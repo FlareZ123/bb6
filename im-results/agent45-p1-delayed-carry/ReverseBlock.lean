@@ -192,6 +192,174 @@ theorem fast_iff_walk (F z : Nat) (ys : List Nat) (r : Nat)
     fast F ys.length (2^ys.length*z+digits ys)=some r ↔ Walk F z ys r :=
   ⟨walk_of_fast hys,fun h => fast_eq_some h hfit⟩
 
+
+/-- The correction is k-Lipschitz on nonnegative increments. -/
+theorem corr_add_bound (k B d : Nat) :
+    corr k (B+d) ≤ corr k B + k*d := by
+  induction d with
+  | zero => simp
+  | succ d ih =>
+    calc
+      corr k (B+(d+1)) = corr k ((B+d)+1) := by congr 1 <;> omega
+      _ ≤ corr k (B+d)+k := corr_adjacent k (B+d)
+      _ ≤ corr k B + k*d + k := Nat.add_le_add_right ih k
+      _ = corr k B + k*(d+1) := by simp [Nat.mul_add, Nat.add_assoc]
+
+/-- If the correction is at most t terminal moduli, the legal quotient lies
+    in the first t+1 integers starting at floor(X/F). -/
+theorem word_near_window (F k X B r t : Nat) (hF : 0<F)
+    (hfit : 2^(k+1)≤F*t) (hr : r<F-k)
+    (he : X+corr k B=F*B+r) :
+    X/F≤B ∧ B≤X/F+t := by
+  have hc := corr_bound k B
+  have hlow : X<F*(B+1) := by rw [Nat.mul_add]; simp; omega
+  have hpow : corr k B + k + 2 ≤ F*t := Nat.le_trans hc hfit
+  have hCorr : corr k B < F*t := by omega
+  have hhigh : F*B < X+F*t := by omega
+  have hdiv := Nat.div_add_mod X F
+  have hrem := Nat.mod_lt X hF
+  have htop : X+F*t < F*(X/F+t+1) := by
+    rw [Nat.mul_add, Nat.mul_add]
+    omega
+  have hprod : F*B < F*(X/F+t+1) := by
+    calc
+      F*B < X+F*t := hhigh
+      _ < F*(X/F+t+1) := htop
+  have hlt : B<X/F+t+1 := Nat.lt_of_mul_lt_mul_left hprod
+  have hlow' : X/F < B+1 := (Nat.div_lt_iff_lt_mul hF).2 (by simpa [Nat.mul_comm] using hlow)
+  exact ⟨by omega, by omega⟩
+
+/-- Two distinct wrap words cannot validate the same fixed block input. -/
+theorem valid_word_unique (F k X B1 B2 r1 r2 : Nat)
+    (hr1 : r1<F-k)
+    (h1 : X+corr k B1=F*B1+r1)
+    (h2 : X+corr k B2=F*B2+r2)
+    (h12 : B1<B2) : False := by
+  let d := B2-B1
+  have hd : B2=B1+d := by dsimp [d]; omega
+  have hdpos : 1≤d := by dsimp [d]; omega
+  have hCorr := corr_add_bound k B1 d
+  have hFk' : k+(F-k)=F := by omega
+  have hmul : F-k ≤ (F-k)*d := by
+    calc
+      F-k = (F-k)*1 := by simp
+      _ ≤ (F-k)*d := Nat.mul_le_mul_left (F-k) hdpos
+  have hFd : k*d+(F-k)≤F*d := by
+    calc
+      k*d+(F-k) ≤ k*d+(F-k)*d := Nat.add_le_add_left hmul (k*d)
+      _ = (k+(F-k))*d := by rw [Nat.add_mul]
+      _ = F*d := by rw [hFk']
+  have h2'' := h2
+  rw [hd, Nat.mul_add] at h2''
+  have h2' : X+corr k (B1+d)=F*B1+F*d+r2 := by
+    simpa [Nat.add_assoc] using h2''
+  have hineq : F*d+r2 ≤ k*d+r1 := by omega
+  omega
+
+/-- At most one quotient in any finite candidate window can validate. -/
+theorem candidate_unique (F k X B1 B2 r1 r2 : Nat)
+    (h1 : candidate F k X B1=some r1)
+    (h2 : candidate F k X B2=some r2) : B1=B2 ∧ r1=r2 := by
+  obtain ⟨_,hr1,he1⟩ := (candidate_iff F k X B1 r1).1 h1
+  obtain ⟨_,hr2,he2⟩ := (candidate_iff F k X B2 r2).1 h2
+  by_cases hEq : B1=B2
+  · subst B2
+    exact ⟨rfl,by omega⟩
+  · have hlt : B1<B2 ∨ B2<B1 := by omega
+    rcases hlt with hlt|hlt
+    · exact False.elim (valid_word_unique F k X B1 B2 r1 r2 hr1 he1 he2 hlt)
+    · exact False.elim (valid_word_unique F k X B2 B1 r2 r1 hr2 he2 hlt)
+
+/-- Search the exact quotient window floor(X/F),...,floor(X/F)+t. -/
+def fastWindow (F k X : Nat) : Nat → Option Nat
+  | 0 => candidate F k X (X/F)
+  | t+1 =>
+    match fastWindow F k X t with
+    | some r => some r
+    | none => candidate F k X (X/F+(t+1))
+
+theorem fastWindow_has_candidate {F k X t r : Nat}
+    (h : fastWindow F k X t=some r) :
+    ∃ j≤t, candidate F k X (X/F+j)=some r := by
+  induction t generalizing r with
+  | zero => exact ⟨0,by omega,by simpa [fastWindow] using h⟩
+  | succ t ih =>
+    cases hp : fastWindow F k X t with
+    | some r' =>
+      have h' : r'=r := by simpa [fastWindow,hp] using h
+      obtain ⟨j,hj,hc⟩ := ih (r:=r') hp
+      rw [h'] at hc
+      exact ⟨j,by omega,hc⟩
+    | none =>
+      have hc : candidate F k X (X/F+(t+1))=some r := by
+        simpa [fastWindow,hp] using h
+      exact ⟨t+1,by omega,hc⟩
+
+theorem fastWindow_eq_some_of_candidate (F k X B r t : Nat)
+    (hwindow : X/F≤B ∧ B≤X/F+t)
+    (hc : candidate F k X B=some r) :
+    fastWindow F k X t=some r := by
+  induction t generalizing B with
+  | zero =>
+    have hB : B=X/F := by omega
+    simpa [fastWindow,hB] using hc
+  | succ t ih =>
+    by_cases hB : B≤X/F+t
+    · have hp := ih B ⟨hwindow.1,hB⟩ hc
+      simp [fastWindow,hp]
+    · have hBeq : B=X/F+(t+1) := by omega
+      have hprev : fastWindow F k X t=none := by
+        cases hp : fastWindow F k X t with
+        | none => rfl
+        | some r' =>
+          obtain ⟨j,hj,hcand⟩ := fastWindow_has_candidate hp
+          have heq : X/F+j=B :=
+            (candidate_unique F k X (X/F+j) B r' r hcand hc).1
+          omega
+      have hc' : candidate F k X (X/F+(t+1))=some r := by
+        simpa [hBeq] using hc
+      simp [fastWindow,hprev,hc']
+
+/-- A genuine Walk is found by the generalized quotient-window search whenever
+    the correction bound fits inside t terminal moduli. -/
+theorem fastWindow_eq_some {F z ys r} (h : Walk F z ys r) (t : Nat)
+    (hfit : 2^(ys.length+1)≤F*t) :
+    fastWindow F ys.length (2^ys.length*z+digits ys) t=some r := by
+  let k := ys.length
+  let X := 2^k*z+digits ys
+  obtain ⟨B,hB,he⟩ := eq_of_walk h
+  have hr := walk_bound h
+  have hF : 0<F := by
+    have hp : 0<2^(k+1) := Nat.two_pow_pos (k+1)
+    omega
+  have hnear := word_near_window F k X B r t hF hfit hr he
+  have hc := (candidate_iff F k X B r).2 ⟨hB,hr,he⟩
+  change fastWindow F k X t=some r
+  exact fastWindow_eq_some_of_candidate F k X B r t hnear hc
+
+/-- Every candidate returned by the window is a genuine Walk. -/
+theorem walk_of_fastWindow {F z ys r t} (hys : ∀ y∈ys, y≤1)
+    (h : fastWindow F ys.length (2^ys.length*z+digits ys) t=some r) :
+    Walk F z ys r := by
+  let k := ys.length
+  let X := 2^k*z+digits ys
+  change fastWindow F k X t=some r at h
+  obtain ⟨j,hj,hc⟩ := fastWindow_has_candidate h
+  have hc' := (candidate_iff F k X (X/F+j) r).1 hc
+  exact walk_of_eq F z ys (X/F+j) r hys hc'.1 hc'.2.1 hc'.2.2
+
+/-- Exact generalized fixed-bit reverse block, with a t+1 candidate quotient
+    window instead of the original two-candidate window. -/
+theorem fastWindow_iff_walk (F z : Nat) (ys : List Nat) (r t : Nat)
+    (hys : ∀ y∈ys, y≤1) (hfit : 2^(ys.length+1)≤F*t) :
+    fastWindow F ys.length (2^ys.length*z+digits ys) t=some r ↔ Walk F z ys r :=
+  ⟨walk_of_fastWindow hys,fun h => fastWindow_eq_some h t hfit⟩
+
+#print axioms corr_add_bound
+#print axioms word_near_window
+#print axioms candidate_unique
+#print axioms fastWindow_iff_walk
+
 #print axioms corr_adjacent
 #print axioms eq_of_walk
 #print axioms walk_of_eq
