@@ -4472,37 +4472,18 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Search the eight Raw124 1LB residuals for symbolic sweep pumps
+      - name: Compile explicit Raw124 1LB residual nonhalting certificates
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           mkdir -p /tmp/raw124-1lb-residual-pumps
-          python im-results/agent2-tnf-raw124/search_1lb_residual_pumps.py \
-            --limit 100000 --max-windows 32 --window-size 160 \
-            --max-period 8 --max-entry 250000 \
-            --out /tmp/raw124-1lb-residual-pumps
-          if [ -f /tmp/raw124-1lb-residual-pumps/Raw1241LBResidualPumps.lean ]; then
-            python tools/lean_compile_closure.py \
-              --workdir /tmp/raw124-1lb-residual-closure \
-              --source-root /tmp/raw124-1lb-residual-pumps --jobs 4 \
-              --manifest /tmp/raw124-1lb-residual-closure/manifest.json \
-              /tmp/raw124-1lb-residual-pumps/Raw1241LBResidualPumps.lean \
-              | tee /tmp/raw124-1lb-residual-closure.log
-            if grep -Eq 'sorryAx|native_decide' /tmp/raw124-1lb-residual-closure.log; then
-              echo "Forbidden proof placeholder or native_decide in residual pump closure" >&2
-              exit 1
-            fi
-            cp -a /tmp/raw124-1lb-residual-closure/. /tmp/raw124-1lb-residual-pumps/closure/
-            cp /tmp/raw124-1lb-residual-closure.log /tmp/raw124-1lb-residual-pumps/
-          fi
+          python tools/lean_compile_closure.py --workdir /tmp/raw124-1lb-residual-pumps/closure --jobs 4 --manifest /tmp/raw124-1lb-residual-pumps/manifest.json --theorem BB6.Agent2Raw124OneLB2083.never_source im-results/agent2-tnf-raw124/Raw124OneLB2083.lean | tee /tmp/raw124-1lb-residual-pumps/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-1lb-residual-pumps/audit.log BB6.Agent2Raw124OneLB2083.never_source
       - uses: actions/upload-artifact@v4
-        if: always()
         with:
-          name: raw124-1lb-residual-pump-search
+          name: raw124-1lb-residual-certified
           path: /tmp/raw124-1lb-residual-pumps
-          if-no-files-found: warn
+          if-no-files-found: error
 
   raw124_1lb_residual_probe:
     if: inputs.target == 'weighted-tnf-raw124-1lb-residual-probe'
