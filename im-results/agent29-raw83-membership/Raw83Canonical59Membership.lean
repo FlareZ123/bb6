@@ -36,7 +36,7 @@ theorem p83_count59 :
 
 /-- The new parent is distinct from every one of the five existing cuts. -/
 theorem p83_distinct_from_five :
-    ∀ p ∈ parents, sameTable p p83 = false := by
+    ∀ p ∈ BB6.Agent31Canonical59Membership.parents, sameTable p p83 = false := by
   decide
 
 #print axioms p83_root
