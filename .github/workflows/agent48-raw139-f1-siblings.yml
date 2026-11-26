@@ -41,8 +41,11 @@ jobs:
           if [[ "$KIND" == c1 ]]; then
             bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
           elif [[ "$KIND" == e0parent ]]; then
-            [[ "$SIBLING" == ZeroRE ]]
-            bash im-results/agent48-raw139-e0-0re/reproduce-parent.sh
+            case "$SIBLING" in
+              ZeroRE) bash im-results/agent48-raw139-e0-0re/reproduce-parent.sh ;;
+              ZeroRB) bash im-results/agent48-raw139-e0-0rb/reproduce-parent.sh ;;
+              *) echo "Unknown E0 parent: $SIBLING" >&2; exit 2 ;;
+            esac
           elif [[ "$KIND" == e0sweep ]]; then
             [[ "$SIBLING" == ZeroRE ]]
             bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh
