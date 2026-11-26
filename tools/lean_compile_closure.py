@@ -24,7 +24,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-STANDARD_PREFIXES = ("Lean", "Init", "Std", "Batteries", "Mathlib")
+STANDARD_PREFIXES = ("Lean", "Init", "Std", "Batteries", "Mathlib", "Cryptids", "BusyBeaver")
 
 # Add an explicit module -> repository-relative source path here only when
 # two files with the same Lean module name are both present and the intended
