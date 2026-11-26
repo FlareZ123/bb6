@@ -51,7 +51,7 @@ jobs:
           if-no-files-found: error
 
   raw111-preflight:
-    if: ${{ inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 }}
+    if: ${{ inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -220,6 +220,8 @@ jobs:
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra91.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra123.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Root52Consume.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0RosterConsume.lean
             --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json
             --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
           )
