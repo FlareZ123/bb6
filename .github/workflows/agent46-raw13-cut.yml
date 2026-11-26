@@ -6,8 +6,12 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch]
         default: core
+      branches:
+        description: Space-separated catalogue keys for branchBatch (max 4)
+        type: string
+        required: false
       source_ref:
         description: Exact source commit (optional)
         type: string
@@ -95,11 +99,22 @@ jobs:
       - name: Verify actual dependency closure
         env:
           TARGET: ${{ inputs.target }}
+          BRANCHES: ${{ inputs.branches }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent46-raw13-cut
-          if [ "$TARGET" = branch1420 ]; then
+          if [ "$TARGET" = branchBatch ]; then
+            read -ra ids <<< "$BRANCHES"
+            test "${#ids[@]}" -ge 1 && test "${#ids[@]}" -le 4
+            ROOT="$D/Agent46Raw13BranchBatch.lean"
+            : > "$ROOT"
+            for id in "${ids[@]}"; do
+              [[ "$id" =~ ^[0-9]+$ ]]
+              python "$D/generateBranch540.py" "$id"
+              printf "import Agent46Raw13Branch%s\n" "$id" >> "$ROOT"
+            done
+          elif [ "$TARGET" = branch1420 ]; then
             python "$D/generateBranch540.py" 1420
             ROOT="$D/Agent46Raw13Branch1420.lean"
           elif [ "$TARGET" = branch540 ]; then
@@ -250,7 +265,7 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified

@@ -25,6 +25,7 @@ bool far(const Table& m,const DFA& a,bool rev){
 }
 struct Node {Res a;array<int,24> child{};string raw,df;bool rev=false;};
 vector<Node> nodes;map<string,pair<bool,DFA>> overrides;set<string> autoTables;
+bool discovering=false; size_t maxHard=30; vector<string> hard;
 string showD(const DFA&d){string s;for(int v:d)s+=char('0'+v);return s;}
 DFA parseD(string s){DFA d;for(char c:s)d.push_back(c-'0');if(d.empty()||d.size()%2||d.size()>20||d[0]!=0||any_of(d.begin(),d.end(),[&](int v){return v<0||v>=int(d.size()/2);}))throw runtime_error("bad DFA");return d;}
 int solve(Table p,int cut,int holes){
@@ -38,6 +39,7 @@ int solve(Table p,int cut,int holes){
      nodes[i].a.typ=5;nodes[i].df=showD(d);nodes[i].rev=rev;return i;}
    for(const auto&d:bank)for(int rev=0;rev<2;rev++)if(far(p,d,rev)){nodes[i].a.typ=5;nodes[i].df=showD(d);nodes[i].rev=rev;return i;}
    auto late=classify<1000,2048,1000>(p);if(late.typ==2){nodes[i].a=late;return i;}
+   if(discovering){nodes[i].a.typ=7;hard.push_back(raw);return hard.size()>=maxHard?-1:i;}
    cerr<<"unresolved "<<raw<<endl;return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;
@@ -56,4 +58,4 @@ void emit(int i){const auto&n=nodes[i];auto a=n.a;
  cout<<"[\"split\","<<a.n<<','<<a.s<<",[";
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
-int main(int argc,char**argv){if(argc!=4)return 2;ifstream f(argv[1]),g(argv[2]),h(argv[3]);if(!f||!g||!h)return 2;string s,d;int rev;while(f>>d)bank.push_back(parseD(d));while(g>>s>>rev>>d)overrides[s]={bool(rev),parseD(d)};while(h>>s)autoTables.insert(s);int cut,holes;while(cin>>s>>cut>>holes){nodes.clear();int i=solve(parse(s),cut,holes);if(i<0)return 1;emit(i);cout<<'\n';}}
+int main(int argc,char**argv){if(argc!=4&&argc!=6)return 2;if(argc==6){if(string(argv[4])!="--discover")return 2;discovering=true;maxHard=stoul(argv[5]);if(!maxHard)return 2;}ifstream f(argv[1]),g(argv[2]),h(argv[3]);if(!f||!g||!h)return 2;string s,d;int rev;while(f>>d)bank.push_back(parseD(d));while(g>>s>>rev>>d)overrides[s]={bool(rev),parseD(d)};while(h>>s)autoTables.insert(s);int cut,holes;while(cin>>s>>cut>>holes){nodes.clear();hard.clear();int i=solve(parse(s),cut,holes);if(discovering){array<int,8> cnt{};for(auto &n:nodes)cnt[n.a.typ]++;cout<<s<<' '<<cut<<' '<<holes<<' '<<(i>=0)<<' '<<nodes.size();for(int n:cnt)cout<<' '<<n;cout<<'\n';for(auto &raw:hard)cout<<"H "<<raw<<'\n';cout.flush();continue;}if(i<0)return 1;emit(i);cout<<'\n';}}

@@ -17,7 +17,15 @@ SPECS = {
     "540": ("1RB0RC1RC0LD1LA0LC------------------", 11, 7, Counter(cycle=51500,last=9303,split=2766,halt=2766,state=2284,far=509,auto=3)),
     "484": ("1RB0RB1RC0LC1LA0LD------------------", 12, 6, Counter(cycle=36067,last=7060,split=1934,halt=1934,state=1036,far=310,auto=2)),
 }
-ROOT, QUERY, QSLOT, EXPECTED = SPECS[BRANCH]
+CATALOG = None
+if BRANCH in SPECS:
+    ROOT, QUERY, QSLOT, EXPECTED = SPECS[BRANCH]
+else:
+    from generate_branch_base import emit_base
+    CATALOG = json.loads((D / 'branch-catalog.json').read_text())[BRANCH]
+    ROOT = CATALOG['root']
+    QUERY, QSLOT = emit_base(ROOT, 'Agent46Raw13Branch'+BRANCH, D/('Agent46Raw13Branch'+BRANCH+'Base.lean'))
+    EXPECTED = Counter(CATALOG['counts'])
 MODULE = "Agent46Raw13Branch" + BRANCH
 NS = "BB6." + MODULE
 AUTO = "BB6Coverage.Agent31Pump.Auto.Raw13Branch" + BRANCH
@@ -28,7 +36,7 @@ def write(name, imports, body):
     (D / (name + ".lean")).write_text("".join(f"import {x}\n" for x in imports) + HEADER + body + "\nend " + NS + "\n", encoding="utf-8")
 
 def main():
-    fixtures = json.loads((D / f"branch{BRANCH}-auto.json").read_text())
+    fixtures = CATALOG["auto"] if CATALOG is not None else json.loads((D / f"branch{BRANCH}-auto.json").read_text())
     # Fixtures already use the checked Lean constructor field order.
     emit_fixtures(fixtures, D / (MODULE + "Auto.lean"), "Raw13Branch"+BRANCH)
     auton = {x["table"]: i for i,x in enumerate(fixtures)}
@@ -38,7 +46,11 @@ def main():
         subprocess.run(["g++","-O3","-std=c++17",str(D/"frontier_complete.cpp"),"-o",str(exe)],check=True)
         auto_tables = temp / "auto.txt"
         auto_tables.write_text("\n".join(auton) + "\n")
-        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(D/f"branch{BRANCH}-far.txt"),str(auto_tables)],input=ROOT+" 4 6\n",text=True))
+        far_file = D/f"branch{BRANCH}-far.txt"
+        if CATALOG is not None:
+            far_file = temp/"far.txt"
+            far_file.write_text("".join(f"{t} {rev} {dfa}\n" for t,rev,dfa in CATALOG["far"]))
+        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(far_file),str(auto_tables)],input=ROOT+" 4 6\n",text=True))
     assert tree[:3] == ["split",QUERY,QSLOT]
     count,mass=Counter(),Counter()
     tally(tree,6,4,count,mass)
