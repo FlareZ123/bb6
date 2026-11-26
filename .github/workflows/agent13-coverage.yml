@@ -3923,7 +3923,8 @@ jobs:
           SRC_DIR=/tmp/a2-raw124-repair-source
           for k in $KIDS; do
             echo "Compiling subdivided ${STEM}Kid${k}" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
-            lean -o "${STEM}Kid${k}.olean" "$SRC_DIR/${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+            cp "$SRC_DIR/${STEM}Kid${k}.lean" "${STEM}Kid${k}.lean"
+            lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
             cp "${STEM}Kid${k}.olean" /tmp/a2-raw124-repair-kids/
           done
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-repair-kids/repair-shard.log; then exit 1; fi
@@ -3993,6 +3994,10 @@ jobs:
           expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_RUN_ID}" --jq .head_sha)"
           test "$(cat SOURCE_COMMIT)" = "$expected"
           sha256sum -c RAW124_SOURCE.sha256
+          export ELAN_HOME="$PWD/.elan"
+          export PATH="$PWD/.elan/bin:$PATH"
+          find "$PWD/.elan" -type f -path '*/bin/*' -exec chmod u+x {} +
+          lean --version
           STEM="Raw124B${RAW124_BRANCH}"
           python - <<'PY'
           import hashlib, json, os
