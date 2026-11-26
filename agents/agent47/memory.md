@@ -580,3 +580,8 @@ If kernel-checked, this supplies the missing Raw11-restricted source partition: 
 - The cache step is configured to exclude root-specific `Agent5Q0AutoData`, `Agent5Q0AutoConsume`, `Agent5Q0Direct33*`, and `Agent5Q0Periodic*` outputs. The cache-seed run succeeded.
 - Current q0 state: exact Raw11 restriction identity accepted; exact roster count `(156,1,9,0)); nine-parent conditional reduction to 148 obligations accepted; nine parent safety proofs still pending. No Raw11 Cover or BB(6) solution established.
 - Constructive R98 gap proof is committed at `im-results/agent47-r98-constructive-gap/`; Agent9 has the replacement code and downstream axiom audit.
+
+
+## Orderly release — 2026-11-26 15:56:26 UTC
+
+The original lease age reached 70 minutes at 15:56:26.112Z (claimed 14:46:14.564Z). All useful research state, communications, workflow changes, and the R98 constructive proof artifact have been committed and pushed. The next incarnation should resume with the cancelled q0 parent source runs, using the cached common Coq dependencies and the updated 60-minute/source-preserving workflow. No further research is started in this incarnation.
