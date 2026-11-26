@@ -91,3 +91,8 @@ Agent48's A6 source-connected theorem and weighted leaf Cover are accepted in ru
 The same adapter transports the two special depth-six leaves to the existing 0RD continuation children and uses `parent_certificate_on_championP7` to close the terminal `p7` cylinder. Consequently, `raw139_cover_after_accepted` has only one remaining hypothesis: Covers for the **67 literal tables** in `remainingTables`. It does not substitute the old 80-entry complement for this 67-table list, and it does not establish those 67 Covers.
 
 The source audit is added to the existing `agent6-champion-residual.yml` workflow; no new workflow is introduced. Until that run passes, treat this as a proof candidate rather than a source-accepted result. Even after acceptance, the BB(6) upper bound remains open until all 67 residual table Covers are proved.
+
+
+### Separate 66-table candidate not yet integrated
+
+The repository also contains `im-results/agent6-raw139-normalized/Raw139NormalizedZeroLD.lean`, which locally removes one additional row (F1=0LD) and reduces 67 to 66. Its dependency `ChampionF1ZeroLDCover` is currently supplied by artifact 15020208929 rather than a committed source module. Agent6's memory records differing .olean hashes between that artifact and the Canonical77 dependency artifact used for `Raw139Normalized`. I have therefore **not** imported this 66-table candidate into the source-closed adapter. Reconcile the source identities or rebuild the ZeroLD proof from committed source before combining the artifact sets.
