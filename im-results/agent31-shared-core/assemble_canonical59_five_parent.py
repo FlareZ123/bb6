@@ -224,9 +224,9 @@ def build_precompiled_manifest(base_linked, work):
         print(result.stdout, end="", flush=True)
         result.check_returncode()
 
-    # The width-two mask checker refers directly to the shared primitive
-    # theorem BB6BlockFAR.run_add. BlockMacro2's ordinary import is private,
-    # so the generated consumer must import BlockMacro itself.
+    # The width-two mask checker refers directly to BB6BlockFAR.run_add.
+    # Keep BlockMacro as an explicit generated import so this source dependency
+    # is visible in the generated module and its compile-closure manifest.
     width_two_mask = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR2.lean"
     width_two_source = width_two_mask.read_text()
     if (
