@@ -2722,6 +2722,14 @@
     "1325": [
       "Raw57LF1Counters",
       "BB6Coverage.Agent1Raw57LF1Counters.M1325"
+    ],
+    "2382": [
+      "Raw57LF1M2382",
+      "BB6Coverage.Agent1Raw57LF1M2382"
+    ],
+    "2417": [
+      "Raw57LF1M2417",
+      "BB6Coverage.Agent1Raw57LF1M2417"
     ]
   },
   "expected_open": [],
@@ -2731,8 +2739,6 @@
     "851": "1RB1LF_1RC1RA_0RD0RB_1LD1RE_---0LA_1LB0LF",
     "882": "1RB1LF_1RC0LA_0RD---_1LD1RE_0RA0LA_1RD0LF",
     "885": "1RB1LF_1RC1LD_0RD---_1LD1RE_0RA0LA_1RD0LF",
-    "2382": "1RB1LF_1RC0RB_0RD1LA_1LD1RE_---0LA_0LF1RB",
-    "2417": "1RB1LF_1RC0RE_0RD---_1LD1RE_0RB0LA_0LF1RB",
     "2780": "1RB1LF_1RC0LD_0RD---_1LD1RE_0RF0LA_0RB1RD",
     "2933": "1RB1LF_1RC---_0RD0LD_1LD1RE_0RB0LA_0RC1RF"
   },
@@ -2794,6 +2800,8 @@
     ]
   },
   "packed_sha256": {
-    "Raw57LF1Counters": "ca9b862344649b7e1e2c91881e39b5dabfa693228929f5d14ac2deba7a3fc958"
+    "Raw57LF1Counters": "ca9b862344649b7e1e2c91881e39b5dabfa693228929f5d14ac2deba7a3fc958",
+    "Raw57LF1M2417": "db96219ca1b2efd4b43c60320a05a27aa1e5bb84d7833741f122bce46ea94207",
+    "Raw57LF1M2382": "2c678f5c832679af79332b90a9db7fd35ac0419b7f5dc0ddbd506e569e419298"
   }
 }
