@@ -712,7 +712,7 @@ jobs:
             overrides+=(--override "Raw122Roster16Kid${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid${n}.lean")
             overrides+=(--override "Raw122Roster17Kid${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid${n}.lean")
           done
-          python tools/lean_compile_closure.py \
+          if ! python tools/lean_compile_closure.py \
             im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
             --workdir /tmp/a43-parent \
             --jobs 8 \
@@ -729,7 +729,11 @@ jobs:
             --provenance-input im-results/agent43-raw122-cut/Raw122RootCompose.lean \
             --provenance-input im-results/agent43-raw122-cut/README.md \
             "${overrides[@]}" \
-            2>&1 | tee /tmp/a43-parent.log
+            2>&1 | tee /tmp/a43-parent.log; then
+            echo "Complete-parent source closure failed; actual Lean diagnostic follows:"
+            tail -n 200 /tmp/a43-parent.log || true
+            exit 1
+          fi
           python - <<'PY'
           import json, pathlib, subprocess
           log = pathlib.Path("/tmp/a43-parent.log").read_text()
