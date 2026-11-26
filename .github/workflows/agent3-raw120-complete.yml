@@ -194,9 +194,11 @@ jobs:
           find /tmp/a3e0-parent -name A3E0RACover.olean -exec cp {} /tmp/a3e0-build/ \\;
           find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAIntegrated.olean' -exec cp {} /tmp/a3e0-build/ \\;
           find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAMatch.olean' -exec cp {} /tmp/a3e0-build/ \\;
+          find /tmp/a3e0-integrated -name 'Raw139NormalizedE0ParentRows.olean' -exec cp {} /tmp/a3e0-build/ \\;
           test -s /tmp/a3e0-build/A3E0RACover.olean
           test -s /tmp/a3e0-build/Raw139E0ZeroRAIntegrated.olean
           test -s /tmp/a3e0-build/Raw139E0ZeroRAMatch.olean
+          test -s /tmp/a3e0-build/Raw139NormalizedE0ParentRows.olean
       - name: Compile the Canonical64 Raw139 subcover wrapper
         if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != ''
         run: |
