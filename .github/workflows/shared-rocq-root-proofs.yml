@@ -372,7 +372,7 @@ jobs:
         working-directory: original/verify
         env:
           GH_TOKEN: ${{ github.token }}
-          COARSE_SHARDS: ${{ inputs.batch_ranges }}
+          COARSE_SHARDS: Small,A,B,C,D
         run: bash "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/run-coarse-forest.sh"
       - name: Preserve coarse forest proofs
         if: always() && inputs.target == 'enumerate62-coarse-forest'
