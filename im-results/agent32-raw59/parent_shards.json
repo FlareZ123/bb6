@@ -1,9 +1,6 @@
 {
   "artifact_prefix": "raw59-checked",
   "groups": {
-    "ClosedBase": [
-      "Raw59ClosedBranches"
-    ],
     "Upgrade0LA": [
       "Raw59Upgrade0LAData"
     ],
@@ -24,6 +21,31 @@
     ],
     "Upgrade1LF": [
       "Raw59Upgrade1LFData"
+    ],
+    "ClosedA": [
+      "Raw59A1RFData",
+      "Raw59A1RDData"
+    ],
+    "ClosedB": [
+      "Raw59A0RFData",
+      "Raw59A0RDData"
+    ],
+    "ClosedC": [
+      "Raw59A0RCData",
+      "Raw59A1LAData"
+    ],
+    "ClosedD": [
+      "Raw59A1RCData",
+      "Raw59A1LCData"
+    ],
+    "ClosedE": [
+      "Raw59A0RBData",
+      "Raw59A0LDData",
+      "Raw59A0LCData"
+    ],
+    "ClosedF": [
+      "Raw59A1RBData",
+      "Raw59A0REData"
     ]
   },
   "allow_mixed_revisions": true

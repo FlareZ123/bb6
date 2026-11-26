@@ -484,7 +484,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeRemaining' && '["Upgrade0LA","Upgrade0LB","Upgrade0LF","Upgrade1LB","Upgrade1LE","ClosedBase"]' || inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF","ClosedBase"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
+        child: ${{ fromJSON(inputs.raw59_child == 'CanonicalAll' && '["0RB","0LD","1RC","0RC","0RF","1LA","1RF","0RD","1LC","1RB","1RD","0LC","0RE","CanonicalBase"]' || (inputs.raw59_child == 'UpgradeRemaining' && '["Upgrade0LA","Upgrade0LB","Upgrade0LF","Upgrade1LB","Upgrade1LE","ClosedA","ClosedB","ClosedC","ClosedD","ClosedE","ClosedF"]' || inputs.raw59_child == 'UpgradeAll' && '["Upgrade0LA","Upgrade0LB","Upgrade0LE","Upgrade0LF","Upgrade1LB","Upgrade1LE","Upgrade1LF","ClosedA","ClosedB","ClosedC","ClosedD","ClosedE","ClosedF"]' || inputs.raw59_child == 'AsymAll' && '["Asym0LB","Asym1LB","Asym1LE"]' || inputs.raw59_child == 'PartialAll' && '["Partial0LA","Partial0LB","Partial0LE","Partial0LF","Partial1LB","Partial1LE","Partial1LF"]' || format('["{0}"]', inputs.raw59_child))) }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -495,7 +495,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Restore checked shared proof dependencies
-        if: ${{ (startsWith(matrix.child, 'Upgrade') && matrix.child != 'Upgrade0LE' && matrix.child != 'Upgrade1LF') || matrix.child == 'ClosedBase' }}
+        if: ${{ (startsWith(matrix.child, 'Upgrade') && matrix.child != 'Upgrade0LE' && matrix.child != 'Upgrade1LF') || startsWith(matrix.child, 'Closed') }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -511,6 +511,24 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent32-raw59/unpack_rc.py
+          targets=()
+          claims=()
+          children=()
+          case "$RAW59_CHILD" in
+            ClosedA) children=(1RF 1RD) ;;
+            ClosedB) children=(0RF 0RD) ;;
+            ClosedC) children=(0RC 1LA) ;;
+            ClosedD) children=(1RC 1LC) ;;
+            ClosedE) children=(0RB 0LD 0LC) ;;
+            ClosedF) children=(1RB 0RE) ;;
+          esac
+          if (( ${#children[@]} )); then
+            python im-results/agent32-raw59/generate.py "${children[@]}"
+            for c in "${children[@]}"; do
+              targets+=("im-results/agent32-raw59/generated_$c/Raw59A${c}Data.lean")
+              claims+=("BB6.Agent32Raw59A${c}.all${c}")
+            done
+          else
           case "$RAW59_CHILD" in
             Asym0LB|Asym1LB|Asym1LE)
               child="${RAW59_CHILD#Asym}"
@@ -568,29 +586,42 @@ jobs:
             0RB|0LD|0RC|1RC|0RF|1LA|1RF|0RD|1LC|1RB|1RD|0LC|0RE) python im-results/agent32-raw59/generate.py "$RAW59_CHILD"; target="im-results/agent32-raw59/generated_$RAW59_CHILD/Raw59A${RAW59_CHILD}Data.lean" ;;
             *) exit 2 ;;
           esac
+          targets=("$target")
+          fi
           extra=()
+          jobs=4
           case "$RAW59_CHILD" in
             Upgrade*)
               child="${RAW59_CHILD#Upgrade}"
               claim="BB6.Agent32Raw59Upgrade${child}.bound"
+              claims+=("$claim")
+              jobs=2
               extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD" --theorem "$claim")
               ;;
             ClosedBase)
               claim=BB6.Agent32Raw59CanonicalAll.closed_sound
+              claims+=("$claim")
+              jobs=2
               extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD" --theorem "$claim")
+              ;;
+            Closed[A-F])
+              jobs=2
+              extra=(--manifest /tmp/a32-raw59/manifest.json --artifact-name "raw59-checked-$RAW59_CHILD")
               ;;
           esac
           if [[ -f /tmp/raw59-core-cache/manifest.json ]]; then
             extra+=(--precompiled-manifest /tmp/raw59-core-cache/manifest.json --precompiled-dir /tmp/raw59-core-cache)
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs 4 "${extra[@]}" "$target" | tee /tmp/a32-raw59.log
+          python tools/lean_compile_closure.py --workdir /tmp/a32-raw59 --jobs "$jobs" "${extra[@]}" "${targets[@]}" | tee /tmp/a32-raw59.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a32-raw59.log; then exit 1; fi
           if [[ "${#extra[@]}" -gt 0 ]]; then
             if [[ "$RAW59_CHILD" == Upgrade* ]]; then
               residual="im-results/agent32-raw59/upgrade_$child/residual.txt"
               test -f "$residual" && test ! -s "$residual"
             fi
-            python im-results/agent32-raw59/check_axioms.py /tmp/a32-raw59.log "$claim"
+            for claim in "${claims[@]}"; do
+              python im-results/agent32-raw59/check_axioms.py /tmp/a32-raw59.log "$claim"
+            done
             cp /tmp/a32-raw59.log /tmp/a32-raw59/audit.log
           fi
 
@@ -605,7 +636,7 @@ jobs:
           if-no-files-found: error
           retention-days: 7
       - name: Preserve checked modules for parent composition
-        if: ${{ startsWith(matrix.child, 'Upgrade') || matrix.child == 'ClosedBase' }}
+        if: ${{ startsWith(matrix.child, 'Upgrade') || startsWith(matrix.child, 'Closed') }}
         uses: actions/upload-artifact@v4
         with:
           name: raw59-checked-${{ matrix.child }}
@@ -715,7 +746,7 @@ jobs:
           retention-days: 30
 
   raw59-canonical77-composition:
-    if: ${{ inputs.verify_raw59 && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining') }}
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'UpgradeAll' }}
     needs: raw59-parent-composition
     runs-on: ubuntu-latest
     timeout-minutes: 15
