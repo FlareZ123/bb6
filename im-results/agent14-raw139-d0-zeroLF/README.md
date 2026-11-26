@@ -15,3 +15,7 @@ Exact local parent proof output:
 'BB6.Agent14Raw139D0LF.all_completions_weighted' depends on axioms: [propext, Classical.choice, Quot.sound]
 ```
 All nine block, 24 chunk and one parent module compiled without errors or `sorryAx`. Exact generated root and source archive hashes match the pinned reproduction inputs. The independent clean-source CI uses existing Agent48 workflow `kind=d0`, `sibling=ZeroLF`.
+
+## Independent clean-source audit
+
+Run [45726077932](https://github.com/FlareZ123/bb6/actions/runs/45726077932) completed successfully at source pin 10600f0067436e573ad18d75fa8a49f1b3d63793. Artifact 15075155906, `raw139-d0-ZeroLF-certified`, SHA256 3a88afc2f88a89ebb321832b71bb03c3e8984431ebc38598280f64d78f33f55d. The entire weighted bound 352 parent theorem is now source-accepted; roster graft remains separate.
