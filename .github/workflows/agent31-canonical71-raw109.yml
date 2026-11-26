@@ -1199,6 +1199,10 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version
+      - name: Check Canonical57 assembler syntax
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent31-shared-core/assemble_canonical57_raw83.py
       - name: Audit Canonical58 and Raw83 artifacts; compile the 57-residual consumer
         env:
           GH_TOKEN: ${{ github.token }}
