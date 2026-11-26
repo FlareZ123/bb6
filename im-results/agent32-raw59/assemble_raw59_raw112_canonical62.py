@@ -178,7 +178,7 @@ def main():
         "axioms": profiles,
     }
     (work / "raw59-raw112-canonical62-integration.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\\n"
+        json.dumps(report, indent=2, sort_keys=True) + "\n"
     )
     print(
         "Raw59 and Raw112 integrated into the accepted Canonical64 frontier; "
