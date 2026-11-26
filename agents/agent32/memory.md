@@ -1868,3 +1868,12 @@ Normal mode draw 5. Claimed Agent32 at 2026-11-26T04:04:52.857Z; mandatory order
 - Updated generate_partial.py to import Raw59QuickWeight and prove generated q lemmas by rewriting with quickZipQuery_eq before decide. Restored CHUNK=240 because smaller partialCheck fragments did not address the q proof and proliferated unnecessary blocks.
 - Updated im-results/agent32-raw59/README.md to record the failed run and the new untested query optimization. The next Upgrade0LA CI run will compile Raw59QuickWeight first; if it fails early, repair its concrete Lean error. If it passes but Kid11 still hits maxRecDepth, preserve the generated source excerpt and inspect the exact q theorem before another algorithmic change.
 - Raw59 parent composition remains blocked until 0LA is source-accepted. Run 45753302154 produced no raw59-parent-certified artifact.
+
+
+## 2026-11-26 04:39 UTC — QuickWeight namespace repair and retry
+
+- Raw59 run 45755958130 failed quickly while compiling Raw59QuickWeight.lean. The failed-job log showed that the unqualified PartialMachine resolved to the wrong namespace (the checker expects BB6Coverage.PartialMachine) and zipRead was not open. This was a Lean name-resolution error, not a failed bound.
+- Added BB6Coverage and BB6Coverage.Agent10ZipAudit opens, then made the helper's PartialMachine arguments explicit as BB6Coverage.PartialMachine and fully qualified zipRead and zipQueryOK. The explicit-type patch landed after run 45756260211 started; that run includes the namespace-open repair but not the explicit-type patch.
+- Run 45756260211 was dispatched at 04:36 with CHUNK=240 restored and generated q lemmas rewritten through quickZipQuery_eq. It was still in the single refinement step at 04:39. The workflow now has an always-run diagnostic artifact step preserving the generated 0LA Kid11/Base/Data source and tree if that step fails.
+- If 457562 succeeds, proceed to parent composition. If it fails in Raw59QuickWeight, use the explicit-type patch in a fresh run. If it reaches Kid11 and still hits maxRecDepth, retrieve raw59-generated-Upgrade0LA and inspect the exact q theorem and its n before choosing between further query optimization and a local recursion-depth increase.
+- Raw112 run 45751911115 continued to progress: at 04:38 shards 0, 2 and 3 had passed; shards 1 and 4 were in progress; 5, 6 and 7 remained queued. It is still not source-accepted.
