@@ -47,3 +47,7 @@ Run from the repository root with:
     python im-results/agent31-canonical58-source-crosswalk/crosswalk.py
 
 The script writes crosswalk.json, including input Git blob SHA values, exact row-to-ancestor matches, group counts, and completion-cylinder unions. A future formal integration must still prove the roster correspondence and source Covers in Lean.
+
+The generated `crosswalk.json` now also carries `current_roster_manifest`: all 58 source-derived entries with raw residual index, canonical index, original address, hole count and exact 12-cell RLE table. The existing Python target passed again after this addition in run [45907103871](https://github.com/FlareZ123/bb6/actions/runs/45907103871), on head `a29a74bbc7b36b0a566918c99a5a3ecd8a6f5183`; artifact `canonical58-source-crosswalk` is ID `15157544307`, SHA-256 `35aa749032dc78b4eed27a21a65b613eff2fe9e348b50fca0acbfd49a8fdc734`.
+
+This remains the *expected source-derived manifest*, not yet the authoritative Lean export. The existing Canonical57 Raw112 consumer target has been extended to export the actual `roster58` and its `roster57` successor from their accepted Lean modules, then compare exact raw-index/table pairs and multiplicity against this manifest. That integrated Lean audit has not run yet; it depends on successful Raw112 recovery and the next Canonical57 consumer run.
