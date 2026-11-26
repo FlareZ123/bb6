@@ -268,7 +268,7 @@ theorem candidate_unique (F k X B1 B2 r1 r2 : Nat)
   · have hlt : B1<B2 ∨ B2<B1 := by omega
     rcases hlt with hlt|hlt
     · exact False.elim (valid_word_unique F k X B1 B2 r1 r2 hr1 he1 he2 hlt)
-    · exact False.elim (valid_word_unique F k X B2 B1 r2 r1 hr2 he2 hlt)
+    · exact False.elim (valid_word_unique F k X B2 B1 r2 r1 hr2 he2 he1 hlt)
 
 /-- Search the exact quotient window floor(X/F),...,floor(X/F)+t. -/
 def fastWindow (F k X : Nat) : Nat → Option Nat
