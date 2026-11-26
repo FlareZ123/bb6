@@ -1,0 +1,92 @@
+name: Agent 5 Raw11 parent source covers
+on:
+  workflow_dispatch:
+    inputs:
+      parents:
+        description: JSON list of extra indices with complete candidate certificates
+        type: string
+        default: '[126,127,128,129,130,137,140]'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  cover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        parent: ${{ fromJSON(inputs.parents) }}
+    env:
+      ID: ${{ matrix.parent }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45889628989
+          name: raw11-root52-known-consumption
+          path: /tmp/raw11-cache
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45896597080
+          pattern: raw11-six-hole-*
+          merge-multiple: true
+          path: /tmp/raw11-six-data
+      - name: Generate exact child proofs
+        env:
+          SIX_HOLE_DATA: /tmp/raw11-six-data
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs "$ID" /tmp/raw11-generated
+      - name: Check accepted dependency identity and compile parent
+        run: |
+          set -euo pipefail
+          cache=/tmp/raw11-cache/tmp/a47-raw11-root52-known
+          test -f "$cache/manifest.json"
+          python - "$cache" "$(elan which lean)" <<'PY'
+          import hashlib,json,pathlib,sys
+          root=pathlib.Path(sys.argv[1])
+          m=json.loads((root/"manifest.json").read_text())
+          sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+          assert sha(pathlib.Path(sys.argv[2]))==m["lean_binary"]["sha256"]
+          for v in m["modules"]:
+              assert sha(root/v["olean_path"])==v["olean_sha256"], v["module"]
+              assert sha(root/(v["module"]+".lean"))==v["source_sha256"], v["module"]
+          print("Verified pinned dependency cache:",len(m["modules"]),"modules")
+          PY
+          cp im-results/agent5-weighted-tnf-queue/Raw11Extra{126,127,137}*.lean "$cache/"
+          cp /tmp/raw11-generated/*.lean "$cache/"
+          cd "$cache"
+          export LEAN_PATH="$PWD"
+          for n in 126 127 137; do
+            lean -j1 -o Raw11Extra$n.olean Raw11Extra$n.lean
+            lean -j1 -o Raw11Extra${n}Coverage.olean Raw11Extra${n}Coverage.lean
+          done
+          export PREFIX="Agent5Raw11Extra$ID"
+          printf '%s\0' "$PREFIX"Kid*.lean | xargs -0 -P 2 -n1 bash -c 'set -e; echo "Checking $0"; lean -j1 -o "${0%.lean}.olean" "$0"' | tee /tmp/raw11-kids.log
+          lean -j1 -o "$PREFIX.olean" "$PREFIX.lean" | tee /tmp/raw11-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-{kids,parent}.log; then exit 1; fi
+          grep -F "BB6.$PREFIX.cover' depends on axioms:" /tmp/raw11-parent.log
+          mkdir -p /tmp/raw11-certified
+          cp "$PREFIX"*.olean "$PREFIX"*.lean /tmp/raw11-certified/
+          cp Raw11Extra{126,127,137}*.olean Raw11Extra{126,127,137}*.lean /tmp/raw11-certified/
+          cp /tmp/raw11-parent.log /tmp/raw11-kids.log /tmp/raw11-generated/manifest.json /tmp/raw11-certified/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-extra-parent-${{ matrix.parent }}
+          path: |
+            /tmp/raw11-generated
+            /tmp/raw11-certified
+            /tmp/raw11-kids.log
+            /tmp/raw11-parent.log
+          if-no-files-found: warn
+          retention-days: 30
