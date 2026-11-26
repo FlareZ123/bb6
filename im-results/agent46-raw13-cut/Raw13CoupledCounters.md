@@ -1,13 +1,13 @@
 # Coupled-counter nonhalting theorem for raw13 parent 1093
 
-**Theorem (mathematical proof; full Lean assembly pending).** Both partial machines with codes
+**Theorem (mathematical proof; guard-return Lean assembly pending).** Both partial machines with codes
 
     7 14 11 5 2 19 22 0 13 13 10 24
     7 14 11 5 2 19 22 0 10 13 10 24
 
 avoid their sole unassigned transition (F1) forever from blank. Here a code is 4*next + 2*write + right, and 24 means unassigned. Consequently every completion is nonhalting. The two machines are the E0=0RD and E0=1LC hard siblings of the source-targeted parent 1093. The exact stuttering equivalence is kernel-checked in Raw13Detour.lean; it suffices to prove the first table safe.
 
-This proof has three components: exact frame rules (kernel-checked in Raw13Frames.lean), a finite accelerated entry certificate (check_coupled_entry.py), and the all-time guard argument below. The latter and the finite jump arithmetic have not yet been assembled into Lean. No empirical long run is used as a proof of infinite behavior.
+This proof has three components: exact frame rules (kernel-checked in Raw13Frames.lean), a finite accelerated entry certificate (check_coupled_entry.py), and the all-time guard argument below. The finite entry and arbitrary jump are now assembled and locally kernel-checked; the all-time guard argument remains to be formalized. No empirical long run is used as a proof of infinite behavior.
 
 ## 1. Notation and exact rules
 
@@ -42,7 +42,7 @@ Then scan(1W)=(6(j+1),R); set I(W)=0^(3j+2)1R. This increments v by exactly one 
 
 For an aligned left counter enc_m(x)U, assume x+2<2^m (or allow arbitrary width if U empty). Apply M with k=0 to the trailing 1 bits of x. It increments x to x+1, and prepends 6(j+1) ones, leaving R on the right. Apply M again, with k=3(j+1)>0, to the trailing 1 bits of x+1. The result is exactly F(enc_m(x+2)U,I(W)). This proves the double increment for both parities of x. The first step also works at x=2^m-2; the second may deliberately carry into U in the boundary arguments below.
 
-Iterating d double increments is valid whenever v+d<=2^n-1 and x+2d<2^m if a suffix U is present. Without a suffix choose width large enough. The left becomes enc(x+2d) with the original fixed suffix. For d>0 the greatest triple index accessed is bit_length(v xor (v+d))-1: monotone addition crosses the binary boundary for that index but no higher boundary. Every lower index is accessed; the first two bits of those triples are therefore zero, and their third bits are those of v+d. Higher triples and incomplete trailing bits remain unchanged. This establishes the exact accelerated jump used by the entry certificate, without executing billions of increments.
+Iterating d double increments is valid whenever v+d<=2^n-1 and x+2d<2^m if a suffix U is present. Without a suffix choose width large enough. The left becomes enc(x+2d) with the original fixed suffix. For d>0 the greatest triple index accessed is bit_length(v xor (v+d))-1: monotone addition crosses the binary boundary for that index but no higher boundary. Every lower index is accessed; the first two bits of those triples are therefore zero, and their third bits are those of v+d. Higher triples and incomplete trailing bits remain unchanged. This establishes the exact accelerated jump used by the entry certificate, without executing billions of increments. `Raw13RightCounter.lean` proves the digit-recursive add function equivalent to iteration, its exact no-overflow condition, unchanged higher suffixes, and arbitrary double jumps from the two frame rules. `Raw13CoupledJump.lean` specializes this to the base machine's `Path0`.
 
 ## 3. A protected-suffix budget
 
@@ -97,6 +97,6 @@ The drain lemma now suffices: for N>=5 its cost is at most 2^(N-4)<=2^(N-3)-2; f
 
 ## 6. Reachable entry
 
-Run python check_coupled_entry.py (standard library only). It starts at the exact blank configuration, takes 21 primitive steps to F(1,empty), and applies only the proved frame and bounded jump rules, or finite primitive replay when no frame rule matches. The first guarded entry occurs after 111 accelerated transitions, 23 of them jumps with total 8589945599 double increments. The trace SHA256 is d40e9be75650d0a46cf82c5b36808cb84fcbff75f9126bc0a07218406ccba917. The right word is length 170, begins with 26 ones, and ends in at least nine zeros followed by 1. The exact word is printed. This finite computation checks reachability rather than inferring nonhalting from a long trace.
+Run python check_coupled_entry.py (standard library only). It starts at the exact blank configuration, takes 21 primitive steps to F(1,empty), and applies only the proved frame and bounded jump rules, or finite primitive replay when no frame rule matches. The first guarded entry occurs after 111 accelerated transitions, 23 of them jumps with total 8589945599 double increments. The trace SHA256 is d40e9be75650d0a46cf82c5b36808cb84fcbff75f9126bc0a07218406ccba917. The right word is length 170, begins with 26 ones, and ends in at least nine zeros followed by 1. The exact word is printed. The new `generate_coupled_entry.py` emits `Raw13CoupledEntry.lean` (local Git blob a4377df35685fa74ca8647742268363a0ffdd357). Lean checked every edge and `entry : Reach (nv blank0) (F [true] guardWord)` plus `guard_shape`, using standard axioms only. Local check used the exact base definition and re-elaborated frame/projection proofs against imported checked dependencies; the full repository-source CI is pending. This proves reachability rather than inferring nonhalting from a long trace.
 
 Together sections 1–6 prove the base machine never queries F1, and the exact detour equivalence transfers the conclusion to the other sibling. A local certificate can be integrated through Raw13BinaryGraft.lean; the two leaves account for 50 represented literal completions, and do not close the other residuals of parent 1093. The overall BB(6) maximality question remains open.

@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -104,7 +104,10 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent46-raw13-cut
-          if [ "$TARGET" = branchBatch ]; then
+          if [ "$TARGET" = coupledEntry ]; then
+            python "$D/generate_coupled_entry.py"
+            ROOT="$D/Raw13CoupledEntry.lean"
+          elif [ "$TARGET" = branchBatch ]; then
             read -ra ids <<< "$BRANCHES"
             test "${#ids[@]}" -ge 1 && test "${#ids[@]}" -le 4
             ROOT="$D/Agent46Raw13BranchBatch.lean"
@@ -265,7 +268,7 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
       - name: Record exact proof targets and source audit
-        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry'
         env:
           TARGET: ${{ inputs.target }}
           BRANCHES: ${{ inputs.branches }}
@@ -275,7 +278,7 @@ jobs:
           lean --version >> /tmp/a46-raw13/proof-targets.txt
           cp /tmp/a46-raw13.log /tmp/a46-raw13/proof-audit.log
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified

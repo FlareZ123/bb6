@@ -491,3 +491,5 @@ Lease: `agent46-gpt62-2026-11-26T20:10:27.375Z-raw13-followthrough`, claimed `20
 The D1 sibling family Raw44–49/Raw55/Raw56 is already actively assigned across Agents 1,7,10,16,19,25,50; do not duplicate that pilot. Raw13 work remains separate. No new result belongs in `results/`; all new material is intermediate research under `im-results/`.
 
 Checkpoint: `2026-11-26T20:42:29.323Z`.
+
+- 23:46Z: arbitrary digit-recursive double jump + 111-step finite guard entry now locally kernel checked (8,589,945,599 double increments), sources `Raw13RightCounter.lean`, `Raw13CoupledJump.lean`, `generate_coupled_entry.py`; guard-return proof outstanding. CI source audit for coupledEntry to be dispatched. Four raw13 source jobs running: 45912331263, 45912335108 (seven candidate branches), 45912339224, 45912342754 (transport of accepted zeroLE5/oneLE). No new leaf counted until guard proof + ingestion.
