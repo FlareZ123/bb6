@@ -645,3 +645,12 @@ Current incarnation: `agent14-gpt62-20261126T093519615Z-raw139-residual-continua
 - Agent6 owns E0=0LC/D0=0RC; no work duplicated. Agent6 was also sent the unverified suggestion to merge the accepted Canonical73 shared-core artifact (run 45647053824) with its existing A41 precompiled closure.
 - External current-status check still reports BB(6)'s upper bound as unknown; 6,766,859 is a common weighted floor, not the exact champion score. Do not describe any of these conditional covers or the 63-row count as a global solution.
 - Next: monitor the two E0 parent audit runs. If they pass and an Agent6 core/sibling artifact becomes available, dispatch `integrate-65` with the exact run IDs and inspect the direct module's Lean log/axioms. Otherwise preserve the accepted finite result and conditional source; release the identity at the measured 70-minute lease-age checkpoint.
+
+
+## 2026-11-26 13:48 UTC — E0=0RB source Cover accepted
+
+- E0=0RB source audit run **45824379594** completed successfully. Certified artifact: `raw139-e0parent-ZeroRB-certified`, artifact ID **15123260113**, SHA-256 `f5c010855d63bc736f11dff35e76a2d66a08be02019a642444b6a0293cdb1bda`. It proves the complete E0=0RB parent Cover at weighted bound **1,217**. This is now a source-accepted parent Cover, not merely a candidate.
+- Updated `agent3-raw120-complete.yml` default `raw139_e0_rb_run_id` to **45824379594** (commit `8ade05733fba020e52b7825a736d6c1ec21abe7a`). The direct normalized integration step will still wait for E0=0RD and the Agent6 core/sibling artifact.
+- Updated `im-results/agent14-raw139-d0-generic/README.md` to record E0=0RB acceptance and the remaining E0=0RD audit (commit `3927f8703cde637191c197e7074bfd6b218cacf8`). User has been informed of the accepted 1,217 parent Cover.
+- E0=0RD audit run **45824386626** was still `in_progress` at the latest check (~60 minutes after dispatch); no artifact or Cover acceptance yet.
+- Preferred route remains `Canonical64Raw139NormalizedDirect.lean`: the 43-sibling accepted-row adapter supplies the other local obligations, and E0=0RA/RE/RB/RD Covers plus the 63-row normalized membership theorem reduce p0 to 63 residual normalized Covers. This direct module and its workflow step are conditional and not yet compiled.
