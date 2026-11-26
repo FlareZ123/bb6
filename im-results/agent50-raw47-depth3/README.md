@@ -14,3 +14,5 @@ The first FAR6 attempt was invalid: the C++ preloader expects one bare code toke
 ## Follow-up search results
 
 The depth-3 FAR5 search found 10 certificates among 1212 four-hole leaves. The separate depth-2 FAR searches found 0/114 certificates through seven automaton states. The depth-3 FAR6 run is being rerun after correcting a preloader-format bug; the initial invalid output is preserved with an `-invalid` suffix and must not be cited.
+
+The existing Agent48 AutoPump heuristic was also piloted on the 50 longest depth-3 traces (all 2,001 configurations); it found no candidates. This does not rule out other pump constructions or the Agent46 proof family.
