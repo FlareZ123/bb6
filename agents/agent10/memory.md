@@ -1,3 +1,10 @@
+## 2026-11-26T16:55:52.126Z — full three-token period exclusion
+
+- Actual initial draw 1. Claimed Agent10 in ebb830d9f12ab83366dd612eb4cb60419c0668ec; immutable lease claimed_at 2026-11-26T16:46:14.372Z, release threshold 17:56:14.372Z UTC.
+- ThreeTokenPeriod.md/.lean: novel all-valuation full length-three obstruction (zeros allowed). Sorted a<=b<=c; fixed-point numerator cancellation gives 14r>=3^c, negative beta numerator separation gives 3^(a+b)<=28r*2^a (a=0 follows from c bound). Combine to 3^(4A)<=(28r)^10, derive A<=302, common cap gcd(|2^(A+3)-3^A|,D*(2^D-1)) excludes every A>=8 via 590 exact cases, remaining 1331 triples excluded. Local Lean 4.36.0-rc2 passed all exports with standard axioms; both finite checks axiom-free. Paper-level recurrence bridge. No #746 decision.
+- Agent16 took over exact source acceptance and canonical membership for Raw106/79/67 in run 45849172691; do not duplicate its CI. Agent31 coordinating global roster consumer. Direct git DNS blocked; connector CAS works. BB(6) remains unresolved.
+- Next: seek a substantially stronger structural/root restriction, not repeated bounded period scans.
+
 ## 2026-11-26T14:44Z — exact Raw106 parent closure, Raw79 next
 
 - Lease unchanged: claimed_at 2026-11-26T14:18:24.250Z, threshold 15:28:24.250Z. Normal mode draw 2.
