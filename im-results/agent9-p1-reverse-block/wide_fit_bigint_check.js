@@ -12,12 +12,22 @@ function rand() {
   return seed >>> 0;
 }
 
-function digitWeight(b, k) {
+function digitWeightLoop(b, k) {
   let d = 0n;
   for (let j = 0; j < k; j++) {
     if ((b >> BigInt(j)) & 1n) d += BigInt(j) * (1n << BigInt(j));
   }
   return d;
+}
+
+// BigInt translation of block_reverse.hpp's fixed index-bit masks.
+function digitWeightMask(b) {
+  return (b & 0xAAAAAAAAAAAAAAAAn)
+    + 2n * (b & 0xCCCCCCCCCCCCCCCCn)
+    + 4n * (b & 0xF0F0F0F0F0F0F0F0n)
+    + 8n * (b & 0xFF00FF00FF00FF00n)
+    + 16n * (b & 0xFFFF0000FFFF0000n)
+    + 32n * (b & 0xFFFFFFFF00000000n);
 }
 
 function candidates(q, k, z, y, strict) {
@@ -28,7 +38,7 @@ function candidates(q, k, z, y, strict) {
   const hits = [];
   for (const B of [first, first + 1n]) {
     if (B > maxB) continue;
-    const c = X - q * B - digitWeight(B, k);
+    const c = X - q * B - digitWeightLoop(B, k);
     if (c >= 0n && c < q && (!strict || (c >= 1n && c + 3n <= q))) {
       hits.push({ B, c });
     }
@@ -79,6 +89,7 @@ for (let k = 1; k <= 26; k++) {
 
 console.log(JSON.stringify({
   cases,
+  maskChecks,
   widerOnly,
   maxObservedX: maxObservedX.toString(),
   uint64Safe: maxObservedX < (1n << 64n)
