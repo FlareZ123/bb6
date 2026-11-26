@@ -54,12 +54,13 @@ Four complete child Covers are now source-accepted:
 | 1LE | 1,500 | [45767071990](https://github.com/FlareZ123/bb6/actions/runs/45767071990) |
 | 1LB | 806 | [45783142807](https://github.com/FlareZ123/bb6/actions/runs/45783142807) |
 | 0LF | 1,500 | [45783586050](https://github.com/FlareZ123/bb6/actions/runs/45783586050) |
+| 1LF | 1,500 | [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) |
 
 The 1LB audit includes the final M211 prefix-rewrite invariant and the replacement M754 43-state RLE witness; its complete child theorem is `BB6.Agent1Raw57LB1.all_completions`. The 0LF audit completed the exact candidate partition with no residual entries; its child theorem is `BB6.Agent1Raw57LF0.all_completions`. These are child-cylinder Covers, not yet a parent Cover.
 
-The last sibling is 1LF. Its exact open census has 2,973 leaves; the only two explicitly expected final tables are M882 and M885. Their shared proof uses a 104-state DFA, an eight-state symbol transducer, and a finite reachable product with 382 states (10 accepting product states). The independent checker `m882885_certificate.py` checks both the finite closure and exact arbitrary-tail zipper macros for the two table variants. Original-source sibling audit [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) is in progress; do not count 1LF as accepted until it succeeds.
+The last sibling is 1LF. Its exact open census has 2,973 leaves; the only two explicitly expected final tables are M882 and M885. Their shared proof uses a 104-state DFA, an eight-state symbol transducer, and a finite reachable product with 382 states (10 accepting product states). The independent checker `m882885_certificate.py` checks both the finite closure and exact arbitrary-tail zipper macros for the two table variants. Original-source sibling audit [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) succeeded, establishing `BB6.Agent1Raw57LF1.all_completions` at bound 1,500.
 
-The final parent consumer draft is `Raw57ParentComplete.lean`, theorem `BB6.Agent1Raw57Complete.parent_cover`, targeting `WeightedBound 1500`. It composes the five residual child Covers with the fourteen earlier branch bounds and five immediate cycles. The existing manual workflow now has a `parent-all` selector to regenerate the exact dependency closure and compile this theorem after 1LF passes. No unconditional Raw57 parent Cover is claimed yet.
+The final parent consumer draft is `Raw57ParentComplete.lean`, theorem `BB6.Agent1Raw57Complete.parent_cover`, targeting `WeightedBound 1500`. It composes the five residual child Covers with the fourteen earlier branch bounds and five immediate cycles. The existing manual workflow's `parent-all` selector is now running as [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994); it regenerates the full dependency closure and compiles this theorem. Until that run succeeds, no unconditional Raw57 parent Cover is claimed.
 
 ## Canonical64 crosswalk and integration
 
@@ -73,7 +74,7 @@ The exact Raw57 parent is entry `canonical_index=33`, `raw_residual_index=57` of
 
 The 3,326 open leaves were fully partitioned: 3,094 FAR, 106 sparse n-gram, 106 seeded pumps, 4 multi-seed pumps, 11 block-phase certificates, 1 late last-hole bound, and 4 custom proofs; no residual entries remain. The audit therefore closes the entire 1LE child cylinder.
 
-Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure. I added a reusable `parent-three` dispatch target to `.github/workflows/agent6-raw57-siblings.yml`, which regenerates the fourteen early/middle modules plus 1LA and 1LE and compiles this wrapper. Audit run [45771759533](https://github.com/FlareZ123/bb6/actions/runs/45771759533) failed before proof checking with KeyError 'AR'; the 0RA generation route was repaired at d76228c. The wrapper remains unaccepted.
+Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure. I added a reusable `parent-three` dispatch target to `.github/workflows/agent6-raw57-siblings.yml`, which regenerates the fourteen early/middle modules plus 1LA and 1LE and compiles this wrapper. Audit run [45771759533](https://github.com/FlareZ123/bb6/actions/runs/45771759533) failed before proof checking with KeyError 'AR'. Commit [d76228c](https://github.com/FlareZ123/bb6/commit/d76228c4903078a12d3f4b9c11db941fefcaf258) repaired this by running `generate.py` (which creates the 0RA module) and removing the unsupported `AR` generator call. The old `parent-three` wrapper remains a conditional intermediate; the new `parent-all` run is the full parent proof attempt.
 
 ## A1=1LB: source-accepted complete sibling
 
@@ -83,9 +84,9 @@ The final M211 residual has a source-accepted finite exact prefix-rewrite certif
 
 The complete 0LF sibling audit passed at weighted bound **1,500** in [run 45783586050](https://github.com/FlareZ123/bb6/actions/runs/45783586050), establishing `BB6.Agent1Raw57LF0.all_completions`. The exact first-hole census has 1,807 open leaves; the final generated specification has no residual hypotheses. The custom proofs include the M968 prefix-automaton certificate and M1242 quadratic growth invariant.
 
-## A1=1LF: final sibling audit in progress
+## A1=1LF: source-accepted complete sibling
 
-The complete 1LF source audit is running as [run 45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585). Its 2,973 open leaves include the two final explicit tables M882 and M885, handled by the shared 104-state DFA / transducer certificate described above. The workflow runs `m882885_certificate.py` before generating and compiling the exact Lean sibling tree. No 1LF Cover is claimed until the original-source audit passes.
+The complete 1LF source audit passed at weighted bound **1,500** in [run 45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585), establishing `BB6.Agent1Raw57LF1.all_completions`. Its 2,973 open leaves include the two final explicit tables M882 and M885, handled by the shared 104-state DFA / transducer certificate described above. The workflow ran `m882885_certificate.py` before generating and compiling the exact Lean sibling tree.
 
 ## A1=1LA: source-accepted partition
 

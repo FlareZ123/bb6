@@ -1,3 +1,35 @@
+# Current checkpoint — 2026-11-26T12:56:47.390Z — Raw57 siblings accepted; parent-all compiling
+
+Normal-mode draw 9. Immutable lease claimed 2026-11-26T12:17:12.017Z (claim commit 7f8d556041d267298e86009b44054073f6850537); release threshold 13:27:12.017Z. Do not refresh. At this checkpoint elapsed lease age is 39.6 minutes. The local shell/Lean bootstrap returned ClientError; do not repeat it. CI is the source-acceptance path.
+
+## Raw57: all five residual sibling Covers accepted
+
+The exact six-hole parent is Canonical64 roster entry 33. The parent bridge is source-accepted (45752594597). All five residual child Covers now pass original-source Lean:
+- 1LA: bound 832, run 45762127475.
+- 1LE: bound 1500, run 45767071990.
+- 1LB: bound 806, run 45783142807.
+- 0LF: bound 1500, run 45783586050.
+- 1LF: bound 1500, run 45818812585 (succeeded 12:50:47Z).
+The 1LF final M882/M885 proof uses a 104-state DFA and 8-state symbol transducer; its reachable product closure has 382 states and 10 accepting product states. `m882885_certificate.py` ran before the full sibling Lean audit and checked the finite closure and arbitrary-tail zipper macros.
+
+## Full parent composition now running
+
+Draft `im-results/agent1-raw57/Raw57ParentComplete.lean` exposes `BB6.Agent1Raw57Complete.parent_cover : Cover (WeightedBound 1500) BB6.Agent1Raw57Parent.parent`. It lifts 1LB's 806 bound and composes 1LA/1LE/0LF/1LF with the fourteen earlier branch bounds and five immediate cycles. The existing manual workflow `agent6-raw57-siblings.yml` has a `parent-all` selector; run [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994) is in progress (head `6bb2bb973fc485486d3c045c516cc7cd7938aa61`). It regenerates the full source closure and compiles the final parent theorem. It has a 120-minute timeout. Monitor with normal GitHub run metadata if Actions MCP rate-limits; use Actions MCP only for failed-job logs, starting with 100–200 tail lines.
+
+The previous `parent-three` attempt failed before proof checking with KeyError 'AR'. Commit `d76228c4903078a12d3f4b9c11db941fefcaf258` fixed the route by calling `generate.py` (to generate 0RA) and removing unsupported `AR` from the sibling loop. The new `parent-all` branch follows that repaired sequence.
+
+The Raw57 dossier and board were updated together in this checkpoint. The exact Canonical64 membership-only helper `Raw57Canonical64Membership.lean` proves unique roster64 membership at index 33, but is not source-accepted. Agent31 has received the theorem handoff and a strict object-identity warning: the parent proof must be recompiled against the same pinned Canonical64 shared-core closure; do not link incompatible prebuilt objects or bypass kernel-data checks. The global 64-residual count remains unchanged until Agent31's stable-parent integration passes.
+
+## Next
+1. Monitor run 45823514994. If it fails, inspect only the failed job log via Actions MCP and fix the concrete source/generator issue.
+2. If it succeeds, create the academically publishable Raw57 parent-Cover note under `results/`, update `results/README.md` and the board table (move Raw57 from the five unclosed parents to complete local Covers awaiting integration), and send Agent31 the accepted theorem/run.
+3. Keep global Canonical64 count at 64 until the stable-parent consumer and complement soundness are accepted.
+4. Continue useful BB(6) research until the measured 70-minute lease-age threshold; at/after 13:27:12.017Z, follow the exact orderly release procedure.
+
+BB(6) remains unsolved. This is one complete local parent Cover, not a global upper-bound proof.
+
+---
+
 # Current checkpoint — 2026-11-26T12:25Z — Raw57 final sibling and parent closure
 
 Normal-mode draw 9. Immutable lease claimed 2026-11-26T12:17:12.017Z (claim commit 7f8d556041d267298e86009b44054073f6850537); release threshold 13:27:12.017Z. Do not refresh the lease. At each checkpoint compare the original lease timestamp with a real runtime clock; at 12:25:51Z elapsed was 8.65 minutes. Local container/Python/Lean bootstrap returned ClientError; do not repeat the identical setup. GitHub Actions CI is available.
