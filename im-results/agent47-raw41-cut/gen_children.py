@@ -32,7 +32,10 @@ if expr is None:
  q=[i for i in range(12) if i!=1 and T[i]<0 and a[i]>=0]
  assert len(q)==1 and all(a[i]==T[i] for i in range(12) if i not in [1,q[0]])
  expr=f'refine (child {mv(a[1])}) {slot(q[0])} (some {mv(a[q[0]])})'
-base='import Raw41CanonicalCut\n'+''.join(f'import {m}\n' for m in imports)+header+f'abbrev {name}_p : PartialMachine := {expr}\n'+end
+standalone = '--standalone' in sys.argv[5:]
+if standalone:
+ header=header.replace('BB6.Agent47CanonicalRefinement BB6.Agent31FourHoleRoster','BB6.Agent8TNFPath')
+base=('import Raw41LBLA\nimport CanonicalPartial\n' if standalone else 'import Raw41CanonicalCut\n')+''.join(f'import {m}\n' for m in imports)+header+f'abbrev {name}_p : PartialMachine := {expr}\n'+end
 Path(name+'Base.lean').write_text(base)
 def size(t):return 1+sum(size(x) for x in t[3]) if t[0]=='split' else 1
 
@@ -74,7 +77,7 @@ assert tree[0]=='split'; step,s=tree[1:3]; cs=[]
 for i,x in enumerate(tree[3]):
  parts=[f'import {name}Base\n',header];cs.append(emit(x,refine(a,s,i),f'refine {name}_p {slot(s)} (some {mv(i)})',f'branch{i:02}',parts));Path(f'{name}Branch{i:02}.lean').write_text(''.join(parts)+end)
 assert index==len(opens)
-parts=[f'import {name}Branch{i:02}\n' for i in range(24)]+[header];c=support(a);n=name+'_tree';pt=name+'_p'
+parts=['import CanonicalEmpty\n']+[f'import {name}Branch{i:02}\n' for i in range(24)]+[header];c=support(a);n=name+'_tree';pt=name+'_p'
 parts.append(f'def {n} : PartialAudit := .split {step} {slot(s)} (byPartialMove [{",".join(cs)}])\n')
 parts.append(f'''theorem {n}_checked : canonicalCheck {B} {pt} {c} {n} = true := by
   rw [{n},canonicalCheck]
@@ -90,7 +93,7 @@ for q in range(6):
  for w,r in [(0,0),(0,1),(1,0),(1,1)]:
   i=12*w+6*r+q;parts.append('  · '+('rfl' if q>c else f'exact {cs[i]}_checked')+'\n')
 parts.append(f'''
-theorem {name}_empty : canonicalResiduals {pt} {c} {n} = [] := by decide +kernel
+theorem {name}_empty : canonicalResiduals {pt} {c} {n} = [] :=\n  noResidual_sound _ _ _ (by decide +kernel)
 
 theorem {name}_bound (m : Machine) (hm : TNFQuotientCompatible {pt} m) : WeightedBound {B} m := by
   have hf : {pt} initialSlot = some (some ⟨true,true,1⟩) := by decide
