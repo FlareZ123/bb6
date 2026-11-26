@@ -2,6 +2,10 @@ name: Agent43 raw122 disjoint source audit
 on:
   workflow_dispatch:
     inputs:
+      compile_complete_parent:
+        description: Compile the 24-child Raw122 parent Cover against the pinned original source closure
+        type: boolean
+        default: false
       targeted_recovery:
         description: Run explicit targeted child-shard checks for selected Raw122 F1 branches
         type: boolean
@@ -661,3 +665,107 @@ jobs:
             fi
           done
           exit 1
+  compile-complete-parent:
+    if: inputs.compile_complete_parent == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-audit-*
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards
+          merge-multiple: false
+      - name: Build the pinned Raw122 core manifest
+        env:
+          SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent43-raw122-cut/assemble_recovered.py
+      - name: Compile the complete 24-child parent Cover
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
+            --workdir /tmp/a43-parent \
+            --jobs 8 \
+            --precompiled-manifest /tmp/a43-audit/manifest.json \
+            --precompiled-dir /tmp/a43-audit \
+            --manifest /tmp/a43-parent/manifest.json \
+            --label raw122-complete-parent-6766859 \
+            --theorem BB6.Agent43Raw122CompleteParent.parent_bound \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0LF_------" \
+            --weighted-bound 6766859 \
+            --artifact-name raw122-complete-parent \
+            --provenance-input im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
+            --provenance-input im-results/agent43-raw122-cut/Raw122Base.lean \
+            --provenance-input im-results/agent43-raw122-cut/Raw122RootCompose.lean \
+            --provenance-input im-results/agent43-raw122-cut/README.md \
+            2>&1 | tee /tmp/a43-parent.log
+          python - <<'PY'
+          import json, pathlib, re, subprocess
+          log = pathlib.Path("/tmp/a43-parent.log").read_text()
+          if re.search(r"\\b(sorryAx|native_decide|Lean\\.ofReduceBool)\\b", log):
+              raise SystemExit("prohibited proof mechanism found in complete-parent closure")
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          required = [
+              "BB6.Agent43Raw122CompleteParent.child_covers",
+              "BB6.Agent43Raw122CompleteParent.parent_bound",
+          ]
+          profiles = {}
+          for name in required:
+              pattern = re.escape("'" + name + "'")
+              m = re.search(pattern + r" depends on axioms: \\[([^\\]]*)\\]", log)
+              if m:
+                  axioms = {x.strip() for x in m.group(1).split(",") if x.strip()}
+              elif re.search(pattern + r" does not depend on any axioms", log):
+                  axioms = set()
+              else:
+                  raise SystemExit(f"missing #print axioms output for {name}")
+              bad = axioms - allowed
+              if bad:
+                  raise SystemExit(f"unapproved axioms for {name}: {sorted(bad)}")
+              profiles[name] = sorted(axioms)
+          report = {
+              "status": "source-compiled Raw122 partial parent Cover; not a BB(6) solution",
+              "theorem": required[1],
+              "parent_table": "1RB---_1RC---_0RD---_1LD1RE_---0LF_------",
+              "weighted_bound": 6766859,
+              "source_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "precompiled_source_revision": "175a9d9004dfadd072d00b5926608f9b4bfdb1d0",
+              "source_artifact_run": 45655656030,
+              "core_artifact_run": 45595285735,
+              "child_cover_runs": {
+                  "0LA": 45819084258,
+                  "0LF": 45815048803,
+                  "1LE_1LF": 45818787152
+              },
+              "axioms": profiles
+          }
+          pathlib.Path("/tmp/a43-parent/parent-cover-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+          PY
+          test -f /tmp/a43-parent/Raw122CompleteParent.olean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-complete-parent
+          path: |
+            /tmp/a43-parent/
+            /tmp/a43-parent.log
+            /tmp/a43-audit/manifest.json
+          retention-days: 90
+          if-no-files-found: error
