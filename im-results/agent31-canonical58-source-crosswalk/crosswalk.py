@@ -20,7 +20,7 @@ EXCLUSIONS = {
     "Canonical68StableBatch": [60, 109, 110, 111, 117, 121, 123, 125],
     "Canonical65AfterThree": [71, 77, 81],
     "Canonical64Raw120": [120],
-    "Canonical59FiveParent": [58, 59, 108, 115, 119],
+    "Canonical59FiveParent": [58, 108, 115, 118, 119],
     "Canonical58Raw113": [113],
 }
 REMOVED = {n for values in EXCLUSIONS.values() for n in values}
@@ -84,6 +84,11 @@ def main():
     ]
     if len(current) != 58:
         raise AssertionError(f"expected Canonical58 count 58, got {len(current)}")
+
+    # The accepted Canonical58 theorem retains Raw59; Canonical59 consumed Raw118.
+    current_ids = [int(e["raw_residual_index"]) for e in current]
+    if len(set(current_ids)) != len(current_ids) or 59 not in current_ids or 118 in current_ids:
+        raise AssertionError("incorrect Canonical58 identity: expected unique IDs, retained Raw59, removed Raw118")
 
     with TSV.open(newline="") as handle:
         rows = list(csv.DictReader(handle, delimiter="\t"))

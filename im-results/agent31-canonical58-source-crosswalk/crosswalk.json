@@ -1,7 +1,7 @@
 {
   "status": "metadata-level routing crosswalk; not a Lean theorem or parent Cover",
-  "generated_at": "2026-11-26T21:38:06.378Z",
-  "source_repo_head": "fd44247b1a8501e7e73e36821d59bce174dfe096",
+  "generated_at": "2026-11-26T22:13:31.119Z",
+  "source_repo_head": "71a2e0679b42ea26f3ca253e837ce2eeaee6e3d2",
   "inputs": {
     "crosswalk_tsv": {
       "path": "im-results/agent10-nov26-cryptids/holdout-source-crosswalk.tsv",
@@ -58,9 +58,9 @@
     ],
     "Canonical59FiveParent": [
       58,
-      59,
       108,
       115,
+      118,
       119
     ],
     "Canonical58Raw113": [
@@ -105,6 +105,7 @@
     55,
     56,
     57,
+    59,
     61,
     63,
     67,
@@ -120,7 +121,6 @@
     105,
     106,
     112,
-    118,
     122,
     124,
     131,
@@ -1536,6 +1536,7 @@
     "The table-extension mapping is a routing result; the 56 source modules are not thereby locally accepted Covers.",
     "A one-hole cylinder contains 25 completions, while the current residual ancestors have 8-10 holes.",
     "Only Raw140 n4/n5 are identified as locally source-accepted 25-completion NonHalt Covers in the Agent10 dossier; other source statuses must be checked there.",
-    "No current residual parent is closed and no Canonical58 count reduction follows from this crosswalk."
+    "No current residual parent is closed and no Canonical58 count reduction follows from this crosswalk.",
+    "Critic metadata correction: independently recomputed the canonical filter and all 56 table extensions from the recorded input blobs. Raw59 is retained and Raw118 is removed as required by the accepted Canonical59 and Canonical58 results. No match or completion-union count changes. This corrected report was checked with JavaScript; the historical Python CI ran before the correction."
   ]
 }
