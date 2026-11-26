@@ -2,6 +2,7 @@
 """Run FAR5 over Raw49's root open cylinders and emit a Lean-checkable partial audit."""
 import hashlib
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -225,6 +226,12 @@ end BB6.Agent7Raw49Far5Cut
     }
     (WORK / "far5-summary.json").write_text(json.dumps(summary, indent=2)+"\n")
     print("Raw49 FAR5 summary:", json.dumps(summary, sort_keys=True))
+    output = os.environ.get("GITHUB_OUTPUT")
+    if output:
+        with open(output, "a") as f:
+            f.write(f"far5_count={len(bank)}\\n")
+            f.write(f"remaining_count={remaining_count}\\n")
+            f.write(f"after_children_count={after_children_count}\\n")
     print(FAR_LOG.read_text())
 
 
