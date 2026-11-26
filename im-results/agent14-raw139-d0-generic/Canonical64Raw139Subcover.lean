@@ -9,6 +9,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent14Canonical64Raw139Subcover
 
 open BB6Coverage
+open BB6ChampionArithmetic
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleRoster
 open BB6.Agent3Canonical64Raw120
@@ -47,7 +48,9 @@ theorem e0_cover_at_champion_score :
   | leaf p hbound =>
     refine Cover.leaf _ ?_
     intro m hm k d hk hd
-    exact Nat.le_trans (hbound m hm k d hk hd) (by omega)
+    exact Nat.le_trans (hbound m hm k d hk hd)
+      (Nat.le_trans (by decide : 321796 ≤ 6766859)
+        BB6.Agent38ChampionThreshold.champion_score_ge_6766859)
 
 /-- The 80-leaf list with its unique E0=0RA table removed. -/
 def remainingRaw139AfterFortyThreeWithoutE0 :=
