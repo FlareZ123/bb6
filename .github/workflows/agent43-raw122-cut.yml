@@ -596,7 +596,7 @@ jobs:
         with:
           name: raw122-branch00-assembly
           run-id: 45819084258
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-branch00-artifact
       - name: Persist source modules for the accepted 0LA Cover
         run: |
@@ -634,7 +634,7 @@ jobs:
         with:
           name: raw122-branch05-assembly
           run-id: 45815048803
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-branch05-artifact
       - name: Persist source modules for the accepted 0LF Cover
         run: |
