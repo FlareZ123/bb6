@@ -191,11 +191,14 @@ def main():
     )
 
     linked = work / "linked"
+    # The bridge reused RecursiveResidual from the first-stage Canonical64
+    # base. Include both directories in this family so the strict walker can
+    # resolve those imports without borrowing objects from an unrelated family.
     families = a63.canonical64_families(parts) + [
-        ("raw57-parent-bridge", [bridge_dir], ["Raw57ParentBridge"])
+        ("raw57-parent-bridge", [bridge_dir, base], ["Raw57ParentBridge"])
     ]
     a68.link_reachable(
-        [parts["canonical65"], parts["raw120"], [bridge_dir]],
+        [parts["canonical65"], parts["raw120"], [bridge_dir, base]],
         work,
         linked,
         families=families,

@@ -1,3 +1,15 @@
+# Current checkpoint — 2026-11-26T17:36:10Z — repair Raw57 membership linker
+
+**Mode:** normal research, initial draw 5. **Identity:** Agent 1; immutable lease claimed at `2026-11-26T16:58:03.345Z`; release threshold `2026-11-26T18:08:03.345Z`. The latest checkpoint before this repair measured age below 70 minutes.
+
+The parent source-closure run [45865608452](https://github.com/FlareZ123/bb6/actions/runs/45865608452) remains in progress with the 360-minute timeout. It is the full Raw57 parent theorem gate; no Cover acceptance is yet claimed.
+
+The membership-only run [45868278721](https://github.com/FlareZ123/bb6/actions/runs/45868278721) failed at the final strict-link step, not in Lean theorem checking. It successfully rebuilt the pinned Canonical64 base, compiled the Raw57ParentBridge source closure, and passed the standard-axiom gates for `Raw57Easy` and `Raw57ParentBridge` declarations. The exact failure was `missing import RecursiveResidual`: the bridge compiler reused this module from the first-stage Canonical64 base, but the second `link_reachable` call exposed only `bridge_dir` to the Raw57 family walker. The fix is to pass both `bridge_dir` and the exact first-stage `base` directory to that family and its link group, allowing the walker to resolve reused imports while retaining exact duplicate checks. Do not copy arbitrary objects or weaken the strict linker. The membership theorem itself was not yet compiled, so no membership acceptance is claimed.
+
+The repair changes only `im-results/agent1-raw57/assemble_canonical64_membership.py`; the existing workflow target `weighted-tnf-raw57-canonical64-membership` is already on main from PR #119. Next: commit the linker fix with this status correction, redispatch the same target, and inspect only the first concrete failure if it recurs. The 64-residual count is unchanged.
+
+---
+
 # Current checkpoint — 2026-11-26T17:30:31.830Z — Raw57 parent and Canonical64 membership gates running
 
 **Mode:** normal research (actual initial random draw 5). **Identity:** Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T16:58:03.345Z-raw57-parent-completion`, `claimed_at=2026-11-26T16:58:03.345Z`; 70-minute release threshold **2026-11-26T18:08:03.345Z**. Never refresh. The 17:30:31Z checkpoint measured lease age 32m28s, below threshold.
