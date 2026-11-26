@@ -92,16 +92,16 @@ theorem w7_q0_target_unreachable_u35mod64 (t : Nat) :
     by_cases hsmall : n≤2
     · exact hsmall
     · have hn4 : 4≤n := by omega
-    have hpow : 32∣2^(n+1) := by
-      change 2^5∣2^(n+1)
-      exact Nat.pow_dvd_pow 2 (by omega)
-    have hdiv : 32∣2^(n+1)*(a+3) :=
-      dvd_mul_of_dvd_left hpow (a+3)
-    have hmod : (2^(n+1)*(a+3))%32=0 :=
-      Nat.mod_eq_zero_of_dvd hdiv
-    rw [hscale] at hmod
-    have hmodW : (16*W)%32=16 := by dsimp [W,u]; omega
-    omega
+      have hpow : 32∣2^(n+1) := by
+        change 2^5∣2^(n+1)
+        exact Nat.pow_dvd_pow 2 (by omega)
+      have hdiv : 32∣2^(n+1)*(a+3) :=
+        dvd_mul_of_dvd_left hpow (a+3)
+      have hmod : (2^(n+1)*(a+3))%32=0 :=
+        Nat.mod_eq_zero_of_dvd hdiv
+      rw [hscale] at hmod
+      have hmodW : (16*W)%32=16 := by dsimp [W,u]; omega
+      omega
   have hnCases : n=0 ∨ n=2 := by omega
   rcases hnCases with hn0 | hn2
   · subst n
@@ -119,8 +119,11 @@ theorem w7_q0_target_unreachable_u35mod64 (t : Nat) :
       rw [ha] at hcost
       dsimp [W,X2,u] at hcost
       omega
+    have hax : 2*W-3=255823+459648*t := by dsimp [W,u]; omega
+    have hay : 24450+39417*u=1404045+2522688*t := by dsimp [u]; omega
     have hbad := w7_z2_q1_parent_unreachable_u35mod64 t
-    exact hbad (by simpa [W,u,ha,hk] using hprev)
+    rw [ha,hk] at hprev
+    exact hbad (by simpa only [hax,hay] using hprev)
 
 #print axioms w7_z2_q1_parent_unreachable_u35mod64
 #print axioms w7_q0_target_unreachable_u35mod64
