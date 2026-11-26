@@ -6,6 +6,8 @@ Generated names avoid collisions with the A1=1RB family.
 import json, os, pathlib, re, subprocess, sys
 root=pathlib.Path(__file__).resolve().parent
 specs={
+ '0LA':(100,90,90,{}, {}, ''),
+ '1LC':(131,69,69,{}, {}, ''),
  '0RC':(109,76,75,{}, {1:('1RB0RB_1RC0RC_0RD0LE_1LD1LA_0LF---_1LC0RB','RB0RC')}, 'Raw40TwoSided'),
  '1RC':(202,105,104,{}, {16:('1RB0RB_1RC1RC_0RD0LE_1LD1LA_---1LF_1LC0RF','RB1RC')}, 'Raw40MoreTwoSided'),
  '0RE':(156,342,337,{233:'1012134335134',315:'0012344514401',87:'1012345414434'}, {}, ''),
