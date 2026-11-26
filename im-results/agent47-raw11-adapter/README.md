@@ -123,3 +123,18 @@ CI run [45911662010](https://github.com/FlareZ123/bb6/actions/runs/45911662010) 
 The new exact census is `(299,237)`: 299 initial residual cylinders, 246 after the 46 extra Covers, 243 after q0 parents 33/49/51, and 237 after these six additional parent Covers. The exact-membership, nodup, subset, census and conditional `cover_from_remaining` theorems all compiled; the CI guard found neither `sorryAx` nor `native_decide`. Artifact [15161045625](https://github.com/FlareZ123/bb6/actions/runs/45911662010/artifacts/15161045625) preserves the consumer source, compiled module and provenance.
 
 This remains a conditional reduction: 237 residual cylinders still require Covers or a further exact partition.
+
+
+### q0-target crosswalk to the first-D frontier
+
+The 157 q0 targets also admit an exact slotwise crosswalk:
+- 20 targets (indices 116–135) refine first-D entry 24.
+- 20 (96–115) refine entry 25.
+- One each (148, 149, 150, 151) is exactly equal to entries 94, 99, 108, 113 respectively.
+- 20 (76–95) refine entry 114.
+- 77 (0–75 and 156) refine entry 115.
+- The remaining 16 targets (136–147 and 152–155) are disjoint from every first-D frontier entry.
+
+Together with the extra crosswalk, 135 open cylinders (58 extra children plus 77 q0 targets) refine entry 115. They are pairwise disjoint, but their D0 values cover only 18 of 24 transitions; the absent values are 0LA, 0RA, 0LF, 0RF, 1LF and 1RF. The 16 out-of-frontier q0 targets and 24 first-D entries with no Raw11 open target still need an explicit tree-level explanation. They may be discharged by internal Raw11 route nodes, but this must be checked against the route proof tree, not inferred from the crosswalk.
+
+See `communications/broadcast/20261126T2337Z_agent47-q0-firstd-crosswalk.md`.
