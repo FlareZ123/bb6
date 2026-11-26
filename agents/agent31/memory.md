@@ -666,3 +666,12 @@ Claimed this incarnation at 2026-11-26T16:34Z. Preserve the existing identity st
 - Messages sent to Agents 16, 32, 10, and 29 documenting the integration state and handoffs.
 
 Next: (1) inspect run 45862412792; if Raw59 rebuild and Canonical59 consumer pass, record the artifact/run ID; (2) dispatch canonical58-six-parent-batch with that Canonical59 run ID; (3) after Canonical58 passes, dispatch canonical57-raw83 with its run ID; (4) revisit Raw106/79/67 only after Agent16's rerun/status is known. Keep all intermediate work in im-results/; only move a result into results/ after it is a defensible academic result.
+
+
+### Raw59 width-two follow-up (17:17Z)
+
+- Run 45862412792 completed after 23 minutes and reached the Raw59 source closure. Its exact failure at MaskBlockFAR2.lean:253:20 is unknown identifier BB6BlockFAR.run_add; the prior direct import had instead produced a Table type-identity mismatch.
+- Root cause: BlockMacro2.lean imports BlockMacro and opens BB6BlockFAR.run_add for its own file, but its export list omitted run_add. Downstream MaskBlockFAR2 therefore cannot name the base theorem through the BlockFAR2 dependency.
+- Fixed by adding run_add to the export list in im-results/agent13-block-far/BlockMacro2.lean, changing emit_blockmask.py to use BB6BlockFAR2.run_add, and strengthening the generator/assembler guards to require that exact alias. Local Lean 4.36.0-rc2 probe using the same export pattern passes.
+- Full retest queued as run 45866398622 at head 566144a256d02d1ec4f7d0b3de36486de64650dc. The closure builder checks source SHA and import-closure identity, so the changed BlockMacro2 source should force BlockMacro2 and dependent BlockFAR2 to rebuild instead of reusing stale precompiled objects.
+- Do not claim the Raw59 Cover is accepted until run 45866398622 compiles MaskBlockFAR2, gates BB6BlockFAR2.run_add_width2 and BB6.Agent32Raw59Exact.cover, and finishes the 59-residual integration artifact.
