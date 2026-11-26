@@ -8,6 +8,8 @@ open BB6.Agent12WordBlock
 open BB6.Agent12BitEventWord
 open BB6.Agent12LaneWord
 open BB6.Agent12LaneClock
+open BB6.Agent12LaneClockSource
+open BB6.Agent12LaneCertificate
 open BB6.Agent12LaneGenerator
 open BB6.Agent12WeightedWord
 open BB6.Agent12CountedOrdinaryLow
@@ -28,7 +30,7 @@ structure LaneSpec5 (q N : Nat) (u : Nat → BitState) : Prop where
 
 /-- The packed bit-plane checks imply the low-output lane guards, including
     the relaxed final inequality b+8<=m+o. -/
-theorem spec5_of_checked5 (s t : State) (N q K : Nat)
+theorem spec5_of_checked5 (s t : BB6.Agent12WordBlock.State) (N q K : Nat)
     (v : BB6.Agent12LaneCertificate.Trace)
     (h : BB6.Agent12LaneCertificate.checked5 s t N q K v) :
     LaneSpec5 q N (lane v) := by
@@ -85,7 +87,7 @@ theorem spec5_of_checked5 (s t : State) (N q K : Nat)
     dsimp
     exact ⟨by omega,by omega⟩
 
-structure EdgeData5 (r : Nat) (s : State) where
+structure EdgeData5 (r : Nat) (s : BB6.Agent12WordBlock.State) where
   a k x y : Nat
   dec : decode s=(a,k)
   decNext : decode (step r s)=(x,y)
@@ -103,7 +105,7 @@ structure EdgeData5 (r : Nat) (s : State) where
 
 /-- The exact input and low-output guards determine the unique ordinary
     section edge, with no global mass lower bound. -/
-theorem edgeData5_of_guards (r : Nat) (s : State) (hr : 1≤r)
+theorem edgeData5_of_guards (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
     (hi : inputOK (lift s) (r==1))
     (ho : outputOK5 (lift (step r s))) : EdgeData5 r s := by
   obtain ⟨ha0,hg0,hp0,hb0⟩ := hi
@@ -164,7 +166,7 @@ theorem edgeData5_of_guards (r : Nat) (s : State) (hr : 1≤r)
 
 /-- Source section edge law for the relaxed low-output guard. -/
 theorem source_step_of_exact_guards5 (next : State → Option State)
-    (law : EdgeLaw next) (r : Nat) (s : State) (hr : 1≤r)
+    (law : EdgeLaw next) (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
     (hi : inputOK (lift s) (r==1))
     (ho : outputOK5 (lift (step r s))) :
     next (decode s)=some (decode (step r s)) := by
@@ -173,7 +175,7 @@ theorem source_step_of_exact_guards5 (next : State → Option State)
     (by exact_mod_cast e.area)
 
 /-- Primitive CLine path for one ordinary section edge, valid down to y=5. -/
-theorem ordinary_step_path5 (r : Nat) (s : State) (hr : 1≤r)
+theorem ordinary_step_path5 (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
     (hi : inputOK (lift s) (r==1))
     (ho : outputOK5 (lift (step r s))) :
     ∃ T W, Path T W (enc s) (enc (step r s)) ∧
@@ -190,7 +192,7 @@ theorem ordinary_step_path5 (r : Nat) (s : State) (hr : 1≤r)
 /-- The exact section run and its lane endpoint are determined by a LaneSpec5. -/
 theorem lane_word5 (next : State → Option State) (law : EdgeLaw next)
     (q N : Nat) (u : Nat → BitState) (spec : LaneSpec5 q N u)
-    (n d : Nat) (s : State) (hn : n+d≤N)
+    (n d : Nat) (s : BB6.Agent12WordBlock.State) (hn : n+d≤N)
     (hstart : u (n+d)=lift s) (hevent : n+d=N ∨ q.testBit (n+d)=true)
     (hidle : u n=idle d (lift s))
     (hfirst : 0<d → q.testBit (n+d-1)=false)
@@ -246,7 +248,7 @@ theorem lane_word5 (next : State → Option State) (law : EdgeLaw next)
 /-- The raw primitive path and its exact aggregate section clocks. -/
 theorem lane_path5 (q N : Nat) (u : Nat → BitState)
     (spec : LaneSpec5 q N u)
-    (n d : Nat) (s : State) (hn : n+d≤N)
+    (n d : Nat) (s : BB6.Agent12WordBlock.State) (hn : n+d≤N)
     (hstart : u (n+d)=lift s) (hevent : n+d=N ∨ q.testBit (n+d)=true)
     (hidle : u n=idle d (lift s))
     (hfirst : 0<d → q.testBit (n+d-1)=false)
@@ -321,7 +323,7 @@ theorem lift_injective : Function.Injective lift := by
 
 /-- A LaneSpec5 plus its two endpoints yields an authentic CLine Path. -/
 theorem source_path5_of_spec (q N : Nat) (u : Nat → BitState)
-    (spec : LaneSpec5 q N u) (s t : State)
+    (spec : LaneSpec5 q N u) (s t : BB6.Agent12WordBlock.State)
     (hstart : u N=lift s) (hend : u 0=lift t) :
     ∃ T W, Path T W (enc s) (enc t) ∧
       (T:Int)=clocks (word q 0 N) s .1 ∧
@@ -347,7 +349,7 @@ theorem source_path5_of_spec (q N : Nat) (u : Nat → BitState)
 theorem source_path5_and_bitplane_clock (q N : Nat)
     (v : BB6.Agent12LaneCertificate.Trace) (w : BB6.Agent12LaneClock.Aligned)
     (spec : LaneSpec5 q N (lane v)) (hq : q<2^N)
-    (ha : alignmentChecked N q v w) (s t : State)
+    (ha : alignmentChecked N q v w) (s t : BB6.Agent12WordBlock.State)
     (hstart : lane v N=lift s) (hend : lane v 0=lift t) :
     ∃ T W, Path T W (enc s) (enc t) ∧
       (T:Int)=sumTerms N q (callsTerms N w) ∧
@@ -378,7 +380,7 @@ theorem source_path5_and_bitplane_clock (q N : Nat)
 /-- A checked low-output bit-plane trace directly yields the authentic
     primitive CLine path. -/
 theorem source_path5_of_checked5 (q N K : Nat)
-    (v : BB6.Agent12LaneCertificate.Trace) (s t : State)
+    (v : BB6.Agent12LaneCertificate.Trace) (s t : BB6.Agent12WordBlock.State)
     (hc : BB6.Agent12LaneCertificate.checked5 s t N q K v) :
     ∃ T W, Path T W (enc s) (enc t) ∧
       (T:Int)=clocks (word q 0 N) s .1 ∧
@@ -391,7 +393,7 @@ theorem source_path5_of_checked5 (q N K : Nat)
     both the primitive path and its exact primitive-step weight. -/
 theorem source_path5_and_bitplane_clock_of_checked5 (q N K : Nat)
     (v : BB6.Agent12LaneCertificate.Trace) (w : BB6.Agent12LaneClock.Aligned)
-    (s t : State)
+    (s t : BB6.Agent12WordBlock.State)
     (hc : BB6.Agent12LaneCertificate.checked5 s t N q K v)
     (ha : alignmentChecked N q v w) :
     ∃ T W, Path T W (enc s) (enc t) ∧
