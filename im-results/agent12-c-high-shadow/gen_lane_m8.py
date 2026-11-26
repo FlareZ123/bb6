@@ -119,7 +119,8 @@ def main():
         s=t
     flush()
     lines.append(f'''theorem endpoint : Path {totalT} {totalW} (5,0,1) {tr(s)} := ep{blocks}
-theorem blank_raw_endpoint := BB6.Agent47CRaw.raw_blank_path endpoint
+set_option linter.defProp false in
+def blank_raw_endpoint := BB6.Agent47CRaw.raw_blank_path endpoint
 #print axioms endpoint
 #print axioms blank_raw_endpoint
 end BB6.Agent12LaneM8
