@@ -548,10 +548,14 @@ jobs:
               source = lzma.decompress(base64.b64decode(path.read_text())).decode()
               lines = source.splitlines()
               print(f'===== {stem}: {len(lines)} lines =====')
-              chosen = set()
-              for i, line in enumerate(lines):
-                  if any(n in line for n in needles):
-                      chosen.update(range(max(0, i-1), min(len(lines), i+5)))
-              for i in sorted(chosen):
-                  print(f'{i+1}: {lines[i]}')
+              if stem in ('Raw391LEBlockRuns', 'Raw391LE12198'):
+                  for i, line in enumerate(lines):
+                      print(f'{i+1}: {line}')
+              else:
+                  chosen = set()
+                  for i, line in enumerate(lines):
+                      if any(n in line for n in needles):
+                          chosen.update(range(max(0, i-1), min(len(lines), i+5)))
+                  for i in sorted(chosen):
+                      print(f'{i+1}: {lines[i]}')
           PY
