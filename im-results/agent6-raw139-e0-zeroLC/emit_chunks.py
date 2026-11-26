@@ -5,12 +5,19 @@ from scan import ORDER
 from emit_family import code_name,bl,slot
 OPEN='open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit BB6.Agent6ChunkSupport\n'
 OPT='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'
-def emit(code,spec,out,limit=225):
- P=spec['parent'];NS='BB6.Agent6E0ZeroLC.D0ZeroRC.C1'+code_name(code);prefix='A6E0LCD0RCC1'+code_name(code)
- counts=Counter();opens=[];tr=tree(P,counts,opens,250,2);assert dict(counts)==spec['counts'] and opens==spec['open']
+def emit(code,spec,out,limit=225,tr=None):
+ P=spec['parent'];NS=spec.get('namespace','BB6.Agent6E0ZeroLC.D0ZeroRC.C1'+code_name(code));prefix=spec.get('prefix','A6E0LCD0RCC1'+code_name(code))
+ if tr is None:
+  counts=Counter();opens=[];tr=tree(P,counts,opens,250,2);assert dict(counts)==spec['counts'] and opens==spec['open']
+ else:
+  counts=Counter(spec['counts']);opens=spec['open']
  rec={int(i):r for i,r in spec['recipes'].items()};idx={tuple(t):i for i,t in enumerate(opens)}
  blocks=sorted(i for i,r in rec.items() if r[0] in ('block','phase'));bmodule={i:prefix+f'Block{j//8:02}' for j,i in enumerate(blocks)}
- B=max(counts['maxquery'],max((r[1] for r in rec.values() if r[0]=='late'),default=0))+6
+ def max_late(r):
+  if r[0]=='late':return int(r[1])
+  if r[0]=='split':return max([int(r[1])]+[max_late(x) for x in r[3]])
+  return 0
+ B=max(counts['maxquery'],max((max_late(r) for r in rec.values()),default=0))+6
  def size(t):return 1+sum(map(size,t[3])) if t[0]=='split' else 1
  def node(t,deps):
   k,*a=t
@@ -76,10 +83,14 @@ theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 
 end {NS}
 '''
  name=prefix+'Cover';(out/(name+'.lean')).write_text(s);files.append(name)
- return files
+ manifest={'code':code,'namespace':NS,'prefix':prefix,'bound':B,'root_module':name,'part_modules':files[:-1],'block_count':len(blocks),'tree_nodes':size(tr),'open_count':len(opens)}
+ manifest_name=spec.get('manifest_name',f'chunk_manifest_{code}.json')
+ (out/manifest_name).write_text(json.dumps(manifest,indent=2))
+ return manifest
 if __name__=='__main__':
  specs=json.load(open(sys.argv[1]));out=pathlib.Path(sys.argv[2]);codes=list(map(int,sys.argv[3:])) or list(map(int,specs))
- manifest=[]
+ spec_by_code={str(code):specs for code in codes} if 'parent' in specs else specs
+ manifests=[]
  for code in codes:
-  files=emit(code,specs[str(code)],out);manifest+=files;print(code,len(files),flush=True)
- (out/'chunk_manifest.json').write_text(json.dumps(manifest))
+  manifest=emit(code,spec_by_code[str(code)],out);manifests.append(manifest);print(code,len(manifest['part_modules'])+1,flush=True)
+ (out/'chunk_manifest.json').write_text(json.dumps(manifests,indent=2))
