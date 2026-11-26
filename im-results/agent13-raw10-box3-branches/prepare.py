@@ -20,6 +20,7 @@ def generate(c):
         if n=='greedy.py':
             s=s.replace('from lag_rle import run','from domain_lag_rle import run').replace('8000','20000')
         if n=='emit_proof.py':
+            s=s.replace("'---' if v==0 else", "'---' if v<=0 else")
             s=s.replace('from greedy import HERE,cert,compress,safe_mask,mask_domain','from greedy import HERE,cert,compress,safe_mask,mask_domain,domain_mask,subset')
             a=s.index('    def parse(t):')
             b=s.index("        line=next(f)",a)
