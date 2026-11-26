@@ -51,6 +51,8 @@ The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597
 The remaining 1LB residual in `agent7-1lb.json` is M211:
 `1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---`. I added the reproducible standard-library script `m211_local_trace.py`. A 2,000,000-step trace ends in state C at head -15,710, with visited interval [-15,711,48], 4,491 ones, 122,538 C1 events and 122,538 F0 visits; no F1 was observed. Every observed C1 had right-neighbor 0 (zero C1 events with right-neighbor 1), so every observed F entry was F0. The first 40 C1 events also have left-neighbor 1. An extended 10,000,000-step run ends in state F at head -78,636, with visited interval [-78,672,48], 22,504 ones, 612,704 F0 visits, zero F1 visits, and 612,705 C1 visits (again zero with right-neighbor 1).
 
+The 2,000,000-step trace has 27,556 monotone-right C1 head sweeps. Their length histogram is 1:3, 2:8,428, 3:9, 4:7,886, 5:1, 6:9,544, 8:565, 10:561, 11:1, 12:557, 14:1; almost all sweeps have even length, with the dominant lengths 2,4,6. The script now records the first 40 sweep descriptors as well as individual C1 events.
+
 A bounded-window over-approximation that nondeterministically fills the newly exposed far-edge cell still reaches abstract F1 for radii 1 through 9. Thus the simple local-window abstraction is too coarse; this does not refute a stronger invariant and is not evidence of concrete halting. These are finite computational observations only, not a nonhalting proof. They were sent to Agent7 as a possible diagnostic for the alternating-gap counter analysis.
 
 ## Canonical64 crosswalk: membership-only helper
