@@ -106,7 +106,7 @@ int main(int argc,char**argv){
  if(argc>=5&&!half&&std::string(argv[4])!="full")return 2;
  std::string path=argc==6?argv[5]:"";
  int n=std::stoi(argv[1]),K=std::stoi(argv[2]),h=std::stoi(argv[3]);
- if(n<14||n%2||K<=n||n>200000000||K>800000000||h<1||h>n)return 2;
+ if(n<14||n%2||K<=n||n>250000000||K>1000000000||h<1||h>n)return 2;
  U A=U(n)+K+2,L=2*(U(n)+3*U(K)+10)+6,prod=A*L;
  auto safe=[&](int g){int e=n-g;return e>=62||(e>=0&&(U(6)<<e)>prod);};
  if((n<63&&A>(U(1)<<n))||!safe(0)||!safe(1))return 3;
@@ -121,7 +121,7 @@ int main(int argc,char**argv){
    auto good=filter(n+s+3,n+s+h+3,y,g.carry,mids,part.fw);
    for(int a:good){
     int c=a;Bits extra(h);
-    for(int i=s+h-1;i>=s;i--){int q=n+i+3,v=2*c+y(q);if(v>=2*q)throw std::runtime_error("rewind");if(v>=q){extra.set(i-s,1);v-=q;}c=v;}
+    for(int i=s+h-1;i>=s;i--){int q=n+i+3; U v=2*U(c)+y(q);if(v>=2*U(q))throw std::runtime_error("rewind");if(v>=q){extra.set(i-s,1);v-=q;}c=v;}
     if(c!=g.carry)throw std::runtime_error("root");
     if(half&&s==1&&extra.get(0)!=0)continue; // B mod 4 = 1
     Prefix g2=g;g2.carry=a;auto appended=std::make_shared<Bits>(h);
