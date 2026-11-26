@@ -16,12 +16,14 @@ open BB6.Agent31FourHoleRoster BB6.Agent13MixedBound109
 open BB6ChampionArithmetic BB6Coverage.Agent48DirectRoot
 
 theorem base_eq_championP6 : BB6.Agent6F0.base = championP6 := by
-  funext s
-  rcases s with ⟨q,b⟩
-  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by
-    have := q.isLt
-    omega
-  rcases hq with h|h|h|h|h|h <;> subst q <;> cases b <;> rfl
+  apply funext
+  intro s
+  cases s with
+  | mk q b =>
+    have hq : ∀ q : Fin 6, BB6.Agent6F0.base (q, b) = championP6 (q, b) := by
+      apply BB6.Agent6ChampionResidual.fin6Cases
+      all_goals cases b <;> rfl
+    exact hq q
 
 theorem parent_eq_championChild (f : Move) :
     BB6.Agent6F0.parent f = championChild 6 f := by
@@ -49,27 +51,46 @@ def closedMoves : List Move :=
 
 theorem cover_move (B : Nat) (hB : 49394 ≤ B) (f : Move)
     (hf : f ∈ closedMoves) : Cover (WeightedBound B) (BB6.Agent6F0.parent f) := by
-  simp only [closedMoves,List.mem_cons,List.mem_singleton] at hf
-  rcases hf with h|h|h|h|h|h|h|h|h|h <;> subst f
-  · exact BB6.Agent6F0.cover_oneLA B (by omega)
-  · exact BB6.Agent6F0.cover_oneLE B (by omega)
-  · exact BB6.Agent6F0.cover_zeroLB B
-  · exact BB6.Agent6F0.cover_oneLC B
-  · exact BB6.Agent6F0.Counter0LC.cover_zeroLC B
-  · exact BB6.Agent6F0.Long.cover_oneRC B hB
-  · exact BB6.Agent6F0.Counter0LE.cover_zeroLE B
-  · exact BB6.Agent6F0.Counter1RD.cover_oneRD B
-  · exact BB6.Agent6F0.AFirst.cover_oneLD B (by omega)
-  · exact BB6.Agent6F0.Sibling1RB.cover_oneRB B (by omega)
+  simp only [closedMoves, List.mem_cons, List.mem_singleton] at hf
+  cases hf with
+  | inl h => subst f; exact BB6.Agent6F0.cover_oneLA B (by omega)
+  | inr h =>
+    cases h with
+    | inl h => subst f; exact BB6.Agent6F0.cover_oneLE B (by omega)
+    | inr h =>
+      cases h with
+      | inl h => subst f; exact BB6.Agent6F0.cover_zeroLB B
+      | inr h =>
+        cases h with
+        | inl h => subst f; exact BB6.Agent6F0.cover_oneLC B
+        | inr h =>
+          cases h with
+          | inl h => subst f; exact BB6.Agent6F0.Counter0LC.cover_zeroLC B
+          | inr h =>
+            cases h with
+            | inl h => subst f; exact BB6.Agent6F0.Long.cover_oneRC B hB
+            | inr h =>
+              cases h with
+              | inl h => subst f; exact BB6.Agent6F0.Counter0LE.cover_zeroLE B
+              | inr h =>
+                cases h with
+                | inl h => subst f; exact BB6.Agent6F0.Counter1RD.cover_oneRD B
+                | inr h =>
+                  cases h with
+                  | inl h => subst f; exact BB6.Agent6F0.AFirst.cover_oneLD B (by omega)
+                  | inr h => subst f; exact BB6.Agent6F0.Sibling1RB.cover_oneRB B (by omega)
 
 def closedF0 (p : PartialMachine) : Bool :=
   closedMoves.any fun f => sameTable p (BB6.Agent6F0.parent f)
 
 theorem cover_closed (B : Nat) (hB : 49394 ≤ B) (p : PartialMachine)
     (hc : closedF0 p = true) : Cover (WeightedBound B) p := by
-  rcases List.any_eq_true.mp hc with ⟨f,hf,he⟩
-  rw [sameTable_sound he]
-  exact cover_move B hB f hf
+  cases List.any_eq_true.mp hc with
+  | intro f hrest =>
+    cases hrest with
+    | intro hf he =>
+      rw [sameTable_sound he]
+      exact cover_move B hB f hf
 
 /-- Remove exactly the certified tables from the explicit raw139 residual
     roster. The filter consumes full tables, not ordinal labels. -/
