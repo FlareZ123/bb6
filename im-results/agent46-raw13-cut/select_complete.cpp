@@ -30,6 +30,7 @@ template<int L,int W,int MAXPER> Res classify(Table const&p){
  }
  return {0,0,0,0,0,0,0};
 }
+#ifndef AGENT46_CLASSIFY_ONLY
 struct Node{Res a;int child[24]{};string p;};vector<Node> nodes;
 bool extended=false, zeroRE=false, zeroRC=false, zeroRD=false, zeroLC=false, zeroLB=false, oneRD=false, zeroRA=false, oneLA=false, oneRA=false, zeroRB=false, oneLC=false, oneRE=false, oneRC=false, zeroRE5=false, oneLE=false, zeroLE5=false;
 int complete(Table p,int cut,int holes){
@@ -214,3 +215,5 @@ void emit(int i){auto n=nodes[i];auto a=n.a;
  for(int j=0;j<24;j++){if(j)cout<<',';if(n.child[j])emit(n.child[j]-1);else cout<<"null";}cout<<"]]";
 }
 int main(){string s;int cut,holes;while(cin>>s>>cut>>holes){zeroRE=s=="1RB1LC1RC0LD1LA0RB1LB0RE------------";zeroRC=s=="1RB1LC1RC0LD1LA0RB0RC---------------";zeroRD=s=="1RB1LC1RC0LD1LA0RB0RD---------------";zeroLC=s=="1RB1LC1RC0LD1LA0RB0LC---------------";zeroLB=s=="1RB1LC1RC0LD1LA0RB0LB---------------";oneRD=s=="1RB1LC1RC0LD1LA0RB1RD---------------";zeroRA=s=="1RB1LC1RC0LD1LA0RB0RA---------------";oneLA=s=="1RB1LC1RC0LD1LA0RB1LA---------------";oneRA=s=="1RB1LC1RC0LD1LA0RB1RA---------------";zeroRB=s=="1RB1LC1RC0LD1LA0RB0RB---------------";oneLC=s=="1RB1LC1RC0LD1LA0RB1LC---------------";oneRE=s=="1RB1LC1RC0LD1LA0RB1RE---------------";oneRC=s=="1RB1LC1RC0LD1LA0RB1RC---------------";zeroRE5=s=="1RB1LC1RC0LD1LA0RB0RE---------------";oneLE=s=="1RB1LC1RC0LD1LA0RB1LE---------------";zeroLE5=s=="1RB1LC1RC0LD1LA0RB0LE---------------";extended=zeroLE5||oneLE||zeroRE5||oneRC||oneRE||zeroRB||oneLC||oneLA||oneRA||zeroRA||oneRD||zeroRE||zeroRC||zeroRD||zeroLC||zeroLB||s=="1RB1LC1RC0LD1LA0RB1LB0LE------------"||s=="1RB1LC1RC0LD1LA0RB1LB1RE------------";nodes.clear();int i=complete(parse(s),cut,holes);if(i<0){cerr<<"unresolved "<<s<<'\n';return 1;}cout<<s<<' ';emit(i);cout<<'\n';}}
+
+#endif
