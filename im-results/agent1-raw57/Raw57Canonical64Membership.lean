@@ -30,6 +30,11 @@ theorem raw57_member_count :
       (fun e => sameTable e.2 raw57)).length = 1 := by
   decide
 
+theorem raw57_index :
+    BB6.Agent3Canonical64Raw120.roster64.findIdx
+      (fun e => sameTable e.2 raw57) = 33 := by
+  decide
+
 theorem roster63_count : roster63.length = 63 := by
   decide
 
@@ -79,6 +84,7 @@ theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
 
 #print axioms raw57_root
 #print axioms raw57_member_count
+#print axioms raw57_index
 #print axioms roster63_count
 #print axioms sound63
 #print axioms exact_at_target
