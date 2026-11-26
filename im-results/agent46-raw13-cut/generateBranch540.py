@@ -28,13 +28,7 @@ def write(name, imports, body):
 
 def main():
     fixtures = json.loads((D / f"branch{BRANCH}-auto.json").read_text())
-    # emit_fixtures stores left-sweep fields in tape order. The checked
-    # fixtures below use direct constructor order, so invert that conversion.
-    for f in fixtures:
-        for op in f["ops"]:
-            if isinstance(op, list) and op[0] == "L":
-                op[1], op[2] = op[2], op[1]
-                op[5], op[6] = op[6], op[5]
+    # Fixtures already use the checked Lean constructor field order.
     emit_fixtures(fixtures, D / (MODULE + "Auto.lean"), "Raw13Branch"+BRANCH)
     auton = {x["table"]: i for i,x in enumerate(fixtures)}
     with tempfile.TemporaryDirectory() as temp:
