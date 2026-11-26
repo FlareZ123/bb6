@@ -396,9 +396,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$DEST"
           if ! git diff --cached --quiet; then
+            git commit -m "Agent 43: preserve Raw122 0LA assembly evidence"
             git fetch origin main
             git rebase origin/main
-            git commit -m "Agent 43: preserve Raw122 0LA assembly evidence"
             git push origin HEAD:main
           fi
       - uses: actions/upload-artifact@v4
@@ -450,9 +450,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$DEST"
           if ! git diff --cached --quiet; then
+            git commit -m "Agent 43: preserve Raw122 0LF assembly evidence"
             git fetch origin main
             git rebase origin/main
-            git commit -m "Agent 43: preserve Raw122 0LF assembly evidence"
             git push origin HEAD:main
           fi
       - uses: actions/upload-artifact@v4
@@ -498,9 +498,9 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add im-results/agent43-raw122-cut/rosters/branch16 im-results/agent43-raw122-cut/rosters/branch17
           if ! git diff --cached --quiet; then
+            git commit -m "Agent 43: preserve Raw122 1LE and 1LF residual rosters"
             git fetch origin main
             git rebase origin/main
-            git commit -m "Agent 43: preserve Raw122 1LE and 1LF residual rosters"
             git push origin HEAD:main
           fi
       - uses: actions/upload-artifact@v4
