@@ -27,8 +27,8 @@ theorem canon_iff (q c : Nat) :
   constructor
   · rintro ⟨⟨h1,h2⟩,h3⟩
     have h4 : c≤q-2-c := by
-      rw [←h3]
-      exact Nat.min_le_right _ _
+      have hm : min c (q-2-c) ≤ q-2-c := Nat.min_le_right _ _
+      omega
     exact ⟨h1,h2,by omega⟩
   · rintro ⟨h1,h2,h3⟩
     exact ⟨⟨h1,h2⟩,Nat.min_eq_left (by omega)⟩
