@@ -7,6 +7,7 @@ namespace BB6.Agent14Raw139NormalizedE0ParentRows
 
 open BB6Coverage
 open BB6.Agent6Raw139Normalized
+open BB6.Agent31FourHoleRoster
 open BB6.Agent3Raw139E0ZeroRAIntegrated
 
 /-- The normalized E0=0RE parent table. -/
