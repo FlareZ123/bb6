@@ -430,23 +430,23 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          mkdir -p six-root-checkpoint six-root-results
-          gh run download 45522264094 --repo FlareZ123/bb6 --name source-packed-chunk --dir six-root-checkpoint
-          cp six-root-checkpoint/Agent8PackedChunk.{v,vo} .
+          mkdir -p eighty-root-checkpoint eighty-root-results
+          gh run download 45522264094 --repo FlareZ123/bb6 --name source-packed-chunk --dir eighty-root-checkpoint
+          cp eighty-root-checkpoint/Agent8PackedChunk.{v,vo} .
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5CoarseConsumeAll.v" .
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Q0FiveRootConsume.v" .
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Q0EightyRootConsume.v" .
-          timeout 900s coqc -Q . BusyCoq -native-compiler no Agent5CoarseConsumeAll.v > six-root-results/coarse-consume.log 2>&1
-          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent5Q0FiveRootConsume.v > six-root-results/five-root-consume.log 2>&1
-          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent5Q0EightyRootConsume.v > six-root-results/consume.log 2>&1
-          cat six-root-results/coarse-consume.log six-root-results/five-root-consume.log six-root-results/consume.log
-          cp Agent5Q0Solid28.{v,vo} Agent5Row28Tree.{v,vo} Agent5Row28Data.{v,vo} Agent5CoarsePair35.{v,vo} Agent5CoarsePair37.{v,vo} Agent5CoarsePair47.{v,vo} Agent5CoarsePair50.{v,vo} Agent5CoarseSmall.{v,vo} Agent5CoarseA.{v,vo} Agent5CoarseB.{v,vo} Agent5CoarseC.{v,vo} Agent5CoarseD.{v,vo} Agent5CoarseConsumeAll.{v,vo} Agent5Q0FiveRootConsume.{v,vo} Agent5Q0EightyRootConsume.{v,vo} row28-candidate.json six-root-results/
+          timeout 900s coqc -Q . BusyCoq -native-compiler no Agent5CoarseConsumeAll.v > eighty-root-results/coarse-consume.log 2>&1
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent5Q0FiveRootConsume.v > eighty-root-results/five-root-consume.log 2>&1
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent5Q0EightyRootConsume.v > eighty-root-results/consume.log 2>&1
+          cat eighty-root-results/coarse-consume.log eighty-root-results/five-root-consume.log eighty-root-results/consume.log
+          cp Agent5Q0Solid28.{v,vo} Agent5Row28Tree.{v,vo} Agent5Row28Data.{v,vo} Agent5CoarsePair35.{v,vo} Agent5CoarsePair37.{v,vo} Agent5CoarsePair47.{v,vo} Agent5CoarsePair50.{v,vo} Agent5CoarseSmall.{v,vo} Agent5CoarseA.{v,vo} Agent5CoarseB.{v,vo} Agent5CoarseC.{v,vo} Agent5CoarseD.{v,vo} Agent5CoarseConsumeAll.{v,vo} Agent5Q0FiveRootConsume.{v,vo} Agent5Q0EightyRootConsume.{v,vo} row28-candidate.json eighty-root-results/
       - name: Preserve integrated 80-root source certificate
         if: always() && inputs.target == 'enumerate62-q0-80-roots'
         uses: actions/upload-artifact@v4
         with:
           name: q0-80-root-source-certificate
-          path: original/verify/six-root-results/
+          path: original/verify/eighty-root-results/
           if-no-files-found: warn
       - name: Preserve focused row 28 proof
         if: always() && inputs.target == 'enumerate62-q0-row28'
