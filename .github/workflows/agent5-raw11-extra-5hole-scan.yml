@@ -1,0 +1,31 @@
+name: Agent 5 Raw11 five-hole extra scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      cap:
+        description: Per-parent retained search node cap
+        required: false
+        default: "12000"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Scan five-hole Raw11-extra parents
+        run: |
+          set -euo pipefail
+          node im-results/agent47-raw11-adapter/scan-raw11-extra-5hole.cjs "${{ inputs.cap }}"
+      - name: Upload scan report
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw11-extra-five-hole-scan
+          path: im-results/agent47-raw11-adapter/raw11-extra-5hole-scan.json
+          if-no-files-found: error
+          retention-days: 30
