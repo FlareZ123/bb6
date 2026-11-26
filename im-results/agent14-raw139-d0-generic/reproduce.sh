@@ -32,6 +32,9 @@ PYTHONPATH="$PWD/im-results/agent48-raw139-f1-oneRA:$PWD/im-results/agent48-raw1
 if [[ "$sibling" == ZeroRF ]]; then
   python3 "$base/patch-ray.py" "$work/imports"
   extra_args+=(--provenance-input "$base/patch-ray.py")
+  # The patch supplies the intended RayLong module in imports/; the generic
+  # source archive also contains a stale RayLong with the same module name.
+  extra_args+=(--override "RayLong=$work/imports/RayLong.lean")
 fi
 root="$work/imports/Raw139D0${label}Cover.lean"
 echo "$rootsha  $root" | sha256sum -c
