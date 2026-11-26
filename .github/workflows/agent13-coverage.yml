@@ -925,39 +925,113 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
         run: |
           set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-          BASE59=$(find /tmp/canonical59-base -name manifest.json -printf '%h\n' | head -n1)
-          BASE10=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\n' | head -n1)
-          test -f "$BASE59/manifest.json"
+          BASE59=$(find /tmp/canonical59-base -name selected-integration.json -printf '%h\\n' | head -n1)
+          BASE10=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\\n' | head -n1)
+          test -f "$BASE59/selected-integration.json"
+          test -f "$BASE59/generated/CanonicalSelectedParentIntegrated.lean"
+          test -f "$BASE59/linked/CanonicalSelectedParentIntegrated.olean"
+          test -f "$BASE59/reachable-link-audit.json"
+          test -f "$BASE59/selected-link-audit.json"
           test -f "$BASE10/manifest.json"
-          python tools/lean_compile_closure.py \
-            --workdir /tmp/a49-raw10-canonical58-membership \
-            --jobs 2 \
-            --source-root "$BASE59" \
-            --source-root "$BASE10" \
-            --precompiled-manifest "$BASE59/manifest.json" \
-            --precompiled-dir "$BASE59" \
-            --artifact-dir /tmp/a49-raw10-canonical58-membership \
-            --manifest /tmp/a49-raw10-canonical58-membership/manifest.json \
-            --label "Raw10 B0=1LC exact membership in Canonical64/59/58 parent rosters" \
-            --artifact-name raw10-canonical58-membership-probe \
-            --provenance-input im-results/agent31-shared-core/Canonical59Raw113Membership.lean \
-            --provenance-input im-results/agent31-shared-core/Canonical58Raw113Graft.lean \
-            --provenance-input im-results/agent25-raw113/Raw113ParentExact.lean \
-            --provenance-input im-results/agent49-raw10-refined-cut/Raw10RefinedCut.lean \
-            --provenance-input im-results/agent49-raw10-box5/source.tar.xz \
-            --provenance-input im-results/agent49-raw10-box5/proof-source.tar.xz \
-            --provenance-input tools/lean_compile_closure.py \
-            --provenance-input im-results/agent13-coverage/unpack.py \
+          mkdir -p /tmp/a49-raw10-canonical58-membership
+          python - "$BASE59" "$BASE10" <<'PY'
+          import hashlib, json, pathlib, sys
+          base59, base10 = map(pathlib.Path, sys.argv[1:])
+          sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          selected = json.loads((base59 / "selected-integration.json").read_text())
+          assert selected["source_revision"] == "bd64e66c5461f413150d62b6593aa9d071de85d4", selected["source_revision"]
+          assert selected["remaining_residual_count"] == 59, selected["remaining_residual_count"]
+          assert selected["raw59_retained"] is True
+          assert {x["label"] for x in selected["accepted"]} == {"raw119", "raw115", "raw58", "raw108", "raw118"}
+          assert sha(base59 / "generated/CanonicalSelectedParentIntegrated.lean") == selected["source_sha256"]
+          assert sha(base59 / "linked/CanonicalSelectedParentIntegrated.olean") == selected["olean_sha256"]
+          assert sha(base59 / "reachable-link-audit.json") == selected["base_link_audit_sha256"]
+          assert sha(base59 / "selected-link-audit.json") == selected["selected_link_audit_sha256"]
+          raw10 = json.loads((base10 / "manifest.json").read_text())
+          assert raw10["lean_version"].startswith("Lean (version 4.36.0-rc2"), raw10["lean_version"]
+          modules = {x["module"]: x for x in raw10["modules"]}
+          assert "Raw10RefinedCut" in modules
+          assert (base10 / modules["Raw10RefinedCut"]["olean_path"]).is_file()
+          common, mismatches = 0, []
+          for entry in raw10["modules"]:
+              candidate = base59 / "linked" / entry["olean_path"]
+              if candidate.is_file():
+                  common += 1
+                  if sha(candidate) != entry["olean_sha256"]:
+                      mismatches.append(entry["module"])
+          assert common > 0, "no common modules to identity-check"
+          assert not mismatches, f"Canonical59/Raw10 object identity mismatches: {mismatches[:20]}"
+          report = {
+              "canonical59_run_id": 45880290680,
+              "canonical59_artifact_id": 15147189928,
+              "canonical59_artifact_sha256": "f19b9977f3e3f3a60c49ae61ad4c5a717689980191bf7ee0d23e7eeff1c27abc",
+              "canonical59_source_revision": selected["source_revision"],
+              "canonical59_accepted_parents": sorted(x["label"] for x in selected["accepted"]),
+              "canonical59_remaining": selected["remaining_residual_count"],
+              "canonical59_raw59_retained": selected["raw59_retained"],
+              "canonical59_selected_source_sha256": selected["source_sha256"],
+              "canonical59_selected_olean_sha256": selected["olean_sha256"],
+              "canonical59_base_link_audit_sha256": selected["base_link_audit_sha256"],
+              "canonical59_selected_link_audit_sha256": selected["selected_link_audit_sha256"],
+              "raw10_run_id": 45896143748,
+              "raw10_artifact_id": 15154018415,
+              "raw10_artifact_sha256": "5f6a27b9fb68627e077a6168fe82609eea07cccba437559da6e6df7454ef383d",
+              "raw10_manifest_sha256": sha(base10 / "manifest.json"),
+              "raw10_refined_cut_olean_sha256": sha(base10 / modules["Raw10RefinedCut"]["olean_path"]),
+              "shared_module_count": common,
+              "shared_module_mismatches": mismatches,
+          }
+          pathlib.Path("/tmp/a49-raw10-canonical58-membership/membership-inputs.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\\n"
+          )
+          PY
+          export LEAN_PATH="$BASE59/linked:$BASE10"
+          lean --version
+          lean -o /tmp/a49-raw10-canonical58-membership/Raw10Canonical58MembershipProbe.olean \\
             im-results/agent49-raw10-refined-cut/Raw10Canonical58MembershipProbe.lean | tee /tmp/a49-raw10-canonical58-membership.log
+          for theorem in \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.count59 \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.p113_count59 \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.count58 \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_count59 \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_not_removed \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_count58 \\
+            BB6.Agent49Raw10Canonical58MembershipProbe.raw59_retained; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a49-raw10-canonical58-membership.log "$theorem"
+          done
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-raw10-canonical58-membership.log; then exit 1; fi
-      - name: Export Raw10 Canonical58 membership manifest
+          python - <<'PY'
+          import hashlib, json, pathlib
+          d = pathlib.Path("/tmp/a49-raw10-canonical58-membership")
+          report = json.loads((d / "membership-inputs.json").read_text())
+          report.update({
+              "status": "kernel-checked exact membership in the accepted Canonical58 roster",
+              "probe_source_sha256": hashlib.sha256(pathlib.Path("im-results/agent49-raw10-refined-cut/Raw10Canonical58MembershipProbe.lean").read_bytes()).hexdigest(),
+              "probe_olean_sha256": hashlib.sha256((d / "Raw10Canonical58MembershipProbe.olean").read_bytes()).hexdigest(),
+              "probe_log_sha256": hashlib.sha256((d / "Raw10Canonical58MembershipProbe.olean").read_bytes()).hexdigest(),
+              "lean_version": "Lean 4.36.0-rc2",
+              "theorems": [
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.count59",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.p113_count59",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.count58",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.p10_count59",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.p10_not_removed",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.p10_count58",
+                  "BB6.Agent49Raw10Canonical58MembershipProbe.raw59_retained",
+              ],
+              "membership_result": "p10_count58 = 1",
+          })
+          (d / "membership-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+          PY
+      - name: Export Raw10 Canonical58 membership proof
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
         uses: actions/upload-artifact@v4
         with:
           name: raw10-canonical58-membership-probe
           path: |
-            /tmp/a49-raw10-canonical58-membership/manifest.json
+            /tmp/a49-raw10-canonical58-membership/membership-report.json
+            /tmp/a49-raw10-canonical58-membership/membership-inputs.json
+            /tmp/a49-raw10-canonical58-membership/Raw10Canonical58MembershipProbe.olean
             /tmp/a49-raw10-canonical58-membership.log
             im-results/agent49-raw10-refined-cut/Raw10Canonical58MembershipProbe.lean
           if-no-files-found: error
