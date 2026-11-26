@@ -57,7 +57,8 @@ theorem w7_z2_parent_fan (u a k : Nat)
           · simp [BB6.Agent46.sectionPreimageAll,ha0,ha1,hk0,hk1,hk2] at hpre <;> omega
           · by_cases hk3 : k=3
             · simp [BB6.Agent46.sectionPreimageAll,ha0,ha1,hk0,hk1,hk2,hk3] at hpre <;> omega
-            · have hcase :
+            · have hk4 : 4≤k := by omega
+              have hcase :
                 (y=3 ∧ ∃ n : Nat, x+6=2^n*16 ∧
                   (2*k-3)+16+3*n=x+10) ∨
                 (5≤y ∧ ∃ n : Nat, x+y+1=2^n*16 ∧
@@ -176,8 +177,9 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
   obtain ⟨n,hn,hscale,hcost⟩ := w7_z2_parent_fan u a k hpre
   have hWodd : W%2=1 := by dsimp [W]; omega
   have hnle : n≤2 := by
-    by_contra hnot
-    have hn4 : 4≤n := by omega
+    by_cases hsmall : n≤2
+    · exact hsmall
+    · have hn4 : 4≤n := by omega
     have hpow : 2^5∣2^(n+1) := by
       exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=n+1) (by omega)
     have hdiv : 32∣2^(n+1)*(a+3) := dvd_mul_of_dvd_left hpow (a+3)
