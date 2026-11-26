@@ -35,6 +35,11 @@ abbrev p115 : PartialMachine :=
 abbrev p119 : PartialMachine :=
   refine e1Base (4,true) (some ⟨false,true,4⟩)
 
+/-- Raw113: E1 = 1RC. This candidate is checked separately from the five
+    parents defining roster59. -/
+abbrev p113 : PartialMachine :=
+  refine e1Base (4,true) (some ⟨true,true,2⟩)
+
 def parents : List PartialMachine := [p58,p59,p108,p115,p119]
 
 noncomputable def roster59 :=
@@ -62,6 +67,14 @@ theorem p119_count64 :
     (BB6.Agent3Canonical64Raw120.roster64.filter
       (fun e => sameTable e.2 p119)).length = 1 := by decide
 
+/-- Raw113 is a unique exact member of Canonical64. -/
+theorem p113_count64 :
+    (BB6.Agent3Canonical64Raw120.roster64.filter
+      (fun e => sameTable e.2 p113)).length = 1 := by decide
+
+theorem p113_root :
+    p113 initialSlot = some (some ⟨true,true,1⟩) := by decide
+
 /-- The five exact, distinct parent matches leave 59 representatives. -/
 theorem count59 : roster59.length = 59 := by decide
 
@@ -76,6 +89,8 @@ theorem parents_root :
 #print axioms p108_count64
 #print axioms p115_count64
 #print axioms p119_count64
+#print axioms p113_count64
+#print axioms p113_root
 #print axioms count59
 #print axioms parents_root
 
