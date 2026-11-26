@@ -31,6 +31,16 @@ jobs:
             echo "Forbidden proof placeholder or native_decide found" >&2
             exit 1
           fi
+      - name: Verify q0 Raw11 checkpoint crosswalk and quotient-aware graft
+        run: |
+          set -euo pipefail
+          node im-results/agent24-raw11-q0-graft/crosswalk.cjs --write | tee /tmp/a24-raw11-q0-crosswalk.log
+          git diff --exit-code -- im-results/agent24-raw11-q0-graft/crosswalk.json
+          python tools/lean_compile_closure.py --workdir /tmp/a24-raw11-q0 --jobs 4 --manifest /tmp/a24-raw11-q0/manifest.json im-results/agent24-raw11-q0-graft/Raw11Q0CheckpointGraft.lean | tee /tmp/a24-raw11-q0.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a24-raw11-q0.log; then
+            echo "Forbidden proof placeholder or native_decide found" >&2
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
