@@ -10,11 +10,16 @@ on:
         description: Compile the exact Raw11 route with the accepted root39 Cover consumed
         type: boolean
         default: false
+      raw11_q0_root52:
+        description: Rebuild q0 root52's 4663 Cover from its pinned source artifact and consume it after root39
+        type: boolean
+        default: false
 permissions:
   contents: read
+  actions: read
 jobs:
   holdouts:
-    if: ${{ !inputs.raw111 && !inputs.raw11_q0_route }}
+    if: ${{ !inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -42,7 +47,7 @@ jobs:
           if-no-files-found: error
 
   raw111-preflight:
-    if: ${{ inputs.raw111 && !inputs.raw11_q0_route }}
+    if: ${{ inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -60,7 +65,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
 
   raw11-q0-route:
-    if: ${{ inputs.raw11_q0_route }}
+    if: ${{ inputs.raw11_q0_route && !inputs.raw11_q0_root52 }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -99,5 +104,86 @@ jobs:
         with:
           name: raw11-root39-consumption
           path: /tmp/a47-raw11-root39/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw11-q0-root52:
+    if: ${{ inputs.raw11_q0_root52 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45872082943
+          name: raw11-root39-consumption
+          path: /tmp/a47-root39-precompiled
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45792833561
+          name: q0-root52-generated-source
+          path: /tmp/q0-root52-rocq
+      - name: Reconstruct the pinned coverage contract and generate root52 Lean shards
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          manifest="$(find /tmp/q0-root52-rocq -name q0-auto-candidate.json -print -quit)"
+          test -n "$manifest"
+          src="$(dirname "$manifest")"
+          python im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py "$src" /tmp/q0-root52-lean --chunk 49
+          test -s /tmp/q0-root52-lean/Q0Root52Base.lean
+          test -s /tmp/q0-root52-lean/Q0Root52Long.lean
+          test -s /tmp/q0-root52-lean/Q0Root52Parent.lean
+          sha256sum "$src"/* | sort -k2 > /tmp/q0-root52-source.sha256
+      - name: Compile root52 and consume it from the 293-entry Raw11 roster
+        run: |
+          set -euo pipefail
+          provenance=(
+            --provenance-input tools/lean_compile_closure.py
+            --provenance-input im-results/agent13-coverage/unpack.py
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0_trace_emit.py
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0ExhaustiveTree.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0Trace.lean
+            --provenance-input /tmp/q0-root52-source.sha256
+            --provenance-input /tmp/a47-root39-precompiled/manifest.json
+          )
+          python tools/lean_compile_closure.py \\
+            im-results/agent47-raw11-adapter/Raw11Root52Consume.lean \\
+            --source-root /tmp/q0-root52-lean \\
+            --workdir /tmp/a47-raw11-root52 \\
+            --manifest /tmp/a47-raw11-root52/manifest.json \\
+            --precompiled-manifest /tmp/a47-root39-precompiled/manifest.json \\
+            --precompiled-dir /tmp/a47-root39-precompiled \\
+            --jobs 2 \\
+            --lean lean \\
+            --label raw11-root52-consumption \\
+            --theorem BB6.Agent47Raw11Root52Consume.cover_from_remaining \\
+            "${provenance[@]}" \\
+            2>&1 | tee /tmp/a47-raw11-root52.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52.log; then
+            echo "::error::forbidden axiom/proof mechanism in Raw11 root52 consumer"
+            exit 1
+          fi
+          grep -q "Q0Root52.safe_root" /tmp/a47-raw11-root52.log
+          grep -q "BB6.Agent47Raw11Root52Consume.cover_from_remaining" /tmp/a47-raw11-root52.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-root52-consumption
+          path: |
+            /tmp/a47-raw11-root52/
+            /tmp/a47-raw11-root52.log
+            /tmp/q0-root52-lean/
+            /tmp/q0-root52-source.sha256
           if-no-files-found: warn
           retention-days: 30
