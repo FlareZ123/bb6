@@ -93,7 +93,7 @@ Q(u)=(2W-3,\;24450+39417u).
 
 ### q=1 parent exclusions
 
-Twelve disjoint infinite parameter slices of the q=1 parent
+Thirteen disjoint infinite parameter slices of the q=1 parent
 \(Q(u)=(2W-3,24450+39417u)\) are now excluded.
 
 The first four previously established slices are:
@@ -230,7 +230,14 @@ The following eight additional slices are formalized in
     sum7_every_parent_odd_image theorem. Every exact parent is therefore
     in the forbidden odd-right sum-two image.
 
-For every one of these twelve slices, the root filters give
+13. **\(u=239+640r\)** — [U5Q0W7U79Mod640.lean](U5Q0W7U79Mod640.lean)
+   closes the first subcylinder of the formerly open \(u=79+80T\)
+   branch, with \(T=2+8r\). The odd/odd sum-16 two-parent iff reduces
+   \(Q(u)\) to \(P_0,P_2\); three and one exact six-even-right inverses,
+   respectively, reach odd-right sum-one terminal states, excluded by
+   the original-source image invariant.
+
+For every one of these thirteen slices, the root filters give
 \(z=2+4u\equiv14\pmod{16}\) and \(z\equiv3\pmod5\). The necessary
 root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), forces
 \(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The original four
@@ -274,14 +281,15 @@ Write every root-compatible parameter as \(u=19+20n\), and split
 - \(n=4T+2\), so \(u=59+80T\). The entire branch is covered,
   with density \(1\).
 
-- \(n=4T+3\), so \(u=79+80T\). No cylinder in this branch is
-  currently proved.
+- \(n=4T+3\), so \(u=79+80T\). The cylinder \(T\equiv2\pmod8\) (equivalently \(u=239+640r\)) is
+  excluded, with branch density \(1/8\); the other seven residue classes
+  modulo 8 remain open.
 
 The four branches are disjoint and equally frequent. Therefore the
-union of the twelve source-proved exclusions has natural density
+union of the thirteen source-proved exclusions has natural density
 \[
-\frac14\left(\frac{53}{128}+\frac{17}{32}+1+0\right)
-=\boxed{\frac{249}{512}}
+\frac14\left(\frac{53}{128}+\frac{17}{32}+1+\frac18\right)
+=\boxed{\frac{265}{512}}
 \]
 among all \(u\equiv19\pmod{20}\). This is an exact density for the
 union of the proved cylinders, hence a lower bound on the density of
@@ -299,6 +307,8 @@ U5Q0W7U19Mod2560.lean and all sixteen new q=0/q=1 declarations, passed in
 [run #25](https://github.com/FlareZ123/bb6/actions/runs/45832100735) and the further extension in [run #26](https://github.com/FlareZ123/bb6/actions/runs/45833176482).
 The module explicitly prints the axioms of every new theorem in the combined twelve-slice closure; the
 workflow's rejection guard found no sorryAx or native_decide dependency.
+
+The thirteenth slice is compiled in [run #46](https://github.com/FlareZ123/bb6/actions/runs/45903781364), which compiles the actual source closure through U5Q0W7U79Mod640.lean. Both new theorem axiom profiles are [propext, Classical.choice, Quot.sound]; the workflow's sorryAx/_native rejection guard passed.
 The proofs use the original-source odd/odd low-value, even/odd sum-three,
 and even-right six inverse theorems, together with the established
 odd-right sum-one and sum-two blank-image invariants.
