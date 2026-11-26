@@ -100,6 +100,9 @@ def main():
     raw112_matches = [x for x in expected_manifest if x["table_rle"] == RAW112_TABLE]
     if len(raw112_matches) != 1:
         raise AssertionError(f"Raw112 table must occur exactly once in Canonical58, got {len(raw112_matches)}")
+    raw112_index = int(raw112_matches[0]["raw_residual_index"])
+    if raw112_index != 112:
+        raise AssertionError(f"Raw112 table is attached to raw residual index {raw112_index}, expected 112")
     expected57_manifest = [x for x in expected_manifest if x["table_rle"] != RAW112_TABLE]
     expected57_pairs = normalize(
         [{"raw_residual_index": x["raw_residual_index"], "table_rle": x["table_rle"]}
@@ -113,8 +116,8 @@ def main():
         raise AssertionError(f"Lean Canonical57 roster mismatch: missing={missing}, extra={extra}")
     if len(actual57_pairs) != 57:
         raise AssertionError(f"Lean Canonical57 export has {len(actual57_pairs)} entries, expected 57")
-    if any(table == RAW112_TABLE for _, table in actual57_pairs):
-        raise AssertionError("Raw112 must be absent from Canonical57")
+    if any(table == RAW112_TABLE for _, table in actual57_pairs) or any(raw == raw112_index for raw, _ in actual57_pairs):
+        raise AssertionError("Raw112 table and raw residual index 112 must be absent from Canonical57")
     if 59 not in {raw for raw, _ in actual57_pairs} or 118 in {raw for raw, _ in actual57_pairs}:
         raise AssertionError("Canonical57 must retain Raw59 and exclude Raw118")
 
