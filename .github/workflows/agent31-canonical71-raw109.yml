@@ -1723,10 +1723,7 @@ jobs:
           [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
           [[ "$RAW59_SLICE_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent32-raw59/assemble_canonical56_raw59_graft.py
-          python im-results/agent32-raw59/assemble_canonical56_raw59_graft.py \\
-            --work /tmp/a32-canonical56-raw59 \\
-            --canonical57-run-id "$CANONICAL57_RUN_ID" \\
-            --raw59-run-id "$RAW59_SLICE_RUN_ID" 2>&1 | tee /tmp/a32-canonical56-raw59.log
+          python im-results/agent32-raw59/assemble_canonical56_raw59_graft.py --work /tmp/a32-canonical56-raw59 --canonical57-run-id "$CANONICAL57_RUN_ID" --raw59-run-id "$RAW59_SLICE_RUN_ID" 2>&1 | tee /tmp/a32-canonical56-raw59.log
           test -s /tmp/a32-canonical56-raw59/canonical56-raw59-graft.json
           python - <<'PY'
           import json
@@ -1734,7 +1731,7 @@ jobs:
           report = json.loads(Path("/tmp/a32-canonical56-raw59/canonical56-raw59-graft.json").read_text())
           assert report["remaining_residual_count"] == 56
           assert report["raw59_consumed"] and report["raw113_removed"] and report["raw112_removed"]
-          assert report["graft_olean_sha256"] if "graft_olean_sha256" in report else report["olean_sha256"]
+          assert report["olean_sha256"]
           assert "sorryAx" not in str(report["axioms"])
           assert "native_decide" not in str(report["axioms"])
           PY
