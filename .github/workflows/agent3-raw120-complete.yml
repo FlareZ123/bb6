@@ -24,9 +24,9 @@ on:
         type: string
         default: "45778885358"
       raw139_e0_integrated_run_id:
-        description: Run containing the compiled Raw139E0ZeroRAIntegrated and Raw139E0ZeroRAMatch objects
+        description: Run containing the compiled Raw139 E0=0RA integration and accepted 63-row membership object
         type: string
-        default: "45797137615"
+        default: "45828809314"
       raw139_e0_rb_run_id:
         description: Source-audited E0=0RB parent Cover artifact run ID
         type: string
@@ -327,6 +327,25 @@ jobs:
             echo "nonstandard axiom in 63-row E0 parent crosswalk consumer"
             exit 1
           fi
+      - name: Compile direct normalized 63-row Canonical64 consumer
+        if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != '' && inputs.raw139_e0_rb_run_id != '' && inputs.raw139_e0_rd_run_id != ''
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          test -s /tmp/a6-sibling/source-sibling-build/Raw139NormalizedAcceptedCovers.olean
+          test -s /tmp/a3e0-build/Raw139NormalizedE0ParentRows.olean
+          test -s /tmp/a3e0-build/Raw139E0ZeroRAIntegrated.olean
+          test -s /tmp/a48-e0rb-build/Raw139E0ZeroRBCover.olean
+          test -s /tmp/a48-e0rd-build/Raw139E0ZeroRDCover.olean
+          test -s .tmp/a48-e0parent-ZeroRE/build/Raw139E0ZeroRECover.olean
+          export LEAN_PATH="/tmp/a6-sibling/source-sibling-build:/tmp/a6-core/build:/tmp/a48-e0rb-build:/tmp/a48-e0rd-build:.tmp/a48-e0parent-ZeroRE/build:/tmp/a3e0-build:/tmp/raw120-canonical64/linked${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedDirect.olean \
+            im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedDirect.lean \
+            | tee /tmp/raw120-canonical64/raw139-normalized-direct-63.log
+          if grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' /tmp/raw120-canonical64/raw139-normalized-direct-63.log; then
+            echo "nonstandard axiom in direct normalized 63-row Canonical64 consumer"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -343,6 +362,8 @@ jobs:
             /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
             /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log
             /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedE0ParentCrosswalk.olean
+            /tmp/raw120-canonical64/raw139-normalized-direct-63.log
+            /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedDirect.olean
             /tmp/a48-e0rb-build/*.olean
             /tmp/a48-e0rd-build/*.olean
             /tmp/a3e0-build/*.olean
