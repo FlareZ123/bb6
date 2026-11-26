@@ -29,7 +29,7 @@ theorem p83_count58 :
 
 /-- Raw83 is pairwise distinct from every one of the six existing parents. -/
 theorem p83_distinct_from_six :
-    ∀ p ∈ parents, sameTable p p83 = false := by
+    ∀ p ∈ BB6.Agent31Canonical58Membership.parents, sameTable p p83 = false := by
   decide
 
 #print axioms p83_root
