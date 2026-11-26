@@ -400,6 +400,23 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-raw11-adapter/Agent47Q0NineParentMembership.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-raw11-adapter/Agent47Raw11RestrictedQ0.v" original/verify/
+      - name: Restore common Coq dependency cache
+        if: inputs.target == 'enumerate62-direct-parent' || inputs.target == 'enumerate62-q0-nine-parent-membership' || inputs.target == 'enumerate62-q0-80-roots'
+        uses: actions/cache@v4
+        with:
+          path: |
+            original/verify/*.vo
+            original/verify/*.vos
+            original/verify/*.vok
+            original/verify/*.glob
+            original/verify/*.aux
+            !original/verify/Agent5Q0AutoData.*
+            !original/verify/Agent5Q0AutoConsume.*
+            !original/verify/Agent5Q0Direct33*.*
+            !original/verify/Agent5Q0Periodic*.*
+          key: coq-vo-${{ runner.os }}-apt-coq-2026-33209bc7-${{ hashFiles('research/im-results/agent5-weighted-tnf-queue/*.v', 'research/im-results/agent8-adaptive-source-plan/*.v', 'research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v', 'research/im-results/agent47-raw11-adapter/*.v', 'research/im-results/agent13-raw11-q0-bridge/*.v') }}
+          restore-keys: |
+            coq-vo-${{ runner.os }}-apt-coq-2026-33209bc7-
       - name: Generate project dependencies with VM fallback
         if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         working-directory: original/verify
