@@ -57,18 +57,18 @@ The deterministic search reports:
 |---|---:|---|
 | F0-fixed one-hole zip leaves | 425 | Lean theorem candidates in `Raw10F0ZipCycles.lean`; CI pending |
 | Early-F1 singleton zip leaves | 65 | Lean theorem candidates in `Raw10F0ZipCycles.lean`; CI pending |
-| F0=HHH branch | 25 | Observed halt after the common 10-step prefix; formal `HaltsAfter` proof pending |
-| Three early-F1 halts | 3 | Observed scores: (12,0) = 32 steps; (22,0) = 11; (24,0) = 11; formal proofs pending |
+| F0=HHH branch | 25 | Formal `HaltsAfter` and `weighted_halt_leaf` cover in Lean source; CI pending |
+| Three early-F1 halts | 3 | Formal `HaltsAfter` and `weighted_halt_leaf` covers in Lean source; scores (12,0)=32, (22,0)=11, (24,0)=11; CI pending |
 | Open one-hole F0 leaves | 50 | F0=1 (`0LA`) and F0=14 (`0RD`), F1 arbitrary |
 | Open singleton leaves | 7 | `(12,1), (12,14), (12,15), (12,22), (22,2), (24,2), (24,3)` |
 
-Thus the current split is **490 nonhalting theorem candidates + 28 observed halts + 57 open completions = 575**. The 28 halts are not yet formally certified, so only the 490 nonhalting candidates have proof terms in the Lean source, and even those remain unaccepted until CI compiles the module.
+Thus the current split is **490 nonhalting theorem candidates + 28 halting covers + 57 open completions = 575**. The Lean source now contains proof terms for all 518 closed completions: `raw10F0ZipLeaves`, `raw10F0F1ZipLeaves`, and `raw10HaltCovers`. None is CI-accepted until the source closure compiles and the aggregate axiom profiles are checked.
 
 The seven singleton leaves had no `zipCycle` found through entry 2000, period 300, and boundary offsets ±100. The two one-hole leaves did not reach F1 in a 100,000-step bounded trace. Neither observation proves nonhalting or excludes a different certificate.
 
 ## Files
 
-- `Raw10F0ZipCycles.lean`: 17 F0 one-hole `zipCycle_sound` theorems, 65 singleton `zipCycle_sound` theorems, aggregate axiom-profile commands, and exact finite partition/count theorems.
+- `Raw10F0ZipCycles.lean`: 17 F0 one-hole `zipCycle_sound` theorems, 65 singleton `zipCycle_sound` theorems, four formal `weighted_halt_leaf` covers (25-completion F0=HHH cylinder plus three singleton halts), aggregate axiom-profile commands, and exact finite partition/count theorems.
 - `search_zipcycles.js`: deterministic candidate-search replay, including the extended search on the seven open singleton leaves and the bounded F1 reachability probes.
 
 ## Next work
