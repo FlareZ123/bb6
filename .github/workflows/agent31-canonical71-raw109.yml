@@ -23,6 +23,7 @@ on:
           - canonical58-six-parent-batch
           - canonical57-raw83
           - canonical58-raw113-delta
+          - canonical58-raw112-delta
           - canonical57-raw83-delta
           - canonical63-preflight
           - canonical65-three
@@ -38,7 +39,7 @@ on:
         required: false
         default: ""
       canonical59_run_id:
-        description: "59-residual base run ID; canonical58-six-parent-batch expects the legacy five-parent artifact, canonical58-raw113-delta expects canonical64-selected-parent-integrated"
+        description: "Accepted 59-residual Canonical59 run ID for Raw112/Raw113 delta consumers"
         type: string
         required: false
         default: ""
@@ -58,7 +59,7 @@ on:
         required: false
         default: "45647053824"
       raw112_run_id:
-        description: "Successful Raw112 closed-parent-cover run ID (required for target=canonical63-integrated; also used by legacy canonical67-integrated)"
+        description: "Successful Raw112 closed-parent-cover run ID (used by canonical58-raw112-delta and legacy Canonical63/67 consumers)"
         type: string
         required: false
         default: ""
@@ -1448,6 +1449,58 @@ jobs:
           path: |
             /tmp/a31-canonical58-raw113/**
             /tmp/a31-canonical58-raw113.log
+          if-no-files-found: warn
+          compression-level: 0
+          retention-days: 30
+
+  canonical58_raw112_delta:
+    name: Add Raw112 to the accepted 59-residual Canonical59 base
+    if: ${{ inputs.target == 'canonical58-raw112-delta' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile the incremental Raw112 Canonical58 graft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent17-raw112-canonical58/assemble_canonical59_raw112_graft.py
+          python im-results/agent17-raw112-canonical58/assemble_canonical59_raw112_graft.py \
+            --work /tmp/a17-canonical58-raw112 --base-run-id "$CANONICAL59_RUN_ID" \
+            --raw112-run-id "$RAW112_RUN_ID" 2>&1 | tee /tmp/a17-canonical58-raw112.log
+          test -s /tmp/a17-canonical58-raw112/canonical58-raw112-graft.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/a17-canonical58-raw112/canonical58-raw112-graft.json").read_text())
+          assert report["remaining_residual_count"] == 58
+          assert report["graft_olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical58-raw112-graft-integrated
+          path: |
+            /tmp/a17-canonical58-raw112/**
+            /tmp/a17-canonical58-raw112.log
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
