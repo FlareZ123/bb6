@@ -74,6 +74,7 @@ def normalizedCoveredByActive : List PartialMachine :=
     activeRows.any (fun e => extendsTable e.2 p))
 
 def e0LCTable : PartialMachine := leaf (2, ⟨false, false, 2⟩)
+def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
 
 /-- A finite crosswalk can discharge every active row covered by at least one
     normalized residual Cover. -/
@@ -157,6 +158,8 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval normalizedCoveredByActive.length
 #eval (activeRows.filter (fun e => sameTable e.2 e0LCTable)).length
 #eval (activeRows.filter (fun e => extendsTable e0LCTable e.2)).map (fun e => e.1)
+#eval (activeRows.filter (fun e => sameTable e.2 e0RETable)).length
+#eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
 
 #print axioms compatible_of_extends
 #print axioms cover_of_extends
