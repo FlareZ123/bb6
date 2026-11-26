@@ -1752,9 +1752,9 @@ jobs:
           compression-level: 0
           retention-days: 30
 
-canonical55_raw83_graft:
+  canonical55_raw83_graft:
     name: Add Raw83 after Canonical56 to produce Canonical55
-    if: \${{ inputs.target == 'canonical55-raw83-graft' }}
+    if: ${{ inputs.target == 'canonical55-raw83-graft' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -1772,8 +1772,8 @@ canonical55_raw83_graft:
           lean --version
       - name: Compile the incremental Raw83 Canonical55 graft
         env:
-          GH_TOKEN: \${{ github.token }}
-          CANONICAL56_RUN_ID: \${{ inputs.canonical56_run_id }}
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL56_RUN_ID: ${{ inputs.canonical56_run_id }}
         run: |
           set -euo pipefail
           [[ "$CANONICAL56_RUN_ID" =~ ^[0-9]+$ ]]
