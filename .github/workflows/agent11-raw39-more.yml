@@ -351,31 +351,7 @@ jobs:
           p=Path(sys.argv[1]);j=json.loads(p.read_text());j['artifact_prefix']='raw39-'+sys.argv[2]+'-semantic-shard';p.write_text(json.dumps(j,indent=2)+'\n')
           PY
 
-      - name: Inspect reusable 1LE proof grammars
-        if: ${{ inputs.branch == 'inspect-1LE-proof-sources' }}
-        run: |
-          set -euo pipefail
-          python - <<'PY'
-          import base64, lzma
-          from pathlib import Path
-          root = Path('im-results/agent11-raw39')
-          stems = ['Raw391LEBlockRuns', 'Raw391LE12198', 'Raw391LEPairTriple',
-                   'Raw391LEMoreSweep', 'Raw391LEFiveSweep', 'Raw391LEFourPhase']
-          needles = ('inductive ', 'structure ', 'def Core', 'def Saved',
-                     'firstReturn', 'theorem never', 'def family', 'def Proc',
-                     'def Q', 'Gap', 'Stack', 'Saved', 'Core')
-          for stem in stems:
-              path = root / (stem + '.lean.xz.b64')
-              source = lzma.decompress(base64.b64decode(path.read_text())).decode()
-              lines = source.splitlines()
-              print(f'===== {stem}: {len(lines)} lines =====')
-              chosen = set()
-              for i, line in enumerate(lines):
-                  if any(n in line for n in needles):
-                      chosen.update(range(max(0, i-1), min(len(lines), i+5)))
-              for i in sorted(chosen):
-                  print(f'{i+1}: {lines[i]}')
-          PY
+
       - name: Check one independent semantic shard
         env:
           GROUP: ${{ matrix.group }}
@@ -552,4 +528,30 @@ jobs:
               for line in source.splitlines():
                   if '5,true' in line or '5, true' in line:
                       print('KNOWN_F1', line.strip())
+          PY
+
+      - name: Inspect reusable 1LE proof grammars
+        if: ${{ inputs.branch == 'inspect-1LE-proof-sources' }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, lzma
+          from pathlib import Path
+          root = Path('im-results/agent11-raw39')
+          stems = ['Raw391LEBlockRuns', 'Raw391LE12198', 'Raw391LEPairTriple',
+                   'Raw391LEMoreSweep', 'Raw391LEFiveSweep', 'Raw391LEFourPhase']
+          needles = ('inductive ', 'structure ', 'def Core', 'def Saved',
+                     'firstReturn', 'theorem never', 'def family', 'def Proc',
+                     'def Q', 'Gap', 'Stack', 'Saved', 'Core')
+          for stem in stems:
+              path = root / (stem + '.lean.xz.b64')
+              source = lzma.decompress(base64.b64decode(path.read_text())).decode()
+              lines = source.splitlines()
+              print(f'===== {stem}: {len(lines)} lines =====')
+              chosen = set()
+              for i, line in enumerate(lines):
+                  if any(n in line for n in needles):
+                      chosen.update(range(max(0, i-1), min(len(lines), i+5)))
+              for i in sorted(chosen):
+                  print(f'{i+1}: {lines[i]}')
           PY
