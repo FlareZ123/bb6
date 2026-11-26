@@ -9,30 +9,65 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent50CtlFootprintSecond
 
+open Mathlib Relation Nat Turing BusyBeaver
 open BusyBeaver.CtlCert
 
 abbrev CtlSource :=
   BusyBeaver.M_1RB0RC_1LC0LD_1RA1RC_1RA1LE_0LB1RE_HHH1RA
 
-def source3 : ConjectureMachines.Machine 6 2 := CtlSource.machine
+/-- Re-elaborate the exact pinned RLE locally so the finite CTL checker
+    can reduce the transition table in this module. -/
+def source3 : ConjectureMachines.Machine 6 2 :=
+  load_rle_machine% "1RB0RC_1LC0LD_1RA1RC_1RA1LE_0LB1RE_HHH1RA"
+
+theorem source3_eq_pinned : source3 = CtlSource.machine := rfl
 def candidate3 : BB6Coverage.Machine :=
   BB6.ConjectureBridge.toAgent8 source3
 
-private abbrev target3 : BusyBeaver.Machine (Fin 2) (Fin 6) :=
-  CtlSource.target
+private abbrev target3 : BusyBeaver.Machine (Fin 2) (Fin 6) := source3.toBB
 
 private def boolToFin2 (b : Bool) : Fin 2 := if b then 1 else 0
 private def fin2ToBool (a : Fin 2) : Bool := a.val == 1
 private def boolToDir (b : Bool) : Turing.Dir :=
   if b then Turing.Dir.right else Turing.Dir.left
 
+def ofAgent8_3 (m : BB6Coverage.Machine) :
+    ConjectureMachines.Machine 6 2 where
+  transition q a :=
+    (m (q, fin2ToBool a)).map fun mv =>
+      (boolToFin2 mv.write, boolToDir mv.right, mv.next)
+
+/-- The inverse adapter is a left inverse on every local transition table. -/
+theorem toAgent8_ofAgent8_3 (m : BB6Coverage.Machine) :
+    BB6.ConjectureBridge.toAgent8 (ofAgent8_3 m) = m := by
+  funext s
+  rcases s with ⟨q, b⟩
+  cases b
+  · cases h : m (q, false) with
+    | none =>
+        simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h]
+    | some mv =>
+        cases mv with
+        | mk w r n =>
+            cases w <;> cases r <;>
+              simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h,
+                boolToFin2, boolToDir, fin2ToBool]
+  · cases h : m (q, true) with
+    | none =>
+        simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h]
+    | some mv =>
+        cases mv with
+        | mk w r n =>
+            cases w <;> cases r <;>
+              simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h,
+                boolToFin2, boolToDir, fin2ToBool]
+
 /-- Recover the exact pinned source target after the local inverse adapter. -/
 theorem ofAgent8_candidate3_toBB :
-    (BB6.Agent50CtlFootprint.ofAgent8 candidate3).toBB = target3 := by
+    (ofAgent8_3 candidate3).toBB = target3 := by
   funext q a
   fin_cases q <;> fin_cases a <;>
-    simp [target3, source3, candidate3,
-      BB6.Agent50CtlFootprint.ofAgent8,
+    simp [target3, source3, candidate3, ofAgent8_3,
       BB6.ConjectureBridge.toAgent8, ConjectureMachines.Machine.toBB,
       boolToFin2, boolToDir, fin2ToBool]
 
@@ -82,7 +117,7 @@ theorem ctlLeaf3_neverHalts (m : BB6Coverage.Machine)
   have hAgree :
       ∀ p : Fin 1, ∀ s : Fin 6, ∀ a : Fin 2, ∀ q : Fin 3,
         (p, s, a, q) ∈ ctlAcc3 →
-          (BB6.Agent50CtlFootprint.ofAgent8 m).toBB s a = target3 s a := by
+          (ofAgent8_3 m).toBB s a = target3 s a := by
     intro p s a q hmem
     have hslot : (s, fin2ToBool a) ∈ used3 :=
       ctlAcc3_used p s a q hmem
@@ -93,17 +128,22 @@ theorem ctlLeaf3_neverHalts (m : BB6Coverage.Machine)
     have hmove : m (s, fin2ToBool a) =
         candidate3 (s, fin2ToBool a) := hm _ _ hleaf
     calc
-      (BB6.Agent50CtlFootprint.ofAgent8 m).toBB s a =
-          (BB6.Agent50CtlFootprint.ofAgent8 candidate3).toBB s a := by
+      (ofAgent8_3 m).toBB s a =
+          (ofAgent8_3 candidate3).toBB s a := by
             have hTransition :
-                (BB6.Agent50CtlFootprint.ofAgent8 m).transition s a =
-                  (BB6.Agent50CtlFootprint.ofAgent8 candidate3).transition s a := by
-              simp [BB6.Agent50CtlFootprint.ofAgent8, hmove, fin2ToBool]
+                (ofAgent8_3 m).transition s a =
+                  (ofAgent8_3 candidate3).transition s a := by
+              change
+                (m (s, fin2ToBool a)).map
+                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next)) =
+                  (candidate3 (s, fin2ToBool a)).map
+                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next))
+              rw [hmove]
             simp [ConjectureMachines.Machine.toBB, hTransition]
       _ = target3 s a := by
             rw [ofAgent8_candidate3_toBB]
   have hIsNotHalt : BusyBeaver.IsNotHalt
-      (BB6.Agent50CtlFootprint.ofAgent8 m).toBB :=
+      (ofAgent8_3 m).toBB :=
     BB6.Agent50CtlFootprint.ctl_certificate_implies_is_does_not_halt_of_agreement
       ctlLeftDfa3 ctlRightDfa3 ctlAcc3 ctlCheck_target3 hAgree
   have hNoHalt :
@@ -113,7 +153,7 @@ theorem ctlLeaf3_neverHalts (m : BB6Coverage.Machine)
   have hNever :=
     BB6.ConjectureBridge.not_halts_to_agent8
       (BB6.Agent50CtlFootprint.ofAgent8 m) hNoHalt
-  simpa [BB6.Agent50CtlFootprint.toAgent8_ofAgent8] using hNever
+  simpa [toAgent8_ofAgent8_3] using hNever
 
 private def allSlots3 : List BB6Coverage.Slot :=
   (List.finRange 6).flatMap fun q => [(q, false), (q, true)]
