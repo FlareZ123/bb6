@@ -4,6 +4,7 @@ import Canonical64ChampionConsumer
 namespace BB6.Agent4Canonical62Champion
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6ChampionArithmetic
 
 /-- Reuse the accepted Canonical64 score/witness boundary, while the
