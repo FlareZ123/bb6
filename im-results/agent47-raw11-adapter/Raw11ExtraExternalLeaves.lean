@@ -1,3 +1,4 @@
+import WeightedTNF
 import Raw11ExtraFamilyCoverage
 import Raw11ExtraSweepCoverage
 
