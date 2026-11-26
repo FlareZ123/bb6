@@ -13,6 +13,8 @@ namespace BB6.Agent4Canonical62Raw112Raw58
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31StableParentBatch
 open BB6.Agent3Canonical64Raw120
+open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
+open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6ChampionArithmetic
 
 /-- The independently source-audited Raw112 parent. -/
