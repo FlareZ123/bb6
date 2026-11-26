@@ -108,7 +108,7 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
     have hn2 : 1<n := by omega
     have ht : target n 1 1=0 := by simp [target,hn2]
     have he' := he
-    simp [hbase.1,hbase.2,hx0,target,hn2] at he'
+    simp [hbase.2,hx0,target,hn2] at he'
     have hc2 : 2*a=(n+2)/2 := by simpa using he'
     have hmod2 : (n+2)%2=0 := by omega
     have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
@@ -149,11 +149,12 @@ theorem half_margin_ok_n45352466 :
     halfMarginOK 45352466 250000000 2 0
       [(1,(45352466+2)/4)] = true := by
   have hpow : 2^64 ≤ 2^45352466 :=
-    Nat.pow_le_pow_right (by decide : 0<2) (by norm_num)
+    Nat.pow_le_pow_right (by decide : 0<2) (by omega)
   have hnum :
       (45352466+250000000+2)*marginSize 45352466 250000000*4
         < 6*2^64 := by
-    norm_num [marginSize]
+    change (45352466+250000000+2) * (2*(45352466+3*250000000+10)+6) * 4 < 6*2^64
+    decide
   have hineq :
       (45352466+250000000+2)*marginSize 45352466 250000000*4
         < 6*2^45352466 := by
@@ -164,7 +165,7 @@ theorem half_margin_ok_n45352466 :
     half certificate at cost two for K=250,000,000. -/
 theorem half_cert_n45352466 :
     HalfCert 45352466 250000000 2 [(1,(45352466+2)/4)] :=
-  half_cert_first_two 45352466 250000000 (by norm_num) half_margin_ok_n45352466
+  half_cert_first_two 45352466 250000000 (by decide) half_margin_ok_n45352466
 
 #print axioms half_covered_next_block
 #print axioms half_cert_next_block
