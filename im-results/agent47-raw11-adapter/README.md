@@ -31,11 +31,18 @@ The 94 bank leaves and all 157 checkpoint residuals share the Raw11 fixed prefix
 
 The current `Agent5Q0AutoConsume.v` is single-parent: its exact count theorem is `(156,1,1,0)`. A nine-parent roster would need to prove `(156,1,9,0)`, preserve the one held node, and leave the other 147 active nodes as obligations. A common source bound of 234 suffices for the nine local parent bounds, subject to the source-accepted parent proofs.
 
+## Coq source checkpoint and current status
+
+- **Membership source accepted:** `Agent47Q0NineParentMembership.v` compiled in CI run [45844062536](https://github.com/FlareZ123/bb6/actions/runs/45844062536). It establishes the exact packed-queue counts `(156 active, 1 held, 9 active covered, 0 held covered)` and the nine active indices `[26;33;34;39;44;46;48;49;51]`. This is a membership/count theorem, not a parent-safety theorem.
+- **Restriction/bridge pending:** `Agent47Raw11RestrictedQ0.v` is intended to prove that filtering the actual `q_0` frontier by Raw11 equals the two local BFS rounds from `raw11_node`. The first two CI failures were only type/scope issues in metadata and diagnostic output; those have been corrected. The next run is queued as [45844648337](https://github.com/FlareZ123/bb6/actions/runs/45844648337). The exact restriction theorem has not yet been source-accepted.
+- **Common parent bound:** the nine local bounds in the table have maximum **234**, not 162. The bridge interface now assumes `Forall (source_table_safe 234) q0_nine_parent_roster` before lifting to 1,000,006.
+- **Parent source Covers still pending:** the eight non-33 direct-parent source runs are being generated/compiled separately; root 33 is being sharded by Agent 50. The independent exact-max calculations in `im-results/agent50-q0-index33/exact-sibling-parents.json` are useful corroboration, but are not substitutes for these Coq source Covers.
+
 ## What is and is not established
 
 - Established computationally: the 94 exact leaf tables group uniquely under the nine active checkpoint parents above.
-- Existing generator logic: the nine parent trees can be reconstructed from the pinned root-scan JSON and checked against all 94 automata certificates.
-- Not yet established: Coq source acceptance for all nine parent proofs; a kernel-checked nine-parent roster consumer; reverse coverage of the whole Raw11 parent; or a Raw11 Cover.
+- Established in Coq source: the exact nine-parent membership/count theorem described above.
+- Not yet established: source-accepted safety Covers for all nine parent rows; the exact Raw11 restriction equality; the backwards-safety bridge; or a Raw11 Cover.
 - Root 28 is separate: its one open leaf has a separate symbolic proof and is not part of this 94-leaf bank.
 
-The next useful work is to source-check the remaining parent trees in small groups, then compose their exact parent Covers into one source-queue roster. Do not treat the 94 leaves as 94 queue entries or remove them directly from the checkpoint.
+The next useful work is to finish the exact restriction proof, source-check the remaining parent trees, and compose their Covers into one source-queue roster. Do not treat the 94 leaves as 94 queue entries or remove them directly from the checkpoint.
