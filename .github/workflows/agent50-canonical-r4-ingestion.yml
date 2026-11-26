@@ -73,7 +73,7 @@ jobs:
           path: /tmp/canonical77
 
       - name: Download the exact canonical77 dependency manifest
-        if: ${{ !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -82,7 +82,7 @@ jobs:
           path: /tmp/canonical77-manifest
 
       - name: Recreate the canonical77 source closure inputs
-        if: ${{ !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -170,7 +170,7 @@ jobs:
         run: bash im-results/agent19-hard-root-crosswalk/reproduce-raw10-cryptids-leaf.sh
 
       - name: Upload source-backed raw10 last-hole leaf closure
-        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint }}
+        if: ${{ inputs.compile_raw10_cryptids_leaf && !inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         uses: actions/upload-artifact@v4
         with:
           name: raw10-cryptids-leaf-certified
@@ -196,7 +196,7 @@ jobs:
         run: bash im-results/agent50-weighted-tnf-pilot/reproduce-raw10-ctl-footprint.sh
 
       - name: Upload minimal source-backed Raw10 CTL footprint closure
-        if: ${{ inputs.compile_raw10_ctl_footprint }}
+        if: ${{ inputs.compile_raw10_ctl_footprint && !inputs.compile_raw10_f0_zip }}
         uses: actions/upload-artifact@v4
         with:
           name: raw10-ctl-footprint-certified
