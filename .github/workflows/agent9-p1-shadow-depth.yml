@@ -156,7 +156,7 @@ jobs:
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/ReverseLagBlocks.lean" | tee /tmp/reverse-live-block.log
-          python tools/lean_compile_deps.py "im-results/agent9-p1-reverse-block/ReverseBlockJump.lean" | tee -a /tmp/reverse-live-block.log
+          python tools/lean_compile_deps.py "im-results/agent9-p1-reverse-block/JumpResidueSource.lean" | tee -a /tmp/reverse-live-block.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/reverse-live-block.log; then exit 1; fi
           python - <<'PY'
           import re
@@ -176,6 +176,23 @@ jobs:
           for name in ("mod_sub_residue", "walk_mem_jump", "jumpCandidates_cover", "walk_mem_prefix_live", "trace_prefix_live", "trace_prefix_live_candidates"):
               m = re.search(r"'BB6\.Agent9ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent9ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
+                  print(name, [])
+                  continue
+              if not m:
+                  raise SystemExit("Missing axiom profile: "+name)
+              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
+                  raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
+              print(name, sorted(axioms))
+          PY
+
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/reverse-live-block.log').read_text()
+          for name in ("mem_residues_iff", "mem_residuesUnique_iff", "residue_range", "weight_eq_nat", "nat_sub_residue", "mem_lift_iff", "liftResidues_cover"):
+              m = re.search(r"'BB6\.Agent9JumpResidue\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m and re.search(r"'BB6\.Agent9JumpResidue\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
                   continue
               if not m:
