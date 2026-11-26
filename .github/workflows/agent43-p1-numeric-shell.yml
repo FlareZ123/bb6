@@ -1,6 +1,16 @@
 name: Agent43 P1 all-natural numeric dyadic shell (manual)
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Arithmetic proof target
+        type: choice
+        options: [numeric-shell, chunk-margin]
+        default: numeric-shell
+      source_ref:
+        description: Exact source commit (optional)
+        type: string
+        required: false
 permissions:
   contents: read
 jobs:
@@ -9,12 +19,15 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile dyadic shell arithmetic
+        if: inputs.target == 'numeric-shell'
         run: |
           set -e
           N=im-results/agent43-p1-high-cost-reset-count
@@ -22,3 +35,14 @@ jobs:
           lean -o "$N/NumericShell.olean" "$N/NumericShell.lean"
           lean -o "$N/NumericPower148.olean" "$N/NumericPower148.lean"
           lean -o "$N/NumericBridge148.olean" "$N/NumericBridge148.lean"
+      - name: Compile original delayed-carry word-local margin bridge
+        if: inputs.target == 'chunk-margin'
+        run: |
+          set -eo pipefail
+          N=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen"
+          python tools/lean_compile_deps.py "$N/ChunkMargin.lean" | tee /tmp/chunk-margin.log
+          for t in chunkProduct_powRunOK chunk_safe allBlockMargins_of_chunkProduct; do
+            grep -F "BB6.Agent43P1Complement.$t'" /tmp/chunk-margin.log
+          done
+          if grep -E 'sorryAx|native_decide' /tmp/chunk-margin.log; then exit 1; fi
