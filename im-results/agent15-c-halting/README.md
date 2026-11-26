@@ -93,7 +93,7 @@ Q(u)=(2W-3,\;24450+39417u).
 
 ### q=1 parent exclusions
 
-Nine disjoint infinite parameter slices of the q=1 parent
+Twelve disjoint infinite parameter slices of the q=1 parent
 \(Q(u)=(2W-3,24450+39417u)\) are now excluded.
 
 The first four previously established slices are:
@@ -127,7 +127,7 @@ The first four previously established slices are:
    \]
    whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
 
-The following five additional slices are formalized in
+The following eight additional slices are formalized in
 [U5Q0W7U19Mod2560.lean](U5Q0W7U19Mod2560.lean):
 
 5. **\(u=339+2560v\)**. The q=1 parent and forced predecessors are
@@ -206,14 +206,38 @@ The following five additional slices are formalized in
    even-right six, odd/odd low-value, then two even-right six inverses.
    The terminal state has odd right coordinate and sum \(1\pmod4\).
 
-For every one of these nine slices, the root filters give
+10. **\(u=16339+20480v\)**. The forced chain is odd/odd low-value,
+    even/odd sum-three, even-right six, odd/odd low-value,
+    even-right six, then even/odd sum-three. Its terminal state is
+    \[
+    (599909367+751923480v,\;402779687+504842100v),
+    \]
+    with odd right coordinate and sum \(2\pmod4\).
+
+11. **\(u=20019+20480v\)**. After odd/odd low-value and even/odd
+    sum-three, six exact even-right inverses reach
+    \[
+    (1703649905+1742827800v,\;9178857+9389940v),
+    \]
+    with odd right coordinate and sum \(2\pmod4\).
+
+12. **\(u=1939+2560v\)**. Odd/odd low-value and even/odd sum-three
+    reach the sum-seven target
+    \[
+    (53007635+69961920v,\;56915364+75119520v).
+    \]
+    Its exact residues satisfy the hypotheses of the original-source
+    sum7_every_parent_odd_image theorem. Every exact parent is therefore
+    in the forbidden odd-right sum-two image.
+
+For every one of these twelve slices, the root filters give
 \(z=2+4u\equiv14\pmod{16}\) and \(z\equiv3\pmod5\). The necessary
 root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), forces
 \(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The original four
 families require the previously stated parameter restrictions:
 \(t\equiv1\pmod5\) for \(u=7+32t\) and \(u=35+64t\), and
 \(s\equiv3\pmod5\) for \(u=23+512s\); the \(u=59+80t\) family
-needs no further restriction. The five new families also need no
+needs no further restriction. The eight new families also need no
 further restriction, since each base value is \(19\pmod{20}\) and
 each step is divisible by 20. These are necessary-residue-compatible
 sublifts, not a classification of the full \(w=7\) progression.
@@ -225,9 +249,9 @@ The focused workflow target w7-q0-parent-fan in
 passed for the original four roots in run
 [#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
 The extended closure, which additionally compiles
-U5Q0W7U19Mod2560.lean and all ten new q=0/q=1 declarations, passed in
+U5Q0W7U19Mod2560.lean and all sixteen new q=0/q=1 declarations, passed in
 [run #25](https://github.com/FlareZ123/bb6/actions/runs/45832100735) and the further extension in [run #26](https://github.com/FlareZ123/bb6/actions/runs/45833176482).
-The module explicitly prints the axioms of every new theorem in the combined nine-slice closure; the
+The module explicitly prints the axioms of every new theorem in the combined twelve-slice closure; the
 workflow's rejection guard found no sorryAx or native_decide dependency.
 The proofs use the original-source odd/odd low-value, even/odd sum-three,
 and even-right six inverse theorems, together with the established
