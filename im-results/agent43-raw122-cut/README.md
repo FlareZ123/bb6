@@ -50,3 +50,23 @@ On 2026-11-26 at 01:27Z, original Lean 4.36.0-rc2 checked remaining 18_12, 18_13
 ### Four-way ternary counter in kid05_16
 
 `Raw122Counter05.lean` proves a single parameterized `never` theorem for all four tables `1RB0RE_1RC---_0RD{C1}_1LD1RE_1RA0LF_1LE0LF`, C1 ∈ {0LE,0LF,1LD,1RD}. From entry times 42/42/44/46, the machine reaches E0 with an empty left tape and right word `(10)^3 ++ 0001`. Arbitrary-tail sweeping gives `(10)^k ++ bits(t)` → `(10)^(k+1) ++ bits(next(t))`; the recursively defined ternary digits 00100, 00000, 00010 cycle and carry at the last digit. The terminal 0001 grows a new digit. The only variant-specific cost is the d0 replacement (7/7/9/11 core steps). The exact original Lean 4.36.0-rc2 theorem passed with axioms propext and Quot.sound only. Agent29 concurrently found large DFA candidates M103–M106 for these same machines; this shared short proof is a much cheaper graft dependency. 1RE is not included; its shifted core is a different recurrence.
+
+## 2026-11-26: remaining hard raw122 counter families
+
+All the following sources were checked locally with Lean 4.36.0-rc2 against the pinned original kernel and sweep libraries. Their `never` theorems quantify over every compatible completion of the literal partial table.
+
+- [Raw122Shift05.lean](Raw122Shift05.lean): the remaining C1=1RE variant of the B1-hole family above. Three scaled relations lift paths of length n into paths of length 6+3n; the unbounded path maps to actual positive-cost sweeps.
+- [Raw122AHole05.lean](Raw122AHole05.lean): `1RB---_1RC0RA_0RD1RE_1LD1RE_1RB0LF_1LE0LF`. A four-step suffix path 4→66→96→100→2 seeds the exact self-lift F³(128x+2)=128F(x)+2. The relational proof constructs arbitrarily long original-machine runs.
+- [Raw122Pair05.lean](Raw122Pair05.lean): `1RB---_1RC0RA_0RD{C1}_1LD1RE_1RB0LF_1LE0LF` for C1=0LD or 1RB (Boolean parameter false/true). The shared suffix relation lifts every two-step path to a six-step path at scale 256, offset 84. This replaces the large indexed proofs M100/M101; they had already been independently certified by Agent29.
+
+Together with Counter17 and Counter05 these are nine new symbolic proofs (some overlapping independent DFA proofs), plus the independently replicated late query in LateBound.lean. The three new scaled-relation proofs have ordinary axioms propext, Classical.choice, Quot.sound. No claim of nine previously unknown nonhalting tables is made.
+
+### Recovered complete 1LC cylinder
+
+[Raw122RecoveredLC.lean](Raw122RecoveredLC.lean) provides `BB6.Agent43Raw122RecoveredLC.cover14` and zero residuals for F1=1LC, bound 7014. The pinned generated source is artifact 15043765926. Both original 1LC and 1RA recovery wrappers compiled with standard axioms. Reproduce using `recover_additional.py`; its 14 wrapper name is deliberately distinct from the earlier fourteen-child combined proof. Together with the previous 14/24 covers this certifies 16/24 ordinary F1 children (156,250,000 literal transition-table completions).
+
+### Modular residual composition
+
+[Raw122RootCompose.lean](Raw122RootCompose.lean) proves a generic root theorem from 24 independent child bounds at C≥7014; the root's immediate halt is handled in its proof. [Raw122ResidualCompose.lean](Raw122ResidualCompose.lean) proves Good/cover_of_good using exact residual obligations. Both checked with standard axioms.
+
+[split_partial.py](split_partial.py) preserves the original partial audit and unresolved leaves while factoring large original reductions into separately checked modules. [residual_roster.py](residual_roster.py) emits per-kid exact residual-table equalities, independently checkable with ordinary kernel reduction. Generate on the **original**, unpatched artifact source 15043765926, not a grafted tree. For branch05 the extracted list contains 20 exact tables; [Raw122Roster05Witnesses.lean](Raw122Roster05Witnesses.lean) matches all of these to 11 of Agent29's indexed certificates (050–060), eight new symbolic nonhalting instances and the conditional late-query bound for p05_007. The witness mapping was checked against the identical literal-table definitions in a structural sandbox with the audit-check proposition explicit; it does not establish the original branch audit. The actual per-kid checks and final composition are underway. The required late theorem is Agent29PackedLate.M0.bound at 6766859; see [agent29-raw122-run](../agent29-raw122-run/). Four unopened closed shards (05_04,10,18,22) run in CI 45739090319; other missing source shards are checked locally. The eight genuine residual branches of the original root still require independent complete covers and root assembly. No BB(6) upper bound is claimed.
