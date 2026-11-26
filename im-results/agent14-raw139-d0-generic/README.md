@@ -86,11 +86,11 @@ Agent48's A6 source-connected theorem and weighted leaf Cover are accepted in ru
 
 ## Normalized Raw139 p0 interface (source CI pending)
 
-`Raw139NormalizedAcceptedCovers.lean` imports the normalized seven-split p0 decomposition and the existing source-sibling modules. It matches every one of the 43 entries in `acceptedRows` against the actual source-parent tables using `sameTable`, then transports each corresponding `Cover` to the normalized child. The finite match audit includes the 13 D0/F1 source siblings, the 12-parent C1 batch, 11 F0 siblings, D0=0RF, and six additional F1 siblings.
+[`Raw139NormalizedAcceptedCovers.lean`](Raw139NormalizedAcceptedCovers.lean) imports the normalized seven-split p0 decomposition in [`Raw139Normalized.lean`](../agent6-raw139-normalized/Raw139Normalized.lean) and the existing source-sibling modules. It matches every one of the 43 entries in `acceptedRows` against the actual source-parent tables using `sameTable`, then transports each corresponding `Cover` to the normalized child. The finite match audit includes the 13 D0/F1 source siblings, the 12-parent C1 batch, 11 F0 siblings, D0=0RF, and six additional F1 siblings.
 
 The same adapter transports the two special depth-six leaves to the existing 0RD continuation children and uses `parent_certificate_on_championP7` to close the terminal `p7` cylinder. Consequently, `raw139_cover_after_accepted` has only one remaining hypothesis: Covers for the **67 literal tables** in `remainingTables`. It does not substitute the old 80-entry complement for this 67-table list, and it does not establish those 67 Covers.
 
-The source audit is added to the existing `agent6-champion-residual.yml` workflow; no new workflow is introduced. Until that run passes, treat this as a proof candidate rather than a source-accepted result. Even after acceptance, the BB(6) upper bound remains open until all 67 residual table Covers are proved.
+The source audit is added to the existing [`agent6-champion-residual.yml`](../../.github/workflows/agent6-champion-residual.yml) workflow; no new workflow is introduced. Until that run passes, treat this as a proof candidate rather than a source-accepted result. Even after acceptance, the BB(6) upper bound remains open until all 67 residual table Covers are proved.
 
 
 ### Separate 66-table candidate not yet integrated
