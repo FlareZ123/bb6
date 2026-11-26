@@ -3,6 +3,7 @@ import OddOddLowVal
 import SectionEvenOddSum3Inverse
 import EvenRightSixOrbit
 import HighSumTwo
+import HighEvenRightSum7Source
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -1148,6 +1149,101 @@ theorem w7_q0_target_unreachable_u20019mod20480 (v : Nat) :
 #print axioms w7_q0_target_unreachable_u16339mod20480
 #print axioms w7_z2_q1_parent_unreachable_u20019mod20480
 #print axioms w7_q0_target_unreachable_u20019mod20480
+
+
+/-- The original-source sum-seven parent theorem: every exact parent
+    of this target is in the forbidden odd-right sum-two image. -/
+theorem w7_blank_no_sum7_target (x y : Nat)
+    (hx : 5<x) (hy12 : 12≤y) (hxy8 : (x+y)%8=7)
+    (hS16 : (x+y+1)%16=8) (hS32 : (x+y+1)%32=24)
+    (hx4 : x%4=3) (hy8 : y%8=4) :
+    ¬ BB6.Agent3.CReach x y := by
+  intro hreach
+  obtain ⟨a,b,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      x y hx hreach
+  have hpre : BB6.Agent46.sectionPreimageAll a b x y :=
+    (BB6.Agent46.section_preimage_all_iff a b x y).mp hstep
+  have himage := BB6.Agent19HighEvenRight.sum7_every_parent_odd_image
+    x y a b hy12 hxy8 hS16 hS32 hx4 hy8 hpre
+  exact BB6.Agent11High.blank_no_odd_sum_two
+    a b himage.1 himage.2.1 himage.2.2 hprev
+
+/-- A tenth new q=1 exclusion, on u=1939+2560*v. The first two
+    forced parents reach the original-source sum-seven cylinder. -/
+theorem w7_z2_q1_parent_unreachable_u1939mod2560 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (13930351+18385920*v) (76454013+100907520*v) := by
+  let Ax : Nat := 13930351+18385920*v
+  let Ay : Nat := 76454013+100907520*v
+  let Bx : Nat := 45192180+59646720*v
+  let By : Nat := 60823095+80277120*v
+  let Cx : Nat := 53007635+69961920*v
+  let Cy : Nat := 56915364+75119520*v
+  have hAx : 5<Ax := by dsimp [Ax]; omega
+  have hAxOdd : Ax%2=1 := by dsimp [Ax]; omega
+  have hAyOdd : Ay%2=1 := by dsimp [Ay]; omega
+  have hAy5 : 5≤Ay := by dsimp [Ay]; omega
+  have hAsum4 : (Ax+Ay)%4=0 := by dsimp [Ax,Ay]; omega
+  have hAsum16 : (Ax+Ay)%16≠0 := by dsimp [Ax,Ay]; omega
+  have hAsize : 24≤Ax+Ay := by dsimp [Ax,Ay]; omega
+  intro hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 Ax Ay hAx hA
+  have hAparent :=
+    (BB6.Agent3.oddodd_lowval_parent_iff a k Ax Ay
+      hAxOdd hAyOdd hAy5 hAsum4 hAsum16 hAsize).mp hstep
+  rcases hAparent with ⟨hsumA,hcostA⟩
+  have haB : a=Bx := by dsimp [Ax,Ay,Bx] at hsumA ⊢; omega
+  have hkB : k=By := by dsimp [Ax,Ay,By] at hcostA ⊢; omega
+  have hB : BB6.Agent3.CReach Bx By := by
+    rw [haB,hkB] at hprev
+    exact hprev
+  have hByOdd : By%2=1 := by dsimp [By]; omega
+  have hBy5 : 5≤By := by dsimp [By]; omega
+  have hBsum : (Bx+By)%8=3 := by dsimp [Bx,By]; omega
+  obtain ⟨a2,k2,hprev2,hstep2⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Bx By (by dsimp [Bx]; omega) hB
+  have hBparent :=
+    BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
+      a2 k2 Bx By hBy5 hByOdd hBsum hstep2
+  rcases hBparent with ⟨hsumB,hcostB⟩
+  have haC : a2=Cx := by dsimp [Bx,By,Cx] at hsumB ⊢; omega
+  have hkC : k2=Cy := by dsimp [By,Cy] at hcostB ⊢; omega
+  have hC : BB6.Agent3.CReach Cx Cy := by
+    rw [haC,hkC] at hprev2
+    exact hprev2
+  have hCsum8 : (Cx+Cy)%8=7 := by dsimp [Cx,Cy]; omega
+  have hCsum16 : (Cx+Cy+1)%16=8 := by dsimp [Cx,Cy]; omega
+  have hCsum32 : (Cx+Cy+1)%32=24 := by dsimp [Cx,Cy]; omega
+  have hCx4 : Cx%4=3 := by dsimp [Cx]; omega
+  have hCy8 : Cy%8=4 := by dsimp [Cy]; omega
+  exact w7_blank_no_sum7_target Cx Cy
+    (by dsimp [Cx]; omega) (by dsimp [Cy]; omega)
+    hCsum8 hCsum16 hCsum32 hCx4 hCy8 hC
+
+/-- The original q=0 target is excluded on u=1939+2560*v. -/
+theorem w7_q0_target_unreachable_u1939mod2560 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (17928+28896*(1939+2560*v)) (17719+28560*(1939+2560*v)) := by
+  let u : Nat := 1939+2560*v
+  have hq1 : ¬ BB6.Agent3.CReach
+      (2*(2228+3591*u)-3) (24450+39417*u) := by
+    intro h
+    have hx : 2*(2228+3591*u)-3=13930351+18385920*v := by
+      dsimp [u]
+      omega
+    have hy : 24450+39417*u=76454013+100907520*v := by
+      dsimp [u]
+      omega
+    exact w7_z2_q1_parent_unreachable_u1939mod2560 v
+      (by simpa only [hx,hy] using h)
+  exact w7_q0_target_unreachable_of_q1 u (by dsimp [u]; omega) hq1
+
+#print axioms w7_blank_no_sum7_target
+#print axioms w7_z2_q1_parent_unreachable_u1939mod2560
+#print axioms w7_q0_target_unreachable_u1939mod2560
 
 #print axioms w7_z2_q1_parent_unreachable_u339mod2560
 #print axioms w7_q0_target_unreachable_u339mod2560
