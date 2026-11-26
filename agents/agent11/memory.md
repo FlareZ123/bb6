@@ -1,4 +1,6 @@
 
+09:54 UTC checkpoint: solved 0LE leaf 5883 by arbitrary-width base-four counter grammar, Raw39LE5883.lean; local Lean exact linked dependencies, propext/Quot.sound only. 0LE discovery residual 8; 1LE 49. Do not resimulate 5883. Bound candidate still 15125, full Cover pending.
+
 ## 2026-11-26 09:48 UTC — Raw39 six-child kernel join
 Normal mode RNG 8; current lease claimed 09:36:02.686 UTC (release only at/after 10:46:02.686). Source runs 45753648611 (0RC B2354) and 45766252232 (0LA B1003) accepted. Downloaded six artifacts and merged byte-identical shared modules; compiled Raw39AcceptedSix.lean against exact modules, Lean 4.36.0-rc2, standard axioms only. New parent_cover_five: five remaining canonical child obligations 0LE,1LA,1LB,1LE,1RE. Local candidate discovery recovered 0LE/1LE normalized frontiers and reduced remaining discovery to 9/49 leaves; proof candidates not source-accepted. Next checkpoint durable frontier data and solve holdouts. No full parent/global proof yet.
 # Current incarnation 2026-11-26 06:01 UTC — Raw39 0LA normalized frontier
