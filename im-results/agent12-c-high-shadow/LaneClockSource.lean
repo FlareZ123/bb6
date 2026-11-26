@@ -33,7 +33,7 @@ def fillKnownPlanes (N q : Nat) (ps : List Nat) : List Nat :=
     and the two event-coordinate planes from a raw lane trace. The sentinel
     at N is explicitly included in the index planes. -/
 def recoverAligned (s t : State) (N q : Nat) : Aligned :=
-  let v : BB6.Agent12LaneCertificate.Trace := LaneGenerator.recover s t N q
+  let v : BB6.Agent12LaneCertificate.Trace := BB6.Agent12LaneGenerator.recover s t N q
   let bs := fillKnownPlanes N q v.bs
   let ms := fillKnownPlanes N q v.ms
   let p := fillKnownPlane N q v.p
@@ -111,6 +111,8 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
     <;> omega
   · simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
       hState,hAge,hpost,lift,parity,step]
+    unfold weight6
+    grind
 
 /-- Sum the event clocks in descending bit order. This is exactly the
     ordinary word clock, including arbitrary initial idle age. -/
@@ -174,19 +176,21 @@ theorem clock_sums_of_checks (s t : State) (N q K : Nat)
     (ha : BB6.Agent12LaneClock.alignmentChecked N q v w) :
     sumTerms N q (callsTerms N w)=(clocks (word q 0 N) s).1 ∧
     sumTerms N q (weightTerms N w)=(clocks (word q 0 N) s).2 := by
-  obtain ⟨hN,hq,hclose,hstart,hfinish,hcounts,hK,hrest⟩ := hc
   have spec := BB6.Agent12LaneCertificate.spec_of_checked s t N q K v hc
+  obtain ⟨hN,hq,hclose,hstart,hfinish,hcounts,hK,hrest⟩ := hc
   let ts : TickSpec q N (lane v) := ⟨spec.next⟩
   have os0 := BB6.Agent12LaneClock.origin_spec N q v w ha
   let os : OriginRecurrence q N (lane v) (origin w) (value w.age) :=
     ⟨os0.event,os0.idle⟩
   have hState : origin w N=lift s := ha.1.trans hstart
-  have hAge : value w.age N=0 := ha.2
+  have hAge : value w.age N=0 := ha.2.1
   have hBoundary : lane v N=idle 0 (origin w N) := by
     rcases os0.top with ⟨ho,ha'⟩
     calc
       lane v N=origin w N := ho.symm
-      _=idle (value w.age N) (origin w N) := by rw [ha']; simp [idle_zero]
+      _=idle (value w.age N) (origin w N) := by
+        rw [ha']
+        exact (idle_zero _).symm
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
   have hcalls := BB6.Agent12LaneClock.calls_sum N q v w ha hq
