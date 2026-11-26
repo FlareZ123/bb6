@@ -14,8 +14,8 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
 SPECS=json.loads((ROOT/"siblings.json").read_text())
 A=sys.argv[1]
-if A=="1LB":
-    SPEC=json.loads((ROOT/"agent7-1lb.json").read_text())
+if A in ("1LB","1LE","0LF","1LF"):
+    SPEC=json.loads((ROOT/("agent7-"+A.lower()+".json")).read_text())
 elif A=="1LA":
     from make_1la_spec import spec
     SPEC=spec()
@@ -52,16 +52,25 @@ def main():
             pumps[i]=f"{pumpns}.M{i}"
             pumpcode.append(code)
             print(A,i,info)
-    if SPEC.get("seeded"):
-        for i,seed in SPEC["seeded"].items():
-            i=int(i); t,q,side,pre,P,S,stride=seed
-            p=one.parse(opens[i])
+    if SPEC.get("seeded") or SPEC.get("seeded_multi"):
+        seed_rows=[]
+        for i,seed in SPEC.get("seeded",{}).items():
+            t,q,side,pre,P,S,stride=seed
             w=multi.clean(multi.lit(pre)+multi.rep(P)+multi.lit(S))
             v=multi.clean(multi.lit(pre+P*stride)+multi.rep(P)+multi.lit(S))
             st=multi.C(q,w if side=="L" else (),w if side=="R" else ())
             tg=multi.C(q,v if side=="L" else (),v if side=="R" else ())
+            seed_rows.append((int(i),t,stride,st,tg))
+        for i,seed in SPEC.get("seeded_multi",{}).items():
+            t,q,l,r,tl,tr,stride=seed
+            def word(xs):return tuple(tuple(x) for x in xs)
+            st=multi.C(q,word(l),word(r))
+            tg=multi.C(q,word(tl),word(tr))
+            seed_rows.append((int(i),t,stride,st,tg))
+        for i,t,stride,st,tg in seed_rows:
+            p=one.parse(opens[i])
             ans=multi.pump(p,st,tg,3000)
-            assert ans is not None,(A,i,seed)
+            assert ans is not None,(A,i,st,tg)
             code,info=multi.generate(i,p,(t,st,tg,ans),epoch=True)
             _,a,b=info
             # The epoch generator checks the exact endpoints. Reindex the
