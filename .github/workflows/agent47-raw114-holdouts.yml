@@ -210,8 +210,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45873233270
-          name: raw11-root52-consumption
+          run-id: 45889628989
+          name: raw11-root52-known-consumption
           path: /tmp/a47-root52-precompiled
       - name: Reconstruct coverage contract source
         run: |
@@ -282,7 +282,7 @@ jobs:
             --provenance-input im-results/agent47-raw11-adapter/Root51LeanBase.lean
             --provenance-input im-results/agent5-weighted-tnf-queue/Q0RosterConsume.lean
             --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
-            --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json
+            --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52-known/manifest.json
           )
           for part in 0 1 2 3 4 5 6; do
             provenance+=(--provenance-input "im-results/agent47-raw11-adapter/Root49LeanPart${part}.lean")
@@ -295,7 +295,7 @@ jobs:
             --source-root /tmp/a47-root52-precompiled/q0-root52-lean \
             --workdir /tmp/a47-raw11-root52-known \
             --manifest /tmp/a47-raw11-root52-known/manifest.json \
-            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \
+            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52-known/manifest.json \
             --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
             --jobs 2 \
             --lean lean \
