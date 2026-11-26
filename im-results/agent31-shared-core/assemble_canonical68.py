@@ -24,8 +24,6 @@ HERE = Path(__file__).resolve().parent
 PINS = [
     (14997966221, 45554648116, "b55e4c939da70aaa4d2f50f5721b9183ab776682f1b682f647ee27aa6cc5da17"),
     (15043876968, 45647053824, "cfa00335da67bb71caf725c8a8fa6f0fd7c257035a4dfddc43531282924e305c"),
-    (15074048355, 45725315357, "63c9f11cb42e7b2e90c1877b7bf2c2e1093abfeed7e402afbcf9de9d48c6ce2a"),
-    (15074083310, 45725315357, "48f377986f931b5a950ea233d03bccdf603dc7f9b7665e72631c1b8ab8fc602b"),
     (15057164854, 45686044022, "0d4d87e1d342d3771666a292cef60051a5aad7fbd52a26215f4859b924282c5d"),
     (15035255805, 45633764095, "f68d8324508ec0c7e50d60a23c05a2d793390b379a3edd5adc65c5a0cb788ae0"),
     (15014940132, 45597857116, "5a5302602f5bdf563c7fc135919af39d6599d9e5ae745c90a87812162b87f0bb"),
@@ -44,7 +42,6 @@ PINS = [
 SOURCE_REVISIONS = {
     45554648116: "1217c6166525b6297191a35f2627eeea5691f17f",
     45647053824: "6df83f9e433d7e8c75e074b1789a457be6f4a4f3",
-    45725315357: "f5f7a3a247f583e353ff81db3d727f30a4b3b77b",
     45686044022: "9dfc3b3b5b0247e01dad1a8c323fd2a4f6963589",
     45633764095: "b4788a0c0b1cef8ff70ed79ddaf8c02e8de6ae43",
     45597857116: "3416108ec22f7e4519a365723a004b894dbbeed6",
@@ -55,7 +52,6 @@ SOURCE_REVISIONS = {
     45722543448: "779cbab28cf77c823e4a99dc3b358980e7a7f410",
 }
 REQUIRED = [
-    "Canonical68E1ParentGraft", "Canonical74Raw109Raw123Graft",
     "CanonicalTwoParentRosterOnly", "Raw60RootFull", "Raw109Closed",
     "Raw110ParentLateCover", "Raw111Data", "Raw121Data",
     "Raw123ResidualClosure", "Raw125ResidualClosure",
@@ -154,9 +150,11 @@ def main():
     assert not (linked / "Raw117Data.olean").exists(), "unexpected Raw117Data object"
     raw117log = compile_module(work / "Raw117Data.lean", linked / "Raw117Data.olean", env, work / "raw117.log")
     gate(raw117log, ["BB6.Agent8Raw117.all117"])
+    thinlog = compile_module(HERE / "Canonical68StableBatch.lean", linked / "Canonical68StableBatch.olean", env, work / "stable68.log")
+    gate(thinlog, ["BB6.Agent31StableParentBatch." + n for n in ["removeParents_sound", "liftCover", "parent_roots", "count68", "sound68", "exact_at_target"]])
     result = compile_module(HERE / "Canonical68Integrated.lean", linked / "Canonical68Integrated.olean", env, work / "canonical68.log")
     required = ["BB6.Agent31Canonical68Integrated." + name for name in [
-        "p60_eq", "p110_eq", "p111_eq", "p117_eq", "p121_eq", "p125_eq",
+        "p109_eq", "p123_eq", "cover109", "cover123", "all_parents", "p60_eq", "p110_eq", "p111_eq", "p117_eq", "p121_eq", "p125_eq",
         "cover60", "cover110", "cover111", "cover117", "cover121", "cover125",
         "sound68_integrated", "exact_at_target",
     ]]
