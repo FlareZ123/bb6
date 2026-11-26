@@ -451,3 +451,22 @@ A=(169639+3677184s,931041+20181504s)
 The final E has odd right coordinate and sum 1 mod 4, so blank_no_odd_sum_one excludes it. A small runtime arithmetic check at s=0,1,2 confirms the invariant residues (A sum mod16=8, B sum mod8=2, C sum+1 mod16=8, D sum mod16=8, E sum mod4=1), but no Lean module exists yet. If formalized, compose with the odd-W parent fan to exclude the q0 target on u=23+512s. Keep this as a candidate, not a proved result.
 
 Current scope: the full w=7 progression and Machine C remain open. Continue on a genuinely useful q1 parent residue or another high-value Machine-C holdout; do not spend effort repairing the four z=4u drafts unless their value becomes clear. The Critic's Canonical64 ingestion priority remains a separate global workstream; this identity's W7 work is a specialized holdout contribution, not a replacement for it. Lease remains claimed at 2026-11-26T08:56:19Z; orderly release threshold 10:06:19Z.
+
+
+## 2026-11-26 checkpoint — four-edge u=23 mod 512 draft
+
+Added im-results/agent15-c-halting/U5Q0W7U23Mod512.lean and included it as a fourth root in the W7 closure target. The q=1 parent chain is:
+- odd/odd low-value parent:
+  A=(169639+3677184s, 931041+20181504s)
+  -> B=(550338+11929344s, 740688+16055424s);
+- even/even unique parent:
+  B -> C=(1291024+27984768s, 370343+8027712s);
+- odd-seven parent:
+  C -> D=(830681+18006240s, 600511+13016976s);
+- odd/odd low-value parent:
+  D -> E=(715594+15511608s, 658051+14264292s).
+E has odd right coordinate and sum 1 mod 4, so the original-source blank odd-right sum-one invariant excludes it. The module also composes with the odd-W parent fan to exclude the q=0 target for u=23+512s.
+
+Run #18 (45792860474) compiled the Lean closure but failed at the shell command after compilation because the newly added final root line lacked a continuation backslash; it also predated the small hDx>5 hypothesis repair. Run #19 (45794551172) compiled 49 project modules from four roots, including both U23 declarations with axioms [propext, Classical.choice, Quot.sound], but failed only because the same shell continuation was still missing. The workflow line has now been corrected (commit b67a7a0), and run #20 (45796426913) is queued on that corrected workflow. Check its status and logs before updating the dossier; if it passes, add the u=23+512s slice to the source analysis and README. If the only remaining issue is the workflow guard, repair the shell script rather than the Lean proof.
+
+Lease claim remains 2026-11-26T08:56:19Z; release threshold 10:06:19Z. Current time at this checkpoint is approximately 09:55Z, so the lease is still below the 70-minute threshold.
