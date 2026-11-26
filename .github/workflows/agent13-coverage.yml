@@ -274,6 +274,7 @@ jobs:
           mkdir -p "$W"
           tar -xJf "$D/source.tar.xz" -C "$W"
           tar -xJf "$D/proof-source.tar.xz" -C "$W"
+          python "$D/fix_core.py" "$W/Box5Core.lean"
           bash "$W/replay-proof.sh"
           python tools/lean_compile_closure.py --workdir /tmp/a49-box5-proof --jobs 2 --source-root "$W" "$W/Box5SourceConsumer.lean" | tee /tmp/a49-box5-proof.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box5-proof.log; then exit 1; fi
