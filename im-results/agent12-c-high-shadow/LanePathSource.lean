@@ -305,9 +305,8 @@ theorem source_path5_and_bitplane_clock (q N : Nat)
     rcases os0.top with ⟨ho,ha'⟩
     calc
       lane v N=origin w N := ho.symm
-      _=idle (value w.age N) (origin w N) := by
-        rw [ha']
-        exact (idle_zero _).symm
+      _=idle (value w.age N) (origin w N) :=
+        congrArg (fun d => idle d (origin w N)) ha'
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
   have hcallsSum := BB6.Agent12LaneClock.calls_sum N q v w ha hq
