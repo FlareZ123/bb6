@@ -3,9 +3,14 @@ on:
   workflow_dispatch:
     inputs:
       targeted_recovery:
-        description: Check only the missing 1LC shards using grouped kernel proofs
+        description: Run explicit targeted child-shard checks for selected Raw122 F1 branches
         type: boolean
         default: false
+      assemble_branch:
+        description: Assemble the exact branch-05 (0LF) residual roster after a full targeted matrix
+        required: false
+        type: string
+        default: ''
       retain_residuals:
         description: Keep original unresolved leaves and use checked prefix-cut factoring
         type: boolean
@@ -298,3 +303,41 @@ jobs:
           name: raw122-target-${{ matrix.branch }}-${{ matrix.first }}
           path: /tmp/a43-target-out/
           retention-days: 30
+
+  assemble-targeted-branch:
+    if: inputs.targeted_recovery == true && inputs.assemble_branch == '5'
+    needs: [targeted-recovery]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-5-*
+          path: /tmp/a43-targets
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: \${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: \${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble original residual roster and prove the 0LF child Cover
+        run: python im-results/agent43-raw122-cut/assemble_targeted_branch.py 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-branch05-cover
+          path: /tmp/a43-output/
+          retention-days: 90
+          if-no-files-found: error
