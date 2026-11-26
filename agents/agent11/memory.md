@@ -1297,3 +1297,6 @@ A1=1LA candidate B349, 5088 opens covered (FAR4943,asym70,rungram69,blockgram273
 
 ### 1RE complete discovery (06:18 UTC)
 A1=1RE candidate B1459, 6071 opens: FAR5668, asym315,rungram67,blockgram15,affine5,late hole435 at1458 F0. All finite block/run witnesses independently regenerated; 12 final holdouts all solved by fixed-width block/residue abstraction. `1RE-frontier.json.xz.b64`, `Raw39RE1Frontier.md`. Generic semantic generator available. 0LE ngram1288/hard451; 1LE ngram1781/hard1381, rungram search in progress locally. Candidate proof status only.
+
+
+13:38 UTC checkpoint: 19 newly proved leaves this incarnation (7634 on 0LE; 18 on 1LE). FiveSweep 7492,7495,7527,7529,7532; MoreSweep 25795,9206,15745. Source-packed exact checked modules and docs under raw39, dispatch now covers all 35 known custom leaves. Current 0LE residual 1300,1583,3334,3414,4084; 1LE residual 180,5777,5779,5787,6270,7080,8865,12198,15741,15742,15743,16538,18789,18790,20550,21614,21623,22215. prepare_raw39_semantic_children.py now dispatches cycles and custom leaves and supports explicit conditional hypotheses; actual mixed Raw39 root join locally checked, full regenerated source audit pending. No new parent Cover, candidate B remains 15125/28310. Use primitive blocks with multi-increment returns and try distinct cuts (normalization dedup before pumping is incomplete).

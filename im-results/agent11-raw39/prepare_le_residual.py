@@ -35,6 +35,10 @@ def custom_le(branch,out):
         assert hashlib.sha256(source).hexdigest()=='c69e36b505410b8d7d211a03c4befe1156cf3aada5c7bc7dbc4f65d68b0fb382'
         (out/'Raw391LEFiveSweep.lean').write_bytes(source)
         add('Raw391LEFiveSweep',[7492,7495,7527,7529,7532],packed=True,scoped=True)
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEMoreSweep.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='499ace74395452b59ce9a6e3aa8e4bc0b82c0737c0f78284f786336b29468467'
+        (out/'Raw391LEMoreSweep.lean').write_bytes(source)
+        add('Raw391LEMoreSweep',[25795,9206,15745],packed=True,scoped=True)
         add('Raw391LEDFour',[5773,5783,5776,5782],packed=True,scoped=True)
         add('Raw391LEFMore',[5785,5775,5788],packed=True,scoped=True)
     return result
