@@ -24,7 +24,7 @@ def sparse_far(match):
     rrows = [codes(x) for x in ast.literal_eval(right)]
     return f"{match.group(0)} ⟨{lrows},{rrows}⟩"
 
-def convert(text):
+def convert(text, checker):
     text, n = FAR.subn(sparse_far, text)
     assert len(re.findall(r"\.far (?:true|false) \d+ ", text)) == n, "unrecognized FAR literal"
     for old, new in [
@@ -34,10 +34,21 @@ def convert(text):
     ]:
         text = text.replace(old, new)
     text = LATE.sub(lambda m: (
-        f"{m[1]}simpa only [zipCheck, sparseCheck, zipQueryOK, packedQueryOK, readRunP_eq] using "
-        f"{m[2]} {m[3]} (by decide)"
+        f"{m[1]}exact lateZip_sparse _ _ _ _ ({m[2]} {m[3]} (by decide))"
     ), text)
-    text = "import SparseAudit\n" + text
+    imports = "import SparseLateBridge\n"
+    if checker != "sparse":
+        namespace, theorem = (
+            ("DirectAudit", "directCheck_sparse") if checker == "direct"
+            else ("PrefixAudit", "prefixRoot_sparse")
+        )
+        imports += f"import {namespace}\n"
+        text = re.sub(
+            r"(?m)^(theorem \w+ : sparseCheck (\d+) (\w+) (\w+) = true :=) by decide$",
+            lambda m: f"{m[1]}\n  BB6.Agent3{namespace}.{theorem} {m[2]} {m[3]} {m[4]} (by decide)",
+            text,
+        )
+    text = imports + text
     text = re.sub(r"(?m)^(namespace [^\n]+)$",
                   r"\1\nopen BB6.Agent3SparseAudit BB6Coverage.Agent13PackedZipper", text, count=1)
     return text, n
@@ -47,6 +58,7 @@ def main():
     ap.add_argument("source", type=Path)
     ap.add_argument("dest", type=Path)
     ap.add_argument("prefix")
+    ap.add_argument("--checker", choices=["sparse", "direct", "prefix"], default="prefix")
     args = ap.parse_args()
     src, dst, prefix = args.source, args.dest, args.prefix
     assert src.resolve() != dst.resolve()
@@ -58,7 +70,7 @@ def main():
     count = 0
     for p in src.glob("*.lean"):
         if p.name in roots:
-            out, n = convert(p.read_text(encoding="utf-8"))
+            out, n = convert(p.read_text(encoding="utf-8"), args.checker)
             (dst / p.name).write_text(out, encoding="utf-8")
             count += n
         else:
