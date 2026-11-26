@@ -20,6 +20,7 @@ SPECS = {
     "484": ("1RB0RB1RC0LC1LA0LD------------------", 12, 6, Counter(cycle=36067,last=7060,split=1934,halt=1934,state=1036,far=310,auto=2)),
 }
 CATALOG = None
+CUT = 4
 if BRANCH in SPECS:
     ROOT, QUERY, QSLOT, EXPECTED = SPECS[BRANCH]
 else:
@@ -33,6 +34,8 @@ else:
     ROOT = CATALOG['root']
     QUERY, QSLOT = emit_base(ROOT, 'Agent46Raw13Branch'+BRANCH, D/('Agent46Raw13Branch'+BRANCH+'Base.lean'))
     EXPECTED = Counter(CATALOG['counts'])
+    CUT = max(ord(c)-64 for c in ROOT[2::3] if c != '-')
+    assert 4 <= CUT <= 6
 MODULE = "Agent46Raw13Branch" + BRANCH
 NS = "BB6." + MODULE
 AUTO = "BB6Coverage.Agent31Pump.Auto.Raw13Branch" + BRANCH
@@ -63,10 +66,10 @@ def main():
         if CATALOG is not None:
             far_file = temp/"far.txt"
             far_file.write_text("".join(f"{t} {rev} {dfa}\n" for t,rev,dfa in CATALOG["far"]))
-        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(far_file),str(auto_tables)],input=ROOT+" 4 6\n",text=True))
+        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(far_file),str(auto_tables)],input=ROOT+f" {CUT} 6\n",text=True))
     assert tree[:3] == ["split",QUERY,QSLOT]
     count,mass=Counter(),Counter()
-    tally(tree,6,4,count,mass)
+    tally(tree,6,CUT,count,mass)
     assert count == EXPECTED,count
     assert sum(mass.values())==25**6,mass
     print("counts",count,"mass",mass)
@@ -95,57 +98,59 @@ def main():
         name=MODULE+"Kid"+tag
         mods.append(name)
         p=f"next {move(MOVES[i])}"
-        decl=checked_subtree(k,tag,p,max(4,i%6+1),B,emit,complete=True)
-        write(name,[MODULE+"Base",MODULE+"Auto","Agent46CompleteCut",*proof_imports],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut 4 {move(MOVES[i])}) kid{tag} = true := ok{tag}\ntheorem closed{tag} : closedCut (nextCut 4 {move(MOVES[i])}) kid{tag} = true := complete{tag}\n")
+        decl=checked_subtree(k,tag,p,max(CUT,i%6+1),B,emit,complete=True)
+        write(name,[MODULE+"Base",MODULE+"Auto","Agent46CompleteCut",*proof_imports],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut {CUT} {move(MOVES[i])}) kid{tag} = true := ok{tag}\ntheorem closed{tag} : closedCut (nextCut {CUT} {move(MOVES[i])}) kid{tag} = true := complete{tag}\n")
     terms=",".join(f"kid{i:02}" if tree[3][i] is not None else ".unresolved" for i in range(24))
-    cases="\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(5),range(2),range(2)))
+    cases="\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(min(CUT,5)+1),range(2),range(2)))
     ccases = cases.replace("exact checked", "exact closed")
+    qcases = " ∨ ".join(f"q = {i}" for i in range(min(CUT,5)+1))
+    rcases_q = "|".join("rfl" for _ in range(min(CUT,5)+1))
     write(MODULE,mods,f"""
 def kids : Move → Cut := byCutMove [{terms}]
-theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 4) :
-    check {B} (next mv) (nextCut 4 mv) (kids mv) = true := by
+theorem kids_checked (mv : Move) (hv : mv.next.val ≤ {CUT}) :
+    check {B} (next mv) (nextCut {CUT} mv) (kids mv) = true := by
   rcases mv with ⟨w,r,q⟩
-  change q.val ≤ 4 at hv
-  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl
+  change q.val ≤ {CUT} at hv
+  have hq : {qcases} := by omega
+  rcases hq with {rcases_q}
   all_goals cases w <;> cases r
 {cases}
 
 def parentCut : Cut := .split {QUERY} {slot(QSLOT)} kids
 
-theorem parent_checked : check {B} parent 4 parentCut = true := by
+theorem parent_checked : check {B} parent {CUT} parentCut = true := by
   change (BB6.Agent10ZipAudit.zipQueryOK {B} parent {QUERY} {slot(QSLOT)} &&
     BB6.Agent31ThreeHole.allMoves (fun mv =>
-      if mv.next.val ≤ 4 then check {B} (next mv) (nextCut 4 mv) (kids mv) else true)) = true
+      if mv.next.val ≤ {CUT} then check {B} (next mv) (nextCut {CUT} mv) (kids mv) else true)) = true
   simp only [Bool.and_eq_true]
   refine ⟨by decide, BB6.Agent31ThreeHole.allMoves_of _ ?_⟩
   intro mv
-  by_cases h : mv.next.val ≤ 4
+  by_cases h : mv.next.val ≤ {CUT}
   · simp [h,kids_checked mv h]
   · simp [h]
 
-theorem kids_closed (mv : Move) (hv : mv.next.val ≤ 4) :
-    closedCut (nextCut 4 mv) (kids mv) = true := by
+theorem kids_closed (mv : Move) (hv : mv.next.val ≤ {CUT}) :
+    closedCut (nextCut {CUT} mv) (kids mv) = true := by
   rcases mv with ⟨w,r,q⟩
-  change q.val ≤ 4 at hv
-  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl
+  change q.val ≤ {CUT} at hv
+  have hq : {qcases} := by omega
+  rcases hq with {rcases_q}
   all_goals cases w <;> cases r
 {ccases}
 
-theorem parent_closed : closedCut 4 parentCut = true := by
+theorem parent_closed : closedCut {CUT} parentCut = true := by
   simp only [parentCut,closedCut]
   apply BB6.Agent31ThreeHole.allMoves_of
   intro mv
-  by_cases hv : mv.next.val ≤ 4
+  by_cases hv : mv.next.val ≤ {CUT}
   · simp [hv,kids_closed mv hv]
   · simp [hv]
 
-theorem empty_complement : residuals parent 4 parentCut = [] :=
+theorem empty_complement : residuals parent {CUT} parentCut = [] :=
   residuals_empty_of_closedCut parent_closed
 
 theorem bound (m : Machine) (hm : compatible parent m) : WeightedBound {B} m := by
-  rcases sound {B} parent 4 parentCut (by decide) parent_support (by decide)
+  rcases sound {B} parent {CUT} parentCut (by decide) parent_support (by decide)
       parent_nohalt parent_checked m (compatible_quotient m hm) with hb | ⟨e,he,hq⟩
   · exact hb
   · rw [empty_complement] at he

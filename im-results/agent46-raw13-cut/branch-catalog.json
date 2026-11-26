@@ -2203,6 +2203,46 @@
       }
     ]
   },
+  "600489": {
+    "root": "1RB0RB1RC0LD1LA---0LD---------------",
+    "counts": {
+      "cycle": 34915,
+      "last": 7469,
+      "split": 1923,
+      "halt": 1923,
+      "state": 1476,
+      "far": 357,
+      "auto": 5
+    },
+    "witnesses_zlib_b64": "eNqVlMFuwjAMht/F5yDZaVZ1vVFoTznlWvVQJpCQNpgYO0yId5+bpGkQARUkaGj82/9np73Arj9B2bZApkJTkVmhXpNeoql5gbomsyTd8J3FYgGCBCBJwkzxBzqR0DWRboUm1mWzdTRf5xY1m2QFalavg05KVEgpnY21OtP4NKYGgU5H+LCeboKOc1jEOtQjcrpOQP97PnJjL3DuN59bKO+NL10itMZ5l3OBgO3hfPqDkhPu+q/9Jy9bYhtMMZRA5Av7st/94cMGHr9/OOqNozTvDoFTLF/GG/w370TGYcZu+FgfMeZ2gSQ7QfmAwRUKARsopbqKhzShnejayWMY2vKUhmazEI6GvT3VCek5Am748TFMoBxAbv0Tzfc/HMIZ/l8hoPtpFAkKjEcy0XoSki+gkEepMEbJI5TMFm7jymgP7y1L2qRHoslkMTITpqhpwi5ucYonOGRfRHYyfIeJKvtiCJNREY9yR6WNalMKKIuAMOmTfNs9EUaDu6N3T8t7nDMUj/O6pnDWPM6azosh7/gUZq5XWXHtrv823Uc2"
+  },
+  "600542": {
+    "root": "1RB0RC1RC1LD1LA0LC------------------",
+    "counts": {
+      "cycle": 77082,
+      "last": 16246,
+      "split": 4282,
+      "halt": 4282,
+      "state": 4140,
+      "far": 993,
+      "auto": 2
+    },
+    "witnesses_zlib_b64": "eNqd0z0PwiAQBuD/cjMk98HkBqWdmFgbhi6uJkYn43/3wGg6VSS5DR7g3gsPOG9XOK0rUA6YJ9JKkZLHNGFeMM2YorWWctRVMGQAicWJCAsU0+XCoPN9jnZOz6D9OwmFqdeFwfs631nbUld1IK28gMHqkAWdOHfodLuitvRxeh8zdrow6Hy3q1moSzq5pY1w/ubCzO4oz7erebZjRlwYdP4PF3/1Vwxs99tFP1R5vgBGZMbT",
+    "proved": [
+      [
+        "1RB0RC1RC1LD1LA0LC1RE0RD1RF---1LC1RD",
+        "Agent46Raw13Counter5421454",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.p0",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.never0"
+      ],
+      [
+        "1RB0RC1RC1LD1LA0LC1RE0RD1LC1RF1RD---",
+        "Agent46Raw13Counter5421454",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.p1",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.never1"
+      ]
+    ]
+  },
   "600571": {
     "root": "1RB0RC1RC0LD1LA1LA------------------",
     "counts": {
@@ -2268,6 +2308,60 @@
     },
     "witnesses_zlib_b64": "eNptj8sKgzAQRf/lriPMRPsgu1p1lVW2wYUtFgSrxdpFEf+9E4ulhUIeczNn7kwmXKoBxnuwS9kdZZHN2B7ISlywzdlmURSRS8kVUKxArGOtdaJjlKVC9Rh7MZgwVqe2hvlnZKU4FzsxYpctRqi7cXjC8F7JCNemldhvlAchtCB+XwRpEXbTnQVW6G93AVlAuxBy/BR86sJ7UireCupErflvMMigVngX/gMjI51gdDKX8wvhQ0Kt"
   },
+  "601454": {
+    "root": "1RB1RC1RC1LD1LA0LC------------------",
+    "counts": {
+      "cycle": 75376,
+      "last": 15039,
+      "split": 4140,
+      "halt": 4140,
+      "state": 4080,
+      "far": 700,
+      "auto": 2
+    },
+    "witnesses_zlib_b64": "eNp1z60OwzAMBOB3MU6ls2M01p8UGZlWASWjk6YNTXv3OanKVsnggD+d/aH7/qTbthH7xD63sYVthEVeYQW2DMOAyD5R4kRgkayiqlTTX2czvDTtK3vTlHA4ZGXIlYt1K9z72MfQZ18WEZV84dARewnRTz3vhGQGU62J9vfrEW/W7w8mIDlL",
+    "proved": [
+      [
+        "1RB1RC1RC1LD1LA0LC1RE0RD0RF---1LC1RD",
+        "Agent46Raw13Counter5421454",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.p2",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.never2"
+      ],
+      [
+        "1RB1RC1RC1LD1LA0LC1RE0RD1LC0RF1RD---",
+        "Agent46Raw13Counter5421454",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.p3",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch5421454.never3"
+      ]
+    ]
+  },
+  "601456": {
+    "root": "1RB1RC1RC---1LA0LD---0LB------------",
+    "counts": {
+      "cycle": 81220,
+      "last": 15339,
+      "split": 4395,
+      "halt": 4395,
+      "state": 4176,
+      "far": 318,
+      "auto": 5
+    },
+    "witnesses_zlib_b64": "eNqVkctugzAQRf9l1kaaMUkg7MojK6+8RSxIlUqR8qhSuqgi/r3jZ42UqC0yGJh77XvGd3gbb1D1PZCuSTd2dKReULWoajP0Lssy4k/dgUABSDKnFRISDCL1qdb7dOd8pHeoG3YvfDL/3dc+8Q0Cxs/pyoHvMI370wGqn4UwBDf7qppUkywEh8t0+4KKpGDk8/HE733OOZBrzELkZs4G5j5eXlks4Pr+wcI1CxULEK0usaBthLOaAhWDkMhybX7agldEJV/oiyC2gyAyWFDJjYA9VPlmFg/o4rGQ8nSmX7pb0pUJ3crQIfot7fSYrvR0FOFiO5zbpS1N1EBmChgEQRf93AfJ6q0HQwdW/h2MnwswKZ+CUWjqP+AiXho8pC7S03OiiEnLXb2LOyMLx5o71rWch/kbeDrB9Q==",
+    "proved": [
+      [
+        "1RB1RC1RC1LD1LA0LD0RE0LB0RC1RF0RD---",
+        "Agent46Raw13Counter601456",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch601456.p0",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch601456.never0"
+      ],
+      [
+        "1RB1RC1RC1LD1LA0LD0RE0LB0RF1RE0RC---",
+        "Agent46Raw13Counter601456",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch601456.p1",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch601456.never1"
+      ]
+    ]
+  },
   "601541": {
     "root": "1RB1RD1RC---1LA0LC---0LC------------",
     "counts": {
@@ -2280,5 +2374,18 @@
       "auto": 0
     },
     "witnesses_zlib_b64": "eNqrVkpLLFKyio5WMgxyMgxyMQxyNvRxNfRxNPBxNghyA5K6urqGPi4GQU4GQY5KOgY6SgaGRsYGxiZAoBQbq6OUWFqSDzQgthYA2tkTKw=="
+  },
+  "601558": {
+    "root": "1RB1RD1RC---1LA---1LA0LD------------",
+    "counts": {
+      "cycle": 53514,
+      "last": 10898,
+      "split": 2938,
+      "halt": 2938,
+      "state": 2608,
+      "far": 537,
+      "auto": 2
+    },
+    "witnesses_zlib_b64": "eNrtkUFrAjEQhf/LnGdhXrKtJTe7q6eccl1yWEVBsFrs9lDE/97Jxm0XRNRbD4UkEzLfey8wR1q3B3JNQwivCDVCJWEGPy2KQk/xtYS5aMvP4StiMAmMNcaUxlKMTO1nt1eDI3XtYrsid9UIfqZeCFP4mphWu+7wRc6q47p922z13lhuSFsQwbmANEJEUtnslsoz7d8/+h97ZfI6C3p+0GUZw0Q2z+ob0kvq/rZ/6FQGQRkZ6R++Z3s4EyMWIoMkJ5RykZD3iB7l5JTJRcodSU/mStKNNGPTrMiVL0wLcpjgxA/NrPqf2R+YWTx9A986wrU="
   }
 }

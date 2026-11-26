@@ -17,7 +17,7 @@ def describe(raw):
         steps.append((s,mv,cut,q))
         p[s]=mv;cut=q
     r=scan(p)
-    assert r[0]=="hole" and cut==4 and p.count(None)==6,(raw,r,cut)
+    assert r[0]=="hole" and 4<=cut<=6 and p.count(None)==6,(raw,r,cut)
     return steps,r[1],r[2]
 
 def emit_base(raw,module,dest):
@@ -34,7 +34,7 @@ def emit_base(raw,module,dest):
         else:proof.append(f"  have h{i} : TNFSupport {name} {nxt} :=\n    "+expr)
         nh=f"(weightedTNFNoAssignedHalt_refine _ _ _ {nh})"
         prev=name;hprev=f"h{i}"
-    lines+=["theorem parent_support : TNFSupport parent 4 := by",*proof,
+    lines+=[f"theorem parent_support : TNFSupport parent {steps[-1][3]} := by",*proof,
         f"theorem parent_nohalt : weightedTNFNoAssignedHalt parent := {nh}",
         f"def next (mv : Move) := refine parent {slot(qs)} (some mv)",
         """theorem compatible_quotient (m : Machine) (hm : compatible parent m) :
