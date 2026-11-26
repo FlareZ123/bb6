@@ -37,3 +37,7 @@ Prove either:
 2. F1 is first read at a finite time, then source-certify the exact halting completion and its primitive-transition score.
 
 Do not promote finite traces, an unverified automaton search, or the observed alternating tape pattern to a proof.
+
+## Exact accelerated frontier map
+
+[FrontierTransduction.md](FrontierTransduction.md) derives the full D-to-D frontier recurrence as a deterministic transduction of a single binary word, with exact primitive cost and displacement. It reduces all future F1 accesses to one bad prefix in the left parser. [frontier_map.py](frontier_map.py) independently replays 1,000 returns (711,352 primitive transitions). This is an exact paper-level reduction, not an all-time decision or a source-accepted Lean theorem. The next proof target is a closed inductive language for the authentic word orbit.
