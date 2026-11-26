@@ -1,3 +1,5 @@
+# Raw59 six-hole refinement
+
 ## Current parent and canonical integration state — 26 November 2026
 
 The accepted global conditional frontier is now Canonical64, not the older Canonical68 snapshot. Raw59 is one of the ten still-open E1 sibling parents in that 64-entry roster.
@@ -26,7 +28,6 @@ No global upper bound or exact BB(6) value follows from any of these conditional
 
 ---
 
-# Raw59 six-hole refinement
 
 Raw index 59 of Agent31's 124-cylinder roster: `1RB---_1RC---_0RD---_1LD1RE_---1LA_------`. A1 is first queried after 7 ordinary steps. The cylinder has 25^6 = 244,140,625 literal completions.
 
