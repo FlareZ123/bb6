@@ -10,6 +10,7 @@ on:
           - canonical74
           - canonical70
           - canonical68-integrated
+          - canonical65-three
           - raw119-parent
         default: canonical74
         required: true
@@ -491,6 +492,44 @@ jobs:
             /tmp/a31-integrated68/reachable-link-audit.json
             /tmp/a31-integrated68/linked/kernel-link-manifest.json
             /tmp/a31-integrated68/linked/Canonical68Integrated.olean
+          if-no-files-found: warn
+          retention-days: 14
+
+  integrate-canonical65-three:
+    if: ${{ inputs.target == 'canonical65-three' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Consume three separately accepted five-hole parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-shared-core/assemble_canonical65.py --work /tmp/a31-three65 2>&1 | tee /tmp/a31-three65.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent31-canonical65-three-audit
+          path: |
+            /tmp/a31-three65.log
+            /tmp/a31-three65/canonical65.log
+            /tmp/a31-three65/canonical65-axioms.json
+            /tmp/a31-three65/stable68-standalone.log
+            /tmp/a31-three65/Canonical68StableBatch.olean
+            /tmp/a31-three65/stable68.log
+            /tmp/a31-three65/reachable-link-audit.json
+            /tmp/a31-three65/linked/kernel-link-manifest.json
+            /tmp/a31-three65/linked/Canonical65AfterThree.olean
           if-no-files-found: warn
           retention-days: 14
 
