@@ -28,6 +28,6 @@ theorem p83_distinct_from_p113 :
 
 #print axioms p83_root
 #print axioms p83_count58
-#print axioms p83_distinct_from_six
+#print axioms p83_distinct_from_p113
 
 end BB6.Agent31Canonical58Raw83Membership
