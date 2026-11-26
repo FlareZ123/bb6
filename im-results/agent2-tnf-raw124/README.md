@@ -2,9 +2,18 @@
 
 Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 moves. Each fixed ordinary F1 row has 25^5 = 9,765,625 raw completions; the weighted checker handles early halts and initial blank delay.
 
-## Source-accepted branch
+## Current first-level branch status
 
-F1=0RA is now fully source-checked, including the final weighted root at bound 283. See [proof and reproduction](Raw124-0RA-accepted.md). All other entries below remain candidate classifications unless a separate source acceptance is documented.
+The following complete first-hole branches are currently established:
+
+- **F1=0RA**, weighted bound **283**: local original-source assembly of all 24 children and the weighted root; see [proof and reproduction](Raw124-0RA-accepted.md). Its dependencies include prior CI-built artifacts; the dossier does not claim a new all-in-one CI run.
+- **F1=0LA**, weighted bound **5,910**: original-source CI accepted, [run 45839093000](https://github.com/FlareZ123/bb6/actions/runs/45839093000), artifact 15127830252, theorem `BB6.Agent32Raw124ZeroLAComplete.bound_all`.
+- **F1=0LB**, weighted bound **4,136,175**: original-source CI accepted, [run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`.
+- **F1=1LB**, weighted bound **3,006**: original-source CI accepted, [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`.
+
+These are four separate Covers for their respective F1 children, not a Cover of the full Raw124 parent. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
+
+Current parallel frontier: F1=0LC is under original-source audit in [run 45841104581](https://github.com/FlareZ123/bb6/actions/runs/45841104581); F1=0LE and F1=1LA have active audits in runs 45836460043 and 45837006401; the existing manual source-check targets for F1=0RF, 0RB and 1RF have also been queued. F1=0LF is a separate 24-way F0 composition: several F0 child Covers are now source-accepted, but the parent remains open, including late F0=1RC queries above the old 2,931 bound.
 
 ## Completed candidate branches
 
@@ -23,7 +32,7 @@ F1=0RA is now fully source-checked, including the final weighted root at bound 2
 | 1RE | 7 | 0 | 0 | 0 | 0 | 0 |
 | 0RA | 283 | 656 | 633 | 23 | 0 | 0 |
 
-The 0RA entry is source-accepted. The other entries in this table are exhaustive candidate audits; source-level acceptance must be established separately. Together the displayed subcylinders represent 117,187,500 raw completions. The 0RC delayed last-hole encounter at step 2753 required increasing the proposed bound from 240 to 2759; the 1000-step exploration cutoff is never itself proof of divergence.
+F1=0RA is locally source-checked as described above. The other rows remain candidate audits unless separately promoted by an original-source acceptance recorded in the current status section. Together the displayed subcylinders represent 117,187,500 raw completions. The 0RC delayed last-hole encounter at step 2753 required increasing the proposed bound from 240 to 2759; the 1000-step exploration cutoff is never itself proof of divergence.
 
 ## Reproduction
 
@@ -38,17 +47,23 @@ Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to arbitrary fi
 Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. A complete proof of raw124 is not yet claimed.
 
 
-## F1=0LB — recursive source audit in progress
+## F1=0LB — source-accepted complete branch Cover
 
 The first 3,691-cycle / 508-hole scan was retracted: `enumerate.cpp` emits underscore-separated display tables, whereas `longcycle.cpp` indexes compact 36-character transition strings. The earlier scan passed display underscores through unchanged and its counts/certificates are invalid.
 
 The corrected `generate_bundle.py` strips underscores before every C++ query and recursively resolves multi-hole hits: each such leaf becomes a 24-way `Audit.split`; translated cycles become `Audit.cycle`, and only genuine one-hole leaves become `Audit.last`. Open leaves are deferred until all descendants at the current cap are processed, then retried at a larger cap. Independent C++ batches now run in two processes.
 
-Last attempt: run 45615959400 (`raw124_bundle_prepare` job 139211302469) ended cancelled at 13:40Z. No 0LB classification or source-level `bound_all` theorem has been accepted. The generated bound is still required to be at most 2,000,000. The proposed lift is `Raw124ChampionBound.branch_bound_le_champion`, but its F412 champion adapter is not yet source-accepted in the pinned champion-source closure. Agent 26 explicitly requested that `f412_le_champion` remain conditional until that adapter is compiled and reproduced. No unconditional Raw124-to-champion bound or roster subtraction is claimed.
+The complete F1=0LB branch is now source-accepted. [Run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, compiled the exact original-source closure and accepted `BB6.Agent2Raw124ZeroLBComplete.bound_all` at weighted bound **4,136,175**. The theorem composes the accepted partial cut with three exact late-residual weighted bounds: M264 at 520,988, M267 at 79,911 and M448 at 4,136,175. The older 17-residual census and local counter proofs below explain the construction; the accepted aggregate theorem closes the complement. This is only the F1=0LB child Cover, not the full Raw124 parent or a Canonical64 subtraction.
 
-## F1=0LF — partial candidate partition and inductive certificates
+## F1=0LF — accepted F0 children; first-level parent still open
 
-For `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LF`, a versioned-tape search at cap 3000 and 32 candidate predecessors found 30,026 exact translated side-cycle leaves, 13,104 last-hole leaves, 1,961 splits and 1,974 open leaves. The respective completion masses are 8,475,650 cycle, 1,048,625 bounded (including halt choices at splits), and 241,350 open, totaling 9,765,625. The maximum observed hole query was at 2,925 moves, giving a conservative candidate weighted bound of 2,931 for the bounded part. This partition is a discovery output, not yet a source-checked audit. The open complement must be retained.
+Agent12's exact first-hole dichotomy is locally kernel-checked and is being composed with source-accepted F0 child Covers. Confirmed original-source child acceptances include F0=0RB (bound 174, [run 45829435208](https://github.com/FlareZ123/bb6/actions/runs/45829435208), artifact 15121597506), F0=0LE (bound 2,455, [run 45827171994](https://github.com/FlareZ123/bb6/actions/runs/45827171994), artifact 15121120817), F0=1RA (bound 2,931, [run 45829497777](https://github.com/FlareZ123/bb6/actions/runs/45829497777), artifact 15121818579), and F0=1LA (bound 1,045, [run 45834325697](https://github.com/FlareZ123/bb6/actions/runs/45834325697), artifact 15125305823). Agent7 has also reported additional accepted F0 children; Agent12 is consolidating the exact remaining list and artifact pins.
+
+The old 2,931 parent candidate is insufficient for the F0=1RC residual: a 20-million-step scan found first undefined B1 queries at 108,665, 108,421, 103,183 and 102,939. These are finite query observations, not yet a source-accepted weighted bound; Agent12 is constructing exact packed certificates. No complete F1=0LF Cover is claimed until the residual complement is empty and the full parent theorem passes original-source CI.
+
+### Historical cap-3000 discovery partition
+
+For `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LF`, the initial versioned-tape search at cap 3000 and 32 candidate predecessors found 30,026 exact translated side-cycle leaves, 13,104 last-hole leaves, 1,961 splits and 1,974 open leaves. The respective completion masses were 8,475,650 cycle, 1,048,625 bounded (including halt choices at splits), and 241,350 open, totaling 9,765,625. The maximum observed hole query was at 2,925 moves. These are historical discovery counts, not the current accepted parent proof.
 
 The first new hole is F0 at move 9. In its 1RB child, the partition has 75 splits, 1,379 cycle leaves, 287 last-hole leaves and 60 open leaves. Existing FAR search produces 53 candidate certificates among those 60. Reproducibility gap: the 60-open-leaf table list and 53 candidate FAR encodings are not currently stored beside this dossier; regenerate them from `fast_partition.cpp` before constructing a complete child `Audit` tree or making any aggregate closure claim. Two further one-hole leaves have parametric block-growth certificates in [Raw124ZeroLFBlockGrowth.lean](Raw124ZeroLFBlockGrowth.lean):
 
@@ -57,7 +72,7 @@ The first new hole is F0 at move 9. In its 1RB child, the partition has 75 split
 | `1RB0RE_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 91 | `0 (111011101110)^n 11101110111111` | 3 blocks of 1110 |
 | `1RB1RF_1RC1RA_0RD0RB_1LD1RE_---1LF_1RB0LF` | 155 | `010 (11101110)^n 11101110111111` | 2 blocks of 1110 |
 
-Both start in A with empty right list. `Raw124ZeroLFBlockGrowth.lean` proves universal nonhalting through the original `BlockPump.Certificate.never` adapter. CI run 45672467015, target `weighted-tnf-raw124-0lf-growth`, compiled the exact dependency closure (`BB6Coverage`, `SparseZipper`, `BlockPump`, and this adapter) under Lean 4.36.0-rc2. The exported `never1539` and `never1547` theorems have only `propext`, `Classical.choice`, and `Quot.sound` in their axiom profiles. Each partial table covers 25 completions, so these two source-accepted proofs cover 50 completions. All five remaining hard leaves now have locally kernel-checked universal nonhalting proofs below. The complete child audit still needs the 53 FAR certificates and exact branch assembly; no parent or canonical roster obligation is yet discharged.
+Both start in A with empty right list. `Raw124ZeroLFBlockGrowth.lean` proves universal nonhalting through the original `BlockPump.Certificate.never` adapter. CI run 45672467015, target `weighted-tnf-raw124-0lf-growth`, compiled the exact dependency closure (`BB6Coverage`, `SparseZipper`, `BlockPump`, and this adapter) under Lean 4.36.0-rc2. The exported `never1539` and `never1547` theorems have only `propext`, `Classical.choice`, and `Quot.sound` in their axiom profiles. Each partial table covers 25 completions, so these two source-accepted proofs cover 50 completions. All five remaining hard leaves now have locally kernel-checked universal nonhalting proofs below. Those 53 FAR certificates were candidate discovery inputs only. Subsequent F0-specific source audits have accepted several child Covers; the remaining exact F0 complement and the late-query leaves above are now the active parent-assembly obligation.
 
 The five exact residuals are the input to `search_0lf_hard_leaves.py`, which applies `cefar.cpp`'s counterexample-equivalence filter and canonical DFA enumeration through nine states (workflow run 45670238532). This is candidate discovery only: any hit must be emitted as a valid FAR certificate, kernel-checked, and connected to the original `NeverHalts` semantics before it can close the child. The companion `Raw124ZeroLFProbe.lean` is now a kernel-checked negative transfer result: `noTransferHard0` through `noTransferHard4` exhaust all 120 state relabelings fixing A, with and without reflecting the certificate's left/right tape orientation, for both existing block-growth certificates. None passes the exact certificate checker on any of the five residuals. This rules out reuse of these two certificates under those transformations; it does not itself establish halting or nonhalting for those residuals. The fifth is addressed independently below.
 
@@ -83,18 +98,18 @@ The exported neverHard1/2 and coverHard1/2 are locally kernel-checked under Lean
 Local Lean 4.36.0-rc2 checks of neverHard0/3 and coverHard0/3 report only [propext, Quot.sound], with the same exact Frontier/extracted bridge as the earlier proofs. All five new committed source blobs match their local checked versions. Thus all 125 completions of the five hard leaves have local semantic nonhalting proofs. The additional 50 completions of the two earlier growth leaves were already source-accepted. The full source dependency closure, tree check and weighted theorem remain separate integration obligations.
 
 
-## F1=1LB — source-accepted partial cut, eight residuals remain
+## F1=1LB — source-accepted complete branch Cover
 
-The cap-3000/lookback-32 fast partition and its 73 affine/n-gram nonhalting cylinders now have an original-source CI audit: [run 45750346651](https://github.com/FlareZ123/bb6/actions/runs/45750346651), artifact ID `15085449694`. The partial `PartialAudit` cut compiles through 211 project modules; `cut_checked`, `residual_count`, and `branch_sound` have only standard axioms. It accounts for 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 growth leaves, and 6 n-gram leaves, but still leaves eight one-hole residuals. Thus F1=1LB is **not** a completed branch Cover and Raw124 remains open.
+The complete F1=1LB branch is source-accepted at weighted bound **3,006**: [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`. The accepted closure consumes the cap-3000/lookback-32 partial cut and all eight exact one-hole residual certificates (five deterministic two-stack DFA proofs plus three explicit growth proofs). The partial-cut audit [run 45750346651](https://github.com/FlareZ123/bb6/actions/runs/45750346651), artifact 15085449694, remains one component of the accepted proof, not the final theorem. F1=1LB is now closed; the full Raw124 parent remains open.
 
 See [Raw124-1LB-fast.md](Raw124-1LB-fast.md) for exact residual table keys and reproduction. The targeted pump-search driver is [search_1lb_residual_pumps.py](search_1lb_residual_pumps.py); its dedicated CI target is `weighted-tnf-raw124-1lb-residual-pumps`. An extended `fast_partition.cpp` probe (cap 1,000,000; lookback 128) also returned `open` for all eight residuals, with no `cycle` or `last` leaf ([run 45767878144](https://github.com/FlareZ123/bb6/actions/runs/45767878144), artifact `15093027029`). This is bounded negative evidence only. Search output is exploratory until generated Lean `NeverHalts` proofs compile against the original source closure.
 
 
 ### F1=1LB numeric bridge
 
-A branch-specific alternative to the unaccepted F412 two-million-step adapter is being tested in [`Raw124OneLBChampionBound.lean`](Raw124OneLBChampionBound.lean): it uses the exact 27,959-step root-prefix theorem to lift only the F1=1LB cutoff `B ≤ 3006` to the champion score. The latest source-closure attempt [45770334987](https://github.com/FlareZ123/bb6/actions/runs/45770334987) completed with failure; inspect its targeted logs before another attempt. Do not use the theorem until CI accepts it. It does not cover sibling cutoffs above 27,959.
+The branch-specific champion lift in [`Raw124OneLBChampionBound.lean`](Raw124OneLBChampionBound.lean) is now source-accepted in [run 45779181860](https://github.com/FlareZ123/bb6/actions/runs/45779181860). It transports only the F1=1LB cutoff 3,006 using the exact 27,959-step root-prefix theorem; it is not the general F412 two-million-step adapter and does not close any other F1 sibling.
 
 
 ### Direct long-run query probe
 
-`probe_1lb_residuals.py` now also compiles and runs [`simulate_1lb_residuals.cpp`](simulate_1lb_residuals.cpp), an exact 64-bit-step simulator without cycle-history overhead, to test each residual through 1,000,000,000 transitions for its missing transition. Run [45769587322](https://github.com/FlareZ123/bb6/actions/runs/45769587322) is in progress. A reported hole time would be a reproducible finite-run observation to feed into a `last` leaf; no-hole-through-cap is only bounded evidence, not a proof.
+`probe_1lb_residuals.py` and [`simulate_1lb_residuals.cpp`](simulate_1lb_residuals.cpp) also ran a bounded 1,000,000,000-transition query probe ([run 45769587322](https://github.com/FlareZ123/bb6/actions/runs/45769587322)). That probe is not used as a nonhalting proof; the eight residuals are now closed by the exact source-accepted certificates in `Raw124OneLBComplete.lean`. Do not repeat the bounded probe.
