@@ -74,9 +74,6 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --provenance-input "$ROOT/im-results/agent8-coverage-contract/Frontier.lean" \
   --provenance-input "$ROOT/im-results/agent10-tnf-multipump/ZipAuditCore.lean" \
   --provenance-input "$ROOT/im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean" \
-  --override Raw10CtlFootprint=im-results/agent50-weighted-tnf-pilot/Raw10CtlFootprint.lean \
-  --override Raw10CtlFootprintSecond=im-results/agent50-weighted-tnf-pilot/Raw10CtlFootprintSecond.lean \
-  --override Raw10CtlDualConsumer=im-results/agent50-weighted-tnf-pilot/Raw10CtlDualConsumer.lean \
   --override Raw10BoxCore=im-results/agent49-box-complement/Raw10BoxCore.lean \
   --override Raw10FixedLeaves=im-results/agent13-block-far/Raw10FixedLeaves.lean \
   --override Raw10F0ZipCycles=im-results/agent19-raw10-f0-box/Raw10F0ZipCycles.lean \
