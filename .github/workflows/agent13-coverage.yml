@@ -4880,7 +4880,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: ${{ fromJSON(inputs.raw124_branch == '0RA' && '["0RE","1RE","0LE"]' || format('["{0}"]', inputs.raw124_branch)) }}
+        branch: ${{ fromJSON(inputs.raw124_branch == '0RA' && '["0RE","1RE","0LE","1LC"]' || format('["{0}"]', inputs.raw124_branch)) }}
     env:
       CHILD: ${{ matrix.branch }}
     steps:
@@ -4903,7 +4903,7 @@ jobs:
           W=/tmp/a7-raw124-closure
           STEM="Raw124ZeroLF${CHILD}"
           python "$D/generate.py" "$G" "$CHILD"
-          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; *) exit 2;; esac
+          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; *) exit 2;; esac
           python tools/lean_compile_closure.py --source-root "$G" --workdir "$W" --jobs 4 --manifest /tmp/a7-raw124.manifest.json --theorem "BB6.Agent7Raw124ZeroLF${CHILD}.bound_all" --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_${CHILD}0LF" --weighted-bound "$B" --artifact-name "raw124-0lf-${CHILD}-source-accepted" --provenance-input "$D/generate.py" "$G/$STEM.lean" 2>&1 | tee /tmp/a7-raw124.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a7-raw124.log; then exit 1; fi
           python - <<'PY'
