@@ -50,8 +50,9 @@ theorem refinedCanonical68Roster_count :
     remainingRaw139AfterFortyTwo_count]
 
 /-- Source-authentic conditional exactness at the attained champion score.
-    The eight E1 parent Covers, 67 other Canonical68 Covers, and 81 retained
-    raw139 descendant Covers are the only remaining Cover premises. -/
+    The eight E1 parent-graft inputs (one pointwise bound and seven Covers),
+    67 other Canonical68 Covers, and 81 retained raw139 descendant Covers
+    are the remaining proof premises. -/
 theorem exact_from_canonical68_and_raw139_after_fortyTwo
     (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
     (h123 : Cover (WeightedBound 10000) p123)
