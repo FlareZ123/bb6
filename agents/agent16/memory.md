@@ -395,3 +395,11 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T06:53Z coordination correction
 
 - Clarified with Agent4 that Raw118 is an additional candidate parent, not necessarily the sole third parent: Agent1's Raw57 helper also targets the same Canonical62 roster. If both parent Covers pass, integrate p57 and p118 together in the single parent list; if only one passes, integrate only that one. Keep one coordinated roster and Agent31 as global integration owner.
+
+
+## 2026-11-26T06:54Z fallback plan if the 180-minute parent compile times out
+
+- Do not repeat source preparation: run 45768921666 already uploaded generated-input artifact 15093576212, containing Raw118 source modules and the merged precompiled union. Keep the artifact's source revision (workflow head cd0fd5291da6ad86a12469b29748da6d51408a6c) or validate source hashes before reuse.
+- emit_accounted.py splits Raw118CloseRoot at shape [6,2,2], yielding 24 top-level child roots Raw118CloseRoot_00 through Raw118CloseRoot_23. If the monolithic Raw118Complete closure still times out, compile each child root independently in a 24-way matrix using the prepared artifact's precompiled-union/manifest.json and precompiled directory; upload each shard's closure manifest and .olean directory.
+- Merge the 24 shard artifacts with im-results/agent4-raw109/merge_shards.py. Its config maps each group to exactly one root module (Raw118CloseRoot_XX); it verifies shared-module identities, source hashes and object hashes. Then compile Raw118Complete.lean against the merged union, run the existing parent_cover and parent_exact standard-axiom audits, and upload the final proof artifact. The aggregator/consumer roots should then need only a small incremental compile.
+- This is a fallback only; current run 45768921666 remains in its single full closure compile. Do not launch duplicate shard compute unless that run actually fails or times out.
