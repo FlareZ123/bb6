@@ -1,8 +1,8 @@
 # Raw139 E0=0LF: new context-sensitive forward FAR closures
 
-## Status (2026-11-26 14:45 UTC)
+## Status (2026-11-26 18:36 UTC)
 
-Two previously unresolved one-hole descendants of Agent14's E0=0LF census have finite forward block-FAR invariants. These prove universal nonhalting once the exact original-table source transfer is checked. They do not yet close the six-hole E0=0LF parent or alter the Canonical64 complement.
+Three previously unresolved one-hole descendants of Agent14's E0=0LF census have finite forward block-FAR invariants. The remaining two now have an exact common first-exit theorem, but no blank-start nonhalting proof. These prove universal nonhalting once the exact original-table source transfer is checked. They do not yet close the six-hole E0=0LF parent or alter the Canonical64 complement.
 
 | Census ID | Exact table (24=hole) | Width/reflection | Left states | Right nodes | Active rows | Right arcs |
 |---|---|---|---:|---:|---:|---:|
@@ -28,7 +28,7 @@ The mathematical invariant uses a defined left DFA path and an accepting right N
 
 ## Next
 
-The three remaining mathematical holdouts from the latest Agent14 dossier are 1307, 3862, 3863. Avoid duplicating the independently found 9015 certificate (Agent14's smaller width-four witness). Primitive prefix/suffix and run-context scans, and naive single-edge state-splitting CEGAR, were not sufficient on these three. Larger block and context searches continue. No parent closure is asserted until the exhaustive split/halting branches and all source proofs are consumed.
+After the 1307 closure below, the remaining mathematical holdouts are 3862 and 3863. Avoid duplicating the independently found 9015 certificate (Agent14's smaller width-four witness). Primitive prefix/suffix and run-context scans, and naive single-edge state-splitting CEGAR, were not sufficient on these three. Larger block and context searches continue. No parent closure is asserted until the exhaustive split/halting branches and all source proofs are consumed.
 
 ## Residual 1307 — third new nonhalting certificate
 
@@ -36,4 +36,8 @@ Exact table `[7,13,11,17,14,21,24,16,20,11,1,2]`. A first width-10 unreflected b
 
 Run `python im-results/agent3-raw139-zeroLF-context/emit1307.py OUT` to emit the three Lean source files (Packed, Proof, source wrapper). Dependencies: Agent13's width-12 block macro/FAR/sparse FAR/active sparse FAR/range check/source bridge. The sparse minimizer and closure checker are in `sparse_min.py`; the existing blockcert generator's new raw_graph option exposes the finite saturation graph before dense packing. Agent13's existing ActiveSparseFAR emitter is reused through streamed default-valued input arrays. The exact table wrapper uses finite equality over the 12 source slots. Full original-source Lean audit pending. Agent14 received integration instructions at 14:51 UTC.
 
-The remaining mathematical search targets in this local branch are 3862 and 3863. Their shared C/E/D phase admits exact variable-length sweep rewrites, currently being explored as a stronger closure method.
+## Residuals 3862 and 3863 — exact common left-excursion classifier
+
+`E0LFExcursion.lean` proves a complete first-exit theorem for both actual source partial tables, differing at B1 = 19 or 21. At A scanning 1 followed immediately by two zeros, and an arbitrary left word L (nearest cell first), the first visit to A0 or D0 is finite and uniquely determined by a nine-state DFA on L. The right suffix beyond the two zeros and the absolute head coordinate are arbitrary. The mutual classifiers W and S correspond respectively to A1 with right prefix 00 and E with immediate right zero. Their equations are W(111L)=W(L), W(1L)=true unless the preceding three-one rule applies, W(01L)=S(L), W(empty/0/00L)=false; S(1L)=S(L), S(011L)=W(L), and S(other)=true. The finite automaton implements these equations; its true answer means first A0, its false answer means first D0. `Exit` explicitly guards every intermediate state against both terminals, `exit_unique` proves determinism, `exit_run` converts a witness to an original zipper run, and `table_binding` checks the complete 12-slot source table.
+
+Compiled locally with Lean 4.36.0-rc2 and the original accepted zipper/FAR proof imports from source-audit artifact 15126193553. `residual_first_exit` and `a_correct`/`e_correct` use only propext, Quot.sound; `exit_run` only propext. Commit 037f7206bfa6123d317349fbd998e17d1ed216de, exact Lean blob 12c4f36810f7b72dd169a097edddb02f88a9e24e. This is a conditional excursion result, not a blank-start nonhalting proof. The open problem is an invariant that ensures safe entry on the authentic orbit (and covers A1 with other right prefixes, where applicable).
