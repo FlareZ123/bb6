@@ -12,9 +12,13 @@ on:
         type: string
         default: ""
       canonical77_run_id:
-        description: Accepted canonical77-certified artifact run ID for the normalized Raw139 candidate scan
+        description: Accepted canonical77-certified object artifact run ID for the normalized Raw139 candidate scan
         type: string
         default: "45554648116"
+      canonical77_manifest_run_id:
+        description: Raw107 shared-core run containing the exact canonical77 source manifest
+        type: string
+        default: "45647053824"
 permissions:
   contents: read
   actions: read
@@ -172,30 +176,50 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Download accepted canonical77 source-checked artifact
+      - name: Download accepted canonical77 source-checked object artifact
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
           run-id: ${{ inputs.canonical77_run_id }}
           name: canonical77-certified
           path: /tmp/canonical77
+      - name: Download exact canonical77 source manifest
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.canonical77_manifest_run_id }}
+          name: raw107-canonical-shared-core
+          path: /tmp/canonical77-manifest
+      - name: Recreate canonical77 source closure inputs
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent10-tnf-raw87/generate.py
+          python im-results/agent10-tnf-raw91/generate.py
+          python im-results/agent11-raw107/generate.py
+          python im-results/agent10-tnf-multipump/generate.py 66 70 80
+          python im-results/agent10-tnf-multipump/generate.py 68 72 82
+          python im-results/agent10-tnf-multipump/generate.py 86 88 92 93 97 98 100 101 102 104
+          cd im-results/agent47-raw114-cut
+          python paired_counter.py
+          python long_sweep.py
+          printf '%s\\n' 0LA 0LB 0LC 0LF 0RA 0RB 0RC 0RF 1LA 1LB 1LC 1LF 1RA 1RB 1RC 1RF | xargs -P 4 -I{} python generate_complete.py {}
+          python generate_complete.py --combine
       - name: Compile normalized Raw139 candidate matcher against canonical77
         run: |
           set -euo pipefail
-          canonical_olean="$(find /tmp/canonical77 -type f -name CanonicalRaw114Accepted.olean -print -quit)"
-          canonical_manifest="$(find /tmp/canonical77 -type f -iname '*manifest*.json' -print -quit)"
-          echo "CanonicalRaw114Accepted object: ${canonical_olean:-MISSING}"
-          echo "Canonical77 manifest: ${canonical_manifest:-MISSING}"
-          find /tmp/canonical77 -maxdepth 4 -type f | sort | head -80
-          test -n "$canonical_olean"
-          test -n "$canonical_manifest"
+          test -s /tmp/canonical77/CanonicalRaw114Accepted.olean
+          test -s /tmp/canonical77/CanonicalTwoParentGraft.olean
+          test -s /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json
           mkdir -p /tmp/agent3-raw139-normalized
           python tools/test_lean_compile_module_index.py
           python tools/lean_compile_closure.py \
             --workdir /tmp/agent3-raw139-normalized/build \
             --jobs 4 \
             --precompiled-dir /tmp/canonical77 \
-            --precompiled-manifest "$canonical_manifest" \
+            --precompiled-manifest /tmp/canonical77-manifest/manifest/canonical77-base-manifest.json \
             --manifest /tmp/agent3-raw139-normalized/manifest.json \
             --label agent3-raw139-normalized-cryptids-scan \
             --provenance-input im-results/agent3-raw139-cryptids-scan/README.md \
