@@ -91,3 +91,26 @@ A table-containment comparison against `im-results/agent44-raw11-fresh-cut/fresh
 - Of the 157 q0 checkpoint tables (156 active + 1 held), 140 refine just 8 first-D frontier entries; 16 are coarser than every individual frontier entry, and the held table lies under entry 115.
 
 Containment is not itself a Cover or a union proof: in particular, the 58 extra cylinders under entry 115 and the 16 coarse q0 nodes require an exact partition argument before any first-D frontier entry can be declared closed. The clean source-queue interface currently has 147 q0 checkpoint residuals plus 107 explicit Raw11-extra residuals after the 35-extra Covers; the proposed 11 five-hole Covers would reduce the extra residual to 96. See `Raw11Q0CheckpointIdentity.lean` for a formal Lean draft of the 157-code identity and the 147-code residual correspondence.
+
+
+## 2026-11-26 accepted expansion and first-D crosswalk
+
+### Accepted Raw11 consumer
+
+CI run [45906697676](https://github.com/FlareZ123/bb6/actions/runs/45906697676) passed the 46-parent expansion and q0-parent composition. The source module `Raw11Root52ExtrasConsume.lean` proves the 46-parent consumption with exact census `(299,246)`; `Raw11Root52Q0ParentsConsume.lean` then consumes q0 parents 33, 49 and 51, proving `(246,243)`. The conditional root theorem still requires Covers for the 243 remaining cylinders. The accepted compiled/source bundle is artifact [15159003899](https://github.com/FlareZ123/bb6/actions/runs/45906697676/artifacts/15159003899); generated parent modules are preserved there because the workflow's source-commit step skipped after main advanced during the run.
+
+### Exact first-D containment result
+
+A fresh slotwise comparison of `raw11-route.json` with Agent 44's `fresh-frontier.json` confirms:
+- All 142 Raw11 extra cylinders refine exactly one first-D frontier entry.
+- 58 lie under frontier entry 115; 84 other entries have one extra cylinder each; 31 entries have none.
+- The 58 under entry 115 are exactly Raw11 extra indices 84–141.
+- All 58 fix D0 to `1LA`, while entry 115 leaves D0 undefined. They are pairwise incompatible, hence disjoint, but occupy only the D0=`1LA` branch (one of 24 possible transition values). They do not partition or close entry 115; the other 23 D0 branches are outside this Raw11-extra family.
+
+See `communications/broadcast/20261126T2315Z_agent47-entry115-crosswalk-disjointness.md` for the detailed warning and next question.
+
+### Further parent-cover candidates
+
+Separate source-CI jobs accepted Raw11 parent Covers 127–130 (run `45898270704`) and 126, 137 (run `45908444758`). Parent 140's first two attempts were terminated by runner shutdown while compiling a large child module; the generator now recursively splits oversized modules and the workflow compiles the generated import closure against the pinned cache. Parent 133 has a closed retained tree (78,873 nodes, bound 98). Parents 84, 131, 132, 133, 134 and 140 are being checked in separate runs; do not count a candidate until its parent theorem and axiom guard pass.
+
+The 134 candidate exposed one unresolved leaf, `1RB1RD_1RC1LE_0LA1LF_1LA0RD_---0LC_1LA0LB`. A direct simulator reaches its first undefined E0 slot after 1,694 steps. The Raw11 classifier's fallback horizon was raised from 1,500 to 2,500 so the one-hole/last-transition proof can be attempted; this is not yet accepted until the generated Lean proof compiles.
