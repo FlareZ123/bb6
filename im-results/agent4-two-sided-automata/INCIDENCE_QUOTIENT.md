@@ -65,3 +65,7 @@ and do not unnecessarily rebuild source-accepted LE1. The Boolean seed
 lemmas must have Bool equality types for the direct rw assembly, as verified
 in the compressed certificate. This is a source-checked leaf certificate,
 not a complete child/parent Cover. No roster count changes.
+
+## Chunked packed-row alternative
+
+The exact Lean module [PackedStackAutomata.lean](PackedStackAutomata.lean) uses independently checked numeric bitmaps and chunked sparse rows. It proves the bitmap membership equivalence, extracts the particular checked chunk from membership, and proves the same stack preservation and original-machine never theorem. The source was checked locally against the pinned original core. The compressed LE203 leaf compiled through all twelve 64-entry-chunk row modules and final checked/never with ordinary axioms only. The hardest row (q=5,a=true) measured 16.29 s / 1,242,524 KB peak RSS for the packed chunked version versus 27.26 s / 3,231,496 KB for the trie row with rfl (same local compiler, certificate and source core; proof tactics differ). The unchunked packed row took 23.41 s / 3,105,164 KB; chunking is responsible for most memory improvement. Generated packed data size is around 41 KB versus 194 KB for the compressed trie. Reproduce via emit_packed.py, which writes data, twelve row modules, and the final proof. The production Raw58 generator continues to use the compressed trie route pending need for this alternative.

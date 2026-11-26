@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-shard, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_pins:
         description: 'JSON per-group run_id and full revision pins for raw108-compose'
@@ -39,7 +39,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-compose'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3') && 120 || 60 }}
@@ -970,6 +970,24 @@ jobs:
         with:
           name: raw58-shard-${{ matrix.group }}
           path: /tmp/a4-raw58-shard/
+          retention-days: 30
+
+  raw58-prepare:
+    if: inputs.target == 'raw58-prepare'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Export exact generated Raw58 source closure (no proof claim)
+        env:
+          CHILD: ${{ inputs.raw58_child }}
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw58/source_bundle.py "$CHILD" /tmp/a4-raw58-sources
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw58-source-${{ inputs.raw58_child }}
+          path: /tmp/a4-raw58-sources/
           retention-days: 30
 
   raw58-compose:
