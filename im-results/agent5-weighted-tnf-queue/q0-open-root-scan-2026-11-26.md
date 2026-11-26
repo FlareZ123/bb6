@@ -57,3 +57,11 @@ For roots 33 and 46, separate 1,000,000-step simulations did not reach the respe
 A finite-radius abstraction that forgets the tape outside a window around the head still admits abstract paths to the missing transition for radii 1 through 6. A proof likely needs a global regular-language/tape-shape invariant or an explicit macro-family.
 
 The Node-only scan completed successfully in CI run `45766350968`. None of the simulation or scan observations here is an infinite-run proof.
+
+## Root26 family simulation and common missing-transition condition
+
+All 13 distinct root26 open-leaf machines were separately simulated for 1,000,000 steps. None reached the missing F0 transition. Each visited F only on symbol 1 (82,938–99,681 visits, depending on the leaf). More specifically, every visit to C on symbol 1 had a 1 immediately to its right: across the 13 machines there were **1,145,032** such observations and zero right-neighbor zeros. Per-machine counts are preserved in the JSON `simulations.root26` array.
+
+The 13 tables share the fixed A–D transitions, C1=`0RF`, E1=`0LA`, and the missing F0; only E0 and F1 vary. Since C1 is the only transition entering F in this family, the empirical condition “C reads 1 => right neighbor is 1” is exactly what prevents F0 from being reached. This suggests a single parameterized invariant could discharge all 13 leaves, rather than 13 unrelated nonhalting proofs. It is still only a simulation-derived conjecture until an inductive tape/configuration invariant is proved.
+
+The same structural idea appears in root46: C1 enters F and every observed C1 visit had a 1 to its right. A shared proof strategy for roots 26 and 46 may be possible.
