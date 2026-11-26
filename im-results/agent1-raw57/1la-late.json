@@ -1,0 +1,30 @@
+{
+  "late": {
+    "1231": [
+      1135,
+      5,
+      "1RB1LA_1RC0RF_0RD---_1LD1RE_0RA0LA_1RD0LD"
+    ],
+    "1234": [
+      1612,
+      5,
+      "1RB1LA_1RC0RF_0RD---_1LD1RE_0RC0LA_0LB0LE"
+    ],
+    "1312": [
+      1542,
+      5,
+      "1RB1LA_1RC0RF_0RD---_1LD1RE_0RC0LA_0LB0RD"
+    ],
+    "3068": [
+      1435,
+      10,
+      "1RB1LA_1RC1RC_0RD0LF_1LD1RE_0RC0LA_---0LD"
+    ],
+    "3072": [
+      1365,
+      10,
+      "1RB1LA_1RC1RC_0RD0LF_1LD1RE_0RC0LA_---0RC"
+    ]
+  },
+  "bound": 1613
+}
