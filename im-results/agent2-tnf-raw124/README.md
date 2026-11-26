@@ -4,7 +4,7 @@ Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 mo
 
 ## Current first-level branch status
 
-The following **22 of 24** first-level F1 branches have complete original-source, kernel-checked Covers. The 13 entries accepted in legacy replay run 45840496976 were individual matrix jobs; the overall matrix run failed because two *other* branches were terminated, so use each listed job/artifact as the evidence unit.
+The following **23 of 24** first-level F1 branches have complete original-source, kernel-checked Covers. The 13 entries accepted in legacy replay run 45840496976 were individual matrix jobs; the overall matrix run failed because two *other* branches were terminated, so use each listed job/artifact as the evidence unit.
 
 | F1 | Weighted bound | Accepted theorem | Source-accepted run / artifact |
 |---|---:|---|---|
@@ -17,6 +17,7 @@ The following **22 of 24** first-level F1 branches have complete original-source
 | 0LD | 157 | `BB6.Agent32Raw124Z0LD.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560502, artifact 15129710694 |
 | 0LE | 3,006 | `BB6.Agent2Raw124New0LE.bound_all` | [45836460043](https://github.com/FlareZ123/bb6/actions/runs/45836460043), artifact 15129435887 |
 | 0RC | 2,759 | `BB6.Agent32Raw124Z0RC.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560280, artifact 15127807592 |
+| 0RE | 2,473 | `BB6.Agent2Raw124B0RE.bound_all` | [45884922679](https://github.com/FlareZ123/bb6/actions/runs/45884922679), artifact 15149067775 |
 | 0RD | 267 | `BB6.Agent32Raw124Z0RD.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560352, artifact 15127941805 |
 | 1LA | 6,230 | `BB6.Agent2Raw124New1LA.bound_all` | [45837006401](https://github.com/FlareZ123/bb6/actions/runs/45837006401), artifact 15128682403 |
 | 1LB | 3,006 | `BB6.Agent2Raw124OneLBComplete.bound_all` | [45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242 |
@@ -31,11 +32,15 @@ The following **22 of 24** first-level F1 branches have complete original-source
 | 1RE | 7 | `BB6.Agent32Raw124Trivial.bound1RE` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560212, artifact 15132051672 |
 | 1RF | 140 | `BB6.Agent32Raw124Z1RF.bound_all` | [45841021688](https://github.com/FlareZ123/bb6/actions/runs/45841021688), artifact 15127612983 |
 
-The legacy batch's source revision is `2a0106d3bfbc4254872e122e6a95cccccdda1639`. Its successful branch jobs ran the source-closure and standard-axiom gates and uploaded the listed artifacts. The `legacy (trivial)` artifact checks both 1LD and 1RE. The 0RE and 1LF jobs in that batch were shut down. Separately, run [45841021688](https://github.com/FlareZ123/bb6/actions/runs/45841021688), source commit `4542dafbc48b00debeb80e248cc8d6c3a3ea6dc2`, accepted the three recovered branches 0LC (145; artifact 15128591873), 1RF (140; artifact 15127612983) and 0RB (272; artifact 15128037834), each through the original-source and standard-axiom audit. F1=1LF was subsequently replayed through the shared six-shard `weighted-tnf-raw124-legacy-sharded` target; all six shard jobs and the final assembly succeeded in run [45855224384](https://github.com/FlareZ123/bb6/actions/runs/45855224384), producing artifact 15134859375. The old shutdowns are superseded by these accepted replays; 0RE remains in repair.
+The legacy batch's source revision is `2a0106d3bfbc4254872e122e6a95cccccdda1639`. Its successful branch jobs ran the source-closure and standard-axiom gates and uploaded the listed artifacts. The `legacy (trivial)` artifact checks both 1LD and 1RE. The 0RE and 1LF jobs in that batch were shut down. Separately, run [45841021688](https://github.com/FlareZ123/bb6/actions/runs/45841021688), source commit `4542dafbc48b00debeb80e248cc8d6c3a3ea6dc2`, accepted the three recovered branches 0LC (145; artifact 15128591873), 1RF (140; artifact 15127612983) and 0RB (272; artifact 15128037834), each through the original-source and standard-axiom audit. F1=1LF was subsequently replayed through the shared six-shard `weighted-tnf-raw124-legacy-sharded` target; all six shard jobs and the final assembly succeeded in run [45855224384](https://github.com/FlareZ123/bb6/actions/runs/45855224384), producing artifact 15134859375. The old shutdowns are superseded by these accepted replays. 0RE was recovered through independently checked sparse FAR certificates and exact subtree assembly; see [Agent4's recovery dossier](../agent4-raw124-0re/README.md).
 
-**Remaining first-level obligations:** F1=0RE and 0LF. The 22 accepted siblings and the first-query halt case are now composed at weighted bound **4,136,175** by [Raw124ParentPartialCut.lean](Raw124ParentPartialCut.lean), theorem `BB6.Agent2Raw124ParentPartialCut.cover_of_two`. [Run 45884318889](https://github.com/FlareZ123/bb6/actions/runs/45884318889) accepted the exact two-hole cut, with artifact 15148992586 (SHA256 `c984f718a9b27f9b4fd6da4095d9bff25d165b6b65d890a6fdefac43f76b35ae`). Its two remaining hypotheses are complete weighted bounds for F1=0RE and 0LF at the common bound.
+**Accepted parent frontier:** The 22 initially accepted siblings and first-query halt case compose at weighted bound **4,136,175** in [Raw124ParentPartialCut.lean](Raw124ParentPartialCut.lean), [45884318889](https://github.com/FlareZ123/bb6/actions/runs/45884318889). The nested 0LF cut [Raw124ParentNestedCut.lean](Raw124ParentNestedCut.lean) passed [45885246108](https://github.com/FlareZ123/bb6/actions/runs/45885246108). After the complete 0RE proof passed, [Raw124ParentSingletonCut.lean](Raw124ParentSingletonCut.lean) was accepted in [45886398593](https://github.com/FlareZ123/bb6/actions/runs/45886398593), artifact 15149013566 (SHA256 `605078b6f833f6aa1a0db8a9a2f195eb5adad5eb0811c46b30a52b0b87841ccb`). Its theorem `BB6.Agent2Raw124ParentSingletonCut.cover_of_last` reduces the entire parent to exactly one remaining cylinder:
 
-F1=0LF has an accepted singleton frontier (see below): only F0=1RC remains. F1=0RE has 22 of 24 F0 kid modules checked against the pinned witness bundle, with K04/K05 still under recovery. Its candidate bound is 2,473. See [Agent4's recovery dossier](../agent4-raw124-0re/README.md). The complete Raw124 parent and any canonical roster subtraction remain unproved.
+```text
+1RB---_1RC---_0RD---_1LD1RE_---1LF_1RC0LF
+```
+
+The last 390,625 literal completions have a complete candidate census from Agent12. A reproducible, independently sharded source audit at proposed bound 108,667 is underway in [45887306671](https://github.com/FlareZ123/bb6/actions/runs/45887306671), using the existing witness bank, not a new search. The complete Raw124 parent and any canonical roster subtraction remain unproved until the final hypothesis is checked and integrated.
 
 ## Completed candidate branches
 
