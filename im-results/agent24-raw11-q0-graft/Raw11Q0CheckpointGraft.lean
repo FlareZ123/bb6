@@ -1,4 +1,5 @@
 import Raw11FreshCut
+import RootFrontier
 
 namespace BB6.Agent24Raw11Q0Graft
 
@@ -6,6 +7,16 @@ open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent44Raw11
 open BB6.Agent50RootFrontier
+
+/-- Enumerate the finite move alphabet explicitly for executable conflict checks. -/
+def moveEquiv : Move ≃ (Bool × Bool × Fin 6) where
+  toFun m := (m.write, m.right, m.next)
+  invFun x := ⟨x.1, x.2.1, x.2.2⟩
+  left_inv m := by cases m; rfl
+  right_inv x := by rcases x with ⟨w, r, n⟩; rfl
+
+local instance : Fintype Move :=
+  Fintype.ofEquiv (Bool × Bool × Fin 6) moveEquiv.symm
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -330,7 +341,7 @@ theorem renameTable_slot_inv (e : StatePerm) (m : Machine) (s : Slot)
           | mk w' r' n' =>
               simp [renameMove] at ht
               rcases ht with ⟨rfl, rfl, rfl⟩
-              exact ⟨⟨w, r, n⟩, hm, rfl, rfl, rfl⟩
+              exact ⟨⟨w, r, n⟩, rfl, rfl, rfl, rfl⟩
 
 /-- Any two TNF witnesses for this Raw11 parent agree on the original states
     corresponding to A, B, and C. The A0 and B0 edges force those images. -/
@@ -508,6 +519,7 @@ theorem q0NoFrontier_safe {p : PartialMachine}
     (hm : TNFQuotientCompatible p m) : WeightedBound bound m := by
   have hpExt := q0NoFrontier_extends_parent hp
   rcases hm with ⟨e, he0, hpm⟩
+  have hOriginal : TNFQuotientCompatible p m := ⟨e, he0, hpm⟩
   have hparent : compatible parent (renameTable e m) := by
     intro s t hs
     exact hpm s t (hpExt s t hs)
@@ -518,7 +530,7 @@ theorem q0NoFrontier_safe {p : PartialMachine}
       (no_common_quotient_of_rootConflict hpExt
         (frontier_extends_parent hentry)
         (q0NoFrontier_conflict hp hentry)
-        ⟨m, hm, hentryTnf⟩)
+        ⟨m, hOriginal, hentryTnf⟩)
 
 /-- The six remaining q0 checkpoint rows retain exactly their compatible
     first-D frontier entries. The finite match-list theorem below identifies
@@ -531,6 +543,7 @@ theorem q0Coarse_restricted_partition {p : PartialMachine}
         ¬ rootConflict p entry.2 ∧ TNFQuotientCompatible entry.2 m := by
   have hpExt := q0Coarse_extends_parent hp
   rcases hm with ⟨e, he0, hpm⟩
+  have hOriginal : TNFQuotientCompatible p m := ⟨e, he0, hpm⟩
   have hparent : compatible parent (renameTable e m) := by
     intro s t hs
     exact hpm s t (hpExt s t hs)
@@ -541,7 +554,7 @@ theorem q0Coarse_restricted_partition {p : PartialMachine}
     · exact False.elim
         (no_common_quotient_of_rootConflict hpExt
           (frontier_extends_parent hentry) hconf
-          ⟨m, hm, hentryTnf⟩)
+          ⟨m, hOriginal, hentryTnf⟩)
     · exact Or.inr ⟨entry, hentry, hconf, hentryTnf⟩
 
 def frontierConflictFreeIndices (p : PartialMachine) : List Nat :=
