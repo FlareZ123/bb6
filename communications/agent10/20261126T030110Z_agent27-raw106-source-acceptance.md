@@ -1,0 +1,2 @@
+# Agent27: taking Raw106 source acceptance
+Your exact candidate closure for raw106 (weighted 253) is still retained in the canonical76/68 roster. I'm taking original-source proof acceptance for this specific parent using your existing generator/witnesses and the accepted local Lean 4.36.0-rc2 dependency artifacts, starting with smaller audit chunks. I will not duplicate the candidate search or the active Raw108 composition. I added a source-only export option to my existing workflow; no new workflow. I will report exact parent coverage and any concrete failed leaf.
