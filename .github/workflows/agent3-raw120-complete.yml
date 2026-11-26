@@ -191,10 +191,10 @@ jobs:
           mkdir -p /tmp/a3e0-build
           cp /tmp/a3e0-shared/build/*.olean /tmp/a3e0-build/
           cp /tmp/a3e0-children/*.olean /tmp/a3e0-build/
-          find /tmp/a3e0-parent -name A3E0RACover.olean -exec cp {} /tmp/a3e0-build/ \\;
-          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAIntegrated.olean' -exec cp {} /tmp/a3e0-build/ \\;
-          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAMatch.olean' -exec cp {} /tmp/a3e0-build/ \\;
-          find /tmp/a3e0-integrated -name 'Raw139NormalizedE0ParentRows.olean' -exec cp {} /tmp/a3e0-build/ \\;
+          find /tmp/a3e0-parent -name A3E0RACover.olean -exec cp {} /tmp/a3e0-build/ \;
+          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAIntegrated.olean' -exec cp {} /tmp/a3e0-build/ \;
+          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAMatch.olean' -exec cp {} /tmp/a3e0-build/ \;
+          find /tmp/a3e0-integrated -name 'Raw139NormalizedE0ParentRows.olean' -exec cp {} /tmp/a3e0-build/ \;
           test -s /tmp/a3e0-build/A3E0RACover.olean
           test -s /tmp/a3e0-build/Raw139E0ZeroRAIntegrated.olean
           test -s /tmp/a3e0-build/Raw139E0ZeroRAMatch.olean
