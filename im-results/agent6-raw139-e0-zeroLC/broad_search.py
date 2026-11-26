@@ -36,6 +36,7 @@ def main():
             if r[0]=='late' and p.count(24)>1:late.append((name,i,p,r))
             counts[r[0]]+=1;f.write(json.dumps([name,i,p,r])+'\n')
     assert len(late)==2
+    Path('late_branch_recipes.jsonl').write_text('')
     for name,i,p,r in late:
         assert p[r[2]]==24
         for code in range(24):
