@@ -102,7 +102,16 @@ theorem rowRC_lift
         (BB6.Agent6F0.AFirst.childA ⟨false, true, 2⟩ ⟨false, true, 3⟩) = true := by
     decide
   rw [sameTable_sound hEq] at h
-  exact BB6.Agent48Remaining.cover_zeroRC_of_RD championScore (by omega) h
+  have hParentEq :
+      sameTable (child rowRC.1 rowRC.2)
+        (BB6.Agent6F0.parent ⟨false, true, 2⟩) = true := by
+    decide
+  have hParent :
+      Cover (WeightedBound championScore)
+        (BB6.Agent6F0.parent ⟨false, true, 2⟩) :=
+    BB6.Agent48Remaining.cover_zeroRC_of_RD championScore (by omega) h
+  rw [sameTable_sound hParentEq]
+  exact hParent
 
 theorem rowRE_lift
     (h : Cover (WeightedBound championScore) (leaf rowRE)) :
@@ -112,7 +121,16 @@ theorem rowRE_lift
         (BB6.Agent6F0.child ⟨true, true, 4⟩ ⟨false, true, 3⟩) = true := by
     decide
   rw [sameTable_sound hEq] at h
-  exact BB6.Agent48Remaining.cover_oneRE_of_RD championScore (by omega) h
+  have hParentEq :
+      sameTable (child rowRE.1 rowRE.2)
+        (BB6.Agent6F0.parent ⟨true, true, 4⟩) = true := by
+    decide
+  have hParent :
+      Cover (WeightedBound championScore)
+        (BB6.Agent6F0.parent ⟨true, true, 4⟩) :=
+    BB6.Agent48Remaining.cover_oneRE_of_RD championScore (by omega) h
+  rw [sameTable_sound hParentEq]
+  exact hParent
 
 /-- The terminal champion branch is already source-certified by the accepted
     weighted TNF parent certificate; this is transported to the normalized p7
