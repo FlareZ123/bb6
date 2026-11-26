@@ -717,9 +717,9 @@ jobs:
             --provenance-input im-results/agent43-raw122-cut/README.md \
             2>&1 | tee /tmp/a43-parent.log
           python - <<'PY'
-          import json, pathlib, re, subprocess
+          import json, pathlib, subprocess
           log = pathlib.Path("/tmp/a43-parent.log").read_text()
-          if re.search(r"\\b(sorryAx|native_decide|Lean\\.ofReduceBool)\\b", log):
+          if any(token in log for token in ("sorryAx", "native_decide", "Lean.ofReduceBool")):
               raise SystemExit("prohibited proof mechanism found in complete-parent closure")
           allowed = {"propext", "Classical.choice", "Quot.sound"}
           required = [
@@ -727,12 +727,16 @@ jobs:
               "BB6.Agent43Raw122CompleteParent.parent_bound",
           ]
           profiles = {}
+          lines = log.splitlines()
           for name in required:
-              pattern = re.escape("'" + name + "'")
-              m = re.search(pattern + r" depends on axioms: \\[([^\\]]*)\\]", log)
-              if m:
-                  axioms = {x.strip() for x in m.group(1).split(",") if x.strip()}
-              elif re.search(pattern + r" does not depend on any axioms", log):
+              prefix = f"'{name}' depends on axioms:"
+              line = next((line for line in lines if prefix in line), None)
+              if line:
+                  raw = line.split(prefix, 1)[1].strip()
+                  if not (raw.startswith("[") and raw.endswith("]")):
+                      raise SystemExit(f"malformed axiom profile for {name}: {raw}")
+                  axioms = {x.strip() for x in raw[1:-1].split(",") if x.strip()}
+              elif any(f"'{name}' does not depend on any axioms" in line for line in lines):
                   axioms = set()
               else:
                   raise SystemExit(f"missing #print axioms output for {name}")
