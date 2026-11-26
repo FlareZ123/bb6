@@ -1,5 +1,5 @@
-# Raw40 round 5: 0LA/0LB candidate
+# Raw40 round 5: exact weighted maximum 1891
 
-Parent `1RB0LA_1RC---_0RD0LB_1LD1LA_------_------`. Exact canonical enumeration has 112 open leaves, 103 FAR5 successes, seven affine pump certificates and two late one-hole F0 queries (1890 and 1790 ordinary moves). Seven pump theorems compiled locally with Lean 4.36.0-rc2 and ordinary axioms. The enclosing 1891 weighted upper certificate is in progress at this checkpoint; this is not yet an accepted parent closure.
+Parent `1RB0LA_1RC---_0RD0LB_1LD1LA_------_------`. All 25^5 raw completions satisfy the weighted bound 1891, attained by `1RB0LA_1RC0RE_0RD0LB_1LD1LA_0LC1RF_HHH0RC` (1890 ordinary moves and halt, zero delay).
 
-Reproduce the pump module using the same `emit_autopump.py` invocation as Round4, changing the namespace/module to Round5; then `python3 prepare_round5.py`. All late queries are checked by the original `.last` case, including the no-delay bound. The 1890-step witness is `1RB0LA_1RC0RE_0RD0LB_1LD1LA_0LC1RF_---0RC` with F0 halting. No global count or BB(6) change.
+112 open representatives: 103 FAR5, seven checked pump certificates and two late F0 queries. All 24 shards, aggregate all_quotient/all, and exact_weighted compiled locally in Lean 4.36.0-rc2 against canonical77 artifact 14997966221 with standard axioms only. Reproduce with Round4 procedure, Round5 names, prepare_round5.py, round5-pumps.jsonl and Raw40Round5Exact.lean. No global roster change.

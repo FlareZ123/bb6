@@ -4,6 +4,8 @@ Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, canonical raw40. First unass
 
 ## Established local results
 
+- [Round5](Round5-README.md): exact weighted maximum **1891** for 0LA/0LB, with kernel-checked coverage and attainment.
+
 - [Round4](Round4-README.md): newly complete exact weighted score **334** for the 0LA/1LB five-hole cylinder. All 25^5 completions covered; exact attained witness, locally compiled original dependency artifact and kernel audit.
 - [Canonical batch](canonical-batch-notes.md): four exact five-hole maxima 100, 47, 43, 114, and earlier RDLC bound 106 ([RDLC](RDLC-README.md)).
 - [Canonical new](Canonical-New-README.md): 17 additional closed canonical cylinders, including RE1RE exact-score case; local kernel acceptance and retained list of 172 from the original 189 (does not subtract the separate batch or Round4).
