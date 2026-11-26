@@ -194,172 +194,157 @@ def is_standard_module(module):
 
 
 def build_precompiled_manifest(base_linked, work):
-    """Build a dependency-closed v1 manifest for the exact linked Canonical64 base."""
-    version = subprocess.check_output(["lean", "--version"], text=True).strip()
-    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
-    compiler = prefix / "bin" / "lean"
-    compiler_sha = a68.sha(compiler)
-    pins = [
-        ("canonical65", a63.CANONICAL65_ARTIFACT, a63.CANONICAL65_REVISION),
-        ("raw120", a63.RAW120_ARTIFACT, a63.RAW120_REVISION),
+    """Create a source-verified precompiled subset for the Raw59 source closure."""
+    unpack = ROOT / "im-results" / "agent13-coverage" / "unpack.py"
+    raw120_generator = ROOT / "im-results" / "agent3-tnf-raw120" / "generate.py"
+    for generator in (unpack, raw120_generator):
+        result = subprocess.run(
+            [sys.executable, str(generator)], cwd=ROOT, text=True,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        )
+        print(result.stdout, end="", flush=True)
+        result.check_returncode()
+
+    source = ROOT / "im-results" / "agent32-raw59" / "Raw59Exact.lean"
+    manifest_path = work / "canonical64-base-precompiled-manifest.json"
+    manifest_work = work / "canonical64-base-manifest-work"
+    log_path = work / "canonical64-base-manifest.log"
+    command = [
+        sys.executable,
+        str(ROOT / "tools" / "lean_compile_closure.py"),
+        "--workdir", str(manifest_work),
+        "--jobs", "8",
+        "--artifact-dir", str(base_linked),
+        "--manifest", str(manifest_path),
+        "--manifest-only",
+        "--allow-missing-objects",
+        "--label", "Canonical64 source-verified precompiled subset for Raw59Exact",
+        "--artifact-name", "canonical64-base-precompiled-manifest",
+        "--provenance-input", str(unpack),
+        "--provenance-input", str(raw120_generator),
+        str(source),
     ]
-    source_entries = {}
-    metadata_conflicts = set()
-    source_revisions = []
-    artifact_manifests = []
-    for label, artifact_id, revision in pins:
-        paths = list((work / "metadata" / str(artifact_id)).rglob("manifest.json"))
-        assert len(paths) == 1, (label, artifact_id, [str(p) for p in paths])
-        path = paths[0]
-        manifest = json.loads(path.read_text())
-        assert manifest.get("schema_version") == 1, (label, manifest.get("schema_version"))
-        assert manifest.get("proof_source_revision") == revision, (
-            label, manifest.get("proof_source_revision"), revision
-        )
-        assert manifest.get("lean_version") == version, (
-            label, manifest.get("lean_version"), version
-        )
-        assert manifest.get("lean_binary", {}).get("sha256") == compiler_sha, (
-            label, manifest.get("lean_binary"), compiler_sha
-        )
-        source_revisions.extend(
-            manifest.get("source_revisions", [manifest["proof_source_revision"]])
-        )
-        artifact_manifests.append({
-            "label": label,
-            "artifact_id": artifact_id,
-            "source_revision": revision,
-            "manifest_sha256": a68.sha(path),
-            "module_count": manifest["module_count"],
-        })
-        for entry in manifest["modules"]:
-            module = entry["module"]
-            previous = source_entries.get(module)
-            if previous is None:
-                source_entries[module] = dict(entry)
-            elif (
-                previous.get("source_sha256") != entry.get("source_sha256")
-                or previous.get("project_imports") != entry.get("project_imports")
-            ):
-                metadata_conflicts.add(module)
+    result = subprocess.run(
+        command, cwd=ROOT, text=True, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    log_path.write_text(result.stdout)
+    print(result.stdout, end="", flush=True)
+    result.check_returncode()
 
-    # If two accepted inputs describe the same module from different source
-    # identities, do not choose one. Let the Raw59 source closure recompile it.
-    for module in metadata_conflicts:
-        source_entries.pop(module, None)
+    manifest = json.loads(manifest_path.read_text())
+    audit_path = base_linked / "kernel-link-manifest.json"
+    audit = json.loads(audit_path.read_text())
+    revisions = {
+        str(a63.CANONICAL65_ARTIFACT): a63.CANONICAL65_REVISION,
+        str(a63.RAW120_ARTIFACT): a63.RAW120_REVISION,
+    }
+    for revision in sorted(set(revisions.values())):
+        fetch = subprocess.run(
+            ["git", "fetch", "--no-tags", "--depth=1", "origin", revision],
+            cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+        )
+        print(fetch.stdout, end="", flush=True)
+        fetch.check_returncode()
 
-    candidates = {}
-    missing_objects = []
-    for module, original in source_entries.items():
-        relative = Path(original["olean_path"])
-        if relative.is_absolute() or ".." in relative.parts:
-            raise ValueError(f"unsafe base object path for {module}: {relative}")
-        object_path = base_linked / relative.name
-        if not object_path.is_file():
-            missing_objects.append(module)
+    verified = {}
+    excluded_missing_provider = []
+    excluded_source_mismatch = []
+    excluded_bad_path = []
+    for entry in manifest["modules"]:
+        module = entry["module"]
+        object_name = Path(entry["olean_path"]).name
+        object_info = audit.get("objects", {}).get(object_name)
+        if object_info is None:
+            excluded_missing_provider.append(module)
             continue
-        entry = dict(original)
-        # link_reachable has already selected one object after exact kernel-data
-        # comparison. Recompute identities below against that exact linked object.
-        entry["olean_path"] = relative.name
-        entry["olean_sha256"] = a68.sha(object_path)
-        candidates[module] = entry
+        object_path = base_linked / object_name
+        if not object_path.is_file() or a68.sha(object_path) != object_info["sha256"]:
+            raise AssertionError(f"linked object/audit hash mismatch for {module}")
+        provider_path = str(object_info["path"])
+        provider_id = next(
+            (artifact_id for artifact_id in revisions if f"/{artifact_id}/" in provider_path),
+            None,
+        )
+        if provider_id is None:
+            excluded_missing_provider.append(module)
+            continue
+        source_path = Path(entry["source_path"])
+        try:
+            if source_path.is_absolute():
+                source_path = source_path.relative_to(ROOT)
+            source_path = source_path.as_posix()
+            if ".." in Path(source_path).parts:
+                raise ValueError(source_path)
+        except (ValueError, OSError):
+            excluded_bad_path.append(module)
+            continue
+        revision = revisions[provider_id]
+        expected = subprocess.run(
+            ["git", "rev-parse", f"{revision}:{source_path}"],
+            cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        current = subprocess.run(
+            ["git", "rev-parse", f"HEAD:{source_path}"],
+            cwd=ROOT, text=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+        )
+        if (
+            expected.returncode != 0 or current.returncode != 0
+            or expected.stdout.strip() != current.stdout.strip()
+        ):
+            excluded_source_mismatch.append(module)
+            continue
+        verified[module] = entry
 
-    # The precompiled checker can only reuse a module if every project import
-    # is also represented. Drop incomplete tails; they will be compiled from source.
+    # Do not precompile a module whose project dependency was not itself
+    # source-verified against the artifact that supplied its object.
     changed = True
+    excluded_dependency_closure = set()
     while changed:
         changed = False
-        for module, entry in list(candidates.items()):
+        for module, entry in list(verified.items()):
             missing = [
                 dep for dep in entry["project_imports"]
-                if not is_standard_module(dep) and dep not in candidates
+                if not is_standard_module(dep) and dep not in verified
             ]
             if missing:
-                candidates.pop(module)
+                verified.pop(module)
+                excluded_dependency_closure.add(module)
                 changed = True
 
-    identities = {}
-    visiting = set()
-
-    def module_identity(module):
-        if module in identities:
-            return identities[module]
-        if module in visiting:
-            raise RuntimeError(f"cyclic manifest import graph at {module}")
-        visiting.add(module)
-        entry = candidates[module]
-        dependencies = []
-        for dep in sorted(entry["project_imports"]):
-            dep_identity = (
-                f"standard:{version}:{dep}"
-                if is_standard_module(dep)
-                else module_identity(dep)
-            )
-            dependencies.append({"module": dep, "identity": dep_identity})
-        import_hash = hashlib.sha256(
-            json.dumps(dependencies, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
-        entry["import_closure_sha256"] = import_hash
-        payload = {
-            "module": module,
-            "source_sha256": entry["source_sha256"],
-            "project_imports": entry["project_imports"],
-            "olean_sha256": entry["olean_sha256"],
-            "import_closure_sha256": import_hash,
-        }
-        identity = hashlib.sha256(
-            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
-        ).hexdigest()
-        entry["module_identity_sha256"] = identity
-        visiting.remove(module)
-        identities[module] = identity
-        return identity
-
-    for module in sorted(candidates):
-        module_identity(module)
-
-    modules = [candidates[module] for module in sorted(candidates)]
-    source_revisions = sorted(set(source_revisions))
-    output = {
-        "schema_version": 1,
-        "label": "Canonical64 exact linked shared core",
-        "proof_source_revision": "composite",
-        "source_revisions": source_revisions,
-        "lean_version": version,
-        "lean_binary": {"path": str(compiler.resolve()), "sha256": compiler_sha},
-        "claim": {
-            "theorem": "Canonical64 shared dependency core",
-            "parent_table": None,
-            "weighted_bound": None,
-        },
-        "artifact_name": "canonical64-base-precompiled-manifest",
-        "roots": [],
-        "module_count": len(modules),
-        "modules": modules,
-        "provenance_inputs": [],
-        "precompiled_core": {
-            "source_artifacts": artifact_manifests,
-            "metadata_conflicts_recompiled": sorted(metadata_conflicts),
-            "missing_linked_objects": sorted(missing_objects),
-            "module_count": len(modules),
-        },
+    manifest["modules"] = [verified[module] for module in sorted(verified)]
+    manifest["module_count"] = len(manifest["modules"])
+    manifest["proof_source_revision"] = "composite"
+    manifest["source_revisions"] = sorted(set(revisions.values()))
+    manifest["precompiled_core"] = {
+        "base_artifacts": [
+            {"artifact_id": int(aid), "source_revision": revision}
+            for aid, revision in sorted(revisions.items())
+        ],
+        "base_link_manifest_sha256": a68.sha(audit_path),
+        "source_verified_module_count": len(verified),
+        "excluded_missing_provider": sorted(excluded_missing_provider),
+        "excluded_source_mismatch": sorted(excluded_source_mismatch),
+        "excluded_bad_source_path": sorted(excluded_bad_path),
+        "excluded_dependency_closure": sorted(excluded_dependency_closure),
     }
-    path = work / "canonical64-base-precompiled-manifest.json"
-    path.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n")
+    manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     info = {
-        "manifest_sha256": a68.sha(path),
-        "module_count": len(modules),
-        "source_revisions": source_revisions,
-        "metadata_conflicts_recompiled": sorted(metadata_conflicts),
-        "missing_linked_objects": sorted(missing_objects),
+        "manifest_sha256": a68.sha(manifest_path),
+        "module_count": len(verified),
+        "source_revisions": sorted(set(revisions.values())),
+        "excluded_missing_provider": sorted(excluded_missing_provider),
+        "excluded_source_mismatch": sorted(excluded_source_mismatch),
+        "excluded_bad_source_path": sorted(excluded_bad_path),
+        "excluded_dependency_closure": sorted(excluded_dependency_closure),
     }
     print(
-        f"Built Canonical64 precompiled manifest for {len(modules)} "
-        "dependency-closed modules.",
+        f"Built source-verified Canonical64 precompiled subset: "
+        f"{len(verified)} modules; excluded "
+        f"{len(excluded_missing_provider) + len(excluded_source_mismatch) + len(excluded_bad_path) + len(excluded_dependency_closure)}.",
         flush=True,
     )
-    return path, info
+    return manifest_path, info
 
 
 def rebuild_raw59(base_linked, base_manifest, work):

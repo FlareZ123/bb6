@@ -1114,6 +1114,7 @@ jobs:
             /tmp/a31-canonical59/linked
             /tmp/a31-canonical59/canonical59-five-parent-integration.json
             /tmp/a31-canonical59/canonical64-base-precompiled-manifest.json
+            /tmp/a31-canonical59/canonical64-base-manifest.log
             /tmp/a31-canonical59/raw59-rebuilt-manifest.json
             /tmp/a31-canonical59/raw59-rebuild.log
             /tmp/a31-canonical59/base-reachable-link-audit.json

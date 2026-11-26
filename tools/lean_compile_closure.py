@@ -152,6 +152,7 @@ def build_manifest(
     weighted_bound: int | None,
     artifact_name: str | None,
     precompiled_metadata: dict | None = None,
+    allow_missing_objects: bool = False,
 ) -> dict:
     if not artifact_dir.is_dir():
         raise FileNotFoundError(f"compiled artifact directory does not exist: {artifact_dir}")
@@ -177,6 +178,27 @@ def build_manifest(
     if not compiler_binary.is_file():
         raise FileNotFoundError(f"Lean compiler binary not found: {compiler_binary}")
     compiler_binary_sha256 = sha256_file(compiler_binary)
+
+    if allow_missing_objects:
+        available = {
+            module for module in sources
+            if (artifact_dir / (module.replace(".", "/") + ".olean")).is_file()
+        }
+        changed = True
+        while changed:
+            changed = False
+            for module in list(available):
+                if any(not is_standard(dep) and dep not in available for dep in graph[module]):
+                    available.remove(module)
+                    changed = True
+        omitted = len(set(sources) - available)
+        sources = {module: sources[module] for module in available}
+        graph = {module: graph[module] for module in available}
+        print(
+            f"[lean-closure] partial manifest retains {len(sources)} "
+            f"dependency-closed objects; omits {omitted}",
+            flush=True,
+        )
 
     modules = []
     for module in sorted(sources):
@@ -371,6 +393,7 @@ def compile_closure(
     precompiled_manifest_path: Path | None = None,
     precompiled_dir: Path | None = None,
     absolute_source_path: bool = False,
+    allow_missing_objects: bool = False,
 ) -> None:
     index = module_index(extra_source_roots)
     sources: dict[str, Path] = {}
@@ -596,6 +619,7 @@ def compile_closure(
             weighted_bound,
             artifact_name,
             precompiled_metadata,
+            allow_missing_objects,
         )
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(
@@ -627,6 +651,11 @@ def main() -> int:
         "--manifest-only",
         action="store_true",
         help="resolve source closure and hash precompiled oleans without compiling",
+    )
+    parser.add_argument(
+        "--allow-missing-objects",
+        action="store_true",
+        help="in manifest-only mode, emit only objects with a complete precompiled import closure",
     )
     parser.add_argument(
         "--artifact-dir",
@@ -673,6 +702,8 @@ def main() -> int:
         parser.error("--compare-manifest requires --manifest")
     if args.manifest_only and not args.artifact_dir:
         parser.error("--manifest-only requires --artifact-dir")
+    if args.allow_missing_objects and not args.manifest_only:
+        parser.error("--allow-missing-objects requires --manifest-only")
     if bool(args.precompiled_manifest) != bool(args.precompiled_dir):
         parser.error("--precompiled-manifest and --precompiled-dir must be supplied together")
     if args.manifest_only and args.precompiled_manifest:
@@ -717,6 +748,7 @@ def main() -> int:
             Path(args.precompiled_manifest).resolve() if args.precompiled_manifest else None,
             Path(args.precompiled_dir).resolve() if args.precompiled_dir else None,
             args.absolute_source_path,
+            args.allow_missing_objects,
         )
     except Exception as exc:
         print(f"[lean-closure] ERROR: {exc}", file=sys.stderr, flush=True)
