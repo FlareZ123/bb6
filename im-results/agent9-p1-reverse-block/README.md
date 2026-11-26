@@ -2,6 +2,11 @@
 
 **Scope and evidence.** This intermediate programme extends the exact-integer P1 critical-index computations beyond the earlier 7,593,750 cutoff, and develops an exact acceleration for both the modular and delayed carry relations. It is not yet a Lean numerical certificate, an all-index reset exclusion, a P1 decision, or a BB(6) bound. The original-source reductions are [BatchCarrySource](../agent9-p1-first-return/BatchCarrySource.lean) and Agent43's [margin-free delayed bridge](../agent43-p1-high-cost-reset-count/LongConeSource.md).
 
+
+**Exact modular jump (new local preflight).** The converse of `walk_mem_jump` is now proved in JumpResidueSource.lean: for a binary target word of length k, let M=2^k, q=F-k, Y=digits ys, and S=qB+D(B). The residue condition implies (c+S) mod M=Y, because Y<M. Thus z=floor((c+S)/M) satisfies Mz+Y+corr(k,B)=FB+c. The existing `walk_of_eq` derives every intermediate guard from this identity and c<q. Consequently JumpMember is equivalent to existence of a genuine broad Walk, and the lifted residue set is exactly the reverse image of all broad terminal endpoints. No fitted-block condition is needed for this equivalence. The converse and digit bound passed Lean 4.36.0-rc2 locally against exact copied source declarations and proof bodies, with [propext, Quot.sound]; the final original-source integration and axiom audit remain to be run through the existing reverse-live-block target. This improves the certificate interface, not the numeric frontier by itself.
+
+**Bitmap reverse-set implementation.** [prefix_bitmap.cpp](prefix_bitmap.cpp) removes per-block sorting from the unlabelled reverse image by packed membership and in-place deduplication. Its reciprocal quotient proposal is accepted only after exact integer inequalities bF<=X<(b+1)F; otherwise the integer division fallback computes it. The labelled midpoint filter still sorts and merges DSU components. Local compiled regression n=3342, block=417 reached empty cost 13768. For n=45352466 the 5,669,058 / 5,669,058 / 11,338,116 / 22,676,233 schedule reproduced the prior prefixes and reached four at s=45352466. Subsequent 22,676,233-bit blocks gave 8,14,14 prefixes at s=68028699,90704932,113381165. No extinction yet. These are exact-integer finite experiments, not numerical Lean certificates; the optional checkpoint is untrusted. Build with g++ -O3 -march=native -std=c++17 -fopenmp prefix_bitmap.cpp -o prefix_bitmap. The cap 250000000 applies only to this implementation; at n<=100000000, s+n<=K and K<=250000000, F<=n+K+3<=350000003, k<=26, X<F*2^k<2^55 and all signed carry/clock variables and 2*q fit 32-bit int. The margin product A*L<6.0e17 fits uint64_t. Continue with the same prefix schedule; an END n 0 is not an exclusion.
+
 ## Reverse block
 
 For a fixed chronological target word y of k bits, write q for the starting clock, c for the starting carry, z for the end carry, and x_i for the selected bits. The exact equation 2 c_(i+1)+y_i=c_i+(q+i)x_i telescopes to
@@ -65,12 +70,12 @@ Run:
 
 The last returns END 10053630 11310334 (initial two mid-prefix branches, both eliminated at next lookahead; max margin gap 24). Independent old-style reverse-forest and block-forest implementations agreed on that exact safe horizon, width(n+1)=162720. The prefix-only method also reproduced prior safe horizons at n=286,350,1614,2990,3342; these are regressions, not new exclusions.
 
-The larger n=45352466 has first-window width 26604712. Prefix-only stages h=5669058,5669058,11338116 left 2,4,4 prefixes at s=22676233 (no extinction yet). Cap 100000000 is below the practical long-cone cutoff. This is the active unresolved computational exception. Use a fresh checkpoint, choose the specified block sizes successively, and continue rather than counting an END 0 as a proof. The optional checkpoint is an ephemeral local computation state, not a trusted certificate; use fresh runs for reproduction.
+The larger n=45352466 has first-window width 26604712. The bitmap continuation now reaches s=113381165 with 14 candidate prefixes (see current state above). This remains the active unresolved computational exception. Use fresh runs for reproduction; checkpoints are ephemeral, untrusted state.
 
 ## Next useful edge
 
 1. Accept the locally preflighted concrete residue generator against the full original-source dependency closure through the existing reverse-live-block target. Then transport actual computed prefix stages to the exact cover and blockFold interfaces.
-2. Repeat the n=45,352,466 prefix-only computation with the wider source-proved fit \(2^{k+1}\le F\). The earlier large run has not been repeated with this fit; do not count END n 0 as an exclusion.
+2. Continue the n=45,352,466 prefix-only computation from the current bitmap experiment; the wider fit has now been exercised on this index. Do not count END n 0 as an exclusion.
 3. For any empty live set, connect the exact C++ candidate output to JumpCover and the Lean blockFold specification before claiming a source-certified P1 exclusion.
 
 The remaining infinite-index quantifier is untouched by these finite computations.
