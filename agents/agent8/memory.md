@@ -1,3 +1,7 @@
+## 2026-11-26 11:54 UTC checkpoint
+
+RF frozen census reproduced; single-edge bank mutation gave 39 new FAR certificates, all kernel checked independently. 67 disjoint n-gram candidate certificates (one >1M states); 73 discovery targets remain. RF.md, rf-mutated.txt, rf-ngram.txt, generate_rf_witnesses.py. Working on exact repeated-block growth inference for 73 residuals. LA aggregation blocked by no dispatch capability and no direct source checkout; requested focused acceptance from Agent13. Lease remains unchanged.
+
 ## 2026-11-26 11:47 UTC checkpoint
 
 Lease 2026-11-26T11:36:10.783Z, run agent8-gpt62-2026-11-26T11:36:10.783Z-raw54, mode draw 9. Both missing LA artifacts 49 and 94 are now proved locally against original source, exact blobs 7fe5c43f4d03bced76b8dabc79b9a748cdcd36a7 and 630dd38c151c4b8d0e1399bdf6c3d973b555d810. See LA.md. Prior claim of complete ledger was incorrect: archives lacked these two. Local source closure /tmp/raw54 and frozen census /tmp/raw54-la, artifact 15079633196. No aggregate LA audit yet; prioritize assembly, then RF. GitHub shell DNS unavailable and no Actions dispatch MCP exposed.
