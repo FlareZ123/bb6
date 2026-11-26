@@ -692,6 +692,7 @@ jobs:
       - name: Build the pinned Raw122 core manifest
         env:
           SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
+          RAW122_PARENT_CORE: "1"
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
