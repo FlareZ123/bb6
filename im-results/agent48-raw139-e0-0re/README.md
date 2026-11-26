@@ -1,8 +1,8 @@
-# Raw139 E0=0RE: complete computational candidate at weighted bound 852
+# Raw139 E0=0RE: source-accepted parent Cover at weighted bound 852
 
 Exact parent `[7,24,11,24,14,24,24,16,17,11,24,24]` (A0,A1,...,F0,F1; code 4q+2w+d; 24 unassigned). This is a distinct six-hole depth-two sibling, not any C1, D0 or F1 descendant.
 
-A first-hole census with translated cycles through 450 steps and ordinary FAR d≤2 produced 11,690 internal splits, 216,456 cycle leaves, 41,263 last-hole leaves, 10,416 FAR leaves and 736 open leaves. The maximum first-hole time in the census was 193. All 736 opens have now been classified computationally: 734 Block-FAR certificates (widths 2/3), one final hole F0 at step 846, and the exact inductive sweep below. Candidate weighted bound 852 = 846+6. No original-source accepted parent Cover yet.
+A first-hole census with translated cycles through 450 steps and ordinary FAR d≤2 produced 11,690 internal splits, 216,456 cycle leaves, 41,263 last-hole leaves, 10,416 FAR leaves and 736 open leaves. The maximum first-hole time in the census was 193. All 736 opens have now been classified computationally: 734 Block-FAR certificates (widths 2/3), one final hole F0 at step 846, and the exact inductive sweep below. Candidate weighted bound 852 = 846+6. The full parent Cover is now source-accepted.
 
 ## Exact symbolic last leaf
 
@@ -20,6 +20,6 @@ The 268,871 ordinary terminal leaves are exactly 216,456 cycle, 41,264 last-hole
 
 `package6.py` generates the original FastThreeHoleAudit certificate, splitting the large tree into sibling groups capped at 1800 leaves where possible, with 92 Block-FAR modules, 276 branch modules and one root. The complete generated dependency graph is reachable and acyclic. From repository root run `bash im-results/agent48-raw139-e0-0re/reproduce-parent.sh` with Lean 4.36.0-rc2. This uses the existing exact-source closure builder and axiom audit, including the original first-hole/weighted semantics and original FAR/Block-FAR checkers. No native-decide or sorry-dependent theorem is accepted.
 
-**Full parent status:** CI [45799738861](https://github.com/FlareZ123/bb6/actions/runs/45799738861) dispatched with source checkout 4fd22a0575df518a25844ec74755b61db17c1f54; pending at this checkpoint. Target theorem `BB6.Agent48Raw139E0ZeroRE.all_completions_weighted`, bound 852. No parent Cover or global exactness claim until this passes.
+**Full parent status: ACCEPTED.** CI [45799738861](https://github.com/FlareZ123/bb6/actions/runs/45799738861) succeeded with source checkout `4fd22a0575df518a25844ec74755b61db17c1f54`. The exact theorem `BB6.Agent48Raw139E0ZeroRE.all_completions_weighted` proves every completion of the parent table is `WeightedBound 852`. The exact-source closure compiled 423 project modules; `hRoot` and `all_completions_weighted` depend only on `propext`, `Classical.choice`, and `Quot.sound`. The accepted artifact is [15110025526](https://github.com/FlareZ123/bb6/actions/runs/45799738861/artifacts/15110025526), SHA256 `51880d101ca787263f9122059373c367d80d1b1523f308e333d532915cc7a55b`. This establishes the parent Cover, but does not by itself establish that it refines any active Canonical64 Raw139 leaf; the normalized crosswalk must still be compiled and inspected.
 
 The normalized residual address is (2, 0RE), i.e. (2, ⟨false,true,4⟩), from Raw139Normalized.p2. It is not in the original normalized acceptedRows or witnesses, and is distinct from the discharged E0=0RA row. The exact table transport and current active-list consumer should be checked in the normalized roster integration; no count reduction is claimed here.
