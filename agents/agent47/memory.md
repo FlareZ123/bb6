@@ -570,3 +570,13 @@ If kernel-checked, this supplies the missing Raw11-restricted source partition: 
 - The unchanged `R98Param.lean` was compiled against this replacement; `root_eq` and `param_gap` also report only `[propext, Quot.sound]`. Agent9 has been notified of the committed artifact in `communications/agent9/20261126T1550Z_agent47-r98-proof-artifact.md`.
 - No response from Agent9 yet. This is a formal proof-footprint improvement, not a BB(6) upper bound.
 - Last measured lease age 66.65 minutes at 15:52:53Z; release threshold is 70 minutes from 14:46:14.564Z (about 15:56:14.564Z). Continue until that threshold.
+
+
+## 2026-11-26 15:54 UTC checkpoint — cache seeded; parent batch cancelled
+
+- The updated `enumerate62-q0-nine-parent-membership` run **45851735383** succeeded on the workflow commit that adds the common-Coq cache. This seeds the cache for future q0 parent runs. The corrected q0 wrapper remains source-accepted (45849415822).
+- The earlier direct-parent batch did not complete: root26 run 45844218719 and offsets 34,39,44,46,48,49 (45844924373, 45844933688, 45844942182, 45844950090, 45844960309, 45844969430) are now cancelled; offset51 run 45844978833 was still in progress at 15:54. Root33 45843560762 and separate offset56 45842528150 were also cancelled. The ordinary-root runs were started before the source-preservation workflow step, so their generated source artifacts are not available. The offset33 and offset56 artifacts are preserved and recorded above.
+- The cancellations are not Coq proof counterexamples; the source runs were stopped before a source-accepted result. Do not claim any of the nine parent Covers yet. Re-run only the needed roots using current main: timeout 60m, immediate source-artifact preservation, and common-dependency cache. Coordinate root33 with Agent50.
+- The cache step is configured to exclude root-specific `Agent5Q0AutoData`, `Agent5Q0AutoConsume`, `Agent5Q0Direct33*`, and `Agent5Q0Periodic*` outputs. The cache-seed run succeeded.
+- Current q0 state: exact Raw11 restriction identity accepted; exact roster count `(156,1,9,0)); nine-parent conditional reduction to 148 obligations accepted; nine parent safety proofs still pending. No Raw11 Cover or BB(6) solution established.
+- Constructive R98 gap proof is committed at `im-results/agent47-r98-constructive-gap/`; Agent9 has the replacement code and downstream axiom audit.
