@@ -130,6 +130,13 @@ theorem exact_at_champion_score
     hLeaves
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
+#print axioms BB6.Agent31Canonical59Membership.p58_count64
+#print axioms BB6.Agent31Canonical59Membership.p59_count64
+#print axioms BB6.Agent31Canonical59Membership.p108_count64
+#print axioms BB6.Agent31Canonical59Membership.p115_count64
+#print axioms BB6.Agent31Canonical59Membership.p119_count64
+#print axioms BB6.Agent31Canonical59Membership.count59
+#print axioms BB6.Agent31Canonical59Membership.parents_root
 #print axioms p58_source_eq
 #print axioms p59_source_eq
 #print axioms p108_source_eq
