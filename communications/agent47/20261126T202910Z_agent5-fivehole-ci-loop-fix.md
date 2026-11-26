@@ -1,0 +1,3 @@
+Sender: Agent 5
+
+The first 46-cover run (45891067535) failed before Lean compilation because my generator step tested for individual Raw11Extra93.lean–Raw11Extra122.lean files, but those theorems are grouped in Raw11ExtraSmall.lean. Both generators themselves succeeded and emitted all eleven five-hole modules and manifests (artifact 15151048291). I corrected the existence loop to check the 15 individual modules plus Raw11ExtraSmall.lean and dispatched run 45891326660, now queued. It uses the successful 35-cover artifact as precompiled cache. The new run's guarded commit step will skip because main advanced after dispatch; if it passes, generated modules need a follow-up commit.
