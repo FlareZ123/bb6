@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Longer-cap side-cycle/last-hole probe for the eight Raw124 F1=1LB leaves.
+"""Probe the eight Raw124 F1=1LB residuals.
 
-The C++ classifier's hashes only select candidates; its tape comparison checks
-translated side-cycle equality directly.  Output remains discovery data until
-the resulting leaves are assembled and checked by the Lean PartialAudit.
+Default mode runs the longer-cap side-cycle/last-hole classifier and then an
+exact direct simulation.  Use --sim-only when the partition probe has already
+been run, so a long-run extension does not repeat that bounded search.
 """
 from __future__ import annotations
 
@@ -31,40 +31,40 @@ def main():
     ap.add_argument("--cap", type=int, default=1_000_000)
     ap.add_argument("--lookback", type=int, default=128)
     ap.add_argument("--sim-cap", type=int, default=1_000_000_000)
+    ap.add_argument("--sim-only", action="store_true")
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
 
-    exe = args.out / "fast_partition"
-    subprocess.run(
-        ["g++", "-std=c++20", "-O3", str(HERE / "fast_partition.cpp"), "-o", str(exe)],
-        check=True,
-    )
-
-    summary = []
-    for rid, table in TABLES:
-        prefix = args.out / f"residual-{rid}"
-        proc = subprocess.run(
-            [str(exe), table, str(args.cap), str(args.lookback), str(prefix)],
-            check=True, capture_output=True, text=True,
+    if not args.sim_only:
+        exe = args.out / "fast_partition"
+        subprocess.run(
+            ["g++", "-std=c++20", "-O3", str(HERE / "fast_partition.cpp"), "-o", str(exe)],
+            check=True,
         )
-        tree = json.loads(prefix.with_suffix(".json").read_text(encoding="utf-8"))
-        open_rows = prefix.with_suffix(".open").read_text(encoding="utf-8").splitlines()
-        item = {
-            "id": rid,
-            "table": table,
-            "cap": args.cap,
-            "lookback": args.lookback,
-            "stdout": proc.stdout.strip(),
-            "tree": tree,
-            "open_rows": open_rows,
-        }
-        summary.append(item)
-        print(f"{rid}: {proc.stdout.strip()} tree={tree}", flush=True)
-
-    (args.out / "partition-probe.json").write_text(
-        json.dumps(summary, indent=2) + "\n", encoding="utf-8"
-    )
+        summary = []
+        for rid, table in TABLES:
+            prefix = args.out / f"residual-{rid}"
+            proc = subprocess.run(
+                [str(exe), table, str(args.cap), str(args.lookback), str(prefix)],
+                check=True, capture_output=True, text=True,
+            )
+            tree = json.loads(prefix.with_suffix(".json").read_text(encoding="utf-8"))
+            open_rows = prefix.with_suffix(".open").read_text(encoding="utf-8").splitlines()
+            item = {
+                "id": rid,
+                "table": table,
+                "cap": args.cap,
+                "lookback": args.lookback,
+                "stdout": proc.stdout.strip(),
+                "tree": tree,
+                "open_rows": open_rows,
+            }
+            summary.append(item)
+            print(f"{rid}: {proc.stdout.strip()} tree={tree}", flush=True)
+        (args.out / "partition-probe.json").write_text(
+            json.dumps(summary, indent=2) + "\n", encoding="utf-8"
+        )
 
     sim_exe = args.out / "simulate_1lb_residuals"
     subprocess.run(
@@ -82,7 +82,6 @@ def main():
     (args.out / "long-run-simulation.json").write_text(
         json.dumps(simulation, indent=2) + "\n", encoding="utf-8"
     )
-
 
 
 if __name__ == "__main__":
