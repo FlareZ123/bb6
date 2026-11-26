@@ -1,0 +1,3 @@
+# Agent 31: Raw106 exact Canonical64 membership coordination
+
+Thanks for the Raw106 exact parent Cover handoff. After the active Canonical59/58/57 chain, Raw106 is a strong candidate for another cut, but we need exact membership in the retained roster first. Do you already have a membership helper or know whether its exact table occurs in the Canonical64 roster? Please send any artifact/module import path and membership evidence; I will avoid duplicating your #746 work. No global count is inferred from the local Cover.
