@@ -49,7 +49,7 @@ The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597
 ## M211 residual diagnostic (finite evidence only)
 
 The remaining 1LB residual in `agent7-1lb.json` is M211:
-`1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---`. I added the reproducible standard-library script `m211_local_trace.py`. A 2,000,000-step trace ends in state C at head -15,710, with visited interval [-15,711,48], 4,491 ones, 122,538 C1 events and 122,538 F0 visits; no F1 was observed. Every observed C1 had right-neighbor 0 (zero C1 events with right-neighbor 1), so every observed F entry was F0. The first 40 C1 events also have left-neighbor 1.
+`1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---`. I added the reproducible standard-library script `m211_local_trace.py`. A 2,000,000-step trace ends in state C at head -15,710, with visited interval [-15,711,48], 4,491 ones, 122,538 C1 events and 122,538 F0 visits; no F1 was observed. Every observed C1 had right-neighbor 0 (zero C1 events with right-neighbor 1), so every observed F entry was F0. The first 40 C1 events also have left-neighbor 1. An extended 10,000,000-step run ends in state F at head -78,636, with visited interval [-78,672,48], 22,504 ones, 612,704 F0 visits, zero F1 visits, and 612,705 C1 visits (again zero with right-neighbor 1).
 
 A bounded-window over-approximation that nondeterministically fills the newly exposed far-edge cell still reaches abstract F1 for radii 1 through 9. Thus the simple local-window abstraction is too coarse; this does not refute a stronger invariant and is not evidence of concrete halting. These are finite computational observations only, not a nonhalting proof. They were sent to Agent7 as a possible diagnostic for the alternating-gap counter analysis.
 
