@@ -26,6 +26,65 @@ structure LaneSpec5 (q N : Nat) (u : Nat → BitState) : Prop where
   output : ∀ j<N, q.testBit j=true → outputOK5 (u j)
   closed : q.testBit 0=true
 
+/-- The packed bit-plane checks imply the low-output lane guards, including
+    the relaxed final inequality b+8<=m+o. -/
+theorem spec5_of_checked5 (s t : State) (N q K : Nat)
+    (v : BB6.Agent12LaneCertificate.Trace)
+    (h : BB6.Agent12LaneCertificate.checked5 s t N q K v) :
+    LaneSpec5 q N (lane v) := by
+  obtain ⟨hN,hq,hclose,hs,ht,hc,hK,hm,hpe,hpn,hb,hi1,hi2,hi3,hid,hib,ho1,ho2⟩ := h
+  refine ⟨?_,?_,?_,hclose⟩
+  · intro j hj
+    have hf : (2^N-1).testBit j=true := by simp [Nat.testBit_two_pow_sub_one,hj]
+    have hmass:=equalOn_sound _ _ _ hm j hf
+    have hB:=equalOn_sound _ _ _ hb j hf
+    simp only [addP_sound,value_shiftP,value_mul2,value_maskP,value,
+      bit_bounded N j hj,bit_and,bit_shr] at hmass hB
+    cases he:q.testBit j
+    · have hn : ((2^N-1)^^^q).testBit j=true := by simp [Nat.testBit_xor,hf,he]
+      have hp:=equalOn_sound _ _ _ hpn j hn
+      simp only [value,bit_shr] at hp
+      simp only [bit,he,Bool.toNat_false,Nat.zero_mul,Nat.mul_zero,Nat.add_zero] at hmass hB
+      simp only [lane,tick,he,Bool.false_eq_true,ite_false,Bool.toNat_false,BitState.mk.injEq]
+      refine ⟨by omega,by omega,by omega⟩
+    · have hp:=equalOn_sound _ _ _ hpe j he
+      simp only [value] at hp
+      have hpar:=value_mod_two v.ms j
+      have hq1:bit q j=1 := by simp [bit,he]
+      simp only [hq1,Nat.one_mul,Nat.mul_one] at hmass hB
+      simp only [lane,tick,he,ite_true,Bool.toNat_true,BitState.mk.injEq]
+      refine ⟨?_,by omega,?_⟩ <;> omega
+  · intro j hj hN' he
+    have hmask:=inputs_bit q N j hj he
+    have hf:=bit_full N j hN'
+    have h1:=leOn_sound _ _ _ hi1 j hmask
+    have h2:=leOn_sound _ _ _ hi2 j hmask
+    have h3:=equalOn_sound _ _ _ hi3 j hmask
+    simp only [value,Nat.mul_zero,Nat.add_zero] at h3
+    have hpar:=value_mod_two v.bs j
+    simp only [addP_sound,value,hf] at h1 h2
+    have hzero:bit 0 j=0 := by simp [bit]
+    simp only [hzero,Nat.zero_add,Nat.mul_zero,Nat.add_zero] at h1 h2
+    unfold inputOK lane
+    dsimp
+    refine ⟨by omega,by omega,by omega,?_⟩
+    cases hd:q.testBit (j-1)
+    · have hh:=leOn_sound _ _ _ hib j (bounceInputs_bit q N j hj hN' he hd)
+      simp only [branchRhs,addP_sound,value_mul2,value,hf,hzero,Nat.zero_add,Nat.mul_zero,Nat.add_zero] at hh
+      simp only [hd,Bool.false_eq_true,ite_false]; omega
+    · have hh:=leOn_sound _ _ _ hid j (directInputs_bit q N j hj he hd)
+      simp only [branchRhs,addP_sound,value_mul2,value,hf,hzero,Nat.zero_add,Nat.mul_zero,Nat.add_zero] at hh
+      simp only [hd,ite_true]; omega
+  · intro j hj he
+    have hf:=bit_full N j (by omega)
+    have h1:=leOn_sound _ _ _ ho1 j he
+    have h2:=leOn_sound _ _ _ ho2 j he
+    have hzero:bit 0 j=0 := by simp [bit]
+    simp only [addP_sound,value,hf,hzero,Nat.zero_add,Nat.mul_zero,Nat.add_zero] at h1 h2
+    unfold outputOK5 lane
+    dsimp
+    exact ⟨by omega,by omega⟩
+
 structure EdgeData5 (r : Nat) (s : State) where
   a k x y : Nat
   dec : decode s=(a,k)
@@ -302,11 +361,8 @@ theorem source_path5_and_bitplane_clock (q N : Nat)
   have hState : origin w N=lift s := ha.1.trans hstart
   have hAge : value w.age N=0 := ha.2.1
   have hBoundary : lane v N=idle 0 (origin w N) := by
-    rcases os0.top with ⟨ho,ha'⟩
-    calc
-      lane v N=origin w N := ho.symm
-      _=idle (value w.age N) (origin w N) :=
-        congrArg (fun d => idle d (origin w N)) ha'
+    rcases os0.top with ⟨ho,_⟩
+    simpa [idle_zero] using ho.symm
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
   have hcallsSum := BB6.Agent12LaneClock.calls_sum N q v w ha hq
@@ -316,5 +372,33 @@ theorem source_path5_and_bitplane_clock (q N : Nat)
   have hsumWeights : sumTerms N q (weightTerms N w)=(clocks (word q 0 N) s).2 :=
     hweightSum.trans (congrArg Prod.snd hclock).symm
   exact ⟨T,W,hpath,hcalls.trans hsumCalls.symm,hweight.trans hsumWeights.symm⟩
+
+
+
+/-- A checked low-output bit-plane trace directly yields the authentic
+    primitive CLine path. -/
+theorem source_path5_of_checked5 (q N K : Nat)
+    (v : BB6.Agent12LaneCertificate.Trace) (s t : State)
+    (hc : BB6.Agent12LaneCertificate.checked5 s t N q K v) :
+    ∃ T W, Path T W (enc s) (enc t) ∧
+      (T:Int)=clocks (word q 0 N) s .1 ∧
+      6*(W:Int)=clocks (word q 0 N) s .2 := by
+  obtain ⟨hN,hq,hclose,hstart,hend,hcounters,hK,hm,hpe,hpn,hb,hi1,hi2,hi3,hid,hib,ho1,ho2⟩ := hc
+  exact source_path5_of_spec q N (lane v)
+    (spec5_of_checked5 s t N q K v hc) s t hstart hend
+
+/-- The same checked low-output trace, aligned to its clock planes, yields
+    both the primitive path and its exact primitive-step weight. -/
+theorem source_path5_and_bitplane_clock_of_checked5 (q N K : Nat)
+    (v : BB6.Agent12LaneCertificate.Trace) (w : BB6.Agent12LaneClock.Aligned)
+    (s t : State)
+    (hc : BB6.Agent12LaneCertificate.checked5 s t N q K v)
+    (ha : alignmentChecked N q v w) :
+    ∃ T W, Path T W (enc s) (enc t) ∧
+      (T:Int)=sumTerms N q (callsTerms N w) ∧
+      6*(W:Int)=sumTerms N q (weightTerms N w) := by
+  obtain ⟨hN,hq,hclose,hstart,hend,hcounters,hK,hm,hpe,hpn,hb,hi1,hi2,hi3,hid,hib,ho1,ho2⟩ := hc
+  exact source_path5_and_bitplane_clock q N v w
+    (spec5_of_checked5 s t N q K v hc) hq ha s t hstart hend
 
 end BB6.Agent12LanePathSource
