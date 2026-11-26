@@ -154,9 +154,63 @@ def check_invariant(rules,entry,edges,final):
                     queue.append(pair)
     return len(seen)
 
+
+def run_source_zip(q,L,R,t):
+    """Exact SweepPumping.move0 convention: L includes the scanned cell."""
+    L,R = deque(L),deque(R)
+    for _ in range(t):
+        a = L.popleft() if L else 0
+        assert a in (0,1), "opaque suffix was scanned"
+        q,b,dp = move(q,a)
+        if dp==1:
+            c = R.popleft() if R else 0
+            assert c in (0,1), "opaque suffix was entered"
+            L.appendleft(b)
+            L.appendleft(c)
+        else:
+            R.appendleft(b)
+    return q,list(L),list(R)
+
+def check_source_macros(rules,entry):
+    t,w=entry
+    assert w[0]=="0"
+    assert run_source_zip(0,[],[],t)==(1,[],bits(w[1:]))
+    for k,(d,n) in rules.items():
+        assert k[0]==d[0]=="0" and n>0
+        marker=object()
+        assert run_source_zip(1,[],bits(k[1:])+[marker],n)==(
+            1,[],bits(d[1:])+[marker])
+
+def trim(edges,final):
+    rev=defaultdict(set)
+    for (p,_),vs in edges.items():
+        for q in vs: rev[q].add(p)
+    live={final}
+    queue=deque(live)
+    while queue:
+        for p in rev[queue.popleft()]:
+            if p not in live:
+                live.add(p)
+                queue.append(p)
+    reachable={0}
+    queue=deque(reachable)
+    while queue:
+        p=queue.popleft()
+        for a in "01":
+            for q in edges.get((p,a),set()) & live:
+                if q not in reachable:
+                    reachable.add(q)
+                    queue.append(q)
+    index={p:i for i,p in enumerate(sorted(reachable))}
+    new={(index[p],a):set(index[q] for q in edges.get((p,a),()) if q in index)
+         for p in index for a in "01"}
+    return new,index[final],len(index)
+
+
 def main():
     rules,entry=discover()
     check_macros(rules,entry)
+    check_source_macros(rules,entry)
     edges,final,n,rounds=build_automaton(rules,entry[1])
     product=check_invariant(rules,entry,edges,final)
     print("table",TABLE)
@@ -164,6 +218,9 @@ def main():
     print("rules",len(rules),"max input",max(map(len,rules)))
     print("NFA states",n,"edges",sum(map(len,edges.values())),
           "rounds",rounds,"uncovered product states",product)
+    te,tf,tn=trim(edges,final)
+    check_invariant(rules,entry,te,tf)
+    print("trimmed NFA states",tn,"edges",sum(map(len,te.values())))
     print("All exact macros, entry, closure and totality checked.")
     return rules,entry,edges,final,n
 
