@@ -65,14 +65,14 @@ def main():
             assert i not in pumps
             pumps[i]=certns
             pumpcode.insert(0,"import "+module)
-    if SPEC.get("automata"):
+    if SPEC.get("automata") or SPEC.get("ngram_automata"):
         sys.path.insert(0,str(ROOT.parent/"agent4-raw58"))
         from generate_more import run_automata, compress_automata, emit_automata_sharded
         an=f"BB6.Agent7{ID}Automata"
         am=ID+"Automata"
         code=["import TwoSidedAutomata","set_option maxRecDepth 100000",
               "set_option maxHeartbeats 0",f"namespace {an}","open BB6Coverage"]
-        for i,params in SPEC["automata"].items():
+        for i,params in SPEC.get("automata",{}).items():
             i=int(i)
             p=one.parse(opens[i])
             L,R=(params["left"],params["right"]) if isinstance(params,dict) else (params,params)
@@ -84,6 +84,22 @@ def main():
             code.append(emit_automata_sharded(i,p,cert))
             assert i not in pumps
             pumps[i]=f"{an}.M{i}"
+        if SPEC.get("ngram_automata"):
+            from ngram_auto import from_sparse
+            nroot=ROOT.parent/"agent47-raw111-cut"
+            exe=target/"ngram_sparse_auto"
+            subprocess.run(["g++","-std=c++17","-O3",str(nroot/"ngram_sparse.cpp"),"-o",str(exe)],check=True)
+            for i,expected in SPEC["ngram_automata"].items():
+                i=int(i); k,before,after=expected
+                p=one.parse(opens[i])
+                raw=subprocess.check_output([str(exe),str(k)],input=f"{i} {opens[i]}\n",text=True)
+                j,data=raw.strip().split(maxsplit=1); assert int(j)==i
+                cert=from_sparse(p,data); assert cert[1]==before
+                cert=compress_automata(p,cert); assert cert[1]==after
+                print(A,i,"ngram incidence quotient",before,"->",after,flush=True)
+                code.append(emit_automata_sharded(i,p,cert))
+                assert i not in pumps
+                pumps[i]=f"{an}.M{i}"
         code.append(f"end {an}")
         (ROOT/(am+".lean")).write_text("\n\n".join(code)+"\n")
         pumpcode.insert(0,"import "+am)
