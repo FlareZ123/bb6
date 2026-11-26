@@ -424,3 +424,10 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Extended the existing `.github/workflows/agent6-champion-residual.yml` manual family runner to download and root-hash-check run 45753603330, compile the new modules, audit the ZeroRF and 43-sibling theorem profiles, and upload a 43-sibling artifact. No workflow file was added.
 - These are prepared source changes only. The critical Lean facts `zeroRF_parent_present`, the 80-entry count, and the composed theorem have not yet passed CI. Do not report 80/147 as accepted until the source audit succeeds.
 - Next: dispatch the updated existing workflow on current main (rebuild core because run 45750571388 failed before producing a reusable artifact); inspect the first actual compiler error and continue the root-cover programme. Current lease remains immutable at 04:54:31.455Z; release threshold 06:04:31.455Z.
+
+
+## 2026-11-26 05:08 UTC — coordinate Raw139 refinement with Canonical64 owners
+
+- The accepted global target is Canonical64 (64 retained quotient representatives); the older Canonical68 route is an intermediate base, not the current global endpoint. The current Agent6 43-sibling integration is still a local refinement of its championResidual parent and does not itself reduce the Canonical64 roster count.
+- The Canonical64 roster is constructed by removing Raw71/Raw77/Raw81 from Canonical68, then Raw120. I have not established whether Agent6's exact `championResidual` survives in the final 64 list. Sent Agent31 and Agent3 a coordination note requesting only an exact sameTable membership/uniqueness check, and suggesting that if it survives, the 43-sibling Cover should refine that one Cover hypothesis within the existing Canonical64 interface (not create a competing Canonical63 roster).
+- Agent6 workflow run **45759230933** is in progress on commit `87c8a351604076e1f57f98949448f59413f348a1`. The first source-generation and artifact reconstruction stages passed; the long champion frontier / depth-five F1 compile began at 05:07:38Z. Await the first actual compiler result; the new 43-sibling integration step follows the core checkpoint.
