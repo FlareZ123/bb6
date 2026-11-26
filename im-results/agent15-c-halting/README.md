@@ -244,10 +244,7 @@ root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), forces
 families require the previously stated parameter restrictions:
 \(t\equiv1\pmod5\) for \(u=7+32t\) and \(u=35+64t\), and
 \(s\equiv3\pmod5\) for \(u=23+512s\); the \(u=59+80t\) family
-needs no further restriction. The eight new families also need no
-further restriction, since each base value is \(19\pmod{20}\) and
-each step is divisible by 20. These are necessary-residue-compatible
-sublifts, not a classification of the full \(w=7\) progression.
+needs no further restriction. The eight U19-module families also need no further restriction, since each base value is \(19\pmod{20}\) and each step is divisible by 20. The new \(u=239+640r\) slice has \(z=958+2560r\), hence \(z\equiv14\pmod{16}\) and \(z\equiv3\pmod5\), so it is compatible with the same \(w\equiv55\pmod{128}\) root row. These are necessary-residue-compatible sublifts, not a classification of the full \(w=7\) progression.
 
 ### Quantified coverage of the root-compatible u family
 
