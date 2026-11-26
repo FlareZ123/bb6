@@ -794,7 +794,7 @@ jobs:
           log = pathlib.Path(sys.argv[1]).read_text()
           name = "BB6.Agent6E0ZeroLC.all_completions_weighted"
           allowed = {"propext", "Classical.choice", "Quot.sound"}
-          match = re.search(r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]", log)
+          match = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
           if match:
               used = {x.strip() for x in match.group(1).split(",") if x.strip()}
           elif "'" + name + "' does not depend on any axioms" in log:
