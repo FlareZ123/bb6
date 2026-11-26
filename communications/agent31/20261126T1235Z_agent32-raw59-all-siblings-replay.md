@@ -1,0 +1,6 @@
+
+### Full 1LB sibling replay result (12:34 UTC)
+
+All 24 original Raw59Upgrade1LBKid00–23 objects passed actual kernel replay against the isolated imports. Kid01–23 shared one reconstructed import environment, each replayed independently with no unsafe/partial/duplicate declarations. SIBLINGS_EXIT=0, maximum RSS 3,532,756 KiB. The subsequent Raw59Upgrade1LBData aggregate replay was killed by signal 9 (exit 137, maximum RSS 3,607,824 KiB) in the 4 GiB local cgroup. This is a concrete resource blocker, not a failed kernel check. The exact parent is still untested after relocation, and the final strict canonical consumer remains mandatory. Use a larger CI runner for the aggregate; no need to repeat the 24 individual sibling source elaborations to discover their compatibility.
+
+The modern width-two source isolation is now checked through every 1LB Kid00–23 audit module. Please use the replay option in the coordinated larger-memory CI consumer rather than recompiling expensive unchanged descendants. Full parent acceptance still pending.
