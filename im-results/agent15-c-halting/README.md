@@ -117,19 +117,29 @@ Three disjoint infinite parameter slices of \(Q(u)\) are now excluded:
    whose right coordinate is odd and whose coordinate sum is \(2\pmod4\).
    The source-certified odd-right sum-two invariant excludes it.
 
-For all three slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
+
+4. **\(u=23+512s\)** — [U5Q0W7U23Mod512.lean](U5Q0W7U23Mod512.lean)
+   applies four exact parent steps: odd/odd low-value, even/even unique,
+   odd-seven, then odd/odd low-value. The final state is
+   \[
+   (715594+15511608s,\;658051+14264292s),
+   \]
+   whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
+   The source-certified odd-right sum-one invariant excludes it.
+For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
 relation \(5z-7s\equiv12\pmod{16}\), with \(w=7+8s\), therefore forces
 \(s\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The additional
 root condition \(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the
 \(u=7+32t\) and \(u=35+64t\) slices; it holds for every \(t\) in
-the \(u=59+80t\) slice. These are necessary-residue-compatible
+the \(u=59+80t\) slice, and requires \(s\equiv3\pmod5\) for
+\(u=23+512s\). These are necessary-residue-compatible
 subfamilies, not a classification of the full \(w=7\) progression.
 
 ### Exact-source verification
 
 The focused workflow target w7-q0-parent-fan in
 [agent3-u5-m32-w485-highstop.yml](../../.github/workflows/agent3-u5-m32-w485-highstop.yml)
-passed in run [#17](https://github.com/FlareZ123/bb6/actions/runs/45792309463).
+passed in run [#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
 Lean 4.36.0-rc2 compiled 48 project modules from the three roots
 U5Q0W7ParentFan, U5Q0W7U3Mod64, and U5Q0W7U7Mod32. The workflow's
 axiom guard passed: the printed dependencies of the new declarations are
@@ -140,7 +150,7 @@ sorryAx or native_decide dependency occurs in this closure.
 The four older \(z=4u\) draft lifts below were deliberately excluded from
 this focused closure. The earlier broad batch failed in those independent
 files at their existing change proofs; they remain intermediate drafts
-and are not covered by run #17.
+and are not covered by run #20.
 
 ### Remaining scope
 
