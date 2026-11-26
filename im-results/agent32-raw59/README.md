@@ -2,37 +2,19 @@
 
 ## Current parent and canonical integration state — 26 November 2026
 
-The accepted global conditional frontier is now Canonical64, not the older Canonical68 snapshot. Raw59 is one of the ten still-open E1 sibling parents in that 64-entry roster.
-
-### Raw59 parent Cover
-
-The six-hole parent is
+**Exact weighted parent maximum: 4,136,171 (source-accepted).** The parent is
 
 `1RB---_1RC---_0RD---_1LD1RE_---1LA_------`
 
-with 25^6 = 244,140,625 literal completions. The existing proof closes 18 of 25 first-hole choices at weighted bound 395 and refines the seven retained children (0LA, 0LB, 1LB, 0LE, 1LE, 0LF, 1LF) to a parent Cover at 4,200,000.
+with 25^6 = 244,140,625 literal completions. A1 is first queried after seven ordinary steps. The proof closes all branches, including the seven previously retained children. The 4,200,000 Cover is superseded by the exact bound and attainment accepted in [run 45786187618](https://github.com/FlareZ123/bb6/actions/runs/45786187618), artifact 15100876549. The extremal completion executes 4,136,170 ordinary transitions followed by its halt query. See [Upgrade.md](Upgrade.md) for branch proof development.
 
-- Source-accepted upgraded children: 0LE and 1LF from run 45675872170; 1LE and ClosedA–F from run 45727352966; 0LB, 0LF and 1LB from run 45742419127.
-- The only remaining child in the focused upgrade set was 0LA. Run 45742419127 reached Raw59Upgrade0LAKid11.lean:4058 and failed with Lean's maximum-recursion-depth diagnostic, not a theorem counterexample.
-- Focused run 45753302154 retried 0LA with generated proof fragments reduced from 240 to 32. It still failed at the same Kid11 line 4058 after the child modules compiled; the parent-composition job did not run. This shows that fragment size alone does not address the expensive query proof.
-- The generator's split-composition lemma still proves each zipQueryOK query by direct decide. I added Raw59QuickWeight.lean, an exact checker extensionally equal to zipQueryOK that short-circuits weightOK when n+6 <= B, changed generated query proofs to use it, and restored CHUNK=240 to avoid unnecessary fragment proliferation. This is a targeted proof-engineering hypothesis, not yet CI-accepted. Run 45755958130 caught a helper namespace/type mismatch before reaching the child proof; the helper now explicitly uses BB6Coverage.PartialMachine and qualified zipRead/zipQueryOK. Follow-up run 45756260211 is currently in the refinement step and preserves the generated Kid11 source on failure. Do not claim the parent Cover until the parent-composition artifact passes.
+**Global integration remains blocked.** Canonical64 is the accepted conditional frontier; Raw59 is still a member until a combined consumer passes. Agent31's coordinated five-parent Canonical64→59 attempt failed the strict kernel-object comparison, with two genuine conflicts in BlockMacro2/BlockFAR2. The accepted Canonical64 dependency closure contains the older standalone width-two primitive implementation; Raw59 imports the modern shared primitive implementation. Later repository source pins matching does not imply archived objects match.
 
-### Canonical integration
+[Isolation.md](Isolation.md) records the concrete archived-source difference, the namespace-isolation repair and the exact verification requirements. The relocated width-two core, certificate and original-machine bridge for Raw59/1LB/194 compile locally under Lean 4.36.0-rc2. The first large downstream Kid00 object also passed actual kernel replay against the isolated imports. The full relocated parent is **not yet accepted**. Keep the one coordinated Canonical64→59 consumer and its strict reachable-kernel comparator; do not count competing Canonical63/62 projections as additional reductions.
 
-Raw59Canonical64Integrated.lean composes the Raw59 parent with the source-accepted Canonical64 artifact 15085029091 (run 45750164590). It checks unique membership of Raw59 in the exact 64-entry roster, removes it, and states a 63-entry conditional exactness interface at the common weighted floor 6,766,859.
+No global upper bound or exact BB(6) value follows from the accepted Raw59 cylinder alone.
 
-assemble_raw59_canonical64.py reconstructs the full Canonical64 import closure from the pinned accepted Canonical65 and Raw120 artifacts, then includes the published Canonical64 root as a second linker family so the reachable-kernel comparator checks it against the rebuild. It verifies the Raw59 parent run and manifest, links only recursive import closures, and checks the exported axiom profiles. The published Canonical64 audit artifact is root-only; do not treat it as a standalone dependency closure. The existing Agent32 workflow has a separate Canonical64Compose target for this integration; supply the successful Raw59 parent run ID as raw59_parent_run_id. The integration has not yet run and must not be treated as accepted.
-
-Agent31 is independently auditing the Raw112 parent Cover in run 45751911115 and prepared a Canonical63 consumer. If Raw112 is source-accepted, Raw59Raw112Canonical62Integrated.lean and assemble_raw59_raw112_canonical62.py consume both parent artifacts directly against the exact Canonical64 base, remove two distinct entries, and prove a 62-entry interface. The existing Agent32 workflow has a Canonical62Compose target requiring both successful parent run IDs. This avoids treating separate 63-entry rosters as separate frontier improvements. The combined integration has not run and is not accepted until both parent artifacts and the final linker/Lean gate pass.
-
-No global upper bound or exact BB(6) value follows from any of these conditional reductions.
-
----
-
-
-Raw index 59 of Agent31's 124-cylinder roster: `1RB---_1RC---_0RD---_1LD1RE_---1LA_------`. A1 is first queried after 7 ordinary steps. The cylinder has 25^6 = 244,140,625 literal completions.
-
-## Branch certificates
+## Historical branch certificates
 
 | A1 | Weighted bound | Splits | Cycle leaves | Last-hole leaves | Open-leaf certificates | Source CI |
 |---|---:|---:|---:|---:|---|---|
@@ -49,10 +31,10 @@ Raw index 59 of Agent31's 124-cylinder roster: `1RB---_1RC---_0RD---_1LD1RE_---1
 | 0RF | 223 | 2301 | 42708 | 9471 | 731 FAR + 8 ngram + 6 sweeps | [passed](https://github.com/FlareZ123/bb6/actions/runs/45535002020) |
 | 1LA | 293 | 1047 | 16645 | 4556 | 2861 FAR + 12 ngram + 7 sweeps + counter | [passed](https://github.com/FlareZ123/bb6/actions/runs/45534793732) |
 | 1RF | 376 | 2531 | 45809 | 10651 | 1724 FAR + 15 ngram + 5 sweeps + 10 manual | [passed](https://github.com/FlareZ123/bb6/actions/runs/45544328523) |
-| 0RA, 1LD, 1RA, 1RE | 395 | 0 | 1 each | 0 | direct cycles | pending combined |
-| halt | 395 | 0 | 0 | 0 | zero-delay graph | pending combined |
+| 0RA, 1LD, 1RA, 1RE | 395 | 0 | 1 each | 0 | direct cycles | accepted via final parent |
+| halt | 395 | 0 | 0 | 0 | zero-delay graph | accepted via final parent |
 
-The thirteen independently source-checked ordinary branches cover 126,953,125 literal completions. Including the four direct-cycle branches and the halt branch proved in Raw59Base (imported by the successful source checks), 18 of the 25 A1 choices satisfy the bound 395, leaving seven children (68,359,375 literal completions). These are individual branch results; the all-branch canonical consumer has not yet passed as a single closed theorem. The combined theorem `Raw59Refinement.lean` is a candidate graft covering 17 of 25 first-hole choices (166,015,625 completions), leaving 8 five-hole children (78,125,000 completions) and 131 entries in the overall residual roster. No global upper bound is asserted. Pending entries must not be counted as accepted until their original-source proof checks succeed.
+The thirteen independently source-checked ordinary branches cover 126,953,125 literal completions. Including the four direct-cycle branches and the halt branch proved in Raw59Base (imported by the successful source checks), 18 of the 25 A1 choices satisfy the bound 395, leaving seven children (68,359,375 literal completions). These are historical individual branch results; all seven formerly retained children and the full parent were subsequently source-accepted in run 45786187618. The combined theorem `Raw59Refinement.lean` is a candidate graft covering 17 of 25 first-hole choices (166,015,625 completions), leaving 8 five-hole children (78,125,000 completions) and 131 entries in the overall residual roster. No global upper bound is asserted. The original partial graft is superseded by the full accepted parent; global roster removal still requires the coordinated canonical integration.
 
 ## Mathematical holdouts
 
