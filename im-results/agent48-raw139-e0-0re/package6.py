@@ -9,8 +9,26 @@ import re
 import sys
 from collections import Counter
 from blockcert import generate
-from scan import scan, far, ORDER
+from scan import far, ORDER
 from package import block_source, bl, slot
+
+
+def first_hole(table, limit):
+    """Exact linear replay: a late last-hole leaf needs no cycle search."""
+    tape = set()
+    q = h = 0
+    for step in range(limit + 1):
+        s = 2*q + int(h in tape)
+        v = table[s]
+        if v == 24:
+            return ('hole', step, s)
+        if v & 2:
+            tape.add(h)
+        else:
+            tape.discard(h)
+        q = v >> 2
+        h += 1 if v & 1 else -1
+    return ('open',)
 
 
 def make(spec, partition, out):
@@ -30,7 +48,7 @@ def make(spec, partition, out):
             record(i, ['block', *params])
     for i, args in spec['late'].items():
         i = int(i)
-        assert opens[i].count(24) == 1 and scan(opens[i],args[0]) == ('hole',*args)
+        assert opens[i].count(24) == 1 and first_hole(opens[i],args[0]) == ('hole',*args)
         record(i, ['last',*args])
     for i, namespace in spec['proven'].items():
         record(i, ['proven', namespace])
