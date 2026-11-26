@@ -6,7 +6,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent13.Box16
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box
-open BB6.Agent49BoxBridge BB6.Agent17Raw10BoxFar BB6.Agent50RootFrontier
+open BB6.Agent13.Box17 BB6.Agent49BoxBridge BB6.Agent17Raw10BoxFar BB6.Agent50RootFrontier
 
 theorem index_source (s : Slot) : index s = slotIndex s := by
   rcases s with ⟨q,b⟩
