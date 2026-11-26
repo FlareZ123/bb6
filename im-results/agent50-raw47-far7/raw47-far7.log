@@ -1,0 +1,242 @@
+
+===== /tmp/raw47-far7-shards/agent50-raw47-far7-shard-0/raw47-far7.log =====
+n=1 tested=2 solved=0/29
+n=2 tested=10 solved=0/29
+n=3 tested=100 solved=0/29
+n=4 tested=1732 solved=0/29
+n=5 tested=42182 solved=0/29
+n=6 tested=1307582 solved=0/29
+n=7 tested=48980662 solved=0/29
+0 1RB0LB1RC---0RD0LA1LD0RC------------
+4 1RB1LB1RC---0RD0LA1LD0RC------------
+8 1RB---1RC---0RD0LE1LD0RC0LB---------
+12 1RB---1RC---0RD0LE1LD0RC0RB---------
+16 1RB---1RC---0RD0LE1LD0RC1LB---------
+20 1RB---1RC---0RD0LE1LD0RC1RB---------
+24 1RB0RE1RC---0RD0RA1LD0RC------------
+28 1RB---1RC0LE0RD0RB1LD0RC------------
+32 1RB---1RC1RE0RD0RB1LD0RC------------
+36 1RB---1RC---0RD0RE1LD0RC---0RD------
+40 1RB---1RC---0RD0RE1LD0RC---1LB------
+44 1RB---1RC---0RD0RE1LD0RC---1RD------
+48 1RB---1RC0LC0RD1LA1LD0RC------------
+52 1RB---1RC1LA0RD1LA1LD0RC------------
+56 1RB---1RC1RA0RD1LA1LD0RC------------
+60 1RB---1RC0LE0RD1LB1LD0RC------------
+64 1RB---1RC1LE0RD1LB1LD0RC------------
+68 1RB---1RC---0RD1LE1LD0RC0LB---------
+72 1RB---1RC---0RD1LE1LD0RC0RB---------
+76 1RB---1RC---0RD1LE1LD0RC1LB---------
+80 1RB---1RC---0RD1LE1LD0RC1RB---------
+84 1RB0LB1RC---0RD1RA1LD0RC------------
+88 1RB1LB1RC---0RD1RA1LD0RC------------
+92 1RB---1RC0LE0RD1RB1LD0RC------------
+96 1RB---1RC1RE0RD1RB1LD0RC------------
+100 1RB---1RC---0RD1RE1LD0RC---0LD------
+104 1RB---1RC---0RD1RE1LD0RC---0RE------
+108 1RB---1RC---0RD1RE1LD0RC---1LD------
+112 1RB---1RC---0RD1RE1LD0RC---1RE------
+	Command being timed: "/home/runner/work/_temp/raw47-far7/raw47-farbank 7"
+	User time (seconds): 1406.85
+	System time (seconds): 0.07
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 23:27.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3608
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 153
+	Voluntary context switches: 1
+	Involuntary context switches: 9405
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+===== /tmp/raw47-far7-shards/agent50-raw47-far7-shard-1/raw47-far7.log =====
+n=1 tested=2 solved=0/29
+n=2 tested=10 solved=0/29
+n=3 tested=100 solved=0/29
+n=4 tested=1732 solved=0/29
+n=5 tested=42182 solved=0/29
+n=6 tested=1307582 solved=0/29
+n=7 tested=48980662 solved=0/29
+1 1RB0LE1RC---0RD0LA1LD0RC------------
+5 1RB1LE1RC---0RD0LA1LD0RC------------
+9 1RB---1RC---0RD0LE1LD0RC0LE---------
+13 1RB---1RC---0RD0LE1LD0RC0RE---------
+17 1RB---1RC---0RD0LE1LD0RC1LE---------
+21 1RB---1RC---0RD0LE1LD0RC1RE---------
+25 1RB1LA1RC---0RD0RA1LD0RC------------
+29 1RB---1RC0RE0RD0RB1LD0RC------------
+33 1RB---1RC---0RD0RE1LD0RC---0LE------
+37 1RB---1RC---0RD0RE1LD0RC---0RE------
+41 1RB---1RC---0RD0RE1LD0RC---1LC------
+45 1RB---1RC---0RD0RE1LD0RC---1RE------
+49 1RB---1RC0LE0RD1LA1LD0RC------------
+53 1RB---1RC1LB0RD1LA1LD0RC------------
+57 1RB---1RC1RC0RD1LA1LD0RC------------
+61 1RB---1RC0RA0RD1LB1LD0RC------------
+65 1RB---1RC1RA0RD1LB1LD0RC------------
+69 1RB---1RC---0RD1LE1LD0RC0LE---------
+73 1RB---1RC---0RD1LE1LD0RC0RE---------
+77 1RB---1RC---0RD1LE1LD0RC1LE---------
+81 1RB---1RC---0RD1LE1LD0RC1RC---------
+85 1RB0LE1RC---0RD1RA1LD0RC------------
+89 1RB1LE1RC---0RD1RA1LD0RC------------
+93 1RB---1RC0RE0RD1RB1LD0RC------------
+97 1RB---1RC---0RD1RE1LD0RC---0LA------
+101 1RB---1RC---0RD1RE1LD0RC---0LE------
+105 1RB---1RC---0RD1RE1LD0RC---0RF------
+109 1RB---1RC---0RD1RE1LD0RC---1LE------
+113 1RB---1RC---0RD1RE1LD0RC---1RF------
+	Command being timed: "/home/runner/work/_temp/raw47-far7/raw47-farbank 7"
+	User time (seconds): 1332.04
+	System time (seconds): 0.07
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 22:12.18
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3560
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 153
+	Voluntary context switches: 1
+	Involuntary context switches: 8605
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+===== /tmp/raw47-far7-shards/agent50-raw47-far7-shard-2/raw47-far7.log =====
+n=1 tested=2 solved=0/28
+n=2 tested=10 solved=0/28
+n=3 tested=100 solved=0/28
+n=4 tested=1732 solved=0/28
+n=5 tested=42182 solved=0/28
+n=6 tested=1307582 solved=0/28
+n=7 tested=48980662 solved=0/28
+2 1RB0RE1RC---0RD0LA1LD0RC------------
+6 1RB1RE1RC---0RD0LA1LD0RC------------
+10 1RB---1RC---0RD0LE1LD0RC0LF---------
+14 1RB---1RC---0RD0LE1LD0RC0RF---------
+18 1RB---1RC---0RD0LE1LD0RC1LF---------
+22 1RB---1RC---0RD0LE1LD0RC1RF---------
+26 1RB1LE1RC---0RD0RA1LD0RC------------
+30 1RB---1RC1LA0RD0RB1LD0RC------------
+34 1RB---1RC---0RD0RE1LD0RC---0LF------
+38 1RB---1RC---0RD0RE1LD0RC---0RF------
+42 1RB---1RC---0RD0RE1LD0RC---1LE------
+46 1RB---1RC---0RD0RE1LD0RC---1RF------
+50 1RB---1RC0RA0RD1LA1LD0RC------------
+54 1RB---1RC1LC0RD1LA1LD0RC------------
+58 1RB---1RC1RE0RD1LA1LD0RC------------
+62 1RB---1RC0RE0RD1LB1LD0RC------------
+66 1RB---1RC1RE0RD1LB1LD0RC------------
+70 1RB---1RC---0RD1LE1LD0RC0LF---------
+74 1RB---1RC---0RD1LE1LD0RC0RF---------
+78 1RB---1RC---0RD1LE1LD0RC1LF---------
+82 1RB---1RC---0RD1LE1LD0RC1RE---------
+86 1RB0RE1RC---0RD1RA1LD0RC------------
+90 1RB1RE1RC---0RD1RA1LD0RC------------
+94 1RB---1RC1LA0RD1RB1LD0RC------------
+98 1RB---1RC---0RD1RE1LD0RC---0LB------
+102 1RB---1RC---0RD1RE1LD0RC---0LF------
+106 1RB---1RC---0RD1RE1LD0RC---1LA------
+110 1RB---1RC---0RD1RE1LD0RC---1LF------
+	Command being timed: "/home/runner/work/_temp/raw47-far7/raw47-farbank 7"
+	User time (seconds): 1235.39
+	System time (seconds): 0.05
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 20:35.53
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3544
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 154
+	Voluntary context switches: 1
+	Involuntary context switches: 8138
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
+
+===== /tmp/raw47-far7-shards/agent50-raw47-far7-shard-3/raw47-far7.log =====
+n=1 tested=2 solved=0/28
+n=2 tested=10 solved=0/28
+n=3 tested=100 solved=0/28
+n=4 tested=1732 solved=0/28
+n=5 tested=42182 solved=0/28
+n=6 tested=1307582 solved=0/28
+n=7 tested=48980662 solved=0/28
+3 1RB1LA1RC---0RD0LA1LD0RC------------
+7 1RB---1RC---0RD0LE1LD0RC0LA---------
+11 1RB---1RC---0RD0LE1LD0RC0RA---------
+15 1RB---1RC---0RD0LE1LD0RC1LA---------
+19 1RB---1RC---0RD0LE1LD0RC1RA---------
+23 1RB0LE1RC---0RD0RA1LD0RC------------
+27 1RB1RE1RC---0RD0RA1LD0RC------------
+31 1RB---1RC1LE0RD0RB1LD0RC------------
+35 1RB---1RC---0RD0RE1LD0RC---0RC------
+39 1RB---1RC---0RD0RE1LD0RC---1LA------
+43 1RB---1RC---0RD0RE1LD0RC---1LF------
+47 1RB---1RC0LA0RD1LA1LD0RC------------
+51 1RB---1RC0RE0RD1LA1LD0RC------------
+55 1RB---1RC1LE0RD1LA1LD0RC------------
+59 1RB---1RC0LA0RD1LB1LD0RC------------
+63 1RB---1RC1LA0RD1LB1LD0RC------------
+67 1RB---1RC---0RD1LE1LD0RC0LA---------
+71 1RB---1RC---0RD1LE1LD0RC0RA---------
+75 1RB---1RC---0RD1LE1LD0RC1LA---------
+79 1RB---1RC---0RD1LE1LD0RC1RA---------
+83 1RB---1RC---0RD1LE1LD0RC1RF---------
+87 1RB1LA1RC---0RD1RA1LD0RC------------
+91 1RB---1RC0LA0RD1RB1LD0RC------------
+95 1RB---1RC1LE0RD1RB1LD0RC------------
+99 1RB---1RC---0RD1RE1LD0RC---0LC------
+103 1RB---1RC---0RD1RE1LD0RC---0RC------
+107 1RB---1RC---0RD1RE1LD0RC---1LB------
+111 1RB---1RC---0RD1RE1LD0RC---1RD------
+	Command being timed: "/home/runner/work/_temp/raw47-far7/raw47-farbank 7"
+	User time (seconds): 809.96
+	System time (seconds): 0.01
+	Percent of CPU this job got: 99%
+	Elapsed (wall clock) time (h:mm:ss or m:ss): 13:30.00
+	Average shared text size (kbytes): 0
+	Average unshared data size (kbytes): 0
+	Average stack size (kbytes): 0
+	Average total size (kbytes): 0
+	Maximum resident set size (kbytes): 3544
+	Average resident set size (kbytes): 0
+	Major (requiring I/O) page faults: 0
+	Minor (reclaiming a frame) page faults: 154
+	Voluntary context switches: 1
+	Involuntary context switches: 6250
+	Swaps: 0
+	File system inputs: 0
+	File system outputs: 16
+	Socket messages sent: 0
+	Socket messages received: 0
+	Signals delivered: 0
+	Page size (bytes): 4096
+	Exit status: 0
