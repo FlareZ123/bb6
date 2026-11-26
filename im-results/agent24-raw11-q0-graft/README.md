@@ -54,4 +54,4 @@ node im-results/agent24-raw11-q0-graft/crosswalk.cjs
 
 The script checks the exact counts, all table containment/compatibility relations, the 16 unmatched checkpoint rows, the six four-way complements, and pairwise disjointness. Its machine-readable output is in [crosswalk.json](crosswalk.json).
 
-The quotient-aware Lean proof is in [Raw11Q0CheckpointGraft.lean](Raw11Q0CheckpointGraft.lean). It imports the Raw11 first-D cut directly, proves the ten bound-18 closures, and exposes the six retained four-way complements. The script and Lean proof are deliberately kept in `im-results/`; this is not yet a publishable BB(6) upper-bound result.
+The quotient-aware Lean proof development is in [Raw11Q0CheckpointGraft.lean](Raw11Q0CheckpointGraft.lean). It imports the Raw11 first-D cut directly and attempts to prove the ten bound-18 closures while exposing the six retained four-way complements. The script and Lean development are deliberately kept in `im-results/`; this is not yet a publishable BB(6) upper-bound result. CI acceptance is pending.
