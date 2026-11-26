@@ -585,3 +585,79 @@ jobs:
           path: /tmp/a43-output/
           retention-days: 90
           if-no-files-found: error
+
+  persist-branch00-witnesses:
+    if: inputs.assemble_branch == '0persist'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-branch00-assembly
+          run-id: 45819084258
+          github-token: \${{ github.token }}
+          path: /tmp/a43-branch00-artifact
+      - name: Persist source modules for the accepted 0LA Cover
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for delay in 0 5 10; do
+            sleep "$delay"
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
+            DEST="im-results/agent43-raw122-cut/branch00-assembly"
+            mkdir -p "$DEST"
+            cp /tmp/a43-branch00-artifact/Agent29Raw122Indexed* "$DEST/"
+            cp /tmp/a43-branch00-artifact/Raw122D15* /tmp/a43-branch00-artifact/Raw122Direct15* "$DEST/"
+            git add "$DEST"
+            if git diff --cached --quiet; then
+              echo "All 0LA witness sources already persisted."
+              exit 0
+            fi
+            git commit -m "Agent 43: persist Raw122 0LA witness sources"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
+
+  persist-branch05-witnesses:
+    if: inputs.assemble_branch == '5persist'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-branch05-assembly
+          run-id: 45815048803
+          github-token: \${{ github.token }}
+          path: /tmp/a43-branch05-artifact
+      - name: Persist source modules for the accepted 0LF Cover
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          for delay in 0 5 10; do
+            sleep "$delay"
+            git fetch origin main
+            git reset --hard origin/main
+            git clean -fd
+            DEST="im-results/agent43-raw122-cut/branch05-assembly"
+            mkdir -p "$DEST"
+            cp /tmp/a43-branch05-artifact/Agent29Raw122Indexed* "$DEST/"
+            cp /tmp/a43-branch05-artifact/PackedLate0* /tmp/a43-branch05-artifact/LateCheck0.lean "$DEST/"
+            git add "$DEST"
+            if git diff --cached --quiet; then
+              echo "All 0LF witness sources already persisted."
+              exit 0
+            fi
+            git commit -m "Agent 43: persist Raw122 0LF witness sources"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
