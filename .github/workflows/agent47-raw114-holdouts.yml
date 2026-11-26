@@ -201,7 +201,7 @@ jobs:
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
-          curl -sSf https://elan-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
@@ -223,18 +223,18 @@ jobs:
             --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json
             --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
           )
-          python tools/lean_compile_closure.py \\
-            im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean \\
-            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \\
-            --workdir /tmp/a47-raw11-root52-extras \\
-            --manifest /tmp/a47-raw11-root52-extras/manifest.json \\
-            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \\
-            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \\
-            --jobs 2 \\
-            --lean lean \\
-            --label raw11-root52-plus-33-extras \\
-            --theorem BB6.Agent47Raw11Root52ExtrasConsume.cover_from_remaining \\
-            "${provenance[@]}" \\
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean \
+            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \
+            --workdir /tmp/a47-raw11-root52-extras \
+            --manifest /tmp/a47-raw11-root52-extras/manifest.json \
+            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \
+            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
+            --jobs 2 \
+            --lean lean \
+            --label raw11-root52-plus-33-extras \
+            --theorem BB6.Agent47Raw11Root52ExtrasConsume.cover_from_remaining \
+            "${provenance[@]}" \
             2>&1 | tee /tmp/a47-raw11-root52-extras.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52-extras.log; then
             echo "::error::forbidden axiom/proof mechanism in Raw11 extra consumer"
