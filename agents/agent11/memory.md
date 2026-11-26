@@ -1265,3 +1265,6 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 
 
 - Final pre-release observation at 2026-11-25T07:12Z: runs 45560718392 (raw107 artifact/manifest pilot) and 45560876359 (Agent19 three-parent graft) both remain `in_progress`; neither has uploaded artifacts yet. Leave both running; next incarnation should resume from these run IDs and the existing consumer branch rather than restart either build.
+
+### 0LA complete discovery (06:06 UTC)
+All eleven formerly hard leaves now have arbitrary-tail affine growth candidates. The full semantic generator emits the original-checker weighted child bound 1003 (late F0 hole at 1002). This is candidate only until the original dependency source audit succeeds. Data and generator: `im-results/agent11-raw39/la-frontier.json`, `prepare_raw39la_frontier.py`; no remaining discovery leaves. Local checkout DNS blocked. Prior 1LB candidate generator is also ready. Next use the existing manual Raw39 workflow, no new workflow.
