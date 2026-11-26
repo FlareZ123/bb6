@@ -351,12 +351,59 @@ multi_count = 0
 one.SIMP = one.SIMP if "List.append_nil" in one.SIMP else one.SIMP + ",List.append_nil"
 multi.SIMP = multi.SIMP if "List.append_nil" in multi.SIMP else multi.SIMP + ",List.append_nil"
 
+# Pinned 1LB growth recipes from the already checked local proofs. The
+# open-roster digest above authenticates every index. Replay is deterministic;
+# every emitted theorem still goes through the original Lean proof checker.
+cache = {}
+if BRANCH == "1LB":
+    rows = json.loads((ROOT / "1LB-growth-recipes.json").read_text())
+    cache = {row[0]: row for row in rows}
+    assert len(cache) == 46
+
+def replay_cached(row, p):
+    i, t, *xs = row
+    if len(xs) == 4:
+        a, b, x, y = xs
+        def decode(v):
+            return one.C(*v[:3], one.W(*v[3:6]), one.W(*v[6:9]))
+        start, target = decode(x), decode(y)
+        if b == 0:
+            z, hist = start, []
+            for _ in range(a):
+                d = one.step(p, z)
+                hist.append(("step", z, d, 1))
+                z = d
+            assert z.norm() == target.norm(), i
+            res = hist, z
+        else:
+            res = one.pump(p, start, target, 1000)
+        assert res is not None, i
+        generated, info = one.generate(i, p, (t, None, start, target, res))
+        assert info == (t, a, b), (i, info)
+        return "one", generated, info
+    def decode(v):
+        return multi.C(v[0], tuple(map(tuple,v[1])), tuple(map(tuple,v[2])))
+    start, target = map(decode, xs)
+    res = multi.pump(p, start, target, 2000)
+    assert res is not None, i
+    generated, info = multi.generate(i, p, (t, start, target, res))
+    return "multi", generated, info
+
 # Only unmatched leaves incur concrete event simulation. Finite traces propose
 # witnesses; one.generate / multi.generate emit inductive Lean proofs.
 for i, code in enumerate(opens):
     if code in certs or code in pumps or code in late:
         continue
     p = one.parse(code)
+    if BRANCH == "1LB":
+        assert i in cache, ("new unmatched leaf outside checked cache", i, code)
+        kind, generated, info = replay_cached(cache[i], p)
+        pump_code.append(generated)
+        pumps[code] = (f"{pumpns}.M{i}.table", f"{pumpns}.M{i}.never")
+        one_count += kind == "one"
+        multi_count += kind == "multi"
+        print("cached", kind, i, info, flush=True)
+        continue
     events = one.concrete_events(p, EVENT_LIMIT)
     if BRANCH == "1LA":
         ans = boundary_pump.candidate(p, events)
