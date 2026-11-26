@@ -4,7 +4,7 @@ on:
     inputs:
       branches:
         description: JSON array of archived F1 branches
-        default: '["0RF","0RD","1LC","1RD","0RC","1RC","0LD","1RA","0RE","1LF","1LE","1RB","0RA","trivial"]'
+        default: '["0RF","0RD","1LC","1RD","0RC","1RC","0LD","1RA","0RE","1LF","1LE","1RB","0RA","trivial","0LC","1RF","0RB"]'
         type: string
 permissions:
   contents: read
@@ -54,7 +54,7 @@ jobs:
             THEOREM="BB6.Agent32Raw124Z${BRANCH}.bound_all"
             case "$BRANCH" in
               0RF) BOUND=71;; 0RD) BOUND=267;; 1LC) BOUND=102;; 1RD) BOUND=80;; 0RC) BOUND=2759;; 1RC) BOUND=688;;
-              0LD) BOUND=157;; 1RA) BOUND=1029;; 0RE) BOUND=2473;; 1LF) BOUND=290;; 1LE) BOUND=670;; 1RB) BOUND=184;; 0RA) BOUND=283;;
+              0LD) BOUND=157;; 1RA) BOUND=1029;; 0RE) BOUND=2473;; 1LF) BOUND=290;; 1LE) BOUND=670;; 1RB) BOUND=184;; 0RA) BOUND=283;; 0LC) BOUND=145;; 1RF) BOUND=140;; 0RB) BOUND=272;;
               *) exit 2;;
             esac
           fi
