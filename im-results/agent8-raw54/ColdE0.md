@@ -7,7 +7,7 @@ These are source-connected child audits and ongoing sibling research. All four c
 |0LF|929|14910|5150|1308|1089|219|accepted exact threshold 1055|
 |0RB|997|16539|4615|1778|1370|408|complete candidate audit at 390; exact attainment checked|
 |0RF|1837|31881|8377|1994|1645|349|complete candidate audit at 402; exact attainment and hard recurrence checked|
-|1RA|2765|47151|14626|1819|1433|386|385/386 misses have certificate candidates or checked symbolic proofs; 250 newly kernel-checked; observed late halt score 39447|
+|1RA|2765|47151|14626|1819|1433|386|386/386 misses have certificate candidates or checked proofs; both final holdouts kernel-checked; observed late halt score 39447|
 
 Each census accounts for 9,765,625 complete tables. `cold_census.py` regenerates the frozen census and checks row order. Frozen bank Git blob: 56bf67275d597e354a0e827f6422ec68aa77f416. Discovery counts are not proof acceptance.
 
@@ -51,9 +51,9 @@ The state-A zipper has left 00 and right 00 followed by 4n+2 ones. Blank entry t
 
 The frozen 408 misses partition into 370 new FAR hits (`zeroRB-far-groups.txt`), one sparse n-gram (355, width 13, 855 reachable configurations), and 37 locally kernel-checked symbolic nonhalting proofs. `Raw54DigitSection.lean` and `generate_digit_sections.py` give 34 binary-counter certificates. `generate_zeroRB_special.py` gives the radix-four and alternating-terminal certificates for 162/393; `Raw54ZeroRB51.lean` proves a nested sweep recurrence with the opposite tape indexed by popcount. All symbolic never theorems have only propext and Quot.sound. The exact 390 attainment uses `1RBHHH_1RC0RF_0RD1LF_1LD0LE_0RB0LE_1RA0LF`, 389 nonhalting moves and zero delay (`Raw54ZeroRBLate.lean`). `generate_zeroRB.py` reconstructs the complete audit; [run 45902903420](https://github.com/FlareZ123/bb6/actions/runs/45902903420) is pending.
 
-## E0=1RA: one discovery holdout
+## E0=1RA: complete candidate ledger
 
-The frozen 386 misses are tracked in [oneRA-ledger.txt](oneRA-ledger.txt). The original census and bank reproduce both hashes in cold_census.py: 1,819 open, 1,433 frozen hits, 386 misses. The ledger now has one discovery holdout, ID 79. Existing FAR, sparse, run-DFA, augmented-DFA, symbolic and late-arrival entries must still be composed into a full original-source audit. In particular the observed late arrival at ID 256 gives score 39447; no complete upper bound at this value is asserted.
+The frozen 386 misses are tracked in [oneRA-ledger.txt](oneRA-ledger.txt). The original census and bank reproduce both hashes in cold_census.py: 1,819 open, 1,433 frozen hits, 386 misses. The ledger has zero discovery holdouts. Both previously unclassified entries have exact original-source kernel proofs. Existing FAR, sparse, run-DFA, augmented-DFA, symbolic and late-arrival entries must still be composed into a full original-source audit. In particular the observed late arrival at ID 256 gives score 39447; no complete upper bound at this value is asserted.
 
 ### New two-level run-pair nonhalting certificate (ID 250)
 
@@ -63,9 +63,11 @@ Primitive-step saturation with left parameters (6,3,1,32,6,16,6) and right (10,3
 
 Generated `Raw54OneRAPair250.lean` (SHA-256 2a11202bb7a295af3527f73e2e9752de19073fca4835e0ea40faa2af8ebf63d5, Git blob 06705f3400936f630562d04635bc900ea082a54c) was locally compiled with Lean 4.36.0-rc2 using original MaskBiDFA and its compiled dependencies from accepted artifact 15143833177. The exported theorem `BB6.Agent32AsymNGram.Raw54OneRAPair250.never` depends only on propext, Classical.choice, Quot.sound. This proves the entire one-hole cylinder, not merely a finite run. The aggregate child audit remains uncompiled.
 
-### Remaining holdout
+### Long translated cycle (ID 79)
 
-ID 79: `1RB---_1RC0RF_0RD0RC_1LD0LE_1RA0LE_0RC0RE`. The same run-pair abstraction at the ID 250 parameters hit its 700,000-configuration cap; smaller trials either reached abstract holes or their caps. A cap or an abstract hole is not evidence of actual halting. Investigate better run-pair partitions or symbolic A-section dynamics.
+Exact table `1RB---_1RC0RF_0RD0RC_1LD0LE_1RA0LE_0RC0RE`. The blank run reaches an A section at time 4953, head 213; after 566 moves, head 237, and the complete retained right half at boundary 194 agrees after translation by +24. The head remains within [194,238] throughout this block. The cycle escaped the original discovery cutoff (1000 moves, 256-step comparison window), and small run-pair abstractions were unnecessarily expensive for this row.
+
+[Raw54OneRA79.lean](Raw54OneRA79.lean) proves `zipCycle table 4953 566 true 194 = true` by kernel reduction; original `zipCycle_sound` gives `BB6.Agent8Raw54.OneRA79.never` for every compatible completion. Locally compiled with Lean 4.36.0-rc2 against the original ZipAuditCore closure from artifact 15143833177; the only axioms are propext, Classical.choice, Quot.sound. This is an all-time nonhalting proof for all 25 assignments of A1. Zero discovery holdouts remain; no aggregate child Cover is claimed.
 
 
 Consume the 0RF and 0RB full Covers only after complete exact source audits pass. No reduction of the accepted global canonical roster follows from the current child candidates.
