@@ -705,6 +705,14 @@ jobs:
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
+      - name: Download source-accepted Raw10 box5/box7 dependency cut
+        if: inputs.target == 'weighted-tnf-raw10-box6'
+        uses: actions/download-artifact@v4
+        with:
+          name: raw10-box5-box7-source-closure
+          run-id: 45895421790
+          github-token: ${{ github.token }}
+          path: /tmp/raw10-box5-base
       - name: Check exact raw10 rectangle 6 sparse-tree coverage
         if: inputs.target == 'weighted-tnf-raw10-box6'
         run: |
@@ -749,6 +757,30 @@ jobs:
             --provenance-input tools/lean_compile_closure.py \
             --provenance-input lean-toolchain \
             "$W/Box6SourceConsumer.lean"
+      - name: Compile refined Box6 source-subset probe against Box5/7 dependency cut
+        if: inputs.target == 'weighted-tnf-raw10-box6'
+        run: |
+          set -euo pipefail
+          BASE5=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\\n' | head -n1)
+          test -f "$BASE5/manifest.json"
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a49-raw10-box6-probe \
+            --jobs 2 \
+            --source-root "$BASE5" \
+            --source-root "$W" \
+            --precompiled-manifest "$BASE5/manifest.json" \
+            --precompiled-dir "$BASE5" \
+            --manifest /tmp/a49-raw10-box6-probe/manifest.json \
+            --compare-manifest /tmp/a49-box6-proof/manifest.json \
+            --label "Raw10 refined box6 source-subset probe (not a parent Cover)" \
+            --artifact-name raw10-refined-box6-probe \
+            --provenance-input "$D/source.tar.gz" \
+            --provenance-input "$D/proof-source.tar.xz" \
+            --provenance-input "$D/fix_emitter.py" \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input lean-toolchain \
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean | tee /tmp/a49-raw10-box6-probe.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a49-raw10-box6-probe.log; then exit 1; fi
       - name: Export source-accepted Raw10 box6 proof closure
         if: inputs.target == 'weighted-tnf-raw10-box6'
         uses: actions/upload-artifact@v4
@@ -756,6 +788,8 @@ jobs:
           name: raw10-box6-source-closure
           path: |
             /tmp/a49-box6-proof
+            /tmp/a49-raw10-box6-probe
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean
             im-results/agent49-raw10-box6/README.md
             im-results/agent49-raw10-box6/source.tar.gz
             im-results/agent49-raw10-box6/proof-source.tar.xz
