@@ -85,7 +85,7 @@ theorem trace_le_cap (n i B a : Nat) (hn : 1≤n) (h : Trace n i B a) : a≤cap 
           simp [cap,show ¬n<i by omega,show n<i+1 by omega,hy1] at *; omega
         · simp [cap,show n<i by omega,show n<i+1 by omega] at *; omega
 
-private theorem cap_step (n i B : Nat) (hn : 1≤n) (hi : 1≤i)
+theorem cap_step (n i B : Nat) (hn : 1≤n) (hi : 1≤i)
     (hB : B<2^i) (ho : B%2=1) :
     2*cap n (i+1)+target n i B+target n i (2^i-B)=cap n i+(n+i+3) := by
   have hp := target_pair n i B hn hi hB ho
