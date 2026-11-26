@@ -14,7 +14,6 @@ SHARED = ROOT / "im-results/agent31-shared-core"
 sys.path.insert(0, str(SHARED))
 
 import assemble_canonical63 as a63
-import assemble_canonical64_champion as a64c
 
 a68 = a63.a68
 
@@ -84,43 +83,18 @@ def main():
     )
     raw58_meta, raw58_dirs = download_raw58(work)
 
-    imports = a64c.reconstruct_champion_imports(work)
-    champion_build, champion_log_path, champion_manifest = a64c.compile_champion_closure(
-        work, imports
-    )
-    champion_log = champion_log_path.read_text()
-    champion_profiles = a68.gate(champion_log, [
-        "BB6Coverage.Agent48DirectRoot.champion_raw_halts_exact",
-        "BB6Coverage.Agent48DirectRoot.champion_weighted_bound",
-        "BB6.Agent38ChampionThreshold.champion_score_ge_6766859",
-    ])
-
     linked = work / "linked"
     families = a63.canonical64_families(parts) + [
         ("raw112", raw112_dirs, ["Raw112ClosedCover"]),
         ("raw58", raw58_dirs, ["Raw58Exact"]),
-        ("champion", [champion_build], ["TM63RawUpperInterface", "ChampionScoreLowerBound"]),
     ]
-    groups = [parts["canonical65"], parts["raw120"], raw112_dirs, raw58_dirs, [champion_build]]
+    groups = [parts["canonical65"], parts["raw120"], raw112_dirs, raw58_dirs]
     a68.link_reachable(groups, work, linked, families=families)
     env = dict(os.environ, LEAN_PATH=str(linked))
 
     canonical64_output, canonical64_log, canonical64_axioms = a63.compile_canonical64(
         linked, env, work
     )
-
-    champion_source = SHARED / "Canonical64ChampionConsumer.lean"
-    champion_output = linked / "Canonical64ChampionConsumer.olean"
-    champion_consumer_log = a68.compile_module(
-        champion_source, champion_output, env, work / "canonical64-champion-consumer.log"
-    )
-    if re.search(r"sorryAx|native_decide", champion_consumer_log):
-        raise AssertionError("forbidden proof mechanism in Canonical64 champion consumer")
-    champion_consumer_axioms = a68.gate(champion_consumer_log, [
-        "BB6Coverage.Agent48DirectRoot.champion_raw_witness",
-        "BB6.Agent38ChampionThreshold.champion_score_ge_6766859",
-        "BB6.Agent31Canonical64Champion.exact_at_champion_score",
-    ])
 
     source = HERE / "Canonical62Raw112Raw58Integrated.lean"
     output = linked / "Canonical62Raw112Raw58Integrated.olean"
@@ -131,6 +105,7 @@ def main():
         "BB6.Agent4Canonical62Raw112Raw58.p112_root",
         "BB6.Agent4Canonical62Raw112Raw58.p58_root",
         "BB6.Agent4Canonical62Raw112Raw58.p112_count",
+        "BB6.Agent4Canonical62Raw112Raw58.parents_distinct",
         "BB6.Agent4Canonical62Raw112Raw58.p58_count",
         "BB6.Agent4Canonical62Raw112Raw58.count62",
         "BB6.Agent4Canonical62Raw112Raw58.raw112_cover",
@@ -171,8 +146,6 @@ def main():
             "artifact_id": a63.RAW120_ARTIFACT,
             "source_revision": a63.RAW120_REVISION,
         },
-        "champion_source_profiles": champion_profiles,
-        "champion_consumer_axioms": champion_consumer_axioms,
         "consumer_axioms": profiles,
         "remaining_obligations": (
             "a Cover at the attained score for each of the 62 retained quotient "
@@ -181,7 +154,6 @@ def main():
         "source_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "lean_version": version,
         "compiler_sha256": a68.sha(compiler),
-        "champion_closure_manifest_sha256": a68.sha(champion_manifest),
         "consumer_source_sha256": a68.sha(source),
         "consumer_olean_sha256": a68.sha(output),
         "reachable_link_audit_sha256": a68.sha(work / "reachable-link-audit.json"),
@@ -190,7 +162,7 @@ def main():
         json.dumps(report, indent=2, sort_keys=True) + "\n"
     )
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
-    print("Raw112 and Raw58 consumed into Canonical64; the 62-residual source/axiom gate passed.", flush=True)
+    print("Raw112 and Raw58 consumed into Canonical64; the generic 62-residual source/axiom gate passed.", flush=True)
 
 
 if __name__ == "__main__":
