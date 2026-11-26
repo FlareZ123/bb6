@@ -21,3 +21,9 @@ The first and last show structured sweeps, the middle grows a 110-block region. 
 ## Kernel-checked cycle Covers
 
 `E0OneLCCycles.lean` verifies nine newly identified translated-cycle witnesses (12481, 12482, 12487, 12490, 13444, 13445, 13447, 18563, 18570) using the sound `zipCycle` checker. Local Lean 4.36.0-rc2 successfully compiled this module against CI artifact 15121390168's core. All nine `coverN` theorems are unconditional for every natural bound B, with axioms exactly `[propext, Classical.choice, Quot.sound]`. No native_decide. The first finite-window list checker exceeded memory; switching to the existing zipper checker resolved it. To reproduce, extract that artifact and use `LEAN_PATH=core lean -o E0OneLCCycles.olean E0OneLCCycles.lean`. These nine checked leaves are a subset of the discovery counts above, not an aggregate cylinder Cover.
+
+## Closure of all three previously exceptional leaves (local kernel checks)
+
+1661: exact sweep recurrence, state A, left stack 001 (head included), right stack (110)^(4n+17) 1111011 (110)^(4n+8) 111110111101. Blank entry at 2764; recurrence cost 1527+308n. Proof source E0OneLC1661.lean.gz, commit c0ee5cb272e31daa46f5e2379f04d0f2cb143a4c. Extract with gzip -dc; compile against accepted core 15121390168. The theorem BB6.Agent4E0OneLC1661.cover proves Cover at arbitrary B.
+
+134: mirrored width-6 block-FAR, cap1/mod1/runs2, graph 26 left/135 right/321 edges; minimized 26 left and 76 right nodes. 15474: mirrored width-12 block-FAR, cap2/mod1/runs2, graph 494 left/3030 right/7149 edges; minimized 494 left and 455 right nodes. Both soundness modules and concrete invariant proofs compiled locally in Lean 4.36.0-rc2 against the same core, with [propext, Classical.choice, Quot.sound]. Width-specialization generator and exact data generation to follow in this dossier. No unresolved discovery leaf remains. Full 603,958-leaf compositional proof remains pending, and bound 204,890 is still candidate only.
