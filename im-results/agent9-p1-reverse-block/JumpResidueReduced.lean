@@ -4,51 +4,35 @@ import ResiduePeriod
 namespace BB6.Agent9JumpResidue
 
 open BB6.Agent23ResiduePeriod
-open BB6.Agent45ReverseBlock (corr)
+open BB6.Agent45ReverseBlock (corr digits)
 open BB6.Agent45WeightedDigitGap (digitWeight)
-open BB6.Agent9ReverseBlock (digits JumpMember JumpCover)
 
 /-- Rep is invariant under changing its target by a multiple of the modulus. -/
 theorem rep_congr (M x y : Int) (ws : List Int)
     (hxy : M ∣ x-y) : Rep M x ws ↔ Rep M y ws := by
   induction ws generalizing x y with
   | nil =>
-    simp only [Rep]
-    constructor
-    · rintro ⟨a,ha⟩
-      rcases hxy with ⟨b,hb⟩
-      have hy : y = M*a-M*b := by omega
-      refine ⟨a-b,?_⟩
-      calc
-        y = M*a-M*b := hy
-        _ = M*(a-b) := by rw [← mul_sub]
-    · rintro ⟨a,ha⟩
-      rcases hxy with ⟨b,hb⟩
-      have hx : x = M*a+M*b := by omega
-      refine ⟨a+b,?_⟩
-      calc
-        x = M*a+M*b := hx
-        _ = M*(a+b) := by rw [← mul_add]
+    simp only [Rep,Int.dvd_iff_emod_eq_zero]
+    have hmod0 : (x-y)%M=0 := Int.dvd_iff_emod_eq_zero.mp hxy
+    have hmod : x%M=y%M :=
+      Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr hmod0
+    rw [hmod]
   | cons w ws ih =>
     simp only [Rep]
     constructor
     · rintro (h|h)
       · exact Or.inl ((ih x y hxy).mp h)
       · have hxy' : M ∣ (x-w)-(y-w) := by
-          rcases hxy with ⟨d,hd⟩
-          refine ⟨d,?_⟩
           have heq : (x-w)-(y-w)=x-y := by omega
           rw [heq]
-          exact hd
+          exact hxy
         exact Or.inr ((ih (x-w) (y-w) hxy').mp h)
     · rintro (h|h)
       · exact Or.inl ((ih x y hxy).mpr h)
       · have hxy' : M ∣ (x-w)-(y-w) := by
-          rcases hxy with ⟨d,hd⟩
-          refine ⟨d,?_⟩
           have heq : (x-w)-(y-w)=x-y := by omega
           rw [heq]
-          exact hd
+          exact hxy
         exact Or.inr ((ih (x-w) (y-w) hxy').mpr h)
 
 /-- All (unreduced) subset sums of a finite weight list. Duplicates are
@@ -136,11 +120,11 @@ theorem mem_reducedResidues_iff (q k Y r : Nat)
     have hEq := (residue_eq_iff _ _ _ _ hr0 hrM).mpr hdiv
     exact List.mem_map.mpr ⟨s,hs,hEq.symm⟩
 
-/-- The original JumpMember condition is equivalent to Rep at the reduced
+/-- The original BB6.Agent9ReverseBlock.JumpMember condition is equivalent to Rep at the reduced
     modulus. The only lost low bits are precisely the top factors removed by
     reduce_sound; c and c mod 2^k are interchangeable at the reduced modulus. -/
 theorem jump_member_iff_reduced (q k Y c : Nat) :
-    JumpMember (q+k) k Y c ↔
+    BB6.Agent9ReverseBlock.JumpMember (q+k) k Y c ↔
       c < q ∧
       Rep (reducedModulus q k : Int) ((Y:Int)-(c:Int))
         (reducedWeights q k) := by
@@ -168,7 +152,7 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
         (reducedWeights q k) := by
     simpa [reducedModulus,reducedExponent,reducedWeights] using hred0
   have hmod :
-      JumpMember (q+k) k Y c ↔
+      BB6.Agent9ReverseBlock.JumpMember (q+k) k Y c ↔
       c < q ∧
       (∃ B, B < 2^k ∧
         (cmod:Int) = ((Y:Int)-weight q k B) % (2:Int)^k) := by
@@ -228,9 +212,9 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
     exact hmod.mpr ⟨hc,hred.mpr (hcong.mpr hRep)⟩
 
 /-- Exact equivalence between the reduced subset-sum lift and the original
-    modular JumpMember set. -/
+    modular BB6.Agent9ReverseBlock.JumpMember set. -/
 theorem mem_reducedLift_iff (q k Y c : Nat) :
-    c ∈ reducedLiftResidues q k Y ↔ JumpMember (q+k) k Y c := by
+    c ∈ reducedLiftResidues q k Y ↔ BB6.Agent9ReverseBlock.JumpMember (q+k) k Y c := by
   let M := reducedModulus q k
   have hMpos : 0 < M := Nat.two_pow_pos (reducedExponent q k)
   constructor
@@ -300,10 +284,10 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
       exact List.mem_flatMap.mpr ⟨c/M,hj,by simpa using hitems⟩
     exact List.mem_filter.mpr ⟨hflat,by simp [hc]⟩
 
-/-- The reduced generator is a complete JumpCover for every suffix. -/
+/-- The reduced generator is a complete BB6.Agent9ReverseBlock.JumpCover for every suffix. -/
 theorem reducedLiftResidues_cover (q : Nat) (ys : List Nat) :
-    JumpCover (q+ys.length) ys
-      (reducedLiftResidues q ys.length (digits ys)) := by
+    BB6.Agent9ReverseBlock.JumpCover (q+ys.length) ys
+      (reducedLiftResidues q ys.length (BB6.Agent45ReverseBlock.digits ys)) := by
   intro c hc
   exact (mem_reducedLift_iff q ys.length (digits ys) c).2 hc
 
