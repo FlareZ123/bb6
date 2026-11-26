@@ -695,7 +695,11 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python im-results/agent43-raw122-cut/assemble_recovered.py
+          if ! python im-results/agent43-raw122-cut/assemble_recovered.py; then
+            echo "Raw122 core assembly failed; showing the actual Lean diagnostic:"
+            tail -n 180 /tmp/a43-audit/audit.log || true
+            exit 1
+          fi
       - name: Compile the complete 24-child parent Cover
         run: |
           set -euo pipefail
