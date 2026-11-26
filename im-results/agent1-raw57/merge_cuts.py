@@ -24,9 +24,8 @@ EXPECTED_ROOTS = {
     "residual-b": {"Raw57LF0Data", "Raw57LF1Data"},
 }
 IDENTITY_FIELDS = (
-    "source_kind", "source_path", "source_sha256", "project_imports",
-    "olean_path", "olean_sha256", "import_closure_sha256",
-    "module_identity_sha256",
+    "source_sha256", "project_imports", "olean_path", "olean_sha256",
+    "import_closure_sha256", "module_identity_sha256",
 )
 
 def digest(path: Path) -> str:
@@ -79,6 +78,7 @@ def main() -> None:
     provenance: dict[str, str] = {}
     revisions: set[str] = set()
     group_records = []
+    source_records: dict[str, tuple[Path, dict]] = {}
 
     for group in GROUPS:
         directory = artifacts_root / group
@@ -93,6 +93,8 @@ def main() -> None:
             raise RuntimeError(f"missing Lean identity in {manifest_path}")
         if manifest.get("module_count") != len(manifest.get("modules", [])):
             raise RuntimeError(f"module count mismatch in {manifest_path}")
+        if manifest.get("artifact_name") != f"raw57-cut-{group}":
+            raise RuntimeError(f"unexpected artifact identity in {manifest_path}: {manifest.get('artifact_name')!r}")
         if base is None:
             base = manifest
         else:
@@ -116,6 +118,10 @@ def main() -> None:
                 f"found {sorted(group_roots)}"
             )
 
+        group_modules = {entry["module"] for entry in manifest.get("modules", [])}
+        if not group_roots <= group_modules:
+            raise RuntimeError(f"{group} roots missing from module table: {sorted(group_roots - group_modules)}")
+
         for entry in manifest.get("modules", []):
             module = entry["module"]
             previous = modules.get(module)
@@ -126,8 +132,14 @@ def main() -> None:
                             f"module identity conflict for {module}.{field}: "
                             f"{previous.get(field)!r} != {entry.get(field)!r}"
                         )
+                # Prefer a tracked source over a generated copy if the same
+                # module is present in more than one cut.
+                if previous.get("source_kind") != "tracked" and entry.get("source_kind") == "tracked":
+                    modules[module] = entry
+                    source_records[module] = (precompiled_dir, entry)
             else:
                 modules[module] = entry
+                source_records[module] = (precompiled_dir, entry)
 
             olean_path = safe_relative(entry["olean_path"])
             copy_identical(
@@ -135,20 +147,7 @@ def main() -> None:
                 precompiled_out / olean_path,
                 entry["olean_sha256"],
             )
-
-            source_path = safe_relative(entry["source_path"])
-            if entry.get("source_kind") == "generated-or-untracked":
-                module_path = Path(*module.split(".")).with_suffix(".lean")
-                module_path = safe_relative(str(module_path))
-                copy_identical(
-                    precompiled_dir / module_path,
-                    generated_out / module_path,
-                    entry["source_sha256"],
-                )
-            else:
-                tracked_source = REPO_ROOT / source_path
-                if not tracked_source.is_file() or digest(tracked_source) != entry["source_sha256"]:
-                    raise RuntimeError(f"tracked source mismatch for {module}: {tracked_source}")
+            safe_relative(entry["source_path"])
 
         for item in manifest.get("roots", []):
             module = item["module"]
@@ -170,6 +169,20 @@ def main() -> None:
 
     if base is None:
         raise RuntimeError("no Raw57 cut manifests found")
+
+    for module, (source_dir, entry) in source_records.items():
+        source_path = safe_relative(entry["source_path"])
+        if entry.get("source_kind") == "generated-or-untracked":
+            module_path = safe_relative(str(Path(*module.split(".")).with_suffix(".lean")))
+            copy_identical(
+                source_dir / module_path,
+                generated_out / module_path,
+                entry["source_sha256"],
+            )
+        else:
+            tracked_source = REPO_ROOT / source_path
+            if not tracked_source.is_file() or digest(tracked_source) != entry["source_sha256"]:
+                raise RuntimeError(f"tracked source mismatch for {module}: {tracked_source}")
     merged = dict(base)
     merged["label"] = "Raw57 parent reusable proof-cut union"
     merged["artifact_name"] = "raw57-parent-cuts-merged"
