@@ -1,5 +1,9 @@
 # Raw122 / canonical86 partial closure
 
+## Exact checker shortcut
+
+`QuickWeight.lean` proves that `n+6 ≤ B` implies `weightOK p s n B = true`, since all candidate delays lie in `List.range 6`. The replacement `quickPrefix` is extensionally equal to the existing original-source `zipCheck` for every audit, partial machine and cutoff. Checked locally against the original compiled dependencies, with ordinary axioms only. This is a checker optimization, not a new machine decision. For the interrupted 1RA branch, kid18_12 has now passed in small separately checked subtrees; other missing groups remain under compilation.
+
 ## Artifact-backed fourteen-child closure (2026-11-25)
 
 [Raw122Recovered14.lean](Raw122Recovered14.lean) was freshly compiled locally using Lean 4.36.0-rc2 against the pinned, original-source CI objects. It proves fourteen F1 cylinder bounds at cutoff 7014 and the exact parent dichotomy `sound` with `residual_count = 10`. The closed children are 0LB, 0LC, 0LD, 0RA, 0RB, 0RC, 0RD, 0RE, 0RF, 1LD, 1RB, 1RC, 1RD, 1RE. The four additions to [the earlier ten-child closure](Raw122RecoveredTen.lean) are 0LB, 0LC, 0RF and 1RC, using the successful individual target artifacts of failed-overall run [45676726717](https://github.com/FlareZ123/bb6/actions/runs/45676726717). All fourteen cover theorems, sound and residual_count have only propext, Classical.choice and Quot.sound. The 0LC branch includes the literal-table patch for leaves 3905/3906/3908; its residual emptiness is checked directly, including the patched child.
