@@ -14,7 +14,9 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
 SPECS=json.loads((ROOT/"siblings.json").read_text())
 A=sys.argv[1]
-if A=="1LA":
+if A=="1LB":
+    SPEC=json.loads((ROOT/"agent7-1lb.json").read_text())
+elif A=="1LA":
     from make_1la_spec import spec
     SPEC=spec()
 else:
@@ -50,6 +52,43 @@ def main():
             pumps[i]=f"{pumpns}.M{i}"
             pumpcode.append(code)
             print(A,i,info)
+    if SPEC.get("seeded"):
+        for i,seed in SPEC["seeded"].items():
+            i=int(i); t,q,side,pre,P,S,stride=seed
+            p=one.parse(opens[i])
+            w=multi.clean(multi.lit(pre)+multi.rep(P)+multi.lit(S))
+            v=multi.clean(multi.lit(pre+P*stride)+multi.rep(P)+multi.lit(S))
+            st=multi.C(q,w if side=="L" else (),w if side=="R" else ())
+            tg=multi.C(q,v if side=="L" else (),v if side=="R" else ())
+            ans=multi.pump(p,st,tg,3000)
+            assert ans is not None,(A,i,seed)
+            code,info=multi.generate(i,p,(t,st,tg,ans),epoch=True)
+            _,a,b=info
+            # The epoch generator checks the exact endpoints. Reindex the
+            # family by the positive stride (the M212 recurrence uses six).
+            family=f"def family (n : Nat) : Z0 := {multi.cfg(st)}"
+            entry=f"theorem entry : run0 table {t} ⟨0,[],[]⟩ = some (family 0) := by rfl"
+            growth=f"""theorem growth (n : Nat) : run0 table ({a}+{b}*n) (family n) = some (family (n+{stride})) := by
+  have h := epoch n
+  simp only [family,rep,List.append_assoc,List.nil_append,List.append_nil] at h ⊢
+  exact h"""
+            never=f"""theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table (fun n => family ({stride}*n)) {t}
+    (fun n => {a}+{b}*({stride}*n)) entry (by intro n; omega)
+    (by intro n; simpa only [show {stride}*(n+1)={stride}*n+{stride} by omega] using growth ({stride}*n)) m hm
+#print axioms never"""
+            suffix=f"end M{i}"
+            assert code.endswith(suffix)
+            code=code[:-len(suffix)]+"\n\n"+"\n\n".join([family,entry,growth,never,suffix])
+            pumps[i]=f"{pumpns}.M{i}"
+            pumpcode.append(code)
+            print(A,i,"seeded pump",info,"stride",stride,flush=True)
+    for i,(module,ns) in SPEC.get("custom",{}).items():
+        i=int(i)
+        assert i not in pumps
+        pumps[i]=ns
+        if "import "+module not in pumpcode:
+            pumpcode.insert(0,"import "+module)
     if SPEC.get("branch_pumps"):
         import branch_pump
         for i,seed in SPEC["branch_pumps"].items():
@@ -217,7 +256,7 @@ theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
     def emit_subtree(node, p, kn, cn, module):
         def leaf(t, pp, k, c):
             return f"def {k}{hp} : Audit := {build(t)}\ntheorem {c}{hp} : zipCheck {BOUND} ({pp}) {ref(k)} = true := by decide\n"
-        if A not in ("0LB", "1RF", "1LA") or size(node) <= 300 or node[0] != "split":
+        if A not in ("0LB", "1RF", "1LA", "1LB", "1LE", "0LF", "1LF") or size(node) <= 300 or node[0] != "split":
             emit(module, [bname], leaf(node,p,kn,cn))
             return
         stats["split"] += 1
