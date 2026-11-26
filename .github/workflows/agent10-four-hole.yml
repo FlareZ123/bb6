@@ -1368,7 +1368,10 @@ jobs:
         with:
           name: raw58-canonical62-preflight
           path: |
-            /tmp/a4-canonical62-preflight
             /tmp/a4-canonical62-preflight.log
+            /tmp/a4-canonical62-preflight/canonical62-preflight.log
+            /tmp/a4-canonical62-preflight/raw112-cover-stub.log
+            /tmp/a4-canonical62-preflight/canonical62-preflight.json
+            /tmp/a4-canonical62-preflight/reachable-link-audit.json
           if-no-files-found: warn
           retention-days: 30
