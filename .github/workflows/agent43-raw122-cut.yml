@@ -704,6 +704,13 @@ jobs:
       - name: Compile the complete 24-child parent Cover
         run: |
           set -euo pipefail
+          overrides=()
+          overrides+=(--override "Raw122Roster16=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16.lean")
+          overrides+=(--override "Raw122Roster17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17.lean")
+          for n in $(seq -w 0 23); do
+            overrides+=(--override "Raw122Roster16Kid${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid${n}.lean")
+            overrides+=(--override "Raw122Roster17Kid${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid${n}.lean")
+          done
           python tools/lean_compile_closure.py \
             im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
             --workdir /tmp/a43-parent \
@@ -720,6 +727,7 @@ jobs:
             --provenance-input im-results/agent43-raw122-cut/Raw122Base.lean \
             --provenance-input im-results/agent43-raw122-cut/Raw122RootCompose.lean \
             --provenance-input im-results/agent43-raw122-cut/README.md \
+            "${overrides[@]}" \
             2>&1 | tee /tmp/a43-parent.log
           python - <<'PY'
           import json, pathlib, subprocess
