@@ -1,4 +1,4 @@
-# Raw57 sibling closure: certified 0LB, 1RF, 1LC and conditional parent bridge
+# Raw57 sibling closure: source-accepted children and the remaining parent branches
 
 Parent raw57: `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. Child A1=1RF:
 `1RB1RF_1RC---_0RD---_1LD1RE_---0LA_------`.
@@ -44,8 +44,10 @@ Table `1RB1RF_1RC1LA_0RD0RA_1LD1RE_---0LA_1LB0LF`. Entry at time 31 into A, left
 
 ## Parent closure status
 
-The existing 1LC generator was also repaired by bounded-subtree sharding; audit 45752512017 passed, bound 272. Agent7's audits 45750969498 (1RA, 382), 45751244565 (0LD, 324), 45751715986 (0LC, 629) passed. The source-accepted conditional bridge `Raw57ParentBridge.lean` (45752594597) reduces the parent to five ordinary choices 1LA, 1LB, 1LE, 0LF, 1LF given fourteen branch bound hypotheses. `Raw57ParentConsumer.lean` supplies all fourteen named branch theorems but its integrated compilation is pending. No unconditional parent bound or global roster reduction is claimed.
+The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597) proves an exact parent dichotomy: fourteen ordinary A1 choices have supplied weighted bounds, five cycles close immediately, and only 1LA, 1LB, 1LE, 0LF and 1LF remain as possible residual children. The 1LA child is now source-accepted at weighted bound **832** (run 45762127475; theorem `BB6.Agent1Raw57LA1.all_completions`). This removes one of the five residual obligations. The 1LE candidate partition has no residual leaves and its exact-source audit is queued as run 45767071990 at bound 1500; until that audit passes, it remains a candidate rather than an accepted branch theorem. 1LB still has one explicit residual, M211; 0LF and 1LF still have live leaves. Agent7 is pursuing 1LB/0LF, and Agent4 is pursuing 1LF. The existing `Raw57ParentConsumer.lean` supplies the fourteen earlier branch bounds but has not yet been compiled as an integrated parent consumer. No unconditional parent bound or global roster reduction is claimed.
 
-## A1=1LA discovery frontier
+## A1=1LA: source-accepted partition
 
-Exact side-cycle algorithm translated to JS: 2258 splits, 32018 cycle leaves, 15943 last-hole leaves, 3974 open; candidate maximum weighted 832. The two JSON frontier files record 3703 FAR and 112 sparse n-gram candidates, leaving 159 indexed partial machines for symbolic/other proofs. These are discovery results, pending original-generator and Lean acceptance. Agent7 is coordinating the other four residual siblings.
+The exact side-cycle census is 2,258 splits, 32,018 cycle leaves, 15,943 last-hole leaves and 3,974 open leaves. The complete disjoint open-leaf partition is 3,703 FAR witnesses, 114 sparse n-gram proofs, 132 RLE automata, two pattern-RLE automata, two branching pumps, five late last-hole bounds and sixteen custom nonhalting residuals. The sixteen residual table indices are 270, 274, 276, 404, 407, 442, 443, 444, 462, 474, 475, 486, 748, 944, 2021 and 2172. The 748/944 alternating-counter pair, seven grammar proofs, two binary-counter proofs and the remaining arbitrary-tail zipper/word-grammar wrappers are imported by the existing generator; the final generated tree is checked against the exact original partial-table enumeration.
+
+The source audit passed in existing workflow run **45762127475** using Lean 4.36.0-rc2. It compiled the exact dependency closure (2,214 project modules) and exported `BB6.Agent1Raw57LA1.all_completions` at weighted bound 832, with axiom profile `[propext, Classical.choice, Quot.sound]`. This is a proof-carrying bound for every completion of the 1LA child cylinder, not a decision of the whole Raw57 parent and not a global BB(6) bound. Reproduction is through `make_1la_spec.py` and `generate_sibling.py 1LA`; the exact custom proof sources and frontier inputs remain in this directory and `im-results/agent4-raw58/`.
