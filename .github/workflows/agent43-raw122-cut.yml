@@ -6,6 +6,10 @@ on:
         description: Check only the missing 1LC shards using grouped kernel proofs
         type: boolean
         default: false
+      retain_residuals:
+        description: Keep original unresolved leaves and use checked prefix-cut factoring
+        type: boolean
+        default: false
       target_matrix:
         description: Explicit JSON matrix of nonoverlapping targeted audit groups
         required: false
@@ -286,6 +290,8 @@ jobs:
           github-token: ${{ github.token }}
           path: /tmp/a43-core
       - name: Check missing modules against retained core
+        env:
+          RAW122_RETAIN_RESIDUALS: ${{ inputs.retain_residuals }}
         run: python im-results/agent43-raw122-cut/targeted_recover.py ${{ matrix.branch }} ${{ matrix.first }} ${{ matrix.end }}
       - uses: actions/upload-artifact@v4
         with:

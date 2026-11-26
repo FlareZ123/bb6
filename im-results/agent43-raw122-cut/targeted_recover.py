@@ -14,6 +14,9 @@ for f in Path('/tmp/a43-source').rglob('*.lean'):
     shutil.copy2(f,work/f.name)
 shutil.copy2(base/'Raw122TailGrowth.lean',work/'Raw122TailGrowth.lean')
 patch(work)
+retain = os.environ.get('RAW122_RETAIN_RESIDUALS','false').lower() == 'true'
+for name in ['Raw122Compact11332','Raw122Symbol11332','QuickWeight','PrefixCut']:
+    shutil.copy2(base/(name+'.lean'),work/(name+'.lean'))
 env=dict(os.environ,LEAN_PATH=str(work));built=[]
 def compile(m):
     if (work/(m+'.olean')).exists():return
@@ -31,14 +34,19 @@ for j in range(first,end):
     # Agent29's literal-table certificates also cover the older planned leaves.
     # Keep the original recovery route available for any unmatched shard.
     patched = False
-    if branch in {0,4,5,12,13,16,17,23}:
+    if not retain and branch in {0,4,5,12,13,16,17,23}:
         sys.path.insert(0,str(base.parent/'agent29-raw122-run'))
         from patch import patch as patch_run
         patched = patch_run(work,branch,j)
-    if not patched and (branch,j) in {(12,4),(12,12),(12,13),(12,16),(23,6),(23,12),(23,16)}:
+    if not retain and not patched and (branch,j) in {(12,4),(12,12),(12,13),(12,16),(23,6),(23,12),(23,16)}:
         from patch_planned import patch as patch_planned
         patch_planned(work,branch,j)
-    if not (work/(m+'.olean')).exists() and f.stat().st_size>15000 and ' : PartialAudit := .closed (' in f.read_text():
+    if retain:
+        stage=work/(m+'-cut');stage.mkdir(exist_ok=True)
+        mods=subprocess.check_output([sys.executable,str(base/'prefix_factor.py'),str(f),str(stage),'3500'],text=True).splitlines()
+        assert mods[-1]==m
+        for n in mods:shutil.copy2(stage/(n+'.lean'),work/(n+'.lean'))
+    elif not (work/(m+'.olean')).exists() and f.stat().st_size>15000 and ' : PartialAudit := .closed (' in f.read_text():
         # Generate independently checked smaller subtrees instead of a single
         # massive reduction. Keep the original exported module and theorem.
         stage=work/(m+'-split');stage.mkdir(exist_ok=True)
