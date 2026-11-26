@@ -11,6 +11,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent31StableParentBatch
 open BB6.Agent31Canonical58Raw113Graft
+open BB6.Agent31Canonical59Membership
 open BB6.Agent31Canonical58Raw83Membership
 open BB6.Agent10Raw83
 open BB6ChampionArithmetic
