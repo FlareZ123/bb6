@@ -5,7 +5,7 @@ on:
       mode:
         description: Build the parent, repair 1LB, or integrate into the eleven-parent core
         type: choice
-        options: [all, repair-1lb, integrate-65, scan-normalized-cryptids, raw139-e0-zeroRA]
+        options: [all, repair-1lb, integrate-65, scan-normalized-cryptids, raw139-e0-zeroRA, raw139-e0-integrate]
         default: repair-1lb
       raw139_subcover_run_id:
         description: Optional Agent6 run ID containing the 43-sibling Raw139 core and consumer artifacts
@@ -19,6 +19,10 @@ on:
         description: Raw107 shared-core run containing the exact canonical77 source manifest
         type: string
         default: "45647053824"
+      raw139_e0_cover_run_id:
+        description: Source-checked Raw139 E0=0RA 24-child cover run to integrate
+        type: string
+        default: "45778885358"
 permissions:
   contents: read
   actions: read
@@ -166,7 +170,7 @@ jobs:
           retention-days: 14
 
   normalized-scan:
-    if: inputs.mode == 'scan-normalized-cryptids'
+    if: inputs.mode == 'scan-normalized-cryptids' || inputs.mode == 'raw139-e0-integrate'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -224,6 +228,8 @@ jobs:
             --label agent3-raw139-normalized-cryptids-scan \
             --provenance-input im-results/agent3-raw139-cryptids-scan/README.md \
             --provenance-input im-results/agent3-raw139-cryptids-scan/Raw139CryptidsNormalizedScan.lean \
+            --provenance-input im-results/agent3-raw139-e0-zeroRA/Raw139E0ZeroRAMatch.lean \
+            --provenance-input im-results/agent3-raw139-e0-zeroRA/Raw139E0ZeroRAIntegrated.lean \
             --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --override FastFAR=im-results/agent7-far/FastFAR.lean \
@@ -237,9 +243,56 @@ jobs:
             im-results/agent6-raw139-normalized/Raw139Normalized.lean \
             im-results/agent19-hard-root-crosswalk/HardRootCore.lean \
             im-results/agent3-raw139-cryptids-scan/Raw139CryptidsNormalizedScan.lean \
+            im-results/agent3-raw139-e0-zeroRA/Raw139E0ZeroRAMatch.lean \
             | tee /tmp/agent3-raw139-normalized/scan.log
           if grep -Eq 'sorryAx|native_decide' /tmp/agent3-raw139-normalized/scan.log; then
             echo "nonstandard axiom in normalized Raw139 scan"
+            exit 1
+          fi
+      - name: Download the E0=0RA shared checker closure
+        if: inputs.mode == 'raw139-e0-integrate'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          name: raw139-e0-0ra-shared
+          path: /tmp/a3e0-shared
+      - name: Download the E0=0RA 24 child-cover objects
+        if: inputs.mode == 'raw139-e0-integrate'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          pattern: raw139-e0-0ra-child-*
+          merge-multiple: true
+          path: /tmp/a3e0-children
+      - name: Download the E0=0RA parent-cover object
+        if: inputs.mode == 'raw139-e0-integrate'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          name: raw139-e0-0ra-certified
+          path: /tmp/a3e0-parent
+      - name: Compile the 66-row Raw139 residual integration
+        if: inputs.mode == 'raw139-e0-integrate'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a3e0-build
+          cp /tmp/a3e0-shared/build/*.olean /tmp/a3e0-build/
+          cp /tmp/a3e0-children/*.olean /tmp/a3e0-build/
+          find /tmp/a3e0-parent -name A3E0RACover.olean -exec cp {} /tmp/a3e0-build/ \\;
+          find /tmp/a3e0-parent -name A3E0RACover.lean -exec cp {} /tmp/a3e0-build/ \\;
+          test -s /tmp/a3e0-build/Agent3PackedFast.olean
+          test -s /tmp/a3e0-build/A3E0RAB00Cover.olean
+          test -s /tmp/a3e0-build/A3E0RAB23Cover.olean
+          test -s /tmp/a3e0-build/A3E0RACover.olean
+          export LEAN_PATH="/tmp/agent3-raw139-normalized/build:/tmp/a3e0-build:/tmp/canonical77"
+          lean -o /tmp/agent3-raw139-normalized/build/Raw139E0ZeroRAIntegrated.olean \\
+            im-results/agent3-raw139-e0-zeroRA/Raw139E0ZeroRAIntegrated.lean \\
+            | tee /tmp/agent3-raw139-normalized/e0-integrated.log
+          if grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' /tmp/agent3-raw139-normalized/e0-integrated.log; then
+            echo "nonstandard axiom in Raw139 E0=0RA integration"
             exit 1
           fi
       - uses: actions/upload-artifact@v4
@@ -248,6 +301,17 @@ jobs:
           name: agent3-raw139-normalized-cryptids-scan
           path: |
             /tmp/agent3-raw139-normalized/scan.log
+            /tmp/agent3-raw139-normalized/manifest.json
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: inputs.mode == 'raw139-e0-integrate'
+        with:
+          name: agent3-raw139-e0-integrated
+          path: |
+            /tmp/agent3-raw139-normalized/e0-integrated.log
+            /tmp/agent3-raw139-normalized/build/Raw139E0ZeroRAIntegrated.olean
+            /tmp/agent3-raw139-normalized/build/Raw139E0ZeroRAMatch.olean
             /tmp/agent3-raw139-normalized/manifest.json
           if-no-files-found: error
           retention-days: 14
