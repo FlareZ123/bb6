@@ -25,48 +25,23 @@ theorem source2_eq_pinned : source2 = CtlSource.machine := rfl
 def candidate2 : BB6Coverage.Machine := BB6.ConjectureBridge.toAgent8 source2
 private abbrev target2 : BusyBeaver.Machine (Fin 2) (Fin 6) := source2.toBB
 
-private def boolToFin2 (b : Bool) : Fin 2 := if b then 1 else 0
 private def fin2ToBool (a : Fin 2) : Bool := a.val == 1
-private def boolToDir (b : Bool) : Turing.Dir :=
-  if b then Turing.Dir.right else Turing.Dir.left
 
-/-- Inverse adapter from the local absolute-tape machine convention to Cryptids. -/
-def ofAgent8 (m : BB6Coverage.Machine) : ConjectureMachines.Machine 6 2 where
-  transition q a :=
-    (m (q, fin2ToBool a)).map fun mv =>
-      (boolToFin2 mv.write, boolToDir mv.right, mv.next)
+/-- Use the shared, kernel-checked inverse adapter from CryptidsTapeAdapter. -/
+abbrev ofAgent8 := BB6.ConjectureBridge.fromAgent8
 
-/-- The two local/source machine adapters are inverse on every one of the
-    twelve state-symbol inputs. The proof reduces the private bit/direction
-    helpers in the pinned adapter by computation. -/
 theorem toAgent8_ofAgent8 (m : BB6Coverage.Machine) :
     BB6.ConjectureBridge.toAgent8 (ofAgent8 m) = m := by
-  funext s
-  rcases s with ⟨q, b⟩
-  cases b
-  · cases h : m (q, false) with
-    | none =>
-        rfl
-    | some mv =>
-        cases mv with
-        | mk w r n =>
-            cases w <;> cases r <;>
-              rfl
-  · cases h : m (q, true) with
-    | none =>
-        rfl
-    | some mv =>
-        cases mv with
-        | mk w r n =>
-            cases w <;> cases r <;>
-              rfl
+  simpa [ofAgent8] using BB6.ConjectureBridge.toAgent8_fromAgent8 m
 
-/-- The inverse adapter recovers the exact pinned source transition table
-    after conversion to the BusyBeaver machine used by the CTL checker. -/
+/-- The inverse adapter recovers the exact pinned source transition table. -/
 theorem ofAgent8_candidate2_toBB :
     (ofAgent8 candidate2).toBB = target2 := by
-  funext q a
-  fin_cases q <;> fin_cases a <;> decide
+  change
+    (BB6.ConjectureBridge.fromAgent8
+      (BB6.ConjectureBridge.toAgent8 source2)).toBB = source2.toBB
+  exact congrArg (fun M : ConjectureMachines.Machine 6 2 => M.toBB)
+    (BB6.ConjectureBridge.fromAgent8_toAgent8 source2)
 
 private theorem list_all_congr {α : Type u} (xs : List α) (f g : α → Bool)
     (h : ∀ x, x ∈ xs → f x = g x) : xs.all f = xs.all g := by
@@ -178,11 +153,10 @@ theorem ctlLeaf2_neverHalts (m : BB6Coverage.Machine)
                 (ofAgent8 m).transition s a =
                   (ofAgent8 candidate2).transition s a := by
               change
-                (m (s, fin2ToBool a)).map
-                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next)) =
-                  (candidate2 (s, fin2ToBool a)).map
-                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next))
-              rw [hmove]
+                (BB6.ConjectureBridge.fromAgent8 m).transition s a =
+                  (BB6.ConjectureBridge.fromAgent8 candidate2).transition s a
+              rw [BB6.ConjectureBridge.fromAgent8_transition,
+                BB6.ConjectureBridge.fromAgent8_transition, hmove]
             simp [ConjectureMachines.Machine.toBB, hTransition]
       _ = target2 s a := by
             rw [ofAgent8_candidate2_toBB]
