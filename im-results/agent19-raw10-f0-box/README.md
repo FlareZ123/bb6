@@ -31,9 +31,9 @@ The 17 F0 values below have a `zipCycle` while F1 remains completely unassigned.
 | 3 | 1LA | 10 | 7 | false | -4 |
 | 4 | 1RA | 10 | 8 | false | -2 |
 | 5 | 0LB | 10 | 4 | false | -4 |
-| 6 | 1LB | 10 | 5 | false | -3 |
+| 6 | 0RB | 10 | 5 | false | -3 |
 | 7 | 1LB | 10 | 4 | false | -4 |
-| 8 | 0RC | 10 | 6 | false | -3 |
+| 8 | 1RB | 10 | 6 | false | -3 |
 | 9 | 0LC | 10 | 3 | false | -4 |
 | 11 | 1LC | 10 | 3 | false | -4 |
 | 13 | 0LD | 10 | 4 | false | -4 |
