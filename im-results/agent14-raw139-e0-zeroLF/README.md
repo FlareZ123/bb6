@@ -33,3 +33,7 @@ The other ten one-hole tables are the remaining decision targets:
 |11287|7,8,11,3,14,21,24,16,20,11,19,2|
 
 The census is a witness discovery experiment. A complete source certificate must replay every branch, including the omitted halting branch at each split; the above counts are ordinary leaves only. Do not infer nonhalting from the billion-step replay or a global roster reduction from any of these local results. Discovery source and exact manifest reconstruction are being consolidated in this dossier.
+
+## Reproduction
+
+Run `python /path/to/repo/im-results/agent14-raw139-e0-zeroLF/discover.py 4` in a scratch directory with g++ and Python 3. The script reconstructs the two-stage search using the existing Agent48 blockcert generator, compiling census.cpp in normal and EXTENDED modes. The original experiment ran independent batches in parallel; the consolidated script sorts IDs and runs the extended scan in one process. Its combined source is a reconstruction, not yet rerun end to end. Intermediate artifacts are candidate witnesses and require source certification. `long.cpp` independently supports exact finite block-macro replay: compile with `g++ -O3 -std=c++17 long.cpp -o long`, feed lines of residual ID followed by the 12 transition codes separated by spaces, and specify the desired primitive-step limit as the first argument. An open result is not a nonhalting certificate.
