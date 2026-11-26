@@ -25,7 +25,7 @@ abbrev p113 : PartialMachine :=
 
 /-- The accepted Canonical58 roster constructor, using the shared stable-batch
     removeParents definition and the exact selected Canonical59 roster. -/
-def roster58 :=
+noncomputable def roster58 :=
   BB6.Agent31StableParentBatch.removeParents [p113]
     BB6.Agent32CanonicalSelectedIntegrated.rosterSelected
 
@@ -57,7 +57,6 @@ theorem p10_count58 :
     (roster58.filter (fun e => sameTable e.2 p10)).length = 1 := by
   decide
 
-#eval (roster58.filter (fun e => sameTable e.2 p10)).map Prod.fst
 #eval p10 initialSlot
 
 #print axioms count59
