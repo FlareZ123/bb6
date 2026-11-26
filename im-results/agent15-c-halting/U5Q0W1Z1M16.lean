@@ -3,6 +3,9 @@ import M32SectionEmbedding
 import CSourceBridge16
 import Lean.Elab.Tactic.Omega
 
+set_option maxRecDepth 20000
+set_option maxHeartbeats 0
+
 namespace BB6.Agent15U5Q0W17
 open BB6.Agent15
 open BB6.Agent46
@@ -68,21 +71,21 @@ theorem q0_w1_z1_target_unreachable (r : Nat) :
   rcases hfan with ⟨q,U,hpow,hUge,hUeven,ha,hkpos,hlow,hcost⟩
   have hmod : (43*t-1)%8=4 := by rw [ht]; omega
   have hq0 : q=0 := by
-    by_contra hq
-    have hqpos : 1≤q := by omega
-    have hpowdiv : 4∣4^q := by
-      have h : 4^1∣4^q := Nat.pow_dvd_pow 4 (by omega)
-      simpa using h
-    obtain ⟨v,hv⟩ := hpowdiv
-    obtain ⟨w,hw⟩ : ∃ w, U=2*w := ⟨U/2,by omega⟩
-    have h8 : 8∣4^q*U := by
-      refine ⟨v*w,?_⟩
-      calc
-        4^q*U=(4*v)*(2*w) := by rw [hv,hw]
-        _=8*(v*w) := by ring
-    have h8' : 8∣43*t-1 := by rw [hpow]; exact h8
-    have hmod0 := Nat.mod_eq_zero_of_dvd h8'
-    omega
+    by_cases hq : q=0
+    · exact hq
+    · have hqpos : 1≤q := by omega
+      have hpowdiv : 4∣4^q := by
+        obtain ⟨q',hqeq⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : q≠0)
+        refine ⟨4^q',?_⟩
+        rw [hqeq,pow_succ]
+        simp [Nat.mul_comm]
+      have hUdiv : 2∣U := ⟨U/2,by omega⟩
+      have h8 : 8∣4^q*U := by
+        have hprod := Nat.mul_dvd_mul hpowdiv hUdiv
+        simpa using hprod
+      have h8' : 8∣43*t-1 := by rw [hpow]; exact h8
+      have hmod0 := Nat.mod_eq_zero_of_dvd h8'
+      omega
   have hU : U=43*t-1 := by simpa [hq0] using hpow.symm
   have ha' : a=43*t-3 := by rw [hU] at ha; omega
   have hk' : 2*k=85*t-7 := by rw [hU] at hcost; omega
