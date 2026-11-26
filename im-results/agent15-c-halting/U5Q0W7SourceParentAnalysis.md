@@ -495,6 +495,85 @@ The original-source odd-right sum-one invariant excludes F, hence A.
 This is formalized by w7_z2_q1_parent_unreachable_u9939mod10240 and
 w7_q0_target_unreachable_u9939mod10240 in U5Q0W7U19Mod2560.lean.
 
+### u=16339+20480v
+
+The forced chain is
+\[
+\begin{aligned}
+A&=(117351151+147087360v,\;644058813+807260160v),\\
+B&=(380704980+477173760v,\;512381895+642216960v),\\
+C&=(446543435+559695360v,\;479462664+600956160v),\\
+D_1&=(926006097+1160651520v,\;239731331+300478080v),\\
+D_2&=(582868712+730564800v,\;411300020+515521440v),\\
+D_3&=(994168730+1246086240v,\;205650009+257760720v),\\
+F&=(599909367+751923480v,\;402779687+504842100v).
+\end{aligned}
+\]
+The exact source steps are odd/odd low-value, even/odd sum-three,
+even-right six, odd/odd low-value, even-right six, and even/odd
+sum-three. The terminal state has odd right coordinate and
+\[
+F_x+F_y=1002689054+1256765580v\equiv2\pmod4.
+\]
+The original-source odd-right sum-two invariant excludes F, hence A.
+The q=0 lift uses the generic odd-W parent-fan lemma
+w7_q0_target_unreachable_of_q1.
+
+### u=20019+20480v
+
+After odd/odd low-value and even/odd sum-three, six exact even-right
+inverses reach
+\[
+\begin{aligned}
+D_1&=(1134560667+1160651520v,\;293723486+300478080v),\\
+D_2&=(1428284151+1461129600v,\;146861742+150239040v),\\
+D_3&=(1575145891+1611368640v,\;73430870+75119520v),\\
+D_4&=(1648576759+1686488160v,\;36715434+37559760v),\\
+D_5&=(1685292191+1724047920v,\;18357716+18779880v),\\
+F&=(1703649905+1742827800v,\;9178857+9389940v).
+\end{aligned}
+\]
+The initial q=1 parent is
+\[
+A=(143780911+147087360v,\;789113373+807260160v).
+\]
+The terminal state has odd right coordinate and
+\[
+F_x+F_y=1713828762+1752217740v\equiv2\pmod4.
+\]
+The original-source odd-right sum-two invariant excludes F, hence A.
+The q=0 lift again uses w7_q0_target_unreachable_of_q1.
+
+### u=1939+2560v: exact sum-seven parent obstruction
+
+The q=1 parent and its first two predecessors are
+\[
+\begin{aligned}
+A&=(13930351+18385920v,\;76454013+100907520v),\\
+B&=(45192180+59646720v,\;60823095+80277120v),\\
+C&=(53007635+69961920v,\;56915364+75119520v).
+\end{aligned}
+\]
+A is odd/odd and uses the original low-value inverse; B is even/odd
+with coordinate sum 3 mod 8 and uses the exact even/odd sum-three
+inverse. At C, the exact residues are
+\[
+\begin{aligned}
+C_x+C_y&\equiv7\pmod8,\\
+C_x+C_y+1&\equiv8\pmod{16},\\
+C_x+C_y+1&\equiv24\pmod{32},\\
+C_x&\equiv3\pmod4,\qquad C_y\equiv4\pmod8.
+\end{aligned}
+\]
+These are precisely the hypotheses of
+BB6.Agent19HighEvenRight.sum7_every_parent_odd_image. Every exact
+parent of C lies in the forbidden odd-right sum-two image, so C and
+then A are blank-unreachable. This is a direct source-parent obstruction,
+not merely a terminal result of the finite forced normalizer.
+
+The original q=0 target is excluded using the generic odd-W parent-fan
+lift w7_q0_target_unreachable_of_q1.
+
 ### Root residuals and exact-source verification
 
 For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
@@ -516,6 +595,6 @@ which additionally compiled U5Q0W7U19Mod2560.lean and all six new
 q=0/q=1 declarations. The new module explicitly prints their axioms;
 the workflow grep guard found no sorryAx or native_decide dependency.
 
-These are nine infinite excluded sublifts of the q=1 parent, not a
+These are twelve infinite excluded sublifts of the q=1 parent, not a
 classification of the entire w=55 (mod 128) row. The remaining q=1
 parameter residues and all even-W high-depth cases remain open.
