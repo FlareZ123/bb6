@@ -1,0 +1,5 @@
+# Raw83 four-hole candidate closure
+
+Parent `1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA` is the F1=0RA sibling of the rooted B1=1LF path. A new enumeration using the existing original-source audit format obtains 228 splits, 3717 side-cycle leaves, 1471 last-hole leaves and 57 open leaves. All 390625 physical completions are covered by the candidate tree. The 57 open leaves are covered by 54 ordinary FAR witnesses and three small width-1 run-quotient block FAR invariants (indices 4,15,52). No delayed leaves or growth proof assumptions are needed. The candidate sharp weighted score is 514, attained in discovery by `1RB0LE_1RC1LF_0RDHHH_1LD1RE_0RF0LB_0LB0RA` (513 ordinary steps, delay 0).
+
+`generate.py` regenerates the tree and all witnesses, checks the ordered roster SHA256, and builds the exact source-connected weighted certificate. `A10Raw83Exact.lean` adds the attained lower witness and equivalence of the universal bound with B≥514. The source audit is pending; the parent is not yet discharged.

@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_groups:
         description: 'JSON list of individual Raw108 groups to certify'
@@ -59,6 +59,37 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Certify complete Raw83 parent and attained bound
+        if: inputs.target == 'raw83-exact'
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw83
+          work=/tmp/a10-raw83
+          python im-results/agent13-coverage/unpack.py
+          python "$root/generate.py"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label raw83-exact \
+            --theorem BB6.Agent10Raw83.all_completions --artifact-name raw83-parent-proof \
+            --provenance-input "$root/spec.json" --provenance-input "$root/generate.py" \
+            --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input im-results/agent7-far/large_far.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent10-raw108/build_lb.py \
+            --provenance-input im-results/agent13-block-far/specialize.py \
+            --provenance-input im-results/agent13-block-far/generate_multi.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            "$root/A10Raw83Exact.lean" 2>&1 | tee /tmp/a10-raw83.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw83.log BB6.Agent10Raw83.all_completions BB6.Agent10Raw83.longest_halts BB6.Agent10Raw83.exact_bound
+          cp /tmp/a10-raw83.log "$work/audit.log"
+      - name: Retain Raw83 proof
+        if: inputs.target == 'raw83-exact'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw83-parent-proof
+          path: /tmp/a10-raw83/
+          retention-days: 30
       - name: Certify wide support-only raw108 0LB leaf 895
         if: inputs.target == 'raw108-block895' || inputs.target == 'raw108-block895-narrow'
         env:
