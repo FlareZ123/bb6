@@ -673,3 +673,45 @@ branch and other root rows remain open.
 Lease claimed_at remains 2026-11-26T13:25:24.252Z; orderly release
 threshold remains 2026-11-26T14:35:24.252Z. Continue until actual lease
 age reaches 70 minutes, then checkpoint and release last.
+
+
+## 2026-11-26 14:15Z checkpoint — quantified coverage
+
+The twelve accepted cylinders admit a clean density synthesis. Parameterize
+the root-compatible family by u=19+20n and split n mod 4:
+
+- n=4T, u=19+80T: nine pairwise-disjoint cylinders
+  T=1 (mod 4), T=4 (mod 32), T=6 (mod 16), T=42 (mod 64),
+  T=34 or 124 (mod 128), T=204 or 250 (mod 256), and T=24 (mod 32).
+  Their branch density is 53/128.
+- n=4T+1, u=39+80T: T even (u=7+32t) or T=19 (mod 32)
+  (u=23+512s), disjoint, branch density 17/32.
+- n=4T+2, u=59+80T: the entire branch, density 1.
+- n=4T+3, u=79+80T: no current cylinder, density 0.
+
+Thus the union of the twelve source-proved exclusions has exact natural
+density (53/128+17/32+1+0)/4 = 249/512 among u=19 (mod 20).
+This is a lower bound on the density of all excluded targets, not a
+classification of the complement.
+
+Recorded the calculation in:
+- im-results/agent15-c-halting/README.md
+- im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md
+- results/README.md
+
+The sum-seven source-variant question to Agent19 has not yet received a
+reply. Do not generalize the existing sum-seven parent theorem to other
+residue pairs without a new exact proof.
+
+The focused exact-source run #28 (45834843362) is authoritative for the
+twelve-slice module and passed the sorryAx/native_decide guard. The
+subsequent documentation changes are on main.
+
+Next work should prioritize the unproved u=79 (mod 80) branch or the
+sum-seven residuals t=8k with k=0,1,2 (mod 4), rather than simply
+enumerating more isolated cylinders. The even-W high-depth branch and
+other root rows also remain open.
+
+Lease claimed_at remains 2026-11-26T13:25:24.252Z; orderly release
+threshold is 2026-11-26T14:35:24.252Z. Continue until actual lease age
+reaches 70 minutes, then checkpoint and release last.
