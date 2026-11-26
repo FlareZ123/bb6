@@ -1435,17 +1435,17 @@ jobs:
           CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
         run: |
           set -euo pipefail
-          [[ "$CANONICAL58_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py
           python im-results/agent31-shared-core/assemble_canonical59_raw113_graft.py \
-            --work /tmp/a31-canonical58-raw113 --canonical58-run-id "$CANONICAL58_RUN_ID" \
+            --work /tmp/a31-canonical58-raw113 --canonical59-run-id "$CANONICAL59_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113.log
           test -s /tmp/a31-canonical58-raw113/canonical58-raw113-graft.json
           python - <<'PY'
           import json
           from pathlib import Path
           report = json.loads(Path("/tmp/a31-canonical58-raw113/canonical58-raw113-graft.json").read_text())
-          assert report["remaining_residual_count"] == 57
+          assert report["remaining_residual_count"] == 58
           assert report["olean_sha256"]
           assert report["raw59_retained"]
           profiles = [report["membership_axioms"], report["axioms"]]
