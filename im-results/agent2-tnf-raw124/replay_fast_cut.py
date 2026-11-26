@@ -78,6 +78,14 @@ theorem never_source (m : Machine) (hm : compatible table m) : NeverHalts m := n
 end {gns}
 """)
                 ref[i]=(name,gns)
+        # Manual exact source theorems are keyed to the pinned discovery roster.
+        manual=ROOT/f'sibling-{b}-manual.json'
+        if manual.is_file():
+            for si,e in json.loads(manual.read_text()).items():
+                i=int(si)
+                assert i in spec['remaining'] and i not in far and i not in ref
+                assert opens[i]==e['table'].replace('_','')
+                ref[i]=(e['module'],e['namespace'])
     for j in range(0,len(growth),12):
         name=stem+f'Growth{j//12:02}'
         gns='BB6.Agent2'+name

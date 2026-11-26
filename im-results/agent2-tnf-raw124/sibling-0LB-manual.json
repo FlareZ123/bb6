@@ -1,0 +1,22 @@
+{
+  "935": {
+    "table": "1RB1LE_1RC0RA_0RD0RE_1LD1RE_0LA1LF_---0LB",
+    "module": "Raw124LB0Four",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Four.M935"
+  },
+  "936": {
+    "table": "1RB1LE_1RC0RA_0RD1RB_1LD1RE_0LA1LF_---0LB",
+    "module": "Raw124LB0Four",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Four.M936"
+  },
+  "1046": {
+    "table": "1RB1LE_1RC0RC_0RD0RE_1LD1RE_0LA1LF_---0LB",
+    "module": "Raw124LB0Four",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Four.M1046"
+  },
+  "1047": {
+    "table": "1RB1LE_1RC0RC_0RD1RB_1LD1RE_0LA1LF_---0LB",
+    "module": "Raw124LB0Four",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Four.M1047"
+  }
+}
