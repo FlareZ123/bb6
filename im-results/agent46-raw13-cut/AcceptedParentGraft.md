@@ -18,3 +18,21 @@ The artifact module inventories establish the actual batch targets (323 already 
 This is a **local artifact-backed integration** of source-accepted parent bounds, not a new full original-source CI run or Canonical64 roster reduction. It does not consume 682 (previously locally checked but no retained source artifact), 1100 (candidate), or the two independently accepted five-hole fresh-state parents 0LE/1LE. The 1697 retained obligations, including the hard #754 cylinder, remain to be covered. No exact BB(6) upper bound follows.
 
 The earlier [five-parent result](FiveParentGraft.md) and [six-parent source](Agent46Raw13SixParentGraft.lean) are historical narrower integrations.
+
+
+## Post-graft branchBatch inventory (2026-11-26)
+
+Two later successful runs of the same `branchBatch` workflow exist and must be reconciled before any further Raw13 branch dispatch:
+
+| Run | Source SHA | Artifact | Artifact size | Catalog at source SHA |
+|---|---|---:|---:|---|
+| 45873240434 | `5d7531c100904c09bef67473fbed930d04a46a8f` | 15145207648 | 80,427,686 bytes | 10 keys: 231, 321, 323, 482, 503, 682, 830, 1046, 1100, 1422 |
+| 45873898225 | `637c0535dd58b701433aef4bca3cf5f05df1db56` | 15144394253 | 101,409,956 bytes | the preceding 10 plus 600571, 600573, 601395, 601396, 601452, 601541 |
+
+At run 45873240434's source snapshot, the only catalog IDs not already represented in the eight source-audited artifact rows above were 682 and 1100. This makes it plausible that the successful run source-audited those two, but the GitHub Actions run metadata does not expose the `workflow_dispatch` branch input. Do **not** mark either accepted until the artifact's generated `Agent46Raw13BranchBatch.lean` import list (or an equivalent manifest) is inspected.
+
+At run 45873898225's source snapshot, six fresh IDs had just been added. The workflow accepts at most four IDs per batch, so this run can cover no more than four of those six; its exact subset is unknown. Five further IDs (600489, 600542, 601454, 601456, 601558) were added only in a later catalog revision and were not available to either run above. The current catalog has 21 keys in total.
+
+This invocation dispatched run 45889186819 for `682 1100` before discovering the two earlier successful runs. It was cancelled at 2026-11-26 20:32:08Z and produced no artifact. This cancellation avoids a likely duplicate; do not repeat that batch. The 11-parent integration and 1697 count above remain the only integrated result until the later artifact inventories are reconciled. The exact branch modules should be checked before updating the graft.
+
+The local Python/container shell returned `ClientError` on repeated attempts in this invocation, so the ZIP contents could not be inspected locally. Next step: inspect artifacts 15145207648 and 15144394253 when a shell is available, or add an explicit branch manifest to a future run; do not spend another CI run merely to rediscover their inputs.
