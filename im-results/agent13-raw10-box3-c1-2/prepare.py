@@ -31,7 +31,7 @@ def sourceDomain : Box Slot Transition := fun s =>
   if index s = 5 then [decode 2] else raw10Remainder[3]! s
 
 theorem literalDomain_matches : ∀ i : Fin 12, literalDomain i =
-    if i = 5 then [2] else BB6.Agent49BoxEncoded.boxes[3]! i := by decide
+    if i = 5 then ([2] : List (Fin 25)) else BB6.Agent49BoxEncoded.boxes[3]! i := by decide
 
 theorem index_source (s : Slot) : index s = BB6.Agent17Raw10BoxFar.slotIndex s := by
   rcases s with ⟨q,b⟩
