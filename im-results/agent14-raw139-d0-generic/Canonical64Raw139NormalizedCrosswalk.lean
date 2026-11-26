@@ -60,7 +60,7 @@ def activeCoveredByNormalized : List (List Move × PartialMachine) :=
 
 def activeUncoveredByNormalized : List (List Move × PartialMachine) :=
   activeRows.filter (fun e =>
-    !(normalizedTables.any (fun p => extendsTable p e.2))
+    !(normalizedTables.any (fun p => extendsTable p e.2)))
 
 /-- Number of active leaves subsumed by each normalized residual table. -/
 def activeCoverageCounts : List Nat :=
