@@ -54,21 +54,9 @@ def verify_raw113_base(work: Path, run_id: int):
 
 
 def verify_raw112_parent(work: Path, run_id: int):
-    run = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}")
-    assert run["conclusion"] == "success", run.get("conclusion")
-    artifacts = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}/artifacts")["artifacts"]
-    candidates = [x for x in artifacts if x["name"] == RAW112_ARTIFACT]
-    assert len(candidates) == 1, [(x["id"], x["name"]) for x in artifacts]
-    item = candidates[0]
-    assert not item["expired"] and item["digest"].startswith("sha256:")
-    digest = item["digest"].removeprefix("sha256:")
-    pin = (item["id"], run_id, digest)
-    dirs = a68.download(pin, work)
-    assert any((d / "Raw112ClosedCover.olean").is_file() for d in dirs)
-
-    metadata = work / "metadata" / str(item["id"])
-    summaries = list(metadata.rglob("retry-summary.json"))
-    manifests = list(metadata.rglob("manifest.json"))
+    metadata, dirs = a68.download_named_artifact(run_id, RAW112_ARTIFACT, work)
+    metadata_dir = work / "metadata" / str(metadata["artifact_id"])
+    summaries = list(metadata_dir.rglob("retry-summary.json"))
     assert len(summaries) == 1, [str(p) for p in summaries]
     summary = json.loads(summaries[0].read_text())
     assert summary["current_run_id"] == str(run_id) or summary["current_run_id"] == run_id
@@ -80,21 +68,8 @@ def verify_raw112_parent(work: Path, run_id: int):
         "r01a-rest0", "r01a-rest1", "r01a-deep",
         "r04a", "r04b", "r04c", "r05a0", "r05a1",
     }
-
-    parent_manifests = []
-    for path in manifests:
-        manifest = json.loads(path.read_text())
-        roots = {x["module"] for x in manifest.get("roots", [])}
-        if "Raw112ClosedCover" in roots:
-            parent_manifests.append((path, manifest))
-    assert len(parent_manifests) == 1, [str(p) for p, _ in parent_manifests]
-    manifest_path, manifest = parent_manifests[0]
-    assert manifest["artifact_name"] == RAW112_ARTIFACT
-    assert manifest["proof_source_revision"] == run["head_sha"]
-    assert "4.36.0-rc2" in manifest["lean_version"]
-    modules = {x["module"] for x in manifest["modules"]}
-    assert {"Raw112Data", "Raw112ClosedCover"} <= modules
-    return dirs, pin, item, summary, manifest_path, manifest
+    assert any((d / "Raw112ClosedCover.olean").is_file() for d in dirs)
+    return metadata, dirs, summary
 
 
 def main():
@@ -114,7 +89,7 @@ def main():
     raw113_dirs, raw113_pin, raw113_item, raw113_report = verify_raw113_base(
         raw113_work, args.canonical58_run_id
     )
-    raw112_dirs, raw112_pin, raw112_item, raw112_summary, raw112_manifest_path, raw112_manifest = verify_raw112_parent(
+    raw112_meta, raw112_dirs, raw112_summary = verify_raw112_parent(
         raw112_work, args.raw112_run_id
     )
 
@@ -185,15 +160,15 @@ def main():
         "raw113_consumed": True,
         "raw59_retained": True,
         "raw112_run_id": args.raw112_run_id,
-        "raw112_artifact_name": raw112_item["name"],
-        "raw112_artifact_id": raw112_pin[0],
-        "raw112_artifact_sha256": raw112_pin[2],
+        "raw112_artifact_name": raw112_meta["artifact_name"],
+        "raw112_artifact_id": raw112_meta["artifact_id"],
+        "raw112_artifact_sha256": raw112_meta["artifact_digest"],
         "raw112_parent_table": RAW112_TABLE,
         "raw112_parent_theorem": RAW112_THEOREM,
         "raw112_weighted_bound": 100000,
         "raw112_retry_summary": raw112_summary,
-        "raw112_parent_manifest": str(raw112_manifest_path),
-        "raw112_parent_manifest_module_count": raw112_manifest["module_count"],
+        "raw112_parent_manifest": raw112_meta["manifest_path"],
+        "raw112_parent_manifest_module_count": raw112_meta["module_count"],
         "raw113_link_audit": raw113_audit,
         "raw112_link_audit": raw112_audit,
         "membership_axioms": membership_profiles,
