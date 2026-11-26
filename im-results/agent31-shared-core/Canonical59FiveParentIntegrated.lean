@@ -76,6 +76,11 @@ theorem p119_cover : Cover (WeightedBound 6766859) p119 := by
   exact Nat.le_trans
     (BB6.Agent10Raw119.all_completions m hm k d hk hd) (by decide)
 
+/-- The five physical parent tables are pairwise distinct under the same
+    exact table predicate used by the quotient filter. -/
+theorem parents_pairwise_distinct :
+    List.Pairwise (fun p q => sameTable p q = false) parents := by decide
+
 /-- Every member of the five-parent list has its own independently accepted
     original-source Cover, lifted to the canonical common score floor. -/
 theorem parents_cover :
@@ -133,9 +138,12 @@ theorem exact_at_champion_score
 #print axioms p108_cover
 #print axioms p115_cover
 #print axioms p119_cover
+#print axioms parents_pairwise_distinct
 #print axioms parents_cover
 #print axioms sound59_integrated
 #print axioms exact_at_target
 #print axioms exact_at_champion_score
+#print axioms BB6Coverage.Agent48DirectRoot.champion_raw_witness
+#print axioms BB6.Agent38ChampionThreshold.champion_score_ge_6766859
 
 end BB6.Agent31Canonical59FiveParentIntegrated
