@@ -37,11 +37,11 @@ def remainingCodes : List Nat :=
 def q0Covers (B : Nat) (hB : 4663 ≤ B) :
     List (Σ p : PartialMachine, Cover (WeightedBound B) p) := [
   ⟨BB6.Agent47Root33.parent,
-    Q0RosterConsume.liftCover (by omega) BB6.Agent47Root33.cover⟩,
+    Q0RosterConsume.liftCover (A := 162) (B := B) (Nat.le_trans (by decide : 162 ≤ 4663) hB) BB6.Agent47Root33.cover⟩,
   ⟨BB6.Agent47Root49.parent,
-    Q0RosterConsume.liftCover (by omega) BB6.Agent47Root49.cover⟩,
+    Q0RosterConsume.liftCover (A := 234) (B := B) (Nat.le_trans (by decide : 234 ≤ 4663) hB) BB6.Agent47Root49.cover⟩,
   ⟨BB6.Agent47Root51.parent,
-    Q0RosterConsume.liftCover (by omega) BB6.Agent47Root51.cover⟩
+    Q0RosterConsume.liftCover (A := 208) (B := B) (Nat.le_trans (by decide : 208 ≤ 4663) hB) BB6.Agent47Root51.cover⟩
 ]
 
 theorem q0Covers_tables (B : Nat) (hB : 4663 ≤ B) :
