@@ -52,7 +52,22 @@ for j in range(first,end):
         stage=work/(m+'-split');stage.mkdir(exist_ok=True)
         mods=subprocess.check_output([sys.executable,str(base/'split_grouped.py'),str(f),str(stage),'5000'],text=True).splitlines()
         assert mods[-1]==m
-        for n in mods:shutil.copy2(stage/(n+'.lean'),work/(n+'.lean'))
+        if os.environ.get('RAW122_FUSE_CLOSED','false').lower()=='true':
+            imports={'QuickWeight'}
+            bodies=[]
+            for n in mods:
+                s=(stage/(n+'.lean')).read_text()
+                imports.update(re.findall(r'^import\s+(\S+)',s,re.M))
+                s=re.sub(r'^import[^\n]+\n','',s,flags=re.M)
+                s=s.replace('rw [← partialCheck.eq_2, ← BB6.Agent47Raw111.partialPrefix_eq]',
+                            'rw [← BB6.Agent43QuickWeight.quickPrefix_eq]')
+                s=s.replace('exact ⟨by decide, allMoves_of',
+                            'exact ⟨by rw [← BB6.Agent43QuickWeight.quickZipQuery_eq]; decide, allMoves_of')
+                bodies.append(s)
+            imports.difference_update(mods)
+            f.write_text(''.join(f'import {d}\n' for d in sorted(imports))+'\n'.join(bodies))
+        else:
+            for n in mods:shutil.copy2(stage/(n+'.lean'),work/(n+'.lean'))
     compile(m)
     audit=work/'A43CheckAxioms.lean'
     audit.write_text(f'import {m}\n#print axioms BB6.Agent43Raw122.kid{branch:02}_{j:02}_checked\n')
