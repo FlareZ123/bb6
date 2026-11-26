@@ -13,6 +13,7 @@ on:
           - canonical67-integrated
           - canonical63-integrated
           - canonical64-score-consumer
+          - raw83-membership-preflight
           - canonical63-raw115
           - canonical59-five-parent-batch
           - canonical58-six-parent-batch
@@ -1237,3 +1238,60 @@ jobs:
             /tmp/parent-manifest.json
           compression-level: 1
           retention-days: 14
+
+  raw83-membership-preflight:
+    name: Check Raw83 survives the five-parent Canonical64 cut
+    if: ${{ inputs.target == 'raw83-membership-preflight' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Rebuild the pinned source-accepted Canonical64 base
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-shared-core/assemble_canonical64_champion.py \
+            --work /tmp/a31-canonical64-score 2>&1 | tee /tmp/a31-canonical64-score.log
+          test -s /tmp/a31-canonical64-score/linked/Canonical64Raw120Integrated.olean
+      - name: Compile the five-parent membership and Raw83 survivor proofs
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/a31-canonical64-score/linked"
+          lean -o "$LEAN_PATH/Canonical59FiveParentMembership.olean" \
+            im-results/agent31-shared-core/Canonical59FiveParentMembership.lean \
+            2>&1 | tee /tmp/a31-canonical59-membership.log
+          lean -o "$LEAN_PATH/Raw83Canonical59Membership.olean" \
+            im-results/agent29-raw83-membership/Raw83Canonical59Membership.lean \
+            2>&1 | tee /tmp/a31-raw83-membership.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical59-membership.log /tmp/a31-raw83-membership.log; then
+            echo "Forbidden proof mechanism in Raw83 membership preflight" >&2
+            exit 1
+          fi
+          grep -E "p83_(root|count64|count59|distinct_from_five)" /tmp/a31-raw83-membership.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw83-canonical59-membership-preflight
+          path: |
+            /tmp/a31-canonical64-score.log
+            /tmp/a31-canonical59-membership.log
+            /tmp/a31-raw83-membership.log
+            /tmp/a31-canonical64-score/canonical64-score-consumer.json
+            /tmp/a31-canonical64-score/kernel-link-manifest.json
+            /tmp/a31-canonical64-score/linked/Canonical59FiveParentMembership.olean
+            /tmp/a31-canonical64-score/linked/Raw83Canonical59Membership.olean
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
