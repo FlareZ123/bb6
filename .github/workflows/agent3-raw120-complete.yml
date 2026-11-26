@@ -231,6 +231,8 @@ jobs:
             /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
             /tmp/raw120-canonical64/linked/Canonical64Raw139Subcover.olean
             /tmp/raw120-canonical64/raw139-subcover.log
+            /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
+            /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
             /tmp/a3e0-build/*.olean
           if-no-files-found: warn
           retention-days: 14
