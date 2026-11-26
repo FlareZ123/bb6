@@ -5,50 +5,10 @@ def rank (s : Nat × Nat × Nat) : Nat := s.1+2*s.2.1+s.2.2
 
 theorem rank_mono {s t : Nat × Nat × Nat}
     (h : next s = some t) : rank s ≤ rank t := by
-  rcases s with ⟨a,k,c⟩
-  rcases c with _ | _ | _ | _ | d
-  · rcases a with _ | _ | a
-    · simp only [next, Option.some.injEq] at h
-      subst t
-      simp only [rank]
-      omega
-    · rcases k with _ | k
-      · simp only [next, Option.some.injEq] at h
-        subst t
-        simp only [rank]
-        omega
-      · simp only [next, Option.some.injEq] at h
-        subst t
-        simp only [rank]
-        omega
-    · simp only [next, Option.some.injEq] at h
-      subst t
-      simp only [rank]
-      omega
-  · simp only [next, Option.some.injEq] at h
-    subst t
-    simp only [rank]
-    omega
-  · simp [next] at h
-  · simp only [next, Option.some.injEq] at h
-    subst t
-    simp only [rank]
-    omega
-  · rcases a with _ | a
-    · dsimp [next] at h
-      by_cases hp : k % 2 = 0
-      · simp only [hp, ite_true, Option.some.injEq] at h
-        subst t
-        simp only [rank]
-        omega
-      · simp only [hp, ite_false, Option.some.injEq] at h
-        subst t
-        simp only [rank]
-        omega
-    · simp only [next, Option.some.injEq] at h
-      subst t
-      simp only [rank]
-      omega
+  -- Reuse the exact source theorem rather than maintaining a second
+  -- copy of its nine transition cases.
+  simpa [next, rank, BB6CLine.rankC] using
+    (BB6CLine.rank_mono (s := s) (t := t) h)
 
 /-- A bounded exhaustive predecessor checker, executable in Lean's kernel. -/
 def boundedCheck (B : Nat) (S : List (Nat × Nat × Nat)) : Bool :=
