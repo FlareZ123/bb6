@@ -25,6 +25,7 @@ on:
           - canonical58-raw113-delta
           - canonical57-raw112-delta
           - canonical56-raw59-graft
+          - canonical56-raw59-after-raw124
           - canonical57-raw83-delta
           - canonical58-source-crosswalk
           - canonical55-raw83-graft
@@ -37,7 +38,7 @@ on:
         default: canonical74
         required: true
       raw59_slice_run_id:
-        description: "Successful independent Raw59 relocation run ID (for canonical59-raw59-graft or canonical56-raw59-graft)"
+        description: "Successful independent Raw59 relocation run ID (for canonical59-raw59-graft or a Canonical56 Raw59 consumer)"
         type: string
         required: false
         default: ""
@@ -52,7 +53,7 @@ on:
         required: false
         default: ""
       canonical57_run_id:
-        description: "Accepted 57-residual Canonical57 Raw112-after-Raw113 run ID for the Canonical56 Raw59 graft"
+        description: "Accepted 57-residual Canonical57 run ID for a Canonical56 Raw59 graft (Raw112-first or Raw124-first)"
         type: string
         required: false
         default: ""
@@ -1795,6 +1796,61 @@ jobs:
           path: |
             /tmp/a32-canonical56-raw59/**
             /tmp/a32-canonical56-raw59.log
+          if-no-files-found: warn
+          compression-level: 0
+          retention-days: 30
+
+  canonical56_raw59_after_raw124:
+    name: Add Raw59 after accepted Canonical57-Raw124 to produce Canonical56
+    if: ${{ inputs.target == 'canonical56-raw59-after-raw124' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile Raw59 after the accepted Canonical57-Raw124 base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL57_RUN_ID: ${{ inputs.canonical57_run_id }}
+          RAW59_SLICE_RUN_ID: ${{ inputs.raw59_slice_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW59_SLICE_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py
+          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py \\
+            --work /tmp/a2-canonical56-raw59-after-raw124 \\
+            --canonical57-run-id "$CANONICAL57_RUN_ID" \\
+            --raw59-run-id "$RAW59_SLICE_RUN_ID" \\
+            2>&1 | tee /tmp/a2-canonical56-raw59-after-raw124.log
+          test -s /tmp/a2-canonical56-raw59-after-raw124/canonical56-raw59-after-raw124.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/a2-canonical56-raw59-after-raw124/canonical56-raw59-after-raw124.json").read_text())
+          assert report["remaining_residual_count"] == 56
+          assert report["raw59_consumed"] and report["raw124_consumed"] and report["raw113_removed"]
+          assert report["raw124_removed"] and report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical56-raw59-after-raw124-integrated
+          path: |
+            /tmp/a2-canonical56-raw59-after-raw124/**
+            /tmp/a2-canonical56-raw59-after-raw124.log
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
