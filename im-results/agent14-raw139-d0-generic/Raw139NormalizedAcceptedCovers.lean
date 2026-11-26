@@ -138,6 +138,12 @@ theorem rowRE_lift
 /-- The terminal champion branch is already source-certified by the accepted
     weighted TNF parent certificate; this is transported to the normalized p7
     table by exact equality. -/
+/-- The normalized local root p0 is the exact championResidual parent
+    already identified in the Canonical64 roster consumer. -/
+theorem p0_eq_championResidual :
+    sameTable p0 BB6.Agent6ChampionResidual.championResidual = true := by
+  decide
+
 theorem p7_cover : Cover (WeightedBound championScore) p7 := by
   have hChampionP7 :
       Cover (WeightedBound championScore) BB6.Agent6ChampionResidual.championP7 := by
@@ -170,6 +176,7 @@ theorem raw139_cover_after_accepted
 #print axioms acceptedRowsCover
 #print axioms rowRC_lift
 #print axioms rowRE_lift
+#print axioms p0_eq_championResidual
 #print axioms p7_cover
 #print axioms raw139_cover_after_accepted
 
