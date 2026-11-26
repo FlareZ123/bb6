@@ -12,7 +12,7 @@ permissions:
 jobs:
   proof:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.child == 'parent-all' && 360 || 60 }}
+    timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
       - uses: actions/checkout@v4
       - name: Verify exact source closure
@@ -31,7 +31,11 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           DIR=im-results/agent6-raw57-ra
-          if [[ "$CHILD" == parent-three ]]; then
+          if [[ "$CHILD" == raw56-e1-0re ]]; then
+            python im-results/agent1-raw56/prepare.py
+            DIR=im-results/agent1-raw56/generated
+            ROOT=Raw56E1REAll
+          elif [[ "$CHILD" == parent-three ]]; then
             python im-results/agent6-raw57-ra/generate.py
             for C in 0RB 0RC 1RB 1RC 1RE 0RE 0RF 1LC; do
               python im-results/agent6-raw57-ra/generate_sibling.py "$C"
@@ -77,7 +81,19 @@ jobs:
           WORKDIR=/tmp/a6-raw57-sibling
           if [[ "$CHILD" == parent-three ]]; then WORKDIR=/tmp/a1-raw57-parent-three; fi
           if [[ "$CHILD" == parent-all ]]; then WORKDIR=/tmp/a1-raw57-parent-all; fi
-          python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+          if [[ "$CHILD" == raw56-e1-0re ]]; then
+            WORKDIR=/tmp/a1-raw56-e1-0re
+            python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 \
+              --manifest "$WORKDIR/manifest.json" --label raw56-e1-0re \
+              --theorem BB6.Agent1Raw56.Raw56E1RE.all_quotient --weighted-bound 7014 \
+              --parent-table '1RB---_1RC---_0RD---_1LD1LE_---0RE_------' \
+              --artifact-name raw56-e1-0re-source-accepted \
+              --provenance-input im-results/agent1-raw56/candidates.json \
+              --provenance-input im-results/agent1-raw56/prepare.py \
+              "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+          else
+            python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+          fi
           if grep -qE 'sorryAx|native_decide' /tmp/raw57.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always() && inputs.child == 'discover-1LA'
@@ -85,3 +101,12 @@ jobs:
           name: raw57-1la-discovery
           path: im-results/agent1-raw57/generated-1LA/discovery.json
           if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: success() && inputs.child == 'raw56-e1-0re'
+        with:
+          name: raw56-e1-0re-source-accepted
+          path: |
+            /tmp/a1-raw56-e1-0re/*.olean
+            /tmp/a1-raw56-e1-0re/manifest.json
+            /tmp/raw57.log
+          if-no-files-found: error
