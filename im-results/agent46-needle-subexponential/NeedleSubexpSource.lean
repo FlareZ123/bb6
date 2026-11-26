@@ -9,17 +9,6 @@ open BB6.Agent48.SpaceNeedle
 open BB6.Agent20.SpaceNeedleGrowthScan
 open BB6.Agent20.SpaceNeedleGrowth
 
-/-- Four original-source edges satisfy the stronger cube gain. -/
-theorem original_four_step_cube_gain (d e f g h : Nat)
-    (hde : highLevelNext (.N d)=some (.N e))
-    (hef : highLevelNext (.N e)=some (.N f))
-    (hfg : highLevelNext (.N f)=some (.N g))
-    (hgh : highLevelNext (.N g)=some (.N h)) :
-    (d+2)^2≤16*(Nat.log2 (d+2)+1)*((h+2)-(d+2))^3 := by
-  exact NeedleFourStep.four_step_bitlength_gain
-    (original_edge d e hde) (original_edge e f hef)
-    (original_edge f g hfg) (original_edge g h hgh)
-
 private def rootRun (n : Nat) : Option HighLevelState :=
   runFrom (some highLevelStart) n
 
@@ -81,17 +70,15 @@ private theorem original_root_prefix (d n : Nat)
   have hh : NeedleSubexp.Edge (p+2) (e+2) := original_edge p e hs
   simpa [counterAt_spec i p hp, counterAt_spec (i+1) e he] using hh
 
-/-- Every successful genuine blank-root trace reaching d has length
-O((d log d)^(1/3)) in original high-level transitions. -/
+/-- Subexponential high-level transition cutoff for a genuine blank-root visit. -/
 theorem original_iterate_subexp_bound (d n : Nat)
     (hr : Nat.iterate (fun z : Option HighLevelState => z.bind highLevelNext)
       n (some highLevelStart)=some (.N d)) :
     n<NeedleSubexp.targetFuel (d+2) := by
   have hrr : rootRun n=some (.N d) := by rwa [rootRun_iter]
   have hp := original_root_prefix d n hrr
-  have hb : 1≤counterAt 0+2 := by omega
-  exact NeedleFourStep.prefix_cube_fuel (fun i => counterAt i+2) n d hp hb
-    (by rw [counterAt_spec n d hrr])
+  exact NeedleSubexp.target_fuel_bound (fun i => counterAt i+2) n (d+2) hp
+    (by omega) (by rw [counterAt_spec n d hrr])
 
 /-- Exact executable single-pass root membership with the stronger bound. -/
 def subexpScan (d : Nat) : Bool :=
