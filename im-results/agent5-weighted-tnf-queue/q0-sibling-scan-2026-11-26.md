@@ -30,3 +30,11 @@ These are empirical reachability observations, not infinite-run proofs. The next
 - Roots 39, 49, and 51: 16, 21, and 31 open leaves respectively.
 
 The search itself completed successfully in CI. The Node-only workflow target initially had an unrelated final-assumptions step failure; a subsequent run succeeded and emitted the full JSON artifact.
+
+## Local-neighborhood invariant experiment
+
+A separate 1,000,000-step trace recorded the following local implications on every observed visit:
+- Root 33: in state B reading 0, the cell immediately to the right was 0 on all 4,000 visits; in state F reading 1, the cell immediately to the left was 0 on all 3,911 visits. These are exactly the two incoming transition cases that enter C, so both observed paths enter C on 0.
+- Root 46: in state C reading 1, the cell immediately to the right was 1 on all 99,540 visits. This is the transition that enters F, so all observed F visits read 1.
+
+A finite-radius abstraction that forgets the tape outside a window around the head was also explored for radii 1 through 6. It still admits abstract paths to the missing transition for both machines. Thus a simple bounded local-window invariant is too weak; a proof likely needs a global regular-language/tape-shape invariant or an explicit macro-family.
