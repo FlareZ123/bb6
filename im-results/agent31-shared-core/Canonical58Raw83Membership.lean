@@ -23,7 +23,7 @@ theorem p83_count58 :
     (BB6.Agent31Canonical58Raw113Graft.roster58.filter
       (fun e => sameTable e.2 p83)).length = 1 := by decide
 
-theorem p83_distinct_from_six :
+theorem p83_distinct_from_p113 :
     ∀ p ∈ [p113], sameTable p p83 = false := by decide
 
 #print axioms p83_root
