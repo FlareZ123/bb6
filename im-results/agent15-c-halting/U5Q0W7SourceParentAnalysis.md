@@ -20,7 +20,7 @@ Put (S=P_1+P_2=6919+14364z) and (T=S+1=6920+14364z=4(1730+3591z)). The original-
   [
   Q_z=(3457+7182z,;3447+7161z).
   ]
-- (z\equiv0\pmod4): (v_2(T)=3), again only (n=0); the existing `OddSevenSliver.lean` theorem gives the same (Q_z).
+- (z\equiv0\pmod4): (v_2(T)=3), again only (n=0); the existing OddSevenSliver.lean theorem gives the same (Q_z). The sublift (z=12+64v) is now blank-unreachable by the two exact even-right inverses detailed below; the other z-divisible-by-four lifts remain open.
 - (z\equiv2\pmod4): (v_2(T)\ge4), and there are additional even-depth high parents. This is the unresolved parent fan.
 
 For (z\equiv2\pmod4), write (z=2+4u) and (W=2228+3591u), so (T=16W) and (P_1+2P_2=53366+86016u). Every high parent is indexed by an even depth (n=2q) with
@@ -55,14 +55,27 @@ R_r=(89508+114744r,;89442+114660r),
 [
 S_r=(178948+229404r,;44720+57330r).
 ]
-The first edge uses `odd_seven_parent_iff`; the second uses the odd/odd valuation-two inverse; the third uses the complete even/even parent fan and the fact
-(R_{r,1}+R_{r,2}=178950+229404r\equiv6) or (2\pmod8).
-
-The remaining target (S_r) has
+The first edge uses "odd_seven_parent_iff"; the second uses the odd/odd valuation-two inverse; the third uses the exact even-right predecessor theorem. The sum of (R_r) is
 [
-S_{r,1}+S_{r,2}=223668+286734r,
+R_{r,1}+R_{r,2}=178950+229404r,
 ]
-which is divisible by 8 exactly for (r\equiv2\pmod4). No conclusion is claimed for its remaining fan. This lift is only one of the sixteen lifts of (w\equiv7\pmod8).
+which is (6,2,6,2) modulo 8 as (r) ranges over residues (0,1,2,3) modulo 4. It is never 0 or 7, so the even-right inverse applies for every r.
+
+The remaining target (S_r) has even right coordinate and sum
+[
+S_{r,1}+S_{r,2}=223668+286734r.
+]
+Its sum is 4,2,0,6 modulo 8 for (r=0,1,2,3) modulo 4. The (r=0) branch is now closed: the even-right inverse forces
+[
+T_r=(223666+286734r,;22359+28665r).
+]
+For (r=4v), this is
+[
+T_{4v}=(223666+1146936v,;22359+114660v),
+]
+whose right coordinate is odd and whose sum is (1) modulo 4. The source-certified "blank_no_odd_sum_one" excludes it. This is exactly the sublift (z=12+64v), formalized as a source-composition draft in "U5Q0W7Z4U3Mod16.lean". That file is not locally compiled, original-source CI checked, or axiom-audited.
+
+The other S_r branches remain open. For (r=2\pmod4), the sum is 0 modulo 8 and the complete even/even parent fan must be used. For (r=1\pmod4), the next forced target has even right coordinate and sum (1+7r) modulo 8, requiring a further residue split. For (r=3\pmod4), the next target likewise has even right coordinate, with sum 2 or 6 modulo 8, so further even-right inverses are available but not yet closed. This lift is only one of the sixteen lifts of (w\equiv7\pmod8).
 
 ## Next mathematical task
 
@@ -208,46 +221,3 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 The additional (w\equiv439\pmod{512}) closure is a deeper lift of
 the (w\equiv55\pmod{128}) row. This table is a routing aid, not a
 claim that the remaining rows are reachable or unreachable.
-
-## 2026-11-26: z=12 (mod 64) sublift in the z divisible-by-four sector
-
-Set \(u=3+16v\) and \(z=4u=12+64v\). The q=0 target and its forced parents are
-\[
-\begin{aligned}
-P_z&=(90168+462336v,\;89119+456960v),\\
-Q_z&=(89641+459648v,\;89379+458304v),\\
-R_0&=(89508+458976v,\;89442+458640v).
-\end{aligned}
-\]
-The exact "odd_seven_parent_iff" theorem forces \(P_z\to Q_z\), since
-\((P_{z,1}+P_{z,2}+1)\equiv8\pmod{16}\). The exact "oddodd_parent_iff"
-then forces \(Q_z\to R_0\), since \(Q_z\) is odd/odd and its sum is
-\(4\bmod8\).
-
-The right coordinate of \(R_0\) is even and its sum is
-\[
-R_{0,1}+R_{0,2}=178950+917616v\equiv6\pmod8.
-\]
-The source-certified "blank_reach_iff_even_right" therefore forces
-\[
-R_1=(178948+917616v,\;44720+229320v).
-\]
-Its right coordinate is again even and its sum is
-\[
-R_{1,1}+R_{1,2}=223668+1146936v\equiv4\pmod8.
-\]
-A second application forces
-\[
-R_2=(223666+1146936v,\;22359+114660v).
-\]
-Here the right coordinate is odd and
-\[
-R_{2,1}+R_{2,2}=246025+1261596v\equiv1\pmod4.
-\]
-The exact "blank_no_odd_sum_one" invariant excludes \(R_2\). Hence
-\(P_z\) is blank-unreachable for every \(v\ge0\).
-
-The source composition is drafted in
-"U5Q0W7Z4U3Mod16.lean". It is a target-level sublift exclusion only:
-it does not close all \(z\equiv0\pmod4\), and the composed Lean file
-has not been locally compiled, original-source CI checked, or axiom-audited.
