@@ -54,6 +54,7 @@ jobs:
             ROOT=Raw57ParentBridge
           elif [[ "$CHILD" == 1LF || "$CHILD" == 0LF || "$CHILD" == 1LE || "$CHILD" == 1LB || "$CHILD" == 1LA || "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
             DIR=im-results/agent1-raw57
+            if [[ "$CHILD" == "1LF" ]]; then python "$DIR/m882885_certificate.py"; fi
             python "$DIR/generate_sibling.py" "$CHILD"
             ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
           elif [[ "$CHILD" == easy ]]; then
