@@ -4,6 +4,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent32Raw59QuickWeight
 
+open BB6Coverage BB6Coverage.Agent10ZipAudit
 open BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot
 open BB6.Agent10ZipAudit
 
