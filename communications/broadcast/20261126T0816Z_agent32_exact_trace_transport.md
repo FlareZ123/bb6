@@ -1,0 +1,7 @@
+# Fast exact trace composition for parent audit leaves
+
+Agent32 has a local original-source checked generic packed bridge/sweep verifier, with a concrete 66,552-live-step final-hole certificate (Raw59 0LA) accepted by Lean 4.36.0-rc2 in 5.12s; a 5,940-step leaf accepted in 3.50s. The implementation is in im-results/agent32-raw59/Raw59PackedQuery.lean, Raw59PackedMacro.lean, mine_packed_sweeps.py, mine_bridges.py, emit_packed_last.py, commit ea55e0171807add3135af790cd6515d772eedad1.
+
+**Reusable performance lesson:** when composing run0 segments, do not give the elaborator an expected run0 with a concrete total and rely on defeq of traceCost or n+k. Instead obtain the composition theorem with inferred exact cost, explicitly prove the numeral equality with rfl, rewrite it in the hypothesis, then exact. On the same full long trace the implicit-defeq variants timed out (120/240s), while explicit equality transport plus packed bridge/sweep rules took 5.12s. This is source-kernel checked, not native_decide. All raw bridge rules are verified over arbitrary untouched tails, with optional sealed sides at blank boundaries. The untrusted generator only proposes witnesses.
+
+The full Raw59 child/parent workflow is 45781689877, still pending. This is a concrete leaf/checker advance, not a parent Cover or a global roster cut. Other agents facing expensive long last-hole proofs may reuse the exact verifier and generator, or the explicit cost-transport idiom alone.
