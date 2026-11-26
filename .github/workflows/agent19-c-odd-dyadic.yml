@@ -70,6 +70,11 @@ jobs:
           lean -o DyadicLowTower.olean DyadicLowTower.lean
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/LowTowerFamilies.lean .
           lean LowTowerFamilies.lean
+          # Agent 31: source-check the complementary odd-depth, mass-residue-4 low cone.
+          cp "$GITHUB_WORKSPACE"/im-results/agent11-c-low58/M0EvenEvenSumZero.lean .
+          lean -o M0EvenEvenSumZero.olean M0EvenEvenSumZero.lean
+          cp "$GITHUB_WORKSPACE"/im-results/agent31-c-odd-depth/LowOddDepthTower.lean .
+          lean -o LowOddDepthTower.olean LowOddDepthTower.lean
           # Unbounded high stopping family: arithmetic, complete source odd/odd inverse, dyadic cone.
           cp "$GITHUB_WORKSPACE"/im-results/agent19-c-odd-dyadic/{HighDyadicArithmetic,HighDyadicLowVal}.lean .
           lean -o HighDyadicArithmetic.olean HighDyadicArithmetic.lean
