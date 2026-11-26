@@ -51,6 +51,20 @@ def main():
             (ROOT/(module+".lean")).write_bytes(gzip.decompress(base64.b64decode(packed.read_bytes().strip(),validate=True)))
         if "import "+module not in pumpcode:
             pumpcode.insert(0,"import "+module)
+    if SPEC.get("ngram"):
+        nroot=ROOT.parent/"agent47-raw111-cut"
+        sys.path.insert(0,str(nroot))
+        import emit_sparse
+        exe=target/"ngram_sparse"
+        subprocess.run(["g++","-std=c++17","-O3",str(nroot/"ngram_sparse.cpp"),"-o",str(exe)],check=True)
+        for i,counts in SPEC["ngram"].items():
+            i=int(i); k,*expected=counts
+            res=subprocess.check_output([str(exe),str(k)],input=f"{i} {opens[i]}\n",text=True)
+            j,data=res.strip().split(maxsplit=1);assert int(j)==i
+            module,certns=emit_sparse.emit(ROOT,i,opens[i],data,width=k,expected=expected,module_name=f"{ID}Sparse{i}")
+            assert i not in pumps
+            pumps[i]=certns
+            pumpcode.insert(0,"import "+module)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(ID+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent1{ID}"
