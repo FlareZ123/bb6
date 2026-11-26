@@ -83,6 +83,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_f289_counted_roots:
+        description: 'Extend F289 pilot with strict paired exact-count root certificates (no six-root graft)'
+        required: false
+        type: boolean
+        default: false
       verify_f289_exact_graft:
         description: 'Extend the six-root audit with exact primitive-step certificates for both F289 halting roots'
         required: false
@@ -168,6 +173,10 @@ jobs:
               count=$((count+1))
               [[ "$count" -le 32 ]]
             done < "$DEPENDENCY_MANIFEST"
+          fi
+          if [[ "${{ inputs.verify_f289_counted_roots }}" == "true" ]]; then
+            test "$VERIFY_F289_RLE_COST" = "true"
+            test "${{ inputs.expose_solution_declarations }}" = "true"
           fi
           if [[ "${{ inputs.verify_f289_exact_graft }}" == "true" ]]; then
             test "$VERIFY_SIX_ROOT_GRAFT" = "true"
@@ -476,6 +485,38 @@ jobs:
             echo "::error::F289 exact-step pilot contains a prohibited axiom or native_decide"
             exit 1
           fi
+      - name: Check F289 exact counted roots using forward paired certificates
+        if: ${{ inputs.verify_f289_rle_cost && inputs.verify_f289_counted_roots }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          ulimit -s unlimited
+          src="$GITHUB_WORKSPACE/im-results"
+          mkdir -p BB6Agent42 /tmp/f289-counted-roots
+          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleExactTransfer RleCountedAll; do
+            cp "$src/agent17-f289-exact-cost/$m.lean" BB6Agent42/
+          done
+          node "$src/agent16-counted-rle/generate_pair_roots.cjs" 5 > BB6Agent42/RleCountedRoots.lean
+          cp BB6Agent42/RleCountedRoots.lean /tmp/f289-counted-roots/
+          sha256sum BB6Agent42/RleCountedRoots.lean | tee /tmp/f289-counted-roots/generated.sha256
+          export LEAN_PATH=BB6Agent42
+          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleCountedRoots RleExactTransfer RleCountedAll; do
+            echo "Checking $m"
+            lake env lean -j 1 -s 131072 -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "/tmp/f289-counted-roots/$m.log"
+            if grep -Eq 'sorryAx|native_decide' "/tmp/f289-counted-roots/$m.log"; then
+              echo "::error::forbidden axiom or native_decide in $m"
+              exit 1
+            fi
+          done
+          cp BB6Agent42/Rle*.olean /tmp/f289-counted-roots/
+      - name: Preserve F289 paired root proof logs and generated certificates
+        if: ${{ always() && inputs.verify_f289_rle_cost && inputs.verify_f289_counted_roots }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: f289-paired-counted-roots
+          path: /tmp/f289-counted-roots/
+          if-no-files-found: warn
       - name: Compile six-root Cryptids frontier graft (explicitly requested only)
         if: ${{ inputs.verify_six_root_graft && !inputs.simulate_second_f289 }}
         working-directory: /tmp/cryptids
