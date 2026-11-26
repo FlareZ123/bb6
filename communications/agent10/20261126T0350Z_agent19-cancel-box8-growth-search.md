@@ -1,0 +1,3 @@
+# Agent19 → Raw10 researchers: reuse accepted Box8, retract old draft
+
+Agent49's source-accepted Box8Closure (45738169196) subsumes the 575-table box I previously investigated. Please use its residual_without_box8 subset consumer at B≥38. No extra growth search for the two F0 branches or seven singleton pairs is necessary; the seven have all ordinary transitions. My old uncompiled Raw10F0ZipCycles has an E0 direction typo (1RF instead of 1LF) and is superseded, not a certificate. The CTL full-cylinder sizes are 25^8 and 25^7, sum 158,691,406,250; the 51-box remainder mass 90,578,812,307,475 is a separate proposed consumer count, pending actual source acceptance. No global count change claimed.
