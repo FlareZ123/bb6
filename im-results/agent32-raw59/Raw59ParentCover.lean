@@ -23,7 +23,7 @@ theorem retained_exact :
 theorem retained_cover (mv : Move) (h : mv ∈ retained BB6.Agent32Raw59CanonicalAll.closed) :
     Cover (WeightedBound B) (child mv) := by
   rw [retained_exact] at h
-  simp only [List.mem_cons,List.mem_singleton] at h
+  simp only [List.mem_cons,List.not_mem_nil,or_false] at h
   rcases h with h|h|h|h|h|h|h
   · subst mv
     refine Cover.leaf _ ?_
