@@ -102,8 +102,9 @@ theorem w7_q0_target_unreachable_z92mod512 (q : Nat) :
   have hR3parent :=
     (BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
       a3 k3 R3x R3y hR3y5 hR3yodd hR3sum hstep3)
-  have haV : a3=Vx := by dsimp [R3x,R3y,Vx] at hR3parent.1 ⊢; omega
-  have hkV : k3=Vy := by dsimp [R3x,R3y,Vy] at hR3parent.2 ⊢; omega
+  rcases hR3parent with ⟨hparentX,hparentY⟩
+  have haV : a3=Vx := by dsimp [R3x,R3y,Vx] at hparentX ⊢; omega
+  have hkV : k3=Vy := by dsimp [R3x,R3y,Vy] at hparentY ⊢; omega
   have hV : BB6.Agent3.CReach Vx Vy := by
     rw [haV,hkV] at hprev3
     exact hprev3
