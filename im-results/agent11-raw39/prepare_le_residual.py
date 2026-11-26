@@ -35,6 +35,10 @@ def custom_le(branch,out):
         assert hashlib.sha256(source).hexdigest()=='d1544eb03d92ef5cd18d5761fa4a02290d3d787167cdebae1bc9f6b529555248'
         (out/'Raw391LEPairTriple.lean').write_bytes(source)
         add('Raw391LEPairTriple',[18789,18790,20550],['.a','.b','.c'],packed=True)
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEBlockRuns.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='3cfb05edb3242a7eae387db247eaf12428dc0f9bb0ed1e72a247b48a8269be44'
+        (out/'Raw391LEBlockRuns.lean').write_bytes(source)
+        add('Raw391LEBlockRuns',[6270,16538],['.a','.b'],packed=True)
         unpack(out)
         source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEFiveSweep.lean.xz.b64').read_text()))
         assert hashlib.sha256(source).hexdigest()=='c69e36b505410b8d7d211a03c4befe1156cf3aada5c7bc7dbc4f65d68b0fb382'
