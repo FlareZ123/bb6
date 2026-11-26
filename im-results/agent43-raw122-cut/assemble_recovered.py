@@ -101,7 +101,7 @@ for p in prov:
 prov=filtered
 if checkout:
     subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
-out/"source-ref.txt".write_text(source_ref+"\\n",encoding="utf-8")
+(out/"source-ref.txt").write_text(source_ref+"\\n",encoding="utf-8")
 prov.append(str(out/"source-ref.txt"))
 
 def manifest_command(path: Path, label: str) -> list[str]:
