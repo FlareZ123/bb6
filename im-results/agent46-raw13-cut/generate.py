@@ -486,7 +486,7 @@ theorem checked{i:02} :
 """)
     terms = ",".join(f"kid{i:02}" if k is not None else ".unresolved" for i,k in enumerate(t[3]))
     cases = "\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(4),range(2),range(2)))
-    write("Agent46Raw13Data",["HardRootD3Bound"]+names,f"""
+    write("Agent46Raw13Data",names,f"""
 def kids : Move → Cut := byCutMove [{terms}]
 theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 3) :
     check 21269 (child mv) (nextCut 3 mv) (kids mv) = true := by
