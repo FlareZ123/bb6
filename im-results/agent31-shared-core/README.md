@@ -1,55 +1,46 @@
 # Canonical TNF shared-core and roster integration
 
-This directory holds intermediate, source-connected proof interfaces and the machinery for composing independently audited weighted-TNF parent Covers. **Nothing in this directory establishes the exact BB(6) value.** Every current quotient theorem still leaves residual Covers and an attaining blank-start witness explicit.
+This directory contains intermediate proof interfaces and strict import-closure integration tools for the six-state weighted-TNF quotient. **No current result here determines exact BB(6).** The strongest accepted conditional frontier is now the 64-residual Canonical64 Raw120 integration; 64 Covers and the champion witness remain explicit.
 
 ## Current accepted mathematical boundary — 26 November 2026
 
-### Canonical76 → Canonical68
+### Canonical76 → Canonical68 → Canonical65 → Canonical64
 
-The source-accepted two-parent reduction gives a 76-entry quotient roster after the Raw107 and Raw114 cuts; see [the Canonical76 result](../../results/2026-11-25-canonical76-two-parent-reduction-agent31.md).
+- **Canonical68:** the source-accepted E1 interface consumes eight parent Covers and reduces 76 → 68. The conditional source audit passed in [run 45725315357](https://github.com/FlareZ123/bb6/actions/runs/45725315357). The full eight-parent integrated closure subsequently passed with the reachable-object linker in [run 45751870097](https://github.com/FlareZ123/bb6/actions/runs/45751870097).
+- **Canonical65:** the three additional accepted parent Covers Raw71, Raw77 and Raw81 are consumed against Canonical68, leaving 65. The eleven-parent integrated base is [run 45732489302](https://github.com/FlareZ123/bb6/actions/runs/45732489302), artifact 15078085872.
+- **Canonical64:** the Raw120 parent has exact weighted threshold 224,707 and is consumed against the integrated Canonical65 roster. The final integrated consumer passed in [run 45750164590](https://github.com/FlareZ123/bb6/actions/runs/45750164590), artifact 15085029091, SHA-256 `bb4fa3c190ab2a67e3f7c17f8e1c0f07c2215b282451a361501f8ff6c678d55b`. See [the publishable Canonical64 result](../../results/2026-11-26-canonical64-raw120-integrated-agent3.md). The theorem leaves exactly 64 quotient Covers at the champion score and an attaining witness as explicit obligations.
 
-The stronger accepted E1 interface is the **68-residual Canonical68 reduction**. It consumes eight individually source-accepted parent Covers in the common E1 sibling family and proves the exact roster membership/count chain 76 → 74 → 68. The combined Canonical74 + Canonical68 conditional source audit passed in [run 45725315357](https://github.com/FlareZ123/bb6/actions/runs/45725315357). The mathematical statement and exact acceptance scope are in [the Canonical68 result dossier](../../results/2026-11-26-canonical68-E1-parent-reduction-agent6.md).
+This is a conditional reduction, not a universal upper bound. The common weighted floor is 6,766,859; it is not itself the champion score.
 
-The important boundary is conditional: the eight parent Cover contracts are explicit premises of the E1 interface, and the 68 retained quotient Covers at the champion score remain open. The separately source-accepted parent certificates are not yet one monolithically accepted integrated theorem. Do not report Canonical68 as a universal upper bound.
+## Current next cut: Raw112 → Canonical63
 
-### Proposed Canonical67 extension — not yet accepted as a complete cut
+Raw112 is the next useful E1 parent candidate. Its parent Cover at weighted bound 100000 is not yet source-accepted. Run [45742063996](https://github.com/FlareZ123/bb6/actions/runs/45742063996) compiled the shared core and four of eight shards; shards 0, 1, 4 and 5 ended with runner shutdown / exit 143 and no Lean theorem diagnostic. The failure is infrastructural, not a rejected proof.
 
-The file ../agent47-raw112-cut/Canonical67E1ParentGraft.lean adds Raw112 to the 68 roster and has a source-audited *conditional* interface in [run 45743917802](https://github.com/FlareZ123/bb6/actions/runs/45743917802). It requires the complete Raw112 parent Cover at weighted bound 100000 in addition to the eight Canonical68 parent contracts. The Raw112 parent Cover itself is **not yet accepted**.
+The existing Raw112 workflow was adjusted to matrix max-parallel 2, per-shard Lean jobs 2 and a 90-minute shard timeout. The reduced-concurrency rerun is [45751911115](https://github.com/FlareZ123/bb6/actions/runs/45751911115); it is not yet complete.
 
-The latest full Raw112 attempt, [run 45742063996](https://github.com/FlareZ123/bb6/actions/runs/45742063996), compiled the shared core and four of eight shards successfully. Shards 0, 1, 4 and 5 ended with runner shutdown / exit 143; no Lean theorem diagnostic preceded those terminations. This is an infrastructure interruption, not evidence against the Cover theorem. The next attempt should reduce matrix concurrency and per-shard Lean jobs, reusing successful shard objects only when their source/compiler manifests match exactly.
+The direct integrated consumer is now **Canonical63**, not the older 67-residual branch:
 
-The file ../agent47-raw112-cut/Canonical67Integrated.lean now builds its 67-entry residual roster directly from Canonical68Integrated.roster68. This avoids conflating the batch-filter roster used by the integrated Canonical68 theorem with the sequential graftRoster list used by the conditional E1 interface. The source correction and the integrated consumer are not yet CI-accepted.
+- `Canonical63Raw112Integrated.lean` removes the Raw112 parent directly from the exact `Canonical64Raw120Integrated.roster64`, proves Raw112 membership/count and a 63-entry residual roster, and composes `sound64_integrated` with the Raw112 parent Cover.
+- `assemble_canonical63.py` downloads the pinned Canonical64 proof-closure artifact (run 45750164590, artifact 15085029091) and the named Raw112 parent artifact from a supplied successful producer run. It checks the producer, digest and Raw112 manifest, then links only import-reachable objects and rejects incompatible duplicate kernel declarations.
+- The existing manual workflow `.github/workflows/agent31-canonical71-raw109.yml` now has target `canonical63-integrated`. It compiles the integrated consumer with the standard axiom allowlist and rejects `sorryAx` / `native_decide`.
 
-## Integrated proof-closure gate
+The Canonical63 source and integration path are **not yet CI-accepted**. Do not report 63 as the accepted frontier until Raw112 itself passes and the integrated Canonical63 target passes.
 
-assemble_canonical68.py assembles the eight individually accepted parent proof closures, selects only the import objects reachable from the named roots, and compares differing duplicate .olean files by their kernel declaration/import data. It does not weaken the gate when a dependency collision is found.
+## Earlier Canonical67 branch
 
-The existing manual workflow .github/workflows/agent31-canonical71-raw109.yml now has a canonical67-integrated target. It first requires the conditional Canonical67 source-audit job to succeed, then:
-1. reconstructs the accepted Canonical68 integrated closure;
-2. retrieves the named raw112-closed-parent-cover artifact from the supplied successful producer run;
-3. checks the artifact digest, producer run, source revision, theorem/table/bound manifest, Lean version and compiler hash;
-4. adds the Raw112 closure to the exact reachable-object linker and rejects incompatible duplicate kernel declarations;
-5. compiles the Canonical74, Canonical68 E1, Canonical67 E1 and integrated Canonical67 consumers in dependency order;
-6. enforces the standard axiom allowlist and rejects sorryAx / native_decide for the final sound67_integrated and exact_at_target67 theorems.
+The conditional Canonical67 E1 interface was source-audited in [run 45743917802](https://github.com/FlareZ123/bb6/actions/runs/45743917802), but the complete Raw112 parent Cover was pending. A separate integrated Canonical67 module was corrected to build its residual roster from the exact integrated Canonical68 base, avoiding a mismatch between the sequential E1 graft list and the batch-filter roster. This branch is now superseded by the stronger direct Canonical64 → Canonical63 composition; preserve it as an intermediate interface, not the current integration target.
 
-The integration gate has not yet passed. An earlier attempt, [run 45731027733](https://github.com/FlareZ123/bb6/actions/runs/45731027733), failed in the integrated job; therefore neither the eight-parent integrated closure nor the Raw112-to-67 consumer should be described as source-accepted. The conditional 68 interface remains the accepted public baseline until the complete Raw112 Cover and the integrated consumer each pass their own gate.
+## Strict integration infrastructure
 
-## Core files
+- `Canonical68StableBatch.lean` — multi-parent filtering and quotient-soundness interface.
+- `Canonical68Integrated.lean` — integrated eight-parent Canonical68 theorem.
+- `Canonical65AfterThree.lean` / `Canonical65Integrated.lean` — Raw71, Raw77 and Raw81 composition.
+- `assemble_canonical68.py` — pinned parent artifacts, reachable import closure and kernel declaration comparison; its current strict linker fixed the earlier irrelevant-all-artifact `SweepData.olean` collision, as confirmed by run 45751870097.
+- `assemble_canonical63.py` — direct Raw112 integration on the accepted Canonical64 artifact.
+- `WalkImportClosure.lean` and the shared `CompareKernelImports.lean` helper — transitive import discovery and duplicate kernel-data comparison.
 
-- CanonicalTwoParentRosterOnly.lean — champion-independent 76-residual base.
-- Canonical68StableBatch.lean — generic multi-parent filtering and quotient-soundness interface.
-- Canonical74Raw109Raw123Graft.lean — conditional 76 → 74 parent graft.
-- Canonical68Integrated.lean — consumer of the eight individually accepted Covers; integrated acceptance remains pending.
-- ../agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean — conditional 68-residual E1 interface.
-- ../agent47-raw112-cut/Canonical67E1ParentGraft.lean — conditional 67-residual E1 interface.
-- ../agent47-raw112-cut/Canonical67Integrated.lean — integrated Raw112 consumer, with roster construction tied to the exact integrated 68 base.
-- WalkImportClosure.lean and assemble_canonical68.py — strict reachable-object selection, duplicate kernel-data comparison, and reproducible integration manifests.
-- ../agent31-three-hole-tnf/RightFrame.lean — generic finite-run right-suffix framing lemma, source-compiled in CI.
+The earlier long execution notes are preserved in [HISTORY-before-2026-11-26.md](HISTORY-before-2026-11-26.md); the immediately superseded 68-residual status snapshot is in [HISTORY-2026-11-26T0353Z.md](HISTORY-2026-11-26T0353Z.md).
 
 ## Remaining mathematical obligation
 
-The immediate roster-level obligation is to establish the Raw112 parent Cover and accept the integrated 67 consumer. Even after that, 67 quotient representatives remain. Exact BB(6) still requires a score-bound Cover for every retained representative at the champion score, composed with the already source-certified champion witness. No universal upper bound or exact BB(6) value follows from the current work.
-
----
-
-Historical execution attempts, superseded roster layers and earlier pending-run notes are preserved in [HISTORY-before-2026-11-26.md](HISTORY-before-2026-11-26.md). The historical record is not a current status source.
+If Raw112 and the integrated Canonical63 consumer pass, the next frontier will contain 63 retained quotient representatives. Each still needs a Cover at the target champion score, and the attaining blank-start witness must be composed with the universal argument. No exact BB(6) value or universal upper bound has been established.
