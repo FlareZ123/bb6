@@ -229,6 +229,17 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
   simp only [Bool.and_eq_true]
   exact ⟨hq, allMoves_of _ hk⟩
 '''
+    packed={}
+    if upgrade and raw=='0LA':
+        from emit_packed_last import emit_certificate, MIN_STEPS
+        for i,code in enumerate(opens):
+            if code not in late or late[code][0]<MIN_STEPS:continue
+            n,s=late[code]
+            module=f'{prefix}Packed{i}'
+            source,table,proof=emit_certificate(module,code,n,s,B)
+            (folder/(module+'.lean')).write_text(source)
+            packed[code]=(table,proof)
+            imports.append(module)
     emit(prefix+'Base',imports,base)
     stats=Counter()
     def size(t):
@@ -255,9 +266,20 @@ theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move →
         assert tag=='split';n,s,kids=v;assert len(kids)==24
         return f'.split {n} {slot(s)} (byPartialMove [\n'+',\n'.join(map(render,kids))+'])'
     def contains_special(t):
-        return special is not None and (t[0]=='open' and t[1]==special or
+        return (t[0]=='open' and (t[1] in packed or t[1]==special) or
             t[0]=='split' and any(map(contains_special,t[3])))
     def compose(pname,name,t):
+        if t[0]=='open' and t[1] in packed:
+            code=render(t)
+            table,proof=packed[t[1]]
+            n,s=late[t[1]]
+            return f'''def t_{name} : PartialAudit := {code}
+theorem c_{name} : partialCheck {B} {pname} t_{name} = true := by
+  change partialCheck {B} {pname} (.closed (.last {n} {slot(s)})) = true
+  have he : {pname} = {table} := tableOK_sound _ _ (by decide)
+  rw [he]
+  exact {proof}
+'''
         if t[0]=='open' and t[1]==special:
             # Do not unfold four million primitive steps in partialCheck.
             code=render(t)
