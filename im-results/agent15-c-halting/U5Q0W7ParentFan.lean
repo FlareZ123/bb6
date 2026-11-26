@@ -38,7 +38,6 @@ theorem w7_z2_parent_fan (u a k : Nat)
     · simp [BB6.Agent46.sectionPreimageAll,ha0,hk0] at hpre
     · by_cases hk1 : k=1
       · simp [BB6.Agent46.sectionPreimageAll,ha0,hk0,hk1] at hpre
-        omega
       · have hcase : 4≤y ∧ ∃ n : Nat,
             x+y=2^n*8 ∧ (2*k+1)+8+3*n=x+2*y := by
           simpa [BB6.Agent46.sectionPreimageAll,ha0,hk0,hk1] using hpre
@@ -76,7 +75,6 @@ theorem w7_z2_parent_fan (u a k : Nat)
                 have hscale : 2^(n+2)*4=16*W := by
                   have hp : 2^(n+2)=2^n*4 := by
                     rw [Nat.pow_add]
-                    simp
                   calc
                     2^(n+2)*4 = (2^n*4)*4 := by rw [hp]
                     _ = 2^n*16 := by ring
@@ -184,7 +182,11 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
     · have hn4 : 4≤n := by omega
       have hpow : 2^5∣2^(n+1) := by
         exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=n+1) (by omega)
-      have hdiv : 32∣2^(n+1)*(a+3) := dvd_mul_of_dvd_left hpow (a+3)
+      have hdiv : 32∣2^(n+1)*(a+3) := by
+        rcases hpow with ⟨q,hq⟩
+        refine ⟨q*(a+3),?_⟩
+        rw [hq]
+        ac_rfl
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
