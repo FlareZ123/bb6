@@ -29,6 +29,16 @@ def digest(path):
 def build(source, exe, std="c++20"):
     subprocess.run(["g++", "-O3", "-std=" + std, str(source), "-o", str(exe)], check=True)
 
+def validate_tree(tree):
+    # Agent7's C++ classifier serializes cycle direction as integer 0/1.
+    # The Lean Audit constructor expects Bool, so keep this representation
+    # contract explicit before the canonical emitter translates it.
+    if tree[0] == "cycle":
+        assert type(tree[3]) is int and tree[3] in (0, 1), tree
+    elif tree[0] == "split":
+        for child in tree[3]:
+            validate_tree(child)
+
 def census(tree):
     c = Counter([tree[0]])
     if tree[0] == "split":
@@ -51,6 +61,7 @@ def run():
         (tmp / "raw.json").rename(tmp / "tree.json")
         rows = (tmp / "open.txt").read_text().splitlines()
         tree = json.loads((tmp / "tree.json").read_text())
+        validate_tree(tree)
         assert census(tree) == Counter(spec["counts"])
         assert len(rows) == len(set(rows)) == spec["counts"]["open"]
         assert tree[:3] == ["split", 10, 8]
@@ -124,9 +135,9 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
             imports.append(name)
             proven[rows[i]] = ns
         (tmp / "proven.txt").write_text("".join(f"{row} {ns}\n" for row, ns in proven.items()))
-        # Reuse the shared modular canonical emitter unchanged except for
-        # hexadecimal DFA labels and a distinct namespace. No checker semantics
-        # are modified. The original helper assumes decimal-only DFA labels.
+        # Reuse the shared modular canonical emitter with two input-format
+        # adapters: hexadecimal DFA labels, and C++ cycle directions (0/1)
+        # serialized as Lean Bool literals. No checker semantics are modified.
         helper = tmp / "helper"
         helper.mkdir()
         shared = IM / "agent19-raw40-cut"
@@ -135,6 +146,9 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
             if name == "certify_shards.py":
                 assert "D=list(map(int,code[1:]))" in text
                 text = text.replace("D=list(map(int,code[1:]))", "D=[int(x,16) for x in code[1:]]")
+            if name == "certify_canonical.py":
+                assert "str(t[3]).lower()" in text
+                text = text.replace("str(t[3]).lower()", "str(bool(t[3])).lower()")
             text = text.replace("BB6.Agent19Raw40.{mod}", "BB6.Agent1Raw56.{mod}")
             (helper / name).write_text(text)
         env = os.environ.copy()
