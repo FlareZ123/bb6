@@ -1,0 +1,50 @@
+{
+  "parent": "1RB---_1RC---_0RD0RB_1LD1LC_------_------",
+  "cut": 4,
+  "bound": 157,
+  "canonical_open_sha256": "40e867fa1aef1e31a3f4aac1bf1e722c74cc6e91115702fdc5eaa37e483eeac4",
+  "raw_open_sha256": "70fb6c7f921ccb53d585a45b7eda2774deb8d24c164d4562633b123b8ab1af92",
+  "stats": {
+    "cycle": 81922,
+    "last": 14544,
+    "split": 4214,
+    "open": 441
+  },
+  "bank": [
+    "-",
+    "00101",
+    "0010202",
+    "0010234343555",
+    "00102343444",
+    "0012101",
+    "0012111",
+    "001213333",
+    "00123224101",
+    "00123224201",
+    "00123224223",
+    "0021110",
+    "10101",
+    "1012101",
+    "10121343322",
+    "10123014301",
+    "10123414144",
+    "1021110",
+    "1021112",
+    "1021211",
+    "1022101",
+    "1034242514343"
+  ],
+  "index": "bbbbbbbbbebbbbbbabbbhobbbbbbibbbbbbbbibbbbbbbbbbbbbbbbbbbbubbbbppbbbbbbafbbtbtbbbfbbbbbnfbnbbbbbbbnbuunbbbbbbbbbbtsnbmbbbbbbbobbbbbbmmmmnmmmnmbbbbbbbbbnbbbbbbbbbbbbbbbmmnmmnnnnnnnnnnnnnnnnnnnnbibbbbbbbbbnnnnnnnnnnonbbbbbbbbnnnnnnnnnninnnnnnnnnnnnnnnnnnnnbbbbbbbbbbbbbbnnnnnonaooonoadabbbbbbbgbbqbjbbbbbbbbbbbbbbbbbbbbbbnnnnnonnnnvnqnnnnnnnnnnnnnkllnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnccbbbbbbbbbbbbbbbbbbnnnnnnnnnnnrnrnnnnnnnnbbbbbbbbbbbbccbcccb",
+  "pump_tables": [
+    "1RB1LF_1RC0LE_0RD0RB_1LD1LC_1LA1RA_---1LE",
+    "1RB1LE_1RC0LF_0RD0RB_1LD1LC_---1LF_1LA1RA",
+    "1RB0LE_1RC0RE_0RD0RB_1LD1LC_1RA0LF_1LA---",
+    "1RB0LF_1RC0RF_0RD0RB_1LD1LC_1LA---_1RA0LE",
+    "1RB1LE_1RC1RA_0RD0RB_1LD1LC_---0LF_1LA0RA",
+    "1RB1LE_1RC1RA_0RD0RB_1LD1LC_---1LF_0LA0LE",
+    "1RB1LE_1RC1RA_0RD0RB_1LD1LC_1LB1LF_0LE---",
+    "1RB1LF_1RC1RA_0RD0RB_1LD1LC_1LA0RA_---0LE",
+    "1RB1LF_1RC1RA_0RD0RB_1LD1LC_0LA0LF_---1LE",
+    "1RB1LF_1RC1RA_0RD0RB_1LD1LC_0LF---_1LB1LE"
+  ]
+}
