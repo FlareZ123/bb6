@@ -1,8 +1,15 @@
 name: Raw120 complete source-linked parent proof
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Full matrix or repair the sole missing child using pinned prior artifacts
+        type: choice
+        options: [all, repair-1lb]
+        default: repair-1lb
 permissions:
   contents: read
+  actions: read
 jobs:
   child:
     runs-on: ubuntu-latest
@@ -11,7 +18,7 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        child: [0LA, 0LB, 0LF, 0RA, 0RB, 0RC, 0RF, 1LA, 1LB, 1LF, 1RA, 1RB, 1RC, 1RF, cycles]
+        child: ${{ fromJSON(inputs.mode == 'repair-1lb' && '["1LB"]' || '["0LA","0LB","0LF","0RA","0RB","0RC","0RF","1LA","1LB","1LF","1RA","1RB","1RC","1RF","cycles"]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -52,6 +59,13 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
+        if: inputs.mode == 'repair-1lb'
+        with:
+          pattern: raw120-child-*
+          path: /tmp/raw120-shards
+          run-id: 45702614303
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
         with:
           pattern: raw120-child-*
           path: /tmp/raw120-shards
@@ -60,7 +74,7 @@ jobs:
           set -euo pipefail
           base=im-results/agent3-tnf-raw120
           python "$base/assemble_shards.py" /tmp/raw120-shards /tmp/raw120-merged
-          python tools/lean_compile_closure.py --workdir /tmp/raw120-parent --jobs 2 --precompiled-dir /tmp/raw120-merged --precompiled-manifest /tmp/raw120-merged/manifest.json --manifest /tmp/raw120-parent-manifest.json "$base/Raw120Complete.lean" | tee /tmp/raw120-parent.log
+          python tools/lean_compile_closure.py --workdir /tmp/raw120-parent --jobs 2 --precompiled-dir /tmp/raw120-merged --precompiled-manifest /tmp/raw120-merged/manifest.json --manifest /tmp/raw120-parent-manifest.json "$base/Raw120Complete.lean" "$base/Raw120ExactLower.lean" | tee /tmp/raw120-parent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw120-parent.log; then exit 1; fi
           mkdir -p /tmp/raw120-result
           cp /tmp/raw120-parent-manifest.json /tmp/raw120-result/manifest.json
