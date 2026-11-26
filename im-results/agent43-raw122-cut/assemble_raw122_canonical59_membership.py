@@ -37,18 +37,14 @@ def add_raw122_base_dependencies(work: Path, linked: Path):
             f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/jobs?per_page=100"
         )["jobs"]
         base_jobs = [j for j in jobs if j["name"] == "branch (base, -1, -1)"]
-        artifact_job_succeeded = any(
-            j.get("conclusion") == "success" and any(
-                step["name"] == "Run actions/upload-artifact@v4"
-                and step.get("conclusion") == "success"
-                for step in j.get("steps", [])
-            )
-            for j in base_jobs
-        )
-        if not artifact_job_succeeded:
+        successful_base_jobs = [j for j in base_jobs if j.get("conclusion") == "success"]
+        if not successful_base_jobs:
             raise RuntimeError(
-                "Raw122 core workflow was cancelled and the base artifact-producing job did not succeed"
+                "Raw122 core workflow was cancelled and the exact base shard job did not succeed"
             )
+        base_job_name = successful_base_jobs[0]["name"]
+    else:
+        base_job_name = "workflow-success"
     artifacts = a68.api_json(
         f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/artifacts"
     )["artifacts"]
@@ -89,6 +85,8 @@ def add_raw122_base_dependencies(work: Path, linked: Path):
     return {
         "run_id": RAW122_CORE_RUN_ID,
         "run_head_sha": run.get("head_sha"),
+        "base_job_name": base_job_name,
+        "base_job_conclusion": "success",
         "artifact_id": item["id"],
         "artifact_name": item["name"],
         "artifact_digest": item["digest"],
