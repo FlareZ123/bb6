@@ -106,6 +106,10 @@ def witnesses(work,rows,found,misses):
             if re.search(r"^def table\b",section,re.M) and re.search(r"^theorem never\b",section,re.M):
                 proved(i,p.stem,ns)
                 remaining.remove(i)
+    if remaining:
+        for p in sorted(ROOT.glob("Raw54LA*.lean")):
+            if any(str(i) in p.name for i in remaining):
+                print(p.name, "\n".join(l for l in p.read_text().splitlines() if l.startswith(("namespace ","def table","theorem never","def machine"))),flush=True)
     assert not remaining,("missing archived theorem namespace",remaining)
     assert set(certs)==set(rows)
     print("Complete leaf ledger:",len(certs),"FAR",len(far),"semantic",len(imports),flush=True)
