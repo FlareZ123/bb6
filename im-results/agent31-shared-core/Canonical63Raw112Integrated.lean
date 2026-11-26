@@ -40,7 +40,7 @@ theorem raw112_cover : Cover (WeightedBound 100000) p112 :=
 /-- Lift any accepted parent Cover to the common Raw110 binding floor. -/
 theorem lift_parent_cover {C : Nat} {p : PartialMachine}
     (hC : C ≤ 6766859) (h : Cover (WeightedBound C) p) :
-    ∀ m, compatible p m → WeightedBound 6766859 m := by
+    Cover (WeightedBound 6766859) p := by
   intro m hm k d hk hd
   exact Nat.le_trans (h.sound m hm k d hk hd) hC
 
