@@ -17,19 +17,17 @@
   {
     "id": 92,
     "table": "1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RA---_------",
-    "n": 50,
-    "bound": 126,
+    "n": 121,
+    "bound": 308,
     "stats": {
-      "side": 0,
-      "auto": 38,
-      "last": 6,
-      "split": 3,
-      "far": 2
+      "side": 2,
+      "auto": 54,
+      "last": 30,
+      "split": 5,
+      "far": 23
     },
-    "opens": [
-      "1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RA0RF_1LA---"
-    ],
-    "solved": false
+    "opens": [],
+    "solved": true
   },
   {
     "id": 93,
@@ -499,19 +497,17 @@
   {
     "id": 124,
     "table": "1RB1RD_1RC0LD_0LA1RE_1LA1LB_------_------",
-    "n": 186,
-    "bound": 43,
+    "n": 1921,
+    "bound": 142,
     "stats": {
-      "side": 126,
-      "auto": 5,
-      "last": 45,
-      "split": 9,
-      "far": 0
+      "side": 1354,
+      "auto": 108,
+      "last": 377,
+      "split": 80,
+      "far": 1
     },
-    "opens": [
-      "1RB1RD_1RC0LD_0LA1RE_1LA1LB_0LE0RF_0RA---"
-    ],
-    "solved": false
+    "opens": [],
+    "solved": true
   },
   {
     "id": 141,
