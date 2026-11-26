@@ -35,9 +35,9 @@ Fixpoint q0_nine_covered_indices (i : nat) (xs : list T) : list nat :=
   end.
 
 Theorem q0_nine_parent_counts_exact :
-  (length (fst q0_nine_queue), length (snd q0_nine_queue),
-   length (filter (source_roster_covers q0_nine_parent_roster) (fst q0_nine_queue)),
-   length (filter (source_roster_covers q0_nine_parent_roster) (snd q0_nine_queue))) =
+  (List.length (fst q0_nine_queue), List.length (snd q0_nine_queue),
+   List.length (filter (source_roster_covers q0_nine_parent_roster) (fst q0_nine_queue)),
+   List.length (filter (source_roster_covers q0_nine_parent_roster) (snd q0_nine_queue))) =
   (156, 1, 9, 0).
 Proof. vm_compute. reflexivity. Qed.
 
@@ -47,7 +47,7 @@ Theorem q0_nine_parent_indices_exact :
 Proof. vm_compute. reflexivity. Qed.
 
 Theorem q0_nine_remaining_length :
-  length q0_nine_remaining = 148.
+  List.length q0_nine_remaining = 148.
 Proof. vm_compute. reflexivity. Qed.
 
 (* Conditional source-queue reduction: once the nine parent Covers are
