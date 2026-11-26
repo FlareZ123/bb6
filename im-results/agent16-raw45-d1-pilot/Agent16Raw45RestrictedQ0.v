@@ -56,24 +56,6 @@ Definition raw45_compatible (left right : TM) : Prop :=
     | _, _ => True
     end.
 
-Theorem raw45_compatibleb_spec left right :
-  raw45_compatibleb left right = true <-> raw45_compatible left right.
-Proof.
-  unfold raw45_compatibleb, raw45_compatible.
-  split.
-  - intros H q s.
-    apply forallb_forall with (x:=q) in H; [|apply all_qs_spec].
-    apply forallb_forall with (x:=s) in H; [|apply all_syms_spec].
-    destruct (left (q,s)) as [a|], (right (q,s)) as [b|]; simpl in *; try exact I.
-    destruct (BusyCoq.Eqb.eqb_spec (Some a) (Some b)); congruence.
-  - intros H.
-    apply forallb_forall. intros q _.
-    apply forallb_forall. intros s _.
-    destruct (left (q,s)) as [a|], (right (q,s)) as [b|]; simpl; try reflexivity.
-    destruct (BusyCoq.Eqb.eqb_spec (Some a) (Some b)); [reflexivity|].
-    exfalso. exact (H q s n).
-Qed.
-
 Definition raw45_q0_overlap : SearchQueue :=
   (filter (fun x => raw45_compatibleb (tm x) raw45_parent) (fst q_0),
    filter (fun x => raw45_compatibleb (tm x) raw45_parent) (snd q_0)).
