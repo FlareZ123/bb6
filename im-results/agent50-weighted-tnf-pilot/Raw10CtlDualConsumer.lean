@@ -44,7 +44,7 @@ def ctlLeaf3Certificate (B : Nat) : WeightedTNFCertificate B ctlLeaf3 6 :=
 /-- Consume both source-pinned CTL cylinders after the 65 side witnesses,
     the held leaf, the 625-machine cycle and the forced-halt cylinder. -/
 def certifiedTablesWithBothCtl : List PartialMachine :=
-  certifiedTablesWithCycleAndHalt ++ [ctlLeaf2, ctlLeaf3]
+  certifiedTablesWithCycleAndHalt ++ [ctlLeaf3, ctlLeaf2]
 
 /-- Exact retained complement after both disjoint CTL footprints. -/
 def raw10RemainderWithBothCtl : List (Box Slot Transition) :=
@@ -72,8 +72,8 @@ theorem raw10RemainderWithBothCtl_exact (m : Machine) :
     · exact hn held (Or.inr (Or.inl rfl))
     · exact hn table (Or.inr (Or.inr (Or.inl rfl)))
     · exact hn haltTable (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
-    · exact hn ctlLeaf2 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
-    · exact hn ctlLeaf3 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
+    · exact hn ctlLeaf3 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+    · exact hn ctlLeaf2 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
   · rintro ⟨hp, hs, hh, hc, hhalt, hctl2, hctl3⟩
     refine ⟨hp, ?_⟩
     intro q hq
@@ -114,9 +114,32 @@ private def allSlots : List Slot :=
 private def boxMass (b : Box Slot Transition) : Nat :=
   (allSlots.map fun s => (b s).length).prod
 
+/-- The two source cylinders are disjoint: their shared C1 slot has
+    different pinned transitions (1LE versus 1RC). -/
+theorem ctlLeaves_disjoint (m : Machine) :
+    ¬ (compatible ctlLeaf2 m ∧ compatible ctlLeaf3 m) := by
+  rintro ⟨h2, h3⟩
+  have hleaf2 :
+      ctlLeaf2 (2, true) =
+        some (BB6.Agent50CtlFootprint.candidate2 (2, true)) := by
+    decide
+  have hleaf3 :
+      ctlLeaf3 (2, true) =
+        some (BB6.Agent50CtlFootprintSecond.candidate3 (2, true)) := by
+    decide
+  have h2move := h2 (2, true)
+    (BB6.Agent50CtlFootprint.candidate2 (2, true)) hleaf2
+  have h3move := h3 (2, true)
+    (BB6.Agent50CtlFootprintSecond.candidate3 (2, true)) hleaf3
+  have hneq :
+      BB6.Agent50CtlFootprint.candidate2 (2, true) ≠
+        BB6.Agent50CtlFootprintSecond.candidate3 (2, true) := by
+    decide
+  exact hneq (h2move.symm.trans h3move)
+
 theorem ctlLeaves_assignedCount :
     (allSlots.filter fun s =>
-      (ctlLeaf2 s).isSome || (ctlLeaf3 s).isSome).length = 9 := by
+      (ctlLeaf2 s).isSome || (ctlLeaf3 s).isSome).length = 6 := by
   decide
 
 theorem raw10RemainderWithBothCtl_mass :
@@ -152,13 +175,13 @@ def raw10CoverWithBothCtl (B : Nat) (hB : 7014 ≤ B)
               subst q
               have h7014 := BB6.Agent50Raw10Box0Halt.cover B
               exact h7014.sound hm
-      · rcases List.mem_cons.mp hctl with hCtl2Mem | htail
-        · have he : q = ctlLeaf2 := by simpa using hCtl2Mem
+      · rcases List.mem_cons.mp hctl with hCtl3Mem | htail
+        · have he : q = ctlLeaf3 := by simpa using hCtl3Mem
           subst q
-          exact (ctlLeaf2Certificate B).sound hm
-        · have he : q = ctlLeaf3 := by simpa using htail
+          exact (ctlLeaf3Certificate B).sound hm
+        · have he : q = ctlLeaf2 := by simpa using htail
           subst q
-          exact (ctlLeaf3Certificate B).sound hm)
+          exact (ctlLeaf2Certificate B).sound hm)
     hOpen
 
 #print axioms ctlLeaf2Certificate
@@ -166,6 +189,7 @@ def raw10CoverWithBothCtl (B : Nat) (hB : 7014 ≤ B)
 #print axioms raw10RemainderWithBothCtl_exact
 #print axioms raw10RemainderWithBothCtl_disjoint
 #print axioms raw10RemainderWithBothCtl_count
+#print axioms ctlLeaves_disjoint
 #print axioms ctlLeaves_assignedCount
 #print axioms raw10RemainderWithBothCtl_mass
 #print axioms raw10CoverWithBothCtl
