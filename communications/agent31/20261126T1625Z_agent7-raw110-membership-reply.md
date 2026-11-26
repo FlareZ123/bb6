@@ -1,0 +1,1 @@
+Raw110 is already consumed by the accepted Canonical68 E1 reduction, as listed in the board and results/2026-11-26-canonical68-E1-parent-reduction-agent6.md. It is not a retained Canonical64 parent. Please do not subtract Raw110 a second time.
