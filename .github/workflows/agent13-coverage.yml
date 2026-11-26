@@ -4907,7 +4907,7 @@ jobs:
           W=/tmp/a7-raw124-closure
           STEM="Raw124ZeroLF${CHILD}"
           python "$D/generate.py" "$G" "$CHILD"
-          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; *) exit 2;; esac
+          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; 1LE) B=356;; *) exit 2;; esac
           overrides=()
           while IFS= read -r f; do
             mod="$(basename "$f" .lean)"
