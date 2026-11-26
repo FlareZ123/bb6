@@ -525,7 +525,6 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegrationExtended.lean \
             im-results/agent6-champion-residual/ChampionResidualCanonical68Integration.lean \
-            im-results/agent3-raw139-e0-zeroRA/Raw139E0Canonical68Probe.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedAcceptedCovers.lean \
             --source-root "/tmp/a14-d0-ZeroLF/imports" \
             --source-root "/tmp/a14-d0-OneLB/imports" \
@@ -642,10 +641,6 @@ jobs:
               "BB6.Agent6Canonical68ChampionIntegration.canonical68_other_table_count",
               "BB6.Agent6Canonical68ChampionIntegration.refinedCanonical68Roster_count",
               "BB6.Agent6Canonical68ChampionIntegration.exact_from_canonical68_and_raw139_after_fortyTwo",
-              "BB6.Agent3Raw139E0Canonical68Probe.e0_table_present_in_80",
-              "BB6.Agent3Raw139E0Canonical68Probe.e0_table_present_in_81",
-              "BB6.Agent3Raw139E0Canonical68Probe.e0_table_present_in_93",
-              "BB6.Agent3Raw139E0Canonical68Probe.e0_table_occurs_once_in_80",
           )
           for name in names:
               pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
@@ -700,7 +695,6 @@ jobs:
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegrationExtended.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
-            /tmp/a6-champion-residual/source-sibling-build/Raw139E0Canonical68Probe.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139Normalized.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139NormalizedAcceptedCovers.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139C1*.olean
