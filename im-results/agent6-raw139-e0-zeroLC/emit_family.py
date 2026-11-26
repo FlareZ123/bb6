@@ -23,10 +23,11 @@ def code_name(v):return ('One' if v&2 else 'Zero')+('R' if v&1 else 'L')+chr(65+
 HEADER='''import BlockFAR2
 import BlockFARBridge
 import FastThreeHoleAudit
+import FARBi
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
 '''
-def block_source(NS,i,t,c):
+def block_source(NS,i,t,c,flip=False):
  ns='BB6BlockFAR2' if c['width']==2 else 'BB6BlockFAR';d,n=c['left_states'],c['right_nodes'];b=max(d,n).bit_length();pb=(2**c['width']*d).bit_length()
  moves=', '.join('none' if m is None else f'some ⟨{bl(m[0])},{bl(m[1])},{m[2]}⟩' for m in c['moves'])
  source=f'''namespace {NS}.H{i}
@@ -50,13 +51,24 @@ def cert : {ns}.Data {d-1} {n-1} := {{
  source+=f'''theorem forever : ∀ k, ∃ c, BB6BlockFAR.run machine k BB6BlockFAR.primBlank = some c :=
   cert.sound machine valid
 def ctr : BB6Coverage.PartialMachine := BB6Coverage.FAR.fromCodes {t}
-theorem same : ctr = BB6BlockFAR.partialTable machine :=
+'''
+ if flip:
+  source+=f'''theorem same : BB6Coverage.FAR.reflectPartial ctr = {ns}.partialTable machine :=
   BB6.Agent31ThreeHole.tableOK_sound _ _ (by decide)
 theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB6Coverage.NeverHalts m :=
-  BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever
-#print axioms never
-end {NS}.H{i}
+  BB6Coverage.FAR.reflectNever m
+    ({ns}.transfer_never machine (BB6Coverage.reflectTable m)
+      (by
+        have h := BB6Coverage.FAR.reflectCompatible ctr m hm
+        simpa only [← same] using h) forever)
 '''
+ else:
+  source+=f'''theorem same : ctr = {ns}.partialTable machine :=
+  BB6.Agent31ThreeHole.tableOK_sound _ _ (by decide)
+theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB6Coverage.NeverHalts m :=
+  {ns}.transfer_never machine m (by simpa only [← same] using hm) forever
+'''
+ source+=f'#print axioms never\\nend {NS}.H{i}\\n'
  return source
 
 def table_text(t):
@@ -116,7 +128,7 @@ def emit(code,spec,out,blocks_only=False,tr=None):
     phase=r[0] in ('phase','mirrorphase')
     c=generate(opens[i],*r[1:5],flip,60000,phase)
     assert c and (not r[5:] or [c['left_states'],c['right_nodes']]==r[5:])
-    body+=block_source(NS,i,opens[i],c)
+    body+=block_source(NS,i,opens[i],c,flip)
   header=HEADER.replace('set_option maxRecDepth',
     ''.join(x+'\\n' for x in sorted(set(extra_imports)))+'set_option maxRecDepth')
   (out/(name+'.lean')).write_text(header+body)
@@ -129,7 +141,7 @@ def emit(code,spec,out,blocks_only=False,tr=None):
   if k=='split':n,s,children=a;return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(map(node,children))+'])'
   if k=='open':
    i=idx[tuple(a[0])];r=rec[i]
-   if r[0] in ('block','phase'):return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
+   if r[0] in BLOCK_RECIPES:return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
    if r[0]=='cycle':return node(r)
    if r[0]=='late':
     assert a[0].count(24)==1 and scan(a[0],r[1])==('hole',r[1],r[2]);return node(('last',*r[1:]))
