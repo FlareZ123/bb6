@@ -2,7 +2,7 @@ const fs=require("node:fs"), path=require("node:path");
 const {find,emit}=require("./coarse-pair.cjs");
 const base=__dirname;
 const q0=JSON.parse(fs.readFileSync(path.join(base,"q0-export/pilot-0-100-fuel-1000000.json"),"utf8"));
-const indices=[33,34,39,44,46,48,49,51];
+const indices=[26,28,33,34,39,44,46,48,49,51];
 
 function inspect(tree){
   const stats={nodes:0,side:0,mitm:0,last:0,split:0,open:0,bad:0};
