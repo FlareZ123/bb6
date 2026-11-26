@@ -21,7 +21,7 @@ PARENT='1RB---_1RC---_0RD---_1LD1RE_---1LF_---'
 
 def replay(spec,out):
     b=spec['branch'];out.mkdir(parents=True,exist_ok=True)
-    ns='BB6.Agent2Raw124New'+b;stem='Raw124New'+b;bound=3006
+    ns='BB6.Agent2Raw124New'+b;stem='Raw124New'+b;bound=spec.get('bound',3006)
     shards.ROOT=out;shards.NS=ns;shards.B=bound
     shards.HEADER=f"""set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -122,6 +122,12 @@ theorem branch_nohalt : weightedTNFNoAssignedHalt branch := weightedTNFNoAssigne
             counts[tag]+=1;t,s=v;return Node(f'.last {t} {slot(s)}')
         if tag=='open':
             table=v[0].replace('_','');i=index[table]
+            if str(i) in spec.get('late_queries',{}):
+                t,j=spec['late_queries'][str(i)]
+                assert i not in far and i not in ref and table.count('---')==1 and table[3*j:3*j+3]=='---'
+                assert t+6<=bound
+                counts['late']+=1
+                return Node(f'.last {t} {slot(j)}')
             if i in far:
                 counts['far']+=1;code=far[i];n,D,L,R,z=masks(parse(table),int(code[0]),[int(c,36) for c in code[1:]])
                 return Node(f'.far {str(bool(int(code[0]))).lower()} {n} ⟨0,{D},{L},{R},{z}⟩')
