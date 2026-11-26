@@ -204,4 +204,27 @@ theorem run_nontermination_of_strip_avoidance
 #print axioms run_none_implies_strip
 #print axioms run_nontermination_of_strip_avoidance
 
+/-- The original blank-start machine, not merely its section evaluator,
+must meet one of the two strips if it halts. -/
+theorem target_halt_implies_strip (hh : BusyBeaver.IsHalt target) :
+    ∃ t u v n, run t=some (.D u v) ∧ 10≤n ∧
+      3^(n-1)-3≤min u v ∧ min u v+3<3^n ∧ strip u v n := by
+  obtain ⟨k,hk⟩ := isHalt_iff_highLevel_acceleration.mp hh
+  have hr : run k=none := by
+    rw [run_eq_highLevel_iterate]
+    apply Option.isNone_iff_eq_none.mp
+    simpa only [highLevelStart] using hk
+  exact run_none_implies_strip k hr
+
+theorem target_not_halt_of_strip_avoidance
+    (avoid : ∀ t u v n, run t=some (.D u v) → 10≤n →
+      3^(n-1)-3≤min u v → min u v+3<3^n → ¬ strip u v n) :
+    ¬ BusyBeaver.IsHalt target := by
+  intro hh
+  obtain ⟨t,u,v,n,hq,hn,hlo,hhi,hs⟩ := target_halt_implies_strip hh
+  exact avoid t u v n hq hn hlo hhi hs
+
+#print axioms target_halt_implies_strip
+#print axioms target_not_halt_of_strip_avoidance
+
 end BB6.Agent27ThreeStepStripSource
