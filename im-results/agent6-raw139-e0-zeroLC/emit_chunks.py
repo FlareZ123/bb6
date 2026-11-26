@@ -83,7 +83,7 @@ theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 
 end {NS}
 '''
  name=prefix+'Cover';(out/(name+'.lean')).write_text(s);files.append(name)
- manifest={'code':code,'namespace':NS,'prefix':prefix,'bound':B,'root_module':name,'part_modules':files[:-1],'block_count':len(blocks),'tree_nodes':size(tr),'open_count':len(opens)}
+ manifest={'code':code,'namespace':NS,'prefix':prefix,'bound':B,'root_module':name,'part_modules':files[:-1],'block_count':len(blocks)+len(nested),'nested_block_module':nested_module if nested else None,'tree_nodes':size(tr),'open_count':len(opens)}
  manifest_name=spec.get('manifest_name',f'chunk_manifest_{code}.json')
  (out/manifest_name).write_text(json.dumps(manifest,indent=2))
  return manifest
