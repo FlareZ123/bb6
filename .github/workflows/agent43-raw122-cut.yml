@@ -385,6 +385,22 @@ jobs:
           path: /tmp/a43-core
       - name: Assemble the 0LA residual roster and prove its child Cover if closed
         run: python im-results/agent43-raw122-cut/assemble_branch00.py
+      - name: Persist 0LA assembly evidence in im-results
+        run: |
+          DEST="im-results/agent43-raw122-cut/branch00-assembly"
+          mkdir -p "$DEST"
+          cp /tmp/a43-output/Raw122Roster00* "$DEST/"
+          cp /tmp/a43-output/Raw122Recovered00.lean /tmp/a43-output/Raw122Branch00.lean "$DEST/"
+          cp /tmp/a43-output/proof-metadata.json /tmp/a43-output/Lean-axioms.txt /tmp/a43-output/manifest.json "$DEST/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if ! git diff --cached --quiet; then
+            git fetch origin main
+            git rebase origin/main
+            git commit -m "Agent 43: preserve Raw122 0LA assembly evidence"
+            git push origin HEAD:main
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-branch00-assembly
@@ -423,6 +439,22 @@ jobs:
           path: /tmp/a43-core
       - name: Assemble the existing 0LF target matrix and prove its child Cover
         run: python im-results/agent43-raw122-cut/assemble_targeted_branch.py 5
+      - name: Persist 0LF assembly evidence in im-results
+        run: |
+          DEST="im-results/agent43-raw122-cut/branch05-assembly"
+          mkdir -p "$DEST"
+          cp /tmp/a43-output/Raw122Roster05* "$DEST/"
+          cp /tmp/a43-output/Raw122Recovered05.lean /tmp/a43-output/Raw122Branch05.lean "$DEST/"
+          cp /tmp/a43-output/proof-metadata.json /tmp/a43-output/Lean-axioms.txt /tmp/a43-output/manifest.json "$DEST/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if ! git diff --cached --quiet; then
+            git fetch origin main
+            git rebase origin/main
+            git commit -m "Agent 43: preserve Raw122 0LF assembly evidence"
+            git push origin HEAD:main
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-branch05-cover
