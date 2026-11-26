@@ -26,6 +26,7 @@ on:
           - enumerate62-q0-row28
           - enumerate62-q0-row26
           - enumerate62-q0-81-roots
+          - enumerate62-q0-sibling-scan
           - enumerate62-phase-consume
           - enumerate62-fast-resume
           - enumerate62-fast-held-discharge
@@ -87,13 +88,14 @@ jobs:
     timeout-minutes: 43
     steps:
       - name: Install original-source proof compiler
-        if: inputs.target != 'enumerate62-chunk-probe-native'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         run: |
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
           coqc --version
           coqc -config
       - name: Checkout exact original source revision
+        if: inputs.target != 'enumerate62-q0-sibling-scan'
         uses: actions/checkout@v4
         with:
           repository: ccz181078/busycoq
@@ -101,13 +103,26 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28' || inputs.target == 'enumerate62-q0-row26' || inputs.target == 'enumerate62-q0-81-roots'
+        if: inputs.target == 'enumerate62-q0-sibling-scan' || inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28' || inputs.target == 'enumerate62-q0-row26' || inputs.target == 'enumerate62-q0-81-roots'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
           ref: ${{ github.sha }}
           path: research
           persist-credentials: false
+      - name: Search eight unresolved q0 sibling roots
+        if: inputs.target == 'enumerate62-q0-sibling-scan'
+        working-directory: research/im-results/agent5-weighted-tnf-queue
+        run: |
+          set -euo pipefail
+          timeout 1800s node q0-sibling-scan.cjs q0-sibling-scan.json | tee q0-sibling-scan.log
+      - name: Preserve q0 sibling scan
+        if: always() && inputs.target == 'enumerate62-q0-sibling-scan'
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-sibling-scan
+          path: research/im-results/agent5-weighted-tnf-queue/q0-sibling-scan.json
+          if-no-files-found: warn
       - name: Add Agent 5 Enumerate62 decider soundness theorem
         if: inputs.target == 'enumerate62-decider-sound'
         run: |
@@ -307,7 +322,7 @@ jobs:
           node "$p/q0-row26.cjs" Agent5Row26Data.v | tee row26-candidate.json
           node "$p/q0-row28.cjs" Agent5Row28Data.v | tee row28-candidate.json
       - name: Generate project dependencies with VM fallback
-        if: inputs.target != 'enumerate62-chunk-probe-native'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         working-directory: original/verify
         run: |
           coq_makefile -Q . BusyCoq -native-compiler no -o Makefile.coq *.v
@@ -351,7 +366,7 @@ jobs:
             --coqc-binary-sha256 "$COQC_BINARY_SHA256"
 
       - name: Compile requested original theorem source
-        if: inputs.target != 'enumerate62-chunk-probe-native'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         working-directory: original/verify
         env:
           PROOF_TARGET: ${{ inputs.target }}
