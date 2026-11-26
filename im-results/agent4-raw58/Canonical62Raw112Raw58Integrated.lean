@@ -51,7 +51,7 @@ theorem count62 : roster62.length = 62 := by
 theorem parents_root :
     ∀ p ∈ parents, p initialSlot = some (some ⟨true,true,1⟩) := by
   intro p hp
-  simp only [parents, List.mem_cons, List.mem_singleton] at hp
+  simp [parents] at hp
   rcases hp with h | h
   · cases h
     exact p112_root
@@ -71,7 +71,7 @@ theorem raw58_cover : Cover (WeightedBound 6766859) p58 :=
 theorem parents_cover :
     ∀ p ∈ parents, Cover (WeightedBound 6766859) p := by
   intro p hp
-  simp only [parents, List.mem_cons, List.mem_singleton] at hp
+  simp [parents] at hp
   rcases hp with h | h
   · cases h
     exact raw112_cover
