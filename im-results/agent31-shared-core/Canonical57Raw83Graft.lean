@@ -16,8 +16,8 @@ open BB6.Agent31Canonical58Raw83Membership
 open BB6.Agent10Raw83
 open BB6ChampionArithmetic
 
-abbrev baseRoster := BB6.Agent31Canonical58Raw113Graft.roster58
-noncomputable def roster57 := removeParents [p83] baseRoster
+noncomputable def roster57 :=
+  removeParents [p83] BB6.Agent31Canonical58Raw113Graft.roster58
 
 abbrev p83Source : PartialMachine := BB6.Agent10Raw83.parent
 
@@ -58,7 +58,8 @@ theorem sound_integrated :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
         ∃ e ∈ roster57, TNFQuotientCompatible e.2 m := by
-  apply removeParents_sound (parents := [p83]) (roster := baseRoster)
+  apply removeParents_sound (parents := [p83])
+    (roster := BB6.Agent31Canonical58Raw113Graft.roster58)
     BB6.Agent31Canonical58Raw113Graft.sound_integrated
     parents_root parents_cover
 
