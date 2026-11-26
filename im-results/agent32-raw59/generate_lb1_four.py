@@ -60,8 +60,11 @@ def main(branch="1LB", opens=None, override=None):
     for i, (table, width, cap, mod, runs, *offset) in cases.items():
         name = f"{prefix}M{i}"
         ns = "BB6BlockFAR" if width == 3 else f"BB6BlockFAR{width}"
-        generate(table, ROOT, width=width, cap=cap, mod=mod, runs=runs,
+        data = generate(table, ROOT, width=width, cap=cap, mod=mod, runs=runs,
                  name=name, minimize_left=True, offset=offset[0] if offset else 0)
+        if branch in ('0LA','0LB','0LF','1LB'):
+            from emit_blockmask import emit
+            emit(ROOT, name, data, offset[0] if offset else 0)
         # Reuse the exact Frontier source bridge with the specialized block types.
         bridge_mod = "BlockFARBridge" if width == 3 else f"Raw59LB1BlockBridge{width}"
         if width == 2:
