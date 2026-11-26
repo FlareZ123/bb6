@@ -8,6 +8,8 @@ namespace BB6.Agent14Canonical64Raw139Crosswalk
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
+open BB6.Agent3Canonical64Raw120
+open BB6.Agent6ChampionResidual
 open BB6.Agent31FourHoleRoster
 open BB6.Agent6Raw139Normalized
 open BB6.Agent3Raw139E0ZeroRAIntegrated
@@ -123,7 +125,7 @@ theorem exact_at_target_with_normalized_and_complement
       Cover (WeightedBound (proposedTM63Moves + 7)) p)
     (hRest : ∀ e ∈ activeUncoveredByNormalized,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
-    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+    ExactBB6 (proposedTM63Moves + 7) :=
   BB6.Agent14Canonical64Raw139Subcover.exact_at_target_with_raw139_subcover
     hOther
     (activeRows_cover_from_normalized_and_complement
