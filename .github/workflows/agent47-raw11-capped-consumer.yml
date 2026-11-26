@@ -28,59 +28,28 @@ jobs:
           name: raw11-root52-known-consumption
           path: /tmp/base
 
-      - name: Download accepted parent 126
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45908444758
-          name: raw11-extra-parent-126
-          path: /tmp/p126
-
-      - name: Download accepted parent 137
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45908444758
-          name: raw11-extra-parent-137
-          path: /tmp/p137
-
-      - name: Download accepted parent 127
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45898270704
-          name: raw11-extra-parent-127
-          path: /tmp/p127
-
-      - name: Download accepted parent 128
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45898270704
-          name: raw11-extra-parent-128
-          path: /tmp/p128
-
-      - name: Download accepted parent 129
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45898270704
-          name: raw11-extra-parent-129
-          path: /tmp/p129
-
-      - name: Download accepted parent 130
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 45898270704
-          name: raw11-extra-parent-130
-          path: /tmp/p130
+      - name: Download accepted parent artifacts by immutable IDs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          download_artifact() {
+            artifact_id="$1"
+            dest="$2"
+            mkdir -p "$dest"
+            curl -fsSL \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$artifact_id/zip" \
+              -o "/tmp/$artifact_id.zip"
+            unzip -q "/tmp/$artifact_id.zip" -d "$dest"
+          }
+          download_artifact 15159257293 /tmp/p126
+          download_artifact 15154832729 /tmp/p127
+          download_artifact 15154568902 /tmp/p128
+          download_artifact 15154569169 /tmp/p129
+          download_artifact 15154663882 /tmp/p130
+          download_artifact 15158958272 /tmp/p137
 
       - name: Compile exact six-parent consumer
         run: |
