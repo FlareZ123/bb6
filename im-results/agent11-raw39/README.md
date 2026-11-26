@@ -43,4 +43,4 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 - [1LE 1837](Raw391LE1837.lean): paired-bit carry, all pairs 00 or 11, entry 61 steps.
 - [1LE 2370](Raw391LE2370.lean): single low bit and duplicated high bits, entry 53 steps.
 
-Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus twenty-three proved. The semantic generator still needs delayed-cycle and custom-proof dispatch and remaining cases. No complete parent or universal BB(6) bound.
+Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus twenty-three proved. The semantic generator now dispatches delayed cycles and all 27 known custom leaves. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.

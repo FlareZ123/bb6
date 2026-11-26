@@ -10,6 +10,7 @@ from minimize_bi import minimize
 from prepare_semantic_branch import asym_emit, rungram_emit, Node, Builder, bs
 from prepare_raw39 import masks, parse
 from gen_rc_counters import m, nextword
+from prepare_le_residual import ConditionalBuilder, custom_le
 ROOT=Path(__file__).resolve().parent
 
 def run(*args,**kw):
@@ -32,11 +33,18 @@ def main():
     ap.add_argument('--work',type=Path)
     ap.add_argument('--out',type=Path,default=ROOT)
     ap.add_argument('--limit',type=int,default=1200)
+    ap.add_argument('--conditional',action='store_true',help='emit an explicit residual hypothesis theorem, never a Complete module')
     a=ap.parse_args(); branch=a.branch; prefix='Raw39'+branch
     work=(a.work or ROOT/('_build'+branch)).resolve(); out=a.out.resolve()
     work.mkdir(parents=True,exist_ok=True);out.mkdir(parents=True,exist_ok=True)
     data=json.loads(lzma.decompress(base64.b64decode((ROOT/(branch+'-frontier.json.xz.b64')).read_text())))
-    assert not data['residual'],'Incomplete discovery frontier'
+    custom=custom_le(branch,out)
+    original_residual=dict(data['residual'])
+    assert set(custom)<=set(original_residual)
+    residual=set(original_residual)-set(custom)
+    assert not residual or a.conditional,'Incomplete discovery frontier: '+str(sorted(residual))
+    assert not a.conditional or residual,'Use complete mode when no residual remains'
+    cycles=data.get('cycles',[])
     source=ROOT.parent/'agent11-raw121'
     run('g++','-O3','-std=c++17',source/'fast_enum.cpp','-o',work/'enum')
     run(work/'enum',data['child'],cwd=work)
@@ -49,7 +57,7 @@ def main():
     assert sha(('\n'.join(opens)+'\n').encode())==data['open_sha256']
     (work/'normalized-tree.json').write_text(raw)
     (work/'normalized-open.txt').write_text('\n'.join(opens)+'\n')
-    for i,s,*_ in data['affine']+data['late']:
+    for i,s,*_ in data['affine']+data['late']+cycles+data['residual']:
         assert opens[i].replace('_','')==s
     run('g++','-O3','-std=c++20',source/'bank.cpp','-o',work/'bank')
     bank=json.loads((ROOT/'lb-witnesses.json').read_text())['bank']
@@ -57,8 +65,9 @@ def main():
     inp=''.join(f'{i} {s.replace("_","")}\n' for i,s in enumerate(opens))
     r=run(work/'bank',work/'bank.txt',input=inp,text=True,capture_output=True)
     far={int(i):code for i,code in map(str.split,r.stdout.splitlines())}
-    expected={x[0] for k in ('asym','rungram','blockgram','runblock','affine','late') for x in data[k]}
-    assert len(expected)==sum(len(data[k]) for k in ('asym','rungram','blockgram','runblock','affine','late'))
+    partitions=[data[k] for k in ('asym','rungram','blockgram','runblock','affine','late','residual')]+[cycles]
+    expected={x[0] for part in partitions for x in part}
+    assert len(expected)==sum(map(len,partitions))
     assert len(far)==data['far_count'] and set(range(len(opens)))-set(far)==expected
     (work/'far.json').write_text(json.dumps(far))
     run('g++','-O3','-std=c++17',ROOT.parent/'agent32-raw59'/'ngram_asym.cpp','-o',work/'ngram')
@@ -67,7 +76,7 @@ def main():
     assert not ng.stderr,ng.stderr
     ac=[asym_emit(line,opens) for line in ng.stdout.splitlines()]
     assert sorted(meta for _,meta in ac)==sorted(data['asym'])
-    special={}
+    special=dict(custom)
     groups=[];group=[];size=0
     for code,meta in ac:
         if group and size+meta[3]>2000:groups.append(group);group=[];size=0
@@ -104,33 +113,40 @@ def main():
         name=f'{ns}.M{i}';special[i]=(mod,name+'.table',name+'.never')
     # The late leaf is a genuine final hole, so the original weighted checker
     # independently checks its trajectory, final hole and delay.
-    late={table:(n,s) for _,table,n,s in data['late']}
+    closed={table:['last',n,s] for _,table,n,s in data['late']}
+    closed.update({table:['cycle',e,k,r,b] for _,table,e,k,r,b in cycles})
+    assert len(closed)==len(data['late'])+len(cycles)
     def close_late(node):
-        if node[0]=='open' and node[1].replace('_','') in late:
-            return ['last',*late[node[1].replace('_','')]]
-        if node[0]=='split':
-            return [*node[:3],[close_late(k) for k in node[3]]]
+        if node[0]=='open':return closed.get(node[1].replace('_',''),node)
+        if node[0]=='split':return [*node[:3],[close_late(k) for k in node[3]]]
         return node
     index={s:i for i,s in enumerate(opens)}
     tree=Node(close_late(full),'pChild',data['cut'],index);ids=set(tree.leaves())
-    assert tree.size==sum(stats.values()) and ids==set(far)|set(special)
+    assert tree.size==sum(stats.values()) and ids==set(far)|set(special)|residual
+    assert len(ids)==len(far)+len(special)+len(residual)
     witnesses={}
     for i,c in far.items():
         d,D,L,R,z=masks(parse(opens[i]),int(c[0]),[int(x,36) for x in c[1:]])
         witnesses[i]=f'.far {bs(int(c[0]))} {d} ⟨0,{D},{L},{R},{z}⟩'
-    b=Builder(out,branch,data['bound_candidate'],a.limit,witnesses,special);tree.name='all'+branch
+    flavor=branch+'Conditional' if residual else branch
+    tree.name='all'+branch+('_if_residual' if residual else '')
+    b=(ConditionalBuilder(out,flavor,data['bound_candidate'],a.limit,witnesses,special,tree,residual)
+       if residual else Builder(out,flavor,data['bound_candidate'],a.limit,witnesses,special))
     w,r,q=branch
-    b.emit(b.base,['Raw39SemanticChunks'],f'''abbrev p39 : PartialMachine :=
+    base=f'''abbrev p39 : PartialMachine :=
   refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,0⟩)
 abbrev pChild : PartialMachine := refine p39 (0,true) (some ⟨{bs(w=="1")},{bs(r=="R")},{ord(q)-65}⟩)
-''')
+'''
+    if residual:base+='\n'+b.hypotheses()
+    b.emit(b.base,['Raw39SemanticChunks'],base)
     top=b.build(tree)
-    b.emit(prefix+'Complete',[top],'#print axioms all'+branch+'\n')
-    leaves=[(name,size) for name,size,deps in b.modules if size>1 or not any(x.startswith(prefix+'Chunk') for x in deps)]
+    root=prefix+('Conditional' if residual else 'Complete')
+    b.emit(root,[top],'#print axioms '+tree.name+'\n')
+    leaves=[(name,size) for name,size,deps in b.modules if size>1 or not any(x.startswith(b.prefix+'Chunk') for x in deps)]
     groups={f'g{i}':[] for i in range(8)};weights=dict.fromkeys(groups,0)
     for name,size in sorted(leaves,key=lambda x:-x[1]):
         g=min(weights,key=weights.get);groups[g].append(name);weights[g]+=size
-    manifest={'root':prefix+'Complete','groups':groups,'weights':weights,'modules':b.modules,'stats':dict(b.stats),'normalized_nodes':tree.size,'open_count':len(ids)}
-    (out/('shards-'+branch+'semantic.json')).write_text(json.dumps(manifest,indent=2)+'\n')
+    manifest={'root':root,'conditional':bool(residual),'residual':[[i,original_residual[i]] for i in sorted(residual)],'groups':groups,'weights':weights,'modules':b.modules,'stats':dict(b.stats),'normalized_nodes':tree.size,'open_count':len(ids)}
+    (out/('shards-'+branch+('conditional' if residual else 'semantic')+'.json')).write_text(json.dumps(manifest,indent=2)+'\n')
     print('candidate full tree',data['stats'],'far',len(far),'special',len(special),'chunks',len(b.modules),'weights',weights,'bound',data['bound_candidate'],flush=True)
 if __name__=='__main__':main()
