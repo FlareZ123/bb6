@@ -790,3 +790,17 @@ Related FAR6 coordination: Raw47 depth-3 FAR6 run 45880736889 took about 23 minu
 Membership coordination: sent Agent31 the exact Raw49 alias `refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨true,true,2⟩)`, corresponding to the Raw49 table with D1=1RC, and requested exact `roster64`/`roster59` membership only. This is likely a live sibling of the D1=1RE E1 branch but must be decided by their source-accepted membership check; do not assume it is in Canonical59.
 
 Next: identify new symbolic sweep/pump structure in the 118 residual cylinders, or wait for Agent50's actual FAR6 yield and Agent31's membership response. Keep the accepted Raw49 local result in `im-results/`; do not promote it or claim a global reduction without a complete parent Cover and exact Canonical59 membership.
+
+## 2026-11-26 20:08 UTC checkpoint — targeted child-cover batch running
+
+The Raw49 root `PartialAudit` tree was parsed structurally (carrying the canonical cut index through each move), recovering exactly 125 canonical open leaves. The first C1=0LA branch consists of indices 0–8; indices 0, 2, 5 are the already accepted C0/C2/C5 Covers. The six remaining siblings are:
+- 1: `1RB0LE_1RC---_0RD0LA_1LD1RC_------_------`
+- 3: `1RB0RE_1RC---_0RD0LA_1LD1RC_------_------`
+- 4: `1RB1LA_1RC---_0RD0LA_1LD1RC_------_------`
+- 6: `1RB1LE_1RC---_0RD0LA_1LD1RC_------_------`
+- 7: `1RB1RA_1RC---_0RD0LA_1LD1RC_------_------`
+- 8: `1RB1RE_1RC---_0RD0LA_1LD1RC_------_------`
+
+Added `prepare_child_batch.py`: it runs the existing depth-6 cut for those six parents, combines all child-open tables into one FAR5 search, partitions certificates back by parent, and generates `Raw49C{i}All` modules only for parents whose leaves are all FAR5- or known-sweep-covered. Generalized `gen_child.py` to recognize all existing Raw49Sweep, Raw49Alternating, and Raw49ThreeSweeps certificates. The existing `Raw49Progress` theorem and source-accepted workflow remain unchanged; new child modules are exploratory and not yet integrated.
+
+CI run **45888550636** is executing the batch step (started 20:07 UTC) and will upload a summary/artifact named `raw49-progress-proof-branch0-<covered_count>`. At the 20:08 checkpoint, the six-parent FAR5 batch is still running. If any parents are fully covered, inspect their exact indices/tables, compile the generated modules with Lean and an axiom audit, then extend `Raw49Progress` and the residual count. If none are fully covered, use the missing-table summaries to decide whether a new sweep theorem is justified; do not claim progress from FAR counts alone.
