@@ -25,6 +25,17 @@ Ten additional exact symbolic return candidates, for the existing raw112_multisw
 157 C - 101011111V 1 6 32 4 82
 163 C 0111V 11 0111 2 11 28 60
 ```
-Generated proof bodies, not yet checked. Remaining 42 IDs: 26 27 37 38 40 42 44 45 48 49 55 56 60 61 62 63 64 65 66 69 70 76 77 83 84 93 94 95 99 100 104 108 119 122 126 127 138 144 145 151 161 162. Priority: recursive counter family 60,62–66; D alternating pair family 48,55,56,69,70,122; nested D family 76,77,144,145,161,162. Exact score 545 still requires proof for all cylinders.
+All ten sweep `never` theorems accepted by Lean 4.36.0-rc2 against the original source closure (propext, Quot.sound); regenerate using [generate_la_witnesses.py](generate_la_witnesses.py).
+
+## Original-source nonhalting proofs for recursive and alternating families
+
+- [Raw54LANested.lean](Raw54LANested.lean), IDs 60,62,63,64,65,66: A has blank left and right 1^(3n+1) followed by 011101 or (in the last two variants) 000101. A positive-time fill lemma with arbitrary left tail changes a scanned zero to one, preserving the right parameter n and allowing either suffix. Preparation transforms the right run into n left triples of zeros; strong induction uses fills at j<n, each followed by a three-move pop raising j to j+1. This proves a total recursive return for arbitrary n, and the blank-left version raises n by one. Entry 27 or 29, n=1.
+- [Raw54LAAlternating.lean](Raw54LAAlternating.lean), IDs 48,55,56,69,70,122: D has empty right, left 0011(01)^(4n). Two rounds of E left-pair and B right-quad sweeps give n -> n+1 in 48n+30 steps. The left sweep uses induction including the final implicit blank (some variants materialize a zero there). Blank entry 3.
+- [Raw54LANestedD.lean](Raw54LANestedD.lean), IDs 76,77,144,145,161,162: D left 00 1^(3n+1) 01b, right empty, n>=1. A stronger arbitrary-tail D-to-B return consumes a right sequence of triples of zeros terminated by 011. A nested call at each strictly smaller level is composed with a 3- or 5-move delimiter macro. The B return is 1^(3n+3) 01b' with the original right tail; at the blank boundary it adds the next triple to D. Entry n=2 at 51,55,63, depending on variant.
+- [Raw54LANestedTwo.lean](Raw54LANestedTwo.lean), IDs 119 and 138: separate recursive D-to-A and D-to-C returns with arbitrary left/right tails, fixed suffixes 011101 and 000100, and triple or pair zero-block drains. At the blank boundary they increment the unary parameter. Entry n=1 at 33 or 22 steps.
+
+All 20 new grouped `never` theorems (including the six+six+six+two variants) compile against original source dependencies, only propext, Quot.sound, and where needed Classical.choice. Original five project source blobs were recovered from artifact 15048626150 and rebuilt from source, and the two RA core modules used by recursive families were rebuilt from their original GitHub source. No new axiom, finite-time extrapolation, or native_decide is used.
+
+Remaining 22 discovery targets: 26 27 37 38 40 42 44 45 49 61 83 84 93 94 95 99 100 104 108 126 127 151. Exact score 545 still requires proof for all cylinders and the coverage audit.
 
 The separate E0=1RF child has 2610 splits, 45064 cycles, 12821 last, 2146 open, observed maximum weighted score 845. Frozen bank hits 1967, misses 179. Open SHA ae1d7c235351d32702026c6d6d416d01548c257aab30e98773ea88b81d63113c; misses SHA b5cc41348b6fb3a76c7abd71623b8b36f880a5c0579b7478df7c99b82d9e0461. No further search on RF yet.
