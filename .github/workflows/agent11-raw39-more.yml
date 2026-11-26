@@ -5,13 +5,13 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB]
         required: true
 permissions:
   contents: write
 jobs:
   shards:
-    if: ${{ inputs.branch != '0RC' }}
+    if: ${{ inputs.branch == '0RB' || inputs.branch == '1RC' || inputs.branch == '0RE' }}
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -80,7 +80,7 @@ jobs:
           retention-days: 30
 
   assemble:
-    if: ${{ inputs.branch != '0RC' }}
+    if: ${{ inputs.branch == '0RB' || inputs.branch == '1RC' || inputs.branch == '0RE' }}
     needs: shards
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -311,3 +311,171 @@ jobs:
             done
             exit 1
           fi
+
+  semantic_shards:
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' }}
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        group: [g0, g1, g2, g3, g4, g5, g6, g7]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact semantic child
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent11-raw39
+          if [ "${{ inputs.branch }}" = 0LA ]; then
+            python "$root/prepare_raw39la_frontier.py"
+            kind=LA
+          else
+            python "$root/prepare_semantic_branch.py" 1LB
+            kind=LB
+          fi
+          echo "KIND=$kind" >> "$GITHUB_ENV"
+          python - "$root/shards-${kind}semantic.json" "${{ inputs.branch }}" <<'PY'
+          import json, sys
+          from pathlib import Path
+          p=Path(sys.argv[1]);j=json.loads(p.read_text());j['artifact_prefix']='raw39-'+sys.argv[2]+'-semantic-shard';p.write_text(json.dumps(j,indent=2)+'\n')
+          PY
+      - name: Check one independent semantic shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          mapfile -t modules < <(python -c 'import json,os; print("\n".join(json.load(open("im-results/agent11-raw39/shards-"+os.environ["KIND"]+"semantic.json"))["groups"][os.environ["GROUP"]]))')
+          test "${#modules[@]}" -gt 0
+          roots=()
+          for module in "${modules[@]}"; do roots+=("$root/$module.lean"); done
+          work=/tmp/a11-semantic-shard
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
+            --artifact-name "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
+            --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39la_frontier.py" \
+            --provenance-input "$root/rungram_regen.py" \
+            --provenance-input "$root/la-frontier.json" \
+            --provenance-input "$root/lb-witnesses.json" \
+            --provenance-input "$root/Raw39LBProofs.json.xz.b64" \
+            --provenance-input "$root/shards-${KIND}semantic.json" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent32-raw59/ngram_asym.cpp \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            --provenance-input tools/lean_compile_closure.py \
+            "${roots[@]}" 2>&1 | tee /tmp/a11-semantic-shard.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-semantic-shard.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-${{ inputs.branch }}-semantic-shard-${{ matrix.group }}
+          path: /tmp/a11-semantic-shard/
+          if-no-files-found: error
+          retention-days: 30
+
+  semantic_assemble:
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' }}
+    needs: semantic_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact semantic child
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          root=im-results/agent11-raw39
+          if [ "${{ inputs.branch }}" = 0LA ]; then
+            python "$root/prepare_raw39la_frontier.py"
+            kind=LA
+          else
+            python "$root/prepare_semantic_branch.py" 1LB
+            kind=LB
+          fi
+          echo "KIND=$kind" >> "$GITHUB_ENV"
+          python - "$root/shards-${kind}semantic.json" "${{ inputs.branch }}" <<'PY'
+          import json, sys
+          from pathlib import Path
+          p=Path(sys.argv[1]);j=json.loads(p.read_text());j['artifact_prefix']='raw39-'+sys.argv[2]+'-semantic-shard';p.write_text(json.dumps(j,indent=2)+'\n')
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw39-${{ inputs.branch }}-semantic-shard-*
+          path: /tmp/a11-semantic-shards
+      - name: Strictly merge independent semantic shards and check final child Bound
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a11-semantic-shards /tmp/a11-semantic-union "$root/shards-${KIND}semantic.json"
+          work=/tmp/a11-semantic-complete
+          theorem="BB6.Agent11Raw39${KIND}.all${{ inputs.branch }}"
+          if [ "$KIND" = LA ]; then
+            table='1RB0LA_1RC---_0RD---_1LD0RA_------_------'
+            bound=1003
+          else
+            table='1RB1LB_1RC---_0RD---_1LD0RA_------_------'
+            bound=266
+          fi
+          python tools/lean_compile_closure.py \
+            --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label "raw39-${{ inputs.branch }}-semantic-complete" \
+            --artifact-name "raw39-${{ inputs.branch }}-semantic-proof" \
+            --theorem "$theorem" --parent-table "$table" --weighted-bound "$bound" \
+            --precompiled-manifest /tmp/a11-semantic-union/manifest.json \
+            --precompiled-dir /tmp/a11-semantic-union \
+            --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39la_frontier.py" \
+            --provenance-input "$root/rungram_regen.py" \
+            --provenance-input "$root/la-frontier.json" \
+            --provenance-input "$root/lb-witnesses.json" \
+            --provenance-input "$root/Raw39LBProofs.json.xz.b64" \
+            --provenance-input "$root/shards-${KIND}semantic.json" \
+            --provenance-input "$root/prepare_raw39.py" \
+            --provenance-input "$root/gen_rc_counters.py" \
+            --provenance-input im-results/agent11-raw121/fast_enum.cpp \
+            --provenance-input im-results/agent11-raw121/bank.cpp \
+            --provenance-input im-results/agent32-raw59/ngram_asym.cpp \
+            --provenance-input im-results/agent10-tnf-multipump/multi.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input .github/workflows/agent11-raw39-more.yml \
+            --provenance-input tools/lean_compile_closure.py \
+            "$root/Raw39${KIND}Complete.lean" 2>&1 | tee /tmp/a11-semantic-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-semantic-complete.log "$theorem"
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-semantic-complete.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-${{ inputs.branch }}-semantic-proof
+          path: /tmp/a11-semantic-complete/
+          if-no-files-found: error
+          retention-days: 30
