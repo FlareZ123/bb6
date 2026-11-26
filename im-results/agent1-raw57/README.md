@@ -74,6 +74,8 @@ The Canonical64 membership-only source audit [45868278721](https://github.com/Fl
 
 The current global boundary is Canonical58 after the Raw113 integration. Exact Raw57 membership and complement in that current roster remain a separate, unaccepted obligation; historical Canonical64 membership does not discharge it. Keep Raw57 in the complement until both the unconditional parent Cover at 1,500 and the current-roster membership/complement proof are accepted. No roster cut is claimed here.
 
+A membership-only draft now exists at `Raw57Canonical58Membership.lean`. It imports the accepted `BB6.Agent31Canonical58Raw113Graft.roster58` directly and the exact parent from `Raw57ParentBridge`; it proves unique `sameTable` membership, the blank-start root, distinction from consumed Raw113, a 57-entry complement, Raw59 retention and Raw113 absence by finite decision. This is not source-accepted yet. Agent31 has been asked to include it in the existing Canonical58 consumer audit, reusing the already assembled base rather than downloading the 22.9-GB integrated artifact. The module does not claim soundness or a roster reduction; those still require the Raw57 parent Cover.
+
 ## A1=1LE: source-accepted partition
 
 <badge color="success">Source-accepted</badge> Lean CI run [45767071990](https://github.com/FlareZ123/bb6/actions/runs/45767071990) completed successfully on Lean 4.36.0-rc2; job 139730422389 compiled 1,998 project modules. The generated theorem is `BB6.Agent1Raw57LE1.all_completions`, proving the A1=1LE sibling at weighted bound **1,500**. Both `tree_checked` and `all_completions` have axiom profile `[propext, Classical.choice, Quot.sound]`.
