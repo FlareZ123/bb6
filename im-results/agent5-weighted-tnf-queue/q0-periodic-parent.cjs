@@ -87,7 +87,7 @@ function scan(rootId) {
 }
 const slot=i=>'('+'ABCDEF'[i>>1]+',S'+(i%2)+')';
 const move=m=>'(S'+m[0]+','+m[1]+','+m[2]+')';
-const header='From BusyCoq Require Import Agent5SourceAutoTree.\nFrom Coq Require Import List NArith Strings.String Lia.\nImport ListNotations.\nOpen Scope string_scope.\nOpen Scope nat_scope.\n';
+const header='From BusyCoq Require Import Agent5SourceAutoTree Enumerate62 Agent8WeightedSource.\nFrom Coq Require Import List NArith Strings.String Lia.\nImport ListNotations TNF_Node.\nOpen Scope string_scope.\nOpen Scope nat_scope.\n';
 function writeCoq(data,output){
  const {rootId,table,bound,tree,certs}=data;
  const dir=path.dirname(output),prefix='Agent5Q0Periodic'+rootId,defs=prefix+'Defs';
