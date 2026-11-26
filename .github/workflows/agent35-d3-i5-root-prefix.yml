@@ -6,9 +6,9 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711:im-results/agent35-d-sixth-rejoin
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact source archives
@@ -45,12 +45,25 @@ jobs:
             lean -o "$A/$module.olean" "$A/$module.lean"
           done
           lean -o "$C/ABridgeCode.olean" "$C/ABridgeCode.lean"
+          lean -o "$A/TripleIteration.olean" "$A/TripleIteration.lean"
+          lean -o "$A/SixOnes.olean" "$A/SixOnes.lean"
+          lean -o "$P/CodeImplicitNil.olean" "$P/CodeImplicitNil.lean"
           lean -o "$H/DRegular.olean" "$H/DRegular.lean"
+          lean -o "$D/DRegularShift.olean" "$D/DRegularShift.lean"
+          lean -o "$D/DRegularDurationShift.olean" "$D/DRegularDurationShift.lean"
           lean -o "$H/DTransport.olean" "$H/DTransport.lean"
+          lean -o "$D/DRegularTimedShift.olean" "$D/DRegularTimedShift.lean"
+          lean -o "$D/DRegularFast.olean" "$D/DRegularFast.lean"
           lean -o "$H/DObservedTransport.olean" "$H/DObservedTransport.lean"
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
+          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
+            lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
+          done
+          for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
+            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
+          done
           lean -o "im-results/agent31-d-exceptional/DRegularBSource.olean" "im-results/agent31-d-exceptional/DRegularBSource.lean"
           lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
           lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
@@ -62,8 +75,19 @@ jobs:
           lean -o "$S/CryptidSix.olean" "$S/CryptidSix.lean"
           lean -o "$S/CryptidPairs.olean" "$S/CryptidPairs.lean"
           lean -o "$S/CryptidTriplePairs.olean" "$S/CryptidTriplePairs.lean"
+          lean -o "$P/EZeroPair.olean" "$P/EZeroPair.lean"
           lean -o "$C/EDouble.olean" "$C/EDouble.lean"
+          lean -o "$P/EAllDouble.olean" "$P/EAllDouble.lean"
+          lean -o "$A/ExceptionalBRejoin.olean" "$A/ExceptionalBRejoin.lean"
+          lean -o "$A/ExceptionalBGeneral.olean" "$A/ExceptionalBGeneral.lean"
+          R=im-results/agent31-d-exceptional
+          G=im-results/agent35-d-sixth-rejoin
+          lean -o "$R/ESecondSource.olean" "$R/ESecondSource.lean"
+          lean -o "$R/PacketSource.olean" "$R/PacketSource.lean"
+          lean -DmaxRecDepth=55000 -o "$G/APacketGeneral.olean" "$G/APacketGeneral.lean"
+          lean -DmaxRecDepth=55000 -o "$G/APacketUnary.olean" "$G/APacketUnary.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
+          lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
           for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE DSourceCorollaries; do
             lean -o "$P3/$module.olean" "$P3/$module.lean"
           done
