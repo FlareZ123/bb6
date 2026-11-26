@@ -32,3 +32,12 @@ full-horizon test is not yet completed. To reproduce the wide executable,
 replace the range check substring
 `F>=1000000000||r>26||!cap||cap>26` in Agent9's original folded_block.cpp
 with `F>=2000000000||r>26||!cap||cap>29`. No other changes.
+
+The second singleton also survives its own full horizon:
+
+    ./folded_wide 814324766 814324766 22 1628649535 29
+    F=1628649535 q=1628649513 jump=22 folded initial=123286902
+    interval 814324766..814324766 visits=1904798224 probe_work=83 blocks=28399643 hits=1 seconds=118.458
+    814324766
+
+Thus both new modular survivors need delayed analysis. This extension adds 273,683,827 even indices with only two full-horizon survivors. All are numerical results.
