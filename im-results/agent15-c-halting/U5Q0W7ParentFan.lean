@@ -87,7 +87,9 @@ theorem w7_z2_parent_fan (u a k : Nat)
                 have hcost' : 2*k+1+7+3*(n+1)=X2 := by
                   rw [hX2]
                   omega
-                exact ⟨n+1,hnEven,hscale,hcost'⟩
+                refine ⟨n+1,hnEven,?_,?_⟩
+                · simpa [ha1] using hscale
+                · simpa [ha1] using hcost'
     · have ha2 : 2≤a := by omega
       by_cases hk0 : k=0
       · simp [BB6.Agent46.sectionPreimageAll,ha0,ha1,hk0] at hpre <;> omega
@@ -180,18 +182,20 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
     by_cases hsmall : n≤2
     · exact hsmall
     · have hn4 : 4≤n := by omega
-    have hpow : 2^5∣2^(n+1) := by
-      exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=n+1) (by omega)
-    have hdiv : 32∣2^(n+1)*(a+3) := dvd_mul_of_dvd_left hpow (a+3)
-    have hmod : (2^(n+1)*(a+3))%32=0 :=
-      Nat.mod_eq_zero_of_dvd hdiv
-    rw [hscale] at hmod
-    have hmodW : (16*W)%32=16 := by dsimp [W]; omega
-    omega
+      have hpow : 2^5∣2^(n+1) := by
+        exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=n+1) (by omega)
+      have hdiv : 32∣2^(n+1)*(a+3) := dvd_mul_of_dvd_left hpow (a+3)
+      have hmod : (2^(n+1)*(a+3))%32=0 :=
+        Nat.mod_eq_zero_of_dvd hdiv
+      rw [hscale] at hmod
+      have hmodW : (16*W)%32=16 := by dsimp [W]; omega
+      omega
   have hnCases : n=0 ∨ n=2 := by omega
   rcases hnCases with hn0 | hn2
   · subst n
-    have ha : a=8*W-3 := by norm_num at hscale; omega
+    have ha : a=8*W-3 := by
+      have htmp : 2*(a+3)=16*W := by simpa using hscale
+      omega
     have hk : k=17769+28644*u := by
       rw [ha] at hcost
       dsimp [W,X2] at hcost
@@ -199,7 +203,9 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
     have hbad := w7_z2_q0_parent_unreachable u
     exact hbad (by simpa [W,ha,hk] using hprev)
   · subst n
-    have ha : a=2*W-3 := by norm_num at hscale; omega
+    have ha : a=2*W-3 := by
+      have htmp : 8*(a+3)=16*W := by simpa using hscale
+      omega
     have hk : k=24450+39417*u := by
       rw [ha] at hcost
       dsimp [W,X2] at hcost
@@ -339,19 +345,19 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
     by_cases hsmall : n≤2
     · exact hsmall
     · have hn4 : 4≤n := by omega
-    have hpow : 32∣2^(n+1) := by
-      change 2^5∣2^(n+1)
-      exact Nat.pow_dvd_pow 2 (by omega)
-    have hdiv : 32∣2^(n+1)*(a+3) :=
-      dvd_mul_of_dvd_left hpow (a+3)
-    have hmod : (2^(n+1)*(a+3))%32=0 :=
-      Nat.mod_eq_zero_of_dvd hdiv
-    rw [hscale] at hmod
-    have hmodW : (16*W)%32=16 := by
-      obtain ⟨q,hq⟩ : ∃ q, W=2*q+1 := by omega
-      rw [hq]
+      have hpow : 32∣2^(n+1) := by
+        change 2^5∣2^(n+1)
+        exact Nat.pow_dvd_pow 2 (by omega)
+      have hdiv : 32∣2^(n+1)*(a+3) :=
+        dvd_mul_of_dvd_left hpow (a+3)
+      have hmod : (2^(n+1)*(a+3))%32=0 :=
+        Nat.mod_eq_zero_of_dvd hdiv
+      rw [hscale] at hmod
+      have hmodW : (16*W)%32=16 := by
+        obtain ⟨q,hq⟩ : ∃ q, W=2*q+1 := by omega
+        rw [hq]
+        omega
       omega
-    omega
   have hnCases : n=0 ∨ n=2 := by omega
   rcases hnCases with hn0 | hn2
   · subst n
@@ -373,9 +379,12 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
       dsimp [W,X2] at hcost
       omega
     have hbad := w7_z2_q1_parent_unreachable_u59mod80 v
+    have hax : 2*W-3=428191+574560*v := by dsimp [W,u]; omega
+    have hay : 24450+39417*u=2350053+3153360*v := by dsimp [u]; omega
     have hprev' : BB6.Agent3.CReach
         (428191+574560*v) (2350053+3153360*v) := by
-      simpa [u,W,ha,hk] using hprev
+      rw [ha,hk] at hprev
+      simpa only [hax,hay] using hprev
     exact hbad hprev'
 
 
