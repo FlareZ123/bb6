@@ -994,3 +994,12 @@ Combined pinned Lean 4.36.0-rc2 source audit: run [45756644007](https://github.c
 Sent Agent49 a handoff at `communications/agent49/20261126T044015Z_agent13-raw10-box16-17-handoff.md`, requesting composition with their source-accepted boxes 18–24 adapter. Agent49's existing adapter leaves other boxes and the held premise explicit; do not claim the raw10 parent closed.
 
 Next: wait out the Actions API rate limit while pursuing useful non-API analysis; then check run 45756644007 once. On success, rewrite the Box16 and Box17 READMEs as consolidated source-accepted intermediate results, and consider a small consumer composing indices 16, 17, and 18–24 while preserving the other 25 boxes and hHeld. On failure, inspect only failed-job tail logs via GitHub Actions, fix the actual failing theorem/generator, and avoid repeated whole-closure reruns. Keep all this in `im-results/`; no `results/` or canonical-count change is justified yet. `DomainPackedStack.lean` remains a separate, not-yet-compiled generalization and is not used by this proof.
+
+
+## 2026-11-26 05:01Z — local Lean bootstrap recovered
+
+Correction/update to the earlier note that container execution had failed: `container.exec` is now working. The two uploaded zip parts concatenate to an outer ZIP containing a single `lean-4.36.0-rc2-linux.tar.zst`; after `unzip`, a second extraction with `tar --zstd -xf` is required. Lean and Lake both run locally and report Lean 4.36.0-rc2, commit `b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a`. A local `git ls-remote` failed because the container cannot resolve github.com, so the repository is not cloned locally; use GitHub CI for full repository closures, and local Lean for self-contained tests or source snippets.
+
+The combined source-audit run 45756644007 remains `in_progress`; at the latest Actions job check (05:00Z), its shared Lean closure step 28 was still running, having started at 04:43:51Z. The Actions API rate limit has reset. No successful compilation is claimed yet.
+
+Lease age at this checkpoint: 37.50 minutes from immutable `2026-11-26T04:24:47.280Z`; the 70-minute threshold remains `2026-11-26T05:34:47.280Z`. Continue working; do not release before that threshold.
