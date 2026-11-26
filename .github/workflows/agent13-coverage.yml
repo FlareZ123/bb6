@@ -2492,27 +2492,27 @@ jobs:
           fi
           if [ "$TARGET" = weighted-tnf-raw49-progress ]; then
             python3 - /tmp/a47-rootsibling.log <<'PY'
-            import pathlib, re, sys
-            log = pathlib.Path(sys.argv[1]).read_text()
-            allowed = {"propext", "Classical.choice", "Quot.sound"}
-            names = [
-                "BB6.Agent7Raw49Sweep.never",
-                "BB6.Agent7Raw49Cut.parent_cut",
-                "BB6.Agent7.Raw49C0.all_quotient",
-                "BB6.Agent7.Raw49C2.all_quotient",
-                "BB6.Agent7.Raw49C5.all_quotient",
-                "BB6.Agent7Raw49Progress.refined",
-                "BB6.Agent7Raw49Progress.residual_count",
-            ]
-            for name in names:
-                m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]", log)
-                if not m:
-                    raise SystemExit("missing axiom audit: " + name)
-                used = {x.strip() for x in m.group(1).split(",") if x.strip()}
-                if not used <= allowed:
-                    raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
-                print(f"{name}: {sorted(used)}")
-            PY
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          names = [
+              "BB6.Agent7Raw49Sweep.never",
+              "BB6.Agent7Raw49Cut.parent_cut",
+              "BB6.Agent7.Raw49C0.all_quotient",
+              "BB6.Agent7.Raw49C2.all_quotient",
+              "BB6.Agent7.Raw49C5.all_quotient",
+              "BB6.Agent7Raw49Progress.refined",
+              "BB6.Agent7Raw49Progress.residual_count",
+          ]
+          for name in names:
+              m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
+              if not m:
+                  raise SystemExit("missing axiom audit: " + name)
+              used = {x.strip() for x in m.group(1).split(",") if x.strip()}
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
+              print(f"{name}: {sorted(used)}")
+          PY
           fi
       - name: Preserve Raw47 FAR5 proof artifacts
         if: inputs.target == 'weighted-tnf-raw47-far5'
