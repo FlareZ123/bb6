@@ -68,7 +68,7 @@ theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB
 theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB6Coverage.NeverHalts m :=
   BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever
 '''
- source+=f'#print axioms never\\nend {NS}.H{i}\\n'
+ source+=f'#print axioms never\nend {NS}.H{i}\n'
  return source
 
 def table_text(t):
@@ -130,7 +130,7 @@ def emit(code,spec,out,blocks_only=False,tr=None):
     assert c and (not r[5:] or [c['left_states'],c['right_nodes']]==r[5:])
     body+=block_source(NS,i,opens[i],c,flip)
   header=HEADER.replace('set_option maxRecDepth',
-    ''.join(x+'\\n' for x in sorted(set(extra_imports)))+'set_option maxRecDepth')
+    ''.join(x+'\n' for x in sorted(set(extra_imports)))+'set_option maxRecDepth')
   (out/(name+'.lean')).write_text(header+body)
  if blocks_only:return modules
  def node(t):
