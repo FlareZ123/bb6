@@ -17,7 +17,11 @@ on:
       resume_retry_run_id:
         type: string
         default: ''
-        description: Previous retry run whose successful shard artifacts should be reused when retrying only missing groups
+        description: First previous retry run whose successful shard artifacts may be reused
+      resume_retry_run_id2:
+        type: string
+        default: ''
+        description: Second previous retry run whose successful shard artifacts may be reused
       retry_groups:
         type: string
         default: '["r01a-rest0","r01a-rest1","r01a-deep","r04a","r04b","r04c","r05a0","r05a1"]'
@@ -820,14 +824,15 @@ jobs:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
+          RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
           test "$SOURCE_RUN_ID" = 45751911115
           test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
-          if [[ -n "$RESUME_RETRY_RUN_ID" ]]; then
-            [[ "$RESUME_RETRY_RUN_ID" =~ ^[0-9]+$ ]]
-          fi
+          for id in "$RESUME_RETRY_RUN_ID" "$RESUME_RETRY_RUN_ID2"; do
+            if [[ -n "$id" ]]; then [[ "$id" =~ ^[0-9]+$ ]]; fi
+          done
           python3 - <<'PY'
           import json, os, sys
           sys.path.insert(0, "im-results/agent10-raw112-recovery")
@@ -837,8 +842,11 @@ jobs:
               raise SystemExit("retry_groups must be a nonempty JSON array without duplicates")
           if not set(selected) <= set(RETRY_GROUPS):
               raise SystemExit(f"unknown retry groups: {sorted(set(selected) - set(RETRY_GROUPS))}")
-          if not os.environ.get("RESUME_RETRY_RUN_ID") and set(selected) != set(RETRY_GROUPS):
-              raise SystemExit("partial retry_groups selection requires resume_retry_run_id")
+          resume_ids = [x.strip() for x in (os.environ.get("RESUME_RETRY_RUN_ID", ""), os.environ.get("RESUME_RETRY_RUN_ID2", "")) if x.strip()]
+          if any(not x.isdigit() for x in resume_ids):
+              raise SystemExit("resume retry run IDs must be numeric")
+          if not resume_ids and set(selected) != set(RETRY_GROUPS):
+              raise SystemExit("partial retry_groups selection requires at least one resume_retry_run_id")
           PY
       - name: Reconstruct common generated source dependencies
         run: |
@@ -870,14 +878,23 @@ jobs:
         if: inputs.resume_retry_run_id != ''
         with:
           pattern: raw112-shard-r*
-          path: /tmp/a47-raw112-prior-retry
+          path: /tmp/a47-raw112-prior-retry-1
           merge-multiple: false
           run-id: ${{ inputs.resume_retry_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        if: inputs.resume_retry_run_id2 != ''
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a47-raw112-prior-retry-2
+          merge-multiple: false
+          run-id: ${{ inputs.resume_retry_run_id2 }}
           github-token: ${{ github.token }}
       - name: Build strict partial union from retained artifacts
         env:
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
+          RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
         run: |
           set -euo pipefail
           python3 -m py_compile im-results/agent10-raw112-recovery/configure_retry.py im-results/agent10-raw112-recovery/raise_maxrecdepth.py im-results/agent10-raw112-recovery/run_retry_shard.py im-results/agent10-raw112-recovery/assemble_retry.py
@@ -892,23 +909,33 @@ jobs:
               raise SystemExit("retry_groups must be a nonempty JSON array without duplicates")
           if not set(selected) <= set(RETRY_GROUPS):
               raise SystemExit(f"unknown retry groups: {sorted(set(selected) - set(RETRY_GROUPS))}")
-          resume_id = os.environ.get("RESUME_RETRY_RUN_ID", "").strip()
-          if resume_id and not resume_id.isdigit():
-              raise SystemExit("resume_retry_run_id must be numeric")
-          if not resume_id and set(selected) != set(RETRY_GROUPS):
-              raise SystemExit("a partial retry_groups selection requires resume_retry_run_id")
+          resume1 = os.environ.get("RESUME_RETRY_RUN_ID", "").strip()
+          resume2 = os.environ.get("RESUME_RETRY_RUN_ID2", "").strip()
+          resume_ids = [x for x in (resume1, resume2) if x]
+          if any(not x.isdigit() for x in resume_ids):
+              raise SystemExit("resume retry run IDs must be numeric")
+          if not resume_ids and set(selected) != set(RETRY_GROUPS):
+              raise SystemExit("a partial retry_groups selection requires at least one resume_retry_run_id")
 
-          reused = sorted(set(RETRY_GROUPS) - set(selected)) if resume_id else []
+          reused = sorted(set(RETRY_GROUPS) - set(selected)) if resume_ids else []
+          prior_dirs = []
+          if resume1:
+              prior_dirs.append(Path("/tmp/a47-raw112-prior-retry-1"))
+          if resume2:
+              prior_dirs.append(Path("/tmp/a47-raw112-prior-retry-2"))
           config = build_config(
               Path("im-results/agent47-raw112-cut/shard-config.json"), "partial"
           )
-          if resume_id:
-              prior = Path("/tmp/a47-raw112-prior-retry")
+          if resume_ids:
               destination = Path("/tmp/a47-raw112-shards")
               for group in reused:
-                  source = prior / f"raw112-shard-{group}"
-                  if not (source / "manifest.json").is_file():
-                      raise SystemExit(f"missing successful prior retry artifact for {group}")
+                  source = next(
+                      (d / f"raw112-shard-{group}" for d in prior_dirs
+                       if (d / f"raw112-shard-{group}" / "manifest.json").is_file()),
+                      None,
+                  )
+                  if source is None:
+                      raise SystemExit(f"missing successful prior retry artifact for {group} in resume runs {resume_ids}")
                   shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
                   config["groups"][group] = RETRY_GROUPS[group]
 
@@ -935,6 +962,54 @@ jobs:
           path: /tmp/a47-raw112-partial-union/
           if-no-files-found: warn
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r01a-rest0') }}
+        with:
+          name: raw112-shard-r01a-rest0
+          path: /tmp/a47-raw112-shards/raw112-shard-r01a-rest0/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r01a-rest1') }}
+        with:
+          name: raw112-shard-r01a-rest1
+          path: /tmp/a47-raw112-shards/raw112-shard-r01a-rest1/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r01a-deep') }}
+        with:
+          name: raw112-shard-r01a-deep
+          path: /tmp/a47-raw112-shards/raw112-shard-r01a-deep/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r04a') }}
+        with:
+          name: raw112-shard-r04a
+          path: /tmp/a47-raw112-shards/raw112-shard-r04a/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r04b') }}
+        with:
+          name: raw112-shard-r04b
+          path: /tmp/a47-raw112-shards/raw112-shard-r04b/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r04c') }}
+        with:
+          name: raw112-shard-r04c
+          path: /tmp/a47-raw112-shards/raw112-shard-r04c/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a0') }}
+        with:
+          name: raw112-shard-r05a0
+          path: /tmp/a47-raw112-shards/raw112-shard-r05a0/
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a1') }}
+        with:
+          name: raw112-shard-r05a1
+          path: /tmp/a47-raw112-shards/raw112-shard-r05a1/
+          if-no-files-found: error
   compile_retry:
     if: inputs.mode == 'retry'
     needs: prepare_retry
@@ -963,14 +1038,15 @@ jobs:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
+          RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
           test "$SOURCE_RUN_ID" = 45751911115
           test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
-          if [[ -n "$RESUME_RETRY_RUN_ID" ]]; then
-            [[ "$RESUME_RETRY_RUN_ID" =~ ^[0-9]+$ ]]
-          fi
+          for id in "$RESUME_RETRY_RUN_ID" "$RESUME_RETRY_RUN_ID2"; do
+            if [[ -n "$id" ]]; then [[ "$id" =~ ^[0-9]+$ ]]; fi
+          done
           python3 - <<'PY'
           import json, os, sys
           sys.path.insert(0, "im-results/agent10-raw112-recovery")
@@ -980,8 +1056,11 @@ jobs:
               raise SystemExit("retry_groups must be a nonempty JSON array without duplicates")
           if not set(selected) <= set(RETRY_GROUPS):
               raise SystemExit(f"unknown retry groups: {sorted(set(selected) - set(RETRY_GROUPS))}")
-          if not os.environ.get("RESUME_RETRY_RUN_ID") and set(selected) != set(RETRY_GROUPS):
-              raise SystemExit("partial retry_groups selection requires resume_retry_run_id")
+          resume_ids = [x.strip() for x in (os.environ.get("RESUME_RETRY_RUN_ID", ""), os.environ.get("RESUME_RETRY_RUN_ID2", "")) if x.strip()]
+          if any(not x.isdigit() for x in resume_ids):
+              raise SystemExit("resume retry run IDs must be numeric")
+          if not resume_ids and set(selected) != set(RETRY_GROUPS):
+              raise SystemExit("partial retry_groups selection requires at least one resume_retry_run_id")
           PY
       - name: Install Lean 4.36.0-rc2
         run: |
@@ -1054,14 +1133,15 @@ jobs:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
+          RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
           test "$SOURCE_RUN_ID" = 45751911115
           test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
-          if [[ -n "$RESUME_RETRY_RUN_ID" ]]; then
-            [[ "$RESUME_RETRY_RUN_ID" =~ ^[0-9]+$ ]]
-          fi
+          for id in "$RESUME_RETRY_RUN_ID" "$RESUME_RETRY_RUN_ID2"; do
+            if [[ -n "$id" ]]; then [[ "$id" =~ ^[0-9]+$ ]]; fi
+          done
           python3 - <<'PY'
           import json, os, sys
           sys.path.insert(0, "im-results/agent10-raw112-recovery")
@@ -1071,8 +1151,11 @@ jobs:
               raise SystemExit("retry_groups must be a nonempty JSON array without duplicates")
           if not set(selected) <= set(RETRY_GROUPS):
               raise SystemExit(f"unknown retry groups: {sorted(set(selected) - set(RETRY_GROUPS))}")
-          if not os.environ.get("RESUME_RETRY_RUN_ID") and set(selected) != set(RETRY_GROUPS):
-              raise SystemExit("partial retry_groups selection requires resume_retry_run_id")
+          resume_ids = [x.strip() for x in (os.environ.get("RESUME_RETRY_RUN_ID", ""), os.environ.get("RESUME_RETRY_RUN_ID2", "")) if x.strip()]
+          if any(not x.isdigit() for x in resume_ids):
+              raise SystemExit("resume retry run IDs must be numeric")
+          if not resume_ids and set(selected) != set(RETRY_GROUPS):
+              raise SystemExit("partial retry_groups selection requires at least one resume_retry_run_id")
           PY
       - name: Install Lean 4.36.0-rc2
         run: |
@@ -1107,54 +1190,33 @@ jobs:
           run-id: ${{ inputs.prior_recovery_run_id }}
           github-token: ${{ github.token }}
       - uses: actions/download-artifact@v4
-        if: inputs.resume_retry_run_id != ''
-        with:
-          pattern: raw112-shard-r*
-          path: /tmp/a47-raw112-prior-retry
-          merge-multiple: false
-          run-id: ${{ inputs.resume_retry_run_id }}
-          github-token: ${{ github.token }}
-      - uses: actions/download-artifact@v4
         with:
           pattern: raw112-shard-r*
           path: /tmp/a47-raw112-current-retry
           merge-multiple: false
-      - name: Reassemble the eight retry groups from retained successes and new cuts
-        env:
-          RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
-          RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
+      - name: Reassemble the eight retry groups from current-run carried and new artifacts
         run: |
           set -euo pipefail
           python3 - <<'PY'
-          import json, os, shutil
+          import shutil
           from pathlib import Path
 
-          selected = set(json.loads(os.environ["RETRY_GROUPS_JSON"]))
           all_groups = {"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a0", "r05a1"}
-          if not selected or not selected <= all_groups:
-              raise SystemExit("invalid selected retry group set")
-          resume_id = os.environ.get("RESUME_RETRY_RUN_ID", "").strip()
           destination = Path("/tmp/a47-raw112-shards")
-          if resume_id:
-              prior = Path("/tmp/a47-raw112-prior-retry")
-              for group in sorted(all_groups - selected):
-                  source = prior / f"raw112-shard-{group}"
-                  if not (source / "manifest.json").is_file():
-                      raise SystemExit(f"missing reusable prior retry artifact for {group}")
-                  shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
           current = Path("/tmp/a47-raw112-current-retry")
-          for group in sorted(selected):
+          for group in sorted(all_groups):
               source = current / f"raw112-shard-{group}"
               if not (source / "manifest.json").is_file():
-                  raise SystemExit(f"missing newly compiled retry artifact for {group}")
+                  raise SystemExit(f"missing carried or newly compiled shard artifact for {group}")
               shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
-          print(f"assembled retry inputs from {len(all_groups - selected)} reused and {len(selected)} new groups")
+          print(f"assembled all {len(all_groups)} retry groups from current-run artifacts")
           PY
       - name: Assemble and audit full Raw112 parent Cover
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
           PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
+          RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
@@ -1168,10 +1230,11 @@ jobs:
           summary = json.loads(path.read_text())
           selected = sorted(json.loads(os.environ["RETRY_GROUPS_JSON"]))
           all_groups = sorted({"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a0", "r05a1"})
-          resume_id = os.environ.get("RESUME_RETRY_RUN_ID", "").strip()
-          summary["resumed_from_retry_run_id"] = int(resume_id) if resume_id else None
+          resume_ids = [int(x) for x in (os.environ.get("RESUME_RETRY_RUN_ID", "").strip(), os.environ.get("RESUME_RETRY_RUN_ID2", "").strip()) if x]
+          summary["resumed_from_retry_run_id"] = resume_ids[0] if len(resume_ids) == 1 else None
+          summary["resumed_from_retry_run_ids"] = resume_ids
           summary["new_retry_groups"] = selected
-          summary["reused_retry_groups"] = sorted(set(all_groups) - set(selected)) if resume_id else []
+          summary["reused_retry_groups"] = sorted(set(all_groups) - set(selected)) if resume_ids else []
           path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           PY
       - uses: actions/upload-artifact@v4
