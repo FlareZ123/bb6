@@ -713,9 +713,10 @@ jobs:
           set -euo pipefail
           work=/tmp/a6-e0-zeroLC
           mkdir -p "$work/generated" "$work/build"
-          test -s /tmp/a6-champion-residual/source-sibling-manifest.json
-          test -d /tmp/a6-champion-residual/source-sibling-build
+          test -s /tmp/a6-champion-residual/manifest.json
+          test -d /tmp/a6-champion-residual/build
           test -s /tmp/a14-d0-ZeroRC/imports/Raw139D0ZeroRCCover.lean
+          cp -a /tmp/a14-d0-ZeroRC/imports "$work/d0-zeroRC-source"
           export PYTHONPATH="$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneLA:$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneRA:$GITHUB_WORKSPACE/im-results/agent13-block-far:$GITHUB_WORKSPACE/im-results/agent32-raw59"
           g++ -O3 -std=c++20 -o "$work/broad_census" im-results/agent6-raw139-e0-zeroLC/broad_census.cpp
           (cd "$work" && ./broad_census)
@@ -737,22 +738,25 @@ jobs:
             --source-root im-results/agent6-raw139-e0-zeroLC \
             --source-root im-results/agent6-champion-residual \
             --source-root im-results/agent14-raw139-d0-generic \
+            --source-root im-results/agent42-champion-terminal \
+            --source-root im-results/agent8-counted-reset \
+            --source-root im-results/agent41-m0-n16r7 \
+            --source-root im-results/agent48-counted-inc0 \
+            --source-root im-results/agent13-coverage \
+            --source-root im-results/agent31-three-hole-tnf \
             --source-root im-results/agent10-tnf-multipump \
+            --source-root im-results/agent48-champion-root \
             --source-root im-results/agent13-block-far \
             --source-root im-results/agent32-raw59 \
             --source-root im-results/agent7-far \
             --source-root im-results/agent8-coverage-contract \
-            --source-root /tmp/a14-d0-ZeroLF/imports \
-            --source-root /tmp/a14-d0-OneLB/imports \
-            --source-root /tmp/a14-d0-OneLA/imports \
-            --source-root /tmp/a14-d0-OneLF/imports \
-            --source-root /tmp/a14-d0-ZeroRC/imports \
-            --source-root /tmp/a14-d0-OneRF/imports \
-            --source-root /tmp/a14-d0-ZeroRA/imports \
-            --source-root /tmp/a14-d0-ZeroRF/imports \
-            --source-root /tmp/a48-c1-batch/imports \
-            --precompiled-manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
-            --precompiled-dir /tmp/a6-champion-residual/source-sibling-build \
+            --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
+            --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
+            --source-root "$PWD/.tmp/a41-f1-zeroRC/imports" \
+            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
+            --source-root "$work/d0-zeroRC-source" \
+            --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
+            --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work/build" \
             --manifest "$work/manifest.json" \
             --label agent6-e0-zeroLC-parent \
@@ -777,7 +781,9 @@ jobs:
             --provenance-input im-results/agent32-raw59/MaskMap.lean \
             --provenance-input im-results/agent7-far/FARBi.lean \
             --provenance-input im-results/agent8-coverage-contract/Symmetry.lean \
-            --provenance-input /tmp/a14-d0-ZeroRC/imports/Raw139D0ZeroRCCover.lean \
+            --provenance-input im-results/agent48-raw139-f1-oneRA/blockcert.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/scan.py \
+            --provenance-input "$work/d0-zeroRC-source/Raw139D0ZeroRCCover.lean" \
             --jobs 4 | tee "$work/compile.log"
           if grep -Eq 'sorryAx|native_decide' "$work/compile.log"; then
             echo "Forbidden proof placeholder or native_decide in E0=0LC parent proof" >&2
@@ -814,11 +820,10 @@ jobs:
             /tmp/a6-e0-zeroLC/late_branch_recipes.jsonl
             /tmp/a6-e0-zeroLC/broad_specs.json
             /tmp/a6-e0-zeroLC/broad_specs_summary.json
-            /tmp/a6-e0-zeroLC/broad_chunk_manifest.json
+            /tmp/a6-e0-zeroLC/generated/broad_chunk_manifest.json
             /tmp/a6-e0-zeroLC/generated/e0_parent_summary.json
             /tmp/a6-e0-zeroLC/*.log
-            /tmp/a6-champion-residual/source-sibling-build
-            /tmp/a6-champion-residual/source-sibling-manifest.json
+            /tmp/a6-e0-zeroLC/d0-zeroRC-source
             im-results/agent13-block-far/BlockFAR4.lean
             im-results/agent13-block-far/BlockMacro4.lean
             im-results/agent13-block-far/RangeCheck4.lean
