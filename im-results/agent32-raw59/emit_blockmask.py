@@ -27,7 +27,10 @@ def emit(root,name,data,offset=0):
             import_line = 'import BlockFAR2\n'
             if template.count(import_line) != 1:
                 raise ValueError('expected one BlockFAR2 import in width-two mask template')
-            template = template.replace(import_line, import_line + 'import BlockMacro\n', 1)
+            # BlockFAR2 imports BlockMacro2, which imports BlockMacro and
+            # re-exports its primitive Table/run names. Keep run_add on that
+            # single dependency path: a second direct BlockMacro import can
+            # split the table type identity in a mixed precompiled closure.
             alias = """theorem run_add_width2 (M : Table) (m n : Nat) (c : Prim) :
     run M (m+n) c = (run M m c).bind (run M n) := by
   simpa [run] using BB6BlockFAR.run_add M m n c
@@ -43,12 +46,13 @@ def emit(root,name,data,offset=0):
                 raise ValueError('unexpected width-two run_add reference count')
             template = template.replace(',run_add', ',run_add_width2')
             if (
-                'import BlockMacro\n' not in template
+                template.count(import_line) != 1
+                or 'import BlockMacro\n' in template
                 or template.count('theorem run_add_width2') != 1
                 or template.count(',run_add_width2') != 2
                 or template.count('#print axioms run_add_width2') != 1
             ):
-                raise ValueError('width-two mask template lacks its local run_add alias')
+                raise ValueError('width-two mask template lacks its single-path local run_add alias')
         (root/(checker+'.lean')).write_text(template,encoding='utf8')
     D,C=data['left_states'],data['right_nodes'];dead=C-1
     ns='BB6BlockFAR'+suffix+'.'+name
