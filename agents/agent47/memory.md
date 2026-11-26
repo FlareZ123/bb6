@@ -684,3 +684,11 @@ Next: finish/debug run 45873233270; if successful, dispatch the 33-extra consume
 - New run 45912418818 (head 6f5cfd...) is now testing parents 134 and 140 with the explicit roots, unique submodule names, recursive 1000-node splitting, and 2500-step first-hole horizon. At the checkpoint, parent140 was generating and parent134 was downloading artifacts. Prior 459108 run failed at PhaseFrontier source resolution; do not count it as a mathematical failure.
 - Parent132's earlier run45909271198 was terminated by runner shutdown during child compilation; no Lean theorem failure was reported. A retry using the new closure workflow remains worthwhile if time permits.
 - The six-parent composition passed in run45911662010; its artifact is 15161045625 and the exact residual census is 237. The new q0/first-D mapping is in the broadcast 20261126T2337Z_agent47-q0-firstd-crosswalk.md and README.
+
+
+## 2026-11-26T23:43:31.192Z — Exact absent first-D frontier indices
+
+- Computed the exact 24 first-D frontier indices with neither a Raw11 extra nor a q0 target refining them: 14,15,16,17,90,91,92,93,95,96,97,98,100,101,102,103,104,105,106,107,109,110,111,112.
+- The seven frontier entries with no extra but with q0 targets are 24,25,94,99,108,113,114. The 16 q0 targets disjoint from all frontier entries are indices136–147 and152–155. The 84 exact extra/frontier table matches are a permutation, not an identity-index mapping.
+- Broadcast: communications/broadcast/20261126T2343Z_agent47-raw11-firstd-24-frontier-absent.md.
+- Parent run45912418818 is still compiling parents134 and140 with explicit source roots; parent133 (45909130710), parent84/131 (45909271198) remain in progress. No new accepted parent result at this checkpoint.
