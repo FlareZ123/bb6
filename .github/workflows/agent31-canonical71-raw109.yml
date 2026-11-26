@@ -14,6 +14,7 @@ on:
           - canonical65-integrated
           - raw119-parent
           - raw115-parent
+          - sharp-fourhole
         default: canonical74
         required: true
       canonical72_run_id:
@@ -812,4 +813,68 @@ jobs:
             /tmp/a8-raw115
             /tmp/a8-raw115-assemble.log
           if-no-files-found: error
+          retention-days: 14
+
+  sharp-fourhole:
+    if: ${{ inputs.target == 'sharp-fourhole' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - raw: 95
+            folder: agent3-tnf-raw95
+            root: SharpRaw95
+            namespace: BB6.Agent31SharpRaw95
+            bound: 379
+          - raw: 99
+            folder: agent2-tnf-raw99
+            root: Raw99Data
+            namespace: BB6.Agent2Raw99
+            bound: 196
+          - raw: 103
+            folder: agent3-tnf-raw103
+            root: Raw103Data
+            namespace: BB6.Agent3Raw103
+            bound: 116
+          - raw: 105
+            folder: agent3-tnf-raw105
+            root: SharpRaw105
+            namespace: BB6.Agent31SharpRaw105
+            bound: 182
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact four-hole parent and attaining completion
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-shared-core/generate_sharp_fourhole.py ${{ matrix.raw }}
+      - name: Prove all completions bounded and exact attainment
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/parent --jobs 4 \
+            --manifest /tmp/parent-manifest.json \
+            --provenance-input im-results/agent31-shared-core/generate_sharp_fourhole.py \
+            --label "raw${{ matrix.raw }}-sharp" \
+            --theorem "${{ matrix.namespace }}.exact${{ matrix.raw }}" \
+            --weighted-bound "${{ matrix.bound }}" \
+            "im-results/${{ matrix.folder }}/${{ matrix.root }}.lean" 2>&1 | tee /tmp/parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/parent.log; then exit 1; fi
+          grep -E "'${{ matrix.namespace }}.exact${{ matrix.raw }}' (depends on axioms:|does not depend on any axioms)" /tmp/parent.log
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw${{ matrix.raw }}-sharp-certified
+          path: |
+            /tmp/parent/
+            /tmp/parent.log
+            /tmp/parent-manifest.json
+          compression-level: 1
           retention-days: 14
