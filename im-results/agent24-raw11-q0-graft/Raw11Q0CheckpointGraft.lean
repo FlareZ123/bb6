@@ -8,22 +8,21 @@ open BB6.Agent13BlankDelay
 open BB6.Agent44Raw11
 open BB6.Agent50RootFrontier
 
-/-- Enumerate the finite move alphabet explicitly for executable conflict checks. -/
-def moveEquiv : Move ≃ (Bool × Bool × Fin 6) where
-  toFun m := (m.write, m.right, m.next)
-  invFun x := ⟨x.1, x.2.1, x.2.2⟩
-  left_inv m := by cases m; rfl
-  right_inv x := by rcases x with ⟨w, r, n⟩; rfl
-
-local instance : Fintype Move :=
-  Fintype.ofEquiv (Bool × Bool × Fin 6) moveEquiv.symm
-
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 /-- A table extension relation: every assignment in p is retained by q. -/
 def extendsTable (p q : PartialMachine) : Prop :=
-  ∀ s t, p s = some t → q s = some t
+  ∀ s, p s = none ∨ q s = p s
+
+theorem extendsTable_compat {p q : PartialMachine}
+    (h : extendsTable p q) : ∀ s t, p s = some t → q s = some t := by
+  intro s t hs
+  rcases h s with hnone | heq
+  · rw [hs] at hnone
+    contradiction
+  · rw [heq]
+    exact hs
 
 /-- Add one defined transition without changing any other slot. -/
 def addRow (p : PartialMachine) (s : Slot) (mv : Move) : PartialMachine :=
@@ -113,13 +112,37 @@ def q0CoarseTables : List PartialMachine := [
 /-- A conflict in one of the already named A/B/C source rows. At least one
     conflicting target is also already named, so a permutation of D/E/F
     cannot repair it. -/
+def conflictMoves (a b : Move) : Prop :=
+  a.write ≠ b.write ∨ a.right ≠ b.right ∨
+    ((a.next.val < 3 ∨ b.next.val < 3) ∧ a.next ≠ b.next)
+
+def slotConflict (p q : PartialMachine) (s : Slot) : Prop :=
+  match p s, q s with
+  | some (some a), some (some b) => conflictMoves a b
+  | _, _ => False
+
 def rootConflict (p q : PartialMachine) : Prop :=
-  ∃ s : Slot, s.1.val < 3 ∧
-    ∃ a b : Move,
-      p s = some (some a) ∧
-      q s = some (some b) ∧
-      (a.write ≠ b.write ∨ a.right ≠ b.right ∨
-        ((a.next.val < 3 ∨ b.next.val < 3) ∧ a.next ≠ b.next))
+  ∃ s : Slot, s.1.val < 3 ∧ slotConflict p q s
+
+theorem rootConflict_elim {p q : PartialMachine} (h : rootConflict p q) :
+    ∃ s : Slot, s.1.val < 3 ∧
+      ∃ a b : Move,
+        p s = some (some a) ∧ q s = some (some b) ∧ conflictMoves a b := by
+  rcases h with ⟨s, hs, hslot⟩
+  cases hpSlot : p s with
+  | none => simp [slotConflict, hpSlot] at hslot
+  | some pt =>
+    cases pt with
+    | none => simp [slotConflict, hpSlot] at hslot
+    | some a =>
+      cases hqSlot : q s with
+      | none => simp [slotConflict, hpSlot, hqSlot] at hslot
+      | some qt =>
+        cases qt with
+        | none => simp [slotConflict, hpSlot, hqSlot] at hslot
+        | some b =>
+          refine ⟨s, hs, a, b, hpSlot, hqSlot, ?_⟩
+          simpa [slotConflict, hpSlot, hqSlot] using hslot
 
 def raw11FrontierTables : List PartialMachine := frontier.map Prod.snd
 
@@ -427,14 +450,14 @@ theorem no_common_quotient_of_rootConflict {p q : PartialMachine}
   rcases hqm with ⟨f, hf0, hpf⟩
   have hpeParent : compatible parent (renameTable e m) := by
     intro s t hs
-    exact hpe s t (hp s t hs)
+    exact hpe s t (extendsTable_compat hp s t hs)
   have hpfParent : compatible parent (renameTable f m) := by
     intro s t hs
-    exact hpf s t (hq s t hs)
+    exact hpf s t (extendsTable_compat hq s t hs)
   obtain ⟨hback0, hback1, hback2⟩ :=
     rootBackwardAgreement m e f he0 hf0 hpeParent hpfParent
 
-  rcases hconf with ⟨s, hs, a, b, hpa, hqb, hdiff⟩
+  rcases rootConflict_elim hconf with ⟨s, hs, a, b, hpa, hqb, hdiff⟩
   have hsrc : e.backward s.1 = f.backward s.1 := by
     have hv : s.1.val = 0 ∨ s.1.val = 1 ∨ s.1.val = 2 := by omega
     rcases hv with hv | hv | hv
@@ -522,7 +545,7 @@ theorem q0NoFrontier_safe {p : PartialMachine}
   have hOriginal : TNFQuotientCompatible p m := ⟨e, he0, hpm⟩
   have hparent : compatible parent (renameTable e m) := by
     intro s t hs
-    exact hpm s t (hpExt s t hs)
+    exact hpm s t (extendsTable_compat hpExt s t hs)
   have htnf : TNFQuotientCompatible parent m := ⟨e, he0, hparent⟩
   rcases partition m htnf with hsafe | ⟨entry, hentry, hentryTnf⟩
   · exact hsafe
