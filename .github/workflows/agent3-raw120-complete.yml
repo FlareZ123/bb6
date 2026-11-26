@@ -243,11 +243,11 @@ jobs:
             export LEAN_PATH=".tmp/a48-e0parent-ZeroRE/build:/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
             lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean \
               im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedCrosswalk.lean
-            if grep -Eq 'sorryAx|native_decide' /tmp/raw120-canonical64/raw139-normalized-crosswalk.log; then
-              echo "nonstandard axiom in Raw139 normalized crosswalk probe"
-              exit 1
-            fi
           } 2>&1 | tee /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw120-canonical64/raw139-normalized-crosswalk.log; then
+            echo "nonstandard axiom in Raw139 normalized crosswalk probe"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
