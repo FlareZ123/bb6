@@ -48,9 +48,12 @@ end {NS}.H{i}
 '''
  return source
 
-def emit(code,spec,out):
- P=spec['parent'];NS='BB6.Agent6E0ZeroLC.D0ZeroRC.C1'+code_name(code);prefix='A6E0LCD0RCC1'+code_name(code)
- counts=Counter();opens=[];tr=tree(P,counts,opens,250,2);assert dict(counts)==spec['counts'] and opens==spec['open']
+def emit(code,spec,out,blocks_only=False,tr=None):
+ P=spec['parent'];NS=spec.get('namespace','BB6.Agent6E0ZeroLC.D0ZeroRC.C1'+code_name(code));prefix=spec.get('prefix','A6E0LCD0RCC1'+code_name(code))
+ if tr is None:
+  counts=Counter();opens=[];tr=tree(P,counts,opens,250,2);assert dict(counts)==spec['counts'] and opens==spec['open']
+ else:
+  counts=Counter(spec['counts']);opens=spec['open']
  rec={int(i):r for i,r in spec['recipes'].items()};assert set(rec)==set(range(len(opens)))
  idx={tuple(t):i for i,t in enumerate(opens)}
  blocks={i:r for i,r in rec.items() if r[0] in ('block','phase')};modules=[]
