@@ -44,7 +44,7 @@ on:
         default: '0RB 0RC 0RD 1LD 1RB 1RD'
         type: string
 permissions:
-  contents: read
+  contents: write
   actions: read
 jobs:
   generate:
@@ -445,6 +445,30 @@ jobs:
         run: |
           python im-results/agent43-raw122-cut/residual_roster.py /tmp/a43-source /tmp/a43-rosters "${{ inputs.assemble_branch }}"
           cat "/tmp/a43-rosters/Raw122Roster${{ inputs.assemble_branch }}.tsv"
+      - name: Persist exact residual roster in im-results
+        env:
+          BRANCH: ${{ inputs.assemble_branch }}
+        run: |
+          DEST="im-results/agent43-raw122-cut/rosters/branch${BRANCH}"
+          mkdir -p "$DEST"
+          cp /tmp/a43-rosters/Raw122Roster${BRANCH}* "$DEST/"
+          cat > "$DEST/metadata.json" <<EOF
+          {
+            "branch_index": ${BRANCH},
+            "source_artifact_run_id": 45655656030,
+            "source_artifact_id": 15043765926,
+            "generator": "im-results/agent43-raw122-cut/residual_roster.py"
+          }
+          EOF
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST"
+          if ! git diff --cached --quiet; then
+            git fetch origin main
+            git rebase origin/main
+            git commit -m "Agent 43: preserve Raw122 branch ${BRANCH} residual roster"
+            git push origin HEAD:main
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-roster-${{ inputs.assemble_branch }}
