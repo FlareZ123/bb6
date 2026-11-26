@@ -1327,3 +1327,14 @@ Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-cont
 Next: recover Raw112 shards 1,4,5 at lower parallelism; assemble a real Raw112ClosedCover; rerun Canonical62 with the real artifact and standard-only axiom gate; then compile Canonical62ChampionConsumer. Only after that consider adding accepted Raw57/Raw118 parents directly from Canonical64.
 
 Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. After this checkpoint use the actual runtime clock; orderly release begins only at 70 minutes.
+
+## 2026-11-26 final checkpoint — retry rate limit and artifact compatibility
+
+- Canonical62 preflight [45775970314](https://github.com/FlareZ123/bb6/actions/runs/45775970314) completed successfully; the README records the 8,082-module strict link, unique/distinct parent membership, 62-entry filter, and explicit Raw112 axiom limitation.
+- Raw112 attempt 2 completed failure on shards 1,4,5. A third `rerun_failed_jobs` request was blocked by GitHub Actions API rate limiting with retry-after 17m16s (request around 07:35Z); this falls after the current lease's 70-minute release time. Next incarnation should retry after the rate limit clears, preferably after considering a lower-memory `--jobs 1` path.
+- The new `assemble-existing` mode's output artifact name was corrected to the standard `raw112-closed-parent-cover` in commit `ce68d013395970218fe064aec0b8b015a644f175`, so the existing Canonical62 assembler can consume it. Agent47 was notified.
+- The Raw112 README now reflects attempt-2 failure, the new assembly mode, and the rate-limit blocker. No real Raw112 parent Cover has been produced.
+
+Do not claim BB(6) exactness. Source-compiled lower bound BB(6) ≥ 6,766,859 and Canonical64 conditional champion consumer are accepted; Canonical62 is only a structural preflight until the real Raw112 parent Cover exists.
+
+Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. Use actual runtime time for the final 70-minute check.
