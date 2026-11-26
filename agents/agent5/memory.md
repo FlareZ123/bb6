@@ -895,3 +895,20 @@ Lease agent5-20261126-frontier, claim 06:25:51.399Z, threshold 07:35:51.399Z. Fi
 - Root53 entire parent accepted in Lean, bound208, all 24 shards; dossier 02e9b44d. Roots52+53 total 58,202 nodes. Both use exact generated Coq artifacts as witnesses, not accepted Rocq proofs.
 - Raw11 extra124 parent accepted at 142 in Lean (1921 nodes). Extra92 all seven symbolic leaves accepted: shared stable sweep and six extra variants with four stable seeds and two nine-phase suffix cycles. Proof modules Raw11ExtraSweep*, Raw11ExtraFamily*, exact variantCover theorem for arbitrary B. Family source commits e8421589,55aa5d8b,be5c071a,d81baf0f. Eight symbolic leaves across 92/124, all completions covered. Extra92 full candidate 121 nodes, bound308, no open leaves, local parent check pending. Pinned JSON witnesses ab7c1da9 (92) and 1fded116 (124) in agent5-weighted-tnf-queue. Need commit generator and parent proofs/consumer. Actual global roster unconsumed pending integration.
 - Lease unchanged at 17:25:56.083Z, release threshold 18:35:56.083Z. Next finish 92, integrate four exact covers, continue unresolved larger parents with available time.
+
+
+## 2026-11-26 19:44 UTC — Raw11 extra parent 92/124 integration
+
+- Current incarnation claimed Agent 5 at 2026-11-26T19:19:55.559Z. This was a normal-mode identity claim; lease is in `.lease.json`.
+- Continued the Raw11 handoff from Agent 47 (mailbox messages at 17:54 and 18:06 UTC; Critic broadcast 09:47 UTC).
+- Exact unresolved-leaf match:
+  - Parent 92 witness has seven `u` leaves. Six are exactly `Raw11ExtraFamilyCoverage.variantTable 0..5`; the seventh is `Raw11ExtraSweepCoverage.table false`.
+  - Parent 124 witness has one `u` leaf, exactly `Raw11ExtraSweepCoverage.table true`.
+  - The exact one-hole tables are preserved in `im-results/agent5-weighted-tnf-queue/raw11-extra-92-witness.json` and `raw11-extra-124-witness.json`.
+- Added `im-results/agent47-raw11-adapter/Raw11ExtraExternalLeaves.lean`. It lifts the exact recurrence-based `NeverHalts` proofs to arbitrary `WeightedBound B`; remember `weighted_never` is in `BB6.Agent13BlankDelay`, so this module must open both `BB6Coverage` and `BB6.Agent13BlankDelay`. Namespace fix committed as `b45e1ce78132f62b60fc1b82d143eb72561afc83`.
+- Added `generate-raw11-extra-external.cjs`. It calls the existing `search(parentText,{retain:true})`, checks the retained open leaves against the two witness JSONs and the exact eight recurrence tables, and emits `Raw11Extra92.lean`, `Raw11Extra124.lean`, plus `raw11-extra-external-manifest.json`. The modules are generated in CI rather than committed as static files.
+- Updated `Raw11Root52ExtrasConsume.lean` to consume 35 extra parent Covers (including 92 and 124), with residual census 299 -> 257 after root39/root52. Updated `Raw11Root52Q0ParentsConsume.lean` census to 299 -> 254 after q0 parents 33, 49 and 51.
+- Updated `.github/workflows/agent47-raw114-holdouts.yml` so the `raw11_q0_extra_covers` job generates the two modules before compiling the combined consumer and uploads generated source/manifest.
+- CI run `45885315747` (head `807a7a33038f50e533009660d124658fb937bb41`) passed generation at 19:40:14 UTC; compile step was still in progress at 19:44 UTC. That run checked out before the namespace fix above, so if it fails at `weighted_never`, rerun the same workflow with `raw11_q0_extra_covers=true` on current main.
+- Reconstructed Lean 4.36.0-rc2 locally from the two uploaded zip parts. Compiled `Root56.lean` and `Root56Coverage.lean` locally against artifact 14997966221. Axiom reports: `Root56.advance` and `Root56.never` use only `propext, Quot.sound`; `Root56Coverage.never_compatible` uses the same; `Root56Coverage.weighted` additionally uses `Classical.choice`.
+- This is a proved local parent-cover reduction, not a complete Raw11 closure and not a BB(6) solution. Next: poll run 45885315747; if necessary rerun after b45e1ce; inspect generated artifact/manifest and update the parent synthesis. Then look for other unresolved extra parents whose leaves match existing exact recurrence families.
