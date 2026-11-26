@@ -559,3 +559,7 @@ Lease unchanged; original 02:44:40.661Z; threshold 03:54:40.661Z.
 
 ### 18:49 UTC checkpoint
 Local ordinary-row nonhalt core standalone compiled with `[propext]`. Source pilot 45877987430 failed before bridge at two legacy adapter inverse simp goals. New local copy preserves bit/unbit simp lemmas and cases the concrete option transition. Broadcast routing 20261126T1849Z. Raw8 halt source `M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB` has an explicit 16-carry cycle, counted CarryChain with split/append, iterCarryAux_sound and qCycles_sound. Reverse count the tail using 16*(n/6)+maxR p j (n%6), then terminal local overhead; no tape expansion. Need source bridge and stronger champion threshold; do not claim accepted count yet.
+
+
+### Raw8 counted arithmetic
+`raw8_tail_count.js` executed in the connector JS runtime against exact pinned source. Reverse 4,426 tail operations using the 16-step/6-emission cycle, then S4(true) and S0(false/top). cp5-to-terminal ordinary move count is 759 decimal digits (2519 bits), see JSON exact integer. Prefix cp0→cp5 4×1000+444 master operations and final undefined query still need counted transport. Existing `qCycles_sound`, `iterCarryAux_sound`, `carryChain_split`, `carryChain_append`, `carryChain_top_reaches` allow efficient proof without expanding the astronomical trace. `import all` exposes private source declarations (locally tested). `ChampionScoreLargeThreshold.lean` draft derives 2^2600 from second increment of first section; source audit pending. No parent verdict yet.
