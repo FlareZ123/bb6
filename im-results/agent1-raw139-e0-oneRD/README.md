@@ -13,10 +13,10 @@ The two remaining tables, each with only F0 unspecified, are:
 
 ## Compact recurrence for 2959
 
-Use a B section with an empty left stack (scanned blank) and right stack `1^n`. Blank entry is at step 10 with n=4. Direct symbolic inspection suggests:
+Use a B section with an empty left stack (scanned blank) and right stack `1^n`. Blank entry is at step 10 with n=4. The following sweep identities are proved in Lean in `E0OneRDLate.lean` (reconstruct with `python unpack.py`):
 
 - Even n: return with n+3 ones in 4n+6 steps.
 - Odd n: in n+3 steps enter A with n+2 ones on its left and a single one on its right. Each group of three left ones converts into right block 011 in three steps. Write n+2=3k+r. For r=2, two further steps query F0, with empty left and right 11(011)^k1. For r=1, one step gives B with right 1(011)^k1. For r=0 and k≥2, 18 steps give B with right 1^8(011)^(k−2)1.
 - B with right 1^m(011)^k1, k>0, returns with right 1^(m+5)(011)^(k−1)1 in 4m+6+6(m mod 2) steps.
 
-The recurrence reproduces the direct query count with final odd n=12,285 and k=4,095. The next task is to prove the symbolic word transfers for arbitrary parameters using SweepPumping and connect to the actual weighted first-hole bound. The remaining machine 4267 needs an all-time invariant or a terminal query; a longer finite run is not a closure proof.
+The recurrence reaches F0 with final odd n=12,285 and k=4,095. `BB6.Agent1Raw139E0OneRDLate.first_query` proves the exact 94,323,044-step first query using 28 macro sections and parametric sweeps, without evaluating the full raw trace. `BB6.Agent1Raw139E0OneRDLate.weighted : Cover (WeightedBound 94323050) p` applies the existing last-hole weighted certificate. Locally compiled under Lean 4.36.0-rc2 against the accepted E0=0RD core (artifact 15127060543) and the original SparseZipper, SweepPumping, ZipAuditCore sources from Raw58 artifact 15090715339. First-query axioms `[propext, Quot.sound]`; weighted theorem `[propext, Classical.choice, Quot.sound]`. Full source-closure acceptance in the shared gate and E0=1RD parent audit remain outstanding. Machine 4267 still needs an all-time invariant or terminal query.
