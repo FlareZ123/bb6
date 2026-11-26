@@ -76,9 +76,9 @@ def far(code, p):
             for j in range(N):
                 if T[j] & z:
                     z |= 1 << j
-            assert not (z & 1), (code, show(p))
             if old == z:
                 break
+        assert not (z & 1), (code, show(p))
         changed = False
         for dst, src, off in rules:
             v, bits = T[dst], T[src]
@@ -90,7 +90,7 @@ def far(code, p):
                 T[dst] = v
                 changed = True
         if not changed:
-            return f".far {'true' if rev else 'false'} {n} ⟨0,{D},{T[:N]},{T[N:]},{z}⟩"
+            return f".far {rev} {n} ⟨0,{D},{T[:N]},{T[N:]},{z}⟩"
 
 def emit(t, p):
     kind = t[0]
