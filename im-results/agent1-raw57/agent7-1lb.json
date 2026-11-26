@@ -828,7 +828,13 @@
     ]
   },
   "residual": {
-    "130": "1RB1LB_1RC0LB_0RD0RF_1LD1RE_0LC0LA_1RA---",
     "211": "1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---"
+  },
+  "block_phase": {
+    "130": [
+      6,
+      4,
+      4
+    ]
   }
 }
