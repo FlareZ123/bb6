@@ -1,4 +1,4 @@
-"""Merge source-checked raw120 child artifacts from one matrix invocation.
+"""Merge source-checked raw120 child artifacts from a pinned matrix and its 1LB repair.
 
 Every module is checked against its source and object hashes. A duplicate
 module must have the same recursive dependency identity. No acceptance is
@@ -29,10 +29,15 @@ def assemble(input_dir, output_dir):
     assert {p.name.removeprefix("raw120-child-") for p in input_dir.iterdir()} == EXPECTED
     revision = subprocess.check_output(["git","rev-parse","HEAD"], cwd=ROOT, text=True).strip()
     modules, roots, metadata = {}, [], None
+    revisions = set()
+    old_revision = "3a45edaf85bc519ee64e07f5b1379664b352a023"
     for shard in sorted(input_dir.iterdir()):
         manifest = json.loads((shard / "manifest.json").read_text())
         assert manifest["schema_version"] == 1
-        assert manifest["proof_source_revision"] == revision
+        child = shard.name.removeprefix("raw120-child-")
+        source_revision = manifest["proof_source_revision"]
+        assert source_revision == revision or (child != "1LB" and source_revision == old_revision), (child, source_revision)
+        revisions.add(source_revision)
         fields = (manifest["lean_version"], manifest["lean_binary"]["sha256"])
         if metadata is None:
             metadata = fields
@@ -62,7 +67,7 @@ def assemble(input_dir, output_dir):
             shutil.copy2(obj, dest)
     assert metadata is not None
     merged = {"schema_version":1,"proof_source_revision":revision,
-              "source_revisions":[revision],"lean_version":metadata[0],
+              "source_revisions":sorted(revisions),"lean_version":metadata[0],
               "lean_binary":{"sha256":metadata[1]},"roots":roots,
               "module_count":len(modules),"modules":list(modules.values())}
     (output_dir / "manifest.json").write_text(json.dumps(merged,indent=2,sort_keys=True)+"\n")
