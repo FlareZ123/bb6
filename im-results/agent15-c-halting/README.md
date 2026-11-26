@@ -62,6 +62,7 @@ reachability questions are open.
 
 
 
+
 ## 2026-11-26: U5 q=0, w=7 source-parent fan (intermediate)
 
 [Detailed derivation and exact parameter formulas](U5Q0W7SourceParentAnalysis.md).
@@ -92,7 +93,7 @@ Q(u)=(2W-3,\;24450+39417u).
 
 ### q=1 parent exclusions
 
-Three disjoint infinite parameter slices of \(Q(u)\) are now excluded:
+Four disjoint infinite parameter slices of \(Q(u)\) are now excluded:
 
 1. **\(u=59+80t\)** — the existing parent-fan theorem
    w7_z2_q1_parent_unreachable_u59mod80 forces an odd/odd parent and
@@ -117,7 +118,6 @@ Three disjoint infinite parameter slices of \(Q(u)\) are now excluded:
    whose right coordinate is odd and whose coordinate sum is \(2\pmod4\).
    The source-certified odd-right sum-two invariant excludes it.
 
-
 4. **\(u=23+512s\)** — [U5Q0W7U23Mod512.lean](U5Q0W7U23Mod512.lean)
    applies four exact parent steps: odd/odd low-value, even/even unique,
    odd-seven, then odd/odd low-value. The final state is
@@ -126,26 +126,28 @@ Three disjoint infinite parameter slices of \(Q(u)\) are now excluded:
    \]
    whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
    The source-certified odd-right sum-one invariant excludes it.
+
 For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
-relation \(5z-7s\equiv12\pmod{16}\), with \(w=7+8s\), therefore forces
-\(s\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The additional
+relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), therefore forces
+\(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The additional
 root condition \(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the
-\(u=7+32t\) and \(u=35+64t\) slices; it holds for every \(t\) in
-the \(u=59+80t\) slice, and requires \(s\equiv3\pmod5\) for
-\(u=23+512s\). These are necessary-residue-compatible
-subfamilies, not a classification of the full \(w=7\) progression.
+\(u=7+32t\) and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\)
+for \(u=23+512s\); it holds for every \(t\) in the \(u=59+80t\)
+slice. These are necessary-residue-compatible subfamilies, not a
+classification of the full \(w=7\) progression.
 
 ### Exact-source verification
 
 The focused workflow target w7-q0-parent-fan in
 [agent3-u5-m32-w485-highstop.yml](../../.github/workflows/agent3-u5-m32-w485-highstop.yml)
 passed in run [#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
-Lean 4.36.0-rc2 compiled 48 project modules from the three roots
-U5Q0W7ParentFan, U5Q0W7U3Mod64, and U5Q0W7U7Mod32. The workflow's
-axiom guard passed: the printed dependencies of the new declarations are
-only propext, Classical.choice, and Quot.sound (with some existing
-source invariants using the subset propext, Quot.sound); no
-sorryAx or native_decide dependency occurs in this closure.
+Lean 4.36.0-rc2 compiled 49 project modules from the four roots
+U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and U5Q0W7U23Mod512.
+The explicit axiom prints include the parent fan, the q=0/q=1 target
+theorems on all four slices, and the u=59 declarations. All printed
+dependencies are only propext, Classical.choice, and Quot.sound (with
+some existing source invariants using the subset propext, Quot.sound);
+no sorryAx or native_decide dependency occurs in this closure.
 
 The four older \(z=4u\) draft lifts below were deliberately excluded from
 this focused closure. The earlier broad batch failed in those independent
