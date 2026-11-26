@@ -37,6 +37,9 @@ theorem p58_root :
     p58 initialSlot = some (some ⟨true,true,1⟩) := by
   decide
 
+theorem parents_distinct : p112 ≠ p58 := by
+  decide
+
 theorem p112_count :
     (roster64.filter (fun e => sameTable e.2 p112)).length = 1 := by
   decide
@@ -114,6 +117,7 @@ theorem exact_at_champion_score
 
 #print axioms p112_root
 #print axioms p58_root
+#print axioms parents_distinct
 #print axioms p112_count
 #print axioms p58_count
 #print axioms count62
