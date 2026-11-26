@@ -65,6 +65,7 @@ theorem raw4_data : raw4 = some e4 := by decide
 def s4 : DRegular.L := ⟨64*t4+27,1,5⟩
 
 def raw5 : Option DRegular.L := BB6.DRegularFast.fastRun 2511 s4
+#eval raw5.map (fun s => (s.a % 27, s.q, s.b))
 def t5b : Nat := ((raw5.getD (⟨0,0,0⟩ : DRegular.L)).a - 10) / 9
 def e5 : DRegular.L := ⟨9*t5b+10,7,1⟩
 theorem raw5_data : raw5 = some e5 := by decide
@@ -72,6 +73,7 @@ theorem raw5_data : raw5 = some e5 := by decide
 def s5 : DRegular.L := ⟨64*t5b+91,3,2⟩
 
 def raw6 : Option DRegular.L := BB6.DRegularFast.fastRun 2138 s5
+#eval raw6.map (fun s => (s.a % 27, s.q, s.b))
 def t6 : Nat := ((raw6.getD (⟨0,0,0⟩ : DRegular.L)).a - 7) / 9
 def e6 : DRegular.L := ⟨9*t6+7,7,1⟩
 theorem raw6_data : raw6 = some e6 ∧ t6 % 27 = 4 := by decide
@@ -109,8 +111,8 @@ private theorem second_start_eq_source (t h : Nat) :
   have hstart :
       BB6.Agent31SecondSource.start t h =
         CryptidBoundary.init xs := by
-    simp [BB6.Agent31SecondSource.start,xs,hq,hlen,hk,
-      BB6.Agent25BGeneral.oppairs_last,List.append_assoc]
+    simp [BB6.Agent31SecondSource.start,xs,hq,hk,
+      BB6.Agent25BGeneral.oppairs_last]
   exact hstart.trans hsource.symm
 
 private theorem second_finish_eq_packet (t h : Nat) :
@@ -118,7 +120,8 @@ private theorem second_finish_eq_packet (t h : Nat) :
       BB6.Agent31PacketSource.packet (64*t+33) 2 (2*h+3) ys := by
   have hlen : 8*(8*t+3)+9 = 64*t+33 := by omega
   simp [BB6.Agent31SecondSource.finish,BB6.Agent31PacketSource.packet,
-    BB6.Agent31PacketSource.word,ys,hlen,List.append_assoc]
+    BB6.Agent31PacketSource.word,ys,BB6.Agent35APacketGeneral.ys,
+    hlen,List.append_assoc]
 
 /-- Two source-certified E returns, expressed directly at the regular
     source section and its exact packet endpoint. -/
@@ -128,14 +131,20 @@ private theorem two_return_packet (t h : Nat) :
           BB6.Agent31SecondSource.secondCost t)
         (DRegularSource.sourceSection ⟨9*t+7,h+3,1⟩))
       (BB6.Agent31PacketSource.packet (64*t+33) 2 (2*h+3) ys) := by
-  rw [← second_start_eq_source t h, second_finish_eq_packet t h]
-  exact BB6.Agent31SecondSource.two_returns_source t h
+  have h := BB6.Agent31SecondSource.two_returns_source t h
+  rw [second_start_eq_source t h, second_finish_eq_packet t h] at h
+  exact h
 
 private theorem a_packet_regular_obs (k q r : Nat) :
     ObsEq
       (run (BB6.Agent35APacketGeneral.duration k q r)
         (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+2) ys))
       (DRegularSource.sourceSection ⟨8*k+11+2*q+8*r,3,2⟩) := by
+  change ObsEq
+    (run (BB6.Agent35APacketGeneral.duration k q r)
+      (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+2)
+        BB6.Agent35APacketGeneral.ys))
+    (DRegularSource.sourceSection ⟨8*k+11+2*q+8*r,3,2⟩)
   rw [BB6.Agent35APacketGeneral.source_a_packet_regular]
   exact BB6.Padding.cfgEq_refl _
 
@@ -144,6 +153,11 @@ private theorem a_packet_unary_obs (k q r : Nat) :
       (run (BB6.Agent35APacketUnary.duration k q r)
         (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+1) ys))
       (DRegularSource.sourceSection ⟨8*k+29+2*q+8*r,0,0⟩) := by
+  change ObsEq
+    (run (BB6.Agent35APacketUnary.duration k q r)
+      (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+1)
+        BB6.Agent35APacketUnary.ys))
+    (DRegularSource.sourceSection ⟨8*k+29+2*q+8*r,0,0⟩)
   rw [BB6.Agent35APacketUnary.source_a_packet_unary]
   exact BB6.Padding.cfgEq_refl _
 
@@ -246,12 +260,17 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
       CryptidBoundary.init (xs ++ List.replicate 2 false) =
         CryptidBoundary.init
           (List.replicate (3*k+2) true ++
-            false :: (CryptidBoundary.pairs (q-1) ++
+            false :: (CryptidBoundary.pairs (q-2+1) ++
               [true,true,false,false])) := by
     have hlen : 3*k+2 = 9*t+8 := by dsimp [k]; omega
-    have hq' : q = (q-1)+1 := by omega
-    rw [hq']
-    rw [BB6.Agent25BGeneral.oppairs_last (q-1)]
+    have hlast :
+        CryptidBoundary.oppairs q ++ [true] =
+          false :: (CryptidBoundary.pairs (q-1) ++ [true,true]) := by
+      cases q with
+      | zero => omega
+      | succ n =>
+        simpa using (BB6.Agent25BGeneral.oppairs_last n)
+    rw [hlast]
     simp [xs,hlen,List.append_assoc]
   have hcost :
       eDoublePacketCost k q = 12*k*k+49*k+64+4*(q-2) := rfl
@@ -262,7 +281,8 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
         BB6.Agent31PacketSource.packet (8*k+5) 0 (2*q) ys := by
     rw [hinput,hcost]
     simpa [BB6.Agent31PacketSource.packet,BB6.Agent31PacketSource.word,
-      ys,hlen2,List.append_assoc] using
+      ys,BB6.Agent35APacketGeneral.ys,hlen2,
+      CryptidBoundary.oppairs,List.append_assoc] using
       (BB6.Agent35.full_E_double k (q-2) [])
   have hp := BB6.BoundaryPadding.source_init_pad
     (eDoublePacketCost k q) 2 xs
@@ -291,7 +311,7 @@ private theorem q8_rejoin (t : Nat) :
           (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 16 ys))
         (DRegularSource.sourceSection (q8Out t)) := by
     rw [ha]
-    simpa [q8Out] using a_packet_unary_obs (q8K t) 0 5
+    simpa [q8Out,q8K] using a_packet_unary_obs (q8K t) 0 5
   simpa [q8Cost,Nat.add_assoc] using
     (source_chain
       (eDoublePacketCost (3*t+2) 8)
@@ -334,7 +354,7 @@ private theorem q7A_rejoin (t : Nat) :
           (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 14 ys))
         (DRegularSource.sourceSection (q7AOut t)) := by
     rw [ha]
-    simpa [q7AOut] using a_packet_regular_obs (q7AK t) 0 4
+    simpa [q7AOut,q7AK] using a_packet_regular_obs (q7AK t) 0 4
   simpa [q7ACost,Nat.add_assoc] using
     (source_chain
       (eDoublePacketCost (3*t+2) 7)
@@ -434,37 +454,67 @@ def regCost6 : Nat := DRegular.accumulated 2138 s5
 private theorem reg1_obs :
     ObsEq (run regCost1 (DRegularSource.sourceSection s0))
       (DRegularSource.sourceSection e1) := by
-  have hc : DRegular.Canon s0 := by decide
+  have hc : DRegular.Canon s0 := by
+    refine ⟨?_, ?_⟩
+    · simp [s0,BB6.Agent35I5Exceptional.pureReentry]
+      omega
+    · intro _
+      rfl
   exact regular_source 4675 s0 e1 hc raw1_data.1
 
 private theorem reg2_obs :
     ObsEq (run regCost2 (DRegularSource.sourceSection s1))
       (DRegularSource.sourceSection e2) := by
-  have hc : DRegular.Canon s1 := by decide
+  have hc : DRegular.Canon s1 := by
+    refine ⟨?_, ?_⟩
+    · simp [s1]
+      omega
+    · intro hq
+      simp [s1] at hq
   exact regular_source 1085 s1 e2 hc raw2_data.1
 
 private theorem reg3_obs :
     ObsEq (run regCost3 (DRegularSource.sourceSection s2))
       (DRegularSource.sourceSection e3) := by
-  have hc : DRegular.Canon s2 := by decide
+  have hc : DRegular.Canon s2 := by
+    refine ⟨?_, ?_⟩
+    · simp [s2]
+      omega
+    · intro _
+      rfl
   exact regular_source 611 s2 e3 hc raw3_data
 
 private theorem reg4_obs :
     ObsEq (run regCost4 (DRegularSource.sourceSection s3))
       (DRegularSource.sourceSection e4) := by
-  have hc : DRegular.Canon s3 := by decide
+  have hc : DRegular.Canon s3 := by
+    refine ⟨?_, ?_⟩
+    · simp [s3]
+      omega
+    · intro _
+      rfl
   exact regular_source 6911 s3 e4 hc raw4_data
 
 private theorem reg5_obs :
     ObsEq (run regCost5 (DRegularSource.sourceSection s4))
       (DRegularSource.sourceSection e5) := by
-  have hc : DRegular.Canon s4 := by decide
+  have hc : DRegular.Canon s4 := by
+    refine ⟨?_, ?_⟩
+    · simp [s4]
+      omega
+    · intro hq
+      simp [s4] at hq
   exact regular_source 2511 s4 e5 hc raw5_data
 
 private theorem reg6_obs :
     ObsEq (run regCost6 (DRegularSource.sourceSection s5))
       (DRegularSource.sourceSection e6) := by
-  have hc : DRegular.Canon s5 := by decide
+  have hc : DRegular.Canon s5 := by
+    refine ⟨?_, ?_⟩
+    · simp [s5]
+      omega
+    · intro hq
+      simp [s5] at hq
   exact regular_source 2138 s5 e6 hc raw6_data.1
 
 def continuationCost : Nat :=
