@@ -32,6 +32,14 @@ def fromAgent8 (m : BB6Coverage.Machine) : ConjectureMachines.Machine 6 2 where
         (if mv.right then Turing.Dir.right else Turing.Dir.left),
         mv.next)
 
+private theorem isRight_boolDir (b : Bool) :
+    isRight (if b then Turing.Dir.right else Turing.Dir.left) = b := by
+  cases b <;> rfl
+
+private theorem boolDir_isRight (d : Turing.Dir) :
+    (if isRight d then Turing.Dir.right else Turing.Dir.left) = d := by
+  cases d <;> rfl
+
 /-- Public transition equation for the inverse adapter; this keeps downstream
     proofs independent of the private bit/unbit implementation. -/
 theorem fromAgent8_transition (m : BB6Coverage.Machine) (q : Fin 6) (a : Fin 2) :
@@ -47,7 +55,9 @@ theorem toAgent8_fromAgent8 (m : BB6Coverage.Machine) :
     toAgent8 (fromAgent8 m) = m := by
   funext s
   rcases s with ⟨q, b⟩
-  simp [toAgent8, fromAgent8, bit, unbit, isRight, Option.map_map]
+  cases b <;>
+    simp [toAgent8, fromAgent8, bit, unbit, isRight,
+      bit_unbit, unbit_bit, isRight_boolDir, Option.map_map, Function.comp_def]
 
 /-- The Cryptids-to-local adapter is a left inverse to `fromAgent8`. -/
 theorem fromAgent8_toAgent8 (m : ConjectureMachines.Machine 6 2) :
@@ -56,7 +66,8 @@ theorem fromAgent8_toAgent8 (m : ConjectureMachines.Machine 6 2) :
   | mk transition =>
     apply congrArg ConjectureMachines.Machine.mk
     funext q a
-    simp [fromAgent8, toAgent8, bit, unbit, isRight, Option.map_map]
+    simp [fromAgent8, toAgent8, bit, unbit, isRight,
+      bit_unbit, unbit_bit, boolDir_isRight, Option.map_map, Function.comp_def]
 
 #print axioms fromAgent8
 #print axioms fromAgent8_transition
