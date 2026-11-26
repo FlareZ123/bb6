@@ -7,6 +7,7 @@ import json
 import shutil
 from pathlib import Path
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
 EXPECTED = set(range(6, 12))
 IDENTITY_FIELDS = (
     "source_kind",
@@ -39,6 +40,26 @@ def copy_identical(source: Path, target: Path, expected_hash: str | None = None)
             raise RuntimeError(f"collision with different content: {target} ({existing} != {actual})")
     else:
         shutil.copy2(source, target)
+
+def restore_generated_source(entry: dict, precompiled_dir: Path) -> None:
+    """Recover the exact source of generated imports outside the slice's generated/ folder."""
+    if entry.get("source_kind") != "generated-or-untracked":
+        return
+    relative = Path(entry["source_path"])
+    if (relative.is_absolute() or ".." in relative.parts
+            or not relative.parts or relative.parts[0] != "im-results"
+            or relative.suffix != ".lean"):
+        raise RuntimeError(f"unexpected generated source path: {relative}")
+    target = REPO_ROOT / relative
+    if not target.resolve().is_relative_to(REPO_ROOT):
+        raise RuntimeError(f"generated source escapes repository: {relative}")
+    # lean_compile_closure.py copies each exact source into its module-shaped
+    # compilation workspace, and the slice uploads that complete workspace.
+    module_path = Path(*entry["module"].split(".")).with_suffix(".lean")
+    if module_path.is_absolute() or ".." in module_path.parts:
+        raise RuntimeError(f"unsafe module source path: {module_path}")
+    source = precompiled_dir / module_path
+    copy_identical(source, target, entry["source_sha256"])
 
 def main() -> None:
     parser = argparse.ArgumentParser()
@@ -129,6 +150,7 @@ def main() -> None:
                         )
             else:
                 modules[module] = entry
+            restore_generated_source(entry, precompiled_dir)
             relative = Path(entry["olean_path"])
             if relative.is_absolute() or ".." in relative.parts:
                 raise RuntimeError(f"unsafe olean path for {module}: {relative}")
