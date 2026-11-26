@@ -38,8 +38,9 @@ def prepare(group, work):
     else:
         child = group.split("-")[0].upper()
         run(py, ROOT / "generate_more.py", child)
+        extra = ["--late-proofs", ROOT / "lf1_late_proofs.json"] if child == "LF1" else []
         run(py, REPO / "im-results/agent10-tnf-multipump/chunk_checks.py",
-            ROOT, f"Raw58{child}", "--limit", "180")
+            ROOT, f"Raw58{child}", "--limit", "180", *extra)
         if child in ("LF", "LF1"):
             theorems = []
             for root in roots:

@@ -5,6 +5,7 @@ Each chunk uses the original zipCheck; parent checks follow from the 24
 child checks and a separately reduced first-hole query.
 """
 import argparse
+import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -35,7 +36,13 @@ def parse(lines):
 def move(i):
     return f'⟨{str(i>=12).lower()},{str(i%12>=6).lower()},{i%6}⟩'
 
-def partition(text,limit=180):
+def partition(text,limit=180,late_proofs=None):
+    late_proofs = late_proofs or {}
+    def late_key(node):
+        return re.sub(r'\s+', '', node.head)
+    late_proofs = {re.sub(r'\s+', '', k): v for k,v in late_proofs.items()}
+    def has_late(node):
+        return late_key(node) in late_proofs or any(has_late(k) for k in (node.kids or []))
     # Exactly one root Audit definition and its corresponding check theorem.
     pat=r'(?m)^def (\w+)( \(h : Exceptions\))? : Audit := ([\s\S]*?)\n(?:\n)?theorem (\w+)\2? : zipCheck (\d+) (.+?) \(?(\1)(?: h)?\)? = true := by (?:rfl|decide)\n'
     m=re.search(pat,text)
@@ -46,13 +53,18 @@ def partition(text,limit=180):
     arg=' h' if parameter else ''
     lines=iter(re.sub(r"(\]\))",r"\n\1",body.rstrip()).splitlines());tree=parse(lines)
     assert next(lines,None) is None
-    if tree.size<=limit:return text,0
+    if tree.size<=limit and not has_late(tree):return text,0
     code=[];counter=0
     def emit(node,p,nm=None,ck=None):
         nonlocal counter
         if nm is None:
             counter+=1;nm=f'{name}_part{counter}';ck=nm+'_checked'
-        if node.size<=limit or node.kids is None:
+        special = late_proofs.get(late_key(node))
+        if special is not None:
+            code.append(f'def {nm}{parameter} : Audit := {node.render()}\ntheorem {ck}{parameter} : zipCheck {bound} {p} ({nm}{arg}) = true := by\n')
+            code.append(f'  have ht : tableOK ({p}) ({special["table"]}) = true := by decide\n  have he := tableOK_sound _ _ ht\n  rw [he]\n  exact {special["proof"]} {bound} (by decide)\n')
+            return nm,ck
+        if (node.size<=limit and not has_late(node)) or node.kids is None:
             code.append(f'def {nm}{parameter} : Audit := {node.render()}\ntheorem {ck}{parameter} : zipCheck {bound} {p} ({nm}{arg}) = true := by rfl\n')
             return nm,ck
         n,s=re.fullmatch(r'\.split (\d+) (\([^)]*\)) \(byMove \[',node.head).groups()
@@ -68,13 +80,14 @@ def partition(text,limit=180):
             code.append(f'  · exact {cs[12*w+6*r+q][1]}{arg}\n')
         return nm,ck
     emit(tree,table,name,thm)
-    return text[:m.start()]+'\n'.join(code)+text[m.end():],counter
+    return text[:m.start()]+'\n'.join(code)+text[m.end():],max(counter,1)
 
 if __name__=='__main__':
-    ap=argparse.ArgumentParser();ap.add_argument('directory',type=Path);ap.add_argument('prefix');ap.add_argument('--limit',type=int,default=180);args=ap.parse_args()
+    ap=argparse.ArgumentParser();ap.add_argument('directory',type=Path);ap.add_argument('prefix');ap.add_argument('--limit',type=int,default=180);ap.add_argument('--late-proofs',type=Path);args=ap.parse_args()
+    late_proofs=json.loads(args.late_proofs.read_text()) if args.late_proofs else None
     paths=sorted(args.directory.glob(args.prefix+'Kid[0-9][0-9].lean'))
     assert len(paths)==24, (args.prefix,len(paths))
     for path in paths:
-        text=path.read_text();out,n=partition(text,args.limit)
+        text=path.read_text();out,n=partition(text,args.limit,late_proofs)
         if n:
             path.write_text(out);print(path.name,n,'subproofs',flush=True)

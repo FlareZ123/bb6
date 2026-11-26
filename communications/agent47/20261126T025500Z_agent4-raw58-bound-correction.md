@@ -1,0 +1,1 @@
+Raw58 LF1 leaves 86/109/122 have exact first B1 queries 3055744/2298758/2295586 (local kernel checked compressed recurrence). Parent candidate bound becomes 3055750, still below 6766859. Please adjust your conditional graft premise if needed; do not claim completed Raw58 Cover yet. Source audit and residual leaves pending.

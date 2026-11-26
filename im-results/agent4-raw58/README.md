@@ -33,23 +33,17 @@ This is a complete, disjoint five-residual partition at weighted bound 374, not 
 
 The `Raw58MoreCut2.parent_dichotomy` audit compiled 280 Lean modules. Its theorem profile contains only standard axioms `propext`, `Classical.choice`, and `Quot.sound`; the workflow rejects `sorryAx` and `native_decide`.
 
-## Current five-child target and bound correction
-
-The remaining children and their current local bounds in `more.json` are:
+## Current five-child target
 
 | A1 move | Data module | Weighted bound | Status |
 |---|---|---:|---|
-| `0LE` | `Raw58LEData` | 927 | Runs 45700746076, 45721009333 and 45722280324 ended by runner shutdown; row-sharded run 45724249145 failed at seed Bool/Prop glue; retry 45725400447 failed because `rw` received a Prop seed lemma; Agent4's current incidence quotient compresses LE203 and is locally kernel-checked, with fresh source audit pending |
-| `0LF` | `Raw58LFData` | 7014 | Candidate custom/automata leaves; run 45701329862 interrupted by runner shutdown; three-group shard pilot 45725204019 (`lf-a/b/c`) is in progress |
-| `0RF` | `Raw58RFData` | 1346 | Source-accepted |
-| `1LE` | `Raw58LE1Data` | 19310 | **Source-accepted** (CI 45700639859) |
-| `1LF` | `Raw58LF1Data` | 7014 | Nine automata entries; targeted source audit 45718748609 in progress with the 120-minute raw58-child timeout; prior run 45700751534 was cancelled after 60 minutes without acceptance |
+| 0LE | Raw58LEData | 927 | Source-accepted shard run 45743474599 |
+| 0LF | Raw58LFData | 7014 | All 24 Kid checks source-accepted in three shards (45725204019); Data assembly pending |
+| 0RF | Raw58RFData | 1346 | Source-accepted |
+| 1LE | Raw58LE1Data | 19310 | Source-accepted |
+| 1LF | Raw58LF1Data | 3055750 | Candidate; remaining leaves and source bridge open |
 
-**The current parent target is 19310, not 7014.** The committed `Raw58MoreCut3.all_completions` theorem has type
-
-`∀ m, compatible Raw58MoreCut2.parent m → WeightedBound 19310 m`.
-
-The LE1 branch supplies the maximum bound: `more.json` retains late leaf 625 at 19304 and leaf 626 at 1170. The other four child bounds are at most 7014. The earlier README target of 7014 was stale and has been corrected here. A 19310 parent bound is still below the canonical common target 6,766,859, so Raw58 remains a potentially useful global-roster graft; the graft premise must use 19310. Agent47's current `Canonical71Raw58Graft.lean` still asks for 7014 and needs this interface correction (handoff: [bound correction](../../communications/agent47/20261125T215151Z_agent4-raw58-graft-bound-correction.md)).
+The long LF1 last-hole family changes the target from 19310 to **3055750**, still below the canonical cutoff 6766859. See [LF1Late.md](LF1Late.md) for the exact three query counts and compressed proof. The parent closure and any unconditional roster graft remain open. Older conditional grafts at 19310 are not usable as stated.
 
 ## Reusable counter certificates
 
@@ -66,13 +60,7 @@ These are leaf-level nonhalting arguments, not claims that an entire parent cyli
 
 ## Current child evidence
 
-- **0RF:** complete 1346-bound source-accepted child, above.
-- **0LE:** `more.json` contains the LE56 custom witness, one two-sided automaton entry, seven single-block pumps, twenty n-gram entries, and multi-seed counter candidates. Prior run 45700746076 reached `ControlPathAudit` and prior retry 45721009333 reached `Raw58LEAutomata`; both ended with runner shutdown (exit 143), not Lean proof diagnostics. Retry 45722280324's failed-step log was retrieved: the runner received a shutdown signal (exit 143) at 23:40:03 while compiling `Raw58LEAutomata`; no Lean proof diagnostic occurred. This is a runner/resource failure, not a counterexample. Row-sharded retry 45724249145 failed at `Raw58LEAutomata.lean:86` because unrestricted `simp` converted the two `List.contains` obligations to membership before the supplied equalities could rewrite them. The emitter now uses direct `rw [...] <;> rfl`, verified locally in Lean 4.36.0-rc2 on the exact Boolean connective pattern (abstract stack/certificate fields, no axioms). Original-source retry [45725400447](https://github.com/FlareZ123/bb6/actions/runs/45725400447) failed at `Raw58LEAutomata.lean:88:37`: direct `rw` was passed `left_seed` as a membership proposition rather than an equality. Agent4's current commit `0c7d16d50210021b5e93add3dc96f92edcb20a56` restores Bool-equality seed lemmas and adds an incidence quotient for LE/LF1. LE203 joint states shrink 8723→2560 and stack sizes 87/348→72/100; the compressed certificate and assembled `never` are locally kernel-checked, but no fresh original-source audit has yet passed. The row-sharded emitter: `generate_more.py` emits twelve separate row checks (one per state/scanned-symbol pair) and combines them with `simp`, instead of one monolithic `by decide` proof for the two-sided automaton. The automaton certificate itself is unchanged.
-- **0LF:** current `more.json` maps 157, 294, 296, 314, 411, 415, and 917 to custom proof modules and has five additional two-sided automata entries. Agent4's 294/314/296 and Agent7's 411/415/917 proofs were checked locally against exact primitive definitions; the original-source child audit is still pending.
-- **1LE:** current `more.json` contains eight two-sided automata entries and late leaves 625 (19304) and 626 (1170). Original-source child audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) **succeeded**; this child is accepted at bound 19310.
-- **1LF:** current `more.json` contains nine two-sided automata entries. Prior audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) ran the individual child step for 60 minutes and was cancelled; it produced no source acceptance or Lean diagnostic. Targeted retry [45718748609](https://github.com/FlareZ123/bb6/actions/runs/45718748609) is in progress on source head `98c2659900186d86ed5816cf93a4cda214686115`, before the row-sharded emitter change; any retry after this run will use the sharded generator at current main.
-
-Agent7's 21:08 checkpoint reports that the 0LF proof data for 411/415/917 is locally checked and integrated. The corrected LF source audit [45701329862](https://github.com/FlareZ123/bb6/actions/runs/45701329862) ended with runner shutdown (exit 143) during `Raw58LFKid17`, after compiling the sparse witnesses and `Raw58LFBase`; its tail contains no Lean proof error. The 0LE audit [45700746076](https://github.com/FlareZ123/bb6/actions/runs/45700746076) likewise ended with runner shutdown after compiling its candidate modules, not a proof error. The 1LE audit [45700639859](https://github.com/FlareZ123/bb6/actions/runs/45700639859) succeeded. The 1LF audit [45700751534](https://github.com/FlareZ123/bb6/actions/runs/45700751534) was cancelled after 60 minutes during the child step, without source acceptance. Targeted retry [45718748609](https://github.com/FlareZ123/bb6/actions/runs/45718748609) is now in progress with a 120-minute timeout. Do not repeat the already completed candidate census or duplicate Agent7's 0LF proof modules.
+0LE's compressed incidence-quotient certificate is source-accepted (45743474599). All 0LF Kid checks succeeded in lf-a/b/c (45725204019); the identical Data wrapper still needs assembly. LF1 #39 has a locally checked growth certificate ([LF1Growth.md](LF1Growth.md)); #86/#109/#122 have locally checked compressed exact last-hole counts. The #1181 candidate and five other unresolved leaves still require source-accepted proofs. The prior LF1 full audit 45718748609 failed at the unclassified-leaf census, before Lean.
 
 ## Generator diagnostic
 
@@ -82,16 +70,16 @@ I independently compiled the current `im-results/agent2-tnf-raw99/enumerate.cpp`
 
 ## Global-roster handoff and next step
 
-The parent is `BB6.Agent4Raw58Cut.parent = BB6.Agent4Raw58RE.p58`, defined by the first four entries of the root path followed by E1=0RA. It is distinct from the already-used p107 and p114 E1 branches. Agent47 has finite membership/count drafts for the canonical77 and canonical72 rosters; neither Raw58 parent Cover nor the 72→71 graft has been source-audited. The 72-roster consumer must use the corrected 19310 premise.
+The parent is `BB6.Agent4Raw58Cut.parent = BB6.Agent4Raw58RE.p58`, defined by the first four entries of the root path followed by E1=0RA. It is distinct from the already-used p107 and p114 E1 branches. Agent47 has finite membership/count drafts for the canonical77 and canonical72 rosters; neither Raw58 parent Cover nor the 72→71 graft has been source-audited. The 72-roster consumer must use the corrected 3055750 premise.
 
-The resumable proof route uses the existing manual workflow's `raw58-shard` and `raw58-compose` selectors. [shard_groups.json](shard_groups.json) covers the entire accepted partition theorem, three ordinary child data modules, and every one of the 24 immediate move checks of each heavy LF/LF1 child. The shared, already-used recursive chunk checker partitions large Kid proofs without changing leaf witnesses. Each group has its own compiled-object manifest and named axiom audit; a failed group does not erase successful groups. The two heavy child Data modules are generated independently in all three respective shards, required to agree byte-for-byte, and compiled with the final parent theorem. Composition pins each artifact's run and source revision, checks exact source/object/import identities, and requires all modules except the two Data wrappers and final parent theorem to be reused. The first pilot is now running as [workflow 45725204019](https://github.com/FlareZ123/bb6/actions/runs/45725204019), with `lf-a`, `lf-b`, and `lf-c` jobs in progress; the LE and LF1 ongoing individual audits are not duplicated. No sharded proof has yet been accepted, no new parent Cover is claimed, and BB(6) remains unresolved.
+The resumable proof route uses the existing manual workflow's `raw58-shard` and `raw58-compose` selectors. [shard_groups.json](shard_groups.json) covers the entire accepted partition theorem, three ordinary child data modules, and every one of the 24 immediate move checks of each heavy LF/LF1 child. The shared, already-used recursive chunk checker partitions large Kid proofs without changing leaf witnesses. Each group has its own compiled-object manifest and named axiom audit; a failed group does not erase successful groups. The two heavy child Data modules are generated independently in all three respective shards, required to agree byte-for-byte, and compiled with the final parent theorem. Composition pins each artifact's run and source revision, checks exact source/object/import identities, and requires all modules except the two Data wrappers and final parent theorem to be reused. The LF pilot succeeded in all three shards and the LE shard succeeded. Parent composition still needs LF1 and the remaining pinned shards. BB(6) remains unresolved.
 
 
 ## Conditional 76-to-75 graft against the accepted two-parent roster
 
 `Canonical75Raw58Graft.lean` is a new conditional consumer of the **source-accepted** `CanonicalTwoParentRosterOnly` 76-residual theorem, rather than the older canonical77-only Raw58 wrapper. It proves by kernel reduction that the exact E1=0RA Raw58 parent `p58` occurs exactly once in the accepted `roster76`, and that empty-replacement grafting removes it to produce `roster75` with length 75.
 
-Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 19310` proof, every normalized root machine is either below the canonical target 6,766,859 or quotient-compatible with one of the 75 retained representatives. `exact_at_target` then reduces exactness to Covers for those 75 representatives plus the existing champion attainment premise. The 19310 premise is essential: the 1LE/LE1 child sets the current parent bound, so the old 7014 premise is not valid for the full Raw58 closure.
+Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 19310` proof, every normalized root machine is either below the canonical target 6,766,859 or quotient-compatible with one of the 75 retained representatives. `exact_at_target` then reduces exactness to Covers for those 75 representatives plus the existing champion attainment premise. This earlier conditional consumer was accepted at 19310; the new LF1 counts require a revised premise at 3055750 before it can consume the parent closure.
 
 **Source-accepted conditional-graft audit:**
 
@@ -106,4 +94,4 @@ This CI result accepts the **conditional roster consumer**, not the missing Raw5
 
 ## Incidence quotient improvement (2026-11-26)
 
-See [the quotient note](../agent4-two-sided-automata/INCIDENCE_QUOTIENT.md). The compressed LE203 leaf was locally kernel-checked against the original Raw109 core and exact TwoSidedAutomata source, all twelve row checks and the assembled `never` theorem. The 19 symmetric Raw58 candidates all shrink; LE203 joint states 8723→2560 and stack states 87/348→72/100. The generator now uses this reduction for LE and LF1, while preserving LF's pinned in-flight shards and accepted LE1 representation. The exact Boolean seed equality + direct rewrite assembly has been checked on the actual compressed certificate. Complete LE/LF/LF1 child and parent closure still pending.
+See [the quotient note](../agent4-two-sided-automata/INCIDENCE_QUOTIENT.md). The compressed LE203 leaf was locally kernel-checked against the original Raw109 core and exact TwoSidedAutomata source, all twelve row checks and the assembled `never` theorem. The 19 symmetric Raw58 candidates all shrink; LE203 joint states 8723→2560 and stack states 87/348→72/100. The generator now uses this reduction for LE and LF1, while preserving LF's pinned in-flight shards and accepted LE1 representation. The exact Boolean seed equality + direct rewrite assembly has been checked on the actual compressed certificate. LE source audit succeeded; LF Kid checks succeeded. LF1 and parent closure remain pending.

@@ -11,7 +11,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent4Raw58MoreCut3
 
 theorem all_completions :
-    ∀ m, compatible BB6.Agent4Raw58MoreCut2.parent m → WeightedBound 19310 m := by
+    ∀ m, compatible BB6.Agent4Raw58MoreCut2.parent m → WeightedBound 3055750 m := by
   intro m hm
   rcases BB6.Agent4Raw58MoreCut2.parent_dichotomy m hm with hb | ⟨mv, hr, hc⟩
   · intro k d hk hd
@@ -33,7 +33,8 @@ theorem all_completions :
       intro k d hk hd
       exact Nat.le_trans (BB6.Agent4Raw58RF.all_completions m hc k d hk hd) (by decide)
     · subst mv
-      exact BB6.Agent4Raw58LE1.all_completions m hc
+      intro k d hk hd
+      exact Nat.le_trans (BB6.Agent4Raw58LE1.all_completions m hc k d hk hd) (by decide)
     · subst mv
       intro k d hk hd
       exact Nat.le_trans (BB6.Agent4Raw58LF1.all_completions m hc k d hk hd) (by decide)

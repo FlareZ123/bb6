@@ -1285,7 +1285,7 @@
   },
   "LF1": {
     "a1": "1LF",
-    "bound": 7014,
+    "bound": 3055750,
     "query": 8,
     "slot": 10,
     "groups": "",
@@ -1295,7 +1295,8 @@
       "39": "BB6Coverage.Agent4LF139"
     },
     "imports": [
-      "Raw58LF139"
+      "Raw58LF139",
+      "Raw58LF1Late"
     ],
     "auto_classify": true,
     "automata": {
@@ -1348,6 +1349,23 @@
         4,
         2,
         2
+      ]
+    },
+    "late": {
+      "86": [
+        3055744,
+        3,
+        "1RB1LF_1RC---_0RD1RC_1LD1RE_1LC0RA_0LA0LF"
+      ],
+      "109": [
+        2298758,
+        3,
+        "1RB1LF_1RC---_0RD0LD_1LD1RE_1RC0RA_0LA0LF"
+      ],
+      "122": [
+        2295586,
+        3,
+        "1RB1LF_1RC---_0RD1RC_1LD1RE_1RC0RA_0LA0LF"
       ]
     }
   }

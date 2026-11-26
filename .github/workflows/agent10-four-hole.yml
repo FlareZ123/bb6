@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_groups:
         description: 'JSON list of individual Raw108 groups to certify'
@@ -334,8 +334,20 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           root=im-results/agent4-raw58
           python "$root/generate_more.py" "$CHILD"
+          if [ "$CHILD" = LF1 ]; then python im-results/agent10-tnf-multipump/chunk_checks.py "$root" Raw58LF1 --limit 180 --late-proofs "$root/lf1_late_proofs.json"; fi
           python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-child --jobs 2 "$root/Raw58${CHILD}Data.lean" | tee /tmp/a4-raw58-child.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-child.log; then exit 1; fi
+      - name: Source-audit compressed Raw58 LF1 late counts and growth
+        if: inputs.target == 'raw58-late'
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          root=im-results/agent4-raw58
+          python tools/lean_compile_closure.py --workdir /tmp/a4-raw58-late --jobs 1 "$root/Raw58LF1Late.lean" "$root/Raw58LF139.lean" | tee /tmp/a4-raw58-late.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw58-late.log BB6Coverage.Agent4LF1Sweep.lastCheck BB6Coverage.Agent4LF139.never
+          if grep -Eq 'sorryAx|native_decide' /tmp/a4-raw58-late.log; then exit 1; fi
       - name: Source-audit one Raw58 two-sided automata leaf
         if: inputs.target == 'raw58-automata'
         env:
