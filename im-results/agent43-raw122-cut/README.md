@@ -1,14 +1,18 @@
 # Raw122 / canonical86 partial closure
 
-## Current verified coverage (2026-11-26 07:04Z)
+## Current verified coverage (2026-11-26 07:12Z)
 
-**19 of the 24 ordinary F1 cylinders are covered at weighted bound 7014**: the previous fourteen, 1LC and 1RA, Agent3's 1LA and 1RF, and the new 0LE theorem below. This accounts for 185,546,875 literal completions (19 × 25⁵), with the immediate F1 halt covered separately by the root split. The five outstanding ordinary choices are 0LA, 0LF, 1LB, 1LE and 1LF. The local parent must ultimately compose at a larger cutoff (6766859 suffices for the two long-query cylinders); it is not yet a full Cover.
+**20 of the 24 ordinary F1 cylinders are covered at weighted bound 7014**: the previous fourteen, 1LC and 1RA, Agent3's 1LA and 1RF, and the new 0LE and 1LB theorems below. This accounts for 195,312,500 literal completions (20 × 25⁵), with the immediate F1 halt covered separately by the root split. The four outstanding ordinary choices are 0LA, 0LF, 1LE and 1LF. The local parent must ultimately compose at a larger cutoff (6766859 suffices for the two long-query cylinders); it is not yet a full Cover.
 
 ### New complete 0LE cylinder
 
 [Raw122Recovered04.lean](Raw122Recovered04.lean) establishes `branch04_empty` and `cover04` from the original `Raw122Branch04` and its 24 checked shards. Both theorems passed local Lean 4.36.0-rc2 with axioms [propext, Classical.choice, Quot.sound]. The original branch source and core are artifacts 15043765926 and 15012394320. The five successful groups from run 45734681632 are 15079635380 (0–3), 15079550812 (4–7), 15078159125 (8–11), 15079740798 (16–19), 15079422738 (20–23). The successful recovery jobs of otherwise failed run 45751140455 supply 15086310817 (12–13), 15085522676 (14), 15085836438 (15). All group manifests refer to the same pinned source/core; their listed file SHA256 values were validated. Assemble the complete artifact dependency sets, then compile the original Raw122Branch04.lean and this wrapper. Do not mix differently factored local Pack objects with the published artifact packs. Wrapper SHA256: `7db96a2a8d82b767b3de3490d3483323da4523d993a6f1ad666fd95fc38dc532`.
 
-1LB now has 23 of its 24 checked child shards; kid13_00 passed locally by grouped reduction, and CI artifact 15084779408 supplies 13_02–03. The only outstanding shard 13_01 imports an exceptionally large n-gram certificate 11332 (9.7 MB source), whose local process was killed at the 4 GB memory limit; a compact independent witness is being sought. This is not yet a full 1LB cover.
+### New complete 1LB cylinder
+
+[Raw122Recovered13.lean](Raw122Recovered13.lean) proves `branch13_empty` and `cover13` from the original branch and all 24 checked shards, with axioms [propext, Classical.choice, Quot.sound]. For children 04–23, recover artifacts 15078269985, 15078786320, 15078453523, 15077894613, 15078737212 (run 45734681632). Artifact 15084779408 (run 45751140455) supplies 02–03. For 00–01 use the pinned original source 15043765926, core 15012394320 and `split_grouped.py` with limit 4000. In kid13_01 replace the original 9.7 MB `Raw122Symbol11332.lean` with the checked [compact adapter](Raw122Symbol11332.lean), importing [Raw122Compact11332.lean](Raw122Compact11332.lean). Its exact 604-step entry and 554-step recurrence for arbitrary repetitions are by rfl, and its nonhalting theorem has only propext and Quot.sound. All grouped kid00 and kid01 modules compiled locally, then the original Raw122Branch13 and wrapper. Wrapper SHA256 `a5e0e4b2a1fb97399db2e41c10d432bfd79b05f8f6da5ad7c9aad567235a8584`. The 1LB result is now complete.
+
+[PrefixCut.lean](PrefixCut.lean) proves the accelerated partial checker equal to the original and split composition at checked prefix configurations; [prefix_factor.py](prefix_factor.py) generates kernel-checked anchors without trusting the simulator. It has passed complete original 05_00, 05_01 and 05_06 shard checks locally. The remaining 0LF, 0LA, 1LE, 1LF need explicit residual witness composition, with the larger cutoff for late queries.
 
 ## Exact late-query cylinder in 1LE / kid16_13
 
