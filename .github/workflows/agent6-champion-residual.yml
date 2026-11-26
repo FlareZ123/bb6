@@ -521,8 +521,8 @@ jobs:
           import json, pathlib, sys
           data = json.loads(pathlib.Path(sys.argv[1]).read_text())
           assert data["parent"] == [7,24,11,24,14,24,24,16,8,11,24,24], data
-          assert data["global_bound"] == 80377, data
-          assert data["special_code"] == 9, data
+          assert data["weighted_bound"] == 80377, data
+          assert data["special_d0_zeroRC_code"] == 9, data
           print("E0=0LC parent and weighted bound:", data["parent"], data["global_bound"])
           PY
           python3 tools/lean_compile_closure.py \
