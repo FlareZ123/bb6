@@ -25,7 +25,7 @@ def pump(p, st, tg, limit=10000):
             I=wr[0][0]
             for j in range(min(20,len(op))+1):
                 ans=multi.local(p,c.q,lp if sd=="L" else op[:j],
-                    op[:j] if sd=="R" else lp,sd,I)
+                    op[:j] if sd=="L" else lp,sd,I)
                 if not ans:
                     continue
                 k,O=ans
