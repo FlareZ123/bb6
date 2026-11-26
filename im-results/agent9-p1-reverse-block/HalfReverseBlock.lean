@@ -142,10 +142,36 @@ theorem half_cert_first_two (n K : Nat) (hn : n%4=2)
     ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2))
     (by omega) (by omega) (by omega) hfull hgood
 
+/-- The reflected full-prefix margin test at the actual n=45,352,466
+    cost-two seed is true for K=250,000,000. The proof only needs 2^64
+    as a lower bound; it does not normalize the enormous power 2^n. -/
+theorem half_margin_ok_n45352466 :
+    halfMarginOK 45352466 250000000 2 0
+      [(1,(45352466+2)/4)] = true := by
+  have hpow : 2^64 ≤ 2^45352466 :=
+    Nat.pow_le_pow_right (by decide : 0<2) (by norm_num)
+  have hnum :
+      (45352466+250000000+2)*marginSize 45352466 250000000*4
+        < 6*2^64 := by
+    norm_num [marginSize]
+  have hineq :
+      (45352466+250000000+2)*marginSize 45352466 250000000*4
+        < 6*2^45352466 := by
+    exact lt_of_lt_of_le hnum (Nat.mul_le_mul_left 6 hpow)
+  simp [halfMarginOK,MarginOK,marginSize,reflectPrefix,cap,resMin,hineq]
+
+/-- The actual n=45,352,466 seed has a fully source-checked canonical
+    half certificate at cost two for K=250,000,000. -/
+theorem half_cert_n45352466 :
+    HalfCert 45352466 250000000 2 [(1,(45352466+2)/4)] :=
+  half_cert_first_two 45352466 250000000 (by norm_num) half_margin_ok_n45352466
+
 #print axioms half_covered_next_block
 #print axioms half_cert_next_block
 #print axioms no_trace_of_half_cert_empty
 #print axioms half_first_two
 #print axioms half_cert_first_two
+#print axioms half_margin_ok_n45352466
+#print axioms half_cert_n45352466
 
 end BB6.Agent9P1HalfReverseBlock
