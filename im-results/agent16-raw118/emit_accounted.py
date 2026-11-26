@@ -117,12 +117,12 @@ theorem {theorem} : ConditionalCover bound ({p}) holdout := by
     assert seen == set(entries) | {holdout_index}, (set(entries) | {holdout_index}) - seen
     write("Raw118Consumer", [root, "Raw118Sharp"], f"""
 /-- Every compatible completion is bounded or lies in the exact holdout. -/
-theorem sound_after : ∀ m, compatible parent m → WeightedBound bound m ∨ compatible holdout m :=
-  {theorem} parent_root parent_nohalt
+theorem sound_after : ∀ m, compatible BB6.Agent16Raw118.parent m → WeightedBound BB6.Agent16Raw118.bound m ∨ compatible holdout m :=
+  {theorem} BB6.Agent16Raw118.parent_root BB6.Agent16Raw118.parent_nohalt
 
 /-- Stable local contract; the holdout is an explicit, separate premise. -/
 theorem parent_cover_at_target {{B : Nat}} (hB : bound ≤ B)
-    (h : Cover (WeightedBound B) holdout) : Cover (WeightedBound B) parent := by
+    (h : Cover (WeightedBound B) holdout) : Cover (WeightedBound B) BB6.Agent16Raw118.parent := by
   refine Cover.leaf _ ?_
   intro m hm
   rcases sound_after m hm with hb | hc
@@ -130,8 +130,8 @@ theorem parent_cover_at_target {{B : Nat}} (hB : bound ≤ B)
     exact Nat.le_trans (hb k d hk hd) hB
   · exact h.sound m hc
 
-theorem parent_exact_if_holdout (h : Cover (WeightedBound bound) holdout) :
-    Cover (WeightedBound bound) parent ∧ ∀ B, Cover (WeightedBound B) parent → bound ≤ B :=
+theorem parent_exact_if_holdout (h : Cover (WeightedBound BB6.Agent16Raw118.bound) holdout) :
+    Cover (WeightedBound BB6.Agent16Raw118.bound) BB6.Agent16Raw118.parent ∧ ∀ B, Cover (WeightedBound B) BB6.Agent16Raw118.parent → BB6.Agent16Raw118.bound ≤ B :=
   ⟨parent_cover_at_target (Nat.le_refl _) h, fun _ hB => BB6.Agent16Raw118.parent_min_weighted_bound hB⟩
 
 #print axioms sound_after
