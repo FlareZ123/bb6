@@ -182,6 +182,24 @@ def main():
     }, branches
     assert max(item["weighted_bound"] for item in metadata) == BOUND
 
+    # The accepted nested frontier contracts the entire F1=0LF obligation
+    # to its exact F0=1RC residual. Its artifact includes a complete closure.
+    frontier_run = 45883981997
+    frontier_aid = 15148163947
+    frontier_sha = "43ff61e9d9e64e4bc8a71f2c8dd9f748a98c3b01be6d0c3dbadcc533b54aa343"
+    frontier_info = a68.api_json(f"repos/{a68.REPO}/actions/runs/{frontier_run}")
+    assert frontier_info["conclusion"] == "success"
+    frontier_dirs = a68.download((frontier_aid, frontier_run, frontier_sha), work)
+    frontier_dirs = [p for p in frontier_dirs if (p / "Raw124ZeroLFParentFrontier.olean").is_file()]
+    assert len(frontier_dirs) == 1
+    frontier_manifest = work / "metadata" / str(frontier_aid) / "frontier.manifest.json"
+    fm = json.loads(frontier_manifest.read_text())
+    assert fm["claim"]["theorem"] == "BB6.Agent2Raw124ZeroLFParentFrontier.parent_cut"
+    assert fm["claim"]["parent_table"] == "1RB---_1RC---_0RD---_1LD1RE_---1LF_0LF"
+    assert fm["proof_source_revision"] == frontier_info["head_sha"]
+    assert fm["lean_binary"]["sha256"] == compiler_sha
+    families.append(("0LF-frontier", frontier_dirs, ["Raw124ZeroLFParentFrontier"]))
+
     linked = work / "linked"
     a68.link_reachable([], work, linked, families=families)
     link_manifest = linked / "kernel-link-manifest.json"
@@ -197,6 +215,14 @@ def main():
     env["LEAN_PATH"] = str(work) + os.pathsep + str(linked)
     compile_source(partial_source, partial_output, env, work / "Raw124ParentPartialCut.log")
     partial_log = work / "Raw124ParentPartialCut.log"
+    nested_source = HERE / "Raw124ParentNestedCut.lean"
+    nested_output = work / "Raw124ParentNestedCut.olean"
+    nested_log = work / "Raw124ParentNestedCut.log"
+    compile_source(nested_source, nested_output, env, nested_log)
+    nested_axioms = a68.gate(nested_log.read_text(), [
+        "BB6.Agent2Raw124ParentNestedCut.p0LF_eq",
+        "BB6.Agent2Raw124ParentNestedCut.cover_of_nested_two",
+    ])
 
     audit_script = ROOT / "im-results" / "agent4-raw109" / "audit_axioms.py"
     audit = subprocess.run(
@@ -228,6 +254,16 @@ def main():
         "source_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "lean_version": lean_version,
         "compiler_sha256": compiler_sha,
+        "nested_frontier": {
+            "run_id": frontier_run,
+            "artifact_id": frontier_aid,
+            "artifact_sha256": frontier_sha,
+            "theorem": "BB6.Agent2Raw124ParentNestedCut.cover_of_nested_two",
+            "hypotheses": ["F1=0RE", "F1=0LF,F0=1RC"],
+            "axioms": nested_axioms,
+            "source_sha256": a68.sha(nested_source),
+            "object_sha256": a68.sha(nested_output),
+        },
         "artifact_inputs": metadata,
         "linked_module_count": len(json.loads(link_manifest.read_text())["objects"]),
         "kernel_link_manifest_sha256": a68.sha(link_manifest),
@@ -238,6 +274,8 @@ def main():
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     shutil.copy2(join_output, output / join_output.name)
     shutil.copy2(partial_output, output / partial_output.name)
+    shutil.copy2(nested_output, output / nested_output.name)
+    shutil.copy2(nested_log, output / nested_log.name)
     shutil.copy2(partial_log, output / partial_log.name)
     shutil.copy2(work / "axiom-audit.log", output / "axiom-audit.log")
     shutil.copy2(link_manifest, output / "kernel-link-manifest.json")
