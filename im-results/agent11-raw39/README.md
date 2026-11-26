@@ -29,7 +29,7 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 5 |
-| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 6 |
+| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 5 |
 
 Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; only propext and Quot.sound:
 
@@ -55,6 +55,8 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 
 - [1LE 15741/15742/15743/22215](Raw391LEFourPhase.md): common two-block affine-growth proof, source-accepted run 45873034483.
 
-- [1LE 7080](Raw391LE7080.md): recursive carry-language proof, locally kernel-checked next/live; source audit pending.
+- [1LE 7080](Raw391LE7080.md): recursive carry-language proof, source-accepted run 45874103755.
 
-Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. Remaining 1LE IDs: 180, 5777, 5779, 5787, 7080, 12198. Leaf 7080 has a locally checked recursive carry proof pending source acceptance. The semantic generator dispatches delayed cycles and 47 accepted custom leaves plus 7080. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
+- [1LE 12198](Raw391LE12198.md): nested alternating-block grammar; local kernel check complete, source audit pending.
+
+Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. Remaining 1LE IDs: 180, 5777, 5779, 5787, 12198. Leaf 12198 has a locally checked recursive proof pending source acceptance. The semantic generator dispatches delayed cycles and 48 accepted custom leaves plus 12198. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.

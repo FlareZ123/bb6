@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: ['0RE-2172', '1LB-width', '1LE-8865', '1LE-four-phase', '1LE-7080']
+        options: ['0RE-2172', '1LB-width', '1LE-8865', '1LE-four-phase', '1LE-7080', '1LE-12198']
         default: '0RE-2172'
 permissions:
   contents: read
@@ -139,4 +139,22 @@ jobs:
         with:
           name: raw39-1le-7080-proof
           path: /tmp/a11-raw39-1le-7080/
+          retention-days: 30
+
+      - name: Compile recursive 1LE 12198 carry-language certificate
+        if: inputs.target == '1LE-12198'
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python -c 'import base64,lzma,hashlib,pathlib; p=pathlib.Path("im-results/agent11-raw39/Raw391LE12198.lean"); b=lzma.decompress(base64.b64decode(p.with_suffix(".lean.xz.b64").read_text())); assert hashlib.sha256(b).hexdigest()=="8edcd67da391ccd2549017db97541492e8e1b15cf73647c8d251c870b0363321"; p.write_bytes(b)'
+          work=/tmp/a11-raw39-1le-12198
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw39-1le-12198 --artifact-name raw39-1le-12198-proof --theorem BB6.Agent11Raw391LE12198.never --provenance-input "$root/Raw391LE12198.lean.xz.b64" "$root/Raw391LE12198.lean" 2>&1 | tee /tmp/a11-raw39-1le-12198.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-1le-12198.log BB6.Agent11Raw391LE12198.next BB6.Agent11Raw391LE12198.live BB6.Agent11Raw391LE12198.never
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-1le-12198.log; then exit 1; fi
+      - name: Preserve 12198 proof closure
+        if: inputs.target == '1LE-12198'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-1le-12198-proof
+          path: /tmp/a11-raw39-1le-12198/
           retention-days: 30
