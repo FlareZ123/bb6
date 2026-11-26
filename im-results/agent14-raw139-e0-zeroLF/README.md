@@ -49,3 +49,7 @@ Three exact translated side-cycle witnesses were obtained by extending the searc
 |11287|2656|948|right|-7|10|
 
 The additional [10338 proof](Residual10338.md) establishes universal nonhalting by the exact odd-run recurrence. Its initial section is F at -98, ones -95..27, at step 6120. The remaining six mathematical holdouts are 1307, 3002, 3862, 3863, 4125, 9015. Lean modules are candidates pending original-source audit; replay.py verifies the three side-cycle witnesses and the 10338 initial section independently.
+
+## Source acceptance and new witness (14:30 UTC)
+
+Run [45839040551](https://github.com/FlareZ123/bb6/actions/runs/45839040551), pinned source `a2979f2be1130a3111af48ac62bdfad90c65c07d`, accepted the three side cycles and 10338 exact growth. Artifact 15126193553, digest `d2a84a66d1a3f9e993538e000345fd3692847698328cf364bf9d591d96fccb69`. Audit output shows only propext/Quot.sound for 10338; side cycles additionally use Classical.choice. These four exact original tables have certified universal nonhalting. Residual 2040 now has a candidate source formalization using simultaneous first-exit induction for the two relevant residues, awaiting compile. A width-four block-FAR candidate was found for 9015 using (width, cap, modulus, runs, reflect, phase)=(4,1,2,3,false,false), 99 left states / 255 right nodes. The generator `emit9015.py` uses the established source bridge. Neither new candidate is claimed source-accepted yet.
