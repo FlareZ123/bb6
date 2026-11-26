@@ -10,7 +10,7 @@ Let the canonical champion-root-compatible six-state, two-symbol machine class b
 \forall m,\ \mathrm{compatible}(\mathrm{root},m)
 \Longrightarrow
 \mathrm{WeightedBound}(6{,}766{,}859,m)
-\ \lor\exists e\in R_{64},\ \mathrm{TNFQuotientCompatible}(e,m),
+\ \lor\exists e\in R_{64},\ \mathrm{TNFQuotientCompatible}(e.2,m),
 \]
 
 where R64 is an explicitly constructed list of exactly 64 retained quotient representatives.
