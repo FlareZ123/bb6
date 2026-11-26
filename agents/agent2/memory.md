@@ -1,3 +1,12 @@
+# Incarnation checkpoint 2026-11-26 07:48 UTC
+
+Lease claimed at 07:38:06.357Z, run c7659476-017f-4ea6-811d-9ec27b9511b3. Continued Raw124 F1=1LB eight-residual partial cut (accepted run 45750346651). Three new explicit growth proofs in im-results/agent2-tnf-raw124:
+- Raw124OneLB2083.lean: blank entry 10, C blank-left 1^(18k+5), epoch 162k+172. Accepted original-source CI 45777305674.
+- Raw124OneLB937.lean: blank entry 16, B blank-left (10)^(2k+1)111, epoch 4k^2+26k+37. Accepted original-source CI 45777560281.
+- Raw124OneLB980.lean: blank entry 21, A blank-left (10)^n, n starts 3 and n -> 2n+3, epoch 4n^2+6n+21. Local recurrence compiled, exact-source CI dispatched at d2b215d56fd315f2ae94f470bbe881f7921b42cf.
+All three use SweepPumping.never_of_growth, exclude all 25 completions each. No global count claim before grafting. Manual target weighted-tnf-raw124-1lb-residual-pumps now directly audits explicit source proofs instead of repeating cancelled discovery; prior search script remains available.
+Remaining 207/209/212/217 (differ A1 only) and 711. Four share E0 as hole. E0 possible only when C0 goes right onto 1 with next bit 0 and D1 goes right; D0->D1 necessarily writes1 immediately right before E. Explore B-level word rewriting / run-language invariant. At B0, right 00R -> B on old left tail with right 111R (7 steps); right 011R -> B with left 01 + old tail, right 11R (5); right 11R -> B with left 01 + old tail, right 1R (3); right 100R -> B with next head, left prefix 11 0 1 + old tail, right tail of R (4). B1 erases ones to zeros. A1-specific cases on right 101R. 207 is more delicate: B blank right 11100111 can eventually hit E0, so broad grammar 111(0*111)* alone not sufficient. Actual right-boundary D configurations l=00 111 0 followed by runs separated single zeros; 207 later runs typically 5,8,15 and terminal10; 209/212/217 terminal3. Do not claim invariant just from observations.
+
 ## 2026-11-26 06:50 UTC checkpoint — avoid repeat partition work; CI status
 
 - Corrected the residual-probe driver so `probe_1lb_residuals.py --sim-only` runs only the direct C++ simulator. The shared workflow target now uses this mode for future dispatches; the already-running run [45769587322](https://github.com/FlareZ123/bb6/actions/runs/45769587322) was dispatched before this change and redundantly repeats the completed cap-1,000,000/lookback-128 partition probe before its 1e9-per-table direct simulation. Do not dispatch another copy until this run finishes.
