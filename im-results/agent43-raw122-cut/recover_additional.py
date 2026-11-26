@@ -69,7 +69,7 @@ def main():
             else:
                 compile(name)
         compile(f"Raw122Branch{i:02}")
-        name=f"Raw122Recovered{i:02}"
+        name={14:"Raw122RecoveredLC",18:"Raw122Recovered18"}[i]
         (work/(name+".lean")).write_bytes((HERE/(name+".lean")).read_bytes())
         compile(name)
 
