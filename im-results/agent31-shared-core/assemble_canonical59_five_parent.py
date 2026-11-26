@@ -200,13 +200,15 @@ def build_precompiled_manifest(base_linked, work):
     macrofar_unpack = ROOT / "im-results" / "agent32-macro-far" / "unpack.py"
     raw59_partial = ROOT / "im-results" / "agent32-raw59" / "generate_partial.py"
     raw59_sharp = ROOT / "im-results" / "agent32-raw59" / "generate_sharp.py"
+    raw59_sharp_source = ROOT / "im-results" / "agent32-raw59" / "generated_0LB"
+    raw59_sharp_output = ROOT / "im-results" / "agent32-raw59" / "generated_sharp"
     raw120_generator = ROOT / "im-results" / "agent3-tnf-raw120" / "generate.py"
     generator_commands = [
         [sys.executable, str(unpack)],
         [sys.executable, str(raw59_generator)],
         [sys.executable, str(macrofar_unpack)],
         [sys.executable, str(raw59_partial), "--upgrade", "0LA", "0LB", "0LE", "0LF", "1LB", "1LE", "1LF"],
-        [sys.executable, str(raw59_sharp)],
+        [sys.executable, str(raw59_sharp), str(raw59_sharp_source), str(raw59_sharp_output)],
         [sys.executable, str(raw120_generator)],
     ]
     for generator_command in generator_commands:
