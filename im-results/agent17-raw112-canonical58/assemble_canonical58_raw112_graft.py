@@ -72,11 +72,15 @@ def verify_raw112_parent(work: Path, run_id: int):
     reused_retry_groups = set(summary.get("reused_retry_groups", []))
     assert new_retry_groups and not (new_retry_groups & reused_retry_groups)
     assert new_retry_groups | reused_retry_groups == all_retry_groups
-    resumed_from = summary.get("resumed_from_retry_run_id")
-    if resumed_from is None:
+    resumed_ids = summary.get("resumed_from_retry_run_ids")
+    if resumed_ids is None:
+        resumed_from = summary.get("resumed_from_retry_run_id")
+        resumed_ids = [] if resumed_from is None else [resumed_from]
+    assert isinstance(resumed_ids, list)
+    assert all(isinstance(run_id, int) and run_id > 0 for run_id in resumed_ids)
+    if not resumed_ids:
         assert new_retry_groups == all_retry_groups and not reused_retry_groups
     else:
-        assert isinstance(resumed_from, int) and resumed_from > 0
         assert reused_retry_groups
     assert any((d / "Raw112ClosedCover.olean").is_file() for d in dirs)
     return metadata, dirs, summary
