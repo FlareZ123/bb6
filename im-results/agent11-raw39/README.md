@@ -29,7 +29,7 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 5 |
-| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 11 |
+| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 10 |
 
 Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; only propext and Quot.sound:
 
@@ -51,6 +51,8 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 
 - [1LE 6270,16538](Raw391LEBlockRuns.md): ternary block-run language, with separate end and gap unwinding proofs for arbitrarily many saved runs.
 
-- [1LE 8865](Raw391LE8865.md): recursive reset-language proof checked in a copied zipper model; original-source acceptance pending. Candidate dispatch is included; accepted residual count unchanged until source audit.
+- [1LE 8865](Raw391LE8865.md): recursive reset-language proof, source-accepted run 45871946437 / artifact 15141704829.
 
-Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus thirty-eight proved. The semantic generator now dispatches delayed cycles and 42 earlier custom leaves and the candidate 8865. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
+- [1LE 15741/15742/15743/22215](Raw391LEFourPhase.md): common two-block affine-growth proof, local Lean growth checked; original-source audit pending.
+
+Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus thirty-nine proved. The semantic generator now dispatches delayed cycles and 43 accepted custom leaves and four additional candidate leaves. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.

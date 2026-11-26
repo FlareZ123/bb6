@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: ['0RE-2172', '1LB-width', '1LE-8865']
+        options: ['0RE-2172', '1LB-width', '1LE-8865', '1LE-four-phase']
         default: '0RE-2172'
 permissions:
   contents: read
@@ -103,4 +103,22 @@ jobs:
         with:
           name: raw39-1le-8865-proof
           path: /tmp/a11-raw39-1le-8865/
+          retention-days: 30
+
+      - name: Compile four 1LE affine-growth certificates
+        if: inputs.target == '1LE-four-phase'
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python -c 'import base64,lzma,hashlib,pathlib; p=pathlib.Path("im-results/agent11-raw39/Raw391LEFourPhase.lean"); b=lzma.decompress(base64.b64decode(p.with_suffix(".lean.xz.b64").read_text())); assert hashlib.sha256(b).hexdigest()=="f6b4214ffd898eac2882a23b9555976a1d995e04a2ff7f4d0e77b3f6bdbec2da"; p.write_bytes(b)'
+          work=/tmp/a11-raw39-1le-four-phase
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw39-1le-four-phase --artifact-name raw39-1le-four-phase-proof --theorem BB6.Agent11Raw391LEFourPhase.never --provenance-input "$root/Raw391LEFourPhase.lean.xz.b64" "$root/Raw391LEFourPhase.lean" 2>&1 | tee /tmp/a11-raw39-1le-four-phase.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-1le-four-phase.log BB6.Agent11Raw391LEFourPhase.first BB6.Agent11Raw391LEFourPhase.growth BB6.Agent11Raw391LEFourPhase.never
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-1le-four-phase.log; then exit 1; fi
+      - name: Preserve four-phase proof closure
+        if: inputs.target == '1LE-four-phase'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-1le-four-phase-proof
+          path: /tmp/a11-raw39-1le-four-phase/
           retention-days: 30
