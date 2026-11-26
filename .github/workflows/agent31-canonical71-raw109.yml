@@ -10,6 +10,7 @@ on:
           - canonical74
           - canonical70
           - canonical68-integrated
+          - canonical67-integrated
           - canonical65-three
           - canonical65-integrated
           - raw119-parent
@@ -27,6 +28,11 @@ on:
         type: string
         required: false
         default: "45647053824"
+      raw112_run_id:
+        description: "Successful Raw112 closed-parent-cover run ID (required only for target=canonical67-integrated)"
+        type: string
+        required: false
+        default: ""
 
 jobs:
   source-audit-canonical70:
@@ -112,8 +118,8 @@ jobs:
           retention-days: 30
 
   source-audit-canonical74:
-    name: Source-audit the canonical74 and canonical68 E1 parent consumers
-    if: ${{ inputs.target == 'canonical74' }}
+    name: Source-audit canonical74, canonical68 and conditional canonical67 E1 consumers
+    if: ${{ inputs.target == 'canonical74' || inputs.target == 'canonical67-integrated' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -541,7 +547,9 @@ jobs:
           retention-days: 14
 
   integrate-canonical68:
-    if: ${{ inputs.target == 'canonical68-integrated' || inputs.target == 'canonical65-integrated' }}
+    name: Integrate the eight-parent Canonical68 closure and optional Raw112-to-67 consumer
+    needs: [source-audit-canonical74]
+    if: ${{ always() && (inputs.target == 'canonical68-integrated' || inputs.target == 'canonical65-integrated' || (inputs.target == 'canonical67-integrated' && needs.source-audit-canonical74.result == 'success')) }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -555,13 +563,18 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Integrate all eight already source-audited parent proofs
+      - name: Integrate the accepted parent closures
         env:
           GH_TOKEN: ${{ github.token }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
         run: |
           set -euo pipefail
           extra=()
           if [[ "${{ inputs.target }}" == canonical65-integrated ]]; then extra+=(--three); fi
+          if [[ "${{ inputs.target }}" == canonical67-integrated ]]; then
+            [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+            extra+=(--raw112-run-id "$RAW112_RUN_ID")
+          fi
           python im-results/agent31-shared-core/assemble_canonical68.py --work /tmp/a31-integrated68 "${extra[@]}" 2>&1 | tee /tmp/a31-integrated68.log
       - uses: actions/upload-artifact@v4
         if: always()
@@ -582,6 +595,12 @@ jobs:
             /tmp/a31-integrated68/canonical65-integrated.log
             /tmp/a31-integrated68/canonical65-integrated.json
             /tmp/a31-integrated68/linked/Canonical65Integrated.olean
+            /tmp/a31-integrated68/Canonical74Raw109Raw123Graft.log
+            /tmp/a31-integrated68/Canonical68E1ParentGraft.log
+            /tmp/a31-integrated68/Canonical67E1ParentGraft.log
+            /tmp/a31-integrated68/Canonical67Integrated.log
+            /tmp/a31-integrated68/canonical67-integrated.json
+            /tmp/a31-integrated68/metadata/
           if-no-files-found: warn
           retention-days: 14
       - name: Preserve the successful reached proof environment
