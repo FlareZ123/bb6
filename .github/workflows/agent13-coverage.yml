@@ -925,8 +925,8 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
         run: |
           set -euo pipefail
-          BASE59=$(find /tmp/canonical59-base -name selected-integration.json -printf '%h\\n' | head -n1)
-          BASE10=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\\n' | head -n1)
+          BASE59=$(find /tmp/canonical59-base -name selected-integration.json -printf '%h\n' | head -n1)
+          BASE10=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\n' | head -n1)
           test -f "$BASE59/selected-integration.json"
           test -f "$BASE59/generated/CanonicalSelectedParentIntegrated.lean"
           test -f "$BASE59/linked/CanonicalSelectedParentIntegrated.olean"
@@ -982,7 +982,7 @@ jobs:
               "shared_module_mismatches": mismatches,
           }
           pathlib.Path("/tmp/a49-raw10-canonical58-membership/membership-inputs.json").write_text(
-              json.dumps(report, indent=2, sort_keys=True) + "\\n"
+              json.dumps(report, indent=2, sort_keys=True) + "\n"
           )
           PY
           export LEAN_PATH="$BASE59/linked:$BASE10"
@@ -1008,7 +1008,7 @@ jobs:
               "status": "kernel-checked exact membership in the accepted Canonical58 roster",
               "probe_source_sha256": hashlib.sha256(pathlib.Path("im-results/agent49-raw10-refined-cut/Raw10Canonical58MembershipProbe.lean").read_bytes()).hexdigest(),
               "probe_olean_sha256": hashlib.sha256((d / "Raw10Canonical58MembershipProbe.olean").read_bytes()).hexdigest(),
-              "probe_log_sha256": hashlib.sha256((d / "Raw10Canonical58MembershipProbe.olean").read_bytes()).hexdigest(),
+              "probe_log_sha256": hashlib.sha256(pathlib.Path("/tmp/a49-raw10-canonical58-membership.log").read_bytes()).hexdigest(),
               "lean_version": "Lean 4.36.0-rc2",
               "theorems": [
                   "BB6.Agent49Raw10Canonical58MembershipProbe.count59",
@@ -1021,7 +1021,7 @@ jobs:
               ],
               "membership_result": "p10_count58 = 1",
           })
-          (d / "membership-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+          (d / "membership-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
           PY
       - name: Export Raw10 Canonical58 membership proof
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
