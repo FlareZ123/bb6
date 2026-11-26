@@ -27,3 +27,11 @@ for a,b in changes:
     assert s.count(a)==1,a
     s=s.replace(a,b)
 p.write_text(s)
+
+# Equality transport through decode avoids rewriting dependent Fin numerals in goals.
+e=p.with_name("emit_proof.py")
+s=e.read_text()
+a="(by rw [← h, hc.2])"
+b="(hc.2.symm.trans (congrArg decode h))"
+assert s.count(a)==2
+e.write_text(s.replace(a,b))
