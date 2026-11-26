@@ -32,7 +32,8 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           DIR=im-results/agent6-raw57-ra
           if [[ "$CHILD" == parent-three ]]; then
-            for C in AR 0RB 0RC 1RB 1RC 1RE 0RE 0RF 1LC; do
+            python im-results/agent6-raw57-ra/generate.py
+            for C in 0RB 0RC 1RB 1RC 1RE 0RE 0RF 1LC; do
               python im-results/agent6-raw57-ra/generate_sibling.py "$C"
             done
             for C in 0LB 0LC 0LD 1RA 1RF 1LA 1LE; do
