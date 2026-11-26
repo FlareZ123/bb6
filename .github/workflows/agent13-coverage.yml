@@ -5077,7 +5077,7 @@ jobs:
             mod="${mod%.lean}"
             mod="${mod//\//.}"
             overrides+=(--override "$mod=$src")
-          done < <(find "$G" -type f -name '*.lean' | sort)
+          done < <(find "$G" -type f -name '*.lean' ! -name 'Raw124New0LACut.lean' | sort)
           python tools/lean_compile_closure.py --source-root "$OLD" --source-root "$G" "${overrides[@]}" --workdir "$W" --jobs 2 --precompiled-manifest "$P/manifest.json" --precompiled-dir "$OLD" --manifest "$W/manifest.json" --theorem BB6.Agent2Raw124New0LA.branch_sound --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LA' --weighted-bound 6766859 "$G/Raw124New0LACut.lean" 2>&1 | tee /tmp/raw124-0la-deep.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-0la-deep.log BB6.Agent2Raw124New0LA.branch_sound BB6.Agent2Raw124New0LA.residual_count
           cp /tmp/raw124-0la-deep.log "$W/audit.log"
