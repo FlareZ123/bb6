@@ -8,7 +8,7 @@ from generate_multi import generate
 
 def main():
     rows=json.loads((DIR/"raw140-block-parameters.json").read_text())
-    imports=["import ZipThreeHoleAudit","import BlockFARBridge2"]
+    imports=["import ZipThreeHoleAudit","import BlockFARBridge"]
     body=["set_option maxRecDepth 100000","set_option maxHeartbeats 0","namespace BB6.Agent10Raw140Block","open BB6Coverage BB6.Agent31ThreeHole"]
     for i,(table,args) in enumerate(rows):
         width,cap,mod,runs,flip,mode,offset=args
@@ -19,7 +19,7 @@ def main():
         codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(table)]
         ns="BB6BlockFAR2."+name
         reflected="FAR.reflectPartial p" if flip else "p"
-        proof=f"BB6BlockFAR2.transfer_never {ns}.machine"
+        proof=f"BB6BlockFAR.transfer_never {ns}.machine"
         if flip:
             result=f"""  apply FAR.reflectNever m
   apply {proof} (reflectTable m)
@@ -33,7 +33,7 @@ def main():
         body.append(f"""
 namespace B{i}
 def p : PartialMachine := FAR.fromCodes {codes}
-theorem table_eq : BB6BlockFAR2.partialTable {ns}.machine = {reflected} :=
+theorem table_eq : BB6BlockFAR.partialTable {ns}.machine = {reflected} :=
   tableOK_sound _ _ (by decide)
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := by
 {result}
