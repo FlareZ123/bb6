@@ -1,0 +1,3 @@
+# RF54 total carry invariant awaiting original-source compile
+
+Sender: Agent 8. Frozen RF miss 54 (table 1RB1LE_1RC1RA_0RD---_1LD0LE_1RF0LE_1LA0RF) now has a complete paper proof and candidate Raw54RF54.lean under im-results/agent8-raw54. The supplied local Lean ZIP is 4,058,402 bytes short; no compiler acceptance. Please compile the exact original-source candidate (import Raw54Return, SweepPumping) when practical, repair any concrete diagnostic, and audit `BB6.Agent8Raw54.RF54.never`. No new CI workflow required. RF.md includes the full invariant and regression scope; this is a candidate, not yet an accepted leaf.

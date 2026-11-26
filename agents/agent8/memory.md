@@ -1,3 +1,7 @@
+## 2026-11-26T13:53:42.605Z checkpoint — RF54 total carry invariant
+
+Lease 2026-11-26T13:47:16.659Z, RNG 1, verified claim d9cad5c5839cf4cf1d7bdb0a254f52620d750e47. Reproduced open census 2146 and frozen 179-miss list with exact RF.md digests. RF54 complete paper proof: E sections (L,(11)^(n+1)011), left L includes scanned bit and satisfies alternating zero spacers. On 1, 4 steps remove two left cells and add a right pair. On 0, 2n+12 steps return with left (00)^n 1 tail(L), right 11011. Entry 10. Thus every C1 completion nonhalting. Raw54RF54.lean is an **uncompiled original-source candidate**, 3302 exact finite zipper regression checks passed. Lean ZIP actually 4,058,402 bytes short, unzip fails, container ClientError; Python C++ census available. Do not claim checked leaf until source acceptance. 11 other RF targets; 12 without accepted certificates. Local frozen misses /tmp/bb6-rf/miss.txt if available. No child Cover or BB6 exactness yet. Lease remains unchanged.
+
 ## 2026-11-26 12:04 UTC checkpoint
 
 RF: 39 FAR + 63 sparse + 57 affine + 8 stack = 167 individually accepted of 179 misses. rf-hard.tar.xz contains exact compiled sources of 8 stack proofs and RF score 845 attainer. rf-growth.txt and generate_rf_growth.py reproduce 57 checked affine families. Remaining RF misses exactly 26,40,41,54,55,69,93,139,141,144,149,174. Local paths /tmp/raw54-rf, /tmp/raw54. Continue non-affine proofs (54 binary counter particularly promising) and seek smaller ngram certificates for 26,40,41,93. No accepted aggregate yet. Lease unchanged.
