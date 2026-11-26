@@ -1,3 +1,18 @@
+## 2026-11-26T21:38:00.470Z — Box6 cut integrated; Canonical58 membership probe running
+
+- Lease claim remains `2026-11-26T20:38:17.487Z`; release threshold `2026-11-26T21:48:17.487Z`. Elapsed at this checkpoint: 59 minutes.
+- Box6 source/probe run [45898296738](https://github.com/FlareZ123/bb6/actions/runs/45898296738) succeeded. It compiled the 94-module Box6 closure, passed all theorem axiom audits, reused 127 modules from Box5/7's precompiled artifact, compiled a 164-module refined probe closure, and compared 94 shared modules with **zero identity mismatches and zero provenance differences**.
+- Exact probe output:
+  - `BB6.Agent49Box6.raw10_box6_closed` has type `(B) (hB : 75 ≤ B) : ∃ b, b ∈ raw10Remainder ∧ sourceMatch b = true ∧ ∀ m, Fits b m → WeightedBound B m`.
+  - `BB6.Agent49Box6.box6_weighted` gives `WeightedBound B m` directly for `Fits BB6.Agent49Box6.baseBox m`.
+  - Adding original-source box6 to the accepted box5/7/8/18–24 cut leaves exactly **30 open rectangles**; the candidate cut with supplied box16/17 bounds leaves exactly **28**. These are kernel-evaluated `#eval` counts, not estimates.
+- Run 45898296738 uploaded `raw10-box6-source-closure`, artifact ID `15155195350`, size 209,883,455 bytes, SHA-256 `7074af84540abfd6689c90386d4ef882649269f5b662ae10c6809d1be0c963df`, retained to 2026-12-26.
+- Created `im-results/agent49-raw10-refined-cut/Raw10RefinedBox6.lean`. It identifies `Agent49Box6.baseBox` with `raw10Remainder[6]!` by `decide`, transfers `box6_weighted`, composes the Box5/7 bounds, and states conditional parent Covers with 30 and 28 open rectangles. Its compile/audit run [45899419790](https://github.com/FlareZ123/bb6/actions/runs/45899419790) is in progress; it compiles both the probe and the new wrapper, audits both parent-cover theorems, and uploads `raw10-box6-refined-parent-cut`.
+- The identical-source deduplication in `tools/lean_compile_closure.py` is now exercised successfully: 127 dependency-closed modules were reused from the Box5 artifact; source copies were byte-identical and safely resolved. The Box6-vs-probe manifest comparison had 94 shared modules and zero mismatches.
+- The separate exact membership run [45898953769](https://github.com/FlareZ123/bb6/actions/runs/45898953769) is also in progress. It downloads the 5.72 GB Canonical59 base artifact and the 121 MB Box5/7 source artifact, then evaluates whether `firstOneB0_1LC` occurs in the Canonical64/59/58 rosters. Its output is not yet known.
+- Current mathematical status: the refined Raw10 conditional parent cut is reduced from 31/29 to **30/28** open rectangles by source-accepted Box6. This is still not a complete Raw10 parent Cover: every remaining open rectangle and the held-leaf premise must be discharged, and box16/17 bounds remain explicit parameters in the 28-open candidate. No BB(6) value is established.
+- Local `container.exec` and `python.exec` remain unavailable with platform ClientError; use CI for Lean execution.
+
 ## 2026-11-26T21:28:07.327Z — Box5 artifact published; Box6 probe collision fixed
 
 - Lease remains immutable at `2026-11-26T20:38:17.487Z`; release threshold `2026-11-26T21:48:17.487Z`. Elapsed at this checkpoint: 49 minutes.
