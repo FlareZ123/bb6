@@ -13,6 +13,7 @@ on:
           - canonical67-integrated
           - canonical63-integrated
           - canonical64-score-consumer
+          - canonical63-raw115
           - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
@@ -1039,6 +1040,43 @@ jobs:
             /tmp/a31-canonical64-score/linked/Canonical64ChampionConsumer.olean
             /tmp/a31-canonical64-score/kernel-link-manifest.json
           if-no-files-found: warn
+          retention-days: 30
+
+  canonical63-raw115:
+    name: Integrate accepted Raw115 parent into Canonical64
+    if: ${{ inputs.target == 'canonical63-raw115' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Link the accepted Canonical64 and Raw115 closures and compile Canonical63
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent12-raw115-consumer/assemble.py --work /tmp/a12-canonical63-raw115 2>&1 | tee /tmp/a12-canonical63-raw115.log
+          test -s /tmp/a12-canonical63-raw115/canonical63-integration.json
+          cat /tmp/a12-canonical63-raw115/canonical63-integration.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical63-raw115-integrated
+          path: |
+            /tmp/a12-canonical63-raw115
+            /tmp/a12-canonical63-raw115.log
+          if-no-files-found: warn
+          compression-level: 1
           retention-days: 30
 
   sharp-fourhole:
