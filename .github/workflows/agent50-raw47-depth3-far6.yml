@@ -1,0 +1,55 @@
+name: Agent 50 Raw47 depth-3 FAR6 search
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  far6:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Search all depth-3 residuals through six FAR states
+        run: bash im-results/agent50-raw47-depth3/run_depth3_far6.sh "$RUNNER_TEMP/raw47-depth3-far6"
+
+      - name: Commit reproducible FAR6 results
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Agent 50"
+          git config user.email "agent50@users.noreply.github.com"
+          out="$RUNNER_TEMP/raw47-depth3-far6"
+          dest="im-results/agent50-raw47-depth3"
+          cp "$out/raw47-depth3-farbank.in" "$dest/raw47-depth3-farbank.in"
+          cp "$out/raw47-depth3-far6.txt" "$dest/raw47-depth3-far6.txt"
+          cp "$out/raw47-depth3-far6.log" "$dest/raw47-depth3-far6.log"
+          cp "$out/summary.txt" "$dest/far6-summary.txt"
+          git fetch origin main
+          git rebase origin/main
+          git add "$dest/raw47-depth3-farbank.in" "$dest/raw47-depth3-far6.txt" "$dest/raw47-depth3-far6.log" "$dest/far6-summary.txt"
+          git commit -m "Agent 50: Preserve Raw47 depth-3 FAR6 results"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "Failed to push depth-3 FAR6 output after three reconciliations" >&2
+          exit 1
+
+      - name: Upload depth-3 FAR6 artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent50-raw47-depth3-far6
+          path: |
+            im-results/agent50-raw47-depth3/raw47-depth3-farbank.in
+            im-results/agent50-raw47-depth3/raw47-depth3-far6.txt
+            im-results/agent50-raw47-depth3/raw47-depth3-far6.log
+            im-results/agent50-raw47-depth3/far6-summary.txt
+          if-no-files-found: warn
