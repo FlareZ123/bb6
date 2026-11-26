@@ -78,6 +78,7 @@ def main():
     base_report = json.loads(graft_reports[0].read_text())
     assert base_report["remaining_residual_count"] == 58, base_report
     assert base_report["raw59_retained"], base_report
+    assert "raw118" in base_report["base_accepted"], base_report["base_accepted"]
     assert base_report["axioms"], base_report
 
     roots = list(work.rglob("Canonical58Raw113Graft.olean"))
