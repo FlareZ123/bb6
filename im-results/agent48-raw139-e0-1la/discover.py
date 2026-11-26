@@ -21,9 +21,14 @@ EXTRA=[(w,c,m,n,False,ph)
        for w,c,m,n,ph in product((2,3,4),(1,2),(1,2,3,5,7),(1,2,3,4),(False,True))
        if (w,c,m,n,False,ph) not in INITIAL]
 def discover(partition):
-    groups,late,remaining={}, {}, []
+    groups,late,remaining,proven={}, {}, [], {}
+    sweeps={(7,18,11,9,14,21,19,16,2,11,24,11):"BB6.Agent48Raw139E0OneLASweeps.Sweep4494",(7,18,11,9,14,21,23,16,2,11,24,11):"BB6.Agent48Raw139E0OneLASweeps.Sweep4700",(7,13,11,21,14,3,24,16,2,11,23,11):"BB6.Agent48Raw139E0OneLASweeps.Sweep9011",(7,13,11,21,14,3,24,16,2,11,23,19):"BB6.Agent48Raw139E0OneLASweeps.Sweep9012"}
+    assert set(sweeps).issubset(map(tuple,partition['open']))
     counts=partition["counts"]
     for i,table in enumerate(partition["open"]):
+        if tuple(table) in sweeps:
+            proven[i]=sweeps[tuple(table)]
+            continue
         for params in INITIAL:
             try:
                 cert=generate(table,*params[:-1],phase=params[-1],event_limit=10000)
@@ -56,9 +61,9 @@ def discover(partition):
     spec=dict(parent=PARENT,counts=counts,limit=450,maxd=2,
               bound=max([counts["maxquery"]]+[v[0] for v in late.values()])+6,
               namespace="BB6.Agent48Raw139E0OneLA",prefix="Raw139E0OneLA",
-              external_imports=[],block_groups=[[p,groups[p]] for p in sorted(groups)],
-              late=late,proven={},max_module_leaves=1800)
-    assert sum(map(len,groups.values()))+len(late)+len(unresolved)==counts["open"]
+              external_imports=["OneLASweepBridge"],block_groups=[[p,groups[p]] for p in sorted(groups)],
+              late=late,proven=proven,max_module_leaves=1800)
+    assert sum(map(len,groups.values()))+len(late)+len(proven)+len(unresolved)==counts["open"]
     return spec,unresolved
 
 if __name__=="__main__":

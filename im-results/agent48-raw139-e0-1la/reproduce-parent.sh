@@ -12,6 +12,7 @@ python3 "$checker/test_replay.py" "$work/replay"
 "$work/replay" 450 2 7 24 11 24 14 24 24 16 2 11 24 24 > "$work/partition.json"
 python3 "$base/discover.py" "$work/partition.json" "$work/spec-compact.json" "$work/unresolved.json" | tee "$work/discovery.log"
 bound=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))["bound"])' "$work/spec-compact.json")
+cp "$base"/Sweep4494.lean "$base"/Sweep9011.lean "$base"/OneLASweepBridge.lean "$work/imports/"
 python3 "$checker/package6.py" "$work/spec-compact.json" "$work/partition.json" "$work/imports"
 python3 im-results/agent13-coverage/unpack.py
 python3 tools/lean_compile_closure.py "$work/imports/Raw139E0OneLACover.lean" \
