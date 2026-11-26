@@ -74,6 +74,10 @@ def normalizedCoveredByActive : List PartialMachine :=
     activeRows.any (fun e => extendsTable e.2 p))
 
 def e0LCTable : PartialMachine := leaf (2, ⟨false, false, 2⟩)
+def e0LCD0RCParent : PartialMachine :=
+  fromCodes [7,24,11,24,14,24,9,16,8,11,24,24]
+def e0LCD0RCC1ZeroLF : PartialMachine :=
+  fromCodes [7,24,11,24,14,20,9,16,8,11,24,24]
 def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
 
 /-- A finite crosswalk can discharge every active row covered by at least one
@@ -158,6 +162,10 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval normalizedCoveredByActive.length
 #eval (activeRows.filter (fun e => sameTable e.2 e0LCTable)).length
 #eval (activeRows.filter (fun e => extendsTable e0LCTable e.2)).map (fun e => e.1)
+#eval (activeRows.filter (fun e => sameTable e.2 e0LCD0RCParent)).length
+#eval (activeRows.filter (fun e => extendsTable e0LCD0RCParent e.2)).map (fun e => e.1)
+#eval (activeRows.filter (fun e => sameTable e.2 e0LCD0RCC1ZeroLF)).length
+#eval (activeRows.filter (fun e => extendsTable e0LCD0RCC1ZeroLF e.2)).map (fun e => e.1)
 #eval (activeRows.filter (fun e => sameTable e.2 e0RETable)).length
 #eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
 
