@@ -4,6 +4,8 @@ Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, canonical raw40. First unass
 
 ## Established local results
 
+- Round20 (1RC/1LB): exact weighted maximum **85**, witness `1RB1RC_1RC0RE_0RD1LB_1LD1LA_0RC1LF_0LEHHH`, 84 ordinary transitions + halt, delay zero. All 81 open leaves closed: 79 FAR≤5, one FAR6, and existing all-time OneRC1LB sweep theorem. All 24 canonical audit shards and [exactness](Raw40Round20Exact.lean) compiled locally against the same Canonical77 dependency artifact as Round16. Local compilation imported the exact OneRC1LB theorem and its private helper extracted from Raw40MoreTwoSided; the [reproduction script](prepare_round20.py) imports the original full module. No new CI or global roster count is claimed.
+
 - Round16 (1RC/0RD): exact weighted maximum **57**, compatible witness `1RB1RC_1RC0RE_0RD0RD_1LD1LA_HHH0RF_0RD1RD`, 56 ordinary transitions + halt, delay zero. All 24 canonical audit shards, empty residual aggregate `Raw40C1RC0RD.all_quotient`, and [exactness](Raw40Round16Exact.lean) compiled locally in Lean 4.36.0-rc2 on Canonical77 artifact 14997966221. The 81 open search leaves have 77 FAR≤5 and four saved larger-FAR certificates. Reproduce the generated parent audit from `prepare_round10-18.py 16` (the local build used the equivalent standalone generator without the empty pump import). No new CI or global roster count is claimed.
 
 - [Round5](Round5-README.md): exact weighted maximum **1891** for 0LA/0LB, with kernel-checked coverage and attainment.
