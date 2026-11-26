@@ -9,6 +9,7 @@ case "$sibling" in
   OneLA) label=LA; bound=1361; code=2; rootsha=6bc5c852ae4850ab0b121a0a082b0aa76738e619b2e905447f81cba16a983875; archive=source.tar.xz.b64; archivesha=af3ca0f10ca181c6b37c14764fff715c8d6aee6871b759d7e2d5e944fb92b449; script=sibling.py; spec=oneLA-spec.json ;;
   OneLF) label=OneLF; bound=42038; code=22; rootsha=b9da28e853bcf3b37606453d488ff2bb6a8f7a52216aa2702f9b99f3e8f01c57; archive=source-v2.tar.xz.b64; archivesha=d7df8ff3f2e38cef9e24e56e754163eabac7792d4da5d452e5416bcfec2db924; script=sibling-v2.py; spec=oneLF-spec.json ;;
   ZeroRC) label=ZeroRC; bound=775; code=9; rootsha=41b6b03422798ffc4f3325cbe49fa8fdd0d1c6449e1f282852e103d6655c5fe0; archive=source-v2.tar.xz.b64; archivesha=d7df8ff3f2e38cef9e24e56e754163eabac7792d4da5d452e5416bcfec2db924; script=sibling-v2.py; spec=zeroRC-spec.json; extraspec=zeroRC-spec.json.xz.b64; extraspecsha=3539b830711f1b97997d36965a61a612ab0f1f36c078dc7c987ea24b6f12878c ;;
+  OneRF) label=OneRF; bound=6250; code=23; rootsha=6ca0dc341acf0aa3c54fb4e3ddbf277476829c6681d16b840ff85f5cf1cfccc5; archive=source-v2.tar.xz.b64; archivesha=d7df8ff3f2e38cef9e24e56e754163eabac7792d4da5d452e5416bcfec2db924; script=sibling-v2.py; spec=oneRF-spec.json; extraspec=oneRF-spec.json.xz.b64; extraspecsha=d8156ee92b768502ad10f5eff2a7f9f69ad348333af5486ea6f00a4fb24159f4 ;;
   *) echo "Unknown sibling $sibling" >&2; exit 2 ;;
 esac
 work="$PWD/.tmp/a48-d0-$sibling"
