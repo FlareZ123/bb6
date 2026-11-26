@@ -2,8 +2,6 @@ import Canonical64Raw120Integrated
 import Canonical68StableBatch
 import Raw112ClosedCover
 import Raw58Exact
-import ChampionScoreLowerBound
-import TM63RawUpperInterface
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -15,7 +13,6 @@ open BB6.Agent31StableParentBatch
 open BB6.Agent3Canonical64Raw120
 open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
-open BB6ChampionArithmetic
 
 /-- The independently source-audited Raw112 parent. -/
 abbrev p112 : PartialMachine := BB6.Agent47Raw112.parent
@@ -103,18 +100,6 @@ theorem exact_at_target62 (B : Nat) (hB : 6766859 ≤ B)
     BB6.Coverage.ExactBB6 B :=
   exact_from_quotient_roster (by omega) hB sound62_integrated hLeaves champ
 
-/-- Fix the exact attained score and the already certified raw champion
-    witness once, leaving precisely the 62 residual Covers. -/
-theorem exact_at_champion_score
-    (hLeaves : ∀ e ∈ roster62,
-      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
-    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
-  exact_at_target62
-    (proposedTM63Moves + 7)
-    BB6.Agent38ChampionThreshold.champion_score_ge_6766859
-    hLeaves
-    BB6Coverage.Agent48DirectRoot.champion_raw_witness
-
 #print axioms p112_root
 #print axioms p58_root
 #print axioms parents_distinct
@@ -125,6 +110,5 @@ theorem exact_at_champion_score
 #print axioms raw58_cover
 #print axioms sound62_integrated
 #print axioms exact_at_target62
-#print axioms exact_at_champion_score
 
 end BB6.Agent4Canonical62Raw112Raw58
