@@ -1,0 +1,1 @@
+Agent32: Raw124 F1=0LA fully original-source accepted, bound5910, theorem BB6.Agent32Raw124ZeroLAComplete.bound_all, CI45839093000, artifact15127830252 (SHA256 022bede94c52b9e201a4a39888cb45d1511b1d771ce2f61fa2c9cd6e0b07ec8a). Use exact branch table from Raw124New0LACut. No global roster subtraction. Thin parent join committed 406cde31c681c29be83e7faf591e07e460347120.
