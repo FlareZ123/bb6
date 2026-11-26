@@ -61,3 +61,12 @@ The separate E0=1RF child has 2610 splits, 45064 cycles, 12821 last, 2146 open, 
 ### LA ID 37: modulo-four run grammar
 
 [Raw54LA37.lean](Raw54LA37.lean) proves the universal blank-start nonhalting theorem for `1RB0LF_1RC0RB_0RD0RC_1LD0LE_1LA0LE_0LB---`. The left stack consists of frames of the form `0^(4k+2)101`; the right word uses internal one-runs with lengths governed by the preceding one- or two-zero gap, plus an unrestricted terminal run. The A0 phase either pushes a frame or merges the first run, and the A1 phase pops a minimal frame or decreases the top frame counter. The exact primitive macro costs are a+6 and 2a+8 for the A0 branches, nine for a pop, and eight for the decrease or empty-stack branch. The auxiliary Q phase permits a sequence of pending pop prefixes. The blank entry takes 43 moves. All branches are positive and preserve the inductive grammar, including arbitrary terminal length and implicit zero padding. Lean 4.36.0-rc2 checked `sectionReturn` and `never` against the rebuilt original-source closure; axioms are propext and Quot.sound only. Commit 297fb15abe1d39bd2f04df6f4a8a49d2e0d04ffe, blob da7317ace353667f0ab7fb6477e543dfc708f9a9.
+
+## 2026-11-26 11:47 UTC — LA missing proof artifacts restored
+
+The frozen enumeration reproduces exactly (1342 open, 164 bank misses, observed weighted halt maximum 545). The two archives contain IDs 27 and 108, but not 49 or 94, contrary to the previous complete-ledger report. Both missing cylinders now have original-source Lean proofs:
+
+- [Raw54LA49.lean](Raw54LA49.lean): blank entry at 30; A-section binary stack with pop transitions of cost 2 and reset transitions of cost 2k+8. All completions of F1 nonhalt.
+- [Raw54LA94.lean](Raw54LA94.lean): blank entry at 28 to P(3); positive return rules P(n) -> Q(n+1,0), Q(m+1,k) -> Q(m,k+2), Q(0,k) -> S(k+2), S(k) -> P(k+3), with respective exact costs 4n+11, 6k+14, 6k+15, 6k+20. All completions of A1 nonhalt.
+
+Both `sectionReturn` and `never` compile using Lean 4.36.0-rc2 and the original source dependencies from artifact 15079633196 plus Raw54RAClosedCore. Only propext and Quot.sound. The existing generator should now discover these namespaces automatically; the aggregate LA audit and cover have not yet been checked.
