@@ -3685,12 +3685,13 @@ jobs:
           export LEAN_PATH="$PWD"
           STEM="Raw124B${RAW124_BRANCH}"
           mkdir -p /tmp/a2-raw124-repair-kids
+          : > /tmp/a2-raw124-repair-kids/repair-shard.log
           for k in $KIDS; do
-            echo "Compiling ${STEM}Kid${k}"
-            lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean"
+            echo "Compiling ${STEM}Kid${k}" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+            lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
             cp "${STEM}Kid${k}.olean" /tmp/a2-raw124-repair-kids/
           done
-          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-repair-kids/*.log 2>/dev/null; then exit 1; fi
+          if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-repair-kids/repair-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-${{ inputs.raw124_branch }}-repair-kids-${{ matrix.shard }}
@@ -3753,7 +3754,7 @@ jobs:
           log = pathlib.Path('/tmp/a2-raw124-bundle-assemble.log').read_text()
           allowed = {'propext', 'Classical.choice', 'Quot.sound'}
           seen = set()
-          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log):
               actual = {a.strip() for a in axioms.split(',') if a.strip()}
               assert actual <= allowed, (name, actual - allowed)
               seen.add(name.rsplit('.', 1)[-1])
