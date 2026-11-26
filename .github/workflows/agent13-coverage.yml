@@ -769,6 +769,7 @@ jobs:
             --source-root "$W" \
             --precompiled-manifest "$BASE5/manifest.json" \
             --precompiled-dir "$BASE5" \
+            --artifact-dir /tmp/a49-raw10-box6-probe \
             --manifest /tmp/a49-raw10-box6-probe/manifest.json \
             --compare-manifest /tmp/a49-box6-proof/manifest.json \
             --label "Raw10 refined box6 source-subset probe (not a parent Cover)" \
