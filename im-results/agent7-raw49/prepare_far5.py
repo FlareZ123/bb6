@@ -86,7 +86,7 @@ def far(code, p):
                 T[dst] = v
                 changed = True
         if not changed:
-            return f".far {rev} {n} ⟨0,{D},{T[:N]},{T[N:]},{z}⟩"
+            return f".far {str(bool(rev)).lower()} {n} ⟨0,{D},{T[:N]},{T[N:]},{z}⟩"
 
 
 def collect_open(node, out):
