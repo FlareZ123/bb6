@@ -10,3 +10,7 @@ This is intermediate computational evidence. A candidate bank is not a proof unt
 ## FAR6 preloader correction
 
 The first FAR6 attempt was invalid: the C++ preloader expects one bare code token per line, but the initial runner passed the FAR5 `id code` output. It therefore parsed IDs as automaton codes and falsely reported all 1212 leaves solved in 0.00 seconds. Those files are explicitly preserved with an `-invalid` suffix. The corrected runner extracts only the second column of the FAR5 bank, validates the ten bare codes, and reruns FAR6. Only the corrected run may be cited.
+
+## Follow-up search results
+
+The depth-3 FAR5 search found 10 certificates among 1212 four-hole leaves. The separate depth-2 FAR searches found 0/114 certificates through seven automaton states. The depth-3 FAR6 run is being rerun after correcting a preloader-format bug; the initial invalid output is preserved with an `-invalid` suffix and must not be cited.
