@@ -5093,7 +5093,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           if [[ "$BRANCH" == 0LE ]]; then
             python im-results/agent32-raw124-0le/replay_0le.py --out "$W/generated"
-            test ! -s "$W/generated/Raw124New0LE.remaining"
+            test -z "$(tr -d '[:space:]' < "$W/generated/Raw124New0LE.remaining")"
             THEOREM=BB6.Agent2Raw124New0LE.bound_all
             SOURCE=Raw124New0LEComplete.lean
           else
