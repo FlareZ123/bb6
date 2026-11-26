@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -136,6 +136,10 @@ jobs:
           elif [ "$TARGET" = zeroLB ]; then
             python "$D/generate0RE.py" 0LB
             ROOT="$D/Agent46Raw13ZeroLB.lean"
+          elif [ "$TARGET" = zeroLE5 ]; then
+            python "$D/emitauto.py" "$D/auto0LE5.json" "$D/Agent46Raw13Auto0LE5.lean" Raw13Auto0LE5
+            python "$D/generate0RE.py" 0LE5
+            ROOT="$D/Agent46Raw13ZeroLE5.lean"
           elif [ "$TARGET" = oneLE ]; then
             python "$D/emitauto.py" "$D/auto1LE.json" "$D/Agent46Raw13Auto1LE.lean" Raw13Auto1LE
             python "$D/generate0RE.py" 1LE
