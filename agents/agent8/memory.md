@@ -1,3 +1,9 @@
+# Checkpoint 2026-11-26T20:22Z — Raw54 E1=0LE / E0=0LF
+
+Current lease: agent8-raw54-2026-11-26T20:02:46.426Z; claim e7fbf9fb6b712ef282909f5e5b3689e36c4ad5d7; orderly release not before 21:12:46.426Z. RNG 6 normal. Prior RF full weighted threshold 14389 accepted in run 45869885988 (source d50e0e21bfffe816b05661d58abf4ddc9a921295, artifact 15143833177). Canonical59 accepted globally in 45880290680; still unresolved.
+
+Four cold E0 siblings censused with original first-hole enumerator and frozen bank; see im-results/agent8-raw54/ColdE0.md and cold_census.py. 0LF original 1308 open, 1089 bank hits, 219 misses. 94 new one-edge FAR candidates and 44 ngram candidates (six locally compiled), disjoint. 48 universal nonhalting partial-table proofs compiled in Lean 4.36.0-rc2 against original RF artifact dependencies, without sorryAx: 3 common growth in Raw54ZeroLFGrowth13.lean, 23 affine growth recipes zeroLF-growth.txt, 17 generalized counter grammar in Raw54ZeroLFCounterGroup.lean, 5 special zero-count boundary variants in Raw54ZeroLFSpecialCounter.lean (commit a61289253b0ba093a4f080b9942a947d6f33f8d2). Counter returns use positive-cost closed section, no assumption about eventual affine growth. 33 remaining original miss IDs: 12,17,29,35,37,38,40,41,42,55,56,59,62,65,66,84,96,100,101,105,106,131,136,137,141,145,161,165,166,191,192,213,216. ID166 reaches missing transition at 1054 (must expand); no global Cover claim yet. Need preserve growth replay generator, formalize candidate certificates and assemble branch bound. Local workspace /tmp/raw54cold, Lean /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. Git shell DNS unavailable; connector per-file commits work; bulk update_ref GraphQL failed twice. No new workflow YAML.
+
 ## 2026-11-26T17:42Z checkpoint — final RF149 nonhalting proof accepted
 
 - Lease 2026-11-26T17:16:15.864Z, RNG 8, verified claim befeaa8999aa34db20e0d3fd38388dc08609ac08. Earliest release 18:26:15.864Z.
