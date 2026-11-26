@@ -170,3 +170,15 @@ The integration filters these five exact tables from the 123-leaf parent frontie
 The new workflow verifies the three D0 run conclusions and pinned root-source hashes, imports their generated source modules, reuses the checked core frontier manifest, and audits all five Covers and the final conditional theorem against standard axioms. This integration is **pending CI** as of source SHA `13182366bcf92d2bcb0ba359f2e7f2791ebe6885`; do not treat the 118 count or conditional theorem as accepted until the run passes.
 
 This is not an exact BB(6) solution: the 118 raw139 residual Covers and the 77 other canonical Covers remain unresolved premises. The source-accepted sibling results are intermediate research, not entries in `results/`.
+
+
+### Parent-level consumer interface
+
+The source-sibling module additionally exposes
+`cover_championResidual_after_five`: given Covers for only the 118 remaining
+residual entries, it returns a single `Cover` for the exact `championResidual`
+parent. It also proves the required A0=1RB initial-slot contract
+(`championResidual_root`) for use with
+`BB6.Agent31StableParentBatch.removeParents_sound`. These two additions are
+after the current in-flight run's pinned source SHA and require a follow-up
+compile/audit before downstream use.
