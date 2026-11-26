@@ -1,44 +1,21 @@
-# Raw10 rectangle 6: source-accepted exhaustive Cover
+# Raw10 original-source box 6 closure
 
-## Exact domain and mathematical result
+The original-source rectangle at `raw10Remainder[6]!` has a source-accepted weighted closure at bound 75. The source consumer exposes:
 
-The original base-34 rectangle fixes A0..D1 to codes 8,14,11,7,17,4,9,2 and excludes 23 at E0. E1/F0/F1 are unrestricted. This is 375,000 tables, disjoint from rectangle 7. Code 0 is halt, -1 is a hole, and 1+4q+2w+r is an ordinary transition.
+- `BB6.Agent49Box6.box6_weighted`: for `Fits BB6.Agent49Box6.baseBox m`, proves `WeightedBound B m` whenever `75 ≤ B`.
+- `BB6.Agent49Box6.raw10_box6_closed`: identifies a source-matched member of `raw10Remainder` and supplies the same weighted closure.
+- The source proof's eight audited theorem interfaces use only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
 
-**Source-accepted result:** every completion of this exact source rectangle has ordinary halting score at most 70, hence weighted first-one bound at most **75** after allowing at most five initial blank-delay steps. The source consumer also exports the exact residual consumer `residual_without_box6`, so this rectangle can be removed from the source-indexed Raw10 remainder while retaining every other box.
+## Reproducible artifacts
 
-## Original-source Lean acceptance
+Run [45898296738](https://github.com/FlareZ123/bb6/actions/runs/45898296738) succeeded and uploaded `raw10-box6-source-closure` (artifact ID `15155195350`, 209,883,455 bytes, SHA-256 `7074af84540abfd6689c90386d4ef882649269f5b662ae10c6809d1be0c963df`, retained to 2026-12-26). It contains the source/import/olean manifest and the compiled source closure.
 
-- **Successful run: [45893206793](https://github.com/FlareZ123/bb6/actions/runs/45893206793).**
-- Source revision: `c0dafc606f26fccb08a97b30c199905bbbe4464f`.
-- Toolchain: Lean 4.36.0-rc2.
-- The original-source closure compiled **94 project modules**, including `Box6Core`, `Box6Hard`, all 25 generated shards, and `Box6SourceConsumer`.
-- Accepted declarations:
-  - `BB6.Agent49Box6.treeCheck_sound`
-  - `BB6.Agent49Box6.base_ordinary`
-  - `BB6.Agent49Box6.ordinary_weighted`
-  - `BB6.Agent49Box6.externalCheck_sound`
-  - `BB6.Agent49Box6.box6_ordinary`
-  - `BB6.Agent49Box6.box6_weighted`
-  - `BB6.Agent49Box6.raw10_box6_closed`
-  - `BB6.Agent49Box6.residual_without_box6`
-- Every exported theorem above has only `propext`, `Classical.choice`, and `Quot.sound` in its axiom profile. The workflow explicitly rejects `sorryAx` and `native_decide`.
+The same run compiled the thin Box6 consumer against the Box5/7 precompiled artifact: 127 modules were reused, 164 project modules were present in the resulting closure, and all 94 shared modules matched the independently generated Box6 manifest with zero identity mismatches and zero provenance differences. The probe source is [`Raw10RefinedBox6Probe.lean`](../agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean).
 
-The earlier run [45829991506](https://github.com/FlareZ123/bb6/actions/runs/45829991506) failed at a proof-script elaboration defect in `Box6Core.lean`: an `intro a ha` was applied to the terminal equation `run m (n+1) blank = none`, which has no binders. This was not a counterexample. The corrected `fix_emitter.py` now proves the one-step halt directly by changing the goal to `((run m n blank).bind (rawStep m)) = none`, rewriting the known prefix run, and simplifying `rawStep` with the exact queried slot and halt hypothesis. The successful run removes the prior `sorryAx` profile.
+## Refined Raw10 parent-cut effect
 
-## Reproduction
+Kernel-evaluated probe counts show that adding original-source Box6 after accepted Box5, Box7, Box8, and Box18–24 leaves **30 open rectangles**. With the separate Box16/17 candidate bounds, the candidate cut leaves **28**. These counts are exact evaluations of the repository's finite rectangle lists.
 
-The original discovery partition has 479 internal nodes, 479 halt leaves (maximum ordinary score 70), 3,561 exact cycles, 4,866 left translated cycles, 2,047 right translated cycles, and 356 open leaves. Of those, 318 are all-ordinary total tables, 36 are closed by bit n-grams, and two are closed by 45-state two-cell block n-grams. The two remaining partials are closed by finite three-cell BlockFAR saturation.
+The final adapter is in [`Raw10RefinedBox6.lean`](../agent49-raw10-refined-cut/Raw10RefinedBox6.lean). It proves the source `baseBox` is `raw10Remainder[6]!` by `decide`, transfers the weighted bound, and constructs conditional parent Covers with 30 and 28 open rectangles. Its compilation and axiom audit are running in [45899419790](https://github.com/FlareZ123/bb6/actions/runs/45899419790); until that run succeeds, treat the wrapper as pending.
 
-The proof archive `proof-source.tar.xz` contains `Box6Core.lean` and `emit_box6.py`. The manual target `weighted-tnf-raw10-box6` in `.github/workflows/agent13-coverage.yml`:
-1. unpacks the original source and proof archives;
-2. applies `fix_emitter.py` to the emitter and generic checker;
-3. regenerates the sparse partition, n-gram certificates, and BlockFAR certificates;
-4. compiles the exact source consumer against the repository's original machine model.
-
-The generator and finite search are untrusted; the accepted result comes from the Lean kernel checking the complete source closure. The accepted source theorem is a **partial parent Cover**, not a complete Raw10 parent Cover or a global BB(6) upper bound.
-
-## Remaining obligations
-
-- The other 33 original base-34 rectangles, the separate held leaf, and the other root-roster obligations remain.
-- Exact Canonical59 membership/consumption of the B0=1LC parent is not established by this result.
-- A reusable dependency-closed proof artifact and manifest are being added to the existing manual workflow; the accepted source theorem does not depend on that transport step.
+This is not a complete Raw10 parent Cover. The remaining open rectangles and the held-leaf premise still need proofs, and the 28-open candidate retains explicit Box16/17 bound parameters.
