@@ -30,6 +30,8 @@ def simulate(max_steps: int, event_limit: int = 40) -> dict:
     lo = hi = offset
     ones = f0 = f1 = c1 = c1_right_one = 0
     events = []
+    c1_runs = []
+    current_run = None
     steps = 0
     halted = False
 
@@ -50,6 +52,20 @@ def simulate(max_steps: int, event_limit: int = 40) -> dict:
                     "window_head_minus_8_to_plus_12":
                         "".join(map(str, tape[head - 8 : head + 13])),
                 })
+            if current_run is not None and head - offset == current_run["end_head"] + 1:
+                current_run["end_step"] = step
+                current_run["end_head"] = head - offset
+                current_run["length"] += 1
+            else:
+                if current_run is not None:
+                    c1_runs.append(current_run)
+                current_run = {
+                    "start_step": step,
+                    "end_step": step,
+                    "start_head": head - offset,
+                    "end_head": head - offset,
+                    "length": 1,
+                }
         if state == 5:
             if bit == 0:
                 f0 += 1
@@ -74,6 +90,14 @@ def simulate(max_steps: int, event_limit: int = 40) -> dict:
         hi = max(hi, head)
         steps = step
 
+    if current_run is not None:
+        c1_runs.append(current_run)
+    histogram = {}
+    for run in c1_runs:
+        histogram[str(run["length"])] = histogram.get(str(run["length"]), 0) + 1
+    for index, run in enumerate(c1_runs[:-1]):
+        run["next_run_start_gap"] = c1_runs[index + 1]["start_step"] - run["end_step"]
+
     return {
         "steps_executed": steps,
         "halted": halted,
@@ -86,7 +110,10 @@ def simulate(max_steps: int, event_limit: int = 40) -> dict:
         "F1_visits": f1,
         "C1_visits": c1,
         "C1_with_right_neighbor_1": c1_right_one,
+        "C1_monotone_right_sweep_count": len(c1_runs),
+        "C1_sweep_length_histogram": histogram,
         "first_C1_events": events,
+        "first_C1_sweeps": c1_runs[:40],
     }
 
 
