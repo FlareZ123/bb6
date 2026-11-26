@@ -71,9 +71,9 @@ theorem q0_rootGood_of_chunk_residuals_append
   apply q0_rootGood_of_chunk_residuals decide Good Compatible hsound root ranges hpart fuel
   intro r hr y hy m hym
   have hy' :
-      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).active ∨
-      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).holdout := by
-    simpa using hy
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).active ++
+        (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).holdout := by
+    simpa [List.mem_append] using hy
   exact hcert r hr y hy' m hym
 
 #print axioms q0_rootGood_of_chunk_residuals
