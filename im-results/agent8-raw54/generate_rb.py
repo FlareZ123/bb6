@@ -106,7 +106,7 @@ def main():
             children.append(f".far false {d} ⟨0,{D},{L},{R},{z}⟩")
     certs[row50]=".split 1967 (1,true) (byMove [\n"+",\n".join(children)+"])"
     residual=[row for row in rows if row not in certs]
-    assert len(residual)==4
+    assert len(residual)==2
     (ROOT/"rb-unresolved.txt").write_text("".join(f"{misses.index(row)}:{row}\n" for row in residual))
     stats=Counter()
     def build(t):

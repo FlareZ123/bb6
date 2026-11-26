@@ -131,3 +131,5 @@
 13 Raw54RBWordQuad RBWordQuad false true
 14 Raw54RBWordQuad RBWordQuad true true
 80 Raw54RBWord80 RBWord80
+3 Raw54RBRunPair RBRunPair false
+7 Raw54RBRunPair RBRunPair true
