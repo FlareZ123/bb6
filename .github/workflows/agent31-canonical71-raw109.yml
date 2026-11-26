@@ -24,6 +24,7 @@ on:
           - canonical57-raw83
           - canonical58-raw113-delta
           - canonical57-raw112-delta
+          - canonical56-raw59-graft
           - canonical57-raw83-delta
           - canonical63-preflight
           - canonical65-three
@@ -34,7 +35,7 @@ on:
         default: canonical74
         required: true
       raw59_slice_run_id:
-        description: "Successful independent Raw59 relocation run ID (for canonical59-raw59-graft)"
+        description: "Successful independent Raw59 relocation run ID (for canonical59-raw59-graft or canonical56-raw59-graft)"
         type: string
         required: false
         default: ""
@@ -45,6 +46,11 @@ on:
         default: ""
       canonical58_run_id:
         description: "58-residual Canonical58 run ID (e.g. accepted Raw113 delta) for Raw112 and Raw83 follow-on grafts"
+        type: string
+        required: false
+        default: ""
+      canonical57_run_id:
+        description: "Accepted 57-residual Canonical57 Raw112-after-Raw113 run ID for the Canonical56 Raw59 graft"
         type: string
         required: false
         default: ""
@@ -1687,4 +1693,58 @@ jobs:
             /tmp/a31-canonical64-score/linked/Raw83Canonical58Membership.olean
           if-no-files-found: warn
           compression-level: 1
+          retention-days: 30
+
+  canonical56_raw59_graft:
+    name: Add Raw59 after Canonical57 to produce Canonical56
+    if: ${{ inputs.target == 'canonical56-raw59-graft' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile Raw59 after the accepted Canonical57 base
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL57_RUN_ID: ${{ inputs.canonical57_run_id }}
+          RAW59_SLICE_RUN_ID: ${{ inputs.raw59_slice_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW59_SLICE_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent32-raw59/assemble_canonical56_raw59_graft.py
+          python im-results/agent32-raw59/assemble_canonical56_raw59_graft.py \\
+            --work /tmp/a32-canonical56-raw59 \\
+            --canonical57-run-id "$CANONICAL57_RUN_ID" \\
+            --raw59-run-id "$RAW59_SLICE_RUN_ID" 2>&1 | tee /tmp/a32-canonical56-raw59.log
+          test -s /tmp/a32-canonical56-raw59/canonical56-raw59-graft.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/a32-canonical56-raw59/canonical56-raw59-graft.json").read_text())
+          assert report["remaining_residual_count"] == 56
+          assert report["raw59_consumed"] and report["raw113_removed"] and report["raw112_removed"]
+          assert report["graft_olean_sha256"] if "graft_olean_sha256" in report else report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical56-raw59-graft-integrated
+          path: |
+            /tmp/a32-canonical56-raw59/**
+            /tmp/a32-canonical56-raw59.log
+          if-no-files-found: warn
+          compression-level: 0
           retention-days: 30
