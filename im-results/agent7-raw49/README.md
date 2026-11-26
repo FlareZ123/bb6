@@ -80,7 +80,7 @@ After removing the four universal sweeps and the C0/C2/C5 child Covers, the 118 
 | 1RB | 6 |
 | 1RE | 16 |
 
-This decomposition identifies where further child Covers can be tested without re-running the root search. The six remaining C1=0LA siblings (root-open indices 1, 3, 4, 6, 7, 8) are currently under a depth-6 child-cut/FAR5 batch experiment; its result is not yet part of the accepted Raw49 theorem.
+The completed depth-6 child-cut/FAR5 batch (run [45888550636](https://github.com/FlareZ123/bb6/actions/runs/45888550636), artifact 15150478430) covered 3,406 of 3,459 open leaves but left 53 exceptions across the six remaining C1=0LA siblings. Three of those siblings have only two exceptions each: C3 (148 FAR + 2 sweeps), C4 (299 FAR + 2 sweeps), C8 (593 FAR + 2 sweeps). The six missing tables now have locally kernel-checked universal nonhalting proofs in `Raw49SixSweeps.lean`, with standard axiom profiles only. The proof uses exact alternating-block growth (three variants, cost 12n+25; one variant, 12n+26) and one-block growth (two variants, costs 48n+85 and 24n+64). The original artifact FAR banks for C3/C4/C8 are preserved in `far3.txt`, `far4.txt`, `far8.txt`. The new `Raw49Progress115.lean` source is intended to compose these three complete child Covers with the accepted 118-residual theorem. Until the full source closure passes, the accepted count remains 118. The remaining C1=0LA children C1, C6, C7 had 25, 17, and 5 FAR5 exceptions respectively; no need to rerun that FAR5 bank.
 
 ## FAR5 diagnostic and remaining obligation
 
