@@ -99,9 +99,8 @@ theorem edgeData5_of_guards (r : Nat) (s : State) (hr : 1≤r)
     have hgi : (10:Int)≤gap (step r s) := by exact_mod_cast hg
     omega
   refine ⟨a,k,x,y,rfl,rfl,?_,?_,hy,hbranch,hM,hA,ha0',hm0,hx0',?_,hpar⟩
-  · exact_mod_cast ha
-  · have : 2*(k:Int)=gap s := hk0
-    omega
+  · omega
+  · omega
   · omega
 
 /-- Source section edge law for the relaxed low-output guard. -/
@@ -301,12 +300,14 @@ theorem source_path5_and_bitplane_clock (q N : Nat)
   let os : OriginRecurrence q N (lane v) (origin w) (value w.age) :=
     ⟨os0.event,os0.idle⟩
   have hState : origin w N=lift s := ha.1.trans hstart
-  have hAge : value w.age N=0 := ha.2
+  have hAge : value w.age N=0 := ha.2.1
   have hBoundary : lane v N=idle 0 (origin w N) := by
     rcases os0.top with ⟨ho,ha'⟩
     calc
       lane v N=origin w N := ho.symm
-      _=idle (value w.age N) (origin w N) := by rw [ha']; simp [idle_zero]
+      _=idle (value w.age N) (origin w N) := by
+        rw [ha']
+        exact (idle_zero _).symm
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
   have hcallsSum := BB6.Agent12LaneClock.calls_sum N q v w ha hq
