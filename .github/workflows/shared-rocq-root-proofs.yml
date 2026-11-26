@@ -23,6 +23,7 @@ on:
           - enumerate62-source-roster
           - enumerate62-recovered-batch-witnesses
           - enumerate62-coarse-forest
+          - enumerate62-q0-row28
           - enumerate62-phase-consume
           - enumerate62-fast-resume
           - enumerate62-fast-held-discharge
@@ -98,7 +99,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -110,7 +111,7 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Enumerate62DeciderSound.v" original/verify/
       - name: Add source q0 partition theorem
-        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceDrain.v" original/verify/
@@ -119,7 +120,7 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8AdaptiveSource.v" original/verify/
       - name: Add independent adaptive checkpoint proof and pilot
-        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceBackwards.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32SourceEncoding.v" original/verify/
@@ -146,12 +147,12 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Last20Witness.v" original/verify/
       - name: Add exact source zero-delay checker
-        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ZeroDelay.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8ExactLeaf.v" original/verify/
       - name: Add direct weighted source proof
-        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8SourceWF.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent8-adaptive-source-plan/Agent8WeightedSource.v" original/verify/
@@ -183,7 +184,7 @@ jobs:
           test -s Agent8Batch_2800_100_1000000.vo
 
       - name: Add independently scheduled source chunk coverage
-        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5ChunkCoverage.v" original/verify/
@@ -265,18 +266,26 @@ jobs:
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5FastSource.v" original/verify/
 
       - name: Add general source roster complement theorem
-        if: inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5RosterComplement.v" original/verify/
 
       - name: Add full first-hole coarse DFA forest
-        if: inputs.target == 'enumerate62-coarse-forest'
+        if: inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28'
         run: |
           cp research/im-results/agent47-rooted-tnf/Agent47SourceTree.v original/verify/
           cp research/im-results/agent47-rooted-tnf/Agent47SourceWitness.v original/verify/
           cp research/im-results/agent5-weighted-tnf-queue/Agent5CoarseTree.v original/verify/
           for shard in Small A B C D; do cp "research/im-results/agent5-weighted-tnf-queue/Agent5Coarse$shard.v" original/verify/; done
+      - name: Generate focused q0 row 28 certificate
+        if: inputs.target == 'enumerate62-q0-row28'
+        working-directory: original/verify
+        run: |
+          set -euo pipefail
+          p="$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue"
+          cp "$p/Agent5Q0Solid28.v" "$p/Agent5Row28Tree.v" .
+          node "$p/q0-row28.cjs" Agent5Row28Data.v | tee row28-candidate.json
       - name: Generate project dependencies with VM fallback
         if: inputs.target != 'enumerate62-chunk-probe-native'
         working-directory: original/verify
@@ -345,6 +354,7 @@ jobs:
             enumerate62-last20-witness) make -f Makefile.coq -j 2 Agent5Last20Witness.vo ;;
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-coarse-forest) make -f Makefile.coq -j 2 Agent5CoarseTree.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
+            enumerate62-q0-row28) make -f Makefile.coq -j 2 Agent5Row28Data.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-recovered-batch-witnesses) make -f Makefile.coq -j 2 Agent5RecoveredBatchWitnesses.vo Agent5RecoveredHeld.vo ;;
             enumerate62-phase-consume) make -f Makefile.coq -j 2 Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-fast-resume) make -f Makefile.coq -j 2 Agent5FastSource.vo Agent8PackedRoot.vo ;;
@@ -367,6 +377,32 @@ jobs:
             enumerate62-q32-decider-tree) make -f Makefile.coq -j 2 Agent47SourceSweep.vo && make -f Makefile.coq -j 2 Agent47SourceChunk2.vo Agent47SourceTree.vo Agent44Q32CanonicalParent.vo && make -f Makefile.coq -j 2 Agent44Q32DeciderTree.vo ;;
             enumerate62-s4-gap-side-search) make -f Makefile.coq -j 2 Agent47SourceWitness.vo Agent44S4GapSideSearch.vo ;;
           esac
+      - name: Consume row 28 in exact q0 checkpoint
+        if: inputs.target == 'enumerate62-q0-row28'
+        working-directory: original/verify
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p row28-checkpoint row28-results
+          gh run download 45522264094 --repo FlareZ123/bb6 --name source-packed-chunk --dir row28-checkpoint
+          cp row28-checkpoint/Agent8PackedChunk.{v,vo} .
+          cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5Row28Consume.v" .
+          if ! timeout 300s coqc -Q . BusyCoq -native-compiler no Agent5Row28Consume.v > row28-results/consume.log 2>&1; then
+            if grep -Eqi 'inconsistent assumptions|bad magic number|compiled library|cannot load' row28-results/consume.log; then
+              timeout 600s coqc -Q . BusyCoq -native-compiler no Agent8PackedChunk.v > row28-results/checkpoint-rebuild.log 2>&1
+              timeout 300s coqc -Q . BusyCoq -native-compiler no Agent5Row28Consume.v >> row28-results/consume.log 2>&1
+            else cat row28-results/consume.log; exit 1; fi
+          fi
+          cat row28-results/consume.log
+          cp Agent5Q0Solid28.{v,vo} Agent5Row28Tree.{v,vo} Agent5Row28Data.{v,vo} Agent5Row28Consume.{v,vo} row28-candidate.json row28-results/
+      - name: Preserve focused row 28 proof
+        if: always() && inputs.target == 'enumerate62-q0-row28'
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-row28-source-certificate
+          path: original/verify/row28-results/
+          if-no-files-found: warn
       - name: Certify coarse full-branch forest and exact checkpoint complement
         if: inputs.target == 'enumerate62-coarse-forest'
         working-directory: original/verify
