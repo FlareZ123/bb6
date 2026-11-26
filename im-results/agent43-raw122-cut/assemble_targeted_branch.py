@@ -210,12 +210,14 @@ def main() -> None:
 
     wrapper = generated / "Raw122Recovered05.lean"
     wrapper.write_text(
-        """import Raw122Roster05Witnesses
+        """import BB6Coverage
+import Raw122Base
+import Raw122Roster05Witnesses
 import LateCheck0
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122Recovered05
-open BB6Coverage
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 theorem cover05 (m : Machine)
     (hm : compatible (BB6.Agent43Raw122.child ⟨false,false,5⟩) m) :
     WeightedBound 6766859 m := by
