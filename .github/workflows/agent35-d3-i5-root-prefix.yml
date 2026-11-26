@@ -110,3 +110,8 @@ jobs:
             echo 'Unexpected sorryAx in I5 exceptional rejoin certificate' >&2
             exit 1
           fi
+          lean -DmaxRecDepth=180000 -o "$R/I5D3Continuation.olean" "$R/I5D3Continuation.lean" 2>&1 | tee /tmp/i5-d3-continuation.log
+          if grep -q 'sorryAx' /tmp/i5-d3-continuation.log; then
+            echo 'Unexpected sorryAx in I5 D3 continuation certificate' >&2
+            exit 1
+          fi
