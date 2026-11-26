@@ -82,7 +82,16 @@ def main():
             result=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {misses[i]}\n",text=True).strip()
             ident,data=result.split(maxsplit=1)
             assert int(ident)==i
-            mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54RBSparse{i}",expected=(n,l,r))
+            # Discovery recorded occupied gram keys; emitter counts individual
+            # (gram, extension-bit) edges, so masks of 3 contribute two edges.
+            _,_,left,right,_=data.split()
+            def sizes(s):
+                masks=[int(x.split(":")[1]) for x in s.rstrip(",").split(",")]
+                return len(masks),sum(v.bit_count() for v in masks)
+            lk,le=sizes(left)
+            rk,re=sizes(right)
+            assert l in (lk,le) and r in (rk,re),(i,l,r,lk,le,rk,re)
+            mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54RBSparse{i}",expected=(n,le,re))
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
             imports[misses[i]]=mod
         for i,mod,ns,*args in specs["proved"]:
