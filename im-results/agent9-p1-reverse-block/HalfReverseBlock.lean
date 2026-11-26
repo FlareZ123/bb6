@@ -7,6 +7,10 @@ open BB6.Agent45.DelayedCarry
 open BB6.Agent45ReverseBlock
 open BB6.Agent43P1Complement
 
+private theorem pow_mod_four_local (s : Nat) (hs : 2≤s) : 2^s%4=0 := by
+  have hd := Nat.pow_dvd_pow 2 hs
+  exact Nat.dvd_iff_mod_eq_zero.mp (by simpa using hd)
+
 /-- The canonical half of a delayed prefix cover, together with the
     source-derived late-margin inequalities. -/
 def HalfCert (n K s : Nat) (ps : List Prefix) : Prop :=
@@ -34,7 +38,7 @@ theorem half_covered_next_block (n s h : Nat) (ps : List Prefix)
   have hExt' : Extend n s D d h B a := by simpa using hExt
   obtain ⟨R,hR⟩ := extend_mod n s D d h B a hExt'
   have hDmod : D%4=1 := by
-    rw [hR,Nat.add_mod,Nat.mul_mod,pow_mod_four s hs] at hBmod
+    rw [hR,Nat.add_mod,Nat.mul_mod,pow_mod_four_local s hs] at hBmod
     simpa using hBmod
   have hfull : Extend n s D d (h+n) C c :=
     extend_append n s D d h B a n C c hExt' hE
