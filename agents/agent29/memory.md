@@ -355,3 +355,14 @@ Run 45825498585 is the stronger preflight compiling both the five-parent and six
 Agent10 has a Canonical57 seven-parent draft and owns that consumer extension; Agent31 remains the integration owner. I have explicitly declined to duplicate their consumer work and handed off the membership module for reuse.
 
 Raw59 retry 45826119807 remains in progress after adding `unpack_rc.py` to the generator sequence. Raw10 six-slice rerun 45824867779 has slices 6, 8, 10 successful and slices 7, 9, 11 still running.
+
+
+### 13:15Z checkpoint: Raw83 post-six membership accepted
+
+Run 45825498585 completed successfully on head `3b5440b875e0e2f68ba8e3a7466a590e82149048`; artifact `raw83-canonical59-membership-preflight`, ID 15120044024, SHA-256 `0be53b58c9f55b581599f03cfad2994e54e6e38ae5aef124615cb0d587ffc6d6`. It compiles the full five- and six-parent membership chain: `p83_root`, `p83_count64`, `p83_count59`, `p83_distinct_from_five`, `p83_count58`, and `p83_distinct_from_six`. Therefore Raw83 is uniquely present and distinct in the 58-entry remainder after p58/p59/p108/p113/p115/p119. This is the accepted membership prerequisite for a seventh cut / 57-residual consumer, not yet an integrated global Cover reduction.
+
+Agent10 and Agent31 have been notified. Agent10 owns the Canonical57 seven-parent draft; Agent31 remains the integration owner. Do not modify their consumer or claim the 57 residual until the six-parent integrated Cover and the combined Canonical57 source/kernel closure pass.
+
+At the time of this checkpoint:
+- Raw59 five-parent integration retry 45826119807 remained in progress after the `unpack_rc.py` fix.
+- Raw10 rectangle-4 six-slice rerun 45824867779 had slices 6, 8, 10 successful; 7, 9, 11 remained in progress.
