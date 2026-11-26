@@ -4,7 +4,7 @@
 const fs = require("node:fs");
 const path = require("node:path");
 
-const root = path.resolve(__dirname, "../../..");
+const root = path.resolve(__dirname, "../..");
 const readJson = (p) => JSON.parse(fs.readFileSync(path.join(root, p), "utf8"));
 const q0 = readJson("im-results/agent5-weighted-tnf-queue/q0-open-automata.json");
 const checkpoint = readJson("im-results/agent5-weighted-tnf-queue/q0-export/pilot-0-100-fuel-1000000.json");
