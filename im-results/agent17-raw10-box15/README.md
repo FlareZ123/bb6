@@ -1,11 +1,13 @@
-# Raw10 box15: first-hole partition and symbolic bouncers
+# Raw10 base34 rectangle 15: independent discovery closure and symbolic nonhalting
 
-## Status
-Intermediate result, 2026-11-26. Exact source parent is base34 rectangle index 15, encoded by the existing Agent17 source bridge. This incarnation reconstructed its 12 domains by exact subtraction of the 66 rows:
+**Status (2026-11-26):** all 97,656,250 completions are computationally classified by first-hole enumeration and sound-in-principle certificate methods. Nine final one-hole cylinders have standalone Lean 4.36.0-rc2 proofs of all-time nonhalting, with [propext, Quot.sound]. The tenth has a successful finite forward block-FAR discovery certificate; its Lean/source audit is pending. The largest discovered ordinary and weighted halt score is 7791, and a source lower-bound witness has been emitted. Neither the full rectangle upper bound nor any reduction of the Canonical58 roster has yet been source-accepted.
+
+## Domain and discovery partition
+
+The existing Agent17 encoded source bridge identifies base34 rectangle index 15. Its 12 domains are
 `[8], 0..24, [11], [6], [17], [13], [11], 0..24, [0,3,4,12,18,20,21,22,23,24], 0..24, 0..24, 0..24`.
-Code 0 is halt, -1 unassigned; ordinary code v uses next=(v-1)/4, write=(v-1)/2%2, right=(v-1)%2. Total mass 97,656,250.
+Code 0 is halt, -1 unassigned; ordinary code v uses next=(v-1)/4, write=(v-1)/2%2, right=(v-1)%2.
 
-## Discovery
 First-hole DFS, 256 live steps, exact relative and translated-cycle tests:
 | terminal class | leaves | completion mass |
 |---|---:|---:|
@@ -15,10 +17,10 @@ First-hole DFS, 256 live steps, exact relative and translated-cycle tests:
 | all ordinary | 1,084,056 | 1,084,056 |
 | open | 9,003 | 927,675 |
 
-1,346,536 visited nodes; maximum found ordinary score 257. Two-stack ngram closure widths 1..20, cap 30,000 removes 8,595 open leaves (911,475 mass). Exact replay of the remaining 408 with first-hole splitting to 10,000 live steps yields 116 halting leaves and 2,784 all-ordinary leaves; 292 open, mass 13,300. The largest observed halt has 7,790 live steps, score 7,791, table [8,18,11,6,17,13,11,13,12,24,4,0]. Symmetric ordinary/lag-one RLE saturation resolves 276, leaving 16 one-hole tables; deeper ngram resolves four more, lag 3 and 5 resolve two more. All 16 survived 6,766,859 exact live steps, which is finite evidence only.
+1,346,536 nodes visited. Two-stack ngram closure widths 1..20, cap 30,000 removes 8,595 open leaves (911,475 mass). Exact replay of remaining 408 with first-hole splitting to 10,000 live steps yields 116 halting leaves and 2,784 all-ordinary leaves; 292 open, mass 13,300. Symmetric ordinary/lag-one RLE saturation resolves 276, leaving 16 one-hole tables; deeper ngram resolves four more, lag 3 and 5 resolve two more. All 16 survived 6,766,859 exact live steps, finite evidence only. The final ten cylinders are below.
 
-## Ten-table final discovery frontier
-Indices are zero-based in this report:
+## Final cylinders and mathematical certificates
+
 ```
 0  8 21 11 6 17 13 11 19 3 2 15 -1
 1  8 19 11 6 17 13 11 21 4 20 -1 11
@@ -31,23 +33,21 @@ Indices are zero-based in this report:
 8  8 12 11 6 17 13 11 19 24 10 4 -1
 9  8 24 11 6 17 13 11 19 24 10 4 -1
 ```
-Each has exactly one missing slot, so every ordinary completion is a total no-halt machine; it suffices to decide the ten completions in which the hole is filled with halt.
 
-A local Lean 4.36.0-rc2 proof establishes all-time nonhalting for indices 1,2,3,4,7,8,9, using an explicit primitive two-infinite-ray model and a recurrent B0 section with 6k+1 consecutive ones on the left and blank right. Exact return costs respectively 20k+17,24k+17,16k+15,20k+15,26k+15,30k+19,22k+11. Initial entry times respectively 18,18,16,16,16,20,12 at k=1. All seven axiom profiles are [propext, Quot.sound]. The two finite-word sweep lemmas quantify over arbitrary ray tails, and the recurrence is proved for every natural k. No source-level adapter yet, and the exhaustive discovery partition itself is not yet kernel certified. Do not claim an accepted box15 Cover, exact global score, or change in Canonical58 count. Remaining literal machines: 0,5,6.
+Each has one missing slot. A forever-defined partial execution implies nonhalting for every completion, including the halt child.
 
-## Next proof edge
-Preserve the Lean recurrence proof and discovery programs, discharge the remaining three literal tables, then emit/check the complete partition with original source identities and weighted halt bounds. No repeated full singleton-projection scan.
+[Bouncers.lean](Bouncers.lean) establishes a B0 section with 6k+1 consecutive ones on the left and blank right. For indices 1,2,3,4,7,8,9, the exact return is k→k+1, with costs 20k+17,24k+17,16k+15,20k+15,26k+15,30k+19,22k+11 respectively. Initial entry times are 18,18,16,16,16,20,12 at k=1. The finite-word sweep lemmas quantify over arbitrary ray tails.
 
-## 2026-11-26 update: nine nonhalting bouncers proved
+Indices 5,6 have a three-pass sweep, return N→N+2 for section B0 with 6N+1 ones (N≥1). Exact costs 54N+62 and 48N+52; blank entry to N=2 in 63 and 53 steps. Commuting-word and sweep lemmas compose all three phases. All nine never declarations locally kernel-checked.
 
-Indices 5 and 6 also have local kernel proofs, in the same `Bouncers.lean`. For the section B0 with 6N+1 ones on the left and blank right (N≥1), the exact return is to 6(N+2)+1 ones. Costs are 54N+62 and 48N+52 respectively. Blank entry reaches N=2 in 63 and 53 steps. The three-pass sweep proof quantifies over arbitrary tails and uses a commuting-word lemma to compose all three phases. All nine `never1` … `never9` declarations are accepted locally with [propext, Quot.sound]. Index 0 is the only literal machine still undecided in the discovery frontier. The previously found 7,791 finite score is still only an observed lower bound for the box; the proof of all other branches and source ingestion are outstanding.
+For index 0 (`1RB0LF_1LC0RB_0LE0LD_1LC1LE_1LA0RA_1LD---`), mirrored width4 macro blocks with six-block left suffix give forward FAR saturation: 312 left states, 793 right nodes, 1168 edges before minimization. [prepare_hard.py](prepare_hard.py) regenerates using Agent13's generator; [HardSource.lean](HardSource.lean) bridges the certificate to original source semantics.
 
-Agent13 already proved the exact weighted minimal-halt slice reduction in `im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean` and the domain identity in `Box15Source.lean`. Reuse them; do not recreate the source-box bridge.
+## Finite maximum witness
 
-## Final literal discovery case
+Table [8,18,11,6,17,13,11,13,12,24,4,0] halts after 7790 live moves, plus the halt, giving 7791. Its zero-write transition graph has no incoming path to A, so weighted score is also 7791. All other discovered finite leaves have weighted score at most 1946 (or at most 262 among initial short leaves). [Lower.lean](Lower.lean) supplies the source lower theorem pending audit.
 
-For index 0, `1RB0LF_1LC0RB_0LE0LD_1LC1LE_1LA0RA_1LD---`, mirrored 4-cell macro blocks with a six-block suffix as left DFA context give successful forward FAR saturation (312 left states, 793 right nodes, 1168 edges before minimization). `prepare_hard.py` regenerates the certificate using Agent13's generator; `HardSource.lean` bridges to source semantics. No independent discovery cases remain, but this is not an accepted rectangle theorem.
+## Source certification and next edge
 
-`BouncersSource.lean` ties the nine symbolic proofs to source tables. First audit 45907932897 failed at ray extensionality in step_map; repair committed and ten-case audit 45908327095 running. `Lower.lean` gives candidate source lower witness 7791; audit pending.
-
-Reuse Agent49's five-family archive: isolated target `weighted-tnf-raw10-family6` (B1 code 6, base34 index 15), run 45908080080. No accepted upper bound or Canonical58 reduction until source audit succeeds.
+- [BouncersSource.lean](BouncersSource.lean) uses pointwise ray semantics and exact source table equality to transfer nine local proofs. Initial run [45907932897](https://github.com/FlareZ123/bb6/actions/runs/45907932897) failed at ray extensionality; the repair is in d83c8eda. Ten-case source audit [45908327095](https://github.com/FlareZ123/bb6/actions/runs/45908327095) is pending.
+- Agent13's existing [Box15Source](../agent13-raw10-box15/Box15Source.lean) and [WeightedBoxMinimalHalt](../agent13-raw10-box15/WeightedBoxMinimalHalt.lean) prove the exact domain and weighted minimal-halt reduction.
+- Agent49's earlier [five-family proof archive](../agent49-raw10-box-family/README.md) already emits the entire partition. Reuse it instead of duplicating millions of first-hole leaves. Isolated B1-code-6 (base34 rectangle15) audit [45908080080](https://github.com/FlareZ123/bb6/actions/runs/45908080080) is pending; its emitted source theorem must be accepted before integrating the rectangle into Raw10RefinedCut.
