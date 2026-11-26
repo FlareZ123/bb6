@@ -30,6 +30,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--cap", type=int, default=1_000_000)
     ap.add_argument("--lookback", type=int, default=128)
+    ap.add_argument("--sim-cap", type=int, default=1_000_000_000)
     ap.add_argument("--out", type=Path, required=True)
     args = ap.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -64,6 +65,24 @@ def main():
     (args.out / "partition-probe.json").write_text(
         json.dumps(summary, indent=2) + "\n", encoding="utf-8"
     )
+
+    sim_exe = args.out / "simulate_1lb_residuals"
+    subprocess.run(
+        ["g++", "-std=c++20", "-O3", str(HERE / "simulate_1lb_residuals.cpp"), "-o", str(sim_exe)],
+        check=True,
+    )
+    sim_input = "\n".join(f"{rid} {table}" for rid, table in TABLES) + "\n"
+    sim_proc = subprocess.run(
+        [str(sim_exe), str(args.sim_cap)], input=sim_input,
+        check=True, capture_output=True, text=True,
+    )
+    simulation = [json.loads(line) for line in sim_proc.stdout.splitlines() if line.strip()]
+    for item in simulation:
+        print(f"LONG-RUN {item}", flush=True)
+    (args.out / "long-run-simulation.json").write_text(
+        json.dumps(simulation, indent=2) + "\n", encoding="utf-8"
+    )
+
 
 
 if __name__ == "__main__":
