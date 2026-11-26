@@ -53,6 +53,8 @@ jobs:
             case "$SIBLING" in
               ZeroRE) bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh ;;
               ZeroLF) bash im-results/agent14-raw139-e0-zeroLF/reproduce-sweep.sh ;;
+              ZeroLFContext) bash im-results/agent3-raw139-zeroLF-context/reproduce-context.sh 2 ;; 
+              ZeroLF1307) bash im-results/agent3-raw139-zeroLF-context/reproduce-context.sh 12 ;;
               *) echo "Unknown E0 sweep: $SIBLING" >&2; exit 2 ;;
             esac
           elif [[ "$KIND" == d0 ]]; then

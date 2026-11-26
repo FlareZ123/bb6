@@ -187,7 +187,9 @@ theorem Ibig (m : Nat) (h : Int) (L R : List Bool) :
   have h2 := fWrite (h+((m+2:Nat):Int)) (false::(zeros m++true::L)) (false::false::true::R)
   have h2' : zrun table 1 ⟨5,h+((m+2:Nat):Int),false::false::(zeros m++true::L),false::false::true::R⟩ =
       some (entry 1 (h+(m:Int)+1) (zeros m++true::L) (true::R)) := by
-    simpa [entry,ones,show h+((m+2:Nat):Int)-1=h+(m:Int)+1 by omega] using h2
+    have he : h+((m+2:Nat):Int)-1=h+(m:Int)+1 := by omega
+    rw [he] at h2
+    exact h2
   exact reach_join h1 (reach_of h2')
 
 def First1 (k : Nat) : Prop :=
@@ -321,7 +323,9 @@ theorem xy (k : Nat) (h : Int) : ∃ n, 0<n ∧ zrun table n (X k h) = some (Y k
       exact hn
     have h2 : zrun table 1 (exit (4*k+1) (h-1) [] [true,true,true]) =
         some (Y k (h-2)) := by
-      simp [exit,Y,ones_succ,zrun,step,table,move,show h-1-1=h-2 by omega]
+      unfold exit Y
+      rw [show 4*k+2=4*k+1+1 by omega,ones_succ, ← show h-1-1=h-2 by omega]
+      rfl
     exact ⟨n+1+1,by omega,join h1 h2⟩
 
 theorem yx (k : Nat) (h : Int) : ∃ n, 0<n ∧ zrun table n (Y k h) = some (X (k+1) (h-2)) := by
@@ -334,7 +338,9 @@ theorem yx (k : Nat) (h : Int) : ∃ n, 0<n ∧ zrun table n (Y k h) = some (X (
       exact hn
     have h2 : zrun table 1 (exit (4*k+4) (h-1) [] [true,true]) =
         some (X (k+1) (h-2)) := by
-      simp [exit,X,show 4*(k+1)+1=4*k+4+1 by omega,ones_succ,zrun,step,table,move,show h-1-1=h-2 by omega]
+      unfold exit X
+      rw [show 4*(k+1)+1=4*k+4+1 by omega,ones_succ, ← show h-1-1=h-2 by omega]
+      rfl
     exact ⟨n+1+1,by omega,join h1 h2⟩
 
 def start : Z := ⟨0,0,[],[]⟩
