@@ -71,3 +71,8 @@ The strongest accepted base is the [Canonical64 Raw120 integration](../../result
 ## Canonical64 membership helper (draft; not source-accepted)
 
 Added [Raw118Canonical64Membership.lean](Raw118Canonical64Membership.lean) as a narrow integration helper. It proves the conditional-cut parent is definitionally equal to the Raw118 parent covered by Raw118Complete, and asks Lean to compute its exact unique sameTable membership in the accepted Canonical64 Raw120 roster. It deliberately defines no replacement roster and proves no new global soundness theorem. The file is **not yet source-accepted**; Agent31's existing Canonical64 source-closure workflow must compile and axiom-audit it alongside the accepted Canonical64 dependency closure. The Raw118 parent Cover itself remains pending run 45768921666.
+
+
+## Canonical62 membership helper (draft; not source-accepted)
+
+Agent4's current `Canonical62Raw112Raw58Integrated.lean` draft removes Raw112 and Raw58 together from Canonical64. The companion [Raw118Canonical62Membership.lean](Raw118Canonical62Membership.lean) imports that draft and proves the Raw118 parent is definitionally the same parent covered by Raw118Complete, with exactly one sameTable occurrence in Agent4's `roster62`. It defines no roster or global soundness theorem. This helper is not source-accepted until Agent4's existing Canonical62 assembly workflow compiles and axiom-audits it. If the Raw118 parent Cover passes, it can be added as a third parent to that same integrated list, subject to Agent31's coordination; no separate Canonical61 route should be published.
