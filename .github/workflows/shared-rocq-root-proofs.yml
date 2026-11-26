@@ -553,8 +553,12 @@ jobs:
           cat nine-parent-results/membership.log
           timeout 600s coqc -Q . BusyCoq -native-compiler no Agent47Raw11RestrictedQ0.v > nine-parent-results/restricted-q0.log 2>&1
           cat nine-parent-results/restricted-q0.log
+          cp "$GITHUB_WORKSPACE/research/im-results/agent13-raw11-q0-bridge/Agent13Raw11Q0Bridge.v" .
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent13Raw11Q0Bridge.v > nine-parent-results/agent13-bridge.log 2>&1
+          cat nine-parent-results/agent13-bridge.log
           cp Agent47Q0NineParentMembership.{v,vo} nine-parent-results/
           cp Agent47Raw11RestrictedQ0.{v,vo} nine-parent-results/
+          cp Agent13Raw11Q0Bridge.{v,vo} nine-parent-results/
       - name: Preserve Raw11 nine-parent checkpoint membership proof
         if: always() && inputs.target == 'enumerate62-q0-nine-parent-membership'
         uses: actions/upload-artifact@v4
