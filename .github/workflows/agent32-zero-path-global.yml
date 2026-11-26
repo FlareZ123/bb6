@@ -65,7 +65,7 @@ on:
         type: boolean
         default: false
       raw59_parent_run_id:
-        description: Successful workflow run ID containing the raw59-parent-certified artifact (required for Canonical64Compose)
+        description: Successful workflow run ID containing the raw59-parent-certified artifact (required for Canonical64Compose or Canonical62Compose)
         required: false
         type: string
         default: ""
