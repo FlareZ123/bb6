@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step, low-scale]
+        options: [n10, gap-two-three-step, low-scale, three-step-strip]
         default: n10
 
 permissions:
@@ -62,7 +62,7 @@ jobs:
           fi
 
       - name: Compile all-scale gap-two elimination against original source
-        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale'
+        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale' || inputs.target == 'three-step-strip'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -89,7 +89,7 @@ jobs:
           if grep -q 'sorryAx' gap-two-axioms.log; then exit 1; fi
 
       - name: Compile universal successor and low-scale exclusion
-        if: inputs.target == 'low-scale'
+        if: inputs.target == 'low-scale' || inputs.target == 'three-step-strip'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -104,3 +104,23 @@ jobs:
           compile Agent49DrainLinearLogSource agent49-parity623/DrainLinearLogSource
           compile AllScaleSuccessorBoundSource agent27-623-gap-two-three-step/AllScaleSuccessorBoundSource
           if grep -q 'sorryAx' low-scale-axioms.log; then exit 1; fi
+
+      - name: Compile all-scale three-step terminal strip
+        if: inputs.target == 'three-step-strip'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          : > three-step-strip-axioms.log
+          compile() {
+            cp "../im-results/$2.lean" "$1.lean"
+            lake env lean -o ".lake/build/lib/lean/$1.olean" "$1.lean" 2>&1 | tee -a three-step-strip-axioms.log
+          }
+          compile Agent49JointMassSource agent49-parity623/JointMassSource
+          compile Agent49RootRayBridgeArithmetic agent49-parity623/RootRayBridgeArithmetic
+          compile Agent8TerminalIntervalSource agent8-623-inverse/TerminalIntervalSource
+          compile Agent49DrainLinearTerminalSource agent49-parity623/DrainLinearTerminalSource
+          compile Agent49TerminalRatio4Arithmetic agent49-parity623/TerminalRatio4Arithmetic
+          compile Agent49TerminalRatio4Source agent49-parity623/TerminalRatio4Source
+          compile ThreeStepStripArithmetic agent27-623-gap-two-three-step/ThreeStepStripArithmetic
+          compile ThreeStepStripSource agent27-623-gap-two-three-step/ThreeStepStripSource
+          if grep -q 'sorryAx' three-step-strip-axioms.log; then exit 1; fi

@@ -65,7 +65,7 @@ theorem root_terminal_parent_not_gap_two (t x y aa dd : Nat)
 
 /-- All ordinary terminal-parent sectors share one scale and one error width. -/
 theorem ordinary_terminal_window (n x y aa dd : Nat)
-    (hpos : 0<x) (hord : OrdinaryStep x y aa dd)
+    (hn : 10≤n) (hpos : 0<x) (hord : OrdinaryStep x y aa dd)
     (hy : y+3<3^(n+2))
     (hK : 2*(x+y+x+y+10+3*(n+2))+5<3^(n+5))
     (he : aa%2=0) (hh : highLevelNext (.D aa dd)=none) :
@@ -155,7 +155,7 @@ theorem root_three_step_terminal_strip (n t u v x y aa dd : Nat)
   have hordp := ordinary_of_step x y aa dd hx hex hgy ht
   have hy := successor_second_bound n u v x y (by omega) hhi heu hs
   obtain ⟨hpy,hK⟩ := terminal_scale n (min u v) x y hn hhi hy hxp
-  have hw := ordinary_terminal_window n x y aa dd hx hordp hpy hK hea hh
+  have hw := ordinary_terminal_window n x y aa dd hn hx hordp hpy hK hea hh
   exact ordinary_previous_strip n u v x y hn hu hlo hhi hordq hw
 
 #print axioms ordinary_of_step
