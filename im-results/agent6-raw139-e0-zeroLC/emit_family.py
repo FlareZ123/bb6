@@ -63,6 +63,7 @@ def emit(code,spec,out,blocks_only=False,tr=None):
    r=blocks[i];c=generate(opens[i],*r[1:5],False,60000,r[0]=='phase');assert c and [c['left_states'],c['right_nodes']]==r[5:]
    s+=block_source(NS,i,opens[i],c)
   (out/(name+'.lean')).write_text(s)
+ if blocks_only:return modules
  def node(t):
   k,*a=t
   if k=='cycle':e,s,r,x=a;return f'.cycle {e} {s} {bl(r)} ({x})'
