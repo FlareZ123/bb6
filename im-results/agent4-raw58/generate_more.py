@@ -22,7 +22,13 @@ SPECS=json.loads((ROOT/"more.json").read_text())
 FAR_CODES=sorted({"000"} | {line.split()[0] for spec in SPECS.values() for line in spec.get("groups","").splitlines() if line.strip()}, key=lambda s:(len(s),s))
 
 def main():
-    for key in sys.argv[1:] or ["RD","LC1","RE1"]:
+    keys=sys.argv[1:] or ["RD","LC1","RE1"]
+    if os.environ.get("RAW58_AUTOMATA_ONLY") == "1":
+        selected = [int(os.environ["RAW58_AUTOMATA_ID"])] if os.environ.get("RAW58_AUTOMATA_ID") else []
+        for key in keys:
+            build_automata_only(key,SPECS[key],selected)
+        return
+    for key in keys:
         build_child(key,SPECS[key])
 
 
@@ -70,6 +76,47 @@ def emit_automata_sharded(i,p,cert):
         "  rw [left_nonempty, right_nonempty, left_seed, right_seed, start_state, rows_checked] <;> rfl",
     ])
     return source.replace(marker,replacement)
+
+def build_automata_only(key,spec,selected):
+    """Generate only selected two-sided automata leaves, without requiring the whole child to close."""
+    target=ROOT/("generated_"+key); target.mkdir(exist_ok=True)
+    parent="1RB"+spec["a1"]+"_1RC---_0RD---_1LD1RE_---0RA_------"
+    subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent2-tnf-raw99/enumerate.cpp"),"-o",str(target/"enumerate")],check=True)
+    subprocess.run([str(target/"enumerate"),parent],cwd=target,check=True)
+    data=(target/"open.txt").read_bytes()
+    digest=hashlib.sha256(data).hexdigest()
+    if "hash" in spec: assert digest==spec["hash"],(key,digest)
+    opens=data.decode().splitlines()
+    assert len(opens)==len(set(opens))
+    if "stats" in spec: assert len(opens)==spec["stats"]["open"],(key,len(opens),spec["stats"]["open"])
+    autids=spec.get("automata",{})
+    selected_ids=sorted(set(selected) if selected else {int(i) for i in autids})
+    missing=set(selected_ids)-{int(i) for i in autids}
+    if missing: raise ValueError(f"{key}: requested automata indices not declared in more.json: {sorted(missing)}")
+    ns="BB6.Agent4Raw58"+key
+    prefix="Raw58"+key
+    an=ns+"Automata"
+    code=["import TwoSidedAutomata","set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {an}","open BB6Coverage"]
+    for i in selected_ids:
+        if i<0 or i>=len(opens): raise IndexError((key,i,len(opens)))
+        if key=="LF1" and i==1181:
+            assert opens[i]=="1RB1LF_1RC0LB_0RD1RA_1LD1RE_---0RA_1LB0RF",(i,opens[i])
+        params=autids[str(i)]
+        p=tuple(opens[i].replace("_","")[k:k+3] for k in range(0,36,3))
+        if isinstance(params,dict):
+            paramsL=tuple(params["left"]); paramsR=tuple(params["right"])
+        else:
+            paramsL=paramsR=tuple(params)
+        cert=run_automata(p,paramsL,paramsR)
+        if key in ("LE","LF1") and cert[0]:
+            before=cert[1]; cert=compress_automata(p,cert)
+            print(key,i,"automata incidence quotient",before,"->",cert[1])
+        assert cert[0],(key,i,params)
+        code.append(emit_automata_sharded(i,p,cert))
+    code.append(f"end {an}")
+    module=ROOT/(prefix+"Automata.lean")
+    module.write_text("-- automata-only source audit; open.txt sha256="+digest+"\n"+"\n\n".join(code)+"\n")
+    print(key,"automata-only",selected_ids,"open_sha256",digest)
 
 def build_child(key,spec):
     target=ROOT/("generated_"+key); target.mkdir(exist_ok=True)
