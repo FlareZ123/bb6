@@ -27,15 +27,12 @@ def main():
 
     version = subprocess.check_output(["lean", "--version"], text=True).strip()
     assert "4.36.0-rc2" in version, version
-    base_run = a68.api_json(f"repos/{a68.REPO}/actions/runs/{a63.BASE_RUN}")
-    assert base_run["conclusion"] == "success"
-    assert base_run["head_sha"] == a63.BASE_REVISION
-    base_dirs = a68.download(a63.BASE_PIN, work)
+    parts = a63.download_canonical64_parts(work)
 
     linked = work / "linked"
+    groups = [parts["canonical65"], parts["raw120"], parts["canonical64"]]
     a68.link_reachable(
-        [base_dirs], work, linked,
-        families=[("canonical64", base_dirs, ["Canonical64Raw120Integrated"])],
+        groups, work, linked, families=a63.canonical64_families(parts)
     )
     env = dict(os.environ, LEAN_PATH=str(linked))
 
@@ -81,9 +78,23 @@ end BB6.Agent47Raw112
 
     report = {
         "status": "typechecked preflight only; not an accepted parent Cover",
-        "base_run": a63.BASE_RUN,
-        "base_artifact": a63.BASE_ARTIFACT,
-        "base_revision": a63.BASE_REVISION,
+        "canonical64_dependencies": {
+            "canonical65": {
+                "run_id": a63.CANONICAL65_RUN,
+                "artifact_id": a63.CANONICAL65_ARTIFACT,
+                "source_revision": a63.CANONICAL65_REVISION,
+            },
+            "raw120": {
+                "run_id": a63.RAW120_RUN,
+                "artifact_id": a63.RAW120_ARTIFACT,
+                "source_revision": a63.RAW120_REVISION,
+            },
+            "canonical64": {
+                "run_id": a63.CANONICAL64_RUN,
+                "artifact_id": a63.CANONICAL64_ARTIFACT,
+                "source_revision": a63.CANONICAL64_REVISION,
+            },
+        },
         "lean_version": version,
         "stub_axiom": "BB6.Agent47Raw112.parent_cover",
         "checked_theorems": required,
