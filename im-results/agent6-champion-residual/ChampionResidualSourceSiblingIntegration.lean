@@ -18,6 +18,12 @@ open BB6.Agent31ChampionParentIntegration
 open BB6.Agent31FourHoleRoster
 open BB6.Agent13MixedBound109
 
+/-- Raw139 retains the required A0=1RB root transition, so it can be
+    consumed by the stable quotient-roster parent-removal contract. -/
+theorem championResidual_root :
+    championResidual initialSlot = some (some ⟨true,true,1⟩) := by
+  decide
+
 /-- The accepted D0=0LF cylinder is the ordinary D/0 sibling at depth 3. -/
 theorem zeroLF_is_depth3_sibling :
     sameTable BB6.Agent14Raw139D0LF.parent
@@ -223,6 +229,7 @@ theorem exact_from_remainingRaw139AfterFive
 #print axioms BB6.Agent14Raw139D0LA.all_completions_weighted
 #print axioms BB6.Agent14F1OneLD.all_completions_weighted
 #print axioms BB6.Agent14F1OneRF.all_completions_weighted
+#print axioms championResidual_root
 #print axioms zeroLF_is_depth3_sibling
 #print axioms oneLB_is_depth3_sibling
 #print axioms oneLA_is_depth3_sibling
