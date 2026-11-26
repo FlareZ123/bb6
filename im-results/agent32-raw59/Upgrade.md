@@ -6,7 +6,7 @@
 
 [45756260211](https://github.com/FlareZ123/bb6/actions/runs/45756260211) failed at Raw59Upgrade0LAKid11.lean:4078:84 with maxRecDepth. Preserved source artifact 15088512701 identifies the entire partialCheck theorem c_kid11_18_13, which includes four long final-hole traces (26334, 66552, 26298, 26346).
 
-**All 14 long one-hole leaves pass local original-source Lean checking.** The exact 739-open enumeration in that artifact was independently replayed through 69900 live steps for the 682 one-hole tables; the 14 last-hole traces with n≥5000 are below. All generated `last_ok` theorems assert the exact original `partialCheck 70000 (.last n q a) table = true` proposition and compile with Lean 4.36.0-rc2 against accepted dependency artifact 15054146521, with only propext, Classical.choice, Quot.sound. Times are sequential local wall seconds.
+**All 14 long one-hole leaves pass local original-source Lean checking.** The exact 739-open enumeration in that artifact was independently replayed through 69900 live steps for the 682 one-hole tables; the 14 last-hole traces with n≥5000 are below. All generated `last_ok` theorems assert the exact original `partialCheck 70000 table (.closed (.last n (q,a))) = true` proposition and compile with Lean 4.36.0-rc2 against accepted dependency artifact 15054146521, with only propext, Classical.choice, Quot.sound. Times are sequential local wall seconds. All 14 refined-table transport obligations also compile using `tableOK_sound` and the original refinement paths (0.75–1.05 seconds after the initial import).
 
 | Open index (zero-based) | Live steps | Final hole | Lean seconds |
 |---:|---:|:---:|---:|
