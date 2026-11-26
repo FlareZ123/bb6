@@ -1,5 +1,6 @@
 """Exact dispatch of custom LE witnesses and explicit conditional tree joins."""
 from pathlib import Path
+import base64,hashlib,lzma
 from shutil import copyfile
 from prepare_semantic_branch import Builder
 from unpack_le_sweeps import unpack
@@ -30,6 +31,10 @@ def custom_le(branch,out):
         add('Raw391LE2370',[2370])
         add('Raw391LEFTrio',[5774,5781,5789],['.a','.b','.c'])
         unpack(out)
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEFiveSweep.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='c69e36b505410b8d7d211a03c4befe1156cf3aada5c7bc7dbc4f65d68b0fb382'
+        (out/'Raw391LEFiveSweep.lean').write_bytes(source)
+        add('Raw391LEFiveSweep',[7492,7495,7527,7529,7532],packed=True,scoped=True)
         add('Raw391LEDFour',[5773,5783,5776,5782],packed=True,scoped=True)
         add('Raw391LEFMore',[5785,5775,5788],packed=True,scoped=True)
     return result
