@@ -7,13 +7,14 @@ Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 mo
 The following complete first-hole branches are currently established:
 
 - **F1=0RA**, weighted bound **283**: local original-source assembly of all 24 children and the weighted root; see [proof and reproduction](Raw124-0RA-accepted.md). Its dependencies include prior CI-built artifacts; the dossier does not claim a new all-in-one CI run.
+- **F1=0RF**, weighted bound **71**: original-source CI accepted, [run 45841208356](https://github.com/FlareZ123/bb6/actions/runs/45841208356), theorem `BB6.Agent2Raw124RF.all0RF`.
 - **F1=0LA**, weighted bound **5,910**: original-source CI accepted, [run 45839093000](https://github.com/FlareZ123/bb6/actions/runs/45839093000), artifact 15127830252, theorem `BB6.Agent32Raw124ZeroLAComplete.bound_all`.
 - **F1=0LB**, weighted bound **4,136,175**: original-source CI accepted, [run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`.
 - **F1=1LB**, weighted bound **3,006**: original-source CI accepted, [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`.
 
 These are four separate Covers for their respective F1 children, not a Cover of the full Raw124 parent. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
 
-Current parallel frontier: F1=0LC is under original-source audit in [run 45841104581](https://github.com/FlareZ123/bb6/actions/runs/45841104581); F1=0LE and F1=1LA have active audits in runs 45836460043 and 45837006401; the existing manual source-check targets for F1=0RF, 0RB and 1RF have also been queued. F1=0LF is a separate 24-way F0 composition: several F0 child Covers are now source-accepted, but the parent remains open, including late F0=1RC queries above the old 2,931 bound.
+Current parallel frontier: F1=0LC is under original-source audit in [run 45841104581](https://github.com/FlareZ123/bb6/actions/runs/45841104581); F1=0RB and F1=1RF have active audits in runs 45841312585 and 45841320914; F1=0LE and F1=1LA have active audits in runs 45836460043 and 45837006401. F1=0LF is a separate 24-way F0 composition: several F0 child Covers are now source-accepted, but the parent remains open, including late F0=1RC queries above the old 2,931 bound.
 
 ## Completed candidate branches
 
