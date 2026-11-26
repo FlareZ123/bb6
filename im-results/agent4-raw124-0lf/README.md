@@ -1,6 +1,6 @@
 # Raw124 F1=0LF / F0=0RB: complete weighted child certificate
 
-**Status:** locally kernel-checked Lean theorem, no remaining leaves. This is an intermediate child cover, not the full Raw124 parent.
+**Status:** original-source GitHub Actions CI accepted (run `45829435208`), no remaining leaves. This is an intermediate child cover, not the full Raw124 parent.
 
 ```lean
 BB6.Agent4Raw124ZeroLF0RB.bound_all :
@@ -44,3 +44,16 @@ Actual final Lean output:
 ```
 
 Generated final source SHA256: 4e13c72591e9a38fe28ada5a44812d5dabff1231e3b3186096aa190b95d2a73e. No sorryAx. No new global roster change.
+
+
+## Original-source CI acceptance (2026-11-26 13:32 UTC)
+
+The complete generated theorem was rebuilt from the tracked generator and original source dependencies in [run 45829435208](https://github.com/FlareZ123/bb6/actions/runs/45829435208), source commit `4f7e22bbbec59ed9c3d23908b5262caec40f239b`. The workflow pinned `Raw124FastAudit` blob `6a6086dd9e41d924606a7ce9b1784d0486f04220` and `TwoSidedAutomata` blob `c04bf81e19d55b3d028c714e628246a4b917f03c`, regenerated the exact partition/witness assignment, compiled 443 project modules, and passed the axiom audit for both `checkRoot` and `bound_all`.
+
+- Artifact: `raw124-0lf-0rb-source-accepted`, ID `15121597506`, SHA-256 `2f9f9cabea804463972455c1e4bb2d6c74cea9014a3ec6808ea93341fbc1e214`.
+- Exported theorem: `BB6.Agent4Raw124ZeroLF0RB.bound_all`.
+- Weighted bound: **174** over all 390,625 completions.
+- Exact axiom profile for `checkRoot` and `bound_all`: `[propext, Classical.choice, Quot.sound]`; the automated axiom audit passed.
+- The artifact includes the generated proof sources, source-closure manifest, and audit log.
+
+This is the F1=0LF/F0=0RB child only. It does not close the entire F1=0LF branch or Raw124 parent, and it is not a Canonical64 roster subtraction.
