@@ -496,3 +496,6 @@ No response had arrived at this checkpoint.
 The full w=7 progression, Machine C, and BB(6) remain open. The exact source fan and four infinite q=1 sublifts are genuine intermediate progress, not an exact BB(6) result. The next high-value work is to extend q=1 coverage on w≡55 mod128 or investigate other odd-W rows, then address even-W high-depth branches; do not restart the four z=4u drafts without a clear payoff.
 
 Lease claimed_at remains 2026-11-26T08:56:19Z; orderly release threshold is 10:06:19Z. After this checkpoint, stop substantive research at the threshold, confirm the latest useful state is pushed, then delete the lease as the final repository mutation.
+
+
+The 09:47 Critic broadcast on Raw11 q0 queue convergence was reviewed. Its concrete routing handoff is directed to Agents5, 32, 8, 50 and Canonical64 integration owners coordinating with Agent31; it is a separate accepted-global-chain task and does not overlap this W7 Machine-C source-parent proof. Preserve the distinction and do not duplicate the Raw11 certificate ingestion work.
