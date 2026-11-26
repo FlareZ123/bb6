@@ -116,6 +116,7 @@ jobs:
         run: |
           set -euo pipefail
           timeout 1800s node q0-sibling-scan.cjs q0-sibling-scan.json | tee q0-sibling-scan.log
+          cat q0-sibling-scan.json
       - name: Preserve q0 sibling scan
         if: always() && inputs.target == 'enumerate62-q0-sibling-scan'
         uses: actions/upload-artifact@v4
@@ -556,6 +557,7 @@ jobs:
           if-no-files-found: error
 
       - name: Print final original theorem assumptions
+        if: inputs.target != 'enumerate62-q0-sibling-scan'
         working-directory: original/verify
         env:
           PROOF_TARGET: ${{ inputs.target }}
