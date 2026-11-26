@@ -645,6 +645,20 @@ jobs:
             im-results/agent32-raw59/upgrade_*/residual.txt
           if-no-files-found: error
           retention-days: 7
+      - name: Preserve generated 0LA source for diagnostics
+        if: ${{ always() && matrix.child == 'Upgrade0LA' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw59-generated-Upgrade0LA
+          path: |
+            im-results/agent32-raw59/upgrade_0LA/Raw59Upgrade0LAKid11.lean
+            im-results/agent32-raw59/upgrade_0LA/Raw59Upgrade0LABase.lean
+            im-results/agent32-raw59/upgrade_0LA/Raw59Upgrade0LAData.lean
+            im-results/agent32-raw59/upgrade_0LA/tree.json
+            im-results/agent32-raw59/upgrade_0LA/open.txt
+            im-results/agent32-raw59/upgrade_0LA/residual.txt
+          if-no-files-found: warn
+          retention-days: 7
       - name: Preserve checked modules for parent composition
         if: ${{ startsWith(matrix.child, 'Upgrade') || startsWith(matrix.child, 'Closed') }}
         uses: actions/upload-artifact@v4
