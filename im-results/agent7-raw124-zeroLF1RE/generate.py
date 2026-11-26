@@ -4,7 +4,6 @@ Adapted from Agent32's generate_1la.py; all leaves require Lean checks.
 Run: python generate.py OUTPUT_DIRECTORY BRANCH
 """
 import hashlib
-import shutil
 import json
 import re
 import subprocess
@@ -151,8 +150,7 @@ def main(out):
     assert set(far)|set(PARAMS)|HARD==set(range(len(opens)))
     for i in PARAMS:emit_auto(out,i,parse(opens[i]))
     for i in HARD:
-        name=custom_module(i)
-        shutil.copyfile(HERE/(name+".lean"),out/(name+".lean"))
+        assert (HERE/(custom_module(i)+".lean")).is_file()
     lookup={s:i for i,s in enumerate(opens)}
     header=f"""import Raw124FastAudit
 set_option maxRecDepth 100000
