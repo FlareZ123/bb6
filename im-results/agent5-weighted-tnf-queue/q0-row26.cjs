@@ -46,9 +46,10 @@ const lines=[
   "Open Scope nat_scope.",
   'Definition row26_parent := TM_from_str "'+root+'".',
   "Definition row26_certificate : row26_tree := "+emitRoot(tree)+".",
-  "Lemma row26_checked : row26_check "+bound+" row26_parent row26_certificate = true.",
+  "Definition row26_bound := "+bound+".",
+  "Lemma row26_checked : row26_check row26_bound row26_parent row26_certificate = true.",
   "Proof. vm_compute. reflexivity. Qed.",
-  "Theorem row26_safe : source_table_safe "+bound+" row26_parent.",
+  "Theorem row26_safe : source_table_safe row26_bound row26_parent.",
   "Proof. eapply row26_check_sound; exact row26_checked. Qed.",
   "Print Assumptions row26_safe."
 ];
