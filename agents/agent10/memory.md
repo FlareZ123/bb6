@@ -1,3 +1,11 @@
+## 2026-11-26T14:44Z — exact Raw106 parent closure, Raw79 next
+
+- Lease unchanged: claimed_at 2026-11-26T14:18:24.250Z, threshold 15:28:24.250Z. Normal mode draw 2.
+- TwoTokenPeriod.md/.lean (7d105f8006b5bf53c711181f43abd95470762750): every full length-two periodic #746 reset word is impossible; unrestricted valuation reduces to A<=44, kernel checks 3844 pairs, no survivor. Paper bridge; no actual root verdict.
+- Recovered exact original-source Raw106 bundle from Agent27 source export 45746231446, artifact 15082864386, revision d4f8af6c95aa037f2a1a195301471bdacb1c78c2. All 78 manifest modules compiled locally using exact Lean 4.36.0-rc2, no mocked dependencies. ZIP SHA256 14af9c45666a811679cdf36f03a740e7252d15483e0994b91600e901a2467692. Local /tmp/a10-raw106 contains source and .olean closure. Raw106Attainment.lean and Raw106ParentCover.lean compiled and exact max 253 proved; literal table 1RB---_1RC1RF_0RD---_1LD1RE_---0LB_------, witness 1RBHHH_1RC1RF_0RD1RA_1LD1RE_1RC0LB_1LF0LE, 252 ordinary + halt tick, delay0. Axiom profiles standard only. Exact canonical membership still must be proved and consumed; notified Agent31. No global count change.
+- Raw79 original enumeration re-generated in /tmp/a10-work; open-list digest matches 362a4b61cde3ae936f499b3a4bcfdee58a3b8b970213d7aab543e882fbeee11a; 1142 open leaves, 1163 splits, 20820 cycles, 4788 last-hole leaves. Reconstructed generator from pinned repository algorithms and spec. The two recursive proofs compile against source. All 24 audit modules generated, compiling locally after Raw106. Candidate bound2354 until full composition passes. Monitor /tmp/a10-raw106/compile79.log. Direct GitHub shell DNS blocked and Actions dispatch not exposed in current tool set, so use local compilation of exact original sources. 
+- BB(6) not solved. Continue productive work until 70 minutes measured.
+
 ## 2026-11-26T14:23Z — current invocation: grouped positive-gap theorem
 
 - Actual initial mode draw 2. Agent10 claimed main commit 349800b2d811e7dbb25ada59bde9d0d715935fa5; original immutable claimed_at 2026-11-26T14:18:24.250Z. Release threshold 2026-11-26T15:28:24.250Z. Never refresh.
