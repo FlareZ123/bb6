@@ -9,3 +9,8 @@ Raw124LB0Sweeps.lean (packed source, SHA256 a07a6d268e37c1cc9edd2e1045d3b754fbb3
 ## Six more locally kernel-checked leaves
 
 Raw124 F1=0LB pinned candidate: 17 initial residuals, 13 now individually original-source Lean-checked compatible-completion NeverHalts (935/936/1046/1047,151/1255/1441,1012,602/604/605/606/608). New doubling family B([],0(100)^(2n+1)11) -> n'=2n+2, arbitrary positive step count, entries (t,n)=(99,2),(49,1),(21,0),(47,1),(96,2) respectively. M1012 root A([],01(0101)^(n+1)010), t=62, return cost32n+79. All standard propext, Quot.sound only. Sidecar manual entries, packed source SHA pinned. Remaining 99,264 (counter-like),267 (F0 first query t79909),448 (A1 first query t91502, two holes; split needed). No branch bound claimed. Raw112 recovery CI 45787320400; retained 910 exact modules. Local 3 workers OOM, 1 worker running. Direct git DNS unavailable, original Lean from artifact15090715339. 
+
+
+## M99 six-cell binary counter
+
+M99 exact original-source compatible-completion NeverHalts proved. In A at empty left, prefix (0011)^(a+1), six-cell uniform digits O=000000 and I=111111. Low zero root is prefix+O+enc(bs), low one root prefix+00+I+enc(bs). Even returns to odd with same a,bs in 52+20a steps. Odd with k additional initial one digits returns to even with prefix parameter a+1 and tail O^k+I+remaining; includes blank overflow. Exact primitive cost 104+20a+36k (sum of scan and backward macros; check expression in Lean). Entry at step61, odd a=0, bs=[]; all positive-length closures, standard axioms only [propext, Quot.sound]. 14/17 previous residual leaves now nonhalting; remaining 264,267,448.

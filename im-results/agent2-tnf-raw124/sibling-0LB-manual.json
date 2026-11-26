@@ -1,4 +1,10 @@
 {
+  "99": {
+    "table": "1RB0LA_1RC0LA_0RD---_1LD1RE_0RF1LF_1RA0LB",
+    "module": "Raw124LB0M99",
+    "namespace": "BB6Coverage.Agent4Raw124LB0M99",
+    "packed_sha256": "59d53e669658c39570fac2e832f0213a7685d7548a9b37e2b23daaf9ca36a730"
+  },
   "151": {
     "table": "1RB1LE_1RC0LA_0RD1RC_1LD1RE_1LB1LF_---0LB",
     "module": "Raw124LB0Sweeps",
