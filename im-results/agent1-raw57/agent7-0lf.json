@@ -1546,6 +1546,14 @@
       "Raw57LF0Counters",
       "BB6Coverage.Agent1Raw57LF0Counters.M355"
     ],
+    "599": [
+      "Raw57LF0Quadratic",
+      "BB6Coverage.Agent1Raw57LF0Quadratic.M599"
+    ],
+    "603": [
+      "Raw57LF0Quadratic",
+      "BB6Coverage.Agent1Raw57LF0Quadratic.M603"
+    ],
     "899": [
       "Raw57LF0Counters",
       "BB6Coverage.Agent1Raw57LF0Counters.M899"
@@ -1570,8 +1578,6 @@
     ]
   ],
   "residual": {
-    "599": "1RB0LF_1RC1RB_0RD0LB_1LD1RE_1RD0LA_---1LA",
-    "603": "1RB0LF_1RC1RB_0RD1RC_1LD1RE_1RD0LA_---1LA",
     "1242": "1RB0LF_1RC0RD_0RD---_1LD1RE_0RB0LA_1LF1RB"
   },
   "automata": {
@@ -1812,6 +1818,7 @@
     ]
   },
   "packed_sha256": {
-    "Raw57LF0Counters": "a84ccee6d9f2043221f2711963ef6a60344131a07cee4a6d58ce61809c52f7cb"
+    "Raw57LF0Counters": "a84ccee6d9f2043221f2711963ef6a60344131a07cee4a6d58ce61809c52f7cb",
+    "Raw57LF0Quadratic": "c48c76d28afe6ec0aa049609ab12b67c0ef056ec4af0748adc86a519a9a63ce8"
   }
 }
