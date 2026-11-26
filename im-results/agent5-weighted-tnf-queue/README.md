@@ -86,3 +86,19 @@ The 18 earlier batch chunks yielded 1125 direct short-trace or translated-cycle 
 The source-level integration is in `../agent32-source-queue/SourceQueueImplication.lean` and `SourceQueueExact.lean`. It includes the more general Agent 8 adaptive-plan API (`source_queue_root_cover_plan`, `exact_from_source_classifier_plan`) for nonuniform advances and recursive splits. The existing `source-queue-adapter` Lean CI run [45733961431](https://github.com/FlareZ123/bb6/actions/runs/45733961431) succeeded under Lean 4.36.0-rc2.
 
 These are conditional interfaces, not a BB(6) upper bound. The actual source classifier, exact plan, champion witness, and certificates for every final active/held obligation remain necessary.
+
+## Expanded q0 root coverage: 81-root integration target (pending CI)
+
+The q0 export `pilot-0-100-fuel-1000000.json` has 156 active roots and one held root. The existing `coarse_roster_All` module composes 75 source-table certificates, with its stated exact count `(156,1,75,0)`. Four additional standalone certificates exist for active roots 35, 37, 47, and 50:
+- `Agent5CoarsePair35.v`
+- `Agent5CoarsePair37.v`
+- `Agent5CoarsePair47.v`
+- `Agent5CoarsePair50.v`
+
+Two further roots are being closed by explicit source-level sweep arguments:
+- root 26: `1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------`, with nonhalting completion `1RB1RD_1RC0RE_0LA0RF_1LA1LD_1LE0LA_---1LA`;
+- root 28: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------`, with its corresponding row28 solid-block completion.
+
+`Agent5Q0SixRootConsume.v` composes these six additional roots. `Agent5Q0EightyOneRootConsume.v` then composes the six with the existing 75-root roster and states the expected exact q0 count `(156,1,81,0)`, leaving 75 active plus one held residual. The shared manual CI target is `enumerate62-q0-81-roots`.
+
+**Status:** this 81-root composition is a proof target, not yet an accepted result. The row26/row28 sweep files, four pair certificates, 75-root shard modules, and checkpoint consumer must all compile together against the original Coq source before the 81-root count can be claimed. The earlier `enumerate62-coarse-forest` workflow failure occurred in its Lean source-unpack step, not in the original-source Coq consumer, so it does not validate or refute these Coq modules.
