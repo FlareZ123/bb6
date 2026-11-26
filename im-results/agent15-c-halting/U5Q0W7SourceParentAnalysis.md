@@ -208,3 +208,46 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 The additional (w\equiv439\pmod{512}) closure is a deeper lift of
 the (w\equiv55\pmod{128}) row. This table is a routing aid, not a
 claim that the remaining rows are reachable or unreachable.
+
+## 2026-11-26: z=12 (mod 64) sublift in the z divisible-by-four sector
+
+Set \(u=3+16v\) and \(z=4u=12+64v\). The q=0 target and its forced parents are
+\[
+\begin{aligned}
+P_z&=(90168+462336v,\;89119+456960v),\\
+Q_z&=(89641+459648v,\;89379+458304v),\\
+R_0&=(89508+458976v,\;89442+458640v).
+\end{aligned}
+\]
+The exact "odd_seven_parent_iff" theorem forces \(P_z\to Q_z\), since
+\((P_{z,1}+P_{z,2}+1)\equiv8\pmod{16}\). The exact "oddodd_parent_iff"
+then forces \(Q_z\to R_0\), since \(Q_z\) is odd/odd and its sum is
+\(4\bmod8\).
+
+The right coordinate of \(R_0\) is even and its sum is
+\[
+R_{0,1}+R_{0,2}=178950+917616v\equiv6\pmod8.
+\]
+The source-certified "blank_reach_iff_even_right" therefore forces
+\[
+R_1=(178948+917616v,\;44720+229320v).
+\]
+Its right coordinate is again even and its sum is
+\[
+R_{1,1}+R_{1,2}=223668+1146936v\equiv4\pmod8.
+\]
+A second application forces
+\[
+R_2=(223666+1146936v,\;22359+114660v).
+\]
+Here the right coordinate is odd and
+\[
+R_{2,1}+R_{2,2}=246025+1261596v\equiv1\pmod4.
+\]
+The exact "blank_no_odd_sum_one" invariant excludes \(R_2\). Hence
+\(P_z\) is blank-unreachable for every \(v\ge0\).
+
+The source composition is drafted in
+"U5Q0W7Z4U3Mod16.lean". It is a target-level sublift exclusion only:
+it does not close all \(z\equiv0\pmod4\), and the composed Lean file
+has not been locally compiled, original-source CI checked, or axiom-audited.
