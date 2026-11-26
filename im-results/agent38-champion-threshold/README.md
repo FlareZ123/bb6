@@ -35,3 +35,11 @@ The appropriate acceptance target is the existing manual `canonical70` target in
 ## Verification boundary
 
 The source is written against the repository's Lean 4.36.0-rc2 definitions. Local Lean execution was blocked in this invocation by a tool-level `ClientError` before the shell command ran. Therefore the modules are proof drafts until the existing source-closure audit compiles them. Their proofs contain no admitted proof or computational oracle by construction; their actual transitive axiom profiles must still be confirmed by Lean.
+
+## Current source-audit status (2026-11-26)
+
+The previous Canonical64 score-consumer attempt [45768868639](https://github.com/FlareZ123/bb6/actions/runs/45768868639) reached and compiled `TM63RawUpperInterface`, but failed in `ChampionScoreLowerBound.lean`: the concrete `rfl` decomposition of `sectionResult 7 2 6 63` exceeded maxRecDepth, and a subsequent concrete reduction attempted to evaluate a tower-sized `Nat.pow`. The axiom dump consequently contained `sorryAx`; that attempt is not accepted.
+
+The source repair in commits `fd3115f55e4a57eae87c0f72004aec9c6233db4d` and `059a3ac985846825734d313d923c7520c262bcef` removes the concrete decomposition, proves the first-cost inequality with generic `sectionResult_firstCost_le`, and transports the final score inequality through `threeSectionMoves_root` using `Eq.mp` rather than rewriting the enormous score. The assembler gate was updated in `9323b5b848496de6d6eb5fa0f22c6cb348c355fb`.
+
+The targeted retry is [run 45772071022](https://github.com/FlareZ123/bb6/actions/runs/45772071022), currently pending/running at the time of this update. The numerical threshold remains **unaccepted** until this exact-source closure passes and the printed axiom profiles are standard. No global BB(6) upper bound follows from this threshold alone.
