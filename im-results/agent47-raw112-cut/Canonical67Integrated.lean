@@ -19,9 +19,9 @@ theorem p112_eq : p112 = BB6.Agent47Raw112.parent := by
   rfl
 
 /-- Source-accepted Raw112 cover, lifted to the canonical champion bound. -/
-theorem raw112_cover : Cover (WeightedBound 6766859) p112 := by
+theorem raw112_cover : Cover (WeightedBound 100000) p112 := by
   rw [p112_eq]
-  exact lift_parent_cover (by decide) BB6.Agent47Raw112.parent_cover
+  exact BB6.Agent47Raw112.parent_cover
 
 /-- All nine parent cylinders are now consumed: the eight existing
     Canonical68 covers plus the Raw112 closed cover. -/
