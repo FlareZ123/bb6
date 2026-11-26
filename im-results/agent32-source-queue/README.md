@@ -20,3 +20,17 @@ Coq [Agent5Enumerate62DeciderSound.v](../agent5-weighted-tnf-queue/Agent5Enumera
 Identify Coq A..F with Fin6 0..5, S0/S1 with false/true, L/R with false/true and nearest-first lists pointwise. Steps agree by case split on table query (absent→None; otherwise write, pop with zero default, push on opposite side, move state), runs by induction on n. Transparent mathematical cross-language correspondence, not automatic import of a Coq theorem into Lean. No Lean implementation of full Coq classifier yet.
 
 Remaining: explicit source queue order/output transport, complete computed partition/roster, all residual cylinder certificates. Original-source q0 census dispatched [45415369906](https://github.com/FlareZ123/bb6/actions/runs/45415369906), pending. No global upper bound.
+
+
+## Finite active/held checkpoint exactness (Agent 5 / Agent 8 integration)
+
+The Lean source-queue interface now supports finite checkpoints without requiring the queue to drain or every stopped chunk to have an empty active list.
+
+- `Agent5AdaptiveQueueCoverage.q0_rootGood_of_chunk_residuals` in `../agent5-weighted-tnf-queue/AdaptiveQueueCoverage.lean` transports each root-completion coverage witness through a finite chunk update. A final residual may be in either `active` or `holdout`; both require certificates.
+- `source_queue_root_cover_residuals` in `SourceQueueImplication.lean` is the explicit `ChunkPartition` / fixed-fuel adapter.
+- `source_queue_root_cover_plan` reuses Agent 8's `AdaptiveQueuePlan.lean`, so a plan may use nonuniform advances and recursive active-list splits. Its `obligations` function retains both active and held nodes at every `Stop`.
+- `SourceQueueExact.lean` exports `exact_from_source_classifier_plan` and `exact_from_finite_classifier_plan`, plus the fixed-chunk residual variants. These compose the source classifier with the existing weighted first-one cover theorem to produce a conditional `ExactBB6 B`.
+
+**Verification:** manual Lean workflow `source-queue-adapter`, run [45733961431](https://github.com/FlareZ123/bb6/actions/runs/45733961431), succeeded under Lean 4.36.0-rc2 after the plan module was added to the compile order. The interface is kernel-checked; no claim of a completed BB(6) upper bound is made.
+
+**Remaining proof obligations:** an actual source classifier with its soundness proof; a concrete adaptive plan matching the source checkpoint; and a `SourceSafe B` certificate for every node in the plan's final active/held obligations. Table-specific nonhalting alone is not enough unless the corresponding node is shown to occur in those obligations. A champion witness at `B` is also required by the exactness theorem.
