@@ -110,8 +110,8 @@ fixed-fuel chunk adapters, this accepts nonuniform advances and recursive
 active-list splits while preserving every stopped active and held residual. -/
 theorem exact_from_source_classifier_plan (H B : Nat) (hB : H+6 ≤ B)
     (classify : SourceTM → SourceVerdict) (hs : SourceClassifierSound H classify)
-    (plan : Plan)
-    (hcert : ∀ y, y ∈ obligations (queueDecision classify) plan
+    (plan : BB6.Agent8AdaptiveQueue.Plan)
+    (hcert : ∀ y, y ∈ BB6.Agent8AdaptiveQueue.obligations (queueDecision classify) plan
       (q0 (queueDecision classify) sourceRoot) → SourceSafe B y)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
@@ -190,8 +190,8 @@ theorem exact_from_finite_classifier_residuals (H B : Nat) (hB : H+6 ≤ B)
 exactness theorem. -/
 theorem exact_from_finite_classifier_plan (H B : Nat) (hB : H+6 ≤ B)
     (classify : SourceTM → SourceVerdict) (hs : FiniteClassifierSound H classify)
-    (plan : Plan)
-    (hcert : ∀ y, y ∈ obligations (queueDecision classify) plan
+    (plan : BB6.Agent8AdaptiveQueue.Plan)
+    (hcert : ∀ y, y ∈ BB6.Agent8AdaptiveQueue.obligations (queueDecision classify) plan
       (q0 (queueDecision classify) sourceRoot) → SourceSafe B y)
     (champ : ∃ m : BB6.Coverage.RawMachine,
       BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
