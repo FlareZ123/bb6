@@ -181,18 +181,22 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
     by_cases hsmall : n≤2
     · exact hsmall
     · have hn4 : 4≤n := by omega
-      have hpow : 2^5∣2^(n+1) := by
-        exact Nat.pow_dvd_pow (a:=2) (m:=5) (n:=n+1) (by omega)
+      have hpow : 32∣2^(n+1) := by
+        change 2^5∣2^(n+1)
+        exact Nat.pow_dvd_pow 2 (by omega)
       have hdiv : 32∣2^(n+1)*(a+3) := by
         rcases hpow with ⟨q,hq⟩
+        have hq' : 2^(n+1)=32*q := by simpa using hq
         refine ⟨q*(a+3),?_⟩
-         have hq' : 2^(n+1)=32*q := by simpa using hq
-         rw [hq']
-        ac_rfl
+        rw [hq']
+        exact Nat.mul_assoc 32 q (a+3)
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
-      have hmodW : (16*W)%32=16 := by dsimp [W]; omega
+      have hmodW : (16*W)%32=16 := by
+        obtain ⟨q,hq⟩ : ∃ q, W=2*q+1 := by omega
+        rw [hq]
+        omega
       omega
   have hnCases : n=0 ∨ n=2 := by omega
   rcases hnCases with hn0 | hn2
