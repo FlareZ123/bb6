@@ -1,5 +1,7 @@
 import CountedOrdinary
 
+set_option maxHeartbeats 0
+
 namespace BB6.Agent12CountedOrdinaryLow
 
 open BB6.Agent12Clock
