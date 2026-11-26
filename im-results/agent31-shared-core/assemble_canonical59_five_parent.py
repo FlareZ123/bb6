@@ -247,6 +247,13 @@ def main():
         ]
     ]
     required += [
+        "BB6.Agent31Canonical59Membership.p58_count64",
+        "BB6.Agent31Canonical59Membership.p59_count64",
+        "BB6.Agent31Canonical59Membership.p108_count64",
+        "BB6.Agent31Canonical59Membership.p115_count64",
+        "BB6.Agent31Canonical59Membership.p119_count64",
+        "BB6.Agent31Canonical59Membership.count59",
+        "BB6.Agent31Canonical59Membership.parents_root",
         "BB6Coverage.Agent48DirectRoot.champion_raw_witness",
         "BB6.Agent38ChampionThreshold.champion_score_ge_6766859",
     ]
