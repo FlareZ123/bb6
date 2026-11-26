@@ -10,6 +10,8 @@ Reproduced exact normalized 0LE frontier 11603 opens, SHA256 ddb17c7db0d309b4698
 
 New leaf closure: 0LE 7634 literal `1RB0LE_1RC1RA_0RD1RC_1LD0RA_1LF---_1RA0LF`, E1 hole, solved by complementary modular run and pair grammar. `Raw39LE7634.lean` compiled locally against exact original dependency objects, never uses only propext and Quot.sound. See `Raw39LE7634.md` for the full invariant. Remaining 0LE five IDs 1300,1583,3334,3414,4084 (Agent7 assigned first two).
 
+New 1LE triple closure: 5774,5781,5789 (F1=0LE,1LA,1RE) share F-return family L=10101000 (11100)^n 1110011100111110011; R=0 (110)^n 11; entry 727 and costs 467/473/469+48n. Exact four-sweep Lean proof `Raw391LEFTrio.lean`, only propext, Quot.sound; 1LE residual now 33. Reproduced exact normalized 1LE open hash 4b8403493d8001bc6c1dacff454c53f2648e623315f435b4be761c5c5dca1451, 26246 leaves. Twelve related residuals 5773–5789 split into similar return families; investigate remaining nine. Original frontier spec `cycles` entries are [index,table,entry,period,direction,boundary] and residual entries [index,table], so generator must account for cycles and custom proofs, no need rediscovery.
+
 10:03 UTC checkpoint: 0LE leaves 1791/1800 solved together by unbounded alternating residue-three carry grammar, Lean theorem Raw39LE1791.never (b : Bool), propext/Quot.sound only. Discovery 0LE remaining IDs 1300,1583,3334,3414,4084,7634; 1LE 49. Existing workflow expanded in 09d6ed0777264e83a08fade7284edf49445bbb57, 1LB queued run 45796346387, 1LA dispatched. Keep lease original.
 
 
