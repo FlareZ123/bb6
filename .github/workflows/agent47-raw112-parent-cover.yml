@@ -4,12 +4,16 @@ on:
     inputs:
       mode:
         type: choice
-        options: [parent, carry, closed, assemble-existing, recover]
+        options: [parent, carry, closed, assemble-existing, recover, retry]
         default: closed
       source_run_id:
         type: string
         default: ''
         description: Existing Raw112 workflow run whose generated sources and shard artifacts should be assembled
+      prior_recovery_run_id:
+        type: string
+        default: '45787320400'
+        description: Prior Raw112 recovery run whose successful dependency cuts should be reused in retry mode
 permissions:
   contents: read
   actions: read
@@ -785,3 +789,179 @@ jobs:
           name: raw112-closed-parent-cover
           path: /tmp/a47-raw112-assembled/
           if-no-files-found: error
+
+  prepare_retry:
+    if: inputs.mode == 'retry'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate pinned retry inputs
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+        run: |
+          set -euo pipefail
+          test "$SOURCE_RUN_ID" = 45751911115
+          test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.prior_recovery_run_id }}
+          github-token: ${{ github.token }}
+      - name: Build strict partial union from retained artifacts
+        run: |
+          set -euo pipefail
+          python3 -m py_compile im-results/agent10-raw112-recovery/configure_retry.py im-results/agent10-raw112-recovery/raise_maxrecdepth.py im-results/agent10-raw112-recovery/run_retry_shard.py im-results/agent10-raw112-recovery/assemble_retry.py
+          python im-results/agent10-raw112-recovery/configure_retry.py --phase partial --source-config im-results/agent47-raw112-cut/shard-config.json --output /tmp/a47-raw112-partial-config.json
+          python im-results/agent4-raw109/merge_shards.py /tmp/a47-raw112-shards /tmp/a47-raw112-partial-union /tmp/a47-raw112-partial-config.json
+          cp /tmp/a47-raw112-partial-config.json /tmp/a47-raw112-partial-union/partial-config.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-recovery-partial-union
+          path: /tmp/a47-raw112-partial-union/
+          if-no-files-found: warn
+
+  compile_retry:
+    if: inputs.mode == 'retry'
+    needs: prepare_retry
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        group: [r01a-rest0, r01a-rest1, r01a-deep, r04a, r04b, r04c, r05a0, r05a1]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate pinned retry inputs
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+        run: |
+          set -euo pipefail
+          test "$SOURCE_RUN_ID" = 45751911115
+          test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-recovery-partial-union
+          path: /tmp/a47-raw112-partial-union
+      - name: Compile one retained-cut retry
+        env:
+          GROUP: ${{ matrix.group }}
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-shard-${{ matrix.group }}
+          path: /tmp/a47-raw112-shard-${{ matrix.group }}/
+          if-no-files-found: warn
+
+  assemble_retry:
+    if: inputs.mode == 'retry'
+    needs: [prepare_retry, compile_retry]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate pinned retry inputs
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+        run: |
+          set -euo pipefail
+          test "$SOURCE_RUN_ID" = 45751911115
+          test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.prior_recovery_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+      - name: Assemble and audit full Raw112 parent Cover
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+        run: |
+          set -euo pipefail
+          python -u im-results/agent10-raw112-recovery/assemble_retry.py --root im-results/agent47-raw112-cut --shards /tmp/a47-raw112-shards --union /tmp/a47-raw112-full-union --branch-work /tmp/a47-raw112-branch-roots --parent-work /tmp/a47-raw112-parent --output /tmp/a47-raw112-assembled
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-closed-parent-cover
+          path: /tmp/a47-raw112-assembled/
+          if-no-files-found: warn
