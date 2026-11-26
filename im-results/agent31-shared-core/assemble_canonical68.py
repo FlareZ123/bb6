@@ -133,8 +133,12 @@ def main():
             assert job["run_id"] == run and job["conclusion"] == "success", job
         else:
             assert info["conclusion"] == "success", (run, info["conclusion"])
+    stable = [download(pin, work) for pin in PINS[:2]]
+    stable_env = dict(os.environ, LEAN_PATH=os.pathsep.join(str(p) for group in reversed(stable) for p in group))
+    stable_log = compile_module(HERE / "Canonical68StableBatch.lean", work / "Canonical68StableBatch.olean", stable_env, work / "stable68-standalone.log")
+    gate(stable_log, ["BB6.Agent31StableParentBatch." + n for n in ["removeParents_sound", "liftCover", "parent_roots", "count68", "sound68", "exact_at_target"]])
     with ThreadPoolExecutor(max_workers=3) as pool:
-        groups = list(pool.map(lambda pin: download(pin, work), PINS))
+        groups = stable + list(pool.map(lambda pin: download(pin, work), PINS[2:]))
     assert (work / "SOURCE_COMMIT").read_text().strip() == SOURCE_REVISIONS[45561386072]
     lines = (work / "RAW117_SOURCE.sha256").read_text().splitlines()
     expect = [line.split()[0] for line in lines if line.split()[-1] == "Raw117Data.lean"]

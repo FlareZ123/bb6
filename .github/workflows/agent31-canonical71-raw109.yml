@@ -483,6 +483,9 @@ jobs:
             /tmp/a31-integrated68.log
             /tmp/a31-integrated68/canonical68.log
             /tmp/a31-integrated68/raw117.log
+            /tmp/a31-integrated68/stable68-standalone.log
+            /tmp/a31-integrated68/Canonical68StableBatch.olean
+            /tmp/a31-integrated68/stable68.log
             /tmp/a31-integrated68/canonical68-integration.json
             /tmp/a31-integrated68/linked/kernel-link-manifest.json
             /tmp/a31-integrated68/linked/Canonical68Integrated.olean
