@@ -119,6 +119,77 @@ def compile_module(source, output, env, logpath):
     result.check_returncode()
     return result.stdout
 
+def link_reachable(groups, work, linked):
+    """Select only the recursive import closures of the actual proof roots.
+    Every reached duplicate is still checked by exact kernel-data equality.
+    Each source-audited root is resolved within its own artifact family first,
+    so a missing import cannot be silently borrowed from an unrelated build.
+    """
+    from collections import defaultdict
+    # Two accepted canonical artifacts form one explicitly checked base.
+    # The eight Raw117 artifacts consist of its common closure and child shards.
+    families = [
+        ("canonical76", [p for g in reversed(groups[:2]) for p in g],
+         ["CanonicalTwoParentRosterOnly", "CanonicalRosterRefinement"]),
+        ("raw60", groups[2], ["Raw60RootFull"]),
+        ("raw109", groups[3], ["Raw109Closed"]),
+        ("raw110", groups[4], ["Raw110ParentLateCover"]),
+        ("raw111", groups[5], ["Raw111Data"]),
+        ("raw121", groups[6], ["Raw121Data"]),
+        ("raw123", groups[7], ["Raw123ResidualClosure"]),
+        ("raw125", groups[8], ["Raw125ResidualClosure"]),
+        ("raw117", [p for g in groups[9:] for p in g],
+         [f"Raw117Kid{k:02d}" for k in range(24)]),
+    ]
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    stdlib = prefix / "lib" / "lean"
+    walker = HERE / "WalkImportClosure.lean"
+    comparator = HERE.parent / "agent13-raw125" / "CompareKernelImports.lean"
+    objects = defaultdict(list)
+    reached = {}
+    for label, dirs, roots in families:
+        command = ["lean", "--run", str(walker), str(stdlib), str(len(dirs)),
+                   *map(str, dirs), *roots]
+        result = subprocess.check_output(command, text=True)
+        files = sorted(set(Path(x) for x in result.splitlines()))
+        assert files and all(p.suffix == ".olean" and p.is_file() for p in files), label
+        assert all(any(p.name == root + ".olean" for p in files) for root in roots), label
+        for p in files:
+            assert p.parent in dirs, p
+            if p not in objects[p.name]:
+                objects[p.name].append(p)
+        reached[label] = {"roots": roots, "files": [str(p) for p in files]}
+        print(f"{label}: selected {len(files)} recursive project objects", flush=True)
+    manifest = {"compiler_sha256": sha(prefix / "bin" / "lean"),
+                "reached_families": reached, "objects": {}, "collisions": []}
+    conflicts = []
+    for name, files in sorted(objects.items()):
+        first = files[0]
+        digest = sha(first)
+        manifest["objects"][name] = {"path": str(first), "sha256": digest}
+        for other in files[1:]:
+            oh = sha(other)
+            if oh == digest:
+                continue
+            comparison = subprocess.run(["lean", "--run", str(comparator), str(first), str(other)],
+                                        text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+            row = {"module": name, "chosen": digest, "other": oh,
+                   "other_path": str(other), "comparison": comparison.stdout.strip(),
+                   "equal": comparison.returncode == 0}
+            manifest["collisions"].append(row)
+            print(comparison.stdout, end="", flush=True)
+            if comparison.returncode:
+                conflicts.append(name)
+    (work / "reachable-link-audit.json").write_text(json.dumps(manifest, indent=2) + "\\n")
+    assert not conflicts, f"incompatible reached kernel declarations: {sorted(set(conflicts))}"
+    linked.mkdir()
+    for name, files in objects.items():
+        # Keep the original downloaded audit objects immutable during elaboration.
+        shutil.copy2(files[0], linked / name)
+    (linked / "kernel-link-manifest.json").write_text(json.dumps(manifest, indent=2) + "\\n")
+    print(f"Linked {len(objects)} reached modules with exact duplicate checks", flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
@@ -144,8 +215,7 @@ def main():
     expect = [line.split()[0] for line in lines if line.split()[-1] == "Raw117Data.lean"]
     assert expect == [sha(work / "Raw117Data.lean")], "Raw117 source hash"
     linked = work / "linked"
-    helper = HERE.parent / "agent13-raw125" / "link_kernel_equal.py"
-    subprocess.run(["python", str(helper), "--out", str(linked), *(str(p) for group in groups for p in group)], check=True)
+    link_reachable(groups, work, linked)
     for mod in REQUIRED:
         assert (linked / (mod + ".olean")).is_file(), f"missing module {mod}"
     for k in range(24):

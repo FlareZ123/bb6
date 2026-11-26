@@ -488,6 +488,7 @@ jobs:
             /tmp/a31-integrated68/Canonical68StableBatch.olean
             /tmp/a31-integrated68/stable68.log
             /tmp/a31-integrated68/canonical68-integration.json
+            /tmp/a31-integrated68/reachable-link-audit.json
             /tmp/a31-integrated68/linked/kernel-link-manifest.json
             /tmp/a31-integrated68/linked/Canonical68Integrated.olean
           if-no-files-found: warn
