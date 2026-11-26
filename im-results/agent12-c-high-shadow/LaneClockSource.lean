@@ -111,11 +111,11 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
     <;> omega
   · have hleft : (lift s).b - 2 - (lift s).o = s.a := by
       simp [lift]
-      ring
+      omega
     have hright : (lift (step (d+1) s)).b - 2 -
         (lift (step (d+1) s)).o = (step (d+1) s).a := by
       simp [lift]
-      ring
+      omega
     simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
       hState,hAge,hpost,hleft,hright]
 
