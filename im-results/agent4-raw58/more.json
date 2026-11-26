@@ -1294,6 +1294,7 @@
     "custom": {
       "39": "BB6Coverage.Agent4LF139",
       "567": "BB6Coverage.Agent4LF1567",
+      "1181": "BB6Coverage.Agent7LF11181",
       "1336": "BB6Coverage.Agent4LF11336",
       "1375": "BB6Coverage.Agent4LF11375",
       "1416": "BB6Coverage.Agent4LF11416"
@@ -1303,7 +1304,8 @@
       "Raw58LF1Late",
       "Raw58LF1567",
       "Raw58LF11336",
-      "Raw58LF1Pair"
+      "Raw58LF1Pair",
+      "Raw58LF11181"
     ],
     "auto_classify": true,
     "automata": {
@@ -1346,11 +1348,6 @@
         2,
         2,
         2
-      ],
-      "1181": [
-        20,
-        8,
-        16
       ],
       "1186": [
         4,
