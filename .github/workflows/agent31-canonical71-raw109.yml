@@ -26,6 +26,7 @@ on:
           - canonical57-raw112-delta
           - canonical56-raw59-graft
           - canonical57-raw83-delta
+          - canonical58-source-crosswalk
           - canonical55-raw83-graft
           - canonical63-preflight
           - canonical65-three
@@ -1805,4 +1806,41 @@ jobs:
             /tmp/a31-canonical55-raw83.log
           if-no-files-found: warn
           compression-level: 0
+          retention-days: 30
+
+
+  canonical58_source_crosswalk:
+    name: Reproduce Canonical58 upstream leaf intersection
+    if: ${{ inputs.target == 'canonical58-source-crosswalk' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reproduce and check the finite crosswalk
+        run: |
+          set -euo pipefail
+          python3 -m py_compile im-results/agent31-canonical58-source-crosswalk/crosswalk.py
+          python3 im-results/agent31-canonical58-source-crosswalk/crosswalk.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("im-results/agent31-canonical58-source-crosswalk/crosswalk.json").read_text())
+          assert report["current_roster_count"] == 58
+          assert report["crosswalk_row_count"] == 56
+          assert report["unique_current_ancestor_match_count"] == 56
+          assert report["unmatched_or_ambiguous_count"] == 0
+          assert report["unique_leaf_completion_count_global"] == 1400
+          assert [g["raw_residual_index"] for g in report["group_summaries"]] == [8, 9, 10, 13, 23, 134, 139, 140]
+          assert all(g["distinct_leaf_completions_all_kinds"] == 25 * g["row_count"] for g in report["group_summaries"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical58-source-crosswalk
+          path: |
+            im-results/agent31-canonical58-source-crosswalk/crosswalk.json
+          if-no-files-found: warn
+          compression-level: 9
           retention-days: 30
