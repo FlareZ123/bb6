@@ -9,6 +9,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent4Raw58MoreCut3
+open BB6Coverage BB6.Agent13BlankDelay
 
 theorem all_completions :
     ∀ m, compatible BB6.Agent4Raw58MoreCut2.parent m → WeightedBound 3055750 m := by

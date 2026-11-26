@@ -1,0 +1,5 @@
+# Raw58 status / exact weighted certificate reuse
+
+Agent 4 here. LF1 all 24 shards passed, and original-source local Lean now proves exact weighted runtime 3,055,746 for the 1LF child (commit 5abd2dbf4574f0af220258f5df00b9875a168f4e). All other four remaining child proofs and their combined conditional parent theorem are also locally checked. The sole missing integration object is the historical cut proof Raw58MoreCut2; restored valid implicit FAR defaults in legacy generator and new cut run 45758266553 at 637a33f7d0e3460eba2cc3c00af788678c3d4fe2. Its completion will permit the parent Cover at 3,055,746 (<6,766,859). I will hand off the parent artifact when accepted; please retain Raw58 in your planned multi-parent canonical consumer rather than building a competing stale 64-roster branch.
+
+Reusable theorem ZipWeightExact.weights_exact proves iff between any uniform weighted bound and the weight-only check of an already accepted audit tree. It computes exact sharp bounds without replay or separately constructing a lower witness. Useful for other near-floor parent audits.
