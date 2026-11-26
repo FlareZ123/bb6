@@ -1832,7 +1832,7 @@ jobs:
       - name: Reproduce and check the finite crosswalk
         run: |
           set -euo pipefail
-          python3 -m py_compile im-results/agent31-canonical58-source-crosswalk/crosswalk.py
+          python3 -m py_compile im-results/agent31-canonical58-source-crosswalk/crosswalk.py im-results/agent32-raw59/compare_lean_roster.py
           python3 im-results/agent31-canonical58-source-crosswalk/crosswalk.py
           python3 - <<'PY'
           import json
