@@ -576,24 +576,78 @@ lift w7_q0_target_unreachable_of_q1.
 
 ### Root residuals and exact-source verification
 
-For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
-relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), gives
+For all twelve slices, \(z=2+4u\equiv14\pmod{16}\). The necessary
+root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), gives
 \(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
-\(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the \(u=7+32t\)
-and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\) for
-\(u=23+512s\); and it holds for every \(t\) in the \(u=59+80t\)
-slice. The three new slices \(u=339+2560v\), \(u=499+1280v\), and
-\(u=3379+5120v\) also satisfy \(u\equiv19\pmod{20}\) for every
-parameter value, so no further restriction is needed. The \(u=59+80t\)
-slice is the deeper \(w\equiv439\pmod{512}\) lift.
-These are necessary root filters, not a classification of the full row.
+\(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the
+\(u=7+32t\) and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\)
+for \(u=23+512s\); and it holds for every \(t\) in the
+\(u=59+80t\) slice. The eight new slices
+\[
+u=339+2560v,\;499+1280v,\;3379+5120v,\;2739+10240v,\;
+9939+10240v,\;16339+20480v,\;20019+20480v,\;1939+2560v
+\]
+all have \(u\equiv19\pmod{20}\) for every parameter value, so no
+further root restriction is needed. The \(u=59+80t\) slice is the
+deeper \(w\equiv439\pmod{512}\) lift. These are necessary root filters,
+not a classification of the full row.
+
+### Quantified coverage of the root-compatible u family
+
+Write every root-compatible parameter as \(u=19+20n\), and split
+\(n\) into its four residue classes modulo 4.
+
+- \(n=4T\), so \(u=19+80T\). The nine pairwise-disjoint proved
+  cylinders are
+  \[
+  T\equiv1\pmod4,\quad T\equiv4\pmod{32},\quad
+  T\equiv6\pmod{16},\quad T\equiv42\pmod{64},
+  \]
+  \[
+  T\equiv34\pmod{128},\quad T\equiv124\pmod{128},\quad
+  T\equiv204\pmod{256},\quad T\equiv250\pmod{256},\quad
+  T\equiv24\pmod{32}.
+  \]
+  Their density within this branch is
+  \[
+  \frac14+\frac1{32}+\frac1{16}+\frac1{64}
+  +\frac1{128}+\frac1{128}+\frac1{256}+\frac1{256}
+  +\frac1{32}=\frac{53}{128}.
+  \]
+
+- \(n=4T+1\), so \(u=39+80T\). The proved cylinders are
+  \(T\) even (the \(u=7+32t\) family) and
+  \(T\equiv19\pmod{32}\) (the \(u=23+512s\) family).
+  They are disjoint and have density
+  \(\frac12+\frac1{32}=\frac{17}{32}\).
+
+- \(n=4T+2\), so \(u=59+80T\). The entire branch is covered,
+  with density \(1\).
+
+- \(n=4T+3\), so \(u=79+80T\). No cylinder in this branch is
+  currently proved.
+
+The four branches are disjoint and equally frequent. Therefore the
+union of the twelve source-proved exclusions has natural density
+\[
+\frac14\left(\frac{53}{128}+\frac{17}{32}+1+0\right)
+=\frac{249}{512}
+\]
+among all \(u\equiv19\pmod{20}\). This is an exact density for the
+union of the proved cylinders, hence a lower bound on the density of
+all excluded targets in this root-compatible family. It is not a
+classification of the complement.
+
+### Exact-source verification
 
 The focused exact-source closure target w7-q0-parent-fan passed in run
 #20 (GitHub Actions run 45796426913) for the original four roots. The
-extended closure passed in run #25 (GitHub Actions run 45832100735),
-which additionally compiled U5Q0W7U19Mod2560.lean and all six new
-q=0/q=1 declarations. The new module explicitly prints their axioms;
-the workflow grep guard found no sorryAx or native_decide dependency.
+seven-slice closure passed in run #25 (45832100735), the nine-slice
+closure in run #26 (45833176482), and the twelve-slice closure in run
+#28 (45834843362). Run #28 compiles U5Q0W7U19Mod2560.lean, the generic
+odd-W q=0 lift, the sum-seven source-parent helper, and all sixteen new
+q=0/q=1 declarations. The module explicitly prints their axioms; the
+workflow grep guard found no sorryAx or native_decide dependency.
 
 These are twelve infinite excluded sublifts of the q=1 parent, not a
 classification of the entire w=55 (mod 128) row. The remaining q=1
