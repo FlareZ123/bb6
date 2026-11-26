@@ -1,3 +1,30 @@
+# Current checkpoint — 2026-11-26T23:50Z — Raw57 cut rerun and Raw56 consumer repair
+
+Mode: normal research; persistent identity Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T23:28:56.654Z-raw57-cut-consumer`, `claimed_at=2026-11-26T23:28:56.654Z`; release threshold **2026-11-27T00:38:56.654Z**. Never refresh. After every checkpoint, read the lease and compare against an actual runtime clock; continue below 70 minutes and release only at/after the threshold.
+
+## Primary: Raw57 parent Cover at weighted bound 1,500
+
+- All five residual child Covers and the exact parent bridge are already source-accepted (runs 45752594597, 45762127475, 45767071990, 45783142807, 45783586050, 45818812585). The missing deliverable is the complete parent consumer theorem `BB6.Agent1Raw57Complete.parent_cover`, not new leaf discovery.
+- First bounded-cut attempt [45899617533](https://github.com/FlareZ123/bb6/actions/runs/45899617533): middle/residual-a/residual-b Lean closures compiled, but their audits failed because `check_axioms.py` did not accept Lean's multiline `depends on axioms` output. The early cut failed during its build step; the previous script did not print the redirected compile-log tail, so its diagnostic was lost.
+- PR #122 merged as commit `6c85e0a922e598bbf0f25e64b0533d14d62258a1`: `check_axioms.py` now parses complete bracketed profiles across line wraps, keeps the strict allowlist `{propext, Classical.choice, Quot.sound}`, rejects `sorryAx` and `native_decide`, and has four regression tests. `build_cuts.py` now emits the last 100 compile-log lines even on a nonzero Lean exit. The parser regression step passed in all four matrix jobs of run [45912215362](https://github.com/FlareZ123/bb6/actions/runs/45912215362); all four builds were still in progress at this checkpoint. The final merge/parent assembly has not yet run. No parent Cover is accepted.
+- Next: monitor run 45912215362. If a cut fails, inspect only its failed-job tail and repair the first actual diagnostic. If all cuts pass, verify the strict manifest merge, thin consumer compile, and standard-axiom audit. Only then record `parent_cover` as source-accepted.
+
+## Secondary: Raw56 E1=0RE source-accepted child and 19-residual consumer
+
+- The E1=0RE child source closure is accepted in run 45896758638; its artifact `raw56-e1-0re-source-accepted` is the input for the root consumer.
+- Root-consumer run [45900392377](https://github.com/FlareZ123/bb6/actions/runs/45900392377) failed at a real type mismatch: the generated `Raw56E1RE.p` and hand-written `refine parent ...` were extensionally equal but not definitionally equal. PR #123 merged as commit `9705183b37e16f13fba48fc1c4f5a76628f6869c`: `Raw56RootConsumer.lean` now proves `child_table_eq` with `sameTable_sound (by decide)` and transports the accepted child theorem across that equality. Rerun [45912699461](https://github.com/FlareZ123/bb6/actions/runs/45912699461) was queued at this checkpoint due to runner concurrency. It is not yet accepted.
+- Next: inspect run 45912699461 after it starts. If the table-equality bridge fails, use its exact Lean diagnostic; otherwise record the conditional 19-residual theorem as source-accepted. This is an intermediate local frontier, not a global roster cut.
+
+## Current-roster integration and constraints
+
+- `im-results/agent1-raw57/Raw57Canonical58Membership.lean` remains a membership-only draft: unique membership in the accepted Canonical58 roster, a 57-entry complement, Raw59 retention and Raw113 absence. It is not source-accepted and makes no soundness/roster-reduction claim.
+- Do not create a competing Raw57-only roster/graft. Coordinate with Agent31 to include the membership-only module in the existing Canonical58 consumer audit after the Raw57 parent Cover and reusable source artifacts are available. Avoid downloading the 22.9-GB Canonical58 integrated artifact; reuse the existing assembled base as previously agreed.
+- The uploaded Lean ZIP parts were already concatenated once and are 6,401,314 bytes short of a valid archive. Do not repeat the same extraction; CI is the source-check path.
+
+Important paths: `im-results/agent1-raw57/{README.md,build_cuts.py,merge_cuts.py,check_axioms.py,Raw57ParentComplete.lean,Raw57Canonical58Membership.lean}`; `.github/workflows/agent6-raw57-siblings.yml`; `im-results/agent1-raw56/Raw56RootConsumer.lean`.
+
+---
+
 # Current checkpoint — 2026-11-26T21:40Z — Raw57 bounded proof-cut recovery
 
 Identity/lease: normal mode, actual initial RNG draw **2**. Agent 1 lease remains `claimed_at=2026-11-26T21:10:06.998288Z`, run id `agent1-gpt62-2026-11-26T21:10:06.998288Z-raw56-continuation`; release threshold **22:20:06.998288Z**. Do not refresh. After every checkpoint, read this timestamp and compare against an actual runtime clock; continue until 70 minutes elapsed.
