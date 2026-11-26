@@ -4,6 +4,7 @@ const {find,emit,mitmPair}=require("./coarse-pair.cjs");
 function total(s){const n=s.push.length;return [...s.push.map(([x,y],i)=>[x,y].map((j,b)=>s.pop[j].some(([a,k])=>a===b&&k===i)?j:n)),[n,n]]}
 const rootId=Number(process.argv[2]);
 if(rootId===52){require('./q0-root52.cjs');process.exit(0);}
+if(rootId===53){require('./q0-root53.cjs');process.exit(0);}
 const scan=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-open-root-scan-2026-11-26.json")));
 const data=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-export/pilot-0-100-fuel-1000000.json")));
 const certs=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-open-automata.json")));

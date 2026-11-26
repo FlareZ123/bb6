@@ -329,15 +329,16 @@ jobs:
             node "$p/q0-direct-parent.cjs" "$ROOT_INDEX" Agent5Q0AutoData.v | tee q0-auto-candidate.json
           else
             cp "$p/Agent5AutoTree.v" .
+            if [ "$ROOT_INDEX" = 53 ]; then cp "$p/Agent5Root53Counter.v" .; fi
             node "$p/q0-auto-source.cjs" "$ROOT_INDEX" Agent5Q0AutoData.v | tee q0-auto-candidate.json
           fi
-      - name: Preserve generated q0 root 52 proof shards
-        if: inputs.target == 'enumerate62-q0-auto-root' && inputs.offset == 52
+      - name: Preserve generated q0 root 52 and 53 proof shards
+        if: inputs.target == 'enumerate62-q0-auto-root' && (inputs.offset == 52 || inputs.offset == 53)
         uses: actions/upload-artifact@v4
         with:
-          name: q0-root52-generated-source
+          name: q0-root${{ inputs.offset }}-generated-source
           path: |
-            original/verify/Agent5Q0Root52*.v
+            original/verify/Agent5Q0Root${{ inputs.offset }}*.v
             original/verify/Agent5Q0AutoData.v
             original/verify/q0-auto-candidate.json
           if-no-files-found: error
@@ -504,6 +505,7 @@ jobs:
           fi
           cp Agent5Q0AutoData.{v,vo} Agent5Q0AutoConsume.{v,vo} q0-auto-candidate.json auto-root-results/
           if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 52 ]; then cp Agent5Q0Root52*.{v,vo} auto-root-results/; fi
+          if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 53 ]; then cp Agent5Q0Root53*.{v,vo} Agent5Root53Counter.{v,vo} auto-root-results/; fi
       - name: Verify Raw11 nine-parent q0 checkpoint membership
         if: inputs.target == 'enumerate62-q0-nine-parent-membership'
         working-directory: original/verify

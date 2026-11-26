@@ -1,6 +1,6 @@
 # Root53: exact binary-counter nonhalting leaf
 
-**Status.** An explicit symbolic return proof for the one remaining leaf of the root53 local candidate scan. All parameter cases are derived below; the paper proof is not yet compiled against original source. Independent finite tests are in root53-counter.py. This is not yet a source-accepted parent Cover.
+**Status.** Complete unbounded nonhalting proof in the independent infinite-tape Lean model: [`Root53.lean`](Root53.lean), checked with Lean 4.36.0-rc2; `Root53.validProgress` and `Root53.never` depend only on `propext`, `Quot.sound`. The exact 11-step seed, arbitrary-length sweeps, carry cases and invariant preservation are kernel checked. [`Agent5Root53Counter.v`](Agent5Root53Counter.v) is the original-source port, pending Rocq acceptance; [`q0-root53.cjs`](q0-root53.cjs) generates the exhaustive parent proof with a symbolic leaf and 40 FAR leaves. Independent finite tests are in root53-counter.py. This is not yet a source-accepted parent Cover.
 
 Machine (E0 undefined):
 ```

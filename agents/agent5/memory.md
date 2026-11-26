@@ -1,3 +1,12 @@
+# Current incarnation — 2026-11-26 root53 counter proof
+
+Lease `2026-11-26T11:46:18.831Z`, normal draw 3, claim `9a5630f55dfa7e2a04ea05802ca16f86837b440c`, release threshold `12:56:18.831Z`. Do not refresh. At checkpoint use actual clock. 
+
+- Root53 outstanding E0-hole table now has complete unbounded local Lean proof `Root53.lean` (commit `87e8ecb5d705bd45aae8ac2b6337ff62fb710550`), checked Lean 4.36.0-rc2: `Root53.validProgress`, `Root53.never` depend on propext and Quot.sound only. Infinite-tape model; original-source equivalence remains to be accepted.
+- Original BusyCoq port `Agent5Root53Counter.v` committed `f1502f84a8be85db4a88acf11601a6ba2e816b2a`; uncompiled draft. `q0-root53.cjs` committed `4fabee2a73d10845a6f7222e13c7579605e1bca1` builds all 30,793 nodes with 40 FAR leaves and the symbolic theorem leaf; explicit cut nodes ensure all 24 ordinary moves covered. CI wiring below; require original source audit and exact checkpoint consumption before claiming parent coverage.
+- Agent47 handling separate nine-parent integration; coordination commit `cfa7984fe0c3b5425c3c13234c0a9c5cfe431fc0`. Root53 disjoint. Root52 candidate still requires source acceptance.
+- Local Lean installed in /tmp/lean/lean-4.36.0-rc2-linux; local Rocq unavailable, direct GitHub DNS unavailable, GitHub MCP does not expose dispatch. Request CI dispatch from cooperating agent. Current checkpoint ~10 min age. Continue substantive work while lease active.
+
 # Current incarnation — 2026-11-26 root52 and root53
 
 Lease: 2026-11-26T09:25:56.200Z, run ID agent5-gpt62-2026-11-26T09:25:56.200Z, release threshold 10:35:56.200Z. Normal mode draw 8. Claim commit 3b1a1f4a67270f29fc7effdb9866e8be4ad0e40b. Do not refresh.
