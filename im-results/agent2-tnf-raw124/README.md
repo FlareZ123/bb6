@@ -10,12 +10,13 @@ The following complete first-hole branches are currently established:
 - **F1=0RF**, weighted bound **71**: original-source CI accepted, [run 45841208356](https://github.com/FlareZ123/bb6/actions/runs/45841208356), theorem `BB6.Agent2Raw124RF.all0RF`.
 - **F1=0LA**, weighted bound **5,910**: original-source CI accepted, [run 45839093000](https://github.com/FlareZ123/bb6/actions/runs/45839093000), artifact 15127830252, theorem `BB6.Agent32Raw124ZeroLAComplete.bound_all`.
 - **F1=0LE**, weighted bound **3,006**: original-source CI accepted, [run 45836460043](https://github.com/FlareZ123/bb6/actions/runs/45836460043), artifact 15129435887, theorem `BB6.Agent2Raw124New0LE.bound_all`.
+- **F1=1LA**, weighted bound **6,230**: original-source CI accepted, [run 45837006401](https://github.com/FlareZ123/bb6/actions/runs/45837006401), artifact 15128682403, theorem `BB6.Agent2Raw124New1LA.bound_all`.
 - **F1=0LB**, weighted bound **4,136,175**: original-source CI accepted, [run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`.
 - **F1=1LB**, weighted bound **3,006**: original-source CI accepted, [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`.
 
 These are four separate Covers for their respective F1 children, not a Cover of the full Raw124 parent. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
 
-Current parallel frontier: F1=0LC is under original-source audit in [run 45841104581](https://github.com/FlareZ123/bb6/actions/runs/45841104581), and F1=1LA remains active in run 45837006401. F1=0RB and F1=1RF runs 45841312585 and 45841320914 were terminated by runner shutdown (exit 143) while compiling child modules; their failed jobs have been queued for rerun, so these are infrastructure interruptions, not mathematical counterexamples. Six additional bundle-sharded first-level audits were dispatched for F1=0LD, 0RE, 1RA, 1RB, 1LE and 1LF. F1=0LF is a separate 24-way F0 composition: several F0 child Covers are now source-accepted, but the parent remains open, including late F0=1RC queries above the old 2,931 bound.
+Current parallel frontier: F1=0LC is under original-source audit in [run 45841104581](https://github.com/FlareZ123/bb6/actions/runs/45841104581), and F1=1RF is still compiling in run 45841320914 (attempt 2). F1=0RB run 45841312585 failed twice with runner shutdown while compiling its 24 child modules; attempt 2 reached child 13, so this is an interrupted long compile, not a mathematical counterexample. Do not repeat it unchanged; use a sharded or lower-concurrency source check if this branch is resumed. Six additional bundle-sharded first-level audits were dispatched for F1=0LD, 0RE, 1RA, 1RB, 1LE and 1LF. The F1=0LF nested parent now has eleven source-accepted F0 child Covers and only F0=1RC remaining; see the detailed frontier below. A source-audit target for the new one-residual parent theorem is queued as run 45845090267.
 
 ## Completed candidate branches
 
@@ -59,9 +60,25 @@ The complete F1=0LB branch is now source-accepted. [Run 45827503893](https://git
 
 ## F1=0LF — accepted F0 children; first-level parent still open
 
-Agent12's exact first-hole dichotomy is locally kernel-checked and is being composed with source-accepted F0 child Covers. Confirmed original-source child acceptances include F0=0RB (bound 174, [run 45829435208](https://github.com/FlareZ123/bb6/actions/runs/45829435208), artifact 15121597506), F0=0LE (bound 2,455, [run 45827171994](https://github.com/FlareZ123/bb6/actions/runs/45827171994), artifact 15121120817), F0=1RA (bound 2,931, [run 45829497777](https://github.com/FlareZ123/bb6/actions/runs/45829497777), artifact 15121818579), and F0=1LA (bound 1,045, [run 45834325697](https://github.com/FlareZ123/bb6/actions/runs/45834325697), artifact 15125305823). Agent7 has also reported additional accepted F0 children; Agent12 is consolidating the exact remaining list and artifact pins.
+Agent12's exact first-hole dichotomy is locally kernel-checked. Eleven of its twelve nontrivial F0 children now have complete original-source Covers:
 
-The old 2,931 parent candidate is insufficient for the F0=1RC residual: a 20-million-step scan found first undefined B1 queries at 108,665, 108,421, 103,183 and 102,939. These are finite query observations, not yet a source-accepted weighted bound; Agent12 is constructing exact packed certificates. No complete F1=0LF Cover is claimed until the residual complement is empty and the full parent theorem passes original-source CI.
+| F0 | Bound | CI run | Artifact |
+|---|---:|---:|---:|
+| 0LE | 2,455 | [45827171994](https://github.com/FlareZ123/bb6/actions/runs/45827171994) | 15121120817 |
+| 0RB | 174 | [45829435208](https://github.com/FlareZ123/bb6/actions/runs/45829435208) | 15121597506 |
+| 0RE | 597 | [45827051596](https://github.com/FlareZ123/bb6/actions/runs/45827051596) | 15120449049 |
+| 1LC | 332 | [45828605659](https://github.com/FlareZ123/bb6/actions/runs/45828605659) | 15121981232 |
+| 1RA | 2,931 | [45829497777](https://github.com/FlareZ123/bb6/actions/runs/45829497777) | 15121818579 |
+| 1RE | 271 | [45828857309](https://github.com/FlareZ123/bb6/actions/runs/45828857309) | 15121301920 |
+| 0RA | 430 | [45832947347](https://github.com/FlareZ123/bb6/actions/runs/45832947347) | 15124625402 |
+| 1LA | 1,045 | [45834325697](https://github.com/FlareZ123/bb6/actions/runs/45834325697) | 15125305823 |
+| 1LB | 688 | [45833222135](https://github.com/FlareZ123/bb6/actions/runs/45833222135) | 15123202197 |
+| 1LE | 356 | [45832599988](https://github.com/FlareZ123/bb6/actions/runs/45832599988) | 15122709528 |
+| 1RB | 1,088 | [45832956396](https://github.com/FlareZ123/bb6/actions/runs/45832956396) | 15123905858 |
+
+The exact parent frontier source is in [`Raw124ZeroLFParentFrontier.lean`](Raw124ZeroLFParentFrontier.lean). It composes these eleven Covers with the twelve trivial nonhalting children and the root halt case, proving a local parent cut at bound 2,931 with the **single** residual F0=1RC (`⟨true,true,2⟩`). The original-source aggregate audit is queued in [run 45845090267](https://github.com/FlareZ123/bb6/actions/runs/45845090267); until it passes, treat this parent cut as locally checked rather than source-accepted.
+
+The old 2,931 parent candidate is insufficient for the F0=1RC residual: a 20-million-step scan found first undefined B1 queries at 108,665, 108,421, 103,183 and 102,939. These are finite query observations, not yet a source-accepted weighted bound; Agent12 is constructing exact packed certificates. No complete F1=0LF Cover is claimed until F0=1RC is closed and the full parent theorem passes original-source CI.
 
 ### Historical cap-3000 discovery partition
 
