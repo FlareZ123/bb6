@@ -5,7 +5,8 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent10Raw108LBExact
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
-open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ExactAuditWeight
+open BB6.Agent31ThreeHole (Audit allMoves allMoves_of)
+open BB6.Agent10ExactAuditWeight
 open BB6.Agent10Raw108B0LB
 
 theorem weight00 : fastWeightCheck 4136175 (child ⟨false,false,0⟩) kid00 = true := by rfl
@@ -63,12 +64,17 @@ theorem kids_weight (mv : Move) : fastWeightCheck 4136175 (child mv) (kids mv) =
   · exact weight17
   · exact weight23
 
-theorem tree_weight : weightCheck 4136175 parent tree = true := by
-  rw [← fastWeightCheck_eq]
-  change (fastWeight 4136175 parent 34 (4,false) &&
-    allMoves (fun mv => fastWeightCheck 4136175 (child mv) (kids mv))) = true
-  simp only [Bool.and_eq_true]
-  exact ⟨rfl, allMoves_of _ kids_weight⟩
+theorem split_weight (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot)
+    (k : Move → Audit) (h : fastWeight B p n s = true)
+    (hk : ∀ mv, fastWeightCheck B (refine p s (some mv)) (k mv) = true) :
+    weightCheck B p (.split n s k) = true := by
+  exact (fastWeightCheck_eq B p (.split n s k)).symm.trans
+    (show fastWeightCheck B p (.split n s k) = true from by
+      simp only [fastWeightCheck, Bool.and_eq_true]
+      exact ⟨h, allMoves_of _ hk⟩)
+
+theorem tree_weight : weightCheck 4136175 parent tree = true :=
+  split_weight 4136175 parent 34 (4,false) kids (by rfl) kids_weight
 
 theorem exact_upper : ∀ m, compatible parent m → WeightedBound 4136175 m :=
   (exact_weight_iff parent tree parent_root parent_nohalt

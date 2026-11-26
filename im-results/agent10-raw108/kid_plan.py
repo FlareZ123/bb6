@@ -10,6 +10,9 @@ PLAN={
  "lb0-b":[6], "lb0-c":[11], "lb0-d":[12,14,16,17,20],
  "lb0-e":[18], "lb0-f":[23],
 }
+# Optional recovery cut: A1=0LB is the only branch containing LA114.
+RECOVERY={"la0-a1":[1],"la0-a-rest":[0,2,3,4,5]}
+assert sorted(i for ids in RECOVERY.values() for i in ids)==PLAN["la0-a"]
 for c in ("la0","lb0"):
  assert sorted(i for g,ids in PLAN.items() if g.startswith(c+"-") for i in ids)==list(range(24))
 def prefix(g): return "Raw108B0L"+g[1].upper()
@@ -56,8 +59,9 @@ def prepare(g,out):
  out.mkdir(parents=True,exist_ok=False)
  # The original generator and common generators have already run.
  providers=isolate(pre)
- mods=[f"{pre}Kid{i:02}" for i in PLAN[g]]
- if g in {"la0-a","lb0-b","lb0-c"}:
+ ids=RECOVERY[g] if g in RECOVERY else PLAN[g]
+ mods=[f"{pre}Kid{i:02}" for i in ids]
+ if g.startswith("la0-a") or g in {"lb0-b","lb0-c"}:
   from fast_kid import modularize
   sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
   from chunk_checks import partition
@@ -69,19 +73,23 @@ def prepare(g,out):
    print(m,n,"subproofs in",units,"independent modules",flush=True)
  else:
   run("im-results/agent10-tnf-multipump/chunk_checks.py",ROOT,pre,"--limit",180)
- for i,m in zip(PLAN[g],mods):
+ for i,m in zip(ids,mods):
   with (ROOT/(m+".lean")).open("a") as f:
    f.write(f"\n#print axioms BB6.Agent10{pre}.check{i:02}\n")
  (out/"roots.txt").write_text("".join(str((ROOT/(m+".lean")).relative_to(REPO))+"\n" for m in mods))
- (out/"theorems.txt").write_text("".join(f"BB6.Agent10{pre}.check{i:02}\n" for i in PLAN[g]))
+ (out/"theorems.txt").write_text("".join(f"BB6.Agent10{pre}.check{i:02}\n" for i in ids))
  data=pre+"Data.lean"
  (out/data).write_bytes((ROOT/data).read_bytes())
 def composition_config(pins):
  c=json.loads((ROOT/"shard_groups.json").read_text())
+ plan=dict(PLAN)
+ if "la0-a" not in pins:
+  del plan["la0-a"]
+  plan.update(RECOVERY)
  for child in ("la0","lb0"):
   if child not in pins:
    del c["groups"][child]
-   for g,ids in PLAN.items():
+   for g,ids in plan.items():
     if g.startswith(child+"-"): c["groups"][g]=[f"{prefix(g)}Kid{i:02}" for i in ids]
  assert set(pins)==set(c["groups"]),(set(pins),set(c["groups"]))
  return c
