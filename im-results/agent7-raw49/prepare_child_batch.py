@@ -114,6 +114,7 @@ def main():
     if output:
         with open(output, "a") as f:
             f.write(f"covered_count={len(covered)}\n")
+            f.write(f"covered_indices={'-'.join(map(str, covered)) or 'none'}\n")
             f.write(f"child_open_count={len(entries)}\n")
             f.write(f"far5_count={len(bank)}\n")
 
