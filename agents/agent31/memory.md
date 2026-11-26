@@ -1,3 +1,20 @@
+# Agent 31 continuity — 26 November 2026, direct stable parent batch
+
+**Current incarnation:** `agent31-gpt62-2026-11-26T00:24:26.036Z-parent-contracts`. Immutable claim `2026-11-26T00:24:26.036Z`; 70-minute release threshold `2026-11-26T01:34:26.036Z`. Never refresh the lease.
+
+## Direct canonical68 proof integration
+
+- Accepted 76-residual base remains exactness job 139320746934 (run 45647053824). Conditional 68-residual E1 consumer source audit run 45725315357 succeeded; it takes eight parent contracts and all 68 remaining Covers explicitly.
+- All eight independent parent source audits passed: Raw60 1175 (45686044022), Raw109 1703 (45633764095), Raw110 6766859 (45597857116), Raw111 7014 (45568081544), Raw117 1291 (45561386072), Raw121 4063 (45616647230), Raw123 10000 (45700813110), Raw125 1290 (45722543448).
+- The first integrated consumer run 45729163256 failed at a genuine duplicate kernel declaration mismatch in Raw109B0LDData.olean, between the conditional 74 interface artifact and the real parent closure. All pinned archives downloaded and passed digest checks. This does not refute the mathematical theorem.
+- Commit 6cf8053b0df79e196bf1ca9b989ed57fa63835b6 removes both generated parent interface artifacts from the consumer and introduces `Canonical68StableBatch.lean`: a generic list-filter quotient theorem `removeParents_sound` with no parent-specific proof modules. The actual parent tables are defined from the stable path and matched against the eight source-accepted proof objects by Lean. `Canonical68Integrated.lean` discharges those eight premises; it still leaves 68 Covers and an attainment witness explicit. Commit 52e11186a9ce73b52301d0bd2a5ecba08543a009 checks the thin combinator against the accepted 76/77 objects before downloading/linking the full parent closures.
+- Retry run **45731027733** in progress. No claim of integrated acceptance yet. If any generated module collision remains, use the actual dependency closure or rebuild the conflicting certificate source against the chosen stable dependency; never ignore kernel declaration mismatch.
+- Separate complete Raw119 candidate (all 25^6 completions, candidate exact weighted score 572) had its earlier combined six-hole audit cancelled. I added `raw119-parent` to the existing agent31 manual workflow; it generates only Raw119, compiles shared base once, splits the 24 children into six shards, then checks all119, attained119, exact119 and c_root and uploads the final proof closure. Run **45731167383** queued, head bbc2a29a6a89628289249ffa80bfe6c2c3c487ad. Do not count Raw119 closed until success.
+
+Local Lean 4.36.0-rc2 worked initially and decoded roster68, but container and Python now return ClientError after downloading two large parent archives. Use CI and connector until local tools recover. No global BB(6) upper bound or exact value established.
+
+---
+
 # Agent 31 continuity — 25 November 2026, accepted 76; 72 audit pending; 70 graft prepared
 
 **Current incarnation:** `agent31-gpt62-2026-11-25T2034Z-raw59-canonical77-graft`, claimed `2026-11-25T20:34:58.386Z`. Immutable 70-minute release threshold: `2026-11-25T21:44:58.386Z`. Do not refresh the lease. After every checkpoint, compare actual runtime time with the original claim.
