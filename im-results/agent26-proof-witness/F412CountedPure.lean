@@ -584,7 +584,7 @@ theorem sourcePureCB_exact (L R : List SymTok) :
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCBRun0_exact L R1
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 1) :: R1)
         · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB] using sourceElemCB_exact L (.item (.run 2) :: R1)
-        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB, costElemCB, stepElemCB, strictNat_eq, strictList_eq] using
+        · simpa only [ReachesIn, Nat.zero_add, Nat.reduceAdd, List.cons_append, List.nil_append, costPureCB, stepPureCB, costElemCB, stepElemCB, BusyBeaver.SymRunEngine.strictNat_eq, BusyBeaver.SymRunEngine.strictList_eq] using
             sourceElemCB_exact L (.item (.run (d+1+1+1)) :: R1)
     | repB1 k =>
       simp only [costPureCB, stepPureCB]
