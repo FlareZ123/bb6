@@ -14,7 +14,8 @@ with 25^6 = 244,140,625 literal completions. The existing proof closes 18 of 25 
 
 - Source-accepted upgraded children: 0LE and 1LF from run 45675872170; 1LE and ClosedA–F from run 45727352966; 0LB, 0LF and 1LB from run 45742419127.
 - The only remaining child in the focused upgrade set was 0LA. Run 45742419127 reached Raw59Upgrade0LAKid11.lean:4058 and failed with Lean's maximum-recursion-depth diagnostic, not a theorem counterexample.
-- The generated decidable proof-fragment size is now 32 rather than 240. Focused source audit 45753302154 was dispatched with target Upgrade0LA; the existing workflow reuses the already accepted sibling artifacts and then composes the full Raw59 parent Cover. This run is pending at the time of this update. Do not claim the parent Cover until its parent-composition job succeeds.
+- Focused run 45753302154 retried 0LA with generated proof fragments reduced from 240 to 32. It still failed at the same Kid11 line 4058 after the child modules compiled; the parent-composition job did not run. This shows that fragment size alone does not address the expensive query proof.
+- The generator's split-composition lemma still proves each zipQueryOK query by direct decide. I added Raw59QuickWeight.lean, an exact checker extensionally equal to zipQueryOK that short-circuits weightOK when n+6 <= B, changed generated query proofs to use it, and restored CHUNK=240 to avoid unnecessary fragment proliferation. This is a targeted proof-engineering hypothesis, not yet CI-accepted. The next focused run must compile the new checker and then re-audit the 0LA child before the parent Cover can be claimed.
 
 ### Canonical integration
 
