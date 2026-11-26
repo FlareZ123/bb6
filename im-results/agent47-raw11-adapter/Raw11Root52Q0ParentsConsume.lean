@@ -79,11 +79,11 @@ theorem remaining_codes_after_extras :
   rfl
 
 theorem remaining_census :
-    (BB6.Agent47Raw11Route.fullRoster.length, remaining.length) = (299, 256) := by
+    (BB6.Agent47Raw11Route.fullRoster.length, remaining.length) = (299, 254) := by
   decide +kernel
 
 /-- Consume q0 parents 33, 49 and 51 after the accepted root39/root52 and
-    33-extra Covers. Their bounds (162, 234, 208) all lift under B >= 4663. -/
+    35-extra Covers. Their bounds (162, 234, 208) all lift under B >= 4663. -/
 theorem cover_from_remaining (B : Nat) (hB : 4663 ≤ B)
     (h : ∀ p ∈ remaining, ∀ m, compatible p m → WeightedBound B m) :
     Cover (WeightedBound B) BB6.Agent47Raw11Route.parent := by
