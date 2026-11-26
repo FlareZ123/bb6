@@ -20,6 +20,10 @@ Lemma solid28_push n r :
   solid28_triples n (Cons S1 r) = Cons S1 (solid28_triples n r).
 Proof. induction n; cbn [solid28_triples]; [reflexivity|now rewrite IHn]. Qed.
 
+Lemma solid28_triples_add3 n r :
+  solid28_triples n (Cons S1 (Cons S1 (Cons S1 r))) = solid28_triples (S n) r.
+Proof. induction n; cbn [solid28_triples]; [reflexivity|now rewrite IHn]. Qed.
+
 Definition solid28_family n : Q * tape :=
   (D,(solid28_zero,S1,Cons S1 (Cons S1 (solid28_triples n solid28_zero)))).
 
@@ -97,6 +101,7 @@ Proof.
   repeat rewrite solid28_push.
   eapply evstep_trans; [apply solid28_turn|].
   unfold solid28_family.
+  rewrite solid28_triples_add3.
   rewrite <- !solid28_push.
   apply (solid28_left (S n) solid28_zero (Cons S1 (Cons S1 solid28_zero))).
 Qed.
