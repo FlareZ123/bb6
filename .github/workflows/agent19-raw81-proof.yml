@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc]
         default: raw81
 permissions:
   contents: read
@@ -101,3 +101,54 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python tools/lean_compile_closure.py --workdir /tmp/a19-raw38 --jobs 4 im-results/agent19-raw38-cut/Raw38Roster.lean | tee /tmp/a19-raw38.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
+
+  raw40-a1rc:
+    if: inputs.target == 'raw40-a1rc'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Retrieve accepted Canonical77 dependency bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a19-raw40-deps
+          gh api repos/${{ github.repository }}/actions/artifacts/14997966221 > /tmp/a19-raw40-pin.json
+          python -c 'import json; a=json.load(open("/tmp/a19-raw40-pin.json")); assert not a["expired"] and a["workflow_run"]["id"] == 45554648116'
+          gh api repos/${{ github.repository }}/actions/artifacts/14997966221/zip > /tmp/a19-raw40-deps.zip
+          unzip -q /tmp/a19-raw40-deps.zip -d /tmp/a19-raw40-deps
+          sha256sum /tmp/a19-raw40-deps.zip
+      - name: Compile complete A1RC weighted-cover composition
+        env:
+          LEAN_DEPS: /tmp/a19-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A1RC.sh | tee /tmp/a19-raw40-a1rc.log
+          python - <<'PY'
+          import re
+          s=open('/tmp/a19-raw40-a1rc.log').read()
+          assert not re.search(r'\b(sorryAx|native_decide)\b',s)
+          for n in ['children','all_quotient','exact_weighted']:
+              m=re.search(r"'BB6\.Agent19Raw40\.A1RC\."+n+r"' depends on axioms: \[([^\]]*)\]",s)
+              assert m,n
+              assert set(m[1].split(', ')) <= {'propext','Classical.choice','Quot.sound'},m[0]
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw40-a1rc-source-audit
+          path: |
+            /tmp/a19-raw40-a1rc.log
+            /tmp/a19-raw40-pin.json
+            im-results/agent19-raw40-cut/Raw40A1RC*.olean
+            im-results/agent19-raw40-cut/Raw40Round*Exact.olean
+          if-no-files-found: warn
