@@ -1,0 +1,1 @@
+Exact extra28 parent refinement now locally accepted: Raw11Extra28Refine.lean in im-results/agent44-raw11-extra28. Eight translated-cycle siblings and D1=0LC closed, 11 residuals. exactCodes and consume prove the precise conditional replacement at B>=42. Source archive Git blob matches local hash. Don't remove extra28 without consuming all 11.

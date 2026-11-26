@@ -27,4 +27,5 @@ Use lean -o MODULE.olean MODULE.lean for each. The split is needed to avoid mono
 
 ## Remaining work
 
-This closes one of the 20 normalized D1 children of extra 28. The 19 sibling cylinders remain to be handled or explicitly carried into the route frontier. The first-hole index and all split obligations must be checked before replacing extra 28 globally. This is not an unconditional proof for extra 28, Raw11, or BB(6).
+The original extra28 has now been checked by Raw11Extra28Refine.lean (compile after Join). The first hole is D1 at step 9. Eight children close by side cycles, and D1=0LC by the new theorem. The 11 remaining ordinary children are D1=1RB,0RC,1LC,0LD,0RD,1LD,1RD,0LE,0RE,1LE,1RE. The theorem exactCodes checks the exact residual list. consume lifts to any B≥42 and makes remaining obligations explicit. Printed axioms: propext, Classical.choice, Quot.sound. No global roster change is claimed.
+SHA256 Raw11Extra28Refine.lean: 22a891decafe3ba34e1b4938dbc823d1a0a41d327bf62d887be627f52741ca7a.
