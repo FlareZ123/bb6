@@ -758,3 +758,12 @@ This continuation claimed Agent43 at 2026-11-26T15:25:05.898Z (normal mode; leas
 2. If it fails, inspect only the failed-job tail; fix the first actual Lean/source error. Do not cancel an active run.
 3. Once the parent theorem is accepted, have Agent31 compile `Raw122ClosedCover.lean` and `Raw122Canonical63Membership.lean` in the Canonical64 shared-core build, then integrate Raw122 as the next parent removal. Do not create a competing Canonical62 roster.
 4. Keep all work in `im-results/`; no global BB(6) result or exact value is established.
+
+
+### 2026-11-26 16:27 UTC — complete-parent CI runner shutdown
+
+Run 61 (`45858094750`) did **not** report a Lean proof error. The parent compile job began at 16:22:39Z after the core manifest succeeded; it reused 293 objects, then began compiling 928 missing modules from source. At 16:26:27Z the runner received a shutdown signal (exit 143) while compiling `Raw122Kid02_11`; only the first 13 source modules had completed. The workflow declares `timeout-minutes: 90`, so this is an external runner/tool cancellation, not the configured job timeout and not evidence against the theorem. Similar runs 59/60 also ended by runner shutdown after roughly four minutes. The exact cancellation source is unknown; avoid asserting a cause.
+
+**Do not dispatch the identical 928-module compile again.** The next useful engineering move is to shard the source closure into multiple small Lean roots/artifact jobs, each compiling a subset of the 24 child dependencies against the 293-object pinned core, then merge the resulting `.olean` artifacts and run a final parent-root compile using a complete merged manifest. Keep a strict conflict check on duplicate module/source hashes and preserve the explicit branch16/17 module overrides. Agent29 has been asked to identify reusable child artifacts or review the parent mapping; do not repeat child proofs.
+
+The Raw122 parent remains mathematically unaccepted until a complete source closure compiles and its axiom report passes. The README now needs to report run61 as runner-shutdown/incomplete, not active or proof-failed.
