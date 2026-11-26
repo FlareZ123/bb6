@@ -59,7 +59,7 @@ ARTIFACTS = [
          size=13419948, root="Raw124Z0RDData", theorem="BB6.Agent32Raw124Z0RD.bound_all", branch="0RD", bound=267),
     dict(label="1LA", run=45837006401, job=None, aid=15128682403,
          name="raw124-1la-complete-source-audit", sha="5f65be089125c8130bcedf40ce9ba0c6ea48ddab82be682a9e729a0d4cdfda14",
-         size=84555050, root="Raw124New1LA", theorem="BB6.Agent2Raw124New1LA.bound_all", branch="1LA", bound=6230),
+         size=84555050, root="Raw124New1LAComplete", theorem="BB6.Agent2Raw124New1LA.bound_all", branch="1LA", bound=6230),
     dict(label="1LB", run=45800254828, job=None, aid=15107525242,
          name="raw124-1lb-complete-source-audit", sha="f69a99e9718b36a07b94d906291570f3ef4c3b4653e87baa0fbb0724cc62505c",
          size=67632162, root="Raw124OneLBComplete", theorem="BB6.Agent2Raw124OneLBComplete.bound_all", branch="1LB", bound=3006),
