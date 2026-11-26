@@ -5,6 +5,7 @@ from collections import Counter
 from datetime import datetime, timezone
 import hashlib
 import json
+import os
 from pathlib import Path
 import subprocess
 
@@ -132,6 +133,14 @@ def main():
     source_revision = subprocess.check_output(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
     ).strip()
+    lean_export_source = ROOT / "im-results/agent32-raw59/Canonical58RosterExport.lean"
+    crosswalk_source = CROSSWALK.parent / "crosswalk.py"
+    source_hashes = {
+        "lean_export_source_sha256": sha(lean_export_source),
+        "comparison_script_sha256": sha(Path(__file__)),
+        "crosswalk_script_sha256": sha(crosswalk_source),
+        "canonical124_source_sha256": sha(ROSTER),
+    }
     base = {
         "canonical58_run_id": graft["canonical58_base_run_id"],
         "canonical58_artifact_id": graft["canonical58_artifact_id"],
@@ -152,12 +161,16 @@ def main():
         **base,
         "crosswalk_source_repo_head": crosswalk["source_repo_head"],
         "crosswalk_inputs": crosswalk["inputs"],
+        **source_hashes,
+        "lean_toolchain": os.environ.get("LEAN_VERSION", "not supplied"),
         "entries": enriched58,
     }
     manifest57 = {
         "status": "exact Lean-exported Canonical57 partial-table manifest",
         **base,
         **successor,
+        **source_hashes,
+        "lean_toolchain": os.environ.get("LEAN_VERSION", "not supplied"),
         "entries": enriched57,
     }
     audit = {
@@ -176,6 +189,8 @@ def main():
         "raw112_table": RAW112_TABLE,
         "crosswalk_source_repo_head": crosswalk["source_repo_head"],
         "crosswalk_inputs": crosswalk["inputs"],
+        **source_hashes,
+        "lean_toolchain": os.environ.get("LEAN_VERSION", "not supplied"),
         "lean58_export_sha256": sha(lean58_path),
         "lean57_export_sha256": sha(lean57_path),
         "canonical58_manifest_sha256": None,
