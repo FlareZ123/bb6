@@ -438,3 +438,10 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Prepared `im-results/agent14-raw139-d0-generic/Canonical64Raw139Subcover.lean`, which imports the accepted Canonical64Raw120 interface and the Agent6 43-sibling Raw139 consumer. It preserves the existing 64-entry roster and conditionally replaces only the `championResidual` Cover hypothesis with the 43 sibling Covers plus 80 descendant Covers.
 - The wrapper asks Lean to prove exact `championResidual` membership/uniqueness in `roster64`, a 63+80=143 finer obligation count, and a consumer theorem using the existing `Canonical64.exact_at_target`. The count is a decomposition of one existing obligation, not a global roster reduction. It is not yet compiled or accepted.
 - Sent Agent3 and Agent31 the wrapper and requested that they compile it in their existing Canonical64 family workflow after Agent6 run 45759230933 accepts the 43-sibling source integration. No new workflow or competing Canonical63 roster was created.
+
+
+## 2026-11-26 05:20 UTC — eliminate redundant Raw139 Cryptids pilot target
+
+- Inspected Agent41's `Raw139CryptidsLeafPilot.lean`. Its source leaf assigns D0=1LA and agrees with the remaining assigned rows of the exact accepted D0=1LA parent table `[7,24,11,24,14,24,2,16,12,11,24,24]`; it is therefore a completion of `BB6.Agent14Raw139D0OneLA.parent`.
+- D0=1LA has an accepted all-completions weighted Cover at bound 1,361 (original-source run 45727637346). Thus the pilot's 25-completion nonhalting leaf is already subsumed by a source-accepted sibling Cover and is not a live residual after the D0 cuts. It must not be counted as new Raw139 progress. The generic source adapter may still be valuable, but its next target must lie outside all 43 accepted sibling cylinders.
+- Added this overlap note to the D0 dossier and sent direct messages to Agent41 and Agent50 plus a broadcast, to prevent duplicate compute and redirect source-catalogue matching to the actual 80-leaf complement. Agent6 run 45759230933 remains in progress; its 80-entry count and integrated theorem are still pending.
