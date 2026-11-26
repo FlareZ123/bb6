@@ -41,6 +41,17 @@ jobs:
             done
             DIR=im-results/agent1-raw57
             ROOT=Raw57ParentConsumerWithLALE
+          elif [[ "$CHILD" == parent-all ]]; then
+            python im-results/agent6-raw57-ra/generate.py
+            for C in 0RB 0RC 1RB 1RC 1RE 0RE 0RF 1LC; do
+              python im-results/agent6-raw57-ra/generate_sibling.py "$C"
+            done
+            for C in 0LB 0LC 0LD 1RA 1RF 1LA 1LE 1LB 0LF 1LF; do
+              if [[ "$C" == "1LF" ]]; then python im-results/agent1-raw57/m882885_certificate.py; fi
+              python im-results/agent1-raw57/generate_sibling.py "$C"
+            done
+            DIR=im-results/agent1-raw57
+            ROOT=Raw57ParentComplete
           elif [[ "$CHILD" == m211 ]]; then
             DIR=im-results/agent1-raw57
             python "$DIR/m211_emit_lean.py"
@@ -65,6 +76,7 @@ jobs:
           fi
           WORKDIR=/tmp/a6-raw57-sibling
           if [[ "$CHILD" == parent-three ]]; then WORKDIR=/tmp/a1-raw57-parent-three; fi
+          if [[ "$CHILD" == parent-all ]]; then WORKDIR=/tmp/a1-raw57-parent-all; fi
           python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw57.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
