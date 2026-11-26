@@ -113,7 +113,7 @@ def gate(log, required):
     return {name: sorted(a) for name, a in profiles.items()}
 
 def compile_module(source, output, env, logpath):
-    result = subprocess.run(["lean", "-o", str(output), str(source)], env=env, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+    result = subprocess.run(["lean", "-o", str(output), str(source)], env=env, cwd=source.parent, text=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
     logpath.write_text(result.stdout)
     print(result.stdout, flush=True)
     result.check_returncode()
@@ -181,13 +181,13 @@ def link_reachable(groups, work, linked, families=None):
             print(comparison.stdout, end="", flush=True)
             if comparison.returncode:
                 conflicts.append(name)
-    (work / "reachable-link-audit.json").write_text(json.dumps(manifest, indent=2) + "\\n")
+    (work / "reachable-link-audit.json").write_text(json.dumps(manifest, indent=2) + "\n")
     assert not conflicts, f"incompatible reached kernel declarations: {sorted(set(conflicts))}"
     linked.mkdir()
     for name, files in objects.items():
         # Keep the original downloaded audit objects immutable during elaboration.
         shutil.copy2(files[0], linked / name)
-    (linked / "kernel-link-manifest.json").write_text(json.dumps(manifest, indent=2) + "\\n")
+    (linked / "kernel-link-manifest.json").write_text(json.dumps(manifest, indent=2) + "\n")
     print(f"Linked {len(objects)} reached modules with exact duplicate checks", flush=True)
 
 
