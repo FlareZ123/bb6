@@ -12,6 +12,7 @@ on:
           - canonical68-integrated
           - canonical67-integrated
           - canonical63-integrated
+          - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
           - raw119-parent
@@ -914,6 +915,45 @@ jobs:
             /tmp/a8-raw115
             /tmp/a8-raw115-assemble.log
           if-no-files-found: error
+          retention-days: 14
+
+  preflight-canonical63:
+    name: Type-check Canonical63 on Canonical64 with an explicit Cover stub
+    if: ${{ inputs.target == 'canonical63-preflight' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+
+      - name: Type-check Canonical63 with an explicit Raw112 parent-Cover axiom
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-shared-core/preflight_canonical63.py \
+            --work /tmp/a31-canonical63-preflight 2>&1 | tee /tmp/a31-canonical63-preflight.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical63-typecheck-preflight
+          path: |
+            /tmp/a31-canonical63-preflight/
+            /tmp/a31-canonical63-preflight.log
+          if-no-files-found: warn
+          compression-level: 1
           retention-days: 14
 
   integrate-canonical63:
