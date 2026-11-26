@@ -814,6 +814,325 @@ theorem w7_q0_target_unreachable_u9939mod10240 (v : Nat) :
 #print axioms w7_z2_q1_parent_unreachable_u9939mod10240
 #print axioms w7_q0_target_unreachable_u9939mod10240
 
+
+/-- Generic lift from an odd-W q=1 parent exclusion to its q=0 target.
+    This factors the exact even-depth parent fan for later cylinders. -/
+theorem w7_q0_target_unreachable_of_q1 (u : Nat) (huodd : u%2=1)
+    (hq1 : ¬ BB6.Agent3.CReach
+      (2*(2228+3591*u)-3) (24450+39417*u)) :
+    ¬ BB6.Agent3.CReach
+      (17928+28896*u) (17719+28560*u) := by
+  let x : Nat := 17928+28896*u
+  let y : Nat := 17719+28560*u
+  let W : Nat := 2228+3591*u
+  let X2 : Nat := 53366+86016*u
+  change ¬ BB6.Agent3.CReach x y
+  intro hP
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      x y (by dsimp [x]; omega) hP
+  have hpre : BB6.Agent46.sectionPreimageAll a k x y :=
+    (BB6.Agent46.section_preimage_all_iff a k x y).mp hstep
+  obtain ⟨n,hn,hscale,hcost⟩ :=
+    BB6.Agent15U5W7Source.w7_z2_parent_fan u a k hpre
+  have hWodd : W%2=1 := by dsimp [W]; omega
+  have hnle : n≤2 := by
+    by_cases hsmall : n≤2
+    · exact hsmall
+    · have hn4 : 4≤n := by omega
+      have hpow : 32∣2^(n+1) := by
+        change 2^5∣2^(n+1)
+        exact Nat.pow_dvd_pow 2 (by omega)
+      have hdiv : 32∣2^(n+1)*(a+3) := by
+        rcases hpow with ⟨q,hq⟩
+        have hq' : 2^(n+1)=32*q := by simpa using hq
+        refine ⟨q*(a+3),?_⟩
+        rw [hq']
+        simp [Nat.mul_assoc]
+      have hmod : (2^(n+1)*(a+3))%32=0 :=
+        Nat.mod_eq_zero_of_dvd hdiv
+      rw [hscale] at hmod
+      have hmodW : (16*W)%32=16 := by dsimp [W]; omega
+      omega
+  have hnCases : n=0 ∨ n=2 := by omega
+  rcases hnCases with hn0 | hn2
+  · subst n
+    have ha : a=8*W-3 := by
+      have htmp : 2*(a+3)=16*W := by simpa using hscale
+      omega
+    have hk : k=17769+28644*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
+    have hbad := BB6.Agent15U5W7Source.w7_z2_q0_parent_unreachable u
+    exact hbad (by simpa [W,ha,hk] using hprev)
+  · subst n
+    have htmp : 8*(a+3)=16*W := by simpa using hscale
+    have ha : a=2*W-3 := by omega
+    have hk : k=24450+39417*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
+    have hbad : ¬ BB6.Agent3.CReach (2*W-3) (24450+39417*u) := by
+      simpa [W] using hq1
+    exact hbad (by simpa [ha,hk] using hprev)
+
+/-- A sixth new q=1 exclusion, on u=16339+20480*v. The chain is
+    odd/odd low-value, even/odd sum-three, even-right six,
+    odd/odd low-value, even-right six, even/odd sum-three. -/
+theorem w7_z2_q1_parent_unreachable_u16339mod20480 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (117351151+147087360*v) (644058813+807260160*v) := by
+  let Ax : Nat := 117351151+147087360*v
+  let Ay : Nat := 644058813+807260160*v
+  let Bx : Nat := 380704980+477173760*v
+  let By : Nat := 512381895+642216960*v
+  let Cx : Nat := 446543435+559695360*v
+  let Cy : Nat := 479462664+600956160*v
+  let D1x : Nat := 926006097+1160651520*v
+  let D1y : Nat := 239731331+300478080*v
+  let D2x : Nat := 582868712+730564800*v
+  let D2y : Nat := 411300020+515521440*v
+  let D3x : Nat := 994168730+1246086240*v
+  let D3y : Nat := 205650009+257760720*v
+  let Fx : Nat := 599909367+751923480*v
+  let Fy : Nat := 402779687+504842100*v
+  have hAx : 5<Ax := by dsimp [Ax]; omega
+  have hAxOdd : Ax%2=1 := by dsimp [Ax]; omega
+  have hAyOdd : Ay%2=1 := by dsimp [Ay]; omega
+  have hAy5 : 5≤Ay := by dsimp [Ay]; omega
+  have hAsum4 : (Ax+Ay)%4=0 := by dsimp [Ax,Ay]; omega
+  have hAsum16 : (Ax+Ay)%16≠0 := by dsimp [Ax,Ay]; omega
+  have hAsize : 24≤Ax+Ay := by dsimp [Ax,Ay]; omega
+  intro hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 Ax Ay hAx hA
+  have hAparent :=
+    (BB6.Agent3.oddodd_lowval_parent_iff a k Ax Ay
+      hAxOdd hAyOdd hAy5 hAsum4 hAsum16 hAsize).mp hstep
+  rcases hAparent with ⟨hsumA,hcostA⟩
+  have haB : a=Bx := by dsimp [Ax,Ay,Bx] at hsumA ⊢; omega
+  have hkB : k=By := by dsimp [Ax,Ay,By] at hcostA ⊢; omega
+  have hB : BB6.Agent3.CReach Bx By := by
+    rw [haB,hkB] at hprev
+    exact hprev
+  have hByOdd : By%2=1 := by dsimp [By]; omega
+  have hBy5 : 5≤By := by dsimp [By]; omega
+  have hBsum : (Bx+By)%8=3 := by dsimp [Bx,By]; omega
+  obtain ⟨a2,k2,hprev2,hstep2⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Bx By (by dsimp [Bx]; omega) hB
+  have hBparent :=
+    BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
+      a2 k2 Bx By hBy5 hByOdd hBsum hstep2
+  rcases hBparent with ⟨hsumB,hcostB⟩
+  have haC : a2=Cx := by dsimp [Bx,By,Cx] at hsumB ⊢; omega
+  have hkC : k2=Cy := by dsimp [By,Cy] at hcostB ⊢; omega
+  have hC : BB6.Agent3.CReach Cx Cy := by
+    rw [haC,hkC] at hprev2
+    exact hprev2
+  have hCy6 : 6≤Cy := by dsimp [Cy]; omega
+  have hCyEven : Cy%2=0 := by dsimp [Cy]; omega
+  have hCsum : (Cx+Cy)%8=3 := by dsimp [Cx,Cy]; omega
+  have hD1 : BB6.Agent3.CReach D1x D1y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      Cx Cy hCy6 hCyEven (by omega) (by omega)).mp hC
+    have hx : Cx+Cy-2=D1x := by dsimp [Cx,Cy,D1x]; omega
+    have hy : (Cy-2)/2=D1y := by dsimp [Cy,D1y]; omega
+    simpa only [hx,hy] using hp
+  have hD1x : 5<D1x := by dsimp [D1x]; omega
+  have hD1xOdd : D1x%2=1 := by dsimp [D1x]; omega
+  have hD1yOdd : D1y%2=1 := by dsimp [D1y]; omega
+  have hD1y5 : 5≤D1y := by dsimp [D1y]; omega
+  have hD1sum4 : (D1x+D1y)%4=0 := by dsimp [D1x,D1y]; omega
+  have hD1sum16 : (D1x+D1y)%16≠0 := by dsimp [D1x,D1y]; omega
+  have hD1size : 24≤D1x+D1y := by dsimp [D1x,D1y]; omega
+  obtain ⟨a3,k3,hprev3,hstep3⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      D1x D1y hD1x hD1
+  have hD1parent :=
+    (BB6.Agent3.oddodd_lowval_parent_iff a3 k3 D1x D1y
+      hD1xOdd hD1yOdd hD1y5 hD1sum4 hD1sum16 hD1size).mp hstep3
+  rcases hD1parent with ⟨hsumD1,hcostD1⟩
+  have haD2 : a3=D2x := by dsimp [D1x,D1y,D2x] at hsumD1 ⊢; omega
+  have hkD2 : k3=D2y := by dsimp [D1x,D1y,D2y] at hcostD1 ⊢; omega
+  have hD2 : BB6.Agent3.CReach D2x D2y := by
+    rw [haD2,hkD2] at hprev3
+    exact hprev3
+  have hD2y6 : 6≤D2y := by dsimp [D2y]; omega
+  have hD2yEven : D2y%2=0 := by dsimp [D2y]; omega
+  have hD2sum : (D2x+D2y)%8=4 := by dsimp [D2x,D2y]; omega
+  have hD3 : BB6.Agent3.CReach D3x D3y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D2x D2y hD2y6 hD2yEven (by omega) (by omega)).mp hD2
+    have hx : D2x+D2y-2=D3x := by dsimp [D2x,D2y,D3x]; omega
+    have hy : (D2y-2)/2=D3y := by dsimp [D2y,D3y]; omega
+    simpa only [hx,hy] using hp
+  have hD3y5 : 5≤D3y := by dsimp [D3y]; omega
+  have hD3yOdd : D3y%2=1 := by dsimp [D3y]; omega
+  have hD3sum : (D3x+D3y)%8=3 := by dsimp [D3x,D3y]; omega
+  obtain ⟨a4,k4,hprev4,hstep4⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      D3x D3y (by dsimp [D3x]; omega) hD3
+  have hD3parent :=
+    BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
+      a4 k4 D3x D3y hD3y5 hD3yOdd hD3sum hstep4
+  rcases hD3parent with ⟨hsumD3,hcostD3⟩
+  have haF : a4=Fx := by dsimp [D3x,D3y,Fx] at hsumD3 ⊢; omega
+  have hkF : k4=Fy := by dsimp [D3y,Fy] at hcostD3 ⊢; omega
+  have hF : BB6.Agent3.CReach Fx Fy := by
+    rw [haF,hkF] at hprev4
+    exact hprev4
+  have hFy5 : 5≤Fy := by dsimp [Fy]; omega
+  have hFyOdd : Fy%2=1 := by dsimp [Fy]; omega
+  have hFsum : (Fx+Fy)%4=2 := by dsimp [Fx,Fy]; omega
+  exact BB6.Agent11High.blank_no_odd_sum_two
+    Fx Fy hFy5 hFyOdd hFsum hF
+
+/-- The original q=0 target is excluded on u=16339+20480*v. -/
+theorem w7_q0_target_unreachable_u16339mod20480 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (17928+28896*(16339+20480*v)) (17719+28560*(16339+20480*v)) := by
+  let u : Nat := 16339+20480*v
+  have hq1 : ¬ BB6.Agent3.CReach
+      (2*(2228+3591*u)-3) (24450+39417*u) := by
+    simpa [u] using w7_z2_q1_parent_unreachable_u16339mod20480 v
+  exact w7_q0_target_unreachable_of_q1 u (by dsimp [u]; omega) hq1
+
+/-- A seventh new q=1 exclusion, on u=20019+20480*v. Six exact
+    even-right inverses after the odd/odd and even/odd source inverses
+    reach an odd-right sum-two state. -/
+theorem w7_z2_q1_parent_unreachable_u20019mod20480 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (143780911+147087360*v) (789113373+807260160*v) := by
+  let Ax : Nat := 143780911+147087360*v
+  let Ay : Nat := 789113373+807260160*v
+  let Bx : Nat := 466447140+477173760*v
+  let By : Nat := 627780255+642216960*v
+  let Cx : Nat := 547113695+559695360*v
+  let Cy : Nat := 587446974+600956160*v
+  let D1x : Nat := 1134560667+1160651520*v
+  let D1y : Nat := 293723486+300478080*v
+  let D2x : Nat := 1428284151+1461129600*v
+  let D2y : Nat := 146861742+150239040*v
+  let D3x : Nat := 1575145891+1611368640*v
+  let D3y : Nat := 73430870+75119520*v
+  let D4x : Nat := 1648576759+1686488160*v
+  let D4y : Nat := 36715434+37559760*v
+  let D5x : Nat := 1685292191+1724047920*v
+  let D5y : Nat := 18357716+18779880*v
+  let Fx : Nat := 1703649905+1742827800*v
+  let Fy : Nat := 9178857+9389940*v
+  have hAx : 5<Ax := by dsimp [Ax]; omega
+  have hAxOdd : Ax%2=1 := by dsimp [Ax]; omega
+  have hAyOdd : Ay%2=1 := by dsimp [Ay]; omega
+  have hAy5 : 5≤Ay := by dsimp [Ay]; omega
+  have hAsum4 : (Ax+Ay)%4=0 := by dsimp [Ax,Ay]; omega
+  have hAsum16 : (Ax+Ay)%16≠0 := by dsimp [Ax,Ay]; omega
+  have hAsize : 24≤Ax+Ay := by dsimp [Ax,Ay]; omega
+  intro hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 Ax Ay hAx hA
+  have hAparent :=
+    (BB6.Agent3.oddodd_lowval_parent_iff a k Ax Ay
+      hAxOdd hAyOdd hAy5 hAsum4 hAsum16 hAsize).mp hstep
+  rcases hAparent with ⟨hsumA,hcostA⟩
+  have haB : a=Bx := by dsimp [Ax,Ay,Bx] at hsumA ⊢; omega
+  have hkB : k=By := by dsimp [Ax,Ay,By] at hcostA ⊢; omega
+  have hB : BB6.Agent3.CReach Bx By := by
+    rw [haB,hkB] at hprev
+    exact hprev
+  have hByOdd : By%2=1 := by dsimp [By]; omega
+  have hBy5 : 5≤By := by dsimp [By]; omega
+  have hBsum : (Bx+By)%8=3 := by dsimp [Bx,By]; omega
+  obtain ⟨a2,k2,hprev2,hstep2⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Bx By (by dsimp [Bx]; omega) hB
+  have hBparent :=
+    BB6.Agent46SourceInverse.section_evenodd_sum3_inverse
+      a2 k2 Bx By hBy5 hByOdd hBsum hstep2
+  rcases hBparent with ⟨hsumB,hcostB⟩
+  have haC : a2=Cx := by dsimp [Bx,By,Cx] at hsumB ⊢; omega
+  have hkC : k2=Cy := by dsimp [By,Cy] at hcostB ⊢; omega
+  have hC : BB6.Agent3.CReach Cx Cy := by
+    rw [haC,hkC] at hprev2
+    exact hprev2
+  have hCy6 : 6≤Cy := by dsimp [Cy]; omega
+  have hCyEven : Cy%2=0 := by dsimp [Cy]; omega
+  have hCsum : (Cx+Cy)%8=5 := by dsimp [Cx,Cy]; omega
+  have hD1 : BB6.Agent3.CReach D1x D1y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      Cx Cy hCy6 hCyEven (by omega) (by omega)).mp hC
+    have hx : Cx+Cy-2=D1x := by dsimp [Cx,Cy,D1x]; omega
+    have hy : (Cy-2)/2=D1y := by dsimp [Cy,D1y]; omega
+    simpa only [hx,hy] using hp
+  have hD1y6 : 6≤D1y := by dsimp [D1y]; omega
+  have hD1yEven : D1y%2=0 := by dsimp [D1y]; omega
+  have hD1sum : (D1x+D1y)%8=1 := by dsimp [D1x,D1y]; omega
+  have hD2 : BB6.Agent3.CReach D2x D2y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D1x D1y hD1y6 hD1yEven (by omega) (by omega)).mp hD1
+    have hx : D1x+D1y-2=D2x := by dsimp [D1x,D1y,D2x]; omega
+    have hy : (D1y-2)/2=D2y := by dsimp [D1y,D2y]; omega
+    simpa only [hx,hy] using hp
+  have hD2y6 : 6≤D2y := by dsimp [D2y]; omega
+  have hD2yEven : D2y%2=0 := by dsimp [D2y]; omega
+  have hD2sum : (D2x+D2y)%8=5 := by dsimp [D2x,D2y]; omega
+  have hD3 : BB6.Agent3.CReach D3x D3y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D2x D2y hD2y6 hD2yEven (by omega) (by omega)).mp hD2
+    have hx : D2x+D2y-2=D3x := by dsimp [D2x,D2y,D3x]; omega
+    have hy : (D2y-2)/2=D3y := by dsimp [D2y,D3y]; omega
+    simpa only [hx,hy] using hp
+  have hD3y6 : 6≤D3y := by dsimp [D3y]; omega
+  have hD3yEven : D3y%2=0 := by dsimp [D3y]; omega
+  have hD3sum : (D3x+D3y)%8=1 := by dsimp [D3x,D3y]; omega
+  have hD4 : BB6.Agent3.CReach D4x D4y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D3x D3y hD3y6 hD3yEven (by omega) (by omega)).mp hD3
+    have hx : D3x+D3y-2=D4x := by dsimp [D3x,D3y,D4x]; omega
+    have hy : (D3y-2)/2=D4y := by dsimp [D3y,D4y]; omega
+    simpa only [hx,hy] using hp
+  have hD4y6 : 6≤D4y := by dsimp [D4y]; omega
+  have hD4yEven : D4y%2=0 := by dsimp [D4y]; omega
+  have hD4sum : (D4x+D4y)%8=1 := by dsimp [D4x,D4y]; omega
+  have hD5 : BB6.Agent3.CReach D5x D5y := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D4x D4y hD4y6 hD4yEven (by omega) (by omega)).mp hD4
+    have hx : D4x+D4y-2=D5x := by dsimp [D4x,D4y,D5x]; omega
+    have hy : (D4y-2)/2=D5y := by dsimp [D4y,D5y]; omega
+    simpa only [hx,hy] using hp
+  have hD5y6 : 6≤D5y := by dsimp [D5y]; omega
+  have hD5yEven : D5y%2=0 := by dsimp [D5y]; omega
+  have hD5sum : (D5x+D5y)%8=3 := by dsimp [D5x,D5y]; omega
+  have hF : BB6.Agent3.CReach Fx Fy := by
+    have hp := (BB6.Agent46.six_even_right_blank_reach_iff
+      D5x D5y hD5y6 hD5yEven (by omega) (by omega)).mp hD5
+    have hx : D5x+D5y-2=Fx := by dsimp [D5x,D5y,Fx]; omega
+    have hy : (D5y-2)/2=Fy := by dsimp [D5y,Fy]; omega
+    simpa only [hx,hy] using hp
+  have hFy5 : 5≤Fy := by dsimp [Fy]; omega
+  have hFyOdd : Fy%2=1 := by dsimp [Fy]; omega
+  have hFsum : (Fx+Fy)%4=2 := by dsimp [Fx,Fy]; omega
+  exact BB6.Agent11High.blank_no_odd_sum_two
+    Fx Fy hFy5 hFyOdd hFsum hF
+
+/-- The original q=0 target is excluded on u=20019+20480*v. -/
+theorem w7_q0_target_unreachable_u20019mod20480 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (17928+28896*(20019+20480*v)) (17719+28560*(20019+20480*v)) := by
+  let u : Nat := 20019+20480*v
+  have hq1 : ¬ BB6.Agent3.CReach
+      (2*(2228+3591*u)-3) (24450+39417*u) := by
+    simpa [u] using w7_z2_q1_parent_unreachable_u20019mod20480 v
+  exact w7_q0_target_unreachable_of_q1 u (by dsimp [u]; omega) hq1
+
+#print axioms w7_q0_target_unreachable_of_q1
+#print axioms w7_z2_q1_parent_unreachable_u16339mod20480
+#print axioms w7_q0_target_unreachable_u16339mod20480
+#print axioms w7_z2_q1_parent_unreachable_u20019mod20480
+#print axioms w7_q0_target_unreachable_u20019mod20480
+
 #print axioms w7_z2_q1_parent_unreachable_u339mod2560
 #print axioms w7_q0_target_unreachable_u339mod2560
 
