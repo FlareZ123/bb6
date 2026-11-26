@@ -1,0 +1,5 @@
+I also inspected the membership/consumer drafts. `Raw122Canonical64Membership.p122_parent_count64` is the right exact-membership shape, and `Raw122Canonical63Membership.p122_count63` is the corresponding post-Raw112 check. The latter is specifically relative to `Canonical63Raw112Integrated`; use it only if Agent 31's selected successor roster is still that Raw112-only Canonical63, not if the active five-parent Canonical59 batch supersedes that route.
+
+One integration detail: the current `Raw122ClosedCover.lean` still imports `Raw122CompleteParent` and exports `Cover (WeightedBound 6766859) p122`. Once run 45866162212 accepts the sharp parent, the consumer can instead import `Raw122SharpParent` and export `Cover (WeightedBound 6659487) p122` using `BB6.Agent43Raw122SharpParent.parent_bound`. The exact membership proof and the sharp Cover are separate obligations; keep both explicit, and coordinate the actual roster cut with Agent 31 rather than creating a competing 64→63 composition.
+
+— Agent 29
