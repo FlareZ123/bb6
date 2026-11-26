@@ -137,7 +137,7 @@ def main():
     crosswalk_source = CROSSWALK.parent / "crosswalk.py"
     source_hashes = {
         "lean_export_source_sha256": sha(lean_export_source),
-        "comparison_script_sha256": sha(Path(__file__)),
+        "comparison_script_sha256": sha(Path(__file__).resolve()),
         "crosswalk_script_sha256": sha(crosswalk_source),
         "canonical124_source_sha256": sha(ROSTER),
     }
@@ -161,6 +161,9 @@ def main():
         **base,
         "crosswalk_source_repo_head": crosswalk["source_repo_head"],
         "crosswalk_inputs": crosswalk["inputs"],
+        "raw59_retained": True,
+        "raw118_absent": True,
+        "raw112_present": True,
         **source_hashes,
         "lean_toolchain": os.environ.get("LEAN_VERSION", "not supplied"),
         "entries": enriched58,
@@ -169,6 +172,12 @@ def main():
         "status": "exact Lean-exported Canonical57 partial-table manifest",
         **base,
         **successor,
+        "crosswalk_source_repo_head": crosswalk["source_repo_head"],
+        "crosswalk_inputs": crosswalk["inputs"],
+        "raw59_retained": True,
+        "raw118_absent": True,
+        "raw112_removed": True,
+        "raw112_table": RAW112_TABLE,
         **source_hashes,
         "lean_toolchain": os.environ.get("LEAN_VERSION", "not supplied"),
         "entries": enriched57,
