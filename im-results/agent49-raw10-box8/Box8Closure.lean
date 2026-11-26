@@ -33,32 +33,44 @@ theorem source_exact : raw10Remainder[8]! = box := by
   simpa only [box, encoded_exact] using h
 
 /-- F0=0 is an assigned halt, not a wildcard; F1 is explicitly optional. -/
-def partial (c : Fin 25) (f1 : Option Transition) : PartialMachine := fun s =>
+def boxPartial (c : Fin 25) (f1 : Option Transition) : PartialMachine := fun s =>
   if (slotIndex s).val < 10 then some (decodeCode fixed[(slotIndex s).val]!)
   else if (slotIndex s).val = 10 then some (decodeCode c)
   else f1
 
-private theorem index10 : ∀ s : Slot, (slotIndex s).val = 10 → s = (5,false) := by decide
-private theorem index11 : ∀ s : Slot, 10 < (slotIndex s).val → s = (5,true) := by decide
+private theorem index10 : ∀ s : Slot, (slotIndex s).val = 10 → s = (5,false) := by
+  intro ⟨q,b⟩
+  cases b
+  · exact (by decide : ∀ q : Fin 6, (slotIndex (q,false)).val = 10 → (q,false) = (5,false)) q
+  · exact (by decide : ∀ q : Fin 6, (slotIndex (q,true)).val = 10 → (q,true) = (5,false)) q
+private theorem index11 : ∀ s : Slot, 10 < (slotIndex s).val → s = (5,true) := by
+  intro ⟨q,b⟩
+  cases b
+  · exact (by decide : ∀ q : Fin 6, 10 < (slotIndex (q,false)).val → (q,false) = (5,true)) q
+  · exact (by decide : ∀ q : Fin 6, 10 < (slotIndex (q,true)).val → (q,true) = (5,true)) q
 private theorem fixed_ordinary : ∀ s : Slot, (slotIndex s).val < 10 →
-    decodeCode fixed[(slotIndex s).val]! ≠ none := by decide
+    decodeCode fixed[(slotIndex s).val]! ≠ none := by
+  intro ⟨q,b⟩
+  cases b
+  · exact (by decide : ∀ q : Fin 6, (slotIndex (q,false)).val < 10 → decodeCode fixed[(slotIndex (q,false)).val]! ≠ none) q
+  · exact (by decide : ∀ q : Fin 6, (slotIndex (q,true)).val < 10 → decodeCode fixed[(slotIndex (q,true)).val]! ≠ none) q
 private theorem decode_nonzero : ∀ c : Fin 25, c ≠ 0 → decodeCode c ≠ none := by decide
 
 theorem compatible_of_fits (m : Machine) (hm : Fits box m) (c : Fin 25)
     (hc : m (5,false) = decodeCode c) (f1 : Option Transition)
     (hf : ∀ t, f1 = some t → m (5,true) = t) :
-    compatible (partial c f1) m := by
+    compatible (boxPartial c f1) m := by
   intro s t hp
   by_cases hi : (slotIndex s).val < 10
   · have hmem := hm s
     change m s ∈ (encodedBox (slotIndex s)).map decodeCode at hmem
     simp only [encodedBox, if_pos hi, List.map_cons, List.map_nil, List.mem_singleton] at hmem
-    simp only [partial, if_pos hi, Option.some.injEq] at hp
+    simp only [boxPartial, if_pos hi, Option.some.injEq] at hp
     exact hmem.trans hp
   · by_cases ht : (slotIndex s).val = 10
-    · simp only [partial, if_neg hi, if_pos ht, Option.some.injEq] at hp
+    · simp only [boxPartial, if_neg hi, if_pos ht, Option.some.injEq] at hp
       rw [index10 s ht,hc,hp]
-    · simp only [partial, if_neg hi, if_neg ht] at hp
+    · simp only [boxPartial, if_neg hi, if_neg ht] at hp
       rw [index11 s (by omega)]
       exact hf t hp
 
@@ -84,55 +96,62 @@ def witnesses : List Witness := [
 
 def check (w : Witness) : Bool :=
   decide (0 < w.period) &&
-    BB6Coverage.Agent50SideCycle.finiteSideCycleCheck (partial w.code none)
+    BB6Coverage.Agent50SideCycle.finiteSideCycleCheck (boxPartial w.code none)
       w.entry w.period false w.boundary
 
 theorem witnesses_checked : witnesses.all check = true := by decide +kernel
 
 theorem cycle_never (c : Fin 25) (hc : c ∈ witnesses.map Witness.code)
-    (m : Machine) (hm : compatible (partial c none) m) : NeverHalts m := by
+    (m : Machine) (hm : compatible (boxPartial c none) m) : NeverHalts m := by
   obtain ⟨w,hw,rfl⟩ := List.mem_map.mp hc
   have h := List.all_eq_true.mp witnesses_checked w hw
   have hs : 0 < w.period ∧
-      BB6Coverage.Agent50SideCycle.finiteSideCycleCheck (partial w.code none)
+      BB6Coverage.Agent50SideCycle.finiteSideCycleCheck (boxPartial w.code none)
         w.entry w.period false w.boundary = true := by
     simpa only [check,Bool.and_eq_true,decide_eq_true_eq] using h
   exact BB6Coverage.Agent50SideCycle.finiteSideCycleCheck_sound
-    (partial w.code none) w.entry w.period false w.boundary hs.1 hs.2 m hm
+    (boxPartial w.code none) w.entry w.period false w.boundary hs.1 hs.2 m hm
 
 theorem sweep_left_table : BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) =
-    partial 1 none := by
+    boxPartial 1 none := by
   funext s
-  have h : ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) s =
-    partial 1 none s := by decide
-  exact h s
+  obtain ⟨q,b⟩ := s
+  cases b
+  · exact (by decide : ∀ q : Fin 6, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) (q,false) =
+      boxPartial 1 none (q,false)) q
+  · exact (by decide : ∀ q : Fin 6, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine false) (q,true) =
+      boxPartial 1 none (q,true)) q
 
 theorem sweep_right_table : BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) =
-    partial 14 none := by
+    boxPartial 14 none := by
   funext s
-  have h : ∀ s : Slot, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) s =
-    partial 14 none s := by decide
-  exact h s
+  obtain ⟨q,b⟩ := s
+  cases b
+  · exact (by decide : ∀ q : Fin 6, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) (q,false) =
+      boxPartial 14 none (q,false)) q
+  · exact (by decide : ∀ q : Fin 6, BB6BlockFAR.partialTable (BB6.Agent49Box8Sweep.machine true) (q,true) =
+      boxPartial 14 none (q,true)) q
 
-theorem sweep_left_never (m : Machine) (hm : compatible (partial 1 none) m) : NeverHalts m :=
+theorem sweep_left_never (m : Machine) (hm : compatible (boxPartial 1 none) m) : NeverHalts m :=
   BB6BlockFAR.transfer_never (BB6.Agent49Box8Sweep.machine false) m
     (by rwa [sweep_left_table]) (BB6.Agent49Box8Sweep.never false)
 
-theorem sweep_right_never (m : Machine) (hm : compatible (partial 14 none) m) : NeverHalts m :=
+theorem sweep_right_never (m : Machine) (hm : compatible (boxPartial 14 none) m) : NeverHalts m :=
   BB6BlockFAR.transfer_never (BB6.Agent49Box8Sweep.machine true) m
     (by rwa [sweep_right_table]) (BB6.Agent49Box8Sweep.never true)
 
 theorem total_never (m : Machine) (h : ∀ s, m s ≠ none) : NeverHalts m := by
   intro n
+  change (run m n blank).isSome = true
   induction n with
   | zero => rfl
   | succ n ih =>
     cases hr : run m n blank with
-    | none => simp [hr] at ih
+    | none => rw [hr] at ih; contradiction
     | some c =>
       cases hs : m (readSlot c) with
       | none => exact False.elim (h _ hs)
-      | some mv => simp [run,hr,rawStep,hs]
+      | some mv => rw [run,hr]; change (rawStep m c).isSome = true; rw [rawStep,hs]; rfl
 
 theorem ordinary_never (c : Fin 25) (hc0 : c ≠ 0) (m : Machine)
     (hm : Fits box m) (hc : m (5,false) = decodeCode c)
@@ -151,10 +170,10 @@ theorem ordinary_never (c : Fin 25) (hc0 : c ≠ 0) (m : Machine)
     · rw [index11 s (by omega)]
       exact hf
 
-theorem halt0_checked : finiteHaltCheck (partial 0 none) 10 = true := by decide +kernel
-theorem halt12_checked : finiteHaltCheck (partial 12 (some none)) 32 = true := by decide +kernel
-theorem halt22_checked : finiteHaltCheck (partial 22 (some none)) 11 = true := by decide +kernel
-theorem halt24_checked : finiteHaltCheck (partial 24 (some none)) 11 = true := by decide +kernel
+theorem halt0_checked : finiteHaltCheck (boxPartial 0 none) 10 = true := by decide +kernel
+theorem halt12_checked : finiteHaltCheck (boxPartial 12 (some none)) 32 = true := by decide +kernel
+theorem halt22_checked : finiteHaltCheck (boxPartial 22 (some none)) 11 = true := by decide +kernel
+theorem halt24_checked : finiteHaltCheck (boxPartial 24 (some none)) 11 = true := by decide +kernel
 
 theorem partition : ∀ c : Fin 25, c ≠ 16 →
     c = 0 ∨ c = 1 ∨ c = 14 ∨ c = 12 ∨ c = 22 ∨ c = 24 ∨
@@ -197,7 +216,9 @@ theorem box8_bound (m : Machine) (hm : Fits box m) : WeightedBound 38 m := by
   · exact weighted_of_never 38 m (cycle_never c hcycles m hp)
 
 theorem original_box8_bound (m : Machine) (hm : Fits raw10Remainder[8]! m) :
-    WeightedBound 38 m := box8_bound m (by simpa [source_exact] using hm)
+    WeightedBound 38 m := by
+  rw [source_exact] at hm
+  exact box8_bound m hm
 
 /-- Every subrectangle of the original box is also closed.  This avoids
 relying on a particular ordering of the later combined remainder. -/
