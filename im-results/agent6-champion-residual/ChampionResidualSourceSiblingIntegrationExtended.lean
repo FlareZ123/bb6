@@ -1,6 +1,10 @@
 import ChampionF1ZeroRCIntegration
 import ChampionResidualSourceSiblingIntegration
 import Raw139SiblingSources
+import Raw139D0OneLFCover
+import Raw139D0ZeroRCCover
+import Raw139D0OneRFCover
+import Raw139D0ZeroRACover
 import Raw139C1Batch
 
 set_option maxRecDepth 1000000
@@ -91,24 +95,98 @@ theorem cover_oneRD :
 
 /-- All nine newly source-accepted sibling parents (five Agent14/D0/F1
     parents plus the four additional F1 parents) have an original-source Cover. -/
+/-- Four more source-audited D0 siblings, independent of the three D0
+    parents already included above. -/
+theorem oneLF_is_depth3_sibling :
+    sameTable BB6.Agent14Raw139D0OneLF.parent
+      (championChild 3 ⟨true,false,5⟩) = true := by decide
+
+theorem zeroRC_is_depth3_sibling :
+    sameTable BB6.Agent14Raw139D0ZeroRC.parent
+      (championChild 3 ⟨false,true,2⟩) = true := by decide
+
+theorem oneRF_is_depth3_sibling :
+    sameTable BB6.Agent14Raw139D0OneRF.parent
+      (championChild 3 ⟨true,true,5⟩) = true := by decide
+
+theorem zeroRA_is_depth3_sibling :
+    sameTable BB6.Agent14Raw139D0ZeroRA.parent
+      (championChild 3 ⟨false,true,0⟩) = true := by decide
+
+theorem oneLF_parent_present :
+    ∃ e ∈ remainingF1ZeroRC,
+      sameTable e.2 BB6.Agent14Raw139D0OneLF.parent = true := by decide
+
+theorem zeroRC_parent_present :
+    ∃ e ∈ remainingF1ZeroRC,
+      sameTable e.2 BB6.Agent14Raw139D0ZeroRC.parent = true := by decide
+
+theorem oneRF_parent_present :
+    ∃ e ∈ remainingF1ZeroRC,
+      sameTable e.2 BB6.Agent14Raw139D0OneRF.parent = true := by decide
+
+theorem zeroRA_parent_present :
+    ∃ e ∈ remainingF1ZeroRC,
+      sameTable e.2 BB6.Agent14Raw139D0ZeroRA.parent = true := by decide
+
+theorem cover_oneLF :
+    Cover (WeightedBound (proposedTM63Moves + 7))
+      BB6.Agent14Raw139D0OneLF.parent := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent14Raw139D0OneLF.all_completions_weighted m hm k d hk hd)
+    (Nat.le_trans (by decide : 42038 ≤ 49394) championScore_ge_49394)
+
+theorem cover_zeroRC :
+    Cover (WeightedBound (proposedTM63Moves + 7))
+      BB6.Agent14Raw139D0ZeroRC.parent := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent14Raw139D0ZeroRC.all_completions_weighted m hm k d hk hd)
+    (Nat.le_trans (by decide : 775 ≤ 49394) championScore_ge_49394)
+
+theorem cover_oneRF :
+    Cover (WeightedBound (proposedTM63Moves + 7))
+      BB6.Agent14Raw139D0OneRF.parent := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent14Raw139D0OneRF.all_completions_weighted m hm k d hk hd)
+    (Nat.le_trans (by decide : 6250 ≤ 49394) championScore_ge_49394)
+
+theorem cover_zeroRA :
+    Cover (WeightedBound (proposedTM63Moves + 7))
+      BB6.Agent14Raw139D0ZeroRA.parent := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent14Raw139D0ZeroRA.all_completions_weighted m hm k d hk hd)
+    (Nat.le_trans (by decide : 8840 ≤ 49394) championScore_ge_49394)
+
 def isAdditionalSourceAcceptedSibling (p : PartialMachine) : Bool :=
   isSourceAcceptedSibling p ||
   sameTable p BB6.Agent41F1ZeroRB.parent ||
   sameTable p BB6.Agent14F1OneLA.parent ||
   sameTable p BB6.Agent14F1OneLB.parent ||
-  sameTable p BB6.Agent14F1OneRD.parent
+  sameTable p BB6.Agent14F1OneRD.parent ||
+  sameTable p BB6.Agent14Raw139D0OneLF.parent ||
+  sameTable p BB6.Agent14Raw139D0ZeroRC.parent ||
+  sameTable p BB6.Agent14Raw139D0OneRF.parent ||
+  sameTable p BB6.Agent14Raw139D0ZeroRA.parent
 
-noncomputable def remainingRaw139AfterTwentySix :
+noncomputable def remainingRaw139AfterThirty :
     List (List Move × PartialMachine) :=
   remainingF1ZeroRC.filter
     (fun e => !isAdditionalSourceAcceptedSibling e.2)
 
-theorem remainingRaw139AfterTwentySix_count :
-    remainingRaw139AfterTwentySix.length = 97 := by decide
+theorem remainingRaw139AfterThirty_count :
+    remainingRaw139AfterThirty.length = 93 := by decide
 
-theorem removedNineSibling_count :
-    remainingF1ZeroRC.length - remainingRaw139AfterTwentySix.length = 9 := by
-  rw [remainingF1ZeroRC_count, remainingRaw139AfterTwentySix_count]
+theorem removedThirteenSibling_count :
+    remainingF1ZeroRC.length - remainingRaw139AfterThirty.length = 13 := by
+  rw [remainingF1ZeroRC_count, remainingRaw139AfterThirty_count]
   rfl
 
 theorem additionalSourceAcceptedSiblingCover (p : PartialMachine)
@@ -121,7 +199,7 @@ theorem additionalSourceAcceptedSiblingCover (p : PartialMachine)
       | false => rfl
       | true => exact False.elim (hFive h)
     simp [isAdditionalSourceAcceptedSibling, hFiveFalse] at hp
-    rcases hp with h0 | h1 | h2 | h3
+    rcases hp with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7
     · have heq : p = BB6.Agent41F1ZeroRB.parent := sameTable_sound h0
       subst p
       exact cover_zeroRB
@@ -134,9 +212,21 @@ theorem additionalSourceAcceptedSiblingCover (p : PartialMachine)
     · have heq : p = BB6.Agent14F1OneRD.parent := sameTable_sound h3
       subst p
       exact cover_oneRD
+    · have heq : p = BB6.Agent14Raw139D0OneLF.parent := sameTable_sound h4
+      subst p
+      exact cover_oneLF
+    · have heq : p = BB6.Agent14Raw139D0ZeroRC.parent := sameTable_sound h5
+      subst p
+      exact cover_zeroRC
+    · have heq : p = BB6.Agent14Raw139D0OneRF.parent := sameTable_sound h6
+      subst p
+      exact cover_oneRF
+    · have heq : p = BB6.Agent14Raw139D0ZeroRA.parent := sameTable_sound h7
+      subst p
+      exact cover_zeroRA
 
 theorem cover_remainingF1ZeroRC
-    (hLeaves : ∀ e ∈ remainingRaw139AfterTwentySix,
+    (hLeaves : ∀ e ∈ remainingRaw139AfterThirty,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
     (e : List Move × PartialMachine)
     (he : e ∈ remainingF1ZeroRC) :
@@ -151,8 +241,8 @@ theorem cover_remainingF1ZeroRC
 
 /-- Lift the 97 remaining leaves through the already audited F1 and F0
     sibling compositions to a Cover of the retained raw139 parent. -/
-theorem cover_championResidual_after_twentySix
-    (hLeaves : ∀ e ∈ remainingRaw139AfterTwentySix,
+theorem cover_championResidual_after_thirty
+    (hLeaves : ∀ e ∈ remainingRaw139AfterThirty,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
     Cover (WeightedBound (proposedTM63Moves + 7)) championResidual := by
   have h106 : ∀ e ∈ remainingF1ZeroRC,
@@ -183,16 +273,16 @@ theorem cover_championResidual_after_twentySix
 def isC1Sibling (p : PartialMachine) : Bool :=
   BB6.Agent48Raw139C1Batch.parents.any (fun q => sameTable p q)
 
-noncomputable def remainingRaw139AfterThirtyEight :
+noncomputable def remainingRaw139AfterFortyTwo :
     List (List Move × PartialMachine) :=
-  remainingRaw139AfterTwentySix.filter (fun e => !isC1Sibling e.2)
+  remainingRaw139AfterThirty.filter (fun e => !isC1Sibling e.2)
 
 theorem c1_parent_count :
     BB6.Agent48Raw139C1Batch.parents.length = 12 := by decide
 
 theorem c1_parents_all_present :
     ∀ p ∈ BB6.Agent48Raw139C1Batch.parents,
-      ∃ e ∈ remainingRaw139AfterTwentySix, sameTable e.2 p = true := by decide
+      ∃ e ∈ remainingRaw139AfterThirty, sameTable e.2 p = true := by decide
 
 theorem isC1Sibling_false_of_not_mem (p : PartialMachine)
     (hp : p ∉ BB6.Agent48Raw139C1Batch.parents) :
@@ -208,51 +298,63 @@ theorem isC1Sibling_false_of_not_mem (p : PartialMachine)
       have heq : p = q := sameTable_sound hSame
       exact False.elim (hp (by simpa [heq] using hq))
 
-theorem remainingRaw139AfterThirtyEight_count :
-    remainingRaw139AfterThirtyEight.length = 85 := by decide
+theorem remainingRaw139AfterFortyTwo_count :
+    remainingRaw139AfterFortyTwo.length = 81 := by decide
 
 theorem removedTwelveSibling_count :
-    remainingRaw139AfterTwentySix.length -
-      remainingRaw139AfterThirtyEight.length = 12 := by
-  rw [remainingRaw139AfterTwentySix_count,
-    remainingRaw139AfterThirtyEight_count]
+    remainingRaw139AfterThirty.length -
+      remainingRaw139AfterFortyTwo.length = 12 := by
+  rw [remainingRaw139AfterThirty_count,
+    remainingRaw139AfterFortyTwo_count]
   rfl
 
 /-- Discharge the twelve C1 parents with the independently source-audited
     2,511 weighted-bound consumer. All other entries remain explicit leaves. -/
-theorem cover_remainingRaw139AfterTwentySix
-    (hLeaves : ∀ e ∈ remainingRaw139AfterThirtyEight,
+theorem cover_remainingRaw139AfterThirty
+    (hLeaves : ∀ e ∈ remainingRaw139AfterFortyTwo,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
     (e : List Move × PartialMachine)
-    (he : e ∈ remainingRaw139AfterTwentySix) :
+    (he : e ∈ remainingRaw139AfterThirty) :
     Cover (WeightedBound (proposedTM63Moves + 7)) e.2 := by
   exact BB6.Agent48Raw139C1Batch.consume
     (Nat.le_trans (by decide : 2511 ≤ 49394) championScore_ge_49394)
-    remainingRaw139AfterTwentySix
+    remainingRaw139AfterThirty
     (by
       intro x hx hnot
       have hFalse := isC1Sibling_false_of_not_mem x.2 hnot
       exact hLeaves x
         (List.mem_filter.mpr
-          ⟨hx, by simp [remainingRaw139AfterThirtyEight, hFalse]⟩))
+          ⟨hx, by simp [remainingRaw139AfterFortyTwo, hFalse]⟩))
     e he
 
-/-- The 85 remaining raw139 leaves, plus the 26 already consumed siblings,
+/-- The 85 remaining raw139 leaves, plus the 42 already consumed siblings,
     now give a Cover of the champion parent. -/
-theorem cover_championResidual_after_thirtyEight
-    (hLeaves : ∀ e ∈ remainingRaw139AfterThirtyEight,
+theorem cover_championResidual_after_fortyTwo
+    (hLeaves : ∀ e ∈ remainingRaw139AfterFortyTwo,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
     Cover (WeightedBound (proposedTM63Moves + 7)) championResidual := by
-  have h97 : ∀ e ∈ remainingRaw139AfterTwentySix,
+  have h93 : ∀ e ∈ remainingRaw139AfterThirty,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2 := by
     intro e he
-    exact cover_remainingRaw139AfterTwentySix hLeaves e he
-  exact cover_championResidual_after_twentySix h97
+    exact cover_remainingRaw139AfterThirty hLeaves e he
+  exact cover_championResidual_after_thirty h93
 
 
 #print axioms zeroRB_is_depth5_sibling
 #print axioms zeroLA_is_depth5_sibling
 #print axioms oneLB_is_depth5_sibling
+#print axioms oneLF_is_depth3_sibling
+#print axioms zeroRC_is_depth3_sibling
+#print axioms oneRF_is_depth3_sibling
+#print axioms zeroRA_is_depth3_sibling
+#print axioms oneLF_parent_present
+#print axioms zeroRC_parent_present
+#print axioms oneRF_parent_present
+#print axioms zeroRA_parent_present
+#print axioms cover_oneLF
+#print axioms cover_zeroRC
+#print axioms cover_oneRF
+#print axioms cover_zeroRA
 #print axioms oneRD_is_depth5_sibling
 #print axioms zeroRB_parent_present
 #print axioms zeroLA_parent_present
@@ -262,17 +364,17 @@ theorem cover_championResidual_after_thirtyEight
 #print axioms cover_zeroLA
 #print axioms cover_oneLB
 #print axioms cover_oneRD
-#print axioms remainingRaw139AfterTwentySix_count
-#print axioms removedNineSibling_count
+#print axioms remainingRaw139AfterThirty_count
+#print axioms removedThirteenSibling_count
 #print axioms additionalSourceAcceptedSiblingCover
 #print axioms cover_remainingF1ZeroRC
-#print axioms cover_championResidual_after_twentySix
+#print axioms cover_championResidual_after_thirty
 #print axioms c1_parent_count
 #print axioms c1_parents_all_present
 #print axioms isC1Sibling_false_of_not_mem
-#print axioms remainingRaw139AfterThirtyEight_count
+#print axioms remainingRaw139AfterFortyTwo_count
 #print axioms removedTwelveSibling_count
-#print axioms cover_remainingRaw139AfterTwentySix
-#print axioms cover_championResidual_after_thirtyEight
+#print axioms cover_remainingRaw139AfterThirty
+#print axioms cover_championResidual_after_fortyTwo
 
 end BB6.Agent6ChampionRaw139SiblingExtended
