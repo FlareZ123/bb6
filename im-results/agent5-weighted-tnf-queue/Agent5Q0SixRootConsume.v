@@ -12,17 +12,23 @@ Lemma q0_six_roster_safe :
   Forall (source_table_safe 1000006) q0_six_roster.
 Proof.
   unfold q0_six_roster.
-  repeat constructor.
+  constructor.
   - eapply coarse_roster_mono with (lo:=row26_bound).
     + unfold row26_bound. lia.
     + constructor; [exact row26_safe|constructor].
-  - eapply coarse_roster_mono with (lo:=row28_bound).
-    + unfold row28_bound. lia.
-    + constructor; [exact row28_safe|constructor].
-  - exact pair_safe_35.
-  - exact pair_safe_37.
-  - exact pair_safe_47.
-  - exact pair_safe_50.
+  - constructor.
+    + eapply coarse_roster_mono with (lo:=row28_bound).
+      * unfold row28_bound. lia.
+      * constructor; [exact row28_safe|constructor].
+    + constructor.
+      * exact pair_safe_35.
+      * constructor.
+        -- exact pair_safe_37.
+        -- constructor.
+           ++ exact pair_safe_47.
+           ++ constructor.
+              ** exact pair_safe_50.
+              ** constructor.
 Qed.
 
 Definition q0_six_queue := decode_queue Agent8PackedChunk.chunk_data.
