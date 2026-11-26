@@ -183,27 +183,24 @@ def main():
          generated, *[str(i) for i in direct_ids]], env=env)
     run([sys.executable, ROOT / "im-results/agent29-raw122-run/late.py", generated, "1"])
 
+    run([sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
+
     # Exclude provisional original-source roster files: the authoritative
     # rosters below are regenerated from the compiled, prefix-factored sources.
     lean_root = Path("/tmp/a43-lean-root")
     if lean_root.exists():
         shutil.rmtree(lean_root)
     lean_root.mkdir(parents=True)
-    tracked_paths = subprocess.check_output(
-        ["git", "ls-files", "*.lean"], cwd=ROOT, text=True).splitlines()
-    for rel in tracked_paths:
+    for src in ROOT.rglob("*.lean"):
+        rel = src.relative_to(ROOT).as_posix()
         if rel.startswith("im-results/agent43-raw122-cut/rosters/branch16/") or rel.startswith(
             "im-results/agent43-raw122-cut/rosters/branch17/"
         ):
-            continue
-        src = ROOT / rel
-        if not src.is_file():
             continue
         dst = lean_root / rel
         dst.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(src, dst)
 
-    run([sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
     manifest = Path("/tmp/a43-branches16-17-manifest.json")
     run([sys.executable, ROOT / "tools/lean_compile_closure.py",
          "--workdir", manifest_work, "--source-root", lean_root, "--source-root", factored,
@@ -222,7 +219,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122Recovered{tag}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 theorem cover{tag} (m : Machine)
-    (hm : compatible (BB6.Agent43Raw122.child ⟨{str(b in (16,)).lower()},{str(b in (16,17)).lower()},{b-16 if b==16 else 5}⟩) m) :
+    (hm : compatible (BB6.Agent43Raw122.child ⟨true,false,{b-12}⟩) m) :
     WeightedBound 6766859 m := by
   exact BB6.Agent43Raw122Roster.cover{tag} 6766859 (by decide)
     BB6.Agent43Raw122Roster.witnesses{tag} m hm
