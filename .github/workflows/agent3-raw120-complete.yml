@@ -27,6 +27,14 @@ on:
         description: Run containing the compiled Raw139E0ZeroRAIntegrated and Raw139E0ZeroRAMatch objects
         type: string
         default: "45797137615"
+      raw139_e0_rb_run_id:
+        description: Source-audited E0=0RB parent Cover artifact run ID
+        type: string
+        default: ""
+      raw139_e0_rd_run_id:
+        description: Source-audited E0=0RD parent Cover artifact run ID
+        type: string
+        default: ""
 permissions:
   contents: read
   actions: read
@@ -248,6 +256,77 @@ jobs:
             echo "nonstandard axiom in Raw139 normalized crosswalk probe"
             exit 1
           fi
+      - name: Download source-accepted E0=0RB parent Cover
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_rb_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_rb_run_id }}
+          name: raw139-e0parent-ZeroRB-certified
+          path: /tmp/a48-e0rb-artifact
+      - name: Download source-accepted E0=0RD parent Cover
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_rd_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_rd_run_id }}
+          name: raw139-e0parent-ZeroRD-certified
+          path: /tmp/a48-e0rd-artifact
+      - name: Prepare E0=0RB/0RD object closures and compare identities
+        if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != '' && inputs.raw139_e0_rb_run_id != '' && inputs.raw139_e0_rd_run_id != ''
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a48-e0rb-build /tmp/a48-e0rd-build
+          find /tmp/a48-e0rb-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rb-build/ \\;
+          find /tmp/a48-e0rd-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rd-build/ \\;
+          test -s /tmp/a48-e0rb-build/Raw139E0ZeroRBCover.olean
+          test -s /tmp/a48-e0rd-build/Raw139E0ZeroRDCover.olean
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, sys
+          dirs = [
+              Path("/tmp/a48-e0rb-build"),
+              Path("/tmp/a48-e0rd-build"),
+              Path(".tmp/a48-e0parent-ZeroRE/build"),
+              Path("/tmp/a3e0-build"),
+              Path("/tmp/raw120-canonical64/linked"),
+              Path("/tmp/a6-core/build"),
+              Path("/tmp/a6-sibling/source-sibling-build"),
+          ]
+          conflicts = []
+          for i, left in enumerate(dirs):
+              if not left.is_dir():
+                  continue
+              for right in dirs[i+1:]:
+                  if not right.is_dir():
+                      continue
+                  for p in left.glob("*.olean"):
+                      q = right / p.name
+                      if q.is_file():
+                          a = hashlib.sha256(p.read_bytes()).hexdigest()
+                          b = hashlib.sha256(q.read_bytes()).hexdigest()
+                          if a != b:
+                              conflicts.append((p.name, str(left), str(right), a, b))
+          if conflicts:
+              for name, left, right, a, b in conflicts:
+                  print(f"OLEAN_CONFLICT {name} {left} {right} {a} {b}")
+              sys.exit(1)
+          print("All overlapping E0 parent, Raw139 core, and Canonical64 .olean objects are byte-identical")
+          PY
+      - name: Compile the 63-row E0 parent crosswalk consumer
+        if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != '' && inputs.raw139_e0_rb_run_id != '' && inputs.raw139_e0_rd_run_id != ''
+        continue-on-error: true
+        run: |
+          set -euo pipefail
+          test -s /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
+          export LEAN_PATH="/tmp/a48-e0rb-build:/tmp/a48-e0rd-build:.tmp/a48-e0parent-ZeroRE/build:/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
+          lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedE0ParentCrosswalk.olean \\
+            im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedE0ParentCrosswalk.lean \\
+            | tee /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log
+          if grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log; then
+            echo "nonstandard axiom in 63-row E0 parent crosswalk consumer"
+            exit 1
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -262,6 +341,10 @@ jobs:
             /tmp/raw120-canonical64/raw139-subcover.log
             /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
             /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
+            /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log
+            /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedE0ParentCrosswalk.olean
+            /tmp/a48-e0rb-build/*.olean
+            /tmp/a48-e0rd-build/*.olean
             /tmp/a3e0-build/*.olean
             .tmp/a48-e0parent-ZeroRE/log
             .tmp/a48-e0parent-ZeroRE/manifest.json
