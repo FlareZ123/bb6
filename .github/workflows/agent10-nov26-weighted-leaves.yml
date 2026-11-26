@@ -1,0 +1,57 @@
+name: November 26 Cryptids weighted leaves (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean and upstream source
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet d1d231afe3a5f6310ac9f956d5687b5a45d7a13d
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "d1d231afe3a5f6310ac9f956d5687b5a45d7a13d"
+      - name: Reclaim unused disk
+        run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+      - name: Build 18 original nonhalting proofs once
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          printf '%s\n' leanprover/lean4:v4.36.0-rc2 > lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          rm -f lake-manifest.json
+          lake update
+          lake exe cache get
+          mapfile -t modules < <(python -c 'import json,sys; d=json.load(open(sys.argv[1])); print("\n".join("BusyBeaver.BB6.NonHalt.M_"+x["rle"] for x in d["rows"] if x["kind"]=="NonHalt"))' "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/manifest.json")
+          test "${#modules[@]}" = 18
+          lake build "${modules[@]}"
+      - name: Compile local weighted proof closure and actual TNF paths
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          python "$GITHUB_WORKSPACE/im-results/agent13-coverage/unpack.py"
+          mkdir -p /tmp/nov26-axioms
+          while IFS= read -r p; do
+            base="$(basename "$p")"
+            cp "$GITHUB_WORKSPACE/$p" "$base"
+            log="/tmp/nov26-axioms/$base.log"
+            lake env lean -o ".lake/build/lib/lean/${base%.lean}.olean" "$base" 2>&1 | tee "$log"
+            if grep -Eq 'sorryAx|native_decide' "$log"; then exit 1; fi
+          done < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/weighted-dependencies.txt"
+      - name: Upload audit logs
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: nov26-weighted-axioms
+          path: /tmp/nov26-axioms
+          if-no-files-found: ignore
