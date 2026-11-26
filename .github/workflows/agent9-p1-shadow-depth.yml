@@ -23,7 +23,8 @@ jobs:
       - name: Install Lean
         if: inputs.target != 'packed-prefix'
         run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check full original P1 shadow cones, finite q29 certificate
@@ -427,18 +428,21 @@ jobs:
           python tools/lean_compile_deps.py "$D/HalfReverseBlock.lean" | tee /tmp/half-reverse-block.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/half-reverse-block.log; then exit 1; fi
           python - <<'PY'
-          import re
           from pathlib import Path
           log = Path('/tmp/half-reverse-block.log').read_text()
           for name in ("half_covered_next_block", "half_cert_next_block", "no_trace_of_half_cert_empty", "half_first_two", "half_cert_first_two"):
-              pattern = r"'BB6\\.Agent9P1HalfReverseBlock\\."+re.escape(name)+r"' depends on axioms:\\s*\\[([^\\]]*)\\]"
-              m = re.search(pattern, log)
-              if not m and re.search(r"'BB6\\.Agent9P1HalfReverseBlock\\."+re.escape(name)+r"' does not depend on any axioms", log):
+              decl = f"'BB6.Agent9P1HalfReverseBlock.{name}'"
+              if f"{decl} does not depend on any axioms" in log:
                   print(name, [])
                   continue
-              if not m:
+              marker = f"{decl} depends on axioms: ["
+              start = log.find(marker)
+              if start < 0:
                   raise SystemExit("Missing axiom profile: "+name)
-              axioms = {a.strip() for a in m.group(1).split(",") if a.strip()}
+              end = log.find("]", start)
+              if end < 0:
+                  raise SystemExit("Malformed axiom profile: "+name)
+              axioms = {a.strip() for a in log[start+len(marker):end].split(",") if a.strip()}
               if not axioms <= {"propext", "Classical.choice", "Quot.sound"}:
                   raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
               print(name, sorted(axioms))
