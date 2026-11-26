@@ -1,6 +1,6 @@
 # q0 sibling-scan index 33: direct residual closure
 
-**Status:** a kernel-checkable two-sided automata certificate has been isolated and connected to a `Cover` leaf. Focused source-level CI is pending. This is an intermediate local result, not a global q0 closure or a BB(6) upper bound.
+**Status:** the isolated two-sided automata certificate and `Cover` leaf passed focused Lean 4.36.0-rc2 CI run [45789439603](https://github.com/FlareZ123/bb6/actions/runs/45789439603). The parent-level original-source Coq consumer is now running in [45789737554](https://github.com/FlareZ123/bb6/actions/runs/45789737554). This is an intermediate local result, not a global q0 closure or a BB(6) upper bound.
 
 ## Exact post-decider residual
 
@@ -26,7 +26,7 @@ This is stronger than the earlier 25-to-1 minimal-slice reduction: the automata 
 
 ## What this does and does not close
 
-The local residual cylinder is now covered mathematically, conditional only on the focused Lean source closure accepting the checked certificate and its imports. The parent/source enumeration connection is separate: the q0 sibling-scan generator and the original-source Coq consumer must still establish that this exact residual is the corresponding child of the claimed root and that all sibling branches are accounted for. This result does not close the entire q0 root family, the canonical64 roster, or BB(6).
+The local residual cylinder is now covered mathematically: the focused Lean source closure compiled 15 modules and checked `residual_never`, `haltCompletion_never`, and `residual_cover`; the reported axioms are `propext`, `Classical.choice`, and `Quot.sound`, with workflow checks rejecting `sorryAx` and `native_decide`. The parent is q0 active index 33, exact table `1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------`, four holes, `maxHalt = 156`, weighted bound 162. Its deterministic coarse/automata tree has 985 nodes, 41 first-hole splits, 55 MITM leaves, 140 terminal leaves, and one open leaf (R33L0). The shared original-source workflow is now compiling the exact Coq consumer for offset 33; run 45789737554 is pending. This result does not close the entire q0 root family, the canonical64 roster, or BB(6).
 
 ## Independent computational observation
 
