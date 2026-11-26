@@ -4486,7 +4486,7 @@ jobs:
           D=im-results/agent2-tnf-raw124
           W=/tmp/raw124-1lb-residual-pumps
           python "$D/generate_1lb_wide.py" --out "$D/wide-generated"
-          for leaf in 207 212; do
+          for leaf in 207 209 212 217 711; do
             THM="BB6.Agent2Raw124OneLBWide.M$leaf.never"
             python tools/lean_compile_closure.py --workdir "$W/closure$leaf" --jobs 4 --manifest "$W/manifest$leaf.json" --theorem "$THM" --provenance-input "$D/generate_1lb_wide.py" "$D/wide-generated/Raw124OneLBWide$leaf.lean" | tee "$W/audit$leaf.log"
             python im-results/agent4-raw109/audit_axioms.py "$W/audit$leaf.log" "$THM"
