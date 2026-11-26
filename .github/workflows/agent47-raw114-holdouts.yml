@@ -197,7 +197,7 @@ jobs:
           retention-days: 30
 
   raw11-q0-extra-covers:
-    if: ${{ inputs.raw11_q0_extra_covers }}
+    if: ${{ inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
