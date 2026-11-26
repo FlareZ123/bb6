@@ -110,6 +110,26 @@ def download_parent(spec, work):
     dirs = a68.download(
         (spec["artifact_id"], spec["run_id"], spec["digest"]), work
     )
+    if spec["label"] == "raw59":
+        manifests = list((work / "metadata" / str(spec["artifact_id"])).rglob("manifest.json"))
+        assert len(manifests) == 1, [str(p) for p in manifests]
+        manifest = json.loads(manifests[0].read_text())
+        claim = manifest["claim"]
+        assert claim["theorem"] == spec["theorem"], claim
+        assert claim["parent_table"] == spec["table"], claim
+        assert claim["weighted_bound"] == spec["bound"], claim
+        assert manifest["proof_source_revision"] == spec["revision"], (
+            manifest["proof_source_revision"], spec["revision"]
+        )
+        assert "4.36.0-rc2" in manifest["lean_version"], manifest["lean_version"]
+        compiler = Path(
+            subprocess.check_output(["lean", "--print-prefix"], text=True).strip()
+        ) / "bin" / "lean"
+        compiler_sha = a68.sha(compiler)
+        assert manifest["lean_binary"]["sha256"] == compiler_sha, (
+            "Raw59 artifact was built with a different Lean binary",
+            manifest["lean_binary"]["sha256"], compiler_sha
+        )
     metadata = {
         key: spec[key]
         for key in (
