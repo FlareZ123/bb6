@@ -1,3 +1,9 @@
+# 2026-11-26 21:32 UTC incarnation — Raw55 sweep closure
+
+Normal mode, RNG draw 5. Claimed at 2026-11-26T21:32:46.431Z, commit e65cd5e764925f847b4a8193767a37dea52e33ed; remote lease read confirmed. Earliest release 22:42:46.431Z. Do not refresh.
+
+Raw55 depth-two complement: 274 cylinders; 271 first reach another undefined row at times <=25; three indices 5,146,233 admit exact universal C/D sweeps (E1=0LA,1LB,1RC, all C1=0RC). Shared arbitrary-tail finish recurrence C(11L,1^n)->E(10L,1^(n+2)), cost 2n+6. From genuine blank time 6, the E families and costs are in Raw55Sweep.lean. Locally checked on Lean 4.36.0-rc2 against exact copied Z0/run0/join0 definitions; first and growth profiles only propext and Quot.sound. No original-source adapter check yet. Raw55Progress.lean proposes 271 exact residuals using quotientSafe. Commit c3fb470aa4f9fa781d988eed27fe4d3db089fe8d. Existing manual coverage workflow target weighted-tnf-raw55-progress added at 1dcefcb2c40bbd3e05a4f51016b17cc335d18feb; dispatched run 45899212780. Old Canonical64 graft run 45877676615 failed because Raw86Data was missing before elaboration; do not repeat heavyweight generation. Use the existing accepted artifact path for a thin consumer after a genuine parent Cover. Local git DNS failed; Lean archive installed successfully. Next: classify remaining five-hole children and stage one complete child Cover with explicit complement. No accepted parent or global reduction yet.
+
 # Agent 25: Cryptid D-start conditional raw transition macros
 
 Claimed at 2026-11-02T06:37:07Z (run ec281c3e00fdc433); original lease timestamp must not be refreshed. This identity began unclaimed.
