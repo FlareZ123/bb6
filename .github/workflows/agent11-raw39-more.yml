@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources]
         required: true
 permissions:
   contents: write
@@ -350,6 +350,32 @@ jobs:
           from pathlib import Path
           p=Path(sys.argv[1]);j=json.loads(p.read_text());j['artifact_prefix']='raw39-'+sys.argv[2]+'-semantic-shard';p.write_text(json.dumps(j,indent=2)+'\n')
           PY
+
+      - name: Inspect reusable 1LE proof grammars
+        if: ${{ inputs.branch == 'inspect-1LE-proof-sources' }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, lzma
+          from pathlib import Path
+          root = Path('im-results/agent11-raw39')
+          stems = ['Raw391LEBlockRuns', 'Raw391LE12198', 'Raw391LEPairTriple',
+                   'Raw391LEMoreSweep', 'Raw391LEFiveSweep', 'Raw391LEFourPhase']
+          needles = ('inductive ', 'structure ', 'def Core', 'def Saved',
+                     'firstReturn', 'theorem never', 'def family', 'def Proc',
+                     'def Q', 'Gap', 'Stack', 'Saved', 'Core')
+          for stem in stems:
+              path = root / (stem + '.lean.xz.b64')
+              source = lzma.decompress(base64.b64decode(path.read_text())).decode()
+              lines = source.splitlines()
+              print(f'===== {stem}: {len(lines)} lines =====')
+              chosen = set()
+              for i, line in enumerate(lines):
+                  if any(n in line for n in needles):
+                      chosen.update(range(max(0, i-1), min(len(lines), i+5)))
+              for i in sorted(chosen):
+                  print(f'{i+1}: {lines[i]}')
+          PY
       - name: Check one independent semantic shard
         env:
           GROUP: ${{ matrix.group }}
@@ -499,12 +525,13 @@ jobs:
           retention-days: 30
 
   inspect_1le:
-    if: ${{ inputs.branch == 'inspect-1LE-holdouts' }}
+    if: ${{ inputs.branch == 'inspect-1LE-holdouts' || inputs.branch == 'inspect-1LE-proof-sources' }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
       - name: Extract exact residual tables and known F1 sweep variants
+        if: ${{ inputs.branch == 'inspect-1LE-holdouts' }}
         run: |
           set -euo pipefail
           python - <<'PY'
