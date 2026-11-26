@@ -64,10 +64,15 @@ on:
         required: false
         type: boolean
         default: false
+      raw59_parent_run_id:
+        description: Successful workflow run ID containing the raw59-parent-certified artifact (required for Canonical64Compose)
+        required: false
+        type: string
+        default: ""
       raw59_child:
-        description: Raw59 proof target; Upgrade0LA reuses checked 0LB/0LF/1LB and prior 0LE/1LF/1LE/Closed shards
+        description: Raw59 proof target; Canonical64Compose consumes a successful Raw59 parent run without rebuilding it
         type: choice
-        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Canonical64Compose, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -480,7 +485,7 @@ jobs:
           PY
 
   raw59-refinement:
-    if: ${{ inputs.verify_raw59 }}
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child != 'Canonical64Compose' }}
     strategy:
       fail-fast: false
       matrix:
@@ -852,4 +857,36 @@ jobs:
             /tmp/raw59-canonical77.log
             /tmp/raw59-canonical77-partition.log
           if-no-files-found: error
+          retention-days: 30
+
+  raw59-canonical64-composition:
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'Canonical64Compose' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Link the accepted Raw59 parent into Canonical64
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW59_PARENT_RUN_ID: ${{ inputs.raw59_parent_run_id }}
+        run: |
+          set -euo pipefail
+          test -n "$RAW59_PARENT_RUN_ID"
+          python im-results/agent32-raw59/assemble_raw59_canonical64.py --work /tmp/raw59-canonical64 | tee /tmp/raw59-canonical64.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw59-canonical64-audit
+          path: |
+            /tmp/raw59-canonical64.log
+            /tmp/raw59-canonical64/raw59-canonical64.log
+            /tmp/raw59-canonical64/raw59-canonical64-integration.json
+            /tmp/raw59-canonical64/reachable-link-audit.json
+            /tmp/raw59-canonical64/linked/Raw59Canonical64Integrated.olean
+          if-no-files-found: warn
           retention-days: 30
