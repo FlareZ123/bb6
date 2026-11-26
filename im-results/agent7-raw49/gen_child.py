@@ -7,6 +7,11 @@ pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
 known_proven={
+    "1RB1RA_1RC0LE_0RD0LA_1LD1RC_0LA0LF_---1LB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .a","BB6.Agent7Raw49C7Sweeps.Triple.never .a"),
+    "1RB1RA_1RC0LE_0RD0LA_1LD1RC_1LB0LF_---1LB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .b","BB6.Agent7Raw49C7Sweeps.Triple.never .b"),
+    "1RB1RA_1RC0LE_0RD0LA_1LD1RC_1LB1LF_---0RB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .c","BB6.Agent7Raw49C7Sweeps.Triple.never .c"),
+    "1RB1RA_1RC1LE_0RD0LA_1LD1RC_0LF0LB_---0LB": ("BB6.Agent7Raw49C7Sweeps.Double.table false","BB6.Agent7Raw49C7Sweeps.Double.never false"),
+    "1RB1RA_1RC1LE_0RD0LA_1LD1RC_1LF0LB_---1LB": ("BB6.Agent7Raw49C7Sweeps.Double.table true","BB6.Agent7Raw49C7Sweeps.Double.never true"),
     "1RB0RE_1RC0LE_0RD0LA_1LD1RC_1RB1LF_0LE---": ("BB6.Agent7Raw49SixSweeps.EDouble.table","BB6.Agent7Raw49SixSweeps.EDouble.never"),
     "1RB0RE_1RC1LF_0RD0LA_1LD1RC_1RE0LB_0LC---": ("BB6.Agent7Raw49SixSweeps.Alternating.table .c3","BB6.Agent7Raw49SixSweeps.Alternating.never .c3"),
     "1RB1LA_1RC1RE_0RD0LA_1LD1RC_---0RF_1RA0LF": ("BB6.Agent7Raw49SixSweeps.Ones.table false","BB6.Agent7Raw49SixSweeps.Ones.never false"),
@@ -92,6 +97,7 @@ import Raw49Sweep
 import Raw49Alternating
 import Raw49ThreeSweeps
 import Raw49SixSweeps
+import Raw49C7Sweeps
 {head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
