@@ -263,7 +263,7 @@ This exact source derivation is now represented in
 odd/odd sum-four parent theorem and the existing odd-right sum-one
 blank-image invariant; the second uses the complete q-parent fan and
 oddness of W to eliminate every depth except 0 and 2. Both declarations were compiled and explicitly axiom-printed in workflow
-run #17. Their dependencies are [propext, Classical.choice, Quot.sound],
+runs #17 and #20. Their dependencies are [propext, Classical.choice, Quot.sound],
 with no sorryAx/native_decide dependency. This closes the target-level q=0
 branch on the (w\\equiv439\\pmod{512}) lift only; it does not close the
 other lifts of the (u\\equiv3\\pmod4) branch.
@@ -282,7 +282,7 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 | 31 | 13 | z odd; excluded |
 | 39 | 8 | z divisible by 4 |
 | 47 | 3 | z odd |
-| 55 | 14 | z=2 mod 4; q=1 parent excluded on u=7 mod 32, u=35 mod 64, and u=59 mod 80 |
+| 55 | 14 | z=2 mod 4; q=1 parent excluded on u=7 mod 32, u=35 mod 64, u=59 mod 80, and u=23 mod 512 |
 | 63 | 9 | z odd |
 | 71 | 4 | z divisible by 4 |
 | 79 | 15 | z odd |
@@ -305,7 +305,7 @@ The parent fan reduces the q=0 target to the q=1 parent
 \[
 Q(u)=(2W-3,\;24450+39417u),\qquad W=2228+3591u,
 \]
-whenever \(W\) is odd. Two additional source-composition theorems now exclude
+whenever \(W\) is odd. Four source-composition theorems now exclude
 \(Q(u)\) on disjoint infinite slices.
 
 ### u=7+32t
@@ -348,7 +348,7 @@ odd-right sum-two invariant excludes \(C\). This is formalized by
 w7_z2_q1_parent_unreachable_u35mod64 and
 w7_q0_target_unreachable_u35mod64 in U5Q0W7U3Mod64.lean.
 
-For both slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root relation
+For the u=7, u=35, and u=23 slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root relation
 \(5z-7s\equiv12\pmod{16}\), with \(w=7+8s\), gives
 \(s\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
 \(z\equiv3\pmod5\) restricts \(t\equiv1\pmod5\) in each new slice.
@@ -356,14 +356,52 @@ The existing \(u=59+80t\) slice also lies in this \(w=55\pmod{128}\) row
 and is the deeper \(w\equiv439\pmod{512}\) lift.
 
 The focused exact-source closure target w7-q0-parent-fan passed in run
-#17 (GitHub Actions run 45792309463). It compiled 48 project modules from
-the three roots U5Q0W7ParentFan, U5Q0W7U3Mod64, and U5Q0W7U7Mod32.
-The explicit axiom prints include both new q=1 and q=0 target theorems
-on each slice, as well as the u=59 theorems. All printed dependencies are
+#20 (GitHub Actions run 45796426913). It compiled 49 project modules from
+the four roots U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and
+U5Q0W7U23Mod512.
+The explicit axiom prints include both q=1 and q=0 target theorems
+on all four slices, including u=59 and u=23. All printed dependencies are
 [propext, Classical.choice, Quot.sound] or the subset
 [propext, Quot.sound]. The workflow's grep guard found no sorryAx or
 native_decide dependency.
 
-These are three infinite excluded sublifts of the q=1 parent, not a
+These are four infinite excluded sublifts of the q=1 parent, not a
 classification of the entire w=55 (mod 128) row. The remaining q=1
 parameter residues and all even-W high-depth cases remain open.
+
+
+### u=23+512s
+
+The q=1 parent is
+\[
+A=(169639+3677184s,\;931041+20181504s).
+\]
+The odd/odd low-valuation inverse forces
+\[
+B=(550338+11929344s,\;740688+16055424s),
+\]
+which is even/even with \(B_x+B_y\equiv2\pmod8\). The even/even unique
+parent forces
+\[
+C=(1291024+27984768s,\;370343+8027712s).
+\]
+Here \(C_x\) is even, \(C_y\) is odd, and
+\(C_x+C_y+1\equiv8\pmod{16}\). The odd-seven parent forces
+\[
+D=(830681+18006240s,\;600511+13016976s).
+\]
+This is odd/odd with \(D_x+D_y\equiv8\pmod{16}\), so its odd/odd
+low-valuation parent is
+\[
+E=(715594+15511608s,\;658051+14264292s).
+\]
+The right coordinate of \(E\) is odd and \(E_x+E_y\equiv1\pmod4\);
+the original-source odd-right sum-one invariant excludes it. This is
+formalized by w7_z2_q1_parent_unreachable_u23mod512 and
+w7_q0_target_unreachable_u23mod512 in U5Q0W7U23Mod512.lean.
+
+For this slice, \(z=2+4u=94+2048s\), hence
+\(z\equiv14\pmod{16}\). The necessary root relation again gives
+\(w\equiv55\pmod{128}\), while \(z\equiv3\pmod5\) requires
+\(s\equiv3\pmod5\).
+
