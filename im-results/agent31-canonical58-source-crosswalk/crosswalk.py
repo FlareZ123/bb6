@@ -87,7 +87,7 @@ def main():
         raise AssertionError(f"expected Canonical58 count 58, got {len(current)}")
 
     with TSV.open(newline="") as handle:
-        rows = list(csv.DictReader(handle, delimiter="\\t"))
+        rows = list(csv.DictReader(handle, delimiter="\t"))
     if len(rows) != 56:
         raise AssertionError(f"expected 56 crosswalk rows, got {len(rows)}")
 
@@ -204,7 +204,7 @@ def main():
             "No current residual parent is closed and no Canonical58 count reduction follows from this crosswalk.",
         ],
     }
-    OUT.write_text(json.dumps(report, indent=2) + "\\n")
+    OUT.write_text(json.dumps(report, indent=2) + "\n")
     print(json.dumps({
         "output": str(OUT.relative_to(ROOT)),
         "current_roster_count": len(current),
