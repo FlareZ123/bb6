@@ -7,10 +7,10 @@ on:
         required: true
         type: string
       kind:
-        description: Branch depth, A6 root or C1 batch (f1, c1, d0, a6, c1batch)
+        description: Branch depth, A6 root, C1 batch or E0 sweep
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch]
+        options: [f1, c1, d0, a6, c1batch, e0sweep]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -40,6 +40,9 @@ jobs:
         run: |
           if [[ "$KIND" == c1 ]]; then
             bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
+          elif [[ "$KIND" == e0sweep ]]; then
+            [[ "$SIBLING" == ZeroRE ]]
+            bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh
           elif [[ "$KIND" == d0 ]]; then
             case "$SIBLING" in
               ZeroLF) bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh ;;
