@@ -97,10 +97,10 @@ theorem w7_q0_target_unreachable_u35mod64 (t : Nat) :
         exact Nat.pow_dvd_pow 2 (by omega)
       have hdiv : 32∣2^(n+1)*(a+3) := by
         rcases hpow with ⟨q,hq⟩
-        refine ⟨q*(a+3),?_⟩
         have hq' : 2^(n+1)=32*q := by simpa using hq
+        refine ⟨q*(a+3),?_⟩
         rw [hq']
-        ac_rfl
+        exact Nat.mul_assoc 32 q (a+3)
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
