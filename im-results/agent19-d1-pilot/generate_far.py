@@ -123,4 +123,6 @@ source = (ROOT / "Raw47Far5.template").read_text()
 source = source.replace("@@TREE@@", emit(tree, parent))
 source = source.replace("@@OPEN_COUNT@@", str(len(opens) - len(bank)))
 out_path.write_text(source)
+root_template = ROOT / "Raw47Far5RootRefinement.template"
+(ROOT / "Raw47Far5RootRefinement.lean").write_text(root_template.read_text())
 print(f"Raw47 FAR5: {len(bank)}/{len(opens)} leaves certified; {len(opens)-len(bank)} canonical residuals")
