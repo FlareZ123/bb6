@@ -237,8 +237,8 @@ theorem consumePairs (k : Nat) (H : ∀ j < k, First1 j ∧ First2 j)
       show h-4*(k:Int)-2-2=h-4*((k:Int)+1) by omega] using J
 
 theorem families (k : Nat) : First1 k ∧ First2 k := by
-  induction k using Nat.strong_induction_on with
-  | h k ih =>
+  induction k using Nat.strongRecOn with
+  | ind k ih =>
     cases k with
     | zero =>
       constructor
