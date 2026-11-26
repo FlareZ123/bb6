@@ -18,7 +18,11 @@ def emit(code,spec,out,limit=225,tr=None):
   if r[0]=='split':return max([int(r[1])]+[max_late(x) for x in r[3]])
   return 0
  B=max(counts['maxquery'],max((max_late(r) for r in rec.values()),default=0))+6
- def size(t):return 1+sum(map(size,t[3])) if t[0]=='split' else 1
+ def recipe_size(r):return 1+sum(recipe_size(x) for x in r[3]) if r[0]=='split' else 1
+ def size(t):
+  if t[0]=='split':return 1+sum(size(x) for x in t[3])
+  if t[0]=='open':return recipe_size(rec[idx[tuple(t[1])]])
+  return 1
  nested=spec.get('nested_blocks',[])
  nested_map={(tuple(x['table']),json.dumps(x['recipe'],sort_keys=True)):int(x['id']) for x in nested}
  nested_module=spec.get('nested_block_module',prefix+'NestedBlock00')
