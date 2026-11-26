@@ -1376,3 +1376,7 @@ Claimed at 2026-11-25T22:04:14.695Z; lease unchanged. Recovered full source via 
 
 ## 2026-11-26 00:42 UTC — raw124 0RA accepted
 Lease unchanged, claimed 00:34:17.217Z. Recovered the 20 CI-accepted child oleans from run 45582556219. Locally compiled K04 (128s), K05 with pNode124 rename (145s), K06, K07 (63s), and final Raw124B0RAData under Lean 4.36.0-rc2. Both root check and bound_all depend only on standard axioms; source-accepted F1=0RA bound 283. Dossier Raw124-0RA-accepted.md documents exact recovery. Current remaining five F1 branches are undergoing pooled FAR, affine sweep and block search; no additional branch acceptance yet. Continue toward whole parent. Do not rebuild 0RA without a reason.
+
+
+## 2026-11-26 00:47 UTC — fast 1LB witness archive
+67 affine and 6 ngram exact source-level NeverHalts proofs passed Lean locally, 4825 completions. Reproducible witness bundle fast-1LB.json.zlib.b64 and replay_fast_cut.py. 3050 FAR candidate leaves, eight residuals. Structural partial cut compilation underway, not yet accepted. Sparse asymmetric window search has candidates for 207 (19,20) and 212 (15,13), unverified until BiDFA. Continue remaining six. Lease unchanged.

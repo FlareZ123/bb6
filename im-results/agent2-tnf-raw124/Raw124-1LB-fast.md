@@ -1,0 +1,7 @@
+# Raw124 F1=1LB: semantic proofs and exact candidate cut
+
+The archived witness bundle `fast-1LB.json.zlib.b64` records a cap-3000 lookback-32 tree, 3050 selected FAR automata, 67 affine sweep seeds, and six n-gram widths. The 67 affine and six n-gram source-level `NeverHalts` theorems compiled successfully locally in Lean 4.36.0-rc2 using the original SweepPumping closure (artifact 15007205305), with standard axioms only. These 73 distinct candidate cylinders cover 4,825 raw completions. This does not by itself certify the aggregate branch.
+
+Reproduction: run `python replay_fast_cut.py fast-1LB.json.zlib.b64 --out /tmp/raw124-1LB` from this directory. The script checks both enumerator hashes, reconstructs affine induction witnesses without searching new seeds, regenerates the selected n-gram certificates, and emits structural `PartialAudit` shards using Agent13's raw125 assembly. Compile Base, Growth, NGram modules and the dependency DAG of the final Cut module, using the exact original source imports. The generated cut has 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 growth leaves, 6 n-gram leaves, 8 unresolved one-hole leaves. Final cut acceptance is pending. No global BB(6) roster subtraction is asserted.
+
+Residual display IDs (fast enumerator open-list indices): 207, 209, 212, 217, 711, 937, 980, 2083. Exact table keys are regenerated into Raw124New1LB.remaining.
