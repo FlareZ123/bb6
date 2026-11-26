@@ -1,7 +1,7 @@
 {
   "status": "metadata-level routing crosswalk; not a Lean theorem or parent Cover",
-  "generated_at": "2026-11-26T21:30:33.684Z",
-  "source_repo_head": "5c42c7eb91719b91290157585d825f5901558721",
+  "generated_at": "2026-11-26T21:38:06.378Z",
+  "source_repo_head": "fd44247b1a8501e7e73e36821d59bce174dfe096",
   "inputs": {
     "crosswalk_tsv": {
       "path": "im-results/agent10-nov26-cryptids/holdout-source-crosswalk.tsv",
@@ -139,113 +139,249 @@
       "raw_residual_index": 8,
       "canonical_index": 4,
       "holes": 10,
-      "address": "0LC",
-      "total": 4,
-      "new": 2,
-      "baseline": 2,
-      "nonhalt": 3,
-      "halt": 1,
-      "distinct_leaf_completions": 100,
+      "address": [
+        "0LC"
+      ],
+      "row_count": 4,
+      "batch_counts": {
+        "Nov26-21": 2,
+        "baseline-191": 2
+      },
+      "source_kind_counts": {
+        "Halt": 1,
+        "NonHalt": 3
+      },
+      "distinct_leaf_completions_all_kinds": 100,
+      "distinct_leaf_completions_nonhalt_only": 75,
       "total_parent_completions": 95367431640625,
-      "coverage_fraction": "1.049e-12"
+      "all_kind_fraction": "4/3814697265625",
+      "nonhalt_fraction": "3/3814697265625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/Halt/M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RF_0LCHHH_1LE1LD_1RE0LA_1RA0RD_1LB1RD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RC_0LC1RE_1RA0LD_1LB0RD_0RFHHH_0RA0RF.lean"
+      ]
     },
     {
       "raw_residual_index": 9,
       "canonical_index": 5,
       "holes": 10,
-      "address": "0RC",
-      "total": 9,
-      "new": 4,
-      "baseline": 5,
-      "nonhalt": 7,
-      "halt": 2,
-      "distinct_leaf_completions": 225,
+      "address": [
+        "0RC"
+      ],
+      "row_count": 9,
+      "batch_counts": {
+        "Nov26-21": 4,
+        "baseline-191": 5
+      },
+      "source_kind_counts": {
+        "Halt": 2,
+        "NonHalt": 7
+      },
+      "distinct_leaf_completions_all_kinds": 225,
+      "distinct_leaf_completions_nonhalt_only": 175,
       "total_parent_completions": 95367431640625,
-      "coverage_fraction": "2.359e-12"
+      "all_kind_fraction": "9/3814697265625",
+      "nonhalt_fraction": "7/3814697265625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/Halt/M_1RB0LE_0RCHHH_1RD0LA_1RE0RA_0LF1LD_1LC1RF.lean",
+        "BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LA_0RC1LE_0RD1RE_1LA1RF_1RB0LD_1RCHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LD_0RC1RD_1LA1RA_1LE0LE_1RF0LA_0RAHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LC_0RC0RB_1LD0LA_1LEHHH_1LF1RA_1LA1LC.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RC0RB_0LD1RB_1LE0LB_0LA1LC_0LBHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RCHHH_1RD1RF_1LE0LF_1LB0LA_1LD0RE.lean"
+      ]
     },
     {
       "raw_residual_index": 10,
       "canonical_index": 6,
       "holes": 10,
-      "address": "1LC",
-      "total": 19,
-      "new": 7,
-      "baseline": 12,
-      "nonhalt": 16,
-      "halt": 3,
-      "distinct_leaf_completions": 475,
+      "address": [
+        "1LC"
+      ],
+      "row_count": 19,
+      "batch_counts": {
+        "Nov26-21": 7,
+        "baseline-191": 12
+      },
+      "source_kind_counts": {
+        "Halt": 3,
+        "NonHalt": 16
+      },
+      "distinct_leaf_completions_all_kinds": 475,
+      "distinct_leaf_completions_nonhalt_only": 400,
       "total_parent_completions": 95367431640625,
-      "coverage_fraction": "4.981e-12"
+      "all_kind_fraction": "19/3814697265625",
+      "nonhalt_fraction": "16/3814697265625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean",
+        "BusyBeaver/BB6/Halt/M_1RB1LE_1LC1RE_1LE1LD_1LC0LA_1RF0LA_HHH0RA.lean",
+        "BusyBeaver/BB6/Halt/M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LA_1LC1RF_HHH1LD_1RE0LA_1RA0RB_1RE0RF.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LB_1LC1LB_1RD1LA_0RE0RE_0RA1RF_HHH1RD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC0RD_1LA0LC_1RE0LB_1RB1RF_0LDHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC1RB_0LA0LD_1LE0RB_1RF0RE_HHH0RD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LA_1RA0RD_HHH1RE_1LA1RC_0LB0RC.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LD_1RD1LB_HHH1RE_0RA1RE_1LA0LE.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1LC0RC_1LE0LD_1LC1LF_1RA1LC_0LCHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RB_1LC0LE_1RD1LB_1RA0RD_1LB1LF_0LBHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC1LF_1LD0LB_1RE1LC_1RA0RE_0LCHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC0RA_1RF0RD_HHH1LE_0LB1LE_1LE1RC.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1LA0LA_1RA1RF_0RAHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1RA0LA_1RA1RF_0RAHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LE_1LC0RF_1LA0RD_1LC1RC_1LB0LB_HHH1RD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RA_1LC1RE_0LD0LD_0LE1LF_1LA0RA_HHH1LC.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LAHHH.lean"
+      ]
     },
     {
       "raw_residual_index": 13,
       "canonical_index": 8,
       "holes": 9,
-      "address": "1RC,1LA",
-      "total": 1,
-      "new": 1,
-      "baseline": 0,
-      "nonhalt": 1,
-      "halt": 0,
-      "distinct_leaf_completions": 25,
+      "address": [
+        "1RC",
+        "1LA"
+      ],
+      "row_count": 1,
+      "batch_counts": {
+        "Nov26-21": 1
+      },
+      "source_kind_counts": {
+        "NonHalt": 1
+      },
+      "distinct_leaf_completions_all_kinds": 25,
+      "distinct_leaf_completions_nonhalt_only": 25,
       "total_parent_completions": 3814697265625,
-      "coverage_fraction": "6.554e-12"
+      "all_kind_fraction": "1/152587890625",
+      "nonhalt_fraction": "1/152587890625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/NonHalt/M_1RB0RD_1RC0LF_1LA0LB_HHH1RE_1LB1RA_0LC0RA.lean"
+      ]
     },
     {
       "raw_residual_index": 23,
       "canonical_index": 13,
       "holes": 9,
-      "address": "1RC,0LD",
-      "total": 4,
-      "new": 0,
-      "baseline": 4,
-      "nonhalt": 3,
-      "halt": 1,
-      "distinct_leaf_completions": 100,
+      "address": [
+        "1RC",
+        "0LD"
+      ],
+      "row_count": 4,
+      "batch_counts": {
+        "baseline-191": 4
+      },
+      "source_kind_counts": {
+        "Halt": 1,
+        "NonHalt": 3
+      },
+      "distinct_leaf_completions_all_kinds": 100,
+      "distinct_leaf_completions_nonhalt_only": 75,
       "total_parent_completions": 3814697265625,
-      "coverage_fraction": "2.621e-11"
+      "all_kind_fraction": "4/152587890625",
+      "nonhalt_fraction": "3/152587890625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LF_0LD0RC_1RA1LD_1LB0LE_HHH0RE.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.lean"
+      ]
     },
     {
       "raw_residual_index": 134,
       "canonical_index": 97,
       "holes": 8,
-      "address": "1RC,0RD,1RE",
-      "total": 1,
-      "new": 0,
-      "baseline": 1,
-      "nonhalt": 1,
-      "halt": 0,
-      "distinct_leaf_completions": 25,
+      "address": [
+        "1RC",
+        "0RD",
+        "1RE"
+      ],
+      "row_count": 1,
+      "batch_counts": {
+        "baseline-191": 1
+      },
+      "source_kind_counts": {
+        "NonHalt": 1
+      },
+      "distinct_leaf_completions_all_kinds": 25,
+      "distinct_leaf_completions_nonhalt_only": 25,
       "total_parent_completions": 152587890625,
-      "coverage_fraction": "1.638e-10"
+      "all_kind_fraction": "1/6103515625",
+      "nonhalt_fraction": "1/6103515625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_0RD0RB_1RE0LA_1RF0LF_1LD1RF.lean"
+      ]
     },
     {
       "raw_residual_index": 139,
       "canonical_index": 102,
       "holes": 9,
-      "address": "1RC,1LD",
-      "total": 11,
-      "new": 2,
-      "baseline": 9,
-      "nonhalt": 10,
-      "halt": 1,
-      "distinct_leaf_completions": 275,
+      "address": [
+        "1RC",
+        "1LD"
+      ],
+      "row_count": 11,
+      "batch_counts": {
+        "Nov26-21": 2,
+        "baseline-191": 9
+      },
+      "source_kind_counts": {
+        "Halt": 1,
+        "NonHalt": 10
+      },
+      "distinct_leaf_completions_all_kinds": 275,
+      "distinct_leaf_completions_nonhalt_only": 250,
       "total_parent_completions": 3814697265625,
-      "coverage_fraction": "7.209e-11"
+      "all_kind_fraction": "11/152587890625",
+      "nonhalt_fraction": "2/30517578125",
+      "upstream_modules": [
+        "BusyBeaver/BB6/Halt/M_1RB0RC_1RC0LD_1LD1RA_1LF0LE_HHH0RD_1LB0LA.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD0LE_1RA1LC_1LC1LF_0LCHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD1RF_HHH1LE_1RF0LF_1RA0LE.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1LD1LE_1LF0LC_0LDHHH_1RA1LD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RC_1RCHHH_1LD1RE_1LE0LD_1RA0LF_0RC0RB.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LB_1RC0LA_1LD1RF_1RB0LE_HHH1LA_1RD0RD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LD_1RC0RB_1LD0RD_1LA0LE_1LD1LF_0LDHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LE_1RC0RB_1LD1RC_1LA1LE_1LF0LA_1LCHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LA0LB_0RBHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LB0LB_0RBHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1RB0LB_0RBHHH.lean"
+      ]
     },
     {
       "raw_residual_index": 140,
       "canonical_index": 103,
       "holes": 9,
-      "address": "1RC,1RD",
-      "total": 7,
-      "new": 5,
-      "baseline": 2,
-      "nonhalt": 7,
-      "halt": 0,
-      "distinct_leaf_completions": 175,
+      "address": [
+        "1RC",
+        "1RD"
+      ],
+      "row_count": 7,
+      "batch_counts": {
+        "Nov26-21": 5,
+        "baseline-191": 2
+      },
+      "source_kind_counts": {
+        "NonHalt": 7
+      },
+      "distinct_leaf_completions_all_kinds": 175,
+      "distinct_leaf_completions_nonhalt_only": 175,
       "total_parent_completions": 3814697265625,
-      "coverage_fraction": "4.588e-11"
+      "all_kind_fraction": "7/152587890625",
+      "nonhalt_fraction": "7/152587890625",
+      "upstream_modules": [
+        "BusyBeaver/BB6/NonHalt/M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LB_1RD0RC_1LA1RC_HHH1LF_1LB1LD.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_1RD1RE_1LA0RF_0RC0LA_0LC0RB.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1RD0LC_1LE1RA_HHH1LF_1RB0LC.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RDHHH.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE.lean",
+        "BusyBeaver/BB6/NonHalt/M_1RB1LF_1RC1RB_1RD0RB_0LE0LF_HHH1LD_0LE1LA.lean"
+      ]
     }
   ],
   "matches": [
@@ -253,952 +389,1145 @@
       "raw_parent": 8,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RF_0LCHHH_1LE1LD_1RE0LA_1RA0RD_1LB1RD.lean",
-      "blob_sha": "47cd70c42241160078a2f1b46a575a41086f3054",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RF_0LCHHH_1LE1LD_1RE0LA_1RA0RD_1LB1RD.lean",
+      "upstream_blob_sha": "47cd70c42241160078a2f1b46a575a41086f3054",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:9,6:8,10:7,11:1,12:10,14:4,25:11",
       "holdout_rle": "1RB0RF_0LC---_1LE1LD_1RE0LA_1RA0RD_1LB1RD",
       "source_rle": "1RB0RF_0LCHHH_1LE1LD_1RE0LA_1RA0RD_1LB1RD",
-      "schedule": "1:2,2:5,3:6,4:9,6:8,10:7,11:1,12:10,14:4,25:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 8,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 8,
         "canonical_index": 4,
         "holes": 10,
-        "address": "0LC"
+        "address": [
+          "0LC"
+        ],
+        "table_rle": "1RB---_0LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 8,
       "batch": "Nov26-21",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB.lean",
-      "blob_sha": "f5cea52b6543ba1449a492f1b1c265c34e3106de",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB.lean",
+      "upstream_blob_sha": "f5cea52b6543ba1449a492f1b1c265c34e3106de",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:7,6:3,7:8,8:10,15:9,21:1,23:11",
       "holdout_rle": "1RB1LE_0LC1RE_---1LD_0RD1LA_0RF1RF_1RA0LB",
       "source_rle": "1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB",
-      "schedule": "1:2,2:5,3:6,4:7,6:3,7:8,8:10,15:9,21:1,23:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 8,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 8,
         "canonical_index": 4,
         "holes": 10,
-        "address": "0LC"
+        "address": [
+          "0LC"
+        ],
+        "table_rle": "1RB---_0LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 8,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD.lean",
-      "blob_sha": "ba1a88c41f62707a8c0a0476f8fa9592e381882b",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD.lean",
+      "upstream_blob_sha": "ba1a88c41f62707a8c0a0476f8fa9592e381882b",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_---0LD",
       "source_rle": "1RB1RA_0LC0RA_1RC1LD_0LB1LE_1LF0RC_HHH0LD",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 8,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 8,
         "canonical_index": 4,
         "holes": 10,
-        "address": "0LC"
+        "address": [
+          "0LC"
+        ],
+        "table_rle": "1RB---_0LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 8,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RC_0LC1RE_1RA0LD_1LB0RD_0RFHHH_0RA0RF.lean",
-      "blob_sha": "a580fb3b03dc80cab0bd64b0da14ce21823c89a6",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RC_0LC1RE_1RA0LD_1LB0RD_0RFHHH_0RA0RF.lean",
+      "upstream_blob_sha": "a580fb3b03dc80cab0bd64b0da14ce21823c89a6",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,5:4,7:3,8:8,9:10,16:7,27:1,63:11",
       "holdout_rle": "1RB1RC_0LC1RE_1RA0LD_1LB0RD_0RF---_0RA0RF",
       "source_rle": "1RB1RC_0LC1RE_1RA0LD_1LB0RD_0RFHHH_0RA0RF",
-      "schedule": "1:2,2:5,3:6,5:4,7:3,8:8,9:10,16:7,27:1,63:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 8,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 8,
         "canonical_index": 4,
         "holes": 10,
-        "address": "0LC"
+        "address": [
+          "0LC"
+        ],
+        "table_rle": "1RB---_0LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LA_0RC1LE_0RD1RE_1LA1RF_1RB0LD_1RCHHH.lean",
-      "blob_sha": "c4648df53c7c1461d6a20b3acfccf16850182edb",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LA_0RC1LE_0RD1RE_1LA1RF_1RB0LD_1RCHHH.lean",
+      "upstream_blob_sha": "c4648df53c7c1461d6a20b3acfccf16850182edb",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,5:3,6:9,8:1,11:5,12:8,15:7,16:10",
       "holdout_rle": "1RB0LA_0RC1LE_0RD1RE_1LA1RF_1RB0LD_1RC---",
       "source_rle": "1RB0LA_0RC1LE_0RD1RE_1LA1RF_1RB0LD_1RCHHH",
-      "schedule": "1:2,2:4,3:6,5:3,6:9,8:1,11:5,12:8,15:7,16:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_0RC1RD_1LA1RA_1LE0LE_1RF0LA_0RAHHH.lean",
-      "blob_sha": "eae828c7d9fcfc3c8b5a4dfe37c10daf44a68626",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_0RC1RD_1LA1RA_1LE0LE_1RF0LA_0RAHHH.lean",
+      "upstream_blob_sha": "eae828c7d9fcfc3c8b5a4dfe37c10daf44a68626",
+      "first_use_after_root_time_slot": "1:2,2:4,4:3,5:6,6:9,7:1,8:7,9:8,10:10,13:5",
       "holdout_rle": "1RB0LD_0RC1RD_1LA1RA_1LE0LE_1RF0LA_0RA---",
       "source_rle": "1RB0LD_0RC1RD_1LA1RA_1LE0LE_1RF0LA_0RAHHH",
-      "schedule": "1:2,2:4,4:3,5:6,6:9,7:1,8:7,9:8,10:10,13:5",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "Nov26-21",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB0LE_0RCHHH_1RD0LA_1RE0RA_0LF1LD_1LC1RF.lean",
-      "blob_sha": "d1d964342279f1bf35e5d406536e7e8374c21552",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB0LE_0RCHHH_1RD0LA_1RE0RA_0LF1LD_1LC1RF.lean",
+      "upstream_blob_sha": "d1d964342279f1bf35e5d406536e7e8374c21552",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:8,5:11,6:10,7:5,8:1,20:9,21:7",
       "holdout_rle": "1RB0LE_0RC---_1RD0LA_1RE0RA_0LF1LD_1LC1RF",
       "source_rle": "1RB0LE_0RCHHH_1RD0LA_1RE0RA_0LF1LD_1LC1RF",
-      "schedule": "1:2,2:4,3:6,4:8,5:11,6:10,7:5,8:1,20:9,21:7",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.lean",
-      "blob_sha": "f9ce0abde3f8f9e35ed9890ca5d047700ef843d1",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA.lean",
+      "upstream_blob_sha": "f9ce0abde3f8f9e35ed9890ca5d047700ef843d1",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_---1RA",
       "source_rle": "1RB0RA_0RC0LD_1LA1RF_1LE1LD_1LB1RE_HHH1RA",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.lean",
-      "blob_sha": "ad2971a7e0daed9d672cfdc51beb624ba570d315",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA.lean",
+      "upstream_blob_sha": "ad2971a7e0daed9d672cfdc51beb624ba570d315",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_---1RA",
       "source_rle": "1RB0RA_0RC0LE_1LD1RF_1LB1RD_1LD1LE_HHH1RA",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LC_0RC0RB_1LD0LA_1LEHHH_1LF1RA_1LA1LC.lean",
-      "blob_sha": "2eabbe9c11267b9f96cf05d4b3471b151fb1fd3f",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LC_0RC0RB_1LD0LA_1LEHHH_1LF1RA_1LA1LC.lean",
+      "upstream_blob_sha": "2eabbe9c11267b9f96cf05d4b3471b151fb1fd3f",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,5:1,6:5,35:8,36:10,38:3,120:11",
       "holdout_rle": "1RB1LC_0RC0RB_1LD0LA_1LE---_1LF1RA_1LA1LC",
       "source_rle": "1RB1LC_0RC0RB_1LD0LA_1LEHHH_1LF1RA_1LA1LC",
-      "schedule": "1:2,2:4,3:6,4:9,5:1,6:5,35:8,36:10,38:3,120:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RCHHH_1RD1RF_1LE0LF_1LB0LA_1LD0RE.lean",
-      "blob_sha": "73a99bcd14160202e03134769be4c71f8b95e147",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RCHHH_1RD1RF_1LE0LF_1LB0LA_1LD0RE.lean",
+      "upstream_blob_sha": "73a99bcd14160202e03134769be4c71f8b95e147",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,7:5,8:10,9:7,12:11,13:8,50:1",
       "holdout_rle": "1RB1LF_0RC---_1RD1RF_1LE0LF_1LB0LA_1LD0RE",
       "source_rle": "1RB1LF_0RCHHH_1RD1RF_1LE0LF_1LB0LA_1LD0RE",
-      "schedule": "1:2,2:4,3:6,4:9,7:5,8:10,9:7,12:11,13:8,50:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RC0RB_0LD1RB_1LE0LB_0LA1LC_0LBHHH.lean",
-      "blob_sha": "cb6c3fd527acc6351e95f76c9544d6e9def0f56c",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_0RC0RB_0LD1RB_1LE0LB_0LA1LC_0LBHHH.lean",
+      "upstream_blob_sha": "cb6c3fd527acc6351e95f76c9544d6e9def0f56c",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,7:8,10:5,13:3,18:1,19:10,30:7",
       "holdout_rle": "1RB1LF_0RC0RB_0LD1RB_1LE0LB_0LA1LC_0LB---",
       "source_rle": "1RB1LF_0RC0RB_0LD1RB_1LE0LB_0LA1LC_0LBHHH",
-      "schedule": "1:2,2:4,3:6,4:9,7:8,10:5,13:3,18:1,19:10,30:7",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 9,
       "batch": "baseline-191",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean",
-      "blob_sha": "5faadb7cd7193ddc0520d6c84f23bdbcae372feb",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH.lean",
+      "upstream_blob_sha": "5faadb7cd7193ddc0520d6c84f23bdbcae372feb",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RD---",
       "source_rle": "1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 9,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 9,
         "canonical_index": 5,
         "holes": 10,
-        "address": "0RC"
+        "address": [
+          "0RC"
+        ],
+        "table_rle": "1RB---_0RC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LA_1LC1RF_HHH1LD_1RE0LA_1RA0RB_1RE0RF.lean",
-      "blob_sha": "93d982eac3a7413fbacfb648042953b466d11d0e",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LA_1LC1RF_HHH1LD_1RE0LA_1RA0RB_1RE0RF.lean",
+      "upstream_blob_sha": "93d982eac3a7413fbacfb648042953b466d11d0e",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:9,5:3,6:10,7:8,11:7,12:1,24:11",
       "holdout_rle": "1RB0LA_1LC1RF_---1LD_1RE0LA_1RA0RB_1RE0RF",
       "source_rle": "1RB0LA_1LC1RF_HHH1LD_1RE0LA_1RA0RB_1RE0RF",
-      "schedule": "1:2,2:5,3:6,4:9,5:3,6:10,7:8,11:7,12:1,24:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LB_1LC1LB_1RD1LA_0RE0RE_0RA1RF_HHH1RD.lean",
-      "blob_sha": "c90b920ab01a198a4964a355c5d7d595426a9f74",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LB_1LC1LB_1RD1LA_0RE0RE_0RA1RF_HHH1RD.lean",
+      "upstream_blob_sha": "c90b920ab01a198a4964a355c5d7d595426a9f74",
+      "first_use_after_root_time_slot": "1:2,2:5,4:3,7:4,8:7,9:9,10:11,12:8,21:1,89:6",
       "holdout_rle": "1RB0LB_1LC1LB_1RD1LA_0RE0RE_0RA1RF_---1RD",
       "source_rle": "1RB0LB_1LC1LB_1RD1LA_0RE0RE_0RA1RF_HHH1RD",
-      "schedule": "1:2,2:5,4:3,7:4,8:7,9:9,10:11,12:8,21:1,89:6",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.lean",
-      "blob_sha": "6e6610d2294cfba04a643d89e233179cb3414994",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF.lean",
+      "upstream_blob_sha": "6e6610d2294cfba04a643d89e233179cb3414994",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0LC_1LC0RB_0LE0LD_1LC---_0RA1LF_1LA1LF",
       "source_rle": "1RB0LC_1LC0RB_0LE0LD_1LCHHH_0RA1LF_1LA1LF",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean",
-      "blob_sha": "a67e77373db8a0288a8879d4ebc4a35343d93e9a",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH.lean",
+      "upstream_blob_sha": "a67e77373db8a0288a8879d4ebc4a35343d93e9a",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LB---",
       "source_rle": "1RB0LC_1LC0RE_1RF1LD_1LA0LB_1RD1RA_1LBHHH",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC0RD_1LA0LC_1RE0LB_1RB1RF_0LDHHH.lean",
-      "blob_sha": "bea2675e920d5c6d4ff1255d262ddd532af850b7",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC0RD_1LA0LC_1RE0LB_1RB1RF_0LDHHH.lean",
+      "upstream_blob_sha": "bea2675e920d5c6d4ff1255d262ddd532af850b7",
+      "first_use_after_root_time_slot": "1:2,2:5,3:4,5:3,6:6,7:9,8:10,9:7,12:8,28:1",
       "holdout_rle": "1RB0LD_1LC0RD_1LA0LC_1RE0LB_1RB1RF_0LD---",
       "source_rle": "1RB0LD_1LC0RD_1LA0LC_1RE0LB_1RB1RF_0LDHHH",
-      "schedule": "1:2,2:5,3:4,5:3,6:6,7:9,8:10,9:7,12:8,28:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC1RB_0LA0LD_1LE0RB_1RF0RE_HHH0RD.lean",
-      "blob_sha": "b617dd5b6d47deaffdeca75b3b46358b72f137c5",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LD_1LC1RB_0LA0LD_1LE0RB_1RF0RE_HHH0RD.lean",
+      "upstream_blob_sha": "b617dd5b6d47deaffdeca75b3b46358b72f137c5",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:8,5:11,9:7,11:4,18:1,29:3,40:9",
       "holdout_rle": "1RB0LD_1LC1RB_0LA0LD_1LE0RB_1RF0RE_---0RD",
       "source_rle": "1RB0LD_1LC1RB_0LA0LD_1LE0RB_1RF0RE_HHH0RD",
-      "schedule": "1:2,2:5,3:6,4:8,5:11,9:7,11:4,18:1,29:3,40:9",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LA_1RA0RD_HHH1RE_1LA1RC_0LB0RC.lean",
-      "blob_sha": "3fbd01debebc34fc46a1e798583be38065dd91ce",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LA_1RA0RD_HHH1RE_1LA1RC_0LB0RC.lean",
+      "upstream_blob_sha": "3fbd01debebc34fc46a1e798583be38065dd91ce",
+      "first_use_after_root_time_slot": "1:2,2:5,3:7,4:8,5:1,6:10,8:4,10:11,16:9,25:3",
       "holdout_rle": "1RB0LF_1LC0LA_1RA0RD_---1RE_1LA1RC_0LB0RC",
       "source_rle": "1RB0LF_1LC0LA_1RA0RD_HHH1RE_1LA1RC_0LB0RC",
-      "schedule": "1:2,2:5,3:7,4:8,5:1,6:10,8:4,10:11,16:9,25:3",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LD_1RD1LB_HHH1RE_0RA1RE_1LA0LE.lean",
-      "blob_sha": "67dd0d27bbdb37ad93a74dc8471d5def29cbb4ec",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LF_1LC0LD_1RD1LB_HHH1RE_0RA1RE_1LA0LE.lean",
+      "upstream_blob_sha": "67dd0d27bbdb37ad93a74dc8471d5def29cbb4ec",
+      "first_use_after_root_time_slot": "1:2,2:5,4:4,5:7,6:9,8:8,14:3,17:1,18:10,20:11",
       "holdout_rle": "1RB0LF_1LC0LD_1RD1LB_---1RE_0RA1RE_1LA0LE",
       "source_rle": "1RB0LF_1LC0LD_1RD1LB_HHH1RE_0RA1RE_1LA0LE",
-      "schedule": "1:2,2:5,4:4,5:7,6:9,8:8,14:3,17:1,18:10,20:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1LC0RC_1LE0LD_1LC1LF_1RA1LC_0LCHHH.lean",
-      "blob_sha": "fa1137550f288ec981363e73882b8609195c05e2",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1LC0RC_1LE0LD_1LC1LF_1RA1LC_0LCHHH.lean",
+      "upstream_blob_sha": "fa1137550f288ec981363e73882b8609195c05e2",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:4,5:8,6:1,9:3,18:7,19:10,21:9",
       "holdout_rle": "1RB0RA_1LC0RC_1LE0LD_1LC1LF_1RA1LC_0LC---",
       "source_rle": "1RB0RA_1LC0RC_1LE0LD_1LC1LF_1RA1LC_0LCHHH",
-      "schedule": "1:2,2:5,3:6,4:4,5:8,6:1,9:3,18:7,19:10,21:9",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RB_1LC0LE_1RD1LB_1RA0RD_1LB1LF_0LBHHH.lean",
-      "blob_sha": "ea00a47863ab1a78e01760303e7b3f449116082f",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RB_1LC0LE_1RD1LB_1RA0RD_1LB1LF_0LBHHH.lean",
+      "upstream_blob_sha": "ea00a47863ab1a78e01760303e7b3f449116082f",
+      "first_use_after_root_time_slot": "1:2,2:5,4:4,5:7,8:6,12:3,13:8,19:1,64:9,65:10",
       "holdout_rle": "1RB0RB_1LC0LE_1RD1LB_1RA0RD_1LB1LF_0LB---",
       "source_rle": "1RB0RB_1LC0LE_1RD1LB_1RA0RD_1LB1LF_0LBHHH",
-      "schedule": "1:2,2:5,4:4,5:7,8:6,12:3,13:8,19:1,64:9,65:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC1LF_1LD0LB_1RE1LC_1RA0RE_0LCHHH.lean",
-      "blob_sha": "ac7578bdb6e72a578d60e5efe3b64243f7cf0d2e",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC1LF_1LD0LB_1RE1LC_1RA0RE_0LCHHH.lean",
+      "upstream_blob_sha": "ac7578bdb6e72a578d60e5efe3b64243f7cf0d2e",
+      "first_use_after_root_time_slot": "1:2,2:5,4:4,5:6,6:9,8:8,9:1,17:3,18:10,23:7",
       "holdout_rle": "1RB0RC_1LC1LF_1LD0LB_1RE1LC_1RA0RE_0LC---",
       "source_rle": "1RB0RC_1LC1LF_1LD0LB_1RE1LC_1RA0RE_0LCHHH",
-      "schedule": "1:2,2:5,4:4,5:6,6:9,8:8,9:1,17:3,18:10,23:7",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC0RA_1RF0RD_HHH1LE_0LB1LE_1LE1RC.lean",
-      "blob_sha": "01e32180d4b8e66506aeae3d56dcfc03cfccc486",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC0RA_1RF0RD_HHH1LE_0LB1LE_1LE1RC.lean",
+      "upstream_blob_sha": "01e32180d4b8e66506aeae3d56dcfc03cfccc486",
+      "first_use_after_root_time_slot": "1:2,2:5,3:7,4:8,6:4,7:11,11:10,12:9,26:3,29:1",
       "holdout_rle": "1RB0RE_1LC0RA_1RF0RD_---1LE_0LB1LE_1LE1RC",
       "source_rle": "1RB0RE_1LC0RA_1RF0RD_HHH1LE_0LB1LE_1LE1RC",
-      "schedule": "1:2,2:5,3:7,4:8,6:4,7:11,11:10,12:9,26:3,29:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1LA0LA_1RA1RF_0RAHHH.lean",
-      "blob_sha": "0c5b118f03d5318c0026e4fe6b7257394b5b0417",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1LA0LA_1RA1RF_0RAHHH.lean",
+      "upstream_blob_sha": "0c5b118f03d5318c0026e4fe6b7257394b5b0417",
+      "first_use_after_root_time_slot": "1:2,2:5,3:4,4:6,6:3,7:1,8:8,16:7,41:9,42:10",
       "holdout_rle": "1RB0RE_1LC1RA_1LD0LC_1LA0LA_1RA1RF_0RA---",
       "source_rle": "1RB0RE_1LC1RA_1LD0LC_1LA0LA_1RA1RF_0RAHHH",
-      "schedule": "1:2,2:5,3:4,4:6,6:3,7:1,8:8,16:7,41:9,42:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1RA0LA_1RA1RF_0RAHHH.lean",
-      "blob_sha": "7574933c6afae2e404631b50f6112d126a154f76",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RE_1LC1RA_1LD0LC_1RA0LA_1RA1RF_0RAHHH.lean",
+      "upstream_blob_sha": "7574933c6afae2e404631b50f6112d126a154f76",
+      "first_use_after_root_time_slot": "1:2,2:5,3:4,4:6,5:1,6:8,14:7,24:3,61:9,62:10",
       "holdout_rle": "1RB0RE_1LC1RA_1LD0LC_1RA0LA_1RA1RF_0RA---",
       "source_rle": "1RB0RE_1LC1RA_1LD0LC_1RA0LA_1RA1RF_0RAHHH",
-      "schedule": "1:2,2:5,3:4,4:6,5:1,6:8,14:7,24:3,61:9,62:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LE_1LC0RF_1LA0RD_1LC1RC_1LB0LB_HHH1RD.lean",
-      "blob_sha": "47b864c35d60b91d53d8e61a91e5b1452c9ec9fb",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LE_1LC0RF_1LA0RD_1LC1RC_1LB0LB_HHH1RD.lean",
+      "upstream_blob_sha": "47b864c35d60b91d53d8e61a91e5b1452c9ec9fb",
+      "first_use_after_root_time_slot": "1:2,2:5,3:7,4:4,5:1,6:8,10:3,11:11,22:6,25:9",
       "holdout_rle": "1RB1LE_1LC0RF_1LA0RD_1LC1RC_1LB0LB_---1RD",
       "source_rle": "1RB1LE_1LC0RF_1LA0RD_1LC1RC_1LB0LB_HHH1RD",
-      "schedule": "1:2,2:5,3:7,4:4,5:1,6:8,10:3,11:11,22:6,25:9",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB1LE_1LC1RE_1LE1LD_1LC0LA_1RF0LA_HHH0RA.lean",
-      "blob_sha": "70e092091f24ce00873e3101acf9b127fd9e7238",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB1LE_1LC1RE_1LE1LD_1LC0LA_1RF0LA_HHH0RA.lean",
+      "upstream_blob_sha": "70e092091f24ce00873e3101acf9b127fd9e7238",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:4,5:8,6:11,7:1,21:7,23:9,44:3",
       "holdout_rle": "1RB1LE_1LC1RE_1LE1LD_1LC0LA_1RF0LA_---0RA",
       "source_rle": "1RB1LE_1LC1RE_1LE1LD_1LC0LA_1RF0LA_HHH0RA",
-      "schedule": "1:2,2:5,3:6,4:4,5:8,6:11,7:1,21:7,23:9,44:3",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_1LC1RE_0LD0LD_0LE1LF_1LA0RA_HHH1LC.lean",
-      "blob_sha": "a1d8352a337a4889070ce34754eec425727ea8c4",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_1LC1RE_0LD0LD_0LE1LF_1LA0RA_HHH1LC.lean",
+      "upstream_blob_sha": "a1d8352a337a4889070ce34754eec425727ea8c4",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,4:8,6:3,8:1,18:7,19:11,33:9,224:4",
       "holdout_rle": "1RB1RA_1LC1RE_0LD0LD_0LE1LF_1LA0RA_---1LC",
       "source_rle": "1RB1RA_1LC1RE_0LD0LD_0LE1LF_1LA0RA_HHH1LC",
-      "schedule": "1:2,2:5,3:6,4:8,6:3,8:1,18:7,19:11,33:9,224:4",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "baseline-191",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.lean",
-      "blob_sha": "233cb54a6640a972b111c3bdebb9febe3c2154f6",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA.lean",
+      "upstream_blob_sha": "233cb54a6640a972b111c3bdebb9febe3c2154f6",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RC---_1LD0RA",
       "source_rle": "1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 10,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LAHHH.lean",
-      "blob_sha": "15000f19425693ec7786d5946fb6153973184152",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LAHHH.lean",
+      "upstream_blob_sha": "15000f19425693ec7786d5946fb6153973184152",
+      "first_use_after_root_time_slot": "1:2,2:5,3:6,5:4,7:3,8:1,9:9,11:8,2053:7,2054:10",
       "holdout_rle": "1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LA---",
       "source_rle": "1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LAHHH",
-      "schedule": "1:2,2:5,3:6,5:4,7:3,8:1,9:9,11:8,2053:7,2054:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 10,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 10,
         "canonical_index": 6,
         "holes": 10,
-        "address": "1LC"
+        "address": [
+          "1LC"
+        ],
+        "table_rle": "1RB---_1LC---_------_------_------_------"
       }
     },
     {
       "raw_parent": 13,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RD_1RC0LF_1LA0LB_HHH1RE_1LB1RA_0LC0RA.lean",
-      "blob_sha": "2e56c0c75e2e48d91e64fe847e7ddfde36a0dc89",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RD_1RC0LF_1LA0LB_HHH1RE_1LB1RA_0LC0RA.lean",
+      "upstream_blob_sha": "2e56c0c75e2e48d91e64fe847e7ddfde36a0dc89",
+      "first_use_after_root_time_slot": "1:2,2:4,3:1,4:7,5:8,6:3,7:10,8:5,19:11,25:9",
       "holdout_rle": "1RB0RD_1RC0LF_1LA0LB_---1RE_1LB1RA_0LC0RA",
       "source_rle": "1RB0RD_1RC0LF_1LA0LB_HHH1RE_1LB1RA_0LC0RA",
-      "schedule": "1:2,2:4,3:1,4:7,5:8,6:3,7:10,8:5,19:11,25:9",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 13,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 13,
         "canonical_index": 8,
         "holes": 9,
-        "address": "1RC,1LA"
+        "address": [
+          "1RC",
+          "1LA"
+        ],
+        "table_rle": "1RB---_1RC---_1LA---_------_------_------"
       }
     },
     {
       "raw_parent": 23,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LF_0LD0RC_1RA1LD_1LB0LE_HHH0RE.lean",
-      "blob_sha": "4217238dcd27dac9f278d13562910720afa94eb1",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LF_0LD0RC_1RA1LD_1LB0LE_HHH0RE.lean",
+      "upstream_blob_sha": "4217238dcd27dac9f278d13562910720afa94eb1",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,5:6,6:1,7:9,8:8,10:5,153:3,154:11",
       "holdout_rle": "1RB0LE_1RC0LF_0LD0RC_1RA1LD_1LB0LE_---0RE",
       "source_rle": "1RB0LE_1RC0LF_0LD0RC_1RA1LD_1LB0LE_HHH0RE",
-      "schedule": "1:2,2:4,3:7,5:6,6:1,7:9,8:8,10:5,153:3,154:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 23,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 23,
         "canonical_index": 13,
         "holes": 9,
-        "address": "1RC,0LD"
+        "address": [
+          "1RC",
+          "0LD"
+        ],
+        "table_rle": "1RB---_1RC---_0LD---_------_------_------"
       }
     },
     {
       "raw_parent": 23,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.lean",
-      "blob_sha": "40c0987589544c100513c7aff45d4b1e6280e1ae",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH.lean",
+      "upstream_blob_sha": "40c0987589544c100513c7aff45d4b1e6280e1ae",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0RE---",
       "source_rle": "1RB0RA_1RC0LC_0LD1RF_1RA1LE_1LD0LB_0REHHH",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 23,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 23,
         "canonical_index": 13,
         "holes": 9,
-        "address": "1RC,0LD"
+        "address": [
+          "1RC",
+          "0LD"
+        ],
+        "table_rle": "1RB---_1RC---_0LD---_------_------_------"
       }
     },
     {
       "raw_parent": 23,
       "batch": "baseline-191",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean",
-      "blob_sha": "b53770c1f1de5aa112fe386d398068b457c085e5",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH.lean",
+      "upstream_blob_sha": "b53770c1f1de5aa112fe386d398068b457c085e5",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LA---",
       "source_rle": "1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 23,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 23,
         "canonical_index": 13,
         "holes": 9,
-        "address": "1RC,0LD"
+        "address": [
+          "1RC",
+          "0LD"
+        ],
+        "table_rle": "1RB---_1RC---_0LD---_------_------_------"
       }
     },
     {
       "raw_parent": 23,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.lean",
-      "blob_sha": "7d6bb3f1c250f1cf7778782f11259d2df97e3f1d",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF.lean",
+      "upstream_blob_sha": "7d6bb3f1c250f1cf7778782f11259d2df97e3f1d",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB1RA_1RC1LB_0LD0RA_1RF1LE_---1LF_1LC0LF",
       "source_rle": "1RB1RA_1RC1LB_0LD0RA_1RF1LE_HHH1LF_1LC0LF",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 23,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 23,
         "canonical_index": 13,
         "holes": 9,
-        "address": "1RC,0LD"
+        "address": [
+          "1RC",
+          "0LD"
+        ],
+        "table_rle": "1RB---_1RC---_0LD---_------_------_------"
       }
     },
     {
       "raw_parent": 134,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_0RD0RB_1RE0LA_1RF0LF_1LD1RF.lean",
-      "blob_sha": "58f0ac4ed9c054261df4b36e5eef4039edc1b74c",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_0RD0RB_1RE0LA_1RF0LF_1LD1RF.lean",
+      "upstream_blob_sha": "58f0ac4ed9c054261df4b36e5eef4039edc1b74c",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:8,5:10,6:7,7:1,12:9,16:11,21:5",
       "holdout_rle": "1RB0LE_1RC---_0RD0RB_1RE0LA_1RF0LF_1LD1RF",
       "source_rle": "1RB0LE_1RCHHH_0RD0RB_1RE0LA_1RF0LF_1LD1RF",
-      "schedule": "1:2,2:4,3:6,4:8,5:10,6:7,7:1,12:9,16:11,21:5",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 134,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 134,
         "canonical_index": 97,
         "holes": 8,
-        "address": "1RC,0RD,1RE"
+        "address": [
+          "1RC",
+          "0RD",
+          "1RE"
+        ],
+        "table_rle": "1RB---_1RC---_0RD---_1RE---_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD0LE_1RA1LC_1LC1LF_0LCHHH.lean",
-      "blob_sha": "14764f66ada887ae382a985ff3293b7d00726c73",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD0LE_1RA1LC_1LC1LF_0LCHHH.lean",
+      "upstream_blob_sha": "14764f66ada887ae382a985ff3293b7d00726c73",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:5,5:8,7:6,8:1,11:3,36:9,37:10",
       "holdout_rle": "1RB0RA_1RC0RC_1LD0LE_1RA1LC_1LC1LF_0LC---",
       "source_rle": "1RB0RA_1RC0RC_1LD0LE_1RA1LC_1LC1LF_0LCHHH",
-      "schedule": "1:2,2:4,3:7,4:5,5:8,7:6,8:1,11:3,36:9,37:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD1RF_HHH1LE_1RF0LF_1RA0LE.lean",
-      "blob_sha": "dc711428ad928e0d484c7599c0cc610b247b81d5",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RC_1LD1RF_HHH1LE_1RF0LF_1RA0LE.lean",
+      "upstream_blob_sha": "dc711428ad928e0d484c7599c0cc610b247b81d5",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:9,5:10,7:3,8:5,15:11,26:8,114:1",
       "holdout_rle": "1RB0RA_1RC0RC_1LD1RF_---1LE_1RF0LF_1RA0LE",
       "source_rle": "1RB0RA_1RC0RC_1LD1RF_HHH1LE_1RF0LF_1RA0LE",
-      "schedule": "1:2,2:4,3:7,4:9,5:10,7:3,8:5,15:11,26:8,114:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1LD1LE_1LF0LC_0LDHHH_1RA1LD.lean",
-      "blob_sha": "ed0ce99e54854d23f066614f87bba7a114bd896d",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1LD1LE_1LF0LC_0LDHHH_1RA1LD.lean",
+      "upstream_blob_sha": "ed0ce99e54854d23f066614f87bba7a114bd896d",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:5,5:8,6:6,7:10,8:1,10:3,22:11",
       "holdout_rle": "1RB0RA_1RC0RD_1LD1LE_1LF0LC_0LD---_1RA1LD",
       "source_rle": "1RB0RA_1RC0RD_1LD1LE_1LF0LC_0LDHHH_1RA1LD",
-      "schedule": "1:2,2:4,3:7,4:5,5:8,6:6,7:10,8:1,10:3,22:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RC_1RCHHH_1LD1RE_1LE0LD_1RA0LF_0RC0RB.lean",
-      "blob_sha": "4010a7cfb2751b405a612c16002df5de89968d92",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RC_1RCHHH_1LD1RE_1LE0LD_1RA0LF_0RC0RB.lean",
+      "upstream_blob_sha": "4010a7cfb2751b405a612c16002df5de89968d92",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,5:6,6:8,7:1,10:9,11:10,16:5,18:11",
       "holdout_rle": "1RB0RC_1RC---_1LD1RE_1LE0LD_1RA0LF_0RC0RB",
       "source_rle": "1RB0RC_1RCHHH_1LD1RE_1LE0LD_1RA0LF_0RC0RB",
-      "schedule": "1:2,2:4,3:7,5:6,6:8,7:1,10:9,11:10,16:5,18:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "Halt",
-      "module": "BusyBeaver/BB6/Halt/M_1RB0RC_1RC0LD_1LD1RA_1LF0LE_HHH0RD_1LB0LA.lean",
-      "blob_sha": "a0e5639a1d8326fba4d76b10f9fd02a9680ecaaa",
+      "upstream_module": "BusyBeaver/BB6/Halt/M_1RB0RC_1RC0LD_1LD1RA_1LF0LE_HHH0RD_1LB0LA.lean",
+      "upstream_blob_sha": "a0e5639a1d8326fba4d76b10f9fd02a9680ecaaa",
+      "first_use_after_root_time_slot": "",
       "holdout_rle": "1RB0RC_1RC0LD_1LD1RA_1LF0LE_---0RD_1LB0LA",
       "source_rle": "1RB0RC_1RC0LD_1LD1RA_1LF0LE_HHH0RD_1LB0LA",
-      "schedule": "",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LB_1RC0LA_1LD1RF_1RB0LE_HHH1LA_1RD0RD.lean",
-      "blob_sha": "950eb947bb8ad05fb7e563fb7434d52433d31bc0",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LB_1RC0LA_1LD1RF_1RB0LE_HHH1LA_1RD0RD.lean",
+      "upstream_blob_sha": "950eb947bb8ad05fb7e563fb7434d52433d31bc0",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:9,6:3,7:1,9:5,10:10,11:6,36:11",
       "holdout_rle": "1RB1LB_1RC0LA_1LD1RF_1RB0LE_---1LA_1RD0RD",
       "source_rle": "1RB1LB_1RC0LA_1LD1RF_1RB0LE_HHH1LA_1RD0RD",
-      "schedule": "1:2,2:4,3:7,4:9,6:3,7:1,9:5,10:10,11:6,36:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LD_1RC0RB_1LD0RD_1LA0LE_1LD1LF_0LDHHH.lean",
-      "blob_sha": "5c313d95f1caa7e96f1c1d2e85c8e45922af7532",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LD_1RC0RB_1LD0RD_1LA0LE_1LD1LF_0LDHHH.lean",
+      "upstream_blob_sha": "5c313d95f1caa7e96f1c1d2e85c8e45922af7532",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:9,5:10,6:6,8:3,10:5,18:8,20:1",
       "holdout_rle": "1RB1LD_1RC0RB_1LD0RD_1LA0LE_1LD1LF_0LD---",
       "source_rle": "1RB1LD_1RC0RB_1LD0RD_1LA0LE_1LD1LF_0LDHHH",
-      "schedule": "1:2,2:4,3:7,4:9,5:10,6:6,8:3,10:5,18:8,20:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LE_1RC0RB_1LD1RC_1LA1LE_1LF0LA_1LCHHH.lean",
-      "blob_sha": "c58f3cc5fe1cff7b3292bbf265d484ab3b323d0c",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LE_1RC0RB_1LD1RC_1LA1LE_1LF0LA_1LCHHH.lean",
+      "upstream_blob_sha": "c58f3cc5fe1cff7b3292bbf265d484ab3b323d0c",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,4:9,7:5,12:1,21:8,22:10,24:6,26:3",
       "holdout_rle": "1RB1LE_1RC0RB_1LD1RC_1LA1LE_1LF0LA_1LC---",
       "source_rle": "1RB1LE_1RC0RB_1LD1RC_1LA1LE_1LF0LA_1LCHHH",
-      "schedule": "1:2,2:4,3:7,4:9,7:5,12:1,21:8,22:10,24:6,26:3",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LA0LB_0RBHHH.lean",
-      "blob_sha": "2f87bc93fbd83095c4084696f7b5268259f35342",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LA0LB_0RBHHH.lean",
+      "upstream_blob_sha": "2f87bc93fbd83095c4084696f7b5268259f35342",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,5:6,6:8,8:3,9:1,10:10,12:5,19:9",
       "holdout_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LA0LB_0RB---",
       "source_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LA0LB_0RBHHH",
-      "schedule": "1:2,2:4,3:7,5:6,6:8,8:3,9:1,10:10,12:5,19:9",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LB0LB_0RBHHH.lean",
-      "blob_sha": "2b8686244085adc88b61170bc8f5a735f31ead86",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LB0LB_0RBHHH.lean",
+      "upstream_blob_sha": "2b8686244085adc88b61170bc8f5a735f31ead86",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,5:6,6:8,8:5,9:3,20:9,41:1,42:10",
       "holdout_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LB0LB_0RB---",
       "source_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1LB0LB_0RBHHH",
-      "schedule": "1:2,2:4,3:7,5:6,6:8,8:5,9:3,20:9,41:1,42:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 139,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1RB0LB_0RBHHH.lean",
-      "blob_sha": "2783aaa5d61ad4d17eef1aaf72dff98127d33a7d",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1RF_1RC0RA_1LD1RB_1LE0LD_1RB0LB_0RBHHH.lean",
+      "upstream_blob_sha": "2783aaa5d61ad4d17eef1aaf72dff98127d33a7d",
+      "first_use_after_root_time_slot": "1:2,2:4,3:7,5:6,6:8,7:3,10:5,18:9,27:1,28:10",
       "holdout_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1RB0LB_0RB---",
       "source_rle": "1RB1RF_1RC0RA_1LD1RB_1LE0LD_1RB0LB_0RBHHH",
-      "schedule": "1:2,2:4,3:7,5:6,6:8,7:3,10:5,18:9,27:1,28:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 139,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 139,
         "canonical_index": 102,
         "holes": 9,
-        "address": "1RC,1LD"
+        "address": [
+          "1RC",
+          "1LD"
+        ],
+        "table_rle": "1RB---_1RC---_1LD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA.lean",
-      "blob_sha": "b1b2f3c5aaee2266a514a8078f1084bcf6749899",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA.lean",
+      "upstream_blob_sha": "b1b2f3c5aaee2266a514a8078f1084bcf6749899",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,5:1,6:5,7:10,9:8,16:3,59:11",
       "holdout_rle": "1RB0LC_1RC0RA_1RD0RF_0LE---_1LB1LA_1LD1RA",
       "source_rle": "1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA",
-      "schedule": "1:2,2:4,3:6,4:9,5:1,6:5,7:10,9:8,16:3,59:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_1RD1RE_1LA0RF_0RC0LA_0LC0RB.lean",
-      "blob_sha": "b40aa4878b9e5d94a2a95b25ed266dc85e8df61e",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RCHHH_1RD1RE_1LA0RF_0RC0LA_0LC0RB.lean",
+      "upstream_blob_sha": "b40aa4878b9e5d94a2a95b25ed266dc85e8df61e",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:1,5:9,7:8,13:7,14:10,23:11,85:5",
       "holdout_rle": "1RB0LE_1RC---_1RD1RE_1LA0RF_0RC0LA_0LC0RB",
       "source_rle": "1RB0LE_1RCHHH_1RD1RE_1LA0RF_0RC0LA_0LC0RB",
-      "schedule": "1:2,2:4,3:6,4:1,5:9,7:8,13:7,14:10,23:11,85:5",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LB_1RD0RC_1LA1RC_HHH1LF_1LB1LD.lean",
-      "blob_sha": "3558d9d4e810a041ca8bbdb477a11fb02d541b6d",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0LE_1RC0LB_1RD0RC_1LA1RC_HHH1LF_1LB1LD.lean",
+      "upstream_blob_sha": "3558d9d4e810a041ca8bbdb477a11fb02d541b6d",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:1,5:9,6:11,9:3,16:10,18:5,21:7",
       "holdout_rle": "1RB0LE_1RC0LB_1RD0RC_1LA1RC_---1LF_1LB1LD",
       "source_rle": "1RB0LE_1RC0LB_1RD0RC_1LA1RC_HHH1LF_1LB1LD",
-      "schedule": "1:2,2:4,3:6,4:1,5:9,6:11,9:3,16:10,18:5,21:7",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1RD0LC_1LE1RA_HHH1LF_1RB0LC.lean",
-      "blob_sha": "8f8fa40b095dbd44fcab93ce45a7ebc4213653bb",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RA_1RC0RD_1RD0LC_1LE1RA_HHH1LF_1RB0LC.lean",
+      "upstream_blob_sha": "8f8fa40b095dbd44fcab93ce45a7ebc4213653bb",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,5:11,6:5,10:10,11:3,12:7,39:1",
       "holdout_rle": "1RB0RA_1RC0RD_1RD0LC_1LE1RA_---1LF_1RB0LC",
       "source_rle": "1RB0RA_1RC0RD_1RD0LC_1LE1RA_HHH1LF_1RB0LC",
-      "schedule": "1:2,2:4,3:6,4:9,5:11,6:5,10:10,11:3,12:7,39:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RDHHH.lean",
-      "blob_sha": "b208394c751e04d011bb2a0e2804c36df4137516",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RDHHH.lean",
+      "upstream_blob_sha": "b208394c751e04d011bb2a0e2804c36df4137516",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:3,5:7,6:9,8:8,24:5,5987:1,5988:10",
       "holdout_rle": "1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RD---",
       "source_rle": "1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RDHHH",
-      "schedule": "1:2,2:4,3:6,4:3,5:7,6:9,8:8,24:5,5987:1,5988:10",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "baseline-191",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE.lean",
-      "blob_sha": "6481b36171ed31919fcd6bd9e4ec985f5980eabe",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE.lean",
+      "upstream_blob_sha": "6481b36171ed31919fcd6bd9e4ec985f5980eabe",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:1,8:3,9:9,10:8,12:7,71:5,72:11",
       "holdout_rle": "1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_---0RE",
       "source_rle": "1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE",
-      "schedule": "1:2,2:4,3:6,4:1,8:3,9:9,10:8,12:7,71:5,72:11",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     },
     {
       "raw_parent": 140,
       "batch": "Nov26-21",
       "source_kind": "NonHalt",
-      "module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_1RC1RB_1RD0RB_0LE0LF_HHH1LD_0LE1LA.lean",
-      "blob_sha": "3f5b47734460aaf218f1a85740ead10db178226a",
+      "upstream_module": "BusyBeaver/BB6/NonHalt/M_1RB1LF_1RC1RB_1RD0RB_0LE0LF_HHH1LD_0LE1LA.lean",
+      "upstream_blob_sha": "3f5b47734460aaf218f1a85740ead10db178226a",
+      "first_use_after_root_time_slot": "1:2,2:4,3:6,4:9,5:7,6:11,8:3,10:5,16:10,28:1",
       "holdout_rle": "1RB1LF_1RC1RB_1RD0RB_0LE0LF_---1LD_0LE1LA",
       "source_rle": "1RB1LF_1RC1RB_1RD0RB_0LE0LF_HHH1LD_0LE1LA",
-      "schedule": "1:2,2:4,3:6,4:9,5:7,6:11,8:3,10:5,16:10,28:1",
-      "leaf_holes": 1,
-      "ancestor": {
-        "raw_index": 140,
+      "leaf_hole_count": 1,
+      "current_ancestor": {
+        "raw_residual_index": 140,
         "canonical_index": 103,
         "holes": 9,
-        "address": "1RC,1RD"
+        "address": [
+          "1RC",
+          "1RD"
+        ],
+        "table_rle": "1RB---_1RC---_1RD---_------_------_------"
       }
     }
   ],

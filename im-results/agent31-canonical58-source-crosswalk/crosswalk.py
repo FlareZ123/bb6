@@ -5,7 +5,6 @@ from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from fractions import Fraction
 import csv
-import hashlib
 import json
 from pathlib import Path
 import subprocess
@@ -177,11 +176,11 @@ def main():
         "inputs": {
             "crosswalk_tsv": {
                 "path": str(TSV.relative_to(ROOT)),
-                "sha256": hashlib.sha256(TSV.read_bytes()).hexdigest(),
+                "git_blob_sha": subprocess.check_output(["git", "hash-object", str(TSV)], cwd=ROOT, text=True).strip(),
             },
             "canonical_124_json": {
                 "path": str(ROSTER_JSON.relative_to(ROOT)),
-                "sha256": hashlib.sha256(ROSTER_JSON.read_bytes()).hexdigest(),
+                "git_blob_sha": subprocess.check_output(["git", "hash-object", str(ROSTER_JSON)], cwd=ROOT, text=True).strip(),
             },
         },
         "canonical_address_initial_cut": 2,

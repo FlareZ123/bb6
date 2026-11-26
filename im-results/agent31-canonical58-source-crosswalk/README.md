@@ -46,4 +46,4 @@ Run from the repository root with:
 
     python im-results/agent31-canonical58-source-crosswalk/crosswalk.py
 
-The script writes crosswalk.json, including input SHA-256 values, exact row-to-ancestor matches, group counts, and completion-cylinder unions. A future formal integration must still prove the roster correspondence and source Covers in Lean.
+The script writes crosswalk.json, including input Git blob SHA values, exact row-to-ancestor matches, group counts, and completion-cylinder unions. A future formal integration must still prove the roster correspondence and source Covers in Lean.
