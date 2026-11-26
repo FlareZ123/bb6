@@ -30,6 +30,41 @@ for base in (Path("/tmp/a43-new-shards"),):
                 dst.parent.mkdir(parents=True,exist_ok=True)
                 shutil.copy2(src,dst)
                 seen[key]=digest
+if parent_core:
+    # The parent workflow downloads the same pinned core artifact used by the
+    # child assemblers. Include its dependency objects as fallbacks; the
+    # recovered child shards remain authoritative on duplicate module names,
+    # matching assemble_branches16_17.py's target-first policy.
+    core = Path("/tmp/a43-core")
+    if not core.is_dir():
+        raise FileNotFoundError(core)
+    core_added = core_identical = core_shadowed = 0
+    for src in sorted(core.rglob("*.olean")):
+        rel = src.relative_to(core)
+        key = rel.as_posix()
+        digest = hashlib.sha256(src.read_bytes()).hexdigest()
+        if key in seen:
+            if seen[key] == digest:
+                core_identical += 1
+            else:
+                core_shadowed += 1
+                print(
+                    f"retaining recovered-shard object for {key}; "
+                    f"pinned-core SHA {digest} differs from shard SHA {seen[key]}",
+                    flush=True,
+                )
+            continue
+        dst = out / rel
+        dst.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(src, dst)
+        seen[key] = digest
+        core_added += 1
+    print(
+        f"merged pinned core objects: added {core_added}, "
+        f"identical duplicates {core_identical}, "
+        f"recovered-shard-preferred conflicts {core_shadowed}",
+        flush=True,
+    )
 print(f"merged {len(seen)} distinct Lean objects",flush=True)
 for src in source.glob("*.lean"):
     if parent_core and src.name in {"Raw122Branch00.lean","Raw122Branch05.lean","Raw122Branch16.lean","Raw122Branch17.lean"}:
