@@ -835,7 +835,17 @@
       "missingVisits": 464289,
       "c1Visits": 0,
       "c1Right0": 0,
-      "c1Right1": 0
+      "c1Right1": 0,
+      "localImplications": {
+        "halted": false,
+        "steps": 1000000,
+        "b0": 4000,
+        "b0r0": 4000,
+        "b0r1": 0,
+        "f1": 3911,
+        "f1l0": 3911,
+        "f1l1": 0
+      }
     },
     "root46": {
       "steps": 1000000,
