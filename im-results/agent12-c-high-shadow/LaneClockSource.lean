@@ -117,7 +117,7 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
       simp [lift]
       omega
     simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
-      hState,hAge,hpost,hleft,hright]
+      hState,hAge,hpost,hleft,hright,lift]
 
 /-- Sum the event clocks in descending bit order. This is exactly the
     ordinary word clock, including arbitrary initial idle age. -/
