@@ -23,7 +23,7 @@ The graft in `Canonical57Raw112Graft.lean` removes only Raw112 from `BB6.Agent31
 - The workflow restores that exact producer driver blob in each retry job before strict merge or compilation. This preserves, rather than relaxes, the merger's source/hash/import/compiler/object checks.
 - Corrected retry run: 45890012441. Its prepare stage passed strict provenance and constructed the 49-root partial union. `r01a-rest1` has compiled successfully; the remaining seven cuts are queued/in progress. No Raw112 parent Cover is claimed yet.
 
-## Integration contract
+## Integration contract\n\nThe follow-on target is \`canonical57-raw112-delta\` in \`.github/workflows/agent31-canonical71-raw109.yml\`. Supply the successful Raw113 run as \`canonical58_run_id\` and the successful Raw112 parent-cover run as \`raw112_run_id\`.
 
 After successful Raw112 recovery, the integration runner verifies the exact `raw112-closed-parent-cover` artifact and its manifest, then links only the reachable Raw112 OLean closure into the accepted Raw113 Canonical58 artifact. It compiles both Lean modules here. The expected profiles are only `propext`, `Classical.choice`, and `Quot.sound`; reject `sorryAx` and `native_decide`.
 
