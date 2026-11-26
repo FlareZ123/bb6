@@ -142,6 +142,7 @@ def main():
         "lean_export_source_sha256": sha(lean_export_source),
         "comparison_script_sha256": sha(Path(__file__).resolve()),
         "crosswalk_script_sha256": sha(crosswalk_source),
+        "crosswalk_report_sha256": sha(CROSSWALK),
         "canonical124_source_sha256": sha(ROSTER),
     }
     base = {
