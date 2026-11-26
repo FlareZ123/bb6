@@ -117,7 +117,7 @@ def main():
         "canonical57_source_revision": base_report["source_revision"],
         "canonical57_olean_sha256": base_report["graft_olean_sha256"],
         "canonical57_residual_count": 57,
-        "canonical58_run_id": base_report["canonical58_run_id"],
+        "canonical58_run_id": base_report["canonical58_base_run_id"],
         "canonical58_artifact_id": base_report["canonical58_artifact_id"],
         "canonical58_artifact_sha256": base_report["canonical58_artifact_sha256"],
         "canonical58_olean_sha256": base_report["canonical58_olean_sha256"],
