@@ -17,7 +17,7 @@ abbrev CtlSource := BusyBeaver.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH
 
 def source2 : ConjectureMachines.Machine 6 2 := CtlSource.machine
 def candidate2 : BB6Coverage.Machine := BB6.ConjectureBridge.toAgent8 source2
-private def target2 : BusyBeaver.Machine (Fin 2) (Fin 6) := source2.toBB
+private abbrev target2 : BusyBeaver.Machine (Fin 2) (Fin 6) := CtlSource.target
 
 private def boolToFin2 (b : Bool) : Fin 2 := if b then 1 else 0
 private def fin2ToBool (a : Fin 2) : Bool := a.val == 1
@@ -37,25 +37,18 @@ theorem toAgent8_ofAgent8 (m : BB6Coverage.Machine) :
     BB6.ConjectureBridge.toAgent8 (ofAgent8 m) = m := by
   funext s
   rcases s with ⟨q, b⟩
-  cases b
-  · cases h : m (q, false) with
-    | none => rfl
-    | some mv =>
-        cases mv with
-        | mk w r n => cases w <;> cases r <;> rfl
-  · cases h : m (q, true) with
-    | none => rfl
-    | some mv =>
-        cases mv with
-        | mk w r n => cases w <;> cases r <;> rfl
+  simp [BB6.ConjectureBridge.toAgent8, ofAgent8,
+    boolToFin2, boolToDir, fin2ToBool]
 
-/-- The inverse adapter recovers the exact pinned Cryptids source machine. -/
-theorem ofAgent8_candidate2 : ofAgent8 candidate2 = source2 := by
-  ext q a
-  fin_cases q
-  all_goals
-    fin_cases a
-    all_goals rfl
+/-- The inverse adapter recovers the exact pinned source transition table
+    after conversion to the BusyBeaver machine used by the CTL checker. -/
+theorem ofAgent8_candidate2_toBB :
+    (ofAgent8 candidate2).toBB = target2 := by
+  funext q a
+  fin_cases q <;> fin_cases a <;>
+    simp [target2, source2, candidate2, ofAgent8,
+      BB6.ConjectureBridge.toAgent8, ConjectureMachines.Machine.toBB,
+      boolToFin2, boolToDir, fin2ToBool]
 
 private theorem list_all_congr {α : Type u} (xs : List α) (f g : α → Bool)
     (h : ∀ x, x ∈ xs → f x = g x) : xs.all f = xs.all g := by
@@ -163,10 +156,13 @@ theorem ctlLeaf2_neverHalts (m : BB6Coverage.Machine)
     calc
       (ofAgent8 m).toBB s a =
           (ofAgent8 candidate2).toBB s a := by
-            simp [ofAgent8, hmove, boolToFin2, boolToDir, fin2ToBool]
+            have hTransition :
+                (ofAgent8 m).transition s a =
+                  (ofAgent8 candidate2).transition s a := by
+              simp [ofAgent8, hmove, fin2ToBool]
+            simp [ConjectureMachines.Machine.toBB, hTransition]
       _ = target2 s a := by
-            rw [ofAgent8_candidate2]
-            rfl
+            rw [ofAgent8_candidate2_toBB]
   have hIsNotHalt : BusyBeaver.IsNotHalt (ofAgent8 m).toBB :=
     ctl_certificate_implies_is_does_not_halt_of_agreement
       ctlLeftDfa ctlRightDfa ctlAcc2 ctlCheck_target2 hAgree
@@ -191,7 +187,7 @@ theorem ctlLeaf2_completionCount : 25 ^ 8 = 152_587_890_625 := by
   decide
 
 #print axioms toAgent8_ofAgent8
-#print axioms ofAgent8_candidate2
+#print axioms ofAgent8_candidate2_toBB
 #print axioms ctlCheck_congr
 #print axioms ctl_certificate_implies_is_does_not_halt_of_agreement
 #print axioms ctlAcc2_footprint
