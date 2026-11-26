@@ -169,6 +169,7 @@ theorem table_never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   have H := zrun_sound table m hm t _ _ hr
   rw [start_embed] at H
   rw [show t=n+(t-n) by omega,run_append] at H
+  change (run m n blank).bind (run m (t-n)) = some (embed (X a k h)) at H
   cases he : run m n blank with
   | none => simp [he] at H
   | some c => rfl
