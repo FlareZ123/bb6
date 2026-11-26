@@ -5,7 +5,8 @@ namespace BB6.Agent9JumpResidue
 
 open BB6.Agent23ResiduePeriod
 open BB6.Agent45ReverseBlock (corr)
-open BB6.Agent9ReverseBlock (JumpMember JumpCover)
+open BB6.Agent45WeightedDigitGap (digitWeight)
+open BB6.Agent9ReverseBlock (digits JumpMember JumpCover)
 
 /-- Rep is invariant under changing its target by a multiple of the modulus. -/
 theorem rep_congr (M x y : Int) (ws : List Int)
@@ -16,12 +17,18 @@ theorem rep_congr (M x y : Int) (ws : List Int)
     constructor
     · rintro ⟨a,ha⟩
       rcases hxy with ⟨b,hb⟩
+      have hy : y = M*a-M*b := by omega
       refine ⟨a-b,?_⟩
-      omega
+      calc
+        y = M*a-M*b := hy
+        _ = M*(a-b) := by rw [← mul_sub]
     · rintro ⟨a,ha⟩
       rcases hxy with ⟨b,hb⟩
+      have hx : x = M*a+M*b := by omega
       refine ⟨a+b,?_⟩
-      omega
+      calc
+        x = M*a+M*b := hx
+        _ = M*(a+b) := by rw [← mul_add]
   | cons w ws ih =>
     simp only [Rep]
     constructor
@@ -30,14 +37,18 @@ theorem rep_congr (M x y : Int) (ws : List Int)
       · have hxy' : M ∣ (x-w)-(y-w) := by
           rcases hxy with ⟨d,hd⟩
           refine ⟨d,?_⟩
-          omega
+          have heq : (x-w)-(y-w)=x-y := by omega
+          rw [heq]
+          exact hd
         exact Or.inr ((ih (x-w) (y-w) hxy').mp h)
     · rintro (h|h)
       · exact Or.inl ((ih x y hxy).mpr h)
       · have hxy' : M ∣ (x-w)-(y-w) := by
           rcases hxy with ⟨d,hd⟩
           refine ⟨d,?_⟩
-          omega
+          have heq : (x-w)-(y-w)=x-y := by omega
+          rw [heq]
+          exact hd
         exact Or.inr ((ih (x-w) (y-w) hxy').mpr h)
 
 /-- All (unreduced) subset sums of a finite weight list. Duplicates are
@@ -119,9 +130,9 @@ theorem mem_reducedResidues_iff (q k Y r : Nat)
   · intro h
     obtain ⟨s,hs,hEq⟩ := List.mem_map.mp h
     have hdiv := (residue_eq_iff _ _ _ _ hr0 hrM).mp hEq.symm
-    exact (mem_subsetSums_iff _ _ _).mpr ⟨s,hs,hdiv⟩
+    exact (mem_subsetSums_iff _ _ _).mp ⟨s,hs,hdiv⟩
   · intro h
-    obtain ⟨s,hs,hdiv⟩ := (mem_subsetSums_iff _ _ _).mp h
+    obtain ⟨s,hs,hdiv⟩ := (mem_subsetSums_iff _ _ _).mpr h
     have hEq := (residue_eq_iff _ _ _ _ hr0 hrM).mpr hdiv
     exact List.mem_map.mpr ⟨s,hs,hEq.symm⟩
 
@@ -205,10 +216,7 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
       Rep (reducedModulus q k : Int) ((Y:Int)-(c:Int))
         (reducedWeights q k) := by
     apply rep_congr
-    have heq : ((Y:Int)-(cmod:Int))-((Y:Int)-(c:Int)) =
-        (c:Int)-(cmod:Int) := by ring
-    rw [heq]
-    exact hsmallInt
+    convert hsmallInt using 1 <;> omega
   constructor
   · intro h
     rcases hmod.mp h with ⟨hc,hB⟩
@@ -230,43 +238,47 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
     obtain ⟨j,hj,hitems⟩ := List.mem_flatMap.mp hlist
     obtain ⟨x,hx,hEq⟩ := List.mem_map.mp hitems
     have hxrange := reducedResidues_range q k Y hx
-    have hxnat : x.toNat < M := by exact_mod_cast hxrange.2
     have hxcast : (x.toNat:Int)=x := Int.toNat_of_nonneg hxrange.1
+    have hxnat : x.toNat < M := by
+      have hxnat' : (x.toNat:Int) < (M:Int) := by simpa [hxcast] using hxrange.2
+      exact_mod_cast hxnat'
     have hmod : c%M=x.toNat := by
       rw [←hEq,Nat.mul_comm j M,Nat.mul_add_mod,Nat.mod_eq_of_lt hxnat]
     have hxmem : (x.toNat:Int) ∈ reducedResidues q k Y := by
       simpa [hxcast] using hx
     have hRepX := (mem_reducedResidues_iff q k Y x.toNat hxnat).mp hxmem
+    have hdiff : c-x.toNat = j*M := by omega
     have hdivNat : M ∣ c-x.toNat := by
       refine ⟨j,?_⟩
-      omega
-    have hdivInt : (M:Int) ∣ (c:Int)-(x.toNat:Int) := by exact_mod_cast hdivNat
+      simpa [Nat.mul_comm] using hdiff
+    have hdivInt : (M:Int) ∣ (c:Int)-(x.toNat:Int) := by
+      rcases hdivNat with ⟨d,hd⟩
+      refine ⟨(d:Int),?_⟩
+      exact_mod_cast hd
     have hRepC : Rep (M:Int) ((Y:Int)-(c:Int))
         (reducedWeights q k) := by
       apply (rep_congr (M:Int) ((Y:Int)-(x.toNat:Int))
         ((Y:Int)-(c:Int)) (reducedWeights q k) ?_).mp hRepX
-      have heq : ((Y:Int)-(x.toNat:Int))-((Y:Int)-(c:Int)) =
-          (c:Int)-(x.toNat:Int) := by ring
-      rw [heq]
-      exact hdivInt
+      convert hdivInt using 1 <;> omega
     exact (jump_member_iff_reduced q k Y c).mpr ⟨hc,hRepC⟩
   · intro hJ
     rcases (jump_member_iff_reduced q k Y c).mp hJ with ⟨hc,hRep⟩
     let r := c%M
     have hr : r<M := Nat.mod_lt c hMpos
     have hdivNat : M ∣ c-r := by
+      have h : M*(c/M)+r=c := by
+        simpa [r,Nat.mul_comm] using Nat.div_add_mod c M
       refine ⟨c/M,?_⟩
-      have h := Nat.div_add_mod c M
       omega
-    have hdivInt : (M:Int) ∣ (c:Int)-(r:Int) := by exact_mod_cast hdivNat
+    have hdivInt : (M:Int) ∣ (c:Int)-(r:Int) := by
+      rcases hdivNat with ⟨d,hd⟩
+      refine ⟨(d:Int),?_⟩
+      exact_mod_cast hd
     have hRepR : Rep (M:Int) ((Y:Int)-(r:Int))
         (reducedWeights q k) := by
       apply (rep_congr (M:Int) ((Y:Int)-(r:Int))
         ((Y:Int)-(c:Int)) (reducedWeights q k) ?_).mpr hRep
-      have heq : ((Y:Int)-(r:Int))-((Y:Int)-(c:Int)) =
-          (c:Int)-(r:Int) := by ring
-      rw [heq]
-      exact hdivInt
+      convert hdivInt using 1 <;> omega
     have hres : (r:Int) ∈ reducedResidues q k Y :=
       (mem_reducedResidues_iff q k Y r hr).mpr hRepR
     have hj : c/M ∈ List.range (q/M+1) := by
