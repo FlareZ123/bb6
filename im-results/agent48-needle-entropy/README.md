@@ -1,6 +1,6 @@
 # Weighted-prefix entropy cutoff for Space Needle
 
-**Status:** all new arithmetic modules compiled locally with Lean 4.36.0-rc2; the original-source adapter is awaiting its source CI gate. No machine nonhalting or BB(6) upper-bound verdict. This improves the leading exponent of Agent46's already source-certified subexponential fixed-target bound (run 45735902584); it is not a first subexponential result.
+**Status:** all new arithmetic modules compiled locally with Lean 4.36.0-rc2; the full unchanged original-source adapter passed [CI 45881202532](https://github.com/FlareZ123/bb6/actions/runs/45881202532). No machine nonhalting or BB(6) upper-bound verdict. This improves the leading exponent of Agent46's already source-certified subexponential fixed-target bound (run 45735902584); it is not a first subexponential result.
 
 ## Theorem
 
@@ -45,4 +45,4 @@ Exact recurrence comparisons (rounded log2 fuel, old/new):
 
 Run python3 unpack.py to reconstruct the three exact source blobs, verifying their Git blob SHA-1 hashes. Compile NeedleWord.lean and NeedleSubexp.lean from Agent46's coherent-paths and subexponential dossiers, then the three new modules in order NeedleSubpower, NeedleEntropyWords, NeedleEntropyBound. The named theorems endpoint_cylinder, mem_words, words_length, fastCount_eq, crossing_prefix, same_prefix_half, finite_prefix_bound, fuel_at_bound, target_fuel_bound have only standard axioms (propext, Classical.choice, Quot.sound as applicable) in the local arithmetic check. The local check used verbatim relevant declarations of the prior modules, not the full original machine checkout (direct GitHub DNS unavailable). The manual source workflow target entropy compiles full original dependency modules and NeedleEntropySource.lean.
 
-For the real blank root, the source adapter is adapted from Agent46's original-source proof, preserving the exact reachability predicate and scan specification. Source certification is pending. A fixed-target membership cutoff does not settle whether the orbit hits any power of two.
+For the real blank root, the source adapter is adapted from Agent46's original-source proof, preserving the exact reachability predicate and scan specification. The original-source CI compiled the arithmetic and adapter modules and passed its no-sorryAx check. The certified adapter gives `BB6.Agent48.SpaceNeedleEntropy.original_iterate_entropy_bound` and `entropyScan_spec`. The asymptotic estimate is a paper argument. A fixed-target membership cutoff does not settle whether the orbit hits any power of two.
