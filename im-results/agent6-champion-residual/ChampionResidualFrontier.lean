@@ -506,7 +506,7 @@ theorem championFrontierExpandedNodes :
   decide
 
 theorem championFrontierClosedLeaves :
-    BB6.Agent6ChampionResidualCount.frontierClosedLeaves championFrontier = 38 := by
+    BB6.Agent6ChampionResidualCount.frontierClosedLeaves championFrontier = 39 := by
   decide
 
 theorem championResidualResidualsCount :
