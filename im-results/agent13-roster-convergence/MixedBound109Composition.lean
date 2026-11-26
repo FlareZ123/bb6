@@ -14,12 +14,11 @@ open BB6.Agent47Combined109
 def championScore : Nat := proposedTM63Moves + 7
 
 /-- The champion has no incoming zero-writing delay at its A/0 root. -/
-theorem champion_score_gt_7014 : 7014 < championScore := by
+theorem champion_score_gt_7014 : 7014 < proposedTM63Moves + 7 := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
   have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
     Nat.lt_of_lt_of_le (by decide) hroot
-  change 7014 < proposedTM63Moves + 7
   exact Eq.mp
     (congrArg (fun n : Nat => 7014 < n + 7) threeSectionMoves_root) hscore
 
@@ -57,7 +56,7 @@ def championSingleton : PartialMachine :=
   fun s => some (championTable s)
 
 theorem champion_singleton_leaf :
-    Cover (WeightedBound championScore) championSingleton := by
+    Cover (WeightedBound (proposedTM63Moves + 7)) championSingleton := by
   refine Cover.leaf _ ?_
   intro m hm
   have hEq : m = championTable := by
@@ -72,16 +71,16 @@ theorem champion_singleton_leaf :
     consumed directly at B. -/
 theorem cover_of_reduced_roster_at_champion_score
     (hLeaves : ∀ e ∈ reducedRoster,
-      Cover (WeightedBound championScore) e.2) :
-    Cover (WeightedBound championScore) BB6.Agent50TNFPilot.root :=
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    Cover (WeightedBound (proposedTM63Moves + 7)) BB6.Agent50TNFPilot.root :=
   BB6.Agent13RosterComposition.cover_of_roster_dichotomy_mixed
     (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves
 
 /-- The corresponding normalized certificate at the exact champion score. -/
 noncomputable def tnf_certificate_of_reduced_roster_at_champion_score
     (hLeaves : ∀ e ∈ reducedRoster,
-      Cover (WeightedBound championScore) e.2) :
-    WeightedTNFCertificate championScore
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    WeightedTNFCertificate (proposedTM63Moves + 7)
       BB6.CoverageAdapter.firstOneCylinder 2 :=
   BB6.Agent13RosterComposition.tnf_certificate_of_roster_dichotomy_mixed
     (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves
@@ -91,8 +90,8 @@ noncomputable def tnf_certificate_of_reduced_roster_at_champion_score
     not at the earlier classification cutoff 7014. -/
 theorem exact_from_reduced_roster_at_champion_score
     (hLeaves : ∀ e ∈ reducedRoster,
-      Cover (WeightedBound championScore) e.2) :
-    BB6.Coverage.ExactBB6 championScore :=
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
   BB6.Agent13RosterComposition.exact_from_roster_dichotomy_mixed
     (by decide) (Nat.le_of_lt champion_score_gt_7014) reduced_sound hLeaves champion_raw_witness
 
