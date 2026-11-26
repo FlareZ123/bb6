@@ -15,6 +15,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent35I5Continuation
 
 open CryptidBoundary
+open DRegular
 open BB6.BoundaryPadding
 open BB6.Agent19.Physical
 open BB6.Portfolio
@@ -100,6 +101,7 @@ private theorem second_start_eq_source (t h : Nat) :
       (CryptidBoundary.oppairs (h+3) ++ [true])
   have hlen : 9*t+7-2 = 9*t+5 := by omega
   have hq : h+3 = (h+2)+1 := by omega
+  have hk : 3*(3*t+1)+2 = 9*t+5 := by omega
   have hsource :
       DRegularSource.sourceSection ⟨9*t+7,h+3,1⟩ =
         CryptidBoundary.init xs := by
@@ -107,7 +109,7 @@ private theorem second_start_eq_source (t h : Nat) :
   have hstart :
       BB6.Agent31SecondSource.start t h =
         CryptidBoundary.init xs := by
-    simp [BB6.Agent31SecondSource.start,xs,hq,hlen,
+    simp [BB6.Agent31SecondSource.start,xs,hq,hlen,hk,
       BB6.Agent25BGeneral.oppairs_last,List.append_assoc]
   exact hstart.trans hsource.symm
 
@@ -253,13 +255,14 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
     simp [xs,hlen,List.append_assoc]
   have hcost :
       eDoublePacketCost k q = 12*k*k+49*k+64+4*(q-2) := rfl
+  have hlen2 : 2*((q-2)+1)+2 = 2*q := by omega
   have hraw :
       run (eDoublePacketCost k q)
         (CryptidBoundary.init (xs ++ List.replicate 2 false)) =
         BB6.Agent31PacketSource.packet (8*k+5) 0 (2*q) ys := by
     rw [hinput,hcost]
     simpa [BB6.Agent31PacketSource.packet,BB6.Agent31PacketSource.word,
-      ys,List.append_assoc] using
+      ys,hlen2,List.append_assoc] using
       (BB6.Agent35.full_E_double k (q-2) [])
   have hp := BB6.BoundaryPadding.source_init_pad
     (eDoublePacketCost k q) 2 xs
@@ -662,7 +665,7 @@ theorem parsed_D3_no_halt_through_final (n : Nat)
       simpa [htime] using hh
     have hfrozen :=
       (BB6.Agent19.Physical.parsed_D3_exact_source_time k).mp hh'
-    exact no_frozen_through_final (k+1) (by omega) hfrozen.2
+    exact (no_frozen_through_final (k+1) (by omega)) hfrozen.2
 
 theorem horizonFinal_ge_10pow1458 : 10^1458 ≤ horizonFinal := by
   have hOld := BB6.Agent35I5Exceptional.horizon_ge_10pow1458
