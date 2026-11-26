@@ -84,7 +84,7 @@ on:
         type: boolean
         default: false
       verify_f289_counted_roots:
-        description: 'Extend F289 pilot with strict paired exact-count root certificates (no six-root graft)'
+        description: 'Strict paired F289 root certificates, using unchanged original-source definitions'
         required: false
         type: boolean
         default: false
@@ -173,10 +173,6 @@ jobs:
               count=$((count+1))
               [[ "$count" -le 32 ]]
             done < "$DEPENDENCY_MANIFEST"
-          fi
-          if [[ "${{ inputs.verify_f289_counted_roots }}" == "true" ]]; then
-            test "$VERIFY_F289_RLE_COST" = "true"
-            test "${{ inputs.expose_solution_declarations }}" = "true"
           fi
           if [[ "${{ inputs.verify_f289_exact_graft }}" == "true" ]]; then
             test "$VERIFY_SIX_ROOT_GRAFT" = "true"
@@ -486,12 +482,13 @@ jobs:
             exit 1
           fi
       - name: Check F289 exact counted roots using forward paired certificates
-        if: ${{ inputs.verify_f289_rle_cost && inputs.verify_f289_counted_roots }}
+        if: ${{ inputs.verify_f289_counted_roots }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
           set -euo pipefail
           ulimit -s unlimited
+          lake build BusyBeaver.BB6.Halt.M_1RB0RE_1RC0RA_0LD0LB_0LA1LE_1LC1LF_0LAHHH BusyBeaver.BB6.Halt.M_1RB1RF_0RC0RE_0RD1RA_1LE0LA_1LB0LD_0RDHHH
           src="$GITHUB_WORKSPACE/im-results"
           mkdir -p BB6Agent42 /tmp/f289-counted-roots
           for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleExactTransfer RleCountedAll; do
@@ -511,7 +508,7 @@ jobs:
           done
           cp BB6Agent42/Rle*.olean /tmp/f289-counted-roots/
       - name: Preserve F289 paired root proof logs and generated certificates
-        if: ${{ always() && inputs.verify_f289_rle_cost && inputs.verify_f289_counted_roots }}
+        if: ${{ always() && inputs.verify_f289_counted_roots }}
         uses: actions/upload-artifact@v4
         with:
           name: f289-paired-counted-roots
@@ -704,7 +701,7 @@ jobs:
             fi
           done
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.verify_raw10_box17 && !inputs.verify_raw10_box16 && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
+        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.verify_raw10_box17 && !inputs.verify_raw10_box16 && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost && !inputs.verify_f289_counted_roots }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
