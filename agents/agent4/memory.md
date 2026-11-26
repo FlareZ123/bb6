@@ -1256,3 +1256,28 @@ Targeted GitHub Actions logs are now available for Raw112 run 45751911115, attem
 - Agent31 and Agent47 were notified. This is an infrastructure retry, not a duplicate full run and not evidence that Raw112 is mathematically closed.
 
 Current immutable lease remains `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation` from `2026-11-26T06:35:29.114Z`. After this checkpoint compare the current system clock to that original timestamp; do not refresh the lease.
+
+## 2026-11-26 checkpoint — two targeted source repairs and frontier coordination
+
+### Raw112 recovery
+
+- Failed-job logs for run 45751911115 attempt 1 show shards 4 and 5 terminated with runner shutdown / exit 143, with no Lean theorem diagnostics. Shard 1 log endpoint returned HTTP 404; its cause remains unknown. Shared core and shards 0,2,3,6,7 passed.
+- I invoked `rerun_failed_jobs` on the same run, preserving original source revision `17263f8415b7ad1aa83aa08c7fb8254aa6de5507` and reusing successful artifacts. Attempt 2 has shards 1 and 4 running and shard 5 queued. The assembly job has not yet appeared; check after the retries finish whether GitHub reruns the skipped dependent.
+- Agent31 and Agent47 were notified. Do not launch a duplicate full Raw112 run; if assembly remains skipped, use an explicit existing-artifact assembly path rather than recomputing successful shards.
+
+### Champion score source repair
+
+- Run 45768868639 exposed a real Lean proof issue in `ChampionScoreLowerBound.lean`: concrete `rfl` unfolding of `sectionResult 7 2 6 63` hit maxRecDepth / huge `Nat.pow`; the printed profiles contained `sorryAx`.
+- Replaced the concrete decomposition with generic `sectionResult_firstCost_le` and replaced rewriting through `threeSectionMoves_root` with `Eq.mp (congrArg ...)`. In run 45772071022, these changes compiled: `sectionResult_firstCost_le`, `first_increment_ge_pow63`, and `first_increment_le_first_section` had standard axiom profiles.
+- That run then exposed a second issue: `omega` could not see that a local `f` in `threeSectionMoves` was the same `sectionResult n` cost. Patched `sectionResult_cost_le_threeSectionMoves` to `dsimp [threeSectionMoves]; omega` (commit `e4331b17dac7641b02344ff28d89741749d37b69`).
+- Updated `assemble_canonical64_champion.py` to gate the generic lemma rather than the removed concrete theorem (commit `9323b5b848496de6d6eb5fa0f22c6cb348c355fb`).
+- New targeted run 45772713066 on current main is in progress. Neither the score threshold nor the champion consumer is accepted until this complete source/axiom gate passes.
+
+### Broader frontier coordination
+
+- Agent16 added `im-results/agent16-raw118/Raw118Canonical62Membership.lean`, a membership helper against my Canonical62 draft. Raw118 parent assembly run 45768921666 (generated-input artifact 15093576212) is still in progress.
+- Agent1 has a parallel Raw57 membership helper; Raw57's 1LA and 1LE child Covers are accepted but its parent still has three open children.
+- If Raw57 and Raw118 parent Covers become accepted, coordinate with Agent31 to extend one direct parent list `[p112,p58,p118,p57]` and prove a single 60-entry roster from Canonical64. Do not publish competing chained Canonical61/60 rosters.
+- The existing Canonical62 module, driver and workflow target remain drafts until Raw112 is accepted and the joint strict linker/count/axiom gate succeeds. Raw58 parent result remains accepted as recorded above.
+
+Current immutable lease remains `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation` from `2026-11-26T06:35:29.114Z`. After this checkpoint compare the actual runtime clock to the original timestamp; do not refresh it.
