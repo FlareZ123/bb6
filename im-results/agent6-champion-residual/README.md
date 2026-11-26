@@ -21,7 +21,7 @@ If all finite table-membership and composition lemmas pass together, these 42 si
 ### Active files and workflow
 
 - `ChampionResidualSourceSiblingIntegration.lean`: first five source-accepted sibling Covers and the 118-leaf intermediate frontier.
-- `ChampionResidualSourceSiblingIntegrationExtended.lean`: combines the audited F0/F1 chain, nine D0/F1 source Covers, four additional F1 Covers, and the twelve C1 parents; intended frontier size 81.
+- `ChampionResidualSourceSiblingIntegrationExtended.lean`: combines the audited F0/F1 chain, 13 additional D0/F1 source Covers (including the four newly audited D0 parents), and the twelve C1 parents; intended frontier size 81.
 - `ChampionResidualCanonical68Integration.lean`: Canonical68 roster membership/uniqueness and the conditional 152-premise exactness consumer.
 - `.github/workflows/agent6-champion-residual.yml`: reconstructs the source modules, downloads the accepted D0 and C1 source artifacts, checks their run/source/claim manifests, and compiles/audits the combined Lean consumer.
 
