@@ -15,9 +15,14 @@ open BusyBeaver.CtlCert
 
 abbrev CtlSource := BusyBeaver.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH
 
-def source2 : ConjectureMachines.Machine 6 2 := CtlSource.machine
+/-- Re-elaborate the exact pinned RLE locally so the finite CTL checker
+    can reduce the transition table in this module. -/
+def source2 : ConjectureMachines.Machine 6 2 :=
+  load_rle_machine% "1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH"
+
+theorem source2_eq_pinned : source2 = CtlSource.machine := rfl
 def candidate2 : BB6Coverage.Machine := BB6.ConjectureBridge.toAgent8 source2
-private abbrev target2 : BusyBeaver.Machine (Fin 2) (Fin 6) := CtlSource.target
+private abbrev target2 : BusyBeaver.Machine (Fin 2) (Fin 6) := source2.toBB
 
 private def boolToFin2 (b : Bool) : Fin 2 := if b then 1 else 0
 private def fin2ToBool (a : Fin 2) : Bool := a.val == 1
@@ -37,8 +42,25 @@ theorem toAgent8_ofAgent8 (m : BB6Coverage.Machine) :
     BB6.ConjectureBridge.toAgent8 (ofAgent8 m) = m := by
   funext s
   rcases s with ⟨q, b⟩
-  simp [BB6.ConjectureBridge.toAgent8, ofAgent8,
-    boolToFin2, boolToDir, fin2ToBool]
+  cases b
+  · cases h : m (q, false) with
+    | none =>
+        simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h]
+    | some mv =>
+        cases mv with
+        | mk w r n =>
+            cases w <;> cases r <;>
+              simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h,
+                boolToFin2, boolToDir, fin2ToBool]
+  · cases h : m (q, true) with
+    | none =>
+        simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h]
+    | some mv =>
+        cases mv with
+        | mk w r n =>
+            cases w <;> cases r <;>
+              simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h,
+                boolToFin2, boolToDir, fin2ToBool]
 
 /-- The inverse adapter recovers the exact pinned source transition table
     after conversion to the BusyBeaver machine used by the CTL checker. -/
@@ -159,7 +181,12 @@ theorem ctlLeaf2_neverHalts (m : BB6Coverage.Machine)
             have hTransition :
                 (ofAgent8 m).transition s a =
                   (ofAgent8 candidate2).transition s a := by
-              simp [ofAgent8, hmove, fin2ToBool]
+              change
+                (m (s, fin2ToBool a)).map
+                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next)) =
+                  (candidate2 (s, fin2ToBool a)).map
+                    (fun mv => (boolToFin2 mv.write, boolToDir mv.right, mv.next))
+              rw [hmove]
             simp [ConjectureMachines.Machine.toBB, hTransition]
       _ = target2 s a := by
             rw [ofAgent8_candidate2_toBB]
