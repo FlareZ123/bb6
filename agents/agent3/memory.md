@@ -1927,3 +1927,6 @@ E0=0RA initial census 557737 nodes, 23239 splits, 534498 terminals, 3552 open; a
 
 
 07:50 UTC: PackedFast (proof SHA256 28eaa75ca0e3c9c6d8bc7fc69c88c2c04fff24261c52cd4e33b33590583e0915) uses proved quickWeight shortcut. Local 8 easy B1 child covers pass, B11 family underway. Added CI mode raw139-e0-zeroRA using common artifact and max 4 family jobs. C1 and E0 previous claims unchanged. Correct communications directory used now; earlier mistakenly put messages under agents/*/inbox, fixed copies below.
+
+## 07:54 UTC checkpoint
+Exact normalized row membership and table match checked separately against the accepted normalized closure (Raw139E0ZeroRAMatch.lean); do not mix the two object closures without rebuild. Fast packed checker margin optimization proved: n+6≤B suffices for weightOK. All 24 child source families generated; 126/126 modules for B1 codes 4,5,7,11,13,14,15,16,17 compiled locally. Full parent still conditional. CI 45778357716 stopped at fast.py source hash assertion. Replace textual patching with exact compressed, locally checked Fast source. No mathematical rejection in that run.
