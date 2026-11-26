@@ -85,6 +85,48 @@ def run(p,params):
         for e in sorted(edges[1-d][z]):pop(c,e,j)
     return edges,seen,D,tab
 
+def quotient(edges,seen,D,T):
+    """Profile-preserving two-sided quotient, independently checked by Lean."""
+    while True:
+        old=sum(map(len,T))
+        for d in range(2):
+            profiles=[set() for _ in T[d]]
+            for q,b,l,r in seen:
+                x,y=(l,r) if d==0 else (r,l)
+                profiles[x].add((q,b,y))
+            def classes(keys):
+                ids={};return [ids.setdefault(k,len(ids)) for k in keys]
+            C=classes([frozenset(p) for p in profiles])
+            while True:
+                C1=classes([(C[i],tuple(C[D[d][i,b]] if (i,b) in D[d] else -1 for b in (0,1))) for i in range(len(C))])
+                if C1==C:break
+                C=C1
+            n=max(C)+1
+            if n==len(C):continue
+            E=defaultdict(set);P={}
+            for i in range(len(C)):
+                E[C[i]].update((b,C[j]) for b,j in edges[d][i])
+                for b in (0,1):
+                    if (i,b) in D[d]:
+                        key=(C[i],b);v=C[D[d][i,b]]
+                        assert key not in P or P[key]==v
+                        P[key]=v
+            edges[d]=E;D[d]=P;T[d]=list(range(n))
+            seen={(q,b,C[l],r) if d==0 else (q,b,l,C[r]) for q,b,l,r in seen}
+        if sum(map(len,T))==old:break
+    return edges,seen,D,T
+
+def validate_quotient(p,edges,seen,D):
+    assert (0,0,0,0) in seen
+    for d in range(2):assert (0,0) in edges[d][0]
+    for q,b,l,r in seen:
+        m=p[2*q+b];assert m!='---'
+        w=int(m[0]);d=int(m[1]=='L');q2=ord(m[2])-65
+        x,y=(l,r) if d==0 else (r,l)
+        j=D[d][x,w];assert (w,x) in edges[d][j]
+        for c,z in edges[1-d][y]:
+            assert ((q2,c,j,z) if d==0 else (q2,c,z,j)) in seen
+
 def trie(xs):
     if not xs:return ".empty"
     if xs==[0]:return ".leaf"
@@ -93,6 +135,10 @@ def trie(xs):
 def emit_auto(out,i,p):
     edges,seen,D,T=run(p,PARAMS[i])
     assert len(seen)==EXPECTED[i]
+    if BRANCH=="1LB" and i in (107,108):
+        edges,seen,D,T=quotient(edges,seen,D,T)
+        validate_quotient(p,edges,seen,D)
+        assert len(seen)=={107:1201,108:1047}[i]
     print("automaton",i,len(seen),len(T[0]),len(T[1]),flush=True)
     def stack(d):
         E=",".join("["+",".join(f"({bit(b)},{j})" for b,j in sorted(edges[d][k]))+"]" for k in range(len(T[d])))
