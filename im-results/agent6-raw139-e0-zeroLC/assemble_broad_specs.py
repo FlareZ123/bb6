@@ -98,6 +98,7 @@ def build_specs(workdir: str | Path):
             )
 
         recipes = {}
+        nested_blocks = []
         multi_late = 0
         for leaf_index, table in enumerate(opens):
             key = (name, tuple(table))
@@ -122,6 +123,15 @@ def build_specs(workdir: str | Path):
                         )
                     children.append(child_recipe)
                 recipe = ["split", int(recipe[1]), int(recipe[2]), children]
+                for move_code, child_recipe in zip(ORDER, children):
+                    child_table = table.copy()
+                    child_table[int(recipe[2])] = int(move_code)
+                    if child_recipe[0] in ("block", "phase"):
+                        nested_blocks.append({
+                            "id": len(opens) + len(nested_blocks),
+                            "table": child_table,
+                            "recipe": child_recipe,
+                        })
 
             if recipe[0] == "late" and table.count(24) != 1:
                 raise AssertionError(f"{name}: unresolved multi-hole late leaf {table}")
@@ -142,6 +152,8 @@ def build_specs(workdir: str | Path):
             "namespace": branch_namespace,
             "prefix": branch_prefix,
             "manifest_name": f"chunk_manifest_d0_{name}.json",
+            "nested_blocks": nested_blocks,
+            "nested_block_module": branch_prefix + "NestedBlock00",
         }
         specs[str(code)] = spec
         trees[code] = audit_tree
@@ -151,6 +163,7 @@ def build_specs(workdir: str | Path):
             "open_leaves": len(opens),
             "counts": dict(counts),
             "multi_hole_late_expansions": multi_late,
+            "nested_block_certificates": len(nested_blocks),
             "max_late_step": max((max_late(r) for r in recipes.values()), default=0),
             "weighted_bound": max(
                 counts["maxquery"],
@@ -162,6 +175,8 @@ def build_specs(workdir: str | Path):
         raise AssertionError(f"expected 13323 open leaves, got {total_open}")
     if total_multi_late != 2:
         raise AssertionError(f"expected exactly two multi-hole late expansions, got {total_multi_late}")
+    if sum(len(spec["nested_blocks"]) for spec in specs.values()) != 1:
+        raise AssertionError("expected exactly one nested block certificate in the late expansions")
 
     (work / "broad_specs.json").write_text(json.dumps(specs, separators=(",", ":")))
     (work / "broad_specs_summary.json").write_text(json.dumps({
