@@ -893,6 +893,7 @@ jobs:
           SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
         run: |
           set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
           cp /tmp/a43-prepin/*.lean im-results/agent43-raw122-cut/
           python im-results/agent43-raw122-cut/pin_parent_sources.py /tmp/a43-prepin/manifest.json
       - name: Compile one independent child-Cover source closure
@@ -965,6 +966,7 @@ jobs:
           SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
         run: |
           set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
           cp /tmp/a43-prepin/*.lean im-results/agent43-raw122-cut/
           python im-results/agent43-raw122-cut/pin_parent_sources.py /tmp/a43-prepin/manifest.json
       - name: Merge dependency-closed child-Cover shards
