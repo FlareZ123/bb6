@@ -224,17 +224,19 @@ def build_precompiled_manifest(base_linked, work):
         print(result.stdout, end="", flush=True)
         result.check_returncode()
 
-    # The width-two mask checker defines run_add_width2 in its own
-    # BB6BlockFAR2 namespace, so the rewrite theorem matches its local run alias.
+    # BlockFAR2 imports BlockMacro2, which imports BlockMacro and re-exports
+    # the primitive Table/run names. Keep this as the only import path so the
+    # local run_add alias and imported table type share one kernel identity.
     width_two_mask = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR2.lean"
     width_two_source = width_two_mask.read_text()
     if (
-        "import BlockMacro\n" not in width_two_source
+        width_two_source.count("import BlockFAR2\n") != 1
+        or "import BlockMacro\n" in width_two_source
         or "theorem run_add_width2" not in width_two_source
         or width_two_source.count(",run_add_width2") != 2
         or "#print axioms run_add_width2" not in width_two_source
     ):
-        raise AssertionError("generated MaskBlockFAR2 is missing its direct BlockMacro import")
+        raise AssertionError("generated MaskBlockFAR2 does not use the single BlockFAR2 import path")
 
     source = ROOT / "im-results" / "agent32-raw59" / "Raw59Exact.lean"
     manifest_path = work / "canonical64-base-precompiled-manifest.json"
