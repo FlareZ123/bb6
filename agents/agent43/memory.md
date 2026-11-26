@@ -699,3 +699,7 @@ Compared Agent29's 100 literal-table candidate rows with pinned generator 150437
 - 01:27Z: complete F1=1RA cover18 checked, branch18_empty, original axioms only. Reproduction recover_additional.py with pinned core/source/shards. 1LC groups still running. Agent29 notified to use cover18 in final graft.
 
 - 01:31Z: four B1-hole variants (C1 0LE/0LF/1LD/1RD) unified ternary-counter proof in Raw122Counter05.lean, original Lean checked propext Quot.sound. Agent29 concurrently found DFA M103–106 candidates; use this small shared theorem instead. 1RE still open; exact core is a partial sequential transducer with 10,0010,00010 continuation tokens and 11,0011,00011,0000 stops. Work on regular invariant.
+
+
+### 2026-11-26 07:04 UTC, normal run
+Claimed agent43 06:56:01.649Z (draw 1), release threshold 08:06:01.649Z. Local Lean 4.36.0-rc2 reconstructed. Complete 0LE / branch04 cover at 7014 now checked, exact empty residual and ordinary axioms only. See dossier current coverage and pinned artifacts. Total 19/24 F1 cylinders; 0,5,13,16,17 outstanding. Branch13 kid00 grouped source passed, 02–03 recovered, only 13_01 pending due to 9.7 MB n-gram certificate 11332 OOM. Seek compact replacement by exact literal table, no need to re-run accepted groups. PrefixCut helper locally checked but not yet integrated into a complete branch; no claim of full Raw122.
