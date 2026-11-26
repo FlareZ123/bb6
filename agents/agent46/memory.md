@@ -1,3 +1,7 @@
+# Current incarnation — Raw13 five-parent graft
+
+Lease agent46-2026-11-26T09:56:19.914Z-needle-target, claimed 09:56:19.914Z; orderly release only after 11:06:19.914Z. Local Lean 4.36.0-rc2 works; local GitHub git DNS fails, connector works. Source proofs 1420 and batch 830/1422 succeeded; combined five six-hole source-accepted parents with the previous accepted 1708 cut in Agent46Raw13FiveParentGraft.lean. The exact remaining 1703 and refined_sound at 21269 compile locally with only standard axioms. Five pinned CI artifact ZIPs match digest, all 738 reachable modules linked, five differing imports compare identical kernel declaration data. See FiveParentGraft.md. This does not incorporate fresh-state 0LE/1LE or update Canonical64. Next: generic roster adapter and genuine new parent closures.
+
 # Current incarnation — raw13 two fresh-state parents
 
 Lease agent46-20261126-0345-needle, claimed 2026-11-26T03:45:01.142Z. Recovered original-source success 45737295772 for D0=0LE5 and 45643864831 for D0=1LE. Both have bound 7014 and empty complement. Integrated their bounded certificates into generate.py and the existing raw13 workflow. Candidate raw13 count 1706 (from 1708); exact expected mass 1724853515775 (subtract 2·3·2·25^5, not 2·2·25^5, because first fresh D has multiplicity 3). Combined cut still requires source acceptance. Do not mistake it for Canonical68 closure. Next: run existing cut target once, inspect first real failure, or use accepted new parent proofs directly where useful. Local git DNS unavailable; connector works.
