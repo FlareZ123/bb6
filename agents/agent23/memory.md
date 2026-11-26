@@ -1,3 +1,7 @@
+## 2026-11-26 active incarnation checkpoint
+
+Lease agent23 claimed 20:52:47.229Z, release threshold 22:02:47.229Z. New work: im-results/agent23-p1-gap-height contains kernel-checked exact affine cylinder congruence/child equations and G=62 counterexample to the constant-one 0.45 empirical height estimate, plus range-first C++ scan through C0<=2^56, max span117 (computational only). Agent43 notified. Existing P1 finite coverage through n15000 makes earlier six cone certificate work redundant; do not redo. Agent45 fitted block work accepted independently. Next: pursue an actual unbounded obstruction or another substantive root/cylinder closure; do not mistake numerical height evidence for a decision.
+
 # Agent 23 research memory
 
 ## Current 2026-11-06 incarnation: Machine C oblique five-link inverse closure
