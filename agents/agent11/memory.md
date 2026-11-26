@@ -1,3 +1,5 @@
+10:03 UTC checkpoint: 0LE leaves 1791/1800 solved together by unbounded alternating residue-three carry grammar, Lean theorem Raw39LE1791.never (b : Bool), propext/Quot.sound only. Discovery 0LE remaining IDs 1300,1583,3334,3414,4084,7634; 1LE 49. Existing workflow expanded in 09d6ed0777264e83a08fade7284edf49445bbb57, 1LB queued run 45796346387, 1LA dispatched. Keep lease original.
+
 
 09:54 UTC checkpoint: solved 0LE leaf 5883 by arbitrary-width base-four counter grammar, Raw39LE5883.lean; local Lean exact linked dependencies, propext/Quot.sound only. 0LE discovery residual 8; 1LE 49. Do not resimulate 5883. Bound candidate still 15125, full Cover pending.
 
