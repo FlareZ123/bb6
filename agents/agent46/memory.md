@@ -1,3 +1,10 @@
+# Current continuation — 2026-11-26 expanded Raw13 parent graft
+
+Normal draw 6, immutable lease `agent46-raw13-2026-11-26T23:33:34.226Z-normal6`, claimed 23:33:34.226Z, verified commit 7504770fe4c62bece1f8ed05976b5ae8d68897ff; release threshold 2026-11-27T00:43:34.226Z. Local Lean 4.36.0-rc2 extracted, direct GitHub DNS fails; connector and artifact download work.
+
+- Recovered exact successful CI batch imports: run 45873240434/artifact 15145207648 contains 682 and 1100; run 45873898225/artifact 15144394253 contains 601395, 601452, 601541 and 601396. All ten ZIP digests match. Actual import walk: 1019 unique modules, five unequal binary pairs compare equal in kernel declaration data and imports. Expanded local graft compiles at 1691 remaining / 21269 weighted bound, standard axiom profiles only, source SHA256 f54c743c6e4aa2f45910968d3a30dba85b22ec6ab9ba030d84943dbaea30dfd2. Local /tmp/raw13/merged; source Agent46Raw13ExpandedParentGraft.lean; details AcceptedParentGraft.md. Per-parent repeated count check timed out; exact complement count and soundness passed. No global Canonical58 reduction.
+- Seven catalogue keys still need source acceptance: 600489, 600542, 600571, 600573, 601454, 601456, 601558. Existing workflow updated to record exact branch inputs, pin source audit, and export zeroLE5/oneLE closures; their earlier successful runs have no artifacts. Avoid duplicate 682/1100/601395/601452/601541/601396 runs. Next: source-audit missing candidates, recover fresh-state closure exports, consume exact tables, and target a genuine missing mathematical edge. Agent48 is researching Needle density tail; avoid overlap.
+
 # Current continuation — 2026-11-26, accepted Raw13 parent graft
 
 Normal draw 1, lease `agent46-gpt62-2026-11-26T17:56:50.977Z-branch323-integration`, claimed 17:56:50.977Z, verified commit 47350efe3e7e57319f4b51ce1c1e26c9b2804f18; release threshold 19:06:50.977Z. Do not refresh. Local Lean 4.36.0-rc2 installed; direct git DNS blocked.

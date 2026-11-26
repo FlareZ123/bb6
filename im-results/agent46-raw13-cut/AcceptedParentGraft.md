@@ -1,6 +1,6 @@
 # Raw13 accepted-parent integration
 
-[Agent46Raw13AcceptedParentGraft.lean](Agent46Raw13AcceptedParentGraft.lean) gives the exact 1697-entry retained complement of the accepted 1708-entry phase cut after consuming eleven distinct independently source-audited six-hole parents. Every completion of each parent has weighted bound 7014; the quotient-aware soundness theorem retains the base bound 21269 for eliminated cases. It filters by `tableOK` and uses `tableOK_sound` and `safe_quotient`.
+[Agent46Raw13ExpandedParentGraft.lean](Agent46Raw13ExpandedParentGraft.lean) establishes the exact **1691-entry** retained complement of the source-accepted 1708-entry phase cut after consuming seventeen source-audited six-hole parents. Each parent has weighted bound 7014. The quotient-aware soundness theorem retains bound 21269 for all eliminated cases and every unmatched residual table. Filtering uses `tableOK`, its equality proof `tableOK_sound`, and `safe_quotient`. The eleven-parent, 1697-entry theorem remains an earlier narrower result.
 
 | Parent(s) | Successful source run | Artifact | ZIP SHA256 |
 |---|---:|---:|---|
@@ -12,27 +12,11 @@
 | 503, 1046 | 45849588820 | 15135720074 | d1a04550690b029e3e9d13ba881bbcd25a13b31fff60793fa86867bd66459c19 |
 | 231, 323 | 45851179262 | 15135299891 | 05962ad23b74929ec1f9d27b8767ac42f1a781c5fece1564dc5acba383522ddc |
 | 321, 482 | 45852032702 | 15136488902 | ed468494d8d7342bca98eb892cc6a19bb10f91e4150fee11ae5cbdca36baaf1b |
+| 682, 1100 | 45873240434 | 15145207648 | 7f3a4e059b1a978195626b82d80ce56ab2f14e82d7b96463950389f88d1bc214 |
+| 601395, 601452, 601541, 601396 | 45873898225 | 15144394253 | 4f3f92b1a6f727d9944a8ac89a08ca53c2dd2b9ba16a989c923820e3ac9e31ba |
 
-The artifact module inventories establish the actual batch targets (323 already accepted with 231; 1100 not in the 321/482 artifact). All eight ZIP SHA256 values matched metadata. The recursive project imports from twelve roots yield 881 unique modules. Exactly five distinct binary duplicate pairs occur (SparseZipper, FrontierMass, TwoFirst, CrossCoverage and BB6Coverage); each passed the existing CompareKernelImports.lean check for exact kernel declarations and import descriptors. Lean 4.36.0-rc2 compiled the integrated source with `-j1` in 28.84 seconds, peak RSS 2925428 KiB. Both `refined_sound` and `refined_count` report only `propext, Classical.choice, Quot.sound`.
+The exact generated `Agent46Raw13BranchBatch.lean` files resolve the formerly uncertain run inputs: 45873240434 imports 682 and 1100, and 45873898225 imports 601395, 601452, 601541 and 601396. All ten ZIP digests match the immutable artifact metadata. Walking the actual imports from the eighteen roots with `WalkImportClosure.lean` reaches 1019 unique project modules (1520 copies); the five distinct conflicting binary pairs (BB6Coverage, CrossCoverage, FrontierMass, SparseZipper and TwoFirst) pass the existing `CompareKernelImports.lean` comparison of complete kernel declarations and import descriptors. Lean 4.36.0-rc2 compiled the expanded graft with `-j1` in 52.29 seconds, maximum RSS 2907704 KiB, exit 0. Both exported theorems `refined_sound` and `refined_count` report exactly `[propext, Classical.choice, Quot.sound]`. The locally compiled source SHA256 is `f54c743c6e4aa2f45910968d3a30dba85b22ec6ab9ba030d84943dbaea30dfd2`. A separate repeated per-parent membership-count attempt exceeded the local call timeout; the exact retained length and soundness theorems above are checked independently of it.
 
-This is a **local artifact-backed integration** of source-accepted parent bounds, not a new full original-source CI run or Canonical64 roster reduction. It does not consume 682 (previously locally checked but no retained source artifact), 1100 (candidate), or the two independently accepted five-hole fresh-state parents 0LE/1LE. The 1697 retained obligations, including the hard #754 cylinder, remain to be covered. No exact BB(6) upper bound follows.
+This is a **local artifact-backed integration**, using already source-accepted parent proofs, not a new full original-source CI run or a reduction of the global Canonical58 roster. It does not consume the two source-accepted five-hole fresh-state parents 0LE/1LE (their successful source runs did not upload proof closures). The unaccepted catalogue keys are 600489, 600542, 600571, 600573, 601454, 601456 and 601558; do not count them before source acceptance and literal-table consumption. The 1691 retained obligations, including #754, remain to be covered. No exact BB(6) upper bound follows.
 
-The earlier [five-parent result](FiveParentGraft.md) and [six-parent source](Agent46Raw13SixParentGraft.lean) are historical narrower integrations.
-
-
-## Post-graft branchBatch inventory (2026-11-26)
-
-Two later successful runs of the same `branchBatch` workflow exist and must be reconciled before any further Raw13 branch dispatch:
-
-| Run | Source SHA | Artifact | Artifact size | Catalog at source SHA |
-|---|---|---:|---:|---|
-| 45873240434 | `5d7531c100904c09bef67473fbed930d04a46a8f` | 15145207648 | 80,427,686 bytes | 10 keys: 231, 321, 323, 482, 503, 682, 830, 1046, 1100, 1422 |
-| 45873898225 | `637c0535dd58b701433aef4bca3cf5f05df1db56` | 15144394253 | 101,409,956 bytes | the preceding 10 plus 600571, 600573, 601395, 601396, 601452, 601541 |
-
-At run 45873240434's source snapshot, the only catalog IDs not already represented in the eight source-audited artifact rows above were 682 and 1100. This makes it plausible that the successful run source-audited those two, but the GitHub Actions run metadata does not expose the `workflow_dispatch` branch input. Do **not** mark either accepted until the artifact's generated `Agent46Raw13BranchBatch.lean` import list (or an equivalent manifest) is inspected.
-
-At run 45873898225's source snapshot, six fresh IDs had just been added. The workflow accepts at most four IDs per batch, so this run can cover no more than four of those six; its exact subset is unknown. Five further IDs (600489, 600542, 601454, 601456, 601558) were added only in a later catalog revision and were not available to either run above. The current catalog has 21 keys in total.
-
-This invocation dispatched run 45889186819 for `682 1100` before discovering the two earlier successful runs. It was cancelled at 2026-11-26 20:32:08Z and produced no artifact. This cancellation avoids a likely duplicate; do not repeat that batch. The 11-parent integration and 1697 count above remain the only integrated result until the later artifact inventories are reconciled. The exact branch modules should be checked before updating the graft.
-
-The local Python/container shell returned `ClientError` on repeated attempts in this invocation, so the ZIP contents could not be inspected locally. Next step: inspect artifacts 15145207648 and 15144394253 when a shell is available, or add an explicit branch manifest to a future run; do not spend another CI run merely to rediscover their inputs.
+Earlier narrower integrations: [eleven-parent theorem](Agent46Raw13AcceptedParentGraft.lean), [five-parent result](FiveParentGraft.md), [six-parent source](Agent46Raw13SixParentGraft.lean). The cancelled 45889186819 run was a duplicate 682/1100 request, superseded by accepted artifact 15145207648. No rerun is needed.
