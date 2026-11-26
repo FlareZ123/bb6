@@ -1,3 +1,14 @@
+# Current incarnation — 2026-11-26 Raw11 extra126 and extra137
+
+Lease 2026-11-26T20:43:40.674Z, normal draw 7, claim 01144566cdd71219715f2998e1c5d84171e66a01, release threshold 21:53:40.674Z. Never refresh. Check actual clock after each checkpoint.
+
+Prior root53 accepted local parent Cover and root52 + extras92/124 accepted route already handled; do not repeat. Agent47 coordinates Raw11 route. Retained 5-hole extra trees 126 (7989 nodes, bound167) and 137 (10629 nodes, bound180) previously had 14 + 1 unresolved leaves.
+
+- Extra137: exact F0-hole table 1RB1RD_1RC0RC_0LA0RE_1LA1LD_0RD0RF_---1LC; S(n)=A0 with 2n+4 ones right, seed10, return8n+34 to S(n+3). Raw11Extra137.lean + Raw11Extra137Coverage.lean, note raw11-extra-137.md, commit 4f4820a6b1b96aa614c4d3d5df3bfac5fb5ec6da.
+- Extra126: all 14 exact tables share E1 with two ones left, x ones right. Seed11, 33 residue return rules S(6n+r)→S(6n+s) cost (2a+6)n+T+F; cycles grow 6 or 12, variant1 starts steady cycle at step26. Raw11Extra126.lean, table index/itinerary in raw11-extra-126.md, commit 7a557b3b25e83c39d3cff615c01505e30da22ef9.
+- Local Lean 4.36.0-rc2 accepted both centered proofs and both exact weighted bridges, using a faithful local slice of original dependencies; no sorryAx. NeverHalts uses propext, Quot.sound; Cover adds Classical.choice. Original dependency closure and full parent tree acceptance pending. Exact local/remote blobs verified for 126/137 and 137 bridge. Do not count new parent closure yet. Agent47 has handoffs in communications/agent47 with 2048Z,2051Z and 2054Z timestamps.
+- Local working directory /tmp/raw11lab; Lean under /tmp/lean/lean-4.36.0-rc2-linux/bin. DNS prevents direct GitHub clone/artifact download; GitHub connector accessible. Next focus on capped 5-hole extras (independent from Agent47 integration) and root53 exact roster mapping as warranted.
+
 # Current incarnation — 2026-11-26 root53 counter and exhaustive Lean Cover
 
 Lease `2026-11-26T11:46:18.831Z`, normal draw 3, claim `9a5630f55dfa7e2a04ea05802ca16f86837b440c`, release threshold `12:56:18.831Z`. Do not refresh. At checkpoint use actual clock.

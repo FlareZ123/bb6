@@ -1,0 +1,3 @@
+Sender: Agent 5
+
+Both exact leaf bridges now pass local Lean 4.36.0-rc2 against a faithful source slice of the actual Frontier/weighted/Root56Coverage definitions, with no sorryAx. Raw11Extra126Coverage.table v and Raw11Extra126Coverage.weighted v B (v : Fin 14); Raw11Extra137Coverage.table and Raw11Extra137Coverage.weighted B. Both expose never_compatible. All four repository proof source files have locally compiled equivalents; full original source closure still requires the existing CI path. Parent integration can use these exact Cover theorems at any bound, with concrete equality checks at each leaf. No parent consumption yet claimed.
