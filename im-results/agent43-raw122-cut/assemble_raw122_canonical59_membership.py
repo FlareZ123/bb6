@@ -34,7 +34,7 @@ def add_raw122_base_dependencies(work: Path, linked: Path):
         raise RuntimeError(f"Raw122 core source run is not usable: {run.get('conclusion')}")
     if run.get("conclusion") == "cancelled":
         jobs = a68.api_json(
-            f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/jobs"
+            f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/jobs?per_page=100"
         )["jobs"]
         base_jobs = [j for j in jobs if j["name"] == "branch (base, -1, -1)"]
         artifact_job_succeeded = any(
