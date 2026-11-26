@@ -1,9 +1,17 @@
-# Raw57 A1=1RF: complete candidate partition, two new kernel proofs
+# Raw57 sibling closure: complete 0LB and 1RF candidate partitions
 
 Parent raw57: `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. Child A1=1RF:
 `1RB1RF_1RC---_0RD---_1LD1RE_---0LA_------`.
 
-The exact first-hole enumeration using Agent47's fast enumerator gives 2073 splits, 37150 cycle leaves, 8686 last-hole leaves, 1844 open leaves. All 1844 open candidates are now covered by 1811 FAR witnesses, 31 one-block growth certificates, and the following two independently Lean-checked proofs. No unresolved discovery leaf remains. The sharp candidate weighted bound is 230 (halting table `1RB1RF_1RC0RA_0RD1RB_1LD1RE_HHH0LA_1LE0RD`, 229 ordinary steps, zero delay). The full source partition audit is dispatched; **not accepted until it passes**. All five-hole compatible tables: 9,765,625.
+The exact first-hole enumeration using Agent47's fast enumerator gives 2073 splits, 37150 cycle leaves, 8686 last-hole leaves, 1844 open leaves. All 1844 open candidates are now covered by 1811 FAR witnesses, 31 one-block growth certificates, and the following two independently Lean-checked proofs. No unresolved discovery leaf remains. The sharp candidate weighted bound is 230 (halting table `1RB1RF_1RC0RA_0RD1RB_1LD1RE_HHH0LA_1LE0RD`, 229 ordinary steps, zero delay). The full source partition audit 45725993066 was interrupted by runner shutdown (exit 143) while compiling child shards; it is **not accepted until a complete audit passes**. All five-hole compatible tables: 9,765,625.
+
+## A1=0LB: complete candidate partition
+
+Child `1RB0LB_1RC---_0RD---_1LD1RE_---0LA_------`: 1381 splits, 23617 cycle leaves, 7526 last-hole leaves, 621 open leaves. Of these, 558 have FAR witnesses, 58 single-block sweeps, three double-block sweeps (156,303,325), and two sparse n-gram invariant proofs. All 61 sweep theorems and both n-gram nonhalting theorems compiled locally in Lean 4.36.0-rc2 against hash-verified original dependency objects from artifact 15057164854 with standard axioms only. The final tree audit is pending. Candidate sharp weighted bound 225, with 224 ordinary steps and zero delay for `1RB0LB_1RC1RF_0RDHHH_1LD1RE_0RF0LA_1LA0RB`. The entire compatible canonical cylinder has 25^5 = 9,765,625 tables.
+
+New DFA `00102342104` closes open indices 8,30,493. Remaining M344 `1RB0LB_1RC1LB_0RD0RF_1LD1RE_---0LA_1LA1RF` and M360 `1RB0LB_1RC1LB_0RD1RF_1LD1RE_---0LA_1LB0RC` have sparse n-gram invariants of widths 5 and 6, 1499 and 2132 configurations respectively. Left/right edge counts are 22/58 and 53/61. Existing original SparseNGram checker and emitter are reused; these are unbounded nonhalting proofs, not finite simulation claims.
+
+Final source theorem: `BB6.Agent1Raw57LB0.all_completions`. Generate with the same command below substituting 0LB for 1RF. No global roster change is claimed.
 
 ## M660: grammar-based nonhalting
 
