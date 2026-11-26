@@ -76,6 +76,16 @@ The [odd-depth mass-four low-gate cone](2026-11-26-machine-c-odd-depth-mass4-con
 
 The [U5 w=7 q=0 source-parent fan](../im-results/agent15-c-halting/README.md) is exact-source accepted: the base four-root closure passed in [run 45796426913](https://github.com/FlareZ123/bb6/actions/runs/45796426913), the seven-slice extension passed in [run 45832100735](https://github.com/FlareZ123/bb6/actions/runs/45832100735), the nine-slice extension passed in [run 45833176482](https://github.com/FlareZ123/bb6/actions/runs/45833176482), and the twelve-slice extension passed in [run 45834843362](https://github.com/FlareZ123/bb6/actions/runs/45834843362). For \(z=2+4u\), every reachable q=0 target has an even parent depth and exact scale/cost equations; when \(W=2228+3591u\) is odd, only depths 0 and 2 remain. The depth-zero parent is source-excluded, and the q=1 parent is now source-excluded on twelve disjoint infinite slices: \(u=59+80t,\;7+32t,\;35+64t,\;23+512s,\;339+2560v,\;499+1280v,\;3379+5120v,\;2739+10240v,\;9939+10240v,\;16339+20480v,\;20019+20480v,\;1939+2560v\). The eight new slices are proved in [U5Q0W7U19Mod2560.lean](../im-results/agent15-c-halting/U5Q0W7U19Mod2560.lean); the extended exact-source closures print their axioms and reject sorryAx/native_decide. These are necessary-residue-compatible sublifts on the \(w\equiv55\pmod{128}\) row, not closure of the full \(w=7\) progression or a Machine C decision. See the [exact parent-chain analysis](../im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md).
 
+Within the root-compatible parameter family \(u\equiv19\pmod{20}\), the
+twelve proved q=1 cylinders cover an exact natural-density fraction
+\(249/512\) of parameters. The calculation splits \(u=19+20n\) into its
+four classes modulo 4: the \(u\equiv19,39,59,79\pmod{80}\) branches have
+proved coverage densities \(53/128,\;17/32,\;1,\;0\), respectively.
+This is a lower bound on the density of all excluded targets, not a
+classification of the remaining parameters; the detailed disjoint
+cylinder calculation is in the
+[U5 w=7 parent analysis](../im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md).
+
 The [density-zero inverse-reachability theorem](2026-11-24-machine-c-shadow-density-zero-agent21.md) establishes uniform sparse dyadic residue covers for the entire reachable section lattice and both full stopping families. A compatible-word collision and uniform amplification yield finite-tree extinction; the direct large-right bridge then transfers this to actual reachable targets. The abstract and complete-parent-law-conditional Lean modules compile locally with standard axioms only; the thin original-source import adapter remains uncompiled. This proves a qualitative asymptotic restriction, not emptiness of the residual set or a fixed-root decision.
 
 The structural mathematical results include [exact section indegree distribution](2026-11-08-machine-c-exact-indegree-distribution-agent34.md), [two-return image density](2026-11-08-machine-c-exact-two-step-image-density-agent34.md), [strict section-image hierarchy at all depths](2026-11-09-machine-c-all-depth-strict-section-image-hierarchy-agent4.md), and [gateway synthesis](2026-11-07-machine-c-gateway-exclusion-synthesis.md). They distinguish certified source reachability exclusions from paper-level lattice counts.
