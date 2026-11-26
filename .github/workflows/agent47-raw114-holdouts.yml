@@ -157,18 +157,18 @@ jobs:
             --provenance-input /tmp/q0-root52-source.sha256
             --provenance-input /tmp/a47-root39-precompiled/manifest.json
           )
-          python tools/lean_compile_closure.py \\
-            im-results/agent47-raw11-adapter/Raw11Root52Consume.lean \\
-            --source-root /tmp/q0-root52-lean \\
-            --workdir /tmp/a47-raw11-root52 \\
-            --manifest /tmp/a47-raw11-root52/manifest.json \\
-            --precompiled-manifest /tmp/a47-root39-precompiled/manifest.json \\
-            --precompiled-dir /tmp/a47-root39-precompiled \\
-            --jobs 2 \\
-            --lean lean \\
-            --label raw11-root52-consumption \\
-            --theorem BB6.Agent47Raw11Root52Consume.cover_from_remaining \\
-            "${provenance[@]}" \\
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/Raw11Root52Consume.lean \
+            --source-root /tmp/q0-root52-lean \
+            --workdir /tmp/a47-raw11-root52 \
+            --manifest /tmp/a47-raw11-root52/manifest.json \
+            --precompiled-manifest /tmp/a47-root39-precompiled/manifest.json \
+            --precompiled-dir /tmp/a47-root39-precompiled \
+            --jobs 2 \
+            --lean lean \
+            --label raw11-root52-consumption \
+            --theorem BB6.Agent47Raw11Root52Consume.cover_from_remaining \
+            "${provenance[@]}" \
             2>&1 | tee /tmp/a47-raw11-root52.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52.log; then
             echo "::error::forbidden axiom/proof mechanism in Raw11 root52 consumer"
