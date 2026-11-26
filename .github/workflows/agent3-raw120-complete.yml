@@ -30,7 +30,7 @@ on:
       raw139_e0_rb_run_id:
         description: Source-audited E0=0RB parent Cover artifact run ID
         type: string
-        default: ""
+        default: "45824379594"
       raw139_e0_rd_run_id:
         description: Source-audited E0=0RD parent Cover artifact run ID
         type: string
