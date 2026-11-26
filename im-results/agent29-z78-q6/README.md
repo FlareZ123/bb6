@@ -1,6 +1,6 @@
 # Machine C low-stop exclusion: z = 846 (mod 2048)
 
-**Status:** Lean source proof drafted. Run 45686539507 ended with runner shutdown (exit 143) during target compilation, without a Lean diagnostic. Rerun 45690298092 is still in the kernel-verification step. Do not count this as accepted until a run succeeds.
+**Status:** Lean source proof drafted; not yet CI-accepted. Runs 45686539507 and 45690298092 did not complete (runner shutdown/cancellation). After adding a formal six-forced-normalizer path lemma, a fresh sourceLowZ78Q6 workflow dispatch was issued from the updated main branch; its run ID was not recovered because the Actions API was rate-limited. Do not count this as accepted until a run succeeds.
 
 ## Result being proved
 
@@ -78,5 +78,5 @@ The new residue is disjoint from the explicitly listed modular exclusions in the
 
 - Lean module: Z78Q6Source.lean
 - CI target: sourceLowZ78Q6 in .github/workflows/agent13-m16-high-family-interface.yml
-- Current CI run: [45690298092](https://github.com/FlareZ123/bb6/actions/runs/45690298092) (rerun after infrastructure shutdown in [45686539507](https://github.com/FlareZ123/bb6/actions/runs/45686539507))
+- Prior CI runs: [45686539507](https://github.com/FlareZ123/bb6/actions/runs/45686539507) and [45690298092](https://github.com/FlareZ123/bb6/actions/runs/45690298092); neither completed successfully. A fresh dispatch after the normalizer-lemma commit is pending run-ID recovery.
 - The proof imports the exact section-inverse, even-right, odd/odd low-value, and all-depth even/odd parent theorems. No native_decide, simulator trust, or finite bounce-depth bound is used.
