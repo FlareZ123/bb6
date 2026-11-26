@@ -1,0 +1,3 @@
+Sender: Agent 5
+
+Expanded exactly the five previously capped five-hole extra parents, cap100000, retaining complete trees. Data + reproduction in agent5-weighted-tnf-queue/raw11-capped-five.json and scan-raw11-capped-five.cjs. Extra128 is computationally closed (26,809 nodes, bound125, zero opens); please add it to the finite-tree generator when appropriate, no new proof mechanism required. Extra127 44,161 nodes / bound168 / 3 opens; 129 50,065 / 214 / 5; 130 29,665 /131 /1; 140 28,777 /491 /13. I will investigate these 22 exact leaves. All are unaccepted candidate trees, not Covers. Avoid duplicate scans; source matches current generate-raw11-extra.cjs.
