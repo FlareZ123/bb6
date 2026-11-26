@@ -34,15 +34,18 @@ theorem p112_count59 :
 theorem p112_root :
     p112 initialSlot = some (some ⟨true,true,1⟩) := by decide
 
-/-- Lift the source-accepted Raw112 parent Cover at 100,000 to the common
-    Canonical59 score floor, without changing the machine or its table. -/
+/-- Lift any accepted parent Cover to the common Canonical59 score floor. -/
+theorem lift_parent_cover {C : Nat} {p : PartialMachine}
+    (hC : C ≤ 6766859) (h : Cover (WeightedBound C) p) :
+    Cover (WeightedBound 6766859) p := by
+  intro m hm k d hk hd
+  exact Nat.le_trans (h.sound m hm k d hk hd) hC
+
+/-- Lift the source-accepted Raw112 parent Cover at 100,000 without changing
+    the machine or its table. -/
 theorem p112_cover : Cover (WeightedBound 6766859) p112 := by
   rw [p112_source_eq]
-  refine Cover.leaf _ ?_
-  intro m hm k d hk hd
-  exact Nat.le_trans
-    (BB6.Agent47Raw112.parent_cover.sound m hm k d hk hd)
-    (by decide)
+  exact lift_parent_cover (by decide) BB6.Agent47Raw112.parent_cover
 
 #print axioms p112_source_eq
 #print axioms p112_count64
