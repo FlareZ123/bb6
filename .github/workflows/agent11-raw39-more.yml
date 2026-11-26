@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa]
         required: true
 permissions:
   contents: write
@@ -559,3 +559,44 @@ jobs:
                   for i in sorted(chosen):
                       print(f'{i+1}: {lines[i]}')
           PY
+
+  gap_dfa:
+    if: ${{ inputs.branch == 'gap-dfa' }}
+    strategy:
+      fail-fast: false
+      matrix:
+        leaf: [5777, 5779, 5787]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Regenerate and kernel-check one exact gap sibling
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          leaf=${{ matrix.leaf }}
+          module=Raw39LE$leaf
+          python im-results/agent13-coverage/unpack.py
+          python "$root/generate_le_gap_dfa.py" "$root" "$leaf"
+          work=/tmp/a11-gap-$leaf
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 \
+            --manifest "$work/manifest.json" --label "Raw39 1LE gap sibling $leaf" \
+            --theorem "BB6.Agent11$module.never" --artifact-name "raw39-le-gap-$leaf" \
+            --provenance-input "$root/generate_le_gap_dfa.py" \
+            --provenance-input "$root/rungram_regen.py" \
+            --provenance-input "$root/minimize_bi.py" \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            "$root/$module.lean" 2>&1 | tee /tmp/a11-gap.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-gap.log "BB6.Agent11$module.never"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-le-gap-${{ matrix.leaf }}
+          path: /tmp/a11-gap-${{ matrix.leaf }}/
+          if-no-files-found: error
+          retention-days: 30
