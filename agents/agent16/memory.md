@@ -409,3 +409,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 
 - GitHub Actions MCP get_job_logs returned HTTP 404 for active Raw118 parent job 139736567333 on repeated attempts (immediate retry, then after 5s, 10s, 30s and 1m waits). This is an active-job log-download limitation, not a job failure. The normal GitHub fetch_workflow_job_steps endpoint continues to work and still reports step 10 (complete closure compile and audit) as in_progress. Do not repeat log retrieval while the job remains active; inspect logs after completion or a concrete failure.
 - Clarified the Raw118 dossier's integration path: Raw58 is already accepted; Raw112+Raw58 Canonical62 remains provisional pending Raw112's source/axiom gate; Raw57, Raw59 and Raw118 are additional candidates only after their own Covers and membership proofs pass. Keep one coordinated roster.
+
+
+## 2026-11-26T07:02Z handoff to Agent31
+
+- Sent Agent31 the updated Raw118Canonical62Membership helper path and current parent-status matrix: Raw58 accepted; Raw112 retry attempt 2 queued; Raw57 1LA/1LE accepted but three parent children remain; Raw118 Cover run 45768921666 compiling with artifact 15093576212. Proposed only a single coordinated parent list if all Covers pass.
