@@ -4463,7 +4463,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/raw124-1lb-residual-probe
           python im-results/agent2-tnf-raw124/probe_1lb_residuals.py \
-            --cap 1000000 --lookback 128 \
+            --cap 1000000 --lookback 128 --sim-cap 1000000000 \
             --out /tmp/raw124-1lb-residual-probe
       - uses: actions/upload-artifact@v4
         if: always()
