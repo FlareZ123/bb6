@@ -1,6 +1,6 @@
 # Exponentially summable ideal inverse mass for #746
 
-**Status (2026-11-26):** new paper-level bound for the ideal inverse tree used in FixedLevelAsymptotic.md, with arithmetic, deterministic-decoding, path-budget and automaton-majorant lemmas locally checked in Lean 4.36.0-rc2 (SeamMass.lean). The binary-prefix injection and resulting counting/tail theorem are proved below on paper. This is not a real-machine reachability decision or a global BB(6) bound.
+**Status (2026-11-26):** new paper-level bound for the ideal inverse tree used in FixedLevelAsymptotic.md, with arithmetic, deterministic-decoding, path-budget and automaton-majorant lemmas locally checked in Lean 4.36.0-rc2 (SeamMass.lean). The binary-prefix injection and finite-list counting theorem are now kernel-checked in SeamPrefix.lean and SeamEntropy.lean (Lean 4.36.0-rc2, standard axioms only). The analytic convergence and numerical tail enclosure are proved below on paper. This is not a real-machine reachability decision or a global BB(6) bound.
 
 ## 1. Main theorem
 
@@ -81,3 +81,7 @@ For tighter numerical upper bounds, enumerate the exact finite ideal tree restri
 ## 5. Consequence for ongoing real inverse work
 
 This is an entropy obstruction to explosive *weighted* ideal inverse mass: there are exponentially fewer distinct legal prefixes than the full binary residue space. The proof is independent of surviving gate index and does not need a gap bound. It does not directly control the real grammar at arbitrarily large gaps; in particular real near-boundary even cross-level transitions can have j=2, and the fixed-gap approximation is not uniform across all levels. The natural next step is to control these rare seam transitions and obtain a genuinely uniform growing-window estimate, or a root-specific invariant. No candidate representative is discharged by this theorem alone.
+
+## 6. Source-kernel counting proof
+
+`SeamPrefix.prefix_mod` proves congruence modulo 2^(B+1) for matching prefixes by recursion on the path. `SeamPrefix.prefix_injective` recovers the terminal state and entire word. `SeamEntropy.ideal_count` proves the exact prefix-count bound for every finite nodup list of integer-model ideal words; `ideal_count_majorant` proves the integer-scaled exponential bound. All compile with the pinned Lean version and axioms `[propext, Classical.choice, Quot.sound]` only. Commands from this directory: `lean -o SeamMass.olean SeamMass.lean`, `LEAN_PATH=. lean -o SeamPrefix.olean SeamPrefix.lean`, `LEAN_PATH=. lean SeamEntropy.lean`. The abstract Path model includes all strict-band words by the existing arithmetic lemma; real near-seam corrections remain separate.
