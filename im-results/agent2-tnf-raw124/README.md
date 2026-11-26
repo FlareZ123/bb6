@@ -13,6 +13,7 @@ The following complete first-hole branches are currently established:
 - **F1=1LA**, weighted bound **6,230**: original-source CI accepted, [run 45837006401](https://github.com/FlareZ123/bb6/actions/runs/45837006401), artifact 15128682403, theorem `BB6.Agent2Raw124New1LA.bound_all`.
 - **F1=0LB**, weighted bound **4,136,175**: original-source CI accepted, [run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`.
 - **F1=1LB**, weighted bound **3,006**: original-source CI accepted, [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`.
+- **F1=0RD**, weighted bound **267**: original-source CI accepted by matrix job `legacy (0RD)` (job 139980560352) in [run 45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), artifact 15127941805 (`raw124-legacy-0RD-source-audit`), source revision `2a0106d3bfbc4254872e122e6a95cccccdda1639`, theorem `BB6.Agent32Raw124Z0RD.bound_all`. The overall matrix run failed on other branches; this specific 0RD job and its theorem/axiom gate passed.
 
 These are four separate Covers for their respective F1 children, not a Cover of the full Raw124 parent. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
 
