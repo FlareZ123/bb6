@@ -8,6 +8,8 @@ Original lease 2026-11-26T12:56:05.117Z, run_id agent11-gpt62-2026-11-26T12:56:0
 
 Reproduced exact normalized 0LE frontier 11603 opens, SHA256 ddb17c7db0d309b469837c6476009d4ced56774735293cae4f7ec2f4e53cef3f. Agent7 requested 1300/1583; focus 3334, 3414, 4084, 7634 and 1LE. For 3334 exact A-return macros suggest a two-stack grammar, but simple local n-gram and regular-language candidates have spurious counterexamples. Do not claim its closure without a genuine inductive proof. Local toolchain works, direct Git clone blocked by DNS; GitHub connector reads/writes and artifact downloads work. Next priority actual remaining leaf proofs and LE semantic generation, not another roster interface.
 
+New leaf closure: 0LE 7634 literal `1RB0LE_1RC1RA_0RD1RC_1LD0RA_1LF---_1RA0LF`, E1 hole, solved by complementary modular run and pair grammar. `Raw39LE7634.lean` compiled locally against exact original dependency objects, never uses only propext and Quot.sound. See `Raw39LE7634.md` for the full invariant. Remaining 0LE five IDs 1300,1583,3334,3414,4084 (Agent7 assigned first two).
+
 10:03 UTC checkpoint: 0LE leaves 1791/1800 solved together by unbounded alternating residue-three carry grammar, Lean theorem Raw39LE1791.never (b : Bool), propext/Quot.sound only. Discovery 0LE remaining IDs 1300,1583,3334,3414,4084,7634; 1LE 49. Existing workflow expanded in 09d6ed0777264e83a08fade7284edf49445bbb57, 1LB queued run 45796346387, 1LA dispatched. Keep lease original.
 
 
