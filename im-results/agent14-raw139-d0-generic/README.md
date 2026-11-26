@@ -63,3 +63,10 @@ From the repository root, use:
 - `bash im-results/agent14-raw139-d0-generic/reproduce.sh ZeroRF`
 
 The script verifies the archived generator and generated root hashes before compilation. The 0LF and 1LB cases use their separate dossiers. Keep these certificates in `im-results/`: even the complete set of eight D0 parent Covers is only a local refinement of the Raw139 champion residual, not a global six-state upper bound.
+
+
+## Conditional embedding into the accepted Canonical64 route (pending CI)
+
+`Canonical64Raw139Subcover.lean` imports the accepted `Canonical64Raw120Integrated` interface and the local 43-sibling Raw139 composition. It does not create a competing roster. It asks Lean to establish that the exact `championResidual` table survives the Raw71/Raw77/Raw81/Raw120 cuts and occurs once in the 64-entry roster. If accepted, the existing one Cover hypothesis for that entry is supplied by the 43 source-accepted sibling Covers plus 80 residual Covers, yielding a conditional exactness theorem with 63 other Canonical64 Covers and 80 Raw139 Covers (143 finer obligations). This is a decomposition of one current proof obligation, not a reduction to 63 total obligations and not an unconditional BB(6) proof.
+
+The wrapper's finite membership/uniqueness/count claims and its consuming theorem are **pending source CI**. It depends on the 43-sibling consumer run 45759230933 passing first. Keep the accepted Canonical64 roster and its current public count unchanged.
