@@ -367,6 +367,16 @@ jobs:
             original/verify/Agent5Q0AutoData.v
             original/verify/q0-auto-candidate.json
           if-no-files-found: error
+      - name: Preserve periodic-parent generated source shards
+        if: inputs.target == 'enumerate62-direct-parent' && inputs.offset >= 55 && inputs.offset <= 58
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-periodic-parent-${{ inputs.offset }}-source
+          path: |
+            original/verify/Agent5Q0Periodic*.v
+            original/verify/Agent5Q0AutoData.v
+            original/verify/q0-auto-candidate.json
+          if-no-files-found: error
       - name: Generate direct finite-stack source certificates
         if: inputs.target == 'enumerate62-direct-auto'
         working-directory: original/verify
@@ -531,6 +541,19 @@ jobs:
           cp Agent5Q0AutoData.{v,vo} Agent5Q0AutoConsume.{v,vo} q0-auto-candidate.json auto-root-results/
           if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 52 ]; then cp Agent5Q0Root52*.{v,vo} auto-root-results/; fi
           if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 53 ]; then cp Agent5Q0Root53*.{v,vo} Agent5Root53Counter.{v,vo} auto-root-results/; fi
+      - name: Retain verified periodic-parent proof shards
+        if: always() && inputs.target == 'enumerate62-direct-parent' && inputs.offset >= 55 && inputs.offset <= 58
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-periodic-parent-${{ inputs.offset }}-proof-shards
+          path: |
+            original/verify/Agent5Q0Periodic*.v
+            original/verify/Agent5Q0Periodic*.vo
+            original/verify/Agent5SourceAutoTree.vo
+            original/verify/Agent5SourceAutomata.vo
+            original/verify/Agent5Q0AutoData.vo
+            original/verify/q0-auto-candidate.json
+          if-no-files-found: warn
       - name: Verify Raw11 nine-parent q0 checkpoint membership
         if: inputs.target == 'enumerate62-q0-nine-parent-membership'
         working-directory: original/verify
