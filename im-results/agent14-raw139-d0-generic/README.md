@@ -47,3 +47,18 @@ The current invocation's local shell/Lean bootstrap returned a tool-level `Clien
 3. Compile and inspect `Canonical64Raw139NormalizedCrosswalk.lean`; verify the E0=0RE identity and 65-table count, then inspect how many of the 79 active leaves refine each normalized/candidate parent and how large the explicit complement remains.
 4. Pursue E0=0LC only if its active-list membership gives direct global leverage; preserve existing search outputs and rebuild only the missing code2/code23 shards.
 5. Keep `results/` reserved for source-accepted, academically presentable mathematical results. No exact BB(6) value or universal upper bound has been established.
+
+
+## Preferred direct normalized-parent route (new; conditional, not yet compiled)
+
+The existing `Raw139NormalizedAcceptedCovers.lean` is a stronger adapter than the active-79 crosswalk: it already consumes the 43 accepted sibling Covers, the rowRC/rowRE continuation lifts, and the terminal p7 Cover, proving `Cover championScore p0` from Covers of the original 67 `remainingTables`. It also proves `p0_eq_championResidual`.
+
+The new `Canonical64Raw139NormalizedDirect.lean` (commit `8d79e6e318420dd39feb29bf42b6c619e9831958`) uses that adapter directly. It:
+1. supplies the accepted E0=0RA Cover from `Raw139E0ZeroRAIntegrated.discharged_cover`;
+2. supplies E0=0RE, E0=0RB and E0=0RD from their source-certified parent Covers (RB/RD still pending their independent audits);
+3. uses the already kernel-accepted 66-to-63 membership theorem to leave only the 63 normalized residual Covers;
+4. feeds the resulting `championResidual` Cover into `Canonical64Raw120Integrated.exact_at_target`.
+
+This route has **no separate active-79 complement hypothesis**. Its conditional exactness interface has only the other 63 Canonical64 roster Covers and the 63 remaining normalized Raw139 Covers as hypotheses. It still requires the Agent6 43-sibling/core artifact (which supplies `Raw139NormalizedAcceptedCovers.olean`) and both E0=0RB/0RD source-audit artifacts. It is not yet compiled; do not claim a global upper bound from it.
+
+The existing active-79 crosswalk remains useful as an independent diagnostic, but the direct normalized route is now the preferred integration path because it uses the already-proved normalized p0 decomposition rather than rebuilding an active-list complement.
