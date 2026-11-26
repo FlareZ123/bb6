@@ -53,7 +53,7 @@ inductive Runs where
 
 def encode : Runs → List Bool
   | .last n => Os (n+1)
-  | .cons k g u => Os (3*k+1) ++ Zs (2*g+1) ++ encode u
+  | .cons k g u => Os (3*k+1) ++ (Zs (2*g+1) ++ encode u)
 
 def cfg (L : List Bool) : Runs → Z0
   | .last n => ⟨0,L,Os (n+3)⟩
@@ -161,7 +161,7 @@ theorem next (L : List Bool) (u : Runs)
     change run0 table (n+4) (cfg L (.last n)) =
       some ⟨2,Zs (n+3) ++ true::true::L.tail,[]⟩ at a
     obtain ⟨t,L',u',ht,h0',hS',b⟩ :=
-      reset_resume n L.tail [] hS rfl (.last (n+3)) (by simp [List.tail])
+      reset_resume n L.tail [] hS rfl (.last (n+3)) (by rfl)
     exact ⟨n+4+t,L',u',by omega,h0',hS',join0 a b⟩
   | cons k g u =>
     cases g with
@@ -178,7 +178,9 @@ theorem next (L : List Bool) (u : Runs)
         some ⟨2,Zs (3*k+3) ++ true::true::L.tail,Zs (2*g+2) ++ encode u⟩ at a
       obtain ⟨t,L',u',ht,h0',hS',b⟩ :=
         reset_resume (3*k) L.tail (Zs (2*g+2) ++ encode u) hS rfl
-          (.cons (k+1) g u) rfl
+          (.cons (k+1) g u) (by
+            rw [encode,show 3*(k+1)+1=3*k+4 by omega]
+            rfl)
       exact ⟨3*k+4+t,L',u',by omega,h0',hS',join0 a b⟩
 
 theorem first : run0 table 11 ⟨0,[],[]⟩ =
