@@ -223,9 +223,10 @@ theorem above_bound_requires_large_gateway (B J N : Nat)
     ∃ j : Nat, J<j ∧ BB6CLine.Reach (0,2*j,4*j+10) := by
   obtain ⟨j,hj,hg⟩ := raw_halt_gateway_bound N h
   refine ⟨j,?_,hj⟩
-  by_contra hn
-  have hm := G_mono (show 8*j+16≤8*J+16 by omega)
-  omega
+  by_cases hn : J<j
+  · exact hn
+  · have hm := G_mono (show 8*j+16≤8*J+16 by omega)
+    omega
 
 /-- Gateway-tail exclusion is sufficient for a literal BB-score bound. -/
 theorem raw_bound_of_gateway_tail (B J : Nat)
@@ -233,9 +234,10 @@ theorem raw_bound_of_gateway_tail (B J : Nat)
     (hexcl : ∀ j : Nat, J<j → ¬ BB6CLine.Reach (0,2*j,4*j+10))
     (N : Nat) (h : BB6Coverage.HaltsAfter BB6.Agent47CRaw.cMachine N) :
     N+1≤B := by
-  by_contra hn
-  obtain ⟨j,hj,hr⟩ := above_bound_requires_large_gateway B J N hcut h (by omega)
-  exact hexcl j hj hr
+  by_cases hn : N+1≤B
+  · exact hn
+  · obtain ⟨j,hj,hr⟩ := above_bound_requires_large_gateway B J N hcut h (by omega)
+    exact False.elim (hexcl j hj hr)
 
 #print axioms raw_halt_gateway_bound
 #print axioms above_bound_requires_large_gateway
