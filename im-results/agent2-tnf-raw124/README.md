@@ -4,20 +4,34 @@ Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 mo
 
 ## Current first-level branch status
 
-The following complete first-hole branches are currently established:
+The following **18 of 24** first-level F1 branches have complete original-source, kernel-checked Covers. The 13 entries accepted in legacy replay run 45840496976 were individual matrix jobs; the overall matrix run failed because two *other* branches were terminated, so use each listed job/artifact as the evidence unit.
 
-- **F1=0RA**, weighted bound **283**: local original-source assembly of all 24 children and the weighted root; see [proof and reproduction](Raw124-0RA-accepted.md). Its dependencies include prior CI-built artifacts; the dossier does not claim a new all-in-one CI run.
-- **F1=0RF**, weighted bound **71**: original-source CI accepted, [run 45841208356](https://github.com/FlareZ123/bb6/actions/runs/45841208356), theorem `BB6.Agent2Raw124RF.all0RF`.
-- **F1=0LA**, weighted bound **5,910**: original-source CI accepted, [run 45839093000](https://github.com/FlareZ123/bb6/actions/runs/45839093000), artifact 15127830252, theorem `BB6.Agent32Raw124ZeroLAComplete.bound_all`.
-- **F1=0LE**, weighted bound **3,006**: original-source CI accepted, [run 45836460043](https://github.com/FlareZ123/bb6/actions/runs/45836460043), artifact 15129435887, theorem `BB6.Agent2Raw124New0LE.bound_all`.
-- **F1=1LA**, weighted bound **6,230**: original-source CI accepted, [run 45837006401](https://github.com/FlareZ123/bb6/actions/runs/45837006401), artifact 15128682403, theorem `BB6.Agent2Raw124New1LA.bound_all`.
-- **F1=0LB**, weighted bound **4,136,175**: original-source CI accepted, [run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`.
-- **F1=1LB**, weighted bound **3,006**: original-source CI accepted, [run 45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242, theorem `BB6.Agent2Raw124OneLBComplete.bound_all`.
-- **F1=0RD**, weighted bound **267**: original-source CI accepted by matrix job `legacy (0RD)` (job 139980560352) in [run 45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), artifact 15127941805 (`raw124-legacy-0RD-source-audit`), source revision `2a0106d3bfbc4254872e122e6a95cccccdda1639`, theorem `BB6.Agent32Raw124Z0RD.bound_all`. The overall matrix run failed on other branches; this specific 0RD job and its theorem/axiom gate passed.
+| F1 | Weighted bound | Accepted theorem | Source-accepted run / artifact |
+|---|---:|---|---|
+| 0RA | 283 | `BB6.Agent32Raw124Z0RA.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560426, artifact 15130748003 |
+| 0RF | 71 | `BB6.Agent32Raw124Z0RF.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980559902, artifact 15126744914; independently [45841208356](https://github.com/FlareZ123/bb6/actions/runs/45841208356) |
+| 0LA | 5,910 | `BB6.Agent32Raw124ZeroLAComplete.bound_all` | [45839093000](https://github.com/FlareZ123/bb6/actions/runs/45839093000), artifact 15127830252 |
+| 0LB | 4,136,175 | `BB6.Agent2Raw124ZeroLBComplete.bound_all` | [45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407 |
+| 0LD | 157 | `BB6.Agent32Raw124Z0LD.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560502, artifact 15129710694 |
+| 0LE | 3,006 | `BB6.Agent2Raw124New0LE.bound_all` | [45836460043](https://github.com/FlareZ123/bb6/actions/runs/45836460043), artifact 15129435887 |
+| 0RC | 2,759 | `BB6.Agent32Raw124Z0RC.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560280, artifact 15127807592 |
+| 0RD | 267 | `BB6.Agent32Raw124Z0RD.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560352, artifact 15127941805 |
+| 1LA | 6,230 | `BB6.Agent2Raw124New1LA.bound_all` | [45837006401](https://github.com/FlareZ123/bb6/actions/runs/45837006401), artifact 15128682403 |
+| 1LB | 3,006 | `BB6.Agent2Raw124OneLBComplete.bound_all` | [45800254828](https://github.com/FlareZ123/bb6/actions/runs/45800254828), artifact 15107525242 |
+| 1LC | 102 | `BB6.Agent32Raw124Z1LC.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560448, artifact 15128955411 |
+| 1LD | 7 | `BB6.Agent32Raw124Trivial.bound1LD` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560212, artifact 15132051672 |
+| 1LE | 670 | `BB6.Agent32Raw124Z1LE.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560359, artifact 15130088173 |
+| 1RA | 1,029 | `BB6.Agent32Raw124Z1RA.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560453, artifact 15130536056 |
+| 1RB | 184 | `BB6.Agent32Raw124Z1RB.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560344, artifact 15130193900 |
+| 1RC | 688 | `BB6.Agent32Raw124Z1RC.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560355, artifact 15129256141 |
+| 1RD | 80 | `BB6.Agent32Raw124Z1RD.bound_all` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560372, artifact 15128635425 |
+| 1RE | 7 | `BB6.Agent32Raw124Trivial.bound1RE` | [45840496976](https://github.com/FlareZ123/bb6/actions/runs/45840496976), job 139980560212, artifact 15132051672 |
 
-These are four separate Covers for their respective F1 children, not a Cover of the full Raw124 parent. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
+The legacy batch's source revision is `2a0106d3bfbc4254872e122e6a95cccccdda1639`. Its successful branch jobs ran the source-closure and standard-axiom gates and uploaded the listed artifacts. The `legacy (trivial)` artifact checks both 1LD and 1RE. The overall run failed only because the 0RE and 1LF jobs were shut down; their failure does not invalidate the individually successful rows above.
 
-F1=0LC run 45841104581 and F1=1RF run 45841320914 were cancelled after runner shutdown during child compilation; F1=0RB run 45841312585 failed twice with the same shutdown (attempt 2 reached child 13/24). None of these runs produced a mathematical counterexample or accepted theorem. Do not repeat these monolithic 24-child compiles unchanged; resume with a sharded/lower-concurrency source check. Six bundle-sharded first-level audits were dispatched for F1=0LD, 0RE, 1RA, 1RB, 1LE and 1LF; two remain in progress and four were cancelled to prioritize the Raw124 parent frontier. The F1=0LF nested parent now has eleven source-accepted F0 child Covers and only F0=1RC remaining; see the detailed frontier below. The first aggregate parent-frontier run 45845090267 exposed a merge-script collision on non-Lean `build_order.txt`; the merger now copies only Lean source files. The corrected source-audit run is queued as [45846032445](https://github.com/FlareZ123/bb6/actions/runs/45846032445).
+**Remaining first-level obligations:** F1=0LC, 0RB, 0RE, 0LF, 1LF and 1RF. The 0RE branch is being retried in the existing bundle-sharded run [45842536675](https://github.com/FlareZ123/bb6/actions/runs/45842536675): five kid shards passed in attempt 1; K04–K07 was terminated by a runner shutdown (exit 143), and a failed-jobs-only retry is in progress. The legacy 0RE job was independently terminated the same way while compiling; neither failure contained a Lean proof diagnostic. F1=0LC run 45841104581 and F1=1RF run 45841320914 were cancelled after runner shutdown; F1=0RB run 45841312585 failed twice with the same infrastructure signal. F1=1LF's legacy job was also shut down. These are not mathematical counterexamples and none is a source-accepted Cover.
+
+F1=0LF is a nested parent: eleven of its twelve nontrivial F0 child Covers are source-accepted, with only F0=1RC remaining. It is **not** yet a complete F1=0LF Cover. Agent32's [`Raw124ParentJoin.lean`](../agent32-raw124-0le/Raw124ParentJoin.lean) locally checks the exact 24-way first-level join interface, but no source-accepted aggregate Raw124 parent theorem or Canonical64 subtraction exists yet.
 
 ## Completed candidate branches
 
