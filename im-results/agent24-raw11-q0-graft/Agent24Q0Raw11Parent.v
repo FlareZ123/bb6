@@ -1,5 +1,5 @@
-From BusyCoq Require Import Enumerate62 Agent8QueueCheckpoint Agent8PackedChunk
-  Agent32SourceEncoding Agent44Q32CanonicalParent.
+From BusyCoq Require Import Enumerate62 Eqb Individual62 Agent8QueueCheckpoint
+  Agent8PackedChunk Agent32SourceEncoding Agent44Q32CanonicalParent.
 From Coq Require Import List Bool.
 Import ListNotations.
 Import TNF_Node.
