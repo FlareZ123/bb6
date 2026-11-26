@@ -73,7 +73,7 @@ theorem checkLeaf_sound {target : Fin 12} (bank : Bank target)
       exact hp.symm ▸ q.good
 
 def audit {target : Fin 12} (bank : Bank target) : Nat → PartialMachine → Tree → Bool
-  | _,p,.leaf w => checkLeaf known p w
+  | _,p,.leaf w => checkLeaf bank p w
   | 0,_,.branch _ _ => false
   | fuel+1,p,.branch s kids =>
     (kids.map Prod.fst == sliceDomain target s) &&
