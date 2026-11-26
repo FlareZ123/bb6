@@ -71,3 +71,11 @@ The separate fixed-score wrapper `Canonical62ChampionConsumer.lean` reuses Agent
 - Added `preflight_canonical62.py` and manual target `canonical62-preflight`. It links the accepted Canonical64 and Raw58 closures with the Raw112 common-core artifact, substitutes an explicit `BB6.Agent47Raw112.parent_cover` axiom stub, and checks parent membership/distinctness, the 62-entry roster, and the conditional quotient theorem's axiom boundary. It is strictly a preflight, not a Cover proof or BB(6) result.
 - The first preflight attempt 45773088105 failed because the stub imported generated `Raw112Data`, which was not present in the common-core artifact. The stub has been corrected to import `Raw112Base` and `ResidualCover` instead. Corrected run [45773948199](https://github.com/FlareZ123/bb6/actions/runs/45773948199) is queued.
 - If the Raw112 retries complete but GitHub leaves the dependent assembly job skipped, an explicit existing-artifact assembly mode may be needed to avoid recomputing successful shards. Any mixed-revision assembly must retain the merge tool's source/import/object/provenance hash checks; do not simply weaken revision checks.
+
+### Canonical62 preflight diagnosis and repair (2026-11-26)
+
+The corrected-link preflight [45775157434](https://github.com/FlareZ123/bb6/actions/runs/45775157434) established that the strict linker successfully combined 8,082 reachable modules across Canonical64, Raw112Base, and Raw58, with exact duplicate kernel-declaration/import checks. The Canonical64 root compiled with standard axioms, and the Raw112 parent-cover stub compiled with exactly the intended explicit axiom.
+
+The remaining failure was in two generic list-membership proofs (`parents_root` and `parents_cover`): the previous `simp only [parents, List.mem_cons, List.mem_singleton]` did not reduce the terminal empty-list membership, leaving the second branch's parent variable unreplaced. Both proofs now use `simp [parents] at hp`, followed by case analysis. The preflight axiom-name parser was also adjusted to Lean's abbreviated `Agent47Raw112.parent_cover` output. A local Lean 4.36.0-rc2 test confirmed the simplified membership-proof pattern. Retry [45775970314](https://github.com/FlareZ123/bb6/actions/runs/45775970314) is in progress.
+
+This is still a preflight: the Raw112 parent Cover is an explicit axiom stub, not an accepted proof.
