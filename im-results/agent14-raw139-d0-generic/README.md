@@ -25,7 +25,7 @@ The finite crosswalk module, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canon
 
 ## E0=0RB/0RD conditional integration source
 
-`Canonical64Raw139NormalizedE0ParentCrosswalk.lean` is the prepared source consumer for the two new parent audits. Once the source runs above succeed and their artifacts are supplied, it matches each certified parent to its normalized table, lifts the Covers to the champion score, and exposes an exactness interface with **63** remaining normalized Covers plus the already explicit active-list complement. This file is not yet compiled or accepted; the base crosswalk's finite membership/fanout diagnostics also remain uncompiled until the Canonical64 Raw139 43-sibling prerequisite is available.
+`Canonical64Raw139NormalizedE0ParentCrosswalk.lean` is the prepared source consumer for the two new parent audits. Once the source runs above succeed and their artifacts are supplied, it matches each certified parent to its normalized table, lifts the Covers to the champion score, and exposes an exactness interface with **63** remaining normalized Covers plus the already explicit active-list complement. This file is not yet compiled or accepted; the base crosswalk's finite membership/fanout diagnostics also remain uncompiled until the Canonical64 Raw139 43-sibling prerequisite is available. The existing `.github/workflows/agent3-raw120-complete.yml` now accepts optional `raw139_e0_rb_run_id` and `raw139_e0_rd_run_id` inputs, downloads the two source-audit artifacts, checks overlapping `.olean` identities, and compiles this consumer when both run IDs and the 43-sibling prerequisite are supplied (workflow commit `ec0d1620680ba8ff133fa56142c68b17028c4efe`).
 
 ## Other open Raw139 siblings
 
