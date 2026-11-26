@@ -5,8 +5,7 @@ Each candidate is accepted only by kernel-checked source theorems.
 """
 import base64,gzip,subprocess,json
 from quotient_search import search
-from fold import minimize
-from emit_quotient import emit as emit_quotient
+from emit_mask import emit as emit_quotient
 from pathlib import Path
 import generate_asym as asym
 ROOT=Path(__file__).resolve().parent
@@ -34,9 +33,6 @@ def add_ngrams(raw,folder,opens,certs,pumps,imports):
         assert len(actual[4].rstrip(',').split(','))==int(eR)
         if use_quotient:
             record=search(' '.join(data),table,verbose=False)
-            if record['states']>1200:
-                budget=5000 if (raw,i)==('0LB','113') else (2000 if record['states']<4000 else 4000)
-                record=minimize(record,max_attempts=budget,seed=32,verbose=False)
             record.update(branch=raw,index=int(i),original_states=int(n),widths=[int(l),int(r)])
             records.append(record)
             name=emit_quotient(folder,f'Raw59Upgrade{raw}NG{i}',record)
