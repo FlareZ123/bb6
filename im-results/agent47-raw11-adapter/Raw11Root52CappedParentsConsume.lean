@@ -28,9 +28,6 @@ def cappedParents : List PartialMachine := [
 def cappedCodes : List Nat :=
   cappedParents.map BB6.Agent47PhaseFrontier.tableCode
 
-def expectedCappedCodes : List Nat :=
-  cappedCodes
-
 /-- Exact residual frontier after the accepted 46-extra/q0 consumer and
     these six additional parent Covers. -/
 def remaining : List PartialMachine :=
