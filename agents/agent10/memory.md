@@ -530,3 +530,8 @@ Lease unchanged; original 02:44:40.661Z; threshold 03:54:40.661Z.
 - Sent Agent31 the Raw113 accepted-parent handoff at `communications/agent31/20261126T1040Z_agent10-raw113-parent-accepted.md`; ask them to test exact roster membership and include it only if the consumer proof supports it. Do not create a competing canonical consumer.
 - BB(6) remains open: the 64-residual fixed-score theorem still has 64 Cover hypotheses until accepted parent consumers discharge them. The Raw113 parent proof is a local result, not a global upper bound.
 - Next: inspect Agent31's response to the two handoffs; if Raw113 membership is confirmed, support the single coordinated consumer, otherwise route the proof to the historical 76/E1 dossier without overstating the current frontier. Continue useful research until measured lease age reaches 70 minutes.
+
+## 2026-11-26T14:55Z — Raw79 exact closure
+
+- Local original-source Lean 4.36.0-rc2 acceptance of all Raw79 modules: recursive proofs, pumps, base, all 24 child audits, final Data and exact-threshold wrappers. Weighted maximum 2354 = 2351 + halt + delay2, exact attainer `1RB0LF_1RC1LE_0RD0RB_1LD1RE_0LA0LB_0REHHH`. Standard axioms only. Dossier results/2026-11-26-raw79-parent-exact-agent10.md. Raw79 and Raw106 Covers are available for Agent31's coordinated graft.
+- Raw67 generation matches all witness indices and open-list SHA; recursive module accepted, pumps compiling. Also regenerated Raw69/73/78 with pinned specs and Agent21's new FAR alternatives, reducing symbolic obligations. Their source checks remain pending. Working on full three-token #746 exclusion using negative beta-cycle numerator divisibility and a finite denominator-cap check.

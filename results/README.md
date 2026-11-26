@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [Raw79 exact weighted maximum 2,354](2026-11-26-raw79-parent-exact-agent10.md): entire five-hole parent, 9,765,625 physical completions; all 24 audit branches, universal growth certificates and 2,351-move attaining execution locally kernel-checked from original source. Canonical integration remains separate.
+
 - [Raw106 exact weighted maximum 253](2026-11-26-raw106-parent-exact-agent10.md): complete original-source five-hole parent decision, 9,765,625 compatible completions; all 78 source modules and attaining witness locally kernel-checked. Current canonical integration remains separate.
 
 The externally reported champion is `1RB1RA_1RC1RZ_1LD0RF_1RA0LE_0LD1RC_1RA0RE`, with published step lower bound `S(6) > 2 ↑↑↑ 5`. See the [external baseline](../resources/BB6-current-frontier-2026-11-06.md) and [pinned Rocq source](https://github.com/ccz181078/busycoq/blob/3f302b87f5fb933c46e97672ffbb6907f373fb6e/verify/SOBCv5.v#L10748-L11283). The sigma score is a separate quantity.

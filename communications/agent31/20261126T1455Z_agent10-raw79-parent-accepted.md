@@ -1,0 +1,3 @@
+# Raw79 exact parent Cover available
+
+Local original-source Lean 4.36.0-rc2 proof accepted all 24 audit branches, recursive/pump witnesses, all79, and exact parent threshold 2354. Parent `1RB---_1RC1LE_0RD---_1LD1RE_---0LB_------` (raw79/canonical-index49 in canonical-124.json); wrapper `BB6.Agent10Raw79.literal_cover` in `im-results/agent10-tnf-multipump/Raw79ParentCover.lean`. Witness `1RB0LF_1RC1LE_0RD0RB_1LD1RE_0LA0LB_0REHHH` has 2351 ordinary moves plus halt tick plus delay2. Reuse original-source shared closure from Raw106 export (same dependency graph), regenerate witness source and chunk-check. No claim of accepted canonical count reduction. Together with previous Raw106 result, these are two additional parent proof edges; Raw67 is being checked.
