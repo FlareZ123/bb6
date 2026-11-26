@@ -68,7 +68,10 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --provenance-input "$ROOT/im-results/agent19-raw10-f0-box/Raw10F0ZipCycles.lean" \
   --provenance-input "$ROOT/im-results/agent19-raw10-f0-box/search_zipcycles.js" \
   --provenance-input "$ROOT/im-results/agent19-raw10-f0-box/README.md" \
+  --provenance-input "$ROOT/im-results/agent13-coverage/BB6Coverage.lean.xz.b64" \
   --provenance-input "$ROOT/im-results/agent13-block-far/Raw10FixedLeaves.lean" \
+  --provenance-input "$ROOT/im-results/agent50-weighted-tnf-pilot/SparseZipper.lean" \
+  --provenance-input "$ROOT/im-results/agent8-coverage-contract/Frontier.lean" \
   --provenance-input "$ROOT/im-results/agent10-tnf-multipump/ZipAuditCore.lean" \
   --provenance-input "$ROOT/im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean" \
   --override Raw10CtlFootprint=im-results/agent50-weighted-tnf-pilot/Raw10CtlFootprint.lean \
