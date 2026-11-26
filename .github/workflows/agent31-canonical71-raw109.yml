@@ -14,6 +14,7 @@ on:
           - canonical63-integrated
           - canonical64-score-consumer
           - canonical63-raw115
+          - canonical59-five-parent-batch
           - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
@@ -1079,6 +1080,48 @@ jobs:
           compression-level: 1
           retention-days: 30
 
+  canonical59-five-parent-batch:
+    name: Integrate five accepted E1 parent Covers into Canonical64
+    if: ${{ inputs.target == 'canonical59-five-parent-batch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Audit five accepted parents and compile the 59-residual consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-shared-core/assemble_canonical59_five_parent.py --work /tmp/a31-canonical59 2>&1 | tee /tmp/a31-canonical59.log
+          test -s /tmp/a31-canonical59/canonical59-five-parent-integration.json
+          cat /tmp/a31-canonical59/canonical59-five-parent-integration.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical59-five-parent-integrated
+          path: |
+            /tmp/a31-canonical59/linked
+            /tmp/a31-canonical59/canonical59-five-parent-integration.json
+            /tmp/a31-canonical59/base-reachable-link-audit.json
+            /tmp/a31-canonical59/reachable-link-audit.json
+            /tmp/a31-canonical59/champion-closure-manifest.json
+            /tmp/a31-canonical59/membership-preflight.log
+            /tmp/a31-canonical59/canonical59-five-parent.log
+            /tmp/a31-canonical59.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
   sharp-fourhole:
     if: ${{ inputs.target == 'sharp-fourhole' }}
     runs-on: ubuntu-latest
