@@ -112,7 +112,8 @@ theorem {theorem} : ConditionalCover bound ({p}) holdout := by
         return name, theorem
     t = json.loads((work / "tree.json").read_text())
     assert t[:3] == ["split", 9, 8]
-    root, theorem = go(t, "parent", "Root")
+    # Other imported namespaces also export `parent`; pin the Raw118 root explicitly.
+    root, theorem = go(t, "BB6.Agent16Raw118.parent", "Root")
     assert seen == set(entries) | {holdout_index}, (set(entries) | {holdout_index}) - seen
     write("Raw118Consumer", [root, "Raw118Sharp"], f"""
 /-- Every compatible completion is bounded or lies in the exact holdout. -/
