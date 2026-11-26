@@ -1,17 +1,24 @@
-# Exceptional sectors and low-scale exclusion (#623)
+# All-scale necessary terminal strips for machine #623
 
-Status: the exceptional gap-two source chain passed its dedicated step in run [45724854319](https://github.com/FlareZ123/bb6/actions/runs/45724854319), which subsequently failed in AllScaleSuccessorBoundSource.lean because its namespace omitted `1LD0LA`. That namespace is corrected. The universal successor and low-scale proof still require a successful full source compile; local Lean 4.36.0-rc2 is installed, but the upstream checkout is unavailable locally (GitHub DNS failure).
+**Source accepted.** The genuine blank-root section iteration can terminate only if it visits a state D(u,v) with m=min(u,v), L=max(u,v), and an integer n>=10 such that
+`3^(n-1)-3 <= m < 3^n-3`, and either
+`|L-13m| <= 35n+93` or `|4L-7m| <= 35n+93`.
+In particular, avoiding these two strips at all such root visits implies section nontermination. This is a necessary condition, not a proof of avoidance or a BB(6) upper bound.
 
-For a blank-root terminal chain q → p → h → none, q=D(a,d) cannot satisfy a=d+2. Root parity forces a even. If a≥32, the actual transition is drainB 0 a 2. Set k=floor(a/8). Induction gives 8(k+1)≤3^k for k≥4, so a<3^k. Source drain bounds yield p=D(x,y) with x≤k, y≥3a+2. Consequently y≥16x+24. The penultimate-root corridor requires y<16x if odd or y<14x+24 if even, a contradiction. If a<32, mass growth gives t≤7 and exact kernel decisions exclude all eight small visits.
+## Proof chain
 
-This discharges the exceptional gap-two branch simultaneously at all ternary scales in Agent48's three-step route, subject to source-proof acceptance. Ordinary sectors at scales n≥10 remain unresolved. No #623 nonhalting conclusion or BB6 bound is claimed.
+1. For a successful even-first-counter source step D(u,v)→D(x,y), n>=4 and min(u,v)+3<3^n imply y<=3min(u,v)+6n+9. This covers ordinary and exceptional sectors.
+2. For a three-step terminal chain q→p→h→none, min(q)<=19679 implies mass(q)<=1004761. The root checkpoint at 47 has mass 1423655, and run(49) succeeds; strict mass growth and forward persistence of failure give a contradiction.
+3. The exceptional q=(a,a-2) branch is impossible at every scale: for a>=32, use k=floor(a/8), a<3^k, x<=k and y>=3a+2 for the successor p. Thus y>=16x+24, contradicting the penultimate corridor. The small case reduces to root visits 0..7. Zero-coordinate q is already excluded by step 2.
+4. On the four ordinary sectors at n>=10, the successor bound and penultimate corridor supply the two scale budgets for Agent49's terminal ratio-four source theorems. The source old-ray signed gap estimates and the terminal ratio-four windows cancel to the two strip inequalities above. Both orientations are included, and the near-sector orientation transfer is proved using the lower scale bound.
+5. Every finite section failure yields such a three-step terminal chain, because the first three visits survive. The scale existence lemma covers every integer m>=19680.
 
-Files: Agent27GapTwoArithmetic.lean (locally checked, only propext and Quot.sound); GapTwoThreeStepSource.lean (source acceptance step passed in run 45724854319). Existing manual workflow agent27-623-n10-mass-gap.yml target gap-two-three-step uses upstream c86f15861709b76042998c5211c7b2f83991621b and its Lean 4.35.0-rc4 environment.
+## Verification
 
-## Uniform successor bound and complete low-scale reduction
+- [AllScaleSuccessorBoundSource.lean](AllScaleSuccessorBoundSource.lean) and [GapTwoThreeStepSource.lean](GapTwoThreeStepSource.lean): full original-source [CI 45744605999](https://github.com/FlareZ123/bb6/actions/runs/45744605999).
+- [ThreeStepStripArithmetic.lean](ThreeStepStripArithmetic.lean): standalone kernel-checked arithmetic in Lean 4.36.0-rc2.
+- [ThreeStepStripSource.lean](ThreeStepStripSource.lean): theorem `run_none_implies_strip` and contrapositive `run_nontermination_of_strip_avoidance` accepted by [CI 45745521684](https://github.com/FlareZ123/bb6/actions/runs/45745521684), pin fdda65ed4197a0c32fbb7420a749d134f5aa5bf2. Original machine revision c86f15861709b76042998c5211c7b2f83991621b, Lean 4.35.0-rc4. CI checks absence of sorryAx. The exact run47/run49 numerical checkpoints use native_decide (explicit trusted computation), not ordinary kernel evaluation.
 
-For any successful even-first-counter source step D(u,v)→D(x,y), let m=min(u,v). For n≥4 and m+3<3^n, the universal bound is y≤3m+6n+9. This covers the zero and gap-two cases in addition to the four ordinary sectors; the even-near residual depth follows directly from evalA_second_le_quotient. It generalizes Agent48's scale-10 successor bound without a separate gap-two exclusion hypothesis.
+## Remaining mathematical obligation
 
-If m≤19679, use n=9 to obtain y≤59100. The penultimate-parent corridor and strict source mass increase imply u+v≤1004761. The root checkpoint at index 47 has mass 1423655, and subsequent surviving masses increase. Hence t<47. A three-step terminal chain would give run(t+3)=none and therefore run(49)=none, contradicting the successful checkpoint at index 49. This rules out every small-min third predecessor, including all zero-coordinate candidates, in one argument. Both new numerical checkpoints use native_decide; source acceptance and the explicit native-evaluation trust boundary remain necessary.
-
-Source: AllScaleSuccessorBoundSource.lean. The isolated syntax preflight used the supplied Lean and exact transition equations with the imported theorems represented as assumptions; it does not certify those imports. The CI target low-scale checks against actual definitions and actual imported proofs. The remaining task is the all-scale n≥10 four-sector ratio cancellation and root avoidance, not more small-scale or exceptional-branch scans.
+Prove avoidance on the actual infinite root orbit, not just finite replay, and connect section nontermination to the original machine nonhalting theorem. The strips are exactly the old-ray cancellation directions g-9m and 4g+9m for g=L-4m. This permits the synchronization approach in Agent1's dossier to use the checked width 35n+93 rather than an assumed sharper bound. No global BB(6) result follows without root avoidance.
