@@ -4,7 +4,7 @@ Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 mo
 
 ## Current first-level branch status
 
-The following **23 of 24** first-level F1 branches have complete original-source, kernel-checked Covers. The 13 entries accepted in legacy replay run 45840496976 were individual matrix jobs; the overall matrix run failed because two *other* branches were terminated, so use each listed job/artifact as the evidence unit.
+The 23 directly source-accepted first-level F1 branches are listed below. The final F1=0LF branch is closed by the nested 0LF/F0=1RC composition. The complete parent theorem `BB6.Agent2Raw124ParentComplete.parent_cover` is now source-accepted at weighted bound **4,136,175**, covering all **24 of 24** first-level branches: [run 45908591612](https://github.com/FlareZ123/bb6/actions/runs/45908591612), artifact 15159377345, SHA-256 `9ec5b5b86fe4f78d636fd9a37891cabdd0017c04c8fc62f74f4ef6022ffcfa15`. Its axiom profile is exactly `propext`, `Classical.choice`, and `Quot.sound`. The 13 entries accepted in legacy replay run 45840496976 were individual matrix jobs; the overall matrix run failed because two *other* branches were terminated, so use each listed job/artifact as the evidence unit.
 
 | F1 | Weighted bound | Accepted theorem | Source-accepted run / artifact |
 |---|---:|---|---|
@@ -40,7 +40,7 @@ The legacy batch's source revision is `2a0106d3bfbc4254872e122e6a95cccccdda1639`
 1RB---_1RC---_0RD---_1LD1RE_---1LF_1RC0LF
 ```
 
-The last 390,625 literal completions have a complete candidate census from Agent12. A reproducible, independently sharded source audit at proposed bound 108,667 is underway in [45887306671](https://github.com/FlareZ123/bb6/actions/runs/45887306671), using the existing witness bank, not a new search. The complete Raw124 parent and any canonical roster subtraction remain unproved until the final hypothesis is checked and integrated.
+The last 390,625 literal completions have a complete candidate census from Agent12. Their independently sharded source audit at bound 108,667 is accepted in [run 45887306671](https://github.com/FlareZ123/bb6/actions/runs/45887306671), artifact 15150950633. The full Raw124 parent Cover is now source-accepted at 4,136,175 in [run 45908591612](https://github.com/FlareZ123/bb6/actions/runs/45908591612), artifact 15159377345. This closes the Raw124 parent, but does not yet authorize a Canonical58 roster subtraction: the earlier six-parent membership preflight was wrong, and the corrected source now targets the actual accepted `Canonical58Raw113Graft.roster58` pending its own CI gate.
 
 ## Completed candidate branches
 
@@ -71,7 +71,7 @@ Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to arbitrary fi
 
 0RB index 238 (zero-based in deterministic open.txt), `1RB0LF_1RC1LA_0RD0RF_1LD1RE_---1LF_0LA0RB`, had resisted exhaustive six-state DFA enumeration. A 32-state last-five-bit suffix DFA certified it, and congruence quotienting reduced it to nine states. It is now included in generate_0rb.py. Pooling successful DFAs across sibling branches yielded over a thousand new certificates. Enumeration and FAR search reused raw99/enumerate.cpp and agent11-tnf-raw86/search.cpp.
 
-Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. A complete proof of raw124 is not yet claimed.
+Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. The complete Raw124 parent Cover is now source-accepted; Canonical58 subtraction remains pending exact membership in the accepted roster.
 
 
 ## F1=0LB — source-accepted complete branch Cover
@@ -82,27 +82,14 @@ The corrected `generate_bundle.py` strips underscores before every C++ query and
 
 The complete F1=0LB branch is now source-accepted. [Run 45827503893](https://github.com/FlareZ123/bb6/actions/runs/45827503893), artifact 15122105407, compiled the exact original-source closure and accepted `BB6.Agent2Raw124ZeroLBComplete.bound_all` at weighted bound **4,136,175**. The theorem composes the accepted partial cut with three exact late-residual weighted bounds: M264 at 520,988, M267 at 79,911 and M448 at 4,136,175. The older 17-residual census and local counter proofs below explain the construction; the accepted aggregate theorem closes the complement. This is only the F1=0LB child Cover, not the full Raw124 parent or a Canonical64 subtraction.
 
-## F1=0LF — accepted F0 children; first-level parent still open
+## F1=0LF — source-accepted complete nested Cover
 
-Agent12's exact first-hole dichotomy is locally kernel-checked. Eleven of its twelve nontrivial F0 children now have complete original-source Covers:
+The exact F1=0LF first-hole dichotomy and its F0 parent cut are source-accepted in [run 45883981997](https://github.com/FlareZ123/bb6/actions/runs/45883981997), artifact 15148163947. The cut reduces the branch to the single exact F0=1RC child
+`1RB---_1RC---_0RD---_1LD1RE_---1LF_1RC0LF`.
 
-| F0 | Bound | CI run | Artifact |
-|---|---:|---:|---:|
-| 0LE | 2,455 | [45827171994](https://github.com/FlareZ123/bb6/actions/runs/45827171994) | 15121120817 |
-| 0RB | 174 | [45829435208](https://github.com/FlareZ123/bb6/actions/runs/45829435208) | 15121597506 |
-| 0RE | 597 | [45827051596](https://github.com/FlareZ123/bb6/actions/runs/45827051596) | 15120449049 |
-| 1LC | 332 | [45828605659](https://github.com/FlareZ123/bb6/actions/runs/45828605659) | 15121981232 |
-| 1RA | 2,931 | [45829497777](https://github.com/FlareZ123/bb6/actions/runs/45829497777) | 15121818579 |
-| 1RE | 271 | [45828857309](https://github.com/FlareZ123/bb6/actions/runs/45828857309) | 15121301920 |
-| 0RA | 430 | [45832947347](https://github.com/FlareZ123/bb6/actions/runs/45832947347) | 15124625402 |
-| 1LA | 1,045 | [45834325697](https://github.com/FlareZ123/bb6/actions/runs/45834325697) | 15125305823 |
-| 1LB | 688 | [45833222135](https://github.com/FlareZ123/bb6/actions/runs/45833222135) | 15123202197 |
-| 1LE | 356 | [45832599988](https://github.com/FlareZ123/bb6/actions/runs/45832599988) | 15122709528 |
-| 1RB | 1,088 | [45832956396](https://github.com/FlareZ123/bb6/actions/runs/45832956396) | 15123905858 |
+The final child is now source-accepted at weighted bound **108,667**. The independently sharded original-source audit [run 45887306671](https://github.com/FlareZ123/bb6/actions/runs/45887306671) compiled `BB6.Agent12Raw124ZeroLF1RC.bound_all` with axiom profile `[propext, Classical.choice, Quot.sound]` and uploaded complete closure artifact 15150950633 (SHA-256 `11ced53194ddc805456c51e1c75e6c3cfe41757b49e01a3e6e7acd08f4b65775`).
 
-The exact parent frontier source is in [`Raw124ZeroLFParentFrontier.lean`](Raw124ZeroLFParentFrontier.lean). It composes these eleven Covers with the twelve trivial nonhalting children and the root halt case, proving a local parent cut at bound 2,931 with the **single** residual F0=1RC (`⟨true,true,2⟩`). The exact theorem `BB6.Agent2Raw124ZeroLFParentFrontier.parent_cut` is now source-accepted and published in [run 45883981997](https://github.com/FlareZ123/bb6/actions/runs/45883981997), artifact 15148163947 (SHA256 `43ff61e9d9e64e4bc8a71f2c8dd9f748a98c3b01be6d0c3dbadcc533b54aa343`). The previous run 45882660285 compiled the theorem but failed artifact publication; its corrected replay passed. The remaining hypothesis is a complete F0=1RC Cover.
-
-The old 2,931 parent candidate is insufficient for the F0=1RC residual: a 20-million-step scan found first undefined B1 queries at 108,665, 108,421, 103,183 and 102,939. Agent12 has since locally kernel-checked all four exact packed late-query certificates at bound 108,667 (see [1RC late dossier](../agent12-raw124-0lf1rc/LATE.md)). The complete 1RC rich audit still requires source acceptance. No complete F1=0LF Cover is claimed until F0=1RC is closed and the full parent theorem passes original-source CI.
+The exact nested parent composition is consumed by `BB6.Agent2Raw124ParentComplete.parent_cover`, source-accepted in [run 45908591612](https://github.com/FlareZ123/bb6/actions/runs/45908591612), artifact 15159377345. This closes F1=0LF and the entire 24-way Raw124 first-level partition at 4,136,175. No new search was required; the final source audit reused Agent12's existing witness bank and rich-audit partition.
 
 ### Historical cap-3000 discovery partition
 
