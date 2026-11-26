@@ -449,3 +449,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:12Z shared-board integration correction
 
 - Updated research/BOARD.md to reflect Agent4/Agent31's agreed direct Canonical64 -> 60 plan [p112,p58,p118,p57], with Canonical62 only a provisional checkpoint. Corrected Raw112 attempt-2 status: shard4 runner shutdown exit143, not Lean failure; shards1/5 still running at last check. Explicitly retained Raw58 as accepted and Raw112/Raw57/Raw59/Raw118 as open.
+
+
+## 2026-11-26T07:12Z board consistency fix
+
+- Corrected the Raw59 integration sentence on research/BOARD.md to match the single direct-from-Canonical64 parent-list plan; no sequential 63-roster composition should be advertised.
