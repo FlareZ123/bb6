@@ -7,13 +7,7 @@ open BB6Coverage BB6.ConjectureBridge
 set_option maxHeartbeats 0
 
 /-- Raw140; existing upstream nonhalting proof F262, with its unique halt row erased. -/
-def n19 : Machine := literal [
-  some ⟨true,true,1⟩, some ⟨false,true,2⟩,
-  some ⟨true,true,2⟩, some ⟨false,true,0⟩,
-  some ⟨true,true,3⟩, some ⟨false,true,5⟩,
-  some ⟨false,false,4⟩, none,
-  some ⟨true,false,1⟩, some ⟨true,false,0⟩,
-  some ⟨true,false,3⟩, some ⟨true,false,0⟩]
+def n19 : Machine := literal [some ⟨true,true,1⟩, some ⟨false,false,2⟩, some ⟨true,true,2⟩, some ⟨false,true,0⟩, some ⟨true,true,3⟩, some ⟨false,true,5⟩, some ⟨false,false,4⟩, none, some ⟨true,false,1⟩, some ⟨true,false,0⟩, some ⟨true,false,3⟩, some ⟨true,true,0⟩]
 theorem n19_eq :
     toAgent8 BusyBeaver.M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA.machine = n19 := by
   funext slot
@@ -31,13 +25,7 @@ theorem n19_cover : Cover NeverHalts (leaf n19) :=
 #print axioms n19_cover
 
 /-- Raw140; existing upstream nonhalting proof F068, with its unique halt row erased. -/
-def n20 : Machine := literal [
-  some ⟨true,true,1⟩, some ⟨true,false,0⟩,
-  some ⟨true,true,2⟩, some ⟨false,false,4⟩,
-  some ⟨true,true,3⟩, some ⟨false,false,5⟩,
-  some ⟨false,false,0⟩, some ⟨false,true,3⟩,
-  some ⟨true,true,2⟩, some ⟨false,false,4⟩,
-  none, some ⟨false,false,4⟩]
+def n20 : Machine := literal [some ⟨true,true,1⟩, some ⟨true,false,0⟩, some ⟨true,true,2⟩, some ⟨false,false,4⟩, some ⟨true,true,3⟩, some ⟨false,false,5⟩, some ⟨false,false,0⟩, some ⟨false,true,3⟩, some ⟨true,false,2⟩, some ⟨false,false,4⟩, none, some ⟨false,true,4⟩]
 theorem n20_eq :
     toAgent8 BusyBeaver.M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE.machine = n20 := by
   funext slot

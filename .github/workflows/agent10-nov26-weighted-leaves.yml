@@ -4,7 +4,7 @@ on:
     inputs:
       audit:
         type: choice
-        options: [nonhalt, raw8, raw140]
+        options: [nonhalt, raw8, raw140, raw140-n20-local, raw140-n20-source]
         default: nonhalt
 permissions:
   contents: read
@@ -21,12 +21,15 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          if [[ "${{ inputs.audit }}" == "raw140-n20-local" ]]; then exit 0; fi
           git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
           git -C /tmp/cryptids checkout --quiet d1d231afe3a5f6310ac9f956d5687b5a45d7a13d
           test "$(git -C /tmp/cryptids rev-parse HEAD)" = "d1d231afe3a5f6310ac9f956d5687b5a45d7a13d"
       - name: Reclaim unused disk
+        if: inputs.audit != 'raw140-n20-local'
         run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
       - name: Build original proofs once
+        if: inputs.audit != 'raw140-n20-local'
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -38,6 +41,8 @@ jobs:
           lake exe cache get
           if [[ "${{ inputs.audit }}" == "raw8" ]]; then
             lake build BusyBeaver.BB6.Halt.M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB
+          elif [[ "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
+            lake build BusyBeaver.BB6.NonHalt.M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA BusyBeaver.BB6.NonHalt.M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE
           elif [[ "${{ inputs.audit }}" == "raw140" ]]; then
             mapfile -t modules < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/raw140-upstream-modules.txt"
             test "${#modules[@]}" = 8
@@ -47,14 +52,24 @@ jobs:
             test "${#modules[@]}" = 18
             lake build "${modules[@]}"
           fi
+      - name: Check local Raw140 n20 finite siblings
+        if: inputs.audit == 'raw140-n20-local'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          mkdir -p /tmp/nov26-axioms
+          python tools/lean_compile_closure.py --workdir /tmp/raw140-n20 --jobs 2 im-results/agent10-nov26-cryptids/Raw140N20Parent.lean 2>&1 | tee /tmp/nov26-axioms/Raw140N20Parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140N20Parent.log BB6.Agent10Raw140N20.cover_of_source
       - name: Compile local weighted proof closure and actual TNF paths
+        if: inputs.audit != 'raw140-n20-local'
         working-directory: /tmp/cryptids
         shell: bash
         run: |
           set -euo pipefail
           python "$GITHUB_WORKSPACE/im-results/agent13-coverage/unpack.py"
           mkdir -p /tmp/nov26-axioms
-          if [[ "${{ inputs.audit }}" == "raw140" ]]; then
+          if [[ "${{ inputs.audit }}" == "raw140" || "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
             export BB6_UPSTREAM_LEAN_PATH="$(lake env printenv LEAN_PATH)"
             cp lake-manifest.json /tmp/nov26-axioms/upstream-lake-manifest.json
             git rev-parse HEAD > /tmp/nov26-axioms/upstream-commit.txt
@@ -66,6 +81,11 @@ jobs:
           EOF
             chmod +x /tmp/raw140-lean
             cd "$GITHUB_WORKSPACE"
+            if [[ "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
+              python tools/lean_compile_closure.py --workdir /tmp/raw140-n20-source --jobs 2 --lean /tmp/raw140-lean im-results/agent10-nov26-cryptids/Raw140N20Source.lean 2>&1 | tee /tmp/nov26-axioms/Raw140N20Source.log
+              python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140N20Source.log BB6.Agent10Raw140N20.cover
+              exit 0
+            fi
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             node im-results/agent10-nov26-cryptids/generate_raw140_cut.js --check

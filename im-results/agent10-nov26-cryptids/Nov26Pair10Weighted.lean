@@ -26,12 +26,12 @@ def refineMany (p : PartialMachine) : List (Slot × Transition) → PartialMachi
 def n19_refinements : List (Slot × Transition) := [
   ((3, false), some ⟨false, false, 4⟩),
   ((4, true), some ⟨true, false, 0⟩),
-  ((0, true), some ⟨false, true, 2⟩),
+  ((0, true), some ⟨false, false, 2⟩),
   ((2, true), some ⟨false, true, 5⟩),
   ((5, false), some ⟨true, false, 3⟩),
   ((4, false), some ⟨true, false, 1⟩),
   ((1, true), some ⟨false, true, 0⟩),
-  ((5, true), some ⟨true, false, 0⟩)]
+  ((5, true), some ⟨true, true, 0⟩)]
 
 theorem n19_refinement : refineMany raw140Parent n19_refinements = leaf n19 := by
   funext slot
@@ -46,10 +46,10 @@ def n20_refinements : List (Slot × Transition) := [
   ((0, true), some ⟨true, false, 0⟩),
   ((1, true), some ⟨false, false, 4⟩),
   ((4, true), some ⟨false, false, 4⟩),
-  ((4, false), some ⟨true, true, 2⟩),
+  ((4, false), some ⟨true, false, 2⟩),
   ((3, true), some ⟨false, true, 3⟩),
   ((2, true), some ⟨false, false, 5⟩),
-  ((5, true), some ⟨false, false, 4⟩)]
+  ((5, true), some ⟨false, true, 4⟩)]
 
 theorem n20_refinement : refineMany raw140Parent n20_refinements = leaf n20 := by
   funext slot
