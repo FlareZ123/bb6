@@ -917,7 +917,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
         run: |
           set -euo pipefail
-          BASE59=$(find /tmp/canonical59-base -name selected-integration.json -printf '%h\\n' | head -n1)
+          BASE59=$(find /tmp/canonical59-base -name selected-integration.json -printf '%h\n' | head -n1)
           test -f "$BASE59/selected-integration.json"
           test -f "$BASE59/generated/CanonicalSelectedParentIntegrated.lean"
           test -f "$BASE59/linked/CanonicalSelectedParentIntegrated.olean"
@@ -945,7 +945,7 @@ jobs:
           assert sha(base59 / "reachable-link-audit.json") == selected["base_link_audit_sha256"]
           assert sha(base59 / "selected-link-audit.json") == selected["selected_link_audit_sha256"]
           raw10_source = pathlib.Path("im-results/agent13-cross-route-pilot/RootRaw10Core.lean").read_text()
-          p10_expr = "BB6Coverage.refine BB6.Agent50TNFPilot.root\\n    (⟨1, by decide⟩, false)\\n    (some ⟨true, false, ⟨2, by decide⟩⟩)"
+          p10_expr = "BB6Coverage.refine BB6.Agent50TNFPilot.root\n    (⟨1, by decide⟩, false)\n    (some ⟨true, false, ⟨2, by decide⟩⟩)"
           assert p10_expr in raw10_source, "B0=1LC source expression changed"
           p113_source = pathlib.Path("im-results/agent31-shared-core/Canonical59Raw113Membership.lean").read_text()
           p113_expr = "refine e1Base (4,true) (some ⟨true,true,2⟩)"
@@ -976,20 +976,20 @@ jobs:
               "stable_batch_git_blob": "5fd481dd94ffec245b879f7ae25352a4be36b008",
           }
           pathlib.Path("/tmp/a49-raw10-canonical58-membership/membership-inputs.json").write_text(
-              json.dumps(report, indent=2, sort_keys=True) + "\\n"
+              json.dumps(report, indent=2, sort_keys=True) + "\n"
           )
           PY
           export LEAN_PATH="$BASE59/linked"
           lean --version
-          lean -o /tmp/a49-raw10-canonical58-membership/Raw10Canonical58MembershipProbe.olean \\
+          lean -o /tmp/a49-raw10-canonical58-membership/Raw10Canonical58MembershipProbe.olean \
             im-results/agent49-raw10-refined-cut/Raw10Canonical58MembershipProbe.lean | tee /tmp/a49-raw10-canonical58-membership.log
-          for theorem in \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.count59 \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.p113_count59 \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.count58 \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.p10_root \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.p10_count59 \\
-            BB6.Agent49Raw10Canonical58MembershipProbe.p10_not_removed \\
+          for theorem in \
+            BB6.Agent49Raw10Canonical58MembershipProbe.count59 \
+            BB6.Agent49Raw10Canonical58MembershipProbe.p113_count59 \
+            BB6.Agent49Raw10Canonical58MembershipProbe.count58 \
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_root \
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_count59 \
+            BB6.Agent49Raw10Canonical58MembershipProbe.p10_not_removed \
             BB6.Agent49Raw10Canonical58MembershipProbe.p10_count58; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/a49-raw10-canonical58-membership.log "$theorem"
           done
@@ -1015,7 +1015,7 @@ jobs:
               ],
               "membership_result": "p10_count58 = 1",
           })
-          (d / "membership-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+          (d / "membership-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
           PY
       - name: Export Raw10 Canonical58 membership proof
         if: inputs.target == 'weighted-tnf-raw10-canonical58-membership'
