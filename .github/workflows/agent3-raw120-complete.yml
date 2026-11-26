@@ -11,10 +11,6 @@ on:
         description: Optional Agent6 run ID containing the 43-sibling Raw139 core and consumer artifacts
         type: string
         default: ""
-      a6_source_run_id:
-        description: Run ID containing the pinned source-connected A6 nonhalting leaf artifact
-        type: string
-        default: "45709235547"
 permissions:
   contents: read
   actions: read
@@ -131,24 +127,14 @@ jobs:
           pattern: agent6-canonical68-raw139-43-sibling-consumer-*
           merge-multiple: true
           path: /tmp/a6-sibling
-      - name: Download pinned source-connected A6 leaf
-        if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != ''
-        uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: ${{ inputs.a6_source_run_id }}
-          pattern: raw139-a6-source-connected-*
-          merge-multiple: true
-          path: /tmp/a6-source
       - name: Compile the Canonical64 Raw139 subcover wrapper
         if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != ''
         run: |
           set -euo pipefail
           test -s /tmp/a6-core/build/ChampionResidualFrontier.olean
           test -s /tmp/a6-sibling/source-sibling-build/ChampionResidualCanonical68Integration.olean
-          test -s /tmp/a6-source/A6Ingestion.olean
           test -s /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
-          export LEAN_PATH="/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build:/tmp/a6-source${LEAN_PATH:+:$LEAN_PATH}"
+          export LEAN_PATH="/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
           lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139Subcover.olean \
             im-results/agent14-raw139-d0-generic/Canonical64Raw139Subcover.lean \
             | tee /tmp/raw120-canonical64/raw139-subcover.log
