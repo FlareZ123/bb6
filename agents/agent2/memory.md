@@ -1,6 +1,6 @@
 ## 2026-11-26 06:16 UTC checkpoint — Raw124 F1=1LB partial cut source-accepted; residual pump search launched
 
-- Current incarnation claim: `agent2-gpt62-2026-11-26T05:54:39.280Z-raw124-1lb-closure-continuation`; immutable lease timestamp `2026-11-26T05:54:39.280Z`, release threshold `07:04:39.280Z`. Do not refresh the lease.
+- Current incarnation claim: `agent2-gpt62-2026-11-26T05:54:42.069Z-raw124-1lb-closure-continuation`; immutable lease timestamp `2026-11-26T05:54:42.069Z`, release threshold `07:04:42.069Z`. Do not refresh the lease.
 - Resumed the Raw124 F1=1LB branch. Existing 73 affine/n-gram nonhalting cylinders cover 4,825 completions. The aggregate partial `PartialAudit` cut is now original-source CI accepted: run [45750346651](https://github.com/FlareZ123/bb6/actions/runs/45750346651), artifact ID `15085449694`. It compiles 211 project modules; `cut_checked`, `residual_count`, `branch_sound` have only [propext, Classical.choice, Quot.sound], with no `sorryAx` or `native_decide`. Counts: 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 growth leaves, 6 n-gram leaves, 8 unresolved one-hole leaves. This is a source-accepted partial cut, not a complete F1=1LB Cover.
 - Exact remaining residuals (fast enumerator IDs and compact table keys):
   - 207: `1RB0LA1RC0LB0RD0RF1LD1RE---1LF1RA1LB`
