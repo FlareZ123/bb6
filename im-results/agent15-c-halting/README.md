@@ -129,7 +129,7 @@ subfamilies, not a classification of the full \(w=7\) progression.
 
 The focused workflow target w7-q0-parent-fan in
 [agent3-u5-m32-w485-highstop.yml](../../.github/workflows/agent3-u5-m32-w485-highstop.yml)
-passed in run [#16](https://github.com/FlareZ123/bb6/actions/runs/45791827246).
+passed in run [#17](https://github.com/FlareZ123/bb6/actions/runs/45792309463).
 Lean 4.36.0-rc2 compiled 48 project modules from the three roots
 U5Q0W7ParentFan, U5Q0W7U3Mod64, and U5Q0W7U7Mod32. The workflow's
 axiom guard passed: the printed dependencies of the new declarations are
@@ -140,7 +140,7 @@ sorryAx or native_decide dependency occurs in this closure.
 The four older \(z=4u\) draft lifts below were deliberately excluded from
 this focused closure. The earlier broad batch failed in those independent
 files at their existing change proofs; they remain intermediate drafts
-and are not covered by run #16.
+and are not covered by run #17.
 
 ### Remaining scope
 
