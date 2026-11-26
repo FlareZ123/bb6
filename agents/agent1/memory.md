@@ -1,3 +1,28 @@
+# Current checkpoint — 2026-11-26T23:52Z — Raw56 19-residual frontier accepted
+
+Mode: normal research; persistent identity Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T23:28:56.654Z-raw57-cut-consumer`, `claimed_at=2026-11-26T23:28:56.654Z`; release threshold **2026-11-27T00:38:56.654Z**. Never refresh. After every checkpoint, read the lease and compare against an actual runtime clock.
+
+## Raw56 E1=0RE: source-accepted conditional 19-residual frontier
+
+- Child `BB6.Agent1Raw56.Raw56E1RE.all_quotient` remains source-accepted from run 45896758638 and artifact 15155176780.
+- The first root-consumer attempt [45900392377](https://github.com/FlareZ123/bb6/actions/runs/45900392377) exposed a real definitional mismatch: generated `Raw56E1RE.p` and the hand-written `refine parent` expression were extensionally equal but not definitionally equal.
+- PR #123 merged as commit `9705183b37e16f13fba48fc1c4f5a76628f6869c`. It adds `child_table_eq` using `sameTable_sound (by decide)`, then transports the source-accepted child theorem across the equality.
+- Rerun [45912699461](https://github.com/FlareZ123/bb6/actions/runs/45912699461) succeeded. `BB6.Agent1Raw56Root.sound19_closed` proves the conditional 19-residual frontier at weighted bound 7,014. Lean compiled 747 project modules. `child_table_eq` axioms: `[propext, Quot.sound]`; `sound19_closed` axioms: `[propext, Classical.choice, Quot.sound]`. The strict audit accepted seven profiles.
+- Reusable artifact: `raw56-root-frontier-source-accepted`, ID `15160313745`, SHA-256 `6513147b3929ab6b707225b6592a882025e234d498ed8baca40216489b469b3d`, 220,548,045 bytes. This is a local conditional frontier, not a closed Raw56 parent or global roster reduction.
+
+## Raw57 parent Cover at weighted bound 1,500
+
+- Four-way bounded-cut run [45912215362](https://github.com/FlareZ123/bb6/actions/runs/45912215362) remains in progress. All four parser-test steps passed; the four cut builds were still running at 23:52 UTC. PR #122 repaired the multiline axiom parser and made failed Lean builds print their captured log tail.
+- No Raw57 parent Cover is accepted. The next decisive task is to inspect cut completion, repair only an actual build/merge diagnostic, and verify the thin parent consumer and strict axiom gate.
+
+## Current-roster constraint
+
+`Raw57Canonical58Membership.lean` remains membership-only. Do not create a competing roster/graft; coordinate with Agent31 to add it to the existing Canonical58 consumer audit after the parent Cover and reusable cut artifact are available. Reuse the assembled base rather than downloading the 22.9-GB integrated artifact.
+
+Next actions: monitor run 45912215362; then inspect the queued/started Raw56 consumer run only if needed (it has succeeded); send Agent31 the Raw57 early-cut artifact ID once uploaded. Local Lean remains unavailable because the supplied split ZIP is 6,401,314 bytes short; do not retry the same extraction.
+
+---
+
 # Current checkpoint — 2026-11-26T23:50Z — Raw57 cut rerun and Raw56 consumer repair
 
 Mode: normal research; persistent identity Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T23:28:56.654Z-raw57-cut-consumer`, `claimed_at=2026-11-26T23:28:56.654Z`; release threshold **2026-11-27T00:38:56.654Z**. Never refresh. After every checkpoint, read the lease and compare against an actual runtime clock; continue below 70 minutes and release only at/after the threshold.

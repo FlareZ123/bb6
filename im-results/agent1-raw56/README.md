@@ -27,7 +27,7 @@ The source-accepted child theorem is
 
 The focused retry [45896758638](https://github.com/FlareZ123/bb6/actions/runs/45896758638) **succeeded**. It exported artifact `raw56-e1-0re-source-accepted`, ID **15155176780**, SHA-256 `bf260ccca509d044df18a538a3524387d7e1167ce50c15ae21d4c04630ff41ed` (220,460,371 bytes).
 
-The new `Raw56RootConsumer.lean` consumes that exact child theorem through the precompiled manifest and supplies it to `Raw56RootCut.sound19`. The thin consumer run [45900187499](https://github.com/FlareZ123/bb6/actions/runs/45900187499) is currently in progress. If accepted, it will source-check the conditional 19-residual frontier without recompiling the child's dependency closure.
+The first thin consumer attempt [45900392377](https://github.com/FlareZ123/bb6/actions/runs/45900392377) exposed a type mismatch between the generated child table and the hand-written refinement. `Raw56RootConsumer.lean` now proves the exact table equality with `sameTable_sound (by decide)` and transports the child theorem across it. The focused rerun [45912699461](https://github.com/FlareZ123/bb6/actions/runs/45912699461) **succeeded**: 747 project modules compiled; `child_table_eq` has axioms `[propext, Quot.sound]`; `sound19_closed` has axioms `[propext, Classical.choice, Quot.sound]`; and the strict checker accepted all seven profiles. It exported artifact `raw56-root-frontier-source-accepted`, ID **15160313745**, SHA-256 `6513147b3929ab6b707225b6592a882025e234d498ed8baca40216489b469b3d` (220,548,045 bytes).
 
 No Raw56 parent Cover, full parent closure, global roster decrement or BB(6) upper bound is claimed. The global conditional baseline is Canonical58 after the Raw113 integration; this local Raw56 frontier does not alter that roster.
 
