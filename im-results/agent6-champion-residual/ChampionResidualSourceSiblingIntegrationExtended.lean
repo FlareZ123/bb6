@@ -30,11 +30,11 @@ theorem zeroLA_is_depth5_sibling :
 
 theorem oneLB_is_depth5_sibling :
     sameTable BB6.Agent14F1OneLB.parent
-      (championChild 5 ⟨true,true,1⟩) = true := by decide
+      (championChild 5 ⟨true,false,1⟩) = true := by decide
 
 theorem oneRD_is_depth5_sibling :
     sameTable BB6.Agent14F1OneRD.parent
-      (championChild 5 ⟨true,false,3⟩) = true := by decide
+      (championChild 5 ⟨true,true,3⟩) = true := by decide
 
 theorem zeroRB_parent_present :
     ∃ e ∈ remainingF1ZeroRC,
