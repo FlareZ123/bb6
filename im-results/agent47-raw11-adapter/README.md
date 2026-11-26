@@ -35,7 +35,7 @@ The current `Agent5Q0AutoConsume.v` is single-parent: its exact count theorem is
 
 - **Membership source accepted:** `Agent47Q0NineParentMembership.v` compiled in CI run [45844062536](https://github.com/FlareZ123/bb6/actions/runs/45844062536). It establishes the exact packed-queue counts `(156 active, 1 held, 9 active covered, 0 held covered)` and the nine active indices `[26;33;34;39;44;46;48;49;51]`. This is a membership/count theorem, not a parent-safety theorem.
 - **Restriction source accepted:** `Agent47Raw11RestrictedQ0.v` compiled in [45844648337](https://github.com/FlareZ123/bb6/actions/runs/45844648337), including `raw11_q0_restriction_exact` and the conditional `raw11_safe_from_restricted_q0` backwards-safety lemma. Thus the filtered actual `q_0` frontier is exactly the two local BFS rounds from `raw11_node`.
-- **Bridge pending:** the same run reached `Agent13Raw11Q0Bridge.v` and stopped only because its import list omitted `Individual62` (`Cannot find module TNF_Node`). I added the explicit import and corrected its comment to the 234 common bound. A source rerun is queued; the bridge has not yet been accepted.
+- **Corrected queue-reduction wrapper:** `Agent13Raw11Q0Bridge.v` no longer claims that the nine-parent roster covers the whole Raw11 frontier. The source count proves only 9/156 active entries and 0/1 held entries are covered; the exact remaining obligation list has length 148. The wrapper now re-exports the exact Raw11 frontier identity and the valid conditional `q0_nine_consumption` theorem. A new source run is needed to compile this corrected wrapper.
 - **Common parent bound:** the nine local bounds in the table have maximum **234**, not 162. The bridge interface now assumes `Forall (source_table_safe 234) q0_nine_parent_roster` before lifting to 1,000,006.
 - **Parent source Covers still pending:** the eight non-33 direct-parent source runs are being generated/compiled separately; root 33 is being sharded by Agent 50. The independent exact-max calculations in `im-results/agent50-q0-index33/exact-sibling-parents.json` are useful corroboration, but are not substitutes for these Coq source Covers.
 
@@ -43,7 +43,7 @@ The current `Agent5Q0AutoConsume.v` is single-parent: its exact count theorem is
 
 - Established computationally: the 94 exact leaf tables group uniquely under the nine active checkpoint parents above.
 - Established in Coq source: the exact nine-parent membership/count theorem described above.
-- Not yet established: source-accepted safety Covers for all nine parent rows; the exact Raw11 restriction equality; the backwards-safety bridge; or a Raw11 Cover.
+- Not yet established: source-accepted safety Covers for all nine parent rows; a completed q0 reduction with those Covers supplied; or a Raw11 parent Cover. The restriction identity does not imply the nine parents cover the 148-entry remainder.
 - Root 28 is separate: its one open leaf has a separate symbolic proof and is not part of this 94-leaf bank.
 
-The next useful work is to finish the exact restriction proof, source-check the remaining parent trees, and compose their Covers into one source-queue roster. Do not treat the 94 leaves as 94 queue entries or remove them directly from the checkpoint.
+The exact restriction identity is already source-accepted. The next useful work is to source-check the nine parent trees, prove their common-bound-234 safety, and apply `q0_nine_consumption` to reduce the global q0 obligations to the 148-entry remainder. Do not infer a Raw11 Cover from these nine rows alone, and do not treat the 94 leaves as 94 queue entries.
