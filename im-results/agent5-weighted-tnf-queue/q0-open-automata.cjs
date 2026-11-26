@@ -1,7 +1,7 @@
 // Primitive forward FAR saturation followed by reverse-NFA subset construction.
 // Usage: node q0-open-automata.cjs q0-open-root-scan-2026-11-26.json
 const fs=require("node:fs");
-function solve(table,k,kind,mirror,limit=100000){
+function solve(table,k,kind,mirror,limit=100000,cap=2,depth=2){
  const moves=table.match(/.{3}/g).map(t=>t==="---"?null:[+t[0],Number((t[1]==="R")!==mirror),t.charCodeAt(2)-65]);
  const left=[[]],li=new Map([["[]",0]]),delta=new Map(),pred=[],pending=[],nodes=[["T"]],ni=new Map([['["T"]',0]]),edges=[new Set()],copying=[],events=[];
  const node=x=>{let key=JSON.stringify(x);if(!ni.has(key)){ni.set(key,nodes.length);nodes.push(x);edges.push(new Set());}return ni.get(key)};
@@ -10,7 +10,7 @@ function solve(table,k,kind,mirror,limit=100000){
  const copy=(p,v)=>{const s=copying[v]??=new Set();if(!s.has(p)){s.add(p);for(const e of edges[v])add(p,e%2,e>>1)}};
  const apply=(l,b,q,w,v)=>{let p=ctrl(l,q,0),x=node(["x",p,b]);add(x,w,v);add(p,b,x)};
  const push=(l,a)=>{let key=2*l+a;if(delta.has(key))return delta.get(key);let x=left[l],y;
- if(!x.length&&!a)y=[];else if(kind==="ngram")y=[a,...x.slice(0,k-1)];else if(x.length&&x[0][0]===a)y=[[a,Math.min(2,x[0][1]+1),(x[0][2]+1)%k],...x.slice(1)];else y=[[a,1,1%k],...x.slice(0,1)];
+ if(!x.length&&!a)y=[];else if(kind==="ngram")y=[a,...x.slice(0,k-1)];else if(x.length&&x[0][0]===a)y=[[a,Math.min(cap,x[0][1]+1),(x[0][2]+1)%k],...x.slice(1)];else y=[[a,1,1%k],...x.slice(0,depth-1)];
  let id=JSON.stringify(y);if(!li.has(id)){li.set(id,left.length);left.push(y)}let j=li.get(id);delta.set(key,j);(pred[j]??=[]).push([l,a]);for(const [q,w,v] of pending[j]??[])apply(l,a,q,w,v);return j};
  push(0,0);add(0,0,0);copy(ctrl(0,0,1),0);
  for(let i=0;i<events.length;i++){if(i>=limit)return null;let [s,a,v]=events[i];for(const p of copying[s]??[])add(p,a,v);let [tag,l,q,d]=nodes[s];if(tag!=="c")continue;let m=moves[2*q+a];if(!m)return null;let [w,d2,q2]=m;if(d2)copy(ctrl(push(l,w),q2,1),v);else{(pending[l]??=[]).push([q2,w,v]);for(const [l0,b] of pred[l]??[])apply(l0,b,q2,w,v)}}
@@ -36,8 +36,6 @@ function solve(table,k,kind,mirror,limit=100000){
 function search(table){for(const [kind,ks] of [["ngram",[1,2,3,4,5,6,7,8]],["run",[2,3,4,5,6,7,8]]])for(const k of ks)for(const mirror of [false,true]){let c=solve(table,k,kind,mirror);if(c)return c}return null}
 function emit(c,id){const bit=x=>x?"true":"false";const stack=s=>`⟨#[${s.pop.map(es=>`[${es.map(([b,j])=>`(${bit(b)},${j})`).join(",")}]`).join(",")}],#[${s.push.map(([i,j])=>`(${i},${j})`).join(",")}]⟩`;const trie=xs=>xs.length===0?".empty":xs.length===1&&xs[0]===0?".leaf":`(.branch ${trie(xs.filter(x=>x%2===0).map(x=>x>>1))} ${trie(xs.filter(x=>x%2===1).map(x=>x>>1))})`;let rows=Array.from({length:12},(_,i)=>trie(c.rows.filter(([q,a])=>2*q+a===i).map(([q,a,l,r])=>r+c.right.pop.length*l).sort((a,b)=>a-b)));let cases=c.table.match(/.{3}/g).map((t,i)=>`  | (${i>>1},${bit(i%2)}) => ${t==="---"?"none":`some (some ⟨${bit(t[0]==="1")},${bit(t[1]==="R")},${t.charCodeAt(2)-65}⟩)`}`).join("\n");
 return `namespace ${id}\ndef table : PartialMachine := fun s => match s with\n${cases}\n  | _ => none\ndef cert : BB6.Agent4Automata.Cert := ⟨${stack(c.left)}, ${stack(c.right)}, #[${rows.join(",")} ]⟩\ntheorem checked : BB6.Agent4Automata.check table cert = true := by decide\ntheorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=\n  BB6.Agent4Automata.never table cert checked m hm\n#print axioms never\nend ${id}\n`}
-const scan=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
-const certs={};for(const r of scan.results){if(r.index===28)continue;for(let i=0;i<r.openTables.length;i++){let c=search(r.openTables[i].table);if(c)certs[`R${r.index}L${i}`]=c;}}
 const extraDFAs=[[[[0,1],[2,3],[4,5],[6,7],[8,9],[10,5],[11,12],[13,14],[10,5],[10,15],[10,5],[16,17],[18,19],[20,5],[21,22],[23,24],[25,26],[27,28],[29,30],[31,32],[33,34],[35,36],[37,38],[10,5],[10,5],[39,5],[10,40],[41,42],[43,44],[10,5],[10,45],[46,47],[48,49],[10,5],[10,50],[51,52],[53,54],[10,5],[10,5],[55,56],[57,58],[59,60],[61,62],[63,64],[65,66],[67,68],[69,70],[2,3],[71,72],[73,74],[75,76],[77,78],[79,80],[81,82],[83,84],[10,5],[10,5],[10,5],[10,5],[85,5],[10,5],[43,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[85,5],[10,86],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,87],[10,5],[10,5],[10,5],[10,88],[89,90],[91,44],[92,93],[94,95],[96,97],[98,99],[100,101],[102,103],[104,105],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[10,5],[85,5],[10,106],[107,5],[21,22],[10,5],[10,5],[108,109],[110,111],[10,5],[10,5],[10,5],[10,50]],[[0,1],[2,3],[4,5],[6,7],[8,9],[8,9],[8,9],[10,11],[8,9],[8,9],[12,13],[14,15],[8,9],[8,9],[8,16],[8,17],[18,19],[20,21],[8,9],[8,9],[8,22],[23,24],[25,26],[27,28],[29,30],[8,9],[8,9],[8,9],[8,9],[8,9],[31,11],[32,33],[8,9],[8,9]]],[[[0,1],[2,3],[4,5],[6,7],[8,9],[10,11],[12,9],[12,9],[13,14],[12,9],[15,16],[17,18],[12,9],[19,9],[20,21],[8,9],[10,11],[12,9],[12,9],[22,23],[24,25],[26,27],[19,9],[20,21],[8,9],[10,11],[12,9],[12,9]],[[0,1],[2,3],[4,5],[6,7],[4,5],[4,5],[4,5],[8,9],[10,11],[4,12],[13,14],[13,14],[15,16],[4,5],[4,5],[10,11],[4,12]]]];
 function mitmCert(table,L,R){
  const ds=[L,R],E=ds.map(d=>d.map(()=>new Set())),W=ds.map(d=>d.map(()=>[])),seen=new Set(),rows=[],nr=R.length,nl=L.length;
@@ -51,6 +49,13 @@ function mitmCert(table,L,R){
  const stack=(d,i)=>({push:d,pop:E[i].map(es=>[...es].map(e=>[e%2,e>>1]))});
  return {table,left:stack(L,0),right:stack(R,1),rows};
 }
+
+module.exports={solve,search,emit,mitmCert};
+if(require.main===module){
+const scan=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
+const certs={};for(const r of scan.results){if(r.index===28)continue;for(let i=0;i<r.openTables.length;i++){let c=search(r.openTables[i].table);if(c)certs[`R${r.index}L${i}`]=c;}}
 const r49=scan.results.find(r=>r.index===49);for(const [j,i] of [14,18].entries()){let c=mitmCert(r49.openTables[i].table,...extraDFAs[j]);if(!c)throw Error("primitive MITM failed");certs[`R49L${i}`]={...c,width:2};}
 fs.writeFileSync("q0-open-automata.json",JSON.stringify(certs));
 fs.writeFileSync("Q0OpenAutomata.lean","import TwoSidedAutomata\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\nnamespace BB6.Agent5Q0OpenAutomata\nopen BB6Coverage\n"+Object.entries(certs).map(([id,c])=>emit(c,id)).join("\n")+"\nend BB6.Agent5Q0OpenAutomata\n");
+
+}
