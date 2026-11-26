@@ -13,7 +13,7 @@ with the objective of proving a universal weighted halting bound for every compl
 
 ## E0 parent decomposition
 
-The 24 D0 children are partitioned into:
+The first query is D0 at step `query_step`. Its immediate-halt (`none`) branch is handled directly by `first_hole_weighted_halt`. The remaining **24 move branches** are partitioned into:
 
 - **11 direct cycle children**;
 - **12 broad D0 branches**, whose search has 13,323 initially unclassified leaves, 29 exact hard-witness exceptions, and two late multi-hole expansions;
