@@ -74,7 +74,7 @@ def generate():
         write(mod,imports,src)
     modular(ROOT,'Root','Box16Root')
     src=['''theorem weighted (m : Machine) (hm : BB6.Agent49Box.Fits domain m) : WeightedBound 7376 m :=
-  okRoot m hm (root_compatible m hm)
+  okRoot m hm ((tableEq_sound root pRoot (by decide)) ▸ root_compatible m hm)
 
 theorem exactWeighted (B : Nat) :
     (∀ m, BB6.Agent49Box.Fits domain m → WeightedBound B m) ↔ 7376 ≤ B := by
