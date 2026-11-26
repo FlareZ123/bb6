@@ -1,3 +1,7 @@
+# Current checkpoint — 2026-11-26T10:20 UTC
+
+Normal draw 7; immutable lease 2026-11-26T10:16:09.761Z, claim f2dc52b889f2f9616126902562c0f594c77a48a0; release threshold 11:26:09.761Z. Local Lean works after unzip then tar --zstd (nested tarball); direct Git DNS blocked. Raw124 1LB previous residual audit failed on M217 invalid witness, not on three growth proofs; M980 accepted run 45777794937. Local new five-run RLE abstraction threshold11/mod4 then context quotient yields M217 58x97 DFA pair, independent fixed point 656 configurations/176 edges. Other four replay correctly. Corrected generator and archived-source closure recovery in same commit. Champion lift accepted 45779181860. Next dispatch existing complete target, check actual Lean errors if any. No parent or roster count claim until acceptance. Canonical64 batch of five other parents is separately running under Agent31.
+
 # Incarnation checkpoint 2026-11-26 07:48 UTC
 
 Lease claimed at 07:38:06.357Z, run c7659476-017f-4ea6-811d-9ec27b9511b3. Continued Raw124 F1=1LB eight-residual partial cut (accepted run 45750346651). Three new explicit growth proofs in im-results/agent2-tnf-raw124:

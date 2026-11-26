@@ -4474,7 +4474,20 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           mv /tmp/raw124-old-cut/closure /tmp/raw124-old-objects
-          python tools/lean_compile_closure.py --source-root /tmp/raw124-old-cut --manifest-only --artifact-dir /tmp/raw124-old-objects --manifest "$W/base.json" --label "accepted Raw124 partial cut from run 45750346651" /tmp/raw124-old-cut/Raw124New1LBCut.lean
+          # The original upload copied only Raw124New1LB* into its top level;
+          # Raw125Shard_* and every other original dependency are in closure/.
+          # Use the archived source for each reused module, avoiding ambiguous
+          # duplicate basenames in the current repository.
+          OLD=/tmp/raw124-old-objects
+          mapfile -t old_sources < <(find "$OLD" -type f -name '*.lean' | sort)
+          overrides=()
+          for src in "${old_sources[@]}"; do
+            mod="${src#"$OLD"/}"
+            mod="${mod%.lean}"
+            mod="${mod//\//.}"
+            overrides+=(--override "$mod=$src")
+          done
+          python tools/lean_compile_closure.py --source-root "$OLD" "${overrides[@]}" --manifest-only --artifact-dir /tmp/raw124-old-objects --manifest "$W/base.json" --label "accepted Raw124 partial cut from run 45750346651" "$OLD/Raw124New1LBCut.lean"
           # The old artifact contains the copied source alongside each compiled object.
           # Reuse only after establishing exact byte identity of the complete base closure.
           python - "$W/base.json" <<'PY'
@@ -4488,7 +4501,7 @@ jobs:
           PY
           python "$D/generate_1lb_wide.py" --out "$D/wide-generated"
           THEOREM=BB6.Agent2Raw124OneLBComplete.bound_all
-          python tools/lean_compile_closure.py --source-root /tmp/raw124-old-cut --workdir "$W/closure" --jobs 4 --precompiled-manifest "$W/base.json" --precompiled-dir /tmp/raw124-old-objects --manifest "$W/manifest.json" --theorem "$THEOREM" --weighted-bound 3006 --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LF_---1LB' "$D/Raw124OneLBComplete.lean" | tee "$W/audit.log"
+          python tools/lean_compile_closure.py --source-root "$OLD" "${overrides[@]}" --workdir "$W/closure" --jobs 4 --precompiled-manifest "$W/base.json" --precompiled-dir /tmp/raw124-old-objects --manifest "$W/manifest.json" --theorem "$THEOREM" --weighted-bound 3006 --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LF_---1LB' "$D/Raw124OneLBComplete.lean" | tee "$W/audit.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" "$THEOREM"
           python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" BB6.Agent2Raw124OneLBComplete.no_open
       - uses: actions/upload-artifact@v4
