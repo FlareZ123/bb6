@@ -299,14 +299,17 @@ claim that the remaining rows are reachable or unreachable.
 
 
 
+
 ## Additional q=1 parent exclusions on the w=55 (mod 128) row
 
-The parent fan reduces the q=0 target to the q=1 parent
+The parent fan reduces the q=0 target to
 \[
 Q(u)=(2W-3,\;24450+39417u),\qquad W=2228+3591u,
 \]
-whenever \(W\) is odd. Four source-composition theorems now exclude
-\(Q(u)\) on disjoint infinite slices.
+whenever \(W\) is odd. Four disjoint infinite parameter slices of \(Q(u)\)
+are now excluded. The \(u=59+80t\) branch is the previously established
+odd/odd sum-four parent followed by the odd-right sum-one obstruction;
+see the detailed derivation above.
 
 ### u=7+32t
 
@@ -348,28 +351,6 @@ odd-right sum-two invariant excludes \(C\). This is formalized by
 w7_z2_q1_parent_unreachable_u35mod64 and
 w7_q0_target_unreachable_u35mod64 in U5Q0W7U3Mod64.lean.
 
-For the u=7, u=35, and u=23 slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root relation
-\(5z-7s\equiv12\pmod{16}\), with \(w=7+8s\), gives
-\(s\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
-\(z\equiv3\pmod5\) restricts \(t\equiv1\pmod5\) in each new slice.
-The existing \(u=59+80t\) slice also lies in this \(w=55\pmod{128}\) row
-and is the deeper \(w\equiv439\pmod{512}\) lift.
-
-The focused exact-source closure target w7-q0-parent-fan passed in run
-#20 (GitHub Actions run 45796426913). It compiled 49 project modules from
-the four roots U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and
-U5Q0W7U23Mod512.
-The explicit axiom prints include both q=1 and q=0 target theorems
-on all four slices, including u=59 and u=23. All printed dependencies are
-[propext, Classical.choice, Quot.sound] or the subset
-[propext, Quot.sound]. The workflow's grep guard found no sorryAx or
-native_decide dependency.
-
-These are four infinite excluded sublifts of the q=1 parent, not a
-classification of the entire w=55 (mod 128) row. The remaining q=1
-parameter residues and all even-W high-depth cases remain open.
-
-
 ### u=23+512s
 
 The q=1 parent is
@@ -400,8 +381,26 @@ the original-source odd-right sum-one invariant excludes it. This is
 formalized by w7_z2_q1_parent_unreachable_u23mod512 and
 w7_q0_target_unreachable_u23mod512 in U5Q0W7U23Mod512.lean.
 
-For this slice, \(z=2+4u=94+2048s\), hence
-\(z\equiv14\pmod{16}\). The necessary root relation again gives
-\(w\equiv55\pmod{128}\), while \(z\equiv3\pmod5\) requires
-\(s\equiv3\pmod5\).
+### Root residuals and exact-source verification
 
+For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
+relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), gives
+\(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
+\(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the \(u=7+32t\)
+and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\) for
+\(u=23+512s\); and it holds for every \(t\) in the \(u=59+80t\)
+slice. The latter is the deeper \(w\equiv439\pmod{512}\) lift.
+These are necessary root filters, not a classification of the full row.
+
+The focused exact-source closure target w7-q0-parent-fan passed in run
+#20 (GitHub Actions run 45796426913). It compiled 49 project modules from
+the four roots U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and
+U5Q0W7U23Mod512. The explicit axiom prints include the parent fan,
+the q=0/q=1 target theorems on all four slices, and the u=59 declarations.
+All printed dependencies are [propext, Classical.choice, Quot.sound] or
+the subset [propext, Quot.sound]. The workflow grep guard found no
+sorryAx or native_decide dependency.
+
+These are four infinite excluded sublifts of the q=1 parent, not a
+classification of the entire w=55 (mod 128) row. The remaining q=1
+parameter residues and all even-W high-depth cases remain open.
