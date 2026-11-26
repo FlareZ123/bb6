@@ -313,4 +313,5 @@ H 331 1383 A1
 # C counter proof; G growth proof; U unresolved
 C 18 27 137 184 219 276 334 339 364
 G 37 44 233 311 353 363 372
-U 79 148 250 265
+A 148 265
+U 79 250
