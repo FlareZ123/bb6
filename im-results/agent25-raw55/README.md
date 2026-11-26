@@ -12,9 +12,11 @@ The classifier is the existing `im-results/agent7-raw49/cut.cpp`, not a new simu
 
 `Raw55Cut.lean` is generated from `Raw55Cut.template` by `generate.py`. It instantiates the original-source `CanonicalPartial` audit for the exact parent and tree. The intended theorem `BB6.Agent25Raw55Cut.canonical_local_sound` states that every TNF-quotient-compatible completion is either bounded by weighted score 7014 or belongs to one of the 274 explicit residual cylinders. A companion 84-bound statement gives a stronger root-compatible conditional refinement.
 
-**Roster interface:** `Raw55Agent31Graft.lean` checks whether this exact parent occurs in Agent31's 124-entry firstOne roster, removes that one concrete entry, and replaces it with the 274 explicit quotient residuals. If accepted, the interface has 123 unchanged parent entries plus 274 Raw55 leaves (397 total). This is a strict refinement, not a net reduction in residual count.
+**Current global consumer:** the relevant frontier is the source-accepted `BB6.Agent3Canonical64Raw120.roster64` with `sound64_integrated`, not the older 124-entry Agent31 raw roster. `Raw55Canonical64Graft.lean` contains an exact membership-count gate against that 64-entry roster and uses the quotient-to-quotient `graftRoster` composition pattern. If the gate is exactly one, the theorem replaces one entry by the 274 explicit Raw55 residuals, yielding 63 unchanged entries plus 274 leaves (337 total). The local 7014 bound is lifted to the common 6,766,859 floor. This is a strict refinement, not a net reduction in residual count.
 
-**Acceptance status:** the source theorem and roster graft have not yet passed the repository's pinned Lean 4.36.0-rc2 original-source closure. Until that audit succeeds, the partition remains computational evidence. Even after acceptance, it is not a complete Raw55 parent Cover: all 274 residuals remain hypotheses. No Canonical64 roster decrement or BB(6) upper bound is claimed.
+**Acceptance status:** the Raw55 local cut module compiled successfully in pinned Lean 4.36.0-rc2 CI (run 45876194466), with only the standard axiom profile. That overall run failed in the superseded 124-entry roster wrapper, not in `Raw55Cut`. The new Canonical64 membership gate and quotient graft have not yet passed CI. If Raw55 is not a unique member of the current Canonical64 roster, no global-frontier refinement will be claimed. Even if accepted, the 274 residuals remain hypotheses; this is not a complete Raw55 parent Cover or a BB(6) upper bound.
+
+ the source theorem and roster graft have not yet passed the repository's pinned Lean 4.36.0-rc2 original-source closure. Until that audit succeeds, the partition remains computational evidence. Even after acceptance, it is not a complete Raw55 parent Cover: all 274 residuals remain hypotheses. No Canonical64 roster decrement or BB(6) upper bound is claimed.
 
 ## Reproduction and next step
 
@@ -28,3 +30,5 @@ python tools/lean_compile_closure.py --workdir /tmp/raw55-source --jobs 4 im-res
 ```
 
 Use the existing manual Agent13 rootsibling workflow for source acceptance; do not add a workflow file. The final source theorem must retain the complete 274-element complement and pass the configured standard-axiom audit before any global parent integration.
+
+The earlier Agent31-124 wrapper and the unrun FAR5 scaffold were retired: the current global frontier is Canonical64, and the Raw47 five-state FAR search certified 0/114 leaves. Do not repeat that search on Raw55 without a materially stronger method.

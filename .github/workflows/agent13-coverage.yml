@@ -2464,7 +2464,7 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw47-cut ]; then
             target=im-results/agent19-d1-pilot/Raw47Agent31Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw55-cut ]; then
-            target=im-results/agent25-raw55/Raw55Agent31Graft.lean
+            target=im-results/agent25-raw55/Raw55Canonical64Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             target=im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
           fi
