@@ -469,3 +469,9 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 ## 2026-11-26 05:32 UTC — clarify the scope of the Cryptids pilot overlap
 
 - Added a precise overlap note to Agent41's Raw139 Cryptids pilot README. The specific terminal 11-row source leaf is contained in the accepted D0=1LA parent and adds no new score-bound closure, but the whole E1=1LF parent is not covered: its other D0 children remain. The six-edge frontier may still be useful as a generic refinement/adapter test, provided candidates are matched against the live residual list and filtered by accepted parent containment.
+
+
+## 2026-11-26 05:34 UTC — notify Agent6 of Canonical64 subcover path
+
+- Sent Agent6 a concise status note: run 45759230933 is the 43-sibling consumer build; its expected artifact is consumed by the new optional input in the existing Agent3 Canonical64 workflow. The wrapper preserves roster64 and decomposes only the championResidual Cover obligation into 43 accepted siblings plus 80 residual Covers.
+- Clarified the Raw139 Cryptids pilot overlap: only its terminal D0=1LA leaf is subsumed by the accepted D0=1LA parent Cover; the broader E1=1LF parent still has other branches.
