@@ -135,3 +135,8 @@ The signed macro agrees with bandHaltBy for every valid band coordinate and ever
 ## Counted #421 section and exact halting-score criterion
 
 [Counted421Score.md](Counted421Score.md) gives a new locally kernel-checked literal-table primitive step evaluator, exact endpoint bridge to Cap.f, and exact blank halting-score iff with bound 10^6 * 8^i at terminal index i. No actual terminal root has been established; formal transport to BB6Coverage remains.
+
+
+## Normalized positive-return dynamics (2026-11-26)
+
+[NormalizedPositiveMap.md](NormalizedPositiveMap.md) rewrites the exact ordinary positive-return recurrence in the normalized coordinate \(u_k=q_k/2^k\). Its limiting autonomous map is a countable full-branch expanding map on \((0,10]\), with inverse-branch Jacobians summing to one and invariant Lebesgue measure. The exact positive-gate failure becomes a summable shrinking target near zero. Borel--Cantelli therefore gives a generic-orbit statement for the limiting map, but **does not** decide the distinguished seed \(u_0=8\), transfer automatically to the non-autonomous exact recurrence, or handle negative-phase returns. This is a structural lens for the outstanding root-specific shrinking-target problem, not a #754 nonhalting result.
