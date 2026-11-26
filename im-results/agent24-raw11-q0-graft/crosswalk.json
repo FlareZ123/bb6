@@ -1,0 +1,182 @@
+{
+  "status": "finite table crosswalk; not a parent Cover",
+  "raw11": {
+    "frontierCount": 116,
+    "parent": "1RB---_1RC---_0LA---_------_------_------"
+  },
+  "q0Checkpoint": {
+    "active": 156,
+    "held": 1,
+    "total": 157,
+    "frontierOverlapHistogram": {
+      "24": 20,
+      "25": 20,
+      "94": 1,
+      "99": 1,
+      "108": 1,
+      "113": 1,
+      "114": 20,
+      "115": 77,
+      "100,101,102,103": 1,
+      "104,105,106,107": 1,
+      "109,110,111,112": 1,
+      "14,15,16,17": 1,
+      "90,91,92,93": 1,
+      "95,96,97,98": 1,
+      "none": 10
+    },
+    "singleFrontierRefinements": 141,
+    "unmatchedCount": 16,
+    "noFrontierOverlap": [
+      {
+        "index": 136,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA0LA_------_------_------"
+      },
+      {
+        "index": 137,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA0RA_------_------_------"
+      },
+      {
+        "index": 139,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA1RA_------_------_------"
+      },
+      {
+        "index": 144,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA0LC_------_------_------"
+      },
+      {
+        "index": 145,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA0RC_------_------_------"
+      },
+      {
+        "index": 146,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA1LC_------_------_------"
+      },
+      {
+        "index": 147,
+        "kind": "active",
+        "table": "1RB1LC_1RC---_0LA1RC_------_------_------"
+      },
+      {
+        "index": 152,
+        "kind": "active",
+        "table": "1RB0LC_1RC---_0LA0LA_------_------_------"
+      },
+      {
+        "index": 153,
+        "kind": "active",
+        "table": "1RB0LC_1RC---_0LA0RA_------_------_------"
+      },
+      {
+        "index": 155,
+        "kind": "active",
+        "table": "1RB0LC_1RC---_0LA1RA_------_------_------"
+      }
+    ],
+    "fourWayResidualParents": [
+      {
+        "index": 138,
+        "table": "1RB1LC_1RC---_0LA1LA_------_------_------",
+        "frontierIndices": [
+          100,
+          101,
+          102,
+          103
+        ]
+      },
+      {
+        "index": 140,
+        "table": "1RB1LC_1RC---_0LA0LB_------_------_------",
+        "frontierIndices": [
+          90,
+          91,
+          92,
+          93
+        ]
+      },
+      {
+        "index": 141,
+        "table": "1RB1LC_1RC---_0LA0RB_------_------_------",
+        "frontierIndices": [
+          95,
+          96,
+          97,
+          98
+        ]
+      },
+      {
+        "index": 142,
+        "table": "1RB1LC_1RC---_0LA1LB_------_------_------",
+        "frontierIndices": [
+          104,
+          105,
+          106,
+          107
+        ]
+      },
+      {
+        "index": 143,
+        "table": "1RB1LC_1RC---_0LA1RB_------_------_------",
+        "frontierIndices": [
+          109,
+          110,
+          111,
+          112
+        ]
+      },
+      {
+        "index": 154,
+        "table": "1RB0LC_1RC---_0LA1LA_------_------_------",
+        "frontierIndices": [
+          14,
+          15,
+          16,
+          17
+        ]
+      }
+    ]
+  },
+  "q0Automata": {
+    "count": 94,
+    "frontierRefinementHistogram": {
+      "115": 94
+    },
+    "checkpointParentCounts": {
+      "26": 13,
+      "33": 1,
+      "34": 4,
+      "39": 16,
+      "44": 5,
+      "46": 1,
+      "48": 2,
+      "49": 21,
+      "51": 31
+    },
+    "pairwiseCompatiblePairs": 0
+  },
+  "q32": {
+    "queueRows": 84,
+    "queueFrontierRefinementHistogram": {
+      "114": 14,
+      "115": 70
+    },
+    "sideLeaves": 32,
+    "sideFrontierRefinementHistogram": {
+      "114": 2,
+      "115": 30
+    },
+    "sideRowsMissingExactQueueMatch": [],
+    "sidePairwiseCompatiblePairs": 0
+  },
+  "crossFamily": {
+    "q0AutomataVsQ32SideCompatiblePairs": 0,
+    "q0AutomataVsCheckpointCompatiblePairs": 94,
+    "q32SideVsCheckpointCompatiblePairs": 10
+  }
+}
