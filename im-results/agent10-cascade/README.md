@@ -63,3 +63,7 @@ The stronger original raw-machine bridge, [OriginalGate268.lean](OriginalGate268
 Prove that **every** fatal target in the surviving infinite sectors is inaccessible from the genuine blank root, or construct a true reaching path. The exact parent grammar permits synthetic ancestors and deep odd-parent chains. Fixed-target termination and arbitrarily large finite cutoffs do not establish a machine-wide decision.
 
 Consult the [full research log](FULL_RESEARCH_LOG.md) for exact formulas, exceptional cases, generated Lean certificates, tree sizes, and historical status text. Old “pending upstream CI” assertions there are superseded by the successful run cited above.
+
+### Full three-token periods excluded (26 November 2026)
+
+[ThreeTokenPeriod.md](ThreeTokenPeriod.md) proves an unbounded exclusion of every full token period of length three, extending the length-two result. For A≥7, the negative beta cycle has three distinct reduced numerator magnitudes within 14r, and powers-of-three divisibility of two of them forces a second denominator lower bound. Combined with the first-difference upper bound, the total valuation must be below 300. Lean checks 45,150 aggregate pairs, leaving only (A,D)=(6,5), and rejects all 21,952 token triples for that pair. Both arithmetic modules passed Lean 4.36.0-rc2; the exact reset-to-periodic constraints remain paper-level. No rooted verdict.
