@@ -96,7 +96,7 @@ jobs:
             lean -j1 -o Raw11Extra${n}Coverage.olean Raw11Extra${n}Coverage.lean
           done
           export PREFIX="Agent5Raw11Extra$ID"
-          printf '%s\0' "$PREFIX"Kid*.lean | xargs -0 -P 2 -n1 bash -c 'set -e; echo "Checking $0"; lean -j1 -o "${0%.lean}.olean" "$0"' | tee /tmp/raw11-kids.log
+          printf '%s\0' "$PREFIX"Kid*.lean | xargs -0 -P 1 -n1 bash -c 'set -e; echo "Checking $0"; lean -j1 -o "${0%.lean}.olean" "$0"' | tee /tmp/raw11-kids.log
           lean -j1 -o "$PREFIX.olean" "$PREFIX.lean" | tee /tmp/raw11-parent.log
           if grep -Eq 'sorryAx|native_decide' /tmp/raw11-{kids,parent}.log; then exit 1; fi
           grep -F "BB6.$PREFIX.cover' depends on axioms:" /tmp/raw11-parent.log
