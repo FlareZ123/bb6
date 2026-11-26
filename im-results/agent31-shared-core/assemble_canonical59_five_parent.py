@@ -196,10 +196,20 @@ def is_standard_module(module):
 def build_precompiled_manifest(base_linked, work):
     """Create a source-verified precompiled subset for the Raw59 source closure."""
     unpack = ROOT / "im-results" / "agent13-coverage" / "unpack.py"
+    raw59_generator = ROOT / "im-results" / "agent32-raw59" / "generate.py"
+    raw59_partial = ROOT / "im-results" / "agent32-raw59" / "generate_partial.py"
+    raw59_sharp = ROOT / "im-results" / "agent32-raw59" / "generate_sharp.py"
     raw120_generator = ROOT / "im-results" / "agent3-tnf-raw120" / "generate.py"
-    for generator in (unpack, raw120_generator):
+    generator_commands = [
+        [sys.executable, str(unpack)],
+        [sys.executable, str(raw59_generator)],
+        [sys.executable, str(raw59_partial), "--upgrade", "0LA", "0LB", "0LE", "0LF", "1LB", "1LE", "1LF"],
+        [sys.executable, str(raw59_sharp)],
+        [sys.executable, str(raw120_generator)],
+    ]
+    for generator_command in generator_commands:
         result = subprocess.run(
-            [sys.executable, str(generator)], cwd=ROOT, text=True,
+            generator_command, cwd=ROOT, text=True,
             stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
         )
         print(result.stdout, end="", flush=True)
@@ -221,6 +231,9 @@ def build_precompiled_manifest(base_linked, work):
         "--label", "Canonical64 source-verified precompiled subset for Raw59Exact",
         "--artifact-name", "canonical64-base-precompiled-manifest",
         "--provenance-input", str(unpack),
+        "--provenance-input", str(raw59_generator),
+        "--provenance-input", str(raw59_partial),
+        "--provenance-input", str(raw59_sharp),
         "--provenance-input", str(raw120_generator),
         str(source),
     ]
