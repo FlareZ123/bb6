@@ -242,6 +242,52 @@ further restriction, since each base value is \(19\pmod{20}\) and
 each step is divisible by 20. These are necessary-residue-compatible
 sublifts, not a classification of the full \(w=7\) progression.
 
+### Quantified coverage of the root-compatible u family
+
+Write every root-compatible parameter as \(u=19+20n\), and split
+\(n\) into its four residue classes modulo 4.
+
+- \(n=4T\), so \(u=19+80T\). The nine pairwise-disjoint proved
+  cylinders are
+  \[
+  T\equiv1\pmod4,\quad T\equiv4\pmod{32},\quad
+  T\equiv6\pmod{16},\quad T\equiv42\pmod{64},
+  \]
+  \[
+  T\equiv34\pmod{128},\quad T\equiv124\pmod{128},\quad
+  T\equiv204\pmod{256},\quad T\equiv250\pmod{256},\quad
+  T\equiv24\pmod{32}.
+  \]
+  Their natural density within this branch is
+  \[
+  \frac14+\frac1{32}+\frac1{16}+\frac1{64}
+  +\frac1{128}+\frac1{128}+\frac1{256}+\frac1{256}
+  +\frac1{32}=\frac{53}{128}.
+  \]
+
+- \(n=4T+1\), so \(u=39+80T\). The proved cylinders are
+  \(T\) even (the \(u=7+32t\) family) and
+  \(T\equiv19\pmod{32}\) (the \(u=23+512s\) family).
+  They are disjoint and have density
+  \(\frac12+\frac1{32}=\frac{17}{32}\).
+
+- \(n=4T+2\), so \(u=59+80T\). The entire branch is covered,
+  with density \(1\).
+
+- \(n=4T+3\), so \(u=79+80T\). No cylinder in this branch is
+  currently proved.
+
+The four branches are disjoint and equally frequent. Therefore the
+union of the twelve source-proved exclusions has natural density
+\[
+\frac14\left(\frac{53}{128}+\frac{17}{32}+1+0\right)
+=\boxed{\frac{249}{512}}
+\]
+among all \(u\equiv19\pmod{20}\). This is an exact density for the
+union of the proved cylinders, hence a lower bound on the density of
+all excluded targets in this root-compatible family. It is not a
+classification of the complement.
+
 ### Exact-source verification
 
 The focused workflow target w7-q0-parent-fan in
