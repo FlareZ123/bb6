@@ -416,3 +416,21 @@ New files/changes:
 4. If Canonical63 passes, update the result note/map to 63. Even then, 63 residual Covers and the champion witness remain open; no exact BB(6) value follows.
 
 Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory 70-minute release time remains `2026-11-26T04:53:30.406Z`. Do not refresh the lease. Use an actual runtime clock after each checkpoint.
+
+
+## 2026-11-26 04:13 UTC checkpoint — Canonical63 consumer and public frontier update
+
+The accepted Canonical64 discovery has been integrated into public reporting and the next Raw112 cut has been implemented.
+
+- Added publishable result note `results/2026-11-26-canonical64-raw120-integrated-agent3.md`; it records the exact Canonical64 statement, the twelve parent cuts after the 76 base, Raw120's exact threshold 224707, final run 45750164590, artifact 15085029091 and digest.
+- Updated `results/README.md`, `research/BOARD.md` and top-level `README.md` so the strongest accepted conditional frontier is 64, not 68. The E1 family status is now nine accepted parent Covers, ten still-open siblings, and the champion-containing Raw113 case.
+- The fresh Canonical68 integration run **45751870097** passed. This confirms the new reachable-import linker resolves the old irrelevant all-artifact SweepData collision; the Canonical64 integration is still the stronger accepted frontier.
+- Added `Canonical63Raw112Integrated.lean` and `assemble_canonical63.py`; added existing-workflow target `canonical63-integrated`. The module uses `BB6.Agent47Raw112.parent` from Raw112ClosedCover, proves its root and unique membership in `Canonical64Raw120Integrated.roster64`, lifts the parent Cover from 100000 to 6766859, and applies `removeParents_sound` to produce exactly 63 residual representatives. It leaves all 63 Covers and the champion witness explicit.
+- The Canonical64 base is pinned to run 45750164590 / artifact 15085029091 / digest `bb4fa3c190ab2a67e3f7c17f8e1c0f07c2215b282451a361501f8ff6c678d55b`, source revision `949fde331f10df81a968f157c622faa581597276`.
+- Compared base revision 949fde... to Raw112 producer revision `17263f8415b7ad1aa83aa08c7fb8254aa6de5507`: 58 commits ahead, but no shared Lean core source files changed. This increases confidence that the strict reachable-object linker can compose the two artifacts; it still must check duplicate kernel declarations.
+- Raw112 reduced-concurrency run **45751911115**: generation and shared core passed; shard 0 completed successfully in about 12m24s; shards 1 and 2 were active, shards 3–7 queued at 04:13Z. Matrix max-parallel 2 and per-shard Lean jobs 2 are confirmed by the workflow revision. This is promising compared with the previous exit-143 failures, but the parent Cover is not yet accepted.
+- The old Canonical67 integration path remains an intermediate/legacy interface; do not run it as the next Raw112 cut. Current route is Canonical64 → Raw112 → Canonical63.
+
+Next: monitor 45751911115; if successful, dispatch the existing Agent31 manual workflow with target `canonical63-integrated` and the successful Raw112 run ID. If the final integration fails, inspect the precise source/closure/axiom error. If the Raw112 run has failed shards, use failed-job-only logs and rerun only those jobs at the same source revision where possible. Do not claim Canonical63 until both gates pass.
+
+Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release time remains `2026-11-26T04:53:30.406Z`. Do not refresh the lease. Check actual clock after every subsequent checkpoint.
