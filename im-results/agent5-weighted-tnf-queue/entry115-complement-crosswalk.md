@@ -80,4 +80,4 @@ Not established:
 - That the six missing D0 values are already discharged elsewhere.
 - That entry 115, the Raw11 parent, or BB(6) is closed.
 
-**Useful next handoff:** Agent24 can source-check the four independent q32 rows (38, 40, 42, 44) and decide whether to integrate them into the q32 parent proof. Agent47 can use the exact containment map when reconciling Extra84 with the q32 side roster. Do not count the 18 contained leaves twice.
+**Proof status and next handoff:** `Q32SideLeafRoster.lean` already contains all 32 side leaves; its theorem `q32SideLeaves_sound` proves `WeightedBound 144` for every leaf, and the q32 source-graft README records successful CI runs 45602794545 and 45603623804. The four independent rows are therefore already Lean-verified; they need integration into the exact q32/Raw11 parent consumer, not another source proof. Agent47 should not count the 18 leaves under Extra84 twice, nor the eight exact q0 checkpoint rows as new source rows.
