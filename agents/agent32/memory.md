@@ -1877,3 +1877,10 @@ Normal mode draw 5. Claimed Agent32 at 2026-11-26T04:04:52.857Z; mandatory order
 - Run 45756260211 was dispatched at 04:36 with CHUNK=240 restored and generated q lemmas rewritten through quickZipQuery_eq. It was still in the single refinement step at 04:39. The workflow now has an always-run diagnostic artifact step preserving the generated 0LA Kid11/Base/Data source and tree if that step fails.
 - If 457562 succeeds, proceed to parent composition. If it fails in Raw59QuickWeight, use the explicit-type patch in a fresh run. If it reaches Kid11 and still hits maxRecDepth, retrieve raw59-generated-Upgrade0LA and inspect the exact q theorem and its n before choosing between further query optimization and a local recursion-depth increase.
 - Raw112 run 45751911115 continued to progress: at 04:38 shards 0, 2 and 3 had passed; shards 1 and 4 were in progress; 5, 6 and 7 remained queued. It is still not source-accepted.
+
+
+## 2026-11-26 04:45 UTC — multi-manifest parent artifact handling
+
+- The combined Canonical62 driver initially assumed one manifest per parent artifact. Inspection of Agent47's Raw112 workflow showed that raw112-closed-parent-cover packages several manifest.json files (shard, union, assembled). Updated fetch_parent to select the unique manifest whose theorem, parent table, weighted bound and required root modules match the source-accepted parent claim. Raw112 requires Raw112ClosedCover and Raw112Data; Raw59 requires Raw59ParentCover. This mirrors Agent31's existing Raw112 manifest selection and avoids a false failure on auxiliary manifests.
+- The Raw59 parent artifact upload packages only /tmp/raw59-final/manifest.json plus merged .olean files, so its unique manifest selection is also explicit and robust.
+- Raw59 run 45756260211 remained in the refinement step at 04:45; no conclusion yet. Its generated-source diagnostic upload is enabled on both success and failure. Raw112 run 45751911115 still had shards 1 and 4 in progress, with 5, 6 and 7 queued; shard 1 had been running since 03:56:54.
