@@ -82,4 +82,77 @@ theorem near_cancel (n u v x y : Nat) (hn : 10 ≤ n)
 #print axioms terminal_scale
 #print axioms far_cancel
 #print axioms near_cancel
+theorem pow3_gt_self (k : Nat) : k < 3^k := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      rw [Nat.pow_succ]
+      omega
+
+theorem scale_exists_aux (k m : Nat) (h : m+3 < 3^k) :
+    ∃ n, 1≤n ∧ 3^(n-1)≤m+3 ∧ m+3<3^n := by
+  induction k with
+  | zero => simp at h
+  | succ k ih =>
+      by_cases hp : m+3<3^k
+      · exact ih hp
+      · refine ⟨k+1,by omega,?_,h⟩
+        simpa using (Nat.le_of_not_gt hp)
+
+theorem scale_exists (m : Nat) (hm : 19680≤m) :
+    ∃ n, 10≤n ∧ 3^(n-1)-3≤m ∧ m+3<3^n := by
+  obtain ⟨n,hn,hl,hh⟩ := scale_exists_aux (m+3) m (pow3_gt_self (m+3))
+  have hn10 : 10≤n := by
+    by_cases h : 10≤n
+    · exact h
+    · have hp := Nat.pow_le_pow_right (by decide : 0<3) (by omega : n≤9)
+      have he : 3^9=19683 := by decide
+      omega
+  exact ⟨n,hn10,by omega,hh⟩
+
+/-- Any finite failure of an option iteration with two initial surviving steps
+has a three-step terminal chain. -/
+theorem terminal_chain {S : Type} (F : S → Option S) (run : Nat → Option S)
+    (hstep : ∀ t, run (t+1) = (run t).bind F)
+    (h0 : ∃ s, run 0 = some s) (h1 : ∃ s, run 1 = some s)
+    (h2 : ∃ s, run 2 = some s)
+    (k : Nat) (hk : run k = none) :
+    ∃ t q p r, run t = some q ∧ F q = some p ∧ F p = some r ∧ F r = none := by
+  induction k with
+  | zero => obtain ⟨s,hs⟩ := h0; rw [hs] at hk; contradiction
+  | succ k ih =>
+      cases hr : run k with
+      | none => exact ih hr
+      | some r =>
+          have hhalt : F r = none := by simpa [hstep,hr] using hk
+          have hge : 2≤k := by
+            by_cases h : 2≤k
+            · exact h
+            · have hk' : k=0 ∨ k=1 := by omega
+              rcases hk' with rfl|rfl
+              · obtain ⟨s,hs⟩ := h1; rw [hs] at hk; contradiction
+              · obtain ⟨s,hs⟩ := h2; rw [hs] at hk; contradiction
+          let t := k-2
+          have he : t+2=k := by dsimp [t]; omega
+          have hr2 : run (t+2)=some r := by rwa [he]
+          cases hp : run (t+1) with
+          | none =>
+              have hbad := hstep (t+1)
+              rw [hp] at hbad
+              change run (t+1+1)=none at hbad
+              rw [show t+1+1=t+2 by omega,hr2] at hbad
+              contradiction
+          | some p =>
+              have hpr : F p=some r := by
+                rw [show t+2=t+1+1 by omega,hstep,hp] at hr2
+                exact hr2
+              cases hq : run t with
+              | none => rw [hstep,hq] at hp; contradiction
+              | some q =>
+                  have hqp : F q=some p := by rw [hstep,hq] at hp; exact hp
+                  exact ⟨t,q,p,r,hq,hqp,hpr,hhalt⟩
+
+#print axioms scale_exists
+#print axioms terminal_chain
+
 end BB6.Agent27ThreeStepStripArithmetic

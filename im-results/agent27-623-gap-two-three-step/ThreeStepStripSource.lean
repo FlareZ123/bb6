@@ -163,4 +163,45 @@ theorem root_three_step_terminal_strip (n t u v x y aa dd : Nat)
 #print axioms ordinary_terminal_window
 #print axioms ordinary_previous_strip
 #print axioms root_three_step_terminal_strip
+/-- Any section failure entails an actual root visit in one of the two
+logarithmic-width strips. This removes the need to supply a terminal chain
+or guess a ternary scale in the eventual root avoidance theorem. -/
+theorem run_none_implies_strip (k : Nat) (hk : run k=none) :
+    ∃ t u v n, run t=some (.D u v) ∧ 10≤n ∧
+      3^(n-1)-3≤min u v ∧ min u v+3<3^n ∧ strip u v n := by
+  have hinit (j : Nat) (hj : j≤49) : ∃ s, run j=some s := by
+    cases hr : run j with
+    | some s => exact ⟨s,rfl⟩
+    | none =>
+        have hbad := run_none_forward j hr (49-j)
+        rw [show j+(49-j)=49 by omega,root_run_49_small_scale] at hbad
+        contradiction
+  obtain ⟨t,q,p,r,hq,hs,ht,hh⟩ := terminal_chain highLevelNext run
+    (fun _ => rfl) (hinit 0 (by decide)) (hinit 1 (by decide))
+    (hinit 2 (by decide)) k hk
+  rcases q with ⟨u,v⟩
+  rcases p with ⟨x,y⟩
+  rcases r with ⟨aa,dd⟩
+  have hm : 19680≤min u v := by
+    by_cases h : 19680≤min u v
+    · exact h
+    · exact (blank_root_no_small_min_three_step_terminal t u v x y aa dd
+        hq (by omega) hs ht hh).elim
+  obtain ⟨n,hn,hlo,hhi⟩ := scale_exists (min u v) hm
+  exact ⟨t,u,v,n,hq,hn,hlo,hhi,
+    root_three_step_terminal_strip n t u v x y aa dd hn hlo hhi hq hs ht hh⟩
+
+/-- Complete conditional section nontermination criterion, solely a root
+orbit strip-avoidance assertion. -/
+theorem run_nontermination_of_strip_avoidance
+    (avoid : ∀ t u v n, run t=some (.D u v) → 10≤n →
+      3^(n-1)-3≤min u v → min u v+3<3^n → ¬ strip u v n) :
+    ∀ k, run k≠none := by
+  intro k hk
+  obtain ⟨t,u,v,n,hq,hn,hlo,hhi,hstrip⟩ := run_none_implies_strip k hk
+  exact avoid t u v n hq hn hlo hhi hstrip
+
+#print axioms run_none_implies_strip
+#print axioms run_nontermination_of_strip_avoidance
+
 end BB6.Agent27ThreeStepStripSource
