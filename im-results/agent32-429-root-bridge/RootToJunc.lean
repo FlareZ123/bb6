@@ -10,11 +10,21 @@ open BB6Coverage BB6Bubble BB429PhysicalFrontier BB429JPhysical
 open BB429RootEntry BB429High0Physical BB429High3Ladder BB429JuncCanonical
 open BB429PhysicalBridge BB429FinishScanEDelta
 
+/-- Extensionality for the function-valued physical configuration. -/
+theorem config_ext {c d : Config}
+    (hs : c.state = d.state) (hh : c.head = d.head)
+    (ht : c.tape = d.tape) : c = d := by
+  cases c with
+  | mk s h t =>
+      cases d with
+      | mk s' h' t' =>
+          simp_all
+
 /-- The exact 35-step blank-root endpoint is the translated physical J(0,0)
     configuration used by the source-certified high-zero branch. -/
 theorem j00Config_eq_shifted_jConfig :
     j00Config = shiftConfig 3 (jConfig 0 0) := by
-  apply Config.ext
+  apply config_ext
   · rfl
   · rfl
   · funext x
@@ -47,7 +57,7 @@ theorem rootAfterHigh0_endpoint_eq :
   have hcanon := represented_junc_eq_translatedJ 0 12 c hrep
   have hhead' : c.head = -6 := by simpa using hhead
   rw [hcanon, hhead']
-  apply Config.ext
+  apply config_ext
   · rfl
   · simp [shiftConfig, translatedJ]
   · funext x
@@ -73,7 +83,7 @@ theorem root_after_145_monitor :
     simpa [source429_eq_target429] using h
   calc
     runWithHeadMax target429 145 blank =
-        runWithHeadMax target429 (35 + 110) blank := by omega
+        runWithHeadMax target429 (35 + 110) blank := by rfl
     _ = (runWithHeadMax target429 35 blank).bind (fun (d, h₁) =>
           (runWithHeadMax target429 110 d).map
             (fun (e, h₂) => (e, max h₁ h₂))) :=
