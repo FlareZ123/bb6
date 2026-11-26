@@ -50,7 +50,7 @@ The other source-audited mechanisms and original run IDs are preserved in the [p
 
 ## Exact quotient handoff
 
-[Raw118CanonicalCut.lean](Raw118CanonicalCut.lean) is a new **conditional source draft**. It supplies a generic quotient-roster cut from a sharp local Cover and an existing sound roster, preserving every other entry. The specific 68-to-67 count and exact target theorem are checked separately in [45737177344](https://github.com/FlareZ123/bb6/actions/runs/45737177344), reusing the already audited 68/74/76/77 objects. This draft does not discharge the Raw118 Cover or the other parent/roster obligations. Once the local parent is source-accepted, apply the generic cut to the then-current accepted roster, checking exact membership and its complement. The binding score floor 6,766,859 from Raw110 is unchanged.
+[Raw118CanonicalCut.lean](Raw118CanonicalCut.lean) is **source-accepted, conditional on the Raw118 Cover**. It supplies a generic quotient-roster cut from a sharp local Cover and an existing sound roster, preserving every other entry. The specific 68-to-67 count and exact target theorem passed original-source Lean compilation in [45737177344](https://github.com/FlareZ123/bb6/actions/runs/45737177344), reusing the already audited 68/74/76/77 objects. The proof artifact is `15079342035`. This theorem does not discharge the Raw118 Cover or the other parent/roster obligations. Once the local parent is source-accepted, apply the generic cut to the then-current accepted roster, checking exact membership and its complement. The binding score floor 6,766,859 from Raw110 is unchanged.
 
 ## Reproduction and remaining acceptance gate
 
