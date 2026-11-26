@@ -948,8 +948,9 @@ jobs:
           p10_expr = "BB6Coverage.refine BB6.Agent50TNFPilot.root\n    (⟨1, by decide⟩, false)\n    (some ⟨true, false, ⟨2, by decide⟩⟩)"
           assert p10_expr in raw10_source, "B0=1LC source expression changed"
           p113_source = pathlib.Path("im-results/agent31-shared-core/Canonical59Raw113Membership.lean").read_text()
+          e1base_expr = "abbrev e1Base : PartialMachine := (pathEnd root 2 (path.take 4)).1"
           p113_expr = "refine e1Base (4,true) (some ⟨true,true,2⟩)"
-          assert p113_expr in p113_source, "p113 source expression changed"
+          assert e1base_expr in p113_source and p113_expr in p113_source, "p113 source expression changed"
           graft_source = pathlib.Path("im-results/agent31-shared-core/Canonical58Raw113Graft.lean").read_text()
           assert "removeParents [p113] BB6.Agent32CanonicalSelectedIntegrated.rosterSelected" in graft_source
           stable_source = pathlib.Path("im-results/agent31-shared-core/Canonical68StableBatch.lean").read_text()
