@@ -23,6 +23,10 @@ on:
         description: Source-checked Raw139 E0=0RA 24-child cover run to integrate
         type: string
         default: "45778885358"
+      raw139_e0_integrated_run_id:
+        description: Run containing the compiled Raw139E0ZeroRAIntegrated and Raw139E0ZeroRAMatch objects
+        type: string
+        default: "45790610736"
 permissions:
   contents: read
   actions: read
@@ -139,6 +143,52 @@ jobs:
           pattern: agent6-canonical68-raw139-43-sibling-consumer-*
           merge-multiple: true
           path: /tmp/a6-sibling
+      - name: Download E0=0RA shared closure for Canonical64 integration
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_cover_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          name: raw139-e0-0ra-shared
+          path: /tmp/a3e0-shared
+      - name: Download E0=0RA child covers for Canonical64 integration
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_cover_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          pattern: raw139-e0-0ra-child-*
+          merge-multiple: true
+          path: /tmp/a3e0-children
+      - name: Download E0=0RA parent cover for Canonical64 integration
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_cover_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_cover_run_id }}
+          name: raw139-e0-0ra-certified
+          path: /tmp/a3e0-parent
+      - name: Download compiled E0=0RA integration objects
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_integrated_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.raw139_e0_integrated_run_id }}
+          name: agent3-raw139-e0-integrated
+          path: /tmp/a3e0-integrated
+      - name: Prepare E0=0RA object closure
+        if: inputs.mode == 'integrate-65' && inputs.raw139_e0_cover_run_id != '' && inputs.raw139_e0_integrated_run_id != ''
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a3e0-build
+          cp /tmp/a3e0-shared/build/*.olean /tmp/a3e0-build/
+          cp /tmp/a3e0-children/*.olean /tmp/a3e0-build/
+          find /tmp/a3e0-parent -name A3E0RACover.olean -exec cp {} /tmp/a3e0-build/ \\;
+          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAIntegrated.olean' -exec cp {} /tmp/a3e0-build/ \\;
+          find /tmp/a3e0-integrated -name 'Raw139E0ZeroRAMatch.olean' -exec cp {} /tmp/a3e0-build/ \\;
+          test -s /tmp/a3e0-build/A3E0RACover.olean
+          test -s /tmp/a3e0-build/Raw139E0ZeroRAIntegrated.olean
+          test -s /tmp/a3e0-build/Raw139E0ZeroRAMatch.olean
       - name: Compile the Canonical64 Raw139 subcover wrapper
         if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != ''
         run: |
@@ -146,7 +196,9 @@ jobs:
           test -s /tmp/a6-core/build/ChampionResidualFrontier.olean
           test -s /tmp/a6-sibling/source-sibling-build/ChampionResidualCanonical68Integration.olean
           test -s /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
-          export LEAN_PATH="/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
+          test -s /tmp/a6-sibling/source-sibling-build/Raw139Normalized.olean
+          test -s /tmp/a3e0-build/Raw139E0ZeroRAIntegrated.olean
+          export LEAN_PATH="/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
           lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139Subcover.olean \
             im-results/agent14-raw139-d0-generic/Canonical64Raw139Subcover.lean \
             | tee /tmp/raw120-canonical64/raw139-subcover.log
@@ -166,6 +218,7 @@ jobs:
             /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
             /tmp/raw120-canonical64/linked/Canonical64Raw139Subcover.olean
             /tmp/raw120-canonical64/raw139-subcover.log
+            /tmp/a3e0-build/*.olean
           if-no-files-found: warn
           retention-days: 14
 
