@@ -94,9 +94,9 @@ Proof.
     [apply (solid26_turn (Cons S1 (solid26_triples n (Cons S1 solid26_zero))) )|].
   rewrite solid26_push.
   unfold solid26_family.
-  change evstep solid26_tm
+  change (evstep solid26_tm
     (D,(solid26_triples (S n) solid26_zero,S1,Cons S1 (Cons S1 solid26_zero)))
-    (D,(solid26_zero,S1,Cons S1 (Cons S1 (solid26_triples (S n) solid26_zero)))).
+    (D,(solid26_zero,S1,Cons S1 (Cons S1 (solid26_triples (S n) solid26_zero))))).
   replace (Cons S1 (Cons S1 (solid26_triples (S n) solid26_zero)))
     with (solid26_triples (S n) (Cons S1 (Cons S1 solid26_zero))) by
       (symmetry; repeat rewrite solid26_push; reflexivity).
