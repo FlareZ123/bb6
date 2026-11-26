@@ -15,9 +15,7 @@ open BB6.Agent31Canonical59Membership
     1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA.
     It is the E1=0LB cylinder with B1=1LF and F1=0RA fixed. -/
 abbrev p83 : PartialMachine :=
-  refine (refine (refine e1Base (1,true) (some ⟨true,false,5⟩))
-    (4,true) (some ⟨false,false,1⟩))
-    (5,true) (some ⟨false,true,0⟩)
+  refine (pathEnd root 2 (path.take 6)).1 (5,true) (some ⟨false,true,0⟩)
 
 /-- Raw83 retains the canonical first-one root transition. -/
 theorem p83_root :
