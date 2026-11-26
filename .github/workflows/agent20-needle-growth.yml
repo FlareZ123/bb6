@@ -12,6 +12,7 @@ on:
           - quadratic
           - cubic
           - subexponential
+          - entropy
           - rotation-affine
 
 permissions:
@@ -92,6 +93,23 @@ jobs:
           lake env lean -o .lake/build/lib/lean/NeedleSubexp.olean NeedleSubexp.lean | tee subexp.axioms.log
           lake env lean NeedleSubexpSource.lean | tee subexp-source.axioms.log
           if grep -q 'sorryAx' subexp.axioms.log subexp-source.axioms.log; then exit 1; fi
+      - name: Audit weighted-prefix entropy cutoff
+        if: inputs.target == 'entropy'
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent46-needle-coherent-paths/NeedleWord.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleWord.olean NeedleWord.lean
+          cp "$GITHUB_WORKSPACE/im-results/agent46-needle-subexponential/NeedleSubexp.lean" .
+          lake env lean -o .lake/build/lib/lean/NeedleSubexp.olean NeedleSubexp.lean
+          python3 "$GITHUB_WORKSPACE/im-results/agent48-needle-entropy/unpack.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent48-needle-entropy/"*.lean .
+          for module in NeedleSubpower NeedleEntropyWords NeedleEntropyBound; do
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean" | tee "$module.axioms.log"
+            if grep -q 'sorryAx' "$module.axioms.log"; then exit 1; fi
+          done
+          lake env lean NeedleEntropySource.lean | tee NeedleEntropySource.axioms.log
+          if grep -q 'sorryAx' NeedleEntropySource.axioms.log; then exit 1; fi
       - name: Audit source-connected terminal rotation and all-depth affine inverse
         if: inputs.target == 'rotation-affine'
         working-directory: /tmp/cryptids
