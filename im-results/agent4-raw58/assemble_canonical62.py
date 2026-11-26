@@ -112,15 +112,14 @@ def main():
         "BB6.Agent4Canonical62Raw112Raw58.raw58_cover",
         "BB6.Agent4Canonical62Raw112Raw58.sound62_integrated",
         "BB6.Agent4Canonical62Raw112Raw58.exact_at_target62",
-        "BB6.Agent4Canonical62Raw112Raw58.exact_at_champion_score",
     ]
     profiles = a68.gate(log, required)
 
     compiler = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip()) / "bin" / "lean"
     report = {
-        "status": "source-audited conditional 62-residual exact-score interface; not an exact BB(6) decision",
-        "theorem": "BB6.Agent4Canonical62Raw112Raw58.exact_at_champion_score",
-        "score": "proposedTM63Moves + 7",
+        "status": "source-audited conditional 62-residual quotient interface; not an exact BB(6) decision",
+        "theorem": "BB6.Agent4Canonical62Raw112Raw58.exact_at_target62",
+        "score": "any B >= 6766859",
         "base_residual_count": 64,
         "removed_parent_count": 2,
         "residual_count": 62,
@@ -148,8 +147,8 @@ def main():
         },
         "consumer_axioms": profiles,
         "remaining_obligations": (
-            "a Cover at the attained score for each of the 62 retained quotient "
-            "representatives; the champion score and raw attaining witness are fixed"
+            "a Cover at the chosen target B for each of the 62 retained quotient "
+            "representatives, plus an attaining blank-start witness at B"
         ),
         "source_revision": subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip(),
         "lean_version": version,
