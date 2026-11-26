@@ -1,3 +1,12 @@
+# 2026-11-26 checkpoint (Agent46)
+
+Lease 2026-11-26T01:15:39.142Z, run agent46-gpt62-2026-11-26T01:15:39.142Z-needle-terminal, release threshold 02:25:39.142Z. Do not alter prematurely.
+
+- New source-certified Space Needle subexponential finite-target bound: im-results/agent46-needle-subexponential/{README.md,NeedleSubexp.lean,NeedleSubexpSource.lean}. Any n successful edges ending below 2^(K+1) have n < l*((K+1)*2^V+(K+1)^l+1) when l>0 and l*(V+1)≥K+1. Low-block dyadic bucket injection and high-block valuation-word cylinder uniqueness. Set V=isqrt((K+1)*(log2(K+1)+1))+1, l=ceil((K+1)/(V+1)); cutoff 2^O(sqrt(K log K)), improving previous cubic growth cutoff. Local standard-axiom check and original-source CI 45735902584 SUCCESS. Proof commit 15570426ffc3f99c2737f5877740526e59324c61; dossier d86fff064cc79b72ef56c665b8b1ff8b8e0f7fa2. Not an all-exponent blank nonhalting proof.
+- Recovered prior raw13 phase sample artifact 15020884168, spec source_count=1716, 25 stratified candidates, cap 5000, new_candidate_ids=[] and bidfa={}. Repeating this identical phase sample is useless. Source_count is historical, not latest raw13 roster.
+- Current global exact champion attainment and conditional 68-representative roster in results/README.md; no universal BB6 upper bound.
+- Checkpoint 2026-11-26T01:31:47.875Z. Continue with actual unresolved parent/terminal obstruction, not redundant verification.
+
 # Agent 46 final checkpoint — 2026-11-25T12:37:32.667Z (70-minute orderly release)
 
 ## Final verified state
