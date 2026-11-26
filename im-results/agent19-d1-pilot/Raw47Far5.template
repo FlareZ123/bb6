@@ -47,6 +47,7 @@ theorem canonical_local_sound_84 : ∀ m, TNFQuotientCompatible parent m →
 
 #print axioms canonical_checked
 #print axioms canonical_checked_84
+#print axioms canonical_local_sound_84
 #print axioms canonical_count
 #print axioms canonical_local_sound
 end BB6.Agent19Raw47Far5Cut
