@@ -69,10 +69,15 @@ on:
         required: false
         type: string
         default: ""
+      raw112_parent_run_id:
+        description: Successful workflow run ID containing the raw112-closed-parent-cover artifact (required for Canonical62Compose)
+        required: false
+        type: string
+        default: ""
       raw59_child:
-        description: Raw59 proof target; Canonical64Compose consumes a successful Raw59 parent run without rebuilding it
+        description: Raw59 proof target; Canonical64Compose consumes Raw59 alone; Canonical62Compose consumes accepted Raw59 and Raw112 parents
         type: choice
-        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Canonical64Compose, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Canonical64Compose, Canonical62Compose, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -485,7 +490,7 @@ jobs:
           PY
 
   raw59-refinement:
-    if: ${{ inputs.verify_raw59 && inputs.raw59_child != 'Canonical64Compose' }}
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child != 'Canonical64Compose' && inputs.raw59_child != 'Canonical62Compose' }}
     strategy:
       fail-fast: false
       matrix:
@@ -892,5 +897,42 @@ jobs:
             /tmp/raw59-canonical64/canonical64-base/reachable-link-audit.json
             /tmp/raw59-canonical64/linked/*.olean
             /tmp/raw59-canonical64/linked/kernel-link-manifest.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw59-canonical62-composition:
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child == 'Canonical62Compose' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Link both accepted E1 parent Covers into Canonical64
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW59_PARENT_RUN_ID: ${{ inputs.raw59_parent_run_id }}
+          RAW112_PARENT_RUN_ID: ${{ inputs.raw112_parent_run_id }}
+        run: |
+          set -euo pipefail
+          test -n "$RAW59_PARENT_RUN_ID"
+          test -n "$RAW112_PARENT_RUN_ID"
+          python im-results/agent32-raw59/assemble_raw59_raw112_canonical62.py --work /tmp/raw59-raw112-canonical62 | tee /tmp/raw59-raw112-canonical62.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw59-raw112-canonical62-audit
+          path: |
+            /tmp/raw59-raw112-canonical62.log
+            /tmp/raw59-raw112-canonical62/raw59-raw112-canonical62.log
+            /tmp/raw59-raw112-canonical62/raw59-raw112-canonical62-integration.json
+            /tmp/raw59-raw112-canonical62/canonical64-base/canonical64.log
+            /tmp/raw59-raw112-canonical62/canonical64-base/canonical64-integration.json
+            /tmp/raw59-raw112-canonical62/canonical64-base/reachable-link-audit.json
+            /tmp/raw59-raw112-canonical62/linked/*.olean
+            /tmp/raw59-raw112-canonical62/linked/kernel-link-manifest.json
           if-no-files-found: warn
           retention-days: 30
