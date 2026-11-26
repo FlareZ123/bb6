@@ -77,13 +77,13 @@ theorem w7_z2_parent_fan (u a k : Nat)
                     rw [Nat.pow_add]
                   calc
                     2^(n+2)*4 = (2^n*4)*4 := by rw [hp]
-                    _ = 2^n*16 := by ac_rfl
+                    _ = 2^n*16 := by omega
                     _ = 16*W := by
                       have ht : x+y+1=16*W := hT
                       rw [hsum] at ht
                       exact ht
                 have hcost' : 2*k+1+7+3*(n+1)=X2 := by
-                  rw [hX2]
+                  rw [← hX2]
                   omega
                 refine ⟨n+1,hnEven,?_,?_⟩
                 · simpa [ha1] using hscale
@@ -133,7 +133,7 @@ theorem w7_z2_parent_fan (u a k : Nat)
                   _ = x+y+1 := by symm; exact hsum
                   _ = 16*W := hT
               have hcost' : 2*k+a+7+3*n=X2 := by
-                rw [hX2]
+                rw [← hX2]
                 omega
               have hX2even : X2%2=0 := by dsimp [X2]; omega
               have hnEven : n%2=0 := by omega
