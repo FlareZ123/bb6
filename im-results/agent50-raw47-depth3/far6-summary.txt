@@ -1,0 +1,8 @@
+Raw47 depth-3 FAR6 search
+residuals=1212
+preloaded_far5_hits=10
+new_far6_hits=1212
+total_far5_or_far6_hits=1222
+max_automaton_states=6
+input_sha256=280e04ae4d026defce8aee537b8f6ded09225cfe7c88601fd87e356bac24124b
+candidate_sha256=21d96c091b2f1111f587b2eebea0350b540fe646a9767c572ea63b8365096f82
