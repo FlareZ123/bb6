@@ -7,9 +7,9 @@ import argparse, json, os, shutil, subprocess, sys, time
 HERE=Path(__file__).resolve().parent
 from finish import domain_for,trace_long
 
-def finish_trace(target):
+def finish_trace(target,first=False):
     ds=domain_for(target);tag=str(target)
-    stack=[tuple(map(int,l.split())) for l in open('hard'+tag+'.txt') if l.strip()]
+    stack=[tuple(map(int,l.split())) for l in open(('firsthard' if first else 'hard')+tag+'.txt') if l.strip()]
     count=Counter();mass=sum(prod(len(ds[i]) for i,v in enumerate(t) if v<0) for t in stack)
     out=[];fails=[];holes=[];start=time.monotonic()
     while stack:
@@ -32,19 +32,27 @@ def main():
     work=Path(args.work or f'/tmp/a13-box3-c{args.c}-replay').resolve()
     work.mkdir(parents=True,exist_ok=True);os.chdir(work)
     targets=[args.target] if args.target is not None else list(range(6,12))
-    for pattern in ('open*.txt','ngram*.txt','hard*.txt','long*.json','tree*.txt','rlestart*.txt','rle*.txt','greedyboxes.*'):
+    for pattern in ('open*.txt','ngram*.txt','hard*.txt','long*.json','tree*.txt','rlestart*.txt','rle*.txt','firsthard*.txt','greedyboxes.*'):
         for stale in work.glob(pattern):stale.unlink()
     def call(*cmd):subprocess.run([str(x) for x in cmd],check=True)
     for n in ('scan','classify','rle_scan','treegen'):
         call('g++','-O3','-std=c++17',HERE/(n+'.cpp'),'-o',work/n)
     def discover(t):
-        call(work/'scan',t);call(work/'classify',t);finish_trace(t);call(work/'rle_scan',t)
+        call(work/'scan',t);call(work/'classify',t)
+        first=cfg.get('rle_first',False)
+        if first:
+            shutil.copyfile(f'hard{t}.txt',f'rlestart{t}.txt')
+            call(work/'rle_scan',t,'--cheap')
+            Path(f'rle{t}.txt').rename(f'rlefirst{t}.txt')
+            Path(f'rlehard{t}.txt').rename(f'firsthard{t}.txt')
+        finish_trace(t,first);call(work/'rle_scan',t)
     with ThreadPoolExecutor(max_workers=4) as pool:list(pool.map(discover,targets))
     stack=[];block=[];remaining=[]
     for t in targets:
-        for l in open(f'rle{t}.txt'):
-            a=list(map(int,l.split()));assert len(a)==21
-            stack.append([a[:12],a[12:16],a[16:20]])
+        for fn in ([f'rlefirst{t}.txt'] if cfg.get('rle_first',False) else [])+[f'rle{t}.txt']:
+            for l in open(fn):
+                a=list(map(int,l.split()));assert len(a)==21
+                stack.append([a[:12],a[12:16],a[16:20]])
         for l in open(f'rlehard{t}.txt'):
             a=list(map(int,l.split()));remaining.append(a)
     seeds={tuple(t):p for t,p in cfg['block']}
