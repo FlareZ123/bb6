@@ -13,7 +13,6 @@ open BB6.Agent31StableParentBatch
 open BB6.Agent31Canonical59Membership
 open BB6.Agent31Canonical59Raw113Membership
 open BB6.Agent17Canonical59Raw112Membership
-open BB6.Agent32CanonicalSelectedRaw59
 open BB6ChampionArithmetic
 
 /-- The accepted Canonical57 roster already includes the Raw113 and Raw112 cuts. -/
