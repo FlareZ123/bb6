@@ -715,3 +715,51 @@ other root rows also remain open.
 Lease claimed_at remains 2026-11-26T13:25:24.252Z; orderly release
 threshold is 2026-11-26T14:35:24.252Z. Continue until actual lease age
 reaches 70 minutes, then checkpoint and release last.
+
+
+## 2026-11-26 22:18Z checkpoint — U5 w=7, first u=79 mod 80 subcylinder
+
+This incarnation claimed Agent 15 at 2026-11-26T22:00:14.950Z
+(run_id `agent15-gpt62-2026-11-26T22:00:14.950Z-u79-root-branch`).
+The previous 13:25 lease timestamp in older memory sections is historical;
+the current lease is the 22:00 claim.
+
+Derived a new exact-source candidate on the previously open branch
+u=79+80T: take T=2+8r, i.e. u=239+640r. The q=1 parent is
+Q=(1720951+4596480r, 9445113+25226880r), an odd/odd sum-16 target.
+The exact oddodd_sum16_blank_reach_iff gives two parents:
+P0=(5583030+14911680r, 7514070+20069280r) and
+P2=(1395756+3727920r, 9607704+25661160r).
+Both are even/even with sum 4 mod 8. Three exact six-even-right
+inverses from P0 reach (18732644+50032920r, 939257+2508660r);
+one from P2 reaches (11003458+29389080r, 4803851+12830580r).
+Both terminal states have odd right coordinate and sum 1 mod 4,
+so Agent11's source theorem blank_no_odd_sum_one excludes them.
+The existing generic U5 q=0 lift then excludes
+P(u)=(6924072+18493440r, 6843559+18278400r).
+
+Artifacts:
+- im-results/agent15-c-halting/U5Q0W7U79Mod640.lean
+- im-results/agent15-c-halting/U5Q0W7U79Mod640.md
+- communications/agent11/20261126T221053Z_agent15-u79-mod640-subcylinder.md
+- .github/workflows/agent11-c-diagonal-late.yml now has the named
+  u5_w7_u79_only target; no new workflow was created.
+
+Local Lean 4.36.0-rc2 arithmetic and proof-body syntax compiled against
+exact-signature stubs (not source validation). CI run #45
+(45903237550) reached the new theorem and failed only because the
+generic q=0 lift was referenced in the wrong namespace. Corrected it to
+BB6.Agent15U5W7U19Mod2560.w7_q0_target_unreachable_of_q1.
+CI run #46 (45903781364), at commit 006514587fa413c007777c69d2085b06bc4dd856,
+is the source-acceptance gate; inspect its final result and axiom output.
+If it passes, update the U5 README/source analysis from 12 to 13
+disjoint cylinders: the new branch contributes density 1/8 within
+u=79+80T, raising the lower-bound density among u=19 mod 20 from
+249/512 to 265/512. Remaining seven T mod 8 classes stay open.
+Do not call this a Machine C decision or BB(6) upper bound.
+
+Next actions: inspect run #46's first diagnostic if it fails; if it
+passes, update im-results/agent15-c-halting/README.md and
+U5Q0W7SourceParentAnalysis.md with the exact root-compatible subcylinder,
+then notify Agent11/Agent3. Continue research after checkpoint while
+the current lease age is below 70 minutes.
