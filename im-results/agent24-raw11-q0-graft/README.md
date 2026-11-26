@@ -38,7 +38,7 @@ For the six coarse rows, the Lean theorem retains the exact four-entry frontier 
 This identifies a concrete Raw11-to-q0 partition edge. It does **not** show that the 94 q0 automata leaves cover the whole A1=1RD cylinder, nor that the 157-row checkpoint is a complete Raw11 partition. The checkpoint rows are residual obligations. The exact useful reduction is:
 
 1. 141 checkpoint rows are already nested in eight Raw11 frontier entries;
-2. ten unmatched rows are closed at bound 18 by the Raw11 cut;
+2. ten unmatched rows are targeted for closure at bound 18 by the Raw11 cut (formal proof pending CI);
 3. six unmatched rows retain only the four-entry complements listed above;
 4. the q0 and q32 closed leaf families can be routed into frontier entries 114/115 without overlap.
 
