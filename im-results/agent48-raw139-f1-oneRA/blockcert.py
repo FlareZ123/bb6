@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 from functools import lru_cache
-def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phase=False,left_key=None):
+def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phase=False,left_key=None,raw_graph=False):
     alphabet=2**width
     moves=[None if n==24 else ((n>>1)&1,bool(n&1)!=flip,n>>2) for n in table]
     @lru_cache(None)
@@ -58,6 +58,8 @@ def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phas
         elif (q2,w,v) not in pending[l]:
             pending[l].add((q2,w,v))
             for l0,b in pred[l]:applyleft(l0,b,q2,w,v)
+    if raw_graph:
+        return 'safe',len(left),len(nodes),count,(left,nodes,dict(delta),dict(edges))
     zero={0};rev=defaultdict(list)
     for s,es in edges.items():
         for a,t in es:
