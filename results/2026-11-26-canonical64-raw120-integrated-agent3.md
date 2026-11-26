@@ -37,7 +37,7 @@ The final Lean module is im-results/agent3-tnf-raw120/Canonical64Raw120Integrate
 
 ## Source acceptance and reproducibility
 
-The final integrated consumer passed in [CI run 45750164590](https://github.com/FlareZ123/bb6/actions/runs/45750164590), at source revision 949fde331f10df81a968f157c622faa581597276. Its proof-closure artifact is raw120-canonical64-audit, artifact ID 15085029091, SHA-256 digest:
+The final integrated consumer passed in [CI run 45750164590](https://github.com/FlareZ123/bb6/actions/runs/45750164590), at source revision 949fde331f10df81a968f157c622faa581597276. Its final-root audit artifact is raw120-canonical64-audit, artifact ID 15085029091, SHA-256 digest:
 
 bb4fa3c190ab2a67e3f7c17f8e1c0f07c2215b282451a361501f8ff6c678d55b
 
