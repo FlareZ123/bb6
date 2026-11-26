@@ -57,10 +57,18 @@ def main():
         for l in open(f'rlehard{t}.txt'):
             a=list(map(int,l.split()));remaining.append(a)
     seeds={tuple(t):p for t,p in cfg.get('block',[])}
+    late={tuple(t):w for t,w in cfg.get('late',[])}
+    seen_late=set()
     for t in remaining:
+        if tuple(t) in late:
+            key=tuple(t); seen_late.add(key)
+            tag=t.index(0); path=Path(f'long{tag}.json')
+            obj=json.loads(path.read_text()); obj['out'].append([t,late[key]])
+            path.write_text(json.dumps(obj)); continue
         if tuple(t) not in seeds:
             seeds[tuple(t)]=block_discover(t)
         block.append([t,seeds[tuple(t)]])
+    assert seen_late=={t for t in late if t.index(0) in targets}
     # Reject stale or omitted seeds; target slices are independent.
     if args.target is None and 'block_count' in cfg:
         assert len(block)==cfg['block_count'], (len(block),cfg['block_count'])
