@@ -15,7 +15,6 @@ def block_source(i,t,data,flip):
     src=original_block_source(i,t,data).replace('BB6.Agent48F1OneRABlocks','BB6.Agent6E0ZeroRCBlocks')
     if data['width']==4:
         src=src.replace('BB6BlockFAR.','BB6BlockFAR4.')
-        src=src.replace('unfold BB6BlockFAR4.Data.rowsCheck','unfold BB6BlockFAR4.Data.rowsCheck')
     if flip:
         ns='BB6BlockFAR4' if data['width']==4 else 'BB6BlockFAR'
         src=src.replace('theorem same : ctr =','theorem same : BB6Coverage.FAR.reflectPartial ctr =')
@@ -139,6 +138,7 @@ def batch(out,names):
         deps=set(re.findall(r'^import (\w+)$',s,re.M));s=re.sub(r'^import \w+\n','',s,flags=re.M)
         if len(pending)>=12 or weight+len(s)>40000:flush()
         pending.append((n,s,deps));weight+=len(s)
+        if re.fullmatch(r'ZRCRoot\d\d',n):flush()
     flush()
     for n in names:
         if n not in result:(out/(n+'.lean')).unlink()
