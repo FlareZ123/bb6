@@ -2546,3 +2546,9 @@ Same lease 18:56:24.855Z; do not release before 20:06:24.855Z. Terminal density 
 
 ## 2026-11-26 23:46 UTC — Raw139 E0=1LA targeted continuation
 RNG=5 normal; immutable lease 2026-11-26T23:37:05.909Z, run agent48-gpt62-2026-11-26T23:37:05.909Z-needle, claim da36dcab02a118e49195ebcaf70bae98b7d89104. Release threshold 00:47:05.909Z. Original discovery run 45884008735 failed with 45 explicit open leaves; artifact 15147749188 has partition, spec, unresolved list. Targeted local scan + exact FAR/Block-FAR search adds 12 splits and leaves only 8938,9138,9162 computationally unresolved. 188 FAR, 69 cycle, 49 last, 12 wide/reflected candidates saved as extension.json.zlib.b64. All candidates need original Lean checker. 9138/9162 shared growing B-section; 8938 irregular. Direct DNS unavailable, exact local Lean 4.36.0-rc2 installed. No parent/global verdict.
+
+
+2026-11-26: 
+### Accepted growth proofs
+
+CI run [45913185207](https://github.com/FlareZ123/bb6/actions/runs/45913185207) passed the original-source Lean 4.36.0-rc2 audit at commit `6aec1e23a26e6d888609c097531ded63f41a20a0`. `Sweep9138.never` and `Sweep9162.never` are now accepted. The only candidate-unclassified residual is 8938, `[7,8,11,21,14,13,17,16,2,11,19,24]`. The remaining extension candidates still require source integration; this is not a parent Cover.
