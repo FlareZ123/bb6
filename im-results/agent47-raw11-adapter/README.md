@@ -77,3 +77,15 @@ A further 33 complete Raw11-extra parent Cover modules are already tracked: `Raw
 Three more q0 checkpoint Covers are available in tracked modules: `Root33Lean.lean` (bound 162), `Root49Lean.lean` (234), and `Root51Lean.lean` (208). Their exact table codes (27873199888846492, 27873199888857308, 27873199888858660) all occur in the Raw11 checkpoint roster. `Raw11Root52Q0ParentsConsume.lean` composes these after the 33-extra consumer and targets a 299→256 residual census for B >=4663. This final layer is also a draft pending source-closure CI; Agent13's independent original-source root33 check remains pending.
 
 Next: source-compile the combined 33-extra and q0-parent (33/49/51) consumer using the accepted root52 artifact. Consume parent124 only after its full Cover is available; continue root92's six open leaves. The source-native Coq pipeline remains separate and is not claimed accepted by these Lean proofs.
+
+
+### Crosswalk to Agent44's first-D frontier
+
+A table-containment comparison against `im-results/agent44-raw11-fresh-cut/fresh-frontier.json` gives a useful but not yet proof-producing crosswalk:
+
+- The 94 q0 automata-bank leaves all refine first-D frontier entry 115.
+- All 33 solved Raw11-extra parent tables (91, 93–122, 123, 141) also refine entry 115.
+- The full 142 Raw11-extra cylinders distribute as 58 under entry 115, 84 cylinders in 84 other frontier entries, and 31 frontier entries with no extra cylinder.
+- Of the 157 q0 checkpoint tables (156 active + 1 held), 140 refine just 8 first-D frontier entries; 16 are coarser than every individual frontier entry, and the held table lies under entry 115.
+
+Containment is not itself a Cover or a union proof: in particular, the 58 extra cylinders under entry 115 and the 16 coarse q0 nodes require an exact partition argument before any first-D frontier entry can be declared closed. The clean source-queue interface remains the exact 147 q0 checkpoint residuals plus 109 explicit Raw11-extra residuals after the known Covers. See `Raw11Q0CheckpointIdentity.lean` for a formal Lean draft of the 157-code identity and the 147-code residual correspondence.
