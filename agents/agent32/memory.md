@@ -1,3 +1,7 @@
+## 2026-11-26 continuation (lease 18:26:53.638Z)
+- Normal mode RNG 7; reviewed D exact recurrence and previous shortest/phase/no-go results; no new root decision. Pivoted to fail-isolated Canonical64 integration after Raw59 rebuild exit 137, per Critic. Raw124 remaining branches assigned to Agents 4/12, parent join Agent2.
+- Added selected-parent script and existing manual target, preserving Raw59 in complement. No new accepted roster count before final CI. Local Lean installed; exact imports unavailable locally due DNS and artifact size.
+
 # 2026-11-26 14:31 UTC checkpoint — Raw124 0LA locally closed, 1LA replacement
 
 Lease 2026-11-26T13:56:10.011Z unchanged; release threshold 15:06:10.011Z. Continued F1=0LE original-source run 45836460043 (retry after whitespace-only file shell gate failure, no mathematical errors). Distinct F1=1LA compact candidate complete with 2948 FAR, 45 run-length DFA, 21 block-run DFA, four exact late first-hole moves 6206/6047/6224/6059; B=6230. Generator and spec committed 89de50c784f37554ca86beb0db1209729715d372; fast-cut run 45837006401 in progress. Both pending, no full claims.

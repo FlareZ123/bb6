@@ -16,6 +16,7 @@ on:
           - raw83-membership-preflight
           - canonical63-raw115
           - canonical59-five-parent-batch
+          - canonical64-selected-parent-batch
           - canonical58-six-parent-batch
           - canonical57-raw83
           - canonical63-preflight
@@ -1136,6 +1137,45 @@ jobs:
             /tmp/a31-canonical59/membership-preflight.log
             /tmp/a31-canonical59/canonical59-five-parent.log
             /tmp/a31-canonical59.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+  canonical64-selected-parent-batch:
+    name: Integrate compatible accepted parent Covers into Canonical64
+    if: ${{ inputs.target == 'canonical64-selected-parent-batch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile fail-isolated selected parent consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent31-shared-core/assemble_canonical_selected.py
+          python im-results/agent31-shared-core/assemble_canonical_selected.py --work /tmp/a32-selected 2>&1 | tee /tmp/a32-selected.log
+          test -s /tmp/a32-selected/selected-integration.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical64-selected-parent-integrated
+          path: |
+            /tmp/a32-selected/linked
+            /tmp/a32-selected/generated
+            /tmp/a32-selected/*.json
+            /tmp/a32-selected/*.log
+            /tmp/a32-selected.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
