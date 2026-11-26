@@ -390,3 +390,9 @@ Release checkpoint 2026-11-25T18:17:01.279Z: coordination messages were sent to 
 - The repaired run `45790736514` completed source preparation, exact artifact downloads, and generated-input preservation successfully. Its parent compile/audit step 10 is in progress.
 - New resumable artifact: `raw118-parent-generated-inputs`, artifact ID `15103075786`, 273,840,118 bytes, created `2026-11-26T09:21:30Z`. This is the corrected generated-source snapshot from a source head containing the qualified Raw118 root; prefer it over older artifact `15093576212` if this run is interrupted.
 - No parent theorem acceptance yet; wait for the final `parent_cover` and `parent_exact` axiom audit.
+
+## 2026-11-26T09:35Z — fallback and namespace review
+
+- Static review confirms the ambiguity fix is narrowly targeted: `emit_accounted.py`'s generated shard namespace opens Agent31ThreeHole and Agent50TNFPilot in addition to Agent16Raw118; the only ambiguous root term was the initial `parent` passed to `go`. The generated consumer namespace opens Agent16Raw118 and Agent16ResidualCover, and ResidualAccounted defines no competing `parent`.
+- The 24-root fallback is documented in the Raw118 dossier, but the repository currently has only `.github/workflows/agent13-coverage.yml` and no per-root matrix/assembly target wired yet. If run `45790736514` fails or is interrupted, add the group and final-assembly targets to that existing manual workflow; do not create a new workflow and do not repeat source preparation.
+- `research/BOARD.md` now records the concrete namespace diagnosis, active retry, and corrected artifact `15103075786`. `im-results/agent16-raw118/README.md` also points its fallback at the corrected artifact and the 24 `Raw118CloseRoot_*` roots.
