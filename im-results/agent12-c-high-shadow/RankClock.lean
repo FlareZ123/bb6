@@ -193,4 +193,52 @@ theorem raw_halt_rank_bound (N : Nat) (h : BB6Coverage.HaltsAfter BB6.Agent47CRa
 #print axioms potential_rank
 #print axioms terminal_shape
 #print axioms raw_halt_rank_bound
+
+/-- Every literal halt has a genuine thin-gateway index; its exact terminal
+    rank is 8*(j+2). This converts the clock bound to an index cutoff. -/
+theorem raw_halt_gateway_bound (N : Nat)
+    (h : BB6Coverage.HaltsAfter BB6.Agent47CRaw.cMachine N) :
+    ∃ j : Nat, BB6CLine.Reach (0,2*j,4*j+10) ∧
+      6*(N+1)+204≤G (8*j+16) := by
+  obtain ⟨n,w,t,p,ht,hN⟩ := (BB6.Agent47CRaw.raw_haltsAfter_iff N).mp h
+  obtain ⟨j,hj⟩ := stops_iff_thin.mp ⟨t,BB6.Agent47CRaw.path_reach p BB6CLine.Reach.init,ht⟩
+  obtain ⟨l,v,q⟩ := BB6.Agent47CRaw.reach_path hj
+  have hterm : nextC (8*j+10,2,2)=none := rfl
+  have hpath := q.append (thin_tail_counted j)
+  have he := (p.terminal_unique ht hpath hterm).2.2
+  obtain ⟨u,hu,hbudget⟩ := raw_halt_rank_bound N h
+  obtain ⟨l',v',q'⟩ := BB6.Agent47CRaw.reach_path hu
+  have he' := (p.terminal_unique ht q' hbudget.1).2.2
+  rw [←he',he] at hbudget
+  refine ⟨j,hj,?_⟩
+  simpa [rankC,G] using hbudget.2
+
+/-- Any score above B must have a thin gateway beyond J whenever
+    the cubic budget at J is at most B. The user of the theorem only
+    needs to exclude large gateway indices, not compute smaller clocks. -/
+theorem above_bound_requires_large_gateway (B J N : Nat)
+    (hcut : G (8*J+16)≤6*B+204)
+    (h : BB6Coverage.HaltsAfter BB6.Agent47CRaw.cMachine N)
+    (hlarge : B<N+1) :
+    ∃ j : Nat, J<j ∧ BB6CLine.Reach (0,2*j,4*j+10) := by
+  obtain ⟨j,hj,hg⟩ := raw_halt_gateway_bound N h
+  refine ⟨j,?_,hj⟩
+  by_contra hn
+  have hm := G_mono (show 8*j+16≤8*J+16 by omega)
+  omega
+
+/-- Gateway-tail exclusion is sufficient for a literal BB-score bound. -/
+theorem raw_bound_of_gateway_tail (B J : Nat)
+    (hcut : G (8*J+16)≤6*B+204)
+    (hexcl : ∀ j : Nat, J<j → ¬ BB6CLine.Reach (0,2*j,4*j+10))
+    (N : Nat) (h : BB6Coverage.HaltsAfter BB6.Agent47CRaw.cMachine N) :
+    N+1≤B := by
+  by_contra hn
+  obtain ⟨j,hj,hr⟩ := above_bound_requires_large_gateway B J N hcut h (by omega)
+  exact hexcl j hj hr
+
+#print axioms raw_halt_gateway_bound
+#print axioms above_bound_requires_large_gateway
+#print axioms raw_bound_of_gateway_tail
+
 end BB6.Agent12RankClock
