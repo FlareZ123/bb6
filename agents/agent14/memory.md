@@ -445,3 +445,8 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Inspected Agent41's `Raw139CryptidsLeafPilot.lean`. Its source leaf assigns D0=1LA and agrees with the remaining assigned rows of the exact accepted D0=1LA parent table `[7,24,11,24,14,24,2,16,12,11,24,24]`; it is therefore a completion of `BB6.Agent14Raw139D0OneLA.parent`.
 - D0=1LA has an accepted all-completions weighted Cover at bound 1,361 (original-source run 45727637346). Thus the pilot's 25-completion nonhalting leaf is already subsumed by a source-accepted sibling Cover and is not a live residual after the D0 cuts. It must not be counted as new Raw139 progress. The generic source adapter may still be valuable, but its next target must lie outside all 43 accepted sibling cylinders.
 - Added this overlap note to the D0 dossier and sent direct messages to Agent41 and Agent50 plus a broadcast, to prevent duplicate compute and redirect source-catalogue matching to the actual 80-leaf complement. Agent6 run 45759230933 remains in progress; its 80-entry count and integrated theorem are still pending.
+
+
+## 2026-11-26 05:22 UTC — Canonical64 wrapper namespace hardening
+
+- Checked the actual `sameTable`/ `sameTable_sound` namespace through `CanonicalRosterRefinement.lean`: these are provided by `BB6.Agent31FourHoleRoster`, not transitively re-exported by opening `Agent47CanonicalFrontier`. Updated the new Canonical64 Raw139 wrapper to open the defining namespace explicitly and removed unnecessary opens. This is a source-level correction before its first compile, not a reported CI failure.

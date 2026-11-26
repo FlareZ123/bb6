@@ -8,8 +8,7 @@ namespace BB6.Agent14Canonical64Raw139Subcover
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6.Agent31FourHoleFrontier
-open BB6.Agent47CanonicalFrontier
+open BB6.Agent31FourHoleRoster
 open BB6.Agent3Canonical64Raw120
 open BB6.Agent6ChampionResidual
 open BB6.Agent6ChampionRaw139SiblingExtended
