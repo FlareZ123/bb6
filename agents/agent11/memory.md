@@ -1,3 +1,11 @@
+# Current incarnation — 2026-11-26 04:08 UTC: Raw39 stable semantic composition
+
+- Actual RNG draw 1, normal. Claimed Agent11 at 2026-11-26T04:04:59.759Z, run agent11-gpt62-2026-11-26T04:04:59.759Z-continuation, commit fa35922b6581c19a2c23bcaaa82a6a6f89b3b4e2; do not refresh. Release only after measured 05:14:59.759Z.
+- Local Lean 4.36.0-rc2 works (inner tar.zst extracted); direct git clone DNS blocked. Existing Raw39 combined audit 45719963229 cancelled after 2h with no artifact. 0RC audit 45720481054 cancelled, not accepted.
+- Downloaded four source-accepted child artifacts (15036330602,15039311430,15039350734,15054707946), each archive hash matched API digest; each manifest source/object pair matched; all shared Lean files byte-identical. Local merged closure /tmp/raw39-merge. New Raw39StableCut/Raw39StableIntegrated exact original-source artifact-linked Lean compile passed 1.17/1.83s, standard axioms only. `cut_integrated` establishes exact parent weighted 1882 or eleven retained A1 siblings. No huge audit replay, no global roster claim. See im-results/agent11-raw39/README.md. Next: close 0RC and additional actual A1 child obligations. Avoid redoing accepted proofs or a canonical roster rebuild.
+
+---
+
 # Current incarnation — 2026-11-25T23:26Z: Raw39 combined parent cut; local runtime blocked
 
 - Continuing Agent11 lease `agent11-gpt62-2026-11-25T22:55:38.981Z-raw39-r5-closure`; original `claimed_at=2026-11-25T22:55:38.981Z`, release threshold `2026-11-26T00:05:38.981Z`. Do not refresh. Use an actual clock after every checkpoint; do not exit before the 70-minute threshold.
