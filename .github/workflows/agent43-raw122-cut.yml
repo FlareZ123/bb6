@@ -387,20 +387,33 @@ jobs:
         run: python im-results/agent43-raw122-cut/assemble_branch00.py
       - name: Persist 0LA assembly evidence in im-results
         run: |
-          DEST="im-results/agent43-raw122-cut/branch00-assembly"
-          mkdir -p "$DEST"
-          cp /tmp/a43-output/Raw122Roster00* "$DEST/"
-          cp /tmp/a43-output/Raw122Recovered00.lean /tmp/a43-output/Raw122Branch00.lean "$DEST/"
-          cp /tmp/a43-output/proof-metadata.json /tmp/a43-output/Lean-axioms.txt /tmp/a43-output/manifest.json "$DEST/"
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$DEST"
-          if ! git diff --cached --quiet; then
-            git commit -m "Agent 43: preserve Raw122 0LA assembly evidence"
+          for delay in 0 5 10; do
+            sleep "$delay"
             git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
-          fi
+            git reset --hard origin/main
+            git clean -fd
+            DEST="im-results/agent43-raw122-cut/branch00-assembly"
+            rm -rf "$DEST"
+            mkdir -p "$DEST"
+            cp /tmp/a43-output/Raw122Roster00* "$DEST/"
+            cp /tmp/a43-output/Agent29Raw122Indexed* "$DEST/"
+            cp /tmp/a43-output/Raw122D15* /tmp/a43-output/Raw122Direct15* "$DEST/"
+            cp /tmp/a43-output/Raw122Recovered00.lean /tmp/a43-output/Raw122Branch00.lean "$DEST/"
+            cp /tmp/a43-output/proof-metadata.json /tmp/a43-output/Lean-axioms.txt /tmp/a43-output/manifest.json "$DEST/"
+            git add "$DEST"
+            if git diff --cached --quiet; then
+              echo "No new 0LA evidence to persist."
+              exit 0
+            fi
+            git commit -m "Agent 43: preserve Raw122 0LA child Cover"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-branch00-assembly
@@ -541,20 +554,31 @@ jobs:
         run: python im-results/agent43-raw122-cut/assemble_branches16_17.py
       - name: Persist both child Covers in im-results
         run: |
-          DEST16="im-results/agent43-raw122-cut/branch16-assembly"
-          DEST17="im-results/agent43-raw122-cut/branch17-assembly"
-          mkdir -p "$DEST16" "$DEST17"
-          cp /tmp/a43-output/branch16-assembly/* "$DEST16/"
-          cp /tmp/a43-output/branch17-assembly/* "$DEST17/"
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$DEST16" "$DEST17"
-          if ! git diff --cached --quiet; then
-            git commit -m "Agent 43: preserve Raw122 1LE and 1LF child Covers"
+          for delay in 0 5 10; do
+            sleep "$delay"
             git fetch origin main
-            git rebase origin/main
-            git push origin HEAD:main
-          fi
+            git reset --hard origin/main
+            git clean -fd
+            DEST16="im-results/agent43-raw122-cut/branch16-assembly"
+            DEST17="im-results/agent43-raw122-cut/branch17-assembly"
+            rm -rf "$DEST16" "$DEST17"
+            mkdir -p "$DEST16" "$DEST17"
+            cp /tmp/a43-output/branch16-assembly/. "$DEST16/"
+            cp /tmp/a43-output/branch17-assembly/. "$DEST17/"
+            git add "$DEST16" "$DEST17"
+            if git diff --cached --quiet; then
+              echo "No new 1LE/1LF evidence to persist."
+              exit 0
+            fi
+            git commit -m "Agent 43: preserve Raw122 1LE and 1LF child Covers"
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+          done
+          exit 1
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-branches16-17-covers
