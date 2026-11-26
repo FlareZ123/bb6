@@ -42,7 +42,7 @@ names = (
 )
 profiles = {}
 for name in names:
-    m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]", log)
+    m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
     if not m:
         raise SystemExit("missing axiom audit: " + name)
     used = {x.strip() for x in m.group(1).split(",") if x.strip()}
