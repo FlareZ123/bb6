@@ -1,0 +1,38 @@
+[lean-closure] reused 1135 dependency-closed module(s) from source revisions ['2bd0b06a415f5a0a63b8e2890cf7316376287a75']
+[lean-closure] level 1: 1 module(s)
+[lean-closure] compiling Raw122ResidualCompose <- im-results/agent43-raw122-cut/Raw122ResidualCompose.lean
+'BB6.Agent43Raw122ResidualCompose.cover_of_good' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122ResidualCompose.never_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 2: 24 module(s)
+[lean-closure] compiling Raw122Roster00Kid00 <- /tmp/a43-generated/Raw122Roster00Kid00.lean
+[lean-closure] compiling Raw122Roster00Kid01 <- /tmp/a43-generated/Raw122Roster00Kid01.lean
+[lean-closure] compiling Raw122Roster00Kid02 <- /tmp/a43-generated/Raw122Roster00Kid02.lean
+[lean-closure] compiling Raw122Roster00Kid03 <- /tmp/a43-generated/Raw122Roster00Kid03.lean
+[lean-closure] compiling Raw122Roster00Kid04 <- /tmp/a43-generated/Raw122Roster00Kid04.lean
+[lean-closure] compiling Raw122Roster00Kid05 <- /tmp/a43-generated/Raw122Roster00Kid05.lean
+[lean-closure] compiling Raw122Roster00Kid06 <- /tmp/a43-generated/Raw122Roster00Kid06.lean
+[lean-closure] compiling Raw122Roster00Kid07 <- /tmp/a43-generated/Raw122Roster00Kid07.lean
+[lean-closure] compiling Raw122Roster00Kid08 <- /tmp/a43-generated/Raw122Roster00Kid08.lean
+[lean-closure] compiling Raw122Roster00Kid09 <- /tmp/a43-generated/Raw122Roster00Kid09.lean
+[lean-closure] compiling Raw122Roster00Kid10 <- /tmp/a43-generated/Raw122Roster00Kid10.lean
+[lean-closure] compiling Raw122Roster00Kid11 <- /tmp/a43-generated/Raw122Roster00Kid11.lean
+[lean-closure] compiling Raw122Roster00Kid12 <- /tmp/a43-generated/Raw122Roster00Kid12.lean
+[lean-closure] compiling Raw122Roster00Kid13 <- /tmp/a43-generated/Raw122Roster00Kid13.lean
+[lean-closure] compiling Raw122Roster00Kid14 <- /tmp/a43-generated/Raw122Roster00Kid14.lean
+[lean-closure] compiling Raw122Roster00Kid15 <- /tmp/a43-generated/Raw122Roster00Kid15.lean
+[lean-closure] compiling Raw122Roster00Kid16 <- /tmp/a43-generated/Raw122Roster00Kid16.lean
+[lean-closure] compiling Raw122Roster00Kid17 <- /tmp/a43-generated/Raw122Roster00Kid17.lean
+[lean-closure] compiling Raw122Roster00Kid18 <- /tmp/a43-generated/Raw122Roster00Kid18.lean
+[lean-closure] compiling Raw122Roster00Kid19 <- /tmp/a43-generated/Raw122Roster00Kid19.lean
+[lean-closure] compiling Raw122Roster00Kid20 <- /tmp/a43-generated/Raw122Roster00Kid20.lean
+[lean-closure] compiling Raw122Roster00Kid21 <- /tmp/a43-generated/Raw122Roster00Kid21.lean
+[lean-closure] compiling Raw122Roster00Kid22 <- /tmp/a43-generated/Raw122Roster00Kid22.lean
+[lean-closure] compiling Raw122Roster00Kid23 <- /tmp/a43-generated/Raw122Roster00Kid23.lean
+[lean-closure] level 3: 1 module(s)
+[lean-closure] compiling Raw122Roster00 <- /tmp/a43-generated/Raw122Roster00.lean
+'BB6.Agent43Raw122Roster.cover00' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 4: 1 module(s)
+[lean-closure] compiling Raw122Recovered00 <- /tmp/a43-generated/Raw122Recovered00.lean
+'BB6.Agent43Raw122Recovered00.residual_count' depends on axioms: [propext]
+[lean-closure] SUCCESS: compiled 1162 project modules from 1 root(s) into /tmp/a43-final
+[lean-closure] wrote manifest for 1162 modules to /tmp/a43-final/manifest.json
