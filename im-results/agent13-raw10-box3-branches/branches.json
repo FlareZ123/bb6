@@ -1,4 +1,130 @@
 {
+  "3": {
+    "bound": 2906,
+    "steps": 2904,
+    "delay": 1,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      3,
+      20,
+      6,
+      24,
+      17,
+      2,
+      0
+    ],
+    "rle_first": true,
+    "block_count": 52
+  },
+  "6": {
+    "bound": 11903,
+    "steps": 11902,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      6,
+      10,
+      18,
+      24,
+      5,
+      4,
+      0
+    ],
+    "rle_first": true,
+    "block_count": 64
+  },
+  "7": {
+    "bound": 6247,
+    "steps": 6245,
+    "delay": 1,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      7,
+      2,
+      4,
+      16,
+      21,
+      19,
+      0
+    ],
+    "rle_first": true,
+    "block_count": 34
+  },
+  "8": {
+    "bound": 7307,
+    "steps": 7305,
+    "delay": 1,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      8,
+      2,
+      4,
+      16,
+      21,
+      19,
+      0
+    ],
+    "rle_first": true,
+    "block_count": 35
+  },
+  "11": {
+    "bound": 9265,
+    "steps": 9264,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      11,
+      4,
+      15,
+      15,
+      21,
+      0,
+      13
+    ],
+    "rle_first": true,
+    "block_count": 66
+  },
+  "12": {
+    "bound": 2725,
+    "steps": 2724,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      12,
+      0,
+      4,
+      20,
+      22,
+      3,
+      4
+    ],
+    "rle_first": true,
+    "block_count": 1
+  },
   "14": {
     "bound": 1230,
     "steps": 1228,
@@ -67,6 +193,69 @@
         ]
       ]
     ]
+  },
+  "15": {
+    "bound": 1530,
+    "steps": 1529,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      15,
+      5,
+      0,
+      20,
+      23,
+      8,
+      22
+    ],
+    "rle_first": true,
+    "block_count": 11
+  },
+  "16": {
+    "bound": 349,
+    "steps": 348,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      16,
+      0,
+      10,
+      23,
+      19,
+      12,
+      24
+    ],
+    "rle_first": true,
+    "block_count": 3
+  },
+  "17": {
+    "bound": 3875,
+    "steps": 3874,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      17,
+      4,
+      14,
+      15,
+      21,
+      7,
+      0
+    ],
+    "rle_first": true,
+    "block_count": 30
   },
   "18": {
     "bound": 800,
@@ -281,6 +470,27 @@
       ]
     ]
   },
+  "19": {
+    "bound": 2715,
+    "steps": 2714,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      19,
+      0,
+      20,
+      24,
+      2,
+      15,
+      5
+    ],
+    "rle_first": true,
+    "block_count": 14
+  },
   "20": {
     "bound": 413,
     "steps": 412,
@@ -373,5 +583,68 @@
         ]
       ]
     ]
+  },
+  "22": {
+    "bound": 582,
+    "steps": 581,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      22,
+      21,
+      14,
+      24,
+      0,
+      4,
+      15
+    ],
+    "rle_first": true,
+    "block_count": 6
+  },
+  "23": {
+    "bound": 1889,
+    "steps": 1888,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      23,
+      0,
+      4,
+      4,
+      18,
+      20,
+      17
+    ],
+    "rle_first": true,
+    "block_count": 64
+  },
+  "24": {
+    "bound": 2551,
+    "steps": 2550,
+    "delay": 0,
+    "witness": [
+      8,
+      14,
+      11,
+      7,
+      17,
+      24,
+      0,
+      4,
+      20,
+      15,
+      7,
+      24
+    ],
+    "rle_first": true,
+    "block_count": 3
   }
 }
