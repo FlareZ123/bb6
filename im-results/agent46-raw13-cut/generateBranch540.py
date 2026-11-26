@@ -66,10 +66,11 @@ def main():
         name=MODULE+"Kid"+tag
         mods.append(name)
         p=f"next {move(MOVES[i])}"
-        decl=checked_subtree(k,tag,p,max(4,i%6+1),B,emit)
-        write(name,[MODULE+"Base",MODULE+"Auto"],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut 4 {move(MOVES[i])}) kid{tag} = true := ok{tag}\n")
+        decl=checked_subtree(k,tag,p,max(4,i%6+1),B,emit,complete=True)
+        write(name,[MODULE+"Base",MODULE+"Auto","Agent46CompleteCut"],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut 4 {move(MOVES[i])}) kid{tag} = true := ok{tag}\ntheorem closed{tag} : closedCut (nextCut 4 {move(MOVES[i])}) kid{tag} = true := complete{tag}\n")
     terms=",".join(f"kid{i:02}" if tree[3][i] is not None else ".unresolved" for i in range(24))
     cases="\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(5),range(2),range(2)))
+    ccases = cases.replace("exact checked", "exact closed")
     write(MODULE,mods,f"""
 def kids : Move → Cut := byCutMove [{terms}]
 theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 4) :
@@ -94,7 +95,25 @@ theorem parent_checked : check {B} parent 4 parentCut = true := by
   · simp [h,kids_checked mv h]
   · simp [h]
 
-theorem empty_complement : residuals parent 4 parentCut = [] := by decide
+theorem kids_closed (mv : Move) (hv : mv.next.val ≤ 4) :
+    closedCut (nextCut 4 mv) (kids mv) = true := by
+  rcases mv with ⟨w,r,q⟩
+  change q.val ≤ 4 at hv
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+{ccases}
+
+theorem parent_closed : closedCut 4 parentCut = true := by
+  simp only [parentCut,closedCut]
+  apply BB6.Agent31ThreeHole.allMoves_of
+  intro mv
+  by_cases hv : mv.next.val ≤ 4
+  · simp [hv,kids_closed mv hv]
+  · simp [hv]
+
+theorem empty_complement : residuals parent 4 parentCut = [] :=
+  residuals_empty_of_closedCut parent_closed
 
 theorem bound (m : Machine) (hm : compatible parent m) : WeightedBound {B} m := by
   rcases sound {B} parent 4 parentCut (by decide) parent_support (by decide)
