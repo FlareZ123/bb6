@@ -36,6 +36,7 @@ function sourceMitmCert(table,L,R){
 const {encodeCert}=require("./q0-direct-auto.cjs");
 const moves=Array.from("ABCDEF").flatMap(q=>Array.from("01").flatMap(w=>Array.from("LR").map(d=>w+d+q)));
 const rootId=Number(process.argv[2]);
+if(rootId>=55&&rootId<=58){require('./q0-periodic-parent.cjs').main(rootId,process.argv[3]||'Agent5Q0AutoData.v');process.exit(0);}
 const scan=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-open-root-scan-2026-11-26.json")));
 const data=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-export/pilot-0-100-fuel-1000000.json")));
 const certs=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-open-automata.json")));

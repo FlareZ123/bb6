@@ -12,6 +12,19 @@ function solve(table,k,kind,mirror,limit=100000,cap=2,depth=2){
  const push=(l,a)=>{let key=2*l+a;if(delta.has(key))return delta.get(key);let x=left[l],y;
  // Compress runs of lag-period discrepancies, retaining the last lag bits.
  if(!x.length&&!a)y=[];
+ else if(kind.startsWith("blk")){
+   // Block alignment is measured from the first nonblank push. Retain
+   // partial block and a bounded run history of complete blocks.
+   const width=+kind.slice(3),part=x.length?x[0]:[],runs=x.slice(1),ps=[...part,a];
+   if(ps.length<width)y=[ps,...runs];
+   else {
+     const v=ps.reduce((n,b)=>2*n+b,0);
+     const rs=runs.length&&runs[0][0]===v
+       ?[[v,Math.min(cap,runs[0][1]+1),(runs[0][2]+1)%k],...runs.slice(1)]
+       :[[v,1,1%k],...runs.slice(0,depth-1)];
+     y=[[],...rs];
+   }
+ }
  else if(kind.startsWith("lag")){
    const lag=+kind.slice(3),hist=x.length?x[0]:Array(lag).fill(0),runs=x.slice(1),e=Number(a!==hist[lag-1]);
    const ys=runs.length&&runs[0][0]===e
@@ -73,6 +86,9 @@ function searchPeriodic(table){
  }
  for(const lag of [3,2,4,5,6])for(const depth of [1,2,3])for(const cap of [1,2,3])for(const k of [1,2,3,4,5,6,7,8])for(const mirror of [false,true]){
    c=solve(table,k,"lag"+lag,mirror,100000,cap,depth);if(c)return c;
+ }
+ for(const width of [3,4,2,5,6,7,8])for(const depth of [1,2,3])for(const cap of [1,2,3])for(const k of [1,2,3,4,5,6])for(const mirror of [false,true]){
+   c=solve(table,k,"blk"+width,mirror,100000,cap,depth);if(c)return c;
  }
  return null;
 }

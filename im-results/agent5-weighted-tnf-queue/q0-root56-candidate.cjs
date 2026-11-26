@@ -1,7 +1,8 @@
 'use strict';
 const fs = require('node:fs');
 const path = require('node:path');
-const {classify, bank, pairs, mitmPair} = require('./coarse-pair.cjs');
+const {classify, mitmPair} = require('./coarse-pair.cjs');
+const {bank,pairs} = require('./q0-periodic-parent.cjs');
 const {solve} = require('./q0-open-automata.cjs');
 const moves = Array.from('ABCDEF').flatMap(q => Array.from('01').flatMap(w => Array.from('LR').map(d => w+d+q)));
 const root = require('./q0-export/pilot-0-100-fuel-1000000.json').active[56];
