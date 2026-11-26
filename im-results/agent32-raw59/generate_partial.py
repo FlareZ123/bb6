@@ -47,7 +47,7 @@ MACROS="""0LB 693 001213333 6
 1LB 469 00123224022 8
 1LE 1118 00100 8
 1LE 1234 00123224101 6""".splitlines()
-CHUNK=240
+CHUNK=32  # keep each decidable audit fragment small enough for Lean's recursion budget
 B=7014
 
 def late_hole(table, limit):
