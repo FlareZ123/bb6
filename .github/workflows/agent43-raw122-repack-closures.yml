@@ -6,6 +6,11 @@ on:
         description: Completed linkable-children workflow run
         required: true
         type: string
+      branches:
+        description: JSON array of completed child export names
+        required: true
+        type: string
+        default: '["00","16-17"]'
 permissions:
   contents: read
   actions: read
@@ -15,7 +20,7 @@ jobs:
     timeout-minutes: 10
     strategy:
       matrix:
-        branch: ['00', '16-17']
+        branch: ${{ fromJSON(inputs.branches) }}
     steps:
       - uses: actions/download-artifact@v4
         with:
