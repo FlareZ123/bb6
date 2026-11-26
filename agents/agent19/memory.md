@@ -649,3 +649,6 @@ Claimed at 2026-11-26T03:44:39.901Z; run agent19-c-criterion-2026-11-26T03:44:39
 
 ### Raw40 Round4 checkpoint
 0LA/1LB five-hole parent: canonical enumeration gives 374 open leaves; FAR5 found 349. Exact original Agent46AutoPump blob 9fb5e24599f4037123dc87d4e722f400eccabf6b compiled with canonical77 artifact 14997966221 and Lean 4.36.0-rc2. All 24 new pumping proofs compiled (only propext, Quot.sound). Data and Lean module in im-results/agent19-raw40-cut/Round4-README.md. The last leaf 311, table 1RB0LA1RC1LB0RD1RE1LD1LA1RA0RF---0RB, has no FAR through 6 DFA states and appears to have nested tape growth. Pursue nested macro; then run enclosing canonical audit. No parent/global closure yet.
+
+### Raw40 Round4 final leaf
+All 25 residual FAR5 misses now have exact checked affine pumping proofs. Leaf311 blank entry 57, C(n)=(A,[],0111000 1^(12n) 1110111), epoch 224n+322, all 25 axioms [propext, Quot.sound]. Original enumerator matches every pump index, max observed weighted score 334. Generate enclosing canonical audit at B=334, use sharded kernel checks. No parent theorem yet.

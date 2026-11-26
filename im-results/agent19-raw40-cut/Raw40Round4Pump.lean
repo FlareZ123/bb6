@@ -367,6 +367,31 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 end Leaf310
 
 
+namespace Leaf311
+-- 1RB0LA1RC1LB0RD1RE1LD1LA1RA0RF---0RB
+def table : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true => some (some ⟨false,false,0⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true => some (some ⟨true,false,1⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 2,true => some (some ⟨true,true,4⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true => some (some ⟨true,false,0⟩)
+  | 4,false => some (some ⟨true,true,0⟩)
+  | 4,true => some (some ⟨false,true,5⟩)
+  | 5,true => some (some ⟨false,true,1⟩)
+  | _,_ => none
+
+def cert : Cert := ⟨57, ⟨0, .lit [], .periodic [false,true,true,true,false,false,false] [true,true,true,true,true,true,true,true,true,true,true,true] (.lit [true,true,true,false,true,true,true])⟩, 1,
+  List.replicate 12 Action.step ++ [.right [true,false] [true,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] [false,true,true,false,true,true,false,true,true,false,true,true] (.lit [true,true,true]) (.lit [true,true,true,false,true,true,true]) 20] ++ List.replicate 15 Action.step ++ [.left [true,true,true,false,true,true,false,true,true] [] [false,true,true,false,true,true,false,true,true,false,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] (.lit [true,true,true]) (.lit [false,true,true]) 36] ++ List.replicate 43 Action.step ++ [.right [true,false] [true,true,true,true,true,true,true,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] [false,true,true,false,true,true,false,true,true,false,true,true] (.lit [true,true,true]) (.lit [false,true,true]) 20] ++ List.replicate 20 Action.step ++ [.left [true,true,true,false,true,true,false,true,true,false,true,true] [] [false,true,true,false,true,true,false,true,true,false,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] (.lit [true,true,true]) (.lit [false,true]) 36] ++ List.replicate 52 Action.step ++ [.right [true,false] [true,true,true,true,true,true,true,true,true,true,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] [false,true,true,false,true,true,false,true,true,false,true,true] (.lit [true,true,true]) (.lit [false,true]) 20] ++ List.replicate 25 Action.step ++ [.left [true,true,true,false,true,true,false,true,true,false,true,true,false,true,true] [] [false,true,true,false,true,true,false,true,true,false,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] (.lit [true,true,true]) (.lit [false]) 36] ++ List.replicate 61 Action.step ++ [.right [true,false] [true,true,true,true,true,true,true,true,true,true,true,true,true,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] [false,true,true,false,true,true,false,true,true,false,true,true] (.lit [true,true,true]) (.lit [false]) 20] ++ List.replicate 36 Action.step ++ [.left [true,true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true,true] [] [false,true,true,false,true,true,false,true,true,false,true,true] [true,true,true,true,true,true,true,true,true,true,true,true] (.lit [true,true,true]) (.lit [false,true,true,true]) 36] ++ List.replicate 58 Action.step, 224, 322⟩
+theorem checked : check table cert = true := by decide +kernel
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  check_never table cert checked m hm
+#print axioms never
+end Leaf311
+
 namespace Leaf312
 -- 1RB0LA1RC1LB0RD1RE1LD1LA1RB0RF---0RB
 def table : PartialMachine := fun s =>
