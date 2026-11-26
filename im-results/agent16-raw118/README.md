@@ -57,3 +57,12 @@ The other source-audited mechanisms and original run IDs are preserved in the [p
 `discover.py` regenerates the enumeration and candidate partitions. Newline-terminated `open.txt` SHA256: `00b82e8ded916fb719ebfd627d29da4bbf86659039b3b7889ff60a3f9ae396f9`. Tree JSON SHA256: `3d6425a04241b88e96a79f6ebc523592ad64b391cc114597e57831454291d8b5`. Use `generate_partial.py`, `emit_consumer.py --accounted`, [ResidualAccounted.lean](ResidualAccounted.lean) and [emit_accounted.py](emit_accounted.py) for the in-place subtree accounting proof. The existing manual workflow `agent13-coverage.yml` has target `weighted-tnf-raw118-consumer` with inputs `raw118_sparse_run_id=45706919905`, `raw118_wide_run_id=45667306290`, `raw118_wide_repair_run_id=45672887654`. Its conditional cut target is `weighted-tnf-raw118-canonical-cut`.
 
 Next gate: finish the original-source unconditional parent Cover and exact-score audit. If it succeeds, consume it in the strongest accepted canonical roster. No global BB(6) conclusion is asserted.
+
+
+## 26 November 2026 update: parent Cover remains open; Canonical64 is the current base
+
+The generic conditional cut in [Raw118CanonicalCut.lean](Raw118CanonicalCut.lean) was source-accepted in [run 45737177344](https://github.com/FlareZ123/bb6/actions/runs/45737177344), artifact 15079342035. It proves the roster-cut composition conditionally on a Raw118 parent Cover; it does **not** establish that Cover.
+
+The full parent assembly [run 45736775052](https://github.com/FlareZ123/bb6/actions/runs/45736775052) was cancelled at 02:35:44Z and uploaded no artifacts. Therefore Raw118 remains an open parent, despite the accepted generic cut. Do not report Raw118 as closed from run 45737177344.
+
+The strongest accepted base is now the [Canonical64 Raw120 integration](../../results/2026-11-26-canonical64-raw120-integrated-agent3.md), source-accepted in [run 45750164590](https://github.com/FlareZ123/bb6/actions/runs/45750164590), artifact 15085029091. Raw118 can be applied to that exact roster once its parent Cover passes: prove the unique Raw118 membership in Canonical64, use the generic sound cut, and compose on whichever 63-residual parent cut is accepted first (Raw112 or Raw59). Avoid presenting competing 63-residual frontiers.
