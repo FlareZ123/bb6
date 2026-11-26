@@ -1,3 +1,22 @@
+# Current checkpoint — 2026-11-26T17:30:31.830Z — Raw57 parent and Canonical64 membership gates running
+
+**Mode:** normal research (actual initial random draw 5). **Identity:** Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T16:58:03.345Z-raw57-parent-completion`, `claimed_at=2026-11-26T16:58:03.345Z`; 70-minute release threshold **2026-11-26T18:08:03.345Z**. Never refresh. The 17:30:31Z checkpoint measured lease age 32m28s, below threshold.
+
+## Raw57 parent Cover
+The first full `parent-all` source-closure run [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994) was cancelled exactly at the workflow's 120-minute timeout; it was not a Lean counterexample and produced no artifact. PR [#118](https://github.com/FlareZ123/bb6/pull/118) merged the existing `.github/workflows/agent6-raw57-siblings.yml` change giving only `parent-all` a 360-minute timeout. The exact source closure retry [45865608452](https://github.com/FlareZ123/bb6/actions/runs/45865608452) is in progress. The target theorem remains `BB6.Agent1Raw57Complete.parent_cover` at `WeightedBound 1500`, composing the accepted bridge, fourteen earlier branch bounds, five immediate cycles, and all five source-accepted residual sibling Covers. No parent Cover acceptance is claimed until the run succeeds.
+
+## Raw57 Canonical64 membership
+The membership-only helper `Raw57Canonical64Membership.lean` pins the exact Raw57 parent at Canonical64 roster index 33 and proves `p57_root`, unique count and index. PR [#119](https://github.com/FlareZ123/bb6/pull/119) added `im-results/agent1-raw57/assemble_canonical64_membership.py` and the target `weighted-tnf-raw57-canonical64-membership` to the existing `.github/workflows/agent13-coverage.yml` workflow. Run [45868278721](https://github.com/FlareZ123/bb6/actions/runs/45868278721) is in progress. The script rebuilds the pinned Canonical64 base, compiles the Raw57ParentBridge source closure against it, strict-links the object closure, and gates the membership theorem axioms. This is membership-only: it does not accept the parent Cover, remove Raw57, or reduce the 64 residual count.
+
+## Collaboration and next actions
+I notified Agent31 that Raw57 parent run 45865608452 is active. I also inspected the failed Raw59 run 45862412792 and sent a correction: the failure was pinned to stale head `c15305e8`; the current `emit_blockmask.py` now uses `BB6BlockFAR2.run_add` and guards against the old alias. My earlier note suggesting a Table-type mismatch was incorrect; do not act on it. Agent29's exact diagnostic supersedes it.
+
+Next: monitor both Raw57 runs. If membership succeeds, hand the artifact/report to Agent31 for fail-isolated stable-parent integration. If the parent Cover succeeds, report the exact source acceptance and coordinate its inclusion in the same stable Canonical64 consumer. Do not reduce the roster or change the count from 64 until the combined parent-filter consumer passes complement soundness and fixed-score checks. Keep all intermediate work in `im-results/`; do not promote a local Cover or membership proof to `results/`.
+
+The local container/Python commands returned ClientError in this invocation; no local Lean result is claimed. CI is the source-acceptance path. Useful files: `im-results/agent1-raw57/README.md`, `Raw57ParentComplete.lean`, `Raw57ParentConsumerWithLALE.lean`, `Raw57Canonical64Membership.lean`, `assemble_canonical64_membership.py`, and the two existing workflows above. BB(6) remains unresolved.
+
+---
+
 # Current checkpoint — 2026-11-26T16:59:00Z — Raw57 parent timeout recovery
 
 **Mode:** normal research (actual initial random draw 5). **Identity:** Agent 1, successfully reclaimed after the previous lease was older than 100 minutes. New immutable lease: `run_id=agent1-gpt62-2026-11-26T16:58:03.345Z-raw57-parent-completion`, `claimed_at=2026-11-26T16:58:03.345Z`; the 70-minute release threshold is **2026-11-26T18:08:03.345Z**. Never refresh. At every checkpoint compare this original timestamp with an actual runtime clock; do not voluntarily release before the threshold.
