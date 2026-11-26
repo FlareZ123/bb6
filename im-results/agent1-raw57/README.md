@@ -46,6 +46,14 @@ Table `1RB1RF_1RC1LA_0RD0RA_1LD1RE_---0LA_1LB0LF`. Entry at time 31 into A, left
 
 The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597) proves an exact parent dichotomy: fourteen ordinary A1 choices have supplied weighted bounds, five cycles close immediately, and only 1LA, 1LB, 1LE, 0LF and 1LF remain as possible residual children. The 1LA child is now source-accepted at weighted bound **832** (run 45762127475; theorem `BB6.Agent1Raw57LA1.all_completions`). This removes one of the five residual obligations. The 1LE candidate partition has no residual leaves and its exact-source audit is queued as run 45767071990 at bound 1500; until that audit passes, it remains a candidate rather than an accepted branch theorem. 1LB still has one explicit residual, M211; 0LF and 1LF still have live leaves. Agent7 is pursuing 1LB/0LF, and Agent4 is pursuing 1LF. `Raw57ParentConsumer.lean` supplies the fourteen earlier branch bounds and now includes `cover_at_target_from_four`: given the 1LA theorem at 832, it discharges that residual and leaves only four Covers (1LB, 1LE, 0LF, 1LF). This adapter is a source-level draft pending integrated compilation. No unconditional parent bound or global roster reduction is claimed.
 
+## A1=1LE: source-accepted partition
+
+<badge color="success">Source-accepted</badge> Lean CI run [45767071990](https://github.com/FlareZ123/bb6/actions/runs/45767071990) completed successfully on Lean 4.36.0-rc2; job 139730422389 compiled 1,998 project modules. The generated theorem is `BB6.Agent1Raw57LE1.all_completions`, proving the A1=1LE sibling at weighted bound **1,500**. Both `tree_checked` and `all_completions` have axiom profile `[propext, Classical.choice, Quot.sound]`.
+
+The 3,326 open leaves were fully partitioned: 3,094 FAR, 106 sparse n-gram, 106 seeded pumps, 4 multi-seed pumps, 11 block-phase certificates, 1 late last-hole bound, and 4 custom proofs; no residual entries remain. The audit therefore closes the entire 1LE child cylinder.
+
+Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure.
+
 ## M211 residual diagnostic (finite evidence only)
 
 The remaining 1LB residual in `agent7-1lb.json` is M211:
