@@ -65,19 +65,37 @@ function branch(t,f,p,safe,children){return `theorem ${safe} : ∀ m, compatible
   rcases statesCases q with hq|hq|hq|hq|hq|hq <;> subst q <;> cases w <;> cases r <;> first | ${children.map(n=>'exact '+n).join(' | ')} | omega
 `}
 function write(name,s){fs.writeFileSync(path.join(outdir,name+'.lean'),s);modules.push(name)}
-function local(t,a,f,p,name,lines,imports){
+const MODULE_SPLIT_THRESHOLD=1000;
+function local(t,a,f,p,name,lines,imports,allowSplit=false){
  const safe='safe'+name;
- if(t[0]==='u'&&ext.has(t[1])){const e=ext.get(t[1]);imports.add(e.module);lines.push(`theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := by
+ if(allowSplit&&census.get(t)>MODULE_SPLIT_THRESHOLD){
+  const moduleName=prefix+'Sub'+name.replace(/[^A-Za-z0-9_]/g,'_');
+  const subLines=[ns(moduleName),parent(a)];
+  const subImports=new Set();
+  const subSafe=local(t,a,f,'parent',name+'_root',subLines,subImports,false);
+  subLines.push(`theorem safe : ∀ m, compatible parent m → WeightedBound ${B} m := ${subSafe}
+#print axioms safe
+end BB6.${moduleName}
+`);
+  write(moduleName,header([...subImports])+subLines.join('\n'));
+  imports.add(moduleName);
+  lines.push(`theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := by
   intro m hm
-  ${eq(p,e.table)}  exact Cover.sound (${e.proof} ${B}) m hm
-`);return safe}
+  ${eq(p,'BB6.'+moduleName+'.parent')}  exact BB6.${moduleName}.safe m hm
+`);
+  return safe;
+ }
+ if(t[0]==='u'&&ext.has(t[1])){const e=ext.get(t[1]);imports.add(e.module);lines.push(`theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := by
+   intro m hm
+   ${eq(p,e.table)}  exact Cover.sound (${e.proof} ${B}) m hm
+ `);return safe}
  if(census.get(t)<=49&&!external.get(t)){const c='cert'+name,h='checked'+name;lines.push(`def ${c} : Tree := ${emit(t,a,f)}
-theorem ${h} : check ${B} ${p} ${c} = true := by decide +kernel
-theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := sound ${B} _ ${c} (by decide) ${h}
-`);return safe}
+ theorem ${h} : check ${B} ${p} ${c} = true := by decide +kernel
+ theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := sound ${B} _ ${c} (by decide) ${h}
+ `);return safe}
  if(t[0]!=='h'||!t[3].length)throw Error('not split');
  const names=[];
- for(const [j,[k,b,g]] of split(t,a,f).entries()){const n=name+'_'+j,q='p'+n;lines.push(`def ${q} := refine ${p} ${slot(t[2])} (some ${move(j)})\n`);names.push(local(k,b,g,q,n,lines,imports))}
+ for(const [j,[k,b,g]] of split(t,a,f).entries()){const n=name+'_'+j,q='p'+n;lines.push(`def ${q} := refine ${p} ${slot(t[2])} (some ${move(j)})\n`);names.push(local(k,b,g,q,n,lines,imports,true))}
  lines.push(branch(t,f,p,safe,names));return safe;
 }
 const parent=t=>`def parent : PartialMachine := ${table(t)}\n`;
@@ -85,7 +103,7 @@ if(r.tree[0]!=='h'||!r.tree[3].length)throw Error('unexpected root');
 const names=[];
 for(const [j,[k,b,g]] of split(r.tree,a,f).entries()){
  const name=prefix+'Kid'+String(j).padStart(2,'0'),imports=new Set(),lines=[ns(name),parent(b)];
- const safe=local(k,b,g,'parent','_root',lines,imports);
+ const safe=local(k,b,g,'parent','_root',lines,imports,true);
  lines.push(`theorem safe : ∀ m, compatible parent m → WeightedBound ${B} m := ${safe}\n#print axioms safe\nend BB6.${name}\n`);
  write(name,header([...imports])+lines.join('\n'));names.push(name)
 }
