@@ -2,7 +2,7 @@
 
 Parent table `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LF` has 5 holes. The new F0 query occurs at move 9; the halting child has weighted bound 15. Twelve ordinary F0 children have direct translated-cycle proofs in Raw124ZeroLFTrivial.lean. Raw124ZeroLFParent.lean proves the exact parent dichotomy and a general semantic Cover composition theorem at any common bound >=15. All original Lean kernel checked with the standard axiom profile.
 
-Raw124ZeroLFAccepted.lean integrates six independently source-accepted artifacts, checking exact table equality via tableOK_sound and numerical bound monotonicity. The combined closure has 2,236 artifact modules; no conflicting duplicate source or object bytes among the six ZIPs. Parent cut compiled locally. At 13:42 UTC its conclusion is WeightedBound 2931 or one of six literal residual F0 moves: 0RA,1LA,1LB,1LE,1RB,1RC. Hence 19/25 choices (7,421,875 of 9,765,625 literal completions) are closed; this is a partial F1 child result, not full Raw124 or a roster subtraction.
+Raw124ZeroLFAccepted.lean integrates eleven independently source-accepted artifacts, checking exact table equality via tableOK_sound and numerical bound monotonicity. The merged core plus eleven child ZIPs contain 4,703 object modules, with no conflicting duplicate .lean or .olean bytes. The updated parent_cut and cover_of_last compiled locally under Lean 4.36.0-rc2 with axiom profile [propext, Classical.choice, Quot.sound]. The cut proves WeightedBound 2931 or compatibility with the sole remaining F0=1RC child. Hence 24/25 choices (9,375,000 of 9,765,625 literal completions) are covered; the remaining child has 390,625 completions. The general cover_of_last theorem composes any sufficient bound B ≥ 2931 with the final child Cover. This is a local exact-source object-link proof, not fresh source-rebuild CI, full Raw124 closure, or a roster subtraction.
 
 | F0 | Bound | Accepted artifact ID | CI run | SHA256 |
 |---|---:|---:|---:|---|
@@ -12,8 +12,13 @@ Raw124ZeroLFAccepted.lean integrates six independently source-accepted artifacts
 | 1LC | 332 | 15121981232 | 45828605659 | ce1c938870b411806e89b8055f1b996d21aba2018066292171f140f344a9b702 |
 | 1RA | 2931 | 15121818579 | 45829497777 | cddf23615348c226c5515b7302033d9bd9aba6df98b4653b973bd307b2c40b6a |
 | 1RE | 271 | 15121301920 | 45828857309 | 187dcb52f3daf68acfc5bdcd5a6b802d4e8cf32dde0d268ac895fe7ad061ab85 |
+| 0RA | 430 | 15124625402 | 45832947347 | c5af330d648fb3a907c2549c595a8413dfbf77e0894ff5d6316edf1985131436 |
+| 1LA | 1045 | 15125305823 | 45834325697 | be99f6599bae57deaf8c64480f281efbbbbefddb45112feee3e19115fc8f9619 |
+| 1LB | 688 | 15123202197 | 45833222135 | f828ded83a6e716812d68fb7b976c7e2a346d3d80e3c83092dcf1996407bc54c |
+| 1LE | 356 | 15122709528 | 45832599988 | 704c82969b31d532f3397001a4c16ee8c7b4a9dd82cb26e2a67d41c4fd05c847 |
+| 1RB | 1088 | 15123905858 | 45832956396 | 68e12517292a2730da979ee0a4309c113a388a2d05463fa9d97f97115f0364b1 |
 
-Use the exact ZIPs plus accepted Raw58 core artifact 15090715339 for RecursiveResidual/ZipThreeHoleAudit and its import closure; merge same-name .lean and .olean modules only when bytes agree, compile Raw124ZeroLFTrivial.lean, Raw124ZeroLFParent.lean and Raw124ZeroLFAccepted.lean using Lean 4.36.0-rc2. Continue by importing remaining accepted child modules and applying the parent composition theorem; do not regenerate internal trees when accepted objects exist.
+Use the exact ZIPs plus accepted Raw58 core artifact 15090715339 for RecursiveResidual/ZipThreeHoleAudit and its import closure; merge same-name .lean and .olean modules only when bytes agree, compile Raw124ZeroLFTrivial.lean, Raw124ZeroLFParent.lean and Raw124ZeroLFAccepted.lean using Lean 4.36.0-rc2. The sole remaining child is F0=1RC; use cover_of_last when its proof is accepted. Do not regenerate the eleven accepted internal trees.
 
 ## Independent block-run witnesses, reusable discovery
 
