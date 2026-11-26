@@ -996,7 +996,15 @@ theorem w7_q0_target_unreachable_u16339mod20480 (v : Nat) :
   let u : Nat := 16339+20480*v
   have hq1 : ¬ BB6.Agent3.CReach
       (2*(2228+3591*u)-3) (24450+39417*u) := by
-    simpa [u] using w7_z2_q1_parent_unreachable_u16339mod20480 v
+    intro h
+    have hx : 2*(2228+3591*u)-3=117351151+147087360*v := by
+      dsimp [u]
+      omega
+    have hy : 24450+39417*u=644058813+807260160*v := by
+      dsimp [u]
+      omega
+    exact w7_z2_q1_parent_unreachable_u16339mod20480 v
+      (by simpa only [hx,hy] using h)
   exact w7_q0_target_unreachable_of_q1 u (by dsimp [u]; omega) hq1
 
 /-- A seventh new q=1 exclusion, on u=20019+20480*v. Six exact
@@ -1124,7 +1132,15 @@ theorem w7_q0_target_unreachable_u20019mod20480 (v : Nat) :
   let u : Nat := 20019+20480*v
   have hq1 : ¬ BB6.Agent3.CReach
       (2*(2228+3591*u)-3) (24450+39417*u) := by
-    simpa [u] using w7_z2_q1_parent_unreachable_u20019mod20480 v
+    intro h
+    have hx : 2*(2228+3591*u)-3=143780911+147087360*v := by
+      dsimp [u]
+      omega
+    have hy : 24450+39417*u=789113373+807260160*v := by
+      dsimp [u]
+      omega
+    exact w7_z2_q1_parent_unreachable_u20019mod20480 v
+      (by simpa only [hx,hy] using h)
   exact w7_q0_target_unreachable_of_q1 u (by dsimp [u]; omega) hq1
 
 #print axioms w7_q0_target_unreachable_of_q1
