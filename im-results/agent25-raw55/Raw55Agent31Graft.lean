@@ -1,0 +1,59 @@
+import Raw55Cut
+import FourHoleResidualRoster
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent25Raw55Agent31Graft
+open BB6Coverage
+open BB6.Agent25Raw55Cut
+open BB6.Agent31FourHoleRoster
+open BB6.Agent47CanonicalFrontier
+open BB6.Agent47RootedTNF
+open BB6.Agent50TNFPilot
+
+/-- Remove the exact Raw55 parent from Agent31's concrete 124-entry roster. -/
+noncomputable def remainingRootRosterWithoutRaw55 :
+    List (List Move × PartialMachine) :=
+  remainingRootRoster.filter fun e => !(sameTable e.2 parent)
+
+/-- The D1=0RE Raw55 parent is present in Agent31's current root roster. -/
+theorem raw55_in_remainingRootRoster :
+    remainingRootRoster.any (fun e => sameTable e.2 parent) = true := by decide
+
+/-- Exactly one concrete roster entry is replaced by the Raw55 refinement. -/
+theorem remainingRootRosterWithoutRaw55_count :
+    remainingRootRosterWithoutRaw55.length = 123 := by decide
+
+/-- The refined interface has 123 unchanged parent residuals and 274 explicit Raw55 leaves. -/
+theorem refinedResidualCount :
+    remainingRootRosterWithoutRaw55.length + canonicalRemaining.length = 397 := by decide
+
+/-- Agent31's B=7014 firstOne roster, with Raw55 replaced by its 274
+    source-checked quotient residuals. This is a strict refinement, not a
+    net reduction in residual count. -/
+theorem remainingRootRoster_refined_sound :
+    ∀ m, compatible BB6.Agent50TNFPilot.root m →
+      WeightedBound 7014 m ∨
+        (∃ e ∈ remainingRootRosterWithoutRaw55, compatible e.2 m) ∨
+        (∃ e ∈ canonicalRemaining, TNFQuotientCompatible e.2 m) := by
+  intro m hm
+  rcases remainingRootRoster_sound_7014 m hm with hbound | ⟨e,he,hcomp⟩
+  · exact Or.inl hbound
+  · cases hs : sameTable e.2 parent with
+    | false =>
+        exact Or.inr (Or.inl ⟨e, List.mem_filter.mpr ⟨he, by simp [hs]⟩, hcomp⟩)
+    | true =>
+        have heq : e.2 = parent := sameTable_sound hs
+        have hcomp' : compatible parent m := by simpa [heq] using hcomp
+        rcases canonical_local_sound_84 m (compatible_quotient hcomp') with hbound84 | hres
+        · exact Or.inl (by
+            intro k d hk hd
+            exact Nat.le_trans (hbound84 k d hk hd) (by decide))
+        · exact Or.inr (Or.inr hres)
+
+#print axioms raw55_in_remainingRootRoster
+#print axioms remainingRootRosterWithoutRaw55_count
+#print axioms refinedResidualCount
+#print axioms remainingRootRoster_refined_sound
+end BB6.Agent25Raw55Agent31Graft

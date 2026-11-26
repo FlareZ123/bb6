@@ -12,7 +12,9 @@ The classifier is the existing `im-results/agent7-raw49/cut.cpp`, not a new simu
 
 `Raw55Cut.lean` is generated from `Raw55Cut.template` by `generate.py`. It instantiates the original-source `CanonicalPartial` audit for the exact parent and tree. The intended theorem `BB6.Agent25Raw55Cut.canonical_local_sound` states that every TNF-quotient-compatible completion is either bounded by weighted score 7014 or belongs to one of the 274 explicit residual cylinders. A companion 84-bound statement gives a stronger root-compatible conditional refinement.
 
-**Acceptance status:** the source theorem has not yet passed the repository's pinned Lean 4.36.0-rc2 original-source closure. Until that audit succeeds, the partition remains computational evidence. Even after acceptance, it is a strict refinement, not a complete Raw55 parent Cover: all 274 residuals remain hypotheses. No Canonical64 roster decrement or BB(6) upper bound is claimed.
+**Roster interface:** `Raw55Agent31Graft.lean` checks whether this exact parent occurs in Agent31's 124-entry firstOne roster, removes that one concrete entry, and replaces it with the 274 explicit quotient residuals. If accepted, the interface has 123 unchanged parent entries plus 274 Raw55 leaves (397 total). This is a strict refinement, not a net reduction in residual count.
+
+**Acceptance status:** the source theorem and roster graft have not yet passed the repository's pinned Lean 4.36.0-rc2 original-source closure. Until that audit succeeds, the partition remains computational evidence. Even after acceptance, it is not a complete Raw55 parent Cover: all 274 residuals remain hypotheses. No Canonical64 roster decrement or BB(6) upper bound is claimed.
 
 ## Reproduction and next step
 
