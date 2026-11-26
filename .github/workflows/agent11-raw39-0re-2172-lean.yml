@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: ['0RE-2172', '1LB-width']
+        options: ['0RE-2172', '1LB-width', '1LE-8865']
         default: '0RE-2172'
 permissions:
   contents: read
@@ -85,4 +85,22 @@ jobs:
           name: raw39-0re-2172-proof
           path: /tmp/a11-raw39-0re-2172/
           if-no-files-found: error
+          retention-days: 30
+
+      - name: Compile recursive 1LE 8865 reset-language certificate
+        if: inputs.target == '1LE-8865'
+        run: |
+          set -euo pipefail
+          root=im-results/agent11-raw39
+          python -c 'import base64,lzma,hashlib,pathlib; p=pathlib.Path("im-results/agent11-raw39/Raw391LE8865.lean"); b=lzma.decompress(base64.b64decode(p.with_suffix(".lean.xz.b64").read_text())); assert hashlib.sha256(b).hexdigest()=="ddb1c6799ae01327774bdd7e798f5be707dbfc62430f052a442c5e0090203427"; p.write_bytes(b)'
+          work=/tmp/a11-raw39-1le-8865
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw39-1le-8865 --artifact-name raw39-1le-8865-proof --theorem BB6.Agent11Raw391LE8865.never --provenance-input "$root/Raw391LE8865.lean.xz.b64" "$root/Raw391LE8865.lean" 2>&1 | tee /tmp/a11-raw39-1le-8865.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a11-raw39-1le-8865.log BB6.Agent11Raw391LE8865.next BB6.Agent11Raw391LE8865.live BB6.Agent11Raw391LE8865.never
+          if grep -Eq 'sorryAx|native_decide' /tmp/a11-raw39-1le-8865.log; then exit 1; fi
+      - name: Preserve 8865 proof closure
+        if: inputs.target == '1LE-8865'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw39-1le-8865-proof
+          path: /tmp/a11-raw39-1le-8865/
           retention-days: 30

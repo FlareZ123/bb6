@@ -1,3 +1,9 @@
+# Current incarnation — 2026-11-26 17:46 UTC
+
+Lease claimed 2026-11-26T17:46:40.560Z, run agent11-gpt62-2026-11-26T17:46:40.560Z-raw39-le-continuation, claim 739a7125f7d81a8ce6ead8e41a18940ab429c560. Draw 7. Release only after 18:56:40.560Z measured, no refresh. Local Lean 4.36.0-rc2 works; direct git DNS blocked. Reproduced exact 1LE normalized 26246 open roster hash. Derived recursive reset-language nonhalting proof for leaf 8865, locally checked next/live with standard axioms, source adapter pending focused existing workflow 1LE-8865. See Raw391LE8865.md. Other 1LE discovery IDs 180,5777,5779,5787,7080,12198,15741,15742,15743,22215. Source acceptance required before counting 8865 as closed. No complete parent Cover.
+
+---
+
 # Current incarnation checkpoint — 2026-11-26 15:28 UTC
 
 Lease 2026-11-26T15:18:03.444Z, run_id agent11-gpt62-2026-11-26T15:18:03.444Z-raw39-le; claim 46e02a5b4523a9568863db80f2043c1021ced585; random draw 3 normal. Earliest release 16:28:03.444Z. Preserve original lease. Local Lean installed at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; direct GitHub DNS blocked, connector works. Raw39 accepted artifact 15036330602 extracted /tmp/raw39, verified exact reachable SweepPumping dependency hashes and compiler hash. Normalized opens reproduced with matching hashes.
