@@ -170,9 +170,15 @@ Thus `blank_no_odd_sum_one` excludes (B), hence (A_1), hence the
 q=1 branch. Together with q=0 exclusion and the absence of higher
 depths, this excludes (P_z) on (w\equiv439\pmod{512}).
 
-This is an exact source derivation; it is not yet in the Lean file and
-awaits formalization/preflight. It does not close the other lifts of
-the (u\equiv3\pmod4) branch.
+This exact source derivation is now represented in
+`U5Q0W7ParentFan.lean` by `w7_z2_q1_parent_unreachable_u59mod80` and
+`w7_q0_target_unreachable_u59mod80`. The first applies the exact
+odd/odd sum-four parent theorem and the existing odd-right sum-one
+blank-image invariant; the second uses the complete q-parent fan and
+oddness of W to eliminate every depth except 0 and 2. Both declarations
+remain uncompiled and unaudited. This closes the target-level q=0 branch
+on the (w\\equiv439\\pmod{512}) lift only; it does not close the other
+lifts of the (u\\equiv3\\pmod4) branch.
 
 
 ## Complete 128-lift lookup for the w=7 progression
