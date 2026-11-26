@@ -8,14 +8,10 @@ open BB6ChampionArithmetic
 /-- The authenticated blank-root prefix alone already exceeds the 1LB
     branch cutoff.  This avoids depending on the still-unaccepted F412
     two-million-step adapter. -/
-theorem champion_ge_27959 : 27959 ≤ proposedTM63Moves + 7 := by
-  have hroot :
-      27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
-    BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
-  exact Eq.mp
-    (congrArg (fun n : Nat => 27959 ≤ n + 7)
-      BB6Coverage.Agent48DirectRoot.threeSectionMoves_root)
-    hroot
+theorem champion_ge_27959 : 27959 ≤ proposedTM63Moves + 7 :=
+  Eq.mp (congrArg (fun n : Nat => 27959 ≤ n)
+    BB6Coverage.Agent48DirectRoot.threeSectionScore_root)
+    (BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63)
 
 /-- Any Raw124 F1=1LB weighted certificate at the established cutoff 3006
     lifts directly to the exact attained champion score. -/
