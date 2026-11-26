@@ -13,6 +13,7 @@ from emitauto import emit_fixtures
 
 BRANCH = sys.argv[1] if len(sys.argv)>1 else "540"
 SPECS = {
+    "1420": ("1RB1RB1RC1LD1LA------0LA------------", 8, 5, Counter(cycle=71157,last=15322,split=3949,halt=3949,state=2892,far=1428,auto=17)),
     "540": ("1RB0RC1RC0LD1LA0LC------------------", 11, 7, Counter(cycle=51500,last=9303,split=2766,halt=2766,state=2284,far=509,auto=3)),
     "484": ("1RB0RB1RC0LC1LA0LD------------------", 12, 6, Counter(cycle=36067,last=7060,split=1934,halt=1934,state=1036,far=310,auto=2)),
 }
