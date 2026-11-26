@@ -1,67 +1,41 @@
-# Raw139 normalized p0 local Cover
+# Raw139 normalized p0 decomposition: 43 accepted siblings, 66 residual tables
 
-## Current mathematical boundary
+This dossier concerns the exact local Raw139 parent `p0` normalized in [`Raw139Normalized.lean`](Raw139Normalized.lean). It is a decomposition of one parent cylinder, not a proof of the global six-state Busy Beaver upper bound.
 
-The live local target is the literal Raw139 parent `BB6.Agent6ChampionResidual.championResidual`. The normalized decomposition in [Raw139Normalized.lean](../agent6-raw139-normalized/Raw139Normalized.lean) defines the same parent as `p0`; the finite theorem `p0_eq_championResidual` in [Raw139NormalizedAcceptedCovers.lean](Raw139NormalizedAcceptedCovers.lean) checks this with `sameTable`.
+## Current source-accepted facts
 
-`Raw139Normalized.raw139_cover` is a conditional weighted-Cover theorem for this exact p0. Its original hypotheses are:
+- The normalized p0 decomposition has **43 accepted sibling rows** and **67 residual tables** before the E0=0RA discharge. The finite counts and depth profile are proved in `Raw139Normalized.lean`: 67 residuals with depth counts `[19,22,18,0,4,2,2]`.
+- The six-hole E0=0RA parent is the exact table `[7,24,11,24,14,24,24,16,1,11,24,24]` (code convention `4*q + 2*w + right`). Its complete 24-child parent Cover at weighted bound **321,796** is source-accepted in CI run **45778885358**. The accepted artifact is `raw139-e0-0ra-certified` (artifact ID 15100202529).
+- `Raw139E0ZeroRAMatch.lean` identifies that exact parent with normalized row `(2, ⟨false,true,0⟩)` (E0=0RA). `Raw139E0ZeroRAIntegrated.lean` removes that row from the 67-table list, proves the residual count is **66**, and exposes the conditional parent-cover interface. Its source integration is now accepted in CI run **45797137615** after adding the missing `open BB6.Agent13BlankDelay` for `WeightedBound`. The parent Cover has only standard axioms; the integration workflow rejects `sorryAx`.
+- The 66-row interface remains conditional: it still requires the 43 accepted sibling Covers and 66 residual Covers at the stated bound, plus the two special rowRC/rowRE continuation lifts and the p7 Cover. It is not a completed p0 Cover.
 
-- Covers for the 43 entries in `acceptedRows` (8 D0, 12 C1, 12 F1, 11 F0);
-- the two continuation implications for F0=0RC/A1=0RD and F0=1RE/B1=0RD;
-- a Cover for the terminal `p7` cylinder;
-- Covers for the 67 literal tables in `remainingTables`.
+## Relationship to the active Canonical64 route
 
-The adapter [Raw139NormalizedAcceptedCovers.lean](Raw139NormalizedAcceptedCovers.lean) matches the 43 accepted rows against their source-parent tables using `sameTable`, constructs their Covers from the existing source modules, discharges both 0RD continuation implications with `Agent48Remaining.cover_zeroRC_of_RD` and `cover_oneRE_of_RD`, and transports the existing `championP7` parent certificate to normalized `p7`. Its theorem `raw139_cover_after_accepted` therefore leaves exactly the 67 `remainingTables` Covers as hypotheses. The per-depth counts are `[19,22,18,0,4,2,2]`.
+Do not conflate the local 67→66 normalized list with the active Canonical64 Raw139 descendant list. The latter starts with 80 residual descendants after the 43 source sibling Covers. Agent3's `Canonical64Raw139Subcover.lean` (commit `c2ecbbbbaec89fc8dc867e68e68609e9c344334c`) proves E0=0RA occurs exactly once in that active 80-list and uses the accepted 321,796 Cover to reduce it to **79**. This yields a conditional interface of 63 other Canonical64 Covers plus 79 Raw139 Covers = 142 remaining Cover obligations; it is not a global proof.
 
-This is a **local conditional parent-Cover interface**, not a proof of the 67 remaining Covers, not a new global roster, and not a BB(6) upper bound. The exact p0 equality makes the result consumable by the existing Canonical64 route if its roster membership and source-acceptance gates are established; the local theorem itself does not prove those global gates. If integrated by replacing the single `championResidual` Cover, the conditional premises would be 63 other Canonical64 Covers plus 67 local Raw139 Covers. This does not change the 64-entry roster or solve BB(6).
+The Canonical64 wrapper still needs a source-accepted integration run combining:
+- Agent6's 43-sibling consumer artifact from run **45793950237** (currently in progress at last check); and
+- Agent3's E0=0RA integrated artifact from run **45797137615** (successful).
 
-### Evidence and acceptance boundary
+Once 45793950237 passes, dispatch the existing `agent3-raw120-complete.yml` workflow in `integrate-65` mode with `raw139_subcover_run_id=45793950237` and `raw139_e0_integrated_run_id=45797137615`. Do not use the failed predecessor run 45790610736.
 
-- The base `Raw139Normalized.lean` was locally kernel-checked against Canonical77 dependency artifact 14997966221 (run 45554648116), with the reported profile `[propext, Classical.choice, Quot.sound]`. Its transitive dependencies have not yet been rebuilt together from original source in this invocation.
-- The new adapter is included in the existing [agent6-champion-residual.yml](../../.github/workflows/agent6-champion-residual.yml) manual workflow. Its source-connected compile and exported-theorem axiom audit are not yet accepted. Until that exact closure compiles and the profiles exclude `sorryAx` and unapproved trust dependencies, treat the adapter as a proof candidate rather than a source-accepted result.
-- The 43-row partition is finite and explicit: `acceptedRowsCovered` checks the table matches by `decide`; the corresponding Cover proofs come from the existing D0, C1, F0 and F1 source modules. The workflow retains the normalized `.olean` objects for reuse.
+A separate finite crosswalk probe, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canonical64Raw139NormalizedCrosswalk.lean), has been added but is **not yet CI-compiled**. It checks whether the 66 normalized residual tables refine any of the 79 active leaves, and whether E0=0LC has exact or refinement membership in the active list. If the crosswalk is favourable, it may let normalized Covers discharge multiple active descendants. No such reduction is claimed until the probe is compiled and its output inspected.
 
-## Source-accepted sibling Covers
+## Other open Raw139 siblings
 
-The eight D0 parent Covers below are original-source Lean certificates. They form eight of the 43 accepted rows; they are not an additional set of obligations.
+- **E0=0LC**: [Agent6's dossier](../agent6-raw139-e0-zeroLC/README.md) reports a 13,323-leaf candidate partition, 55 locally accepted block shards, and 8 nontrivial C1 children. Code2 needed a sharded rebuild after a monolithic OOM; code23 was still being sharded. These are computational/local results, not a source-accepted parent Cover. Agent6 has been asked to test exact membership in the active 80-list before investing in the missing shards.
+- **E0=0RE**: [Agent48's dossier](../agent48-raw139-e0-0re/README.md) has a symbolic unbounded-run proof for one exceptional one-hole table, but no source-accepted full parent Cover. Its 734 Block-FAR leaves and remaining exceptional leaf still need original-source certificate generation and compilation. This branch may be a useful active residual if its exact membership survives the current filter.
 
-| D0 child | Exact depth-3 move | Weighted bound | Original-source CI |
-|---|---|---:|---|
-| 0LF | `⟨false,false,5⟩` | 352 | [45726077932](https://github.com/FlareZ123/bb6/actions/runs/45726077932) |
-| 1LB | `⟨true,false,1⟩` | 7,252 | [45726917837](https://github.com/FlareZ123/bb6/actions/runs/45726917837) |
-| 1LA | `⟨true,false,0⟩` | 1,361 | [45727637346](https://github.com/FlareZ123/bb6/actions/runs/45727637346) |
-| 1LF | `⟨true,false,5⟩` | 42,038 | [45728113457](https://github.com/FlareZ123/bb6/actions/runs/45728113457) |
-| 0RC | `⟨false,true,2⟩` | 775 | [45728638168](https://github.com/FlareZ123/bb6/actions/runs/45728638168) |
-| 1RF | `⟨true,true,5⟩` | 6,250 | [45729425638](https://github.com/FlareZ123/bb6/actions/runs/45729425638) |
-| 0RA | `⟨false,true,0⟩` | 8,840 | [45730253726](https://github.com/FlareZ123/bb6/actions/runs/45730253726) |
-| 0RF | `⟨false,true,5⟩` | 9,110 | [45753603330](https://github.com/FlareZ123/bb6/actions/runs/45753603330) |
+## Source and verification discipline
 
-The 0LF and 1LB cases have separate dossiers under `im-results/agent14-raw139-d0-zeroLF/` and `im-results/agent14-raw139-d0-oneLB/`. The other six can be reproduced with `reproduce.sh` below. The remaining accepted rows come from the 12-parent C1 batch (source run 45746968139, artifact `raw139-c1-twelve-certified`), the 12 F1 parents, and the 11 F0 parents (`closedF0` plus 0RA). The exact source-parent membership and Cover constructors are collected in `ChampionResidualSourceSiblingIntegrationExtended.lean` and its imported F0/F1 integration modules.
+The previous Agent14 adapter run **45777525729** failed at the core compile because its pinned source imported Mathlib, which the bare CI Lean toolchain does not install. Agent3 has since replaced that dependency with core finite-case helpers. The corrected Agent6 core plus 43-sibling consumer run **45793950237** is in progress; do not rely on the failed predecessor.
 
-## Remaining local work and exclusions
+The current invocation's local shell/Lean bootstrap returned a tool-level `ClientError` before producing command output. Source acceptance is therefore being done through the existing manual CI workflows; no local compilation is claimed here.
 
-The 67 residual tables are still open. Agent6's E0=0LC target is one of these literal residuals; it is not included in `acceptedRows` or consumed by this adapter. A source-accepted Cover of that parent would directly remove its corresponding obligation from the local complement.
+## Next actions
 
-Several candidate sources must not be counted as direct residual Covers:
-
-- The source-connected Cryptids scan found 34 upstream nonhalting candidates mapping to 11 normalized residual-row addresses, but no exact remaining one-hole leaf. Two E1=1LF candidates are six-hole parents whose source runs query additional erased rows, so they do not directly cover the broader normalized residual cylinders. The only direct one-hole candidate identified in that crosswalk is already consumed by Agent41's E1=1LF parent contract.
-- The earlier Agent41 Cryptids D0=1LA leaf is a completion of the already source-accepted D0=1LA parent Cover (bound 1,361); it is not a new live residual.
-- The A6 source leaf has C1=0RB and is contained in the C1=0RB parent among the 12 C1 batch Covers. It is not a 44th sibling or an extra reduction.
-- `Raw139NormalizedZeroLD.lean` locally proposes a 66-table complement by removing F1=0LD. Its `ChampionF1ZeroLDCover` dependency is supplied by artifact 15020208929 rather than a committed source module. Agent6's memory records differing `.olean` hashes between that artifact and the Canonical77 dependency artifact used for `Raw139Normalized`; this candidate is deliberately excluded until the source identities are reconciled or the ZeroLD proof is rebuilt from committed source.
-
-## Reproduction and preserved D0 evidence
-
-From the repository root:
-
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneLA`
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneLF`
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh ZeroRC`
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneRF`
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh ZeroRA`
-- `bash im-results/agent14-raw139-d0-generic/reproduce.sh ZeroRF`
-
-The script verifies the archived generator and generated root hashes before compilation. The source tree sizes, leaf classifications, long-trace recurrence for D0=0RF, root hashes, and per-case diagnostics remain preserved in the individual sibling dossiers and generator archive. The D0=0RF exact parent table is `[7,24,11,24,14,24,21,16,12,11,24,24]`; its accepted theorem is `BB6.Agent14Raw139D0ZeroRF.all_completions_weighted` at bound 9,110, with artifact `raw139-d0-ZeroRF-certified` (ID 15087825863).
-
-### Historical Canonical64 embedding experiment
-
-`Canonical64Raw139Subcover.lean` preserves an earlier wrapper that proves `championResidual` membership/uniqueness in `roster64` and replaces that one Cover hypothesis with 43 sibling Covers plus the older 80-entry `remainingRaw139AfterFortyThree` complement (63 other Canonical64 Covers + 80 Raw139 Covers = 143 premises). That complement is not interchangeable with the normalized 67-table `remainingTables` list. The wrapper is retained as historical integration evidence; the normalized local p0 adapter is the current candidate boundary. The intended global endpoint is the shared `Canonical64ChampionConsumer.exact_at_champion_score`, not a second score/witness consumer.
+1. Wait for Agent6 run 45793950237; inspect failed jobs only if it fails.
+2. If it passes, dispatch the Canonical64 `integrate-65` workflow using the successful Agent6 and Agent3 run IDs above.
+3. Compile and inspect `Canonical64Raw139NormalizedCrosswalk.lean`; use the result to decide whether the 66 normalized residual Covers can discharge any of the 79 active leaves.
+4. Pursue E0=0LC only if its active-list membership gives direct global leverage; preserve existing search outputs and rebuild only the missing code2/code23 shards.
+5. Keep `results/` reserved for source-accepted, academically presentable mathematical results. No exact BB(6) value or universal upper bound has been established.
