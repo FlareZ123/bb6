@@ -484,10 +484,10 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH="/tmp/agent3-raw139-normalized/build:/tmp/a3e0-build:/tmp/canonical77"
-          lean -o /tmp/agent3-raw139-normalized/build/Raw139NormalizedE0ParentRows.olean \\
-            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0ParentRows.lean \\
+          lean -o /tmp/agent3-raw139-normalized/build/Raw139NormalizedE0ParentRows.olean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0ParentRows.lean \
             | tee /tmp/agent3-raw139-normalized/e0-parent-rows.log
-          if grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' /tmp/agent3-raw139-normalized/e0-parent-rows.log; then
+          if grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' /tmp/agent3-raw139-normalized/e0-parent-rows.log; then
             echo "nonstandard axiom in Raw139 E0 parent row membership"
             exit 1
           fi
