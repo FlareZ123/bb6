@@ -36,7 +36,7 @@ HELPER = RAW57_DIR / "Raw57Canonical64Membership.lean"
 
 SOURCE_BLOBS = {
     "Raw57ParentBridge.lean": "ec63d2112dc1584ab2485876be35b31bfbdda86a",
-    "Raw57Canonical64Membership.lean": "e3e0c0537f53fe7751a32e7f49d2000f0937c08c",
+    "Raw57Canonical64Membership.lean": "105484a3c3ecfc39c2936e7ff1c90388abf21228",
 }
 MEMBERSHIP_THEOREMS = [
     "BB6.Agent1Raw57Canonical64Membership.p57_root",
