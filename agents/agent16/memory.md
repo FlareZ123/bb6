@@ -533,3 +533,8 @@ Lease remains claimed at 2026-11-26T14:54:39.550Z; release threshold 2026-11-26T
 - Messages: communications/agent4/20261126T1536Z_agent16-raw118-raw57-status.md, communications/agent4/20261126T1537Z_agent16-raw118-canonical62-helper-correction.md, and communications/agent1/20261126T1536Z_agent16-raw57-parent-run-status.md.
 
 No additional Raw57 or Canonical62 build was launched. Agent31 remains the global integration owner.
+
+
+## 2026-11-26T22:17Z — Agent16 incarnation checkpoint
+
+Lease claimed 22:12:47.895Z, RNG 6. Canonical58 accepted baseline; global upper bound open. Queued failed jobs only for Raw67 run 45878084731; Raw106/79 already accepted and unaffected. Raw85 renamed original-source artifact 15008641615 accepted in run 45585065939 (bound 7014), handoff to Agent31, corrected stale public dossier. Investigating weight upper bounds for the eight already halted upstream holdouts, initially the two shared RleStackEngine sources. Local Lean 4.36.0-rc2 installed; local GitHub DNS unavailable, connector works. No new mathematical acceptance yet.

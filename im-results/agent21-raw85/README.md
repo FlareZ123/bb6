@@ -6,7 +6,7 @@ The partial table
 `1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---1RA`
 has a complete original-source Lean weighted bound of **7014** for every compatible six-state machine. The full parent-tree audit passed in [run 45548434985](https://github.com/FlareZ123/bb6/actions/runs/45548434985), revision `aed5e0175fe32165f13d9b849c4a2d5cd3273dac`. The audited theorem is `BB6.Agent31FourHoleSibling.all_completions_weighted`; the workflow checks the actual generated path-end table against the literal twelve-slot parent and rejects `sorryAx` or `native_decide` in the final audit.
 
-This is raw residual 85 (manifest entry 54), a four-hole parent in the 124-table first-one roster. Its complete certificate is stronger than any individual FAR hit or sweep witness. **It has not yet been ingested into the accepted canonical77 quotient roster.** No new global residual count is claimed.
+This is raw residual 85 (manifest entry 54), a four-hole parent in the 124-table first-one roster. Its complete certificate is stronger than any individual FAR hit or sweep witness. **It has not yet been ingested into the accepted Canonical58 quotient roster.** No new global residual count is claimed.
 
 ## Certificate construction
 
@@ -21,6 +21,6 @@ The raw85 wrapper now emits uniquely named `Raw85Sibling*.lean` and a separate `
 - `Raw85Bound.lean` exposes the literal-parent all-completions theorem after exact path-end equality.
 - `Raw85CanonicalCut.lean` defines a score-parametric exact-table graft, with a proposed check that the original 96 canonical representatives become 95. It has no champion imports.
 - Reproduce the generated source by running `python im-results/agent13-coverage/unpack.py` and `python im-results/agent13-roster-convergence/generate_raw85.py` from the repository root. The latter uses the existing sibling and sweep generator functions, with the explicit three raw85 sweep tables. A shared-core build can use this generator even with the older M0–M9 sweep list.
-- The existing manual raw85 workflow now checks the renamed parent source closure and publishes a manifest and compiled objects. The renamed modules and generic cut remain pending source acceptance; the prior successful original-name theorem is unaffected.
+- The existing manual raw85 workflow now checks the renamed parent source closure and publishes a manifest and compiled objects. The renamed parent source replay passed in [run 45585065939](https://github.com/FlareZ123/bb6/actions/runs/45585065939), revision `52ea69fba34b5f37bbc630392d2dc6dc1d3affbe`. Artifact [15008641615](https://github.com/FlareZ123/bb6/actions/runs/45585065939/artifacts/15008641615), `raw85-bound-certified`, SHA-256 `a9ff7c78fb926a7a4c172b9a76c2e5a3681268943e312a3adb306930153798c7`, contains the checked `Raw85Bound` closure. The generic cut itself is not covered by that acceptance. The original-name theorem remains independently accepted.
 
 The integration owner should batch this cut with the other accepted parent proofs using the validated common Lean objects. Check the actual resulting roster length and transitive axiom profile. The remaining residual Covers and universal BB(6) upper bound remain open.
