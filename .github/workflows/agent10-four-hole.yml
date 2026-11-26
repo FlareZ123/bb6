@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_groups:
         description: 'JSON list of individual Raw108 groups to certify'
@@ -48,7 +48,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata') && 120 || 60 }}
@@ -1133,4 +1133,136 @@ jobs:
         with:
           name: raw58-parent-proof
           path: /tmp/a4-raw58-parent/
+          retention-days: 30
+
+  raw119-shards:
+    if: inputs.target == 'raw119-shard'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        group: ${{ fromJSON(inputs.raw108_groups) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and certify Raw119 shard
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw119
+          work=/tmp/a10-raw119-shard
+          python im-results/agent13-coverage/unpack.py
+          python "$root/generate.py" "$GROUP"
+          mapfile -t roots < "$root/roots.txt"
+          mapfile -t theorems < "$root/theorems.txt"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label "raw119-shard-$GROUP" \
+            --artifact-name "raw119-shard-$GROUP" \
+            --provenance-input "$root/spec.json" --provenance-input "$root/generate.py" \
+            --provenance-input im-results/agent2-tnf-raw99/enumerate.cpp \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input im-results/agent7-far/large_far.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
+            --provenance-input im-results/agent10-raw108/build_lb.py \
+            --provenance-input im-results/agent13-block-far/specialize.py \
+            --provenance-input im-results/agent13-block-far/generate_multi.py \
+            --provenance-input im-results/agent13-block-far/emit_active.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            "${roots[@]}" 2>&1 | tee /tmp/a10-raw119-shard.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw119-shard.log "${theorems[@]}"
+          cp /tmp/a10-raw119-shard.log "$work/audit.log"
+          cp "$root/shard_groups.json" "$work/"
+      - name: Retain verified shard
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw119-shard-${{ matrix.group }}
+          path: /tmp/a10-raw119-shard/
+          retention-days: 30
+
+  raw119-compose:
+    if: inputs.target == 'raw119-compose'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct parent assembly and retrieve pinned shards
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SHARD_PINS: ${{ inputs.raw108_pins }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw119
+          python "$root/generate.py" assemble
+          python - <<'PY'
+          import json, os, pathlib, re, subprocess
+          root=pathlib.Path("im-results/agent10-raw119")
+          config=json.loads((root/"shard_groups.json").read_text())
+          pins=json.loads(os.environ["SHARD_PINS"])
+          assert set(pins)==set(config["groups"])
+          dest=pathlib.Path("/tmp/a10-raw119-shards")
+          dest.mkdir()
+          for group,pin in pins.items():
+              run=str(pin["run_id"]);rev=pin["revision"]
+              assert re.fullmatch(r"[0-9]+",run) and re.fullmatch(r"[0-9a-f]{40}",rev)
+              metadata=json.loads(subprocess.check_output(["gh","run","view",run,"--json","headSha"],text=True))
+              assert metadata["headSha"]==rev
+              if subprocess.run(["git","cat-file","-e",rev+"^{commit}"]).returncode:
+                  subprocess.run(["git","fetch","--no-tags","origin",rev],check=True)
+              name="raw119-shard-"+group
+              subprocess.run(["gh","run","download",run,"--name",name,"--dir",str(dest/name)],check=True)
+              assert json.loads((dest/name/"shard_groups.json").read_text())==config
+          pathlib.Path("/tmp/a10-raw119-pins.json").write_text(json.dumps(pins,indent=2))
+          PY
+      - name: Compose the weighted parent bound
+        run: |
+          set -euo pipefail
+          root=im-results/agent10-raw119
+          union=/tmp/a10-raw119-union
+          work=/tmp/a10-raw119-parent
+          python im-results/agent10-raw108/merge_resume.py /tmp/a10-raw119-shards "$union" "$root/shard_groups.json" /tmp/a10-raw119-pins.json
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --precompiled-dir "$union" --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" --label raw119 \
+            --theorem BB6.Agent10Raw119.all_completions \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RE_------" \
+            --weighted-bound 572 --artifact-name raw119-parent-proof \
+            --provenance-input "$root/spec.json" --provenance-input "$root/generate.py" \
+            --provenance-input /tmp/a10-raw119-pins.json --provenance-input "$union/manifest.json" \
+            "$root/Raw119Data.lean" 2>&1 | tee /tmp/a10-raw119-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a10-raw119-parent.log BB6.Agent10Raw119.all_completions
+          python - "$work/manifest.json" <<'PY'
+          import json,sys
+          m=json.load(open(sys.argv[1]))
+          new={"Raw119Data"}|{f"Raw119Kid{i:02}" for i in (5,11,12,13,14,17,23)}
+          expected={x["module"] for x in m["modules"]}-new
+          reused=set(m["precompiled_core"]["reused_modules"])
+          assert reused==expected,(sorted(expected-reused),sorted(reused-expected))
+          PY
+          cp /tmp/a10-raw119-parent.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
+          cp -r "$union/original-shard-manifests" "$work/"
+      - name: Retain parent proof
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw119-parent-proof
+          path: /tmp/a10-raw119-parent/
           retention-days: 30
