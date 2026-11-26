@@ -6,6 +6,15 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent
 tree = json.loads((ROOT / "Raw47-cut.json").read_text())
 opens = (ROOT / "Raw47-open.txt").read_text().splitlines()
+tree_opens = []
+def collect_open(t):
+    if t[0] == "open":
+        tree_opens.append(t[1])
+    elif t[0] == "split":
+        for child in t[3]:
+            collect_open(child)
+collect_open(tree)
+assert tree_opens == opens, "tree/open manifest mismatch"
 assert len(opens) == 114, len(opens)
 NL = chr(10)
 
