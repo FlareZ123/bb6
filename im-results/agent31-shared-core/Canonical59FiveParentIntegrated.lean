@@ -48,8 +48,7 @@ theorem p58_cover : Cover (WeightedBound 6766859) p58 := by
   rw [p58_source_eq]
   exact BB6.Agent4Raw58Exact.coverRaw58 6766859 (by decide)
 
-/-- Raw59 uses the already accepted conservative parent bound 4,200,000;
-    its sharper local search is unnecessary for this common floor. -/
+/-- Raw59's source-accepted sharp parent bound is 4,136,171. -/
 theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
   rw [p59_source_eq]
   exact liftCover (by decide) BB6.Agent32Raw59Exact.cover
