@@ -7,7 +7,7 @@ on:
         type: boolean
         default: false
       assemble_branch:
-        description: "Assemble an existing Raw122 branch: 0 reuses completed 0LA shards; 5 runs and assembles 0LF"
+        description: "0 assembles 0LA, 5 reuses 0LF, and 16/17 extract original residual rosters"
         required: false
         type: string
         default: ''
@@ -427,6 +427,28 @@ jobs:
         with:
           name: raw122-branch05-cover
           path: /tmp/a43-output/
+          retention-days: 90
+          if-no-files-found: error
+  extract-roster:
+    if: inputs.assemble_branch == '16' || inputs.assemble_branch == '17'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - name: Extract the original-source residual roster
+        run: |
+          python im-results/agent43-raw122-cut/residual_roster.py /tmp/a43-source /tmp/a43-rosters "${{ inputs.assemble_branch }}"
+          cat "/tmp/a43-rosters/Raw122Roster${{ inputs.assemble_branch }}.tsv"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-roster-${{ inputs.assemble_branch }}
+          path: /tmp/a43-rosters/
           retention-days: 90
           if-no-files-found: error
 
