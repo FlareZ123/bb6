@@ -30,8 +30,25 @@ def sha(path: Path) -> str:
 
 def add_raw122_base_dependencies(work: Path, linked: Path):
     run = a68.api_json(f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}")
-    if run.get("conclusion") != "success":
-        raise RuntimeError(f"Raw122 core source run is not successful: {run.get('conclusion')}")
+    if run.get("conclusion") not in {"success", "cancelled"}:
+        raise RuntimeError(f"Raw122 core source run is not usable: {run.get('conclusion')}")
+    if run.get("conclusion") == "cancelled":
+        jobs = a68.api_json(
+            f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/jobs"
+        )["jobs"]
+        base_jobs = [j for j in jobs if j["name"] == "branch (base, -1, -1)"]
+        artifact_job_succeeded = any(
+            j.get("conclusion") == "success" and any(
+                step["name"] == "Run actions/upload-artifact@v4"
+                and step.get("conclusion") == "success"
+                for step in j.get("steps", [])
+            )
+            for j in base_jobs
+        )
+        if not artifact_job_succeeded:
+            raise RuntimeError(
+                "Raw122 core workflow was cancelled and the base artifact-producing job did not succeed"
+            )
     artifacts = a68.api_json(
         f"repos/{REPO}/actions/runs/{RAW122_CORE_RUN_ID}/artifacts"
     )["artifacts"]
