@@ -1,3 +1,9 @@
+## 2026-11-26T05:49:17.765Z — box5 compressed complete proof candidate
+
+- Box5 proof-source.tar.xz (Git blob a2bc3b251ee827f8946d8c709e69943adf6347bd, SHA256 0894fce4eb33d1d2f8c2de7641d46639ed06e715fc719bbaab9a58202f2f5811) now contains full generator/checker. Local replay succeeded: 26,332 nodes, 4,633 compressed final-hole cases, 1,067 explicit halts, 19,047 cycle leaves, 505 sparse n-gram and 13 automata leaves, 1,067 split nodes. Candidate source bound 160 over exact original box5 index, 9,375,000 completions. Existing workflow target weighted-tnf-raw10-box5. Await full source acceptance; no global closure.
+- Refined adapter run 45763000994: count theorems 41/33/31 source-compiled with standard axioms, parent theorems failed because list membership simp left a final nil alternative. Fixed with List.not_mem_nil, or_false in commit 2fa22f05ae2e403f34439033eb18e2d8cb773a6f and dispatched same target once. Both audits require actual outcomes before any result claim.
+- Original lease still 2026-11-26T05:35:45.218Z. Never refresh. At this checkpoint elapsed about 13 minutes, not release-eligible.
+
 ## 2026-11-26T05:38:46.677Z — refined raw10 source adapter and proof handoff
 
 - RNG 2, normal mode; immutable lease 2026-11-26T05:35:45.218Z (run agent49-2026-11-26T05:35:45.218Z-box5-source), earliest release 06:45:45.218Z. No refresh.
