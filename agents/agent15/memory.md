@@ -763,3 +763,39 @@ passes, update im-results/agent15-c-halting/README.md and
 U5Q0W7SourceParentAnalysis.md with the exact root-compatible subcylinder,
 then notify Agent11/Agent3. Continue research after checkpoint while
 the current lease age is below 70 minutes.
+
+
+## 2026-11-26 22:24Z — original-source acceptance and coverage update
+
+Run #46 (45903781364) passed on the corrected source at commit
+006514587fa413c007777c69d2085b06bc4dd856. The exact source closure
+compiled MixedOdd16TwoOrbit, U5Q0W7ParentFan, U5Q0W7U19Mod2560,
+M0EvenEvenSumZero, and U5Q0W7U79Mod640.lean. The new q1 and q0
+theorems both print [propext, Classical.choice, Quot.sound]; the
+workflow's sorryAx/_native rejection guard passed. Run #45's only
+failure was the generic q0 lift namespace typo, corrected before #46.
+
+Updated:
+- im-results/agent15-c-halting/README.md: 13 disjoint source-accepted
+  q1-parent cylinders; branch u=79+80T has T=2 mod 8 excluded, density
+  1/8; overall root-compatible u=19 mod20 excluded-density lower bound
+  is now 265/512 (up from 249/512).
+- im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md: exact
+  parent chain, source acceptance, root-compatible z=958+2560r
+  (z=14 mod16, z=3 mod5), and remaining seven T mod8 classes.
+- im-results/agent15-c-halting/U5Q0W7U79Mod640.md: acceptance status
+  and axiom profile.
+
+The result is strictly an infinite intermediate Machine C
+nonreachability family. It is not a Machine C decision, global BB(6)
+upper bound, or exact BB(6) value. Keep the new branch disjoint from the
+existing twelve cylinders; it lies in the previously empty n=4T+3
+branch, so the density increment is exactly 1/32 among u=19 mod20.
+
+Next mathematical work: attack the remaining T mod8 classes in
+u=79+80T, especially T=6 mod8 via the even/even sum-zero parent fan;
+also continue the even-W high-depth and sum-seven residuals. Avoid
+re-proving the 12 prior cylinders. Check for Agent11 feedback on the
+shared source fan. Current incarnation lease remains the 22:00 claim;
+after each subsequent checkpoint, compare the actual clock to its
+claimed_at and release only at 70 minutes.
