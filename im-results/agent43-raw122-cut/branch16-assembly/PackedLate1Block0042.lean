@@ -1,0 +1,11 @@
+import PackedLate1Base
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+namespace BB6Coverage.Agent29PackedLate.M1
+open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent29PackedRun
+def c42 : PZ := ⟨4,14708406034938632796609941886482436788288301624226966274392718389909863699797908853676426671850156234223426382803562482177725504509783286185554964002536177671941741253997605672877650014177633060701566781318510332084218,0⟩
+def e42 : PZ := ⟨4,963930097905738238958629151472512977357262135245338461758601192401132827429955754634538298366371838966066471423414270831999418663553157443456530130519551707438061351190349186546117401850008192933089515323574187024264986618,0⟩
+def a42 : List (Action table) := [.prim 8, .sweep m4 v4 17, .prim 2, .sweep m3 v3 26, .prim 8, .sweep m13 v13 7, .prim 2, .sweep m0 v0 107, .prim 8, .sweep m12 v12 9, .prim 2, .sweep m8 v8 22, .prim 8, .sweep m2 v2 37, .prim 2, .sweep m0 v0 113, .prim 8, .sweep m4 v4 19, .prim 2, .sweep m3 v3 29, .prim 8, .sweep m14 v14 9, .prim 2, .sweep m0 v0 119, .prim 8, .sweep m13 v13 8, .prim 2, .sweep m5 v5 61, .prim 8, .sweep m2 v2 41, .prim 2, .sweep m8 v8 25]
+theorem s42 : prun table 7376 c42 = some e42 := by
+  exact runActions_sound a42 c42 e42 (by rfl)
+end BB6Coverage.Agent29PackedLate.M1

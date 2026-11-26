@@ -1,0 +1,105 @@
+[lean-closure] reused 1399 dependency-closed module(s) from source revisions ['94eb66d7d22034638bd5d9be014a5564363657f5']
+[lean-closure] level 1: 4 module(s)
+[lean-closure] compiling BiDFA <- im-results/agent16-raw118/BiDFA.lean
+[lean-closure] compiling Raw122Counter17 <- im-results/agent43-raw122-cut/Raw122Counter17.lean
+[lean-closure] compiling Raw122D104Base <- /tmp/a43-generated/Raw122D104Base.lean
+[lean-closure] compiling Raw122ResidualCompose <- im-results/agent43-raw122-cut/Raw122ResidualCompose.lean
+'BB6Coverage.Agent16BiDFA.inv_step' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent16BiDFA.live' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent16BiDFA.never' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent43Raw122Counter17.never' depends on axioms: [propext, Quot.sound]
+'BB6.Agent43Raw122ResidualCompose.cover_of_good' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122ResidualCompose.never_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 2: 27 module(s)
+[lean-closure] compiling Raw122D104S00 <- /tmp/a43-generated/Raw122D104S00.lean
+[lean-closure] compiling Raw122D104S01 <- /tmp/a43-generated/Raw122D104S01.lean
+[lean-closure] compiling Raw122Roster17Kid00 <- /tmp/a43-generated/Raw122Roster17Kid00.lean
+[lean-closure] compiling Raw122Roster17Kid01 <- /tmp/a43-generated/Raw122Roster17Kid01.lean
+[lean-closure] compiling Raw122Roster17Kid02 <- /tmp/a43-generated/Raw122Roster17Kid02.lean
+[lean-closure] compiling Raw122Roster17Kid03 <- /tmp/a43-generated/Raw122Roster17Kid03.lean
+[lean-closure] compiling Raw122Roster17Kid04 <- /tmp/a43-generated/Raw122Roster17Kid04.lean
+[lean-closure] compiling Raw122Roster17Kid05 <- /tmp/a43-generated/Raw122Roster17Kid05.lean
+[lean-closure] compiling Raw122Roster17Kid06 <- /tmp/a43-generated/Raw122Roster17Kid06.lean
+[lean-closure] compiling Raw122Roster17Kid07 <- /tmp/a43-generated/Raw122Roster17Kid07.lean
+[lean-closure] compiling Raw122Roster17Kid08 <- /tmp/a43-generated/Raw122Roster17Kid08.lean
+[lean-closure] compiling Raw122Roster17Kid09 <- /tmp/a43-generated/Raw122Roster17Kid09.lean
+[lean-closure] compiling Raw122Roster17Kid10 <- /tmp/a43-generated/Raw122Roster17Kid10.lean
+[lean-closure] compiling Raw122Roster17Kid11 <- /tmp/a43-generated/Raw122Roster17Kid11.lean
+[lean-closure] compiling Raw122Roster17Kid12 <- /tmp/a43-generated/Raw122Roster17Kid12.lean
+[lean-closure] compiling Raw122Roster17Kid13 <- /tmp/a43-generated/Raw122Roster17Kid13.lean
+[lean-closure] compiling Raw122Roster17Kid14 <- /tmp/a43-generated/Raw122Roster17Kid14.lean
+[lean-closure] compiling Raw122Roster17Kid15 <- /tmp/a43-generated/Raw122Roster17Kid15.lean
+[lean-closure] compiling Raw122Roster17Kid16 <- /tmp/a43-generated/Raw122Roster17Kid16.lean
+[lean-closure] compiling Raw122Roster17Kid17 <- /tmp/a43-generated/Raw122Roster17Kid17.lean
+[lean-closure] compiling Raw122Roster17Kid18 <- /tmp/a43-generated/Raw122Roster17Kid18.lean
+[lean-closure] compiling Raw122Roster17Kid19 <- /tmp/a43-generated/Raw122Roster17Kid19.lean
+[lean-closure] compiling Raw122Roster17Kid20 <- /tmp/a43-generated/Raw122Roster17Kid20.lean
+[lean-closure] compiling Raw122Roster17Kid21 <- /tmp/a43-generated/Raw122Roster17Kid21.lean
+[lean-closure] compiling Raw122Roster17Kid22 <- /tmp/a43-generated/Raw122Roster17Kid22.lean
+[lean-closure] compiling Raw122Roster17Kid23 <- /tmp/a43-generated/Raw122Roster17Kid23.lean
+[lean-closure] compiling TreeBiDFA <- im-results/agent16-raw118/TreeBiDFA.lean
+'BB6Coverage.Agent16BiDFA.TreeCheck.never' depends on axioms: [propext, Quot.sound]
+[lean-closure] level 3: 3 module(s)
+[lean-closure] compiling IndexedBiDFA <- im-results/agent1-bidfa-sat/IndexedBiDFA.lean
+[lean-closure] compiling Raw122D104Join <- /tmp/a43-generated/Raw122D104Join.lean
+[lean-closure] compiling Raw122Roster17 <- /tmp/a43-generated/Raw122Roster17.lean
+'BB6Coverage.Agent1IndexedBiDFA.inv_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent1IndexedBiDFA.live' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent1IndexedBiDFA.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122Roster.cover17' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 4: 23 module(s)
+[lean-closure] compiling Agent29Raw122Indexed078 <- /tmp/a43-generated/Agent29Raw122Indexed078.lean
+[lean-closure] compiling Agent29Raw122Indexed079 <- /tmp/a43-generated/Agent29Raw122Indexed079.lean
+[lean-closure] compiling Agent29Raw122Indexed080 <- /tmp/a43-generated/Agent29Raw122Indexed080.lean
+'BB6Coverage.Agent29Raw122Indexed.M080.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed081 <- /tmp/a43-generated/Agent29Raw122Indexed081.lean
+'BB6Coverage.Agent29Raw122Indexed.M078.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed082 <- /tmp/a43-generated/Agent29Raw122Indexed082.lean
+'BB6Coverage.Agent29Raw122Indexed.M081.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed083 <- /tmp/a43-generated/Agent29Raw122Indexed083.lean
+'BB6Coverage.Agent29Raw122Indexed.M082.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed084 <- /tmp/a43-generated/Agent29Raw122Indexed084.lean
+'BB6Coverage.Agent29Raw122Indexed.M079.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed085 <- /tmp/a43-generated/Agent29Raw122Indexed085.lean
+'BB6Coverage.Agent29Raw122Indexed.M084.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed086 <- /tmp/a43-generated/Agent29Raw122Indexed086.lean
+'BB6Coverage.Agent29Raw122Indexed.M085.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed087 <- /tmp/a43-generated/Agent29Raw122Indexed087.lean
+'BB6Coverage.Agent29Raw122Indexed.M083.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed088 <- /tmp/a43-generated/Agent29Raw122Indexed088.lean
+'BB6Coverage.Agent29Raw122Indexed.M086.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed089 <- /tmp/a43-generated/Agent29Raw122Indexed089.lean
+'BB6Coverage.Agent29Raw122Indexed.M087.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed090 <- /tmp/a43-generated/Agent29Raw122Indexed090.lean
+'BB6Coverage.Agent29Raw122Indexed.M089.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed091 <- /tmp/a43-generated/Agent29Raw122Indexed091.lean
+'BB6Coverage.Agent29Raw122Indexed.M088.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed092 <- /tmp/a43-generated/Agent29Raw122Indexed092.lean
+'BB6Coverage.Agent29Raw122Indexed.M092.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed093 <- /tmp/a43-generated/Agent29Raw122Indexed093.lean
+'BB6Coverage.Agent29Raw122Indexed.M090.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed094 <- /tmp/a43-generated/Agent29Raw122Indexed094.lean
+'BB6Coverage.Agent29Raw122Indexed.M091.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed095 <- /tmp/a43-generated/Agent29Raw122Indexed095.lean
+'BB6Coverage.Agent29Raw122Indexed.M094.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed096 <- /tmp/a43-generated/Agent29Raw122Indexed096.lean
+'BB6Coverage.Agent29Raw122Indexed.M093.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed097 <- /tmp/a43-generated/Agent29Raw122Indexed097.lean
+'BB6Coverage.Agent29Raw122Indexed.M095.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed098 <- /tmp/a43-generated/Agent29Raw122Indexed098.lean
+'BB6Coverage.Agent29Raw122Indexed.M096.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed099 <- /tmp/a43-generated/Agent29Raw122Indexed099.lean
+'BB6Coverage.Agent29Raw122Indexed.M097.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Raw122Direct104 <- /tmp/a43-generated/Raw122Direct104.lean
+'BB6Coverage.Agent31Pump.Raw122DirectGrowth.M104.never' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent29Raw122Indexed.M098.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent29Raw122Indexed.M099.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 5: 1 module(s)
+[lean-closure] compiling Raw122Roster17Witnesses <- /tmp/a43-generated/Raw122Roster17Witnesses.lean
+'BB6.Agent43Raw122Roster.witnesses17' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 6: 1 module(s)
+[lean-closure] compiling Raw122Recovered17 <- /tmp/a43-generated/Raw122Recovered17.lean
+'BB6.Agent43Raw122Recovered17.cover17' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122Recovered17.residual_count' depends on axioms: [propext]
+[lean-closure] SUCCESS: compiled 1458 project modules from 1 root(s) into /tmp/a43-final-17
+[lean-closure] wrote manifest for 1458 modules to /tmp/a43-final-17/manifest.json
