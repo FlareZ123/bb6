@@ -422,7 +422,7 @@ jobs:
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-coarse-forest) make -f Makefile.coq -j 2 Agent5CoarseTree.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-direct-auto) make -f Makefile.coq -j 2 Agent5SourceAutoData.vo ;;
-            enumerate62-q0-nine-parent-membership) make -f Makefile.coq -j 2 Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
+            enumerate62-q0-nine-parent-membership) make -f Makefile.coq -j 2 Agent5RosterComplement.vo Agent8PackedRoot.vo Agent47Raw11RestrictedQ0.vo ;;
             enumerate62-q0-auto-root|enumerate62-direct-parent) make -f Makefile.coq -j 2 Agent5Q0AutoData.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-q0-row28) make -f Makefile.coq -j 2 Agent5Row28Data.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-q0-80-roots) make -f Makefile.coq -j 2 Agent5Row28Data.vo Agent5CoarsePair35.vo Agent5CoarsePair37.vo Agent5CoarsePair47.vo Agent5CoarsePair50.vo Agent5CoarseSmall.vo Agent5CoarseA.vo Agent5CoarseB.vo Agent5CoarseC.vo Agent5CoarseD.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
@@ -523,7 +523,10 @@ jobs:
             fi
           fi
           cat nine-parent-results/membership.log
+          timeout 600s coqc -Q . BusyCoq -native-compiler no Agent47Raw11RestrictedQ0.v > nine-parent-results/restricted-q0.log 2>&1
+          cat nine-parent-results/restricted-q0.log
           cp Agent47Q0NineParentMembership.{v,vo} nine-parent-results/
+          cp Agent47Raw11RestrictedQ0.{v,vo} nine-parent-results/
       - name: Preserve Raw11 nine-parent checkpoint membership proof
         if: always() && inputs.target == 'enumerate62-q0-nine-parent-membership'
         uses: actions/upload-artifact@v4
