@@ -1,10 +1,10 @@
-# Space Needle: cancellation index 10, complete finite reverse tree
+# Space Needle: cancellation indices 10 and 11, complete finite reverse trees
 
 ## Result and status
 
-The tenth cancellation feeder is not on the blank-root orbit, by the established exact shifted-counter inverse correspondence, the kernel-checked arithmetic cancellation cutoff and resonance/gap lemmas, and the finite exact GMP calculation below. This is an intermediate computational exclusion, not a newly kernel-certified finite result or a decision of Space Needle. The previously audited r=7,8,9 cases are not rerun.
+The tenth and eleventh cancellation feeders are not on the blank-root orbit, by the established exact shifted-counter inverse correspondence, the kernel-checked arithmetic cancellation cutoff and resonance/gap lemmas, and the finite exact GMP calculation below. This is an intermediate computational exclusion, not a newly kernel-certified finite result or a decision of Space Needle. The previously audited r=7,8,9 cases are not rerun.
 
-Set N=9^10=3486784401, a=(N+5)/2=1743392203, A=2^a, M=20a=34867844060, P=(A^20-N)/(A+3). The cancellation feeder b=AP/2 maps to terminal 2^(M-1). We avoid allocating AP or the terminal integer.
+For the detailed r=10 audit, set N=9^10=3486784401, a=(N+5)/2=1743392203, A=2^a, M=20a=34867844060, P=(A^20-N)/(A+3). The cancellation feeder b=AP/2 maps to terminal 2^(M-1). We avoid allocating AP or the terminal integer.
 
 ## Complete candidate coverage
 
@@ -24,7 +24,7 @@ For large resonant candidates, choose h from {0,B,2B} so all three rotated expon
 
 Every proper descendant has one candidate m=a passing this necessary three-term test. Apply the same good-shift argument to the ORIGINAL sparse polynomial C+c sum_(j=1)^(2r) (-3)^(2r-j)2^(ja), with H2=bitlength(c(N-1)/2+Cmax), B2=H2+2ceil(M/m), and (2r+1)B2<=m. Its rotated sum is nonzero for all ten such candidates, so they are rejected without constructing giant D. The code explicitly signals unresolved large candidates if neither rejection succeeds and exact modular checking is unavailable. No such unresolved candidate occurred in this audit.
 
-## Exact audit
+## Exact audit (r=10)
 
 All ranges [1,25000] and [25001,cut] were completed for every listed node. The latter also checks all resonance extras. Counts below aggregate the two ranges. Paths list reverse valuations v=m-1.
 
@@ -45,6 +45,29 @@ All ranges [1,25000] and [25001,cut] were completed for every listed node. The l
 
 Eleven vertices, ten edges, two leaves, zero root matches, zero unresolved large candidates. Ordinary candidate partition holds on every row. No arbitrary valuation cutoff has been substituted for a proved coverage bound.
 
+## Eleventh cancellation feeder
+
+For r=11 the kernel-checked initial cutoff is m^2<16ra, giving m<=1661786. The optimized exact solver rejects the complete interval, including the lower range where the earlier GMP modular exponentiation was expensive.
+
+| Inclusive range | prime rejects | sparse rejects | full LD checks | parents |
+|---|---:|---:|---:|---|
+| 1..25000 | 20156 | 4844 | 0 | none |
+| 25001..50000 | 20210 | 4790 | 0 | none |
+| 50001..200000 | 121287 | 28713 | 0 | none |
+| 200001..300000 | 80812 | 19188 | 0 | none |
+| 300001..600000 | 242609 | 57391 | 0 | none |
+| 600001..1000000 | 323494 | 76506 | 0 | none |
+| 1000001..1661786 | 535129 | 126657 | 0 | none |
+| TOTAL | 1343697 | 318089 | 0 | none |
+
+The r=11 reverse tree consists of its sole root, which differs from blank root 3.
+
+The new needle11.cpp differs from the checked r=10 version only in the specialized modular exponentiation. It replaces general GMP modulus by signed shift folding using 2^m=-3 mod D, after every square and multiplication by 3. Every fold preserves congruence and strictly reduces magnitude whenever |S|>=2^m and m>=8. For smaller m the original GMP path remains. This permits exact modular powers without large general integer division. The exact source SHA256 is ee7f5216b0cce8ab029630ed84d364655296b1772f59b3c5f60e2901a443f592. The first small chunk was also independently repeated with this source. The optimized r=11 calculation is complete, but not yet a Lean finite certificate.
+
+## Checked arithmetic implementation
+
+SparseZero.lean independently proves `NeedleSparse.sortCheck_iff`: sorting an arbitrary list of signed coefficient/exponent terms and testing successive binary gaps returns true exactly when their integer sum is zero. If the accumulator is nonzero and the next gap exceeds its log2 magnitude, the implementation rejects without materializing the power. All four exported correctness theorems compile on Lean 4.36.0-rc2 and have only [propext, Classical.choice, Quot.sound]. This certifies the mathematical sparse-zero algorithm, not the C++ binary or the complete r=10/11 audit.
+
 ## Reproduce
 
 On 64-bit Linux with GMP and OpenMP:
@@ -54,4 +77,4 @@ OMP_NUM_THREADS=4 python3 reproduce.py
 ```
 The driver traverses from the initial representation, runs both contiguous chunks for each vertex, checks totals, compares each printed child to its affine update and checks the expected tree. Compile without NDEBUG. The exact executed C++ source SHA256 is 9fe23d516e3fd5bad76b52c936ba4ba5a7c3cb0670947b0d4153e8878d1ef6bb.
 
-The integer algorithm and its complete enumeration are computational evidence; the sparse zero implementation and finite tree have not been ported to a new Lean finite certificate. The original source inverse semantics and cited arithmetic theorems are inherited. A useful next step is to formalize the compact resonance enumeration and extend the audit to further indices or obtain a uniform root-sensitive theorem.
+The integer algorithm and its complete enumeration are computational evidence; the sparse zero algorithm now has a separate checked Lean implementation, but the finite trees have not been ported to a new Lean finite certificate. The original source inverse semantics and cited arithmetic theorems are inherited. A useful next step is to formalize the compact resonance enumeration and extend the audit to further indices or obtain a uniform root-sensitive theorem.
