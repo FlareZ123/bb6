@@ -16,6 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
+    if: inputs.child != 'raw57-cuts'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -158,4 +159,114 @@ jobs:
             /tmp/a1-raw56-e1-0re/*.olean
             /tmp/a1-raw56-e1-0re/manifest.json
             /tmp/raw57.log
+          if-no-files-found: error
+
+  raw57-cuts:
+    if: inputs.child == 'raw57-cuts'
+    strategy:
+      fail-fast: false
+      matrix:
+        group: [early, middle, residual-a, residual-b]
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-four-hole-roster/generate_four_hole.py
+      - name: Build bounded Raw57 proof cut
+        run: python im-results/agent1-raw57/build_cuts.py "${{ matrix.group }}" --jobs 4
+      - name: Standard-axiom audit
+        run: python im-results/agent1-raw57/check_axioms.py "/tmp/raw57-cut-${{ matrix.group }}/compile.log"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw57-cut-${{ matrix.group }}
+          path: |
+            /tmp/raw57-cut-${{ matrix.group }}/precompiled/**
+            /tmp/raw57-cut-${{ matrix.group }}/manifest.json
+            /tmp/raw57-cut-${{ matrix.group }}/compile.log
+          if-no-files-found: error
+
+  raw57-parent-assemble:
+    if: inputs.child == 'raw57-cuts'
+    needs: raw57-cuts
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-four-hole-roster/generate_four_hole.py
+      - name: Download early proof cut
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-cut-early
+          path: /tmp/raw57-artifacts/early
+      - name: Download middle proof cut
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-cut-middle
+          path: /tmp/raw57-artifacts/middle
+      - name: Download residual-A proof cut
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-cut-residual-a
+          path: /tmp/raw57-artifacts/residual-a
+      - name: Download residual-B proof cut
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-cut-residual-b
+          path: /tmp/raw57-artifacts/residual-b
+      - name: Strictly merge proof-cut objects
+        run: |
+          python im-results/agent1-raw57/merge_cuts.py \
+            --artifacts-root /tmp/raw57-artifacts \
+            --generated-out /tmp/raw57-merged/generated \
+            --precompiled-out /tmp/raw57-merged/precompiled \
+            --manifest-out /tmp/raw57-merged/manifest.json
+      - name: Compile thin Raw57 parent consumer
+        run: |
+          set -euo pipefail
+          WORK=/tmp/raw57-parent-final
+          python tools/lean_compile_closure.py \
+            --workdir "$WORK" --jobs 4 \
+            --source-root /tmp/raw57-merged/generated \
+            --precompiled-manifest /tmp/raw57-merged/manifest.json \
+            --precompiled-dir /tmp/raw57-merged/precompiled \
+            --manifest "$WORK/manifest.json" --label raw57-parent-complete \
+            --theorem BB6.Agent1Raw57Complete.parent_cover \
+            --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LA_------' \
+            --weighted-bound 1500 --artifact-name raw57-parent-complete-source-accepted \
+            --provenance-input im-results/agent1-raw57/Raw57ParentComplete.lean \
+            --provenance-input im-results/agent1-raw57/Raw57ParentConsumer.lean \
+            --provenance-input im-results/agent1-raw57/Raw57ParentConsumerWithLALE.lean \
+            --provenance-input im-results/agent1-raw57/Raw57ParentBridge.lean \
+            --provenance-input im-results/agent1-raw57/build_cuts.py \
+            --provenance-input im-results/agent1-raw57/merge_cuts.py \
+            im-results/agent1-raw57/Raw57ParentComplete.lean | tee /tmp/raw57-parent-final.log
+      - name: Standard-axiom and theorem audit
+        run: |
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw57-parent-final.log --require BB6.Agent1Raw57Complete.parent_cover
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw57-parent-complete-source-accepted
+          path: |
+            /tmp/raw57-parent-final/**
+            /tmp/raw57-parent-final.log
           if-no-files-found: error
