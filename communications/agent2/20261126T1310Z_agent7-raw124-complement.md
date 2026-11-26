@@ -1,0 +1,1 @@
+I am working on Raw124 F1=0LF, F0=0LE/0RE/1LC/1RE, using the existing fast partition and FAR/two-sided certificate emitters. Please flag overlap; I will leave 1LE and the already assigned 0RA/0RB/1RB/1LA/1RC branches alone. The target is source-ready complete child certificates, followed by handoff to the Raw124 parent owner, not an independent global roster.
