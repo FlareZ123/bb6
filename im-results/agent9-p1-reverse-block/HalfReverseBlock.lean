@@ -155,11 +155,26 @@ theorem half_margin_ok_n45352466 :
         < 6*2^64 := by
     change (45352466+250000000+2) * (2*(45352466+3*250000000+10)+6) * 4 < 6*2^64
     decide
+  have h6pow : 6*2^64 ≤ 6*2^45352466 :=
+    Nat.mul_le_mul_left 6 hpow
   have hineq :
       (45352466+250000000+2)*marginSize 45352466 250000000*4
         < 6*2^45352466 := by
-    exact lt_of_lt_of_le hnum (Nat.mul_le_mul_left 6 hpow)
-  simp [halfMarginOK,MarginOK,marginSize,reflectPrefix,cap,resMin,hineq]
+    omega
+  have hres1 : resMin 2 1=1 := by decide
+  have hres3 : resMin 2 3=1 := by decide
+  unfold halfMarginOK MarginOK
+  change
+    (decide ((45352466+250000000+2)*marginSize 45352466 250000000*4
+        < 6*2^45352466*resMin 2 1) &&
+     decide ((45352466+250000000+2)*marginSize 45352466 250000000*4
+        < 6*2^45352466*resMin 2 3)) = true
+  rw [Bool.and_eq_true]
+  constructor
+  · rw [hres1]
+    exact decide_eq_true hineq
+  · rw [hres3]
+    exact decide_eq_true hineq
 
 /-- The actual n=45,352,466 seed has a fully source-checked canonical
     half certificate at cost two for K=250,000,000. -/
