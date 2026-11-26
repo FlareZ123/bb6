@@ -30,7 +30,7 @@ def main():
     parts = a63.download_canonical64_parts(work)
 
     linked = work / "linked"
-    groups = [parts["canonical65"], parts["raw120"], parts["canonical64"]]
+    groups = [parts["canonical65"], parts["raw120"]]
     a68.link_reachable(
         groups, work, linked, families=a63.canonical64_families(parts)
     )
