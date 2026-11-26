@@ -1,0 +1,10 @@
+# Raw10 sibling rectangles: candidate classification and a late halter
+
+The five original base34 rectangle indices 12, 13, 14, 15, 25 fix B1 to transition codes 11, 9, 7, 6, 5 respectively, and fix A0=8, B0=11, C0=17, C1=13, D0=11. E0 has allowed values 0,3,4,12,18,20,21,22,23,24; A1,D1,E1,F0,F1 range over 0..24. Each contains 97,656,250 completions (488,281,250 total). Search found 26,302 open leaves at cutoff 1024, of which sparse n-gram invariants settled 25,229; symmetric run-length and differential-stack certificates settled 989; longer search settled 21; expanded stack search settled 43; forward block-FAR settled 19. The final cylinder reaches an unassigned slot after 805,012,067 live moves. These are discovery results, not yet a kernel proof of the five rectangles.
+
+## Long halter
+Transition string: `1RB1RF_1LC1LB_0LE0LD_1LC0LC_1RE1RA_---1RD` (F0 is the only hole). The initial 503 live steps reach F(4,36), where the head scans the first of 36 ones and has four ones to its left. For even L=2n and R>=3,
+`F(L,R) -> F(2L+8,R-3)`, at cost `L+9+4k^2+10k` for `k=L/2+1`.
+Twelve iterations produce F(49144,0), hence query F0 at time 805,012,067. Assigning halt gives ordinary score 805,012,068; assigning any ordinary transition yields a total nonhalting table. The weighted bound is at most 805,012,073. The macro recurrence, initial prefix and endpoint theorem were locally kernel-checked against extracted primitive-ray definitions. The source-level bridge in FamilyLateSource.lean is pending audit against the unchanged repository BlockMacro and BlockFARBridge.
+
+Extract late-source.tar.xz to obtain the two Lean modules; archive SHA-256 26cc6fe5efe8ada2e934264ab3e5f4b4c4f8da10fb6f85a96ff7e48be75c458a. No claim of global closure.
