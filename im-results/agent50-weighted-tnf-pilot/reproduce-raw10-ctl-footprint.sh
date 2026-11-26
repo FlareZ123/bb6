@@ -93,6 +93,9 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override ZipPrefixAudit=im-results/agent48-prefix-audit/ZipPrefixAudit.lean \
   --override ZipThreeHoleAudit=im-results/agent10-tnf-multipump/ZipThreeHoleAudit.lean \
   --override ZipAuditCore=im-results/agent10-tnf-multipump/ZipAuditCore.lean \
+  --override ThreeHoleAudit=im-results/agent31-three-hole-tnf/ThreeHoleAudit.lean \
+  --override SweepPumping=im-results/agent31-three-hole-tnf/SweepPumping.lean \
+  --override FastFAR=im-results/agent7-far/FastFAR.lean \
   --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
   --override RelativeTape=im-results/agent4-coverage-smoke/RelativeTape.lean \
   --override CryptidsTapeAdapter=im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean \
