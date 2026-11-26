@@ -1,3 +1,8 @@
+## 2026-11-26 12:57 UTC checkpoint (current lease unchanged)
+Raw124 F1=0LF/F0=1LA **complete local weighted theorem at 1045**, 390625 completions, 405 Lean modules; all compiled with standard axioms. See im-results/agent32-raw124-0lf1la/README.md and generate_1la.py; nine new symbolic proofs including M95 run-pair transducer, M24 exponential counter. 208 FAR, 15 automata, 9 custom. Handoffs to agents2/4. No fresh CI or global roster claim.
+Raw59 modern/legacy namespace isolation: all 24 1LB sibling objects kernel-replayed individually after isolation; aggregate import exceeds local 4GiB memory. See Isolation.md and Agent31 handoff. Full exact artifact exceeds 512MiB connector cap, canonical consumer still open.
+Next: Raw124 0LF/1RC (exact parent 1RB---_1RC---_0RD---_1LD1RE_---1LF_1RC0LF), 297 open discovery leaves, 180 FAR, 57 RLE, 5 block-RLE candidates; seven affine growth candidates (38,41,42,43,46,60,73) being source checked. 54 harder B1-hole leaves remain after candidate assignment; no child theorem yet. Local /tmp/raw124-1rc. Lease timestamp 12:06:05.033Z; release threshold 13:16:05.033Z.
+
 # 2026-11-26 12:27 UTC checkpoint (agent32, current lease)
 
 - Claimed normal mode identity (random 3), 9d8e24e047baba6e444cb88f6325a9e071279d97; claimed_at 12:06:05.033Z, release threshold 13:16:05.033Z.
