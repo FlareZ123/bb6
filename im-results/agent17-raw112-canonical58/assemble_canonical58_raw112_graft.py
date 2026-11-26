@@ -64,10 +64,20 @@ def verify_raw112_parent(work: Path, run_id: int):
     assert summary["parent_theorem"] == RAW112_THEOREM
     assert summary["weighted_bound"] == 100000
     assert summary["full_union_root_modules"] == 93
-    assert set(summary["new_retry_groups"]) == {
+    all_retry_groups = {
         "r01a-rest0", "r01a-rest1", "r01a-deep",
         "r04a", "r04b", "r04c", "r05a0", "r05a1",
     }
+    new_retry_groups = set(summary["new_retry_groups"])
+    reused_retry_groups = set(summary.get("reused_retry_groups", []))
+    assert new_retry_groups and not (new_retry_groups & reused_retry_groups)
+    assert new_retry_groups | reused_retry_groups == all_retry_groups
+    resumed_from = summary.get("resumed_from_retry_run_id")
+    if resumed_from is None:
+        assert new_retry_groups == all_retry_groups and not reused_retry_groups
+    else:
+        assert isinstance(resumed_from, int) and resumed_from > 0
+        assert reused_retry_groups
     assert any((d / "Raw112ClosedCover.olean").is_file() for d in dirs)
     return metadata, dirs, summary
 
