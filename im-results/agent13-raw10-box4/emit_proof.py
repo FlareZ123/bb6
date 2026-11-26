@@ -120,7 +120,7 @@ theorem p_safe (m : Machine) (hm : compatible p m) : NeverHalts m := by
   have he := h s.1 s.2 (by simpa [hv])
   exact hm s v (he.symm ▸ hv)
 def known : BB6.Agent13.Box4.Known {target} := ⟨p,BB6.Agent13.Box4.good_never {target} p p_safe⟩
-end BB6.Agent13.Box4.Block{i}
+end BB6.Agent13.Box4.Block{tag}{i}
 '''
         write(name,imports,text)
         refs[tuple(t)]=(name,f'BB6.Agent13.Box4.Block{tag}{i}.known')
