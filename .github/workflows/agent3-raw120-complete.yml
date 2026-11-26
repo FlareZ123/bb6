@@ -182,16 +182,21 @@ jobs:
       - name: Compile normalized Raw139 candidate matcher against canonical77
         run: |
           set -euo pipefail
-          test -s /tmp/canonical77/CanonicalRaw114Accepted.olean
-          test -s /tmp/canonical77/CanonicalTwoParentGraft.olean
-          test -s /tmp/canonical77/canonical77-base-manifest.json
+          canonical_olean="$(find /tmp/canonical77 -type f -name CanonicalRaw114Accepted.olean -print -quit)"
+          canonical_manifest="$(find /tmp/canonical77 -type f -name canonical77-base-manifest.json -print -quit)"
+          test -n "$canonical_olean"
+          canonical_dir="$(dirname "$canonical_olean")"
+          test -s "$canonical_dir/CanonicalTwoParentGraft.olean"
+          test -s "$canonical_manifest"
+          echo "Using canonical77 objects from $canonical_dir"
+          echo "Using canonical77 manifest $canonical_manifest"
           mkdir -p /tmp/agent3-raw139-normalized
           python tools/test_lean_compile_module_index.py
           python tools/lean_compile_closure.py \
             --workdir /tmp/agent3-raw139-normalized/build \
             --jobs 4 \
-            --precompiled-dir /tmp/canonical77 \
-            --precompiled-manifest /tmp/canonical77/canonical77-base-manifest.json \
+            --precompiled-dir "$canonical_dir" \
+            --precompiled-manifest "$canonical_manifest" \
             --manifest /tmp/agent3-raw139-normalized/manifest.json \
             --label agent3-raw139-normalized-cryptids-scan \
             --provenance-input im-results/agent3-raw139-cryptids-scan/README.md \
