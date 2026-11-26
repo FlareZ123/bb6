@@ -1,5 +1,5 @@
 name: Agent 10 twelve-cylinder weighted frontier
-run-name: ${{ inputs.target }} child=${{ inputs.raw58_child }} groups=${{ inputs.raw58_groups }} automata_id=${{ inputs.raw58_automata_id }} source=${{ github.sha }}
+run-name: ${{ inputs.target }} child=${{ inputs.raw58_child }} groups=${{ inputs.raw58_groups }} automata_id=${{ inputs.raw58_automata_id }} raw112_run_id=${{ inputs.raw112_run_id }} source=${{ github.sha }}
 on:
   workflow_dispatch:
     inputs:
@@ -52,7 +52,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'canonical62-raw112-raw58'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata') && 120 || 60 }}
