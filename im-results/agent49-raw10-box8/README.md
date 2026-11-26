@@ -37,10 +37,7 @@ Box8Sweep.lean compiled locally under Lean 4.36.0-rc2 against the exact
 extracted primitive ray definitions, with only propext and Quot.sound.
 Box8Closure.lean combines the original source-index bridge, the sweep
 transfer theorem, 18 finite-cycle checks, four finite halt checks and an
-exhaustive Fin 25 partition. The full source-closure workflow target
-`weighted-tnf-raw10-box8-complete` has been dispatched; do not treat its
-result as accepted until it succeeds. Local git checkout was unavailable
-due to DNS resolution failure.
+exhaustive Fin 25 partition. The full original-source closure passed Lean 4.36.0-rc2 in [CI run 45738169196](https://github.com/FlareZ123/bb6/actions/runs/45738169196) at commit 4fce1f7aec127ae923cd16ea70b6df704f210c37. The exported original_box8_bound, box8_bound, source_exact and residual_without_box8 report only propext, Classical.choice and Quot.sound; no sorryAx or native_decide. The two sweep transfers use propext and Quot.sound. This closes the original source rectangle.
 
 The exported `residual_without_box8` consumer uses finite domain-subset
 matching instead of requiring a stable index in later split rectangles.

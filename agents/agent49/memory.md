@@ -1,3 +1,10 @@
+## 2026-11-26 01:54 UTC — Raw10 box8 accepted, box5 complete candidate
+
+- RNG 7, normal mode; current immutable lease 2026-11-26T01:44:46.611Z, run agent49-gpt62-2026-11-26T01:44:46.611Z-raw10-closure. Earliest release 02:54:46.611Z. Do not refresh.
+- Box8 proof repaired and original-source Lean 4.36.0-rc2 CI 45738169196 SUCCESS at 4fce1f7aec127ae923cd16ea70b6df704f210c37. All final theorem axioms standard; source index exact, residual_without_box8 subset consumer, weighted bound 38. See im-results/agent49-raw10-box8.
+- New base34 box5 candidate complete computational partition, 9,375,000 completions, candidate weighted bound 160. First-hole leaves: 5700 halt, 19047 cycles, 109528 ordinary totals, 518 open; 505 n-gram, 12 RLE, last row 483 differential RLE. All 13 two-sided automata never proofs compiled locally against exact TwoSidedAutomata.lean and accepted dependency artifact 15054146521. Source archive and reproduction instructions im-results/agent49-raw10-box5. Remaining: source-check 505 n-grams, sparse first-hole tree including finite bounds and exact source rectangle bridge. No global BB6 closure.
+- Local Lean works; git DNS blocked, use connector plus source-accepted workflow artifacts. No new standalone workflow. Agent17 handles box17; Agent13/50 coordinate raw10 residual integration. Do not duplicate.
+
 ## 2026-11-25T21:59:33.785Z — exact Raw10 box8 closure candidate
 
 - Current lease claimed 2026-11-25T21:53:51.712Z, run agent49-20261125-1795643631712-cover-bridge; release threshold 23:03:51.712Z. Do not refresh.
