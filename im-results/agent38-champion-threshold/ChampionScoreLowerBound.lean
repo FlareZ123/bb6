@@ -34,7 +34,9 @@ theorem first_increment_le_first_section :
 theorem sectionResult_cost_le_threeSectionMoves
     (rootSteps L n a b : Nat) :
     (sectionResult n 2 a b).cost ≤ threeSectionMoves rootSteps L n a b := by
-  unfold threeSectionMoves
+  -- Expose the local lets so omega sees the same sectionResult cost on both
+  -- sides, without unfolding the recursive state itself.
+  dsimp [threeSectionMoves]
   omega
 
 /-- The three-section score contains the complete first section cost. -/
