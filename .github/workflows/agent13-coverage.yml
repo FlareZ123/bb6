@@ -6,7 +6,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-raw10-box8-complete, weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-q32-row26, weighted-tnf-q32-row34, weighted-tnf-q32-row45, weighted-tnf-q32-five-hole, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-nested, weighted-tnf-raw118-nested657, weighted-tnf-raw118-partial, weighted-tnf-raw118-accounted-core, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-run-summary, weighted-tnf-raw118-run-summary-extra, weighted-tnf-raw118-run-summary-second, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-agent42-frontier-count, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-0lf-simulation, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1ra, weighted-tnf-raw120-1rf, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1lb, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box-source-bridge, weighted-tnf-raw10-domain-source-inspect, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter, weighted-tnf-agent8-raw54-lf, weighted-tnf-raw10-box18to24-canonical76]
+        options: [weighted-tnf-raw10-box8-complete, weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-q32-row26, weighted-tnf-q32-row34, weighted-tnf-q32-row45, weighted-tnf-q32-five-hole, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-nested, weighted-tnf-raw118-nested657, weighted-tnf-raw118-partial, weighted-tnf-raw118-accounted-core, weighted-tnf-raw118-canonical-cut, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-run-summary, weighted-tnf-raw118-run-summary-extra, weighted-tnf-raw118-run-summary-second, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-agent42-frontier-count, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-0lf-simulation, weighted-tnf-raw124-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1ra, weighted-tnf-raw120-1rf, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1lb, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box-source-bridge, weighted-tnf-raw10-domain-source-inspect, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter, weighted-tnf-agent8-raw54-lf, weighted-tnf-raw10-box18to24-canonical76]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -92,6 +92,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw118-wide-cert'
       && inputs.target != 'weighted-tnf-raw118-sparse'
       && inputs.target != 'weighted-tnf-raw118-consumer'
+      && inputs.target != 'weighted-tnf-raw118-canonical-cut'
       && inputs.target != 'weighted-tnf-agent8-raw54-lf'
       && inputs.target != 'weighted-tnf-raw10-box18to24-canonical76'
     runs-on: ubuntu-latest
@@ -4125,3 +4126,107 @@ jobs:
           name: raw124-0lf-hard-simulation
           path: /tmp/0lf-hard-simulation.json
           if-no-files-found: warn
+
+  raw118_canonical_cut:
+    if: inputs.target == 'weighted-tnf-raw118-canonical-cut'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45647053824
+          name: canonical73-raw110-raw112-roster-consumer-certified
+          path: /tmp/raw118-cut/76
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/raw118-cut/77
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45725315357
+          name: agent31-canonical74-raw109-raw123-graft
+          path: /tmp/raw118-cut/74
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45725315357
+          name: agent6-canonical68-e1-parent-consumer
+          path: /tmp/raw118-cut/68
+      - name: Compile only the new conditional Raw118 quotient cut
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, pathlib, subprocess, os
+          d = pathlib.Path("/tmp/raw118-cut")
+          def sha(p):
+              return hashlib.sha256(p.read_bytes()).hexdigest()
+          def one(root, name):
+              paths = list(root.rglob(name))
+              assert len(paths) == 1, (root, name, paths)
+              return paths[0]
+          def load(p):
+              return json.loads(p.read_text())
+          s68 = load(one(d/"68", "a31-canonical68-summary.json"))
+          s74 = load(one(d/"74", "a31-canonical74-summary.json"))
+          assert s68["theorem"] == "BB6.Agent6Canonical68E1ParentGraft.exact_at_target"
+          assert s68["after_six_additional_e1_parent_cuts"] == 68
+          assert s68["common_weighted_bound_floor"] == 6766859
+          assert s68["canonical76_run_id"] == 45647053824
+          assert s68["canonical77_run_id"] == 45554648116
+          assert s74["source_revision"] == s68["source_revision"]
+          assert s74["lean_version"] == subprocess.check_output(["lean","--version"], text=True).strip()
+          obj68 = one(d/"68", "Canonical68E1ParentGraft.olean")
+          obj74 = one(d/"68", "Canonical74Raw109Raw123Graft.olean")
+          assert sha(obj68) == s68["olean_sha256"]
+          assert sha(obj74) == s68["canonical74_olean_sha256"] == s74["olean_sha256"]
+          assert sha(pathlib.Path("im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean")) == s68["source_sha256"]
+          assert sha(pathlib.Path("im-results/agent31-shared-core/Canonical74Raw109Raw123Graft.lean")) == s74["source_sha256"]
+          interface_manifest = one(d/"74", "a31-parent-interfaces-manifest.json")
+          assert sha(interface_manifest) == s68["parent_interface_manifest_sha256"] == s74["parent_interface_manifest_sha256"]
+          interfaces = one(d/"74", "Raw109Cut.olean").parent
+          shared = one(d/"76", "CanonicalTwoParentRosterOnly.olean").parent
+          core = one(d/"77", "CanonicalRaw114Accepted.olean").parent
+          version = subprocess.check_output(["lean","--version"], text=True).strip()
+          compiler = pathlib.Path(subprocess.check_output(["lean","--print-prefix"], text=True).strip())/"bin/lean"
+          s76 = load(one(d/"76", "canonical76-base.json"))
+          assert s76["residual_count"] == 76
+          assert sha(shared/"CanonicalTwoParentRosterOnly.olean") == s76["modules"]["CanonicalTwoParentRosterOnly"]["olean_sha256"]
+          assert sha(core/"CanonicalRaw114Accepted.olean") == s76["modules"]["CanonicalRaw114Accepted"]["accepted_artifact_olean_sha256"]
+          manifests = [(load(interface_manifest), interfaces),
+                       (load(one(d/"76", "canonical77-base-manifest.json")), core),
+                       (load(one(d/"76", "raw107-shared-manifest.json")), shared)]
+          for manifest, location in manifests:
+              assert manifest["lean_version"] == version
+              assert manifest["lean_binary"]["sha256"] == sha(compiler)
+              for entry in manifest["modules"]:
+                  obj = location/entry["olean_path"]
+                  assert obj.is_file() and sha(obj) == entry["olean_sha256"], (location, entry["module"])
+          # The original accepted 68 audit used this exact import ordering.
+          path = ":".join(map(str,[obj68.parent, interfaces, shared, core]))
+          with open(os.environ["GITHUB_ENV"],"a") as out:
+              out.write("LEAN_PATH="+path+"\n")
+          (d/"lean-path.txt").write_text(path+"\n")
+          PY
+          mkdir -p /tmp/raw118-cut/output
+          export LEAN_PATH="$(cat /tmp/raw118-cut/lean-path.txt)"
+          lean -o /tmp/raw118-cut/output/Raw118CanonicalCut.olean im-results/agent16-raw118/Raw118CanonicalCut.lean 2>&1 | tee /tmp/raw118-cut/output/audit.log
+          for theorem in parent_root sound_cut parent_count68 count67 sound67 exact_at_target; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw118-cut/output/audit.log "BB6.Agent16Raw118CanonicalCut.$theorem"
+          done
+          cp im-results/agent16-raw118/Raw118CanonicalCut.lean /tmp/raw118-cut/output/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw118-canonical-cut-conditional
+          path: /tmp/raw118-cut/output
+          if-no-files-found: error
