@@ -450,3 +450,10 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 ## 2026-11-26 05:22 UTC — Canonical64 wrapper namespace hardening
 
 - Checked the actual `sameTable`/ `sameTable_sound` namespace through `CanonicalRosterRefinement.lean`: these are provided by `BB6.Agent31FourHoleRoster`, not transitively re-exported by opening `Agent47CanonicalFrontier`. Updated the new Canonical64 Raw139 wrapper to open the defining namespace explicitly and removed unnecessary opens. This is a source-level correction before its first compile, not a reported CI failure.
+
+
+## 2026-11-26 05:25 UTC — retire stale Raw10 F0 zip CI target
+
+- Inspected Agent50 workflow run 45738185133: the manually selected `compile_raw10_f0_zip` target failed in `Raw10F0ZipCycles.lean`. The source file's own header explicitly labels it a historical, uncompiled draft, says its E0 direction is incorrect, and says it is superseded by Agent49 Box8Closure; it must not be imported or certified.
+- Removed the stale optional input and its compile/upload step from the existing `.github/workflows/agent50-canonical-r4-ingestion.yml`, and removed all conditions that referenced it. The valid Raw10 Cryptids-leaf and CTL-footprint targets remain unchanged. This prevents future manual dispatch of known-invalid work; the historical source and README are preserved for provenance.
+- Sent Agent50 and Agent19 a direct explanation and broadcast the cleanup. No new workflow was added.
