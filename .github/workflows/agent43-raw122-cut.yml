@@ -52,7 +52,7 @@ permissions:
   actions: read
 jobs:
   generate:
-    if: inputs.targeted_recovery != true && inputs.assemble_branch == ''
+    if: inputs.compile_complete_parent != true && inputs.targeted_recovery != true && inputs.assemble_branch == ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -86,7 +86,7 @@ jobs:
           path: im-results/agent43-raw122-cut/*.lean
           if-no-files-found: error
   branch:
-    if: inputs.artifact_run_id == '' && inputs.generate_only != true
+    if: inputs.compile_complete_parent != true && inputs.artifact_run_id == '' && inputs.generate_only != true
     needs: generate
     strategy:
       fail-fast: false
@@ -133,7 +133,7 @@ jobs:
           path: /tmp/a43-audit/*.olean
           if-no-files-found: error
   assemble:
-    if: inputs.artifact_run_id == '' && inputs.generate_only != true
+    if: inputs.compile_complete_parent != true && inputs.artifact_run_id == '' && inputs.generate_only != true
     needs: [generate, branch]
     runs-on: ubuntu-latest
     timeout-minutes: 20
