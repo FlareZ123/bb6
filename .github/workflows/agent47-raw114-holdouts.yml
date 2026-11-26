@@ -213,6 +213,11 @@ jobs:
           run-id: 45889628989
           name: raw11-root52-known-consumption
           path: /tmp/a47-root52-precompiled
+      - name: Check compiled cache artifact
+        run: |
+          set -euo pipefail
+          test -s /tmp/a47-root52-precompiled/tmp/a47-raw11-root52-known/manifest.json
+          test -s /tmp/a47-root52-precompiled/tmp/a47-root52-precompiled/q0-root52-source.sha256
       - name: Reconstruct coverage contract source
         run: |
           set -euo pipefail
@@ -281,8 +286,8 @@ jobs:
             --provenance-input im-results/agent47-raw11-adapter/Root51Lean.lean
             --provenance-input im-results/agent47-raw11-adapter/Root51LeanBase.lean
             --provenance-input im-results/agent5-weighted-tnf-queue/Q0RosterConsume.lean
-            --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
-            --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52-known/manifest.json
+            --provenance-input /tmp/a47-root52-precompiled/tmp/a47-root52-precompiled/q0-root52-source.sha256
+            --provenance-input /tmp/a47-root52-precompiled/tmp/a47-raw11-root52-known/manifest.json
           )
           for part in 0 1 2 3 4 5 6; do
             provenance+=(--provenance-input "im-results/agent47-raw11-adapter/Root49LeanPart${part}.lean")
@@ -292,11 +297,11 @@ jobs:
           done
           python tools/lean_compile_closure.py \
             im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean \
-            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \
+            --source-root /tmp/a47-root52-precompiled/tmp/a47-root52-precompiled/q0-root52-lean \
             --workdir /tmp/a47-raw11-root52-known \
             --manifest /tmp/a47-raw11-root52-known/manifest.json \
-            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52-known/manifest.json \
-            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52-known \
+            --precompiled-manifest /tmp/a47-root52-precompiled/tmp/a47-raw11-root52-known/manifest.json \
+            --precompiled-dir /tmp/a47-root52-precompiled/tmp/a47-raw11-root52-known \
             --jobs 2 \
             --lean lean \
             --label raw11-root52-plus-46-extras-plus-q0-parents \
@@ -335,8 +340,8 @@ jobs:
           path: |
             /tmp/a47-raw11-root52-known/
             /tmp/a47-raw11-root52-known.log
-            /tmp/a47-root52-precompiled/q0-root52-lean/
-            /tmp/a47-root52-precompiled/q0-root52-source.sha256
+            /tmp/a47-root52-precompiled/tmp/a47-root52-precompiled/q0-root52-lean/
+            /tmp/a47-root52-precompiled/tmp/a47-root52-precompiled/q0-root52-source.sha256
             im-results/agent47-raw11-adapter/Raw11Extra85.lean
             im-results/agent47-raw11-adapter/Raw11Extra86.lean
             im-results/agent47-raw11-adapter/Raw11Extra87.lean
