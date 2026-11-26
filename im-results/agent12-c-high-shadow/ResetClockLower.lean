@@ -382,7 +382,7 @@ theorem raw_terminal_clock_bounds (N : Nat) (h : BB6Coverage.HaltsAfter BB6.Agen
   obtain ⟨m,v,q⟩ := BB6.Agent47CRaw.reach_path hu
   have he := (p.terminal_unique ht q hs).2.2
   rw [←he] at hupper
-  have p0 : Path 1 2 (5,0,1) (5,1,0) := Path.cons (by rfl) (Path.nil _)
+  have p0 : Path 1 2 (5,0,1) (5,1,0) := Path.cons (by rfl : nextC (5,0,1)=some (5,1,0)) (Path.nil _)
   obtain ⟨n',w',hn,hw,p'⟩ := terminal_suffix p ht p0
   refine ⟨t,BB6.Agent47CRaw.path_reach p BB6CLine.Reach.init,ht,hupper,?_⟩
   intro X L hX hR hL
