@@ -67,10 +67,10 @@ The separate fixed-score wrapper `Canonical62ChampionConsumer.lean` reuses Agent
 
 ### Preflight and Raw112 retry update (2026-11-26)
 
-- The first failed-shard retry of Raw112 run 45751911115 (attempt 2) again lost shard 4 to a runner shutdown / exit 143 after roughly ten minutes; shard 1 and shard 5 were still running at the last check. This is not a Lean theorem diagnostic. The Raw112 parent artifact remains unavailable.
+- Raw112 run 45751911115 attempt 2 completed failure: shards 1, 4 and 5 all failed during compilation. Shards 4 and 5 were confirmed runner shutdown / exit 143 without Lean theorem diagnostics; shard 1's log inspection was blocked by GitHub API rate limiting. The Raw112 parent artifact remains unavailable.
 - Added `preflight_canonical62.py` and manual target `canonical62-preflight`. It links the accepted Canonical64 and Raw58 closures with the Raw112 common-core artifact, substitutes an explicit `BB6.Agent47Raw112.parent_cover` axiom stub, and checks parent membership/distinctness, the 62-entry roster, and the conditional quotient theorem's axiom boundary. It is strictly a preflight, not a Cover proof or BB(6) result.
 - The first preflight attempt 45773088105 failed because the stub imported generated `Raw112Data`, which was not present in the common-core artifact. The stub has been corrected to import `Raw112Base` and `ResidualCover` instead. Corrected run [45773948199](https://github.com/FlareZ123/bb6/actions/runs/45773948199) is queued.
-- If the Raw112 retries complete but GitHub leaves the dependent assembly job skipped, an explicit existing-artifact assembly mode may be needed to avoid recomputing successful shards. Any mixed-revision assembly must retain the merge tool's source/import/object/provenance hash checks; do not simply weaken revision checks.
+- Added assemble-existing mode to .github/workflows/agent47-raw112-parent-cover.yml (commit 5e1473d8d044ecb263f0d015d6a9d78c46634713; standard artifact name restored in ce68d013395970218fe064aec0b8b015a644f175). Once all eight shard artifacts exist in a source run, dispatch with mode=assemble-existing and source_run_id=<run>. It reuses the artifacts and retains the merge tool's source/import/object/compiler/provenance hash checks. A third rerun request was blocked by GitHub API rate limiting (retry-after 17m16s); missing shards still need a lower-memory targeted retry, preferably --jobs 1.
 
 ### Canonical62 preflight diagnosis and repair (2026-11-26)
 
