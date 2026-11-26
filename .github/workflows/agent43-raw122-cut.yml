@@ -529,13 +529,13 @@ jobs:
         with:
           name: raw122-generated
           run-id: 45655656030
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-source
       - uses: actions/download-artifact@v4
         with:
           name: raw122-audit-01-18
           run-id: 45595285735
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-core
       - name: Assemble original-source 1LE and 1LF residual Covers
         run: python im-results/agent43-raw122-cut/assemble_branches16_17.py
