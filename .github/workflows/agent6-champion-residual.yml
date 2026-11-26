@@ -674,7 +674,7 @@ jobs:
               "BB6.Agent14Raw139NormalizedAccepted.raw139_cover_after_accepted": core_allowed,
           }
           for name, allowed in names.items():
-              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
               match = re.search(pattern, log)
               if match:
                   used = {x.strip() for x in match.group(1).split(",") if x.strip()}
