@@ -41,7 +41,7 @@ The `Raw58MoreCut2.parent_dichotomy` audit compiled 280 Lean modules. Its theore
 | 0LF | Raw58LFData | 7014 | All 24 Kid checks source-accepted in three shards (45725204019); Data assembly pending |
 | 0RF | Raw58RFData | 1346 | Source-accepted |
 | 1LE | Raw58LE1Data | 19310 | Source-accepted |
-| 1LF | Raw58LF1Data | 3055750 | Candidate; remaining leaves and source bridge open |
+| 1LF | Raw58LF1Data | 3055750 | Candidate; late-count and #39 bridges source-accepted; #567 and remaining leaves open |
 
 The long LF1 last-hole family changes the target from 19310 to **3055750**, still below the canonical cutoff 6766859. See [LF1Late.md](LF1Late.md) for the exact three query counts and compressed proof. The parent closure and any unconditional roster graft remain open. Older conditional grafts at 19310 are not usable as stated.
 
@@ -60,7 +60,7 @@ These are leaf-level nonhalting arguments, not claims that an entire parent cyli
 
 ## Current child evidence
 
-0LE's compressed incidence-quotient certificate is source-accepted (45743474599). All 0LF Kid checks succeeded in lf-a/b/c (45725204019); the identical Data wrapper still needs assembly. LF1 #39 has a locally checked growth certificate ([LF1Growth.md](LF1Growth.md)); #86/#109/#122 have locally checked compressed exact last-hole counts. The #1181 candidate and five other unresolved leaves still require source-accepted proofs. The prior LF1 full audit 45718748609 failed at the unclassified-leaf census, before Lean.
+0LE's compressed incidence-quotient certificate is source-accepted (45743474599). All 0LF Kid checks succeeded in lf-a/b/c (45725204019); the identical Data wrapper still needs assembly. LF1 #39 ([LF1Growth.md](LF1Growth.md)) and #86/#109/#122 ([LF1Late.md](LF1Late.md)) passed the original-source audit [45745620641](https://github.com/FlareZ123/bb6/actions/runs/45745620641). Leaf #567 has a locally kernel-checked base-four counter overflow proof ([LF1567.md](LF1567.md)); its original-source bridge remains pending. The #1181 automaton candidate and four other unresolved leaves (1188, 1336, 1375, 1416) still require source-accepted proofs. The prior LF1 full audit 45718748609 failed at the unclassified-leaf census, before Lean.
 
 ## Generator diagnostic
 

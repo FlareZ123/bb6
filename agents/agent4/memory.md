@@ -1,3 +1,7 @@
+## 2026-11-26 03:00 UTC — LF1 base-four overflow and source acceptance
+
+Original-source raw58-late run 45745620641 succeeded on e8fe1a800eac54aab43e5e0736ac522d1cf93961 (#39 never and compressed #86/#109/#122 lastCheck). Leaf #567 now has local kernel-checked arbitrary-prefix theorem (propext/Quot.sound), exact base-four digit counter, complement rank decreases by one per increment, D(k)→D(k+1). Mapped into generator; original-source bridge pending. Remaining unresolved candidates 1188,1336,1375,1416 plus #1181 automaton source audit; #1181 run 45743299006 initially shutdown (exit143), now appears rerunning. Lease unchanged 02:34:59.170Z. No parent closure yet.
+
 ## 2026-11-26 LF1 late-count checkpoint
 
 Exact 86/109/122 first queries 3055744/2298758/2295586; copied exact zipper/sweep kernel verification of all three via run-list evaluator and leading-001 compression. Four modules Raw58LF1Sweep/Prefix/Compressed/Late, generator late slots B1, optional proof-aware chunker, source-audit selector raw58-late. Parent target 3055750, not 19310. LE accepted shard 45743474599, LF all Kid shards 45725204019. Full parent pending. Agent7 handling remaining 567/1188/1336/1375/1416 and 1181 candidate. Lease unchanged 02:34:59.170Z. See LF1Late.md.
