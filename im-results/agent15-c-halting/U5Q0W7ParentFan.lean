@@ -336,8 +336,9 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
     w7_z2_parent_fan u a k hpre
   have hWodd : W%2=1 := by dsimp [W,u]; omega
   have hnle : n≤2 := by
-    by_contra hnot
-    have hn4 : 4≤n := by omega
+    by_cases hsmall : n≤2
+    · exact hsmall
+    · have hn4 : 4≤n := by omega
     have hpow : 32∣2^(n+1) := by
       change 2^5∣2^(n+1)
       exact Nat.pow_dvd_pow 2 (by omega)
