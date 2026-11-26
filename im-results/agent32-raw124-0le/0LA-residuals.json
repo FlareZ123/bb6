@@ -1,0 +1,633 @@
+{
+  "open_sha256": "601d1d5ef8bd026ac31cb26aee51803434b693726a92eeedd6b98d5e67515554",
+  "tree_sha256": "f854c788c7fbbdf0e0be375865a10f897653a6a7f770346ccf2e413119b31f22",
+  "tables": {
+    "66": "1RB0LB1RC1RF0RD0LB1LD1RE---1LF0RA0LA",
+    "86": "1RB0LB1RC0RF0RD0RA1LD1RE---1LF0LB0LA",
+    "97": "1RB0LB1RC1RC0RD0RA1LD1RE---1LF---0LA",
+    "104": "1RB0LB1RC1RF0RD0RA1LD1RE---1LF0RA0LA",
+    "105": "1RB0LB1RC1RF0RD0RA1LD1RE---1LF0RD0LA",
+    "106": "1RB0LB1RC1RF0RD0RA1LD1RE---1LF1LC0LA",
+    "108": "1RB0LB1RC0LE0RD0RB1LD1RE1RB1LF---0LA",
+    "171": "1RB0LB1RC0LE0RD0RF1LD1RE---1LF1RC0LA",
+    "186": "1RB0LB1RC1RD0RD0RF1LD1RE---1LF0RA0LA",
+    "220": "1RB0LB1RC0RF0RD1RA1LD1RE---1LF0LB0LA",
+    "223": "1RB0LB1RC1RC0RD1RA1LD1RE---1LF---0LA",
+    "226": "1RB0LB1RC1RF0RD1RA1LD1RE---1LF0RD0LA",
+    "244": "1RB0LB1RC1RD0RD1RB1LD1RE0RF1LF---0LA",
+    "253": "1RB0LB1RC0RE0RD1RC1LD1RE1LE1LF---0LA",
+    "322": "1RB0LE1RC---0RD0RC1LD1RE0LB1LF0RA0LA",
+    "326": "1RB0LE1RC1RD0RD1RB1LD1RE0LB1LF---0LA",
+    "403": "1RB0LE1RC1RB0RD0RC1LD1RE1LA1LF---0LA",
+    "410": "1RB0LE1RC0LA0RD1RB1LD1RE1LB1LF---0LA",
+    "412": "1RB0LE1RC1RE0RD1RB1LD1RE1LB1LF---0LA",
+    "413": "1RB0LE1RC1RA0RD0LB1LD1RE1LC1LF---0LA",
+    "426": "1RB0LE1RC1LD0RD1RB1LD1RE1LC1LF---0LA",
+    "427": "1RB0LE1RC1LF0RD1RB1LD1RE1LC1LF---0LA",
+    "432": "1RB0LE1RC---0RD1RB1LD1RE1LF1LF0LA0LA",
+    "444": "1RB0LE1RC---0RD1RB1LD1RE1LF1LF1LC0LA",
+    "451": "1RB0LE1RC---0RD1RB1LD1RE1LF1LF1RE0LA",
+    "470": "1RB0LE1RC0LC0RD1RE1LD1RE1RA1LF---0LA",
+    "471": "1RB0LE1RC0LD0RD1RE1LD1RE1RA1LF---0LA",
+    "472": "1RB0LE1RC1RA0RD1RE1LD1RE1RA1LF---0LA",
+    "480": "1RB0LE1RC---0RD1RA1LD1RE1RB1LF0LF0LA",
+    "489": "1RB0LE1RC---0RD1RE1LD1RE1RB1LF0LE0LA",
+    "585": "1RB0LF1RC1RA0RD0RB1LD1RE---1LF0RA0LA",
+    "633": "1RB0LF1RC0LD0RD---1LD1RE1RF1LF1LA0LA",
+    "654": "1RB0LF1RC1RF0RD---1LD1RE1RF1LF1LA0LA",
+    "777": "1RB0RA1RC1LE0RD0RF1LD1RE---1LF0LB0LA",
+    "778": "1RB0RA1RC1LE0RD1RC1LD1RE---1LF0LB0LA",
+    "1652": "1RB1LB1RC0LE0RD0RF1LD1RE---1LF0LA0LA",
+    "1656": "1RB1LB1RC1LE0RD0RF1LD1RE---1LF0LA0LA",
+    "1662": "1RB1LB1RC1LE0RD0RF1LD1RE---1LF0LB0LA",
+    "1674": "1RB1LB1RC0LE0RD0RF1LD1RE---1LF1LC0LA",
+    "1676": "1RB1LB1RC1LE0RD0RF1LD1RE---1LF1LC0LA",
+    "1694": "1RB1LB1RC0LE0RD0RF1LD1RE---1LF1RE0LA",
+    "1697": "1RB1LB1RC1LE0RD0RF1LD1RE---1LF1RE0LA",
+    "1709": "1RB1LB1RC0LE0RD1RB1LD1RE1RD1LF---0LA",
+    "1748": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF0LA0LA",
+    "1749": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF0LB0LA",
+    "1750": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF0RC0LA",
+    "1751": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF1LB0LA",
+    "1752": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF1LC0LA",
+    "1753": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF1RD0LA",
+    "1754": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF1RE0LA",
+    "1755": "1RB1LB1RC1LE0RD1RC1LD1RE---1LF1RF0LA",
+    "1837": "1RB1LC1RC---0RD0LE1LD1RE0LF1LF1RB0LA",
+    "1919": "1RB1LC1RC0LB0RD0RB1LD1RE0RF1LF---0LA",
+    "1991": "1RB1LC1RC1RE0RD0LF1LD1RE1RA1LF---0LA",
+    "2091": "1RB1LE1RC0LE0RD1RC1LD1RE0LB1LF---0LA",
+    "2097": "1RB1LE1RC0RE0RD1RB1LD1RE0LB1LF---0LA",
+    "2108": "1RB1LE1RC1RC0RD1RB1LD1RE0LB1LF---0LA",
+    "2125": "1RB1LE1RC---0RD0RC1LD1RE0LF1LF1RB0LA",
+    "2160": "1RB1LE1RC0LE0RD1RB1LD1RE0RC1LF---0LA",
+    "2270": "1RB1LE1RC1RD0RD1RA1LD1RE0RF1LF---0LA",
+    "2291": "1RB1LE1RC0RF0RD1RA1LD1RE1LA1LF---0LA",
+    "2311": "1RB1LE1RC0LC0RD1RB1LD1RE1LB1LF---0LA",
+    "2313": "1RB1LE1RC1RC0RD1RB1LD1RE1LB1LF---0LA",
+    "2589": "1RB1LF1RC---0RD1LD1LD1RE0RF1LF0LB0LA",
+    "2590": "1RB1LF1RC---0RD1LF1LD1RE0RF1LF0LB0LA",
+    "2624": "1RB1LF1RC0LB0RD0RF1LD1RE---1LF0RB0LA",
+    "2799": "1RB1LF1RC0LC0RD1RA1LD1RE---1LF0RF0LA",
+    "2801": "1RB1LF1RC1RB0RD1RA1LD1RE---1LF0RF0LA",
+    "2878": "1RB1LF1RC0RF0RD1RA1LD1RE---1LF1LC0LA",
+    "3011": "1RB1LF1RC0RD0RD0RF1LD1RE---1LF1RB0LA"
+  },
+  "params": {
+    "66": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "86": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "97": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "104": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      2
+    ],
+    "105": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "106": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "108": [
+      "run",
+      2,
+      2,
+      2,
+      4,
+      4
+    ],
+    "171": [
+      "run",
+      2,
+      2,
+      2,
+      4,
+      4
+    ],
+    "186": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "220": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "223": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "226": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "253": [
+      "run",
+      3,
+      2,
+      2,
+      4,
+      4
+    ],
+    "322": [
+      "run",
+      3,
+      2,
+      2,
+      3,
+      3
+    ],
+    "326": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "403": [
+      "run",
+      6,
+      7,
+      7,
+      1,
+      3
+    ],
+    "410": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "412": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "413": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "426": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "427": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "432": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "444": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "451": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "470": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "471": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "472": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "480": [
+      "run",
+      4,
+      7,
+      7,
+      1,
+      3
+    ],
+    "489": [
+      "block",
+      2,
+      3,
+      1,
+      1,
+      0
+    ],
+    "585": [
+      "run",
+      3,
+      3,
+      3,
+      4,
+      4
+    ],
+    "633": [
+      "run",
+      2,
+      4,
+      4,
+      2,
+      2
+    ],
+    "654": [
+      "run",
+      2,
+      4,
+      4,
+      2,
+      2
+    ],
+    "777": [
+      "run",
+      3,
+      2,
+      2,
+      4,
+      4
+    ],
+    "778": [
+      "run",
+      3,
+      2,
+      2,
+      4,
+      4
+    ],
+    "1652": [
+      "block",
+      1,
+      2,
+      1,
+      2,
+      1
+    ],
+    "1656": [
+      "run",
+      2,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1662": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1674": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "1676": [
+      "run",
+      2,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1694": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "1697": [
+      "run",
+      2,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1709": [
+      "block",
+      2,
+      2,
+      1,
+      2,
+      0
+    ],
+    "1748": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1749": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1750": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1751": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1752": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1753": [
+      "run",
+      4,
+      3,
+      3,
+      4,
+      4
+    ],
+    "1754": [
+      "run",
+      3,
+      1,
+      1,
+      4,
+      4
+    ],
+    "1755": [
+      "run",
+      4,
+      2,
+      2,
+      4,
+      4
+    ],
+    "1837": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "1919": [
+      "block",
+      1,
+      6,
+      1,
+      1,
+      0
+    ],
+    "2091": [
+      "run",
+      3,
+      2,
+      2,
+      2,
+      3
+    ],
+    "2097": [
+      "block",
+      2,
+      2,
+      1,
+      3,
+      0
+    ],
+    "2108": [
+      "block",
+      2,
+      2,
+      1,
+      3,
+      0
+    ],
+    "2125": [
+      "run",
+      3,
+      1,
+      1,
+      2,
+      2
+    ],
+    "2160": [
+      "block",
+      2,
+      3,
+      1,
+      2,
+      0
+    ],
+    "2270": [
+      "block",
+      1,
+      2,
+      1,
+      3,
+      1
+    ],
+    "2291": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "2311": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "2313": [
+      "block",
+      1,
+      3,
+      1,
+      2,
+      0
+    ],
+    "2589": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "2590": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "2624": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "2799": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ],
+    "2801": [
+      "block",
+      1,
+      2,
+      2,
+      2,
+      0
+    ],
+    "2878": [
+      "block",
+      1,
+      2,
+      1,
+      2,
+      0
+    ],
+    "3011": [
+      "block",
+      1,
+      4,
+      1,
+      1,
+      0
+    ]
+  },
+  "late": {
+    "244": [
+      4589,
+      10
+    ],
+    "1991": [
+      5904,
+      10
+    ]
+  },
+  "bound": 5910
+}
