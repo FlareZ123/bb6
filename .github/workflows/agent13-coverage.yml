@@ -420,7 +420,10 @@ jobs:
           tar -xJf im-results/agent49-raw10-box18-24/source.tar.xz -C "$Q"
           (cd "$Q"; python3 generate.py)
           python im-results/agent13-block-far/generate.py "$Q" '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
-          python tools/lean_compile_closure.py --workdir /tmp/a49-box5-proof --jobs 2 --source-root "$W" --source-root "$Q" "$W/Box5SourceConsumer.lean" im-results/agent49-raw10-refined-cut/Raw10RefinedBox5.lean | tee /tmp/a49-box5-proof.log
+          S=im-results/agent49-domain-blockfar
+          tar -xJf "$S/domain-source.tar.xz" -C "$S"
+          python "$S/build_box7.py"
+          python tools/lean_compile_closure.py --workdir /tmp/a49-box5-proof --jobs 2 --source-root "$W" --source-root "$Q" im-results/agent49-raw10-refined-cut/Raw10RefinedBox7.lean | tee /tmp/a49-box5-proof.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box5-proof.log; then exit 1; fi
       - name: Check exact raw10 rectangle 6 sparse-tree coverage
         if: inputs.target == 'weighted-tnf-raw10-box6'
