@@ -1,23 +1,16 @@
-# Raw56 E1=0RE: complete six-hole candidate (2026-11-26)
+# Raw56 E1=0RE: source-checked local frontier (2026-11-26)
 
-Parent Raw56: `1RB---_1RC---_0RD---_1LD1LE_------_------` (D1=1LE).
-The root first undefined query is E1 at ordinary time 6. Four ordinary
-choices 0LC, 0LD, 1LD, 1RD have immediate translated cycles; the other
-20 are not assumed closed. The E1=0RE child has six holes and its first
-undefined query is E0 at time 10.
+## Root query and conditional frontier
 
-## Source-checked root frontier
+The six-hole parent is `1RB---_1RC---_0RD---_1LD1LE_------_------` (D1=1LE). Its first undefined query is E1 at ordinary time 6. Four ordinary choices (0LC, 0LD, 1LD, 1RD) close by immediate translated cycles. The remaining 20 canonical representatives are not assumed closed.
 
-`Raw56RootCut.lean` passed the existing original-source Lean 4.36.0-rc2 workflow in [run 45883348983](https://github.com/FlareZ123/bb6/actions/runs/45883348983). It proves the first undefined query is E1 at ordinary time 6, checks the four immediate translated-cycle branches, and gives the exact conditional root partition `sound20`: every compatible completion either has weighted bound 7014 or belongs to one of 20 canonical residual representatives. The distinguished E1=0RE child is exactly the six-hole table in `candidates.json`; `sound19` shows that accepting this child reduces the local residual list from 20 to 19. This is a local source-checked frontier, not a closed Raw56 parent or a global roster reduction.
+`Raw56RootCut.lean` passed original-source Lean 4.36.0-rc2 run [45883348983](https://github.com/FlareZ123/bb6/actions/runs/45883348983). Its `sound20` theorem proves the exact conditional parent partition at weighted bound 7,014: every compatible completion either has that bound or belongs to one of 20 canonical residual representatives. The distinguished E1=0RE child is exactly the six-hole table in `candidates.json`; `sound19` shows that accepting this child reduces the local residual list from 20 to 19. This is not a closed Raw56 parent or a global roster reduction.
 
-## New discovery
+## E1=0RE candidate certificate closure
 
-Using the existing Agent7 Raw49 classifier at cap 1000, lookback 32,
-depth 6, the E1=0RE child has 8,528 split nodes, 157,695 translated-cycle
-leaves, 35,737 last-hole leaves and 2,713 initially open leaves. No aliases.
-The longest query was 762 and longest detected cycle endpoint was 797.
+Using the existing Agent7 Raw49 classifier at cap 1,000, lookback 32, depth 6, the child has 8,528 split nodes, 157,695 translated-cycle leaves, 35,737 last-hole leaves and 2,713 initially open leaves. The longest query was 762 and the longest detected cycle endpoint was 797.
 
-All 2,713 open leaves now have explicit candidate nonhalting certificates:
+All 2,713 open leaves have explicit candidate nonhalting certificates:
 - 2,666 exhaustive FAR candidates with at most five DFA states;
 - 23 larger FAR candidates with up to eleven DFA states;
 - 20 source-generated symbolic sweep families;
@@ -25,38 +18,19 @@ All 2,713 open leaves now have explicit candidate nonhalting certificates:
 
 The last symbolic case, leaf 2006
 `1RB0LF_1RC0RB_0RD0RA_1LD1LE_1LF0RE_1LA---`,
-has the exact zipper candidate
-`A([], 1 (0101)^n 0101010101)`, entered at step 52.
-A return adds three copies of 0101 with cost 100+16n. The generic
-single-block discovery failed when the entire 12-bit increment was
-opaque; using a 4-bit transferable block exposed the recurrence.
-The generated sweep theorem checks arbitrary tails and induction.
+has the exact zipper candidate `A([], 1 (0101)^n 0101010101)`, entered at step 52. A return adds three copies of 0101 with cost 100+16n. The generic single-block discovery failed when the entire 12-bit increment was opaque; using a 4-bit transferable block exposed the recurrence. The generated sweep theorem checks arbitrary tails and induction.
 
-The source-checked target is
-`BB6.Agent1Raw56.Raw56E1RE.all_quotient` at WeightedBound 7014, and its
-ordinary compatibility corollary. The underlying tree checks the
-halt branch at every split, all ordinary successors, and the empty
-canonical residual list. **Candidate complete; original-source Lean
-acceptance pending.**
+## Source acceptance and composition
 
-The first child source-check [run 45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157) failed in generated `Raw56E1REPart575.lean` with `OfNat Bool 1` and consequent stuck `decide` checks. This is an emitter serialization defect, not a counterexample: the C++ cut tree stores cycle direction as integer 0/1, but the inherited formatter printed `1` instead of Lean `true`. `prepare.py` now validates the raw direction field and patches its private copy of `certify_canonical.py` to emit `bool(t[3])` as a Lean Bool. The tree/open-list hashes and certificate data are unchanged. The focused retry [run 45896758638](https://github.com/FlareZ123/bb6/actions/runs/45896758638) is in progress; no child acceptance is claimed until it succeeds.
+The source-accepted child theorem is
+`BB6.Agent1Raw56.Raw56E1RE.all_quotient` at weighted bound **7,014**. The first source attempt [45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157) failed because the C++ classifier serializes cycle direction as integer 0/1 while the inherited Lean emitter printed 1 as a Bool. `prepare.py` now validates the raw direction field and normalizes the private emitter copy; certificate data, tree bytes and hashes were unchanged.
 
-## First source-check diagnostic and repair
+The focused retry [45896758638](https://github.com/FlareZ123/bb6/actions/runs/45896758638) **succeeded**. It exported artifact `raw56-e1-0re-source-accepted`, ID **15155176780**, SHA-256 `bf260ccca509d044df18a538a3524387d7e1167ce50c15ae21d4c04630ff41ed` (220,460,371 bytes).
 
-The first original-source attempt, [run 45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157), reached Lean and failed in generated `Raw56E1REPart575.lean` with `OfNat Bool 1` (and consequent stuck `decide` checks). This is a serialization defect, not a counterexample to a certificate: the Agent7 C++ classifier writes cycle direction as integer `0/1`, while the inherited canonical emitter formatted that field with `str(t[3]).lower()`, producing Lean `1` instead of `true`.
+The new `Raw56RootConsumer.lean` consumes that exact child theorem through the precompiled manifest and supplies it to `Raw56RootCut.sound19`. The thin consumer run [45900187499](https://github.com/FlareZ123/bb6/actions/runs/45900187499) is currently in progress. If accepted, it will source-check the conditional 19-residual frontier without recompiling the child's dependency closure.
 
-`prepare.py` now validates that every cycle direction is exactly integer 0 or 1 and patches its private copy of `certify_canonical.py` to emit `str(bool(t[3])).lower()`. The pinned discovery-tree bytes, open-list digest, certificate data and checker semantics are unchanged. The candidate remains unaccepted until the existing manual workflow selector `raw56-e1-0re` passes on the repaired source. No Raw56 parent closure, global roster reduction or BB(6) upper bound is claimed. No Raw56 parent closure, roster decrement, or
-BB(6) upper bound is asserted. The accepted global roster remains 60.
+No Raw56 parent Cover, full parent closure, global roster decrement or BB(6) upper bound is claimed. The global conditional baseline is Canonical58 after the Raw113 integration; this local Raw56 frontier does not alter that roster.
 
-Reproduce with `python im-results/agent1-raw56/prepare.py`. The manifest
-pins tree and open-list bytes, exhaustive FAR output, larger FAR
-automata, exact pump indices and sparse fixed-point sizes. The
-generator reuses Agent7/19/31/47's established certificate interfaces.
-Generated Lean source is ephemeral. Compile its root
-`im-results/agent1-raw56/generated/Raw56E1REAll.lean` via
-`tools/lean_compile_closure.py` after the normal shared-core unpack and
-sweep generation. Use the existing manual Raw57-sibling workflow selector
-`raw56-e1-0re`; no new workflow file.
+## Reproduction
 
-Next: kernel-check the complete child, then consume it through an
-explicit Raw56 first-query frontier retaining every other open branch.
+Run `python im-results/agent1-raw56/prepare.py` to regenerate the deterministic child sources. The manifest pins tree and open-list bytes, exhaustive FAR output, larger FAR automata, exact pump indices and sparse fixed-point sizes. Compile `im-results/agent1-raw56/generated/Raw56E1REAll.lean` through `tools/lean_compile_closure.py` after the normal shared-core unpack and sweep generation. The existing manual Raw57-sibling workflow selectors are `raw56-e1-0re` and `raw56-root-consumer`; the latter takes the successful child run ID as `source_run_id`.
