@@ -2,6 +2,7 @@ import Combined109Roster
 import MixedBound109Composition
 import FourHoleResidualRoster
 import WeightedTNFCertificate
+import ChampionResidualCount
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -345,7 +346,7 @@ theorem championClosed_sound (i : Fin 8) (mv : Move)
 
 def championChildCertificate (i : Fin 8) (mv : Move)
     (h : championClosed i mv = true) :
-    WeightedTNFCertificate championScore (championChild i mv) 6 :=
+    WeightedTNFCertificate (proposedTM63Moves + 7) (championChild i mv) 6 :=
   WeightedTNFCertificate.nonhalt
     (RawRootPath.rootRow (championChildPath i mv))
     (BB6.Agent50TNFPilot.support6 _)
@@ -353,8 +354,8 @@ def championChildCertificate (i : Fin 8) (mv : Move)
     (championClosed_sound i mv h)
 
 def championStep (i : Fin 8)
-    (nextFrontier : RootedFrontier championScore (championNextParent i)) :
-    RootedFrontier championScore (championParent i) := by
+    (nextFrontier : RootedFrontier (proposedTM63Moves + 7) (championNextParent i)) :
+    RootedFrontier (proposedTM63Moves + 7) (championParent i) := by
   let c := championConfig i
   have hrun : knownRun (championParent i) (championRunLength i) = some c := by
     simpa [c] using championRunKnown i
@@ -364,13 +365,13 @@ def championStep (i : Fin 8)
   have hweight :
       ∀ d ∈ possibleDelays
         (refine (championParent i) (readSlot c) none) 0,
-          d + championRunLength i + 1 ≤ championScore := by
+          d + championRunLength i + 1 ≤ (proposedTM63Moves + 7) := by
     intro d hd
     have hd6 : d < 6 := by
       unfold possibleDelays at hd
       exact List.mem_range.mp (List.mem_filter.mp hd).1
-    have hScore : 7014 < championScore := champion_score_gt_7014
-    have hroom : championRunLength i + 6 ≤ championScore := by
+    have hScore : 7014 < (proposedTM63Moves + 7) := champion_score_gt_7014
+    have hroom : championRunLength i + 6 ≤ (proposedTM63Moves + 7) := by
       fin_cases i <;> omega
     omega
   have hnext :
@@ -387,7 +388,7 @@ def championStep (i : Fin 8)
     · have hp : RawRootPath
           (refine (championParent i) (readSlot c) (some mv)) := by
         simpa [championChild, championReadSlot i] using championChildPath i mv
-      have hcert : WeightedTNFCertificate championScore
+      have hcert : WeightedTNFCertificate (proposedTM63Moves + 7)
           (refine (championParent i) (readSlot c) (some mv)) 6 := by
         simpa [championChild, championReadSlot i] using
           championChildCertificate i mv hc
@@ -405,12 +406,11 @@ theorem championP8DefaultCompletion :
 
 theorem championP8FirstHole :
     ∃ c, knownRun championP8 (proposedTM63Moves + 6) = some c ∧
-      championP8 (readSlot c) = none := by
-  apply (weightedTNF_halt_iff_firstHole championP8
+      championP8 (readSlot c) = none :=
+  (weightedTNF_halt_iff_firstHole championP8
     (rawRootPathNoAssignedHalt championP8Path)
     (proposedTM63Moves + 6)).mp
-  rw [championP8DefaultCompletion]
-  exact champion_halts_exact
+    (by simpa only [championP8DefaultCompletion] using champion_halts_exact)
 
 noncomputable def championP8Config : Config :=
   Classical.choose championP8FirstHole
@@ -425,7 +425,8 @@ theorem championP8Hole :
 
 theorem championP8UniqueHole {s : Slot}
     (h : championP8 s = none) : s = (1, true) := by
-  fin_cases s.1 <;> cases s.2 <;>
+  rcases s with ⟨q, b⟩
+  fin_cases q <;> cases b <;>
     simp [championP8, championP7, championP6, championP5, championP4,
       championP3, championP2, championP1, championResidual,
       championRootAfterB, refine, root] at h ⊢
@@ -436,7 +437,8 @@ theorem championP8HoleSlot :
 
 theorem championP8OtherSlots (s : Slot) (h : s ≠ (1, true)) :
     ∃ mv, championP8 s = some (some mv) := by
-  fin_cases s.1 <;> cases s.2 <;>
+  rcases s with ⟨q, b⟩
+  fin_cases q <;> cases b <;>
     simp [championP8, championP7, championP6, championP5, championP4,
       championP3, championP2, championP1, championResidual,
       championRootAfterB, refine, root] at h ⊢
@@ -464,20 +466,19 @@ theorem championP8PossibleDelays :
 theorem championP8HWeight :
     ∀ d ∈ possibleDelays
       (refine championP8 (readSlot championP8Config) none) 0,
-        d + (proposedTM63Moves + 6) + 1 ≤ championScore := by
+        d + (proposedTM63Moves + 6) + 1 ≤ proposedTM63Moves + 7 := by
   intro d hd
   rw [championP8HoleSlot, championP8PossibleDelays] at hd
   simp at hd
   subst d
-  rfl
+  simp [Nat.add_assoc]
 
 noncomputable def championP8Certificate :
-    WeightedTNFCertificate championScore championP8 6 :=
+    WeightedTNFCertificate (proposedTM63Moves + 7) championP8 6 :=
   WeightedTNFCertificate.lastHole
     (RawRootPath.rootRow championP8Path)
     (BB6.Agent50TNFPilot.support6 _)
     (by decide)
-    (rawRootPathNoAssignedHalt championP8Path)
     championP8Run
     championP8Hole
     championP8HRest
@@ -485,7 +486,7 @@ noncomputable def championP8Certificate :
 
 /-- Eight source-replayed first-hole splits, with the exact champion terminal
     cylinder closed by lastHole at the attained score. -/
-noncomputable def championFrontier : RootedFrontier championScore championResidual :=
+noncomputable def championFrontier : RootedFrontier (proposedTM63Moves + 7) championResidual :=
   championStep 0
     (championStep 1
       (championStep 2
@@ -496,23 +497,36 @@ noncomputable def championFrontier : RootedFrontier championScore championResidu
                 (championStep 7
                   (RootedFrontier.closed championP8Path championP8Certificate))))))))
 
-def championResidualResiduals :
+noncomputable def championResidualResiduals :
     List (List Move × PartialMachine) :=
-  RootedFrontier.residuals championFrontier
+  BB6.Agent31FourHoleFrontier.residuals championFrontier
+
+theorem championFrontierExpandedNodes :
+    BB6.Agent6ChampionResidualCount.frontierExpandedNodes championFrontier = 8 := by
+  decide
+
+theorem championFrontierClosedLeaves :
+    BB6.Agent6ChampionResidualCount.frontierClosedLeaves championFrontier = 38 := by
+  decide
 
 theorem championResidualResidualsCount :
-    championResidualResiduals.length = 146 := by decide
+    championResidualResiduals.length = 146 := by
+  change (BB6.Agent31FourHoleFrontier.residuals championFrontier).length = 146
+  have h := BB6.Agent6ChampionResidualCount.residuals_closed_expanded championFrontier
+  rw [championFrontierExpandedNodes, championFrontierClosedLeaves] at h
+  omega
 
 theorem championResidualFrontierSound (m : Machine)
     (hm : compatible championResidual m) :
-    WeightedBound championScore m ∨
+    WeightedBound (proposedTM63Moves + 7) m ∨
       ∃ e ∈ championResidualResiduals, compatible e.2 m := by
   rcases RootedFrontier.sound championFrontier m hm with hB | ⟨address, q, hopen, hq⟩
   · exact Or.inl hB
-  · exact Or.inr ⟨(address, q), OpenLeaf.mem_residuals hopen, hq⟩
+  · exact Or.inr ⟨(address, q),
+      BB6.Agent42FrontierCount.OpenLeaf_mem_residuals hopen, hq⟩
 
 /-- The 9-hole champion cylinder is one of the 109 retained root residuals. -/
-def championResidualRetained : Bool :=
+noncomputable def championResidualRetained : Bool :=
   reducedRoster.any fun e => sameTable e.2 championResidual
 
 theorem championResidualRetainedTrue :
@@ -530,17 +544,24 @@ theorem championResidualUniqueInReducedRoster :
 /-- Replace the champion-compatible 9-hole cylinder by its explicit
     source-checked frontier. The roster now has 108 untouched obligations
     and 156 smaller residual cylinders. -/
-def championResidualRefinedRoster :
+noncomputable def championResidualRefinedRoster :
     List (List Move × PartialMachine) :=
   (reducedRoster.filter fun e => !(sameTable e.2 championResidual)) ++
     championResidualResiduals
 
 theorem championResidualRefinedRosterCount :
-    championResidualRefinedRoster.length = 254 := by decide
+    championResidualRefinedRoster.length = 254 := by
+  rw [championResidualRefinedRoster, List.length_append,
+    championResidualResidualsCount]
+  have hfilter :
+      (reducedRoster.filter fun e => !(sameTable e.2 championResidual)).length = 108 := by
+    decide
+  rw [hfilter]
+  rfl
 
 theorem championResidualRefinedRosterSound (m : Machine)
     (hm : compatible BB6.Agent50TNFPilot.root m) :
-    WeightedBound championScore m ∨
+    WeightedBound (proposedTM63Moves + 7) m ∨
       ∃ e ∈ championResidualRefinedRoster, compatible e.2 m := by
   rcases reduced_sound m hm with hB | ⟨e, he, hcomp⟩
   · exact Or.inl (by
@@ -562,8 +583,8 @@ theorem championResidualRefinedRosterSound (m : Machine)
     cylinder by its checked first-hole frontier. -/
 theorem exactBB6OfChampionResidualRoster
     (hLeaves : ∀ e ∈ championResidualRefinedRoster,
-      Cover (WeightedBound championScore) e.2) :
-    BB6.Coverage.ExactBB6 championScore :=
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
   BB6.Agent13RosterComposition.exact_from_roster_dichotomy_mixed
     (Nat.le_trans (by decide : 6 ≤ 7014)
       (Nat.le_of_lt champion_score_gt_7014))
