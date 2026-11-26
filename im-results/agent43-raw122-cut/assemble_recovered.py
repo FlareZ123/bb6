@@ -9,6 +9,12 @@ source=Path("/tmp/a43-source")
 source_ref=os.environ["SOURCE_REF"]
 out=Path("/tmp/a43-audit")
 out.mkdir(parents=True,exist_ok=True)
+parent_core = os.environ.get("RAW122_PARENT_CORE") == "1"
+branch_indices = (
+    [1,2,3,4,6,7,8,9,10,11,12,13,14,15,18,19,20,21,22,23]
+    if parent_core else list(range(24))
+)
+root_name = "Raw122CoreAccepted" if parent_core else "Raw122Data"
 seen={}
 for base in (Path("/tmp/a43-new-shards"),):
     if not base.is_dir(): raise FileNotFoundError(base)
@@ -32,16 +38,19 @@ env=os.environ.copy()
 env["LEAN_PATH"]=str(out)
 log_path=out/"audit.log"
 with log_path.open("w",encoding="utf-8") as log:
-    for i in range(24):
+    for i in branch_indices:
         name=f"Raw122Branch{i:02}"
         subprocess.run(["lean","-o",f"{name}.olean",f"{name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
-    subprocess.run(["lean","-o","Raw122Data.olean","Raw122Data.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
+    if parent_core:
+        shutil.copy2(cut/f"{root_name}.lean", out/f"{root_name}.lean")
+    subprocess.run(["lean","-o",f"{root_name}.olean",f"{root_name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
 log_text=log_path.read_text(encoding="utf-8")
 if "sorryAx" in log_text or "native_decide" in log_text:
-    raise RuntimeError("root audit output contains a prohibited axiom or native_decide")
-for line in (out/"Raw122Data.lean").read_text(encoding="utf-8").splitlines():
-    if "theorem residual_count" in line or "theorem sound" in line:
-        print(line,flush=True)
+    raise RuntimeError("Raw122 core output contains a prohibited axiom or native_decide")
+if not parent_core:
+    for line in (out/"Raw122Data.lean").read_text(encoding="utf-8").splitlines():
+        if "theorem residual_count" in line or "theorem sound" in line:
+            print(line,flush=True)
 prov=[
 "im-results/agent43-raw122-cut/generate.py",
 "im-results/agent43-raw122-cut/symbolic.py",
@@ -75,6 +84,9 @@ prov=[
 "im-results/agent1-ngram/emit_ngram.py",
 "im-results/agent13-coverage/unpack.py",
 "tools/lean_compile_closure.py"]
+if parent_core:
+    prov.append("im-results/agent43-raw122-cut/Raw122CoreAccepted.lean")
+    prov.append("im-results/agent43-raw122-cut/assemble_recovered.py")
 subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
 checkout=[]
 filtered=[]
@@ -89,8 +101,10 @@ for p in prov:
 prov=filtered
 if checkout:
     subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
-cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(out/"manifest.json"),"--manifest-only","--artifact-dir",str(out),"--label","raw122-partial-audit","--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014","--artifact-name","raw122-certified-root"]
+cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(out/"manifest.json"),"--manifest-only","--artifact-dir",str(out),"--label","raw122-parent-core" if parent_core else "raw122-partial-audit","--artifact-name","raw122-parent-core" if parent_core else "raw122-certified-root"]
+if not parent_core:
+    cmd += ["--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
 for p in prov: cmd += ["--provenance-input",p]
-cmd += [str((cut/"Raw122Data.lean").relative_to(root))]
+cmd += [str((cut/f"{root_name}.lean").relative_to(root))]
 subprocess.run(cmd,cwd=root,check=True)
-print(f"assembled raw122 partial audit from {len(seen)} source-checked objects",flush=True)
+print(f"assembled {'Raw122 parent core' if parent_core else 'raw122 partial audit'} from {len(seen)} source-checked objects and {len(branch_indices)} original branches",flush=True)
