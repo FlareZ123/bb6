@@ -133,7 +133,7 @@ theorem w7_q0_target_unreachable_u239mod640 (r : Nat) :
         (1720951+4596480*r) (9445113+25226880*r) := by
       simpa only [hx,hy] using h
     exact w7_q1_parent_unreachable_u239mod640 r h'
-  have h := BB6.Agent15U5W7Source.w7_q0_target_unreachable_of_q1 u huodd hq1
+  have h := BB6.Agent15U5W7U19Mod2560.w7_q0_target_unreachable_of_q1 u huodd hq1
   have hx : 17928+28896*u = 6924072+18493440*r := by dsimp [u]; omega
   have hy : 17719+28560*u = 6843559+18278400*r := by dsimp [u]; omega
   simpa only [hx,hy] using h
