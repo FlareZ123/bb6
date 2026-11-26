@@ -9,7 +9,7 @@ HERE = Path(__file__).resolve().parent
 BRANCH = 0
 SOURCE_ARTIFACT = 15043765926
 CORE_ARTIFACT = 15012394320
-TARGET_RUNS = [45785487569]
+TARGET_RUNS = [45773448173, 45785487569]
 BOUND = 6766859
 
 
@@ -32,18 +32,25 @@ def run(args, *, cwd=ROOT, env=None, capture=False):
     return r.stdout or "" if capture else ""
 
 
-def copy_oleans(root: Path, out: Path, seen: dict[str, str], prefer_existing=False):
+def copy_oleans(root: Path, out: Path, seen: dict[str, str], owners=None, run_id=None, prefer_existing=False):
     for src in root.rglob("*.olean"):
         name = src.name
         h = sha(src)
         if name in seen:
             if prefer_existing:
                 continue
-            if seen[name] != h:
+            if owners is not None:
+                owner = owners[name]
+                if owner == run_id and seen[name] != h:
+                    raise RuntimeError(f"conflicting Lean object {name} within run {run_id}")
+                if owner > run_id:
+                    continue
+            elif seen[name] != h:
                 raise RuntimeError(f"conflicting Lean object {name}: {seen[name]} != {h}")
-        else:
-            shutil.copy2(src, out / name)
-            seen[name] = h
+        shutil.copy2(src, out / name)
+        seen[name] = h
+        if owners is not None:
+            owners[name] = run_id
 
 
 def main():
@@ -65,16 +72,21 @@ def main():
 
     tracked = {Path(x).name for x in subprocess.check_output(
         ["git", "ls-files", "*.lean"], cwd=ROOT, text=True).splitlines()}
-    records, coverage, seen_olean = [], {}, {}
+    records, coverage, seen_olean, olean_owner, source_owner = [], {}, {}, {}, {}
     metadata_paths = sorted(targets.rglob("metadata.json"))
-    if len(metadata_paths) != 16:
-        raise RuntimeError(f"expected 16 branch-00 shard artifacts from the final matrix, found {len(metadata_paths)}")
+    if len(metadata_paths) != 24:
+        raise RuntimeError(f"expected 24 branch-00 shard artifacts across the two target runs, found {len(metadata_paths)}")
     run_counts = {rid: 0 for rid in TARGET_RUNS}
+    entries = []
     for mp in metadata_paths:
-        d = mp.parent
         matched_run = next((rid for rid in TARGET_RUNS if f"run{rid}" in str(mp)), None)
         if matched_run is None:
             raise RuntimeError(f"target artifact came from an unpinned run: {mp}")
+        entries.append((matched_run, mp))
+    # Prefer the newer 16-artifact matrix where runs overlap; retain the
+    # earlier run only for its uncovered kid ranges.
+    for matched_run, mp in sorted(entries, key=lambda x: x[0], reverse=True):
+        d = mp.parent
         run_counts[matched_run] += 1
         m = json.loads(mp.read_text(encoding="utf-8"))
         if m.get("source_artifact") != SOURCE_ARTIFACT or m.get("core_artifact") != CORE_ARTIFACT:
@@ -85,9 +97,7 @@ def main():
         if not 0 <= first < end <= 24:
             raise RuntimeError(f"unexpected branch-00 interval [{first},{end})")
         for kid_index in range(first, end):
-            if kid_index in coverage:
-                raise RuntimeError(f"overlapping branch-00 kid {kid_index}: {coverage[kid_index]} and {d}")
-            coverage[kid_index] = str(d)
+            coverage.setdefault(kid_index, []).append(str(d))
         for filename, expected in m["files"].items():
             rel = Path(filename)
             if rel.is_absolute() or ".." in rel.parts or len(rel.parts) != 1:
@@ -101,16 +111,22 @@ def main():
             if f.name in tracked:
                 continue
             dst = factored / f.name
-            if dst.exists() and sha(dst) != sha(f):
-                raise RuntimeError(f"conflicting target source {f.name}")
-            if not dst.exists():
-                shutil.copy2(f, dst)
-        copy_oleans(d, work, seen_olean)
+            h = sha(f)
+            if f.name in source_owner:
+                owner = source_owner[f.name]
+                if owner == matched_run and sha(dst) != h:
+                    raise RuntimeError(f"conflicting target source {f.name} within run {matched_run}")
+                if owner > matched_run:
+                    continue
+            shutil.copy2(f, dst)
+            source_owner[f.name] = matched_run
+        copy_oleans(d, work, seen_olean, olean_owner, matched_run)
     if set(coverage) != set(range(24)):
         raise RuntimeError(f"branch-00 shard complement is {sorted(set(range(24))-set(coverage))}")
-    print("branch-00 shard intervals:", sorted((r["run_id"], r["first"], r["end"], r["name"]) for r in records), flush=True)
-    if run_counts != {45785487569: 16}:
+    if run_counts != {45773448173: 8, 45785487569: 16}:
         raise RuntimeError(f"unexpected target-run artifact distribution: {run_counts}")
+    print("branch-00 shard intervals:", sorted((r["run_id"], r["first"], r["end"], r["name"]) for r in records), flush=True)
+    print("overlapping kid indices:", {i: len(ds) for i, ds in coverage.items() if len(ds) > 1}, flush=True)
 
     copy_oleans(core, work, seen_olean, prefer_existing=True)
     branch_srcs = list(source.rglob("Raw122Branch00.lean"))
