@@ -25,11 +25,16 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          if [[ "$CHILD" == easy ]]; then
+          DIR=im-results/agent6-raw57-ra
+          if [[ "$CHILD" == 1RF ]]; then
+            DIR=im-results/agent1-raw57
+            python "$DIR/generate_sibling.py" "$CHILD"
+            ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
+          elif [[ "$CHILD" == easy ]]; then
             ROOT=Raw57Easy
           else
             python im-results/agent6-raw57-ra/generate_sibling.py "$CHILD"
             ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/a6-raw57-sibling --jobs 4 "im-results/agent6-raw57-ra/$ROOT.lean" | tee /tmp/raw57.log
+          python tools/lean_compile_closure.py --workdir /tmp/a6-raw57-sibling --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw57.log; then exit 1; fi
