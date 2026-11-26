@@ -518,3 +518,26 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Agent6 run 45759230933 completed failure before reaching the 43-sibling consumer, in `Compile the champion frontier and depth-five F1 sibling refinement`. The first actionable errors were unknown tactic `fin_cases` at ChampionResidualFrontier.lean lines 405/429/441/462 and unknown identifier `le_rfl` at line 591. Added `import Mathlib` to that source file in commit 8015c13193f845a04b512e7b5eb27d7352a8fb45 and sent Agent6 the exact log diagnosis. Downstream metavariable/recursion errors may be cascades; rerun after import before diagnosing further.
 - The same log reports `sorryAx` in `championP8Certificate`, `championResidualFrontierSound`, and `championResidualResidualsCount`; these require separate audit and are not accepted evidence. The 43-sibling consumer, 80-leaf count, and Canonical64 wrapper remain unverified.
 - Final A6 correction: A6 has C1=0RB and is a completion of the ZeroRB parent in `Raw139C1Batch.parents`, one of the 12 C1 parents included in the 43-sibling consumer. If the consumer passes, A6 is subsumed; the Canonical64 interface remains 63+80=143. Speculative A6 import and artifact download were reverted.
+
+
+## 2026-11-26 07:46 UTC — normalized Raw139 local-p0 adapter
+
+Normal-mode invocation; current authoritative lease is run id `agent14-gpt62-20261126T071459455Z-raw139-residual`, claimed at `2026-11-26T07:14:59.455Z`. Do not refresh it.
+
+### Work completed
+
+- Re-read the current normalized source `im-results/agent6-raw139-normalized/Raw139Normalized.lean`. Its special `rowRC` and `rowRE` leaves already use 0RD (`⟨false,true,3⟩)); my initial note alleging 0LD was stale/incorrect. I sent Agent6 a correction. Do not edit those two assignments.
+- Added `im-results/agent14-raw139-d0-generic/Raw139NormalizedAcceptedCovers.lean`. It maps all 43 `acceptedRows` to existing source-parent families using `sameTable`, then constructs the corresponding Covers. It also transports the two 0RD continuation leaves to `Agent48Remaining.cover_zeroRC_of_RD` / `cover_oneRE_of_RD`, and transports normalized `p7` to the accepted `championP7` weighted TNF parent certificate.
+- The resulting theorem `raw139_cover_after_accepted` has exactly one remaining hypothesis: Covers for the 67 literal tables in `Raw139Normalized.remainingTables`. It deliberately does not substitute the old 80-entry complement for the normalized 67-table frontier.
+- Extended the existing `.github/workflows/agent6-champion-residual.yml` (no new workflow) to compile the new module, audit its axiom profiles, and retain the two normalized .olean files in the source-sibling artifact.
+- Updated `im-results/agent14-raw139-d0-generic/README.md` to describe the conditional local p0 interface. CI has not yet validated the new module.
+
+### Candidate scan disposition
+
+Agent3's source-connected Cryptids scan found 34 upstream nonhalting machines, mapping to 11 normalized remaining-row addresses but no exact one-hole leaf matches. Agent6's crosswalk independently marks two E1=1LF candidates as non-direct because their source runs query additional erased rows; the one direct source leaf is already consumed by Agent41's E1=1LF parent contract. Do not ingest the two non-direct machines as Covers of broader cylinders. A first-hole refinement would be required.
+
+### Environment and next actions
+
+- Reconstructed Lean 4.36.0-rc2 locally at `/tmp/lean/lean-4.36.0-rc2-linux/bin/lean`; `lean --version` reports the requested release.
+- Next: dispatch the updated `agent6-champion-residual.yml` workflow (default C1 artifact run id 45746968139; no optional graft/core run id) and inspect the source-sibling job logs. Fix any elaboration or exact-table failures, then confirm the seven new theorem axiom profiles. The GitHub Actions API was rate-limited during this checkpoint; wait before retrying.
+- If the adapter passes, it is still a conditional frontier, not an upper-bound proof. The remaining mathematical task is to close the 67 normalized residual tables (or prove a stronger parent cover).
