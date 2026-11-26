@@ -49,7 +49,10 @@ private theorem code_false_repeat (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    simp only [List.replicate_succ,wordCode,pairs,ih]
+    change [true,false] ++ wordCode (List.replicate n false) =
+      true :: false :: pairs n
+    rw [ih]
+    rfl
 
 private theorem inc_append (xs ys : List Bool) :
     wordInc (xs++ys) = wordInc xs + wordInc ys := by
@@ -94,9 +97,9 @@ private theorem p_suffix (r : Nat) :
   have hrep : List.replicate (3*r+1) true =
       List.replicate (3*r) true ++ [true] := by
     calc
-      _ = List.replicate (3*r) true ++ List.replicate 1 true := by
-        congr 1 <;> omega
-      _ = _ := List.replicate_append_replicate
+      _ = List.replicate (3*r) true ++ List.replicate 1 true :=
+        (List.replicate_append_replicate).symm
+      _ = _ := by simp
   rw [hrep]
   simp [ys,code_append,code_true_repeat,wordCode,List.append_assoc]
 
