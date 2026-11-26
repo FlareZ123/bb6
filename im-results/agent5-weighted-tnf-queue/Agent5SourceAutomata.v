@@ -139,9 +139,10 @@ Proof.
   destruct (auto_inv_run p c n agent32_finiteBlank H (auto_inv_blank p c H))
     as [x [Hr _]].
   exists (cconfig_to_config x).
-  rewrite <- agent32_finiteBlank_correct.
   apply multistep_c_spec.
-  rewrite agent32_cconfig_run_commute,Hr. reflexivity.
+  pose proof (agent32_cconfig_run_commute p n agent32_finiteBlank) as HC.
+  rewrite agent32_finiteBlank_correct, Hr in HC.
+  exact HC.
 Qed.
 
 Print Assumptions auto_cert_nonhalt.
