@@ -56,7 +56,7 @@ def cert(t,param):
  if param[0]=='n':return convert(domain_check(mask_domain(domain_mask(t)),param[1],20000))
  if param[0]=='r':return run(t,param[1],max(2500,param[2]))
  raise ValueError(param)
-def collect():
+def collect(target=None):
  allc=[]
  for f in sorted(glob.glob('ngram*.txt')):
   for l in open(f):
@@ -65,11 +65,13 @@ def collect():
   for t,r in json.load(open(f))['out']:
    if r[0]=='rle':allc.append((tuple(t),('r',(r[1],r[1]),max(2500,r[2])),r[2]))
  for t,p,q in json.load(open(HERE/'survivors.json'))['stack']:
+  if target is not None and t[target]!=0:continue
   c=run(t,(p,q),8000);assert c is not None
   allc.append((tuple(t),('r',(p,q),8000),len(c['states'])))
  return allc
 def main():
- allc=collect();allc.sort(key=lambda x:x[0]);masks=[domain_mask(t) for t,_,_ in allc];N=len(allc);idx=[defaultdict(int) for _ in range(12)]
+ target=int(sys.argv[1]) if len(sys.argv)>1 else None
+ allc=collect(target);allc.sort(key=lambda x:x[0]);masks=[domain_mask(t) for t,_,_ in allc];N=len(allc);idx=[defaultdict(int) for _ in range(12)]
  for i,m in enumerate(masks):
   for j,v in enumerate(m):idx[j][v]|=1<<i
  full=(1<<N)-1;options=[];seen=set();start=time.monotonic()

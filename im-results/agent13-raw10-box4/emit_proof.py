@@ -74,11 +74,12 @@ def bank_modules():
     print('stack certificate modules',group,flush=True)
     return refs
 
-def block_modules():
+def block_modules(target=None):
     B=HERE.parent/'agent13-block-far'
     sys.path.insert(0,str(B))
     from generate_multi import generate
     rows=json.load(open(HERE/'survivors.json'))['block']
+    if target is not None:rows=[(t,p) for t,p in rows if t[target]==0]
     widths=sorted({p[0] for _,p in rows}-{3})
     if widths:subprocess.run([sys.executable,str(B/'specialize.py'),*map(str,widths)],check=True)
     refs={}
@@ -204,12 +205,14 @@ end BB6.Agent13.Box4
     print('slice',target,'nodes',root.size,'proof shards',serial,'modules',group,flush=True)
 
 def main():
-    boxes=bank_modules();block=block_modules();long={}
+    only_target=int(sys.argv[2]) if len(sys.argv)>2 else None
+    boxes=bank_modules();block=block_modules(only_target);long={}
     for f in sorted(glob.glob('long*.json')):
         for t,w in json.load(open(f))['out']:
             long[tuple(t)]=w
-    for target in range(6,12):tree_modules(target,load_tree(target,long,block),boxes)
-    write('Box4Closure',[f'Box4Slice{t}' for t in range(6,12)],'''namespace BB6.Agent13.Box4
+    targets=[only_target] if only_target is not None else list(range(6,12))
+    for target in targets:tree_modules(target,load_tree(target,long,block),boxes)
+    if only_target is None: write('Box4Closure',[f'Box4Slice{t}' for t in range(6,12)],'''namespace BB6.Agent13.Box4
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 theorem allSlices : ∀ t : Fin 12, 6 ≤ t.val → Good t (root t) := by
   intro t ht
