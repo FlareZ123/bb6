@@ -181,6 +181,7 @@ jobs:
             im-results/agent48-champion-root/ChampionF1ZeroLFIntegration.lean \
             im-results/agent6-champion-residual/ChampionF1OneLAIntegration.lean \
             im-results/agent6-champion-residual/ChampionF1ZeroRCIntegration.lean \
+            im-results/agent6-champion-residual/ChampionF1OneLDOneRFIntegration.lean \
             im-results/agent6-champion-residual/Raw139SiblingSources.lean \
             --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
             --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
@@ -290,6 +291,23 @@ jobs:
               "BB6.Agent6F1ZeroRCIntegration.removedZeroRC_count",
               "BB6.Agent6F1ZeroRCIntegration.cover_remainingF1OneLA",
               "BB6.Agent6F1ZeroRCIntegration.exact_from_remainingF1ZeroRC",
+              "BB6.Agent14F1OneLD.checked",
+              "BB6.Agent14F1OneLD.all_completions_weighted",
+              "BB6.Agent14F1OneRF.checked",
+              "BB6.Agent14F1OneRF.all_completions_weighted",
+              "BB6.Agent6F1OneLDOneRFIntegration.oneLD_is_depth5_sibling",
+              "BB6.Agent6F1OneLDOneRFIntegration.cover_oneLD",
+              "BB6.Agent6F1OneLDOneRFIntegration.oneLD_parent_present",
+              "BB6.Agent6F1OneLDOneRFIntegration.remainingF1OneLD_count",
+              "BB6.Agent6F1OneLDOneRFIntegration.removedOneLD_count",
+              "BB6.Agent6F1OneLDOneRFIntegration.cover_remainingF1ZeroRC",
+              "BB6.Agent6F1OneLDOneRFIntegration.oneRF_is_depth5_sibling",
+              "BB6.Agent6F1OneLDOneRFIntegration.cover_oneRF",
+              "BB6.Agent6F1OneLDOneRFIntegration.oneRF_parent_present",
+              "BB6.Agent6F1OneLDOneRFIntegration.remainingF1OneRF_count",
+              "BB6.Agent6F1OneLDOneRFIntegration.removedOneRF_count",
+              "BB6.Agent6F1OneLDOneRFIntegration.cover_remainingF1OneLD",
+              "BB6.Agent6F1OneLDOneRFIntegration.exact_from_remainingF1OneLDOneRF",
           )
           for name in names:
               if name.startswith(("BB6.", "BB6Coverage.")):
