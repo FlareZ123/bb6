@@ -548,6 +548,11 @@ jobs:
             --source-root "$PWD/.tmp/a41-f1-zeroRC/imports" \
             --source-root "$PWD/.tmp/a14-f1-batch/imports" \
             --source-root "$work/d0-zeroRC-source" \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
             --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work/build" \
