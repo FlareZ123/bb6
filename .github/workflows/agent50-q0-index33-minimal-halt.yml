@@ -1,10 +1,10 @@
-name: Agent 50 q0 index-33 minimal-halt source check
+name: Agent 50 q0 index-33 residual Cover source check
 
 on:
   workflow_dispatch:
     inputs:
       target:
-        description: Compile the minimal-slice application and replay its macro checker
+        description: Compile the isolated automata certificate and residual Cover; replay the macro checker
         type: choice
         options: [all]
         default: all
@@ -24,7 +24,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Compile source closure and replay macro recurrence
+      - name: Compile automata certificate and residual Cover; replay independent macro recurrence
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
