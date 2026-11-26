@@ -206,19 +206,48 @@ jobs:
             echo "nonstandard axiom in Canonical64 Raw139 subcover wrapper"
             exit 1
           fi
-      - name: Compile normalized-to-active Raw139 crosswalk probe
+      - name: Rebuild accepted E0=0RE parent and compile normalized-to-active Raw139 crosswalk
         if: inputs.mode == 'integrate-65' && inputs.raw139_subcover_run_id != ''
         continue-on-error: true
         run: |
           set -euo pipefail
-          export LEAN_PATH="/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
-          lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean \
-            im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedCrosswalk.lean \
-            | tee /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/raw120-canonical64/raw139-normalized-crosswalk.log; then
-            echo "nonstandard axiom in Raw139 normalized crosswalk probe"
-            exit 1
-          fi
+          mkdir -p /tmp/raw120-canonical64
+          {
+            bash im-results/agent48-raw139-e0-0re/reproduce-parent.sh
+            test -s .tmp/a48-e0parent-ZeroRE/build/Raw139E0ZeroRECover.olean
+            python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, sys
+          src = Path(".tmp/a48-e0parent-ZeroRE/build")
+          others = [
+              Path("/tmp/a3e0-build"),
+              Path("/tmp/raw120-canonical64/linked"),
+              Path("/tmp/a6-core/build"),
+              Path("/tmp/a6-sibling/source-sibling-build"),
+          ]
+          conflicts = []
+          for p in src.glob("*.olean"):
+              digest = hashlib.sha256(p.read_bytes()).hexdigest()
+              for directory in others:
+                  q = directory / p.name
+                  if q.is_file():
+                      other = hashlib.sha256(q.read_bytes()).hexdigest()
+                      if digest != other:
+                          conflicts.append((p.name, str(directory), digest, other))
+          if conflicts:
+              for name, directory, left, right in conflicts:
+                  print(f"OLEAN_CONFLICT {name} {directory} {left} {right}")
+              sys.exit(1)
+          print("E0RE overlapping .olean modules are byte-identical")
+          PY
+            export LEAN_PATH=".tmp/a48-e0parent-ZeroRE/build:/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
+            lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean \
+              im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedCrosswalk.lean
+            if grep -Eq 'sorryAx|native_decide' /tmp/raw120-canonical64/raw139-normalized-crosswalk.log; then
+              echo "nonstandard axiom in Raw139 normalized crosswalk probe"
+              exit 1
+            fi
+          } 2>&1 | tee /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -234,6 +263,10 @@ jobs:
             /tmp/raw120-canonical64/raw139-normalized-crosswalk.log
             /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
             /tmp/a3e0-build/*.olean
+            .tmp/a48-e0parent-ZeroRE/log
+            .tmp/a48-e0parent-ZeroRE/manifest.json
+            .tmp/a48-e0parent-ZeroRE/partition.json
+            .tmp/a48-e0parent-ZeroRE/source/Raw139E0ZeroRECover.lean
           if-no-files-found: warn
           retention-days: 14
 
