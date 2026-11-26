@@ -10,13 +10,17 @@ on:
         description: JSON list of extra indices with complete candidate certificates
         type: string
         default: '[126,127,128,129,130,137,140]'
+      extended_automata:
+        description: Search unresolved open leaves with the broader FAR automata family
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
 jobs:
   cover:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     strategy:
       fail-fast: false
       max-parallel: 4
@@ -68,6 +72,7 @@ jobs:
         if: inputs.generation_run == ''
         env:
           SIX_HOLE_DATA: /tmp/raw11-six-data
+          RAW11_EXTENDED_AUTOMATA: ${{ inputs.extended_automata && '1' || '0' }}
         run: |
           set -euo pipefail
           node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs "$ID" /tmp/raw11-generated
