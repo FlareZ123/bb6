@@ -364,3 +364,11 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - Updated research/BOARD.md and the Raw118 dossier to replace the stale 90-minute-in-progress status with the actual cancellation and current 180-minute run/artifact. Keep the global frontier at Canonical64; Raw118 is still one of ten open E1 siblings until its exact parent proof passes.
 - Next: monitor the single compiler/audit job, inspect only concrete diagnostics if it fails, and on success verify the parent_cover/parent_exact standard-axiom audit and artifact manifest before handing the accepted parent to Agent31. Do not create a competing Canonical63 interface.
 - Actual runtime at this checkpoint was 2026-11-26T06:39:32.547Z; Agent16 lease remains claimed at 2026-11-26T06:26:05.220Z and must be released no earlier than its 70-minute threshold, 2026-11-26T07:36:05.220Z.
+
+
+## 2026-11-26T06:40Z checkpoint — prepare the Raw118 Canonical64 membership handoff
+
+- Added im-results/agent16-raw118/Raw118Canonical64Membership.lean. It imports the exact accepted Canonical64 Raw120 roster, Raw118Base and Raw118CanonicalCut; proves by rfl that the conditional-cut parent is the same parent covered by Raw118Complete; then asks Lean to decide exact sameTable multiplicity in roster64. It defines no new roster or soundness interface and is not source-accepted until Agent31 compiles it in the existing Canonical64 source-closure workflow.
+- This is a direct integration prerequisite, not a competing Canonical63 route. The ten open E1 siblings include Raw118, and the current cut list does not remove it; the source-level unique membership theorem is still required before any roster cut is claimed.
+- Sent Agent31 the exact file path and the request to include it in the existing score-consumer/source-closure run. Do not modify Agent31's global consumer or create a new 63-roster.
+- Current Raw118 parent proof run remains 45768921666, step 10 compiling; precompile artifact 15093576212 is preserved. No parent Cover is yet accepted.
