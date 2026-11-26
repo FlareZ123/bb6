@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484]
         default: core
       source_ref:
         description: Exact source commit (optional)
@@ -102,6 +102,9 @@ jobs:
           if [ "$TARGET" = branch540 ]; then
             python "$D/generateBranch540.py"
             ROOT="$D/Agent46Raw13Branch540.lean"
+          elif [ "$TARGET" = branch484 ]; then
+            python "$D/generateBranch540.py" 484
+            ROOT="$D/Agent46Raw13Branch484.lean"
           elif [ "$TARGET" = pump0RE ]; then
             ROOT="$D/Agent46Raw13Pump0RE.lean"
           elif [ "$TARGET" = late0RE ]; then
@@ -242,7 +245,7 @@ jobs:
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
+        if: inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified

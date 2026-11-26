@@ -1,5 +1,6 @@
 """Reproduce the complete six-hole raw13 branch-540 certificate."""
 import json
+import sys
 import subprocess
 import tempfile
 from pathlib import Path
@@ -10,10 +11,15 @@ from generateOneFAR import codes, fmt, saturate
 from shard_cut import checked_subtree
 from emitauto import emit_fixtures
 
-ROOT = "1RB0RC1RC0LD1LA0LC------------------"
-MODULE = "Agent46Raw13Branch540"
+BRANCH = sys.argv[1] if len(sys.argv)>1 else "540"
+SPECS = {
+    "540": ("1RB0RC1RC0LD1LA0LC------------------", 11, 7, Counter(cycle=51500,last=9303,split=2766,halt=2766,state=2284,far=509,auto=3)),
+    "484": ("1RB0RB1RC0LC1LA0LD------------------", 12, 6, Counter(cycle=36067,last=7060,split=1934,halt=1934,state=1036,far=310,auto=2)),
+}
+ROOT, QUERY, QSLOT, EXPECTED = SPECS[BRANCH]
+MODULE = "Agent46Raw13Branch" + BRANCH
 NS = "BB6." + MODULE
-AUTO = "BB6Coverage.Agent31Pump.Auto.Raw13Branch540"
+AUTO = "BB6Coverage.Agent31Pump.Auto.Raw13Branch" + BRANCH
 B = 7014
 HEADER = f"set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace {NS}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent46CanonicalCut\n"
 
@@ -21,7 +27,7 @@ def write(name, imports, body):
     (D / (name + ".lean")).write_text("".join(f"import {x}\n" for x in imports) + HEADER + body + "\nend " + NS + "\n", encoding="utf-8")
 
 def main():
-    fixtures = json.loads((D / "branch540-auto.json").read_text())
+    fixtures = json.loads((D / f"branch{BRANCH}-auto.json").read_text())
     # emit_fixtures stores left-sweep fields in tape order. The checked
     # fixtures below use direct constructor order, so invert that conversion.
     for f in fixtures:
@@ -29,7 +35,7 @@ def main():
             if isinstance(op, list) and op[0] == "L":
                 op[1], op[2] = op[2], op[1]
                 op[5], op[6] = op[6], op[5]
-    emit_fixtures(fixtures, D / (MODULE + "Auto.lean"), "Raw13Branch540")
+    emit_fixtures(fixtures, D / (MODULE + "Auto.lean"), "Raw13Branch"+BRANCH)
     auton = {x["table"]: i for i,x in enumerate(fixtures)}
     with tempfile.TemporaryDirectory() as temp:
         temp = Path(temp)
@@ -37,11 +43,11 @@ def main():
         subprocess.run(["g++","-O3","-std=c++17",str(D/"frontier_complete.cpp"),"-o",str(exe)],check=True)
         auto_tables = temp / "auto.txt"
         auto_tables.write_text("\n".join(auton) + "\n")
-        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(D/"branch540-far.txt"),str(auto_tables)],input=ROOT+" 4 6\n",text=True))
-    assert tree[:3] == ["split",11,7]
+        tree = json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),str(D/f"branch{BRANCH}-far.txt"),str(auto_tables)],input=ROOT+" 4 6\n",text=True))
+    assert tree[:3] == ["split",QUERY,QSLOT]
     count,mass=Counter(),Counter()
     tally(tree,6,4,count,mass)
-    assert count == Counter(cycle=51500,last=9303,split=2766,halt=2766,state=2284,far=509,auto=3),count
+    assert count == EXPECTED,count
     assert sum(mass.values())==25**6,mass
     print("counts",count,"mass",mass)
     def emit(t):
@@ -81,10 +87,10 @@ theorem kids_checked (mv : Move) (hv : mv.next.val ≤ 4) :
   all_goals cases w <;> cases r
 {cases}
 
-def parentCut : Cut := .split 11 (3,true) kids
+def parentCut : Cut := .split {QUERY} {slot(QSLOT)} kids
 
 theorem parent_checked : check {B} parent 4 parentCut = true := by
-  change (BB6.Agent10ZipAudit.zipQueryOK {B} parent 11 (3,true) &&
+  change (BB6.Agent10ZipAudit.zipQueryOK {B} parent {QUERY} {slot(QSLOT)} &&
     BB6.Agent31ThreeHole.allMoves (fun mv =>
       if mv.next.val ≤ 4 then check {B} (next mv) (nextCut 4 mv) (kids mv) else true)) = true
   simp only [Bool.and_eq_true]

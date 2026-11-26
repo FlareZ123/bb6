@@ -37,6 +37,7 @@ int solve(Table p,int cut,int holes){
      const auto&[rev,d]=ov->second;if(!far(p,d,rev)){cerr<<"bad override "<<raw<<endl;return -1;}
      nodes[i].a.typ=5;nodes[i].df=showD(d);nodes[i].rev=rev;return i;}
    for(const auto&d:bank)for(int rev=0;rev<2;rev++)if(far(p,d,rev)){nodes[i].a.typ=5;nodes[i].df=showD(d);nodes[i].rev=rev;return i;}
+   auto late=classify<1000,2048,1000>(p);if(late.typ==2){nodes[i].a=late;return i;}
    cerr<<"unresolved "<<raw<<endl;return -1;
  }
  nodes[i].a=a;if(a.typ==2||holes==1)return i;

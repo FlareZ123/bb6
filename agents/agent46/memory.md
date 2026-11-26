@@ -418,3 +418,5 @@ Normal draw 4; lease `agent46-gpt62-2026-11-25T14:44:19.750Z-raw13-closure`, con
 - SAT 6x6 unsat, larger tested sizes timeout; phase-feature DFA searches no closures. Avoid retreading.
 
 2026-11-26 04:01 UTC: raw13 pB singleton candidate committed 982460fef77e09d7b52abfaee39b4d546069892d (corridor audit). New six-hole branch540 complete candidate, exact mass 25^6, bound 7014, 509 FAR and 3 locally kernel-checked sweep leaves, 66365 total nodes. Standalone source audit pending. Local closure compiling. Global raw13 mass reduction would be 3*25^6 on consumption; not yet claimed.
+
+04:04 UTC: branch484 complete candidate (1RB0RB1RC0LC1LA0LD------------------), 46409 nodes, 1934 splits, 36067 cycle, 1036 state, 7060 last, 310 FAR, 2 sweep. All remaining leaves now have explicit candidates; source audit pending. Generalized branch540 pipeline. No unverified global claim.

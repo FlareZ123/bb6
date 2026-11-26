@@ -160,3 +160,7 @@ Workflow target `phase` runs the candidate search, emits the Lean audit module, 
 ### Six-hole residual 540 candidate
 
 The exact parent `1RB0RC1RC0LD1LA0LC------------------` is reached by A1=0RC, C1=0LC, B1=0LD (first query D1 at step 11). The complete candidate tree has 2766 splits, 51500 cycle, 2284 closed-state, 9303 last, 509 FAR, and three explicit parameterized-sweep leaves. Its ordinary-label mass is 25^6=244140625. The candidate empty complement and bound 7014 are under source audit (`branch540` target); no global roster reduction is claimed until consumption. `generateBranch540.py` reconstructs all certificates using the shared classifier, explicit DFA witnesses, and the three sweep fixtures.
+
+### Six-hole residual 484 candidate
+
+The exact parent `1RB0RB1RC0LC1LA0LD------------------` is reached by A1=0RB, B1=0LC, C1=0LD (first query D0 at step 12). The complete candidate tree has 1934 splits, 36067 cycle (including a 573-step translating cycle), 1036 closed-state, 7060 last, 310 FAR, and two parameterized-sweep leaves. Its ordinary-label mass is 25^6=244140625. The empty complement and bound 7014 are under source audit (`branch484` target). Both this and branch540 use the common generator, preserving the source-pinned previous audit.
