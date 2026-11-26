@@ -19,6 +19,28 @@ def emit(code,spec,out,limit=225,tr=None):
   return 0
  B=max(counts['maxquery'],max((max_late(r) for r in rec.values()),default=0))+6
  def size(t):return 1+sum(map(size,t[3])) if t[0]=='split' else 1
+ nested=spec.get('nested_blocks',[])
+ nested_map={(tuple(x['table']),json.dumps(x['recipe'],sort_keys=True)):int(x['id']) for x in nested}
+ nested_module=spec.get('nested_block_module',prefix+'NestedBlock00')
+ def recipe_node(p,r,deps):
+  if r[0]=='split':
+   n,s,children=r[1:];nodes=[]
+   for v,cr in zip(ORDER,children):
+    q=p.copy();q[s]=v;nodes.append(recipe_node(q,cr,deps))
+   return f'.split {n} {slot(s)} (byMove [{", ".join(nodes)}])'
+  if r[0] in ('block','phase'):
+   i=nested_map[(tuple(p),json.dumps(r,sort_keys=True))]
+   deps.add(nested_module)
+   return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
+  if r[0]=='cycle':return node(tuple(r),deps)
+  if r[0]=='late':
+   assert p.count(24)==1 and scan(p,r[1])==('hole',r[1],r[2])
+   return node(('last',*r[1:]),deps)
+  if r[0]=='last':return node(tuple(r),deps)
+  if r[0]=='far':
+   cert=far(p,*r[1:]);assert cert
+   return node(('far',*cert),deps)
+  raise ValueError(r)
  def node(t,deps):
   k,*a=t
   if k=='cycle':e,s,r,x=a;return f'.cycle {e} {s} {bl(r)} ({x})'
@@ -26,11 +48,9 @@ def emit(code,spec,out,limit=225,tr=None):
   if k=='far':rev,d,dfa,t0,t1,z=a;return f'.far {bl(rev)} {d} ⟨0,{dfa},{t0},{t1},{z}⟩'
   if k=='split':n,s,children=a;return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(node(c,deps) for c in children)+'])'
   if k=='open':
-   i=idx[tuple(a[0])];r=rec[i]
+   p=a[0];i=idx[tuple(p)];r=rec[i]
    if r[0] in ('block','phase'):deps.add(bmodule[i]);return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
-   if r[0]=='cycle':return node(r,deps)
-   if r[0]=='late':assert a[0].count(24)==1 and scan(a[0],r[1])==('hole',r[1],r[2]);return node(('last',*r[1:]),deps)
-   if r[0]=='far':c=far(a[0],*r[1:]);assert c;return node(('far',*c),deps)
+   return recipe_node(p,r,deps)
   raise ValueError(t)
  seq=[0];files=[]
  def make(p,t):
