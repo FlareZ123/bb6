@@ -1389,3 +1389,19 @@ Next actions:
 2. Inspect run `45828453615`; on success, update `im-results/agent4-raw124-0lf/README.md` from local-only to original-source accepted and hand the artifact to Agent2.
 3. Inspect run `45827823002`; preserve the partition/open/FAR hashes and classify remaining hard leaves. Coordinate with Agent2 before committing to further F1=0LA work.
 4. Use GitHub Actions MCP for CI logs. Local shell/container returned ClientError in this invocation; do not waste cycles retrying without a reason.
+
+
+## 2026-11-26T13:29:26.936Z — Raw124 branch proofs and CI continuation
+
+- **Raw124 F1=0LB is now source-accepted.** Run `45827503893` succeeded; artifact `raw124-0lb-complete-source-audit` ID `15122105407`, SHA-256 `e08cc30ac83d1efbe513095f469ec79763d7aa917d6f67d75e660b2b74f0238a`; theorem `BB6.Agent2Raw124ZeroLBComplete.bound_all`; weighted bound **4,136,175**. The full residual graft consumed M264, M267, M448 and the axiom audit passed. This is one F1 child only, not a Raw124 parent Cover. Agent2 and Agent31 have been notified with the artifact pin.
+- **Raw124 F1=0LF/F0=0LE is source-accepted by Agent7/12.** Run `45827171994` succeeded; artifact `raw124-0lf-0LE-source-accepted` ID `15121120817`, SHA-256 `7986c863ca02b469ce689b72f37ab7b0313a224645c072dec1dafd4813f9fb10`; theorem `BB6.Agent7Raw124ZeroLF0LE.bound_all`; weighted bound **2,455**. Agent2 has been notified. This is a child of F1=0LF, not that whole branch.
+- **Raw124 F1=0LA scan was cancelled to avoid duplicate work.** Agent2's 08:03 memory already records a combined local partition over 0LA/0LB/0LE/0LF with 16,052 opens, 15,195 pooled FAR closures, and 288 residual candidates in `/tmp/raw124new`. My standalone scan run `45827823002` was cancelled; `im-results/agent4-raw124-0la/README.md` documents why and preserves the fallback script. Asked Agent2 for a persisted bundle or a distinct subset of the 288 residuals.
+- **Raw124 F1=0LF/F0=0RB source audit:** first run `45828453615` compiled all 443 project modules, including `BB6.Agent4Raw124ZeroLF0RB.checkRoot` and `bound_all`, with only `[propext, Classical.choice, Quot.sound]`. It then failed because I teed the compiler log into its `--workdir`, which the compiler cleans before writing its manifest; the subsequent axiom script could not find `$W/audit.log`. This is a workflow persistence bug, not a Lean proof failure. Fixed by teeing to `/tmp/a4-raw124-0lf-0rb.log`, auditing there, then copying it into the artifact. Retry `45829435208` is in progress. If it passes, artifact `raw124-0lf-0rb-source-accepted` is the 390,625-completion F1=0LF/F0=0RB child at bound 174.
+- Agent7's Raw124 F1=0LF/F0=1RE run `45827051596` failed on the separate module collision `Raw124ZeroLF1REM42` between Agent4's old directory and Agent7's generated directory. Agent7 received the exact collision and suggested explicit override; not a proof failure.
+- The 0LB source-audit retries revealed the same paired module ambiguity in M448: after overriding `Raw124M448Kid4Proof`, the next failure was `Raw124M448Kid4Packed`. The final workflow pins generated `Kid{i}`, `Packed`, and `Proof` modules for i ∈ {4,10,16}; run `45827503893` passed.
+- No Canonical64 subtraction or `results/` change has been made. Raw124 remains one of the ten open E1 sibling parents; the two accepted children above do not close the parent.
+
+Next actions:
+1. Check run `45829435208`. If successful, update `im-results/agent4-raw124-0lf/README.md` to distinguish source-accepted evidence from the prior local-only claim, and notify Agent2 with artifact ID/digest.
+2. Obtain Agent2's persisted 0LA/0LE residual data or a specific unowned residual from the 288; do not rerun the combined partition.
+3. Avoid overlapping Agent7/Agent12's active F1=0LF branches; ask before taking another child.
