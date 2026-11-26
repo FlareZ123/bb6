@@ -93,7 +93,10 @@ Q(u)=(2W-3,\;24450+39417u).
 
 ### q=1 parent exclusions
 
-Four disjoint infinite parameter slices of \(Q(u)\) are now excluded:
+Seven disjoint infinite parameter slices of the q=1 parent
+\(Q(u)=(2W-3,24450+39417u)\) are now excluded.
+
+The first four previously established slices are:
 
 1. **\(u=59+80t\)** — the existing parent-fan theorem
    w7_z2_q1_parent_unreachable_u59mod80 forces an odd/odd parent and
@@ -107,7 +110,6 @@ Four disjoint infinite parameter slices of \(Q(u)\) are now excluded:
    (416500+1749048t,\;119477+501732t),
    \]
    whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
-   The source-certified odd-right sum-one invariant excludes it.
 
 3. **\(u=35+64t\)** — [U5Q0W7U3Mod64.lean](U5Q0W7U3Mod64.lean)
    applies the odd/odd low-valuation parent, then the odd-seven unique
@@ -116,43 +118,88 @@ Four disjoint infinite parameter slices of \(Q(u)\) are now excluded:
    (973457+1749048t,\;1045221+1877988t),
    \]
    whose right coordinate is odd and whose coordinate sum is \(2\pmod4\).
-   The source-certified odd-right sum-two invariant excludes it.
 
 4. **\(u=23+512s\)** — [U5Q0W7U23Mod512.lean](U5Q0W7U23Mod512.lean)
-   applies four exact parent steps: odd/odd low-value, even/even unique,
-   odd-seven, then odd/odd low-value. The final state is
+   applies odd/odd low-value, even/even unique, odd-seven, then odd/odd
+   low-value. The final state is
    \[
    (715594+15511608s,\;658051+14264292s),
    \]
    whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
-   The source-certified odd-right sum-one invariant excludes it.
 
-For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
-relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), therefore forces
-\(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The additional
-root condition \(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the
-\(u=7+32t\) and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\)
-for \(u=23+512s\); it holds for every \(t\) in the \(u=59+80t\)
-slice. These are necessary-residue-compatible subfamilies, not a
-classification of the full \(w=7\) progression.
+The following three additional slices are formalized in
+[U5Q0W7U19Mod2560.lean](U5Q0W7U19Mod2560.lean):
+
+5. **\(u=339+2560v\)**. The q=1 parent and forced predecessors are
+   \[
+   \begin{aligned}
+   A&=(2439151+18385920v,\;13386813+100907520v),\\
+   B&=(7912980+59646720v,\;10649895+80277120v),\\
+   C&=(9281435+69961920v,\;9965664+75119520v),\\
+   D&=(19247097+145081440v,\;4982831+37559760v),\\
+   F&=(12114962+91320600v,\;8548895+64440180v).
+   \end{aligned}
+   \]
+   The source steps are odd/odd low-value, even/odd sum-three,
+   even-right six, and odd/odd low-value. The terminal state has odd
+   right coordinate and sum \(1\pmod4\).
+
+6. **\(u=499+1280v\)**. The forced chain is
+   \[
+   \begin{aligned}
+   A&=(3588271+9192960v,\;19693533+50453760v),\\
+   B&=(11640900+29823360v,\;15667215+40138560v),\\
+   C&=(13654055+34980960v,\;14660634+37559760v),\\
+   D&=(28314687+72540720v,\;7330316+18779880v),\\
+   E&=(35645001+91320600v,\;3665157+9389940v).
+   \end{aligned}
+   \]
+   The source steps are odd/odd low-value, even/odd sum-three, and two
+   even-right six inverses. The terminal state has odd right coordinate
+   and sum \(2\pmod4\).
+
+7. **\(u=3379+5120v\)**. The forced chain is
+   \[
+   \begin{aligned}
+   A&=(24272431+36771840v,\;133214493+201815040v),\\
+   B&=(78743460+119293440v,\;105978975+160554240v),\\
+   C&=(92361215+139923840v,\;99170094+150239040v),\\
+   D_1&=(191531307+290162880v,\;49585046+75119520v),\\
+   D_2&=(241116351+365282400v,\;24792522+37559760v),\\
+   D_3&=(265908871+402842160v,\;12396260+18779880v),\\
+   F&=(278305129+421622040v,\;6198129+9389940v).
+   \end{aligned}
+   \]
+   After the odd/odd low-value and even/odd sum-three steps, four exact
+   even-right six inverses reach the terminal state, whose right
+   coordinate is odd and whose sum is \(2\pmod4\).
+
+For every one of these seven slices, the root filters give
+\(z=2+4u\equiv14\pmod{16}\) and \(z\equiv3\pmod5\). The necessary
+root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), forces
+\(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The original four
+families require the previously stated parameter restrictions:
+\(t\equiv1\pmod5\) for \(u=7+32t\) and \(u=35+64t\), and
+\(s\equiv3\pmod5\) for \(u=23+512s\); the \(u=59+80t\) family
+needs no further restriction. The three new families also need no
+further restriction, since each base value is \(19\pmod{20}\) and
+each step is divisible by 20. These are necessary-residue-compatible
+sublifts, not a classification of the full \(w=7\) progression.
 
 ### Exact-source verification
 
 The focused workflow target w7-q0-parent-fan in
 [agent3-u5-m32-w485-highstop.yml](../../.github/workflows/agent3-u5-m32-w485-highstop.yml)
-passed in run [#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
-Lean 4.36.0-rc2 compiled 49 project modules from the four roots
-U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and U5Q0W7U23Mod512.
-The explicit axiom prints include the parent fan, the q=0/q=1 target
-theorems on all four slices, and the u=59 declarations. All printed
-dependencies are only propext, Classical.choice, and Quot.sound (with
-some existing source invariants using the subset propext, Quot.sound);
-no sorryAx or native_decide dependency occurs in this closure.
-
-The four older \(z=4u\) draft lifts below were deliberately excluded from
-this focused closure. The earlier broad batch failed in those independent
-files at their existing change proofs; they remain intermediate drafts
-and are not covered by run #20.
+passed for the original four roots in run
+[#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
+The extended closure, which additionally compiles
+U5Q0W7U19Mod2560.lean and all six new q=0/q=1 declarations, passed in
+[run #25](https://github.com/FlareZ123/bb6/actions/runs/45832100735).
+The module explicitly prints the axioms of every new theorem; the
+workflow's rejection guard found no sorryAx or native_decide dependency.
+The proofs use the original-source odd/odd low-value, even/odd sum-three,
+and even-right six inverse theorems, together with the established
+odd-right sum-one and sum-two blank-image invariants.
 
 ### Remaining scope
 
