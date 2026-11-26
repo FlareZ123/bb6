@@ -161,7 +161,7 @@ theorem next (L : List Bool) (u : Runs)
     change run0 table (n+4) (cfg L (.last n)) =
       some ⟨2,Zs (n+3) ++ true::true::L.tail,[]⟩ at a
     obtain ⟨t,L',u',ht,h0',hS',b⟩ :=
-      reset_resume n L.tail [] hS rfl (.last (n+3)) (by rfl)
+      reset_resume n L.tail [] hS rfl (.last (n+3)) (by change Os (n+4) ++ [] = Os (n+4); exact List.append_nil _)
     exact ⟨n+4+t,L',u',by omega,h0',hS',join0 a b⟩
   | cons k g u =>
     cases g with
