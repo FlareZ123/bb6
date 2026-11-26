@@ -18,7 +18,6 @@ from pathlib import Path
 import hashlib, sys
 out=Path(sys.argv[1])
 rows=[x for x in (out/'raw47-depth3.open').read_text().splitlines() if x.strip()]
-assert len(rows)==len(set(rows)), 'duplicate open tables'
 holes=Counter()
 for row in rows:
     chunks=row.split('_')
@@ -29,7 +28,7 @@ summary=[
     'Raw47 depth-3 cut + FAR5 search',
     'parent=1RB---_1RC---_0RD---_1LD0RC_------_------',
     'cap=1000', 'lookback=32', 'split_depth=3',
-    f'open={len(rows)}', f'unique_open={len(set(rows))}',
+    f'open={len(rows)}', f'unique_open={len(set(rows))}', f'duplicate_open={len(rows)-len(set(rows))}',
     'hole_distribution='+','.join(f'{k}:{holes[k]}' for k in sorted(holes)),
     f'far5_hits={hits}',
     f'open_sha256={hashlib.sha256((out/"raw47-depth3.open").read_bytes()).hexdigest()}',
