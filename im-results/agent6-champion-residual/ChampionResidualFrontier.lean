@@ -19,7 +19,7 @@ open BB6.Agent13MixedBound109
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48DirectRoot
 
-/-- Core-Lean finite eliminators used instead of Mathlib's fin_cases tactic. -/
+/-- Core-Lean finite eliminators for the fixed six- and eight-slot tables. -/
 private theorem fin8Cases {P : Fin 8 → Prop}
     (h0 : P 0) (h1 : P 1) (h2 : P 2) (h3 : P 3)
     (h4 : P 4) (h5 : P 5) (h6 : P 6) (h7 : P 7) : ∀ i, P i := by
@@ -379,11 +379,17 @@ theorem championClosed_sound (i : Fin 8) (mv : Move)
     (h : championClosed i mv = true) :
     ∀ m, compatible (championChild i mv) m → NeverHalts m := by
   unfold championClosed at h
-  rcases List.any_eq_true.mp h with ⟨w, hw, hpair⟩
-  have hOK := (List.all_eq_true.mp championWitnessesOK) w hw
-  have hpair' : w.depth = i ∧ w.child = mv := of_decide_eq_true hpair
-  rcases hpair' with ⟨rfl, rfl⟩
-  exact residualWitnessOK_sound (championChild i mv) w.witness hOK
+  cases List.any_eq_true.mp h with
+  | intro w hrest =>
+    cases hrest with
+    | intro hw hpair =>
+      have hOK := (List.all_eq_true.mp championWitnessesOK) w hw
+      have hpair' : w.depth = i ∧ w.child = mv := of_decide_eq_true hpair
+      cases hpair' with
+      | intro hdepth hchild =>
+        cases hdepth
+        cases hchild
+        exact residualWitnessOK_sound (championChild i mv) w.witness hOK
 
 def championChildCertificate (i : Fin 8) (mv : Move)
     (h : championClosed i mv = true) :
@@ -422,7 +428,12 @@ def championStep (i : Fin 8)
       refine (championParent i) (readSlot c) (some (championNextMove i)) =
         championNextParent i := by
     rw [championReadSlot i]
-    fin_cases i <;> rfl
+    exact fin8Cases
+      (P := fun i =>
+        refine (championParent i) (championHole i) (some (championNextMove i)) =
+          championNextParent i)
+      (by rfl) (by rfl) (by rfl) (by rfl)
+      (by rfl) (by rfl) (by rfl) (by rfl) i
   refine RootedFrontier.expand (championPath i) hrun hhole hweight ?_
   intro mv
   by_cases hn : mv = championNextMove i
@@ -447,7 +458,14 @@ theorem championP8DefaultCompletion :
     weightedTNFDefaultCompletion championP8 = championTable := by
   apply funext
   intro s
-  fin_cases s.1 <;> cases s.2 <;> decide
+  cases s with
+  | mk q b =>
+    exact fin6Cases
+      (P := fun q =>
+        weightedTNFDefaultCompletion championP8 (q, b) = championTable (q, b))
+      (by cases b <;> decide) (by cases b <;> decide)
+      (by cases b <;> decide) (by cases b <;> decide)
+      (by cases b <;> decide) (by cases b <;> decide) q
 
 /-- Keep the first-hole argument polymorphic in its halt time.  Specializing
     only after the proof avoids reducing the enormous champion score while
@@ -482,10 +500,26 @@ theorem championP8UniqueHole {s : Slot}
     (h : championP8 s = none) : s = (1, true) := by
   cases s with
   | mk q b =>
-    fin_cases q <;> cases b <;>
-      simp [championP8, championP7, championP6, championP5, championP4,
-        championP3, championP2, championP1, championResidual,
-        championRootAfterB, refine, root] at h ⊢
+    exact (fin6Cases
+      (P := fun q => championP8 (q, b) = none → (q, b) = (1, true))
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢) q h)
 
 theorem championP8HoleSlot :
     readSlot championP8Config = (1, true) :=
@@ -495,10 +529,27 @@ theorem championP8OtherSlots (s : Slot) (h : s ≠ (1, true)) :
     ∃ mv, championP8 s = some (some mv) := by
   cases s with
   | mk q b =>
-    fin_cases q <;> cases b <;>
-      simp [championP8, championP7, championP6, championP5, championP4,
-        championP3, championP2, championP1, championResidual,
-        championRootAfterB, refine, root] at h ⊢
+    exact (fin6Cases
+      (P := fun q => (q, b) ≠ (1, true) →
+        ∃ mv, championP8 (q, b) = some (some mv))
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢)
+      (by intro h; cases b <;> simp [championP8, championP7, championP6, championP5,
+        championP4, championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢) q h)
 
 theorem championP8HRest :
     ∀ s, s ≠ readSlot championP8Config →
@@ -517,7 +568,14 @@ theorem championP8PossibleDelays :
         (fun s => some (championTable s)) := by
     apply funext
     intro s
-    fin_cases s.1 <;> cases s.2 <;> decide
+    cases s with
+    | mk q b =>
+      exact fin6Cases
+        (P := fun q =>
+          refine championP8 (1, true) none (q, b) = some (championTable (q, b)))
+        (by cases b <;> decide) (by cases b <;> decide)
+        (by cases b <;> decide) (by cases b <;> decide)
+        (by cases b <;> decide) (by cases b <;> decide) q
   rw [hfull]
   decide
 
@@ -589,10 +647,17 @@ theorem championResidualFrontierSound (m : Machine)
     (hm : compatible championResidual m) :
     WeightedBound (proposedTM63Moves + 7) m ∨
       ∃ e ∈ championResidualResiduals, compatible e.2 m := by
-  rcases RootedFrontier.sound championFrontier m hm with hB | ⟨address, q, hopen, hq⟩
-  · exact Or.inl hB
-  · exact Or.inr ⟨(address, q),
-      BB6.Agent42FrontierCount.OpenLeaf_mem_residuals hopen, hq⟩
+  cases RootedFrontier.sound championFrontier m hm with
+  | inl hB => exact Or.inl hB
+  | inr h =>
+    cases h with
+    | intro address hrest =>
+      cases hrest with
+      | intro q hrest =>
+        cases hrest with
+        | intro hopen hq =>
+          exact Or.inr ⟨(address, q),
+            BB6.Agent42FrontierCount.OpenLeaf_mem_residuals hopen, hq⟩
 
 /-- The 9-hole champion cylinder is one of the 109 retained root residuals. -/
 noncomputable def championResidualRetained : Bool :=
@@ -603,8 +668,11 @@ theorem championResidualRetainedTrue :
 
 theorem championResidualMemReducedRoster :
     ∃ e ∈ reducedRoster, e.2 = championResidual := by
-  rcases List.any_eq_true.mp championResidualRetainedTrue with ⟨e, he, hs⟩
-  exact ⟨e, he, sameTable_sound hs⟩
+  cases List.any_eq_true.mp championResidualRetainedTrue with
+  | intro e hrest =>
+    cases hrest with
+    | intro he hs =>
+      exact ⟨e, he, sameTable_sound hs⟩
 
 theorem championResidualUniqueInReducedRoster :
     (reducedRoster.filter fun e => sameTable e.2 championResidual).length = 1 := by
@@ -632,21 +700,32 @@ theorem championResidualRefinedRosterSound (m : Machine)
     (hm : compatible BB6.Agent50TNFPilot.root m) :
     WeightedBound (proposedTM63Moves + 7) m ∨
       ∃ e ∈ championResidualRefinedRoster, compatible e.2 m := by
-  rcases reduced_sound m hm with hB | ⟨e, he, hcomp⟩
-  · exact Or.inl (by
+  cases reduced_sound m hm with
+  | inl hB =>
+    exact Or.inl (by
       intro k d hk hd
       exact Nat.le_trans (hB k d hk hd) (Nat.le_of_lt champion_score_gt_7014))
-  · by_cases hs : sameTable e.2 championResidual = true
-    · have heq : e.2 = championResidual := sameTable_sound hs
-      have hcomp' : compatible championResidual m := by
-        simpa [heq] using hcomp
-      rcases championResidualFrontierSound m hcomp' with hB' | ⟨residual, hresidual, hcompat⟩
-      · exact Or.inl hB'
-      · exact Or.inr ⟨residual,
-          List.mem_append_right _ hresidual, hcompat⟩
-    · exact Or.inr ⟨e,
-        List.mem_append_left _ (List.mem_filter.mpr ⟨he, by simp [hs]⟩),
-        hcomp⟩
+  | inr h =>
+    cases h with
+    | intro e hrest =>
+      cases hrest with
+      | intro he hcomp =>
+        by_cases hs : sameTable e.2 championResidual = true
+        · have heq : e.2 = championResidual := sameTable_sound hs
+          have hcomp' : compatible championResidual m := by
+            simpa [heq] using hcomp
+          cases championResidualFrontierSound m hcomp' with
+          | inl hB' => exact Or.inl hB'
+          | inr h =>
+            cases h with
+            | intro residual hrest =>
+              cases hrest with
+              | intro hresidual hcompat =>
+                exact Or.inr ⟨residual,
+                  List.mem_append_right _ hresidual, hcompat⟩
+        · exact Or.inr ⟨e,
+            List.mem_append_left _ (List.mem_filter.mpr ⟨he, by simp [hs]⟩),
+            hcomp⟩
 
 /-- Conditional exact BB(6) after replacing the champion-containing 109th
     cylinder by its checked first-hole frontier. -/
