@@ -178,6 +178,10 @@ jobs:
             python "$D/generate0RE.py" 0RE5
             python "$D/emitauto.py" "$D/auto1RD.json" "$D/Agent46Raw13Auto1RD.lean" Raw13Auto1RD
             python "$D/generate0RE.py" 1RD
+            python "$D/emitauto.py" "$D/auto0LE5.json" "$D/Agent46Raw13Auto0LE5.lean" Raw13Auto0LE5
+            python "$D/generate0RE.py" 0LE5
+            python "$D/emitauto.py" "$D/auto1LE.json" "$D/Agent46Raw13Auto1LE.lean" Raw13Auto1LE
+            python "$D/generate0RE.py" 1LE
             python "$D/generate.py"
             if [ -f "$D/raw13-bidfa-spec.json" ]; then
               python "$D/audit_bidfa_raw13.py"
