@@ -1,5 +1,7 @@
 """Reproduce the complete six-hole raw13 branch-540 certificate."""
 import json
+import base64
+import zlib
 import sys
 import subprocess
 import tempfile
@@ -23,6 +25,11 @@ if BRANCH in SPECS:
 else:
     from generate_branch_base import emit_base
     CATALOG = json.loads((D / 'branch-catalog.json').read_text())[BRANCH]
+    # Compact witness payloads retain exact JSON data, not regenerated guesses.
+    if 'witnesses_zlib_b64' in CATALOG:
+        payload = json.loads(zlib.decompress(base64.b64decode(CATALOG.pop('witnesses_zlib_b64'), validate=True)))
+        assert set(payload) == {'far', 'auto'} and not (set(payload) & set(CATALOG))
+        CATALOG.update(payload)
     ROOT = CATALOG['root']
     QUERY, QSLOT = emit_base(ROOT, 'Agent46Raw13Branch'+BRANCH, D/('Agent46Raw13Branch'+BRANCH+'Base.lean'))
     EXPECTED = Counter(CATALOG['counts'])
