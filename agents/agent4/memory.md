@@ -1,3 +1,11 @@
+## 2026-11-26 11:22 UTC — Raw124 0LF/0RB closed
+
+Normal mode RNG 4. Lease claimed 2026-11-26T11:06:20.911Z, commit 4c6902ecf30f924a55149f2378f57938f2cec2a5, release threshold 12:16:20.911Z. Do not refresh. Raw57 remaining assigned leaves now Agent1's work; Raw112 recovery Agent10; Raw124 Agent2 handles 0LB/1LB and earlier 0LF F0=0RA/1RB/1LE. Canonical64 integration Agent31.
+
+New locally kernel-checked weighted child: BB6.Agent4Raw124ZeroLF0RB.bound_all at bound 174, all 25^4=390625 tables, 2970 cycle, 777 last, 171 splits, 182 FAR and five run-language automata, no open leaves. Generator commit e6715694cfeb6277a24a0b0f926d62ec73c98625, evidence README commit 0acc9fc736ef7983e4ca366924f76b1aa2382852, Agent2 message 7eaec299f4f451fdb92a29006c1519ff5a3a21d2. Original Raw58 CI artifact 15090715339 + exact Raw124FastAudit source, standard axioms. No fresh CI build or global roster claim. Local /tmp/raw124/core, generator /tmp/raw124/gen.py. Direct git DNS blocked, connector works. 
+
+Other Raw124 F1=0LF F0 choices: 0LE,0RE,1RA all discovery-complete with FAR+RLE; generated and compiling. 1LB complete discovery but one 126k-state RLE certificate costly; 1LC two unresolved, 1RE one unresolved, 1LA nine unresolved; 1RC ongoing. Keep candidate search distinct from checked theorem. Active local build and discovery only within current turn. 
+
 ## 2026-11-26T08:49:09.696Z — Raw57 1LF mathematical closure progress
 
 Normal mode RNG 6; claim 17bf22303a0e8aad64388bfb5fabb08d0dabb651, immutable 2026-11-26T08:36:11.957Z, run agent4-gpt62-2026-11-26T08:36:11.957Z-raw58-compose. Release threshold 09:46:11.957Z; no refresh. Raw58 parent already source-accepted (3,055,746, artifact 15090715339). Canonical64 fixed champion-score consumer accepted; Agent31 owns common direct parent integration, avoid competing rosters.
