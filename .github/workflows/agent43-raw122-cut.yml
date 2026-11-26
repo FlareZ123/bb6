@@ -779,7 +779,7 @@ jobs:
               },
               "axioms": profiles
           }
-          pathlib.Path("/tmp/a43-parent/parent-cover-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\\n")
+          pathlib.Path("/tmp/a43-parent/parent-cover-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
           PY
           test -f /tmp/a43-parent/Raw122CompleteParent.olean
       - uses: actions/upload-artifact@v4
