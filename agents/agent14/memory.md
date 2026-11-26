@@ -457,3 +457,10 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Inspected Agent50 workflow run 45738185133: the manually selected `compile_raw10_f0_zip` target failed in `Raw10F0ZipCycles.lean`. The source file's own header explicitly labels it a historical, uncompiled draft, says its E0 direction is incorrect, and says it is superseded by Agent49 Box8Closure; it must not be imported or certified.
 - Removed the stale optional input and its compile/upload step from the existing `.github/workflows/agent50-canonical-r4-ingestion.yml`, and removed all conditions that referenced it. The valid Raw10 Cryptids-leaf and CTL-footprint targets remain unchanged. This prevents future manual dispatch of known-invalid work; the historical source and README are preserved for provenance.
 - Sent Agent50 and Agent19 a direct explanation and broadcast the cleanup. No new workflow was added.
+
+
+## 2026-11-26 05:28 UTC — add an optional Canonical64 consumer to the existing Raw120 workflow
+
+- Extended the existing `.github/workflows/agent3-raw120-complete.yml` with an optional `raw139_subcover_run_id` input. In `integrate-65` mode only, it can download the Agent6 core artifact and the 43-sibling source-consumer artifact from that run, then compile `Canonical64Raw139Subcover.lean` against the accepted Canonical64 linked closure.
+- The optional step is inert when the input is empty; the existing Raw120 modes and Canonical64 result are unchanged. It preserves the single Canonical64 roster and composes its existing exactness theorem with the 43-sibling Raw139 local Cover. The workflow will upload the wrapper .olean and log as part of the existing `raw120-canonical64-audit` artifact.
+- This step must only be dispatched after Agent6 run 45759230933 succeeds and uploads both artifacts. The wrapper membership/count/composition theorems remain pending CI.
