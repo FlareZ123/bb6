@@ -270,8 +270,8 @@ theorem exact_at_target_with_normalized_if_crosswalk
 
 /-- Finite crosswalk diagnostics. The first count is how many active leaves
     are refinements of at least one normalized residual table; the second is
-    how many are not. The final counts test E0=0LC by exact equality and by
-    the more useful refinement relation. -/
+    how many are not. The final counts test E0=0LC, its D0RC/C1ZeroLF
+    refinements, and the source-accepted E0=0RE parent. -/
 #eval (normalizedTables.length, activeRows.length,
   activeCoveredByNormalized.length, activeUncoveredByNormalized.length)
 #eval normalizedCoverageSummary
@@ -289,7 +289,10 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
 #eval (activeRowsNotCoveredByParents candidateParentTables).length
 
+#print axioms e0RETable_eq_certifiedParent
 #print axioms e0RE_cover_at_852
+#print axioms e0RE_occurs_once_in_normalizedTables
+#print axioms normalizedTablesWithoutE0RE_count
 #print axioms e0RE_cover_at_bound
 #print axioms exact_at_target_with_65_normalized_and_complement
 #print axioms compatible_of_extends
