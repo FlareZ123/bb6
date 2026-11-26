@@ -17,22 +17,30 @@ open BB6.Agent13MixedBound109
     slot, not inferred from the matching labels. -/
 theorem parent_eq_championP7 :
     BB6.Agent48Parent.parent = BB6.Agent6ChampionResidual.championP7 := by
-  funext s
-  rcases s with ⟨q,b⟩
-  fin_cases q <;> cases b <;>
-    simp [BB6.Agent48Parent.parent, BB6.Agent48Parent.parentM,
-      BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
-      BB6.Agent6ChampionResidual.championP7,
-      BB6.Agent6ChampionResidual.championP6,
-      BB6.Agent6ChampionResidual.championP5,
-      BB6.Agent6ChampionResidual.championP4,
-      BB6.Agent6ChampionResidual.championP3,
-      BB6.Agent6ChampionResidual.championP2,
-      BB6.Agent6ChampionResidual.championP1,
-      BB6.Agent6ChampionResidual.championResidual,
-      BB6.Agent6ChampionResidual.championRootAfterB,
-      BB6.Agent13BlankDelay.refine,
-      BB6Coverage.Agent48Champion.championTable]]
+  apply funext
+  intro s
+  cases s with
+  | mk q b =>
+    have hq : ∀ q : Fin 6,
+        BB6.Agent48Parent.parent (q, b) =
+          BB6.Agent6ChampionResidual.championP7 (q, b) := by
+      apply BB6.Agent6ChampionResidual.fin6Cases
+      all_goals
+        cases b <;>
+          simp [BB6.Agent48Parent.parent, BB6.Agent48Parent.parentM,
+            BB6.Agent48Parent.a1, BB6.Agent47WeightedHalt.forgetHaltRows,
+            BB6.Agent6ChampionResidual.championP7,
+            BB6.Agent6ChampionResidual.championP6,
+            BB6.Agent6ChampionResidual.championP5,
+            BB6.Agent6ChampionResidual.championP4,
+            BB6.Agent6ChampionResidual.championP3,
+            BB6.Agent6ChampionResidual.championP2,
+            BB6.Agent6ChampionResidual.championP1,
+            BB6.Agent6ChampionResidual.championResidual,
+            BB6.Agent6ChampionResidual.championRootAfterB,
+            BB6.Agent13BlankDelay.refine,
+            BB6Coverage.Agent48Champion.championTable]
+    exact hq q
 
 /-- Transport the source-checked two-hole parent certificate to the exact
     Agent6 frontier node. -/
@@ -64,23 +72,33 @@ theorem championResidualFrontierWithParentSound :
 
 noncomputable def championResidualFrontierWithParentResiduals :
     List (List Move × PartialMachine) :=
-  BB6.Agent31FourHoleFrontier.residuals championFrontierWithParent
+  BB6.Agent31FourHoleFrontier.residuals
+    (B := proposedTM63Moves + 7) (p := championResidual)
+    championFrontierWithParent
 
 /-- The seven ordinary refinements and 39 closed leaves (38 checked side
     cycles plus the terminal two-hole parent certificate) force 123 open
     residual cylinders by the generic 24-way frontier identity. -/
 theorem championFrontierWithParentExpandedNodes :
-    BB6.Agent6ChampionResidualCount.frontierExpandedNodes championFrontierWithParent = 7 := by
+    BB6.Agent6ChampionResidualCount.frontierExpandedNodes
+      (B := proposedTM63Moves + 7) (p := championResidual)
+      championFrontierWithParent = 7 := by
   decide
 
 theorem championFrontierWithParentClosedLeaves :
-    BB6.Agent6ChampionResidualCount.frontierClosedLeaves championFrontierWithParent = 39 := by
+    BB6.Agent6ChampionResidualCount.frontierClosedLeaves
+      (B := proposedTM63Moves + 7) (p := championResidual)
+      championFrontierWithParent = 39 := by
   decide
 
 theorem championResidualFrontierWithParentCount :
     championResidualFrontierWithParentResiduals.length = 123 := by
-  change (BB6.Agent31FourHoleFrontier.residuals championFrontierWithParent).length = 123
-  have h := BB6.Agent6ChampionResidualCount.residuals_closed_expanded championFrontierWithParent
+  change (BB6.Agent31FourHoleFrontier.residuals
+    (B := proposedTM63Moves + 7) (p := championResidual)
+    championFrontierWithParent).length = 123
+  have h := BB6.Agent6ChampionResidualCount.residuals_closed_expanded
+    (B := proposedTM63Moves + 7) (p := championResidual)
+    championFrontierWithParent
   rw [championFrontierWithParentExpandedNodes, championFrontierWithParentClosedLeaves] at h
   omega
 
@@ -126,9 +144,16 @@ theorem cover_of_frontier_leaves {B : Nat} {p : PartialMachine}
     Cover (WeightedBound B) p := by
   refine Cover.leaf _ ?_
   intro m hm
-  rcases RootedFrontier.sound f m hm with hB | ⟨address, q, hopen, hq⟩
-  · exact hB
-  · exact (hLeaves (address, q) (openLeaf_mem_residuals hopen)).sound _ hq
+  cases RootedFrontier.sound f m hm with
+  | inl hB => exact hB
+  | inr h =>
+    cases h with
+    | intro address hrest =>
+      cases hrest with
+      | intro q hrest =>
+        cases hrest with
+        | intro hopen hq =>
+          exact (hLeaves (address, q) (openLeaf_mem_residuals hopen)).sound _ hq
 
 theorem cover_of_championResidual_frontier
     (hLeaves : ∀ e ∈ championResidualFrontierWithParentResiduals,
