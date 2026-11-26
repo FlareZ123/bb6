@@ -31,18 +31,6 @@ Theorem raw11_q0_restriction_exact :
   raw11_q0_restriction = raw11_local_q0.
 Proof. vm_compute. reflexivity. Qed.
 
-Eval vm_compute in
-  (length (fst raw11_q0_restriction), length (snd raw11_q0_restriction)).
-
-Definition raw11_q0_chunk_counts : list nat :=
-  map (fun i =>
-    length (filter (source_roster_covers [raw11_parent])
-      (fst (q_i (100 * i) 100)))) (seq 0 129).
-
-Eval vm_compute in
-  filter (fun p => negb (Nat.eqb (snd p) 0))
-    (combine (seq 0 129) raw11_q0_chunk_counts).
-
 (* If all residual nodes in the restricted frontier are safe, the two
    backwards BFS steps recover safety of the complete Raw11 cylinder. *)
 Theorem raw11_safe_from_restricted_q0 (Safe : T -> Prop) :
