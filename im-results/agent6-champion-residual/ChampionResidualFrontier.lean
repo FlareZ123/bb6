@@ -402,16 +402,27 @@ def championStep (i : Fin 8)
     champion, so the terminal halt is charged at the full champion score. -/
 theorem championP8DefaultCompletion :
     weightedTNFDefaultCompletion championP8 = championTable := by
-  funext s
+  apply funext
+  intro s
   fin_cases s.1 <;> cases s.2 <;> decide
+
+/-- Keep the first-hole argument polymorphic in its halt time.  Specializing
+    only after the proof avoids reducing the enormous champion score while
+    elaborating the finite table-completion transport. -/
+private theorem championP8FirstHoleOfHalt (n : Nat)
+    (hhalts : HaltsAfter championTable n) :
+    ∃ c, knownRun championP8 n = some c ∧
+      championP8 (readSlot c) = none := by
+  have hdefault : weightedTNFDefaultCompletion championP8 = championTable :=
+    championP8DefaultCompletion
+  exact (weightedTNF_halt_iff_firstHole championP8
+    (rawRootPathNoAssignedHalt championP8Path) n).mp
+    (hdefault.symm ▸ hhalts)
 
 theorem championP8FirstHole :
     ∃ c, knownRun championP8 (proposedTM63Moves + 6) = some c ∧
       championP8 (readSlot c) = none :=
-  (weightedTNF_halt_iff_firstHole championP8
-    (rawRootPathNoAssignedHalt championP8Path)
-    (proposedTM63Moves + 6)).mp
-    (by simpa only [championP8DefaultCompletion] using champion_halts_exact)
+  championP8FirstHoleOfHalt (proposedTM63Moves + 6) champion_halts_exact
 
 noncomputable def championP8Config : Config :=
   Classical.choose championP8FirstHole
@@ -426,11 +437,12 @@ theorem championP8Hole :
 
 theorem championP8UniqueHole {s : Slot}
     (h : championP8 s = none) : s = (1, true) := by
-  rcases s with ⟨q, b⟩
-  fin_cases q <;> cases b <;>
-    simp [championP8, championP7, championP6, championP5, championP4,
-      championP3, championP2, championP1, championResidual,
-      championRootAfterB, refine, root] at h ⊢
+  cases s with
+  | mk q b =>
+    fin_cases q <;> cases b <;>
+      simp [championP8, championP7, championP6, championP5, championP4,
+        championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢
 
 theorem championP8HoleSlot :
     readSlot championP8Config = (1, true) :=
@@ -438,11 +450,12 @@ theorem championP8HoleSlot :
 
 theorem championP8OtherSlots (s : Slot) (h : s ≠ (1, true)) :
     ∃ mv, championP8 s = some (some mv) := by
-  rcases s with ⟨q, b⟩
-  fin_cases q <;> cases b <;>
-    simp [championP8, championP7, championP6, championP5, championP4,
-      championP3, championP2, championP1, championResidual,
-      championRootAfterB, refine, root] at h ⊢
+  cases s with
+  | mk q b =>
+    fin_cases q <;> cases b <;>
+      simp [championP8, championP7, championP6, championP5, championP4,
+        championP3, championP2, championP1, championResidual,
+        championRootAfterB, refine, root] at h ⊢
 
 theorem championP8HRest :
     ∀ s, s ≠ readSlot championP8Config →
@@ -459,7 +472,8 @@ theorem championP8PossibleDelays :
   have hfull :
       refine championP8 (1, true) none =
         (fun s => some (championTable s)) := by
-    funext s
+    apply funext
+    intro s
     fin_cases s.1 <;> cases s.2 <;> decide
   rw [hfull]
   decide
@@ -500,20 +514,31 @@ noncomputable def championFrontier : RootedFrontier (proposedTM63Moves + 7) cham
 
 noncomputable def championResidualResiduals :
     List (List Move × PartialMachine) :=
-  BB6.Agent31FourHoleFrontier.residuals championFrontier
+  BB6.Agent31FourHoleFrontier.residuals
+    (B := proposedTM63Moves + 7)
+    (p := championResidual)
+    championFrontier
 
 theorem championFrontierExpandedNodes :
-    BB6.Agent6ChampionResidualCount.frontierExpandedNodes championFrontier = 8 := by
+    BB6.Agent6ChampionResidualCount.frontierExpandedNodes
+      (B := proposedTM63Moves + 7) (p := championResidual)
+      championFrontier = 8 := by
   decide
 
 theorem championFrontierClosedLeaves :
-    BB6.Agent6ChampionResidualCount.frontierClosedLeaves championFrontier = 39 := by
+    BB6.Agent6ChampionResidualCount.frontierClosedLeaves
+      (B := proposedTM63Moves + 7) (p := championResidual)
+      championFrontier = 39 := by
   decide
 
 theorem championResidualResidualsCount :
     championResidualResiduals.length = 146 := by
-  change (BB6.Agent31FourHoleFrontier.residuals championFrontier).length = 146
-  have h := BB6.Agent6ChampionResidualCount.residuals_closed_expanded championFrontier
+  change (BB6.Agent31FourHoleFrontier.residuals
+    (B := proposedTM63Moves + 7) (p := championResidual)
+    championFrontier).length = 146
+  have h := BB6.Agent6ChampionResidualCount.residuals_closed_expanded
+    (B := proposedTM63Moves + 7) (p := championResidual)
+    championFrontier
   rw [championFrontierExpandedNodes, championFrontierClosedLeaves] at h
   omega
 
