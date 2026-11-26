@@ -38,11 +38,11 @@ def emit_far(rows,mut):
         out+=['  exact reflectNever m (cert.sound (reflectPartial table) (cert.fastValid_sound _ checked) (reflectTable m) (reflectCompatible table m hm))' if rev else '  exact cert.sound table (cert.fastValid_sound _ checked) m hm','#print axioms never',f'end M{i}','end BB6.Agent8Raw54.RF']
         (ROOT/f'Raw54RFMut{i}.lean').write_text('\n'.join(out)+'\n')
 
-def emit_ngrams(work,rows,max_states):
+def emit_ngrams(work,rows,max_states,ids=None):
     sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
     from emit_sparse import emit
     for i,k,n in (map(int,l.split()) for l in (ROOT/"rf-ngram.txt").read_text().splitlines()):
-        if n>max_states:continue
+        if n>max_states or (ids is not None and i not in ids):continue
         line=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {rows[i]}\n",text=True).strip()
         ident,data=line.split(maxsplit=1)
         assert int(ident)==i
@@ -56,6 +56,7 @@ if __name__=="__main__":
     ap=argparse.ArgumentParser()
     ap.add_argument("--sparse",action="store_true")
     ap.add_argument("--max-states",type=int,default=50000)
+    ap.add_argument("--sparse-ids",type=int,nargs="+")
     args=ap.parse_args()
     with tempfile.TemporaryDirectory() as d:
         work=Path(d);rows=census(work)
@@ -64,4 +65,4 @@ if __name__=="__main__":
         extra={int(i):c for i,c in (l.split(":") for l in (ROOT/"rf-extra.txt").read_text().splitlines())}
         assert set(extra).isdisjoint(mut)
         emit_far(rows,mut|extra)
-        if args.sparse:emit_ngrams(work,rows,args.max_states)
+        if args.sparse:emit_ngrams(work,rows,args.max_states,args.sparse_ids)
