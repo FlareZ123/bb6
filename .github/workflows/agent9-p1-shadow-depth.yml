@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -15,12 +15,13 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: ${{ inputs.target == 'packed-prefix' && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
+        if: inputs.target != 'packed-prefix'
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -415,3 +416,37 @@ jobs:
                   raise SystemExit(f"Unexpected axioms in {name}: {axioms}")
               print(name, sorted(axioms))
           PY
+      - name: Run exact n=45,352,466 packed half-prefix frontier
+        if: inputs.target == 'packed-prefix'
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="im-results/agent43-p1-high-cost-reset-count"
+          git rev-parse HEAD
+          sha256sum "$D/packed_prefix.cpp"
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/packed_prefix.cpp" -o /tmp/packed_prefix
+          OMP_NUM_THREADS=1 /tmp/packed_prefix 3342 14000 417 half /tmp/p1-3342-half.chk | tee /tmp/p1-3342-half.log
+          grep -F "END 3342 13768" /tmp/p1-3342-half.log
+          set +e
+          OMP_NUM_THREADS=1 /tmp/packed_prefix 45352466 250000000 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [[ "$rc" -eq 1 ]]; then
+            grep -Fq "END 45352466 0" /tmp/p1-45352466-half.log
+          elif [[ "$rc" -eq 0 ]]; then
+            grep -Eq '^END 45352466 [1-9][0-9]*$' /tmp/p1-45352466-half.log
+          else
+            exit "$rc"
+          fi
+          echo "scan_exit_code=$rc"
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'packed-prefix'
+        with:
+          name: p1-packed-prefix-n45352466-${{ github.run_id }}
+          path: |
+            /tmp/p1-45352466-half.chk
+            /tmp/p1-45352466-half.log
+            /tmp/p1-3342-half.log
+          if-no-files-found: ignore
+          compression-level: 1
+          retention-days: 90
