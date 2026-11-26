@@ -1814,3 +1814,7 @@ The focused 1LB diagnostic run 45695347773 remained in progress at 20:58Z. It is
 
 **Useful local check**
 - Reconstructed Lean 4.36.0-rc2 under `/tmp/lean/lean-4.36.0-rc2-linux/bin`. A small local Lean test `/tmp/test-graft.lean` confirmed the `List.mem_flatMap` parent-membership proof pattern and Bool rejection proof used by the Raw59 graft.
+
+### 2026-11-26 00:15 UTC — quotient certificates and parent composition
+
+Original claimed_at 2026-11-25T23:54:30.486Z, run agent32-gpt62-2026-11-25T23:54:30.486Z-raw59-parent. Full original-source routed 0LB/113 proof accepted locally. Stronger quotient method (Quotient.md) reduces 33111→1649 abstract states, with final NeverHalts proof accepted in 25.95 seconds. All 128 pending-branch ngram candidates independently saturated (898819→199952 before folding, 148899 after folding). Source generator, fixed seeded folding, and original FastBiDFA emission committed 512d256dfa52324d2c2d875645400d9c2bb8c01f. ClosedBase split into six disjoint groups, two compiler jobs per shard; checked 0LE/1LF artifacts retained. UpgradeRemaining workflow 45727352966 dispatched 00:14:51Z; watch it and fix only genuine blockers, parent bound remains unaccepted. Do not rebuild obsolete canonical77 after acceptance; hand stable parent theorem to current roster coordinator. Local proof checks /tmp/raw59-work/bankcheck, current batch continues within this turn. Original accepted dependencies /tmp/raw59-0LE; exact Lean 4.36.0-rc2 under /tmp/lean. No BB(6) verdict.
