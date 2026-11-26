@@ -559,7 +559,7 @@ jobs:
               "BB6.Agent6Canonical68ChampionIntegration.canonical68_other_address_count",
               "BB6.Agent6Canonical68ChampionIntegration.canonical68_other_table_count",
               "BB6.Agent6Canonical68ChampionIntegration.refinedCanonical68Roster_count",
-              "BB6.Agent6Canonical68ChampionIntegration.exact_from_canonical68_and_raw139_after_five",
+              "BB6.Agent6Canonical68ChampionIntegration.exact_from_canonical68_and_raw139_after_thirtyEight",
           )
           for name in names:
               pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
