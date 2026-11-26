@@ -1,3 +1,20 @@
+# Current checkpoint — 2026-11-26T21:10:06.998288Z — Raw56 emitter repair
+
+Normal research mode: actual initial mode-selection draw **2**. Identity Agent 1 was reclaimed after the prior lease exceeded the 100-minute eligibility threshold. Immutable lease: `run_id=agent1-gpt62-2026-11-26T21:10:06.998288Z-raw56-continuation`, `claimed_at=2026-11-26T21:10:06.998288Z`; claim commit `eef886ca43d68c8ba3056ab80ba0afce4121a20c`. Release threshold is **2026-11-26T22:20:06.998288Z**. Never refresh; after every checkpoint compare this timestamp with an actual runtime clock, and do not release early.
+
+## Raw56 E1=0RE: exact current state
+
+- The candidate partition remains 8,528 split nodes, 157,695 translated-cycle leaves, 35,737 last-hole leaves and 2,713 initially open leaves; all 2,713 opens have candidate FAR, symbolic sweep or sparse n-gram certificates. The exact tree/open/FAR hashes are pinned in `im-results/agent1-raw56/candidates.json`. The 20 sweep cases include the difficult leaf 2006, whose arbitrary-tail return adds three `0101` blocks with cost `100+48n` after passing to the subsequence `family (3*n)`.
+- The first source-check run [45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157) failed at Lean compilation, not on a mathematical counterexample. First diagnostic: `Raw56E1REPart575.lean:144:56`, `OfNat Bool 1`; the dependent `decide` checks then got stuck. Agent7 `cut.cpp` serializes `Result.dir` as integer 0/1; inherited `certify_canonical.py` emitted `str(t[3]).lower()`, so a cycle direction reached Lean as `1` instead of a Bool literal.
+- Repaired `im-results/agent1-raw56/prepare.py` (commit `a190d1df2dd588655c161df8571300470abfa1c0`): recursively validates the raw direction field is integer 0/1 and patches the local copy of `certify_canonical.py` to serialize `bool(t[3])` as `true/false`. The original tree digest and certificate inputs remain unchanged. No source acceptance is claimed yet.
+- Next: run the existing manual `.github/workflows/agent6-raw57-siblings.yml` selector `raw56-e1-0re` on current main. If it reports another actual Lean diagnostic, repair the first failing declaration only, then use one focused acceptance run. Do not rediscover leaves or change the mathematical tree. Keep this as an intermediate result under `im-results/`; Raw56 parent closure and global roster membership remain unproved.
+
+## Local Lean bootstrap limitation
+
+The uploaded split ZIP parts were concatenated once (601,992,482 bytes). `unzip` reported `missing 6401314 bytes` and `invalid zip file with overlapped components`; the inner `lean-4.36.0-rc2-linux.tar.zst` was not extracted and no local Lean result exists. Do not repeatedly unpack the identical short archive. The focused existing manual CI target is the available source-check path for this task.
+
+---
+
 # Current checkpoint — 2026-11-26T19:18:19.862Z — Raw56 complete E1=0RE candidate
 
 Normal research draw 7; Agent 1 reclaimed at 2026-11-26T19:07:30.759Z (claim 8c0c76162123db8ca2d051ed24d292fafc223fcf), threshold 20:17:30.759Z. Never refresh. Real runtime clock used. Local Lean 4.36.0-rc2 installed successfully; direct Git DNS fails but GitHub connector works.

@@ -33,7 +33,13 @@ The source-checked target is
 ordinary compatibility corollary. The underlying tree checks the
 halt branch at every split, all ordinary successors, and the empty
 canonical residual list. **Candidate complete; original-source Lean
-acceptance pending.** No Raw56 parent closure, roster decrement, or
+acceptance pending.**
+
+## First source-check diagnostic and repair
+
+The first original-source attempt, [run 45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157), reached Lean and failed in generated `Raw56E1REPart575.lean` with `OfNat Bool 1` (and consequent stuck `decide` checks). This is a serialization defect, not a counterexample to a certificate: the Agent7 C++ classifier writes cycle direction as integer `0/1`, while the inherited canonical emitter formatted that field with `str(t[3]).lower()`, producing Lean `1` instead of `true`.
+
+`prepare.py` now validates that every cycle direction is exactly integer 0 or 1 and patches its private copy of `certify_canonical.py` to emit `str(bool(t[3])).lower()`. The pinned discovery-tree bytes, open-list digest, certificate data and checker semantics are unchanged. The candidate remains unaccepted until the existing manual workflow selector `raw56-e1-0re` passes on the repaired source. No Raw56 parent closure, global roster reduction or BB(6) upper bound is claimed. No Raw56 parent closure, roster decrement, or
 BB(6) upper bound is asserted. The accepted global roster remains 60.
 
 Reproduce with `python im-results/agent1-raw56/prepare.py`. The manifest
