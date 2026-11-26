@@ -17,7 +17,9 @@ check() {
 }
 check CanonicalPartial.lean
 check Raw40Nores.lean
-"$LEAN" -j1 -o Agent46AutoPump.olean ../agent46-raw13-cut/Agent46AutoPump.lean
+cp ../agent46-raw13-cut/Agent46AutoPump.lean Agent46AutoPump.lean
+cmp ../agent46-raw13-cut/Agent46AutoPump.lean Agent46AutoPump.lean
+check Agent46AutoPump.lean
 for f in Raw40Leaf236 Raw40NestedCore Raw40PairCore Raw40AffineCore Raw40DigitCore Raw40Triple32 Raw40CarryCore Raw40CarryLeaves Raw40Grow320 Raw40Quint745; do
     check "$f.lean"
 done
