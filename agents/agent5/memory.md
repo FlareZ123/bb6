@@ -1,3 +1,22 @@
+# Current incarnation — 2026-11-26 q0 row26/row28 source closure
+
+Lease: `2026-11-26T05:15:00.743Z`, run ID `agent5-gpt62-2026-11-26T051500743Z-q0-row26`; immutable release threshold `06:25:00.743Z`. Normal mode, initial draw 4. Do not refresh. At every checkpoint compare the original claim with a real runtime clock; orderly release only at age >=70 minutes.
+
+## Work since claim
+
+- Inspected current q0 frontier and CI. Row28 is an open root (active[28]) with a 289-node candidate tree and one solid symbolic leaf. Its prior original-source audit, run `45746553381`, failed at `Agent5Q0Solid28.v:101`: the left tape had shape `solid28_triples n (111 zero)`, while `solid28_left` expects `solid28_triples (S n) zero`. This is a stream-shape normalization issue, not a counterexample to the quadratic recurrence.
+- Added `solid28_triples_add3` and inserted it before the final `solid28_left` application in `im-results/agent5-weighted-tnf-queue/Agent5Q0Solid28.v` (commit `c42031c4388c0cdb968c31a058c24940b060dad6`). Dispatched existing shared manual target `enumerate62-q0-row28`, run `45760483917`, head `1def52f0e042717ed5c58725cbdf16da4387c86c`. At 05:29 UTC it was still in progress at the "Install original-source proof compiler" step; job log retrieval returned HTTP 404, so no source-acceptance claim yet.
+- Began source-level row26 closure from the existing Lean macro recurrence in `Q0SolidSweep.lean`. Added `Agent5Q0Solid26.v` (commit `86b54adcf420ae7542dca482acb2d567055b519e`), defining the exact machine `1RB1RD_1RC0RE_0LA0RF_1LA1LD_1LE0LA_---1LA`, a 7-step three-cell right block, its inductive sweep, a 7-step turn, a left sweep, and the intended quadratic growth proof. The growth endpoint normalization was made explicit with `change`/`replace` (commit `b7ee8ce23842796973d5966b6199ca7487817bd9`). This Coq proof is a draft until original-source CI compiles it.
+- Added `Agent5Row26Tree.v`, `q0-row26.cjs`, and `Agent5Row26Consume.v` (commits `d4e671613f0aa07e46d21baf31e66226cb37d594`, `b77390edbc39a47af1a775add24b11909a22e1a7`, `687255bfc22a75431610752bb621a8365ff92250`), then made the generator emit a dynamic `row26_bound` consumed by the roster monotonicity lemma (commits `9120c3b0d24560b64650e6c16fc20042ded669ff`, `87bc8b0589e6ed0ecf735c7f3a67ec8c18480ff6`). The generator checks that active[26] is exactly `1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------`, that all symbolic open leaves equal the proposed solid completion, and that every split has all 24 ordinary children.
+- Added named target `enumerate62-q0-row26` to the existing shared manual runner `.github/workflows/shared-rocq-root-proofs.yml` (commit `3e38e49b9e7c1ac23dfb43dd5e09093829792743`). No new workflow file. The row26 target has not yet been dispatched.
+
+## Next
+
+1. Check run `45760483917` for progress/completion. If it completes, inspect only the first real Coq diagnostic and repair that source issue.
+2. Dispatch `enumerate62-q0-row26` using the existing shared workflow; inspect generated leaf count and original-source compile/consumer separately.
+3. If row26 source and checkpoint consumer pass, update the intermediate q0 README with exact evidence and notify Agent32 of the new source-safe q0 root(s).
+4. Keep all material in `im-results/`; neither isolated q0 root closure nor the adaptive source-queue interfaces prove a global upper bound. BB(6) remains unresolved.
+
 # Current incarnation — 2026-11-26 solid-sweep checkpoint
 
 Lease: 2026-11-26T02:54:54.987Z, agent5-2026-11-26T02:54:54.987Z-forest; immutable release threshold 04:04:54.987Z. RNG=3. Checkpoint clock 2026-11-26T03:07:08.544Z, age 12.23 minutes. Do not refresh.
