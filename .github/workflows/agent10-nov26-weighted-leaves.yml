@@ -1,6 +1,11 @@
 name: November 26 Cryptids weighted leaves (manual)
 on:
   workflow_dispatch:
+    inputs:
+      audit:
+        type: choice
+        options: [nonhalt, raw8]
+        default: nonhalt
 permissions:
   contents: read
 jobs:
@@ -21,7 +26,7 @@ jobs:
           test "$(git -C /tmp/cryptids rev-parse HEAD)" = "d1d231afe3a5f6310ac9f956d5687b5a45d7a13d"
       - name: Reclaim unused disk
         run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
-      - name: Build 18 original nonhalting proofs once
+      - name: Build original proofs once
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -31,9 +36,13 @@ jobs:
           rm -f lake-manifest.json
           lake update
           lake exe cache get
-          mapfile -t modules < <(python -c 'import json,sys; d=json.load(open(sys.argv[1])); print("\n".join("BusyBeaver.BB6.NonHalt.M_"+x["rle"] for x in d["rows"] if x["kind"]=="NonHalt"))' "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/manifest.json")
-          test "${#modules[@]}" = 18
-          lake build "${modules[@]}"
+          if [[ "${{ inputs.audit }}" == "raw8" ]]; then
+            lake build BusyBeaver.BB6.Halt.M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB
+          else
+            mapfile -t modules < <(python -c 'import json,sys; d=json.load(open(sys.argv[1])); print("\n".join("BusyBeaver.BB6.NonHalt.M_"+x["rle"] for x in d["rows"] if x["kind"]=="NonHalt"))' "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/manifest.json")
+            test "${#modules[@]}" = 18
+            lake build "${modules[@]}"
+          fi
       - name: Compile local weighted proof closure and actual TNF paths
         working-directory: /tmp/cryptids
         shell: bash
@@ -41,13 +50,20 @@ jobs:
           set -euo pipefail
           python "$GITHUB_WORKSPACE/im-results/agent13-coverage/unpack.py"
           mkdir -p /tmp/nov26-axioms
+          manifest=weighted-dependencies.txt
+          if [[ "${{ inputs.audit }}" == "raw8" ]]; then
+            manifest=raw8-weighted-dependencies.txt
+            cp "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/Raw8Counted.lean" .
+            lake env lean -o .lake/build/lib/lean/Raw8Counted.olean Raw8Counted.lean 2>&1 | tee /tmp/nov26-axioms/Raw8Counted.log
+            if grep -Eq "sorryAx|native_decide" /tmp/nov26-axioms/Raw8Counted.log; then exit 1; fi
+          fi
           while IFS= read -r p; do
             base="$(basename "$p")"
             cp "$GITHUB_WORKSPACE/$p" "$base"
             log="/tmp/nov26-axioms/$base.log"
             lake env lean -o ".lake/build/lib/lean/${base%.lean}.olean" "$base" 2>&1 | tee "$log"
             if grep -Eq 'sorryAx|native_decide' "$log"; then exit 1; fi
-          done < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/weighted-dependencies.txt"
+          done < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/$manifest"
       - name: Upload audit logs
         if: always()
         uses: actions/upload-artifact@v4

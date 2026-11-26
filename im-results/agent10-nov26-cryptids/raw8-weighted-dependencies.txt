@@ -23,4 +23,4 @@ im-results/agent13-weighted-first-one/WeightedFirstOneCover.lean
 im-results/agent47-weighted-halt-branch/WeightedNonhaltLeafAdapter.lean
 im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean
 im-results/agent4-coverage-smoke/CryptidsHaltIff.lean
-im-results/agent10-nov26-cryptids/Raw8Counted.lean
+im-results/agent10-nov26-cryptids/Raw8Weighted.lean
