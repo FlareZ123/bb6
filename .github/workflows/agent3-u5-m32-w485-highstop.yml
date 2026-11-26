@@ -97,7 +97,7 @@ jobs:
                 im-results/agent15-c-halting/U5Q0W7ParentFan.lean \
                 im-results/agent15-c-halting/U5Q0W7U3Mod64.lean \
                 im-results/agent15-c-halting/U5Q0W7U7Mod32.lean \
-                im-results/agent15-c-halting/U5Q0W7U23Mod512.lean
+                im-results/agent15-c-halting/U5Q0W7U23Mod512.lean \
                 --jobs 4 --workdir /tmp/lean-closure-w7-q0-parent-fan 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
               ;;
             linear-rank)
