@@ -1,6 +1,6 @@
 import Canonical59FiveParentMembership
 import Raw58Exact
-import Raw59ParentCover
+import Raw59Exact
 import Raw108Closed
 import Raw115Data
 import Raw119Data
@@ -52,7 +52,7 @@ theorem p58_cover : Cover (WeightedBound 6766859) p58 := by
     its sharper local search is unnecessary for this common floor. -/
 theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
   rw [p59_source_eq]
-  exact liftCover (by decide) BB6.Agent32Raw59UpgradeAll.cover
+  exact liftCover (by decide) BB6.Agent32Raw59Exact.cover
 
 /-- Raw108's source-accepted universal parent bound is 4,136,180. -/
 theorem p108_cover : Cover (WeightedBound 6766859) p108 := by
