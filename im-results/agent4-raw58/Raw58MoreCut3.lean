@@ -12,7 +12,7 @@ namespace BB6.Agent4Raw58MoreCut3
 open BB6Coverage BB6.Agent13BlankDelay
 
 theorem all_completions :
-    ∀ m, compatible BB6.Agent4Raw58MoreCut2.parent m → WeightedBound 3055750 m := by
+    ∀ m, compatible BB6.Agent4Raw58MoreCut.parent m → WeightedBound 3055750 m := by
   intro m hm
   rcases BB6.Agent4Raw58MoreCut2.parent_dichotomy m hm with hb | ⟨mv, hr, hc⟩
   · intro k d hk hd
