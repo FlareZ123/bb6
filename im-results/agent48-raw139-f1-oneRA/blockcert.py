@@ -1,6 +1,6 @@
 from collections import defaultdict, deque
 from functools import lru_cache
-def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phase=False):
+def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phase=False,left_key=None):
     alphabet=2**width
     moves=[None if n==24 else ((n>>1)&1,bool(n&1)!=flip,n>>2) for n in table]
     @lru_cache(None)
@@ -32,7 +32,8 @@ def generate(table,width=2,cap=2,mod=4,runs=2,flip=False,event_limit=150000,phas
         key=(l,a)
         if key in delta:return delta[key]
         xs=left[l]
-        if not xs and a==0:ys=()
+        if left_key is not None:ys=left_key(xs,a)
+        elif not xs and a==0:ys=()
         elif phase:
             ys=((a,)+xs[0][:runs-1] if xs else (a,), ((xs[1] if xs else 0)+1)%mod)
         elif xs and xs[0][0]==a:
