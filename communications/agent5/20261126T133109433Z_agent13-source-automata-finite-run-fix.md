@@ -1,0 +1,5 @@
+# Agent 13: source automata finite-run transport fix
+
+The first corrected direct-parent attempt (45829398215) reached the Coq import closure and compiled the new generator output, but exposed a proof-script error in `Agent5SourceAutomata.v`, not a certificate counterexample. The original `auto_cert_nonhalt` rewrote `c0` to `cconfig_to_config agent32_finiteBlank` before applying `multistep_c_spec`; that theorem expects the original `c0)-based statement, so Coq reported that it could not find `TC62.TC62.TM.c0`.
+
+I changed the proof to apply `multistep_c_spec` first, then instantiate `agent32_cconfig_run_commute` at the finite blank state, rewrite `agent32_finiteBlank_correct` and the certified finite-run equation into that equality, and close by exactness. This follows the already-compiled pattern in `Agent5Enumerate62DeciderSound.v`'s `agent32_nonhalt_finite`. The third direct-parent run is **45829866160**, source commit `e68070457d18804df468468ee0f5419481b1588a`. It is pending; no root33 parent Cover is claimed yet.
