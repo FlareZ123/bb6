@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Merge six source-checked Raw10 rectangle-4 slice artifacts without trusting collisions."""
+"""Merge six source-checked Raw10 final-halt slices without trusting collisions."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -82,7 +82,15 @@ def main() -> None:
     parser.add_argument("--generated-out", required=True)
     parser.add_argument("--precompiled-out", required=True)
     parser.add_argument("--manifest-out", required=True)
+    parser.add_argument("--branch-c1", type=int, help="Rectangle 3 C1 branch; omit for rectangle 4")
     args = parser.parse_args()
+    module_prefix, artifact_prefix, bound, parent = "Box4", "raw10-box4", 3640, "raw10Remainder[4]"
+    if args.branch_c1 is not None:
+        branch = str(args.branch_c1)
+        cfg = json.loads((REPO_ROOT / "im-results/agent13-raw10-box3-branches/branches.json").read_text())
+        bound = cfg[branch]["bound"]
+        module_prefix, artifact_prefix = f"Box3C{branch}", f"raw10-box3-c{branch}"
+        parent = f"raw10Remainder[3] / C1={branch}"
 
     artifacts_root = Path(args.artifacts_root)
     generated_out = Path(args.generated_out)
@@ -90,7 +98,7 @@ def main() -> None:
     manifest_out = Path(args.manifest_out)
 
     artifact_dirs = sorted(
-        p for p in artifacts_root.glob("raw10-box4-slice-*") if p.is_dir()
+        p for p in artifacts_root.glob(f"{artifact_prefix}-slice-*") if p.is_dir()
     )
     found = {}
     for directory in artifact_dirs:
@@ -122,7 +130,7 @@ def main() -> None:
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
         if manifest.get("schema_version") != 1:
             raise RuntimeError(f"unsupported manifest schema in {manifest_path}")
-        if manifest.get("claim", {}).get("weighted_bound") != 3640:
+        if manifest.get("claim", {}).get("weighted_bound") != bound:
             raise RuntimeError(f"wrong weighted bound in slice {slot} manifest")
         if manifest.get("lean_version") is None or manifest.get("lean_binary", {}).get("sha256") is None:
             raise RuntimeError(f"missing Lean identity in slice {slot} manifest")
@@ -139,8 +147,8 @@ def main() -> None:
                 raise RuntimeError("workflow head SHAs differ between slice artifacts")
         revisions.add(manifest["proof_source_revision"])
         root_names = {item["module"] for item in manifest.get("roots", [])}
-        if f"Box4Slice{slot}" not in root_names:
-            raise RuntimeError(f"slice {slot} manifest does not certify Box4Slice{slot}")
+        if root_names != {f"{module_prefix}Slice{slot}"}:
+            raise RuntimeError(f"slice {slot} manifest does not certify exactly {module_prefix}Slice{slot}")
 
         generated_dir = directory / "generated"
         if not generated_dir.is_dir():
@@ -193,13 +201,13 @@ def main() -> None:
 
     assert base is not None
     merged = dict(base)
-    merged["label"] = "Raw10 rectangle 4 merged six-slice precompiled closure"
+    merged["label"] = f"{parent} merged six-slice precompiled closure"
     merged["claim"] = {
-        "theorem": "BB6.Agent13.Box4.sourceBound",
-        "parent_table": "raw10Remainder[4]",
-        "weighted_bound": 3640,
+        "theorem": f"BB6.Agent13.{module_prefix}.sourceBound",
+        "parent_table": parent,
+        "weighted_bound": bound,
     }
-    merged["artifact_name"] = "raw10-box4-slices-precompiled"
+    merged["artifact_name"] = f"{artifact_prefix}-slices-precompiled"
     merged["roots"] = [roots[k] for k in sorted(roots)]
     merged["modules"] = [modules[k] for k in sorted(modules)]
     merged["module_count"] = len(modules)
@@ -213,7 +221,7 @@ def main() -> None:
     manifest_out.parent.mkdir(parents=True, exist_ok=True)
     manifest_out.write_text(json.dumps(merged, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(
-        f"[box4-merge] slices={sorted(found)} modules={len(modules)} "
+        f"[{artifact_prefix}-merge] slices={sorted(found)} modules={len(modules)} "
         f"roots={len(roots)} generated_files={sum(1 for _ in generated_out.rglob('*.lean'))} "
         f"precompiled_oleans={sum(1 for _ in precompiled_out.rglob('*.olean'))}",
         flush=True,
