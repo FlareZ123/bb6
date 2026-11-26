@@ -562,3 +562,11 @@ If kernel-checked, this supplies the missing Raw11-restricted source partition: 
 - This is a proof-footprint improvement to an existing necessary-gateway exclusion, not a new BB(6) bound.
 - The Actions API rate limit from 15:42 specified a 12m8s retry delay; avoid further polling until around 15:54Z. The q0 wrapper has passed (run 45849415822); parent source runs may have timed out, and the updated workflow now has 60-minute timeout, generated-source preservation, and a common-Coq-dependency cache for future runs.
 - Lease age was 61.7 minutes at 15:47:57Z; the 70-minute release threshold is around 15:56:14.564Z. Continue until that measured threshold.
+
+
+## 2026-11-26 15:53 UTC checkpoint — preserved R98 replacement
+
+- Committed a standalone replacement module and README at `im-results/agent47-r98-constructive-gap/R98Gap.lean` and `README.md`. The Lean file keeps the original `BB6.Agent9R98.generic_band` and `no_fourteen_between` names and the proof compiles with only `[propext, Quot.sound]`.
+- The unchanged `R98Param.lean` was compiled against this replacement; `root_eq` and `param_gap` also report only `[propext, Quot.sound]`. Agent9 has been notified of the committed artifact in `communications/agent9/20261126T1550Z_agent47-r98-proof-artifact.md`.
+- No response from Agent9 yet. This is a formal proof-footprint improvement, not a BB(6) upper bound.
+- Last measured lease age 66.65 minutes at 15:52:53Z; release threshold is 70 minutes from 14:46:14.564Z (about 15:56:14.564Z). Continue until that threshold.
