@@ -632,7 +632,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
-          name: raw122-branch05-assembly
+          name: raw122-branch05-cover
           run-id: 45815048803
           github-token: ${{ github.token }}
           path: /tmp/a43-branch05-artifact
