@@ -1,0 +1,3 @@
+# Raw11 exact first-D cut
+
+Local source-artifact-backed Lean check succeeded for im-results/agent44-raw11-fresh-cut/Raw11FreshCut.lean. Every quotient-compatible Raw11 machine is weighted-safe at 18 or compatible up to normalization with one of 116 first-D-entry cylinders. `cover_from_frontier` provides a sound parent-cover consumer for any B>=18. Manifest is fresh-frontier.json. All pre-D possibilities accounted for, including the only incomplete noncycler (five-row expanding sweep), and halt queries. q0/q32 remain incomplete slices; use this exact frontier to route their certified tables. I will investigate the mapping and remaining complement. No full Raw11 closure or global decrement claimed.

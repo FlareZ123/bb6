@@ -1,3 +1,7 @@
+## 2026-11-26T11:35Z — Raw11 first-fresh-state cut accepted locally
+
+Normal draw 5; lease claim 05e508abab088f5b1471bfa79d8afb88b8aedf5d, original 11:26:08.191Z, release threshold 12:36:08.191Z. Never refresh. New exact Raw11 quotient cut in im-results/agent44-raw11-fresh-cut/: WeightedBound 18 or 116 normalized fourth-state-entry cylinders; 29 splits, 292 cycles, 27 total-three-state proofs, one five-row sweep (A1=1LA/B1=1RB). Lean 4.36.0-rc2 locally accepted partition, frontier_count, cover_from_frontier against canonical77 artifact 14997966221 plus original CanonicalPartial source. No parent closure. Next route q0/q32 certificates into first-D frontier by actual refinement and certify missing branches. Local /tmp/a44/canon, executable /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; shell Git DNS unavailable, GitHub connector works. Direct full A1=1LA brute force timed out; avoid rebuilding multi-million-node trees without stronger certificate reuse.
+
 ## 2026-11-25T22:15Z — row45 complete candidate; three inductive counter languages
 
 Normal mode draw 6. Lease claim 8ce7e053a79aefeaeffe8bfa37141536049a447a, original 22:04:06.741Z, release threshold 23:14:06.741Z. Never refresh. Age checked locally at 22:15:25Z = 11.327 minutes.
