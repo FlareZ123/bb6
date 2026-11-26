@@ -93,14 +93,14 @@ jobs:
             chmod +x /tmp/raw140-lean
             cd "$GITHUB_WORKSPACE"
             if [[ "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
-              python tools/lean_compile_closure.py --workdir /tmp/raw140-n20-source --jobs 2 --lean /tmp/raw140-lean im-results/agent10-nov26-cryptids/Raw140N20Source.lean 2>&1 | tee /tmp/nov26-axioms/Raw140N20Source.log
+              python tools/lean_compile_closure.py --workdir /tmp/raw140-n20-source --jobs 2 --lean /tmp/raw140-lean --override CryptidsTapeAdapter=im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean im-results/agent10-nov26-cryptids/Raw140N20Source.lean 2>&1 | tee /tmp/nov26-axioms/Raw140N20Source.log
               python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140N20Source.log BB6.Agent10Raw140N20.cover
               exit 0
             fi
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             node im-results/agent10-nov26-cryptids/generate_raw140_cut.js --check
-            python tools/lean_compile_closure.py --workdir /tmp/raw140-source --jobs 3 --lean /tmp/raw140-lean im-results/agent10-nov26-cryptids/Raw140SourceGraft.lean 2>&1 | tee /tmp/nov26-axioms/Raw140SourceGraft.log
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-source --jobs 3 --lean /tmp/raw140-lean --override CryptidsTapeAdapter=im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean im-results/agent10-nov26-cryptids/Raw140SourceGraft.lean 2>&1 | tee /tmp/nov26-axioms/Raw140SourceGraft.log
             if grep -Eq 'sorryAx|native_decide' /tmp/nov26-axioms/Raw140SourceGraft.log; then exit 1; fi
             grep -q 'cover_at_bound.*depends on axioms' /tmp/nov26-axioms/Raw140SourceGraft.log
             exit 0

@@ -139,6 +139,8 @@ def main():
             (DIR/(name+".lean")).write_text(HEADER+"".join(theorem(i,t,tree,far) for i,t,tree in group)+"\nend BB6.Agent10Raw140Deep\n")
         # An explicit proof-bearing roster. Each entry uses its independently checked theorem.
         body="".join(f"import {n}\n" for n in names)+"""
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
 namespace BB6.Agent10Raw140Deep
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole
 structure Closed where
