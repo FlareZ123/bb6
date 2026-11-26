@@ -194,6 +194,16 @@ def main():
         "canonical_address_roster_count": len(canonical),
         "current_roster_count": len(current),
         "current_roster_raw_indices": sorted(int(e["raw_residual_index"]) for e in current),
+        "current_roster_manifest": [
+            {
+                "raw_residual_index": int(e["raw_residual_index"]),
+                "canonical_index": int(e["canonical_index"]),
+                "holes": int(e["holes"]),
+                "address": [x["move"] for x in e["address"]],
+                "table_rle": encode_rle(e["table"]),
+            }
+            for e in sorted(current, key=lambda x: int(x["raw_residual_index"]))
+        ],
         "crosswalk_row_count": len(rows),
         "unique_current_ancestor_match_count": len(matches),
         "unmatched_or_ambiguous_count": 0,
