@@ -17,3 +17,7 @@ Two novel drift witnesses were found by hashing the finite suffix at each new ri
 * 15474: `[7,22,11,21,14,3,7,16,10,11,24,17]` (F0)
 
 The first and last show structured sweeps, the middle grows a 110-block region. Need induction or a genuine invariant. No full cylinder Cover or global BB(6) bound is established. The reproducer is assembled from the same existing Agent6/48 algorithms and fixed per-index search scheduling; its individual search stages were executed locally, the consolidated file has not yet been run end-to-end. Discovery recipes must be translated to the repository's exact Lean checker before acceptance.
+
+## Kernel-checked cycle Covers
+
+`E0OneLCCycles.lean` verifies nine newly identified translated-cycle witnesses (12481, 12482, 12487, 12490, 13444, 13445, 13447, 18563, 18570) using the sound `zipCycle` checker. Local Lean 4.36.0-rc2 successfully compiled this module against CI artifact 15121390168's core. All nine `coverN` theorems are unconditional for every natural bound B, with axioms exactly `[propext, Classical.choice, Quot.sound]`. No native_decide. The first finite-window list checker exceeded memory; switching to the existing zipper checker resolved it. To reproduce, extract that artifact and use `LEAN_PATH=core lean -o E0OneLCCycles.olean E0OneLCCycles.lean`. These nine checked leaves are a subset of the discovery counts above, not an aggregate cylinder Cover.
