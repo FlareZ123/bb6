@@ -1,3 +1,39 @@
+# Current research status — 2026-11-26
+
+## Canonical68 raw139 consumer (combined CI pending)
+
+The accepted roster to target is now **Canonical68**, not the historical Canonical78/77/76 snapshots described in the notes below. The current integration work treats the raw139 champion residual as one retained Canonical68 representative and composes source-authenticated sibling Covers around it.
+
+### Current intended composition
+
+The current branch contains a Lean consumer with the following structure:
+
+- The older audited F0/F1 sibling chain discharges 17 sibling parents, leaving 106 raw139 residual entries.
+- Five additional original-source sibling Covers discharge D0=0LF, D0=1LB, D0=1LA, F1=1LD, and F1=1RF.
+- Four further original-source sibling Covers discharge F1=0RB, F1=0LA, F1=1LB, and F1=1RD.
+- The independently source-audited C1 batch (run **45746968139**, source revision `24307ed48c90f18938778cac530c5c3213af2203`) provides twelve C1 parent Covers at common weighted bound **2,511**.
+
+If all finite table-membership and composition lemmas pass together, these 38 sibling Covers reduce the raw139 parent to **85 remaining residual Covers**. Combined with the other 67 Canonical68 representatives, the intended conditional exactness interface has **152 Cover premises**.
+
+**Important status distinction:** the C1 batch itself passed original-source Lean CI. The D0/F1 sibling certificates have their own source artifacts. The 38-sibling composition, the 85-leaf count, the Canonical68 membership/uniqueness proofs, and the final 152-premise exactness consumer still require a successful combined source/axiom audit. These counts are a target of the current integration, not yet an accepted BB(6) upper bound.
+
+### Active files and workflow
+
+- `ChampionResidualSourceSiblingIntegration.lean`: first five source-accepted sibling Covers and the 118-leaf intermediate frontier.
+- `ChampionResidualSourceSiblingIntegrationExtended.lean`: combines the audited F0/F1 chain, the five D0/F1 Covers, four additional F1 Covers, and the twelve C1 parents; intended frontier size 85.
+- `ChampionResidualCanonical68Integration.lean`: Canonical68 roster membership/uniqueness and the conditional 152-premise exactness consumer.
+- `.github/workflows/agent6-champion-residual.yml`: reconstructs the source modules, downloads the accepted D0 and C1 source artifacts, checks their run/source/claim manifests, and compiles/audits the combined Lean consumer.
+
+Run **45750571388** is building the reusable Agent6 core artifact from the earlier five-sibling source revision. Its core compile is still in progress. That run predates the latest C1 consumer and has the old D0 source-root paths; even if its later consumer step fails, its core artifact can be reused if uploaded and its source hashes remain compatible. The current workflow fixes the D0 paths and adds the C1 artifact as a source root. The next combined run should use the completed core artifact from 45750571388 and the accepted C1 artifact from 45746968139.
+
+### Research boundary
+
+This is still a conditional decomposition, not a proof of exact BB(6). The 85 raw139 residuals and 67 other Canonical68 representatives remain obligations. Keep this work under `im-results/` until it becomes a complete, independently reproducible mathematical result; do not promote the conditional roster or an unverified count into `results/`.
+
+---
+
+## Historical investigation notes (older roster snapshots)
+
 # Champion-containing raw139 residual: parent integration and sibling closures
 
 ## Scope and target cylinder
