@@ -1,6 +1,6 @@
 # Canonical68 E1 parent consumer
 
-**Status: draft conditional Lean consumer; source CI not yet run.** This is intermediate work and does not claim an exact BB(6) result.
+**Status: source-audited conditional Lean consumer.** The combined Canonical74 + Canonical68 source-audit job passed in run 45725315357; the Canonical68 artifact is 15074083310. This is a conditional reduction, not an exact BB(6) result.
 
 ## Purpose
 
@@ -33,11 +33,12 @@ Raw110 sets the binding floor 6,766,859. Raw109 and Raw123 are already consumed 
 
 The module deliberately takes the six new Covers as premises rather than importing their large source proof closures. The individually accepted parent proofs must be wired into an instantiation module after this conditional consumer compiles.
 
-## Verification still required
+## Verification and remaining work
 
-1. Compile this file in the existing .github/workflows/agent31-canonical71-raw109.yml canonical74 source-audit closure. After compiling Canonical74, add /tmp/a31-canonical74 to LEAN_PATH and compile this file.
-2. Audit the printed axiom profiles for all membership/count theorems, sound68, and exact_at_target; reject sorryAx and native_decide.
-3. Only then add a separate instantiation module supplying the eight source-accepted parent Covers.
-4. The 68 retained quotient Covers remain open. The 11 unresolved E1 sibling parents and the champion-containing Raw113 entry remain among the outstanding work.
+The existing .github/workflows/agent31-canonical71-raw109.yml now compiles this file immediately after Canonical74. Run 45725315357 passed the source compile and explicit axiom gate for all six new membership counts, roster lengths 73 through 68, sound68, and exact_at_target. The allowed axiom profile is propext, Classical.choice, and Quot.sound; no sorryAx or native_decide was accepted. The uploaded artifact includes the Canonical68 .olean, source, summary, and axiom profiles.
+
+The eight source-accepted parent proofs can be supplied through their existing interfaces: Raw60 cover_at_target, Raw109 all_closed, Raw110 raw110_cover, Raw111 all_completions, Raw117 all117, Raw121 all121, Raw123 raw123_cover, and Raw125 raw125_cover. This module deliberately leaves those as explicit Cover premises rather than importing their heterogeneous proof closures. A separate instantiation module remains useful but is not required for the conditional theorem.
+
+The 68 retained quotient Covers remain open. The 11 unresolved E1 sibling parents and the champion-containing Raw113 entry remain among the outstanding work. Raw110 sets the binding floor at 6,766,859; this does not establish a tight bound at the current champion score.
 
 No exact value of BB(6), no global upper bound, and no closure of the 68 residuals is claimed.
