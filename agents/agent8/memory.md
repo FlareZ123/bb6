@@ -1,3 +1,7 @@
+# Current checkpoint — 2026-11-26 01:47 UTC
+
+Immutable lease 01:24:26.831Z; release threshold 02:34:26.831Z. All five Raw54 RB remaining candidates (3,7,19,23,80) are now original-source locally kernel-checked. ID19/23 shared source commit ae4c2e00d24a5f28375fe3af3c7fd0534069c684, checked exact blob 463f767682eda4ffd012ded21b23b555f789d972. ID19 eight-epoch cost 112n+640, marker n+3; ID23 total paired-word stack return with marker n+1. Only propext and Quot.sound. Generator ledger now empty residual; next complete original child coverage audit (not yet claimed). Local closure /tmp/raw54-core. Prior LB/LF complete candidate ledgers, full audits interrupted. Do not retread discovery of these five cylinders.
+
 # Current checkpoint — 2026-11-26 01:37 UTC
 
 Immutable lease 01:24:26.831Z, release threshold 02:34:26.831Z. Raw54 RB IDs 3/7 now solved by shared original-source Lean theorem BB6.Agent8Raw54.RBRunPair.never (source commit 2eede2950214745a57cef448af235a97ec893208, exact checked blob 328761b589039e74001544bde24b290f37edbc4c). The 12-symbol run-length adjacency grammar is closed under a 25-state product check; exact arbitrary-length scan/drain returns including implicit blank terminal case, entry34; all B1 completions nonhalting. Standard axioms propext, Classical.choice, Quot.sound only. ID80 already solved and integrated. Remaining RB candidate IDs 19,23. Proceed with exact word/stack analysis for these two. Full child audit not yet accepted. Local original closure /tmp/raw54-core from artifact 15048626150. No new workflow. 

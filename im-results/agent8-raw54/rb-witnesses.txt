@@ -133,3 +133,5 @@
 80 Raw54RBWord80 RBWord80
 3 Raw54RBRunPair RBRunPair false
 7 Raw54RBRunPair RBRunPair true
+19 Raw54RBCounterPair RBCounterPair false
+23 Raw54RBCounterPair RBCounterPair true
