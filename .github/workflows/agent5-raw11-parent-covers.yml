@@ -94,6 +94,10 @@ jobs:
           done
           python tools/lean_compile_closure.py "/tmp/raw11-generated/$PREFIX.lean" \
             --source-root /tmp/raw11-generated \
+            --source-root im-results/agent47-raw11-adapter \
+            --source-root im-results/agent5-weighted-tnf-queue \
+            --source-root im-results/agent13-coverage \
+            --source-root im-results/agent50-weighted-tnf-pilot \
             --workdir /tmp/raw11-certified \
             --artifact-dir /tmp/raw11-certified \
             --jobs 1 \
