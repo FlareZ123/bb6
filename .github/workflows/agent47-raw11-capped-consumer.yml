@@ -1,0 +1,133 @@
+name: Agent47 Raw11 capped-parent consumer
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        uses: leanprover/lean-action@v1
+        with:
+          use-github-cache: false
+
+      - name: Download accepted 46-parent and q0 consumer
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Download accepted parent 126
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45908444758
+          name: raw11-extra-parent-126
+          path: /tmp/p126
+
+      - name: Download accepted parent 137
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45908444758
+          name: raw11-extra-parent-137
+          path: /tmp/p137
+
+      - name: Download accepted parent 127
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45898270704
+          name: raw11-extra-parent-127
+          path: /tmp/p127
+
+      - name: Download accepted parent 128
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45898270704
+          name: raw11-extra-parent-128
+          path: /tmp/p128
+
+      - name: Download accepted parent 129
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45898270704
+          name: raw11-extra-parent-129
+          path: /tmp/p129
+
+      - name: Download accepted parent 130
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45898270704
+          name: raw11-extra-parent-130
+          path: /tmp/p130
+
+      - name: Compile exact six-parent consumer
+        run: |
+          set -euo pipefail
+          find_one() {
+            find "$1" -type d -name "$2" -print -quit
+          }
+          BASE="$(find_one /tmp/base a47-raw11-root52-known)"
+          P126="$(find_one /tmp/p126 raw11-certified)"
+          P127="$(find_one /tmp/p127 raw11-certified)"
+          P128="$(find_one /tmp/p128 raw11-certified)"
+          P129="$(find_one /tmp/p129 raw11-certified)"
+          P130="$(find_one /tmp/p130 raw11-certified)"
+          P137="$(find_one /tmp/p137 raw11-certified)"
+          test -n "$BASE" && test -f "$BASE/Raw11Root52Q0ParentsConsume.olean"
+          for pair in "126:$P126" "127:$P127" "128:$P128" "129:$P129" "130:$P130" "137:$P137"; do
+            id="${pair%%:*}"
+            dir="${pair#*:}"
+            test -n "$dir"
+            test -f "$dir/Agent5Raw11Extra${id}.olean"
+          done
+          export LEAN_PATH="$BASE:$P126:$P127:$P128:$P129:$P130:$P137"
+          mkdir -p /tmp/capped-consumer
+          lean -j1 -o /tmp/capped-consumer/Raw11Root52CappedParentsConsume.olean \
+            im-results/agent47-raw11-adapter/Raw11Root52CappedParentsConsume.lean \
+            | tee /tmp/capped-consumer.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/capped-consumer.log; then
+            echo "forbidden axiom found" >&2
+            exit 1
+          fi
+          grep -F "'BB6.Agent47Raw11Root52CappedParentsConsume.remaining_census' depends on axioms:" /tmp/capped-consumer.log
+          grep -F "'BB6.Agent47Raw11Root52CappedParentsConsume.cover_from_remaining' depends on axioms:" /tmp/capped-consumer.log
+          {
+            echo "lean_version=$(lean --version)"
+            echo "base_run=45906697676"
+            echo "parent_runs=45898270704,45908444758"
+            echo "parent_ids=126,127,128,129,130,137"
+            sha256sum im-results/agent47-raw11-adapter/Raw11Root52CappedParentsConsume.lean
+            sha256sum /tmp/capped-consumer/Raw11Root52CappedParentsConsume.olean
+          } > /tmp/capped-consumer/provenance.txt
+
+      - name: Upload accepted capped-parent consumer
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw11-root52-capped-parent-consumption
+          path: |
+            /tmp/capped-consumer
+            im-results/agent47-raw11-adapter/Raw11Root52CappedParentsConsume.lean
+          if-no-files-found: error
+          retention-days: 30
