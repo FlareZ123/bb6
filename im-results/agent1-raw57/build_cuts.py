@@ -60,7 +60,7 @@ def generate(group: str) -> tuple[list[str], list[str]]:
             run([sys.executable, f"{AGENT1}/generate_sibling.py", child])
         return list(RESIDUAL_A_ROOTS), [
             f"{AGENT1}/generate_sibling.py", f"{AGENT1}/siblings.json",
-            f"{AGENT1}/make_1la_spec.py", f"{AGENT1}/Raw57ParentBridge.lean",
+            f"{AGENT1}/Raw57ParentBridge.lean",
         ]
     if group == "residual-b":
         run([sys.executable, f"{AGENT1}/m882885_certificate.py"])
