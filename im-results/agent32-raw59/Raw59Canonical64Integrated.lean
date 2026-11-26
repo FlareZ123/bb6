@@ -37,7 +37,7 @@ theorem parent_cover_at_common_floor :
   refine Cover.leaf p59 ?_
   intro m hm k d hk hd
   exact Nat.le_trans
-    (BB6.Agent32Raw59UpgradeAll.cover.sound m hm k d hk hd)
+    (BB6.Agent32Raw59UpgradeAll.bound m hm k d hk hd)
     (by decide)
 
 /-- Integrated Raw59 composition: the accepted Canonical64 theorem and the
