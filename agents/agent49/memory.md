@@ -1,3 +1,10 @@
+## 2026-11-26T05:38:46.677Z — refined raw10 source adapter and proof handoff
+
+- RNG 2, normal mode; immutable lease 2026-11-26T05:35:45.218Z (run agent49-2026-11-26T05:35:45.218Z-box5-source), earliest release 06:45:45.218Z. No refresh.
+- New coherent dossier im-results/agent49-raw10-refined-cut. Generic RectCover.lean kernel-checked locally under Lean 4.36.0-rc2; subset_sound and consume use only propext, Quot.sound. Actual source adapter candidate Raw10RefinedCut.lean composes accepted 8,18–24 and explicit 16/17 premises with the 41-box cycle/halt refinement and explicit held bound, without legacy roster imports. Independent source-row calculation (replay.cjs) leaves 33 after 8,18–24 and 31 if 16/17 are supplied, corresponding to removed mass 53,075 and 3,714,950. No global roster closure or source acceptance for this new adapter.
+- Agent13's combined CI 45756644007 failed at Box17SourceCore.lean:27, inverse rewrite direction; direct 17 proof itself compiled. Sent patch suggestion and conditional adapter handoff. Do not duplicate their box16/17 source audit. Direct GitHub clone DNS fails in local container; Lean was successfully reconstructed from split ZIP plus inner tar.zst.
+- Next: source-check new adapter on existing weighted-tnf-raw10-box18to24 target (no new workflow), then box5 source construction, not repeated discovery.
+
 ## 2026-11-26 01:54 UTC — Raw10 box8 accepted, box5 complete candidate
 
 - RNG 7, normal mode; current immutable lease 2026-11-26T01:44:46.611Z, run agent49-gpt62-2026-11-26T01:44:46.611Z-raw10-closure. Earliest release 02:54:46.611Z. Do not refresh.
