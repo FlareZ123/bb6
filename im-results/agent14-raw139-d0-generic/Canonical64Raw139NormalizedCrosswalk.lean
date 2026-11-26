@@ -7,20 +7,42 @@ set_option maxHeartbeats 0
 namespace BB6.Agent14Canonical64Raw139Crosswalk
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleRoster
 open BB6.Agent6Raw139Normalized
 open BB6.Agent3Raw139E0ZeroRAIntegrated
 open BB6.Agent14Canonical64Raw139Subcover
 
-/-- True when every fixed transition of p is also fixed identically by q.
-    Thus every completion of q is a completion of p, and a Cover of p
-    transports to q. -/
-def extendsTable (p q : PartialMachine) : Bool :=
-  (List.finRange 6).all (fun s =>
-    [false, true].all (fun b =>
-      match p (s, b) with
-      | none => true
-      | some v => q (s, b) == some v))
+/-- p is a partial table whose fixed transitions are all retained identically
+    in q. Thus every completion of q is also a completion of p. -/
+def Extends (p q : PartialMachine) : Prop :=
+  ∀ slot, p slot = none ∨ q slot = p slot
+
+/-- Boolean form used by the finite crosswalk. -/
+def extendsTable (p q : PartialMachine) : Bool := decide (Extends p q)
+
+theorem extendsTable_sound {p q : PartialMachine}
+    (h : extendsTable p q = true) : Extends p q :=
+  of_decide_eq_true h
+
+theorem compatible_of_extends {p q : PartialMachine} {m : Machine}
+    (he : Extends p q) (hm : compatible q m) : compatible p m := by
+  intro slot v hp
+  have hq : q slot = some v := by
+    rcases he slot with hnone | heq
+    · rw [hp] at hnone
+      contradiction
+    · rw [heq, hp]
+  exact hm slot v hq
+
+/-- A Cover is inherited by every more-specific partial table. -/
+theorem cover_of_extends {B : Nat} {p q : PartialMachine}
+    (h : Cover (WeightedBound B) p) (he : Extends p q) :
+    Cover (WeightedBound B) q := by
+  cases h with
+  | leaf _ hbound =>
+      exact Cover.leaf _ (fun m hm k d hk hd =>
+        hbound m (compatible_of_extends he hm) k d hk hd)
 
 /-- The active Canonical64 Raw139 leaves after the accepted 0RA Cover. -/
 def activeRows := remainingRaw139AfterFortyThreeWithoutE0
@@ -34,13 +56,50 @@ def activeCoveredByNormalized : List (List Move × PartialMachine) :=
 
 def activeUncoveredByNormalized : List (List Move × PartialMachine) :=
   activeRows.filter (fun e =>
-    !(normalizedTables.any (fun p => extendsTable p e.2)))
+    !(normalizedTables.any (fun p => extendsTable p e.2))
 
+/-- Number of active leaves subsumed by each normalized residual table. -/
 def activeCoverageCounts : List Nat :=
   normalizedTables.map (fun p =>
     (activeRows.filter (fun e => extendsTable p e.2)).length)
 
 def e0LCTable : PartialMachine := leaf (2, ⟨false, false, 2⟩)
+
+/-- A finite crosswalk can discharge every active row covered by at least one
+    normalized residual Cover. -/
+theorem activeCoveredByNormalized_cover (B : Nat)
+    (hNorm : ∀ p ∈ normalizedTables, Cover (WeightedBound B) p) :
+    ∀ e ∈ activeCoveredByNormalized, Cover (WeightedBound B) e.2 := by
+  intro e he
+  have hAny : normalizedTables.any (fun p => extendsTable p e.2) = true :=
+    (List.mem_filter.mp he).2
+  obtain ⟨p, hp, hExt⟩ := List.any_eq_true.mp hAny
+  exact cover_of_extends (hNorm p hp) (extendsTable_sound hExt)
+
+/-- If the finite crosswalk misses some active rows, only those explicit
+    complement rows need separate Covers in addition to the normalized list. -/
+theorem activeRows_cover_from_normalized_and_complement (B : Nat)
+    (hNorm : ∀ p ∈ normalizedTables, Cover (WeightedBound B) p)
+    (hRest : ∀ e ∈ activeUncoveredByNormalized, Cover (WeightedBound B) e.2) :
+    ∀ e ∈ activeRows, Cover (WeightedBound B) e.2 := by
+  intro e he
+  by_cases hCovered : normalizedTables.any (fun p => extendsTable p e.2) = true
+  · obtain ⟨p, hp, hExt⟩ := List.any_eq_true.mp hCovered
+    exact cover_of_extends (hNorm p hp) (extendsTable_sound hExt)
+  · have hUncovered : e ∈ activeUncoveredByNormalized := by
+      apply List.mem_filter.mpr
+      exact ⟨he, by simp [activeUncoveredByNormalized, hCovered]⟩
+    exact hRest e hUncovered
+
+/-- Strongest possible case: every active 79-leaf is a refinement of one of
+    the 66 normalized residual tables. -/
+theorem activeRows_cover_from_normalized (B : Nat)
+    (hCross : ∀ e ∈ activeRows, ∃ p ∈ normalizedTables, Extends p e.2)
+    (hNorm : ∀ p ∈ normalizedTables, Cover (WeightedBound B) p) :
+    ∀ e ∈ activeRows, Cover (WeightedBound B) e.2 := by
+  intro e he
+  obtain ⟨p, hp, hExt⟩ := hCross e he
+  exact cover_of_extends (hNorm p hp) hExt
 
 /-- Finite crosswalk diagnostics. The first count is how many active leaves
     are refinements of at least one normalized residual table; the second is
