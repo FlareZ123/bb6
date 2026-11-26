@@ -76,8 +76,11 @@ def main():
     version = os.popen("lean --version").read().strip()
     assert "4.36.0-rc2" in version, version
 
+    print('Stage 1/7: download pinned Canonical64 artifacts', flush=True)
     parts = a63.download_canonical64_parts(work)
+    print('Stage 2/7: download Raw112 common-core artifact', flush=True)
     raw112_meta, raw112_dirs = download_raw112_preflight(work)
+    print('Stage 3/7: download pinned Raw58 parent artifact', flush=True)
     raw58_meta, raw58_dirs = a62.download_raw58(work)
 
     linked = work / "linked"
@@ -87,13 +90,16 @@ def main():
         ("raw58", raw58_dirs, ["Raw58Exact"]),
     ]
     groups = [parts["canonical65"], parts["raw120"], raw112_dirs, raw58_dirs]
+    print('Stage 4/7: strict-link Canonical64, Raw112 base and Raw58', flush=True)
     a68.link_reachable(groups, work, linked, families=families)
     env = dict(os.environ, LEAN_PATH=str(linked))
 
+    print('Stage 5/7: compile Canonical64 root', flush=True)
     canonical64_output, canonical64_log, canonical64_axioms = a63.compile_canonical64(
         linked, env, work
     )
 
+    print("Stage 6/7: compile explicit Raw112 parent-cover stub", flush=True)
     stub_source = work / "Raw112ClosedCover.lean"
     stub_source.write_text("""import Raw112Base
 import ResidualCover
@@ -116,6 +122,7 @@ end BB6.Agent47Raw112
     if re.search(r"sorryAx|native_decide", stub_log):
         raise AssertionError("forbidden proof mechanism in Raw112 preflight stub")
 
+    print("Stage 7/7: compile and axiom-audit Canonical62 consumer", flush=True)
     source = a62.HERE / "Canonical62Raw112Raw58Integrated.lean"
     output = linked / "Canonical62Raw112Raw58Integrated.olean"
     log = a68.compile_module(source, output, env, work / "canonical62-preflight.log")
