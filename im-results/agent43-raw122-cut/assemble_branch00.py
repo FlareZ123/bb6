@@ -26,9 +26,11 @@ def run(args, *, cwd=ROOT, env=None, capture=False):
     print("$ " + " ".join(args), flush=True)
     r = subprocess.run(args, cwd=cwd, env=env, text=True,
                        stdout=subprocess.PIPE if capture else None,
-                       stderr=subprocess.STDOUT if capture else None, check=True)
+                       stderr=subprocess.STDOUT if capture else None, check=False)
     if capture and r.stdout:
         print(r.stdout, end="" if r.stdout.endswith("\n") else "\n", flush=True)
+    if r.returncode != 0:
+        raise subprocess.CalledProcessError(r.returncode, args, output=r.stdout)
     return r.stdout or "" if capture else ""
 
 

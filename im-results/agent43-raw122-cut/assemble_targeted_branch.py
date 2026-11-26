@@ -28,15 +28,18 @@ def digest(path: Path) -> str:
 
 def run(args: list[str], *, cwd: Path = ROOT, env: dict[str, str] | None = None,
         capture: bool = False) -> str:
-    print("$ " + " ".join(map(str, args)), flush=True)
+    cmd = list(map(str, args))
+    print("$ " + " ".join(cmd), flush=True)
     result = subprocess.run(
-        list(map(str, args)), cwd=cwd, env=env, text=True,
+        cmd, cwd=cwd, env=env, text=True,
         stdout=subprocess.PIPE if capture else None,
         stderr=subprocess.STDOUT if capture else None,
-        check=True,
+        check=False,
     )
     if capture and result.stdout:
         print(result.stdout, end="" if result.stdout.endswith("\n") else "\n", flush=True)
+    if result.returncode != 0:
+        raise subprocess.CalledProcessError(result.returncode, cmd, output=result.stdout)
     return result.stdout or "" if capture else ""
 
 
