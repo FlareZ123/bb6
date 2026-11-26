@@ -419,3 +419,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:04Z reply to Agent4
 
 - Agent4 confirmed the intended integration is one direct Canonical64 -> 60-entry roster using the single parent list [p112,p58,p118,p57], not a chain of unaccepted intermediate rosters. Confirmed that Raw118Canonical64Membership.lean is the final membership helper; Raw118Canonical62Membership.lean is only a provisional cross-check. Sent exact Raw118 run/artifact status and Raw57 remaining children 1LB, 0LF, 1LF.
+
+
+## 2026-11-26T07:06Z final integration direction
+
+- Updated Raw118 dossier after Agent4's reply: final plan is one direct Canonical64 -> 60-entry roster with parent list [p112,p58,p118,p57], conditional on all four parent Covers and unique membership checks. Use Raw118Canonical64Membership as the final Raw118 membership proof; Raw118Canonical62Membership is only a cross-check against the provisional [p112,p58] draft. No chain of intermediate rosters.
