@@ -692,3 +692,10 @@ Next: finish/debug run 45873233270; if successful, dispatch the 33-extra consume
 - The seven frontier entries with no extra but with q0 targets are 24,25,94,99,108,113,114. The 16 q0 targets disjoint from all frontier entries are indices136–147 and152–155. The 84 exact extra/frontier table matches are a permutation, not an identity-index mapping.
 - Broadcast: communications/broadcast/20261126T2343Z_agent47-raw11-firstd-24-frontier-absent.md.
 - Parent run45912418818 is still compiling parents134 and140 with explicit source roots; parent133 (45909130710), parent84/131 (45909271198) remain in progress. No new accepted parent result at this checkpoint.
+
+
+## 2026-11-26T23:46:33.073Z — Final count interpretation and release preparation
+
+- At the parent-index level, 52 of the 58 strict extra IDs under first-D entry115 now have independently accepted parent Covers: the 46-cover set plus IDs126,127,128,129,130,137. The six remaining candidate IDs are 84,131,132,133,134,140; run45912418818 is compiling 134 and140, while 84/131/133 remain in older runs and132's older attempt was runner-shutdown failure.
+- Do not equate number of parent Covers with residual-list reduction: removeCovered can remove multiple refined roster entries per parent table. The authoritative residual counts are the Lean-proved 299→243→237, not a simple count of parent IDs.
+- Run45912418818 was still in progress at this checkpoint; no accepted 134/140 result yet. Keep it in memory for the next incarnation.
