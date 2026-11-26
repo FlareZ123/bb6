@@ -41,8 +41,11 @@ jobs:
           if [[ "$KIND" == c1 ]]; then
             bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
           elif [[ "$KIND" == d0 ]]; then
-            [[ "$SIBLING" == ZeroLF ]]
-            bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh
+            case "$SIBLING" in
+              ZeroLF) bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh ;;
+              OneLB) bash im-results/agent14-raw139-d0-oneLB/reproduce.sh ;;
+              *) echo "Unknown D0 sibling: $SIBLING" >&2; exit 2 ;;
+            esac
           else
             bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
           fi
