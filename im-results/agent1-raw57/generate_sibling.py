@@ -124,6 +124,16 @@ def main():
             i=int(i); k,*expected=counts
             res=subprocess.check_output([str(exe),str(k)],input=f"{i} {opens[i]}\n",text=True)
             j,data=res.strip().split(maxsplit=1);assert int(j)==i
+            # Agent1's initial 1LA JS census counted distinct gram keys,
+            # while the sparse Lean emitter counts individual 0/1 edges.
+            # Validate the recorded census in its original convention and
+            # pass the independently regenerated edge cardinalities onward.
+            if A=="1LA" and str(i) in json.loads((ROOT/"1la-ngram-frontier.json").read_text())["ngram"]:
+                kk,nn,L,R,_=data.split()
+                assert int(kk)==k and int(nn)==expected[0]
+                rows=[x.rstrip(",").split(",") for x in (L,R)]
+                assert [len(x) for x in rows]==expected[1:],(i,expected,[len(x) for x in rows])
+                expected=[int(nn),*[sum(int(x.split(":")[1]).bit_count() for x in row) for row in rows]]
             module,certns=emit_sparse.emit(ROOT,i,opens[i],data,width=k,expected=expected,module_name=f"{ID}Sparse{i}")
             assert i not in pumps
             pumps[i]=certns
