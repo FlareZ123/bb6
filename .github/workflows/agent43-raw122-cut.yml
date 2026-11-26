@@ -353,6 +353,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Fetch pinned Raw122 source revision
+        run: git fetch --no-tags --depth=1 origin 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
