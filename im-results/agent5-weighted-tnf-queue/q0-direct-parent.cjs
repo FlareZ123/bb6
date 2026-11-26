@@ -60,7 +60,14 @@ function encode(t,a){
  if(t[3].length!==24)throw Error("incomplete first-hole split");
  return "source_auto_split "+t[1]+" ("+"ABCDEF"[t[2]>>1]+",S"+t[2]%2+") ["+t[3].map((kid,j)=>{let b=a.slice();b[t[2]]=moves[j];return encode(kid,b)}).join(";\n")+"]";
 }
-const body=encode(tree,row.table.replaceAll("_","").match(/.{3}/g));
+// Root 33 previously stalled in a monolithic parent check.
+const output=process.argv[3]||"Agent5Q0AutoData.v";
+let shardManifest=null;
+const body=rootId===33
+  ? (shardManifest=require("./q0-direct-shards.cjs").emitShards({
+      rootId,row,tree,bound:root.bound,encode,moves,output
+    }),null)
+  : encode(tree,row.table.replaceAll("_","").match(/.{3}/g));
 if(n!==root.stats.nodes||observed.size!==root.openTables.length||root.openTables.some(x=>observed.get(x.table)!==x.count))throw Error("open complement mismatch");
 const out=[
 "From BusyCoq Require Import Agent5SourceAutoTree.",
@@ -77,5 +84,5 @@ const out=[
 "Proof. eapply source_auto_check_sound; exact auto_checked. Qed.",
 "Print Assumptions auto_parent_safe."
 ].join("\n")+"\n";
-fs.writeFileSync(process.argv[3]||"Agent5Q0AutoData.v",out);
-console.log(JSON.stringify({rootId,table:row.table,n,bound:root.bound,open:observed.size,direct}));
+if(!shardManifest)fs.writeFileSync(output,out);
+console.log(JSON.stringify({rootId,table:row.table,n,bound:root.bound,open:observed.size,direct,...(shardManifest?{shardManifest}:{})}));

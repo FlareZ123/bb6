@@ -1,6 +1,6 @@
 # q0 sibling-scan index 33: direct residual closure
 
-**Status:** the isolated two-sided automata certificate and `Cover` leaf passed focused Lean 4.36.0-rc2 CI run [45789439603](https://github.com/FlareZ123/bb6/actions/runs/45789439603). The parent-level original-source Coq consumer is now running in [45789737554](https://github.com/FlareZ123/bb6/actions/runs/45789737554). This is an intermediate local result, not a global q0 closure or a BB(6) upper bound.
+**Status:** the isolated two-sided automata certificate and `Cover` leaf passed focused Lean 4.36.0-rc2 CI run [45789439603](https://github.com/FlareZ123/bb6/actions/runs/45789439603). The parent-level original-source Coq run [45789737554](https://github.com/FlareZ123/bb6/actions/runs/45789737554) was cancelled without parent acceptance. A proof-level sharded direct-source candidate is available. This is an intermediate local result, not a global q0 closure or a BB(6) upper bound.
 
 ## Exact post-decider residual
 
@@ -26,7 +26,7 @@ This is stronger than the earlier 25-to-1 minimal-slice reduction: the automata 
 
 ## What this does and does not close
 
-The local residual cylinder is now covered mathematically: the focused Lean source closure compiled 15 modules and checked `residual_never`, `haltCompletion_never`, and `residual_cover`; the reported axioms are `propext`, `Classical.choice`, and `Quot.sound`, with workflow checks rejecting `sorryAx` and `native_decide`. The parent is q0 active index 33, exact table `1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------`, four holes, `maxHalt = 156`, weighted bound 162. Its deterministic coarse/automata tree has 985 nodes, 41 first-hole splits, 55 MITM leaves, 140 terminal leaves, and one open leaf (R33L0). The shared original-source workflow is now compiling the exact Coq consumer for offset 33; run 45789737554 is pending. This result does not close the entire q0 root family, the canonical64 roster, or BB(6).
+The local residual cylinder is now covered mathematically: the focused Lean source closure compiled 15 modules and checked `residual_never`, `haltCompletion_never`, and `residual_cover`; the reported axioms are `propext`, `Classical.choice`, and `Quot.sound`, with workflow checks rejecting `sorryAx` and `native_decide`. The parent is q0 active index 33, exact table `1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------`, four holes, `maxHalt = 156`, weighted bound 162. Its deterministic coarse/automata tree has 985 nodes, 41 first-hole splits, 55 MITM leaves, 140 terminal leaves, and one open leaf (R33L0). The original parent-level source run 45789737554 was cancelled. The new direct-source sharded candidate below is not yet accepted. This result does not close the entire q0 root family, the canonical64 roster, or BB(6).
 
 ## Independent computational observation
 
@@ -44,3 +44,9 @@ These observations motivated the original pilot but are no longer needed for the
 - `Q0Index33Automata.lean` — isolated `R33L0` two-sided automata certificate.
 - `Q0Index33MinimalHalt.lean` — exact residual nonhalting theorem and weighted `Cover` leaf.
 - `verify_macro.py` — independent deterministic simulation/replay only.
+
+## Parent closure candidate: proof-level sharding
+
+The exact 985-node first-hole tree (748 translated-cycle leaves, 55 coarse automata leaves, 140 terminal leaves, 41 splits, and one R33L0 automata leaf) has first split E0 at 27 live steps. Instead of original-source MITM saturation, the direct generator emits all 56 automata as explicit finite-stack certificates. The new [q0-direct-shards.cjs](../agent5-weighted-tnf-queue/q0-direct-shards.cjs) decomposes the same tree into 24 independently compilable first-split modules, two definition modules, and a final `Agent5Q0AutoData.v`. There are 162 independently evaluated subtrees (at most 25 nodes each) and 7 proof-level `source_first_hole_split` compositions. All 24 ordinary child transitions are retained at every split; the halt continuation costs at most n+6. The six nontrivial first-split branches are E0=1LB,1LC,0LF,0RF,1LF,1RF, with 121,121,169,145,289,121 nodes respectively. R33L0 lies within E0=0LF.
+
+The generator was executed in the local JavaScript tool runtime on the existing checkpoint, scan and automata bank; it produced the 27 modules, 56 explicit certificates and exact single-open-leaf match before source checking. This verifies generation, not the Coq theorem. Use the existing manual `shared-rocq-root-proofs.yml` target `enumerate62-direct-parent`, offset 33. The workflow retains generated source and compiled shards even on cancellation. Acceptance requires `auto_parent_safe` and the exact q0 checkpoint consumer with assumption audits. No additional queue entry has been proved safe until the source parent check succeeds.
