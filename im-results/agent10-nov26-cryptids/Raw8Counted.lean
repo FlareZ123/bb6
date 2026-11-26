@@ -126,36 +126,35 @@ private theorem terminalLift (isTop p : Bool) (k : Nat) (j : Sep)
     (he : (step1Carry isTop p k j).2.2.1 = some b)
     (h : CarryExact false b s t) :
     CarryExact isTop p (layerBits k j s) (t + terminalOverhead isTop p k j) := by
-  cases isTop <;> cases p <;> cases j <;> simp only [step1Carry] at he <;>
-    try contradiction <;> try (injection he with hb; subst b)
+  cases isTop <;> cases p <;> cases j <;> cases b <;> simp [step1Carry] at he
   all_goals first
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
         Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
         (wrap_S7_exact (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
         Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
         (wrap_Top0_exact (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
         Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
         (wrap_S2_exact1 (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
         Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
         (wrap_Top1_exact1 (unitStep_m8_exact h k))
     | (have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S2 +> s))) (24*(k+1)+t) := by
          rw [u8_cons_pow]
          exact unitStep_m8_exact h k
        first
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
            Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_S2_exact2 (sub_S1 k s) hu
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
            Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_Top1_exact2 (sub_S1 k s) hu)
     | (have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S7 +> s))) (24*(k+1)+t) := by
          rw [u8_cons_pow]
          exact unitStep_m8_exact h k
        first
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
            Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_S2_exact2 (sub_S4 k s) hu
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.add_zero,
+       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
            Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_Top1_exact2 (sub_S4 k s) hu)
 
 /-- The table maxR consumes exactly the requested number of residual child carries,
@@ -233,10 +232,17 @@ private theorem exact_lift (isTop p : Bool) (k : Nat) (j : Sep)
     dsimp only
     rw [hit]
   rw [hinfo]
-  refine ⟨layerBits k' j' s',_,_,hcomb,?_,?_⟩
-  · rw [hp]
+  refine ⟨layerBits k' j' s',
+    qCyclesCost isTop p j k Q + ccQ + (cR + ccR),
+    c2 + terminalOverhead isTop (parityXor p r) k' j', hcomb, ?_, ?_⟩
+  · change CarryExact isTop (parityXor p (16*Q+r)) (layerBits k' j' s')
+      (c2 + terminalOverhead isTop (parityXor p r) k' j')
+    rw [hp]
     exact hterm
-  · dsimp only
+  · change t + (qCyclesCost isTop p j k Q + cR +
+        terminalOverhead isTop (parityXor p r) k' j') =
+      qCyclesCost isTop p j k Q + ccQ + (cR + ccR) +
+        (c2 + terminalOverhead isTop (parityXor p r) k' j')
     omega
 
 /-- Two numbers plus a proof. Computation never traverses the giant CarryChain.
@@ -263,11 +269,11 @@ private def th_ruleC {q : Bool} {c : Nat} {lhs rhs rest : List Nat} {s : ListBla
     (hr : ∀ t : ListBlank (Fin 2), CarrySem false q c (uBits lhs +> t) (uBits rhs +> t))
     (ht : Cert false (!q) (uBits (rhs ++ rest) +> s)) :
     Cert false q (uBits (lhs ++ rest) +> s) :=
-  ⟨ht.n+1,c+ht.ticks,by
-    rw [uBits_append lhs rest s]
-    have h := ht.sound
-    rw [uBits_append rhs rest s] at h
-    exact exact_prepend (hr (uBits rest +> s)) h⟩
+  match ht with
+  | ⟨n,t,h⟩ => ⟨n+1,c+t,by
+      rw [uBits_append lhs rest s]
+      rw [uBits_append rhs rest s] at h
+      exact exact_prepend (hr (uBits rest +> s)) h⟩
 
 private def th_spawn1C {q : Bool} (j : Sep) {rest : List Nat} {s : ListBlank (Fin 2)}
     (ht : Cert false (qPol j) (uBits rest +> s)) :
@@ -717,7 +723,7 @@ private theorem countedHalt :
     blank-delay moves) stays below this explicit champion threshold. -/
 private theorem raw8_halt_under_pow2600 :
     ∃ n : Nat, n+7 ≤ 2^2600 ∧
-      ∃ cfg', (init [] : Cfg (Fin 2) (Fin 6)) [target]⊢^{n} cfg' ∧ (step target cfg').isNone := by
+      ∃ cfg' : Cfg (Fin 2) (Fin 6), ((init [] : Cfg (Fin 2) (Fin 6)) [target]⊢^{n} cfg') ∧ (step target cfg').isNone := by
   refine ⟨prefixCost+topCert.ticks,by decide +kernel,?_⟩
   obtain ⟨cfg',h,hh⟩ := countedHalt
   refine ⟨cfg',?_,?_⟩
