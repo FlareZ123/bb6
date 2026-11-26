@@ -40,7 +40,7 @@ Consequently, the current `q0-row26.cjs` single-solid generator is invalid for c
 Root28 has 1 open leaf and 1 distinct open table:
 `1RB1RD1RC0RE0LA1RF1LA1LD1LE0LA---0RE`.
 
-This matches the proposed row28 partial machine. Its source-level sweep proof and exact q0 consumer are under Coq CI in run `45764648102`; that run was still compiling at the last checkpoint.
+This matches the proposed row28 partial machine. Its source-level sweep proof and exact q0 consumer are included in integrated run `45766737173`. The standalone run `45764648102` was cancelled after 20 minutes in the compile step to avoid duplicating the integrated audit.
 
 ## Other promising roots
 
