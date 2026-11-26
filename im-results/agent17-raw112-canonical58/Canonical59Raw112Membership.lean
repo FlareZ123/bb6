@@ -1,4 +1,4 @@
-import CanonicalSelectedParentIntegrated
+import Canonical58Raw113Graft
 import Raw112ClosedCover
 
 set_option maxRecDepth 100000
@@ -31,6 +31,10 @@ theorem p112_count59 :
     (BB6.Agent32CanonicalSelectedIntegrated.rosterSelected.filter
       (fun e => sameTable e.2 p112)).length = 1 := by decide
 
+theorem p112_count58 :
+    (BB6.Agent31Canonical58Raw113Graft.roster58.filter
+      (fun e => sameTable e.2 p112)).length = 1 := by decide
+
 theorem p112_root :
     p112 initialSlot = some (some ⟨true,true,1⟩) := by decide
 
@@ -50,6 +54,7 @@ theorem p112_cover : Cover (WeightedBound 6766859) p112 := by
 #print axioms p112_source_eq
 #print axioms p112_count64
 #print axioms p112_count59
+#print axioms p112_count58
 #print axioms p112_root
 #print axioms p112_cover
 
