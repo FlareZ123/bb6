@@ -100,3 +100,10 @@ skips the older 102-list F1 consumer because this proof uses the stable
 Acceptance is pending until that workflow succeeds and the artifact confirms
 the current-list membership/address checks. A failed or unrun CI result must
 not be described as a locally accepted proof.
+
+
+## Current overlap status — 26 November 2026
+
+The specific terminal source leaf described above assigns D0=1LA and agrees with the other assigned rows of the exact accepted parent table `[7,24,11,24,14,24,2,16,12,11,24,24]`. It is therefore a completion of `BB6.Agent14Raw139D0OneLA.parent`, whose all-completions weighted Cover at bound 1,361 was accepted in original-source CI run [45727637346](https://github.com/FlareZ123/bb6/actions/runs/45727637346). The pilot's 25-completion nonhalting theorem is already subsumed for the BB(6) upper-bound objective; do not count that terminal leaf as new live completion closure.
+
+This does **not** mean the entire E1=1LF parent is covered: its other D0 children remain distinct branches. The six-edge frontier may still be useful as a generic refinement/adapter test, but its source leaf adds no new score-bound closure. Before further compute, match any new source candidate against the current Raw139 residual list after accepted sibling-parent cuts (the 43-sibling consumer is pending in run 45759230933), and require that it is not contained in an already accepted parent Cover.

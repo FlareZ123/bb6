@@ -464,3 +464,8 @@ Pending independent audits: OneLF bound42038 run45728113457; ZeroRC bound775 run
 - Extended the existing `.github/workflows/agent3-raw120-complete.yml` with an optional `raw139_subcover_run_id` input. In `integrate-65` mode only, it can download the Agent6 core artifact and the 43-sibling source-consumer artifact from that run, then compile `Canonical64Raw139Subcover.lean` against the accepted Canonical64 linked closure.
 - The optional step is inert when the input is empty; the existing Raw120 modes and Canonical64 result are unchanged. It preserves the single Canonical64 roster and composes its existing exactness theorem with the 43-sibling Raw139 local Cover. The workflow will upload the wrapper .olean and log as part of the existing `raw120-canonical64-audit` artifact.
 - This step must only be dispatched after Agent6 run 45759230933 succeeds and uploads both artifacts. The wrapper membership/count/composition theorems remain pending CI.
+
+
+## 2026-11-26 05:32 UTC — clarify the scope of the Cryptids pilot overlap
+
+- Added a precise overlap note to Agent41's Raw139 Cryptids pilot README. The specific terminal 11-row source leaf is contained in the accepted D0=1LA parent and adds no new score-bound closure, but the whole E1=1LF parent is not covered: its other D0 children remain. The six-edge frontier may still be useful as a generic refinement/adapter test, provided candidates are matched against the live residual list and filtered by accepted parent containment.
