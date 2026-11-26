@@ -136,11 +136,11 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw54-rf54'
         run: |
           set -euo pipefail
-          test "$(git hash-object im-results/agent8-raw54/Raw54RF54.lean)" = '172eaa8d3053634b1fc4aa54177131dcb7daa451'
+          test "$(git hash-object im-results/agent8-raw54/Raw54RF54.lean)" = 'fad0f02da82b6bb1c78920bdd53eea9ec5a5b07b'
           python im-results/agent13-coverage/unpack.py
           W=/tmp/raw54-rf54
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent8Raw54.RF54.never im-results/agent8-raw54/Raw54RF54.lean | tee /tmp/raw54-rf54.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-rf54.log BB6.Agent8Raw54.RF54.never
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent8Raw54.RF54.never im-results/agent8-raw54/Raw54RFNew.lean | tee /tmp/raw54-rf54.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-rf54.log BB6.Agent8Raw54.RF54.never BB6.Agent8Raw54.RF.M40.never BB6.Agent8Raw54.RF.M41.never
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw54-rf54'
         with:

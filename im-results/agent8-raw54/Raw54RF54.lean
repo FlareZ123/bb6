@@ -80,10 +80,19 @@ theorem false_entry (L : List Bool) (n : Nat)
     · rfl
     · simp at hb
 
+theorem zeros_rotate (n : Nat) (T : List Bool) :
+    rep [false,false] n ++ false::T = false::(rep [false,false] n ++ T) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    change false::false::(rep [false,false] n ++ false::T) =
+      false::false::false::(rep [false,false] n ++ T)
+    rw [ih]
+
 theorem restore (n : Nat) (T : List Bool) :
     run0 table 10 ⟨5,true::(rep [false,false] n ++ false::true::T),[false,true,true]⟩ =
       some (cfg (rep [false,false] n ++ true::T) 0) := by
-  cases n <;> rfl
+  rw [zeros_rotate n (true::T)] <;> rfl
 
 theorem returns (L : List Bool) (n : Nat) (h : Good L) :
     ∃ t, 0<t ∧ run0 table t (cfg L n) = some (cfg (nextL L n) (nextN L n)) := by
