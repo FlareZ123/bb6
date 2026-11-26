@@ -1,0 +1,595 @@
+[lean-closure] reused 470 dependency-closed module(s) from source revisions ['7db06494d8b7144db2d22b2e487fbf0a100ba407']
+[lean-closure] level 1: 4 module(s)
+[lean-closure] compiling BiDFA <- im-results/agent16-raw118/BiDFA.lean
+[lean-closure] compiling PackedRun122 <- im-results/agent29-raw122-run/PackedRun122.lean
+[lean-closure] compiling Raw122Counter05 <- im-results/agent43-raw122-cut/Raw122Counter05.lean
+'BB6Coverage.Agent16BiDFA.inv_step' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent16BiDFA.live' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent16BiDFA.never' depends on axioms: [propext, Quot.sound]
+[lean-closure] compiling Raw122ResidualCompose <- im-results/agent43-raw122-cut/Raw122ResidualCompose.lean
+PackedRun122.lean:65:34: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+PackedRun122.lean:77:34: warning: This simp argument is unused:
+  h
+
+Hint: Omit it from the simp argument list.
+  [apply] simp [ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+'BB6Coverage.Agent29PackedRun.packed_last' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122Counter05.never' depends on axioms: [propext, Quot.sound]
+'BB6.Agent43Raw122ResidualCompose.cover_of_good' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122ResidualCompose.never_bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 2: 26 module(s)
+[lean-closure] compiling PackedSweep122 <- im-results/agent29-raw122-run/PackedSweep122.lean
+[lean-closure] compiling Raw122Roster05Kid00 <- /tmp/a43-generated/Raw122Roster05Kid00.lean
+[lean-closure] compiling Raw122Roster05Kid01 <- /tmp/a43-generated/Raw122Roster05Kid01.lean
+'BB6Coverage.Agent29PackedRun.psweepR' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent29PackedRun.psweepL' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Raw122Roster05Kid02 <- /tmp/a43-generated/Raw122Roster05Kid02.lean
+[lean-closure] compiling Raw122Roster05Kid03 <- /tmp/a43-generated/Raw122Roster05Kid03.lean
+[lean-closure] compiling Raw122Roster05Kid04 <- /tmp/a43-generated/Raw122Roster05Kid04.lean
+[lean-closure] compiling Raw122Roster05Kid05 <- /tmp/a43-generated/Raw122Roster05Kid05.lean
+[lean-closure] compiling Raw122Roster05Kid06 <- /tmp/a43-generated/Raw122Roster05Kid06.lean
+[lean-closure] compiling Raw122Roster05Kid07 <- /tmp/a43-generated/Raw122Roster05Kid07.lean
+[lean-closure] compiling Raw122Roster05Kid08 <- /tmp/a43-generated/Raw122Roster05Kid08.lean
+[lean-closure] compiling Raw122Roster05Kid09 <- /tmp/a43-generated/Raw122Roster05Kid09.lean
+[lean-closure] compiling Raw122Roster05Kid10 <- /tmp/a43-generated/Raw122Roster05Kid10.lean
+[lean-closure] compiling Raw122Roster05Kid11 <- /tmp/a43-generated/Raw122Roster05Kid11.lean
+[lean-closure] compiling Raw122Roster05Kid12 <- /tmp/a43-generated/Raw122Roster05Kid12.lean
+[lean-closure] compiling Raw122Roster05Kid13 <- /tmp/a43-generated/Raw122Roster05Kid13.lean
+[lean-closure] compiling Raw122Roster05Kid14 <- /tmp/a43-generated/Raw122Roster05Kid14.lean
+[lean-closure] compiling Raw122Roster05Kid15 <- /tmp/a43-generated/Raw122Roster05Kid15.lean
+[lean-closure] compiling Raw122Roster05Kid16 <- /tmp/a43-generated/Raw122Roster05Kid16.lean
+[lean-closure] compiling Raw122Roster05Kid17 <- /tmp/a43-generated/Raw122Roster05Kid17.lean
+[lean-closure] compiling Raw122Roster05Kid18 <- /tmp/a43-generated/Raw122Roster05Kid18.lean
+[lean-closure] compiling Raw122Roster05Kid19 <- /tmp/a43-generated/Raw122Roster05Kid19.lean
+[lean-closure] compiling Raw122Roster05Kid20 <- /tmp/a43-generated/Raw122Roster05Kid20.lean
+[lean-closure] compiling Raw122Roster05Kid21 <- /tmp/a43-generated/Raw122Roster05Kid21.lean
+[lean-closure] compiling Raw122Roster05Kid22 <- /tmp/a43-generated/Raw122Roster05Kid22.lean
+[lean-closure] compiling Raw122Roster05Kid23 <- /tmp/a43-generated/Raw122Roster05Kid23.lean
+[lean-closure] compiling TreeBiDFA <- im-results/agent16-raw118/TreeBiDFA.lean
+'BB6Coverage.Agent16BiDFA.TreeCheck.never' depends on axioms: [propext, Quot.sound]
+[lean-closure] level 3: 4 module(s)
+[lean-closure] compiling IndexedBiDFA <- im-results/agent1-bidfa-sat/IndexedBiDFA.lean
+[lean-closure] compiling PackedAction122 <- im-results/agent29-raw122-run/PackedAction122.lean
+[lean-closure] compiling Raw122Roster05 <- /tmp/a43-generated/Raw122Roster05.lean
+'BB6Coverage.Agent1IndexedBiDFA.inv_step' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent1IndexedBiDFA.live' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent1IndexedBiDFA.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Raw122Shift05 <- im-results/agent43-raw122-cut/Raw122Shift05.lean
+'BB6Coverage.Agent29PackedRun.pack_rep' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent29PackedRun.applyMotif_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent29PackedRun.runActions_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122Roster.cover05' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122Shift05.phase0' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent43Raw122Shift05.core_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122Shift05.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 4: 14 module(s)
+[lean-closure] compiling Agent29Raw122Indexed050 <- /tmp/a43-generated/Agent29Raw122Indexed050.lean
+[lean-closure] compiling Agent29Raw122Indexed051 <- /tmp/a43-generated/Agent29Raw122Indexed051.lean
+[lean-closure] compiling Agent29Raw122Indexed052 <- /tmp/a43-generated/Agent29Raw122Indexed052.lean
+'BB6Coverage.Agent29Raw122Indexed.M052.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed053 <- /tmp/a43-generated/Agent29Raw122Indexed053.lean
+'BB6Coverage.Agent29Raw122Indexed.M050.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed054 <- /tmp/a43-generated/Agent29Raw122Indexed054.lean
+'BB6Coverage.Agent29Raw122Indexed.M051.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed055 <- /tmp/a43-generated/Agent29Raw122Indexed055.lean
+'BB6Coverage.Agent29Raw122Indexed.M053.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed056 <- /tmp/a43-generated/Agent29Raw122Indexed056.lean
+'BB6Coverage.Agent29Raw122Indexed.M054.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed057 <- /tmp/a43-generated/Agent29Raw122Indexed057.lean
+'BB6Coverage.Agent29Raw122Indexed.M055.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed058 <- /tmp/a43-generated/Agent29Raw122Indexed058.lean
+'BB6Coverage.Agent29Raw122Indexed.M056.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed059 <- /tmp/a43-generated/Agent29Raw122Indexed059.lean
+'BB6Coverage.Agent29Raw122Indexed.M058.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Agent29Raw122Indexed060 <- /tmp/a43-generated/Agent29Raw122Indexed060.lean
+'BB6Coverage.Agent29Raw122Indexed.M060.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling PackedLate0Base <- /tmp/a43-generated/PackedLate0Base.lean
+'BB6Coverage.Agent29Raw122Indexed.M059.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] compiling Raw122AHole05 <- im-results/agent43-raw122-cut/Raw122AHole05.lean
+[lean-closure] compiling Raw122Pair05 <- im-results/agent43-raw122-cut/Raw122Pair05.lean
+'BB6Coverage.Agent43Raw122AHole05.long4' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent43Raw122AHole05.core_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122AHole05.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent29Raw122Indexed.M057.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122Pair05.long4' depends on axioms: [propext, Quot.sound]
+'BB6Coverage.Agent43Raw122Pair05.core_sound' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent43Raw122Pair05.never' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 5: 308 module(s)
+[lean-closure] compiling PackedLate0Block0000 <- /tmp/a43-generated/PackedLate0Block0000.lean
+[lean-closure] compiling PackedLate0Block0001 <- /tmp/a43-generated/PackedLate0Block0001.lean
+[lean-closure] compiling PackedLate0Block0002 <- /tmp/a43-generated/PackedLate0Block0002.lean
+[lean-closure] compiling PackedLate0Block0003 <- /tmp/a43-generated/PackedLate0Block0003.lean
+[lean-closure] compiling PackedLate0Block0004 <- /tmp/a43-generated/PackedLate0Block0004.lean
+[lean-closure] compiling PackedLate0Block0005 <- /tmp/a43-generated/PackedLate0Block0005.lean
+[lean-closure] compiling PackedLate0Block0006 <- /tmp/a43-generated/PackedLate0Block0006.lean
+[lean-closure] compiling PackedLate0Block0007 <- /tmp/a43-generated/PackedLate0Block0007.lean
+[lean-closure] compiling PackedLate0Block0008 <- /tmp/a43-generated/PackedLate0Block0008.lean
+[lean-closure] compiling PackedLate0Block0009 <- /tmp/a43-generated/PackedLate0Block0009.lean
+[lean-closure] compiling PackedLate0Block0010 <- /tmp/a43-generated/PackedLate0Block0010.lean
+[lean-closure] compiling PackedLate0Block0011 <- /tmp/a43-generated/PackedLate0Block0011.lean
+[lean-closure] compiling PackedLate0Block0012 <- /tmp/a43-generated/PackedLate0Block0012.lean
+[lean-closure] compiling PackedLate0Block0013 <- /tmp/a43-generated/PackedLate0Block0013.lean
+[lean-closure] compiling PackedLate0Block0014 <- /tmp/a43-generated/PackedLate0Block0014.lean
+[lean-closure] compiling PackedLate0Block0015 <- /tmp/a43-generated/PackedLate0Block0015.lean
+[lean-closure] compiling PackedLate0Block0016 <- /tmp/a43-generated/PackedLate0Block0016.lean
+[lean-closure] compiling PackedLate0Block0017 <- /tmp/a43-generated/PackedLate0Block0017.lean
+[lean-closure] compiling PackedLate0Block0018 <- /tmp/a43-generated/PackedLate0Block0018.lean
+[lean-closure] compiling PackedLate0Block0019 <- /tmp/a43-generated/PackedLate0Block0019.lean
+[lean-closure] compiling PackedLate0Block0020 <- /tmp/a43-generated/PackedLate0Block0020.lean
+[lean-closure] compiling PackedLate0Block0021 <- /tmp/a43-generated/PackedLate0Block0021.lean
+[lean-closure] compiling PackedLate0Block0022 <- /tmp/a43-generated/PackedLate0Block0022.lean
+[lean-closure] compiling PackedLate0Block0023 <- /tmp/a43-generated/PackedLate0Block0023.lean
+[lean-closure] compiling PackedLate0Block0024 <- /tmp/a43-generated/PackedLate0Block0024.lean
+[lean-closure] compiling PackedLate0Block0025 <- /tmp/a43-generated/PackedLate0Block0025.lean
+[lean-closure] compiling PackedLate0Block0026 <- /tmp/a43-generated/PackedLate0Block0026.lean
+[lean-closure] compiling PackedLate0Block0027 <- /tmp/a43-generated/PackedLate0Block0027.lean
+[lean-closure] compiling PackedLate0Block0028 <- /tmp/a43-generated/PackedLate0Block0028.lean
+[lean-closure] compiling PackedLate0Block0029 <- /tmp/a43-generated/PackedLate0Block0029.lean
+[lean-closure] compiling PackedLate0Block0030 <- /tmp/a43-generated/PackedLate0Block0030.lean
+[lean-closure] compiling PackedLate0Block0031 <- /tmp/a43-generated/PackedLate0Block0031.lean
+[lean-closure] compiling PackedLate0Block0032 <- /tmp/a43-generated/PackedLate0Block0032.lean
+[lean-closure] compiling PackedLate0Block0033 <- /tmp/a43-generated/PackedLate0Block0033.lean
+[lean-closure] compiling PackedLate0Block0034 <- /tmp/a43-generated/PackedLate0Block0034.lean
+[lean-closure] compiling PackedLate0Block0035 <- /tmp/a43-generated/PackedLate0Block0035.lean
+[lean-closure] compiling PackedLate0Block0036 <- /tmp/a43-generated/PackedLate0Block0036.lean
+[lean-closure] compiling PackedLate0Block0037 <- /tmp/a43-generated/PackedLate0Block0037.lean
+[lean-closure] compiling PackedLate0Block0038 <- /tmp/a43-generated/PackedLate0Block0038.lean
+[lean-closure] compiling PackedLate0Block0039 <- /tmp/a43-generated/PackedLate0Block0039.lean
+[lean-closure] compiling PackedLate0Block0040 <- /tmp/a43-generated/PackedLate0Block0040.lean
+[lean-closure] compiling PackedLate0Block0041 <- /tmp/a43-generated/PackedLate0Block0041.lean
+[lean-closure] compiling PackedLate0Block0042 <- /tmp/a43-generated/PackedLate0Block0042.lean
+[lean-closure] compiling PackedLate0Block0043 <- /tmp/a43-generated/PackedLate0Block0043.lean
+[lean-closure] compiling PackedLate0Block0044 <- /tmp/a43-generated/PackedLate0Block0044.lean
+[lean-closure] compiling PackedLate0Block0045 <- /tmp/a43-generated/PackedLate0Block0045.lean
+[lean-closure] compiling PackedLate0Block0046 <- /tmp/a43-generated/PackedLate0Block0046.lean
+[lean-closure] compiling PackedLate0Block0047 <- /tmp/a43-generated/PackedLate0Block0047.lean
+[lean-closure] compiling PackedLate0Block0048 <- /tmp/a43-generated/PackedLate0Block0048.lean
+[lean-closure] compiling PackedLate0Block0049 <- /tmp/a43-generated/PackedLate0Block0049.lean
+[lean-closure] compiling PackedLate0Block0050 <- /tmp/a43-generated/PackedLate0Block0050.lean
+[lean-closure] compiling PackedLate0Block0051 <- /tmp/a43-generated/PackedLate0Block0051.lean
+[lean-closure] compiling PackedLate0Block0052 <- /tmp/a43-generated/PackedLate0Block0052.lean
+[lean-closure] compiling PackedLate0Block0053 <- /tmp/a43-generated/PackedLate0Block0053.lean
+[lean-closure] compiling PackedLate0Block0054 <- /tmp/a43-generated/PackedLate0Block0054.lean
+[lean-closure] compiling PackedLate0Block0055 <- /tmp/a43-generated/PackedLate0Block0055.lean
+[lean-closure] compiling PackedLate0Block0056 <- /tmp/a43-generated/PackedLate0Block0056.lean
+[lean-closure] compiling PackedLate0Block0057 <- /tmp/a43-generated/PackedLate0Block0057.lean
+[lean-closure] compiling PackedLate0Block0058 <- /tmp/a43-generated/PackedLate0Block0058.lean
+[lean-closure] compiling PackedLate0Block0059 <- /tmp/a43-generated/PackedLate0Block0059.lean
+[lean-closure] compiling PackedLate0Block0060 <- /tmp/a43-generated/PackedLate0Block0060.lean
+[lean-closure] compiling PackedLate0Block0061 <- /tmp/a43-generated/PackedLate0Block0061.lean
+[lean-closure] compiling PackedLate0Block0062 <- /tmp/a43-generated/PackedLate0Block0062.lean
+[lean-closure] compiling PackedLate0Block0063 <- /tmp/a43-generated/PackedLate0Block0063.lean
+[lean-closure] compiling PackedLate0Block0064 <- /tmp/a43-generated/PackedLate0Block0064.lean
+[lean-closure] compiling PackedLate0Block0065 <- /tmp/a43-generated/PackedLate0Block0065.lean
+[lean-closure] compiling PackedLate0Block0066 <- /tmp/a43-generated/PackedLate0Block0066.lean
+[lean-closure] compiling PackedLate0Block0067 <- /tmp/a43-generated/PackedLate0Block0067.lean
+[lean-closure] compiling PackedLate0Block0068 <- /tmp/a43-generated/PackedLate0Block0068.lean
+[lean-closure] compiling PackedLate0Block0069 <- /tmp/a43-generated/PackedLate0Block0069.lean
+[lean-closure] compiling PackedLate0Block0070 <- /tmp/a43-generated/PackedLate0Block0070.lean
+[lean-closure] compiling PackedLate0Block0071 <- /tmp/a43-generated/PackedLate0Block0071.lean
+[lean-closure] compiling PackedLate0Block0072 <- /tmp/a43-generated/PackedLate0Block0072.lean
+[lean-closure] compiling PackedLate0Block0073 <- /tmp/a43-generated/PackedLate0Block0073.lean
+[lean-closure] compiling PackedLate0Block0074 <- /tmp/a43-generated/PackedLate0Block0074.lean
+[lean-closure] compiling PackedLate0Block0075 <- /tmp/a43-generated/PackedLate0Block0075.lean
+[lean-closure] compiling PackedLate0Block0076 <- /tmp/a43-generated/PackedLate0Block0076.lean
+[lean-closure] compiling PackedLate0Block0077 <- /tmp/a43-generated/PackedLate0Block0077.lean
+[lean-closure] compiling PackedLate0Block0078 <- /tmp/a43-generated/PackedLate0Block0078.lean
+[lean-closure] compiling PackedLate0Block0079 <- /tmp/a43-generated/PackedLate0Block0079.lean
+[lean-closure] compiling PackedLate0Block0080 <- /tmp/a43-generated/PackedLate0Block0080.lean
+[lean-closure] compiling PackedLate0Block0081 <- /tmp/a43-generated/PackedLate0Block0081.lean
+[lean-closure] compiling PackedLate0Block0082 <- /tmp/a43-generated/PackedLate0Block0082.lean
+[lean-closure] compiling PackedLate0Block0083 <- /tmp/a43-generated/PackedLate0Block0083.lean
+[lean-closure] compiling PackedLate0Block0084 <- /tmp/a43-generated/PackedLate0Block0084.lean
+[lean-closure] compiling PackedLate0Block0085 <- /tmp/a43-generated/PackedLate0Block0085.lean
+[lean-closure] compiling PackedLate0Block0086 <- /tmp/a43-generated/PackedLate0Block0086.lean
+PackedLate0Block0084.lean:10:41: warning: exponent 257 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0087 <- /tmp/a43-generated/PackedLate0Block0087.lean
+[lean-closure] compiling PackedLate0Block0088 <- /tmp/a43-generated/PackedLate0Block0088.lean
+PackedLate0Block0086.lean:10:41: warning: exponent 263 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0089 <- /tmp/a43-generated/PackedLate0Block0089.lean
+[lean-closure] compiling PackedLate0Block0090 <- /tmp/a43-generated/PackedLate0Block0090.lean
+PackedLate0Block0088.lean:10:41: warning: exponent 265 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0091 <- /tmp/a43-generated/PackedLate0Block0091.lean
+[lean-closure] compiling PackedLate0Block0092 <- /tmp/a43-generated/PackedLate0Block0092.lean
+PackedLate0Block0090.lean:10:41: warning: exponent 267 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0093 <- /tmp/a43-generated/PackedLate0Block0093.lean
+[lean-closure] compiling PackedLate0Block0094 <- /tmp/a43-generated/PackedLate0Block0094.lean
+PackedLate0Block0092.lean:10:41: warning: exponent 269 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0095 <- /tmp/a43-generated/PackedLate0Block0095.lean
+[lean-closure] compiling PackedLate0Block0096 <- /tmp/a43-generated/PackedLate0Block0096.lean
+PackedLate0Block0094.lean:10:41: warning: exponent 277 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0097 <- /tmp/a43-generated/PackedLate0Block0097.lean
+PackedLate0Block0095.lean:10:41: warning: exponent 270 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0098 <- /tmp/a43-generated/PackedLate0Block0098.lean
+[lean-closure] compiling PackedLate0Block0099 <- /tmp/a43-generated/PackedLate0Block0099.lean
+PackedLate0Block0097.lean:10:41: warning: exponent 279 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0100 <- /tmp/a43-generated/PackedLate0Block0100.lean
+[lean-closure] compiling PackedLate0Block0101 <- /tmp/a43-generated/PackedLate0Block0101.lean
+PackedLate0Block0099.lean:10:41: warning: exponent 285 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0102 <- /tmp/a43-generated/PackedLate0Block0102.lean
+[lean-closure] compiling PackedLate0Block0103 <- /tmp/a43-generated/PackedLate0Block0103.lean
+PackedLate0Block0101.lean:10:44: warning: exponent 289 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0104 <- /tmp/a43-generated/PackedLate0Block0104.lean
+[lean-closure] compiling PackedLate0Block0105 <- /tmp/a43-generated/PackedLate0Block0105.lean
+PackedLate0Block0104.lean:10:44: warning: exponent 291 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0106 <- /tmp/a43-generated/PackedLate0Block0106.lean
+PackedLate0Block0102.lean:10:44: warning: exponent 273 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0107 <- /tmp/a43-generated/PackedLate0Block0107.lean
+PackedLate0Block0106.lean:10:44: warning: exponent 297 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0108 <- /tmp/a43-generated/PackedLate0Block0108.lean
+[lean-closure] compiling PackedLate0Block0109 <- /tmp/a43-generated/PackedLate0Block0109.lean
+[lean-closure] compiling PackedLate0Block0110 <- /tmp/a43-generated/PackedLate0Block0110.lean
+[lean-closure] compiling PackedLate0Block0111 <- /tmp/a43-generated/PackedLate0Block0111.lean
+PackedLate0Block0109.lean:10:44: warning: exponent 301 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0112 <- /tmp/a43-generated/PackedLate0Block0112.lean
+[lean-closure] compiling PackedLate0Block0113 <- /tmp/a43-generated/PackedLate0Block0113.lean
+[lean-closure] compiling PackedLate0Block0114 <- /tmp/a43-generated/PackedLate0Block0114.lean
+PackedLate0Block0111.lean:10:44: warning: exponent 307 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0115 <- /tmp/a43-generated/PackedLate0Block0115.lean
+PackedLate0Block0113.lean:10:44: warning: exponent 311 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0116 <- /tmp/a43-generated/PackedLate0Block0116.lean
+[lean-closure] compiling PackedLate0Block0117 <- /tmp/a43-generated/PackedLate0Block0117.lean
+PackedLate0Block0114.lean:10:44: warning: exponent 308 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0118 <- /tmp/a43-generated/PackedLate0Block0118.lean
+PackedLate0Block0116.lean:10:44: warning: exponent 313 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0119 <- /tmp/a43-generated/PackedLate0Block0119.lean
+[lean-closure] compiling PackedLate0Block0120 <- /tmp/a43-generated/PackedLate0Block0120.lean
+[lean-closure] compiling PackedLate0Block0121 <- /tmp/a43-generated/PackedLate0Block0121.lean
+PackedLate0Block0119.lean:10:44: warning: exponent 315 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0122 <- /tmp/a43-generated/PackedLate0Block0122.lean
+PackedLate0Block0121.lean:10:44: warning: exponent 321 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0123 <- /tmp/a43-generated/PackedLate0Block0123.lean
+[lean-closure] compiling PackedLate0Block0124 <- /tmp/a43-generated/PackedLate0Block0124.lean
+PackedLate0Block0122.lean:10:44: warning: exponent 280 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0125 <- /tmp/a43-generated/PackedLate0Block0125.lean
+PackedLate0Block0124.lean:10:44: warning: exponent 325 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0126 <- /tmp/a43-generated/PackedLate0Block0126.lean
+[lean-closure] compiling PackedLate0Block0127 <- /tmp/a43-generated/PackedLate0Block0127.lean
+[lean-closure] compiling PackedLate0Block0128 <- /tmp/a43-generated/PackedLate0Block0128.lean
+PackedLate0Block0126.lean:10:44: warning: exponent 327 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0129 <- /tmp/a43-generated/PackedLate0Block0129.lean
+PackedLate0Block0127.lean:10:44: warning: exponent 318 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0130 <- /tmp/a43-generated/PackedLate0Block0130.lean
+[lean-closure] compiling PackedLate0Block0131 <- /tmp/a43-generated/PackedLate0Block0131.lean
+PackedLate0Block0129.lean:10:44: warning: exponent 333 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0132 <- /tmp/a43-generated/PackedLate0Block0132.lean
+PackedLate0Block0130.lean:10:44: warning: exponent 289 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0133 <- /tmp/a43-generated/PackedLate0Block0133.lean
+[lean-closure] compiling PackedLate0Block0134 <- /tmp/a43-generated/PackedLate0Block0134.lean
+PackedLate0Block0132.lean:10:44: warning: exponent 337 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0135 <- /tmp/a43-generated/PackedLate0Block0135.lean
+[lean-closure] compiling PackedLate0Block0136 <- /tmp/a43-generated/PackedLate0Block0136.lean
+PackedLate0Block0133.lean:10:44: warning: exponent 259 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0137 <- /tmp/a43-generated/PackedLate0Block0137.lean
+PackedLate0Block0135.lean:10:44: warning: exponent 343 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0138 <- /tmp/a43-generated/PackedLate0Block0138.lean
+[lean-closure] compiling PackedLate0Block0139 <- /tmp/a43-generated/PackedLate0Block0139.lean
+PackedLate0Block0137.lean:10:44: warning: exponent 347 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0140 <- /tmp/a43-generated/PackedLate0Block0140.lean
+PackedLate0Block0138.lean:10:44: warning: exponent 333 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0141 <- /tmp/a43-generated/PackedLate0Block0141.lean
+PackedLate0Block0140.lean:10:44: warning: exponent 349 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0142 <- /tmp/a43-generated/PackedLate0Block0142.lean
+[lean-closure] compiling PackedLate0Block0143 <- /tmp/a43-generated/PackedLate0Block0143.lean
+PackedLate0Block0141.lean:10:44: warning: exponent 312 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0144 <- /tmp/a43-generated/PackedLate0Block0144.lean
+PackedLate0Block0143.lean:10:44: warning: exponent 351 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0145 <- /tmp/a43-generated/PackedLate0Block0145.lean
+[lean-closure] compiling PackedLate0Block0146 <- /tmp/a43-generated/PackedLate0Block0146.lean
+PackedLate0Block0144.lean:10:44: warning: exponent 294 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0147 <- /tmp/a43-generated/PackedLate0Block0147.lean
+[lean-closure] compiling PackedLate0Block0148 <- /tmp/a43-generated/PackedLate0Block0148.lean
+PackedLate0Block0146.lean:10:44: warning: exponent 357 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0149 <- /tmp/a43-generated/PackedLate0Block0149.lean
+PackedLate0Block0147.lean:10:44: warning: exponent 287 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0150 <- /tmp/a43-generated/PackedLate0Block0150.lean
+[lean-closure] compiling PackedLate0Block0151 <- /tmp/a43-generated/PackedLate0Block0151.lean
+PackedLate0Block0149.lean:10:44: warning: exponent 361 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0152 <- /tmp/a43-generated/PackedLate0Block0152.lean
+PackedLate0Block0150.lean:10:44: warning: exponent 283 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0153 <- /tmp/a43-generated/PackedLate0Block0153.lean
+[lean-closure] compiling PackedLate0Block0154 <- /tmp/a43-generated/PackedLate0Block0154.lean
+PackedLate0Block0152.lean:10:44: warning: exponent 363 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0155 <- /tmp/a43-generated/PackedLate0Block0155.lean
+PackedLate0Block0153.lean:10:44: warning: exponent 277 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0156 <- /tmp/a43-generated/PackedLate0Block0156.lean
+[lean-closure] compiling PackedLate0Block0157 <- /tmp/a43-generated/PackedLate0Block0157.lean
+PackedLate0Block0155.lean:10:44: warning: exponent 369 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0158 <- /tmp/a43-generated/PackedLate0Block0158.lean
+PackedLate0Block0156.lean:10:44: warning: exponent 278 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0159 <- /tmp/a43-generated/PackedLate0Block0159.lean
+[lean-closure] compiling PackedLate0Block0160 <- /tmp/a43-generated/PackedLate0Block0160.lean
+PackedLate0Block0158.lean:10:44: warning: exponent 371 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0161 <- /tmp/a43-generated/PackedLate0Block0161.lean
+PackedLate0Block0159.lean:10:44: warning: exponent 282 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0162 <- /tmp/a43-generated/PackedLate0Block0162.lean
+[lean-closure] compiling PackedLate0Block0163 <- /tmp/a43-generated/PackedLate0Block0163.lean
+PackedLate0Block0161.lean:10:44: warning: exponent 373 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0164 <- /tmp/a43-generated/PackedLate0Block0164.lean
+PackedLate0Block0162.lean:10:44: warning: exponent 293 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0165 <- /tmp/a43-generated/PackedLate0Block0165.lean
+[lean-closure] compiling PackedLate0Block0166 <- /tmp/a43-generated/PackedLate0Block0166.lean
+PackedLate0Block0164.lean:10:44: warning: exponent 375 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0167 <- /tmp/a43-generated/PackedLate0Block0167.lean
+PackedLate0Block0165.lean:10:44: warning: exponent 298 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0168 <- /tmp/a43-generated/PackedLate0Block0168.lean
+[lean-closure] compiling PackedLate0Block0169 <- /tmp/a43-generated/PackedLate0Block0169.lean
+PackedLate0Block0167.lean:10:44: warning: exponent 377 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0170 <- /tmp/a43-generated/PackedLate0Block0170.lean
+PackedLate0Block0168.lean:10:44: warning: exponent 317 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0171 <- /tmp/a43-generated/PackedLate0Block0171.lean
+[lean-closure] compiling PackedLate0Block0172 <- /tmp/a43-generated/PackedLate0Block0172.lean
+PackedLate0Block0170.lean:10:44: warning: exponent 383 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0173 <- /tmp/a43-generated/PackedLate0Block0173.lean
+PackedLate0Block0171.lean:10:44: warning: exponent 338 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0174 <- /tmp/a43-generated/PackedLate0Block0174.lean
+[lean-closure] compiling PackedLate0Block0175 <- /tmp/a43-generated/PackedLate0Block0175.lean
+PackedLate0Block0173.lean:10:44: warning: exponent 385 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0176 <- /tmp/a43-generated/PackedLate0Block0176.lean
+PackedLate0Block0174.lean:10:44: warning: exponent 355 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0177 <- /tmp/a43-generated/PackedLate0Block0177.lean
+[lean-closure] compiling PackedLate0Block0178 <- /tmp/a43-generated/PackedLate0Block0178.lean
+PackedLate0Block0176.lean:10:44: warning: exponent 387 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0179 <- /tmp/a43-generated/PackedLate0Block0179.lean
+PackedLate0Block0178.lean:10:44: warning: exponent 257 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0180 <- /tmp/a43-generated/PackedLate0Block0180.lean
+PackedLate0Block0177.lean:10:44: warning: exponent 377 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0181 <- /tmp/a43-generated/PackedLate0Block0181.lean
+PackedLate0Block0180.lean:10:44: warning: exponent 397 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0182 <- /tmp/a43-generated/PackedLate0Block0182.lean
+[lean-closure] compiling PackedLate0Block0183 <- /tmp/a43-generated/PackedLate0Block0183.lean
+PackedLate0Block0181.lean:10:44: warning: exponent 285 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0184 <- /tmp/a43-generated/PackedLate0Block0184.lean
+[lean-closure] compiling PackedLate0Block0185 <- /tmp/a43-generated/PackedLate0Block0185.lean
+PackedLate0Block0183.lean:10:44: warning: exponent 399 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0186 <- /tmp/a43-generated/PackedLate0Block0186.lean
+PackedLate0Block0184.lean:10:44: warning: exponent 315 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0187 <- /tmp/a43-generated/PackedLate0Block0187.lean
+[lean-closure] compiling PackedLate0Block0188 <- /tmp/a43-generated/PackedLate0Block0188.lean
+PackedLate0Block0186.lean:10:44: warning: exponent 401 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0189 <- /tmp/a43-generated/PackedLate0Block0189.lean
+PackedLate0Block0187.lean:10:44: warning: exponent 351 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0190 <- /tmp/a43-generated/PackedLate0Block0190.lean
+[lean-closure] compiling PackedLate0Block0191 <- /tmp/a43-generated/PackedLate0Block0191.lean
+PackedLate0Block0189.lean:10:44: warning: exponent 409 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0192 <- /tmp/a43-generated/PackedLate0Block0192.lean
+PackedLate0Block0190.lean:10:44: warning: exponent 392 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0193 <- /tmp/a43-generated/PackedLate0Block0193.lean
+PackedLate0Block0191.lean:10:44: warning: exponent 270 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0194 <- /tmp/a43-generated/PackedLate0Block0194.lean
+[lean-closure] compiling PackedLate0Block0195 <- /tmp/a43-generated/PackedLate0Block0195.lean
+PackedLate0Block0193.lean:10:44: warning: exponent 411 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0196 <- /tmp/a43-generated/PackedLate0Block0196.lean
+PackedLate0Block0194.lean:10:44: warning: exponent 318 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0197 <- /tmp/a43-generated/PackedLate0Block0197.lean
+[lean-closure] compiling PackedLate0Block0198 <- /tmp/a43-generated/PackedLate0Block0198.lean
+PackedLate0Block0196.lean:10:44: warning: exponent 417 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0199 <- /tmp/a43-generated/PackedLate0Block0199.lean
+PackedLate0Block0197.lean:10:44: warning: exponent 369 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0200 <- /tmp/a43-generated/PackedLate0Block0200.lean
+[lean-closure] compiling PackedLate0Block0201 <- /tmp/a43-generated/PackedLate0Block0201.lean
+[lean-closure] compiling PackedLate0Block0202 <- /tmp/a43-generated/PackedLate0Block0202.lean
+PackedLate0Block0200.lean:10:44: warning: exponent 421 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0203 <- /tmp/a43-generated/PackedLate0Block0203.lean
+PackedLate0Block0201.lean:10:44: warning: exponent 299 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0204 <- /tmp/a43-generated/PackedLate0Block0204.lean
+[lean-closure] compiling PackedLate0Block0205 <- /tmp/a43-generated/PackedLate0Block0205.lean
+PackedLate0Block0203.lean:10:44: warning: exponent 423 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0206 <- /tmp/a43-generated/PackedLate0Block0206.lean
+PackedLate0Block0204.lean:10:44: warning: exponent 353 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0207 <- /tmp/a43-generated/PackedLate0Block0207.lean
+[lean-closure] compiling PackedLate0Block0208 <- /tmp/a43-generated/PackedLate0Block0208.lean
+PackedLate0Block0206.lean:10:44: warning: exponent 429 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0209 <- /tmp/a43-generated/PackedLate0Block0209.lean
+PackedLate0Block0207.lean:10:44: warning: exponent 415 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0210 <- /tmp/a43-generated/PackedLate0Block0210.lean
+PackedLate0Block0208.lean:10:44: warning: exponent 290 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0211 <- /tmp/a43-generated/PackedLate0Block0211.lean
+[lean-closure] compiling PackedLate0Block0212 <- /tmp/a43-generated/PackedLate0Block0212.lean
+PackedLate0Block0210.lean:10:44: warning: exponent 433 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0213 <- /tmp/a43-generated/PackedLate0Block0213.lean
+PackedLate0Block0211.lean:10:44: warning: exponent 361 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0214 <- /tmp/a43-generated/PackedLate0Block0214.lean
+[lean-closure] compiling PackedLate0Block0215 <- /tmp/a43-generated/PackedLate0Block0215.lean
+PackedLate0Block0213.lean:10:44: warning: exponent 435 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0216 <- /tmp/a43-generated/PackedLate0Block0216.lean
+PackedLate0Block0214.lean:10:44: warning: exponent 426 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0217 <- /tmp/a43-generated/PackedLate0Block0217.lean
+[lean-closure] compiling PackedLate0Block0218 <- /tmp/a43-generated/PackedLate0Block0218.lean
+PackedLate0Block0215.lean:10:44: warning: exponent 304 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0219 <- /tmp/a43-generated/PackedLate0Block0219.lean
+PackedLate0Block0217.lean:10:44: warning: exponent 445 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0220 <- /tmp/a43-generated/PackedLate0Block0220.lean
+PackedLate0Block0218.lean:10:44: warning: exponent 380 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0221 <- /tmp/a43-generated/PackedLate0Block0221.lean
+PackedLate0Block0219.lean:10:44: warning: exponent 261 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0222 <- /tmp/a43-generated/PackedLate0Block0222.lean
+[lean-closure] compiling PackedLate0Block0223 <- /tmp/a43-generated/PackedLate0Block0223.lean
+PackedLate0Block0221.lean:10:44: warning: exponent 447 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0224 <- /tmp/a43-generated/PackedLate0Block0224.lean
+PackedLate0Block0222.lean:10:44: warning: exponent 341 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0225 <- /tmp/a43-generated/PackedLate0Block0225.lean
+[lean-closure] compiling PackedLate0Block0226 <- /tmp/a43-generated/PackedLate0Block0226.lean
+PackedLate0Block0225.lean:10:44: warning: exponent 422 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0227 <- /tmp/a43-generated/PackedLate0Block0227.lean
+PackedLate0Block0224.lean:10:44: warning: exponent 449 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0228 <- /tmp/a43-generated/PackedLate0Block0228.lean
+PackedLate0Block0226.lean:10:44: warning: exponent 301 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0229 <- /tmp/a43-generated/PackedLate0Block0229.lean
+[lean-closure] compiling PackedLate0Block0230 <- /tmp/a43-generated/PackedLate0Block0230.lean
+PackedLate0Block0228.lean:10:44: warning: exponent 455 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0231 <- /tmp/a43-generated/PackedLate0Block0231.lean
+PackedLate0Block0229.lean:10:44: warning: exponent 389 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0232 <- /tmp/a43-generated/PackedLate0Block0232.lean
+PackedLate0Block0230.lean:10:44: warning: exponent 270 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0233 <- /tmp/a43-generated/PackedLate0Block0233.lean
+[lean-closure] compiling PackedLate0Block0234 <- /tmp/a43-generated/PackedLate0Block0234.lean
+PackedLate0Block0232.lean:10:44: warning: exponent 457 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0235 <- /tmp/a43-generated/PackedLate0Block0235.lean
+[lean-closure] compiling PackedLate0Block0236 <- /tmp/a43-generated/PackedLate0Block0236.lean
+PackedLate0Block0233.lean:10:44: warning: exponent 364 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0237 <- /tmp/a43-generated/PackedLate0Block0237.lean
+PackedLate0Block0235.lean:10:44: warning: exponent 459 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0238 <- /tmp/a43-generated/PackedLate0Block0238.lean
+PackedLate0Block0236.lean:10:44: warning: exponent 454 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0239 <- /tmp/a43-generated/PackedLate0Block0239.lean
+PackedLate0Block0237.lean:10:44: warning: exponent 332 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0240 <- /tmp/a43-generated/PackedLate0Block0240.lean
+[lean-closure] compiling PackedLate0Block0241 <- /tmp/a43-generated/PackedLate0Block0241.lean
+PackedLate0Block0239.lean:10:44: warning: exponent 465 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0242 <- /tmp/a43-generated/PackedLate0Block0242.lean
+PackedLate0Block0240.lean:10:44: warning: exponent 433 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0243 <- /tmp/a43-generated/PackedLate0Block0243.lean
+PackedLate0Block0241.lean:10:44: warning: exponent 310 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0244 <- /tmp/a43-generated/PackedLate0Block0244.lean
+[lean-closure] compiling PackedLate0Block0245 <- /tmp/a43-generated/PackedLate0Block0245.lean
+PackedLate0Block0243.lean:10:44: warning: exponent 469 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0246 <- /tmp/a43-generated/PackedLate0Block0246.lean
+PackedLate0Block0244.lean:10:44: warning: exponent 410 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0247 <- /tmp/a43-generated/PackedLate0Block0247.lean
+PackedLate0Block0245.lean:10:44: warning: exponent 291 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0248 <- /tmp/a43-generated/PackedLate0Block0248.lean
+[lean-closure] compiling PackedLate0Block0249 <- /tmp/a43-generated/PackedLate0Block0249.lean
+PackedLate0Block0247.lean:10:44: warning: exponent 471 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0250 <- /tmp/a43-generated/PackedLate0Block0250.lean
+PackedLate0Block0248.lean:10:44: warning: exponent 392 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0251 <- /tmp/a43-generated/PackedLate0Block0251.lean
+PackedLate0Block0249.lean:10:44: warning: exponent 273 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0252 <- /tmp/a43-generated/PackedLate0Block0252.lean
+[lean-closure] compiling PackedLate0Block0253 <- /tmp/a43-generated/PackedLate0Block0253.lean
+PackedLate0Block0251.lean:10:44: warning: exponent 477 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0254 <- /tmp/a43-generated/PackedLate0Block0254.lean
+PackedLate0Block0252.lean:10:44: warning: exponent 382 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0255 <- /tmp/a43-generated/PackedLate0Block0255.lean
+PackedLate0Block0253.lean:10:44: warning: exponent 260 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0256 <- /tmp/a43-generated/PackedLate0Block0256.lean
+[lean-closure] compiling PackedLate0Block0257 <- /tmp/a43-generated/PackedLate0Block0257.lean
+PackedLate0Block0255.lean:10:44: warning: exponent 481 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0258 <- /tmp/a43-generated/PackedLate0Block0258.lean
+PackedLate0Block0256.lean:10:44: warning: exponent 375 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0259 <- /tmp/a43-generated/PackedLate0Block0259.lean
+[lean-closure] compiling PackedLate0Block0260 <- /tmp/a43-generated/PackedLate0Block0260.lean
+[lean-closure] compiling PackedLate0Block0261 <- /tmp/a43-generated/PackedLate0Block0261.lean
+PackedLate0Block0259.lean:10:44: warning: exponent 487 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0262 <- /tmp/a43-generated/PackedLate0Block0262.lean
+PackedLate0Block0260.lean:10:44: warning: exponent 375 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0263 <- /tmp/a43-generated/PackedLate0Block0263.lean
+[lean-closure] compiling PackedLate0Block0264 <- /tmp/a43-generated/PackedLate0Block0264.lean
+[lean-closure] compiling PackedLate0Block0265 <- /tmp/a43-generated/PackedLate0Block0265.lean
+PackedLate0Block0263.lean:10:44: warning: exponent 489 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0266 <- /tmp/a43-generated/PackedLate0Block0266.lean
+PackedLate0Block0264.lean:10:44: warning: exponent 375 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0267 <- /tmp/a43-generated/PackedLate0Block0267.lean
+[lean-closure] compiling PackedLate0Block0268 <- /tmp/a43-generated/PackedLate0Block0268.lean
+[lean-closure] compiling PackedLate0Block0269 <- /tmp/a43-generated/PackedLate0Block0269.lean
+PackedLate0Block0267.lean:10:44: warning: exponent 493 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0270 <- /tmp/a43-generated/PackedLate0Block0270.lean
+PackedLate0Block0268.lean:10:44: warning: exponent 379 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0271 <- /tmp/a43-generated/PackedLate0Block0271.lean
+PackedLate0Block0269.lean:10:44: warning: exponent 257 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0272 <- /tmp/a43-generated/PackedLate0Block0272.lean
+[lean-closure] compiling PackedLate0Block0273 <- /tmp/a43-generated/PackedLate0Block0273.lean
+PackedLate0Block0271.lean:10:44: warning: exponent 495 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0274 <- /tmp/a43-generated/PackedLate0Block0274.lean
+PackedLate0Block0272.lean:10:44: warning: exponent 383 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0275 <- /tmp/a43-generated/PackedLate0Block0275.lean
+PackedLate0Block0273.lean:10:44: warning: exponent 261 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0276 <- /tmp/a43-generated/PackedLate0Block0276.lean
+[lean-closure] compiling PackedLate0Block0277 <- /tmp/a43-generated/PackedLate0Block0277.lean
+PackedLate0Block0275.lean:10:44: warning: exponent 497 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0278 <- /tmp/a43-generated/PackedLate0Block0278.lean
+PackedLate0Block0276.lean:10:44: warning: exponent 388 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0279 <- /tmp/a43-generated/PackedLate0Block0279.lean
+PackedLate0Block0277.lean:10:44: warning: exponent 268 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0280 <- /tmp/a43-generated/PackedLate0Block0280.lean
+[lean-closure] compiling PackedLate0Block0281 <- /tmp/a43-generated/PackedLate0Block0281.lean
+PackedLate0Block0279.lean:10:44: warning: exponent 503 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0282 <- /tmp/a43-generated/PackedLate0Block0282.lean
+PackedLate0Block0281.lean:10:44: warning: exponent 283 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0283 <- /tmp/a43-generated/PackedLate0Block0283.lean
+PackedLate0Block0280.lean:10:44: warning: exponent 404 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0284 <- /tmp/a43-generated/PackedLate0Block0284.lean
+[lean-closure] compiling PackedLate0Block0285 <- /tmp/a43-generated/PackedLate0Block0285.lean
+PackedLate0Block0283.lean:10:44: warning: exponent 505 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0286 <- /tmp/a43-generated/PackedLate0Block0286.lean
+PackedLate0Block0284.lean:10:44: warning: exponent 419 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0287 <- /tmp/a43-generated/PackedLate0Block0287.lean
+PackedLate0Block0285.lean:10:44: warning: exponent 296 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0288 <- /tmp/a43-generated/PackedLate0Block0288.lean
+[lean-closure] compiling PackedLate0Block0289 <- /tmp/a43-generated/PackedLate0Block0289.lean
+PackedLate0Block0287.lean:10:44: warning: exponent 507 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0290 <- /tmp/a43-generated/PackedLate0Block0290.lean
+PackedLate0Block0288.lean:10:44: warning: exponent 437 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0291 <- /tmp/a43-generated/PackedLate0Block0291.lean
+PackedLate0Block0289.lean:10:44: warning: exponent 314 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0292 <- /tmp/a43-generated/PackedLate0Block0292.lean
+[lean-closure] compiling PackedLate0Block0293 <- /tmp/a43-generated/PackedLate0Block0293.lean
+PackedLate0Block0292.lean:10:44: warning: exponent 456 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0294 <- /tmp/a43-generated/PackedLate0Block0294.lean
+PackedLate0Block0291.lean:10:44: warning: exponent 509 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0295 <- /tmp/a43-generated/PackedLate0Block0295.lean
+PackedLate0Block0293.lean:10:44: warning: exponent 335 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0296 <- /tmp/a43-generated/PackedLate0Block0296.lean
+PackedLate0Block0295.lean:10:44: warning: exponent 515 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0297 <- /tmp/a43-generated/PackedLate0Block0297.lean
+[lean-closure] compiling PackedLate0Block0298 <- /tmp/a43-generated/PackedLate0Block0298.lean
+PackedLate0Block0296.lean:10:44: warning: exponent 484 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0299 <- /tmp/a43-generated/PackedLate0Block0299.lean
+[lean-closure] compiling PackedLate0Block0300 <- /tmp/a43-generated/PackedLate0Block0300.lean
+PackedLate0Block0297.lean:10:44: warning: exponent 365 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0301 <- /tmp/a43-generated/PackedLate0Block0301.lean
+PackedLate0Block0299.lean:10:44: warning: exponent 517 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0302 <- /tmp/a43-generated/PackedLate0Block0302.lean
+PackedLate0Block0301.lean:10:44: warning: exponent 389 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0303 <- /tmp/a43-generated/PackedLate0Block0303.lean
+PackedLate0Block0300.lean:10:44: warning: exponent 512 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0304 <- /tmp/a43-generated/PackedLate0Block0304.lean
+PackedLate0Block0302.lean:10:44: warning: exponent 270 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling PackedLate0Block0305 <- /tmp/a43-generated/PackedLate0Block0305.lean
+[lean-closure] compiling PackedLate0Block0306 <- /tmp/a43-generated/PackedLate0Block0306.lean
+PackedLate0Block0304.lean:10:44: warning: exponent 519 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+[lean-closure] compiling Raw122Roster05Witnesses <- im-results/agent43-raw122-cut/Raw122Roster05Witnesses.lean
+PackedLate0Block0305.lean:10:44: warning: exponent 425 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+PackedLate0Block0306.lean:10:44: warning: exponent 307 exceeds the threshold 256, exponentiation operation was not evaluated, use `set_option exponentiation.threshold <num>` to set a new threshold
+'BB6.Agent43Raw122Roster.witnesses05' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 6: 1 module(s)
+[lean-closure] compiling PackedLate0Join000 <- /tmp/a43-generated/PackedLate0Join000.lean
+[lean-closure] level 7: 1 module(s)
+[lean-closure] compiling PackedLate0Join001 <- /tmp/a43-generated/PackedLate0Join001.lean
+[lean-closure] level 8: 1 module(s)
+[lean-closure] compiling PackedLate0Join002 <- /tmp/a43-generated/PackedLate0Join002.lean
+[lean-closure] level 9: 1 module(s)
+[lean-closure] compiling PackedLate0Join003 <- /tmp/a43-generated/PackedLate0Join003.lean
+[lean-closure] level 10: 1 module(s)
+[lean-closure] compiling PackedLate0Join004 <- /tmp/a43-generated/PackedLate0Join004.lean
+[lean-closure] level 11: 1 module(s)
+[lean-closure] compiling PackedLate0Join005 <- /tmp/a43-generated/PackedLate0Join005.lean
+[lean-closure] level 12: 1 module(s)
+[lean-closure] compiling PackedLate0Join006 <- /tmp/a43-generated/PackedLate0Join006.lean
+[lean-closure] level 13: 1 module(s)
+[lean-closure] compiling PackedLate0Join007 <- /tmp/a43-generated/PackedLate0Join007.lean
+[lean-closure] level 14: 1 module(s)
+[lean-closure] compiling PackedLate0Join008 <- /tmp/a43-generated/PackedLate0Join008.lean
+[lean-closure] level 15: 1 module(s)
+[lean-closure] compiling PackedLate0Join009 <- /tmp/a43-generated/PackedLate0Join009.lean
+[lean-closure] level 16: 1 module(s)
+[lean-closure] compiling PackedLate0 <- /tmp/a43-generated/PackedLate0.lean
+'BB6Coverage.Agent29PackedLate.M0.exact_run' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 17: 1 module(s)
+[lean-closure] compiling LateCheck0 <- /tmp/a43-generated/LateCheck0.lean
+'BB6Coverage.Agent29PackedLate.M0.last_check' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6Coverage.Agent29PackedLate.M0.bound' depends on axioms: [propext, Classical.choice, Quot.sound]
+[lean-closure] level 18: 1 module(s)
+[lean-closure] compiling Raw122Recovered05 <- /tmp/a43-generated/Raw122Recovered05.lean
+'BB6.Agent43Raw122Recovered05.cover05' depends on axioms: [propext, Classical.choice, Quot.sound]
+'BB6.Agent43Raw122Recovered05.residual_count' depends on axioms: [propext]
+[lean-closure] SUCCESS: compiled 839 project modules from 1 root(s) into /tmp/a43-final
+[lean-closure] wrote manifest for 839 modules to /tmp/a43-final/manifest.json
