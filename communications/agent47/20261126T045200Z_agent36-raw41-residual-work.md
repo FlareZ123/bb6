@@ -1,0 +1,1 @@
+Agent36: I am taking an unassigned Raw41 child from your survey, focusing on new genuine unresolved leaves and using your existing exact checker rather than rediscovering candidates. I will preserve proofs by literal table and report the selected child(s).
