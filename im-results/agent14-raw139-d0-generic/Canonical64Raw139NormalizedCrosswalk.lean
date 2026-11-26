@@ -80,6 +80,9 @@ def e0LCD0RCC1ZeroLF : PartialMachine :=
   fromCodes [7,24,11,24,14,20,9,16,8,11,24,24]
 def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
 
+def candidateParentTables : List PartialMachine :=
+  [e0LCTable, e0LCD0RCParent, e0RETable]
+
 /-- A finite crosswalk can discharge every active row covered by at least one
     normalized residual Cover. -/
 theorem activeCoveredByNormalized_cover (B : Nat)
@@ -109,6 +112,50 @@ theorem activeRows_cover_from_normalized_and_complement (B : Nat)
       apply List.mem_filter.mpr
       exact ⟨he, by simp [activeUncoveredByNormalized, hAnyFalse]⟩
     exact hRest e hUncovered
+
+/-- Active rows not already subsumed by any table in a finite list of
+    source-accepted parent Covers. -/
+def activeRowsNotCoveredByParents (parents : List PartialMachine) :
+    List (List Move × PartialMachine) :=
+  activeRows.filter (fun e =>
+    !(parents.any (fun p => extendsTable p e.2)))
+
+/-- A finite family of parent Covers discharges every active row that refines
+    at least one parent; only the explicit complement needs separate Covers. -/
+theorem activeRows_cover_from_parents_and_complement (B : Nat)
+    (parents : List PartialMachine)
+    (hParents : ∀ p ∈ parents, Cover (WeightedBound B) p)
+    (hRest : ∀ e ∈ activeRowsNotCoveredByParents parents,
+      Cover (WeightedBound B) e.2) :
+    ∀ e ∈ activeRows, Cover (WeightedBound B) e.2 := by
+  intro e he
+  by_cases hCovered : parents.any (fun p => extendsTable p e.2) = true
+  · obtain ⟨p, hp, hExt⟩ := List.any_eq_true.mp hCovered
+    exact cover_of_extends (hParents p hp) (extendsTable_sound hExt)
+  · have hAnyFalse : parents.any (fun p => extendsTable p e.2) = false := by
+      cases hAny : parents.any (fun p => extendsTable p e.2) with
+      | false => rfl
+      | true => exact (hCovered hAny).elim
+    have hUncovered : e ∈ activeRowsNotCoveredByParents parents := by
+      apply List.mem_filter.mpr
+      exact ⟨he, by simp [activeRowsNotCoveredByParents, hAnyFalse]⟩
+    exact hRest e hUncovered
+
+/-- Global conditional interface for any finite collection of parent Covers. -/
+theorem exact_at_target_with_parent_list_and_complement
+    (hOther : ∀ e ∈ roster64,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (parents : List PartialMachine)
+    (hParents : ∀ p ∈ parents,
+      Cover (WeightedBound (proposedTM63Moves + 7)) p)
+    (hRest : ∀ e ∈ activeRowsNotCoveredByParents parents,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent14Canonical64Raw139Subcover.exact_at_target_with_raw139_subcover
+    hOther
+    (activeRows_cover_from_parents_and_complement
+      (proposedTM63Moves + 7) parents hParents hRest)
 
 /-- Strongest possible case: every active 79-leaf is a refinement of one of
     the 66 normalized residual tables. -/
@@ -168,6 +215,7 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval (activeRows.filter (fun e => extendsTable e0LCD0RCC1ZeroLF e.2)).map (fun e => e.1)
 #eval (activeRows.filter (fun e => sameTable e.2 e0RETable)).length
 #eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
+#eval (activeRowsNotCoveredByParents candidateParentTables).length
 
 #print axioms compatible_of_extends
 #print axioms cover_of_extends
@@ -175,5 +223,7 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #print axioms activeRows_cover_from_normalized
 #print axioms exact_at_target_with_normalized_and_complement
 #print axioms exact_at_target_with_normalized_if_crosswalk
+#print axioms activeRows_cover_from_parents_and_complement
+#print axioms exact_at_target_with_parent_list_and_complement
 
 end BB6.Agent14Canonical64Raw139Crosswalk
