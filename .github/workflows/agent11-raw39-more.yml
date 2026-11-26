@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts]
         required: true
 permissions:
   contents: write
@@ -497,3 +497,32 @@ jobs:
           path: /tmp/a11-semantic-complete/
           if-no-files-found: error
           retention-days: 30
+
+  inspect_1le:
+    if: ${{ inputs.branch == 'inspect-1LE-holdouts' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Extract exact residual tables and known F1 sweep variants
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import base64, json, lzma
+          from pathlib import Path
+          root = Path('im-results/agent11-raw39')
+          data = json.loads(lzma.decompress(base64.b64decode((root/'1LE-frontier.json.xz.b64').read_text())))
+          wanted = {180, 5777, 5779, 5787}
+          selected = [row for row in data['residual'] if row[0] in wanted]
+          print('FRONTIER_KEYS', sorted(data.keys()))
+          print('RESIDUAL_COUNT', len(data['residual']))
+          for row in selected:
+              print('HOLDOUT', repr(row))
+          assert {row[0] for row in selected} == wanted, (wanted, {row[0] for row in selected})
+          packed = json.loads(lzma.decompress(base64.b64decode((root/'Raw391LESweeps.json.xz.b64').read_text())))
+          for name, source in sorted(packed.items()):
+              print('KNOWN_MODULE', name)
+              for line in source.splitlines():
+                  if '5,true' in line or '5, true' in line:
+                      print('KNOWN_F1', line.strip())
+          PY
