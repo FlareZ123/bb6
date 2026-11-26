@@ -34,7 +34,7 @@ jobs:
           if [[ "$CHILD" == bridge ]]; then
             DIR=im-results/agent1-raw57
             ROOT=Raw57ParentBridge
-          elif [[ "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
+          elif [[ "$CHILD" == 1LA || "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
             DIR=im-results/agent1-raw57
             python "$DIR/generate_sibling.py" "$CHILD"
             ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
