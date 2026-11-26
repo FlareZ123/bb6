@@ -36,6 +36,12 @@ for src in source.glob("*.lean"):
         continue
     shutil.copy2(src,cut/src.name)
     shutil.copy2(src,out/src.name)
+if parent_core:
+    for name in ("Raw122Branch00.lean","Raw122Branch05.lean","Raw122Branch16.lean","Raw122Branch17.lean"):
+        original=cut/name
+        if original.exists():
+            original.unlink()
+            print(f"removed superseded original-source module {original.relative_to(root)}; nested Cover module is authoritative",flush=True)
 env=os.environ.copy()
 env["LEAN_PATH"]=str(out)
 log_path=out/"audit.log"
