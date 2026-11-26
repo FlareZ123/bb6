@@ -473,7 +473,7 @@ jobs:
             --theorem "$theorem" \
             --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LC_------" \
             --weighted-bound 100000 \
-            --artifact-name "raw112-closed-parent-cover-reused" \
+            --artifact-name "raw112-closed-parent-cover" \
             --provenance-input "$root/generate.py" \
             --provenance-input "$root/symbolic.py" \
             --provenance-input "$root/enumerate_fast.cpp" \
@@ -528,7 +528,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw112-closed-parent-cover-reused
+          name: raw112-closed-parent-cover
           path: |
             /tmp/a47-raw112-shards/
             /tmp/a47-raw112-union/
