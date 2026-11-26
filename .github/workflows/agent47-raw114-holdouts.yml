@@ -214,7 +214,14 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-      - name: Compile 33 extra Covers and q0 parents 33, 49 and 51
+      - name: Generate Raw11 extra parent 92 and 124 Covers
+        run: |
+          set -euo pipefail
+          node im-results/agent47-raw11-adapter/generate-raw11-extra-external.cjs
+          test -s im-results/agent47-raw11-adapter/Raw11Extra92.lean
+          test -s im-results/agent47-raw11-adapter/Raw11Extra124.lean
+          cat im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
+      - name: Compile 35 extra Covers and q0 parents 33, 49 and 51
         run: |
           set -euo pipefail
           provenance=(
@@ -222,6 +229,26 @@ jobs:
             --provenance-input im-results/agent13-coverage/unpack.py
             --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64
             --provenance-input im-results/agent47-raw11-adapter/raw11-extra.json
+            --provenance-input im-results/agent47-raw11-adapter/raw11-route.json
+            --provenance-input im-results/agent47-raw11-adapter/generate-raw11-extra.cjs
+            --provenance-input im-results/agent47-raw11-adapter/generate-raw11-extra-external.cjs
+            --provenance-input im-results/agent47-raw11-adapter/generate-q0-lean.cjs
+            --provenance-input im-results/agent47-raw11-adapter/Raw11ExtraExternalLeaves.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra92.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Extra124.lean
+            --provenance-input im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
+            --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraFamily.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraFamilySeed.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraFamilyCoverage.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraSweep.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Raw11ExtraSweepCoverage.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Root56.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Root56Coverage.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-extra-92-witness.json
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-extra-124-witness.json
+            --provenance-input im-results/agent5-weighted-tnf-queue/coarse-pair.cjs
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-source-mitm-cert.cjs
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-open-automata.json
             --provenance-input im-results/agent47-raw11-adapter/Raw11ExtraSmall.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra91.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra123.lean
@@ -270,5 +297,8 @@ jobs:
             /tmp/a47-raw11-root52-known.log
             /tmp/a47-root52-precompiled/q0-root52-lean/
             /tmp/a47-root52-precompiled/q0-root52-source.sha256
+            im-results/agent47-raw11-adapter/Raw11Extra92.lean
+            im-results/agent47-raw11-adapter/Raw11Extra124.lean
+            im-results/agent47-raw11-adapter/raw11-extra-external-manifest.json
           if-no-files-found: warn
           retention-days: 30
