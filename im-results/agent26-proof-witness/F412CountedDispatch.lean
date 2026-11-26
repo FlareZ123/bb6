@@ -171,7 +171,7 @@ theorem tryRuleB_exact (L : List SymTok) (d2 : Nat) (R_tail : List SymTok) :
                     hp_eq, hm_eq, hk_eq, repBlock_B2_shift (p0 + 1), List.cons_append,
                         List.nil_append, List.append_assoc]
                 rw [hlhs, hp_new]
-                simpa only [Nat.mul_zero,Nat.add_zero] using ruleB_iter_exact s_sep m_sep hs_or hm_or n3 p0 0 k_new d2 R_tail
+                simpa only [Nat.mul_zero,Nat.add_zero,stateB] using ruleB_iter_exact s_sep m_sep hs_or hm_or n3 p0 0 k_new d2 R_tail
 
 def costRuleBC (L : List SymTok) (d2 : Nat) (R_tail : List SymTok) : Nat :=
   match stripPrefixSym [.item (.run 0), .item (.run 0), .item (.run 1)] L with
@@ -228,7 +228,7 @@ theorem tryRuleBC_exact (L : List SymTok) (d2 : Nat) (R_tail : List SymTok) :
                 stateC (0 + n4 + 2) k1 d2 R_tail := by
               rw [hL1, hL2, hL3, hL4, hp_eq]; rfl
             rw [hlhs]
-            simpa only [Nat.mul_zero,Nat.zero_add] using ruleC_iter_exact n4 0 k1 d2 R_tail hk1
+            simpa only [Nat.mul_zero,Nat.zero_add,stateC] using ruleC_iter_exact n4 0 k1 d2 R_tail hk1
 
 def costAfterSweepCB : List SymTok × List SymTok → Nat
   | (L,.item .zero :: .item (.run d2) :: R_tail) => costRuleBC L d2 R_tail
