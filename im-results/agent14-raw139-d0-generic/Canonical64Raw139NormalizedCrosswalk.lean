@@ -1,5 +1,6 @@
 import Canonical64Raw139Subcover
 import Raw139E0ZeroRAIntegrated
+import Raw139E0ZeroRECover
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -13,6 +14,7 @@ open BB6.Agent6ChampionResidual
 open BB6.Agent31FourHoleRoster
 open BB6.Agent6Raw139Normalized
 open BB6.Agent3Raw139E0ZeroRAIntegrated
+open BB6.Agent48Raw139E0ZeroRE
 open BB6.Agent14Canonical64Raw139Subcover
 
 /-- p is a partial table whose fixed transitions are all retained identically
@@ -82,6 +84,74 @@ def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
 
 def candidateParentTables : List PartialMachine :=
   [e0LCTable, e0LCD0RCParent, e0RETable]
+
+/-- The normalized E0=0RE table is definitionally the parent certified by
+    Agent48's original-source parent Cover. -/
+theorem e0RETable_eq_certifiedParent :
+    e0RETable = BB6.Agent48Raw139E0ZeroRE.parent := by
+  exact sameTable_sound (by decide)
+
+/-- Source-accepted E0=0RE parent Cover at its own weighted bound. -/
+theorem e0RE_cover_at_852 : Cover (WeightedBound 852) e0RETable := by
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  have hm' : compatible BB6.Agent48Raw139E0ZeroRE.parent m := by
+    simpa [e0RETable_eq_certifiedParent] using hm
+  exact BB6.Agent48Raw139E0ZeroRE.all_completions_weighted m hm' k d hk hd
+
+/-- The accepted E0=0RE Cover lifts to every larger weighted bound. -/
+theorem e0RE_cover_at_bound {B : Nat} (hB : 852 ≤ B) :
+    Cover (WeightedBound B) e0RETable := by
+  cases e0RE_cover_at_852 with
+  | leaf _ hbound =>
+    refine Cover.leaf _ ?_
+    intro m hm k d hk hd
+    exact Nat.le_trans (hbound m hm k d hk hd) hB
+
+/-- E0=0RE is exactly one of the 66 normalized residual tables. -/
+theorem e0RE_occurs_once_in_normalizedTables :
+    (normalizedTables.filter (fun p => sameTable p e0RETable)).length = 1 := by
+  decide
+
+/-- Remove the now source-discharged E0=0RE table from the normalized
+    residual Cover obligations. -/
+def normalizedTablesWithoutE0RE : List PartialMachine :=
+  normalizedTables.filter (fun p => !(sameTable p e0RETable))
+
+theorem normalizedTablesWithoutE0RE_count :
+    normalizedTablesWithoutE0RE.length = 65 := by
+  decide
+
+/-- Supply the accepted E0=0RE parent Cover for its unique normalized row,
+    leaving only the other 65 normalized table Covers as hypotheses. -/
+theorem normalizedTables_cover_with_e0RE {B : Nat} (hB : 852 ≤ B)
+    (hNorm : ∀ p ∈ normalizedTablesWithoutE0RE,
+      Cover (WeightedBound B) p) :
+    ∀ p ∈ normalizedTables, Cover (WeightedBound B) p := by
+  intro p hp
+  by_cases he : sameTable p e0RETable = true
+  · have hpEq : p = e0RETable := sameTable_sound he
+    rw [hpEq]
+    exact e0RE_cover_at_bound hB
+  · exact hNorm p (List.mem_filter.mpr ⟨hp, by simp [he]⟩)
+
+/-- Canonical64 exactness with the accepted E0=0RE Cover supplying one of the
+    66 normalized residuals: 63 other Canonical64 Covers, 65 normalized Covers,
+    and only the explicit active complement outside the normalized crosswalk. -/
+theorem exact_at_target_with_65_normalized_and_complement
+    (hOther : ∀ e ∈ roster64,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (hNorm : ∀ p ∈ normalizedTablesWithoutE0RE,
+      Cover (WeightedBound (proposedTM63Moves + 7)) p)
+    (hRest : ∀ e ∈ activeUncoveredByNormalized,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    ExactBB6 (proposedTM63Moves + 7) := by
+  have hB : 852 ≤ proposedTM63Moves + 7 := by
+    have hScore := BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+    omega
+  exact exact_at_target_with_normalized_and_complement hOther
+    (normalizedTables_cover_with_e0RE hB hNorm) hRest
 
 /-- A finite crosswalk can discharge every active row covered by at least one
     normalized residual Cover. -/
@@ -205,6 +275,8 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval (normalizedTables.length, activeRows.length,
   activeCoveredByNormalized.length, activeUncoveredByNormalized.length)
 #eval normalizedCoverageSummary
+#eval normalizedTablesWithoutE0RE.length
+#eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).length
 #eval activeUncoveredByNormalized.map (fun e => e.1)
 #eval normalizedCoveredByActive.length
 #eval (activeRows.filter (fun e => sameTable e.2 e0LCTable)).length
@@ -217,6 +289,9 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
 #eval (activeRowsNotCoveredByParents candidateParentTables).length
 
+#print axioms e0RE_cover_at_852
+#print axioms e0RE_cover_at_bound
+#print axioms exact_at_target_with_65_normalized_and_complement
 #print axioms compatible_of_extends
 #print axioms cover_of_extends
 #print axioms activeRows_cover_from_normalized_and_complement
