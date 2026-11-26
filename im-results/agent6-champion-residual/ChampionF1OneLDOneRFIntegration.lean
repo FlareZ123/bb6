@@ -141,6 +141,10 @@ theorem exact_from_remainingF1OneLDOneRF
       cover_remainingF1ZeroRC
         (fun e he => cover_remainingF1OneLD hLeaves e he) e he)
 
+#print axioms BB6.Agent14F1OneLD.checked
+#print axioms BB6.Agent14F1OneLD.all_completions_weighted
+#print axioms BB6.Agent14F1OneRF.checked
+#print axioms BB6.Agent14F1OneRF.all_completions_weighted
 #print axioms oneLD_is_depth5_sibling
 #print axioms cover_oneLD
 #print axioms oneLD_parent_present
