@@ -1,4 +1,3 @@
-import Mathlib
 import Combined109Roster
 import MixedBound109Composition
 import FourHoleResidualRoster
@@ -19,6 +18,43 @@ open BB6.Agent47Combined109
 open BB6.Agent13MixedBound109
 open BB6Coverage.Agent48Champion
 open BB6Coverage.Agent48DirectRoot
+
+/-- Core-Lean finite eliminators used instead of Mathlib's fin_cases tactic. -/
+private theorem fin8Cases {P : Fin 8 → Prop}
+    (h0 : P 0) (h1 : P 1) (h2 : P 2) (h3 : P 3)
+    (h4 : P 4) (h5 : P 5) (h6 : P 6) (h7 : P 7) : ∀ i, P i := by
+  intro i
+  refine Fin.cases h0 ?_ i
+  intro i
+  refine Fin.cases h1 ?_ i
+  intro i
+  refine Fin.cases h2 ?_ i
+  intro i
+  refine Fin.cases h3 ?_ i
+  intro i
+  refine Fin.cases h4 ?_ i
+  intro i
+  refine Fin.cases h5 ?_ i
+  intro i
+  refine Fin.cases h6 ?_ i
+  intro i
+  exact Fin.cases h7 (fun j => Fin.elim0 j) i
+
+private theorem fin6Cases {P : Fin 6 → Prop}
+    (h0 : P 0) (h1 : P 1) (h2 : P 2) (h3 : P 3)
+    (h4 : P 4) (h5 : P 5) : ∀ i, P i := by
+  intro i
+  refine Fin.cases h0 ?_ i
+  intro i
+  refine Fin.cases h1 ?_ i
+  intro i
+  refine Fin.cases h2 ?_ i
+  intro i
+  refine Fin.cases h3 ?_ i
+  intro i
+  refine Fin.cases h4 ?_ i
+  intro i
+  exact Fin.cases h5 (fun j => Fin.elim0 j) i
 
 /-- The champion-compatible canonical residual: A/0=1RB, B/0=1RC,
     C/0=1LD, with the other nine transitions still undefined. -/
@@ -156,7 +192,11 @@ theorem championRunKnown (i : Fin 8) :
     knownRun (championParent i) (championRunLength i) = some (championConfig i) := by
   have hsome :
       (knownRun (championParent i) (championRunLength i)).isSome = true := by
-    fin_cases i <;> decide
+    exact fin8Cases
+      (P := fun i =>
+        (knownRun (championParent i) (championRunLength i)).isSome = true)
+      (by decide) (by decide) (by decide) (by decide)
+      (by decide) (by decide) (by decide) (by decide) i
   unfold championConfig
   cases h : knownRun (championParent i) (championRunLength i) with
   | none => simp [h] at hsome
@@ -164,11 +204,17 @@ theorem championRunKnown (i : Fin 8) :
 
 theorem championReadSlot (i : Fin 8) :
     readSlot (championConfig i) = championHole i := by
-  fin_cases i <;> decide
+  exact fin8Cases
+    (P := fun i => readSlot (championConfig i) = championHole i)
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) i
 
 theorem championHoleProof (i : Fin 8) :
     championParent i (championHole i) = none := by
-  fin_cases i <;> decide
+  exact fin8Cases
+    (P := fun i => championParent i (championHole i) = none)
+    (by decide) (by decide) (by decide) (by decide)
+    (by decide) (by decide) (by decide) (by decide) i
 
 def championP1Path : RawRootPath championP1 := by
   have hh : championResidual (readSlot (championConfig 0)) = none := by
@@ -242,16 +288,10 @@ def championP8Path : RawRootPath championP8 := by
   rw [championReadSlot 7] at h
   simpa [championP8, championNextMove] using h
 
-theorem championPath (i : Fin 8) : RawRootPath (championParent i) := by
-  fin_cases i
-  · exact championResidualPath
-  · exact championP1Path
-  · exact championP2Path
-  · exact championP3Path
-  · exact championP4Path
-  · exact championP5Path
-  · exact championP6Path
-  · exact championP7Path
+theorem championPath (i : Fin 8) : RawRootPath (championParent i) :=
+  fin8Cases (P := fun i => RawRootPath (championParent i))
+    championResidualPath championP1Path championP2Path championP3Path
+    championP4Path championP5Path championP6Path championP7Path i
 
 theorem rawRootPathNoAssignedHalt {p : PartialMachine}
     (path : RawRootPath p) : weightedTNFNoAssignedHalt p := by
@@ -373,7 +413,10 @@ def championStep (i : Fin 8)
       exact List.mem_range.mp (List.mem_filter.mp hd).1
     have hScore : 7014 < (proposedTM63Moves + 7) := champion_score_gt_7014
     have hroom : championRunLength i + 6 ≤ (proposedTM63Moves + 7) := by
-      fin_cases i <;> omega
+      exact fin8Cases
+        (P := fun i => championRunLength i + 6 ≤ proposedTM63Moves + 7)
+        (by omega) (by omega) (by omega) (by omega)
+        (by omega) (by omega) (by omega) (by omega) i
     omega
   have hnext :
       refine (championParent i) (readSlot c) (some (championNextMove i)) =
