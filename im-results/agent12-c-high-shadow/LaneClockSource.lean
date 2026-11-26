@@ -109,9 +109,15 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
   constructor
   · simp [callsAt,edgeClock,hState,hAge,lift,parity,gap]
     <;> omega
-  · simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
-      hState,hAge,hpost,lift,parity,step]
-    grind
+  · have hleft : (lift s).b - 2 - (lift s).o = s.a := by
+      simp [lift]
+      ring
+    have hright : (lift (step (d+1) s)).b - 2 -
+        (lift (step (d+1) s)).o = (step (d+1) s).a := by
+      simp [lift]
+      ring
+    simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
+      hState,hAge,hpost,hleft,hright]
 
 /-- Sum the event clocks in descending bit order. This is exactly the
     ordinary word clock, including arbitrary initial idle age. -/
@@ -184,11 +190,8 @@ theorem clock_sums_of_checks (s t : State) (N q K : Nat)
   have hState : origin w N=lift s := ha.1.trans hstart
   have hAge : value w.age N=0 := ha.2.1
   have hBoundary : lane v N=idle 0 (origin w N) := by
-    rcases os0.top with ⟨ho,ha'⟩
-    calc
-      lane v N=origin w N := ho.symm
-      _=idle (value w.age N) (origin w N) :=
-        congrArg (fun d => idle d (origin w N)) ha'
+    rcases os0.top with ⟨ho,_⟩
+    simpa [idle_zero] using ho.symm
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
   have hcalls := BB6.Agent12LaneClock.calls_sum N q v w ha hq
