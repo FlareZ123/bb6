@@ -739,5 +739,10 @@ theorem raw10Partition_count : 490 + 28 + 57 = 575 := by decide
 #print axioms raw10HaltCovers
 #print axioms f0Domain_partition
 #print axioms branchPair_partition
+#print axioms raw10Box_total_count
+#print axioms raw10NonhaltCount
+#print axioms raw10ObservedHaltCount
+#print axioms raw10OpenCount
+#print axioms raw10Partition_count
 
 end BB6.Agent19Raw10F0Box
