@@ -1,0 +1,17 @@
+# Signed-prefix safety potential for #172
+
+This strengthens the mass bound in PROTECTED.md. The complete local safety proof for the projected particle relation is kernel-accepted with Lean 4.36.0-rc2 (propext, Classical.choice, Quot.sound only). Source bridge to the word reduction and the universal birth guard remain open.
+
+Represent each cell by (phase, following gap). Phases D,L,H correspond to 0,1,2. Define two scores, A = 3g + (-1,-2,0)[phase], B = -g + (-1,-1,-2)[phase]. On a nonempty list x::xs let R0 = A(x)+R1(xs), R1 = max(0,B(x)+R0(xs)), with both scores zero on empty. P_i = 3 length + R_i. P0 is positive on every nonempty suffix and at most three times the suffix mass. In closed form it is the maximum over odd nonempty prefixes of the signed alternating gap sum, with phase and length corrections. In particular large even-position gaps can cancel or be omitted from the bound.
+
+**Carry theorem.** A projected carry on suffix xs yielding ys and exterior gap increment e satisfies |ys| <= |xs|, P0(ys) <= P0(xs)+e-1 for xs nonempty, and P1(ys) <= P1(xs)-3e. The simultaneous induction on Carry is crucial: the second inequality absorbs the increase of the first gap when a deeper pair annihilates; the first inequality absorbs the carry when the orientation alternates. All tail drains and the boundary-pair case are included.
+
+**Birth-tail theorem.** Decrementing the positive trailing gap, or removing the final H particle and incrementing its predecessor gap, cannot increase either potential. The particle count cannot increase under this transformation.
+
+For an internal gap G after phase s and before nonempty suffix xs, protection means G >= P0(xs)+[s != H]. This forces G>0, survives D->L and L->H, the projected H carry, a merge with the gap to its left, and external birth-tail updates. Declare a gap good if its original mod-3 charge is 1 or it is protected. Then carry_safe and birth_tail_safe establish preservation of all existing good gaps. The exhausted_safe and carry_or_birth theorems establish that a safe state has a carry successor or is at an all-H birth with boundary 0. An arbitrary exhausted good internal gap can never reach a non-L next particle.
+
+Consequently the only remaining trajectory obligation is the new gap at birth: its charge is 1, or G >= P0(new suffix). This is strictly weaker than the old mass guard. For example a suffix of two H particles with following gaps 0 and M has P0=6 regardless of M, whereas the old bound is 3(M+2)+2.
+
+**Distance observation.** During a no-wrap interval from all D to all H, V is the ternary counter and D=3^m-1-V. Each ordinary transition lowers D by one. At an L,L pair deletion at digit j, p=3^j and x=p*(3^(m-j-2)-higherSuffixValue) >= p, the distances before/after are 9x-5p and x-1. Lean theorem pair_distance_drop proves the drop is at least one (in fact >=3p+1). Thus pair deletion cannot postpone the first all-H boundary beyond the original remaining distance. Conversely the counter V increases by at most one per nonwrap step, giving a lower bound on the elapsed time since the previous wrap at a birth. In an ordinary positive-tail birth cycle this prevents the newly inserted front particle from exhausting its following gap before the next boundary, unless a tail drain interrupts the cycle. The exceptional boundary episodes remain to be analyzed.
+
+File Potential.lean checked locally with lean 4.36.0-rc2, no sorry or nonstandard axioms. No nonhalt verdict or new global Cover is claimed.

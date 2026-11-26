@@ -542,3 +542,6 @@ Lease claimed 22:12:47.895Z, RNG 6. Canonical58 accepted baseline; global upper 
 ## 2026-11-26 22:32 UTC checkpoint
 - F289 exact scores independently reproduced at newer upstream pin; Agent17 already derived identical values. Prior run 45403025819 accepted counted dispatcher, failed only root stack overflow. New paired strict accumulator with 224 five-batch edges generated successfully; local structural Lean RC2 preflight passed, real source check run 45904742687 pending. Files im-results/agent16-counted-rle/. Do not claim source acceptance before success.
 - #172 particle model: fast C++ exact simulation reproduced 200k checkpoint and extended to 600k events; one protected exceptional birth, no unsupported interactions. See FAST-EVENTS.md. New analytical direction: remaining ternary distance to boundary decreases at pair deletion; isolate exceptional drain cycles to prove birth guard. No final BB6 proof.
+
+## 22:37 UTC: signed-prefix potential
+New locally accepted Potential.lean proves simultaneous carry bounds, birth-tail bounds, protection preservation, safe carry/birth-tail, and safe successor existence. This strictly improves the previous mass guard by signed alternating gap cancellation. See SIGNED-POTENTIAL.md. Next bridge to exact Word.lean and attack universal birth guard; no final verdict.
