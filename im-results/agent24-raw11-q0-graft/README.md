@@ -22,7 +22,7 @@ The six four-way complements are:
 | 143 | 109–112 |
 | 154 | 14–17 |
 
-The ten no-overlap rows are checkpoint indices 136, 137, 139, 144, 145, 146, 147, 152, 153, and 155. They are all descendants of the Raw11 parent. The accompanying Lean development proves that their fixed first-three-state conflicts exclude quotient-compatible membership in any first-D frontier entry; therefore every completion of each row lies in the Raw11 (\mathrm{WeightedBound}(18)\) branch.
+The ten no-overlap rows are checkpoint indices 136, 137, 139, 144, 145, 146, 147, 152, 153, and 155. The crosswalk script checks that all 157 checkpoint rows refine the Raw11 parent. The accompanying Lean development formalizes a quotient-aware conflict argument intended to exclude quotient-compatible membership in any first-D frontier entry for each of these ten rows. Kernel compilation is pending; if accepted, it yields the Raw11 (\mathrm{WeightedBound}(18)\) branch for every completion of each row.
 
 For the six coarse rows, the Lean theorem retains the exact four-entry frontier complement rather than falsely closing them.
 
