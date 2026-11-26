@@ -81,11 +81,12 @@ def main():
         if m.get("branch") != BRANCH:
             raise RuntimeError(f"wrong branch in {mp}: {m.get('branch')}")
         first, end = int(m["first"]), int(m["end"])
-        if end != first + 1 or not 0 <= first < 24:
+        if not 0 <= first < end <= 24:
             raise RuntimeError(f"unexpected branch-00 interval [{first},{end})")
-        if first in coverage:
-            raise RuntimeError(f"overlapping branch-00 kid {first}: {coverage[first]} and {d}")
-        coverage[first] = str(d)
+        for kid_index in range(first, end):
+            if kid_index in coverage:
+                raise RuntimeError(f"overlapping branch-00 kid {kid_index}: {coverage[kid_index]} and {d}")
+            coverage[kid_index] = str(d)
         for filename, expected in m["files"].items():
             rel = Path(filename)
             if rel.is_absolute() or ".." in rel.parts or len(rel.parts) != 1:
@@ -138,7 +139,7 @@ def main():
     Path("/tmp/a43-manifest-work").mkdir(parents=True, exist_ok=True)
     closure = ROOT / "tools/lean_compile_closure.py"
     run([os.sys.executable, closure, "--workdir", "/tmp/a43-manifest-work",
-         "--source-root", factored, "--manifest", manifest, "--manifest-only",
+         "--source-root", ROOT, "--source-root", factored, "--manifest", manifest, "--manifest-only",
          "--artifact-dir", work, factored / "Raw122Branch00.lean"])
 
     wrapper = generated / "Raw122Recovered00.lean"
@@ -165,7 +166,7 @@ end BB6.Agent43Raw122Recovered00
     theorem = ("BB6.Agent43Raw122Recovered00.cover00" if not residual_rows
                else "BB6.Agent43Raw122Recovered00.residual_count")
     args = [os.sys.executable, closure, "--workdir", final,
-            "--source-root", factored, "--source-root", generated, "--jobs", "3",
+            "--source-root", ROOT, "--source-root", factored, "--source-root", generated, "--jobs", "3",
             "--precompiled-manifest", manifest, "--precompiled-dir", work,
             "--manifest", final / "manifest.json",
             "--label", "Raw122 F1=0LA exact residual roster",

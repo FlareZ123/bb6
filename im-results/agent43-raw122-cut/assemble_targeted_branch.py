@@ -196,6 +196,7 @@ def main() -> None:
     run([
         sys.executable, closure_tool,
         "--workdir", "/tmp/a43-manifest-work",
+        "--source-root", ROOT,
         "--source-root", factored,
         "--manifest", manifest,
         "--manifest-only",
@@ -231,6 +232,7 @@ end BB6.Agent43Raw122Recovered05
     compile_log = run([
         sys.executable, closure_tool,
         "--workdir", final,
+        "--source-root", ROOT,
         "--source-root", factored,
         "--source-root", generated,
         "--jobs", "3",
