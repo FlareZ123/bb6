@@ -16,7 +16,7 @@ from emit_family import code_name, bl
 
 BASE_PARENT = [7, 24, 11, 24, 14, 24, 24, 16, 8, 11, 24, 24]
 BROAD_CODES = [0, 1, 2, 3, 5, 6, 7, 11, 20, 21, 22, 23]
-SPECIAL_CODE = 9  # D0=0RC, separately covered at weighted bound 616.
+SPECIAL_CODE = 9  # D0=0RC, source-accepted at weighted bound 775.
 GLOBAL_BOUND = 80377
 
 
@@ -37,7 +37,7 @@ def branch_proof(code: int, cycle_data: dict[int, tuple]) -> str:
         Nat.le_trans ({ns}.all_completions_weighted m hm k d hk hd) (by omega))
 """
     if code == SPECIAL_CODE:
-        ns = "BB6.Agent6E0ZeroLC.D0ZeroRC"
+        ns = "BB6.Agent14Raw139D0ZeroRC"
         return f"""    · have he : child {move} = {ns}.parent := by
         apply BB6.Agent31ThreeHole.tableOK_sound
         decide
@@ -97,7 +97,7 @@ def main():
     imports = [
         "import FastThreeHoleAudit",
         "import A6ChunkSupport",
-        "import Raw139E0ZeroLCD0ZeroRC",
+        "import Raw139D0ZeroRCCover",
     ]
     imports += [
         "import A6E0LCD0" + code_name(code) + "Cover"
