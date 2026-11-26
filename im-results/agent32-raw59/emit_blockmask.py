@@ -27,13 +27,13 @@ def emit(root,name,data,offset=0):
             import_line = 'import BlockFAR2\n'
             if template.count(import_line) != 1:
                 raise ValueError('expected one BlockFAR2 import in width-two mask template')
-            # BlockFAR2 imports BlockMacro2, which imports BlockMacro and
-            # re-exports its primitive Table/run names. Keep run_add on that
-            # single dependency path: a second direct BlockMacro import can
-            # split the table type identity in a mixed precompiled closure.
+            # BlockFAR2 imports BlockMacro2, which re-exports the primitive
+            # Table/run names and run_add as BB6BlockFAR2 constants. Use that
+            # single path; a second direct BlockMacro import can split type
+            # identity in a mixed precompiled closure.
             alias = """theorem run_add_width2 (M : Table) (m n : Nat) (c : Prim) :
     run M (m+n) c = (run M m c).bind (run M n) := by
-  simpa [run] using BB6BlockFAR.run_add M m n c
+  simpa [run] using BB6BlockFAR2.run_add M m n c
 
 #print axioms run_add_width2
 
@@ -49,6 +49,8 @@ def emit(root,name,data,offset=0):
                 template.count(import_line) != 1
                 or 'import BlockMacro\n' in template
                 or template.count('theorem run_add_width2') != 1
+                or template.count('BB6BlockFAR2.run_add M m n c') != 1
+                or 'BB6BlockFAR.run_add M m n c' in template
                 or template.count(',run_add_width2') != 2
                 or template.count('#print axioms run_add_width2') != 1
             ):
