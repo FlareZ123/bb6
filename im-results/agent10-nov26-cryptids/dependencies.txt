@@ -1,2 +1,2 @@
-im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean
+im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean
 im-results/agent10-nov26-cryptids/Nov26SourceCore.lean

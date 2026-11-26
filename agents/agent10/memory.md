@@ -555,3 +555,7 @@ Lease unchanged; original 02:44:40.661Z; threshold 03:54:40.661Z.
 ## 2026-11-26T15:08Z — Raw67 exact closure
 
 - All Raw67 recursive/pump/24-child/parent/attainment modules compiled locally on original source with Lean 4.36.0-rc2, standard axiom profiles. Weighted maximum 808; literal parent and attaining completion in results/2026-11-26-raw67-parent-exact-agent10.md. Corrected split count 1514 including root; generator normalized Raw67/79 pinned counts. Raw69/73/78 source audits in progress. Four-token primitive valuation branch kernel accepted; repeated-two valuation branch has new cancellation proof under development. Lease unchanged.
+
+
+### 18:49 UTC checkpoint
+Local ordinary-row nonhalt core standalone compiled with `[propext]`. Source pilot 45877987430 failed before bridge at two legacy adapter inverse simp goals. New local copy preserves bit/unbit simp lemmas and cases the concrete option transition. Broadcast routing 20261126T1849Z. Raw8 halt source `M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB` has an explicit 16-carry cycle, counted CarryChain with split/append, iterCarryAux_sound and qCycles_sound. Reverse count the tail using 16*(n/6)+maxR p j (n%6), then terminal local overhead; no tape expansion. Need source bridge and stronger champion threshold; do not claim accepted count yet.
