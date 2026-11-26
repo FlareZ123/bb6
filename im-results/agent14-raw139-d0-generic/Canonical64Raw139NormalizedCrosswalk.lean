@@ -113,6 +113,37 @@ theorem activeRows_cover_from_normalized (B : Nat)
   obtain ⟨p, hp, hExt⟩ := hCross e he
   exact cover_of_extends (hNorm p hp) hExt
 
+/-- Canonical64 exactness interface using the 66 normalized residual Covers
+    plus Covers only for active leaves outside the finite refinement crosswalk. -/
+theorem exact_at_target_with_normalized_and_complement
+    (hOther : ∀ e ∈ roster64,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (hNorm : ∀ p ∈ normalizedTables,
+      Cover (WeightedBound (proposedTM63Moves + 7)) p)
+    (hRest : ∀ e ∈ activeUncoveredByNormalized,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent14Canonical64Raw139Subcover.exact_at_target_with_raw139_subcover
+    hOther
+    (activeRows_cover_from_normalized_and_complement
+      (proposedTM63Moves + 7) hNorm hRest)
+
+/-- If the refinement crosswalk is total, the global conditional interface
+    needs only 63 other Canonical64 Covers and 66 normalized Raw139 Covers. -/
+theorem exact_at_target_with_normalized_if_crosswalk
+    (hCross : ∀ e ∈ activeRows, ∃ p ∈ normalizedTables, Extends p e.2)
+    (hOther : ∀ e ∈ roster64,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (hNorm : ∀ p ∈ normalizedTables,
+      Cover (WeightedBound (proposedTM63Moves + 7)) p) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent14Canonical64Raw139Subcover.exact_at_target_with_raw139_subcover
+    hOther
+    (activeRows_cover_from_normalized
+      (proposedTM63Moves + 7) hCross hNorm)
+
 /-- Finite crosswalk diagnostics. The first count is how many active leaves
     are refinements of at least one normalized residual table; the second is
     how many are not. The final counts test E0=0LC by exact equality and by
@@ -129,5 +160,7 @@ theorem activeRows_cover_from_normalized (B : Nat)
 #print axioms cover_of_extends
 #print axioms activeRows_cover_from_normalized_and_complement
 #print axioms activeRows_cover_from_normalized
+#print axioms exact_at_target_with_normalized_and_complement
+#print axioms exact_at_target_with_normalized_if_crosswalk
 
 end BB6.Agent14Canonical64Raw139Crosswalk
