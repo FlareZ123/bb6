@@ -1,6 +1,10 @@
-# Raw124 subcylinder work, 2026-11-25
+# Raw124 subcylinder work
 
 Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 moves. Each fixed ordinary F1 row has 25^5 = 9,765,625 raw completions; the weighted checker handles early halts and initial blank delay.
+
+## Source-accepted branch
+
+F1=0RA is now fully source-checked, including the final weighted root at bound 283. See [proof and reproduction](Raw124-0RA-accepted.md). All other entries below remain candidate classifications unless a separate source acceptance is documented.
 
 ## Completed candidate branches
 
@@ -19,7 +23,7 @@ Raw124 = `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. First new query F1 at 7 mo
 | 1RE | 7 | 0 | 0 | 0 | 0 | 0 |
 | 0RA | 283 | 656 | 633 | 23 | 0 | 0 |
 
-These are exhaustive candidate audits, not accepted source-level proofs. Together they represent 117,187,500 raw completions. The 0RC delayed last-hole encounter at step 2753 required increasing the proposed bound from 240 to 2759; the 1000-step exploration cutoff is never itself proof of divergence.
+The 0RA entry is source-accepted. The other entries in this table are exhaustive candidate audits; source-level acceptance must be established separately. Together the displayed subcylinders represent 117,187,500 raw completions. The 0RC delayed last-hole encounter at step 2753 required increasing the proposed bound from 240 to 2759; the 1000-step exploration cutoff is never itself proof of divergence.
 
 ## Reproduction
 
