@@ -4435,28 +4435,43 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Replay exact fast partition and compile its original-source Lean closure
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-1lb-fast-partial-source-audit
+          run-id: 45750346651
+          github-token: ${{ github.token }}
+          path: /tmp/raw124-old-cut
+      - name: Graft the eight residual certificates onto the accepted partial cut
         run: |
           set -euo pipefail
+          D=im-results/agent2-tnf-raw124
+          W=/tmp/raw124-1lb-complete
+          mkdir -p "$W"
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python im-results/agent2-tnf-raw124/replay_fast_cut.py im-results/agent2-tnf-raw124/fast-1LB.json.zlib.b64 --out /tmp/raw124-1LB
-          echo "Exact unresolved one-hole tables:"
-          cat /tmp/raw124-1LB/Raw124New1LB.remaining
-          python tools/lean_compile_closure.py --workdir /tmp/raw124-1LB-closure --source-root /tmp/raw124-1LB --jobs 4 /tmp/raw124-1LB/Raw124New1LBCut.lean | tee /tmp/raw124-1LB-closure.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/raw124-1LB-closure.log; then
-            echo "Forbidden proof placeholder or native_decide in raw124 1LB partial closure" >&2
-            exit 1
-          fi
-          mkdir -p /tmp/raw124-1LB-output
-          cp /tmp/raw124-1LB/Raw124New1LB* /tmp/raw124-1LB-output/
-          cp /tmp/raw124-1LB-closure.log /tmp/raw124-1LB-output/
-          cp -a /tmp/raw124-1LB-closure/. /tmp/raw124-1LB-output/closure/
+          mv /tmp/raw124-old-cut/closure /tmp/raw124-old-objects
+          python tools/lean_compile_closure.py --source-root /tmp/raw124-old-cut --manifest-only --artifact-dir /tmp/raw124-old-objects --manifest "$W/base.json" --label "accepted Raw124 partial cut from run 45750346651" /tmp/raw124-old-cut/Raw124New1LBCut.lean
+          # The old artifact contains the copied source alongside each compiled object.
+          # Reuse only after establishing exact byte identity of the complete base closure.
+          python - "$W/base.json" <<'PY'
+          import hashlib, json, pathlib, sys
+          base=json.load(open(sys.argv[1]))
+          root=pathlib.Path('/tmp/raw124-old-objects')
+          for m in base['modules']:
+              src=root / (m['module'].replace('.','/')+'.lean')
+              assert hashlib.sha256(src.read_bytes()).hexdigest()==m['source_sha256'],m['module']
+          print('Exact accepted-source identities:',len(base['modules']))
+          PY
+          python "$D/generate_1lb_wide.py" --out "$D/wide-generated"
+          THEOREM=BB6.Agent2Raw124OneLBComplete.bound_all
+          python tools/lean_compile_closure.py --source-root /tmp/raw124-old-cut --workdir "$W/closure" --jobs 4 --precompiled-manifest "$W/base.json" --precompiled-dir /tmp/raw124-old-objects --manifest "$W/manifest.json" --theorem "$THEOREM" --weighted-bound 3006 --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LF_---1LB' "$D/Raw124OneLBComplete.lean" | tee "$W/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" "$THEOREM"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" BB6.Agent2Raw124OneLBComplete.no_open
       - uses: actions/upload-artifact@v4
         with:
-          name: raw124-1lb-fast-partial-source-audit
-          path: /tmp/raw124-1LB-output
+          name: raw124-1lb-complete-source-audit
+          path: /tmp/raw124-1lb-complete/
           if-no-files-found: error
 
   raw124_1lb_residual_pumps:
