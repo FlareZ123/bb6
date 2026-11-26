@@ -108,14 +108,19 @@ def main() -> None:
     print("PROVENANCE:", *sorted(set(provenance)), sep="\n  ", flush=True)
     print("+", " ".join(command), flush=True)
     with log.open("w", encoding="utf-8") as output:
-        subprocess.run(command, cwd=ROOT, check=True, stdout=output, stderr=subprocess.STDOUT)
+        completed = subprocess.run(
+            command, cwd=ROOT, check=False, stdout=output, stderr=subprocess.STDOUT
+        )
     tail = log.read_text(encoding="utf-8", errors="replace").splitlines()[-100:]
     print("\n".join(tail), flush=True)
     print(
         f"[raw57-cut-{args.group}] roots={len(roots)} manifest={manifest} "
-        f"olean_count={sum(1 for _ in precompiled.rglob('*.olean'))}",
+        f"olean_count={sum(1 for _ in precompiled.rglob('*.olean'))} "
+        f"returncode={completed.returncode}",
         flush=True,
     )
+    if completed.returncode:
+        raise SystemExit(completed.returncode)
 
 if __name__ == "__main__":
     main()
