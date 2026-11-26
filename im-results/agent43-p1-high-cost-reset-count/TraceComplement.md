@@ -63,3 +63,20 @@ checkpoints; their final outputs will be recorded separately.
 
 Neither this computation nor the new symmetry proves the unbounded P1
 index quantifier, a machine decision, or a BB(6) bound.
+
+## Second delayed extinction and wider search
+
+Using the packed implementation with h=n/2, K=4n, OMP_NUM_THREADS=2:
+
+    ./packed_prefix 230417762 921671048 115208881 half
+    s=1 next=2
+    s=115208882 next=4
+    s=230417763 next=1
+    s=345626644 next=0
+    END 230417762 576044406
+
+Exit 0, wall 431.565 seconds under concurrent computations. The extinction depth is below the existing practical cutoff. This closes a second modular-horizon survivor numerically, with formal numerical coverage still required.
+
+The n=123109726 half-mode run (h=61554863, K=492438904) instead survived: candidate counts 3,1,2,4,2,1. Its four-n horizon is not an extinction result. An extended 6n run is in progress from an untrusted checkpoint at s=307774316; one previous stage was repeated to recover the last surviving prefix.
+
+[packed_wide.cpp](packed_wide.cpp), exact blob ddd2fdcdba145cafccb5c67f37efb008bc0092ef, uses uint32_t clocks/carries, checks n+K+3<UINT32_MAX, and uses uint128_t for the margin product. It permits increasing K at restart after checking the stored maximum gap against the new margin bound. The n=3342 regression again returned END 3342 13768. The n=514893090 full modular survivor is being tested with K=2059572360, h=257446545. All these runs are numerical experiments, not proof certificates.
