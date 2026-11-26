@@ -51,6 +51,30 @@ theorem cover_at_target (B : Nat) (hB : 629 ≤ B)
     Cover (WeightedBound B) parent :=
   BB6.Agent1Raw57Parent.cover_at_target B hB early_bounds middle_bounds hTail
 
+/-- The accepted 1LA theorem discharges one of the five parent residuals.
+    This leaves exactly four independent branch Covers to be supplied. -/
+theorem cover_at_target_from_four (B : Nat) (hB : 832 ≤ B)
+    (hLA : ∀ m, compatible (child ⟨true,false,0⟩) m → WeightedBound 832 m)
+    (hLB : Cover (WeightedBound B) (child ⟨true,false,1⟩))
+    (hLE : Cover (WeightedBound B) (child ⟨true,false,4⟩))
+    (h0LF : Cover (WeightedBound B) (child ⟨false,false,5⟩))
+    (h1LF : Cover (WeightedBound B) (child ⟨true,false,5⟩)) :
+    Cover (WeightedBound B) parent := by
+  have hLA' : Cover (WeightedBound B) (child ⟨true,false,0⟩) := by
+    refine Cover.leaf _ ?_
+    intro m hm k d hk hd
+    exact Nat.le_trans (hLA m hm k d hk hd) hB
+  have hTail : ∀ mv ∈ residual, Cover (WeightedBound B) (child mv) := by
+    intro mv hmv
+    simp only [residual, List.mem_cons, List.not_mem_nil, or_false] at hmv
+    rcases hmv with rfl | rfl | rfl | rfl | rfl
+    · exact hLA'
+    · exact hLB
+    · exact hLE
+    · exact h0LF
+    · exact h1LF
+  exact cover_at_target B (by omega) hTail
+
 #print axioms early_bounds
 #print axioms middle_bounds
 #print axioms parent_five
