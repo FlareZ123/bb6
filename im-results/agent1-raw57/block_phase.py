@@ -76,14 +76,14 @@ def block(table,w,dl,dr):
         return x if not x and b==0 else (b,)+x[:(dr if d else dl)-1]
     return closure(lambda q,d,b:ms.get((q,d,b)),push)
 
-def phase_lift(table,w,c,limit=500000):
+def phase_lift(table,w,c,limit=500000,missing=0):
     D=c[4]
     initial=tuple((0,0) for _ in range(w))
     def push(side,old,b):
         res=[None]*w
         for p,(q,v) in enumerate(old):
             v=v|b<<p if side==0 else (v<<1)|b
-            if p+1==w: res[0]=(D[side].get((q,v),0),0)
+            if p+1==w: res[0]=(D[side].get((q,v),missing),0)
             else: res[p+1]=(q,v)
         return tuple(res)
     p=table.replace('_','')
@@ -95,10 +95,10 @@ def phase_lift(table,w,c,limit=500000):
     S={(q,b,l,r) for q,d,b,l,r in S}
     return ok,len(S),E,S,D,T
 
-def run(table,w,dl,dr):
+def run(table,w,dl,dr,missing=0):
     c=block(table,w,dl,dr)
     assert c[0],(table,w,dl,dr,c[1])
-    cert=phase_lift(table,w,c)
+    cert=phase_lift(table,w,c,missing=missing)
     assert cert[0],(table,w,dl,dr,cert[1])
     print('block/phase counts',c[1],cert[1],flush=True)
     return cert
