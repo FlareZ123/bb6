@@ -15,6 +15,7 @@ import multi
 from generate_growth import pump
 sys.path.insert(0,str(IM/'agent1-ngram'))
 from emit_ngram import emit as emit_ngram
+from sibling_witnesses import emit_sibling_witnesses
 
 PARENT='1RB---_1RC---_0RD---_1LD1RE_---1LF_---'
 
@@ -38,7 +39,9 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent47Par
         opens=[s.replace('_','') for s in raw.decode().splitlines()];index={s:i for i,s in enumerate(opens)}
         assert len(opens)==len(index)==len(spec['far'])
         far={i:spec['bank'][j] for i,j in enumerate(spec['far']) if j>=0}
-        growth=spec['growth'];ref={}
+        growth=spec.get('growth',[]);ref={}
+        if spec.get('params'):
+            ref.update(emit_sibling_witnesses(spec,opens,stem,out,tmp))
         if spec.get('ngram'):
             exe=tmp/'ngram'
             subprocess.run(['g++','-std=c++17','-O3',str(IM/'agent1-ngram'/'ngram.cpp'),'-o',str(exe)],check=True)
@@ -110,7 +113,7 @@ theorem branch_nohalt : weightedTNFNoAssignedHalt branch := weightedTNFNoAssigne
                 counts['far']+=1;code=far[i];n,D,L,R,z=masks(parse(table),int(code[0]),[int(c,36) for c in code[1:]])
                 return Node(f'.far {str(bool(int(code[0]))).lower()} {n} ⟨0,{D},{L},{R},{z}⟩')
             if i in ref:
-                mod,gns=ref[i];kind='ngram' if 'NGram' in mod else 'growth';counts[kind]+=1;return Node(f'.proven {gns}.table {gns}.'+('never_source' if kind=='ngram' else 'never'))
+                mod,gns=ref[i];kind='ngram' if 'NGram' in mod else 'wide' if 'Wide' in mod else 'growth';counts[kind]+=1;return Node(f'.proven {gns}.table {gns}.'+('never_source' if kind=='ngram' else 'never'))
             counts['unresolved']+=1;remaining.append(table);return Node('.unresolved',open_count=1)
         assert tag=='split';counts[tag]+=1;t,s,kids=v;assert len(kids)==24
         cs=[build(k) for k in kids];return Node(f'.split {t} {slot(s)}',cs,1+sum(k.size for k in cs),sum(k.open_count for k in cs))
