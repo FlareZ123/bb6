@@ -465,3 +465,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:19Z Raw112 attempt-2 status update
 
 - Run 45751911115 attempt 2: shards 0,2,3,6,7 succeeded; shards 1 and 5 still in progress; shard4 failed again with runner shutdown. Confirmed shard job timeout-minutes=90, max-parallel=2; failure at ~9m33s is not the configured timeout. Recommended retry shard4 on fresh runner or split its three roots (Raw112Branch04/12/20).
+
+
+## 2026-11-26T07:20Z dossier fallback note
+
+- Added the resumable 24-root compile fallback to the Raw118 dossier as well as memory: reuse artifact 15093576212, compile Raw118CloseRoot_00..23 against the precompiled union, merge with merge_shards.py, then compile Raw118Complete and audit. Do not duplicate compute while the full closure run remains active.
