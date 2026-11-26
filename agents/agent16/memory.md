@@ -493,3 +493,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - Compare API check from Canonical64 base revision 949fde331f10df81a968f157c622faa581597276 to Raw118 source revision b2e050ea75b4633f06ce836375a4260135ed500c returned no changed .lean files among the reported 300-file diff window. This supports source-level compatibility, not object identity; the linker remains authoritative.
 - Raw118 is canonical index 82 with draft exact unique membership in Canonical64Raw120Integrated.roster64; do not alter Agent31's current five-parent list until the Raw118 Cover and membership are both accepted. On success, provide BB6.Agent1Raw118Complete.parent_cover, parent_exact, bound 756,496, artifact id/digest/source manifest, and the existing membership helper in one handoff. The global 64-Cover problem remains open.
 - The current lease is 2026-11-26T11:34:14.256Z; do not refresh. Continue until the measured 70-minute threshold, checkpointing and comparing against a real runtime clock.
+
+
+## 2026-11-26T12:08Z — generated-input artifact integrity pin
+
+The active Raw118 retry 45812415227 has exactly one artifact so far: `raw118-parent-generated-inputs`, artifact ID 15113732668, size 273,840,139 bytes, SHA-256 `ce913fcf8e8bf8c877e4342b22676b6970ac805aef54dcb4e3035f48bb9a3b19`, created 11:41:34Z, expires 2026-12-10. Its source revision is b2e050ea75b4633f06ce836375a4260135ed500c. Use this exact artifact if recovery is needed; do not repeat sparse/wide discovery or source generation.
