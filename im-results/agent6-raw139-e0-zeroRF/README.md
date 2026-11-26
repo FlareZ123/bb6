@@ -1,4 +1,4 @@
-# E0=0RF normalized Raw139 candidate partition (one exception)
+# E0=0RF normalized Raw139 candidate partition (all hard leaves resolved)
 
 Parent codes `[7,24,11,24,14,24,24,16,21,11,24,24]`. The deterministic reproduction script uses a 250-step translated-cycle/small-FAR split search followed by block-FAR and late-query search. Initial 29,610 splits, 681,031 ordinary leaves: 505,223 translated cycles, 115,143 last-hole finite queries, 55,394 FAR, 5,271 open. Extended search resolves 5,215 open by block-FAR, 50 by finite queries, four by cycles. All 50 late finite queries are single-hole leaves; largest query is 2037. Candidate weighted bound 2043 for the nonexceptional leaves.
 
@@ -6,17 +6,14 @@ Parent codes `[7,24,11,24,14,24,24,16,21,11,24,24]`. The deterministic reproduct
 
 Table `[7,9,11,21,14,23,24,16,21,11,3,20]` (D0 unassigned). `PadGrowth.lean` establishes exact tape-equivalence transport for blank padding, and `ZeroRF4570.lean` proves six phases of a growth recurrence. In F0 with a blank left half, a right run of even length n >= 6 maps to length n+24 in 30n+1020 primitive steps, up to far-end blank padding. Authentic seed at step 967 has n=24. Local Lean 4.36.0-rc2 accepts period, growth, never (propext, Quot.sound); exact `Hybrid` transport to its weighted Cover also passes (standard axioms). Sources used the dependency oleans from CI zeroRC core artifact 15121390168. Independent source-connected parent verification is not yet done.
 
-## Remaining exception 1892
+## Exact arbitrary-tail pump for residual 1892
 
-Table `[7,24,11,17,14,8,3,16,21,11,12,13]`, A1 unassigned. `ZeroRF1892Macros.lean` proves seven A0 section rules exactly with arbitrary tails, including long transfers. L and R nearest-first excluding the scanned 0. A0 maps:
-- L=1^x 0 U, R=00 T -> L'=1 U, R'=1^(x+2) T, cost 3x+10.
-- L=1^x 0 1^y 0 U, y>=1, R=01 T -> L'=1 U, R'=1^y 0^(x+3) T, cost x+3y+7.
-- R=110 T -> L'=11 L, R'=1 T, cost 8.
-- L=1^x 0 U, R=111 T -> L'=1 U, R'=1^(x+1) 00 T, cost 3x+10.
-- R=100 T -> L'=101 L, R'=T, cost 5.
-- R=1011 T -> L'=1001 L, R'=T, cost 8.
-- R=10100 T -> L'=10001 L, R'=T, cost 5.
+Table `[7,24,11,17,14,8,3,16,21,11,12,13]` (A1 unassigned). A finite authentic seed and guarded period provide a proof for **every compatible completion**, independent of the behavior assigned to A1. Use the zipper convention in which the nearest-first left word includes the scanned cell and the right word starts immediately to its right. Denote the explicit words in [verify1892.py](verify1892.py) by P, B, T; P has 66 bits, B 120 bits. The exact blank-start finite check reaches (A,P++T,empty) at step 39,854. The guarded 16,148-step replay from (A,P,empty) returns (A,P++B,empty). At every intermediate source configuration the known left word is nonempty, so the replay never consumes an appended tail, even when the head reaches the leftmost certified cell.
 
-Failure prefixes include R=10101 and R=01 without required second left run. No unbounded proof for this machine yet: observed left one-run parity and gap constraints do not form an inductive invariant. Equal/asymmetric ngram, run-grammar, block-FAR, bounded prefix abstraction and backward prefix preimage search did not close. A proof of the exception would finish the candidate classification; full exact Cover assembly still needs audit. No parent closure is claimed.
+Appending an arbitrary finite word U to the left zipper preserves every guarded transition (right move pushes the scanned write and reads the right word; left move pops the known scanned bit). Inductively the same replay gives (A,P++U,empty) → (A,P++B++U,empty). Consequently the authentic orbit reaches (A,P++B^k++T,empty) at step 39,854 + 16,148 k for each k >= 0, without executing the undefined row. This is an unbounded nonhalting proof based on an exact reproducible finite certificate; it is not a cutoff inference. The general transport theorem `guardedRun_append` in [GuardedTail.lean](GuardedTail.lean) compiled locally against the existing source semantics with propext only. The complete finite replay and original-source kernel audit are not yet accepted.
+
+The previous exact seven A0 section rules in `ZeroRF1892Macros.lean` were used to discover the cycle. Equal/asymmetric ngram, run grammar, block-FAR and prefix abstractions did not establish an invariant. The arbitrary-tail period avoids these failed methods.
+
+Both formerly open leaves of the candidate partition now have unbounded mathematical resolutions. The remaining work for a source-accepted 0RF parent Cover is the complete exhaustive partition replay and integration of the two exact leaf proofs, including the finite seed/period checker for 1892. Candidate uniform weighted bound remains 2043.
 
 Run `python reproduce.py` to regenerate partition and recipes (requires repository source and g++). Recipes are candidate data, not proof artifacts.
