@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reconstruct four accepted raw139 F1 sibling source modules for one shared Lean build."""
+"""Reconstruct source-accepted raw139 sibling modules for one shared Lean build."""
 from __future__ import annotations
 
 import base64
@@ -183,8 +183,15 @@ def main() -> None:
                    cwd=work_one_ld, check=True)
     subprocess.run([sys.executable, str(one_ld_base / "package.py")],
                    cwd=work_one_ld, check=True)
+    # package.py emits the Hard/Cover checkers, but the recursive carry proof is
+    # a separately checked-in Lean source module. Include it explicitly.
+    carry_source = one_ld_base / "Agent14OneLDCarry.lean"
+    if not carry_source.is_file():
+        raise SystemExit(f"missing checked-in 1LD carry source: {carry_source}")
+    shutil.copy2(carry_source, work_one_ld / "Agent14OneLDCarry.lean")
     check_files(work_one_ld, {
         "WordShift.lean": "7f93ab9ad25543375c7c30e23b8fac780b77a716b00347f6c657719771f1cadf",
+        "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
         "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
         "Agent14OneLDHard.lean": "b436a77405c29314f7f75e9d773326591f7eeb8ad7098b6b854b93afa83818d0",
         "Agent14OneLDCover.lean": "c1e905c2103d30b39bac253c5015f5a51da87aa57c6c5c9acd35e677e022f225",

@@ -432,6 +432,7 @@ jobs:
           work=/tmp/a6-champion-residual/source-sibling-build
           python3 tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegration.lean \
+            im-results/agent6-champion-residual/ChampionResidualCanonical68Integration.lean \
             --source-root "$PWD/.tmp/a14-d0-ZeroLF/imports" \
             --source-root "$PWD/.tmp/a14-d0-OneLB/imports" \
             --source-root "$PWD/.tmp/a14-d0-OneLA/imports" \
@@ -439,7 +440,7 @@ jobs:
             --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work" \
             --manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
-            --label agent6-raw139-five-sibling-graft --jobs 4 | tee /tmp/a6-source-sibling.log
+            --label agent6-canonical68-raw139-five-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-source-sibling.log; then
             echo "Forbidden proof placeholder or native_decide in raw139 source sibling graft" >&2
             exit 1
@@ -477,6 +478,17 @@ jobs:
               "BB6.Agent6ChampionRaw139SiblingIntegration.cover_championResidual_after_five",
               "BB6.Agent6ChampionRaw139SiblingIntegration.canonical78_refined_obligation_count",
               "BB6.Agent6ChampionRaw139SiblingIntegration.exact_from_remainingRaw139AfterFive",
+              "BB6.Agent38ChampionThreshold.champion_score_ge_pow63",
+              "BB6.Agent38ChampionThreshold.champion_score_ge_6766859",
+              "BB6.Agent6Canonical68E1ParentGraft.sound68",
+              "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+              "BB6.Agent6Canonical68ChampionIntegration.championResidual_mem_canonical68",
+              "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_canonical68",
+              "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_by_table_canonical68",
+              "BB6.Agent6Canonical68ChampionIntegration.canonical68_other_address_count",
+              "BB6.Agent6Canonical68ChampionIntegration.canonical68_other_table_count",
+              "BB6.Agent6Canonical68ChampionIntegration.refinedCanonical68Roster_count",
+              "BB6.Agent6Canonical68ChampionIntegration.exact_from_canonical68_and_raw139_after_five",
           )
           for name in names:
               pattern = r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]"
@@ -494,10 +506,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.raw121_graft_run_id == '' }}
         with:
-          name: agent6-raw139-five-sibling-graft-${{ inputs.source_sha || github.sha }}
+          name: agent6-canonical68-raw139-five-sibling-consumer-${{ inputs.source_sha || github.sha }}
           include-hidden-files: true
           path: |
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
+            /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
             /tmp/a6-source-sibling.log
           if-no-files-found: error
