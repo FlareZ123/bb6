@@ -800,13 +800,13 @@ jobs:
         run: |
           set -euo pipefail
           source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
-          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
           git fetch --no-tags origin "$source_revision"
           git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
-          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
-          test "$actual_sha256" = "$expected_sha256"
+          actual_blob_sha=$(git hash-object /tmp/raw112-lean_compile_closure.py)
+          test "$actual_blob_sha" = "$expected_blob_sha"
           cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
-          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
+          test "$(git hash-object tools/lean_compile_closure.py)" = "$expected_blob_sha"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
@@ -871,13 +871,13 @@ jobs:
         run: |
           set -euo pipefail
           source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
-          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
           git fetch --no-tags origin "$source_revision"
           git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
-          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
-          test "$actual_sha256" = "$expected_sha256"
+          actual_blob_sha=$(git hash-object /tmp/raw112-lean_compile_closure.py)
+          test "$actual_blob_sha" = "$expected_blob_sha"
           cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
-          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
+          test "$(git hash-object tools/lean_compile_closure.py)" = "$expected_blob_sha"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
@@ -933,13 +933,13 @@ jobs:
         run: |
           set -euo pipefail
           source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
-          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
           git fetch --no-tags origin "$source_revision"
           git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
-          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
-          test "$actual_sha256" = "$expected_sha256"
+          actual_blob_sha=$(git hash-object /tmp/raw112-lean_compile_closure.py)
+          test "$actual_blob_sha" = "$expected_blob_sha"
           cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
-          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
+          test "$(git hash-object tools/lean_compile_closure.py)" = "$expected_blob_sha"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
