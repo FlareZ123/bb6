@@ -420,3 +420,8 @@ theorem fatal_even_parent_formula_1085_1372 (n : Nat)
   omega
 
 end CascadeFeederExceptional
+
+#print axioms CascadeFeederExceptional.fatal_feeder_1085_1372_root_exclusion
+#print axioms CascadeFeederExceptional.fatal_parent_set_1085_1372
+#print axioms CascadeFeederExceptional.fatal_root_iff_even_parent_1085_1372
+#print axioms CascadeFeederExceptional.fatal_even_parent_formula_1085_1372
