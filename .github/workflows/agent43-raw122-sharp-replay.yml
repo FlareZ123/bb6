@@ -1,0 +1,63 @@
+name: Agent43 sharp Raw122 replay
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  replay:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reuse pinned proof archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p /tmp/raw122-archives
+          python -c 'import json; p=json.load(open("im-results/agent43-raw122-cut/sharp_artifacts.json")); print(*dict.fromkeys(p["archived_shards"]+[p["source"],p["source_bundle"]]+p["late_artifacts"]),sep="\n")' |
+          xargs -P 8 -I '{}' bash -c 'set -e; for attempt in 1 2 3; do gh api "/repos/$GITHUB_REPOSITORY/actions/artifacts/$1/zip" > "/tmp/raw122-archives/github-actions-artifact-$1.zip" && unzip -tq "/tmp/raw122-archives/github-actions-artifact-$1.zip" >/dev/null && exit 0; sleep 3; done; exit 1' _ '{}'
+      - name: Rebuild missing proof objects and compose exact parent
+        run: |
+          set -o pipefail
+          python im-results/agent43-raw122-cut/replay_sharp.py /tmp/raw122-archives /tmp/raw122-sharp | tee /tmp/raw122-sharp.log
+      - name: Package exact linked dependency closure
+        run: |
+          python - <<'PY'
+          import sys, json, pathlib, re, shutil
+          sys.path.insert(0, "tools")
+          import lean_compile_closure as lc
+          w=pathlib.Path("/tmp/raw122-sharp")
+          graph={}; sources={}; stack=["Raw122SharpParent"]
+          while stack:
+              m=stack.pop()
+              if m in sources or lc.is_standard(m): continue
+              p=w/(m+".lean")
+              sources[m]=p
+              graph[m]=re.findall(r"^import ([\w.]+)", p.read_text(),re.M)
+              stack.extend(graph[m])
+          manifest=lc.build_manifest([sources["Raw122SharpParent"]],sources,graph,w,"lean","Raw122 sharp exact weighted maximum",[], "BB6.Agent43Raw122SharpParent.parent_bound","1RB---_1RC---_0RD---_1LD1RE_---0LF_------",6659487,"raw122-sharp-parent")
+          (w/"manifest.json").write_text(json.dumps(manifest,indent=2)+"\n")
+          # Only ship the linked objects and corresponding source, rather than unrelated shards.
+          for p in w.iterdir():
+              if p.suffix in (".lean",".olean") and p.stem not in sources: p.unlink()
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw122-sharp-replay-log
+          path: /tmp/raw122-sharp.log
+          if-no-files-found: warn
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-sharp-parent
+          path: |
+            /tmp/raw122-sharp/*.lean
+            /tmp/raw122-sharp/*.olean
+            /tmp/raw122-sharp/manifest.json
+          retention-days: 90
