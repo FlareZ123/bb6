@@ -4,11 +4,30 @@
 
 ### Focused 0LA repair: proof-carrying packed exact traces
 
-[45756260211](https://github.com/FlareZ123/bb6/actions/runs/45756260211) failed at Raw59Upgrade0LAKid11.lean:4078:84 with maxRecDepth. The actual preserved source artifact 15088512701 identifies the entire partialCheck theorem c_kid11_18_13, not an individual q theorem or the preceding 927-entry cycle. The split includes several long final-hole traces (26334, 66552, 26298, 26346). The 66552-step table is 1RB0LA_1RC0LC_0RD0RF_1LD1RE_---1LA_1RA1LB, with final unassigned E/0; the exact Python trajectory has 66552 live steps. This is an untrusted trace witness until its concrete Lean theorem is accepted.
+[45756260211](https://github.com/FlareZ123/bb6/actions/runs/45756260211) failed at Raw59Upgrade0LAKid11.lean:4078:84 with maxRecDepth. Preserved source artifact 15088512701 identifies the entire partialCheck theorem c_kid11_18_13, which includes four long final-hole traces (26334, 66552, 26298, 26346).
 
-[Raw59PackedQuery.lean](Raw59PackedQuery.lean) proves exact packed-step and run correspondence to the original SweepPumping and zipper semantics, then reduces a last-hole PartialAudit proof to a certified exact final read, the final unassigned slot, restOK, and n+6≤B. [Raw59PackedMacro.lean](Raw59PackedMacro.lean) proves that a block-transfer rule valid over arbitrary untouched tails can be iterated exactly n times, with primitive cost k*n. It checks packed trace segments by induction and composes their exact costs. Both source modules compiled locally with Lean 4.36.0-rc2 against the original accepted 0LE artifact 15054146521; printed theorem axiom dependencies are standard propext, Classical.choice, Quot.sound. The new generator mines repeated query words and verifies the candidate framed rule and each checkpoint in Lean. It selects 0LA late final-hole leaves with n≥5000, emits independent modules, forces the tree proof to split down to their leaves, and transports the checked literal table to the exact original refined table via tableOK_sound. Other child source generation is unchanged. Commit 6481ee1b1e6f900ba6da4296c164f8da723469b8 implements the route; [focused run 45780862896](https://github.com/FlareZ123/bb6/actions/runs/45780862896) is the current acceptance attempt.
+**All 14 long one-hole leaves pass local original-source Lean checking.** The exact 739-open enumeration in that artifact was independently replayed through 69900 live steps for the 682 one-hole tables; the 14 last-hole traces with n≥5000 are below. All generated `last_ok` theorems assert the exact original `partialCheck 70000 (.last n q a) table = true` proposition and compile with Lean 4.36.0-rc2 against accepted dependency artifact 15054146521, with only propext, Classical.choice, Quot.sound. Times are sequential local wall seconds.
 
-For the long test leaf the miner obtains seven sweep rules and 780 actions, with 62273 steps covered by repeated sweeps and 4279 raw steps. The local initial group proof passed; complete trace attempts hit 120s/240s local limits, without a false equality diagnostic. A follow-up closed-form repetition and sealed-prefix bridge checker is being tested to reduce primitive computation further. No parent Cover or reduction of the canonical roster follows before source acceptance.
+| Open index (zero-based) | Live steps | Final hole | Lean seconds |
+|---:|---:|:---:|---:|
+|457|26334|E0|5.85|
+|459|66552|E0|4.53|
+|460|7472|E0|2.70|
+|466|7472|E0|2.66|
+|467|7478|E0|2.39|
+|469|7478|E0|2.50|
+|470|7472|E0|2.28|
+|471|26298|E0|2.92|
+|476|26346|E0|2.83|
+|477|6300|B1|3.18|
+|509|44242|B1|5.81|
+|517|5940|B1|3.39|
+|707|5706|B1|2.51|
+|731|5240|B1|2.93|
+
+[Raw59PackedQuery.lean](Raw59PackedQuery.lean) proves packed-step and exact-run correspondence to original SweepPumping and zipper semantics, then reduces the last-hole PartialAudit proof to certified exact final read, unassigned slot, restOK and n+6≤B. [Raw59PackedMacro.lean](Raw59PackedMacro.lean) provides arbitrary-tail repeated block transfers, sealed-prefix bridges (explicit blank end where necessary), closed-form packed word repetition, exact costs and typed segment composition. The untrusted Python miner proposes all rules; Lean checks every framed rule, group endpoint, primitive cost and final query. The 66552-step table `1RB0LA_1RC0LC_0RD0RF_1LD1RE_---1LA_1RA1LB` has seven sweep rules covering 62273 transitions and 31 bridge rules covering the remaining 4279, with 780 total actions and zero raw replay actions. Explicit arithmetic equality transport before applying the composed run theorem avoids the catastrophic definitional equality cost: earlier full attempts timed out after 120/240 seconds and the direct 520-checkpoint pilot was killed; optimized concrete checking took 4.53–5.12 seconds.
+
+Reproduce with [generate_partial.py](generate_partial.py) on Upgrade0LA, or [emit_packed_last.py](emit_packed_last.py) for the exact table, bound and live count; generated module indices correspond to the preserved open.txt enumeration. The generator selects 0LA late final-hole leaves n≥5000, imports each independently checked module, splits the original proof down to the leaf and transports the literal table to the exact refined table via tableOK_sound. Other child generation is unchanged. Commits 21e1ceb1, 6481ee1b, ea55e017 implement the route. Optimized [focused run 45781689877](https://github.com/FlareZ123/bb6/actions/runs/45781689877) tests full child and parent composition; superseded 45780862896 was cancelled after the optimized pilot passed. No parent Cover or canonical roster reduction is claimed until that integration passes.
 
 ### Integration
 
