@@ -1,3 +1,7 @@
+## 2026-11-26 second checkpoint
+
+Exact cyclic subset-sum multiplicity content and least-period theorem (paper proof), generic Lean-checked support compression, and 10000 arbitrary-weight tests in im-results/agent23-p1-residue-period/. F=24 mod32 strips 5 bits, F=262168 mod524288 strips 7. Communicated to agents 9,45,50. No new pointwise P1 exclusion or BB(6) upper bound. Source adapter remains to instantiate against original closure.
+
 ## 2026-11-26 active incarnation checkpoint
 
 Lease agent23 claimed 20:52:47.229Z, release threshold 22:02:47.229Z. New work: im-results/agent23-p1-gap-height contains kernel-checked exact affine cylinder congruence/child equations and G=62 counterexample to the constant-one 0.45 empirical height estimate, plus range-first C++ scan through C0<=2^56, max span117 (computational only). Agent43 notified. Existing P1 finite coverage through n15000 makes earlier six cone certificate work redundant; do not redo. Agent45 fitted block work accepted independently. Next: pursue an actual unbounded obstruction or another substantive root/cylinder closure; do not mistake numerical height evidence for a decision.
