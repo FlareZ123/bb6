@@ -10,7 +10,18 @@ function solve(table,k,kind,mirror,limit=100000,cap=2,depth=2){
  const copy=(p,v)=>{const s=copying[v]??=new Set();if(!s.has(p)){s.add(p);for(const e of edges[v])add(p,e%2,e>>1)}};
  const apply=(l,b,q,w,v)=>{let p=ctrl(l,q,0),x=node(["x",p,b]);add(x,w,v);add(p,b,x)};
  const push=(l,a)=>{let key=2*l+a;if(delta.has(key))return delta.get(key);let x=left[l],y;
- if(!x.length&&!a)y=[];else if(kind==="ngram")y=[a,...x.slice(0,k-1)];else if(x.length&&x[0][0]===a)y=[[a,Math.min(cap,x[0][1]+1),(x[0][2]+1)%k],...x.slice(1)];else y=[[a,1,1%k],...x.slice(0,depth-1)];
+ // Compress runs of lag-period discrepancies, retaining the last lag bits.
+ if(!x.length&&!a)y=[];
+ else if(kind.startsWith("lag")){
+   const lag=+kind.slice(3),hist=x.length?x[0]:Array(lag).fill(0),runs=x.slice(1),e=Number(a!==hist[lag-1]);
+   const ys=runs.length&&runs[0][0]===e
+     ?[[e,Math.min(cap,runs[0][1]+1),(runs[0][2]+1)%k],...runs.slice(1)]
+     :[[e,1,1%k],...runs.slice(0,depth-1)];
+   y=[[a,...hist.slice(0,lag-1)],...ys];
+ }
+ else if(kind==="ngram")y=[a,...x.slice(0,k-1)];
+ else if(x.length&&((kind==="alt")!==(x[0][0]===a)))y=[[a,Math.min(cap,x[0][1]+1),(x[0][2]+1)%k],...x.slice(1)];
+ else y=[[a,1,1%k],...x.slice(0,depth-1)];
  let id=JSON.stringify(y);if(!li.has(id)){li.set(id,left.length);left.push(y)}let j=li.get(id);delta.set(key,j);(pred[j]??=[]).push([l,a]);for(const [q,w,v] of pending[j]??[])apply(l,a,q,w,v);return j};
  push(0,0);add(0,0,0);copy(ctrl(0,0,1),0);
  for(let i=0;i<events.length;i++){if(i>=limit)return null;let [s,a,v]=events[i];for(const p of copying[s]??[])add(p,a,v);let [tag,l,q,d]=nodes[s];if(tag!=="c")continue;let m=moves[2*q+a];if(!m)return null;let [w,d2,q2]=m;if(d2)copy(ctrl(push(l,w),q2,1),v);else{(pending[l]??=[]).push([q2,w,v]);for(const [l0,b] of pred[l]??[])apply(l0,b,q2,w,v)}}
@@ -31,7 +42,7 @@ function solve(table,k,kind,mirror,limit=100000,cap=2,depth=2){
  for(let [q,a,l,r] of todo){let t=table.slice(6*q+3*a,6*q+3*a+3),w=+t[0],n=t.charCodeAt(2)-65;
  if(t[1]==="R"){let j=L.push[l][w];if(!mem(L.pop[j],w,l)||!RR.pop[r].every(([b,k])=>seen.has(((2*n+b)*nl+j)*nr+k)))throw Error("right closure")}
  else{let j=RR.push[r][w];if(!mem(RR.pop[j],w,r)||!L.pop[l].every(([b,k])=>seen.has(((2*n+b)*nl+k)*nr+j)))throw Error("left closure")}}
- return {table,k,kind,mirror,left:L,right:RR,rows:todo};
+ return {table,k,kind,mirror,cap,depth,left:L,right:RR,rows:todo};
 }
 function search(table){for(const [kind,ks] of [["ngram",[1,2,3,4,5,6,7,8]],["run",[2,3,4,5,6,7,8]]])for(const k of ks)for(const mirror of [false,true]){let c=solve(table,k,kind,mirror);if(c)return c}return null}
 function emit(c,id){const bit=x=>x?"true":"false";const stack=s=>`⟨#[${s.pop.map(es=>`[${es.map(([b,j])=>`(${bit(b)},${j})`).join(",")}]`).join(",")}],#[${s.push.map(([i,j])=>`(${i},${j})`).join(",")}]⟩`;const trie=xs=>xs.length===0?".empty":xs.length===1&&xs[0]===0?".leaf":`(.branch ${trie(xs.filter(x=>x%2===0).map(x=>x>>1))} ${trie(xs.filter(x=>x%2===1).map(x=>x>>1))})`;let rows=Array.from({length:12},(_,i)=>trie(c.rows.filter(([q,a])=>2*q+a===i).map(([q,a,l,r])=>r+c.right.pop.length*l).sort((a,b)=>a-b)));let cases=c.table.match(/.{3}/g).map((t,i)=>`  | (${i>>1},${bit(i%2)}) => ${t==="---"?"none":`some (some ⟨${bit(t[0]==="1")},${bit(t[1]==="R")},${t.charCodeAt(2)-65}⟩)`}`).join("\n");
@@ -50,7 +61,22 @@ function mitmCert(table,L,R){
  return {table,left:stack(L,0),right:stack(R,1),rows};
 }
 
-module.exports={solve,search,emit,mitmCert};
+// Keep the historical search unchanged; extended searches are opt-in.
+function searchPeriodic(table){
+ let c=search(table);if(c)return c;
+ for(const kind of ["ngram","run"])for(const depth of [1,3,4])for(const cap of [1,2,3])for(const k of (kind==="ngram"?[9,10,11]:[2,3,4,5,6]))for(const mirror of [false,true]){
+   if(kind==="ngram"&&(depth!==1||cap!==1))continue;
+   c=solve(table,k,kind,mirror,100000,cap,depth);if(c)return c;
+ }
+ for(const depth of [1,2,3])for(const cap of [1,2,3,4])for(const k of [1,2,3,4,5,6,7,8])for(const mirror of [false,true]){
+   c=solve(table,k,"alt",mirror,100000,cap,depth);if(c)return c;
+ }
+ for(const lag of [3,2,4,5,6])for(const depth of [1,2,3])for(const cap of [1,2,3])for(const k of [1,2,3,4,5,6,7,8])for(const mirror of [false,true]){
+   c=solve(table,k,"lag"+lag,mirror,100000,cap,depth);if(c)return c;
+ }
+ return null;
+}
+module.exports={solve,search,searchPeriodic,emit,mitmCert};
 if(require.main===module){
 const scan=JSON.parse(fs.readFileSync(process.argv[2],"utf8"));
 const certs={};for(const r of scan.results){if(r.index===28)continue;for(let i=0;i<r.openTables.length;i++){let c=search(r.openTables[i].table);if(c)certs[`R${r.index}L${i}`]=c;}}
