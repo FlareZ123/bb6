@@ -930,7 +930,7 @@ jobs:
               destination = Path("/tmp/a47-raw112-shards")
               for group in reused:
                   source = next(
-                      (d / f"raw112-shard-{group}" for d in prior_dirs
+                      (d / f"raw112-shard-{group}" for d in reversed(prior_dirs)
                        if (d / f"raw112-shard-{group}" / "manifest.json").is_file()),
                       None,
                   )
