@@ -39,7 +39,8 @@ def section(ts,kind):
         if len(ts)==2:body='by decide +kernel'
         else:
             mid=len(ts)//2
-            left=merge(ts[:mid+1]);right=merge(ts[mid:]);body=f'prun_join {left} {right}'
+            left=merge(ts[:mid+1]);right=merge(ts[mid:]);c=ts[mid]
+            body=f'prun_join (n := {c-a}) (k := {b-c}) (a := p{a}) (b := p{c}) (c := p{b}) {left} {right}'
         lines.append(f'private theorem {name} : {expr} {b-a} p{a} = some p{b} := {body}')
         return name
     a,b=ts[0],ts[-1];h=merge(ts)
