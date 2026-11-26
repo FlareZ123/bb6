@@ -430,7 +430,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           log = Path('/tmp/half-reverse-block.log').read_text()
-          for name in ("half_covered_next_block", "half_cert_next_block", "no_trace_of_half_cert_empty", "half_first_two", "half_cert_first_two"):
+          for name in ("half_covered_next_block", "half_cert_next_block", "no_trace_of_half_cert_empty", "half_first_two", "half_cert_first_two", "half_margin_ok_n45352466", "half_cert_n45352466"):
               decl = f"'BB6.Agent9P1HalfReverseBlock.{name}'"
               if f"{decl} does not depend on any axioms" in log:
                   print(name, [])
