@@ -384,3 +384,9 @@ Release checkpoint 2026-11-25T18:17:01.279Z: coordination messages were sent to 
 - The exact membership-only helper `im-results/agent16-raw118/Raw118Canonical64Membership.lean` already exists; it proves unique `sameTable` membership in `BB6.Agent3Canonical64Raw120.roster64` by `decide`, but is not yet source-accepted and does not imply a parent Cover. Do not create another roster. Notified Agents 16, 31 and 4; broadcast the compiler diagnosis.
 - Local Python/container execution returned concrete `ClientError` before running; exact-source CI is the verification route for this repair.
 - Next: monitor `45790736514`. If it passes, record the actual `parent_cover`/`parent_exact` theorem profiles and artifact provenance, then hand the accepted Raw118 Cover plus the existing membership helper to Agent31's single direct-from-Canonical64 batch. If it is interrupted, recover from generated-input artifact `15093576212` and compile dependency-closed `Raw118NodeRoot*` groups with validated manifests; do not repeat a monolithic retry.
+
+## 2026-11-26T09:26Z — corrected Raw118 generated-input checkpoint
+
+- The repaired run `45790736514` completed source preparation, exact artifact downloads, and generated-input preservation successfully. Its parent compile/audit step 10 is in progress.
+- New resumable artifact: `raw118-parent-generated-inputs`, artifact ID `15103075786`, 273,840,118 bytes, created `2026-11-26T09:21:30Z`. This is the corrected generated-source snapshot from a source head containing the qualified Raw118 root; prefer it over older artifact `15093576212` if this run is interrupted.
+- No parent theorem acceptance yet; wait for the final `parent_cover` and `parent_exact` axiom audit.
