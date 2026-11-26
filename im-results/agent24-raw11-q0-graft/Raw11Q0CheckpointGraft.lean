@@ -501,61 +501,6 @@ theorem no_common_quotient_of_rootConflict {p q : PartialMachine}
         simpa [e.rightInverse] using h
       exact hneq hEq
 
-def q0NoFrontierConflictCheck : Bool :=
-  q0NoFrontierTables.all (fun p =>
-    raw11FrontierTables.all (fun q => decide (rootConflict p q)))
-
-theorem q0NoFrontierConflictCheck_ok :
-    q0NoFrontierConflictCheck = true := by decide +kernel
-
-def q0NoFrontierExtendsParentCheck : Bool :=
-  q0NoFrontierTables.all (fun p => decide (extendsTable parent p))
-
-theorem q0NoFrontierExtendsParentCheck_ok :
-    q0NoFrontierExtendsParentCheck = true := by decide +kernel
-
-def q0CoarseExtendsParentCheck : Bool :=
-  q0CoarseTables.all (fun p => decide (extendsTable parent p))
-
-theorem q0CoarseExtendsParentCheck_ok :
-    q0CoarseExtendsParentCheck = true := by decide +kernel
-
-def frontierExtendsParentCheck : Bool :=
-  raw11FrontierTables.all (fun p => decide (extendsTable parent p))
-
-theorem frontierExtendsParentCheck_ok :
-    frontierExtendsParentCheck = true := by decide +kernel
-
-theorem q0NoFrontier_extends_parent {p : PartialMachine}
-    (hp : p ∈ q0NoFrontierTables) : extendsTable parent p := by
-  have h := List.all_eq_true.mp q0NoFrontierExtendsParentCheck_ok p hp
-  exact of_decide_eq_true h
-
-theorem q0Coarse_extends_parent {p : PartialMachine}
-    (hp : p ∈ q0CoarseTables) : extendsTable parent p := by
-  have h := List.all_eq_true.mp q0CoarseExtendsParentCheck_ok p hp
-  exact of_decide_eq_true h
-
-theorem frontier_extends_parent {e : List Move × PartialMachine}
-    (he : e ∈ frontier) : extendsTable parent e.2 := by
-  have hmem : e.2 ∈ raw11FrontierTables :=
-    List.mem_map.mpr ⟨e, he, rfl⟩
-  have h := List.all_eq_true.mp frontierExtendsParentCheck_ok e.2 hmem
-  exact of_decide_eq_true h
-
-theorem q0NoFrontier_conflict {p : PartialMachine}
-    (hp : p ∈ q0NoFrontierTables)
-    {e : List Move × PartialMachine} (he : e ∈ frontier) :
-    rootConflict p e.2 := by
-  have hpCheck := List.all_eq_true.mp
-    (show q0NoFrontierTables.all
-      (fun p => raw11FrontierTables.all (fun q => decide (rootConflict p q))) = true
-      from q0NoFrontierConflictCheck_ok) p hp
-  have hmem : e.2 ∈ raw11FrontierTables :=
-    List.mem_map.mpr ⟨e, he, rfl⟩
-  have heCheck := List.all_eq_true.mp hpCheck e.2 hmem
-  exact of_decide_eq_true heCheck
-
 /-- The 10 q0 checkpoint rows with no first-D overlap are fully discharged
     by the Raw11 low-bound branch. -/
 theorem q0NoFrontier_safe {p : PartialMachine}
