@@ -2509,7 +2509,7 @@ jobs:
           fi
           if [ "$TARGET" = weighted-tnf-raw49-progress ]; then
             python tools/lean_compile_closure.py \
-              --source-root /tmp/raw49-generated
+              --source-root /tmp/raw49-generated \\
               --source-root /tmp/raw49-generated/child0 \
               --source-root /tmp/raw49-generated/child2 \
               --source-root /tmp/raw49-generated/child5 \
