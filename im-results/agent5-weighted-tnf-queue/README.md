@@ -87,18 +87,22 @@ The source-level integration is in `../agent32-source-queue/SourceQueueImplicati
 
 These are conditional interfaces, not a BB(6) upper bound. The actual source classifier, exact plan, champion witness, and certificates for every final active/held obligation remain necessary.
 
-## Expanded q0 root coverage: 81-root integration target (pending CI)
+## Expanded q0 root coverage: 80-root integration target (pending CI)
 
-The q0 export `pilot-0-100-fuel-1000000.json` has 156 active roots and one held root. The existing `coarse_roster_All` module composes 75 source-table certificates, with its stated exact count `(156,1,75,0)`. Four additional standalone certificates exist for active roots 35, 37, 47, and 50:
+The q0 export `pilot-0-100-fuel-1000000.json` has 156 active roots and one held root. The existing `coarse_roster_All` module composes 75 source-table certificates, with its stated exact count `(156,1,75,0)`. Four additional standalone source-certificate modules exist for active roots 35, 37, 47, and 50:
 - `Agent5CoarsePair35.v`
 - `Agent5CoarsePair37.v`
 - `Agent5CoarsePair47.v`
 - `Agent5CoarsePair50.v`
 
-Two further roots are being closed by explicit source-level sweep arguments:
-- root 26: `1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------`, with nonhalting completion `1RB1RD_1RC0RE_0LA0RF_1LA1LD_1LE0LA_---1LA`;
-- root 28: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------`, with its corresponding row28 solid-block completion.
+Root 28 has one open leaf in its coarse search tree, matching the proposed solid-block partial machine:
+- parent: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------`
+- open leaf / proposed partial machine: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_1LE0LA_---0RE`
 
-`Agent5Q0SixRootConsume.v` composes these six additional roots. `Agent5Q0EightyOneRootConsume.v` then composes the six with the existing 75-root roster and states the expected exact q0 count `(156,1,81,0)`, leaving 75 active plus one held residual. The shared manual CI target is `enumerate62-q0-81-roots`.
+Its source-level sweep proof and exact q0 consumer are being checked in run `45764648102` (still compiling at the last checkpoint).
 
-**Status:** this 81-root composition is a proof target, not yet an accepted result. The row26/row28 sweep files, four pair certificates, 75-root shard modules, and checkpoint consumer must all compile together against the original Coq source before the 81-root count can be claimed. The earlier `enumerate62-coarse-forest` workflow failure occurred in its Lean source-unpack step, not in the original-source Coq consumer, so it does not validate or refute these Coq modules.
+**Important correction — root 26 is not closed by the current single-solid certificate.** The full open-leaf scan found 13 distinct residual tables for root 26, not one. The first proposed solid machine covers only one of those leaves. The other 12 leaves also have F0 undefined but differ in E0 and/or F1. Root 26 is excluded from the integrated target until all 13 open leaves have independent source-safe certificates or a valid generalized proof.
+
+`Agent5Q0FiveRootConsume.v` composes root 28 with the four pair roots. `Agent5Q0EightyRootConsume.v` then composes those five with the existing 75-root roster and states the expected exact q0 count `(156,1,80,0)`, leaving 76 active plus one held residual. The shared manual CI target is `enumerate62-q0-80-roots`.
+
+**Status:** this 80-root composition is a proof target, not yet an accepted result. The row28 sweep, four pair certificates, 75-root shard modules, and checkpoint consumer must all compile together against the original Coq source before the 80-root count can be claimed. The earlier `enumerate62-coarse-forest` workflow failure occurred in its Lean source-unpack step, not in the original-source Coq consumer, so it does not validate or refute these Coq modules.
