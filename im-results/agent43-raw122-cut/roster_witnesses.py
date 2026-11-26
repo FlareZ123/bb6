@@ -31,11 +31,11 @@ def load_direct(path: Path):
 
 def eq_lines(lhs: str, rhs: str):
     return [
-        f"  have he : {lhs} = {rhs} := by",
-        "    funext s",
-        "    rcases s with ⟨q,b⟩",
-        "    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega",
-        "    rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> rfl",
+        f"  · have he : {lhs} = {rhs} := by",
+        "      funext s",
+        "      rcases s with ⟨q,b⟩",
+        "      have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega",
+        "      rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> rfl",
     ]
 
 def build(branch: int, roster_tsv: Path, hits_tsv: Path,
@@ -105,7 +105,6 @@ def build(branch: int, roster_tsv: Path, hits_tsv: Path,
         "  rcases hp with " + "|".join("rfl" for _ in rows),
     ]
     for kind, lhs, rhs, theorem in proofs:
-        lines.append("  ·")
         lines += eq_lines(lhs, rhs)
         if kind == "late":
             lines += [
