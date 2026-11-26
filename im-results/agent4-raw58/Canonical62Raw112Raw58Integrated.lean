@@ -34,7 +34,7 @@ theorem p58_root :
     p58 initialSlot = some (some ⟨true,true,1⟩) := by
   decide
 
-theorem parents_distinct : p112 ≠ p58 := by
+theorem parents_distinct : sameTable p112 p58 = false := by
   decide
 
 theorem p112_count :
