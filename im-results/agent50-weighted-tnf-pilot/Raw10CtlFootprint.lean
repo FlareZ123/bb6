@@ -209,6 +209,7 @@ theorem ctlLeaf2_holes_exact :
 theorem ctlLeaf2_completionCount : 25 ^ 8 = 152_587_890_625 := by
   decide
 
+#print axioms source2_eq_pinned
 #print axioms toAgent8_ofAgent8
 #print axioms ofAgent8_candidate2_toBB
 #print axioms ctlCheck_congr
