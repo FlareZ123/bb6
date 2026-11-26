@@ -325,13 +325,13 @@ jobs:
         with:
           name: raw122-generated
           run-id: 45655656030
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-source
       - uses: actions/download-artifact@v4
         with:
           name: raw122-audit-01-18
           run-id: 45595285735
-          github-token: \${{ github.token }}
+          github-token: ${{ github.token }}
           path: /tmp/a43-core
       - name: Assemble original residual roster and prove the 0LF child Cover
         run: python im-results/agent43-raw122-cut/assemble_targeted_branch.py 5
