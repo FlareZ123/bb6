@@ -467,7 +467,7 @@ jobs:
           print("Raw139 C1 artifact accepted:", os.environ["C1_BATCH_RUN_ID"])
           print("generated C1 sources:", len(sources))
           PY
-      - name: Compile five source-accepted D0/F1 siblings into the raw139 parent frontier
+      - name: Compile 38 source-accepted sibling Covers into the Canonical68 raw139 parent frontier
         if: ${{ inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
@@ -583,7 +583,6 @@ jobs:
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegrationExtended.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
-            /tmp/a6-champion-residual/source-sibling-build/Raw139C1Batch.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139C1*.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
             /tmp/a6-source-sibling.log
