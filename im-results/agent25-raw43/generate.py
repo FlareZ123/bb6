@@ -1,0 +1,164 @@
+"""Produce the Raw43 B1=0RE E1=0LE five-hole audit using existing exact checkers."""
+from pathlib import Path
+from collections import Counter
+from itertools import product
+import hashlib, json, subprocess, sys, tempfile
+
+ROOT = Path(__file__).resolve().parent
+IM = ROOT.parent
+OUT = ROOT / "generated"
+OUT.mkdir(exist_ok=True)
+sys.path[:0] = [str(IM/x) for x in (
+    "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
+    "agent32-raw59")]
+from generate_four_hole import masks, move, slot
+
+S = json.loads((ROOT/"spec.json").read_text())
+B = 75
+MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
+NS = "BB6.Agent25Raw43"
+CHUNK = 240
+SHARD = 5000
+
+def emit(name, imports, body, namespace=NS, opens=None):
+    if opens is None:
+        opens = ("BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath "
+                 "BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit")
+    (OUT/(name+".lean")).write_text(
+        "".join("import "+x+"\n" for x in imports)
+        + "set_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
+        + f"namespace {namespace}\nopen {opens}\n"
+        + body + f"\nend {namespace}\n")
+
+def compile_cpp(src, out):
+    subprocess.run(["g++","-std=c++20","-O3",str(src),"-o",str(out)],check=True)
+
+def digest(data):
+    return hashlib.sha256(data).hexdigest()
+
+def generate():
+    with tempfile.TemporaryDirectory() as tmp:
+        work = Path(tmp)
+        compile_cpp(IM/"agent2-tnf-raw124/fast_partition.cpp",work/"enumerate")
+        prefix=work/"tree"
+        subprocess.run([str(work/"enumerate"),S["table"],str(S["cap"]),str(S["lookback"]),str(prefix)],check=True)
+        raw=prefix.with_suffix(".open").read_bytes()
+        treebytes=prefix.with_suffix(".json").read_bytes()
+        assert digest(raw)==S["openSHA256"]
+        assert digest(treebytes)==S["treeSHA256"]
+        rows=raw.decode().splitlines()
+        assert len(rows)==len(set(rows))==52
+        tree=json.loads(treebytes)
+        assert tree[:3]==["split",8,8]
+        index={row:i for i,row in enumerate(rows)}
+        cert={}
+        modules={}
+        for key,code in S["witnesses"].items():
+            i=int(key)
+            p=tuple(rows[i].replace("_","")[j:j+3] for j in range(0,36,3))
+            d,D,L,R,z=masks(p,int(code[0]),[int(c,36) for c in code[1:]])
+            cert[i]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
+        for key,table in S["growth"].items():
+            i=int(key)
+            assert rows[i]==table
+            cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
+            modules[i]="Raw43M29"
+        assert set(cert)==set(range(len(rows)))
+        stats=Counter()
+        sizes={}
+        def inspect(t):
+            tag=t[0];stats[tag]+=1
+            n=1+sum(inspect(k) for k in t[3]) if tag=="split" else 1
+            sizes[id(t)]=n
+            return n
+        inspect(tree)
+        assert stats==Counter(cycle=5371,last=995,open=52,split=279)
+        used=set()
+        def render(t):
+            tag,*v=t
+            if tag=="cycle":
+                e,k,r,b=v;return f".cycle {e} {k} {str(bool(r)).lower()} ({b})"
+            if tag=="last":
+                n,s=v;return f".last {n} {slot(s)}"
+            if tag=="open":
+                i=index[v[0]];assert i not in used;used.add(i)
+                return cert[i]
+            assert tag=="split"
+            n,s,kids=v;assert len(kids)==24
+            return f".split {n} {slot(s)} (byMove [\n"+",\n".join(map(render,kids))+"])"
+        def deps(t):
+            if t[0]=="open":
+                return {modules[index[t[1]]]} if index[t[1]] in modules else set()
+            if t[0]=="split":
+                return set().union(*(deps(k) for k in t[3]))
+            return set()
+        emit("Raw43Base",["ZipPrefixAudit"],f"""
+abbrev p43child : PartialMachine :=
+  refine (refine (refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩)) (1,true) (some ⟨false,true,4⟩)) (4,true) (some ⟨false,false,4⟩)
+theorem p43child_root : p43child initialSlot = some (some ⟨true,true,1⟩) := by decide
+theorem p43child_nohalt : weightedTNFNoAssignedHalt p43child :=
+  weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take 3) firstOneCylinder_no_assigned_halt)))
+theorem split_checked (p : PartialMachine) (n : Nat) (s : Slot) (kids : Move → Audit)
+    (hq : zipQueryOK {B} p n s = true)
+    (hk : ∀ mv, zipCheck {B} (refine p s (some mv)) (kids mv) = true) :
+    zipCheck {B} p (.split n s kids) = true := by
+  change (zipQueryOK {B} p n s && allMoves (fun mv => zipCheck {B} (refine p s (some mv)) (kids mv))) = true
+  simp only [Bool.and_eq_true]
+  exact ⟨hq, allMoves_of _ hk⟩
+""")
+        def combine(p,name,n,s,names):
+            cases="\n".join(f"  · exact c_{names[12*w+6*r+q]}" for q,w,r in product(range(6),range(2),range(2)))
+            return f"""
+def k_{name} : Move → Audit := byMove [{','.join('t_'+x for x in names)}]
+def t_{name} : Audit := .split {n} {slot(s)} k_{name}
+theorem q_{name} : zipQueryOK {B} {p} {n} {slot(s)} = true := by decide
+theorem kcheck_{name} (mv : Move) : zipCheck {B} (refine {p} {slot(s)} (some mv)) (k_{name} mv) = true := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+{cases}
+theorem c_{name} : zipCheck {B} {p} t_{name} = true :=
+  split_checked {p} {n} {slot(s)} k_{name} q_{name} kcheck_{name}
+"""
+        def local(t,p,name):
+            if sizes[id(t)]<=CHUNK:
+                return f"""def t_{name} : Audit := {render(t)}
+theorem c_{name} : zipCheck {B} {p} t_{name} = true := by
+  rw [← BB6.Agent48PrefixAudit.prefixCheck_eq]
+  decide
+"""
+            assert t[0]=="split"
+            _,n,s,kids=t;out=[];names=[]
+            for i,k in enumerate(kids):
+                a=f"{name}_{i:02}";names.append(a)
+                out.append(f"abbrev p_{a} := refine {p} {slot(s)} (some {move(MOVES[i])})\n")
+                out.append(local(k,f"p_{a}",a))
+            out.append(combine(p,name,n,s,names))
+            return "".join(out)
+        def shard(t,p,name):
+            mod=f"Raw43Shard_{name}"
+            if sizes[id(t)]<=SHARD:
+                emit(mod,["Raw43Base",*sorted(deps(t))],
+                     f"abbrev p_{name} := {p}\n"+local(t,f"p_{name}",name))
+                return mod
+            assert t[0]=="split"
+            _,n,s,kids=t;names=[];imports=[]
+            for i,k in enumerate(kids):
+                a=f"{name}_{i:02}";names.append(a)
+                imports.append(shard(k,f"(refine {p} {slot(s)} (some {move(MOVES[i])}))",a))
+            emit(mod,imports,f"abbrev p_{name} := {p}\n"+combine(f"p_{name}",name,n,s,names))
+            return mod
+        mod=shard(tree,"p43child","root")
+        assert used==set(range(len(rows)))
+        emit("Raw43Data",[mod],f"""
+noncomputable def certificate43child : WeightedTNFCertificate {B} p43child 6 :=
+  certifiedZip {B} p43child t_root p43child_root p43child_nohalt c_root
+theorem all43child : ∀ m, compatible p43child m → WeightedBound {B} m :=
+  certificate43child.sound
+#print axioms all43child
+""")
+        print("raw43:",stats,"complete candidate audit; bound",B,flush=True)
+
+if __name__=="__main__":
+    generate()
