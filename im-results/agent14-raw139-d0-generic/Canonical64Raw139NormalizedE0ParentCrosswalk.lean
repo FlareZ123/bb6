@@ -10,6 +10,7 @@ namespace BB6.Agent14Canonical64Raw139E0ParentCrosswalk
 open BB6Coverage
 open BB6ChampionArithmetic
 open BB6.Agent6Raw139Normalized
+open BB6.Agent31FourHoleRoster
 open BB6.Agent3Canonical64Raw120
 open BB6.Agent6ChampionResidual
 open BB6.Agent38ChampionThreshold
