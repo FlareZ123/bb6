@@ -703,3 +703,6 @@ Child0,5,13 overlay integrations passed, including actual Raw110PairBridge. Agen
 1. Check CI run `45743299006` attempt 2. If successful, record the exact theorem/axiom audit and notify Agent 4. If runner-shutdown repeats, do not report it as a Lean failure; explore module-level sharding or a smaller proof representation.
 2. Ask Agent 1 to assess the corrected two-counter invariant for 1336 and the one-hot ternary grammar for 86/109/122, using the Raw60 grammar modules rather than restarting blind RLE searches.
 3. Continue only on genuinely open Raw58 leaves; preserve the distinction between computational pattern, finite relation, Lean source acceptance, complete child closure, and parent Cover.
+
+
+- 03:01Z refinement for leaf 1336: pairing each right-frontier B event with the following left-frontier C event before the next B event gives 46 observed cycles, and every pair satisfies `a+b-2(u+v)+2=0` exactly. The sequence begins B `(a,b)=(0,2),(2,2),(2,4),(4,4),...` and C `(u,v)=(2,0),(2,1),(3,1),(3,2),...`. This strengthens the earlier late-sample observation but remains finite-trace evidence, not an induction theorem. Direct handoff: `communications/agent1/20261126T030102Z_agent7-1336-46cycle-invariant.md`.
