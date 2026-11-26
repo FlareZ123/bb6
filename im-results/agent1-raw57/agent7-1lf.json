@@ -2723,6 +2723,14 @@
       "Raw57LF1M851",
       "BB6Coverage.Agent4Raw57LF1M851"
     ],
+    "882": [
+      "Raw57LF1M882885",
+      "BB6Coverage.Agent1Raw57LF1M882885.M882"
+    ],
+    "885": [
+      "Raw57LF1M882885",
+      "BB6Coverage.Agent1Raw57LF1M882885.M885"
+    ],
     "1311": [
       "Raw57LF1Counters",
       "BB6Coverage.Agent1Raw57LF1Counters.M1311"
@@ -2752,11 +2760,17 @@
       "BB6Coverage.Agent1Raw57LF1M2933"
     ]
   },
-  "expected_open": [],
-  "residual": {
-    "882": "1RB1LF_1RC0LA_0RD---_1LD1RE_0RA0LA_1RD0LF",
-    "885": "1RB1LF_1RC1LD_0RD---_1LD1RE_0RA0LA_1RD0LF"
-  },
+  "expected_open": [
+    [
+      882,
+      "1RB1LF_1RC0LA_0RD---_1LD1RE_0RA0LA_1RD0LF"
+    ],
+    [
+      885,
+      "1RB1LF_1RC1LD_0RD---_1LD1RE_0RA0LA_1RD0LF"
+    ]
+  ],
+  "residual": {},
   "automata": {
     "180": [
       2,
@@ -2822,6 +2836,7 @@
     "Raw57LF1M2780": "175475c373c2fb97d6cb4508009369c2ce872aed616ffa89e714067859a84c09",
     "Raw57LF1M851": "563bf7b27cca4852f44d1cc23923385e2c32c1a5a0dd12ddf392b5a017dce71d",
     "Raw57LF1M540542": "df822012abd4410e6eb685d0cca2709d51856be09c691c5589751d2b7d947d7d",
-    "Raw57LF1RunStack": "a38f0ed569f1825152bfc26e1799fe63c9b5167873a4d5c116d2e2bb970f4ca9"
+    "Raw57LF1RunStack": "a38f0ed569f1825152bfc26e1799fe63c9b5167873a4d5c116d2e2bb970f4ca9",
+    "Raw57LF1M882885": "3a2dccd0c3031172ab9a99f6b1b9b44f54e08e68b5183728ca2683f5965773d7"
   }
 }
