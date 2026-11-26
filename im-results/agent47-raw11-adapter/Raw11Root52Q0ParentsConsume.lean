@@ -35,7 +35,7 @@ def remainingCodes : List Nat :=
     (fun c => !(q0Codes.contains c))
 
 def q0Covers (B : Nat) (hB : 4663 ≤ B) :
-    List (Σ p : PartialMachine, Cover (WeightedBound B) p) := [
+    List (PSigma fun p : PartialMachine => Cover (WeightedBound B) p) := [
   ⟨BB6.Agent47Root33.parent,
     Q0RosterConsume.liftCover (A := 162) (B := B) (Nat.le_trans (by decide : 162 ≤ 4663) hB) BB6.Agent47Root33.cover⟩,
   ⟨BB6.Agent47Root49.parent,
@@ -45,13 +45,13 @@ def q0Covers (B : Nat) (hB : 4663 ≤ B) :
 ]
 
 theorem q0Covers_tables (B : Nat) (hB : 4663 ≤ B) :
-    (q0Covers B hB).map Sigma.fst = q0Parents := by
+    (q0Covers B hB).map PSigma.fst = q0Parents := by
   rfl
 
 theorem covers (B : Nat) (hB : 4663 ≤ B) :
     ∀ p ∈ q0Parents, Cover (WeightedBound B) p := by
   intro p hp
-  have hp' : p ∈ (q0Covers B hB).map Sigma.fst := by
+  have hp' : p ∈ (q0Covers B hB).map PSigma.fst := by
     rw [q0Covers_tables]
     exact hp
   rcases List.mem_map.mp hp' with ⟨⟨q, hq⟩, hqmem, hEq⟩
