@@ -94,8 +94,8 @@ def main():
     if len(sys.argv)>1 and sys.argv[1]=="--plan":
         return
     selected=sys.argv[1] if len(sys.argv)>1 else "all"
-    needed=set(groups[selected]) if selected!="all" else {x[0] for x in leaves}
-    far,blocks=witnesses(opens,target)
+    needed=set() if selected=="assemble" else set(groups[selected]) if selected!="all" else {x[0] for x in leaves}
+    far,blocks=({}, {}) if selected=="assemble" else witnesses(opens,target)
     index={s:i for i,s in enumerate(opens)}
     stats=Counter()
     block_done=set()
@@ -126,7 +126,7 @@ def main():
         n,s,kids=v
         rs=[render(k,imports,produce) for k in kids]
         return f".split {n} {slot(s)} (byMove [\n"+",\n".join(rs)+"\n])" if produce else ""
-    emit("Raw119Base",["ZipThreeHoleAudit"],f"""
+    emit("Raw119Base",["CachedZipAudit"],f"""
 abbrev parent : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨false,true,4⟩)
 abbrev child (mv : Move) : PartialMachine := refine parent (4,false) (some mv)
@@ -146,6 +146,10 @@ def {nm} : Audit := {body}
 theorem {ck} : zipCheck {B} {table} {nm} = true := by rfl
 """)
         text,_=partition(p.read_text(),limit=180)
+        # The cached checker is proved equal to zipCheck. Use it only for
+        # the concrete leaves/chunks; the structural joins stay unchanged.
+        text=re.sub(r"(theorem [^\n]+ : zipCheck [^\n]+ = true := by) rfl",
+                    r"\1\n  rw [← BB6.Agent10CachedAudit.root_check_eq]\n  rfl",text)
         p.write_text(text+f"\n#print axioms {NS}.{ck}\n")
     def assemble(mod,nm,ck,table,n,s,partnames,partchecks,imports):
         klist=",".join(partnames)
@@ -197,7 +201,7 @@ theorem all_completions : ∀ m, compatible parent m → WeightedBound {B} m :=
 #print axioms all_completions
 """+end)
     print("enumerated",stats,"block proofs generated",len(block_done),flush=True)
-    if selected!="all":
+    if selected not in ("all","assemble"):
         (ROOT/"roots.txt").write_text("".join(str((ROOT/(m+".lean")).relative_to(REPO))+"\n" for m in groups[selected]))
         check_by_mod={m:(f"check{i:02}" if j is None else f"check{i:02}_{j:02}") for m,_,i,j in leaves}
         (ROOT/"theorems.txt").write_text("".join(NS+"."+check_by_mod[m]+"\n" for m in groups[selected]))
