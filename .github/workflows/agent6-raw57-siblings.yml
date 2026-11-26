@@ -21,6 +21,8 @@ jobs:
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
       - uses: actions/checkout@v4
+      - name: Test Raw57 axiom-report parser
+        run: python im-results/agent1-raw57/test_check_axioms.py
       - name: Download source-accepted Raw56 E1=0RE closure
         if: inputs.child == 'raw56-root-consumer' && inputs.source_run_id != ''
         uses: actions/download-artifact@v4
@@ -174,6 +176,8 @@ jobs:
     timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
+      - name: Test Raw57 axiom-report parser
+        run: python im-results/agent1-raw57/test_check_axioms.py
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
@@ -206,6 +210,8 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Test Raw57 axiom-report parser
+        run: python im-results/agent1-raw57/test_check_axioms.py
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh | sh -s -- -y
