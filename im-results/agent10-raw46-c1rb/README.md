@@ -1,0 +1,3 @@
+# Raw46 / C1=0RB candidate audit
+
+Parent `1RB---_1RC---_0RD0RB_1LD0LC_------_------`, cut 4. Candidate upper bound 179; attaining machine `1RB0LF_1RC0LE_0RD0RB_1LD0LC_1LA0RA_1LEHHH` halts after 178 ordinary moves, certified with Lean. Canonical audit: 2356 splits, 45146 cycles, 8345 last-hole leaves, 690 open leaves (679 FAR, 11 one-/two-block sweep proofs). All 22 raw sweep witnesses and attaining witness passed local Lean 4.36.0-rc2. Full audit compilation in progress; no whole-cylinder Cover claimed yet. Generator uses the same original-source canonical checker as Raw48. This is a child, not a whole Raw46 closure.
