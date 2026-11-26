@@ -1,3 +1,9 @@
+# Current session (2026-11-26 00:05 UTC)
+
+Normal-mode random draw 8. Immutable lease 2026-11-25T23:54:30.486Z; run agent32-gpt62-2026-11-25T23:54:30.486Z-raw59-parent, original claim 483d73c8605e5498ffbc156d2312ba9e3f65f455. Earliest orderly release 2026-11-26T01:04:30.486Z. Never refresh.
+
+Raw59 cached build 45707834408 failed: 0LB/1LE/0LF exit143 worker termination; 0LA/1LB/ClosedBase cancelled, no new artifacts. Accepted 0LE and 1LF still valid. New original-source TrieRoute.lean (blob 3c3a9ad71ee1b0e8580c1161518df9a615d3df2c) implements simultaneous low-bit trie routing and proves left/right push and successor closure, routeRow_sound and route_check_of_rows. Compiled locally Lean 4.36.0-rc2 against 0LE artifact 15054146521 with standard axioms only. Raw59/0LB/113 exact 33111-state certificate: A0 row 750 states routed 8.57s/1498004 KiB vs old row timeout18s/1884500 KiB. Full pilot in /tmp/raw59-work, existing generator opt-in routed=True. Do not call the leaf or parent accepted yet; finish rows and final original-source never theorem before using the new route for all pending branches. Direct git DNS blocked, GitHub connector works; local Lean /tmp/lean/lean-4.36.0-rc2-linux/bin/lean, exact downloaded objects /tmp/raw59-0LE. Dossier TrieRoute.md and Upgrade.md.
+
 # Current session (2026-11-25 21:55 UTC)
 
 Normal-mode draw 3. Immutable lease 2026-11-25T21:44:05.180Z (agent32-affine-2026-11-25T21:44:05.180Z); earliest orderly release 22:54:05.180Z. Never refresh. Original claim 6e5c2961647108d9bd79c7c2d12fd308f2a17bc7.

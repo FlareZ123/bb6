@@ -4,7 +4,7 @@ import subprocess, tempfile, sys
 BASE='BB6.Agent32AsymNGram'
 ROOT=Path(__file__).resolve().parent
 
-def emit(root, name, table, line):
+def emit(root, name, table, line, routed=False):
     l,r,n,L,R,S=line.split();l,r,n=map(int,(l,r,n));size=1<<(l+r)
     def edges(s):
         return sorted(2*int(x)+b for x,v in (a.split(':') for a in s.rstrip(',').split(',')) for b in (0,1) if int(v)&(1<<b))
@@ -32,11 +32,19 @@ def emit(root, name, table, line):
         v='none' if a=='---' else f'some (some ⟨{str(a[0]=="1").lower()},{str(a[1]=="R").lower()},{ord(a[2])-65}⟩)'
         moves.append(f'  | {j//2},{str(bool(j%2)).lower()} => {v}')
     write(name+'Data',['AsymNGram'],[*defs,'def table : PartialMachine := fun s => match s.1.val,s.2 with',*moves,'  | _,_ => none',f'def cert : {BASE}.Cert := ⟨{l-1},{r-1},{lt},{rt},#[{",".join(ts)}]⟩'])
-    modules=[]
-    for j in range(12):
-        q,a=j//2,str(bool(j%2)).lower();mod=name+f'Row{j:02}';modules.append(mod)
-        write(mod,[name+'Data'],[f'theorem row{j:02} : ({BASE}.row cert {q} {a}).all (fun i =>',f'    {BASE}.stateStepOK table cert {q} {a} (i/2^(cert.nR+1)) (i%2^(cert.nR+1))) = true := by decide'])
-    write(name,modules,[f'theorem allRows (q : Fin 6) (a : Bool) : ({BASE}.row cert q a).all (fun i =>',f'    {BASE}.stateStepOK table cert q a (i/2^(cert.nR+1)) (i%2^(cert.nR+1))) = true := by','  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega','  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl','  all_goals cases a',*(f'  · exact row{j:02}' for j in range(12)),f'theorem checked : {BASE}.check table cert = true :=',f'  {BASE}.check_of_rows (by decide) (by decide) (by decide) allRows', 'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=',f'  {BASE}.never table cert checked m hm','#print axioms never'])
+    if routed:
+        route='BB6.Agent32TrieRoute'
+        modules=[]
+        for j in range(12):
+            q,a=j//2,str(bool(j%2)).lower();mod=name+f'Row{j:02}';modules.append(mod)
+            write(mod,[name+'Data','TrieRoute'],[f'theorem row{j:02} : {route}.routeRow table cert {q} {a} = true := by decide'])
+        write(name,modules,[f'theorem allRows (q : Fin 6) (a : Bool) : {route}.routeRow table cert q a = true := by','  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega','  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl','  all_goals cases a',*(f'  · exact row{j:02}' for j in range(12)),f'theorem checked : {BASE}.check table cert = true :=',f'  {route}.route_check_of_rows (by decide) (by decide) (by decide) allRows','theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=',f'  {BASE}.never table cert checked m hm','#print axioms never'])
+    else:
+        modules=[]
+        for j in range(12):
+            q,a=j//2,str(bool(j%2)).lower();mod=name+f'Row{j:02}';modules.append(mod)
+            write(mod,[name+'Data'],[f'theorem row{j:02} : ({BASE}.row cert {q} {a}).all (fun i =>',f'    {BASE}.stateStepOK table cert {q} {a} (i/2^(cert.nR+1)) (i%2^(cert.nR+1))) = true := by decide'])
+        write(name,modules,[f'theorem allRows (q : Fin 6) (a : Bool) : ({BASE}.row cert q a).all (fun i =>',f'    {BASE}.stateStepOK table cert q a (i/2^(cert.nR+1)) (i%2^(cert.nR+1))) = true := by','  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega','  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl','  all_goals cases a',*(f'  · exact row{j:02}' for j in range(12)),f'theorem checked : {BASE}.check table cert = true :=',f'  {BASE}.check_of_rows (by decide) (by decide) (by decide) allRows', 'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=',f'  {BASE}.never table cert checked m hm','#print axioms never'])
     print(name,l,r,n,len(L),len(R),len(defs),flush=True)
     return name
 
