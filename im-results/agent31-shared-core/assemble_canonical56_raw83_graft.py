@@ -164,7 +164,7 @@ def main():
         "raw83_run_id": RAW83_SPEC["run_id"],
         "raw83_artifact_id": raw83_metadata["artifact_id"],
         "raw83_artifact_name": raw83_metadata["artifact_name"],
-        "raw83_artifact_sha256": raw83_metadata["artifact_digest"],
+        "raw83_artifact_sha256": raw83_metadata["digest"],
         "raw83_parent_table": RAW83_SPEC["table"],
         "raw83_parent_theorem": RAW83_SPEC["theorem"],
         "raw83_weighted_bound": RAW83_SPEC["bound"],
