@@ -30,9 +30,9 @@ The 21 new Nov26-21 rows lie under six residuals (8, 9, 10, 13, 139, 140). The 3
 
 ## Reproduction run
 
-The lightweight CI target completed successfully: workflow run 45898819353, head 33b6e4bd2a3a71d9e692aae0c2b50bf8614b5551. It ran Python syntax compilation and the full crosswalk script, then asserted the 58-entry roster count, 56 unique matches, zero unmatched/ambiguous rows, the eight expected residual groups, and 1,400 distinct leaf completions.
+The final script and report schema were reproduced successfully by workflow run 45899546150 on head 3731bd0ce6365a815473f0d23c96c00c0a2a551b (superseding the earlier validation run 45898819353). The job ran Python syntax compilation and the full crosswalk script, then asserted the 58-entry roster count, 56 unique matches, zero unmatched/ambiguous rows, the eight expected residual groups, and 1,400 distinct leaf completions.
 
-The uploaded artifact is canonical58-source-crosswalk (artifact ID 15154443941, 6,894 bytes, SHA-256 fc4ea3e10d92224c69037c2159661ccc9a91010a12b1313ad612b0982cc78671). This validates the metadata calculation and script reproducibility only; it does not turn the table-extension map into a Lean theorem or any parent Cover.
+The uploaded artifact is canonical58-source-crosswalk (artifact ID 15154733821, 6,866 bytes, SHA-256 415ec5d21e19373490bfa87167027d142d66e468bff87096a2f3e2d02d73f053). The report records the input Git blob SHAs. This validates the metadata calculation and script reproducibility only; it does not turn the table-extension map into a Lean theorem or any parent Cover.
 
 ## Proof status and limits
 
