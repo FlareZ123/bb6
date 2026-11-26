@@ -32,6 +32,8 @@ for base in (Path("/tmp/a43-new-shards"),):
                 seen[key]=digest
 print(f"merged {len(seen)} distinct Lean objects",flush=True)
 for src in source.glob("*.lean"):
+    if parent_core and src.name in {"Raw122Branch00.lean","Raw122Branch05.lean","Raw122Branch16.lean","Raw122Branch17.lean"}:
+        continue
     shutil.copy2(src,cut/src.name)
     shutil.copy2(src,out/src.name)
 env=os.environ.copy()
