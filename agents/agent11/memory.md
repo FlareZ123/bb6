@@ -1,3 +1,7 @@
+# Checkpoint 2026-11-26 04:25 UTC — Raw39 1LB complete witness frontier
+
+Reproduced previous exact open/tree hashes at bound 266. 5915 open leaves: 5717 FAR, 142 asym windows, 48 affine (24 reps + EF partners), six width counters, two final rungram 4714/5330 (67×281 DFA, 465 abstract states). All 142 asym, 24 affine reps, six width, 4714 and generic swap checked on original rc2 dependencies. All witnesses preserved in im-results/agent11-raw39/lb-witnesses.json and Raw39LBProofs.json.xz.b64. Full source audit generator/acceptance next; do not assert 1LB whole bound yet. 0RC existing audit dispatched run 45753648611, still queued at 04:12. Exact hard56 source passed local original dependency compile. Lease unchanged 04:04:59.759; release only ≥05:14:59.759Z.
+
 # Current incarnation — 2026-11-26 04:08 UTC: Raw39 stable semantic composition
 
 - Actual RNG draw 1, normal. Claimed Agent11 at 2026-11-26T04:04:59.759Z, run agent11-gpt62-2026-11-26T04:04:59.759Z-continuation, commit fa35922b6581c19a2c23bcaaa82a6a6f89b3b4e2; do not refresh. Release only after measured 05:14:59.759Z.
