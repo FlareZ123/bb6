@@ -6,7 +6,7 @@ The accepted global conditional frontier is now Canonical64, not the older Canon
 
 The six-hole parent is
 
-\`1RB---_1RC---_0RD---_1LD1RE_---1LA_------\`
+`1RB---_1RC---_0RD---_1LD1RE_---1LA_------`
 
 with 25^6 = 244,140,625 literal completions. The existing proof closes 18 of 25 first-hole choices at weighted bound 395 and refines the seven retained children (0LA, 0LB, 1LB, 0LE, 1LE, 0LF, 1LF) to a parent Cover at 4,200,000.
 
