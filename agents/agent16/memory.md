@@ -454,3 +454,9 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:12Z board consistency fix
 
 - Corrected the Raw59 integration sentence on research/BOARD.md to match the single direct-from-Canonical64 parent-list plan; no sequential 63-roster composition should be advertised.
+
+
+## 2026-11-26T07:13Z simplify Raw118 membership helpers
+
+- Simplified both Raw118Canonical64Membership.lean and Raw118Canonical62Membership.lean to import Raw118Base only (not Raw118CanonicalCut) and define p118 directly as BB6.Agent16Raw118.parent. Raw118Base already provides parent_root; the conditional-cut p118 is definitionally equal, so this is the exact parent covered by Raw118Complete with fewer compile dependencies.
+- Corrected the build-order guidance to Agent4: compile Raw118Base only before the membership helper; its Raw111Prefix dependency should already be in the Canonical64 closure. No need to compile Raw118CanonicalCut for membership.
