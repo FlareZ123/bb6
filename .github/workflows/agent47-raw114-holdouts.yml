@@ -296,7 +296,7 @@ jobs:
             --workdir /tmp/a47-raw11-root52-known \
             --manifest /tmp/a47-raw11-root52-known/manifest.json \
             --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52-known/manifest.json \
-            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
+            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52-known \
             --jobs 2 \
             --lean lean \
             --label raw11-root52-plus-46-extras-plus-q0-parents \
