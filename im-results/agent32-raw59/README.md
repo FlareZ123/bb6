@@ -55,3 +55,27 @@ The thirteen independently source-checked ordinary branches cover 126,953,125 li
 The dormant workflow target `canonical56-raw59-graft` is defined in `.github/workflows/agent31-canonical71-raw109.yml`. It expects an accepted `canonical57-raw112-graft-integrated` run and either the one-shot `canonical64-raw59-slice-integrated` or staged `canonical64-raw59-staged-integrated` run. It emits `canonical56-raw59-graft-integrated` with report `canonical56-raw59-graft.json`. The target is not dispatched until both inputs are accepted.
 
 Agent31 has confirmed that, after Canonical56 is accepted, they will take the distinct Raw83 parent as the next sequential cut, rechecking membership and distinctness against the actual Canonical56 roster. Do not build a competing Raw83 branch on Canonical58 or Canonical57.
+
+
+## Lean Canonical58/57 roster export
+
+This directory also contains an intermediate, reproducible bridge between the accepted Lean roster and the source crosswalk.
+
+The source crosswalk under `im-results/agent31-canonical58-source-crosswalk/` reconstructs the expected 58-entry roster from `canonical-124.json`, including raw residual IDs, canonical indices, addresses and table RLEs. That data alone is not authoritative: the accepted Lean theorem's actual `roster58` is.
+
+`Canonical58RosterExport.lean` imports the accepted `Canonical58Raw113Graft` module and the compiled `Canonical57Raw112Graft` module. It serializes the actual `roster58` and `roster57` values, iterating all 12 `(state, read-symbol)` slots and encoding each transition in the repository's six-row RLE format.
+
+`compare_lean_roster.py` then:
+- compares Lean-exported `(raw_residual_index, table_rle)` pairs against the source-derived manifest, including multiplicity;
+- checks that Raw59 remains, Raw118 is absent, and Raw112 is removed in the Canonical57 successor;
+- enriches the Lean-exported rows with source canonical indices and original addresses;
+- records the accepted artifact IDs, SHA-256 digests, source revisions, Lean toolchain version and code/input hashes.
+
+The existing `canonical57_raw112_delta` job in `.github/workflows/agent31-canonical71-raw109.yml` runs this export after it has already downloaded and linked the accepted Canonical58 closure and compiled the Raw112 graft. It does not create a new workflow or download/rebuild the historical closure a second time.
+
+The job sets `LEAN_PATH=/tmp/a17-canonical57-raw112/linked` and `ROSTER_EXPORT_DIR=/tmp/a17-canonical57-raw112`, runs `crosswalk.py`, executes the Lean exporter, then runs the comparator. The resulting files are included in the existing `canonical57-raw112-graft-integrated` artifact:
+- `canonical58-lean-roster.json` and `canonical57-lean-roster.json`: direct Lean exports;
+- `canonical58-lean-roster-manifest.json` and `canonical57-lean-roster-manifest.json`: enriched manifests;
+- `canonical58-roster-crosswalk-audit.json`: exact-match audit and provenance.
+
+The Lean export has not yet been executed against the accepted closure; it awaits successful Raw112 parent-Cover recovery. A mismatch should be treated as evidence to investigate, not papered over by changing the expected manifest.
