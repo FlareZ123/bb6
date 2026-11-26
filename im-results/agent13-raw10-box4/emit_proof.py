@@ -5,8 +5,8 @@ Run from the scratch directory containing greedyboxes.json and tree6..11.txt.
 import json,glob,sys,subprocess
 from pathlib import Path
 from collections import defaultdict
-from greedy import HERE,cert,compress,safe_mask,mask_domain
 from finish import domain_for
+from greedy import HERE,cert,compress,safe_mask,mask_domain
 sys.path.insert(0,str(HERE.parent/'agent13-raw10-box17'))
 from emit_all import partial
 from emit_bitpacked import packstack
