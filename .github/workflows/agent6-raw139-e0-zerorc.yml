@@ -11,8 +11,13 @@ on:
         type: choice
         options: [zeroRC, oneRE, zeroRF]
         default: zeroRC
+      recovery_run_id:
+        description: Reuse the 23 accepted oneRE root artifacts from run 45846437127; recover root00 only
+        type: string
+        default: ''
 permissions:
   contents: read
+  actions: read
 env:
   VARIANT: ${{ inputs.variant || 'zeroRC' }}
   ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || 'ZRC' }}
@@ -20,6 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || '1673363' }}
 jobs:
   prepare:
+    if: inputs.recovery_run_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -61,6 +67,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   shard:
+    if: inputs.recovery_run_id == ''
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -104,6 +111,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   compose:
+    if: inputs.recovery_run_id == ''
     needs: [prepare,shard]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -137,5 +145,105 @@ jobs:
           path: |
             .tmp/a6-${{ env.VARIANT }}/parent
             .tmp/a6-${{ env.VARIANT }}/imports
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-oneRE-root00:
+    if: inputs.recovery_run_id == '45846437127' && inputs.variant == 'oneRE'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5b160a000f2b21286f3a0f7fcabd92d13d8e4469
+      - name: Fetch pinned replacement generator
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneRE/emit60.py" > im-results/agent6-raw139-e0-oneRE/emit60.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneRE-core-and-sources
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneRE
+      - name: Replace only H60 and compile exact missing root
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-oneRE
+          base=im-results/agent6-raw139-e0-oneRE
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$base/emit60.py" "$work/imports"
+          mkdir -p "$work/shard"
+          printf '%s\n' "$RECOVERY_SHA" > "$work/shard/recovery-source-sha.txt"
+          python3 tools/lean_compile_closure.py "$work/imports/ORERoot00.lean" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir /tmp/a6-oneRE-branch --jobs 2 --manifest "$work/shard/manifest.json" --label raw139-e0-oneRE-root00-recovered --theorem BB6.Agent6E0OneRE.cORERoot00 --weighted-bound 19745 | tee "$work/shard/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/shard/log"
+          mkdir -p "$work/shard/build"
+          find /tmp/a6-oneRE-branch -name '*.olean' -exec cp '{}' "$work/shard/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneRE-root00-certified
+          path: .tmp/a6-oneRE/shard
+          include-hidden-files: true
+          retention-days: 14
+  compose-recovered-oneRE:
+    needs: recover-oneRE-root00
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 5b160a000f2b21286f3a0f7fcabd92d13d8e4469
+      - name: Fetch pinned replacement generator
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneRE/emit60.py" > im-results/agent6-raw139-e0-oneRE/emit60.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneRE-core-and-sources
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneRE
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-oneRE-root*-certified
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneRE/shards
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneRE-root00-certified
+          path: .tmp/a6-oneRE/shards/raw139-e0-oneRE-root00-certified
+      - name: Compose exact parent using the original 23 roots and repaired root00
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-oneRE
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent6-raw139-e0-oneRE/emit60.py "$work/imports"
+          python3 im-results/agent6-raw139-e0-oneRE/compose.py "$work"
+          printf '%s\n' "$RECOVERY_SHA" > "$work/parent/recovery-source-sha.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneRE-parent-certified
+          path: |
+            .tmp/a6-oneRE/parent
+            .tmp/a6-oneRE/imports
           include-hidden-files: true
           retention-days: 14
