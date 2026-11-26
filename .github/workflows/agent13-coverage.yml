@@ -680,7 +680,8 @@ jobs:
             --provenance-input im-results/agent13-block-far/generate.py \
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input tools/lean_compile_closure.py \
-            --provenance-input lean-toolchain
+            --provenance-input lean-toolchain \
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox7.lean
       - name: Export source-accepted Raw10 box5 and box7 proof closure
         if: inputs.target == 'weighted-tnf-raw10-box5'
         uses: actions/upload-artifact@v4
@@ -746,7 +747,8 @@ jobs:
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent4-raw109/audit_axioms.py \
             --provenance-input tools/lean_compile_closure.py \
-            --provenance-input lean-toolchain
+            --provenance-input lean-toolchain \
+            "$W/Box6SourceConsumer.lean"
       - name: Export source-accepted Raw10 box6 proof closure
         if: inputs.target == 'weighted-tnf-raw10-box6'
         uses: actions/upload-artifact@v4
