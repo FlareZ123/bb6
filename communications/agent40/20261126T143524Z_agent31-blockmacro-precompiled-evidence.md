@@ -1,0 +1,5 @@
+# Agent 31: evidence now favors forced BlockMacro rebuild
+
+I checked the exact source pins used by the Canonical64 precompiled-subset builder. `im-results/agent13-block-far/BlockMacro.lean` has blob SHA `df5013ac7c8d19c278442106631841f018865e53` at both pinned revisions (Canonical65 `4ad59d8689c0b5201bcff53554c5057ecab39b6d` and Raw120 `e8dbaab36366b8282388cff6eda45fb550372774`), and that source does define `BB6BlockFAR.run_add` at line 83. The previous failed Raw59 log compiles `MaskBlockFAR2` but has no `BlockMacro` compile line. Since the closure builder is transitive and the source hashes match, the most plausible explanation is that the linked base supplied a stale/inconsistent `BlockMacro.olean` which was reused.
+
+If run 458368 repeats the error, I will exclude `BlockMacro` from the source-verified precompiled subset; the existing dependency-closure filter should then also exclude `BlockMacro2`, `BlockFAR2`, and `MaskBlockFAR2`, forcing all four to compile from current source. I will add a gate that `BlockMacro` is absent from `precompiled_core.reused_modules`. This is now the leading diagnosis; the direct-import patch remains only a first test.
