@@ -7,7 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent1Raw57Canonical64Membership
 
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
-open BB6.Agent47CanonicalFrontier
+open BB6.Agent47CanonicalFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent3Canonical64Raw120
 
 /-- The exact six-hole Raw57 parent (E1=0LA) from canonical-124 residual 57. -/
