@@ -2,7 +2,8 @@
 
 // Deterministic BigInt stress test for the wider reverse-block quotient window.
 // Run with: node wide_fit_bigint_check.js
-// This checks generated legal blocks (not an exhaustive global theorem or C++ build).
+// Also checks the modular first-jump subset-sum loop against direct enumeration.
+// This is generated arithmetic evidence, not an exhaustive global theorem or C++ build.
 
 let seed = 0x9e3779b9;
 function rand() {
@@ -30,6 +31,28 @@ function digitWeightMask(b) {
     + 32n * (b & 0xFFFFFFFF00000000n);
 }
 
+function jumpLoop(q, k, Y) {
+  const M = 1n << BigInt(k);
+  let residues = new Set([String(Y % M)]);
+  for (let j = 0; j < k; j++) {
+    const shift = ((q + BigInt(j)) * (1n << BigInt(j))) % M;
+    const next = new Set(residues);
+    for (const r of residues) next.add(String((BigInt(r) - shift + M) % M));
+    residues = next;
+  }
+  return residues;
+}
+
+function jumpDirect(q, k, Y) {
+  const M = 1n << BigInt(k);
+  const residues = new Set();
+  for (let B = 0n; B < M; B++) {
+    const S = q * B + digitWeightLoop(B, k);
+    residues.add(String((Y - S % M + M) % M));
+  }
+  return residues;
+}
+
 function candidates(q, k, z, y, strict) {
   const X = (z << BigInt(k)) + y;
   const F = q + BigInt(k);
@@ -47,6 +70,7 @@ function candidates(q, k, z, y, strict) {
 }
 
 let cases = 0;
+let maskChecks = 0;
 let widerOnly = 0;
 let maxObservedX = 0n;
 for (let k = 1; k <= 26; k++) {
@@ -60,7 +84,10 @@ for (let k = 1; k <= 26; k++) {
     const q = minQ + BigInt(rand() % span);
     const B = BigInt(rand()) & mask;
     const r = BigInt(rand()) % q;
-    const X = q * B + digitWeight(B, k) + r;
+    const D = digitWeightLoop(B, k);
+    if (D !== digitWeightMask(B)) throw new Error(`digitWeight mask mismatch at k=${k}`);
+    maskChecks++;
+    const X = q * B + D + r;
     const z = X >> BigInt(k);
     const y = X & mask;
     const F = q + BigInt(k);
@@ -87,9 +114,28 @@ for (let k = 1; k <= 26; k++) {
   }
 }
 
+let jumpComparisons = 0;
+let jumpResidues = 0;
+for (let k = 1; k <= 12; k++) {
+  const M = 1n << BigInt(k);
+  for (let i = 0; i < 64; i++) {
+    const q = BigInt(rand() % 200000003 + 1);
+    const Y = BigInt(rand()) % M;
+    const byLoop = jumpLoop(q, k, Y);
+    const byDirect = jumpDirect(q, k, Y);
+    if (byLoop.size !== byDirect.size || [...byDirect].some(r => !byLoop.has(r))) {
+      throw new Error(`jump residue mismatch at k=${k}`);
+    }
+    jumpComparisons++;
+    jumpResidues += byDirect.size;
+  }
+}
+
 console.log(JSON.stringify({
   cases,
   maskChecks,
+  jumpComparisons,
+  jumpResidues,
   widerOnly,
   maxObservedX: maxObservedX.toString(),
   uint64Safe: maxObservedX < (1n << 64n)
