@@ -79,6 +79,8 @@ on:
           - sourceWeightedWord
           - sourceLaneClock
           - sourceLanePath
+          - sourceLaneM8Smoke
+          - sourceLaneM8
           - sourceDyadicAncestry
           - sourceHighSigned
           - sourceBoundedShadow
@@ -311,6 +313,13 @@ jobs:
             sourceLanePath)
               jobs=2
               target=im-results/agent12-c-high-shadow/LanePathSource.lean
+              ;;
+            sourceLaneM8Smoke|sourceLaneM8)
+              jobs=2
+              returns=150052
+              if [ "$M16_TARGET" = sourceLaneM8Smoke ]; then returns=1000; fi
+              python3 im-results/agent12-c-high-shadow/gen_lane_m8.py --returns "$returns"
+              target=im-results/agent12-c-high-shadow/LaneM8Generated.lean
               ;;
             sourceBitEventCutoff)
               jobs=2
