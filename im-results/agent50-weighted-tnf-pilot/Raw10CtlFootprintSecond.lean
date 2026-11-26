@@ -166,6 +166,7 @@ theorem ctlLeaf3_completionCount :
     25 ^ 7 = 6_103_515_625 := by
   decide
 
+#print axioms source3_eq_pinned
 #print axioms ofAgent8_candidate3_toBB
 #print axioms ctlAcc3_footprint
 #print axioms ctlCheck_target3
