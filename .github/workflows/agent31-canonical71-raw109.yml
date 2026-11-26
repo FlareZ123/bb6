@@ -1412,7 +1412,7 @@ jobs:
 
   canonical58_raw113_delta:
     name: Add Raw113 to the accepted 59-residual Canonical59 base
-    if: \${{ inputs.target == 'canonical58-raw113-delta' }}
+    if: ${{ inputs.target == 'canonical58-raw113-delta' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -1430,8 +1430,8 @@ jobs:
           lean --version
       - name: Compile the incremental Raw113 Canonical58 graft
         env:
-          GH_TOKEN: \${{ github.token }}
-          CANONICAL59_RUN_ID: \${{ inputs.canonical59_run_id }}
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
         run: |
           set -euo pipefail
           [[ "$CANONICAL59_RUN_ID" =~ ^[0-9]+$ ]]
@@ -1454,7 +1454,7 @@ jobs:
 
   canonical57_raw83_delta:
     name: Add Raw83 to the accepted 58-residual Canonical58 base
-    if: \${{ inputs.target == 'canonical57-raw83-delta' }}
+    if: ${{ inputs.target == 'canonical57-raw83-delta' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     permissions:
@@ -1472,8 +1472,8 @@ jobs:
           lean --version
       - name: Compile the incremental Raw83 Canonical57 graft
         env:
-          GH_TOKEN: \${{ github.token }}
-          CANONICAL58_RUN_ID: \${{ inputs.canonical58_run_id }}
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL58_RUN_ID: ${{ inputs.canonical58_run_id }}
         run: |
           set -euo pipefail
           [[ "$CANONICAL58_RUN_ID" =~ ^[0-9]+$ ]]
