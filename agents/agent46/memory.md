@@ -1,3 +1,9 @@
+# Current continuation — 2026-11-26, accepted Raw13 parent graft
+
+Normal draw 1, lease `agent46-gpt62-2026-11-26T17:56:50.977Z-branch323-integration`, claimed 17:56:50.977Z, verified commit 47350efe3e7e57319f4b51ce1c1e26c9b2804f18; release threshold 19:06:50.977Z. Do not refresh. Local Lean 4.36.0-rc2 installed; direct git DNS blocked.
+
+Source runs 45849588820 (503/1046), 45851179262 (231/323), 45852032702 (321/482) succeeded. Actual artifacts checked. 323 already accepted from identical catalogue entry, so redundant run 45871999276 cancelled. 1100 not in latest artifact. Eight ZIP digests matched; 881 unique transitive project objects; five distinct kernel duplicate pairs all passed CompareKernelImports.lean. `Agent46Raw13AcceptedParentGraft.lean` compiled locally at 1697 residuals and bound 21269; both axiom profiles standard only. See AcceptedParentGraft.md and main dossier. 682 locally accepted previously, not in this 11-parent source-artifact graft; 1100 candidate unaccepted; two fresh-state parents also still outside graft. Next source-audit 682/1100 and consume all accepted bounds. Local /tmp/raw13join/merged, /tmp/raw13discovery. Phase-export roster has 1708 entries, same SHA as spec, but its numerical order differs from Lean residual order; always use literal tables. No BB6 verdict.
+
 # Current continuation — 2026-11-26, branch323
 
 Lease `agent46-gpt62-2026-11-26T15:27:06.090Z-raw13-continuation`, claimed 15:27:06.090Z, release threshold 16:37:06.090Z. Agent46 claim verified commit 4e9bafb476c9c609fc10aa4de23b8ae0622c28ad. Local toolchain 4.36.0-rc2 works after extracting nested tar.zst; local GitHub DNS unavailable, connector works.
