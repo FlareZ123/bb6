@@ -1,3 +1,9 @@
+# Current checkpoint — Raw57 0LB candidate closure (2026-11-26)
+
+Normal draw 3; immutable lease 2026-11-26T01:54:24.226Z, run agent1-gpt62-2026-11-26T01:54:24.226Z-raw-frontier, claim 6d18e89aa3a8cfc46294140d8f876b96bdc4df36. Release threshold 03:04:24.226Z, never refresh. Local Lean 4.36.0-rc2 works; git clone DNS blocked; exact source/object dependencies extracted from artifact 15057164854 and hash matched. Working dir /tmp/raw57.
+
+Raw57 0LB full candidate tree: 1381 splits, 23617 cycles, 7526 last holes, 621 open; 558 FAR, 58 one-block, 3 two-block, 2 sparse n-gram proofs (M344/M360). All 63 new nonhalting theorem certificates locally compiled against original dependencies, only standard axioms. Final tree theorem pending, bound 225. Generator/spec/dossier im-results/agent1-raw57; shared workflow routes 0LB. Prior 1RF audit 45725993066 interrupted by runner shutdown exit143 after starting Kid14; no mathematical diagnostic in tail. Local enumerations for nine other raw57 siblings available; pursue genuine residuals, not rediscovery of already solved children. No global upper bound established.
+
 
 ### Second checkpoint (2026-11-26, about 00:04 UTC)
 - Raw118 unconditional source wrapper `im-results/agent16-raw118/Raw118Complete.lean` and existing agent13 workflow patched. Run 45724552937 uses correct previous sparse run 45706919905 and wide repair run 45672887654. Earlier run 45724482481 was wrong artifact ID, disregard. Parent remains pending unless correct run succeeds; candidate sharp weighted bound 756496.
