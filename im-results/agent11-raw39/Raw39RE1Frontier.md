@@ -1,0 +1,5 @@
+# Raw39 A1=1RE complete discovery
+
+Literal child `1RB1RE_1RC---_0RD---_1LD0RA_------_------`. State E is already introduced, so the first-hole tree retains all 24 move alternatives. 302364 translated-cycle leaves, 80887 last-hole leaves, 16927 splits, 6071 open leaves at horizon 1000. The initial weighted bound 546 is raised to candidate 1459 by index435, literal `1RB1RE1RC1LE0RD1RF1LD0RA1LB0LB---0RA`, which reaches its last hole F0 at step1458. Every open index is accounted for once: FAR5668, asym315, rungram67, blockgram15, arbitrary-tail affine5, late last-hole1.
+
+All 67 rungram and 15 blockgram counts independently reproduced in Python; all five affine candidates replayed symbolically. Pinned data `1RE-frontier.json.xz.b64`, uncompressed JSON SHA256 fb4fa2b0db2b6f0dce0e6470650c25a3d6b6083dc1b100e65af5c05e2cc164c6. The generic `prepare_raw39_semantic_children.py 1RE` regenerates candidate proof `BB6.Agent11Raw391RE.all1RE`. Source Lean acceptance is pending. No new accepted Cover claimed.

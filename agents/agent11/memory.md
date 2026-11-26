@@ -1271,3 +1271,6 @@ All eleven formerly hard leaves now have arbitrary-tail affine growth candidates
 
 ### 1LA complete discovery (06:15 UTC)
 A1=1LA candidate B349, 5088 opens covered (FAR4943,asym70,rungram69,blockgram273,runblock410,affine421/457/460/503). New 410 paired run-block closure 36374 rows reduced to 1691 by joint context/transition partition refinement, independent closure verified. Data and generic generator in `1LA-frontier.json.xz.b64`, `prepare_raw39_semantic_children.py`, `blockgram_regen.py`, `minimize_bi.py`. Candidate only. 0LA run45766252232 queued; 0RC accepted B2354. 1RE residual work continues. Local /tmp/raw39.
+
+### 1RE complete discovery (06:18 UTC)
+A1=1RE candidate B1459, 6071 opens: FAR5668, asym315,rungram67,blockgram15,affine5,late hole435 at1458 F0. All finite block/run witnesses independently regenerated; 12 final holdouts all solved by fixed-width block/residue abstraction. `1RE-frontier.json.xz.b64`, `Raw39RE1Frontier.md`. Generic semantic generator available. 0LE ngram1288/hard451; 1LE ngram1781/hard1381, rungram search in progress locally. Candidate proof status only.
