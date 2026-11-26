@@ -17,3 +17,6 @@ Previous tier: run 45875061485 reported `Raw47 FAR5: 0/114 leaves certified; 114
 The FAR bank output is computational candidate evidence only. A line in `raw47-far6.txt` is not a theorem until it is converted into the Lean FAR certificate and checked by Lean 4.36.0-rc2. The existing `generate_far.py` currently asserts `n <= 5`; an n=6 result requires that generator's bound to be extended (or an equivalent reproducible generator) before proof compilation.
 
 All output belongs in `im-results/`; no academic result or global residual-count reduction is claimed by this search alone.
+## Result (2026-11-26)
+
+The exhaustive FAR6 run completed with **0/114** certified residuals. The progress log reports cumulative direction tests: n=1: 2; n=2: 10; n=3: 100; n=4: 1,732; n=5: 42,182; n=6: 1,307,582. The full process took 84.99 seconds and peaked at 3,560 KB RSS. The candidate file is empty. The committed summary and raw log are the reproducible evidence; this excludes only the FAR certificate family through six states, not all possible nonhalting arguments.
