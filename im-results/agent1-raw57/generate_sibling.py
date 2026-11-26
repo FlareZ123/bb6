@@ -119,7 +119,7 @@ def main():
             assert i not in pumps
             pumps[i]=certns
             pumpcode.insert(0,"import "+module)
-    if SPEC.get("automata") or SPEC.get("ngram_automata") or SPEC.get("pattern_automata"):
+    if SPEC.get("automata") or SPEC.get("ngram_automata") or SPEC.get("pattern_automata") or SPEC.get("block_phase"):
         sys.path.insert(0,str(ROOT.parent/"agent4-raw58"))
         from generate_more import run_automata, compress_automata, emit_automata_sharded
         an=f"BB6.Agent7{ID}Automata"
@@ -134,6 +134,16 @@ def main():
                 pumpcode.insert(0,"import "+module)
             else:
                 code.append(source)
+        if SPEC.get("block_phase"):
+            import block_phase
+            for i,params in SPEC["block_phase"].items():
+                i=int(i);p=one.parse(opens[i])
+                cert=block_phase.run(opens[i],*params)
+                before=cert[1];cert=compress_automata(p,cert)
+                print(A,i,"block-phase quotient",before,"->",cert[1],flush=True)
+                add_automaton(i,p,cert)
+                assert i not in pumps
+                pumps[i]=f"{an}.M{i}"
         for i,params in SPEC.get("automata",{}).items():
             i=int(i)
             p=one.parse(opens[i])
