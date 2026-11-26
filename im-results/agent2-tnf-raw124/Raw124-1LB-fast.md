@@ -5,3 +5,8 @@ The archived witness bundle `fast-1LB.json.zlib.b64` records a cap-3000 lookback
 Reproduction: run `python replay_fast_cut.py fast-1LB.json.zlib.b64 --out /tmp/raw124-1LB` from this directory. The script checks both enumerator hashes, reconstructs affine induction witnesses without searching new seeds, regenerates the selected n-gram certificates, and emits structural `PartialAudit` shards using Agent13's raw125 assembly. Compile Base, Growth, NGram modules and the dependency DAG of the final Cut module, using the exact original source imports. The generated cut has 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 growth leaves, 6 n-gram leaves, 8 unresolved one-hole leaves. Final cut acceptance is pending. No global BB(6) roster subtraction is asserted.
 
 Residual display IDs (fast enumerator open-list indices): 207, 209, 212, 217, 711, 937, 980, 2083. Exact table keys are regenerated into Raw124New1LB.remaining.
+
+
+## Extended side-cycle probe (negative search result)
+
+The eight exact one-hole tables were each passed through the existing `fast_partition.cpp` classifier with `cap=1,000,000` and `lookback=128` in [Actions run 45767878144](https://github.com/FlareZ123/bb6/actions/runs/45767878144), artifact ID `15093027029` (`raw124-1lb-residual-partition-probe`). All eight returned `open`; none produced a `cycle` or `last` leaf within that cap. This is only a bounded search result, not a nonhalting proof. Do not repeat the same cap/lookback run; pursue a different invariant or pump certificate, or materially change the search.
