@@ -41,7 +41,7 @@ function visit(a,h){
 }
 const tree=visit(start,5);
 const bound=stats.maxHalt+6;
-if(stats.nodes!==30793||stats.far!==40||stats.symbolic!==1||stats.nodes!==stats.side+stats.coarse+stats.split+stats.last+stats.far+stats.symbolic)throw Error('unexpected candidate counts '+JSON.stringify(stats));
+if(stats.nodes!==30793||stats.far!==40||stats.symbolic!==1||bound!==208||stats.nodes!==stats.side+stats.coarse+stats.split+stats.last+stats.far+stats.symbolic)throw Error('unexpected candidate counts '+JSON.stringify(stats));
 const slot=i=>'('+ 'ABCDEF'[i>>1]+',S'+(i%2)+')';
 const move=m=>'(S'+m[0]+','+m[1]+','+m[2]+')';
 const listN=x=>'['+x.flat().map(n=>n+'%N').join(';')+']';

@@ -1,5 +1,30 @@
 name: Shared original BusyCoq rooted theorem source verifier (manual)
 on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+      offset:
+        required: false
+        type: number
+        default: 0
+      size:
+        required: false
+        type: number
+        default: 1
+      fuel:
+        required: false
+        type: number
+        default: 1
+      batch_ranges:
+        required: false
+        type: string
+        default: '34:16:64,4096:16:64,8192:16:64,12000:16:64'
+      q2800_shard_runs:
+        required: false
+        type: string
+        default: ''
   workflow_dispatch:
     inputs:
       target:

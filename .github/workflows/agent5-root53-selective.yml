@@ -1,0 +1,16 @@
+name: Selective root53 original-source proof request
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent5-weighted-tnf-queue/ci-root53-request.txt'
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    uses: ./.github/workflows/shared-rocq-root-proofs.yml
+    with:
+      target: enumerate62-q0-auto-root
+      offset: 53

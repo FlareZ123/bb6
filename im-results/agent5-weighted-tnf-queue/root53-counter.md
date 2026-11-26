@@ -2,6 +2,8 @@
 
 **Status.** Complete unbounded nonhalting proof in the independent infinite-tape Lean model: [`Root53.lean`](Root53.lean), checked with Lean 4.36.0-rc2; `Root53.validProgress` and `Root53.never` depend only on `propext`, `Quot.sound`. The exact 11-step seed, arbitrary-length sweeps, carry cases and invariant preservation are kernel checked. [`Agent5Root53Counter.v`](Agent5Root53Counter.v) is the original-source port, pending Rocq acceptance; [`q0-root53.cjs`](q0-root53.cjs) generates the exhaustive parent proof with a symbolic leaf and 40 FAR leaves. Independent finite tests are in root53-counter.py. This is not yet a source-accepted parent Cover.
 
+Root53 full generator executed against repository JavaScript and exact q0 export: 30,793 nodes; 18,227 side, 5,664 coarse pair, 1,283 split, 5,578 last-hole, 40 FAR, 1 symbolic; maximum first-hole trace 202; weighted candidate bound 208. All 40 totalized DFA MITM checks passed; generated 24 proof shards, symbolic leaf in S22. No original-source kernel acceptance yet.
+
 Machine (E0 undefined):
 ```
 1RB1RD_1RC1RE_0LA0RC_1LA1LD_---1LF_1LC0LE
