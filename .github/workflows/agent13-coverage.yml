@@ -2414,13 +2414,8 @@ jobs:
             g++ -std=c++20 -O3 im-results/agent7-raw49/cut.cpp -o /tmp/raw47-cut
             /tmp/raw47-cut '1RB---_1RC---_0RD---_1LD0RC_------_------' 1000 32 2 /tmp/raw47 | tee /tmp/raw47-cut.log
             grep -q 'open=114 cycle=131 last=0 split=12 alias=32 max_query=10 max_cycle_end=267' /tmp/raw47-cut.log
-            python - <<'PY'
-            import json
-            from pathlib import Path
-            d = Path("im-results/agent19-d1-pilot")
-            assert json.loads(Path("/tmp/raw47.json").read_text()) == json.loads((d / "Raw47-cut.json").read_text())
-            assert Path("/tmp/raw47.open").read_text().splitlines() == (d / "Raw47-open.txt").read_text().splitlines()
-            PY
+            cmp <(tr -d '\\n' < /tmp/raw47.json) <(tr -d '\\n' < im-results/agent19-d1-pilot/Raw47-cut.json)
+            cmp /tmp/raw47.open im-results/agent19-d1-pilot/Raw47-open.txt
             python im-results/agent19-d1-pilot/generate.py
             git diff --exit-code -- im-results/agent19-d1-pilot/Raw47Cut.lean
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
