@@ -10,7 +10,7 @@ Generated module CanonicalSelectedParentIntegrated.lean, namespace BB6.Agent32Ca
 - sound_integrated: every compatible root completion is either WeightedBound 6766859 or TNFQuotientCompatible with a remaining representative.
 - exact_at_champion_score: if every retained representative has Cover (WeightedBound (proposedTM63Moves + 7)), then ExactBB6 (proposedTM63Moves + 7), using the accepted exact blank-start champion witness.
 
-The four accepted local bounds are respectively 572, 7,014, 3,055,746 and 4,136,175; the source gates lift each to the common floor. The proof combines independently source-accepted Covers and checks exact common kernel declarations, not numerical evidence or an assumed count. All final axioms are within propext, Classical.choice, Quot.sound; no sorryAx/native_decide.
+The four accepted local bounds are respectively 572, 7,014, 3,055,746 and 4,136,180 (the particular pinned Raw108 certificate used here; a tighter separately reported bound is 4,136,175); the source gates lift each to the common floor. The proof combines independently source-accepted Covers and checks exact common kernel declarations, not numerical evidence or an assumed count. All final axioms are within propext, Classical.choice, Quot.sound; no sorryAx/native_decide.
 
 ## Reproduction and downstream consumption
 - Workflow: .github/workflows/agent31-canonical71-raw109.yml, target canonical64-selected-parent-batch; exact source revision above.
