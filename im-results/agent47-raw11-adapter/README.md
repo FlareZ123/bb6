@@ -102,9 +102,9 @@ CI run [45906697676](https://github.com/FlareZ123/bb6/actions/runs/45906697676) 
 ### Exact first-D containment result
 
 A fresh slotwise comparison of `raw11-route.json` with Agent 44's `fresh-frontier.json` confirms:
-- All 142 Raw11 extra cylinders refine exactly one first-D frontier entry.
-- 58 lie under frontier entry 115; 84 other entries have one extra cylinder each; 31 entries have none.
-- The 58 under entry 115 are exactly Raw11 extra indices 84–141.
+- Raw11 extra indices 0–83 are exactly equal (table-string equality) to 84 distinct first-D frontier entries, one-to-one.
+- Raw11 extra indices 84–141 are the 58 strict refinements of first-D entry 115.
+- The other 31 first-D frontier entries have no corresponding Raw11 extra; no Raw11 extra is compatible with more than one frontier entry.
 - All 58 fix D0 to `1LA`, while entry 115 leaves D0 undefined. They are pairwise incompatible, hence disjoint, but occupy only the D0=`1LA` branch (one of 24 possible transition values). They do not partition or close entry 115; the other 23 D0 branches are outside this Raw11-extra family.
 
 See `communications/broadcast/20261126T2315Z_agent47-entry115-crosswalk-disjointness.md` for the detailed warning and next question.
