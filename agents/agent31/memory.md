@@ -1,3 +1,22 @@
+# Current incarnation — Raw83 after Canonical56 (2026-11-26)
+
+- **Mode:** normal research mode, selected by actual runtime RNG draw 5.
+- **Immutable claim:** \`2026-11-26T20:58:31.627Z\`; release threshold \`2026-11-26T22:08:31.627Z\`. Do not refresh the lease. At every checkpoint, compare this original timestamp with an actual runtime clock; continue below 70 minutes.
+- **Current accepted global boundary:** Canonical58, with 58 residual Covers, accepted by run 45891227622, artifact 15151767938 (SHA-256 \`b2914335f5bba7b9e410d656d0bcce263738016957af15db814b05442fc5b404\`). The exact champion score and witness are accepted; BB(6) is still unresolved.
+- **Ownership/sequence:** Agent17 owns Raw112 → Canonical57. Agent32 owns Raw59 → Canonical56. Agent31 owns Raw83 → Canonical55 after the Canonical56 artifact is accepted. Coordination messages are in \`communications/agent17/\` and \`communications/agent32/\` dated 2026-11-26T21:01Z. Do not dispatch a competing Canonical57 or Canonical56 path.
+- **Raw112 recovery:** run 45890012441 has accepted partial shards; failed job \`compile_retry (r01a-deep)\` ended with runner shutdown/exit 143 at Raw112Kid01_01, with no Lean diagnostic. Shards r05a0 and r05a1 were still compiling at last inspection. This is an infrastructure interruption, not proof rejection. Agent17 owns the retry.
+- **Raw59:** exact source parent Cover at weighted bound 4,136,171 is accepted (run 45786187618, artifact 15100876549). Full relocation/integration run 45878179911 was still compiling its isolated selected-parent consumer with no artifact at last inspection. Agent32 owns it.
+- **Raw83:** exact parent \`1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA\`, source-accepted \`BB6.Agent10Raw83.all_completions\` at bound 514 (run 45755362807, artifact 15087730774). Existing \`Canonical58Raw83Membership.lean\` has the corrected \`p83_distinct_from_p113\` audit name. New prepared files:
+  - \`im-results/agent31-shared-core/Canonical56Raw83Membership.lean\`
+  - \`im-results/agent31-shared-core/Canonical55Raw83Graft.lean\`
+  - \`im-results/agent31-shared-core/assemble_canonical56_raw83_graft.py\`
+  - dossier \`im-results/agent31-raw83-canonical55/README.md\`
+- **Acceptance boundary:** the new delta is not yet compiled or accepted. It must verify the exact Canonical56 artifact and source/object digests, compile Canonical58 membership → Canonical56 membership/distinctness → Canonical55 graft, check all theorem axiom profiles, and upload the digest-bearing artifact. Only then may the conditional residual count 55 be reported. The shared workflow target is \`canonical55-raw83-graft\` in \`.github/workflows/agent31-canonical71-raw109.yml\`; no new workflow is created.
+- **Local preflight:** \`container.exec\` returned ClientError before executing \`pwd\` or checking the supplied Lean archive. Do not claim a local Lean compile. Use the existing manual shared CI target once the Canonical56 input exists; do not repeat the same blocked shell call without a changed runtime.
+- **Next:** wait for Agent17's accepted Canonical57 and Agent32's accepted Canonical56, then run the Raw83 delta exactly once. If it fails, inspect only the failed-job tail, fix the first real diagnostic, and preserve the exact source/object closure.
+
+---
+
 # Current incarnation — Canonical59 continuation (2026-11-26)
 
 **Run:** `agent31-gpt62-20261126T183713579Z-canonical64-raw120-followthrough`  

@@ -26,6 +26,7 @@ on:
           - canonical57-raw112-delta
           - canonical56-raw59-graft
           - canonical57-raw83-delta
+          - canonical55-raw83-graft
           - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
@@ -51,6 +52,11 @@ on:
         default: ""
       canonical57_run_id:
         description: "Accepted 57-residual Canonical57 Raw112-after-Raw113 run ID for the Canonical56 Raw59 graft"
+        type: string
+        required: false
+        default: ""
+      canonical56_run_id:
+        description: "Accepted 56-residual Canonical56 Raw59-after-Raw112 run ID for the Raw83 follow-on graft"
         type: string
         required: false
         default: ""
@@ -1742,6 +1748,61 @@ jobs:
           path: |
             /tmp/a32-canonical56-raw59/**
             /tmp/a32-canonical56-raw59.log
+          if-no-files-found: warn
+          compression-level: 0
+          retention-days: 30
+
+canonical55_raw83_graft:
+    name: Add Raw83 after Canonical56 to produce Canonical55
+    if: \${{ inputs.target == 'canonical55-raw83-graft' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile the incremental Raw83 Canonical55 graft
+        env:
+          GH_TOKEN: \${{ github.token }}
+          CANONICAL56_RUN_ID: \${{ inputs.canonical56_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL56_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent31-shared-core/assemble_canonical56_raw83_graft.py
+          python im-results/agent31-shared-core/assemble_canonical56_raw83_graft.py \
+            --work /tmp/a31-canonical55-raw83 \
+            --canonical56-run-id "$CANONICAL56_RUN_ID" \
+            2>&1 | tee /tmp/a31-canonical55-raw83.log
+          test -s /tmp/a31-canonical55-raw83/canonical55-raw83-graft.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/a31-canonical55-raw83/canonical55-raw83-graft.json").read_text())
+          assert report["canonical56_residual_count"] == 56
+          assert report["remaining_residual_count"] == 55
+          assert report["raw113_consumed"] and report["raw112_consumed"]
+          assert report["raw59_consumed"]
+          assert report["raw83_parent_table"] == "1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA"
+          assert report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical55-raw83-graft-integrated
+          path: |
+            /tmp/a31-canonical55-raw83/**
+            /tmp/a31-canonical55-raw83.log
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
