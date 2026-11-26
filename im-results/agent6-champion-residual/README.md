@@ -14,9 +14,9 @@ The current branch contains a Lean consumer with the following structure:
 - Four additional D0 source-audited sibling Covers discharge D0=1LF, D0=0RC, D0=1RF, and D0=0RA (runs 45728113457, 45728638168, 45729425638, and 45730253726 respectively).
 - The independently source-audited C1 batch (run **45746968139**, source revision `24307ed48c90f18938778cac530c5c3213af2203`) provides twelve C1 parent Covers at common weighted bound **2,511**.
 
-If all finite table-membership and composition lemmas pass together, these 42 sibling Covers reduce the raw139 parent to **81 remaining residual Covers**. Combined with the other 67 Canonical68 representatives, the intended conditional exactness interface has **148 Cover premises**.
+If all finite table-membership and composition lemmas pass together, these 42 sibling Covers reduce the raw139 parent to **81 remaining residual Covers**. Together with the other 67 Canonical68 representatives, the refined leaf roster has **148 remaining Cover premises**. The exactness theorem also takes eight existing E1 parent-graft inputs (one pointwise bound and seven Cover premises), for 156 explicit proof inputs when those are counted separately.
 
-**Important status distinction:** the C1 batch itself passed original-source Lean CI. The D0/F1 sibling certificates have their own source artifacts. The 42-sibling composition, the 81-leaf count, the Canonical68 membership/uniqueness proofs, and the final 148-premise exactness consumer still require a successful combined source/axiom audit. These counts are a target of the current integration, not yet an accepted BB(6) upper bound.
+**Important status distinction:** the C1 batch itself passed original-source Lean CI. The D0/F1 sibling certificates have their own source artifacts. The 42-sibling composition, the 81-leaf count, the Canonical68 membership/uniqueness proofs, and the 148-leaf/156-explicit-input exactness consumer still require a successful combined source/axiom audit. These counts are a target of the current integration, not yet an accepted BB(6) upper bound.
 
 ### Active files and workflow
 
