@@ -1,8 +1,10 @@
 # Raw40 parent: exact local frontier and closed subcylinders
 
-Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, canonical raw40. First unassigned query A1 after six ordinary steps. **The whole parent remains unresolved.** Its two-query-level exact canonical cut has 189 residual five-hole representatives (Raw40CanonicalCut / Raw40LocalCut). The earlier unquotiented 303-cylinder count is a distinct representation. The canonical68 global roster remains the authoritative conditional interface.
+Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, canonical raw40. First unassigned query A1 after six ordinary steps. **The whole parent remains unresolved.** Its two-query-level exact canonical cut has 189 residual five-hole representatives (Raw40CanonicalCut / Raw40LocalCut). The earlier unquotiented 303-cylinder count is a distinct representation. The authoritative global interface is the source-accepted Canonical64 integrated roster; this local dossier does not change its count.
 
 ## Established local results
+
+- Round16 (1RC/0RD): exact weighted maximum **57**, compatible witness `1RB1RC_1RC0RE_0RD0RD_1LD1LA_HHH0RF_0RD1RD`, 56 ordinary transitions + halt, delay zero. All 24 canonical audit shards, empty residual aggregate `Raw40C1RC0RD.all_quotient`, and [exactness](Raw40Round16Exact.lean) compiled locally in Lean 4.36.0-rc2 on Canonical77 artifact 14997966221. The 81 open search leaves have 77 FAR≤5 and four saved larger-FAR certificates. Reproduce the generated parent audit from `prepare_round10-18.py 16` (the local build used the equivalent standalone generator without the empty pump import). No new CI or global roster count is claimed.
 
 - [Round5](Round5-README.md): exact weighted maximum **1891** for 0LA/0LB, with kernel-checked coverage and attainment.
 
