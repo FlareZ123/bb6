@@ -72,14 +72,17 @@ The q=0 target is
   obstruction.
 
 The candidate Lean source is
-[U5Q0W7ParentFan.lean](U5Q0W7ParentFan.lean). It is explicitly an
-**uncompiled draft**: local shell and Python execution returned runtime
-errors in this invocation, and no CI was dispatched without local
-preflight. The (w=439\pmod{512}) chain is currently documented
-mathematically but not yet formalized. None of these slices closes the
-full w=7 progression or proves Machine C nonhalting. The remaining
-odd-z parent cylinders, (z\equiv0\pmod4), and the unresolved
-(z\equiv2\pmod4) high-depth branches remain open.
+[U5Q0W7ParentFan.lean](U5Q0W7ParentFan.lean). It remains an
+**uncompiled draft** because local shell and Python execution returned
+runtime errors in this invocation; no U5-specific CI was dispatched
+without local preflight. The (w=439\\pmod{512}) chain is now represented
+by `w7_z2_q1_parent_unreachable_u59mod80` and
+`w7_q0_target_unreachable_u59mod80`, which formalize the q=1 low-value
+parent and the complete q=0 target reduction on that lift. These
+declarations still require local compilation and an axiom audit. None
+of these slices closes the full w=7 progression or proves Machine C
+nonhalting. The remaining odd-z parent cylinders, (z\\equiv0\\pmod4),
+and the unresolved (z\\equiv2\\pmod4) high-depth branches remain open.
 
 
 Additional open z=4u lead: P_z has a unique Q_z parent; for odd u, Q_z has a unique odd/odd low-value parent R_u=(3450+28686u,3447+28665u), which is even/even with sum 6897+57351u divisible by 3. Its direct/bounce parent fan remains unresolved; see `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
