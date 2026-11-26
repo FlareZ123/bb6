@@ -11,7 +11,7 @@ const checkpoint = readJson("im-results/agent5-weighted-tnf-queue/q0-export/pilo
 const raw11 = readJson("im-results/agent44-raw11-fresh-cut/fresh-frontier.json");
 const q32Source = fs.readFileSync(path.join(root, "im-results/agent24-q32-source-graft/Q32SideLeafRoster.lean"), "utf8");
 
-const frontier = raw11.frontier;
+const frontier = raw11.frontier.map((table, index) => ({ index, table: typeof table === "string" ? table : table.table }));
 const checkpointRows = [
   ...checkpoint.active.map((x, index) => ({ index, kind: "active", table: x.table })),
   ...checkpoint.held.map((x, index) => ({ index: checkpoint.active.length + index, kind: "held", table: x.table })),
