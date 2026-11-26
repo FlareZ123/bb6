@@ -4,6 +4,8 @@
 - Direct generator preflight exactly reconstructed 985 nodes, 748 side/55 MITM/140 terminal/1 R33L0 leaves and 41 splits, bound 162; first E0 split at 27. It emitted 56 explicit finite-stack certs, 162 small VM-check chunks (max 25 nodes) and seven explicit split proofs in 27 modules. New shared generator `q0-direct-shards.cjs` handles root33, existing shared manual workflow retains the generated and compiled shards. No Coq parent acceptance yet; no roster removal. Next source check uses enumerate62-direct-parent offset 33; retain and reuse partial object shards rather than restarting a large proof. Other roots unchanged.
 - Local shell returned ClientError; Python could concatenate the ZIP parts (295960576 and 304196898 bytes) but Python zipfile reported negative member header offset -8236322 and extraction OSError 22, so supplied local Lean could not be installed. Generator tested via local JavaScript runtime. Do not call this Lean compilation.
 
+- Sharded original-source run 45843560762 dispatched; in progress at 14:55Z. Independent finite-certificate checker now establishes the sharp local maxima 157 ordinary score and 158 weighted score, with attainer and all 985 nodes checked. Reproduction and proof argument in im-results/agent50-q0-index33/README.md. Only attaining one-hole leaf has n+6>158; exact kernel proof can use source_delay_check on this single table. No original-source parent acceptance yet.
+
 ---
 
 # 2026-11-26 update: root-33 source consumer dispatched; global direction noted

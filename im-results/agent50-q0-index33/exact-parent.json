@@ -1,0 +1,47 @@
+{
+  "index": 33,
+  "parent": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------",
+  "counts": {
+    "nodes": 985,
+    "side": 748,
+    "mitm": 55,
+    "last": 140,
+    "split": 41,
+    "open": 1
+  },
+  "haltBranches": 181,
+  "delayHistogram": {
+    "1": 168,
+    "2": 13
+  },
+  "standardMaximum": 157,
+  "weightedMaximum": 158,
+  "standardWitness": {
+    "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_0RF0RB_1LF0LC",
+    "liveMoves": 156,
+    "haltSlot": "C1",
+    "standardScore": 157,
+    "weightedScore": 158,
+    "zeroPath": "CA"
+  },
+  "weightedWitness": {
+    "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_0RF0RB_1LF0LC",
+    "liveMoves": 156,
+    "haltSlot": "C1",
+    "standardScore": 157,
+    "weightedScore": 158,
+    "zeroPath": "CA"
+  },
+  "highHaltBranches": [
+    {
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_0RF0RB_1LF0LC",
+      "n": 156,
+      "h": 5,
+      "path": [
+        2,
+        0
+      ],
+      "weighted": 158
+    }
+  ]
+}
