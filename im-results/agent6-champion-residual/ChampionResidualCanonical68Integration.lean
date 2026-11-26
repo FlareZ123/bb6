@@ -84,6 +84,56 @@ theorem exact_from_canonical68_and_raw139_after_fortyTwo
         exact hOther e he hne)
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
+
+/-- The 43-sibling refinement removes the newly accepted D0=0RF parent from
+    the 81-leaf raw139 complement, leaving 80 explicit descendant obligations. -/
+noncomputable def refinedCanonical68RosterAfterFortyThree :
+    List (List Move × PartialMachine) :=
+  (roster68.filter (fun e => !sameTable e.2 championResidual)) ++
+  (remainingRaw139AfterFortyThree.map
+    (fun e => (championResidualAddress ++ e.1, e.2)))
+
+theorem refinedCanonical68RosterAfterFortyThree_count :
+    refinedCanonical68RosterAfterFortyThree.length = 147 := by
+  simp [refinedCanonical68RosterAfterFortyThree,
+    canonical68_other_table_count,
+    remainingRaw139AfterFortyThree_count]
+
+/-- Conditional exactness with the 43rd accepted sibling consumed. The
+    remaining inputs are 67 other Canonical68 Covers and 80 Raw139 Covers,
+    together with the eight already accepted E1 parent-graft inputs. -/
+theorem exact_from_canonical68_and_raw139_after_fortyThree
+    (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
+    (h123 : Cover (WeightedBound 10000) p123)
+    (h60 : Cover (WeightedBound 1175) p60)
+    (h110 : Cover (WeightedBound 6766859) p110)
+    (h111 : Cover (WeightedBound 7014) p111)
+    (h117 : Cover (WeightedBound 1291) p117)
+    (h121 : Cover (WeightedBound 4063) p121)
+    (h125 : Cover (WeightedBound 1290) p125)
+    (hOther : ∀ e ∈ roster68,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (hLeaves : ∀ e ∈ remainingRaw139AfterFortyThree,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent6Canonical68E1ParentGraft.exact_at_target
+    (proposedTM63Moves + 7)
+    BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+    h109 h123 h60 h110 h111 h117 h121 h125
+    (fun e he => by
+      by_cases hSame : sameTable e.2 championResidual = true
+      · have heq : e.2 = championResidual := sameTable_sound hSame
+        rw [heq]
+        exact cover_championResidual_after_fortyThree hLeaves
+      · have hne : e.2 ≠ championResidual := by
+          intro hEq
+          have hself : sameTable championResidual championResidual = true := by decide
+          exact hSame (by simpa [hEq] using hself)
+        exact hOther e he hne)
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+
+
 #print axioms championResidual_mem_canonical68
 #print axioms championResidual_unique_canonical68
 #print axioms championResidual_unique_by_table_canonical68
@@ -91,5 +141,8 @@ theorem exact_from_canonical68_and_raw139_after_fortyTwo
 #print axioms canonical68_other_table_count
 #print axioms refinedCanonical68Roster_count
 #print axioms exact_from_canonical68_and_raw139_after_fortyTwo
+
+#print axioms refinedCanonical68RosterAfterFortyThree_count
+#print axioms exact_from_canonical68_and_raw139_after_fortyThree
 
 end BB6.Agent6Canonical68ChampionIntegration

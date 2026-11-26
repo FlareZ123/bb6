@@ -425,13 +425,21 @@ jobs:
           run-id: 45730253726
           name: raw139-d0-ZeroRA-certified
           path: /tmp/a14-d0-ZeroRA
+      - name: Download accepted Raw139 D0=0RF source artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45753603330
+          name: raw139-d0-ZeroRF-certified
+          path: /tmp/a14-d0-ZeroRF
       - name: Verify accepted D0 source roots and original CI conclusions
         if: ${{ inputs.raw121_graft_run_id == '' }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          for id in 45726077932 45726917837 45727637346 45728113457 45728638168 45729425638 45730253726; do
+          for id in 45726077932 45726917837 45727637346 45728113457 45728638168 45729425638 45730253726 45753603330; do
             curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$id" -o "/tmp/d0-run-$id.json"
           done
@@ -452,6 +460,8 @@ jobs:
                "6ca0dc341acf0aa3c54fb4e3ddbf277476829c6681d16b840ff85f5cf1cfccc5"),
               ("ZeroRA", 45730253726, "Raw139D0ZeroRACover.lean",
                "bafd8de380fe0e0323265a733343fa578e47b323d01d4818daf60e8c0b644c09"),
+              ("ZeroRF", 45753603330, "Raw139D0ZeroRFCover.lean",
+               "292e8f8b7d9f0f7ce41280f374d32c103d1f0682fbc69d39a4b70ea91d81a9a9"),
           )
           for label, run_id, root, expected in specs:
               run = json.loads(pathlib.Path(f"/tmp/d0-run-{run_id}.json").read_text())
@@ -507,7 +517,7 @@ jobs:
           print("Raw139 C1 artifact accepted:", os.environ["C1_BATCH_RUN_ID"])
           print("generated C1 sources:", len(sources))
           PY
-      - name: Compile 42 source-accepted sibling Covers into the Canonical68 raw139 parent frontier
+      - name: Compile 43 source-accepted sibling Covers into the Canonical68 raw139 parent frontier
         if: ${{ inputs.raw121_graft_run_id == '' }}
         run: |
           set -euo pipefail
@@ -522,12 +532,13 @@ jobs:
             --source-root "/tmp/a14-d0-ZeroRC/imports" \
             --source-root "/tmp/a14-d0-OneRF/imports" \
             --source-root "/tmp/a14-d0-ZeroRA/imports" \
+            --source-root "/tmp/a14-d0-ZeroRF/imports" \
             --source-root "/tmp/a48-c1-batch/imports" \
             --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
             --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work" \
             --manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
-            --label agent6-canonical68-raw139-42-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
+            --label agent6-canonical68-raw139-43-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-source-sibling.log; then
             echo "Forbidden proof placeholder or native_decide in raw139 source sibling graft" >&2
             exit 1
@@ -540,6 +551,7 @@ jobs:
               "BB6.Agent14Raw139D0LF.all_completions_weighted",
               "BB6.Agent14Raw139D0LB.all_completions_weighted",
               "BB6.Agent14Raw139D0LA.all_completions_weighted",
+              "BB6.Agent14Raw139D0ZeroRF.all_completions_weighted",
               "BB6.Agent14F1OneLD.all_completions_weighted",
               "BB6.Agent14F1OneRF.all_completions_weighted",
               "BB6.Agent6ChampionRaw139SiblingIntegration.championResidual_root",
@@ -612,6 +624,15 @@ jobs:
               "BB6.Agent6ChampionRaw139SiblingExtended.removedTwelveSibling_count",
               "BB6.Agent6ChampionRaw139SiblingExtended.cover_remainingRaw139AfterThirty",
               "BB6.Agent6ChampionRaw139SiblingExtended.cover_championResidual_after_fortyTwo",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroRF_is_depth3_sibling",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroRF_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_zeroRF",
+              "BB6.Agent6ChampionRaw139SiblingExtended.remainingRaw139AfterFortyThree_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.removedOneSibling_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_remainingRaw139AfterFortyTwo",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_championResidual_after_fortyThree",
+              "BB6.Agent6Canonical68ChampionIntegration.refinedCanonical68RosterAfterFortyThree_count",
+              "BB6.Agent6Canonical68ChampionIntegration.exact_from_canonical68_and_raw139_after_fortyThree",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_mem_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_by_table_canonical68",
@@ -636,7 +657,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.raw121_graft_run_id == '' }}
         with:
-          name: agent6-canonical68-raw139-42-sibling-consumer-${{ inputs.source_sha || github.sha }}
+          name: agent6-canonical68-raw139-43-sibling-consumer-${{ inputs.source_sha || github.sha }}
           include-hidden-files: true
           path: |
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
