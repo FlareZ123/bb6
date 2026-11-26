@@ -611,3 +611,65 @@ Lease claimed_at remains 2026-11-26T13:25:24.252Z; 70-minute orderly
 release threshold is 2026-11-26T14:35:24.252Z. Continue working until
 the measured lease age reaches the threshold, then checkpoint/push and
 delete the lease as the final repository mutation.
+
+
+## 2026-11-26 14:07Z checkpoint — twelve W7 q=1 cylinders
+
+Extended U5Q0W7U19Mod2560.lean with three further source-accepted
+q=1 exclusions:
+
+- u=16339+20480v: odd/odd low-value -> even/odd sum-three ->
+  even-right six -> odd/odd low-value -> even-right six ->
+  even/odd sum-three; terminal odd-right sum-two.
+- u=20019+20480v: odd/odd low-value -> even/odd sum-three ->
+  six exact even-right inverses; terminal odd-right sum-two.
+- u=1939+2560v: odd/odd low-value -> even/odd sum-three ->
+  exact sum-seven target C. Its residues satisfy
+  (Cx+Cy)%8=7, (Cx+Cy+1)%16=8, (Cx+Cy+1)%32=24,
+  Cx%4=3, Cy%8=4. The original-source
+  BB6.Agent19HighEvenRight.sum7_every_parent_odd_image theorem forces
+  every exact parent into the odd-right sum-two blank image.
+
+Added generic helpers:
+- w7_q0_target_unreachable_of_q1: lifts any odd-u q=1 exclusion
+  through the exact q=0 parent fan.
+- w7_blank_no_sum7_target: applies the original source sum-seven
+  parent-image theorem plus the odd-right sum-two invariant.
+
+Combined exact-source closure run #28 (45834843362) passed. It compiled
+the full focused target including the generic helpers and all sixteen
+q=0/q=1 declarations for eight new slices. The workflow's
+sorryAx/native_decide rejection guard passed.
+
+The W7 w=55 (mod 128) investigation now has twelve disjoint infinite
+q=1 exclusions:
+u=59+80t, u=7+32t, u=35+64t, u=23+512s,
+u=339+2560v, u=499+1280v, u=3379+5120v,
+u=2739+10240v, u=9939+10240v,
+u=16339+20480v, u=20019+20480v, u=1939+2560v.
+All eight new slices are compatible with the root filters for every v,
+because their u values are 19 mod 20. They remain partial sublifts,
+not a closure of the full row or Machine C.
+
+Updated:
+- im-results/agent15-c-halting/README.md
+- im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md
+- results/README.md
+
+Sent Agent19 a focused question about other exact sum-seven source
+residue variants at
+communications/agent19/2026-11-26T140234973Z_agent15-w7-sum7-residue-variants.md.
+Their memory warns not to generalize the sum-seven theorem to other
+residue combinations without an exact source proof. For t=8k in
+u=19+80t, only k=3 mod4 is currently covered by the existing theorem;
+k=0,1,2 remain open.
+
+Next productive direction: inspect the other sum-seven residue pairs
+for t divisible by 8, but only by proving exact source-parent statements;
+also continue the finite-state search for further stable t-cylinders.
+Do not overclaim from finite residue sampling. The even-W high-depth
+branch and other root rows remain open.
+
+Lease claimed_at remains 2026-11-26T13:25:24.252Z; orderly release
+threshold remains 2026-11-26T14:35:24.252Z. Continue until actual lease
+age reaches 70 minutes, then checkpoint and release last.
