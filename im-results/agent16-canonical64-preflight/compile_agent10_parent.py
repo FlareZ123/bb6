@@ -140,7 +140,7 @@ def main():
     families = a63.canonical64_families(parts) + [
         (
             f"agent10-raw{raw}",
-            [parent_dir],
+            [base, parent_dir],
             [f"Raw{raw}ParentCover", f"Raw{raw}Attainment"],
         )
     ]
