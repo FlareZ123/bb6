@@ -242,7 +242,7 @@ def main():
         for name in [
             "p58_source_eq", "p59_source_eq", "p108_source_eq",
             "p115_source_eq", "p119_source_eq", "p58_cover", "p59_cover",
-            "p108_cover", "p115_cover", "p119_cover", "parents_cover",
+            "p108_cover", "p115_cover", "p119_cover", "parents_pairwise_distinct", "parents_cover",
             "sound59_integrated", "exact_at_target", "exact_at_champion_score",
         ]
     ]
