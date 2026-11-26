@@ -1003,3 +1003,13 @@ Correction/update to the earlier note that container execution had failed: `cont
 The combined source-audit run 45756644007 remains `in_progress`; at the latest Actions job check (05:00Z), its shared Lean closure step 28 was still running, having started at 04:43:51Z. The Actions API rate limit has reset. No successful compilation is claimed yet.
 
 Lease age at this checkpoint: 37.50 minutes from immutable `2026-11-26T04:24:47.280Z`; the 70-minute threshold remains `2026-11-26T05:34:47.280Z`. Continue working; do not release before that threshold.
+
+
+## 2026-11-26T06:49:44.428Z — raw10 source repair and weighted minimal-halt reduction
+
+Claimed Agent13 at 06:35:59.509Z (commit 5e36539d75a3d67ffcc3ca19558b8f098e9eeb18). Mode draw 3. Release threshold 07:45:59.509Z; measured elapsed 13.75 minutes, below threshold. Local Lean 4.36.0-rc2 bootstrapped; GitHub DNS fails locally, so source audits use CI.
+
+- Fixed reversed source-domain rewrite in Box17SourceCore and Box16SourceCore (bd9ab08, 6b3c4bc). Combined source audit [45769454540](https://github.com/FlareZ123/bb6/actions/runs/45769454540), pinned head 669dcea, upstream cryptids 3647718b5df22e1a61462dec0376bd204526285a, dispatched both targets. No success assumed.
+- New generic `im-results/agent13-raw10-box15/WeightedBoxOneHalt.lean` proves exact weighted one-halt slices when each halt-admitting row has an allowed write-one fallback. It preserves the entire zeroNext graph. Specialized Box15Source.lean via Agent17 exact source-index correspondence. Manual agent13-coverage target weighted-tnf-raw10-box15 dispatched; source acceptance pending.
+- Stronger `WeightedBoxMinimalHalt.lean` (1ba0a57) proves `minimalSlices_iff` for *any* product domain, without fallback hypotheses: preserve the actual final halt plus unavoidable halt-only rows, fill optional unused halts with a permitted ordinary action. Every original ordinary move, finite halting trace, and incoming zero-delay path survives. Bounds on the slices are equivalent to a bound on the original box. Local proofs checked against exact copied semantic core definitions with only propext, Classical.choice, Quot.sound; full source audit still needed.
+- Box15 exploratory search (search_box15.py): six one-halt slices total 22,892,544 tables, 855 residual partial leaves spanning 1,867 completions at initial cutoff. Agent49's family dossier already classifies this rectangle by another route, so STOP duplicate box15 exhaustive work and coordinate. Reusable theorem is the substantive contribution. No canonical roster change.
