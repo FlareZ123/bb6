@@ -103,7 +103,7 @@ if(r.tree[0]!=='h'||!r.tree[3].length)throw Error('unexpected root');
 const names=[];
 for(const [j,[k,b,g]] of split(r.tree,a,f).entries()){
  const name=prefix+'Kid'+String(j).padStart(2,'0'),imports=new Set(),lines=[ns(name),parent(b)];
- const safe=local(k,b,g,'parent','_root',lines,imports,true);
+ const safe=local(k,b,g,'parent','_root_'+j,lines,imports,true);
  lines.push(`theorem safe : ∀ m, compatible parent m → WeightedBound ${B} m := ${safe}\n#print axioms safe\nend BB6.${name}\n`);
  write(name,header([...imports])+lines.join('\n'));names.push(name)
 }
