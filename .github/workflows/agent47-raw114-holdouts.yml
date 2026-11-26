@@ -142,7 +142,7 @@ jobs:
           test -s /tmp/q0-root52-lean/Q0Root52Base.lean
           test -s /tmp/q0-root52-lean/Q0Root52Long.lean
           test -s /tmp/q0-root52-lean/Q0Root52Parent.lean
-          sha256sum "$src"/* | sort -k2 > /tmp/q0-root52-source.sha256
+          find "$src" -type f -print0 | sort -z | xargs -0 sha256sum > /tmp/q0-root52-source.sha256
       - name: Compile root52 and consume it from the 293-entry Raw11 roster
         run: |
           set -euo pipefail
