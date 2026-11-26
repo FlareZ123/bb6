@@ -20,7 +20,7 @@ noncomputable def roster58 :=
 theorem p112_count59 :
     (BB6.Agent32CanonicalSelectedIntegrated.rosterSelected.filter
       (fun e => sameTable e.2 p112)).length = 1 :=
-  p112_count59
+  BB6.Agent17Canonical59Raw112Membership.p112_count59
 
 theorem count58 : roster58.length = 58 := by decide
 
