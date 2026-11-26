@@ -1,4 +1,4 @@
-name: Agent 47 raw114 symbolic holdouts
+name: Agent 47 Raw114 holdouts and Raw11 q0 route audit
 on:
   workflow_dispatch:
     inputs:
@@ -6,11 +6,15 @@ on:
         description: Check the raw111 shallow certificate and prefix partial checker
         type: boolean
         default: false
+      raw11_q0_route:
+        description: Compile the exact Raw11 route with the accepted root39 Cover consumed
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   holdouts:
-    if: ${{ !inputs.raw111 }}
+    if: ${{ !inputs.raw111 && !inputs.raw11_q0_route }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -38,7 +42,7 @@ jobs:
           if-no-files-found: error
 
   raw111-preflight:
-    if: ${{ inputs.raw111 }}
+    if: ${{ inputs.raw111 && !inputs.raw11_q0_route }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -54,3 +58,46 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python tools/lean_compile_closure.py --workdir /tmp/a47-raw111 --jobs 4 im-results/agent47-raw111-cut/Raw111Prefix.lean im-results/agent47-raw111-cut/Raw111Ternary.lean im-results/agent47-raw111-cut/Raw111Triplet.lean im-results/agent47-raw111-cut/Raw111QuadCounter.lean im-results/agent47-raw111-cut/Raw111TripleCounter.lean | tee /tmp/a47-raw111.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
+
+  raw11-q0-route:
+    if: ${{ inputs.raw11_q0_route }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct the pinned coverage contract
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+      - name: Compile exact Raw11 route and root39 consumer
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \\
+            im-results/agent47-raw11-adapter/Raw11Root39Consume.lean \\
+            --workdir /tmp/a47-raw11-root39 \\
+            --manifest /tmp/a47-raw11-root39/manifest.json \\
+            --jobs 2 \\
+            --lean lean \\
+            --label raw11-root39-consumption \\
+            --theorem BB6.Agent47Raw11Root39Consume.cover_from_remaining \\
+            --provenance-input tools/lean_compile_closure.py \\
+            --provenance-input im-results/agent13-coverage/unpack.py \\
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \\
+            2>&1 | tee /tmp/a47-raw11-root39.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root39.log; then
+            echo "::error::forbidden axiom/proof mechanism in Raw11 root39 consumer"
+            exit 1
+          fi
+          grep -q "BB6.Agent47Raw11Root39Consume.cover_from_remaining" /tmp/a47-raw11-root39.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-root39-consumption
+          path: /tmp/a47-raw11-root39/
+          if-no-files-found: warn
+          retention-days: 30
