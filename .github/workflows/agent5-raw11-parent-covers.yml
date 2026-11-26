@@ -68,6 +68,9 @@ jobs:
               s=p.read_text().replace("theorem safe := ",f"theorem safe : ∀ m, compatible parent m → WeightedBound {b} m := ")
               p.write_text(s)
           PY
+      - name: Reconstruct pinned coverage contract
+        run: python im-results/agent13-coverage/unpack.py
+
       - name: Generate exact child proofs
         if: inputs.generation_run == ''
         env:
@@ -103,6 +106,8 @@ jobs:
             --parent-table "$PARENT_TABLE" \
             --weighted-bound "$BOUND" \
             --provenance-input im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             --provenance-input im-results/agent5-weighted-tnf-queue/q0-open-automata.cjs \
             --provenance-input im-results/agent47-raw11-adapter/raw11-route.json \
             --provenance-input im-results/agent5-weighted-tnf-queue/raw11-capped-extra-automata.json \
