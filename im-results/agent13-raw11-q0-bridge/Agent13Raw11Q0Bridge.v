@@ -45,7 +45,7 @@ Theorem raw11_q0_nine_parent_consumption bound :
       (adaptive_obligations decider (AP_advance 1000000%N AP_stop) (q_i 0 100)) <->
    Forall (source_weighted_safe bound) q0_nine_remaining).
 Proof.
-  exact q0_nine_consumption.
+  exact (q0_nine_consumption bound).
 Qed.
 
 Print Assumptions raw11_q0_restriction_is_local_frontier.
