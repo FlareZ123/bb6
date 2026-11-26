@@ -11,7 +11,7 @@ on:
         type: boolean
         default: false
       assemble_branch:
-        description: "0 assembles 0LA, 5 reuses 0LF, 16/17 extract residual rosters, inventory lists accepted parent artifacts"
+        description: "0 assembles 0LA, 5 reuses 0LF, 16/17 extract residual rosters, inventory lists artifacts, membership59 proves Raw122 roster membership"
         required: false
         type: string
         default: ''
@@ -733,6 +733,34 @@ jobs:
             fi
           done
           exit 1
+  canonical59-membership:
+    if: inputs.assemble_branch == 'membership59'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact Raw122 membership in Canonical59
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GITHUB_TOKEN: ${{ github.token }}
+          RAW122_SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
+        run: |
+          set -euo pipefail
+          python im-results/agent43-raw122-cut/assemble_raw122_canonical59_membership.py \
+            --work /tmp/a43-canonical59-membership \
+            --base-run-id 45880290680
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-canonical59-membership
+          path: /tmp/a43-canonical59-membership/generated/
+          retention-days: 90
+          if-no-files-found: error
+
   compile-complete-parent:
     if: inputs.compile_complete_parent == true
     runs-on: ubuntu-latest
@@ -783,7 +811,7 @@ jobs:
           if ! python tools/lean_compile_closure.py \
             im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
             --workdir /tmp/a43-parent \
-            --jobs 8 \
+            --jobs 2 \
             --precompiled-manifest /tmp/a43-audit/manifest.json \
             --precompiled-dir /tmp/a43-audit \
             --manifest /tmp/a43-parent/manifest.json \
