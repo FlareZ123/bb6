@@ -41,3 +41,15 @@ Each shard still emits its own source/import/object manifest. The assembly stage
 This is a proof-build reliability improvement, not a new mathematical closure. The 100,000-step parent theorem remains **pending original-source acceptance** until the `mode=closed` run passes the named axiom audit and full dependency-reuse check. The two residual nonhalting theorems are already source-accepted; the remaining obligation is the complete parent partition and its two residual Covers.
 
 The generated-source artifact preserves the `im-results/agent47-raw112-cut/` directory as its common root; do not add a log path from `/tmp` to that artifact, or download will nest the generated Lean files and the shard root scan will miss them. It must include all generated families, especially `Raw112Counter*.lean` (branch 03 imports `Raw112Counter72`), as well as `Raw112Branch*.lean`, `Raw112Kid*.lean`, `Raw112Symbol*.lean`, and `Raw112Sparse*.lean`. Each shard artifact likewise uploads only its work directory so `manifest.json` is at the downloaded artifact root expected by the raw109 merger.
+
+
+## 26 November 2026: Raw112-to-67 roster extension
+
+The two residual nonhalting wrappers are source-certified, but the full Raw112 parent Cover still requires the eight-shard `closed` audit. The parent-level integration is now prepared:
+
+- `Canonical67E1ParentGraft.lean` defines the ninth E1 parent `p112`, proves it occurs exactly once in the 68-residual roster, and gives `count67` plus `sound67`. This is conditional on the Raw112 parent Cover at 100000, in addition to the eight existing Canonical68 parent contracts.
+- `Canonical67Integrated.lean` instantiates that premise from `Raw112ClosedCover.parent_cover` and the eight integrated Canonical68 Covers. Its `sound67_integrated` theorem leaves 67 explicit quotient obligations at the unchanged champion bound 6,766,859.
+- The conditional 67-roster consumer is being source-audited in workflow run [45743082471](https://github.com/FlareZ123/bb6/actions/runs/45743082471).
+- The Raw112 parent-cover audit is workflow run [45742063996](https://github.com/FlareZ123/bb6/actions/runs/45742063996), currently queued at the last checkpoint. The integrated 67 theorem is not yet source-accepted; do not count the roster reduction as complete until both the parent-cover audit and integrated compile succeed.
+
+This extension reuses the existing Canonical68 roster and does not regenerate the canonical parent set.
