@@ -7,7 +7,7 @@ open BB6Coverage BB6.Agent13BlankDelay
 def partialTable (short : Bool) : PartialMachine := fun s => some (table short s)
 
 theorem compatible_table (short : Bool) (m : Machine)
-    (hm : Compatible (partialTable short) m) : m = table short := by
+    (hm : compatible (partialTable short) m) : m = table short := by
   funext s
   exact hm s _ rfl
 
