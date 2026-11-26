@@ -216,8 +216,8 @@ jobs:
               ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24")),
           ):
               for name in names:
-                  m = re.search(r"'" + re.escape(namespace) + r"\\." + re.escape(name) + r"' depends on axioms:\\s*\\[([^\\]]*)\\]", log)
-                  if not m and re.search(r"'" + re.escape(namespace) + r"\\." + re.escape(name) + r"' does not depend on any axioms", log):
+                  m = re.search(r"'" + re.escape(namespace) + r"\." + re.escape(name) + r"' depends on axioms:\s*\[([^\]]*)\]", log)
+                  if not m and re.search(r"'" + re.escape(namespace) + r"\." + re.escape(name) + r"' does not depend on any axioms", log):
                       print(namespace, name, [])
                       continue
                   if not m:
