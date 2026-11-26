@@ -1,0 +1,84 @@
+{
+  "residuals": 1212,
+  "ranked_by_trace": 50,
+  "max_trace_length": 2001,
+  "min_selected_trace_length": 22,
+  "candidates": 8,
+  "candidate_ids": [
+    1091,
+    1087,
+    1086,
+    680,
+    546,
+    524,
+    66,
+    26
+  ],
+  "elapsed_seconds": 5.907,
+  "candidates_detail": [
+    {
+      "id": 1091,
+      "trace_length": 2001,
+      "entry": 3,
+      "ops": 13,
+      "fixture": "pump-1091.json",
+      "table": "1RB---_1RC---_0RD1RE_1LD0RC_1LC0RE_------"
+    },
+    {
+      "id": 1087,
+      "trace_length": 2001,
+      "entry": 3,
+      "ops": 9,
+      "fixture": "pump-1087.json",
+      "table": "1RB---_1RC---_0RD1RE_1LD0RC_0RD0RE_------"
+    },
+    {
+      "id": 1086,
+      "trace_length": 2001,
+      "entry": 3,
+      "ops": 11,
+      "fixture": "pump-1086.json",
+      "table": "1RB---_1RC---_0RD1RE_1LD0RC_0RC0RE_------"
+    },
+    {
+      "id": 680,
+      "trace_length": 2001,
+      "entry": 21,
+      "ops": 33,
+      "fixture": "pump-680.json",
+      "table": "1RB---_1RC1RD_0RD1LE_1LD0RC_0LB---_------"
+    },
+    {
+      "id": 546,
+      "trace_length": 2001,
+      "entry": 1,
+      "ops": 19,
+      "fixture": "pump-546.json",
+      "table": "1RB0LC_1RC1RA_0RD1LA_1LD0RC_------_------"
+    },
+    {
+      "id": 524,
+      "trace_length": 2001,
+      "entry": 1,
+      "ops": 20,
+      "fixture": "pump-524.json",
+      "table": "1RB1RA_1RC1LB_0RD1LA_1LD0RC_------_------"
+    },
+    {
+      "id": 66,
+      "trace_length": 2001,
+      "entry": 2,
+      "ops": 17,
+      "fixture": "pump-66.json",
+      "table": "1RB1RC_1RC---_0RD0LE_1LD0RC_0LA---_------"
+    },
+    {
+      "id": 26,
+      "trace_length": 2001,
+      "entry": 1,
+      "ops": 18,
+      "fixture": "pump-26.json",
+      "table": "1RB1LA_1RC1RB_0RD0LA_1LD0RC_------_------"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+candidate id=1091 trace=2001 entry=3 ops=13 elapsed=0.00s
+candidate id=1087 trace=2001 entry=3 ops=9 elapsed=0.00s
+candidate id=1086 trace=2001 entry=3 ops=11 elapsed=0.00s
+candidate id=680 trace=2001 entry=21 ops=33 elapsed=0.11s
+candidate id=546 trace=2001 entry=1 ops=19 elapsed=0.01s
+candidate id=524 trace=2001 entry=1 ops=20 elapsed=0.01s
+candidate id=66 trace=2001 entry=2 ops=17 elapsed=0.06s
+candidate id=26 trace=2001 entry=1 ops=18 elapsed=0.00s
+{
+  "residuals": 1212,
+  "ranked_by_trace": 50,
+  "max_trace_length": 2001,
+  "min_selected_trace_length": 22,
+  "candidates": 8,
+  "candidate_ids": [
+    1091,
+    1087,
+    1086,
+    680,
+    546,
+    524,
+    66,
+    26
+  ],
+  "elapsed_seconds": 5.907
+}
