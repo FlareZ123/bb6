@@ -46,6 +46,28 @@ The 30 q32 side leaves under entry 115 divide exactly as follows:
 
 All four independent rows still have D0=`1LA`. The two remaining q32 side leaves lie under frontier entry 114, not entry 115.
 
+## Full q32 queue nesting under entry 115
+
+The 84-row q32 source queue has 70 rows under entry 115 and 14 under entry 114. All 84 queue tables are pairwise disjoint. The 70 entry-115 rows have this exact nesting map:
+
+| q32 queue index | Exact relation |
+|---|---|
+| 0–37 | Each refines Raw11 Extra84 (38 queue rows inside that parent) |
+| 38, 40, 42, 44 | The four independent q32 side leaves listed above |
+| 39 | Parent of Raw11 Extras 85–130 and q0 held checkpoint row 156 |
+| 41, 43, 45, 46 | Exact table matches to Raw11 Extras 131, 132, 133, 134, respectively |
+| 47 | Parent of Raw11 Extras 135–141, q0 active rows 0–53, and all 94 q0 automata leaves |
+| 48–69 | Exact table matches to q0 checkpoint rows 54–75, respectively |
+
+The two coarse q32 parent tables are:
+
+- q32 row 39: `1RB1RD_1RC---_0LA---_1LA1LB_------_------`
+- q32 row 47: `1RB1RD_1RC---_0LA---_1LA1LD_------_------`
+
+Consequently every one of the 77 q0 checkpoint rows under entry 115 is nested in a q32 queue row: rows 0–53 sit under q32 row 47, held row 156 sits under q32 row 39, and rows 54–75 exactly match q32 rows 48–69. Extra131 is exactly q32 queue row 41, so its parent-Cover result can be consumed directly at that q32 address.
+
+This is a **containment map**, not a proof that the 70 q32 rows exhaust entry 115 or that q32 rows 39 and 47 are exhausted by their listed subfamilies. The q32 source README explicitly leaves 38 queue entries untouched. The queue records also carry introduced-state cuts 4, 5, and 6; do not infer completeness from a uniform 25-ary or 21-ary volume calculation. Keep the source-cut/support predicate explicit.
+
 ## D0 complement
 
 Among the 77 q0 checkpoint rows under entry 115, the six defined D0 values absent from the checkpoint roster are:
