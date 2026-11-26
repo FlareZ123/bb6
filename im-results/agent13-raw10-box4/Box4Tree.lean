@@ -3,7 +3,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent13.Box4
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box
-open BB6.Agent13.Box17 (tableEq tableEq_sound haltBound haltBound_sound slot decode slots slots_complete)
+open BB6.Agent13.Box17 (tableEq tableEq_sound haltBound haltBound_sound zipHalt slot decode slots slots_complete)
 open BB6Coverage.Agent10ZipAudit
 
 structure Known (target : Fin 12) where
