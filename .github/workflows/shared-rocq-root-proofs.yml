@@ -330,6 +330,16 @@ jobs:
             cp "$p/Agent5AutoTree.v" .
             node "$p/q0-auto-source.cjs" "$ROOT_INDEX" Agent5Q0AutoData.v | tee q0-auto-candidate.json
           fi
+      - name: Preserve generated q0 root 52 proof shards
+        if: inputs.target == 'enumerate62-q0-auto-root' && inputs.offset == 52
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-root52-generated-source
+          path: |
+            original/verify/Agent5Q0Root52*.v
+            original/verify/Agent5Q0AutoData.v
+            original/verify/q0-auto-candidate.json
+          if-no-files-found: error
       - name: Generate direct finite-stack source certificates
         if: inputs.target == 'enumerate62-direct-auto'
         working-directory: original/verify
@@ -486,6 +496,7 @@ jobs:
             cp Agent5AutoTree.{v,vo} auto-root-results/
           fi
           cp Agent5Q0AutoData.{v,vo} Agent5Q0AutoConsume.{v,vo} q0-auto-candidate.json auto-root-results/
+          if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 52 ]; then cp Agent5Q0Root52*.{v,vo} auto-root-results/; fi
       - name: Preserve selected original-source automata root proof
         if: always() && (inputs.target == 'enumerate62-q0-auto-root' || inputs.target == 'enumerate62-direct-parent')
         uses: actions/upload-artifact@v4
