@@ -1877,7 +1877,12 @@
   "residual": {
     "657": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_0RB0LA",
     "658": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_1LB0LA",
-    "672": "1RB1LE_1RC1RA_0RD0RB_1LD1RE_0LF0LA_---1LA",
     "771": "1RB1LE_1RC0LB_0RD0RB_1LD1RE_1LF0LA_---1LB"
+  },
+  "custom": {
+    "672": [
+      "Raw57LE1M672",
+      "BB6Coverage.Agent7Raw57LE1M672"
+    ]
   }
 }
