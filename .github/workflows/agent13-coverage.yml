@@ -4479,6 +4479,8 @@ jobs:
           mkdir -p /tmp/raw124-1lb-residual-pumps
           python tools/lean_compile_closure.py --workdir /tmp/raw124-1lb-residual-pumps/closure --jobs 4 --manifest /tmp/raw124-1lb-residual-pumps/manifest.json --theorem BB6.Agent2Raw124OneLB2083.never_source im-results/agent2-tnf-raw124/Raw124OneLB2083.lean | tee /tmp/raw124-1lb-residual-pumps/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-1lb-residual-pumps/audit.log BB6.Agent2Raw124OneLB2083.never_source
+          python tools/lean_compile_closure.py --workdir /tmp/raw124-1lb-residual-pumps/closure937 --jobs 4 --precompiled-manifest /tmp/raw124-1lb-residual-pumps/manifest.json --precompiled-dir /tmp/raw124-1lb-residual-pumps/closure --manifest /tmp/raw124-1lb-residual-pumps/manifest937.json --theorem BB6.Agent2Raw124OneLB937.never_source im-results/agent2-tnf-raw124/Raw124OneLB937.lean | tee /tmp/raw124-1lb-residual-pumps/audit937.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-1lb-residual-pumps/audit937.log BB6.Agent2Raw124OneLB937.never_source
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-1lb-residual-certified
