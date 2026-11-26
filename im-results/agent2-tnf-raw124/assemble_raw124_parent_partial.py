@@ -343,6 +343,22 @@ def main():
         compile_source(complete_source, complete_output, env, complete_log)
         axioms = a68.gate(complete_log.read_text(), ["BB6.Agent2Raw124ParentComplete.parent_cover"])
         report["status"] = "source-accepted complete parent Cover"
+        # The 22 direct F1 child artifacts are supplemented by the independently
+        # accepted 0RE Cover and the 0LF -> 1RC nested Cover. Report the actual
+        # 24-way parent coverage rather than leaving the two composed branches
+        # misleadingly marked as uncovered.
+        report["directly_source_accepted_first_level_branches"] = sorted(branches)
+        report["covered_first_level_branches"] = sorted([*branches, "0RE", "0LF"])
+        report["covered_first_level_count"] = 24
+        report["uncovered_first_level_branches"] = []
+        report["composed_branch_covers"] = {
+            "0RE": {"theorem": "BB6.Agent2Raw124B0RE.bound_all", "weighted_bound": 2473,
+                    "run_id": re_run, "artifact_id": re_aid},
+            "0LF": {"theorem": "BB6.Agent2Raw124ParentComplete.parent_cover",
+                    "final_child_theorem": "BB6.Agent12Raw124ZeroLF1RC.bound_all",
+                    "weighted_bound": BOUND, "run_id": args.rc_run,
+                    "artifact_id": rc_metadata["artifact_id"]},
+        }
         report["final_cylinder"] = rc_metadata
         report["complete_parent"] = {
             "theorem": "BB6.Agent2Raw124ParentComplete.parent_cover",
