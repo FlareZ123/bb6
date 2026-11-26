@@ -115,7 +115,7 @@ theorem {hn} : canonicalCheck {B} {pn} {cut} {tn} = true := by
 """
     for q,w,r in product(range(6),range(2),range(2)):
         x=rs[12*w+6*r+q]
-        body+=f"    · exact {x[2]}\n" if x else "    · simp at hmv\n"
+        body+=f"    · exact {x[2]}\n" if x else "    · change 5 ≤ 4 at hmv; omega\n"
     emit(name,[x[0] for x in rs if x],body);return name,tn,hn
 root,tn,hn=generate(TREE,CUT,[])
 assert stats==Counter(spec["stats"]),(stats,spec["stats"])
