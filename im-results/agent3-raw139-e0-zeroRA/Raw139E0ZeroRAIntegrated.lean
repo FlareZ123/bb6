@@ -4,7 +4,7 @@ import A3E0RACover
 
 namespace BB6.Agent3Raw139E0ZeroRAIntegrated
 
-open BB6Coverage BB6Coverage.FAR BB6.Agent6Raw139Normalized
+open BB6Coverage BB6Coverage.FAR BB6.Agent6Raw139Normalized BB6.Agent13BlankDelay
 
 /-- The unique six-hole residual cylinder closed by the E0=0RA branch family. -/
 def dischargedRow : Fin 7 × Move :=
