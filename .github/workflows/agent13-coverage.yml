@@ -5653,7 +5653,7 @@ jobs:
             --source-root im-results/agent13-coverage \
             --source-root im-results/agent31-three-hole-tnf \
             --source-root im-results/agent4-two-sided-automata \
-            --workdir /tmp/frontier-work --jobs 4 \
+            --workdir /tmp/frontier-closure --jobs 4 \
             --manifest /tmp/frontier.manifest.json \
             --artifact-dir /tmp/frontier-closure \
             --precompiled-manifest /tmp/merged.manifest.json \
