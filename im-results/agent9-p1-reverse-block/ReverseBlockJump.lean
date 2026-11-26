@@ -24,7 +24,9 @@ theorem mod_sub_residue (M a b y : Nat)
   have hq : (a+b)/M < 2 :=
     (Nat.div_lt_iff_lt_mul hM).2 (by simpa [Nat.mul_comm] using hlt)
   have hdiv := Nat.div_add_mod (a+b) M
-  have hcases : (a+b)/M = 0 ∨ (a+b)/M = 1 := by omega
+  have hcases : (a+b)/M = 0 ∨ (a+b)/M = 1 := by
+    have hnonneg : 0 ≤ (a+b)/M := Nat.zero_le _
+    omega
   rcases hcases with h0 | h1
   · have hab : a+b=y := by
       rw [h0,h] at hdiv
