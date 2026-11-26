@@ -46,7 +46,7 @@ Table `1RB1RF_1RC1LA_0RD0RA_1LD1RE_---0LA_1LB0LF`. Entry at time 31 into A, left
 
 The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597) proves the exact parent dichotomy: fourteen ordinary A1 choices have supplied weighted bounds, five choices close immediately, and only 1LA, 1LB, 1LE, 0LF and 1LF remain as residual children.
 
-Four complete child Covers are now source-accepted:
+All five residual child Covers are source-accepted:
 
 | Child | Weighted bound | Original-source audit |
 |---|---:|---|
@@ -56,17 +56,23 @@ Four complete child Covers are now source-accepted:
 | 0LF | 1,500 | [45783586050](https://github.com/FlareZ123/bb6/actions/runs/45783586050) |
 | 1LF | 1,500 | [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) |
 
-The 1LB audit includes the final M211 prefix-rewrite invariant and the replacement M754 43-state RLE witness; its complete child theorem is `BB6.Agent1Raw57LB1.all_completions`. The 0LF audit completed the exact candidate partition with no residual entries; its child theorem is `BB6.Agent1Raw57LF0.all_completions`. These are child-cylinder Covers, not yet a parent Cover.
+The 1LB audit includes the final M211 prefix-rewrite invariant and replacement M754 43-state RLE witness. The 0LF audit completed its exact candidate partition with no residual entries. The 1LF audit proves `BB6.Agent1Raw57LF1.all_completions` at bound 1,500; its two exceptional tables M882 and M885 share the checked 104-state DFA, eight-state symbol transducer and 382-state reachable product. These are child-cylinder Covers, not yet a parent Cover.
 
-The last sibling is 1LF. Its exact open census has 2,973 leaves; the only two explicitly expected final tables are M882 and M885. Their shared proof uses a 104-state DFA, an eight-state symbol transducer, and a finite reachable product with 382 states (10 accepting product states). The independent checker `m882885_certificate.py` checks both the finite closure and exact arbitrary-tail zipper macros for the two table variants. Original-source sibling audit [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) succeeded, establishing `BB6.Agent1Raw57LF1.all_completions` at bound 1,500.
+The final parent consumer is `Raw57ParentComplete.lean`, theorem `BB6.Agent1Raw57Complete.parent_cover`, targeting `WeightedBound 1500`. It composes the five residual child Covers with the fourteen earlier branch bounds and five immediate cycles. The first full parent source-closure attempt [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994) was cancelled at the 120-minute timeout. The 360-minute retry [45865608452](https://github.com/FlareZ123/bb6/actions/runs/45865608452) terminated with runner exit 143 after about 173 minutes, without a Lean diagnostic or a proof artifact. Neither attempt accepted `parent_cover`.
 
-The final parent consumer draft is `Raw57ParentComplete.lean`, theorem `BB6.Agent1Raw57Complete.parent_cover`, targeting `WeightedBound 1500`. It composes the five residual child Covers with the fourteen earlier branch bounds and five immediate cycles. The first full parent source-closure attempt [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994) was cancelled at 14:51:27Z after reaching the workflow's explicit 120-minute timeout; it produced no proof artifact and did not accept `parent_cover`. The existing manual workflow now gives only `parent-all` a 360-minute timeout, preserving the same source generator and exact dependency closure; the targeted retry is running as [45865608452](https://github.com/FlareZ123/bb6/actions/runs/45865608452). Until this run succeeds, no unconditional Raw57 parent Cover is claimed.
+### Bounded proof-cut recovery
 
-## Canonical64 crosswalk and integration
+The existing manual workflow now has a `raw57-cuts` selector. It builds four bounded, independently auditable closures: (1) the eight early branches plus `Raw57ParentBridge`; (2) the six middle branches; (3) residual children 1LA/1LB/1LE; and (4) residual children 0LF/1LF. Each cut exports its exact module objects and manifest. A strict merger checks common module identities, source hashes, compiler identity and import closures, then a thin consumer compile reuses the merged cuts to prove `parent_cover` at 1,500. This avoids repeating the monolithic parent-all build and does not change any mathematical certificate or branch selection.
 
-The exact Raw57 parent is entry `canonical_index=33`, `raw_residual_index=57` of `im-results/agent13-roster-convergence/canonical-124.json`. Its address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=0LA, and its six-hole table is exactly `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. The address is canonical under `canonicalAddress 2`.
+The first matrix dispatch [45899463402](https://github.com/FlareZ123/bb6/actions/runs/45899463402) failed before compilation because the setup step referenced a nonexistent four-hole generator path. The path is corrected to `im-results/agent31-three-hole-tnf/generate_four_hole.py`; the focused matrix retry has been queued. No parent Cover acceptance is claimed until all four cuts merge and the thin consumer compiles with the standard-axiom gate.
 
-`Raw57Canonical64Membership.lean` proves unique `sameTable` membership in the accepted `Canonical64Raw120Integrated.roster64`, at zero-based index 33. It is deliberately membership-only: it defines no competing roster and makes no global soundness claim. A dedicated source-audit target was added to the existing `.github/workflows/agent13-coverage.yml` workflow in [PR #119](https://github.com/FlareZ123/bb6/pull/119). The first attempt [45868278721](https://github.com/FlareZ123/bb6/actions/runs/45868278721) rebuilt the pinned Canonical64 base and compiled the Raw57 parent-bridge closure; its standard-axiom checks passed, but the final strict-link step failed because the second link did not include the first-stage base directory containing the reused `RecursiveResidual` import. The script now includes that base directory in the Raw57 family, preserving strict object checks rather than copying or weakening the dependency. A focused rerun is next. No membership acceptance or roster cut is claimed; the global residual count remains 64 until the stable Canonical64 parent consumer itself passes.
+## Historical Canonical64 crosswalk and current-roster obligation
+
+`Raw57Canonical64Membership.lean` proves unique `sameTable` membership in the historical `Canonical64Raw120Integrated.roster64`, at zero-based index 33. The exact six-hole table is `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`, with canonical address B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=0LA. This crosswalk remains useful for traceability but is not a membership proof for the current Canonical58 boundary.
+
+The Canonical64 membership-only source audit [45868278721](https://github.com/FlareZ123/bb6/actions/runs/45868278721) rebuilt its pinned base and compiled the Raw57 parent-bridge closure; standard-axiom checks passed, but strict linking failed because the second link omitted the first-stage base directory containing the reused `RecursiveResidual` import. The linker script now includes that base directory without weakening object-identity checks. A successful rerun is still required.
+
+The current global boundary is Canonical58 after the Raw113 integration. Exact Raw57 membership and complement in that current roster remain a separate, unaccepted obligation; historical Canonical64 membership does not discharge it. Keep Raw57 in the complement until both the unconditional parent Cover at 1,500 and the current-roster membership/complement proof are accepted. No roster cut is claimed here.
 
 ## A1=1LE: source-accepted partition
 
