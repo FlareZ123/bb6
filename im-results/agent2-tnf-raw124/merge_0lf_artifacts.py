@@ -151,7 +151,7 @@ def main() -> None:
         if workflow_sha:
             revisions.add(workflow_sha)
 
-        for source in generated_dir.rglob("*"):
+        for source in generated_dir.rglob("*.lean"):
             if source.is_file():
                 copy_identical(source, generated_out / source.relative_to(generated_dir))
 
