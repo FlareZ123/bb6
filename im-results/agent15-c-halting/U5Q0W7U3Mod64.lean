@@ -100,7 +100,7 @@ theorem w7_q0_target_unreachable_u35mod64 (t : Nat) :
         have hq' : 2^(n+1)=32*q := by simpa using hq
         refine ⟨q*(a+3),?_⟩
         rw [hq']
-        exact Nat.mul_assoc 32 q (a+3)
+        simp [Nat.mul_assoc]
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
