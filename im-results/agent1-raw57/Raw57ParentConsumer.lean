@@ -79,4 +79,5 @@ theorem cover_at_target_from_four (B : Nat) (hB : 832 ≤ B)
 #print axioms middle_bounds
 #print axioms parent_five
 #print axioms cover_at_target
+#print axioms cover_at_target_from_four
 end BB6.Agent1Raw57Consumer
