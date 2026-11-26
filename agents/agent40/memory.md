@@ -1,3 +1,6 @@
+## 2026-11-26: two additional Raw57 proofs
+Raw57Binary.lean (2021/2172) kernel checked against original dependencies, all four leaf wrappers now integrated into 1LA custom partition. Binary suffix language with digits 011011 and 010011 and two terminal forms, exact structural recursive carry. Parent audit outstanding.
+
 ## 2026-11-26 05:23Z: original-source acceptance
 Rebuilt all five source dependencies from artifact 15057164854 and compiled Raw57Alternating.lean including original NeverHalts adapter and M748/M944 wrappers. Axioms [propext, Quot.sound]. Integrated custom entries into 1LA spec and notified agent1. Parent audit still outstanding.
 
