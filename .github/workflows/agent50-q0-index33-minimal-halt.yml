@@ -1,0 +1,36 @@
+name: Agent 50 q0 index-33 minimal-halt source check
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Compile the minimal-slice application and replay its macro checker
+        type: choice
+        options: [all]
+        default: all
+
+permissions:
+  contents: read
+
+jobs:
+  formal-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Compile source closure and replay macro recurrence
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a50-q0-index33 --jobs 4 im-results/agent50-q0-index33/Q0Index33MinimalHalt.lean | tee /tmp/a50-q0-index33.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a50-q0-index33.log; then
+            echo "Untrusted proof axiom detected."
+            exit 1
+          fi
+          python im-results/agent50-q0-index33/verify_macro.py
