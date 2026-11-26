@@ -6,10 +6,11 @@ mkdir -p "$work/imports" "$work/build"
 (
   cd "$work/imports"
   rm -f pump-*.json
-  cp "$base/recipes.txt" "$base/Agent14OneLDCarry.lean" .
+  cp "$base/recipes.txt" .
+  rm -f Agent14OneLDCarry.lean
   python3 "$base/replay.py"
   python3 "$base/package.py"
-  echo "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a  Agent14OneLDCarry.lean" | sha256sum -c
+  echo "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a  $base/Agent14OneLDCarry.lean" | sha256sum -c
   echo "b436a77405c29314f7f75e9d773326591f7eeb8ad7098b6b854b93afa83818d0  Agent14OneLDHard.lean" | sha256sum -c
   echo "c1e905c2103d30b39bac253c5015f5a51da87aa57c6c5c9acd35e677e022f225  Agent14OneLDCover.lean" | sha256sum -c
 )
