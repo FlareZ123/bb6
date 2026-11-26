@@ -2436,6 +2436,9 @@ jobs:
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-multipump/generate.py 66 70 80
           elif [ "$TARGET" = weighted-tnf-raw49-progress ]; then
+            python im-results/agent31-three-hole-tnf/generate_sweeps.py
+            python im-results/agent31-three-hole-tnf/generate_four_hole.py
+            python im-results/agent10-tnf-multipump/generate.py 66 70 80
             bash im-results/agent7-raw49/prepare.sh /tmp/raw49-generated
             test -s /tmp/raw49-generated/child0/Raw49C0All.lean
             test -s /tmp/raw49-generated/child2/Raw49C2All.lean
