@@ -66,4 +66,22 @@ The new search summarizes the nearest K maximal runs of each half-tape, keeping 
 
 Let p_j=0^j11 and b_j=01^j; E sections have scanned blank and empty left tape. Define A(k) with right word p4 p7^(k+1) p2^k 11, and B(k) with right word p4 p7^(k+1) p5 p2^k. The genuine blank run reaches A(0) at live time 87. Arbitrary-tail finite block equalities, sweep induction, and explicit positive costs prove A(k) -> B(k) -> A(k+1). The first phase scans p7 blocks into b8 blocks, rewrites the p2 suffix into b3 blocks and one b6, drains those to p10 p2^k, then restores b8 blocks into p7 blocks; the alternate phase scans the p5 separator, drains b3 blocks, and increments both p7 and p2 exponents. [Raw54RF141.lean](Raw54RF141.lean) proves universal nonhalting with the original SweepPumping and Raw54Return interfaces. Original-source and named axiom audit accepted [run 45839554784](https://github.com/FlareZ123/bb6/actions/runs/45839554784), commit 6cbd527a501dcbd42785bd13fce355174a730027. The initial elaboration issue concerned unfolding the E constructor and specifying existential time witnesses; no mathematical change was required.
 
-**Current acceptance ledger: 178/179 frozen misses individually resolved (41 FAR, 64 sparse, 57 affine, 11 non-affine, 3 compressed two-stack quotients, 2 late bounds). RF149 is the sole remaining miss.** The aggregate first-hole audit is still to be checked.
+## Residual 149: eight-phase two-counter growth
+
+The exact partial table is `1RB1RE_1RC0RA_0RD0RA_1LD0LE_1RF0LE_1RB---`. Write p(a,b)=0^a 1^b, P=p(3,2), Q=01111, and S(k,V) for E with empty left zipper and right zipper p(11,2) P^k V. The genuine blank prefix reaches S(8,p(12,2) P p(6,8)) at exactly 3186 live moves. The eight phases transform S(k+i,V_i) to S(k+i+1,V_{i+1}), for arbitrary k and j>=1:
+
+| i | V_i |
+|---|---|
+|0| p(12,2) P^j p(6,8) |
+|1| p(9,2) P^j p(3,4) p(1,8) |
+|2| p(12,2) P^j p(17,4) |
+|3| p(9,2) P^j p(3,4) p(12,4) |
+|4| p(12,2) P^(j+1) p(10,4) |
+|5| p(9,2) P^(j+1) p(3,4) p(5,4) |
+|6| p(12,2) P^(j+2) p(3,4) |
+|7| p(9,2) P^(j+3) p(9,4) |
+|8| p(12,2) P^(j+2) p(6,8) |
+
+The proof uses arbitrary-tail finite macros and two independently quantified sweeps, transferring P to Q and back, with different inner scan modes. Every phase has positive time. Thus the family F(n)=S(8n+8,p(12,2) P^(2n+1) p(6,8)) is closed under a positive-time return, and all 25 F1 completions never halt. [Raw54RF149.lean](Raw54RF149.lean) proves this in the original semantics; [original-source CI 45869412778](https://github.com/FlareZ123/bb6/actions/runs/45869412778) succeeded including the named axiom audit. Source commit 7359870e3f398879a9b757462b61c49c04048d76, blob ceaa679a5480bc54af5c6d9beb94b861b7b65407. The earlier [E0 return reduction](RF149Return.md) is intermediate and is superseded for this cylinder by the exact recurrence.
+
+**Current acceptance ledger: 179/179 frozen misses individually resolved (41 FAR, 64 sparse, 57 affine, 12 non-affine, 3 compressed two-stack quotients, 2 late bounds).** The aggregate first-hole audit is still to be checked; RF's independently attained lower bound remains 14,389.
