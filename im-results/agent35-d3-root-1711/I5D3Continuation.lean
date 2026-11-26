@@ -131,9 +131,9 @@ private theorem two_return_packet (t h : Nat) :
           BB6.Agent31SecondSource.secondCost t)
         (DRegularSource.sourceSection ⟨9*t+7,h+3,1⟩))
       (BB6.Agent31PacketSource.packet (64*t+33) 2 (2*h+3) ys) := by
-  have h := BB6.Agent31SecondSource.two_returns_source t h
-  rw [second_start_eq_source t h, second_finish_eq_packet t h] at h
-  exact h
+  have hTwo := BB6.Agent31SecondSource.two_returns_source t h
+  rw [second_start_eq_source t h, second_finish_eq_packet t h] at hTwo
+  exact hTwo
 
 private theorem a_packet_regular_obs (k q r : Nat) :
     ObsEq
@@ -263,6 +263,7 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
             false :: (CryptidBoundary.pairs (q-2+1) ++
               [true,true,false,false])) := by
     have hlen : 3*k+2 = 9*t+8 := by dsimp [k]; omega
+    have hsub : q-2+1 = q-1 := by omega
     have hlast :
         CryptidBoundary.oppairs q ++ [true] =
           false :: (CryptidBoundary.pairs (q-1) ++ [true,true]) := by
@@ -271,7 +272,7 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
       | succ n =>
         simpa using (BB6.Agent25BGeneral.oppairs_last n)
     rw [hlast]
-    simp [xs,hlen,List.append_assoc]
+    simp [xs,hlen,hsub,List.append_assoc]
   have hcost :
       eDoublePacketCost k q = 12*k*k+49*k+64+4*(q-2) := rfl
   have hlen2 : 2*((q-2)+1)+2 = 2*q := by omega
