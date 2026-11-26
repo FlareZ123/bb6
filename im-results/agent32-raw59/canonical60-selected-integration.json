@@ -1,0 +1,251 @@
+{
+  "status": "kernel-checked conditional quotient reduction",
+  "base_residual_count": 64,
+  "remaining_residual_count": 60,
+  "accepted": [
+    {
+      "label": "raw119",
+      "run_id": 45755653372,
+      "revision": "4a39c28ab1f00c86047a10c78840676ac7c23df1",
+      "artifact_id": 15087741037,
+      "artifact_name": "raw119-parent-proof",
+      "digest": "b6997b8b530e59357bf8deabbc295f51f03b85567b99773b2fa91248ca3be235",
+      "root": "Raw119Data",
+      "theorem": "BB6.Agent10Raw119.all_completions",
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RE_------",
+      "bound": 572,
+      "size": 114409836,
+      "axioms": {
+        "BB6.Agent32CanonicalSelectedRaw119.p119_source_eq": [
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent32CanonicalSelectedRaw119.p119_cover": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent31Canonical59Membership.p119_count64": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "source_sha256": "e25fab74cd961e6def394f0ac07d3fb42ec78fadbef03d1348c793ed4411f577",
+      "olean_sha256": "0dd2f518578556a948de2a0032b3346a6b73506c004d949c6b4b41cece3c434a"
+    },
+    {
+      "label": "raw115",
+      "run_id": 45783903926,
+      "revision": "9416c1292e50f47c06ae29ae4f6d2c80620e1755",
+      "artifact_id": 15100255568,
+      "artifact_name": "raw115-certified-root",
+      "digest": "a4eea4fe3327e993aa402544af9991e03faa56e9f04b3609a41e7f9ee615b453",
+      "root": "Raw115Data",
+      "theorem": "BB6.Agent47Raw115.all_completions",
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RD_------",
+      "bound": 7014,
+      "size": 107302042,
+      "axioms": {
+        "BB6.Agent32CanonicalSelectedRaw115.p115_source_eq": [
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent32CanonicalSelectedRaw115.p115_cover": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent31Canonical59Membership.p115_count64": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "source_sha256": "eb8fee5dbbfaaa1c9947d6eddf9e9011423b310c40aae3d06d0fb72f0f135d31",
+      "olean_sha256": "af5d5498294ac159da6ed629f2d269879f2bba5456217b002cdbd68fb1a4bbf0"
+    },
+    {
+      "label": "raw58",
+      "run_id": 45762057732,
+      "revision": "91ebd1de7ac989c13541f3b30b422097cebc209a",
+      "artifact_id": 15090715339,
+      "artifact_name": "raw58-parent-proof",
+      "digest": "2231c274970b233002894c3fa097e3b81ad1484a3db0809c0148f8c03e26c477",
+      "root": "Raw58Exact",
+      "theorem": "BB6.Agent4Raw58Exact.coverRaw58",
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---0RA_------",
+      "bound": 3055746,
+      "size": 257300992,
+      "axioms": {
+        "BB6.Agent32CanonicalSelectedRaw58.p58_source_eq": [
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent32CanonicalSelectedRaw58.p58_cover": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent31Canonical59Membership.p58_count64": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "source_sha256": "e2dbe869914161e6c5cb69088ce7abe3ffb475d4c0df33f498ac995add17ee53",
+      "olean_sha256": "079dc7ebb2e060633f24ee4461c25d1a0eacb58c5caefd397f017337fcb6991f"
+    },
+    {
+      "label": "raw108",
+      "run_id": 45788380944,
+      "revision": "e40934b3e1211b36fd617377f81c3658b23ebffd",
+      "artifact_id": 15101731441,
+      "artifact_name": "raw108-parent-proof",
+      "digest": "77f7274d51f16697b29bcf2fbee1eb25ed3a2084b1e5134e36bd6e3759e6d21c",
+      "root": "Raw108Closed",
+      "theorem": "BB6.Agent10Raw108Closed.all_closed",
+      "table": "1RB---_1RC---_0RD---_1LD1RE_---1LB_------",
+      "bound": 4136180,
+      "size": 774677658,
+      "axioms": {
+        "BB6.Agent32CanonicalSelectedRaw108.p108_source_eq": [
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent32CanonicalSelectedRaw108.p108_cover": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ],
+        "BB6.Agent31Canonical59Membership.p108_count64": [
+          "Classical.choice",
+          "Quot.sound",
+          "propext"
+        ]
+      },
+      "source_sha256": "312d0f91358d85409bd229c9ed146ed471bd0c4f8833c46f948aa7ff12e7f9e9",
+      "olean_sha256": "ec681850585a1b827607c1fe258c901b017fda024a8fee0162ec4727c9e55f1b"
+    }
+  ],
+  "rejected": [],
+  "raw59_retained": true,
+  "common_weighted_floor": 6766859,
+  "exact_at_champion_score": "BB6.Agent32CanonicalSelectedIntegrated.exact_at_champion_score",
+  "axioms": {
+    "BB6.Agent32CanonicalSelectedIntegrated.raw59_retained": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.parents_pairwise_distinct": [
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.countSelected": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.parents_root": [
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.parents_cover": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.sound_integrated": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.exact_at_target": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent32CanonicalSelectedIntegrated.exact_at_champion_score": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent31Canonical59Membership.p119_count64": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent31Canonical59Membership.p115_count64": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent31Canonical59Membership.p58_count64": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent31Canonical59Membership.p108_count64": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6Coverage.Agent48DirectRoot.champion_raw_witness": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent38ChampionThreshold.champion_score_ge_6766859": [
+      "Quot.sound",
+      "propext"
+    ]
+  },
+  "canonical64_axioms": {
+    "BB6.Agent3Canonical64Raw120.raw120_exact": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent3Canonical64Raw120.p120_root": [
+      "propext"
+    ],
+    "BB6.Agent3Canonical64Raw120.p120_count": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent3Canonical64Raw120.count64": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent3Canonical64Raw120.sound64_integrated": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ],
+    "BB6.Agent3Canonical64Raw120.exact_at_target": [
+      "Classical.choice",
+      "Quot.sound",
+      "propext"
+    ]
+  },
+  "canonical64_olean_sha256": "980275380a722a1bae2fc056ba9aab44e99adc571f2c7c04dda07a7ad115009c",
+  "canonical64_artifact_id": 15085029091,
+  "canonical65_pin": [
+    15078085872,
+    45732489302,
+    "0e7b0932a1c6e35c2716dac560bb6352a6da3ade63b1376cf3660c909bf94e61"
+  ],
+  "raw120_pin": [
+    15080392441,
+    45733198942,
+    "617e0e6e523edfe5bdbba757d812e2139555f054e9d4a857ccfee54d685a2364"
+  ],
+  "champion_manifest_sha256": "ff5682cffafb3ecf1de6c5b6803c9afe34ac449f01d0ce8a00e15143b140adcc",
+  "base_link_audit_sha256": "311873bf350106e26069a4c8a68a3096fdfce219606b64a758d6c20706248c71",
+  "selected_link_audit_sha256": "5a3278ae3e16c7f8a0f6e141a7d0c54a552eab60d2c21b53aa95f07e4aa0bdb8",
+  "source_sha256": "dd3386fcfdb80197eb558985642c6f13aaff85351531bd848f0423bbd0750996",
+  "olean_sha256": "d538c5479fb948c59f00e5735673884dec86abaec79b702ea2e6f6ba3ba5ba1e",
+  "source_revision": "3f923338bb7a95403a8fa089741f59ad892d4e70",
+  "lean_version": "Lean (version 4.36.0-rc2, x86_64-unknown-linux-gnu, commit b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a, Release)"
+}
