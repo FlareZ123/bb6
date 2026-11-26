@@ -169,3 +169,17 @@ theorem never (v : Bool) (m : Machine) (hm : compatible (table v) m) : NeverHalt
 #print axioms epoch
 #print axioms entry
 end BB6Coverage.Agent40Raw57Alternating
+
+namespace BB6Coverage.Agent40Raw57Alternating.M748
+open BB6Coverage
+abbrev table := Agent40Raw57Alternating.table false
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := Agent40Raw57Alternating.never false m hm
+#print axioms never
+end BB6Coverage.Agent40Raw57Alternating.M748
+
+namespace BB6Coverage.Agent40Raw57Alternating.M944
+open BB6Coverage
+abbrev table := Agent40Raw57Alternating.table true
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := Agent40Raw57Alternating.never true m hm
+#print axioms never
+end BB6Coverage.Agent40Raw57Alternating.M944

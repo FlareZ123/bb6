@@ -21,8 +21,9 @@ def spec():
         pattern_automata={i:v["params"] for i,v in pattern["hits"].items()},
         branch_pumps={i:v for i,v in bp.items() if v is not None},
         late=late["late"],expected_open=far["miss"])
-    s["residual"]={str(i):t for i,t in pattern["miss"] if str(i) not in s["branch_pumps"]}
-    parts=[set(s[k]) for k in ("ngram","automata","pattern_automata","branch_pumps","late","residual")]
+    s["custom"]={str(i):["Raw57Alternating",f"BB6Coverage.Agent40Raw57Alternating.M{i}"] for i in (748,944)}
+    s["residual"]={str(i):t for i,t in pattern["miss"] if str(i) not in s["branch_pumps"] and str(i) not in s["custom"]}
+    parts=[set(s[k]) for k in ("ngram","automata","pattern_automata","branch_pumps","custom","late","residual")]
     assert sum(map(len,parts))==len(set.union(*parts))
     assert set.union(*parts)=={str(i) for i,_ in far["miss"]}
     return s
