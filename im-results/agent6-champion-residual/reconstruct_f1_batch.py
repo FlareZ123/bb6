@@ -172,19 +172,52 @@ def main() -> None:
         "Agent14OneRDCover.lean": "9e10874098f0674b3c4959db593bd80ee08e02db8a42317ff969b347dc8a51df",
     })
 
+    # Reconstruct the source-accepted 1LD sibling from its compact recipes.
+    # package.py deliberately runs from the temporary working directory while
+    # retaining its original __file__ path so its shared emitter import resolves.
+    one_ld_base = a14 / "agent14-raw139-f1-oneLD"
+    work_one_ld = TMP / "a14-f1-oneLD/imports"
+    extract_archive(common, work_one_ld, common_members)
+    shutil.copy2(one_ld_base / "recipes.txt", work_one_ld / "recipes.txt")
+    subprocess.run([sys.executable, str(one_ld_base / "replay.py")],
+                   cwd=work_one_ld, check=True)
+    subprocess.run([sys.executable, str(one_ld_base / "package.py")],
+                   cwd=work_one_ld, check=True)
+    check_files(work_one_ld, {
+        "WordShift.lean": "7f93ab9ad25543375c7c30e23b8fac780b77a716b00347f6c657719771f1cadf",
+        "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
+        "Agent14OneLDHard.lean": "b436a77405c29314f7f75e9d773326591f7eeb8ad7098b6b854b93afa83818d0",
+        "Agent14OneLDCover.lean": "c1e905c2103d30b39bac253c5015f5a51da87aa57c6c5c9acd35e677e022f225",
+    })
+
+    # Reconstruct the independently source-audited 1RF sibling from its
+    # pinned archive and regenerate its compact proof tree deterministically.
+    work_one_rf = TMP / "a14-f1-oneRF/imports"
+    extract_archive(common, work_one_rf)
+    for path in work_one_rf.glob("pump-*.json"):
+        path.unlink()
+    run_generators(work_one_rf, "replay.py", "chunk.py")
+    check_files(work_one_rf, {
+        "WordShift.lean": "7f93ab9ad25543375c7c30e23b8fac780b77a716b00347f6c657719771f1cadf",
+        "RunCarry.lean": "2cb41161279c8eaec09cc89030634f77c6da5d6ddacd590aedfa225a442c078b",
+        "FastQuery.lean": "3bdf42ec78668cfa36707f3ca31bcafdc6a32ca1f918710fce414b9412037cc7",
+        "Agent14OneRFHard.lean": "075d364b997245763ad33de079f3b9f34c44c993b112930432a50e4b10fc3bb3",
+        "Agent14OneRFCover.lean": "b94cb7678d30cf3521b3e3eed19181019878101f50c901f675035d9031bf58a2",
+    })
+
     batch_root = TMP / "a14-f1-batch/imports"
     total = 0
-    for work in (work_zero_la, work_one_lb, work_one_rd):
+    for work in (work_zero_la, work_one_lb, work_one_rd, work_one_ld, work_one_rf):
         total += merge_lean_sources(work, batch_root)
-    for required in ("Agent14OneLACover.lean", "Agent14OneLBCover.lean", "Agent14OneRDCover.lean"):
+    for required in ("Agent14OneLACover.lean", "Agent14OneLBCover.lean", "Agent14OneRDCover.lean", "Agent14OneLDCover.lean", "Agent14OneRFCover.lean"):
         if not (batch_root / required).is_file():
             raise SystemExit(f"missing merged source {required}")
     # The individual work roots are staging areas only. Remove them after the
     # merge; otherwise the compiler's recursive module index sees duplicate
     # Agent14One* modules beside the canonical batch root.
-    for work in (work_zero_la, work_one_lb, work_one_rd):
+    for work in (work_zero_la, work_one_lb, work_one_rd, work_one_ld, work_one_rf):
         shutil.rmtree(work.parent)
-    print(f"reconstructed Agent41 0RB and Agent14 0LA/1LB/1RD; merged {total} Lean sources")
+    print(f"reconstructed Agent41 0RB and Agent14 0LA/1LB/1RD/1LD/1RF; merged {total} Lean sources")
 
 
 if __name__ == "__main__":
