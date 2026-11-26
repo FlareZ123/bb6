@@ -4969,8 +4969,9 @@ jobs:
           G=/tmp/a4-raw124-0lf-0rb-generated
           W=/tmp/a4-raw124-0lf-0rb-closure
           python "$D/generate_0rb.py" "$G"
-          python tools/lean_compile_closure.py --source-root "$G" --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent4Raw124ZeroLF0RB.bound_all --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_0RB0LF" --weighted-bound 174 --artifact-name raw124-0lf-0rb-source-accepted --provenance-input "$D/generate_0rb.py" --provenance-input "$D/README.md" --provenance-input im-results/agent2-tnf-raw124/fast_partition.cpp --provenance-input im-results/agent11-tnf-raw86/search.cpp --provenance-input im-results/agent2-tnf-raw124/Raw124FastAudit.lean --provenance-input im-results/agent4-two-sided-automata/TwoSidedAutomata.lean "$G/Raw124ZeroLF0RB.lean" 2>&1 | tee "$W/audit.log"
-          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" BB6.Agent4Raw124ZeroLF0RB.checkRoot BB6.Agent4Raw124ZeroLF0RB.bound_all
+          python tools/lean_compile_closure.py --source-root "$G" --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent4Raw124ZeroLF0RB.bound_all --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_0RB0LF" --weighted-bound 174 --artifact-name raw124-0lf-0rb-source-accepted --provenance-input "$D/generate_0rb.py" --provenance-input "$D/README.md" --provenance-input im-results/agent2-tnf-raw124/fast_partition.cpp --provenance-input im-results/agent11-tnf-raw86/search.cpp --provenance-input im-results/agent2-tnf-raw124/Raw124FastAudit.lean --provenance-input im-results/agent4-two-sided-automata/TwoSidedAutomata.lean "$G/Raw124ZeroLF0RB.lean" 2>&1 | tee /tmp/a4-raw124-0lf-0rb.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw124-0lf-0rb.log BB6.Agent4Raw124ZeroLF0RB.checkRoot BB6.Agent4Raw124ZeroLF0RB.bound_all
+          cp /tmp/a4-raw124-0lf-0rb.log "$W/audit.log"
           git rev-parse HEAD > "$W/SOURCE_COMMIT"
       - uses: actions/upload-artifact@v4
         with:
@@ -4978,5 +4979,6 @@ jobs:
           path: |
             /tmp/a4-raw124-0lf-0rb-closure/
             /tmp/a4-raw124-0lf-0rb-generated/
+            /tmp/a4-raw124-0lf-0rb.log
           if-no-files-found: error
           retention-days: 90
