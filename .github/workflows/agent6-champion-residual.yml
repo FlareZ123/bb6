@@ -718,6 +718,22 @@ jobs:
           test -s /tmp/a14-d0-ZeroRC/imports/Raw139D0ZeroRCCover.lean
           cp -a /tmp/a14-d0-ZeroRC/imports "$work/d0-zeroRC-source"
           export PYTHONPATH="$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneLA:$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneRA:$GITHUB_WORKSPACE/im-results/agent13-block-far:$GITHUB_WORKSPACE/im-results/agent32-raw59"
+          python3 -m py_compile \
+            im-results/agent6-raw139-e0-zeroLC/broad_search.py \
+            im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_family.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_chunks.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_broad.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py \
+            im-results/agent13-block-far/generate_multi.py \
+            im-results/agent32-raw59/emit_blockmask.py
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, "im-results/agent6-raw139-e0-zeroLC")
+          import emit_family, emit_chunks
+          assert set(("block", "phase", "mirror", "mirrorphase", "offset")) <= set(emit_family.BLOCK_RECIPES)
+          print("E0 emitter imports and FAR recipe routing ready")
+          PY
           g++ -O3 -std=c++20 -o "$work/broad_census" im-results/agent6-raw139-e0-zeroLC/broad_census.cpp
           (cd "$work" && ./broad_census)
           (cd "$work" && python3 -u "$GITHUB_WORKSPACE/im-results/agent6-raw139-e0-zeroLC/broad_search.py" 4) | tee "$work/broad-search.log"
