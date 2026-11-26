@@ -127,35 +127,102 @@ private theorem terminalLift (isTop p : Bool) (k : Nat) (j : Sep)
     (h : CarryExact false b s t) :
     CarryExact isTop p (layerBits k j s) (t + terminalOverhead isTop p k j) := by
   cases isTop <;> cases p <;> cases j <;> cases b <;> simp [step1Carry] at he
-  all_goals first
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-        Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
-        (wrap_S7_exact (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-        Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
-        (wrap_Top0_exact (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-        Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
-        (wrap_S2_exact1 (unitStep_m8_exact h k))
-    | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-        Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using
-        (wrap_Top1_exact1 (unitStep_m8_exact h k))
-    | (have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S2 +> s))) (24*(k+1)+t) := by
-         rw [u8_cons_pow]
-         exact unitStep_m8_exact h k
-       first
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-           Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_S2_exact2 (sub_S1 k s) hu
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-           Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_Top1_exact2 (sub_S1 k s) hu)
-    | (have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S7 +> s))) (24*(k+1)+t) := by
-         rw [u8_cons_pow]
-         exact unitStep_m8_exact h k
-       first
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-           Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_S2_exact2 (sub_S4 k s) hu
-       | simpa only [terminalOverhead, ↓reduceIte, Bool.false_eq_true, Nat.zero_add, Nat.add_zero,
-           Nat.add_assoc, Nat.add_comm, Nat.add_left_comm] using wrap_Top1_exact2 (sub_S4 k s) hu)
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hc := wrap_S7_exact (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead false false k .S2 = 60 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hc := wrap_S7_exact (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead false false k .S7 = 60 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S2 +> s))) (24*(k+1)+t) := by
+      rw [u8_cons_pow]
+      exact unitStep_m8_exact hh k
+    have hc := wrap_S2_exact2 (sub_S1 k s) hu
+    have e : t + terminalOverhead false true k .S1 = 48 + (56*k+63) + 29 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hc := wrap_S2_exact1 (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead false true k .S2 = 48 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S7 +> s))) (24*(k+1)+t) := by
+      rw [u8_cons_pow]
+      exact unitStep_m8_exact hh k
+    have hc := wrap_S2_exact2 (sub_S4 k s) hu
+    have e : t + terminalOverhead false true k .S4 = 48 + (56*k+63) + 29 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hc := wrap_S2_exact1 (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead false true k .S7 = 48 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hc := wrap_Top0_exact (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead true false k .S2 = 33 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hc := wrap_Top0_exact (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead true false k .S7 = 33 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S2 +> s))) (24*(k+1)+t) := by
+      rw [u8_cons_pow]
+      exact unitStep_m8_exact hh k
+    have hc := wrap_Top1_exact2 (sub_S1 k s) hu
+    have e : t + terminalOverhead true true k .S1 = 21 + (56*k+63) + 29 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S2 +> s) t := h
+    have hc := wrap_Top1_exact1 (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead true true k .S2 = 21 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hu : UnitExact (u8 +> ((u8 ^ k) +> (sepBits .S7 +> s))) (24*(k+1)+t) := by
+      rw [u8_cons_pow]
+      exact unitStep_m8_exact hh k
+    have hc := wrap_Top1_exact2 (sub_S4 k s) hu
+    have e : t + terminalOverhead true true k .S4 = 21 + (56*k+63) + 29 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
+  · have hh : UnitExact (sepBits .S7 +> s) t := h
+    have hc := wrap_Top1_exact1 (unitStep_m8_exact hh k)
+    have e : t + terminalOverhead true true k .S7 = 21 + (24*(k+1)+t) := by
+      simp [terminalOverhead]
+      omega
+    rw [e]
+    exact hc
 
 /-- The table maxR consumes exactly the requested number of residual child carries,
     and its next parent carry emits to the now-terminal child. -/
