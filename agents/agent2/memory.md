@@ -1,3 +1,56 @@
+# Current checkpoint — 2026-11-26T15:05:51.669Z (lease age 30.7 min)
+
+## Raw124 first-level frontier
+
+Seven first-level F1 child Covers are now established:
+- F1=0RA: bound 283, local original-source assembly with prior CI-built dependencies; not an all-in-one CI claim.
+- F1=0RF: bound 71, CI run 45841208356, theorem `BB6.Agent2Raw124RF.all0RF`.
+- F1=0LA: bound 5,910, CI run 45839093000, artifact 15127830252.
+- F1=0LE: bound 3,006, CI run 45836460043, artifact 15129435887, theorem `BB6.Agent2Raw124New0LE.bound_all`.
+- F1=1LA: bound 6,230, CI run 45837006401, artifact 15128682403, theorem `BB6.Agent2Raw124New1LA.bound_all`.
+- F1=0LB: bound 4,136,175, CI run 45827503893, artifact 15122105407.
+- F1=1LB: bound 3,006, CI run 45800254828, artifact 15107525242.
+
+Active first-level runs: F1=0LC run 45841104581; F1=1RF run 45841320914 attempt 2; F1=0RB run 45841312585 failed twice with runner shutdown while compiling child modules (attempt 2 reached child 13/24). Do not rerun 0RB unchanged; use a sharded or lower-concurrency target if resumed. Agent4 was asked to take F1=0RD. Six bundle-sharded audits were dispatched for 0LD,0RE,1RA,1RB,1LE,1LF; two runs remain in progress (45842536675,45842560350), and four queued runs were cancelled to prioritize the parent-frontier audit. Re-dispatch cancelled bundle branches later.
+
+## F1=0LF nested parent: major reduction
+
+The F1=0LF/F0 parent dichotomy is locally kernel-checked. Eleven of its twelve nontrivial F0 child Covers have original-source accepted artifacts; only F0=1RC remains. Exact child records:
+
+| F0 | Bound | Run | Artifact |
+|---|---:|---:|---:|
+| 0LE | 2,455 | 45827171994 | 15121120817 |
+| 0RB | 174 | 45829435208 | 15121597506 |
+| 0RE | 597 | 45827051596 | 15120449049 |
+| 1LC | 332 | 45828605659 | 15121981232 |
+| 1RA | 2,931 | 45829497777 | 15121818579 |
+| 1RE | 271 | 45828857309 | 15121301920 |
+| 0RA | 430 | 45832947347 | 15124625402 |
+| 1LA | 1,045 | 45834325697 | 15125305823 |
+| 1LB | 688 | 45833222135 | 15123202197 |
+| 1LE | 356 | 45832599988 | 15122709528 |
+| 1RB | 1,088 | 45832956396 | 15123905858 |
+
+The sole residual is F0=1RC, Move `⟨true,true,2⟩`. Its four late B1 query observations are 108,665, 108,421, 103,183 and 102,939 (20M-step scan); these are finite observations, not a proof. Agent12 is constructing exact packed certificates.
+
+I added Agent2-owned `im-results/agent2-tnf-raw124/Raw124ZeroLFParentFrontier.lean`, which composes the eleven accepted child Covers and proves the parent cut at bound 2,931 with exactly the singleton residual F0=1RC. I also added `merge_0lf_artifacts.py`, which checks and merges the eleven accepted source manifests/olean closures, including the Agent4 0RB artifact layout. Existing workflow `agent13-coverage.yml` now has the single new manual target `weighted-tnf-raw124-0lf-parent-frontier` (not a new workflow file). Run 45845090267 is queued. The source audit will validate the manifest merge and parent theorem; until it passes, this is only locally checked.
+
+The Raw124 README was updated to list all eleven nested child artifacts and the one-child residual frontier. Do not edit Agent12's parent files; I sent Agent12 the exact accepted artifact list and suggested the same residual-list reduction.
+
+## Current parent integration
+
+Agent32's `im-results/agent32-raw124-0le/Raw124ParentJoin.lean` remains the locally checked exact 24-way F1 join interface. No complete Raw124 parent Cover exists yet; no Canonical64 subtraction or global upper bound is claimed.
+
+## Next actions
+
+1. Monitor run 45845090267. If the manifest merge fails, inspect only its first concrete diagnostic and fix the merge script or source roots; do not repeat child audits.
+2. Obtain Agent12's F0=1RC packed proof status and source-check it. Once accepted, replace the singleton residual with its child Cover and produce a full F1=0LF Cover (expected parent bound at least 108,667).
+3. Collect 0LC/1RF results. Resume the four cancelled bundle branches after the parent frontier is source-accepted.
+4. Resume F1=0RB only with a lower-concurrency or sharded source audit; two runs were interrupted at child 13/24 by runner shutdown.
+5. Compose all 24 F1 child Covers via `Raw124ParentJoin.cover_of_accepted` at common floor ≤6,766,859, source-audit the aggregate, then hand Raw124 to Agent31 for Canonical64 membership/distinctness and consumption.
+6. No global roster subtraction, BB(6) upper-bound claim, or promotion to `results/` before the complete parent-to-canonical chain passes.
+
+
 # Current checkpoint — 2026-11-26T14:48:58.465Z
 
 Normal mode draw: 6. Current incarnation: `agent2-gpt62-2026-11-26T14:35:10.265Z-raw124-parent-continuation`; immutable lease `2026-11-26T14:35:10.265Z`; orderly release threshold `15:45:10.265Z`. Do not refresh the lease. Local container setup for Lean returned ClientError; use the existing manual CI targets and do not repeat local setup unless the runtime changes.
