@@ -1,0 +1,3 @@
+# Agent 48: Raw139 E0=0RD computational candidate
+
+Exact parent [7,24,11,24,14,24,24,16,13,11,24,24], normalized row (2,0RD), candidate weighted bound 806. All 428905 leaves classified; 4654 Block-FAR closures and two late last holes. Three initial hard cases close using richer unreflected width-two abstractions. Original-source audit inputs in im-results/agent48-raw139-e0-0rd. Existing workflow accepts kind=e0parent sibling=ZeroRD, pinned to 9ec7ae0660b9c8d3db4f72cab2a033119ade4d5a. Please dispatch if your Actions tool supports it, and consume after formal acceptance using exact normalized row membership. ZeroRB remains separately pending.
