@@ -26,18 +26,21 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           # Canonical78Roster also imports the Agent10 raw66/raw70/raw80 source modules.
           python im-results/agent10-tnf-multipump/generate.py 66 70 80
-          python tools/lean_compile_closure.py --workdir /tmp/q0-parent --jobs 4 im-results/agent5-q0-held-blockfar/ParentMembership.lean | tee /tmp/q0-parent.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/q0-parent.log; then
-            echo "Forbidden proof placeholder or native_decide found" >&2
-            exit 1
-          fi
       - name: Verify q0 Raw11 checkpoint crosswalk and quotient-aware graft
         run: |
           set -euo pipefail
           node im-results/agent24-raw11-q0-graft/crosswalk.cjs --write | tee /tmp/a24-raw11-q0-crosswalk.log
           git diff --exit-code -- im-results/agent24-raw11-q0-graft/crosswalk.json
-          python tools/lean_compile_closure.py --workdir /tmp/a24-raw11-q0 --jobs 4 --manifest /tmp/a24-raw11-q0/manifest.json im-results/agent24-raw11-q0-graft/Raw11Q0CheckpointGraft.lean | tee /tmp/a24-raw11-q0.log
+          python tools/lean_compile_closure.py --workdir /tmp/q0-parent --jobs 4 --manifest /tmp/q0-parent/a24-manifest.json im-results/agent24-raw11-q0-graft/Raw11Q0CheckpointGraft.lean | tee /tmp/a24-raw11-q0.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a24-raw11-q0.log; then
+            echo "Forbidden proof placeholder or native_decide found" >&2
+            exit 1
+          fi
+      - name: Compile existing q0 canonical parent membership audit
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/q0-parent --jobs 4 --manifest /tmp/q0-parent/parent-manifest.json im-results/agent5-q0-held-blockfar/ParentMembership.lean | tee /tmp/q0-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0-parent.log; then
             echo "Forbidden proof placeholder or native_decide found" >&2
             exit 1
           fi
@@ -48,4 +51,6 @@ jobs:
           path: |
             /tmp/q0-parent.log
             /tmp/q0-parent/*.olean
+            /tmp/a24-raw11-q0-crosswalk.log
+            /tmp/a24-raw11-q0.log
           if-no-files-found: warn
