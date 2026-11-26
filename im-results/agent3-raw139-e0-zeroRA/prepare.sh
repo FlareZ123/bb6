@@ -16,7 +16,14 @@ export A3_BUILD="$out/build"
 export LEAN_PATH="$A3_BUILD"
 cd "$base"
 echo "fb2d8506761f3a7843e59d16202ad069f68fba835dca9e5b03fe46623dd58b7d  source.tar.xz" | sha256sum -c
+# The source bundle predates the checked fast certificate; preserve the current
+# working-tree driver and compressed source while extracting the older bundle.
+cp fast.py /tmp/a3-e0-fast.py
+cp Agent3PackedFast.lean.xz /tmp/a3-e0-fast.lean.xz
 tar -xJf source.tar.xz
+cp /tmp/a3-e0-fast.py fast.py
+cp /tmp/a3-e0-fast.lean.xz Agent3PackedFast.lean.xz
+echo "56b716777e9b1371b4638d7f4e54e0d0812ad5f2618793a43bb9e88633073b7e  Agent3PackedFast.lean.xz" | sha256sum -c
 python fast.py
 cp Agent3PackedAudit.lean Agent3PackedFast.lean "$A3_BUILD"
 cd "$repo"
