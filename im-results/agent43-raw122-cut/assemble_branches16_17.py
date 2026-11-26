@@ -185,25 +185,9 @@ def main():
 
     run([sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
 
-    # Exclude provisional original-source roster files: the authoritative
-    # rosters below are regenerated from the compiled, prefix-factored sources.
-    lean_root = Path("/tmp/a43-lean-root")
-    if lean_root.exists():
-        shutil.rmtree(lean_root)
-    lean_root.mkdir(parents=True)
-    for src in ROOT.rglob("*.lean"):
-        rel = src.relative_to(ROOT).as_posix()
-        if rel.startswith("im-results/agent43-raw122-cut/rosters/branch16/") or rel.startswith(
-            "im-results/agent43-raw122-cut/rosters/branch17/"
-        ):
-            continue
-        dst = lean_root / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst)
-
     manifest = Path("/tmp/a43-branches16-17-manifest.json")
     run([sys.executable, ROOT / "tools/lean_compile_closure.py",
-         "--workdir", manifest_work, "--source-root", lean_root, "--source-root", factored,
+         "--workdir", manifest_work, "--source-root", ROOT, "--source-root", factored,
          "--manifest", manifest, "--manifest-only", "--artifact-dir", work,
          factored / "Raw122Branch16.lean", factored / "Raw122Branch17.lean"])
 
@@ -236,7 +220,7 @@ end BB6.Agent43Raw122Recovered{tag}
         theorem = f"BB6.Agent43Raw122Recovered{tag}.cover{tag}"
         log = run([
             sys.executable, ROOT / "tools/lean_compile_closure.py",
-            "--workdir", final, "--source-root", lean_root, "--source-root", factored,
+            "--workdir", final, "--source-root", ROOT, "--source-root", factored,
             "--source-root", generated, "--jobs", "3",
             "--precompiled-manifest", manifest, "--precompiled-dir", work,
             "--manifest", final / "manifest.json",
@@ -245,6 +229,8 @@ end BB6.Agent43Raw122Recovered{tag}
             "--parent-table", f"Canonical124 raw122 parent with F1={'1LE' if b==16 else '1LF'}",
             "--weighted-bound", str(BOUND),
             "--artifact-name", f"raw122-branch{tag}-cover",
+            *sum((["--override", f"{f.stem}={f}"] for f in generated.glob(f"Raw122Roster{tag}*.lean")), []),
+            "--override", f"Raw122Recovered{tag}={wrapper}",
             wrapper,
         ], capture=True)
         for name in (theorem, f"BB6.Agent43Raw122Recovered{tag}.residual_count"):
