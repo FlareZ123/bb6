@@ -1,0 +1,119 @@
+name: Agent 50 Raw47 FAR7 search
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  far7:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run verified FAR7 shard
+        run: bash im-results/agent50-raw47-far7/run_far7_shard.sh ${{ matrix.shard }} 4 "$RUNNER_TEMP/raw47-far7"
+
+      - name: Upload FAR7 shard output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent50-raw47-far7-shard-${{ matrix.shard }}
+          path: |
+            ${{ runner.temp }}/raw47-far7/raw47-far7.txt
+            ${{ runner.temp }}/raw47-far7/raw47-far7.log
+            ${{ runner.temp }}/raw47-far7/raw47-far7.in
+            ${{ runner.temp }}/raw47-far7/raw47-far7-shard-summary.txt
+          if-no-files-found: warn
+
+  aggregate:
+    needs: far7
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download four shard outputs
+        uses: actions/download-artifact@v4
+        with:
+          pattern: agent50-raw47-far7-shard-*
+          path: /tmp/raw47-far7-shards
+          merge-multiple: false
+
+      - name: Validate, aggregate and commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          dest="im-results/agent50-raw47-far7"
+          mkdir -p "$dest"
+          mapfile -t inputs < <(find /tmp/raw47-far7-shards -type f -name 'raw47-far7.in' | sort)
+          mapfile -t candidates < <(find /tmp/raw47-far7-shards -type f -name 'raw47-far7.txt' | sort)
+          mapfile -t logs < <(find /tmp/raw47-far7-shards -type f -name 'raw47-far7.log' | sort)
+          mapfile -t summaries < <(find /tmp/raw47-far7-shards -type f -name 'raw47-far7-shard-summary.txt' | sort)
+          test "${#inputs[@]}" -eq 4
+          test "${#candidates[@]}" -eq 4
+          test "${#logs[@]}" -eq 4
+          test "${#summaries[@]}" -eq 4
+          cat "${inputs[@]}" | sort -n -k1,1 > "$dest/raw47-far7-input.txt"
+          cat "${candidates[@]}" | sort -n -k1,1 > "$dest/raw47-far7.txt"
+          for f in "${logs[@]}"; do printf '\n===== %s =====\n' "$f"; cat "$f"; done > "$dest/raw47-far7.log"
+          for f in "${summaries[@]}"; do cat "$f"; done > "$dest/raw47-far7-shards.txt"
+          python - <<'PY'
+          from pathlib import Path
+          dest = Path("im-results/agent50-raw47-far7")
+          input_rows = [line.split() for line in (dest / "raw47-far7-input.txt").read_text().splitlines() if line.strip()]
+          assert len(input_rows) == 114, len(input_rows)
+          input_ids = [int(row[0]) for row in input_rows]
+          assert sorted(input_ids) == list(range(114)), input_ids
+          candidate_rows = [line.split() for line in (dest / "raw47-far7.txt").read_text().splitlines() if line.strip()]
+          candidate_ids = [int(row[0]) for row in candidate_rows]
+          assert len(candidate_ids) == len(set(candidate_ids)), candidate_ids
+          assert all(0 <= i < 114 for i in candidate_ids), candidate_ids
+          assert all(len(row) == 2 and len(row[1]) == 15 for row in candidate_rows), candidate_rows
+          summary = [
+              "Raw47 FAR7 exhaustive sharded search",
+              "residuals=114",
+              "shards=4",
+              "max_automaton_states=7",
+              f"far7_hits={len(candidate_rows)}",
+              f"input_sha256={__import__('hashlib').sha256((dest / 'raw47-far7-input.txt').read_bytes()).hexdigest()}",
+              f"candidate_sha256={__import__('hashlib').sha256((dest / 'raw47-far7.txt').read_bytes()).hexdigest()}",
+          ]
+          (dest / "summary.txt").write_text("\n".join(summary) + "\n")
+          print("\n".join(summary))
+          PY
+          git config user.name "Agent 50"
+          git config user.email "agent50@users.noreply.github.com"
+          git fetch origin main
+          git rebase origin/main
+          git add "$dest/raw47-far7-input.txt" "$dest/raw47-far7.txt" "$dest/raw47-far7.log" "$dest/raw47-far7-shards.txt" "$dest/summary.txt"
+          git commit -m "Agent 50: Preserve Raw47 FAR7 search results"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "Failed to push FAR7 search output after three reconciliations" >&2
+          exit 1
+
+      - name: Upload aggregated FAR7 output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent50-raw47-far7-aggregate
+          path: |
+            im-results/agent50-raw47-far7/raw47-far7.txt
+            im-results/agent50-raw47-far7/raw47-far7.log
+            im-results/agent50-raw47-far7/raw47-far7-input.txt
+            im-results/agent50-raw47-far7/raw47-far7-shards.txt
+            im-results/agent50-raw47-far7/summary.txt
+          if-no-files-found: warn
