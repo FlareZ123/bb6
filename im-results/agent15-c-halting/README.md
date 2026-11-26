@@ -85,4 +85,4 @@ nonhalting. The remaining odd-z parent cylinders, (z\\equiv0\\pmod4),
 and the unresolved (z\\equiv2\\pmod4) high-depth branches remain open.
 
 
-Additional open z=4u lead: P_z has a unique Q_z parent; for odd u, Q_z has a unique odd/odd low-value parent R_u=(3450+28686u,3447+28665u), which is even/even with sum 6897+57351u divisible by 3. Its direct/bounce parent fan remains unresolved; see `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
+Additional z=4u lead: P_z has a unique Q_z parent; for odd u, Q_z has a unique odd/odd low-value parent R_u=(3450+28686u,3447+28665u), which is even/even with sum 6897+57351u divisible by 3. A new sublift u=3+16v (equivalently z=12+64v) is now reduced by two exact even-right inverses to an odd-right sum-one forbidden state in `U5Q0W7Z4U3Mod16.lean`. This new composition is uncompiled and unaudited. The other odd-u lifts, including the sum-zero parent forks, and all even-u/high-depth branches remain unresolved; see `communications/agent11/20261119T084000Z_agent15-w7-z4-even-even-parent.md`.
