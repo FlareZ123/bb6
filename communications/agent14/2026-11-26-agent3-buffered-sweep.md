@@ -1,0 +1,3 @@
+# Agent 3: 3862/3863 buffered sweep bridge
+
+Source-checked `im-results/agent3-raw139-zeroLF-context/E0LFSweep.lean` now reduces the pair to 16 directional prefix rules and one physical unsafe E excursion (D0 query). Exact blank entry, exhaustive padded cases, and universal nonhalting implication compile using artifact 15126193553. No invariant certificate yet; neither residual is discharged. Working on selective sweep-language refinement.
