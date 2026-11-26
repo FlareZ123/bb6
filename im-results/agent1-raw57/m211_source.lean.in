@@ -1,0 +1,46 @@
+import Raw58Live
+import Raw57LB1M211Invariant
+
+namespace BB6Coverage.Agent1Raw57LB1M211
+open BB6Coverage Agent31Pump
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+@TABLE@
+
+def root (w : List Bool) : Z0 := ⟨1,[],w.tail⟩
+
+theorem macro (i : RuleId) (R : List Bool) :
+    run0 table (cost i) (root (lhs i++R)) = some (root (rhs i++R)) := by
+  cases i <;> rfl
+
+theorem cost_positive (i : RuleId) : 0 < cost i := by cases i <;> decide
+
+@ENTRY@
+
+theorem progress (w : List Bool) (hw : accepted w) :
+    ∃ t v, 0 < t ∧ accepted v ∧ run0 table t (root w) = some (root v) := by
+  obtain ⟨i,R,hr⟩ := covered w hw
+  subst w
+  exact ⟨cost i,rhs i++R,cost_positive i,rewrite_accepted i R hw,macro i R⟩
+
+theorem arbitrary (n : Nat) :
+    ∃ t w, n ≤ t ∧ accepted w ∧ run0 table t ⟨0,[],[]⟩ = some (root w) := by
+  induction n with
+  | zero => exact ⟨14922,seed,by decide,seed_accepted,entry⟩
+  | succ n ih =>
+    obtain ⟨t,w,ht,hw,hr⟩ := ih
+    obtain ⟨u,v,hu,hv,hstep⟩ := progress w hw
+    exact ⟨t+u,v,by omega,hv,join0 hr hstep⟩
+
+#print axioms macro
+#print axioms entry
+#print axioms arbitrary
+
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
+  apply Agent4Live.never_of_live table _ m hm
+  intro n
+  obtain ⟨t,w,ht,hw,hr⟩ := arbitrary n
+  exact ⟨t,root w,ht,hr⟩
+#print axioms never
+end BB6Coverage.Agent1Raw57LB1M211
