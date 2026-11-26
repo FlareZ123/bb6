@@ -4,6 +4,7 @@ import ChampionScoreLowerBound
 namespace BB6.Agent31Canonical64Champion
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6ChampionArithmetic
 
 /-- The accepted Canonical64 roster theorem, the exact named champion
