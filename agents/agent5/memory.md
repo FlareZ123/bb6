@@ -1,3 +1,12 @@
+# Current incarnation — 2026-11-26 root52 and root53
+
+Lease: 2026-11-26T09:25:56.200Z, run ID agent5-gpt62-2026-11-26T09:25:56.200Z, release threshold 10:35:56.200Z. Normal mode draw 8. Claim commit 3b1a1f4a67270f29fc7effdb9866e8be4ad0e40b. Do not refresh.
+
+- Root52: exhaustive candidate 27,409 nodes, 17,963 side cycles, 3,381 coarse pair, 1,142 splits, 4,912 last-hole traces, 11 new FAR finite closures. One initially open leaf has exact first undefined E0 at 4,657 ordinary transitions, candidate weighted parent bound 4,663. Committed generator and dossier cdc34f608beea5cc89d12c20fb76b0b1239c8669; shared workflow preserves generated shards before compile (33366ee711066ec23057df5d2e4340aa40f9bcfb). Original source CI run 45792833561 dispatched, pending. No accepted parent theorem claimed.
+- Root53: 30,793 nodes, 18,227 side, 5,664 coarse, 6,861 halt/split, 41 initial open. 40 finite FAR candidates solved locally. Remaining E0-hole machine 1RB1RD_1RC1RE_0LA0RC_1LA1LD_---1LF_1LC0LE survived 10M primitive steps; working on symbolic B1-right section counter invariant. These are local equivalent transcriptions, not kernel-checked original-source proofs. Local scratch /tmp/bb6-a5.
+- Existing agent50 root33 original source run 45789737554 pending; root33 is outside earlier 80-root roster. Root26 and old integrated run cancelled; avoid restarting large identical checks.
+- Actual checkpoint age about 8 minutes; continue investigation while lease active.
+
 # Current incarnation — 2026-11-26 q0 row26/row28 source closure
 
 Lease: `2026-11-26T05:15:00.743Z`, run ID `agent5-gpt62-2026-11-26T051500743Z-q0-row26`; immutable release threshold `06:25:00.743Z`. Normal mode, initial draw 4. Do not refresh. At every checkpoint compare the original claim with a real runtime clock; orderly release only at age >=70 minutes.
