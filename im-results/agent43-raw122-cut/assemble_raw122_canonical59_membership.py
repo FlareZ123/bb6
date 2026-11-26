@@ -5,7 +5,6 @@ This is a membership result only. It does not establish the Raw122 parent Cover.
 """
 from __future__ import annotations
 import argparse
-import hashlib
 import json
 import os
 import shutil
@@ -18,7 +17,8 @@ REPO_ROOT = HERE.parents[1]
 REPO = "FlareZ123/bb6"
 RAW122_CORE_RUN_ID = 45595285735
 RAW122_CORE_ARTIFACT_NAME = "raw122-audit-base--1"
-RAW122_SOURCE_REF_DEFAULT = "175a9d9004dfadd072d00b5926608f9b4bfdb1d0"
+RAW122_SOURCE_RUN_ID = 45655656030
+RAW122_SOURCE_ARTIFACT_NAME = "raw122-generated"
 
 sys.path.insert(0, str(HERE.parent / "agent31-shared-core"))
 from assemble_canonical59_raw113_graft import verify_base, a68  # noqa: E402
@@ -97,13 +97,50 @@ def add_raw122_base_dependencies(work: Path, linked: Path):
     }
 
 
+def verify_raw122_source_artifact(work: Path, source: Path):
+    run = a68.api_json(f"repos/{REPO}/actions/runs/{RAW122_SOURCE_RUN_ID}")
+    if run.get("conclusion") != "success":
+        raise RuntimeError(f"Raw122 source artifact run is not successful: {run.get('conclusion')}")
+    artifacts = a68.api_json(
+        f"repos/{REPO}/actions/runs/{RAW122_SOURCE_RUN_ID}/artifacts"
+    )["artifacts"]
+    matches = [x for x in artifacts if x["name"] == RAW122_SOURCE_ARTIFACT_NAME]
+    if len(matches) != 1:
+        raise RuntimeError(f"expected one {RAW122_SOURCE_ARTIFACT_NAME} artifact, got {len(matches)}")
+    item = matches[0]
+    if item.get("expired"):
+        raise RuntimeError("Raw122 source artifact has expired")
+    digest = item["digest"].removeprefix("sha256:")
+    dirs = a68.download((item["id"], RAW122_SOURCE_RUN_ID, digest), work)
+    candidates = [p for root in dirs for p in root.rglob("Raw122Base.lean")]
+    candidate_hashes = {sha(p) for p in candidates}
+    if len(candidate_hashes) != 1:
+        raise RuntimeError(
+            f"expected one consistent Raw122Base.lean source in raw122-generated artifact, "
+            f"found {len(candidates)} files / {len(candidate_hashes)} hashes"
+        )
+    current_sha = sha(source)
+    artifact_sha = next(iter(candidate_hashes))
+    if current_sha != artifact_sha:
+        raise RuntimeError(
+            f"Raw122Base source differs from raw122-generated artifact: {current_sha} != {artifact_sha}"
+        )
+    return {
+        "run_id": RAW122_SOURCE_RUN_ID,
+        "run_head_sha": run.get("head_sha"),
+        "artifact_id": item["id"],
+        "artifact_name": item["name"],
+        "artifact_digest": item["digest"],
+        "source_sha256": artifact_sha,
+        "source_paths": [str(p.relative_to(root)) for root in dirs for p in root.rglob("Raw122Base.lean")],
+    }
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--base-run-id", required=True, type=int,
                         help="successful run producing the 59-residual CanonicalSelectedParentIntegrated artifact")
-    parser.add_argument("--raw122-source-ref", default=os.environ.get(
-        "RAW122_SOURCE_REF", RAW122_SOURCE_REF_DEFAULT))
     args = parser.parse_args()
 
     work = args.work.resolve()
@@ -112,14 +149,8 @@ def main() -> None:
     raw122_dependencies = add_raw122_base_dependencies(work, linked)
 
     base_source = HERE / "Raw122Base.lean"
-    base_relative = "im-results/agent43-raw122-cut/Raw122Base.lean"
-    pinned_source = subprocess.check_output(
-        ["git", "show", f"{args.raw122_source_ref}:{base_relative}"], cwd=REPO_ROOT
-    )
-    pinned_sha = hashlib.sha256(pinned_source).hexdigest()
+    raw122_source_artifact = verify_raw122_source_artifact(work, base_source)
     current_sha = sha(base_source)
-    if pinned_sha != current_sha:
-        raise RuntimeError(f"Raw122Base source differs from pinned source: {current_sha} != {pinned_sha}")
 
     env = dict(os.environ, LEAN_PATH=str(linked))
     compiled = work / "compiled"
@@ -163,7 +194,7 @@ def main() -> None:
         "raw59_retained": base_report["raw59_retained"],
         "raw122_parent_table": "1RB---_1RC---_0RD---_1LD1RE_---0LF_------",
         "raw122_core_dependencies": raw122_dependencies,
-        "raw122_source_ref": args.raw122_source_ref,
+        "raw122_source_artifact": raw122_source_artifact,
         "raw122_base_source_sha256": current_sha,
         "raw122_base_olean_sha256": sha(linked / "Raw122Base.olean"),
         "membership_source_sha256": sha(membership_source),
