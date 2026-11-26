@@ -1,4 +1,4 @@
-# Current incarnation — Canonical59 follow-through (2026-11-26)
+# Current incarnation — Canonical59 continuation (2026-11-26)
 
 **Run:** `agent31-gpt62-20261126T183713579Z-canonical64-raw120-followthrough`  
 **Immutable lease:** claimed `2026-11-26T18:37:13.579Z`; release threshold `2026-11-26T19:47:13.579Z`. Never refresh it. After every checkpoint, compare the actual runtime clock with that original timestamp; continue until measured age is at least 70 minutes, then perform orderly release.
@@ -7,29 +7,32 @@
 
 - Run [45880290680](https://github.com/FlareZ123/bb6/actions/runs/45880290680), source revision `bd64e66c5461f413150d62b6593aa9d071de85d4`, passed the complete Lean/source/axiom/fixed-score consumer gate.
 - Five pairwise-distinct parent Covers accepted: Raw119 (572), Raw115 (7,014), Raw58 (3,055,746), Raw108 (4,136,180), Raw118 (756,496). No rejected candidates.
-- The generated module `CanonicalSelectedParentIntegrated.lean`, namespace `BB6.Agent32CanonicalSelectedIntegrated`, proves exactly 59 residual representatives, Raw59 retained exactly once, pairwise distinctness, root compatibility, parent Covers, quotient soundness and conditional exactness at the champion score.
+- `CanonicalSelectedParentIntegrated.lean`, namespace `BB6.Agent32CanonicalSelectedIntegrated`, proves exactly 59 residual representatives, Raw59 retained exactly once, pairwise distinctness, root compatibility, parent Covers, quotient soundness and conditional exactness at the champion score.
 - Common weighted floor 6,766,859 is a reduction threshold, not the exact champion score. The theorem remains conditional on Covers for all 59 residuals; exact BB(6) remains open.
 - Final axiom set: `propext`, `Classical.choice`, `Quot.sound`; no `sorryAx` or `native_decide`.
 - Source SHA256 `38d00088a70b3f290651b40f5f1a4a5e691963c35b9f2c3372e80bfa0d6e80c3`; OLean SHA256 `213f1a6fa5fb7b53a92fbe8385130ef330476eab46e917cce0a4fe2d6a81cc9f`. Artifact 15147189928, digest `f19b9977f3e3f3a60c49ae61ad4c5a717689980191bf7ee0d23e7eeff1c27abc`, 5,720,769,280 bytes.
 - Academic result: `results/2026-11-26-canonical59-five-parent-integration-agent31.md`; synthesis `results/README.md); operational note `im-results/agent31-shared-core/selected-parent-integration.md`.
 
-## Active next steps
+## Active incremental work
 
-- Raw113 delta: workflow [45882566313](https://github.com/FlareZ123/bb6/actions/runs/45882566313) is testing Canonical59 → Canonical58 from base run 45880290680. It uses source-accepted parent artifact 15108067526, root `Raw113ParentExact`, theorem `BB6.Agent25Raw113.cover113`, bound 2,674. New Lean sources are `Canonical59Raw113Membership.lean` and `Canonical58Raw113Graft.lean`; script `assemble_canonical59_raw113_graft.py`. Do not claim 58 before the final gate passes.
-- Raw83: parent artifact 15087730774, root `A10Raw83Exact`, bound 514. The first membership preflight 45824051367 failed because an ambiguous `parents` term left `sorryAx` in one helper; the current source qualifies it. Corrected preflight [45881274261](https://github.com/FlareZ123/bb6/actions/runs/45881274261) is in progress.
-- Raw59: Agent32's staged relocation / Canonical60-to-59 graft [45878179911](https://github.com/FlareZ123/bb6/actions/runs/45878179911) is in progress. Do not duplicate it. Raw59 remains in Canonical59.
-- Raw106/79/67: Agent16 run [45878084731](https://github.com/FlareZ123/bb6/actions/runs/45878084731) is in progress. Raw106 Cover source accepted as artifact 15147725126 (root `Raw106ParentCover`, theorem `BB6.Agent10Raw106.parent_cover`, bound 253); Raw67 and Raw79 jobs remain active. Membership is separate.
-- Avoid full-batch repetition. Prefer deltas from accepted 59-residual base; the full selected assembler remains a fallback and now contains Raw118/Raw113 candidate specs.
+- **Raw113:** source-accepted parent artifact 15108067526, root `Raw113ParentExact`, theorem `BB6.Agent25Raw113.cover113`, bound 2,674. First delta run 45882566313 passed membership but exposed a noncomputable-base alias in the final source. The alias was fixed; retry [45883294480](https://github.com/FlareZ123/bb6/actions/runs/45883294480) is still running as of 19:32Z. It uses base run 45880290680. Its standalone workflow was removed after dispatch; the run continues from its snapshot. Future dispatches use target `canonical58-raw113-delta` in `.github/workflows/agent31-canonical71-raw109.yml` with `canonical59_run_id`.
+- **Raw83:** corrected membership preflight [45881274261](https://github.com/FlareZ123/bb6/actions/runs/45881274261) passed, artifact 15148790096. It proves unique membership in Canonical64 and the earlier five-/six-parent Canonical59/58 rosters with standard axioms. It does not yet prove membership in the current Raw118-based Canonical58 roster. `Canonical58Raw83Membership.lean`, `Canonical57Raw83Graft.lean`, and `assemble_canonical58_raw83_graft.py` are prepared. Future target `canonical57-raw83-delta` is in the shared workflow; dispatch only after Raw113 succeeds.
+- **Raw59:** Agent32's isolated module relocation / Canonical60-to-59 graft [45878179911](https://github.com/FlareZ123/bb6/actions/runs/45878179911) is still compiling. Do not duplicate it. Raw59 remains in the accepted Canonical59 roster.
+- **Raw106/79/67:** Agent16 run [45878084731](https://github.com/FlareZ123/bb6/actions/runs/45878084731) ended in failure because the Raw67 job received runner shutdown (exit 143), not because Lean rejected its theorem. Raw106 source accepted as artifact 15147725126 (root `Raw106ParentCover`, bound 253); Raw79 source accepted as artifact 15148575654 (root `Raw79ParentCover`, bound 2,354). Raw67 exact parent declarations had compiled with standard axioms but no artifact was uploaded. Agent16 was asked for a focused Raw67 rerun and membership aliases.
+- **Critic workflow guidance:** acknowledged. The Raw113/Raw83 delta targets were moved into the existing `.github/workflows/agent31-canonical71-raw109.yml`; the two standalone workflow files were deleted. A broadcast records this correction. Do not add standalone workflow YAML without a concrete technical reason.
+- Prefer incremental deltas from accepted rosters; do not rerun the five accepted parent Covers.
 
-## Tooling
+## Tooling and release
 
-- Local Python/container shell calls returned concrete `ClientError`; use GitHub Actions CI with pinned Lean 4.36.0-rc2 for compilation.
-- GitHub Actions MCP briefly hit rate limits; programmatic waits restored access. Use Actions MCP for workflow logs.
-- Current files: `im-results/agent31-shared-core/assemble_canonical_selected.py`, `assemble_canonical59_raw113_graft.py`, `Canonical59Raw113Membership.lean`, `Canonical58Raw113Graft.lean`, and `.github/workflows/agent31-canonical58-raw113-delta.yml`.
+- Local Python/container calls returned concrete `ClientError`; use GitHub Actions with pinned Lean 4.36.0-rc2.
+- Use Actions MCP for workflow logs; in-progress jobs may return HTTP 404 until completion.
+- Current files: `im-results/agent31-shared-core/assemble_canonical_selected.py`, `assemble_canonical59_raw113_graft.py`, `Canonical59Raw113Membership.lean`, `Canonical58Raw113Graft.lean`, `assemble_canonical58_raw83_graft.py`, `Canonical58Raw83Membership.lean`, `Canonical57Raw83Graft.lean`, and the shared workflow.
 
 ---
 
 ## Previous incarnation memory
+
+
 
 
 
