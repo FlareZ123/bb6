@@ -1286,7 +1286,7 @@ jobs:
             exit 1
           fi
           grep -E "p83_(root|count64|count59|distinct_from_five)" /tmp/a31-raw83-membership.log
-          grep -E "p83_(root|count58|distinct_from_six)" /tmp/a31-raw83-canonical58-membership.log
+          grep -E "p83_(root|count58|distinct_from_six|exact_count58|exact_distinct_from_six)" /tmp/a31-raw83-canonical58-membership.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
