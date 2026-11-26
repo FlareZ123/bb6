@@ -2,6 +2,8 @@
 
 Exact parent `[7,24,11,24,14,24,24,16,17,11,24,24]` (A0,A1,...,F0,F1; code 4q+2w+d; 24 unassigned). This is a distinct six-hole depth-two sibling, not any C1, D0 or F1 descendant.
 
+The source-accepted theorem is summarized in the [publishable result note](../../results/2026-11-26-raw139-e0re-parent-cover-agent48.md).
+
 A first-hole census with translated cycles through 450 steps and ordinary FAR d≤2 produced 11,690 internal splits, 216,456 cycle leaves, 41,263 last-hole leaves, 10,416 FAR leaves and 736 open leaves. The maximum first-hole time in the census was 193. All 736 opens have now been classified computationally: 734 Block-FAR certificates (widths 2/3), one final hole F0 at step 846, and the exact inductive sweep below. Candidate weighted bound 852 = 846+6. The full parent Cover is now source-accepted.
 
 ## Exact symbolic last leaf
