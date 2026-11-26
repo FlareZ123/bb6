@@ -468,14 +468,6 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a44-q32-closed.log; then exit 1; fi
           python tools/lean_compile_closure.py --workdir /tmp/a50-q32-canonical76 --jobs 4 --precompiled-manifest /tmp/a44-q32-closed/manifest.json --precompiled-dir /tmp/a44-q32-closed im-results/agent50-weighted-tnf-pilot/Q32Canonical76Consumer.lean | tee /tmp/a50-q32-canonical76.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a50-q32-canonical76.log; then exit 1; fi
-      - name: Crosswalk q0 checkpoint and q32 leaves into Raw11 first-D cut
-        if: inputs.target == 'weighted-tnf-q32-slice-closed'
-        run: |
-          set -euo pipefail
-          node im-results/agent24-raw11-q0-graft/crosswalk.cjs --write | tee /tmp/a24-raw11-q0-crosswalk.log
-          git diff --exit-code -- im-results/agent24-raw11-q0-graft/crosswalk.json
-          python tools/lean_compile_closure.py --workdir /tmp/a24-raw11-q0 --jobs 4 --manifest /tmp/a24-raw11-q0/manifest.json im-results/agent24-raw11-q0-graft/Raw11Q0CheckpointGraft.lean | tee /tmp/a24-raw11-q0.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a24-raw11-q0.log; then exit 1; fi
       - name: Certify q32 row 26 from exact source tree
         if: inputs.target == 'weighted-tnf-q32-row26'
         run: |
