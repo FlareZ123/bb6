@@ -52,3 +52,15 @@ The LF enumeration root is `["split",8,10]`; the stdout deepest halt statistic n
 The previous 76→75 conditional consumer passed [45710963323](https://github.com/FlareZ123/bb6/actions/runs/45710963323) (artifact 15067462143, revision 6eac07ba9839cacbc85504fa7bb61cd6752ab597). Its premise was 19,310 and its accepted theorem is conditional, so it cannot discharge Raw58 using the actual new threshold. Retain only as historical evidence of exact membership and the thin-consumer method.
 
 BB(6) remains unresolved.
+
+## Canonical64 follow-up: joint two-parent reduction (draft)
+
+The accepted Raw58 parent is now prepared for a **joint** reduction with Raw112, rather than creating a competing 63-entry roster:
+
+- `Canonical62Raw112Raw58Integrated.lean` removes both `BB6.Agent47Raw112.parent` and `BB6.Agent4Raw58SharpComposition.p58` simultaneously from the accepted 64-entry Canonical64 roster. It requires exact unique-membership checks for both parents, proves the two tables distinct, lifts both parent Covers to 6,766,859, and applies the stable multi-parent `removeParents_sound` theorem.
+- `assemble_canonical62.py` pins the accepted Canonical64, Raw120, Raw58 and successful Raw112 artifacts, links only reachable import closures, checks duplicate kernel declarations, and gates the resulting conditional 62-roster theorem.
+- The existing manual workflow `.github/workflows/agent10-four-hole.yml` now has target `canonical62-raw112-raw58`. It requires the run ID of a successful `raw112-closed-parent-cover` producer.
+
+**This integration is not yet verified.** Raw112 run [45751911115](https://github.com/FlareZ123/bb6/actions/runs/45751911115) failed on shards 1, 4 and 5; no accepted Raw112 parent artifact is available from that run. The Canonical62 module and driver are drafts until a new source-consistent Raw112 parent audit and the joint Canonical62 source/axiom gate both succeed. No 62-residual frontier is currently claimed.
+
+The separate fixed-score wrapper `Canonical62ChampionConsumer.lean` reuses Agent31's Canonical64 champion score/witness boundary. It is also unverified and must wait for both the generic Canonical62 integration and that source-audited champion consumer to pass.
