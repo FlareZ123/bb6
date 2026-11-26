@@ -64,7 +64,7 @@ For the limiting map, (|J_k|=(k+7)/2^{k+1}) is summable. Since (T) preserves Leb
 - The normalized recurrence and the full-branch limiting map are exact algebraic rewrites of the positive-return definitions.
 - The limiting map has an invariant Lebesgue measure and a summable shrinking target.
 - This suggests treating the #754 obstruction as a *specific-orbit shrinking-target problem*, rather than expecting a universal fixed-modulus invariant.
-- It does **not** prove that (u_0=8) avoids every target. The exact recurrence is non-autonomous, the branch endpoints move, and a failed gate invokes the separate signed macro. The limiting Borel--Cantelli argument does not transfer automatically to that exact orbit.
+- The limiting-map Borel--Cantelli argument alone does **not** transfer automatically to the exact non-autonomous recurrence. The exact transfer-operator argument below repairs this for the relaxed arithmetic orbit and proves almost-everywhere finiteness of gate failures. Neither argument decides the distinguished seed (u_0=8), and neither controls the actual signed negative macro after a first failed gate.
 - No new BB(6) upper bound or #754 nonhalting claim follows.
 
 ## Next mathematical work
