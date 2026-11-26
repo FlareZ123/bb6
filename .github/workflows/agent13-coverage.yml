@@ -2425,6 +2425,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Generate selected source dependencies
+        id: raw49_generation
         env:
           TARGET: ${{ inputs.target }}
         run: |
@@ -2458,6 +2459,8 @@ jobs:
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
             python im-results/agent10-tnf-multipump/generate.py 66 70 80
             bash im-results/agent7-raw49/prepare.sh /tmp/raw49-generated
+            python im-results/agent7-raw49/prepare_far5.py /tmp/raw49-generated
+            test -s /tmp/raw49-generated/Raw49Far5Cut.lean
             test -s /tmp/raw49-generated/child0/Raw49C0All.lean
             test -s /tmp/raw49-generated/child2/Raw49C2All.lean
             test -s /tmp/raw49-generated/child5/Raw49C5All.lean
@@ -2506,6 +2509,7 @@ jobs:
           fi
           if [ "$TARGET" = weighted-tnf-raw49-progress ]; then
             python tools/lean_compile_closure.py \
+              --source-root /tmp/raw49-generated
               --source-root /tmp/raw49-generated/child0 \
               --source-root /tmp/raw49-generated/child2 \
               --source-root /tmp/raw49-generated/child5 \
@@ -2525,6 +2529,11 @@ jobs:
           names = [
               "BB6.Agent7Raw49Sweep.never",
               "BB6.Agent7Raw49Cut.parent_cut",
+              "BB6.Agent7Raw49Far5Cut.canonical_checked",
+              "BB6.Agent7Raw49Far5Cut.canonical_local_sound",
+              "BB6.Agent7Raw49Far5Cut.parent_cut",
+              "BB6.Agent7Raw49Far5Cut.canonical_count",
+              "BB6.Agent7Raw49Far5Cut.remaining_count",
               "BB6.Agent7.Raw49C0.all_quotient",
               "BB6.Agent7.Raw49C2.all_quotient",
               "BB6.Agent7.Raw49C5.all_quotient",
@@ -2578,8 +2587,12 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw49-progress'
         uses: actions/upload-artifact@v4
         with:
-          name: raw49-progress-proof
+          name: raw49-progress-proof-${{ steps.raw49_generation.outputs.after_children_count }}
           path: |
+            /tmp/raw49-generated/Raw49Far5Cut.lean
+            /tmp/raw49-generated/far5.txt
+            /tmp/raw49-generated/far5.log
+            /tmp/raw49-generated/far5-summary.json
             /tmp/raw49-generated/child0/*.lean
             /tmp/raw49-generated/child2/*.lean
             /tmp/raw49-generated/child5/*.lean
