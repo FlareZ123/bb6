@@ -62,6 +62,23 @@ noncomputable def roster57 : List (Nat × PartialMachine) :=
 
 theorem count57 : roster57.length = 57 := by decide
 
+/-- The accepted roster lineage is checked by exact tables, not cardinality
+    alone: Raw59 survives, while Raw118, Raw113 and Raw124 are absent. -/
+theorem raw59_retained :
+    (roster57.filter
+      (fun e => sameTable e.2 BB6.Agent31Canonical59Membership.p59)).length = 1 := by decide
+
+theorem raw118_removed :
+    (roster57.filter
+      (fun e => sameTable e.2 BB6.Agent16Raw118.parent)).length = 0 := by decide
+
+theorem raw113_removed :
+    (roster57.filter
+      (fun e => sameTable e.2 BB6.Agent31Canonical59Raw113Membership.p113)).length = 0 := by decide
+
+theorem raw124_removed :
+    (roster57.filter (fun e => sameTable e.2 p124)).length = 0 := by decide
+
 theorem sound_integrated :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
@@ -92,6 +109,10 @@ theorem exact_at_champion_score
 #print axioms p124_root
 #print axioms p124_cover
 #print axioms count57
+#print axioms raw59_retained
+#print axioms raw118_removed
+#print axioms raw113_removed
+#print axioms raw124_removed
 #print axioms sound_integrated
 #print axioms exact_at_target
 #print axioms exact_at_champion_score
