@@ -484,6 +484,145 @@ jobs:
                   raise SystemExit(f"missing D0 {label} compiled objects")
               print(f"D0 {label}: source run {run_id} accepted; exact root SHA {actual}")
           PY
+      - name: Generate and kernel-check the six-hole Raw139 E0=0LC residual Cover
+        if: ${{ inputs.e0_zeroLC_parent && inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          work=/tmp/a6-e0-zeroLC
+          mkdir -p "$work/generated" "$work/build"
+          test -s /tmp/a6-champion-residual/manifest.json
+          test -d /tmp/a6-champion-residual/build
+          test -s /tmp/a14-d0-ZeroRC/imports/Raw139D0ZeroRCCover.lean
+          cp -a /tmp/a14-d0-ZeroRC/imports "$work/d0-zeroRC-source"
+          export PYTHONPATH="$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneLA:$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneRA:$GITHUB_WORKSPACE/im-results/agent13-block-far:$GITHUB_WORKSPACE/im-results/agent32-raw59"
+          python3 -m py_compile \
+            im-results/agent6-raw139-e0-zeroLC/broad_search.py \
+            im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_family.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_chunks.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_broad.py \
+            im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py \
+            im-results/agent13-block-far/generate_multi.py \
+            im-results/agent32-raw59/emit_blockmask.py
+          python3 - <<'PY'
+          import sys
+          sys.path.insert(0, "im-results/agent6-raw139-e0-zeroLC")
+          import emit_family, emit_chunks
+          assert set(("block", "phase", "mirror", "mirrorphase", "offset")) <= set(emit_family.BLOCK_RECIPES)
+          print("E0 emitter imports and FAR recipe routing ready")
+          PY
+          g++ -O3 -std=c++20 -o "$work/broad_census" im-results/agent6-raw139-e0-zeroLC/broad_census.cpp
+          (cd "$work" && ./broad_census)
+          (cd "$work" && python3 -u "$GITHUB_WORKSPACE/im-results/agent6-raw139-e0-zeroLC/broad_search.py" 4) | tee "$work/broad-search.log"
+          python3 im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py "$work" | tee "$work/assemble.log"
+          python3 im-results/agent6-raw139-e0-zeroLC/emit_broad.py "$work" "$work/generated" | tee "$work/emit-broad.log"
+          python3 im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py "$work" "$work/generated" | tee "$work/emit-parent.log"
+          python3 - "$work/generated/e0_parent_summary.json" <<'PY'
+          import json, pathlib, sys
+          data = json.loads(pathlib.Path(sys.argv[1]).read_text())
+          assert data["parent"] == [7,24,11,24,14,24,24,16,8,11,24,24], data
+          assert data["global_bound"] == 80377, data
+          assert data["special_code"] == 9, data
+          print("E0=0LC parent and weighted bound:", data["parent"], data["global_bound"])
+          PY
+          python3 tools/lean_compile_closure.py \
+            "$work/generated/Raw139E0ZeroLC.lean" \
+            --source-root "$work/generated" \
+            --source-root im-results/agent6-raw139-e0-zeroLC \
+            --source-root im-results/agent6-champion-residual \
+            --source-root im-results/agent14-raw139-d0-generic \
+            --source-root im-results/agent42-champion-terminal \
+            --source-root im-results/agent8-counted-reset \
+            --source-root im-results/agent41-m0-n16r7 \
+            --source-root im-results/agent48-counted-inc0 \
+            --source-root im-results/agent13-coverage \
+            --source-root im-results/agent31-three-hole-tnf \
+            --source-root im-results/agent10-tnf-multipump \
+            --source-root im-results/agent48-champion-root \
+            --source-root im-results/agent13-block-far \
+            --source-root im-results/agent32-raw59 \
+            --source-root im-results/agent7-far \
+            --source-root im-results/agent8-coverage-contract \
+            --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
+            --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
+            --source-root "$PWD/.tmp/a41-f1-zeroRC/imports" \
+            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
+            --source-root "$work/d0-zeroRC-source" \
+            --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
+            --precompiled-dir /tmp/a6-champion-residual/build \
+            --workdir "$work/build" \
+            --manifest "$work/manifest.json" \
+            --label agent6-e0-zeroLC-parent \
+            --theorem BB6.Agent6E0ZeroLC.all_completions_weighted \
+            --parent-table '[7,24,11,24,14,24,24,16,8,11,24,24]' \
+            --weighted-bound 80377 \
+            --artifact-name agent6-e0-zeroLC-parent \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/broad_census.cpp \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/broad_search.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/hard-witnesses.md \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/search.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_family.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_chunks.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_broad.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py \
+            --provenance-input im-results/agent6-raw139-e0-zeroLC/A6ChunkSupport.lean \
+            --provenance-input im-results/agent13-block-far/generate_multi.py \
+            --provenance-input im-results/agent13-block-far/specialize.py \
+            --provenance-input im-results/agent32-raw59/emit_blockmask.py \
+            --provenance-input im-results/agent32-raw59/MaskBlockFAR4.lean \
+            --provenance-input im-results/agent32-raw59/MaskMap.lean \
+            --provenance-input im-results/agent7-far/FARBi.lean \
+            --provenance-input im-results/agent8-coverage-contract/Symmetry.lean \
+            --provenance-input im-results/agent48-raw139-f1-oneRA/blockcert.py \
+            --provenance-input im-results/agent48-raw139-f1-oneLA/scan.py \
+            --provenance-input "$work/d0-zeroRC-source/Raw139D0ZeroRCCover.lean" \
+            --jobs 4 | tee "$work/compile.log"
+          if grep -Eq 'sorryAx|native_decide' "$work/compile.log"; then
+            echo "Forbidden proof placeholder or native_decide in E0=0LC parent proof" >&2
+            exit 1
+          fi
+          python3 - "$work/compile.log" <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          name = "BB6.Agent6E0ZeroLC.all_completions_weighted"
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          match = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
+          if match:
+              used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+          elif "'" + name + "' does not depend on any axioms" in log:
+              used = set()
+          else:
+              raise SystemExit("missing axiom audit for " + name)
+          if not used <= allowed:
+              raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+          print(name, sorted(used))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.e0_zeroLC_parent && inputs.raw121_graft_run_id == '' }}
+        with:
+          name: agent6-e0-zeroLC-parent-${{ inputs.source_sha || github.sha }}
+          include-hidden-files: true
+          path: |
+            /tmp/a6-e0-zeroLC/generated
+            /tmp/a6-e0-zeroLC/build
+            /tmp/a6-e0-zeroLC/manifest.json
+            /tmp/a6-e0-zeroLC/broad_census
+            /tmp/a6-e0-zeroLC/raw139_e0_0LC_*_leaves.txt
+            /tmp/a6-e0-zeroLC/broad_recipes.jsonl
+            /tmp/a6-e0-zeroLC/late_branch_recipes.jsonl
+            /tmp/a6-e0-zeroLC/broad_specs.json
+            /tmp/a6-e0-zeroLC/broad_specs_summary.json
+            /tmp/a6-e0-zeroLC/generated/broad_chunk_manifest.json
+            /tmp/a6-e0-zeroLC/generated/e0_parent_summary.json
+            /tmp/a6-e0-zeroLC/*.log
+            /tmp/a6-e0-zeroLC/d0-zeroRC-source
+            im-results/agent13-block-far/BlockFAR4.lean
+            im-results/agent13-block-far/BlockMacro4.lean
+            im-results/agent13-block-far/RangeCheck4.lean
+            im-results/agent13-block-far/BlockFARBridge4.lean
+          if-no-files-found: error
+          retention-days: 14
       - name: Download source-audited Raw139 C1 twelve-sibling artifact
         if: ${{ inputs.raw121_graft_run_id == '' }}
         uses: actions/download-artifact@v4
@@ -705,145 +844,6 @@ jobs:
             /tmp/a6-champion-residual/source-sibling-build/Raw139D0*.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
             /tmp/a6-source-sibling.log
-          if-no-files-found: error
-          retention-days: 14
-      - name: Generate and kernel-check the six-hole Raw139 E0=0LC residual Cover
-        if: ${{ inputs.e0_zeroLC_parent && inputs.raw121_graft_run_id == '' }}
-        run: |
-          set -euo pipefail
-          work=/tmp/a6-e0-zeroLC
-          mkdir -p "$work/generated" "$work/build"
-          test -s /tmp/a6-champion-residual/manifest.json
-          test -d /tmp/a6-champion-residual/build
-          test -s /tmp/a14-d0-ZeroRC/imports/Raw139D0ZeroRCCover.lean
-          cp -a /tmp/a14-d0-ZeroRC/imports "$work/d0-zeroRC-source"
-          export PYTHONPATH="$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneLA:$GITHUB_WORKSPACE/im-results/agent48-raw139-f1-oneRA:$GITHUB_WORKSPACE/im-results/agent13-block-far:$GITHUB_WORKSPACE/im-results/agent32-raw59"
-          python3 -m py_compile \
-            im-results/agent6-raw139-e0-zeroLC/broad_search.py \
-            im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py \
-            im-results/agent6-raw139-e0-zeroLC/emit_family.py \
-            im-results/agent6-raw139-e0-zeroLC/emit_chunks.py \
-            im-results/agent6-raw139-e0-zeroLC/emit_broad.py \
-            im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py \
-            im-results/agent13-block-far/generate_multi.py \
-            im-results/agent32-raw59/emit_blockmask.py
-          python3 - <<'PY'
-          import sys
-          sys.path.insert(0, "im-results/agent6-raw139-e0-zeroLC")
-          import emit_family, emit_chunks
-          assert set(("block", "phase", "mirror", "mirrorphase", "offset")) <= set(emit_family.BLOCK_RECIPES)
-          print("E0 emitter imports and FAR recipe routing ready")
-          PY
-          g++ -O3 -std=c++20 -o "$work/broad_census" im-results/agent6-raw139-e0-zeroLC/broad_census.cpp
-          (cd "$work" && ./broad_census)
-          (cd "$work" && python3 -u "$GITHUB_WORKSPACE/im-results/agent6-raw139-e0-zeroLC/broad_search.py" 4) | tee "$work/broad-search.log"
-          python3 im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py "$work" | tee "$work/assemble.log"
-          python3 im-results/agent6-raw139-e0-zeroLC/emit_broad.py "$work" "$work/generated" | tee "$work/emit-broad.log"
-          python3 im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py "$work" "$work/generated" | tee "$work/emit-parent.log"
-          python3 - "$work/generated/e0_parent_summary.json" <<'PY'
-          import json, pathlib, sys
-          data = json.loads(pathlib.Path(sys.argv[1]).read_text())
-          assert data["parent"] == [7,24,11,24,14,24,24,16,8,11,24,24], data
-          assert data["global_bound"] == 80377, data
-          assert data["special_code"] == 9, data
-          print("E0=0LC parent and weighted bound:", data["parent"], data["global_bound"])
-          PY
-          python3 tools/lean_compile_closure.py \
-            "$work/generated/Raw139E0ZeroLC.lean" \
-            --source-root "$work/generated" \
-            --source-root im-results/agent6-raw139-e0-zeroLC \
-            --source-root im-results/agent6-champion-residual \
-            --source-root im-results/agent14-raw139-d0-generic \
-            --source-root im-results/agent42-champion-terminal \
-            --source-root im-results/agent8-counted-reset \
-            --source-root im-results/agent41-m0-n16r7 \
-            --source-root im-results/agent48-counted-inc0 \
-            --source-root im-results/agent13-coverage \
-            --source-root im-results/agent31-three-hole-tnf \
-            --source-root im-results/agent10-tnf-multipump \
-            --source-root im-results/agent48-champion-root \
-            --source-root im-results/agent13-block-far \
-            --source-root im-results/agent32-raw59 \
-            --source-root im-results/agent7-far \
-            --source-root im-results/agent8-coverage-contract \
-            --source-root "$PWD/.tmp/a41-f1-zeroLF/imports" \
-            --source-root "$PWD/.tmp/a48-f1-oneLA/imports" \
-            --source-root "$PWD/.tmp/a41-f1-zeroRC/imports" \
-            --source-root "$PWD/.tmp/a14-f1-batch/imports" \
-            --source-root "$work/d0-zeroRC-source" \
-            --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
-            --precompiled-dir /tmp/a6-champion-residual/build \
-            --workdir "$work/build" \
-            --manifest "$work/manifest.json" \
-            --label agent6-e0-zeroLC-parent \
-            --theorem BB6.Agent6E0ZeroLC.all_completions_weighted \
-            --parent-table '[7,24,11,24,14,24,24,16,8,11,24,24]' \
-            --weighted-bound 80377 \
-            --artifact-name agent6-e0-zeroLC-parent \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/broad_census.cpp \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/broad_search.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/hard-witnesses.md \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/search.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_family.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_chunks.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_broad.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/emit_e0_parent.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/assemble_broad_specs.py \
-            --provenance-input im-results/agent6-raw139-e0-zeroLC/A6ChunkSupport.lean \
-            --provenance-input im-results/agent13-block-far/generate_multi.py \
-            --provenance-input im-results/agent13-block-far/specialize.py \
-            --provenance-input im-results/agent32-raw59/emit_blockmask.py \
-            --provenance-input im-results/agent32-raw59/MaskBlockFAR4.lean \
-            --provenance-input im-results/agent32-raw59/MaskMap.lean \
-            --provenance-input im-results/agent7-far/FARBi.lean \
-            --provenance-input im-results/agent8-coverage-contract/Symmetry.lean \
-            --provenance-input im-results/agent48-raw139-f1-oneRA/blockcert.py \
-            --provenance-input im-results/agent48-raw139-f1-oneLA/scan.py \
-            --provenance-input "$work/d0-zeroRC-source/Raw139D0ZeroRCCover.lean" \
-            --jobs 4 | tee "$work/compile.log"
-          if grep -Eq 'sorryAx|native_decide' "$work/compile.log"; then
-            echo "Forbidden proof placeholder or native_decide in E0=0LC parent proof" >&2
-            exit 1
-          fi
-          python3 - "$work/compile.log" <<'PY'
-          import pathlib, re, sys
-          log = pathlib.Path(sys.argv[1]).read_text()
-          name = "BB6.Agent6E0ZeroLC.all_completions_weighted"
-          allowed = {"propext", "Classical.choice", "Quot.sound"}
-          match = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
-          if match:
-              used = {x.strip() for x in match.group(1).split(",") if x.strip()}
-          elif "'" + name + "' does not depend on any axioms" in log:
-              used = set()
-          else:
-              raise SystemExit("missing axiom audit for " + name)
-          if not used <= allowed:
-              raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
-          print(name, sorted(used))
-          PY
-      - uses: actions/upload-artifact@v4
-        if: ${{ inputs.e0_zeroLC_parent && inputs.raw121_graft_run_id == '' }}
-        with:
-          name: agent6-e0-zeroLC-parent-${{ inputs.source_sha || github.sha }}
-          include-hidden-files: true
-          path: |
-            /tmp/a6-e0-zeroLC/generated
-            /tmp/a6-e0-zeroLC/build
-            /tmp/a6-e0-zeroLC/manifest.json
-            /tmp/a6-e0-zeroLC/broad_census
-            /tmp/a6-e0-zeroLC/raw139_e0_0LC_*_leaves.txt
-            /tmp/a6-e0-zeroLC/broad_recipes.jsonl
-            /tmp/a6-e0-zeroLC/late_branch_recipes.jsonl
-            /tmp/a6-e0-zeroLC/broad_specs.json
-            /tmp/a6-e0-zeroLC/broad_specs_summary.json
-            /tmp/a6-e0-zeroLC/generated/broad_chunk_manifest.json
-            /tmp/a6-e0-zeroLC/generated/e0_parent_summary.json
-            /tmp/a6-e0-zeroLC/*.log
-            /tmp/a6-e0-zeroLC/d0-zeroRC-source
-            im-results/agent13-block-far/BlockFAR4.lean
-            im-results/agent13-block-far/BlockMacro4.lean
-            im-results/agent13-block-far/RangeCheck4.lean
-            im-results/agent13-block-far/BlockFARBridge4.lean
           if-no-files-found: error
           retention-days: 14
       - name: Download source-accepted Raw121 canonical76 graft artifact
