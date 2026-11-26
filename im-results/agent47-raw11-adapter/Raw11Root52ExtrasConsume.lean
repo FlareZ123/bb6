@@ -68,7 +68,7 @@ def remainingCodes : List Nat :=
 
 /-- Package each exact parent together with its independently checked local Cover. -/
 def closedCovers (B : Nat) (hB : 4663 ≤ B) :
-    List (Σ p : PartialMachine, Cover (WeightedBound B) p) := [
+    List (PSigma fun p : PartialMachine => Cover (WeightedBound B) p) := [
   ⟨BB6.Agent47Extra91.parent, Q0RosterConsume.liftCover (A := 143) (B := B) (Nat.le_trans (by decide : 143 ≤ 4663) hB) BB6.Agent47Extra91.cover⟩,
   ⟨BB6.Agent47Extra92.parent, Q0RosterConsume.liftCover (A := BB6.Agent47Extra92.bound) (B := B) (Nat.le_trans (by decide : BB6.Agent47Extra92.bound ≤ 4663) hB) BB6.Agent47Extra92.cover⟩,
   ⟨BB6.Agent47Extra93.parent, Q0RosterConsume.liftCover (A := 24) (B := B) (Nat.le_trans (by decide : 24 ≤ 4663) hB) BB6.Agent47Extra93.cover⟩,
@@ -107,13 +107,13 @@ def closedCovers (B : Nat) (hB : 4663 ≤ B) :
 ]
 
 theorem closedCovers_tables (B : Nat) (hB : 4663 ≤ B) :
-    (closedCovers B hB).map Sigma.fst = closedTables := by
+    (closedCovers B hB).map PSigma.fst = closedTables := by
   rfl
 
 theorem covers (B : Nat) (hB : 4663 ≤ B) :
     ∀ p ∈ closedTables, Cover (WeightedBound B) p := by
   intro p hp
-  have hp' : p ∈ (closedCovers B hB).map Sigma.fst := by
+  have hp' : p ∈ (closedCovers B hB).map PSigma.fst := by
     rw [closedCovers_tables]
     exact hp
   rcases List.mem_map.mp hp' with ⟨⟨q, hq⟩, hqmem, hEq⟩
