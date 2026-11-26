@@ -24,7 +24,7 @@ RAW112_ARTIFACTS = [
 ]
 
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
-STUB_AXIOM = "BB6.Agent47Raw112.parent_cover"
+STUB_AXIOM = "Agent47Raw112.parent_cover"
 
 
 def download_raw112_preflight(work):
