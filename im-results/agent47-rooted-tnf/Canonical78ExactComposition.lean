@@ -20,7 +20,7 @@ private theorem exact_rootSteps_le_score (rootSteps L n a b : Nat) :
     rootSteps ≤ threeSectionMoves rootSteps L n a b + 7 :=
   BB6Coverage.Agent48DirectRoot.rootSteps_le_score rootSteps L n a b
 
-theorem champion_score_gt_7014 : 7014 < championScore := by
+theorem champion_score_gt_7014 : 7014 < proposedTM63Moves + 7 := by
   have hroot : 27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     exact_rootSteps_le_score 27959 3 7 6 63
   have hscore : 7014 < threeSectionMoves 27959 3 7 6 63 + 7 :=
@@ -61,18 +61,18 @@ theorem champion_in_canonical_roster :
 /-- The 78 quotient-residual covers at B yield a root cover at B. -/
 theorem cover_at_champion_score
     (hLeaves : ∀ e ∈ BB6.Agent47Canonical78.roster,
-      Cover (WeightedBound championScore) e.2) :
-    Cover (WeightedBound championScore) BB6.CoverageAdapter.firstOneCylinder :=
-  BB6.Agent47Canonical78.cover_at_target championScore
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    Cover (WeightedBound (proposedTM63Moves + 7)) BB6.CoverageAdapter.firstOneCylinder :=
+  BB6.Agent47Canonical78.cover_at_target (proposedTM63Moves + 7)
     (Nat.le_of_lt champion_score_gt_7014) hLeaves
 
 /-- Ingest the already source-accepted raw champion witness: 78 B-bound
     quotient-residual Covers suffice for exact BB(6) at the attained score. -/
 theorem exact_from_canonical78_at_champion_score
     (hLeaves : ∀ e ∈ BB6.Agent47Canonical78.roster,
-      Cover (WeightedBound championScore) e.2) :
-    BB6.Coverage.ExactBB6 championScore :=
-  BB6.Agent47Canonical78.exact_at_target championScore
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  BB6.Agent47Canonical78.exact_at_target (proposedTM63Moves + 7)
     (Nat.le_of_lt champion_score_gt_7014) hLeaves champion_raw_witness
 
 #print axioms champion_score_gt_7014
