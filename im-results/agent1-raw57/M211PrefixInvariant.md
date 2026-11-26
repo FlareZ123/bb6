@@ -2,7 +2,7 @@
 
 ## Claim and evidence
 
-For the exact partial table `1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---`, every compatible completion has an infinite blank-tape execution. This is a finite-certificate mathematical argument with an executable independent checker. The regular-language proof itself compiled locally under Lean 4.36.0-rc2 with standard axioms [propext, Classical.choice, Quot.sound]. The original-source `NeverHalts` theorem is pending a focused CI audit; this is not yet an accepted Raw57/1LB or parent Cover.
+For the exact partial table `1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---`, every compatible completion has an infinite blank-tape execution. This is a finite-certificate mathematical argument with an executable independent checker. The regular-language proof itself compiled locally under Lean 4.36.0-rc2 with standard axioms [propext, Classical.choice, Quot.sound]. The original-source `NeverHalts` theorem **passed** the focused [CI audit 45780341512](https://github.com/FlareZ123/bb6/actions/runs/45780341512), at head 969c3907c84cb3cd9379e1ddfa31d8f78d0e704d. This closes the individual M211 obligation. The full 1LB sibling audit is queued; no parent Cover is claimed.
 
 ## Exact section and invariant
 
