@@ -165,6 +165,6 @@ summary = {
     "module_count": manifest["module_count"],
     "theorem_axioms": {name: sorted(profiles[name]) for name in required},
 }
-pathlib.Path(sys.argv[3]).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+pathlib.Path(sys.argv[3]).write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
 print(json.dumps(summary, indent=2, sort_keys=True))
 PY
