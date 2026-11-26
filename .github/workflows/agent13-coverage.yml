@@ -761,6 +761,8 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-box6'
         run: |
           set -euo pipefail
+          D=im-results/agent49-raw10-box6
+          W="$D/generated"
           BASE5=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\n' | head -n1)
           test -f "$BASE5/manifest.json"
           python tools/lean_compile_closure.py \
