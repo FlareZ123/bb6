@@ -153,7 +153,7 @@ bounce alternatives.
 
 ## Next mathematical task
 
-Close the complete high-parent fan for (z\\equiv2\\pmod4), especially the (q\\ge2) branches when (W) has large 2-adic valuation. On the (w\\equiv7\\pmod{128}) lift, continue the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod8) has a sum-zero fork; (r\\equiv5\\pmod{16}) outside (r\\equiv5\\pmod{32}) leaves an odd/odd sum-zero parent, of which the (r=117\\pmod{128}) sublift is now excluded; (r\\equiv13\\pmod{16}) leaves an even/odd sum-seven target; and (r\\equiv3\\pmod4) outside (r\\equiv3\\pmod{16}) needs further residue splits. The (r\\equiv0\\pmod4), (r\\equiv3\\pmod{16}), (r\\equiv5\\pmod{32}), and (r=117\\pmod{128}) sublifts are excluded above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
+Continue the remaining q=1 parent residues in the (z\\equiv2\\pmod4) sector and the even-(W) high-depth cases. The exact source parent fan is now proved: every parent has even depth (n) and satisfies the scale/cost equations; when (W) is odd, only depths 0 and 2 remain. On the (w\\equiv7\\pmod{128}) lift, continue the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod8) has a sum-zero fork; (r\\equiv5\\pmod{16}) outside (r\\equiv5\\pmod{32}) leaves an odd/odd sum-zero parent, of which the (r=117\\pmod{128}) sublift is now excluded; (r\\equiv13\\pmod{16}) leaves an even/odd sum-seven target; and (r\\equiv3\\pmod4) outside (r\\equiv3\\pmod{16}) needs further residue splits. The (r\\equiv0\\pmod4), (r\\equiv3\\pmod{16}), (r\\equiv5\\pmod{32}), and (r=117\\pmod{128}) sublifts are excluded above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
 
 
 ## Infinite subfamily closed by the first parent fan
@@ -176,9 +176,9 @@ actual residual condition (z\equiv3\pmod5) gives
 (z\equiv38\pmod{80}).
 
 The Lean proof attempt is in
-`U5Q0W7ParentFan.lean`; it awaits independent local compilation.
-Until that preflight succeeds, this is a source-level derivation with a
-pending formalization, not a verified Lean theorem.
+`U5Q0W7ParentFan.lean`; it passed the exact-source closure in workflow run #17.
+The parent fan and the u=1 (mod 4) target exclusion have printed axioms
+[propext, Classical.choice, Quot.sound], with no sorryAx/native_decide dependency.
 
 
 The same excluded cylinder has a direct root-index description. Write
@@ -222,7 +222,7 @@ z\equiv13\pmod{16}\Rightarrow w\equiv31\pmod{128}.
 ]
 The corresponding Lean draft is
 `w7_q0_target_unreachable_z5or13mod16` in
-`U5Q0W7ParentFan.lean`; it also awaits independent local compilation.
+`U5Q0W7ParentFan.lean`; it passed the exact-source closure in workflow run #17.
 
 
 ## One higher-depth root cylinder: w=439 (mod 512)
@@ -262,10 +262,11 @@ This exact source derivation is now represented in
 `w7_q0_target_unreachable_u59mod80`. The first applies the exact
 odd/odd sum-four parent theorem and the existing odd-right sum-one
 blank-image invariant; the second uses the complete q-parent fan and
-oddness of W to eliminate every depth except 0 and 2. Both declarations
-remain uncompiled and unaudited. This closes the target-level q=0 branch
-on the (w\\equiv439\\pmod{512}) lift only; it does not close the other
-lifts of the (u\\equiv3\\pmod4) branch.
+oddness of W to eliminate every depth except 0 and 2. Both declarations were compiled and explicitly axiom-printed in workflow
+run #17. Their dependencies are [propext, Classical.choice, Quot.sound],
+with no sorryAx/native_decide dependency. This closes the target-level q=0
+branch on the (w\\equiv439\\pmod{512}) lift only; it does not close the
+other lifts of the (u\\equiv3\\pmod4) branch.
 
 
 ## Complete 128-lift lookup for the w=7 progression
@@ -281,7 +282,7 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 | 31 | 13 | z odd; excluded |
 | 39 | 8 | z divisible by 4 |
 | 47 | 3 | z odd |
-| 55 | 14 | z=2 mod 4 |
+| 55 | 14 | z=2 mod 4; q=1 parent excluded on u=7 mod 32, u=35 mod 64, and u=59 mod 80 |
 | 63 | 9 | z odd |
 | 71 | 4 | z divisible by 4 |
 | 79 | 15 | z odd |
@@ -295,3 +296,74 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 The additional (w\equiv439\pmod{512}) closure is a deeper lift of
 the (w\equiv55\pmod{128}) row. This table is a routing aid, not a
 claim that the remaining rows are reachable or unreachable.
+
+
+
+## Additional q=1 parent exclusions on the w=55 (mod 128) row
+
+The parent fan reduces the q=0 target to the q=1 parent
+\[
+Q(u)=(2W-3,\;24450+39417u),\qquad W=2228+3591u,
+\]
+whenever \(W\) is odd. Two additional source-composition theorems now exclude
+\(Q(u)\) on disjoint infinite slices.
+
+### u=7+32t
+
+The q=1 parent is
+\[
+A=(54727+229824t,\;300369+1261344t).
+\]
+The odd/odd low-valuation inverse forces
+\[
+B=(177546+745584t,\;238956+1003464t),
+\]
+which is even/even with \(B_x+B_y\equiv2\pmod8\). The exact even/even
+unique-parent theorem forces
+\[
+C=(416500+1749048t,\;119477+501732t).
+\]
+Here \(C_y\) is odd and \(C_x+C_y\equiv1\pmod4\), so the original-source
+odd-right sum-one invariant excludes \(C\). This is formalized by
+w7_z2_q1_parent_unreachable_u7mod32 and
+w7_q0_target_unreachable_u7mod32 in U5Q0W7U7Mod32.lean.
+
+### u=35+64t
+
+The q=1 parent is
+\[
+A=(255823+459648t,\;1404045+2522688t).
+\]
+The odd/odd low-valuation inverse forces
+\[
+B=(829932+1491168t,\;1116987+2006928t),
+\]
+with \((B_x+B_y+1)\equiv8\pmod{16}\). The exact odd-seven parent
+forces
+\[
+C=(973457+1749048t,\;1045221+1877988t).
+\]
+Here \(C_y\) is odd and \(C_x+C_y\equiv2\pmod4\), so the original-source
+odd-right sum-two invariant excludes \(C\). This is formalized by
+w7_z2_q1_parent_unreachable_u35mod64 and
+w7_q0_target_unreachable_u35mod64 in U5Q0W7U3Mod64.lean.
+
+For both slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root relation
+\(5z-7s\equiv12\pmod{16}\), with \(w=7+8s\), gives
+\(s\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
+\(z\equiv3\pmod5\) restricts \(t\equiv1\pmod5\) in each new slice.
+The existing \(u=59+80t\) slice also lies in this \(w=55\pmod{128}\) row
+and is the deeper \(w\equiv439\pmod{512}\) lift.
+
+The focused exact-source closure target w7-q0-parent-fan passed in run
+#17 (GitHub Actions run 45792309463). It compiled 48 project modules from
+the three roots U5Q0W7ParentFan, U5Q0W7U3Mod64, and U5Q0W7U7Mod32.
+The explicit axiom prints include both new q=1 and q=0 target theorems
+on each slice, as well as the u=59 theorems. All printed dependencies are
+[propext, Classical.choice, Quot.sound] or the subset
+[propext, Quot.sound]. The workflow's grep guard found no sorryAx or
+native_decide dependency.
+
+These are three infinite excluded sublifts of the q=1 parent, not a
+classification of the entire w=55 (mod 128) row. The remaining q=1
+parameter residues and all even-W high-depth cases remain open.
