@@ -1,13 +1,13 @@
-# Raw57 sibling closure: complete 0LB and 1RF candidate partitions
+# Raw57 sibling closure: certified 0LB, 1RF, 1LC and conditional parent bridge
 
 Parent raw57: `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. Child A1=1RF:
 `1RB1RF_1RC---_0RD---_1LD1RE_---0LA_------`.
 
-The exact first-hole enumeration using Agent47's fast enumerator gives 2073 splits, 37150 cycle leaves, 8686 last-hole leaves, 1844 open leaves. All 1844 open candidates are now covered by 1811 FAR witnesses, 31 one-block growth certificates, and the following two independently Lean-checked proofs. No unresolved discovery leaf remains. The sharp candidate weighted bound is 230 (halting table `1RB1RF_1RC0RA_0RD1RB_1LD1RE_HHH0LA_1LE0RD`, 229 ordinary steps, zero delay). The full source partition audit 45725993066 was interrupted by runner shutdown (exit 143) while compiling child shards; it is **not accepted until a complete audit passes**. All five-hole compatible tables: 9,765,625.
+The exact first-hole enumeration using Agent47's fast enumerator gives 2073 splits, 37150 cycle leaves, 8686 last-hole leaves, 1844 open leaves. All 1844 open candidates are now covered by 1811 FAR witnesses, 31 one-block growth certificates, and the following two independently Lean-checked proofs. No unresolved discovery leaf remains. The sharp candidate weighted bound is 230 (halting table `1RB1RF_1RC0RA_0RD1RB_1LD1RE_HHH0LA_1LE0RD`, 229 ordinary steps, zero delay). The initial full source partition audit 45725993066 was interrupted by runner shutdown. The repaired, bounded-subtree audit **45752357170 passed**; `BB6.Agent1Raw57RF1.all_completions` certifies the bound. All five-hole compatible tables: 9,765,625.
 
-## A1=0LB: complete candidate partition
+## A1=0LB: certified partition
 
-Child `1RB0LB_1RC---_0RD---_1LD1RE_---0LA_------`: 1381 splits, 23617 cycle leaves, 7526 last-hole leaves, 621 open leaves. Of these, 558 have FAR witnesses, 58 single-block sweeps, three double-block sweeps (156,303,325), and two sparse n-gram invariant proofs. All 61 sweep theorems and both n-gram nonhalting theorems compiled locally in Lean 4.36.0-rc2 against hash-verified original dependency objects from artifact 15057164854 with standard axioms only. The final tree audit is pending. Candidate sharp weighted bound 225, with 224 ordinary steps and zero delay for `1RB0LB_1RC1RF_0RDHHH_1LD1RE_0RF0LA_1LA0RB`. The entire compatible canonical cylinder has 25^5 = 9,765,625 tables.
+Child `1RB0LB_1RC---_0RD---_1LD1RE_---0LA_------`: 1381 splits, 23617 cycle leaves, 7526 last-hole leaves, 621 open leaves. Of these, 558 have FAR witnesses, 58 single-block sweeps, three double-block sweeps (156,303,325), and two sparse n-gram invariant proofs. All 61 sweep theorems and both n-gram nonhalting theorems compiled locally in Lean 4.36.0-rc2 against hash-verified original dependency objects from artifact 15057164854 with standard axioms only. The final source tree audit **45752353339 passed**. Certified weighted upper bound 225, with 224 ordinary steps and zero delay for `1RB0LB_1RC1RF_0RDHHH_1LD1RE_0RF0LA_1LA0RB`. The entire compatible canonical cylinder has 25^5 = 9,765,625 tables.
 
 New DFA `00102342104` closes open indices 8,30,493. Remaining M344 `1RB0LB_1RC1LB_0RD0RF_1LD1RE_---0LA_1LA1RF` and M360 `1RB0LB_1RC1LB_0RD1RF_1LD1RE_---0LA_1LB0RC` have sparse n-gram invariants of widths 5 and 6, 1499 and 2132 configurations respectively. Left/right edge counts are 22/58 and 53/61. Existing original SparseNGram checker and emitter are reused; these are unbounded nonhalting proofs, not finite simulation claims.
 
@@ -41,3 +41,11 @@ Table `1RB1RF_1RC1LA_0RD0RA_1LD1RE_---0LA_1LB0LF`. Entry at time 31 into A, left
 ## Reproduction
 
 `python im-results/agent1-raw57/generate_sibling.py 1RF` generates exact Lean tree and source modules; spec records SHA256 of open list and witness bank, with machine strings at the two indexed proven leaves checked by the final tree. The existing workflow `agent6-raw57-siblings.yml` is extended to route 1RF through this generator. Final target `BB6.Agent1Raw57RF1.all_completions`. Other siblings remain separate.
+
+## Parent closure status
+
+The existing 1LC generator was also repaired by bounded-subtree sharding; audit 45752512017 passed, bound 272. Agent7's audits 45750969498 (1RA, 382), 45751244565 (0LD, 324), 45751715986 (0LC, 629) passed. The source-accepted conditional bridge `Raw57ParentBridge.lean` (45752594597) reduces the parent to five ordinary choices 1LA, 1LB, 1LE, 0LF, 1LF given fourteen branch bound hypotheses. `Raw57ParentConsumer.lean` supplies all fourteen named branch theorems but its integrated compilation is pending. No unconditional parent bound or global roster reduction is claimed.
+
+## A1=1LA discovery frontier
+
+Exact side-cycle algorithm translated to JS: 2258 splits, 32018 cycle leaves, 15943 last-hole leaves, 3974 open; candidate maximum weighted 832. The two JSON frontier files record 3703 FAR and 112 sparse n-gram candidates, leaving 159 indexed partial machines for symbolic/other proofs. These are discovery results, pending original-generator and Lean acceptance. Agent7 is coordinating the other four residual siblings.
