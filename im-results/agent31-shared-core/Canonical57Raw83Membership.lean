@@ -5,6 +5,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent31Canonical57Membership
 
+open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent31StableParentBatch
 open BB6.Agent31Canonical58Membership
 open BB6.Agent29Raw83Canonical58Membership
