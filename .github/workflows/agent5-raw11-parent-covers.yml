@@ -76,39 +76,43 @@ jobs:
         run: |
           set -euo pipefail
           node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs "$ID" /tmp/raw11-generated
-      - name: Check accepted dependency identity and compile parent
+      - name: Compile exact generated proof closure
         run: |
           set -euo pipefail
           cache=/tmp/raw11-cache/tmp/a47-raw11-root52-known
           test -f "$cache/manifest.json"
-          python - "$cache" "$(elan which lean)" <<'PY'
-          import hashlib,json,pathlib,sys
-          root=pathlib.Path(sys.argv[1])
-          m=json.loads((root/"manifest.json").read_text())
-          sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
-          assert sha(pathlib.Path(sys.argv[2]))==m["lean_binary"]["sha256"]
-          for v in m["modules"]:
-              assert sha(root/v["olean_path"])==v["olean_sha256"], v["module"]
-              assert sha(root/(v["module"]+".lean"))==v["source_sha256"], v["module"]
-          print("Verified pinned dependency cache:",len(m["modules"]),"modules")
-          PY
-          cp im-results/agent5-weighted-tnf-queue/Raw11Extra{126,127,137}*.lean "$cache/"
-          cp /tmp/raw11-generated/*.lean "$cache/"
-          cd "$cache"
-          export LEAN_PATH="$PWD"
-          for n in 126 127 137; do
-            lean -j1 -o Raw11Extra$n.olean Raw11Extra$n.lean
-            lean -j1 -o Raw11Extra${n}Coverage.olean Raw11Extra${n}Coverage.lean
-          done
-          export PREFIX="Agent5Raw11Extra$ID"
-          printf '%s\0' "$PREFIX"Kid*.lean | xargs -0 -P 1 -n1 bash -c 'set -e; echo "Checking $0"; lean -j1 -o "${0%.lean}.olean" "$0"' | tee /tmp/raw11-kids.log
-          lean -j1 -o "$PREFIX.olean" "$PREFIX.lean" | tee /tmp/raw11-parent.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-{kids,parent}.log; then exit 1; fi
-          grep -F "BB6.$PREFIX.cover' depends on axioms:" /tmp/raw11-parent.log
           mkdir -p /tmp/raw11-certified
-          cp "$PREFIX"*.olean "$PREFIX"*.lean /tmp/raw11-certified/
-          cp Raw11Extra{126,127,137}*.olean Raw11Extra{126,127,137}*.lean /tmp/raw11-certified/
-          cp /tmp/raw11-parent.log /tmp/raw11-kids.log /tmp/raw11-generated/manifest.json /tmp/raw11-certified/
+          export PREFIX="Agent5Raw11Extra$ID"
+          BOUND=$(python -c 'import json; print(json.load(open("/tmp/raw11-generated/manifest.json"))["bound"])')
+          PARENT_TABLE=$(python -c 'import json; print(json.load(open("/tmp/raw11-generated/manifest.json"))["table"])')
+          PROVENANCE_ARGS=()
+          for f in /tmp/raw11-six-data/six-hole-scan-*.json; do
+            [ -f "$f" ] && PROVENANCE_ARGS+=(--provenance-input "$f")
+          done
+          python tools/lean_compile_closure.py "/tmp/raw11-generated/$PREFIX.lean" \
+            --source-root /tmp/raw11-generated \
+            --workdir /tmp/raw11-certified \
+            --artifact-dir /tmp/raw11-certified \
+            --jobs 1 \
+            --lean "$(elan which lean)" \
+            --precompiled-manifest "$cache/manifest.json" \
+            --precompiled-dir "$cache" \
+            --manifest /tmp/raw11-certified/manifest.json \
+            --label "Agent5 Raw11 extra parent $ID" \
+            --theorem "BB6.$PREFIX.cover" \
+            --parent-table "$PARENT_TABLE" \
+            --weighted-bound "$BOUND" \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-open-automata.cjs \
+            --provenance-input im-results/agent47-raw11-adapter/raw11-route.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-capped-extra-automata.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-capped-extra-automata-more.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-capped-extra140-last-automata.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-six-hole-131-133.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/raw11-six-hole-131-last-automata.json \
+            "${PROVENANCE_ARGS[@]}" | tee /tmp/raw11-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-parent.log; then exit 1; fi
+          grep -F "BB6.$PREFIX.cover' depends on axioms:" /tmp/raw11-parent.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
