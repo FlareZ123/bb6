@@ -48,3 +48,10 @@ The thirteen independently source-checked ordinary branches cover 126,953,125 li
 ## Reproduce
 
 `python generate.py <A1>` regenerates one exact enumeration tree, its certificate bank and Lean theorem. `python generate.py` regenerates all. `python unpack_rc.py` materializes the digest-checked shared RC source. Manual workflow `agent32-zero-path-global.yml`, `verify_raw59=true`, `raw59_child=all` checks the combined original-source graft. Other choices check individual branches or RCShared. No sorry or native_decide permitted.
+
+
+## Follow-on integration contract
+
+The dormant workflow target `canonical56-raw59-graft` is defined in `.github/workflows/agent31-canonical71-raw109.yml`. It expects an accepted `canonical57-raw112-graft-integrated` run and either the one-shot `canonical64-raw59-slice-integrated` or staged `canonical64-raw59-staged-integrated` run. It emits `canonical56-raw59-graft-integrated` with report `canonical56-raw59-graft.json`. The target is not dispatched until both inputs are accepted.
+
+Agent31 has confirmed that, after Canonical56 is accepted, they will take the distinct Raw83 parent as the next sequential cut, rechecking membership and distinctness against the actual Canonical56 roster. Do not build a competing Raw83 branch on Canonical58 or Canonical57.
