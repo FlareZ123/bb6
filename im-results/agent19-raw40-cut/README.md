@@ -4,6 +4,8 @@ Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, canonical raw40. First unass
 
 ## Established local results
 
+- Round37 (A1=0RD, B1=0RE): exact weighted **214**, attained by `1RB0RD_1RC0RE_0RD0LE_1LD1LA_0RC1LF_0LEHHH` (213 ordinary transitions + halt, delay 0). All 836 open leaves closed: 831 FAR≤5 and five previously saved FAR6 witnesses. All 24 audit shards, empty-residual aggregate, and [exactness](Raw40Round37Exact.lean) passed local Lean 4.36.0-rc2 against Canonical77 artifact 14997966221, using an equivalent standalone generator without unrelated pump imports. [Rebuild](prepare_round37.py). No new global roster count.
+
 - Rounds35–36 (B1=0RC): A1=0RD exact weighted **225**, A1=1RB **219**. The 196 and 178 open leaves reduce respectively to 195 and 177 FAR≤5 certificates plus the previously established A10RC sweep (F0 free). Both enclosing 28-module audits (including base and aggregate), empty residuals, and attaining witnesses compiled in Lean 4.36.0-rc2 with standard axioms only. [Rebuild](prepare_round35_36.py), [R35 exact](Raw40Round35Exact.lean), [R36 exact](Raw40Round36Exact.lean). Local proof generation used an equivalent modular generator and the exact A10RC namespace extracted from `Raw40MoreTwoSided.lean`; the rebuild uses the original full module. The fresh-state-alias nores proof now explicitly reduces `Move.next.val` before `omega`. No global roster decrement or new CI acceptance.
 
 
