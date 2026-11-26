@@ -14,7 +14,7 @@ static inline uint64_t digitWeight(uint64_t b){
 // where F is the terminal clock and q=F-k is the starting clock.
 static inline int fit(int F,int remaining){
  int k=1;
- while(k<remaining&&k<25&&(uint64_t(1)<<(k+2))<=uint64_t(F))++k;
+ while(k<remaining&&k<27&&(uint64_t(1)<<(k+2))<=uint64_t(F))++k;
  return k;
 }
 // Fixed-target exact reverse block. y is little-endian in chronological
