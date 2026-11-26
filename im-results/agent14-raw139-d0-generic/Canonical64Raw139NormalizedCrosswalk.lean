@@ -25,7 +25,7 @@ theorem extendsTable_sound {p q : PartialMachine}
     (h : extendsTable p q = true) : Extends p q :=
   of_decide_eq_true h
 
-theorem compatible_of_extends {p q : PartialMachine} {m : Machine}
+theorem compatible_of_extends {p q : PartialMachine} {m}
     (he : Extends p q) (hm : compatible q m) : compatible p m := by
   intro slot v hp
   have hq : q slot = some v := by
@@ -86,9 +86,13 @@ theorem activeRows_cover_from_normalized_and_complement (B : Nat)
   by_cases hCovered : normalizedTables.any (fun p => extendsTable p e.2) = true
   · obtain ⟨p, hp, hExt⟩ := List.any_eq_true.mp hCovered
     exact cover_of_extends (hNorm p hp) (extendsTable_sound hExt)
-  · have hUncovered : e ∈ activeUncoveredByNormalized := by
+  · have hAnyFalse : normalizedTables.any (fun p => extendsTable p e.2) = false := by
+      cases hAny : normalizedTables.any (fun p => extendsTable p e.2) with
+      | false => rfl
+      | true => exact (hCovered hAny).elim
+    have hUncovered : e ∈ activeUncoveredByNormalized := by
       apply List.mem_filter.mpr
-      exact ⟨he, by simp [activeUncoveredByNormalized, hCovered]⟩
+      exact ⟨he, by simp [activeUncoveredByNormalized, hAnyFalse]⟩
     exact hRest e hUncovered
 
 /-- Strongest possible case: every active 79-leaf is a refinement of one of
