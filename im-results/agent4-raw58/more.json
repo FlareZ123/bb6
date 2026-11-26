@@ -1295,6 +1295,7 @@
       "39": "BB6Coverage.Agent4LF139",
       "567": "BB6Coverage.Agent4LF1567",
       "1181": "BB6Coverage.Agent7LF11181",
+      "1188": "BB6Coverage.Agent7LF11188",
       "1336": "BB6Coverage.Agent4LF11336",
       "1375": "BB6Coverage.Agent4LF11375",
       "1416": "BB6Coverage.Agent4LF11416"
@@ -1305,7 +1306,8 @@
       "Raw58LF1567",
       "Raw58LF11336",
       "Raw58LF1Pair",
-      "Raw58LF11181"
+      "Raw58LF11181",
+      "Raw58LF11188"
     ],
     "auto_classify": true,
     "automata": {
