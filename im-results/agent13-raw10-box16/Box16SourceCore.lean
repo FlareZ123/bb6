@@ -26,7 +26,7 @@ theorem sourceDomainEq : domain = raw10Remainder[16]! := by
   change raw10Remainder[16]! s =
     (BB6.Agent49BoxEncoded.boxes[16]! (slotIndex s)).map decodeCode at h
   unfold domain
-  rw [← h, literalDomain_matches, index_source]
+  rw [h, literalDomain_matches, index_source]
   have hd : decode = decodeCode := funext decode_source
   rw [hd]
 
