@@ -4,8 +4,12 @@ on:
     inputs:
       mode:
         type: choice
-        options: [parent, carry, closed]
+        options: [parent, carry, closed, assemble-existing]
         default: closed
+      source_run_id:
+        type: string
+        default: ''
+        description: Existing Raw112 workflow run whose generated sources and shard artifacts should be assembled
 permissions:
   contents: read
   actions: read
@@ -398,3 +402,143 @@ jobs:
           path: |
             /tmp/a47-carry/
             /tmp/a47-carry.log
+
+  assemble_existing:
+    if: inputs.mode == 'assemble-existing'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate source run id
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN_ID" =~ ^[0-9]+$ ]] || { echo "source_run_id must be a numeric workflow run id" >&2; exit 1; }
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Reconstruct common generated source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          path: /tmp/a47-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - name: Merge existing source-identical shards and compile the parent theorem
+        run: |
+          set -euo pipefail
+          root=im-results/agent47-raw112-cut
+          union=/tmp/a47-raw112-union
+          work=/tmp/a47-raw112-assembled
+          python3 - <<'PY'
+          import json
+          source = "im-results/agent47-raw112-cut/shard-config.json"
+          config = json.load(open(source))
+          config["allow_mixed_revisions"] = True
+          json.dump(config, open("/tmp/a47-raw112-shard-config.json", "w"), indent=2)
+          PY
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a47-raw112-shards "$union" /tmp/a47-raw112-shard-config.json
+          module=Raw112ClosedCover
+          theorem=BB6.Agent47Raw112.parent_cover
+          required_axioms=(
+            BB6.Agent47Raw112.sound
+            BB6.Agent47Raw112.residual_count
+            BB6.Agent47Raw112.residuals_covered
+            BB6.Agent47Raw112.parent_cover
+          )
+          python tools/lean_compile_closure.py "$root/$module.lean" \
+            --workdir "$work" \
+            --jobs 2 \
+            --precompiled-dir "$union" \
+            --precompiled-manifest "$union/manifest.json" \
+            --manifest "$work/manifest.json" \
+            --label "raw112-closed-existing-artifacts" \
+            --theorem "$theorem" \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LC_------" \
+            --weighted-bound 100000 \
+            --artifact-name "raw112-closed-parent-cover-reused" \
+            --provenance-input "$root/generate.py" \
+            --provenance-input "$root/symbolic.py" \
+            --provenance-input "$root/enumerate_fast.cpp" \
+            --provenance-input "$root/far-bank.txt" \
+            --provenance-input "$root/far-extra.txt" \
+            --provenance-input "$root/late.txt" \
+            --provenance-input "$root/ngram.txt" \
+            --provenance-input "$root/inductive-generators.tar.xz" \
+            --provenance-input "$root/Raw112Data.lean" \
+            --provenance-input "$root/unresolved.txt" \
+            --provenance-input im-results/agent47-raw114-cut/seeded_far.cpp \
+            --provenance-input im-results/agent47-raw115-cut/counter.py \
+            --provenance-input im-results/agent47-raw114-cut/multi_sweep.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_sweeps.py \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            --provenance-input im-results/agent47-raw111-cut/ngram_sparse.cpp \
+            --provenance-input im-results/agent47-raw111-cut/emit_sparse.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent16-raw118/ResidualCover.lean \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent4-raw109/merge_shards.py \
+            --provenance-input im-results/agent4-raw109/audit_axioms.py \
+            --provenance-input "$root/shard-config.json" \
+            2>&1 | tee /tmp/a47-raw112-final-existing.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a47-raw112-final-existing.log "${required_axioms[@]}"
+          python3 - "$work/manifest.json" "$module" <<'PY'
+          import json, sys
+          manifest = json.load(open(sys.argv[1]))
+          root = sys.argv[2]
+          modules = {item["module"] for item in manifest["modules"]}
+          required_compiled = {root, "Raw112Data"}
+          if not required_compiled <= modules:
+              raise SystemExit(f"missing final modules: {sorted(required_compiled - modules)}")
+          expected_reused = modules - required_compiled
+          core = manifest.get("precompiled_core") or {}
+          reused = set(core.get("reused_modules", []))
+          if reused != expected_reused:
+              raise SystemExit(
+                  f"unexpected rebuilt dependencies: missing={sorted(expected_reused - reused)}, "
+                  f"extra={sorted(reused - expected_reused)}"
+              )
+          if core.get("proof_source_revision") != manifest["proof_source_revision"]:
+              raise SystemExit("precompiled shard revision differs from final source revision")
+          if core.get("lean_binary_sha256") != manifest["lean_binary"]["sha256"]:
+              raise SystemExit("precompiled shard compiler differs from final compiler")
+          print(f"Reused all {len(expected_reused)} source-identical parent dependencies")
+          PY
+          cp /tmp/a47-raw112-final-existing.log "$work/audit.log"
+          cp "$union/manifest.json" "$work/shard-union.json"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-closed-parent-cover-reused
+          path: |
+            /tmp/a47-raw112-shards/
+            /tmp/a47-raw112-union/
+            /tmp/a47-raw112-assembled/
+            /tmp/a47-raw112-final-existing.log
+            im-results/agent47-raw112-cut/Raw112Data.lean
+            im-results/agent47-raw112-cut/Raw112ClosedCover.lean
+            im-results/agent47-raw112-cut/Raw112Branch*.lean
+            im-results/agent47-raw112-cut/Raw112Kid*.lean
+            im-results/agent47-raw112-cut/Raw112Symbol*.lean
+            im-results/agent47-raw112-cut/Raw112Sparse*.lean
+            im-results/agent47-raw112-cut/unresolved.txt
+          if-no-files-found: warn
