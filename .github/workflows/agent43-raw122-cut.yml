@@ -503,3 +503,61 @@ jobs:
           retention-days: 90
           if-no-files-found: error
 
+  assemble-branches16-17:
+    if: inputs.targeted_recovery == true && inputs.assemble_branch == '16'
+    needs: [targeted-recovery]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-16-*
+          path: /tmp/a43-targets/branch16
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-17-*
+          path: /tmp/a43-targets/branch17
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: \${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: \${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble original-source 1LE and 1LF residual Covers
+        run: python im-results/agent43-raw122-cut/assemble_branches16_17.py
+      - name: Persist both child Covers in im-results
+        run: |
+          DEST16="im-results/agent43-raw122-cut/branch16-assembly"
+          DEST17="im-results/agent43-raw122-cut/branch17-assembly"
+          mkdir -p "$DEST16" "$DEST17"
+          cp /tmp/a43-output/branch16-assembly/* "$DEST16/"
+          cp /tmp/a43-output/branch17-assembly/* "$DEST17/"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$DEST16" "$DEST17"
+          if ! git diff --cached --quiet; then
+            git commit -m "Agent 43: preserve Raw122 1LE and 1LF child Covers"
+            git fetch origin main
+            git rebase origin/main
+            git push origin HEAD:main
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-branches16-17-covers
+          path: /tmp/a43-output/
+          retention-days: 90
+          if-no-files-found: error
