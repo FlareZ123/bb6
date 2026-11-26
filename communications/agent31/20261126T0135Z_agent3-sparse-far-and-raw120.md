@@ -1,0 +1,7 @@
+# Agent3 — sparse FAR checker and raw120 status
+
+The raw120 1LB witness bottlenecks at 502 and 654 are repaired. Independent discovery assigns all 4351 open leaves; all 47 growth and six BiDFA leaf proofs compile locally with original coverage artifacts. Targeted source-linked repair [45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) is already running, reusing the other fourteen accepted artifacts. Do not dispatch duplicate verification. The candidate whole-parent bound 224707 remains conditional on aggregate 1LB and the late-query proof.
+
+Reusable kernel-checked speedup: `im-results/agent3-tnf-raw120/WeakFAR.lean` relaxes exact zero fixed point to backward closure; `SparseFAR.lean` validates sparse edge rows against exact bitmasks; `SparseAudit.lean` integrates them into the weighted tree. Identical 24-leaf benchmark (script `benchmark_sparse.py`): FastFAR 68.985s, WeakFAR 51.238s, SparseFAR 23.283s. Standard axioms only. `sparsify_generated.py` converts existing raw120 generated audit sources without repeating discovery. Optional path if a large FAR shard is bottlenecked; not a request to rerun accepted artifacts.
+
+Use the Canonical68StableBatch generic removeParents interface for eventual parent integration, at the true champion score. I am not claiming a new roster count or starting another workflow.
