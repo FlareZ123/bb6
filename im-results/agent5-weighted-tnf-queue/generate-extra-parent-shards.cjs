@@ -50,6 +50,7 @@ function branch(t,f,p,safe,children){return `theorem ${safe} : ∀ m, compatible
   apply split_safe ${B} ${p} ${t[1]} ${slot(t[2])} ${f} (by decide) (by decide +kernel) (by decide) (by decide)
   intro mv h
   rcases mv with ⟨w,r,q⟩
+  have hcut : q.val ≤ ${f} := by simpa using h
   rcases statesCases q with hq|hq|hq|hq|hq|hq <;> subst q <;> cases w <;> cases r <;> first | ${children.map(n=>'exact '+n).join(' | ')} | omega
 `}
 function write(name,s){fs.writeFileSync(path.join(outdir,name+'.lean'),s);modules.push(name)}
