@@ -88,9 +88,11 @@ def e0LCD0RCParent : PartialMachine :=
 def e0LCD0RCC1ZeroLF : PartialMachine :=
   refine e0LCD0RCParent (2,true) (some ⟨false,false,5⟩)
 def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
+def e0RBTable : PartialMachine := leaf (2, ⟨false, true, 1⟩)
+def e0RDTable : PartialMachine := leaf (2, ⟨false, true, 3⟩)
 
 def candidateParentTables : List PartialMachine :=
-  [e0LCTable, e0LCD0RCParent, e0RETable]
+  [e0LCTable, e0LCD0RCParent, e0RETable, e0RBTable, e0RDTable]
 
 /-- The normalized E0=0RE table is definitionally the parent certified by
     Agent48's original-source parent Cover. -/
@@ -127,6 +129,26 @@ def normalizedTablesWithoutE0RE : List PartialMachine :=
 
 theorem normalizedTablesWithoutE0RE_count :
     normalizedTablesWithoutE0RE.length = 65 := by
+  decide
+
+/-- The E0=0RB and E0=0RD parent candidates are distinct normalized residuals.
+    Their source Covers are audited separately; these finite checks alone do
+    not discharge either Cover. -/
+theorem e0RB_occurs_once_in_normalizedTables :
+    (normalizedTables.filter (fun p => sameTable p e0RBTable)).length = 1 := by
+  decide
+
+theorem e0RD_occurs_once_in_normalizedTables :
+    (normalizedTables.filter (fun p => sameTable p e0RDTable)).length = 1 := by
+  decide
+
+def normalizedTablesWithoutE0RE0RB0RD : List PartialMachine :=
+  normalizedTables.filter (fun p =>
+    !(sameTable p e0RETable) && !(sameTable p e0RBTable) &&
+    !(sameTable p e0RDTable))
+
+theorem normalizedTablesWithoutE0RE0RB0RD_count :
+    normalizedTablesWithoutE0RE0RB0RD.length = 63 := by
   decide
 
 /-- Supply the accepted E0=0RE parent Cover for its unique normalized row,
@@ -294,7 +316,15 @@ theorem exact_at_target_with_normalized_if_crosswalk
 #eval (activeRows.filter (fun e => extendsTable e0LCD0RCC1ZeroLF e.2)).map (fun e => e.1)
 #eval (activeRows.filter (fun e => sameTable e.2 e0RETable)).length
 #eval (activeRows.filter (fun e => extendsTable e0RETable e.2)).map (fun e => e.1)
+#eval (normalizedTables.filter (fun p => sameTable p e0RBTable)).length
+#eval (activeRows.filter (fun e => sameTable e.2 e0RBTable)).length
+#eval (activeRows.filter (fun e => extendsTable e0RBTable e.2)).map (fun e => e.1)
+#eval (normalizedTables.filter (fun p => sameTable p e0RDTable)).length
+#eval (activeRows.filter (fun e => sameTable e.2 e0RDTable)).length
+#eval (activeRows.filter (fun e => extendsTable e0RDTable e.2)).map (fun e => e.1)
+#eval normalizedTablesWithoutE0RE0RB0RD.length
 #eval (activeRowsNotCoveredByParents candidateParentTables).length
+#eval (activeRowsNotCoveredByParents candidateParentTables).map (fun e => e.1)
 
 #print axioms e0RETable_eq_certifiedParent
 #print axioms e0RE_cover_at_852
