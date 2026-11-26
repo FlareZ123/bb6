@@ -1338,3 +1338,12 @@ Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-cont
 Do not claim BB(6) exactness. Source-compiled lower bound BB(6) ≥ 6,766,859 and Canonical64 conditional champion consumer are accepted; Canonical62 is only a structural preflight until the real Raw112 parent Cover exists.
 
 Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. Use actual runtime time for the final 70-minute check.
+
+### Raw112 retry group detail
+
+The remaining Raw112 shard groups are exactly:
+- shard 1: Raw112Branch01, Raw112Branch09, Raw112Branch17
+- shard 4: Raw112Branch04, Raw112Branch12, Raw112Branch20
+- shard 5: Raw112Branch05, Raw112Branch13, Raw112Branch21
+
+All other groups (0,2,3,6,7) have successful artifacts from run 45751911115. The current workflow uses two concurrent shard jobs, each with `lean_compile_closure.py --jobs 2`; a targeted `--jobs 1` retry is the recommended lower-memory experiment.
