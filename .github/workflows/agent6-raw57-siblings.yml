@@ -40,6 +40,10 @@ jobs:
             done
             DIR=im-results/agent1-raw57
             ROOT=Raw57ParentConsumerWithLALE
+          elif [[ "$CHILD" == m211 ]]; then
+            DIR=im-results/agent1-raw57
+            python "$DIR/m211_emit_lean.py"
+            ROOT=Raw57LB1M211
           elif [[ "$CHILD" == bridge ]]; then
             DIR=im-results/agent1-raw57
             ROOT=Raw57ParentBridge
