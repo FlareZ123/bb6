@@ -653,6 +653,57 @@ jobs:
           python "$S/build_box7.py"
           python tools/lean_compile_closure.py --workdir /tmp/a49-box5-proof --jobs 2 --source-root "$W" --source-root "$Q" im-results/agent49-raw10-refined-cut/Raw10RefinedBox7.lean | tee /tmp/a49-box5-proof.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box5-proof.log; then exit 1; fi
+          for thm in \
+            BB6.Agent49Box5.sourceBound \
+            BB6.Agent49Raw10RefinedBox7.sourceBound7 \
+            BB6.Agent49Raw10RefinedBox7.open31 \
+            BB6.Agent49Raw10RefinedBox7.open29 \
+            BB6.Agent49Raw10RefinedBox7.parentCover31 \
+            BB6.Agent49Raw10RefinedBox7.parentCover29; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a49-box5-proof.log "$thm"
+          done
+          python tools/lean_compile_closure.py --manifest-only \
+            --workdir /tmp/a49-box5-proof \
+            --artifact-dir /tmp/a49-box5-proof \
+            --manifest /tmp/a49-box5-proof/manifest.json \
+            --source-root "$W" --source-root "$Q" \
+            --label "Raw10 box5 and box7 source-checked Covers with conditional 31-box parent adapter" \
+            --theorem BB6.Agent49Box5.sourceBound \
+            --weighted-bound 160 \
+            --artifact-name raw10-box5-box7-source-closure \
+            --provenance-input "$D/source.tar.xz" \
+            --provenance-input "$D/proof-source.tar.xz" \
+            --provenance-input "$D/fix_core.py" \
+            --provenance-input im-results/agent49-raw10-box18-24/source.tar.xz \
+            --provenance-input im-results/agent49-domain-blockfar/domain-source.tar.xz \
+            --provenance-input im-results/agent49-domain-blockfar/build_box7.py \
+            --provenance-input im-results/agent13-block-far/generate.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input lean-toolchain
+      - name: Export source-accepted Raw10 box5 and box7 proof closure
+        if: inputs.target == 'weighted-tnf-raw10-box5'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw10-box5-box7-source-closure
+          path: |
+            /tmp/a49-box5-proof
+            im-results/agent49-raw10-box5/README.md
+            im-results/agent49-raw10-box5/source.tar.xz
+            im-results/agent49-raw10-box5/proof-source.tar.xz
+            im-results/agent49-raw10-box5/fix_core.py
+            im-results/agent49-raw10-box18-24/README.md
+            im-results/agent49-raw10-box18-24/source.tar.xz
+            im-results/agent49-domain-blockfar/README.md
+            im-results/agent49-domain-blockfar/domain-source.tar.xz
+            im-results/agent49-domain-blockfar/build_box7.py
+            im-results/agent13-block-far/generate.py
+            im-results/agent13-coverage/unpack.py
+            tools/lean_compile_closure.py
+            lean-toolchain
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
       - name: Check exact raw10 rectangle 6 sparse-tree coverage
         if: inputs.target == 'weighted-tnf-raw10-box6'
         run: |
