@@ -15,11 +15,7 @@ on:
         type: boolean
         default: false
       raw11_q0_extra_covers:
-        description: Consume all 33 completed Raw11-extra parent Covers after root39 and root52
-        type: boolean
-        default: false
-      raw11_q0_bank_parents:
-        description: Consume q0 parent Covers 33, 49 and 51 after root39, root52 and the 33 extras
+        description: Compile all 33 Raw11-extra Covers plus q0 parents 33, 49 and 51 after root39 and root52
         type: boolean
         default: false
 permissions:
@@ -27,7 +23,7 @@ permissions:
   actions: read
 jobs:
   holdouts:
-    if: ${{ !inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
+    if: ${{ !inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -55,7 +51,7 @@ jobs:
           if-no-files-found: error
 
   raw111-preflight:
-    if: ${{ inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
+    if: ${{ inputs.raw111 && !inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -73,7 +69,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw111.log; then exit 1; fi
 
   raw11-q0-route:
-    if: ${{ inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
+    if: ${{ inputs.raw11_q0_route && !inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -116,7 +112,7 @@ jobs:
           retention-days: 30
 
   raw11-q0-root52:
-    if: ${{ inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
+    if: ${{ inputs.raw11_q0_root52 && !inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -197,9 +193,9 @@ jobs:
           retention-days: 30
 
   raw11-q0-extra-covers:
-    if: ${{ inputs.raw11_q0_extra_covers && !inputs.raw11_q0_bank_parents }}
+    if: ${{ inputs.raw11_q0_extra_covers }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -214,11 +210,11 @@ jobs:
           run-id: 45873233270
           name: raw11-root52-consumption
           path: /tmp/a47-root52-precompiled
-      - name: Reconstruct coverage contract sources for closure resolution
+      - name: Reconstruct coverage contract source
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-      - name: Compile all 33 completed Raw11-extra Covers and the exact residual consumer
+      - name: Compile 33 extra Covers and q0 parents 33, 49 and 51
         run: |
           set -euo pipefail
           provenance=(
@@ -229,84 +225,17 @@ jobs:
             --provenance-input im-results/agent47-raw11-adapter/Raw11ExtraSmall.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra91.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Extra123.lean
-            --provenance-input im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Root52Consume.lean
-            --provenance-input im-results/agent5-weighted-tnf-queue/Q0RosterConsume.lean
-            --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json
-            --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
-          )
-          python tools/lean_compile_closure.py \
-            im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean \
-            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \
-            --workdir /tmp/a47-raw11-root52-extras \
-            --manifest /tmp/a47-raw11-root52-extras/manifest.json \
-            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \
-            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
-            --jobs 2 \
-            --lean lean \
-            --label raw11-root52-plus-33-extras \
-            --theorem BB6.Agent47Raw11Root52ExtrasConsume.cover_from_remaining \
-            "${provenance[@]}" \
-            2>&1 | tee /tmp/a47-raw11-root52-extras.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52-extras.log; then
-            echo "::error::forbidden axiom/proof mechanism in Raw11 extra consumer"
-            exit 1
-          fi
-          grep -q "BB6.Agent47Raw11Root52ExtrasConsume.cover_from_remaining" /tmp/a47-raw11-root52-extras.log
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: raw11-root52-extras-consumption
-          path: |
-            /tmp/a47-raw11-root52-extras/
-            /tmp/a47-raw11-root52-extras.log
-          if-no-files-found: warn
-          retention-days: 30
-
-  raw11-q0-bank-parents:
-    if: ${{ inputs.raw11_q0_bank_parents }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 35
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: 45873233270
-          name: raw11-root52-consumption
-          path: /tmp/a47-root52-precompiled
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: 45874613317
-          name: raw11-root52-extras-consumption
-          path: /tmp/a47-root52-extras-precompiled
-      - name: Reconstruct coverage contract source
-        run: |
-          set -euo pipefail
-          python im-results/agent13-coverage/unpack.py
-      - name: Compile q0 parents 33, 49 and 51 against the 256-entry residual
-        run: |
-          set -euo pipefail
-          provenance=(
-            --provenance-input tools/lean_compile_closure.py
-            --provenance-input im-results/agent13-coverage/unpack.py
-            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64
-            --provenance-input im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean
             --provenance-input im-results/agent47-raw11-adapter/Raw11Root52ExtrasConsume.lean
+            --provenance-input im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean
             --provenance-input im-results/agent47-raw11-adapter/Root33Lean.lean
             --provenance-input im-results/agent47-raw11-adapter/Root49Lean.lean
             --provenance-input im-results/agent47-raw11-adapter/Root49LeanBase.lean
             --provenance-input im-results/agent47-raw11-adapter/Root51Lean.lean
             --provenance-input im-results/agent47-raw11-adapter/Root51LeanBase.lean
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0RosterConsume.lean
             --provenance-input /tmp/a47-root52-precompiled/q0-root52-source.sha256
-            --provenance-input /tmp/a47-root52-extras-precompiled/a47-raw11-root52-extras/manifest.json
+            --provenance-input /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json
           )
           for part in 0 1 2 3 4 5 6; do
             provenance+=(--provenance-input "im-results/agent47-raw11-adapter/Root49LeanPart${part}.lean")
@@ -317,27 +246,29 @@ jobs:
           python tools/lean_compile_closure.py \\
             im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean \\
             --source-root /tmp/a47-root52-precompiled/q0-root52-lean \\
-            --workdir /tmp/a47-raw11-root52-q0parents \\
-            --manifest /tmp/a47-raw11-root52-q0parents/manifest.json \\
-            --precompiled-manifest /tmp/a47-root52-extras-precompiled/a47-raw11-root52-extras/manifest.json \\
-            --precompiled-dir /tmp/a47-root52-extras-precompiled/a47-raw11-root52-extras \\
+            --workdir /tmp/a47-raw11-root52-known \\
+            --manifest /tmp/a47-raw11-root52-known/manifest.json \\
+            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \\
+            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \\
             --jobs 2 \\
             --lean lean \\
             --label raw11-root52-plus-33-extras-plus-q0-parents \\
             --theorem BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining \\
             "${provenance[@]}" \\
-            2>&1 | tee /tmp/a47-raw11-root52-q0parents.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52-q0parents.log; then
-            echo "::error::forbidden axiom/proof mechanism in Raw11 q0-parent consumer"
+            2>&1 | tee /tmp/a47-raw11-root52-known.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52-known.log; then
+            echo "::error::forbidden axiom/proof mechanism in Raw11 combined consumer"
             exit 1
           fi
-          grep -q "BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining" /tmp/a47-raw11-root52-q0parents.log
+          grep -q "BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining" /tmp/a47-raw11-root52-known.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw11-root52-q0-parent-consumption
+          name: raw11-root52-known-consumption
           path: |
-            /tmp/a47-raw11-root52-q0parents/
-            /tmp/a47-raw11-root52-q0parents.log
+            /tmp/a47-raw11-root52-known/
+            /tmp/a47-raw11-root52-known.log
+            /tmp/a47-root52-precompiled/q0-root52-lean/
+            /tmp/a47-root52-precompiled/q0-root52-source.sha256
           if-no-files-found: warn
           retention-days: 30
