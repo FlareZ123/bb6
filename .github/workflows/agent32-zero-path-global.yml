@@ -65,7 +65,7 @@ on:
         type: boolean
         default: false
       raw59_child:
-        description: Raw59 proof target; UpgradeRemaining reuses accepted 0LE/1LF and 1LE/ClosedA-F shards
+        description: Raw59 proof target; Upgrade0LA reuses checked 0LB/0LF/1LB and prior 0LE/1LF/1LE/Closed shards
         type: choice
         options: [UpgradeAll, UpgradeRemaining, Upgrade0LA, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
@@ -692,7 +692,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/raw59-combined.log; then exit 1; fi
 
   raw59-parent-composition:
-    if: ${{ inputs.verify_raw59 && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining') }}
+    if: ${{ inputs.verify_raw59 && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA') }}
     needs: raw59-refinement
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -708,28 +708,49 @@ jobs:
           pattern: raw59-checked-*
           path: /tmp/raw59-shards
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45742419127
+          name: raw59-checked-Upgrade0LB
+          path: /tmp/raw59-shards/raw59-checked-Upgrade0LB
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45742419127
+          name: raw59-checked-Upgrade0LF
+          path: /tmp/raw59-shards/raw59-checked-Upgrade0LF
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' }}
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45742419127
+          name: raw59-checked-Upgrade1LB
+          path: /tmp/raw59-shards/raw59-checked-Upgrade1LB
+      - uses: actions/download-artifact@v4
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45675872170
           name: raw59-checked-Upgrade0LE
           path: /tmp/raw59-shards/raw59-checked-Upgrade0LE
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45675872170
           name: raw59-checked-Upgrade1LF
           path: /tmp/raw59-shards/raw59-checked-Upgrade1LF
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45727352966
           name: raw59-checked-Upgrade1LE
           path: /tmp/raw59-shards/raw59-checked-Upgrade1LE
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45727352966
