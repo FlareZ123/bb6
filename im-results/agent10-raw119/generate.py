@@ -99,6 +99,16 @@ def main():
     index={s:i for i,s in enumerate(opens)}
     stats=Counter()
     block_done=set()
+    if selected=="assemble":
+        # The shard generator specializes shared block modules, some of which
+        # are tracked at an older specialization. Reproduce those exact inputs
+        # before the strict merge; the merger still checks every source hash.
+        for key, (w,c,m,r) in SPEC["blocks"].items():
+            i=int(key)
+            mod=f"Raw119Block{i}"
+            build_lb.emit_block(mod,f"BB6.Agent10{mod}",opens[i],
+                                dict(width=w,cap=c,mod=m,runs=r),active=w>=5)
+            block_done.add(i)
     def render(node,imports,produce):
         tag,*v=node;stats[tag]+=1
         if tag=="cycle":
