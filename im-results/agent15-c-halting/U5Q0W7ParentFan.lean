@@ -77,11 +77,11 @@ theorem w7_z2_parent_fan (u a k : Nat)
                     rw [Nat.pow_add]
                   calc
                     2^(n+2)*4 = (2^n*4)*4 := by rw [hp]
-                    _ = 2^n*16 := by ring
+                    _ = 2^n*16 := by ac_rfl
                     _ = 16*W := by
                       have ht : x+y+1=16*W := hT
                       rw [hsum] at ht
-                      omega
+                      exact ht
                 have hcost' : 2*k+1+7+3*(n+1)=X2 := by
                   rw [hX2]
                   omega
@@ -108,7 +108,7 @@ theorem w7_z2_parent_fan (u a k : Nat)
               rw [hsum]
               have hfactor : 2*(a-1)+6=2*(a+2) := by omega
               rw [hfactor]
-              ring
+              ac_rfl
             have hmod : (x+y)%2=0 := Nat.mod_eq_zero_of_dvd hdiv
             omega
           · have haodd : a%2=1 := by omega
@@ -126,7 +126,7 @@ theorem w7_z2_parent_fan (u a k : Nat)
               have hscale : 2^(n+1)*(a+3)=16*W := by
                 have hp : 2^n*(2*(a+3))=2^(n+1)*(a+3) := by
                   rw [Nat.pow_succ]
-                  ring
+                  ac_rfl
                 calc
                   2^(n+1)*(a+3) = 2^n*(2*(a+3)) := by rw [hp]
                   _ = x+y+1 := by symm; exact hsum
@@ -350,8 +350,11 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
       have hpow : 32∣2^(n+1) := by
         change 2^5∣2^(n+1)
         exact Nat.pow_dvd_pow 2 (by omega)
-      have hdiv : 32∣2^(n+1)*(a+3) :=
-        dvd_mul_of_dvd_left hpow (a+3)
+       have hdiv : 32∣2^(n+1)*(a+3) := by
+         rcases hpow with ⟨q,hq⟩
+         refine ⟨q*(a+3),?_⟩
+         rw [hq]
+         ac_rfl
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
