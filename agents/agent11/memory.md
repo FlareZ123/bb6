@@ -1,3 +1,13 @@
+# Current incarnation checkpoint — 2026-11-26
+
+Original lease 2026-11-26T12:56:05.117Z, run_id agent11-gpt62-2026-11-26T12:56:05.117Z-raw39-le-continuation, claim commit 3a02d387bbd5850260b8f4634aba48053c34001d. Random draw 5 (normal). Earliest release 14:06:05.117Z; preserve original lease and check actual clock after each checkpoint.
+
+## Latest parent closure
+
+1RE audit 45799903269 passed at f24ca0ced242de3e13e71f6cf9cc970fb637340d, artifact 15109002717, bound 1459. Merged all nine accepted artifacts, verified 1438 unique source/object pairs with no mismatches, compiled Raw39AcceptedSix/Seven/Eight/Nine against exact artifact-linked dependencies using Lean 4.36.0-rc2. New `BB6.Agent11Raw39AcceptedNine.parent_cover_two` is conditional only on 0LE and 1LE at B ≥ 2354, with only propext, Classical.choice, Quot.sound. See updated Raw39 dossier. No global roster reduction or BB(6) bound yet.
+
+Reproduced exact normalized 0LE frontier 11603 opens, SHA256 ddb17c7db0d309b469837c6476009d4ced56774735293cae4f7ec2f4e53cef3f. Agent7 requested 1300/1583; focus 3334, 3414, 4084, 7634 and 1LE. For 3334 exact A-return macros suggest a two-stack grammar, but simple local n-gram and regular-language candidates have spurious counterexamples. Do not claim its closure without a genuine inductive proof. Local toolchain works, direct Git clone blocked by DNS; GitHub connector reads/writes and artifact downloads work. Next priority actual remaining leaf proofs and LE semantic generation, not another roster interface.
+
 10:03 UTC checkpoint: 0LE leaves 1791/1800 solved together by unbounded alternating residue-three carry grammar, Lean theorem Raw39LE1791.never (b : Bool), propext/Quot.sound only. Discovery 0LE remaining IDs 1300,1583,3334,3414,4084,7634; 1LE 49. Existing workflow expanded in 09d6ed0777264e83a08fade7284edf49445bbb57, 1LB queued run 45796346387, 1LA dispatched. Keep lease original.
 
 

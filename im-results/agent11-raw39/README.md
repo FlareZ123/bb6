@@ -1,27 +1,26 @@
-# Raw39: eight accepted child bounds, three remaining canonical obligations
+# Raw39: nine accepted child bounds, two remaining canonical obligations
 
-**Status:** locally kernel-checked, artifact-linked conditional parent Cover; not a complete Raw39 Cover or a BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
+**Status:** locally kernel-checked, artifact-linked conditional parent Cover; not a complete Raw39 Cover or BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
 
-`Raw39AcceptedEight.lean` proves `BB6.Agent11Raw39AcceptedEight.parent_cover_three`: at any B ≥ 2354, bounds on 0LE, 1LE and 1RE imply `Cover (WeightedBound B) p39`. The intermediate joins are Raw39AcceptedSix/Seven. The newest parent join compiled locally against the exact merged dependency objects with only propext, Classical.choice and Quot.sound.
+`Raw39AcceptedNine.lean` proves `BB6.Agent11Raw39AcceptedNine.parent_cover_two`: at every B ≥ 2354, bounds on exactly 0LE and 1LE imply `Cover (WeightedBound B) p39`. It composes the accepted 1RE theorem (weighted bound 1459) with the previous eight-child join, including the original fresh-state symmetry and literal cycle cases. No global roster change has yet been earned.
 
-| A1 move | Weighted bound | Source run | Artifact |
-| --- | ---: | ---: | ---: |
-| 1RB | 175 | 45639153728 | 15036330602 |
-| 0RB | 1271 | 45644271619 | 15039311430 |
-| 1RC | 1882 | 45644280485 | 15039350734 |
-| 0RE | 944 | 45680199670 | 15054707946 |
-| 0RC | 2354 | 45753648611 | 15087393537 |
-| 0LA | 1003 | 45766252232 | 15091944603 |
-| 1LB | 266 | 45796346387 | 15105668345 |
-| 1LA | 349 | 45796691482 | 15105938864 |
+| A1 move | Weighted bound | Source run | Artifact | Proof source revision |
+| --- | ---: | ---: | ---: | --- |
+| 1RB | 175 | 45639153728 | 15036330602 | 439ff1526b1d9b19b3e5a02f8c1c764eadcbdbda |
+| 0RB | 1271 | 45644271619 | 15039311430 | c39dbcb430765b7d8f630dc7fd7633e613bee8e6 |
+| 1RC | 1882 | 45644280485 | 15039350734 | c39dbcb430765b7d8f630dc7fd7633e613bee8e6 |
+| 0RE | 944 | 45680199670 | 15054707946 | 9e3bfe908a91b42031d33e46c42b03c71b1a84b1 |
+| 0RC | 2354 | 45753648611 | 15087393537 | aa832e9f7734b28505baa8527de0f19979f009ca |
+| 0LA | 1003 | 45766252232 | 15091944603 | a82f9d0ca7b85b6dfb2b32e09d6d36c1e8133680 |
+| 1LB | 266 | 45796346387 | 15105668345 | 71a9e95c80f388f8889b183cc9474ba3833a10a4 |
+| 1LA | 349 | 45796691482 | 15105938864 | 09d6ed0777264e83a08fade7284edf49445bbb57 |
+| 1RE | 1459 | 45799903269 | 15109002717 | f24ca0ced242de3e13e71f6cf9cc970fb637340d |
 
-The first six exact archives were linked locally after checking the per-module source/object SHA256 hashes in each embedded manifest and equality of all shared module pairs. Their 88+100+102+97+94+232 manifest entries yield 456 distinct source/object pairs. The first four source revisions are 439ff1526b1d9b19b3e5a02f8c1c764eadcbdbda, c39dbcb430765b7d8f630dc7fd7633e613bee8e6 (twice), and 9e3bfe908a91b42031d33e46c42b03c71b1a84b1; the last two are aa832e9f7734b28505baa8527de0f19979f009ca and a82f9d0ca7b85b6dfb2b32e09d6d36c1e8133680. The last two archive digests are 2c085341ac516ae6b8e40796c96e77d77aa974fc97a79ffef508f5f57925d7d1 and d0a7a4bc52c65f54fe386efc077ac56635becbf0af02d69dd7c57dc97da64942. This is a specifically audited legacy object link, not a claim of identical whole source revisions.
+All nine archives were merged locally, verifying the embedded manifest SHA256 for each source and object and byte identity of all duplicated modules. 88+100+102+97+94+232+307+308+539 manifest entries yield 1438 distinct source/object pairs, with zero mismatches. This is a specifically audited legacy object link, not a claim of identical whole source revisions.
 
-Lean 4.36.0-rc2 compiled the exact new source in 9 seconds (peak RSS 2029144 KiB). `remaining_count` depends only on propext; `parent_bound_five` and `parent_cover_five` depend only on propext, Classical.choice and Quot.sound. Source SHA256: 9818e7a13b85f1dd5ce0890807e0bd329fafce6c5135180fa507db98b6e77495. Object SHA256: 77bc535e072a6c5dab4194e10c166276336976fae4bd3c74969585abf691bd42.
+Lean 4.36.0-rc2 compiled Raw39AcceptedSix, Seven, Eight and Nine in order against these exact dependencies. Nine's `remaining_count` uses only propext; `parent_bound_two` and `parent_cover_two` depend only on propext, Classical.choice and Quot.sound. Nine source SHA256: eb048a3c0aec74326b4e073c031335b1772d7cfc5f3e107bb702493ce871e4c6. Reproduce by downloading the nine exact artifacts, checking manifest hashes and common module equality, setting LEAN_PATH to the merged directory and compiling the four named modules in order using the same Lean release. This is distinct from a fresh source rebuild.
 
-Reproduce by downloading those exact artifacts, checking manifests and shared bytes, and placing the source in the merged directory. Set LEAN_PATH to the directory and compile with the same Lean release. A full fresh source rebuild is distinct from this artifact-linked check.
-
-The older `Raw39StableCut.lean`, `Raw39StableIntegrated.lean` and `Raw39SymmetryCut.lean` prove eleven literal residuals, the E/F transport and seven canonical residuals; the new theorem supersedes their conditional parent interface without replaying large audits. The older joint audit 45719963229 was cancelled without an artifact. The 1LB candidate partition is described in [Raw39LBClosure.md](Raw39LBClosure.md). The [0LA candidate dossier](Raw39LAFrontier.md) now has the accepted source run above. 1LB and 1LA source audits succeeded and were linked locally; 1RE source run 45799903269 is queued. The remaining difficult discovery branches are 0LE and 1LE. Do not claim a global roster reduction before all three conditions are discharged.
+The previous StableCut/StableIntegrated/SymmetryCut interfaces and Six/Seven/Eight are historical conditional compositions. The accepted 1RE partition is documented in [Raw39RE1Frontier.md](Raw39RE1Frontier.md). The remaining difficult discovery branches are 0LE and 1LE; neither is yet a complete child proof.
 
 ## LE discovery frontiers
 
