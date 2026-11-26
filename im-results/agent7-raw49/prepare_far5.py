@@ -171,6 +171,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent7Raw49Far5Cut
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent19CanonicalPartial
+open BB6.Agent47PartialAudit BB6.Agent48PrefixAudit
 open BB6.Agent47CanonicalFrontier BB6.Agent7Raw49Cut
 
 def tree : PartialAudit := {tree_expr}
