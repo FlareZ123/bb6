@@ -78,8 +78,9 @@ def verify_raw113(work, version, compiler_sha):
     dirs, item, run_info, metadata = download_named(
         RAW113["run_id"], RAW113["artifact_name"], work, RAW113
     )
-    manifest_path = work / "metadata" / str(item["id"]) / "manifest.json"
-    assert manifest_path.is_file(), manifest_path
+    manifest_paths = list((work / "metadata" / str(item["id"])).rglob("manifest.json"))
+    assert len(manifest_paths) == 1, [str(path) for path in manifest_paths]
+    manifest_path = manifest_paths[0]
     manifest = json.loads(manifest_path.read_text())
     claim = manifest["claim"]
     assert claim["theorem"] == RAW113["theorem"], claim
@@ -119,11 +120,13 @@ def main():
     five_dirs, five_item, five_run, five_metadata = download_named(
         args.canonical59_run_id, "canonical59-five-parent-integrated", work
     )
-    five_report_path = (
-        work / "metadata" / str(five_item["id"])
-        / "canonical59-five-parent-integration.json"
+    five_report_paths = list(
+        (work / "metadata" / str(five_item["id"])).rglob(
+            "canonical59-five-parent-integration.json"
+        )
     )
-    assert five_report_path.is_file(), five_report_path
+    assert len(five_report_paths) == 1, [str(path) for path in five_report_paths]
+    five_report_path = five_report_paths[0]
     five_report = json.loads(five_report_path.read_text())
     assert five_run["head_sha"] == five_report["source_revision"], (
         five_run["head_sha"], five_report["source_revision"]
