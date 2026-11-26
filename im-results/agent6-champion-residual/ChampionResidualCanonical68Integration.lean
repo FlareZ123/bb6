@@ -1,4 +1,4 @@
-import ChampionResidualSourceSiblingIntegration
+import ChampionResidualSourceSiblingIntegrationExtended
 import Canonical68E1ParentGraft
 import ChampionScoreLowerBound
 
@@ -10,7 +10,7 @@ namespace BB6.Agent6Canonical68ChampionIntegration
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent6ChampionResidual
-open BB6.Agent6ChampionRaw139SiblingIntegration
+open BB6.Agent6ChampionRaw139SiblingExtended
 open BB6.Agent6Canonical68E1ParentGraft
 open BB6.Agent31Canonical74Raw109Raw123
 
@@ -36,23 +36,23 @@ theorem canonical68_other_table_count :
     (roster68.filter (fun e => !sameTable e.2 championResidual)).length = 67 := by
   decide
 
-/-- Replace the one retained raw139 parent by its exact five-sibling
+/-- Replace the one retained raw139 parent by its exact twenty-six-sibling
     refinement. The 67 other Canonical68 representatives are unchanged. -/
 noncomputable def refinedCanonical68Roster :
     List (List Move × PartialMachine) :=
   (roster68.filter (fun e => !sameTable e.2 championResidual)) ++
-  (remainingRaw139AfterFive.map
+  (remainingRaw139AfterTwentySix.map
     (fun e => (championResidualAddress ++ e.1, e.2)))
 
 theorem refinedCanonical68Roster_count :
-    refinedCanonical68Roster.length = 185 := by
+    refinedCanonical68Roster.length = 164 := by
   simp [refinedCanonical68Roster, canonical68_other_table_count,
-    remainingRaw139AfterFive_count]
+    remainingRaw139AfterTwentySix_count]
 
 /-- Source-authentic conditional exactness at the attained champion score.
-    The eight E1 parent Covers, 67 other Canonical68 Covers, and 118 retained
+    The eight E1 parent Covers, 67 other Canonical68 Covers, and 97 retained
     raw139 descendant Covers are the only remaining Cover premises. -/
-theorem exact_from_canonical68_and_raw139_after_five
+theorem exact_from_canonical68_and_raw139_after_twentySix
     (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
     (h123 : Cover (WeightedBound 10000) p123)
     (h60 : Cover (WeightedBound 1175) p60)
@@ -64,7 +64,7 @@ theorem exact_from_canonical68_and_raw139_after_five
     (hOther : ∀ e ∈ roster68,
       e.2 ≠ championResidual →
         Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
-    (hLeaves : ∀ e ∈ remainingRaw139AfterFive,
+    (hLeaves : ∀ e ∈ remainingRaw139AfterTwentySix,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
     BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
   BB6.Agent6Canonical68E1ParentGraft.exact_at_target
@@ -75,7 +75,7 @@ theorem exact_from_canonical68_and_raw139_after_five
       by_cases hSame : sameTable e.2 championResidual = true
       · have heq : e.2 = championResidual := sameTable_sound hSame
         rw [heq]
-        exact cover_championResidual_after_five hLeaves
+        exact cover_championResidual_after_twentySix hLeaves
       · have hne : e.2 ≠ championResidual := by
           intro hEq
           have hself : sameTable championResidual championResidual = true := by decide
@@ -89,6 +89,6 @@ theorem exact_from_canonical68_and_raw139_after_five
 #print axioms canonical68_other_address_count
 #print axioms canonical68_other_table_count
 #print axioms refinedCanonical68Roster_count
-#print axioms exact_from_canonical68_and_raw139_after_five
+#print axioms exact_from_canonical68_and_raw139_after_twentySix
 
 end BB6.Agent6Canonical68ChampionIntegration

@@ -431,7 +431,7 @@ jobs:
           set -euo pipefail
           work=/tmp/a6-champion-residual/source-sibling-build
           python3 tools/lean_compile_closure.py \
-            im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegration.lean \
+            im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegrationExtended.lean \
             im-results/agent6-champion-residual/ChampionResidualCanonical68Integration.lean \
             --source-root "$PWD/.tmp/a14-d0-ZeroLF/imports" \
             --source-root "$PWD/.tmp/a14-d0-OneLB/imports" \
@@ -440,7 +440,7 @@ jobs:
             --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work" \
             --manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
-            --label agent6-canonical68-raw139-five-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
+            --label agent6-canonical68-raw139-26-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-source-sibling.log; then
             echo "Forbidden proof placeholder or native_decide in raw139 source sibling graft" >&2
             exit 1
@@ -482,6 +482,23 @@ jobs:
               "BB6.Agent38ChampionThreshold.champion_score_ge_6766859",
               "BB6.Agent6Canonical68E1ParentGraft.sound68",
               "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroRB_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroLA_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingExtended.oneLB_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingExtended.oneRD_is_depth5_sibling",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroRB_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.zeroLA_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.oneLB_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.oneRD_parent_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_zeroRB",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_zeroLA",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_oneLB",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_oneRD",
+              "BB6.Agent6ChampionRaw139SiblingExtended.remainingRaw139AfterTwentySix_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.removedNineSibling_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.additionalSourceAcceptedSiblingCover",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_remainingF1ZeroRC",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_championResidual_after_twentySix",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_mem_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_by_table_canonical68",
@@ -506,10 +523,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.raw121_graft_run_id == '' }}
         with:
-          name: agent6-canonical68-raw139-five-sibling-consumer-${{ inputs.source_sha || github.sha }}
+          name: agent6-canonical68-raw139-26-sibling-consumer-${{ inputs.source_sha || github.sha }}
           include-hidden-files: true
           path: |
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
+            /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegrationExtended.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
             /tmp/a6-source-sibling.log
