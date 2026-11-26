@@ -76,7 +76,10 @@ def main():
     assert (linked / "Canonical57Raw112Graft.olean").is_file(), (
         "the accepted Canonical57 linked closure is not present"
     )
-    parent_work = work / "raw124-parent-artifact"
+    # Keep the downloaded 1 GB parent artifact outside the Canonical57
+    # artifact staging directory; only the exact reachable import closure is
+    # copied into linked and included in the successor artifact.
+    parent_work = work.parent / "raw124-parent-artifact"
     parent_work.mkdir(exist_ok=True)
     item, parent_dirs, manifest_path, parent_manifest = verify_raw124_parent(
         args.raw124_run_id, parent_work
