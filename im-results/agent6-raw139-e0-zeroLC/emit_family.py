@@ -53,20 +53,20 @@ def cert : {ns}.Data {d-1} {n-1} := {{
 def ctr : BB6Coverage.PartialMachine := BB6Coverage.FAR.fromCodes {t}
 '''
  if flip:
-  source+=f'''theorem same : BB6Coverage.FAR.reflectPartial ctr = {ns}.partialTable machine :=
+  source+=f'''theorem same : BB6Coverage.FAR.reflectPartial ctr = BB6BlockFAR.partialTable machine :=
   BB6.Agent31ThreeHole.tableOK_sound _ _ (by decide)
 theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB6Coverage.NeverHalts m :=
   BB6Coverage.FAR.reflectNever m
-    ({ns}.transfer_never machine (BB6Coverage.reflectTable m)
+    (BB6BlockFAR.transfer_never machine (BB6Coverage.reflectTable m)
       (by
         have h := BB6Coverage.FAR.reflectCompatible ctr m hm
         simpa only [← same] using h) forever)
 '''
  else:
-  source+=f'''theorem same : ctr = {ns}.partialTable machine :=
+  source+=f'''theorem same : ctr = BB6BlockFAR.partialTable machine :=
   BB6.Agent31ThreeHole.tableOK_sound _ _ (by decide)
 theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB6Coverage.NeverHalts m :=
-  {ns}.transfer_never machine m (by simpa only [← same] using hm) forever
+  BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever
 '''
  source+=f'#print axioms never\\nend {NS}.H{i}\\n'
  return source
