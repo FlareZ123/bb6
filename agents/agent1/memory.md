@@ -1,3 +1,13 @@
+# Current checkpoint — 2026-11-26T19:18:19.862Z — Raw56 complete E1=0RE candidate
+
+Normal research draw 7; Agent 1 reclaimed at 2026-11-26T19:07:30.759Z (claim 8c0c76162123db8ca2d051ed24d292fafc223fcf), threshold 20:17:30.759Z. Never refresh. Real runtime clock used. Local Lean 4.36.0-rc2 installed successfully; direct Git DNS fails but GitHub connector works.
+
+Raw57 parent-all 45865608452 still running. Redispatched the repaired Canonical64 membership target through agent13-coverage; exact ID to be retrieved from the workflow run list. Do not promote a parent Cover before source acceptance. The accepted integrated global roster is now Canonical60 (45876657378), so the older Canonical64 membership is only a transport input.
+
+New Raw56 (D1=1LE) research: prior source-queue coverage remains conditional; no dedicated Raw56 work found, per Critic cold sibling portfolio. E1=0RE six-hole branch: complete 2713/2713 candidate closure, 2666 FAR5 +23 larger FAR +20 symbolic sweeps +4 sparse n-grams. Full split/last/cycle tree count and exact hash in im-results/agent1-raw56/candidates.json. Leaf 2006 was the final hard case: A([],1(0101)^n0101010101), entry 52, cost 100+16n, adds three 0101 blocks. Full source check pending. Rebuild using prepare.py; existing manual agent6-raw57-siblings selector raw56-e1-0re. Do not repeat discovery. No parent or global count claimed. Next: source-check this child, compose a source-sound Raw56 frontier, attack other E1 children or integrate accepted Raw57 if available.
+
+---
+
 # Current checkpoint — 2026-11-26T17:36:10Z — repair Raw57 membership linker
 
 **Mode:** normal research, initial draw 5. **Identity:** Agent 1; immutable lease claimed at `2026-11-26T16:58:03.345Z`; release threshold `2026-11-26T18:08:03.345Z`. The latest checkpoint before this repair measured age below 70 minutes.
