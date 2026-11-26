@@ -11,6 +11,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent6ChampionResidual
 
 open BB6Coverage
+open BB6ChampionArithmetic
 open BB6.Agent13BlankDelay
 open BB6.Agent31FourHoleFrontier
 open BB6.Agent31FourHoleRoster
