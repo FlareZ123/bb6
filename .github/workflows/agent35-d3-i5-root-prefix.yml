@@ -78,8 +78,6 @@ jobs:
           G=im-results/agent35-d-sixth-rejoin
           lean -o "$R31/ESecondSource.olean" "$R31/ESecondSource.lean"
           lean -o "$R31/PacketSource.olean" "$R31/PacketSource.lean"
-          lean -DmaxRecDepth=55000 -o "$G/APacketGeneral.olean" "$G/APacketGeneral.lean"
-          lean -DmaxRecDepth=55000 -o "$G/APacketUnary.olean" "$G/APacketUnary.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
@@ -88,6 +86,8 @@ jobs:
           for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
             lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
           done
+          lean -DmaxRecDepth=55000 -o "$G/APacketGeneral.olean" "$G/APacketGeneral.lean"
+          lean -DmaxRecDepth=55000 -o "$G/APacketUnary.olean" "$G/APacketUnary.lean"
           for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE DSourceCorollaries; do
             lean -o "$P3/$module.olean" "$P3/$module.lean"
           done
