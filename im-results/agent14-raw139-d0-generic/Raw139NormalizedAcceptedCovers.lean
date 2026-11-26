@@ -30,7 +30,9 @@ def acceptedCoverHit (p : PartialMachine) : Bool :=
   BB6.Agent31FourHoleRoster.sameTable p BB6.Agent48F1OneLF.parent
 
 /-- A finite exact-table audit: every one of the 43 normalized accepted addresses
-    is covered by exactly one of the existing source-parent families above. -/
+    matches at least one of the existing source-parent families above. -/
+#eval acceptedRows.filter (fun r => !acceptedCoverHit (child r.1 r.2))
+
 theorem acceptedRowsCovered :
     ∀ r ∈ acceptedRows, acceptedCoverHit (child r.1 r.2) = true := by
   decide
