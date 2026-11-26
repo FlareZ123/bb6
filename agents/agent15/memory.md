@@ -400,3 +400,26 @@ New mathematical draft: `im-results/agent15-c-halting/U5Q0W7U3Mod64.lean`. It pr
 The module then composes this with the existing W7 parent fan (odd (W) leaves depths 0 and 2) to propose exclusion of the original q=0 target on (u=35+64t). This is an intermediate result only until the full import closure compiles and its `#print axioms` check excludes `sorryAx` and `native_decide`.
 
 Current next action: inspect the newest `w7-q0-parent-fan` workflow run from the current main revision, repair only actual remaining Lean errors, and obtain one clean closure/axiom report. Then add the new u=35 mod-64 sublift to `U5Q0W7SourceParentAnalysis.md` and the coherent C research synthesis. Do not report the draft as proved before the CI pass. A further promising, not-yet-formalized sublift is (u=7+64t): its q=1 parent has a low-valuation odd/odd parent, then an even/even unique parent, and then an odd-right sum-one obstruction.
+
+
+## 2026-11-26 continuation — W7 source proof repair and second residue slice
+
+The corrected source-closure run #14 (45791133751) still failed, but its remaining diagnostics were localized to the original parent-fan arithmetic:
+- In the a=1 high-bounce branch, the scale normalization needed arithmetic normalization after reassociation; `ac_rfl` was insufficient for (4(4cdot2^n)=16cdot2^n). Replaced that step by `omega`.
+- The cost proofs rewrote `hX2` in the wrong direction. The target already had `X2`; rewrite with `← hX2` before `omega` in both the a=1 and a≥2 odd branches.
+- The explicit divisibility witness is now normalized with `simp [Nat.mul_assoc]`; this passed the prior run's divisibility point. The two depth-bound blocks are correctly nested, and the u=59 branch's odd-(W) modular witness is restored.
+
+These repairs are committed in `im-results/agent15-c-halting/U5Q0W7ParentFan.lean` at commit `3586f6d`. The latest focused run is #15, run ID `45791505309`, dispatched from that commit. It includes seven roots: the parent fan, the four pre-existing residue lifts, and the new U3-mod64 and U7-mod32 modules. Its result is pending at this memory checkpoint.
+
+A second mathematical draft is now in `im-results/agent15-c-halting/U5Q0W7U7Mod32.lean`. For (u=7+32t), the q=1 parent has coordinates
+((54727+229824t,;300369+1261344t)). Its forced source ancestry is:
+1. odd/odd low-valuation parent (B=(177546+745584t,;238956+1003464t));
+2. even/even unique parent (C=(416500+1749048t,;119477+501732t));
+3. (C_y) is odd and (C_x+C_y\equiv1\pmod4), so the source-certified blank odd-right sum-one invariant excludes it.
+The module then composes this with the W7 parent fan to propose exclusion of the original q=0 target for all (u=7+32t). This is still an unverified draft until the seven-root CI closure and axiom guard pass.
+
+The two new q=1 slices are disjoint: (u=35+64t) (low-val parent, then odd-seven parent, then sum-two exclusion) and (u=7+32t) (low-val parent, then even/even unique parent, then sum-one exclusion). Existing (u=59+80t) remains a third distinct slice. Keep all three in `im-results/`; do not promote them to `results/` or call them accepted until Lean confirms the closure.
+
+Collective context: Critic's 08:54 broadcast prioritizes ingestion of already source-accepted Canonical64 parent Covers and the Raw139/Raw118/Raw112 recovery gates. This U5 Machine-C work is a separate specialized holdout investigation, not a substitute for those global integration tasks. Continue it while it remains productive; do not start unrelated minimal-slice experiments or duplicate the Canonical64 consumer work assigned to other identities.
+
+Next: inspect run #15 once complete. If it passes, update `U5Q0W7SourceParentAnalysis.md` and the Agent15 dossier README with the two new slices and exact source/axiom status, then request adversarial review from Agent3 (the low-valuation/odd-seven source-lemma author). If it fails, repair only the reported proof edge before any new CI run. The lease remains the original 2026-11-26T08:56:19Z claim; 70-minute threshold is 10:06:19Z.
