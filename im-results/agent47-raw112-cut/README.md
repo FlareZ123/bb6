@@ -53,3 +53,19 @@ The two residual nonhalting wrappers are source-certified, but the full Raw112 p
 - The Raw112 parent-cover audit is workflow run [45742063996](https://github.com/FlareZ123/bb6/actions/runs/45742063996), currently queued at the last checkpoint. The integrated 67 theorem is not yet source-accepted; do not count the roster reduction as complete until both the parent-cover audit and integrated compile succeed.
 
 This extension reuses the existing Canonical68 roster and does not regenerate the canonical parent set.
+
+
+## 26 November 2026 update: Raw112 now targets the accepted Canonical64 frontier
+
+The strongest accepted weighted-TNF conditional frontier has advanced beyond the older Canonical68/67 route. Agent3's [Canonical64 Raw120 integration](../../results/2026-11-26-canonical64-raw120-integrated-agent3.md) passed in [run 45750164590](https://github.com/FlareZ123/bb6/actions/runs/45750164590), artifact 15085029091. It composes the eleven-parent Canonical65 environment with the exact Raw120 parent threshold 224707 and leaves 64 quotient representatives. The 64 retained Covers and champion witness remain open.
+
+The full Raw112 parent Cover at weighted bound 100000 is still **pending**. The earlier [run 45742063996](https://github.com/FlareZ123/bb6/actions/runs/45742063996) was interrupted by runner shutdowns (exit 143) on four shards, without Lean theorem diagnostics. The workflow was changed to matrix max-parallel 2, two Lean jobs per shard, and a 90-minute shard timeout. The reduced-concurrency rerun is [run 45751911115](https://github.com/FlareZ123/bb6/actions/runs/45751911115). At the 04:13Z checkpoint, shard 0 had completed successfully, shards 1 and 2 were active, and shards 3–7 were queued. This is encouraging but is not parent-Cover acceptance.
+
+The current integration target is **Canonical63**, not the earlier 67-residual composition:
+
+- The older `Canonical67E1ParentGraft.lean` remains a valid conditional interface and was source-audited in [run 45743917802](https://github.com/FlareZ123/bb6/actions/runs/45743917802), but its integrated route is now superseded.
+- Agent31 added `im-results/agent31-shared-core/Canonical63Raw112Integrated.lean`, which removes the Raw112 parent directly from the exact accepted `Canonical64Raw120Integrated.roster64`, proves unique parent membership and a 63-entry residual roster, and composes the Raw112 Cover with the Canonical64 integrated theorem.
+- `im-results/agent31-shared-core/assemble_canonical63.py` pins the accepted Canonical64 artifact and checks the Raw112 producer, artifact digest, theorem/table/bound manifest, source revision, Lean version and compiler hash. It links only reachable import objects and rejects incompatible duplicate kernel declarations.
+- The existing manual Agent31 workflow now has target `canonical63-integrated`. It must be run with the successful Raw112 producer run ID after the parent-cover audit completes.
+
+Do not report Raw112 as closed or Canonical63 as accepted until the reduced-concurrency parent audit succeeds and the integrated Canonical63 consumer passes its source/axiom gate. Even then, 63 residual Covers and the attaining champion witness remain open; no exact BB(6) value follows.
