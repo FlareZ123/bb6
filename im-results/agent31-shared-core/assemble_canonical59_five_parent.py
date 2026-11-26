@@ -1,5 +1,6 @@
 """Audit five accepted E1 parent Covers into one direct Canonical64 reduction."""
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
@@ -144,6 +145,287 @@ def download_parent(spec, work):
     )
     return dirs, metadata
 
+
+def verify_parent_artifact(spec):
+    """Verify a source-accepted parent artifact without downloading its large OLean bundle."""
+    run_info = a68.api_json(f"repos/{a68.REPO}/actions/runs/{spec['run_id']}")
+    assert run_info["conclusion"] == "success", (spec["label"], run_info.get("conclusion"))
+    assert run_info["head_sha"] == spec["revision"], (
+        spec["label"], run_info["head_sha"], spec["revision"]
+    )
+    artifacts = a68.api_json(
+        f"repos/{a68.REPO}/actions/runs/{spec['run_id']}/artifacts?per_page=100"
+    )["artifacts"]
+    matches = [item for item in artifacts if item["id"] == spec["artifact_id"]]
+    assert len(matches) == 1, (spec["label"], matches)
+    item = matches[0]
+    assert item["name"] == spec["artifact_name"], (spec["label"], item["name"])
+    assert item["digest"] == "sha256:" + spec["digest"], (
+        spec["label"], item["digest"], spec["digest"]
+    )
+    assert item["size_in_bytes"] == spec["size"], (
+        spec["label"], item["size_in_bytes"], spec["size"]
+    )
+    assert not item["expired"], (spec["label"], "artifact expired")
+    assert item["workflow_run"]["head_sha"] == spec["revision"], (
+        spec["label"], item["workflow_run"]
+    )
+    metadata = {
+        key: spec[key]
+        for key in (
+            "label", "run_id", "revision", "artifact_id", "artifact_name",
+            "digest", "root", "theorem", "table", "bound", "size",
+        )
+    }
+    metadata["verified_without_download"] = True
+    print(
+        f"Verified {spec['label']} parent producer {spec['artifact_id']} "
+        f"from successful run {spec['run_id']} (no stale OLean objects imported).",
+        flush=True,
+    )
+    return metadata
+
+
+def is_standard_module(module):
+    return any(
+        module == prefix or module.startswith(prefix + ".")
+        for prefix in ("Lean", "Init", "Std", "Batteries", "Mathlib")
+    )
+
+
+def build_precompiled_manifest(base_linked, work):
+    """Build a dependency-closed v1 manifest for the exact linked Canonical64 base."""
+    version = subprocess.check_output(["lean", "--version"], text=True).strip()
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    compiler = prefix / "bin" / "lean"
+    compiler_sha = a68.sha(compiler)
+    pins = [
+        ("canonical65", a63.CANONICAL65_ARTIFACT, a63.CANONICAL65_REVISION),
+        ("raw120", a63.RAW120_ARTIFACT, a63.RAW120_REVISION),
+    ]
+    source_entries = {}
+    metadata_conflicts = set()
+    source_revisions = []
+    artifact_manifests = []
+    for label, artifact_id, revision in pins:
+        paths = list((work / "metadata" / str(artifact_id)).rglob("manifest.json"))
+        assert len(paths) == 1, (label, artifact_id, [str(p) for p in paths])
+        path = paths[0]
+        manifest = json.loads(path.read_text())
+        assert manifest.get("schema_version") == 1, (label, manifest.get("schema_version"))
+        assert manifest.get("proof_source_revision") == revision, (
+            label, manifest.get("proof_source_revision"), revision
+        )
+        assert manifest.get("lean_version") == version, (
+            label, manifest.get("lean_version"), version
+        )
+        assert manifest.get("lean_binary", {}).get("sha256") == compiler_sha, (
+            label, manifest.get("lean_binary"), compiler_sha
+        )
+        source_revisions.extend(
+            manifest.get("source_revisions", [manifest["proof_source_revision"]])
+        )
+        artifact_manifests.append({
+            "label": label,
+            "artifact_id": artifact_id,
+            "source_revision": revision,
+            "manifest_sha256": a68.sha(path),
+            "module_count": manifest["module_count"],
+        })
+        for entry in manifest["modules"]:
+            module = entry["module"]
+            previous = source_entries.get(module)
+            if previous is None:
+                source_entries[module] = dict(entry)
+            elif (
+                previous.get("source_sha256") != entry.get("source_sha256")
+                or previous.get("project_imports") != entry.get("project_imports")
+            ):
+                metadata_conflicts.add(module)
+
+    # If two accepted inputs describe the same module from different source
+    # identities, do not choose one. Let the Raw59 source closure recompile it.
+    for module in metadata_conflicts:
+        source_entries.pop(module, None)
+
+    candidates = {}
+    missing_objects = []
+    for module, original in source_entries.items():
+        relative = Path(original["olean_path"])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(f"unsafe base object path for {module}: {relative}")
+        object_path = base_linked / relative.name
+        if not object_path.is_file():
+            missing_objects.append(module)
+            continue
+        entry = dict(original)
+        # link_reachable has already selected one object after exact kernel-data
+        # comparison. Recompute identities below against that exact linked object.
+        entry["olean_path"] = relative.name
+        entry["olean_sha256"] = a68.sha(object_path)
+        candidates[module] = entry
+
+    # The precompiled checker can only reuse a module if every project import
+    # is also represented. Drop incomplete tails; they will be compiled from source.
+    changed = True
+    while changed:
+        changed = False
+        for module, entry in list(candidates.items()):
+            missing = [
+                dep for dep in entry["project_imports"]
+                if not is_standard_module(dep) and dep not in candidates
+            ]
+            if missing:
+                candidates.pop(module)
+                changed = True
+
+    identities = {}
+    visiting = set()
+
+    def module_identity(module):
+        if module in identities:
+            return identities[module]
+        if module in visiting:
+            raise RuntimeError(f"cyclic manifest import graph at {module}")
+        visiting.add(module)
+        entry = candidates[module]
+        dependencies = []
+        for dep in sorted(entry["project_imports"]):
+            dep_identity = (
+                f"standard:{version}:{dep}"
+                if is_standard_module(dep)
+                else module_identity(dep)
+            )
+            dependencies.append({"module": dep, "identity": dep_identity})
+        import_hash = hashlib.sha256(
+            json.dumps(dependencies, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        entry["import_closure_sha256"] = import_hash
+        payload = {
+            "module": module,
+            "source_sha256": entry["source_sha256"],
+            "project_imports": entry["project_imports"],
+            "olean_sha256": entry["olean_sha256"],
+            "import_closure_sha256": import_hash,
+        }
+        identity = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, separators=(",", ":")).encode()
+        ).hexdigest()
+        entry["module_identity_sha256"] = identity
+        visiting.remove(module)
+        identities[module] = identity
+        return identity
+
+    for module in sorted(candidates):
+        module_identity(module)
+
+    modules = [candidates[module] for module in sorted(candidates)]
+    source_revisions = sorted(set(source_revisions))
+    output = {
+        "schema_version": 1,
+        "label": "Canonical64 exact linked shared core",
+        "proof_source_revision": "composite",
+        "source_revisions": source_revisions,
+        "lean_version": version,
+        "lean_binary": {"path": str(compiler.resolve()), "sha256": compiler_sha},
+        "claim": {
+            "theorem": "Canonical64 shared dependency core",
+            "parent_table": None,
+            "weighted_bound": None,
+        },
+        "artifact_name": "canonical64-base-precompiled-manifest",
+        "roots": [],
+        "module_count": len(modules),
+        "modules": modules,
+        "provenance_inputs": [],
+        "precompiled_core": {
+            "source_artifacts": artifact_manifests,
+            "metadata_conflicts_recompiled": sorted(metadata_conflicts),
+            "missing_linked_objects": sorted(missing_objects),
+            "module_count": len(modules),
+        },
+    }
+    path = work / "canonical64-base-precompiled-manifest.json"
+    path.write_text(json.dumps(output, indent=2, sort_keys=True) + "\n")
+    info = {
+        "manifest_sha256": a68.sha(path),
+        "module_count": len(modules),
+        "source_revisions": source_revisions,
+        "metadata_conflicts_recompiled": sorted(metadata_conflicts),
+        "missing_linked_objects": sorted(missing_objects),
+    }
+    print(
+        f"Built Canonical64 precompiled manifest for {len(modules)} "
+        "dependency-closed modules.",
+        flush=True,
+    )
+    return path, info
+
+
+def rebuild_raw59(base_linked, base_manifest, work):
+    """Recompile the exact Raw59 proof closure against Canonical64's linked objects."""
+    source = ROOT / "im-results" / "agent32-raw59" / "Raw59Exact.lean"
+    assert source.is_file(), source
+    output_dir = work / "raw59-rebuilt"
+    manifest_path = work / "raw59-rebuilt-manifest.json"
+    log_path = work / "raw59-rebuild.log"
+    command = [
+        sys.executable,
+        str(ROOT / "tools" / "lean_compile_closure.py"),
+        "--workdir", str(output_dir),
+        "--jobs", "8",
+        "--precompiled-dir", str(base_linked),
+        "--precompiled-manifest", str(base_manifest),
+        "--manifest", str(manifest_path),
+        "--label", "Raw59Exact rebuilt against Canonical64 shared core",
+        "--theorem", "BB6.Agent32Raw59Exact.cover",
+        "--parent-table", "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
+        "--weighted-bound", "4136171",
+        "--artifact-name", "raw59-exact-rebuilt-on-canonical64",
+        str(source),
+    ]
+    result = subprocess.run(
+        command, cwd=ROOT, text=True, stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    log_path.write_text(result.stdout)
+    print(result.stdout, end="", flush=True)
+    result.check_returncode()
+    if re.search(r"sorryAx|native_decide", result.stdout):
+        raise AssertionError("forbidden proof mechanism in rebuilt Raw59 closure")
+    required = [
+        "BB6.Agent32Raw59Exact.exact_bound",
+        "BB6.Agent32Raw59Exact.retained_cover",
+        "BB6.Agent32Raw59Exact.cover",
+        "BB6.Agent32Raw59Exact.bound",
+    ]
+    profiles = a68.gate(result.stdout, required)
+    manifest = json.loads(manifest_path.read_text())
+    assert manifest["claim"]["theorem"] == "BB6.Agent32Raw59Exact.cover"
+    assert manifest["claim"]["parent_table"] == "1RB---_1RC---_0RD---_1LD1RE_---1LA_------"
+    assert manifest["claim"]["weighted_bound"] == 4136171
+    assert "4.36.0-rc2" in manifest["lean_version"], manifest["lean_version"]
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    compiler_sha = a68.sha(prefix / "bin" / "lean")
+    assert manifest["lean_binary"]["sha256"] == compiler_sha
+    dirs = sorted({path.parent for path in output_dir.rglob("*.olean")}, key=str)
+    assert dirs and any((directory / "Raw59Exact.olean").is_file() for directory in dirs)
+    reused = (manifest.get("precompiled_core") or {}).get("reused_module_count", 0)
+    metadata = {
+        "root_source_sha256": a68.sha(source),
+        "manifest_sha256": a68.sha(manifest_path),
+        "module_count": manifest["module_count"],
+        "reused_module_count": reused,
+        "compiled_module_count": manifest["module_count"] - reused,
+        "required_axioms": {name: profiles[name] for name in required},
+    }
+    print(
+        f"Raw59 exact source closure rebuilt: {metadata['reused_module_count']} "
+        f"reused, {metadata['compiled_module_count']} newly compiled modules.",
+        flush=True,
+    )
+    return dirs, metadata
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
@@ -158,8 +440,8 @@ def main():
     # before paying for the large Canonical64 base download. This is the known
     # mixed-revision risk exposed by the first strict link attempt.
     raw59_spec = next(spec for spec in PARENTS if spec["label"] == "raw59")
-    raw59_dirs, raw59_metadata = download_parent(raw59_spec, work)
-    parent_dirs = {"raw59": raw59_dirs}
+    raw59_metadata = verify_parent_artifact(raw59_spec)
+    parent_dirs = {}
     parent_metadata = [raw59_metadata]
 
     # First compile only the accepted Canonical64 base and exact table-membership
@@ -201,6 +483,18 @@ def main():
         work / "base-reachable-link-audit.json",
     )
     print("Membership preflight passed: five unique exact parents, 59 retained.", flush=True)
+
+    # Rebuild Raw59 from its checked-in source against the exact Canonical64
+    # linked core. This avoids importing the two stale/conflicting width-two
+    # OLean objects from the independent Raw59 artifact.
+    base_precompiled_manifest, base_precompiled_info = build_precompiled_manifest(
+        base_linked, work
+    )
+    raw59_dirs, raw59_rebuild_info = rebuild_raw59(
+        base_linked, base_precompiled_manifest, work
+    )
+    parent_dirs["raw59"] = raw59_dirs
+    raw59_metadata["rebuild"] = raw59_rebuild_info
 
     # Reuse only the five accepted original-source proof artifacts. Their
     # conservative bounds already lie below the canonical common score floor.
@@ -298,6 +592,8 @@ def main():
         "remaining_residual_count": 59,
         "common_weighted_floor": 6766859,
         "parent_artifacts": parent_metadata,
+        "base_precompiled_manifest": base_precompiled_info,
+        "raw59_rebuild": raw59_rebuild_info,
         "canonical65_run_id": a63.CANONICAL65_RUN,
         "canonical65_artifact_id": a63.CANONICAL65_ARTIFACT,
         "raw120_run_id": a63.RAW120_RUN,
