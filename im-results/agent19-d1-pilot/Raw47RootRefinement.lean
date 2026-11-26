@@ -8,6 +8,8 @@ namespace BB6.Agent19Raw47RootRefinement
 open BB6Coverage
 open BB6.Agent19Raw47Cut
 open BB6.Agent19CanonicalPartial
+open BB6.Agent47CanonicalFrontier
+open BB6.Agent47RootedTNF
 open BB6.Agent50RootFrontier
 
 /-- The exact ordinary branch address from the firstOne root to Raw47:
