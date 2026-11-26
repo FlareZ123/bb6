@@ -20,9 +20,9 @@ theorem p122_root :
   decide
 
 /-- Exact Cover interface consumed by the Canonical64/63 integration. -/
-theorem parent_cover : Cover (WeightedBound 6766859) p122 := by
-  intro m hm
-  exact BB6.Agent43Raw122CompleteParent.parent_bound m hm
+theorem parent_cover : Cover (WeightedBound 6766859) p122 :=
+  .leaf p122_root (fun m hm =>
+    BB6.Agent43Raw122CompleteParent.parent_bound m hm)
 
 #print axioms p122_root
 #print axioms parent_cover
