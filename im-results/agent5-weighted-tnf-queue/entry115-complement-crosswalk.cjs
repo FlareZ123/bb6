@@ -109,6 +109,27 @@ const q32Side115 = q32Side.filter((x) => refines(x.slots, parent));
 const q32Side114 = q32Side.filter((x) => refines(x.slots, slots(frontier.frontier[114])));
 const q32Queue115 = q32Queue.filter((x) => refines(x.slots, parent));
 const q32Queue114 = q32Queue.filter((x) => refines(x.slots, slots(frontier.frontier[114])));
+const q32ByIndex = new Map(q32Queue.map((x) => [x.index, x]));
+const q32Row39 = q32ByIndex.get(39);
+const q32Row47 = q32ByIndex.get(47);
+const extra84 = extras.find((x) => x.id === 84);
+const q32RowsUnderExtra84 = q32Queue115.filter((x) =>
+  x.index >= 0 && x.index <= 37 && refines(x.slots, extra84.slots));
+const q32Row39Extras = extras.filter((x) => refines(x.slots, q32Row39.slots));
+const q32Row39Q0 = q0Rows.filter((x) => refines(x.slots, q32Row39.slots));
+const q32Row47Extras = extras.filter((x) => refines(x.slots, q32Row47.slots));
+const q32Row47Q0 = q0Rows.filter((x) => refines(x.slots, q32Row47.slots));
+const q32Row47Automata = q0Leaves.filter((x) => refines(x.slots, q32Row47.slots));
+const q32ExactExtraMap = [
+  { q32: 41, extra: 131 }, { q32: 43, extra: 132 },
+  { q32: 45, extra: 133 }, { q32: 46, extra: 134 }
+];
+const q32ExactQ0Map = Array.from({ length: 22 }, (_, i) => ({
+  q32: 48 + i, q0: 54 + i
+}));
+const q32QueuePairwise = pairwiseCount(q32Queue);
+const q32Queue115Pairwise = pairwiseCount(q32Queue115);
+
 
 const q32ExtraPairs = pairList(q32Side115, extras);
 const q32CheckpointPairs = pairList(q32Side115, q0Rows);
@@ -148,6 +169,30 @@ assertEqual(q32Queue.length, 84, 'q32 queue size');
 assertEqual(q32Queue115.length, 70, 'q32 queue rows under entry 115');
 assertEqual(q32Queue114.length, 14, 'q32 queue rows under entry 114');
 assertEqual(q32Side.length, 32, 'q32 side leaf count');
+assertEqual(q32QueuePairwise, 0, 'q32 queue pairwise disjointness');
+assertEqual(q32Queue115Pairwise, 0, 'q32 entry115 queue pairwise disjointness');
+assertEqual(q32RowsUnderExtra84.map((x) => x.index).sort((a,b) => a-b),
+  Array.from({ length: 38 }, (_, i) => i), 'q32 rows 0-37 refine Extra84');
+assertEqual(q32Row39Extras.map((x) => x.id).sort((a,b) => a-b),
+  Array.from({ length: 46 }, (_, i) => 85 + i), 'q32 row39 contains Extras85-130');
+assertEqual(q32Row39Q0.map((x) => x.index), [156], 'q32 row39 contains q0 held row156');
+assertEqual(q32Row47Extras.map((x) => x.id).sort((a,b) => a-b),
+  Array.from({ length: 7 }, (_, i) => 135 + i), 'q32 row47 contains Extras135-141');
+assertEqual(q32Row47Q0.map((x) => x.index).sort((a,b) => a-b),
+  Array.from({ length: 54 }, (_, i) => i), 'q32 row47 contains q0 rows 0-53');
+assertEqual(q32Row47Automata.length, 94, 'q32 row47 contains all q0 automata leaves');
+assertEqual(q32ExactExtraMap.every((x) =>
+  q32ByIndex.get(x.q32).table.replaceAll('_', '') ===
+  extras.find((e) => e.id === x.extra).table.replaceAll('_', '')), true,
+  'q32 rows 41,43,45,46 exactly match Extras131-134');
+assertEqual(q32ExactQ0Map.every((x) =>
+  q32ByIndex.get(x.q32).table.replaceAll('_', '') ===
+  q0Rows.find((q) => q.index === x.q0).table.replaceAll('_', '')), true,
+  'q32 rows 48-69 exactly match q0 rows 54-75');
+assertEqual(q0Rows.every((q) =>
+  q32Queue115.some((x) => refines(q.slots, x.slots))), true,
+  'every q0 checkpoint row under entry115 nests in a q32 queue row');
+
 assertEqual(q32Side115.length, 30, 'q32 side leaves under entry 115');
 assertEqual(q32Side114.length, 2, 'q32 side leaves under entry 114');
 assertEqual(pairwiseCount(q32Side), 0, 'q32 side leaf disjointness');
@@ -190,6 +235,24 @@ const output = {
     pairwiseCompatiblePairs: pairwiseCount(q0Leaves),
     compatibleWithExtras: q0AutomataExtraPairs.length,
     compatibleWithQ32Side: q0AutomataSidePairs.length
+  },
+  q32QueueNesting: {
+    pairwiseCompatiblePairs: q32QueuePairwise,
+    entry115QueuePairwiseCompatiblePairs: q32Queue115Pairwise,
+    rows0to37UnderExtra84: q32RowsUnderExtra84.map((x) => x.index),
+    row39: {
+      table: q32Row39.table,
+      containsExtraIds: q32Row39Extras.map((x) => x.id).sort((a,b) => a-b),
+      containsQ0Rows: q32Row39Q0.map((x) => x.index)
+    },
+    row47: {
+      table: q32Row47.table,
+      containsExtraIds: q32Row47Extras.map((x) => x.id).sort((a,b) => a-b),
+      containsQ0Rows: q32Row47Q0.map((x) => x.index).sort((a,b) => a-b),
+      containsQ0AutomataLeaves: q32Row47Automata.length
+    },
+    exactExtraRows: q32ExactExtraMap,
+    exactQ0Rows: q32ExactQ0Map
   },
   q32: {
     queueRows: q32Queue.length,
