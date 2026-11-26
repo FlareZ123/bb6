@@ -28,7 +28,14 @@ branch,first,end=map(int,sys.argv[1:4])
 for j in range(first,end):
     m=f'Raw122Kid{branch:02}_{j:02}'
     f=work/(m+'.lean')
-    if (branch,j) in {(12,4),(12,12),(12,13),(12,16),(23,6),(23,12),(23,16)}:
+    # Agent29's literal-table certificates also cover the older planned leaves.
+    # Keep the original recovery route available for any unmatched shard.
+    patched = False
+    if branch in {0,4,5,12,13,16,17,23}:
+        sys.path.insert(0,str(base.parent/'agent29-raw122-run'))
+        from patch import patch as patch_run
+        patched = patch_run(work,branch,j)
+    if not patched and (branch,j) in {(12,4),(12,12),(12,13),(12,16),(23,6),(23,12),(23,16)}:
         from patch_planned import patch as patch_planned
         patch_planned(work,branch,j)
     if not (work/(m+'.olean')).exists() and f.stat().st_size>15000 and ' : PartialAudit := .closed (' in f.read_text():
