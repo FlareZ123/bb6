@@ -35,9 +35,9 @@ def emit(root,name,data,offset=0):
 #print axioms run_add_width2
 
 """
-            anchor = 'theorem forever_of_invariant'
+            anchor = 'theorem MaskData.soundFrom'
             if template.count(anchor) != 1:
-                raise ValueError('expected one width-two invariant theorem anchor')
+                raise ValueError('expected one width-two MaskData.soundFrom anchor')
             template = template.replace(anchor, alias + anchor, 1)
             if template.count(',run_add') != 2:
                 raise ValueError('unexpected width-two run_add reference count')
