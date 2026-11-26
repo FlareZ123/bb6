@@ -43,7 +43,7 @@ This is a proof-build reliability improvement, not a new mathematical closure. T
 The generated-source artifact preserves the `im-results/agent47-raw112-cut/` directory as its common root; do not add a log path from `/tmp` to that artifact, or download will nest the generated Lean files and the shard root scan will miss them. It must include all generated families, especially `Raw112Counter*.lean` (branch 03 imports `Raw112Counter72`), as well as `Raw112Branch*.lean`, `Raw112Kid*.lean`, `Raw112Symbol*.lean`, and `Raw112Sparse*.lean`. Each shard artifact likewise uploads only its work directory so `manifest.json` is at the downloaded artifact root expected by the raw109 merger.
 
 
-## 26 November 2026: Raw112-to-67 roster extension
+## 26 November 2026: Earlier Raw112-to-67 roster extension (superseded)
 
 The two residual nonhalting wrappers are source-certified, but the full Raw112 parent Cover still requires the eight-shard `closed` audit. The parent-level integration is now prepared:
 
