@@ -3868,7 +3868,7 @@ jobs:
     if: ${{ always() && !cancelled() && inputs.target == 'weighted-tnf-raw118-consumer' && (needs.raw118_sparse_join.result == 'success' || inputs.raw118_sparse_run_id != '') }}
     needs: raw118_sparse_join
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -3938,7 +3938,27 @@ jobs:
           json.dump({"artifact_prefix":"raw118","allow_mixed_revisions":True,"groups":groups},open("/tmp/raw118-merge-config.json","w"))
           PY
           python im-results/agent4-raw109/merge_shards.py /tmp/raw118-merge /tmp/raw118-consumer-union /tmp/raw118-merge-config.json
-          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest /tmp/raw118-consumer-union/manifest.json --precompiled-dir /tmp/raw118-consumer-union --manifest /tmp/a16-raw118-consumer/manifest.json --artifact-name raw118-parent-proof --label raw118-complete-parent --theorem BB6.Agent1Raw118Complete.parent_cover --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LE_------' --weighted-bound 756496 im-results/agent16-raw118/Raw118Complete.lean | tee /tmp/a16-raw118-consumer.log
+          cp -a /tmp/raw118-consumer-union im-results/agent16-raw118/precompiled-union
+      - name: Preserve generated Raw118 inputs before compilation
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw118-parent-generated-inputs
+          path: |
+            im-results/agent16-raw118/*.lean
+            im-results/agent16-raw118/*.json
+            im-results/agent16-raw118/precompiled-union/
+            im-results/agent1-bidfa-sat/Raw118*.lean
+            im-results/agent1-bidfa-sat/wide-generated/
+            im-results/agent40-raw118-independent/Raw118*.lean
+            im-results/agent40-raw118-independent/run-generated/
+          if-no-files-found: error
+          retention-days: 14
+      - name: Compile and audit complete Raw118 parent residual cover
+        if: inputs.target == 'weighted-tnf-raw118-consumer'
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py --workdir /tmp/a16-raw118-consumer --jobs 4 --source-root im-results/agent1-bidfa-sat/wide-generated --source-root im-results/agent40-raw118-independent/run-generated --precompiled-manifest im-results/agent16-raw118/precompiled-union/manifest.json --precompiled-dir im-results/agent16-raw118/precompiled-union --manifest /tmp/a16-raw118-consumer/manifest.json --artifact-name raw118-parent-proof --label raw118-complete-parent --theorem BB6.Agent1Raw118Complete.parent_cover --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0LE_------' --weighted-bound 756496 im-results/agent16-raw118/Raw118Complete.lean | tee /tmp/a16-raw118-consumer.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent1Raw118Complete.parent_cover
           python im-results/agent4-raw109/audit_axioms.py /tmp/a16-raw118-consumer.log BB6.Agent1Raw118Complete.parent_exact
           cp /tmp/a16-raw118-consumer.log /tmp/a16-raw118-consumer/audit.log
