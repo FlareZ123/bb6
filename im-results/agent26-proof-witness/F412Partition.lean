@@ -118,16 +118,27 @@ theorem fFinalUniqueHole {s : Slot} (h : fP9 s = none) : s = (4, true) := by
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;>
-    simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,refine,emptyTable] at h ⊢
+    simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,initialSlot,refine,emptyTable] at h ⊢
 
 theorem fFinalOtherSlots (s : Slot) (h : s ≠ (4,true)) :
     ∃ mv, fP9 s = some (some mv) := by
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;>
-    simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,refine,emptyTable] at h ⊢
+    simp [fP9,fP8,fP7,fP6,fP5,fP4,fP3,fP2,fP1,fResidual,fRoot,initialSlot,refine,emptyTable] at h ⊢
 
 theorem fFinalDelays : possibleDelays (refine fP9 (4,true) none) 0 = [0] := by decide
+
+/-- The initial transition remains fixed throughout the nine-step parent path. -/
+theorem fParentInitialSlot (i : Fin 9) :
+    fParent i initialSlot = some (some ⟨true,true,1⟩) := by
+  revert i
+  decide
+
+/-- The simulated prefix length is uniformly bounded over the finite path. -/
+theorem fRunLength_le14 (i : Fin 9) : fRunLength i ≤ 14 := by
+  revert i
+  decide
 
 /-- All 25 final completions: 24 total ordinary tables and the unique halter.
     Only the exact original-source clock remains an input. -/
@@ -238,7 +249,7 @@ theorem fClosed_sound (i : Fin 9) (mv : Move) (h : fClosed i mv = true) :
   have hpair' : w.depth = i ∧ w.child = mv := of_decide_eq_true hpair
   rcases hpair' with ⟨rfl,rfl⟩
   have hh := Bool.and_eq_true_iff.mp hOK
-  exact finiteSideCycleCheck_sound (fChild i mv) w.entry w.period w.right w.boundary
+  exact finiteSideCycleCheck_sound (fChild w.depth w.child) w.entry w.period w.right w.boundary
     (of_decide_eq_true hh.1) hh.2
 
 def fAllMoves : List Move := choices.filterMap id
@@ -267,8 +278,7 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
   have hu : fParent i (readSlot (fConfig i)) = none := by
     rw [fReadSlot i]
     exact fHoleProof i
-  have hf : fParent i initialSlot = some (some ⟨true,true,1⟩) := by
-    revert i; decide
+  have hf := fParentInitialSlot i
   have href := compatible_refine (fParent i) m (fHole i) hm
   cases ht : m (fHole i) with
   | none =>
@@ -279,7 +289,7 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
       have hd6 : d < 6 := by
         unfold possibleDelays at hd
         exact List.mem_range.mp (List.mem_filter.mp hd).1
-      have hn : fRunLength i ≤ 14 := by revert i; decide
+      have hn := fRunLength_le14 i
       omega
     · rw [fReadSlot i]
       simpa [ht] using href
@@ -290,7 +300,7 @@ theorem fStep (B : Nat) (hB : 20 ≤ B) (i : Fin 9)
     · subst mv
       have he : fChild i (fNextMove i) = fNextParent i := by
         have hi : i = 0 ∨ i = 1 ∨ i = 2 ∨ i = 3 ∨ i = 4 ∨ i = 5 ∨ i = 6 ∨ i = 7 ∨ i = 8 := by omega
-      rcases hi with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> rfl
+        rcases hi with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> rfl
       exact hnext m (he ▸ hc)
     · by_cases hs : fClosed i mv = true
       · exact Or.inl (weighted_never B m (fClosed_sound i mv hs m hc))
