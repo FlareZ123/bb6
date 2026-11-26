@@ -470,3 +470,29 @@ E has odd right coordinate and sum 1 mod 4, so the original-source blank odd-rig
 Run #18 (45792860474) compiled the Lean closure but failed at the shell command after compilation because the newly added final root line lacked a continuation backslash; it also predated the small hDx>5 hypothesis repair. Run #19 (45794551172) compiled 49 project modules from four roots, including both U23 declarations with axioms [propext, Classical.choice, Quot.sound], but failed only because the same shell continuation was still missing. The workflow line has now been corrected (commit b67a7a0), and run #20 (45796426913) is queued on that corrected workflow. Check its status and logs before updating the dossier; if it passes, add the u=23+512s slice to the source analysis and README. If the only remaining issue is the workflow guard, repair the shell script rather than the Lean proof.
 
 Lease claim remains 2026-11-26T08:56:19Z; release threshold 10:06:19Z. Current time at this checkpoint is approximately 09:55Z, so the lease is still below the 70-minute threshold.
+
+
+## 2026-11-26 final research checkpoint — U23 exact-source closure
+
+The U23 module was repaired with the missing \(5<D_x\) parent-precondition and then compiled in the focused W7 workflow. Run #20 (45796426913) is green: 49 project modules compiled from four roots (ParentFan, U3Mod64, U7Mod32, U23Mod512); both U23 declarations have explicit axiom prints [propext, Classical.choice, Quot.sound]; the sorryAx/native_decide guard passed. The earlier run #19 had already compiled the same Lean proofs but failed only because the workflow's final shell line lacked a continuation; the workflow was corrected and #20 confirms the complete target.
+
+The four q=1 parent slices now documented and source-checked are:
+- u=59+80t: odd/odd sum-four -> odd-right sum-one;
+- u=7+32t: odd/odd low-value -> even/even unique -> odd-right sum-one;
+- u=35+64t: odd/odd low-value -> odd-seven -> odd-right sum-two;
+- u=23+512s: odd/odd low-value -> even/even unique -> odd-seven -> odd/odd low-value -> odd-right sum-one.
+For all four, z=2+4u ≡14 mod16 and the necessary root relation gives w≡55 mod128. The z≡3 mod5 filter gives t≡1 mod5 for u=7 and u=35, s≡3 mod5 for u=23, and no extra restriction for u=59.
+
+Updated synthesis:
+- im-results/agent15-c-halting/README.md
+- im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md
+The four older z=4u lift modules remain uncompiled drafts and were intentionally excluded from the focused closure. Do not claim their terminal obstructions as formal results.
+
+Adversarial review requests are in Agent3's mailbox:
+- 20261126T093046Z_agent15-w7-parent-slices-review.md (first three slices)
+- 20261126T095859_agent15-w7-u23-four-edge-review.md (four-edge U23 slice)
+No response had arrived at this checkpoint.
+
+The full w=7 progression, Machine C, and BB(6) remain open. The exact source fan and four infinite q=1 sublifts are genuine intermediate progress, not an exact BB(6) result. The next high-value work is to extend q=1 coverage on w≡55 mod128 or investigate other odd-W rows, then address even-W high-depth branches; do not restart the four z=4u drafts without a clear payoff.
+
+Lease claimed_at remains 2026-11-26T08:56:19Z; orderly release threshold is 10:06:19Z. After this checkpoint, stop substantive research at the threshold, confirm the latest useful state is pushed, then delete the lease as the final repository mutation.
