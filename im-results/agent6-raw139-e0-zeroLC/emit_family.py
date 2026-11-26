@@ -1,6 +1,17 @@
-import json,pathlib,sys
-from search import far,tree,scan,generate
+import json,pathlib,sys,subprocess
 from collections import Counter
+from search import far,tree,scan,generate
+
+ROOT = pathlib.Path(__file__).resolve().parent
+BLOCKFAR_ROOT = ROOT.parent / "agent13-block-far"
+MASK_ROOT = ROOT.parent / "agent32-raw59"
+sys.path.insert(0, str(BLOCKFAR_ROOT))
+sys.path.insert(0, str(MASK_ROOT))
+from generate_multi import generate as generate_offset
+from emit_blockmask import emit as emit_offset
+
+BLOCK_RECIPES = ("block", "phase", "mirror", "mirrorphase", "offset")
+_OFFSET_BACKEND_READY = False
 
 def pack(xs,b):return sum(v<<(b*i) for i,v in enumerate(xs))
 def vec(xs,b,stride=16):return f'⟨{b},{stride},#['+','.join(hex(pack(xs[i:i+stride],b)) for i in range(0,len(xs),stride))+']⟩'
@@ -48,6 +59,33 @@ end {NS}.H{i}
 '''
  return source
 
+def table_text(t):
+ return '_'.join(
+  '---' if v == 24 else
+  f'{(v >> 1) & 1}{"R" if v & 1 else "L"}{chr(65 + v // 4)}'
+  for v in t
+ )
+
+def ensure_offset_backend(width):
+ global _OFFSET_BACKEND_READY
+ if width == 4 and not _OFFSET_BACKEND_READY:
+  subprocess.run([sys.executable, str(BLOCKFAR_ROOT / 'specialize.py'), '4'], check=True)
+  _OFFSET_BACKEND_READY = True
+
+def offset_block_source(NS,i,t,width,name):
+ ns = 'BB6BlockFAR4' if width == 4 else 'BB6BlockFAR'
+ return f'''namespace {NS}.H{i}
+def ctr : BB6Coverage.PartialMachine := BB6Coverage.FAR.fromCodes {t}
+theorem same : ctr = {ns}.partialTable {ns}.{name}.machine := by
+  apply BB6.Agent31ThreeHole.tableOK_sound
+  decide
+theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) :
+    BB6Coverage.NeverHalts m :=
+  {ns}.transfer_never {ns}.{name}.machine m (by simpa only [← same] using hm) {ns}.{name}.never
+#print axioms never
+end {NS}.H{i}
+'''
+
 def emit(code,spec,out,blocks_only=False,tr=None):
  P=spec['parent'];NS=spec.get('namespace','BB6.Agent6E0ZeroLC.D0ZeroRC.C1'+code_name(code));prefix=spec.get('prefix','A6E0LCD0RCC1'+code_name(code))
  if tr is None:
@@ -56,13 +94,32 @@ def emit(code,spec,out,blocks_only=False,tr=None):
   counts=Counter(spec['counts']);opens=spec['open']
  rec={int(i):r for i,r in spec['recipes'].items()};assert set(rec)==set(range(len(opens)))
  idx={tuple(t):i for i,t in enumerate(opens)}
- blocks={i:r for i,r in rec.items() if r[0] in ('block','phase')};modules=[]
+ blocks={i:r for i,r in rec.items() if r[0] in BLOCK_RECIPES};modules=[]
  for j in range(0,len(blocks),8):
-  name=prefix+f'Block{j//8:02}';modules.append(name);s=HEADER
+  name=prefix+f'Block{j//8:02}';modules.append(name);body='';extra_imports=[]
   for i in sorted(blocks)[j:j+8]:
-   r=blocks[i];c=generate(opens[i],*r[1:5],False,60000,r[0]=='phase');assert c and [c['left_states'],c['right_nodes']]==r[5:]
-   s+=block_source(NS,i,opens[i],c)
-  (out/(name+'.lean')).write_text(s)
+   r=blocks[i]
+   if r[0]=='offset':
+    width,cap,mod,runs,offset=map(int,r[1:])
+    ensure_offset_backend(width)
+    cert_name=prefix+f'OffsetH{i}'
+    scratch=out.parent/(out.name+'-offset-generator')
+    scratch.mkdir(parents=True,exist_ok=True)
+    c=generate_offset(table_text(opens[i]),scratch,width=width,cap=cap,mod=mod,
+      runs=runs,name=cert_name,minimize_left=True,offset=offset)
+    emit_offset(out,cert_name,c,offset)
+    bridge='BlockFARBridge4' if width==4 else 'BlockFARBridge'
+    extra_imports += [f'import {cert_name}Proof',f'import {bridge}']
+    body+=offset_block_source(NS,i,opens[i],width,cert_name)
+   else:
+    flip=r[0] in ('mirror','mirrorphase')
+    phase=r[0] in ('phase','mirrorphase')
+    c=generate(opens[i],*r[1:5],flip,60000,phase)
+    assert c and [c['left_states'],c['right_nodes']]==r[5:]
+    body+=block_source(NS,i,opens[i],c)
+  header=HEADER.replace('set_option maxRecDepth',
+    ''.join(x+'\\n' for x in sorted(set(extra_imports)))+'set_option maxRecDepth')
+  (out/(name+'.lean')).write_text(header+body)
  if blocks_only:return modules
  def node(t):
   k,*a=t
