@@ -1,0 +1,81 @@
+name: Raw124 archived witness zipper closure (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: JSON array of archived F1 branches
+        default: '["0RF","0RD","1LC","1RD","0RC","1RC","0LD","1RA","0RE","1LF","1LE","1RB","0RA","trivial"]'
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  legacy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        branch: ${{ fromJSON(inputs.branches) }}
+    env:
+      BRANCH: ${{ matrix.branch }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-1lb-complete-source-audit
+          run-id: 45800254828
+          github-token: ${{ github.token }}
+          path: /tmp/raw124-accepted-1lb
+      - name: Replay only archived witnesses and compile source closure
+        run: |
+          set -euo pipefail
+          D=im-results/agent32-raw124-0le
+          P=/tmp/raw124-accepted-1lb
+          OLD="$P/closure"
+          G=/tmp/raw124-legacy-generated
+          W=/tmp/raw124-legacy-closure
+          mkdir -p "$G"
+          if [[ "$BRANCH" == trivial ]]; then
+            cp "$D/Raw124Trivial.lean" "$G/"
+            SOURCE=Raw124Trivial.lean
+            THEOREM=BB6.Agent32Raw124Trivial.bound1LD
+            BOUND=7
+          else
+            python "$D/replay_legacy.py" --branch "$BRANCH" --out "$G"
+            SOURCE="Raw124Z${BRANCH}Data.lean"
+            THEOREM="BB6.Agent32Raw124Z${BRANCH}.bound_all"
+            case "$BRANCH" in
+              0RF) BOUND=71;; 0RD) BOUND=267;; 1LC) BOUND=102;; 1RD) BOUND=80;; 0RC) BOUND=2759;; 1RC) BOUND=688;;
+              0LD) BOUND=157;; 1RA) BOUND=1029;; 0RE) BOUND=2473;; 1LF) BOUND=290;; 1LE) BOUND=670;; 1RB) BOUND=184;; 0RA) BOUND=283;;
+              *) exit 2;;
+            esac
+          fi
+          overrides=()
+          while IFS= read -r src; do
+            mod="${src#"$OLD"/}"
+            mod="${mod%.lean}"
+            mod="${mod//\//.}"
+            overrides+=(--override "$mod=$src")
+          done < <(find "$OLD" -type f -name '*.lean' | sort)
+          python tools/lean_compile_closure.py --source-root "$OLD" --source-root "$G" "${overrides[@]}" --workdir "$W" --jobs 2 --precompiled-manifest "$P/manifest.json" --precompiled-dir "$OLD" --manifest "$W/manifest.json" --theorem "$THEOREM" --weighted-bound "$BOUND" --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_---$BRANCH" --provenance-input "$D/replay_legacy.py" "$G/$SOURCE" 2>&1 | tee /tmp/raw124-legacy.log
+          if [[ "$BRANCH" == trivial ]]; then
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-legacy.log "$THEOREM" BB6.Agent32Raw124Trivial.bound1RE
+          else
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-legacy.log "$THEOREM"
+          fi
+          cp /tmp/raw124-legacy.log "$W/audit.log"
+          git rev-parse HEAD > "$W/SOURCE_COMMIT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-legacy-${{ matrix.branch }}-source-audit
+          path: /tmp/raw124-legacy-closure/
+          if-no-files-found: error
+          retention-days: 90
