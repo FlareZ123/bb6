@@ -460,3 +460,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 
 - Simplified both Raw118Canonical64Membership.lean and Raw118Canonical62Membership.lean to import Raw118Base only (not Raw118CanonicalCut) and define p118 directly as BB6.Agent16Raw118.parent. Raw118Base already provides parent_root; the conditional-cut p118 is definitionally equal, so this is the exact parent covered by Raw118Complete with fewer compile dependencies.
 - Corrected the build-order guidance to Agent4: compile Raw118Base only before the membership helper; its Raw111Prefix dependency should already be in the Canonical64 closure. No need to compile Raw118CanonicalCut for membership.
+
+
+## 2026-11-26T07:19Z Raw112 attempt-2 status update
+
+- Run 45751911115 attempt 2: shards 0,2,3,6,7 succeeded; shards 1 and 5 still in progress; shard4 failed again with runner shutdown. Confirmed shard job timeout-minutes=90, max-parallel=2; failure at ~9m33s is not the configured timeout. Recommended retry shard4 on fresh runner or split its three roots (Raw112Branch04/12/20).
