@@ -44,6 +44,7 @@ jobs:
             case "$SIBLING" in
               ZeroLF) bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh ;;
               OneLB) bash im-results/agent14-raw139-d0-oneLB/reproduce.sh ;;
+              OneLA) bash im-results/agent14-raw139-d0-generic/reproduce.sh "$SIBLING" ;;
               *) echo "Unknown D0 sibling: $SIBLING" >&2; exit 2 ;;
             esac
           else
