@@ -177,7 +177,7 @@ theorem {ck} : zipCheck {B} {table} {nm} = true := by
     end=f"\nend {NS}\n"
     assert s.endswith(end)
     p.write_text(s[:-len(end)]+f"""
-noncomputable def certificate : WeightedTNFCertificate {B} parent 4 :=
+noncomputable def certificate : WeightedTNFCertificate {B} parent 6 :=
   certifiedZip {B} parent tree parent_root parent_nohalt tree_checked
 
 theorem all_completions : ∀ m, compatible parent m → WeightedBound {B} m :=
