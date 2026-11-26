@@ -31,6 +31,11 @@ on:
         description: Compile the source-connected raw139 E1=1LF Cryptids NonHalt leaf pilot
         type: boolean
         default: false
+      c1_batch_run_id:
+        description: Successful source-audited Raw139 C1 twelve-sibling run ID
+        type: string
+        required: false
+        default: "45746968139"
 
 permissions:
   contents: read
@@ -425,6 +430,43 @@ jobs:
                   raise SystemExit(f"missing D0 {label} compiled objects")
               print(f"D0 {label}: source run {run_id} accepted; exact root SHA {actual}")
           PY
+      - name: Download source-audited Raw139 C1 twelve-sibling artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.c1_batch_run_id }}
+          name: raw139-c1-twelve-certified
+          path: /tmp/a48-c1-batch
+      - name: Verify accepted Raw139 C1 batch artifact
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          C1_BATCH_RUN_ID: ${{ inputs.c1_batch_run_id }}
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$GITHUB_REPOSITORY/actions/runs/$C1_BATCH_RUN_ID" -o /tmp/c1-batch-run.json
+          python3 - <<'PY'
+          import json, pathlib, os
+          run = json.loads(pathlib.Path("/tmp/c1-batch-run.json").read_text())
+          manifest = json.loads(pathlib.Path("/tmp/a48-c1-batch/manifest.json").read_text())
+          imports = pathlib.Path("/tmp/a48-c1-batch/imports")
+          if run.get("conclusion") != "success":
+              raise SystemExit("Raw139 C1 batch source run is not successful")
+          if str(manifest.get("workflow", {}).get("run_id")) != os.environ["C1_BATCH_RUN_ID"]:
+              raise SystemExit("Raw139 C1 artifact run ID mismatch")
+          if manifest.get("proof_source_revision") != "24307ed48c90f18938778cac530c5c3213af2203":
+              raise SystemExit("Raw139 C1 artifact source revision mismatch")
+          claim = manifest.get("claim", {})
+          if claim.get("theorem") != "BB6.Agent48Raw139C1Batch.all_completions_weighted" or claim.get("weighted_bound") != 2511:
+              raise SystemExit("Raw139 C1 artifact claim mismatch")
+          sources = sorted(imports.glob("Raw139C1*Cover.lean"))
+          if len(sources) != 10:
+              raise SystemExit(f"expected ten generated C1 Cover sources, found {len(sources)}")
+          print("Raw139 C1 artifact accepted:", os.environ["C1_BATCH_RUN_ID"])
+          print("generated C1 sources:", len(sources))
+          PY
       - name: Compile five source-accepted D0/F1 siblings into the raw139 parent frontier
         if: ${{ inputs.raw121_graft_run_id == '' }}
         run: |
@@ -433,14 +475,15 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegrationExtended.lean \
             im-results/agent6-champion-residual/ChampionResidualCanonical68Integration.lean \
-            --source-root "$PWD/.tmp/a14-d0-ZeroLF/imports" \
-            --source-root "$PWD/.tmp/a14-d0-OneLB/imports" \
-            --source-root "$PWD/.tmp/a14-d0-OneLA/imports" \
+            --source-root "/tmp/a14-d0-ZeroLF/imports" \
+            --source-root "/tmp/a14-d0-OneLB/imports" \
+            --source-root "/tmp/a14-d0-OneLA/imports" \
+            --source-root "/tmp/a48-c1-batch/imports" \
             --precompiled-manifest /tmp/a6-champion-residual/manifest.json \
             --precompiled-dir /tmp/a6-champion-residual/build \
             --workdir "$work" \
             --manifest /tmp/a6-champion-residual/source-sibling-manifest.json \
-            --label agent6-canonical68-raw139-26-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
+            --label agent6-canonical68-raw139-38-sibling-consumer --jobs 4 | tee /tmp/a6-source-sibling.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a6-source-sibling.log; then
             echo "Forbidden proof placeholder or native_decide in raw139 source sibling graft" >&2
             exit 1
@@ -499,6 +542,17 @@ jobs:
               "BB6.Agent6ChampionRaw139SiblingExtended.additionalSourceAcceptedSiblingCover",
               "BB6.Agent6ChampionRaw139SiblingExtended.cover_remainingF1ZeroRC",
               "BB6.Agent6ChampionRaw139SiblingExtended.cover_championResidual_after_twentySix",
+              "BB6.Agent48Raw139C1Batch.parents_eq",
+              "BB6.Agent48Raw139C1Batch.all_completions_weighted",
+              "BB6.Agent48Raw139C1Batch.cover_at",
+              "BB6.Agent48Raw139C1Batch.consume",
+              "BB6.Agent6ChampionRaw139SiblingExtended.c1_parent_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.c1_parents_all_present",
+              "BB6.Agent6ChampionRaw139SiblingExtended.isC1Sibling_false_of_not_mem",
+              "BB6.Agent6ChampionRaw139SiblingExtended.remainingRaw139AfterThirtyEight_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.removedTwelveSibling_count",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_remainingRaw139AfterTwentySix",
+              "BB6.Agent6ChampionRaw139SiblingExtended.cover_championResidual_after_thirtyEight",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_mem_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_canonical68",
               "BB6.Agent6Canonical68ChampionIntegration.championResidual_unique_by_table_canonical68",
@@ -523,12 +577,14 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.raw121_graft_run_id == '' }}
         with:
-          name: agent6-canonical68-raw139-26-sibling-consumer-${{ inputs.source_sha || github.sha }}
+          name: agent6-canonical68-raw139-38-sibling-consumer-${{ inputs.source_sha || github.sha }}
           include-hidden-files: true
           path: |
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegrationExtended.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
+            /tmp/a6-champion-residual/source-sibling-build/Raw139C1Batch.olean
+            /tmp/a6-champion-residual/source-sibling-build/Raw139C1*.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
             /tmp/a6-source-sibling.log
           if-no-files-found: error

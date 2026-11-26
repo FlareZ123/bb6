@@ -1,6 +1,7 @@
 import ChampionF1ZeroRCIntegration
 import ChampionResidualSourceSiblingIntegration
 import Raw139SiblingSources
+import Raw139C1Batch
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
@@ -175,6 +176,80 @@ theorem cover_championResidual_after_twentySix
     fun e he => cover_remainingExtended h110 e he
   exact BB6.Agent41F0Extended.refined_residual_cover h112
 
+
+/-- The twelve source-audited C1 siblings are distinct from the 26 already
+    consumed F0/F1/D0 parents. Match by the finite table comparator, then use
+    the source module's exact list-membership consumer. -/
+def isC1Sibling (p : PartialMachine) : Bool :=
+  BB6.Agent48Raw139C1Batch.parents.any (fun q => sameTable p q)
+
+noncomputable def remainingRaw139AfterThirtyEight :
+    List (List Move × PartialMachine) :=
+  remainingRaw139AfterTwentySix.filter (fun e => !isC1Sibling e.2)
+
+theorem c1_parent_count :
+    BB6.Agent48Raw139C1Batch.parents.length = 12 := by decide
+
+theorem c1_parents_all_present :
+    ∀ p ∈ BB6.Agent48Raw139C1Batch.parents,
+      ∃ e ∈ remainingRaw139AfterTwentySix, sameTable e.2 p = true := by decide
+
+theorem isC1Sibling_false_of_not_mem (p : PartialMachine)
+    (hp : p ∉ BB6.Agent48Raw139C1Batch.parents) :
+    isC1Sibling p = false := by
+  cases h : isC1Sibling p with
+  | false => rfl
+  | true =>
+      have hAny :
+          BB6.Agent48Raw139C1Batch.parents.any
+            (fun q => sameTable p q) = true := by
+        simpa [isC1Sibling] using h
+      rcases List.any_eq_true.mp hAny with ⟨q, hq, hSame⟩
+      have heq : p = q := sameTable_sound hSame
+      exact False.elim (hp (by simpa [heq] using hq))
+
+theorem remainingRaw139AfterThirtyEight_count :
+    remainingRaw139AfterThirtyEight.length = 85 := by decide
+
+theorem removedTwelveSibling_count :
+    remainingRaw139AfterTwentySix.length -
+      remainingRaw139AfterThirtyEight.length = 12 := by
+  rw [remainingRaw139AfterTwentySix_count,
+    remainingRaw139AfterThirtyEight_count]
+  rfl
+
+/-- Discharge the twelve C1 parents with the independently source-audited
+    2,511 weighted-bound consumer. All other entries remain explicit leaves. -/
+theorem cover_remainingRaw139AfterTwentySix
+    (hLeaves : ∀ e ∈ remainingRaw139AfterThirtyEight,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (e : List Move × PartialMachine)
+    (he : e ∈ remainingRaw139AfterTwentySix) :
+    Cover (WeightedBound (proposedTM63Moves + 7)) e.2 := by
+  exact BB6.Agent48Raw139C1Batch.consume
+    (Nat.le_trans (by decide : 2511 ≤ 49394) championScore_ge_49394)
+    remainingRaw139AfterTwentySix
+    (by
+      intro x hx hnot
+      have hFalse := isC1Sibling_false_of_not_mem x.2 hnot
+      exact hLeaves x
+        (List.mem_filter.mpr
+          ⟨hx, by simp [remainingRaw139AfterThirtyEight, hFalse]⟩))
+    e he
+
+/-- The 85 remaining raw139 leaves, plus the 26 already consumed siblings,
+    now give a Cover of the champion parent. -/
+theorem cover_championResidual_after_thirtyEight
+    (hLeaves : ∀ e ∈ remainingRaw139AfterThirtyEight,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    Cover (WeightedBound (proposedTM63Moves + 7)) championResidual := by
+  have h97 : ∀ e ∈ remainingRaw139AfterTwentySix,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2 := by
+    intro e he
+    exact cover_remainingRaw139AfterTwentySix hLeaves e he
+  exact cover_championResidual_after_twentySix h97
+
+
 #print axioms zeroRB_is_depth5_sibling
 #print axioms zeroLA_is_depth5_sibling
 #print axioms oneLB_is_depth5_sibling
@@ -192,5 +267,12 @@ theorem cover_championResidual_after_twentySix
 #print axioms additionalSourceAcceptedSiblingCover
 #print axioms cover_remainingF1ZeroRC
 #print axioms cover_championResidual_after_twentySix
+#print axioms c1_parent_count
+#print axioms c1_parents_all_present
+#print axioms isC1Sibling_false_of_not_mem
+#print axioms remainingRaw139AfterThirtyEight_count
+#print axioms removedTwelveSibling_count
+#print axioms cover_remainingRaw139AfterTwentySix
+#print axioms cover_championResidual_after_thirtyEight
 
 end BB6.Agent6ChampionRaw139SiblingExtended
