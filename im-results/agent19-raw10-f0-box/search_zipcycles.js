@@ -169,10 +169,12 @@ const summary = {
   stubbornOneHoleLeaves: stubborn,
   counts: {
     residualCompletions: F0_DOMAIN.length * 25,
-    f0ZipCompletions: f0.length * 25,
+    f0ZipCompletions: f0.filter(x => x.zip).length * 25,
     branchZipCompletions: branches.zip.length,
+    nonhaltingCompletions: f0.filter(x => x.zip).length * 25 + branches.zip.length,
     observedHaltingCompletions: 25 + branches.halt.length,
     openCompletions: 2 * 25 + branches.open.length,
+    partitionTotal: f0.filter(x => x.zip).length * 25 + branches.zip.length + 25 + branches.halt.length + 2 * 25 + branches.open.length,
   },
 };
 
