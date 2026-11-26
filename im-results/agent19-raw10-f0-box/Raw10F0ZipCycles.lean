@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent19Raw10F0Box
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6.Agent10ZipAudit
 
 /-- Decode the repository's integer transition code
@@ -556,6 +557,147 @@ theorem raw10F0F1ZipLeaves :
     f0f1_24_23_never,
     f0f1_24_24_never⟩
 
+
+/-- Transfer a finite zipper trace ending at a halting query to every
+    compatible total machine. This is the same source-level bridge used by
+    Raw10FixedLeaves.halt_exact. -/
+theorem haltsAfter_of_zrun_halt (p : PartialMachine) (n : Nat) (entry : Z)
+    (hentry : zrun p n start = some entry)
+    (hquery : p (entry.q, entry.l.headD false) = some none) :
+    ∀ m, compatible p m → HaltsAfter m n := by
+  intro m hm
+  have hrun := zrun_sound p m hm n entry hentry
+  rw [start_embed] at hrun
+  have hstep : rawStep m (embed entry) = none := by
+    rw [rawStep, read_embed, hm _ _ hquery]
+    rfl
+  refine ⟨embed entry, hrun, ?_⟩
+  rw [run, hrun]
+  exact hstep
+
+/-- The first-one delay list is always a filter of range 6. -/
+theorem raw10_delay_bound_any (p : PartialMachine) (n : Nat)
+    (hn : n + 7 ≤ 6766859) :
+    ∀ d ∈ possibleDelays p 0, d + n + 1 ≤ 6766859 := by
+  intro d hd
+  have hmem : d ∈ List.range 6 := (List.mem_filter.mp hd).1
+  have hlt : d < 6 := List.mem_range.mp hmem
+  omega
+
+def haltEntryF0 : Z := ⟨5, -4, [], [true, false, false, true, false, false]⟩
+
+theorem haltEntryF0_reached :
+    zrun (raw10WithF0 (⟨0, by decide⟩ : Fin 25)) 10 start =
+      some haltEntryF0 := by decide
+
+theorem haltEntryF0_query :
+    raw10WithF0 (⟨0, by decide⟩ : Fin 25)
+      (haltEntryF0.q, haltEntryF0.l.headD false) = some none := by decide
+
+theorem f0_halts_after_10 :
+    ∀ m, compatible (raw10WithF0 (⟨0, by decide⟩ : Fin 25)) m →
+      HaltsAfter m 10 :=
+  haltsAfter_of_zrun_halt (raw10WithF0 (⟨0, by decide⟩ : Fin 25))
+    10 haltEntryF0 haltEntryF0_reached haltEntryF0_query
+
+theorem f0_halt_cover :
+    Cover (WeightedBound 6766859) (raw10WithF0 (⟨0, by decide⟩ : Fin 25)) :=
+  weighted_halt_leaf (raw10WithF0 (⟨0, by decide⟩ : Fin 25))
+    6766859 10 (by decide) f0_halts_after_10
+    (raw10_delay_bound_any _ 10 (by decide))
+
+def haltEntry12_0 : Z :=
+  ⟨5, -4, [true], [true, false, false, false, true, false, false]⟩
+
+theorem haltEntry12_0_reached :
+    zrun (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+      32 start = some haltEntry12_0 := by decide
+
+theorem haltEntry12_0_query :
+    raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)
+      (haltEntry12_0.q, haltEntry12_0.l.headD false) = some none := by decide
+
+theorem f0f1_12_0_halts_after_32 :
+    ∀ m, compatible
+      (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) m →
+      HaltsAfter m 32 :=
+  haltsAfter_of_zrun_halt
+    (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    32 haltEntry12_0 haltEntry12_0_reached haltEntry12_0_query
+
+theorem f0f1_12_0_halt_cover :
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) :=
+  weighted_halt_leaf
+    (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    6766859 32 (by decide) f0f1_12_0_halts_after_32
+    (raw10_delay_bound_any _ 32 (by decide))
+
+def haltEntry22_0 : Z :=
+  ⟨5, -3, [true, false], [false, false, true, false, false]⟩
+
+theorem haltEntry22_0_reached :
+    zrun (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+      11 start = some haltEntry22_0 := by decide
+
+theorem haltEntry22_0_query :
+    raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)
+      (haltEntry22_0.q, haltEntry22_0.l.headD false) = some none := by decide
+
+theorem f0f1_22_0_halts_after_11 :
+    ∀ m, compatible
+      (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) m →
+      HaltsAfter m 11 :=
+  haltsAfter_of_zrun_halt
+    (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    11 haltEntry22_0 haltEntry22_0_reached haltEntry22_0_query
+
+theorem f0f1_22_0_halt_cover :
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) :=
+  weighted_halt_leaf
+    (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    6766859 11 (by decide) f0f1_22_0_halts_after_11
+    (raw10_delay_bound_any _ 11 (by decide))
+
+def haltEntry24_0 : Z :=
+  ⟨5, -3, [true, true], [false, false, true, false, false]⟩
+
+theorem haltEntry24_0_reached :
+    zrun (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+      11 start = some haltEntry24_0 := by decide
+
+theorem haltEntry24_0_query :
+    raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)
+      (haltEntry24_0.q, haltEntry24_0.l.headD false) = some none := by decide
+
+theorem f0f1_24_0_halts_after_11 :
+    ∀ m, compatible
+      (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) m →
+      HaltsAfter m 11 :=
+  haltsAfter_of_zrun_halt
+    (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    11 haltEntry24_0 haltEntry24_0_reached haltEntry24_0_query
+
+theorem f0f1_24_0_halt_cover :
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) :=
+  weighted_halt_leaf
+    (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25))
+    6766859 11 (by decide) f0f1_24_0_halts_after_11
+    (raw10_delay_bound_any _ 11 (by decide))
+
+theorem raw10HaltCovers :
+    Cover (WeightedBound 6766859) (raw10WithF0 (⟨0, by decide⟩ : Fin 25)) ∧
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨12, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) ∧
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨22, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) ∧
+    Cover (WeightedBound 6766859)
+      (raw10WithF0F1 (⟨24, by decide⟩ : Fin 25) (⟨0, by decide⟩ : Fin 25)) :=
+  ⟨f0_halt_cover, f0f1_12_0_halt_cover,
+    f0f1_22_0_halt_cover, f0f1_24_0_halt_cover⟩
+
 /-- Exact F0 domain of this residual product box: codes 10 and 16 were
     already removed by the preceding side/cycle certificates. -/
 def f0Domain : List Nat :=
@@ -594,6 +736,7 @@ theorem raw10Partition_count : 490 + 28 + 57 = 575 := by decide
 
 #print axioms raw10F0ZipLeaves
 #print axioms raw10F0F1ZipLeaves
+#print axioms raw10HaltCovers
 #print axioms f0Domain_partition
 #print axioms branchPair_partition
 
