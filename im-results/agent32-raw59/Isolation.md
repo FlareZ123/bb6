@@ -33,3 +33,7 @@ Accepted Upgrade1LB ZIP 15082588050: all 123 producer modules, source/object has
 Generated large Kid00 proof elaboration exceeded the local tool call timeout. The original Kid00 object then passed actual Lean.Kernel.Environment.replay against the isolated imports: 389 constants, 43.42 s elapsed, 3461164 KiB maximum RSS. The full child and parent still require acceptance. The exact proof producer's archive is too large for the local artifact connector.
 
 This is a candidate repair to a closed local mathematical proof, not a new accepted canonical roster. The coordinated five-parent consumer must be the final acceptance gate.
+
+### Full 1LB sibling replay result (12:34 UTC)
+
+All 24 original Raw59Upgrade1LBKid00–23 objects passed actual kernel replay against the isolated imports. Kid01–23 shared one reconstructed import environment, each replayed independently with no unsafe/partial/duplicate declarations. SIBLINGS_EXIT=0, maximum RSS 3,532,756 KiB. The subsequent Raw59Upgrade1LBData aggregate replay was killed by signal 9 (exit 137, maximum RSS 3,607,824 KiB) in the 4 GiB local cgroup. This is a concrete resource blocker, not a failed kernel check. The exact parent is still untested after relocation, and the final strict canonical consumer remains mandatory. Use a larger CI runner for the aggregate; no need to repeat the 24 individual sibling source elaborations to discover their compatibility.
