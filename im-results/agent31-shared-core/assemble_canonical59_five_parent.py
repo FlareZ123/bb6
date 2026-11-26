@@ -200,6 +200,9 @@ def build_precompiled_manifest(base_linked, work):
     raw59_rc_unpack = ROOT / "im-results" / "agent32-raw59" / "unpack_rc.py"
     macrofar_unpack = ROOT / "im-results" / "agent32-macro-far" / "unpack.py"
     raw59_partial = ROOT / "im-results" / "agent32-raw59" / "generate_partial.py"
+    raw59_block_generator = ROOT / "im-results" / "agent32-raw59" / "generate_lb1_four.py"
+    raw59_mask_emitter = ROOT / "im-results" / "agent32-raw59" / "emit_blockmask.py"
+    raw59_mask_template = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR4.lean"
     raw59_sharp = ROOT / "im-results" / "agent32-raw59" / "generate_sharp.py"
     raw59_sharp_source = ROOT / "im-results" / "agent32-raw59" / "upgrade_0LB"
     raw59_sharp_output = ROOT / "im-results" / "agent32-raw59" / "generated_sharp"
@@ -221,6 +224,17 @@ def build_precompiled_manifest(base_linked, work):
         print(result.stdout, end="", flush=True)
         result.check_returncode()
 
+    # The width-two mask checker refers directly to the shared primitive
+    # theorem BB6BlockFAR.run_add. BlockMacro2's ordinary import is private,
+    # so the generated consumer must import BlockMacro itself.
+    width_two_mask = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR2.lean"
+    width_two_source = width_two_mask.read_text()
+    if (
+        "import BlockMacro\\n" not in width_two_source
+        or width_two_source.count("BB6BlockFAR.run_add") != 2
+    ):
+        raise AssertionError("generated MaskBlockFAR2 is missing its direct BlockMacro import")
+
     source = ROOT / "im-results" / "agent32-raw59" / "Raw59Exact.lean"
     manifest_path = work / "canonical64-base-precompiled-manifest.json"
     manifest_work = work / "canonical64-base-manifest-work"
@@ -241,6 +255,9 @@ def build_precompiled_manifest(base_linked, work):
         "--provenance-input", str(raw59_generator),
         "--provenance-input", str(macrofar_unpack),
         "--provenance-input", str(raw59_partial),
+        "--provenance-input", str(raw59_block_generator),
+        "--provenance-input", str(raw59_mask_emitter),
+        "--provenance-input", str(raw59_mask_template),
         "--provenance-input", str(raw59_sharp),
         "--provenance-input", str(raw120_generator),
         str(source),
@@ -388,6 +405,10 @@ def rebuild_raw59(base_linked, base_manifest, work):
         "--parent-table", "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
         "--weighted-bound", "4136171",
         "--artifact-name", "raw59-exact-rebuilt-on-canonical64",
+        "--provenance-input", str(ROOT / "im-results" / "agent32-raw59" / "generate_partial.py"),
+        "--provenance-input", str(ROOT / "im-results" / "agent32-raw59" / "generate_lb1_four.py"),
+        "--provenance-input", str(ROOT / "im-results" / "agent32-raw59" / "emit_blockmask.py"),
+        "--provenance-input", str(ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR4.lean"),
         str(source),
     ]
     result = subprocess.run(

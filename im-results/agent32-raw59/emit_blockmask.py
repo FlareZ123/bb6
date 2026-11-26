@@ -23,7 +23,16 @@ def emit(root,name,data,offset=0):
         template=template.replace('cases a <;> cases b <;> cases c <;> cases d',' <;> '.join('cases '+c for c in 'abcd'[:width]))
         template=re.sub(r'\b96\b',str(6*k),template)
         template=re.sub(r'\b16\b',str(k),template)
-        if width==2:template=template.replace(',run_add',',BB6BlockFAR.run_add')
+        if width == 2:
+            import_line = 'import BlockFAR2\n'
+            if template.count(import_line) != 1:
+                raise ValueError('expected one BlockFAR2 import in width-two mask template')
+            template = template.replace(import_line, import_line + 'import BlockMacro\n', 1)
+            if template.count(',run_add') != 2:
+                raise ValueError('unexpected width-two run_add reference count')
+            template = template.replace(',run_add', ',BB6BlockFAR.run_add')
+            if 'import BlockMacro\n' not in template or template.count('BB6BlockFAR.run_add') != 2:
+                raise ValueError('width-two mask template lacks its direct BlockMacro dependency')
         (root/(checker+'.lean')).write_text(template,encoding='utf8')
     D,C=data['left_states'],data['right_nodes'];dead=C-1
     ns='BB6BlockFAR'+suffix+'.'+name
