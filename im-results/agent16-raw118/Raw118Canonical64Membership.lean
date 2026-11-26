@@ -24,8 +24,9 @@ theorem p118_root :
   BB6.Agent16Raw118.parent_root
 
 /-- Exact, unique sameTable membership in the accepted Canonical64 roster.
-    This is only a membership certificate: it defines no competing roster
-    and makes no claim that the Raw118 parent Cover has passed. -/
+    This is only a membership certificate: it defines no competing roster.
+    The Raw118 parent Cover is separately source-accepted in run 45812415227;
+    this helper and the combined global consumption are still unaccepted. -/
 theorem p118_parent_count64 :
     (BB6.Agent3Canonical64Raw120.roster64.filter
       (fun e => sameTable e.2 p118)).length = 1 := by
