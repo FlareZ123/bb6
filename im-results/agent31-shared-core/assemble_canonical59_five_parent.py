@@ -154,8 +154,16 @@ def main():
     version = subprocess.check_output(["lean", "--version"], text=True).strip()
     assert "4.36.0-rc2" in version, version
 
+    # Check the sharp Raw59 artifact's producer manifest and compiler identity
+    # before paying for the large Canonical64 base download. This is the known
+    # mixed-revision risk exposed by the first strict link attempt.
+    raw59_spec = next(spec for spec in PARENTS if spec["label"] == "raw59")
+    raw59_dirs, raw59_metadata = download_parent(raw59_spec, work)
+    parent_dirs = {"raw59": raw59_dirs}
+    parent_metadata = [raw59_metadata]
+
     # First compile only the accepted Canonical64 base and exact table-membership
-    # checks. Do not download the 2.6 GB parent bundle unless all five matches
+    # checks. Do not download the remaining parent bundle unless all five matches
     # are unique and the computed residual count is exactly 59.
     parts = a63.download_canonical64_parts(work)
     base_linked = work / "base-linked"
@@ -196,12 +204,13 @@ def main():
 
     # Reuse only the five accepted original-source proof artifacts. Their
     # conservative bounds already lie below the canonical common score floor.
-    parent_dirs = {}
-    parent_metadata = []
     for spec in PARENTS:
+        if spec["label"] == "raw59":
+            continue
         dirs, metadata = download_parent(spec, work)
         parent_dirs[spec["label"]] = dirs
         parent_metadata.append(metadata)
+    parent_metadata.sort(key=lambda item: item["label"])
 
     # Reconstruct and compile the existing blank-start champion witness and
     # score lower-bound source closure; no new champion claim is introduced.
