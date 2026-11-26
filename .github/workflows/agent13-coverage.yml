@@ -5839,8 +5839,8 @@ jobs:
       matrix:
         raw: ['106', '79', '67']
     env:
-      GH_TOKEN: \${{ github.token }}
-      RAW: \${{ matrix.raw }}
+      GH_TOKEN: ${{ github.token }}
+      RAW: ${{ matrix.raw }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -5851,16 +5851,16 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version
-      - name: Compile and source-audit Raw\${{ matrix.raw }} parent Cover
+      - name: Compile and source-audit Raw${{ matrix.raw }} parent Cover
         run: |
           set -euo pipefail
-          python im-results/agent16-canonical64-preflight/compile_agent10_parent.py --raw "$RAW" --work "/tmp/agent10-raw\${RAW}-parent" 2>&1 | tee "/tmp/agent10-raw\${RAW}-parent.log"
+          python im-results/agent16-canonical64-preflight/compile_agent10_parent.py --raw "$RAW" --work "/tmp/agent10-raw${RAW}-parent" 2>&1 | tee "/tmp/agent10-raw${RAW}-parent.log"
       - uses: actions/upload-artifact@v4
         with:
-          name: agent10-raw\${{ matrix.raw }}-canonical64-parent-source-accepted
+          name: agent10-raw${{ matrix.raw }}-canonical64-parent-source-accepted
           path: |
-            /tmp/agent10-raw\${{ matrix.raw }}-parent/output/
-            /tmp/agent10-raw\${{ matrix.raw }}-parent.log
+            /tmp/agent10-raw${{ matrix.raw }}-parent/output/
+            /tmp/agent10-raw${{ matrix.raw }}-parent.log
           if-no-files-found: error
           retention-days: 90
 
@@ -5870,7 +5870,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
-      GH_TOKEN: \${{ github.token }}
+      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
