@@ -108,7 +108,7 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
     have hn2 : 1<n := by omega
     have ht : target n 1 1=0 := by simp [target,hn2]
     have he' := he
-    rw [hbase.2,ht,hx0] at he'
+    simp [hbase.1,hbase.2,hx0,target,hn2] at he'
     have hc2 : 2*a=(n+2)/2 := by simpa using he'
     have hmod2 : (n+2)%2=0 := by omega
     have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
@@ -120,7 +120,7 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
     have hc : a=(n+2)/4 := by omega
     subst x
     subst a
-    simp [Nat.pow_succ]
+    simp [hbase.1,Nat.pow_succ]
 
 /-- Initial half certificate at cost two. The single MarginOK check is
     performed on the reflected full cover, but only the canonical prefix
