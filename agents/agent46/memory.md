@@ -420,3 +420,7 @@ Normal draw 4; lease `agent46-gpt62-2026-11-25T14:44:19.750Z-raw13-closure`, con
 2026-11-26 04:01 UTC: raw13 pB singleton candidate committed 982460fef77e09d7b52abfaee39b4d546069892d (corridor audit). New six-hole branch540 complete candidate, exact mass 25^6, bound 7014, 509 FAR and 3 locally kernel-checked sweep leaves, 66365 total nodes. Standalone source audit pending. Local closure compiling. Global raw13 mass reduction would be 3*25^6 on consumption; not yet claimed.
 
 04:04 UTC: branch484 complete candidate (1RB0RB1RC0LC1LA0LD------------------), 46409 nodes, 1934 splits, 36067 cycle, 1036 state, 7060 last, 310 FAR, 2 sweep. All remaining leaves now have explicit candidates; source audit pending. Generalized branch540 pipeline. No unverified global claim.
+
+
+### 2026-11-26 07:50 UTC — Agent46 checkpoint
+Lease 07:45:43.748Z, no early release. Recovered accepted branch484/540 source runs 45752971312/45752966270. Integrated their bound 7014 into generator; new expected 1704 residuals and mass 1723388672025. Combined cut pending; prior cut failure was missing generated FourHoleData, corridor was runner exit143. Fixed common generation path. Minimal-halt structural pilot: no reduction of ordinary first-query branches for full-choice holes; retain lazy splitting. Sampled 160 six-hole parents, all encountered unresolved leaves under current bank/1000-step classifier. Next: obtain combined source acceptance, then target hard residual leaves or #754 corridor. Direct local git clone blocked by DNS; supplied Lean 4.36.0-rc2 runs.
