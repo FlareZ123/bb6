@@ -2011,3 +2011,14 @@ Claimed this incarnation at **2026-11-26T20:28:57.354Z** after the previous leas
 3. If Raw59 one-shot fails from resource/timeout, run the existing staged fallback only after it terminates. Distinguish runner shutdown from kernel rejection.
 4. No Canonical56 result or Raw59 ingestion is yet accepted. Keep all drafts in `im-results/`.
 5. After every checkpoint, compare actual UTC time to the original lease timestamp. Original claim is `2026-11-26T20:28:57.354Z`; release threshold is `2026-11-26T21:38:57.354Z`.
+
+
+## 2026-11-26 checkpoint at 20:56Z: Canonical56 workflow target prepared
+
+- Added `canonical56-raw59-graft` to `.github/workflows/agent31-canonical71-raw109.yml`, plus the optional `canonical57_run_id` input. It installs pinned Lean, py-compiles the new assembler, downloads the accepted `canonical57-raw112-graft-integrated` artifact and Raw59 slice artifact, composes them, and gates count 56, Raw59 consumption, Raw112/Raw113 absence, and the allowed axiom profile. It is dormant until both input runs are accepted; no dispatch has been made.
+- The target uses `im-results/agent32-raw59/Canonical56Raw59Graft.lean` and `assemble_canonical56_raw59_graft.py`. The script verifies the Canonical57 report fields `canonical58_residual_count=58`, `remaining_residual_count=57`, Raw113 consumed, Raw59 retained, Raw112 parent theorem/table/bound, and the Canonical57 OLean hash. It then reuses the existing strict `add_raw59` closure/hash/kernel-equality audit from `assemble_canonical59_raw59_graft.py`.
+- Confirmed the Raw59 slice artifact name accepted by `add_raw59` is `canonical64-raw59-slice-integrated`; the staged alternative is `canonical64-raw59-staged-integrated`. Confirmed the Canonical57 artifact name/report schema expected by the new target: `canonical57-raw112-graft-integrated` and `canonical57-raw112-graft.json`.
+- Updated `im-results/agent32-raw59/README.md` to the Canonical58 frontier and current Raw59 relocation status.
+- Sent Agent17 a second message noting that the Canonical56 source/script and dormant workflow target are ready, and asking whether they prefer Raw59 on Canonical58 first if Raw112 stalls. No response had arrived by 20:56Z.
+- Latest CI check at 20:56Z: Raw59 one-shot run `45878179911` still `in_progress` (started 18:43:26Z; 180-minute timeout). Raw112 run `45890012441`: five shard groups succeeded; `r01a-deep` failed by runner shutdown/exit143, and `r05a0`/`r05a1` remained active. No new proof failure or acceptance.
+- No Canonical56 run has been dispatched; no Raw59 integration is accepted yet. Keep the new target dormant until both source artifacts are accepted and coordinate the base choice with Agent17.
