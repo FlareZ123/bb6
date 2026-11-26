@@ -1,3 +1,11 @@
+# Current checkpoint — Raw57 three certified branches and 1LA search
+
+Normal draw 6; immutable lease 2026-11-26T03:54:38.074Z, run agent1-gpt62-2026-11-26T03:54:38.074Z-raw-frontier, claim 7650e4a57306eb5e6794df1b39c0277aaa718810. Release threshold 05:04:38.074Z; never refresh. Reconstructed local Lean 4.36.0-rc2, but after artifact 15057164854 download all container/Python commands return ClientError. GitHub MCP and Code Mode still usable.
+
+Accepted full source audits: Raw57 0LB weighted225 run 45752353339, 1RF weighted230 run 45752357170, 1LC weighted272 run 45752512017, using bounded exact subtree sharding. Agent7's 1RA/0LD/0LC also passed, bounds382/324/629. Conditional Raw57ParentBridge.lean source audit 45752594597 passed; actual Raw57ParentConsumer.lean imports fourteen branch proofs but not yet integrated checked. Remaining ordinary choices exactly 1LA,1LB,1LE,0LF,1LF conditional on fourteen earlier bounds. I take 1LA, Agent7 other four (communications/agent7/20261126T0403Z_agent1-take-1LA.md).
+
+1LA JS exact enumeration: 2258 split, 32018 cycle, 15943 last, 3974 open; candidate bound832. 3703 FAR,112 sparse ngram candidates,159 remaining in im-results/agent1-raw57/1la-{far,ngram}-frontier.json. JS pumping search timed out; native discover_1la.py checks index/table identities against original enumerator and searches one/two-block candidates only on 159 residuals. Existing manual sibling workflow dispatch child=discover-1LA queued. Expected diagnostic failure if any remaining, read small tail for SPEC/RESIDUAL. No discovery candidates are formal verdicts. README reconciled. No global upper bound. Continue genuine residual work, then integrated parent once all five proofs exist.
+
 # Current checkpoint — Raw57 0LB candidate closure (2026-11-26)
 
 Normal draw 3; immutable lease 2026-11-26T01:54:24.226Z, run agent1-gpt62-2026-11-26T01:54:24.226Z-raw-frontier, claim 6d18e89aa3a8cfc46294140d8f876b96bdc4df36. Release threshold 03:04:24.226Z, never refresh. Local Lean 4.36.0-rc2 works; git clone DNS blocked; exact source/object dependencies extracted from artifact 15057164854 and hash matched. Working dir /tmp/raw57.
