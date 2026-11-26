@@ -11,6 +11,7 @@ on:
           - canonical70
           - canonical68-integrated
           - canonical67-integrated
+          - canonical63-integrated
           - canonical65-three
           - canonical65-integrated
           - raw119-parent
@@ -29,7 +30,7 @@ on:
         required: false
         default: "45647053824"
       raw112_run_id:
-        description: "Successful Raw112 closed-parent-cover run ID (required only for target=canonical67-integrated)"
+        description: "Successful Raw112 closed-parent-cover run ID (required for target=canonical63-integrated; also used by legacy canonical67-integrated)"
         type: string
         required: false
         default: ""
@@ -914,6 +915,48 @@ jobs:
             /tmp/a8-raw115-assemble.log
           if-no-files-found: error
           retention-days: 14
+
+  integrate-canonical63:
+    name: Integrate Raw112 into the accepted Canonical64 frontier
+    if: ${{ inputs.target == 'canonical63-integrated' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+
+      - name: Integrate Raw112 into the source-accepted 64-residual frontier
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          python im-results/agent31-shared-core/assemble_canonical63.py \
+            --work /tmp/a31-canonical63 \
+            --raw112-run-id "$RAW112_RUN_ID" 2>&1 | tee /tmp/a31-canonical63.log
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical63-raw112-integration-audit
+          path: |
+            /tmp/a31-canonical63/
+            /tmp/a31-canonical63.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
 
   sharp-fourhole:
     if: ${{ inputs.target == 'sharp-fourhole' }}
