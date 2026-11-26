@@ -115,6 +115,8 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
 """
         (ROOT/(name+".lean")).write_text("".join("import "+i+"\n" for i in imports)+header+body+f"\nend {ns}\n")
     tree=json.loads((target/"tree.json").read_text());stats=Counter()
+    late={int(i):(n,s) for i,(n,s,t) in SPEC.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
+    assert len(late)==len(SPEC.get("late",{})) and not (set(late)&set(pumps))
     def build(node):
         tag,*v=node;stats[tag]+=1
         if tag=="cycle":
@@ -125,6 +127,9 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             return f".last {n} {slot(s)}"
         if tag=="open":
             code=v[0];i=index[code]
+            if i in late:
+                nn,ss0=late[i]
+                return f".last {nn} {slot(ss0)}"
             if i in pumps:return f".proven {pumps[i]}.table {pumps[i]}.never"
             candidates=SPEC["bank"].split() if "bank" in SPEC else [dfa[i]]
             for a in candidates:
@@ -163,7 +168,7 @@ theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
     def emit_subtree(node, p, kn, cn, module):
         def leaf(t, pp, k, c):
             return f"def {k} : Audit := {build(t)}\ntheorem {c} : zipCheck {BOUND} ({pp}) {k} = true := by decide\n"
-        if A not in ("0LB", "1RF") or size(node) <= 300 or node[0] != "split":
+        if A not in ("0LB", "1RF", "1LA") or size(node) <= 300 or node[0] != "split":
             emit(module, [bname], leaf(node,p,kn,cn))
             return
         stats["split"] += 1
@@ -238,5 +243,5 @@ theorem all_completions : ∀ m, compatible p57ra m → WeightedBound {BOUND} m 
 #print axioms all_completions
 """
     emit(ID+"Data",mods,body)
-    print(A,stats,"FAR",len(opens)-len(pumps),"pumps",len(pumps))
+    print(A,stats,"FAR",len(opens)-len(pumps)-len(late),"pumps",len(pumps),"late",len(late))
 if __name__=="__main__": main()
