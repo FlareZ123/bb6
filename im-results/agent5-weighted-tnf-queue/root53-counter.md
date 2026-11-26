@@ -74,3 +74,8 @@ with implicit zeros. The last configuration is S(P(0,0),0). Iterate the return t
 ## Reproduction and scope
 
 root53-counter.py independently replays 9,216 arbitrary triples (q,p,n), including q in 0..511 and n independently chosen from 0,1,2,5,13,37; all predicted returns agree and there is exactly one intermediate carry B1 in phase2. This finite test is a cross-check, not the proof. The local root53 exhaustive candidate tree has 30,793 nodes, 41 initially open leaves, 40 primitive finite FAR candidates; this proof addresses the remaining leaf. The parent tree, local certificates and source consumer are not yet accepted.
+
+
+### Direct accepted-model Lean bridge
+
+`Root53Coverage.lean` (commit 5204eacc54ba23b2251a4d80bbf28afa5b72401b) proves `never_compatible` for all completions and `weighted B` for every bound in the accepted WeightedTNF model, compiled locally against Canonical77 artifact 14997966221. The original Rocq port remains unaccepted (run 45815437524 compilation failed, generated source artifact 15115810979). The separate Lean tree checker `Root53Tree.lean` and translator `generate_root53_lean.py` are committed, with whole-parent local checking in progress. Neither a failed original-source run nor the successful leaf theorem alone proves the parent bound.
