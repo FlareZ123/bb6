@@ -7,10 +7,10 @@ on:
         required: true
         type: string
       kind:
-        description: Branch depth or source-connected A6 root (f1, c1, d0, a6)
+        description: Branch depth, A6 root or C1 batch (f1, c1, d0, a6, c1batch)
         required: true
         type: choice
-        options: [f1, c1, d0, a6]
+        options: [f1, c1, d0, a6, c1batch]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
-    if: ${{ inputs.kind != 'a6' }}
+    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -123,3 +123,45 @@ jobs:
           include-hidden-files: true
           if-no-files-found: warn
           path: cryptids/BB6Agent48
+
+  c1-batch:
+    if: ${{ inputs.kind == 'c1batch' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reuse accepted C1 OneRB producer
+        uses: actions/download-artifact@v4
+        with:
+          name: raw139-c1-OneRB-certified
+          run-id: 45689490709
+          github-token: ${{ github.token }}
+          path: /tmp/a48-c1-rb
+      - name: Reuse accepted C1 OneLF producer
+        uses: actions/download-artifact@v4
+        with:
+          name: raw139-c1-OneLF-certified
+          run-id: 45726436580
+          github-token: ${{ github.token }}
+          path: /tmp/a48-c1-lf
+      - name: Compile and audit the twelve-parent contract
+        run: bash im-results/agent48-raw139-c1/reproduce-batch.sh /tmp/a48-c1-rb /tmp/a48-c1-lf
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-c1-twelve-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a48-c1-batch/manifest.json
+            .tmp/a48-c1-batch/log
+            .tmp/a48-c1-batch/imports/*.lean
+            .tmp/a48-c1-batch/build/*.olean
