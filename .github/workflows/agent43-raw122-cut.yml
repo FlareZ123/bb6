@@ -787,7 +787,42 @@ jobs:
           github-token: ${{ github.token }}
           path: /tmp/a43-new-shards
           merge-multiple: false
-      - name: Build the pinned Raw122 core manifest
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-0-*
+          run-id: 45773448173
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards/targets-0-grouped
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-0-*
+          run-id: 45785487569
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards/targets-0-singletons
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-5-*
+          run-id: 45800793166
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards/targets-5
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-16-*
+          run-id: 45818787152
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards/targets-16
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-17-*
+          run-id: 45818787152
+          github-token: ${{ github.token }}
+          path: /tmp/a43-new-shards/targets-17
+          merge-multiple: false
+      - name: Build the full Raw122 parent prepin manifest
         env:
           SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
           RAW122_PARENT_CORE: "1"
