@@ -30,7 +30,7 @@ src=src.replace(anchor,'''    nr=f"""theorem nr{name} : canonicalResiduals p{nam
     for q in range(6):
         for w in range(2):
             for r in range(2):
-                nr+='  · '+(f'exact nr{names[12*w+6*r+q]}' if q<=cut else 'omega')+'\\n'
+                nr+='  · '+(f'exact nr{names[12*w+6*r+q]}' if q<=cut else f'change {q} ≤ {cut} at h; omega')+'\\n'
     xs.append(nr.rstrip())
     return xs
 n,s,children=tree[1:]''')
