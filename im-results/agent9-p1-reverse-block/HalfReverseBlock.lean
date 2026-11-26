@@ -9,7 +9,7 @@ open BB6.Agent43P1Complement
 
 private theorem pow_mod_four_local (s : Nat) (hs : 2≤s) : 2^s%4=0 := by
   have hd := Nat.pow_dvd_pow 2 hs
-  exact Nat.dvd_iff_mod_eq_zero.mp (by simpa using hd)
+  exact Nat.dvd_iff_mod_eq_zero.mp hd
 
 /-- The canonical half of a delayed prefix cover, together with the
     source-derived late-margin inequalities. -/
@@ -47,7 +47,7 @@ theorem half_covered_next_block (n s h : Nat) (ps : List Prefix)
   have hmem := hcover D d F f hpre hDmod hshort
   have hadv := extend_in_advance n s D d h B a ps hmem hExt'
   have htrB : Trace n (s+h) B a :=
-    extend_trace n s D d h hpre hExt'
+    extend_trace n s D d h B a hpre hExt'
   have hfilter : blockLookahead n (s+h) B a (parts B)=true :=
     blockLookahead_sound n (s+h) B a (parts B)
       (hflat B) (hfit B) htrB hE
@@ -92,18 +92,22 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
   | step i B0 a0 x c0 hprev hx he =>
     cases hprev with
     | first =>
-      have hi : i=1 := by omega
-      subst i
       have hx0 : x=0 := by
         have hB : (1+2*x)%4=1 := by simpa [Nat.pow_succ] using hBmod
         omega
       have hn2 : 1<n := by omega
       have ht : target n 1 1=0 := by simp [target,hn2]
-      have hq : (n+2)/2=2*((n+2)/4) := by omega
-      have hc : c0=(n+2)/4 := by
-        rw [ht] at he
-        rw [hx0] at he
-        omega
+      have he' := he
+      rw [ht,hx0] at he'
+      have hc2 : 2*c0=(n+2)/2 := by simpa using he'
+      have hmod2 : (n+2)%2=0 := by omega
+      have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
+        Nat.mod_add_div (n+2) 2
+      have hc4 : 4*c0=n+2 := by omega
+      have hmod4 : (n+2)%4=0 := by omega
+      have hdiv4 : (n+2)%4 + 4*((n+2)/4)=n+2 :=
+        Nat.mod_add_div (n+2) 4
+      have hc : c0=(n+2)/4 := by omega
       subst x
       subst c0
       simp [Nat.pow_succ]
