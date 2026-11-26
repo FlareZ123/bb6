@@ -1,0 +1,85 @@
+name: Raw139 ZeroLF residual 3862 and parent discharge
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source revision
+        required: true
+        type: string
+      parent_run_id:
+        description: Completed conditional parent audit run (empty for proof-only)
+        type: string
+        default: ''
+      proof_run_id:
+        description: Optional earlier certified 3862 run for parent composition
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact 3862 proof shards
+        run: |
+          set -euo pipefail
+          base=im-results/agent14-raw139-e0-zeroLF
+          python3 im-results/agent13-coverage/unpack.py
+          python3 "$base/unpack3862.py" .tmp/zeroLF3862/imports
+      - uses: actions/download-artifact@v4
+        if: inputs.parent_run_id != ''
+        with:
+          name: raw139-e0-zeroLF-parent-certified
+          run-id: ${{ inputs.parent_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/zeroLF3862/conditional
+      - uses: actions/download-artifact@v4
+        if: inputs.proof_run_id != ''
+        with:
+          name: raw139-zeroLF3862-certified
+          run-id: ${{ inputs.proof_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/zeroLF3862/exception
+      - name: Check proof or compose with the conditional parent
+        env:
+          PARENT_RUN: ${{ inputs.parent_run_id }}
+          PROOF_RUN: ${{ inputs.proof_run_id }}
+        run: |
+          set -euo pipefail
+          base=im-results/agent14-raw139-e0-zeroLF
+          work=.tmp/zeroLF3862
+          out="$work/final"
+          mkdir -p "$out/build"
+          args=(--source-root "$work/imports")
+          target="$base/Cover3862.lean"
+          theorem=BB6.Agent14ZeroLF3862.weighted
+          table='[7,10,11,19,14,17,24,16,20,11,3,0]'
+          if [[ -n "$PARENT_RUN" ]]; then
+            bash "$base/prepare.sh"
+            python3 "$base/merge3862.py" "$work"
+            args+=(--source-root "$work/conditional/imports" --precompiled-manifest "$work/merged.json" --precompiled-dir "$work/merged")
+            target="$base/E0ZeroLFDischarge.lean"
+            theorem=BB6.Agent14E0LFParent.weighted
+            table='[7,24,11,24,14,24,24,16,20,11,24,24]'
+            args+=(--weighted-bound 19007)
+          fi
+          python3 tools/lean_compile_closure.py "$target" "${args[@]}" --workdir /tmp/agent14-zeroLF3862 --jobs 2 --manifest "$out/manifest.json" --label "$theorem" --theorem "$theorem" --parent-table "$table" --provenance-input "$base/3862-source.b64.1" --provenance-input "$base/3862-source.b64.2" --provenance-input "$base/3862-source.b64.3" --provenance-input "$base/unpack3862.py" | tee "$out/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$out/log"
+          grep -F "'$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" "$out/log"
+          find /tmp/agent14-zeroLF3862 -name '*.olean' -exec cp '{}' "$out/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.parent_run_id == '' && 'raw139-zeroLF3862-certified' || 'raw139-e0-zeroLF-unconditional-certified' }}
+          path: .tmp/zeroLF3862/final
+          include-hidden-files: true
+          retention-days: 14
