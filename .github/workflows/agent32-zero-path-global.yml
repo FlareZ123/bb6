@@ -77,7 +77,7 @@ on:
       raw59_child:
         description: Raw59 proof target; Canonical64Compose consumes Raw59 alone; Canonical62Compose consumes accepted Raw59 and Raw112 parents
         type: choice
-        options: [ParentCompose, UpgradeAll, UpgradeRemaining, Upgrade0LA, Canonical64Compose, Canonical62Compose, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
+        options: [SharpCompose, ParentCompose, UpgradeAll, UpgradeRemaining, Upgrade0LA, Canonical64Compose, Canonical62Compose, Upgrade0LB, Upgrade0LE, Upgrade0LF, Upgrade1LB, Upgrade1LE, Upgrade1LF, ClosedBase, AsymAll, Asym0LB, Asym1LB, Asym1LE, all, 0RB, 0LD, 0RC, 1RC, 0RF, 1LA, RCShared, RFCount, RFTriple, RFScan, 1RF, CanonicalPilot, CanonicalAll, PartialAll, Partial0LB, Partial1LB, Partial1LE, MacroFARPilot, Return1582, ReturnFamily, Late190, OffsetPilot, Width2Pilot, LB1Four, LB1Sweep583, LB1Sweep1734, 0RD, 1LC, 1RB, 1RD, 0LC, 0RE]
         default: all
 
       verify_f418_return:
@@ -492,7 +492,7 @@ jobs:
           PY
 
   raw59-refinement:
-    if: ${{ inputs.verify_raw59 && inputs.raw59_child != 'Canonical64Compose' && inputs.raw59_child != 'Canonical62Compose' && inputs.raw59_child != 'ParentCompose' }}
+    if: ${{ inputs.verify_raw59 && inputs.raw59_child != 'Canonical64Compose' && inputs.raw59_child != 'Canonical62Compose' && inputs.raw59_child != 'ParentCompose' && inputs.raw59_child != 'SharpCompose' }}
     strategy:
       fail-fast: false
       matrix:
@@ -718,7 +718,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/raw59-combined.log; then exit 1; fi
 
   raw59-parent-composition:
-    if: ${{ always() && inputs.verify_raw59 && (inputs.raw59_child == 'ParentCompose' || (needs.raw59-refinement.result == 'success' && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA'))) }}
+    if: ${{ always() && inputs.verify_raw59 && (inputs.raw59_child == 'SharpCompose' || inputs.raw59_child == 'ParentCompose' || (needs.raw59-refinement.result == 'success' && (inputs.raw59_child == 'UpgradeAll' || inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA'))) }}
     needs: raw59-refinement
     runs-on: ubuntu-latest
     timeout-minutes: 15
@@ -735,62 +735,63 @@ jobs:
           pattern: raw59-checked-*
           path: /tmp/raw59-shards
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45781689877
           name: raw59-checked-Upgrade0LA
           path: /tmp/raw59-shards/raw59-checked-Upgrade0LA
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45742419127
           name: raw59-checked-Upgrade0LB
           path: /tmp/raw59-shards/raw59-checked-Upgrade0LB
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45742419127
           name: raw59-checked-Upgrade0LF
           path: /tmp/raw59-shards/raw59-checked-Upgrade0LF
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45742419127
           name: raw59-checked-Upgrade1LB
           path: /tmp/raw59-shards/raw59-checked-Upgrade1LB
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45675872170
           name: raw59-checked-Upgrade0LE
           path: /tmp/raw59-shards/raw59-checked-Upgrade0LE
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45675872170
           name: raw59-checked-Upgrade1LF
           path: /tmp/raw59-shards/raw59-checked-Upgrade1LF
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45727352966
           name: raw59-checked-Upgrade1LE
           path: /tmp/raw59-shards/raw59-checked-Upgrade1LE
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' }}
+        if: ${{ inputs.raw59_child == 'UpgradeRemaining' || inputs.raw59_child == 'Upgrade0LA' || inputs.raw59_child == 'ParentCompose' || inputs.raw59_child == 'SharpCompose' }}
         with:
           github-token: ${{ github.token }}
           run-id: 45727352966
           pattern: raw59-checked-Closed*
           path: /tmp/raw59-shards
       - name: Validate shard closure and compose raw59 parent bound
+        if: ${{ inputs.raw59_child != 'SharpCompose' }}
         run: |
           set -euo pipefail
           python im-results/agent4-raw109/merge_shards.py /tmp/raw59-shards /tmp/raw59-merged im-results/agent32-raw59/parent_shards.json
@@ -803,12 +804,42 @@ jobs:
           python im-results/agent32-raw59/check_axioms.py /tmp/raw59-final.log BB6.Agent32Raw59UpgradeAll.bound
           cp /tmp/raw59-final.log /tmp/raw59-final/audit.log
       - uses: actions/upload-artifact@v4
+        if: ${{ inputs.raw59_child != 'SharpCompose' }}
         with:
           name: raw59-parent-certified
           path: |
             /tmp/raw59-final/*.lean
             /tmp/raw59-final/*.olean
             /tmp/raw59-merged/*.olean
+            /tmp/raw59-final/manifest.json
+            /tmp/raw59-final/audit.log
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Reweight accepted audit and prove sharp Raw59 score
+        if: ${{ inputs.raw59_child == 'SharpCompose' }}
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py /tmp/raw59-shards /tmp/raw59-merged im-results/agent32-raw59/parent_shards.json
+          python im-results/agent32-raw59/generate_sharp.py /tmp/raw59-shards/raw59-checked-Upgrade0LB im-results/agent32-raw59/generated_sharp
+          python tools/lean_compile_closure.py --workdir /tmp/raw59-final --jobs 1 \
+            --precompiled-manifest /tmp/raw59-merged/manifest.json --precompiled-dir /tmp/raw59-merged \
+            --manifest /tmp/raw59-final/manifest.json --artifact-name raw59-exact-certified \
+            --theorem BB6.Agent32Raw59Exact.exact_bound --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LA_------' \
+            --weighted-bound 4136171 --provenance-input im-results/agent32-raw59/generate_sharp.py \
+            im-results/agent32-raw59/Raw59Exact.lean | tee /tmp/raw59-final.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw59-final.log; then exit 1; fi
+          for theorem in BB6.Agent32Raw59Exact.exact_bound BB6.Agent32Raw59Exact.cover BB6.Agent32Raw59Sharp.longest_halts; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/raw59-final.log "$theorem"
+          done
+          cp /tmp/raw59-final.log /tmp/raw59-final/audit.log
+      - uses: actions/upload-artifact@v4
+        if: ${{ inputs.raw59_child == 'SharpCompose' }}
+        with:
+          name: raw59-exact-certified
+          path: |
+            /tmp/raw59-final/*.lean
+            /tmp/raw59-final/*.olean
             /tmp/raw59-final/manifest.json
             /tmp/raw59-final/audit.log
           if-no-files-found: error
