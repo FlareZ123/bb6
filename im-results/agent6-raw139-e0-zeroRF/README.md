@@ -16,4 +16,6 @@ The previous exact seven A0 section rules in `ZeroRF1892Macros.lean` were used t
 
 Both formerly open leaves of the candidate partition now have unbounded mathematical resolutions. The remaining work for a source-accepted 0RF parent Cover is the complete exhaustive partition replay and integration of the two exact leaf proofs, whose individual local kernel certificates now pass. [assemble.py](assemble.py) and [compose.py](compose.py) generate and merge the 24 exact first-hole root proofs (F0 at step 8), including both exceptional leaves. The existing manual E0 audit workflow supports variant `zeroRF`. Candidate uniform weighted bound remains 2043.
 
-Run `python reproduce.py` to regenerate partition and recipes (requires repository source and g++). Recipes are candidate data, not proof artifacts.
+Run `python generate1892_kernel.py` to regenerate the exact 1892 Lean certificate. Run `python reproduce.py` to regenerate partition and recipes (requires repository source and g++). Recipes are candidate data, not proof artifacts.
+
+Parent source audit: [run 45880300288](https://github.com/FlareZ123/bb6/actions/runs/45880300288), pinned source `bd64e66c5461f413150d62b6593aa9d071de85d4`. No parent theorem accepted yet.
