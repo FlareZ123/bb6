@@ -190,6 +190,7 @@ def main() -> None:
     branch_log = run([
         "lean", "-o", work / f"Raw122Branch{branch:02}.olean", branch_source.name,
     ], cwd=factored, env=env, capture=True)
+    run([sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
     manifest = Path("/tmp/a43-branch05-manifest.json")
     Path("/tmp/a43-manifest-work").mkdir(parents=True, exist_ok=True)
     closure_tool = ROOT / "tools/lean_compile_closure.py"

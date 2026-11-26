@@ -139,6 +139,7 @@ def main():
     env["LEAN_PATH"] = str(work.resolve())
     branch_log = run(["lean", "-o", work / "Raw122Branch00.olean", "Raw122Branch00.lean"],
                      cwd=factored, env=env, capture=True)
+    run([os.sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
     manifest = Path("/tmp/a43-branch00-manifest.json")
     Path("/tmp/a43-manifest-work").mkdir(parents=True, exist_ok=True)
     closure = ROOT / "tools/lean_compile_closure.py"
