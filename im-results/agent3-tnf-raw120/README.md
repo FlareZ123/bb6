@@ -2,9 +2,9 @@
 
 Parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9.
 
-## Accepted partial closure (2026-11-26)
+## Accepted complete parent and exact weighted threshold (2026-11-26)
 
-**24 of 25 disjoint E0 branches now have accepted component bounds; only 1LB remains.** The prior source-linked composition [Raw120ThreeResidual.lean](Raw120ThreeResidual.lean) formally combines 22 branches at WeightedBound 18859, leaving 1LB, 1RC and 1RF. The original matrix has since accepted 1RC and 1RF at 135 and 889. Consequently the remaining component obligation is one cylinder of mass 25^5 = 9,765,625 (the other 234,375,000 raw completions have accepted component bounds). These are cylinder counts, not distinct canonical machines. The full parent theorem has not yet been accepted.
+**All 25 disjoint E0 branches are source-accepted. The entire Raw120 cylinder has exact uniform weighted threshold 224707.** In [run 45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942), both the 1LB child job 139620035429 and the complete parent job 139639329915 succeeded at revision `e8dbaab36366b8282388cff6eda45fb550372774`. The parent job composes all 25 choices (`Raw120Complete.allRaw120`, `coverRaw120`) and checks `Raw120ExactLower.raw120_lower`, which forces the bound 224707 from the attaining 1LB late leaf. It rejects `sorryAx` and `native_decide`. Artifact **15080392441** (`raw120-parent`, SHA-256 `617e0e6e523edfe5bdbba757d812e2139555f054e9d4a857ccfee54d685a2364`) contains the checked object closure and manifest. Thus every compatible machine satisfies the bound, and no smaller uniform weighted bound suffices. The six-hole cylinder has 25^6 = 244,140,625 raw completions; this is not a count of canonical machines. A global roster cut still requires a consuming proof.
 
 | E0 | Weighted bound | Evidence |
 | --- | ---: | --- |
@@ -21,18 +21,18 @@ Parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at o
 | 1LF | 1855 | [matrix job 139516363565](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363565); artifact 15071453743; [dossier](1LF-dossier.md) |
 | 1RA | 13317 | [45685953381](https://github.com/FlareZ123/bb6/actions/runs/45685953381) |
 | 1RB | 749 | [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
-| 1LB | candidate 224707 | [dossier](1LB-dossier.md); [targeted repair run 45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) pending |
+| 1LB | 224707 (exact) | [dossier](1LB-dossier.md); [accepted repair job 139620035429](https://github.com/FlareZ123/bb6/actions/runs/45733198942/job/139620035429), artifact 15080541393 |
 | 1RC | 135 | [matrix job 139516363381](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363381); artifact 15073891914 |
 | 1RF | 889 | [matrix job 139516363775](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363775); artifact 15076397787 |
 
-All 14 successful matrix artifacts pin source revision `3a45edaf85bc519ee64e07f5b1379664b352a023` in [run 45702614303](https://github.com/FlareZ123/bb6/actions/runs/45702614303). Its sole cancelled child 1LB stalled during Python witness discovery, before Lean compilation. Both 1RC and 1RF final `allOneR*` theorems use only propext, Classical.choice and Quot.sound. The targeted repair uses the 14 accepted artifacts and reruns only 1LB, checking all object/source hashes and shared dependency identities before parent compilation.
+All 14 successful matrix artifacts pin source revision `3a45edaf85bc519ee64e07f5b1379664b352a023` in [run 45702614303](https://github.com/FlareZ123/bb6/actions/runs/45702614303). Its sole cancelled child 1LB stalled during Python witness discovery, before Lean compilation. Both 1RC and 1RF final `allOneR*` theorems use only propext, Classical.choice and Quot.sound. The targeted repair reused the 14 accepted artifacts and reran only 1LB, checking all object/source hashes and shared dependency identities before successful parent compilation.
 
 ## Parent and canonical composition
 
-- Raw120ThreeResidual.lean: pairwise disjoint remaining children, exact mass identities, parent_partition and cover_from_three. Its two explicit premises are the already accepted 1RA and 1RB bounds.
-- Raw120Complete.lean: complete candidate parent composition at bound 224707, awaiting the sole remaining 1LB aggregate certificate.
-- Raw120ExactLower.lean: consumes the 1LB late leaf 1341, whose 224705 live transitions, halt tick and one incoming blank-prefix step give weighted threshold 224707. The exact parent lower bound still requires composition with the original-source late artifact.
-- Raw120Canonical76Graft.lean: corrected thin consumer of the **accepted raw107+raw114 canonical76 roster**, not the different raw114+raw121 roster that also has length 76. Lean locally checks parent_present, roster75_count, roster75_sound and exact_at_target against canonical artifact 14997966221. Conditional on a full raw120 bound, precisely this roster drops from 76 to 75. The theorem explicitly retains all 75 other Covers and the champion witness. **No global roster entry is removed yet.**
+- [Raw120Complete.lean](Raw120Complete.lean): accepted all-completions theorem at 224707 and Cover at every larger target.
+- [Raw120ExactLower.lean](Raw120ExactLower.lean): accepted sharpness theorem using the exact 1LB late leaf 1341 (224705 live transitions, one halt tick, and one incoming blank-prefix step).
+- [Canonical64Raw120Integrated.lean](Canonical64Raw120Integrated.lean): consuming theorem against Agent31's eleven-parent `Canonical65Integrated` environment from run 45732489302, artifact 15078085872. It tests exact membership and a one-entry removal, then imports the actual accepted Raw120 proof and composes both exactness directions. **Awaiting its own pinned artifact-link and kernel audit.** The other 64 Covers and the champion witness remain explicit. This proposal does not yet remove an entry from the accepted public roster.
+- Historical [Raw120ThreeResidual.lean](Raw120ThreeResidual.lean) and [Raw120Canonical76Graft.lean](Raw120Canonical76Graft.lean) preserve the earlier partial partition and conditional 76→75 mechanism; their remaining parent premise is now discharged by the completed Raw120 theorem. The current integration target is the eleven-parent environment, not a separate competing 75-entry roster.
 
 The 0RF child alone disproves a uniform 7014 bound for raw120. The final roster composition must lift this parent bound to the champion score rather than impose 7014.
 
@@ -70,6 +70,6 @@ The E0=0RB manual target `weighted-tnf-raw120-rb` passed in [CI run 45532860093]
 
 ## Reproduction
 
-Use the manual workflow `.github/workflows/agent3-raw120-complete.yml` with mode `repair-1lb` to reuse the 14 accepted siblings and check the final child and parent; mode `all` rebuilds the full matrix. Do not regenerate accepted siblings merely to inspect the remaining ones. The child artifacts contain source/olean manifests; `assemble_shards.py` checks source revision, hashes and dependency identities before composition.
+The manual workflow `.github/workflows/agent3-raw120-complete.yml` has a new `integrate-65` mode using the two pinned accepted parent/core artifacts, without regenerating any child. The earlier `repair-1lb` and `all` modes reproduce the parent proof; do not rerun them merely for integration. The child artifacts contain source/olean manifests; `assemble_shards.py` checks source revision, hashes and dependency identities before composition. The integration uses the existing Agent31 reached-kernel comparator and checks all exported axiom profiles.
 
 The generators are generate.py (0RF), generate_rb.py, generate_rc.py, generate_la.py and generate_sibling.py. The individual dossiers preserve discovery details and candidate witness indices. The matrix consumes generated Lean proofs; no native decision oracle or sorry is needed.

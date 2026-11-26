@@ -1,6 +1,6 @@
-# Raw120 E0=1LB — complete candidate assignment
+# Raw120 E0=1LB — accepted exact sibling bound
 
-**Status:** all 4,351 open leaves have candidate proof routes; the full generated sibling coverage theorem is pending source checking. The weighted candidate bound is **224707** (attained by index 1341 in the local original-artifact proof). No global roster entry is removed.
+**Status:** complete source-accepted sibling coverage at weighted bound **224707**. All 4,351 open leaves are covered by the generated proof; run [45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) passed both its 1LB child and complete parent jobs. Index 1341 attains the threshold, and the accepted `raw120_lower` theorem transfers this sharpness to the entire parent. Canonical integration is a separate gate.
 
 Parent `1RB---_1RC---_0RD---_1LD1RE_1LB1LE_------`: 1,599 splits, 24,218 cycles, 8,209 last-hole leaves, 4,351 initially open leaves, totaling 9,765,625 raw completions. Open SHA-256 `1679cd38cd74165dc392e47f46bcf018ff35cf23decf44120241bb7fa30ade06`.
 
@@ -10,7 +10,7 @@ The initial search found 4,295 FAR, 45 one-block, two multi-block, two late-quer
 | --- | --- |
 | 1265, 3656, 4072 | Source-accepted TreeBiDFA nonhalting certificates, run [45663147964](https://github.com/FlareZ123/bb6/actions/runs/45663147964). |
 | 1947 | Source-accepted TreeBiDFA nonhalting certificate, run [45665829257](https://github.com/FlareZ123/bb6/actions/runs/45665829257). |
-| 1341 | Exact weighted threshold 224707, kernel-checked locally against original-source coverage artifacts (standard axioms only); fresh exact repository-source CI pending. |
+| 1341 | Exact weighted threshold 224707, checked by the complete parent job in run 45733198942. |
 
 The two prior BiDFA pairs at indices 820 and 850 remain in `1LB-bidfa.json`. The earlier `1LB-hard.json` is preserved as a historical search input, not a current unresolved list.
 
@@ -24,12 +24,12 @@ The repair contains three main changes:
 - Leaf 654 now uses the explicit one-block witness at time 42: state B, empty left list, right list `1 ++ (111111111111111)^n ++ 1111011111`. One phase costs `342 + 360*n` and increases the exponent by one. This bypasses the costly generic multi-block search.
 - The 1LB generator tries literal-only symbolic phases first, extends the one-block candidate horizon, and reports each unmatched leaf before searching. The local equivalent discovery pass found all 47 symbolic candidates without a residual. All 47 growth witnesses and all six BiDFA proofs compiled locally against the original accepted coverage-library objects, with standard axioms only. This checks the leaf proofs individually; their tree-wide composition is a separate obligation.
 
-The targeted workflow [45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) checks only 1LB, then composes the complete parent against the other 14 already accepted matrix shards. It must prove `allOneLB` at 224707, `allRaw120` and `raw120_lower` using standard axioms. The former 3793 bound is false for the whole sibling. No parent or canonical roster closure is claimed pending acceptance.
+The targeted workflow [45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) checked only 1LB, then composed the complete parent against the other 14 already accepted matrix shards. Both jobs passed at source e8dbaab36366b8282388cff6eda45fb550372774, proving `allOneLB` at 224707, `allRaw120` and `raw120_lower`; the forbidden-axiom guards passed. The former 3793 bound is false for the whole sibling. The parent is accepted, with canonical consumption remaining separate.
 
 ## Reusable faster kernel checks
 
 [PackedCycle.lean](PackedCycle.lean) proves signed-head translated-cycle soundness using a packed tape. [WeakFAR.lean](WeakFAR.lean) proves that backward closure of the bad all-zero suffix set suffices for nonhalting, rather than requiring the full fixed-point equality. [SparseFAR.lean](SparseFAR.lean) validates sparse transition rows against their exact bitmasks, checking closure only on listed targets. [SparseAudit.lean](SparseAudit.lean) lifts these into the weighted first-hole certificate. Each new soundness theorem compiled using the original coverage library with only standard axioms.
 
-On the same 24-leaf sample in [benchmark_sparse.py](benchmark_sparse.py), the original FastFAR checker took 68.985 s, WeakFAR 51.238 s, and SparseFAR 23.283 s (2.96x speedup over FastFAR). This is an observed local benchmark, not a universal runtime guarantee. The first substantial sparse tree shard (Kid09) checked in 43.303 s; the original packed variant was stopped after more than four minutes. [sparsify_generated.py](sparsify_generated.py) is an optional source converter that preserves the original generated artifacts, and is not part of the running repair workflow. The local conditional tree check isolates the exact 1341 late-query proof as a premise. No full sibling acceptance is claimed until all shards and the aggregate theorem check.
+On the same 24-leaf sample in [benchmark_sparse.py](benchmark_sparse.py), the original FastFAR checker took 68.985 s, WeakFAR 51.238 s, and SparseFAR 23.283 s (2.96x speedup over FastFAR). This is an observed local benchmark, not a universal runtime guarantee. The first substantial sparse tree shard (Kid09) checked in 43.303 s; the original packed variant was stopped after more than four minutes. [sparsify_generated.py](sparsify_generated.py) is an optional source converter that preserves the original generated artifacts, and was not part of the accepted repair workflow. The earlier local conditional tree check isolates the exact 1341 late-query proof as a premise; the accepted aggregate now closes it.
 
 The existing raw120 matrix workflow is retained for its distinct pinned 14-artifact merge, including module dependency identity checks; no additional agent-specific workflow is required for sparse checking. It can be considered as a selectable checker within the existing workflow after acceptance, rather than creating another dispatch path.
