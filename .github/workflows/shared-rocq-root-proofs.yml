@@ -378,6 +378,15 @@ jobs:
             original/verify/Agent5Q0AutoData.v
             original/verify/q0-auto-candidate.json
           if-no-files-found: error
+      - name: Preserve generated direct-parent source for ordinary roots
+        if: inputs.target == 'enumerate62-direct-parent' && inputs.offset != 33 && (inputs.offset < 55 || inputs.offset > 58)
+        uses: actions/upload-artifact@v4
+        with:
+          name: q0-direct-parent-${{ inputs.offset }}-source
+          path: |
+            original/verify/Agent5Q0AutoData.v
+            original/verify/q0-auto-candidate.json
+          if-no-files-found: error
       - name: Generate direct finite-stack source certificates
         if: inputs.target == 'enumerate62-direct-auto'
         working-directory: original/verify
