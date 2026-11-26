@@ -45,31 +45,26 @@ theorem toAgent8_ofAgent8_3 (m : BB6Coverage.Machine) :
   cases b
   · cases h : m (q, false) with
     | none =>
-        simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h]
+        rfl
     | some mv =>
         cases mv with
         | mk w r n =>
             cases w <;> cases r <;>
-              simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h,
-                boolToFin2, boolToDir, fin2ToBool]
+              rfl
   · cases h : m (q, true) with
     | none =>
-        simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h]
+        rfl
     | some mv =>
         cases mv with
         | mk w r n =>
             cases w <;> cases r <;>
-              simp [BB6.ConjectureBridge.toAgent8, ofAgent8_3, h,
-                boolToFin2, boolToDir, fin2ToBool]
+              rfl
 
 /-- Recover the exact pinned source target after the local inverse adapter. -/
 theorem ofAgent8_candidate3_toBB :
     (ofAgent8_3 candidate3).toBB = target3 := by
   funext q a
-  fin_cases q <;> fin_cases a <;>
-    simp [target3, source3, candidate3, ofAgent8_3,
-      BB6.ConjectureBridge.toAgent8, ConjectureMachines.Machine.toBB,
-      boolToFin2, boolToDir, fin2ToBool]
+  fin_cases q <;> fin_cases a <;> decide
 
 /-- The source DFA tables and accepted tuples are copied verbatim from the
     pinned module. Its source-side dimensions are Fin 1 and Fin 3. -/
