@@ -1291,8 +1291,12 @@
     "groups": "",
     "pumps": [],
     "multi": [],
-    "custom": {},
-    "imports": [],
+    "custom": {
+      "39": "BB6Coverage.Agent4LF139"
+    },
+    "imports": [
+      "Raw58LF139"
+    ],
     "auto_classify": true,
     "automata": {
       "131": [
