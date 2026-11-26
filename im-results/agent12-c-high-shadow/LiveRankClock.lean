@@ -136,7 +136,7 @@ theorem live_section_86784452 (hr : Reach (954556,42914948,0)) :
   have hf : factor 27=224 := by decide
   have hR : rankC (954556,42914948,0)=86784452 := by decide
   rw [hs,hf,hR] at hbound
-  norm_num at hbound
+  simp only [Nat.reduceAdd,Nat.reduceMul,Nat.reducePow] at hbound
   exact ⟨N,h,by omega,hrun⟩
 
 theorem section_reach_live_bound
