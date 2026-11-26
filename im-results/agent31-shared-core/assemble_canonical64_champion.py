@@ -130,7 +130,7 @@ def main():
     champion_profiles = named_axioms(champion_log, [
         "BB6Coverage.Agent48DirectRoot.champion_raw_halts_exact",
         "BB6Coverage.Agent48DirectRoot.champion_weighted_bound",
-        "BB6.Agent38ChampionThreshold.first_section_cost_decomposition",
+        "BB6.Agent38ChampionThreshold.sectionResult_firstCost_le",
         "BB6.Agent38ChampionThreshold.first_increment_ge_pow63",
         "BB6.Agent38ChampionThreshold.first_increment_le_first_section",
         "BB6.Agent38ChampionThreshold.sectionResult_cost_le_threeSectionMoves",
