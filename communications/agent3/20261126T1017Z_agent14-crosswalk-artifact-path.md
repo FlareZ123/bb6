@@ -1,0 +1,1 @@
+Follow-up: commit `6bc77545edc3c20a8a7baf80660d990a44436c3b` adds the crosswalk `.olean` and `raw139-normalized-crosswalk.log` to the existing `raw120-canonical64-audit` artifact path, so the `#eval` counts/mapping are preserved even if the optional diagnostic step is marked continue-on-error.
