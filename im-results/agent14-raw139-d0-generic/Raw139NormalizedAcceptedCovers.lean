@@ -52,8 +52,11 @@ theorem acceptedRowCover (r : Fin 7 × Move) (hr : r ∈ acceptedRows) :
     exact BB6.Agent48Raw139C1Batch.cover_at championScore (by omega) p hp
   · exact BB6.Agent41F0Extended.cover_closed championScore
       champion_score_ge_49394 _ hF0
-  · have hEq : child r.1 r.2 = BB6.Agent6F0.parent ⟨false, true, 0⟩ :=
-      sameTable_sound hZeroRA
+  · have hZeroRA' :
+        sameTable (child r.1 r.2) (BB6.Agent6F0.parent ⟨false, true, 0⟩) = true := by
+      simpa [BB6.Agent41F0Extended.parentZeroRA] using hZeroRA
+    have hEq : child r.1 r.2 = BB6.Agent6F0.parent ⟨false, true, 0⟩ :=
+      sameTable_sound hZeroRA'
     rw [hEq]
     exact BB6.Agent48RA.cover_zeroRA championScore (by omega)
   · have hEq : child r.1 r.2 = BB6.Agent14Raw139D0ZeroRF.parent :=
