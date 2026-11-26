@@ -1,10 +1,41 @@
 name: Agent41 raw139 finite partial coverage
 on:
   workflow_dispatch:
+    inputs:
+      task:
+        description: Select the Raw139 source audit or the F421 FAR search
+        required: false
+        type: choice
+        options:
+          - certify
+          - f421-far-search
+        default: certify
 permissions:
   contents: read
 jobs:
+  f421-far-search:
+    if: ${{ inputs.task == 'f421-far-search' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build F421 FAR enumerator
+        run: g++ -O3 -std=c++17 -Wall -Wextra -Wpedantic im-results/agent41-f421/search_far.cpp -o /tmp/f421-far-search
+      - name: Search all canonical six-state DFAs
+        run: |
+          set -euo pipefail
+          timeout 1740s /tmp/f421-far-search 2>&1 | tee /tmp/f421-far-search.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: f421-far-search
+          path: |
+            /tmp/f421-far-search.log
+            /tmp/f421-far.json
+          if-no-files-found: warn
+          retention-days: 14
   certify:
+    if: ${{ inputs.task != 'f421-far-search' }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
