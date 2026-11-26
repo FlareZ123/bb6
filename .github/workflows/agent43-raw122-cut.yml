@@ -7,15 +7,15 @@ on:
         type: boolean
         default: false
       assemble_branch:
+        description: "Assemble an existing Raw122 branch: 0 reuses completed 0LA shards; 5 runs and assembles 0LF"
+        required: false
+        type: string
+        default: ''
       target_run_id:
         description: Existing 0LF target-matrix workflow run to reuse in assembly-only mode
         required: false
         type: string
         default: '45800793166'
-        description: "Assemble an existing Raw122 branch: 0 reuses completed 0LA shards; 5 runs and assembles 0LF"
-        required: false
-        type: string
-        default: ''
       retain_residuals:
         description: Keep original unresolved leaves and use checked prefix-cut factoring
         type: boolean
