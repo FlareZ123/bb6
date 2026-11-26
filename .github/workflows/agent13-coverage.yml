@@ -4907,20 +4907,35 @@ jobs:
           G=/tmp/a7-raw124-generated
           W=/tmp/a7-raw124-closure
           STEM="Raw124ZeroLF${CHILD}"
+          NS="BB6.Agent7Raw124ZeroLF${CHILD}"
           if [[ "$CHILD" == 0RA || "$CHILD" == 1RB ]]; then STEM="Agent7$STEM"; fi
-          python "$D/generate.py" "$G" "$CHILD"
-          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; 1LE) B=356;; 0RA) B=430;; 1RB) B=1088;; *) exit 2;; esac
+          if [[ "$CHILD" == 1LA ]]; then
+            D=im-results/agent32-raw124-0lf1la
+            NS=BB6.Agent32Raw124ZeroLF1LA
+            test "$(git hash-object im-results/agent2-tnf-raw124/Raw124FastAudit.lean)" = "6a6086dd9e41d924606a7ce9b1784d0486f04220"
+            test "$(git hash-object im-results/agent4-two-sided-automata/TwoSidedAutomata.lean)" = "c04bf81e19d55b3d028c714e628246a4b917f03c"
+            GEN="$D/generate_1la.py"
+            python "$GEN" "$G"
+            provenance=(--provenance-input "$GEN" --provenance-input im-results/agent2-tnf-raw124/fast_partition.cpp --provenance-input im-results/agent2-tnf-raw124/generate_0lf_0ra.py)
+            for f in "$D"/*.b64; do provenance+=(--provenance-input "$f"); done
+          else
+            GEN="$D/generate.py"
+            python "$GEN" "$G" "$CHILD"
+            provenance=(--provenance-input "$GEN")
+          fi
+          export NS
+          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; 1LE) B=356;; 0RA) B=430;; 1RB) B=1088;; 1LA) B=1045;; *) exit 2;; esac
           overrides=()
           while IFS= read -r f; do
             mod="$(basename "$f" .lean)"
             overrides+=(--override "$mod=$f")
           done < <(find "$G" -maxdepth 1 -type f -name "${STEM}*.lean" ! -name "$STEM.lean" | sort)
-          python tools/lean_compile_closure.py --source-root "$G" --workdir "$W" --jobs 4 --manifest /tmp/a7-raw124.manifest.json --theorem "BB6.Agent7Raw124ZeroLF${CHILD}.bound_all" --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_${CHILD}0LF" --weighted-bound "$B" --artifact-name "raw124-0lf-${CHILD}-source-accepted" --provenance-input "$D/generate.py" "${overrides[@]}" "$G/$STEM.lean" 2>&1 | tee /tmp/a7-raw124.log
+          python tools/lean_compile_closure.py --source-root "$G" --workdir "$W" --jobs 4 --manifest /tmp/a7-raw124.manifest.json --theorem "${NS}.bound_all" --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_${CHILD}0LF" --weighted-bound "$B" --artifact-name "raw124-0lf-${CHILD}-source-accepted" "${provenance[@]}" "${overrides[@]}" "$G/$STEM.lean" 2>&1 | tee /tmp/a7-raw124.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a7-raw124.log; then exit 1; fi
           python - <<'PY'
           import os, pathlib, re
           log=pathlib.Path('/tmp/a7-raw124.log').read_text()
-          name='BB6.Agent7Raw124ZeroLF'+os.environ['CHILD']+'.bound_all'
+          name=os.environ['NS']+'.bound_all'
           matches=re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]",log)
           profiles={n:{x.strip() for x in a.split(',') if x.strip()} for n,a in matches}
           for n in re.findall(r"'([^']+)' does not depend on any axioms",log):
