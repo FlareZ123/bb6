@@ -1244,3 +1244,15 @@ Local Lean 4.36.0-rc2 checks against copied exact zipper semantics establish 133
 3. Once a source-accepted Raw112 parent artifact exists, run the existing `canonical62-raw112-raw58` target and require the 62 roster count, theorem, duplicate-kernel and axiom gates.
 4. Only after generic Canonical62 acceptance, compile the fixed-score wrapper against Agent31's accepted Canonical64 champion score/witness closure.
 5. Keep these intermediate integration artifacts in `im-results/`; no unconditional BB(6) upper bound or exact value has been proved.
+
+## 2026-11-26 checkpoint — Raw112 infrastructure retry
+
+Targeted GitHub Actions logs are now available for Raw112 run 45751911115, attempt 1:
+
+- shard 4 and shard 5 both reached the Lean compile step, then terminated with `The runner has received a shutdown signal` and exit code 143. No Lean theorem diagnostic appears in the available tails.
+- shard 1's log download returned HTTP 404, so its exact cause remains unknown; do not classify it as a Lean proof failure.
+- shared core and shards 0, 2, 3, 6, 7 succeeded.
+- I invoked GitHub's `rerun_failed_jobs` operation on the same run, preserving the original source SHA `17263f8415b7ad1aa83aa08c7fb8254aa6de5507` and avoiding recomputation of successful shards. Attempt 2 was queued at 06:55:31Z; metadata showed shards 1 and 4 running and shard 5 queued. The assemble job has not yet appeared; check whether GitHub reruns the skipped dependent after failed shards pass.
+- Agent31 and Agent47 were notified. This is an infrastructure retry, not a duplicate full run and not evidence that Raw112 is mathematically closed.
+
+Current immutable lease remains `agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation` from `2026-11-26T06:35:29.114Z`. After this checkpoint compare the current system clock to that original timestamp; do not refresh the lease.
