@@ -6,13 +6,17 @@ idx=int(sys.argv[1]);B=7014
 pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
-proven={"1RB0LB_1RC0RE_0RD0LA_1LD1RC_1LF0RF_1LA---": "BB6.Agent7Raw49Alternating"} if idx==0 else {}
-if idx==2:
-    proven={
-        "1RB0RA_1RC0LE_0RD0LA_1LD1RC_1LC0LF_1LE---": ("BB6.Agent7Raw49ThreeSweeps.LeftE.table","BB6.Agent7Raw49ThreeSweeps.LeftE.never"),
-        "1RB0RA_1RC0RE_0RD0LA_1LD1RC_1LF---_0LF0LD": ("BB6.Agent7Raw49ThreeSweeps.RightE.table false","BB6.Agent7Raw49ThreeSweeps.RightE.never false"),
-        "1RB0RA_1RC1RE_0RD0LA_1LD1RC_1LF---_1LD0LF": ("BB6.Agent7Raw49ThreeSweeps.RightE.table true","BB6.Agent7Raw49ThreeSweeps.RightE.never true"),
-    }
+known_proven={
+    "1RB---_1RC---_0RD0RC_1LD1RC_------_------": ("BB6.Agent7Raw49Sweep.table .direct","BB6.Agent7Raw49Sweep.never .direct"),
+    "1RB0RC_1RC---_0RD0RA_1LD1RC_------_------": ("BB6.Agent7Raw49Sweep.table .viaA","BB6.Agent7Raw49Sweep.never .viaA"),
+    "1RB---_1RC0RC_0RD0RB_1LD1RC_------_------": ("BB6.Agent7Raw49Sweep.table .viaB","BB6.Agent7Raw49Sweep.never .viaB"),
+    "1RB---_1RC---_0RD0RE_1LD1RC_---0RC_------": ("BB6.Agent7Raw49Sweep.table .viaE","BB6.Agent7Raw49Sweep.never .viaE"),
+    "1RB0LB_1RC0RE_0RD0LA_1LD1RC_1LF0RF_1LA---": "BB6.Agent7Raw49Alternating",
+    "1RB0RA_1RC0LE_0RD0LA_1LD1RC_1LC0LF_1LE---": ("BB6.Agent7Raw49ThreeSweeps.LeftE.table","BB6.Agent7Raw49ThreeSweeps.LeftE.never"),
+    "1RB0RA_1RC0RE_0RD0LA_1LD1RC_1LF---_0LF0LD": ("BB6.Agent7Raw49ThreeSweeps.RightE.table false","BB6.Agent7Raw49ThreeSweeps.RightE.never false"),
+    "1RB0RA_1RC1RE_0RD0LA_1LD1RC_1LF---_1LD0LF": ("BB6.Agent7Raw49ThreeSweeps.RightE.table true","BB6.Agent7Raw49ThreeSweeps.RightE.never true"),
+}
+proven={t:v for t,v in known_proven.items() if t in set(opens)}
 assert set(opens)==set(bank)|set(proven),set(opens)-set(bank)-set(proven)
 mod=f'Raw49C{idx}';out=root/f'child{idx}';out.mkdir(exist_ok=True)
 def support(p):return max([2]+[max(i//2,ord(v[2])-65)+1 for i,v in enumerate(p) if v!='---'])
@@ -78,7 +82,10 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit 
 ''';foot=f'\nend BB6.Agent7.{mod}\n'
 cut=support(parent)
 base=f'''import Raw40Nores
-{('import Raw49Alternating'+chr(10) if idx==0 else 'import Raw49ThreeSweeps'+chr(10) if idx==2 else '')}{head}
+import Raw49Sweep
+import Raw49Alternating
+import Raw49ThreeSweeps
+{head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem nohalt : weightedTNFNoAssignedHalt p := by
