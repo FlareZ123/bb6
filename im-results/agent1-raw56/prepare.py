@@ -89,6 +89,21 @@ def run():
             source, info = pump.generate(i, p, ans)
             if i == 2006:
                 assert info == (52, 100, 16), info
+                # A return grows n by 3, not 1. Use the subsequence n=3*j
+                # to instantiate the original unit-increment growth theorem.
+                assert "(family (n+1))" in source
+                source = source.replace("(family (n+1))", "(family (n+3))", 1)
+                start = source.index("theorem never (m : Machine)")
+                end = source.index("#print axioms never", start)
+                source = source[:start] + """def family3 (n : Nat) : Z0 := family (3*n)
+theorem entry3 : run0 table 52 ⟨0,[],[]⟩ = some (family3 0) := entry
+theorem growth3 (n : Nat) : run0 table (100+48*n) (family3 n) = some (family3 (n+1)) := by
+  unfold family3
+  rw [show 100+48*n = 100+16*(3*n) by omega, show 3*(n+1) = 3*n+3 by omega]
+  exact growth (3*n)
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_of_growth table family3 52 (fun n => 100+48*n) entry3 (by intro n; omega) growth3 m hm
+""" + source[end:]
             name = f"Raw56Sweep{i}"
             ns = f"BB6Coverage.Agent31Pump.{name}"
             (OUT / (name + ".lean")).write_text("\n\n".join([
