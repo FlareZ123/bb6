@@ -1,0 +1,171 @@
+import Canonical58SixParentMembership
+import Raw58Exact
+import Raw59Exact
+import Raw108Closed
+import Raw113ParentExact
+import Raw115Data
+import Raw119Data
+import TM63RawUpperInterface
+import ChampionScoreLowerBound
+
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent31Canonical58SixParentIntegrated
+
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
+open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
+open BB6.Agent47CanonicalFrontier
+open BB6.Agent47CanonicalRefinement
+open BB6.Agent31StableParentBatch
+open BB6.Agent31Canonical58Membership
+open BB6ChampionArithmetic
+
+/-- The source-certified parent definitions are matched to the five exact
+    table literals whose unique Canonical64 membership was preflighted. -/
+abbrev p58Source : PartialMachine := BB6.Agent4Raw58SharpComposition.p58
+abbrev p59Source : PartialMachine := BB6.Agent32Raw59.p59
+abbrev p108Source : PartialMachine := BB6.Agent10Raw108Root.parent
+abbrev p113Source : PartialMachine := BB6.Agent25Raw113.p113
+abbrev p115Source : PartialMachine := BB6.Agent47Raw115.parent
+abbrev p119Source : PartialMachine := BB6.Agent10Raw119.parent
+
+theorem p58_source_eq : p58 = p58Source :=
+  sameTable_sound (by decide)
+
+theorem p59_source_eq : p59 = p59Source :=
+  sameTable_sound (by decide)
+
+theorem p108_source_eq : p108 = p108Source :=
+  sameTable_sound (by decide)
+
+theorem p113_source_eq : p113 = p113Source :=
+  sameTable_sound (by decide)
+
+theorem p115_source_eq : p115 = p115Source :=
+  sameTable_sound (by decide)
+
+theorem p119_source_eq : p119 = p119Source :=
+  sameTable_sound (by decide)
+
+/-- Raw58 has the accepted exact parent bound 3,055,746. -/
+theorem p58_cover : Cover (WeightedBound 6766859) p58 := by
+  rw [p58_source_eq]
+  exact BB6.Agent4Raw58Exact.coverRaw58 6766859 (by decide)
+
+/-- Raw59's source-accepted sharp parent bound is 4,136,171. -/
+theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
+  rw [p59_source_eq]
+  exact liftCover (by decide) BB6.Agent32Raw59Exact.cover
+
+/-- Raw108's source-accepted universal parent bound is 4,136,180. -/
+theorem p108_cover : Cover (WeightedBound 6766859) p108 := by
+  rw [p108_source_eq]
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent10Raw108Closed.all_closed m hm k d hk hd) (by decide)
+
+/-- Raw113's complete source-accepted parent bound is 2,674. -/
+theorem p113_cover : Cover (WeightedBound 6766859) p113 := by
+  rw [p113_source_eq]
+  exact BB6.Agent25Raw113.cover113 6766859 (by decide)
+
+/-- Raw115's complete source-accepted parent bound is 7,014. -/
+theorem p115_cover : Cover (WeightedBound 6766859) p115 := by
+  rw [p115_source_eq]
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent47Raw115.all_completions m hm k d hk hd) (by decide)
+
+/-- Raw119's complete source-accepted parent bound is 572. -/
+theorem p119_cover : Cover (WeightedBound 6766859) p119 := by
+  rw [p119_source_eq]
+  refine Cover.leaf _ ?_
+  intro m hm k d hk hd
+  exact Nat.le_trans
+    (BB6.Agent10Raw119.all_completions m hm k d hk hd) (by decide)
+
+/-- The five physical parent tables are pairwise distinct under the same
+    exact table predicate used by the quotient filter. -/
+theorem parents_pairwise_distinct :
+    List.Pairwise (fun p q => sameTable p q = false) parents := by decide
+
+/-- Every member of the five-parent list has its own independently accepted
+    original-source Cover, lifted to the canonical common score floor. -/
+theorem parents_cover :
+    ∀ p ∈ parents, Cover (WeightedBound 6766859) p := by
+  intro p hp
+  simp only [parents, List.mem_cons, List.not_mem_nil, or_false] at hp
+  rcases hp with rfl | rfl | rfl | rfl | rfl | rfl
+  · exact p58_cover
+  · exact p59_cover
+  · exact p108_cover
+  · exact p113_cover
+  · exact p115_cover
+  · exact p119_cover
+
+/-- Directly consume the five certified E1 cylinders from the exact
+    Canonical64 roster. No intermediate Canonical63/62 roster is introduced;
+    every nonmatching quotient representative remains in roster58. -/
+theorem sound58_integrated :
+    ∀ m, compatible root m →
+      WeightedBound 6766859 m ∨
+        ∃ e ∈ roster58, TNFQuotientCompatible e.2 m := by
+  apply removeParents_sound
+    (parents := parents)
+    (roster := BB6.Agent3Canonical64Raw120.roster64)
+    BB6.Agent3Canonical64Raw120.sound64_integrated
+    parents_root
+    parents_cover
+
+/-- Conditional exactness at any target above the champion score, assuming
+    Covers only for the 59 exact retained Canonical64 representatives. -/
+theorem exact_at_target (B : Nat) (hB : 6766859 ≤ B)
+    (hLeaves : ∀ e ∈ roster58, Cover (WeightedBound B) e.2)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_quotient_roster (by omega) hB sound58_integrated hLeaves champ
+
+/-- The existing source-accepted blank-start champion witness and score lower
+    bound now give the fixed-score BB(6) consumer with 59 remaining Covers. -/
+theorem exact_at_champion_score
+    (hLeaves : ∀ e ∈ roster58,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
+  exact_at_target (proposedTM63Moves + 7)
+    BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+    hLeaves
+    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+
+#print axioms BB6.Agent31Canonical58Membership.p58_count64
+#print axioms BB6.Agent31Canonical58Membership.p59_count64
+#print axioms BB6.Agent31Canonical58Membership.p108_count64
+#print axioms BB6.Agent31Canonical58Membership.p113_count64
+#print axioms BB6.Agent31Canonical58Membership.p115_count64
+#print axioms BB6.Agent31Canonical58Membership.p119_count64
+#print axioms BB6.Agent31Canonical58Membership.count58
+#print axioms BB6.Agent31Canonical58Membership.parents_root
+#print axioms p58_source_eq
+#print axioms p59_source_eq
+#print axioms p108_source_eq
+#print axioms p113_source_eq
+#print axioms p115_source_eq
+#print axioms p119_source_eq
+#print axioms p58_cover
+#print axioms p59_cover
+#print axioms p108_cover
+#print axioms p113_cover
+#print axioms p115_cover
+#print axioms p119_cover
+#print axioms parents_pairwise_distinct
+#print axioms parents_cover
+#print axioms sound58_integrated
+#print axioms exact_at_target
+#print axioms exact_at_champion_score
+#print axioms BB6Coverage.Agent48DirectRoot.champion_raw_witness
+#print axioms BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+
+end BB6.Agent31Canonical58SixParentIntegrated
