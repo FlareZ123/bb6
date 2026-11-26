@@ -20,10 +20,10 @@ def bools(x):return str(bool(x)).lower()
 def code_table(t):
     return ''.join('---' if v==0 else f'{(v-1)//2%2}'+('R' if (v-1)%2 else 'L')+chr(65+(v-1)//4) for v in t)
 
-def stack_cert(i,entry,c):
+def stack_cert(i,entry,c,tag=''):
     ds=mask_domain(entry['mask']);rows=[[] for _ in range(12)];r=len(c['edges'][1])
     for s,l,j in c['states']:rows[s].append(r*l+j)
-    ns=f'BB6.Agent13.Box4.Safe{i}'
+    ns=f'BB6.Agent13.Box4.Safe{tag}{i}'
     text=f'namespace {ns}\n'+OPEN
     text+='def codes (i : Fin 12) : List (Fin 25) := match i.val with\n'
     for j,d in enumerate(ds[:-1]):text+=f'  | {j} => {list(d)}\n'
@@ -57,24 +57,24 @@ def stack_cert(i,entry,c):
     text+='def safeBox : BB6.Agent13.Box4.SafeBox := ⟨b,neverDomain b c checked⟩\n'
     return text+f'end {ns}\n'
 
-def bank_modules():
+def bank_modules(tag=''):
     entries=json.load(open('greedyboxes.json'))['boxes'];refs={};body=[];total=0;group=0
     def flush():
         nonlocal body,total,group
         if body:
-            write(f'Box4Bank{group:04d}',['Box4Tree'],'\n'.join(body));body=[];total=0;group+=1
+            write(f'Box4Bank{tag}{group:04d}',['Box4Tree'],'\n'.join(body));body=[];total=0;group+=1
     for i,e in enumerate(entries):
         c=compress(cert(e['t'],e['param']))
         assert tuple(e['mask'])==safe_mask(c)
         n=len(c['states'])
         if total+n>3000 or len(body)>=25:flush()
-        refs[i]=(f'Box4Bank{group:04d}',f'BB6.Agent13.Box4.Safe{i}.safeBox')
-        body.append(stack_cert(i,e,c));total+=n
+        refs[i]=(f'Box4Bank{tag}{group:04d}',f'BB6.Agent13.Box4.Safe{tag}{i}.safeBox')
+        body.append(stack_cert(i,e,c,tag));total+=n
     flush()
     print('stack certificate modules',group,flush=True)
     return refs
 
-def block_modules(target=None):
+def block_modules(target=None,tag=''):
     B=HERE.parent/'agent13-block-far'
     sys.path.insert(0,str(B))
     from generate_multi import generate
@@ -86,10 +86,10 @@ def block_modules(target=None):
     for i,(t,p) in enumerate(rows):
         width,cap,mod,runs,flip,mode=p
         suffix='' if width==3 else str(width)
-        name=f'Box4Block{i:02d}';ns=f'BB6BlockFAR{suffix}.{name}';base=f'BB6BlockFAR{suffix}'
+        name=f'Box4Block{tag}{i:02d}';ns=f'BB6BlockFAR{suffix}.{name}';base=f'BB6BlockFAR{suffix}'
         generate(code_table(t),OUT,width,cap,mod,runs,flip,name,minimize_left=True,left_mode=mode)
         imports=[name+'Proof','BlockFARBridge'+suffix,'Box4Tree']
-        text=f'namespace BB6.Agent13.Box4.Block{i}\n'+OPEN
+        text=f'namespace BB6.Agent13.Box4.Block{tag}{i}\n'+OPEN
         if flip:
             imports.append('FARBi')
             text+=f'''open BB6Coverage.FAR
@@ -123,7 +123,7 @@ def known : BB6.Agent13.Box4.Known {target} := ⟨p,BB6.Agent13.Box4.good_never 
 end BB6.Agent13.Box4.Block{i}
 '''
         write(name,imports,text)
-        refs[tuple(t)]=(name,f'BB6.Agent13.Box4.Block{i}.known')
+        refs[tuple(t)]=(name,f'BB6.Agent13.Box4.Block{tag}{i}.known')
     return refs
 
 class Node:
@@ -204,15 +204,8 @@ end BB6.Agent13.Box4
 ''')
     print('slice',target,'nodes',root.size,'proof shards',serial,'modules',group,flush=True)
 
-def main():
-    only_target=int(sys.argv[2]) if len(sys.argv)>2 else None
-    boxes=bank_modules();block=block_modules(only_target);long={}
-    for f in sorted(glob.glob('long*.json')):
-        for t,w in json.load(open(f))['out']:
-            long[tuple(t)]=w
-    targets=[only_target] if only_target is not None else list(range(6,12))
-    for target in targets:tree_modules(target,load_tree(target,long,block),boxes)
-    if only_target is None: write('Box4Closure',[f'Box4Slice{t}' for t in range(6,12)],'''namespace BB6.Agent13.Box4
+def write_closure():
+    write('Box4Closure',[f'Box4Slice{t}' for t in range(6,12)],'''namespace BB6.Agent13.Box4
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 theorem allSlices : ∀ t : Fin 12, 6 ≤ t.val → Good t (root t) := by
   intro t ht
@@ -233,4 +226,19 @@ theorem sourceExact (B : Nat) :
 #print axioms sourceExact
 end BB6.Agent13.Box4
 ''')
+
+def main():
+    if len(sys.argv)>2 and sys.argv[2]=='--assemble':
+        write_closure()
+        return
+    only_target=int(sys.argv[2]) if len(sys.argv)>2 else None
+    tag=f'{only_target}_' if only_target is not None else ''
+    boxes=bank_modules(tag);block=block_modules(only_target,tag);long={}
+    for f in sorted(glob.glob('long*.json')):
+        for t,w in json.load(open(f))['out']:
+            long[tuple(t)]=w
+    targets=[only_target] if only_target is not None else list(range(6,12))
+    for target in targets:tree_modules(target,load_tree(target,long,block),boxes)
+    if only_target is None:write_closure()
+
 if __name__=='__main__':main()

@@ -22,3 +22,9 @@ The existing `agent13-coverage.yml` workflow now also offers `weighted-tnf-raw10
 - emits `Box4SliceN.lean`, whose theorem proves `Good N (root N)` for every machine in that slice.
 
 Each accepted slice is a genuine source-connected partial Cover at bound 3640. It does **not** establish `sourceBound` for the whole rectangle; all six slice theorems are still required before `Box4Closure.lean` can be accepted. The aggregate target remains available for a sufficiently provisioned run.
+
+## Full six-slice assembly
+
+The per-slice target also uses target-qualified certificate-bank and block-witness module names, so the six independently generated trees can coexist without Lean module or namespace collisions. The shared workflow now offers `weighted-tnf-raw10-box4-sliced-full`: it runs the six target-specific replays in one job, assembles `Box4Closure.lean`, and compiles the complete import closure with a source/proof manifest. On success it preserves the generated Lean sources and manifest as a 90-day workflow artifact.
+
+This is the intended route to the full rectangle-4 result after the aggregate global-bank run exhausted its one-hour CI window. Until that assembled target succeeds, the six-slice parent bound remains unproved; individual slice acceptance must not be mistaken for whole-rectangle closure.
