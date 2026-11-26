@@ -2202,5 +2202,83 @@
         "b": 34
       }
     ]
+  },
+  "600571": {
+    "root": "1RB0RC1RC0LD1LA1LA------------------",
+    "counts": {
+      "cycle": 121912,
+      "last": 25839,
+      "split": 6738,
+      "halt": 6738,
+      "state": 6496,
+      "far": 695,
+      "auto": 5
+    },
+    "witnesses_zlib_b64": "eNq1ksFugzAMht/FZyPZSbpp3KCUU065ohzo1EmVunbq2GGqePc5QGFMaKIVBYKi2L/tz84F3sozxEUB7FJya3ZrshnbpPlydht2WRRF5BKyOSAhECtNTEZp8DipE5GVwzzobCoBep0hI88MHd+tS+7TuUmdRyi/qpM06AJVuT3sIJ4I1OSVRuUUwiXkNoCwO1bnb4gVSoff9wfZFkrKIBYbU3jDRkqDsPbHV4gZ4fTx2UzDArauI+9BFgzKeOSVxHTd0V+vsfuTx+fAA7EWyq2UpmqchcULYTG2YHxd/4GZx4GNLmgwZQOY5B3IQnOpyd9WIWmnyfSVrBtZK2CiXhaOXzwq6rBaDmpduv8vJt0zsWqYNM1n4kWYVo9numlO6QJMPGdQdAMVTWAZqn39A/ZiNJ4="
+  },
+  "600573": {
+    "root": "1RB0RC1RC1LD1LA1LA------------------",
+    "counts": {
+      "cycle": 144856,
+      "last": 35349,
+      "split": 8302,
+      "halt": 8302,
+      "state": 8812,
+      "far": 1893,
+      "auto": 5
+    },
+    "witnesses_zlib_b64": "eNqNlEtvwjAMx7+Lz0Gyk1CgN56nnnKtcoCJSZM2mBg7TIjvPufVJisDUEmh/Tv2z49c4HV7grptgcwCzZL4albUzP21IbMejUZo+MkCmyUIEoAklZSakMBaAdvv85E3uMB5u3vfQ31jI7dFsyaz4V14RTMHAfvD+fQDNc0Eh/Dx9s6/WxQtIPJL8h//A9iHX94OLywXcPz8Yql02iZK+VYYIbnovLWLF0RlBWk2MO5/oeilyTiaSGmFrBwg1HIqYAd1hVdxjxM5ScZzmpVPW8YpZcapOJToPUTj+DDcSkySERMJozq3S+buqWZGTIxp97/KtANXcsp848gnPZ+e3OdjJmrWyBVsYil7PqUyvrHLJ3tqIRYzrnbAN44Bd9WibO2MlRVVlwcqKl6IQTAQzQJUqJnCp5n41bxg4nT2TK4QXad4Zza1p0fSCSnF2Tdl4MA+as4+WTHJ2TMJUo4ftER9u2OfgE5KeRKcgZRFZmmgvG2Ru3jKj1I3/Dx25s0Gzp7yqPV/Hh+71dPYG6E5pHzQHXz+cV/4WeZjy0131h066w4dJxp914eK+69r+eFYq36q40BiqnZp7QPX7iQaDkrmjkoLd3QFUKrCFNDVXn8B2aFFWw=="
+  },
+  "601395": {
+    "root": "1RB1RB1RC0LD1LA------0LB------------",
+    "counts": {
+      "cycle": 30220,
+      "last": 4811,
+      "split": 1574,
+      "halt": 1574,
+      "state": 996,
+      "far": 168,
+      "auto": 0
+    },
+    "witnesses_zlib_b64": "eNqrVkpLLFKyio5WMgxyAiNnAx8XQx9HXV1dQx9XAx+giJshUCTIySDITUnHUEfJwNDI2MjIyMTIWCk2VkcpsbQkH2hAbC0A2OMTLQ=="
+  },
+  "601396": {
+    "root": "1RB1RB1RC0LD1LA------0LC------------",
+    "counts": {
+      "cycle": 65246,
+      "last": 11058,
+      "split": 3462,
+      "halt": 3462,
+      "state": 2980,
+      "far": 316,
+      "auto": 3
+    },
+    "witnesses_zlib_b64": "eNp9kk1vwjAMhv+Lz0ay01BKbzDaU065VjmUiUlIDCbGDhPiv8/5aCm0Q3LVxnnf2k+cK3y0ZyibBtiuQ7yR2bBZka3Y1GRkWZPkzXo2mwEyArHKMi3B4HDkY1uJ0PtszeEfYgWk6NNak9Yvfb6qrUgyAx9r/t8X+2S78T+wK2k4+UhRRlIQnENofy4nAb3Cpd0edlBOAXtzbKDugGF3vJx/oWSFclSf+4N8N3PpgwhCDQ4vaQ38sz++ixbh9PUtukx0xu8H1VDf2XyWc4e8FKmVpU/xo8wv0w5gIVryOFAqjbCFMlM3fEWVjjUghXFUd6riGSpW4lBrEikBBV0vTQYfS4f5EIWfRNypigjBRYBg/QLi4U75TLxTHUQ+gFChQppOxzGC6DucbDGEYjno/D6/fmukXDicp4FEFrW4udsfJoXDVw=="
+  },
+  "601452": {
+    "root": "1RB1RC1RC0LD1LA0LC------------------",
+    "counts": {
+      "cycle": 47989,
+      "last": 8062,
+      "split": 2544,
+      "halt": 2544,
+      "state": 2104,
+      "far": 337,
+      "auto": 1
+    },
+    "witnesses_zlib_b64": "eNptj8sKgzAQRf/lriPMRPsgu1p1lVW2wYUtFgSrxdpFEf+9E4ulhUIeczNn7kwmXKoBxnuwS9kdZZHN2B7ISlywzdlmURSRS8kVUKxArGOtdaJjlKVC9Rh7MZgwVqe2hvlnZKU4FzsxYpctRqi7cXjC8F7JCNemldhvlAchtCB+XwRpEXbTnQVW6G93AVlAuxBy/BR86sJ7UireCupErflvMMigVngX/gMjI51gdDKX8wvhQ0Kt"
+  },
+  "601541": {
+    "root": "1RB1RD1RC---1LA0LC---0LC------------",
+    "counts": {
+      "cycle": 63091,
+      "last": 10396,
+      "split": 3330,
+      "halt": 3330,
+      "state": 2888,
+      "far": 200,
+      "auto": 0
+    },
+    "witnesses_zlib_b64": "eNqrVkpLLFKyio5WMgxyMgxyMQxyNvRxNfRxNPBxNghyA5K6urqGPi4GQU4GQY5KOgY6SgaGRsYGxiZAoBQbq6OUWFqSDzQgthYA2tkTKw=="
   }
 }
