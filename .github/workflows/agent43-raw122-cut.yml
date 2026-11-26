@@ -707,6 +707,7 @@ jobs:
           overrides=()
           overrides+=(--override "Raw122Roster16=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16.lean")
           overrides+=(--override "Raw122Roster17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17.lean")
+          overrides+=(--override "Raw122Counter17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Counter17.lean")
           for n in $(seq -w 0 23); do
             overrides+=(--override "Raw122Roster16Kid${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid${n}.lean")
             overrides+=(--override "Raw122Roster17Kid${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid${n}.lean")
