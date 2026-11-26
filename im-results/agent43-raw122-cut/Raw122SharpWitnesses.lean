@@ -7,9 +7,6 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122Roster
 open BB6Coverage BB6.Agent43Raw122ResidualCompose
-end BB6.Agent43Raw122Roster
-namespace BB6.Agent43Raw122Roster
-open BB6Coverage BB6.Agent43Raw122ResidualCompose
 theorem sharpWitnesses05 (hLate : Covered 6659487 p05_007) : ∀ p ∈ tables05, Covered 6659487 p := by
   intro p hp
   simp only [tables05,List.mem_cons,List.not_mem_nil,or_false] at hp
@@ -251,9 +248,6 @@ theorem sharpWitnesses16 : ∀ p ∈ tables16, Covered 1296926 p := by
       exact hm
     exact BB6.Agent43Raw122Sharp.late1_bound m hm'
 #print axioms sharpWitnesses16
-end BB6.Agent43Raw122Roster
-namespace BB6.Agent43Raw122Roster
-open BB6Coverage BB6.Agent43Raw122ResidualCompose
 end BB6.Agent43Raw122Roster
 namespace BB6.Agent43Raw122Sharp
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent43Raw122ResidualCompose
@@ -274,9 +268,6 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122Roster
 open BB6Coverage BB6.Agent43Raw122ResidualCompose
-end BB6.Agent43Raw122Roster
-namespace BB6.Agent43Raw122Roster
-open BB6Coverage BB6.Agent43Raw122ResidualCompose
 theorem sharpWitnesses05 (hLate : Covered 6659487 p05_007) : ∀ p ∈ tables05, Covered 6659487 p := by
   intro p hp
   simp only [tables05,List.mem_cons,List.not_mem_nil,or_false] at hp
@@ -519,9 +510,6 @@ theorem sharpWitnesses16 : ∀ p ∈ tables16, Covered 1296926 p := by
     exact BB6.Agent43Raw122Sharp.late1_bound m hm'
 #print axioms sharpWitnesses16
 end BB6.Agent43Raw122Roster
-namespace BB6.Agent43Raw122Roster
-open BB6Coverage BB6.Agent43Raw122ResidualCompose
-end BB6.Agent43Raw122Roster
 namespace BB6.Agent43Raw122Sharp
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent43Raw122ResidualCompose
 open BB6.Agent43Raw122Roster
@@ -532,8 +520,6 @@ theorem cover05 : Covered 6659487 (BB6.Agent43Raw122.child ⟨false,false,5⟩) 
 theorem cover16 : Covered 1296926 (BB6.Agent43Raw122.child ⟨true,false,4⟩) :=
   BB6.Agent43Raw122Roster.cover16 1296926 (by decide) sharpWitnesses16
 
-theorem cover17 : Covered 7014 (BB6.Agent43Raw122.child ⟨true,false,5⟩) :=
-  BB6.Agent43Raw122Roster.cover17 7014 (by decide) sharpWitnesses17
 #print axioms cover05
 #print axioms cover16
 end BB6.Agent43Raw122Sharp
