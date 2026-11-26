@@ -115,7 +115,11 @@ theorem additionalSourceAcceptedSiblingCover (p : PartialMachine)
     Cover (WeightedBound (proposedTM63Moves + 7)) p := by
   by_cases hFive : isSourceAcceptedSibling p = true
   · exact sourceAcceptedSiblingCover p hFive
-  · simp [isAdditionalSourceAcceptedSibling, hFive] at hp
+  · have hFiveFalse : isSourceAcceptedSibling p = false := by
+      cases h : isSourceAcceptedSibling p with
+      | false => rfl
+      | true => exact False.elim (hFive h)
+    simp [isAdditionalSourceAcceptedSibling, hFiveFalse] at hp
     rcases hp with h0 | h1 | h2 | h3
     · have heq : p = BB6.Agent41F1ZeroRB.parent := sameTable_sound h0
       subst p
@@ -138,7 +142,11 @@ theorem cover_remainingF1ZeroRC
     Cover (WeightedBound (proposedTM63Moves + 7)) e.2 := by
   by_cases hs : isAdditionalSourceAcceptedSibling e.2 = true
   · exact additionalSourceAcceptedSiblingCover e.2 hs
-  · exact hLeaves e (List.mem_filter.mpr ⟨he, by simp [hs]⟩)
+  · have hFalse : isAdditionalSourceAcceptedSibling e.2 = false := by
+      cases h : isAdditionalSourceAcceptedSibling e.2 with
+      | false => rfl
+      | true => exact False.elim (hs h)
+    exact hLeaves e (List.mem_filter.mpr ⟨he, by simp [hFalse]⟩)
 
 /-- Lift the 97 remaining leaves through the already audited F1 and F0
     sibling compositions to a Cover of the retained raw139 parent. -/
