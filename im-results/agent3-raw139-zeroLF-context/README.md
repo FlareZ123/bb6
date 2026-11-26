@@ -29,3 +29,11 @@ The mathematical invariant uses a defined left DFA path and an accepting right N
 ## Next
 
 The three remaining mathematical holdouts from the latest Agent14 dossier are 1307, 3862, 3863. Avoid duplicating the independently found 9015 certificate (Agent14's smaller width-four witness). Primitive prefix/suffix and run-context scans, and naive single-edge state-splitting CEGAR, were not sufficient on these three. Larger block and context searches continue. No parent closure is asserted until the exhaustive split/halting branches and all source proofs are consumed.
+
+## Residual 1307 — third new nonhalting certificate
+
+Exact table `[7,13,11,17,14,21,24,16,20,11,1,2]`. A first width-10 unreflected block-FAR certificate (first block + last four blocks) closed with 2,305 left states / 4,709 right nodes, 7,556 active rows and 7,426 arcs. A reduced width-12 certificate retaining the last three blocks and total one-count parity has 702 left states / 1,425 right nodes, 2,384 active rows and 2,307 arcs. The exact committed generator's raw saturation (707 left states / 2,584 nodes / 3,750 arcs) was reproduced and the minimized certificate independently checked. No bounded trajectory assumption is used.
+
+Run `python im-results/agent3-raw139-zeroLF-context/emit1307.py OUT` to emit the three Lean source files (Packed, Proof, source wrapper). Dependencies: Agent13's width-12 block macro/FAR/sparse FAR/active sparse FAR/range check/source bridge. The sparse minimizer and closure checker are in `sparse_min.py`; the existing blockcert generator's new raw_graph option exposes the finite saturation graph before dense packing. Agent13's existing ActiveSparseFAR emitter is reused through streamed default-valued input arrays. The exact table wrapper uses finite equality over the 12 source slots. Full original-source Lean audit pending. Agent14 received integration instructions at 14:51 UTC.
+
+The remaining mathematical search targets in this local branch are 3862 and 3863. Their shared C/E/D phase admits exact variable-length sweep rewrites, currently being explored as a stronger closure method.
