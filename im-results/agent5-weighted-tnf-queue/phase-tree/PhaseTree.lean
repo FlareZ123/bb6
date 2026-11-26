@@ -91,7 +91,7 @@ theorem sound (B : Nat) (p : PartialMachine) (t : Tree)
       have H := List.all_eq_true.mp h.2 q (mem_states q)
       simp only [hv,ite_true] at H
       exact List.all_eq_true.mp (List.all_eq_true.mp H w (mem_bits w)) r (mem_bits r)
-    exact tnf_branch_sound B cut p (readSlot c) hc hsupport hslot hf
+    exact tnf_branch_sound B cut p (readSlot c) hc hsupport hu hslot hf
       (first_hole_weighted_halt B p n c hf hr hu (delay_margin hb))
       (fun mv hv => getChild mv (Nat.le_of_lt hv))
       (fun q hq w r => getChild ⟨w,r,q⟩ (Nat.le_of_eq hq))
