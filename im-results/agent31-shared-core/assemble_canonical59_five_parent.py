@@ -224,14 +224,15 @@ def build_precompiled_manifest(base_linked, work):
         print(result.stdout, end="", flush=True)
         result.check_returncode()
 
-    # The width-two mask checker refers directly to BB6BlockFAR.run_add.
-    # Keep BlockMacro as an explicit generated import so this source dependency
-    # is visible in the generated module and its compile-closure manifest.
+    # The width-two mask checker defines run_add_width2 in its own
+    # BB6BlockFAR2 namespace, so the rewrite theorem matches its local run alias.
     width_two_mask = ROOT / "im-results" / "agent32-raw59" / "MaskBlockFAR2.lean"
     width_two_source = width_two_mask.read_text()
     if (
         "import BlockMacro\n" not in width_two_source
-        or width_two_source.count("BB6BlockFAR.run_add") != 2
+        or "theorem run_add_width2" not in width_two_source
+        or width_two_source.count(",run_add_width2") != 2
+        or "#print axioms run_add_width2" not in width_two_source
     ):
         raise AssertionError("generated MaskBlockFAR2 is missing its direct BlockMacro import")
 
@@ -401,6 +402,7 @@ def rebuild_raw59(base_linked, base_manifest, work):
         "--precompiled-manifest", str(base_manifest),
         "--manifest", str(manifest_path),
         "--label", "Raw59Exact rebuilt against Canonical64 shared core",
+        "--theorem", "BB6BlockFAR2.run_add_width2",
         "--theorem", "BB6.Agent32Raw59Exact.cover",
         "--parent-table", "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
         "--weighted-bound", "4136171",
@@ -421,6 +423,7 @@ def rebuild_raw59(base_linked, base_manifest, work):
     if re.search(r"sorryAx|native_decide", result.stdout):
         raise AssertionError("forbidden proof mechanism in rebuilt Raw59 closure")
     required = [
+        "BB6BlockFAR2.run_add_width2",
         "BB6.Agent32Raw59Exact.exact_bound",
         "BB6.Agent32Raw59Exact.retained_cover",
         "BB6.Agent32Raw59Exact.cover",

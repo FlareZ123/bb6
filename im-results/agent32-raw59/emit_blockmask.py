@@ -28,11 +28,27 @@ def emit(root,name,data,offset=0):
             if template.count(import_line) != 1:
                 raise ValueError('expected one BlockFAR2 import in width-two mask template')
             template = template.replace(import_line, import_line + 'import BlockMacro\n', 1)
+            alias = """theorem run_add_width2 (M : Table) (m n : Nat) (c : Prim) :
+    run M (m+n) c = (run M m c).bind (run M n) := by
+  simpa [run] using BB6BlockFAR.run_add M m n c
+
+#print axioms run_add_width2
+
+"""
+            anchor = 'theorem forever_of_invariant'
+            if template.count(anchor) != 1:
+                raise ValueError('expected one width-two invariant theorem anchor')
+            template = template.replace(anchor, alias + anchor, 1)
             if template.count(',run_add') != 2:
                 raise ValueError('unexpected width-two run_add reference count')
-            template = template.replace(',run_add', ',BB6BlockFAR.run_add')
-            if 'import BlockMacro\n' not in template or template.count('BB6BlockFAR.run_add') != 2:
-                raise ValueError('width-two mask template lacks its direct BlockMacro dependency')
+            template = template.replace(',run_add', ',run_add_width2')
+            if (
+                'import BlockMacro\n' not in template
+                or template.count('theorem run_add_width2') != 1
+                or template.count(',run_add_width2') != 2
+                or template.count('#print axioms run_add_width2') != 1
+            ):
+                raise ValueError('width-two mask template lacks its local run_add alias')
         (root/(checker+'.lean')).write_text(template,encoding='utf8')
     D,C=data['left_states'],data['right_nodes'];dead=C-1
     ns='BB6BlockFAR'+suffix+'.'+name
