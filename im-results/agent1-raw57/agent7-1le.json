@@ -1203,6 +1203,15 @@
       "11",
       1
     ],
+    "1454": [
+      177,
+      3,
+      "L",
+      "0011101",
+      "11",
+      "11111111111111111",
+      7
+    ],
     "1475": [
       9,
       0,
@@ -1869,7 +1878,6 @@
     "657": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_0RB0LA",
     "658": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_1LB0LA",
     "672": "1RB1LE_1RC1RA_0RD0RB_1LD1RE_0LF0LA_---1LA",
-    "771": "1RB1LE_1RC0LB_0RD0RB_1LD1RE_1LF0LA_---1LB",
-    "1454": "1RB1LE_1RC0LA_0RD0RF_1LD1RE_0LB0LA_1RA---"
+    "771": "1RB1LE_1RC0LB_0RD0RB_1LD1RE_1LF0LA_---1LB"
   }
 }
