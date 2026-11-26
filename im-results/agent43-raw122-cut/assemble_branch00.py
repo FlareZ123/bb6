@@ -207,24 +207,10 @@ theorem residual_count : BB6.Agent43Raw122Roster.tables00.length = {len(residual
 end BB6.Agent43Raw122Recovered00
 ''', encoding="utf-8")
 
-    # Avoid duplicate provisional roster modules from the previous roster-only
-    # artifact. The factored roster generated above is the authoritative module.
-    lean_root = Path("/tmp/a43-lean-root")
-    if lean_root.exists():
-        shutil.rmtree(lean_root)
-    lean_root.mkdir(parents=True)
-    for src in ROOT.rglob("*.lean"):
-        rel = src.relative_to(ROOT).as_posix()
-        if rel.startswith("im-results/agent43-raw122-cut/branch00-assembly/Raw122Roster00") or rel == "im-results/agent43-raw122-cut/branch00-assembly/Raw122Recovered00.lean":
-            continue
-        dst = lean_root / rel
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        shutil.copy2(src, dst)
-
     log = run([
         os.sys.executable, closure,
         "--workdir", final,
-        "--source-root", lean_root, "--source-root", factored, "--source-root", generated,
+        "--source-root", ROOT, "--source-root", factored, "--source-root", generated,
         "--jobs", "3",
         "--precompiled-manifest", manifest, "--precompiled-dir", work,
         "--manifest", final / "manifest.json",
@@ -233,6 +219,8 @@ end BB6.Agent43Raw122Recovered00
         "--parent-table", "Canonical124 raw122 parent with F1=0LA",
         "--weighted-bound", str(BOUND),
         "--artifact-name", "raw122-branch00-cover",
+        *sum((["--override", f"{f.stem}={f}"] for f in generated.glob("Raw122Roster00*.lean")), []),
+        "--override", f"Raw122Recovered00={wrapper}",
         wrapper,
     ], capture=True)
     for name in ("BB6.Agent43Raw122Recovered00.cover00",
