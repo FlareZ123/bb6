@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_groups:
         description: 'JSON list of individual Raw108 groups to certify'
@@ -52,7 +52,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'canonical62-raw112-raw58'
+    if: inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'canonical62-raw112-raw58' && inputs.target != 'canonical62-preflight'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata') && 120 || 60 }}
@@ -1340,5 +1340,35 @@ jobs:
           path: |
             /tmp/a4-canonical62
             /tmp/a4-canonical62.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  canonical62-preflight:
+    if: inputs.target == 'canonical62-preflight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Preflight Raw112 plus Raw58 parent membership and Canonical62 filtering
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw58/preflight_canonical62.py \
+            --work /tmp/a4-canonical62-preflight 2>&1 | tee /tmp/a4-canonical62-preflight.log
+          grep -q "Canonical62 preflight passed" /tmp/a4-canonical62-preflight.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw58-canonical62-preflight
+          path: |
+            /tmp/a4-canonical62-preflight
+            /tmp/a4-canonical62-preflight.log
           if-no-files-found: warn
           retention-days: 30
