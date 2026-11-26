@@ -5,19 +5,20 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent6ChampionResidualCount
 
+open BB6Coverage
 open BB6.Agent31FourHoleFrontier
 
 /-- Number of explicitly closed ordinary leaves in a rooted frontier. -/
-def frontierClosedLeaves {B : Nat} {p : PartialMachine} :
-    RootedFrontier B p → Nat
+def frontierClosedLeaves {B : Nat} {p : BB6Coverage.PartialMachine} :
+    BB6.Agent31FourHoleFrontier.RootedFrontier B p → Nat
   | .residual _ => 0
   | .closed _ _ => 1
   | .expand _ _ _ _ children =>
       (allMoves.map fun mv => frontierClosedLeaves (children mv)).sum
 
 /-- Number of expanded first-hole nodes in a rooted frontier. -/
-def frontierExpandedNodes {B : Nat} {p : PartialMachine} :
-    RootedFrontier B p → Nat
+def frontierExpandedNodes {B : Nat} {p : BB6Coverage.PartialMachine} :
+    BB6.Agent31FourHoleFrontier.RootedFrontier B p → Nat
   | .residual _ => 0
   | .closed _ _ => 0
   | .expand _ _ _ _ children =>
@@ -44,8 +45,8 @@ private theorem sum_map_mul_add_one {α : Type} (xs : List α) (f : α → Nat) 
 
 /-- Every full 24-way expansion contributes exactly 23 residual-or-closed
     leaves per expanded node, plus its single root leaf. -/
-theorem residuals_closed_expanded {B : Nat} {p : PartialMachine}
-    (frontier : RootedFrontier B p) :
+theorem residuals_closed_expanded {B : Nat} {p : BB6Coverage.PartialMachine}
+    (frontier : BB6.Agent31FourHoleFrontier.RootedFrontier B p) :
     (residuals frontier).length + frontierClosedLeaves frontier =
       23 * frontierExpandedNodes frontier + 1 := by
   induction frontier with
