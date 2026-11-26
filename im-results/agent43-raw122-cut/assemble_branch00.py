@@ -9,7 +9,7 @@ HERE = Path(__file__).resolve().parent
 BRANCH = 0
 SOURCE_ARTIFACT = 15043765926
 CORE_ARTIFACT = 15012394320
-TARGET_RUNS = [45773448173, 45785487569]
+TARGET_RUNS = [45785487569]
 BOUND = 6766859
 
 
@@ -67,8 +67,8 @@ def main():
         ["git", "ls-files", "*.lean"], cwd=ROOT, text=True).splitlines()}
     records, coverage, seen_olean = [], {}, {}
     metadata_paths = sorted(targets.rglob("metadata.json"))
-    if len(metadata_paths) != 24:
-        raise RuntimeError(f"expected 24 branch-00 shard artifacts, found {len(metadata_paths)}")
+    if len(metadata_paths) != 16:
+        raise RuntimeError(f"expected 16 branch-00 shard artifacts from the final matrix, found {len(metadata_paths)}")
     run_counts = {rid: 0 for rid in TARGET_RUNS}
     for mp in metadata_paths:
         d = mp.parent
@@ -108,7 +108,8 @@ def main():
         copy_oleans(d, work, seen_olean)
     if set(coverage) != set(range(24)):
         raise RuntimeError(f"branch-00 shard complement is {sorted(set(range(24))-set(coverage))}")
-    if run_counts != {45773448173: 8, 45785487569: 16}:
+    print("branch-00 shard intervals:", sorted((r["run_id"], r["first"], r["end"], r["name"]) for r in records), flush=True)
+    if run_counts != {45785487569: 16}:
         raise RuntimeError(f"unexpected target-run artifact distribution: {run_counts}")
 
     copy_oleans(core, work, seen_olean, prefer_existing=True)
