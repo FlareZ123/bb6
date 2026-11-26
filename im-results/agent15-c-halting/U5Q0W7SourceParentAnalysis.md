@@ -153,7 +153,7 @@ bounce alternatives.
 
 ## Next mathematical task
 
-Continue the remaining q=1 parent residues in the (z\\equiv2\\pmod4) sector and the even-(W) high-depth cases. The exact source parent fan is now proved: every parent has even depth (n) and satisfies the scale/cost equations; when (W) is odd, only depths 0 and 2 remain. On the (w\\equiv7\\pmod{128}) lift, continue the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod8) has a sum-zero fork; (r\\equiv5\\pmod{16}) outside (r\\equiv5\\pmod{32}) leaves an odd/odd sum-zero parent, of which the (r=117\\pmod{128}) sublift is now excluded; (r\\equiv13\\pmod{16}) leaves an even/odd sum-seven target; and (r\\equiv3\\pmod4) outside (r\\equiv3\\pmod{16}) needs further residue splits. The (r\\equiv0\\pmod4), (r\\equiv3\\pmod{16}), (r\\equiv5\\pmod{32}), and (r=117\\pmod{128}) sublifts are excluded above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
+Continue the remaining q=1 parent residues in the (z\\equiv2\\pmod4) sector and the even-(W) high-depth cases. The exact source parent fan is now proved: every parent has even depth (n) and satisfies the scale/cost equations; when (W) is odd, only depths 0 and 2 remain. On the (w\\equiv7\\pmod{128}) lift, continue the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod8) has a sum-zero fork; (r\\equiv5\\pmod{16}) outside (r\\equiv5\\pmod{32}) leaves an odd/odd sum-zero parent, of which the (r=117\\pmod{128}) sublift is now excluded; (r\\equiv13\\pmod{16}) leaves an even/odd sum-seven target; and (r\\equiv3\\pmod4) outside (r\\equiv3\\pmod{16}) needs further residue splits. The (r\\equiv0\\pmod4), (r\\equiv3\\pmod{16}), (r\\equiv5\\pmod{32}), and (r=117\\pmod{128}) sublifts are excluded above. The u=79+80T branch now has T=2 (mod 8) excluded by U5Q0W7U79Mod640.lean; the other seven T (mod 8) classes remain open. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
 
 
 ## Infinite subfamily closed by the first parent fan
@@ -576,7 +576,7 @@ lift w7_q0_target_unreachable_of_q1.
 
 ### Root residuals and exact-source verification
 
-For all twelve slices, \(z=2+4u\equiv14\pmod{16}\). The necessary
+For all thirteen slices, \(z=2+4u\equiv14\pmod{16}\). The necessary
 root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), gives
 \(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The root condition
 \(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the
@@ -694,7 +694,7 @@ The proof is formalized in
 [U5Q0W7U79Mod640.md](U5Q0W7U79Mod640.md). Original-source run #46
 (45903781364) passed; both new theorems print axioms
 [propext, Classical.choice, Quot.sound], with no sorryAx or native
-evaluation dependency. The new cylinder has density \(1/8\) within
+evaluation dependency. For this cylinder, z=2+4u=958+2560r, so z=14 (mod 16) and z=3 (mod 5); it is compatible with the same w=55 (mod 128) root row as the other listed slices. The new cylinder has density \(1/8\) within
 \(u=79+80T\), raising the root-compatible \(u\equiv19\pmod{20}\)
 excluded density lower bound from \(249/512\) to \(265/512\). It does
 not close the other seven \(T\pmod8\) classes or decide Machine C.
