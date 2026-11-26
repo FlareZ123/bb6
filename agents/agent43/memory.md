@@ -697,3 +697,5 @@ Compared Agent29's 100 literal-table candidate rows with pinned generator 150437
 - 01:26Z: solved kid17_19 via original Lean Raw122Counter17.lean; arbitrary-tail octal digit recurrence, axiom propext Quot.sound. Agent29 notified for graft. 18_12/13/14/17 checked; assembling 1RA. 1LC missing group jobs continue.
 
 - 01:27Z: complete F1=1RA cover18 checked, branch18_empty, original axioms only. Reproduction recover_additional.py with pinned core/source/shards. 1LC groups still running. Agent29 notified to use cover18 in final graft.
+
+- 01:31Z: four B1-hole variants (C1 0LE/0LF/1LD/1RD) unified ternary-counter proof in Raw122Counter05.lean, original Lean checked propext Quot.sound. Agent29 concurrently found DFA M103–106 candidates; use this small shared theorem instead. 1RE still open; exact core is a partial sequential transducer with 10,0010,00010 continuation tokens and 11,0011,00011,0000 stops. Work on regular invariant.
