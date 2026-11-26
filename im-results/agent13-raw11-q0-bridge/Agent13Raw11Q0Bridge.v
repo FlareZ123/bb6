@@ -9,7 +9,7 @@ From BusyCoq Require Import
   Individual62 Enumerate62
   Agent47Q0NineParentMembership Agent47Raw11RestrictedQ0
   Agent8AdaptiveSource Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster.
-From Coq Require Import List Lia.
+From Coq Require Import List Lia NArith.
 Import ListNotations TNF_Node.
 Open Scope nat_scope.
 
@@ -42,7 +42,7 @@ Qed.
 Theorem raw11_q0_nine_parent_consumption bound :
   Forall (source_table_safe bound) q0_nine_parent_roster ->
   (Forall (source_weighted_safe bound)
-      (adaptive_obligations decider (AP_advance 1000000 AP_stop) (q_i 0 100)) <->
+      (adaptive_obligations decider (AP_advance 1000000%N AP_stop) (q_i 0 100)) <->
    Forall (source_weighted_safe bound) q0_nine_remaining).
 Proof.
   exact q0_nine_consumption.
