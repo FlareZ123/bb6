@@ -761,7 +761,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-box6'
         run: |
           set -euo pipefail
-          BASE5=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\\n' | head -n1)
+          BASE5=$(find /tmp/raw10-box5-base -name manifest.json -printf '%h\n' | head -n1)
           test -f "$BASE5/manifest.json"
           python tools/lean_compile_closure.py \
             --workdir /tmp/a49-raw10-box6-probe \
