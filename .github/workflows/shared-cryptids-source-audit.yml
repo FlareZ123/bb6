@@ -63,6 +63,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_raw10_box16:
+        description: 'Also compile source-authentic raw10 rectangle 16 at its exact 7,376 bound (requires rectangle 17 target)'
+        required: false
+        type: boolean
+        default: false
       verify_six_root_graft:
         description: 'Compile and axiom-audit the six pinned upstream NonHalt roots grafted into the local depth-four frontier'
         required: false
@@ -169,6 +174,14 @@ jobs:
           fi
           if [[ "$VERIFY_WEIGHTED_TNF_LEAVES" == "true" ]]; then
             test "$VERIFY_SIX_ROOT_GRAFT" = "true"
+            test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
+            test "$LEAN_TOOLCHAIN" = "leanprover/lean4:v4.36.0-rc2"
+            test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
+          fi
+          if [[ "${{ inputs.verify_raw10_box16 }}" == "true" ]]; then
+            test "${{ inputs.verify_raw10_box17 }}" = "true"
+          fi
+          if [[ "${{ inputs.verify_raw10_box17 }}" == "true" || "${{ inputs.verify_raw10_box16 }}" == "true" ]]; then
             test "$UPSTREAM_SHA" = "3647718b5df22e1a61462dec0376bd204526285a"
             test "$LEAN_TOOLCHAIN" = "leanprover/lean4:v4.36.0-rc2"
             test "$DEPENDENCY_VERSION" = "v4.36.0-rc2"
@@ -422,7 +435,7 @@ jobs:
           if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
             lake build "$EXTRA_ORIGINAL_MODULE"
           fi
-      - name: Check exact raw10 rectangle 17 with its pinned r1 theorem
+      - name: Check raw10 rectangle 17 and optional source rectangle 16
         if: ${{ inputs.verify_raw10_box17 }}
         working-directory: /tmp/cryptids
         shell: bash
@@ -433,8 +446,15 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent13-raw10-box17
           (cd "$D"; python box17.py; python box17_ngram.py; python finish.py; python compress.py; python emit_bitpacked.py; python emit_direct.py)
+          ROOTS=("$D/Box17SourceCore.lean" "im-results/agent4-coverage-smoke/RelativeTape.lean")
+          if [[ "${{ inputs.verify_raw10_box16 }}" == "true" ]]; then
+            D16=im-results/agent13-raw10-box16
+            export PYTHONPATH="$GITHUB_WORKSPACE/$D${PYTHONPATH:+:$PYTHONPATH}"
+            (cd "$D16"; python box16.py; python box16_ngram.py; python finish16.py; python gen16.py)
+            ROOTS+=("$D16/Box16SourceCore.lean")
+          fi
           mkdir -p /tmp/cryptids-source-audit
-          python tools/lean_compile_closure.py --workdir /tmp/a13-box17-proof --jobs 2 "$D/Box17SourceCore.lean" im-results/agent4-coverage-smoke/RelativeTape.lean 2>&1 | tee /tmp/cryptids-source-audit/box17-local.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-box17-proof --jobs 2 "${ROOTS[@]}" 2>&1 | tee /tmp/cryptids-source-audit/box17-local.log
           if grep -Eq 'sorryAx|native_decide' /tmp/cryptids-source-audit/box17-local.log; then exit 1; fi
           cd /tmp/cryptids
           export LEAN_PATH=/tmp/a13-box17-proof
@@ -641,7 +661,7 @@ jobs:
             fi
           done
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.verify_raw10_box17 && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
+        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.verify_raw10_box17 && !inputs.verify_raw10_box16 && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
