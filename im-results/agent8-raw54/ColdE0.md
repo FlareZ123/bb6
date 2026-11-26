@@ -1,13 +1,13 @@
 # Raw54 E1=0LE: four cold E0 siblings
 
-These are exact source-connected child audits in preparation. All four child tables have form `1RB---_1RC---_0RD---_1LD0LE_<E0>0LE_------`. The accepted E0=1RF proof is a different sibling (threshold 14389).
+These are source-connected child audits and ongoing sibling research. All four child tables have form `1RB---_1RC---_0RD---_1LD0LE_<E0>0LE_------`. The accepted E0=1RF proof is a different sibling (threshold 14389).
 
 | E0 | Split | Cycle | Last | Open | Frozen FAR hits | Misses | Current evidence |
 |---|---:|---:|---:|---:|---:|---:|---|
-|0LF|929|14910|5150|1308|1089|219|complete candidate audit at 1055; exact attainment checked|
-|0RB|997|16539|4615|1778|1370|408|census only; observed lower bound 390|
+|0LF|929|14910|5150|1308|1089|219|accepted exact threshold 1055|
+|0RB|997|16539|4615|1778|1370|408|complete candidate audit at 390; exact attainment checked|
 |0RF|1837|31881|8377|1994|1645|349|complete candidate audit at 402; exact attainment and hard recurrence checked|
-|1RA|2765|47151|14626|1819|1433|386|census only; observed lower bound 985|
+|1RA|2765|47151|14626|1819|1433|386|366/386 misses classified; observed late halt score 39447|
 
 Each census accounts for 9,765,625 complete tables. `cold_census.py` regenerates the frozen census and checks row order. Frozen bank Git blob: 56bf67275d597e354a0e827f6422ec68aa77f416. Discovery counts are not proof acceptance.
 
@@ -33,11 +33,11 @@ Blank entry reaches E(0) after 664 steps. For all n≥0 the exact return costs a
 
 The complete 0RF source-audit run is [45901424082](https://github.com/FlareZ123/bb6/actions/runs/45901424082), dispatched from a1ef4fa2fc73d370ef3b3fc95f9b52dd6f91868c. It uses the RF closure manifest for exact source/object dependency reuse and audits both exported theorems. No root acceptance asserted yet.
 
-## E0=0LF: exact threshold 1055 candidate
+## E0=0LF: accepted exact threshold 1055
 
 The complete `generate_zeroLF.py` ledger partitions all 219 frozen misses: 96 mutated FAR, 44 sparse n-grams, 24 generated growth, 21 run-length quotient, and 34 custom (including the exact late last-hole witness). This supersedes the earlier incomplete 78/33-miss counts.
 
-`Raw54ZeroLFLate.lean` (blob 354130c9b06fd400c9e5bdfca8db99402a1eafb3) was locally compiled at this checkpoint against accepted RF artifact 15143833177. M166 cover and attainment have only propext, Classical.choice, Quot.sound; the witness reaches its final B1 slot after 1054 nonhalting moves with delay zero, giving the sharp candidate score 1055. The full 0LF upper-bound audit is [45900516624](https://github.com/FlareZ123/bb6/actions/runs/45900516624), dispatched from 5af1eef0b61c6010c3ee46dcbc0105336576aea4.
+`Raw54ZeroLFLate.lean` (blob 354130c9b06fd400c9e5bdfca8db99402a1eafb3) was locally compiled at this checkpoint against accepted RF artifact 15143833177. M166 cover and attainment have only propext, Classical.choice, Quot.sound; the witness reaches its final B1 slot after 1054 nonhalting moves with delay zero, giving the sharp candidate score 1055. The full 0LF upper-bound audit is [45900516624](https://github.com/FlareZ123/bb6/actions/runs/45900516624), dispatched from 5af1eef0b61c6010c3ee46dcbc0105336576aea4, **succeeded**, artifact 15155753789 (digest sha256:6ac828ded6fe21cf7081939aa1226a56665998829b7ef14bc4de8095cacc888c). Both `cover` and `exact_threshold` passed the axiom gate.
 
 Previously compiled `Raw54ZeroLFGrowth13.lean` proves three exact growth families for 0LF misses 13,16,18:
 ```
@@ -47,6 +47,12 @@ Previously compiled `Raw54ZeroLFGrowth13.lean` proves three exact growth familie
 ```
 The state-A zipper has left 00 and right 00 followed by 4n+2 ones. Blank entry takes 9 steps and each epoch 12n+34 steps. Their source theorems quantify over all compatible completions and use propext and Quot.sound.
 
-## Next work
+## E0=0RB: exact threshold 390 candidate
 
-Resolve 0RB and 1RA frozen misses, reusing sibling FAR codes and small abstract closures before deriving recurrences. Consume the 0LF and 0RF full Cover only after complete exact source audit passes. No reduction of the accepted global canonical roster follows from the current child candidates.
+The frozen 408 misses partition into 370 new FAR hits (`zeroRB-far-groups.txt`), one sparse n-gram (355, width 13, 855 reachable configurations), and 37 locally kernel-checked symbolic nonhalting proofs. `Raw54DigitSection.lean` and `generate_digit_sections.py` give 34 binary-counter certificates. `generate_zeroRB_special.py` gives the radix-four and alternating-terminal certificates for 162/393; `Raw54ZeroRB51.lean` proves a nested sweep recurrence with the opposite tape indexed by popcount. All symbolic never theorems have only propext and Quot.sound. The exact 390 attainment uses `1RBHHH_1RC0RF_0RD1LF_1LD0LE_0RB0LE_1RA0LF`, 389 nonhalting moves and zero delay (`Raw54ZeroRBLate.lean`). `generate_zeroRB.py` reconstructs the complete audit; [run 45902903420](https://github.com/FlareZ123/bb6/actions/runs/45902903420) is pending.
+
+## E0=1RA: remaining work
+
+The frozen 386 misses now have 73 FAR candidates, 103 sparse n-gram candidates, 146 run-length closure candidates, and 44 observed late last-hole arrivals. Twenty live cases remain. The latest arrival is miss 256 at step 39446, so the earlier enumeration bound 985 is only an observed lower bound, not the candidate threshold. The exact late certificate and remaining live cases are being developed.
+
+Consume the 0RF and 0RB full Covers only after complete exact source audits pass. No reduction of the accepted global canonical roster follows from the current child candidates.
