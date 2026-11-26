@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE]
         required: true
 permissions:
   contents: write
@@ -313,7 +313,7 @@ jobs:
           fi
 
   semantic_shards:
-    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' }}
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' }}
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -337,9 +337,12 @@ jobs:
           if [ "${{ inputs.branch }}" = 0LA ]; then
             python "$root/prepare_raw39la_frontier.py"
             kind=LA
-          else
+          elif [ "${{ inputs.branch }}" = 1LB ]; then
             python "$root/prepare_semantic_branch.py" 1LB
             kind=LB
+          else
+            kind='${{ inputs.branch }}'
+            python "$root/prepare_raw39_semantic_children.py" "$kind"
           fi
           echo "KIND=$kind" >> "$GITHUB_ENV"
           python - "$root/shards-${kind}semantic.json" "${{ inputs.branch }}" <<'PY'
@@ -364,6 +367,11 @@ jobs:
             --label "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
             --artifact-name "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
             --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39_semantic_children.py" \
+            --provenance-input "$root/blockgram_regen.py" \
+            --provenance-input "$root/minimize_bi.py" \
+            --provenance-input "$root/1LA-frontier.json.xz.b64" \
+            --provenance-input "$root/1RE-frontier.json.xz.b64" \
             --provenance-input "$root/prepare_raw39la_frontier.py" \
             --provenance-input "$root/rungram_regen.py" \
             --provenance-input "$root/la-frontier.json" \
@@ -393,7 +401,7 @@ jobs:
           retention-days: 30
 
   semantic_assemble:
-    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' }}
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' }}
     needs: semantic_shards
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -413,9 +421,12 @@ jobs:
           if [ "${{ inputs.branch }}" = 0LA ]; then
             python "$root/prepare_raw39la_frontier.py"
             kind=LA
-          else
+          elif [ "${{ inputs.branch }}" = 1LB ]; then
             python "$root/prepare_semantic_branch.py" 1LB
             kind=LB
+          else
+            kind='${{ inputs.branch }}'
+            python "$root/prepare_raw39_semantic_children.py" "$kind"
           fi
           echo "KIND=$kind" >> "$GITHUB_ENV"
           python - "$root/shards-${kind}semantic.json" "${{ inputs.branch }}" <<'PY'
@@ -438,9 +449,11 @@ jobs:
           if [ "$KIND" = LA ]; then
             table='1RB0LA_1RC---_0RD---_1LD0RA_------_------'
             bound=1003
-          else
+          elif [ "$KIND" = LB ]; then
             table='1RB1LB_1RC---_0RD---_1LD0RA_------_------'
             bound=266
+          else
+            read -r table bound < <(python -c 'import base64,lzma,json,sys; j=json.loads(lzma.decompress(base64.b64decode(open(sys.argv[1]).read()))); print(j["child"],j["bound_candidate"])' "$root/${KIND}-frontier.json.xz.b64")
           fi
           python tools/lean_compile_closure.py \
             --workdir "$work" --jobs 2 \
@@ -451,6 +464,11 @@ jobs:
             --precompiled-manifest /tmp/a11-semantic-union/manifest.json \
             --precompiled-dir /tmp/a11-semantic-union \
             --provenance-input "$root/prepare_semantic_branch.py" \
+            --provenance-input "$root/prepare_raw39_semantic_children.py" \
+            --provenance-input "$root/blockgram_regen.py" \
+            --provenance-input "$root/minimize_bi.py" \
+            --provenance-input "$root/1LA-frontier.json.xz.b64" \
+            --provenance-input "$root/1RE-frontier.json.xz.b64" \
             --provenance-input "$root/prepare_raw39la_frontier.py" \
             --provenance-input "$root/rungram_regen.py" \
             --provenance-input "$root/la-frontier.json" \
