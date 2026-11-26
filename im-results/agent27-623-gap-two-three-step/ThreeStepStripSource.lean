@@ -123,7 +123,7 @@ theorem ordinary_previous_strip (n u v x y : Nat)
         omega
       obtain ⟨hr,hl⟩ := evenNearGap u v p q r x y n 1 5 hu h hb
         (Or.inl rfl) (Or.inl rfl) hev hs
-      exact near_cancel n u v x y hn hlo hl hr hw
+      exact near_cancel n u v x y hn hlo hl (by omega) hw
 
 /-- Necessary all-scale third-predecessor condition for a genuine root terminal
 chain. This conclusion is a two-strip reduction, not an orbit avoidance theorem. -/
