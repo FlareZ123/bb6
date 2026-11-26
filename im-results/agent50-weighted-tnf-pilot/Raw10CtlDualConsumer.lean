@@ -1,4 +1,5 @@
-import Raw10BoxCombinedConsumer
+import Raw10BoxCore
+import Raw10FixedLeaves
 import Raw10CtlFootprint
 import Raw10CtlFootprintSecond
 import Mathlib.Tactic
@@ -13,13 +14,35 @@ open BB6.Agent13BlankDelay
 open BB6.Agent49Box
 open BB6.Agent49BoxBridge
 open BB6.Agent13CrossRouteHeldLeaf109
-open BB6.Agent50Raw10Box8
-open BB6.Agent50Raw10Box8Consumer
-open BB6.Agent50Raw10Box0Halt
-open BB6.Agent17Raw10CombinedConsumer
+
+abbrev cycleTable : PartialMachine :=
+  BB6.Agent13Raw10FixedLeaves.cycleTable
+abbrev haltTable : PartialMachine :=
+  BB6.Agent13Raw10FixedLeaves.haltTable
 
 abbrev ctlLeaf2 := BB6.Agent50CtlFootprint.ctlLeaf2
 abbrev ctlLeaf3 := BB6.Agent50CtlFootprintSecond.ctlLeaf3
+
+/-- The existing 65 side witnesses, held leaf, cycle and halt cylinders. -/
+def certifiedTablesWithCycleAndHalt : List PartialMachine :=
+  sideTables ++ [held, cycleTable, haltTable]
+
+/-- The cycle cylinder is nonhalting at every weighted score bound. -/
+def cycleCover (B : Nat) : Cover (WeightedBound B) cycleTable :=
+  Cover.leaf cycleTable (fun m hm =>
+    weighted_of_never B m (BB6.Agent13Raw10FixedLeaves.cycle_never m hm))
+
+/-- The forced-halt cylinder is covered at every B >= 7014. -/
+def haltCover (B : Nat) (hB : 7014 ≤ B) :
+    Cover (WeightedBound B) haltTable :=
+  weighted_halt_leaf haltTable B 2
+    BB6.Agent13Raw10FixedLeaves.halt_root
+    BB6.Agent13Raw10FixedLeaves.halt_exact
+    (by
+      intro d hd
+      exact Nat.le_trans
+        (BB6.Agent13Raw10FixedLeaves.halt_delay_bound d hd)
+        (by omega))
 
 /-- The four-pair CTL footprint is a nonhalting weighted leaf at every bound. -/
 def ctlLeaf2Certificate (B : Nat) : WeightedTNFCertificate B ctlLeaf2 6 :=
@@ -41,12 +64,12 @@ def ctlLeaf3Certificate (B : Nat) : WeightedTNFCertificate B ctlLeaf3 6 :=
       intro m hm
       exact BB6.Agent50CtlFootprintSecond.ctlLeaf3_neverHalts m hm)
 
-/-- Consume both source-pinned CTL cylinders after the 65 side witnesses,
-    the held leaf, the 625-machine cycle and the forced-halt cylinder. -/
+/-- Subtract the five-pair CTL cylinder first, then the four-pair cylinder.
+    This order matches the exact first-mismatch crosswalk. -/
 def certifiedTablesWithBothCtl : List PartialMachine :=
   certifiedTablesWithCycleAndHalt ++ [ctlLeaf3, ctlLeaf2]
 
-/-- Exact retained complement after both disjoint CTL footprints. -/
+/-- Exact retained complement after both source-pinned CTL footprints. -/
 def raw10RemainderWithBothCtl : List (Box Slot Transition) :=
   remainder firstOneB0_1LC certifiedTablesWithBothCtl
 
@@ -56,7 +79,7 @@ theorem raw10RemainderWithBothCtl_exact (m : Machine) :
       (∀ w ∈ b0_1lcSideWitnesses,
         ¬ compatible (unpackTable w.table) m) ∧
       ¬ compatible held m ∧
-      ¬ compatible table m ∧
+      ¬ compatible cycleTable m ∧
       ¬ compatible haltTable m ∧
       ¬ compatible ctlLeaf2 m ∧
       ¬ compatible ctlLeaf3 m := by
@@ -70,11 +93,11 @@ theorem raw10RemainderWithBothCtl_exact (m : Machine) :
     · intro w hw
       exact hn _ (Or.inl ⟨w, hw, rfl⟩)
     · exact hn held (Or.inr (Or.inl rfl))
-    · exact hn table (Or.inr (Or.inr (Or.inl rfl)))
+    · exact hn cycleTable (Or.inr (Or.inr (Or.inl rfl)))
     · exact hn haltTable (Or.inr (Or.inr (Or.inr (Or.inl rfl))))
-    · exact hn ctlLeaf3 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
     · exact hn ctlLeaf2 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr rfl)))))
-  · rintro ⟨hp, hs, hh, hc, hhalt, hctl2, hctl3⟩
+    · exact hn ctlLeaf3 (Or.inr (Or.inr (Or.inr (Or.inr (Or.inl rfl)))))
+  · rintro ⟨hp, hs, hh, hcycle, hhalt, hctl2, hctl3⟩
     refine ⟨hp, ?_⟩
     intro q hq
     rcases hq with hside | htail
@@ -85,20 +108,20 @@ theorem raw10RemainderWithBothCtl_exact (m : Machine) :
         subst q
         exact hh
       · rcases htail with hCycleMem | htail
-        · have he : q = table := by simpa using hCycleMem
+        · have he : q = cycleTable := by simpa using hCycleMem
           subst q
-          exact hc
+          exact hcycle
         · rcases htail with hHaltMem | htail
           · have he : q = haltTable := by simpa using hHaltMem
             subst q
             exact hhalt
-          · rcases htail with hCtl2Mem | hCtl3Mem
-            · have he : q = ctlLeaf2 := by simpa using hCtl2Mem
-              subst q
-              exact hctl2
+          · rcases htail with hCtl3Mem | hCtl2Mem
             · have he : q = ctlLeaf3 := by simpa using hCtl3Mem
               subst q
               exact hctl3
+            · have he : q = ctlLeaf2 := by simpa using hCtl2Mem
+              subst q
+              exact hctl2
 
 theorem raw10RemainderWithBothCtl_disjoint :
     raw10RemainderWithBothCtl.Pairwise Disjoint :=
@@ -114,8 +137,7 @@ private def allSlots : List Slot :=
 private def boxMass (b : Box Slot Transition) : Nat :=
   (allSlots.map fun s => (b s).length).prod
 
-/-- The two source cylinders are disjoint: their shared C1 slot has
-    different pinned transitions (1LE versus 1RC). -/
+/-- The two source cylinders conflict at C1: one fixes 1LE, the other 1RC. -/
 theorem ctlLeaves_disjoint (m : Machine) :
     ¬ (compatible ctlLeaf2 m ∧ compatible ctlLeaf3 m) := by
   rintro ⟨h2, h3⟩
@@ -167,14 +189,13 @@ def raw10CoverWithBothCtl (B : Nat) (hB : 7014 ≤ B)
             subst q
             exact hHeld m hm
           · rcases List.mem_cons.mp htail with hCycleMem | htail
-            · have he : q = table := by simpa using hCycleMem
+            · have he : q = cycleTable := by simpa using hCycleMem
               subst q
-              exact (BB6.Agent50Raw10Box8.cover B).sound hm
+              exact (cycleCover B).sound hm
             · rcases List.mem_singleton.mp htail with hHaltMem
               have he : q = haltTable := by simpa using hHaltMem
               subst q
-              have h7014 := BB6.Agent50Raw10Box0Halt.cover B
-              exact h7014.sound hm
+              exact (haltCover B hB).sound hm
       · rcases List.mem_cons.mp hctl with hCtl3Mem | htail
         · have he : q = ctlLeaf3 := by simpa using hCtl3Mem
           subst q
@@ -184,6 +205,8 @@ def raw10CoverWithBothCtl (B : Nat) (hB : 7014 ≤ B)
           exact (ctlLeaf2Certificate B).sound hm)
     hOpen
 
+#print axioms cycleCover
+#print axioms haltCover
 #print axioms ctlLeaf2Certificate
 #print axioms ctlLeaf3Certificate
 #print axioms raw10RemainderWithBothCtl_exact
