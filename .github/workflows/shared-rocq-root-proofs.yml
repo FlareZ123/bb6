@@ -353,6 +353,7 @@ jobs:
         if: inputs.target == 'enumerate62-q0-nine-parent-membership'
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent47-raw11-adapter/Agent47Q0NineParentMembership.v" original/verify/
+          cp "$GITHUB_WORKSPACE/research/im-results/agent47-raw11-adapter/Agent47Raw11RestrictedQ0.v" original/verify/
       - name: Generate project dependencies with VM fallback
         if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         working-directory: original/verify
@@ -422,7 +423,7 @@ jobs:
             enumerate62-resume-last20) make -f Makefile.coq -j 2 Agent5PackedChunk12800_20_1000000.vo ;;
             enumerate62-coarse-forest) make -f Makefile.coq -j 2 Agent5CoarseTree.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-direct-auto) make -f Makefile.coq -j 2 Agent5SourceAutoData.vo ;;
-            enumerate62-q0-nine-parent-membership) make -f Makefile.coq -j 2 Agent5RosterComplement.vo Agent8PackedRoot.vo Agent47Raw11RestrictedQ0.vo ;;
+            enumerate62-q0-nine-parent-membership) make -f Makefile.coq -j 2 Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-q0-auto-root|enumerate62-direct-parent) make -f Makefile.coq -j 2 Agent5Q0AutoData.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-q0-row28) make -f Makefile.coq -j 2 Agent5Row28Data.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;
             enumerate62-q0-80-roots) make -f Makefile.coq -j 2 Agent5Row28Data.vo Agent5CoarsePair35.vo Agent5CoarsePair37.vo Agent5CoarsePair47.vo Agent5CoarsePair50.vo Agent5CoarseSmall.vo Agent5CoarseA.vo Agent5CoarseB.vo Agent5CoarseC.vo Agent5CoarseD.vo Agent5RosterComplement.vo Agent8PackedRoot.vo ;;

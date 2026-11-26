@@ -23,7 +23,7 @@ Definition q0_nine_parent_roster : list TM :=
 Definition q0_nine_queue := decode_queue Agent8PackedChunk.chunk_data.
 Definition q0_nine_remaining :=
   roster_remaining q0_nine_parent_roster
-    (fst q0_nine_queue ++ snd q0_nine_queue).
+    List.app (fst q0_nine_queue) (snd q0_nine_queue).
 
 Fixpoint q0_nine_covered_indices (i : nat) (xs : list T) : list nat :=
   match xs with
