@@ -29,6 +29,10 @@ on:
         description: 'Prior run containing the raw124 common artifact and successful kid shards'
         type: string
         default: ''
+      raw124_bundle_previous_repair_run_id:
+        description: 'Optional earlier repair run containing already compiled raw124 repair kids'
+        type: string
+        default: ''
       raw124_bundle_repair_kids:
         description: 'JSON array of {shard,kids} objects for the missing raw124 kid modules'
         type: string
@@ -3729,6 +3733,15 @@ jobs:
         with:
           pattern: raw124-${{ inputs.raw124_branch }}-kids-*
           run-id: ${{ inputs.raw124_bundle_source_run_id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          path: /tmp/a2-raw124-bundle
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        if: inputs.raw124_bundle_previous_repair_run_id != ''
+        with:
+          pattern: raw124-${{ inputs.raw124_branch }}-repair-kids-*
+          run-id: ${{ inputs.raw124_bundle_previous_repair_run_id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           path: /tmp/a2-raw124-bundle
