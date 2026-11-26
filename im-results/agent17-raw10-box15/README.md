@@ -43,3 +43,11 @@ Preserve the Lean recurrence proof and discovery programs, discharge the remaini
 Indices 5 and 6 also have local kernel proofs, in the same `Bouncers.lean`. For the section B0 with 6N+1 ones on the left and blank right (N≥1), the exact return is to 6(N+2)+1 ones. Costs are 54N+62 and 48N+52 respectively. Blank entry reaches N=2 in 63 and 53 steps. The three-pass sweep proof quantifies over arbitrary tails and uses a commuting-word lemma to compose all three phases. All nine `never1` … `never9` declarations are accepted locally with [propext, Quot.sound]. Index 0 is the only literal machine still undecided in the discovery frontier. The previously found 7,791 finite score is still only an observed lower bound for the box; the proof of all other branches and source ingestion are outstanding.
 
 Agent13 already proved the exact weighted minimal-halt slice reduction in `im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean` and the domain identity in `Box15Source.lean`. Reuse them; do not recreate the source-box bridge.
+
+## Final literal discovery case
+
+For index 0, `1RB0LF_1LC0RB_0LE0LD_1LC1LE_1LA0RA_1LD---`, mirrored 4-cell macro blocks with a six-block suffix as left DFA context give successful forward FAR saturation (312 left states, 793 right nodes, 1168 edges before minimization). `prepare_hard.py` regenerates the certificate using Agent13's generator; `HardSource.lean` bridges to source semantics. No independent discovery cases remain, but this is not an accepted rectangle theorem.
+
+`BouncersSource.lean` ties the nine symbolic proofs to source tables. First audit 45907932897 failed at ray extensionality in step_map; repair committed and ten-case audit 45908327095 running. `Lower.lean` gives candidate source lower witness 7791; audit pending.
+
+Reuse Agent49's five-family archive: isolated target `weighted-tnf-raw10-family6` (B1 code 6, base34 index 15), run 45908080080. No accepted upper bound or Canonical58 reduction until source audit succeeds.
