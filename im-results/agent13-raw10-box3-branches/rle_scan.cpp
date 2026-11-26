@@ -28,13 +28,13 @@ int check(const T&t,int target,Params a,Params b,int cap){Stack stacks[2]{{a},{b
  return bad?0:seen.size();}
 vector<Params> params(int capMax,int modMax){vector<Params> opts;for(int lag=0;lag<=5;lag++)for(int cap=1;cap<=capMax;cap++)for(int mod=1;mod<=modMax;mod++)for(int runs=2;runs<=5;runs++)opts.push_back({lag,cap,mod,runs});stable_sort(opts.begin(),opts.end(),[](auto a,auto b){return (a.cap+a.mod)*a.runs+2*a.lag<(b.cap+b.mod)*b.runs+2*b.lag;});return opts;}
 int main(int argc,char**argv){
- assert(argc==2);int target=atoi(argv[1]);string tag=to_string(target);
+ assert(argc==2||argc==3);bool cheapOnly=argc==3;int target=atoi(argv[1]);string tag=to_string(target);
  ifstream in("rlestart"+tag+".txt");ofstream cert("rle"+tag+".txt"),fail("rlehard"+tag+".txt");
  assert(in&&cert&&fail);T t;int cnt=0,solved=0,maxsize=0;auto cheap=params(2,3),wide=params(3,4);auto start=chrono::steady_clock::now();
  while(in>>t[0]){for(int i=1;i<12;i++)in>>t[i];cnt++;int size=0;Params p{},q{};
  for(auto x:cheap){size=check(t,target,x,x,2500);if(size){p=q=x;break;}}
- if(!size)for(auto x:wide){size=check(t,target,x,x,10000);if(size){p=q=x;break;}}
- if(!size){int n=min((int)wide.size(),120);for(int k=0;k<2*n-1&&!size;k++)for(int i=max(0,k-n+1);i<n&&i<=k&&!size;i++){int j=k-i;if(i==j)continue;size=check(t,target,wide[i],wide[j],3500);if(size){p=wide[i];q=wide[j];}}}
+ if(!size&&!cheapOnly)for(auto x:wide){size=check(t,target,x,x,10000);if(size){p=q=x;break;}}
+ if(!size&&!cheapOnly){int n=min((int)wide.size(),120);for(int k=0;k<2*n-1&&!size;k++)for(int i=max(0,k-n+1);i<n&&i<=k&&!size;i++){int j=k-i;if(i==j)continue;size=check(t,target,wide[i],wide[j],3500);if(size){p=wide[i];q=wide[j];}}}
  ostream&out=size?cert:fail;for(int v:t)out<<v<<' ';if(size){for(auto x:{p,q})out<<x.lag<<' '<<x.cap<<' '<<x.mod<<' '<<x.runs<<' ';out<<size;solved++;maxsize=max(maxsize,size);}out<<'\n';}
  cout<<target<<" RLE "<<solved<<"/"<<cnt<<" max states "<<maxsize<<" seconds "<<chrono::duration<double>(chrono::steady_clock::now()-start).count()<<endl;
 }
