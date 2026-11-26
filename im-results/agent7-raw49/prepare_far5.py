@@ -229,9 +229,9 @@ end BB6.Agent7Raw49Far5Cut
     output = os.environ.get("GITHUB_OUTPUT")
     if output:
         with open(output, "a") as f:
-            f.write(f"far5_count={len(bank)}\\n")
-            f.write(f"remaining_count={remaining_count}\\n")
-            f.write(f"after_children_count={after_children_count}\\n")
+            f.write(f"far5_count={len(bank)}\n")
+            f.write(f"remaining_count={remaining_count}\n")
+            f.write(f"after_children_count={after_children_count}\n")
     print(FAR_LOG.read_text())
 
 
