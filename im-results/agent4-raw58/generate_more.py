@@ -14,6 +14,7 @@ sys.path.insert(0,str(ROOT.parent/"agent1-ngram"))
 from emit_ngram import emit as emit_ngram
 sys.path.insert(0,str(ROOT.parent/"agent4-two-sided-automata"))
 from emit_automata import emit as emit_automata, run as run_automata
+from quotient import compress as compress_automata
 sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
 from emit_sparse import emit as emit_sparse
 MOVES=[w+d+q for w,d,q in product("01","LR","ABCDEF")]
@@ -54,8 +55,8 @@ def emit_automata_sharded(i,p,cert):
     replacement = "\n".join([
         "theorem left_nonempty : decide (0 < cert.left.edges.size) = true := by decide",
         "theorem right_nonempty : decide (0 < cert.right.edges.size) = true := by decide",
-        "theorem left_seed : (false,0) ∈ cert.left.pop 0 := by decide",
-        "theorem right_seed : (false,0) ∈ cert.right.pop 0 := by decide",
+        "theorem left_seed : (cert.left.pop 0).contains (false,0) = true := by decide",
+        "theorem right_seed : (cert.right.pop 0).contains (false,0) = true := by decide",
         "theorem start_state : BB6.Agent4Automata.stateOK cert 0 false 0 0 = true := by decide",
         *row_proofs,
         """theorem rows_checked :
@@ -196,6 +197,9 @@ def build_child(key,spec):
             else:
                 paramsL=paramsR=params
             cert=run_automata(p,paramsL,paramsR)
+            if key in ('LE','LF1') and cert[0]:
+                before=cert[1]; cert=compress_automata(p,cert)
+                print(key,i,'automata incidence quotient',before,'->',cert[1])
             assert cert[0],(key,i,params)
             code.append(emit_automata_sharded(i,p,cert));pumps[i]=f"{an}.M{i}"
         code.append(f"end {an}")

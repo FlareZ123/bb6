@@ -103,3 +103,7 @@ Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 
 - Axiom profiles for `parent_count`, `count`, `base_sound_at_target`, `sound`, and `exact_at_target` contain only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
 
 This CI result accepts the **conditional roster consumer**, not the missing Raw58 parent Cover. The 19310 parent premise and all 75 retained Covers remain explicit; do not report an unconditional 75-residual upper bound. The full Raw58 parent closure still needs its own original-source audit.
+
+## Incidence quotient improvement (2026-11-26)
+
+See [the quotient note](../agent4-two-sided-automata/INCIDENCE_QUOTIENT.md). The compressed LE203 leaf was locally kernel-checked against the original Raw109 core and exact TwoSidedAutomata source, all twelve row checks and the assembled `never` theorem. The 19 symmetric Raw58 candidates all shrink; LE203 joint states 8723→2560 and stack states 87/348→72/100. The generator now uses this reduction for LE and LF1, while preserving LF's pinned in-flight shards and accepted LE1 representation. The exact Boolean seed equality + direct rewrite assembly has been checked on the actual compressed certificate. Complete LE/LF/LF1 child and parent closure still pending.
