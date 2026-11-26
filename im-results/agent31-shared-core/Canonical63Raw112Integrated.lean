@@ -8,6 +8,7 @@ namespace BB6.Agent31Canonical63Raw112
 
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent47CanonicalRefinement
+open BB6.Agent47CanonicalFrontier
 open BB6.Agent3Canonical64Raw120
 open BB6.Agent47Raw112
 
