@@ -6,6 +6,10 @@ choices 0LC, 0LD, 1LD, 1RD have immediate translated cycles; the other
 20 are not assumed closed. The E1=0RE child has six holes and its first
 undefined query is E0 at time 10.
 
+## Source-checked root frontier
+
+`Raw56RootCut.lean` passed the existing original-source Lean 4.36.0-rc2 workflow in [run 45883348983](https://github.com/FlareZ123/bb6/actions/runs/45883348983). It proves the first undefined query is E1 at ordinary time 6, checks the four immediate translated-cycle branches, and gives the exact conditional root partition `sound20`: every compatible completion either has weighted bound 7014 or belongs to one of 20 canonical residual representatives. The distinguished E1=0RE child is exactly the six-hole table in `candidates.json`; `sound19` shows that accepting this child reduces the local residual list from 20 to 19. This is a local source-checked frontier, not a closed Raw56 parent or a global roster reduction.
+
 ## New discovery
 
 Using the existing Agent7 Raw49 classifier at cap 1000, lookback 32,
@@ -34,6 +38,8 @@ ordinary compatibility corollary. The underlying tree checks the
 halt branch at every split, all ordinary successors, and the empty
 canonical residual list. **Candidate complete; original-source Lean
 acceptance pending.**
+
+The first child source-check [run 45882933157](https://github.com/FlareZ123/bb6/actions/runs/45882933157) failed in generated `Raw56E1REPart575.lean` with `OfNat Bool 1` and consequent stuck `decide` checks. This is an emitter serialization defect, not a counterexample: the C++ cut tree stores cycle direction as integer 0/1, but the inherited formatter printed `1` instead of Lean `true`. `prepare.py` now validates the raw direction field and patches its private copy of `certify_canonical.py` to emit `bool(t[3])` as a Lean Bool. The tree/open-list hashes and certificate data are unchanged. The focused retry [run 45896758638](https://github.com/FlareZ123/bb6/actions/runs/45896758638) is in progress; no child acceptance is claimed until it succeeds.
 
 ## First source-check diagnostic and repair
 
