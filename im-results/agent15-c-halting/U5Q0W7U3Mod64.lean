@@ -64,7 +64,7 @@ theorem w7_z2_q1_parent_unreachable_u35mod64 (t : Nat) :
   have hCy5 : 5≤Cy := by dsimp [Cy]; omega
   have hCyOdd : Cy%2=1 := by dsimp [Cy]; omega
   have hCsum : (Cx+Cy)%4=2 := by dsimp [Cx,Cy]; omega
-  exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_two
+  exact BB6.Agent11High.blank_no_odd_sum_two
     Cx Cy hCy5 hCyOdd hCsum hC
 
 /-- The original q=0 U5 w=7 target is blank-unreachable on u=35+64t.
