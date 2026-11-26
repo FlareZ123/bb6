@@ -42,7 +42,7 @@ jobs:
           if [[ "${{ inputs.audit }}" == "raw8" ]]; then
             lake build BusyBeaver.BB6.Halt.M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB
           elif [[ "${{ inputs.audit }}" == "raw140-n20-source" ]]; then
-            lake build BusyBeaver.BB6.NonHalt.M_1RB0LC_1RC0RA_1RD0RF_0LEHHH_1LB1LA_1LD1RA BusyBeaver.BB6.NonHalt.M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE
+            lake build BusyBeaver.BB6.NonHalt.M_1RB1LA_1RC0LE_1RD0LF_0LA0RD_1LC0LE_HHH0RE
           elif [[ "${{ inputs.audit }}" == "raw140" ]]; then
             mapfile -t modules < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/raw140-upstream-modules.txt"
             test "${#modules[@]}" = 8

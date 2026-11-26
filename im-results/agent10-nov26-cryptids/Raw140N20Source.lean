@@ -1,5 +1,5 @@
 import Raw140N20Parent
-import Nov26Pair10
+import Nov26N20
 
 namespace BB6.Agent10Raw140N20
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole

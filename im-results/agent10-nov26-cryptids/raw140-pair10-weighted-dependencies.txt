@@ -1,5 +1,7 @@
 im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean
 im-results/agent10-nov26-cryptids/Nov26SourceCore.lean
+im-results/agent10-nov26-cryptids/Nov26N19.lean
+im-results/agent10-nov26-cryptids/Nov26N20.lean
 im-results/agent10-nov26-cryptids/Nov26Pair10.lean
 im-results/agent8-coverage-contract/Symmetry.lean
 im-results/agent8-coverage-contract/RootShift.lean
