@@ -3608,6 +3608,12 @@ jobs:
           export LEAN_PATH="$PWD"
           test "$(cat SOURCE_COMMIT)" = "$GITHUB_SHA"
           sha256sum -c RAW124_SOURCE.sha256
+          echo "ELAN_HOME=$PWD/.elan" >> "$GITHUB_ENV"
+          echo "$PWD/.elan/bin" >> "$GITHUB_PATH"
+          find "$PWD/.elan" -type f -path '*/bin/*' -exec chmod u+x {} +
+          export ELAN_HOME="$PWD/.elan"
+          export PATH="$PWD/.elan/bin:$PATH"
+          lean --version
           STEM="Raw124B${RAW124_BRANCH}"
           for k in $(seq -w 0 23); do test -s "${STEM}KidK$k.olean"; done
           lean -o "${STEM}Data.olean" "${STEM}Data.lean" 2>&1 | tee /tmp/a2-raw124-bundle-assemble.log
