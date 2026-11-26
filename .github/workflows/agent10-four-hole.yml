@@ -1322,7 +1322,7 @@ jobs:
         run: |
           set -euo pipefail
           [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
-      - name: Link accepted Canonical64, Raw112, Raw58 and champion source closures
+      - name: Link accepted Canonical64, Raw112 and Raw58 source closures
         env:
           GH_TOKEN: ${{ github.token }}
           RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
