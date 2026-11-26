@@ -1,6 +1,7 @@
 import argparse, json, re
 from pathlib import Path
 from collections import Counter
+from q0_trace_emit import module as trace_module
 
 MOVES=[w+d+q for q in 'ABCDEF' for w in '01' for d in 'LR']
 BANK=[[(0,1),(2,1),(2,1)],[(0,1),(2,3),(2,3),(2,3)]]
@@ -121,10 +122,17 @@ def load(src):
 
 def size(t): return 1+sum(map(size,t[3])) if t[0]=='b' else 1
 
+def long_traces(t,tab):
+    if t[0]=='h' and t[1]>512:
+        yield tab,t[1]
+    elif t[0]=='b':
+        for k,m in zip(t[3],MOVES):
+            yield from long_traces(k,replace(tab,t[2],m))
+
 def emit(t,tab,stats):
     k=t[0];stats[k]+=1
     if k=='s': return f'.side {bit(t[1]=="R")} {t[2]} {t[3]} {t[4]}'
-    if k=='h': return f'.last {t[1]}'
+    if k=='h': return '.symbolic' if t[1]>512 else f'.last {t[1]}'
     if k=='p': return '.pair '+mitm(tab,BANK[t[1]],BANK[t[2]])
     if k=='d': return '.pair '+mitm(tab,t[1],t[2])
     if k=='c': return '.symbolic'
@@ -150,23 +158,27 @@ def generate(src,out,chunk):
     else: lines+=['def sym (_ : PartialMachine) : Bool := false',f'theorem sym_sound (p : PartialMachine) (h : sym p = true) : Cover (WeightedBound {B}) p := by contradiction']
     (out/(ns+'Base.lean')).write_text('\n'.join(lines+['end '+ns])+'\n')
     stats=Counter();stats['b']+=1
-    def prove(t,tab,p,name,lines):
+    traces=list(long_traces(tree,tab))
+    if traces: trace_module(rid,B,traces,out/(ns+'Long.lean'))
+    def prove(t,tab,p,name,lines,sym_name):
         if size(t)<=chunk:
             expr=emit(t,tab,stats)
             lines.append(f'def cert_{name} : Tree := {expr}')
-            lines.append(f'theorem safe_{name} : Cover (WeightedBound {B}) {p} := check_sound {B} sym sym_sound 6 {p} cert_{name} (by decide +kernel)')
+            lines.append(f'theorem safe_{name} : Cover (WeightedBound {B}) {p} := check_sound {B} {sym_name} {sym_name}_sound 6 {p} cert_{name} (by decide +kernel)')
         else:
             stats['b']+=1;_,n,i,kids=t;assert tab[i]=='---'
             names=[name+'_'+str(j) for j in range(24)]
             for m,k,cn in zip(MOVES,kids,names):
-                cp='p_'+cn;lines.append(f'def {cp} := refine {p} {sl(i)} (some {mv(m)})');prove(k,replace(tab,i,m),cp,cn,lines)
+                cp='p_'+cn;lines.append(f'def {cp} := refine {p} {sl(i)} (some {mv(m)})');prove(k,replace(tab,i,m),cp,cn,lines,sym_name)
             lines.append(splitproof(p,t,name,names,B))
     _,n,i,kids=tree
     modules=[]
     for j,(m,k) in enumerate(zip(MOVES,kids)):
         name='r'+str(j);p='p_'+name;mod=ns+'Shard'+str(j);modules.append(mod)
         lines=['import '+ns+'Base',pre,'namespace '+ns,f'def {p} := refine rootParent {sl(i)} (some {mv(m)})']
-        prove(k,replace(tab,i,m),p,name,lines);lines+=['#print axioms safe_'+name,'end '+ns]
+        has_long=any(long_traces(k,replace(tab,i,m)))
+        if has_long: lines.insert(1,'import '+ns+'Long')
+        prove(k,replace(tab,i,m),p,name,lines,'longSym' if has_long else 'sym');lines+=['#print axioms safe_'+name,'end '+ns]
         (out/(mod+'.lean')).write_text('\n'.join(lines)+'\n')
     lines=['import '+m for m in modules]+[pre,'namespace '+ns,splitproof('rootParent',tree,'root',['r'+str(j) for j in range(24)],B),'#print axioms safe_root','end '+ns]
     (out/(ns+'Parent.lean')).write_text('\n'.join(lines)+'\n')
