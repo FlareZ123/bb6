@@ -1,9 +1,20 @@
 import Raw11Root52Consume
 import Raw11ExtraSmall
+import Raw11Extra85
+import Raw11Extra86
+import Raw11Extra87
+import Raw11Extra88
+import Raw11Extra89
+import Raw11Extra90
 import Raw11Extra91
 import Raw11Extra92
 import Raw11Extra123
 import Raw11Extra124
+import Raw11Extra125
+import Raw11Extra135
+import Raw11Extra136
+import Raw11Extra138
+import Raw11Extra139
 import Q0RosterConsume
 
 set_option maxRecDepth 100000
@@ -13,8 +24,14 @@ namespace BB6.Agent47Raw11Root52ExtrasConsume
 
 open BB6Coverage BB6.Agent13BlankDelay
 
-/-- The 35 checked Raw11-extra parent tables. Two new parents use exact growing-return leaf Covers. -/
+/-- The 46 checked Raw11-extra parent tables, including eleven fully closed five-hole trees. -/
 def closedTables : List PartialMachine := [
+  BB6.Agent47Extra85.parent,
+  BB6.Agent47Extra86.parent,
+  BB6.Agent47Extra87.parent,
+  BB6.Agent47Extra88.parent,
+  BB6.Agent47Extra89.parent,
+  BB6.Agent47Extra90.parent,
   BB6.Agent47Extra91.parent,
   BB6.Agent47Extra92.parent,
   BB6.Agent47Extra93.parent,
@@ -49,13 +66,18 @@ def closedTables : List PartialMachine := [
   BB6.Agent47Extra122.parent,
   BB6.Agent47Extra123.parent,
   BB6.Agent47Extra124.parent,
+  BB6.Agent47Extra125.parent,
+  BB6.Agent47Extra135.parent,
+  BB6.Agent47Extra136.parent,
+  BB6.Agent47Extra138.parent,
+  BB6.Agent47Extra139.parent,
   BB6.Agent47Extra141.parent
 ]
 
 def closedCodes : List Nat :=
   closedTables.map BB6.Agent47PhaseFrontier.tableCode
 
-/-- Exact residual frontier after root39, root52, and all 35 completed extra Covers. -/
+/-- Exact residual frontier after root39, root52, and all 46 completed extra Covers. -/
 def remaining : List PartialMachine :=
   Q0RosterConsume.removeCovered BB6.Agent47Raw11Root52Consume.remaining closedTables
 
@@ -69,6 +91,12 @@ def remainingCodes : List Nat :=
 /-- Package each exact parent together with its independently checked local Cover. -/
 def closedCovers (B : Nat) (hB : 4663 ≤ B) :
     List (PSigma fun p : PartialMachine => Cover (WeightedBound B) p) := [
+  ⟨BB6.Agent47Extra85.parent, Q0RosterConsume.liftCover (A := 195) (B := B) (Nat.le_trans (by decide : 195 ≤ 4663) hB) BB6.Agent47Extra85.cover⟩,
+  ⟨BB6.Agent47Extra86.parent, Q0RosterConsume.liftCover (A := 98) (B := B) (Nat.le_trans (by decide : 98 ≤ 4663) hB) BB6.Agent47Extra86.cover⟩,
+  ⟨BB6.Agent47Extra87.parent, Q0RosterConsume.liftCover (A := 101) (B := B) (Nat.le_trans (by decide : 101 ≤ 4663) hB) BB6.Agent47Extra87.cover⟩,
+  ⟨BB6.Agent47Extra88.parent, Q0RosterConsume.liftCover (A := 91) (B := B) (Nat.le_trans (by decide : 91 ≤ 4663) hB) BB6.Agent47Extra88.cover⟩,
+  ⟨BB6.Agent47Extra89.parent, Q0RosterConsume.liftCover (A := 87) (B := B) (Nat.le_trans (by decide : 87 ≤ 4663) hB) BB6.Agent47Extra89.cover⟩,
+  ⟨BB6.Agent47Extra90.parent, Q0RosterConsume.liftCover (A := 41) (B := B) (Nat.le_trans (by decide : 41 ≤ 4663) hB) BB6.Agent47Extra90.cover⟩,
   ⟨BB6.Agent47Extra91.parent, Q0RosterConsume.liftCover (A := 143) (B := B) (Nat.le_trans (by decide : 143 ≤ 4663) hB) BB6.Agent47Extra91.cover⟩,
   ⟨BB6.Agent47Extra92.parent, Q0RosterConsume.liftCover (A := BB6.Agent47Extra92.bound) (B := B) (Nat.le_trans (by decide : BB6.Agent47Extra92.bound ≤ 4663) hB) BB6.Agent47Extra92.cover⟩,
   ⟨BB6.Agent47Extra93.parent, Q0RosterConsume.liftCover (A := 24) (B := B) (Nat.le_trans (by decide : 24 ≤ 4663) hB) BB6.Agent47Extra93.cover⟩,
@@ -103,6 +131,11 @@ def closedCovers (B : Nat) (hB : 4663 ≤ B) :
   ⟨BB6.Agent47Extra122.parent, Q0RosterConsume.liftCover (A := 45) (B := B) (Nat.le_trans (by decide : 45 ≤ 4663) hB) BB6.Agent47Extra122.cover⟩,
   ⟨BB6.Agent47Extra123.parent, Q0RosterConsume.liftCover (A := 144) (B := B) (Nat.le_trans (by decide : 144 ≤ 4663) hB) BB6.Agent47Extra123.cover⟩,
   ⟨BB6.Agent47Extra124.parent, Q0RosterConsume.liftCover (A := BB6.Agent47Extra124.bound) (B := B) (Nat.le_trans (by decide : BB6.Agent47Extra124.bound ≤ 4663) hB) BB6.Agent47Extra124.cover⟩,
+  ⟨BB6.Agent47Extra125.parent, Q0RosterConsume.liftCover (A := 47) (B := B) (Nat.le_trans (by decide : 47 ≤ 4663) hB) BB6.Agent47Extra125.cover⟩,
+  ⟨BB6.Agent47Extra135.parent, Q0RosterConsume.liftCover (A := 245) (B := B) (Nat.le_trans (by decide : 245 ≤ 4663) hB) BB6.Agent47Extra135.cover⟩,
+  ⟨BB6.Agent47Extra136.parent, Q0RosterConsume.liftCover (A := 123) (B := B) (Nat.le_trans (by decide : 123 ≤ 4663) hB) BB6.Agent47Extra136.cover⟩,
+  ⟨BB6.Agent47Extra138.parent, Q0RosterConsume.liftCover (A := 97) (B := B) (Nat.le_trans (by decide : 97 ≤ 4663) hB) BB6.Agent47Extra138.cover⟩,
+  ⟨BB6.Agent47Extra139.parent, Q0RosterConsume.liftCover (A := 147) (B := B) (Nat.le_trans (by decide : 147 ≤ 4663) hB) BB6.Agent47Extra139.cover⟩,
   ⟨BB6.Agent47Extra141.parent, Q0RosterConsume.liftCover (A := 70) (B := B) (Nat.le_trans (by decide : 70 ≤ 4663) hB) BB6.Agent47Extra141.cover⟩
 ]
 
@@ -138,10 +171,10 @@ theorem remaining_codes_after_root52 :
   rfl
 
 theorem remaining_census :
-    (BB6.Agent47Raw11Route.fullRoster.length, remaining.length) = (299, 257) := by
+    (BB6.Agent47Raw11Route.fullRoster.length, remaining.length) = (299, 246) := by
   decide +kernel
 
-/-- All 35 local bounds are at most 4663, so each lifts under B >= 4663. -/
+/-- All 46 local bounds are at most 4663, so each lifts under B >= 4663. -/
 theorem cover_from_remaining (B : Nat) (hB : 4663 ≤ B)
     (h : ∀ p ∈ remaining, ∀ m, compatible p m → WeightedBound B m) :
     Cover (WeightedBound B) BB6.Agent47Raw11Route.parent := by
