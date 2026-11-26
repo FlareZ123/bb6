@@ -473,37 +473,39 @@ jobs:
           run-id: 45655656030
           github-token: ${{ github.token }}
           path: /tmp/a43-source
-      - name: Extract the original-source residual roster
+      - name: Extract both original-source residual rosters
         run: |
-          python im-results/agent43-raw122-cut/residual_roster.py /tmp/a43-source /tmp/a43-rosters "${{ inputs.assemble_branch }}"
-          cat "/tmp/a43-rosters/Raw122Roster${{ inputs.assemble_branch }}.tsv"
-      - name: Persist exact residual roster in im-results
-        env:
-          BRANCH: ${{ inputs.assemble_branch }}
+          python im-results/agent43-raw122-cut/residual_roster.py /tmp/a43-source /tmp/a43-rosters 16
+          python im-results/agent43-raw122-cut/residual_roster.py /tmp/a43-source /tmp/a43-rosters 17
+          cat /tmp/a43-rosters/Raw122Roster16.tsv
+          cat /tmp/a43-rosters/Raw122Roster17.tsv
+      - name: Persist both residual rosters in im-results
         run: |
-          DEST="im-results/agent43-raw122-cut/rosters/branch${BRANCH}"
-          mkdir -p "$DEST"
-          cp /tmp/a43-rosters/Raw122Roster${BRANCH}* "$DEST/"
-          cat > "$DEST/metadata.json" <<EOF
-          {
-            "branch_index": ${BRANCH},
-            "source_artifact_run_id": 45655656030,
-            "source_artifact_id": 15043765926,
-            "generator": "im-results/agent43-raw122-cut/residual_roster.py"
-          }
-          EOF
+          for BRANCH in 16 17; do
+            DEST="im-results/agent43-raw122-cut/rosters/branch${BRANCH}"
+            mkdir -p "$DEST"
+            cp /tmp/a43-rosters/Raw122Roster${BRANCH}* "$DEST/"
+            cat > "$DEST/metadata.json" <<EOF
+            {
+              "branch_index": ${BRANCH},
+              "source_artifact_run_id": 45655656030,
+              "source_artifact_id": 15043765926,
+              "generator": "im-results/agent43-raw122-cut/residual_roster.py"
+            }
+            EOF
+          done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add "$DEST"
+          git add im-results/agent43-raw122-cut/rosters/branch16 im-results/agent43-raw122-cut/rosters/branch17
           if ! git diff --cached --quiet; then
             git fetch origin main
             git rebase origin/main
-            git commit -m "Agent 43: preserve Raw122 branch ${BRANCH} residual roster"
+            git commit -m "Agent 43: preserve Raw122 1LE and 1LF residual rosters"
             git push origin HEAD:main
           fi
       - uses: actions/upload-artifact@v4
         with:
-          name: raw122-roster-${{ inputs.assemble_branch }}
+          name: raw122-rosters-16-17
           path: /tmp/a43-rosters/
           retention-days: 90
           if-no-files-found: error
