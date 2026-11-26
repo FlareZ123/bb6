@@ -104,12 +104,14 @@ def JumpCover (F : Nat) (ys : List Nat) (ends : List Nat) : Prop :=
 
 /-- Specification of the complete modular first-jump set. The C++ implementation
     constructs this set by iterative subset-sum residues and interval lifting. -/
-def JumpCandidates (F : Nat) (ys : List Nat) : List Nat :=
-  (List.range (F - ys.length)).filter
+noncomputable def JumpCandidates (F : Nat) (ys : List Nat) : List Nat := by
+  classical
+  exact (List.range (F - ys.length)).filter
     (fun c => decide (JumpMember F ys.length (digits ys) c))
 
 theorem jumpCandidates_cover (F : Nat) (ys : List Nat) :
     JumpCover F ys (JumpCandidates F ys) := by
+  classical
   intro c hc
   exact List.mem_filter.mpr
     ⟨List.mem_range.mpr hc.1, decide_eq_true_eq.mpr hc⟩
