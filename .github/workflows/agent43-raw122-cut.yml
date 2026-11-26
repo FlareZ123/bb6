@@ -11,7 +11,7 @@ on:
         type: boolean
         default: false
       assemble_branch:
-        description: "0 assembles 0LA, 5 reuses 0LF, and 16/17 extract original residual rosters"
+        description: "0 assembles 0LA, 5 reuses 0LF, 16/17 extract residual rosters, inventory lists accepted parent artifacts"
         required: false
         type: string
         default: ''
@@ -55,6 +55,69 @@ permissions:
   contents: write
   actions: read
 jobs:
+  inventory-parent-artifacts:
+    if: inputs.assemble_branch == 'inventory'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-branch00-assembly
+          run-id: 45819084258
+          github-token: ${{ github.token }}
+          path: /tmp/a43-parent-artifacts/branch00
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-branch05-cover
+          run-id: 45815048803
+          github-token: ${{ github.token }}
+          path: /tmp/a43-parent-artifacts/branch05
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-branches16-17-covers
+          run-id: 45818787152
+          github-token: ${{ github.token }}
+          path: /tmp/a43-parent-artifacts/branches16-17
+      - name: Inventory accepted child-Cover bundles
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, json
+          root = Path("/tmp/a43-parent-artifacts")
+          rows = []
+          for path in sorted(root.rglob("*")):
+              if path.is_file():
+                  rows.append({
+                      "path": path.relative_to(root).as_posix(),
+                      "bytes": path.stat().st_size,
+                      "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
+                  })
+          report = {
+              "artifacts": {
+                  "branch00": 45819084258,
+                  "branch05": 45815048803,
+                  "branches16_17": 45818787152,
+              },
+              "file_count": len(rows),
+              "olean_count": sum(x["path"].endswith(".olean") for x in rows),
+              "lean_count": sum(x["path"].endswith(".lean") for x in rows),
+              "manifest_files": [x["path"] for x in rows if "manifest" in x["path"].lower()],
+              "files": rows,
+          }
+          Path("/tmp/raw122-parent-artifact-inventory.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\\n"
+          )
+          print(json.dumps({k: v for k, v in report.items() if k != "files"}, indent=2))
+          for row in rows:
+              print(f"{row['bytes']:>12}  {row['path']}")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-parent-artifact-inventory
+          path: /tmp/raw122-parent-artifact-inventory.json
+          retention-days: 30
+          if-no-files-found: error
+
   generate:
     if: inputs.compile_complete_parent != true && inputs.targeted_recovery != true && inputs.assemble_branch == ''
     runs-on: ubuntu-latest
