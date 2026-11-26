@@ -99,9 +99,9 @@ Root 28 has one open leaf in its coarse search tree, matching the proposed solid
 - parent: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------`
 - open leaf / proposed partial machine: `1RB1RD_1RC0RE_0LA1RF_1LA1LD_1LE0LA_---0RE`
 
-Its source-level sweep proof and exact q0 consumer are being checked in run `45764648102` (still compiling at the last checkpoint).
+Its source-level sweep proof and exact q0 consumer are included in integrated run `45766737173`. The earlier standalone run `45764648102` was cancelled after 20 minutes in the compile step to avoid duplicating the integrated audit.
 
-**Important correction — root 26 is not closed by the current single-solid certificate.** The full open-leaf scan found 13 distinct residual tables for root 26, not one. The first proposed solid machine covers only one of those leaves. The other 12 leaves also have F0 undefined but differ in E0 and/or F1. Root 26 is excluded from the integrated target until all 13 open leaves have independent source-safe certificates or a valid generalized proof.
+**Important correction — root 26 is not closed by the current single-solid certificate.** The full open-leaf scan found 13 distinct residual tables for root 26, not one. The first proposed solid machine covers only one of those leaves. The other 12 leaves also have F0 undefined but differ in E0 and/or F1. Root 26 is excluded from the integrated target until all 13 open leaves have independent source-safe certificates or a valid generalized proof. The full ten-root open-leaf data and audit are preserved in [`q0-open-root-scan-2026-11-26.md`](q0-open-root-scan-2026-11-26.md) and [`q0-open-root-scan-2026-11-26.json`](q0-open-root-scan-2026-11-26.json).
 
 `Agent5Q0FiveRootConsume.v` composes root 28 with the four pair roots. `Agent5Q0EightyRootConsume.v` then composes those five with the existing 75-root roster and states the expected exact q0 count `(156,1,80,0)`, leaving 76 active plus one held residual. The shared manual CI target is `enumerate62-q0-80-roots`.
 
