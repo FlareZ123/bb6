@@ -79,7 +79,7 @@ The other S_r branches remain open. For (r=2\pmod4), the sum is 0 modulo 8 and t
 
 ## Next mathematical task
 
-Close the complete high-parent fan for (z\equiv2\pmod4), especially the (q\ge2) branches when (W) has large 2-adic valuation; separately handle the (S_r) fan on the (w\equiv7\pmod{128}) lift. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
+Close the complete high-parent fan for (z\\equiv2\\pmod4), especially the (q\\ge2) branches when (W) has large 2-adic valuation. On the (w\\equiv7\\pmod{128}) lift, continue only the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan, while (r\\equiv1,3\\pmod4) need further even-right inverse analysis. The (r\\equiv0\\pmod4) sublift (z=12+64v) is already excluded by the chain above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
 
 
 ## Infinite subfamily closed by the first parent fan
@@ -201,7 +201,7 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 
 | w (mod 128) | z (mod 16) | first-parent sector |
 |---:|---:|---|
-| 7 | 12 | z divisible by 4 |
+| 7 | 12 | z divisible by 4; z=12 (mod 64) sublift excluded |
 | 15 | 7 | z odd |
 | 23 | 2 | z=2 mod 4 |
 | 31 | 13 | z odd; excluded |
