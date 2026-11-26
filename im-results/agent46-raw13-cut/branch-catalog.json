@@ -1163,6 +1163,217 @@
       }
     ]
   },
+  "1046": {
+    "root": "1RB0RD1RC---1LA0LC---1LB------------",
+    "counts": {
+      "split": 3659,
+      "halt": 3659,
+      "state": 3208,
+      "cycle": 68221,
+      "last": 12487,
+      "far": 220,
+      "auto": 6
+    },
+    "far": [
+      [
+        "1RB0RD1RC1LE1LA0LC1RF1LB0RA0LD0RA---",
+        0,
+        "0120340134"
+      ],
+      [
+        "1RB0RD1RC1LE1LA0LC1RF1LB---1LD0RC1RF",
+        0,
+        "0123442044"
+      ]
+    ],
+    "auto": [
+      {
+        "table": "1RB0RD1RC0RE1LA0LC---1LB1LE0RF1RA1LC",
+        "entry": 35,
+        "family": [
+          2,
+          [
+            "",
+            "1001",
+            "10011"
+          ],
+          "000"
+        ],
+        "inc": 3,
+        "ops": [
+          [
+            "L",
+            "",
+            "",
+            "1001",
+            "0011",
+            "10011",
+            "000",
+            14
+          ],
+          28,
+          [
+            "R",
+            "0",
+            "110011",
+            "0011",
+            "1001",
+            "1",
+            "000",
+            4
+          ],
+          15,
+          [
+            "L",
+            "1110011001",
+            "",
+            "1001",
+            "1100",
+            "1",
+            "0",
+            14
+          ],
+          44,
+          [
+            "R",
+            "0",
+            "110011001100",
+            "1100",
+            "1001",
+            "1",
+            "0",
+            4
+          ],
+          19,
+          [
+            "L",
+            "11100110011001",
+            "",
+            "1001",
+            "1100",
+            "1",
+            "0",
+            14
+          ],
+          58,
+          [
+            "R",
+            "0",
+            "1100110011001100",
+            "1100",
+            "1001",
+            "1",
+            "0",
+            4
+          ],
+          25
+        ],
+        "a": 54,
+        "b": 189
+      },
+      {
+        "table": "1RB0RD1RC1RE1LA0LC1LD1LB0RF0RE1LD---",
+        "entry": 22,
+        "family": [
+          3,
+          [
+            "",
+            "00000",
+            "00001"
+          ],
+          "1"
+        ],
+        "inc": 1,
+        "ops": [
+          [
+            "L",
+            "",
+            "",
+            "00000",
+            "11111",
+            "00001",
+            "1",
+            5
+          ],
+          16,
+          [
+            "R",
+            "1",
+            "111111",
+            "11111",
+            "00000",
+            "1",
+            "1",
+            5
+          ],
+          10
+        ],
+        "a": 10,
+        "b": 26
+      },
+      {
+        "table": "1RB0RD1RC1RE1LA0LC1LD1LB1RF0RE0LA---",
+        "entry": 23,
+        "family": [
+          5,
+          [
+            "01",
+            "00000",
+            "0001"
+          ],
+          ""
+        ],
+        "inc": 1,
+        "ops": [
+          2,
+          [
+            "L",
+            "00",
+            "",
+            "00000",
+            "11111",
+            "0001",
+            "",
+            5
+          ],
+          19,
+          [
+            "R",
+            "1",
+            "1111111",
+            "11111",
+            "00000",
+            "1",
+            "",
+            5
+          ],
+          9
+        ],
+        "a": 10,
+        "b": 30
+      }
+    ],
+    "proved": [
+      [
+        "1RB0RD1RC0LA1LA0LC0RE1LB1LC1RF1RD---",
+        "Agent46Raw13Counter1046Auto",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch1046.p0",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch1046.never0"
+      ],
+      [
+        "1RB0RD1RC0LA1LA0LC0RE1LB1RF---1LC1RD",
+        "Agent46Raw13Counter1046Auto",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch1046.p1",
+        "BB6Coverage.Agent31Pump.Auto.Counter.Raw13Branch1046.never1"
+      ],
+      [
+        "1RB0RD1RC0RE1LA0LC1LD1LB0RF0RE0RD---",
+        "Agent46Raw13Drift1046",
+        "BB6Coverage.Agent46Drift1046.p",
+        "BB6Coverage.Agent46Drift1046.never"
+      ]
+    ]
+  },
   "1422": {
     "root": "1RB1RB1RC1LD1LA------0LC------------",
     "counts": {
