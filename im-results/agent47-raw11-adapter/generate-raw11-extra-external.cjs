@@ -126,7 +126,26 @@ def bound : Nat := ${B}
   have hEq : ${p} = ${ext.table} := by
     funext s
     rcases s with ⟨q,b⟩
-    fin_cases q <;> cases b <;> rfl
+    have hq : q.val = 0 ∨ q.val = 1 ∨ q.val = 2 ∨ q.val = 3 ∨ q.val = 4 ∨ q.val = 5 := by omega
+    rcases hq with hq|hq|hq|hq|hq|hq
+    · have hq' : q = 0 := Fin.ext hq
+      subst q
+      cases b <;> rfl
+    · have hq' : q = 1 := Fin.ext hq
+      subst q
+      cases b <;> rfl
+    · have hq' : q = 2 := Fin.ext hq
+      subst q
+      cases b <;> rfl
+    · have hq' : q = 3 := Fin.ext hq
+      subst q
+      cases b <;> rfl
+    · have hq' : q = 4 := Fin.ext hq
+      subst q
+      cases b <;> rfl
+    · have hq' : q = 5 := Fin.ext hq
+      subst q
+      cases b <;> rfl
   rw [hEq] at hm
   exact ${ext.proof} ${B} m hm
 `;
