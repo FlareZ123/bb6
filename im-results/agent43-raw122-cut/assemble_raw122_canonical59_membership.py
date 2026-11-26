@@ -97,7 +97,7 @@ def add_raw122_base_dependencies(work: Path, linked: Path):
     }
 
 
-def verify_raw122_source_artifact(work: Path, source: Path):
+def verify_raw122_source_artifact(source_dir: Path, source: Path):
     run = a68.api_json(f"repos/{REPO}/actions/runs/{RAW122_SOURCE_RUN_ID}")
     if run.get("conclusion") != "success":
         raise RuntimeError(f"Raw122 source artifact run is not successful: {run.get('conclusion')}")
@@ -110,9 +110,11 @@ def verify_raw122_source_artifact(work: Path, source: Path):
     item = matches[0]
     if item.get("expired"):
         raise RuntimeError("Raw122 source artifact has expired")
-    digest = item["digest"].removeprefix("sha256:")
-    dirs = a68.download((item["id"], RAW122_SOURCE_RUN_ID, digest), work)
-    candidates = [p for root in dirs for p in root.rglob("Raw122Base.lean")]
+    if not source_dir.is_dir():
+        raise RuntimeError(f"raw122-generated source artifact was not downloaded to {source_dir}")
+    # This artifact is source-only, so use actions/download-artifact in the
+    # workflow rather than the .olean-only a68.download helper.
+    candidates = list(source_dir.rglob("Raw122Base.lean"))
     candidate_hashes = {sha(p) for p in candidates}
     if len(candidate_hashes) != 1:
         raise RuntimeError(
@@ -132,7 +134,7 @@ def verify_raw122_source_artifact(work: Path, source: Path):
         "artifact_name": item["name"],
         "artifact_digest": item["digest"],
         "source_sha256": artifact_sha,
-        "source_paths": [str(p.relative_to(root)) for root in dirs for p in root.rglob("Raw122Base.lean")],
+        "source_paths": [str(p.relative_to(source_dir)) for p in candidates],
     }
 
 
@@ -149,7 +151,7 @@ def main() -> None:
     raw122_dependencies = add_raw122_base_dependencies(work, linked)
 
     base_source = HERE / "Raw122Base.lean"
-    raw122_source_artifact = verify_raw122_source_artifact(work, base_source)
+    raw122_source_artifact = verify_raw122_source_artifact(Path('/tmp/a43-source'), base_source)
     current_sha = sha(base_source)
 
     env = dict(os.environ, LEAN_PATH=str(linked))
