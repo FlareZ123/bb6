@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import CodeImplicitNil
 import PacketSource
+import DObsSourceCandidate
 
 set_option maxHeartbeats 20000000
 set_option maxRecDepth 55000
@@ -76,6 +77,7 @@ private theorem inc_true_repeat (n : Nat) :
 private theorem inc_ws (q r : Nat) :
     wordInc (ws q r) = q+4*r+9 := by
   simp [ws,inc_append,inc_false_repeat,inc_true_repeat,wordInc]
+  omega
 
 private theorem oppairs_false (q : Nat) :
     oppairs q ++ [false] = false :: pairs q := by
@@ -86,6 +88,18 @@ private theorem oppairs_false (q : Nat) :
       false :: true :: false :: pairs q
     simpa using congrArg (fun bs : List Bool => false :: true :: bs) ih
 
+private theorem p_suffix (r : Nat) :
+    List.replicate (3*r+1) true ++ ys =
+      wordCode (List.replicate r true ++ [false,true,true]) := by
+  have hrep : List.replicate (3*r+1) true =
+      List.replicate (3*r) true ++ [true] := by
+    calc
+      _ = List.replicate (3*r) true ++ List.replicate 1 true := by
+        congr 1 <;> omega
+      _ = _ := List.replicate_append_replicate
+  rw [hrep]
+  simp [ys,code_append,code_true_repeat,wordCode,List.append_assoc]
+
 private theorem packet_word (q r : Nat) :
     word q (3*r+1) ys = false :: wordCode (ws q r) := by
   calc
@@ -94,18 +108,10 @@ private theorem packet_word (q r : Nat) :
           (List.replicate (3*r+1) true ++ ys) := by
       simp [word,List.append_assoc]
     _ = (false :: pairs q) ++
-          (List.replicate (3*r+1) true ++ ys) := by
-      rw [oppairs_false]
-    _ = false :: (pairs q ++
-          (List.replicate (3*r+1) true ++ ys)) := by
-      simp [List.append_assoc]
-    _ = false :: (wordCode (List.replicate q false) ++
-          (wordCode (List.replicate r true) ++
-            (wordCode [false] ++ wordCode [true,true]))) := by
-      rw [code_false_repeat,code_true_repeat]
-      simp [ys,wordCode,List.append_assoc]
+          wordCode (List.replicate r true ++ [false,true,true]) := by
+      rw [oppairs_false,p_suffix]
     _ = false :: wordCode (ws q r) := by
-      simp [ws,code_append,List.append_assoc]
+      simp [ws,code_append,code_false_repeat,List.append_assoc]
 
 private theorem A_start (k q r : Nat) :
     packet (3*k+3) q (3*r+1) ys =
