@@ -90,6 +90,8 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
   intro B a C c htr hBmod hE
   cases htr with
   | step i B0 a0 x c0 hprev hx he =>
+    have hi : i=1 := by omega
+    subst i
     cases hprev with
     | first =>
       have hx0 : x=0 := by
@@ -99,19 +101,20 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
       have ht : target n 1 1=0 := by simp [target,hn2]
       have he' := he
       rw [ht,hx0] at he'
-      have hc2 : 2*c0=(n+2)/2 := by simpa using he'
+      have hc2 : 2*a=(n+2)/2 := by simpa using he'
       have hmod2 : (n+2)%2=0 := by omega
       have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
         Nat.mod_add_div (n+2) 2
-      have hc4 : 4*c0=n+2 := by omega
+      have hc4 : 4*a=n+2 := by omega
       have hmod4 : (n+2)%4=0 := by omega
       have hdiv4 : (n+2)%4 + 4*((n+2)/4)=n+2 :=
         Nat.mod_add_div (n+2) 4
-      have hc : c0=(n+2)/4 := by omega
+      have hc : a=(n+2)/4 := by omega
       subst x
-      subst c0
+      subst a
       simp [Nat.pow_succ]
     | step i' B' a' x' c' hprev' hx' he' =>
+      have hpos := (trace_bounds n i' B' a' hprev').1
       omega
 
 /-- Initial half certificate at cost two. The single MarginOK check is
