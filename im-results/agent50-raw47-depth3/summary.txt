@@ -1,0 +1,12 @@
+Raw47 depth-3 cut + FAR5 search
+parent=1RB---_1RC---_0RD---_1LD0RC_------_------
+cap=1000
+lookback=32
+split_depth=3
+open=1212
+unique_open=1212
+duplicate_open=0
+hole_distribution=4:1212
+far5_hits=10
+open_sha256=4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d
+far5_sha256=851e52084ac4d3baa85901339862f8a7410cce971171950b752a3ca7712beb1e
