@@ -58,6 +58,11 @@ on:
         required: false
         type: boolean
         default: false
+      verify_raw10_box17:
+        description: 'Check exact raw10 rectangle 17 and its single pinned r1 nonhalt dependency'
+        required: false
+        type: boolean
+        default: false
       verify_six_root_graft:
         description: 'Compile and axiom-audit the six pinned upstream NonHalt roots grafted into the local depth-four frontier'
         required: false
@@ -417,6 +422,25 @@ jobs:
           if [[ -n "$EXTRA_ORIGINAL_MODULE" ]]; then
             lake build "$EXTRA_ORIGINAL_MODULE"
           fi
+      - name: Check exact raw10 rectangle 17 with its pinned r1 theorem
+        if: ${{ inputs.verify_raw10_box17 }}
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          lake build BusyBeaver.Bridge Cryptids.Machines
+          cd "$GITHUB_WORKSPACE"
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent13-raw10-box17
+          (cd "$D"; python box17.py; python box17_ngram.py; python finish.py; python compress.py; python emit_bitpacked.py; python emit_direct.py)
+          mkdir -p /tmp/cryptids-source-audit
+          python tools/lean_compile_closure.py --workdir /tmp/a13-box17-proof --jobs 2 "$D/Box17SourceCore.lean" im-results/agent4-coverage-smoke/RelativeTape.lean 2>&1 | tee /tmp/cryptids-source-audit/box17-local.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/cryptids-source-audit/box17-local.log; then exit 1; fi
+          cd /tmp/cryptids
+          export LEAN_PATH=/tmp/a13-box17-proof
+          lake env lean -o /tmp/a13-box17-proof/CryptidsTapeAdapter.olean "$GITHUB_WORKSPACE/im-results/agent4-coverage-smoke/CryptidsTapeAdapter.lean" 2>&1 | tee /tmp/cryptids-source-audit/box17-tape.log
+          lake env lean "$GITHUB_WORKSPACE/$D/Box17SourceFull.lean" 2>&1 | tee /tmp/cryptids-source-audit/box17-full.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/cryptids-source-audit/box17-{tape,full}.log; then exit 1; fi
       - name: Compile F289 exact primitive-step pilot
         if: ${{ inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
@@ -617,7 +641,7 @@ jobs:
             fi
           done
       - name: Prove against unchanged source definitions and audit axioms
-        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
+        if: ${{ !inputs.export_local_source_closure && !inputs.verify_six_root_graft && !inputs.verify_raw10_box17 && !inputs.simulate_second_f289 && !inputs.verify_f289_rle_cost }}
         working-directory: /tmp/cryptids
         shell: bash
         run: |
