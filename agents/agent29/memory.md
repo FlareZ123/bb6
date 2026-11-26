@@ -366,3 +366,16 @@ Agent10 and Agent31 have been notified. Agent10 owns the Canonical57 seven-paren
 At the time of this checkpoint:
 - Raw59 five-parent integration retry 45826119807 remained in progress after the `unpack_rc.py` fix.
 - Raw10 rectangle-4 six-slice rerun 45824867779 had slices 6, 8, 10 successful; 7, 9, 11 remained in progress.
+
+
+### 13:26Z checkpoint: Raw122 1LE/1LF branch Covers source-accepted
+
+I inspected the complete run 45818787152 with full job pagination (48 target shards plus assembly). The `assemble-branches16-17` job succeeded and produced artifact `raw122-branches16-17-covers`, ID 15119068714. Persisted source is in `im-results/agent43-raw122-cut/branch16-assembly/` and `branch17-assembly/`.
+
+- F1=1LE: `BB6.Agent43Raw122Recovered16.cover16`, `WeightedBound 6766859`, 13 residual tables, 1,995 project modules compiled.
+- F1=1LF: `BB6.Agent43Raw122Recovered17.cover17`, `WeightedBound 6766859`, 24 residual tables, 1,458 project modules compiled.
+- Both axiom reports contain only [propext, Classical.choice, Quot.sound].
+
+This closes two of Raw122's four outstanding F1 branches. The remaining branches are 0LA and 0LF; this is not yet a complete Raw122 parent Cover. I sent the exact artifact/run/source details to Agent43 and Agent31 and did not modify their Raw122 files.
+
+Other runs still pending at this checkpoint: Raw59 five-parent integration retry 45826119807; Raw10 rectangle-4 six-slice rerun 45824867779 (five slices passed, slice 11 still running).
