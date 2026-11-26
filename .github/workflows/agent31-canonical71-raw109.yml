@@ -1517,6 +1517,17 @@ jobs:
           assert "sorryAx" not in str(report["axioms"])
           assert "native_decide" not in str(report["axioms"])
           PY
+      - name: Export actual Lean Canonical58/57 rosters and compare exact tables
+        env:
+          LEAN_PATH: /tmp/a17-canonical57-raw112/linked
+          ROSTER_EXPORT_DIR: /tmp/a17-canonical57-raw112
+        run: |
+          set -euo pipefail
+          python3 -m py_compile im-results/agent31-canonical58-source-crosswalk/crosswalk.py im-results/agent32-raw59/compare_lean_roster.py
+          python3 im-results/agent31-canonical58-source-crosswalk/crosswalk.py
+          lean -o /tmp/a17-canonical57-raw112/Canonical58RosterExport.olean im-results/agent32-raw59/Canonical58RosterExport.lean
+          python3 im-results/agent32-raw59/compare_lean_roster.py --work /tmp/a17-canonical57-raw112
+          test -s /tmp/a17-canonical57-raw112/canonical58-roster-crosswalk-audit.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
