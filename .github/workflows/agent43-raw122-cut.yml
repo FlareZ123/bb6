@@ -767,10 +767,10 @@ jobs:
           retention-days: 90
           if-no-files-found: error
 
-  compile-complete-parent:
+  prepare-complete-parent:
     if: inputs.compile_complete_parent == true
     runs-on: ubuntu-latest
-    timeout-minutes: 90
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -782,51 +782,51 @@ jobs:
         with:
           name: raw122-generated
           run-id: 45655656030
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-source
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-audit-*
           run-id: 45595285735
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards
           merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-target-0-*
           run-id: 45773448173
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards/targets-0-grouped
           merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-target-0-*
           run-id: 45785487569
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards/targets-0-singletons
           merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-target-5-*
           run-id: 45800793166
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards/targets-5
           merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-target-16-*
           run-id: 45818787152
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards/targets-16
           merge-multiple: false
       - uses: actions/download-artifact@v4
         with:
           pattern: raw122-target-17-*
           run-id: 45818787152
-          github-token: ${{ github.token }}
+          github-token: \${{ github.token }}
           path: /tmp/a43-new-shards/targets-17
           merge-multiple: false
-      - name: Build the full Raw122 parent prepin manifest
+      - name: Build the dependency-closed Raw122 parent prepin
         env:
           SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
           RAW122_PARENT_CORE: "1"
@@ -838,7 +838,64 @@ jobs:
             tail -n 180 /tmp/a43-audit/audit.log || true
             exit 1
           fi
-      - name: Compile the complete 24-child parent Cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-parent-prepin
+          path: /tmp/a43-audit/
+          retention-days: 30
+          if-no-files-found: error
+
+  compile-parent-shards:
+    if: inputs.compile_complete_parent == true
+    needs: [prepare-complete-parent]
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include:
+          - id: "00"
+            root: im-results/agent43-raw122-cut/branch00-assembly/Raw122Recovered00.lean
+          - id: "05"
+            root: im-results/agent43-raw122-cut/branch05-assembly/Raw122Recovered05.lean
+          - id: "16"
+            root: im-results/agent43-raw122-cut/branch16-assembly/Raw122Recovered16.lean
+          - id: "17"
+            root: im-results/agent43-raw122-cut/branch17-assembly/Raw122Recovered17.lean
+          - id: "14"
+            root: im-results/agent43-raw122-cut/Raw122Recovered14.lean
+          - id: "04"
+            root: im-results/agent43-raw122-cut/Raw122Recovered04.lean
+          - id: "12"
+            root: im-results/agent3-raw122-recovered/Raw122Recovered12.lean
+          - id: "13"
+            root: im-results/agent43-raw122-cut/Raw122Recovered13.lean
+          - id: "LC"
+            root: im-results/agent43-raw122-cut/Raw122RecoveredLC.lean
+          - id: "18"
+            root: im-results/agent43-raw122-cut/Raw122Recovered18.lean
+          - id: "23"
+            root: im-results/agent3-raw122-recovered/Raw122Recovered23.lean
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-parent-prepin
+          path: /tmp/a43-prepin
+      - name: Restore the pinned source and generated Raw122 inputs
+        env:
+          SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
+        run: |
+          set -euo pipefail
+          python im-results/agent43-raw122-cut/pin_parent_sources.py /tmp/a43-prepin/manifest.json
+          cp /tmp/a43-prepin/*.lean im-results/agent43-raw122-cut/
+      - name: Compile one independent child-Cover source closure
         run: |
           set -euo pipefail
           overrides=()
@@ -846,16 +903,93 @@ jobs:
           overrides+=(--override "Raw122Roster17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17.lean")
           overrides+=(--override "Raw122Counter17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Counter17.lean")
           for n in $(seq -w 0 23); do
-            overrides+=(--override "Raw122Roster16Kid${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid${n}.lean")
-            overrides+=(--override "Raw122Roster17Kid${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid${n}.lean")
+            overrides+=(--override "Raw122Roster16Kid\${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid\${n}.lean")
+            overrides+=(--override "Raw122Roster17Kid\${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid\${n}.lean")
+          done
+          if ! python tools/lean_compile_closure.py "\${{ matrix.root }}" \
+            --workdir /tmp/a43-shard \
+            --jobs 1 \
+            --precompiled-manifest /tmp/a43-prepin/manifest.json \
+            --precompiled-dir /tmp/a43-prepin \
+            --manifest /tmp/a43-shard/manifest.json \
+            --label "raw122-parent-child-\${{ matrix.id }}" \
+            --provenance-input im-results/agent43-raw122-cut/Raw122Base.lean \
+            --provenance-input im-results/agent43-raw122-cut/Raw122RootCompose.lean \
+            "\${overrides[@]}" \
+            2>&1 | tee /tmp/a43-shard.log; then
+            echo "Child-Cover shard \${{ matrix.id }} failed; actual Lean diagnostic follows:"
+            tail -n 160 /tmp/a43-shard.log || true
+            exit 1
+          fi
+          if grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' /tmp/a43-shard.log; then
+            echo "Prohibited proof mechanism in shard \${{ matrix.id }}"
+            exit 1
+          fi
+          python im-results/agent43-raw122-cut/export_parent_shard.py \
+            /tmp/a43-prepin/manifest.json \
+            /tmp/a43-shard \
+            /tmp/a43-shard-out \
+            "\${{ matrix.id }}" \
+            "\${{ matrix.root }}"
+          cp /tmp/a43-shard.log /tmp/a43-shard-out/compile.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-parent-shard-\${{ matrix.id }}
+          path: /tmp/a43-shard-out/
+          retention-days: 30
+          if-no-files-found: error
+
+  assemble-complete-parent:
+    if: inputs.compile_complete_parent == true
+    needs: [prepare-complete-parent, compile-parent-shards]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-parent-prepin
+          path: /tmp/a43-prepin
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-parent-shard-*
+          path: /tmp/a43-shards
+          merge-multiple: false
+      - name: Restore pinned source and generated Raw122 inputs
+        env:
+          SOURCE_REF: 175a9d9004dfadd072d00b5926608f9b4bfdb1d0
+        run: |
+          set -euo pipefail
+          python im-results/agent43-raw122-cut/pin_parent_sources.py /tmp/a43-prepin/manifest.json
+          cp /tmp/a43-prepin/*.lean im-results/agent43-raw122-cut/
+      - name: Merge dependency-closed child-Cover shards
+        run: |
+          set -euo pipefail
+          python im-results/agent43-raw122-cut/merge_parent_shards.py \
+            /tmp/a43-prepin /tmp/a43-shards /tmp/a43-merged
+      - name: Compile and audit the complete 24-child parent Cover
+        run: |
+          set -euo pipefail
+          overrides=()
+          overrides+=(--override "Raw122Roster16=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16.lean")
+          overrides+=(--override "Raw122Roster17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17.lean")
+          overrides+=(--override "Raw122Counter17=im-results/agent43-raw122-cut/branch17-assembly/Raw122Counter17.lean")
+          for n in $(seq -w 0 23); do
+            overrides+=(--override "Raw122Roster16Kid\${n}=im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid\${n}.lean")
+            overrides+=(--override "Raw122Roster17Kid\${n}=im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid\${n}.lean")
           done
           if ! python tools/lean_compile_closure.py \
             im-results/agent43-raw122-cut/Raw122CompleteParent.lean \
-            --workdir /tmp/a43-parent \
-            --jobs 2 \
-            --precompiled-manifest /tmp/a43-audit/manifest.json \
-            --precompiled-dir /tmp/a43-audit \
-            --manifest /tmp/a43-parent/manifest.json \
+            --workdir /tmp/a43-parent-final \
+            --jobs 1 \
+            --precompiled-manifest /tmp/a43-merged/manifest.json \
+            --precompiled-dir /tmp/a43-merged \
+            --manifest /tmp/a43-parent-final/manifest.json \
             --label raw122-complete-parent-6766859 \
             --theorem BB6.Agent43Raw122CompleteParent.parent_bound \
             --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0LF_------" \
@@ -865,7 +999,10 @@ jobs:
             --provenance-input im-results/agent43-raw122-cut/Raw122Base.lean \
             --provenance-input im-results/agent43-raw122-cut/Raw122RootCompose.lean \
             --provenance-input im-results/agent43-raw122-cut/README.md \
-            "${overrides[@]}" \
+            --provenance-input im-results/agent43-raw122-cut/pin_parent_sources.py \
+            --provenance-input im-results/agent43-raw122-cut/export_parent_shard.py \
+            --provenance-input im-results/agent43-raw122-cut/merge_parent_shards.py \
+            "\${overrides[@]}" \
             2>&1 | tee /tmp/a43-parent.log; then
             echo "Complete-parent source closure failed; actual Lean diagnostic follows:"
             tail -n 200 /tmp/a43-parent.log || true
@@ -899,6 +1036,7 @@ jobs:
               if bad:
                   raise SystemExit(f"unapproved axioms for {name}: {sorted(bad)}")
               profiles[name] = sorted(axioms)
+          merged = json.loads(pathlib.Path("/tmp/a43-merged/manifest.json").read_text())
           report = {
               "status": "source-compiled Raw122 partial parent Cover; not a BB(6) solution",
               "theorem": required[1],
@@ -914,17 +1052,22 @@ jobs:
                   "0LF": 45815048803,
                   "1LE_1LF": 45818787152
               },
+              "sharded_precompiled_module_count": merged["module_count"],
+              "shard_manifests": json.loads(pathlib.Path("/tmp/a43-merged/shards.json").read_text()),
               "axioms": profiles
           }
-          pathlib.Path("/tmp/a43-parent/parent-cover-report.json").write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+          pathlib.Path("/tmp/a43-parent-final/parent-cover-report.json").write_text(
+              json.dumps(report, indent=2, sort_keys=True) + "\n"
+          )
           PY
-          test -f /tmp/a43-parent/Raw122CompleteParent.olean
+          test -f /tmp/a43-parent-final/Raw122CompleteParent.olean
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-complete-parent
           path: |
-            /tmp/a43-parent/
+            /tmp/a43-parent-final/
             /tmp/a43-parent.log
-            /tmp/a43-audit/manifest.json
+            /tmp/a43-merged/manifest.json
+            /tmp/a43-merged/shards.json
           retention-days: 90
           if-no-files-found: error
