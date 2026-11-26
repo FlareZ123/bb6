@@ -485,14 +485,7 @@ jobs:
             DEST="im-results/agent43-raw122-cut/rosters/branch${BRANCH}"
             mkdir -p "$DEST"
             cp /tmp/a43-rosters/Raw122Roster${BRANCH}* "$DEST/"
-            cat > "$DEST/metadata.json" <<EOF
-            {
-              "branch_index": ${BRANCH},
-              "source_artifact_run_id": 45655656030,
-              "source_artifact_id": 15043765926,
-              "generator": "im-results/agent43-raw122-cut/residual_roster.py"
-            }
-            EOF
+            printf '{\n  "branch_index": %s,\n  "source_artifact_run_id": 45655656030,\n  "source_artifact_id": 15043765926,\n  "generator": "im-results/agent43-raw122-cut/residual_roster.py"\n}\n' "$BRANCH" > "$DEST/metadata.json"
           done
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
