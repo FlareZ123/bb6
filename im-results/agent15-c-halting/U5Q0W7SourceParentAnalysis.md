@@ -79,6 +79,78 @@ The remaining S_r branches are now partitioned more finely. For (r=0\\pmod4), th
 
 The remaining branches are open. For (r=2\\pmod4), S_r has sum 0 modulo 8 and the complete even/even parent fan is still required. For (r=1\\pmod8), the next inverse hits a sum-zero fork. For (r=5\\pmod8), the next target splits further: if (r=5\\pmod{16}), it is even/odd with sum 3 modulo 8, and its unique parent is odd/odd with sum (2+2s) modulo 4 for (r=5+16s); the (r=5\\pmod{32}) case is excluded. The (r=21\\pmod{32}) case has an odd/odd sum-zero parent; its (q=3\\pmod4) sublift is now excluded by the odd/odd low-value parent theorem, yielding (z=1884+2048s) in U5Q0W7R21Mod128.lean. The remaining q=0,1,2 modulo 4 cases still need parent analysis. If (r=13\\pmod{16}), the next target is even/odd with sum 7 modulo 8 and is not covered by the sum-three inverse. For (r=3\\pmod4) outside (r=3\\pmod{16}), further even-right inverses and residue splits remain. All four source-composition files are uncompiled and unaudited. This lift is only one of the sixteen lifts of (w\\equiv7\\pmod8).
 
+
+## Exact parent fan for the remaining r=2 (mod 4) branch
+
+Put (r=2+4v). The remaining even/even target after the first forced
+even-right inverse is
+[
+X_v=(637756+917616v,\;159380+229320v),
+\qquad X_{v,1}+X_{v,2}=8S_v,
+]
+where
+[
+S_v=99642+143367v=3(33214+47789v)>2.
+]
+The exact source theorem "even_even_parent_fan" therefore gives only
+three possible parent shapes: direct/low, zero-left, or even-a bounce.
+The zero-left alternative requires (S_v=2^n), which is impossible
+because (S_v>2) is divisible by 3. Thus only direct and bounce parents
+remain.
+
+The direct parent is
+[
+D_v=(797134+1146936v,\;79689+114660v).
+]
+Its right coordinate is odd and its sum is
+[
+D_{v,1}+D_{v,2}=876823+1261596v\equiv7+4v\pmod8.
+]
+For odd v, the sum is 3 modulo 8, so "section_evenodd_sum3_inverse"
+forces
+[
+F_v=(438409+630798v,\;259048+372729v).
+]
+This is odd/odd, with
+[
+F_{v,1}+F_{v,2}=697457+1003527v\equiv1+3v\pmod4.
+]
+Consequently the v=3 mod4 direct branch is excluded by
+"blank_no_odd_sum_two"; the v=1 mod4 branch reaches an odd/odd
+sum-zero target and requires the low-value parent analysis. For even v,
+D_v has sum 7 modulo 8 and the sum-three inverse does not apply.
+
+When (v\not\equiv2\pmod4), (S_v\not\equiv0\pmod4), and the specialized
+"even_even_sumzero_parent" reduces the bounce alternative to the
+depth-one parent
+[
+E_v=(199282+286734v,\;378612+544761v).
+]
+Its right coordinate is odd exactly when v is odd, and
+[
+E_{v,1}+E_{v,2}=577894+831495v\equiv2+3v\pmod4.
+]
+Thus v=1 mod4 is excluded by the odd-right sum-one invariant; v=3 mod4
+leaves an odd-right sum-three state; and v=0 mod4 leaves an even-right
+state, to which further even-right inverses apply.
+
+For (v=2+4q), (S_v\equiv0\pmod4), so the two-parent specialization is
+not valid. The complete "even_even_parent_fan" still excludes the
+zero-left branch, but its even-a bounce may have any odd depth n
+satisfying
+[
+n\le v_2(S_v)+1.
+]
+Here
+[
+S_v=4(32198+47789q),
+]
+and the odd coefficient 47789 makes this secondary valuation unbounded
+over q. The n=1 bounce is E_v; higher odd depths remain a genuine
+nested parent fan. This is the main unresolved fork in the r=2 mod4
+lift. No reachability exclusion is claimed for D_v or the remaining
+bounce alternatives.
+
 ## Next mathematical task
 
 Close the complete high-parent fan for (z\\equiv2\\pmod4), especially the (q\\ge2) branches when (W) has large 2-adic valuation. On the (w\\equiv7\\pmod{128}) lift, continue the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod8) has a sum-zero fork; (r\\equiv5\\pmod{16}) outside (r\\equiv5\\pmod{32}) leaves an odd/odd sum-zero parent, of which the (r=117\\pmod{128}) sublift is now excluded; (r\\equiv13\\pmod{16}) leaves an even/odd sum-seven target; and (r\\equiv3\\pmod4) outside (r\\equiv3\\pmod{16}) needs further residue splits. The (r\\equiv0\\pmod4), (r\\equiv3\\pmod{16}), (r\\equiv5\\pmod{32}), and (r=117\\pmod{128}) sublifts are excluded above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
