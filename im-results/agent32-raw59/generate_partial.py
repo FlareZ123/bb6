@@ -47,7 +47,7 @@ MACROS="""0LB 693 001213333 6
 1LB 469 00123224022 8
 1LE 1118 00100 8
 1LE 1234 00123224101 6""".splitlines()
-CHUNK=32  # keep each decidable audit fragment small enough for Lean's recursion budget
+CHUNK=240  # retain the original fragment size; optimize the expensive weighted query separately
 B=7014
 
 def late_hole(table, limit):
@@ -79,7 +79,7 @@ def generate(raw,upgrade=False):
     if upgrade:
         from generate_lb1_four import main as block_generate, cases_for
         block_generate(raw,opens)
-    certs={};pumps={};late={};imports=['Raw59Base','PartialAudit']
+    certs={};pumps={};late={};imports=['Raw59Base','PartialAudit','Raw59QuickWeight']
     for rle in opens:
         for a in BANK:
             try: masks(parse(rle),int(a[0]),[int(x,36) for x in a[1:]])
@@ -284,7 +284,9 @@ theorem c_{name} : partialCheck {B} {pname} t_{name} = true := by
         return f'''
 def k_{name} : Move → PartialAudit := byPartialMove [{','.join('t_'+x for x in names)}]
 def t_{name} : PartialAudit := .split {n} {slot(s)} k_{name}
-theorem q_{name} : zipQueryOK {B} {pname} {n} {slot(s)} = true := by decide
+theorem q_{name} : zipQueryOK {B} {pname} {n} {slot(s)} = true := by
+  rw [← BB6.Agent32Raw59QuickWeight.quickZipQuery_eq]
+  decide
 theorem kcheck_{name} (mv : Move) : partialCheck {B} (refine {pname} {slot(s)} (some mv)) (k_{name} mv) = true := by
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
