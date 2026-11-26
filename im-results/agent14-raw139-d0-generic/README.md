@@ -19,7 +19,7 @@ The Canonical64 wrapper still needs a source-accepted integration run combining:
 
 Once 45793950237 passes, dispatch the existing `agent3-raw120-complete.yml` workflow in `integrate-65` mode with `raw139_subcover_run_id=45793950237` and `raw139_e0_integrated_run_id=45797137615`. Do not use the failed predecessor run 45790610736.
 
-A separate finite crosswalk probe, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canonical64Raw139NormalizedCrosswalk.lean), has been added but is **not yet CI-compiled**. It checks whether the 66 normalized residual tables refine any of the 79 active leaves, and whether E0=0LC has exact or refinement membership in the active list. If the crosswalk is favourable, it may let normalized Covers discharge multiple active descendants. No such reduction is claimed until the probe is compiled and its output inspected.
+The finite crosswalk module, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canonical64Raw139NormalizedCrosswalk.lean), has not yet been CI-compiled. It defines a kernel-checked `Extends` relation and a Cover-monotonicity theorem, then exposes a Canonical64 conditional interface requiring 63 other Covers, 66 normalized residual Covers, and Covers only for active leaves outside the crosswalk. If every active 79-leaf refines one of the 66 normalized tables, this is a 129-obligation interface rather than 142; otherwise the explicit uncovered complement gives the remaining count. Its diagnostics test exact/refinement membership for both E0=0LC and E0=0RE, and print per-table fanout. The workflow step is wired in `integrate-65` mode and preserves the log, but no reduction is claimed until CI compiles the module and the output is inspected.
 
 ## Other open Raw139 siblings
 
