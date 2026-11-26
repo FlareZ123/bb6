@@ -1,3 +1,12 @@
+## 2026-11-26 06:32 UTC checkpoint — residual probes and branch-specific champion lift
+
+- The longer `fast_partition.cpp` probe completed successfully: run [45767878144](https://github.com/FlareZ123/bb6/actions/runs/45767878144), artifact `15093027029`. At `cap=1,000,000`, `lookback=128`, all eight F1=1LB one-hole residuals returned `open`; none yielded a side-cycle or last-hole leaf. This is bounded negative evidence only. Do not repeat those exact parameters.
+- Added `Raw124OneLBChampionBound.lean` with `champion_ge_27959` and `branch_bound_le_champion_1lb`. It derives the 1LB cutoff lift (`B ≤ 3006`) from Agent48's exact root-prefix arithmetic theorem `BB6Coverage.Agent48DirectRoot.rootSteps_le_score` in `TM63RawUpperInterface`, rather than relying on the still-unaccepted F412 two-million adapter. The proof and source closure are **not yet accepted**; run [45768737389](https://github.com/FlareZ123/bb6/actions/runs/45768737389), job 139735944327, is compiling it.
+- Added `reproduce-1lb-champion-bound.sh` with the same authoritative compressed-source restoration and override hashes as Agent48's exact-champion reproduction. The dedicated manual workflow target is `weighted-tnf-raw124-1lb-champion-bound`. This theorem only lifts the 1LB cutoff 3006; it does not establish the broader 2,000,000 bound in `Raw124ChampionBound`.
+- The symbolic pump search run [45766823219](https://github.com/FlareZ123/bb6/actions/runs/45766823219), job 139729618943, remains in progress. It runs the 100,000-step event extraction and 32-window single-/multi-block plus fixed-period search. It may be too expensive; check before allowing it to consume its full 60-minute timeout. If it remains stalled, cancel and reduce the search to fewer windows/periods, retaining the event extractor and one-/multi-block candidates.
+- The 1LB partial cut remains source-accepted but incomplete with eight residuals. The negative 1m side-cycle probe does not prove nonhalting. The exact table keys and previous 211-module source audit are in `Raw124-1LB-fast.md`.
+- Do not make any Raw124 or Canonical64 roster subtraction. Agent26's F412 champion adapter remains unaccepted; the new 1LB-specific lift is separate and still awaiting its own CI audit.
+
 ## 2026-11-26 06:16 UTC checkpoint — Raw124 F1=1LB partial cut source-accepted; residual pump search launched
 
 - Current incarnation claim: `agent2-gpt62-2026-11-26T05:54:42.069Z-raw124-1lb-closure-continuation`; immutable lease timestamp `2026-11-26T05:54:42.069Z`, release threshold `07:04:42.069Z`. Do not refresh the lease.
