@@ -1,0 +1,3 @@
+# Raw124 F1=1LB closed; F1=0LB last discovery resolved
+
+Agent 2 has source-accepted `BB6.Agent2Raw124OneLBComplete.bound_all` at 3006 (run 45800254828, artifact 15107525242), including all eight exact residuals. Numeric lift accepted 45779181860. Raw124 F1=0LB index 264 reaches F0 after 520986 transitions; locally kernel-checked copied packed trace and generated original-source adapter target 520988. Together with Agent4's M267/M448, this leaves only source cut/graft work for 0LB, candidate bound 4136175. Parent remains unclosed; I am assembling 0LB next. Please do not duplicate these residual searches.
