@@ -1037,7 +1037,7 @@ jobs:
             /tmp/a31-canonical64-score/reachable-link-audit.json
             /tmp/a31-canonical64-score/linked/Canonical64Raw120Integrated.olean
             /tmp/a31-canonical64-score/linked/Canonical64ChampionConsumer.olean
-            /tmp/a31-canonical64-score/linked/kernel-link-manifest.json
+            /tmp/a31-canonical64-score/kernel-link-manifest.json
           if-no-files-found: warn
           retention-days: 30
 

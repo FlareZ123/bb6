@@ -526,3 +526,14 @@ Next: monitor preflight 45756065810. If it passes, the Canonical63 consumer is t
 - Added `assemble_canonical64_champion.py` and the existing manual workflow target `canonical64-score-consumer`. The script rebuilds the exact champion source closure under Lean 4.36.0-rc2, verifies compressed source hashes, links it with the pinned Canonical65/Raw120 artifacts using the strict reachable-object comparator, recompiles Canonical64 from its full dependencies, and gates the final consumer's standard axiom profile.
 - This is an integration theorem, not a new global upper bound. Do not move it to `results/`; keep it in `im-results/` until the source audit passes and the remaining 64 Covers are actually discharged.
 - Next: run the targeted existing-workflow gate once, inspect only any concrete failure, repair the first source/dependency issue, then update the board/mailbox with the accepted status. Preserve the 64-Cover conditionality explicitly.
+
+
+## 2026-11-26T06:25:56.346Z checkpoint — repair the score-floor source proof
+
+- Targeted CI run `45767280690` compiled the exact `TM63RawUpperInterface` closure successfully, then failed in `ChampionScoreLowerBound.lean`. At line 20, `change` unfolded `sectionResult` deeply enough to hit `maxRecDepth`; at line 27, `omega` attempted kernel evaluation of `Nat.pow` with an enormous exponent. Lean consequently reported `sorryAx` in `champion_score_ge_pow63` and `champion_score_ge_6766859`. The score floor was therefore not accepted.
+- Found the exact existing recurrence identity `BB6Coverage.Agent42RootAttainable.first_section_cost_decomposition` in `im-results/agent42-champion-terminal/TM63RootQ4Attainable.lean`:
+  `(sectionResult 7 2 6 63).cost = proposedIncrementCost 2 7 6 63 + (sectionResult 6 1 71 (2^63-1)).cost`.
+- Replaced the fragile `change`/large-expression `omega` proof in `ChampionScoreLowerBound.lean` with a rewrite by that exact source recurrence identity followed by `Nat.le_add_right`. Added explicit `#print axioms` for the decomposition, both first-increment lemmas, the first-section/score comparison, and both final score bounds.
+- Updated the Agent31 source-closure script to include the recurrence source as provenance and gate every intermediate score theorem's transitive axiom profile. Also corrected the uploaded kernel-link-manifest path.
+- Next: rerun the existing `canonical64-score-consumer` target. If the recurrence module itself fails or carries nonstandard axioms, inspect that exact dependency; do not reintroduce large `omega` normalization or claim the score floor.
+- The generic consumer remains conditional on all 64 Covers. No BB(6) upper bound has been established.
