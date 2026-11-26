@@ -27,13 +27,13 @@ theorem mod_sub_residue (M a b y : Nat)
   have hcases : (a+b)/M = 0 ∨ (a+b)/M = 1 := by omega
   rcases hcases with h0 | h1
   · have hab : a+b=y := by
-      rw [h0] at hdiv
+      rw [h0,h] at hdiv
       omega
     have heq : y+M-b=M+a := by omega
     rw [heq]
-    simp [Nat.add_mod, Nat.mod_eq_of_lt ha]
+    simp [Nat.mod_eq_of_lt ha]
   · have hab : M+y=a+b := by
-      rw [h1] at hdiv
+      rw [h1,h] at hdiv
       omega
     have heq : y+M-b=a := by omega
     rw [heq, Nat.mod_eq_of_lt ha]
@@ -63,17 +63,15 @@ theorem walk_mem_jump (F z : Nat) (ys : List Nat) (c : Nat)
       _ = X-q*B-digitWeight k B := hrem
   have hcorr := corr_le_mul k B hB
   have hprod : (q+k)*B=q*B+k*B := Nat.add_mul q k B
-  have hqB : q*B ≤ X := by
+  have hDsum : q*B+digitWeight k B ≤ X := by
+    dsimp [digitWeight]
     rw [hprod] at hvalid
     omega
+  have hqB : q*B ≤ X := by omega
   have hD : digitWeight k B ≤ X-q*B := by omega
   have hsum : c+(q*B+digitWeight k B)=X := by
-    calc
-      c+(q*B+digitWeight k B) =
-          (X-q*B-digitWeight k B)+(q*B+digitWeight k B) := by rw [hcarry]
-      _ = (X-q*B-digitWeight k B+digitWeight k B)+q*B := by omega
-      _ = (X-q*B)+q*B := by rw [Nat.sub_add_cancel hD]
-      _ = X := Nat.sub_add_cancel hqB
+    rw [hcarry]
+    omega
   have hdiv : 2^k ∣ 2^k*z := ⟨z,rfl⟩
   have hzmod : (2^k*z)%2^k=0 := Nat.dvd_iff_mod_eq_zero.mp hdiv
   have hXmod : X%2^k=digits ys%2^k := by
