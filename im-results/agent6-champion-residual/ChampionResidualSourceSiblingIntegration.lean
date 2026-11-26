@@ -74,12 +74,12 @@ theorem oneRF_parent_present :
       sameTable e.2 BB6.Agent14F1OneRF.parent = true := by
   decide
 
-/-- The champion score is already above every one of these five local bounds. -/
-theorem championScore_ge_7015 :
-    7015 ≤ proposedTM63Moves + 7 :=
-  Nat.le_of_lt (by
-    simpa [BB6.Agent13MixedBound109.championScore] using
-      BB6.Agent31Canonical78Exact.champion_score_gt_7014)
+/-- The existing source-checked lower-bound lemma lifts every one of the
+    five local sibling bounds without evaluating the champion's huge runtime. -/
+theorem championScore_ge_49394 :
+    49394 ≤ proposedTM63Moves + 7 := by
+  simpa [BB6.Agent13MixedBound109.championScore] using
+    BB6.Agent6F0.Integration.champion_score_ge_49394
 
 theorem cover_zeroLF :
     Cover (WeightedBound (proposedTM63Moves + 7))
@@ -88,7 +88,7 @@ theorem cover_zeroLF :
   intro m hm k d hk hd
   exact Nat.le_trans
     (BB6.Agent14Raw139D0LF.all_completions_weighted m hm k d hk hd)
-    (Nat.le_trans (by decide : 352 ≤ 7015) championScore_ge_7015)
+    (Nat.le_trans (by decide : 352 ≤ 49394) championScore_ge_49394)
 
 theorem cover_oneLB :
     Cover (WeightedBound (proposedTM63Moves + 7))
@@ -97,7 +97,7 @@ theorem cover_oneLB :
   intro m hm k d hk hd
   exact Nat.le_trans
     (BB6.Agent14Raw139D0LB.all_completions_weighted m hm k d hk hd)
-    (Nat.le_trans (by decide : 7252 ≤ 7015) championScore_ge_7015)
+    (Nat.le_trans (by decide : 7252 ≤ 49394) championScore_ge_49394)
 
 theorem cover_oneLA :
     Cover (WeightedBound (proposedTM63Moves + 7))
@@ -106,7 +106,7 @@ theorem cover_oneLA :
   intro m hm k d hk hd
   exact Nat.le_trans
     (BB6.Agent14Raw139D0LA.all_completions_weighted m hm k d hk hd)
-    (Nat.le_trans (by decide : 1361 ≤ 7015) championScore_ge_7015)
+    (Nat.le_trans (by decide : 1361 ≤ 49394) championScore_ge_49394)
 
 theorem cover_oneLD :
     Cover (WeightedBound (proposedTM63Moves + 7))
@@ -115,7 +115,7 @@ theorem cover_oneLD :
   intro m hm k d hk hd
   exact Nat.le_trans
     (BB6.Agent14F1OneLD.all_completions_weighted m hm k d hk hd)
-    (Nat.le_trans (by decide : 264 ≤ 7015) championScore_ge_7015)
+    (Nat.le_trans (by decide : 264 ≤ 49394) championScore_ge_49394)
 
 theorem cover_oneRF :
     Cover (WeightedBound (proposedTM63Moves + 7))
@@ -124,7 +124,7 @@ theorem cover_oneRF :
   intro m hm k d hk hd
   exact Nat.le_trans
     (BB6.Agent14F1OneRF.all_completions_weighted m hm k d hk hd)
-    (Nat.le_trans (by decide : 5423 ≤ 7015) championScore_ge_7015)
+    (Nat.le_trans (by decide : 5423 ≤ 49394) championScore_ge_49394)
 
 /-- Exactly the five independently source-accepted raw139 siblings are
     removed from the 123-leaf frontier. -/
