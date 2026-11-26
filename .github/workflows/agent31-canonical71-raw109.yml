@@ -76,6 +76,11 @@ on:
         type: string
         required: false
         default: ""
+      raw124_parent_run_id:
+        description: "Source-accepted Raw124 complete-parent run ID for the optional Canonical56 follow-on"
+        type: string
+        required: false
+        default: "45908591612"
 
 jobs:
   source-audit-canonical70:
@@ -1529,6 +1534,21 @@ jobs:
           lean im-results/agent32-raw59/Canonical58RosterExport.lean
           python3 im-results/agent32-raw59/compare_lean_roster.py --work /tmp/a17-canonical57-raw112
           test -s /tmp/a17-canonical57-raw112/canonical58-roster-crosswalk-audit.json
+      - name: Add the accepted Raw124 parent to produce a Canonical56 successor (optional)
+        id: raw124_canonical56
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+          RAW124_PARENT_RUN_ID: ${{ inputs.raw124_parent_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW124_PARENT_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent2-tnf-raw124/assemble_raw124_canonical56.py
+          python im-results/agent2-tnf-raw124/assemble_raw124_canonical56.py \\
+            --work /tmp/a17-canonical57-raw112 --raw124-run-id "$RAW124_PARENT_RUN_ID" \\
+            2>&1 | tee /tmp/a17-canonical57-raw112/raw124-canonical56-assembly.log
+          test -s /tmp/a17-canonical57-raw112/raw124-canonical56-graft.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
