@@ -55,6 +55,7 @@ on:
           - enumerate62-direct-parent
           - enumerate62-q0-80-roots
           - enumerate62-q0-sibling-scan
+          - enumerate62-raw45-q0-membership
           - enumerate62-phase-consume
           - enumerate62-fast-resume
           - enumerate62-fast-held-discharge
@@ -116,7 +117,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Install original-source proof compiler
-        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan' && inputs.target != 'enumerate62-raw45-q0-membership'
         run: |
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
@@ -131,7 +132,7 @@ jobs:
           path: original
           persist-credentials: false
       - name: Checkout research repository proof artifact
-        if: inputs.target == 'enumerate62-q0-sibling-scan' || inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28' || inputs.target == 'enumerate62-q0-80-roots' || inputs.target == 'enumerate62-q0-auto-root' || inputs.target == 'enumerate62-q0-nine-parent-membership' || inputs.target == 'enumerate62-direct-auto' || inputs.target == 'enumerate62-direct-parent'
+        if: inputs.target == 'enumerate62-q0-sibling-scan' || inputs.target == 'enumerate62-raw45-q0-membership' || inputs.target == 'enumerate62-decider-sound' || inputs.target == 'enumerate62-q0-partition' || inputs.target == 'enumerate62-adaptive-checkpoint' || inputs.target == 'enumerate62-adaptive-expansion' || inputs.target == 'enumerate62-packed-chunk' || inputs.target == 'enumerate62-packed-batch' || inputs.target == 'enumerate62-resume-chunk2' || inputs.target == 'enumerate62-resume-last20' || inputs.target == 'enumerate62-last20-witness' || inputs.target == 'enumerate62-weighted-source' || inputs.target == 'enumerate62-source-roster' || inputs.target == 'enumerate62-source-first-hole' || inputs.target == 'enumerate62-source-first-hole-side' || inputs.target == 'enumerate62-q32-decider-tree' || inputs.target == 'enumerate62-s4-gap-side-search' || inputs.target == 'enumerate62-q32-canonical-parent' || inputs.target == 'enumerate62-zero-delay' || inputs.target == 'enumerate62-recovered-batch-witnesses' || inputs.target == 'enumerate62-held-farv3-pilot' || inputs.target == 'enumerate62-held-checkpoint-membership' || inputs.target == 'enumerate62-held-checkpoint-consumption' || inputs.target == 'enumerate62-held-far-batch' || inputs.target == 'enumerate62-phase-mitm' || inputs.target == 'enumerate62-phase-consume' || inputs.target == 'enumerate62-fast-resume' || inputs.target == 'enumerate62-prefix-drain' || inputs.target == 'enumerate62-fast-held-discharge' || inputs.target == 'enumerate62-q2800-shard01' || inputs.target == 'enumerate62-q2800-shard02' || inputs.target == 'enumerate62-q2800-shard03' || inputs.target == 'enumerate62-q2800-shard04' || inputs.target == 'enumerate62-q2800-shard05' || inputs.target == 'enumerate62-q2800-assemble' || inputs.target == 'enumerate62-coarse-forest' || inputs.target == 'enumerate62-q0-row28' || inputs.target == 'enumerate62-q0-80-roots' || inputs.target == 'enumerate62-q0-auto-root' || inputs.target == 'enumerate62-q0-nine-parent-membership' || inputs.target == 'enumerate62-direct-auto' || inputs.target == 'enumerate62-direct-parent'
         uses: actions/checkout@v4
         with:
           repository: FlareZ123/bb6
@@ -234,6 +235,11 @@ jobs:
         run: |
           cp "$GITHUB_WORKSPACE/research/im-results/agent32-source-queue/Agent32Q0Partition.v" original/verify/
           cp "$GITHUB_WORKSPACE/research/im-results/agent5-weighted-tnf-queue/Agent5ChunkCoverage.v" original/verify/
+      - name: Add Raw45 parent-restricted q0 source module
+        if: inputs.target == 'enumerate62-raw45-q0-membership'
+        run: |
+          cp "$GITHUB_WORKSPACE/research/im-results/agent16-raw45-d1-pilot/Agent16Raw45RestrictedQ0.v" original/verify/
+
       - name: Add S4 gap side-search source
         if: inputs.target == 'enumerate62-s4-gap-side-search'
         run: |
@@ -941,6 +947,23 @@ jobs:
           name: source-packed-batch
           path: original/verify/agent8-batch/
           if-no-files-found: error
+
+      - name: Compile exact Raw45 q0 restriction and report source index
+        if: inputs.target == 'enumerate62-raw45-q0-membership'
+        working-directory: original/verify
+        run: |
+          set -euo pipefail
+          make -f Makefile.coq -j 2 Agent16Raw45RestrictedQ0.vo 2>&1 | tee raw45-q0-membership.log
+      - name: Preserve Raw45 parent-restricted q0 export
+        if: always() && inputs.target == 'enumerate62-raw45-q0-membership'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw45-q0-parent-restricted-export
+          path: |
+            original/verify/Agent16Raw45RestrictedQ0.v
+            original/verify/Agent16Raw45RestrictedQ0.vo
+            original/verify/raw45-q0-membership.log
+          if-no-files-found: warn
 
       - name: Continue the exact 84-node source checkpoint
         if: inputs.target == 'enumerate62-resume-chunk2'
