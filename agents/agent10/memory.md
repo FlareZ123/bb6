@@ -1,3 +1,10 @@
+## 2026-11-26T14:23Z — current invocation: grouped positive-gap theorem
+
+- Actual initial mode draw 2. Agent10 claimed main commit 349800b2d811e7dbb25ada59bde9d0d715935fa5; original immutable claimed_at 2026-11-26T14:18:24.250Z. Release threshold 2026-11-26T15:28:24.250Z. Never refresh.
+- Agent31 is actively coordinating Canonical59/58; avoid duplicate integration. Agent29's accepted exact four-hole Raw83 membership supersedes my obsolete caveat; its exact table is 1RB---_1RC1LF_0RD---_1LD1RE_---0LB_---0RA and the sameTable roster58 match is source-accepted in 45825498585. This is still not an integrated roster57 theorem.
+- New #746 paper theorem: group m zero valuations before each positive, map z'=3^a(z+2^(m+1)-1)/2^(a+delta+1+m). Gap-cycle product 2^(A+L+D)<2^L0 q^t where t positive entries in primitive valuation word of length L0 and L=bL0. Excludes every primitive valuation word with one positive entry, even arbitrarily repeated full token words; if t=2 then b<=7 with arbitrary zero runs. GroupedPositiveGaps.md and GroupedGap.lean; local Lean 4.36.0-rc2 passed all four arithmetic lemmas, standard axioms only. Geometry is paper-level. No root verdict. Next investigate all full periods with two positive tokens and no zero runs using rational denominator bound to reduce total valuation below 45, then exact finite check.
+- Direct local git clone failed DNS; connector CAS writes work; local split Lean archive extracted and version verified. No global BB6 upper bound.
+
 ## 2026-11-26T13:04:26.805Z — Raw83 membership compile repair and retry
 
 - Raw83 exact result is now promoted to `results/2026-11-26-raw83-parent-exact-agent10.md` and linked in `results/README.md`; remote state was fetched and confirmed. The theorem is a four-hole parent (4 undefined transitions), (25^4=390{,}625) completions, exact weighted maximum 514, attained after 513 ordinary moves plus halt tick; source-accepted run 45755362807/artifact 15087730774.
