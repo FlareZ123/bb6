@@ -298,4 +298,145 @@ theorem initial9 : run m9 12 init = some (root 1) := by
 theorem never9 : ∀ n, ∃ c, run m9 n init = some c :=
   init_forever m9 root (fun k => 1+10*k+2+12*k+8) (by intro k; omega) recurrence9 12 initial9
 #print axioms never9
+
+-- Commuting finite words can pass through arbitrary repeated blocks.
+theorem commute_pre_rep (u x : List Bool) (hc : u++x=x++u) (k : Nat) (r : Ray) :
+    pre u (rep x k r) = rep x k (pre u r) := by
+  induction k with
+  | zero => rfl
+  | succ k ih =>
+    simp only [rep]
+    rw [← pre_append,hc,pre_append,ih]
+def ones (n : Nat) : List Bool := List.replicate n true
+def tri : List Bool := [true,false,true]
+def ww : List Bool := [true,false,true,true,false,true]
+def one : List Bool := [true]
+def z1 : List Bool := [false,true]
+def z11 : List Bool := [false,true,true]
+theorem join (M : Table) {a b : Nat} {c d e : Prim} (h : run M a c = some d) (g : run M b d = some e) :
+    run M (a+b) c = some e := by rw [run_add,h]; exact g
+
+def largeCost (a b c d e f : Nat) (k : Nat) : Nat :=
+  1+6*(k+1)+a+b*k+c+3+6*(k+1)+d+b*(k+1)+4+6*(k+1)+e+b*k+f
+
+theorem largeBounce (M : Table) (a b c d e f : Nat)
+    (entry : ∀ l, run M 1 ⟨1,cons true l,blank⟩ = some ⟨2,l,pre two blank⟩)
+    (leftStep : ∀ l r, run M 6 ⟨2,pre six l,pre two r⟩ = some ⟨2,l,pre two (pre ww r)⟩)
+    (rightStep : ∀ l r, run M b ⟨1,l,pre one (pre ww r)⟩ = some ⟨1,pre six l,pre one r⟩)
+    (turn1 : ∀ r, run M a ⟨2,blank,pre two (pre ww r)⟩ = some ⟨1,pre (ones 4) blank,pre one (pre ww r)⟩)
+    (finish1 : ∀ l, run M c ⟨1,l,pre one (pre ww blank)⟩ = some ⟨1,cons false (pre six l),blank⟩)
+    (entry2 : ∀ l, run M 3 ⟨1,cons false (pre two l),blank⟩ = some ⟨2,l,pre two (pre z1 blank)⟩)
+    (turn2 : ∀ r, run M d ⟨2,pre two blank,pre two (pre ww r)⟩ = some ⟨1,pre (ones 5) blank,pre one (pre ww r)⟩)
+    (finish2 : ∀ l, run M 4 ⟨1,pre two l,pre one (pre z1 blank)⟩ = some ⟨2,l,pre two (pre z11 blank)⟩)
+    (turn3 : ∀ r, run M e ⟨2,pre (ones 3) blank,pre two (pre ww r)⟩ = some ⟨1,pre (ones 4) blank,pre one (pre ww (pre tri r))⟩)
+    (finish3 : ∀ l, run M f ⟨1,l,pre one (pre ww (pre tri (pre z11 blank)))⟩ = some ⟨1,pre (ones 15) l,blank⟩)
+    (k : Nat) : run M (largeCost a b c d e f k) (root (k+1)) = some (root (k+3)) := by
+  have h1 := entry (rep six (k+1) blank)
+  have h2 := sweep M 2 [] two six ww 6 leftStep (k+1) blank blank
+  have h3 := turn1 (rep ww k blank)
+  have hh3 := join M (join M h1 h2) h3
+  have h4 := sweepR M 1 [] one ww six b rightStep k (pre (ones 4) blank) (pre ww blank)
+  rw [rep_push] at h4
+  have hh4 := join M hh3 h4
+  have h5 := finish1 (rep six k (pre (ones 4) blank))
+  have hh5 := join M hh4 h5
+  have h6 := entry2 (pre (ones 4) (rep six k (pre (ones 4) blank)))
+  have hh6 := join M hh5 h6
+  have eq6 : pre (ones 4) (rep six k (pre (ones 4) blank)) = rep six (k+1) (pre two blank) := by
+    rw [commute_pre_rep (ones 4) six (by decide), ← rep_push]
+    rfl
+  rw [eq6] at hh6
+  have h7 := sweep M 2 [] two six ww 6 leftStep (k+1) (pre two blank) (pre z1 blank)
+  have hh7 := join M hh6 h7
+  have h8 := turn2 (rep ww k (pre z1 blank))
+  have hh8 := join M hh7 h8
+  have h9 := sweepR M 1 [] one ww six b rightStep (k+1) (pre (ones 5) blank) (pre z1 blank)
+  have hh9 := join M hh8 h9
+  have eq9 : rep six (k+1) (pre (ones 5) blank) = pre two (rep six (k+1) (pre (ones 3) blank)) := by
+    rw [commute_pre_rep two six (by decide)]
+    rfl
+  rw [eq9] at hh9
+  have h10 := finish2 (rep six (k+1) (pre (ones 3) blank))
+  have hh10 := join M hh9 h10
+  have h11 := sweep M 2 [] two six ww 6 leftStep (k+1) (pre (ones 3) blank) (pre z11 blank)
+  have hh11 := join M hh10 h11
+  have h12 := turn3 (rep ww k (pre z11 blank))
+  have hh12 := join M hh11 h12
+  rw [commute_pre_rep tri ww (by decide)] at hh12
+  have h13 := sweepR M 1 [] one ww six b rightStep k (pre (ones 4) blank) (pre ww (pre tri (pre z11 blank)))
+  rw [rep_push] at h13
+  have hh13 := join M hh12 h13
+  have h14 := finish3 (rep six k (pre (ones 4) blank))
+  have hh14 := join M hh13 h14
+  have eq14 : pre (ones 15) (rep six k (pre (ones 4) blank)) = cons true (rep six (k+3) blank) := by
+    change pre one (pre (ones 14) (rep six k (pre (ones 4) blank))) = pre one (rep six (k+3) blank)
+    rw [commute_pre_rep (ones 14) six (by decide)]
+    rw [← rep_push,← rep_push,← rep_push]
+    rfl
+  rw [eq14] at hh14
+  exact hh14
+
+def m5 : Table := fun q b => match q.val, b with
+  | 0, false => some ⟨true, true, 1⟩
+  | 0, true => some ⟨true, true, 0⟩
+  | 1, false => some ⟨true, false, 2⟩
+  | 1, true => some ⟨false, true, 1⟩
+  | 2, false => some ⟨false, false, 4⟩
+  | 2, true => some ⟨false, false, 3⟩
+  | 3, false => some ⟨true, false, 2⟩
+  | 3, true => some ⟨true, false, 4⟩
+  | 4, false => some ⟨true, true, 5⟩
+  | 4, true => some ⟨true, false, 2⟩
+  | 5, false => some ⟨true, false, 0⟩
+  | _, _ => none
+theorem recurrence5 (k : Nat) : run m5 (largeCost 9 12 13 11 12 33 k) (root (k+1)) = some (root (k+3)) := by
+  apply largeBounce m5 9 12 13 11 12 33
+  all_goals intros; rfl
+
+def m6 : Table := fun q b => match q.val, b with
+  | 0, false => some ⟨true, true, 1⟩
+  | 0, true => some ⟨true, true, 0⟩
+  | 1, false => some ⟨true, false, 2⟩
+  | 1, true => some ⟨false, true, 1⟩
+  | 2, false => some ⟨false, false, 4⟩
+  | 2, true => some ⟨false, false, 3⟩
+  | 3, false => some ⟨true, false, 2⟩
+  | 3, true => some ⟨true, false, 4⟩
+  | 4, false => some ⟨true, true, 5⟩
+  | 4, true => some ⟨true, false, 2⟩
+  | 5, false => some ⟨true, true, 0⟩
+  | _, _ => none
+theorem recurrence6 (k : Nat) : run m6 (largeCost 7 10 11 9 10 27 k) (root (k+1)) = some (root (k+3)) := by
+  apply largeBounce m6 7 10 11 9 10 27
+  all_goals intros; rfl
+
+def largeRoot (k : Nat) : Prim := root (2*k+2)
+theorem largeRecurrence5 (k : Nat) : run m5 (largeCost 9 12 13 11 12 33 (2*k+1)) (largeRoot k) = some (largeRoot (k+1)) := by
+  simpa [largeRoot,show 2*(k+1)+2=2*k+1+3 by omega] using recurrence5 (2*k+1)
+theorem initial5 : run m5 63 init = some (largeRoot 0) := by rfl
+theorem never5 : ∀ n, ∃ c, run m5 n init = some c := by
+  intro n
+  by_cases hn : 63 ≤ n
+  · obtain ⟨c,hc⟩ := forever m5 largeRoot (fun k => largeCost 9 12 13 11 12 33 (2*k+1)) (by intro k; unfold largeCost; omega) largeRecurrence5 (n-63) 0
+    exact ⟨c,by rw [show n=63+(n-63) by omega,run_add,initial5]; exact hc⟩
+  · have h := initial5
+    rw [show 63=n+(63-n) by omega,run_add] at h
+    cases hh : run m5 n init with
+    | none => simp [hh] at h
+    | some c => exact ⟨c,rfl⟩
+#print axioms never5
+theorem largeRecurrence6 (k : Nat) : run m6 (largeCost 7 10 11 9 10 27 (2*k+1)) (largeRoot k) = some (largeRoot (k+1)) := by
+  simpa [largeRoot,show 2*(k+1)+2=2*k+1+3 by omega] using recurrence6 (2*k+1)
+theorem initial6 : run m6 53 init = some (largeRoot 0) := by rfl
+theorem never6 : ∀ n, ∃ c, run m6 n init = some c := by
+  intro n
+  by_cases hn : 53 ≤ n
+  · obtain ⟨c,hc⟩ := forever m6 largeRoot (fun k => largeCost 7 10 11 9 10 27 (2*k+1)) (by intro k; unfold largeCost; omega) largeRecurrence6 (n-53) 0
+    exact ⟨c,by rw [show n=53+(n-53) by omega,run_add,initial6]; exact hc⟩
+  · have h := initial6
+    rw [show 53=n+(53-n) by omega,run_add] at h
+    cases hh : run m6 n init with
+    | none => simp [hh] at h
+    | some c => exact ⟨c,rfl⟩
+#print axioms never6
 end Box15
