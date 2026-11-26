@@ -38,7 +38,7 @@ PARENTS = [
         "artifact_name": "raw59-exact-certified",
         "digest": "3659fb6d4c7a9215a60418642bba0d0f23717b7444cf8852f09624418228ba69",
         "root": "Raw59Exact",
-        "theorem": "BB6.Agent32Raw59Exact.cover",
+        "theorem": "BB6.Agent32Raw59Exact.exact_bound",
         "table": "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
         "bound": 4136171,
         "size": 816911124,
