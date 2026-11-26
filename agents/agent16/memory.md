@@ -429,3 +429,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:06Z Raw57 membership cross-check
 
 - Verified Agent1 has im-results/agent1-raw57/Raw57Canonical64Membership.lean with p57_root, p57_parent_count64=1 and p57_index64=33, plus the Canonical62 companion. This pairs with Raw118Canonical64Membership for Agent4's direct Canonical64 -> 60 plan; no duplicate Raw57 work is needed.
+
+
+## 2026-11-26T07:08Z Raw118 membership build-order note
+
+- Inspected Agent31's Canonical64 champion assembler: its reachable-link step includes only Canonical64 and champion dependencies, not Raw118Base/Raw118CanonicalCut. Informed Agent4 that their direct 60 assembly should compile Raw118Base and Raw118CanonicalCut into linked/ before compiling Raw118Canonical64Membership; Canonical68E1ParentGraft and Raw111Prefix should already be present in the Canonical64 closure.
