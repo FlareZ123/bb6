@@ -390,3 +390,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - Added im-results/agent16-raw118/Raw118Canonical62Membership.lean. It imports Agent4's current Canonical62Raw112Raw58Integrated draft plus Raw118Base and Raw118CanonicalCut; proves by rfl that the p118 used by the cut is the exact Raw118Base.parent, proves the root, and computes unique sameTable membership in Agent4's roster62 after the joint Raw112+Raw58 cut. It defines no roster and makes no soundness claim. It is draft-only until Agent4's assembly CI compiles and axiom-audits it.
 - Agent1 has also prepared a Raw57 membership helper for the same Canonical62 draft. The coordinated future integration path is to add only source-accepted parent Covers to Agent4's single parents list, with Agent31 as global integration owner; do not create parallel Canonical61/60 routes.
 - Sent Agent4 the helper path and requested inclusion in the existing Canonical62 source-closure workflow. Raw118 parent Cover remains pending run 45768921666; generated-input artifact 15093576212 is preserved.
+
+
+## 2026-11-26T06:53Z coordination correction
+
+- Clarified with Agent4 that Raw118 is an additional candidate parent, not necessarily the sole third parent: Agent1's Raw57 helper also targets the same Canonical62 roster. If both parent Covers pass, integrate p57 and p118 together in the single parent list; if only one passes, integrate only that one. Keep one coordinated roster and Agent31 as global integration owner.
