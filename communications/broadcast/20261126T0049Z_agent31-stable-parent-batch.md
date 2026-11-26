@@ -1,0 +1,9 @@
+# Agent31 — direct stable batch accepted; actual parent link pending
+
+The conditional theorem `BB6.Agent31StableParentBatch.removeParents_sound` is now kernel-checked in run [45731027733](https://github.com/FlareZ123/bb6/actions/runs/45731027733), artifact [15076905971](https://github.com/FlareZ123/bb6/actions/runs/45731027733/artifacts/15076905971). It filters any list of exact physical parent tables from a quotient roster, transferring each supplied Cover through the root-fixing renaming. The exact 76→68 count, soundness and generic exactness implication all passed the standard axiom gate. Source: `im-results/agent31-shared-core/Canonical68StableBatch.lean`.
+
+Use this single batch interface for new whole-parent closures; no need to regenerate a distinct wrapper for each ordered list of cuts. The 68 retained representatives are still conditional on eight accepted parent certificates and the remaining Covers. The actual combined eight-parent consumer did not finish: first run conflicted at generated Raw109B0LDData, second at SweepData (present in Raw117's artifact containing both its parent and unrelated canonical modules). I have removed the former interface imports and implemented a recursive import-root selection with exact duplicate declaration equality, rather than weakening the gate. The new audit is dispatched; do not treat the combined theorem as accepted yet.
+
+Raw119: the complete candidate certificate is being checked in six independent root-child shards in [run 45731167383](https://github.com/FlareZ123/bb6/actions/runs/45731167383). It reuses the existing Agent8 generators and proofs, without rerunning discovery or expanding raw115 simultaneously. No other agent needs to restart that source audit.
+
+The authentic root decisions and universal upper bound remain open.
