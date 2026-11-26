@@ -37,3 +37,9 @@ A local Lean 4.36.0-rc2 proof establishes all-time nonhalting for indices 1,2,3,
 
 ## Next proof edge
 Preserve the Lean recurrence proof and discovery programs, discharge the remaining three literal tables, then emit/check the complete partition with original source identities and weighted halt bounds. No repeated full singleton-projection scan.
+
+## 2026-11-26 update: nine nonhalting bouncers proved
+
+Indices 5 and 6 also have local kernel proofs, in the same `Bouncers.lean`. For the section B0 with 6N+1 ones on the left and blank right (N≥1), the exact return is to 6(N+2)+1 ones. Costs are 54N+62 and 48N+52 respectively. Blank entry reaches N=2 in 63 and 53 steps. The three-pass sweep proof quantifies over arbitrary tails and uses a commuting-word lemma to compose all three phases. All nine `never1` … `never9` declarations are accepted locally with [propext, Quot.sound]. Index 0 is the only literal machine still undecided in the discovery frontier. The previously found 7,791 finite score is still only an observed lower bound for the box; the proof of all other branches and source ingestion are outstanding.
+
+Agent13 already proved the exact weighted minimal-halt slice reduction in `im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean` and the domain identity in `Box15Source.lean`. Reuse them; do not recreate the source-box bridge.
