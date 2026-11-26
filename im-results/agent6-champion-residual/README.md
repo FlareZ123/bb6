@@ -147,3 +147,26 @@ Run `45640166916` is an additional infrastructure failure: the runner shut down 
 ### Checkpoint serialization follow-up
 
 Commit `5e0f099a63def89cb6c6f2c311f6c6578fffe7c9` corrected the checkpoint JSON writer to emit a real newline and made the reuse reader tolerate the literal `\\n` suffix produced by the first workflow snapshot. Run `45653181883` was already running from source SHA `1529549cc3abcb838b9f14efe120ece26ee71abd` when this correction landed, so if its artifact is uploaded it may contain the legacy escaped suffix; the current reader strips it before parsing. Reuse that artifact only with the same `source_sha=1529549cc3abcb838b9f14efe120ece26ee71abd` (exact checkout SHA) and let the hash/object checks run. At 16:34 UTC the first run was still compiling the champion frontier and had not uploaded the checkpoint.
+
+
+## Five source-accepted sibling graft (2026-11-26, CI pending)
+
+The parent-refined branch `championFrontierWithParent` uses seven ordinary refinements, 38 side-cycle closures, and the terminal two-hole parent certificate. The generic 24-way cardinality identity gives 123 open residual cylinders. The corresponding older canonical78 wrapper has 77 non-champion entries, for 200 conditional obligations before consuming additional sibling certificates.
+
+Five independent original-source sibling Covers are now wired into
+`ChampionResidualSourceSiblingIntegration.lean`:
+
+| Sibling | Exact depth/slot move | Weighted bound | Source CI run |
+|---|---|---:|---:|
+| D0=0LF | depth 3, `⟨false,false,5⟩` | 352 | 45726077932 |
+| D0=1LB | depth 3, `⟨true,false,1⟩` | 7,252 | 45726917837 |
+| D0=1LA | depth 3, `⟨true,false,0⟩` | 1,361 | 45727637346 |
+| F1=1LD | depth 5, `⟨true,false,3⟩` | 264 | 45725716706 |
+| F1=1RF | depth 5, `⟨true,true,5⟩` | 5,423 | 45723873034 |
+
+The integration filters these five exact tables from the 123-leaf parent frontier, leaving 118 explicit residual Covers. The conditional obligation count becomes 77 canonical78 Covers + 118 raw139 residual Covers = 195. The exact theorem is
+`BB6.Agent6ChampionRaw139SiblingIntegration.exact_from_remainingRaw139AfterFive`.
+
+The new workflow verifies the three D0 run conclusions and pinned root-source hashes, imports their generated source modules, reuses the checked core frontier manifest, and audits all five Covers and the final conditional theorem against standard axioms. This integration is **pending CI** as of source SHA `13182366bcf92d2bcb0ba359f2e7f2791ebe6885`; do not treat the 118 count or conditional theorem as accepted until the run passes.
+
+This is not an exact BB(6) solution: the 118 raw139 residual Covers and the 77 other canonical Covers remain unresolved premises. The source-accepted sibling results are intermediate research, not entries in `results/`.
