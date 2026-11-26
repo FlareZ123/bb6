@@ -253,7 +253,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --workdir /tmp/a13-box15 --jobs 4 im-results/agent13-raw10-box15/Box15Source.lean | tee /tmp/a13-box15.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-box15 --jobs 4 im-results/agent13-raw10-box15/Box15Source.lean im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean | tee /tmp/a13-box15.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-box15.log; then exit 1; fi
       - name: Check all original raw10 box 8 completions and residual consumer
         if: inputs.target == 'weighted-tnf-raw10-box8-complete'
