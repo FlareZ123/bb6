@@ -4,6 +4,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import shutil
 from pathlib import Path
 
@@ -43,9 +44,16 @@ def copy_identical(source: Path, target: Path, expected_hash: str | None = None)
 
 def restore_generated_source(entry: dict, precompiled_dir: Path) -> None:
     """Recover the exact source of generated imports outside the slice's generated/ folder."""
-    if entry.get("source_kind") != "generated-or-untracked":
-        return
     relative = Path(entry["source_path"])
+    # specialize.py also overwrites width-specific files that are tracked in git.
+    # Their recorded source_kind is therefore "tracked", although the actual
+    # accepted input is generated. Restore those exact bytes too.
+    specialized = (
+        relative.parent == Path("im-results/agent13-block-far")
+        and re.fullmatch(r"(?:BlockMacro|BlockFAR|RangeCheck|BlockFARBridge)[0-9]+\.lean", relative.name) is not None
+    )
+    if entry.get("source_kind") != "generated-or-untracked" and not specialized:
+        return
     if (relative.is_absolute() or ".." in relative.parts
             or not relative.parts or relative.parts[0] != "im-results"
             or relative.suffix != ".lean"):
@@ -59,7 +67,14 @@ def restore_generated_source(entry: dict, precompiled_dir: Path) -> None:
     if module_path.is_absolute() or ".." in module_path.parts:
         raise RuntimeError(f"unsafe module source path: {module_path}")
     source = precompiled_dir / module_path
-    copy_identical(source, target, entry["source_sha256"])
+    if specialized and target.exists() and digest(target) != entry["source_sha256"]:
+        # Only the known specialize.py output paths may replace checkout bytes.
+        # All six manifests must still agree on full module identity.
+        if digest(source) != entry["source_sha256"]:
+            raise RuntimeError(f"specialized source digest mismatch: {source}")
+        shutil.copy2(source, target)
+    else:
+        copy_identical(source, target, entry["source_sha256"])
 
 def main() -> None:
     parser = argparse.ArgumentParser()
