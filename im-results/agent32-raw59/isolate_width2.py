@@ -95,7 +95,7 @@ def check_axioms(log: str, required: list[str]) -> dict[str, list[str]]:
     return {name: sorted(axioms) for name, axioms in profiles.items()}
 
 
-def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], plan_only: bool) -> dict:
+def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], plan_only: bool, kernel_replay: bool = False) -> dict:
     manifest_path = source / 'manifest.json'
     manifest = json.loads(manifest_path.read_text())
     version = subprocess.check_output([lean, '--version'], text=True).strip()
@@ -114,6 +114,7 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
     identities(identity_copy, order)
     transformed: dict[str, str] = {}
     affected: set[str] = set()
+    direct: set[str] = set()
     for name in order:
         entry = original[name]
         src = source / (name + '.lean')
@@ -128,20 +129,25 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
             raise ValueError(f'producer import manifest mismatch: {name}')
         new_text = rename_source(text)
         transformed[name] = new_text
-        if name in RENAME or new_text != text or any(dep in affected for dep in entry['project_imports']):
+        if name in RENAME or new_text != text:
+            direct.add(name)
+        if name in direct or any(dep in affected for dep in entry['project_imports']):
             affected.add(name)
     if 'BlockMacro2' in original:
         text = (source / 'BlockMacro2.lean').read_text()
         if 'import BlockMacro' not in text or 'export BB6BlockFAR' not in text:
             raise ValueError('not the modern Raw59 width-two primitive implementation')
     names = [RENAME.get(name, name) for name in order]
+    replay = affected - direct if kernel_replay else set()
+    replay_names = {RENAME.get(name, name) for name in replay}
     report = {'producer_manifest_sha256': sha(manifest_path),
               'producer_source_revision': manifest['proof_source_revision'],
               'producer_claim': manifest['claim'],
               'lean_version': version, 'compiler_sha256': sha(compiler),
               'namespace_rename': {OLD_NAMESPACE: NEW_NAMESPACE},
               'module_renames': {k: v for k, v in RENAME.items() if k in original},
-              'recompiled_modules': [RENAME.get(name, name) for name in order if name in affected],
+              'recompiled_modules': [RENAME.get(name, name) for name in order if name in affected - replay],
+              'kernel_replayed_modules': sorted(replay_names),
               'reused_count': len(order) - len(affected), 'module_count': len(order)}
     print(f"{len(order)} checked producer modules; {len(affected)} affected; {len(order)-len(affected)} reusable", flush=True)
     if plan_only:
@@ -154,7 +160,7 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
     for old_name, name in zip(order, names):
         src = output / (name + '.lean')
         original_entry = original[old_name]
-        if old_name in affected:
+        if old_name in affected - replay:
             src.write_text(transformed[old_name])
         else:
             shutil.copyfile(source / (old_name + '.lean'), src)
@@ -164,7 +170,8 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
         if deps != expected_deps or set(deps) & RENAME.keys():
             raise ValueError(f'bad isolated import graph for {name}')
         result_entries[name] = {'module': name, 'source_path': name + '.lean',
-                                'source_kind': 'artifact-namespace-transform' if old_name in affected else 'artifact-reused',
+                                'source_kind': ('artifact-kernel-replayed' if old_name in replay else
+                                                'artifact-namespace-transform' if old_name in affected else 'artifact-reused'),
                                 'source_sha256': sha(src), 'project_imports': deps,
                                 'olean_path': name + '.olean',
                                 'producer_module': old_name,
@@ -193,13 +200,32 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
         if not ready:
             raise ValueError('no remaining import layer')
         with ThreadPoolExecutor(max_workers=jobs) as pool:
-            timing.update(pool.map(compile_one, ready))
+            timing.update(pool.map(compile_one, [name for name in ready if name not in replay_names]))
+        # Group by the source import list; Lean independently checks the actual
+        # serialized import descriptors before replaying each declaration.
+        groups: dict[tuple[str, ...], list[str]] = {}
+        for name in ready:
+            if name in replay_names:
+                key = tuple(m.group(0).strip() for m in IMPORT.finditer((output / (name + '.lean')).read_text()))
+                groups.setdefault(key, []).append(name)
+        for group in groups.values():
+            log_path = logs / (group[0] + '.replay.log')
+            start = time.monotonic()
+            cmd = [lean, '--run', str(Path(__file__).resolve().with_name('ReplayUnchanged.lean')),
+                   *[name + '.olean' for name in group]]
+            with log_path.open('w') as log:
+                p = subprocess.run(cmd, cwd=output, env=env, stdout=log, stderr=subprocess.STDOUT)
+            log = log_path.read_text()
+            if p.returncode or any(f'PASS {name}.olean: checked by Lean kernel' not in log for name in group):
+                raise RuntimeError(f'kernel replay failed: {group}\n{log[-12000:]}')
+            print(log, end='', flush=True)
+            print(f'kernel-replayed {len(group)} modules: {time.monotonic()-start:.2f}s', flush=True)
         done.update(ready)
         pending.difference_update(ready)
     for name, entry in result_entries.items():
         entry['olean_sha256'] = sha(output / entry['olean_path'])
         old_name = entry['producer_module']
-        if old_name not in affected and entry['olean_sha256'] != original[old_name]['olean_sha256']:
+        if (old_name not in affected or old_name in replay) and entry['olean_sha256'] != original[old_name]['olean_sha256']:
             raise ValueError(f'reused object changed: {name}')
     identities(result_entries, names)
     roots = [RENAME.get(r['module'], r['module']) for r in manifest['roots']]
@@ -216,7 +242,7 @@ def run(source: Path, output: Path, lean: str, jobs: int, claims: list[str], pla
     report['roots'] = roots
     report['modules'] = [result_entries[name] for name in sorted(result_entries)]
     (output / 'isolation-report.json').write_text(json.dumps(report, indent=2, sort_keys=True) + '\n')
-    print('SOURCE-REBUILT ISOLATION PASSED', flush=True)
+    print('KERNEL-REPLAY ISOLATION PASSED' if kernel_replay else 'SOURCE-REBUILT ISOLATION PASSED', flush=True)
     return report
 
 
@@ -228,8 +254,9 @@ def main() -> None:
     ap.add_argument('--jobs', type=int, default=1)
     ap.add_argument('--claim', action='append', default=[])
     ap.add_argument('--plan-only', action='store_true')
+    ap.add_argument('--kernel-replay', action='store_true', help='kernel-check unchanged source/object pairs in the changed reverse cone instead of re-elaborating')
     args = ap.parse_args()
-    run(args.source.resolve(), args.output.resolve(), args.lean, args.jobs, args.claim, args.plan_only)
+    run(args.source.resolve(), args.output.resolve(), args.lean, args.jobs, args.claim, args.plan_only, args.kernel_replay)
 
 
 if __name__ == '__main__':
