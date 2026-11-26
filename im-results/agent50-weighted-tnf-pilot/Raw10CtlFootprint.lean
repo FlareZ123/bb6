@@ -11,6 +11,7 @@ universe u
 
 namespace BB6.Agent50CtlFootprint
 
+open Mathlib Relation Nat Turing BusyBeaver
 open BusyBeaver.CtlCert
 
 abbrev CtlSource := BusyBeaver.M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH
