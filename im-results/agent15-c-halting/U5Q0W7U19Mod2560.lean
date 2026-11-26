@@ -235,12 +235,11 @@ theorem w7_z2_q1_parent_unreachable_u499mod1280 (v : Nat) :
     have hx : Dx+Dy-2=Ex := by dsimp [Dx,Dy,Ex]; omega
     have hy : (Dy-2)/2=Ey := by dsimp [Dy,Ey]; omega
     simpa only [hx,hy] using hp
-  have hEx5 : 5<Ex := by dsimp [Ex]; omega
   have hEy5 : 5≤Ey := by dsimp [Ey]; omega
   have hEyOdd : Ey%2=1 := by dsimp [Ey]; omega
   have hEsum : (Ex+Ey)%4=2 := by dsimp [Ex,Ey]; omega
   exact BB6.Agent11High.blank_no_odd_sum_two
-    Ex Ey hEx5 hEy5 hEyOdd hEsum hE
+    Ex Ey hEy5 hEyOdd hEsum hE
 
 /-- The original q=0 U5 w=7 target is blank-unreachable on
     u=499+1280*v. -/
