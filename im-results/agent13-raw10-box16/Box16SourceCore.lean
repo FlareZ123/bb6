@@ -26,9 +26,10 @@ theorem sourceDomainEq : domain = raw10Remainder[16]! := by
   change raw10Remainder[16]! s =
     (BB6.Agent49BoxEncoded.boxes[16]! (slotIndex s)).map decodeCode at h
   unfold domain
-  rw [h, literalDomain_matches, index_source]
+  rw [index_source, literalDomain_matches]
   have hd : decode = decodeCode := funext decode_source
   rw [hd]
+  exact h.symm
 
 theorem sourceBound (m : Machine) (hm : Fits raw10Remainder[16]! m) :
     WeightedBound 7376 m :=
