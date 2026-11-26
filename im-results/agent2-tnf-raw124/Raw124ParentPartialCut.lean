@@ -61,18 +61,18 @@ def accepted : List (Accepted parentBound) :=
     22 child tables match one of the source-accepted Covers above. -/
 theorem covered_iff (mv : Move) :
     covered accepted (child mv) = true ↔
-      mv ≠ (false,true,4) ∧ mv ≠ (false,false,5) := by
+      mv ≠ ⟨false,true,4⟩ ∧ mv ≠ ⟨false,false,5⟩ := by
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r <;> decide
 
 theorem covered_or_missing (mv : Move) :
-    mv = (false,true,4) ∨ mv = (false,false,5) ∨
+    mv = ⟨false,true,4⟩ ∨ mv = ⟨false,false,5⟩ ∨
       covered accepted (child mv) = true := by
-  by_cases hRE : mv = (false,true,4)
+  by_cases hRE : mv = ⟨false,true,4⟩
   · exact Or.inl hRE
-  · by_cases hLF : mv = (false,false,5)
+  · by_cases hLF : mv = ⟨false,false,5⟩
     · exact Or.inr (Or.inl hLF)
     · exact Or.inr (Or.inr ((covered_iff mv).2 ⟨hRE,hLF⟩))
 
@@ -80,8 +80,8 @@ theorem covered_or_missing (mv : Move) :
     22 accepted siblings and the exact first-query halt case yield the
     complete Raw124 parent Cover. -/
 theorem cover_of_two
-    (h0RE : ∀ m, compatible (child (false,true,4)) m → WeightedBound parentBound m)
-    (h0LF : ∀ m, compatible (child (false,false,5)) m → WeightedBound parentBound m) :
+    (h0RE : ∀ m, compatible (child ⟨false,true,4⟩) m → WeightedBound parentBound m)
+    (h0LF : ∀ m, compatible (child ⟨false,false,5⟩) m → WeightedBound parentBound m) :
     Cover (WeightedBound parentBound) parent124 := by
   apply cover_of_children parentBound (by decide)
   intro mv m hm
@@ -91,8 +91,8 @@ theorem cover_of_two
   · exact covered_sound hcovered m (by simpa [child] using hm)
 
 /-- The two remaining child tables, named for downstream integration. -/
-abbrev child0RE : PartialMachine := child (false,true,4)
-abbrev child0LF : PartialMachine := child (false,false,5)
+abbrev child0RE : PartialMachine := child ⟨false,true,4⟩
+abbrev child0LF : PartialMachine := child ⟨false,false,5⟩
 
 #print axioms covered_iff
 #print axioms cover_of_two
