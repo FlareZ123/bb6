@@ -36,6 +36,17 @@ All ten sweep `never` theorems accepted by Lean 4.36.0-rc2 against the original 
 
 All 20 new grouped `never` theorems (including the six+six+six+two variants) compile against original source dependencies, only propext, Quot.sound, and where needed Classical.choice. Original five project source blobs were recovered from artifact 15048626150 and rebuilt from source, and the two RA core modules used by recursive families were rebuilt from their original GitHub source. No new axiom, finite-time extrapolation, or native_decide is used.
 
-Remaining 22 discovery targets: 26 27 37 38 40 42 44 45 49 61 83 84 93 94 95 99 100 104 108 126 127 151. Exact score 545 still requires proof for all cylinders and the coverage audit.
+## Paired odd-run stack (IDs 126 and 127)
+
+[Raw54LAPair126.lean](Raw54LAPair126.lean) proves universal blank-tape nonhalting for both one-hole cylinders:
+
+- 126: `1RB1RA_1RC0RF_0RD---_1LD0LE_1LA0LE_1RD0RB`
+- 127: `1RB1RA_1RC0RF_0RD---_1LD0LE_1LA0LE_1RD0RF`
+
+Both share a section system at A scanning zero, with a left stack of odd zero/one-run frames and a right word of positive even one-runs separated by positive multiples of four zeros. Let a denote the number of leading left one-pairs. A P-section has an odd right one-run (at least three); a Q-section has three leading right zeros. With nonempty stack, a is even at P and odd at Q. Every nonbottom frame stores an even one-pair count. The exact P push costs 2n+16 moves for a first right run of length 2n+3; it installs a frame with zero-run 2n+1 and one-run 2a+1 and returns to Q with a=1. The Q drain of a nonminimal frame (or empty stack) costs 8+2a+8(a+1) and returns to P with a+1. A minimal-frame Q pop costs 10+2a and restores the next frame's counter b+1; its right gap has the required multiple-of-four structure because a is odd. Blank padding is handled by a proved bisimulation of the original zipper, not by a finite tape cutoff. The authentic blank is equivalent to the empty Q-section with a=0. Positive-time closure gives unbounded live prefixes, and the original run bridge yields `NeverHalts` for all compatible completions.
+
+Lean 4.36.0-rc2 checked `BB6.Agent8Raw54.LA.Pair126.sectionReturn` and `BB6.Agent8Raw54.LA.Pair126.never` using rebuilt original source dependencies Frontier, Symmetry, RootShift, SparseZipper, SweepPumping from artifact 15048626150. Both report only propext and Quot.sound. Exact source commit 174a7238fb014cf9876ae35982c5c28e83101975; verified blob fd840ea652b3823929158d3dcc1cc84f9bf3cb95.
+
+The subsequent witness archives `la-proofs.tar.xz` and `la-hard.tar.xz` reduced the discovery backlog to IDs 37, 61, 104, 126, 127 before the paired theorem. The remaining known discovery targets are now **37, 61, 104**. Earlier candidate lists above are discovery records; they are not a checked disjoint coverage partition. Exact score 545 still requires a complete checked child coverage audit, including ingestion of archived and newly proved witnesses.
 
 The separate E0=1RF child has 2610 splits, 45064 cycles, 12821 last, 2146 open, observed maximum weighted score 845. Frozen bank hits 1967, misses 179. Open SHA ae1d7c235351d32702026c6d6d416d01548c257aab30e98773ea88b81d63113c; misses SHA b5cc41348b6fb3a76c7abd71623b8b36f880a5c0579b7478df7c99b82d9e0461. No further search on RF yet.
