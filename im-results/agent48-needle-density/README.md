@@ -2,7 +2,7 @@
 
 **New theorem:** the natural density of terminal exponents admitting any legal immediate predecessor exists and is computable. Its complement, exponents with no legal immediate parent, has density strictly between 0.566665 and 0.602053. At every fixed finite inverse depth the corresponding density likewise exists and is computable. Fixed-alphabet inverse histories have exponentially decaying density with depth. These are rigorous all-exponent statements, not sampled estimates. None determines authentic blank-root halting.
 
-**Status:** period/spacing, exact order certificates (v=0..50), low hit lists, and arithmetic congruence iff sufficient size are local Lean 4.36.0-rc2 kernel results (standard axioms only). The real-limit/density arguments are paper proofs. Original-source adapter pending; underlying exact edge and valuation dichotomy accepted in [CI 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719). No external novelty claim.
+**Status:** period/spacing, exact order certificates (v=0..50), low hit lists, and arithmetic congruence iff sufficient size are local Lean 4.36.0-rc2 kernel results (standard axioms only). The real-limit/density arguments are paper proofs. Original-source arithmetic adapter accepted in [CI 45883224467](https://github.com/FlareZ123/bb6/actions/runs/45883224467), at source `2403ae2768b4d63cc51103e267175f90d1e0bc5e`; underlying exact edge and valuation dichotomy accepted in [CI 42416997719](https://github.com/FlareZ123/bb6/actions/runs/42416997719). No external novelty claim.
 
 ## Period and tail theorem
 
