@@ -33,6 +33,7 @@ PARENT_SPECS = {
         "table": "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
         "bound": 4200000,
         "root": "Raw59ParentCover",
+        "required_modules": {"Raw59ParentCover"},
     },
     "raw112": {
         "env": "RAW112_PARENT_RUN_ID",
@@ -41,6 +42,7 @@ PARENT_SPECS = {
         "table": "1RB---_1RC---_0RD---_1LD1RE_---1LC_------",
         "bound": 100000,
         "root": "Raw112ClosedCover",
+        "required_modules": {"Raw112ClosedCover", "Raw112Data"},
     },
 }
 
@@ -58,12 +60,27 @@ def fetch_parent(spec, work, compiler_sha):
     assert digest.startswith("sha256:"), (item["id"], digest)
     dirs = download((item["id"], run_id, digest.removeprefix("sha256:")), work)
     manifests = list((work / "metadata" / str(item["id"])).rglob("manifest.json"))
-    assert len(manifests) == 1, [str(p) for p in manifests]
-    manifest = json.loads(manifests[0].read_text())
+    candidates = []
+    for path in manifests:
+        try:
+            candidate = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        claim = candidate.get("claim") or {}
+        modules = {entry.get("module") for entry in candidate.get("modules", [])}
+        if (
+            claim.get("theorem") == spec["theorem"]
+            and claim.get("parent_table") == spec["table"]
+            and claim.get("weighted_bound") == spec["bound"]
+            and spec["required_modules"] <= modules
+        ):
+            candidates.append((path, candidate))
+    assert len(candidates) == 1, (
+        "expected exactly one source-audited parent manifest",
+        spec["artifact"], [str(path) for path, _ in candidates],
+    )
+    manifest_path, manifest = candidates[0]
     claim = manifest["claim"]
-    assert claim["theorem"] == spec["theorem"], claim
-    assert claim["parent_table"] == spec["table"], claim
-    assert claim["weighted_bound"] == spec["bound"], claim
     assert manifest["proof_source_revision"] == run["head_sha"], (
         manifest["proof_source_revision"], run["head_sha"]
     )
@@ -80,6 +97,9 @@ def fetch_parent(spec, work, compiler_sha):
         "theorem": spec["theorem"],
         "parent_table": spec["table"],
         "weighted_bound": spec["bound"],
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": sha(manifest_path),
+        "module_count": manifest["module_count"],
         "manifest": manifest,
     }, dirs
 
