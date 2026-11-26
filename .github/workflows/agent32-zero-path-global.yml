@@ -730,7 +730,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
-        if: ${{ inputs.raw59_child != 'ParentCompose' }}
+        if: ${{ inputs.raw59_child != 'ParentCompose' && inputs.raw59_child != 'SharpCompose' }}
         with:
           pattern: raw59-checked-*
           path: /tmp/raw59-shards
