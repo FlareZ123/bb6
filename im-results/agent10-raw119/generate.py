@@ -125,7 +125,7 @@ def main():
         assert tag=="split" and len(v[2])==24
         n,s,kids=v
         rs=[render(k,imports,produce) for k in kids]
-        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(rs)+"\n])" if produce else ""
+        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(rs)+"])" if produce else ""
     emit("Raw119Base",["CachedZipAudit"],f"""
 abbrev parent : PartialMachine :=
   refine (pathEnd root 2 (path.take 4)).1 (4,true) (some ⟨false,true,4⟩)
