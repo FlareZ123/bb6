@@ -13,7 +13,20 @@ a63, a68, champion = five.a63, five.a68, five.champion
 HERE = Path(__file__).resolve().parent
 MEM = "BB6.Agent31Canonical59Membership"
 NS = "BB6.Agent32CanonicalSelected"
-LABELS = ("raw119", "raw115", "raw58", "raw108")
+LABELS = ("raw119", "raw115", "raw58", "raw108", "raw118")
+RAW118_SPEC = {
+    "label": "raw118",
+    "run_id": 45812415227,
+    "revision": "b2e050ea75b4633f06ce836375a4260135ed500c",
+    "artifact_id": 15120592642,
+    "artifact_name": "raw118-parent-proof",
+    "digest": "226a16e1181a456a2f6eddfb785b3882abde05d462837fffcb4b3ba47dfe2053",
+    "root": "Raw118Complete",
+    "theorem": "BB6.Agent1Raw118Complete.parent_cover",
+    "table": "1RB---_1RC---_0RD---_1LD1RE_---0LE_------",
+    "bound": 756496,
+    "size": 531464312,
+}
 OPENS = """
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
@@ -34,47 +47,68 @@ def gate(log, names):
 
 
 def candidate_source(spec, previous):
-    # Reuse the precise source equality and Cover proof from the existing
-    # five-parent consumer, rather than deriving a new mathematical claim.
     p = spec["label"][3:]
-    text = (HERE / "Canonical59FiveParentIntegrated.lean").read_text()
-    source = re.search(r"^abbrev p" + p + r"Source :.*$", text, re.M).group()
-    eq = re.search(r"^theorem p" + p + r"_source_eq :.*?\n\n", text, re.M | re.S).group()
-    cover = re.search(r"^theorem p" + p + r"_cover :.*?\n\n", text, re.M | re.S).group()
+    membership_imports = []
+    membership_names = []
+    if p == "118":
+        source = "abbrev p118Source : PartialMachine := BB6.Agent16Raw118.parent"
+        eq = """theorem p118_source_eq : p118 = p118Source := by
+  rfl
+
+"""
+        cover = """theorem p118_cover : Cover (WeightedBound 6766859) p118 := by
+  rw [p118_source_eq]
+  exact BB6.Agent1Raw118Complete.parent_cover_monotone (by decide)
+
+"""
+        membership_imports = ["Raw118Canonical64Membership"]
+        membership_names = [
+            "BB6.Agent16Raw118Canonical64Membership.p118_eq_raw118_parent",
+            "BB6.Agent16Raw118Canonical64Membership.p118_root",
+            "BB6.Agent16Raw118Canonical64Membership.p118_parent_count64",
+        ]
+    else:
+        text = (HERE / "Canonical59FiveParentIntegrated.lean").read_text()
+        source = re.search(r"^abbrev p" + p + r"Source :.*$", text, re.M).group()
+        eq = re.search(r"^theorem p" + p + r"_source_eq :.*?\n\n", text, re.M | re.S).group()
+        cover = re.search(r"^theorem p" + p + r"_cover :.*?\n\n", text, re.M | re.S).group()
     module = "CanonicalSelectedRaw" + p
     namespace = NS + "Raw" + p
-    if p == "59":
-        source = source.replace("BB6.Agent32Raw59.p59", "A32Raw59Slice.BB6.Agent32Raw59.p59")
-        cover = cover.replace("BB6.Agent32Raw59Exact.cover", "A32Raw59Slice.BB6.Agent32Raw59Exact.cover")
-    imports = ["Canonical59FiveParentMembership", "Raw59KernelSlice" if p == "59" else spec["root"],
+    imports = ["Canonical59FiveParentMembership", *membership_imports, spec["root"],
                "TM63RawUpperInterface", "ChampionScoreLowerBound", *previous]
-    names = [namespace + ".p" + p + "_source_eq", namespace + ".p" + p + "_cover",
-             MEM + ".p" + p + "_count64"]
+    names = [namespace + ".p" + p + "_source_eq", namespace + ".p" + p + "_cover"]
+    if p == "118":
+        names += membership_names
+    else:
+        names += [MEM + ".p" + p + "_count64"]
+    opens = OPENS + (
+        "\nopen BB6.Agent16Raw118Canonical64Membership\n" if p == "118" else ""
+    )
     body = "".join("import " + x + "\n" for x in imports)
     body += "\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
-    body += "\nnamespace " + namespace + "\n" + OPENS + "\n"
+    body += "\nnamespace " + namespace + "\n" + opens + "\n"
     body += source + "\n\n" + eq + cover
     body += "".join("#print axioms " + x + "\n" for x in names)
     body += "\nend " + namespace + "\n"
     return module, body, names
 
-
 def final_source(accepted):
     ids = [x["label"][3:] for x in accepted]
     namespace = NS + "Integrated"
-    body = "".join("import CanonicalSelectedRaw" + p + "\n" for p in ids)
+    body = "import Raw118Canonical64Membership\n" if "118" in ids else ""
+    body += "".join("import CanonicalSelectedRaw" + p + "\n" for p in ids)
     body += "\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
-    body += "\nnamespace " + namespace + "\n" + OPENS
-    raw59_gate = "raw59_consumed" if "59" in ids else "raw59_retained"
-    raw59_count = 0 if "59" in ids else 1
+    opens = OPENS + (
+        "\nopen BB6.Agent16Raw118Canonical64Membership\n" if "118" in ids else ""
+    )
+    body += "\nnamespace " + namespace + "\n" + opens
     body += "\ndef selectedParents : List PartialMachine := [" + ",".join("p" + p for p in ids) + "]\n"
     body += """
 noncomputable def rosterSelected :=
   removeParents selectedParents BB6.Agent3Canonical64Raw120.roster64
 
-"""
-    body += f"\ntheorem {raw59_gate} :\n    (rosterSelected.filter (fun e => sameTable e.2 p59)).length = {raw59_count} := by decide\n"
-    body += """
+theorem raw59_retained :
+    (rosterSelected.filter (fun e => sameTable e.2 p59)).length = 1 := by decide
 
 theorem parents_pairwise_distinct :
     List.Pairwise (fun p q => sameTable p q = false) selectedParents := by decide
@@ -87,7 +121,12 @@ theorem parents_root :
   simp only [selectedParents, List.mem_cons, List.not_mem_nil, or_false] at hp
 """
     cases = "  rcases hp with " + " | ".join("rfl" for _ in ids)
-    body += cases + " <;> decide\n"
+    body += cases + "\n"
+    for p in ids:
+        if p == "118":
+            body += "  · exact BB6.Agent16Raw118Canonical64Membership.p118_root\n"
+        else:
+            body += "  · decide\n"
     body += """
 theorem parents_cover :
     ∀ p ∈ selectedParents, Cover (WeightedBound 6766859) p := by
@@ -126,16 +165,23 @@ theorem exact_at_champion_score
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 """
     names = [namespace + "." + n for n in (
-        raw59_gate, "parents_pairwise_distinct", "countSelected",
+        "raw59_retained", "parents_pairwise_distinct", "countSelected",
         "parents_root", "parents_cover", "sound_integrated", "exact_at_target",
         "exact_at_champion_score")]
-    names += [MEM + ".p" + p + "_count64" for p in ids]
+    for p in ids:
+        if p == "118":
+            names += [
+                "BB6.Agent16Raw118Canonical64Membership.p118_eq_raw118_parent",
+                "BB6.Agent16Raw118Canonical64Membership.p118_root",
+                "BB6.Agent16Raw118Canonical64Membership.p118_parent_count64",
+            ]
+        else:
+            names += [MEM + ".p" + p + "_count64"]
     names += ["BB6Coverage.Agent48DirectRoot.champion_raw_witness",
               "BB6.Agent38ChampionThreshold.champion_score_ge_6766859"]
     body += "\n" + "".join("#print axioms " + x + "\n" for x in names)
     body += "\nend " + namespace + "\n"
     return body, names
-
 
 def add_family(spec, dirs, linked, copied, audit):
     prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
@@ -237,6 +283,7 @@ def main():
          [MEM + ".p59_count64"])
     accepted, rejected, previous, audits = [], [], [], []
     specs = {spec["label"]: spec for spec in five.PARENTS}
+    specs["raw118"] = RAW118_SPEC
     for label in args.parents:
         spec = specs[label]
         copied = []
@@ -253,6 +300,21 @@ def main():
                 relocate_raw59(spec, dirs, linked, copied, audit, work, env)
             else:
                 add_family(spec, dirs, linked, copied, audit)
+            if label == "raw118":
+                membership_source = ROOT / "im-results" / "agent16-raw118" / "Raw118Canonical64Membership.lean"
+                membership_output = linked / "Raw118Canonical64Membership.olean"
+                assert not membership_output.exists()
+                copied.append(membership_output)
+                membership_log = a68.compile_module(
+                    membership_source, membership_output, env, work / "raw118-membership.log"
+                )
+                membership_profiles = gate(membership_log, [
+                    "BB6.Agent16Raw118Canonical64Membership.p118_eq_raw118_parent",
+                    "BB6.Agent16Raw118Canonical64Membership.p118_root",
+                    "BB6.Agent16Raw118Canonical64Membership.p118_parent_count64",
+                ])
+                audit["membership_axioms"] = membership_profiles
+                audit["membership_source_sha256"] = a68.sha(membership_source)
             log = a68.compile_module(path, output, env, work / (label + ".log"))
             profiles = gate(log, names)
         except (AssertionError, subprocess.CalledProcessError, OSError, ValueError) as exc:
