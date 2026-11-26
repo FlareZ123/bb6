@@ -96,6 +96,9 @@ def main():
         i=int(i)
         assert i not in pumps
         pumps[i]=ns
+        if module=="Raw57LF0M968":
+            from prefix3_emit import emit as emit_prefix3
+            emit_prefix3(module,json.loads((ROOT/"prefix3-M968.json").read_text()))
         if module=="Raw57LB1M211":
             from m211_emit_lean import main as emit_m211
             emit_m211()
