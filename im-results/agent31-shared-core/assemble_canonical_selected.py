@@ -255,6 +255,55 @@ def relocate_raw59(spec, dirs, linked, copied, audit, work, env):
                            "base": base, "log": log}
 
 
+
+def relocate_raw59_staged(spec, dirs, linked, copied, audit, work, env):
+    """Memory-bounded import-cone relocation using independent kernel stages."""
+    import sys
+    helper = HERE.parent / "agent32-raw59" / "kernel-slice"
+    sys.path.insert(0, str(helper))
+    from stage_relocate import relocate
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    result = subprocess.check_output(
+        ["lean", "--run", str(HERE / "WalkImportClosure.lean"),
+         str(prefix / "lib" / "lean"), str(len(dirs)), *map(str, dirs), spec["root"]],
+        text=True)
+    files = sorted(set(Path(x) for x in result.splitlines()))
+    assert files and all(p.suffix == ".olean" and p.is_file() and p.parent in dirs for p in files)
+    scratch = work / "raw59-stage-tool"
+    scratch.mkdir()
+    shutil.copy2(helper / "KernelStage.lean", scratch / "KernelStage.lean")
+    stage_env = dict(env, LEAN_SYSROOT=str(prefix))
+    subprocess.run(["lean", "-c", "KernelStage.c", "KernelStage.lean"],
+                   cwd=scratch, env=stage_env, check=True)
+    subprocess.run(["leanc", "-O2", "-o", "kernelstage", "KernelStage.c"],
+                   cwd=scratch, env=stage_env, check=True)
+    report, objects, names = relocate(
+        producer_files=files, base=linked, work=work / "raw59-staged",
+        root_module=spec["root"], root_names=["BB6.Agent32Raw59Exact.cover"],
+        prefix="A32Raw59Slice", tool=scratch / "kernelstage",
+        comparator=HERE.parent / "agent13-raw125" / "CompareKernelImports.lean")
+    assert report["complete"]
+    for p in sorted(objects.glob("*.olean")):
+        dest = linked / p.name
+        assert not dest.exists()
+        copied.append(dest)
+        shutil.copy2(p, dest)
+    source = scratch / "Raw59KernelSlice.lean"
+    text = "import " + report["staged_root"] + "\n"
+    if "BB6.Agent32Raw59.p59" not in names:
+        text += "\nnamespace A32Raw59Slice.BB6.Agent32Raw59\n"
+        text += "abbrev p59 := _root_.BB6.Agent32Raw59.p59\nend A32Raw59Slice.BB6.Agent32Raw59\n"
+    text += "\n#print axioms A32Raw59Slice.BB6.Agent32Raw59Exact.cover\n"
+    source.write_text(text)
+    dest = linked / "Raw59KernelSlice.olean"
+    assert not dest.exists()
+    copied.append(dest)
+    log = a68.compile_module(source, dest, env, work / "raw59-staged-root.log")
+    profiles = gate(log, ["A32Raw59Slice.BB6.Agent32Raw59Exact.cover"])
+    audit["relocation"] = {"mode": "staged", "report": report, "output_sha256": a68.sha(dest),
+                           "source_sha256": a68.sha(source), "axioms": profiles}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
@@ -297,7 +346,10 @@ def main():
         try:
             dirs, metadata = five.download_parent(spec, work)
             if label == "raw59":
-                relocate_raw59(spec, dirs, linked, copied, audit, work, env)
+                if os.environ.get("BB6_RAW59_RELOCATION") == "staged":
+                    relocate_raw59_staged(spec, dirs, linked, copied, audit, work, env)
+                else:
+                    relocate_raw59(spec, dirs, linked, copied, audit, work, env)
             else:
                 add_family(spec, dirs, linked, copied, audit)
             if label == "raw118":
