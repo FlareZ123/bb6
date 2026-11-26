@@ -155,7 +155,7 @@ def main():
         raise RuntimeError("residual roster generator count disagrees with its TSV")
 
     env = os.environ.copy()
-    env["LEAN_PATH"] = str(work.resolve())
+    env["LEAN_PATH"] = os.pathsep.join([str(work.resolve()), str(generated.resolve())])
     branch_log = run(["lean", "-o", work / "Raw122Branch00.olean", "Raw122Branch00.lean"],
                      cwd=factored, env=env, capture=True)
     run([os.sys.executable, ROOT / "im-results/agent13-coverage/unpack.py"])
@@ -166,69 +166,88 @@ def main():
          "--source-root", ROOT, "--source-root", factored, "--manifest", manifest, "--manifest-only",
          "--artifact-dir", work, factored / "Raw122Branch00.lean"])
 
+    # Match every exact residual table against an existing checked witness.
+    witness_log = run([
+        os.sys.executable, HERE / "roster_witnesses.py", "0", tsv,
+        ROOT / "im-results/agent29-raw122-run/hits.tsv",
+        ROOT / "im-results/agent43-raw122-cut/direct_certificates.json",
+        generated / "Raw122Roster00Witnesses.lean",
+    ], capture=True)
+    witness_info = json.loads(witness_log.splitlines()[-1])
+    if witness_info["residual_count"] != 28:
+        raise RuntimeError(f"unexpected 0LA residual count: {witness_info}")
+    run([
+        os.sys.executable, ROOT / "im-results/agent29-raw122-run/generate.py",
+        generated, *[str(i) for i in witness_info["indexed_ids"]],
+    ])
+    if witness_info["direct_ids"]:
+        run([
+            os.sys.executable, HERE / "direct_cert.py",
+            ROOT / "im-results/agent43-raw122-cut/direct_certificates.json",
+            generated, *[str(i) for i in witness_info["direct_ids"]],
+        ], env=env)
+
     wrapper = generated / "Raw122Recovered00.lean"
-    body = f'''import BB6Coverage
+    wrapper.write_text(f'''import BB6Coverage
 import Raw122Base
 import Raw122Roster00
+import Raw122Roster00Witnesses
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122Recovered00
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
-theorem residual_count : BB6.Agent43Raw122Roster.tables00.length = {len(residual_rows)} := by decide
-'''
-    if not residual_rows:
-        body += '''theorem cover00 (m : Machine)
+theorem cover00 (m : Machine)
     (hm : compatible (BB6.Agent43Raw122.child ⟨false,false,0⟩) m) :
     WeightedBound 6766859 m := by
   exact BB6.Agent43Raw122Roster.cover00 6766859 (by decide)
-    (by intro p hp; simp [BB6.Agent43Raw122Roster.tables00] at hp) m hm
+    BB6.Agent43Raw122Roster.witnesses00 m hm
+theorem residual_count : BB6.Agent43Raw122Roster.tables00.length = {len(residual_rows)} := by decide
 #print axioms cover00
-'''
-    body += '''#print axioms residual_count
+#print axioms residual_count
 end BB6.Agent43Raw122Recovered00
-'''
-    wrapper.write_text(body, encoding="utf-8")
+''', encoding="utf-8")
 
-    theorem = ("BB6.Agent43Raw122Recovered00.cover00" if not residual_rows
-               else "BB6.Agent43Raw122Recovered00.residual_count")
-    args = [os.sys.executable, closure, "--workdir", final,
-            "--source-root", ROOT, "--source-root", factored, "--source-root", generated, "--jobs", "3",
-            "--precompiled-manifest", manifest, "--precompiled-dir", work,
-            "--manifest", final / "manifest.json",
-            "--label", "Raw122 F1=0LA exact residual roster",
-            "--theorem", theorem,
-            "--parent-table", "Canonical124 raw122 parent with F1=0LA",
-            "--artifact-name", "raw122-branch00-cover" if not residual_rows else "raw122-branch00-roster",
-            wrapper]
-    if not residual_rows:
-        args += ["--weighted-bound", str(BOUND)]
-    log = run(args, capture=True)
-    names = (["BB6.Agent43Raw122Recovered00.cover00", "BB6.Agent43Raw122Recovered00.residual_count"]
-             if not residual_rows else ["BB6.Agent43Raw122Recovered00.residual_count"])
-    for name in names:
+    log = run([
+        os.sys.executable, closure,
+        "--workdir", final,
+        "--source-root", ROOT, "--source-root", factored, "--source-root", generated,
+        "--jobs", "3",
+        "--precompiled-manifest", manifest, "--precompiled-dir", work,
+        "--manifest", final / "manifest.json",
+        "--label", "Raw122 F1=0LA source-accepted child Cover",
+        "--theorem", "BB6.Agent43Raw122Recovered00.cover00",
+        "--parent-table", "Canonical124 raw122 parent with F1=0LA",
+        "--weighted-bound", str(BOUND),
+        "--artifact-name", "raw122-branch00-cover",
+        wrapper,
+    ], capture=True)
+    for name in ("BB6.Agent43Raw122Recovered00.cover00",
+                 "BB6.Agent43Raw122Recovered00.residual_count"):
         lines = [x for x in log.splitlines() if name in x and "depends on axioms:" in x]
         if len(lines) != 1 or any(t in lines[0] for t in ("sorryAx", "native_decide", "Lean.ofReduceBool")):
             raise RuntimeError(f"missing or untrusted axiom report for {name}: {lines}")
 
+    prefixes = ("Raw122Roster00", "Agent29Raw122Indexed", "Raw122D15", "Raw122Direct15")
     for f in generated.iterdir():
-        if f.is_file() and f.suffix in {".lean", ".tsv"} and f.name.startswith("Raw122Roster00"):
+        if f.is_file() and f.suffix in {".lean", ".tsv"} and (
+            f.name.startswith(prefixes) or f.name == "Raw122Recovered00.lean"
+        ):
             shutil.copy2(f, output / f.name)
-    shutil.copy2(wrapper, output / wrapper.name)
     shutil.copy2(factored / "Raw122Branch00.lean", output / "Raw122Branch00.lean")
     shutil.copy2(final / "manifest.json", output / "manifest.json")
     (output / "Lean-axioms.txt").write_text(log, encoding="utf-8")
     shutil.copy2(final / "Raw122Recovered00.olean", output / "Raw122Recovered00.olean")
     shutil.copy2(work / "Raw122Branch00.olean", output / "Raw122Branch00.olean")
     meta = {"branch": "0LA", "branch_index": 0, "residual_count": len(residual_rows),
-            "weighted_bound": BOUND if not residual_rows else None,
-            "source_artifact": SOURCE_ARTIFACT, "core_artifact": CORE_ARTIFACT,
-            "target_runs": TARGET_RUNS, "target_artifacts": records,
-            "target_coverage": sorted(coverage), "merged_olean_count": len(seen_olean),
-            "theorem": theorem, "branch_compile_output": branch_log,
-            "workflow_run_id": os.environ.get("GITHUB_RUN_ID")}
+            "weighted_bound": BOUND, "source_artifact": SOURCE_ARTIFACT,
+            "core_artifact": CORE_ARTIFACT, "target_runs": TARGET_RUNS,
+            "target_artifacts": records, "target_coverage": sorted(coverage),
+            "merged_olean_count": len(seen_olean), "theorem": "BB6.Agent43Raw122Recovered00.cover00",
+            "witness_mapping": witness_info, "workflow_run_id": os.environ.get("GITHUB_RUN_ID"),
+            "branch_compile_output": branch_log}
     (output / "proof-metadata.json").write_text(json.dumps(meta, indent=2, sort_keys=True)+"\n")
     print(json.dumps(meta, indent=2, sort_keys=True), flush=True)
-    print(f"SUCCESS: branch 0LA source audit compiled; residual tables={len(residual_rows)}", flush=True)
+    print("SUCCESS: original Raw122 F1=0LA child Cover compiled at 6766859", flush=True)
 
 
 if __name__ == "__main__":
