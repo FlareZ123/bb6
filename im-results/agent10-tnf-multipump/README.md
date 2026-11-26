@@ -38,7 +38,7 @@ B1=1LC, candidate weighted bound 165. All 9,765,625 raw assignments covered by t
 
 ### Raw 67 (B1=1LB)
 
-All candidate leaves closed, bound 808. The tree has 1,515 splits including root, 25,738 side-cycle, 6,626 last-halt, 2,380 FAR, 64 one-block, 11 two-block, two long-epoch and two recursive leaves. `Raw67Recursive.lean` gives exact universal macros for leaves 438 and 1088, with positive epochs starting from blank at steps 28 and 41. The first consumes one left zero recursively; the second consumes a 0001 block, increasing the alternating right prefix by two pairs and adding G(k)=2^(k+1) trailing ones. Both universal growth theorems checked locally with Lean 4.36.0-rc2 against the copied zipper core; full source audit and two-row `LargerFiveRoster` deletion remain pending. Generate with `python generate.py 67 71`.
+All candidate leaves closed, bound 808. The tree has 1,514 splits including root, 25,738 side-cycle, 6,626 last-halt, 2,380 FAR, 64 one-block, 11 two-block, two long-epoch and two recursive leaves. `Raw67Recursive.lean` gives exact universal macros for leaves 438 and 1088, with positive epochs starting from blank at steps 28 and 41. The first consumes one left zero recursively; the second consumes a 0001 block, increasing the alternating right prefix by two pairs and adding G(k)=2^(k+1) trailing ones. Both universal growth theorems checked locally with Lean 4.36.0-rc2 against the copied zipper core; the complete original-source audit and exact bound wrapper have now compiled locally. See [Raw67 exact weighted maximum 808](../../results/2026-11-26-raw67-parent-exact-agent10.md). Canonical integration remains separate. Generate with `python generate.py 67 71`.
 
 ### Raw 81 (B1=0LF)
 

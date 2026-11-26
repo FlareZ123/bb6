@@ -539,3 +539,7 @@ Lease unchanged; original 02:44:40.661Z; threshold 03:54:40.661Z.
 ## 2026-11-26T15:00Z — unbounded three-token periodic exclusion
 
 - New negative beta cycle argument in ThreeTokenPeriod.md, BetaThreeBridge.lean, ThreeTokenPeriod.lean: A≥7 implies all numerator magnitudes u_i satisfy r<u_i≤14r. Distinct phases preceded by two largest valuations a≥b are divisible by 3^b. Outgoing valuation ≥c yields 3^c(u_i-r)≤28r2^c; difference gives 3^(b+c)≤28r2^c. Split 5a≥2A vs 5(b+c)>3A. Combine lower bounds and r upper to force A<300, kernel check 45150 aggregate pairs leaves (6,5), kernel check 21952 token triples rejects all. Both arithmetic files compiled, standard axiom set, exact model connection remains paper-level. Full periods lengths 1–3 excluded, global #746 and BB6 open.
+
+## 2026-11-26T15:08Z — Raw67 exact closure
+
+- All Raw67 recursive/pump/24-child/parent/attainment modules compiled locally on original source with Lean 4.36.0-rc2, standard axiom profiles. Weighted maximum 808; literal parent and attaining completion in results/2026-11-26-raw67-parent-exact-agent10.md. Corrected split count 1514 including root; generator normalized Raw67/79 pinned counts. Raw69/73/78 source audits in progress. Four-token primitive valuation branch kernel accepted; repeated-two valuation branch has new cancellation proof under development. Lease unchanged.

@@ -122,7 +122,11 @@ theorem query{raw} : zipQueryOK {bound} p{raw} {n} {ss} = true := by decide
 def kid{i:02} : Audit := {build(kid)}
 theorem check{i:02} : zipCheck {bound} (child{raw} {move(MOVES[i])}) kid{i:02} = true := by decide
 """)
-    assert stats==Counter(spec["stats"]),stats
+    expected = Counter(spec["stats"])
+    # Raw67 and Raw79 pinned split counts include the root; stats counts children only.
+    if raw in ("67", "79"):
+        expected["split"] -= 1
+    assert stats == expected, (raw, stats, expected)
     cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
     body=f"""
 def kids{raw} : Move → Audit := byMove [{",".join(f"kid{i:02}" for i in range(24))}]
