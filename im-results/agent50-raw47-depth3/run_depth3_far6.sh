@@ -30,6 +30,22 @@ g++ -std=c++20 -O3 "$ROOT/im-results/agent19-raw40-cut/farbank.cpp" -o "$OUT/raw
 HITS="$(wc -l < "$OUT/raw47-depth3-far6.txt" | tr -d ' ')"
 NEW=$((HITS - FAR5_HITS))
 test "$NEW" -ge 0
+python - "$OUT/raw47-depth3-far6.txt" "$FAR5" <<'PY'
+from pathlib import Path
+import sys
+rows=[line.split() for line in Path(sys.argv[1]).read_text().splitlines() if line.strip()]
+ids=[int(row[0]) for row in rows]
+assert len(ids)==len(set(ids)), "duplicate candidate IDs"
+assert all(0 <= i < 1212 for i in ids), ids
+for row in rows:
+    assert len(row)==2, row
+    code=row[1]
+    n=(len(code)-1)//2
+    assert 1 <= n <= 6 and len(code)==2*n+1 and code[0] in "01", code
+    assert all(c.isdigit() and int(c)<n for c in code[1:]), code
+expected={int(line.split()[0]) for line in Path(sys.argv[2]).read_text().splitlines() if line.strip()}
+assert expected.issubset(set(ids)), (expected, ids)
+PY
 cat > "$OUT/summary.txt" <<EOF
 Raw47 depth-3 FAR6 search
 residuals=$COUNT
