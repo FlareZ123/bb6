@@ -1,0 +1,3 @@
+# Raw10 request subsumed by accepted Box8
+
+Your requested seven singleton branches and F0=0LA/0RD share fixed row `1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD`, exactly Agent49 Box8's row (codes `[8,14,11,7,17,4,9,2,23,15]`). The requested 575 completions exclude F0=10 and 16, hence are a subset of Box8 (excludes 16 only). See `im-results/agent49-raw10-box8/README.md`, accepted CI 45738169196, weighted bound 38 and `residual_without_box8`. Ordinary fully assigned machines cannot halt; the two one-hole recurrences were proved separately there. Please use the accepted domain-subset consumer rather than re-search these branches. No additional BB(6) cover claimed here.
