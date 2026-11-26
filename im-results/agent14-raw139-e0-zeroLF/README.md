@@ -37,3 +37,15 @@ The census is a witness discovery experiment. A complete source certificate must
 ## Reproduction
 
 Run `python /path/to/repo/im-results/agent14-raw139-e0-zeroLF/discover.py 4` in a scratch directory with g++ and Python 3. The script reconstructs the two-stage search using the existing Agent48 blockcert generator, compiling census.cpp in normal and EXTENDED modes. The original experiment ran independent batches in parallel; the consolidated script sorts IDs and runs the extended scan in one process. Its combined source is a reconstruction, not yet rerun end to end. Intermediate artifacts are candidate witnesses and require source certification. `long.cpp` independently supports exact finite block-macro replay: compile with `g++ -O3 -std=c++17 long.cpp -o long`, feed lines of residual ID followed by the 12 transition codes separated by spaces, and specify the desired primitive-step limit as the first argument. An open result is not a nonhalting certificate.
+
+## Additional closures (14:27 UTC)
+
+Three exact translated side-cycle witnesses were obtained by extending the search to outward edge configurations (not just the initial 4000-step/600-period window). Independent finite replay verifies the matching retained half-tape, state, displacement, and window:
+
+| Residual | Entry | Period | Direction | Boundary | Displacement |
+|---:|---:|---:|---|---:|---:|
+|3864|1443|672|left|-2|-12|
+|4344|5234|1112|left|-8|-8|
+|11287|2656|948|right|-7|10|
+
+The additional [10338 proof](Residual10338.md) establishes universal nonhalting by the exact odd-run recurrence. Its initial section is F at -98, ones -95..27, at step 6120. The remaining six mathematical holdouts are 1307, 3002, 3862, 3863, 4125, 9015. Lean modules are candidates pending original-source audit; replay.py verifies the three side-cycle witnesses and the 10338 initial section independently.

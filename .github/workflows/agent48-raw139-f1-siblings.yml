@@ -49,8 +49,11 @@ jobs:
               *) echo "Unknown E0 parent: $SIBLING" >&2; exit 2 ;;
             esac
           elif [[ "$KIND" == e0sweep ]]; then
-            [[ "$SIBLING" == ZeroRE ]]
-            bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh
+            case "$SIBLING" in
+              ZeroRE) bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh ;;
+              ZeroLF) bash im-results/agent14-raw139-e0-zeroLF/reproduce-sweep.sh ;;
+              *) echo "Unknown E0 sweep: $SIBLING" >&2; exit 2 ;;
+            esac
           elif [[ "$KIND" == d0 ]]; then
             case "$SIBLING" in
               ZeroLF) bash im-results/agent14-raw139-d0-zeroLF/reproduce.sh ;;
