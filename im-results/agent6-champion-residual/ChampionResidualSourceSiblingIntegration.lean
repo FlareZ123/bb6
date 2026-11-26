@@ -187,6 +187,16 @@ theorem cover_remainingRaw139Frontier
   · apply hLeaves e
     exact List.mem_filter.mpr ⟨he, by simp [hs]⟩
 
+/-- A reusable parent-level Cover interface for downstream canonical
+    rosters: five source-accepted siblings are discharged internally, leaving
+    only the 118 listed residual Covers as premises. -/
+theorem cover_championResidual_after_five
+    (hLeaves : ∀ e ∈ remainingRaw139AfterFive,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    Cover (WeightedBound (proposedTM63Moves + 7)) championResidual :=
+  cover_of_championResidual_frontier
+    (fun e he => cover_remainingRaw139Frontier hLeaves e he)
+
 /-- The raw139 parent graft now leaves 77 non-champion canonical obligations
     and 118 explicit raw139 residual Covers. -/
 theorem canonical78_refined_obligation_count :
@@ -232,6 +242,7 @@ theorem exact_from_remainingRaw139AfterFive
 #print axioms removedFiveSibling_count
 #print axioms sourceAcceptedSiblingCover
 #print axioms cover_remainingRaw139Frontier
+#print axioms cover_championResidual_after_five
 #print axioms canonical78_refined_obligation_count
 #print axioms exact_from_remainingRaw139AfterFive
 
