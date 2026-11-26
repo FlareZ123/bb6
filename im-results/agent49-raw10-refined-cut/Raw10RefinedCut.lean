@@ -66,7 +66,7 @@ theorem candidate_bounds (B : Nat) (hB : 7376 ≤ B)
   change r ∈ accepted ++ [raw10Remainder[16]!, raw10Remainder[17]!] at hr
   rcases List.mem_append.mp hr with hs | ht
   · exact accepted_bounds B (by omega) r hs m hm
-  · simp only [List.mem_cons, List.mem_singleton] at ht
+  · simp only [List.mem_cons, List.not_mem_nil, or_false] at ht
     rcases ht with he | he
     · subst r
       exact liftBound hB m (bound16 m hm)
@@ -87,7 +87,7 @@ def parentCover (B : Nat) (hB : 7014 ≤ B) (cs : List RBox)
     rcases List.mem_append.mp hq with hs | ht
     · obtain ⟨w, hw, rfl⟩ := List.mem_map.mp hs
       exact liftBound hB m (b0_1lcSideWitnesses_safe w hw m hm)
-    · simp only [List.mem_cons, List.mem_singleton] at ht
+    · simp only [List.mem_cons, List.not_mem_nil, or_false] at ht
       rcases ht with rfl | rfl | rfl
       · exact hHeld m hm
       · exact (BB6.Agent13Raw10FixedLeaves.cycle_cover B).sound m hm
