@@ -2,6 +2,9 @@ import Canonical64Raw120Integrated
 import Raw106Data
 import Raw79Data
 import Raw67Data
+import Raw106ParentCover
+import Raw79ParentCover
+import Raw67ParentCover
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -34,6 +37,13 @@ theorem p67_parent_count64 :
 theorem p106_p79_distinct : sameTable p106 p79 = false := by decide
 theorem p106_p67_distinct : sameTable p106 p67 = false := by decide
 theorem p79_p67_distinct : sameTable p79 p67 = false := by decide
+
+#print axioms BB6.Agent10Raw106.parent_cover
+#print axioms BB6.Agent10Raw106.exact_weighted_threshold
+#print axioms BB6.Agent10Raw79.parent_cover
+#print axioms BB6.Agent10Raw79.exact_weighted_threshold
+#print axioms BB6.Agent10Raw67.parent_cover
+#print axioms BB6.Agent10Raw67.exact_weighted_threshold
 
 #print axioms p106_root
 #print axioms p79_root
