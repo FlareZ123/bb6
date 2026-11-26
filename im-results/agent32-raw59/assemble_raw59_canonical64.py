@@ -118,7 +118,7 @@ def main():
         "axioms": profiles,
     }
     (work / "raw59-canonical64-integration.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\\n"
+        json.dumps(report, indent=2, sort_keys=True) + "\n"
     )
     print("Raw59 integrated into the accepted Canonical64 frontier; standard axiom gate passed.", flush=True)
 
