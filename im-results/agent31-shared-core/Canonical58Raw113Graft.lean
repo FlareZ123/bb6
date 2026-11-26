@@ -14,11 +14,12 @@ open BB6.Agent31Canonical59Membership
 open BB6.Agent31Canonical59Raw113Membership
 open BB6ChampionArithmetic
 
-abbrev baseRoster := BB6.Agent32CanonicalSelectedIntegrated.rosterSelected
-noncomputable def roster58 := removeParents [p113] baseRoster
+noncomputable def roster58 :=
+  removeParents [p113] BB6.Agent32CanonicalSelectedIntegrated.rosterSelected
 
 theorem p113_count59 :
-    (baseRoster.filter (fun e => sameTable e.2 p113)).length = 1 :=
+    (BB6.Agent32CanonicalSelectedIntegrated.rosterSelected.filter
+      (fun e => sameTable e.2 p113)).length = 1 :=
   BB6.Agent31Canonical59Raw113Membership.p113_count59
 
 theorem count58 : roster58.length = 58 := by decide
@@ -47,7 +48,8 @@ theorem sound_integrated :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
         ∃ e ∈ roster58, TNFQuotientCompatible e.2 m := by
-  apply removeParents_sound (parents := [p113]) (roster := baseRoster)
+  apply removeParents_sound (parents := [p113])
+    (roster := BB6.Agent32CanonicalSelectedIntegrated.rosterSelected)
     BB6.Agent32CanonicalSelectedIntegrated.sound_integrated
     parents_root parents_cover
 
