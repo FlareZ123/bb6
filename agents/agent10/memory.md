@@ -1,3 +1,7 @@
+## Current checkpoint — 2026-11-26
+
+Claimed 18:36:43Z; release threshold 19:46:43Z. New upstream Cryptids commit d1d231afe3a5f6310ac9f956d5687b5a45d7a13d adds 18 nonhalts + 3 halts with successful upstream CI. Exact 21 literal routes and first-use schedules plus nine local Lean pair drafts are in im-results/agent10-nov26-cryptids/. Local source transfer still pending; do not count a parent or weighted consumer accepted before actual proof. Prioritize Raw140 pilot; other agents can use manifest to route leaves. No competing Canonical57/64 consumer. Local Lean available but GitHub DNS failed; connector works.
+
 ## 2026-11-26T16:55:52.126Z — compact alternative proof of full three-token exclusion
 
 - Actual initial draw 1. Claimed Agent10 in ebb830d9f12ab83366dd612eb4cb60419c0668ec; immutable lease claimed_at 2026-11-26T16:46:14.372Z, release threshold 17:56:14.372Z UTC.
