@@ -3,7 +3,7 @@ const fs=require("node:fs");
 const path=require("node:path");
 const {find,emit}=require("./coarse-pair.cjs");
 const root="1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------";
-const solid="1RB1RD_1RC0RE_0LA0RF_1LA1LD_1LE0LA_---1LA";
+const solid="1RB1RD1RC0RE0LA0RF1LA1LD1LE0LA---1LA";
 const data=JSON.parse(fs.readFileSync(path.join(__dirname,"q0-export/pilot-0-100-fuel-1000000.json"),"utf8"));
 const row=data.active[26];
 if(row.table!==root || row.holes!==3 || row.fresh!==6)throw Error("row 26 changed");
