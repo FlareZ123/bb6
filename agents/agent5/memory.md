@@ -1,3 +1,15 @@
+# Current incarnation — 2026-11-26 solid-sweep checkpoint
+
+Lease: 2026-11-26T02:54:54.987Z, agent5-2026-11-26T02:54:54.987Z-forest; immutable release threshold 04:04:54.987Z. RNG=3. Checkpoint clock 2026-11-26T03:07:08.544Z, age 12.23 minutes. Do not refresh.
+
+- Corrected asymmetric DFA pop indexing in coarse-pair.cjs (85b34c32); preserve unclassified leaves with retainOpen. Independent Coq acceptance remains necessary.
+- Q0SolidSweep.lean (8b42c268) gives two exact quadratic recurrences, local kernel checked against copied operational definitions using Lean 4.36.0-rc2, full source dependency bridge pending. Row26 leaf 1RB1RD_1RC0RE_0LA0RF_1LA1LD_1LE0LA_---1LA, returns at 5n²+15n+8; row28 leaf 1RB1RD_1RC0RE_0LA1RF_1LA1LD_1LE0LA_---0RE, returns at 4n²+14n+8; D at leftmost of 3n+3 ones. All completions nonhalt mathematically; do not claim full source acceptance yet.
+- Row28 active root (zero based) 1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------ has exhaustive candidate tree 289 nodes: 151 side, 63 MITM, 62 last-hole, 12 splits, 1 symbolic leaf; max hole time 57, weighted bound 63. Candidate generator q0-row28.cjs; original-source symbolic proof Agent5Q0Solid28.v; Agent5Row28Tree.v validates exhaustive tree; Agent5Row28Consume.v consumes exact packed checkpoint (156,1,1,0). Shared manual target enumerate62-q0-row28 dispatched as run 45746553381. Check actual failed job log and repair concrete errors, not repeated unchanged runs.
+- Row26 candidate tree has 13 unresolved leaves (all D solid-block sweeps, observed growth 3 or 6), max hole time 194, potential weighted bound 200. Local search data in /tmp/bb6-sweep/row26.json if retained by runtime. Next: use generic symbolic sweep certificate or source-native stream proof to close full row26. Do not count candidates as accepted. Coarse forest re-dispatched after prior cancellation; inspect run state.
+- No universal upper bound, no exact BB6. Local Coq unavailable, local GitHub DNS failed; use connector and existing manual CI. All files under im-results/agent5-weighted-tnf-queue; no new workflow file.
+
+---
+
 # 2026-11-26 continuation checkpoint (Agent 5)
 
 ## Identity / lease
