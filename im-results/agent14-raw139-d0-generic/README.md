@@ -17,7 +17,7 @@ The Canonical64 wrapper still needs a source-accepted integration run combining:
 - Agent6's 43-sibling consumer artifact from a fresh run pinned to the repaired core; and
 - Agent3's E0=0RA integrated artifact from run **45797137615** (successful).
 
-The earlier run **45793950237** failed during `ChampionResidualFrontier.lean` compilation: the core source did not import `CostRecurrence` (so `proposedTM63Moves` was unresolved) and used unavailable `le_rfl`. Agent3 repaired those two source issues in commit `b7a7f7a36c8d41d7ffcfb50353687dc2366c34c3`. A fresh existing-workflow run **45805343184** was queued at 10:52:24Z, pinned to that exact source SHA, with the accepted C1 batch run 45746968139. It must pass and upload both the core and 43-sibling artifacts before the wrapper is dispatched.
+The earlier run **45793950237** failed during `ChampionResidualFrontier.lean` compilation: the core source did not import `CostRecurrence` (so `proposedTM63Moves` was unresolved) and used unavailable `le_rfl`. Agent3's first repair added the defining module import but missed that `proposedTM63Moves` lives in namespace `BB6ChampionArithmetic`; the identifier also requires `open BB6ChampionArithmetic`. The first retry **45805343184** was cancelled before compilation. The complete repair is in commit `106c489391efc8bbef8fbe1d3d56f46e9df945b1`: it adds `import CostRecurrence`, opens `BB6ChampionArithmetic`, and replaces unavailable `le_rfl` with `Nat.le_refl _`. A fresh existing-workflow run **45806157593** was queued at 10:57:49Z, pinned to that exact source SHA, with the accepted C1 batch run 45746968139. It must pass and upload both the core and 43-sibling artifacts before the wrapper is dispatched.
 
 After run 45805343184 passes, dispatch the existing `agent3-raw120-complete.yml` workflow in `integrate-65` mode with `raw139_subcover_run_id=45805343184` and `raw139_e0_integrated_run_id=45797137615`. Do not use failed predecessor runs 45790610736 or 45793950237.
 
@@ -30,14 +30,14 @@ The finite crosswalk module, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canon
 
 ## Source and verification discipline
 
-The previous Agent14 adapter run **45777525729** failed at the core compile because its pinned source imported Mathlib, which the bare CI Lean toolchain does not install. Agent3 has since replaced that dependency with core finite-case helpers. The Agent6 core plus 43-sibling consumer run **45793950237** failed during core compilation. Its first actionable errors were the missing `CostRecurrence` import and unavailable `le_rfl`; the resulting unresolved score identifier caused downstream diagnostics. Agent3 applied the minimal import/refl repair in commit `b7a7f7a36c8d41d7ffcfb50353687dc2366c34c3`. Fresh pinned validation run **45805343184** is in progress; no acceptance is claimed until it uploads both required artifacts and its final source/axiom audit succeeds.
+The previous Agent14 adapter run **45777525729** failed at the core compile because its pinned source imported Mathlib, which the bare CI Lean toolchain does not install. Agent3 has since replaced that dependency with core finite-case helpers. The Agent6 core plus 43-sibling consumer run **45793950237** failed during core compilation. Its first actionable errors were the missing `CostRecurrence` import and unavailable `le_rfl`; the resulting unresolved score identifier caused downstream diagnostics. Agent3 applied the complete import/namespace/refl repair in commit `106c489391efc8bbef8fbe1d3d56f46e9df945b1`. The incomplete run 45805343184 was cancelled before compilation; fresh pinned validation run **45806157593** is queued. No acceptance is claimed until it uploads both required artifacts and its final source/axiom audit succeeds.
 
 The current invocation's local shell/Lean bootstrap returned a tool-level `ClientError` before producing command output. Source acceptance is therefore being done through the existing manual CI workflows; no local compilation is claimed here.
 
 ## Next actions
 
-1. Wait for Agent6 run 45805343184; inspect failed jobs only if it fails.
-2. If it passes, dispatch the Canonical64 `integrate-65` workflow with `raw139_subcover_run_id=45805343184` and `raw139_e0_integrated_run_id=45797137615`.
+1. Wait for Agent6 run 45806157593; inspect failed jobs only if it fails.
+2. If it passes, dispatch the Canonical64 `integrate-65` workflow with `raw139_subcover_run_id=45806157593` and `raw139_e0_integrated_run_id=45797137615`.
 3. Compile and inspect `Canonical64Raw139NormalizedCrosswalk.lean`; use the result to decide whether the 66 normalized residual Covers can discharge any of the 79 active leaves.
 4. Pursue E0=0LC only if its active-list membership gives direct global leverage; preserve existing search outputs and rebuild only the missing code2/code23 shards.
 5. Keep `results/` reserved for source-accepted, academically presentable mathematical results. No exact BB(6) value or universal upper bound has been established.
