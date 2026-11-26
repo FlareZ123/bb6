@@ -75,11 +75,13 @@ T_{4v}=(223666+1146936v,;22359+114660v),
 ]
 whose right coordinate is odd and whose sum is (1) modulo 4. The source-certified "blank_no_odd_sum_one" excludes it. This is exactly the sublift (z=12+64v), formalized as a source-composition draft in "U5Q0W7Z4U3Mod16.lean". That file is not locally compiled, original-source CI checked, or axiom-audited.
 
-The other S_r branches remain open. For (r=2\pmod4), the sum is 0 modulo 8 and the complete even/even parent fan must be used. For (r=1\pmod4), the next forced target has even right coordinate and sum (1+7r) modulo 8, requiring a further residue split. For (r=3\pmod4), the next target likewise has even right coordinate, with sum 2 or 6 modulo 8, so further even-right inverses are available but not yet closed. This lift is only one of the sixteen lifts of (w\equiv7\pmod8).
+The remaining S_r branches are now partitioned more finely. For (r=0\\pmod4), the next even-right inverse gives an odd-right sum-one target, closing the sublift (z=12+64v) in the uncompiled draft U5Q0W7Z4U3Mod16.lean. A second sublift, (r=3\\pmod{16}) or equivalently (z=60+256t), is closed by four successive even-right inverses after R_r; the final target again has odd right coordinate and sum (1\\pmod4). Its uncompiled draft is U5Q0W7Z4R3Mod16.lean.
+
+For (r=2\\pmod4), S_r has sum 0 modulo 8 and the complete even/even parent fan is still required. For (r=1\\pmod4), the next forced target has even right coordinate and sum (1+7r) modulo 8, so a further residue split is required. For (r=3\\pmod4) outside (r=3\\pmod{16}), the next target has even right coordinate and sum 2 or 6 modulo 8; further even-right inverses are available but have not yet been closed. Both new source-composition files are uncompiled and unaudited. This lift is only one of the sixteen lifts of (w\\equiv7\\pmod8).
 
 ## Next mathematical task
 
-Close the complete high-parent fan for (z\\equiv2\\pmod4), especially the (q\\ge2) branches when (W) has large 2-adic valuation. On the (w\\equiv7\\pmod{128}) lift, continue only the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan, while (r\\equiv1,3\\pmod4) need further even-right inverse analysis. The (r\\equiv0\\pmod4) sublift (z=12+64v) is already excluded by the chain above. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
+Close the complete high-parent fan for (z\\equiv2\\pmod4), especially the (q\\ge2) branches when (W) has large 2-adic valuation. On the (w\\equiv7\\pmod{128}) lift, continue only the remaining (S_r) branches: (r\\equiv2\\pmod4) needs the even/even parent fan; (r\\equiv1\\pmod4) needs a residue split after the next inverse; and (r\\equiv3\\pmod4) needs further inverses except for the already-excluded (r\\equiv3\\pmod{16}) sublift. The (r\\equiv0\\pmod4) sublift is also excluded. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis. The two analyses should be combined only after every parent case is covered. No quotient census or reachability claim is substituted for this source analysis.
 
 
 ## Infinite subfamily closed by the first parent fan
@@ -201,7 +203,7 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 
 | w (mod 128) | z (mod 16) | first-parent sector |
 |---:|---:|---|
-| 7 | 12 | z divisible by 4; z=12 (mod 64) sublift excluded |
+| 7 | 12 | z divisible by 4; z=12 (mod 64) and z=60 (mod 256) sublifts excluded |
 | 15 | 7 | z odd |
 | 23 | 2 | z=2 mod 4 |
 | 31 | 13 | z odd; excluded |
