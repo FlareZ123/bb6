@@ -4885,7 +4885,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: ${{ fromJSON(inputs.raw124_branch == '0RA' && '["0RE","1RE","0LE","1LC"]' || format('["{0}"]', inputs.raw124_branch)) }}
+        branch: ${{ fromJSON(format('["{0}"]', inputs.raw124_branch)) }}
     env:
       CHILD: ${{ matrix.branch }}
     steps:
@@ -4907,8 +4907,9 @@ jobs:
           G=/tmp/a7-raw124-generated
           W=/tmp/a7-raw124-closure
           STEM="Raw124ZeroLF${CHILD}"
+          if [[ "$CHILD" == 0RA || "$CHILD" == 1RB ]]; then STEM="Agent7$STEM"; fi
           python "$D/generate.py" "$G" "$CHILD"
-          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; 1LE) B=356;; *) exit 2;; esac
+          case "$CHILD" in 0RE) B=597;; 1RE) B=271;; 0LE) B=2455;; 1LC) B=332;; 1RA) B=2931;; 1LB) B=688;; 1LE) B=356;; 0RA) B=430;; 1RB) B=1088;; *) exit 2;; esac
           overrides=()
           while IFS= read -r f; do
             mod="$(basename "$f" .lean)"
