@@ -100,7 +100,13 @@ def compile_champion_closure(work, imports):
         "--override", "M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean",
     ]
     with log_path.open("w") as stream:
-        subprocess.run(cmd, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, check=True, text=True)
+        try:
+            subprocess.run(cmd, cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, check=True, text=True)
+        except subprocess.CalledProcessError:
+            lines = log_path.read_text().splitlines()
+            print("=== champion source-closure failure log (last 180 lines) ===", file=sys.stderr, flush=True)
+            print("\\n".join(lines[-180:]), file=sys.stderr, flush=True)
+            raise
     print(log_path.read_text(), flush=True)
     return build, log_path, manifest
 
