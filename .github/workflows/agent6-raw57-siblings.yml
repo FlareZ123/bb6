@@ -107,7 +107,7 @@ jobs:
           if [[ "$CHILD" == parent-all ]]; then WORKDIR=/tmp/a1-raw57-parent-all; fi
           if [[ "$CHILD" == raw56-root-consumer ]]; then
             WORKDIR=/tmp/a1-raw56-root-consumer
-            PRECOMPILED="$GITHUB_WORKSPACE/raw56-e1-0re-source-accepted"
+            PRECOMPILED="$GITHUB_WORKSPACE/raw56-e1-0re-source-accepted/a1-raw56-e1-0re"
             python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 \
               --precompiled-manifest "$PRECOMPILED/manifest.json" --precompiled-dir "$PRECOMPILED" \
               --manifest "$WORKDIR/manifest.json" --label raw56-root-frontier \
