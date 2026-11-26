@@ -92,7 +92,7 @@ def download(pin, work):
                 assert not dest.exists(), (aid, i.filename)
                 with z.open(i) as src, dest.open("wb") as dst:
                     shutil.copyfileobj(src, dst)
-            elif path.name == "manifest.json":
+            elif path.suffix == ".json":
                 dest = work / "metadata" / str(aid) / Path(*path.parts)
                 dest.parent.mkdir(parents=True, exist_ok=True)
                 with z.open(i) as src, dest.open("wb") as dst:

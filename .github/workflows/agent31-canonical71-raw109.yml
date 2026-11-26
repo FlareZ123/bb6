@@ -24,6 +24,11 @@ on:
           - sharp-fourhole
         default: canonical74
         required: true
+      canonical59_run_id:
+        description: "Successful Canonical59 five-parent integration run ID (required for the 58-residual target)"
+        type: string
+        required: false
+        default: ""
       canonical72_run_id:
         description: "Successful canonical72 run ID (required only for target=canonical70)"
         type: string
@@ -1148,9 +1153,10 @@ jobs:
       - name: Audit six accepted parents and compile the 58-residual consumer
         env:
           GH_TOKEN: ${{ github.token }}
+          CANONICAL59_RUN_ID: ${{ inputs.canonical59_run_id }}
         run: |
           set -euo pipefail
-          python im-results/agent31-shared-core/assemble_canonical58_six_parent.py --work /tmp/a31-canonical58 2>&1 | tee /tmp/a31-canonical58.log
+          python im-results/agent31-shared-core/assemble_canonical58_six_parent.py --work /tmp/a31-canonical58 --canonical59-run-id "$CANONICAL59_RUN_ID" 2>&1 | tee /tmp/a31-canonical58.log
           test -s /tmp/a31-canonical58/canonical58-six-parent-integration.json
           cat /tmp/a31-canonical58/canonical58-six-parent-integration.json
       - uses: actions/upload-artifact@v4
@@ -1158,17 +1164,12 @@ jobs:
         with:
           name: canonical58-six-parent-integrated
           path: |
-            /tmp/a31-canonical58/linked
+            /tmp/a31-canonical58/linked58
             /tmp/a31-canonical58/canonical58-six-parent-integration.json
-            /tmp/a31-canonical58/canonical64-base-precompiled-manifest.json
-            /tmp/a31-canonical58/canonical64-base-manifest.log
-            /tmp/a31-canonical58/raw59-rebuilt-manifest.json
-            /tmp/a31-canonical58/raw59-rebuild.log
-            /tmp/a31-canonical58/base-reachable-link-audit.json
-            /tmp/a31-canonical58/reachable-link-audit.json
-            /tmp/a31-canonical58/champion-closure-manifest.json
             /tmp/a31-canonical58/membership-preflight.log
             /tmp/a31-canonical58/canonical58-six-parent.log
+            /tmp/a31-canonical58/reachable-link-audit.json
+            /tmp/a31-canonical58/metadata
             /tmp/a31-canonical58.log
           if-no-files-found: warn
           compression-level: 1
