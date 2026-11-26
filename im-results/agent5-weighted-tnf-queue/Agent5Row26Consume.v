@@ -5,9 +5,9 @@ Import ListNotations TNF_Node.
 Open Scope nat_scope.
 
 Definition row26_roster : list TM := [row26_parent].
-Lemma row26_roster_safe bound : 200 <= bound -> Forall (source_table_safe bound) row26_roster.
+Lemma row26_roster_safe bound : row26_bound <= bound -> Forall (source_table_safe bound) row26_roster.
 Proof.
-  intro Hb. eapply coarse_roster_mono with (lo:=200); [exact Hb|].
+  intro Hb. eapply coarse_roster_mono with (lo:=row26_bound); [exact Hb|].
   unfold row26_roster. constructor; [exact row26_safe|constructor].
 Qed.
 Definition row26_q0 := decode_queue Agent8PackedChunk.chunk_data.
