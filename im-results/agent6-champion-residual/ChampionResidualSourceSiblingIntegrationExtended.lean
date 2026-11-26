@@ -113,25 +113,22 @@ theorem removedNineSibling_count :
 theorem additionalSourceAcceptedSiblingCover (p : PartialMachine)
     (hp : isAdditionalSourceAcceptedSibling p = true) :
     Cover (WeightedBound (proposedTM63Moves + 7)) p := by
-  simp [isAdditionalSourceAcceptedSibling, isSourceAcceptedSibling] at hp
-  rcases hp with h0 | h1 | h2 | h3 | h4 | h5 | h6 | h7 | h8
-  · exact sourceAcceptedSiblingCover p h0
-  · exact sourceAcceptedSiblingCover p h1
-  · exact sourceAcceptedSiblingCover p h2
-  · exact sourceAcceptedSiblingCover p h3
-  · exact sourceAcceptedSiblingCover p h4
-  · have heq : p = BB6.Agent41F1ZeroRB.parent := sameTable_sound h5
-    subst p
-    exact cover_zeroRB
-  · have heq : p = BB6.Agent14F1OneLA.parent := sameTable_sound h6
-    subst p
-    exact cover_zeroLA
-  · have heq : p = BB6.Agent14F1OneLB.parent := sameTable_sound h7
-    subst p
-    exact cover_oneLB
-  · have heq : p = BB6.Agent14F1OneRD.parent := sameTable_sound h8
-    subst p
-    exact cover_oneRD
+  by_cases hFive : isSourceAcceptedSibling p = true
+  · exact sourceAcceptedSiblingCover p hFive
+  · simp [isAdditionalSourceAcceptedSibling, hFive] at hp
+    rcases hp with h0 | h1 | h2 | h3
+    · have heq : p = BB6.Agent41F1ZeroRB.parent := sameTable_sound h0
+      subst p
+      exact cover_zeroRB
+    · have heq : p = BB6.Agent14F1OneLA.parent := sameTable_sound h1
+      subst p
+      exact cover_zeroLA
+    · have heq : p = BB6.Agent14F1OneLB.parent := sameTable_sound h2
+      subst p
+      exact cover_oneLB
+    · have heq : p = BB6.Agent14F1OneRD.parent := sameTable_sound h3
+      subst p
+      exact cover_oneRD
 
 theorem cover_remainingF1ZeroRC
     (hLeaves : ∀ e ∈ remainingRaw139AfterTwentySix,
