@@ -73,7 +73,7 @@ def visit(t,p,cut,name,expr):
 n,s,children=tree[1:]
 manifest.append([mod+'Base',[]]);imports=[]
 for i,k in enumerate(children):
-    q=parent[:s]+[move(i)]+p[s+1:]
+    q=parent[:s]+[move(i)]+parent[s+1:]
     imports.append(visit(k,q,max(cut,i%6+1),str(i),f'refine p {slot(s)} (some {mv(i)})'))
 flush()
 assert next(it,None) is None
