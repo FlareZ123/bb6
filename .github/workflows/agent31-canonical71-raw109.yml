@@ -1832,6 +1832,12 @@ jobs:
           assert report["unique_current_ancestor_match_count"] == 56
           assert report["unmatched_or_ambiguous_count"] == 0
           assert report["unique_leaf_completion_count_global"] == 1400
+          manifest = report["current_roster_manifest"]
+          assert len(manifest) == 58
+          assert [x["raw_residual_index"] for x in manifest] == report["current_roster_raw_indices"]
+          assert len({x["raw_residual_index"] for x in manifest}) == 58
+          assert all(len(x["table_rle"].replace("_", "")) == 36 for x in manifest)
+          assert 59 in report["current_roster_raw_indices"] and 118 not in report["current_roster_raw_indices"]
           assert [g["raw_residual_index"] for g in report["group_summaries"]] == [8, 9, 10, 13, 23, 134, 139, 140]
           assert all(g["distinct_leaf_completions_all_kinds"] == 25 * g["row_count"] for g in report["group_summaries"])
           PY
