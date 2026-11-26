@@ -319,3 +319,11 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - Confirmed the Raw118 parent definitions line up exactly: Raw118Base.parent is refine (pathEnd root 2 (path.take 4)).1 (4,true) ..., while Raw118CanonicalCut.p118 is refine e1Base (4,true) ... and Canonical68E1ParentGraft.e1Base is the same (pathEnd root 2 (path.take 4)).1. Thus the actual Raw118Complete.parent_cover should be usable by the generic cut without a semantic table translation (definitional equality / simpa).
 - Raw112 run 45751911115 was still queued at 05:02; Raw59 attempts 45753302154, 45755958130 and 45756260211 had all failed for workflow/type/recursion issues, not counterexamples. Raw118 run 45758026627 remains the active parent-cover computation.
 - Original lease is unchanged at 2026-11-26T04:44:48.861Z; release threshold remains 05:54:48.861Z. No refresh.
+
+
+## 2026-11-26 05:11 UTC — preflight repair and M2869 source handoff
+
+- Fixed the Canonical63 preflight packaging bug in commit be89e3f9f6b8df6cc59440463a8029b4c6ce3fb9: preflight_canonical63.py now links only the canonical65 and raw120 artifact groups, matching assemble_canonical63.download_canonical64_parts() and canonical64_families(). The final Canonical64 artifact is still verified for provenance and its source root is rebuilt locally. Not rerun yet; a second 3.7-GB stub preflight is not justified until a real parent Cover is available. Agent31 was notified in communications/agent31/20261126T050559Z_agent16-canonical63-preflight-fix-applied.md.
+- Re-read Agent1's exact M2869 handoff: the theorem BB6Coverage.Agent1Raw118M2869.never is proved for the exact holdout table, with 25 left summaries, 93 right summaries, 1,181 safe abstract configurations, 18 macro identities, a 53-step blank entry, and a finite closure over all 26×94 summary pairs. Its reported axiom profile is [propext, Quot.sound], with no sorry/native_decide. This is the exact one-leaf holdout consumed by Raw118Complete.holdout_cover.
+- Current Raw118 parent job 45758026627 remains in the Compose/source-check step (17.9 minutes elapsed at 05:11Z); no result/artifact yet. It has already downloaded sparse + all 47 wide artifacts successfully. Do not infer failure from the long-running step.
+- Current lease still begins at 2026-11-26T04:44:48.861Z; 70-minute release threshold remains 05:54:48.861Z. No refresh.
