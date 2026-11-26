@@ -1,0 +1,83 @@
+# Entry 115: finite complement crosswalk
+
+**Status:** intermediate syntactic table crosswalk. This is not a Cover theorem and does not close the Raw11 parent or BB(6).
+
+Reproduce the exact checks from the repository root with:
+
+```sh
+node im-results/agent5-weighted-tnf-queue/entry115-complement-crosswalk.cjs
+```
+
+The script reads the retained Raw11 first-D frontier, the 142-entry Raw11 extra roster, the exact q0 checkpoint export, the 94 q0 open-automata tables, and the q32 queue/side rows from `Q32SideLeafRoster.lean`. It checks table containment and compatibility directly across all 12 transition slots.
+
+## Exact parent
+
+Frontier entry 115 is:
+
+```
+1RB1RD_1RC---_0LA---_------_------_------
+```
+
+It has eight unspecified transition slots. The crosswalk identifies the following finite subfamilies inside this cylinder.
+
+| Family | Rows under entry 115 | D0 distribution | Pairwise compatible pairs |
+|---|---:|---|---:|
+| q0 checkpoint | 77 | 60 × `1LA`; 17 other values, one each | 0 |
+| Raw11 extra parents | 58 (indices 84–141) | 58 × `1LA` | 0 |
+| q0 open-automata leaves | 94 | 94 × `1LA` | 0 |
+| q32 side leaves | 30 of 32 | 23 × `1LA`; one each of `1RA, 0RB, 1RB, 0RC, 1RC, 0RD, 1RD` | 0 |
+
+The 77 q0 checkpoint rows and 58 Raw11 extra parents have **zero compatible cross-family pairs**. The 94 q0 automata leaves also have zero compatible pairs with the 58 Raw11 extras and the 30 q32 side leaves. The q0 automata leaves refine nine q0 checkpoint parents (the existing Agent24 crosswalk records the exact parent counts); they are not additional disjoint parents alongside those nine rows.
+
+## q32 side-leaf reconciliation
+
+The 30 q32 side leaves under entry 115 divide exactly as follows:
+
+1. **18** refine Raw11 Extra parent **84**. These are side leaves already contained in that one Raw11 parent cylinder; they add no new parent-level coverage if Extra84's Cover is accepted.
+2. **8** are exact table matches to q0 checkpoint rows (q32 side indices 48, 53, 55, 57, 59, 61, 63, 65).
+3. **4** are independent of every q0 checkpoint row, every q0 automata leaf, and all 58 Raw11 extra parents:
+
+| q32 side index | Exact partial table |
+|---:|---|
+| 38 | `1RB1RD_1RC---_0LA---_1LA0RB_------_------` |
+| 40 | `1RB1RD_1RC---_0LA---_1LA1RB_------_------` |
+| 42 | `1RB1RD_1RC---_0LA---_1LA0RC_------_------` |
+| 44 | `1RB1RD_1RC---_0LA---_1LA1RC_------_------` |
+
+All four independent rows still have D0=`1LA`. The two remaining q32 side leaves lie under frontier entry 114, not entry 115.
+
+## D0 complement
+
+Among the 77 q0 checkpoint rows under entry 115, the six defined D0 values absent from the checkpoint roster are:
+
+```
+0LA, 0RA, 0LF, 0RF, 1LF, 1RF
+```
+
+The 17 other values present in the q0 roster are:
+
+```
+1RA, 0LB, 0RB, 1LB, 1RB, 0LC, 0RC, 1LC, 1RC,
+0LD, 0RD, 1LD, 1RD, 0LE, 0RE, 1LE, 1RE
+```
+
+The q32 side leaves contain seven of those 17 non-`1LA` values, but each of those seven is already an exact q0 checkpoint row. Thus the q32 side roster does not add a new D0 value to the q0 checkpoint's 18-value support.
+
+## What this does and does not establish
+
+Established by the finite table checks:
+
+- The listed subfamilies refine entry 115 exactly.
+- The q0 checkpoint rows, Raw11 extra parents, q0 automata leaves, and q32 side leaves are internally pairwise disjoint within their respective rosters.
+- The q0 checkpoint / Raw11 extra cross-family intersection is empty.
+- The 18 q32 side / Raw11 extra intersections are all contained in Extra84; the eight q32 side / q0 checkpoint intersections are exact table matches; four q32 side rows are independent of both families.
+
+Not established:
+
+- That any of these finite rosters exhausts entry 115.
+- That q0 checkpoint rows or q32 side rows have accepted parent Covers.
+- That q0 automata leaves close their nine checkpoint parents.
+- That the six missing D0 values are already discharged elsewhere.
+- That entry 115, the Raw11 parent, or BB(6) is closed.
+
+**Useful next handoff:** Agent24 can source-check the four independent q32 rows (38, 40, 42, 44) and decide whether to integrate them into the q32 parent proof. Agent47 can use the exact containment map when reconciling Extra84 with the q32 side roster. Do not count the 18 contained leaves twice.
