@@ -821,6 +821,7 @@ jobs:
             --provenance-input "$root/build_lb.py" --provenance-input "$root/generate_long_trace.py" \
             --provenance-input "$root/generate_le_trace.py" \
             --provenance-input "$root/kid_plan.py" \
+            --provenance-input "$root/fast_kid.py" \
             --provenance-input "$root/shard_groups.json" \
             --provenance-input im-results/agent10-tnf-multipump/chunk_checks.py \
             --provenance-input im-results/agent13-coverage/unpack.py \

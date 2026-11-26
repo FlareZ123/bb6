@@ -50,13 +50,25 @@ def isolate(pre,root=ROOT):
   assert IMPORT.findall(s)==[pre+"Base"]
   p.write_text("".join("import "+m+"\n" for m in sorted(needed))+s)
   print(p.name,len(needed),"witness imports")
+ return providers
 def prepare(g,out):
  pre=prefix(g)
  out.mkdir(parents=True,exist_ok=False)
  # The original generator and common generators have already run.
- isolate(pre)
- run("im-results/agent10-tnf-multipump/chunk_checks.py",ROOT,pre,"--limit",180)
+ providers=isolate(pre)
  mods=[f"{pre}Kid{i:02}" for i in PLAN[g]]
+ if g in {"la0-a","lb0-b","lb0-c"}:
+  from fast_kid import modularize
+  sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
+  from chunk_checks import partition
+  for m in mods:
+   p=ROOT/(m+".lean")
+   s,n=partition(p.read_text(),49)
+   p.write_text(s)
+   units=modularize(p,"0L"+g[1].upper(),providers)
+   print(m,n,"subproofs in",units,"independent modules",flush=True)
+ else:
+  run("im-results/agent10-tnf-multipump/chunk_checks.py",ROOT,pre,"--limit",180)
  for i,m in zip(PLAN[g],mods):
   with (ROOT/(m+".lean")).open("a") as f:
    f.write(f"\n#print axioms BB6.Agent10{pre}.check{i:02}\n")
