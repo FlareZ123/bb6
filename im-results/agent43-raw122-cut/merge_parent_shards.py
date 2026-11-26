@@ -9,7 +9,7 @@ import subprocess
 import sys
 
 STANDARD_PREFIXES = (
-    "Lean", "Init", "Std", "Batteries", "Mathlib", "Cryptids", "BusyBeaver",
+    "Lean", "Init", "Std", "Lake", "Batteries", "Mathlib", "Cryptids", "BusyBeaver",
 )
 FIELDS = (
     "module", "source_path", "source_kind", "source_sha256",
@@ -93,14 +93,21 @@ for manifest_path in manifest_paths:
         if not any((x.get("module"), x.get("source_sha256")) == key for x in root_entries):
             root_entries.append(root)
     for item in shard.get("provenance_inputs", []):
-        key = (item.get("path"), item.get("sha256"))
-        provenance[key] = item
+        path = item.get("path")
+        digest = item.get("sha256")
+        conflicts = [x for x in provenance.values() if x.get("path") == path and x.get("sha256") != digest]
+        if conflicts:
+            raise RuntimeError(f"conflicting provenance hash for {path}")
+        provenance[(path, digest)] = item
 
     added = 0
     for item in shard.get("modules", []):
         module = item["module"]
         if module in modules:
             compare(modules[module], item, module)
+            duplicate = shard_dir / Path(item["olean_path"])
+            if duplicate.is_file() and sha(duplicate) != item["olean_sha256"]:
+                raise RuntimeError(f"duplicate shard object hash mismatch for {module}")
             continue
         relative = Path(item["olean_path"])
         if relative.is_absolute() or ".." in relative.parts:
