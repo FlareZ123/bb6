@@ -81,6 +81,7 @@ on:
           - sourceLanePath
           - sourceLaneM8Smoke
           - sourceLaneM8
+          - sourceRankClock
           - sourceDyadicAncestry
           - sourceHighSigned
           - sourceBoundedShadow
@@ -320,6 +321,9 @@ jobs:
               if [ "$M16_TARGET" = sourceLaneM8Smoke ]; then returns=1000; fi
               python3 im-results/agent12-c-high-shadow/gen_lane_m8.py --returns "$returns"
               target=im-results/agent12-c-high-shadow/LaneM8Generated.lean
+              ;;
+            sourceRankClock)
+              target=im-results/agent12-c-high-shadow/RankClock.lean
               ;;
             sourceBitEventCutoff)
               jobs=2
