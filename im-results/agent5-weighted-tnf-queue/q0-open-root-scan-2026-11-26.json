@@ -1,0 +1,628 @@
+{
+  "source": "q0-export/pilot-0-100-fuel-1000000.json",
+  "indices": [
+    26,
+    28,
+    33,
+    34,
+    39,
+    44,
+    46,
+    48,
+    49,
+    51
+  ],
+  "results": [
+    {
+      "index": 26,
+      "table": "1RB1RD_1RC0RE_0LA0RF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6,
+      "status": "tree",
+      "search_n": 361,
+      "elapsed_ms": 1061,
+      "coqTree": null,
+      "stats": {
+        "nodes": 361,
+        "side": 159,
+        "mitm": 73,
+        "last": 101,
+        "split": 15,
+        "open": 13,
+        "bad": 0
+      },
+      "maxHalt": 194,
+      "bound": 200,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LE0LA---1LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RA0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LB0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RB0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LC0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RC0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LC0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LD0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LD0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LE0LA---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RA0LA---0RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LD0LA---0RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LE0LA---0RE",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 28,
+      "table": "1RB1RD_1RC0RE_0LA1RF_1LA1LD_---0LA_------",
+      "holes": 3,
+      "fresh": 6,
+      "status": "tree",
+      "search_n": 289,
+      "elapsed_ms": 92,
+      "coqTree": null,
+      "stats": {
+        "nodes": 289,
+        "side": 151,
+        "mitm": 63,
+        "last": 62,
+        "split": 12,
+        "open": 1,
+        "bad": 0
+      },
+      "maxHalt": 57,
+      "bound": 63,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1LE0LA---0RE",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 33,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------",
+      "holes": 4,
+      "fresh": 5,
+      "status": "tree",
+      "search_n": 985,
+      "elapsed_ms": 68,
+      "coqTree": null,
+      "stats": {
+        "nodes": 985,
+        "side": 748,
+        "mitm": 55,
+        "last": 140,
+        "split": 41,
+        "open": 1,
+        "bad": 0
+      },
+      "maxHalt": 156,
+      "bound": 162,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA---1LA1LD0LF0RB1LF0LC",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 34,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LB_------",
+      "holes": 4,
+      "fresh": 5,
+      "status": "tree",
+      "search_n": 1777,
+      "elapsed_ms": 303,
+      "coqTree": null,
+      "stats": {
+        "nodes": 1777,
+        "side": 939,
+        "mitm": 324,
+        "last": 436,
+        "split": 74,
+        "open": 4,
+        "bad": 0
+      },
+      "maxHalt": 75,
+      "bound": 81,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RA1LB---1RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1RB1LB---0LB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1RC1LB---0RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1RD1LB---0RB",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 39,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RC_------",
+      "holes": 4,
+      "fresh": 5,
+      "status": "tree",
+      "search_n": 1873,
+      "elapsed_ms": 667,
+      "coqTree": null,
+      "stats": {
+        "nodes": 1873,
+        "side": 925,
+        "mitm": 448,
+        "last": 406,
+        "split": 78,
+        "open": 16,
+        "bad": 0
+      },
+      "maxHalt": 138,
+      "bound": 144,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD---1RC---1RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RA1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LB1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RB1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LC1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RC1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LC1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LD1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1LD1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0LE1RC---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RA1RC---0LE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RA1RC---1RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD---1RC0RA0LF",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1RB1RC---0LB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD---1RC---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD0RA1RC---1RE",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 44,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LE_------",
+      "holes": 4,
+      "fresh": 5,
+      "status": "tree",
+      "search_n": 2041,
+      "elapsed_ms": 240,
+      "coqTree": null,
+      "stats": {
+        "nodes": 2041,
+        "side": 1363,
+        "mitm": 112,
+        "last": 476,
+        "split": 85,
+        "open": 5,
+        "bad": 0
+      },
+      "maxHalt": 84,
+      "bound": 90,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RB0LE---1RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD0RB0LE---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD1RB0LE---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD0RC0LE---0RD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1LC0LE---0RC",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 46,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1LE_------",
+      "holes": 4,
+      "fresh": 5,
+      "status": "tree",
+      "search_n": 2017,
+      "elapsed_ms": 110,
+      "coqTree": null,
+      "stats": {
+        "nodes": 2017,
+        "side": 1321,
+        "mitm": 153,
+        "last": 458,
+        "split": 84,
+        "open": 1,
+        "bad": 0
+      },
+      "maxHalt": 58,
+      "bound": 64,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA1RF1LA1LD1RC1LE---0RB",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 48,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0LF_------",
+      "holes": 4,
+      "fresh": 6,
+      "status": "tree",
+      "search_n": 3745,
+      "elapsed_ms": 353,
+      "coqTree": null,
+      "stats": {
+        "nodes": 3745,
+        "side": 2506,
+        "mitm": 362,
+        "last": 719,
+        "split": 156,
+        "open": 2,
+        "bad": 0
+      },
+      "maxHalt": 145,
+      "bound": 151,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD---0LF0RB0RA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD---0LF0RB1RB",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 49,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---0RF_------",
+      "holes": 4,
+      "fresh": 6,
+      "status": "tree",
+      "search_n": 5785,
+      "elapsed_ms": 1076,
+      "coqTree": null,
+      "stats": {
+        "nodes": 5785,
+        "side": 3665,
+        "mitm": 833,
+        "last": 1025,
+        "split": 241,
+        "open": 21,
+        "bad": 0
+      },
+      "maxHalt": 228,
+      "bound": 234,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0LB1LA1LD1RB0RF---0LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LE1LA1LD---0RF1RB0LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RE1LA1LD0RB0RF---0LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RA0RF---0LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RB0RF---0LA",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LD1LA1LD1RB0RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LB1LA1LD1RB0RF---1LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1LC0RF---1LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1RC0RF---1LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1RD0RF---1LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1LB0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RB1LA1LD1LB0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA---1LA1LD1RB0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1LA1LA1LD0RC0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0RC0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1RC0RF---0LD",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1LB0RF---0LE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LB1LA1LD1RB0RF---0LE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LC1LA1LD---0RF1LB0RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD---0RF1LB0LF",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LE1LA1LD---0RF1RB0LF",
+          "count": 1
+        }
+      ]
+    },
+    {
+      "index": 51,
+      "table": "1RB1RD_1RC0RE_0LA---_1LA1LD_---1RF_------",
+      "holes": 4,
+      "fresh": 6,
+      "status": "tree",
+      "search_n": 4393,
+      "elapsed_ms": 1319,
+      "coqTree": null,
+      "stats": {
+        "nodes": 4393,
+        "side": 2408,
+        "mitm": 970,
+        "last": 801,
+        "split": 183,
+        "open": 31,
+        "bad": 0
+      },
+      "maxHalt": 202,
+      "bound": 208,
+      "openTables": [
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1LC1RF---0LB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RA1LA1LD1LB1RF---1RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD1LB1RF---1RB",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1LA1LA1LD1RB1RF---0LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1LA1LA1LD0RC1RF---0LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1LE1LA1LD1RB1RF---0LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RC1RF---0LC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RB1LA1LD---1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0LA1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0RB1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD1RB1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0LC1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0RC1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD1RC1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD0LD1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RD1LA1LD1RD1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LE1LA1LD0RA1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RA1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RB1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD1RB1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RC1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0LD1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD1LE1RF---0RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0LB1LA1LD1RB1RF---1RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RE1LA1LD0RB1RF---1RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RA1RF---1RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RE1LA1LD0RB1RF---1RC",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA1RB1LA1LD---1RF0RC0LE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RB1LA1LD---1RF0LC1RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RA1LA1LD---1RF1LC1RE",
+          "count": 1
+        },
+        {
+          "table": "1RB1RD1RC0RE0LA0RF1LA1LD---1RF1RA0LF",
+          "count": 1
+        }
+      ]
+    }
+  ],
+  "distinctOpenTables": 95
+}
