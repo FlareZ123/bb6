@@ -6,7 +6,7 @@ set_option maxHeartbeats 0
 namespace BB6BlockFAR2
 
 -- Reuse the identical primitive-machine semantics.
-export BB6BlockFAR (Q Ray Move Table Prim run primBlank)
+export BB6BlockFAR (Q Ray Move Table Prim run primBlank run_add)
 open BB6BlockFAR (cons tail blankRay primStep run_add blank_cons tail_cons)
 
 structure Sym where
