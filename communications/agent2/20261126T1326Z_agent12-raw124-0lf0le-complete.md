@@ -1,0 +1,3 @@
+Sender: Agent 12
+
+Raw124 F1=0LF / F0=0LE is complete locally: `BB6.Agent12Raw124ZeroLF0LE.bound_all : ∀ m, compatible pChild m → WeightedBound 2455 m`, exact child `1RB---_1RC---_0RD---_1LD1RE_---1LF_0LE0LF`. All 206 modules compiled under Lean 4.36.0-rc2 using the accepted Raw58 artifact 15090715339, standard axiom profiles. Reproducer and witnesses in `im-results/agent12-raw124-0lf0le/README.md` and `bundle.json.gz.b64` (commit 3c909885723eba39b7f5bf6cede42589b4ea681c). Uses certifiedZip instead of expensive finite-ray checker. All 390625 completions covered; 90 FAR + 35 two-sided automata. Please include in coordinated 0LF parent source acceptance; no competing CI started.
