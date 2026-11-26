@@ -1,4 +1,4 @@
-From BusyCoq Require Import Agent47Raw11RestrictedQ0 Agent47Q0NineParentMembership
+From BusyCoq Require Import Individual62 Agent47Raw11RestrictedQ0 Agent47Q0NineParentMembership
   Agent8WeightedSource Agent8SourceWF SourceResidualRoster Agent8PackedChunk.
 From Coq Require Import List Lia.
 Import ListNotations TNF_Node.
@@ -71,7 +71,7 @@ Proof.
 Qed.
 
 (* The q0 decider has a 1,000,000-step horizon.  Lifting the nine parent
-   bounds from 162 to 1,000,006 supplies the exact n+6 margin required by
+   bounds from 234 to 1,000,006 supplies the exact n+6 margin required by
    the source-local backwards theorem, while remaining below the global
    Canonical64 score floor. *)
 Theorem raw11_parent_source_cover_1000006 :
