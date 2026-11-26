@@ -59,7 +59,7 @@ theorem spec5_of_checked5 (s t : BB6.Agent12WordBlock.State) (N q K : Nat)
       refine ⟨?_,by omega,?_⟩ <;> omega
   · intro j hj hN' he
     have hmask:=inputs_bit q N j hj he
-    have hf:=bit_full N j hN'
+    have hf:=BB6.Agent12LaneCertificate.bit_full N j hN'
     have h1:=leOn_sound _ _ _ hi1 j hmask
     have h2:=leOn_sound _ _ _ hi2 j hmask
     have h3:=equalOn_sound _ _ _ hi3 j hmask
@@ -79,7 +79,7 @@ theorem spec5_of_checked5 (s t : BB6.Agent12WordBlock.State) (N q K : Nat)
       simp only [branchRhs,addP_sound,value_mul2,value,hf,hzero,Nat.zero_add,Nat.mul_zero,Nat.add_zero] at hh
       simp only [hd,ite_true]; omega
   · intro j hj he
-    have hf:=bit_full N j (by omega)
+    have hf:=BB6.Agent12LaneCertificate.bit_full N j (by omega)
     have h1:=leOn_sound _ _ _ ho1 j he
     have h2:=leOn_sound _ _ _ ho2 j he
     have hzero:bit 0 j=0 := by simp [bit]
@@ -224,7 +224,7 @@ theorem lane_path5 (q N : Nat) (u : Nat → BitState)
             simpa using hpath1.append hpath2
           simpa [word,run,hbit] using hp
         · simp [clocks,word,hbit,hcalls1,hcalls2]
-        · simp [clocks,word,hbit,hweight1,hweight2]
+        · simp [clocks,word,hbit]; omega
 
 theorem lift_injective : Function.Injective lift := by
   intro s t h
