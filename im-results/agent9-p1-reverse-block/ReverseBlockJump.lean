@@ -96,6 +96,97 @@ theorem walk_mem_jump (F z : Nat) (ys : List Nat) (c : Nat)
   refine ⟨by simpa [q,k] using hc,B,hB,?_⟩
   simpa [q,k,S] using hres
 
+
+/-- An endpoint list covers the modular first-jump candidates for a fixed
+    suffix when it contains every carry satisfying the exact residue equation. -/
+def JumpCover (F : Nat) (ys : List Nat) (ends : List Nat) : Prop :=
+  ∀ c, JumpMember F ys.length (digits ys) c → c ∈ ends
+
+/-- Specification of the complete modular first-jump set. The C++ implementation
+    constructs this set by iterative subset-sum residues and interval lifting. -/
+def JumpCandidates (F : Nat) (ys : List Nat) : List Nat :=
+  (List.range (F - ys.length)).filter
+    (fun c => decide (JumpMember F ys.length (digits ys) c))
+
+theorem jumpCandidates_cover (F : Nat) (ys : List Nat) :
+    JumpCover F ys (JumpCandidates F ys) := by
+  intro c hc
+  exact List.mem_filter.mpr
+    ⟨List.mem_range.mpr hc.1, decide_eq_true_eq.mpr hc⟩
+
+/-- A genuine reverse walk survives the intersection used by the prefix-only
+    algorithm: split off the final modular-jump suffix, retain its midpoint in
+    the modular candidate cover, and rewind the earlier word by fitted blocks. -/
+theorem walk_mem_prefix_live (F q z c : Nat) (bs : List (List Nat))
+    (tail ends : List Nat)
+    (hclock : F = q + bs.flatten.length + tail.length)
+    (hbits : ∀ y ∈ bs.flatten ++ tail, y ≤ 1)
+    (hfit : Fitted q bs)
+    (hjump : JumpCover F tail ends)
+    (h : Walk F z (bs.flatten ++ tail) c) :
+    c ∈ blockFold q bs ends := by
+  obtain ⟨d, htail, hprefix⟩ :=
+    walk_split F z bs.flatten tail c h
+  have hclock' : F - tail.length = q + bs.flatten.length := by omega
+  have hprefix' : Walk (q + bs.flatten.length) d bs.flatten c := by
+    simpa [hclock'] using hprefix
+  have hbits' : ∀ y ∈ bs.flatten, y ≤ 1 := by
+    intro y hy
+    exact hbits y (List.mem_append.mpr (Or.inl hy))
+  exact (mem_blockFold q c bs ends hbits' hfit).2
+    ⟨d, hjump d (walk_mem_jump F z tail d htail), hprefix'⟩
+
+/-- Original delayed-carry traces inherit the same prefix-only live property.
+    This is source-connected: the trace rewind transports the authentic Trace
+    prefix to the exact fixed-target Walk before applying the modular/block
+    intersection theorem. -/
+theorem trace_prefix_live (n m B a s : Nat)
+    (hTrace : Trace n m B a) (hs : 1 ≤ s) (hm : s ≤ m) (hk : m - s ≤ n) :
+    ∃ C c R, Trace n s C c ∧ B = C + 2^s * R ∧
+      ∀ bs tail ends,
+        bs.flatten ++ tail = targetWord n s C (m - s) →
+        Fitted (n + s + 3) bs →
+        JumpCover (n + m + 3) tail ends →
+        c ∈ blockFold (n + s + 3) bs ends := by
+  obtain ⟨C, c, R, htr, hB, hw⟩ :=
+    trace_rewind hTrace s hs hm hk
+  refine ⟨C, c, R, htr, hB, ?_⟩
+  intro bs tail ends hparts hfit hjump
+  have hlen : bs.flatten.length + tail.length = m - s := by
+    have h := congrArg List.length hparts
+    simpa [targetWord_length] using h
+  have hclock : n + m + 3 =
+      n + s + 3 + bs.flatten.length + tail.length := by omega
+  have hbits : ∀ y ∈ bs.flatten ++ tail, y ≤ 1 := by
+    intro y hy
+    rw [hparts] at hy
+    exact targetWord_bits n s C (m - s) y hy
+  have hwalk : Walk (n + m + 3) a (bs.flatten ++ tail) c := by
+    rw [hparts]
+    exact hw
+  exact walk_mem_prefix_live (n + m + 3) (n + s + 3) a c
+    bs tail ends hclock hbits hfit hjump hwalk
+
+/-- Concrete specification corollary using the full modular candidate set. -/
+theorem trace_prefix_live_candidates (n m B a s : Nat)
+    (hTrace : Trace n m B a) (hs : 1 ≤ s) (hm : s ≤ m) (hk : m - s ≤ n) :
+    ∃ C c R, Trace n s C c ∧ B = C + 2^s * R ∧
+      ∀ bs tail,
+        bs.flatten ++ tail = targetWord n s C (m - s) →
+        Fitted (n + s + 3) bs →
+        c ∈ blockFold (n + s + 3) bs (JumpCandidates (n + m + 3) tail) := by
+  obtain ⟨C, c, R, htr, hB, hlive⟩ :=
+    trace_prefix_live n m B a s hTrace hs hm hk
+  refine ⟨C, c, R, htr, hB, ?_⟩
+  intro bs tail hparts hfit
+  exact hlive bs tail (JumpCandidates (n + m + 3) tail)
+    hparts hfit (jumpCandidates_cover (n + m + 3) tail)
+
+#print axioms jumpCandidates_cover
+#print axioms walk_mem_prefix_live
+#print axioms trace_prefix_live
+#print axioms trace_prefix_live_candidates
+
 #print axioms mod_sub_residue
 #print axioms walk_mem_jump
 
