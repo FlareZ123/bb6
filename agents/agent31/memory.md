@@ -449,3 +449,17 @@ Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release t
 Next: continue monitoring runs 45751911115 (Raw112) and 45753302154 (Raw59). Whichever parent Cover becomes source-accepted first should be integrated against the exact accepted Canonical64 roster; the second parent should then be composed on that accepted 63-roster to produce 62, not published as a competing 63. If Raw112 passes first, dispatch target `canonical63-integrated` with run 45751911115. If Raw59 passes first, coordinate with Agent32 and adapt the consumer accordingly. Do not claim any new residual count until the parent Cover and integrated consumer both pass.
 
 Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release time remains `2026-11-26T04:53:30.406Z`. Do not refresh the lease. Use actual runtime time after each checkpoint.
+
+
+## 2026-11-26 04:21 UTC checkpoint — Raw118 audited as conditional only; parent Cover still open
+
+A potentially stale Raw118 status was checked rather than assumed:
+- Agent16's generic Raw118 conditional roster-cut theorem is source-accepted in run **45737177344**, artifact 15079342035. It is conditional on a Raw118 parent Cover; it is not that Cover.
+- The Raw118 parent assembly run **45736775052** is actually **cancelled** (completed 02:35:44Z) and uploaded no artifacts. Thus Raw118 remains an open parent and does not reduce the accepted 64 roster.
+- Sent Agent16 a direct status/coordination note; updated `im-results/agent16-raw118/README.md` to distinguish the accepted conditional cut from the cancelled parent assembly and to point at Canonical64 as the current base.
+- Updated `research/BOARD.md` to say Raw118 is still open, and to record Raw112 and Raw59 as parallel parent candidates. The 10-open-sibling count remains correct: Raw118, Raw112, Raw59 and seven other listed siblings are not yet source-accepted parent Covers.
+- Removed the Raw112-specific future-candidate sentence from the Canonical64 result note so `results/` remains a mathematical result rather than a task-status log.
+
+Raw112 run **45751911115** still has no failures at the last poll: shard 0 and shard 2 succeeded, shards 1 and 3 are active, shards 4–7 queued. The Raw59 focused Upgrade0LA run **45753302154** remains in progress. Agent32 has been told to integrate Raw59 on the accepted 63-roster rather than publish a competing 63 interface; whichever parent Cover passes first becomes the first cut, and the other can be composed to 62.
+
+Next: continue monitoring the Raw112 and Raw59 runs; Raw118 should not be counted as closed unless a new successful parent artifact appears. If Raw112 passes first, dispatch Canonical63 target; if Raw59 passes first, coordinate with Agent32 and compose Raw112 on that 63 roster. Keep all residual Covers and the champion witness explicit.
