@@ -1,6 +1,6 @@
 # Exact reverse-block and prefix-only P1 carry exploration
 
-**Scope and evidence.** This intermediate programme extends the exact-integer P1 critical-index computations beyond the earlier 7,593,750 cutoff, and develops an exact acceleration for both the modular and delayed carry relations. It is not yet a Lean numerical certificate, an all-index reset exclusion, a P1 decision, or a BB(6) bound. The original-source reductions are [BatchCarrySource](../agent9-p1-first-return/BatchCarrySource.lean) and Agent43's [margin-free delayed bridge](../agent43-p1-high-cost-reset-count/LongConeSource.md).
+**Scope and evidence.** The exact-integer P1 modular critical-index computation now reaches 437,894,120, with three new full-horizon exceptions (123,109,726; 155,728,894; 230,417,762) in addition to the earlier unresolved 45,352,466. The new fitted-block birth sweep checks every intervening center through a sparse forward probe and uses an exact reverse block for the large live set. It is not yet a Lean numerical certificate, an all-index reset exclusion, a P1 decision, or a BB(6) bound. The original-source reductions are [BatchCarrySource](../agent9-p1-first-return/BatchCarrySource.lean) and Agent43's [margin-free delayed bridge](../agent43-p1-high-cost-reset-count/LongConeSource.md).
 
 
 **Exact modular jump (new local preflight).** The converse of `walk_mem_jump` is now proved in JumpResidueSource.lean: for a binary target word of length k, let M=2^k, q=F-k, Y=digits ys, and S=qB+D(B). The residue condition implies (c+S) mod M=Y, because Y<M. Thus z=floor((c+S)/M) satisfies Mz+Y+corr(k,B)=FB+c. The existing `walk_of_eq` derives every intermediate guard from this identity and c<q. Consequently JumpMember is equivalent to existence of a genuine broad Walk, and the lifted residue set is exactly the reverse image of all broad terminal endpoints. No fitted-block condition is needed for this equivalence. The converse and digit bound passed Lean 4.36.0-rc2 locally against exact copied source declarations and proof bodies, with [propext, Quot.sound]; the final original-source integration and axiom audit remain to be run through the existing reverse-live-block target. This improves the certificate interface, not the numeric frontier by itself.
@@ -51,7 +51,29 @@ Exact integer scan results:
 |25628918..38443376|51257355|1287035601|none|
 |38443378..57665066|76886027|2060433903|45352466|
 
-Singleton tests at F=2n+3 leave both hits. These intervals contain every even index in the indicated range; prior computations cover smaller n. A subsequent 57.7M–86.5M run was interrupted, so no claim for that range.
+Singleton tests at F=2n+3 leave both hits. These intervals contain every even index in the indicated range; prior computations cover smaller n. The previously interrupted next range has now been completed by the fitted-block sweep below.
+
+### Fitted-block common-clock sweep with exact birth probes
+
+The new [folded_block.cpp](folded_block.cpp) replaces the scalar reverse traversal between clock boundaries by a fitted reverse block, without losing any central births inside the skipped block. It is an exact integer experiment with a mathematical correctness argument using the already source-accepted [reverse block interface](../agent45-p1-delayed-carry/ReverseBlockSource.lean) and [batch-to-source transfer](../agent9-p1-first-return/BatchCarrySource.lean). The numerical outputs themselves are not yet kernel-certified.
+
+Let C_q(c)=q-2-c and f_q(c)=min(c,C_q(c)) on the strict interior 1<=c<=q-3. The edge 2z=c+q*x, x in {0,1}, is carried by C to 2*C_(q+1)(z)=C_q(c)+q*(1-x). Therefore a live set is complement-invariant, and exact reachability in the folded quotient is equivalent to reachability between some representatives. A folded endpoint class has at most one folded parent class: the unquotiented parent is (2z)%q if strict, and complementing the endpoint complements this parent. The same property holds for any composed block. From a canonical parent, its at most two folded children are obtained by testing the two numerators for even parity; the strict interior is preserved. Distinct parent classes cannot share a child; when the two children of a single class coincide, retain only one.
+
+Suppose the current folded set A at clock F represents all strict endpoints with a continuation to the common final clock T. For a block starting at q=F-k, the new live set is exactly the folded k-step predecessor image of A. For every intervening even birth clock b in [q,F), the center (b-2)/2 survives to T iff its folded forward image after F-b steps intersects A, by concatenation and splitting of the exact Walk relation. If b=0 mod 4 the center is odd, so neither branch is legal for its first step; it cannot survive even one step. The only remaining births to probe are b=2 mod 4. The clock F itself is tested before the first block or was already tested by the preceding block; there is no overlap or omission of birth clocks. An empty live set propagates backward.
+
+The initialization is the existing exact modular jump, and reverse blocks use the source-accepted two-candidate quotient window, with the strict range checked at the initial carry. Every intermediate strict guard follows from the exact zero-target Walk. The reciprocal quotient estimate is accepted only after exact bracketing inequalities; integer division restores it otherwise. With T<10^9 and k<=26, X<10^9*2^26<2^56, all products and correction sums fit uint64_t, all carry clocks fit uint32_t. Packed bitmaps support exact membership and deduplication. The new sweep no longer sorts or merges a large list at every individual clock.
+
+Local regression: 14,580 full hit-list comparisons with the independent unquotiented scalar sweep, varying the initial jump and fitted-block cap, all passed. Build `g++ -O3 -march=native -std=c++17 folded_block.cpp -o folded_block`; run `./folded_block test`, then `./folded_block L R 22`. The exact five new runs (all even indices, no gaps) are:
+
+| Inclusive even indices | Common T | Reverse endpoint visits | Forward probe visits | Hits |
+|---|---:|---:|---:|---|
+|57,665,068..86,497,600|115329035|122778491|88980265|none|
+|86,497,602..129,746,402|172994571|185063398|140556649|123109726|
+|129,746,404..194,619,606|259491851|287507686|210835272|155728894|
+|194,619,608..291,929,412|389238795|439084184|316259345|230417762|
+|291,929,414..437,894,120|583858187|672479652|474380709|none|
+
+All three hits also survive their own full modular horizons: singleton common T respectively 246219455, 311457791, 460835527. The new interval contains 190,114,527 even indices, of which 190,114,524 are excluded by this exact arithmetic test; the three named exceptions require post-n delayed-bit analysis. Together with the prior contiguous ranges, the modular experiment reaches 437,894,120. This does not certify the unbounded index quantifier, nor does it promote the C++ execution to an original-source Lean numerical proof. An attempted next interval 437,894,122..656,841,182 timed out after initialization; no result is claimed for it.
 
 ## Prefix-only delayed cover
 
@@ -75,7 +97,7 @@ The larger n=45352466 has first-window width 26604712. The bitmap continuation n
 ## Next useful edge
 
 1. Accept the locally preflighted concrete residue generator against the full original-source dependency closure through the existing reverse-live-block target. Then transport actual computed prefix stages to the exact cover and blockFold interfaces.
-2. Continue the n=45,352,466 prefix-only computation from the current bitmap experiment; the wider fit has now been exercised on this index. Do not count END n 0 as an exclusion.
-3. For any empty live set, connect the exact C++ candidate output to JumpCover and the Lean blockFold specification before claiming a source-certified P1 exclusion.
+2. Continue the n=45,352,466 delayed prefix-only computation if its checkpoint can be recovered, and investigate the three new full-horizon exceptions. Preserve compact replayable midpoint ancestry rather than only an ephemeral full-word checkpoint. Do not count END n 0 as an exclusion.
+3. Connect the folded birth probes and reverse predecessor blocks to the accepted BatchCarry Walk interface, then construct an interruption-safe numerical checker. For any empty delayed live set, connect the candidate output to JumpCover and the Lean blockFold specification before claiming a source-certified P1 exclusion.
 
 The remaining infinite-index quantifier is untouched by these finite computations.
