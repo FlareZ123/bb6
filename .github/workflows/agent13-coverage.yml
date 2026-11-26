@@ -263,7 +263,8 @@ jobs:
           tar -xJf "$D/source.tar.xz" -C "$W"
           (cd "$W"; python3 generate.py)
           python im-results/agent13-block-far/generate.py "$W" '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
-          python tools/lean_compile_closure.py --workdir /tmp/a49-box18to24 --jobs 2 --source-root "$W" "$W/Box18to24Source.lean" im-results/agent49-raw10-box18-24/Raw10Box18to24Bridge.lean im-results/agent49-raw10-refined-cut/Raw10RefinedCut.lean im-results/agent49-raw10-refined-cut/Raw10RefinedHeld.lean | tee /tmp/a49-box18to24.log
+          tar -xJf im-results/agent49-raw10-box-family/late-source.tar.xz -C "$W"
+          python tools/lean_compile_closure.py --workdir /tmp/a49-box18to24 --jobs 2 --source-root "$W" "$W/Box18to24Source.lean" im-results/agent49-raw10-box18-24/Raw10Box18to24Bridge.lean im-results/agent49-raw10-refined-cut/Raw10RefinedCut.lean im-results/agent49-raw10-refined-cut/Raw10RefinedHeld.lean "$W/FamilyLateSource.lean" | tee /tmp/a49-box18to24.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-box18to24.log; then exit 1; fi
       - name: Check exact raw10 rectangle 5 compressed first-hole coverage
         if: inputs.target == 'weighted-tnf-raw10-box5'
