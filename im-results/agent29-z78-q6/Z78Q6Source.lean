@@ -366,4 +366,154 @@ theorem blank_halts_iff_six_low1585 :
 #print axioms low_stop_m67_z846_mod2048_unreachable
 #print axioms blank_halts_iff_six_low1585
 
+
+/-- On the two new low-stop residue classes, the six-forced normalizer follows
+    the exact five-edge inverse path and stops at the even-coordinate point
+    P=(173u+24,(339u+47)/2). -/
+theorem six_forced_normalize_low_cylinder (u : Nat)
+    (hu : u % 8192 = 3115 ∨ u % 8192 = 7211) :
+    BB6.Agent11SixForced.sixForcedNormalize 1 (256*u+51) =
+      (173*u+24, (339*u+47)/2) := by
+  have hu2 : u % 2 = 1 := by omega
+  have hu4 : u % 4 = 3 := by omega
+  have hu8 : u % 8 = 3 := by omega
+  have hu16 : u % 16 = 11 := by omega
+  have hu32 : u % 32 = 11 := by omega
+  let x1 := 128*u+24
+  let y1 := 192*u+36
+  let x2 := 320*u+58
+  let y2 := 96*u+17
+  let x3 := 208*u+35
+  let y3 := 152*u+25
+  let x4 := 180*u+28
+  let y4 := 166*u+25
+  let x5 := 173*u+24
+  let y5 := (339*u+47)/2
+  have h0 : BB6.Agent3.oddLowGate 1 (256*u+51) := by
+    simp [BB6.Agent3.oddLowGate] <;> omega
+  have h1o : ¬ BB6.Agent3.oddLowGate x1 y1 := by
+    simp [BB6.Agent3.oddLowGate, x1, y1] <;> omega
+  have h1e : ¬ BB6.Agent3.evenSevenGate x1 y1 := by
+    simp [BB6.Agent3.evenSevenGate, x1, y1] <;> omega
+  have h1a : ¬ BB6.Agent3.evenAffineGate x1 y1 := by
+    simp [BB6.Agent3.evenAffineGate, x1, y1] <;> omega
+  have h1r : BB6.Agent46.sixEvenRightGate x1 y1 := by
+    simp [BB6.Agent46.sixEvenRightGate, x1, y1] <;> omega
+  have h2o : ¬ BB6.Agent3.oddLowGate x2 y2 := by
+    simp [BB6.Agent3.oddLowGate, x2, y2] <;> omega
+  have h2e : ¬ BB6.Agent3.evenSevenGate x2 y2 := by
+    simp [BB6.Agent3.evenSevenGate, x2, y2] <;> omega
+  have h2a : ¬ BB6.Agent3.evenAffineGate x2 y2 := by
+    simp [BB6.Agent3.evenAffineGate, x2, y2] <;> omega
+  have h2r : ¬ BB6.Agent46.sixEvenRightGate x2 y2 := by
+    simp [BB6.Agent46.sixEvenRightGate, x2, y2] <;> omega
+  have h2v : ¬ BB6.Agent3ValSix.valSixGate x2 y2 := by
+    simp [BB6.Agent3ValSix.valSixGate, x2, y2] <;> omega
+  have h2f : BB6.Agent11SixForced.evenOddFourGate x2 y2 := by
+    simp [BB6.Agent11SixForced.evenOddFourGate, x2, y2] <;> omega
+  have h3o : BB6.Agent3.oddLowGate x3 y3 := by
+    simp [BB6.Agent3.oddLowGate, x3, y3] <;> omega
+  have h4o : ¬ BB6.Agent3.oddLowGate x4 y4 := by
+    simp [BB6.Agent3.oddLowGate, x4, y4] <;> omega
+  have h4e : ¬ BB6.Agent3.evenSevenGate x4 y4 := by
+    simp [BB6.Agent3.evenSevenGate, x4, y4] <;> omega
+  have h4a : ¬ BB6.Agent3.evenAffineGate x4 y4 := by
+    simp [BB6.Agent3.evenAffineGate, x4, y4] <;> omega
+  have h4r : ¬ BB6.Agent46.sixEvenRightGate x4 y4 := by
+    simp [BB6.Agent46.sixEvenRightGate, x4, y4] <;> omega
+  have h4v : ¬ BB6.Agent3ValSix.valSixGate x4 y4 := by
+    simp [BB6.Agent3ValSix.valSixGate, x4, y4] <;> omega
+  have h4f : BB6.Agent11SixForced.evenOddFourGate x4 y4 := by
+    simp [BB6.Agent11SixForced.evenOddFourGate, x4, y4] <;> omega
+  have h5o : ¬ BB6.Agent3.oddLowGate x5 y5 := by
+    simp [BB6.Agent3.oddLowGate, x5, y5] <;> omega
+  have h5e : ¬ BB6.Agent3.evenSevenGate x5 y5 := by
+    simp [BB6.Agent3.evenSevenGate, x5, y5] <;> omega
+  have h5a : ¬ BB6.Agent3.evenAffineGate x5 y5 := by
+    simp [BB6.Agent3.evenAffineGate, x5, y5] <;> omega
+  have h5r : ¬ BB6.Agent46.sixEvenRightGate x5 y5 := by
+    simp [BB6.Agent46.sixEvenRightGate, x5, y5] <;> omega
+  have h5v : ¬ BB6.Agent3ValSix.valSixGate x5 y5 := by
+    simp [BB6.Agent3ValSix.valSixGate, x5, y5] <;> omega
+  have h5f : ¬ BB6.Agent11SixForced.evenOddFourGate x5 y5 := by
+    simp [BB6.Agent11SixForced.evenOddFourGate, x5, y5] <;> omega
+  have stepOdd (x y x' y' : Nat)
+      (h : BB6.Agent3.oddLowGate x y)
+      (hx : (x+y-4)/2=x') (hy : (x+3*y-10)/4=y') :
+      BB6.Agent11SixForced.sixForcedNormalize x y =
+        BB6.Agent11SixForced.sixForcedNormalize x' y' := by
+    conv_lhs => unfold BB6.Agent11SixForced.sixForcedNormalize
+    rw [dif_pos h, hx, hy]
+  have stepRight (x y x' y' : Nat)
+      (h1 : ¬ BB6.Agent3.oddLowGate x y)
+      (h2 : ¬ BB6.Agent3.evenSevenGate x y)
+      (h3 : ¬ BB6.Agent3.evenAffineGate x y)
+      (h4 : BB6.Agent46.sixEvenRightGate x y)
+      (hx : x+y-2=x') (hy : (y-2)/2=y') :
+      BB6.Agent11SixForced.sixForcedNormalize x y =
+        BB6.Agent11SixForced.sixForcedNormalize x' y' := by
+    conv_lhs => unfold BB6.Agent11SixForced.sixForcedNormalize
+    rw [dif_neg h1, dif_neg h2, dif_neg h3, dif_pos h4, hx, hy]
+  have stepFour (x y x' y' : Nat)
+      (h1 : ¬ BB6.Agent3.oddLowGate x y)
+      (h2 : ¬ BB6.Agent3.evenSevenGate x y)
+      (h3 : ¬ BB6.Agent3.evenAffineGate x y)
+      (h4 : ¬ BB6.Agent46.sixEvenRightGate x y)
+      (h5 : ¬ BB6.Agent3ValSix.valSixGate x y)
+      (h6 : BB6.Agent11SixForced.evenOddFourGate x y)
+      (hx : (x+y-5)/2=x') (hy : (x+3*y-9)/4=y') :
+      BB6.Agent11SixForced.sixForcedNormalize x y =
+        BB6.Agent11SixForced.sixForcedNormalize x' y' := by
+    conv_lhs => unfold BB6.Agent11SixForced.sixForcedNormalize
+    rw [dif_neg h1, dif_neg h2, dif_neg h3, dif_neg h4,
+      dif_neg h5, dif_pos h6, hx, hy]
+  have stepStop (x y : Nat)
+      (h1 : ¬ BB6.Agent3.oddLowGate x y)
+      (h2 : ¬ BB6.Agent3.evenSevenGate x y)
+      (h3 : ¬ BB6.Agent3.evenAffineGate x y)
+      (h4 : ¬ BB6.Agent46.sixEvenRightGate x y)
+      (h5 : ¬ BB6.Agent3ValSix.valSixGate x y)
+      (h6 : ¬ BB6.Agent11SixForced.evenOddFourGate x y) :
+      BB6.Agent11SixForced.sixForcedNormalize x y = (x,y) := by
+    conv_lhs => unfold BB6.Agent11SixForced.sixForcedNormalize
+    rw [dif_neg h1, dif_neg h2, dif_neg h3, dif_neg h4,
+      dif_neg h5, dif_neg h6]
+  have hx01 : (1+(256*u+51)-4)/2=x1 := by dsimp [x1]; omega
+  have hy01 : (1+3*(256*u+51)-10)/4=y1 := by dsimp [y1]; omega
+  have hx12 : x1+y1-2=x2 := by dsimp [x1, y1, x2]; omega
+  have hy12 : (y1-2)/2=y2 := by dsimp [y1, y2]; omega
+  have hx23 : (x2+y2-5)/2=x3 := by dsimp [x2, y2, x3]; omega
+  have hy23 : (x2+3*y2-9)/4=y3 := by dsimp [x2, y2, y3]; omega
+  have hx34 : (x3+y3-4)/2=x4 := by dsimp [x3, y3, x4]; omega
+  have hy34 : (x3+3*y3-10)/4=y4 := by dsimp [x3, y3, y4]; omega
+  have hx45 : (x4+y4-5)/2=x5 := by dsimp [x4, y4, x5]; omega
+  have hy45 : (x4+3*y4-9)/4=y5 := by dsimp [x4, y4, y5]; omega
+  calc
+    BB6.Agent11SixForced.sixForcedNormalize 1 (256*u+51)
+        = BB6.Agent11SixForced.sixForcedNormalize x1 y1 :=
+          stepOdd 1 (256*u+51) x1 y1 h0 hx01 hy01
+    _ = BB6.Agent11SixForced.sixForcedNormalize x2 y2 :=
+          stepRight x1 y1 x2 y2 h1o h1e h1a h1r hx12 hy12
+    _ = BB6.Agent11SixForced.sixForcedNormalize x3 y3 :=
+          stepFour x2 y2 x3 y3 h2o h2e h2a h2r h2v h2f hx23 hy23
+    _ = BB6.Agent11SixForced.sixForcedNormalize x4 y4 :=
+          stepOdd x3 y3 x4 y4 h3o hx34 hy34
+    _ = BB6.Agent11SixForced.sixForcedNormalize x5 y5 :=
+          stepFour x4 y4 x5 y5 h4o h4e h4a h4r h4v h4f hx45 hy45
+    _ = (x5,y5) := stepStop x5 y5 h5o h5e h5a h5r h5v h5f
+    _ = (173*u+24, (339*u+47)/2) := by rfl
+
+/-- The normalizer does not already exclude either of the two new low-stop
+    residue classes: its terminal point has even second coordinate. -/
+theorem six_forced_excluded_low_cylinder (u : Nat)
+    (hu : u % 8192 = 3115 ∨ u % 8192 = 7211) :
+    BB6.Agent11SixForced.sixForcedExcluded 1 (256*u+51) = false := by
+  have hy : ((339*u+47)/2) % 2 = 0 := by omega
+  simp [BB6.Agent11SixForced.sixForcedExcluded,
+    six_forced_normalize_low_cylinder u hu, hy]
+
+#print axioms six_forced_normalize_low_cylinder
+#print axioms six_forced_excluded_low_cylinder
+
+
 end BB6.Agent29Z78Q6
