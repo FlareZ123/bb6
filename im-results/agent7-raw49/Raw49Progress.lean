@@ -1,4 +1,4 @@
-import Raw49Cut
+import Raw49Far5Cut
 import Raw49C0All
 import Raw49C5All
 import Raw49C2All
@@ -10,9 +10,9 @@ open BB6.Agent7Raw49Cut
 
 def closedTables : List PartialMachine := [BB6.Agent7.Raw49C0.p,BB6.Agent7.Raw49C5.p,BB6.Agent7.Raw49C2.p]
 def removeClosed (p : PartialMachine) : Bool := closedTables.any (equalTable p)
-def residuals := remaining.filter (fun e => !removeClosed e.2)
+def residuals := BB6.Agent7Raw49Far5Cut.remaining.filter (fun e => !removeClosed e.2)
 
-theorem residual_count : residuals.length = 118 := by decide
+theorem residual_count : residuals.length = BB6.Agent7Raw49Far5Cut.expected_after_children := by decide
 
 theorem closedSafe (p : PartialMachine) (h : p ∈ closedTables) (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 7014 m := by
   simp only [closedTables,List.mem_cons,List.mem_nil_iff,or_false] at h
@@ -22,7 +22,7 @@ theorem closedSafe (p : PartialMachine) (h : p ∈ closedTables) (m : Machine) (
   · exact BB6.Agent7.Raw49C2.all_quotient m hm
 
 theorem refined (m : Machine) (hm : TNFQuotientCompatible parent m) : WeightedBound 7014 m ∨ ∃ e ∈ residuals, TNFQuotientCompatible e.2 m := by
-  rcases parent_cut m hm with h | ⟨e,he,hq⟩
+  rcases BB6.Agent7Raw49Far5Cut.parent_cut m hm with h | ⟨e,he,hq⟩
   · exact Or.inl h
   · cases hh : removeClosed e.2 with
     | false => exact Or.inr ⟨e,List.mem_filter.mpr ⟨he,by simp [hh]⟩,hq⟩
