@@ -143,3 +143,6 @@ The signed macro agrees with bandHaltBy for every valid band coordinate and ever
 
 
 The normalized-map note now also proves an exact non-autonomous transfer-operator bound for the *relaxed* positive recurrence: its densities are (L^\infty)-contractive because the inverse-branch weights sum to one. Hence almost every continuous initial seed has only finitely many positive-gate failures, with a tail bound ( (N+7)/(5\cdot2^N) ) in unnormalized Lebesgue measure. This does not decide the distinguished seed (x_0=4/5), nor the signed machine trajectory after a failed gate. See [NormalizedPositiveMap.md](NormalizedPositiveMap.md) for the exact branch and transfer-operator calculation.
+
+
+A subsequent support refinement sharpens the exact transfer bound: the total unnormalized measure of all gate-failure events is at most (13/10), the expected number of such events for a uniform seed on (X_0) is at most (13/8), and for (N\ge1) the uniform-seed probability of any gate failure at or after (N) is at most ((N+6)/(4\cdot2^N)). The earlier ((N+7)/(5\cdot2^N)) unnormalized tail bound remains valid but weaker.
