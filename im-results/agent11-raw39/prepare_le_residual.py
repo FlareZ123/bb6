@@ -25,6 +25,7 @@ def custom_le(branch,out):
         add('Raw39LE5883',[5883])
         add('Raw39LE7634',[7634])
     elif branch=='1LE':
+        add('Raw391LEDriftPair',[21614,21623],['.a','.b'])
         add('Raw391LEBinaryFive',[19021,19049,19091,20727,20938],['.a','.b','.c','.d','.e'])
         add('Raw391LEBinarySix',[1897,2372,2529,2534,2535,2550],['.a','.b','.c','.d','.e','.f'])
         add('Raw391LE1837',[1837])

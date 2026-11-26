@@ -29,7 +29,7 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 5 |
-| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 15 |
+| 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 13 |
 
 Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; only propext and Quot.sound:
 
@@ -47,4 +47,6 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 
 - [1LE 18789,18790,20550](Raw391LEPairTriple.md): paired-one/triple-zero left language and modular right runs, with positive-cost closure for every grammatical configuration.
 
-Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus thirty-four proved. The semantic generator now dispatches delayed cycles and all 38 known custom leaves. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
+- [1LE 21614,21623](Raw391LEDriftPair.lean): exact translated left drift, entry 1154/1124, period 2158/2108, fixed inserted 30-bit block before arbitrary tail.
+
+Remaining 0LE IDs: 1300, 1583, 3334, 3414, 4084. The 1LE residual is original 49 minus thirty-six proved. The semantic generator now dispatches delayed cycles and all 40 known custom leaves. Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
