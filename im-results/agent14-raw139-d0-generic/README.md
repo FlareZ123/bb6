@@ -17,3 +17,7 @@ Reproduce: `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneLF`. Sourc
 ## D0 = 0RC (candidate, source audit pending)
 
 Exact table `[7,24,11,24,14,24,9,16,12,11,24,24]`, candidate bound 775. The partition has 998 splits and 22,955 leaves: 13,935 initial cycles, 5,551 initial last holes, 3,113 FAR, 351 block FAR, two late cycles and three late last holes (maximum query 769). No search holdouts. The root SHA-256 is `41b6b03422798ffc4f3325cbe49fa8fdd0d1c6449e1f282852e103d6655c5fe0`. Reproduce with `bash reproduce.sh ZeroRC` from repository root using the full path to this script. Exact-source audit dispatched from `90c3c382991bd530d06a9c81bbfbeec3de38a7d2`. This is not yet an accepted theorem.
+
+## D0 = 1RF (candidate, source audit pending)
+
+Exact table `[7,24,11,24,14,24,23,16,12,11,24,24]`, candidate bound 6250. The initial partition has 2673 splits and 61,480 leaves: 40,979 initial cycles, 14,247 initial last holes, 5,553 FAR, 676 block FAR, two late cycles and 23 late last holes (maximum query 6244). No search holdouts. 299 generated Lean modules. Reproduce from repository root with `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneRF`. Root SHA-256 `6ca0dc341acf0aa3c54fb4e3ddbf277476829c6681d16b840ff85f5cf1cfccc5`; CI run 45729425638. This is not yet an accepted theorem.
