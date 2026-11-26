@@ -1,4 +1,4 @@
-# Raw10 Box 5 complete candidate search and differential stack certificates
+# Raw10 Box5 source-accepted exhaustive Cover
 
 ## Scope and status
 
@@ -18,7 +18,7 @@ Extract source.tar.xz (SHA256 0837d8a34fda69c6699e1e9b7107e489645abc98d90447b61b
 
 ## 2026-11-26: full proof-source acceptance
 
-The original discovery partition was compressed using a sound last-hole rule. When every row except the current hole is assigned an ordinary transition, a halt there is checked by the finite-prefix checker; every ordinary choice gives a total table with no halt instruction. Thus 4,633 split nodes and their 24 ordinary children each become a single last-hole certificate. The resulting preorder tree has 26,332 nodes: 1,067 split, 1,067 explicit halt, 19,047 translated cycle, 4,633 last-hole, 518 invariant leaves. The maximum finite score stays 155, so weighted bound 160 is the target. All 518 open rows are exactly matched to 505 emitted sparse n-gram tries and 13 previously locally checked two-sided automata candidates. The new generator pins the known automata parameters rather than rerunning their discovery search.
+The original discovery partition was compressed using a sound last-hole rule. When every row except the current hole is assigned an ordinary transition, a halt there is checked by the finite-prefix checker; every ordinary choice gives a total table with no halt instruction. Thus 4,633 split nodes and their 24 ordinary children each become a single last-hole certificate. The resulting preorder tree has 26,332 nodes: 1,067 split, 1,067 explicit halt, 19,047 translated cycle, 4,633 last-hole, 518 invariant leaves. The maximum finite score stays 155, yielding the now source-accepted weighted bound 160. All 518 open rows are exactly matched to 505 emitted sparse n-gram tries and 13 two-sided automata certificates. The new generator pins the known automata parameters rather than rerunning their discovery search.
 
 Extract the existing source.tar.xz and the new proof-source.tar.xz (SHA256 0894fce4eb33d1d2f8c2de7641d46639ed06e715fc719bbaab9a58202f2f5811) in one empty directory and execute bash replay-proof.sh. The local C++/Python regeneration succeeded, creating 25 Lean shards (second-level kernel checks for each nontrivial shard), Box5Core, Box5Hard, Box5Automata and Box5SourceConsumer. The latter is designed to export source_index5, sourceBound (160), and residual_without_box5. Each split's children are checked against the actual allowed domain rather than trusting the discovery tree, and each certificate is applied to the accumulated partial table. The source index is checked extensionally against raw10Remainder[5]!, not merely matched by count. The full generated source closure is now accepted; details and the exact conditional parent interface are recorded below.
 
