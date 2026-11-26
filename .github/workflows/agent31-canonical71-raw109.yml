@@ -1240,7 +1240,7 @@ jobs:
           retention-days: 14
 
   raw83-membership-preflight:
-    name: Check Raw83 survives the five-parent Canonical64 cut
+    name: Check Raw83 survives the five- and six-parent Canonical64 cuts
     if: ${{ inputs.target == 'raw83-membership-preflight' }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -1265,7 +1265,7 @@ jobs:
           python im-results/agent31-shared-core/assemble_canonical64_champion.py \
             --work /tmp/a31-canonical64-score 2>&1 | tee /tmp/a31-canonical64-score.log
           test -s /tmp/a31-canonical64-score/linked/Canonical64Raw120Integrated.olean
-      - name: Compile the five-parent membership and Raw83 survivor proofs
+      - name: Compile the five- and six-parent membership and Raw83 survivor proofs
         run: |
           set -euo pipefail
           export LEAN_PATH="/tmp/a31-canonical64-score/linked"
@@ -1275,11 +1275,18 @@ jobs:
           lean -o "$LEAN_PATH/Raw83Canonical59Membership.olean" \
             im-results/agent29-raw83-membership/Raw83Canonical59Membership.lean \
             2>&1 | tee /tmp/a31-raw83-membership.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical59-membership.log /tmp/a31-raw83-membership.log; then
+          lean -o "$LEAN_PATH/Canonical58SixParentMembership.olean" \
+            im-results/agent31-shared-core/Canonical58SixParentMembership.lean \
+            2>&1 | tee /tmp/a31-canonical58-membership.log
+          lean -o "$LEAN_PATH/Raw83Canonical58Membership.olean" \
+            im-results/agent29-raw83-membership/Raw83Canonical58Membership.lean \
+            2>&1 | tee /tmp/a31-raw83-canonical58-membership.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical59-membership.log /tmp/a31-raw83-membership.log /tmp/a31-canonical58-membership.log /tmp/a31-raw83-canonical58-membership.log; then
             echo "Forbidden proof mechanism in Raw83 membership preflight" >&2
             exit 1
           fi
           grep -E "p83_(root|count64|count59|distinct_from_five)" /tmp/a31-raw83-membership.log
+          grep -E "p83_(root|count58|distinct_from_six)" /tmp/a31-raw83-canonical58-membership.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -1288,10 +1295,14 @@ jobs:
             /tmp/a31-canonical64-score.log
             /tmp/a31-canonical59-membership.log
             /tmp/a31-raw83-membership.log
+            /tmp/a31-canonical58-membership.log
+            /tmp/a31-raw83-canonical58-membership.log
             /tmp/a31-canonical64-score/canonical64-score-consumer.json
             /tmp/a31-canonical64-score/kernel-link-manifest.json
             /tmp/a31-canonical64-score/linked/Canonical59FiveParentMembership.olean
             /tmp/a31-canonical64-score/linked/Raw83Canonical59Membership.olean
+            /tmp/a31-canonical64-score/linked/Canonical58SixParentMembership.olean
+            /tmp/a31-canonical64-score/linked/Raw83Canonical58Membership.olean
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
