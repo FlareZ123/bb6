@@ -1481,7 +1481,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version
-      - name: Compile the incremental Raw112 Canonical58 graft
+      - name: Compile the incremental Raw112 Canonical57 graft
         env:
           GH_TOKEN: ${{ github.token }}
           CANONICAL58_RUN_ID: ${{ inputs.canonical58_run_id }}
