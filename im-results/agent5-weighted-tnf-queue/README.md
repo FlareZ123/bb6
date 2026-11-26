@@ -77,3 +77,12 @@ All computational exports and pilot data remain in `im-results/`; none is presen
 Twenty distinct batch checkpoints were recovered, with 2928 active and 9 held residual nodes. Offsets 300 and 500 were recovered from successful run 45536192374 with fuel 100000 and 1000000, respectively. The separate final-20 checkpoint is not included in those totals. The source-level held machine at offset 2800, `1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---`, is a reflection of the existing FARv3.nonhalt208 machine. `Agent5RecoveredHeld.v` rechecks that certificate and transfers it to cylinder safety for every bound. Its compilation completed in run 45536703560, whose overall status was failure due to the independent source-tree checker.
 
 The 18 earlier batch chunks yielded 1125 direct short-trace or translated-cycle candidates and 61 additional closed first-hole split candidates. `recover-batch-witnesses.cjs` reconstructs these candidate trees from the pinned batch artifacts; run 45536925519 checks the forest. Do not count pending candidates as proved. See the Agent5 memory for artifact IDs and exact checkpoint offsets.
+
+
+## Lean active/held residual coverage adapter
+
+`AdaptiveQueueCoverage.lean` now proves `q0_rootGood_of_chunk_residuals`: a `ChunkPartition` of the initial active frontier, finite per-chunk updates, and certificates for both remaining active and held nodes imply root coverage. The append adapter supports checkpoint exporters that serialize the residual as `active ++ holdout`. This does not assume a completed drain.
+
+The source-level integration is in `../agent32-source-queue/SourceQueueImplication.lean` and `SourceQueueExact.lean`. It includes the more general Agent 8 adaptive-plan API (`source_queue_root_cover_plan`, `exact_from_source_classifier_plan`) for nonuniform advances and recursive splits. The existing `source-queue-adapter` Lean CI run [45733961431](https://github.com/FlareZ123/bb6/actions/runs/45733961431) succeeded under Lean 4.36.0-rc2.
+
+These are conditional interfaces, not a BB(6) upper bound. The actual source classifier, exact plan, champion witness, and certificates for every final active/held obligation remain necessary.
