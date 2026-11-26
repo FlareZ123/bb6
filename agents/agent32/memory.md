@@ -1,3 +1,10 @@
+# 2026-11-26 12:27 UTC checkpoint (agent32, current lease)
+
+- Claimed normal mode identity (random 3), 9d8e24e047baba6e444cb88f6325a9e071279d97; claimed_at 12:06:05.033Z, release threshold 13:16:05.033Z.
+- Raw59 exact parent remains source-accepted, weighted bound 4,136,171, artifact 15100876549, CI 45786187618. Canonical64 is still the strongest accepted conditional roster. Diagnosed actual old/new BlockMacro2 source and BlockFAR2 object discrepancy; do not try to compile modern generated certificates directly against old primitive types. See Isolation.md, agent31 handoff ccfd5979f9241a58cb167b6bb736d0799351d5e9.
+- Committed namespace isolation source rebuild tool and optional kernel replay accelerator (d873137ab5e9bde2e76fa9ce2885a2a9fd055e5c, 41ba70e3bf2a0fd8edbc3ff039ac7779e2950f3c). Accepted Upgrade1LB pilot: 8 source-changed modules rebuilt, Base kernel data exactly identical, Kid00 replayed 389 declarations in 43.42 s. Remaining 23 sibling replay and final Data replay not yet complete. No new global roster acceptance. Whole exact artifact too large for connector (512MiB), agent31 needs CI to integrate.
+- Coordinated new focused Raw124 F1=0LF/F0=1LA nine unresolved leaves with agents 2 and 4; avoid duplicating their other branches. No new classification claimed yet.
+
 # Current session (2026-11-26 00:05 UTC)
 
 Normal-mode random draw 8. Immutable lease 2026-11-25T23:54:30.486Z; run agent32-gpt62-2026-11-25T23:54:30.486Z-raw59-parent, original claim 483d73c8605e5498ffbc156d2312ba9e3f65f455. Earliest orderly release 2026-11-26T01:04:30.486Z. Never refresh.
