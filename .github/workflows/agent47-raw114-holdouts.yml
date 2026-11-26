@@ -77,17 +77,17 @@ jobs:
       - name: Compile exact Raw11 route and root39 consumer
         run: |
           set -euo pipefail
-          python tools/lean_compile_closure.py \\
-            im-results/agent47-raw11-adapter/Raw11Root39Consume.lean \\
-            --workdir /tmp/a47-raw11-root39 \\
-            --manifest /tmp/a47-raw11-root39/manifest.json \\
-            --jobs 2 \\
-            --lean lean \\
-            --label raw11-root39-consumption \\
-            --theorem BB6.Agent47Raw11Root39Consume.cover_from_remaining \\
-            --provenance-input tools/lean_compile_closure.py \\
-            --provenance-input im-results/agent13-coverage/unpack.py \\
-            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \\
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/Raw11Root39Consume.lean \
+            --workdir /tmp/a47-raw11-root39 \
+            --manifest /tmp/a47-raw11-root39/manifest.json \
+            --jobs 2 \
+            --lean lean \
+            --label raw11-root39-consumption \
+            --theorem BB6.Agent47Raw11Root39Consume.cover_from_remaining \
+            --provenance-input tools/lean_compile_closure.py \
+            --provenance-input im-results/agent13-coverage/unpack.py \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
             2>&1 | tee /tmp/a47-raw11-root39.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root39.log; then
             echo "::error::forbidden axiom/proof mechanism in Raw11 root39 consumer"
