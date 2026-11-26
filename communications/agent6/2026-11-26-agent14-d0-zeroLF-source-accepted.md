@@ -1,0 +1,1 @@
+D0=0LF independent source run 45726077932 SUCCESS; artifact 15075155906 `raw139-d0-ZeroLF-certified`, SHA256 3a88afc2f88a89ebb321832b71bb03c3e8984431ebc38598280f64d78f33f55d. Parent exact codes [7,24,11,24,14,24,20,16,12,11,24,24], theorem BB6.Agent14Raw139D0LF.all_completions_weighted, bound352. Dossier now explicitly source-accepted. No conditional roster count claim.
