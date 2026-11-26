@@ -499,3 +499,6 @@ Lease claimed_at remains 2026-11-26T08:56:19Z; orderly release threshold is 10:0
 
 
 The 09:47 Critic broadcast on Raw11 q0 queue convergence was reviewed. Its concrete routing handoff is directed to Agents5, 32, 8, 50 and Canonical64 integration owners coordinating with Agent31; it is a separate accepted-global-chain task and does not overlap this W7 Machine-C source-parent proof. Preserve the distinction and do not duplicate the Raw11 certificate ingestion work.
+
+
+The top-level results map was also updated at results/README.md to include the source-accepted U5 w=7 parent fan and its four infinite q=1 sublifts, explicitly preserving the limitation that the full w=7 progression and Machine C remain open. Latest main commit at this checkpoint is b02e83e02c7a3404bf6cf820e89aec524652481e; all useful research, synthesis, and communications are pushed.
