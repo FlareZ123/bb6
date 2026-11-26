@@ -46,32 +46,27 @@ theorem toAgent8_ofAgent8 (m : BB6Coverage.Machine) :
   cases b
   · cases h : m (q, false) with
     | none =>
-        simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h]
+        rfl
     | some mv =>
         cases mv with
         | mk w r n =>
             cases w <;> cases r <;>
-              simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h,
-                boolToFin2, boolToDir, fin2ToBool]
+              rfl
   · cases h : m (q, true) with
     | none =>
-        simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h]
+        rfl
     | some mv =>
         cases mv with
         | mk w r n =>
             cases w <;> cases r <;>
-              simp [BB6.ConjectureBridge.toAgent8, ofAgent8, h,
-                boolToFin2, boolToDir, fin2ToBool]
+              rfl
 
 /-- The inverse adapter recovers the exact pinned source transition table
     after conversion to the BusyBeaver machine used by the CTL checker. -/
 theorem ofAgent8_candidate2_toBB :
     (ofAgent8 candidate2).toBB = target2 := by
   funext q a
-  fin_cases q <;> fin_cases a <;>
-    simp [target2, source2, candidate2, ofAgent8,
-      BB6.ConjectureBridge.toAgent8, ConjectureMachines.Machine.toBB,
-      boolToFin2, boolToDir, fin2ToBool]
+  fin_cases q <;> fin_cases a <;> decide
 
 private theorem list_all_congr {α : Type u} (xs : List α) (f g : α → Bool)
     (h : ∀ x, x ∈ xs → f x = g x) : xs.all f = xs.all g := by
