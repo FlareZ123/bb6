@@ -1,11 +1,20 @@
 import TM63RawUpperInterface
-import TM63RootQ4Attainable
+import CostRecurrence
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent38ChampionThreshold
 
 open BB6ChampionArithmetic
 open BB6Coverage.Agent48DirectRoot
+
+/-- One-step unfolding of sectionResult exposes the initial proposed
+    increment as the first summand. This is definitional and does not
+    evaluate the enormous residual exponent. -/
+theorem first_section_cost_decomposition :
+    (sectionResult 7 2 6 63).cost =
+      proposedIncrementCost 2 7 6 63 +
+        (sectionResult 6 1 71 (2^63 - 1)).cost := by
+  rfl
 
 /-- The first proposed source increment already exceeds 2^63. -/
 theorem first_increment_ge_pow63 :
@@ -14,12 +23,11 @@ theorem first_increment_ge_pow63 :
   unfold proposedIncrementCost
   omega
 
-/-- The exact source recurrence already exposes the first increment as
-    the first summand of the initial section cost. Using that identity avoids
-    unfolding the enormous residual section inside omega. -/
+/-- The exact source recurrence exposes the first increment as the first
+    summand of the initial section cost. -/
 theorem first_increment_le_first_section :
     proposedIncrementCost 2 7 6 63 ≤ (sectionResult 7 2 6 63).cost := by
-  rw [BB6Coverage.Agent42RootAttainable.first_section_cost_decomposition]
+  rw [first_section_cost_decomposition]
   exact Nat.le_add_right _ _
 
 /-- The three-section score contains the complete first section cost. -/
@@ -47,7 +55,7 @@ theorem champion_score_ge_6766859 :
     6766859 ≤ proposedTM63Moves + 7 := by
   exact Nat.le_trans (by decide : 6766859 ≤ 2^63) champion_score_ge_pow63
 
-#print axioms BB6Coverage.Agent42RootAttainable.first_section_cost_decomposition
+#print axioms first_section_cost_decomposition
 #print axioms first_increment_ge_pow63
 #print axioms first_increment_le_first_section
 #print axioms first_section_cost_le_champion_score

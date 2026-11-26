@@ -90,7 +90,7 @@ def compile_champion_closure(work, imports):
         "--label", "canonical64-exact-champion-score-consumer",
         "--provenance-input", "im-results/agent48-counted-inc0/TM63RawUpperInterface.lean",
         "--provenance-input", "im-results/agent38-champion-threshold/ChampionScoreLowerBound.lean",
-        "--provenance-input", "im-results/agent42-champion-terminal/TM63RootQ4Attainable.lean",
+        "--provenance-input", "im-results/agent24-champion-time/CostRecurrence.lean",
         "--provenance-input", "im-results/agent42-champion-terminal/TerminalProofs.tar.xz.b64",
         "--provenance-input", "im-results/agent42-champion-terminal/TerminalLeftExact.lean.xz.b64",
         "--provenance-input", "im-results/agent13-coverage/BB6Coverage.lean.xz.b64",
@@ -129,7 +129,7 @@ def main():
     champion_profiles = named_axioms(champion_log, [
         "BB6Coverage.Agent48DirectRoot.champion_raw_halts_exact",
         "BB6Coverage.Agent48DirectRoot.champion_weighted_bound",
-        "BB6Coverage.Agent42RootAttainable.first_section_cost_decomposition",
+        "BB6.Agent38ChampionThreshold.first_section_cost_decomposition",
         "BB6.Agent38ChampionThreshold.first_increment_ge_pow63",
         "BB6.Agent38ChampionThreshold.first_increment_le_first_section",
         "BB6.Agent38ChampionThreshold.first_section_cost_le_champion_score",

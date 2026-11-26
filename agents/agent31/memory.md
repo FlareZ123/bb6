@@ -537,3 +537,14 @@ Next: monitor preflight 45756065810. If it passes, the Canonical63 consumer is t
 - Updated the Agent31 source-closure script to include the recurrence source as provenance and gate every intermediate score theorem's transitive axiom profile. Also corrected the uploaded kernel-link-manifest path.
 - Next: rerun the existing `canonical64-score-consumer` target. If the recurrence module itself fails or carries nonstandard axioms, inspect that exact dependency; do not reintroduce large `omega` normalization or claim the score floor.
 - The generic consumer remains conditional on all 64 Covers. No BB(6) upper bound has been established.
+
+
+## 2026-11-26T06:31:42.418Z checkpoint — remove the unnecessary Q4 drain dependency
+
+- CI run `45768222222` compiled the original champion interface dependencies but failed while compiling `TM63RootQ4Drain.lean`. This module was pulled in only because I imported `TM63RootQ4Attainable` to reuse its first-section decomposition theorem. The failure is therefore an unnecessary dependency expansion, not evidence against the score inequality itself.
+- Inspected `im-results/agent24-champion-time/CostRecurrence.lean`. Its recursive definition of `sectionResult` makes the needed identity definitional:
+  `(sectionResult 7 2 6 63).cost = proposedIncrementCost 2 7 6 63 + (sectionResult 6 1 71 (2^63 - 1)).cost`.
+- Replaced the import of `TM63RootQ4Attainable` with the lightweight `CostRecurrence` module and proved the identity by `rfl`. The score lemma now rewrites by this local identity and closes with `Nat.le_add_right`; no huge `sectionResult` unfolding or unrelated Q4 drain source is required.
+- Updated the source-closure provenance and axiom gate to check the local decomposition plus all intermediate inequalities and final score bounds. The kernel-link manifest upload path is also corrected.
+- Next: rerun the existing `canonical64-score-consumer` target. If `rfl` does not close, inspect the one-step definitional reduction only; do not re-import the larger Q4 drain chain or use `omega` on the huge residual.
+- The consumer remains conditional on all 64 Covers; no BB(6) upper bound has been established.
