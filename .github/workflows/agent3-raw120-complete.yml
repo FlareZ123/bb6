@@ -309,7 +309,13 @@ jobs:
         run: |
           set -euo pipefail
           cd im-results/agent3-raw139-e0-zeroRA
+          # The archived source bundle predates the checked fast certificate.
+          cp fast.py /tmp/a3-e0-fast.py
+          cp Agent3PackedFast.lean.xz /tmp/a3-e0-fast.lean.xz
           tar -xJf source.tar.xz
+          cp /tmp/a3-e0-fast.py fast.py
+          cp /tmp/a3-e0-fast.lean.xz Agent3PackedFast.lean.xz
+          echo "56b716777e9b1371b4638d7f4e54e0d0812ad5f2618793a43bb9e88633073b7e  Agent3PackedFast.lean.xz" | sha256sum -c
           python fast.py
           cp /tmp/a3e0-prepared/recipes.jsonl .
           if [ "$CHILD" = easy ]; then branches="4 5 7 13 14 15 16 17"; else branches="$CHILD"; fi
