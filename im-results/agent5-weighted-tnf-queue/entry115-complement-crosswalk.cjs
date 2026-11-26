@@ -91,13 +91,13 @@ const queueSection = parseSection(
   q32Source,
   'def q32QueueData : List Q32QueueRecord :=',
   'theorem q32QueueData_length',
-  /⟨"([^"]+)",\\s*(\\d+),\\s*(\\d+)⟩/g
+  /⟨"([^"]+)",\s*(\d+),\s*(\d+)⟩/g
 );
 const sideSection = parseSection(
   q32Source,
   'def q32SideData : List Q32SideData :=',
   'theorem q32SideData_sourceExact',
-  /⟨(\\d+),\\s*"([^"]+)",\\s*\\d+,\\s*\\d+,\\s*(?:true|false),/g
+  /⟨(\d+),\s*"([^"]+)",\s*\d+,\s*\d+,\s*(?:true|false),/g
 );
 const q32Queue = queueSection.map((m, index) => ({
   index, table: m[1], holes: Number(m[2]), cut: Number(m[3]), slots: slots(m[1])
