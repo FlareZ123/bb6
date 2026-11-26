@@ -2,7 +2,7 @@
 
 Parent: `1RB---_1RC---_0RD---_1LD1RA_------_------` (seven holes); first query A1 at step 6. The original two-query partition proves a weighted bound of 16 or an explicit residual. Its six first-level cycle leaves, 19 halt branches, 166 second-level cycle leaves and five FAR leaves cover 3,554,687,500 of 6,103,515,625 physical completions (58.24%). These are disjoint branch cardinalities, not a count of arbitrary symmetry classes. There are 261 physical five-hole residuals and 153 canonical representatives.
 
-**Current checked descendant closures:** LC0RA (117), LB0LC (109), LD0LC (82), LB0RB (156), LC1LB (92), and earlier LC0LB (229). Each is a five-hole cylinder containing 25^5 physical completions. The new LC0RA result includes two new all-time proofs, one previously derived sweep, 23 finite-automaton certificates and an exhaustive canonical first-hole tree. No actual root remains open inside that child. The remainder of Raw41 is still open; these are alternative refinements of the accepted 77-entry parent roster, not a global BB(6) upper bound.
+**Current checked descendant closures:** LC0RA (117), LB0LC (109), LD0LC (82), LB0RB (156), LC1LB (92), LC0LB (229), LB1RB (96), and RB0RC (173). Each is a five-hole cylinder containing 25^5 physical completions. The new LC0RA result includes two new all-time proofs, one previously derived sweep, 23 finite-automaton certificates and an exhaustive canonical first-hole tree. No actual root remains open inside that child. The latter two children have 177 and 174 FAR witnesses respectively, no unresolved leaves, and a checked joint local 153→151 reduction. The remainder of Raw41 is still open; these are alternative refinements of the accepted 77-entry parent roster, not a global BB(6) upper bound.
 
 ## LC0RA: complete child closure
 
@@ -37,6 +37,21 @@ python gen_children.py child4 Raw41LC0RA 117 '1RB0LC_1RC---_0RD0RA_1LD1RA_------
 Compile CanonicalPartial, Raw41LBLA, generated Raw41TwoCut, Raw41CanonicalCut, the three LC0RA sweep/grammar source modules, Raw41LC0RABase, the 24 Raw41LC0RABranchNN modules, Raw41LC0RAClosed and Raw41LC0RAGraft on one coherent LEAN_PATH. For the earlier child, use child2, Raw41LC0LB, bound 229 and its literal table above. The Python generator and C++ search are untrusted; Lean checks every certificate, exact table correspondence, first-hole split, blank-delay charge and the retained complement.
 
 The original five second-level FAR leaves are A1/B1=0LB/0LA (0012101), A1/C1=0RC/0RC (000), A1/B1=1LA/0LD (00101), A1/B1=1LA/1RB (000), A1/C1=1RC/0RC (000). Raw41LBLA.lean proves the first directly. `python generate_two.py` generates Raw41TwoCut.lean; Raw41CanonicalCut proves the generic ordinary-to-canonical checker implication and the 153/229 roster counts.
+
+## LB1RB and RB0RC: complete FAR-only descendants
+
+The exact child tables and exhaustive original-semantics bounds are:
+
+| Child | Literal partial table | Bound | Canonical tree (splits / cycles / last-hole / FAR) |
+|---|---|---:|---|
+| LB1RB (008) | `1RB0LB_1RC1RB_0RD---_1LD1RA_------_------` | 96 | 253 / 4440 / 1199 / 177 |
+| RB0RC (047) | `1RB0RB_1RC0RC_0RD---_1LD1RA_------_------` | 173 | 359 / 6085 / 1995 / 174 |
+
+The deterministic canonical enumerator found no surviving leaf after FAR search through six-state automata. All 48 branch modules, the two Closed modules and [Raw41FARPairGraft.lean](Raw41FARPairGraft.lean) compiled locally with Lean 4.36.0-rc2 on canonical77 artifact 14997966221 (same SHA256 as above), with the original repository `CanonicalPartial`, `Raw41LBLA`, two-query partition and canonical-cut source. The two weighted bounds and `localFARPair_sound`, `globalFARPair_sound`, `exact_at_target_farPair` have standard axioms only. In particular the empty-residual and weighted-bound theorems cover **every quotient-compatible completion**, not merely enumerated full tables. The unique membership checks give a 151-entry remainder from the 153-entry Raw41 local roster; on the earlier 229-entry global refinement the joint remainder has 227 entries. These are standalone pair reductions; other closures are not silently counted. The latest global canonical64 parent roster has not been changed.
+
+The [structural residual-emptiness lemma](CanonicalEmpty.lean) checks the tree shape using the same canonical alias guard and proves the actual `canonicalResiduals` list is empty. This avoids replaying the entire residual-list computation at the final kernel check. The existing generator's default behavior is unchanged; `--standalone` imports only the necessary core and enables the new check, and `--fast-empty` enables it with the ordinary global-cut import.
+
+Reproduction: run the existing enumerator in `survey/008` and `survey/047` using the respective literal table, then run `python gen_children.py survey/008 Raw41LB1RB 96 '<literal table>' --standalone` and `python gen_children.py survey/047 Raw41RB0RC 173 '<literal table>' --standalone`. The [008 FAR witnesses](survey/008/far.txt) and [047 FAR witnesses](survey/047/far.txt) are complete, sorted by deterministic open-leaf index. Compile original CanonicalPartial and Raw41LBLA, CanonicalEmpty, Base, all 24 Branch modules and Closed for each; regenerate and compile Raw41TwoCut and Raw41CanonicalCut before compiling Raw41FARPairGraft. This is a local accepted-artifact-backed proof, not a fresh strict source CI audit.
 
 ## Next obligation
 
