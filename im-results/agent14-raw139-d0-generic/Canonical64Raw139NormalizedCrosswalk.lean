@@ -8,6 +8,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent14Canonical64Raw139Crosswalk
 
 open BB6Coverage
+open BB6ChampionArithmetic
 open BB6.Agent13BlankDelay
 open BB6.Agent3Canonical64Raw120
 open BB6.Agent6ChampionResidual
@@ -23,11 +24,17 @@ def Extends (p q : PartialMachine) : Prop :=
   ∀ slot, p slot = none ∨ q slot = p slot
 
 /-- Boolean form used by the finite crosswalk. -/
-def extendsTable (p q : PartialMachine) : Bool := decide (Extends p q)
+def extendsTable (p q : PartialMachine) : Bool :=
+  (List.finRange 6).all fun s =>
+    [false,true].all fun b => decide (p (s,b) = none ∨ q (s,b) = p (s,b))
 
 theorem extendsTable_sound {p q : PartialMachine}
-    (h : extendsTable p q = true) : Extends p q :=
-  of_decide_eq_true h
+    (h : extendsTable p q = true) : Extends p q := by
+  intro slot
+  rcases slot with ⟨s,b⟩
+  have hs := List.all_eq_true.mp h s (List.mem_finRange s)
+  have hb : b ∈ [false,true] := by cases b <;> simp
+  exact of_decide_eq_true (List.all_eq_true.mp hs b hb)
 
 theorem compatible_of_extends {p q : PartialMachine} {m}
     (he : Extends p q) (hm : compatible q m) : compatible p m := by
@@ -77,9 +84,9 @@ def normalizedCoveredByActive : List PartialMachine :=
 
 def e0LCTable : PartialMachine := leaf (2, ⟨false, false, 2⟩)
 def e0LCD0RCParent : PartialMachine :=
-  fromCodes [7,24,11,24,14,24,9,16,8,11,24,24]
+  refine e0LCTable (3,false) (some ⟨false,true,2⟩)
 def e0LCD0RCC1ZeroLF : PartialMachine :=
-  fromCodes [7,24,11,24,14,20,9,16,8,11,24,24]
+  refine e0LCD0RCParent (2,true) (some ⟨false,false,5⟩)
 def e0RETable : PartialMachine := leaf (2, ⟨false, true, 4⟩)
 
 def candidateParentTables : List PartialMachine :=
@@ -134,24 +141,6 @@ theorem normalizedTables_cover_with_e0RE {B : Nat} (hB : 852 ≤ B)
     rw [hpEq]
     exact e0RE_cover_at_bound hB
   · exact hNorm p (List.mem_filter.mpr ⟨hp, by simp [he]⟩)
-
-/-- Canonical64 exactness with the accepted E0=0RE Cover supplying one of the
-    66 normalized residuals: 63 other Canonical64 Covers, 65 normalized Covers,
-    and only the explicit active complement outside the normalized crosswalk. -/
-theorem exact_at_target_with_65_normalized_and_complement
-    (hOther : ∀ e ∈ roster64,
-      e.2 ≠ championResidual →
-        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
-    (hNorm : ∀ p ∈ normalizedTablesWithoutE0RE,
-      Cover (WeightedBound (proposedTM63Moves + 7)) p)
-    (hRest : ∀ e ∈ activeUncoveredByNormalized,
-      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
-    ExactBB6 (proposedTM63Moves + 7) := by
-  have hB : 852 ≤ proposedTM63Moves + 7 := by
-    have hScore := BB6.Agent38ChampionThreshold.champion_score_ge_6766859
-    omega
-  exact exact_at_target_with_normalized_and_complement hOther
-    (normalizedTables_cover_with_e0RE hB hNorm) hRest
 
 /-- A finite crosswalk can discharge every active row covered by at least one
     normalized residual Cover. -/
@@ -252,6 +241,24 @@ theorem exact_at_target_with_normalized_and_complement
     hOther
     (activeRows_cover_from_normalized_and_complement
       (proposedTM63Moves + 7) hNorm hRest)
+
+/-- Canonical64 exactness with the accepted E0=0RE Cover supplying one of the
+    66 normalized residuals: 63 other Canonical64 Covers, 65 normalized Covers,
+    and only the explicit active complement outside the normalized crosswalk. -/
+theorem exact_at_target_with_65_normalized_and_complement
+    (hOther : ∀ e ∈ roster64,
+      e.2 ≠ championResidual →
+        Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
+    (hNorm : ∀ p ∈ normalizedTablesWithoutE0RE,
+      Cover (WeightedBound (proposedTM63Moves + 7)) p)
+    (hRest : ∀ e ∈ activeUncoveredByNormalized,
+      Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
+    ExactBB6 (proposedTM63Moves + 7) := by
+  have hB : 852 ≤ proposedTM63Moves + 7 := by
+    have hScore := BB6.Agent38ChampionThreshold.champion_score_ge_6766859
+    omega
+  exact exact_at_target_with_normalized_and_complement hOther
+    (normalizedTables_cover_with_e0RE hB hNorm) hRest
 
 /-- If the refinement crosswalk is total, the global conditional interface
     needs only 63 other Canonical64 Covers and 66 normalized Raw139 Covers. -/
