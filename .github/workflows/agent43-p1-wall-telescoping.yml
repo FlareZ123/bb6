@@ -27,11 +27,15 @@ on:
         type: choice
         default: '286'
         options: ['286', '1614', '2990', '3342']
+  push:
+    branches: [main]
+    paths:
+      - 'im-results/agent43-p1-high-cost-reset-count/.run-packed-prefix-20261126'
 permissions:
   contents: read
 jobs:
   packed-prefix:
-    if: inputs.target == 'packed-prefix'
+    if: inputs.target == 'packed-prefix' || (github.event_name == 'push' && github.event.head_commit.message == 'Agent 9: run packed prefix n=45352466')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -93,7 +97,7 @@ jobs:
           retention-days: 3
   source-wall:
     needs: block-shards
-    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix'
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' && github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
