@@ -1,6 +1,8 @@
 # Raw124 F1=0RE source-audit recovery
 
-**Status: pending source acceptance.** This directory records a compile-recovery strategy for the existing exact Raw124 F1=0RE weighted-TNF partition. It does not add a new candidate census or establish a Cover yet.
+**Status: complete source-accepted F1=0RE Cover.** The sparse-FAR subdivision recovery passed in [run 45884922679](https://github.com/FlareZ123/bb6/actions/runs/45884922679) at revision `09d6f56a73dc2183c840f92febf7d628d338ec01`. The exact table is `1RB---_1RC---_0RD---_1LD1RE_---1LF_---0RE`. Lean 4.36.0-rc2 proves `BB6.Agent2Raw124B0RE.bound_all : ∀ m, compatible pBranch m → WeightedBound 2473 m`, and the complete root `checkRoot` succeeds. Both report only `propext`, `Classical.choice`, and `Quot.sound`.
+
+The self-contained [proof artifact 15149067775](https://github.com/FlareZ123/bb6/actions/runs/45884922679/artifacts/15149067775) has SHA-256 `f89ca10db12662221fb37728d7c266d8bc2fdb54911085faebffa689ea2fbcbe`. It contains 174 project .olean objects, the original source pin, stable source hashes, repair/optimization manifests and final axiom log. The 24 F0 ordinary choices and the F0 first-query halt are all covered. No new candidate search was needed.
 
 ## Pinned evidence
 
@@ -34,9 +36,17 @@ The existing manual target in `.github/workflows/agent13-coverage.yml` now has a
 - Previous repair run: 45855732321.
 - Requested repair kids: K04 and K05.
 
+## Successful sparse-FAR recovery
+
+Threshold-50 subdivision alone still produced runner shutdown at K04 in run 45882800387. Agent2's [optimize_wide_kids.py](optimize_wide_kids.py) preserves the exact original partition, substitutes independently proved `.proven` leaves for the 12 wide (64-state) FAR witnesses, and splits each K04/K05 into its 24 immediate subtrees plus head/root modules. The original Audit checks exact literal table equality at every substituted leaf. The new proofs use the original sound `WeakFAR`, `SparseFAR` and `DirectFAR` checker from Agent3, with the same witness transition and mask data, ordinary kernel `decide`, and no oracle. The Base, Pumps, Data sources and root theorem statements are unchanged. K04 uses nine wide witnesses and K05 three.
+
+- Source optimizer commit `5f842aad0712933d9056686a6c63e275114c7295`; workflow integration `09d6f56a73dc2183c840f92febf7d628d338ec01`.
+- Accepted source preparation artifact 15147824927; K04 compiled artifact 15149880521; K05 compiled artifact 15148443863.
+- The complete root also compiled independently locally against the accepted Raw58 core and the 22 prior kid objects. All twelve DirectFAR witness proofs and both subdivided kid roots passed locally.
+
 ## Acceptance criterion
 
-Do not report F1=0RE as closed unless the final assembly job:
+The final assembly job met all of these criteria:
 
 - verifies the original source pin and `RAW124_SOURCE.sha256`;
 - verifies the subdivision manifest against the original and new sources;
@@ -44,6 +54,6 @@ Do not report F1=0RE as closed unless the final assembly job:
 - compiles `Raw124B0REData.lean`;
 - proves both `checkRoot` and `bound_all` with no `sorryAx` or `native_decide`, and only `propext`, `Classical.choice`, and `Quot.sound`.
 
-If threshold 50 still causes runner shutdown, do not retry unchanged. Lower the cap further or split the generated kid module into smaller independently compiled declaration groups while retaining the same root theorem statement and source pins.
+The successful source audit also checks the optimized module hashes and all stable root statements. Reuse this complete branch artifact; no further rerun of the witness search or the dense checker is needed.
 
-F1=0LF remains a separate open first-level obligation owned by Agent12. No Raw124 parent Cover or Canonical64 subtraction is established by this work.
+The only remaining Raw124 obligation is F1=0LF/F0=1RC (Agent12). The accepted nested parent theorem is in run 45885246108; integration of this new 0RE Cover into the exact singleton-cut consumer is underway. No Raw124 full parent Cover or global roster subtraction has yet been established.
