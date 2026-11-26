@@ -1380,3 +1380,18 @@ Lease unchanged, claimed 00:34:17.217Z. Recovered the 20 CI-accepted child olean
 
 ## 2026-11-26 00:47 UTC — fast 1LB witness archive
 67 affine and 6 ngram exact source-level NeverHalts proofs passed Lean locally, 4825 completions. Reproducible witness bundle fast-1LB.json.zlib.b64 and replay_fast_cut.py. 3050 FAR candidate leaves, eight residuals. Structural partial cut compilation underway, not yet accepted. Sparse asymmetric window search has candidates for 207 (19,20) and 212 (15,13), unverified until BiDFA. Continue remaining six. Lease unchanged.
+
+
+## 2026-11-26 03:47 UTC — raw124 F1=1LB fast-cut continuation
+
+Claimed this incarnation at 2026-11-26T03:35:37.072Z (run_id `agent2-gpt62-2026-11-26T03:35:37.072Z-raw124-1lb-closure`). Original lease release threshold is 04:45:37.072Z; do not refresh the lease or release before the measured 70-minute threshold.
+
+The raw124 parent table is `1RB---_1RC---_0RD---_1LD1RE_---1LF_---`; its F1=1LB branch is one of five remaining F1 children (the other open children are 0LA, 0LB, 0LE, 0LF). Do not confuse F1=1LB with the E1=1LB sibling. This raw124 parent is one of the eleven partial E1-family parents identified in the 25-Nov Critic/Agent7 crosswalk; it must not be counted as a closed parent until all children and the parent composition are source-accepted.
+
+Existing candidate dossier `im-results/agent2-tnf-raw124/Raw124-1LB-fast.md`: cap 3000/lookback 32; 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 affine-growth and six n-gram NeverHalts proofs. The 73 local proofs cover 4,825 raw completions; eight unresolved one-hole leaves remain (display IDs 207, 209, 212, 217, 711, 937, 980, 2083). Their exact table keys are generated into `Raw124New1LB.remaining`. This is a candidate partial cut, not yet an accepted source theorem.
+
+Added a focused target to the existing manual `.github/workflows/agent13-coverage.yml` (commit `064b06846b2451834b16e0812d2521e8575d5bc0`), dispatched run [45750346651](https://github.com/FlareZ123/bb6/actions/runs/45750346651), job 139676357716. It replays the pinned fast partition, compiles `Raw124New1LBCut.lean` with the exact repository source closure, checks for `sorryAx/native_decide`, and uploads `raw124-1lb-fast-partial-source-audit`. At this checkpoint the job is in progress; do not claim source acceptance until successful.
+
+High-value next step: extend only the eight one-hole residuals, not the full 25^5 parent. For a one-hole table, the first query at time n is decisive: the undefined/halting choice halts at weighted time d+n+1, while each of the 24 nonhalting choices completes the table and is therefore nonhalting; a `.last` certificate closes the leaf when all possible delays satisfy d+n+1 ≤ B. The existing canonical68 E1 common floor is 6,766,859 (a floor, not the champion's exact symbolic score C). Try a focused deeper replay through that bound; if any query is later, record its exact weighted score and coordinate a minimally raised common floor. If no query/cycle occurs, search for a stronger FAR/regular invariant. The champion exact attainment is documented in `results/2026-11-24-champion-exact-attainment.md`; it proves attainment only, not maximality.
+
+After the partial-cut CI result, retrieve the eight exact residual table strings, deepen them, and source-check a complete F1=1LB Cover. Then coordinate the accepted child theorem and exact parent membership/composition with Agent31/Agent6. Keep all partial work in `im-results/`; no `results/` promotion or canonical roster subtraction until the full parent Cover and consuming graft are source-accepted.
