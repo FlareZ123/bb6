@@ -7,15 +7,6 @@ namespace BB6.Agent38ChampionThreshold
 open BB6ChampionArithmetic
 open BB6Coverage.Agent48DirectRoot
 
-/-- One-step unfolding of sectionResult exposes the initial proposed
-    increment as the first summand. This is definitional and does not
-    evaluate the enormous residual exponent. -/
-theorem first_section_cost_decomposition :
-    (sectionResult 7 2 6 63).cost =
-      proposedIncrementCost 2 7 6 63 +
-        (sectionResult 6 1 71 (2^63 - 1)).cost := by
-  rfl
-
 /-- The first proposed source increment already exceeds 2^63. -/
 theorem first_increment_ge_pow63 :
     2^63 ≤ proposedIncrementCost 2 7 6 63 := by
@@ -23,12 +14,19 @@ theorem first_increment_ge_pow63 :
   unfold proposedIncrementCost
   omega
 
-/-- The exact source recurrence exposes the first increment as the first
-    summand of the initial section cost. -/
-theorem first_increment_le_first_section :
-    proposedIncrementCost 2 7 6 63 ≤ (sectionResult 7 2 6 63).cost := by
-  rw [first_section_cost_decomposition]
+/-- Generic first-cost inequality. The symbolic successor parameter
+    keeps the residual section opaque, so no tower-sized right endpoint is
+    evaluated by the kernel. -/
+theorem sectionResult_firstCost_le (n m a b : Nat) :
+    proposedIncrementCost (m%3) (n+1) a b ≤
+      (sectionResult (n+1) m a b).cost := by
+  simp only [sectionResult]
   exact Nat.le_add_right _ _
+
+/-- The initial proposed increment is one summand of the initial section. -/
+theorem first_increment_le_first_section :
+    proposedIncrementCost 2 7 6 63 ≤ (sectionResult 7 2 6 63).cost :=
+  sectionResult_firstCost_le 6 2 6 63
 
 /-- For symbolic section parameters, the first section cost is one
     nonnegative summand of the full three-section composition. Keeping the
@@ -42,11 +40,16 @@ theorem sectionResult_cost_le_threeSectionMoves
 /-- The three-section score contains the complete first section cost. -/
 theorem first_section_cost_le_champion_score :
     (sectionResult 7 2 6 63).cost ≤ proposedTM63Moves + 7 := by
-  have h := sectionResult_cost_le_threeSectionMoves 27959 3 7 6 63
-  calc
-    (sectionResult 7 2 6 63).cost ≤ threeSectionMoves 27959 3 7 6 63 := h
-    _ ≤ threeSectionMoves 27959 3 7 6 63 + 7 := Nat.le_add_right _ _
-    _ = proposedTM63Moves + 7 := by rw [← threeSectionMoves_root]
+  have h :
+      (sectionResult 7 2 6 63).cost ≤
+        threeSectionMoves 27959 3 7 6 63 + 7 :=
+    Nat.le_trans
+      (sectionResult_cost_le_threeSectionMoves 27959 3 7 6 63)
+      (Nat.le_add_right _ _)
+  exact Eq.mp
+    (congrArg (fun n : Nat =>
+      (sectionResult 7 2 6 63).cost ≤ n + 7) threeSectionMoves_root)
+    h
 
 /-- The exact champion score exceeds 2^63. This stronger bound can lift any
     smaller finite-parent threshold without unfolding the enormous score. -/
