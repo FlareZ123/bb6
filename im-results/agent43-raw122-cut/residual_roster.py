@@ -78,7 +78,7 @@ def move_children(expr,defs,ambiguous,seen=None):
 def extract(a,p,t,partial_defs,move_defs,ambiguous_partial,ambiguous_moves,seen=None):
  if seen is None:seen=set()
  a=strip_outer(a)
- if a.startswith('.closed ('):return []
+ if a=='.closed' or a.startswith('.closed '):return []
  if a=='.unresolved':return [(p,t)]
  m=re.fullmatch(r'\.split (\d+) (\([^)]*\)) (.*)',a,re.S)
  if m:
