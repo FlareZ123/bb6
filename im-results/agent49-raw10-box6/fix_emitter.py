@@ -22,13 +22,9 @@ replace(r"^    · simp \[hd\]\s*\n    · simp \[run,\s*hd,\s*rawStep,\s*hs,\s*hh
 """    · change (run m n blank).isSome = true
       rw [hd]
       rfl
-    · intro a ha
-      change run m n blank = some a at ha
-      rw [hd] at ha
-      have he : d = a := Option.some.inj ha
-      subst a
-      rw [hs]
-      exact hh""")
+    · change ((run m n blank).bind (rawStep m)) = none
+      rw [hd]
+      simp [rawStep, hs, hh]""")
 replace(r"^    \| none => simp \[hr\] at ih\s*\n    \| some c =>\s*\n      obtain ⟨mv,hv⟩ := ht \(readSlot c\)\s*\n      simp \[run,\s*hr,\s*rawStep,\s*hv\]$",
 """    | none =>
       change (run m n blank).isSome = true at ih
