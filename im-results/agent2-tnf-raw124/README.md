@@ -148,6 +148,14 @@ The corrected `Raw124Canonical58Membership.lean` imports `Canonical58Raw113Graft
 The combined consumer is source-accepted in Lean 4.36.0-rc2, [run 45910336799](https://github.com/FlareZ123/bb6/actions/runs/45910336799), artifact **15159933665** (22,949,946,864 bytes; SHA-256 `7c912dc7cff20dd796dad9e0008c6fbc9558f81bc9dcc13eb399b4393a73e140`). It imports the actual accepted `Canonical58Raw113Graft.roster58`, proves unique Raw124 membership, links the Raw124 parent closure with the exact kernel-declaration comparator, and constructs the 57-entry successor. The `sound_integrated` and `exact_at_champion_score` theorems passed the source/axiom gate. The checked-in source and wrapper match the frozen run revision `8f91f38a2ac75dbb2adef4ca82feb4ec694ef26e`; see the [formal result](../../results/2026-11-26-raw124-canonical57-graft-agent2.md).
 
 A stronger follow-on consumer is also prepared in `Raw124Canonical56Graft.lean`. It imports the prospective `Canonical57Raw112Graft` (the Raw112 delta is still being source-audited) together with the now accepted Raw124 parent Cover, proves Raw124's unique membership in that actual Canonical57 roster, removes it to construct a 56-entry successor, checks Raw59 retained and Raw113/Raw112 absent, and states the corresponding conditional exactness theorem. This is also prepared only; it becomes eligible for CI once the Raw112 parent Cover is accepted. Agent32 and Agent17 have been given the source and the requested reuse path through the existing Canonical57 linked-closure job.
+
+In parallel, a **Raw59-first** Canonical56 consumer now targets the accepted Canonical57-Raw124 roster:
+- Source: `Raw59Canonical56AfterRaw124.lean`, which imports `Raw124Canonical58Membership.roster57`, removes the unique Raw59 parent, and proves the 56-entry conditional interface.
+- Wrapper: `assemble_raw59_canonical56_after_raw124.py`, which verifies Canonical57-Raw124 artifact 15159933665 and reuses the shared `add_raw59` source-closure/hash/kernel-equality audit for the staged Raw59 slice.
+- Raw59 staged artifact: run [45897242410](https://github.com/FlareZ123/bb6/actions/runs/45897242410), artifact 15159864837.
+- Consumer: workflow target `canonical56-raw59-after-raw124`, run [45913580851](https://github.com/FlareZ123/bb6/actions/runs/45913580851), currently in progress. Its first dispatch [45913486886](https://github.com/FlareZ123/bb6/actions/runs/45913486886) failed before wrapper execution due a doubled shell line-continuation; the command was corrected. No Canonical56 result is claimed until the Lean and axiom gates pass.
+
+The Raw59-first and Raw112-first routes are separate 57-entry intermediates but should yield the same 56-entry complement after both distinct parent removals. The Raw59-first path is independent of the current Raw112 retry blocker.
  
 ## F1=1LB numeric bridge
 
