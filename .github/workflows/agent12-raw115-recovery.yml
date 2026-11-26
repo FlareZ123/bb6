@@ -4,108 +4,39 @@ on:
 permissions:
   contents: read
   actions: read
-env:
-  SOURCE_RUN: "45755928881"
-  SOURCE_REF: "496465aee626aaf2237367fb90888499692dc772"
 jobs:
-  repair:
+  assemble:
     runs-on: ubuntu-latest
-    timeout-minutes: 22
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ env.SOURCE_REF }}
+          ref: 496465aee626aaf2237367fb90888499692dc772
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.sha }}
           path: recovery-driver
-      - uses: actions/download-artifact@v4
-        with:
-          name: raw115-generated-source
-          run-id: ${{ env.SOURCE_RUN }}
-          github-token: ${{ github.token }}
-          path: im-results/agent47-raw115-cut
       - name: Install Lean 4.36.0-rc2
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Kernel check the sole slow shard with prefix-split sparse rows
+      - name: Recover exact original-source parent from pinned successful producer jobs
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          cp recovery-driver/im-results/agent12-raw115-consumer/split_sparse.py /tmp/
+          driver=recovery-driver/im-results/agent12-raw115-consumer
+          cp "$driver/recover_raw115.py" "$driver/recovery-pins.json" /tmp/
           rm -rf recovery-driver
-          root=im-results/agent47-raw115-cut
-          python /tmp/split_sparse.py "$root" --chunk 64
-          python im-results/agent13-coverage/unpack.py
-          roots=()
-          for i in $(seq -w 12 17); do roots+=("$root/Raw115Kid17_${i}.lean"); done
-          python tools/lean_compile_closure.py --workdir /tmp/recovered --jobs 4 "${roots[@]}" | tee /tmp/recovery.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/recovery.log; then exit 1; fi
-      - uses: actions/upload-artifact@v4
-        with:
-          name: raw115-recovered-17-12
-          path: |
-            /tmp/recovered/*.olean
-            /tmp/recovery.log
-            im-results/agent47-raw115-cut/Raw115Sparse7*.lean
-          if-no-files-found: error
-  assemble:
-    needs: repair
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - uses: actions/checkout@v4
-        with:
-          ref: ${{ env.SOURCE_REF }}
-      - uses: actions/download-artifact@v4
-        with:
-          name: raw115-generated-source
-          run-id: ${{ env.SOURCE_RUN }}
-          github-token: ${{ github.token }}
-          path: im-results/agent47-raw115-cut
-      - uses: actions/download-artifact@v4
-        with:
-          pattern: raw115-audit-*
-          run-id: ${{ env.SOURCE_RUN }}
-          github-token: ${{ github.token }}
-          path: /tmp/audit
-          merge-multiple: true
-      - uses: actions/download-artifact@v4
-        with:
-          name: raw115-recovered-17-12
-          path: /tmp/replacement
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Assemble exact parent with accepted sibling shards
-        run: |
-          set -euo pipefail
-          root=im-results/agent47-raw115-cut
-          find /tmp/replacement -name '*.olean' -exec cp '{}' /tmp/audit/ \;
-          find /tmp/replacement -name 'Raw115Sparse7*.lean' -exec cp '{}' "$root/" \;
-          cp "$root/"*.lean /tmp/audit/
-          (
-            cd /tmp/audit
-            export LEAN_PATH="$PWD"
-            for i in $(seq -w 0 23); do
-              if [ ! -f "Raw115Branch${i}.olean" ]; then
-                for j in $(seq -w 0 23); do test -s "Raw115Kid${i}_${j}.olean"; done
-                lean -o "Raw115Branch${i}.olean" "Raw115Branch${i}.lean"
-              fi
-            done
-            lean -o Raw115Data.olean Raw115Data.lean | tee /tmp/root.log
-            if grep -Eq 'sorryAx|native_decide' /tmp/root.log; then exit 1; fi
-          )
-          python im-results/agent13-coverage/unpack.py
-          python tools/lean_compile_closure.py --manifest-only --artifact-dir /tmp/audit --manifest /tmp/audit/source-manifest.json --label raw115 --theorem BB6.Agent47Raw115.all_completions --parent-table '1RB---_1RC---_0RD---_1LD1RE_---0RD_------' --weighted-bound 7014 --artifact-name raw115-certified-root --provenance-input "$root/generate.py" --provenance-input "$root/symbolic.py" --provenance-input "$root/far-bank.txt" "$root/Raw115Data.lean"
+          python /tmp/recover_raw115.py --pins /tmp/recovery-pins.json --work /tmp/raw115
       - uses: actions/upload-artifact@v4
         with:
           name: raw115-certified-root
           path: |
-            /tmp/audit/*.olean
-            /tmp/audit/*.lean
-            /tmp/audit/source-manifest.json
+            /tmp/raw115/audit/*.olean
+            /tmp/raw115/audit/*.lean
+            /tmp/raw115/audit/source-manifest.json
+            /tmp/raw115/audit/producer-audit.json
+            /tmp/raw115/root.log
           if-no-files-found: error
