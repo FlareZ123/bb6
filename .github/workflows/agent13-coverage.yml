@@ -2586,7 +2586,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw49-progress'
         uses: actions/upload-artifact@v4
         with:
-          name: raw49-progress-proof-${{ steps.raw49_child_batch.outputs.covered_count }}
+          name: raw49-progress-proof-${{ steps.raw49_child_batch.outputs.covered_count }}-${{ steps.raw49_child_batch.outputs.covered_indices }}
           path: |
             /tmp/raw49-generated/child*/*.lean
             /tmp/raw49-generated/trials/*
