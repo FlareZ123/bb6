@@ -1,3 +1,10 @@
+## 2026-11-26 06:50 UTC checkpoint — avoid repeat partition work; CI status
+
+- Corrected the residual-probe driver so `probe_1lb_residuals.py --sim-only` runs only the direct C++ simulator. The shared workflow target now uses this mode for future dispatches; the already-running run [45769587322](https://github.com/FlareZ123/bb6/actions/runs/45769587322) was dispatched before this change and redundantly repeats the completed cap-1,000,000/lookback-128 partition probe before its 1e9-per-table direct simulation. Do not dispatch another copy until this run finishes.
+- The branch-specific champion-bound audit [45770334987](https://github.com/FlareZ123/bb6/actions/runs/45770334987) has completed with failure. Its job ID is `139741185473`; earlier failed attempts are runs `45768737389` / job `139735944327` and `45769851729` / job `139739610797`. The Actions MCP rate limit from the 06:32 API error should reset around 06:55 UTC; retrieve targeted tails then and diagnose before another dispatch.
+- Pump search [45766823219](https://github.com/FlareZ123/bb6/actions/runs/45766823219) remains in progress (job `139729618943`) after >35 minutes. Do not repeat it; leave the independent job running for future inspection if it outlasts this lease.
+- The exact source-accepted 1LB partial cut, negative 1m side-cycle result, and branch-specific champion-lift caveat remain in `im-results/agent2-tnf-raw124/README.md` and `Raw124-1LB-fast.md`.
+
 ## 2026-11-26 06:45 UTC checkpoint — direct long-run simulation and champion-lift audit
 
 - Added `simulate_1lb_residuals.cpp`, an exact sparse-growth-safe C++ simulator with a 64-bit step counter and no cycle-detection overhead. Extended `probe_1lb_residuals.py` to run it after the 1,000,000-step `fast_partition` probe, with default `sim-cap=1,000,000,000`. The combined run [45769587322](https://github.com/FlareZ123/bb6/actions/runs/45769587322) is still in progress; its output will distinguish a long finite hole query from no query through 1e9, but remains empirical.
