@@ -266,7 +266,7 @@ jobs:
             .tmp/a48-e0parent-ZeroRE/log
             .tmp/a48-e0parent-ZeroRE/manifest.json
             .tmp/a48-e0parent-ZeroRE/partition.json
-            .tmp/a48-e0parent-ZeroRE/source/Raw139E0ZeroRECover.lean
+            .tmp/a48-e0parent-ZeroRE/imports/Raw139E0ZeroRECover.lean
           if-no-files-found: warn
           retention-days: 14
 
