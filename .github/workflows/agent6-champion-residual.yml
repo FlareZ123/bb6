@@ -473,6 +473,7 @@ jobs:
               "BB6.Agent6ChampionRaw139SiblingIntegration.removedFiveSibling_count",
               "BB6.Agent6ChampionRaw139SiblingIntegration.sourceAcceptedSiblingCover",
               "BB6.Agent6ChampionRaw139SiblingIntegration.cover_remainingRaw139Frontier",
+              "BB6.Agent6ChampionRaw139SiblingIntegration.cover_championResidual_after_five",
               "BB6.Agent6ChampionRaw139SiblingIntegration.canonical78_refined_obligation_count",
               "BB6.Agent6ChampionRaw139SiblingIntegration.exact_from_remainingRaw139AfterFive",
           )
