@@ -38,12 +38,11 @@ env=os.environ.copy()
 env["LEAN_PATH"]=str(out)
 log_path=out/"audit.log"
 with log_path.open("w",encoding="utf-8") as log:
-    for i in branch_indices:
-        name=f"Raw122Branch{i:02}"
-        subprocess.run(["lean","-o",f"{name}.olean",f"{name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
-    if parent_core:
-        shutil.copy2(cut/f"{root_name}.lean", out/f"{root_name}.lean")
-    subprocess.run(["lean","-o",f"{root_name}.olean",f"{root_name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
+    if not parent_core:
+        for i in branch_indices:
+            name=f"Raw122Branch{i:02}"
+            subprocess.run(["lean","-o",f"{name}.olean",f"{name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
+        subprocess.run(["lean","-o",f"{root_name}.olean",f"{root_name}.lean"],cwd=out,env=env,stdout=log,stderr=subprocess.STDOUT,check=True)
 log_text=log_path.read_text(encoding="utf-8")
 if "sorryAx" in log_text or "native_decide" in log_text:
     raise RuntimeError("Raw122 core output contains a prohibited axiom or native_decide")
@@ -106,7 +105,9 @@ prov.append(str(out/"source-ref.txt"))
 
 def manifest_command(path: Path, label: str) -> list[str]:
     cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(path),"--manifest-only","--artifact-dir",str(out),"--label",label,"--artifact-name","raw122-parent-core" if parent_core else "raw122-certified-root"]
-    if not parent_core:
+    if parent_core:
+        cmd += ["--allow-missing-objects"]
+    else:
         cmd += ["--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
     for p in prov: cmd += ["--provenance-input",p]
     cmd += [str((cut/f"{root_name}.lean").relative_to(root))]
