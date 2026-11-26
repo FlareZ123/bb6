@@ -381,6 +381,75 @@ jobs:
           print(json.dumps(summary, indent=2, sort_keys=True))
           PY
 
+      - name: Compile and audit the conditional 67-residual E1 consumer
+        run: |
+          set -euo pipefail
+          base=/tmp/a31-accepted76/a31-shared
+          export LEAN_PATH="/tmp/a31-canonical74:/tmp/a31-parent-interfaces:$base:/tmp/a47-canonical77"
+          lean -o /tmp/a31-canonical74/Canonical67E1ParentGraft.olean \
+            im-results/agent47-raw112-cut/Canonical67E1ParentGraft.lean \
+            2>&1 | tee /tmp/a31-canonical67.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a31-canonical67.log; then
+            echo "Forbidden proof placeholder or native_decide in canonical67 consumer" >&2
+            exit 1
+          fi
+          python3 - /tmp/a31-canonical67.log <<'PY'
+          import json, pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          profiles = {}
+          for name, axioms in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log):
+              profiles[name] = {x.strip() for x in axioms.split(",") if x.strip()}
+          for name in re.findall(r"'([^']+)' does not depend on any axioms", log):
+              profiles[name] = set()
+          required = (
+              "BB6.Agent47Canonical67E1ParentGraft.p112_root",
+              "BB6.Agent47Canonical67E1ParentGraft.p112_parent_count",
+              "BB6.Agent47Canonical67E1ParentGraft.count67",
+              "BB6.Agent47Canonical67E1ParentGraft.sound67",
+              "BB6.Agent47Canonical67E1ParentGraft.exact_at_target67",
+          )
+          for name in required:
+              if name not in profiles:
+                  raise SystemExit("missing axiom profile: " + name)
+              bad = profiles[name] - allowed
+              if bad:
+                  raise SystemExit(f"{name}: unexpected axioms {sorted(bad)}")
+              print(f"{name}: {sorted(profiles[name])}")
+          pathlib.Path("/tmp/a31-canonical67-axioms.json").write_text(
+              json.dumps({name: sorted(profiles[name]) for name in required}, indent=2, sort_keys=True) + "\\n"
+          )
+          PY
+          python3 - <<'PY'
+          import hashlib, json, pathlib, subprocess
+          def sha(path):
+              h = hashlib.sha256()
+              with path.open("rb") as stream:
+                  for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+                      h.update(chunk)
+              return h.hexdigest()
+          source = pathlib.Path("im-results/agent47-raw112-cut/Canonical67E1ParentGraft.lean")
+          summary = {
+              "theorem": "BB6.Agent47Canonical67E1ParentGraft.exact_at_target67",
+              "status": "conditional 67-residual quotient theorem; nine parent Covers and all 67 retained Covers remain explicit",
+              "base_theorem": "BB6.Agent6Canonical68E1ParentGraft.exact_at_target",
+              "base_residual_count": 68,
+              "after_raw112_parent_cut": 67,
+              "new_parent": "Raw112",
+              "new_parent_bound": 100000,
+              "new_parent_cover_theorem": "BB6.Agent47Raw112.parent_cover",
+              "source_revision": "${GITHUB_SHA}",
+              "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip(),
+              "source_sha256": sha(source),
+              "olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical67E1ParentGraft.olean")),
+              "canonical68_olean_sha256": sha(pathlib.Path("/tmp/a31-canonical74/Canonical68E1ParentGraft.olean")),
+              "axiom_profiles": json.loads(pathlib.Path("/tmp/a31-canonical67-axioms.json").read_text()),
+              "axiom_allowlist": ["propext", "Classical.choice", "Quot.sound"]
+          }
+          pathlib.Path("/tmp/a31-canonical67-summary.json").write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          print(json.dumps(summary, indent=2, sort_keys=True))
+          PY
+
       - name: Record the 74-residual source and object manifest
         env:
           CANONICAL76_RUN_ID: ${{ inputs.canonical76_run_id }}
@@ -456,6 +525,18 @@ jobs:
             /tmp/a31-canonical68-summary.json
             im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean
             im-results/agent6-e1-parent-consumer/README.md
+          if-no-files-found: error
+          retention-days: 14
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent47-canonical67-e1-parent-consumer
+          path: |
+            /tmp/a31-canonical74/Canonical67E1ParentGraft.olean
+            /tmp/a31-canonical67.log
+            /tmp/a31-canonical67-axioms.json
+            /tmp/a31-canonical67-summary.json
+            im-results/agent47-raw112-cut/Canonical67E1ParentGraft.lean
           if-no-files-found: error
           retention-days: 14
 
