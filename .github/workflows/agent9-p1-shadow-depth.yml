@@ -4,24 +4,25 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, half-reverse-block]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, half-reverse-block]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
         type: string
         required: false
 permissions:
+  actions: read
   contents: read
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ inputs.target == 'packed-prefix' && 90 || 20 }}
+    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume') && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -478,6 +479,63 @@ jobs:
             /tmp/p1-45352466-half.chk
             /tmp/p1-45352466-half.log
             /tmp/p1-3342-half.log
+          if-no-files-found: ignore
+          compression-level: 1
+          retention-days: 90
+      - name: Download prior n=45,352,466 packed-prefix checkpoint
+        if: inputs.target == 'packed-prefix-resume'
+        uses: actions/download-artifact@v4
+        with:
+          name: p1-packed-prefix-n45352466-45909216505
+          run-id: 45909216505
+          github-token: ${{ github.token }}
+          path: /tmp/p1-resume
+      - name: Resume n=45,352,466 packed half-prefix scan with larger K
+        if: inputs.target == 'packed-prefix-resume'
+        shell: bash
+        run: |
+          set -euo pipefail
+          BASE=5a2bdc111a72f7967ef5b8bf54d6909102adceb1
+          git fetch --depth=1 origin "$BASE"
+          git show "$BASE:im-results/agent43-p1-high-cost-reset-count/packed_prefix.cpp" > /tmp/packed_prefix_continue.cpp
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('/tmp/packed_prefix_continue.cpp')
+          s = p.read_text()
+          old = 'if(get()!=0x50314331||get()!=n||get()!=K||get()!=h||get()!=half)throw std::runtime_error("checkpoint parameters");'
+          new = 'if(get()!=0x50314331||get()!=n)throw std::runtime_error("checkpoint parameters");int oldK=get();if(oldK>K||get()!=h||get()!=half)throw std::runtime_error("checkpoint parameters");'
+          if old not in s:
+              raise SystemExit("checkpoint header pattern changed")
+          s = s.replace(old, new, 1)
+          old = 'load(path,n,K,h,half,s,maxgap,gs);'
+          new = 'load(path,n,K,h,half,s,maxgap,gs);if(!safe(maxgap))throw std::runtime_error("checkpoint margin");'
+          if old not in s:
+              raise SystemExit("checkpoint load call pattern changed")
+          s = s.replace(old, new, 1)
+          p.write_text(s)
+          PY
+          sha256sum /tmp/packed_prefix_continue.cpp /tmp/p1-resume/p1-45352466-half.chk
+          g++ -O3 -march=native -std=c++17 -fopenmp /tmp/packed_prefix_continue.cpp -o /tmp/packed_prefix_continue
+          cp /tmp/p1-resume/p1-45352466-half.chk /tmp/p1-45352466-half.chk
+          set +e
+          OMP_NUM_THREADS=1 /tmp/packed_prefix_continue 45352466 320000000 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half-resume.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [[ "$rc" -eq 1 ]]; then
+            grep -Fq "END 45352466 0" /tmp/p1-45352466-half-resume.log
+          elif [[ "$rc" -eq 0 ]]; then
+            grep -Eq '^END 45352466 [1-9][0-9]* /tmp/p1-45352466-half-resume.log
+          else
+            exit "$rc"
+          fi
+          echo "resume_exit_code=$rc"
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'packed-prefix-resume'
+        with:
+          name: p1-packed-prefix-n45352466-resume-${{ github.run_id }}
+          path: |
+            /tmp/p1-45352466-half.chk
+            /tmp/p1-45352466-half-resume.log
           if-no-files-found: ignore
           compression-level: 1
           retention-days: 90
