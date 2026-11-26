@@ -2,7 +2,7 @@ import json,pathlib,sys
 from collections import Counter
 from search import far,tree,scan
 from scan import ORDER
-from emit_family import code_name,bl,slot
+from emit_family import code_name,bl,slot,BLOCK_RECIPES
 OPEN='open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit BB6.Agent6ChunkSupport\n'
 OPT='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'
 def emit(code,spec,out,limit=225,tr=None):
@@ -12,7 +12,7 @@ def emit(code,spec,out,limit=225,tr=None):
  else:
   counts=Counter(spec['counts']);opens=spec['open']
  rec={int(i):r for i,r in spec['recipes'].items()};idx={tuple(t):i for i,t in enumerate(opens)}
- blocks=sorted(i for i,r in rec.items() if r[0] in ('block','phase'));bmodule={i:prefix+f'Block{j//8:02}' for j,i in enumerate(blocks)}
+ blocks=sorted(i for i,r in rec.items() if r[0] in BLOCK_RECIPES);bmodule={i:prefix+f'Block{j//8:02}' for j,i in enumerate(blocks)}
  def max_late(r):
   if r[0]=='late':return int(r[1])
   if r[0]=='split':return max([int(r[1])]+[max_late(x) for x in r[3]])
@@ -53,7 +53,7 @@ def emit(code,spec,out,limit=225,tr=None):
   if k=='split':n,s,children=a;return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(node(c,deps) for c in children)+'])'
   if k=='open':
    p=a[0];i=idx[tuple(p)];r=rec[i]
-   if r[0] in ('block','phase'):deps.add(bmodule[i]);return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
+   if r[0] in BLOCK_RECIPES:deps.add(bmodule[i]);return f'.proven {NS}.H{i}.ctr {NS}.H{i}.never'
    return recipe_node(p,r,deps)
   raise ValueError(t)
  seq=[0];files=[]
