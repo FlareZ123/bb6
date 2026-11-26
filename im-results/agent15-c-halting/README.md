@@ -47,9 +47,11 @@ second family, (j,m,k)=(0,1,40) gives (a,k)=(3,40), with
 of reachability; they show that the current M192 invariant does not exclude
 the entire stopping families.
 
-NoMachineCHalt.lean has therefore been corrected to record the exact
-nontrivial residual stopping families after the two small feeder exclusions.
-It does not prove that Machine C is nonhalting. The remaining reachability
+NoMachineCHalt.lean records the exact nontrivial residual stopping
+families after the two small feeder exclusions. Its M192 predicate
+references now use the explicit namespace `Agent41M192.lowCore`; the
+corrected original-source bridge still requires a focused compile. It does
+not prove that Machine C is nonhalting. The remaining reachability
 questions are open.
 
 
