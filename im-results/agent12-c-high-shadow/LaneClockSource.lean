@@ -109,13 +109,9 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
   constructor
   · simp [callsAt,edgeClock,hState,hAge,lift,parity,gap]
     <;> omega
-  · have hleft : (lift s).b - 2 - (lift s).o = s.a := by
-      simp [lift]
-      omega
-    have hright : (lift (step (d+1) s)).b - 2 -
-        (lift (step (d+1) s)).o = (step (d+1) s).a := by
-      simp [lift]
-      omega
+  · have hleft : s.a + 2 + parity s - 2 - parity s = s.a := by omega
+    have hright : (step (d+1) s).a + 2 + parity (step (d+1) s) - 2 -
+        parity (step (d+1) s) = (step (d+1) s).a := by omega
     simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
       hState,hAge,hpost,hleft,hright,lift]
 
