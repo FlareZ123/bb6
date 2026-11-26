@@ -31,7 +31,10 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           DIR=im-results/agent6-raw57-ra
-          if [[ "$CHILD" == raw56-e1-0re ]]; then
+          if [[ "$CHILD" == raw56-root-cut ]]; then
+            DIR=im-results/agent1-raw56
+            ROOT=Raw56RootCut
+          elif [[ "$CHILD" == raw56-e1-0re ]]; then
             python im-results/agent1-raw56/prepare.py
             DIR=im-results/agent1-raw56/generated
             ROOT=Raw56E1REAll
