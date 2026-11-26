@@ -31,7 +31,7 @@ Eight non-affine counter cylinders are proved in [rf-hard.tar.xz](rf-hard.tar.xz
 
 All four module-level never theorems are kernel checked with propext and Quot.sound. The same archive includes Raw54RFBase.lean and Raw54RFAttained.lean, the latter proves the score 845 lower bound in the original weighted semantics, with standard propext, Classical.choice, Quot.sound axioms. Extract the archive into a directory on the Lean import path.
 
-63 of the 67 sparse n-gram candidates have individually compiled with the original sparse kernel checker; two more (40,41) are resolved by FAR instead. Including RF54 below, 170 of 179 misses have accepted certificates (41 FAR, 63 sparse, 57 affine, 9 non-affine). The precise residual set is **26,55,69,93,139,141,144,149,174** (9 total). No complete RF child Cover yet.
+64 of the 67 sparse n-gram candidates have individually compiled with the original sparse kernel checker; two more (40,41) are resolved by FAR instead. RF26 (width 28, 1,684 states) passed the original source closure and named axiom audit in [run 45835170887](https://github.com/FlareZ123/bb6/actions/runs/45835170887), source commit `dba4e0db94a161f39eeab42bfd98fd7c2139ba2d`. Reproduce it with `generate_rf_witnesses.py --sparse --sparse-ids 26`. Including RF54 below, 171 of 179 misses have accepted certificates (41 FAR, 64 sparse, 57 affine, 9 non-affine). The precise residual set is **55,69,93,139,141,144,149,174** (8 total). No complete RF child Cover yet.
 
 ## Residual 54: source-checked total binary-carry invariant
 
