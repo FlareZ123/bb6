@@ -136,6 +136,9 @@ jobs:
             LOG=/tmp/raw57.log
           fi
           if grep -qE 'sorryAx|native_decide' "$LOG"; then exit 1; fi
+      - name: Standard-axiom audit for Raw56 root consumer
+        if: inputs.child == 'raw56-root-consumer'
+        run: python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root.log --require BB6.Agent1Raw56Root.sound19_closed
       - uses: actions/upload-artifact@v4
         if: always() && inputs.child == 'discover-1LA'
         with:
