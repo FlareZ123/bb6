@@ -1,13 +1,23 @@
-name: Raw139 E0 ZeroRC exact-cover shards (manual)
+name: Raw139 E0 exact-cover shards (manual)
 on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Pinned source commit containing the E0 ZeroRC proof generator
+        description: Pinned source commit containing the selected E0 proof generator
         type: string
         required: true
+      variant:
+        description: Select the E0 transition
+        type: choice
+        options: [zeroRC, oneRE]
+        default: zeroRC
 permissions:
   contents: read
+env:
+  VARIANT: ${{ inputs.variant || 'zeroRC' }}
+  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || 'ZRC' }}
+  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || 'BB6.Agent6E0ZeroRC' }}
+  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || '1673363' }}
 jobs:
   prepare:
     runs-on: ubuntu-latest
@@ -24,8 +34,8 @@ jobs:
       - name: Reconstruct exact candidate and proof sources once
         run: |
           set -euo pipefail
-          base=im-results/agent6-raw139-e0-zeroRC
-          work=.tmp/a6-zeroRC
+          base=im-results/agent6-raw139-e0-${VARIANT}
+          work=.tmp/a6-${VARIANT}
           mkdir -p "$work/imports"
           python3 "$base/reproduce.py"
           python3 "$base/assemble.py" "$work/imports"
@@ -35,16 +45,18 @@ jobs:
       - name: Compile shared source-connected dependency closure
         run: |
           set -euo pipefail
-          base=im-results/agent6-raw139-e0-zeroRC
-          work=.tmp/a6-zeroRC
-          python3 tools/lean_compile_closure.py "$base/Hybrid.lean" "$base/E0ZeroRCRecurrence.lean" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean --workdir "/tmp/a6-zeroRC-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-zeroRC-core | tee "$work/core.log"
+          base=im-results/agent6-raw139-e0-${VARIANT}
+          work=.tmp/a6-${VARIANT}
+          proofs=("$base/E0ZeroRCRecurrence.lean")
+          if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
+          python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-zeroRC/Hybrid.lean "${proofs[@]}" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean --workdir "/tmp/a6-${VARIANT}-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-${VARIANT}-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
           mkdir -p "$work/core"
-          find /tmp/a6-zeroRC-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
+          find /tmp/a6-${VARIANT}-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-e0-zeroRC-core-and-sources
-          path: .tmp/a6-zeroRC
+          name: raw139-e0-${{ env.VARIANT }}-core-and-sources
+          path: .tmp/a6-${{ env.VARIANT }}
           include-hidden-files: true
           retention-days: 14
   shard:
@@ -67,8 +79,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw139-e0-zeroRC-core-and-sources
-          path: .tmp/a6-zeroRC
+          name: raw139-e0-${{ env.VARIANT }}-core-and-sources
+          path: .tmp/a6-${{ env.VARIANT }}
       - name: Reconstruct shared generated source dependencies
         run: |
           python3 im-results/agent13-coverage/unpack.py
@@ -78,16 +90,16 @@ jobs:
           ROOT_INDEX: ${{ matrix.root }}
         run: |
           set -euo pipefail
-          work=.tmp/a6-zeroRC
+          work=.tmp/a6-${VARIANT}
           mkdir -p "$work/shard"
-          python3 tools/lean_compile_closure.py "$work/imports/ZRCRoot${ROOT_INDEX}.lean" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir "/tmp/a6-zeroRC-branch" --jobs 2 --manifest "$work/shard/manifest.json" --label "raw139-e0-zeroRC-root${ROOT_INDEX}" --theorem "BB6.Agent6E0ZeroRC.cZRCRoot${ROOT_INDEX}" --weighted-bound 1673363 | tee "$work/shard/log"
+          python3 tools/lean_compile_closure.py "$work/imports/${ROOT_PREFIX}Root${ROOT_INDEX}.lean" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir "/tmp/a6-${VARIANT}-branch" --jobs 2 --manifest "$work/shard/manifest.json" --label "raw139-e0-${VARIANT}-root${ROOT_INDEX}" --theorem "${PROOF_NS}.c${ROOT_PREFIX}Root${ROOT_INDEX}" --weighted-bound "$BOUND" | tee "$work/shard/log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/shard/log"
           mkdir -p "$work/shard/build"
-          find /tmp/a6-zeroRC-branch -name '*.olean' -exec cp '{}' "$work/shard/build/" ';'
+          find /tmp/a6-${VARIANT}-branch -name '*.olean' -exec cp '{}' "$work/shard/build/" ';'
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-e0-zeroRC-root${{ matrix.root }}-certified
-          path: .tmp/a6-zeroRC/shard
+          name: raw139-e0-${{ env.VARIANT }}-root${{ matrix.root }}-certified
+          path: .tmp/a6-${{ env.VARIANT }}/shard
           include-hidden-files: true
           retention-days: 14
   compose:
@@ -105,24 +117,24 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw139-e0-zeroRC-core-and-sources
-          path: .tmp/a6-zeroRC
+          name: raw139-e0-${{ env.VARIANT }}-core-and-sources
+          path: .tmp/a6-${{ env.VARIANT }}
       - uses: actions/download-artifact@v4
         with:
-          pattern: raw139-e0-zeroRC-root*-certified
-          path: .tmp/a6-zeroRC/shards
+          pattern: raw139-e0-${{ env.VARIANT }}-root*-certified
+          path: .tmp/a6-${{ env.VARIANT }}/shards
       - name: Compose exact parent Cover
         run: |
           set -euo pipefail
-          work=.tmp/a6-zeroRC
+          work=.tmp/a6-${VARIANT}
           python3 im-results/agent13-coverage/unpack.py
           python3 im-results/agent13-block-far/specialize.py 4
-          python3 im-results/agent6-raw139-e0-zeroRC/compose.py "$work"
+          python3 im-results/agent6-raw139-e0-${VARIANT}/compose.py "$work"
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-e0-zeroRC-parent-certified
+          name: raw139-e0-${{ env.VARIANT }}-parent-certified
           path: |
-            .tmp/a6-zeroRC/parent
-            .tmp/a6-zeroRC/imports
+            .tmp/a6-${{ env.VARIANT }}/parent
+            .tmp/a6-${{ env.VARIANT }}/imports
           include-hidden-files: true
           retention-days: 14
