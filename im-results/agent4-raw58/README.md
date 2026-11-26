@@ -1,4 +1,4 @@
-# Raw58 E1=0RA: exact weighted closure awaiting cut-object composition
+# Raw58 E1=0RA: exact weighted closure, source-audited
 
 ## The mathematical result
 
@@ -14,7 +14,7 @@ The historical original-source audit [45596841950](https://github.com/FlareZ123/
 | 1LE | E0, 8 | 19310 | [45748661100](https://github.com/FlareZ123/bb6/actions/runs/45748661100), LE1 shard successful |
 | 1LF | F0, 8 | **3055746 (exact)** | All 24 Kids in [45750653340](https://github.com/FlareZ123/bb6/actions/runs/45750653340); Data wrapper, sharp upper/lower and exactness locally compiled |
 
-The locally original-source checked `Raw58SharpComposition.raw58_exact` proves the exact parent threshold **3,055,746**, with the historical cut theorem as its one explicit premise. The threshold is strictly below the accepted canonical64 cutoff 6,766,859. `Raw58SharpComposition.raw58_lower` is unconditional. The final `Raw58Exact.raw58_bound_exact` adapter and `coverRaw58` need a recompiled cut closure to achieve a single source-audited parent proof. Do not report a global roster reduction until the exact parent Cover is actually consumed by the current integrated roster.
+The full source audit [45762057732](https://github.com/FlareZ123/bb6/actions/runs/45762057732) at revision `91ebd1de7ac989c13541f3b30b422097cebc209a` accepts the unconditional theorem `BB6.Agent4Raw58Exact.raw58_bound_exact` and its `all_completions` and `coverRaw58` consequences. The exact parent threshold is **3,055,746**, strictly below the accepted canonical64 cutoff 6,766,859. The theorem uses only propext, Classical.choice, Quot.sound. Artifact [15090715339](https://github.com/FlareZ123/bb6/actions/runs/45762057732/artifacts/15090715339), `raw58-parent-proof`, SHA-256 `2231c274970b233002894c3fa097e3b81ad1484a3db0809c0148f8c03e26c477`, contains the ten-shard composition and 785 modules. Global roster integration is separate; Agent31 has the pin.
 
 The attaining last-hole machine is `1RB1LF_1RC---_0RD1RC_1LD1RE_1LC0RA_0LA0LF` with B1 assigned halt. Its exact first query occurs at ordinary step 3,055,744, proved by compressed sweep recurrence, and possible incoming blank delays are [0,1]. The maximum weighted score is therefore 3,055,744+1+1 = 3,055,746. The two other late LF1 first queries at #109/#122 occur at 2,298,758 and 2,295,586. See [LF1Sharp.md](LF1Sharp.md) and [LF1Late.md](LF1Late.md).
 
@@ -24,11 +24,11 @@ The attaining last-hole machine is `1RB1LF_1RC---_0RD1RC_1LD1RE_1LC0RA_0LA0LF` w
 
 Original-source local Lean 4.36.0-rc2 accepted all 24 generated LF1 weight checks, the Data wrapper, upper, lower and exactness theorems with only standard axioms `propext`, `Classical.choice`, `Quot.sound`. It also accepted the conditional full-parent assembly against the nine non-cut artifact closures; all 521 unique module source/object identities agree across them. The artifact pins and reproduction recipe are in [LF1Sharp.md](LF1Sharp.md).
 
-## Remaining integration gate
+## Completed parent composition
 
-The historical cut run did not retain a reusable object artifact. A modern generator regression dropped valid unspecified one-state FAR defaults from the explicit witness census. Run [45757432002](https://github.com/FlareZ123/bb6/actions/runs/45757432002) exposed two LC1 leaves (61/63). Commit [637a33f7](https://github.com/FlareZ123/bb6/commit/637a33f7d0e3460eba2cc3c00af788678c3d4fe2) restores those defaults for the seven legacy cut children, with a validity test before assigning each one. The new `cut` shard [45758266553](https://github.com/FlareZ123/bb6/actions/runs/45758266553) is compiling.
+The historical cut run did not retain a reusable object artifact. A modern generator regression dropped valid unspecified one-state FAR defaults from the explicit witness census. Run [45757432002](https://github.com/FlareZ123/bb6/actions/runs/45757432002) exposed two LC1 leaves (61/63). Commit [637a33f7](https://github.com/FlareZ123/bb6/commit/637a33f7d0e3460eba2cc3c00af788678c3d4fe2) restores those defaults for the seven legacy cut children, with a validity test before assigning each one. The new `cut` shard [45758266553](https://github.com/FlareZ123/bb6/actions/runs/45758266553) succeeded and produced artifact 15089752872.
 
-After its acceptance, use `raw58-compose` with the ten pinned artifact groups from [shard_groups.json](shard_groups.json). The workflow's parent artifact metadata now records the actual 3,055,750 loose theorem threshold rather than the obsolete 19,310. For sharp exactness, compile the weight-only modules and `Raw58Exact.lean` with the cut artifact and the same accepted child closure. The existing older [Canonical75Raw58Graft.lean](Canonical75Raw58Graft.lean) is a historical conditional consumer at the incorrect 19,310 premise and stale 76 roster; do not use it for current integration. Agent31 has been notified to consume the actual Raw58 Cover on the current accepted complement.
+The `raw58-compose` job then consumed all ten pinned artifact groups from [shard_groups.json](shard_groups.json), compiled the sharp weight-only checkers and full-parent adapter, and succeeded. The initial composition attempt 45761414721 failed only because of a legacy parent alias in `Raw58MoreCut3`, repaired in 00125738. The accepted manifest records the exact 3,055,746 bound. The older [Canonical75Raw58Graft.lean](Canonical75Raw58Graft.lean) is a historical conditional consumer with an incorrect 19,310 premise and stale roster; do not use it.
 
 ## Reusable leaf certificates
 
