@@ -213,7 +213,7 @@ jobs:
           log = Path('/tmp/reverse-live-block.log').read_text()
           for namespace, names in (
               ("BB6.Agent23ResiduePeriod", ("reduce_sound", "final24_reduced", "reduced_weight_iff")),
-              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24")),
+              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "reducedResidues_range", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24")),
           ):
               for name in names:
                   m = re.search(r"'" + re.escape(namespace) + r"\." + re.escape(name) + r"' depends on axioms:\s*\[([^\]]*)\]", log)
