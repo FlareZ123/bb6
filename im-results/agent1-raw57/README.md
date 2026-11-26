@@ -52,7 +52,7 @@ The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597
 
 The 3,326 open leaves were fully partitioned: 3,094 FAR, 106 sparse n-gram, 106 seeded pumps, 4 multi-seed pumps, 11 block-phase certificates, 1 late last-hole bound, and 4 custom proofs; no residual entries remain. The audit therefore closes the entire 1LE child cylinder.
 
-Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure.
+Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure. I added a reusable `parent-three` dispatch target to `.github/workflows/agent6-raw57-siblings.yml`, which regenerates the fourteen early/middle modules plus 1LA and 1LE and compiles this wrapper. Audit run [45771759533](https://github.com/FlareZ123/bb6/actions/runs/45771759533) was dispatched at 06:57Z and is currently in progress; do not treat the wrapper as accepted until it passes.
 
 ## M211 residual diagnostic (finite evidence only)
 
