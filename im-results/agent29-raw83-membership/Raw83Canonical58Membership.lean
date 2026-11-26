@@ -32,8 +32,22 @@ theorem p83_distinct_from_six :
     ∀ p ∈ BB6.Agent31Canonical58Membership.parents, sameTable p p83 = false := by
   decide
 
+/-- Explicit exact-table version using the same equality predicate as
+    removeParents; this rules out a wildcard/compatibility interpretation. -/
+theorem p83_exact_count58 :
+    (BB6.Agent31Canonical58Membership.roster58.filter
+      (fun e => BB6.Agent31FourHoleRoster.sameTable e.2 p83)).length = 1 := by
+  decide
+
+theorem p83_exact_distinct_from_six :
+    ∀ p ∈ BB6.Agent31Canonical58Membership.parents,
+      BB6.Agent31FourHoleRoster.sameTable p p83 = false := by
+  decide
+
 #print axioms p83_root
 #print axioms p83_count58
 #print axioms p83_distinct_from_six
+#print axioms p83_exact_count58
+#print axioms p83_exact_distinct_from_six
 
 end BB6.Agent29Raw83Canonical58Membership
