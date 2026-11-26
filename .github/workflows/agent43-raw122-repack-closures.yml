@@ -1,0 +1,56 @@
+name: Agent43 Raw122 split reusable closure objects
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Completed linkable-children workflow run
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  repack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    strategy:
+      matrix:
+        branch: ['00', '16-17']
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-linkable-${{ matrix.branch }}
+          run-id: ${{ inputs.run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/linkable
+      - name: Repackage missing closure objects into bounded download shards
+        shell: bash
+        run: |
+          python - <<'PY'
+          import pathlib, shutil, hashlib
+          root=pathlib.Path('/tmp/linkable')
+          output=pathlib.Path('/tmp/packed')
+          files={}
+          for p in sorted(root.rglob('*')):
+              if p.is_file() and (p.suffix in ('.olean','.lean') or p.name=='manifest.json'):
+                  # Keep every manifest independently; object/source identity
+                  # is checked by the final local merger.
+                  name = p.name if p.name!='manifest.json' else p.parent.name+'-manifest.json'
+                  if name in files:
+                      if hashlib.sha256(files[name].read_bytes()).digest()!=hashlib.sha256(p.read_bytes()).digest():
+                          raise RuntimeError(f'conflicting {name}: {files[name]}, {p}')
+                  else: files[name]=p
+          index=0; size=0
+          for name,p in files.items():
+              n=p.stat().st_size
+              if size and size+n>300*1024*1024:
+                  index+=1;size=0
+              d=output/str(index).zfill(2);d.mkdir(parents=True,exist_ok=True)
+              shutil.copy2(p,d/name);size+=n
+          print(f'{len(files)} files in {index+1} shards')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-repacked-${{ matrix.branch }}
+          path: /tmp/packed
+          retention-days: 30
