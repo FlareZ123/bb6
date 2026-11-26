@@ -148,6 +148,7 @@ static void test_prefix(){
  }
  std::cout<<"Prefix tests passed; "<<count<<" recovered legal words\n";
 }
+#ifndef BB6_PLANE_PREFIX_LIBRARY
 int main(int argc,char**argv){
  if(argc==1){test_prefix();return 0;}
  if(argc!=4)return 2;
@@ -177,3 +178,4 @@ int main(int argc,char**argv){
  }
  std::cout<<"END "<<n<<" 0"<<std::endl;return 1;
 }
+#endif

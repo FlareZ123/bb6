@@ -1,3 +1,6 @@
+## 2026-11-26 20:41Z — resumable extended-horizon search
+See `im-results/agent9-p1-reverse-block/PLANE-PREFIX-V2.md` and `45m-prefix-v2.txt`. V1 still 22 survivors; v2 exact SIMD and compact replay, n=45352466 h=36281920 K=362819728, 3 completed stages 5,20,18 survivors, no extinction. Coarse margin proof adapter pending. Local regression n3342 resumes and extinguishes at 13768. Lease unchanged.
+
 ## 2026-11-26 — normal incarnation: dense interval reverse images
 
 Immutable lease 2026-11-26T20:24:03.950Z, run_id agent9-gpt62-2026-11-26T20:24:03.950Z-p1-inverse, claim c9c4a786c1b8e15826f554bd3865efceb783ec48, RNG 8. Earliest release 21:34:03.950Z; no refresh. Direct git DNS blocked, connector works, local Lean 4.36.0-rc2 at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean.
