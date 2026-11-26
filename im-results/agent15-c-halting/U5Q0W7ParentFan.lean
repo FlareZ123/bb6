@@ -271,6 +271,111 @@ theorem w7_q0_target_unreachable_z5or13mod16 (z : Nat)
   rw [haR,hkR] at hprev2
   exact BB6.Agent11High.blank_no_odd_sum_two Rx Ry hRy5 hRyOdd hRsumMod hprev2
 
+
+/-- The q=1 parent on the root-index lift u=59 (mod 80) has a
+    unique odd/odd low-valuation predecessor with odd right coordinate
+    and sum 1 (mod 4), so it is outside the authentic blank orbit. -/
+theorem w7_z2_q1_parent_unreachable_u59mod80 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (428191+574560*v) (2350053+3153360*v) := by
+  let Ax : Nat := 428191+574560*v
+  let Ay : Nat := 2350053+3153360*v
+  let Bx : Nat := 1389120+1863960*v
+  let By : Nat := 1869585+2508660*v
+  have hAx : 5<Ax := by dsimp [Ax]; omega
+  have hAxodd : Ax%2=1 := by dsimp [Ax]; omega
+  have hAyodd : Ay%2=1 := by dsimp [Ay]; omega
+  have hAy5 : 5≤Ay := by dsimp [Ay]; omega
+  have hAsum : (Ax+Ay)%8=4 := by dsimp [Ax,Ay]; omega
+  have hBx : 5<Bx := by dsimp [Bx]; omega
+  have hBy5 : 5≤By := by dsimp [By]; omega
+  have hByodd : By%2=1 := by dsimp [By]; omega
+  have hBsum : (Bx+By)%4=1 := by dsimp [Bx,By]; omega
+  intro hA
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      Ax Ay hAx hA
+  have hparent := (BB6.Agent3.oddodd_parent_iff a k Ax Ay
+    hAxodd hAyodd hAy5 hAsum).mp hstep
+  rcases hparent with ⟨hsum,hcost⟩
+  have ha : a=Bx := by
+    dsimp [Ax,Ay,Bx] at hsum ⊢
+    omega
+  have hk : k=By := by
+    dsimp [Ax,Ay,By] at hcost ⊢
+    omega
+  have hB : BB6.Agent3.CReach Bx By := by
+    rw [ha,hk] at hprev
+    exact hprev
+  exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
+    Bx By hBx hBy5 hByodd hBsum hB
+
+/-- The complete z=2 (mod 4) parent fan also closes the higher-depth
+    lift u=59+80v. Here W is odd, so only n=0,2 occur; n=0 is
+    excluded by the universal sum-two invariant and n=2 by the
+    preceding low-valuation parent chain. This is the w=439 (mod 512)
+    root-index subcylinder after the exact residual congruence. -/
+theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
+    ¬ BB6.Agent3.CReach
+      (17928+28896*(59+80*v)) (17719+28560*(59+80*v)) := by
+  let u : Nat := 59+80*v
+  let x : Nat := 17928+28896*u
+  let y : Nat := 17719+28560*u
+  let W : Nat := 2228+3591*u
+  let X2 : Nat := 53366+86016*u
+  change ¬ BB6.Agent3.CReach x y
+  intro hP
+  obtain ⟨a,k,hprev,hstep⟩ :=
+    BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5
+      x y (by dsimp [x]; omega) hP
+  have hpre : BB6.Agent46.sectionPreimageAll a k x y :=
+    (BB6.Agent46.section_preimage_all_iff a k x y).mp hstep
+  obtain ⟨n,hn,hscale,hcost⟩ :=
+    w7_z2_parent_fan u a k hpre
+  have hWodd : W%2=1 := by dsimp [W,u]; omega
+  have hnle : n≤2 := by
+    by_contra hnot
+    have hn4 : 4≤n := by omega
+    have hpow : 32∣2^(n+1) := by
+      change 2^5∣2^(n+1)
+      exact Nat.pow_dvd_pow 2 (by omega)
+    have hdiv : 32∣2^(n+1)*(a+3) :=
+      dvd_mul_of_dvd_left hpow (a+3)
+    have hmod : (2^(n+1)*(a+3))%32=0 :=
+      Nat.mod_eq_zero_of_dvd hdiv
+    rw [hscale] at hmod
+    have hmodW : (16*W)%32=16 := by
+      obtain ⟨q,hq⟩ : ∃ q, W=2*q+1 := by omega
+      rw [hq]
+      omega
+    omega
+  have hnCases : n=0 ∨ n=2 := by omega
+  rcases hnCases with hn0 | hn2
+  · subst n
+    have ha : a=8*W-3 := by
+      have htmp : 2*(a+3)=16*W := by simpa using hscale
+      omega
+    have hk : k=17769+28644*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
+    have hbad := w7_z2_q0_parent_unreachable u
+    exact hbad (by simpa [W,ha,hk] using hprev)
+  · subst n
+    have ha : a=2*W-3 := by
+      have htmp : 8*(a+3)=16*W := by simpa using hscale
+      omega
+    have hk : k=24450+39417*u := by
+      rw [ha] at hcost
+      dsimp [W,X2] at hcost
+      omega
+    have hbad := w7_z2_q1_parent_unreachable_u59mod80 v
+    have hprev' : BB6.Agent3.CReach
+        (428191+574560*v) (2350053+3153360*v) := by
+      simpa [u,W,ha,hk] using hprev
+    exact hbad hprev'
+
+
 #print axioms w7_q0_target_unreachable_z5or13mod16
 
 #print axioms w7_z2_parent_fan
