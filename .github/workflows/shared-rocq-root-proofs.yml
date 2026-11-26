@@ -117,7 +117,7 @@ jobs:
     timeout-minutes: 60
     steps:
       - name: Install original-source proof compiler
-        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan' && inputs.target != 'enumerate62-raw45-q0-membership'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
         run: |
           sudo apt-get update -qq
           sudo DEBIAN_FRONTEND=noninteractive apt-get install -y coq
@@ -469,7 +469,7 @@ jobs:
             --coqc-binary-sha256 "$COQC_BINARY_SHA256"
 
       - name: Compile requested original theorem source
-        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan'
+        if: inputs.target != 'enumerate62-chunk-probe-native' && inputs.target != 'enumerate62-q0-sibling-scan' && inputs.target != 'enumerate62-raw45-q0-membership'
         working-directory: original/verify
         env:
           PROOF_TARGET: ${{ inputs.target }}
