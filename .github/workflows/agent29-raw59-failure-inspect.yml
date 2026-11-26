@@ -1,0 +1,38 @@
+name: Agent29 inspect Raw59 rebuild artifact
+
+on:
+  workflow_dispatch:
+    inputs:
+      run_id:
+        description: Failed Raw59 integration run to inspect
+        required: true
+        default: "45826119807"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Download failed integration artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: canonical59-five-parent-integrated
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.run_id }}
+          path: /tmp/raw59-failure
+
+      - name: Print precise Lean rebuild failure
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "=== Artifact files ==="
+          find /tmp/raw59-failure -maxdepth 5 -type f -print | sort
+          echo "=== Relevant compiler diagnostics ==="
+          grep -R -n -C 5 -E 'error:|error: .*MaskBlockFAR2|MaskBlockFAR2|BlockMacro2|BlockFAR2|failed' /tmp/raw59-failure || true
+          echo "=== Rebuild log tail ==="
+          find /tmp/raw59-failure -type f \( -name '*rebuild*.log' -o -name '*.log' \) -print -exec tail -n 160 {} \;
