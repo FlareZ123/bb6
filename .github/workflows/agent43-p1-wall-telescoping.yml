@@ -20,6 +20,7 @@ on:
           - finite-gate-join
           - modular-unbounded
           - lag-partition
+          - packed-prefix
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -29,6 +30,326 @@ on:
 permissions:
   contents: read
 jobs:
+  packed-prefix:
+    if: inputs.target == 'packed-prefix'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build and run exact n=45,352,466 half-prefix experiment
+        shell: bash
+        run: |
+          set -euo pipefail
+          D="im-results/agent43-p1-high-cost-reset-count"
+          git rev-parse HEAD
+          sha256sum "$D/packed_prefix.cpp"
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/packed_prefix.cpp" -o /tmp/packed_prefix
+          OMP_NUM_THREADS=1 /tmp/packed_prefix 3342 14000 417 half /tmp/p1-3342-half.chk | tee /tmp/p1-3342-half.log
+          grep -F "END 3342 13768" /tmp/p1-3342-half.log
+          set +e
+          OMP_NUM_THREADS=1 /tmp/packed_prefix 45352466 250000000 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [[ "$rc" -eq 1 ]]; then
+            grep -Fq "END 45352466 0" /tmp/p1-45352466-half.log
+          elif [[ "$rc" -eq 0 ]]; then
+            grep -Eq '^END 45352466 [1-9][0-9]*
+    if: inputs.target == 'margin-block-parallel'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: true
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check independent block shards
+        run: |
+          set -euo pipefail
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          GEN="$PWD/agent43-block-shard"
+          mkdir -p "$GEN"
+          export GEN LEAN_PATH="$AG43:$GEN"
+          N="${{ inputs.chain_case }}"
+          test "$N" = 3342
+          for m in CarryCert MarginCert BlockCarry BlockMargin Generate BlockProposal; do
+            lean -j1 -DElab.async=false -o "$AG43/$m.olean" "$AG43/$m.lean"
+          done
+          python "$AG43/gen_block_chain.py" "$N" 13730 8 6 "$GEN"
+          m=$(head -n1 "$GEN/modules.txt")
+          lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+          sed '1d;$d' "$GEN/modules.txt" | awk -v shard="${{ matrix.shard }}" '(NR-1)%4==shard' | xargs -P2 -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent43-block-shard-${{ matrix.shard }}
+          path: agent43-block-shard/BlockMargin3342G*.olean
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 3
+  source-wall:
+    needs: block-shards
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'margin-block-parallel'
+        with:
+          pattern: agent43-block-shard-*
+          merge-multiple: true
+          path: agent43-block-artifacts
+      - name: Compile unchanged-source CountCone dependency chain and wall theorem
+        run: |
+          set -e -o pipefail
+          MAP=im-results/agent1-p1-map
+          INV=im-results/agent47-p1-finite-inverse
+          P1=im-results/agent1-p1-quarter
+          AG28=im-results/agent28-p1-word-automaton
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          AG50=im-results/agent50-p1-subwall
+          CARRY=im-results/agent50-p1-dyadic-width
+          export LEAN_PATH="$MAP:$INV:$P1:$AG28:$AG43:$AG50:$CARRY"
+          lean --version
+          for m in GParity GInverse PosEvenForm; do
+            lean -o "$MAP/$m.olean" "$MAP/$m.lean"
+          done
+          if [ "${{ inputs.target }}" = forward-unit ] || [ "${{ inputs.target }}" = finite-gate-join ]; then
+            FWD=im-results/agent28-p1-forward
+            export LEAN_PATH="$LEAN_PATH:$FWD"
+            lean -o "$CARRY/ReverseUnitMap.olean" "$CARRY/ReverseUnitMap.lean"
+            set -o pipefail
+            for m in ForwardUnit ForwardPhase ForwardEven ForwardReset ForwardHalt; do
+              lean -o "$FWD/$m.olean" "$FWD/$m.lean"
+            done | tee /tmp/agent28-forward-axioms.txt
+            grep -q blank_critical_clock_iff /tmp/agent28-forward-axioms.txt
+            if [ "${{ inputs.target }}" = finite-gate-join ]; then
+              lean -o "$MAP/ResetGate.olean" "$MAP/ResetGate.lean"
+              lean -j1 -DElab.async=false -o "$AG43/EarlyGate.olean" "$AG43/EarlyGate.lean"
+              lean "$AG43/GateJoin.lean" | tee /tmp/agent43-join-axioms.txt
+              grep -q halt_iff_remaining /tmp/agent43-join-axioms.txt
+              grep -q full_finite_cover /tmp/agent43-join-axioms.txt
+              if grep -q sorryAx /tmp/agent43-join-axioms.txt; then exit 1; fi
+            fi
+            if grep -q sorryAx /tmp/agent28-forward-axioms.txt; then exit 1; fi
+            exit 0
+          fi
+          lean -o "$INV/P1FiniteInverse.olean" "$INV/P1FiniteInverse.lean"
+          for m in MassInverse OddConeMass; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          lean -o "$INV/P1InverseLog.olean" "$INV/P1InverseLog.lean"
+          for m in InverseIff UpperTail; do
+            lean -o "$P1/$m.olean" "$P1/$m.lean"
+          done
+          for m in OddWordCost OddWordSourceBridge OneResetGrowth OneResetTwoAdic OneResetBudget OneResetSourceEq OneResetPoly OneResetSourceBudget OneResetSourceBridge OneResetZero OneResetCount DefectTransport; do
+            lean -o "$AG28/$m.olean" "$AG28/$m.lean"
+          done
+          lean -o "$AG43/CountedLastResetDraft.olean" "$AG43/CountedLastResetDraft.lean"
+          lean -o "$AG43/LastResetStrengthSource.olean" "$AG43/LastResetStrengthSource.lean"
+          lean -o "$AG43/CountedWallStrongGateSource.olean" "$AG43/CountedWallStrongGateSource.lean"
+          lean -o "$AG50/ThreeResetCore.olean" "$AG50/ThreeResetCore.lean"
+          lean "$AG43/WallTelescopingSource.lean"
+          lean -o "$AG43/WallListCore.olean" "$AG43/WallListCore.lean"
+          lean -o "$CARRY/WallPrefixListBridge.olean" "$CARRY/WallPrefixListBridge.lean"
+          lean -o "$CARRY/wall_prefix_carry_cylinders.olean" "$CARRY/wall_prefix_carry_cylinders.lean"
+          lean -o "$AG43/WallListSource.olean" "$AG43/WallListSource.lean"
+          FULL=im-results/agent28-p1-full-prefix
+          export LEAN_PATH="$LEAN_PATH:$FULL"
+          lean -o "$FULL/FullPrefix.olean" "$FULL/FullPrefix.lean"
+          lean -o "$FULL/ExactEndpoint.olean" "$FULL/ExactEndpoint.lean"
+          if [ "${{ inputs.target }}" = exact-carry-cert ]; then
+            GEN=$(mktemp -d "$PWD/.agent43-carry.XXXXXX")
+            export LEAN_PATH="$LEAN_PATH:$GEN"
+            lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
+            (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_carry_cert.py" 350 586 16)
+            lean -o "$GEN/Carry350.olean" "$GEN/Carry350.lean"
+            lean "$AG43/CarryCertSource.lean"
+            exit 0
+          fi
+          if [ "${{ inputs.target }}" = lag-partition ] || [ "${{ inputs.target }}" = modular-unbounded ] || [ "${{ inputs.target }}" = margin-blank ] || [ "${{ inputs.target }}" = budget-blank ] || [ "${{ inputs.target }}" = margin-chain ] || [ "${{ inputs.target }}" = margin-half ] || [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
+            RES=im-results/agent50-p1-residue
+            GEN=$(mktemp -d "$PWD/.agent43-margin.XXXXXX")
+            export LEAN_PATH="$LEAN_PATH:$RES:$GEN"
+            lean -o "$MAP/ResetGate.olean" "$MAP/ResetGate.lean"
+            for m in P1Triple P1ResidualArithmetic P1ResidualReach P1Gate; do
+              lean -o "$RES/$m.olean" "$RES/$m.lean"
+            done
+            for m in P1CarryExact P1CarryExactSource P1CarryExtinction P1CarryExactReverse P1CarryBlankArithmetic; do
+              lean -o "$CARRY/$m.olean" "$CARRY/$m.lean"
+            done
+            lean -o "$AG43/CarryCert.olean" "$AG43/CarryCert.lean"
+            lean -o "$AG43/MarginCert.olean" "$AG43/MarginCert.lean"
+            lean -o "$AG43/MarginSource.olean" "$AG43/MarginSource.lean"
+            if [ "${{ inputs.target }}" = lag-partition ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              LAG=im-results/agent45-p1-delayed-carry
+              export LEAN_PATH="$LEAN_PATH:$SCREEN:$LAG"
+              lean -o "$SCREEN/BitCarry.olean" "$SCREEN/BitCarry.lean"
+              for m in LagCore LagChecker LagReverse LagCert LagPartition LagGroup; do
+                lean -o "$LAG/$m.olean" "$LAG/$m.lean"
+              done
+              lean -o "$AG43/ReverseSet.olean" "$AG43/ReverseSet.lean"
+              lean -o "$AG43/ReverseComplement.olean" "$AG43/ReverseComplement.lean"
+              lean -o "$AG43/PackedReverse.olean" "$AG43/PackedReverse.lean"
+              lean -o "$AG43/LagPartitionCert.olean" "$AG43/LagPartitionCert.lean" | tee /tmp/agent43-lag-axioms.txt
+              lean -o "$AG43/LagComplementCert.olean" "$AG43/LagComplementCert.lean" | tee /tmp/agent43-lag-complement-axioms.txt
+              lean "$AG43/LagJump.lean" | tee /tmp/agent43-lag-jump-axioms.txt
+              grep -q cert_jump /tmp/agent43-lag-jump-axioms.txt
+              if grep -q sorryAx /tmp/agent43-lag-jump-axioms.txt; then exit 1; fi
+              grep -q cert_next_rev /tmp/agent43-lag-complement-axioms.txt
+              if grep -q sorryAx /tmp/agent43-lag-complement-axioms.txt; then exit 1; fi
+              grep -q cert_next_packed /tmp/agent43-lag-axioms.txt
+              if grep -q sorryAx /tmp/agent43-lag-axioms.txt; then exit 1; fi
+              exit 0
+            fi
+            if [ "${{ inputs.target }}" = modular-unbounded ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              export LEAN_PATH="$LEAN_PATH:$SCREEN"
+              for m in P1CarryWideMargin P1CarryWideArithmetic P1CarryWideSource; do
+                lean -o "$CARRY/$m.olean" "$CARRY/$m.lean"
+              done
+              for m in BitCarry CertCore CarryBudget CarryProjection; do
+                lean -o "$SCREEN/$m.olean" "$SCREEN/$m.lean"
+              done
+              lean "$AG43/ModularSource.lean" | tee /tmp/agent43-modular-axioms.txt
+              grep -q critical_reset_no_reach_certificate /tmp/agent43-modular-axioms.txt
+              if grep -q sorryAx /tmp/agent43-modular-axioms.txt; then exit 1; fi
+              exit 0
+            fi
+            if [ "${{ inputs.target }}" = margin-block ] || [ "${{ inputs.target }}" = margin-block-parallel ]; then
+              N="${{ inputs.chain_case }}"
+              case "$N" in
+                286) K=1442; GROUP=16; P=2 ;;
+                1614) K=5824; GROUP=12; P=2 ;;
+                2990) K=6154; GROUP=12; P=2 ;;
+                3342) K=13730; GROUP=6; P=1 ;;
+                *) exit 2 ;;
+              esac
+              for m in BlockCarry BlockMargin Generate BlockProposal; do
+                lean -j1 -DElab.async=false -o "$AG43/$m.olean" "$AG43/$m.lean"
+              done
+              python "$AG43/gen_block_chain.py" "$N" "$K" 8 "$GROUP" "$GEN"
+              export GEN
+              m=$(head -n1 "$GEN/modules.txt")
+              lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              if [ "${{ inputs.target }}" = margin-block-parallel ]; then
+                test "$N" = 3342
+                cp agent43-block-artifacts/*.olean "$GEN/"
+                while IFS= read -r m; do
+                  test -s "$GEN/$m.olean"
+                done < <(sed '1d;$d' "$GEN/modules.txt")
+              else
+                sed '1d;$d' "$GEN/modules.txt" | xargs -P"$P" -I{} bash -ec 'm="$1"; echo "Checking $m"; lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"' _ {}
+              fi
+              m=$(tail -n1 "$GEN/modules.txt")
+              lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              set -o pipefail
+              lean "$GEN/BlockMargin${N}Source.lean" | tee /tmp/agent43-block-axioms.txt
+              grep -q "critical_reset_no_reach_$N" /tmp/agent43-block-axioms.txt
+              if grep -q sorryAx /tmp/agent43-block-axioms.txt; then exit 1; fi
+              exit 0
+            fi
+            if [ "${{ inputs.target }}" = margin-half ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              export LEAN_PATH="$LEAN_PATH:$SCREEN"
+              N="${{ inputs.chain_case }}"
+              case "$N" in
+                286) K=1442 ;;
+                1614) K=5824 ;;
+                2990) K=6154 ;;
+                3342) K=13730 ;;
+                *) exit 2 ;;
+              esac
+              lean -o "$SCREEN/HalfCarry.olean" "$SCREEN/HalfCarry.lean"
+              python "$SCREEN/gen_half_margin.py" "$N" "$K" 16 4 "$GEN"
+              while IFS= read -r m; do
+                lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              done < "$GEN/modules.txt"
+              set -o pipefail
+              lean "$GEN/HalfMargin${N}Source.lean" | tee /tmp/agent28-half-axioms.txt
+              grep -q "critical_reset_no_reach_$N" /tmp/agent28-half-axioms.txt
+              if grep -q sorryAx /tmp/agent28-half-axioms.txt; then exit 1; fi
+              exit 0
+            fi
+            if [ "${{ inputs.target }}" = margin-chain ]; then
+              SCREEN=im-results/agent28-p1-modular-screen
+              N="${{ inputs.chain_case }}"
+              case "$N" in
+                286) K=1442; BLOCK=16; GROUP=4 ;;
+                1614) K=5824; BLOCK=8; GROUP=2 ;;
+                2990) K=6154; BLOCK=8; GROUP=2 ;;
+                3342) K=13730; BLOCK=8; GROUP=2 ;;
+                *) exit 2 ;;
+              esac
+              python "$SCREEN/gen_chain_margin.py" "$N" "$K" "$BLOCK" "$GROUP" "$GEN"
+              while IFS= read -r m; do
+                lean -j1 -DElab.async=false -o "$GEN/$m.olean" "$GEN/$m.lean"
+              done < "$GEN/modules.txt"
+              set -o pipefail
+              lean "$GEN/ChainMargin${N}Source.lean" | tee /tmp/agent28-chain-axioms.txt
+              grep -q "critical_reset_no_reach_$N" /tmp/agent28-chain-axioms.txt
+              if grep -q sorryAx /tmp/agent28-chain-axioms.txt; then exit 1; fi
+              exit 0
+            fi
+            if [ "${{ inputs.target }}" = margin-blank ]; then
+            lean -o "$AG43/Margin30.olean" "$AG43/Margin30.lean"
+            (cd "$GEN" && python "$GITHUB_WORKSPACE/$AG43/gen_margin_cert.py" 350 586 16)
+            lean -j1 -DElab.async=false -o "$GEN/Margin350.olean" "$GEN/Margin350.lean"
+            lean "$AG43/MarginFiniteSource.lean" | tee /tmp/agent43-margin-axioms.txt
+            grep -q critical_reset_no_reach_30 /tmp/agent43-margin-axioms.txt
+            grep -q critical_reset_no_reach_350 /tmp/agent43-margin-axioms.txt
+            if grep -q sorryAx /tmp/agent43-margin-axioms.txt; then exit 1; fi
+            exit 0
+            fi
+          fi
+          SCREEN=im-results/agent28-p1-modular-screen
+          GEN=$(mktemp -d "$PWD/.agent28-cert.XXXXXX")
+          python "$SCREEN/generate.py" "$GEN"
+          export LEAN_PATH="$LEAN_PATH:$SCREEN:$GEN"
+          lean -o "$SCREEN/BitCarry.olean" "$SCREEN/BitCarry.lean"
+          lean -o "$SCREEN/CertCore.olean" "$SCREEN/CertCore.lean"
+          for i in $(seq 0 38); do
+            lean -o "$GEN/Cert$i.olean" "$GEN/Cert$i.lean"
+          done
+          lean -o "$SCREEN/ModScreen.olean" "$SCREEN/ModScreen.lean"
+          if [ "${{ inputs.target }}" = budget-blank ]; then
+            for m in CarryBudget CarryProjection BudgetCore Margin34 BudgetCoverage; do
+              lean -j1 -DElab.async=false -o "$SCREEN/$m.olean" "$SCREEN/$m.lean"
+            done
+            set -o pipefail
+            lean "$SCREEN/SourceBudgetScreen.lean" | tee /tmp/agent28-budget-axioms.txt
+            grep -q critical_reset_no_reach_budget_screen /tmp/agent28-budget-axioms.txt
+            if grep -q sorryAx /tmp/agent28-budget-axioms.txt; then exit 1; fi
+          else
+            lean "$SCREEN/SourceFiniteScreen.lean"
+          fi
+ /tmp/p1-45352466-half.log
+          else
+            exit "$rc"
+          fi
+          echo "scan_exit_code=$rc"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: p1-packed-prefix-n45352466-${{ github.run_id }}
+          path: |
+            /tmp/p1-45352466-half.chk
+            /tmp/p1-45352466-half.log
+            /tmp/p1-3342-half.log
+          if-no-files-found: ignore
+          compression-level: 1
+          retention-days: 90
   block-shards:
     if: inputs.target == 'margin-block-parallel'
     runs-on: ubuntu-latest
@@ -69,7 +390,7 @@ jobs:
           retention-days: 3
   source-wall:
     needs: block-shards
-    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped')
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
