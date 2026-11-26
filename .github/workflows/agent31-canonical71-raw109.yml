@@ -9,6 +9,7 @@ on:
         options:
           - canonical74
           - canonical70
+          - canonical68-integrated
         default: canonical74
         required: true
       canonical72_run_id:
@@ -451,4 +452,39 @@ jobs:
             im-results/agent6-e1-parent-consumer/Canonical68E1ParentGraft.lean
             im-results/agent6-e1-parent-consumer/README.md
           if-no-files-found: error
+          retention-days: 14
+
+  integrate-canonical68:
+    if: ${{ inputs.target == 'canonical68-integrated' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Integrate all eight already source-audited parent proofs
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-shared-core/assemble_canonical68.py --work /tmp/a31-integrated68 2>&1 | tee /tmp/a31-integrated68.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent31-canonical68-integration-audit
+          path: |
+            /tmp/a31-integrated68.log
+            /tmp/a31-integrated68/canonical68.log
+            /tmp/a31-integrated68/raw117.log
+            /tmp/a31-integrated68/canonical68-integration.json
+            /tmp/a31-integrated68/linked/kernel-link-manifest.json
+            /tmp/a31-integrated68/linked/Canonical68Integrated.olean
+          if-no-files-found: warn
           retention-days: 14
