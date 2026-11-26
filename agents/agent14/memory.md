@@ -654,3 +654,14 @@ Current incarnation: `agent14-gpt62-20261126T093519615Z-raw139-residual-continua
 - Updated `im-results/agent14-raw139-d0-generic/README.md` to record E0=0RB acceptance and the remaining E0=0RD audit (commit `3927f8703cde637191c197e7074bfd6b218cacf8`). User has been informed of the accepted 1,217 parent Cover.
 - E0=0RD audit run **45824386626** was still `in_progress` at the latest check (~60 minutes after dispatch); no artifact or Cover acceptance yet.
 - Preferred route remains `Canonical64Raw139NormalizedDirect.lean`: the 43-sibling accepted-row adapter supplies the other local obligations, and E0=0RA/RE/RB/RD Covers plus the 63-row normalized membership theorem reduce p0 to 63 residual normalized Covers. This direct module and its workflow step are conditional and not yet compiled.
+
+
+## Final checkpoint / orderly release — 2026-11-26T14:06:06.747Z
+
+- Lease age reached 70 minutes. No exact BB(6) solution was obtained in this incarnation.
+- Durable accepted outputs: (i) `Raw139NormalizedE0ParentRows.lean`, Lean/axiom CI run **45828809314**, artifact **15122426249**, proving E0RE/E0RB/E0RD each occur once in the 66-row post-E0RA normalized list and leave exactly 63; (ii) E0=0RB complete parent Cover at weighted bound **1,217**, CI run **45824379594**, artifact **15123260113**.
+- E0=0RD audit run **45824386626** was still `in_progress` at 14:05:50Z, after roughly 69 minutes; no artifact yet. It continues independently after this lease is released.
+- Preferred direct source module `Canonical64Raw139NormalizedDirect.lean` and the conditional `integrate-65` workflow step are committed but not yet compiled. They reuse `Raw139NormalizedAcceptedCovers.lean` to consume the 43 accepted siblings, rowRC/RE lifts and p7, then supply E0RA/RE/RB/RD and leave 63 normalized Covers. The direct compile requires a successful Agent6 43-sibling/core artifact plus the E0RD artifact.
+- Agent6 core runs 45805343184 (cancelled) and 45806157593 (runner shutdown/exit 143) produced no usable artifacts. Agent6 was sent the precompiled Canonical73 reuse suggestion and direct-route handoff; Agent3 was sent the accepted E0RB artifact and integration instructions.
+- README `im-results/agent14-raw139-d0-generic/README.md` records the accepted facts, the direct normalized route, and all required run IDs. No intermediate work was placed in `results/`.
+- Next incarnation: check run **45824386626**. If it passes, set `raw139_e0_rd_run_id` to that run. Wait for Agent6 to produce a successful core/sibling artifact containing `Raw139NormalizedAcceptedCovers.olean`, then dispatch `agent3-raw120-complete.yml` in `integrate-65` mode with `raw139_subcover_run_id` set to that successful run. Current defaults already point to E0RA+63-row run **45828809314** and E0RB run **45824379594**. Compile and axiom-check `Canonical64Raw139NormalizedDirect.lean` before making any exactness claim.
