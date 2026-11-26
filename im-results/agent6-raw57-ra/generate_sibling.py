@@ -102,14 +102,67 @@ theorem p57ra_nohalt : weightedTNFNoAssignedHalt p57ra :=
 abbrev child (mv : Move) := refine p57ra {ss} (some mv)
 theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
 """)
+    # Use the same compositional zipCheck proof pattern as raw60's
+    # shard_audit.py. Restrict the new layout to our interrupted children.
+    # A split is checked from its query and all 24 exact refined children;
+    # leaf checks and the final full-tree census are unchanged.
+    def size(node):
+        return 1 + sum(map(size, node[3])) if node[0] == "split" else 1
+    def emit_subtree(node, p, kn, cn, module):
+        def leaf(t, pp, k, c):
+            return f"def {k} : Audit := {build(t)}\ntheorem {c} : zipCheck {BOUND} ({pp}) {k} = true := by decide\n"
+        if A != "1LC" or size(node) <= 300 or node[0] != "split":
+            emit(module, [bname], leaf(node,p,kn,cn))
+            return
+        stats["split"] += 1
+        _, nn, ss0, children = node
+        assert len(children) == 24
+        sl = slot(ss0)
+        ks, cs, imports, small = [], [], [], []
+        chunk = 0
+        def flush():
+            nonlocal chunk
+            if small:
+                name = module + f"Chunk{chunk:02}"
+                emit(name, [bname], "\n".join(small))
+                imports.append(name)
+                small.clear()
+                chunk += 1
+        for j, sub in enumerate(children):
+            k, c = kn+f"_{j:02}", cn+f"_{j:02}"
+            ks.append(k); cs.append(c)
+            pp = f"refine ({p}) {sl} (some {move(MOVES[j])})"
+            if size(sub) > 300 and sub[0] == "split":
+                flush()
+                name = module+f"Sub{j:02}"
+                emit_subtree(sub,pp,k,c,name)
+                imports.append(name)
+            else:
+                body0 = leaf(sub,pp,k,c)
+                if sum(map(len,small))+len(body0)>10000:
+                    flush()
+                small.append(body0)
+        flush()
+        cases0="\n".join(f"  · exact {cs[12*w+6*r+q]}" for q,w,r in product(range(6),range(2),range(2)))
+        emit(module,imports,f"""
+def {kn}Kids : Move → Audit := byMove [{",".join(ks)}]
+def {kn} : Audit := .split {nn} {sl} {kn}Kids
+theorem {cn}_kids (mv : Move) : zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids mv) = true := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r
+{cases0}
+theorem {cn} : zipCheck {BOUND} ({p}) {kn} = true := by
+  change (zipQueryOK {BOUND} ({p}) {nn} {sl} && allMoves (fun mv => zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids mv))) = true
+  simp only [Bool.and_eq_true]
+  exact ⟨by decide, allMoves_of _ {cn}_kids⟩
+""")
     mods=[]
     stats["split"]+=1
     for i,kid in enumerate(tree[3]):
         name=f"{ID}Kid{i:02}";mods.append(name)
-        emit(name,[bname],f"""
-def kid{i:02} : Audit := {build(kid)}
-theorem check{i:02} : zipCheck {BOUND} (child {move(MOVES[i])}) kid{i:02} = true := by decide
-""")
+        emit_subtree(kid,f"child {move(MOVES[i])}",f"kid{i:02}",f"check{i:02}",name)
     assert stats==Counter(SPEC["stats"]),stats
     cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
     body=f"""
