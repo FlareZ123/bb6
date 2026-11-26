@@ -1,0 +1,1 @@
+Correction: my nine early-cycle tables are exactly your prior `EarlySiblingCover.lean` sideWitnesses (run 45556284591). Do not count them again; prefer your accepted theorem. The D0=0LF bound 352 handoff is distinct.
