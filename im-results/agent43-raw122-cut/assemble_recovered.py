@@ -10,11 +10,8 @@ source_ref=os.environ["SOURCE_REF"]
 out=Path("/tmp/a43-audit")
 out.mkdir(parents=True,exist_ok=True)
 parent_core = os.environ.get("RAW122_PARENT_CORE") == "1"
-branch_indices = (
-    [1,2,3,4,6,7,8,9,10,11,12,13,14,15,18,19,20,21,22,23]
-    if parent_core else list(range(24))
-)
-root_name = "Raw122CoreAccepted" if parent_core else "Raw122Data"
+branch_indices = list(range(24))
+root_name = "Raw122CompleteParent" if parent_core else "Raw122Data"
 seen={}
 for base in (Path("/tmp/a43-new-shards"),):
     if not base.is_dir(): raise FileNotFoundError(base)
@@ -92,8 +89,12 @@ prov=[
 "im-results/agent13-coverage/unpack.py",
 "tools/lean_compile_closure.py"]
 if parent_core:
-    prov.append("im-results/agent43-raw122-cut/Raw122CoreAccepted.lean")
-    prov.append("im-results/agent43-raw122-cut/assemble_recovered.py")
+    prov.extend([
+        "im-results/agent43-raw122-cut/Raw122CoreAccepted.lean",
+        "im-results/agent43-raw122-cut/Raw122CompleteParent.lean",
+        "im-results/agent43-raw122-cut/Raw122RootCompose.lean",
+        "im-results/agent43-raw122-cut/assemble_recovered.py",
+    ])
 subprocess.run(["git","fetch","--no-tags","--depth=1","origin",source_ref],cwd=root,check=True)
 checkout=[]
 filtered=[]
@@ -112,9 +113,30 @@ if checkout:
 prov.append(str(out/"source-ref.txt"))
 
 def manifest_command(path: Path, label: str) -> list[str]:
-    cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(path),"--manifest-only","--artifact-dir",str(out),"--label",label,"--artifact-name","raw122-parent-core" if parent_core else "raw122-certified-root"]
+    cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(path),"--manifest-only","--artifact-dir",str(out),"--label",label,"--artifact-name","raw122-complete-parent" if parent_core else "raw122-certified-root"]
     if parent_core:
-        cmd += ["--allow-missing-objects"]
+        cmd += [
+            "--allow-missing-objects",
+            "--theorem","BB6.Agent43Raw122CompleteParent.parent_bound",
+            "--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------",
+            "--weighted-bound","6766859",
+        ]
+        overrides = [
+            ("Raw122Roster16", "im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16.lean"),
+            ("Raw122Roster17", "im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17.lean"),
+            ("Raw122Counter17", "im-results/agent43-raw122-cut/branch17-assembly/Raw122Counter17.lean"),
+        ]
+        for i in range(24):
+            overrides.append((
+                f"Raw122Roster16Kid{i:02}",
+                f"im-results/agent43-raw122-cut/branch16-assembly/Raw122Roster16Kid{i:02}.lean",
+            ))
+            overrides.append((
+                f"Raw122Roster17Kid{i:02}",
+                f"im-results/agent43-raw122-cut/branch17-assembly/Raw122Roster17Kid{i:02}.lean",
+            ))
+        for module, source_path in overrides:
+            cmd += ["--override", f"{module}={source_path}"]
     else:
         cmd += ["--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
     for p in prov: cmd += ["--provenance-input",p]
@@ -143,4 +165,4 @@ if checkout_modules:
     subprocess.run(["git","checkout",source_ref,"--",*checkout_modules],cwd=root,check=True)
     print(f"pinned {len(checkout_modules)} tracked modules to the precompiled-object source revision",flush=True)
 subprocess.run(manifest_command(out/"manifest.json","raw122-parent-core-pinned" if parent_core else "raw122-partial-audit-pinned"),cwd=root,check=True)
-print(f"assembled {'Raw122 parent core' if parent_core else 'raw122 partial audit'} from {len(seen)} source-checked objects and {len(branch_indices)} original branches",flush=True)
+print(f"assembled {'Raw122 complete-parent prepin' if parent_core else 'raw122 partial audit'} from {len(seen)} merged objects across {len(branch_indices)} child branches",flush=True)
