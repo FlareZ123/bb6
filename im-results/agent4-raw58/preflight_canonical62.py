@@ -21,8 +21,6 @@ RAW112_REVISION = "17263f8415b7ad1aa83aa08c7fb8254aa6de5507"
 RAW112_ARTIFACTS = [
     (15085314343, "raw112-common-core",
      "9fc9e408c42b3a8b10126107f4c2327015d750298947fe92f801c1608aeb692b"),
-    (15086587928, "raw112-shard-0",
-     "0eb6bfc68292dc7aba4610eeb5fccfceb8da087599f3e73d0450527468a18998"),
 ]
 
 STANDARD_AXIOMS = {"propext", "Classical.choice", "Quot.sound"}
@@ -85,7 +83,7 @@ def main():
     linked = work / "linked"
     families = a63.canonical64_families(parts) + [
         ("raw112-preflight", raw112_dirs,
-         ["Raw112Data", "Raw112SiblingNever", "ResidualCover"]),
+         ["Raw112Base", "Raw112SiblingNever", "ResidualCover"]),
         ("raw58", raw58_dirs, ["Raw58Exact"]),
     ]
     groups = [parts["canonical65"], parts["raw120"], raw112_dirs, raw58_dirs]
@@ -97,8 +95,7 @@ def main():
     )
 
     stub_source = work / "Raw112ClosedCover.lean"
-    stub_source.write_text("""import Raw112Data
-import Raw112SiblingNever
+    stub_source.write_text("""import Raw112Base
 import ResidualCover
 
 set_option maxRecDepth 100000
