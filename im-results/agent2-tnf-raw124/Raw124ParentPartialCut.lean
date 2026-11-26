@@ -61,7 +61,11 @@ def accepted : List (Accepted parentBound) :=
     22 child tables match one of the source-accepted Covers above. -/
 theorem covered_iff (mv : Move) :
     covered accepted (child mv) = true ↔
-      mv ≠ (false,true,4) ∧ mv ≠ (false,false,5) := by decide
+      mv ≠ (false,true,4) ∧ mv ≠ (false,false,5) := by
+  rcases mv with ⟨w,r,q⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases w <;> cases r <;> decide
 
 theorem covered_or_missing (mv : Move) :
     mv = (false,true,4) ∨ mv = (false,false,5) ∨
