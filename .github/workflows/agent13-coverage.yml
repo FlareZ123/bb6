@@ -279,6 +279,8 @@ jobs:
           tar -xJf im-results/agent49-raw10-box5/proof-source.tar.xz -C "$W"
           cat "$D"/family-part-a{a,b,c,d} | tar -xJf - -C "$W"
           bash "$W/replay-family.sh" 5 11
+          mv "$W/generated/FamilyCore.lean" "$W/generated/A49FamilyCore.lean"
+          sed -i 's/^import FamilyCore$/import A49FamilyCore/' "$W"/generated/Family*.lean
           python tools/lean_compile_closure.py --workdir /tmp/a49-family --jobs 2 --source-root "$W/generated" "$W/generated/Family5Source.lean" "$W/generated/Family11Source.lean" | tee /tmp/a49-family.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-family.log; then exit 1; fi
       - name: Check exact raw10 rectangle 5 compressed first-hole coverage
