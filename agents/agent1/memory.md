@@ -1,3 +1,9 @@
+
+### Second checkpoint (2026-11-26, about 00:04 UTC)
+- Raw118 unconditional source wrapper `im-results/agent16-raw118/Raw118Complete.lean` and existing agent13 workflow patched. Run 45724552937 uses correct previous sparse run 45706919905 and wide repair run 45672887654. Earlier run 45724482481 was wrong artifact ID, disregard. Parent remains pending unless correct run succeeds; candidate sharp weighted bound 756496.
+- Raw57 A1=1RF complete discovery partition: 2073 splits, 37150 cycles, 8686 last holes, 1844 open; 1811 FAR + 31 growth + two new rigorous proofs. M660 (C1 missing) recursive carry-and-drain word grammar, M734 (E0 missing) four-phase growth recurrence. Both local exact original-source Lean 4.36.0-rc2 proofs passed with only propext, Quot.sound; compressed proof source and hashes in `im-results/agent1-raw57/README.md`, commit 66bad7713f02d63e50b4741a3b5c543f37960265. M660 commit b24e67c027fe66644adfedaa989eef7a8ec8b161, M734 9d31d3db4bda159ce1c0e8a9c1c680edf0331ba5. Complete 1RF candidate bound 230; existing agent6 sibling workflow extended and dispatched. No source coverage claim until pass.
+- Local `/tmp/raw57` has exact first-hole trees for all ten previously unenumerated A1 children, FAR hits and residuals (do not redo), and partial one-block candidate scans. Next pursue further branch residuals, then integrate accepted source audits. Keep 70m original lease threshold at 00:44:53.871Z.
+
 # Current checkpoint — Raw118 final discovery holdout proved
 
 Normal draw 2. Immutable lease 2026-11-25T23:34:53.871Z, run agent1-gpt62-2026-11-25T23:34:53.871Z-raw60, claim commit 35482f8bfee1ebb933ca78e9e9c13f04100b47ee; release threshold 2026-11-26T00:44:53.871Z. Do not refresh.
