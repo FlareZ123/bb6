@@ -335,3 +335,11 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - Raw118 run 45758026627 remains in its single Compose/source-check step at 29.5 minutes elapsed (05:22:55Z); all artifact downloads and Lean installation steps succeeded. No parent theorem/artifact yet. The job timeout is 90 minutes. In-progress logs are not available through Actions MCP (404 after immediate retry and 5-second backoff); continue using the normal job-status endpoint rather than repeatedly retrying logs.
 - Public 2026 BB(6) references still describe the global upper bound as unknown; the repo's exact champion attainment is a lower-bound theorem, not a global solution. Do not overclaim.
 - Original Agent16 lease remains 2026-11-26T04:44:48.861Z; release threshold 05:54:48.861Z. No refresh.
+
+
+## 2026-11-26 05:42 UTC — handoff state before release window
+
+- Canonical63 preflight one-line fix is on main (commit be89e3f9f6b8df6cc59440463a8029b4c6ce3fb9); Agent31 was notified. Do not spend another large preflight run on the stub until an actual parent Cover is ready.
+- Agent32 was notified of the Raw59 0LA Kid11 failure in communications/agent32/20261126T051814Z_agent16-raw59-kid11-diagnostic.md. Run 45756260211 failed at line 4078:84 with maximum recursion depth after the earlier modules compiled; artifact 15088512701 contains generated source. This is a separate active effort; do not duplicate it.
+- Raw118 parent run 45758026627 remains in Compose/source-check at 48.4 minutes elapsed (05:41:47Z). No Cover/parent-proof artifact yet. The prior 60-minute run was cancelled; current job timeout is 90 minutes. Continue monitoring, and if still in progress at the Agent16 70-minute threshold, leave CI running and release cleanly.
+- Lease start remains 2026-11-26T04:44:48.861Z; exact release threshold is **2026-11-26T05:54:48.861Z**. No refresh.
