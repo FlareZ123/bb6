@@ -12,6 +12,21 @@ Regenerate the exact tables and FAR masks with [generate_rf_witnesses.py](genera
 
 ## Further candidate witnesses
 
-The disjoint [rf-ngram.txt](rf-ngram.txt) records 67 more successful untrusted sparse n-gram searches (ID, width, abstract state count). The existing original sparse checker and emitter can regenerate these via `generate_rf_witnesses.py --sparse`. Their proof acceptance is in progress; ID 93 has 1,005,602 abstract states at width 28, so a smaller witness is preferred before attempting a huge kernel reduction. With the 39 checked FAR leaves and 67 n-gram candidates the unresolved discovery count is 73. This does not establish completeness of the enumeration or a child upper bound.
+The disjoint [rf-ngram.txt](rf-ngram.txt) records 67 more successful untrusted sparse n-gram searches (ID, width, abstract state count). The existing original sparse checker and emitter can regenerate these via `generate_rf_witnesses.py --sparse`. ID 93 has 1,005,602 abstract states at width 28, so a smaller witness is preferred before attempting a huge kernel reduction. See below for the affine and non-affine acceptance ledger. This does not establish completeness of the enumeration or a child upper bound.
 
-The next mathematical work is to derive exact section-return proofs for the remaining 73 candidates and assemble a disjoint first-hole audit.
+The next mathematical work is to close the residuals and assemble a disjoint first-hole audit.
+
+## Checked affine and stack-return theorems
+
+All 57 affine-growth theorems in [rf-growth.txt](rf-growth.txt) passed Lean 4.36.0-rc2 against the original SweepPumping source. The reproducible witness descriptions are (ID, blank entry time, state, left word, right word, repeat blocks, target left, target right, affine cost coefficient, intercept); letters A,B are the repetition placeholders. [generate_rf_growth.py](generate_rf_growth.py) replays the exact symbolic computations with the existing emitter, extending it to unequal-length block sweeps. Every step or arbitrary-tail block transfer is a kernel equality, and the final return has strictly positive cost. All 57 axiom reports are only propext and Quot.sound.
+
+Eight non-affine counter cylinders are proved in [rf-hard.tar.xz](rf-hard.tar.xz) (Git blob 6aa5cdf8eca07ed2988c1b7967a411a7805b3477):
+
+- Raw54RFStack011.lean: IDs 0,10,11. State A sections with left unary count 4n+3 and right stack alphabet 0000/0110, terminal 011. Reset on empty or zero block costs 4n+24 (0,10) or 4n+26 (11); pop costs 4 or 6. Entry 31. All compatible completions are nonhalting.
+- Raw54RFStack579.lean: IDs 57,59,63. Analogous right alphabet of width 5 (57) or 4 (59,63), left count width*n+1. Reset costs width*n+12, pop costs respectively 7,10,4, entry 14.
+- Raw54RF61.lean: right alphabet 0000/0110, A and C sections. A transfers to C on a marker; C accumulates an arbitrary unary count by popping markers and resets to A with 4n+12 steps on a zero or empty tail.
+- Raw54RF62.lean: A right word is 0 followed by arbitrary pairs 00/11, C scans pairs. C increases counter by one per pair 11, and on 00 or empty returns in 2n+11 steps. A and C inductive closure covers arbitrary pairs and arbitrary counts.
+
+All four module-level never theorems are kernel checked with propext and Quot.sound. The same archive includes Raw54RFBase.lean and Raw54RFAttained.lean, the latter proves the score 845 lower bound in the original weighted semantics, with standard propext, Classical.choice, Quot.sound axioms. Extract the archive into a directory on the Lean import path.
+
+63 of the 67 sparse n-gram candidates have individually compiled with the original sparse kernel checker; the unaccepted IDs are 26,40,41,93. Eight non-affine discovery targets remain. The precise current residual set is **54,55,69,139,141,144,149,174,26,40,41,93** (12 total). No complete RF child Cover yet.

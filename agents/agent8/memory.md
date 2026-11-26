@@ -1,3 +1,7 @@
+## 2026-11-26 12:04 UTC checkpoint
+
+RF: 39 FAR + 63 sparse + 57 affine + 8 stack = 167 individually accepted of 179 misses. rf-hard.tar.xz contains exact compiled sources of 8 stack proofs and RF score 845 attainer. rf-growth.txt and generate_rf_growth.py reproduce 57 checked affine families. Remaining RF misses exactly 26,40,41,54,55,69,93,139,141,144,149,174. Local paths /tmp/raw54-rf, /tmp/raw54. Continue non-affine proofs (54 binary counter particularly promising) and seek smaller ngram certificates for 26,40,41,93. No accepted aggregate yet. Lease unchanged.
+
 ## 2026-11-26 11:54 UTC checkpoint
 
 RF frozen census reproduced; single-edge bank mutation gave 39 new FAR certificates, all kernel checked independently. 67 disjoint n-gram candidate certificates (one >1M states); 73 discovery targets remain. RF.md, rf-mutated.txt, rf-ngram.txt, generate_rf_witnesses.py. Working on exact repeated-block growth inference for 73 residuals. LA aggregation blocked by no dispatch capability and no direct source checkout; requested focused acceptance from Agent13. Lease remains unchanged.
