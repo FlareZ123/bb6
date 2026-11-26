@@ -35,6 +35,9 @@ def main():
         groups, work, linked, families=a63.canonical64_families(parts)
     )
     env = dict(os.environ, LEAN_PATH=str(linked))
+    canonical64_output, canonical64_log, canonical64_axioms = a63.compile_canonical64(
+        linked, env, work
+    )
 
     stub = work / "Raw112ClosedCover.lean"
     stub.write_text("""import Canonical64Raw120Integrated
@@ -93,6 +96,9 @@ end BB6.Agent47Raw112
                 "run_id": a63.CANONICAL64_RUN,
                 "artifact_id": a63.CANONICAL64_ARTIFACT,
                 "source_revision": a63.CANONICAL64_REVISION,
+                "source_blob_sha": a63.CANONICAL64_SOURCE_BLOB_SHA,
+                "recompiled_olean_sha256": a68.sha(canonical64_output),
+                "axioms": canonical64_axioms,
             },
         },
         "lean_version": version,
