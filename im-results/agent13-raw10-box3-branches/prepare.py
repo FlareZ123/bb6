@@ -6,6 +6,9 @@ BASE=HERE.parent/'agent13-raw10-box4'
 CORE_FRAGMENT="def literalDomain (i : Fin 12) : List (Fin 25) :=\n  match i.val with\n  | 0 => [8]\n  | 1 => [14]\n  | 2 => [11]\n  | 3 => [7]\n  | 4 => [17]\n  | 5 => [@C@]\n  | _ => List.finRange 25\n\ndef domain : Box Slot Transition := fun s => (literalDomain (index s)).map decode\n\ndef sourceDomain : Box Slot Transition := fun s =>\n  if index s = 5 then [decode @C@] else raw10Remainder[3]! s\n\ntheorem literalDomain_matches : ∀ i : Fin 12, literalDomain i =\n    if i = 5 then ([@C@] : List (Fin 25)) else BB6.Agent49BoxEncoded.boxes[3]! i := by decide\n\ntheorem index_source (s : Slot) : index s = BB6.Agent17Raw10BoxFar.slotIndex s := by\n  rcases s with ⟨q,b⟩\n  revert q b\n  decide\n\ntheorem decode_source (v : Fin 25) : decode v = BB6.Agent17Raw10BoxFar.decodeCode v := by\n  revert v\n  decide\n\ntheorem sourceDomainEq : domain = sourceDomain := by\n  funext s\n  have h := BB6.Agent17Raw10BoxFar.exact_box_at_index (3 : Fin 34) s\n  change raw10Remainder[3]! s =\n    (BB6.Agent49BoxEncoded.boxes[3]! (BB6.Agent17Raw10BoxFar.slotIndex s)).map BB6.Agent17Raw10BoxFar.decodeCode at h\n  unfold domain sourceDomain\n  rw [literalDomain_matches]\n  by_cases hi : index s = 5\n  · simp [hi]\n  · simp only [if_neg hi]\n    rw [h,index_source]\n    rw [show decode = BB6.Agent17Raw10BoxFar.decodeCode from funext decode_source]\n\ntheorem source_subset : ∀ s v, v ∈ sourceDomain s → v ∈ raw10Remainder[3]! s := by\n  intro s v hv\n  by_cases hi : index s = 5\n  · have hs : s = slot 5 := by rw [← slot_index s,hi]\n    subst s\n    have hm : decode @C@ ∈ raw10Remainder[3]! (slot 5) := by decide\n    simp [sourceDomain,index_slot] at hv\n    rw [hv]\n    exact hm\n  · simpa [sourceDomain,hi] using hv\n\n"
 def generate(c):
     cfg=json.loads((HERE/'branches.json').read_text())[str(c)]
+    if c==9:
+        subprocess.run([sys.executable,str(HERE/'solve_c9_pair.py')],cwd=HERE,check=True)
+        subprocess.run([sys.executable,str(HERE/'emit_trace.py')],cwd=HERE,check=True)
     name=f'Box3C{c}';bound=cfg['bound'];steps=cfg['steps'];delay=cfg['delay']
     for n in ('scan.cpp','classify.cpp','treegen.cpp','finish.py','greedy.py','emit_proof.py','Box4Core.lean','Box4Tree.lean'):
         s=(BASE/n).read_text()
@@ -30,6 +33,7 @@ def generate(c):
             if subset(domain_mask(t),b):return Node(t,'a',(i,))
         if t in block:return Node(t,'known',block[t])
         w=long[t]
+        if w[0]=='pair':return Node(t,'known',('C9PairKnown','BB6.Agent13.C9PairKnown.'+('shortKnown' if w[1] else 'longKnown')))
         if w[0]=='halt':return Node(t,'h',(w[1],))
         if w[0] in ('cycle','side'):return Node(t,'c',tuple(w[1:]))
         if w[0]=='hole':
@@ -51,6 +55,22 @@ def generate(c):
     a=lower.index('def late :');b=lower.index('def lateMachine',a)
     lower=lower[:a]+'def late : PartialMachine := fun s => match s with\n'+''.join(f'  | ({i//2},{str(i%2==1).lower()}) => {move(v)}\n' for i,v in enumerate(t))+'  | _ => none\n\n'+lower[b:]
     lower=lower.replace('lateDelayZero : 0 ∈',f'lateDelayZero : {delay} ∈').replace(f'{steps} 0 lateHalts',f'{steps} {delay} lateHalts')
+    if c==9:
+        lower='import C9PairWeights\n'+lower
+        a=lower.index('theorem lateHalts');b=lower.index('theorem lowerBound',a)
+        lower=lower[:a]+'''theorem lateMachineEq : lateMachine = BB6.Agent13.C9Bridge.table false := by
+  funext s
+  obtain ⟨q,b⟩ := s
+  revert q b
+  decide
+
+theorem lateHalts : HaltsAfter lateMachine 3142249368711029 := by
+  rw [lateMachineEq]
+  exact BB6.Agent13.C9Bridge.long_halt
+
+theorem lateDelayZero : 0 ∈ delays (zeroNext lateMachine) 0 := by decide
+
+'''+lower[b:]
     (HERE/f'{name}Lower.lean').write_text(lower)
 
 if __name__=='__main__':
