@@ -2,6 +2,7 @@
 // Generate the two Raw11-extra parent Covers whose only open leaves are
 // discharged by the exact Root56 recurrence families in Raw11ExtraExternalLeaves.
 const fs = require('node:fs');
+const path = require('node:path');
 const { search } = require('./generate-raw11-extra.cjs');
 const { table, head, cert, slot, bit } = require('./generate-q0-lean.cjs');
 const { sourceMitmCert } = require('../agent5-weighted-tnf-queue/q0-source-mitm-cert.cjs');
@@ -11,6 +12,7 @@ const route = require('./raw11-route.json');
 const moves = Array.from('ABCDEF').flatMap(q =>
   Array.from('01').flatMap(w => Array.from('LR').map(d => w + d + q)));
 const normalize = s => s.replaceAll('_', '');
+const move = j => `⟨${bit(j % 4 >> 1)},${bit(j % 2)},${j >> 2}⟩`;
 const parse = s => normalize(s).match(/.{3}/g);
 const size = t => 1 + (t[0] === 'h' ? t[3].reduce((n, k) => n + size(k), 0) : 0);
 const split = (t, a, f) => t[3].map((k, j) => [
@@ -86,6 +88,8 @@ function generate(id) {
   const parentText = route.extra[id];
   if (typeof parentText !== 'string') throw new Error('missing Raw11 extra index ' + id);
   const witness = require(`../agent5-weighted-tnf-queue/raw11-extra-${id}-witness.json`);
+  if (normalize(parentText) !== normalize(witness.table))
+    throw new Error('route/witness parent mismatch for ' + id);
   const witnessOpen = collectWitnessOpen(witness.tree).sort();
   const expected = [...external.keys()].filter(k =>
     (id === 92 ? k.includes('0LA0RE') : k.includes('0LA1RE'))).sort();
@@ -169,8 +173,8 @@ end BB6.Agent47Extra${id}
 if (require.main === module) {
   const results = [92, 124].map(generate);
   for (const r of results)
-    fs.writeFileSync(`Raw11Extra${r.id}.lean`, r.source);
-  fs.writeFileSync('raw11-extra-external-manifest.json',
+    fs.writeFileSync(path.join(__dirname, `Raw11Extra${r.id}.lean`), r.source);
+  fs.writeFileSync(path.join(__dirname, 'raw11-extra-external-manifest.json'),
     JSON.stringify(results.map(({source, ...r}) => r), null, 2) + '\n');
   console.log(JSON.stringify(results.map(({source, ...r}) => r)));
 }
