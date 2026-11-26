@@ -43,7 +43,10 @@ def candidate_source(spec, previous):
     cover = re.search(r"^theorem p" + p + r"_cover :.*?\n\n", text, re.M | re.S).group()
     module = "CanonicalSelectedRaw" + p
     namespace = NS + "Raw" + p
-    imports = ["Canonical59FiveParentMembership", spec["root"],
+    if p == "59":
+        source = source.replace("BB6.Agent32Raw59.p59", "A32Raw59Slice.BB6.Agent32Raw59.p59")
+        cover = cover.replace("BB6.Agent32Raw59Exact.cover", "A32Raw59Slice.BB6.Agent32Raw59Exact.cover")
+    imports = ["Canonical59FiveParentMembership", "Raw59KernelSlice" if p == "59" else spec["root"],
                "TM63RawUpperInterface", "ChampionScoreLowerBound", *previous]
     names = [namespace + ".p" + p + "_source_eq", namespace + ".p" + p + "_cover",
              MEM + ".p" + p + "_count64"]
@@ -62,13 +65,16 @@ def final_source(accepted):
     body = "".join("import CanonicalSelectedRaw" + p + "\n" for p in ids)
     body += "\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
     body += "\nnamespace " + namespace + "\n" + OPENS
+    raw59_gate = "raw59_consumed" if "59" in ids else "raw59_retained"
+    raw59_count = 0 if "59" in ids else 1
     body += "\ndef selectedParents : List PartialMachine := [" + ",".join("p" + p for p in ids) + "]\n"
     body += """
 noncomputable def rosterSelected :=
   removeParents selectedParents BB6.Agent3Canonical64Raw120.roster64
 
-theorem raw59_retained :
-    (rosterSelected.filter (fun e => sameTable e.2 p59)).length = 1 := by decide
+"""
+    body += f"\ntheorem {raw59_gate} :\n    (rosterSelected.filter (fun e => sameTable e.2 p59)).length = {raw59_count} := by decide\n"
+    body += """
 
 theorem parents_pairwise_distinct :
     List.Pairwise (fun p q => sameTable p q = false) selectedParents := by decide
@@ -120,7 +126,7 @@ theorem exact_at_champion_score
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 """
     names = [namespace + "." + n for n in (
-        "raw59_retained", "parents_pairwise_distinct", "countSelected",
+        raw59_gate, "parents_pairwise_distinct", "countSelected",
         "parents_root", "parents_cover", "sound_integrated", "exact_at_target",
         "exact_at_champion_score")]
     names += [MEM + ".p" + p + "_count64" for p in ids]
@@ -161,10 +167,52 @@ def add_family(spec, dirs, linked, copied, audit):
             shutil.copy2(p, dest)
 
 
+
+def relocate_raw59(spec, dirs, linked, copied, audit, work, env):
+    """Replay the accepted proof declarations, then use the normal consumer gate."""
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    result = subprocess.check_output(
+        ["lean", "--run", str(HERE / "WalkImportClosure.lean"),
+         str(prefix / "lib" / "lean"), str(len(dirs)), *map(str, dirs), spec["root"]],
+        text=True)
+    files = sorted(set(Path(x) for x in result.splitlines()))
+    assert files and all(p.suffix == ".olean" and p.is_file() and p.parent in dirs for p in files)
+    assert any(p.name == spec["root"] + ".olean" for p in files)
+    audit["objects"] = [{"module": p.name, "sha256": a68.sha(p)} for p in files]
+    scratch = work / "raw59-slice"
+    scratch.mkdir()
+    src = HERE.parent / "agent32-raw59" / "kernel-slice" / "KernelSlice.lean"
+    shutil.copy2(src, scratch / "KernelSlice.lean")
+    slice_env = dict(env, LEAN_SYSROOT=str(prefix))
+    subprocess.run(["lean", "-c", "KernelSlice.c", "KernelSlice.lean"],
+                   cwd=scratch, env=slice_env, check=True)
+    subprocess.run(["leanc", "-O2", "-o", "kernelslice", "KernelSlice.c"],
+                   cwd=scratch, env=slice_env, check=True)
+    base = ["Std", "Frontier", "WeightedTNF", "TNFPilot", "BlockFAR2"]
+    assert all((linked / (m + ".olean")).is_file() for m in base[1:])
+    (scratch / "base.txt").write_text("\n".join(base) + "\n")
+    (scratch / "roots.txt").write_text("BB6.Agent32Raw59Exact.cover\nBB6.Agent32Raw59.p59\n")
+    (scratch / "objects.txt").write_text("\n".join(map(str, files)) + "\n")
+    dest = linked / "Raw59KernelSlice.olean"
+    assert not dest.exists()
+    copied.append(dest)
+    with (work / "raw59-kernel-slice.log").open("w") as log:
+        subprocess.run([str(scratch / "kernelslice"), "base.txt", "roots.txt", "objects.txt",
+                        "Raw59KernelSlice", "A32Raw59Slice", str(dest)],
+                       cwd=scratch, env=slice_env, stdout=log, stderr=subprocess.STDOUT, check=True)
+    log = (work / "raw59-kernel-slice.log").read_text()
+    print(log, flush=True)
+    assert dest.is_file() and "PASS: saved" in log
+    assert "ROOT BB6.Agent32Raw59Exact.cover -> A32Raw59Slice.BB6.Agent32Raw59Exact.cover" in log
+    assert "ROOT BB6.Agent32Raw59.p59 -> A32Raw59Slice.BB6.Agent32Raw59.p59" in log
+    audit["relocation"] = {"output_sha256": a68.sha(dest), "source_sha256": a68.sha(src),
+                           "base": base, "log": log}
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
-    ap.add_argument("--parents", nargs="+", choices=LABELS, default=list(LABELS))
+    ap.add_argument("--parents", nargs="+", choices=(*LABELS, "raw59"), default=list(LABELS))
     args = ap.parse_args()
     assert len(set(args.parents)) == len(args.parents)
     work = args.work.resolve()
@@ -201,7 +249,10 @@ def main():
         assert not output.exists()
         try:
             dirs, metadata = five.download_parent(spec, work)
-            add_family(spec, dirs, linked, copied, audit)
+            if label == "raw59":
+                relocate_raw59(spec, dirs, linked, copied, audit, work, env)
+            else:
+                add_family(spec, dirs, linked, copied, audit)
             log = a68.compile_module(path, output, env, work / (label + ".log"))
             profiles = gate(log, names)
         except (AssertionError, subprocess.CalledProcessError, OSError, ValueError) as exc:
@@ -230,7 +281,7 @@ def main():
         "status": "kernel-checked conditional quotient reduction",
         "base_residual_count": 64,
         "remaining_residual_count": 64 - len(accepted),
-        "accepted": accepted, "rejected": rejected, "raw59_retained": True,
+        "accepted": accepted, "rejected": rejected, "raw59_retained": not any(x["label"] == "raw59" for x in accepted),
         "common_weighted_floor": 6766859,
         "exact_at_champion_score": NS + "Integrated.exact_at_champion_score",
         "axioms": profiles, "canonical64_axioms": base_axioms,
