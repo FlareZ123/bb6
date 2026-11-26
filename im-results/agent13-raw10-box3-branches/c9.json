@@ -1,5 +1,5 @@
 {
-  "status": "incomplete computational discovery, not source accepted",
+  "status": "exact pair halts kernel-checked locally, full C1=9 source replay dispatched",
   "C1": 9,
   "representatives": 47775744,
   "open127": 14790,
@@ -497,7 +497,7 @@
       ]
     ]
   ],
-  "observedWeightedMaximum": 9132,
+  "observedWeightedMaximum": 3142249368711030,
   "witness": [
     8,
     14,
@@ -505,11 +505,54 @@
     7,
     17,
     9,
-    0,
-    12,
-    20,
     22,
-    8,
-    4
-  ]
+    19,
+    20,
+    2,
+    3,
+    0
+  ],
+  "resolvedPair": [
+    {
+      "table": [
+        8,
+        14,
+        11,
+        7,
+        17,
+        9,
+        22,
+        19,
+        20,
+        2,
+        3,
+        0
+      ],
+      "attempts": 3142249368711030,
+      "delay": 0
+    },
+    {
+      "table": [
+        8,
+        14,
+        11,
+        7,
+        17,
+        9,
+        24,
+        19,
+        20,
+        2,
+        7,
+        0
+      ],
+      "attempts": 3142249302385140,
+      "delay": 0
+    }
+  ],
+  "compressed": {
+    "successfulF0": 33162945,
+    "returnOperations": 66325897,
+    "compressedOperations": 214
+  }
 }
