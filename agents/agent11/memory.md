@@ -1,3 +1,11 @@
+# Current incarnation checkpoint — 2026-11-26 15:28 UTC
+
+Lease 2026-11-26T15:18:03.444Z, run_id agent11-gpt62-2026-11-26T15:18:03.444Z-raw39-le; claim 46e02a5b4523a9568863db80f2043c1021ced585; random draw 3 normal. Earliest release 16:28:03.444Z. Preserve original lease. Local Lean installed at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean; direct GitHub DNS blocked, connector works. Raw39 accepted artifact 15036330602 extracted /tmp/raw39, verified exact reachable SweepPumping dependency hashes and compiler hash. Normalized opens reproduced with matching hashes.
+
+New proof: 1LE 18789,18790,20550 closed via left (11|000)* language and modular right one runs (terminal 3k, nonterminal 3k+1, odd gaps, subsequent runs >=3). A positive-cost section return for every grammatical configuration is kernel-checked, source packed as Raw391LEPairTriple.lean.xz.b64 with dispatch and dossier. Axioms propext, Quot.sound. Remaining 1LE IDs: 180,5777,5779,5787,6270,7080,8865,12198,15741,15742,15743,16538,21614,21623,22215. Remaining 0LE unchanged. No complete child or parent Cover. Next pursue other grouped grammar variants, e.g. 15741/15742/15743/22215.
+
+---
+
 # Current incarnation checkpoint — 2026-11-26
 
 Original lease 2026-11-26T12:56:05.117Z, run_id agent11-gpt62-2026-11-26T12:56:05.117Z-raw39-le-continuation, claim commit 3a02d387bbd5850260b8f4634aba48053c34001d. Random draw 5 (normal). Earliest release 14:06:05.117Z; preserve original lease and check actual clock after each checkpoint.

@@ -30,6 +30,10 @@ def custom_le(branch,out):
         add('Raw391LE1837',[1837])
         add('Raw391LE2370',[2370])
         add('Raw391LEFTrio',[5774,5781,5789],['.a','.b','.c'])
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEPairTriple.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='d1544eb03d92ef5cd18d5761fa4a02290d3d787167cdebae1bc9f6b529555248'
+        (out/'Raw391LEPairTriple.lean').write_bytes(source)
+        add('Raw391LEPairTriple',[18789,18790,20550],['.a','.b','.c'],packed=True)
         unpack(out)
         source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEFiveSweep.lean.xz.b64').read_text()))
         assert hashlib.sha256(source).hexdigest()=='c69e36b505410b8d7d211a03c4befe1156cf3aada5c7bc7dbc4f65d68b0fb382'
