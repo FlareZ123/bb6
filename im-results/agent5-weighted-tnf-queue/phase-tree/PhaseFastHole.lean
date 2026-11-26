@@ -31,5 +31,18 @@ theorem last_safe (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot)
   obtain ⟨c,hc,hs,hu,hb⟩ := fastHoleOK_sound h
   subst s
   exact last_hole_sound B p n c hf hc hu (BB6.Agent50TNFPilot.restOK_sound _ _ hr) (delay_margin hb)
+theorem fast_split_safe (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) (cut : Nat)
+    (hf : p initialSlot = some (some ⟨true,true,1⟩)) (h : fastHoleOK B p n s = true)
+    (hc : 0 < cut) (hs : supportOK p cut = true)
+    (hk : ∀ mv : Move, mv.next.val ≤ cut → ∀ m,
+      compatible (refine p s (some mv)) m → WeightedBound B m) :
+    ∀ m, compatible p m → WeightedBound B m := by
+  obtain ⟨c,hr,hrslot,hu,hb⟩ := fastHoleOK_sound h
+  subst s
+  exact tnf_branch_sound B cut p (readSlot c) hc (supportOK_sound hs) hu
+    (knownRun_support p cut hc (supportOK_sound hs) n c hr) hf
+    (first_hole_weighted_halt B p n c hf hr hu (delay_margin hb))
+    (fun mv hv => hk mv (Nat.le_of_lt hv)) (fun q hq w r => hk ⟨w,r,q⟩ (Nat.le_of_eq hq))
+#print axioms fast_split_safe
 #print axioms last_safe
 end BB6.Agent5PhaseFastHole
