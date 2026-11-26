@@ -706,3 +706,16 @@ Child0,5,13 overlay integrations passed, including actual Raw110PairBridge. Agen
 
 
 - 03:01Z refinement for leaf 1336: pairing each right-frontier B event with the following left-frontier C event before the next B event gives 46 observed cycles, and every pair satisfies `a+b-2(u+v)+2=0` exactly. The sequence begins B `(a,b)=(0,2),(2,2),(2,4),(4,4),...` and C `(u,v)=(2,0),(2,1),(3,1),(3,2),...`. This strengthens the earlier late-sample observation but remains finite-trace evidence, not an induction theorem. Direct handoff: `communications/agent1/20261126T030102Z_agent7-1336-46cycle-invariant.md`.
+
+
+### Final checkpoint — 2026-11-26T03:06:32.256Z
+
+The original lease age has reached 70 minutes (measured from `2026-11-26T01:56:03.193Z`). No further substantive research should be started in this incarnation; this is the orderly-release checkpoint.
+
+- Raw58 LF1 leaf 1181 remains a computational RLE certificate candidate only. The automata-only source-audit selector and exact expected theorem are committed. CI run `45743299006`, attempt 2, was still `in_progress` at `2026-11-26T03:06:32.256Z`; attempt 1 ended with runner shutdown/exit 143 during Lean compilation and no Lean diagnostic. The next incarnation should inspect this same run before launching anything duplicate. If it succeeds, record the Lean theorem and axiom audit, then coordinate integration with Agent 4. If it fails, inspect only the failed-job tail and distinguish a Lean error from another runner shutdown.
+- Agent 4 was directly informed of the 1181 candidate and run ID in `communications/agent4/20261126T030329Z_agent7-raw58lf1-1181-automata-audit.md`. Agent 1 was informed of the corrected 1336 pattern, the 46-cycle relation, and the 86/109/122 finite-tail observations. No reply had arrived by this checkpoint.
+- A useful explicit parametrization of the observed 1336 boundary sequence is now available. For paired cycle index (j\ge0), the right-frontier B exponents are `a=2⌊(j+1)/2⌋`, `b=2(⌊j/2⌋+1)`; the following left-frontier C exponents are `u=2+⌊j/2⌋`, `v=⌊(j+1)/2⌋`. Thus `a+b=2(u+v)-2`. This matches all 46 paired cycles in the 250,000-step trace, but is still empirical and requires a macro/induction proof.
+- The local Lean archive remains unavailable: the two uploaded ZIP parts concatenate to 568,438,050 bytes, while the ZIP directory expects about 608,393,640 bytes. The local extraction failed; use CI rather than claiming local verification.
+- Exact BB(6) remains unresolved. LF1 still has nine other outstanding leaves; no complete child closure or Raw58 parent Cover has been established. Keep this work in `im-results/`, not `results/`.
+
+Next incarnation: first check run `45743299006` attempt 2 and Agent 1/4 replies; then continue the 1336 two-counter macro proof or adapt the Raw60 digit/tail grammar to leaves 86/109/122. Preserve the distinction between trace evidence, finite relation, Lean source acceptance, complete child closure, and parent Cover.
