@@ -40,7 +40,7 @@ private theorem fin8Cases {P : Fin 8 → Prop}
   intro i
   exact Fin.cases h7 (fun j => Fin.elim0 j) i
 
-private theorem fin6Cases {P : Fin 6 → Prop}
+theorem fin6Cases {P : Fin 6 → Prop}
     (h0 : P 0) (h1 : P 1) (h2 : P 2) (h3 : P 3)
     (h4 : P 4) (h5 : P 5) : ∀ i, P i := by
   intro i
