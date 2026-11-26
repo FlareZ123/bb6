@@ -27,7 +27,10 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           DIR=im-results/agent6-raw57-ra
-          if [[ "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
+          if [[ "$CHILD" == bridge ]]; then
+            DIR=im-results/agent1-raw57
+            ROOT=Raw57ParentBridge
+          elif [[ "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
             DIR=im-results/agent1-raw57
             python "$DIR/generate_sibling.py" "$CHILD"
             ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
