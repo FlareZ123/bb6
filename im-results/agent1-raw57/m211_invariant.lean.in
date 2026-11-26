@@ -1,0 +1,118 @@
+import Lean
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+namespace BB6Coverage.Agent1Raw57LB1M211
+
+@RULES@
+
+inductive EdgeTree where
+  | leaf (z o : List Nat)
+  | node (mid : Nat) (l r : EdgeTree)
+def lookup (q : Nat) (b : Bool) : EdgeTree → List Nat
+  | .leaf z o => if b then o else z
+  | .node m l r => if q < m then lookup q b l else lookup q b r
+def edges : EdgeTree := @EDGES@
+def final : Nat := @FINAL@
+
+def step (S : List Nat) (b : Bool) : List Nat :=
+  S.flatMap fun q => lookup q b edges
+
+def walk (S : List Nat) : List Bool → List Nat
+  | [] => S
+  | b::w => walk (step S b) w
+
+theorem walk_append (S : List Nat) (u v : List Bool) :
+    walk S (u++v) = walk (walk S u) v := by
+  induction u generalizing S with
+  | nil => rfl
+  | cons b u ih => exact ih (step S b)
+
+theorem walk_nil (w : List Bool) : walk [] w = [] := by
+  induction w with
+  | nil => rfl
+  | cons b w ih => exact ih
+
+theorem step_mono (S T : List Nat) (b : Bool)
+    (h : ∀ q, q ∈ S → q ∈ T) : ∀ q, q ∈ step S b → q ∈ step T b := by
+  intro q hq
+  obtain ⟨p,hp,hq⟩ := List.mem_flatMap.mp hq
+  exact List.mem_flatMap.mpr ⟨p,h p hp,hq⟩
+
+theorem walk_mono (S T : List Nat) (w : List Bool)
+    (h : ∀ q, q ∈ S → q ∈ T) : ∀ q, q ∈ walk S w → q ∈ walk T w := by
+  induction w generalizing S T with
+  | nil => exact h
+  | cons b w ih => exact ih (step S b) (step T b) (step_mono S T b h)
+
+def accepted (w : List Bool) : Prop := final ∈ walk [0] w
+
+theorem inclusion_checked (i : RuleId) :
+    (walk [0] (lhs i)).all (fun q => (walk [0] (rhs i)).contains q) = true := by
+  cases i <;> decide
+
+theorem inclusion (i : RuleId) :
+    ∀ q, q ∈ walk [0] (lhs i) → q ∈ walk [0] (rhs i) := by
+  intro q hq
+  have h := List.all_eq_true.mp (inclusion_checked i) q hq
+  simpa using h
+
+theorem rewrite_accepted (i : RuleId) (R : List Bool)
+    (h : accepted (lhs i++R)) : accepted (rhs i++R) := by
+  unfold accepted at *
+  rw [walk_append] at h ⊢
+  exact walk_mono _ _ R (inclusion i) final h
+
+inductive Trie where
+  | miss
+  | hit (i : RuleId)
+  | node (z o : Trie)
+
+def checkTrie (S : List Nat) (p : List Bool) : Trie → Bool
+  | .miss => S.isEmpty
+  | .hit i => p == lhs i
+  | .node z o => !(S.contains final) &&
+      checkTrie (step S false) (p++[false]) z &&
+      checkTrie (step S true) (p++[true]) o
+
+theorem checkTrie_sound (t : Trie) (S : List Nat) (p w : List Bool)
+    (h : checkTrie S p t = true) (ha : final ∈ walk S w) :
+    ∃ i R, p++w = lhs i++R := by
+  induction t generalizing S p w with
+  | miss =>
+    have he : S = [] := by simpa [checkTrie] using h
+    subst S
+    rw [walk_nil] at ha
+    simp at ha
+  | hit i =>
+    have hp : p = lhs i := by simpa [checkTrie] using h
+    exact ⟨i,w,by rw [hp]⟩
+  | node z o ihz iho =>
+    simp only [checkTrie, Bool.and_eq_true] at h
+    cases w with
+    | nil =>
+      have hn : final ∉ S := by simpa using h.1.1
+      exact False.elim (hn ha)
+    | cons b w =>
+      cases b
+      · obtain ⟨i,R,hr⟩ := ihz (step S false) (p++[false]) w h.1.2 ha
+        exact ⟨i,R,by simpa only [List.append_assoc,List.singleton_append] using hr⟩
+      · obtain ⟨i,R,hr⟩ := iho (step S true) (p++[true]) w h.2 ha
+        exact ⟨i,R,by simpa only [List.append_assoc,List.singleton_append] using hr⟩
+
+def trie : Trie := @TRIE@
+theorem trie_checked : checkTrie [0] [] trie = true := by decide
+
+theorem covered (w : List Bool) (h : accepted w) :
+    ∃ i R, w = lhs i++R := by
+  obtain ⟨i,R,hr⟩ := checkTrie_sound trie [0] [] w trie_checked h
+  exact ⟨i,R,hr⟩
+
+def seed : List Bool := @SEED@
+theorem seed_accepted : accepted seed := by
+  change final ∈ walk [0] seed
+  decide
+
+#print axioms covered
+#print axioms rewrite_accepted
+#print axioms seed_accepted
+end BB6Coverage.Agent1Raw57LB1M211
