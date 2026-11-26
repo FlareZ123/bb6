@@ -70,6 +70,7 @@ The seven singleton leaves had no `zipCycle` found through entry 2000, period 30
 
 - `Raw10F0ZipCycles.lean`: 17 F0 one-hole `zipCycle_sound` theorems, 65 singleton `zipCycle_sound` theorems, four formal `weighted_halt_leaf` covers (25-completion F0=HHH cylinder plus three singleton halts), aggregate axiom-profile commands, and exact finite partition/count theorems.
 - `search_zipcycles.js`: deterministic candidate-search replay, including the extended search on the seven open singleton leaves and the bounded F1 reachability probes.
+- `reproduce-raw10-f0-zip.sh`: focused pinned-source Lean compile and aggregate axiom-profile gate for the module; it expects the workflow to provide the pinned upstream checkout in `UPSTREAM_ROOT`.
 
 ## Next work
 
