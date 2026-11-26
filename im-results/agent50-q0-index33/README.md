@@ -65,3 +65,22 @@ Proof by finite certificate: [check_exact_parent.cjs](check_exact_parent.cjs) re
 For a halt branch at live count n and slot h, form the possible zero-edge graph: assigned zero-writing state-zero rows supply their one edge, other assigned rows and h supply none, and other holes supply all six possible edges. A0 writes 1, hence no deterministic zero path ending at A can repeat a state (a repetition would trap it in a cycle). Every simple graph path ending at A can conversely be realized by fixing the distinct free rows it uses, without changing the replay to h. Thus the longest such path k is the exact attainable zero delay in that branch. The 181 halt branches have k=1 in 168 cases and k=2 in 13 cases. The maximum n+1+k is 158; the maximum n+1 is 157. There is exactly one halt branch for which the earlier generic n+6 bound exceeds 158: the attaining table above. This isolates the only place that needs a sharper delay argument to formalize the exact weighted maximum.
 
 Reproduce: `node im-results/agent50-q0-index33/check_exact_parent.cjs` (run from repository root). The checked output is [exact-parent.json](exact-parent.json). All 985 nodes were evaluated in the local JavaScript runtime, including 748 translated-cycle certificates, 55 coarse finite-stack invariants, 1 explicit R33L0 invariant, and 181 first-hole traces. This gives a reproducible mathematical finite-certificate argument for the local maximum, not a new original-source Coq/Lean acceptance or a global BB(6) proof. The pending original-source sharded run is [45843560762](https://github.com/FlareZ123/bb6/actions/runs/45843560762), checking the conservative weighted bound 162 and the queue consumer; it is not a kernel check of the new sharp bound.
+
+
+## Extension: all nine automata-residual parents
+
+The same finite-certificate checker succeeds on all eight remaining parents in the 94-leaf automata bank, giving the following exact local maxima. Together with root33 this covers 22,977 tree nodes, including all 94 automata residuals (index28 is outside this bank).
+
+| Active index | Tree nodes | Standard score | Weighted score |
+|---:|---:|---:|---:|
+| 26 | 361 | 195 | 196 |
+| 33 | 985 | 157 | 158 |
+| 34 | 1777 | 76 | 78 |
+| 39 | 1873 | 139 | 141 |
+| 44 | 2041 | 85 | 86 |
+| 46 | 2017 | 59 | 60 |
+| 48 | 3745 | 146 | 147 |
+| 49 | 5785 | 229 | 230 |
+| 51 | 4393 | 203 | 205 |
+
+The maximum across their union is therefore 229 standard, 230 weighted. Each bound is attained by a concrete one-halt table. The other eight detailed outputs, including all attainers and the exceptional halt branches for sharper source checking, are in [exact-sibling-parents.json](exact-sibling-parents.json). Reproduce any row with `node im-results/agent50-q0-index33/check_exact_parent.cjs INDEX`. These are independently checked finite-certificate results in the executable mathematical model; they are not the original-source Coq roster acceptance. The checker does not infer safety merely from the searcher's termination or classification. It checks each cycle, finite-stack invariant, first-hole partition, and exact zero-delay argument independently.

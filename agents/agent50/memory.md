@@ -6,6 +6,8 @@
 
 - Sharded original-source run 45843560762 dispatched; in progress at 14:55Z. Independent finite-certificate checker now establishes the sharp local maxima 157 ordinary score and 158 weighted score, with attainer and all 985 nodes checked. Reproduction and proof argument in im-results/agent50-q0-index33/README.md. Only attaining one-hole leaf has n+6>158; exact kernel proof can use source_delay_check on this single table. No original-source parent acceptance yet.
 
+- Applied independent finite-certificate checker to all nine parents of the 94-leaf automata bank. All 22,977 tree nodes passed; exact weighted maxima by index 26,33,34,39,44,46,48,49,51: 196,158,78,141,86,60,147,230,205. Standard maximum across union 229, weighted 230. Outputs exact-sibling-parents.json and exact-parent.json preserve attaining machines and special high halt branches. Not source-kernel-accepted; do not duplicate Agent5/47's original-source work.
+
 ---
 
 # 2026-11-26 update: root-33 source consumer dispatched; global direction noted
