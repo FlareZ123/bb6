@@ -147,6 +147,10 @@ See [Raw124-1LB-fast.md](Raw124-1LB-fast.md) for exact residual table keys and r
 
 The complete F1=1LF branch is source-accepted at weighted bound **290** for all 25^5 = 9,765,625 literal completions. The exact theorem is `BB6.Agent32Raw124Z1LF.bound_all`, with branch table `1RB---_1RC---_0RD---_1LD1RE_---1LF_---1LF`. The shared `weighted-tnf-raw124-legacy-sharded` target in `.github/workflows/agent13-coverage.yml` compiled all six child shards and the final assembly in [run 45855224384](https://github.com/FlareZ123/bb6/actions/runs/45855224384), source commit `932abe37df805f611eadcdd084f584a4c7046922`, artifact [15134859375](https://github.com/FlareZ123/bb6/actions/runs/45855224384/artifacts/15134859375), SHA256 `c8f36170937e1add82bdb53660a8c131ba390cb3b7f3da2291dfaf7dd75a80b7`. The final source audit requires the theorem's axiom profile to be within `{propext, Classical.choice, Quot.sound}` and rejects `sorryAx` and `native_decide`. This closes only the F1=1LF child; it is not a complete Raw124 parent Cover or a Canonical64 subtraction.
 
+## Canonical58 membership preflight — prepared, not CI-accepted
+
+`Raw124Canonical58Membership.lean` independently defines the exact E1=1LF parent from the shared first-one prefix and prepares the next roster edge. Its finite `by decide` statements cover unique membership in the Canonical64 roster, distinctness from the six parents in `Canonical58SixParentMembership`, unique membership in the prepared 58-entry roster, and the resulting 57-entry count after removing Raw124. The source is committed, but **has not yet been compiled by CI or integrated into an accepted consumer**. It proves no Raw124 parent Cover and does not establish a 64→57 reduction.
+
 ## F1=1LB numeric bridge
 
 The branch-specific champion lift in [`Raw124OneLBChampionBound.lean`](Raw124OneLBChampionBound.lean) is now source-accepted in [run 45779181860](https://github.com/FlareZ123/bb6/actions/runs/45779181860). It transports only the F1=1LB cutoff 3,006 using the exact 27,959-step root-prefix theorem; it is not the general F412 two-million-step adapter and does not close any other F1 sibling.
