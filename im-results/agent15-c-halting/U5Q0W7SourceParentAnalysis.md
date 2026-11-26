@@ -282,7 +282,7 @@ For quick navigation, the residual map (z\equiv12+11s\pmod{16}),
 | 31 | 13 | z odd; excluded |
 | 39 | 8 | z divisible by 4 |
 | 47 | 3 | z odd |
-| 55 | 14 | z=2 mod 4; q=1 parent excluded on u=7 mod 32, u=35 mod 64, u=59 mod 80, and u=23 mod 512 |
+| 55 | 14 | z=2 mod 4; q=1 parent excluded on u=7 mod 32, u=35 mod 64, u=59 mod 80, u=23 mod 512, u=339 mod 2560, u=499 mod 1280, and u=3379 mod 5120 |
 | 63 | 9 | z odd |
 | 71 | 4 | z divisible by 4 |
 | 79 | 15 | z odd |
@@ -381,6 +381,72 @@ the original-source odd-right sum-one invariant excludes it. This is
 formalized by w7_z2_q1_parent_unreachable_u23mod512 and
 w7_q0_target_unreachable_u23mod512 in U5Q0W7U23Mod512.lean.
 
+### u=339+2560v
+
+The q=1 parent and forced predecessors are
+\[
+\begin{aligned}
+A&=(2439151+18385920v,\;13386813+100907520v),\\
+B&=(7912980+59646720v,\;10649895+80277120v),\\
+C&=(9281435+69961920v,\;9965664+75119520v),\\
+D&=(19247097+145081440v,\;4982831+37559760v),\\
+F&=(12114962+91320600v,\;8548895+64440180v).
+\end{aligned}
+\]
+The exact source steps are odd/odd low-value, even/odd sum-three,
+even-right six, and odd/odd low-value. The terminal state has odd right
+coordinate and
+\[
+F_x+F_y=20663857+155760780v\equiv1\pmod4.
+\]
+The original-source odd-right sum-one invariant excludes F, hence A.
+This is formalized by w7_z2_q1_parent_unreachable_u339mod2560 and
+w7_q0_target_unreachable_u339mod2560 in U5Q0W7U19Mod2560.lean.
+
+### u=499+1280v
+
+The forced chain is
+\[
+\begin{aligned}
+A&=(3588271+9192960v,\;19693533+50453760v),\\
+B&=(11640900+29823360v,\;15667215+40138560v),\\
+C&=(13654055+34980960v,\;14660634+37559760v),\\
+D&=(28314687+72540720v,\;7330316+18779880v),\\
+E&=(35645001+91320600v,\;3665157+9389940v).
+\end{aligned}
+\]
+The source steps are odd/odd low-value, even/odd sum-three, then two
+even-right six inverses. The terminal state has odd right coordinate and
+\[
+E_x+E_y=39310158+100710540v\equiv2\pmod4.
+\]
+The original-source odd-right sum-two invariant excludes E, hence A.
+This is formalized by w7_z2_q1_parent_unreachable_u499mod1280 and
+w7_q0_target_unreachable_u499mod1280 in U5Q0W7U19Mod2560.lean.
+
+### u=3379+5120v
+
+The forced chain is
+\[
+\begin{aligned}
+A&=(24272431+36771840v,\;133214493+201815040v),\\
+B&=(78743460+119293440v,\;105978975+160554240v),\\
+C&=(92361215+139923840v,\;99170094+150239040v),\\
+D_1&=(191531307+290162880v,\;49585046+75119520v),\\
+D_2&=(241116351+365282400v,\;24792522+37559760v),\\
+D_3&=(265908871+402842160v,\;12396260+18779880v),\\
+F&=(278305129+421622040v,\;6198129+9389940v).
+\end{aligned}
+\]
+After the odd/odd low-value and even/odd sum-three steps, four exact
+even-right six inverses reach F. Its right coordinate is odd and
+\[
+F_x+F_y=284503258+431011980v\equiv2\pmod4.
+\]
+The original-source odd-right sum-two invariant excludes F, hence A.
+This is formalized by w7_z2_q1_parent_unreachable_u3379mod5120 and
+w7_q0_target_unreachable_u3379mod5120 in U5Q0W7U19Mod2560.lean.
+
 ### Root residuals and exact-source verification
 
 For all four slices, \(z=2+4u\equiv14\pmod{16}\). The necessary root
@@ -389,18 +455,19 @@ relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), gives
 \(z\equiv3\pmod5\) requires \(t\equiv1\pmod5\) in the \(u=7+32t\)
 and \(u=35+64t\) slices; it requires \(s\equiv3\pmod5\) for
 \(u=23+512s\); and it holds for every \(t\) in the \(u=59+80t\)
-slice. The latter is the deeper \(w\equiv439\pmod{512}\) lift.
+slice. The three new slices \(u=339+2560v\), \(u=499+1280v\), and
+\(u=3379+5120v\) also satisfy \(u\equiv19\pmod{20}\) for every
+parameter value, so no further restriction is needed. The \(u=59+80t\)
+slice is the deeper \(w\equiv439\pmod{512}\) lift.
 These are necessary root filters, not a classification of the full row.
 
 The focused exact-source closure target w7-q0-parent-fan passed in run
-#20 (GitHub Actions run 45796426913). It compiled 49 project modules from
-the four roots U5Q0W7ParentFan, U5Q0W7U3Mod64, U5Q0W7U7Mod32, and
-U5Q0W7U23Mod512. The explicit axiom prints include the parent fan,
-the q=0/q=1 target theorems on all four slices, and the u=59 declarations.
-All printed dependencies are [propext, Classical.choice, Quot.sound] or
-the subset [propext, Quot.sound]. The workflow grep guard found no
-sorryAx or native_decide dependency.
+#20 (GitHub Actions run 45796426913) for the original four roots. The
+extended closure passed in run #25 (GitHub Actions run 45832100735),
+which additionally compiled U5Q0W7U19Mod2560.lean and all six new
+q=0/q=1 declarations. The new module explicitly prints their axioms;
+the workflow grep guard found no sorryAx or native_decide dependency.
 
-These are four infinite excluded sublifts of the q=1 parent, not a
+These are seven infinite excluded sublifts of the q=1 parent, not a
 classification of the entire w=55 (mod 128) row. The remaining q=1
 parameter residues and all even-W high-depth cases remain open.
