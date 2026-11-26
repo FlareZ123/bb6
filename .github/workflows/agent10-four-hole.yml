@@ -1143,7 +1143,7 @@ jobs:
             --manifest "$work/manifest.json" --label raw58 \
             --theorem BB6.Agent4Raw58MoreCut3.all_completions \
             --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RA_------" \
-            --weighted-bound 19310 --artifact-name raw58-parent-proof \
+            --weighted-bound 3055750 --artifact-name raw58-parent-proof \
             --provenance-input "$root/shard_groups.json" --provenance-input "$root/shard_plan.py" \
             --provenance-input "$union/manifest.json" \
             "$root/Raw58MoreCut3.lean" 2>&1 | tee /tmp/a4-raw58-parent.log
