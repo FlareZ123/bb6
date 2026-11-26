@@ -101,7 +101,7 @@ theorem drainA (k : Nat) (L : List Bool) :
     have a := drain3first (rep b3 j++b6++L)
     have b := sweepL table 4 [] p7 b3 p2 14 (by
       intro X Y
-      simpa only [List.nil_append] using drain3next X Y) j (b6++L) []
+      simpa only [E,List.nil_append] using drain3next X Y) j (b6++L) []
     have c := drain6next L (rep p2 j)
     simp only [List.nil_append,List.append_nil,List.append_assoc] at a b c
     have h := join0 (join0 a b) c
@@ -114,7 +114,7 @@ theorem drain8A (k : Nat) :
   have a := drain8Afirst (rep b8 k) (rep p2 k)
   have b := sweepL table 4 [] p12 b8 p7 19 (by
     intro X Y
-    simpa only [List.nil_append] using drain8next X Y) k [] (p5++rep p2 k)
+    simpa only [E,List.nil_append] using drain8next X Y) k [] (p5++rep p2 k)
   simp only [List.nil_append,List.append_nil,List.append_assoc] at a b
   have h := join0 a b
   simpa only [E,rep,List.append_assoc] using h
@@ -135,7 +135,7 @@ theorem drainB (k : Nat) (L : List Bool) :
   have a := drain3Bfirst (rep b3 k++L)
   have b := sweepL table 4 [] p7 b3 p2 14 (by
     intro X Y
-    simpa only [List.nil_append] using drain3next X Y) k L extra
+    simpa only [E,List.nil_append] using drain3next X Y) k L extra
   simp only [List.nil_append,List.append_assoc] at a b
   have h := join0 a b
   simpa only [E,rep,List.append_assoc] using h
@@ -146,7 +146,7 @@ theorem drain8B (k : Nat) :
   have a := drain8Bfirst (rep b8 (k+1)) (rep p2 k++extra)
   have b := sweepL table 4 [] p12 b8 p7 19 (by
     intro X Y
-    simpa only [List.nil_append] using drain8next X Y) (k+1) [] (p2++rep p2 k++extra)
+    simpa only [E,List.nil_append] using drain8next X Y) (k+1) [] (p2++rep p2 k++extra)
   simp only [List.nil_append,List.append_nil,List.append_assoc] at a b
   have h := join0 a b
   simpa only [E,rep,List.append_assoc] using h
@@ -162,7 +162,7 @@ theorem AB (k : Nat) : ∃ t, 0<t ∧ run0 table t (A k) = some (B k) := by
   have e := finish (rep p7 k++p5++rep p2 k)
   simp only [List.append_assoc] at a b c d e
   have h := join0 (join0 (join0 (join0 a b) c) d) e
-  refine ⟨_,by omega,?_⟩
+  refine ⟨(18+15*k)+(9+6*k)+(14*k+17)+(19+19*k)+11,by omega,?_⟩
   simpa only [A,B,E,rep,List.append_assoc] using h
 
 theorem BA (k : Nat) : ∃ t, 0<t ∧ run0 table t (B k) = some (A (k+1)) := by
@@ -177,7 +177,7 @@ theorem BA (k : Nat) : ∃ t, 0<t ∧ run0 table t (B k) = some (A (k+1)) := by
       some (E (f01++rep b8 (k+2)) (f011++rep p2 k)) := by
     simpa only [rep,List.append_assoc] using b
   have h := join0 (join0 (join0 (join0 (join0 a b') c) d) e) f
-  refine ⟨_,by omega,?_⟩
+  refine ⟨(18+15*k)+15+(4*k+4+12)+(14+14*k)+(19+19*(k+1))+11,by omega,?_⟩
   simpa only [A,B,E,rep,List.append_assoc] using h
 
 theorem first : run0 table 87 ⟨0,[],[]⟩ = some (A 0) := by rfl
