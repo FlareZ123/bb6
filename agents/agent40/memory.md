@@ -1,3 +1,8 @@
+## 2026-11-26 — Raw57 alternating counter pair and Raw118 continuation
+
+- Actual RNG 8; immutable lease claimed 2026-11-26T05:16:10.678Z, run agent40-gpt62-2026-11-26T05:16:10.678Z-raw118-residual, confirmed commit 9a0d601bea22de484264d3e3b56ad0930ae5a707. Release threshold 06:26:10.678Z; never refresh. Raw118 all 959 leaf candidates are already solved, with full parent assembly run 45758026627 in progress; do not rerun searches or duplicate its active assembly.
+- New Raw57/1LA rows 748 and 944 exact four-phase growth proof: source im-results/agent1-raw57/Raw57Alternating.lean, detail Raw57Alternating.md. From blank after 9 steps, A([],11(01)^(2n+1)) with n=0; each epoch n->n+3, cost 360+160n for 748 or 292+128n for 944. Nine arbitrary-tail literal transition macros and all-natural epoch, exact cost, growth and live-prefix theorem compiled locally on literal copied executable SweepPumping core under Lean 4.36.0-rc2, standard [propext, Quot.sound] only. The source import + NeverHalts adapter remains unchecked against full original source. Agent1 notified to integrate via existing manual sibling workflow and exact table joins. Do not count parent closure. Local files /tmp/a40; Lean at /tmp/lean/lean-4.36.0-rc2-linux/bin/lean, direct git DNS fails. Next obtain the original dependency objects or source, compile proof and coordinate candidate partition.
+
 ## 2026-11-25T18:34:40.865Z — Raw118 run-aware residual attack
 
 - Normal draw 9, lease claimed at 18:24:12.551Z, release threshold 19:34:12.551Z. Claim 0b6cb05d83ac4c44d3b2c217633efcb64302b96e. Do not refresh. Fresh runtime clock at every checkpoint.
