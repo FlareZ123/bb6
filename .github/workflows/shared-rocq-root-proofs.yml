@@ -480,7 +480,12 @@ jobs:
             else cat auto-root-results/consume.log; exit 1; fi
           fi
           cat auto-root-results/consume.log
-          cp Agent5AutoTree.{v,vo} Agent5Q0AutoData.{v,vo} Agent5Q0AutoConsume.{v,vo} q0-auto-candidate.json auto-root-results/
+          if [ "${{ inputs.target }}" = enumerate62-direct-parent ]; then
+            cp Agent5SourceAutomata.{v,vo} Agent5SourceAutoTree.{v,vo} auto-root-results/
+          else
+            cp Agent5AutoTree.{v,vo} auto-root-results/
+          fi
+          cp Agent5Q0AutoData.{v,vo} Agent5Q0AutoConsume.{v,vo} q0-auto-candidate.json auto-root-results/
       - name: Preserve selected original-source automata root proof
         if: always() && (inputs.target == 'enumerate62-q0-auto-root' || inputs.target == 'enumerate62-direct-parent')
         uses: actions/upload-artifact@v4
