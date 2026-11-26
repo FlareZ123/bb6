@@ -23,7 +23,7 @@ theorem step_map (M : Box15.Table) (x : Box15.Prim) :
   | none => simp [Box15.step,BB6BlockFAR.primStep,mapTable,mapPrim,h]
   | some mv =>
     cases hd : mv.right <;>
-      simp [Box15.step,BB6BlockFAR.primStep,mapTable,mapPrim,mapMove,h,hd] <;> rfl
+      simp [Box15.step,BB6BlockFAR.primStep,mapTable,mapPrim,mapMove,h,hd] <;> constructor <;> funext k <;> cases k <;> rfl
 
 theorem run_map (M : Box15.Table) (n : Nat) (x : Box15.Prim) :
     (Box15.run M n x).map mapPrim =
