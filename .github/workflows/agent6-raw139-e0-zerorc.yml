@@ -12,7 +12,7 @@ on:
         options: [zeroRC, oneRE, zeroRF, oneRFProof]
         default: zeroRC
       recovery_run_id:
-        description: Reuse the 23 accepted oneRE root artifacts from run 45846437127; recover root00 only
+        description: Reuse accepted root artifacts from run 45846437127 (oneRE) or 45827711630 (zeroRC)
         type: string
         default: ''
 permissions:
@@ -392,5 +392,122 @@ jobs:
         with:
           name: raw139-oneRF-special-certified
           path: .tmp/a6-oneRF-proof/final
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-zeroRC-cuts:
+    if: inputs.recovery_run_id == '45827711630' && inputs.variant == 'zeroRC'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dfb6abff540a4decf4c46f147393a3e89025034
+      - name: Fetch pinned cut generator
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          for script in repack.py merge-recovery.py; do
+            git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/$script" > "im-results/agent6-raw139-e0-zeroRC/$script"
+          done
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroRC-core-and-sources
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC
+      - name: Recover exact declaration cuts
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent6-raw139-e0-zeroRC/repack.py .tmp/a6-zeroRC
+      - name: Compile independent child covers
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroRC
+          roots=()
+          while IFS= read -r module; do roots+=("$work/imports/$module.lean"); done < "$work/recovery-groups/$GROUP.txt"
+          mkdir -p "$work/cut/build"
+          python3 tools/lean_compile_closure.py "${roots[@]}" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir /tmp/a6-zeroRC-cut --jobs 2 --manifest "$work/cut/manifest.json" --label "raw139-zeroRC-cut-$GROUP" | tee "$work/cut/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/cut/log"
+          printf '%s\n' "$RECOVERY_SHA" > "$work/cut/recovery-source-sha.txt"
+          find /tmp/a6-zeroRC-cut -name '*.olean' -exec cp '{}' "$work/cut/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroRC-cut-${{ matrix.group }}
+          path: .tmp/a6-zeroRC/cut
+          include-hidden-files: true
+          retention-days: 14
+  compose-recovered-zeroRC:
+    needs: recover-zeroRC-cuts
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dfb6abff540a4decf4c46f147393a3e89025034
+      - name: Fetch pinned cut generator
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          for script in repack.py merge-recovery.py; do
+            git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/$script" > "im-results/agent6-raw139-e0-zeroRC/$script"
+          done
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroRC-core-and-sources
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC
+      - name: Recover exact declaration cuts
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent6-raw139-e0-zeroRC/repack.py .tmp/a6-zeroRC
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-zeroRC-root*-certified
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/shards
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroRC-cut-*
+          path: .tmp/a6-zeroRC/cuts
+      - name: Close four missing roots and compose exact parent
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroRC
+          python3 im-results/agent6-raw139-e0-zeroRC/merge-recovery.py "$work"
+          printf '%s\n' "$RECOVERY_SHA" > "$work/parent/recovery-source-sha.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroRC-parent-certified
+          path: |
+            .tmp/a6-zeroRC/parent
+            .tmp/a6-zeroRC/imports
           include-hidden-files: true
           retention-days: 14

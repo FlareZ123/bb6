@@ -14,3 +14,7 @@ The B/C inner loop maps a B configuration with three leading ones, j repeated 01
 `Hybrid.lean` adds a general verified certificate constructor that composes bounded Covers with ordinary FastThreeHoleAudit leaves and checked first-query splits. Its soundness theorem and generic fromCodes no-assigned-halt lemma passed local Lean. This enables exact parent assembly using the hard leaf without replaying its 1.67m primitive steps.
 
 `reproduce.py` preserves the deterministic search and recipe reconstruction; it is an untrusted generator and the independently checked proofs are the boundary of mathematical acceptance. No BB(6) universal upper bound or global roster reduction is claimed here.
+
+## Interrupted-root recovery (26 November)
+
+Run 45827711630 published 20 of 24 exact root covers. The four interrupted roots 00, 07, 12, 18 contain 5,919 unchanged proof declarations, grouped into 63 genuinely independent top-level child cuts by `repack.py` (tested on the original generated source artifact 15121390168). The old sequential batching introduced dependencies between unrelated children. The recovery mode checks 16 balanced groups of these cuts only, with the original accepted core, then `merge-recovery.py` checks exact object identities and composes the four missing roots with the original twenty. No changed proof claim, new candidate search, or repeated accepted root checks. Parent theorem remains pending.
