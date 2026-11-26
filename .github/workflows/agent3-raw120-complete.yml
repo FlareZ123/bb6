@@ -3,15 +3,16 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Full matrix or repair the sole missing child using pinned prior artifacts
+        description: Build the parent, repair 1LB, or integrate into the eleven-parent core
         type: choice
-        options: [all, repair-1lb]
+        options: [all, repair-1lb, integrate-65]
         default: repair-1lb
 permissions:
   contents: read
   actions: read
 jobs:
   child:
+    if: inputs.mode != 'integrate-65'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -48,6 +49,7 @@ jobs:
           if-no-files-found: error
           retention-days: 14
   parent:
+    if: inputs.mode != 'integrate-65'
     needs: child
     runs-on: ubuntu-latest
     timeout-minutes: 60
@@ -85,4 +87,34 @@ jobs:
           name: raw120-parent
           path: /tmp/raw120-result
           if-no-files-found: error
+          retention-days: 14
+
+  integrate:
+    if: inputs.mode == 'integrate-65'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Consume the exact Raw120 parent in the accepted eleven-parent core
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent3-tnf-raw120/assemble_raw120_canonical.py --work /tmp/raw120-canonical64 | tee /tmp/raw120-canonical64.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw120-canonical64-audit
+          path: |
+            /tmp/raw120-canonical64.log
+            /tmp/raw120-canonical64/canonical64.log
+            /tmp/raw120-canonical64/canonical64-integration.json
+            /tmp/raw120-canonical64/reachable-link-audit.json
+            /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
+          if-no-files-found: warn
           retention-days: 14
