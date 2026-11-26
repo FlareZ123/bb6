@@ -277,8 +277,8 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p /tmp/a48-e0rb-build /tmp/a48-e0rd-build
-          find /tmp/a48-e0rb-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rb-build/ \\;
-          find /tmp/a48-e0rd-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rd-build/ \\;
+          find /tmp/a48-e0rb-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rb-build/ \;
+          find /tmp/a48-e0rd-artifact -name '*.olean' -exec cp {} /tmp/a48-e0rd-build/ \;
           test -s /tmp/a48-e0rb-build/Raw139E0ZeroRBCover.olean
           test -s /tmp/a48-e0rd-build/Raw139E0ZeroRDCover.olean
           python3 - <<'PY'
@@ -320,10 +320,10 @@ jobs:
           set -euo pipefail
           test -s /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedCrosswalk.olean
           export LEAN_PATH="/tmp/a48-e0rb-build:/tmp/a48-e0rd-build:.tmp/a48-e0parent-ZeroRE/build:/tmp/a3e0-build:/tmp/raw120-canonical64/linked:/tmp/a6-core/build:/tmp/a6-sibling/source-sibling-build${LEAN_PATH:+:$LEAN_PATH}"
-          lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedE0ParentCrosswalk.olean \\
-            im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedE0ParentCrosswalk.lean \\
+          lean -o /tmp/raw120-canonical64/linked/Canonical64Raw139NormalizedE0ParentCrosswalk.olean \
+            im-results/agent14-raw139-d0-generic/Canonical64Raw139NormalizedE0ParentCrosswalk.lean \
             | tee /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log
-          if grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log; then
+          if grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' /tmp/raw120-canonical64/raw139-e0-parent-crosswalk.log; then
             echo "nonstandard axiom in 63-row E0 parent crosswalk consumer"
             exit 1
           fi
