@@ -4,14 +4,14 @@ on:
     inputs:
       audit:
         type: choice
-        options: [nonhalt, raw8]
+        options: [nonhalt, raw8, raw140]
         default: nonhalt
 permissions:
   contents: read
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean and upstream source
@@ -38,6 +38,10 @@ jobs:
           lake exe cache get
           if [[ "${{ inputs.audit }}" == "raw8" ]]; then
             lake build BusyBeaver.BB6.Halt.M_1RB1LE_0LC1RE_HHH1LD_0RD1LA_0RF1RF_1RA0LB
+          elif [[ "${{ inputs.audit }}" == "raw140" ]]; then
+            mapfile -t modules < "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/raw140-upstream-modules.txt"
+            test "${#modules[@]}" = 8
+            lake build "${modules[@]}"
           else
             mapfile -t modules < <(python -c 'import json,sys; d=json.load(open(sys.argv[1])); print("\n".join("BusyBeaver.BB6.NonHalt.M_"+x["rle"] for x in d["rows"] if x["kind"]=="NonHalt"))' "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/manifest.json")
             test "${#modules[@]}" = 18
@@ -50,6 +54,26 @@ jobs:
           set -euo pipefail
           python "$GITHUB_WORKSPACE/im-results/agent13-coverage/unpack.py"
           mkdir -p /tmp/nov26-axioms
+          if [[ "${{ inputs.audit }}" == "raw140" ]]; then
+            export BB6_UPSTREAM_LEAN_PATH="$(lake env printenv LEAN_PATH)"
+            cp lake-manifest.json /tmp/nov26-axioms/upstream-lake-manifest.json
+            git rev-parse HEAD > /tmp/nov26-axioms/upstream-commit.txt
+            cat >/tmp/raw140-lean <<'EOF'
+          #!/usr/bin/env bash
+          set -euo pipefail
+          export LEAN_PATH="${LEAN_PATH:+$LEAN_PATH:}$BB6_UPSTREAM_LEAN_PATH"
+          exec lean "$@"
+          EOF
+            chmod +x /tmp/raw140-lean
+            cd "$GITHUB_WORKSPACE"
+            python im-results/agent31-three-hole-tnf/generate_sweeps.py
+            python im-results/agent31-three-hole-tnf/generate_four_hole.py
+            node im-results/agent10-nov26-cryptids/generate_raw140_cut.js --check
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-source --jobs 3 --lean /tmp/raw140-lean im-results/agent10-nov26-cryptids/Raw140SourceGraft.lean 2>&1 | tee /tmp/nov26-axioms/Raw140SourceGraft.log
+            if grep -Eq 'sorryAx|native_decide' /tmp/nov26-axioms/Raw140SourceGraft.log; then exit 1; fi
+            grep -q 'cover_at_bound.*depends on axioms' /tmp/nov26-axioms/Raw140SourceGraft.log
+            exit 0
+          fi
           manifest=weighted-dependencies.txt
           if [[ "${{ inputs.audit }}" == "raw8" ]]; then
             manifest=raw8-weighted-dependencies.txt
