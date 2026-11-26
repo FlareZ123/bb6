@@ -113,7 +113,7 @@ def main():
     parts = a63.download_canonical64_parts(work)
     linked = work / "linked"
     families = a63.canonical64_families(parts) + [
-        (f"agent10-raw{raw}", [parent_dirs[raw]], PARENT_ROOTS[raw])
+        (f"agent10-raw{raw}", [parts["canonical65"], parts["raw120"], parent_dirs[raw]], PARENT_ROOTS[raw])
         for raw in ("106", "79", "67")
     ]
     a68.link_reachable(
