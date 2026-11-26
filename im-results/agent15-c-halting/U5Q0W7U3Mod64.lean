@@ -105,7 +105,9 @@ theorem w7_q0_target_unreachable_u35mod64 (t : Nat) :
   have hnCases : n=0 ∨ n=2 := by omega
   rcases hnCases with hn0 | hn2
   · subst n
-    have ha : a=8*W-3 := by norm_num at hscale; omega
+    have ha : a=8*W-3 := by
+      have htmp : 2*(a+3)=16*W := by simpa using hscale
+      omega
     have hk : k=17769+28644*u := by
       rw [ha] at hcost
       dsimp [W,X2,u] at hcost
