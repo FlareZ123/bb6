@@ -796,6 +796,17 @@ jobs:
     timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
+      - name: Restore exact Raw112 producer closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
+          test "$actual_sha256" = "$expected_sha256"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
@@ -856,6 +867,17 @@ jobs:
         group: [r01a-rest0, r01a-rest1, r01a-deep, r04a, r04b, r04c, r05a0, r05a1]
     steps:
       - uses: actions/checkout@v4
+      - name: Restore exact Raw112 producer closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
+          test "$actual_sha256" = "$expected_sha256"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
@@ -907,6 +929,17 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+      - name: Restore exact Raw112 producer closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_sha256=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          actual_sha256=$(sha256sum /tmp/raw112-lean_compile_closure.py | cut -d' ' -f1)
+          test "$actual_sha256" = "$expected_sha256"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+          test "$(sha256sum tools/lean_compile_closure.py | cut -d' ' -f1)" = "$expected_sha256"
       - name: Validate pinned retry inputs
         env:
           SOURCE_RUN_ID: ${{ inputs.source_run_id }}
