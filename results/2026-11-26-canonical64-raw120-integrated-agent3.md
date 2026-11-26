@@ -15,7 +15,7 @@ Let the canonical champion-root-compatible six-state, two-symbol machine class b
 
 where R64 is an explicitly constructed list of exactly 64 retained quotient representatives.
 
-Consequently, for every B ≥ 6,766,859, if each of the 64 retained representatives has a Cover at weighted bound B, and a blank-start machine attains B, then the repository's conditional theorem ExactBB6 B follows. The 64 residual Covers and the attaining witness are hypotheses, not discharged obligations.
+Consequently, for every B ≥ 6,766,859, if each of the 64 retained representatives has a Cover at weighted bound B and a blank-start machine attains B, then the repository's conditional theorem ExactBB6 B follows. At the exact champion score B₍ch₎ = proposedTM63Moves + 7, the source-accepted `Canonical64ChampionConsumer.lean` supplies the already-proved blank-start witness and the score-floor inequality. Its exported theorem `BB6.Agent31Canonical64Champion.exact_at_champion_score` therefore has exactly the 64 retained score-B Covers as hypotheses; the witness is no longer an open obligation for this route.
 
 ## Construction of the 64-entry roster
 
@@ -45,8 +45,10 @@ The Raw120 parent source audit is [run 45733198942](https://github.com/FlareZ123
 
 The source and integration driver are preserved under im-results/agent3-tnf-raw120/, including Canonical64Raw120Integrated.lean, assemble_raw120_canonical.py and the accompanying README.
 
+The fixed-score champion composition is separately source-accepted in [run 45773904666](https://github.com/FlareZ123/bb6/actions/runs/45773904666), job 139752841886, at source revision `37628c02bc5e82c581b4a2b426ae90c5c20d7e4f`. The run used Lean 4.36.0-rc2, compiled 116 champion modules from two source roots, linked 7,444 reachable modules with exact duplicate checks, and audited the champion witness, score inequality and exported consumer to the standard axiom set. Artifact `canonical64-exact-champion-score-consumer` is ID 15094714836 (SHA-256 `c3d9d25c216e76102695e2f542c911acb3bfb3fd01717063b31c7213aa7ed36d`).
+
 ## Significance and remaining work
 
 This is a genuine reduction of the unresolved quotient frontier from 76 to 64 representatives, with twelve parent cuts composed into a single source-accepted conditional interface. It also establishes the sharp uniform weighted threshold 224,707 for Raw120, including the incoming blank delay and halt tick.
 
-The result does **not** prove that the 64 retained representatives halt within the champion score, nor does it by itself establish a universal upper bound for BB(6). The remaining mathematical obligations are to establish Covers for all 64 retained representatives at the target bound and compose the already certified attaining witness with the universal argument. Any further roster refinement must prove exact parent membership, a source-accepted parent Cover, and sound composition while preserving the complete retained complement.
+The result does **not** prove that the 64 retained representatives halt within the champion score, nor does it by itself establish a universal upper bound for BB(6). The exact score and blank-start witness are now bound to this conditional interface by the source-accepted fixed-score theorem `BB6.Agent31Canonical64Champion.exact_at_champion_score`; the only remaining hypotheses in that theorem are Covers for all 64 retained representatives at `proposedTM63Moves + 7`. Any further roster refinement must prove exact parent membership, a source-accepted parent Cover, and sound composition while preserving the complete retained complement.
