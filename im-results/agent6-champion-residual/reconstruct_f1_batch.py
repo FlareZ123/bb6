@@ -192,10 +192,13 @@ def main() -> None:
     check_files(work_one_ld, {
         "WordShift.lean": "7f93ab9ad25543375c7c30e23b8fac780b77a716b00347f6c657719771f1cadf",
         "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
-        "Agent14OneLDCarry.lean": "24d2b82d1c9a11c33b28ab9e7fb460ce2b9ea05db919dd6840d4ebceb76bf34a",
         "Agent14OneLDHard.lean": "b436a77405c29314f7f75e9d773326591f7eeb8ad7098b6b854b93afa83818d0",
         "Agent14OneLDCover.lean": "c1e905c2103d30b39bac253c5015f5a51da87aa57c6c5c9acd35e677e022f225",
     })
+    # The checked-in carry source is already indexed from the repository root.
+    # Keep the copy only for the hash check; merging it into the temporary batch
+    # would create an ambiguous duplicate module name.
+    (work_one_ld / "Agent14OneLDCarry.lean").unlink()
 
     # Reconstruct the independently source-audited 1RF sibling from its
     # pinned archive and regenerate its compact proof tree deterministically.
