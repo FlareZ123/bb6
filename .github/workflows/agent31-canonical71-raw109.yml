@@ -11,6 +11,7 @@ on:
           - canonical70
           - canonical68-integrated
           - canonical65-three
+          - canonical65-integrated
           - raw119-parent
           - raw115-parent
         default: canonical74
@@ -458,7 +459,7 @@ jobs:
           retention-days: 14
 
   integrate-canonical68:
-    if: ${{ inputs.target == 'canonical68-integrated' }}
+    if: ${{ inputs.target == 'canonical68-integrated' || inputs.target == 'canonical65-integrated' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     permissions:
@@ -477,7 +478,9 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python im-results/agent31-shared-core/assemble_canonical68.py --work /tmp/a31-integrated68 2>&1 | tee /tmp/a31-integrated68.log
+          extra=()
+          if [[ "${{ inputs.target }}" == canonical65-integrated ]]; then extra+=(--three); fi
+          python im-results/agent31-shared-core/assemble_canonical68.py --work /tmp/a31-integrated68 "${extra[@]}" 2>&1 | tee /tmp/a31-integrated68.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -493,7 +496,20 @@ jobs:
             /tmp/a31-integrated68/reachable-link-audit.json
             /tmp/a31-integrated68/linked/kernel-link-manifest.json
             /tmp/a31-integrated68/linked/Canonical68Integrated.olean
+            /tmp/a31-integrated68/canonical65-three.log
+            /tmp/a31-integrated68/canonical65-integrated.log
+            /tmp/a31-integrated68/canonical65-integrated.json
+            /tmp/a31-integrated68/linked/Canonical65Integrated.olean
           if-no-files-found: warn
+          retention-days: 14
+      - name: Preserve the successful reached proof environment
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: agent31-integrated-quotient-proof-closure
+          path: /tmp/a31-integrated68/linked/
+          compression-level: 1
+          if-no-files-found: error
           retention-days: 14
 
   integrate-canonical65-three:
