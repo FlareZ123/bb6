@@ -1,8 +1,14 @@
 # Raw122 / canonical86 partial closure
 
-## Current verified coverage (2026-11-26 07:12Z)
+## Current verified coverage (2026-11-26 16:54Z)
 
-**20 of the 24 ordinary F1 cylinders are covered at weighted bound 7014**: the previous fourteen, 1LC and 1RA, Agent3's 1LA and 1RF, and the new 0LE and 1LB theorems below. This accounts for 195,312,500 literal completions (20 × 25⁵), with the immediate F1 halt covered separately by the root split. The four outstanding ordinary choices are 0LA, 0LF, 1LE and 1LF. The local parent must ultimately compose at a larger cutoff (6766859 suffices for the two long-query cylinders); it is not yet a full Cover.
+All **24 ordinary F1 cylinders have separately source-accepted weighted bounds**: twenty at 7014, and 0LA, 0LF, 1LE, 1LF at 6766859. These are disjoint and cover 24 × 25⁵ = 234,375,000 literal completions; the first-query F1 halt covers the remaining 25⁵ completions. The root split theorem `BB6.Agent43Raw122RootCompose.root_bound` is kernel-checked and gives the mathematical composition from all ordinary child bounds. The exact complete-parent source [Raw122CompleteParent.lean](Raw122CompleteParent.lean) still needs a successful joint Lean import closure before it is promoted as an accepted integrated parent Cover or removed from the global canonical roster.
+
+- The 0LA, 0LF, 1LE and 1LF child Covers are separately accepted in runs [45819084258](https://github.com/FlareZ123/bb6/actions/runs/45819084258), [45815048803](https://github.com/FlareZ123/bb6/actions/runs/45815048803) and [45818787152](https://github.com/FlareZ123/bb6/actions/runs/45818787152). Their original witnesses and manifests are in the corresponding branch-assembly directories.
+- New local recovery merges 171 archived proof shards with zero recorded file conflicts. Source bundle run [45862004824](https://github.com/FlareZ123/bb6/actions/runs/45862004824) supplies the exact missing tracked sources. The missing 13_00 and 13_01 proof objects have now been rebuilt with the fused checker proof strategy. The missing 14/18 shards and complete four larger-bound closure exports are in progress; the source-only parent remains unaccepted.
+- The complete closure export job [45862875976](https://github.com/FlareZ123/bb6/actions/runs/45862875976) explicitly retains the transitive proof objects, rather than repeating the previous failure to export anything but the two root objects. The missing 18 shard export job is [45862792018](https://github.com/FlareZ123/bb6/actions/runs/45862792018). Check actual outcomes before using either.
+
+## Earlier child-proof details
 
 ### New complete 0LE cylinder
 
