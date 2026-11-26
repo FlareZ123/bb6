@@ -51,7 +51,8 @@ theorem sourceDomainEq : domain = sourceDomain := by
   rw [literalDomain_matches]
   by_cases hi : index s = 5
   · simp [hi]
-  · rw [if_neg hi,if_neg hi,h,index_source]
+  · simp only [if_neg hi]
+    rw [h,index_source]
     rw [show decode = BB6.Agent17Raw10BoxFar.decodeCode from funext decode_source]
 
 theorem source_subset : ∀ s v, v ∈ sourceDomain s → v ∈ raw10Remainder[3]! s := by
@@ -61,7 +62,8 @@ theorem source_subset : ∀ s v, v ∈ sourceDomain s → v ∈ raw10Remainder[3
     subst s
     have hm : decode 2 ∈ raw10Remainder[3]! (slot 5) := by decide
     simp [sourceDomain,index_slot] at hv
-    simpa [← hv] using hm
+    rw [hv]
+    exact hm
   · simpa [sourceDomain,hi] using hv
 
 ''' +s[b:]
