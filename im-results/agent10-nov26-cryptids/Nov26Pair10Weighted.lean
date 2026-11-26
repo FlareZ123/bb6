@@ -34,7 +34,10 @@ def n19_refinements : List (Slot × Transition) := [
   ((5, true), some ⟨true, false, 0⟩)]
 
 theorem n19_refinement : refineMany raw140Parent n19_refinements = leaf n19 := by
-  decide
+  funext slot
+  rcases slot with ⟨q,b⟩
+  fin_cases q <;> cases b <;>
+    simp [refineMany, raw140Parent, n19_refinements, leaf, n19, literal]
 
 /-- The eight ordinary assignments after Raw140's three-row prefix, in
     first-use order for the F068 source machine. -/
@@ -49,7 +52,10 @@ def n20_refinements : List (Slot × Transition) := [
   ((5, true), some ⟨false, false, 4⟩)]
 
 theorem n20_refinement : refineMany raw140Parent n20_refinements = leaf n20 := by
-  decide
+  funext slot
+  rcases slot with ⟨q,b⟩
+  fin_cases q <;> cases b <;>
+    simp [refineMany, raw140Parent, n20_refinements, leaf, n20, literal]
 
 /-- Exact first-hole schedule from the bulk manifest; times are ordinary
     moves from the blank start, with A0 at time zero omitted. -/
