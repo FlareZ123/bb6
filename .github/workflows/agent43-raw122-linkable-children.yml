@@ -1,0 +1,142 @@
+name: Agent43 Raw122 linkable child closures
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  assemble-branch00:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-0-*
+          run-id: 45773448173
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets/run45773448173
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-0-*
+          run-id: 45785487569
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets/run45785487569
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble the 0LA residual roster and prove its child Cover if closed
+        run: python im-results/agent43-raw122-cut/assemble_branch00.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-linkable-00
+          path: |
+            /tmp/a43-final/
+            /tmp/a43-factored-source/
+            /tmp/a43-generated/
+          retention-days: 90
+          if-no-files-found: error
+  assemble-branch05-existing:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-5-*
+          run-id: 45800793166
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble the existing 0LF target matrix and prove its child Cover
+        run: python im-results/agent43-raw122-cut/assemble_targeted_branch.py 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-linkable-05
+          path: |
+            /tmp/a43-final/
+            /tmp/a43-factored-source/
+            /tmp/a43-generated/
+          retention-days: 90
+          if-no-files-found: error
+  assemble-branches16-17:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-16-*
+          run-id: 45818787152
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets/branch16
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-17-*
+          run-id: 45818787152
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets/branch17
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble original-source 1LE and 1LF residual Covers
+        run: python im-results/agent43-raw122-cut/assemble_branches16_17.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-linkable-16-17
+          path: |
+            /tmp/a43-final-16/
+            /tmp/a43-final-17/
+            /tmp/a43-factored-source/
+            /tmp/a43-generated/
+          retention-days: 90
+          if-no-files-found: error
