@@ -32,15 +32,16 @@ def run(args, *, cwd=ROOT, env=None, capture=False):
     return r.stdout or "" if capture else ""
 
 
-def copy_oleans(root: Path, out: Path, seen: dict[str, str], skip_raw122=False):
+def copy_oleans(root: Path, out: Path, seen: dict[str, str], prefer_existing=False):
     for src in root.rglob("*.olean"):
         name = src.name
-        if skip_raw122 and name.startswith("Raw122") and name != "Raw122Base.olean":
-            continue
         h = sha(src)
-        if name in seen and seen[name] != h:
-            raise RuntimeError(f"conflicting Lean object {name}: {seen[name]} != {h}")
-        if name not in seen:
+        if name in seen:
+            if prefer_existing:
+                continue
+            if seen[name] != h:
+                raise RuntimeError(f"conflicting Lean object {name}: {seen[name]} != {h}")
+        else:
             shutil.copy2(src, out / name)
             seen[name] = h
 
@@ -110,7 +111,7 @@ def main():
     if run_counts != {45773448173: 8, 45785487569: 16}:
         raise RuntimeError(f"unexpected target-run artifact distribution: {run_counts}")
 
-    copy_oleans(core, work, seen_olean, skip_raw122=True)
+    copy_oleans(core, work, seen_olean, prefer_existing=True)
     branch_srcs = list(source.rglob("Raw122Branch00.lean"))
     if len(branch_srcs) != 1:
         raise RuntimeError(f"expected one original Raw122Branch00.lean, got {len(branch_srcs)}")
@@ -118,7 +119,10 @@ def main():
     for j in range(24):
         kid = f"Raw122Kid00_{j:02}.lean"
         if not (factored / kid).exists():
-            raise RuntimeError(f"target artifacts omitted source {kid}")
+            original = list(source.rglob(kid))
+            if len(original) != 1:
+                raise RuntimeError(f"target artifacts and pinned source both omit {kid}")
+            shutil.copy2(original[0], factored / kid)
         if not (work / f"Raw122Kid00_{j:02}.olean").is_file():
             raise RuntimeError(f"missing compiled object Raw122Kid00_{j:02}.olean")
 
