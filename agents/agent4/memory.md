@@ -1313,3 +1313,17 @@ Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-cont
 - Raw118 parent assembly run 45768921666 is still compiling. Agent16's Raw118 membership helper and Agent1's Raw57 helper remain coordination-only; no additional parent has been added to the draft roster.
 
 Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. Use the actual system clock after this checkpoint; continue until the 70-minute lease-age threshold.
+
+## 2026-11-26 checkpoint — Canonical62 preflight passed; local Lean installed
+
+- Reconstructed local Lean 4.36.0-rc2 from the two uploaded archive parts. The ZIP contained a single `lean-4.36.0-rc2-linux.tar.zst`, so after the requested unzip step I extracted it with `tar --zstd`; `lean --version` reports the pinned commit/version. A local minimal Lean test confirmed the repaired `simp [parents] at hp` membership-proof pattern.
+- Canonical62 preflight run 45775970314's compile step **passed**. It strictly linked 8,082 reachable modules across Canonical64, Raw112Base, and Raw58; all duplicate kernel declarations/import descriptors matched. Canonical64 root compiled with standard axioms. Raw112's explicit parent-cover stub compiled. Both p112 and p58 were proved root-compatible, distinct, and uniquely present in roster64; the direct two-parent filter has length 62. The integrated soundness/exactness interface compiled with only the intended Raw112 stub axiom plus standard axioms. This remains a preflight, not a real Raw112 Cover proof.
+- The earlier preflight failure was fixed by replacing the two brittle membership simplifications with `simp [parents] at hp`; the custom axiom parser now matches Lean's abbreviated `Agent47Raw112.parent_cover` output.
+- Raw112 attempt 2 (run 45751911115) is complete failure: shards 1,4,5 failed during compilation. Shards 4 and 5 are confirmed runner shutdown / exit 143 without Lean theorem diagnostics; the log API rate limit prevented inspection of shard 1's exact cause. Five successful shard artifacts (0,2,3,6,7) remain available.
+- Added `assemble-existing` mode to the Raw112 workflow (commit `5e1473d8d044ecb263f0d015d6a9d78c46634713`) for assembling a complete source run's existing artifacts without recomputing successful shards. Agent47 was notified. The missing shards still need a lower-memory targeted retry (likely `--jobs 1`); if retry artifacts come from another run, extend the assembly mode to combine selected artifacts across run IDs while preserving source/import/object/provenance hash checks.
+- Canonical64 champion consumer run 45773904666 succeeded. Lower bound BB(6) ≥ 6,766,859 is source-compiled; exactness remains conditional on all 64 residual Covers. Canonical62's corresponding champion consumer has not yet been run.
+- Raw118 parent assembly run 45768921666 remains in progress. Raw57 and Raw118 membership helpers remain coordination-only; no additional parent is accepted.
+
+Next: recover Raw112 shards 1,4,5 at lower parallelism; assemble a real Raw112ClosedCover; rerun Canonical62 with the real artifact and standard-only axiom gate; then compile Canonical62ChampionConsumer. Only after that consider adding accepted Raw57/Raw118 parents directly from Canonical64.
+
+Current immutable lease remains agent4-gpt62-2026-11-26T06:35:29.114Z-raw58-continuation from 2026-11-26T06:35:29.114Z. After this checkpoint use the actual runtime clock; orderly release begins only at 70 minutes.
