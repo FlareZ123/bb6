@@ -7,14 +7,16 @@ from pathlib import Path
 import sys
 
 class Side:
-    def __init__(self,k,c,p,lag):
+    def __init__(self,k,c,p,lag,far=0,mod=1,mode=0,k2=0,c2=0,p2=0):
         self.k,self.c,self.p,self.lag=k,c,p,lag
-        self.keys=[(0,0,())]; self.idx={self.keys[0]:0}
-        self.delta=[[-1,-1]]; self.edges=[{(0,0)}]; self.wait=[[]]
+        self.far,self.mod,self.mode=far,mod,mode
+        self.k2,self.c2,self.p2=k2,c2,p2
+        self.keys=[(0,0,(),0,0,0,())];self.idx={self.keys[0]:0}
+        self.delta=[[-1,-1]];self.edges=[{(0,0)}];self.wait=[[]]
     def push(self,i,b):
         t=self.delta[i][b]
         if t>=0:return t
-        h,last,runs=self.keys[i]
+        h,last,runs,f,flen,rem,rr2=self.keys[i]
         if i==0 and b==0:t=0
         else:
             z=b^((h>>(self.lag-1))&1) if self.lag else b
@@ -23,8 +25,18 @@ class Side:
                 n=runs[0]+1
                 if n==self.c+self.p:n=self.c
                 rr=(n,)+runs[1:]
-            else:rr=(1,)+runs[:self.k-1]
-            key=(hh,z,rr)
+            else:
+                rr=(1,)+runs[:self.k-1]
+                if self.k2 and runs:
+                    d=runs[0]
+                    if rr2 and rr2[0][0]==d:
+                        n=rr2[0][1]+1
+                        if n==self.c2+self.p2:n=self.c2
+                        rr2=((d,n),)+rr2[1:]
+                    else:rr2=((d,1),)+rr2[:self.k2-1]
+            if flen<self.far:f=(f<<1)|b;flen+=1
+            rem=(rem*(2 if self.mode==0 else 1)+(b if self.mode!=2 else 1))%self.mod
+            key=(hh,z,rr,f,flen,rem,rr2)
             t=self.idx.get(key)
             if t is None:
                 t=len(self.keys);self.idx[key]=t;self.keys.append(key)
