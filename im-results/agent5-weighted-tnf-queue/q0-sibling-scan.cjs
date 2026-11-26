@@ -1,5 +1,5 @@
 const fs=require("node:fs"), path=require("node:path");
-const {find}=require("./coarse-pair.cjs");
+const {find,emit}=require("./coarse-pair.cjs");
 const base=__dirname;
 const q0=JSON.parse(fs.readFileSync(path.join(base,"q0-export/pilot-0-100-fuel-1000000.json"),"utf8"));
 const indices=[33,34,39,44,46,48,49,51];
@@ -40,7 +40,7 @@ for(const i of indices){
     const found=find(row,true);
     if(!found||!found.tree){results.push({index:i,table:row.table,holes:row.holes,fresh:row.fresh,status:"no-tree",search_n:found?.n??null,elapsed_ms:Date.now()-started});continue;}
     const x=inspect(found.tree);
-    results.push({index:i,table:row.table,holes:row.holes,fresh:row.fresh,status:"tree",search_n:found.n,elapsed_ms:Date.now()-started,...x});
+    results.push({index:i,table:row.table,holes:row.holes,fresh:row.fresh,status:"tree",search_n:found.n,elapsed_ms:Date.now()-started,coqTree:x.stats.open===0?emit(found.tree):null,...x});
   }catch(e){
     results.push({index:i,table:row.table,holes:row.holes,fresh:row.fresh,status:"error",error:String(e),elapsed_ms:Date.now()-started});
   }
