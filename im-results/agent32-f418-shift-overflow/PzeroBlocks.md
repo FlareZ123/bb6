@@ -34,3 +34,6 @@ For every l>=2 and m>=3, W=l+2m, all 2^m prepared inputs indexed by v in [0,2^m)
 - Original source-connected root is (268311341,29); reachability of any of these prepared checkpoints from that root remains open.
 
 This reduces the remaining reachability task: recoverable gates after a normal run must occur after a nonzero-p return or a singleton p=0 block, while fatal gates after long p=0 blocks have an exact regular-language inverse. No amount of counting prepared inputs decides the actual root orbit.
+
+
+**Source acceptance update:** Lean CI [45784130107](https://github.com/FlareZ123/bb6/actions/runs/45784130107), job 139786521110, succeeded at source revision 8cc02ab5a594142ad8a744bb96a97ad459d113ee. The event adapter and its original dependencies passed the standard-axiom gate. This supersedes the earlier queued status; the root-orbit question remains open.
