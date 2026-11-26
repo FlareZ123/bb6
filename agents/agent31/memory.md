@@ -474,3 +474,32 @@ Next: continue monitoring the Raw112 and Raw59 runs; Raw118 should not be counte
 - Attempted the prompt's local Lean reconstruction using the mounted split ZIPs, but both `container.exec` and `python.exec` returned a concrete CAAS ClientError, including a minimal `pwd` check. No local shell was available in this invocation; Lean execution is therefore being handled through the repository's pinned GitHub Actions workflows. Do not claim the local toolchain was reconstructed.
 
 Continue monitoring Raw112 and Raw59. If either parent Cover is accepted first, integrate it on the exact Canonical64 base; compose the other on the resulting 63 roster to avoid competing 63 interfaces. Release remains governed solely by the original lease age.
+
+
+## 2026-11-26 04:35 UTC checkpoint — Canonical63 preflight packaging corrected; Raw59 failure diagnosed
+
+### Canonical63 integration closure
+
+The first Canonical63 preflight run **45755335513** failed because the Canonical64 audit artifact is only the final root module and does not carry the Canonical65 dependency closure. This is a packaging/import issue, not a theorem failure. I verified the exact original inputs used by Agent3's successful Canonical64 assembly:
+
+- Canonical65 integrated closure: run 45732489302, artifact 15078085872, digest `0e7b0932a1c6e35c2716dac560bb6352a6da3ade63b1376cf3660c909bf94e61`.
+- Raw120 parent proof: run 45733198942, artifact 15080392441, digest `617e0e6e523edfe5bdbba757d812e2139555f054e9d4a857ccfee54d685a2364`.
+- Canonical64 final-root audit artifact: run 45750164590, artifact 15085029091, digest `bb4fa3c190ab2a67e3f7c17f8e1c0f07c2215b282451a361501f8ff6c678d55b`.
+
+The current Canonical64 source blob SHA is `37bc06c33eae91b9e7e9387afbe8d3f5ba1e8529`, identical to the file at the accepted source revision 949fde331f10df81a968f157c622faa581597276. The corrected `assemble_canonical63.py` downloads the full Canonical65 and Raw120 dependency artifacts, verifies the Canonical64 final artifact and source blob, recompiles Canonical64 from that exact source, then links Raw112 and compiles Canonical63. The preflight script follows the same route with an explicit Raw112 parent-Cover axiom stub.
+
+- Old preflight run **45755556772** used the incomplete-root approach; cancellation was requested twice, but the run still appeared in progress at 04:35. It is expected to fail and should not be treated as evidence against the theorem.
+- Corrected preflight run **45756065810** is in progress. It should prove the 64→63 roster membership/count and theorem wiring with the single explicit stub axiom. This is only a type-check preflight, not an accepted parent Cover.
+
+The shared-core README now documents the three pinned Canonical64 inputs and the preflight/integration distinction.
+
+### Other parent candidates
+
+- Raw59 focused run **45753302154** failed at `Raw59Upgrade0LAKid11.lean:4058:84` with Lean maximum recursion depth. All preceding modules compiled and the log contains no mathematical counterexample. Sent Agent32 the precise diagnostic and requested a higher `maxRecDepth` retry. Updated the research board.
+- Raw118 generic conditional cut run **45737177344** is source-accepted, but parent assembly run **45736775052** was cancelled at 02:35:44Z with no artifact. Raw118 is still open; updated its README and the board.
+- Raw112 run **45751911115** remains active: shards 0 and 2 succeeded; shards 1 and 3 active; shards 4–7 queued. No failure has been reported. Its reduced-concurrency run is still the most advanced parent-cover attempt.
+- Agent32 and Agent16 have been told to compose their parent cuts on whichever accepted 63 roster comes first, avoiding competing 63 frontiers.
+
+Next: monitor corrected preflight 45756065810. If it passes, Canonical63 source wiring is type-checked; wait for Raw112 parent artifact before dispatching the real integration target. Monitor the Raw112 run and any Raw59 retry. No new parent cut is accepted yet.
+
+Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release time remains `2026-11-26T04:53:30.406Z`. Do not refresh the lease.
