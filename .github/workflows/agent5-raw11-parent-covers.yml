@@ -2,6 +2,10 @@ name: Agent 5 Raw11 parent source covers
 on:
   workflow_dispatch:
     inputs:
+      generation_run:
+        description: Existing source-generation run (optional)
+        type: string
+        default: ''
       parents:
         description: JSON list of extra indices with complete candidate certificates
         type: string
@@ -26,6 +30,7 @@ jobs:
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          "$HOME/.elan/bin/lean" --version
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
@@ -40,7 +45,27 @@ jobs:
           pattern: raw11-six-hole-*
           merge-multiple: true
           path: /tmp/raw11-six-data
+      - uses: actions/download-artifact@v4
+        if: inputs.generation_run != ''
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-extra-parent-${{ matrix.parent }}
+          path: /tmp/raw11-source
+      - name: Recover generated source and repair alias types
+        if: inputs.generation_run != ''
+        run: |
+          mv /tmp/raw11-source/raw11-generated /tmp/raw11-generated
+          python - <<'PY'
+          import json,pathlib
+          root=pathlib.Path("/tmp/raw11-generated")
+          b=json.loads((root/"manifest.json").read_text())["bound"]
+          for p in root.glob("*Kid*.lean"):
+              s=p.read_text().replace("theorem safe := ",f"theorem safe : ∀ m, compatible parent m → WeightedBound {b} m := ")
+              p.write_text(s)
+          PY
       - name: Generate exact child proofs
+        if: inputs.generation_run == ''
         env:
           SIX_HOLE_DATA: /tmp/raw11-six-data
         run: |
