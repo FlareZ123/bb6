@@ -17,6 +17,7 @@ on:
           - canonical63-raw115
           - canonical59-five-parent-batch
           - canonical58-six-parent-batch
+          - canonical57-raw83
           - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
@@ -27,6 +28,11 @@ on:
         required: true
       canonical59_run_id:
         description: "Successful Canonical59 five-parent integration run ID (required for the 58-residual target)"
+        type: string
+        required: false
+        default: ""
+      canonical58_run_id:
+        description: "Successful Canonical58 six-parent integration run ID (required for target=canonical57-raw83)"
         type: string
         required: false
         default: ""
@@ -1175,6 +1181,53 @@ jobs:
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
+  canonical57-raw83:
+    name: Integrate Raw83 as the seventh Canonical64 parent
+    if: ${{ inputs.target == 'canonical57-raw83' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Audit Canonical58 and Raw83 artifacts; compile the 57-residual consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL58_RUN_ID: ${{ inputs.canonical58_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL58_RUN_ID" =~ ^[0-9]+$ ]]
+          python im-results/agent31-shared-core/assemble_canonical57_raw83.py \
+            --work /tmp/a31-canonical57 \
+            --canonical58-run-id "$CANONICAL58_RUN_ID" 2>&1 | tee /tmp/a31-canonical57.log
+          test -s /tmp/a31-canonical57/canonical57-raw83-integration.json
+          cat /tmp/a31-canonical57/canonical57-raw83-integration.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical57-raw83-integrated
+          path: |
+            /tmp/a31-canonical57/linked57
+            /tmp/a31-canonical57/canonical57-raw83-integration.json
+            /tmp/a31-canonical57/raw83-canonical58-membership.log
+            /tmp/a31-canonical57/canonical57-membership.log
+            /tmp/a31-canonical57/canonical57-integration.log
+            /tmp/a31-canonical57/reachable-link-audit.json
+            /tmp/a31-canonical57/metadata
+            /tmp/a31-canonical57.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+
   sharp-fourhole:
     if: ${{ inputs.target == 'sharp-fourhole' }}
     runs-on: ubuntu-latest
