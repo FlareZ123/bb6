@@ -119,7 +119,7 @@ def compile_module(source, output, env, logpath):
     result.check_returncode()
     return result.stdout
 
-def link_reachable(groups, work, linked):
+def link_reachable(groups, work, linked, families=None):
     """Select only the recursive import closures of the actual proof roots.
     Every reached duplicate is still checked by exact kernel-data equality.
     Each source-audited root is resolved within its own artifact family first,
@@ -128,19 +128,20 @@ def link_reachable(groups, work, linked):
     from collections import defaultdict
     # Two accepted canonical artifacts form one explicitly checked base.
     # The eight Raw117 artifacts consist of its common closure and child shards.
-    families = [
-        ("canonical76", [p for g in reversed(groups[:2]) for p in g],
-         ["CanonicalTwoParentRosterOnly", "CanonicalRosterRefinement"]),
-        ("raw60", groups[2], ["Raw60RootFull"]),
-        ("raw109", groups[3], ["Raw109Closed"]),
-        ("raw110", groups[4], ["Raw110ParentLateCover"]),
-        ("raw111", groups[5], ["Raw111Data"]),
-        ("raw121", groups[6], ["Raw121Data"]),
-        ("raw123", groups[7], ["Raw123ResidualClosure"]),
-        ("raw125", groups[8], ["Raw125ResidualClosure"]),
-        ("raw117", [p for g in groups[9:] for p in g],
-         [f"Raw117Kid{k:02d}" for k in range(24)]),
-    ]
+    if families is None:
+        families = [
+            ("canonical76", [p for g in reversed(groups[:2]) for p in g],
+             ["CanonicalTwoParentRosterOnly", "CanonicalRosterRefinement"]),
+            ("raw60", groups[2], ["Raw60RootFull"]),
+            ("raw109", groups[3], ["Raw109Closed"]),
+            ("raw110", groups[4], ["Raw110ParentLateCover"]),
+            ("raw111", groups[5], ["Raw111Data"]),
+            ("raw121", groups[6], ["Raw121Data"]),
+            ("raw123", groups[7], ["Raw123ResidualClosure"]),
+            ("raw125", groups[8], ["Raw125ResidualClosure"]),
+            ("raw117", [p for g in groups[9:] for p in g],
+             [f"Raw117Kid{k:02d}" for k in range(24)]),
+        ]
     prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
     stdlib = prefix / "lib" / "lean"
     walker = HERE / "WalkImportClosure.lean"
