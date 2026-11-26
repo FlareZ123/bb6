@@ -7,10 +7,10 @@ on:
         required: true
         type: string
       kind:
-        description: Branch depth, A6 root, C1 batch or E0 sweep
+        description: Branch depth, A6 root, C1 batch or E0 proof
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch, e0sweep]
+        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -23,7 +23,7 @@ jobs:
   certify:
     if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: ${{ inputs.kind == 'e0parent' && 180 || 60 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,6 +40,9 @@ jobs:
         run: |
           if [[ "$KIND" == c1 ]]; then
             bash im-results/agent48-raw139-f1-oneRA/reproduce-blocks.sh c1 "$SIBLING"
+          elif [[ "$KIND" == e0parent ]]; then
+            [[ "$SIBLING" == ZeroRE ]]
+            bash im-results/agent48-raw139-e0-0re/reproduce-parent.sh
           elif [[ "$KIND" == e0sweep ]]; then
             [[ "$SIBLING" == ZeroRE ]]
             bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh
@@ -60,6 +63,7 @@ jobs:
           path: |
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/manifest.json
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/log
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/partition.json
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
 
