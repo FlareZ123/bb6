@@ -13,21 +13,30 @@ parent_core = os.environ.get("RAW122_PARENT_CORE") == "1"
 branch_indices = list(range(24))
 root_name = "Raw122CompleteParent" if parent_core else "Raw122Data"
 seen={}
-for base in (Path("/tmp/a43-new-shards"),):
-    if not base.is_dir(): raise FileNotFoundError(base)
-    for shard in sorted(p for p in base.iterdir() if p.is_dir()):
-        for src in shard.rglob("*.olean"):
-            rel=src.relative_to(shard)
-            key=rel.as_posix()
-            digest=hashlib.sha256(src.read_bytes()).hexdigest()
-            if key in seen and seen[key]!=digest:
-                raise RuntimeError(f"conflicting Lean object for {key}")
-            if key not in seen:
-                dst=out/rel
-                dst.parent.mkdir(parents=True,exist_ok=True)
-                shutil.copy2(src,dst)
-                seen[key]=digest
-print(f"merged {len(seen)} distinct Lean objects",flush=True)
+base=Path("/tmp/a43-new-shards")
+if not base.is_dir(): raise FileNotFoundError(base)
+# download-artifact stores target artifacts beneath grouping directories; identify
+# the actual artifact roots by their stable artifact-name prefixes, not by
+# assuming every artifact is an immediate child of /tmp/a43-new-shards.
+shards=sorted(
+    p for p in base.rglob("*")
+    if p.is_dir() and (p.name.startswith("raw122-audit-") or p.name.startswith("raw122-target-"))
+)
+if not shards:
+    raise RuntimeError(f"no Raw122 audit/target artifact roots found under {base}")
+for shard in shards:
+    for src in shard.rglob("*.olean"):
+        rel=src.relative_to(shard)
+        key=rel.as_posix()
+        digest=hashlib.sha256(src.read_bytes()).hexdigest()
+        if key in seen and seen[key]!=digest:
+            raise RuntimeError(f"conflicting Lean object for {key}")
+        if key not in seen:
+            dst=out/rel
+            dst.parent.mkdir(parents=True,exist_ok=True)
+            shutil.copy2(src,dst)
+            seen[key]=digest
+print(f"merged {len(seen)} distinct Lean objects from {len(shards)} artifact roots",flush=True)
 for src in source.glob("*.lean"):
     if parent_core and src.name in {"Raw122Branch00.lean","Raw122Branch05.lean","Raw122Branch16.lean","Raw122Branch17.lean"}:
         continue
