@@ -564,7 +564,7 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent17-raw10-box15/prepare_hard.py
-          python tools/lean_compile_closure.py --workdir /tmp/a13-box15 --jobs 4 --source-root im-results/agent17-raw10-box15/generated im-results/agent13-raw10-box15/Box15Source.lean im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean im-results/agent17-raw10-box15/BouncersSource.lean im-results/agent17-raw10-box15/HardSource.lean | tee /tmp/a13-box15.log
+          python tools/lean_compile_closure.py --workdir /tmp/a13-box15 --jobs 4 --source-root im-results/agent17-raw10-box15/generated im-results/agent13-raw10-box15/Box15Source.lean im-results/agent13-raw10-box15/WeightedBoxMinimalHalt.lean im-results/agent17-raw10-box15/BouncersSource.lean im-results/agent17-raw10-box15/HardSource.lean im-results/agent17-raw10-box15/Lower.lean | tee /tmp/a13-box15.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a13-box15.log; then exit 1; fi
       - name: Regenerate and check Raw10 rectangle 4
         if: inputs.target == 'weighted-tnf-raw10-box4-full' || inputs.target == 'weighted-tnf-raw10-box4-sample'
