@@ -922,7 +922,7 @@ jobs:
                   f"extra={sorted(set(flat) - expected)}"
               )
           Path("/tmp/a47-raw112-partial-config.json").write_text(
-              json.dumps(config, indent=2, sort_keys=True) + "\\n"
+              json.dumps(config, indent=2, sort_keys=True) + "\n"
           )
           print(f"partial union reuses {len(reused)} prior retry groups; recompiles {selected}")
           PY
@@ -1138,12 +1138,15 @@ jobs:
               shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
           print(f"assembled retry inputs from {len(all_groups - selected)} reused and {len(selected)} new groups")
           PY
-      - name: Record exact retry reuse in the output manifest
+      - name: Assemble and audit full Raw112 parent Cover
         env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
+          python -u im-results/agent10-raw112-recovery/assemble_retry.py --root im-results/agent47-raw112-cut --shards /tmp/a47-raw112-shards --union /tmp/a47-raw112-full-union --branch-work /tmp/a47-raw112-branch-roots --parent-work /tmp/a47-raw112-parent --output /tmp/a47-raw112-assembled
           python3 - <<'PY'
           import json, os
           from pathlib import Path
@@ -1157,15 +1160,8 @@ jobs:
           summary["resumed_from_retry_run_id"] = int(resume_id) if resume_id else None
           summary["new_retry_groups"] = selected
           summary["reused_retry_groups"] = sorted(set(all_groups) - set(selected)) if resume_id else []
-          path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\\n")
+          path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           PY
-      - name: Assemble and audit full Raw112 parent Cover
-        env:
-          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
-          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
-        run: |
-          set -euo pipefail
-          python -u im-results/agent10-raw112-recovery/assemble_retry.py --root im-results/agent47-raw112-cut --shards /tmp/a47-raw112-shards --union /tmp/a47-raw112-full-union --branch-work /tmp/a47-raw112-branch-roots --parent-work /tmp/a47-raw112-parent --output /tmp/a47-raw112-assembled
       - uses: actions/upload-artifact@v4
         if: always()
         with:
