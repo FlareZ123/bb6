@@ -3862,8 +3862,10 @@ jobs:
       REPAIR_KIDS: ${{ inputs.raw124_bundle_repair_kids }}
     steps:
       - uses: actions/checkout@v4
-      - name: Preserve subdivision driver before pinning the source revision
-        run: cp im-results/agent4-raw124-0re/regenerate_subtree.py /tmp/regenerate_subtree.py
+      - name: Preserve subdivision drivers before pinning the source revision
+        run: |
+          cp im-results/agent4-raw124-0re/regenerate_subtree.py /tmp/regenerate_subtree.py
+          cp im-results/agent4-raw124-0re/optimize_wide_kids.py /tmp/optimize_wide_kids.py
       - name: Pin exact source revision from the common-artifact run
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -3890,6 +3892,9 @@ jobs:
           )"
           read -r -a kid_array <<< "$kids"
           python /tmp/regenerate_subtree.py "$GITHUB_WORKSPACE" /tmp/raw124-repair-source "$RAW124_BRANCH" 50 "$expected" "${kid_array[@]}"
+          if [[ "$RAW124_BRANCH" == 0RE ]]; then
+            python /tmp/optimize_wide_kids.py "$GITHUB_WORKSPACE" /tmp/raw124-repair-source "${kid_array[@]}"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-${{ inputs.raw124_branch }}-repair-source
@@ -3953,9 +3958,18 @@ jobs:
           SRC_DIR=/tmp/a2-raw124-repair-source
           for k in $KIDS; do
             echo "Compiling subdivided ${STEM}Kid${k}" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
-            cp "$SRC_DIR/${STEM}Kid${k}.lean" "${STEM}Kid${k}.lean"
-            lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
-            cp "${STEM}Kid${k}.olean" /tmp/a2-raw124-repair-kids/
+            if [[ -f "$SRC_DIR/optimized/$k.order" ]]; then
+              while IFS= read -r mod; do
+                echo "Compiling $mod" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+                cp "$SRC_DIR/optimized/$mod.lean" "$mod.lean"
+                lean -j 1 -o "$mod.olean" "$mod.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+                cp "$mod.olean" /tmp/a2-raw124-repair-kids/
+              done < "$SRC_DIR/optimized/$k.order"
+            else
+              cp "$SRC_DIR/${STEM}Kid${k}.lean" "${STEM}Kid${k}.lean"
+              lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+              cp "${STEM}Kid${k}.olean" /tmp/a2-raw124-repair-kids/
+            fi
           done
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-repair-kids/repair-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
@@ -4048,6 +4062,16 @@ jobs:
               text = new_path.read_text()
               for statement in entry["root_statements"].values():
                   assert statement in text, f"root statement missing in {name}"
+          optimized = source / "optimized"
+          if optimized.is_dir():
+              reports = json.loads((optimized / "OPTIMIZED_MANIFEST.json").read_text())
+              for kid, report in reports.items():
+                  for module, expected_sha in report["source_sha256"].items():
+                      assert sha(optimized / (module + ".lean")) == expected_sha, module
+                      assert (root / (module + ".olean")).is_file(), module
+                  wrapper = optimized / f'Raw124B{os.environ["RAW124_BRANCH"]}Kid{kid}.lean'
+                  for statement in manifest["kids"][kid]["root_statements"].values():
+                      assert statement in wrapper.read_text(), (kid, statement)
           print("Raw124 subdivided kid manifest, original source pins, and stable parent interfaces verified.")
           PY
           for k in $(seq -w 0 23); do test -s "${STEM}KidK$k.olean"; done
