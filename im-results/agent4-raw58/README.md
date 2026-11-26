@@ -1,97 +1,54 @@
-# Raw58 E1=0RA parent: five-residual frontier
+# Raw58 E1=0RA: exact weighted closure awaiting cut-object composition
 
-## Parent and accepted first partition
+## The mathematical result
 
-The parent cylinder is the six-hole partial machine
+Parent (six holes): `1RB---_1RC---_0RD---_1LD1RE_---0RA_------`. It has 25^6 = 244,140,625 compatible completions. Its first unknown transition A1 is queried after seven ordinary steps.
 
-`1RB---_1RC---_0RD---_1LD1RE_---0RA_------`
+The historical original-source audit [45596841950](https://github.com/FlareZ123/bb6/actions/runs/45596841950) proved the exhaustive first-hole partition `Raw58MoreCut2.parent_dichotomy`: every compatible machine has weighted bound 374 or belongs to exactly one of five disjoint A1 children. All five child proofs now exist and were compiled locally against the original, hash-verified source artifact closures:
 
-with `25^6 = 244,140,625` compatible completions. Its first undefined transition is A1, queried after seven transitions.
-
-The source-verified composition in `Raw58MoreCut2.lean` proves
-
-`∀ m, compatible parent m → WeightedBound 374 m ∨ residual(m)`
-
-where `residual(m)` means compatibility with exactly one of these five A1-child cylinders:
-
-| A1 move | Next undefined query |
-|---|---|
-| `0LE` | E0, step 8 (slot 8) |
-| `0LF` | F0, step 8 (slot 10) |
-| `0RF` | F0, step 8 (slot 10) |
-| `1LE` | E0, step 8 (slot 8) |
-| `1LF` | F0, step 8 (slot 10) |
-
-This is a complete, disjoint five-residual partition at weighted bound 374, not a complete closure of the parent.
-
-## Source-accepted layers
-
-1. `Raw58Cut.lean` (CI [45520713972](https://github.com/FlareZ123/bb6/actions/runs/45520713972)): the initial A1 partition bounds 13 of 25 first-hole cylinders at 55, leaving 12 five-hole children.
-2. `Raw58MoreCut.lean` (CI [45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017)): adds complete child bounds for A1=0RD (120), 1LC (156), and 1RE (93), reducing the residual frontier to nine.
-3. `Raw58MoreCut2.lean` (CI [45596841950](https://github.com/FlareZ123/bb6/actions/runs/45596841950)): adds A1=0RC (167), 1LA (284), 1LB (223), and 1RF (374), reducing the residual frontier from nine to five.
-4. The A1=0RF child has a complete 1346-bound source-accepted certificate (CI [45636997573](https://github.com/FlareZ123/bb6/actions/runs/45636997573)), including its seven custom counter witnesses.
-
-The `Raw58MoreCut2.parent_dichotomy` audit compiled 280 Lean modules. Its theorem profile contains only standard axioms `propext`, `Classical.choice`, and `Quot.sound`; the workflow rejects `sorryAx` and `native_decide`.
-
-## Current five-child target
-
-| A1 move | Data module | Weighted bound | Status |
+| A1 move | Next query | Weighted bound | Source evidence |
 |---|---|---:|---|
-| 0LE | Raw58LEData | 927 | Source-accepted shard run 45743474599 |
-| 0LF | Raw58LFData | 7014 | All 24 Kid checks source-accepted in three shards (45725204019); Data assembly pending |
-| 0RF | Raw58RFData | 1346 | Source-accepted |
-| 1LE | Raw58LE1Data | 19310 | Source-accepted |
-| 1LF | Raw58LF1Data | 3055750 | Candidate; late-count and #39 bridges source-accepted; #567 and remaining leaves open |
+| 0LE | E0, 8 | 927 | [45743474599](https://github.com/FlareZ123/bb6/actions/runs/45743474599) |
+| 0LF | F0, 8 | 7014 | All 24 Kids in [45725204019](https://github.com/FlareZ123/bb6/actions/runs/45725204019); Data wrapper locally compiled |
+| 0RF | F0, 8 | 1346 | [45748661100](https://github.com/FlareZ123/bb6/actions/runs/45748661100), RF shard successful |
+| 1LE | E0, 8 | 19310 | [45748661100](https://github.com/FlareZ123/bb6/actions/runs/45748661100), LE1 shard successful |
+| 1LF | F0, 8 | **3055746 (exact)** | All 24 Kids in [45750653340](https://github.com/FlareZ123/bb6/actions/runs/45750653340); Data wrapper, sharp upper/lower and exactness locally compiled |
 
-The long LF1 last-hole family changes the target from 19310 to **3055750**, still below the canonical cutoff 6766859. See [LF1Late.md](LF1Late.md) for the exact three query counts and compressed proof. The parent closure and any unconditional roster graft remain open. Older conditional grafts at 19310 are not usable as stated.
+The locally original-source checked `Raw58SharpComposition.raw58_exact` proves the exact parent threshold **3,055,746**, with the historical cut theorem as its one explicit premise. The threshold is strictly below the accepted canonical64 cutoff 6,766,859. `Raw58SharpComposition.raw58_lower` is unconditional. The final `Raw58Exact.raw58_bound_exact` adapter and `coverRaw58` need a recompiled cut closure to achieve a single source-audited parent proof. Do not report a global roster reduction until the exact parent Cover is actually consumed by the current integrated roster.
 
-## Reusable counter certificates
+The attaining last-hole machine is `1RB1LF_1RC---_0RD1RC_1LD1RE_1LC0RA_0LA0LF` with B1 assigned halt. Its exact first query occurs at ordinary step 3,055,744, proved by compressed sweep recurrence, and possible incoming blank delays are [0,1]. The maximum weighted score is therefore 3,055,744+1+1 = 3,055,746. The two other late LF1 first queries at #109/#122 occur at 2,298,758 and 2,295,586. See [LF1Sharp.md](LF1Sharp.md) and [LF1Late.md](LF1Late.md).
+
+## Reusable proof method
+
+[ZipWeightTighten.lean](ZipWeightTighten.lean) transfers an accepted exhaustive zipper Audit at any bound to a new one by checking only query weights. It skips simulation, cycle, FAR and imported nonhalting proofs. [ZipWeightExact.lean](ZipWeightExact.lean) proves completeness: under the standard first-one root and no assigned halt, an accepted Audit has uniform weighted bound B **iff** the independent weight check returns true. Every query-halt path is attainable via its possible blank delay, so the least accepted B is the exact weighted maximum. This enables cheap sharp bounds without rerunning expensive traces.
+
+Original-source local Lean 4.36.0-rc2 accepted all 24 generated LF1 weight checks, the Data wrapper, upper, lower and exactness theorems with only standard axioms `propext`, `Classical.choice`, `Quot.sound`. It also accepted the conditional full-parent assembly against the nine non-cut artifact closures; all 521 unique module source/object identities agree across them. The artifact pins and reproduction recipe are in [LF1Sharp.md](LF1Sharp.md).
+
+## Remaining integration gate
+
+The historical cut run did not retain a reusable object artifact. A modern generator regression dropped valid unspecified one-state FAR defaults from the explicit witness census. Run [45757432002](https://github.com/FlareZ123/bb6/actions/runs/45757432002) exposed two LC1 leaves (61/63). Commit [637a33f7](https://github.com/FlareZ123/bb6/commit/637a33f7d0e3460eba2cc3c00af788678c3d4fe2) restores those defaults for the seven legacy cut children, with a validity test before assigning each one. The new `cut` shard [45758266553](https://github.com/FlareZ123/bb6/actions/runs/45758266553) is compiling.
+
+After its acceptance, use `raw58-compose` with the ten pinned artifact groups from [shard_groups.json](shard_groups.json). The workflow's parent artifact metadata now records the actual 3,055,750 loose theorem threshold rather than the obsolete 19,310. For sharp exactness, compile the weight-only modules and `Raw58Exact.lean` with the cut artifact and the same accepted child closure. The existing older [Canonical75Raw58Graft.lean](Canonical75Raw58Graft.lean) is a historical conditional consumer at the incorrect 19,310 premise and stale 76 roster; do not use it for current integration. Agent31 has been notified to consume the actual Raw58 Cover on the current accepted complement.
+
+## Reusable leaf certificates
 
 - `Raw58PairCounter.lean` and `Raw58PairCases.lean`: paired-digit binary countdown; carry skips zero pairs, clears positive digits, and grows the word by one pair at overflow.
 - `Raw58BlockCases.lean`: width-3/4 countdown instances.
 - `Raw58UnaryDrain.lean`: affine unary-drain returns.
-- `Raw58M1391.lean`: alternating C/E sweeps with return recurrence (k\mapsto 3k+10).
-- `Raw58OddRun.lean` and `Raw58RD1892.lean`: additional literal-table counter certificates.
-- `Raw58LE56.lean` and `Raw58LF157.lean`: two-bit and four-bit block counters giving arbitrarily long live prefixes.
-- `Raw58LFPair.lean` and `Raw58LF296.lean`: nested counter proofs for LF leaves 294/314 and 296.
-- `Raw58LFGrowth.lean` and `Raw58LF917.lean`: Agent7's parameterized live-prefix proofs for LF411/415 and LF917.
+- `Raw58M1391.lean`: alternating C/E sweeps, return recurrence k→3k+10.
+- `Raw58OddRun.lean`, `Raw58RD1892.lean`, `Raw58RD8.lean`: literal counter certificates.
+- `Raw58LE56.lean`, `Raw58LF157.lean`: two-bit and four-bit block counters giving arbitrarily long live prefixes.
+- `Raw58LFPair.lean`, `Raw58LF296.lean`: nested counters for LF294/314 and LF296.
+- `Raw58LFGrowth.lean`, `Raw58LF917.lean`: Agent7's parameterized live-prefix proofs for LF411/415 and LF917.
+- [LF1Growth.md](LF1Growth.md), [LF1567.md](LF1567.md), and LF1 custom modules: the previously difficult leaves, all consumed by the accepted LF1 shards.
+- [Incidence quotient reduction](../agent4-two-sided-automata/INCIDENCE_QUOTIENT.md): LE203 joint states 8723→2560, stack states 87/348→72/100; reduced automata certificate accepted in the LE audit.
 
-These are leaf-level nonhalting arguments, not claims that an entire parent cylinder is nonhalting. Local Lean checks on copied exact zipper/sweep definitions are not original-source acceptance.
+## Historical partition and generator notes
 
-## Current child evidence
+The first cut `Raw58Cut.lean` ([45520713972](https://github.com/FlareZ123/bb6/actions/runs/45520713972)) closed 13 of 25 A1 cylinders at 55. `Raw58MoreCut.lean` ([45521202017](https://github.com/FlareZ123/bb6/actions/runs/45521202017)) added 0RD (120), 1LC (156), and 1RE (93). `Raw58MoreCut2.lean` added 0RC (167), 1LA (284), 1LB (223), 1RF (374), yielding the five-child partition. The accepted audit compiled 280 Lean modules and rejected sorryAx/native_decide.
 
-0LE's compressed incidence-quotient certificate is source-accepted (45743474599). All 0LF Kid checks succeeded in lf-a/b/c (45725204019); the identical Data wrapper still needs assembly. LF1 #39 ([LF1Growth.md](LF1Growth.md)) and #86/#109/#122 ([LF1Late.md](LF1Late.md)) passed the original-source audit [45745620641](https://github.com/FlareZ123/bb6/actions/runs/45745620641). Leaf #567 has a locally kernel-checked base-four counter overflow proof ([LF1567.md](LF1567.md)); its original-source bridge remains pending. The #1181 automaton candidate and four other unresolved leaves (1188, 1336, 1375, 1416) still require source-accepted proofs. The prior LF1 full audit 45718748609 failed at the unclassified-leaf census, before Lean.
+The LF enumeration root is `["split",8,10]`; the stdout deepest halt statistic n=373 is unrelated to the first query. The generator shadowed n in an early failed LF run (45700931315), fixed by Agent7 at c62c0b4ee10dc1e7aacd4c1607023aaffce127aa. Full LE/LF audits initially suffered runner shutdown; the accepted sharded route now avoids replay. The loose 19,310 closure target predates the three late LF1 query counts and is superseded.
 
-## Generator diagnostic
+The previous 76→75 conditional consumer passed [45710963323](https://github.com/FlareZ123/bb6/actions/runs/45710963323) (artifact 15067462143, revision 6eac07ba9839cacbc85504fa7bb61cd6752ab597). Its premise was 19,310 and its accepted theorem is conditional, so it cannot discharge Raw58 using the actual new threshold. Retain only as historical evidence of exact membership and the thin-consumer method.
 
-The failed LF run [45700931315](https://github.com/FlareZ123/bb6/actions/runs/45700931315) found all eleven sparse certificates and zero unclassified leaves, then failed because local variable `n` shadowed the first-query step in `generate_more.py`. Agent7 fixed this in commit `c62c0b4ee10dc1e7aacd4c1607023aaffce127aa` and dispatched run 45701329862; that rerun reached `Raw58LFKid17` before runner shutdown (exit 143), with no Lean proof error in the retrieved tail.
-
-I independently compiled the current `im-results/agent2-tnf-raw99/enumerate.cpp` and ran it on all twelve current Raw58 A1 child parent tables. Every actual `tree.json` root matched its `more.json` query/slot specification. In particular, for the 0LF parent `1RB0LF_1RC---_0RD---_1LD1RE_---0RA_------`, the actual root is `["split",8,10]`. The stdout line `maxscore=374 n=373 delay=0 table=...` describes a deepest/best halt candidate in the recursive tree, not the root split. Do not change LF's slot to 5 based on that line.
-
-## Global-roster handoff and next step
-
-The parent is `BB6.Agent4Raw58Cut.parent = BB6.Agent4Raw58RE.p58`, defined by the first four entries of the root path followed by E1=0RA. It is distinct from the already-used p107 and p114 E1 branches. Agent47 has finite membership/count drafts for the canonical77 and canonical72 rosters; neither Raw58 parent Cover nor the 72→71 graft has been source-audited. The 72-roster consumer must use the corrected 3055750 premise.
-
-The resumable proof route uses the existing manual workflow's `raw58-shard` and `raw58-compose` selectors. [shard_groups.json](shard_groups.json) covers the entire accepted partition theorem, three ordinary child data modules, and every one of the 24 immediate move checks of each heavy LF/LF1 child. The shared, already-used recursive chunk checker partitions large Kid proofs without changing leaf witnesses. Each group has its own compiled-object manifest and named axiom audit; a failed group does not erase successful groups. The two heavy child Data modules are generated independently in all three respective shards, required to agree byte-for-byte, and compiled with the final parent theorem. Composition pins each artifact's run and source revision, checks exact source/object/import identities, and requires all modules except the two Data wrappers and final parent theorem to be reused. The LF pilot succeeded in all three shards and the LE shard succeeded. Parent composition still needs LF1 and the remaining pinned shards. BB(6) remains unresolved.
-
-
-## Conditional 76-to-75 graft against the accepted two-parent roster
-
-`Canonical75Raw58Graft.lean` is a new conditional consumer of the **source-accepted** `CanonicalTwoParentRosterOnly` 76-residual theorem, rather than the older canonical77-only Raw58 wrapper. It proves by kernel reduction that the exact E1=0RA Raw58 parent `p58` occurs exactly once in the accepted `roster76`, and that empty-replacement grafting removes it to produce `roster75` with length 75.
-
-Its `sound` theorem states that, assuming the Raw58 parent has a `WeightedBound 19310` proof, every normalized root machine is either below the canonical target 6,766,859 or quotient-compatible with one of the 75 retained representatives. `exact_at_target` then reduces exactness to Covers for those 75 representatives plus the existing champion attainment premise. This earlier conditional consumer was accepted at 19310; the new LF1 counts require a revised premise at 3055750 before it can consume the parent closure.
-
-**Source-accepted conditional-graft audit:**
-
-- Existing manual workflow target: `canonical75raw58` in `.github/workflows/agent47-raw114-graft.yml`.
-- CI run [45710963323](https://github.com/FlareZ123/bb6/actions/runs/45710963323), job `canonical75raw58`: **success**. The other workflow jobs were skipped; no unrelated canonical rebuild was run.
-- Uploaded artifact 15067462143, `canonical75-raw58-graft-conditional-source-audited`; ZIP SHA256 `8783c59115dad53dbd66cfca3f2b98251dc10e646dd6c8ca3e374e1c703a0aa7`.
-- Source revision: `6eac07ba9839cacbc85504fa7bb61cd6752ab597`. Source SHA256: `e929df0d772691367b3b5d50c9c842646a48968147963a2732d057fc0718f5a1`. CI `.olean` SHA256: `a7345b33ba39d9a7e8b073ca50587370681b0c8216093301e8b3981f693ad7c9`.
-- The accepted 76 base artifact is run 45647053824 / artifact 15043876968; its canonical77 dependency is run 45554648116 / artifact 14997966221. The workflow verifies the accepted 76 manifest, the source hash of `CanonicalTwoParentRosterOnly.lean` against the current repository, the accepted object hashes, and the exact Lean 4.36.0-rc2 compiler binary hash before compiling the consumer.
-- Axiom profiles for `parent_count`, `count`, `base_sound_at_target`, `sound`, and `exact_at_target` contain only `propext`, `Classical.choice`, and `Quot.sound`; no `sorryAx` or `native_decide`.
-
-This CI result accepts the **conditional roster consumer**, not the missing Raw58 parent Cover. The 19310 parent premise and all 75 retained Covers remain explicit; do not report an unconditional 75-residual upper bound. The full Raw58 parent closure still needs its own original-source audit.
-
-## Incidence quotient improvement (2026-11-26)
-
-See [the quotient note](../agent4-two-sided-automata/INCIDENCE_QUOTIENT.md). The compressed LE203 leaf was locally kernel-checked against the original Raw109 core and exact TwoSidedAutomata source, all twelve row checks and the assembled `never` theorem. The 19 symmetric Raw58 candidates all shrink; LE203 joint states 8723→2560 and stack states 87/348→72/100. The generator now uses this reduction for LE and LF1, while preserving LF's pinned in-flight shards and accepted LE1 representation. The exact Boolean seed equality + direct rewrite assembly has been checked on the actual compressed certificate. LE source audit succeeded; LF Kid checks succeeded. LF1 and parent closure remain pending.
+BB(6) remains unresolved.
