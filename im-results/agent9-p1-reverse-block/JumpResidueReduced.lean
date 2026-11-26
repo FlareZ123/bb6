@@ -237,7 +237,8 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
   · intro h
     change c ∈ ((List.range (q/M+1)).flatMap
       (fun j => (reducedResidues q k Y).map (fun x => j*M+x.toNat))).filter (·<q) at h
-    obtain ⟨hlist,hc⟩ := List.mem_filter.mp h
+    obtain ⟨hlist,hcBool⟩ := List.mem_filter.mp h
+    have hc : c < q := of_decide_eq_true hcBool
     obtain ⟨j,hj,hitems⟩ := List.mem_flatMap.mp hlist
     obtain ⟨x,hx,hEq⟩ := List.mem_map.mp hitems
     have hxrange := reducedResidues_range q k Y hx
@@ -297,7 +298,7 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
     have hflat : c ∈ (List.range (q/M+1)).flatMap
         (fun j => (reducedResidues q k Y).map (fun x => j*M+x.toNat)) := by
       exact List.mem_flatMap.mpr ⟨c/M,hj,by simpa using hitems⟩
-    exact List.mem_filter.mpr ⟨hflat,hc⟩
+    exact List.mem_filter.mpr ⟨hflat,by simp [hc]⟩
 
 /-- The reduced generator is a complete JumpCover for every suffix. -/
 theorem reducedLiftResidues_cover (q : Nat) (ys : List Nat) :
