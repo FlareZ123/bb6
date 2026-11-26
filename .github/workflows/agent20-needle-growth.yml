@@ -13,6 +13,7 @@ on:
           - cubic
           - subexponential
           - entropy
+          - terminal-density
           - rotation-affine
 
 permissions:
@@ -44,7 +45,7 @@ jobs:
           lake exe cache get
           lake build BusyBeaver.BB6.M_1RB1LA_1LC0RE_1LF1LD_0RB0LA_1RC1RE_HHH0LD
       - name: Audit source-connected unconditional step growth and conditional orbit bound
-        if: inputs.target != 'rotation-affine'
+        if: inputs.target != 'rotation-affine' && inputs.target != 'terminal-density'
         working-directory: /tmp/cryptids
         run: |
           set -euo pipefail
@@ -110,6 +111,26 @@ jobs:
           done
           lake env lean NeedleEntropySource.lean | tee NeedleEntropySource.axioms.log
           if grep -q 'sorryAx' NeedleEntropySource.axioms.log; then exit 1; fi
+      - name: Audit terminal exponent density arithmetic and source spacing
+        if: inputs.target == 'terminal-density'
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
+          lake env lean -o .lake/build/lib/lean/SpaceNeedleClosed.olean SpaceNeedleClosed.lean
+          for module in NeedleTerminalDichotomy NeedleTerminalDichotomySource; do
+            cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/$module.lean" .
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+          done
+          python3 "$GITHUB_WORKSPACE/im-results/agent48-needle-density/unpack.py"
+          python3 "$GITHUB_WORKSPACE/im-results/agent48-needle-density/density_certificate.py"
+          cp "$GITHUB_WORKSPACE/im-results/agent48-needle-density/"*.lean .
+          for module in NeedleOrderBound NeedleOrderCert NeedleOrderTable NeedleTerminalDensityArithmetic NeedleLowHits; do
+            lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean" | tee "$module.axioms.log"
+            if grep -q 'sorryAx' "$module.axioms.log"; then exit 1; fi
+          done
+          lake env lean NeedleTerminalDensitySource.lean | tee density-source.axioms.log
+          if grep -q 'sorryAx' density-source.axioms.log; then exit 1; fi
       - name: Audit source-connected terminal rotation and all-depth affine inverse
         if: inputs.target == 'rotation-affine'
         working-directory: /tmp/cryptids
