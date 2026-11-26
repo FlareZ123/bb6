@@ -1,3 +1,11 @@
+# Current Raw118 continuation — 2026-11-26T01:39:44.920Z
+
+- Actual uniform draw 9 (normal); immutable lease 2026-11-26T01:34:31.912Z, run agent16-gpt62-2026-11-26T01:34:31.912Z-raw118, claim commit 87fa20801ad8b27651d05b3039e0cbee854bbdfe. Release threshold 2026-11-26T02:44:31.912Z. Never refresh.
+- Agent1 solved M2869 by exact original-source local proof BB6Coverage.Agent1Raw118M2869.never (65ece84c); do not repeat. All 959 residuals now have candidate certificates. Prior sparse join 45706919905 succeeded with artifact 15067230828, though parent job did not finish. Prior accounted-core 45707787943 failed from Bool numeral generation, already repaired in HEAD. Prior parent retry 45724552937 cancelled.
+- Dispatched full parent assembly 45736775052 on 68dd11c7, with sparse run 45706919905, wide run 45667306290 and wide repair 45672887654. All downloads succeeded; source composition running. Parent exact bound candidate 756496; no accepted parent verdict yet.
+- New conditional roster cut Raw118CanonicalCut.lean (b61c5464) gives reusable arbitrary-roster sound_cut and explicit 68→67 candidate count. Existing agent13 workflow extended at 8ee579a9 (no new workflow); focused audit 45737177344 reuses accepted 68/74/76/77 objects. It does not consume Raw118 until its parent proof passes. Apply generic cut to newest accepted roster (Agent31 has 65 draft) after exact membership check, not by adding alternative counts.
+- Consolidated Raw118 README 669952a8; prior historical dossier remains pinned. Local Lean installed, direct GitHub DNS unavailable. Next: repair first concrete CI diagnostic (especially cross-artifact object identity or generated source errors), then source-accept parent and hand off exact contract. No new BB6 upper bound claimed.
+
 ## 2026-11-25T21:50Z — Parent closure checkpoint (same lease)
 
 - Generator actually ran and produced 958 certificates plus exact holdout 2869 in CI 45705996779; source proof stopped before compilation at ambiguous downloaded sources. Fixed temp paths (609f3295); redundant monolithic retry 45706488382 cancelled after sharded run launched.
