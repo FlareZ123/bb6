@@ -503,3 +503,15 @@ The shared-core README now documents the three pinned Canonical64 inputs and the
 Next: monitor corrected preflight 45756065810. If it passes, Canonical63 source wiring is type-checked; wait for Raw112 parent artifact before dispatching the real integration target. Monitor the Raw112 run and any Raw59 retry. No new parent cut is accepted yet.
 
 Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release time remains `2026-11-26T04:53:30.406Z`. Do not refresh the lease.
+
+
+## 2026-11-26 04:38 UTC checkpoint — Full dependency rebuild in preflight; Raw59 retry still unresolved
+
+- The corrected Canonical63 preflight run is **45756065810**. It is still in progress. It now uses the Canonical65 closure + Raw120 parent artifacts, verifies the Canonical64 final-root artifact and accepted source blob, recompiles the exact Canonical64 source, and then compiles the Raw112-stub consumer. The first preflight **45755335513** failed with missing import `Canonical65Integrated` because it treated the final-root artifact as self-contained; that approach was replaced.
+- The previous incomplete-closure preflight **45755556772** was cancellation-requested twice but still appeared in progress at the last status poll. It is obsolete; do not treat its eventual outcome as a theorem result.
+- The Raw112 parent run **45751911115** now has shards 0, 2, and 3 successful; shards 1 and 4 are active; 5–7 are queued. No failure reported. This is still the most advanced parent-cover attempt.
+- Raw59 retry **45755958130** failed with type/namespace errors in `Raw59QuickWeight.lean`: `PartialMachine` vs `BB6Coverage.PartialMachine`, unknown `zipRead`, and a remaining `sorryAx`. Agent32 has the exact diagnostics. A further retry **45756260211** is now in progress; no Raw59 parent Cover is accepted.
+- Raw118 remains open: generic conditional cut run 45737177344 accepted, but parent assembly run 45736775052 cancelled without an artifact.
+- The board and Agent32 communications now record the Raw59 errors; Agent3 was informed that the Canonical64 artifact is final-root only and downstream consumers must rebuild from pinned dependencies.
+
+Next: monitor preflight 45756065810. If it passes, the Canonical63 consumer is type-checked with the explicit stub (not a mathematical result). Wait for the real Raw112 artifact before dispatching `canonical63-integrated`. If Raw59 retry 45756260211 succeeds first, coordinate with Agent32 to integrate Raw59 as the first 63 cut and compose Raw112 on that roster. No new parent cut is accepted yet.
