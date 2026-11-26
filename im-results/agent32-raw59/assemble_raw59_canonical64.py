@@ -64,7 +64,7 @@ def main():
     )
     rebuilt_root = canonical64_base / "linked" / "Canonical64Raw120Integrated.olean"
     assert rebuilt_root.is_file(), rebuilt_root
-    canonical64_dirs = [canonical64_base / "linked", *canonical64_dirs_published]
+    canonical64_rebuilt_dirs = [canonical64_base / "linked"]
     canonical64_rebuild_report = json.loads(
         (canonical64_base / "canonical64-integration.json").read_text()
     )
@@ -98,13 +98,15 @@ def main():
     )
 
     linked = work / "linked"
-    canonical_family_dirs = canonical64_dirs
+    canonical64_published_family_dirs = [*canonical64_dirs_published, *canonical64_rebuilt_dirs]
     link_reachable(
-        [canonical_family_dirs, raw59_dirs],
+        [canonical64_rebuilt_dirs, raw59_dirs],
         work,
         linked,
         families=[
-            ("canonical64", canonical_family_dirs, ["Canonical64Raw120Integrated"]),
+            ("canonical64-rebuilt", canonical64_rebuilt_dirs, ["Canonical64Raw120Integrated"]),
+            ("canonical64-published", canonical64_published_family_dirs,
+             ["Canonical64Raw120Integrated"]),
             ("raw59-parent", raw59_dirs, ["Raw59ParentCover"]),
         ],
     )
@@ -146,7 +148,7 @@ def main():
         "axioms": profiles,
     }
     (work / "raw59-canonical64-integration.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\\n"
+        json.dumps(report, indent=2, sort_keys=True) + "\n"
     )
     print("Raw59 integrated into the accepted Canonical64 frontier; standard axiom gate passed.", flush=True)
 
