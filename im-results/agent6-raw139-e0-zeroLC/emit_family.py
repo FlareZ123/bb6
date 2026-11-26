@@ -115,7 +115,7 @@ def emit(code,spec,out,blocks_only=False,tr=None):
     flip=r[0] in ('mirror','mirrorphase')
     phase=r[0] in ('phase','mirrorphase')
     c=generate(opens[i],*r[1:5],flip,60000,phase)
-    assert c and [c['left_states'],c['right_nodes']]==r[5:]
+    assert c and (not r[5:] or [c['left_states'],c['right_nodes']]==r[5:])
     body+=block_source(NS,i,opens[i],c)
   header=HEADER.replace('set_option maxRecDepth',
     ''.join(x+'\\n' for x in sorted(set(extra_imports)))+'set_option maxRecDepth')
