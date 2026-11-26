@@ -42,9 +42,30 @@ Table `1RB1RF_1RC1LA_0RD0RA_1LD1RE_---0LA_1LB0LF`. Entry at time 31 into A, left
 
 `python im-results/agent1-raw57/generate_sibling.py 1RF` generates exact Lean tree and source modules; spec records SHA256 of open list and witness bank, with machine strings at the two indexed proven leaves checked by the final tree. The existing workflow `agent6-raw57-siblings.yml` is extended to route 1RF through this generator. Final target `BB6.Agent1Raw57RF1.all_completions`. Other siblings remain separate.
 
-## Parent closure status
+## Parent closure status — 2026-11-26 checkpoint
 
-The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597) proves an exact parent dichotomy: fourteen ordinary A1 choices have supplied weighted bounds, five cycles close immediately, and only 1LA, 1LB, 1LE, 0LF and 1LF remain as possible residual children. The 1LA child is now source-accepted at weighted bound **832** (run 45762127475; theorem `BB6.Agent1Raw57LA1.all_completions`). This removes one of the five residual obligations. The 1LE partition is source-accepted at 1500 (45767071990). The 1LB specification is now complete following source acceptance of M211; its full child audit is pending. 0LF and 1LF still have live leaves. Agent1 is advancing 0LF, and Agent4 is pursuing 1LF. `Raw57ParentConsumer.lean` supplies the fourteen earlier branch bounds and now includes `cover_at_target_from_four`: given the 1LA theorem at 832, it discharges that residual and leaves only four Covers (1LB, 1LE, 0LF, 1LF). This adapter is a source-level draft pending integrated compilation. No unconditional parent bound or global roster reduction is claimed.
+The source-accepted conditional bridge `Raw57ParentBridge.lean` (run 45752594597) proves the exact parent dichotomy: fourteen ordinary A1 choices have supplied weighted bounds, five choices close immediately, and only 1LA, 1LB, 1LE, 0LF and 1LF remain as residual children.
+
+Four complete child Covers are now source-accepted:
+
+| Child | Weighted bound | Original-source audit |
+|---|---:|---|
+| 1LA | 832 | [45762127475](https://github.com/FlareZ123/bb6/actions/runs/45762127475) |
+| 1LE | 1,500 | [45767071990](https://github.com/FlareZ123/bb6/actions/runs/45767071990) |
+| 1LB | 806 | [45783142807](https://github.com/FlareZ123/bb6/actions/runs/45783142807) |
+| 0LF | 1,500 | [45783586050](https://github.com/FlareZ123/bb6/actions/runs/45783586050) |
+
+The 1LB audit includes the final M211 prefix-rewrite invariant and the replacement M754 43-state RLE witness; its complete child theorem is `BB6.Agent1Raw57LB1.all_completions`. The 0LF audit completed the exact candidate partition with no residual entries; its child theorem is `BB6.Agent1Raw57LF0.all_completions`. These are child-cylinder Covers, not yet a parent Cover.
+
+The last sibling is 1LF. Its exact open census has 2,973 leaves; the only two explicitly expected final tables are M882 and M885. Their shared proof uses a 104-state DFA, an eight-state symbol transducer, and a finite reachable product with 382 states (10 accepting product states). The independent checker `m882885_certificate.py` checks both the finite closure and exact arbitrary-tail zipper macros for the two table variants. Original-source sibling audit [45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585) is in progress; do not count 1LF as accepted until it succeeds.
+
+The final parent consumer draft is `Raw57ParentComplete.lean`, theorem `BB6.Agent1Raw57Complete.parent_cover`, targeting `WeightedBound 1500`. It composes the five residual child Covers with the fourteen earlier branch bounds and five immediate cycles. The existing manual workflow now has a `parent-all` selector to regenerate the exact dependency closure and compile this theorem after 1LF passes. No unconditional Raw57 parent Cover is claimed yet.
+
+## Canonical64 crosswalk and integration
+
+The exact Raw57 parent is entry `canonical_index=33`, `raw_residual_index=57` of `im-results/agent13-roster-convergence/canonical-124.json`. Its address is B0=1RC, C0=0RD, D0=1LD, D1=1RE, E1=0LA, and its six-hole table is exactly `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. The address is canonical under `canonicalAddress 2`.
+
+`Raw57Canonical64Membership.lean` proves unique `sameTable` membership in the accepted `Canonical64Raw120Integrated.roster64`, at zero-based index 33. It is deliberately membership-only: it defines no competing roster and makes no global soundness claim. This helper is not yet source-accepted. Agent31 has been notified to consume the parent through the existing Canonical64 stable-parent integration after the Raw57 parent Cover is accepted. The global residual count remains 64 until that integration itself passes.
 
 ## A1=1LE: source-accepted partition
 
@@ -54,9 +75,17 @@ The 3,326 open leaves were fully partitioned: 3,094 FAR, 106 sparse n-gram, 106 
 
 Together with the earlier source-accepted 1LA bound 832 (run 45762127475), this leaves exactly three Raw57 parent children: 1LB, 0LF and 1LF. `Raw57ParentConsumerWithLALE.lean` is a composition draft that imports the two accepted child modules, lifts their bounds to the requested parent target, and leaves only those three Covers as hypotheses. The wrapper itself is not yet source-accepted; its generated 1LA/1LE modules must be regenerated in the final parent-consumer CI closure. I added a reusable `parent-three` dispatch target to `.github/workflows/agent6-raw57-siblings.yml`, which regenerates the fourteen early/middle modules plus 1LA and 1LE and compiles this wrapper. Audit run [45771759533](https://github.com/FlareZ123/bb6/actions/runs/45771759533) failed before proof checking with KeyError 'AR'; the 0RA generation route was repaired at d76228c. The wrapper remains unaccepted.
 
-## A1=1LB: M211 source proof accepted; complete sibling audit pending
+## A1=1LB: source-accepted complete sibling
 
-The last explicit residual M211 has a source-accepted finite exact prefix-rewrite certificate, [CI run 45780341512](https://github.com/FlareZ123/bb6/actions/runs/45780341512). Its 57 arbitrary-tail rules, regular-language closure and exact 14922-step entry prove unbounded live prefixes for every compatible completion. See [M211PrefixInvariant.md](M211PrefixInvariant.md). The candidate 1LB spec now has zero residual hypotheses; the complete sibling audit at bound 806 has been dispatched. This does not yet close the 1LB sibling or Raw57 parent.
+The final M211 residual has a source-accepted finite exact prefix-rewrite certificate, [run 45780341512](https://github.com/FlareZ123/bb6/actions/runs/45780341512). Its 57 arbitrary-tail rules, regular-language closure and exact 14,922-step entry prove unbounded live prefixes for every compatible completion. See [M211PrefixInvariant.md](M211PrefixInvariant.md). The complete 1LB sibling audit then passed at weighted bound **806** in [run 45783142807](https://github.com/FlareZ123/bb6/actions/runs/45783142807), establishing `BB6.Agent1Raw57LB1.all_completions`.
+
+## A1=0LF: source-accepted complete sibling
+
+The complete 0LF sibling audit passed at weighted bound **1,500** in [run 45783586050](https://github.com/FlareZ123/bb6/actions/runs/45783586050), establishing `BB6.Agent1Raw57LF0.all_completions`. The exact first-hole census has 1,807 open leaves; the final generated specification has no residual hypotheses. The custom proofs include the M968 prefix-automaton certificate and M1242 quadratic growth invariant.
+
+## A1=1LF: final sibling audit in progress
+
+The complete 1LF source audit is running as [run 45818812585](https://github.com/FlareZ123/bb6/actions/runs/45818812585). Its 2,973 open leaves include the two final explicit tables M882 and M885, handled by the shared 104-state DFA / transducer certificate described above. The workflow runs `m882885_certificate.py` before generating and compiling the exact Lean sibling tree. No 1LF Cover is claimed until the original-source audit passes.
 
 ## Canonical64 crosswalk: membership-only helper
 
