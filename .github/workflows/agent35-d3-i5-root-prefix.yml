@@ -58,12 +58,6 @@ jobs:
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean -o "$H/DObsSourceCandidate.olean" "$H/DObsSourceCandidate.lean"
-          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
-            lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
-          done
-          for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
-            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
-          done
           lean -o "im-results/agent31-d-exceptional/DRegularBSource.olean" "im-results/agent31-d-exceptional/DRegularBSource.lean"
           lean -o "$D/BRegularSource.olean" "$D/BRegularSource.lean"
           lean -o "$D/AZeroSource.olean" "$D/AZeroSource.lean"
@@ -88,6 +82,12 @@ jobs:
           lean -DmaxRecDepth=55000 -o "$G/APacketUnary.olean" "$G/APacketUnary.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
+          for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
+            lean -DmaxRecDepth=8192 -o "$D/$module.olean" "$D/$module.lean"
+          done
+          for module in A1100 A1100First A110111 A110111First AExceptionalClosure A110111CodeFirst; do
+            lean -DmaxRecDepth=8192 -o "$B/$module.olean" "$B/$module.lean"
+          done
           for module in MachineConjugacy DTableWitness DStartFinite DSectionTransfer DAllStarts DExactTimes DParseRLE DSourceCorollaries; do
             lean -o "$P3/$module.olean" "$P3/$module.lean"
           done
