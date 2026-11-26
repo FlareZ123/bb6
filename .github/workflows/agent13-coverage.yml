@@ -4483,6 +4483,14 @@ jobs:
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-1lb-residual-pumps/audit937.log BB6.Agent2Raw124OneLB937.never_source
           python tools/lean_compile_closure.py --workdir /tmp/raw124-1lb-residual-pumps/closure980 --jobs 4 --precompiled-manifest /tmp/raw124-1lb-residual-pumps/manifest.json --precompiled-dir /tmp/raw124-1lb-residual-pumps/closure --manifest /tmp/raw124-1lb-residual-pumps/manifest980.json --theorem BB6.Agent2Raw124OneLB980.never_source im-results/agent2-tnf-raw124/Raw124OneLB980.lean | tee /tmp/raw124-1lb-residual-pumps/audit980.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw124-1lb-residual-pumps/audit980.log BB6.Agent2Raw124OneLB980.never_source
+          D=im-results/agent2-tnf-raw124
+          W=/tmp/raw124-1lb-residual-pumps
+          python "$D/generate_1lb_wide.py" --out "$D/wide-generated"
+          for leaf in 207 212; do
+            THM="BB6.Agent2Raw124OneLBWide.M$leaf.never"
+            python tools/lean_compile_closure.py --workdir "$W/closure$leaf" --jobs 4 --manifest "$W/manifest$leaf.json" --theorem "$THM" --provenance-input "$D/generate_1lb_wide.py" "$D/wide-generated/Raw124OneLBWide$leaf.lean" | tee "$W/audit$leaf.log"
+            python im-results/agent4-raw109/audit_axioms.py "$W/audit$leaf.log" "$THM"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: raw124-1lb-residual-certified
