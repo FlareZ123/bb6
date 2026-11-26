@@ -14,6 +14,7 @@ test -s "$UPSTREAM_ROOT/.lake/build/lib/lean/BusyBeaver/Basic.olean"
 test -s "$UPSTREAM_ROOT/.lake/build/lib/lean/BusyBeaver/Calculi/CtlCertificate.olean"
 test -s "$UPSTREAM_ROOT/.lake/build/lib/lean/BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC1RD_1RA1LE_1LA0RD_0LE1RF_1LBHHH.olean"
 test -s "$UPSTREAM_ROOT/.lake/build/lib/lean/BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC0LD_1RA1RC_1RA1LE_0LB1RE_HHH1RA.olean"
+test -s "$ROOT/.tmp/a47-canonical/imports/BB6Coverage.lean"
 
 python3 "$ROOT/tools/test_lean_compile_module_index.py"
 mkdir -p "$WORKDIR"
@@ -84,7 +85,7 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override CrossUpper=im-results/agent4-coverage-smoke/CrossUpper.lean \
   --override CrossFirstUpper=im-results/agent42-coverage-normal/CrossFirstUpper.lean \
   --override TwoCylinder=im-results/agent42-coverage-normal/TwoCylinder.lean \
-  --override BB6Coverage=im-results/agent13-coverage/BB6Coverage.lean \
+  --override BB6Coverage=.tmp/a47-canonical/imports/BB6Coverage.lean \
   --override BlankDelayKernel=im-results/agent13-weighted-first-one/BlankDelayKernel.lean \
   --override BlankDelaySource=im-results/agent13-weighted-first-one/BlankDelaySource.lean \
   --override SparseBlankDelay=im-results/agent13-weighted-first-one/SparseBlankDelay.lean \
