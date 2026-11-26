@@ -1,0 +1,76 @@
+# Normalized positive-return map for BMO5 #754
+
+This note records a dynamical-systems representation of the already formalized positive-return recurrence. It is an intermediate research model, not a nonhalting proof.
+
+## Exact recurrence
+
+Write (P_k=5\cdot 2^k). On a positive entry ((k,q)), let
+[
+a_k=1+\max\{r\ge 0:3^r q\le 2P_k-2\}.
+]
+The existing `positiveNext` definition gives
+[
+q_{k+1}=3^{a_k}q_k-2P_k+3
+       =3^{a_k}q_k-10\cdot2^k+3,
+]
+provided the positive gate succeeds, (q_{k+1}\ge k+7). This is the ordinary one-band return. If the gate fails, the signed negative-phase macro must be used; the recurrence must not be extrapolated through that event.
+
+Normalize by (u_k=q_k/2^k). Then, exactly,
+[
+u_{k+1}=\frac{3^{a_k}}2u_k-5+\frac{3}{2^{k+1}}.
+]
+The exponent selection is equivalent to
+[
+\frac{10-2^{1-k}}{3^{a_k}}
+ < u_k\le
+\frac{10-2^{1-k}}{3^{a_k-1}}.
+]
+Thus the finite-(k) branch boundaries converge exponentially to (10/3^a).
+
+The gate condition at the next band is
+[
+u_{k+1}\ge\frac{k+7}{2^{k+1}}.
+]
+A failed positive gate is therefore a shrinking-target event near zero, with target interval
+[
+J_k=\left(0,\frac{k+7}{2^{k+1}}\right).
+]
+The direct terminal at this first negative entry is the special case (q_{k+1}=k+3); other gate failures must be followed through the exact negative macro and can return to a later positive band.
+
+## Limiting full-branch map
+
+Ignoring the exponentially small finite-(k) corrections gives the autonomous map
+[
+T(u)=\frac{3^a}{2}u-5
+\quad\text{for}\quad
+\frac{10}{3^a}<u\le\frac{10}{3^{a-1}},
+\qquad a=1,2,\ldots.
+]
+Each branch maps its interval onto ((0,10]), with slope (3^a/2\ge3/2). Its inverse branch is
+[
+T_a^{-1}(v)=\frac{2(v+5)}{3^a},
+\qquad 0<v\le10.
+]
+The inverse-branch Jacobians sum to
+[
+\sum_{a=1}^{\infty}\frac{2}{3^a}=1.
+]
+Consequently the transfer operator fixes the constant density: Lebesgue measure on ((0,10]) is invariant under this limiting map.
+
+For the limiting map, (|J_k|=(k+7)/2^{k+1}) is summable. Since (T) preserves Lebesgue measure, the first Borel--Cantelli lemma implies that for Lebesgue-almost every initial (u_0), the orbit (T^k(u_0)) enters (J_k) only finitely often. This is a generic-orbit statement, not a statement about the distinguished rational seed (u_0=8).
+
+## What this does and does not establish
+
+- The normalized recurrence and the full-branch limiting map are exact algebraic rewrites of the positive-return definitions.
+- The limiting map has an invariant Lebesgue measure and a summable shrinking target.
+- This suggests treating the #754 obstruction as a *specific-orbit shrinking-target problem*, rather than expecting a universal fixed-modulus invariant.
+- It does **not** prove that (u_0=8) avoids every target. The exact recurrence is non-autonomous, the branch endpoints move, and a failed gate invokes the separate signed macro. The limiting Borel--Cantelli argument does not transfer automatically to that exact orbit.
+- No new BB(6) upper bound or #754 nonhalting claim follows.
+
+## Next mathematical work
+
+1. Derive exact cylinder intervals for the itinerary of (u_0=8) under the limiting map and compare their distances to the shrinking targets.
+2. Quantify how the (2^{-k}) branch-boundary and additive corrections affect cylinder distortion; do not assume global shadowing, since the map is expanding.
+3. If an exact positive gate fails, compose the signed negative return map with the next positive episode and formulate a non-autonomous return-map version of the shrinking-target problem.
+
+Relevant formal sources: `CapPositiveRepeat.lean`, `CapPositiveRepeatBound.lean`, `CapNegativeExit.lean`, `CapSieveCore.lean`, and the root-specific discussion in `README.md`.
