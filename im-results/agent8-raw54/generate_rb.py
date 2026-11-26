@@ -28,6 +28,17 @@ def move(a): return f"⟨{str(a[0]=='1').lower()},{str(a[1]=='R').lower()},{ord(
 def wrap(t):
     closed, code=t
     return ".closed ("+code+")" if closed else code
+def fuse_sparse(root, mod):
+    """Keep identical Lean declarations but share import initialization across
+    all twelve row checks. The generated closure has one module per certificate."""
+    paths=[root/(mod+"Data.lean"),*(root/(mod+f"Row{j:02}.lean") for j in range(12)),root/(mod+".lean")]
+    source=paths[0].read_text()
+    for path in paths[1:]:
+        source+="".join(line for line in path.read_text().splitlines(keepends=True) if not line.startswith("import "))
+    paths[-1].write_text(source)
+    for path in paths[:-1]:
+        path.unlink()
+
 def witness_sections():
     out = {}
     for line in (ROOT/"rb-witnesses.txt").read_text().splitlines():
@@ -93,6 +104,7 @@ def main():
             assert l in (lk,le) and r in (rk,re),(i,l,r,lk,le,rk,re)
             mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54RBSparse{i}",expected=(n,le,re))
             certs[misses[i]]=f".proven {ns}.table {ns}.never"
+            fuse_sparse(ROOT,mod)
             imports[misses[i]]=mod
         for i,mod,ns,*args in specs["proved"]:
             ns="BB6.Agent8Raw54."+ns
