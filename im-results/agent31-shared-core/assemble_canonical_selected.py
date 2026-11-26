@@ -11,6 +11,7 @@ import assemble_canonical59_five_parent as five
 
 a63, a68, champion = five.a63, five.a68, five.champion
 HERE = Path(__file__).resolve().parent
+ROOT = HERE.parent.parent
 MEM = "BB6.Agent31Canonical59Membership"
 NS = "BB6.Agent32CanonicalSelected"
 LABELS = ("raw119", "raw115", "raw58", "raw108", "raw118")
@@ -72,9 +73,13 @@ def candidate_source(spec, previous):
         source = re.search(r"^abbrev p" + p + r"Source :.*$", text, re.M).group()
         eq = re.search(r"^theorem p" + p + r"_source_eq :.*?\n\n", text, re.M | re.S).group()
         cover = re.search(r"^theorem p" + p + r"_cover :.*?\n\n", text, re.M | re.S).group()
+    if p == "59":
+        source = source.replace("BB6.Agent32Raw59.p59", "A32Raw59Slice.BB6.Agent32Raw59.p59")
+        cover = cover.replace("BB6.Agent32Raw59Exact.cover", "A32Raw59Slice.BB6.Agent32Raw59Exact.cover")
     module = "CanonicalSelectedRaw" + p
     namespace = NS + "Raw" + p
-    imports = ["Canonical59FiveParentMembership", *membership_imports, spec["root"],
+    imports = ["Canonical59FiveParentMembership", *membership_imports,
+               "Raw59KernelSlice" if p == "59" else spec["root"],
                "TM63RawUpperInterface", "ChampionScoreLowerBound", *previous]
     names = [namespace + ".p" + p + "_source_eq", namespace + ".p" + p + "_cover"]
     if p == "118":
@@ -107,8 +112,18 @@ def final_source(accepted):
 noncomputable def rosterSelected :=
   removeParents selectedParents BB6.Agent3Canonical64Raw120.roster64
 
+"""
+    if "59" in ids:
+        body += """
+theorem raw59_consumed :
+    (rosterSelected.filter (fun e => sameTable e.2 p59)).length = 0 := by decide
+"""
+    else:
+        body += """
 theorem raw59_retained :
     (rosterSelected.filter (fun e => sameTable e.2 p59)).length = 1 := by decide
+"""
+    body += """
 
 theorem parents_pairwise_distinct :
     List.Pairwise (fun p q => sameTable p q = false) selectedParents := by decide
@@ -165,7 +180,7 @@ theorem exact_at_champion_score
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 """
     names = [namespace + "." + n for n in (
-        "raw59_retained", "parents_pairwise_distinct", "countSelected",
+        ("raw59_consumed" if "59" in ids else "raw59_retained"), "parents_pairwise_distinct", "countSelected",
         "parents_root", "parents_cover", "sound_integrated", "exact_at_target",
         "exact_at_champion_score")]
     for p in ids:
@@ -328,7 +343,7 @@ def main():
     membership = HERE / "Canonical59FiveParentMembership.lean"
     log = a68.compile_module(membership, linked / (membership.stem + ".olean"),
                              env, work / "membership.log")
-    gate(log, [MEM + ".p" + label[3:] + "_count64" for label in args.parents] +
+    gate(log, [MEM + ".p" + label[3:] + "_count64" for label in args.parents if label != "raw118"] +
          [MEM + ".p59_count64"])
     accepted, rejected, previous, audits = [], [], [], []
     specs = {spec["label"]: spec for spec in five.PARENTS}
