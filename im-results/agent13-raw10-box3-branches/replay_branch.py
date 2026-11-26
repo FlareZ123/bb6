@@ -6,6 +6,7 @@ from concurrent.futures import ThreadPoolExecutor
 import argparse, json, os, shutil, subprocess, sys, time
 HERE=Path(__file__).resolve().parent
 from finish import domain_for,trace_long
+from block_discover import discover as block_discover
 
 def finish_trace(target,first=False):
     ds=domain_for(target);tag=str(target)
@@ -55,11 +56,14 @@ def main():
                 stack.append([a[:12],a[12:16],a[16:20]])
         for l in open(f'rlehard{t}.txt'):
             a=list(map(int,l.split()));remaining.append(a)
-    seeds={tuple(t):p for t,p in cfg['block']}
+    seeds={tuple(t):p for t,p in cfg.get('block',[])}
     for t in remaining:
-        if tuple(t) not in seeds:raise ValueError(f'Unresolved leaf: {t}')
+        if tuple(t) not in seeds:
+            seeds[tuple(t)]=block_discover(t)
         block.append([t,seeds[tuple(t)]])
     # Reject stale or omitted seeds; target slices are independent.
+    if args.target is None and 'block_count' in cfg:
+        assert len(block)==cfg['block_count'], (len(block),cfg['block_count'])
     assert {tuple(t) for t,_ in block}=={t for t in seeds if t.index(0) in targets}
     (HERE/'survivors.json').write_text(json.dumps({'stack':stack,'block':block}))
     opt=[] if args.target is None else [str(args.target)]
