@@ -14,7 +14,11 @@ sys.path.insert(0,str(ROOT.parent/"agent10-tnf-multipump"))
 import multi
 SPECS=json.loads((ROOT/"siblings.json").read_text())
 A=sys.argv[1]
-SPEC=SPECS[A]
+if A=="1LA":
+    from make_1la_spec import spec
+    SPEC=spec()
+else:
+    SPEC=SPECS[A]
 ID="Raw57"+A[1:]+A[0]
 PARENT=f"1RB{A}_1RC---_0RD---_1LD1RE_---0LA_------"
 BOUND=SPEC["bound"]
@@ -25,9 +29,12 @@ def main():
     subprocess.run(["g++","-std=c++17","-O3",str(ROOT.parent/"agent47-raw112-cut/enumerate_fast.cpp"),"-o",str(target/"enumerate")],check=True)
     subprocess.run([str(target/"enumerate"),PARENT],cwd=target,check=True)
     data=(target/"open.txt").read_bytes()
-    assert hashlib.sha256(data).hexdigest()==SPEC["hash"]
+    digest=hashlib.sha256(data).hexdigest()
+    if "hash" in SPEC: assert digest==SPEC["hash"]
+    print(A,"open_sha256",digest,flush=True)
     opens=data.decode().splitlines()
     assert len(opens)==SPEC["stats"]["open"]==len(set(opens))
+    assert all(opens[i]==s for i,s in SPEC.get("expected_open",[]))
     index={s:i for i,s in enumerate(opens)}
     dfa=[SPEC.get("default","")]*len(opens)
     for row in OVERRIDES.split():
@@ -43,6 +50,14 @@ def main():
             pumps[i]=f"{pumpns}.M{i}"
             pumpcode.append(code)
             print(A,i,info)
+    if SPEC.get("branch_pumps"):
+        import branch_pump
+        for i,seed in SPEC["branch_pumps"].items():
+            i=int(i);p=one.parse(opens[i])
+            code,info=branch_pump.generate(i,p,seed)
+            pumps[i]=f"{pumpns}.M{i}"
+            pumpcode.append(code)
+            print(A,i,"branch pump",info,flush=True)
     for i,module in SPEC.get("extra",{}).items():
         pumps[int(i)]=f"BB6Coverage.Agent1{module}"
         packed=ROOT/(module+".lean.gz.b64")
@@ -65,13 +80,21 @@ def main():
             assert i not in pumps
             pumps[i]=certns
             pumpcode.insert(0,"import "+module)
-    if SPEC.get("automata") or SPEC.get("ngram_automata"):
+    if SPEC.get("automata") or SPEC.get("ngram_automata") or SPEC.get("pattern_automata"):
         sys.path.insert(0,str(ROOT.parent/"agent4-raw58"))
         from generate_more import run_automata, compress_automata, emit_automata_sharded
         an=f"BB6.Agent7{ID}Automata"
         am=ID+"Automata"
         code=["import TwoSidedAutomata","set_option maxRecDepth 100000",
               "set_option maxHeartbeats 0",f"namespace {an}","open BB6Coverage"]
+        def add_automaton(i,p,cert):
+            source=emit_automata_sharded(i,p,cert)
+            if A=="1LA":
+                module=am+str(i)
+                (ROOT/(module+".lean")).write_text("\n\n".join(code+[source,f"end {an}"])+"\n")
+                pumpcode.insert(0,"import "+module)
+            else:
+                code.append(source)
         for i,params in SPEC.get("automata",{}).items():
             i=int(i)
             p=one.parse(opens[i])
@@ -81,9 +104,20 @@ def main():
             before=cert[1]
             cert=compress_automata(p,cert)
             print(A,i,"automata",before,"->",cert[1],flush=True)
-            code.append(emit_automata_sharded(i,p,cert))
+            add_automaton(i,p,cert)
             assert i not in pumps
             pumps[i]=f"{an}.M{i}"
+        if SPEC.get("pattern_automata"):
+            import pattern_rle
+            for i,params in SPEC["pattern_automata"].items():
+                i=int(i);p=one.parse(opens[i]);params=tuple(params)
+                cert=pattern_rle.check(p,params,params)
+                assert cert[0],(A,i,params)
+                before=cert[1];cert=compress_automata(p,cert)
+                print(A,i,"periodic automata",before,"->",cert[1],flush=True)
+                add_automaton(i,p,cert)
+                assert i not in pumps
+                pumps[i]=f"{an}.M{i}"
         if SPEC.get("ngram_automata"):
             from ngram_auto import from_sparse
             nroot=ROOT.parent/"agent47-raw111-cut"
@@ -100,9 +134,10 @@ def main():
                 code.append(emit_automata_sharded(i,p,cert))
                 assert i not in pumps
                 pumps[i]=f"{an}.M{i}"
-        code.append(f"end {an}")
-        (ROOT/(am+".lean")).write_text("\n\n".join(code)+"\n")
-        pumpcode.insert(0,"import "+am)
+        if A!="1LA":
+            code.append(f"end {an}")
+            (ROOT/(am+".lean")).write_text("\n\n".join(code)+"\n")
+            pumpcode.insert(0,"import "+am)
     pumpcode.append(f"end {pumpns}")
     (ROOT/(ID+"Pumps.lean")).write_text("\n\n".join(pumpcode)+"\n")
     ns=f"BB6.Agent1{ID}"
@@ -117,6 +152,17 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
     tree=json.loads((target/"tree.json").read_text());stats=Counter()
     late={int(i):(n,s) for i,(n,s,t) in SPEC.get("late",{}).items() if opens[int(i)]==t and t.count("---")==1}
     assert len(late)==len(SPEC.get("late",{})) and not (set(late)&set(pumps))
+    residual={int(i):t for i,t in SPEC.get("residual",{}).items()}
+    assert all(opens[i]==t for i,t in residual.items())
+    assert not (set(residual)&(set(late)|set(pumps)))
+    hp=" (h : ResidualHypotheses)" if residual else ""
+    ha=" h" if residual else ""
+    def ref(name): return f"({name} h)" if residual else name
+    residual_defs=""
+    if residual:
+        residual_defs="\n".join(one.tab(one.parse(t)).replace("def table :",f"def residualTable{i} :") for i,t in residual.items())
+        residual_defs+="\nstructure ResidualHypotheses : Prop where\n"
+        residual_defs+="\n".join(f"  h{i} : ∀ m, compatible residualTable{i} m → NeverHalts m" for i in residual)
     def build(node):
         tag,*v=node;stats[tag]+=1
         if tag=="cycle":
@@ -127,6 +173,8 @@ open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
             return f".last {n} {slot(s)}"
         if tag=="open":
             code=v[0];i=index[code]
+            if i in residual:
+                return f".proven residualTable{i} h.h{i}"
             if i in late:
                 nn,ss0=late[i]
                 return f".last {nn} {slot(ss0)}"
@@ -158,6 +206,7 @@ theorem p57ra_nohalt : weightedTNFNoAssignedHalt p57ra :=
       (pathEnd_nohalt root 2 (path.take 4) firstOneCylinder_no_assigned_halt))
 abbrev child (mv : Move) := refine p57ra {ss} (some mv)
 theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
+{residual_defs}
 """)
     # Use the same compositional zipCheck proof pattern as raw60's
     # shard_audit.py. Restrict the new layout to our interrupted children.
@@ -167,7 +216,7 @@ theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
         return 1 + sum(map(size, node[3])) if node[0] == "split" else 1
     def emit_subtree(node, p, kn, cn, module):
         def leaf(t, pp, k, c):
-            return f"def {k} : Audit := {build(t)}\ntheorem {c} : zipCheck {BOUND} ({pp}) {k} = true := by decide\n"
+            return f"def {k}{hp} : Audit := {build(t)}\ntheorem {c}{hp} : zipCheck {BOUND} ({pp}) {ref(k)} = true := by decide\n"
         if A not in ("0LB", "1RF", "1LA") or size(node) <= 300 or node[0] != "split":
             emit(module, [bname], leaf(node,p,kn,cn))
             return
@@ -200,20 +249,20 @@ theorem query : zipQueryOK {BOUND} p57ra {n} {ss} = true := by decide
                     flush()
                 small.append(body0)
         flush()
-        cases0="\n".join(f"  · exact {cs[12*w+6*r+q]}" for q,w,r in product(range(6),range(2),range(2)))
+        cases0="\n".join(f"  · exact {cs[12*w+6*r+q]}{ha}" for q,w,r in product(range(6),range(2),range(2)))
         emit(module,imports,f"""
-def {kn}Kids : Move → Audit := byMove [{",".join(ks)}]
-def {kn} : Audit := .split {nn} {sl} {kn}Kids
-theorem {cn}_kids (mv : Move) : zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids mv) = true := by
+def {kn}Kids{hp} : Move → Audit := byMove [{",".join(ref(k) for k in ks)}]
+def {kn}{hp} : Audit := .split {nn} {sl} {ref(kn+"Kids")}
+theorem {cn}_kids{hp} (mv : Move) : zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids{ha} mv) = true := by
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
 {cases0}
-theorem {cn} : zipCheck {BOUND} ({p}) {kn} = true := by
-  change (zipQueryOK {BOUND} ({p}) {nn} {sl} && allMoves (fun mv => zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids mv))) = true
+theorem {cn}{hp} : zipCheck {BOUND} ({p}) {ref(kn)} = true := by
+  change (zipQueryOK {BOUND} ({p}) {nn} {sl} && allMoves (fun mv => zipCheck {BOUND} (refine ({p}) {sl} (some mv)) ({kn}Kids{ha} mv))) = true
   simp only [Bool.and_eq_true]
-  exact ⟨by decide, allMoves_of _ {cn}_kids⟩
+  exact ⟨by decide, allMoves_of _ ({cn}_kids{ha})⟩
 """)
     mods=[]
     stats["split"]+=1
@@ -221,27 +270,27 @@ theorem {cn} : zipCheck {BOUND} ({p}) {kn} = true := by
         name=f"{ID}Kid{i:02}";mods.append(name)
         emit_subtree(kid,f"child {move(MOVES[i])}",f"kid{i:02}",f"check{i:02}",name)
     assert stats==Counter(SPEC["stats"]),stats
-    cases="\n".join(f"  · exact check{12*w+6*r+q:02}" for q,w,r in product(range(6),range(2),range(2)))
+    cases="\n".join(f"  · exact check{12*w+6*r+q:02}{ha}" for q,w,r in product(range(6),range(2),range(2)))
     body=f"""
-def kids : Move → Audit := byMove [{",".join(f"kid{i:02}" for i in range(24))}]
-theorem kids_checked (mv : Move) : zipCheck {BOUND} (child mv) (kids mv) = true := by
+def kids{hp} : Move → Audit := byMove [{",".join(ref(f"kid{i:02}") for i in range(24))}]
+theorem kids_checked{hp} (mv : Move) : zipCheck {BOUND} (child mv) (kids{ha} mv) = true := by
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
 {cases}
-def tree : Audit := .split {n} {ss} kids
-theorem tree_checked : zipCheck {BOUND} p57ra tree = true := by
-  change (zipQueryOK {BOUND} p57ra {n} {ss} && allMoves (fun mv => zipCheck {BOUND} (child mv) (kids mv))) = true
+def tree{hp} : Audit := .split {n} {ss} {ref("kids")}
+theorem tree_checked{hp} : zipCheck {BOUND} p57ra {ref("tree")} = true := by
+  change (zipQueryOK {BOUND} p57ra {n} {ss} && allMoves (fun mv => zipCheck {BOUND} (child mv) (kids{ha} mv))) = true
   simp only [Bool.and_eq_true]
-  exact ⟨query, allMoves_of _ kids_checked⟩
-noncomputable def certificate : WeightedTNFCertificate {BOUND} p57ra 6 :=
-  certifiedZip {BOUND} p57ra tree p57ra_root p57ra_nohalt tree_checked
-theorem all_completions : ∀ m, compatible p57ra m → WeightedBound {BOUND} m :=
-  certificate.sound
+  exact ⟨query, allMoves_of _ (kids_checked{ha})⟩
+noncomputable def certificate{hp} : WeightedTNFCertificate {BOUND} p57ra 6 :=
+  certifiedZip {BOUND} p57ra {ref("tree")} p57ra_root p57ra_nohalt (tree_checked{ha})
+theorem all_completions{hp} : ∀ m, compatible p57ra m → WeightedBound {BOUND} m :=
+  ({ref("certificate")}).sound
 #print axioms tree_checked
 #print axioms all_completions
 """
     emit(ID+"Data",mods,body)
-    print(A,stats,"FAR",len(opens)-len(pumps)-len(late),"pumps",len(pumps),"late",len(late))
+    print(A,stats,"FAR",len(opens)-len(pumps)-len(late)-len(residual),"pumps",len(pumps),"late",len(late),"residual",len(residual))
 if __name__=="__main__": main()
