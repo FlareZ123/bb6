@@ -1293,12 +1293,17 @@
     "multi": [],
     "custom": {
       "39": "BB6Coverage.Agent4LF139",
-      "567": "BB6Coverage.Agent4LF1567"
+      "567": "BB6Coverage.Agent4LF1567",
+      "1336": "BB6Coverage.Agent4LF11336",
+      "1375": "BB6Coverage.Agent4LF11375",
+      "1416": "BB6Coverage.Agent4LF11416"
     },
     "imports": [
       "Raw58LF139",
       "Raw58LF1Late",
-      "Raw58LF1567"
+      "Raw58LF1567",
+      "Raw58LF11336",
+      "Raw58LF1Pair"
     ],
     "auto_classify": true,
     "automata": {
