@@ -1440,7 +1440,7 @@ jobs:
             --work /tmp/a31-canonical58-raw113 --base-run-id "$CANONICAL59_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113.log
           test -s /tmp/a31-canonical58-raw113/canonical58-raw113-graft.json
-          test -s /tmp/a31-canonical58-raw113/Canonical58Raw113Graft.olean
+          test -s /tmp/a31-canonical58-raw113/linked/Canonical58Raw113Graft.olean
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -1482,7 +1482,7 @@ jobs:
             --work /tmp/a31-canonical57-raw83 --base-run-id "$CANONICAL58_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical57-raw83.log
           test -s /tmp/a31-canonical57-raw83/canonical57-raw83-graft.json
-          test -s /tmp/a31-canonical57-raw83/Canonical57Raw83Graft.olean
+          test -s /tmp/a31-canonical57-raw83/linked/Canonical57Raw83Graft.olean
       - uses: actions/upload-artifact@v4
         if: always()
         with:
