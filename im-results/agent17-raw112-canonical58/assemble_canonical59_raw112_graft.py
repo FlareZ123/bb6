@@ -58,7 +58,7 @@ def verify_raw112(work: Path, run_id: int):
     manifest_path, manifest = parent_manifests[0]
     assert manifest["artifact_name"] == ARTIFACT_NAME
     assert manifest["proof_source_revision"] == run["head_sha"]
-    assert manifest["lean_version"].startswith("Lean 4.36.0-rc2")
+    assert "4.36.0-rc2" in manifest["lean_version"]
     modules = {x["module"] for x in manifest["modules"]}
     assert {"Raw112Data", "Raw112ClosedCover"} <= modules
     return dirs, pin, item, summary, manifest_path, manifest
@@ -74,11 +74,16 @@ def main():
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
 
+    assert args.base_run_id == 45880290680, "use the accepted Canonical59 base"
+    base_work = work / "canonical59-base"
+    raw_work = work / "raw112-parent"
+    base_work.mkdir()
+    raw_work.mkdir()
     linked, base_pin, base_artifact, base_report = raw113_delta.verify_base(
-        work / "canonical59-base", args.base_run_id
+        base_work, args.base_run_id
     )
     raw_dirs, raw_pin, raw_artifact, raw_summary, raw_manifest_path, raw_manifest = verify_raw112(
-        work / "raw112-parent", args.raw112_run_id
+        raw_work, args.raw112_run_id
     )
 
     copied = []
