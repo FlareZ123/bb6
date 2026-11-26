@@ -21,3 +21,15 @@ Exact table `[7,24,11,24,14,24,9,16,12,11,24,24]`, candidate bound 775. The part
 ## D0 = 1RF (candidate, source audit pending)
 
 Exact table `[7,24,11,24,14,24,23,16,12,11,24,24]`, candidate bound 6250. The initial partition has 2673 splits and 61,480 leaves: 40,979 initial cycles, 14,247 initial last holes, 5,553 FAR, 676 block FAR, two late cycles and 23 late last holes (maximum query 6244). No search holdouts. 299 generated Lean modules. Reproduce from repository root with `bash im-results/agent14-raw139-d0-generic/reproduce.sh OneRF`. Root SHA-256 `6ca0dc341acf0aa3c54fb4e3ddbf277476829c6681d16b840ff85f5cf1cfccc5`; CI run 45729425638. This is not yet an accepted theorem.
+
+
+## Final two expanded-tree candidates (2026-11-26)
+
+| D0 | Parent code | Splits including late expansion | Terminal leaves | Weighted bound | Original-source audit |
+|---|---:|---:|---:|---:|---|
+| 0RA | 1 | 1601 | 36824 | 8840 | 45730253726 |
+| 0RF | 21 | 1947 | 44782 | 9110 | 45730417215 |
+
+0RA: 23173 initial/expanded cycles, 8830 initial/expanded last-hole leaves, 3896 FAR, 833 block FAR, 90 late last-hole, 2 late cycles. Includes width-five block certificate for leaf 1754 and 62 segmented long queries. 0RF: 29145 initial/expanded cycles, 9637 initial/expanded last-hole leaves, 5442 FAR, 525 block FAR, 30 late last-hole, 2 late cycles, 1 segmented long cycle. Leaf 3732 has a locally kernel-accepted right-side translated recurrence (entry 3273, period 2541, boundary 99), with standard axioms only. Explicit intermediate configurations and segment lengths in joins avoid costly reduction of the original long runs during unification; patch-ray.py reproduces this proof. Full parent theorems remain pending source audit. Replay: bash im-results/agent14-raw139-d0-generic/reproduce.sh ZeroRA (or ZeroRF). Both use source-v3.tar.xz.b64 and exact external specs. The initial ZeroRF run 45730259707 was cancelled before starting, superseded by 45730417215.
+
+D0=1LA is now source-accepted (45727637346, artifact 15076496814), bound 1361. D0=1LB likewise source-accepted (45726917837, artifact 15076155551), bound 7252, in its separate dossier. All eight previously unresolved D0 sibling searches have complete candidate partitions, but do not count any pending theorem until source acceptance. Agent6 owns exact-table roster integration.
