@@ -1,8 +1,9 @@
 """Strictly integrate the source-accepted Raw59 parent into Canonical64.
 
-The parent and canonical base are downloaded by exact artifact identity. Only
-recursive import closures are linked, and every differing reachable duplicate
-is compared at the Lean kernel-data level before the consumer is compiled.
+The published Canonical64 audit artifact contains the consumer root object.
+Rebuild its complete import closure from the pinned accepted Canonical65 and
+Raw120 artifacts, include the published root in the same linker family, and
+require exact kernel-data comparison before composing Raw59.
 """
 from pathlib import Path
 import argparse
@@ -40,10 +41,33 @@ def main():
     prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
     compiler_sha = sha(prefix / "bin" / "lean")
 
+    # Pin and verify the published Canonical64 consumer artifact.
     canonical_run = api_json(f"repos/{REPO}/actions/runs/{CANONICAL64_PIN[1]}")
     assert canonical_run["conclusion"] == "success", canonical_run
     assert canonical_run["head_sha"] == CANONICAL64_REVISION, canonical_run
-    canonical_dirs = download(CANONICAL64_PIN, work)
+    canonical64_dirs_published = download(CANONICAL64_PIN, work)
+    published_roots = [
+        p for directory in canonical64_dirs_published
+        for p in directory.rglob("Canonical64Raw120Integrated.olean")
+    ]
+    assert len(published_roots) == 1, [str(p) for p in published_roots]
+
+    # The audit artifact is intentionally thin. Reconstruct the full accepted
+    # Canonical64 closure from the two exact source-accepted inputs using the
+    # same pinned assembler, then compare its root against the published root.
+    canonical64_base = work / "canonical64-base"
+    assembler = HERE.parent / "agent3-tnf-raw120" / "assemble_raw120_canonical.py"
+    subprocess.run(
+        [sys.executable, str(assembler), "--work", str(canonical64_base)],
+        env=os.environ.copy(),
+        check=True,
+    )
+    rebuilt_root = canonical64_base / "linked" / "Canonical64Raw120Integrated.olean"
+    assert rebuilt_root.is_file(), rebuilt_root
+    canonical64_dirs = [canonical64_base / "linked", *canonical64_dirs_published]
+    canonical64_rebuild_report = json.loads(
+        (canonical64_base / "canonical64-integration.json").read_text()
+    )
 
     raw_run_id = int(os.environ["RAW59_PARENT_RUN_ID"])
     raw_run = api_json(f"repos/{REPO}/actions/runs/{raw_run_id}")
@@ -74,12 +98,13 @@ def main():
     )
 
     linked = work / "linked"
+    canonical_family_dirs = canonical64_dirs
     link_reachable(
-        [canonical_dirs, raw59_dirs],
+        [canonical_family_dirs, raw59_dirs],
         work,
         linked,
         families=[
-            ("canonical64", canonical_dirs, ["Canonical64Raw120Integrated"]),
+            ("canonical64", canonical_family_dirs, ["Canonical64Raw120Integrated"]),
             ("raw59-parent", raw59_dirs, ["Raw59ParentCover"]),
         ],
     )
@@ -102,6 +127,9 @@ def main():
         "canonical64_artifact_id": CANONICAL64_PIN[0],
         "canonical64_artifact_sha256": CANONICAL64_PIN[2],
         "canonical64_source_revision": CANONICAL64_REVISION,
+        "canonical64_published_root_sha256": sha(published_roots[0]),
+        "canonical64_rebuilt_root_sha256": sha(rebuilt_root),
+        "canonical64_rebuild_report": canonical64_rebuild_report,
         "raw59_parent_run_id": raw_run_id,
         "raw59_parent_artifact_id": item["id"],
         "raw59_parent_artifact_sha256": digest.removeprefix("sha256:"),
@@ -118,7 +146,7 @@ def main():
         "axioms": profiles,
     }
     (work / "raw59-canonical64-integration.json").write_text(
-        json.dumps(report, indent=2, sort_keys=True) + "\n"
+        json.dumps(report, indent=2, sort_keys=True) + "\\n"
     )
     print("Raw59 integrated into the accepted Canonical64 frontier; standard axiom gate passed.", flush=True)
 
