@@ -123,6 +123,7 @@ theorem w7_z2_parent_fan (u a k : Nat)
             · omega
             · have hfactor : 2*(a-1)+8=2*(a+3) := by omega
               rw [hfactor] at hsum
+              rw [hfactor] at hcost
               have hscale : 2^(n+1)*(a+3)=16*W := by
                 have hp : 2^n*(2*(a+3))=2^(n+1)*(a+3) := by
                   rw [Nat.pow_succ]
@@ -185,7 +186,8 @@ theorem w7_q0_target_unreachable_u1mod4 (u : Nat) (hu : u%4=1) :
       have hdiv : 32∣2^(n+1)*(a+3) := by
         rcases hpow with ⟨q,hq⟩
         refine ⟨q*(a+3),?_⟩
-        rw [hq]
+         have hq' : 2^(n+1)=32*q := by simpa using hq
+         rw [hq']
         ac_rfl
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
@@ -350,17 +352,19 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
       have hpow : 32∣2^(n+1) := by
         change 2^5∣2^(n+1)
         exact Nat.pow_dvd_pow 2 (by omega)
-       have hdiv : 32∣2^(n+1)*(a+3) := by
-         rcases hpow with ⟨q,hq⟩
-         refine ⟨q*(a+3),?_⟩
-         rw [hq]
+      have hdiv : 32∣2^(n+1)*(a+3) := by
+        rcases hpow with ⟨q,hq⟩
+        refine ⟨q*(a+3),?_⟩
+        have hq' : 2^(n+1)=32*q := by simpa using hq
+        rw [hq']
          ac_rfl
       have hmod : (2^(n+1)*(a+3))%32=0 :=
         Nat.mod_eq_zero_of_dvd hdiv
       rw [hscale] at hmod
       have hmodW : (16*W)%32=16 := by
         obtain ⟨q,hq⟩ : ∃ q, W=2*q+1 := by omega
-        rw [hq]
+         have hq' : 2^(n+1)=32*q := by simpa using hq
+         rw [hq']
         omega
       omega
   have hnCases : n=0 ∨ n=2 := by omega
