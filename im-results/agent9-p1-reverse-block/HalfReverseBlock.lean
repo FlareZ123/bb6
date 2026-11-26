@@ -22,6 +22,12 @@ def HalfCert (n K s : Nat) (ps : List Prefix) : Prop :=
 def halfMarginOK (n K s h : Nat) (ps : List Prefix) : Bool :=
   MarginOK n K s h (ps ++ ps.map (reflectPrefix n s))
 
+/-- Proposition-valued margin hypothesis. Keeping the inequalities in Prop
+    avoids evaluating enormous closed powers inside the Bool-valued MarginOK. -/
+def HalfMarginOKProp (n K s h : Nat) (ps : List Prefix) : Prop :=
+  ∀ p, p ∈ ps ++ ps.map (reflectPrefix n s) →
+    (n+K+2)*marginSize n K*2^(s+h) < 6*2^n*resMin s p.1
+
 private theorem trace_not_zero {n B a : Nat} (h : Trace n 0 B a) : False := by
   cases h
 
@@ -85,6 +91,69 @@ theorem half_cert_next_block (n K s h : Nat) (ps : List Prefix)
     exact margin_block n K s h j (ps ++ ps.map (reflectPrefix n s))
       (by omega) (by omega) hjs hfull hgood
 
+/-- Prop-valued analogue of margin_block. It is useful when the
+    right-hand side contains an enormous power: the inequality is proved
+    directly rather than by evaluating a closed Bool-valued decide. -/
+theorem margin_block_prop (n K s h j : Nat) (ps : List Prefix)
+    (hs : 1≤s) (hj : s≤j) (hjs : j≤s+h)
+    (hcover : Covered n s ps)
+    (hgood : ∀ p, p∈ps →
+      (n+K+2)*marginSize n K*2^(s+h)<6*2^n*resMin s p.1) :
+    LateMargin n K j := by
+  intro B a htr
+  obtain ⟨C,c,hpre,hE⟩ := trace_split n (n+j) B a s htr hs (by omega)
+  obtain ⟨D,d,hshort⟩ := extend_prefix n s C c (n+j-s) B a n hE (by omega)
+  have hm := hcover C c D d hpre hshort
+  have hineq := hgood (C,c) hm
+  obtain ⟨R,hR⟩ := extend_mod n s C c (n+j-s) B a hE
+  have hr := resMin_extend s j C R hj
+  rw [← hR] at hr
+  have hL := Nat.mul_le_mul_left ((n+K+2)*marginSize n K)
+    (Nat.pow_le_pow_right (show 0<2 by decide) hjs)
+  have hR' := Nat.mul_le_mul_left (6*2^n) hr
+  omega
+
+/-- Half-certificate induction using proposition-valued margins. -/
+theorem half_cert_next_block_prop (n K s h : Nat) (ps : List Prefix)
+    (parts : Nat → List (List Nat))
+    (hn : 1≤n) (heven : n%2=0) (hs : 2≤s)
+    (hcert : HalfCert n K s ps)
+    (hgood : HalfMarginOKProp n K s h ps)
+    (hflat : ∀ B, (parts B).flatten = targetWord n (s+h) B n)
+    (hfit : ∀ B, Fitted (n+(s+h)+3) (parts B)) :
+    HalfCert n K (s+h) (nextBlockByFold n s h parts ps) := by
+  rcases hcert with ⟨hcover,hmargins⟩
+  refine ⟨half_covered_next_block n s h ps parts hs hcover hflat hfit,?_⟩
+  intro j hj hjs
+  by_cases hle : j≤s
+  · exact hmargins j hj hle
+  · have hfull : Covered n s (ps ++ ps.map (reflectPrefix n s)) :=
+      complete_half n s ps hn heven hs hcover
+    exact margin_block_prop n K s h j
+      (ps ++ ps.map (reflectPrefix n s)) (by omega) (by omega) hjs hfull
+      (by
+        intro p hp
+        exact hgood p hp)
+
+/-- Initial half certificate at cost two using proposition-valued margins. -/
+theorem half_cert_first_two_prop (n K : Nat) (hn : n%4=2)
+    (hgood : HalfMarginOKProp n K 2 0 [(1,(n+2)/4)]) :
+    HalfCert n K 2 [(1,(n+2)/4)] := by
+  refine ⟨half_first_two n hn,?_⟩
+  intro j hj hjs
+  have hj2 : j=2 := by omega
+  subst j
+  have hfull : Covered n 2
+      ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2)) :=
+    complete_half n 2 [(1,(n+2)/4)] (by omega) (by omega) (by omega)
+      (half_first_two n hn)
+  exact margin_block_prop n K 2 0 2
+    ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2))
+    (by omega) (by omega) (by omega) hfull
+    (by
+      intro p hp
+      exact hgood p hp)
+
 /-- Once the canonical half is empty, the original source has no trace at
     or beyond the corresponding delayed horizon. -/
 theorem no_trace_of_half_cert_empty (n K s : Nat)
@@ -142,12 +211,11 @@ theorem half_cert_first_two (n K : Nat) (hn : n%4=2)
     ([(1,(n+2)/4)] ++ [(1,(n+2)/4)].map (reflectPrefix n 2))
     (by omega) (by omega) (by omega) hfull hgood
 
-/-- The reflected full-prefix margin test at the actual n=45,352,466
-    cost-two seed is true for K=250,000,000. The proof only needs 2^64
-    as a lower bound; it does not normalize the enormous power 2^n. -/
+/-- A source-level lower bound for the reflected cost-two margin at the
+    actual n=45,352,466. The proof uses 2^64 ≤ 2^n and never evaluates 2^n. -/
 theorem half_margin_ok_n45352466 :
-    halfMarginOK 45352466 250000000 2 0
-      [(1,(45352466+2)/4)] = true := by
+    HalfMarginOKProp 45352466 250000000 2 0
+      [(1,(45352466+2)/4)] := by
   have hpow : 2^64 ≤ 2^45352466 :=
     Nat.pow_le_pow_right (by decide : 0<2) (by omega)
   have hnum :
@@ -161,32 +229,28 @@ theorem half_margin_ok_n45352466 :
       (45352466+250000000+2)*marginSize 45352466 250000000*4
         < 6*2^45352466 := by
     omega
-  have hres1 : resMin 2 1=1 := by decide
-  have hres3 : resMin 2 3=1 := by decide
-  unfold halfMarginOK MarginOK
-  change
-    (decide ((45352466+250000000+2)*marginSize 45352466 250000000*4
-        < 6*2^45352466*resMin 2 1) &&
-     decide ((45352466+250000000+2)*marginSize 45352466 250000000*4
-        < 6*2^45352466*resMin 2 3)) = true
-  rw [Bool.and_eq_true]
-  constructor
-  · rw [hres1]
-    exact decide_eq_true hineq
-  · rw [hres3]
-    exact decide_eq_true hineq
+  intro p hp
+  simp [reflectPrefix,cap] at hp
+  rcases hp with hp | hp
+  · rw [hp]
+    simpa [resMin] using hineq
+  · rw [hp]
+    simpa [resMin] using hineq
 
-/-- The actual n=45,352,466 seed has a fully source-checked canonical
-    half certificate at cost two for K=250,000,000. -/
+/-- The actual n=45,352,466 seed has a source-checked canonical half
+    certificate at cost two for K=250,000,000. -/
 theorem half_cert_n45352466 :
     HalfCert 45352466 250000000 2 [(1,(45352466+2)/4)] :=
-  half_cert_first_two 45352466 250000000 (by decide) half_margin_ok_n45352466
+  half_cert_first_two_prop 45352466 250000000 (by decide) half_margin_ok_n45352466
 
 #print axioms half_covered_next_block
 #print axioms half_cert_next_block
 #print axioms no_trace_of_half_cert_empty
 #print axioms half_first_two
 #print axioms half_cert_first_two
+#print axioms margin_block_prop
+#print axioms half_cert_next_block_prop
+#print axioms half_cert_first_two_prop
 #print axioms half_margin_ok_n45352466
 #print axioms half_cert_n45352466
 
