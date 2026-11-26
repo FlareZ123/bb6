@@ -1736,3 +1736,49 @@ Coordination messages to Agent12, Agent17, Agent31, and Agent32 are in their res
 - Continue monitoring **45910336799**. If its main Canonical58 graft passes, inspect only the optional Raw124 step's result/log and artifact. If Raw124 linking fails, diagnose the exact duplicate module mismatch; do not silently mix closures or rebuild the 22.9 GB base without a specific reason.
 - If the direct Canonical58→57 consumer passes, update the Raw124 result/README and board with the source-accepted 57 conditional interface. If it fails, preserve the accepted local parent Cover and correct only the specific consumer issue.
 - After Raw112 acceptance, let the optional Canonical57→56 consumer run. The source is prepared and conditional only; no Canonical56 claim until its CI gate passes.
+
+
+## 2026-11-26T23:45Z checkpoint — Canonical57-Raw124 source-accepted
+
+### Mathematical result
+
+The independent Canonical58→57 Raw124 consumer completed successfully:
+- Run **45910336799**, conclusion success, artifact **15159933665**, size **22,949,946,864** bytes, SHA-256 `7c912dc7cff20dd796dad9e0008c6fbc9558f81bc9dcc13eb399b4393a73e140`.
+- The accepted consumer imports the actual `BB6.Agent31Canonical58Raw113Graft.roster58`, proves unique Raw124 membership, links the source-accepted Raw124 parent closure with the exact kernel-declaration comparator, constructs the 57-entry successor, and compiles `BB6.Agent2Raw124Canonical58Membership.sound_integrated` plus `exact_at_champion_score`.
+- The optional consumer step succeeded and passed the theorem/axiom gate. The checked-in `Raw124Canonical58Membership.lean` and `assemble_raw124_canonical57.py` contents match the frozen run revision **8f91f38a2ac75dbb2adef4ca82feb4ec694ef26e**.
+- This is now the accepted global conditional interface **Canonical57-Raw124**. It leaves 57 Covers open; BB(6) remains unresolved.
+- The earlier six-parent reconstruction remains withdrawn: the actual chain consumes Raw58, Raw108, Raw115, Raw118, Raw119 in Canonical59 and Raw113 in Canonical58; Raw59 is retained, Raw118 absent. Agent32's 22:39 broadcast corrected/retracted the earlier mistaken diagnosis. Our consumer uses the accepted roster value directly.
+
+### Research-facing files updated
+
+- New pure result: `results/2026-11-26-raw124-canonical57-graft-agent2.md`.
+- Parent Cover result `results/2026-11-26-raw124-parent-cover-agent2.md` now links the accepted graft.
+- `results/README.md` now says 57 residual Covers remain and links both Raw124 results.
+- Top-level `README.md` now identifies Canonical57 as the strongest accepted conditional interface, with seven parent Covers integrated from Canonical64.
+- `research/BOARD.md` now records 16 consumed E1 siblings, one accepted local Cover awaiting consumption (Raw59), and three without a complete accepted parent Cover (Raw57, Raw112, Raw122). The current accepted global interface is Canonical57-Raw124.
+- `im-results/agent2-tnf-raw124/README.md` now records source acceptance of the 57-entry consumer and keeps Canonical56 as prepared only.
+- No unsupported BB(6) exact-value or universal-upper-bound claim is made.
+
+### Raw112 follow-on
+
+Run **45905708054** completed failure at **23:37:22Z**:
+- Both `compile_retry (r01a-deep)` and `compile_retry (r05a0)` failed; all assembly jobs were skipped.
+- `prepare_retry` succeeded and produced partial-union artifact **15157532683** (398,740,157 bytes; SHA-256 `212aab983674407bf9311363944b2f75a1450b38e03527afe636694e6b9437a0`).
+- Targeted logs for job **140202232318** repeatedly returned HTTP 404, including after 5/10/30/60-second programmatic waits. No Lean diagnostic was obtained; do not infer a source failure.
+- Agent32 was informed in `communications/agent32/20261126T234522Z_agent2-raw112-retry-status-after-459057.md`. Their prior recovery plan remains: carry forward the six accepted groups from run **45890012441** and compile only the two missing groups with the one-thread/swap settings.
+- The optional Canonical57→56 Raw124 consumer remains wired into the existing `canonical57_raw112_delta` job, but it has not run because Raw112 is not accepted. Note the distinction: Canonical57-Raw124 and prospective Canonical57-Raw112 are two different 57-entry intermediates; removing both distinct parents yields the common 56-entry successor.
+
+### Coordination
+
+Acceptance messages were sent:
+- Agent32: `communications/agent32/20261126T233931Z_agent2-raw124-canonical57-accepted.md`
+- Agent31: `communications/agent31/20261126T233939Z_agent2-raw124-canonical57-accepted.md`
+- Agent17: `communications/agent17/20261126T233947Z_agent2-raw124-canonical57-accepted.md`
+- Agent12: `communications/agent12/20261126T233955Z_agent2-raw124-canonical57-accepted.md`
+
+### Next actions
+
+1. Do not repeat Raw124 discovery or parent proof work. Its parent and Canonical58→57 consumer are accepted.
+2. Continue productive work toward the remaining 57 Covers; coordinate with Agent32/17 on the Raw112 retry, but do not duplicate their shard search.
+3. Once Raw112 is accepted, run the existing optional Canonical57→56 Raw124 consumer. Confirm the resulting 56-entry roster is the Canonical58 roster with both Raw112 and Raw124 removed; retain exact membership checks and the kernel comparator.
+4. If Raw59's staged relocation becomes source-accepted, consume it from the accepted roster without redoing its local proof.
