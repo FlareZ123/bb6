@@ -264,6 +264,17 @@ def build_child(key,spec):
         assert opens[i]=="1RB0RD_1RC---_0RD0LC_1LD1RE_1RF0RA_1LC1RE"
         pumps[i]="BB6Coverage.Agent4Raw58RD1892"
         imports.append("Raw58RD1892")
+    # The historical source-accepted cut used the implicit one-state FAR
+    # default "000" for every unspecified non-pump leaf.  Do not discard
+    # those certificates when building the explicit classification census.
+    # Scope this to the seven legacy children to preserve audited shard identities.
+    if key in ("RD","LC1","RE1","RC","LA1","LB1","RF1"):
+        for i in sorted(set(range(len(opens))) - assigned - set(pumps) - set(late)):
+            try:
+                masks(parse(opens[i]),0,[0,0])
+            except (AssertionError,ValueError,IndexError):
+                continue
+            assigned.add(i)
     # Search remaining unclassified leaves for exact sparse width-23 n-gram invariants.
     sparse_modules=[]
     unclassified=sorted(set(range(len(opens))) - assigned - set(pumps) - set(late))
