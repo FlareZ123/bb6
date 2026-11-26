@@ -61,6 +61,9 @@ Result advance(Word& w){auto r=scan(w);if(r.kind==3)return {true,r.L,r.kind,0,0,
  assert(done&&o.replaced);if(o.pending>=0)o.bit(0,false);if(!o.w.empty()&&o.w.back().p==0)o.w.pop_back();assert(o.w.size()>=2&&o.w[0].p==2&&o.w[1].p==1);
  U b=o.qcount-(r.kind==1);U L2=2*(o.leadingP+1);Big cost=Big(r.L)+2*(r.L/2)+4*Big(b)+2+2*Big(L2)+2;w.swap(o.w);return {false,r.L,r.kind,b,L2,cost,odd?3u:4u};
 }
+#ifndef F421_NO_MAIN
 int main(int argc,char**argv){if(argc>1&&string(argv[1])=="--one"){string s;while(cin>>s){auto w=pack(s);auto r=advance(w);if(r.bad)cout<<"BAD "<<r.firstL<<" "<<decimal(r.steps)<<"\n";else cout<<expand(w)<<" "<<r.firstL<<" "<<r.kind<<" "<<r.firstQ<<" "<<r.secondL<<" "<<decimal(r.steps)<<" "<<r.dx<<"\n";}return 0;}
  U N=argc>1?stoull(argv[1]):1000000;bool verbose=argc>2&&string(argv[2])=="--verbose";bool oddlog=argc>2&&string(argv[2])=="--odd";Word w=pack("10010101");Big time=24;U head=4,odd=0,maxruns=0;for(U i=0;i<N;++i){auto r=advance(w);time+=r.steps;head+=r.dx;if(r.bad){cout<<"F1 after macro "<<i<<" at primitive step "<<decimal(time)<<"\n";return 2;}maxruns=max(maxruns,U(w.size()));if(r.firstL%2){++odd;if(oddlog)cout<<i<<" "<<head<<" "<<r.firstL<<" "<<r.kind<<" "<<w.size()<<"\n";}if(verbose)cout<<i+1<<" "<<decimal(time)<<" "<<head<<" "<<expand(w)<<"\n";if(!verbose&&!oddlog&&(i+1)%10000000==0)cerr<<i+1<<" macros; steps="<<decimal(time)<<"; runs="<<w.size()<<"; odd="<<odd<<"\n";}
  cout<<"macros="<<N<<" steps="<<decimal(time)<<" head="<<head<<" odd="<<odd<<" runs="<<w.size()<<" maxruns="<<maxruns<<"\n";for(auto [p,n]:w)cout<<"ZQPR"[p]<<n<<" ";cout<<"\n";}
+
+#endif
