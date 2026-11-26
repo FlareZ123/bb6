@@ -1,5 +1,14 @@
-import Raw122SharpParent
+import Raw122TopTwoCore
+import Raw122Sharp00
+import Raw122Sharp17
 import Raw122ExceptionalBranches
+import Raw122Recovered14
+import Raw122Recovered04
+import Raw122Recovered12
+import Raw122Recovered13
+import Raw122RecoveredLC
+import Raw122Recovered18
+import Raw122Recovered23
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent43Raw122TopTwo
@@ -39,44 +48,19 @@ theorem child_except (m : Machine) (hne0 : m ≠ longest) (hne1 : m ≠ second)
   · exact BB6.Agent43Raw122Sharp.cover17 m hm
   · exact BB6.Agent3Raw122Recovered23.cover23 m hm
 
-/-- No completion other than the two exact late-query halters has
-weighted halting score greater than the original 7014 audit cutoff. -/
-theorem parent_except (m : Machine) (hm : compatible BB6.Agent43Raw122.parent m)
-    (hne0 : m ≠ longest) (hne1 : m ≠ second) : WeightedBound 7014 m := by
-  let t : PartialAudit := .split 7 (5,true) (fun _ => .unresolved)
-  have hcheck : partialCheck 7014 BB6.Agent43Raw122.parent t = true := by
-    rw [partialCheck.eq_3,Bool.and_eq_true]
-    exact ⟨by decide,allMoves_of _ (by intro mv; rfl)⟩
-  rcases partialSound 7014 BB6.Agent43Raw122.parent t BB6.Agent43Raw122.parent_root
-      BB6.Agent43Raw122.parent_nohalt hcheck m hm with h|⟨e,he,hh⟩
-  · exact h
-  · rw [partialResiduals.eq_3] at he
-    obtain ⟨mv,_,hmem⟩ := List.mem_flatMap.mp he
-    rw [partialResiduals.eq_1] at hmem
-    obtain ⟨e',he',heq⟩ := List.mem_map.mp hmem
-    have he'' : e' = ([], BB6.Agent43Raw122.child mv) := by
-      simpa only [List.mem_singleton] using he'
-    rw [← heq,he''] at hh
-    exact child_except m hne0 hne1 mv hh
+theorem all_children : BB6.Agent43Raw122TopTwoCore.ChildExcept := child_except
 
-theorem runner_up_bound (m : Machine) (hm : compatible BB6.Agent43Raw122.parent m)
-    (hne : m ≠ longest) : WeightedBound 1296926 m := by
-  by_cases h : m = second
-  · subst m
-    exact late1_bound second second_compatible
-  · intro k d hk hd
-    exact Nat.le_trans (parent_except m hm hne h k d hk hd) (by decide)
+theorem parent_except := BB6.Agent43Raw122TopTwoCore.parent_except all_children
 
-theorem runner_up_exact (B : Nat) :
-    (∀ m, compatible BB6.Agent43Raw122.parent m → m ≠ longest → WeightedBound B m) ↔
-      1296926 ≤ B := by
-  constructor
-  · intro h
-    exact h second second_parent_compatible second_ne_longest 1296924 1 second_halts second_delay
-  · intro h m hm hne k d hk hd
-    exact Nat.le_trans (runner_up_bound m hm hne k d hk hd) h
+theorem runner_up_bound := BB6.Agent43Raw122TopTwoCore.runner_up_bound all_children
+
+theorem runner_up_exact := BB6.Agent43Raw122TopTwoCore.runner_up_exact all_children
+
+theorem parent_bound := BB6.Agent43Raw122TopTwoCore.parent_bound all_children
+
+theorem exact_bound_iff := BB6.Agent43Raw122TopTwoCore.exact_bound_iff all_children
 
 #print axioms parent_except
-#print axioms runner_up_bound
 #print axioms runner_up_exact
+#print axioms exact_bound_iff
 end BB6.Agent43Raw122TopTwo
