@@ -7,6 +7,11 @@ on:
         type: boolean
         default: false
       assemble_branch:
+      target_run_id:
+        description: Existing 0LF target-matrix workflow run to reuse in assembly-only mode
+        required: false
+        type: string
+        default: '45800793166'
         description: "Assemble an existing Raw122 branch: 0 reuses completed 0LA shards; 5 runs and assembles 0LF"
         required: false
         type: string
@@ -383,6 +388,44 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: raw122-branch00-assembly
+          path: /tmp/a43-output/
+          retention-days: 90
+          if-no-files-found: error
+  assemble-branch05-existing:
+    if: inputs.assemble_branch == '5' && inputs.targeted_recovery != true
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw122-target-5-*
+          run-id: ${{ inputs.target_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a43-targets
+          merge-multiple: false
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-audit-01-18
+          run-id: 45595285735
+          github-token: ${{ github.token }}
+          path: /tmp/a43-core
+      - name: Assemble the existing 0LF target matrix and prove its child Cover
+        run: python im-results/agent43-raw122-cut/assemble_targeted_branch.py 5
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw122-branch05-cover
           path: /tmp/a43-output/
           retention-days: 90
           if-no-files-found: error
