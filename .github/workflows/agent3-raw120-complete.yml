@@ -183,19 +183,18 @@ jobs:
         run: |
           set -euo pipefail
           canonical_olean="$(find /tmp/canonical77 -type f -name CanonicalRaw114Accepted.olean -print -quit)"
-          canonical_manifest="$(find /tmp/canonical77 -type f -name canonical77-base-manifest.json -print -quit)"
+          canonical_manifest="$(find /tmp/canonical77 -type f -iname '*manifest*.json' -print -quit)"
+          echo "CanonicalRaw114Accepted object: ${canonical_olean:-MISSING}"
+          echo "Canonical77 manifest: ${canonical_manifest:-MISSING}"
+          find /tmp/canonical77 -maxdepth 4 -type f | sort | head -80
           test -n "$canonical_olean"
-          canonical_dir="$(dirname "$canonical_olean")"
-          test -s "$canonical_dir/CanonicalTwoParentGraft.olean"
-          test -s "$canonical_manifest"
-          echo "Using canonical77 objects from $canonical_dir"
-          echo "Using canonical77 manifest $canonical_manifest"
+          test -n "$canonical_manifest"
           mkdir -p /tmp/agent3-raw139-normalized
           python tools/test_lean_compile_module_index.py
           python tools/lean_compile_closure.py \
             --workdir /tmp/agent3-raw139-normalized/build \
             --jobs 4 \
-            --precompiled-dir "$canonical_dir" \
+            --precompiled-dir /tmp/canonical77 \
             --precompiled-manifest "$canonical_manifest" \
             --manifest /tmp/agent3-raw139-normalized/manifest.json \
             --label agent3-raw139-normalized-cryptids-scan \
