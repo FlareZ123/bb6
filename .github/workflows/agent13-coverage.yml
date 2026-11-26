@@ -3725,8 +3725,54 @@ jobs:
           if-no-files-found: error
 
 
+  raw124_bundle_repair_prepare:
+    if: inputs.target == 'weighted-tnf-raw124-bundle-repair-existing'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      RAW124_BRANCH: ${{ inputs.raw124_branch }}
+      SOURCE_RUN_ID: ${{ inputs.raw124_bundle_source_run_id }}
+      REPAIR_KIDS: ${{ inputs.raw124_bundle_repair_kids }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve subdivision driver before pinning the source revision
+        run: cp im-results/agent4-raw124-0re/regenerate_subtree.py /tmp/regenerate_subtree.py
+      - name: Pin exact source revision from the common-artifact run
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          test -n "$SOURCE_RUN_ID" || { echo "raw124_bundle_source_run_id is required"; exit 2; }
+          expected="$(gh api "repos/${GITHUB_REPOSITORY}/actions/runs/${SOURCE_RUN_ID}" --jq .head_sha)"
+          git fetch --no-tags --depth=1 origin "$expected"
+          git checkout --detach "$expected"
+          echo "$expected" > /tmp/raw124-source-commit
+      - name: Install Boost multiprecision headers
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-dev
+      - name: Regenerate selected kids with smaller recursive Audit subtrees
+        run: |
+          set -euo pipefail
+          expected="$(cat /tmp/raw124-source-commit)"
+          kids="$(python - <<'PY'
+          import json, os
+          rows = json.loads(os.environ["REPAIR_KIDS"])
+          print(" ".join(k for row in rows for k in row["kids"].split()))
+          PY
+          )"
+          read -r -a kid_array <<< "$kids"
+          python /tmp/regenerate_subtree.py "$GITHUB_WORKSPACE" /tmp/raw124-repair-source "$RAW124_BRANCH" 50 "$expected" "${kid_array[@]}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-repair-source
+          path: /tmp/raw124-repair-source
+          if-no-files-found: error
+          retention-days: 90
+
   raw124_bundle_repair_shards:
     if: inputs.target == 'weighted-tnf-raw124-bundle-repair-existing'
+    needs: raw124_bundle_repair_prepare
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -3748,6 +3794,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           path: /tmp/a2-raw124-bundle
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-repair-source
+          path: /tmp/a2-raw124-repair-source
       - name: Verify source pin and use bundled Lean toolchain
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -3773,9 +3823,10 @@ jobs:
           STEM="Raw124B${RAW124_BRANCH}"
           mkdir -p /tmp/a2-raw124-repair-kids
           : > /tmp/a2-raw124-repair-kids/repair-shard.log
+          SRC_DIR=/tmp/a2-raw124-repair-source
           for k in $KIDS; do
-            echo "Compiling ${STEM}Kid${k}" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
-            lean -o "${STEM}Kid${k}.olean" "${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+            echo "Compiling subdivided ${STEM}Kid${k}" | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
+            lean -o "${STEM}Kid${k}.olean" "$SRC_DIR/${STEM}Kid${k}.lean" 2>&1 | tee -a /tmp/a2-raw124-repair-kids/repair-shard.log
             cp "${STEM}Kid${k}.olean" /tmp/a2-raw124-repair-kids/
           done
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-repair-kids/repair-shard.log; then exit 1; fi
@@ -3788,7 +3839,7 @@ jobs:
 
   raw124_bundle_assemble_existing:
     if: inputs.target == 'weighted-tnf-raw124-bundle-repair-existing'
-    needs: raw124_bundle_repair_shards
+    needs: [raw124_bundle_repair_prepare, raw124_bundle_repair_shards]
     runs-on: ubuntu-latest
     timeout-minutes: 60
     env:
@@ -3806,6 +3857,10 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           path: /tmp/a2-raw124-bundle
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-${{ inputs.raw124_branch }}-repair-source
+          path: /tmp/a2-raw124-bundle/repair-source
       - uses: actions/download-artifact@v4
         with:
           pattern: raw124-${{ inputs.raw124_branch }}-kids-*
@@ -3842,6 +3897,27 @@ jobs:
           test "$(cat SOURCE_COMMIT)" = "$expected"
           sha256sum -c RAW124_SOURCE.sha256
           STEM="Raw124B${RAW124_BRANCH}"
+          python - <<'PY'
+          import hashlib, json, os
+          from pathlib import Path
+          root = Path("/tmp/a2-raw124-bundle")
+          source = root / "repair-source"
+          manifest = json.loads((source / "SPLIT_MANIFEST.json").read_text())
+          sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+          assert manifest["source_commit"] == (root / "SOURCE_COMMIT").read_text().strip()
+          assert manifest["branch"] == os.environ["RAW124_BRANCH"]
+          for name, expected_sha in manifest["stable_source_sha256"].items():
+              assert sha(root / name) == expected_sha, name
+          for kid, entry in manifest["kids"].items():
+              name = f'Raw124B{os.environ["RAW124_BRANCH"]}Kid{kid}.lean'
+              assert sha(root / name) == entry["original"]["sha256"], f"original {name}"
+              new_path = source / name
+              assert sha(new_path) == entry["subdivided"]["sha256"], f"subdivided {name}"
+              text = new_path.read_text()
+              for statement in entry["root_statements"].values():
+                  assert statement in text, f"root statement missing in {name}"
+          print("Raw124 subdivided kid manifest, original source pins, and stable parent interfaces verified.")
+          PY
           for k in $(seq -w 0 23); do test -s "${STEM}KidK$k.olean"; done
           lean -o "${STEM}Data.olean" "${STEM}Data.lean" 2>&1 | tee /tmp/a2-raw124-bundle-assemble.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a2-raw124-bundle-assemble.log; then exit 1; fi
@@ -3867,6 +3943,7 @@ jobs:
             /tmp/a2-raw124-bundle-assemble.log
             /tmp/a2-raw124-bundle/SOURCE_COMMIT
             /tmp/a2-raw124-bundle/RAW124_SOURCE.sha256
+            /tmp/a2-raw124-bundle/repair-source/**
           if-no-files-found: error
           retention-days: 90
 
