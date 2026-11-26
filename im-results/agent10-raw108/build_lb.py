@@ -98,7 +98,9 @@ def prepare(spec, opens, target, witnesses, manual, slot):
     emit_ngram_group(spec,opens,target)
     for i,params in spec.pop("block").items():
         mod=f"Raw108LBBlock{i}";ns=f"BB6.Agent10{mod}"
-        emit_block(mod,ns,opens[int(i)],params)
+        # Kid11 has repeatedly exhausted dense row verification; use the existing
+        # support-complete active checker only for these seven isolated witnesses.
+        emit_block(mod,ns,opens[int(i)],params,active=int(i) in {1916,1933,1935,1936,1941,1944,1967})
         spec["manual"][i]=[mod,ns,opens[int(i)]]
     kids=emit_split1930(spec,opens[1930],manual,slot)
     n,s=spec["delayed"]["query"]

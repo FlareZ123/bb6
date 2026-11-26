@@ -768,6 +768,7 @@ jobs:
           reuse=()
           jobs=1
           if [[ "$GROUP" == la0-? || "$GROUP" == lb0-? ]]; then jobs=2; fi
+          if [ "$GROUP" = lb0-c ]; then jobs=1; fi
           if [ "$GROUP" = le0 ]; then
             theorems+=("BB6.Agent10Raw108LEFast.longestLE_halts" "BB6.Agent10Raw108LEFast.longestLE_delays" "BB6.Agent10Raw108LEFast.raw108LE_lower")
             jobs=2
