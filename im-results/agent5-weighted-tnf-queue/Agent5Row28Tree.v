@@ -1,4 +1,4 @@
-From BusyCoq Require Import Agent5CoarseTree Agent5Q0Solid28.
+From BusyCoq Require Export Agent5CoarseTree Agent5Q0Solid28.
 From Coq Require Import List Bool Arith Strings.String.
 Import ListNotations.
 Open Scope string_scope.
