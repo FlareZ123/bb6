@@ -4,6 +4,7 @@
 
 ## Global maximality and the attainable score
 
+- [Raw10 rectangle 4 exact weighted maximum 3640](2026-11-26-raw10-box4-exact-agent13.md) — all 234,375,000 machines covered, six independently checked slices and accepted source composition.
 - [Raw79 exact weighted maximum 2,354](2026-11-26-raw79-parent-exact-agent10.md): entire five-hole parent, 9,765,625 physical completions; all 24 audit branches, universal growth certificates and 2,351-move attaining execution locally kernel-checked from original source. Canonical integration remains separate.
 
 - [Raw106 exact weighted maximum 253](2026-11-26-raw106-parent-exact-agent10.md): complete original-source five-hole parent decision, 9,765,625 compatible completions; all 78 source modules and attaining witness locally kernel-checked. Current canonical integration remains separate.
