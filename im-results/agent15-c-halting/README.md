@@ -93,7 +93,7 @@ Q(u)=(2W-3,\;24450+39417u).
 
 ### q=1 parent exclusions
 
-Seven disjoint infinite parameter slices of the q=1 parent
+Nine disjoint infinite parameter slices of the q=1 parent
 \(Q(u)=(2W-3,24450+39417u)\) are now excluded.
 
 The first four previously established slices are:
@@ -127,7 +127,7 @@ The first four previously established slices are:
    \]
    whose right coordinate is odd and whose coordinate sum is \(1\pmod4\).
 
-The following three additional slices are formalized in
+The following five additional slices are formalized in
 [U5Q0W7U19Mod2560.lean](U5Q0W7U19Mod2560.lean):
 
 5. **\(u=339+2560v\)**. The q=1 parent and forced predecessors are
@@ -174,14 +174,46 @@ The following three additional slices are formalized in
    even-right six inverses reach the terminal state, whose right
    coordinate is odd and whose sum is \(2\pmod4\).
 
-For every one of these seven slices, the root filters give
+8. **\(u=2739+10240v\)**. The forced chain is
+   \[
+   \begin{aligned}
+   A&=(19675951+73543680v,\;107987613+403630080v),\\
+   B&=(63831780+238586880v,\;85909695+321108480v),\\
+   C&=(74870735+279847680v,\;80390214+300478080v),\\
+   D_1&=(155260947+580325760v,\;40195106+150239040v),\\
+   D_2&=(195456051+730564800v,\;20097552+75119520v),\\
+   D_3&=(215553601+805684320v,\;10048775+37559760v),\\
+   F&=(112801186+421622040v,\;61424979+229590900v).
+   \end{aligned}
+   \]
+   The source steps are odd/odd low-value, even/odd sum-three, three
+   even-right six inverses, then odd/odd low-value. The terminal state
+   has odd right coordinate and sum \(1\pmod4\).
+
+9. **\(u=9939+10240v\)**. The forced chain is
+   \[
+   \begin{aligned}
+   A&=(71386351+73543680v,\;391790013+403630080v),\\
+   B&=(231588180+238586880v,\;311689095+321108480v),\\
+   C&=(271638635+279847680v,\;291663864+300478080v),\\
+   D_1&=(563302497+580325760v,\;145831931+150239040v),\\
+   D_2&=(354567212+365282400v,\;250199570+257760720v),\\
+   D_3&=(604766780+623043120v,\;125099784+128880360v),\\
+   F&=(729866562+751923480v,\;62549891+64440180v).
+   \end{aligned}
+   \]
+   The source steps are odd/odd low-value, even/odd sum-three,
+   even-right six, odd/odd low-value, then two even-right six inverses.
+   The terminal state has odd right coordinate and sum \(1\pmod4\).
+
+For every one of these nine slices, the root filters give
 \(z=2+4u\equiv14\pmod{16}\) and \(z\equiv3\pmod5\). The necessary
 root relation \(5z-7r\equiv12\pmod{16}\), with \(w=7+8r\), forces
 \(r\equiv6\pmod{16}\) and \(w\equiv55\pmod{128}\). The original four
 families require the previously stated parameter restrictions:
 \(t\equiv1\pmod5\) for \(u=7+32t\) and \(u=35+64t\), and
 \(s\equiv3\pmod5\) for \(u=23+512s\); the \(u=59+80t\) family
-needs no further restriction. The three new families also need no
+needs no further restriction. The five new families also need no
 further restriction, since each base value is \(19\pmod{20}\) and
 each step is divisible by 20. These are necessary-residue-compatible
 sublifts, not a classification of the full \(w=7\) progression.
@@ -193,9 +225,9 @@ The focused workflow target w7-q0-parent-fan in
 passed for the original four roots in run
 [#20](https://github.com/FlareZ123/bb6/actions/runs/45796426913).
 The extended closure, which additionally compiles
-U5Q0W7U19Mod2560.lean and all six new q=0/q=1 declarations, passed in
-[run #25](https://github.com/FlareZ123/bb6/actions/runs/45832100735).
-The module explicitly prints the axioms of every new theorem; the
+U5Q0W7U19Mod2560.lean and all ten new q=0/q=1 declarations, passed in
+[run #25](https://github.com/FlareZ123/bb6/actions/runs/45832100735) and the further extension in [run #26](https://github.com/FlareZ123/bb6/actions/runs/45833176482).
+The module explicitly prints the axioms of every new theorem in the combined nine-slice closure; the
 workflow's rejection guard found no sorryAx or native_decide dependency.
 The proofs use the original-source odd/odd low-value, even/odd sum-three,
 and even-right six inverse theorems, together with the established
