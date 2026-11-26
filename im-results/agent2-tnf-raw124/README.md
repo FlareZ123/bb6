@@ -71,7 +71,7 @@ Agent2MultiPump.lean extends Agent50's open-tail transfer lemmas to arbitrary fi
 
 0RB index 238 (zero-based in deterministic open.txt), `1RB0LF_1RC1LA_0RD0RF_1LD1RE_---1LF_0LA0RB`, had resisted exhaustive six-state DFA enumeration. A 32-state last-five-bit suffix DFA certified it, and congruence quotienting reduced it to nine states. It is now included in generate_0rb.py. Pooling successful DFAs across sibling branches yielded over a thousand new certificates. Enumeration and FAR search reused raw99/enumerate.cpp and agent11-tnf-raw86/search.cpp.
 
-Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. The complete Raw124 parent Cover is now source-accepted; Canonical58 subtraction remains pending exact membership in the accepted roster.
+Automatic multiblock candidate inference uses four tape snapshots with constant growth increments, dynamic programming to segment into constant and repeated words, and finite symbolic search for exact sweep/rewrite operations. Proof checks do not trust the search. The complete Raw124 parent Cover is source-accepted and has been consumed exactly once from the actual Canonical58 roster to produce the source-accepted 57-entry Canonical57 interface in [run 45910336799](https://github.com/FlareZ123/bb6/actions/runs/45910336799).
 
 
 ## F1=0LB — source-accepted complete branch Cover
