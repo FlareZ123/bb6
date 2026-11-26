@@ -58,9 +58,9 @@ def main():
     (work/'far.json').write_text(json.dumps(far))
     run('g++','-O3','-std=c++17',ROOT.parent/'agent32-raw59'/'ngram_asym.cpp','-o',work/'ngram')
     inp=''.join(f'{i} {opens[i]} {l} {r}\n' for i,l,r,n in data['asym'])
-    a=run(work/'ngram',input=inp,text=True,capture_output=True)
-    assert not a.stderr,a.stderr
-    ac=[asym_emit(line,opens) for line in a.stdout.splitlines()]
+    ng=run(work/'ngram',input=inp,text=True,capture_output=True)
+    assert not ng.stderr,ng.stderr
+    ac=[asym_emit(line,opens) for line in ng.stdout.splitlines()]
     assert sorted(meta for _,meta in ac)==sorted(data['asym'])
     special={}
     groups=[];group=[];size=0
