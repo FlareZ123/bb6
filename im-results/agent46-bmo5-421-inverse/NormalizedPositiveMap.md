@@ -74,3 +74,27 @@ For the limiting map, (|J_k|=(k+7)/2^{k+1}) is summable. Since (T) preserves Leb
 3. If an exact positive gate fails, compose the signed negative return map with the next positive episode and formulate a non-autonomous return-map version of the shrinking-target problem.
 
 Relevant formal sources: `CapPositiveRepeat.lean`, `CapPositiveRepeatBound.lean`, `CapNegativeExit.lean`, `CapSieveCore.lean`, and the root-specific discussion in `README.md`.
+
+
+## Exact affine itinerary identity
+
+For a fixed positive-return exponent word \(a_0,\ldots,a_{n-1}\), put
+\[
+A_j=\sum_{r<j}a_r,\qquad C_0=D_0=0,
+\]
+with \(C_{j+1}=3^{a_j}C_j+2^j\) and \(D_{j+1}=3^{a_j}D_j+1\). The existing Lean theorem `CapExitWord.expansion` proves, for the exact recurrence,
+\[
+3^{A_n}q_0+3D_n=q_n+10C_n.
+\]
+For the #754 seed \(q_0=8\), division by \(3^{A_n}\) gives
+\[
+8=\sum_{j=1}^{n}\frac{10\cdot2^{j-1}-3}{3^{A_j}}+\frac{q_n}{3^{A_n}}.
+\]
+Thus \(q_n/3^{A_n}\) is the exact arithmetic gap between the seed and the partial itinerary expansion. In the limiting autonomous map, the cylinder for this word is the interval
+\[
+\left(\sum_{j=1}^{n}\frac{10\cdot2^{j-1}}{3^{A_j}},\quad
+\sum_{j=1}^{n}\frac{10\cdot2^{j-1}}{3^{A_j}}+\frac{10\cdot2^n}{3^{A_n}}\right],
+\]
+while the exact non-autonomous affine composition has the \(-3/3^{A_j}\) corrections displayed in the seed identity. For the exact positive orbit, the intermediate branch and gate constraints further restrict the affine preimage; do not treat the unrestricted affine interval as the exact finite-\(k\) cylinder.
+
+The remaining obstruction is now explicit: the distinguished seed's itinerary must keep the integer gap \(q_n\) above the moving linear threshold \(k+n+6\) at every positive return. The identity supplies an exact series/cylinder representation, but it does not by itself give the needed lower bound. This is the Diophantine shrinking-target problem to attack next.
