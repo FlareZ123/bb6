@@ -1,4 +1,6 @@
-# Raw39: exact eleven-cylinder semantic residual cut
+# Raw39: ten-cylinder semantic cut and seven canonical child obligations
+
+**New symmetry result:** `Raw39SymmetryCut.lean` proves `all0RF` at weighted bound 944 by transporting the accepted 0RE bound through the E/F state swap. The parent only introduces A–D. `cut_ten` reduces the literal residuals to ten; `parent_bound_seven` shows seven canonical child Covers suffice for the entire parent at any B ≥ 1882. The seven moves are 0LA, 0LE, 0RC, 1LA, 1LB, 1LE, 1RE. The other three live F branches follow by weighted renaming. All three theorems compile locally with propext, Classical.choice, Quot.sound only. No assumption of nonhalting is made for the remaining seven.
 
 **Status:** locally kernel-checked original-source artifact-linked parent refinement; not a complete Raw39 Cover or a BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
 
@@ -17,4 +19,4 @@ On local Lean 4.36.0-rc2, the exact `Raw39StableCut.lean` and `Raw39StableIntegr
 
 To reproduce, download the four artifact ZIPs, extract into a common directory after checking shared source and object bytes, preserving separate manifests. Place these two modules there and run Lean with LEAN_PATH set to that directory, first compiling Raw39StableCut.lean to Raw39StableCut.olean, then checking Raw39StableIntegrated.lean. A full fresh source rebuild is distinct from this local artifact-linked check.
 
-The older Raw39CombinedPartial/Canonical86 joint audit run 45719963229 was cancelled after two hours with no output artifact. The 0RC candidate at bound 2354 is unaccepted (run 45720481054 cancelled). Neither is used in the theorem above. The useful next step is the actual missing A1 child Covers, especially completing 0RC, and eventually instantiating a stable Raw39 parent Cover at the champion score. Do not claim a global 86-way roster or a whole Raw39 bound from this local eleven-residual cut.
+The older Raw39CombinedPartial/Canonical86 joint audit run 45719963229 was cancelled after two hours with no output artifact. The 0RC candidate at bound 2354 is unaccepted (run 45720481054 cancelled). Neither is used in the theorem above. The useful next step is the actual missing A1 child Covers, especially completing 0RC, and eventually instantiating a stable Raw39 parent Cover at the champion score. Do not claim a global 86-way roster or a whole Raw39 bound from this local partial cut.
