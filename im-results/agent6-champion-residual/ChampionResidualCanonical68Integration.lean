@@ -41,18 +41,18 @@ theorem canonical68_other_table_count :
 noncomputable def refinedCanonical68Roster :
     List (List Move × PartialMachine) :=
   (roster68.filter (fun e => !sameTable e.2 championResidual)) ++
-  (remainingRaw139AfterThirtyEight.map
+  (remainingRaw139AfterFortyTwo.map
     (fun e => (championResidualAddress ++ e.1, e.2)))
 
 theorem refinedCanonical68Roster_count :
-    refinedCanonical68Roster.length = 152 := by
+    refinedCanonical68Roster.length = 148 := by
   simp [refinedCanonical68Roster, canonical68_other_table_count,
-    remainingRaw139AfterThirtyEight_count]
+    remainingRaw139AfterFortyTwo_count]
 
 /-- Source-authentic conditional exactness at the attained champion score.
-    The eight E1 parent Covers, 67 other Canonical68 Covers, and 85 retained
+    The eight E1 parent Covers, 67 other Canonical68 Covers, and 81 retained
     raw139 descendant Covers are the only remaining Cover premises. -/
-theorem exact_from_canonical68_and_raw139_after_thirtyEight
+theorem exact_from_canonical68_and_raw139_after_fortyTwo
     (h109 : ∀ m, compatible p109 m → WeightedBound 1703 m)
     (h123 : Cover (WeightedBound 10000) p123)
     (h60 : Cover (WeightedBound 1175) p60)
@@ -64,7 +64,7 @@ theorem exact_from_canonical68_and_raw139_after_thirtyEight
     (hOther : ∀ e ∈ roster68,
       e.2 ≠ championResidual →
         Cover (WeightedBound (proposedTM63Moves + 7)) e.2)
-    (hLeaves : ∀ e ∈ remainingRaw139AfterThirtyEight,
+    (hLeaves : ∀ e ∈ remainingRaw139AfterFortyTwo,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
     BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
   BB6.Agent6Canonical68E1ParentGraft.exact_at_target
@@ -75,7 +75,7 @@ theorem exact_from_canonical68_and_raw139_after_thirtyEight
       by_cases hSame : sameTable e.2 championResidual = true
       · have heq : e.2 = championResidual := sameTable_sound hSame
         rw [heq]
-        exact cover_championResidual_after_thirtyEight hLeaves
+        exact cover_championResidual_after_fortyTwo hLeaves
       · have hne : e.2 ≠ championResidual := by
           intro hEq
           have hself : sameTable championResidual championResidual = true := by decide
@@ -89,6 +89,6 @@ theorem exact_from_canonical68_and_raw139_after_thirtyEight
 #print axioms canonical68_other_address_count
 #print axioms canonical68_other_table_count
 #print axioms refinedCanonical68Roster_count
-#print axioms exact_from_canonical68_and_raw139_after_thirtyEight
+#print axioms exact_from_canonical68_and_raw139_after_fortyTwo
 
 end BB6.Agent6Canonical68ChampionIntegration
