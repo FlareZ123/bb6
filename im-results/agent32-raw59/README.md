@@ -1,3 +1,31 @@
+## Current parent and canonical integration state — 26 November 2026
+
+The accepted global conditional frontier is now Canonical64, not the older Canonical68 snapshot. Raw59 is one of the ten still-open E1 sibling parents in that 64-entry roster.
+
+### Raw59 parent Cover
+
+The six-hole parent is
+
+\`1RB---_1RC---_0RD---_1LD1RE_---1LA_------\`
+
+with 25^6 = 244,140,625 literal completions. The existing proof closes 18 of 25 first-hole choices at weighted bound 395 and refines the seven retained children (0LA, 0LB, 1LB, 0LE, 1LE, 0LF, 1LF) to a parent Cover at 4,200,000.
+
+- Source-accepted upgraded children: 0LE and 1LF from run 45675872170; 1LE and ClosedA–F from run 45727352966; 0LB, 0LF and 1LB from run 45742419127.
+- The only remaining child in the focused upgrade set was 0LA. Run 45742419127 reached Raw59Upgrade0LAKid11.lean:4058 and failed with Lean's maximum-recursion-depth diagnostic, not a theorem counterexample.
+- The generated decidable proof-fragment size is now 32 rather than 240. Focused source audit 45753302154 was dispatched with target Upgrade0LA; the existing workflow reuses the already accepted sibling artifacts and then composes the full Raw59 parent Cover. This run is pending at the time of this update. Do not claim the parent Cover until its parent-composition job succeeds.
+
+### Canonical integration
+
+Raw59Canonical64Integrated.lean composes the Raw59 parent with the source-accepted Canonical64 artifact 15085029091 (run 45750164590). It checks unique membership of Raw59 in the exact 64-entry roster, removes it, and states a 63-entry conditional exactness interface at the common weighted floor 6,766,859.
+
+assemble_raw59_canonical64.py verifies both producer runs and the Raw59 artifact manifest, links only recursive import closures, compares all differing reachable kernel objects, and checks the exported axiom profiles. The existing Agent32 workflow has a separate Canonical64Compose target for this integration; supply the successful Raw59 parent run ID as raw59_parent_run_id. The integration has not yet run and must not be treated as accepted.
+
+Agent31 is independently pursuing Raw112→Canonical63. If that route is accepted first, the Raw59 parent should be composed against its exact accepted 63-entry roster to produce a 62-entry interface, rather than treating two different 63-entry rosters as separate frontier improvements.
+
+No global upper bound or exact BB(6) value follows from any of these conditional reductions.
+
+---
+
 # Raw59 six-hole refinement
 
 Raw index 59 of Agent31's 124-cylinder roster: `1RB---_1RC---_0RD---_1LD1RE_---1LA_------`. A1 is first queried after 7 ordinary steps. The cylinder has 25^6 = 244,140,625 literal completions.
