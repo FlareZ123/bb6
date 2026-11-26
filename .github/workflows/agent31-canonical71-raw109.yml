@@ -1470,6 +1470,20 @@ jobs:
           assert "sorryAx" not in str(profiles)
           assert "native_decide" not in str(profiles)
           PY
+      - name: Add the accepted Raw124 parent to produce a Canonical57 successor (optional)
+        id: raw124_canonical57
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW124_PARENT_RUN_ID: ${{ inputs.raw124_parent_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW124_PARENT_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py
+          python im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py \\
+            --work /tmp/a31-canonical58-raw113 --raw124-run-id "$RAW124_PARENT_RUN_ID" \\
+            2>&1 | tee /tmp/a31-canonical58-raw113/raw124-canonical57-assembly.log
+          test -s /tmp/a31-canonical58-raw113/raw124-canonical58-membership.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
