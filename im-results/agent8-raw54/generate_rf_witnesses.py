@@ -61,5 +61,7 @@ if __name__=="__main__":
         work=Path(d);rows=census(work)
         mut={int(i):c for i,c in (l.split(":") for l in (ROOT/"rf-mutated.txt").read_text().splitlines())}
         assert len(mut)==39
-        emit_far(rows,mut)
+        extra={int(i):c for i,c in (l.split(":") for l in (ROOT/"rf-extra.txt").read_text().splitlines())}
+        assert set(extra).isdisjoint(mut)
+        emit_far(rows,mut|extra)
         if args.sparse:emit_ngrams(work,rows,args.max_states)
