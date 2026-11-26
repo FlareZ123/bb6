@@ -92,7 +92,7 @@ See [Raw124-1LB-fast.md](Raw124-1LB-fast.md) for exact residual table keys and r
 
 ### F1=1LB numeric bridge
 
-A branch-specific alternative to the unaccepted F412 two-million-step adapter is being tested in [`Raw124OneLBChampionBound.lean`](Raw124OneLBChampionBound.lean): it uses the exact 27,959-step root-prefix theorem to lift only the F1=1LB cutoff `B ≤ 3006` to the champion score. The clean source-closure run [45770334987](https://github.com/FlareZ123/bb6/actions/runs/45770334987) is pending; do not use the theorem until CI accepts it. It does not cover sibling cutoffs above 27,959.
+A branch-specific alternative to the unaccepted F412 two-million-step adapter is being tested in [`Raw124OneLBChampionBound.lean`](Raw124OneLBChampionBound.lean): it uses the exact 27,959-step root-prefix theorem to lift only the F1=1LB cutoff `B ≤ 3006` to the champion score. The latest source-closure attempt [45770334987](https://github.com/FlareZ123/bb6/actions/runs/45770334987) completed with failure; inspect its targeted logs before another attempt. Do not use the theorem until CI accepts it. It does not cover sibling cutoffs above 27,959.
 
 
 ### Direct long-run query probe
