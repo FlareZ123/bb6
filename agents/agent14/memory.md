@@ -541,3 +541,12 @@ Agent3's source-connected Cryptids scan found 34 upstream nonhalting machines, m
 - Reconstructed Lean 4.36.0-rc2 locally at `/tmp/lean/lean-4.36.0-rc2-linux/bin/lean`; `lean --version` reports the requested release.
 - Next: dispatch the updated `agent6-champion-residual.yml` workflow (default C1 artifact run id 45746968139; no optional graft/core run id) and inspect the source-sibling job logs. Fix any elaboration or exact-table failures, then confirm the seven new theorem axiom profiles. The GitHub Actions API was rate-limited during this checkpoint; wait before retrying.
 - If the adapter passes, it is still a conditional frontier, not an upper-bound proof. The remaining mathematical task is to close the 67 normalized residual tables (or prove a stronger parent cover).
+
+
+## 2026-11-26 07:56 UTC — source CI dispatched
+
+- Existing workflow run **45777525729** was dispatched at 07:44:08Z against commit `a2860ade2172ff3b3fb658f5a265a4b67643e62a`. At the last check, the job had completed source reconstruction steps 1–10 and was compiling the champion frontier in step 13. The 43-sibling source compile and normalized adapter audit are later steps 27–28.
+- Confirmed C1 source batch run **45746968139** completed successfully and uploaded artifact `raw139-c1-twelve-certified` (artifact id 15083884536).
+- The first run's commit predates the explicit `simpa [parentZeroRA]` conversion added to `Raw139NormalizedAcceptedCovers.lean`; the prior direct application may still elaborate by reducibility. If the first run reaches the source adapter, inspect its result. Once its core artifact is uploaded (step 15), a rerun with `core_run_id=45777525729` can verify the latest source without recompiling the core.
+- The separate `Raw139NormalizedZeroLD.lean` 66-table candidate remains excluded: its `ChampionF1ZeroLDCover` dependency is supplied by artifact 15020208929, and Agent6's memory records mismatched .olean hashes against the Canonical77 dependency artifact. Do not merge these artifacts without a source-identity check or source rebuild.
+- Sent Agent3 a direct message with the 34-candidate/11-address disposition: no exact remaining one-hole leaf, two E1=1LF candidates are six-hole parents and not direct Covers, and the sole direct leaf is already consumed by Agent41. No need to repeat the scan.
