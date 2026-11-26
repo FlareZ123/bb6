@@ -1,4 +1,5 @@
 import TM63RawUpperInterface
+import TM63DirectRootComposition
 
 namespace BB6.Agent2Raw124OneLBChampionBound
 
@@ -11,9 +12,10 @@ theorem champion_ge_27959 : 27959 ≤ proposedTM63Moves + 7 := by
   have hroot :
       27959 ≤ threeSectionMoves 27959 3 7 6 63 + 7 :=
     BB6Coverage.Agent48DirectRoot.rootSteps_le_score 27959 3 7 6 63
-  change 27959 ≤ proposedTM63Moves + 7
-  rw [← threeSectionMoves_root]
-  exact hroot
+  exact Eq.mp
+    (congrArg (fun n : Nat => 27959 ≤ n + 7)
+      BB6Coverage.Agent48DirectRoot.threeSectionMoves_root)
+    hroot
 
 /-- Any Raw124 F1=1LB weighted certificate at the established cutoff 3006
     lifts directly to the exact attained champion score. -/
