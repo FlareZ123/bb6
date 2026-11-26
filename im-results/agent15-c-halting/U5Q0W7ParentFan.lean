@@ -76,7 +76,7 @@ theorem w7_z2_parent_fan (u a k : Nat)
                 have hscale : 2^(n+2)*4=16*W := by
                   have hp : 2^(n+2)=2^n*4 := by
                     rw [Nat.pow_add]
-                    norm_num
+                    simp
                   calc
                     2^(n+2)*4 = (2^n*4)*4 := by rw [hp]
                     _ = 2^n*16 := by ring
