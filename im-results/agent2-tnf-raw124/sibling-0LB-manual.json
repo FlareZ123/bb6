@@ -5,6 +5,36 @@
     "namespace": "BB6Coverage.Agent4Raw124LB0Sweeps.M151",
     "packed_sha256": "a07a6d268e37c1cc9edd2e1045d3b754fbb33384a1ed7e0f1b637679229ab067"
   },
+  "602": {
+    "table": "1RB0RB_1RC0LE_0RD1RA_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Five",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Five.M602",
+    "packed_sha256": "1018c7166a18ab0b3f7be6d7049a820e10f75c1bf82260f4b444220a7beea311"
+  },
+  "604": {
+    "table": "1RB1LD_1RC0LE_0RD1RA_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Five",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Five.M604",
+    "packed_sha256": "1018c7166a18ab0b3f7be6d7049a820e10f75c1bf82260f4b444220a7beea311"
+  },
+  "605": {
+    "table": "1RB1LE_1RC0LE_0RD1RA_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Five",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Five.M605",
+    "packed_sha256": "1018c7166a18ab0b3f7be6d7049a820e10f75c1bf82260f4b444220a7beea311"
+  },
+  "606": {
+    "table": "1RB1LF_1RC0LE_0RD1RA_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Five",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Five.M606",
+    "packed_sha256": "1018c7166a18ab0b3f7be6d7049a820e10f75c1bf82260f4b444220a7beea311"
+  },
+  "608": {
+    "table": "1RB1RE_1RC0LE_0RD1RA_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Five",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Five.M608",
+    "packed_sha256": "1018c7166a18ab0b3f7be6d7049a820e10f75c1bf82260f4b444220a7beea311"
+  },
   "935": {
     "table": "1RB1LE_1RC0RA_0RD0RE_1LD1RE_0LA1LF_---0LB",
     "module": "Raw124LB0Four",
@@ -14,6 +44,12 @@
     "table": "1RB1LE_1RC0RA_0RD1RB_1LD1RE_0LA1LF_---0LB",
     "module": "Raw124LB0Four",
     "namespace": "BB6Coverage.Agent4Raw124LB0Four.M936"
+  },
+  "1012": {
+    "table": "1RB1LE_1RC0RB_0RD0RA_1LD1RE_0LA1LF_---0LB",
+    "module": "Raw124LB0M1012",
+    "namespace": "BB6Coverage.Agent4Raw124LB0M1012",
+    "packed_sha256": "ba5e9d069ebd811462f3873ee77993f912d9b5a4510f930fab06905639fd0f6c"
   },
   "1046": {
     "table": "1RB1LE_1RC0RC_0RD0RE_1LD1RE_0LA1LF_---0LB",

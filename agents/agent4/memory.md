@@ -1359,3 +1359,8 @@ All other groups (0,2,3,6,7) have successful artifacts from run 45751911115. The
 ### Canonical62 champion-consumer integration note
 
 The current `canonical62-raw112-raw58` workflow target and `assemble_canonical62.py` compile only `Canonical62Raw112Raw58Integrated.lean`; they do not compile `Canonical62ChampionConsumer.lean`. That consumer is still a draft. It imports `Canonical64ChampionConsumer` to make the champion score/witness declarations available, but the current Canonical62 assembler does not link the champion closure. After the real Raw112 Cover is accepted, extend the assembler to compile/link the ChampionScoreLowerBound / TM63RawUpperInterface closure (or another source-verified dependency route) before compiling the Canonical62 champion consumer. The Canonical64 champion consumer itself is source-accepted in run 45773904666.
+
+
+## Checkpoint 2026-11-26T09:09:41.882Z
+
+Raw124 F1=0LB pinned candidate: 17 initial residuals, 13 now individually original-source Lean-checked compatible-completion NeverHalts (935/936/1046/1047,151/1255/1441,1012,602/604/605/606/608). New doubling family B([],0(100)^(2n+1)11) -> n'=2n+2, arbitrary positive step count, entries (t,n)=(99,2),(49,1),(21,0),(47,1),(96,2) respectively. M1012 root A([],01(0101)^(n+1)010), t=62, return cost32n+79. All standard propext, Quot.sound only. Sidecar manual entries, packed source SHA pinned. Remaining 99,264 (counter-like),267 (F0 first query t79909),448 (A1 first query t91502, two holes; split needed). No branch bound claimed. Raw112 recovery CI 45787320400; retained 910 exact modules. Local 3 workers OOM, 1 worker running. Direct git DNS unavailable, original Lean from artifact15090715339. 
