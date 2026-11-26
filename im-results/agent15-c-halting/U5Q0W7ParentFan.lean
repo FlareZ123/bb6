@@ -402,5 +402,7 @@ theorem w7_q0_target_unreachable_u59mod80 (v : Nat) :
 #print axioms w7_z2_q0_parent_unreachable
 #print axioms w7_z2_q1_parent_unreachable
 #print axioms w7_q0_target_unreachable_u1mod4
+#print axioms w7_z2_q1_parent_unreachable_u59mod80
+#print axioms w7_q0_target_unreachable_u59mod80
 
 end BB6.Agent15U5W7Source
