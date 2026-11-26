@@ -57,7 +57,7 @@ theorem nohalt : weightedTNFNoAssignedHalt parent := by
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 
 theorem checked (safe : ∀ m, compatible sourceLeaf m → NeverHalts m) :
-    zipCheck 400 parent (tree safe) = true := by decide
+    zipCheck 400 parent (tree safe) = true := by decide +revert
 
 theorem cover_of_source (h : Cover NeverHalts sourceLeaf) :
     Cover (WeightedBound 400) parent :=
