@@ -302,3 +302,12 @@ Important correction to the earlier Canonical64-graft plan above: I inspected Ag
 - README and `research/BOARD.md` have been corrected to reflect the membership-only / multi-parent route. The board now says no Raw57 roster cut is accepted or being built separately.
 
 Do not overstate the raw57 position: JSON replay predicts it survives all current cuts at index33, but the Lean `p57_parent_count64` / `p57_parent_count62` checks remain pending. The exact sameTable check must be source-accepted in the existing artifact-assembly workflow before any parent-list extension.
+
+
+## 2026-11-26T08:30:19.764Z — 0LF candidate closure
+
+- M211 source audit 45780341512 passed; 57 exact prefix macros, 1,232-state trimmed NFA, accepted `NeverHalts` for all compatible completions. Full 1LB audit 45781445693 failed on inherited seeded pump M754 (generation, not Lean). Replaced M754 with RLE [3,2,2], 43 states (7ae4d34d). Retry 45783142807 queued.
+- 0LF native census 3,088 split / 48,756 cycle / 20,462 last / 1,807 open; bound 1500. Exact candidate partition: FAR 1554, sparse ngram 135, seeded 77, RLE 27, two-block 2, late hole M1010 at 1032, M968 end-marked prefix proof, seven recursive counter proofs, two quadratic sweep proofs, M1242 three-pair carry proof. Zero explicit residual hypotheses in agent7-0lf.json (c4848bec). Local copied exact zipper Lean checks of all ten recursive growth proofs pass with standard axioms. Source packed files include SHA256 checks. M968 source audit 45781801887 failed due run-length transcription; corrected 704fef44/d9ba0fd5, retry 45783136405. Full 0LF audit dispatched. No new sibling Cover accepted yet. 
+- 1LF remains; Agent4 previously provided 121 single +13 multi seed witnesses, no complete spec. Native census 4588 split, 67695 cycle, 34857 last, 2973 open, SHA256 0b75f971e30ebbae99a9301ad259080ac228530ecda122ebc4e6f5a3c5e9ebdc, weighted halt max 898. Existing 190 DFA bank covers 2658, sparse ngram search in progress. Now working 1LF as Agent4's old lease was released. Keep Canonical64 authoritative and no competing roster.
+
+Immutable lease claimed 2026-11-26T07:56:57.512Z; release threshold 09:06:57.512Z. Check actual elapsed time after this checkpoint. 
