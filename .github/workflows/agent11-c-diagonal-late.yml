@@ -33,6 +33,11 @@ on:
         required: false
         type: boolean
         default: false
+      u5_w7_u79_only:
+        description: "Source-check the U5 w=7, u=239 mod 640 sum-16 two-parent exclusion, then stop"
+        required: false
+        type: boolean
+        default: false
       u5_q0_m16_only:
         description: "Source-check the U5 w=21 mod32 and w=37 mod128 M16 parent closures and high m=0 stop exclusions, then stop"
         required: false
@@ -95,6 +100,7 @@ jobs:
           U5_M8_ONLY: ${{ inputs.u5_m8_only }}
           U5_Q0_PARTIAL_ONLY: ${{ inputs.u5_q0_partial_only }}
           U5_Q0_FAN_ONLY: ${{ inputs.u5_q0_fan_only }}
+          U5_W7_U79_ONLY: ${{ inputs.u5_w7_u79_only }}
           U5_Q0_M16_ONLY: ${{ inputs.u5_q0_m16_only }}
           U5_SOURCE_ONLY_W21_ONLY: ${{ inputs.u5_source_only_w21_only }}
           S31_W13_ONLY: ${{ inputs.s31_w13_only }}
@@ -287,6 +293,23 @@ jobs:
               echo "REJECTED: U5 q=0 exact source parent fan contains sorryAx"
               exit 1
             fi
+            exit 0
+          fi
+          if [ "$U5_W7_U79_ONLY" = "true" ]; then
+            # Reuse the already compiled original-section, M0 image, and
+            # high-sum dependencies; compile only the exact U5 w=7 closure.
+            cp ${GITHUB_WORKSPACE}/im-results/agent3-c-bounce-inverse/{MixedOdd16TwoInverse,MixedOdd16TwoConstruct,MixedOdd16TwoOrbit,SectionEvenOddSum3Inverse}.lean .
+            cp ${GITHUB_WORKSPACE}/im-results/agent15-c-even-source/OddEvenUnique.lean .
+            cp ${GITHUB_WORKSPACE}/im-results/agent19-c-odd-dyadic/{HighEvenRightArithmetic,HighEvenRightSum7Arithmetic,HighEvenRightSum7Source}.lean .
+            cp ${GITHUB_WORKSPACE}/im-results/agent15-c-halting/{U5Q0W7ParentFan,U5Q0W7U19Mod2560,U5Q0W7U79Mod640}.lean .
+            for f in MixedOdd16TwoInverse MixedOdd16TwoConstruct MixedOdd16TwoOrbit SectionEvenOddSum3Inverse OddEvenUnique HighEvenRightArithmetic HighEvenRightSum7Arithmetic HighEvenRightSum7Source U5Q0W7ParentFan U5Q0W7U19Mod2560 U5Q0W7U79Mod640; do
+              echo "Original-source Lean compile: $f"
+              lean -o "$f.olean" "$f.lean" 2>&1 | tee "$f.log"
+              if grep -Eq 'sorryAx|_native' "$f.log"; then
+                echo "REJECTED: $f depends on sorryAx or native-evaluation axioms"
+                exit 1
+              fi
+            done
             exit 0
           fi
           if [ "$U5_X314_ONLY" = "true" ]; then
