@@ -15,7 +15,7 @@ open BB6.Agent12WeightedWord
 open BB6.Agent12CountedOrdinaryLow
 open BB6.Agent47ThinCounted
 open BB6.Agent12Clock
-open BB6.Agent12BitPlanes BB6.Agent12PlaneOps BB6.Agent12PlaneSum
+open BB6.Agent12BitPlanes BB6.Agent12PlaneOps BB6.Agent12PlaneSum BB6.Agent12BitEventSummary
 
 /-- The low-output guard needed by the exact inverse section theorem.
     Unlike outputOK, it permits the genuine source cases y=5,6,7. -/
@@ -88,97 +88,57 @@ theorem spec5_of_checked5 (s t : BB6.Agent12WordBlock.State) (N q K : Nat)
     dsimp
     exact ⟨by omega,by omega⟩
 
-structure EdgeData5 (r : Nat) (s : BB6.Agent12WordBlock.State) where
-  a k x y : Nat
-  dec : decode s=(a,k)
-  decNext : decode (step r s)=(x,y)
-  ha : 2≤a
-  hk : 1≤k
-  hy : 5≤y
-  branch : if r=1 then 2*k≤a else a<2*k
-  mass : x+2*y=a+2*k+3*r+1
-  area : (2:Int)^r*((a:Int)+2+(a%2:Nat))=2*(x:Int)+2*(y:Int)+2*(a%2:Nat)
-  a_eq : (a:Int)=s.a
-  m_eq : a+2*k=s.m
-  x_eq : (x:Int)=(step r s).a
-  gap_eq : gap s=2*k
-  parity_eq : parity s=(a%2:Nat)
-
-/-- The exact input and low-output guards determine the unique ordinary
-    section edge, with no global mass lower bound. -/
-theorem edgeData5_of_guards (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
-    (hi : inputOK (lift s) (r==1))
-    (ho : outputOK5 (lift (step r s))) : EdgeData5 r s := by
-  obtain ⟨ha0,hg0,hp0,hb0⟩ := hi
-  obtain ⟨hx0,hg1⟩ := ho
-  simp only [lift] at ha0 hg0 hp0 hb0 hx0 hg1
-  have ha : 2≤s.a := by omega
-  have hkGap : 2≤gap s := by unfold gap; omega
-  have hp : consistent s := by unfold consistent parity at *; omega
-  have hv : valid s := ⟨by omega,by omega,hp⟩
-  have hx : 0≤(step r s).a := by omega
-  have hg : 10≤gap (step r s) := by unfold gap; omega
-  have hb : if r=1 then (s.m:Int)≤2*s.a else 2*s.a<(s.m:Int) := by
-    by_cases h : r=1 <;> simp [h] at hb0 ⊢ <;> omega
-  have hv' : valid (step r s) :=
-    ⟨hx,by omega,step_consistent r s hr⟩
-  obtain ⟨_,ha0',hk0,hm0⟩ := decode_coords s hv
-  obtain ⟨_,hx0',hy0,hm1⟩ := decode_coords (step r s) hv'
-  let a := (decode s).1
-  let k := (decode s).2
-  let x := (decode (step r s)).1
-  let y := (decode (step r s)).2
-  change (a:Int)=s.a at ha0'
-  change 2*(k:Int)=gap s at hk0
-  change a+2*k=s.m at hm0
-  change (x:Int)=(step r s).a at hx0'
-  change 2*(y:Int)=gap (step r s) at hy0
-  change x+2*y=(step r s).m at hm1
-  have hpar : parity s=(a%2:Nat) := by
-    unfold consistent at hp
-    omega
-  have hM : x+2*y=a+2*k+3*r+1 := by
-    change x+2*y=s.m+3*r+1 at hm1
-    omega
-  have hA : (2:Int)^r*((a:Int)+2+(a%2:Nat))=
-      2*(x:Int)+2*(y:Int)+2*(a%2:Nat) := by
-    have hrel : (2:Int)^r*(s.a+2+parity s)=
-        (step r s).a+(step r s).m+2*parity s := by
-      simp [step]
-      omega
-    rw [←ha0',hpar,←hx0',←hm1] at hrel
-    push_cast at hrel
-    simpa [Int.add_assoc,Int.two_mul] using hrel
-  have hbranch : if r=1 then 2*k≤a else a<2*k := by
-    by_cases h : r=1
-    · simp [h] at hb
-      unfold gap at hk0
-      omega
-    · simp [h] at hb
-      unfold gap at hk0
-      omega
-  have hy : 5≤y := by
-    have hgi : (10:Int)≤gap (step r s) := by exact_mod_cast hg
-    omega
-  refine ⟨a,k,x,y,rfl,rfl,?_,?_,hy,hbranch,hM,hA,ha0',hm0,hx0',?_,hpar⟩
-  · omega
-  · omega
-  · omega
-
 /-- Primitive CLine path for one ordinary section edge, valid down to y=5. -/
 theorem ordinary_step_path5 (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
     (hi : inputOK (lift s) (r==1))
     (ho : outputOK5 (lift (step r s))) :
     ∃ T W, Path T W (enc s) (enc (step r s)) ∧
       (T:Int)=edgeClock r s ∧ 6*(W:Int)=edgeWeight6 r s := by
-  let e := edgeData5_of_guards r s hr hi ho
-  obtain ⟨T,W,hpath,hcalls,hweight⟩ :=
-    BB6.Agent12CountedOrdinaryLow.ordinary_edge5 e.a e.k e.x e.y r hr
-      e.ha e.hk e.hy e.branch e.mass e.area
-  refine ⟨T,W,?_,?_,?_⟩
-  · simpa [enc,e.dec,e.decNext] using hpath
-  · simpa [edgeClock,e.gap_eq,e.parity_eq] using hcalls
-  · simpa [edgeWeight6,e.a_eq,e.m_eq,e.x_eq,e.parity_eq] using hweight
+  obtain ⟨ha0,hg0,hp0,hb0⟩ := hi
+  obtain ⟨hx0,hg1⟩ := ho
+  simp only [lift] at ha0 hg0 hp0 hb0 hx0 hg1
+  have ha : 2≤s.a := by omega
+  have hk : 2≤gap s := by unfold gap; omega
+  have hp : consistent s := by unfold consistent parity at *; omega
+  have hv : valid s := ⟨by omega,by omega,hp⟩
+  have hx : 0≤(step r s).a := by omega
+  have hg : 10≤gap (step r s) := by unfold gap; omega
+  have hb : if r=1 then (s.m:Int)≤2*s.a else 2*s.a<(s.m:Int) := by
+    by_cases h:r=1 <;> simp [h] at hb0 ⊢ <;> omega
+  have hv' : valid (step r s) := ⟨hx,by omega,step_consistent r s hr⟩
+  obtain ⟨_,ha0,hk0,hm0⟩ := decode_coords s hv
+  obtain ⟨_,hx0,hy0,hm1⟩ := decode_coords (step r s) hv'
+  let a := (decode s).1
+  let k := (decode s).2
+  let x := (decode (step r s)).1
+  let y := (decode (step r s)).2
+  change (a:Int)=s.a at ha0
+  change 2*(k:Int)=gap s at hk0
+  change a+2*k=s.m at hm0
+  change (x:Int)=(step r s).a at hx0
+  change 2*(y:Int)=gap (step r s) at hy0
+  change x+2*y=(step r s).m at hm1
+  have hpar : parity s=(a%2:Nat) := by unfold consistent at hp; omega
+  have hM : x+2*y=a+2*k+3*r+1 := by
+    change x+2*y=s.m+3*r+1 at hm1
+    omega
+  have hA : (2:Int)^r*((a:Int)+2+(a%2:Nat))=2*(x:Int)+2*(y:Int)+2*(a%2:Nat) := by
+    have hrel : (2:Int)^r*(s.a+2+parity s)=(step r s).a+((step r s).m:Int)+2*parity s := by simp [step]; omega
+    rw [←ha0,hpar,←hx0,←hm1] at hrel
+    push_cast at hrel
+    simpa [Int.add_assoc,Int.two_mul] using hrel
+  have hbranch : if r=1 then 2*k≤a else a<2*k := by
+    split
+    next h => rw [if_pos h] at hb; unfold gap at hk0; omega
+    next h => rw [if_neg h] at hb; unfold gap at hk0; omega
+  obtain ⟨t,w,hpath,ht,hw⟩ := BB6.Agent12CountedOrdinaryLow.ordinary_edge5 a k x y r hr (by omega) (by omega) (by omega) hbranch hM (by exact_mod_cast hA)
+  refine ⟨t,w,hpath,?_,?_⟩
+  · unfold edgeClock
+    rw [←hk0,hpar]
+    exact ht
+  · unfold edgeWeight6
+    rw [←ha0,←hm0,←hx0,hpar]
+    exact hw
 
 /-- The tick recurrence determines the endpoint independently of a section
     edge law. In particular, N counts bits, not section returns. -/
@@ -209,8 +169,8 @@ theorem lane_path5 (q N : Nat) (u : Nat → BitState)
     (hfirst : 0<d → q.testBit (n+d-1)=false)
     (h0 : n=0 → d=0) :
     ∃ T W, Path T W (enc s) (enc (run (word q d n) s)) ∧
-      (T:Int)=clocks (word q d n) s .1 ∧
-      6*(W:Int)=clocks (word q d n) s .2 := by
+      (T:Int)=(clocks (word q d n) s).1 ∧
+      6*(W:Int)=(clocks (word q d n) s).2 := by
   induction n generalizing d s with
   | zero =>
       have hd : d=0 := h0 rfl
@@ -232,8 +192,9 @@ theorem lane_path5 (q N : Nat) (u : Nat → BitState)
           ih (d+1) s (by omega) (by rwa [heq]) (by rwa [heq]) hnext
             (by
               intro _
-              rw [show n+(d+1)-1=n+d by omega]
-              exact hfirst (by omega))
+              by_cases hd : d=0
+              · simpa [hd] using hbit
+              · rw [heq]; exact hfirst (by omega))
             (by
               intro h
               exact False.elim (hn0 h))
@@ -273,16 +234,18 @@ theorem lift_injective : Function.Injective lift := by
   | mk sa sm =>
     cases t with
     | mk ta tm =>
-      simp [lift,parity] at hm hb
-      omega
+      simp [lift] at hm
+      subst tm
+      simp [lift,parity] at hb
+      exact congrArg (fun a => (⟨a,sm⟩ : BB6.Agent12WordBlock.State)) (by omega : sa=ta)
 
 /-- A LaneSpec5 plus its two endpoints yields an authentic CLine Path. -/
 theorem source_path5_of_spec (q N : Nat) (u : Nat → BitState)
     (spec : LaneSpec5 q N u) (s t : BB6.Agent12WordBlock.State)
     (hstart : u N=lift s) (hend : u 0=lift t) :
     ∃ T W, Path T W (enc s) (enc t) ∧
-      (T:Int)=clocks (word q 0 N) s .1 ∧
-      6*(W:Int)=clocks (word q 0 N) s .2 := by
+      (T:Int)=(clocks (word q 0 N) s).1 ∧
+      6*(W:Int)=(clocks (word q 0 N) s).2 := by
   obtain ⟨T,W,hpath,hcalls,hweight⟩ :=
     lane_path5 q N u spec N 0 s (by omega)
       (by simpa using hstart) (Or.inl (by omega))
@@ -332,11 +295,12 @@ theorem source_path5_of_checked5 (q N K : Nat)
     (v : BB6.Agent12LaneCertificate.Trace) (s t : BB6.Agent12WordBlock.State)
     (hc : BB6.Agent12LaneCertificate.checked5 s t N q K v) :
     ∃ T W, Path T W (enc s) (enc t) ∧
-      (T:Int)=clocks (word q 0 N) s .1 ∧
-      6*(W:Int)=clocks (word q 0 N) s .2 := by
+      (T:Int)=(clocks (word q 0 N) s).1 ∧
+      6*(W:Int)=(clocks (word q 0 N) s).2 := by
+  have hs := spec5_of_checked5 s t N q K v hc
   obtain ⟨hN,hq,hclose,hstart,hend,hcounters,hK,hm,hpe,hpn,hb,hi1,hi2,hi3,hid,hib,ho1,ho2⟩ := hc
   exact source_path5_of_spec q N (lane v)
-    (spec5_of_checked5 s t N q K v hc) s t hstart hend
+    hs s t hstart hend
 
 /-- The same checked low-output trace, aligned to its clock planes, yields
     both the primitive path and its exact primitive-step weight. -/
@@ -348,9 +312,10 @@ theorem source_path5_and_bitplane_clock_of_checked5 (q N K : Nat)
     ∃ T W, Path T W (enc s) (enc t) ∧
       (T:Int)=sumTerms N q (callsTerms N w) ∧
       6*(W:Int)=sumTerms N q (weightTerms N w) := by
+  have hs := spec5_of_checked5 s t N q K v hc
   obtain ⟨hN,hq,hclose,hstart,hend,hcounters,hK,hm,hpe,hpn,hb,hi1,hi2,hi3,hid,hib,ho1,ho2⟩ := hc
   exact source_path5_and_bitplane_clock q N v w
-    (spec5_of_checked5 s t N q K v hc) hq ha s t hstart hend
+    hs hq ha s t hstart hend
 
  #print axioms source_path5_of_checked5
 #print axioms source_path5_and_bitplane_clock_of_checked5
