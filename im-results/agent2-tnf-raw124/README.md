@@ -44,7 +44,7 @@ The first 3,691-cycle / 508-hole scan was retracted: `enumerate.cpp` emits under
 
 The corrected `generate_bundle.py` strips underscores before every C++ query and recursively resolves multi-hole hits: each such leaf becomes a 24-way `Audit.split`; translated cycles become `Audit.cycle`, and only genuine one-hole leaves become `Audit.last`. Open leaves are deferred until all descendants at the current cap are processed, then retried at a larger cap. Independent C++ batches now run in two processes.
 
-Last attempt: run 45615959400 (`raw124_bundle_prepare` job 139211302469) ended cancelled at 13:40Z. No 0LB classification or source-level `bound_all` theorem has been accepted. The generated bound is still required to be at most 2,000,000. Once available, `Raw124ChampionBound.branch_bound_le_champion` provides the numeric lift to the champion score, followed by `weightedBound_mono_local` for roster integration.
+Last attempt: run 45615959400 (`raw124_bundle_prepare` job 139211302469) ended cancelled at 13:40Z. No 0LB classification or source-level `bound_all` theorem has been accepted. The generated bound is still required to be at most 2,000,000. The proposed lift is `Raw124ChampionBound.branch_bound_le_champion`, but its F412 champion adapter is not yet source-accepted in the pinned champion-source closure. Agent 26 explicitly requested that `f412_le_champion` remain conditional until that adapter is compiled and reproduced. No unconditional Raw124-to-champion bound or roster subtraction is claimed.
 
 ## F1=0LF — partial candidate partition and inductive certificates
 
@@ -81,3 +81,10 @@ The exported neverHard1/2 and coverHard1/2 are locally kernel-checked under Lean
 * [Raw124ZeroLFHard3.lean](Raw124ZeroLFHard3.lean), commit 5ef08b1799990e5073ec33e715d13f97cf567c76, table `1RB---_1RC1RA_0RD0RE_1LD1RE_0RB1LF_1RB0LF`: let e(n)=0^(4n+2)11 and o(n)=0^(4n+3)11; G ::= ε | o(n)G | e(m)o(n)G. The right word obeys G, with the current gap allowed to be offset by the scan phase. The left word is a stack of typed active/inactive runs, separated by one or two zeros; the run lengths modulo 4 depend on separator type and activation. Seven configuration constructors form a closed positive-time macro relation. Blank entry at 9 moves; no assumption that an excursion returns to the initial section is needed. The A1 hole remains unqueried.
 
 Local Lean 4.36.0-rc2 checks of neverHard0/3 and coverHard0/3 report only [propext, Quot.sound], with the same exact Frontier/extracted bridge as the earlier proofs. All five new committed source blobs match their local checked versions. Thus all 125 completions of the five hard leaves have local semantic nonhalting proofs. The additional 50 completions of the two earlier growth leaves were already source-accepted. The full source dependency closure, tree check and weighted theorem remain separate integration obligations.
+
+
+## F1=1LB — source-accepted partial cut, eight residuals remain
+
+The cap-3000/lookback-32 fast partition and its 73 affine/n-gram nonhalting cylinders now have an original-source CI audit: [run 45750346651](https://github.com/FlareZ123/bb6/actions/runs/45750346651), artifact ID `15085449694`. The partial `PartialAudit` cut compiles through 211 project modules; `cut_checked`, `residual_count`, and `branch_sound` have only standard axioms. It accounts for 47,952 cycle leaves, 14,330 last-hole leaves, 2,844 splits, 3,050 FAR leaves, 67 growth leaves, and 6 n-gram leaves, but still leaves eight one-hole residuals. Thus F1=1LB is **not** a completed branch Cover and Raw124 remains open.
+
+See [Raw124-1LB-fast.md](Raw124-1LB-fast.md) for exact residual table keys and reproduction. The targeted pump-search driver is [search_1lb_residual_pumps.py](search_1lb_residual_pumps.py); its dedicated CI target is `weighted-tnf-raw124-1lb-residual-pumps`. Search output is exploratory until generated Lean `NeverHalts` proofs compile against the original source closure.
