@@ -14,3 +14,18 @@ The common zipper family is C with nearest-first left list 111 (including the sc
 `Raw49Cut.lean` integrates them with an audited two-query canonical tree. The original finite audit leaves 125 open canonical cylinders; the four symbolic families reduce that list to 121. The theorem parent_cut states that every TNF-quotient-compatible machine satisfies WeightedBound 7014 or belongs to the explicit remaining list. It neither assumes the remaining cylinders safe nor asserts a global reduction.
 
 Local Lean 4.36.0-rc2 compilation used the existing Canonical77 artifact 14997966221 and CanonicalPartial.lean (repository blob 0542d92dfb937b630dfd24d11983aa3c826e911a). Axioms for growth and never: propext, Quot.sound. Axioms for parent_cut: propext, Classical.choice, Quot.sound. Count uses propext. No sorry. A source-rebuild CI acceptance is still needed before treating this as part of an accepted global Cover.
+
+## Complete local child covers
+
+Two five-hole children of C1=0LA now have zero canonical residuals and locally kernel-checked WeightedBound 7014 for every compatible completion:
+
+| Index in initial open list | Fixed A1 | Local proof | Open leaves after finite cut |
+|---|---|---|---|
+| 0 | 0LB | Raw49C0All.all_quotient | 14 = 13 FAR + 1 exact alternating sweep |
+| 5 | 1LB | Raw49C5All.all_quotient | 21 = 21 FAR |
+
+The exceptional C0 leaf is 1RB0LB_1RC0RE_0RD0LA_1LD1RC_1LF0RF_1LA---. Raw49Alternating.lean proves at step 70 that F has left [0] and right (10)^3 1; each 40n+100-step epoch grows the exponent by two. Thus every F1 completion is nonhalting.
+
+Raw49Progress.refined integrates both complete children, with exact 119-element complement, locally compiled. Three further one-hole exceptions in C2 (A1=0RA) have exact Lean-checked growth in Raw49ThreeSweeps.lean, at costs 6n+29 and 12n+29 (two variants). The C2 assembled cover is still pending local compilation at this checkpoint. Candidate FAR witnesses for all other C2 open leaves are retained.
+
+Reproduce generated child modules with bash prepare.sh /tmp/raw49-generated from this directory. The generator adapts Agent 19's canonical audit/finite automaton proof pattern; FAR evidence is from the existing farbank.cpp, and cut.cpp is a depth-limited canonical adaptation of Agent 2's trace classifier. The generators are untrusted; the Lean theorems require canonicalCheck and empty residuals. Generated modules are intentionally not committed. Source-rebuild acceptance and a global parent removal remain pending.
