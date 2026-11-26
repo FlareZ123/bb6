@@ -15,6 +15,7 @@ open BB6.Agent12WeightedWord
 open BB6.Agent12CountedOrdinaryLow
 open BB6.Agent47ThinCounted
 open BB6.Agent12Clock
+open BB6.Agent12BitPlanes BB6.Agent12PlaneOps BB6.Agent12PlaneSum
 
 /-- The low-output guard needed by the exact inverse section theorem.
     Unlike outputOK, it permits the genuine source cases y=5,6,7. -/
@@ -164,16 +165,6 @@ theorem edgeData5_of_guards (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1�
   · omega
   · omega
 
-/-- Source section edge law for the relaxed low-output guard. -/
-theorem source_step_of_exact_guards5 (next : State → Option State)
-    (law : EdgeLaw next) (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
-    (hi : inputOK (lift s) (r==1))
-    (ho : outputOK5 (lift (step r s))) :
-    next (decode s)=some (decode (step r s)) := by
-  let e := edgeData5_of_guards r s hr hi ho
-  exact law e.a e.k e.x e.y r hr e.ha e.hk e.hy e.branch e.mass
-    (by exact_mod_cast e.area)
-
 /-- Primitive CLine path for one ordinary section edge, valid down to y=5. -/
 theorem ordinary_step_path5 (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1≤r)
     (hi : inputOK (lift s) (r==1))
@@ -189,61 +180,25 @@ theorem ordinary_step_path5 (r : Nat) (s : BB6.Agent12WordBlock.State) (hr : 1�
   · simpa [edgeClock,e.gap_eq,e.parity_eq] using hcalls
   · simpa [edgeWeight6,e.a_eq,e.m_eq,e.x_eq,e.parity_eq] using hweight
 
-/-- The exact section run and its lane endpoint are determined by a LaneSpec5. -/
-theorem lane_word5 (next : State → Option State) (law : EdgeLaw next)
-    (q N : Nat) (u : Nat → BitState) (spec : LaneSpec5 q N u)
-    (n d : Nat) (s : BB6.Agent12WordBlock.State) (hn : n+d≤N)
-    (hstart : u (n+d)=lift s) (hevent : n+d=N ∨ q.testBit (n+d)=true)
-    (hidle : u n=idle d (lift s))
-    (hfirst : 0<d → q.testBit (n+d-1)=false)
-    (h0 : n=0 → d=0) :
-    runNext next n (some (decode s))=some (decode (run (word q d n) s)) ∧
-    u 0=lift (run (word q d n) s) := by
-  induction n generalizing d s with
-  | zero =>
-      have hd : d=0 := h0 rfl
-      subst d
-      simp [word,run,runNext,idle_zero] at hidle ⊢
-      exact hidle
+/-- The tick recurrence determines the endpoint independently of a section
+    edge law. In particular, N counts bits, not section returns. -/
+theorem walk_eq_of_spec (q N : Nat) (u : Nat → BitState)
+    (spec : LaneSpec5 q N u) (n : Nat) (hn : n≤N) :
+    walk q n (u n)=u 0 := by
+  induction n with
+  | zero => rfl
   | succ n ih =>
-      have hnext := spec.next n (by omega)
-      rw [hidle] at hnext
-      cases hbit : q.testBit n
-      · have hn0 : n≠0 := by
-          intro h
-          subst n
-          rw [spec.closed] at hbit
-          contradiction
-        have heq : n+(d+1)=n+1+d := by omega
-        simp only [word,hbit,Bool.false_eq_true,ite_false]
-        rw [hbit,tick_false_idle] at hnext
-        apply ih (d+1) s (by omega) (by rwa [heq]) (by rwa [heq]) hnext
-          (by
-            intro _
-            rw [show n+(d+1)-1=n+d by omega]
-            exact hfirst (by omega))
-          (by
-            intro h
-            exact False.elim (hn0 h))
-      · rw [hbit,tick_true_lift] at hnext
-        have hi := spec.input (n+1+d) (by omega) hn hevent
-        rw [hstart] at hi
-        have hdir : q.testBit (n+1+d-1)=((d+1)==1) := by
-          by_cases hd : d=0
-          · simpa [hd] using hbit
-          · rw [hfirst (by omega)]
-            simp [hd]
-        rw [hdir] at hi
-        have ho := spec.output n (by omega) hbit
-        rw [hnext] at ho
-        have hedge := source_step_of_exact_guards5 next law (d+1) s (by omega) hi ho
-        have htail := ih 0 (step (d+1) s) (by omega)
-          (by simpa using hnext) (Or.inr (by simpa using hbit))
-          (by simpa [idle_zero] using hnext) (by omega) (by simp)
-        constructor
-        · rw [hedge] at htail.1
-          simpa [word,run] using htail.1
-        · simpa [word,run] using htail.2
+    rw [walk, ←spec.next n (by omega)]
+    exact ih (by omega)
+
+theorem lane_endpoint5 (q N : Nat) (u : Nat → BitState)
+    (spec : LaneSpec5 q N u) (s : BB6.Agent12WordBlock.State)
+    (hstart : u N=lift s) :
+    u 0=lift (run (word q 0 N) s) := by
+  have h := walk_eq_of_spec q N u spec N (by omega)
+  rw [hstart] at h
+  have hw := walk_word q N 0 s (by simp) (fun _ => spec.closed)
+  exact h.symm.trans (by simpa [idle_zero] using hw)
 
 /-- The raw primitive path and its exact aggregate section clocks. -/
 theorem lane_path5 (q N : Nat) (u : Nat → BitState)
@@ -332,14 +287,8 @@ theorem source_path5_of_spec (q N : Nat) (u : Nat → BitState)
     lane_path5 q N u spec N 0 s (by omega)
       (by simpa using hstart) (Or.inl (by omega))
       (by simpa [idle_zero] using hstart) (by omega) (by simp)
-  have hrun := lane_word5 BB6.Agent12WordBlock.secNext
-    BB6.Agent12WordBlock.source_edge_law q N u spec N 0 s (by omega)
-      (by simpa using hstart) (Or.inl (by omega))
-      (by simpa [idle_zero] using hstart) (by omega) (by simp)
-  have hLift : lift t=lift (run (word q 0 N) s) := by
-    calc
-      lift t= u 0 := hend.symm
-      _=lift (run (word q 0 N) s) := hrun.2
+  have hrun := lane_endpoint5 q N u spec s hstart
+  have hLift : lift t=lift (run (word q 0 N) s) := hend.symm.trans hrun
   have hrunEq : run (word q 0 N) s=t := (lift_injective hLift).symm
   rw [hrunEq] at hpath
   exact ⟨T,W,hpath,hcalls,hweight⟩
@@ -403,4 +352,6 @@ theorem source_path5_and_bitplane_clock_of_checked5 (q N K : Nat)
   exact source_path5_and_bitplane_clock q N v w
     (spec5_of_checked5 s t N q K v hc) hq ha s t hstart hend
 
+ #print axioms source_path5_of_checked5
+#print axioms source_path5_and_bitplane_clock_of_checked5
 end BB6.Agent12LanePathSource
