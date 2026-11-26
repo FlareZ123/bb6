@@ -181,7 +181,7 @@ jobs:
         run: |
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-four-hole-roster/generate_four_hole.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
       - name: Build bounded Raw57 proof cut
         run: python im-results/agent1-raw57/build_cuts.py "${{ matrix.group }}" --jobs 4
       - name: Standard-axiom audit
@@ -213,7 +213,7 @@ jobs:
         run: |
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-four-hole-roster/generate_four_hole.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
       - name: Download early proof cut
         uses: actions/download-artifact@v4
         with:
