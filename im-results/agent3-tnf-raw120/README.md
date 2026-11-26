@@ -2,9 +2,9 @@
 
 Parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at ordinary time 9.
 
-## Accepted partial closure (2026-11-25)
+## Accepted partial closure (2026-11-26)
 
-**22 of 25 disjoint E0 branches are covered; three remain: 1LB, 1RC, 1RF.** The original-source Lean composition [Raw120ThreeResidual.lean](Raw120ThreeResidual.lean) imports nine successful matrix child artifacts and uses two previously accepted child bounds as explicit premises. It also proves the immediate-halt branch and ten translated cycles. It compiles locally against the original Lean 4.36.0-rc2 artifacts, with only standard axioms. Every covered branch satisfies WeightedBound 18859. The partition leaves exactly 29,296,875 raw completions, versus 214,843,750 covered; each child has mass 25^5 = 9,765,625. These are cylinder counts, not distinct canonical machines.
+**24 of 25 disjoint E0 branches now have accepted component bounds; only 1LB remains.** The prior source-linked composition [Raw120ThreeResidual.lean](Raw120ThreeResidual.lean) formally combines 22 branches at WeightedBound 18859, leaving 1LB, 1RC and 1RF. The original matrix has since accepted 1RC and 1RF at 135 and 889. Consequently the remaining component obligation is one cylinder of mass 25^5 = 9,765,625 (the other 234,375,000 raw completions have accepted component bounds). These are cylinder counts, not distinct canonical machines. The full parent theorem has not yet been accepted.
 
 | E0 | Weighted bound | Evidence |
 | --- | ---: | --- |
@@ -21,16 +21,16 @@ Parent: `1RB---_1RC---_0RD---_1LD1RE_---1LE_------`. First undefined row E0 at o
 | 1LF | 1855 | [matrix job 139516363565](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363565); artifact 15071453743; [dossier](1LF-dossier.md) |
 | 1RA | 13317 | [45685953381](https://github.com/FlareZ123/bb6/actions/runs/45685953381) |
 | 1RB | 749 | [45584422715](https://github.com/FlareZ123/bb6/actions/runs/45584422715) |
-| 1LB | candidate 224707 | [dossier](1LB-dossier.md); aggregate matrix check pending |
-| 1RC | pending | 3075 open leaves; 3048 FAR, 24 generic sweep, 3 custom witnesses (939, 1928, 1934) |
-| 1RF | pending | Six bespoke original-source never-halting proofs compile locally; aggregate check pending |
+| 1LB | candidate 224707 | [dossier](1LB-dossier.md); [targeted repair run 45733198942](https://github.com/FlareZ123/bb6/actions/runs/45733198942) pending |
+| 1RC | 135 | [matrix job 139516363381](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363381); artifact 15073891914 |
+| 1RF | 889 | [matrix job 139516363775](https://github.com/FlareZ123/bb6/actions/runs/45702614303/job/139516363775); artifact 15076397787 |
 
-The nine matrix artifacts above pin source revision `3a45edaf85bc519ee64e07f5b1379664b352a023`. The matrix run is [45702614303](https://github.com/FlareZ123/bb6/actions/runs/45702614303). Its generated modules and dependency identities support local composition without regenerating the enumerations. The earlier dedicated 1RF run [45699530786](https://github.com/FlareZ123/bb6/actions/runs/45699530786) failed; its job logs were unavailable (HTTP 404). Local generation and compilation of both Raw120OneRFCounter and Raw120OneRFRecursive against the original PhaseClosure artifact now succeeds for leaves 1658, 1676, 1677, 1678, 2120 and 2118. This is not yet aggregate sibling acceptance.
+All 14 successful matrix artifacts pin source revision `3a45edaf85bc519ee64e07f5b1379664b352a023` in [run 45702614303](https://github.com/FlareZ123/bb6/actions/runs/45702614303). Its sole cancelled child 1LB stalled during Python witness discovery, before Lean compilation. Both 1RC and 1RF final `allOneR*` theorems use only propext, Classical.choice and Quot.sound. The targeted repair uses the 14 accepted artifacts and reruns only 1LB, checking all object/source hashes and shared dependency identities before parent compilation.
 
 ## Parent and canonical composition
 
 - Raw120ThreeResidual.lean: pairwise disjoint remaining children, exact mass identities, parent_partition and cover_from_three. Its two explicit premises are the already accepted 1RA and 1RB bounds.
-- Raw120Complete.lean: complete candidate parent composition at bound 224707, awaiting all three remaining aggregate certificates.
+- Raw120Complete.lean: complete candidate parent composition at bound 224707, awaiting the sole remaining 1LB aggregate certificate.
 - Raw120ExactLower.lean: consumes the 1LB late leaf 1341, whose 224705 live transitions, halt tick and one incoming blank-prefix step give weighted threshold 224707. The exact parent lower bound still requires composition with the original-source late artifact.
 - Raw120Canonical76Graft.lean: corrected thin consumer of the **accepted raw107+raw114 canonical76 roster**, not the different raw114+raw121 roster that also has length 76. Lean locally checks parent_present, roster75_count, roster75_sound and exact_at_target against canonical artifact 14997966221. Conditional on a full raw120 bound, precisely this roster drops from 76 to 75. The theorem explicitly retains all 75 other Covers and the champion witness. **No global roster entry is removed yet.**
 
@@ -70,6 +70,6 @@ The E0=0RB manual target `weighted-tnf-raw120-rb` passed in [CI run 45532860093]
 
 ## Reproduction
 
-Use the manual workflow `.github/workflows/agent3-raw120-complete.yml` for the full child matrix, or existing targeted manual jobs. Do not regenerate accepted siblings merely to inspect the remaining ones. The child artifacts contain source/olean manifests; `assemble_shards.py` checks source revision, hashes and dependency identities before composition.
+Use the manual workflow `.github/workflows/agent3-raw120-complete.yml` with mode `repair-1lb` to reuse the 14 accepted siblings and check the final child and parent; mode `all` rebuilds the full matrix. Do not regenerate accepted siblings merely to inspect the remaining ones. The child artifacts contain source/olean manifests; `assemble_shards.py` checks source revision, hashes and dependency identities before composition.
 
 The generators are generate.py (0RF), generate_rb.py, generate_rc.py, generate_la.py and generate_sibling.py. The individual dossiers preserve discovery details and candidate witness indices. The matrix consumes generated Lean proofs; no native decision oracle or sorry is needed.
