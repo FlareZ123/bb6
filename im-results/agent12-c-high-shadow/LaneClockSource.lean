@@ -15,6 +15,7 @@ open BB6.Agent12LaneClock
 open BB6.Agent12LaneGenerator
 open BB6.Agent12PlaneSum
 open BB6.Agent12WeightedWord
+open BB6.Agent12Clock
 
 /-- Include the terminal position N in the binary index planes. -/
 def indexPlanesSentinel (N : Nat) : List Nat :=
@@ -32,7 +33,7 @@ def fillKnownPlanes (N q : Nat) (ps : List Nat) : List Nat :=
     and the two event-coordinate planes from a raw lane trace. The sentinel
     at N is explicitly included in the index planes. -/
 def recoverAligned (s t : State) (N q : Nat) : Aligned :=
-  let v := LaneGenerator.recover s t N q
+  let v : BB6.Agent12LaneCertificate.Trace := LaneGenerator.recover s t N q
   let bs := fillKnownPlanes N q v.bs
   let ms := fillKnownPlanes N q v.ms
   let p := fillKnownPlane N q v.p
@@ -79,11 +80,12 @@ theorem lane_eq_idle_origin (q N : Nat) (u orig : Nat → BitState)
           calc
             u j = orig j := ho.symm
             _ = idle (age j) (orig j) := by rw [ha]; simp [idle_zero]
-        · obtain ⟨ho,ha⟩ := os.idle j hjlt he
+        · have hf : q.testBit j=false := by cases h : q.testBit j <;> simp_all
+          obtain ⟨ho,ha⟩ := os.idle j hjlt hf
           calc
             u j = tick (q.testBit j) (u (j+1)) := ts.next j hjlt
             _ = tick false (idle (age (j+1)) (orig (j+1))) := by
-              rw [he, ih (j+1) hnext]
+              rw [hf, ih (j+1) hnext]
             _ = idle (age (j+1)+1) (orig (j+1)) := tick_false_idle _ _
             _ = idle (age j) (orig j) := by rw [ha,ho]
   intro j hj
@@ -106,9 +108,9 @@ theorem event_clock (q N j : Nat) (u orig : Nat → BitState)
       _ = lift (step (d+1) s) := tick_true_lift d s
   constructor
   · simp [callsAt,edgeClock,hState,hAge,lift,parity,gap]
-    <;> ring
-  · simp [weightAt,edgeWeight6,weight6,cost6,hState,hAge,hpost,lift,parity,step]
-    <;> ring
+    <;> omega
+  · simp [weightAt,edgeWeight6,weight6,BB6.Agent12Clock.cost6,
+      hState,hAge,hpost,lift,parity,step]
 
 /-- Sum the event clocks in descending bit order. This is exactly the
     ordinary word clock, including arbitrary initial idle age. -/
@@ -120,7 +122,7 @@ theorem clock_word (q N d : Nat) (u orig : Nat → BitState)
     clocks (word q d N) s =
       (isum (fun j => if q.testBit j then callsAt u orig age j else 0) N 0,
        isum (fun j => if q.testBit j then weightAt u orig age j else 0) N 0) := by
-  induction N generalizing d s ts os with
+  induction N generalizing d s with
   | zero =>
       simp [word,clocks,isum]
   | succ N ih =>
@@ -142,36 +144,40 @@ theorem clock_word (q N d : Nat) (u orig : Nat → BitState)
           simpa [idle_zero] using hpost.trans hState'.symm
         have htail := ih (d:=0) (s:=step (d+1) s) ts' os'
           hState' hAge' hBoundary'
+        have hBoundaryAge : u (N+1)=idle (age (N+1)) (orig (N+1)) := by
+          rw [hAge]
+          exact hBoundary
         have hev := event_clock q (N+1) N u orig age ts os
-          (by omega) he hBoundary hState hAge
-        simp only [word,he,ite_true,clocks,isum,if_pos he]
+          (by omega) he hBoundaryAge hState hAge
+        simp only [word,he,ite_true,clocks,isum,Nat.zero_add]
         rw [htail]
         simp [hev,Int.add_comm]
-      · obtain ⟨ho,ha⟩ := os.idle N (by omega) he
+      · have hf : q.testBit N=false := by cases h : q.testBit N <;> simp_all
+        obtain ⟨ho,ha⟩ := os.idle N (by omega) hf
         have hState' : orig N=lift s := ho.trans hState
         have hAge' : age N=d+1 := by rw [ha,hAge]
         have hBoundary' : u N=idle (d+1) (orig N) := by
           calc
             u N = tick (q.testBit N) (u (N+1)) := ts.next N (by omega)
-            _ = tick false (idle d (orig (N+1))) := by rw [he,hBoundary]
+            _ = tick false (idle d (orig (N+1))) := by rw [hf,hBoundary]
             _ = idle (d+1) (orig (N+1)) := tick_false_idle d _
             _ = idle (d+1) (orig N) := by rw [ho]
         have htail := ih (d:=d+1) (s:=s) ts' os'
           hState' hAge' hBoundary'
-        simpa [word,he,clocks,isum] using htail
+        simpa [word,hf,clocks,isum] using htail
 
 /-- The bit-plane sums are the exact aggregate clocks of the represented
     ordinary word, not merely independent polynomial checks. -/
 theorem clock_sums_of_checks (s t : State) (N q K : Nat)
-    (v : Trace) (w : Aligned)
-    (hc : LaneCertificate.checked s t N q K v)
-    (ha : alignmentChecked N q v w) :
+    (v : BB6.Agent12LaneCertificate.Trace) (w : BB6.Agent12LaneClock.Aligned)
+    (hc : BB6.Agent12LaneCertificate.checked s t N q K v)
+    (ha : BB6.Agent12LaneClock.alignmentChecked N q v w) :
     sumTerms N q (callsTerms N w)=(clocks (word q 0 N) s).1 ∧
     sumTerms N q (weightTerms N w)=(clocks (word q 0 N) s).2 := by
   obtain ⟨hN,hq,hclose,hstart,hfinish,hcounts,hK,hrest⟩ := hc
-  have spec := LaneCertificate.spec_of_checked s t N q K v hc
+  have spec := BB6.Agent12LaneCertificate.spec_of_checked s t N q K v hc
   let ts : TickSpec q N (lane v) := ⟨spec.next⟩
-  have os0 := LaneClock.origin_spec N q v w ha
+  have os0 := BB6.Agent12LaneClock.origin_spec N q v w ha
   let os : OriginRecurrence q N (lane v) (origin w) (value w.age) :=
     ⟨os0.event,os0.idle⟩
   have hState : origin w N=lift s := ha.1.trans hstart
@@ -183,8 +189,8 @@ theorem clock_sums_of_checks (s t : State) (N q K : Nat)
       _=idle (value w.age N) (origin w N) := by rw [ha']; simp [idle_zero]
   have hclock := clock_word q N 0 (lane v) (origin w) (value w.age)
     ts os s hState hAge hBoundary
-  have hcalls := LaneClock.calls_sum N q v w ha hq
-  have hweights := LaneClock.weight_sum N q v w ha hq
+  have hcalls := BB6.Agent12LaneClock.calls_sum N q v w ha hq
+  have hweights := BB6.Agent12LaneClock.weight_sum N q v w ha hq
   exact ⟨hcalls.trans (congrArg Prod.fst hclock).symm,
          hweights.trans (congrArg Prod.snd hclock).symm⟩
 
