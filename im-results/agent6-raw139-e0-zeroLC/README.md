@@ -1,0 +1,9 @@
+# New E0=0LC descendant closure
+
+The exact four-hole cylinder `[7,24,11,24,14,20,9,16,8,11,24,24]` (E0=0LC, D0=0RC, C1=0LF on the raw139 champion spine) has a **kernel-checked all-completions weighted bound 84**. It covers all 25^4 = 390625 raw completions of this particular partial table.
+
+`generate_zeroLF.py` reproduces the checked source using the existing Agent48 first-hole scan and block-FAR generator. The tree consists of 33 first-hole splits, 599 cycles, 138 last-hole leaves, 15 small FAR leaves, five additional three-state FAR leaves, and three width-two block-FAR leaves (left/right sizes 8/28, 12/43, 7/20). Every initial open leaf is resolved; the largest finite query is 78 ordinary moves, plus up to five blank-delay moves and one halt tick.
+
+Local Lean 4.36.0-rc2 accepted the exact theorem `BB6.Agent6E0ZeroLC.D0ZeroRC.C1ZeroLF.all_completions_weighted` using original dependency objects from the source-accepted C1 batch artifact 15083884536 (run 45746968139). Generated source SHA256 23f32686dd50b3d817db6b46c0e988913775750ec6a0ca4c7b07078c2cab7760; dependency ZIP SHA256 b5141e994a4fbbf56d1f226ccd64df425df6d9816b6fcc1282b7ba7e63dea243. The parent, checker and each block nonhalting theorem depend only on propext, Classical.choice and Quot.sound. A fresh source dependency rebuild has not been performed.
+
+The broader E0=0LC/D0=0RC five-hole parent has 16 direct cycle children and eight nontrivial C1 children. All seven other nontrivial children have now been computationally classified using late replay, three-state FAR and width-two/three block-FAR, with no candidate holdout; kernel compilation is underway. The proposed parent bound is 616 (maximum finite query 610). Until the final exact parent theorem passes, only the C1=0LF four-hole cylinder is claimed kernel-checked. No global roster change follows.
