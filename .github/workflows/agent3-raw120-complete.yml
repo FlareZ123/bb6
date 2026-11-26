@@ -5,18 +5,22 @@ on:
       mode:
         description: Build the parent, repair 1LB, or integrate into the eleven-parent core
         type: choice
-        options: [all, repair-1lb, integrate-65]
+        options: [all, repair-1lb, integrate-65, scan-normalized-cryptids]
         default: repair-1lb
       raw139_subcover_run_id:
         description: Optional Agent6 run ID containing the 43-sibling Raw139 core and consumer artifacts
         type: string
         default: ""
+      canonical77_run_id:
+        description: Accepted canonical77-certified artifact run ID for the normalized Raw139 candidate scan
+        type: string
+        default: "45554648116"
 permissions:
   contents: read
   actions: read
 jobs:
   child:
-    if: inputs.mode != 'integrate-65'
+    if: inputs.mode == 'all' || inputs.mode == 'repair-1lb'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     strategy:
@@ -154,5 +158,66 @@ jobs:
             /tmp/raw120-canonical64/linked/Canonical64Raw120Integrated.olean
             /tmp/raw120-canonical64/linked/Canonical64Raw139Subcover.olean
             /tmp/raw120-canonical64/raw139-subcover.log
+          if-no-files-found: warn
+          retention-days: 14
+
+  normalized-scan:
+    if: inputs.mode == 'scan-normalized-cryptids'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download accepted canonical77 source-checked artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.canonical77_run_id }}
+          name: canonical77-certified
+          path: /tmp/canonical77
+      - name: Compile normalized Raw139 candidate matcher against canonical77
+        run: |
+          set -euo pipefail
+          test -s /tmp/canonical77/CanonicalRaw114Accepted.olean
+          test -s /tmp/canonical77/CanonicalTwoParentGraft.olean
+          test -s /tmp/canonical77/canonical77-base-manifest.json
+          mkdir -p /tmp/agent3-raw139-normalized
+          python tools/test_lean_compile_module_index.py
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/agent3-raw139-normalized/build \
+            --jobs 4 \
+            --precompiled-dir /tmp/canonical77 \
+            --precompiled-manifest /tmp/canonical77/canonical77-base-manifest.json \
+            --manifest /tmp/agent3-raw139-normalized/manifest.json \
+            --label agent3-raw139-normalized-cryptids-scan \
+            --provenance-input im-results/agent3-raw139-cryptids-scan/README.md \
+            --provenance-input im-results/agent3-raw139-cryptids-scan/Raw139CryptidsNormalizedScan.lean \
+            --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            --override CanonicalRaw114Accepted=im-results/agent47-rooted-tnf/CanonicalRaw114Accepted.lean \
+            --override HardRootCore=im-results/agent19-hard-root-crosswalk/HardRootCore.lean \
+            --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override Raw139CryptidsNormalizedScan=im-results/agent3-raw139-cryptids-scan/Raw139CryptidsNormalizedScan.lean \
+            im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            im-results/agent19-hard-root-crosswalk/HardRootCore.lean \
+            im-results/agent3-raw139-cryptids-scan/Raw139CryptidsNormalizedScan.lean \
+            | tee /tmp/agent3-raw139-normalized/scan.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/agent3-raw139-normalized/scan.log; then
+            echo "nonstandard axiom in normalized Raw139 scan"
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent3-raw139-normalized-cryptids-scan
+          path: /tmp/agent3-raw139-normalized
           if-no-files-found: warn
           retention-days: 14
