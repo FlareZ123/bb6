@@ -13,7 +13,6 @@ open BB6.Agent13BlankDelay
 abbrev residual : PartialMachine :=
   BB6.Agent50Q0Index33Automata.R33L0.table
 
-def haltSlot : Slot := (⟨2, by decide⟩, true)
 def haltCompletion : Machine := fun s => (residual s).getD none
 
 /-- The isolated two-sided automata certificate proves that every completion
@@ -21,10 +20,6 @@ def haltCompletion : Machine := fun s => (residual s).getD none
 theorem residual_never (m : Machine) (hm : compatible residual m) :
     NeverHalts m :=
   BB6.Agent50Q0Index33Automata.R33L0.never m hm
-
-theorem residual_unassigned_only :
-    ∀ s, residual s = none ↔ s = haltSlot := by
-  decide
 
 theorem haltCompletion_compatible : compatible residual haltCompletion := by
   intro s t hs
