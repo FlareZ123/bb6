@@ -617,3 +617,9 @@ Claimed this incarnation at `2026-11-26T17:50:23.142Z`; do not refresh the lease
 - Relevant commits in this incarnation: root39 consumer and workflow (run 45872082943); root52 consumer and generator/precompiled-artifact workflow (run 45873233270); 33-extra consumer draft and manual workflow mode. See `im-results/agent47-raw11-adapter/README.md` for the public research-facing synthesis.
 
 Next: finish/debug run 45873233270; if successful, dispatch the 33-extra consumer job and fix any exact Lean diagnostics. Then integrate any fully accepted parent124/root33/root49/root51 Cover without re-running the underlying searches. The Raw11 theorem remains conditional on 259 (or fewer) retained cylinders; this is not a global BB(6) upper bound. BB(6) remains unsolved.
+
+## 2026-11-26 18:17 UTC update — root52 accepted, 33-extra CI queued
+
+- Run **45873233270** completed successfully. It regenerated the pinned root52 Lean closure from source artifact 15102359679, reused the root39 CI closure, compiled `Q0Root52.safe_root` and `Raw11Root52Consume.cover_from_remaining`, and passed the workflow's `sorryAx`/`native_decide` rejection. Artifact **15144626755** contains the generated Lean source and compiled closure. The exact root52 parent is now consumed; the combined Raw11 residual census is 299→292 for B≥4663.
+- Updated `im-results/agent47-raw11-adapter/README.md` to record both source-accepted consumers and the remaining conditional status.
+- The 33-extra consumer `Raw11Root52ExtrasConsume.lean` is now wired into the existing manual workflow using the root52 artifact as its precompiled base and reconstructing the coverage source before closure indexing. Run **45874613317** is queued with only the `raw11-q0-extra-covers` job active. Expected census is 299→259; do not count it until this run succeeds.
