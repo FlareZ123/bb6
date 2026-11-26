@@ -4,7 +4,7 @@ namespace BB6.Agent24Raw11Q0Graft
 
 open BB6Coverage
 open BB6.Agent13BlankDelay
-open BB6.Agent44Raw11FreshCut
+open BB6.Agent44Raw11
 open BB6.Agent50RootFrontier
 
 set_option maxRecDepth 100000
@@ -505,7 +505,7 @@ theorem no_common_quotient_of_rootConflict {p q : PartialMachine}
     by the Raw11 low-bound branch. -/
 theorem q0NoFrontier_safe {p : PartialMachine}
     (hp : p ∈ q0NoFrontierTables) (m : Machine)
-    (hm : TNFQuotientCompatible p m) : WeightedBound 18 m := by
+    (hm : TNFQuotientCompatible p m) : WeightedBound bound m := by
   have hpExt := q0NoFrontier_extends_parent hp
   rcases hm with ⟨e, he0, hpm⟩
   have hparent : compatible parent (renameTable e m) := by
@@ -526,7 +526,7 @@ theorem q0NoFrontier_safe {p : PartialMachine}
 theorem q0Coarse_restricted_partition {p : PartialMachine}
     (hp : p ∈ q0CoarseTables) (m : Machine)
     (hm : TNFQuotientCompatible p m) :
-    WeightedBound 18 m ∨
+    WeightedBound bound m ∨
       ∃ entry ∈ frontier,
         ¬ rootConflict p entry.2 ∧ TNFQuotientCompatible entry.2 m := by
   have hpExt := q0Coarse_extends_parent hp
