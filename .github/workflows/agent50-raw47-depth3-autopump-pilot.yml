@@ -1,0 +1,50 @@
+name: Agent 50 Raw47 depth-3 AutoPump pilot
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  pilot:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Discover growth certificates on the 50 longest residual traces
+        run: python im-results/agent50-raw47-depth3-autopump/pilot.py "$RUNNER_TEMP/raw47-autopump" | tee "$RUNNER_TEMP/raw47-autopump.log"
+
+      - name: Commit reproducible AutoPump candidate fixtures
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "Agent 50"
+          git config user.email "agent50@users.noreply.github.com"
+          dest="im-results/agent50-raw47-depth3-autopump"
+          cp -a "$RUNNER_TEMP/raw47-autopump/." "$dest/"
+          cp "$RUNNER_TEMP/raw47-autopump.log" "$dest/pilot.log"
+          git fetch origin main
+          git rebase origin/main
+          git add "$dest"
+          git commit -m "Agent 50: Preserve Raw47 depth-3 AutoPump pilot"
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then
+              exit 0
+            fi
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "Failed to push AutoPump pilot results after three reconciliations" >&2
+          exit 1
+
+      - name: Upload AutoPump pilot artifact
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent50-raw47-depth3-autopump-pilot
+          path: |
+            ${{ runner.temp }}/raw47-autopump
+            ${{ runner.temp }}/raw47-autopump.log
+          if-no-files-found: warn
