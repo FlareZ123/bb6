@@ -1,17 +1,18 @@
-import Raw108LERead
-import ZipThreeHoleAudit
+import Raw108LEAttained
+import FastAuditWeight
 
 namespace BB6.Agent10Raw108LEAudit
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath
 open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6Coverage.Agent10ZipAudit
 open BB6.Agent10Raw108LEFast
+open BB6.Agent10ExactAuditWeight
 
 def zipQueryOK (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) : Bool :=
-  decide (fastRead p n = some s) && (decide (p s = none) && weightOK p s n B)
+  decide (fastRead p n = some s) && (decide (p s = none) && fastWeight B p n s)
 
 theorem query_eq (B : Nat) (p : PartialMachine) (n : Nat) (s : Slot) :
     zipQueryOK B p n s = BB6.Agent10ZipAudit.zipQueryOK B p n s := by
-  simp only [zipQueryOK,BB6.Agent10ZipAudit.zipQueryOK,fastRead_eq]
+  simp only [zipQueryOK,BB6.Agent10ZipAudit.zipQueryOK,fastRead_eq,fastWeight_eq]
 
 def zipCheck (B : Nat) (p : PartialMachine) : (t : Audit) → Bool
   | .last n s => zipQueryOK B p n s && restOK p s
