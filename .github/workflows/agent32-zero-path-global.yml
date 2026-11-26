@@ -887,6 +887,10 @@ jobs:
             /tmp/raw59-canonical64/raw59-canonical64.log
             /tmp/raw59-canonical64/raw59-canonical64-integration.json
             /tmp/raw59-canonical64/reachable-link-audit.json
-            /tmp/raw59-canonical64/linked/Raw59Canonical64Integrated.olean
+            /tmp/raw59-canonical64/canonical64-base/canonical64.log
+            /tmp/raw59-canonical64/canonical64-base/canonical64-integration.json
+            /tmp/raw59-canonical64/canonical64-base/reachable-link-audit.json
+            /tmp/raw59-canonical64/linked/*.olean
+            /tmp/raw59-canonical64/linked/kernel-link-manifest.json
           if-no-files-found: warn
           retention-days: 30
