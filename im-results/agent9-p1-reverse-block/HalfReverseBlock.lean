@@ -22,6 +22,16 @@ def HalfCert (n K s : Nat) (ps : List Prefix) : Prop :=
 def halfMarginOK (n K s h : Nat) (ps : List Prefix) : Bool :=
   MarginOK n K s h (ps ++ ps.map (reflectPrefix n s))
 
+private theorem trace_not_zero {n B a : Nat} (h : Trace n 0 B a) : False := by
+  cases h
+
+private theorem trace_one_state {n B a : Nat} (h : Trace n 1 B a) :
+    B=1 ∧ a=(n+2)/2 := by
+  cases h with
+  | first => exact ⟨rfl,rfl⟩
+  | step i B0 a0 x c0 hprev hx he =>
+      exact False.elim (trace_not_zero hprev)
+
 /-- A fitted reverse-block filter preserves the canonical half-cover.
     Unlike the generic half_next theorem, this version explicitly composes
     the source trace with blockLookahead_sound, so it applies directly to
@@ -89,33 +99,28 @@ theorem half_first_two (n : Nat) (hn : n%4=2) :
     HalfCovered n 2 [(1,(n+2)/4)] := by
   intro B a C c htr hBmod hE
   cases htr with
-  | step i B0 a0 x c0 hprev hx he =>
-    have hi : i=1 := by omega
-    subst i
-    cases hprev with
-    | first =>
-      have hx0 : x=0 := by
-        have hB : (1+2*x)%4=1 := by simpa [Nat.pow_succ] using hBmod
-        omega
-      have hn2 : 1<n := by omega
-      have ht : target n 1 1=0 := by simp [target,hn2]
-      have he' := he
-      rw [ht,hx0] at he'
-      have hc2 : 2*a=(n+2)/2 := by simpa using he'
-      have hmod2 : (n+2)%2=0 := by omega
-      have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
-        Nat.mod_add_div (n+2) 2
-      have hc4 : 4*a=n+2 := by omega
-      have hmod4 : (n+2)%4=0 := by omega
-      have hdiv4 : (n+2)%4 + 4*((n+2)/4)=n+2 :=
-        Nat.mod_add_div (n+2) 4
-      have hc : a=(n+2)/4 := by omega
-      subst x
-      subst a
-      simp [Nat.pow_succ]
-    | step i' B' a' x' c' hprev' hx' he' =>
-      have hpos := (trace_bounds n i' B' a' hprev').1
+  | step _ B0 a0 x c0 hprev hx he =>
+    have hbase := trace_one_state hprev
+    have hx0 : x=0 := by
+      have hB : (1+2*x)%4=1 := by
+        simpa [hbase.1,Nat.pow_succ] using hBmod
       omega
+    have hn2 : 1<n := by omega
+    have ht : target n 1 1=0 := by simp [target,hn2]
+    have he' := he
+    rw [hbase.2,ht,hx0] at he'
+    have hc2 : 2*a=(n+2)/2 := by simpa using he'
+    have hmod2 : (n+2)%2=0 := by omega
+    have hdiv2 : (n+2)%2 + 2*((n+2)/2)=n+2 :=
+      Nat.mod_add_div (n+2) 2
+    have hc4 : 4*a=n+2 := by omega
+    have hmod4 : (n+2)%4=0 := by omega
+    have hdiv4 : (n+2)%4 + 4*((n+2)/4)=n+2 :=
+      Nat.mod_add_div (n+2) 4
+    have hc : a=(n+2)/4 := by omega
+    subst x
+    subst a
+    simp [Nat.pow_succ]
 
 /-- Initial half certificate at cost two. The single MarginOK check is
     performed on the reflected full cover, but only the canonical prefix
