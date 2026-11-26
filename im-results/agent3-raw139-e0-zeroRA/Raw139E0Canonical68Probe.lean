@@ -7,6 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent3Raw139E0Canonical68Probe
 
 open BB6Coverage
+open BB6.Agent13BlankDelay
 open BB6.Agent6Raw139Normalized
 open BB6.Agent6ChampionRaw139SiblingExtended
 
