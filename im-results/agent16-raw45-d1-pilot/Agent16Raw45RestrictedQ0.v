@@ -5,15 +5,13 @@ Open Scope nat_scope.
 Open Scope string_scope.
 
 (* Raw45 is a seven-hole D1 sibling of the authentic A0=1RB source root.
-   The pinned q_0 is the four-round first-hole frontier.  Since q_0 nodes
-   fix a different set of four slots, the relevant restriction is cylinder
-   compatibility (intersection), not child/refinement. *)
+   Its exact parent occurs in the pinned four-round q_0 source frontier. *)
 Definition raw45_parent : TM :=
   TM_from_str "1RB---_1RC---_0RD---_1LD1RB_------_------".
 Definition raw45_node : T := Build_T raw45_parent 7 4.
 
-(* SourceResidualRoster.v's source_refinesb, retained here as the strict
-   refinement predicate for comparisons and its source-semantic spec. *)
+(* This is the source-native refinement executable used by
+   SourceResidualRoster.v. *)
 Definition raw45_source_refinesb (child parent : TM) : bool :=
   forallb (fun q => forallb (fun s =>
     match parent (q,s) with
@@ -40,56 +38,50 @@ Proof.
     destruct (BusyCoq.Eqb.eqb_spec (child (q,s)) (Some v)); congruence.
 Qed.
 
-(* Two partial transition tables intersect exactly when no slot is assigned
-   two different moves.  This is the cylinder-overlap relation needed to
-   restrict the q_0 partition to Raw45. *)
-Definition raw45_compatibleb (left right : TM) : bool :=
-  forallb (fun q => forallb (fun s =>
-    match left (q,s), right (q,s) with
-    | Some a, Some b => BusyCoq.Eqb.eqb (Some a) (Some b)
-    | _, _ => true
-    end) all_syms) all_qs.
+Definition raw45_q0_restriction : SearchQueue :=
+  (filter (fun x => raw45_source_refinesb (tm x) raw45_parent) (fst q_0),
+   filter (fun x => raw45_source_refinesb (tm x) raw45_parent) (snd q_0)).
 
-Definition raw45_compatible (left right : TM) : Prop :=
-  forall q s, match left (q,s), right (q,s) with
-    | Some a, Some b => a = b
-    | _, _ => True
-    end.
+Definition raw45_local_q0 : SearchQueue := ([raw45_node], []).
 
-Definition raw45_q0_overlap : SearchQueue :=
-  (filter (fun x => raw45_compatibleb (tm x) raw45_parent) (fst q_0),
-   filter (fun x => raw45_compatibleb (tm x) raw45_parent) (snd q_0)).
-
-Fixpoint raw45_collect_indices {A : Type} (p : A -> bool) (xs : list A)
-    (n : nat) : list nat :=
+Fixpoint raw45_find_index {A : Type} (p : A -> bool) (xs : list A) : option nat :=
   match xs with
-  | [] => []
-  | x :: rest =>
-      if p x then n :: raw45_collect_indices p rest (S n)
-      else raw45_collect_indices p rest (S n)
+  | [] => None
+  | x :: rest => if p x then Some 0 else option_map S (raw45_find_index p rest)
   end.
 
-Definition raw45_q0_overlap_indices : list nat :=
-  raw45_collect_indices
-    (fun x => raw45_compatibleb (tm x) raw45_parent)
-    (fst q_0) 0.
+Definition raw45_q0_index : option nat :=
+  raw45_find_index
+    (fun x => raw45_source_refinesb (tm x) raw45_parent)
+    (fst q_0).
 
-Definition raw45_q0_overlap_data : list (string * nat * nat) :=
+Definition raw45_q0_match_data : list (string * nat * nat) :=
   map (fun x => (TM_to_str (tm x), num_undef_trans x, min_unused_state x))
-    (fst raw45_q0_overlap ++ snd raw45_q0_overlap).
+    (fst raw45_q0_restriction ++ snd raw45_q0_restriction).
 
 Theorem raw45_node_metadata :
   raw45_node.(num_undef_trans) = 7 /\
   raw45_node.(min_unused_state) = 4.
 Proof. split; reflexivity. Qed.
 
-(* Exact bounded exports of the pinned q_0 list.  The indices identify the
-   100-node q_i chunks that need no replay or, if absent, a targeted replay. *)
-Eval vm_compute in
-  (length (fst raw45_q0_overlap), length (snd raw45_q0_overlap)).
-Eval vm_compute in raw45_q0_overlap_indices.
-Eval vm_compute in raw45_q0_overlap_data.
+(* The exact parent restriction, its position in q_0, and its canonical
+   cached metadata are all checked by Coq's VM, not by an external parser. *)
+Theorem raw45_q0_restriction_exact :
+  raw45_q0_restriction = raw45_local_q0.
+Proof. vm_compute. reflexivity. Qed.
+
+Theorem raw45_q0_index_exact : raw45_q0_index = Some 1539.
+Proof. vm_compute. reflexivity. Qed.
+
+Theorem raw45_q0_nth :
+  nth_error (fst q_0) 1539 = Some raw45_node.
+Proof. vm_compute. reflexivity. Qed.
+
+Eval vm_compute in raw45_q0_index.
+Eval vm_compute in raw45_q0_match_data.
 
 Print Assumptions raw45_source_refinesb_spec.
-Print Assumptions raw45_compatibleb_spec.
 Print Assumptions raw45_node_metadata.
+Print Assumptions raw45_q0_restriction_exact.
+Print Assumptions raw45_q0_index_exact.
+Print Assumptions raw45_q0_nth.
