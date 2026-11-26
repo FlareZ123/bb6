@@ -1268,3 +1268,6 @@ The arithmetic identities, residue maps, and affine gate paths were checked with
 
 ### 0LA complete discovery (06:06 UTC)
 All eleven formerly hard leaves now have arbitrary-tail affine growth candidates. The full semantic generator emits the original-checker weighted child bound 1003 (late F0 hole at 1002). This is candidate only until the original dependency source audit succeeds. Data and generator: `im-results/agent11-raw39/la-frontier.json`, `prepare_raw39la_frontier.py`; no remaining discovery leaves. Local checkout DNS blocked. Prior 1LB candidate generator is also ready. Next use the existing manual Raw39 workflow, no new workflow.
+
+### 1LA complete discovery (06:15 UTC)
+A1=1LA candidate B349, 5088 opens covered (FAR4943,asym70,rungram69,blockgram273,runblock410,affine421/457/460/503). New 410 paired run-block closure 36374 rows reduced to 1691 by joint context/transition partition refinement, independent closure verified. Data and generic generator in `1LA-frontier.json.xz.b64`, `prepare_raw39_semantic_children.py`, `blockgram_regen.py`, `minimize_bi.py`. Candidate only. 0LA run45766252232 queued; 0RC accepted B2354. 1RE residual work continues. Local /tmp/raw39.

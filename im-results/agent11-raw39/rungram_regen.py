@@ -36,8 +36,8 @@ class RunDFA:
         # Unused entries are arbitrary; FastBiDFA checks every required push.
         return [0 if j is None else j for v in self.delta for j in v]
 
-def discover(table, left, right, cap=100000):
-    ds = [RunDFA(left),RunDFA(right)]
+def discover(table, left, right, cap=100000, dfa=RunDFA):
+    ds = [dfa(left),dfa(right)]
     p = table.replace('_','')
     assert len(p)==36
     p = [p[i:i+3] for i in range(0,36,3)]
