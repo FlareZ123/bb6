@@ -10,23 +10,26 @@ static inline uint64_t digitWeight(uint64_t b){
  +4*(b&0xF0F0F0F0F0F0F0F0ull)+8*(b&0xFF00FF00FF00FF00ull)
  +16*(b&0xFFFF0000FFFF0000ull)+32*(b&0xFFFFFFFF00000000ull);
 }
-// Largest block k <= remaining with k*2^k <= F-k, for q=F-k.
+// Largest block k <= remaining under the proved wide fit 2^(k+1) <= F,
+// where F is the terminal clock and q=F-k is the starting clock.
 static inline int fit(int F,int remaining){
- int k=1;while(k<remaining&&k<25&&uint64_t(k+1)*(uint64_t(1)<<(k+1))<=uint64_t(F-k-1))++k;return k;
+ int k=1;
+ while(k<remaining&&k<25&&(uint64_t(1)<<(k+2))<=uint64_t(F))++k;
+ return k;
 }
-// Fixed-target exact reverse block. y is little-endian in original
-// chronological order, X=2^k*z+y, c=X-q*B-D(B). For a legal
-// block 0<=D(B)<q and 0<=c<q, hence B=floor(X/q) or one less.
-// Interior at c and y=0 guarantee every intermediate interior guard.
+// Fixed-target exact reverse block. y is little-endian in chronological
+// order, X=2^k*z+y, and D(B)=sum j*2^j*bit_j(B). Under the proved wide
+// fit 2^(k+1)<=q+k, a legal parent lies at floor(X/(q+k)) or +1.
+// The exact start carry is c=X-q*B-D(B).
 static inline int blockParent(int q,int k,int z,uint64_t y,bool strict){
- uint64_t X=(uint64_t(z)<<k)+y, b=X/uint64_t(q), max=(uint64_t(1)<<k)-1;
- for(int i=0;i<2;++i){
+ uint64_t X=(uint64_t(z)<<k)+y, F=uint64_t(q)+uint64_t(k);
+ uint64_t b=X/F, max=(uint64_t(1)<<k)-1;
+ for(int i=0;i<2;++i,++b){
   if(b<=max){uint64_t f=uint64_t(q)*b+digitWeight(b);
    if(f<=X){uint64_t c=X-f;
     if(strict?(c>=1&&c+3<=uint64_t(q)):c<uint64_t(q))return int(c);
    }
   }
-  if(!b)break;--b;
  }
  return -1;
 }

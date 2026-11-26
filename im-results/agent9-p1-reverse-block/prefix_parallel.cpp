@@ -1,4 +1,5 @@
 // Prefix-only delayed cover: no terminal endpoint sets between blocks.
+// Reverse blocks use the source-proved wider quotient window 2^(k+1) <= F.
 // g++ -O3 -std=c++17 prefix_only.cpp -o prefix_only
 // ./prefix_only n cap block [checkpoint] [maxBlocks]
 #include <algorithm>

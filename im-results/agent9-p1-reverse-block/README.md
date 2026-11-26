@@ -9,7 +9,20 @@ For a fixed chronological target word y of k bits, write q for the starting cloc
     X=2^k*z+Y=c+q*B+D(B)
     B=sum x_i 2^i, Y=sum y_i 2^i, D(B)=sum i*x_i 2^i.
 
-Conversely, for 0<=B,Y<2^k and 0<=c<q this integer equation implies a legal broad carry walk: its first numerator c+q*x_0-y_0 is even, nonnegative (a negative numerator could only be -1), and <2q. Recurse after division by two. For y=0 and 1<=c<=q-3 the same induction gives the strict interior automatically. Thus it is unnecessary to inspect intermediate guards. When k*2^k<=q, D(B)<q. Necessarily floor(X/q) is B or B+1. Check precisely those two quotient candidates with 0<=B<2^k and the starting interval condition. This gives a complete block reverse map; uniqueness follows from each single-step predecessor being unique. The index-weighted digit sum is evaluated by fixed bit masks in [block_reverse.hpp](block_reverse.hpp). Unlike Agent43's increasing-clock ordinary-map accelerator, this is the fixed-target **reverse** map including delayed bits.
+Conversely, the exact reverse-block theorem proves that a block is legal precisely when
+\[
+X+\operatorname{corr}(k,B)=(q+k)B+r,\qquad 0\le r<q,
+\]
+where \(X=2^kz+Y\) and \(B<2^k\). The parity induction establishes every intermediate broad guard; with a zero target word and \(1\le c\le q-3\), it also preserves the strict interior. The identity \(\operatorname{corr}(k,B)=kB-D(B)\), with \(D(B)=\sum_j j2^j\operatorname{bit}_j(B)\), makes the starting carry exactly \(c=X-qB-D(B)\).
+
+The stronger, source-checked fit \(2^{k+1}\le q+k\) gives the two-candidate window
+\[
+\left\lfloor\frac{X}{q+k}\right\rfloor\le B\le
+\left\lfloor\frac{X}{q+k}\right\rfloor+1.
+\]
+Thus block_reverse.hpp now selects the floor quotient and its successor, rather than the older floor(X/q) and predecessor pair. Agent45's Lean quotient-window and digit-weight proof proves both candidate_window and candidate_remainder_eq; original-source CI [45722244806](https://github.com/FlareZ123/bb6/actions/runs/45722244806) passed with standard axioms. The exhaustive small-range C++ test in ../agent45-p1-delayed-carry/wide_fit_exhaustive.cpp checks 481,220 wide-fit cases (219,724 in the old-fit overlap and 261,496 admitted only by the wider fit), including both strict modes. An independent JavaScript reimplementation of that exact test also passed all 481,220 cases. With the existing k<25 cap, the fit raises block length from 17 to 20 at F=4,000,000, and from 21 to 24 at F=68,000,000. This is an algorithmic acceleration, not a new P1 exclusion; the large prefix-only run has not yet been repeated with the new fit.
+
+The index-weighted digit sum is evaluated by fixed bit masks in block_reverse.hpp. Unlike Agent43's increasing-clock ordinary-map accelerator, this is the fixed-target **reverse** map including delayed bits.
 
 ## Folded modular sweep
 
