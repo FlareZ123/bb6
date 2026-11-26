@@ -24,7 +24,7 @@ Theorem q0_raw11_checkpoint_counts :
 Proof. vm_compute. reflexivity. Qed.
 
 Definition q0_raw11_tables : list string :=
-  map (fun x => TM_to_str (tm x))
+  List.map (fun x => TM_to_str (tm x))
     (fst q0_raw11_queue ++ snd q0_raw11_queue).
 
 Definition q0_raw11_tail_indices : list nat :=
@@ -32,7 +32,7 @@ Definition q0_raw11_tail_indices : list nat :=
    144; 145; 146; 147; 152; 153; 154; 155].
 
 Definition q0_raw11_tail_tables : list string :=
-  map (fun i => nth i q0_raw11_tables EmptyString) q0_raw11_tail_indices.
+  List.map (fun i => nth i q0_raw11_tables EmptyString) q0_raw11_tail_indices.
 
 Definition q0_raw11_tail_expected : list string := [
   "1RB1LC_1RC---_0LA0LA_------_------_------";
