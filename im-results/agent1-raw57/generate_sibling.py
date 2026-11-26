@@ -96,6 +96,9 @@ def main():
         i=int(i)
         assert i not in pumps
         pumps[i]=ns
+        if module=="Raw57LB1M211":
+            from m211_emit_lean import main as emit_m211
+            emit_m211()
         packed=ROOT/(module+".lean.gz.b64")
         if packed.is_file():
             import gzip,base64
