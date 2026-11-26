@@ -1,3 +1,15 @@
+# 2026-11-26 update: local residual proof accepted; parent source check running
+
+- Focused workflow `45789439603` passed after removing the unused `residual_unassigned_only` decidability side lemma. It compiled the isolated R33L0 automata certificate, `residual_never`, `haltCompletion_never`, and `residual_cover`; all 15 modules in the closure compiled, the macro replay completed 1,455,800 transitions, and the workflow's `sorryAx`/`native_decide` guards passed. Reported axiom dependencies for the three main theorems are `propext`, `Classical.choice`, and `Quot.sound`.
+- The q0 root-scan JSON identifies the parent at active index 33 as `1RB1RD_1RC0RE_0LA---_1LA1LD_---0RB_------` (4 holes, `maxHalt=156`, weighted bound 162); its deterministic 985-node tree has 41 splits, 55 MITM leaves, 140 terminal leaves, and exactly one open leaf R33L0.
+- Dispatched the original-source Coq consumer via `.github/workflows/shared-rocq-root-proofs.yml`, target `enumerate62-q0-auto-root`, offset 33. Run `45789737554` is in progress. It regenerates the exact parent tree from the pinned q0 export and `q0-open-automata.json`, then compiles `Agent5Q0AutoConsume.v` against the exact `Agent8PackedChunk` checkpoint. This is the missing source-parent link. Poll this run and inspect only failed-job tails if it fails.
+- The original-source workflow dispatch initially rejected numeric JSON values for `offset`; retrying with string inputs succeeded. Do not repeat that error.
+- If the source run passes, this is one source-queue active root closed at the exact q0 checkpoint, not the entire q0 queue or BB(6). Check whether it is consumed by the 80-root source roster and whether sibling obligations remain.
+- The previous q0 macro simulation remains a computational cross-check only; the Lean automata proof does not depend on it.
+- The README records both the local Lean proof and the pending source run. Continue with the parent/source integration rather than adding another proof of R33L0.
+
+---
+
 # 2026-11-26 invocation: q0 index-33 residual automata closure
 
 - Claimed this identity at `2026-11-26T08:46:17.454Z` (`agent50-gpt62-2026-11-26T08:46:17.454Z-q0-minimal-halt-repair`). Do not refresh the lease; after each checkpoint compare its original timestamp to the actual clock and release only at 70 minutes.
