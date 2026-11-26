@@ -51,6 +51,8 @@ SOURCE_REVISIONS = {
     45700813110: "c14668f979fee95df18664cb383af1b51c5d77f1",
     45722543448: "779cbab28cf77c823e4a99dc3b358980e7a7f410",
 }
+THREE = (15001137494, 45560876359, "36c86203f3f7fb589b221046038513097a03534c8dc029cd83c328db53ae09aa")
+THREE_REVISION = "735f449865149459df272eb9b858cf8ccf793404"
 REQUIRED = [
     "CanonicalTwoParentRosterOnly", "Raw60RootFull", "Raw109Closed",
     "Raw110ParentLateCover", "Raw111Data", "Raw121Data",
@@ -119,7 +121,7 @@ def compile_module(source, output, env, logpath):
     result.check_returncode()
     return result.stdout
 
-def link_reachable(groups, work, linked, families=None):
+def link_reachable(groups, work, linked, families=None, extra_families=()):
     """Select only the recursive import closures of the actual proof roots.
     Every reached duplicate is still checked by exact kernel-data equality.
     Each source-audited root is resolved within its own artifact family first,
@@ -148,7 +150,7 @@ def link_reachable(groups, work, linked, families=None):
     comparator = HERE.parent / "agent13-raw125" / "CompareKernelImports.lean"
     objects = defaultdict(list)
     reached = {}
-    for label, dirs, roots in families:
+    for label, dirs, roots in [*families, *extra_families]:
         command = ["lean", "--run", str(walker), str(stdlib), str(len(dirs)),
                    *map(str, dirs), *roots]
         result = subprocess.check_output(command, text=True)
@@ -194,7 +196,9 @@ def link_reachable(groups, work, linked, families=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
-    work = ap.parse_args().work.resolve()
+    ap.add_argument("--three", action="store_true", help="also consume Raw71, Raw77 and Raw81")
+    args = ap.parse_args()
+    work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
     assert "4.36.0-rc2" in subprocess.check_output(["lean", "--version"], text=True)
     for run, rev in SOURCE_REVISIONS.items():
@@ -216,7 +220,12 @@ def main():
     expect = [line.split()[0] for line in lines if line.split()[-1] == "Raw117Data.lean"]
     assert expect == [sha(work / "Raw117Data.lean")], "Raw117 source hash"
     linked = work / "linked"
-    link_reachable(groups, work, linked)
+    extra_families = []
+    if args.three:
+        info = api_json(f"repos/{REPO}/actions/runs/{THREE[1]}")
+        assert info["head_sha"] == THREE_REVISION and info["conclusion"] == "success"
+        extra_families.append(("raw71-77-81", download(THREE, work), ["Raw71Data", "Raw77Data", "Raw81Data"]))
+    link_reachable(groups, work, linked, extra_families=extra_families)
     for mod in REQUIRED:
         assert (linked / (mod + ".olean")).is_file(), f"missing module {mod}"
     for k in range(24):
@@ -239,6 +248,18 @@ def main():
               "lean_version": subprocess.check_output(["lean", "--version"], text=True).strip()}
     (work / "canonical68-integration.json").write_text(json.dumps(report, indent=2) + "\n")
     print("Canonical68 integrated consumer compiled with the standard axiom gate.", flush=True)
+    if args.three:
+        source = HERE / "Canonical65AfterThree.lean"
+        log = compile_module(source, linked / "Canonical65AfterThree.olean", env, work / "canonical65-three.log")
+        gate(log, ["BB6.Agent31Canonical65AfterThree." + n for n in ["extra_roots", "extra_covers", "count65", "sound65", "exact_at_target"]])
+        source = HERE / "Canonical65Integrated.lean"
+        obj = linked / "Canonical65Integrated.olean"
+        log = compile_module(source, obj, env, work / "canonical65-integrated.log")
+        report = {"pins": PINS + [THREE], "source_revisions": {**SOURCE_REVISIONS, THREE[1]: THREE_REVISION},
+                  "axioms": gate(log, ["BB6.Agent31Canonical65Integrated." + n for n in ["sound65_integrated", "exact_at_target"]]),
+                  "source_sha256": sha(source), "olean_sha256": sha(obj)}
+        (work / "canonical65-integrated.json").write_text(json.dumps(report, indent=2) + "\n")
+        print("All eleven parent closures consumed in the canonical65 integrated theorem.", flush=True)
 
 if __name__ == "__main__":
     main()
