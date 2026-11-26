@@ -21,7 +21,7 @@ The table has four undefined transitions (A1, C1, E0, F0), hence 25^4 = 390,625 
 
 The first preflight (run 45824051367) rebuilt the Canonical64 base successfully and compiled `p83_root`, `p83_count64`, and `p83_count59`. Its job failed only because the new five-parent distinctness theorem had an ambiguous unqualified `parents`; Agent10 corrected it to `BB6.Agent31Canonical59Membership.parents` in commit 70bac442f2ce2fc7d03ec3e86e0cfd1eef0c2ed0. The post-six theorem uses the fully qualified Canonical58 parent list.
 
-Run 45825342699 passed on head `0b6db94fe488a779cde3d37159ed7b45fe43055d`, artifact `raw83-canonical59-membership-preflight` (ID 15120098113). It source-accepts `p83_root`, `p83_count64`, `p83_count59`, and `p83_distinct_from_five`; the prior ambiguity is resolved. Run 45825498585 is the stronger five- and six-parent preflight, compiling both membership modules against the pinned Canonical64 source closure; it remains in progress.
+Run 45825342699 passed on head `0b6db94fe488a779cde3d37159ed7b45fe43055d`, artifact `raw83-canonical59-membership-preflight` (ID 15120098113). It source-accepts `p83_root`, `p83_count64`, `p83_count59`, and `p83_distinct_from_five`; the prior ambiguity is resolved. Run 45825498585 passed on head `3b5440b875e0e2f68ba8e3a7466a590e82149048`, artifact `raw83-canonical59-membership-preflight` (ID 15120044024). It compiles the post-five and post-six checks, including unique membership in roster58 and pairwise distinction from p58/p59/p108/p113/p115/p119. This source-accepts the membership prerequisite for the seventh-parent / 57-residual draft.
 
 ## Integration status
 
