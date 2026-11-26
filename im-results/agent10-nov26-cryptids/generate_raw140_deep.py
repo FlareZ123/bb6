@@ -4,6 +4,7 @@ Run from repository root. Generated modules deliberately have disjoint table IDs
 """
 import concurrent.futures as cf
 import json
+import sys
 from pathlib import Path
 import subprocess as sp
 import tempfile
@@ -68,16 +69,20 @@ def far_data(table,code):
 def slot(s):
     return f"({s//2},{str(bool(s%2)).lower()})"
 
-def emit(t,far):
+def emit(t,far,block):
     k=t[0]
     if k=="cycle":
         _,e,p,r,b=t
         return f".cycle {e} {p} {str(bool(r)).lower()} ({b})"
     if k=="last":return f".last {t[1]} {slot(t[2])}"
-    if k=="open":return far_data(t[1],far[t[1]])
+    if k=="open":
+        if t[1] in far:return far_data(t[1],far[t[1]])
+        i=block[t[1]]
+        p=f"BB6.Agent10Raw140Block.B{i}.p"
+        return f".proven {p} BB6.Agent10Raw140Block.B{i}.never"
     if k=="split":
         assert len(t[3])==24
-        return f".split {t[1]} {slot(t[2])} (byMove [\n"+",\n".join(emit(c,far) for c in t[3])+"\n])"
+        return f".split {t[1]} {slot(t[2])} (byMove [\n"+",\n".join(emit(c,far,block) for c in t[3])+"\n])"
     raise ValueError(t)
 
 HEADER="""import ZipThreeHoleAudit
@@ -88,12 +93,12 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit
 open BB6.Agent50TNFPilot
 """
 
-def theorem(i,table,tree,far):
+def theorem(i,table,tree,far,block):
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(table)]
     return f"""
 namespace R{i}
 def p : PartialMachine := FAR.fromCodes {codes}
-def audit : Audit := {emit(tree,far)}
+def audit : Audit := {emit(tree,far,block)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem nohalt : weightedTNFNoAssignedHalt p := by
   intro s; rcases s with ⟨q,b⟩
@@ -107,6 +112,10 @@ end R{i}
 """
 
 def main():
+    plus='--block' in sys.argv
+    block={t:i for i,(t,_) in enumerate(json.loads((DIR/'raw140-block-parameters.json').read_text()))} if plus else {}
+    prefix='Raw140Plus' if plus else 'Raw140Deep'
+    ns='BB6.Agent10Raw140Plus' if plus else 'BB6.Agent10Raw140Deep'
     residuals=json.loads((DIR/"raw140-residuals.json").read_text())["residuals"]
     roots=[(i,t) for i,t in enumerate(residuals) if t.count("---") in (1,2)]
     assert len(roots)==180
@@ -125,18 +134,18 @@ def main():
         bank_input="".join(f"{i} {t.replace('_','')}\n" for i,t in enumerate(opens))
         bank=sp.run([str(d/"farbank"),"5"],input=bank_input,text=True,capture_output=True,check=True)
         far={opens[int(i)]:c for i,c in (line.split() for line in bank.stdout.splitlines())}
-        closed=[(i,t,tree) for i,t,tree,os in results if all(o in far for o in os)]
-        pending=[{"id":i,"table":t,"open":[o for o in os if o not in far]} for i,t,_,os in results if any(o not in far for o in os)]
-        expected={1:36,2:93}
+        closed=[(i,t,tree) for i,t,tree,os in results if all(o in far or o in block for o in os)]
+        pending=[{"id":i,"table":t,"open":[o for o in os if o not in far and o not in block]} for i,t,_,os in results if any(o not in far and o not in block for o in os)]
+        expected={1:47,2:106} if plus else {1:36,2:93}
         counts={h:sum(t.count("---")==h for _,t,_ in closed) for h in (1,2)}
         assert counts==expected,counts
         print("closed",counts,"pending",len(pending),"FAR",len(far),"/",len(opens))
         names=[]
         for offset in range(0,len(closed),12):
             group=closed[offset:offset+12]
-            name=f"Raw140Deep{offset//12:02}"
+            name=f"{prefix}{offset//12:02}"
             names.append(name)
-            (DIR/(name+".lean")).write_text(HEADER+"".join(theorem(i,t,tree,far) for i,t,tree in group)+"\nend BB6.Agent10Raw140Deep\n")
+            (DIR/(name+".lean")).write_text(("import Raw140BlockLeaves\n" if plus else "")+(HEADER+"".join(theorem(i,t,tree,far,block) for i,t,tree in group)+"\nend BB6.Agent10Raw140Deep\n").replace("BB6.Agent10Raw140Deep",ns))
         # An explicit proof-bearing roster. Each entry uses its independently checked theorem.
         body="".join(f"import {n}\n" for n in names)+"""
 set_option maxRecDepth 100000
@@ -160,7 +169,7 @@ theorem matches_sound (p : PartialMachine)
 #print axioms matches_sound
 end BB6.Agent10Raw140Deep
 """
-        (DIR/"Raw140DeepCovers.lean").write_text(body)
-        (DIR/"raw140-deep-summary.json").write_text(json.dumps({"bound":BOUND,"closed": [{"id":i,"table":t} for i,t,_ in closed],"pending":pending,"far":far},indent=2)+"\n")
+        (DIR/(prefix+"Covers.lean")).write_text(body.replace("BB6.Agent10Raw140Deep",ns).replace("= 129 :=",f"= {len(closed)} :="))
+        (DIR/("raw140-plus-summary.json" if plus else "raw140-deep-summary.json")).write_text(json.dumps({"bound":BOUND,"closed": [{"id":i,"table":t} for i,t,_ in closed],"pending":pending,"far":far},indent=2)+"\n")
 
 if __name__=="__main__":main()

@@ -4,7 +4,7 @@ on:
     inputs:
       audit:
         type: choice
-        options: [nonhalt, raw8, raw140, raw140-n20-local, raw140-n20-source, raw140-deep-local, raw140-root-local]
+        options: [nonhalt, raw8, raw140, raw140-n20-local, raw140-n20-source, raw140-deep-local, raw140-root-local, raw140-block-local]
         default: nonhalt
 permissions:
   contents: read
@@ -21,15 +21,15 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          if [[ "${{ inputs.audit }}" == "raw140-n20-local" || "${{ inputs.audit }}" == "raw140-deep-local" || "${{ inputs.audit }}" == "raw140-root-local" ]]; then exit 0; fi
+          if [[ "${{ inputs.audit }}" == "raw140-n20-local" || "${{ inputs.audit }}" == "raw140-deep-local" || "${{ inputs.audit }}" == "raw140-root-local" || "${{ inputs.audit }}" == "raw140-block-local" ]]; then exit 0; fi
           git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
           git -C /tmp/cryptids checkout --quiet d1d231afe3a5f6310ac9f956d5687b5a45d7a13d
           test "$(git -C /tmp/cryptids rev-parse HEAD)" = "d1d231afe3a5f6310ac9f956d5687b5a45d7a13d"
       - name: Reclaim unused disk
-        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local'
+        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local' && inputs.audit != 'raw140-block-local'
         run: sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
       - name: Build original proofs once
-        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local'
+        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local' && inputs.audit != 'raw140-block-local'
         working-directory: /tmp/cryptids
         shell: bash
         run: |
@@ -79,8 +79,20 @@ jobs:
           fi
           python tools/lean_compile_closure.py --workdir /tmp/raw140-deep --jobs 3 im-results/agent10-nov26-cryptids/Raw140DeepCovers.lean 2>&1 | tee /tmp/nov26-axioms/Raw140DeepCovers.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140DeepCovers.log BB6.Agent10Raw140Deep.matches_sound
+      - name: Check next Raw140 block certificates and full cylinders
+        if: inputs.audit == 'raw140-block-local'
+        shell: bash
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent10-nov26-cryptids/generate_raw140_blocks.py
+          python im-results/agent10-nov26-cryptids/generate_raw140_deep.py --block
+          mkdir -p /tmp/nov26-axioms
+          cp im-results/agent10-nov26-cryptids/raw140-plus-summary.json /tmp/nov26-axioms/
+          python tools/lean_compile_closure.py --workdir /tmp/raw140-plus --jobs 3 im-results/agent10-nov26-cryptids/Raw140PlusCovers.lean 2>&1 | tee /tmp/nov26-axioms/Raw140PlusCovers.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140PlusCovers.log BB6.Agent10Raw140Plus.matches_sound
       - name: Compile local weighted proof closure and actual TNF paths
-        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local'
+        if: inputs.audit != 'raw140-n20-local' && inputs.audit != 'raw140-deep-local' && inputs.audit != 'raw140-root-local' && inputs.audit != 'raw140-block-local'
         working-directory: /tmp/cryptids
         shell: bash
         run: |
