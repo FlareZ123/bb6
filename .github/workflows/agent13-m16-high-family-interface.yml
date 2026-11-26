@@ -78,6 +78,7 @@ on:
           - sourceBitEventCutoff
           - sourceWeightedWord
           - sourceLaneClock
+          - sourceLanePath
           - sourceDyadicAncestry
           - sourceHighSigned
           - sourceBoundedShadow
@@ -306,6 +307,10 @@ jobs:
             sourceLaneClock)
               jobs=2
               target=im-results/agent12-c-high-shadow/LaneClockSource.lean
+              ;;
+            sourceLanePath)
+              jobs=2
+              target=im-results/agent12-c-high-shadow/LanePathSource.lean
               ;;
             sourceBitEventCutoff)
               jobs=2
