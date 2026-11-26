@@ -1347,3 +1347,7 @@ The remaining Raw112 shard groups are exactly:
 - shard 5: Raw112Branch05, Raw112Branch13, Raw112Branch21
 
 All other groups (0,2,3,6,7) have successful artifacts from run 45751911115. The current workflow uses two concurrent shard jobs, each with `lean_compile_closure.py --jobs 2`; a targeted `--jobs 1` retry is the recommended lower-memory experiment.
+
+### Canonical62 champion-consumer integration note
+
+The current `canonical62-raw112-raw58` workflow target and `assemble_canonical62.py` compile only `Canonical62Raw112Raw58Integrated.lean`; they do not compile `Canonical62ChampionConsumer.lean`. That consumer is still a draft. It imports `Canonical64ChampionConsumer` to make the champion score/witness declarations available, but the current Canonical62 assembler does not link the champion closure. After the real Raw112 Cover is accepted, extend the assembler to compile/link the ChampionScoreLowerBound / TM63RawUpperInterface closure (or another source-verified dependency route) before compiling the Canonical62 champion consumer. The Canonical64 champion consumer itself is source-accepted in run 45773904666.
