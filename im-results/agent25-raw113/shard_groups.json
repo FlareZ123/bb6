@@ -1,0 +1,41 @@
+{
+  "artifact_prefix": "raw113-shard",
+  "groups": {
+    "g0": [
+      "Raw113Shard_root_00",
+      "Raw113Shard_root_01",
+      "Raw113Shard_root_02",
+      "Raw113Shard_root_03"
+    ],
+    "g1": [
+      "Raw113Shard_root_04",
+      "Raw113Shard_root_05",
+      "Raw113Shard_root_06",
+      "Raw113Shard_root_07"
+    ],
+    "g2": [
+      "Raw113Shard_root_08",
+      "Raw113Shard_root_09",
+      "Raw113Shard_root_10",
+      "Raw113Shard_root_11"
+    ],
+    "g3": [
+      "Raw113Shard_root_12",
+      "Raw113Shard_root_13",
+      "Raw113Shard_root_14",
+      "Raw113Shard_root_15"
+    ],
+    "g4": [
+      "Raw113Shard_root_16",
+      "Raw113Shard_root_17",
+      "Raw113Shard_root_18",
+      "Raw113Shard_root_19"
+    ],
+    "g5": [
+      "Raw113Shard_root_20",
+      "Raw113Shard_root_21",
+      "Raw113Shard_root_22",
+      "Raw113Shard_root_23"
+    ]
+  }
+}
