@@ -1262,13 +1262,20 @@ jobs:
             /tmp/a32-raw59-staged/generated
             /tmp/a32-raw59-staged/raw59-staged/report.json
             /tmp/a32-raw59-staged/raw59-staged/logs
-            /tmp/a32-raw59-staged/raw59-staged/objects
             /tmp/a32-raw59-staged/*.json
             /tmp/a32-raw59-staged/*.log
             /tmp/a32-raw59-staged.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: canonical64-raw59-staged-partial-objects
+          path: /tmp/a32-raw59-staged/raw59-staged/objects
+          if-no-files-found: ignore
+          compression-level: 1
+          retention-days: 7
   canonical59-raw59-graft:
     name: Graft accepted Raw59 proof into accepted Canonical60
     if: ${{ inputs.target == 'canonical59-raw59-graft' }}
