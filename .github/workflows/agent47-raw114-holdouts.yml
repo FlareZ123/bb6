@@ -243,18 +243,18 @@ jobs:
           for part in 0 1 2 3 4 5 6 7; do
             provenance+=(--provenance-input "im-results/agent47-raw11-adapter/Root51LeanPart${part}.lean")
           done
-          python tools/lean_compile_closure.py \\
-            im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean \\
-            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \\
-            --workdir /tmp/a47-raw11-root52-known \\
-            --manifest /tmp/a47-raw11-root52-known/manifest.json \\
-            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \\
-            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \\
-            --jobs 2 \\
-            --lean lean \\
-            --label raw11-root52-plus-33-extras-plus-q0-parents \\
-            --theorem BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining \\
-            "${provenance[@]}" \\
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/Raw11Root52Q0ParentsConsume.lean \
+            --source-root /tmp/a47-root52-precompiled/q0-root52-lean \
+            --workdir /tmp/a47-raw11-root52-known \
+            --manifest /tmp/a47-raw11-root52-known/manifest.json \
+            --precompiled-manifest /tmp/a47-root52-precompiled/a47-raw11-root52/manifest.json \
+            --precompiled-dir /tmp/a47-root52-precompiled/a47-raw11-root52 \
+            --jobs 2 \
+            --lean lean \
+            --label raw11-root52-plus-33-extras-plus-q0-parents \
+            --theorem BB6.Agent47Raw11Root52Q0ParentsConsume.cover_from_remaining \
+            "${provenance[@]}" \
             2>&1 | tee /tmp/a47-raw11-root52-known.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a47-raw11-root52-known.log; then
             echo "::error::forbidden axiom/proof mechanism in Raw11 combined consumer"
