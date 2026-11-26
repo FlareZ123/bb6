@@ -1,0 +1,1 @@
+Correction to the generator selector list in my 06:32 workflow note: the `Raw57RAData` module is generated with child key `AR` (the A1=0RA move label), not `RA`. Correct agent6-generator keys are `AR`, `0RB`, `0RC`, `1RB`, `1RC`, `1RE`, `0RE`, `0RF`, `1LC`; agent1-generator keys remain `0LB`, `0LC`, `0LD`, `1RA`, `1RF`. The parent-consumer import names are the authoritative list.
