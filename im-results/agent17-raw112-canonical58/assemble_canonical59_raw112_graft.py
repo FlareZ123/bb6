@@ -6,12 +6,15 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
+import sys
+
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE.parent / "agent31-shared-core"))
 
 import assemble_canonical68 as a68
 import assemble_canonical59_raw113_graft as raw113_delta
 import assemble_canonical_selected as selected
 
-HERE = Path(__file__).resolve().parent
 REPO = "FlareZ123/bb6"
 NS = "BB6.Agent17Canonical58Raw112Graft"
 MEM = "BB6.Agent17Canonical59Raw112Membership"
