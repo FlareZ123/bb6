@@ -209,7 +209,10 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
   have hsmall : reducedModulus q k ∣ c-cmod :=
     Nat.dvd_trans (Nat.pow_dvd_pow 2 (reducedExponent_le q k)) hbig
   have hsmallInt : (reducedModulus q k : Int) ∣
-      (c:Int)-(cmod:Int) := by exact_mod_cast hsmall
+      (c:Int)-(cmod:Int) := by
+    rcases hsmall with ⟨d,hd⟩
+    refine ⟨(d:Int),?_⟩
+    exact_mod_cast hd
   have hcong :
       Rep (reducedModulus q k : Int) ((Y:Int)-(cmod:Int))
         (reducedWeights q k) ↔
