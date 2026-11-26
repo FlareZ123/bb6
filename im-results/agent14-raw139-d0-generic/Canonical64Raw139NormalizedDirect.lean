@@ -46,7 +46,7 @@ theorem e0RETable_eq_certifiedParent :
     e0RETable = BB6.Agent48Raw139E0ZeroRE.parent := by
   exact sameTable_sound (by decide)
 
-/-- Exact table identity for the E0=0RB parent under source audit. -/
+/-- Exact table identity for the source-accepted E0=0RB parent. -/
 theorem e0RBTable_eq_certifiedParent :
     e0RBTable = BB6.Agent48Raw139E0ZeroRB.parent := by
   exact sameTable_sound (by decide)
@@ -98,7 +98,7 @@ theorem e0RD_cover_at_champion :
     omega
   exact cover_mono hScore hSmall
 
-/-- Supply the three accepted/pending E0=0RE/0RB/0RD Covers for their unique
+/-- Supply the E0=0RE and E0=0RB Covers and, once accepted, E0=0RD for their unique
     normalized rows, leaving exactly the 63 rows in the finite membership proof. -/
 theorem normalizedTables_cover_from_63
     (hNorm : ∀ p ∈ normalizedTablesWithoutE0RE0RB0RD,
