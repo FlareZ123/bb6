@@ -14,10 +14,12 @@ This dossier concerns the exact local Raw139 parent `p0` normalized in [`Raw139N
 Do not conflate the local 67→66 normalized list with the active Canonical64 Raw139 descendant list. The latter starts with 80 residual descendants after the 43 source sibling Covers. Agent3's `Canonical64Raw139Subcover.lean` (commit `c2ecbbbbaec89fc8dc867e68e68609e9c344334c`) proves E0=0RA occurs exactly once in that active 80-list and uses the accepted 321,796 Cover to reduce it to **79**. This yields a conditional interface of 63 other Canonical64 Covers plus 79 Raw139 Covers = 142 remaining Cover obligations; it is not a global proof.
 
 The Canonical64 wrapper still needs a source-accepted integration run combining:
-- Agent6's 43-sibling consumer artifact from run **45793950237** (currently in progress at last check); and
+- Agent6's 43-sibling consumer artifact from a fresh run pinned to the repaired core; and
 - Agent3's E0=0RA integrated artifact from run **45797137615** (successful).
 
-Once 45793950237 passes, dispatch the existing `agent3-raw120-complete.yml` workflow in `integrate-65` mode with `raw139_subcover_run_id=45793950237` and `raw139_e0_integrated_run_id=45797137615`. Do not use the failed predecessor run 45790610736.
+The earlier run **45793950237** failed during `ChampionResidualFrontier.lean` compilation: the core source did not import `CostRecurrence` (so `proposedTM63Moves` was unresolved) and used unavailable `le_rfl`. Agent3 repaired those two source issues in commit `b7a7f7a36c8d41d7ffcfb50353687dc2366c34c3`. A fresh existing-workflow run **45805343184** was queued at 10:52:24Z, pinned to that exact source SHA, with the accepted C1 batch run 45746968139. It must pass and upload both the core and 43-sibling artifacts before the wrapper is dispatched.
+
+After run 45805343184 passes, dispatch the existing `agent3-raw120-complete.yml` workflow in `integrate-65` mode with `raw139_subcover_run_id=45805343184` and `raw139_e0_integrated_run_id=45797137615`. Do not use failed predecessor runs 45790610736 or 45793950237.
 
 The finite crosswalk module, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canonical64Raw139NormalizedCrosswalk.lean), has not yet been CI-compiled. It defines a kernel-checked `Extends` relation and a Cover-monotonicity theorem, then exposes a Canonical64 conditional interface requiring 63 other Covers, 66 normalized residual Covers, and Covers only for active leaves outside the crosswalk. If every active 79-leaf refines one of the 66 normalized tables, this is a 129-obligation interface rather than 142; otherwise the explicit uncovered complement gives the remaining count. Its diagnostics test exact/refinement membership for the six-hole E0=0LC parent, the five-hole E0=0LC/D0=0RC parent and its four-hole C1=0LF child, and the E0=0RE parent; it also prints per-table fanout. The workflow step is wired in `integrate-65` mode and preserves the log, but no reduction is claimed until CI compiles the module and the output is inspected.
 
@@ -28,14 +30,14 @@ The finite crosswalk module, [`Canonical64Raw139NormalizedCrosswalk.lean`](Canon
 
 ## Source and verification discipline
 
-The previous Agent14 adapter run **45777525729** failed at the core compile because its pinned source imported Mathlib, which the bare CI Lean toolchain does not install. Agent3 has since replaced that dependency with core finite-case helpers. The corrected Agent6 core plus 43-sibling consumer run **45793950237** is in progress; do not rely on the failed predecessor.
+The previous Agent14 adapter run **45777525729** failed at the core compile because its pinned source imported Mathlib, which the bare CI Lean toolchain does not install. Agent3 has since replaced that dependency with core finite-case helpers. The Agent6 core plus 43-sibling consumer run **45793950237** failed during core compilation. Its first actionable errors were the missing `CostRecurrence` import and unavailable `le_rfl`; the resulting unresolved score identifier caused downstream diagnostics. Agent3 applied the minimal import/refl repair in commit `b7a7f7a36c8d41d7ffcfb50353687dc2366c34c3`. Fresh pinned validation run **45805343184** is in progress; no acceptance is claimed until it uploads both required artifacts and its final source/axiom audit succeeds.
 
 The current invocation's local shell/Lean bootstrap returned a tool-level `ClientError` before producing command output. Source acceptance is therefore being done through the existing manual CI workflows; no local compilation is claimed here.
 
 ## Next actions
 
-1. Wait for Agent6 run 45793950237; inspect failed jobs only if it fails.
-2. If it passes, dispatch the Canonical64 `integrate-65` workflow using the successful Agent6 and Agent3 run IDs above.
+1. Wait for Agent6 run 45805343184; inspect failed jobs only if it fails.
+2. If it passes, dispatch the Canonical64 `integrate-65` workflow with `raw139_subcover_run_id=45805343184` and `raw139_e0_integrated_run_id=45797137615`.
 3. Compile and inspect `Canonical64Raw139NormalizedCrosswalk.lean`; use the result to decide whether the 66 normalized residual Covers can discharge any of the 79 active leaves.
 4. Pursue E0=0LC only if its active-list membership gives direct global leverage; preserve existing search outputs and rebuild only the missing code2/code23 shards.
 5. Keep `results/` reserved for source-accepted, academically presentable mathematical results. No exact BB(6) value or universal upper bound has been established.
