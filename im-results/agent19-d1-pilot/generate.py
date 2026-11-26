@@ -2,10 +2,12 @@
 """Emit the source Lean cut for Raw47 from the deterministic cut.cpp JSON."""
 import json
 from pathlib import Path
+
 ROOT = Path(__file__).resolve().parent
 tree = json.loads((ROOT / "Raw47-cut.json").read_text())
 opens = (ROOT / "Raw47-open.txt").read_text().splitlines()
 assert len(opens) == 114, len(opens)
+NL = chr(10)
 
 def slot(i):
     return f"({i // 2},{'true' if i % 2 else 'false'})"
@@ -21,7 +23,7 @@ def emit(t):
     if k == "split":
         n, s, children = t[1:]
         assert len(children) == 24
-        return f".split {n} {slot(s)} (byPartialMove [\\n" + ",\\n".join(emit(c) for c in children) + "\\n])"
+        return f".split {n} {slot(s)} (byPartialMove [{NL}" + ("," + NL).join(emit(c) for c in children) + f"{NL}])"
     raise ValueError(k)
 
 source = (ROOT / "Raw47Cut.template").read_text()
