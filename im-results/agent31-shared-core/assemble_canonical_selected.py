@@ -14,7 +14,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
 MEM = "BB6.Agent31Canonical59Membership"
 NS = "BB6.Agent32CanonicalSelected"
-LABELS = ("raw119", "raw115", "raw58", "raw108", "raw118")
+LABELS = ("raw119", "raw115", "raw58", "raw108", "raw118", "raw113")
 RAW118_SPEC = {
     "label": "raw118",
     "run_id": 45812415227,
@@ -27,6 +27,19 @@ RAW118_SPEC = {
     "table": "1RB---_1RC---_0RD---_1LD1RE_---0LE_------",
     "bound": 756496,
     "size": 531464312,
+}
+RAW113_SPEC = {
+    "label": "raw113",
+    "run_id": 45802897709,
+    "revision": "e91b9703f6dd7657d16bb9d428181a657ad14fff",
+    "artifact_id": 15108067526,
+    "artifact_name": "raw113-parent-proof",
+    "digest": "7d3ac590a7b9e562e430a00148616dc37d3eb0304fd1b20e9e3cbd07c611f865",
+    "root": "Raw113ParentExact",
+    "theorem": "BB6.Agent25Raw113.cover113",
+    "table": "1RB---_1RC---_0RD---_1LD1RE_---1RC_------",
+    "bound": 2674,
+    "size": 175456215,
 }
 OPENS = """
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
@@ -68,6 +81,21 @@ def candidate_source(spec, previous):
             "BB6.Agent16Raw118Canonical64Membership.p118_root",
             "BB6.Agent16Raw118Canonical64Membership.p118_parent_count64",
         ]
+    elif p == "113":
+        source = "abbrev p113Source : PartialMachine := BB6.Agent25Raw113.p113"
+        eq = """theorem p113_source_eq : p113 = p113Source := by
+  exact sameTable_sound (by decide)
+
+"""
+        cover = """theorem p113_cover : Cover (WeightedBound 6766859) p113 := by
+  rw [p113_source_eq]
+  exact BB6.Agent25Raw113.cover113 6766859 (by decide)
+
+"""
+        membership_names = [
+            MEM + ".p113_count64",
+            MEM + ".p113_root",
+        ]
     else:
         text = (HERE / "Canonical59FiveParentIntegrated.lean").read_text()
         source = re.search(r"^abbrev p" + p + r"Source :.*$", text, re.M).group()
@@ -83,6 +111,8 @@ def candidate_source(spec, previous):
                "TM63RawUpperInterface", "ChampionScoreLowerBound", *previous]
     names = [namespace + ".p" + p + "_source_eq", namespace + ".p" + p + "_cover"]
     if p == "118":
+        names += membership_names
+    elif p == "113":
         names += membership_names
     else:
         names += [MEM + ".p" + p + "_count64"]
@@ -140,6 +170,8 @@ theorem parents_root :
     for p in ids:
         if p == "118":
             body += "  · exact BB6.Agent16Raw118Canonical64Membership.p118_root\n"
+        elif p == "113":
+            body += "  · exact BB6.Agent31Canonical59Membership.p113_root\n"
         else:
             body += "  · decide\n"
     body += """
@@ -190,6 +222,8 @@ theorem exact_at_champion_score
                 "BB6.Agent16Raw118Canonical64Membership.p118_root",
                 "BB6.Agent16Raw118Canonical64Membership.p118_parent_count64",
             ]
+        elif p == "113":
+            names += [MEM + ".p113_count64", MEM + ".p113_root"]
         else:
             names += [MEM + ".p" + p + "_count64"]
     names += ["BB6Coverage.Agent48DirectRoot.champion_raw_witness",
@@ -348,6 +382,7 @@ def main():
     accepted, rejected, previous, audits = [], [], [], []
     specs = {spec["label"]: spec for spec in five.PARENTS}
     specs["raw118"] = RAW118_SPEC
+    specs["raw113"] = RAW113_SPEC
     for label in args.parents:
         spec = specs[label]
         copied = []
