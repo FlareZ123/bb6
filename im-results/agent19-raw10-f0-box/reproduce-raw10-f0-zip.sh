@@ -130,7 +130,7 @@ log = pathlib.Path(sys.argv[1]).read_text()
 manifest = json.loads(pathlib.Path(sys.argv[2]).read_text())
 profiles = {
     name: {x.strip() for x in raw.split(",") if x.strip()}
-    for name, raw in re.findall(r"'([^']+)' depends on axioms: \\[([^\\]]*)\\]", log)
+    for name, raw in re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", log)
 }
 required = [
     "BB6.Agent19Raw10F0Box.raw10F0ZipLeaves",
