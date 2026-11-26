@@ -48,11 +48,16 @@ of reachability; they show that the current M192 invariant does not exclude
 the entire stopping families.
 
 NoMachineCHalt.lean records the exact nontrivial residual stopping
-families after the two small feeder exclusions. Its M192 predicate
-references now use the explicit namespace `Agent41M192.lowCore`; the
-corrected original-source bridge still requires a focused compile. It does
-not prove that Machine C is nonhalting. The remaining reachability
-questions are open.
+families after the two small feeder exclusions. The corrected
+`Agent41M192.lowCore` namespace bridge now compiles in the original-source
+workflow; CFeeder's `source_no_3_7` also compiles without `sorryAx`.
+The next U5 quotient integration compiled its q=0 parent exclusion but
+failed in `q0_w1_z1_target_unreachable` at a deep `decide` reduction and
+an unavailable `by_contra` tactic. That proof now sets the M16 quotient
+recursion/heartbeat options and uses core `by_cases` plus an explicit
+divisibility argument; this repair still needs focused compilation.
+None of these reductions proves that Machine C is nonhalting. The remaining
+reachability questions are open.
 
 
 
