@@ -7,7 +7,12 @@ on:
         description: A1 transition
         type: string
         default: 0RB
+      source_run_id:
+        description: Prior successful Raw56 E1=0RE run ID for root-consumer artifact reuse
+        type: string
+        default: ''
 permissions:
+  actions: read
   contents: read
 jobs:
   proof:
@@ -15,9 +20,19 @@ jobs:
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
       - uses: actions/checkout@v4
+      - name: Download source-accepted Raw56 E1=0RE closure
+        if: inputs.child == 'raw56-root-consumer' && inputs.source_run_id != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-e1-0re-source-accepted
+          path: ${{ github.workspace }}/raw56-e1-0re-source-accepted
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.source_run_id }}
       - name: Verify exact source closure
         env:
           CHILD: ${{ inputs.child }}
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
         run: |
           set -euo pipefail
           if [[ "$CHILD" == discover-1LA ]]; then
@@ -34,6 +49,11 @@ jobs:
           if [[ "$CHILD" == raw56-root-cut ]]; then
             DIR=im-results/agent1-raw56
             ROOT=Raw56RootCut
+          elif [[ "$CHILD" == raw56-root-consumer ]]; then
+            if [[ -z "$SOURCE_RUN_ID" ]]; then echo 'source_run_id is required' >&2; exit 1; fi
+            python im-results/agent1-raw56/prepare.py
+            DIR=im-results/agent1-raw56
+            ROOT=Raw56RootConsumer
           elif [[ "$CHILD" == raw56-e1-0re ]]; then
             python im-results/agent1-raw56/prepare.py
             DIR=im-results/agent1-raw56/generated
@@ -84,7 +104,22 @@ jobs:
           WORKDIR=/tmp/a6-raw57-sibling
           if [[ "$CHILD" == parent-three ]]; then WORKDIR=/tmp/a1-raw57-parent-three; fi
           if [[ "$CHILD" == parent-all ]]; then WORKDIR=/tmp/a1-raw57-parent-all; fi
-          if [[ "$CHILD" == raw56-e1-0re ]]; then
+          if [[ "$CHILD" == raw56-root-consumer ]]; then
+            WORKDIR=/tmp/a1-raw56-root-consumer
+            PRECOMPILED="$GITHUB_WORKSPACE/raw56-e1-0re-source-accepted"
+            python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 \
+              --precompiled-manifest "$PRECOMPILED/manifest.json" --precompiled-dir "$PRECOMPILED" \
+              --manifest "$WORKDIR/manifest.json" --label raw56-root-frontier \
+              --theorem BB6.Agent1Raw56Root.sound19_closed --weighted-bound 7014 \
+              --parent-table '1RB---_1RC---_0RD---_1LD1LE_------_------' \
+              --artifact-name raw56-root-frontier-source-accepted \
+              --provenance-input im-results/agent1-raw56/candidates.json \
+              --provenance-input im-results/agent1-raw56/prepare.py \
+              --provenance-input im-results/agent1-raw56/Raw56RootCut.lean \
+              --provenance-input im-results/agent1-raw56/Raw56RootConsumer.lean \
+              "$DIR/$ROOT.lean" | tee /tmp/raw56-root.log
+            LOG=/tmp/raw56-root.log
+          elif [[ "$CHILD" == raw56-e1-0re ]]; then
             WORKDIR=/tmp/a1-raw56-e1-0re
             python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 \
               --manifest "$WORKDIR/manifest.json" --label raw56-e1-0re \
@@ -94,16 +129,27 @@ jobs:
               --provenance-input im-results/agent1-raw56/candidates.json \
               --provenance-input im-results/agent1-raw56/prepare.py \
               "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+            LOG=/tmp/raw57.log
           else
             python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+            LOG=/tmp/raw57.log
           fi
-          if grep -qE 'sorryAx|native_decide' /tmp/raw57.log; then exit 1; fi
+          if grep -qE 'sorryAx|native_decide' "$LOG"; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always() && inputs.child == 'discover-1LA'
         with:
           name: raw57-1la-discovery
           path: im-results/agent1-raw57/generated-1LA/discovery.json
           if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        if: success() && inputs.child == 'raw56-root-consumer'
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: |
+            /tmp/a1-raw56-root-consumer/*.olean
+            /tmp/a1-raw56-root-consumer/manifest.json
+            /tmp/raw56-root.log
+          if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: success() && inputs.child == 'raw56-e1-0re'
         with:
