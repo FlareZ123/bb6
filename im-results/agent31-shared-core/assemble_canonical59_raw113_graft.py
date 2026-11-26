@@ -91,6 +91,18 @@ def main():
         "parents_root", "parents_cover", "sound_integrated", "exact_at_target",
         "exact_at_champion_score")])
 
+    generated = work / "generated"
+    generated.mkdir()
+    import shutil
+    shutil.copy2(membership_source, generated / membership_source.name)
+    shutil.copy2(source, generated / source.name)
+    (generated / "base-selected-integration.json").write_text(
+        json.dumps(base_report, indent=2) + "\\n"
+    )
+    (generated / "raw113-parent-spec.json").write_text(
+        json.dumps(RAW113_SPEC, indent=2) + "\\n"
+    )
+
     report = {
         "status": "kernel-checked Canonical59-to-58 Raw113 delta",
         "base_run_id": args.base_run_id,
