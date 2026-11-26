@@ -24,6 +24,10 @@ on:
         description: Keep original unresolved leaves and use checked prefix-cut factoring
         type: boolean
         default: false
+      fuse_closed:
+        description: Fuse closed-child proof packs and use checked QuickWeight reductions
+        type: boolean
+        default: false
       target_matrix:
         description: Explicit JSON matrix of nonoverlapping targeted audit groups
         required: false
@@ -306,6 +310,7 @@ jobs:
       - name: Check missing modules against retained core
         env:
           RAW122_RETAIN_RESIDUALS: ${{ inputs.retain_residuals }}
+          RAW122_FUSE_CLOSED: ${{ inputs.fuse_closed }}
         run: python im-results/agent43-raw122-cut/targeted_recover.py ${{ matrix.branch }} ${{ matrix.first }} ${{ matrix.end }}
       - uses: actions/upload-artifact@v4
         with:
