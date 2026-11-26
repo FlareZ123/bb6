@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF]
+        options: [zeroRC, oneRE, zeroRF, oneRFProof]
         default: zeroRC
       recovery_run_id:
         description: Reuse the 23 accepted oneRE root artifacts from run 45846437127; recover root00 only
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == ''
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -67,7 +67,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   shard:
-    if: inputs.recovery_run_id == ''
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -111,7 +111,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   compose:
-    if: inputs.recovery_run_id == ''
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
     needs: [prepare,shard]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -245,5 +245,152 @@ jobs:
           path: |
             .tmp/a6-oneRE/parent
             .tmp/a6-oneRE/imports
+          include-hidden-files: true
+          retention-days: 14
+
+  prepare-oneRF-special:
+    if: inputs.variant == 'oneRFProof'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    outputs:
+      matrix: ${{ steps.generate.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Generate only the two exceptional leaf proof sources
+        id: generate
+        run: |
+          set -euo pipefail
+          base=im-results/agent6-raw139-e0-oneRF
+          work=.tmp/a6-oneRF-proof
+          mkdir -p "$work/imports" "$work/local-source"
+          python3 "$base/generate4563.py" "$work/imports"
+          python3 "$base/generate4563_conclusion.py" "$work/imports"
+          python3 "$base/emit1271.py" "$work/imports"
+          python3 "$base/split4563.py" "$work"
+          cp "$base"/{TwoSidedGuard,NatTape,WordNat,SymWord,RuleCompose,SymTrace}.lean "$work/local-source/"
+          cp im-results/agent6-raw139-e0-zeroRF/PadGrowth.lean "$work/local-source/"
+          echo "matrix=$(cat "$work/matrix.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRF-special-sources
+          path: .tmp/a6-oneRF-proof
+          include-hidden-files: true
+          retention-days: 14
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check shared symbolic rules and independently verify 1271/5
+        run: |
+          set -euo pipefail
+          base=im-results/agent6-raw139-e0-oneRF
+          work=.tmp/a6-oneRF-proof
+          # The local-source folder is for artifact portability, not a second source root.
+          rm -rf "$work/local-source"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 tools/lean_compile_closure.py "$work/imports/RF4563Conclusion.lean" "$work/imports/OneRF1271_5.lean" --source-root "$work/imports" --workdir /tmp/a6-oneRF-proof-core --jobs 2 --manifest "$work/core.json" --label raw139-oneRF-special-core --provenance-input "$base/generate4563.py" --provenance-input "$base/generate4563_conclusion.py" --provenance-input "$base/split4563.py" --provenance-input "$base/emit1271.py" | tee "$work/core.log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
+          mkdir -p "$work/core"
+          find /tmp/a6-oneRF-proof-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRF-special-core
+          path: |
+            .tmp/a6-oneRF-proof/core
+            .tmp/a6-oneRF-proof/core.json
+            .tmp/a6-oneRF-proof/core.log
+          include-hidden-files: true
+          retention-days: 14
+  check-oneRF-trace:
+    needs: prepare-oneRF-special
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.prepare-oneRF-special.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRF-special-sources
+          path: .tmp/a6-oneRF-proof
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRF-special-core
+          path: .tmp/a6-oneRF-proof
+      - name: Check one independent source trace cut
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-oneRF-proof
+          rm -rf "$work/local-source"
+          python3 im-results/agent13-coverage/unpack.py
+          roots=()
+          while IFS= read -r module; do roots+=("$work/imports/$module"); done < "$work/groups/$GROUP.txt"
+          mkdir -p "$work/shard"
+          python3 tools/lean_compile_closure.py "${roots[@]}" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir /tmp/a6-oneRF-proof-shard --jobs 2 --manifest "$work/shard/manifest.json" --label "raw139-oneRF-trace-$GROUP" | tee "$work/shard/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/shard/log"
+          mkdir -p "$work/shard/build"
+          find /tmp/a6-oneRF-proof-shard -name '*.olean' -exec cp '{}' "$work/shard/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRF-trace-${{ matrix.group }}
+          path: .tmp/a6-oneRF-proof/shard
+          include-hidden-files: true
+          retention-days: 14
+  compose-oneRF-special:
+    needs: [prepare-oneRF-special, check-oneRF-trace]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRF-special-sources
+          path: .tmp/a6-oneRF-proof
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRF-special-core
+          path: .tmp/a6-oneRF-proof
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneRF-trace-*
+          path: .tmp/a6-oneRF-proof/shards
+      - name: Compose exact blank-seed and growth proof
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-oneRF-proof
+          rm -rf "$work/local-source"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent6-raw139-e0-oneRF/merge4563.py "$work"
+          mkdir -p "$work/final/build"
+          python3 tools/lean_compile_closure.py "$work/imports/RF4563Never.lean" "$work/imports/OneRF1271_5.lean" --source-root "$work/imports" --precompiled-manifest "$work/merged.json" --precompiled-dir "$work/merged" --workdir /tmp/a6-oneRF-proof-final --jobs 2 --manifest "$work/final/manifest.json" --label raw139-oneRF-exceptional-leaves | tee "$work/final/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/final/log"
+          grep -F 'BB6.Agent6RF4563.tableCover' "$work/final/log"
+          grep -F 'BB6.Agent6E0OneRF1271_5.never' "$work/final/log"
+          find /tmp/a6-oneRF-proof-final -name '*.olean' -exec cp '{}' "$work/final/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRF-special-certified
+          path: .tmp/a6-oneRF-proof/final
           include-hidden-files: true
           retention-days: 14
