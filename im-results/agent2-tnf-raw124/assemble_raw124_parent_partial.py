@@ -153,6 +153,7 @@ def compile_source(source, output, env, log_path):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--work", type=Path, required=True)
+    parser.add_argument("--rc-run", type=int, help="Successful final-cylinder audit run; enables complete parent assembly")
     args = parser.parse_args()
     work = args.work.resolve()
     work.mkdir(parents=True, exist_ok=True)
@@ -218,6 +219,30 @@ def main():
     re_opt = json.loads((re_manifest_dir / "optimized" / "OPTIMIZED_MANIFEST.json").read_text())
     assert set(re_opt) == {"K04", "K05"}
     families.append(("0RE", re_dirs, ["Raw124B0REData"]))
+
+    rc_metadata = None
+    if args.rc_run:
+        rc_run = a68.api_json(f"repos/{a68.REPO}/actions/runs/{args.rc_run}")
+        assert rc_run["conclusion"] == "success"
+        items = a68.api_json(f"repos/{a68.REPO}/actions/runs/{args.rc_run}/artifacts")["artifacts"]
+        choices = [a for a in items if a["name"] == "raw124-0lf-1rc-complete" and not a["expired"]]
+        assert len(choices) == 1
+        item = choices[0]
+        rc_sha = item["digest"].removeprefix("sha256:")
+        rc_dirs = a68.download((item["id"], args.rc_run, rc_sha), work)
+        rm = json.loads((work / "metadata" / str(item["id"]) / "manifest.json").read_text())
+        assert rm["claim"] == {
+            "theorem": "BB6.Agent12Raw124ZeroLF1RC.bound_all",
+            "parent_table": "1RB---_1RC---_0RD---_1LD1RE_---1LF_1RC0LF",
+            "weighted_bound": 108667,
+        }
+        assert rm["proof_source_revision"] == rc_run["head_sha"]
+        assert rm["lean_version"] == lean_version
+        assert len(rc_dirs) == 1
+        assert {p.name: a68.sha(p) for p in rc_dirs[0].glob("*.olean")} == rm["objects"]
+        a68.gate(rm["axiom_log"], ["BB6.Agent12Raw124ZeroLF1RC.bound_all"])
+        families.append(("0LF/1RC", rc_dirs, ["Agent12RCFinal"]))
+        rc_metadata = {"run_id": args.rc_run, "artifact_id": item["id"], "artifact_sha256": rc_sha, "claim": rm["claim"]}
 
     linked = work / "linked"
     a68.link_reachable([], work, linked, families=families)
@@ -311,6 +336,41 @@ def main():
         "compile_log_sha256": a68.sha(partial_log),
         "axiom_audit_log_sha256": a68.sha(work / "axiom-audit.log"),
     }
+    if rc_metadata:
+        complete_source = HERE / "Raw124ParentComplete.lean"
+        complete_output = work / "Raw124ParentComplete.olean"
+        complete_log = work / "Raw124ParentComplete.log"
+        compile_source(complete_source, complete_output, env, complete_log)
+        axioms = a68.gate(complete_log.read_text(), ["BB6.Agent2Raw124ParentComplete.parent_cover"])
+        report["status"] = "source-accepted complete parent Cover"
+        report["final_cylinder"] = rc_metadata
+        report["complete_parent"] = {
+            "theorem": "BB6.Agent2Raw124ParentComplete.parent_cover",
+            "weighted_bound": BOUND,
+            "axioms": axioms,
+            "source_sha256": a68.sha(complete_source),
+            "object_sha256": a68.sha(complete_output),
+        }
+        # Include the full imported closure so the canonical consumer can use
+        # this proof without repeating the independent parent branch audits.
+        for p in [*linked.glob("*.olean"), *work.glob("*.olean")]:
+            dest = output / p.name
+            assert not dest.exists() or a68.sha(dest) == a68.sha(p), p.name
+            shutil.copy2(p, dest)
+        shutil.copy2(complete_log, output / "lean.log")
+        manifest = {
+            "claim": {"theorem": "BB6.Agent2Raw124ParentComplete.parent_cover",
+                      "parent_table": report["parent_table"], "weighted_bound": BOUND},
+            "proof_source_revision": report["source_revision"],
+            "lean_version": lean_version,
+            "lean_binary": {"sha256": compiler_sha},
+            "objects": {p.name: a68.sha(p) for p in output.glob("*.olean")},
+            "module_count": len(list(output.glob("*.olean"))),
+            "axiom_log": complete_log.read_text(),
+            "final_cylinder": rc_metadata,
+        }
+        (output / "manifest.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
     report_path = output / "raw124-parent-22of24-partial-cut.json"
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
     shutil.copy2(join_output, output / join_output.name)
