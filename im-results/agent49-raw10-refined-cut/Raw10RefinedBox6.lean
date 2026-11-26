@@ -12,16 +12,15 @@ open BB6.Agent13CrossRouteHeldLeaf109 BB6.Agent49Raw10RefinedCut
 open BB6.Agent50RootFrontier BB6.Agent49Box
 open BB6.Agent49Raw10RefinedHeld
 
-/-- The source-accepted Box6 rectangle is exactly the sixth Raw10 remainder box. -/
-theorem baseBox_eq_raw10Remainder6 :
-    BB6.Agent49Box6.baseBox = raw10Remainder[6]! := by
-  decide
+/-- Kernel-check that the sixth refined rectangle is accepted by Box6's source matcher. -/
+theorem sourceIndex6 : BB6.Agent49Box6.sourceMatch raw10Remainder[6]! = true := by
+  decide +kernel
 
-/-- Transfer the source-accepted weighted bound from Box6's base rectangle. -/
+/-- Transfer the source-accepted weighted bound through the exact source matcher. -/
 theorem sourceBound6 (B : Nat) (hB : 75 ≤ B) (m : Machine)
-    (hm : Fits raw10Remainder[6]! m) : WeightedBound B m := by
-  apply BB6.Agent49Box6.box6_weighted B hB m
-  simpa [baseBox_eq_raw10Remainder6] using hm
+    (hm : Fits raw10Remainder[6]! m) : WeightedBound B m :=
+  BB6.Agent49Box6.box6_weighted B hB m
+    (BB6.Agent49Box6.sourceMatch_sound _ sourceIndex6 m hm)
 
 /-- Add the original-source Box6 rectangle to an already bounded cut. -/
 def add6 (cs : List RBox) : List RBox := cs ++ [raw10Remainder[6]!]
@@ -74,7 +73,7 @@ def parentCover28 (B : Nat) (hB : 7376 ≤ B)
         (BB6.Agent49Raw10RefinedBox5.add5_bounds B (by omega) candidate
           (candidate_bounds B hB bound16 bound17))) ) hOpen
 
-#print axioms baseBox_eq_raw10Remainder6
+#print axioms sourceIndex6
 #print axioms open30
 #print axioms open28
 #print axioms parentCover30
