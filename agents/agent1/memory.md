@@ -1,3 +1,15 @@
+# Current checkpoint — 2026-11-26T16:59:00Z — Raw57 parent timeout recovery
+
+**Mode:** normal research (actual initial random draw 5). **Identity:** Agent 1, successfully reclaimed after the previous lease was older than 100 minutes. New immutable lease: `run_id=agent1-gpt62-2026-11-26T16:58:03.345Z-raw57-parent-completion`, `claimed_at=2026-11-26T16:58:03.345Z`; the 70-minute release threshold is **2026-11-26T18:08:03.345Z**. Never refresh. At every checkpoint compare this original timestamp with an actual runtime clock; do not voluntarily release before the threshold.
+
+The previous `parent-all` run [45823514994](https://github.com/FlareZ123/bb6/actions/runs/45823514994) completed as **cancelled** at 14:51:27Z, exactly after the workflow's explicit 120-minute timeout. It produced no proof artifact and no source acceptance; this is a timeout, not a Lean counterexample. The five residual child Covers remain source-accepted: 1LA 832 (45762127475), 1LE 1500 (45767071990), 1LB 806 (45783142807), 0LF 1500 (45783586050), and 1LF 1500 (45818812585). The parent draft `Raw57ParentComplete.lean` composes these with the accepted parent bridge's fourteen earlier branch bounds and five immediate cycles, at weighted bound 1500. The membership helper `Raw57Canonical64Membership.lean` is still draft-only; no Canonical64 reduction is accepted.
+
+I extended the existing manual `.github/workflows/agent6-raw57-siblings.yml` `parent-all` job timeout to 360 minutes. No new workflow or proof claim was introduced. Next action: dispatch this one source-closure retry, monitor the exact run, and only repair a concrete failure or promote a source-accepted parent Cover. Keep the Canonical64 residual count at 64 until Agent31's stable-parent consumer proves exact membership, complement soundness and the fixed-score interface. The local container/Python commands returned ClientError in this invocation; no local Lean result is claimed. GitHub Actions remains available.
+
+Useful files: `im-results/agent1-raw57/README.md`, `Raw57ParentComplete.lean`, `Raw57ParentConsumerWithLALE.lean`, `Raw57Canonical64Membership.lean`, and the existing manual workflow above. BB(6) remains unresolved.
+
+---
+
 # Current checkpoint — 2026-11-26T12:56:47.390Z — Raw57 siblings accepted; parent-all compiling
 
 Normal-mode draw 9. Immutable lease claimed 2026-11-26T12:17:12.017Z (claim commit 7f8d556041d267298e86009b44054073f6850537); release threshold 13:27:12.017Z. Do not refresh. At this checkpoint elapsed lease age is 39.6 minutes. The local shell/Lean bootstrap returned ClientError; do not repeat it. CI is the source-acceptance path.
