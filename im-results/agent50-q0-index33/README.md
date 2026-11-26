@@ -1,75 +1,46 @@
-# q0 sibling-scan index 33: minimal-halt reduction and macro candidate
+# q0 sibling-scan index 33: direct residual closure
 
-**Status:** formal reduction source written; nonhalting proof still open. This is intermediate research, not an academically publishable result and not a BB(6) upper-bound claim.
+**Status:** a kernel-checkable two-sided automata certificate has been isolated and connected to a `Cover` leaf. Focused source-level CI is pending. This is an intermediate local result, not a global q0 closure or a BB(6) upper bound.
 
 ## Exact post-decider residual
 
-The existing q0 sibling scan (2026-11-26) reports one open leaf at active index 33:
+The existing q0 sibling scan reports one open leaf at active index 33:
 
 `1RB1RD1RC0RE0LA---1LA1LD0LF0RB1LF0LC`
 
-The sole unassigned transition is **C1**. All other eleven transitions are fixed. This is the already-produced post-decider residual; this investigation does not re-enumerate the four-hole parent cylinder.
+The sole unassigned transition is **C1**; the other eleven entries are fixed. This is the already-produced residual, not a new enumeration of the four-hole parent.
 
-The table's product domain has 25 total completions. The source-audited `minimalSlices_iff` theorem partitions the halting cases by their unique final halt slot. Since C1 is the only unassigned slot, eleven slices are empty and the C1 slice contains exactly one machine: the completion with C1 = halt.
+## Formal nonhalting certificate
 
-## Formal result
+The exact table already occurs as `R33L0` in `im-results/agent5-weighted-tnf-queue/Q0OpenAutomata.lean` and as key `R33L0` in `q0-open-automata.json`. Its table string is identical to the residual above.
 
-`Q0Index33MinimalHalt.lean` instantiates the generic box theorem on this exact residual. It proves, for every bound `B`:
+`Q0Index33Automata.lean` isolates that one finite certificate instead of importing the full 94-leaf automata roster. It imports `TwoSidedAutomata`, checks the two finite stack relations and every represented transition (`checked`), and obtains `NeverHalts` through `BB6.Agent4Automata.never`. No bounded simulation or macro conjecture is a premise.
 
-```lean
-(∀ m, compatible residual m → WeightedBound B m)
-  ↔ WeightedBound B haltCompletion
-```
+`Q0Index33MinimalHalt.lean` now proves:
 
-It also proves the exact slice cardinalities, in A0,A1,...,F1 order:
+- `residual_never`: every total machine compatible with this partial table is nonhalting;
+- `residual_weighted_bound B` for every natural-number bound `B`;
+- `residual_cover B : Cover (WeightedBound B) residual`, a genuine proof-carrying leaf covering the entire one-hole cylinder.
 
-```
-original box mass: 25
-slice masses:      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0]
-```
+This is stronger than the earlier 25-to-1 minimal-slice reduction: the automata invariant proves that even the completion assigning **halt** to C1 never reaches that entry. Therefore all 25 completions are covered by one leaf at every weighted bound.
 
-Thus the remaining weighted-bound obligation is exactly one concrete machine, not 25. The other 24 C1 choices are ordinary transitions, so those completed tables have no halting transition at all. The generic theorem handles this reduction without enumerating those completions.
+## What this does and does not close
 
-This is a 25x reduction of the residual completion domain. It does not shrink the 985-node post-decider search tree that produced the residual; it removes the final 25-way ambiguity *after* that tree.
+The local residual cylinder is now covered mathematically, conditional only on the focused Lean source closure accepting the checked certificate and its imports. The parent/source enumeration connection is separate: the q0 sibling-scan generator and the original-source Coq consumer must still establish that this exact residual is the corresponding child of the claimed root and that all sibling branches are accounted for. This result does not close the entire q0 root family, the canonical64 roster, or BB(6).
 
-## Empirical nonhalting evidence
+## Independent computational observation
 
-The unique machine with C1 = halt was simulated for 100,000,000 ordinary moves without visiting C1. The head stayed within the sampled interval [-838, 841]. At ten-million-step checkpoints the tape had three 1-runs: two isolated markers and one contiguous block. This is computational evidence only.
+`verify_macro.py` remains a reproducible cross-check, not a proof premise. It replays the blank-run base case and 5,050 macro transitions for 1 ≤ j ≤ k ≤ 100 (1,455,800 simulated transitions). The observed checkpoints are:
 
-A stronger exact macro pattern appears at visits to F1. Define S(k,j), for 1 ≤ j ≤ k, by:
+- state F, head `H = 2k + 3 - 4j`;
+- a singleton 1-marker at `-2k` and a contiguous 1-block on `[H, 2k+2]`;
+- for j < k, the next checkpoint is reached in `8j+20` moves;
+- for j = k, the next cycle checkpoint is reached in `4k+34` moves.
 
-- state F;
-- head H = 2k + 3 - 4j;
-- tape has a single 1 at position -2k and a contiguous block of 1s on [H, 2k+2];
-- every other cell is 0.
-
-The observed recurrence is:
-
-- Base: the blank run reaches S(1,1) after 31 ordinary moves.
-- If j < k, S(k,j) reaches S(k,j+1) after 8j+20 moves.
-- If j = k, S(k,k) reaches S(k+1,1) after 4k+34 moves.
-
-The block length at S(k,j) is 4j and the zero gap between the marker and block is 4(k-j)+2. The recurrence therefore gives infinitely many F1 checkpoints if its two macro-step claims are proved. Every transition between checkpoints is defined; in particular, C is entered only on 0 in the observed executions.
-
-`verify_macro.py` checks the blank-run base case and 5,050 macro transitions for 1 ≤ j ≤ k ≤ 100 (1,455,800 simulated transitions), including that no earlier F1 return or C1 halt occurs inside each macro. This is reproducible finite computation, not a proof for arbitrary k.
-
-## Proof target
-
-Formalize the two macro steps by reusable sweep lemmas for:
-
-1. D's leftward scan over a contiguous 1-block;
-2. the alternating B/E rightward erasure sweep;
-3. F's leftward fill over a zero gap, stopping at the preserved singleton marker.
-
-Then prove the S(k,j) recurrence by induction. Since the checkpoint times strictly increase and the sequence is infinite, this would establish `NeverHalts haltCompletion`; the Lean theorem `residual_weightedBound_of_neverHalts` would then close the entire 25-completion residual for any weighted bound.
-
-## Comparison with the previous pilots
-
-- **Raw112:** its two one-hole post-decider residuals already had universal `NeverHalts` certificates for all completions. Minimal slices would reduce 25 completions to one per residual, but would not reduce the actual proof work already present.
-- **Raw59 Kid11:** the four per-slot pruned trees summed to 4,228 nodes versus 3,865 nodes in the original tree, so separate slice certificates were not a compression on that target.
-- **q0 index 33:** the residual is one hole, the exact slice count is 25 → 1, and the one remaining machine has no current source proof. This is the cleanest target so far for testing whether the minimal-halt theorem turns a difficult residual into a simpler concrete nonhalting proof.
+These observations motivated the original pilot but are no longer needed for the formal nonhalting result.
 
 ## Files
 
-- `Q0Index33MinimalHalt.lean` — source-level reduction to one machine.
-- `verify_macro.py` — deterministic macro recurrence checker.
+- `Q0Index33Automata.lean` — isolated `R33L0` two-sided automata certificate.
+- `Q0Index33MinimalHalt.lean` — exact residual nonhalting theorem and weighted `Cover` leaf.
+- `verify_macro.py` — independent deterministic simulation/replay only.
