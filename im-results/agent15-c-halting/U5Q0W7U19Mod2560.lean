@@ -2,6 +2,7 @@ import U5Q0W7ParentFan
 import OddOddLowVal
 import SectionEvenOddSum3Inverse
 import EvenRightSixOrbit
+import HighSumTwo
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -238,7 +239,7 @@ theorem w7_z2_q1_parent_unreachable_u499mod1280 (v : Nat) :
   have hEy5 : 5≤Ey := by dsimp [Ey]; omega
   have hEyOdd : Ey%2=1 := by dsimp [Ey]; omega
   have hEsum : (Ex+Ey)%4=2 := by dsimp [Ex,Ey]; omega
-  exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_two
+  exact BB6.Agent11High.blank_no_odd_sum_two
     Ex Ey hEx5 hEy5 hEyOdd hEsum hE
 
 /-- The original q=0 U5 w=7 target is blank-unreachable on
