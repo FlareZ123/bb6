@@ -635,20 +635,26 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Restore accepted LB0 exceptional witnesses
-        if: inputs.target == 'raw108-lb0-reuse'
+        if: inputs.target == 'raw108-lb0-reuse' || matrix.group == 'lb0-b' || matrix.group == 'lb0-c'
         env:
           GH_TOKEN: ${{ github.token }}
+          GROUP: ${{ matrix.group }}
         run: |
           set -euo pipefail
           root=im-results/agent10-raw108
           dest=/tmp/a10-raw108-lb0-witnesses
           mkdir -p "$dest"
-          gh run download 45719411601 --name raw108-block895 --dir "$dest/raw108-block895"
-          gh run download 45720878969 --name raw108-split1930-narrow --dir "$dest/raw108-split1930-narrow"
+          if [[ "$GROUP" != lb0-c ]]; then gh run download 45719411601 --name raw108-block895 --dir "$dest/raw108-block895"; fi
+          if [[ "$GROUP" != lb0-b ]]; then gh run download 45720878969 --name raw108-split1930-narrow --dir "$dest/raw108-split1930-narrow"; fi
           python - <<'PY'
-          import json, pathlib, subprocess
+          import json, os, pathlib, subprocess
           groups = {"block895": ["Raw108LBBlock895"], "split1930-narrow": [f"Raw108LBSplit1930Kid{i}" for i in (0,3,6,7,9,11,12,13,15,17,18,19,21,23)]}
           pins = {"block895": {"run_id": "45719411601", "revision": "f1ed25b2db3c4b1f2bc693fbc596248fa8159745"}, "split1930-narrow": {"run_id": "45720878969", "revision": "8313deb87693c888658d5b1e31f0c0189d4d2d8d"}}
+          group = os.environ['GROUP']
+          if group == 'lb0-b':
+              del groups['split1930-narrow']; del pins['split1930-narrow']
+          elif group == 'lb0-c':
+              del groups['block895']; del pins['block895']
           for p in pins.values():
               rev = p["revision"]
               if subprocess.run(["git", "cat-file", "-e", rev+"^{commit}"]).returncode:
@@ -706,7 +712,7 @@ jobs:
             theorems+=("BB6.Agent10Raw108LEFast.longestLE_halts" "BB6.Agent10Raw108LEFast.longestLE_delays" "BB6.Agent10Raw108LEFast.raw108LE_lower")
             jobs=2
           fi
-          if [ "$TARGET" = raw108-lb0-reuse ]; then
+          if [[ "$TARGET" == raw108-lb0-reuse || "$GROUP" == lb0-b || "$GROUP" == lb0-c ]]; then
             python "$root/merge_resume.py" /tmp/a10-raw108-lb0-witnesses /tmp/a10-lb0-witness-union /tmp/a10-lb0-witness-config.json /tmp/a10-lb0-witness-pins.json
             reuse=(--precompiled-dir /tmp/a10-lb0-witness-union --precompiled-manifest /tmp/a10-lb0-witness-union/manifest.json)
             jobs=2
