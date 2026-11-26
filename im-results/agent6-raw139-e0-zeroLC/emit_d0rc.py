@@ -55,8 +55,13 @@ theorem cover (B : Nat) (hB : 616 ≤ B) : Cover (WeightedBound B) parent := by
     have hc := first_hole_weighted_halt B parent 10 c (by decide) hr hh hw
     simpa only [hs] using hc
 
+theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 616 m := by
+  intro m hm
+  exact (cover 616 (by decide)).sound m hm
+
 #print axioms ordinary
 #print axioms cover
+#print axioms all_completions_weighted
 end BB6.Agent6E0ZeroLC.D0ZeroRC
 '''
 Path(sys.argv[1]+'/Raw139E0ZeroLCD0ZeroRC.lean').write_text(source)
