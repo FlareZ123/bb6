@@ -8,7 +8,7 @@
 From BusyCoq Require Import
   Individual62 Enumerate62
   Agent47Q0NineParentMembership Agent47Raw11RestrictedQ0
-  Agent8WeightedSource SourceResidualRoster.
+  Agent8AdaptiveSource Agent8QueueCheckpoint Agent8WeightedSource SourceResidualRoster.
 From Coq Require Import List Lia.
 Import ListNotations TNF_Node.
 Open Scope nat_scope.
