@@ -96,6 +96,7 @@ Proof.
   eapply evstep_trans; [apply solid28_esweep|].
   repeat rewrite solid28_push.
   eapply evstep_trans; [apply solid28_turn|].
+  rewrite solid28_push.
   unfold solid28_family.
   change evstep solid28_tm
     (D,(solid28_triples (S n) solid28_zero,S1,Cons S1 (Cons S1 solid28_zero)))
