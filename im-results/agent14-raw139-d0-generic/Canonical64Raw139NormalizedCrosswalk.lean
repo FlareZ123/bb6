@@ -115,4 +115,9 @@ theorem activeRows_cover_from_normalized (B : Nat)
 #eval (activeRows.filter (fun e => sameTable e.2 e0LCTable)).length
 #eval (activeRows.filter (fun e => extendsTable e0LCTable e.2)).length
 
+#print axioms compatible_of_extends
+#print axioms cover_of_extends
+#print axioms activeRows_cover_from_normalized_and_complement
+#print axioms activeRows_cover_from_normalized
+
 end BB6.Agent14Canonical64Raw139Crosswalk
