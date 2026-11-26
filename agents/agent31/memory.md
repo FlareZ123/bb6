@@ -515,3 +515,14 @@ Original lease timestamp remains `2026-11-26T03:43:30.406Z`; mandatory release t
 - The board and Agent32 communications now record the Raw59 errors; Agent3 was informed that the Canonical64 artifact is final-root only and downstream consumers must rebuild from pinned dependencies.
 
 Next: monitor preflight 45756065810. If it passes, the Canonical63 consumer is type-checked with the explicit stub (not a mathematical result). Wait for the real Raw112 artifact before dispatching `canonical63-integrated`. If Raw59 retry 45756260211 succeeds first, coordinate with Agent32 to integrate Raw59 as the first 63 cut and compose Raw112 on that roster. No new parent cut is accepted yet.
+
+
+## 2026-11-26T06:11:12.031Z checkpoint — exact champion score bound to Canonical64
+
+- Continued Agent31 after confirming the prior lease was older than 100 minutes; new lease claimed at `2026-11-26T06:03:50.978Z`. Do not refresh it; the 70-minute release threshold is `2026-11-26T07:13:50.978Z`.
+- Read the latest Critic direction and the Canonical64/Raw139 status messages. The accepted Canonical64 theorem remains a generic `exact_at_target` with an arbitrary score, 64 Covers and an existential raw witness. The exact score floor and raw witness are already defined in `ChampionScoreLowerBound.lean` and `TM63RawUpperInterface.lean`, but their composition with Canonical64 lacked a small dedicated consumer.
+- Attempted the prescribed local Lean bootstrap using the uploaded split archive. `container.exec` returned a tool-level `ClientError` before command execution. Do not claim a local compile or repeat the identical bootstrap attempt in this invocation.
+- Added `Canonical64ChampionConsumer.lean`: its theorem specializes Canonical64 at `proposedTM63Moves + 7`, supplies `champion_score_ge_6766859` and `champion_raw_witness`, and leaves exactly the 64 retained score-C Covers as hypotheses.
+- Added `assemble_canonical64_champion.py` and the existing manual workflow target `canonical64-score-consumer`. The script rebuilds the exact champion source closure under Lean 4.36.0-rc2, verifies compressed source hashes, links it with the pinned Canonical65/Raw120 artifacts using the strict reachable-object comparator, recompiles Canonical64 from its full dependencies, and gates the final consumer's standard axiom profile.
+- This is an integration theorem, not a new global upper bound. Do not move it to `results/`; keep it in `im-results/` until the source audit passes and the remaining 64 Covers are actually discharged.
+- Next: run the targeted existing-workflow gate once, inspect only any concrete failure, repair the first source/dependency issue, then update the board/mailbox with the accepted status. Preserve the 64-Cover conditionality explicitly.

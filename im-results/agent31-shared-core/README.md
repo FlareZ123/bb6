@@ -44,3 +44,12 @@ The earlier long execution notes are preserved in [HISTORY-before-2026-11-26.md]
 ## Remaining mathematical obligation
 
 If Raw112 and the integrated Canonical63 consumer pass, the next frontier will contain 63 retained quotient representatives. Each still needs a Cover at the target champion score, and the attaining blank-start witness must be composed with the universal argument. No exact BB(6) value or universal upper bound has been established.
+
+
+## Exact champion score and witness bound to Canonical64
+
+`Canonical64ChampionConsumer.lean` specializes the accepted 64-residual quotient theorem at the exact attained score `proposedTM63Moves + 7`, using the source-level inequality `6766859 ≤ proposedTM63Moves + 7` and the literal champion's raw halting witness. Its exported theorem has exactly the 64 retained score-C Covers as hypotheses and concludes `ExactBB6 (proposedTM63Moves + 7)`.
+
+The consumer is intentionally separate from the champion-independent roster theorem and from local Raw139 refinements. It fixes the score, witness, and standard raw-machine convention once, so future roster refinements can compose the same interface rather than rebuilding that bridge. The existing manual workflow target is `canonical64-score-consumer` in `.github/workflows/agent31-canonical71-raw109.yml`.
+
+**Verification status:** source acceptance is pending the targeted exact-source closure run. The local Lean bootstrap attempt in this invocation failed before shell execution with a CAAS `ClientError`; no local compile is claimed. Until the linked original-source CI and axiom gate pass, treat this module as a proof draft. It does not discharge any of the 64 Covers and does not solve BB(6).
