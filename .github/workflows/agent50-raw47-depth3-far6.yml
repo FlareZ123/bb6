@@ -25,12 +25,13 @@ jobs:
           out="$RUNNER_TEMP/raw47-depth3-far6"
           dest="im-results/agent50-raw47-depth3"
           cp "$out/raw47-depth3-farbank.in" "$dest/raw47-depth3-farbank.in"
+          cp "$out/raw47-depth3-far5.codes" "$dest/raw47-depth3-far5.codes"
           cp "$out/raw47-depth3-far6.txt" "$dest/raw47-depth3-far6.txt"
           cp "$out/raw47-depth3-far6.log" "$dest/raw47-depth3-far6.log"
           cp "$out/summary.txt" "$dest/far6-summary.txt"
           git fetch origin main
           git rebase origin/main
-          git add "$dest/raw47-depth3-farbank.in" "$dest/raw47-depth3-far6.txt" "$dest/raw47-depth3-far6.log" "$dest/far6-summary.txt"
+          git add "$dest/raw47-depth3-farbank.in" "$dest/raw47-depth3-far5.codes" "$dest/raw47-depth3-far6.txt" "$dest/raw47-depth3-far6.log" "$dest/far6-summary.txt"
           git commit -m "Agent 50: Preserve Raw47 depth-3 FAR6 results"
           for attempt in 1 2 3; do
             if git push origin HEAD:main; then
@@ -49,6 +50,7 @@ jobs:
           name: agent50-raw47-depth3-far6
           path: |
             im-results/agent50-raw47-depth3/raw47-depth3-farbank.in
+            im-results/agent50-raw47-depth3/raw47-depth3-far5.codes
             im-results/agent50-raw47-depth3/raw47-depth3-far6.txt
             im-results/agent50-raw47-depth3/raw47-depth3-far6.log
             im-results/agent50-raw47-depth3/far6-summary.txt
