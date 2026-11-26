@@ -806,6 +806,10 @@
     ]
   },
   "custom": {
+    "211": [
+      "Raw57LB1M211",
+      "BB6Coverage.Agent1Raw57LB1M211"
+    ],
     "246": [
       "Raw57LB1M246",
       "BB6Coverage.Agent7Raw57LB1M246"
@@ -827,14 +831,18 @@
       "BB6Coverage.Agent7Raw57LB1Counters.M1256"
     ]
   },
-  "residual": {
-    "211": "1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---"
-  },
+  "residual": {},
   "block_phase": {
     "130": [
       6,
       4,
       4
     ]
-  }
+  },
+  "expected_open": [
+    [
+      211,
+      "1RB1LB_1RC0LE_0RD0RF_1LD1RE_1RA0LA_1RD---"
+    ]
+  ]
 }
