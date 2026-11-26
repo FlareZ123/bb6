@@ -1,6 +1,6 @@
 import CanonicalSelectedParentIntegrated
 import Canonical68StableBatch
-import RootRaw10Core
+import TNFPilot
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -13,8 +13,11 @@ open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent31StableParentBatch
 open BB6.Agent13CrossRouteHeldLeaf109
 
-/-- The exact B0=1LC parent defined by RootRaw10Core. -/
-abbrev p10 : PartialMachine := BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC
+/-- The exact B0=1LC parent from RootRaw10Core, reproduced verbatim. -/
+abbrev p10 : PartialMachine :=
+  BB6Coverage.refine BB6.Agent50TNFPilot.root
+    (⟨1, by decide⟩, false)
+    (some ⟨true, false, ⟨2, by decide⟩⟩)
 
 /-- Exact E1 parent definition used by the accepted Canonical59→58 delta. -/
 abbrev e1Base : PartialMachine := (pathEnd root 2 (path.take 4)).1
@@ -40,8 +43,8 @@ theorem count58 : roster58.length = 58 := by
   decide
 
 theorem p10_root :
-    p10 initialSlot = some (some ⟨true,true,1⟩) :=
-  BB6.Agent13CrossRouteHeldLeaf109.firstOneB0_1LC_root
+    p10 initialSlot = some (some ⟨true,true,1⟩) := by
+  decide
 
 theorem p10_count59 :
     (BB6.Agent32CanonicalSelectedIntegrated.rosterSelected.filter
