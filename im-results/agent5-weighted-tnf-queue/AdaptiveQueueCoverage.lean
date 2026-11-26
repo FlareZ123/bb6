@@ -6,15 +6,15 @@ open BB6.Agent13QueueCoverage
 
 /--
 A finite source-queue checkpoint is sufficient for root coverage when both
-residual lists are certified. Unlike `q0_rootGood_of_chunk_holdouts`, this
-does not assume that the active queue has drained.
+residual lists are certified. No queue-drain or empty-active assumption is
+needed: finite updates preserve the coverage witness.
 -/
 theorem q0_rootGood_of_chunk_residuals
     {Node Machine : Type}
-    (decide : Node → Decision Node)
+    (decide : Node → QueueDecision Node)
     (Good : Machine → Prop)
     (Compatible : Node → Machine → Prop)
-    (hsound : LocalClosure decide Good Compatible)
+    (hsound : ClassifierSound decide Good Compatible)
     (root : Node)
     (ranges : List (Nat × Nat))
     (hpart : ChunkPartition (q0 decide root) ranges)
@@ -45,7 +45,9 @@ theorem q0_rootGood_of_chunk_residuals
         · rcases hhold' with ⟨y, hy, hym⟩
           exact hcert r hr y (Or.inr hy) m hym
     · rcases hhold with ⟨x, hx, hxm⟩
-      simp [q0] at hx
+      have hnil : (q0 decide root).holdout = [] :=
+        q0_holdout_empty decide root
+      simp [hnil] at hx
 
 /--
 List-valued adapter for checkpoint exporters that serialize active ++ held
@@ -53,10 +55,10 @@ as one residual roster.
 -/
 theorem q0_rootGood_of_chunk_residuals_append
     {Node Machine : Type}
-    (decide : Node → Decision Node)
+    (decide : Node → QueueDecision Node)
     (Good : Machine → Prop)
     (Compatible : Node → Machine → Prop)
-    (hsound : LocalClosure decide Good Compatible)
+    (hsound : ClassifierSound decide Good Compatible)
     (root : Node)
     (ranges : List (Nat × Nat))
     (hpart : ChunkPartition (q0 decide root) ranges)
@@ -68,7 +70,11 @@ theorem q0_rootGood_of_chunk_residuals_append
     ∀ m, Compatible root m → Good m := by
   apply q0_rootGood_of_chunk_residuals decide Good Compatible hsound root ranges hpart fuel
   intro r hr y hy m hym
-  exact hcert r hr y (by simpa [List.mem_append] using hy) m hym
+  have hy' :
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).active ∨
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).holdout := by
+    simpa using hy
+  exact hcert r hr y hy' m hym
 
 #print axioms q0_rootGood_of_chunk_residuals
 #print axioms q0_rootGood_of_chunk_residuals_append

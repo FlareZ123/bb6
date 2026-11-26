@@ -1,9 +1,11 @@
 import Enumerate62Adapter
 import QueueImplication
+import AdaptiveQueueCoverage
 
 namespace BB6.Agent32SourceQueue
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5Enumerate62
 open BB6.Agent13QueueCoverage BB6.Agent32QueueImplication
+open BB6.Agent5AdaptiveQueueCoverage
 
 theorem reachable_cut_positive {x : SourceNode} (h : SourceReachable x) : 0 < x.fresh := by
   induction h with
@@ -78,6 +80,48 @@ theorem source_localClosure (H B : Nat) (hB : H+6 ≤ B)
         (fun mv hlt => hchild mv (Nat.le_of_lt hlt))
         (fun q hq w r => hchild ⟨w,r,q⟩ (by change q.val ≤ x.fresh; omega))).sound
 
+
+/-- Root safety from finite source checkpoints when both active and held
+residual nodes are certified. This removes the queue-drain premise. -/
+theorem q0_safe_of_chunk_residuals
+    (decide : SourceNode → QueueDecision SourceNode)
+    (Safe : SourceNode → Prop)
+    (hsound : LocalClosure decide Safe)
+    (root : SourceNode)
+    (ranges : List (Nat × Nat))
+    (hpart : ChunkPartition (q0 decide root) ranges)
+    (fuel : Nat)
+    (hcert : ∀ r, r ∈ ranges → ∀ y,
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).active ∨
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide root) r.1 r.2)).holdout →
+      Safe y) : Safe root := by
+  classical
+  apply Classical.byContradiction
+  intro hb
+  exact q0_rootGood_of_chunk_residuals decide (fun _ : Unit => False)
+    (fun x _ => ¬ Safe x)
+    (localClosure_classifier decide Safe hsound)
+    root ranges hpart fuel
+    (fun r hr y hy _ hbad => hbad (hcert r hr y hy)) () hb
+
+/-- Source-specific weighted Cover interface for finite checkpoints. Every
+active or held residual must carry a score-B certificate; no drain is needed. -/
+theorem source_queue_root_cover_residuals (H B : Nat) (hB : H+6 ≤ B)
+    (decide : SourceNode → QueueDecision SourceNode)
+    (hevidence : SourceEvidence H decide)
+    (ranges : List (Nat × Nat))
+    (hpart : ChunkPartition (q0 decide sourceRoot) ranges)
+    (fuel : Nat)
+    (hcert : ∀ r, r ∈ ranges → ∀ y,
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide sourceRoot) r.1 r.2)).active ∨
+      y ∈ (runUpdates decide fuel (chunkQueue (q0 decide sourceRoot) r.1 r.2)).holdout →
+      SourceSafe B y) :
+    Cover (WeightedBound B) (sourcePartial sourceRoot.tm) := by
+  have hs := q0_safe_of_chunk_residuals decide (SourceSafe B)
+    (source_localClosure H B hB decide hevidence) sourceRoot ranges hpart fuel hcert
+  exact .leaf _ (hs SourceReachable.root)
+
+
 theorem source_queue_root_cover (H B : Nat) (hB : H+6 ≤ B)
     (decide : SourceNode → QueueDecision SourceNode)
     (hevidence : SourceEvidence H decide)
@@ -97,4 +141,6 @@ theorem source_queue_root_cover (H B : Nat) (hB : H+6 ≤ B)
 #print axioms halt_budget_weight
 #print axioms source_localClosure
 #print axioms source_queue_root_cover
+#print axioms q0_safe_of_chunk_residuals
+#print axioms source_queue_root_cover_residuals
 end BB6.Agent32SourceQueue

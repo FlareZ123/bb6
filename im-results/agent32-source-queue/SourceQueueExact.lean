@@ -80,6 +80,30 @@ theorem exact_from_source_classifier (H B : Nat) (hB : H+6 ≤ B)
   rw [source_root_eq_firstOneCylinder] at hc
   exact exact_from_weighted_first_one B (by omega) hc champ
 
+
+/-- Exactness from a finite source checkpoint, certifying both active and
+held residuals. Unlike the drain-based interface, this theorem accepts any
+finite fuel and leaves the exact residual partition explicit. -/
+theorem exact_from_source_classifier_residuals (H B : Nat) (hB : H+6 ≤ B)
+    (classify : SourceTM → SourceVerdict) (hs : SourceClassifierSound H classify)
+    (ranges : List (Nat × Nat))
+    (hpart : ChunkPartition (q0 (queueDecision classify) sourceRoot) ranges)
+    (fuel : Nat)
+    (hcert : ∀ r, r ∈ ranges → ∀ y,
+      y ∈ (runUpdates (queueDecision classify) fuel
+        (chunkQueue (q0 (queueDecision classify) sourceRoot) r.1 r.2)).active ∨
+      y ∈ (runUpdates (queueDecision classify) fuel
+        (chunkQueue (q0 (queueDecision classify) sourceRoot) r.1 r.2)).holdout →
+      SourceSafe B y)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B := by
+  have hc := source_queue_root_cover_residuals H B hB _
+    (source_evidence_of_classifier H classify hs) ranges hpart fuel hcert
+  rw [source_root_eq_firstOneCylinder] at hc
+  exact exact_from_weighted_first_one B (by omega) hc champ
+
+
 #print axioms source_default_completion
 #print axioms source_knownRun
 #print axioms source_evidence_of_classifier
@@ -121,6 +145,30 @@ theorem exact_from_finite_classifier (H B : Nat) (hB : H+6 ≤ B)
   exact_from_source_classifier H B hB classify (source_classifier_sound_of_finite H classify hs)
     ranges hpart hcert champ
 
+
+/-- Same finite-checkpoint interface, stated directly for the upstream
+finite-list classifier specification. -/
+theorem exact_from_finite_classifier_residuals (H B : Nat) (hB : H+6 ≤ B)
+    (classify : SourceTM → SourceVerdict) (hs : FiniteClassifierSound H classify)
+    (ranges : List (Nat × Nat))
+    (hpart : ChunkPartition (q0 (queueDecision classify) sourceRoot) ranges)
+    (fuel : Nat)
+    (hcert : ∀ r, r ∈ ranges → ∀ y,
+      y ∈ (runUpdates (queueDecision classify) fuel
+        (chunkQueue (q0 (queueDecision classify) sourceRoot) r.1 r.2)).active ∨
+      y ∈ (runUpdates (queueDecision classify) fuel
+        (chunkQueue (q0 (queueDecision classify) sourceRoot) r.1 r.2)).holdout →
+      SourceSafe B y)
+    (champ : ∃ m : BB6.Coverage.RawMachine,
+      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
+    BB6.Coverage.ExactBB6 B :=
+  exact_from_source_classifier_residuals H B hB classify
+    (source_classifier_sound_of_finite H classify hs)
+    ranges hpart fuel hcert champ
+
+
 #print axioms source_classifier_sound_of_finite
 #print axioms exact_from_finite_classifier
+#print axioms exact_from_source_classifier_residuals
+#print axioms exact_from_finite_classifier_residuals
 end BB6.Agent32SourceExact
