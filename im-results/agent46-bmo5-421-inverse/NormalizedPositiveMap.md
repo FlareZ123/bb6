@@ -142,3 +142,55 @@ Relevant existing frameworks to consult before attempting a metric theorem:
 - Bo Tan and Qinglong Zhou, “Approximation properties of Lüroth expansions,” *Discrete and Continuous Dynamical Systems—Series A* 41 (2021), 2873–2890, [DOI 10.3934/dcds.2020389](https://doi.org/10.3934/dcds.2020389). This studies Diophantine approximation associated with Lüroth expansions.
 
 These are methodological precedents, not plug-in proofs for #754: the distinguished seed is a specific rational point, the target is nonstationary and exponentially shrinking, and the exact map has band-dependent corrections. Any application must verify the hypotheses for this precise map and must still address the point \(x_0=4/5\), not merely almost every point.
+
+
+## Exact non-autonomous Borel--Cantelli bound for the relaxed orbit
+
+The exact finite-band maps admit a direct transfer-operator estimate; no shadowing by the limiting map is needed for this *metric* statement. Put
+\[
+c_k=10-2^{1-k},\qquad X_k=(0,c_k/10].
+\]
+For exponent \(a\ge1\), the exact branch domain is
+\[
+I_{k,a}=\left(\frac{c_k}{10\cdot3^a},\frac{c_k}{10\cdot3^{a-1}}\right],
+\]
+and the normalized relaxed map is
+\[
+F_{k,a}(x)=\frac{3^a}{2}x-\frac12+\frac{3}{10\cdot2^{k+1}}.
+\]
+The intervals \(I_{k,a}\) partition \(X_k\). Every branch maps onto the same interval
+\[
+Y_k=\left(\frac{1}{10\cdot2^{k+1}},\ 1-\frac{3}{10\cdot2^{k+1}}\right]\subset X_{k+1},
+\]
+whose length equals \(|X_k|=c_k/10\). The inverse-branch derivative is \(2/3^a\), independent of \(k\), and
+\[
+\sum_{a=1}^{\infty}\frac{2}{3^a}=1.
+\]
+
+Let \(f_k\) be the density of the pushforward of Lebesgue measure on \(X_0\) under the first \(k\) relaxed maps. The transfer operator is
+\[
+(\mathcal P_k f)(y)=\mathbf 1_{Y_k}(y)\sum_{a=1}^{\infty}\frac{2}{3^a}f(F_{k,a}^{-1}(y)).
+\]
+Therefore \(0\le f\le1\) implies \(0\le\mathcal P_k f\le1\). Since \(f_0=\mathbf1_{X_0}\), induction gives \(0\le f_k\le1\) for every \(k\). This is an exact L-infinity contraction for the non-autonomous relaxed system.
+
+The positive-gate failure at band \(k\) is the target
+\[
+J_k=\left(0,\frac{k+6}{10\cdot2^k}\right)\subset X_k.
+\]
+Consequently
+\[
+\lambda\{x_0\in X_0:F_{k-1}\circ\cdots\circ F_0(x_0)\in J_k\}
+=\int_{J_k}f_k(y)\,dy
+\le\frac{k+6}{10\cdot2^k}.
+\]
+Summing and applying the first Borel--Cantelli lemma proves:
+
+**Theorem (generic finite gate failures).** For Lebesgue-almost every initial \(x_0\in X_0\), the relaxed exact positive-return orbit has only finitely many indices \(k\) with \(q_k<k+6\). More quantitatively, for every \(N\ge0\),
+\[
+\lambda\{x_0\in X_0:\exists k\ge N,\ q_k<k+6\}
+\le\sum_{k=N}^{\infty}\frac{k+6}{10\cdot2^k}
+=\frac{N+7}{5\cdot2^N}.
+\]
+For the uniform probability measure on \(X_0\), divide this bound by \(|X_0|=4/5\), obtaining \((N+7)/(4\cdot2^N)\).
+
+This is stronger than the limiting-map metric observation: it applies to the exact non-autonomous relaxed recurrence. It still does **not** decide the distinguished seed \(x_0=4/5\), a measure-zero endpoint of \(X_0\). Nor does it prove that the actual Turing-machine trajectory is nonhalting: after a first gate failure the machine follows the separate signed negative macro, whereas the theorem continues the relaxed positive recurrence. The theorem controls the measure of initial seeds whose relaxed orbit has late gate failures, not the actual negative-phase outcomes for #754.
