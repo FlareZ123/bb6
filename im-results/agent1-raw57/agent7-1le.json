@@ -1874,15 +1874,26 @@
       "1RB1LE_1RC1RB_0RD0RA_1LD1RE_0RF0LA_---0RD"
     ]
   },
-  "residual": {
-    "657": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_0RB0LA",
-    "658": "1RB1LE_1RC---_0RD0RB_1LD1RE_0LF0LA_1LB0LA",
-    "771": "1RB1LE_1RC0LB_0RD0RB_1LD1RE_1LF0LA_---1LB"
-  },
+  "residual": {},
   "custom": {
+    "657": [
+      "Raw57LE1Counters",
+      "BB6Coverage.Agent7Raw57LE1M657"
+    ],
+    "658": [
+      "Raw57LE1Counters",
+      "BB6Coverage.Agent7Raw57LE1M658"
+    ],
     "672": [
       "Raw57LE1M672",
       "BB6Coverage.Agent7Raw57LE1M672"
+    ],
+    "771": [
+      "Raw57LE1Counters",
+      "BB6Coverage.Agent7Raw57LE1M771"
     ]
+  },
+  "packed_sha256": {
+    "Raw57LE1Counters": "d78f1bf29c514db0b1037e04abf77e6eeed2ec906bf79dc2e31a1eb522676279"
   }
 }

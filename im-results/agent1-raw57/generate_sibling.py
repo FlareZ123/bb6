@@ -96,6 +96,13 @@ def main():
         i=int(i)
         assert i not in pumps
         pumps[i]=ns
+        packed=ROOT/(module+".lean.gz.b64")
+        if packed.is_file():
+            import gzip,base64
+            decoded=gzip.decompress(base64.b64decode(packed.read_bytes().strip(),validate=True))
+            expected=SPEC.get("packed_sha256",{}).get(module)
+            if expected: assert hashlib.sha256(decoded).hexdigest()==expected
+            (ROOT/(module+".lean")).write_bytes(decoded)
         if "import "+module not in pumpcode:
             pumpcode.insert(0,"import "+module)
     if SPEC.get("branch_pumps"):
