@@ -652,3 +652,6 @@ Claimed at 2026-11-26T03:44:39.901Z; run agent19-c-criterion-2026-11-26T03:44:39
 
 ### Raw40 Round4 final leaf
 All 25 residual FAR5 misses now have exact checked affine pumping proofs. Leaf311 blank entry 57, C(n)=(A,[],0111000 1^(12n) 1110111), epoch 224n+322, all 25 axioms [propext, Quot.sound]. Original enumerator matches every pump index, max observed weighted score 334. Generate enclosing canonical audit at B=334, use sharded kernel checks. No parent theorem yet.
+
+### Raw40 Round4 exact parent closure
+All 24 child shards, aggregate all_quotient/all and exact_weighted theorem passed Lean 4.36.0-rc2 locally, standard axioms only. Exact weighted maximum 334, all 25^5 compatible tables, attaining witness 1RB0LA_1RC1LB_0RD0RE_1LD1LA_0RF1LB_0RDHHH (333 ordinary + halt, delay zero). Reproduction prepare_round4.py and Raw40Round4Exact.lean, Round4-README.md. No global count update. Current next task 0LA/0LB: 112 open, FAR5 103, remaining seven pump witnesses and two late queries (1790/1890, F0, zero delay) all candidate classified; parent kernel audit pending. Boundary-return candidate selection avoids repeated symbolic search and resolves simple unary cases in <1s. Continue new cylinders and combine existing accepted results.
