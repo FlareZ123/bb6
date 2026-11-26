@@ -45,3 +45,13 @@ The theorem does not bound the reachable terminal rank itself. The remaining unb
 - [RankClock.lean](../im-results/agent12-c-high-shadow/RankClock.lean) contains `edge_budget`, `path_budget`, `potential_rank`, `reachable_terminal_shape`, and `raw_halt_rank_bound`.
 - [Original literal bridge](../im-results/agent47-c-root-inverse-audit/CRawCountBridge.lean).
 - The initial original-source audit [45755061463](https://github.com/FlareZ123/bb6/actions/runs/45755061463) compiled the generic potential and terminal-edge lemmas but rejected a tactic typo in the root-terminal corollary. Correction [a0c93e88](https://github.com/FlareZ123/bb6/commit/a0c93e88daa7dd5dea7206899cee41cfa353a91b) passed the complete original-source `sourceRankClock` audit [45755243824](https://github.com/FlareZ123/bb6/actions/runs/45755243824). The generic theorem profiles use only standard Lean axioms. The result is proved against the repository's literal six-state machine, not an independent simulator assumption.
+
+## Explicit thin-gateway reduction
+
+The source thin-gateway theorem gives a reachable state (0,2j,4j+10) for every literal halt. Its counted tail ends at (8j+10,2,2), of rank 8j+16. Determinism of terminal weighted paths identifies this with the actual terminal. Hence the score bound is
+$$
+6S+204\le G(8j+16).
+$$
+For arbitrary B and J satisfying G(8J+16) <= 6B+204, any literal halt with S>B must reach a thin gateway with j>J. Equivalently, exclusion of every reachable thin gateway with j>J suffices for S<=B. This is the direct statement `raw_bound_of_gateway_tail` consumed at a candidate score; smaller terminal candidates need no exact clock computation. The high/low source criterion already characterizes reachability of these gateways. The tail itself is still unbounded and unresolved.
+
+The gateway bound and both score-transfer corollaries passed the full original-source audit [45755604597](https://github.com/FlareZ123/bb6/actions/runs/45755604597) after correction of an unavailable tactic in the two corollaries.
