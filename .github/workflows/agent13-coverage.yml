@@ -2433,6 +2433,7 @@ jobs:
             git diff --exit-code -- im-results/agent25-raw55/Raw55Cut.lean
             python im-results/agent31-three-hole-tnf/generate_sweeps.py
             python im-results/agent31-three-hole-tnf/generate_four_hole.py
+            python im-results/agent10-tnf-multipump/generate.py 66 70 80
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             g++ -std=c++20 -O3 im-results/agent7-raw49/cut.cpp -o /tmp/raw47-cut
             /tmp/raw47-cut '1RB---_1RC---_0RD---_1LD0RC_------_------' 1000 32 2 /tmp/raw47 | tee /tmp/raw47-cut.log

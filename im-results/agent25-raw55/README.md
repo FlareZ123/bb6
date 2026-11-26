@@ -26,6 +26,9 @@ g++ -std=c++20 -O3 im-results/agent7-raw49/cut.cpp -o /tmp/raw55-cut
 cmp /tmp/raw55.json im-results/agent25-raw55/Raw55-cut.json
 cmp /tmp/raw55.open im-results/agent25-raw55/Raw55-open.txt
 python im-results/agent25-raw55/generate.py
+python im-results/agent31-three-hole-tnf/generate_sweeps.py
+python im-results/agent31-three-hole-tnf/generate_four_hole.py
+python im-results/agent10-tnf-multipump/generate.py 66 70 80
 python tools/lean_compile_closure.py --workdir /tmp/raw55-source --jobs 4 im-results/agent25-raw55/Raw55Cut.lean
 ```
 
