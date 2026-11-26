@@ -11,6 +11,7 @@ open BB6Coverage
 open BB6.Agent6Canonical68E1ParentGraft
 open BB6.Agent31Canonical68Integrated
 open BB6.Agent47Canonical67E1ParentGraft
+open BB6.Agent47CanonicalRefinement
 open BB6.Agent47Raw112
 
 /-- The Raw112 parent in the 68-to-67 graft is definitionally the
@@ -29,8 +30,10 @@ theorem sound67_integrated :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
         ∃ e ∈ roster67, TNFQuotientCompatible e.2 m := by
-  exact sound67 cover109.sound cover123 cover60 cover110 cover111
-    cover117 cover121 cover125 raw112_cover
+  apply graftRoster_sound (p := p112) (replacement := []) (roster := roster68)
+    p112_root sound68_integrated
+  intro m hm
+  exact Or.inl (lift_parent_cover (by decide) raw112_cover m hm)
 
 /-- The exact BB(6) target now has 67, rather than 68, quotient
     obligations, with the champion lower bound unchanged. -/
