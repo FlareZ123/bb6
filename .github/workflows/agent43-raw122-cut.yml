@@ -744,6 +744,13 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw122-generated
+          run-id: 45655656030
+          github-token: ${{ github.token }}
+          path: /tmp/a43-source
+          merge-multiple: false
       - name: Compile exact Raw122 membership in Canonical59
         env:
           GH_TOKEN: ${{ github.token }}
