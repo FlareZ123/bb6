@@ -12,7 +12,7 @@ permissions:
 jobs:
   proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Verify exact source closure
@@ -31,7 +31,16 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           DIR=im-results/agent6-raw57-ra
-          if [[ "$CHILD" == bridge ]]; then
+          if [[ "$CHILD" == parent-three ]]; then
+            for C in AR 0RB 0RC 1RB 1RC 1RE 0RE 0RF 1LC; do
+              python im-results/agent6-raw57-ra/generate_sibling.py "$C"
+            done
+            for C in 0LB 0LC 0LD 1RA 1RF 1LA 1LE; do
+              python im-results/agent1-raw57/generate_sibling.py "$C"
+            done
+            DIR=im-results/agent1-raw57
+            ROOT=Raw57ParentConsumerWithLALE
+          elif [[ "$CHILD" == bridge ]]; then
             DIR=im-results/agent1-raw57
             ROOT=Raw57ParentBridge
           elif [[ "$CHILD" == 1LE || "$CHILD" == 1LB || "$CHILD" == 1LA || "$CHILD" == 1RF || "$CHILD" == 0LB || "$CHILD" == 1RA || "$CHILD" == 0LD || "$CHILD" == 0LC ]]; then
@@ -44,7 +53,9 @@ jobs:
             python im-results/agent6-raw57-ra/generate_sibling.py "$CHILD"
             ROOT="Raw57${CHILD:1}${CHILD:0:1}Data"
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/a6-raw57-sibling --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
+          WORKDIR=/tmp/a6-raw57-sibling
+          if [[ "$CHILD" == parent-three ]]; then WORKDIR=/tmp/a1-raw57-parent-three; fi
+          python tools/lean_compile_closure.py --workdir "$WORKDIR" --jobs 4 "$DIR/$ROOT.lean" | tee /tmp/raw57.log
           if grep -qE 'sorryAx|native_decide' /tmp/raw57.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: always() && inputs.child == 'discover-1LA'
