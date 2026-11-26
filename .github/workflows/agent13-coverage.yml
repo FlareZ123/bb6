@@ -6,7 +6,7 @@ on:
       target:
         description: 'Source closure to verify'
         type: choice
-        options: [weighted-tnf-raw10-box3-c10-core, weighted-tnf-raw10-box3-c10-full, weighted-tnf-raw10-box3-c2-core, weighted-tnf-raw10-box3-c2-full, weighted-tnf-raw10-box16, weighted-tnf-raw10-box4-full, weighted-tnf-raw10-box4-slice, weighted-tnf-raw10-box4-sliced-full, weighted-tnf-raw10-box4-assemble-existing, weighted-tnf-raw10-box4-sample, weighted-tnf-raw10-box4-core, weighted-tnf-raw10-box15, weighted-tnf-agent8-raw54-rb, weighted-tnf-agent8-raw54-la, weighted-tnf-raw54-rb23, weighted-tnf-raw54-rf54, weighted-tnf-raw54-rf26, weighted-tnf-raw54-rf55, weighted-tnf-raw54-rf93-quotient, weighted-tnf-raw54-rf-run-quotients, weighted-tnf-raw54-rf-late, weighted-tnf-raw54-rf141, weighted-tnf-raw10-box8-complete, weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-raw10-box5, weighted-tnf-raw10-family, weighted-tnf-raw10-family-hard, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-q32-row26, weighted-tnf-q32-row34, weighted-tnf-q32-row45, weighted-tnf-q32-five-hole, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-nested, weighted-tnf-raw118-nested657, weighted-tnf-raw118-partial, weighted-tnf-raw118-accounted-core, weighted-tnf-raw118-canonical-cut, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-run-summary, weighted-tnf-raw118-run-summary-extra, weighted-tnf-raw118-run-summary-second, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-agent42-frontier-count, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-0lf-complement, weighted-tnf-raw124-0lf-simulation, weighted-tnf-raw124-champion-bound, weighted-tnf-raw124-1lb-fast-cut, weighted-tnf-raw124-0lb-fast-cut, weighted-tnf-raw124-0lb-complete, weighted-tnf-raw124-0la-scan, weighted-tnf-raw124-0la-fast-cut, weighted-tnf-raw124-0le-fast-cut, weighted-tnf-raw124-1la-fast-cut, weighted-tnf-raw124-0la-deep-lift, weighted-tnf-raw124-0la-seal, weighted-tnf-raw124-0lf-0rb-source, weighted-tnf-raw124-1lb-residual-pumps, weighted-tnf-raw124-1lb-residual-probe, weighted-tnf-raw124-1lb-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1ra, weighted-tnf-raw120-1rf, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1lb, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box-source-bridge, weighted-tnf-raw10-domain-source-inspect, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter, weighted-tnf-agent8-raw54-lf, weighted-tnf-raw10-box18to24-canonical76]
+        options: [weighted-tnf-raw10-box3-c10-core, weighted-tnf-raw10-box3-c10-full, weighted-tnf-raw10-box3-c2-core, weighted-tnf-raw10-box3-c2-full, weighted-tnf-raw10-box16, weighted-tnf-raw10-box4-full, weighted-tnf-raw10-box4-slice, weighted-tnf-raw10-box4-sliced-full, weighted-tnf-raw10-box4-assemble-existing, weighted-tnf-raw10-box4-sample, weighted-tnf-raw10-box4-core, weighted-tnf-raw10-box15, weighted-tnf-agent8-raw54-rb, weighted-tnf-agent8-raw54-la, weighted-tnf-raw54-rb23, weighted-tnf-raw54-rf54, weighted-tnf-raw54-rf26, weighted-tnf-raw54-rf55, weighted-tnf-raw54-rf93-quotient, weighted-tnf-raw54-rf-run-quotients, weighted-tnf-raw54-rf-late, weighted-tnf-raw54-rf141, weighted-tnf-raw10-box8-complete, weighted-tnf-q2800-raw10-certificate, weighted-tnf-raw10-box18to24, weighted-tnf-raw10-box6, weighted-tnf-raw10-box5, weighted-tnf-raw10-family, weighted-tnf-raw10-family-hard, weighted-tnf-canonical-partial-audit, weighted-tnf-q32-slice-closed, weighted-tnf-q32-queue-slice, weighted-tnf-q32-row26, weighted-tnf-q32-row34, weighted-tnf-q32-row45, weighted-tnf-q32-five-hole, weighted-tnf-raw10-domain-box7, weighted-tnf-raw118-long, weighted-tnf-raw118-bidfa, weighted-tnf-raw118-independent, weighted-tnf-raw118-phasegraph, weighted-tnf-raw118-recursive, weighted-tnf-raw118-nested, weighted-tnf-raw118-nested657, weighted-tnf-raw118-partial, weighted-tnf-raw118-accounted-core, weighted-tnf-raw118-canonical-cut, weighted-tnf-raw118-symbolic, weighted-tnf-raw118-sparse, weighted-tnf-raw118-treebank, weighted-tnf-raw118-sat, weighted-tnf-raw118-wide-cert, weighted-tnf-raw120-1lb-sat-cert, weighted-tnf-raw118-consumer, weighted-tnf-raw118-canonical76-membership, weighted-tnf-raw118-sat-crossbank, weighted-tnf-raw118-run-summary, weighted-tnf-raw118-run-summary-extra, weighted-tnf-raw118-run-summary-second, weighted-tnf-raw118-wide-repair, legacy, weighted-first-one, weighted-halt-branch, source-queue-adapter, queue-coverage, weighted-tnf-pilot, weighted-tnf-three-hole, weighted-tnf-four-hole, weighted-tnf-four-hole-sibling, weighted-tnf-r1-sweep, queue-orbit, weighted-tnf-roster-convergence, weighted-tnf-roster-agent47-graft, weighted-tnf-pure-residuals, weighted-tnf-agent42-frontier-count, weighted-tnf-raw99, weighted-tnf-raw113, weighted-tnf-raw123, weighted-tnf-raw123-recursive, weighted-tnf-raw123-bidfa, weighted-tnf-raw124-rf, weighted-tnf-raw124-lc, weighted-tnf-raw124-1rf, weighted-tnf-raw124-0rb, weighted-tnf-raw124-bundle, weighted-tnf-raw124-0lf-hard-search, weighted-tnf-raw124-1la, weighted-tnf-raw124-1la-sharded, weighted-tnf-raw124-0lb-longcycle100k, weighted-tnf-raw124-bundle-sharded, weighted-tnf-raw124-0lf-growth, weighted-tnf-raw124-0lf-complement, weighted-tnf-raw124-0lf-parent-frontier, weighted-tnf-raw124-0lf-simulation, weighted-tnf-raw124-champion-bound, weighted-tnf-raw124-1lb-fast-cut, weighted-tnf-raw124-0lb-fast-cut, weighted-tnf-raw124-0lb-complete, weighted-tnf-raw124-0la-scan, weighted-tnf-raw124-0la-fast-cut, weighted-tnf-raw124-0le-fast-cut, weighted-tnf-raw124-1la-fast-cut, weighted-tnf-raw124-0la-deep-lift, weighted-tnf-raw124-0la-seal, weighted-tnf-raw124-0lf-0rb-source, weighted-tnf-raw124-1lb-residual-pumps, weighted-tnf-raw124-1lb-residual-probe, weighted-tnf-raw124-1lb-champion-bound, weighted-tnf-raw103, weighted-tnf-raw104, weighted-tnf-agent8-five, weighted-tnf-agent8-six, weighted-tnf-agent8-raw117, weighted-tnf-agent8-raw112-macros, weighted-tnf-agent8-raw54, weighted-tnf-roster-composition, weighted-tnf-agent3-siblings, weighted-tnf-raw85-parent-check, weighted-tnf-raw91, weighted-tnf-raw87, weighted-tnf-raw83-pump, weighted-tnf-agent10-multi, weighted-tnf-agent10-five-new, weighted-tnf-agent10-five-roster, weighted-tnf-agent10-raw106, weighted-tnf-raw63-counter, weighted-tnf-raw61-witnesses, weighted-tnf-prefix-single, weighted-tnf-agent10-single, weighted-tnf-combined-109, weighted-tnf-root-zero-refinement, weighted-tnf-combined-106, weighted-tnf-canonical-78, weighted-tnf-canonical-78-exact, weighted-tnf-raw108-canonical, weighted-tnf-canonical-two-parent, weighted-tnf-raw10-box, weighted-tnf-raw10-box8-cycle, weighted-tnf-raw10-box0-halt, weighted-tnf-raw10-short-frontier, weighted-tnf-held-block-far, weighted-tnf-raw120-late, weighted-tnf-raw120-1341, weighted-tnf-raw120-cycles, weighted-tnf-raw120-rf, weighted-tnf-raw120-rb, weighted-tnf-raw120-rc, weighted-tnf-raw120-1rb, weighted-tnf-raw120-1rc, weighted-tnf-raw120-1ra, weighted-tnf-raw120-1rf, weighted-tnf-raw120-1lb-search, weighted-tnf-raw120-1lb, weighted-tnf-raw120-1la, weighted-tnf-raw120-1lf, weighted-tnf-raw120-0lb, weighted-tnf-raw120-0lf, weighted-tnf-raw120-partition, weighted-tnf-raw120-la-carry, weighted-tnf-raw120-la, weighted-tnf-raw120-ra-phases, weighted-tnf-raw120-0ra, weighted-tnf-root-sibling-first-hole, weighted-tnf-canonical-frontier, weighted-tnf-raw114-cut, weighted-tnf-raw114-far, weighted-tnf-raw114-pumps, weighted-tnf-raw114-complete, weighted-tnf-raw107-witnesses, weighted-tnf-raw107-1la, weighted-tnf-raw60, weighted-tnf-raw60-conditional, weighted-tnf-raw60-next, weighted-tnf-raw60-la, weighted-tnf-raw60-assemble, weighted-tnf-raw60-progress, weighted-tnf-raw60-0lf-witnesses, weighted-tnf-raw60-complete, weighted-tnf-raw60-repair, weighted-tnf-raw60-sparse-shards, weighted-tnf-raw60-membership, weighted-tnf-raw60-discover, weighted-tnf-raw60-1lf, weighted-tnf-raw60-1re, weighted-tnf-raw60-graft, weighted-tnf-ngram-pilot, weighted-tnf-champion-parent, weighted-tnf-held-leaf-109-membership, weighted-tnf-canonical76-raw10-membership, weighted-tnf-raw10-box-ranked-search, weighted-tnf-raw10-box-source-bridge, weighted-tnf-raw10-domain-source-inspect, weighted-tnf-raw10-box8-halt-slice, weighted-tnf-raw10-box8-cert-compile, weighted-tnf-f412-partition, weighted-tnf-sidewitness-multiparent, weighted-tnf-sidewitness-multiparent-scan, weighted-tnf-raw10-hardroot-r1-adapter, weighted-tnf-agent8-raw54-lf, weighted-tnf-raw10-box18to24-canonical76]
         default: legacy
       raw_id:
         description: 'Single Agent 10 residual index (single target only)'
@@ -78,6 +78,7 @@ jobs:
       && inputs.target != 'weighted-tnf-raw124-0lf-hard-search'
       && inputs.target != 'weighted-tnf-raw124-0lf-growth'
       && inputs.target != 'weighted-tnf-raw124-0lf-complement'
+      && inputs.target != 'weighted-tnf-raw124-0lf-parent-frontier'
       && inputs.target != 'weighted-tnf-raw124-0lf-simulation'
       && inputs.target != 'weighted-tnf-raw124-1lb-fast-cut'
       && inputs.target != 'weighted-tnf-raw124-0lb-fast-cut'
@@ -5081,6 +5082,143 @@ jobs:
             /tmp/a7-raw124.manifest.json
             /tmp/a7-raw124.log
             /tmp/a7-raw124-generated/
+          if-no-files-found: error
+          retention-days: 90
+
+
+  raw124_0lf_parent_frontier:
+    if: inputs.target == 'weighted-tnf-raw124-0lf-parent-frontier'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-0LE-source-accepted
+          run-id: 45827171994
+          github-token: ${{ github.token }}
+          path: /tmp/children/0LE
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-0rb-source-accepted
+          run-id: 45829435208
+          github-token: ${{ github.token }}
+          path: /tmp/children/0RB
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-0RE-source-accepted
+          run-id: 45827051596
+          github-token: ${{ github.token }}
+          path: /tmp/children/0RE
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1LC-source-accepted
+          run-id: 45828605659
+          github-token: ${{ github.token }}
+          path: /tmp/children/1LC
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1RA-source-accepted
+          run-id: 45829497777
+          github-token: ${{ github.token }}
+          path: /tmp/children/1RA
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1RE-source-accepted
+          run-id: 45828857309
+          github-token: ${{ github.token }}
+          path: /tmp/children/1RE
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-0RA-source-accepted
+          run-id: 45832947347
+          github-token: ${{ github.token }}
+          path: /tmp/children/0RA
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1LA-source-accepted
+          run-id: 45834325697
+          github-token: ${{ github.token }}
+          path: /tmp/children/1LA
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1LB-source-accepted
+          run-id: 45833222135
+          github-token: ${{ github.token }}
+          path: /tmp/children/1LB
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1LE-source-accepted
+          run-id: 45832599988
+          github-token: ${{ github.token }}
+          path: /tmp/children/1LE
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw124-0lf-1RB-source-accepted
+          run-id: 45832956396
+          github-token: ${{ github.token }}
+          path: /tmp/children/1RB
+      - name: Merge eleven exact child source closures
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent2-tnf-raw124/merge_0lf_artifacts.py \
+            --artifacts-root /tmp/children \
+            --generated-out /tmp/merged-generated \
+            --precompiled-out /tmp/merged-precompiled \
+            --manifest-out /tmp/merged.manifest.json 2>&1 | tee /tmp/merge.log
+          provenance=(--provenance-input im-results/agent2-tnf-raw124/merge_0lf_artifacts.py)
+          for child in 0LE 0RB 0RE 1LC 1RA 1RE 0RA 1LA 1LB 1LE 1RB; do
+            if [[ "$child" == 0RB ]]; then
+              manifest="/tmp/children/0RB/a4-raw124-0lf-0rb-closure/manifest.json"
+            else
+              manifest="/tmp/children/$child/a7-raw124.manifest.json"
+            fi
+            provenance+=(--provenance-input "$manifest")
+          done
+          python tools/lean_compile_closure.py \
+            --source-root /tmp/merged-generated \
+            --source-root im-results/agent12-raw124-0lf0le \
+            --source-root im-results/agent2-tnf-raw124 \
+            --source-root im-results/agent13-coverage \
+            --source-root im-results/agent31-three-hole-tnf \
+            --source-root im-results/agent4-two-sided-automata \
+            --workdir /tmp/frontier-work --jobs 4 \
+            --manifest /tmp/frontier.manifest.json \
+            --artifact-dir /tmp/frontier-closure \
+            --precompiled-manifest /tmp/merged.manifest.json \
+            --precompiled-dir /tmp/merged-precompiled \
+            --theorem BB6.Agent2Raw124ZeroLFParentFrontier.parent_cut \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LF_0LF" \
+            --artifact-name raw124-0lf-parent-frontier-source-audit \
+            "${provenance[@]}" \
+            im-results/agent2-tnf-raw124/Raw124ZeroLFParentFrontier.lean \
+            2>&1 | tee /tmp/frontier.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/frontier.log; then exit 1; fi
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/frontier.log BB6.Agent2Raw124ZeroLFParentFrontier.parent_cut
+          git rev-parse HEAD > /tmp/frontier-closure/SOURCE_COMMIT
+          cp /tmp/frontier.log /tmp/frontier-closure/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw124-0lf-parent-frontier-source-audit
+          path: |
+            /tmp/frontier-closure/
+            /tmp/frontier.manifest.json
+            /tmp/frontier.log
+            /tmp/merged-generated/
+            /tmp/merged-precompiled/
+            /tmp/merged.manifest.json
+            /tmp/merge.log
           if-no-files-found: error
           retention-days: 90
 
