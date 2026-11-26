@@ -1441,7 +1441,17 @@ jobs:
             --work /tmp/a31-canonical58-raw113 --base-run-id "$CANONICAL59_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113.log
           test -s /tmp/a31-canonical58-raw113/canonical58-raw113-graft.json
-          test -s /tmp/a31-canonical58-raw113/linked/Canonical58Raw113Graft.olean
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report = json.loads(Path("/tmp/a31-canonical58-raw113/canonical58-raw113-graft.json").read_text())
+          assert report["remaining_residual_count"] == 58
+          assert report["olean_sha256"]
+          assert report["raw59_retained"]
+          profiles = [report["membership_axioms"], report["axioms"]]
+          assert "sorryAx" not in str(profiles)
+          assert "native_decide" not in str(profiles)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
