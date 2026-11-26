@@ -4577,7 +4577,15 @@ jobs:
               fi
             done < <(find "$ROOT" -type f -name '*.lean' | sort)
           done
+          overrides+=(--override "Raw124M448Kid4=$W/generated/Raw124M448Kid4.lean")
+          overrides+=(--override "Raw124M448Kid4Packed=$W/generated/Raw124M448Kid4Packed.lean")
           overrides+=(--override "Raw124M448Kid4Proof=$W/generated/Raw124M448Kid4Proof.lean")
+          overrides+=(--override "Raw124M448Kid10=$W/generated/Raw124M448Kid10.lean")
+          overrides+=(--override "Raw124M448Kid10Packed=$W/generated/Raw124M448Kid10Packed.lean")
+          overrides+=(--override "Raw124M448Kid10Proof=$W/generated/Raw124M448Kid10Proof.lean")
+          overrides+=(--override "Raw124M448Kid16=$W/generated/Raw124M448Kid16.lean")
+          overrides+=(--override "Raw124M448Kid16Packed=$W/generated/Raw124M448Kid16Packed.lean")
+          overrides+=(--override "Raw124M448Kid16Proof=$W/generated/Raw124M448Kid16Proof.lean")
           THEOREM=BB6.Agent2Raw124ZeroLBComplete.bound_all
           python tools/lean_compile_closure.py --source-root "$OLD" --source-root "$AUX" --source-root "$W/generated" "${overrides[@]}" --workdir "$W/closure" --jobs 1 --precompiled-manifest /tmp/raw124-0lb-cut/manifest.json --precompiled-dir "$OLD" --manifest "$W/manifest.json" --theorem "$THEOREM" --weighted-bound 4136175 --parent-table '1RB---_1RC---_0RD---_1LD1RE_---1LF_---0LB' "$D/Raw124ZeroLBComplete.lean" | tee "$W/audit.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" "$THEOREM" BB6.Agent2Raw124ZeroLBComplete.no_open BB6.Agent2.Raw124M264.bound BB6.Agent4.Raw124M267.bound BB6.Agent4.Raw124M448.bound
