@@ -1828,11 +1828,7 @@ jobs:
           [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
           [[ "$RAW59_SLICE_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py
-          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py \\
-            --work /tmp/a2-canonical56-raw59-after-raw124 \\
-            --canonical57-run-id "$CANONICAL57_RUN_ID" \\
-            --raw59-run-id "$RAW59_SLICE_RUN_ID" \\
-            2>&1 | tee /tmp/a2-canonical56-raw59-after-raw124.log
+          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py --work /tmp/a2-canonical56-raw59-after-raw124 --canonical57-run-id "$CANONICAL57_RUN_ID" --raw59-run-id "$RAW59_SLICE_RUN_ID" 2>&1 | tee /tmp/a2-canonical56-raw59-after-raw124.log
           test -s /tmp/a2-canonical56-raw59-after-raw124/canonical56-raw59-after-raw124.json
           python - <<'PY'
           import json
