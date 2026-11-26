@@ -82,3 +82,12 @@ The wrapper's finite membership/uniqueness/count claims and its consuming theore
 ### A6 source leaf is not an additional live residual
 
 Agent48's A6 source-connected theorem and weighted leaf Cover are accepted in run 45709235547. However, the A6 leaf has C1=0RB, so it is a completion of `BB6.Agent48Raw139C1ZeroRB.parent`, one of the twelve parents in `Raw139C1Batch.parents`. The 43-sibling consumer includes this C1 batch; its original-source acceptance is pending in Agent6 run 45759230933. If that run passes, the A6 leaf is already covered by the C1=0RB parent at weighted bound 2,511 and is not one of the 80 residual obligations. Do not count it as a 44th sibling or reduce 80 to 79. The separate 184-residual / 260-graft A6 frontier counts remain unproved.
+
+
+## Normalized Raw139 p0 interface (source CI pending)
+
+`Raw139NormalizedAcceptedCovers.lean` imports the normalized seven-split p0 decomposition and the existing source-sibling modules. It matches every one of the 43 entries in `acceptedRows` against the actual source-parent tables using `sameTable`, then transports each corresponding `Cover` to the normalized child. The finite match audit includes the 13 D0/F1 source siblings, the 12-parent C1 batch, 11 F0 siblings, D0=0RF, and six additional F1 siblings.
+
+The same adapter transports the two special depth-six leaves to the existing 0RD continuation children and uses `parent_certificate_on_championP7` to close the terminal `p7) cylinder. Consequently, `raw139_cover_after_accepted` has only one remaining hypothesis: Covers for the **67 literal tables** in `remainingTables`. It does not substitute the old 80-entry complement for this 67-table list, and it does not establish those 67 Covers.
+
+The source audit is added to the existing `agent6-champion-residual.yml` workflow; no new workflow is introduced. Until that run passes, treat this as a proof candidate rather than a source-accepted result. Even after acceptance, the BB(6) upper bound remains open until all 67 residual table Covers are proved.
