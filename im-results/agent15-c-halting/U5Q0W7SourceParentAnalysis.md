@@ -33,7 +33,7 @@ Equivalently (q=0,1) always occur, and (q\ge2) is permitted only when (2^{2q-2}\
 Two branches are already eliminated by source blank-image invariants:
 
 - (q=0): ((a,k)=(8W-3,;17769+28644u)), whose right coordinate is odd and whose coordinate sum is (35590+57372u\equiv2\pmod4). Hence `blank_no_odd_sum_two` excludes it.
-- (q=1): ((a,k)=(2W-3,;24450+39417u)). If (u\equiv1\pmod4), it is odd/odd with sum (28903+46599u\equiv2\pmod4), so `blank_no_odd_sum_two` excludes it. The cases (u\equiv3\pmod4) and (u) even remain.
+- (q=1): ((a,k)=(2W-3,;24450+39417u)). If (u\equiv1\pmod4), it is odd/odd with sum (28903+46599u\equiv2\pmod4), so `blank_no_odd_sum_two` excludes it. The subcylinder \(u=239+640r\) of the \(u\equiv3\pmod4\) case is now excluded by U5Q0W7U79Mod640.lean; the remaining \(u\equiv3\pmod4\) values and even \(u\) remain open.
 
 Higher (q) occur only when (u\\equiv0\\pmod4), since (W\\equiv3u\\pmod4); larger (q) impose the exact stronger condition (2^{2q-2}\\mid W). They have not been closed.
 
@@ -624,14 +624,15 @@ Write every root-compatible parameter as \(u=19+20n\), and split
 - \(n=4T+2\), so \(u=59+80T\). The entire branch is covered,
   with density \(1\).
 
-- \(n=4T+3\), so \(u=79+80T\). No cylinder in this branch is
-  currently proved.
+- \(n=4T+3\), so \(u=79+80T\). The subcylinder \(T\equiv2\pmod8\),
+  equivalently \(u=239+640r\), is source-accepted and has density \(1/8\)
+  within this branch. The other seven \(T\pmod8\) classes remain open.
 
 The four branches are disjoint and equally frequent. Therefore the
-union of the twelve source-proved exclusions has natural density
+union of the thirteen source-proved exclusions has natural density
 \[
-\frac14\left(\frac{53}{128}+\frac{17}{32}+1+0\right)
-=\frac{249}{512}
+\frac14\left(\frac{53}{128}+\frac{17}{32}+1+\frac18\right)
+=\frac{265}{512}
 \]
 among all \(u\equiv19\pmod{20}\). This is an exact density for the
 union of the proved cylinders, hence a lower bound on the density of
@@ -648,7 +649,52 @@ closure in run #26 (45833176482), and the twelve-slice closure in run
 odd-W q=0 lift, the sum-seven source-parent helper, and all sixteen new
 q=0/q=1 declarations. The module explicitly prints their axioms; the
 workflow grep guard found no sorryAx or native_decide dependency.
+The thirteenth u=239+640r subcylinder passed the original-source closure
+in run #46 (45903781364). That run additionally compiles
+MixedOdd16TwoOrbit, U5Q0W7ParentFan, U5Q0W7U19Mod2560,
+M0EvenEvenSumZero, and U5Q0W7U79Mod640.lean. Both new theorem axiom
+profiles are [propext, Classical.choice, Quot.sound]; the workflow
+guard found no sorryAx or _native dependency.
 
-These are twelve infinite excluded sublifts of the q=1 parent, not a
+These are thirteen infinite excluded sublifts of the q=1 parent, not a
 classification of the entire w=55 (mod 128) row. The remaining q=1
-parameter residues and all even-W high-depth cases remain open.
+parameter residues (including the other seven T mod 8 classes in u=79+80T) and all even-W high-depth cases remain open.
+
+
+## 2026-11-26: source-accepted u=239+640r subcylinder
+
+The previously open \(u=79+80T\) branch has its first exact-source
+subcylinder closed: \(T=2+8r\), i.e. \(u=239+640r\). Its q=1 parent is
+\[
+Q=(1720951+4596480r,\;9445113+25226880r),
+\]
+an odd/odd target with right coordinate at least 64 and sum \(16\pmod{32}\).
+The exact odd/odd sum-16 iff gives precisely
+\[
+P_0=(5583030+14911680r,\;7514070+20069280r),\qquad
+P_2=(1395756+3727920r,\;9607704+25661160r).
+\]
+Both have even right coordinate and sum \(4\pmod8\). Three exact
+six-even-right inverses from \(P_0\) reach
+\[
+(18732644+50032920r,\;939257+2508660r),
+\]
+and one from \(P_2\) reaches
+\[
+(11003458+29389080r,\;4803851+12830580r).
+\]
+Each terminal state has odd right coordinate and sum \(1\pmod4\), so
+the original-source blank_no_odd_sum_one invariant excludes both parent
+branches. The generic odd-W q=0 lift then excludes
+\[
+P(u)=(6924072+18493440r,\;6843559+18278400r).
+\]
+The proof is formalized in
+[U5Q0W7U79Mod640.lean](U5Q0W7U79Mod640.lean), with a readable derivation in
+[U5Q0W7U79Mod640.md](U5Q0W7U79Mod640.md). Original-source run #46
+(45903781364) passed; both new theorems print axioms
+[propext, Classical.choice, Quot.sound], with no sorryAx or native
+evaluation dependency. The new cylinder has density \(1/8\) within
+\(u=79+80T\), raising the root-compatible \(u\equiv19\pmod{20}\)
+excluded density lower bound from \(249/512\) to \(265/512\). It does
+not close the other seven \(T\pmod8\) classes or decide Machine C.
