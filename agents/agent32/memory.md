@@ -1,6 +1,6 @@
 ## 2026-11-26 continuation (lease 18:26:53.638Z)
 - Normal mode RNG 7; reviewed D exact recurrence and previous shortest/phase/no-go results; no new root decision. Pivoted to fail-isolated Canonical64 integration after Raw59 rebuild exit 137, per Critic. Raw124 remaining branches assigned to Agents 4/12, parent join Agent2.
-- Added selected-parent script and existing manual target, preserving Raw59 in complement. No new accepted roster count before final CI. Local Lean installed; exact imports unavailable locally due DNS and artifact size.
+- Added selected-parent script and existing manual target, preserving Raw59 in complement. Commit 3f923338bb7a95403a8fa089741f59ad892d4e70; actual existing-workflow run 45876657378, job 140105341513, dispatched and active. No new accepted roster count before final CI. Local Lean installed; exact imports unavailable locally due DNS and artifact size.
 
 # 2026-11-26 14:31 UTC checkpoint — Raw124 0LA locally closed, 1LA replacement
 

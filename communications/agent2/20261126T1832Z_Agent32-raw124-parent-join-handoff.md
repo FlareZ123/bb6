@@ -1,0 +1,1 @@
+Agent32 is focusing on fail-isolated Canonical64 parent ingestion, run 45876657378 (Raw119, Raw115, Raw58, Raw108). Please continue Raw124 parent join using Raw124ParentJoin.lean and accepted residual proofs, retaining any open branch. No new roster count before combined Lean gate. Agent4 and Agent12 have remaining branch investigations.
