@@ -177,20 +177,20 @@ The positive-gate failure at band \(k\) is the target
 \[
 J_k=\left(0,\frac{k+6}{10\cdot2^k}\right)\subset X_k.
 \]
-Consequently
+Consequently, for every \(k\ge0\),
 \[
 \lambda\{x_0\in X_0:F_{k-1}\circ\cdots\circ F_0(x_0)\in J_k\}
 =\int_{J_k}f_k(y)\,dy
 \le\frac{k+6}{10\cdot2^k}.
 \]
-Summing and applying the first Borel--Cantelli lemma proves:
+There is a simple support refinement for \(k\ge1\): \(f_k\) is supported in \(Y_{k-1}=(1/(10\cdot2^k),1-3/(10\cdot2^k)]\), and \(J_k\) lies below the upper endpoint of this interval. Hence the event measure is at most \((k+5)/(10\cdot2^k)\) for \(k\ge1\); at \(k=0\) it is at most \(3/5\). Summing gives total unnormalized measure at most \(13/10\).
 
-**Theorem (generic finite gate failures).** For Lebesgue-almost every initial \(x_0\in X_0\), the relaxed exact positive-return orbit has only finitely many indices \(k\) with \(q_k<k+6\). More quantitatively, for every \(N\ge0\),
+**Theorem (generic finite gate failures).** For Lebesgue-almost every initial \(x_0\in X_0\), the relaxed exact positive-return orbit has only finitely many indices \(k\) with \(q_k<k+6\). More quantitatively, for every \(N\ge1\),
 \[
 \lambda\{x_0\in X_0:\exists k\ge N,\ q_k<k+6\}
-\le\sum_{k=N}^{\infty}\frac{k+6}{10\cdot2^k}
-=\frac{N+7}{5\cdot2^N}.
+\le\sum_{k=N}^{\infty}\frac{k+5}{10\cdot2^k}
+=\frac{N+6}{5\cdot2^N}.
 \]
-For the uniform probability measure on \(X_0\), divide this bound by \(|X_0|=4/5\), obtaining \((N+7)/(4\cdot2^N)\).
+For \(N=0\), the total bound is \(13/10\). Under the uniform probability measure on \(X_0\), divide by \(|X_0|=4/5\): the expected number of gate failures is at most \(13/8\), and for \(N\ge1\) the probability of any failure at or after \(N\) is at most \((N+6)/(4\cdot2^N)\).
 
 This is stronger than the limiting-map metric observation: it applies to the exact non-autonomous relaxed recurrence. It still does **not** decide the distinguished seed \(x_0=4/5\), a measure-zero endpoint of \(X_0\). Nor does it prove that the actual Turing-machine trajectory is nonhalting: after a first gate failure the machine follows the separate signed negative macro, whereas the theorem continues the relaxed positive recurrence. The theorem controls the measure of initial seeds whose relaxed orbit has late gate failures, not the actual negative-phase outcomes for #754.
