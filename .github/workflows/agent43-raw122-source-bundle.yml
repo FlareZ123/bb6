@@ -1,0 +1,24 @@
+name: Agent43 Raw122 source bundle
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect tracked theorem sources
+        run: |
+          mkdir -p bundle
+          find im-results/agent43-raw122-cut im-results/agent29-raw122-run im-results/agent3-raw122-cut -maxdepth 1 -name '*.lean' -exec cp {} bundle/ \; 2>/dev/null || true
+          git rev-parse HEAD > bundle/source-commit.txt
+          test -f bundle/Raw122CompleteParent.lean
+          test -f bundle/Raw122ResidualCompose.lean
+          test -f bundle/PackedAction122.lean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent43-raw122-source-bundle
+          path: bundle/
+          retention-days: 7
