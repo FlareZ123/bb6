@@ -40,12 +40,18 @@ def main():
     # Fixtures already use the checked Lean constructor field order.
     emit_fixtures(fixtures, D / (MODULE + "Auto.lean"), "Raw13Branch"+BRANCH)
     auton = {x["table"]: i for i,x in enumerate(fixtures)}
+    # A manual proof has the same candidate-tree tag as an automatic sweep,
+    # but the Lean kernel checks its explicit machine and theorem instead.
+    rows = CATALOG.get("proved", []) if CATALOG is not None else []
+    proved = {table: (mod, p, thm) for table, mod, p, thm in rows}
+    assert len(proved) == len(rows) and not (set(proved) & set(auton))
+    proof_imports = sorted({mod for mod, _, _ in proved.values()})
     with tempfile.TemporaryDirectory() as temp:
         temp = Path(temp)
         exe = temp / "frontier_complete"
         subprocess.run(["g++","-O3","-std=c++17",str(D/"frontier_complete.cpp"),"-o",str(exe)],check=True)
         auto_tables = temp / "auto.txt"
-        auto_tables.write_text("\n".join(auton) + "\n")
+        auto_tables.write_text("\n".join([*auton,*proved]) + "\n")
         far_file = D/f"branch{BRANCH}-far.txt"
         if CATALOG is not None:
             far_file = temp/"far.txt"
@@ -66,6 +72,9 @@ def main():
             a,b,z=saturate(codes(raw),dfa,rev)
             return f".closed (.far {boolean(rev)} {len(dfa)//2} ⟨0,{fmt(dfa)},{fmt(a)},{fmt(b)},{z}⟩)"
         if tag=="auto":
+            if v[0] in proved:
+                _, p, thm = proved[v[0]]
+                return f".closed (.proven {p} {thm})"
             i=auton[v[0]]
             return f".closed (.proven {AUTO}.p{i} {AUTO}.never{i})"
         if tag=="split":
@@ -80,7 +89,7 @@ def main():
         mods.append(name)
         p=f"next {move(MOVES[i])}"
         decl=checked_subtree(k,tag,p,max(4,i%6+1),B,emit,complete=True)
-        write(name,[MODULE+"Base",MODULE+"Auto","Agent46CompleteCut"],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut 4 {move(MOVES[i])}) kid{tag} = true := ok{tag}\ntheorem closed{tag} : closedCut (nextCut 4 {move(MOVES[i])}) kid{tag} = true := complete{tag}\n")
+        write(name,[MODULE+"Base",MODULE+"Auto","Agent46CompleteCut",*proof_imports],decl+f"\ndef kid{tag} : Cut := c{tag}\ntheorem checked{tag} : check {B} ({p}) (nextCut 4 {move(MOVES[i])}) kid{tag} = true := ok{tag}\ntheorem closed{tag} : closedCut (nextCut 4 {move(MOVES[i])}) kid{tag} = true := complete{tag}\n")
     terms=",".join(f"kid{i:02}" if tree[3][i] is not None else ".unresolved" for i in range(24))
     cases="\n".join(f"  · exact checked{12*w+6*r+q:02}" for q,w,r in product(range(5),range(2),range(2)))
     ccases = cases.replace("exact checked", "exact closed")
