@@ -267,7 +267,7 @@ theorem cover_championResidual_after_thirty
   exact BB6.Agent41F0Extended.refined_residual_cover h112
 
 
-/-- The twelve source-audited C1 siblings are distinct from the 26 already
+/-- The twelve source-audited C1 siblings are distinct from the 30 already
     consumed F0/F1/D0 parents. Match by the finite table comparator, then use
     the source module's exact list-membership consumer. -/
 def isC1Sibling (p : PartialMachine) : Bool :=
@@ -327,7 +327,7 @@ theorem cover_remainingRaw139AfterThirty
           ⟨hx, by simp [remainingRaw139AfterFortyTwo, hFalse]⟩))
     e he
 
-/-- The 85 remaining raw139 leaves, plus the 42 already consumed siblings,
+/-- The 81 remaining raw139 leaves, plus the 42 already consumed siblings,
     now give a Cover of the champion parent. -/
 theorem cover_championResidual_after_fortyTwo
     (hLeaves : ∀ e ∈ remainingRaw139AfterFortyTwo,
