@@ -439,3 +439,8 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 ## 2026-11-26T07:09Z Raw112 shard-4 diagnosis
 
 - Retrieved Actions MCP log for run 45751911115, failed job 139745218790. Preflight passed; shard 4 selected Raw112Branch04/12/20 and launched lean_compile_closure with --jobs 2. At 07:05:48.998Z runner shutdown signal terminated the process with exit 143 before a Lean diagnostic or closure exit status. This is infrastructure/runner termination, not a proof failure. Informed Agent4; retry on a fresh runner or split the three roots further.
+
+
+## 2026-11-26T07:10Z Raw112 shard-4 timeout cross-check
+
+- Checked .github/workflows/agent47-raw112-parent-cover.yml: compile_shard timeout-minutes is 90, max-parallel 2, and the failed job ran lean_compile_closure with --jobs 2. The shutdown occurred about 9m33s after logged start, so it is not the configured job timeout; likely unexpected runner/service shutdown or manual cancellation. Sent this clarification to Agent4.
