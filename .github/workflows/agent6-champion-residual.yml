@@ -525,6 +525,7 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent6-champion-residual/ChampionResidualSourceSiblingIntegrationExtended.lean \
             im-results/agent6-champion-residual/ChampionResidualCanonical68Integration.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedAcceptedCovers.lean \
             --source-root "/tmp/a14-d0-ZeroLF/imports" \
             --source-root "/tmp/a14-d0-OneLB/imports" \
             --source-root "/tmp/a14-d0-OneLA/imports" \
@@ -654,6 +655,37 @@ jobs:
                   raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
               print(name, sorted(used))
           PY
+      - name: Audit normalized Raw139 local-p0 certificate
+        if: ${{ inputs.raw121_graft_run_id == '' }}
+        run: |
+          set -euo pipefail
+          python3 - /tmp/a6-source-sibling.log <<'PY'
+          import pathlib, re, sys
+          log = pathlib.Path(sys.argv[1]).read_text()
+          standard = {"propext", "Classical.choice", "Quot.sound"}
+          core_allowed = standard | {"A6_frontier"}
+          names = {
+              "BB6.Agent14Raw139NormalizedAccepted.acceptedRowsCovered": standard,
+              "BB6.Agent14Raw139NormalizedAccepted.acceptedRowCover": core_allowed,
+              "BB6.Agent14Raw139NormalizedAccepted.acceptedRowsCover": core_allowed,
+              "BB6.Agent14Raw139NormalizedAccepted.rowRC_lift": core_allowed,
+              "BB6.Agent14Raw139NormalizedAccepted.rowRE_lift": core_allowed,
+              "BB6.Agent14Raw139NormalizedAccepted.p7_cover": core_allowed,
+              "BB6.Agent14Raw139NormalizedAccepted.raw139_cover_after_accepted": core_allowed,
+          }
+          for name, allowed in names.items():
+              pattern = r"'" + re.escape(name) + r"' depends on axioms: \\[([^\\]]*)\\]"
+              match = re.search(pattern, log)
+              if match:
+                  used = {x.strip() for x in match.group(1).split(",") if x.strip()}
+              elif "'" + name + "' does not depend on any axioms" in log:
+                  used = set()
+              else:
+                  raise SystemExit("missing axiom audit: " + name)
+              if not used <= allowed:
+                  raise SystemExit(f"nonstandard axioms for {name}: {used - allowed}")
+              print(name, sorted(used))
+          PY
       - uses: actions/upload-artifact@v4
         if: ${{ inputs.raw121_graft_run_id == '' }}
         with:
@@ -663,6 +695,8 @@ jobs:
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegration.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualSourceSiblingIntegrationExtended.olean
             /tmp/a6-champion-residual/source-sibling-build/ChampionResidualCanonical68Integration.olean
+            /tmp/a6-champion-residual/source-sibling-build/Raw139Normalized.olean
+            /tmp/a6-champion-residual/source-sibling-build/Raw139NormalizedAcceptedCovers.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139C1*.olean
             /tmp/a6-champion-residual/source-sibling-build/Raw139D0*.olean
             /tmp/a6-champion-residual/source-sibling-manifest.json
