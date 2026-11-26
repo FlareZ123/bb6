@@ -17,6 +17,26 @@ test -s "$UPSTREAM_ROOT/.lake/build/lib/lean/BusyBeaver/BB6/NonHalt/M_1RB0RC_1LC
 
 python3 "$ROOT/tools/test_lean_compile_module_index.py"
 mkdir -p "$WORKDIR"
+python3 - "$ROOT" "$WORKDIR" <<'PY'
+import base64
+import hashlib
+import lzma
+from pathlib import Path
+import sys
+
+root, work = Path(sys.argv[1]), Path(sys.argv[2])
+encoded = root / "im-results/agent13-coverage/BB6Coverage.lean.xz.b64"
+source = lzma.decompress(base64.b64decode(encoded.read_bytes()))
+digest = hashlib.sha256(source).hexdigest()
+expected = "fbe453c5c170029885ba328bfdd9262600f918a8ce2371c60ecbb843897fd6bd"
+if digest != expected:
+    raise SystemExit(f"BB6Coverage source checksum mismatch: {digest}")
+target = work / "BB6Coverage.lean"
+target.write_bytes(source)
+(work / "BB6Coverage.sha256").write_text(digest + "  BB6Coverage.lean\n", encoding="utf-8")
+print(f"Materialized pinned BB6Coverage source: sha256={digest}")
+PY
+test -s "$WORKDIR/BB6Coverage.lean"
 printf '%s\n' "$PINNED" > "$WORKDIR/upstream-commit.txt"
 cp "$UPSTREAM_ROOT/lakefile.toml" "$WORKDIR/upstream-lakefile.toml"
 cp "$UPSTREAM_ROOT/lake-manifest.json" "$WORKDIR/upstream-lake-manifest.json"
@@ -55,6 +75,7 @@ python3 "$ROOT/tools/lean_compile_closure.py" \
   --override Raw10CtlDualConsumer=im-results/agent50-weighted-tnf-pilot/Raw10CtlDualConsumer.lean \
   --override Raw10BoxCore=im-results/agent49-box-complement/Raw10BoxCore.lean \
   --override Raw10FixedLeaves=im-results/agent13-block-far/Raw10FixedLeaves.lean \
+  --override BB6Coverage=.tmp/agent50-raw10-ctl-footprint/BB6Coverage.lean \
   --override BoxComplement=im-results/agent49-box-complement/BoxComplement.lean \
   --override RootRaw10Core=im-results/agent13-cross-route-pilot/RootRaw10Core.lean \
   --override CrossRouteHeldLeaf=im-results/agent13-cross-route-pilot/CrossRouteHeldLeaf.lean \
