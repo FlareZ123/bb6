@@ -1,73 +1,54 @@
-# No three-token periodic reset itinerary
+# No full three-token periodic reset itinerary for machine #746
 
-**Result (26 November 2026).** Every infinite successful #746 reset itinerary with a full period of length three is impossible, including arbitrary zero valuations. Together with [the two-token exclusion](TwoTokenPeriod.md) and [the grouped positive-gap theorem](GroupedPositiveGaps.md), this excludes all full periods of length at most three. The integer lower-bound combination, tail cutoff, exact denominator-cap search and bounded token exclusion are kernel-checked in [ThreeTokenPeriod.lean](ThreeTokenPeriod.lean), Lean 4.36.0-rc2. The connection to the original reset dynamics is a written proof using [PeriodicRigidity.md](PeriodicRigidity.md) and [PeriodicBetaSearch.md](PeriodicBetaSearch.md). This is not a verdict for the blank-root orbit.
+**Result.** Extending [TwoTokenPeriod.md](TwoTokenPeriod.md), no successful infinite #746 reset itinerary can have a full token period of length three, with arbitrary valuations (including zeros) and increments. The new ingredient is a lower bound on the denominator of the negative second-coordinate cycle from the minimum separation of distinct 3-adically divisible numerators. The arithmetic inequalities, denominator-cap finite check, and final token finite check are Lean-kernel verified in [BetaThreeBridge.lean](BetaThreeBridge.lean) and [ThreeTokenPeriod.lean](ThreeTokenPeriod.lean), Lean 4.36.0-rc2. The connection to the exact original reset grammar remains the paper-level periodic rigidity reduction. No authentic blank-root halt/nonhalt decision is claimed.
 
-## 1. A new lower bound on the beta denominator
+## 1. Negative second-coordinate states
 
-Let the three cyclic valuation entries have sorted values a<=b<=c (the chronological order need not be sorted), total A=a+b+c, and total increment D>0. Constant valuation words are already excluded by the grouped positive-gap theorem, irrespective of their full token length. Assume A>=7; smaller totals will be exhausted directly.
+Let the three valuations be sorted as a≥b≥c≥0 (their chronological order is arbitrary), A=a+b+c, and D the total level increment. The constant-valuation case is already excluded by [GroupedPositiveGaps.md](GroupedPositiveGaps.md). Otherwise the valuation word is primitive of length three. Its rational second-coordinate orbit y=p/r has three distinct phases because its next valuation is determined by v2(|p+r|)-1. The reduced odd denominator r is the same at every phase.
 
-The second coordinate y=p/r (r>0, coprime to 6) follows y'=3^v(y+1)/2^(v+1). The three cyclic fixed points have common reduced denominator r, dividing V=3^A-2^(A+3)>0. For A>=7, V>=3^A/2 (verify at 7, then multiply the competing powers by 3 and 2).
+Assume A≥7. Then R=3^A≥2P, where P=2^(A+3); this follows at A=7 and propagates by multiplication. The cyclic y equation has positive translation numerator and negative denominator P-R, so all y_i<-1. Write u_i=-p_i>r. For a chronological phase with valuation e, its successor satisfies
 
-At the phase after the largest valuation c, the unreduced absolute numerator is
+    3^e (u_i-r) = 2^(e+1) u_(i+1).
 
-    U=3^c*(3^(a+b)+2^(v+1)*3^w+2^(a+b+2)),
+Each u_(i+1) is divisible by 3^e. Substituting the three inverse equations in a cycle yields
 
-where (v,w) is either (a,b) or (b,a), as determined by the cyclic order. Since the common cancellation factor V/r is coprime to 3, it divides the parenthesis, which is at most 7*3^(a+b). Thus
+    R u_i = (R + P_i R_(i+1) R_(i+2) + P_i P_(i+1) R_(i+2)) r + P u_i,
 
-    14*r >= 3^c.                                              (1)
+where R_i=3^e, P_i=2^(e+1). Since P_i≤2R_i and R≥2P, this implies u_i≤14r at every phase (phase_bound).
 
-The corresponding bound U_i<=7*3^A applies at every phase, so the negative rational beta cycle has x_i=-y_i with 1<x_i<=14.
+Choose the phase preceded by a maximum valuation a. Then 3^a≤14r. Choose the two phases preceded by a and b. Their distinct numerators are both divisible by 3^b. Since each outgoing valuation is at least c, their inverse equations imply
 
-If a=0, (1) already implies 3^(a+b)<=28*r*2^a. Otherwise all three valuations are positive. Each phase numerator p_i is divisible by 3 to at least the preceding valuation, since its update multiplies by 3 to that power and divides by a power of 2. The two phases immediately after the two largest valuations therefore have numerators both divisible by 3^b. They must be distinct: equality would imply equality of all their future valuation entries by the deterministic rule v=v2(|p+r|)-1, and a nonconstant cyclic word of length three cannot have a smaller period. Hence their difference has magnitude at least 3^b.
+    3^c (u_i-r) ≤ 28 r 2^c.
 
-For any phase with outgoing valuation v>=a, the recurrence gives
+The nonzero difference of these two numerators is at least 3^b and is no larger than the larger u_i-r. Consequently 3^(b+c)≤28 r 2^c (close_to_r, close_pair). This argument applies also if two valuations are equal, provided the word is not constant, and if c=0.
 
-    |p_i+r| = r*(x_i-1) = r*x_(i+1)*2^(v+1)/3^v
-             <=28*r*(2/3)^a.
+If 5a≥2A, the first bound gives 3^(2A)≤(14r)^5. Otherwise 5(b+c)>3A and b≥c; square the second bound, replace 2^(2c) by 2^(b+c), raise to the fifth power, and use monotonicity of (9/2)^s to obtain
 
-Both p_i+r are negative, so the absolute difference of the selected two numerators is at most this same bound. It follows that
+    3^(6A) ≤ (28r)^10 2^(3A).
 
-    3^(a+b) <= 28*r*2^a.                                      (2)
+## 2. Unbounded cutoff
 
-Squaring (2), use 2a<=a+b to get 3^(2(a+b)) <= (28r)^2*2^(a+b). Cubing and using 8<=9 gives 3^(4(a+b)) <= (28r)^6. Raising the weaker 3^c<=28r from (1) to the fourth power yields the central bound
+From the existing first-difference denominator identity and q|(2^D-1)^2, we have r≤D(2^D-1), D≤A. The slope product gives 2^(A+3+D)<3^(A+3). Hence
 
-    3^(4A) <= (28r)^10.                                       (3)
+    8*2^A*r < 27*A*3^A.
 
-The integer implication (1),(2) -> (3) is kernel-checked by beta_lower. The rational-cycle argument supplying (1),(2) remains a paper proof. It uses no assumption about a blank root.
+Combine this strict upper bound with the first or second lower bound above to obtain, respectively,
 
-## 2. Uniform total-valuation cutoff
+    8^5*32^A < (378*A)^5*27^A,
+    8^10*128^A < (756*A)^10*81^A.
 
-Write H=2^D-1 and let q be the reduced normalized slope denominator. The necessary denominator identities q|H^2 and q/gcd(q,H)=r/gcd(r,D) imply r|D*H. The strict slope-band product gives
+Both reverse weak inequalities hold at A=300. They propagate for n≥300 because 32(n+1)≤33n and 27*33^5≤32*32^5, 81*33^10≤128*32^10. Thus A<300. The theorems valuation_bound and beta_upper are exact integer proofs, and the A<7 branch automatically satisfies the cutoff.
 
-    3^A < 2^(A+D),    2^(A+3+D)<3^(A+3),    D<=A.
+## 3. Exact aggregate and token exhaustion
 
-In particular r<=D*H<A*2^D and 8*2^A*r<27*A*3^A, hence 2^A*(28r)<95*A*3^A. Combining its tenth power with (3) and cancelling 81^A yields
+Put H=2^D-1, g=gcd(P*2^D-R,H^2), C=gcd(|P-R|,D*(g/gcd(g,H))). The slope denominator q>1 divides g; the first-difference identity and gcd-quotient monotonicity give r|C, as in [PeriodicBetaSearch.md](PeriodicBetaSearch.md). Use the inequalities 3^A<2^(A+D), 2^(A+3+D)<3^(A+3), and, for A≥7, either lower bound with C replacing r. The complete kernel computation check_pairs examines 45,150 aggregate pairs 0≤A<300, 0≤D≤A and leaves only the possible pair A=6,D=5. The theorem aggregate_only incorporates the unbounded cutoff and cap monotonicity.
 
-    1024^A < (95*A)^10*729^A.
+For that pair, all tokens have 0≤valuation≤6 and 0≤increment≤valuation. There are 28 such tokens; the kernel computes all 28^3=21,952 ordered triples. For chronological tokens (a_i,delta_i), put P_i=2^(a_i+1+delta_i), R_i=3^a_i, Q=P_1P_2P_3-R_1R_2R_3. The cyclic slope numerator at phase zero is
 
-The reverse weak inequality holds at A=303 (integer calculation) and persists, since for n>=303, 30(n+1)<=31n and 729*31^10<=1024*30^10. Theorems tail_bound and valuation_bound check this reasoning. Thus A<=302.
+    n_0=R_3*(R_2*(R_1+P_1)+P_1P_2),
 
-## 3. Sharpening the cutoff to A<=7
+and the other phases are its cyclic rotations. Require A=6,D=5, Q>0, Q<2n_i<2Q for all phases, and q=Q/gcd(Q,n_0)>1 dividing 31^2. No triple survives. The theorems check_tokens and no_tokens certify that computation without native_decide or additional axioms.
 
-Rather than enumerating millions of token triples, use the necessary common denominator cap
+## 4. Reproduction and boundary
 
-    C(A,D)=gcd(|2^(A+3)-3^A|, D*(2^D-1)),   r|C(A,D).
-
-Consequently 3^(4A)<=(28*C)^10 is necessary. For each A, put d0=floor(log2(3^A))+1-A. The two strict band inequalities imply D is d0 or d0+1: the lower one gives D>=d0; the upper follows from 27<32 and 3^A<2^(floor(log2(3^A))+1). The theorem D_choices proves this with Nat.log2, not floating point.
-
-There are just 590 possible cap checks for 8<=A<=302. In every case either a necessary band/increment inequality fails or (28*C)^10<3^(4A). The axiom-free theorem cap_checked evaluates the complete check, and small_total composes the tail and cap bound to force A<8.
-
-## 4. Exact remaining token census
-
-For 0<=v<=7 and 0<=delta<=v use the necessary slope inequalities 3*3^v<2^(v+2+delta), 2^(v+delta)<2*3^v. These give 11 tokens. For each ordered triple, let P_i=2^(v_i+1+delta_i), R_i=3^v_i and
-
-    Q=P1*P2*P3-R1*R2*R3,
-    n=R3*(R1*R2+P1*R2+P1*P2),
-
-with cyclic analogues n1,n2. Require all three strict slope bands Q<2*n_i and n_i<Q; Q>0; A<8; D>0. Reduce q=Q/gcd(Q,n). The second coordinate has denominator r=V/gcd(V,U) with V=|2^(A+3)-3^A| and U obtained from the same numerator formula using zero increments. Require q>1, gcd(q,6)=1, q|H^2 and the first-difference denominator equality. None of the 11^3=1331 triples passes. small_checked is axiom-free, and no_small_candidate generalizes this exhaustive computation to arbitrary small-total triples.
-
-Run lean ThreeTokenPeriod.lean with Lean 4.36.0-rc2. The arithmetic exports use only propext, Classical.choice, Quot.sound; the two finite checks are axiom-free. No sorryAx. The initial local source SHA-256 is 89b02f6a7079cac5d8bd1f08d20cfa6e9341e5746c1fa2ec66d6d2017b6a437e.
-
-## Remaining quantifier
-
-This excludes full length-three periodic itineraries, not arbitrary repetition of a primitive valuation word of length three, longer periods, or aperiodic itineraries. The source-to-rational reduction and numerator separation argument are written mathematical derivations, not a single original-source Lean theorem. The authentic fatal-index reachability problem remains open.
+Run lean BetaThreeBridge.lean and lean ThreeTokenPeriod.lean. Both compiled locally under 4.36.0-rc2. The two exhaustive theorems have no axioms; every other exported theorem has only standard axioms (propext, Classical.choice, Quot.sound). All arithmetic is exact. Full token lengths 1, 2 and 3 are now excluded without a valuation cutoff. The result does not rule out longer periods or aperiodic itineraries, and no new global BB(6) upper bound follows. The close-numerator inequality may generalize to larger negative beta cycles, but the quantitative exponent comparison for three phases is specific to their total valuation distribution.

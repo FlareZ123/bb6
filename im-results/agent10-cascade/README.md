@@ -67,3 +67,5 @@ Consult the [full research log](FULL_RESEARCH_LOG.md) for exact formulas, except
 ### Full three-token periods excluded (26 November 2026)
 
 [ThreeTokenPeriod.md](ThreeTokenPeriod.md) proves an unbounded exclusion of every full token period of length three, extending the length-two result. For A≥7, the negative beta cycle has three distinct reduced numerator magnitudes within 14r, and powers-of-three divisibility of two of them forces a second denominator lower bound. Combined with the first-difference upper bound, the total valuation must be below 300. Lean checks 45,150 aggregate pairs, leaving only (A,D)=(6,5), and rejects all 21,952 token triples for that pair. Both arithmetic modules passed Lean 4.36.0-rc2; the exact reset-to-periodic constraints remain paper-level. No rooted verdict.
+
+**Compact alternative:** [ThreeTokenPeriodCompact.md](ThreeTokenPeriodCompact.md) preserves the second proof of the previously established full three-token exclusion; its single combined lower bound reduces the finite check to 590 caps and 1,331 triples. Both original proof modules and the distinct compact namespace are retained.
