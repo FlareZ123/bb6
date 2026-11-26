@@ -143,7 +143,7 @@ n\le v_2(S_v)+1.
 ]
 Here
 [
-S_v=4(32198+47789q),
+S_v=12(32198+47789q),
 ]
 and the odd coefficient 47789 makes this secondary valuation unbounded
 over q. The n=1 bounce is E_v; higher odd depths remain a genuine
