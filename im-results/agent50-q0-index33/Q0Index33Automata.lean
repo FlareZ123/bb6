@@ -5,13 +5,10 @@ set_option maxHeartbeats 0
 namespace BB6.Agent50Q0Index33Automata
 open BB6Coverage
 
-/--
-Exact R33L0 two-sided finite-stack certificate, isolated from the larger
-q0-open-automata roster.  The table is the q0 sibling-scan index-33 residual:
-only C1 is unassigned.  The checker validates every transition in both
-stack automata; no bounded simulation is a proof premise.
--/
 namespace R33L0
+/-- Exact R33L0 two-sided finite-stack certificate, isolated from the larger
+q0-open-automata roster. Only C1 is unassigned; no bounded simulation is a
+proof premise. -/
 def table : PartialMachine := fun s => match s with
   | (0,false) => some (some ⟨true,true,1⟩)
   | (0,true) => some (some ⟨true,true,3⟩)
