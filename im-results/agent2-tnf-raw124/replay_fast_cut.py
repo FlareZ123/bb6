@@ -85,6 +85,11 @@ end {gns}
                 i=int(si)
                 assert i in spec['remaining'] and i not in far and i not in ref
                 assert opens[i]==e['table'].replace('_','')
+                if e.get('packed_sha256'):
+                    import gzip
+                    data=gzip.decompress(base64.b64decode((ROOT/(e['module']+'.lean.gz.b64')).read_bytes()))
+                    assert hashlib.sha256(data).hexdigest()==e['packed_sha256']
+                    (out/(e['module']+'.lean')).write_bytes(data)
                 ref[i]=(e['module'],e['namespace'])
     for j in range(0,len(growth),12):
         name=stem+f'Growth{j//12:02}'

@@ -1,4 +1,10 @@
 {
+  "151": {
+    "table": "1RB1LE_1RC0LA_0RD1RC_1LD1RE_1LB1LF_---0LB",
+    "module": "Raw124LB0Sweeps",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Sweeps.M151",
+    "packed_sha256": "a07a6d268e37c1cc9edd2e1045d3b754fbb33384a1ed7e0f1b637679229ab067"
+  },
   "935": {
     "table": "1RB1LE_1RC0RA_0RD0RE_1LD1RE_0LA1LF_---0LB",
     "module": "Raw124LB0Four",
@@ -18,5 +24,17 @@
     "table": "1RB1LE_1RC0RC_0RD1RB_1LD1RE_0LA1LF_---0LB",
     "module": "Raw124LB0Four",
     "namespace": "BB6Coverage.Agent4Raw124LB0Four.M1047"
+  },
+  "1255": {
+    "table": "1RB0LE_1RC1LA_0RD0RA_1LD1RE_1RB1LF_---0LB",
+    "module": "Raw124LB0Sweeps",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Sweeps.M1255",
+    "packed_sha256": "a07a6d268e37c1cc9edd2e1045d3b754fbb33384a1ed7e0f1b637679229ab067"
+  },
+  "1441": {
+    "table": "1RB1LC_1RC1LA_0RD1LE_1LD1RE_1RC1LF_---0LB",
+    "module": "Raw124LB0Sweeps",
+    "namespace": "BB6Coverage.Agent4Raw124LB0Sweeps.M1441",
+    "packed_sha256": "a07a6d268e37c1cc9edd2e1045d3b754fbb33384a1ed7e0f1b637679229ab067"
   }
 }
