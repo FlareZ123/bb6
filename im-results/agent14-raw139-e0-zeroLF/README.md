@@ -15,7 +15,7 @@ Initial block search closed 12,226, exact late queries 142, leaving 273 opens an
 |1307|7,13,11,17,14,21,24,16,20,11,1,2|Lean accepted|
 |2040|7,3,11,5,14,13,24,16,20,11,2,22|Lean accepted locally|
 |3002|7,23,11,13,14,1,24,16,20,11,3,6|Lean accepted|
-|3862|7,10,11,19,14,17,24,16,20,11,3,0|Open|
+|3862|7,10,11,19,14,17,24,16,20,11,3,0|Lean accepted locally|
 |3863|7,10,11,21,14,17,24,16,20,11,3,0|Lean accepted locally|
 |3864|7,10,11,22,14,17,24,16,20,11,3,0|Lean accepted|
 |4125|7,9,11,24,14,21,2,16,20,11,3,0|Lean accepted|
@@ -34,7 +34,7 @@ Source artifacts: run 45839040551 / 15126193553 (3864,4344,11287,10338); run 459
 |4344|5234|1112|left|-8|-8|
 |11287|2656|948|right|-7|10|
 
-3862 remains the only mathematically undecided exceptional row. The exact buffered sweep rules are formalized in Agent3's E0LFSweep.lean. Neither a long finite run nor a failed abstraction is evidence of universal nonhalting.
+All eleven exceptional rows are now proved nonhalting (see 3862 below). The exact buffered sweep rules are formalized in Agent3's E0LFSweep.lean. Neither a long finite run nor a failed abstraction is evidence of universal nonhalting.
 
 ## Reproduction
 
@@ -46,4 +46,14 @@ Run `python /path/to/repo/im-results/agent14-raw139-e0-zeroLF/discover.py 4` in 
 
 `ConditionalHybrid.lean` gives kernel-checked compositional soundness of first-hole certificates with an explicit proposition premise, including weighted halting branches. `assemble.py` expands the complete tree to 27,892 splits and 641,517 ordinary leaves: 425,386 cycles, 156,180 last-hole, 47,569 FAR, 12,371 block-FAR, 11 exceptional. The only outstanding premise in packed mode is the exact weighted Cover at 19,007 of table `[7,10,11,19,14,17,24,16,20,11,3,0]` (3862). This is inside F0=1RA, root index 18 in byMove order. The other 23 root proofs have premise True. The root00 proof was accepted locally. All source shards were generated locally; the complete source closure and parent theorem `BB6.Agent14E0LFParent.weighted_conditional` still require kernel acceptance. `prepare.sh` and `compose.py` reproduce the sharded closure in the existing E0 workflow. Source pin d778a640cac0ab4ac49fe020d321bde11afba066, CI run [45908439166](https://github.com/FlareZ123/bb6/actions/runs/45908439166) queued at 23:01:53Z.
 
-The 19,007 bound remains conditional; no removal from the outer canonical roster is asserted.
+The conditional tree audit still requires completion; no removal from the outer canonical roster is asserted.
+
+## Final exceptional residual 3862 — exact growth (23:26 UTC)
+
+**All eleven exceptional residuals are kernel-accepted.** For the exact partial table `[7,10,11,19,14,17,24,16,20,11,3,0]` (D0 unknown), define the buffered A-state family with empty left stack and right stack `00100 1^(112+48k)`. The theorem `recurrence k : Reach 1 .a [] (family k) .a [] (family (k+1))` proves growth for every natural k, using 54 symbolic blocks and exact finite prefix effects. Each Reach 1 path contains a positive number of original machine steps. A separate checked blank-entry proof reaches k=132. The discovery trace's entry was 14,773,670 primitive steps after 4,181,607 buffered macro rules (following the initial nine-step seed); these are simulation counts, not assertions of the existential Reach theorem. The entry proof uses 22,029 accelerated transfers over 109 exact effects, compiled in 44 bounded-memory seed modules. No unknown D0 transition is executed.
+
+The original-source Lean 4.36.0-rc2 kernel accepted all recurrence/entry shards and `BB6.Agent14ZeroLF3862.never`. `Cover3862.lean` proves exact table identity, `never_exact`, and `weighted (B : Nat) : Cover (WeightedBound B) ctr` for **every** B. `E0LFPortfolioAll.lean` proves `BB6.Agent14E0LFPortfolio.allRows_never` for the eleven exact tables. All these theorems use only propext, Classical.choice, Quot.sound.
+
+The exact checked source generator bundle is stored in `3862-source.b64.1`, `.2`, `.3`; decoded tar.gz SHA-256 `d07ed63e04e65d73d60bc75fc70e0ef2bf1ad60ce62398cc59ab0321aa3fe08c`. Run `python3 unpack3862.py <output-directory>` to regenerate the Lean source closure. Python is an untrusted witness producer, and all concrete transfers are checked in Lean. `Rec3862Base.lean` and `Rec3862SeedBase.lean` in the bundle provide the general symbolic and arithmetic soundness lemmas. The first unsuccessful PDS abstraction omitted padding behavior; it was discarded, not used in any proof.
+
+Parent audit 45908439166 failed on CLI ordering; corrected run [45908931018](https://github.com/FlareZ123/bb6/actions/runs/45908931018), pin 8d2f3c17beee369bcb936bc4c1acf7d715e0ba77, is checking the original conditional parent. `E0ZeroLFDischarge.lean` applies the now-proved 3862 premise to its theorem. Only after the conditional parent audit and this final adapter are accepted is the unconditional 19,007 Cover available. No mathematical exceptional holdout remains.
