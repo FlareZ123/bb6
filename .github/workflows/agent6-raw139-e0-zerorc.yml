@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, oneRFProof]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRFProof]
         default: zeroRC
       recovery_run_id:
         description: Reuse accepted root artifacts from run 45846437127 (oneRE) or 45827711630 (zeroRC)
@@ -20,9 +20,9 @@ permissions:
   actions: read
 env:
   VARIANT: ${{ inputs.variant || 'zeroRC' }}
-  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || 'ZRC' }}
-  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || 'BB6.Agent6E0ZeroRC' }}
-  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || '1673363' }}
+  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || inputs.variant == 'zeroLF' && 'ZLF' || 'ZRC' }}
+  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || inputs.variant == 'zeroLF' && 'BB6.Agent14E0LFParent' || 'BB6.Agent6E0ZeroRC' }}
+  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || '1673363' }}
 jobs:
   prepare:
     if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
@@ -43,11 +43,15 @@ jobs:
           base=im-results/agent6-raw139-e0-${VARIANT}
           work=.tmp/a6-${VARIANT}
           mkdir -p "$work/imports"
-          python3 "$base/reproduce.py"
-          python3 "$base/assemble.py" "$work/imports"
-          python3 "$base/assemble.py" "$work/imports" --final
-          python3 im-results/agent13-coverage/unpack.py
-          python3 im-results/agent13-block-far/specialize.py 4
+          if [[ "$VARIANT" == zeroLF ]]; then
+            bash im-results/agent14-raw139-e0-zeroLF/prepare.sh sources
+          else
+            python3 "$base/reproduce.py"
+            python3 "$base/assemble.py" "$work/imports"
+            python3 "$base/assemble.py" "$work/imports" --final
+            python3 im-results/agent13-coverage/unpack.py
+            python3 im-results/agent13-block-far/specialize.py 4
+          fi
       - name: Compile shared source-connected dependency closure
         run: |
           set -euo pipefail
@@ -56,6 +60,10 @@ jobs:
           proofs=("$base/E0ZeroRCRecurrence.lean")
           if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
           if [[ "$VARIANT" == zeroRF ]]; then proofs=("$base/ZeroRF1892Cover.lean" "$base/ZeroRF4570.lean"); fi
+          if [[ "$VARIANT" == zeroLF ]]; then
+            base=im-results/agent14-raw139-e0-zeroLF
+            proofs=("$base/ConditionalHybrid.lean" "$base/E0LFPortfolio.lean" "$work/imports/E0LF3863Packed.lean" "$work/imports/ZLFOpen.lean" --source-root "$work/imports")
+          fi
           python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-zeroRC/Hybrid.lean "${proofs[@]}" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean --workdir "/tmp/a6-${VARIANT}-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-${VARIANT}-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
           mkdir -p "$work/core"
@@ -91,8 +99,12 @@ jobs:
           path: .tmp/a6-${{ env.VARIANT }}
       - name: Reconstruct shared generated source dependencies
         run: |
-          python3 im-results/agent13-coverage/unpack.py
-          python3 im-results/agent13-block-far/specialize.py 4
+          if [[ "$VARIANT" == zeroLF ]]; then
+            bash im-results/agent14-raw139-e0-zeroLF/prepare.sh
+          else
+            python3 im-results/agent13-coverage/unpack.py
+            python3 im-results/agent13-block-far/specialize.py 4
+          fi
       - name: Compile exact branch
         env:
           ROOT_INDEX: ${{ matrix.root }}
@@ -136,9 +148,14 @@ jobs:
         run: |
           set -euo pipefail
           work=.tmp/a6-${VARIANT}
-          python3 im-results/agent13-coverage/unpack.py
-          python3 im-results/agent13-block-far/specialize.py 4
-          python3 im-results/agent6-raw139-e0-${VARIANT}/compose.py "$work"
+          if [[ "$VARIANT" == zeroLF ]]; then
+            bash im-results/agent14-raw139-e0-zeroLF/prepare.sh
+            python3 im-results/agent14-raw139-e0-zeroLF/compose.py "$work"
+          else
+            python3 im-results/agent13-coverage/unpack.py
+            python3 im-results/agent13-block-far/specialize.py 4
+            python3 im-results/agent6-raw139-e0-${VARIANT}/compose.py "$work"
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw139-e0-${{ env.VARIANT }}-parent-certified
