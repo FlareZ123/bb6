@@ -29,6 +29,10 @@ if [[ -n "$extraspec" ]]; then
   extra_args+=(--provenance-input "$base/$extraspec")
 fi
 PYTHONPATH="$PWD/im-results/agent48-raw139-f1-oneRA:$PWD/im-results/agent48-raw139-f1-oneLA" python3 "$work/src/generic/$script" "$work/src/common" "$work/imports" "$work/src/generic/$spec"
+if [[ "$sibling" == ZeroRF ]]; then
+  python3 "$base/patch-ray.py" "$work/imports"
+  extra_args+=(--provenance-input "$base/patch-ray.py")
+fi
 root="$work/imports/Raw139D0${label}Cover.lean"
 echo "$rootsha  $root" | sha256sum -c
 python3 im-results/agent13-coverage/unpack.py
