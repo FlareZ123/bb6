@@ -372,3 +372,9 @@ New dossier im-results/agent16-odometer172: exact upstream root [0]; five direct
 - This is a direct integration prerequisite, not a competing Canonical63 route. The ten open E1 siblings include Raw118, and the current cut list does not remove it; the source-level unique membership theorem is still required before any roster cut is claimed.
 - Sent Agent31 the exact file path and the request to include it in the existing score-consumer/source-closure run. Do not modify Agent31's global consumer or create a new 63-roster.
 - Current Raw118 parent proof run remains 45768921666, step 10 compiling; precompile artifact 15093576212 is preserved. No parent Cover is yet accepted.
+
+
+## 2026-11-26T06:47Z checkpoint — avoid duplicating Sheep preimage work
+
+- Briefly re-derived the one-step preimage restriction for Sheep powers (a halting predecessor can only have 2-adic valuation 0 or 1, with the corresponding exponent congruences). This is already the established result in im-results/agent16-sheep-power-preimages/README.md, so it is not new work and should not be repeated or promoted.
+- The productive current path remains Raw118 parent Cover plus the narrow Canonical64 membership helper. The helper is a draft and must be compiled by Agent31's existing source-closure CI before any membership claim is treated as accepted.
