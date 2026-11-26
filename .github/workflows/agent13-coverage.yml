@@ -680,7 +680,6 @@ jobs:
             --provenance-input im-results/agent13-block-far/generate.py \
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input tools/lean_compile_closure.py \
-            --provenance-input lean-toolchain \
             im-results/agent49-raw10-refined-cut/Raw10RefinedBox7.lean
       - name: Export source-accepted Raw10 box5 and box7 proof closure
         if: inputs.target == 'weighted-tnf-raw10-box5'
@@ -701,7 +700,6 @@ jobs:
             im-results/agent13-block-far/generate.py
             im-results/agent13-coverage/unpack.py
             tools/lean_compile_closure.py
-            lean-toolchain
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
@@ -755,7 +753,6 @@ jobs:
             --provenance-input im-results/agent13-coverage/unpack.py \
             --provenance-input im-results/agent4-raw109/audit_axioms.py \
             --provenance-input tools/lean_compile_closure.py \
-            --provenance-input lean-toolchain \
             "$W/Box6SourceConsumer.lean"
       - name: Compile refined Box6 source-subset probe against Box5/7 dependency cut
         if: inputs.target == 'weighted-tnf-raw10-box6'
@@ -780,7 +777,6 @@ jobs:
             --provenance-input "$D/proof-source.tar.xz" \
             --provenance-input "$D/fix_emitter.py" \
             --provenance-input tools/lean_compile_closure.py \
-            --provenance-input lean-toolchain \
             im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean | tee /tmp/a49-raw10-box6-probe.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-raw10-box6-probe.log; then exit 1; fi
       - name: Export source-accepted Raw10 box6 proof closure
@@ -801,7 +797,6 @@ jobs:
             im-results/agent13-coverage/unpack.py
             im-results/agent4-raw109/audit_axioms.py
             tools/lean_compile_closure.py
-            lean-toolchain
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
