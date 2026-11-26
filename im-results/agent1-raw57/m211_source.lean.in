@@ -10,7 +10,7 @@ set_option maxHeartbeats 0
 
 def root (w : List Bool) : Z0 := ⟨1,[],w.tail⟩
 
-theorem macro (i : RuleId) (R : List Bool) :
+theorem macro_run (i : RuleId) (R : List Bool) :
     run0 table (cost i) (root (lhs i++R)) = some (root (rhs i++R)) := by
   cases i <;> rfl
 
@@ -22,7 +22,7 @@ theorem progress (w : List Bool) (hw : accepted w) :
     ∃ t v, 0 < t ∧ accepted v ∧ run0 table t (root w) = some (root v) := by
   obtain ⟨i,R,hr⟩ := covered w hw
   subst w
-  exact ⟨cost i,rhs i++R,cost_positive i,rewrite_accepted i R hw,macro i R⟩
+  exact ⟨cost i,rhs i++R,cost_positive i,rewrite_accepted i R hw,macro_run i R⟩
 
 theorem arbitrary (n : Nat) :
     ∃ t w, n ≤ t ∧ accepted w ∧ run0 table t ⟨0,[],[]⟩ = some (root w) := by
@@ -33,7 +33,7 @@ theorem arbitrary (n : Nat) :
     obtain ⟨u,v,hu,hv,hstep⟩ := progress w hw
     exact ⟨t+u,v,by omega,hv,join0 hr hstep⟩
 
-#print axioms macro
+#print axioms macro_run
 #print axioms entry
 #print axioms arbitrary
 
