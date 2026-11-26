@@ -58,6 +58,9 @@ def verify_base(work: Path, run_id: int):
     assert report["canonical58_residual_count"] == 58
     assert report["remaining_residual_count"] == 57
     assert report["raw113_consumed"] and report["raw59_retained"]
+    canonical58_olean = linked / "Canonical58Raw113Graft.olean"
+    assert canonical58_olean.is_file()
+    assert report["canonical58_olean_sha256"] == a68.sha(canonical58_olean)
     assert report["raw112_parent_theorem"] == "BB6.Agent47Raw112.parent_cover"
     assert report["raw112_parent_table"] == "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
     assert report["raw112_weighted_bound"] == 100000
