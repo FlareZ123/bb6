@@ -1,5 +1,5 @@
 name: Agent 46 canonical raw13 source cut
-run-name: Agent 46 raw13 ${{ inputs.target }}
+run-name: Agent 46 raw13 ${{ inputs.target }} ${{ inputs.branches }}
 on:
   workflow_dispatch:
     inputs:
@@ -264,8 +264,18 @@ jobs:
             /tmp/a46-raw13/Agent46Raw13Data.olean
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
+      - name: Record exact proof targets and source audit
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE'
+        env:
+          TARGET: ${{ inputs.target }}
+          BRANCHES: ${{ inputs.branches }}
+        run: |
+          set -euo pipefail
+          printf 'target=%s\nbranches=%s\nsource=%s\n' "$TARGET" "$BRANCHES" "$(git rev-parse HEAD)" > /tmp/a46-raw13/proof-targets.txt
+          lean --version >> /tmp/a46-raw13/proof-targets.txt
+          cp /tmp/a46-raw13.log /tmp/a46-raw13/proof-audit.log
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified
