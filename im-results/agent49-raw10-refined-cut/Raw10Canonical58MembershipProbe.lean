@@ -11,7 +11,6 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31FourHoleFrontier BB6.Agent31FourHoleRoster
 open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent31StableParentBatch
-open BB6.Agent13CrossRouteHeldLeaf109
 
 /-- The exact B0=1LC parent from RootRaw10Core, reproduced verbatim. -/
 abbrev p10 : PartialMachine :=
