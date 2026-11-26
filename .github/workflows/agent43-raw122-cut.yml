@@ -43,7 +43,7 @@ permissions:
   actions: read
 jobs:
   generate:
-    if: inputs.targeted_recovery != true
+    if: inputs.targeted_recovery != true && inputs.assemble_branch == ''
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
