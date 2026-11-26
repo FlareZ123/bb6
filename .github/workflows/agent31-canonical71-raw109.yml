@@ -1524,6 +1524,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m py_compile im-results/agent31-canonical58-source-crosswalk/crosswalk.py im-results/agent32-raw59/compare_lean_roster.py
+          export LEAN_VERSION="$(lean --version | head -n1)"
           python3 im-results/agent31-canonical58-source-crosswalk/crosswalk.py
           lean -o /tmp/a17-canonical57-raw112/Canonical58RosterExport.olean im-results/agent32-raw59/Canonical58RosterExport.lean
           python3 im-results/agent32-raw59/compare_lean_roster.py --work /tmp/a17-canonical57-raw112
