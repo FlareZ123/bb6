@@ -423,3 +423,31 @@ The two new q=1 slices are disjoint: (u=35+64t) (low-val parent, then odd-seven 
 Collective context: Critic's 08:54 broadcast prioritizes ingestion of already source-accepted Canonical64 parent Covers and the Raw139/Raw118/Raw112 recovery gates. This U5 Machine-C work is a separate specialized holdout investigation, not a substitute for those global integration tasks. Continue it while it remains productive; do not start unrelated minimal-slice experiments or duplicate the Canonical64 consumer work assigned to other identities.
 
 Next: inspect run #15 once complete. If it passes, update `U5Q0W7SourceParentAnalysis.md` and the Agent15 dossier README with the two new slices and exact source/axiom status, then request adversarial review from Agent3 (the low-valuation/odd-seven source-lemma author). If it fails, repair only the reported proof edge before any new CI run. The lease remains the original 2026-11-26T08:56:19Z claim; 70-minute threshold is 10:06:19Z.
+
+
+## 2026-11-26 checkpoint — W7 source closure accepted by CI
+
+Focused W7 source-closure workflow run #16 (45791827246) passed, compiling 48 project modules from the parent-fan, U3-mod64, and U7-mod32 roots. Run #17 (45792309463) repeated the closure after adding explicit axiom prints for the u=59 declarations; it also passed. The final axiom output explicitly covers:
+- parent fan, q0/q1 parent obstructions, and u=1 mod 4 target;
+- u=59 mod 80 q1 parent and q0 target;
+- u=7 mod 32 q1 parent and q0 target;
+- u=35 mod 64 q1 parent and q0 target.
+All printed dependencies are [propext, Classical.choice, Quot.sound] or [propext, Quot.sound]. The workflow grep guard passed with no sorryAx or native_decide. The exact-source closure is therefore accepted for these three roots; do not extend that status to the four unrelated z=4u drafts, which were removed from this focused target after the broad batch exposed their independent change-proof failures.
+
+New formalized slices:
+- u=7+32t: odd/odd low-value parent -> even/even unique parent -> odd-right sum-one obstruction. File: U5Q0W7U7Mod32.lean.
+- u=35+64t: odd/odd low-value parent -> odd-seven unique parent -> odd-right sum-two obstruction. File: U5Q0W7U3Mod64.lean.
+- u=59+80t: existing odd/odd sum-four parent -> odd-right sum-one obstruction, now explicitly axiom-printed in ParentFan.lean.
+For odd W, the parent fan restricts the q=0 target to depth 0 or 2; the depth-zero parent is excluded generically and the q=1 parent is excluded on these three slices. All three are compatible with w=55 mod128; z≡3 mod5 restricts the u=7 and u=35 parameters to t≡1 mod5, while u=59 satisfies it for all t. The detailed derivation and exact root filters are now in im-results/agent15-c-halting/U5Q0W7SourceParentAnalysis.md; the Agent15 dossier README was rewritten as a current synthesis.
+
+I sent Agent3 an adversarial review request at communications/agent3/20261126T093046Z_agent15-w7-parent-slices-review.md, specifically asking for review of source-lemma hypotheses, root-residual necessity/sufficiency, and missing parent branches.
+
+Next promising draft, not yet formalized: u=23+512s. The q=1 parent has a four-edge source chain:
+A=(169639+3677184s,931041+20181504s)
+ -> B=(550338+11929344s,740688+16055424s) by odd/odd lowval;
+ -> C=(1291024+27984768s,370343+8027712s) by even/even unique parent;
+ -> D=(830681+18006240s,600511+13016976s) by odd-seven;
+ -> E=(715594+15511608s,658051+14264292s) by odd/odd lowval.
+The final E has odd right coordinate and sum 1 mod 4, so blank_no_odd_sum_one excludes it. A small runtime arithmetic check at s=0,1,2 confirms the invariant residues (A sum mod16=8, B sum mod8=2, C sum+1 mod16=8, D sum mod16=8, E sum mod4=1), but no Lean module exists yet. If formalized, compose with the odd-W parent fan to exclude the q0 target on u=23+512s. Keep this as a candidate, not a proved result.
+
+Current scope: the full w=7 progression and Machine C remain open. Continue on a genuinely useful q1 parent residue or another high-value Machine-C holdout; do not spend effort repairing the four z=4u drafts unless their value becomes clear. The Critic's Canonical64 ingestion priority remains a separate global workstream; this identity's W7 work is a specialized holdout contribution, not a replacement for it. Lease remains claimed at 2026-11-26T08:56:19Z; orderly release threshold 10:06:19Z.
