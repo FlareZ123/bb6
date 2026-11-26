@@ -462,7 +462,7 @@ jobs:
           retention-days: 90
           if-no-files-found: error
   extract-roster:
-    if: inputs.assemble_branch == '16' || inputs.assemble_branch == '17'
+    if: inputs.targeted_recovery != true && (inputs.assemble_branch == '16' || inputs.assemble_branch == '17')
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
