@@ -788,23 +788,30 @@ jobs:
             --artifact-dir /tmp/a49-raw10-box6-probe \
             --manifest /tmp/a49-raw10-box6-probe/manifest.json \
             --compare-manifest /tmp/a49-box6-proof/manifest.json \
-            --label "Raw10 refined box6 source-subset probe (not a parent Cover)" \
-            --artifact-name raw10-refined-box6-probe \
+            --label "Raw10 refined Box6 cut: 30/28 open boxes and conditional parent Covers" \
+            --artifact-name raw10-box6-refined-parent-cut \
+            --theorem BB6.Agent49Raw10RefinedBox6.parentCover30 \
+            --weighted-bound 7014 \
             --provenance-input "$D/source.tar.gz" \
             --provenance-input "$D/proof-source.tar.xz" \
             --provenance-input "$D/fix_emitter.py" \
             --provenance-input tools/lean_compile_closure.py \
-            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean | tee /tmp/a49-raw10-box6-probe.log
+            --provenance-input im-results/agent49-raw10-refined-cut/Raw10RefinedBox6.lean \
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean \
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6.lean | tee /tmp/a49-raw10-box6-probe.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a49-raw10-box6-probe.log BB6.Agent49Raw10RefinedBox6.parentCover30
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a49-raw10-box6-probe.log BB6.Agent49Raw10RefinedBox6.parentCover28
           if grep -Eq 'sorryAx|native_decide' /tmp/a49-raw10-box6-probe.log; then exit 1; fi
       - name: Export source-accepted Raw10 box6 proof closure
         if: inputs.target == 'weighted-tnf-raw10-box6'
         uses: actions/upload-artifact@v4
         with:
-          name: raw10-box6-source-closure
+          name: raw10-box6-refined-parent-cut
           path: |
             /tmp/a49-box6-proof
             /tmp/a49-raw10-box6-probe
             im-results/agent49-raw10-refined-cut/Raw10RefinedBox6Probe.lean
+            im-results/agent49-raw10-refined-cut/Raw10RefinedBox6.lean
             im-results/agent49-raw10-box6/README.md
             im-results/agent49-raw10-box6/source.tar.gz
             im-results/agent49-raw10-box6/proof-source.tar.xz
