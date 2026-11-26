@@ -41,6 +41,47 @@ Run [45882523160](https://github.com/FlareZ123/bb6/actions/runs/45882523160) reg
 
 To reproduce the generated child modules, run `bash prepare.sh /tmp/raw49-generated` from this directory after generating the three source dependencies above. The manual target `weighted-tnf-raw49-progress` in `.github/workflows/agent13-coverage.yml` performs the full source check. Generated Lean modules are intentionally not committed; the generators, FAR inputs, and source theorem are.
 
+## Structure of the root-open frontier
+
+Replaying the checked `Raw49Cut.tree` structurally, with the canonical cut index updated by each accepted destination state, recovers exactly 125 canonical open leaves. The first split is C1. Across those leaves, the second split is at A1 for 34, B1 for 26, and E1 for 64; one leaf is the direct C1=0RC sweep case and needs no second split.
+
+The 125 leaves grouped by their first C1 assignment are:
+
+| C1 move | Open leaves |
+|---|---:|
+| 0LA | 9 |
+| 0LB | 6 |
+| 0LE | 16 |
+| 0RA | 6 |
+| 0RB | 6 |
+| 0RC | 1 |
+| 0RE | 13 |
+| 1LA | 12 |
+| 1LB | 8 |
+| 1LE | 19 |
+| 1RA | 7 |
+| 1RB | 6 |
+| 1RE | 16 |
+
+After removing the four universal sweeps and the C0/C2/C5 child Covers, the 118 residuals have this distribution:
+
+| C1 move | Remaining |
+|---|---:|
+| 0LA | 6 |
+| 0LB | 6 |
+| 0LE | 16 |
+| 0RA | 5 |
+| 0RB | 5 |
+| 0RE | 12 |
+| 1LA | 12 |
+| 1LB | 8 |
+| 1LE | 19 |
+| 1RA | 7 |
+| 1RB | 6 |
+| 1RE | 16 |
+
+This decomposition identifies where further child Covers can be tested without re-running the root search. The six remaining C1=0LA siblings (root-open indices 1, 3, 4, 6, 7, 8) are currently under a depth-6 child-cut/FAR5 batch experiment; its result is not yet part of the accepted Raw49 theorem.
+
 ## FAR5 diagnostic and remaining obligation
 
 An exploratory max-5-state FAR search over all 125 root-open tables (run [45885525770](https://github.com/FlareZ123/bb6/actions/runs/45885525770)) reported exactly four FAR certificates. Those four tables are the same four already covered by the universal sweep families; it found no additional certificate among the 121 residuals. Consequently it did not improve the accepted 118-residual result. This is computational search output, not an additional accepted theorem. The first generated Lean integration exposed a Bool-orientation encoding error; the emitter now writes the correct Bool constructor, but the FAR5 module is deliberately not part of the accepted proof path because it produced no new coverage. Do not repeat the same max-5 search.
