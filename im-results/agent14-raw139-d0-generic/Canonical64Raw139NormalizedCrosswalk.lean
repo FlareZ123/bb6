@@ -63,6 +63,14 @@ def activeCoverageCounts : List Nat :=
   normalizedTables.map (fun p =>
     (activeRows.filter (fun e => extendsTable p e.2)).length)
 
+def normalizedCoverageSummary : List (Fin 7 × Move × Nat) :=
+  (remainingRowsAfter.zip activeCoverageCounts).map
+    (fun x => (x.1.1, x.1.2, x.2))
+
+def normalizedCoveredByActive : List PartialMachine :=
+  normalizedTables.filter (fun p =>
+    activeRows.any (fun e => extendsTable e.2 p))
+
 def e0LCTable : PartialMachine := leaf (2, ⟨false, false, 2⟩)
 
 /-- A finite crosswalk can discharge every active row covered by at least one
@@ -111,9 +119,11 @@ theorem activeRows_cover_from_normalized (B : Nat)
     the more useful refinement relation. -/
 #eval (normalizedTables.length, activeRows.length,
   activeCoveredByNormalized.length, activeUncoveredByNormalized.length)
-#eval activeCoverageCounts
+#eval normalizedCoverageSummary
+#eval activeUncoveredByNormalized.map (fun e => e.1)
+#eval normalizedCoveredByActive.length
 #eval (activeRows.filter (fun e => sameTable e.2 e0LCTable)).length
-#eval (activeRows.filter (fun e => extendsTable e0LCTable e.2)).length
+#eval (activeRows.filter (fun e => extendsTable e0LCTable e.2)).map (fun e => e.1)
 
 #print axioms compatible_of_extends
 #print axioms cover_of_extends
