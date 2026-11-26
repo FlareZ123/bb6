@@ -169,7 +169,7 @@ theorem reach_rank {s : State} (h : BB6CLine.Reach s) : 6≤rankC s := by
 theorem reachable_terminal_shape {s : State} (h : BB6CLine.Reach s)
     (ht : nextC s=none) : s.2.1=2 ∧ s.1%4=2 := by
   cases h with
-  | init => decide at ht
+  | init => simp [nextC] at ht
   | next p q hp hq => exact terminal_shape hq (reach_rank hp) ht
 
 /-- A hypothetical raw halt with successful-move count N has a reachable
