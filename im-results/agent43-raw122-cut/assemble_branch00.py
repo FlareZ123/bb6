@@ -219,6 +219,7 @@ end BB6.Agent43Raw122Recovered00
         "--parent-table", "Canonical124 raw122 parent with F1=0LA",
         "--weighted-bound", str(BOUND),
         "--artifact-name", "raw122-branch00-cover",
+        "--override", f"Raw122Branch00={factored / 'Raw122Branch00.lean'}",
         *sum((["--override", f"{f.stem}={f}"] for f in generated.glob("Raw122Roster00*.lean")), []),
         "--override", f"Raw122Recovered00={wrapper}",
         wrapper,
