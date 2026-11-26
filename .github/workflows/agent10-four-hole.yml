@@ -1138,20 +1138,22 @@ jobs:
           python "$root/shard_plan.py" fetch /tmp/a4-raw58-pins.json "$downloads"
           python im-results/agent10-raw108/merge_resume.py "$downloads" "$union" "$root/shard_groups.json" /tmp/a4-raw58-pins.json
           python "$root/shard_plan.py" restore-data "$downloads"
+          python "$root/gen_lf1_weights.py" "$root" "$root"
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
             --precompiled-dir "$union" --precompiled-manifest "$union/manifest.json" \
             --manifest "$work/manifest.json" --label raw58 \
-            --theorem BB6.Agent4Raw58MoreCut3.all_completions \
+            --theorem BB6.Agent4Raw58Exact.all_completions \
             --parent-table "1RB---_1RC---_0RD---_1LD1RE_---0RA_------" \
-            --weighted-bound 3055750 --artifact-name raw58-parent-proof \
+            --weighted-bound 3055746 --artifact-name raw58-parent-proof \
             --provenance-input "$root/shard_groups.json" --provenance-input "$root/shard_plan.py" \
-            --provenance-input "$union/manifest.json" \
-            "$root/Raw58MoreCut3.lean" 2>&1 | tee /tmp/a4-raw58-parent.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw58-parent.log BB6.Agent4Raw58MoreCut3.all_completions
+            --provenance-input "$union/manifest.json" --provenance-input "$root/gen_lf1_weights.py" \
+            "$root/Raw58MoreCut3.lean" "$root/Raw58Exact.lean" "$root/ZipWeightExact.lean" 2>&1 | tee /tmp/a4-raw58-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a4-raw58-parent.log BB6.Agent4Raw58MoreCut3.all_completions BB6.Agent4Raw58Exact.all_completions BB6.Agent4Raw58Exact.raw58_bound_exact BB6.Agent4Raw58Exact.coverRaw58 BB6.Agent4ZipWeightTighten.weights_exact
           python - "$work/manifest.json" <<'PY'
           import json, sys
           m = json.load(open(sys.argv[1]))
-          new = {"Raw58LFData", "Raw58LF1Data", "Raw58MoreCut3"}
+          new = {"Raw58LFData", "Raw58LF1Data", "Raw58MoreCut3", "ZipWeightTighten", "ZipWeightExact", "Raw58LF1SharpUpper", "Raw58LF1SharpLower", "Raw58LF1Exact", "Raw58SharpComposition", "Raw58Exact"}
+          new |= {f"Raw58LF1Kid{i:02}Weight" for i in range(24)}
           expected = {item["module"] for item in m["modules"]} - new
           reused = set(m["precompiled_core"]["reused_modules"])
           if reused != expected:
