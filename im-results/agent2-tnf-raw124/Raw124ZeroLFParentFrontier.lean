@@ -7,8 +7,8 @@ import Raw124ZeroLF1RA
 import Raw124ZeroLF1RE
 import Agent7Raw124ZeroLF0RA
 import Raw124ZeroLF1LA
-import Agent7Raw124ZeroLF1LB
-import Agent7Raw124ZeroLF1LE
+import Raw124ZeroLF1LB
+import Raw124ZeroLF1LE
 import Agent7Raw124ZeroLF1RB
 
 set_option maxHeartbeats 0
