@@ -1005,6 +1005,18 @@ jobs:
         with:
           name: raw112-recovery-partial-union
           path: /tmp/a47-raw112-partial-union
+      - name: Add swap headroom for the deep Raw112 root
+        if: matrix.group == 'r01a-deep'
+        run: |
+          set -euo pipefail
+          if sudo fallocate -l 8G /swapfile && sudo chmod 600 /swapfile && sudo mkswap /swapfile && sudo swapon /swapfile; then
+            sudo sysctl vm.swappiness=80 || true
+            free -h
+            swapon --show
+            df -h /
+          else
+            echo "::warning::swap could not be enabled; continuing with runner RAM"
+          fi
       - name: Compile one retained-cut retry
         env:
           GROUP: ${{ matrix.group }}
