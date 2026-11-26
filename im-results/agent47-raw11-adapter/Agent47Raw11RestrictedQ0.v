@@ -2,6 +2,7 @@ From BusyCoq Require Import Enumerate62 Individual62 TC62 CTL62 Eqb
   Agent32SourceBackwards SourceResidualRoster.
 From Coq Require Import List Bool NArith Lia Strings.String.
 Import ListNotations TNF_Node.
+Open Scope nat_scope.
 Open Scope string_scope.
 
 (* Raw11 is the source-root branch A0=1RB, B0=1RC, C0=0LA.  The

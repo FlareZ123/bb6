@@ -38,7 +38,7 @@ Proof.
 Qed.
 
 Lemma q0_nine_parent_roster_safe_1000006 :
-  Forall (source_table_safe 162) q0_nine_parent_roster ->
+  Forall (source_table_safe 234) q0_nine_parent_roster ->
   Forall (source_table_safe 1000006) q0_nine_parent_roster.
 Proof.
   intros Hsmall.
@@ -75,7 +75,7 @@ Qed.
    the source-local backwards theorem, while remaining below the global
    Canonical64 score floor. *)
 Theorem raw11_parent_source_cover_1000006 :
-  Forall (source_table_safe 162) q0_nine_parent_roster ->
+  Forall (source_table_safe 234) q0_nine_parent_roster ->
   source_table_safe 1000006 raw11_parent.
 Proof.
   intros Hparents.
