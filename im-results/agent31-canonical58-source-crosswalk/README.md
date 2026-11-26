@@ -28,6 +28,12 @@ Each one-hole TSV table is checked for extension of a current residual. All 56 r
 
 The 21 new Nov26-21 rows lie under six residuals (8, 9, 10, 13, 139, 140). The 35 baseline-191 rows add residuals 23 and 134 and increase the counts under the other six. In total, the 56 one-hole cylinders account for 1,400 distinct complete tables across these eight residuals. The largest group, raw10, accounts for 475 of 25^10 completions.
 
+## Reproduction run
+
+The lightweight CI target completed successfully: workflow run 45898819353, head 33b6e4bd2a3a71d9e692aae0c2b50bf8614b5551. It ran Python syntax compilation and the full crosswalk script, then asserted the 58-entry roster count, 56 unique matches, zero unmatched/ambiguous rows, the eight expected residual groups, and 1,400 distinct leaf completions.
+
+The uploaded artifact is canonical58-source-crosswalk (artifact ID 15154443941, 6,894 bytes, SHA-256 fc4ea3e10d92224c69037c2159661ccc9a91010a12b1313ad612b0982cc78671). This validates the metadata calculation and script reproducibility only; it does not turn the table-extension map into a Lean theorem or any parent Cover.
+
 ## Proof status and limits
 
 The crosswalk identifies where historical source leaves sit; it does not establish that their source modules have passed local source audit or that the corresponding parent residual is covered.
