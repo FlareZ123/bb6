@@ -2,6 +2,7 @@
 // Disjoint child proof modules; exact parent composition via sameTable_sound.
 const fs=require('node:fs'),path=require('node:path'),adapter='../agent47-raw11-adapter/';
 const {search}=require(adapter+'generate-raw11-extra.cjs');
+const {searchPeriodic}=require('./q0-open-automata.cjs');
 const {table,head,cert,slot,bit}=require(adapter+'generate-q0-lean.cjs');
 const {sourceMitmCert}=require('./q0-source-mitm-cert.cjs');
 const {bank}=require('./coarse-pair.cjs');
@@ -31,6 +32,16 @@ fs.mkdirSync(outdir,{recursive:true});
 const r=search(route.extra[id],{retain:true,cap:400000});
 if(!r.tree)throw Error('incomplete '+id);
 const B=r.bound,a=parse(r.table),f=Math.max(...a.filter(x=>x!=='---').map(x=>x.charCodeAt(2)-64));
+const extendedAutomata=[];
+if(process.env.RAW11_EXTENDED_AUTOMATA==='1'){
+ for(const t of r.opens){
+  const k=norm(t);
+  if(!ext.has(k)&&!known.has(k)){
+   const c=searchPeriodic(k);
+   if(c){known.set(k,c);extendedAutomata.push({table:k,k:c.k,kind:c.kind,mirror:c.mirror,cap:c.cap,depth:c.depth,rows:c.rows?.length});}
+  }
+ }
+}
 const unresolved=r.opens.filter(t=>!ext.has(norm(t))&&!known.has(norm(t)));
 if(unresolved.length)throw Error('unresolved '+JSON.stringify(unresolved));
 const census=new WeakMap(),external=new WeakMap();
@@ -89,5 +100,5 @@ for(const [j,name] of names.entries()){
 lines.push(branch(r.tree,f,'parent','safe',names.map((_,j)=>'child'+j)));
 lines.push(`theorem cover : Cover (WeightedBound ${B}) parent := .leaf _ safe\n#print axioms cover\nend BB6.${prefix}\n`);
 write(prefix,header(names)+lines.join('\n'));
-fs.writeFileSync(path.join(outdir,'manifest.json'),JSON.stringify({id,table:r.table,nodes:r.n,bound:B,stats:r.stats,opens:r.opens,modules},null,2)+'\n');
+fs.writeFileSync(path.join(outdir,'manifest.json'),JSON.stringify({id,table:r.table,nodes:r.n,bound:B,stats:r.stats,opens:r.opens,extendedAutomata,modules},null,2)+'\n');
 console.log(JSON.stringify({id,nodes:r.n,bound:B,opens:r.opens.length,modules:modules.length}));
