@@ -66,5 +66,13 @@
   "lb0-c": {
     "run_id": "45771451130",
     "revision": "0618dc4f82d2f27a084e28d151be5f5016cbb1dc"
+  },
+  "la0-a1": {
+    "run_id": "45787643033",
+    "revision": "edec36952bb0c2b06edf260ec50cb10bfb29da5d"
+  },
+  "la0-a-rest": {
+    "run_id": "45787643033",
+    "revision": "edec36952bb0c2b06edf260ec50cb10bfb29da5d"
   }
 }
