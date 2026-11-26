@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Merge old and recovered raw122 Lean shards, then compile the parent theorem."""
 from pathlib import Path
-import hashlib, os, shutil, subprocess, sys
+import hashlib, json, os, shutil, subprocess, sys
 
 root=Path.cwd()
 cut=root/"im-results/agent43-raw122-cut"
@@ -101,10 +101,37 @@ for p in prov:
 prov=filtered
 if checkout:
     subprocess.run(["git","checkout",source_ref,"--",*checkout],cwd=root,check=True)
-cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(out/"manifest.json"),"--manifest-only","--artifact-dir",str(out),"--label","raw122-parent-core" if parent_core else "raw122-partial-audit","--artifact-name","raw122-parent-core" if parent_core else "raw122-certified-root"]
-if not parent_core:
-    cmd += ["--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
-for p in prov: cmd += ["--provenance-input",p]
-cmd += [str((cut/f"{root_name}.lean").relative_to(root))]
-subprocess.run(cmd,cwd=root,check=True)
+out/"source-ref.txt".write_text(source_ref+"\\n",encoding="utf-8")
+prov.append(str(out/"source-ref.txt"))
+
+def manifest_command(path: Path, label: str) -> list[str]:
+    cmd=[sys.executable,"tools/lean_compile_closure.py","--workdir",str(out),"--manifest",str(path),"--manifest-only","--artifact-dir",str(out),"--label",label,"--artifact-name","raw122-parent-core" if parent_core else "raw122-certified-root"]
+    if not parent_core:
+        cmd += ["--theorem","BB6.Agent43Raw122.sound","--parent-table","1RB---_1RC---_0RD---_1LD1RE_---0LF_------","--weighted-bound","7014"]
+    for p in prov: cmd += ["--provenance-input",p]
+    cmd += [str((cut/f"{root_name}.lean").relative_to(root))]
+    return cmd
+
+prepin_manifest=out/"manifest-prepin.json"
+subprocess.run(manifest_command(prepin_manifest,"raw122-parent-core-prepin" if parent_core else "raw122-partial-audit-prepin"),cwd=root,check=True)
+prepin=json.loads(prepin_manifest.read_text(encoding="utf-8"))
+checkout_modules=[]
+for item in prepin.get("modules",[]):
+    if item.get("source_kind")!="tracked":
+        continue
+    source_path=Path(item["source_path"])
+    if source_path.is_absolute():
+        try:
+            source_path=source_path.resolve().relative_to(root.resolve())
+        except ValueError:
+            continue
+    relative=source_path.as_posix()
+    exists=subprocess.run(["git","cat-file","-e",f"{source_ref}:{relative}"],cwd=root,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
+    if exists.returncode==0:
+        checkout_modules.append(relative)
+if checkout_modules:
+    checkout_modules=sorted(set(checkout_modules))
+    subprocess.run(["git","checkout",source_ref,"--",*checkout_modules],cwd=root,check=True)
+    print(f"pinned {len(checkout_modules)} tracked modules to the precompiled-object source revision",flush=True)
+subprocess.run(manifest_command(out/"manifest.json","raw122-parent-core-pinned" if parent_core else "raw122-partial-audit-pinned"),cwd=root,check=True)
 print(f"assembled {'Raw122 parent core' if parent_core else 'raw122 partial audit'} from {len(seen)} source-checked objects and {len(branch_indices)} original branches",flush=True)
