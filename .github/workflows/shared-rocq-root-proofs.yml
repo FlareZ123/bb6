@@ -385,6 +385,7 @@ jobs:
           name: q0-direct-parent-${{ inputs.offset }}-source
           path: |
             original/verify/Agent5Q0AutoData.v
+            original/verify/Agent5Q0Direct26*.v
             original/verify/q0-auto-candidate.json
           if-no-files-found: error
       - name: Generate direct finite-stack source certificates
@@ -412,7 +413,7 @@ jobs:
             original/verify/*.aux
             !original/verify/Agent5Q0AutoData.*
             !original/verify/Agent5Q0AutoConsume.*
-            !original/verify/Agent5Q0Direct33*.*
+            !original/verify/Agent5Q0Direct*.*
             !original/verify/Agent5Q0Periodic*.*
           key: coq-vo-${{ runner.os }}-apt-coq-2026-33209bc7-${{ hashFiles('research/im-results/agent5-weighted-tnf-queue/*.v', 'research/im-results/agent8-adaptive-source-plan/*.v', 'research/im-results/agent50-weighted-tnf-pilot/SourceResidualRoster.v', 'research/im-results/agent47-raw11-adapter/*.v', 'research/im-results/agent13-raw11-q0-bridge/*.v') }}
           restore-keys: |
@@ -569,15 +570,17 @@ jobs:
           if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 52 ]; then cp Agent5Q0Root52*.{v,vo} auto-root-results/; fi
           if [ "${{ inputs.target }}" = enumerate62-q0-auto-root ] && [ "${{ inputs.offset }}" = 53 ]; then cp Agent5Q0Root53*.{v,vo} Agent5Root53Counter.{v,vo} auto-root-results/; fi
       - name: Retain verified periodic-parent proof shards
-        if: always() && inputs.target == 'enumerate62-direct-parent' && (inputs.offset == 33 || (inputs.offset >= 55 && inputs.offset <= 58))
+        if: always() && inputs.target == 'enumerate62-direct-parent' && (inputs.offset == 26 || inputs.offset == 33 || (inputs.offset >= 55 && inputs.offset <= 58))
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ inputs.offset == 33 && 'q0-direct-parent-33-proof-shards' || format('q0-periodic-parent-{0}-proof-shards', inputs.offset) }}
+          name: ${{ (inputs.offset == 26 || inputs.offset == 33) && format('q0-direct-parent-{0}-proof-shards', inputs.offset) || format('q0-periodic-parent-{0}-proof-shards', inputs.offset) }}
           path: |
             original/verify/Agent5Q0Periodic*.v
             original/verify/Agent5Q0Direct33*.v
             original/verify/Agent5Q0Periodic*.vo
             original/verify/Agent5Q0Direct33*.vo
+            original/verify/Agent5Q0Direct26*.v
+            original/verify/Agent5Q0Direct26*.vo
             original/verify/Agent5SourceAutoTree.vo
             original/verify/Agent5SourceAutomata.vo
             original/verify/Agent5Q0AutoData.vo

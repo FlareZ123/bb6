@@ -2,7 +2,7 @@
 // Reuse the direct source certificates, but check bounded subtrees
 // separately and compose larger splits through source_first_hole_split.
 const fs = require("node:fs"), path = require("node:path");
-function emitShards({rootId,row,tree,bound,encode,moves,output,chunkCap=25}) {
+function emitShards({rootId,row,tree,bound,encode,moves,output,chunkCap=25,timed=false}) {
   const prefix="Agent5Q0Direct"+rootId, defs=prefix+"Defs", top=prefix+"Top";
   const dir=path.dirname(output);
   const header="From BusyCoq Require Import Agent5SourceAutoTree Enumerate62 Agent8WeightedSource.\n"+
@@ -23,6 +23,15 @@ function emitShards({rootId,row,tree,bound,encode,moves,output,chunkCap=25}) {
   }
   function assemble(n,p,t,ns) {
     manifest.splitProofs++;
+    // The focused root-26 pilot avoids guessing certificate arguments and
+    // makes the exact slow command visible. Every split has all 24 children.
+    if(timed) return "Theorem safe_"+n+" : source_table_safe auto_bound "+p+".\n"+
+      "Proof.\n  refine (@source_first_hole_split auto_bound "+p+" "+t[1]+" "+slot(t[2])+" _ _ _).\n"+
+      "  - idtac \"hole "+n+"\". refine (@source_hole_atb_sound "+p+" "+t[1]+" "+slot(t[2])+" _). Time vm_compute. reflexivity.\n"+
+      "  - unfold auto_bound. lia.\n"+
+      "  - intros [[s d] q]. destruct q; destruct s; destruct d.\n"+
+      ns.map(k=>"    + exact safe_"+k+".\n").join("")+
+      "Time Qed.\n";
     return "Theorem safe_"+n+" : source_table_safe auto_bound "+p+".\n"+
       "Proof.\n  eapply source_first_hole_split with (n:="+t[1]+") (h:="+slot(t[2])+").\n"+
       "  - apply source_hole_atb_sound. vm_compute. reflexivity.\n"+
@@ -35,6 +44,11 @@ function emitShards({rootId,row,tree,bound,encode,moves,output,chunkCap=25}) {
     if(count<=chunkCap) {
       manifest.chunks++;
       manifest.maxChunk=Math.max(manifest.maxChunk,count);
+      if(timed) return "Time Definition cert_"+n+" : source_auto_tree := "+encode(t,a)+".\n"+
+        "Lemma check_"+n+" : source_auto_check auto_bound "+p+" cert_"+n+" = true.\n"+
+        "Proof. idtac \"check "+n+"\". Time vm_compute. reflexivity. Time Qed.\n"+
+        "Theorem safe_"+n+" : source_table_safe auto_bound "+p+".\n"+
+        "Proof. exact (@source_auto_check_sound auto_bound "+p+" cert_"+n+" check_"+n+"). Time Qed.\n";
       return "Definition cert_"+n+" : source_auto_tree := "+encode(t,a)+".\n"+
         "Lemma check_"+n+" : source_auto_check auto_bound "+p+" cert_"+n+" = true.\n"+
         "Proof. vm_compute. reflexivity. Qed.\n"+

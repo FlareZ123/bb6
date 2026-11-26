@@ -63,9 +63,10 @@ function encode(t,a){
 // Root 33 previously stalled in a monolithic parent check.
 const output=process.argv[3]||"Agent5Q0AutoData.v";
 let shardManifest=null;
-const body=rootId===33
+const body=(rootId===33||rootId===26)
   ? (shardManifest=require("./q0-direct-shards.cjs").emitShards({
-      rootId,row,tree,bound:root.bound,encode,moves,output
+      rootId,row,tree,bound:root.bound,encode,moves,output,
+      chunkCap:rootId===26?1:25,timed:rootId===26
     }),null)
   : encode(tree,row.table.replaceAll("_","").match(/.{3}/g));
 if(n!==root.stats.nodes||observed.size!==root.openTables.length||root.openTables.some(x=>observed.get(x.table)!==x.count))throw Error("open complement mismatch");
