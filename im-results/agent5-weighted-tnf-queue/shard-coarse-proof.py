@@ -27,7 +27,7 @@ def partition(directory, count):
     stem = "Agent5Q0Coarse" + str(manifest["id"])
     names = set(manifest["modules"])
     assert stem in names and count > 0
-    core = {m for m in names if m in (stem + "Base", stem + "Long")}
+    core = {m for m in names if m == stem + "Base" or m.startswith(stem + "Long")}
     graph = {m: imports(directory / (m + ".lean")) for m in names}
     external = {d for ds in graph.values() for d in ds if d not in names}
     sub = names - core - {stem}
