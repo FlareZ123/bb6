@@ -151,7 +151,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 55
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent2-packet-shift:im-results/agent37-d-timing-cocycle:im-results/agent37-echain
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent25-cryptid-doublezero:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent32-cryptid-third:im-results/agent35-cryptid-code:im-results/agent31-d-exceptional:im-results/agent35-d-sixth-rejoin:im-results/agent2-packet-shift:im-results/agent36-cryptid-trace:im-results/agent37-d-timing-cocycle:im-results/agent37-echain
     steps:
       - uses: actions/checkout@v4
       - name: Reconstruct pinned six-state original sources
@@ -170,4 +170,4 @@ jobs:
         run: |
           set -euo pipefail
           lean --version
-          python3 -u im-results/agent37-echain/reproduce-safe-e.py ExceptionalESafeCanonical ExceptionalEReentryClassification RegularSafeEBridge
+          python3 -u im-results/agent37-echain/reproduce-safe-e.py ExceptionalESafeCanonical ExceptionalEReentryClassification RegularSafeEBridge Blank8394SafeE
