@@ -98,6 +98,7 @@ theorem corr_adjacent_gap (k B : Nat) :
       have h2 : (B+1)/2=B/2+1 := by omega
       have hi := ih (B/2)
       simp only [corr,carryGap,h,h0,h1,h2,if_neg,Nat.mul_zero,Nat.add_zero,Nat.mul_one]
+      simp at *
       omega
 
 theorem weight_adjacent (q k B : Nat) (hB : B+1<2^k) :
@@ -140,7 +141,8 @@ theorem valid_split (q k X a : Nat) :
       rw [hb,corr_extend_one k L hL,corr_extend_zero k L hL] at he
       have hp : (q+(k+1))*(L+2^k)=(q+k)*L+L+W+2^k := by
         dsimp [W,H]
-        rw [show q+(k+1)=q+k+1 by omega,Nat.mul_add,Nat.add_mul,Nat.add_mul,Nat.one_mul,Nat.one_mul]
+        rw [show q+(k+1)=q+k+1 by omega,Nat.mul_add]
+        simp only [Nat.add_mul,Nat.one_mul]
         ac_rfl
       rw [hp] at he
       have hcorr := corr_le_mul k L hL
@@ -160,7 +162,8 @@ theorem valid_split (q k X a : Nat) :
       rw [corr_extend_one k L hL,corr_extend_zero k L hL]
       have hp : (q+(k+1))*(L+2^k)=(q+k)*L+L+W+2^k := by
         dsimp [W,H]
-        rw [show q+(k+1)=q+k+1 by omega,Nat.mul_add,Nat.add_mul,Nat.add_mul,Nat.one_mul,Nat.one_mul]
+        rw [show q+(k+1)=q+k+1 by omega,Nat.mul_add]
+        simp only [Nat.add_mul,Nat.one_mul]
         ac_rfl
       rw [hp]
       omega
@@ -201,7 +204,7 @@ theorem greedyFast_iff_walk (q r t z a : Nat) (ys : List Nat)
     obtain ⟨B,hB,he⟩ := eq_of_walk hw
     have ha := walk_bound hw
     rw [hlen] at hB he
-    exact ⟨B,hB,by simpa using ha,he⟩
+    exact ⟨B,hB,by simpa using ha,by simpa only [hlen] using he⟩
 
 #print axioms corr_shift_bound
 #print axioms shifted_word_near
