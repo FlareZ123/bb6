@@ -20,7 +20,7 @@ from emit_rungram import emit as emit_bidfa
 S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
 B = S.get("bound", 75)
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
-SUFFIX = {"default":"", "0rd":"RD", "1rd":"RD1"}.get(VARIANT, "E"+VARIANT.upper())
+SUFFIX = VARIANT.upper() if B1RC else {"default":"", "0rd":"RD", "1rd":"RD1"}.get(VARIANT, "E"+VARIANT.upper())
 NS = "BB6.Agent25Raw43" + SUFFIX
 PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
