@@ -46,7 +46,7 @@ inductive Word : Stream → Prop where
   | one {s} : Word s → Word (push true s)
   | gap {s} : Word s → Word (pair false true s)
 
-theorem prefix (n : Nat) (s : Stream) (hs : Word s) : Word (rep true n s) := by
+theorem prefix_word (n : Nat) (s : Stream) (hs : Word s) : Word (rep true n s) := by
   induction n with
   | zero => exact hs
   | succ n ih => exact Word.one ih
@@ -79,7 +79,7 @@ theorem fill (b e : Gate) (n : Nat) :
 theorem progress (b e : Gate) (n : Nat) (s : Stream) (hs : Word s) :
     ∃ t n' s', 0<t ∧ runCore b e t (Froot n s) = some (Froot n' s') ∧ Word s' := by
   cases hs with
-  | endWord => exact ⟨n+7,1,_,by omega,fill b e n,prefix n _ (.gap .endWord)⟩
+  | endWord => exact ⟨n+7,1,_,by omega,fill b e n,prefix_word n _ (.gap .endWord)⟩
   | one hw => exact ⟨1,n+1,_,by decide,consume_one b e n _,hw⟩
   | gap hw => exact ⟨2,n+2,_,by decide,consume_gap b e n _,hw⟩
 
