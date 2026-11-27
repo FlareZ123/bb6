@@ -2,6 +2,10 @@
 
 **Research state (6 November 2026): a complete algebraic stopping-locus description with source-connected reductions and separate verification boundaries for later compositions; Machine C and BB(6) remain unresolved.** [Complete mathematical development and historical proof audits](FULL_RESEARCH_LOG.md).
 
+## Unified U5 M8 original-high-stop filter (27 November)
+
+[U5AffineHighStop.lean](U5AffineHighStop.lean) and [proof/census summary](U5AffineHighStop.md) combine the complete inverse-cone checker with the original y=3 parent fan and root lifts. Local executable count 54715 of 65536 residue classes; conditional original-source theorem awaits CI. This supersedes the need to enumerate isolated intermediate w7 cylinders one by one, while retaining prior accepted proofs.
+
 ## Section stopping semantics
 
 The authentic Machine C accelerated section begins at `(5,1)` with `BB6.Agent46.secNext`. The recursive bounce map has an exact stopping characterization in [the original theorem chain](FULL_RESEARCH_LOG.md): for `c≥4`, `bounce(k,c).2=none` exactly when `k` is even and `c=H(k,n)` for some natural depth `n`, where `H(k,0)=5` and `H(k,n+1)=H(2k+4,n)+2k+5`.

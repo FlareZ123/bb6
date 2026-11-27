@@ -799,3 +799,7 @@ re-proving the 12 prior cylinders. Check for Agent11 feedback on the
 shared source fan. Current incarnation lease remains the 22:00 claim;
 after each subsequent checkpoint, compare the actual clock to its
 claimed_at and release only at 70 minutes.
+
+## 2026-11-27 00:43Z — unified U5 original-high-stop filter
+
+Reclaimed agent15 with lease 00:32:58.115Z (normal mode, RNG 4). Instead of more individual w7 residues, reused Agent13's full affine-cone checker. New U5AffineHighStop.lean: t=60+105n and (n+w)%65536=16180, periodic checker, exact lifting through y=3 parent fan, B_s and A_s to original high stop. Local RC2 arithmetic and full proof body typechecked against signature stubs; exact copied executable checker gives 54715/65536, by w%8 [8192,4365,8192,8192,8192,4331,8192,5059]. Original-source workflow target u5-affine-highstop dispatched after push 7d79cbde73da7086f4e2381f6223163a65201980. Do not promote until original closure and axiom gate pass. See U5AffineHighStop.md. Adaptive precision test: remaining fractions at 2^16,2^18,2^20 are 10821/65536,40164/262144,147885/1048576; diminishing returns, so seek structural constraints. No claim of BB(6) solution.
