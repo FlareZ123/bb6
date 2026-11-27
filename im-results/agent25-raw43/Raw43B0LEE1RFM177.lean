@@ -94,8 +94,12 @@ theorem growth (k : Nat) :
     have h5 := enterBack (O++rep O k++[true])
     have h6 := backMany (k+1) [true] []
     have h7 := finish [] (rep J (k+1))
-    have H := join0 (join0 (join0 (join0 (join0 (join0 h1' h2) h3) h4) h5) h6) h7
-    simpa only [family,cost,rep,List.append_assoc,Nat.mul_succ] using H
+    have h7' : run0 table 2
+        ⟨4,[true]++[true],[false,true]++rep J (k+1)++[]⟩ =
+        some (family (k+2)) := by
+      simpa only [family,rep,List.append_assoc,List.append_nil] using h7
+    have H := join0 (join0 (join0 (join0 (join0 (join0 h1' h2) h3) h4) h5) h6) h7'
+    simpa only [cost,Nat.mul_succ] using H
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
   never_of_growth table family 0 cost first positive growth m hm
