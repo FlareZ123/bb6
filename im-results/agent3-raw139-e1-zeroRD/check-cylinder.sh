@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+set -euo pipefail
+kind="$1"
+base="$PWD/im-results/agent3-raw139-e1-zeroRD"
+work="$PWD/.tmp/a3-e1-$kind"
+mkdir -p "$work/imports" "$work/reuse" "$work/build" /tmp/a3-e1-core
+python3 im-results/agent13-coverage/unpack.py
+gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15175093456/zip" > /tmp/a3-e1-core.zip
+unzip -q /tmp/a3-e1-core.zip -d /tmp/a3-e1-core
+python3 im-results/agent3-raw139-e0-oneLB/merge-bank.py "$work/reuse" "$work/imports" /tmp/a3-e1-core
+case "$kind" in
+E1D0ZeroRD) d=13; emitter=emit-d0rd.py; recipes=recipes-d0rd.json; hash=3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127; suffix=ZeroRD; B=679;;
+E1D0OneRB) d=7; emitter=emit-d0rb1.py; recipes=recipes-d0rb1.json; hash=b6d3c1914722160084d71c5631f0dd344943d0c985b45cbfb8827851e8b75ce5; suffix=OneRB; B=435;;
+E1D0ZeroRE) d=17; emitter=emit.py; recipes=recipes.json; hash=3d69cf3e91812cebf72213a743adbf463e7d0bfd8733092ccaec1bc06315b2a6; suffix=ZeroRE; B=533;;
+*) exit 2;;
+esac
+g++ -std=c++17 -O3 im-results/agent48-raw139-e0-0re/replay.cpp -o "$work/replay"
+"$work/replay" 450 2 7 24 11 24 14 24 "$d" 16 24 13 24 24 > "$work/partition.json"
+echo "$hash  $work/partition.json" | sha256sum -c -
+export PYTHONPATH="$PWD/im-results/agent48-raw139-f1-oneRA"
+if [[ "$kind" == E1D0ZeroRE ]]; then
+ python3 "$base/$emitter" "$work/partition.json" "$base/$recipes" "$work/imports" 600
+else
+ python3 "$base/$emitter" "$work/partition.json" "$work/imports" 600
+fi
+root="A3E1ZeroRDD0${suffix}Cover"
+ns="BB6.Agent3Raw139E1ZeroRDD0${suffix}"
+python3 tools/lean_compile_closure.py "$work/imports/$root.lean" \
+ --source-root "$work/imports" --workdir "$work/build" --jobs 3 \
+ --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
+ --override SparseZipper=im-results/agent50-weighted-tnf-pilot/SparseZipper.lean \
+ --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
+ --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
+ --override PackedPrefixAudit=im-results/agent48-prefix-audit/PackedPrefixAudit.lean \
+ --precompiled-manifest "$work/reuse/manifest.json" --precompiled-dir "$work/reuse" \
+ --manifest "$work/manifest.json" --label "$kind" \
+ --theorem "$ns.weighted" --parent-table "[7,24,11,24,14,24,$d,16,24,13,24,24]" \
+ --weighted-bound "$B" --artifact-name "raw139-$kind-certified" \
+ --provenance-input "$base/$recipes" --provenance-input "$base/$emitter" | tee "$work/log"
+python3 - "$work/log" "$ns" <<'PY'
+import re,sys
+s=open(sys.argv[1]).read()
+for t in ["hRoot","weighted","all_completions_weighted"]:
+ name=sys.argv[2]+"."+t
+ m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",s,re.S)
+ if m: used={x.strip() for x in m.group(1).split(",") if x.strip()}
+ elif "'"+name+"' does not depend on any axioms" in s: used=set()
+ else: raise SystemExit("Missing axiom audit: "+name)
+ assert used<={"propext","Classical.choice","Quot.sound"},(name,used)
+ print(name,sorted(used))
+PY

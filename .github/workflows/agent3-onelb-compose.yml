@@ -7,7 +7,7 @@ on:
         required: true
         type: string
       child_code:
-        description: 09 or 21 to certify one child; omit for parent composition
+        description: 09, 21, E1D0ZeroRD, E1D0OneRB or E1D0ZeroRE; omit for parent composition
         required: false
         type: string
         default: ''
@@ -41,7 +41,7 @@ jobs:
           [[ "$EXTRA" =~ ^[0-9\ ]*$ ]]
           bash im-results/agent3-raw139-e0-oneLB/check-parent.sh $EXTRA
       - name: Consume exact compressed replay bank
-        if: ${{ inputs.child_code != '' }}
+        if: ${{ inputs.child_code == '09' || inputs.child_code == '21' }}
         env:
           GH_TOKEN: ${{ github.token }}
           EXTRA: ${{ inputs.extra_artifacts }}
@@ -71,15 +71,40 @@ jobs:
             .tmp/a3-oneLB-parent/build/*.olean
             .tmp/a3-oneLB-parent/log
       - uses: actions/upload-artifact@v4
-        if: ${{ success() && inputs.child_code != '' }}
+        if: ${{ success() && (inputs.child_code == '09' || inputs.child_code == '21') }}
         with:
           name: raw139-oneLB-c${{ inputs.child_code }}-certified
           include-hidden-files: true
           path: .tmp/a3-oneLB-c${{ inputs.child_code }}/
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() && inputs.child_code != '' }}
+        if: ${{ failure() && (inputs.child_code == '09' || inputs.child_code == '21') }}
         with:
           name: raw139-oneLB-c${{ inputs.child_code }}-incomplete
           include-hidden-files: true
           if-no-files-found: ignore
           path: .tmp/a3-oneLB-c${{ inputs.child_code }}/
+      - name: Certify an E1=0RD sub-cylinder
+        if: ${{ startsWith(inputs.child_code, 'E1D0') }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CODE: ${{ inputs.child_code }}
+        run: bash im-results/agent3-raw139-e1-zeroRD/check-cylinder.sh "$CODE"
+      - uses: actions/upload-artifact@v4
+        if: ${{ success() && startsWith(inputs.child_code, 'E1D0') }}
+        with:
+          name: raw139-${{ inputs.child_code }}-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a3-e1-${{ inputs.child_code }}/manifest.json
+            .tmp/a3-e1-${{ inputs.child_code }}/build/*.olean
+            .tmp/a3-e1-${{ inputs.child_code }}/imports/*.lean
+            .tmp/a3-e1-${{ inputs.child_code }}/log
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() && startsWith(inputs.child_code, 'E1D0') }}
+        with:
+          name: raw139-${{ inputs.child_code }}-incomplete
+          include-hidden-files: true
+          if-no-files-found: ignore
+          path: |
+            .tmp/a3-e1-${{ inputs.child_code }}/log
+            .tmp/a3-e1-${{ inputs.child_code }}/imports/*.lean
