@@ -20,8 +20,10 @@ theorem reduced_count : (retained.map fun d => (reducedRemaining d).length).sum 
 theorem representative_mem (d v : Fin 25) (hd : d ∈ retained) (hv : v ∈ remaining d)
     (hs : symmetric d = true) (h21 : 21 ≤ v.val) :
     representative v ∈ reducedRemaining d := by
-  revert d v
-  decide
+  have hc : ∀ a b : Fin 25,
+      (a ∈ retained ∧ b ∈ remaining a ∧ symmetric a = true ∧ 21 ≤ b.val) →
+      representative b ∈ reducedRemaining a := by decide
+  exact hc d v ⟨hd,hv,hs,h21⟩
 
 theorem rename_child (d v : Fin 25) (hd : d ∈ retained)
     (hs : symmetric d = true) (h21 : 21 ≤ v.val) :
