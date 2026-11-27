@@ -112,8 +112,7 @@ theorem drain (n : Nat) (L : List Bool) :
 
 theorem turnWord (n : Nat) : V++(rep Q n++T) = J++rep P n++Tail := by
   change V++(rep Q n++([false]++Tail)) = _
-  rw [← List.append_assoc (rep Q n) [false] Tail,← rotate0 n]
-  rfl
+  rw [← List.append_assoc (rep Q n) [false] Tail,← rotate0 n] <;> rfl
 
 theorem left1 (n : Nat) (L : List Bool) :
     run0 p (5*n+9) (A (Z++rep P n++H1++L) [true]) =
