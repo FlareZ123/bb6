@@ -1,18 +1,37 @@
 # Raw139 E0=1LB: exact C1 subcovers
 
-The normalized depth-two E0=1LB parent is `[7,24,11,24,14,24,24,16,6,11,24,24]` (ordinary transition code (4q+2w+r), 24 unknown). Its first unknown slot is C1 at primitive time 9. The full weighted Cover is **not yet proved**. The C1=0LC child is accepted in original-source Lean; C1=1LC is computationally complete; its first source gate was interrupted and the long replay is now chunked. Neither constitutes a global roster cut.
+The normalized depth-two E0=1LB parent is `[7,24,11,24,14,24,24,16,6,11,24,24]` (ordinary transition code (4q+2w+r), 24 unknown). Its first unknown slot is C1 at primitive time 9. The full weighted Cover is **not yet proved**. Fourteen ordinary C1 children have original-source Lean acceptance (codes 0,2,3,4,5,6,7,8,10,13,15,19,20,23). Code 1 has a complete graft including the new independent nonhalting theorem; code 22 has a diagnosed narrow-block packing defect and a repair awaiting the targeted source check. Codes 9 and 21 have complete computational recipes but need efficient source certification of long final-hole paths. None constitutes a global roster cut.
 
 ## Established child covers and open obligations
 
 | C1 code | Exact child table | Bound | Status |
 |---|---|---:|---|
 | 8 (0LC) | [7,24,11,24,14,8,24,16,6,11,24,24] | 574 | Original-source Lean accepted, [run 45934344615](https://github.com/FlareZ123/bb6/actions/runs/45934344615), [artifact 15169732599](https://github.com/FlareZ123/bb6/actions/runs/45934344615/artifacts/15169732599), pinned source 227a5454ea2bc0c3ce765c0ca7fc6cb1c43e7d98 |
-| 10 (1LC) | [7,24,11,24,14,10,24,16,6,11,24,24] | 61185 | Computational discovery complete; source [run 45934601426](https://github.com/FlareZ123/bb6/actions/runs/45934601426) interrupted by runner shutdown, no parent theorem, pinned source 7467766e7062b6e44e7de95d20e5fcf10c4f31ff |
+| 10 (1LC) | [7,24,11,24,14,10,24,16,6,11,24,24] | 61185 | Original-source Lean accepted [run 45936450670](https://github.com/FlareZ123/bb6/actions/runs/45936450670), [artifact 15170359046](https://github.com/FlareZ123/bb6/actions/runs/45936450670/artifacts/15170359046), pinned source 735a50566c1b6c61cc35371cc2b55333b17566b7 |
 
-Accepted theorem for code 8: `BB6.Agent3E0OneLBC1ZeroLC.weighted : Cover (WeightedBound 574) parent`. Its checker uses the original FastThreeHoleAudit and BlockFAR2/BlockFAR and the standard-axiom gate. This is an exact child cylinder, not an entire parent. The intended code-10 theorem is `BB6.Agent3E0OneLBC1OneLC.weighted : Cover (WeightedBound 61185) parent`.
+Accepted theorem for code 8: `BB6.Agent3E0OneLBC1ZeroLC.weighted : Cover (WeightedBound 574) parent`. Its checker uses the original FastThreeHoleAudit and BlockFAR2/BlockFAR and the standard-axiom gate. This is an exact child cylinder, not an entire parent. The accepted code-10 theorem is `BB6.Agent3E0OneLBC1OneLC.weighted : Cover (WeightedBound 61185) parent`.
 
 Six other C1 ordinary choices immediately enter a translated cycle; candidate witnesses are (start,period,direction,boundary): 11:(2,8,false,2); 12:(6,4,false,0); 14:(6,4,false,0); 16:(4,6,false,1); 17:(14,3,true,2); 18:(9,2,true,-2).
 The other 16 choices now have complete computational witness recipes, including four long final-hole executions (see [long returns](long-returns.md)). Agent12 has independently kernel-checked nonhalting of the only previously unresolved single-hole leaf, [code 1 leaf 286](../agent12-raw139-oneLB-c1-286/README.md), against the accepted code-8 build. The exact leaf is grafted via `BB6.Agent12Counter286.never`; the code-1 whole child still requires its pinned source consumer to compile. The original C1 halt alternative and the full parent composition also remain to be covered.
+
+The [matrix run 45936586801](https://github.com/FlareZ123/bb6/actions/runs/45936586801) accepted these twelve other code-specific weighted children; overall run failure is confined to code 22. Each artifact is independent and must be checked against its exact parent and bound at composition.
+
+| Code | Certified artifact ID |
+|---:|---:|
+| 0 | 15170943998 |
+| 2 | 15171268674 |
+| 3 | 15172491119 |
+| 4 | 15171717416 |
+| 5 | 15171918583 |
+| 6 | 15172092832 |
+| 7 | 15173066637 |
+| 13 | 15172995676 |
+| 15 | 15173005981 |
+| 19 | 15172323659 |
+| 20 | 15173086029 |
+| 23 | 15174465692 |
+
+Code 22 failed `rangeCheck ... cert.fastRowsAt machine` for reflected width-2/3 certificates, not their machine-table equality. The untrusted narrow-width emitter reused radix A=2^w for pair packing of control keys 2q+d, whose range is 0..11. For A=4 or 8 this corrupts the key and its value. The repair uses K=max(A,16) for packed pairs only, leaving symbol/edge/predecessor radices A unchanged; pair bit capacity increases accordingly. The existing width-4+ results are unaffected. The two original recipes are retained; no repeated discovery. The code-22 source repair must pass an independent targeted check before acceptance.
 
 ## Exact first-query partitions
 

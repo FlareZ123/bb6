@@ -88,7 +88,14 @@ for k in ids:
     e=e.replace("name='E0OneRD4267'",f"name='{name}'")
     e=e.replace('import WideSparse',f'import OneLBWideSparse{w}')
     e=re.sub(r'\b256\b',str(A),e)
-    e=e.replace('pairbits=8+',f'pairbits={w}+').replace('ebits=8+',f'ebits={w}+')
+    # Push/auxiliary keys fit A, but control keys are 2*q+d (0..11).
+    # Use an independent pair radix K >= 12; otherwise w=2,3
+    # silently alias control keys and corrupt packed rows.
+    K=max(A,16)
+    e=e.replace(f'A={A};K={A}',f'A={A};K={K}')
+    e=e.replace(f'(x%{A},x/{A})',f'(x%{K},x/{K})')
+    e=e.replace('pairbits=8+',f'pairbits={max(w,4)}+').replace('ebits=8+',f'ebits={w}+')
+    assert f'A={A};K={K}' in e and f'(x%{K},x/{K})' in e
     if not flip:
         e=e.replace('BB6Coverage.FAR.reflectPartial ctr =','ctr =')
         e=e.replace('BB6Coverage.FAR.reflectNever m (BB6BlockFAR.transfer_never machine _ (by simpa only [← same] using BB6Coverage.FAR.reflectCompatible ctr m hm) forever)','BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever')
