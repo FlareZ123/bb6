@@ -11,6 +11,23 @@ Parent `1RB---_1RC---_0RD---_1LD0LB_------_------` (canonical surviving raw inde
 
 The first-hole cut and all three new modules were checked locally with Lean 4.36.0-rc2 against the exact imported source dependency objects from accepted Raw59 artifact 15054146521. Both new growth theorems report only propext and Quot.sound; both Cover adapters and query gates only propext, Classical.choice, Quot.sound. No sorryAx or native_decide. No fresh complete dependency CI acceptance is claimed. The new locally checked source SHA256 values are 917c06357eb33c53ec9762bedd2e31df4c9f39b4308da2de0116ea7965e92912, 0f41d9ab397c0c49444f3fc6dad5327aaf4b031b41c373f5f4ebfff2f476489f, fb5f0cb111f476d87ba3f0eb5f8d26e3a8498cb72df690ab281ab056853ef2b8 respectively.
 
+## Wide two-choice growth cuts (symbolic derivation; Lean acceptance pending)
+
+[Raw42WideGrowth.lean](Raw42WideGrowth.lean) and [Raw42WideCuts.lean](Raw42WideCuts.lean) specify eight disjoint seven-transition partial tables, their exact blank entries, and positive return clocks. The family is in D with empty right tape and the left zipper word shown, where (n) starts at zero. The two-bit repetitions are indicated by parentheses.
+
+| B1 | Additional choice | Blank entry | Family left word | Return steps |
+|---|---|---:|---|---:|
+| 0LA | A1=1RC | 16 | 001(11)^n111 | 12n+25 |
+| 1LA | A1=0RD | 30 | 001(11)^n1111 | 14n+39 |
+| 1LC | C1=0RB | 28 | 001(11)^n1111 | 16n+43 |
+| 1LC | C1=0RD | 28 | 001(11)^n1111 | 14n+39 |
+| 1RB | C1=1LC | 24 | 0011(11)^n11 | 8n+29 |
+| 1LB | C1=1RC | 16 | 001(11)^n111 | 4n+17 |
+| 1RE | E0=1LD | 20 | 001(11)^n111 | 12n+29 |
+| 1RB | C1=0RC | 11 | (00)^n000011 | 4n+12 |
+
+Each return increments n. The derivation decomposes it into two repeated-block transfers and fixed entry/turn/finish phases. Each transfer is a fixed primitive run over arbitrary untouched left and right tails. The symbolic simulator checks fixed phases without inspecting the repeated-word marker and transfers without inspecting either opaque tail. Exact recipes are in [wide_growth_recipes.json](wide_growth_recipes.json). The Lean implementation uses the original SweepPumping induction, with exact path-refinement equalities in the Cover adapters. Local tools returned ClientError before execution; no successful Lean compile is claimed yet. If accepted, these eight subcylinders certify 8*25^5 = 78,125,000 additional normalized raw completions, without expanding the five remaining slots.
+
 ## Remaining problem and method
 
 The 16 first-level children have 12 canonical representatives under fresh E/F renaming. A normalized first-hole discovery run using the existing [linear side-cycle scanner](../agent32-linear-side-cycle/README.md), cutoff 500, found 1723 retained leaves within B1=0RA alone (1523 with one unassigned slot, 184 with two, 14 with three, 2 with four). Both four-hole leaves are exactly the new inductive families above; the counts are untrusted search output before pruning and not a certified full tree. The promising route is to test uniform symbolic growth on highest-hole retained leaves before expanding, with FAR/prefix checkers for the remaining finite tree. Do not enumerate all six-state completions directly. The complete parent Cover and global roster consumption are still open.
@@ -32,3 +49,7 @@ Leaf 1582 (`1RB1RE_1RC0RA_0RD0LF_1LD0LB_1LC1RA_0LD---`) and leaf 1665 (`1RB1RE_1
 Leaf 1659 `1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF` is now **source-checked nonhalting for every compatible completion**, including all 25 normalized C1 choices. The exact return parser [Raw42Leaf1659.lean](Raw42Leaf1659.lean) and recursively synchronized word invariant [Raw42Leaf1659Invariant.lean](Raw42Leaf1659Invariant.lean) prove `BB6.Agent32Raw42RA.Leaf1659.never`; only propext, Quot.sound, local Lean 4.36.0-rc2 against artifact 15054146521. See [the return grammar and proof](Raw42Leaf1659Transducer.md). A five-bit block B=10010 commutes with the continuation map G; eight finite phase words P_i advance cyclically, sometimes recursively updating the tail, and four phases emit B. The finite exceptional suffix U0 generates B^4 P5 P6 U0 in eight G iterations. The regular language (B|P0|...|P7)*{U0,...,U7} is therefore closed, and a six-phase outer prefix plus twelve initial checked returns connects this directly to the authentic blank start. No finite scanning assumption remains.
 
 All 1723 normalized open leaves of 0RA now have candidate verdicts. The 94 residual leaf proofs (52 n-gram, 39 run/block-run, 2 twin-growth, 1 recursive language) have been locally source-checked, as have the two independent four-hole growth proofs (also in the FAR class). The 1626 FAR and three late trace candidates and full first-hole tree still require checked assembly. No complete child or global roster reduction is yet claimed.
+
+## 0RB assembly status
+
+The normalized B1=0RB discovery and generated certificate tree are implemented by [gen_closed42rb.py](gen_closed42rb.py). The earlier workflow run 45967480182 failed before proof checking because reconstructed coverage sources were missing. The subsequent run 45968320615 compiled numerous exceptional modules but ended with runner shutdown (exit 143), not a mathematical counterexample. The full 0RB child Cover is not accepted. Avoid restarting the same large prepare job unchanged; split expensive witness compilation and reuse completed evidence where available.

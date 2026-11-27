@@ -1,11 +1,20 @@
 name: Agent 32 Raw42 0RB normalized cover
 on:
   workflow_dispatch:
+    inputs:
+      variant:
+        type: choice
+        options: [rb, wide]
+        default: rb
+      source_revision:
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
 jobs:
   prepare:
+    if: inputs.variant == 'rb'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -153,5 +162,42 @@ jobs:
         with:
           name: raw42rb-certified
           path: /tmp/rb-final/
+          retention-days: 30
+          if-no-files-found: error
+  wide:
+    if: inputs.variant == 'wide'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/core-old
+      - name: Check eight exact wide-cylinder Covers
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          mkdir -p /tmp/wide
+          python tools/lean_compile_closure.py --workdir /tmp/wide --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/wide/manifest.json --artifact-name raw42-wide "$d/Raw42WideCuts.lean" | tee /tmp/wide/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/wide/audit.log
+          for name in ZeroLAOneRC OneLAZeroRD OneLCZeroRB OneLCZeroRD OneRBOneLC OneLBOneRC OneREOneLD OneRBZeroRC; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/wide/audit.log "BB6.Agent32Raw42WideCuts.cover$name"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-wide
+          path: /tmp/wide/
           retention-days: 30
           if-no-files-found: error

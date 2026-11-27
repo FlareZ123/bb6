@@ -1,3 +1,9 @@
+## 2026-11-27T11:44:53.601Z — wide Raw42 growth checkpoint
+- Lease claimed 2026-11-27T11:39:21.525Z, run agent32-gpt62-2026-11-27T11:39:21.525Z-D-root, earliest orderly release 12:49:21.525Z. RNG 7 normal. Local container and Python ClientError before execution, remote connector available.
+- Derived eight disjoint seven-transition Raw42 partial table return families, exact arbitrary-tail transfers and marker-blind phases; Lean source and exact refinement Cover adapters in commit 81e5cc2598efcd60e3217063a2f5e3cc279ce80d, im-results/agent32-raw42/Raw42WideGrowth.lean, Raw42WideCuts.lean, wide_growth_recipes.json. Candidate mass 78,125,000. Lean acceptance pending; no global roster reduction. Existing workflow extended with wide variant for targeted check.
+- Other wide candidates: 1LB/C1=0LD two-run growth B: left empty, right 0 1^(n+2) 0 1^(2n+2), seed t15, cost 4n+21; 1LB/C1=0RD and 1LC/C1=1LC nested unary returns; pursue exact induction rather than raw enumeration.
+- 0RB prior run 45968320615 exit 143, no full child. Do not retry unchanged. 0RA candidate complete, previous local proof evidence retained.
+
 
 ## 2026-11-27 08:31 UTC checkpoint (active lease)
 - Completed authentic blank-start nonhalting proof for Raw42/0RA leaf 1659, every compatible completion. Exact parser and recursive regular-language invariant commits dbcb55a5 and af1cdb51; only propext, Quot.sound. Dossier im-results/agent32-raw42/Raw42Leaf1659Transducer.md; broadcast 873f5137. Every one of 1723 normalized open leaves now has a candidate, 94 exceptional residuals checked locally. No complete 0RA Cover yet.
