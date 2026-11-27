@@ -33,6 +33,7 @@ on:
           - canonical50-eight-ready-from58
           - canonical47-sharp-after-eight
           - canonical46-raw59-after-sharp
+          - canonical45-raw67-after-sharp-raw59
           - canonical49-raw59-after-eight
           - canonical48-after-raw67
           - raw67-parent-reuse
@@ -81,6 +82,11 @@ on:
         default: ""
       canonical47_run_id:
         description: "Accepted Canonical47 sharp-parent run ID for the Raw59 successor"
+        type: string
+        required: false
+        default: ""
+      canonical46_run_id:
+        description: "Accepted Canonical46 sharp+Raw59 run ID for the Raw67 successor"
         type: string
         required: false
         default: ""
@@ -2284,6 +2290,67 @@ jobs:
             /tmp/a31-canonical46-raw59/generated/**
             /tmp/a31-canonical46-raw59/canonical46-raw59-after-sharp.json
             /tmp/a31-canonical46-raw59/canonical46-raw59-after-sharp.log
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+
+  canonical45_raw67_after_sharp_raw59:
+    name: Consume accepted Raw67 after Canonical46 sharp+Raw59
+    if: ${{ inputs.target == 'canonical45-raw67-after-sharp-raw59' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile and audit Canonical46-to-45 Raw67 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL46_RUN_ID: ${{ inputs.canonical46_run_id }}
+          RAW67_RUN_ID: ${{ inputs.raw67_accepted_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL46_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW67_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent31-raw106-79-canonical55/assemble_canonical45_raw67_after_sharp_raw59.py
+          python im-results/agent31-raw106-79-canonical55/assemble_canonical45_raw67_after_sharp_raw59.py \
+            --work /tmp/a31-canonical45-raw67 \
+            --canonical46-run-id "$CANONICAL46_RUN_ID" \
+            --raw67-run-id "$RAW67_RUN_ID" \
+            2>&1 | tee /tmp/a31-canonical45-raw67.log
+          test -s /tmp/a31-canonical45-raw67/canonical45-raw67-after-sharp-raw59.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("/tmp/a31-canonical45-raw67/canonical45-raw67-after-sharp-raw59.json").read_text())
+          assert report["canonical46_residual_count"] == 46
+          assert report["remaining_residual_count"] == 45
+          assert report["raw67_weighted_bound"] == 808
+          assert report["raw67_unique_membership_in_canonical46"]
+          assert report["raw67_removed"] and report["raw59_still_removed"]
+          assert report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: canonical45-raw67-after-sharp-raw59-integrated
+          path: |
+            /tmp/a31-canonical45-raw67/linked/**
+            /tmp/a31-canonical45-raw67/generated/**
+            /tmp/a31-canonical45-raw67/canonical45-raw67-after-sharp-raw59.json
+            /tmp/a31-canonical45-raw67/canonical45-raw67-after-sharp-raw59.log
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
