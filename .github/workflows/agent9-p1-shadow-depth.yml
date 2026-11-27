@@ -4,12 +4,20 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, half-reverse-block, packed-midpoint, pair-chunks]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
         type: string
         required: false
+      resume_run:
+        description: Prior packed-prefix continuation workflow run ID
+        type: string
+        default: "45917351754"
+      resume_k:
+        description: New exact packed-prefix cost horizon
+        type: string
+        default: "650000000"
       pair_lo:
         description: Lower even index for pair-chunks
         type: string
@@ -32,13 +40,13 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'pair-chunks') && 90 || 20 }}
+    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'pair-chunks') && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -416,7 +424,7 @@ jobs:
         run: |
           set -euo pipefail
           D="im-results/agent9-p1-first-return"
-          G="/tmp/pair-chunks"
+          G="$PWD/.pair-chunks"
           mkdir -p "$G"
           export LEAN_PATH="$G:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           lean --version
@@ -570,20 +578,21 @@ jobs:
           compression-level: 1
           retention-days: 90
       - name: Download packed-prefix continuation checkpoint
-        if: inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2'
+        if: inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next'
         uses: actions/download-artifact@v4
         with:
-          name: ${{ inputs.target == 'packed-prefix-resume-2' && 'p1-packed-prefix-n45352466-resume-45911913329' || 'p1-packed-prefix-n45352466-45909216505' }}
-          run-id: ${{ inputs.target == 'packed-prefix-resume-2' && 45911913329 || 45909216505 }}
+          name: ${{ inputs.target == 'packed-prefix-resume-next' && format('p1-packed-prefix-n45352466-resume-{0}', inputs.resume_run) || inputs.target == 'packed-prefix-resume-2' && 'p1-packed-prefix-n45352466-resume-45911913329' || 'p1-packed-prefix-n45352466-45909216505' }}
+          run-id: ${{ inputs.target == 'packed-prefix-resume-next' && inputs.resume_run || inputs.target == 'packed-prefix-resume-2' && 45911913329 || 45909216505 }}
           github-token: ${{ github.token }}
           path: /tmp/p1-resume
       - name: Continue exact packed half-prefix scan
-        if: inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2'
+        if: inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next'
         shell: bash
         env:
-          SCAN_K: ${{ inputs.target == 'packed-prefix-resume-2' && '450000000' || '320000000' }}
+          SCAN_K: ${{ inputs.target == 'packed-prefix-resume-next' && inputs.resume_k || inputs.target == 'packed-prefix-resume-2' && '450000000' || '320000000' }}
         run: |
           set -euo pipefail
+          [[ "$SCAN_K" =~ ^[0-9]+$ ]] && (( SCAN_K <= 900000000 )) || exit 2
           BASE=5a2bdc111a72f7967ef5b8bf54d6909102adceb1
           git fetch --depth=1 origin "$BASE"
           git show "$BASE:im-results/agent43-p1-high-cost-reset-count/packed_prefix.cpp" > /tmp/packed_prefix_base.cpp
@@ -606,7 +615,7 @@ jobs:
           fi
           echo "resume_exit_code=$rc"
       - uses: actions/upload-artifact@v4
-        if: always() && (inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2')
+        if: always() && (inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next')
         with:
           name: p1-packed-prefix-n45352466-resume-${{ github.run_id }}
           path: |
