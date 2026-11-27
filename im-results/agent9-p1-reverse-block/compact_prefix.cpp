@@ -194,7 +194,7 @@ static void load(const std::string& path,I n,I K,I h,bool half,I&s,I&gap,vector<
 int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
  bb6_shifted::fit_mode=0; // legacy default until measured selection
- if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>5)return 2;bb6_shifted::fit_mode=unsigned(x);}
+ if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>6)return 2;bb6_shifted::fit_mode=unsigned(x);}
  if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
  bool half=argc>=5&&std::string(argv[4])=="half";
