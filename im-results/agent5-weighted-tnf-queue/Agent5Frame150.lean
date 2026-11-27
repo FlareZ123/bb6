@@ -28,12 +28,10 @@ theorem cell_head (a : List Bool) : cell a 0 = a.headD false := by cases a <;> r
 theorem cell_tail (a : List Bool) (n : Nat) : cell a.tail n = cell a (n+1) := by
   cases a <;> rfl
 theorem WEq.head {a b} (h : WEq a b) : a.headD false = b.headD false := by
-  rw [← cell_head, ← cell_head]
-  exact h 0
+  simpa only [cell_head] using h 0
 theorem WEq.tail {a b} (h : WEq a b) : WEq a.tail b.tail := by
   intro n
-  rw [cell_tail,cell_tail]
-  exact h (n+1)
+  simpa only [cell_tail] using h (n+1)
 theorem zeroWord (n : Nat) : WEq (rep [false] n) [] := by
   intro i
   induction n generalizing i with
@@ -57,8 +55,7 @@ theorem ZEq.trans {a b c} (h : ZEq a b) (g : ZEq b c) : ZEq a c :=
 theorem moveEq (mv : Move) {a b : Z0} (h : ZEq a b) : ZEq (move0 mv a) (move0 mv b) := by
   cases hd : mv.right with
   | false =>
-    change ZEq (if mv.right then _ else _) (if mv.right then _ else _)
-    simp only [hd,Bool.false_eq_true,ite_false]
+    simp only [move0,hd,Bool.false_eq_true,ite_false]
     exact ⟨rfl,h.left.tail,WEq.cons _ h.right⟩
   | true =>
     simp only [move0,hd,ite_true]
@@ -320,13 +317,13 @@ theorem rightCut (sp : Bool) (c : LC) (b : Bool) (g : List Nat) (z : Option Nat)
     | none =>
       cases b with
       | false =>
-        cases c <;> cases sp <;> exact ⟨.oneEnd,[],rfl,rfl⟩
+        cases c <;> cases sp <;> exact ⟨.oneEnd,[],rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
       | true =>
         cases c with
         | two => have h := hc rfl; simp [capacity] at h
-        | blank => exact ⟨.twoEnd,[],rfl,rfl⟩
-        | one => exact ⟨.twoEnd,[],rfl,rfl⟩
-        | large => exact ⟨.twoEnd,[],rfl,rfl⟩
+        | blank => exact ⟨.twoEnd,[],rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
+        | one => exact ⟨.twoEnd,[],rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
+        | large => exact ⟨.twoEnd,[],rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
     | some a =>
       cases b with
       | false =>
@@ -342,10 +339,10 @@ theorem rightCut (sp : Bool) (c : LC) (b : Bool) (g : List Nat) (z : Option Nat)
     cases b with
     | false =>
       cases c <;> cases sp <;>
-        exact ⟨.one,triples a ++ runs xs z,rfl,rfl⟩
+        exact ⟨.one,triples a ++ runs xs z,rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
     | true =>
       cases c <;>
-        exact ⟨.two,triples a ++ runs xs z,rfl,rfl⟩
+        exact ⟨.two,triples a ++ runs xs z,rfl,by simp [rightWord,rightPre,rightPost,rightAfter,endFlag,runs,triples,rep,List.append_assoc]⟩
 
 def region (s : Z0) : Prop :=
   ∃ L r, debt L ≤ capacity r ∧ ZEq s (E (leftWord L) (rightWord r))
