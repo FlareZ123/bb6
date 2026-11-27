@@ -1,6 +1,6 @@
 # Raw11 Extra28: first-hole refinement and binary-counter proofs
 
-Parent: `1RB0LB_1RC1LC_0LA0LD_------_------_------`. The first hole is D1 at step 9. Eight ordinary children close by translated side cycles. D1=0LC has a prior locally checked WeightedBound 42 (3309 nodes); D1=0LD now has a locally kernel-checked WeightedBound 64 (3357 nodes). The ten other ordinary children still require full kernel-checked Covers. This is not a complete Raw11 parent Cover or a global roster reduction.
+Parent: `1RB0LB_1RC1LC_0LA0LD_------_------_------`. The first hole is D1 at step 9. Eight ordinary children close by translated side cycles. D1=0LC has a prior locally checked WeightedBound 42 (3309 nodes); D1=0LD now has a locally kernel-checked WeightedBound 64 (3357 nodes). D1=1RB and D1=0RC also now have locally kernel-checked WeightedBounds 72 and 84 (4893 and 4965 nodes). Eight ordinary children still require full kernel-checked Covers. This is not a complete Raw11 parent Cover or a global roster reduction.
 
 ## Checked D1=0LD result
 
@@ -19,3 +19,14 @@ The previous LC certificate remains in source.tar.gz; extract separately, run py
 ## Complete candidate discovery for remaining children (not yet kernel checked)
 
 All ten remaining children now have complete bounded-tree candidate discoveries; all initially open leaves were solved by finite automata except the source-checked RE counter. For D1=0RE one harder leaf `1RB0LB1RC1LC0LA0LD1LF0RE1RD1RA---1LE` requires ngram width 10 (78/84 stack states, 474 reachable rows). Candidate bounds in move order: 1RB 72, 0RC 84, 1LC 101, 0RD 79, 1LD 96, 1RD 119, 0LE 81, 0RE 150, 1LE 141, 1RE 158. Do not claim these bounds until the exact complete trees and parent consumer compile. Next work: shard kernel checks, compose LC and LD plus ten siblings, then consume Extra28 into the exact Raw11 route.
+
+## Additional checked siblings and faster universal checker
+
+`BB6.Agent44Extra28M7.cover` and `BB6.Agent44Extra28M9.cover` passed kernel checking (standard axioms only), with exact D1 moves 1RB and 0RC. This closes two further residual cylinders; the exact parent consumer has not yet been updated to take these two.
+
+`siblings-source.tar.gz` (Git blob a7434ff99e18200af61b5ffb98c30a787b4f2218) adds the **general** source-checked zipper checker:
+- ZFast.lean: zipSideCheck_sound (arbitrary exact retained-halfline translated recurrence)
+- ZTree.lean: run_known, zipHoleOK_sound, sound (same PhaseTree certificate type, zipper semantics for side cycles and first holes)
+- ZRoute.lean: consume for existing PhaseFrontier Route, retaining exact table checks and residuals.
+
+All three passed actual original-source kernel checking, with only propext, Classical.choice, Quot.sound. No native_decide or sorryAx. The new checker is designed to reduce repeated finite-tape simulation on large trees; runtime benefit has not yet been measured on equal-sized source. Reproduction: extract ld-source.tar.gz and siblings-source.tar.gz into the same directory; set LEAN_PATH as above, build the two counter modules, then run `python prepare-siblings.py; node make-periodic.cjs; bash generate-siblings.sh 7 9 10 13 14 15 16 17 18 19`. Use `bash compile-siblings.sh 7 9 ...` as desired. This generates the exact checked M7/M9 sources and candidate sources for all other siblings; M14 onward use the new checker. Build in parallel only within memory limits. The checked M7/M9 bounds are not global roster reductions.

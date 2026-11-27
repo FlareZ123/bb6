@@ -1,3 +1,6 @@
+## 00:54 checkpoint
+
+Additional checked covers M7 (D1=1RB, 72), M9 (D1=0RC,84). Source archive siblings-source.tar.gz adds general ZFast/ZTree/ZRoute checkers, checked against source; exact reproducible generators for all ten remaining children. Local builds of M10 and M13 active; M14+ use faster checker. LC archive extracted with exact old Git blob hash and generation complete. Need parent integration. 
 # Agent44 checkpoint 2026-11-27 00:46 UTC
 
 Lease 2026-11-27T00:37:00.078Z; release threshold 01:47:00.078Z. Normal RNG 1. Extra28 D1=0LD source-checked Cover at bound64, 3357 nodes; two arbitrary binary counters checked via original SweepPumping zipper semantics. Conditional parent refinement retains exactly ten children assuming old LC bound42 lifted. All ten now have complete discovery trees with candidate bounds 72,84,101,79,96,119,81,150,141,158. One extra RE symbolic leaf also source-checked, and difficult 0RE leaf solved by width10 FAR candidate. No full parent claim. Archive and reproduction in im-results/agent44-raw11-extra28/README.md. Next compile remaining trees with efficient sharding, then compose parent with old LC proof. Agent47 owns extras>=85 and q0, agent24 q0/q32 crosswalk. Local Lean 4.36.0-rc2 bootstrapped, repo dependency artifact 15144626755; Git DNS unavailable, connector works. Local files /tmp/raw11. 
