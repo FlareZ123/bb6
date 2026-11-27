@@ -86,13 +86,20 @@ def main():
 open BB6Coverage BB6.Agent49Box BB6.Agent13.Box17
 def row : PartialMachine := fun s => some (decode ([{codes}] : List (Fin 25))[2*s.1.val+s.2.toNat]!)
 def projected : {ns}.Table := {projected}
+def projectionCheck (s : Slot) : Bool :=
+  match {ns}.partialTable projected s with
+  | none => true
+  | some t => decide (row s = some t)
+theorem projection_checks : ∀ (q : Fin 6) (b : Bool), projectionCheck (q,b) = true := by decide
 theorem projection (s : Slot) :
     match {ns}.partialTable projected s with
     | none => True
     | some t => row s = some t := by
-  rcases s with ⟨q,b⟩
-  revert q b
-  decide
+  have hc := projection_checks s.1 s.2
+  change projectionCheck s = true at hc
+  cases h : {ns}.partialTable projected s with
+  | none => trivial
+  | some t => simpa [projectionCheck,h] using hc
 theorem compatible_never (m : Machine) (hm : compatible row m) : NeverHalts m := by
   apply {ns}.transfer_never projected m
   · intro s t ht
