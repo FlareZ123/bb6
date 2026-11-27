@@ -117,10 +117,12 @@ can have an eventually constant even F-run length**. The proof handles
 both eventually fixed pair type and eventually alternating pair type,
 including the exceptional m=0 boundary cases D=0 and D=4.
 
-This is stronger than the parity lemma but still not a mixed-path
-termination theorem. A hypothetical infinite path must keep changing
-its even F-run lengths infinitely often. The genuinely variable-run
-case remains open. The branch-13/15 first-pair specializations and defect
+The stronger [all-period F-run obstruction](PeriodicRunNoGo.md) proves
+at the paper level that **no infinite admissible signed path has an
+eventually periodic even F-run length sequence**. This subsumes the
+accepted fixed-length result above but is **not yet Lean-certified**.
+Only genuinely aperiodic mixed schedules remain as infinite-path
+candidates; this still does not decide a whole machine. The branch-13/15 first-pair specializations and defect
 identities are CI-checked in the manual workflow (run
 [45683408657](https://github.com/FlareZ123/bb6/actions/runs/45683408657),
 pinned Lean 4.36.0-rc2, success on 2026-11-25). The result remains
