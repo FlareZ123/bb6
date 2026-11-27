@@ -32,7 +32,9 @@ for name in ["CounterCarry.increment","CounterCarry.never","BB6.Agent3CounterCar
 PY
   exit 0
 fi
+limit=450
 case "$kind" in
+E1D0ZeroRF) d=21; emitter=emit-d0rf0.py; recipes=census-d0rf0.json; hash=; suffix=ZeroRF; B=394; limit=140;;
 E1D0ZeroLE) d=16; emitter=emit-d0le.py; recipes=recipes-d0le.json; hash=ee587f95632ca2d9a914f9777ab7243061396a6e5edb0e7f973178365be70a4b; suffix=ZeroLE; B=456;;
 E1D0ZeroLA) d=0; emitter=emit-d0la.py; recipes=recipes-d0la.json; hash=badd35612f9653ed71106e91dde892cbe7dbf4072da92663cd49549eb7af49d1; suffix=ZeroLA; B=4653;;
 E1D0ZeroRD) d=13; emitter=emit-d0rd.py; recipes=recipes-d0rd.json; hash=3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127; suffix=ZeroRD; B=679;;
@@ -41,15 +43,15 @@ E1D0ZeroRE) d=17; emitter=emit.py; recipes=recipes.json; hash=3d69cf3e91812cebf7
 *) exit 2;;
 esac
 g++ -std=c++17 -O3 im-results/agent48-raw139-e0-0re/replay.cpp -o "$work/replay"
-"$work/replay" 450 2 7 24 11 24 14 24 "$d" 16 24 13 24 24 > "$work/partition.json"
-echo "$hash  $work/partition.json" | sha256sum -c -
+"$work/replay" "$limit" 2 7 24 11 24 14 24 "$d" 16 24 13 24 24 > "$work/partition.json"
+if [[ -n "$hash" ]]; then echo "$hash  $work/partition.json" | sha256sum -c -; fi
 export PYTHONPATH="$PWD/im-results/agent48-raw139-f1-oneRA"
 if [[ "$kind" == E1D0ZeroRE ]]; then
  python3 "$base/$emitter" "$work/partition.json" "$base/$recipes" "$work/imports" 600
 else
  python3 "$base/$emitter" "$work/partition.json" "$work/imports" 600
 fi
-if [[ "$kind" == E1D0ZeroLE ]]; then
+if [[ "$kind" == E1D0ZeroLE || "$kind" == E1D0ZeroRF ]]; then
   # Closure resolver must see original, checked ray/reflect definitions.
   cp "$base"/UnaryGrow{,Bridge,Reflect}.lean "$work/imports/"
 fi
