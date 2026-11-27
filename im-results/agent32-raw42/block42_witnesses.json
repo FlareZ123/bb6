@@ -814,5 +814,197 @@
       78,
       479
     ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC0LB",
+    "id": 10184009,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      76,
+      419
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC0RA",
+    "id": 10184014,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      85,
+      297
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC0RB",
+    "id": 10184015,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      108,
+      400
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC0RC",
+    "id": 10184016,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      105,
+      382
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1LB",
+    "id": 10184021,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      76,
+      374
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1RA",
+    "id": 10184026,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      79,
+      281
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1RB",
+    "id": 10184027,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      78,
+      262
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1RC",
+    "id": 10184028,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      76,
+      249
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1RD",
+    "id": 10184029,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      78,
+      307
+    ]
+  },
+  {
+    "branch": "1LB",
+    "code": "1RB---1RC1LB0RD0RE1LD0LB1LE0LF0RC1RE",
+    "id": 10184030,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      78,
+      303
+    ]
+  },
+  {
+    "branch": "1LE",
+    "code": "1RB---1RC1LE0RD0LF1LD0LB1RF0LC0RA0RB",
+    "id": 11076046,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      140,
+      522
+    ]
+  },
+  {
+    "branch": "1LE",
+    "code": "1RB---1RC1LE0RD0LF1LD0LB1RF0LC1RA0RB",
+    "id": 11076058,
+    "width": 2,
+    "cap": 1,
+    "mod": 1,
+    "runs": 1,
+    "offset": 0,
+    "left_mode": "runs",
+    "stats": [
+      5,
+      140,
+      522
+    ]
   }
 ]
