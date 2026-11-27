@@ -37,7 +37,7 @@ theorem ones_triple (k : Nat) : ones (3*k) = rep Q k := by
     rw [show 3*(k+1)=3*k+3 by omega,ones_add,ih]
     exact rep_snoc Q k
 
-theorem prefix (v : Variant) (L R : List Bool) :
+theorem prefixRun (v : Variant) (L R : List Bool) :
     run0 (p v) (prefixCost v) ⟨4,false::L,[false,true,true]++R⟩ =
       some ⟨4,ones 4++L,R⟩ := by cases v <;> rfl
 
@@ -109,7 +109,7 @@ theorem leftPhase (v : Variant) (k j : Nat) :
   have h1' : run0 (p v) (3*(3*k+2)) (LPhase k (j+1)) =
       some ⟨4,pair++L,false::ones (3*k+2)⟩ := by
     simpa only [LPhase,L,rep,show 3*k+1+1=3*k+2 by omega,List.append_assoc] using h1
-  have h2 := prefix v (true::L) (ones (3*k))
+  have h2 := prefixRun v (true::L) (ones (3*k))
   have h2' : run0 (p v) (prefixCost v) ⟨4,pair++L,false::ones (3*k+2)⟩ =
       some ⟨4,ones 4++true::L,ones (3*k)⟩ := by
     simpa only [pair,List.cons_append,List.nil_append,show 3*k+2=2+3*k by omega,
@@ -123,9 +123,15 @@ theorem leftPhase (v : Variant) (k j : Nat) :
 
 theorem leftDone (v : Variant) (k : Nat) :
     run0 (p v) (3*(3*k+4)) (LPhase k 0) = some (U (3*k+4)) := by
-  simpa only [LPhase,U,rep,List.nil_append,List.append_nil,show 3*k+3+1=3*k+4 by omega,
-    show 3*k+4=3*k+2+2 by omega,ones_add,show ones 2=[true,true] by rfl] using
-    drainBlank v (3*k+3) []
+  have hlen : 3*k+2+2 = 3*k+4 := by omega
+  have hword : ones (3*k+2) ++ [true,true] = ones (3*k+4) := by
+    rw [← hlen, ones_add]
+    rfl
+  have hstart : LPhase k 0 = ⟨4,ones (3*k+4),[]⟩ := by
+    simp only [LPhase,rep,List.nil_append,hword]
+  rw [hstart]
+  have h := drainBlank v (3*k+3) []
+  simpa only [show 3*k+3+1=3*k+4 by omega,List.append_nil,U] using h
 
 theorem turn1 (v : Variant) (L : List Bool) :
     run0 (p v) 5 ⟨4,ones 4++L,[true]⟩ =

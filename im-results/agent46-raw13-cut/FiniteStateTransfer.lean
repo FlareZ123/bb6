@@ -34,7 +34,10 @@ theorem step_transport {p p' : PartialMachine} {R : Nat}
     ∃ mv', p' (b,s) = some (some mv') ∧
       mv.write = mv'.write ∧ mv.right = mv'.right ∧ rel R mv.next mv'.next = true := by
   have hmem : s ∈ [false,true] := by cases s <;> simp
-  have h0 := (Bool.and_eq_true.mp h).2
+  have hc : rel R 0 0 = true ∧ (List.finRange 6).all (fun a =>
+      (List.finRange 6).all (fun b => [false,true].all (cell p p' R a b))) = true := by
+    simpa only [check,Bool.and_eq_true] using h
+  have h0 := hc.2
   have h1 := List.all_eq_true.mp h0 a (List.mem_finRange a)
   have h2 := List.all_eq_true.mp h1 b (List.mem_finRange b)
   have h3 := List.all_eq_true.mp h2 s hmem
@@ -61,7 +64,10 @@ theorem never {p p' : PartialMachine} {R : Nat} (h : check p p' R = true)
     intro n
     induction n with
     | zero =>
-      exact ⟨blank,blank,rfl,rfl,rfl,rfl,(Bool.and_eq_true.mp h).1⟩
+      have hc : rel R 0 0 = true := by
+        unfold check at h
+        cases hrel : rel R 0 0 <;> simp_all
+      exact ⟨blank,blank,rfl,rfl,rfl,rfl,hc⟩
     | succ n ih =>
       obtain ⟨x,y,hx,hy,hh,ht,hr⟩ := ih
       have hlive := h0 (n+1)
