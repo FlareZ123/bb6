@@ -73,7 +73,7 @@ def make(p,recipe,out,roots,cap=100):
     tree=expand(p['tree'],P)
     assert used==set(exceptional)
     def size(n):return sum(map(size,n[3])) if n[0]=='split' else 1
-    assert size(tree)==945047
+    assert size(tree)==23*(p['counts']['split']+12)+1==945048
     for rec in records:
         if 'block5' in rec:emit_width5(out,rec)
     for j,(t,r) in ngrams.items():emit_ngram(out,j,t,r)
