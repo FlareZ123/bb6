@@ -45,11 +45,11 @@ theorem source_spine_exact (choices : List (Option Nat)) (b : Nat) (s : Pair)
         exact ⟨p,q,hstep,hpath⟩
 
 private theorem affineStep1 (r B p q : Nat)
-    (h : StepEq (some 1) p q (4196993+8388608*r+0*B) (49726+0*r+8388608*B)) :
+    (h : StepEq (some 1) p q (4196993+8388608*r) (49726+8388608*B)) :
     p=(1061677+2097152*r+2097152*B) ∧ q=(1617379+3145728*r+7340032*B) := by
-  change (4196993+8388608*r+0*B)+(49726+0*r+8388608*B)+((4196993+8388608*r+0*B)+(49726+0*r+8388608*B))%2 =
-      4*(p+2+((4196993+8388608*r+0*B)+(49726+0*r+8388608*B))%2) ∧
-      2*q+p+10=(4196993+8388608*r+0*B)+2*(49726+0*r+8388608*B) at h
+  change (4196993+8388608*r)+(49726+8388608*B)+((4196993+8388608*r)+(49726+8388608*B))%2 =
+      4*(p+2+((4196993+8388608*r)+(49726+8388608*B))%2) ∧
+      2*q+p+10=(4196993+8388608*r)+2*(49726+8388608*B) at h
   omega
 
 private theorem affineStep2 (r B p q : Nat)
@@ -123,7 +123,7 @@ theorem h5_affine_path (r B a t : Nat)
     (h : ExactPath h5Spine (2*J r+1) (49726+8388608*B) a t) :
     a=(1735479+3388496*r+6776976*B) ∧
     t=(1280448+2500056*r+5000120*B) := by
-  have hx : 2*J r+1=(4196993+8388608*r+0*B) := by unfold J; omega
+  have hx : 2*J r+1=(4196993+8388608*r) := by unfold J; omega
   rw [hx] at h
   rcases h with ⟨x1,y1,h1,rest1⟩
   obtain ⟨he1x,he1y⟩ := affineStep1 r B x1 y1 h1
