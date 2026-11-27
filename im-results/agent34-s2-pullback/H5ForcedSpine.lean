@@ -29,6 +29,14 @@ def forcedAt (b : Nat) (s : Pair) (choice : Option Nat) : Bool :=
         (if choice=some n then true else excluded (b-(n+2)) (high s n))
     else true)
 
+/-- The exact arithmetic equation witnessed by the selected original-source inverse edge. -/
+def StepEq (choice : Option Nat) (a k x y : Nat) : Prop :=
+  match choice with
+  | none => a+2=x+y ∧ 2*k+2=y
+  | some n =>
+      x+y+(x+y)%2 = P (n+1)*(a+2+(x+y)%2) ∧
+      2*k+a+7+3*n = x+2*y
+
 /-- Each successful one-open-leaf certificate transports original blank
     reachability into the uniquely designated parent, retaining the exact
     lower height bound and congruence data for the next certificate. -/
@@ -38,7 +46,8 @@ theorem source_forced_one (b : Nat) (s : Pair) (choice : Option Nat)
     (hl : Large b y) (hm : Matches b x y s) :
     ∃ a k, BB6.Agent3.CReach a k ∧
       Large (branchBits b choice) k ∧
-      Matches (branchBits b choice) a k (branchResidue b s choice) := by
+      Matches (branchBits b choice) a k (branchResidue b s choice) ∧
+      StepEq choice a k x y := by
   simp only [forcedAt, Bool.and_eq_true, decide_eq_true_eq] at hc
   rcases hc with ⟨⟨⟨hb,hv⟩,hd⟩,hh⟩
   let v := valuation b (q s)
@@ -56,7 +65,7 @@ theorem source_forced_one (b : Nat) (s : Pair) (choice : Option Nat)
     have hchildMatches := direct_matches (by omega : 1≤b) hm ha hk hye
     rcases hbranch with hchosen | hcert
     · subst choice
-      exact ⟨a,k,hrp,hchildLarge,matches_residue hchildMatches⟩
+      exact ⟨a,k,hrp,hchildLarge,matches_residue hchildMatches,⟨ha,hk⟩⟩
     · exact False.elim
         ((source_excluded (b-1) (direct s) hcert a k hchildLarge hchildMatches) hrp)
   · have hallowed : Allowed s v n := allowed_actual hb hm hn hpar
@@ -80,10 +89,11 @@ theorem source_forced_one (b : Nat) (s : Pair) (choice : Option Nat)
     have hchildMatches :=
       high_matches (by have := hv.1; omega : n+2≤b) hm hq hw hvalid
     by_cases hchosen : choice=some n
-    · refine ⟨a,k,hrp,?_,?_⟩
+    · refine ⟨a,k,hrp,?_,?_,?_⟩
       · simpa [branchBits,hchosen] using hchildLarge
       · simpa [branchBits,branchResidue,hchosen] using
           (matches_residue hchildMatches)
+      · simpa only [StepEq,hchosen] using (And.intro hq hw)
     · have hcert : excluded (b-(n+2)) (high s n)=true := by
         simpa only [hchosen, ite_false] using hline.2
       exact False.elim
@@ -120,7 +130,7 @@ theorem source_spine_sound (choices : List (Option Nat)) (b : Nat) (s : Pair)
       have hs : forcedAt b s choice=true ∧
           spineCert rest (branchBits b choice) (branchResidue b s choice)=true := by
         simpa only [spineCert, Bool.and_eq_true] using hc
-      obtain ⟨a,k,hrp,hlp,hmp⟩ :=
+      obtain ⟨a,k,hrp,hlp,hmp,_⟩ :=
         source_forced_one b s choice hs.1 x y hr hl hm
       simpa only [spineBits,spineResidue] using
         (ih (branchBits b choice) (branchResidue b s choice)
