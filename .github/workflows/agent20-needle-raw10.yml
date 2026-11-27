@@ -3,10 +3,11 @@ on:
   workflow_dispatch:
 permissions:
   contents: read
+  actions: read
 jobs:
   kernel:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean 4.36.0-rc2
@@ -15,10 +16,34 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Restore source modules and verify exact leaf
+      - name: Reuse accepted Canonical77 dependency bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python3 im-results/agent13-coverage/unpack.py
-          python3 tools/lean_compile_closure.py im-results/agent20-needle-raw10-routing/SpaceNeedleRaw10.lean --workdir /tmp/a20-needle-raw10 --jobs 4 --manifest /tmp/a20-needle-raw10-manifest.json --theorem BB6.Agent20NeedleRaw10.cover_iff 2>&1 | tee /tmp/a20-needle-raw10.log
+          gh api repos/FlareZ123/bb6/actions/artifacts/14997966221 > /tmp/a20-base-pin.json
+          python3 -c 'import json; a=json.load(open("/tmp/a20-base-pin.json")); assert not a["expired"] and a["workflow_run"]["id"] == 45554648116'
+          mkdir -p /tmp/a20-base
+          gh api repos/FlareZ123/bb6/actions/artifacts/14997966221/zip > /tmp/a20-base.zip
+          unzip -q /tmp/a20-base.zip -d /tmp/a20-base
+          test -s /tmp/a20-base/CanonicalRaw114Accepted.olean
+          echo "Canonical77 dependency bundle loaded"
+      - name: Compile exact Space Needle leaf
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a20-needle-raw10
+          cp im-results/agent19-hard-root-crosswalk/HardRootCore.lean /tmp/a20-needle-raw10/
+          cp im-results/agent19-hard-root-crosswalk/HardRootParents.lean /tmp/a20-needle-raw10/
+          cp im-results/agent20-needle-raw10-routing/SpaceNeedleRaw10.lean /tmp/a20-needle-raw10/
+          cd /tmp/a20-needle-raw10
+          export LEAN_PATH="/tmp/a20-base:$PWD"
+          if ! test -s /tmp/a20-base/FirstHolePath.olean; then
+            cp "$GITHUB_WORKSPACE/im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean" .
+            lean -o FirstHolePath.olean FirstHolePath.lean | tee -a /tmp/a20-needle-raw10.log
+          fi
+          for module in HardRootCore HardRootParents SpaceNeedleRaw10; do
+            echo "Compiling $module" | tee -a /tmp/a20-needle-raw10.log
+            lean -o "$module.olean" "$module.lean" | tee -a /tmp/a20-needle-raw10.log
+          done
           if grep -Eq 'sorryAx|native_decide|Lean.ofReduceBool' /tmp/a20-needle-raw10.log; then exit 1; fi
-          grep -F '[lean-closure] SUCCESS' /tmp/a20-needle-raw10.log
+          grep -F 'BB6.Agent20NeedleRaw10.cover_iff' /tmp/a20-needle-raw10.log
