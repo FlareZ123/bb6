@@ -64,7 +64,9 @@ theorem guardedFrontZero (m : Nat) (ys : List Bool) :
   change run 44
     (⟨oppairs 1 ++ (pairs (m+3) ++ [true,true]),true,
       List.replicate 4 true ++ (List.replicate 2 true ++ ys),3⟩ : Cfg) = _
-  rw [onesSix]
+  have hs : List.replicate 4 true ++ (List.replicate 2 true ++ ys) =
+      List.replicate 6 true ++ ys := by rfl
+  rw [hs]
   exact dZeroClose44 m ys
 
 private theorem oppairsFalse (q : Nat) :
