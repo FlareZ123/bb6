@@ -27,7 +27,7 @@ def ingest(m, root):
         shutil.copy2(src, dst)
 ingest(core, work / "core")
 for i in range(24):
-    shard = work / "children" / f"raw139-e0-zeroLF-root13-child{i:02d}-certified"
+    shard = work / "children" / f"raw139-e0-zeroLF-root13-child{i}-certified"
     m = json.loads((shard / "manifest.json").read_text())
     assert m["claim"]["theorem"] == f"BB6.Agent14E0LFParent.cZLFRoot13_{i}"
     assert m["claim"]["weighted_bound"] == 19007
