@@ -48,13 +48,15 @@ theorem rotate_words (a b : List Bool) (n : Nat) :
     rep (a++b) n++a = a++rep (b++a) n := by
   induction n with
   | zero => simp [rep]
-  | succ n ih => simp only [rep,List.append_assoc] at *; rw [← List.append_assoc (a++b),ih]; simp only [List.append_assoc]
+  | succ n ih => simp only [rep,List.append_assoc,ih]
 theorem exchange (k : Nat) :
     [true,true,false]++rep X k++[true,true,true,true] = [true,true,false,true,true]++rep Z k++[true,true] := by
   have h := rotate_words [true,true] [false,true,false] k
   change rep X k++[true,true] = [true,true]++rep Z k at h
-  rw [show [true,true,true,true]=[true,true]++[true,true] by rfl,← List.append_assoc (rep X k),List.append_assoc [true,true,false],h]
-  simp only [List.append_assoc,List.cons_append,List.nil_append]
+  calc
+    _ = [true,true,false] ++ ((rep X k ++ [true,true]) ++ [true,true]) := by simp only [List.append_assoc]; rfl
+    _ = [true,true,false] ++ (([true,true] ++ rep Z k) ++ [true,true]) := by rw [h]
+    _ = _ := by simp only [List.append_assoc]; rfl
 theorem growth (k : Nat) :
     run0 p (46*k+122) (F k)=some (F (k+1)) := by
   have h0 := setup (rep X k++[true,true,false,true])
