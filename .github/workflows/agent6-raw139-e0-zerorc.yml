@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -123,7 +123,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   shard:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -171,7 +171,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   compose:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
     needs: [prepare,shard]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -776,5 +776,81 @@ jobs:
           path: |
             .tmp/a6-zeroRC/parent
             .tmp/a6-zeroRC/imports
+          include-hidden-files: true
+          retention-days: 14
+
+  partition-oneLF:
+    if: inputs.variant == 'oneLFSearch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Generate first-query partition once
+        run: python3 im-results/agent6-raw139-e0-oneLF/discover.py partition .tmp/a6-oneLF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF-partition
+          path: .tmp/a6-oneLF
+          include-hidden-files: true
+          retention-days: 14
+  discover-oneLF:
+    needs: partition-oneLF
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: [0,1,2,3,4,5,6,7,8,9,10,11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF-partition
+          path: .tmp/a6-oneLF
+      - name: Search only open leaves, including exact late-query descendants
+        run: python3 im-results/agent6-raw139-e0-oneLF/discover.py shard .tmp/a6-oneLF --group ${{ matrix.group }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-oneLF-search-${{ matrix.group }}
+          path: .tmp/a6-oneLF/group-*/recipes.jsonl
+          include-hidden-files: true
+          retention-days: 14
+  aggregate-oneLF:
+    needs: [partition-oneLF, discover-oneLF]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF-partition
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneLF-search-*
+          path: .tmp/a6-oneLF/shards
+      - name: Validate complete leaf ID partition and list exact holdouts
+        run: |
+          set -euo pipefail
+          for g in {0..11}; do
+            printf -v gg '%02d' "$g"
+            mkdir -p ".tmp/a6-oneLF/group-$gg"
+            f=$(find ".tmp/a6-oneLF/shards/raw139-oneLF-search-$g" -name recipes.jsonl -type f)
+            test -n "$f"
+            cp "$f" ".tmp/a6-oneLF/group-$gg/"
+          done
+          python3 im-results/agent6-raw139-e0-oneLF/discover.py aggregate .tmp/a6-oneLF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF-candidate-summary
+          path: .tmp/a6-oneLF/summary.json
           include-hidden-files: true
           retention-days: 14
