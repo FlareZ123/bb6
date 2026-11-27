@@ -31,7 +31,7 @@ def overOut {n : Nat} (s : Shape n) (i : Fin n) :=
   param s (s.successor i) s.zero (enc s (s.extension i)++(s.phase (s.successor i)).post)
 
 structure Cert (n : Nat) where
-  shape : Shape n
+  shape : PhaseCounter.Shape n
   entry : Nat
   start : Fin n
   seed : List Bool
@@ -45,7 +45,7 @@ structure Checked {n : Nat} (p : PartialMachine) (c : Cert n) : Prop where
 
 theorem live {n : Nat} (p : PartialMachine) (c : Cert n) (hc : Checked p c)
     (i : Fin n) (bs : List Bool) :
-    ∃ t j ds, 0<t ∧ run0 p t (frame c.shape i bs) = some (frame c.shape j ds) := by
+    ∃ (t : Nat) (j : Fin n) (ds : List Bool), 0<t ∧ run0 p t (frame c.shape i bs) = some (frame c.shape j ds) := by
   obtain ⟨k,h⟩ := split_next (c.shape.extension i) bs
   rcases h with ⟨hb,_⟩ | ⟨rest,hb,_⟩
   · subst bs
@@ -59,7 +59,7 @@ theorem live {n : Nat} (p : PartialMachine) (c : Cert n) (hc : Checked p c)
 
 theorem never {n : Nat} (p : PartialMachine) (c : Cert n) (hc : Checked p c)
     (m : Machine) (hm : compatible p m) : NeverHalts m := by
-  have arbitrary : ∀ k : Nat, ∃ t i bs, k ≤ t ∧ run0 p t ⟨0,[],[]⟩ = some (frame c.shape i bs) := by
+  have arbitrary : ∀ k : Nat, ∃ (t : Nat) (i : Fin n) (bs : List Bool), k ≤ t ∧ run0 p t ⟨0,[],[]⟩ = some (frame c.shape i bs) := by
     intro k
     induction k with
     | zero => exact ⟨c.entry,c.start,c.seed,by omega,hc.seed⟩
