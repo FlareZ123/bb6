@@ -43,5 +43,130 @@
       ]
     ],
     "increment": 480
+  },
+  "0RE/1730": {
+    "table": "1RB0LA_1RC0RF_0RD0RE_1LD1LA_1RA1RE_---1LB",
+    "entry": 20104,
+    "entryHead": 80,
+    "period": 48572,
+    "shift": 60,
+    "side": "R",
+    "cuts": [
+      [
+        9,
+        229
+      ]
+    ],
+    "increment": 28800
+  },
+  "0RE/1736": {
+    "table": "1RB0LA_1RC1RF_0RD0RE_1LD1LA_1RA1RE_---0RE",
+    "entry": 19128,
+    "entryHead": 80,
+    "period": 46006,
+    "shift": 60,
+    "side": "R",
+    "cuts": [
+      [
+        9,
+        229
+      ]
+    ],
+    "increment": 27200
+  },
+  "0RE/790": {
+    "table": "1RB0LA_1RC0RA_0RD0RE_1LD1LA_0LB0RF_---0RD",
+    "entry": 2198,
+    "entryHead": -48,
+    "period": 444,
+    "shift": -8,
+    "side": "L",
+    "cuts": [
+      [
+        15,
+        17
+      ],
+      [
+        30,
+        36
+      ]
+    ],
+    "increment": 30
+  },
+  "1RE/390": {
+    "table": "1RB0LA_1RC0RF_0RD1RE_1LD1LA_0RB0RC_---1RA",
+    "entry": 23992,
+    "entryHead": -132,
+    "period": 19302,
+    "shift": -50,
+    "side": "L",
+    "cuts": [
+      [
+        2,
+        42
+      ],
+      [
+        133,
+        143
+      ]
+    ],
+    "increment": 5600
+  },
+  "1RE/1179": {
+    "table": "1RB0LA_1RC0RD_0RD1RE_1LD1LA_0RB0RF_---1RE",
+    "entry": 23992,
+    "entryHead": -132,
+    "period": 19302,
+    "shift": -50,
+    "side": "L",
+    "cuts": [
+      [
+        2,
+        42
+      ],
+      [
+        133,
+        143
+      ]
+    ],
+    "increment": 5600
+  },
+  "0RE/627": {
+    "table": "1RB0LA_1RC1RF_0RD0RE_1LD1LA_---0RD_1RA0RB",
+    "entry": 135300,
+    "entryHead": 1004,
+    "period": 19958,
+    "shift": 96,
+    "side": "R",
+    "cuts": [
+      [
+        9,
+        33
+      ],
+      [
+        688,
+        760
+      ]
+    ],
+    "increment": 912
+  },
+  "0RE/1403": {
+    "table": "1RB0LA_1RC1RF_0RD0RE_1LD1LA_---1RB_1RA0RB",
+    "entry": 133274,
+    "entryHead": 1004,
+    "period": 19728,
+    "shift": 96,
+    "side": "R",
+    "cuts": [
+      [
+        9,
+        33
+      ],
+      [
+        688,
+        760
+      ]
+    ],
+    "increment": 912
   }
 }
