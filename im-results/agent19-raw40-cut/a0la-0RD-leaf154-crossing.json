@@ -1,0 +1,20 @@
+{
+  "0RD/154": {
+    "table": "1RB0LA_1RC1RE_0RD0RD_1LD1LA_---0RF_0RC0RA",
+    "entry": 132476,
+    "entryHead": -480,
+    "period": 12262,
+    "shift": -24,
+    "cuts": [
+      [
+        73,
+        81
+      ],
+      [
+        489,
+        513
+      ]
+    ],
+    "increment": 520
+  }
+}
