@@ -59,7 +59,7 @@ def make(p,recipe,out,roots,cap=100):
             key=(i,path);rec=exceptional[key]
             assert rec['table']==t==r[1] and key not in used
             used.add(key)
-            if 'cycle' in rec:return rec['cycle']
+            if 'cycle' in rec:return ['longcert','H'+str(i)+'_'+str(path[0][1]) if path else 'H'+str(i)]
             if 'block5' in rec:return ['special',i]
             assert i in (4231,15496,15542,9135,14327),rec
             return ['special',i]
@@ -123,16 +123,19 @@ def make(p,recipe,out,roots,cap=100):
     def plain(n,imports):
         if n[0]!='split':return leaf(n,imports)
         return f'.split {n[1]} {slot(n[2])} (byMove [\n'+',\n'.join(plain(ch,imports) for ch in n[3])+'])'
+    def hard(n):return any(map(hard,n[3])) if n[0]=='split' else n[0]=='longcert'
     base='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\nnamespace '+NS+'\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent6OneLFZipHybrid\n'
     def emit(n,t,name):
         deps={'OneLFZipHybrid'}
-        if size(n)<=cap:
+        if n[0]=='longcert':
+            deps.add('LongCycle');pre='BB6.Agent6OneLFLongCycle';term=f'.covered {pre}.p{n[1]} {pre}.c{n[1]}'
+        elif not hard(n) and size(n)<=cap:
             term=f'.closed ({plain(n,deps)})'
         else:
             _,k,s,kids=n;terms=[]
             for j,(ch,v) in enumerate(zip(kids,ORDER)):
                 t2=t[:s]+[v]+t[s+1:]
-                if ch[0]=='split':
+                if ch[0] in ('split','longcert'):
                     cn=f'{name}_{j}'
                     emit(ch,t2,cn);deps.add(cn);terms.append(f'.covered p{cn} c{cn}')
                 else:terms.append(f'.closed ({plain(ch,deps)})')
