@@ -55,13 +55,13 @@ jobs:
           lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/raw41-canonical-partial.log
           lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/raw41-empty.log
           printf -v MOD 'Raw41New%03d' "${{ inputs.index }}"
-          lean -o "$SRC/\${MOD}Base.olean" "$SRC/\${MOD}Base.lean" 2>&1 | tee /tmp/raw41-base.log
+          lean -o "$SRC/${MOD}Base.olean" "$SRC/${MOD}Base.lean" 2>&1 | tee /tmp/raw41-base.log
           for n in $(seq -w 0 23); do
-            lean -o "$SRC/\${MOD}Branch\${n}.olean" "$SRC/\${MOD}Branch\${n}.lean" \
-              2>&1 | tee "/tmp/raw41-branch-\${n}.log"
+            lean -o "$SRC/${MOD}Branch${n}.olean" "$SRC/${MOD}Branch${n}.lean" \
+              2>&1 | tee "/tmp/raw41-branch-${n}.log"
           done
-          lean -o "$SRC/\${MOD}Closed.olean" "$SRC/\${MOD}Closed.lean" 2>&1 | tee /tmp/raw41-closed.log
-          grep -F "\${MOD}_bound" /tmp/raw41-closed.log
+          lean -o "$SRC/${MOD}Closed.olean" "$SRC/${MOD}Closed.lean" 2>&1 | tee /tmp/raw41-closed.log
+          grep -F "${MOD}_bound" /tmp/raw41-closed.log
           if grep -ER 'sorryAx|native_decide' /tmp/raw41-*.log; then exit 1; fi
           echo "CERTIFIED: exact source canonical bound, original accepted core"
       - uses: actions/upload-artifact@v4
