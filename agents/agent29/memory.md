@@ -438,3 +438,12 @@ Other runs still pending at this checkpoint: Raw59 five-parent integration retry
 - Added optional Raw57 support to `im-results/agent2-ready-union/extra_ready_union.py`: namespace `BB6.Agent31Raw57`, bound 1500, table `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. It is not in the default run map, so nothing is consumed unless an accepted Raw57 producer run is explicitly supplied.
 - If run 46064160509 succeeds, immediately dispatch `.github/workflows/agent31-canonical71-raw109.yml` with target `canonical-extra-ready`, `ready_resume_run_id=46031670976`, and `extra_parent_runs={"63":45948590270,"61":46032302566,"67":46034483043,"59":45897242410,"122":45866162212,"57":46064160509}`. This should replay the accepted five-parent chain and attempt Raw57 as the sixth removal, targeting a 40-representative successor.
 - If shard18 fails, inspect only its concrete failed-job tail. Do not rerun shards 0–17 or repeat the accepted 1LF mathematics.
+
+
+### 2026-11-27 21:11Z — direct Canonical41 successor plumbing
+
+- Added `im-results/agent29-raw57-consumer/consume_after_canonical41.py` and manual workflow `.github/workflows/agent29-canonical40-raw57.yml`.
+- The successor restores/authenticates accepted ready run 46031670976, then the exact Canonical41 extra delta from run 46037391095 / artifact 15221387172 / SHA-256 `5c95aa1c657a36dea9958216e16f5b5b2c731de262d45a0a2cd42ba088d59697`, and consumes only an explicitly accepted Raw57 producer. It targets `BB6.Agent31Canonical40Extra57.exact_at_champion_score` with 40 retained representatives.
+- Fixed a real chaining bug in `extra_ready_union.generate`: `raw59_count` now respects a predecessor whose `accepted` list already contains Raw59. Without this, a Canonical41 successor would incorrectly assert that Raw59 reappears in the new roster.
+- Do not dispatch the Canonical40 workflow until Raw57 producer run 46064160509 is fully successful and exports `raw57-prefix-parent-certified`.
+- At 21:11Z Raw57 shard18 was still compiling successfully, already beyond the old 40-minute cutoff; no diagnostic. Raw112 run 46065378088 had r05a01/r05a02/r05a03 successful and only r05a00 still in progress.
