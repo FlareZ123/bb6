@@ -1,6 +1,6 @@
 # All binary triple-containing G words halt
 
-**New all-parameter source-clause theorem (paper proof); [Lean source append](GeneralTripleBarrier.append.lean) is prepared, full source acceptance pending.** It supersedes the restricted tail language in
+**Original-source Lean-kernel accepted:** [run 46043370013](https://github.com/FlareZ123/bb6/actions/runs/46043370013), head `b303343143c44fc4a8c8a5ed68e3af121ca15299`, job `140656434899`. The theorem `a12G_binary_triple_halts` has only `[propext, Classical.choice, Quot.sound]` as axioms. [Lean source append](GeneralTripleBarrier.append.lean). Exact costs remain a separate source-clause arithmetic derivation. It supersedes the restricted tail language in
 [DoubleSuffixBarrier.md](DoubleSuffixBarrier.md). This is not an authentic
 blank-root verdict.
 
@@ -167,6 +167,6 @@ The Good condition is essential to this argument. This is not a
 nonhalting verdict for that prepared configuration.
 
 The finite tests are not the proof. The source-clause induction
-above is the mathematical advance; the direct [Lean formalization](GeneralTripleBarrier.append.lean) using the pinned source clauses is now prepared. It extends the kernel-accepted separated-double source closure without importing the older hazard append files. Full kernel acceptance remains the next gate. No
+above is the mathematical advance; the direct [Lean formalization](GeneralTripleBarrier.append.lean) using the pinned source clauses is now prepared. It extends the kernel-accepted separated-double source closure without importing the older hazard append files. The original-source closure has passed; the theorem does not certify the numerical cost formula. No
 authentic #85/#490 blank trajectory has been shown to enter the
 expanded region. No parent Cover or numerical BB(6) bound follows.

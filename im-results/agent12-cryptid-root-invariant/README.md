@@ -14,7 +14,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Current strongest prepared-state barrier
 
-[General triple halting theorem](GeneralTripleBarrier.md): every prepared G(M,U), M>=1, with binary U containing 111, halts. The new invariant pairs each token 2 with a preceding 1, preserving the triple in high-token returns and making all low-token branches fatal. The exact cost recurrence and quadratic bound are proved by source-clause derivation; 42,287 binary-word replays and 36 arbitrary good-token/tail cases agree. Full original-source Lean acceptance is pending. The [separated-double theorem](DoubleSuffixBarrier.md) is the simpler special case with v in (0|01|0011)*, kernel-accepted in [run 46041206114](https://github.com/FlareZ123/bb6/actions/runs/46041206114) with standard axioms. Neither theorem gives an authentic blank-root decision.
+[General triple halting theorem](GeneralTripleBarrier.md): every prepared G(M,U), M>=1, with binary U containing 111, halts. The new invariant pairs each token 2 with a preceding 1, preserving the triple in high-token returns and making all low-token branches fatal. The exact cost recurrence and quadratic bound are proved by source-clause derivation; 42,287 binary-word replays and 36 arbitrary good-token/tail cases agree. The unrestricted theorem is original-source kernel accepted in [run 46043370013](https://github.com/FlareZ123/bb6/actions/runs/46043370013) with standard axioms. The [separated-double theorem](DoubleSuffixBarrier.md) is the simpler special case with v in (0|01|0011)*, kernel-accepted in [run 46041206114](https://github.com/FlareZ123/bb6/actions/runs/46041206114) with standard axioms. The [nonbinary extension](NonbinaryTripleBarrier.md), accepted in the same run, proves halting for every G(M,w 1 0^z 2 T) with w binary containing 111 and T arbitrary; it also permits any high entry x>=2 when T is paired. These theorems give no authentic blank-root decision.
 
 ## Research map and evidence status
 
@@ -35,7 +35,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Next mathematical work
 
-Formalize the general triple theorem through the exact token-mode source closure; investigate whether the authentic arithmetic return map can reach the expanded fatal suffix language, rather than extending bounded scans alone.
+The general and nonbinary triple barriers are now source accepted. Next pursue a single-mode, counted, globally total token-CR return map and its blank-root transport; integrate prepared barriers into that exact recurrence rather than extending bounded scans alone.
 
 1. Formalize the corrected suffix-preserving prefix and the new E_n(x;T) decrement / E_n(1) bridge in the pinned #85 module; do not reuse the current failing append unchanged.
 2. Resolve the offset-six E_n(2) token closure at the new endpoint E_1192248236(2), then continue the exact modulo-3 residual chain.
