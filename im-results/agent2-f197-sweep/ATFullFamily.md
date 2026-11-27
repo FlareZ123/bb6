@@ -34,7 +34,7 @@ The scanner/decoder `atp_staged_with` ([ATCarriedParser.lean](ATCarriedParser.le
 B(TAT Z AA X,R) ->^(46+S+K) B(J Φ X,A C R)
 ```
 
-where `S=39+8(q+1)+10t` and `K= -29 + 60(q+1)+4t` (the carried decoder consumes 31 fewer transitions than the n=0 end decoder). Equivalently `S+K=10+68(q+1)+14t`. The source-core rules comprise the 46-step TAT preconsume, the 8/18-step AT/TT scanners, 47/57-step AAA/TAA terminals, 60/64-step four-case decoder peel, and 32/36-step A/T terminal carry junction.
+where `S=39+8(q+1)+10t` and `K= -28 + 60(q+1)+4t` (the carried decoder consumes 31 fewer transitions than the n=0 end decoder). Equivalently `S+K=11+68(q+1)+14t`. The source-core rules comprise the 46-step TAT preconsume, the 8/18-step AT/TT scanners, 47/57-step AAA/TAA terminals, 60/64-step four-case decoder peel, and 32/36-step A/T terminal carry junction.
 
 Next restore the right counter, by induction on n:
 
