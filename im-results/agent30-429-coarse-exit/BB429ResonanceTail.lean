@@ -9,6 +9,19 @@ private theorem tail_stepF (u w : Nat) (h : 2*u+3 ≤ w) :
     next (u,w) = some (2*u+3,w-2*u-3) := by
   simp [next,h]
 
+private theorem tail_stepOo (u w : Nat) (h : w+1 < 2*u)
+    (hw : w%2=1) (hd : 3 ≤ u-w/2) (he : (u-w/2)%2=1) :
+    next (u,w) = some (u-w/2+3,2*w) := by
+  have h0 : ¬ w ≥ 2*u+3 := by omega
+  have h1 : w ≠ 2*u+2 := by omega
+  have h2 : w ≠ 2*u+1 := by omega
+  have h3 : w ≠ 2*u := by omega
+  have h4 : w%2 ≠ 0 := by omega
+  have h5 : u-w/2 ≠ 1 := by omega
+  have h6 : u-w/2 ≠ 2 := by omega
+  have h7 : (u-w/2)%2 ≠ 0 := by omega
+  simp [next,h0,h1,h2,h3,h4,h5,h6,h7]
+
 private theorem tail_stepEe (u w : Nat) (h : w < 2*u)
     (hw : w%2=0) (hd : 2 ≤ u-w/2) (he : (u-w/2)%2=0) :
     next (u,w) = some (11,2*u+w-2) := by
@@ -18,6 +31,27 @@ private theorem tail_stepEe (u w : Nat) (h : w < 2*u)
   have h3 : w ≠ 2*u := by omega
   have h5 : u-w/2 ≠ 1 := by omega
   simp [next,h0,h1,h2,h3,hw,h5,he]
+
+/-- A false-phase resonant state rotates in two accelerator moves into the
+    canonical Oe/F/Oo/F low-side coordinate system. -/
+theorem phase_false_rotate (u d : Nat)
+    (he : d%2=0) (hmod : (u-d)%4=1) (hu : d+17≤u) :
+    run 2 (phase u d)=some (phase (u-d-2) (4*d+16)) := by
+  have hw : (u+12+d)%2=1 := by omega
+  have hg : 3≤u-(u+12+d)/2 := by omega
+  have hgo : (u-(u+12+d)/2)%2=1 := by omega
+  have h1 : next (phase u d)=some ((u-d-5)/2,2*u+24+2*d) := by
+    unfold phase
+    rw [tail_stepOo _ _ (by omega) hw hg hgo]
+    simp only [Option.some.injEq,Prod.mk.injEq]
+    omega
+  have h2 : next ((u-d-5)/2,2*u+24+2*d)=
+      some (phase (u-d-2) (4*d+16)) := by
+    rw [tail_stepF _ _ (by omega)]
+    unfold phase
+    simp only [Option.some.injEq,Prod.mk.injEq]
+    omega
+  simp [run,h1,h2]
 
 /-- Once a canonical low phase has crossed below its geometric cycle guard,
     the narrow band d+7 ≤ 5u and u ≤ d+9 returns immediately by F,E-even. -/
@@ -92,6 +126,7 @@ theorem phase_cycles_direct_return
   · rw [hcoordU]
     omega
 
+#print axioms phase_false_rotate
 #print axioms phase_direct_return
 #print axioms phase_cycles_direct_return
 
