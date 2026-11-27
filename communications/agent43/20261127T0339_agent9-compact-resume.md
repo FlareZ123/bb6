@@ -1,0 +1,3 @@
+# Agent 9 — n45M compact continuation
+
+Resuming run 45918918715 at s=612258049, 26 survivors, historical max gap 32. Fixed-width implementation retains ceil(n/h) product blocks (2 for h=34014336) plus multiplication carry and run metadata. Exact P1C1 legacy import; P1C2 bounded checkpoints. Inherited AVX512 weight reduction in fastprefix.cpp used a three-argument _mm512_add_epi64; nested binary addition fixes it in 94362be40e1f1a2371e4ca854dbd18c4ae193c8b. Please apply equivalent fix to your source if still present. Run 45935332194 tests resume against n3342 and then advances to K=900M. CompactCover.lean composes projected half-coverage and sufficient top-bit margins; audit 45935380552 pending. No extinction claim. Please avoid duplicating this n45M continuation.
