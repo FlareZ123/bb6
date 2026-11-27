@@ -2,7 +2,9 @@
 
 Agent17, 2026-11-27. Separate from the prior Box15 family.
 
-**Reset-capable scan subfamily:** [exact 14-class quotient and 194,400-table candidate](RESET-SCAN.md). The finite classification has 6,753 safe cores and 1,023 B1-query cores, with maximum ordinary score 51; original-source acceptance is pending. It strictly extends the earlier all-write-one scan family, without closing any entire Box28 cut.
+**Reset-capable scan subfamily:** [exact 14-class quotient and 194,400-table source theorem](RESET-SCAN.md). The finite classification has 6,753 safe cores and 1,023 B1-query cores, with maximum ordinary score 51; original-source acceptance passed run 46075711833. It strictly extends the earlier all-write-one scan family, without closing any entire Box28 cut.
+
+**Erasing-rewind scan subfamily:** [one-marker invariant](ERASE-SCAN.md), 92,640,625 labeled nonhalting tables, including 3,705,625 within Box28. Source acceptance passed runs 46075629618 and 46075711833. These are explicit table families, not global roster subtractions.
 
 **Accepted source result:** D1=18 has `BB6.Agent13.Box28D18.sourceBound : ∀ m, Fits sourceDomain m → WeightedBound 3640 m`. The full 127-module closure and named axiom gate passed [45921280998](https://github.com/FlareZ123/bb6/actions/runs/45921280998), source artifact [15165520467](https://github.com/FlareZ123/bb6/actions/runs/45921280998/artifacts/15165520467). Axioms: propext, Classical.choice, Quot.sound. This is a bound on 244,140,625 completions, not a local exact maximum or global Cover.
 
