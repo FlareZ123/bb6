@@ -2,7 +2,7 @@ import ATCarriedParser
 import ATCostGrowth
 
 set_option maxRecDepth 100000
-set_option maxHeartbeats 0
+set_option maxHeartbeats 500000
 
 namespace F197
 open Q
@@ -64,11 +64,25 @@ theorem atPConsume (n : Nat) (l : Tape) (hl : l 0 = true) :
       simp only [Option.bind_some]
       cases n with
       | zero =>
-          simpa [atQ,atpRight,pre] using atc_consume_e l hl
+          change run 36
+            (other B
+              (pre [true,false,true,false,true,true,false,false] l)
+              (pre [false,false,true] blank)) =
+            some (other B l
+              (pre [false,false,true,true,true,true,false,false,false,
+                true,true] blank))
+          exact atc_consume_e l hl
       | succ k =>
           have hS : (atSStack k) 0 = true := atSStack_first k
-          simpa [atQ,atSStack,atpRight,pre] using
-            atc_consume_u l (atSStack k) hl hS
+          change run 36
+            (other B
+              (pre [true,false,true,false,true,true,false,false] l)
+              (pre [false,false,true,true,true,true,false,false,false]
+                (atSStack k))) =
+            some (other B l
+              (pre [false,false,true,true,true,true,false,false,false,
+                true,true,true,true,true,false,false,false] (atSStack k)))
+          exact atc_consume_u l (atSStack k) hl hS
 
 #print axioms atPConsume
 
