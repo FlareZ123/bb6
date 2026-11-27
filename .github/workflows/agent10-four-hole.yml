@@ -149,8 +149,8 @@ jobs:
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" --label raw43-1rd-growth \
             --theorem BB6.Agent25Raw43RD1Return.never --artifact-name raw43-1rd-growth-proof \
-            "$root/Raw43RD1Return.lean" 2>&1 | tee /tmp/a25-raw43-1rd-growth.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-raw43-1rd-growth.log BB6.Agent25Raw43RD1Growth.chain BB6.Agent25Raw43RD1Return.returns BB6.Agent25Raw43RD1Return.never
+            "$root/Raw43RD1Return.lean" "$root/Raw43RD1M0.lean" "$root/Raw43RD1M29.lean" 2>&1 | tee /tmp/a25-raw43-1rd-growth.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-raw43-1rd-growth.log BB6.Agent25Raw43RD1Growth.chain BB6.Agent25Raw43RD1Return.returns BB6.Agent25Raw43RD1Return.never BB6.Agent25Raw43RD1M0.never BB6.Agent25Raw43RD1M29.never
           cp /tmp/a25-raw43-1rd-growth.log "$work/audit.log"
       - name: Retain Raw43 1RD growth proof
         if: inputs.target == 'raw43-1rd-growth'
