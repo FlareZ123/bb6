@@ -153,14 +153,23 @@ with tempfile.TemporaryDirectory() as temp:
         exe='run_portfolio' if args[0]=='portfolio' else 'run_search'
         run=subprocess.run([str(work/exe),*args],input=inp,text=True,capture_output=True,check=True)
         return run.stdout,run.stderr
-    inp=''.join(f'{g} {t.replace("_","")}\n' for g,(i,t) in miss.items())
+    # Exact asymmetric witness for the formerly depth-limited 813 leaf.
+    # Reconstruct and check every graph below; counts are discovery metadata only.
+    forced_graph={
+        (813,'1RB---1RC1RE0RD1LE1LD0RC1LF1RB0RA0LF'):
+            '0 2 2 4 0 1 2 2 4 1 8701 9 2149',
+    }
+    selected={g:forced_graph[i,t.replace('_','')] for g,(i,t) in miss.items()
+              if (i,t.replace('_','')) in forced_graph}
+    forced=''.join(f'{g} {miss[g][1].replace("_","")} {v}\n' for g,v in selected.items())
+    inp=''.join(f'{g} {t.replace("_","")}\n' for g,(i,t) in miss.items() if g not in selected)
     portfolio,left=search(['portfolio',str(here/'graph-portfolio.txt'),'10000'],inp)
     cheap,left=search(['10000','150'],left)
     deep,left=search(['80000','999999'],left)
     # Exact soundness is independent of which search proposes the graph.
     # Use asymmetric candidates only for the remaining failures.
     asym,left=search(['asym','5000','50000'],left) if left.strip() and not partial_mode else ('',left)
-    hits=portfolio+cheap+deep+asym
+    hits=forced+portfolio+cheap+deep+asym
     print(f'Portfolio: {len(portfolio.splitlines())}/{len(miss)} novel graph candidates',flush=True)
     (out/'unresolved.txt').write_text(left)
     if not partial_mode: assert not left.strip(),left
