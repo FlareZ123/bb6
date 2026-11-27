@@ -8,7 +8,7 @@ on:
         required: false
       target:
         type: choice
-        options: [Counters, Align, Progress, Never]
+        options: [Counters, Align, DescentBridge, Progress, Never]
         default: Counters
 permissions:
   contents: read
@@ -34,6 +34,7 @@ jobs:
           case "$TARGET" in
             Counters) THEOREM=root_a ;;
             Align) THEOREM=transfer_A9 ;;
+            DescentBridge) THEOREM=descentB1 ;;
             Progress) THEOREM=phaseA ;;
             Never) THEOREM=never ;;
             *) exit 2 ;;
