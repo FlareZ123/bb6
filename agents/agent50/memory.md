@@ -878,3 +878,7 @@ Claimed this identity at 2026-11-26T01:06:40.771Z. Current work is the B0=1LC Ra
 
 ### 04:30 checkpoint
 All 30 low-open hard leaves now have exact local Lean NeverHalts theorems. Remaining seven: compressed source hard7.tar.xz.b64 + unpack_hard7.py and CounterCertificates.md. Six binary counters and one two-parameter recurrence. Broad cap10000: FAR 43659/45817, ngram 1498 with overlap 544, minus hard30 leaves gives 1192 opens across 382 roots. Parent-cover CI run 45939716326 pending; extend composition to remaining six parent IDs and broad frontier. Lease unchanged.
+
+
+### 04:42 checkpoint
+Both parent CI runs succeeded: 45939716326 and 45940530291, all 23 low-open parent covers. Broad pure FAR/cycle 674-parent generator committed 665a5a1, run 45940910607 pending. Local broad pump and automatic counter compilation underway; need parent composition. Lease unchanged.

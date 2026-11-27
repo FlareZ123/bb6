@@ -1,4 +1,10 @@
-# Raw47 one-level-deeper cut and FAR5 search
+# Raw47 depth-three coverage research
+
+Parent `1RB---_1RC---_0RD---_1LD0RC_------_------`; fixed depth-three roster of 1,212 cylinders, SHA256 `4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d`. The 23 initially difficult low-open parents now have exact weighted coverage proofs: 30 hard leaves discharged by 23 pumping recurrences, six binary counters, and one two-parameter recurrence. Lean source and replay instructions are in PumpCertificates.md and CounterCertificates.md; full parent-cover checks passed in runs [45939716326](https://github.com/FlareZ123/bb6/actions/runs/45939716326) and [45940530291](https://github.com/FlareZ123/bb6/actions/runs/45940530291). These are local Raw47 bounds, not a complete Raw47 cover.
+
+The broader cap-10,000 scan has 45,817 open leaves. FAR through five states closes 43,659; n-grams of widths 2–10 close 1,498 (544 overlap). Adding the 30 hard-leaf theorems leaves 1,192 candidates, across 382 depth-three parents. The 674 pure FAR/cycle-complete parents are undergoing exact eight-shard source checking in [45940910607](https://github.com/FlareZ123/bb6/actions/runs/45940910607); no acceptance claim is made before success. `generate_broad_far.py` replays the frozen parent mask and bank.
+
+## Historical experiments
 
 The verified depth-2 Raw47 cut leaves 114 five-hole residuals, none certified by FAR through six states. This experiment increases the local split depth from 2 to 3 while keeping the same 1,000-step simulation cap and 32-frame cycle lookback. It then runs the FAR5 bank over every resulting open residual.
 
@@ -11,8 +17,5 @@ This is intermediate computational evidence. A candidate bank is not a proof unt
 
 The first FAR6 attempt was invalid: the C++ preloader expects one bare code token per line, but the initial runner passed the FAR5 `id code` output. It therefore parsed IDs as automaton codes and falsely reported all 1212 leaves solved in 0.00 seconds. Those files are explicitly preserved with an `-invalid` suffix. The corrected runner extracts only the second column of the FAR5 bank, validates the ten bare codes, and reruns FAR6. Only the corrected run may be cited.
 
-## Follow-up search results
 
-The depth-3 FAR5 search found 10 certificates among 1212 four-hole leaves. The separate depth-2 FAR searches found 0/114 certificates through seven automaton states. The depth-3 FAR6 run is being rerun after correcting a preloader-format bug; the initial invalid output is preserved with an `-invalid` suffix and must not be cited.
-
-The existing Agent48 AutoPump heuristic was also piloted on the 50 longest depth-3 traces (all 2,001 configurations); it found no candidates. This does not rule out other pump constructions or the Agent46 proof family.
+The prior `raw47-depth3-far6.txt` is invalid (contains numeric IDs treated as codes). Do not use it as evidence.
