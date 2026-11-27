@@ -18,23 +18,12 @@
 #include <immintrin.h>
 #include <omp.h>
 #include "reduced_jump.hpp"
+#include "shifted_reverse.hpp"
 using U=uint64_t; using I=uint32_t; using W=__uint128_t;
 constexpr I missing=UINT32_MAX;
 using std::vector;
 static inline U mask(unsigned k){return k==64?~U(0):(U(1)<<k)-1;}
-static inline U dw(U b){return (b&0xAAAAAAAAAAAAAAAAull)+2*(b&0xCCCCCCCCCCCCCCCCull)+4*(b&0xF0F0F0F0F0F0F0F0ull)+8*(b&0xFF00FF00FF00FF00ull)+16*(b&0xFFFF0000FFFF0000ull)+32*(b&0xFFFFFFFF00000000ull);}
-static int fit(I F,I rem){return int(std::min({rem,I(30),I(63-__builtin_clzll(F)-1)}));}
-struct Block {
- I q; int k; U Y,F,M; double inv;
- Block(I end,I rem):q(end-fit(end,rem)),k(fit(end,rem)),Y(0),F(end),M((U(1)<<k)-1),inv(1.0/F){}
- I parent(I z,U* word=nullptr)const {
-  U X=(U(z)<<k)+Y,b=U(double(X)*inv);
-  if(b*F>X)--b; else if((b+1)*F<=X)++b;
-  if(b*F>X || (b+1)*F<=X)b=X/F;
-  for(int j=0;j<2;++j,++b)if(b<=M){U f=U(q)*b+dw(b);if(f<=X&&X-f<U(q)){if(word)*word=b;return I(X-f);}}
-  return missing;
- }
-};
+using bb6_shifted::Block;
 struct Seen {
  vector<U> bits;
  explicit Seen(I n):bits((U(n)+63)/64){}
@@ -67,41 +56,7 @@ struct DSU {
 };
 struct Entry{I c;int id;};
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
-struct Block8 {
- const Block& b; __m512i F,q,M,Y,shift,one;__m512d inv;
- explicit Block8(const Block& x):b(x),F(_mm512_set1_epi64(x.F)),q(_mm512_set1_epi64(x.q)),M(_mm512_set1_epi64(x.M)),Y(_mm512_set1_epi64(x.Y)),shift(_mm512_set1_epi64(x.k)),one(_mm512_set1_epi64(1)),inv(_mm512_set1_pd(x.inv)){}
- static __m512i wt(__m512i w){
-  auto a=_mm512_and_si512(w,_mm512_set1_epi64(0xAAAAAAAAAAAAAAAAull));
-  auto b=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xCCCCCCCCCCCCCCCCull)),1);
-  auto c=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xF0F0F0F0F0F0F0F0ull)),2);
-  auto d=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFF00FF00FF00FF00ull)),3);
-  auto e=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFFFF0000FFFF0000ull)),4);
-  return _mm512_add_epi64(_mm512_add_epi64(_mm512_add_epi64(a,b),_mm512_add_epi64(c,d)),e);
- }
- __m512i parent_vec(__m512i z,__mmask8 active)const{
-  auto X=_mm512_add_epi64(_mm512_sllv_epi64(z,shift),Y);
-  auto B=_mm512_cvttpd_epu64(_mm512_mul_pd(_mm512_cvtepu64_pd(X),inv));
-  auto BF=_mm512_mullo_epi64(B,F);
-  auto hi=_mm512_cmp_epu64_mask(BF,X,_MM_CMPINT_GT);
-  auto lo=_mm512_cmp_epu64_mask(_mm512_add_epi64(BF,F),X,_MM_CMPINT_LE);
-  B=_mm512_mask_sub_epi64(B,hi,B,one);B=_mm512_mask_add_epi64(B,lo,B,one);
-  BF=_mm512_mullo_epi64(B,F);
-  auto bad=_mm512_cmp_epu64_mask(BF,X,_MM_CMPINT_GT)|_mm512_cmp_epu64_mask(_mm512_add_epi64(BF,F),X,_MM_CMPINT_LE);
-  auto c0=_mm512_sub_epi64(X,_mm512_add_epi64(_mm512_mullo_epi64(B,q),wt(B)));
-  auto good0=active&_mm512_cmp_epu64_mask(c0,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B,M,_MM_CMPINT_LE);
-  auto B1=_mm512_add_epi64(B,one);
-  auto c1=_mm512_sub_epi64(X,_mm512_add_epi64(_mm512_mullo_epi64(B1,q),wt(B1)));
-  auto good1=active&_mm512_cmp_epu64_mask(c1,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B1,M,_MM_CMPINT_LE);
-  auto c=_mm512_mask_blend_epi64(good1,_mm512_set1_epi64(missing),c1);
-  c=_mm512_mask_mov_epi64(c,good0,c0);
-  bad&=active;
-  if(bad){alignas(64) U in[8],out[8];_mm512_store_si512(in,z);_mm512_store_si512(out,c);
-   while(bad){unsigned j=__builtin_ctz(bad);bad&=bad-1;out[j]=b.parent(I(in[j]));}
-   c=_mm512_load_si512(out);
-  }
-  return c;
- }
-};
+using bb6_shifted::Block8;
 #endif
 // Deduplication at the boundary of a composed partial function is exact:
 // duplicate intermediate carries have identical remaining paths.
@@ -238,6 +193,8 @@ static void load(const std::string& path,I n,I K,I h,bool half,I&s,I&gap,vector<
 }
 int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
+ bb6_shifted::fit_mode=0; // legacy default until measured selection
+ if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>5)return 2;bb6_shifted::fit_mode=unsigned(x);}
  if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
  bool half=argc>=5&&std::string(argv[4])=="half";
@@ -269,7 +226,7 @@ int main(int argc,char**argv){
   }
   vector<Prefix>next;vector<std::pair<I,I>> layer;U work=0,fw=0,mid=0;I maxrun=0;
   for(I i=0;i<parts.size();i++){auto&part=parts[i];work+=part.work;fw+=part.fw;mid+=part.mids;for(auto a:part.accepted)layer.push_back({i,a});for(auto&g:part.next){maxrun=std::max(maxrun,g.run);next.push_back(std::move(g));}}
-  std::cout<<"s="<<s<<" h="<<h<<" old="<<gs.size()<<" mids="<<mid<<" next="<<next.size()<<" work="<<work<<" filter="<<fw<<" run="<<maxrun<<" gapBound="<<maxgap<<" fuse="<<fusion_limit<<" sec="<<std::chrono::duration<double>(std::chrono::steady_clock::now()-t).count()<<std::endl;
+  std::cout<<"s="<<s<<" h="<<h<<" old="<<gs.size()<<" mids="<<mid<<" next="<<next.size()<<" work="<<work<<" filter="<<fw<<" run="<<maxrun<<" gapBound="<<maxgap<<" fit="<<bb6_shifted::fit_mode<<" fuse="<<fusion_limit<<" sec="<<std::chrono::duration<double>(std::chrono::steady_clock::now()-t).count()<<std::endl;
   for(auto e:layer)std::cout<<"CHILD "<<e.first<<" "<<e.second<<"\n";std::cout<<std::flush;
   if(next.empty()){std::cout<<"END "<<n<<" "<<n+s<<std::endl;return 0;}
   s+=h;gs=std::move(next);save(path,n,K,h,half,s,maxgap,gs);
