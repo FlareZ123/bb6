@@ -2,6 +2,18 @@
 
 Parent `1RB---_1RC---_0RD---_1LD0LB_------_------` (canonical surviving raw index 42, path address 1RC,0RD,1LD,0LB), first query B1 at time 6. Seven unknown slots, 25^7 = 6,103,515,625 normalized raw completions (each halt is counted as one choice).
 
+## Whole-child acceptance and remaining work
+
+The following exact first-level Covers have already passed pinned original-source Lean CI. The previous discovery-only status below is historical.
+
+| B1 | CI run | Artifact |
+|---|---:|---:|
+| 0RA | [45994074344](https://github.com/FlareZ123/bb6/actions/runs/45994074344) | 15195228793 |
+| 0RE | [45996645063](https://github.com/FlareZ123/bb6/actions/runs/45996645063) | 15198405532 |
+| 1RB | [45996253830](https://github.com/FlareZ123/bb6/actions/runs/45996253830) | 15196792976 |
+
+0RB has seven successful shards and one failed shard (group 5, run 45994080192). 1LA has seven successful shards (run 45996630344), 1RA six (run 45996637267). Target only their missing groups. No complete Raw42 parent or global roster reduction yet.
+
 ## Established original-source cuts
 
 - [Raw42Cut.lean](Raw42Cut.lean) discharges the halt child at weighted bound 12, seven direct side-cycle children B1=0LB,0LC,0LD,0RC,0RD,1LD,1RC, and the symbolic B1=1RD child via [Raw42RDGrowth.lean](Raw42RDGrowth.lean). The latter starts after 9 steps in B with right word 0 followed by k=2n+3 ones; the positive return consumes 6k+5 steps and adds two ones. Arbitrary-tail transfers and unbounded iteration prove nonhalting of every completion. The first-hole partition closes 9 of 25 choices, leaving 16 ordinary children. It covers 2,197,265,625 raw completions.
@@ -57,7 +69,7 @@ The exact nested induction and Cover adapter passed [CI run 45993507004](https:/
 | 1RE | E0 (7) | 4 | 1 | 19 |
 | **Total** | | **93** | **11** | **136** |
 
-The disjoint new early cylinders contain 93*25^5 = 908,203,125 normalized raw completions; the combined 104 nonhalting cylinders and ten bounded immediate halts contain 114*25^5 = 1,113,281,250. This count is disjoint from the previously closed first-level branches and the two 0RA cuts, but may overlap previously investigated descendants within these ten branches; it is not a new global roster subtraction. No fresh E/F symmetry factor is claimed. All remaining ordinary children are retained, rather than inferred nonhalting from a finite cutoff.
+The disjoint new early cylinders contain 93*25^5 = 908,203,125 normalized raw completions; the combined 104 nonhalting cylinders and ten bounded immediate halts contain 114*25^5 = 1,113,281,250. This count is disjoint from the initial nine-choice cut and the two 0RA cuts, but 19 of the 93 early cylinders (nine 0RE and ten 1RB) are already contained in the previously accepted whole-child Covers identified above. The other 74 may overlap previously investigated descendants. Thus this is a compact alternative proof and exact conditional decomposition, not 93 novel global exclusions. No fresh E/F symmetry factor is claimed. All remaining ordinary children are retained, rather than inferred nonhalting from a finite cutoff.
 
 The exported `BB6.Agent32Raw42Early.cover_all` takes Covers of the exact 136 residual refinements at any B≥64 and returns Covers of all ten first-level parents. `bankCover` independently exports each n-gram leaf at arbitrary B; `count_new`, `count_residual`, `code_distinct` and `first_distinct` check the finite partition. Local Lean 4.36.0-rc2 compilation against original-source objects from artifacts 15054146521, 15193983498 and 15195400786 succeeded. The coverage theorems depend only on propext, Classical.choice and Quot.sound; the checked counts require no axioms. Source SHA256 e136d9bdbb4257f192d4cf90ccfbf67d5b7c4da625acb94ec086f5731b1ad191. No new CI acceptance claimed. The existing manual workflow has an early variant for a pinned source-closure audit.
 
@@ -83,8 +95,8 @@ Leaf 1582 (`1RB1RE_1RC0RA_0RD0LF_1LD0LB_1LC1RA_0LD---`) and leaf 1665 (`1RB1RE_1
 
 Leaf 1659 `1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF` is now **source-checked nonhalting for every compatible completion**, including all 25 normalized C1 choices. The exact return parser [Raw42Leaf1659.lean](Raw42Leaf1659.lean) and recursively synchronized word invariant [Raw42Leaf1659Invariant.lean](Raw42Leaf1659Invariant.lean) prove `BB6.Agent32Raw42RA.Leaf1659.never`; only propext, Quot.sound, local Lean 4.36.0-rc2 against artifact 15054146521. See [the return grammar and proof](Raw42Leaf1659Transducer.md). A five-bit block B=10010 commutes with the continuation map G; eight finite phase words P_i advance cyclically, sometimes recursively updating the tail, and four phases emit B. The finite exceptional suffix U0 generates B^4 P5 P6 U0 in eight G iterations. The regular language (B|P0|...|P7)*{U0,...,U7} is therefore closed, and a six-phase outer prefix plus twelve initial checked returns connects this directly to the authentic blank start. No finite scanning assumption remains.
 
-All 1723 normalized open leaves of 0RA now have candidate verdicts. The 94 residual leaf proofs (52 n-gram, 39 run/block-run, 2 twin-growth, 1 recursive language) have been locally source-checked, as have the two independent four-hole growth proofs (also in the FAR class). The 1626 FAR and three late trace candidates and full first-hole tree still require checked assembly. No complete child or global roster reduction is yet claimed.
+All 1723 normalized open leaves of 0RA now have candidate verdicts. The 94 residual leaf proofs (52 n-gram, 39 run/block-run, 2 twin-growth, 1 recursive language) have been locally source-checked, as have the two independent four-hole growth proofs (also in the FAR class). The subsequently accepted whole-child CI run 45994074344 assembled all 1723 leaves and closes 0RA. No complete Raw42 parent or global roster reduction is yet claimed.
 
 ## 0RB assembly status
 
-The normalized B1=0RB discovery and generated certificate tree are implemented by [gen_closed42rb.py](gen_closed42rb.py). The earlier workflow run 45967480182 failed before proof checking because reconstructed coverage sources were missing. The subsequent run 45968320615 compiled numerous exceptional modules but ended with runner shutdown (exit 143), not a mathematical counterexample. The full 0RB child Cover is not accepted. Avoid restarting the same large prepare job unchanged; split expensive witness compilation and reuse completed evidence where available.
+The normalized B1=0RB discovery and generated certificate tree are implemented by [gen_closed42rb.py](gen_closed42rb.py). The earlier workflow run 45967480182 failed before proof checking because reconstructed coverage sources were missing. The subsequent run 45968320615 compiled numerous exceptional modules but ended with runner shutdown (exit 143), not a mathematical counterexample. The later sharded run 45994080192 accepted seven groups; group 5 failed. The exact generated source artifact is 15194448129, core artifact 15195605495. Avoid restarting the same large prepare job unchanged. In the missing group, the list-based BiDFA leaf 1570 consumed over 3.5 GB RSS after 56 seconds on a 4 GiB local runner and was stopped. The new [FastBiDFA.lean](FastBiDFA.lean) uses low-bit tries indexed by destination for edges and by (state, scanned symbol) for state pairs. Its independently kernel-proved `never` theorem uses only propext, Classical.choice, Quot.sound. The untrusted [convert_bidfa.py](convert_bidfa.py) translates the old explicit list data and preserves the leaf theorem interface. On the exact generated leaf 1570 it completed in 18.64 s, peak RSS 2806208 KB, with standard axioms only. This is a local proof of that leaf and a reusable checker improvement; full 0RB closure remains unclaimed.
