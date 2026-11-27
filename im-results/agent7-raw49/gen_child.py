@@ -7,6 +7,23 @@ pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
 known_proven={
+    "1RB1LE_1RC1RF_0RD0LA_1LD1RC_0LB0LE_1RB---": "BB6.Agent7Raw49C6Counters.M600",
+    "1RB1LE_1RC1RF_0RD0LA_1LD1RC_0RB0LE_1RB---": "BB6.Agent7Raw49MutatedFAR.M601",
+    "1RB1LE_1RC1LF_0RD0LA_1LD1RC_0LB0LF_0LA---": "BB6.Agent7Raw49MutatedFAR.M602",
+    "1RB1LE_1RC0RA_0RD0LA_1LD1RC_0RB0LF_0LB---": "BB6.Agent7Raw49AutoSweeps.M603",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_0RC0LF_0LB0LF": "BB6.Agent7Raw49AutoSweeps.M604",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_1RD0LF_0LB0LE": "BB6.Agent7Raw49MutatedFAR.M605",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_1RD0LF_0LB0LF": "BB6.Agent7Raw49MutatedFAR.M606",
+    "1RB1LE_1RC0RF_0RD0LA_1LD1RC_---0LF_1LA1RB": "BB6.Agent7Raw49AutoSweeps.M607",
+    "1RB1LE_1RC1RA_0RD0LA_1LD1RC_---0LF_1LA1LC": "BB6.Agent7Raw49C6Counters.M608",
+    "1RB1LE_1RC0LC_0RD0LA_1LD1RC_0LF1LA_---1LD": "BB6.Agent7Raw49AutoSweeps.M609",
+    "1RB1LE_1RC0RE_0RD0LA_1LD1RC_1RF1LA_---0LC": "BB6.Agent7Raw49AutoSweeps.M610",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_1RF1LB_1RD0RE": "BB6.Agent7Raw49MutatedFAR.M611",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_0RF1LC_1RA1RE": "BB6.Agent7Raw49MutatedFAR.M612",
+    "1RB1LE_1RC0RF_0RD0LA_1LD1RC_0LE1RB_0RB---": "BB6.Agent7Raw49C6Counters.M613",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_0RF1RE_0RB0LD": "BB6.Agent7Raw49MutatedFAR.M614",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_0RC1RF_0LB0LF": "BB6.Agent7Raw49MutatedFAR.M615",
+    "1RB1LE_1RC---_0RD0LA_1LD1RC_1RD1RF_0LB0LF": "BB6.Agent7Raw49AutoSweeps.M616",
     "1RB0LE_1RC---_0RD0LA_1LD1RC_0LA0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .la0 false","BB6.Agent7Raw49C1Guard.never .la0 false"),
     "1RB0LE_1RC---_0RD0LA_1LD1RC_0LA0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .la0 true","BB6.Agent7Raw49C1Guard.never .la0 true"),
     "1RB0LE_1RC---_0RD0LA_1LD1RC_0LD0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .ld0 false","BB6.Agent7Raw49C1Guard.never .ld0 false"),
@@ -127,6 +144,7 @@ import Raw49C1Guard
 import Raw49AutoSweeps
 import Raw49MutatedFAR
 import Raw49Doubling
+import Raw49C6Counters
 {head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
