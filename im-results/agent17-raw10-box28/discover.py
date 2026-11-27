@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reuse exact Box4 one-halt scans on the new Box28 D0=14,D1=17/18 cut.
+"""Reuse exact Box4 one-halt scans on the new Box28 D0=14,D1 in {3,4,17,18,19,20} cuts.
 Discovery is untrusted. Retain all unresolved rows and exact mass accounting.
 Do not repeat completed targets or claim a source bound from this script.
 """
@@ -33,7 +33,7 @@ def prepare(work, fixed):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--d1',type=int,choices=(17,18),required=True)
+    p.add_argument('--d1',type=int,choices=(3,4,17,18,19,20),required=True)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--targets',type=int,nargs='+',default=TARGETS)
     args=p.parse_args()
