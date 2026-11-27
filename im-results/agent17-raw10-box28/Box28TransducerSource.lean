@@ -83,7 +83,9 @@ theorem compatible_never (p : Params) (m : Machine) (hm : compatible (baseTable 
     runCore p (sourceGate m (1,true)) n localBlank at h
   have hn := never_blank p (sourceGate m (1,true)) hg n
   cases hr : BB6Coverage.run m n blank with
-  | none => exact False.elim (hn (by simpa [hr] using h.symm))
+  | none =>
+    rw [hr] at h
+    exact False.elim (hn h.symm)
   | some c => simp [hr]
 
 def finiteOK (p : Params) : Bool :=

@@ -99,7 +99,9 @@ theorem compatible_never (p : Params) (m : Machine) (hm : compatible (baseTable 
     (sourceGate m (1,true)) (sourceGate m (2,false)) n localBlank at h
   have hn := never_blank p (sourceGate m (0,true)) (sourceGate m (1,true)) (sourceGate m (2,false)) n
   cases hr : BB6Coverage.run m n blank with
-  | none => exact False.elim (hn (by simpa [hr] using h.symm))
+  | none =>
+    rw [hr] at h
+    exact False.elim (hn h.symm)
   | some c => simp [hr]
 
 #print axioms compatible_never
