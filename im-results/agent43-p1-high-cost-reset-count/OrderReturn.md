@@ -1,0 +1,5 @@
+Accepted source check: https://github.com/FlareZ123/bb6/actions/runs/46069999115 (success, f939c810).
+
+`OrderReturn.lean` proves a confined affine difference slope with an odd modulus and primitive return at most K is impossible over 2K+B bits when 2C<2^B and both coordinates are positive and bounded by C. The second difference of the original carry halves, hence vanishes. The cross determinant between the difference and primitive slope also halves and returns to its start, hence is zero; this forces p distinct integers strictly between 0 and p. The order condition g | 2^K-1 supplies the return, or K>=g suffices.
+
+`OrderReturnSource.lean` lifts this to the authentic delayed trace: for even n>=14, at separation 2^r h with odd h, the selected word cannot contain equal or complemented factors of length 2n+2K+7 when ReturnBound h K (h<=K or positive K with h | 2^K-1). The bound no longer grows with h if its multiplicative order is small. This excludes structured carry-word candidates, not an entire critical index or a machine. No BB(6) classification change.
