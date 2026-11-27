@@ -2,6 +2,7 @@ import Lean.Elab.Tactic.Omega
 import EGenericTurn
 import PacketSource
 
+set_option linter.unusedSimpArgs false
 set_option maxRecDepth 8192
 set_option maxHeartbeats 20000000
 
@@ -48,6 +49,7 @@ theorem dPairsRun (n : Nat) (L ys : List Bool) :
           rw [List.replicate_append_replicate]
         _ = _ := by
           rw [show 2*n+2=2*(n+1) by omega]
+    rw [show 2+2*n=2*(n+1) by omega]
     exact congrArg (fun z : List Bool => Cfg.mk L false z 3) hr
 
 /-- One fixed left-turn step group after scanning the q-dependent stack. -/
@@ -65,6 +67,14 @@ private theorem dBaseTen (m : Nat) (ys : List Bool) :
   simp [run,step,goL,goR,sweepD,shortPacket,oppairs,pairs,
     List.append_assoc]
 
+private theorem pairRotate (n : Nat) (zs : List Bool) :
+    true :: (oppairs n ++ zs) = pairs n ++ (true :: zs) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      simpa [oppairs,pairs,List.append_assoc] using
+        congrArg (fun xs : List Bool => true :: false :: xs) ih
+
 /-- For q>=2, the first five transitions expose an arbitrary D-pair
     stack, which can be removed by dPairsRun before a seven-step close. -/
 private theorem dFive (u m : Nat) (ys : List Bool) :
@@ -74,6 +84,7 @@ private theorem dFive (u m : Nat) (ys : List Bool) :
       ⟨pairs u ++ (true :: (pairs (m+3) ++ [true,true])),false,
         [true,true,false] ++ (List.replicate 8 true ++ ys),3⟩ := by
   simp [run,step,goL,goR,oppairs,pairs,List.append_assoc]
+  exact pairRotate u _
 
 private theorem dMany (u m : Nat) (ys : List Bool) :
     run (2*(u+2)+8)
@@ -155,8 +166,9 @@ private theorem inputShape (k q : Nat) (ys : List Bool) :
       _ = _ := by
             rw [oppairsFalse]
             simp [shortFront,List.replicate,List.append_assoc]
-  simp only [packet,word,init,hn,List.cons_append]
-  rw [hw]
+  simp only [packet,word,init,List.replicate_zero,
+    List.nil_append,List.cons_append]
+  rw [hn,hw]
   rfl
 
 private theorem outputShape (k q : Nat) (ys : List Bool) :
