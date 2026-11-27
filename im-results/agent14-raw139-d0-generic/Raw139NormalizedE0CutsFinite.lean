@@ -1,12 +1,11 @@
-import Raw139Normalized
+import Raw139LocalCore
 
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent14Raw139NormalizedE0CutsFinite
 
-open BB6.Agent6Raw139Normalized
-open BB6.Agent31FourHoleRoster
+open BB6.Agent14Raw139Core
 
 def e0ZeroRA : PartialMachine := leaf (2, ⟨false, true, 0⟩)
 def e0ZeroRE : PartialMachine := leaf (2, ⟨false, true, 4⟩)
