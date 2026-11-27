@@ -1,0 +1,11 @@
+# Two complete carry rectangles: exact weighted bound eight (candidate)
+
+The two background rows are [8,20,11,?,11,13,18,15,?,24,4,12] and [8,24,11,?,11,13,18,15,?,24,4,12]. B1 and E0 range independently over all 25 transition codes. Hence 1,250 complete tables, not merely the one-halt subset. All fixed slots are live.
+
+The E0 split has 50 cases. Twenty-three have short directional cycles (maximum period 76); these certificates preserve B1 as a hole. Two E0=0 cases halt after 4 live steps. Eight cases with E0 in {3,6,8,21} reach B1 after respectively 6,5,5,7 live steps: if B1 halts they terminate, otherwise all slots are live. The remaining seventeen cases have infinite carry invariants. Fifteen use the original markers, and two (A1=20, E0=4 or 20) use the alternate marker 01.
+
+For the latter two, the common triple language is (111|110|101)*01 0^infinity. At E with 3k ones on the left, the terminal 01 produces D with 3k+2 ones on the left and right suffix 01 in six steps. Rewind costs 3k+4 more steps, returning to E with left blank and suffix 1^(3k+3)01. The other three digit macros are unchanged. This proves positive progress forever, including the terminal branch, without any B1 assumption. The blank prefix is four live steps to E scanning 01, so the invariant starts directly.
+
+The aggregate mathematical bound is exactly eight attempts including halt. The halters have no nonzero incoming blank delay to A, and [8,20,11,0,11,13,18,15,21,24,4,12] attains eight. There are 58 halting tables and 1,192 nonhalting tables in the disjoint union (counts follow from the classification, not a kernel count theorem). This replaces the previous six special cylinders with one complete pair of rectangles, though many simple cases already had short witnesses. It does not close the full D0=18 source box or establish a global Busy Beaver upper bound.
+
+Lean source candidate: Box28CarryRectangle.lean (rectangle_bound, max_halts, max_base). The first 15 entry proofs now use finite list configurations and kernel-checkable exact prefixes, not large recursive simp expansions. Box28CarryTail01.lean proves the alternate marker recurrence. No new source acceptance until the complete audit succeeds.
