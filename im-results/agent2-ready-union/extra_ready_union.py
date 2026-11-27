@@ -172,10 +172,11 @@ theorem all_ready_parents_removed :
   intro p hp
   simp only [readyParents, List.mem_cons, List.not_mem_nil, or_false] at hp
   rcases hp with """ + " | ".join("rfl" for _ in raws) + " <;> decide")
+    raw59_expected = int("59" not in raws and "59" not in set(prior.get("accepted", [])))
     text.append(f"""
 theorem raw59_count :
     (roster{count}.filter
-      (fun e => sameTable e.2 BB6.Agent31Canonical59Membership.p59)).length = {int("59" not in raws)} := by decide
+      (fun e => sameTable e.2 BB6.Agent31Canonical59Membership.p59)).length = {raw59_expected} := by decide
 """)
     tail = template[template.index("theorem sound_integrated"):template.index("#print axioms")]
     text.append(tail.replace("BB6.Agent2Canonical53FourSharp", prior_ns)
