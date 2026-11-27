@@ -18862,7 +18862,14 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
+  "growth": {
+    "805": {
+      "table": "1RB1LE_1RC1LA_0RD1RF_1LD0RB_1RA1LB_---0RE",
+      "partial": "BB6.Agent25Raw43B1LAA1LEM805.table",
+      "never": "BB6.Agent25Raw43B1LAA1LEM805.never",
+      "module": "Raw43B1LAA1LEM805"
+    }
+  },
   "unresolved": [
     {
       "i": 122,
@@ -18874,13 +18881,6 @@
     {
       "i": 468,
       "table": "1RB1LE_1RC1LA_0RD0LE_1LD0RB_1LF0RC_0LA---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 805,
-      "table": "1RB1LE_1RC1LA_0RD1RF_1LD0RB_1RA1LB_---0RE",
       "query": [
         "open"
       ]
