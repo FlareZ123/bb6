@@ -1,13 +1,13 @@
 # Coupled-counter nonhalting theorem for raw13 parent 1093
 
-**Theorem (mathematical proof; guard-return Lean assembly pending).** Both partial machines with codes
+**Theorem (source-accepted Lean proof, CI 45913978085).** Both partial machines with codes
 
     7 14 11 5 2 19 22 0 13 13 10 24
     7 14 11 5 2 19 22 0 10 13 10 24
 
 avoid their sole unassigned transition (F1) forever from blank. Here a code is 4*next + 2*write + right, and 24 means unassigned. Consequently every completion is nonhalting. The two machines are the E0=0RD and E0=1LC hard siblings of the source-targeted parent 1093. The exact stuttering equivalence is kernel-checked in Raw13Detour.lean; it suffices to prove the first table safe.
 
-This proof has three components: exact frame rules (kernel-checked in Raw13Frames.lean), a finite accelerated entry certificate (check_coupled_entry.py), and the all-time guard argument below. The finite entry and arbitrary jump are now assembled and locally kernel-checked; the all-time guard argument remains to be formalized. No empirical long run is used as a proof of infinite behavior.
+This proof has three components: exact frame rules (kernel-checked in Raw13Frames.lean), a finite accelerated entry certificate (check_coupled_entry.py), and the all-time guard argument below. The finite entry, arbitrary jump and all-time guard-return argument are assembled in Raw13CoupledLive.lean and Raw13CoupledBoth.lean; the actual source closure passed CI 45913978085. No empirical long run is used as a proof of infinite behavior.
 
 ## 1. Notation and exact rules
 
