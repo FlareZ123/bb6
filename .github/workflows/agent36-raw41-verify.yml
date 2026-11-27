@@ -47,7 +47,9 @@ jobs:
           lean --version | grep -F '4.36.0-rc2'
           echo 'Accepted original canonical77 object layout:'
           find /tmp/canonical77 -maxdepth 2 -name 'CanonicalFrontier.olean' -o -name 'ZipThreeHoleAudit.olean' -o -name 'PartialAudit.olean'
-          SRC=/tmp/raw41-candidate/lean
+          SRC=.tmp/agent36-raw41-verify-${{ inputs.index }}
+          mkdir -p "$SRC"
+          cp -a /tmp/raw41-candidate/lean/. "$SRC/"
           D=im-results/agent47-raw41-cut
           R=im-results/agent19-raw40-cut
           export LEAN_PATH="$SRC:/tmp/canonical77:$D:$R:im-results/agent47-rooted-tnf:im-results/agent13-coverage"
