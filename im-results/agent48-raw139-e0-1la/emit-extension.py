@@ -37,7 +37,9 @@ def render(k):
     return f"""namespace R{k}
 def parent : PartialMachine := fromCodes {t}
 def tree : Audit := {leaf(k)}
-theorem checked : fastCheck {B} parent tree = true := by decide +kernel
+theorem checked : zipCheck {B} parent tree = true := by
+  rw [← BB6.Agent48PrefixAudit.prefixCheck_eq]
+  decide +kernel
 theorem root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide +kernel
 theorem nohalt : weightedTNFNoAssignedHalt parent := by
   intro s
@@ -46,7 +48,7 @@ theorem nohalt : weightedTNFNoAssignedHalt parent := by
   | none => simp [h]
   | some n => by_cases hn : n < 24 <;> simp [h, hn]
 noncomputable def certificate : WeightedTNFCertificate {B} parent 6 :=
-  certifiedFast {B} parent tree root nohalt checked
+  certifiedZip {B} parent tree root nohalt checked
 theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound {B} m := certificate.sound
 #print axioms all_completions_weighted
 end R{k}
@@ -79,11 +81,11 @@ def main(out):
     keys=[];modules=[]
     for k,(t,a) in m.items():
         if '_' in k or k in ('8938','11147') or (a[0]=='wide' and a[1]!=2):continue
-        imports='import FastThreeHoleAudit\n'
+        imports='import FastThreeHoleAudit\nimport ZipPrefixAudit\n'
         if a[0]=='wide':
             block(k,out);imports+=f'import OneLAExtBlock{k}\n'
         if k in ('9138','9162'):imports+='import OneLAGrowth\n'
-        s=imports+'set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'+f'namespace {ns}\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit\n'+render(k)+f'end {ns}\n'
+        s=imports+'set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'+f'namespace {ns}\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit BB6.Agent10ZipAudit\n'+render(k)+f'end {ns}\n'
         name=f'OneLAExt{k}'
         (out/(name+'.lean')).write_text(s);keys.append(k);modules.append(name)
     covered=[m[k][0] for k in keys]

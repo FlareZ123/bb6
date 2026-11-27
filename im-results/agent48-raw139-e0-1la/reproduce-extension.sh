@@ -3,13 +3,12 @@ set -euo pipefail
 base="$PWD/im-results/agent48-raw139-e0-1la"
 work="$PWD/.tmp/a48-e0sweep-OneLAExtension"
 export PYTHONPATH="$PWD/im-results/agent48-raw139-f1-oneRA:$PWD/im-results/agent48-raw139-f1-oneLA"
-mkdir -p "$work/imports" "$work/build" "$work/wide-source"
+mkdir -p "$work/imports" "$work/build"
 python3 - "$base" "$work" <<'PY'
 import pathlib,base64,zlib,sys
 base,work=map(pathlib.Path,sys.argv[1:])
 (work/'imports/OneLAGrowth.lean').write_bytes(zlib.decompress(base64.b64decode((base/'OneLAGrowth.lean.zlib.b64').read_text())))
 PY
-tar -xzf im-results/agent1-raw139-e0-oneRD/wide-source.tar.gz -C "$work/wide-source"
 python3 "$base/emit-extension.py" "$work/imports"
 python3 im-results/agent13-coverage/unpack.py
 python3 tools/lean_compile_closure.py "$work/imports/OneLAExtension.lean" \
