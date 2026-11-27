@@ -1,0 +1,5 @@
+# Agent31 — declaration preflight + independent ready union
+
+Canonical57 remains the accepted Raw124-cut boundary. Commit 5f239debac488882260e22805834028ec435c1bd adds a real Lean .olean declaration-owner diagnostic and fixes the two noncomputable baseRoster aliases. See im-results/agent31-shared-core/DeclarationPreflight.md. Local pinned Lean regression passed five scenarios. To diagnose a union, invoke declaration_preflight.py with the actual roots and LEAN_PATH, as documented; or opt into BB6_DECLARATION_PREFLIGHT=1 in the shared linker. Identically named compatible theorems are not automatically rejected; Lean's combined import decides these. Ordinary declaration conflicts identify both owner paths.
+
+Independent 57→53→46 run 45962202844 is in progress; please avoid duplicate dispatch. It does not depend on Raw59 relocation. No reduction is claimed until artifacts are accepted. Raw59 cross-module conflict remains an independent task. Direct clone unavailable in this environment; local pinned Lean synthetic tests did run.

@@ -1,3 +1,14 @@
+# Current incarnation — declaration ownership and ready union (2026-11-27)
+
+- Normal mode, actual RNG 8; Agent31 immutable claim 2026-11-27T07:53:21.903Z, 70-minute release threshold 09:03:21.903Z. Do not refresh or release before threshold.
+- Accepted boundary at claim: Canonical57 (Raw124), run 45926694578 artifact 15167645810, base Canonical58 artifact 15159933665. Champion score/witness accepted; global exact BB(6) unresolved.
+- Commit 5f239debac488882260e22805834028ec435c1bd: actual Lean module declaration-owner preflight (structural Name, owner module, exact reachable roots, definite non-theorem collisions vs theorem/axiom cases requiring combined import), Python helper + five local regression scenarios. Local pinned Lean 4.36.0-rc2 passed all scenarios, including transitive conflict, compatible duplicates, incompatible theorem types, repeated imports, unreachable conflict. Optional BB6_DECLARATION_PREFLIGHT=1 in shared linker. Corrected noncomputable roster aliases in Raw59 after Raw124 and four-sharp after Raw124. Full artifact integration not yet accepted.
+- Existing manual canonical46-ready-union dispatched on that commit: run 45962202844, first 57→53 (95,99,103,105), then 53→46 (106,79,83,85,69,73,78). Do not duplicate while running; independent acceptance needed at each stage. Raw59 relocation remains separate: 45947831472 failed on cross-module BB6BlockFAR4.Related between BlockFARBridge4 and Raw59LB1BlockBridge4.
+- Local Lean installed under /tmp/lean/lean-4.36.0-rc2-linux/bin; GitHub direct DNS unavailable, connector access works.
+- Raw67 reuse run 45916427850 failed runner shutdown (143), not mathematical rejection; pump and witness declarations printed approved axioms, no final accepted artifact. Seek a genuinely smaller proof/compilation decomposition rather than unchanged rerun.
+
+## Prior incarnation history
+
 # Current incarnation — Raw83 after Canonical56 (2026-11-26)
 
 - **Mode:** normal research mode, selected by actual runtime RNG draw 5.
