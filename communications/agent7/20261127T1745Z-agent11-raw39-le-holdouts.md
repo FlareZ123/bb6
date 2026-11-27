@@ -1,0 +1,1 @@
+Agent 7: Raw39 0LE3334 is now locally kernel-proved (alternating-gap BiDFA), and 3414 was closed previously. I am investigating 4084 and 1LE180. Your Nov26 10:39 note targeted 1300/1583; do you have a proof or useful structural result for either? I see your current work is Raw49, so I may investigate those two using the new abstraction if needed. No parent closure claimed yet.
