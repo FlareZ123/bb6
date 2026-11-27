@@ -12,19 +12,18 @@
 #include <vector>
 #include <omp.h>
 #include "block_reverse.hpp"
+#include "reduced_jump.hpp"
 using namespace std;
 using U=uint64_t;
 struct Entry{int c,id;};
 struct Prefix{string y;int c,r;};
 struct DSU{vector<int>p;explicit DSU(int n):p(n,-1){}int find(int x){int r=x;while(p[r]>=0)r=p[r];while(x!=r){int y=p[x];p[x]=r;x=y;}return r;}int unite(int a,int b){a=find(a);b=find(b);if(a==b)return a;if(p[a]>p[b])swap(a,b);p[a]+=p[b];p[b]=a;return a;}};
 // Exact broad fixed-target live set, initially jumped by a modular subset sum.
-template<class Bit>vector<Entry>live(int q0,int F,Bit y,U&work){
- int r=min(22,F-q0),q=F-r;uint32_t M=1u<<r,mask=M-1,Y=0;
- for(int j=0;j<r;j++)Y|=uint32_t(y(q+j))<<j;
- vector<uint8_t>seen(M);vector<uint32_t>res{Y};seen[Y]=1;
- for(int j=0;j<r;j++){uint32_t shift=uint32_t((U(q+j)<<j)&mask),count=res.size();for(uint32_t i=0;i<count;i++){uint32_t c=(res[i]-shift)&mask;if(!seen[c]){seen[c]=1;res.push_back(c);}}}
- sort(res.begin(),res.end());vector<Entry>a,b;
- for(U base=0;base<U(q);base+=M)for(auto x:res){U c=base+x;if(c>=U(q))break;a.push_back({int(c),0});}
+template<class Bit>vector<Entry>live(int q0,int F,Bit y,U&work,const bb6_jump::Plan& jump){
+ int r=jump.r,q=jump.q;U Y=0;
+ for(int j=0;j<r;j++)Y|=U(y(q+j))<<j;
+ vector<Entry>a,b;
+ jump.lift(Y,[&](int c){a.push_back({c,0});});
  while(q>q0&&!a.empty()){
   int k=fit(q,q-q0),p=q-k;U bits=0;for(int j=0;j<k;j++)bits|=U(y(p+j))<<j;
   work+=a.size();size_t w=0;for(auto e:a){int c=blockParent(p,k,e.c,bits,false);if(c>=0)a[w++]={c,0};}a.resize(w);radix(a,b);
@@ -60,9 +59,11 @@ int main(int argc,char**argv){
   int h=min(block,n);vector<Prefix>next;size_t midTotal=0;
   struct Part{vector<Prefix>next;U work=0,filterWork=0;size_t mids=0;int maxgap=0;};
   vector<Part>parts(gs.size());
+  int F=2*n+s+3, r=min(22,n-h);
+  const bb6_jump::Plan jump(F-r,r);
   #pragma omp parallel for schedule(dynamic)
   for(int gi=0;gi<(int)gs.size();gi++){const auto&g=gs[gi];auto &part=parts[gi];auto y=[&](int q){int i=q-n-3;return i<n?0:g.y[i-n]-'0';};
-   auto mids=live(n+s+h+3,2*n+s+3,y,part.work);part.mids=mids.size();
+   auto mids=live(n+s+h+3,2*n+s+3,y,part.work,jump);part.mids=mids.size();
    auto good=filter(n+s+3,n+s+h+3,y,g.c,move(mids),part.filterWork);
    for(int a:good){int c=a;string extra(h,'0');for(int i=s+h-1;i>=s;i--){int q=n+i+3,v=2*c+y(q);if(v>=2*q)throw runtime_error("bad rewind");if(v>=q){extra[i-s]='1';v-=q;}c=v;}if(c!=g.c)throw runtime_error("wrong root");
     Prefix g2={g.y,a,g.r};int last=g2.y.back()-'0',run=0;for(int k=s-1;k>=0&&g2.y[k]==g2.y.back();k--)run++;
