@@ -33,7 +33,7 @@ theorem aTurn_balance (k : Nat) (s : ATail) : 6*(aTurn k s).1+arank (aTurn k s).
   | succ k ih =>
     have h := ih (an s)
     have h' := abalance s
-    simp only [aTurn]
+    change 6*(ac s+(aTurn k (an s)).1)+arank (aTurn k (an s)).2=k+1+arank s
     omega
 
 def bw (n : Nat) : List Bool :=
@@ -191,10 +191,14 @@ theorem bFront (p : Nat) (hp : 24 ≤ p) :
   let s := (aTurn (p-4) .t152).2
   have hb := aTurn_balance (p-4) .t152
   have hlt := arank_lt s
-  have hn3 : 3 ≤ n := by dsimp [n,s]; simp only [arank] at hb; omega
+  have hb' : 6*n+arank s=p-3 := by
+    dsimp only [n,s]
+    simp only [arank] at hb
+    omega
+  have hn3 : 3 ≤ n := by omega
   have h0 : Plus (B0 p) (boundary 4 true (S 1::(U 3 3 ++ U 5 (p-4))) (aword .t152)) := by
     simpa only [B0,aword,show p-24+24=p by omega,show p-24+20=p-4 by omega,
-      U,List.replicate_succ,List.replicate_zero,List.cons_append,List.append_assoc,List.nil_append] using positive (bSeed (p-24)) (by omega)
+      U,List.replicate_succ,List.replicate_zero,List.cons_append,List.append_assoc,List.nil_append] using positive (bSeed (p := p-24)) (by omega)
   have h1 := lift (bankIter (p-4) 0 3 [] .t152)
   have h1' : R (boundary 4 true (S 1::(U 3 3 ++ U 5 (p-4))) (aword .t152))
       (boundary 4 true (S 1::(AB n ++ U 3 (p-1))) (aword s)) := by
@@ -216,7 +220,9 @@ theorem b0Return (p : Nat) (hp : 24 ≤ p) : Plus (B0 p) (cfg (ret .b0 p)) := by
   let t := an s
   have hbal := aTurn_balance (p-4) .t152
   have hbal' : 6*n+arank s=p-3 := by
-    dsimp [n,s]; simp only [arank] at hbal; omega
+    dsimp only [n,s]
+    simp only [arank] at hbal
+    omega
   have hlt := arank_lt s
   have hn : n=(p-3)/6 := by omega
   have hs : arank s=(p-3)%6 := by omega
@@ -229,7 +235,10 @@ theorem b0Return (p : Nat) (hp : 24 ≤ p) : Plus (B0 p) (cfg (ret .b0 p)) := by
     simpa only [show p+2-24+24=p+2 by omega] using rr (oddInit (p+2-24) Y)
   have h2 : R (boundary 4 true [S 2] (U 1 (p+2) ++ S 5::Y))
       (boundary 0 true (U 3 3 ++ [S 2]) (S 0::(U 1 p ++ S 5::Y))) := by
-    simpa only [show p+2=(p-1)+1+1+1 by omega,show p=(p-1)+1 by omega,
+    have hpL : U 1 p = S 1::U 1 (p-1) := by
+      conv => lhs; rw [show p=(p-1)+1 by omega]
+      rfl
+    simpa only [show p+2=(p-1)+1+1+1 by omega,hpL,
       U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] using
       rr (oddStart (U 1 (p-1) ++ S 5::Y))
   have h := Plus.transR (Plus.transR h0 h1) h2
@@ -255,7 +264,7 @@ theorem b0Return (p : Nat) (hp : 24 ≤ p) : Plus (B0 p) (cfg (ret .b0 p)) := by
         U,List.replicate_zero,List.nil_append] using h3
     have h4 : R (boundary 0 true (U 3 m ++ [S 2]) (S 0::S 5::Y))
         (boundary 4 true (S 1::(U 3 (m+1) ++ [S 2])) Y) := by
-      simpa only [m,show 2*p+3-24+24=2*p+3 by omega,show 2*p+3-24+25=2*p+3+1 by omega] using rr (evenLow (m-24) Y)
+      simpa only [m,show 2*p+3-24+24=2*p+3 by omega,show 2*p+3-24+25=2*p+3+1 by omega] using rr (evenLow (p := m-24) Y)
     have h5 := rr (Raw140VariantTransfer.erMany M86 ext z (U 3 (m+1) ++ [S 2]) (aword t))
     have h6 := lift (Raw140ERExit.exitBank (z-2) (m+1) t)
     have h6' : R (boundary 4 true (S 1::(AB z ++ U 3 (m+1) ++ [S 2])) (aword t))
