@@ -2,7 +2,7 @@ import ListSym
 set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 namespace BB6.Agent6OneLF14327
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent6ListSym BB6.Agent6SymWord (Widths env)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent6ListSym BB6.Agent6SymWord
 
 def p : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -276,7 +276,10 @@ def s36 : State := ⟨2,[.lit [false],.rep [true,false,true,true,false,true,true
 def d36 : State := ⟨2,[.lit [false],.lit [true,false,true,true,false,true,true,true,true,false,true,true,false,true,true,true],.rep [true,true,false,true,true,false] false,.lit [true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true]],[.lit [],.rep [true,false,true,false,false,true,false,true] true,.lit [true,true,true]]⟩
 theorem rule36 (L R : List Bool) :
     run0 p 12 ⟨2,[false]++[true,false,true,true,false,true,true,true]++L,[]++R⟩ =
-      some ⟨2,[false]++L,[]++[true,false,true,false,false,true,false,true]++R⟩ := rfl
+      some ⟨2,[false]++L,[]++[true,false,true,false,false,true,false,true]++R⟩ := by
+  cases R with
+  | nil => rfl
+  | cons b R => cases b <;> rfl
 theorem h36 (x y : Nat) : run0 p (12*y) (s36.eval x y)=some (d36.eval x y) := by
   simpa only [s36,d36,State.eval,ev,env,Bool.false_eq_true,ite_false,ite_true,List.append_assoc,List.append_nil,List.nil_append] using sweepL p 2 [false] [] [true,false,true,true,false,true,true,true] [true,false,true,false,false,true,false,true] 12 rule36 y (ev [.lit [true,false,true,true,false,true,true,true,true,false,true,true,false,true,true,true],.rep [true,true,false,true,true,false] false,.lit [true,true,false,true,true,false,true,true,false,true,true,false,true,true,false,true]] (env x y)) (ev [.lit [true,true,true]] (env x y))
 def s37 : State := ⟨2,[.lit [false,true,false,true,true,false,true,true,true,true,false,true,true,false,true,true,true,true],.rep [true,false,true,true,false,true] false,.lit [true,false,true,true,false,true,true,false,true,true,false,true,true,false,true]],[.lit [],.rep [true,false,true,false,false,true,false,true] true,.lit [true,true,true]]⟩
