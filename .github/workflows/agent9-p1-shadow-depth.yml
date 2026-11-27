@@ -83,7 +83,7 @@ jobs:
           g++ -O3 -march=native -std=c++17 "$D/shifted_reverse_test.cpp" -o /tmp/shifted-test
           /tmp/shifted-test
           g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-shifted
-          for mode in 0 1 2 3 4 5 6; do
+          for mode in 0 1 2 3 4 5 6 7; do
             P1_FIT="$mode" OMP_NUM_THREADS=1 /tmp/p1-shifted 3342 14000 417 half > "/tmp/shifted-$mode.log"
             grep -Fx 'END 3342 13768' "/tmp/shifted-$mode.log"
             grep -E '^CHILD |^END ' "/tmp/shifted-$mode.log" > "/tmp/shifted-$mode.children"
