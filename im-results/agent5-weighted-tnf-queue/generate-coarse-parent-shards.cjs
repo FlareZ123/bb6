@@ -22,6 +22,12 @@ const longMap=new Map(require('./q0-coarse-long-holes.json').map(c=>[norm(c.tabl
 // Each external cut is matched by its entire 12-entry table; no index/count substitution.
 // Importing the actual theorem is mandatory even when the source proof is still pending CI.
 const regionCuts=new Map([
+ ['1RB1LC1RC0LF0LA0RD1RA1RE1LF1RD---0LB', {root:149,mod:'Q0149H11',ns:'BB6.Agent50Q0149H11',tableField:'ctr'}],
+ ['1RB1LC1RC---0LA0RD1RA1RE1LF1RD1LC0LF', {root:149,mod:'Q0149H16',ns:'BB6.Agent50Q0149H16',tableField:'ctr'}],
+ ['1RB1LC1RC---0LA0RD1RA1RE1LF1RD1RC0LF', {root:149,mod:'Q0149H17',ns:'BB6.Agent50Q0149H17',tableField:'ctr'}],
+ ['1RB1LC1RC0LC0LA0RD1RF1RE0RB---1LB1RE', {root:149,mod:'Q0149Block8',ns:'BB6.Agent50Q0149Block8'}],
+ ['1RB1LC1RC0RC0LA0RD1RB1RE0RF---1LC0LC', {root:149,mod:'Q0149Block10',ns:'BB6.Agent50Q0149Block10'}],
+ ['1RB1LC1RC---0LA0RD1RF1RE0RD0RB1LA0LC', {root:149,mod:'Raw11Q0LongSweep2',ns:'BB6.Raw11Q0LongSweep2',minBound:195836}],
  ['1RB1LC1RC0RE0LA1LD1LA1RE---0RF1LC1RD', {root:150,mod:'Raw11Q0Double150',ns:'BB6Coverage.Agent31Pump.Raw11Q0Double150'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LA1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M0'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M1'}],
@@ -71,7 +77,7 @@ function register(t,a,f){
   const c=longMap.get(a.join(''))||(!g&&t[0]==='u'?findLongHole(a):null);
   if(t[0]==='u'&&g){
    if(g.root!==id||a.filter(t=>t==='---').length!==1)throw Error('wrong region proof domain');
-   t.splice(0,t.length,'v',regionLeaves.length);regionLeaves.push({...g,table:a.join('')});stats.region++;x=true;
+   t.splice(0,t.length,'v',regionLeaves.length);regionLeaves.push({...g,table:a.join('')});stats.region++;B=Math.max(B,g.minBound||0);x=true;
   }else if(t[0]==='u'&&c){
    if(a.filter(t=>t==='---').length!==1||a[c.slot]!=='---')throw Error('bad last repair');
    t.splice(0,t.length,'l',longs.length);longs.push({...c,table:a.join('')});B=Math.max(B,c.n+6);stats.long++;x=true;
@@ -157,7 +163,7 @@ function local(t,a,f,p,name,lines,imps,allowSplit=false){
  if(t[0]==='g'||t[0]==='l'||t[0]==='r'||t[0]==='v'){
   let other,proof;
   if(t[0]==='g'){imps.add('Raw11Q0CoarsePumps');other=pumpNS+'.p'+t[1];proof=`Cover.sound (${pumpNS}.cover${t[1]} ${B}) m hm`}
-  else if(t[0]==='v'){const g=regionLeaves[t[1]];if(!g||g.table!==a.join(''))throw Error('wrong external region leaf');imps.add(g.mod);other=g.ns+'.table';proof=`Cover.sound (${g.ns}.cover ${B}) m hm`}
+  else if(t[0]==='v'){const g=regionLeaves[t[1]];if(!g||g.table!==a.join(''))throw Error('wrong external region leaf');imps.add(g.mod);other=g.ns+'.'+(g.tableField||'table');proof=`Cover.sound (${g.ns}.cover ${B}${g.minBound?' (by decide)':''}) m hm`}
   else if(t[0]==='l'){const name=longMod+t[1];imps.add(name);other='BB6.'+name+'.p'+t[1];proof=`BB6.${name}.safe${t[1]} m hm`}
   else{other='BB6.'+base+'.remaining'+t[1];proof=`hR ${other} BB6.${base}.mem${t[1]} m hm`}
   lines.push(`theorem ${safe}${H} : ${safeTy(p)} := by
