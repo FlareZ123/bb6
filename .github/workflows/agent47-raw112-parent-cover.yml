@@ -1017,7 +1017,7 @@ jobs:
     timeout-minutes: 120
     strategy:
       fail-fast: false
-      max-parallel: 1
+      max-parallel: 2
       matrix:
         group: ${{ fromJSON(inputs.retry_groups) }}
     steps:
@@ -1103,6 +1103,14 @@ jobs:
           LEAN_NUM_THREADS: "1"
         run: |
           set -euo pipefail
+          case "$GROUP" in
+            r01a-deep)
+              python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+              ;;
+            r05a0)
+              python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid05_0{0,1,2,3}.lean
+              ;;
+          esac
           python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
       - uses: actions/upload-artifact@v4
         if: always()
@@ -1221,6 +1229,7 @@ jobs:
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
+          python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean im-results/agent47-raw112-cut/Raw112Kid05_0{0,1,2,3}.lean
           python -u im-results/agent10-raw112-recovery/assemble_retry.py --root im-results/agent47-raw112-cut --shards /tmp/a47-raw112-shards --union /tmp/a47-raw112-full-union --branch-work /tmp/a47-raw112-branch-roots --parent-work /tmp/a47-raw112-parent --output /tmp/a47-raw112-assembled
           python3 - <<'PY'
           import json, os
