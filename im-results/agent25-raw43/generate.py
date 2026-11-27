@@ -7,8 +7,8 @@ import hashlib, json, re, subprocess, sys, tempfile
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
-B1RC = re.fullmatch(r"b1rc_c([01][lr][a-f])", VARIANT)
-assert VARIANT == "default" or re.fullmatch(r"[01][lr][a-f]", VARIANT) or B1RC
+B1C1 = re.fullmatch(r"b([01][lr][a-f])_c([01][lr][a-f])", VARIANT)
+assert VARIANT == "default" or re.fullmatch(r"[01][lr][a-f]", VARIANT) or B1C1
 OUT = ROOT / ("generated" if VARIANT == "default" else "generated_"+VARIANT)
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
@@ -20,7 +20,7 @@ from emit_rungram import emit as emit_bidfa
 S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
 B = S.get("bound", 75)
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
-SUFFIX = VARIANT.upper() if B1RC else {"default":"", "0rd":"RD", "1rd":"RD1"}.get(VARIANT, "E"+VARIANT.upper())
+SUFFIX = VARIANT.upper() if B1C1 else {"default":"", "0rd":"RD", "1rd":"RD1"}.get(VARIANT, "E"+VARIANT.upper())
 NS = "BB6.Agent25Raw43" + SUFFIX
 PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
@@ -92,6 +92,11 @@ def generate():
             i=int(key)
             assert rows[i]==leaf["table"]
             cert[i]=f'.last {leaf["n"]} {slot(leaf["s"])}'
+        for key,leaf in S.get("lateCycle",{}).items():
+            i=int(key)
+            assert rows[i]==leaf["table"]
+            e,k,r,b=leaf["cycle"]
+            cert[i]=f".cycle {e} {k} {str(bool(r)).lower()} ({b})"
         assert set(cert)==set(range(len(rows)))
         stats=Counter()
         sizes={}
@@ -122,10 +127,10 @@ def generate():
                 return set().union(*(deps(k) for k in t[3]))
             return set()
         p0 = "(refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩))"
-        if B1RC:
-            c1 = B1RC.group(1).upper()
-            assert S["table"] == f"1RB---_1RC1RC_0RD{c1}_1LD0RB_------_------"
-            base_expr = f"refine (refine {p0} (1,true) (some ⟨true,true,2⟩)) (2,true) (some {move(c1)})"
+        if B1C1:
+            b1, c1 = (x.upper() for x in B1C1.groups())
+            assert S["table"] == f"1RB---_1RC{b1}_0RD{c1}_1LD0RB_------_------"
+            base_expr = f"refine (refine {p0} (1,true) (some {move(b1)})) (2,true) (some {move(c1)})"
         else:
             base_expr = f"refine (refine {p0} (1,true) (some ⟨false,true,4⟩)) (4,true) (some {move(S.get('e1','0LE'))})"
         emit(PREFIX+"Base",["ZipPrefixAudit"],f"""
