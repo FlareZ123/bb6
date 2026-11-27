@@ -1,0 +1,44 @@
+name: Agent 36 Raw41 small holdout FAR SMT targeted closure (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { index: 128, shard: 0 }
+          - { index: 83, shard: 3 }
+          - { index: 92, shard: 0 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080134973
+          name: raw41-batch-far-${{ matrix.shard }}
+          path: .tmp/a36-batch-far
+      - name: Install SMT dependency
+        run: python3 -m pip install --user z3-solver
+      - name: SMT-synthesize and source-reconstruct all remaining FAR leaves
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/target_smt_batch.py \
+            --batch .tmp/a36-batch-far/a36-raw41-batch-${{ matrix.shard }}.json \
+            --index ${{ matrix.index }} \
+            --out .tmp/raw41-smt-target-${{ matrix.index }} \
+            --min-dfa 6 --max-dfa 8 --timeout-ms 60000
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-smt-target-${{ matrix.index }}
+          path: .tmp/raw41-smt-target-${{ matrix.index }}/
+          retention-days: 30
