@@ -12,7 +12,7 @@ open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent31StableParentBatch
 open BB6ChampionArithmetic
 
-abbrev baseRoster := BB6.Agent2Raw124Canonical58Membership.roster57
+noncomputable abbrev baseRoster := BB6.Agent2Raw124Canonical58Membership.roster57
 abbrev sharpParents := BB6.Agent32FourSharp.parents
 
 theorem unique_membership :

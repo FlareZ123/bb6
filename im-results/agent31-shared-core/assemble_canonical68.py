@@ -248,6 +248,14 @@ def link_reachable(groups, work, linked, families=None, extra_families=()):
                 conflicts.append(name)
     (work / "reachable-link-audit.json").write_text(json.dumps(manifest, indent=2) + "\n")
     assert not conflicts, f"incompatible reached kernel declarations: {sorted(set(conflicts))}"
+    # Opt-in until the large-closure cost is benchmarked. Distinct filenames
+    # can still introduce incompatible fully qualified kernel declarations.
+    if os.environ.get("BB6_DECLARATION_PREFLIGHT") == "1":
+        from declaration_preflight import audit_objects
+        declaration_audit = audit_objects({n: v[0] for n, v in objects.items()}, reached)
+        (work / "declaration-owner-audit.json").write_text(json.dumps(declaration_audit, indent=2) + "\n")
+        if declaration_audit["definite_conflict_count"]:
+            raise ValueError("cross-module declaration conflicts; see declaration-owner-audit.json")
     linked.mkdir()
     for name, files in objects.items():
         # Keep the original downloaded audit objects immutable during elaboration.

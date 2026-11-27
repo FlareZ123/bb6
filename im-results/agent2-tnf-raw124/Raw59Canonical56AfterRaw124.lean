@@ -16,7 +16,7 @@ open BB6ChampionArithmetic
 
 /-- Start from the source-accepted Canonical57 roster obtained by removing
     Raw124 from the actual accepted Canonical58 roster. -/
-abbrev baseRoster := BB6.Agent2Raw124Canonical58Membership.roster57
+noncomputable abbrev baseRoster := BB6.Agent2Raw124Canonical58Membership.roster57
 
 /-- Remove Raw59 from Canonical57-Raw124 to obtain a 56-entry successor. -/
 noncomputable def roster56 := removeParents [p59] baseRoster
