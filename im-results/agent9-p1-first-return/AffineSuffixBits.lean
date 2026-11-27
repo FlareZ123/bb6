@@ -69,7 +69,7 @@ theorem suffixBits_sound (M n k j : Nat) (hM : 0<M) (ys : List Bool) :
       exact addResidue_keep _ _ _ _ ht hs'
     · have he : 2^j*((if true then n+3+(k+j) else 0)+2*weightedTail n (k+j+1) bs)
           =t+(n+3+k+j)*2^j := by
-        simp only [if_true,t,Nat.pow_succ,Nat.mul_add]
+        simp only [if_true,t,Nat.pow_succ,Nat.mul_add,Nat.add_mul]
         ac_rfl
       rw [he]
       have h := addResidue_shift M ((n+3+k+j)*2^j) _ _ ht hs'
@@ -103,7 +103,9 @@ def suffixReject (k d n : Nat) : Bool :=
 
 theorem suffixReject_sound (k d n : Nat) (hk : 0<k) (hd : d≤k)
     (hc : suffixReject k d n=true) : width (k+d) n=0 := by
-  by_contra h
+  by_cases h : width (k+d) n=0
+  · exact h
+  exfalso
   have hw : 0<width (k+d) n := by omega
   obtain ⟨p,hp,hr,ys,hy,he⟩ := (width_pos_iff_suffix k d n hk hd).mp hw
   let M := 2^d
@@ -111,8 +113,10 @@ theorem suffixReject_sound (k d n : Nat) (hk : 0<k) (hd : d≤k)
   have hneg := residue_neg_eq M (p.a+n/2^k*p.B) (weightedTail p.r k ys) hM he
   have hb := suffixBits_sound M p.r k 0 hM ys
   simp only [Nat.pow_zero,Nat.one_mul,Nat.add_zero,hy,hneg] at hb
+  unfold suffixReject at hc
   have hh := List.all_eq_true.mp hc p hp
-  simp [suffixReject,hr,←hr,hb,M] at hh
+  rw [←hr] at hh
+  simp [M,hb] at hh
 
 theorem suffixReject_critical (k d n : Nat) (hk : 0<k) (hd : d≤k)
     (hn : 14≤n) (hKn : k+d≤n) (hc : suffixReject k d n=true) :
