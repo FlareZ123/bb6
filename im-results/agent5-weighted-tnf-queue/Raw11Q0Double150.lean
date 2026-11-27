@@ -5,7 +5,7 @@ set_option maxHeartbeats 0
 set_option maxRecDepth 100000
 namespace BB6Coverage.Agent31Pump.Raw11Q0Double150
 open BB6Coverage Agent31Pump BB6.Agent13BlankDelay
-open Pair143 (Reach PosReach U Uadd)
+open BB6Coverage.Agent31Pump.Pair143 (Reach PosReach U Uadd)
 
 def table : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -112,7 +112,6 @@ theorem startRun (n : Nat) (X Y : List Bool) :
   ⟨_,Tails.check_sound table startCert startChecked n 0 X Y⟩
 
 /-- Shift a constant prefix of ones past an arbitrary run length. -/
-theorem prefix (a n : Nat) : U (a+n) = U a ++ U n := Uadd a n
 
 theorem advance (n : Nat) (X Y : List Bool) :
     Reach table (E ([true,false,true]++X) (U (3*n+4)++false::Y))
