@@ -22,18 +22,18 @@ theorem arank_next (s : ATail) : arank (an s) = next (arank s) := by cases s <;>
 theorem ac_rank (s : ATail) : ac s = Raw14086Arithmetic.carry (arank s) := by cases s <;> decide
 theorem abalance (s : ATail) : 6*ac s+arank (an s)=arank s+1 := by cases s <;> decide
 
-def at (k : Nat) (s : ATail) : Nat × ATail :=
+def aTurn (k : Nat) (s : ATail) : Nat × ATail :=
   match k with
   | 0 => (0,s)
-  | k+1 => (ac s+(at k (an s)).1,(at k (an s)).2)
+  | k+1 => (ac s+(aTurn k (an s)).1,(aTurn k (an s)).2)
 
-theorem at_balance (k : Nat) (s : ATail) : 6*(at k s).1+arank (at k s).2=k+arank s := by
+theorem aTurn_balance (k : Nat) (s : ATail) : 6*(aTurn k s).1+arank (aTurn k s).2=k+arank s := by
   induction k generalizing s with
-  | zero => simp [at]
+  | zero => simp [aTurn]
   | succ k ih =>
     have h := ih (an s)
     have h' := abalance s
-    simp only [at]
+    simp only [aTurn]
     omega
 
 def bw (n : Nat) : List Bool :=
@@ -79,20 +79,21 @@ theorem bankStep (n m : Nat) (X : List Sym) (s : ATail) :
     simp only [W,Raw140ERSuffix.oddword_append,bw_sound,ow3]
   rw [hw,carry_word] at h
   have h' : AB (ac s) ++ AB n = AB (n+ac s) := by rw [← ab_add,Nat.add_comm]
-  simpa only [List.append_assoc,← merge,show m+1= m+1 by rfl,U,List.replicate_succ,List.cons_append,rep_cons,
-    ← List.append_assoc,h',List.append_assoc] using (⟨_,h⟩ : Reach base _ _)
+  have he : AB (ac s) ++ (AB n ++ (U 3 m ++ S 3::X)) = AB (n+ac s) ++ (U 3 (m+1) ++ X) := by
+    rw [← List.append_assoc (AB (ac s)),h',← merge 3 m 1 X]
+  simpa only [List.append_assoc,he] using (⟨_,h⟩ : Reach base _ _)
 
 theorem bankIter (k n m : Nat) (X : List Sym) (s : ATail) :
     Reach base (boundary 4 true (S 1::(AB n ++ U 3 m ++ U 5 k ++ X)) (aword s))
-      (boundary 4 true (S 1::(AB (n+(at k s).1) ++ U 3 (m+k) ++ X)) (aword (at k s).2)) := by
+      (boundary 4 true (S 1::(AB (n+(aTurn k s).1) ++ U 3 (m+k) ++ X)) (aword (aTurn k s).2)) := by
   induction k generalizing n m s with
   | zero =>
-    simpa only [at,Nat.add_zero,U,List.replicate_zero,List.append_nil,List.nil_append] using Reach.refl base _
+    simpa only [aTurn,Nat.add_zero,U,List.replicate_zero,List.append_nil,List.nil_append] using Reach.refl base _
   | succ k ih =>
     have h0 := bankStep n m (U 5 k ++ X) s
     have h1 := ih (n+ac s) (m+1) (an s)
     simp only [List.append_assoc] at h0 h1
-    simpa only [at,U,List.replicate_succ,List.cons_append,List.append_assoc,Nat.add_assoc,
+    simpa only [aTurn,U,List.replicate_succ,List.cons_append,List.append_assoc,Nat.add_assoc,
       show m+1+k=m+(k+1) by omega] using Reach.trans h0 h1
 
 -- A generic bank exit retaining the homogeneous context, rather than using
@@ -185,10 +186,10 @@ theorem onePumpAll (p j b : Nat) (Y : List Sym) (hp : 3 ≤ p) :
 
 theorem bFront (p : Nat) (hp : 24 ≤ p) :
     Plus (B0 p) (boundary 4 true (U 3 (p+2))
-      (S 1::(TA ((at (p-4) .t152).1+ac (at (p-4) .t152).2-1) ++ aword (an (at (p-4) .t152).2)))) := by
-  let n := (at (p-4) .t152).1
-  let s := (at (p-4) .t152).2
-  have hb := at_balance (p-4) .t152
+      (S 1::(TA ((aTurn (p-4) .t152).1+ac (aTurn (p-4) .t152).2-1) ++ aword (an (aTurn (p-4) .t152).2)))) := by
+  let n := (aTurn (p-4) .t152).1
+  let s := (aTurn (p-4) .t152).2
+  have hb := aTurn_balance (p-4) .t152
   have hlt := arank_lt s
   have hn3 : 3 ≤ n := by dsimp [n,s]; simp only [arank] at hb; omega
   have h0 : Plus (B0 p) (boundary 4 true (S 1::(U 3 3 ++ U 5 (p-4))) (aword .t152)) := by
@@ -209,11 +210,11 @@ theorem bFront (p : Nat) (hp : 24 ≤ p) :
 -- Both homogeneous exits retain at least 24 threes; the even exit must
 -- first transform the whole surviving carry bank through the common ER rule.
 theorem b0Return (p : Nat) (hp : 24 ≤ p) : Plus (B0 p) (cfg (ret .b0 p)) := by
-  let n := (at (p-4) .t152).1
-  let s := (at (p-4) .t152).2
+  let n := (aTurn (p-4) .t152).1
+  let s := (aTurn (p-4) .t152).2
   let z := n+ac s-1
   let t := an s
-  have hbal := at_balance (p-4) .t152
+  have hbal := aTurn_balance (p-4) .t152
   have hbal' : 6*n+arank s=p-3 := by
     dsimp [n,s]; simp only [arank] at hbal; omega
   have hlt := arank_lt s
