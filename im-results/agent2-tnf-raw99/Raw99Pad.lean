@@ -21,7 +21,10 @@ theorem pad_embed (z : HZ) (h : Int) :
   unfold HZ.at embed
   congr 1
   funext x
-  simp [atCell, padHZ, getD_append_false]
+  by_cases hx : x ≤ h
+  · change (if x ≤ h then (z.l ++ [false]).getD (h-x).toNat false else z.r.getD (x-h-1).toNat false) = (if x ≤ h then z.l.getD (h-x).toNat false else z.r.getD (x-h-1).toNat false)
+    rw [if_pos hx, if_pos hx, getD_append_false]
+  · simp [atCell, padHZ, hx]
 
 def padShape (s : Shape) : Shape :=
   {s with l := {s.l with post := s.l.post ++ [false]}}

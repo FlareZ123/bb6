@@ -44,6 +44,7 @@ on:
           - raw119-parent
           - raw115-parent
           - sharp-fourhole
+          - sharp-raw99
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -1657,33 +1658,13 @@ jobs:
           retention-days: 30
 
   sharp-fourhole:
-    if: ${{ inputs.target == 'sharp-fourhole' }}
+    if: ${{ inputs.target == 'sharp-fourhole' || inputs.target == 'sharp-raw99' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     strategy:
       fail-fast: false
       matrix:
-        include:
-          - raw: 95
-            folder: agent3-tnf-raw95
-            root: SharpRaw95
-            namespace: BB6.Agent31SharpRaw95
-            bound: 379
-          - raw: 99
-            folder: agent2-tnf-raw99
-            root: Raw99Data
-            namespace: BB6.Agent2Raw99
-            bound: 196
-          - raw: 103
-            folder: agent3-tnf-raw103
-            root: Raw103Data
-            namespace: BB6.Agent3Raw103
-            bound: 116
-          - raw: 105
-            folder: agent3-tnf-raw105
-            root: SharpRaw105
-            namespace: BB6.Agent31SharpRaw105
-            bound: 182
+        include: ${{ fromJSON(inputs.target == 'sharp-raw99' && '[{"raw":99,"folder":"agent2-tnf-raw99","root":"Raw99Data","namespace":"BB6.Agent2Raw99","bound":196}]' || '[{"raw":95,"folder":"agent3-tnf-raw95","root":"SharpRaw95","namespace":"BB6.Agent31SharpRaw95","bound":379},{"raw":99,"folder":"agent2-tnf-raw99","root":"Raw99Data","namespace":"BB6.Agent2Raw99","bound":196},{"raw":103,"folder":"agent3-tnf-raw103","root":"Raw103Data","namespace":"BB6.Agent3Raw103","bound":116},{"raw":105,"folder":"agent3-tnf-raw105","root":"SharpRaw105","namespace":"BB6.Agent31SharpRaw105","bound":182}]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
