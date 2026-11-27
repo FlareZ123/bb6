@@ -237,12 +237,13 @@ theorem particle_safe (guard : BirthGuard) {s : ParticleState}
     cases h with
     | carry n hc => exact carry_safe hc ih
     | birthEmpty n => trivial
-    | birth n hb he hs =>
+    | @birth n xs ys z e hb he hs =>
       have ht := birth_tail_safe hb ih
-      by_cases hy : _ = []
+      change good (.h,n+1+e) ys ∧ safe ys
+      by_cases hy : ys = []
       · simp [hy, safe, good]
       · rw [he hy, Nat.add_zero]
-        exact ⟨guard n _ _ hr ih hb, ht⟩
+        exact ⟨guard n xs ys hr ih hb, ht⟩
 
 #print axioms carry_form
 #print axioms carry_scan
