@@ -41,6 +41,14 @@ def main(mv):
                 manual[t]=f".bounded ({ns}.Dtab {d}) 2651346 ({ns}.boundD {d})"
         else:
             manual["1RB1LD1RC1RA1LA1RE1LE0LA0RF1RD---0LC"]=f".bounded {ns}.Rtab 2651346 {ns}.boundR"
+            extra_imports+=["Raw13Coupled6RDSweep","Raw13Coupled6RDAlt"]
+            ns_sweep="BB6.Agent46Raw13Coupled6RDSweep"
+            ns_alt="BB6.Agent46Raw13Coupled6RDAlt"
+            for d,f,t in [("false","false","1RB1LD1RC1RA1LA1RE0LF0LA0RB1RD---1RC"),
+                          ("true","false","1RB1LD1RC1RA1LA1RE1LF0LA0RB1RD---1LB"),
+                          ("true","true","1RB1LD1RC1RA1LA1RE1LF0LA0RB1RD---1LD")]:
+                manual[t]=f".closed (.proven ({ns_sweep}.p {d} {f}) ({ns_sweep}.never {d} {f}))"
+            manual["1RB1LD1RC0RD1LA1RE1LB0LA1RF1RD---1RA"]=f".closed (.proven {ns_alt}.p {ns_alt}.never)"
     B=max(62123,2651340 if mv=="1LB" else 2651346 if mv in ("1LD","1RD") else 0,max((x['n']+6 for x in late.values()),default=0))
     coupled4.B=B
     assert all(x["holes"]==1 and x["n"]+6<=B for x in late.values())
