@@ -129,9 +129,7 @@ theorem growth (n : Nat) :
     congr 1
   have h1 : run0 table (4*n) (phase n) =
       some ⟨5,false::ones (2*(n+1)),[]⟩ := by
-    have h0 := forward_sweep n (ones 2)
-    rw [he] at h0
-    simpa only [phase] using h0
+    simpa only [phase,List.cons_append,he] using forward_sweep n (ones 2)
   have h := join0 h1 (reset (n+1))
   have hn : 4*n+(2*(n+1)+7)=6*n+9 := by omega
   simpa only [hn,phase] using h
