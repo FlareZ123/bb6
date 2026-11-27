@@ -5,7 +5,7 @@ on:
       target:
         description: Arithmetic proof target
         type: choice
-        options: [numeric-shell, chunk-margin, word-plane, birth-locate]
+        options: [numeric-shell, chunk-margin, word-plane, birth-locate, strict-cover]
         default: numeric-shell
       source_ref:
         description: Exact source commit (optional)
@@ -51,7 +51,7 @@ jobs:
         run: |
           set -eo pipefail
           N=im-results/agent43-p1-high-cost-reset-count
-          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent9-p1-reverse-block"
+          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent9-p1-first-return"
           python tools/lean_compile_deps.py "$N/WordPlaneSource.lean" | tee /tmp/word-plane.log
           for t in reverseCover_append reverseCover_plane reverseCover_sparse; do
             grep -F "BB6.Agent43WordPlane.$t'" /tmp/word-plane.log
@@ -62,7 +62,7 @@ jobs:
         run: |
           set -eo pipefail
           N=im-results/agent43-p1-high-cost-reset-count
-          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent9-p1-reverse-block"
+          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent9-p1-first-return"
           python tools/lean_compile_deps.py "$N/BirthLocateSource.lean" | tee /tmp/birth-locate.log
           for t in one_parent parent_exists_iff unique_start first_failure_iff suffix_mono birth_from_failures strictParent_iff boundary_spec testSuffix_iff locate_spec locate_center mem_lostClocks lostClocks_live; do
             grep -F "BB6.Agent43BirthLocate.$t'" /tmp/birth-locate.log
