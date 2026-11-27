@@ -1,0 +1,62 @@
+name: Agent17 Box28 compact source banks
+on:
+  workflow_dispatch:
+    inputs:
+      cuts:
+        description: 'JSON array of saved cut names; "carry" checks shared family'
+        required: true
+        default: '["d18v14"]'
+permissions:
+  contents: read
+jobs:
+  source:
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        cut: ${{ fromJSON(inputs.cuts) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CUT: ${{ matrix.cut }}
+      D: im-results/agent17-raw10-box28
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replay selected bank and materialize exact source tree
+        if: matrix.cut != 'carry'
+        run: |
+          set -euo pipefail
+          [[ "$CUT" =~ ^d([0-9]+)v([0-9]+)$ ]]
+          D0="${BASH_REMATCH[1]}"
+          V="${BASH_REMATCH[2]}"
+          python im-results/agent13-coverage/unpack.py
+          python "$D/unpack_bank.py" "$D/banks/$CUT.b64" /tmp/box28-work
+          python "$D/emit.py" --d0 "$D0" --code "$V" --work /tmp/box28-work --out /tmp/box28-source --bank /tmp/box28-work/seeds.json
+          if [ "$D0" = 14 ]; then M="Box28D$V"; else M="Box28D${D0}V$V"; fi
+          echo "MODULE=$M" >> "$GITHUB_ENV"
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check source theorem and axiom audit
+        run: |
+          set -euo pipefail
+          if [ "$CUT" = carry ]; then
+            python im-results/agent13-coverage/unpack.py
+            python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 4 --manifest /tmp/box28-olean/manifest.json "$D/Box28CarryFamilySource.lean" 2>&1 | tee /tmp/box28-audit.log
+            python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log BB6.Agent17.Box28CarryFamilySource.compatible_never
+          else
+            python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 4 --source-root /tmp/box28-source --manifest /tmp/box28-olean/manifest.json "/tmp/box28-source/${MODULE}Closure.lean" 2>&1 | tee /tmp/box28-audit.log
+            python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log "BB6.Agent13.${MODULE}.sourceBound"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw10-box28-${{ matrix.cut }}-source
+          path: |
+            /tmp/box28-source
+            /tmp/box28-olean/manifest.json
+            /tmp/box28-audit.log
+          if-no-files-found: warn
+          retention-days: 90
