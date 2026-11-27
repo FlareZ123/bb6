@@ -1,0 +1,43 @@
+name: Agent 36 Raw41 new whole-cylinder FAR search batch (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_open:
+        description: Maximum originally open leaves per candidate
+        type: string
+        default: '250'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  survey:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46078926057
+          name: raw41-screen-${{ matrix.shard }}
+          path: .tmp/a36-batch-screens
+      - name: Survey previously untouched finite proof cylinders
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/batch_far.py \
+            --screen .tmp/a36-batch-screens/raw41-screen-shard-${{ matrix.shard }}.json \
+            --out .tmp/a36-raw41-batch-${{ matrix.shard }}.json \
+            --max-open ${{ inputs.max_open }} --dfa 5 --time 180
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-batch-far-${{ matrix.shard }}
+          path: .tmp/a36-raw41-batch-${{ matrix.shard }}.json
+          retention-days: 30
