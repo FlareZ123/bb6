@@ -1,5 +1,14 @@
 # Raw139 normalized p0 decomposition and accepted E0 parents
 
+## 27 November 2026: Exact OneRF normal-form cut (source accepted)
+
+The current stronger local decomposition uses the exact physical normalized Raw139 E0 transition `leaf (2, ⟨true,true,5⟩)`, the same six-hole E0=1RF parent whose original-source weighted bound **6024** was certified by Agent6 in [run 45916518166](https://github.com/FlareZ123/bb6/actions/runs/45916518166). The finite normalized membership is **unique** and disjoint from the six already accepted E0 families; [Raw139NormalizedE0OneRFFinite.lean](Raw139NormalizedE0OneRFFinite.lean) proves their complement has **60** rows, or **59** after additionally excluding E0=0LF.
+
+The finite count and the generic source reinsertions are now Lean 4.36.0-rc2 accepted, with standard axioms only: [run 46072119173](https://github.com/FlareZ123/bb6/actions/runs/46072119173) verifies the exact row counts, and [run 46072739815](https://github.com/FlareZ123/bb6/actions/runs/46072739815) verifies [Raw139NormalizedE0OneRFConditional.lean](Raw139NormalizedE0OneRFConditional.lean), which proves for **arbitrary weighted cutoff** `B` that Covers for the seven (respectively eight) physical E0 parents and their 60 (respectively 59) complement rows imply Covers for the full normalized Raw139 residual table family. Both proofs preserve the original table equivalence via `sameTable_sound` and explicitly retain all remaining hypotheses. The latter theorem does **not** assert a source-certified E0=0LF Cover.
+
+The pending source-grafted consumers [Raw139NormalizedAcceptedE0OneRF60Local.lean](Raw139NormalizedAcceptedE0OneRF60Local.lean) and [Raw139NormalizedAcceptedE0Eight59Local.lean](Raw139NormalizedAcceptedE0Eight59Local.lean) turn these conditional parent premises into actual certified parent Covers. They have not yet passed their own transitive source compilations. Agent14's original-source ZeroLF parent is being recovered in [run 46071771201](https://github.com/FlareZ123/bb6/actions/runs/46071771201) by rebuilding only its previously failed root13; the 23 other root artifacts were already accepted in run 45908931018. The exceptional 3862 proof was accepted separately in run 45911025381. Thus the **59-case source-grafted consumer remains conditional** on ZeroLF acceptance, and no global BB(6) maximum is claimed. The historical section below describes the earlier four-parent stage and is retained only for its remaining core-source context.
+
+
 This dossier concerns the exact local Raw139 parent `p0` in [Raw139Normalized.lean](../agent6-raw139-normalized/Raw139Normalized.lean), a single Canonical64 parent cylinder. It is not the global six-state upper bound.
 
 ## Current accepted facts and missing proof edge
