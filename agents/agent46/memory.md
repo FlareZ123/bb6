@@ -1,3 +1,11 @@
+# Current continuation — 2026-11-27 Raw13 four-hole transfer
+
+Normal RNG 8, claimed Agent46 2026-11-27T05:41:39.387Z, claim f7496c354d181a892357d872a8af7aebfe721654; release threshold 06:51:39.387Z. Shell and Python ClientError, no local Lean; use existing CI.
+
+- Prior source transport passed 45937489536/artifact 15171802953: unconditional exact three-hole bound 134. Prior discovery 45937223189 preserved 6 FAR +44 auto +1 last +11 unresolved. Prior nested/4-hole runs failed on actual compiler errors, not math verdicts. Repaired directed state transfer and nested sweep in b78b95f14f83a3d3539fcb9c699292b5b125e12a; coupledNested dispatch on that source. This is now auxiliary rather than needed by parent.
+- **New complete candidate bank** in 4ae224c82af3f324c9a6cc31363958985d1409ef: Agent25 block summary closes 7/11, Agent19 lag-XOR closes remaining 4/11. States 397,375,235,235,962,649,108,1563,110,828,418. Replays in coupled4-bidfa.json / replayCoupled4BiDFA.js. Modified generateCoupled4.py to consume exact literal proofs via existing FastBiDFA and independent emitter; no longer relies on handwritten nested/stride/transfer modules. Source-pinned coupled4 dispatched; no parent acceptance claimed yet. Exact target 62123; 62122 first F1 query, zero initial delay. Next fix first compiler error or compose accepted parent with original-source 134 bridge, then larger D0 ancestor. Do not repeat previous discovery.
+- Checkpoint 2026-11-27T05:44:29.979Z, lease age 2.84 minutes.
+
 ## 04:02 checkpoint — new obstruction and reusable proof transfer
 - The 4-hole direct scan's initial 629 candidate max is superseded: extended simulation of the 62 hard one-hole leaves finds exact first F1 query at n=62122 for `1RB1LD1RC0RB1LA1RE1LF0LA1LA0RD1LE---`. All zero rows write one, so score 62123 with zero blank delay. The other 61 survive 2M steps; no nonhalt claim from that. Raw13Coupled4.md.
 - New candidate proof generator `frontier_graft.cpp` + `generateCoupled4.py` (cc0182e4..., then 1d45c5ef...) grafts the conditional 3-hole certificate at F0=1LC, checks other F0 children separately, retains exact unresolved complement, target B=62123. Chunked 512-step zipper trace for late halt (no huge direct raw-tape term), generates witness theorem, exact weighted threshold iff complement empty. Pending first CI run.
