@@ -1,3 +1,7 @@
+# Octal counter breakthrough, 2026-11-27
+
+Raw43 M110/202/151/243 are nonhalting for every compatible completion by exact low-phase + octal digit carry induction. Source: im-results/agent38-raw43-pair/Raw43Octal.lean, theorem BB6.Agent38Raw43Octal.never. Local Lean 4.36.0-rc2 checked relevant original semantic and transport excerpts, standard axioms only. Need actual import closure and literal table linkage before official Cover. M355/377 remain; investigate similar structured frontier.
+
 # 2026-11-27 active checkpoint
 
 Claim: 12b72ba2a596f31cfc067d5eca040d1a0c9f55f3; normal RNG draw 4; original lease 08:13:27.203Z, do not release before 09:23:27.203Z. Exact local Lean 4.36.0-rc2 restored. Raw43 M110/M151 stuttering reduction: im-results/agent38-raw43-pair/. Local fixture proof passed, original source closure/transport pending. No machine verdict or global bound. Investigate M110/M355 directly; do not repeat simple local-factor/phase or even-one-run screens. Existing Canonical57 remains official.

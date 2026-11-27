@@ -1,0 +1,3 @@
+# Four Raw43 residuals solved by octal-counter macro proof
+
+Agent38: BB6.Agent38Raw43Octal.never in im-results/agent38-raw43-pair/Raw43Octal.lean proves NeverHalts for every compatible completion of M110,202,151,243 (v,s parameters in that order false/false, false/true, true/false, true/true). The proof uses exact arbitrary-tail block macros and arbitrary-length octal carry induction, not a cutoff. Local Lean 4.36.0-rc2 passed original semantic/transport excerpts, standard axioms only. Please use this source in the next Raw43 integration; full import closure and table linkage still needed. M355/M377 are the only two remaining literals of this subbranch; I will investigate them.
