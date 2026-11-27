@@ -11,7 +11,7 @@ Parent `1RB---_1RC---_0RD---_1LD0LB_------_------` (canonical surviving raw inde
 
 The first-hole cut and all three new modules were checked locally with Lean 4.36.0-rc2 against the exact imported source dependency objects from accepted Raw59 artifact 15054146521. Both new growth theorems report only propext and Quot.sound; both Cover adapters and query gates only propext, Classical.choice, Quot.sound. No sorryAx or native_decide. No fresh complete dependency CI acceptance is claimed. The new locally checked source SHA256 values are 917c06357eb33c53ec9762bedd2e31df4c9f39b4308da2de0116ea7965e92912, 0f41d9ab397c0c49444f3fc6dad5327aaf4b031b41c373f5f4ebfff2f476489f, fb5f0cb111f476d87ba3f0eb5f8d26e3a8498cb72df690ab281ab056853ef2b8 respectively.
 
-## Wide two-choice growth cuts (symbolic derivation; Lean acceptance pending)
+## Certified wide two-choice growth cuts
 
 [Raw42WideGrowth.lean](Raw42WideGrowth.lean) and [Raw42WideCuts.lean](Raw42WideCuts.lean) specify eight disjoint seven-transition partial tables, their exact blank entries, and positive return clocks. The family is in D with empty right tape and the left zipper word shown, where (n) starts at zero. The two-bit repetitions are indicated by parentheses.
 
@@ -26,7 +26,7 @@ The first-hole cut and all three new modules were checked locally with Lean 4.36
 | 1RE | E0=1LD | 20 | 001(11)^n111 | 12n+29 |
 | 1RB | C1=0RC | 11 | (00)^n000011 | 4n+12 |
 
-Each return increments n. The derivation decomposes it into two repeated-block transfers and fixed entry/turn/finish phases. Each transfer is a fixed primitive run over arbitrary untouched left and right tails. The symbolic simulator checks fixed phases without inspecting the repeated-word marker and transfers without inspecting either opaque tail. Exact recipes are in [wide_growth_recipes.json](wide_growth_recipes.json). The Lean implementation uses the original SweepPumping induction, with exact path-refinement equalities in the Cover adapters. Local tools returned ClientError before execution; no successful Lean compile is claimed yet. If accepted, these eight subcylinders certify 8*25^5 = 78,125,000 additional normalized raw completions, without expanding the five remaining slots.
+Each return increments n. The derivation decomposes it into two repeated-block transfers and fixed entry/turn/finish phases. Each transfer is a fixed primitive run over arbitrary untouched left and right tails. The symbolic simulator checks fixed phases without inspecting the repeated-word marker and transfers without inspecting either opaque tail. Exact recipes are in [wide_growth_recipes.json](wide_growth_recipes.json). The Lean implementation uses the original SweepPumping induction, with exact path-refinement equalities in the Cover adapters. The pinned source check [45993015276](https://github.com/FlareZ123/bb6/actions/runs/45993015276) passed all eight original-source Cover theorems and their standard-axiom checks. These eight subcylinders certify 8*25^5 = 78,125,000 additional normalized raw completions, without expanding the five remaining slots. The full Raw42 parent remains open.
 
 ## Remaining problem and method
 
