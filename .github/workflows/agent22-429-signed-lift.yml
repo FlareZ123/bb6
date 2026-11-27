@@ -16,7 +16,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Check source-connected signed certificate
         env:
-          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent22-429-signed-drift:im-results/agent18-429-root-invariants:im-results/agent33-429-24
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent22-429-signed-drift:im-results/agent18-429-root-invariants:im-results/agent33-429-24:im-results/agent30-429-even16
         run: |
           set -e
           lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
@@ -36,5 +36,14 @@ jobs:
           lean -o im-results/agent18-429-root-invariants/BB429FiniteAvoidance.olean im-results/agent18-429-root-invariants/BB429FiniteAvoidance.lean
           lean "$p/Branch29Extra1024.lean" 2>&1 | tee /tmp/agent22-branch29-audit.log
           lean "$p/Branch29Extra2048.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
+          for m in BB429SevenStrong BB429OddResetGate BB429Reset31 BB429NoThree BB429Even16 BB429Branch7 BB429Branch29 BB429Branch29Mod16 BB429Branch29Mod64 BB429Branch29Mod128 BB429Branch29Odd31 BB429Branch29Reflect BB429Branch29Reflect1024 BB429Branch29Small BB429Branch29All; do
+            case "$m" in
+              BB429NoThree) dir=im-results/agent6-harmonic429 ;;
+              BB429Even16) dir=im-results/agent30-429-even16 ;;
+              *) dir=im-results/agent18-429-root-invariants ;;
+            esac
+            lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 -o "$dir/$m.olean" "$dir/$m.lean"
+          done
+          lean "$p/Branch29Roster31.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           ! grep -q 'sorryAx' /tmp/agent22-branch29-audit.log
           ! grep -q 'native_decide' /tmp/agent22-branch29-audit.log
