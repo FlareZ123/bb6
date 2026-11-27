@@ -50,6 +50,7 @@ on:
           - canonical46-ready-union
           - canonical46-ready-resume
           - canonical-extra-ready
+          - canonical40-raw112-after-canonical41
           - raw67-kid11-recovery
         default: canonical74
         required: true
@@ -2592,6 +2593,47 @@ jobs:
         with:
           name: canonical-extra-ready-diagnostics
           path: /tmp/a31-extra-ready/extra-delta/evidence/
+          if-no-files-found: warn
+          retention-days: 7
+
+  canonical40_raw112_after_canonical41:
+    name: Consume accepted Raw112 Cover on Canonical41
+    if: ${{ inputs.target == 'canonical40-raw112-after-canonical41' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Consume Raw112 on the accepted Canonical41 boundary
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW112_RUN: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          test -n "$RAW112_RUN"
+          python -m py_compile im-results/agent42-raw112-canonical40/assemble.py
+          python im-results/agent42-raw112-canonical40/assemble.py \
+            --work /tmp/a42-canonical40 \
+            --raw112-run-id "$RAW112_RUN"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical40-raw112-after-canonical41-thin-delta
+          path: /tmp/a42-canonical40/delta/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: canonical40-raw112-after-canonical41-diagnostics
+          path: /tmp/a42-canonical40/**
           if-no-files-found: warn
           retention-days: 7
 
