@@ -1,0 +1,50 @@
+name: Agent 28 Raw36 first F0 blank-root lemma
+run-name: Raw36 first exact source blank-root ${{ github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        required: false
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prove original blank-root entries
+        run: |
+          set -euo pipefail
+          work=/tmp/a28-raw36-first-root
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label raw36-first-root \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36FirstRoot.root13244 \
+            --artifact-name raw36-first-root-proof \
+            im-results/agent28-raw36-first-hard/Raw36FirstRoot.lean 2>&1 | tee /tmp/a28-first-root.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a28-first-root.log \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstRoot.root416 \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstRoot.root13244
+          cp /tmp/a28-first-root.log "$work/audit.log"
+      - name: Retain proof closure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-first-root-proof
+          path: |
+            /tmp/a28-raw36-first-root/
+            /tmp/a28-first-root.log
+          if-no-files-found: warn
+          retention-days: 30
