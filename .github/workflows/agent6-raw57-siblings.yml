@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -705,3 +705,109 @@ jobs:
           name: raw56-pilot-generated-source
           path: /tmp/raw56-pilot
           if-no-files-found: error
+
+
+  raw56_pilot_aggregate_shard:
+    if: inputs.child == 'raw56-pilot-0rd' || inputs.child == 'raw56-pilot-1lc'
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        idx: ${{ fromJSON(inputs.child == 'raw56-pilot-0rd' && '[0,1,5,6,7,8,11,12,13,17,18,19,20,23]' || '[0,1,5,6,7,8,11,12,13,17,18,19,20,22,23]') }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-pilot-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-pilot-generated-source
+          path: /tmp/raw56-pilot
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46062134943'
+      - name: Reuse exact frozen witnesses; compile one disjoint E0 child
+        env:
+          TAG: ${{ inputs.child == 'raw56-pilot-0rd' && 'E10RD' || 'E11LC' }}
+          CHILD: ${{ matrix.idx }}
+        run: |
+          set -euo pipefail
+          P="$GITHUB_WORKSPACE/im-results/agent4-raw56-root-pilot"
+          cp "$P"/{prepare_root_aggregate,emit_root_aggregate_join,compile_pilot_aggregate}.py /tmp/raw56-pilot/
+          cd /tmp/raw56-pilot
+          LEAN="$(elan which lean)"
+          "$LEAN" --version | grep -F '4.36.0-rc2'
+          python compile_pilot_aggregate.py shard --tag "$TAG" --child "$CHILD" --root /tmp/raw56-pilot --base /tmp/raw56-pilot-base/a1-raw56-root-consumer --generated /tmp/raw56-pilot-gen --out /tmp/raw56-pilot-shard --lean "$LEAN" --jobs 2
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-pilot-shard-${{ matrix.idx }}
+          path: /tmp/raw56-pilot-shard
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_pilot_aggregate_assemble:
+    if: inputs.child == 'raw56-pilot-0rd' || inputs.child == 'raw56-pilot-1lc'
+    needs: raw56_pilot_aggregate_shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-pilot-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-pilot-generated-source
+          path: /tmp/raw56-pilot
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46062134943'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-pilot-shard-*
+          path: /tmp/raw56-pilot-inputs
+      - name: Verify exact complete child roster and compile parent Cover
+        env:
+          TAG: ${{ inputs.child == 'raw56-pilot-0rd' && 'E10RD' || 'E11LC' }}
+        run: |
+          set -euo pipefail
+          P="$GITHUB_WORKSPACE/im-results/agent4-raw56-root-pilot"
+          cp "$P"/{prepare_root_aggregate,emit_root_aggregate_join,compile_pilot_aggregate}.py /tmp/raw56-pilot/
+          cd /tmp/raw56-pilot
+          LEAN="$(elan which lean)"
+          "$LEAN" --version | grep -F '4.36.0-rc2'
+          python compile_pilot_aggregate.py assemble --tag "$TAG" --root /tmp/raw56-pilot --base /tmp/raw56-pilot-base/a1-raw56-root-consumer --generated /tmp/raw56-pilot-gen --out /tmp/raw56-pilot-final --inputs /tmp/raw56-pilot-inputs --lean "$LEAN"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-pilot-parent-source-accepted
+          path: /tmp/raw56-pilot-final
+          if-no-files-found: error
+          retention-days: 30
