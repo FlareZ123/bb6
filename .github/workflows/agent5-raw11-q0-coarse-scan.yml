@@ -3,6 +3,16 @@ name: Agent 5 Raw11 coarse q0 scan
 on:
   workflow_dispatch:
     inputs:
+      mode:
+        description: Legacy shallow scan, complete normalized discovery, or six-pump source preflight
+        required: true
+        default: legacy
+        type: choice
+        options: [legacy, full, pumps]
+      revision:
+        description: Exact source revision (empty uses dispatch SHA)
+        type: string
+        default: ''
       indices:
         description: JSON array of q0 target indices to scan
         required: true
@@ -24,6 +34,7 @@ permissions:
 
 jobs:
   scan:
+    if: inputs.mode == 'legacy'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -33,9 +44,9 @@ jobs:
           node-version: 20
       - name: Generate candidate q0 Covers
         env:
-          INDICES: \${{ inputs.indices }}
-          PREVIOUS: \${{ inputs.previous }}
-          OLD_COUNT: \${{ inputs.old_count }}
+          INDICES: ${{ inputs.indices }}
+          PREVIOUS: ${{ inputs.previous }}
+          OLD_COUNT: ${{ inputs.old_count }}
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/raw11-q0-coarse"
@@ -57,8 +68,80 @@ jobs:
         with:
           name: raw11-coarse-q0-scan
           path: |
-            \${{ runner.temp }}/raw11-q0-coarse/*.lean
-            \${{ runner.temp }}/raw11-q0-coarse/scan-summary.json
-            \${{ runner.temp }}/raw11-q0-coarse/summary.md
+            ${{ runner.temp }}/raw11-q0-coarse/*.lean
+            ${{ runner.temp }}/raw11-q0-coarse/scan-summary.json
+            ${{ runner.temp }}/raw11-q0-coarse/summary.md
           if-no-files-found: error
+          retention-days: 30
+
+  full:
+    if: inputs.mode == 'full'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Complete first-hole candidate scan with retained open and capped leaves
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/scan-q0-coarse-full.cjs "$ID" "$RUNNER_TEMP/coarse-$ID"
+          cat "$RUNNER_TEMP/coarse-$ID/summary.json" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-coarse-full-${{ matrix.id }}
+          path: ${{ runner.temp }}/coarse-${{ matrix.id }}/
+          if-no-files-found: warn
+          retention-days: 30
+
+  pumps:
+    if: inputs.mode == 'pumps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact six-pump source closure
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent5-weighted-tnf-queue/Raw11Q0CoarsePumps.lean \
+            --workdir /tmp/raw11-q0-pumps \
+            --manifest /tmp/raw11-q0-pumps/manifest.json \
+            --jobs 2 --lean lean \
+            --label raw11-q0-six-coarse-pumps \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-coarse-pumps.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/verify-coarse-pumps.cjs \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee /tmp/raw11-q0-pumps.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-q0-pumps.log; then exit 1; fi
+          for id in 138 140 141 142 143 154; do
+            grep -F "BB6Coverage.Agent31Pump.Auto.Raw11Q0Coarse.cover$id' depends on axioms:" /tmp/raw11-q0-pumps.log
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-six-coarse-pumps
+          path: |
+            /tmp/raw11-q0-pumps/
+            /tmp/raw11-q0-pumps.log
+          if-no-files-found: warn
           retention-days: 30
