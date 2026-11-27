@@ -70,6 +70,14 @@ def main():
       (8,0,11,24,11,13,14,17,22,17,19,4):('counterTrue',1,'counterPartial true','counter_compatible_never true'),
       (8,14,11,24,11,13,14,17,3,15,4,0):('sweep',11,'sweepPartial','sweep_compatible_never'),
     } if (a.d0,a.d1)==(14,17) else {}
+    # Exact analytically solved residual rows, independent of the finite FAR bank.
+    d16_hard = {
+        (16,17): ((8,10,11,22,11,13,16,17,20,4,0,12),'Box28D16V17PumpSource'),
+        (16,18): ((8,1,11,0,11,13,16,18,10,22,23,4),'Box28D16V18GrowthSource'),
+    }.get((a.d0,a.d1))
+    if d16_hard:
+        row,module=d16_hard
+        hard_rows[row]=('d16Recurrence',row.index(0),'partialTable','compatible_never')
     remaining={tuple(t) for v in summary.values() for t in v['open_rows']}
     d2v13_rows=[[8,24,11,13,11,13,2,23,0,6,4,20],[8,24,11,13,11,13,2,23,0,10,4,20],[8,20,11,13,11,13,2,23,4,0,2,21],[8,20,11,13,11,13,2,19,4,24,0,6],[8,20,11,13,11,13,2,19,4,24,0,10],[8,24,11,13,11,13,2,19,2,17,4,0]]
     d2v13 = (a.d0,a.d1)==(2,13)
@@ -144,11 +152,11 @@ end {q}
         far_imports=[];far_defs=[]
         assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
     if hard_rows:
-        ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryRectangle' if carry_rows else 'BB6.Agent17.Box28HardSource'
+        ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryRectangle' if carry_rows else 'BB6.Agent17.'+d16_hard[1] if d16_hard else 'BB6.Agent17.Box28HardSource'
         analytic_rows=set(hard_rows)-set(solved) if far else set(hard_rows)
         lines=[f'import {name}Tree',*(f'import {m}' for m in far_imports)]
         if analytic_rows:
-            lines.append('import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryRectangle' if carry_rows else 'Box28HardSource'))
+            lines.append('import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryRectangle' if carry_rows else d16_hard[1] if d16_hard else 'Box28HardSource'))
         lines.extend([f'namespace BB6.Agent13.{name}','open BB6Coverage',*far_defs])
         for row in sorted(analytic_rows):
             label,target,part,proof=hard_rows[row]
