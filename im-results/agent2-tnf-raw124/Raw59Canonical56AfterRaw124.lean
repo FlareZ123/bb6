@@ -1,5 +1,5 @@
 import Raw124Canonical58Membership
-import CanonicalSelectedRaw59
+import Raw59KernelSlice
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -50,12 +50,22 @@ theorem parents_root :
   subst p
   decide
 
+/-- Recheck the source parent literal in this roster's own environment.
+    The old producer's CanonicalSelectedRaw59 wrapper is unnecessary. -/
+theorem p59_source_eq :
+    p59 = A32Raw59Slice.BB6.Agent32Raw59.p59 :=
+  sameTable_sound (by decide)
+
+theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
+  rw [p59_source_eq]
+  exact liftCover (by decide) A32Raw59Slice.BB6.Agent32Raw59Exact.cover
+
 theorem parents_cover :
     ∀ p ∈ [p59], Cover (WeightedBound 6766859) p := by
   intro p hp
   simp only [List.mem_singleton] at hp
   subst p
-  exact BB6.Agent32CanonicalSelectedRaw59.p59_cover
+  exact p59_cover
 
 theorem sound_integrated :
     ∀ m, compatible root m →
@@ -87,6 +97,8 @@ theorem exact_at_champion_score
 #print axioms raw124_removed
 #print axioms parents_pairwise_distinct
 #print axioms parents_root
+#print axioms p59_source_eq
+#print axioms p59_cover
 #print axioms parents_cover
 #print axioms sound_integrated
 #print axioms exact_at_target

@@ -49,7 +49,11 @@ def verify_base(work):
     return linked, report
 
 
-def add_raw59(work, linked, run_id):
+def add_raw59(work, linked, run_id, *, parent_only=False):
+    # The old candidate wrapper imports a historical global membership module.
+    # A new consumer can use the accepted parent proof directly and check its
+    # table against its own roster without importing that obsolete wrapper.
+    root_module = "Raw59KernelSlice" if parent_only else "CanonicalSelectedRaw59"
     run = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}")
     assert run["conclusion"] == "success", run.get("conclusion")
     artifacts = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}/artifacts")["artifacts"]
@@ -128,14 +132,19 @@ def add_raw59(work, linked, run_id):
                 with z.open(i) as src, dst.open("wb") as out:
                     shutil.copyfileobj(src, out)
                 new_objects.append(name)
-        root = linked / "CanonicalSelectedRaw59.olean"
-        assert root.is_file() and a68.sha(root) == claim["olean_sha256"]
+        # Authenticate the old wrapper against the accepted report even when
+        # it is deliberately outside the new consumer's dependency closure.
+        with z.open(entries["CanonicalSelectedRaw59.olean"]) as f:
+            assert hashlib.file_digest(f, "sha256").hexdigest() == claim["olean_sha256"]
+        if not parent_only:
+            root = linked / "CanonicalSelectedRaw59.olean"
+            assert root.is_file() and a68.sha(root) == claim["olean_sha256"]
         slice_root = linked / "Raw59KernelSlice.olean"
         assert slice_root.is_file() and a68.sha(slice_root) == relocation["output_sha256"]
         prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
         reached = subprocess.check_output(
             ["lean", "--run", str(HERE / "WalkImportClosure.lean"),
-             str(prefix / "lib" / "lean"), "1", str(linked), "CanonicalSelectedRaw59"],
+             str(prefix / "lib" / "lean"), "1", str(linked), root_module],
             text=True)
         compare = HERE.parent / "agent13-raw125" / "CompareKernelImports.lean"
         reached_names = {Path(p).name for p in reached.splitlines()}
@@ -166,6 +175,7 @@ def add_raw59(work, linked, run_id):
           f"{len(set(new_objects) & reached_names)} new modules", flush=True)
     return {"run_id": run_id, "revision": run["head_sha"], "artifact_id": aid,
             "artifact_sha256": expected, "claim": claim,
+            "linked_root": root_module, "slice_olean_sha256": relocation["output_sha256"],
             "link_audit_sha256": a68.sha(work / "raw59-link-audit.json")}
 
 

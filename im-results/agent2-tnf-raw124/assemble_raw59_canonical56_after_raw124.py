@@ -164,7 +164,7 @@ def main():
     # Reuse the existing Raw59 slice consumer. It checks the staged artifact's
     # accepted theorem, verifies its digest, and audits every reachable
     # duplicate object by exact bytes or kernel equality.
-    raw59_delta = raw59.add_raw59(work, linked, args.raw59_run_id)
+    raw59_delta = raw59.add_raw59(work, linked, args.raw59_run_id, parent_only=True)
     env = dict(os.environ, LEAN_PATH=str(linked))
 
     source = HERE / "Raw59Canonical56AfterRaw124.lean"
@@ -176,7 +176,7 @@ def main():
     profiles = a68.gate(log, [NS + "." + name for name in (
         "p59_count57", "p59_count56", "count56", "raw113_removed",
         "raw124_removed", "parents_pairwise_distinct", "parents_root",
-        "parents_cover", "sound_integrated", "exact_at_target",
+        "p59_source_eq", "p59_cover", "parents_cover", "sound_integrated", "exact_at_target",
         "exact_at_champion_score",
     )])
 
