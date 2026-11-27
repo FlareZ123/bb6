@@ -1,6 +1,12 @@
 name: Agent 12 corrected token normalization source proof (manual)
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Proof group (core, hazards, extended)
+        default: core
+        type: choice
+        options: [core, hazards, extended]
 permissions:
   contents: read
 jobs:
@@ -30,17 +36,21 @@ jobs:
         working-directory: cryptids
         env:
           LEAN_NUM_THREADS: "1"
+          PROOF_MODE: ${{ inputs.mode }}
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import os
           p=Path("BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean")
           ending="end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
           a=p.read_text().rstrip().splitlines()
           assert a[-1].strip()==ending
           b=Path("../bb6/im-results/agent12-cryptid-root-invariant/TokenCounterCorrection.append.lean").read_text()
-          b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/SuffixHazards.append.lean").read_text()
-          b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/BinarySuffixHazards.append.lean").read_text()
-          b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/TripleZeroSuffix.append.lean").read_text()
+          if os.environ["PROOF_MODE"] in ("hazards","extended"):
+              b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/SuffixHazards.append.lean").read_text()
+              b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/BinarySuffixHazards.append.lean").read_text()
+          if os.environ["PROOF_MODE"] == "extended":
+              b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/TripleZeroSuffix.append.lean").read_text()
           p.write_text("\n".join(a[:-1])+"\n\n"+b+"\n"+ending+"\n")
           PY
           set -o pipefail
