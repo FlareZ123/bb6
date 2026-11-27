@@ -1,0 +1,109 @@
+[
+  {
+    "child": "1LA",
+    "opens": 179,
+    "nodes": 9261,
+    "initialBound": 883,
+    "bound": 1139,
+    "witness": {
+      "score": 1139,
+      "n": 1138,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC1RE_0RD1LA_1LD1LA_1RF0RB_0RCHHH"
+    },
+    "counts": {
+      "far": 144,
+      "compact": 32,
+      "late": 1,
+      "crossing": 1,
+      "long-cycle": 1
+    }
+  },
+  {
+    "child": "1RB",
+    "opens": 227,
+    "nodes": 9405,
+    "initialBound": 912,
+    "bound": 1756,
+    "witness": {
+      "score": 1756,
+      "n": 1755,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_0LDHHH"
+    },
+    "counts": {
+      "far": 181,
+      "compact": 24,
+      "late": 1,
+      "long-cycle": 1,
+      "crossing": 20
+    }
+  },
+  {
+    "child": "1LC",
+    "opens": 305,
+    "nodes": 8757,
+    "initialBound": 767,
+    "bound": 767,
+    "witness": {
+      "n": 766,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC0RE_0RD1LC_1LD1LA_1RF0LE_0RCHHH"
+    },
+    "counts": {
+      "far": 281,
+      "compact": 22,
+      "nested-drain": 1,
+      "long-cycle": 1
+    }
+  },
+  {
+    "child": "1RC",
+    "opens": 171,
+    "nodes": 8685,
+    "initialBound": 638,
+    "bound": 1766,
+    "witness": {
+      "score": 1766,
+      "n": 1764,
+      "slot": 8,
+      "delay": 1,
+      "delayPath": [
+        5
+      ],
+      "table": "1RB0LA_1RC0RE_0RD1RC_1LD1LA_HHH0RF_0LA0RD"
+    },
+    "counts": {
+      "far": 146,
+      "compact": 22,
+      "late": 2,
+      "long-cycle": 1
+    }
+  },
+  {
+    "child": "0RD",
+    "opens": 170,
+    "nodes": 9261,
+    "initialBound": 942,
+    "bound": 942,
+    "witness": {
+      "n": 941,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC0RE_0RD0RD_1LD1LA_1RF1RE_0RCHHH"
+    },
+    "counts": {
+      "far": 149,
+      "compact": 17,
+      "crossing": 3,
+      "long-cycle": 1
+    }
+  }
+]
