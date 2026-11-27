@@ -4,6 +4,11 @@ kind="$1"
 base="$PWD/im-results/agent3-raw139-e1-zeroRD"
 work="$PWD/.tmp/a3-e1-$kind"
 mkdir -p "$work/imports" "$work/reuse" "$work/build" /tmp/a3-e1-core
+if [[ "$kind" == E1D0Leaf2265Core ]]; then
+  lean -o "$work/build/Leaf2265Core.olean" "$base/Leaf2265Core.lean" 2>&1 | tee "$work/log"
+  printf '%s\n' '{"scope":"standalone primitive ray lemma check, not source-bound cover"}' > "$work/manifest.json"
+  exit 0
+fi
 python3 im-results/agent13-coverage/unpack.py
 gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15175093456/zip" > /tmp/a3-e1-core.zip
 unzip -q /tmp/a3-e1-core.zip -d /tmp/a3-e1-core
