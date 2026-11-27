@@ -1,6 +1,8 @@
 """Graft exact residual witnesses into the saved first-query partition; no search."""
 import json,sys,pathlib
 from collections import Counter,defaultdict
+from compressed import patch_candidate_replay
+patch_candidate_replay()
 from package6 import first_hole
 from scan import ORDER
 src=pathlib.Path(sys.argv[1]);out=pathlib.Path(sys.argv[2]);out.mkdir(parents=True,exist_ok=True)

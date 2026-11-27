@@ -15,9 +15,9 @@ fi
 if [[ "$(cat "$work/wide.json")" != "{}" ]]; then
   python3 "$base/emit-wide.py" "$work/imports" "$work/wide.json"
 fi
-python3 "$checker/package6.py" "$work/spec-compact.json" "$work/partition.json" "$work/raw-imports"
-python3 "$late/emit_late.py" "$work/partition.json" "$work/spec-compact.json" "$work/imports" 10000
-python3 "$late/transform-graft.py" "$work/raw-imports" "$work/imports" "$work/partition.json" "$work/spec-compact.json" 10000
+python3 "$base/compressed.py" "$work/spec-compact.json" "$work/partition.json" "$work/raw-imports" "$work/spec-uncompressed.json"
+python3 "$late/emit_late.py" "$work/partition.json" "$work/spec-uncompressed.json" "$work/imports" 10000
+python3 "$base/transform-compressed.py" "$work/raw-imports" "$work/imports" "$work/partition.json" "$work/spec-compact.json" 10000
 rm -rf "$work/raw-imports"
 python3 - "$work" "$c" <<'PY'
 import pathlib,sys,json
@@ -53,7 +53,7 @@ python3 tools/lean_compile_closure.py "$work/imports/${meta[0]}Weighted.lean" \
  --artifact-name "raw139-oneLB-c$c-certified" --provenance-input "$work/partition.json" \
  --provenance-input "$work/spec-compact.json" --provenance-input "$base/residuals.json" \
  --provenance-input "$base/graft.py" --provenance-input "$base/emit-wide.py" \
- --provenance-input "$checker/package6.py" --provenance-input "$late/transform-graft.py" \
+ --provenance-input "$checker/package6.py" --provenance-input "$base/transform-compressed.py" --provenance-input "$base/compressed.py" \
  --provenance-input "$late/emit_late.py" | tee "$work/log"
 python3 - "$work/log" "${meta[1]}" <<'PY'
 import pathlib,re,sys
