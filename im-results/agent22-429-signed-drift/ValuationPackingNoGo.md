@@ -35,3 +35,13 @@ Consequently, with t=sum j_i for a primitive gap period, the finite-family budge
 ## Reproduction
 
 Compile PeriodicGridPacking.lean first with -o, then ValuationPacking.lean with -o, then ValuationEdges.lean, setting LEAN_PATH to their containing directory. All three use only Lean 4.36.0-rc2 and Std.
+
+## Kernel-checked cyclic backward uniqueness and exact signed-block bridge
+
+Two further source-independent Lean 4.36.0-rc2 modules narrow the nonperiodic proof gap.
+
+[ValuationPrimitive.lean](ValuationPrimitive.lean) proves backwards_unique: an integer-indexed sequence obeying 4^j v_next = v + K with 0<3v<K has unique backward history. Thus if two source values agree, all preceding gap lengths and values agree. It formalizes BackwardPrimitive, which says that the preceding n-gap windows at two distinct positions in a length-n word differ somewhere. It then proves window_source_injective and the full no_primitive_window contradiction against K<=6sum(j) in this abstract model. These claims use only standard Lean axioms; they do not yet prove that a usual primitive periodic word implies BackwardPrimitive, nor construct the integer-indexed slope sequence from the authentic signed source.
+
+[SignedPairMacroBridge.lean](SignedPairMacroBridge.lean) formalizes the actual compressed signed F, EF, SF equations (including modular guards and every standalone F transition). Its theorem pairRun_model proves an E/S pair followed by 2(j-1) standalone Fs satisfies the exact half-rank step 4^j u_out = u_in + r_in + c and r_out = r_in + 3j + a, with (c,a)=(4,2) for E and (10,4) for S. The stronger pairRun_model_exists constructs the integer output half-rank automatically using fRun_parity and pairRun_output_even. This is an exact coordinate/guard bridge to [PeriodicMacroTransfer.lean](PeriodicMacroTransfer.lean). It is not yet imported directly into the archived SignedDrift source nor the authentic BB429 root model.
+
+Both files were actually compiled locally with no sorryAx; the first depends only on ValuationEdges, the second only on PeriodicMacroTransfer. They are ready for source integration and for resolving the remaining pure gap-periodicity bridge. These checked pieces do not decide the machine.
