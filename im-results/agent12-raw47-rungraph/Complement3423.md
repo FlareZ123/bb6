@@ -52,6 +52,6 @@ Both transitions have positive cost, so inductively there are arbitrarily long d
 
 ## Status
 
-The mathematical derivation and original-semantics Lean source are committed. The initial CI run found list-normalization/induction elaboration errors; these are being corrected. The direct numerical macro test covered 3920 decrement-prefix and 1764 reset-prefix instances, including arbitrary finite tails, with zero disagreements. This is supplementary and not the proof. The result is not to be counted as a certified parent until Lean accepts the theorem and the parent audit.
+Accepted at commit `e485f9a09285e3c353e5173fade517fe7ecfaa71`, CI run `45970441302`, job `140409318448`. `decrementPrefix`, `resetPrefix`, `goodStep`, `never`, and `BB6.Agent50.Raw47D3G174.all_quotient` checked with only standard axioms. All 23 open leaves of parent 174 were covered (22 FAR + this proof); accepted artifact `raw47-graph-parents` ID `15184886313`. The direct numerical macro test covered 3920 decrement-prefix and 1764 reset-prefix instances, including arbitrary finite tails, with zero disagreements; this is supplementary, not the proof.
 
 The previous finite side-graph searches (including positional masks, aggregate run classes and two-alignment block summaries) had no witness for this leaf; the coupled arithmetic balance explains why purely independent side summaries can be inefficient.
