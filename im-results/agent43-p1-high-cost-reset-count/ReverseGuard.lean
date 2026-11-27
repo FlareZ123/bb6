@@ -67,14 +67,16 @@ theorem back_guarded (n m v w : Nat) (hn : 14≤n)
   | succ m ih =>
     by_cases hlt : v<w
     · simp only [backCheck, if_pos hlt] at h
-      obtain ⟨hc,hr⟩ := Bool.and_eq_true.mp h
+      simp only [Bool.and_eq_true] at h
+      obtain ⟨hc,hr⟩ := h
       have hc' : 0<m ∧ 2≤v ∧ v+4≤w := of_decide_eq_true hc
       have hp := ih (2*v) (w-v+1) hr
       have hmass := micro_mass n m (2*v) (w-v+1) hn (guarded_micro hp)
       change 2*v+(w-v+1)+n+m+1=BB6.P1CarryExact.total n at hmass
       exact GuardedMicro.zero m (2*v) (w-v+1) v w hp hc'.1 hc'.2.1 rfl (by omega)
     · simp only [backCheck, if_neg hlt] at h
-      obtain ⟨hc,hr⟩ := Bool.and_eq_true.mp h
+      simp only [Bool.and_eq_true] at h
+      obtain ⟨hc,hr⟩ := h
       have hc' : 2≤v ∧ 5≤w := of_decide_eq_true hc
       have hp := ih (v-w+1) (2*w) hr
       have hmass := micro_mass n m (v-w+1) (2*w) hn (guarded_micro hp)
@@ -128,4 +130,105 @@ theorem critical_reset_no_reach_of_back (n : Nat) (hn : 14≤n) (he : n%2=0)
 #print axioms back_iff_legal
 #print axioms forbidden_middle
 #print axioms critical_reset_no_reach_of_back
+
+/-- Exact run jump in the zero predecessor branch.  The last guard
+    dominates all the earlier ones. -/
+theorem zero_jump (n m v w k : Nat) (hm : k<m) (hv : 2≤v)
+    (hf : 2^k*v+5≤v+w+k) :
+    backCheck n m v w =
+      backCheck n (m-k) (2^k*v) (v+w+k-2^k*v) := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    let p := 2^k*v
+    have hp : 2≤p := by
+      have hpow : 1≤2^k := Nat.one_le_pow _ _ (by decide)
+      have hmul := Nat.mul_le_mul_right v hpow
+      dsimp [p]
+      exact Nat.le_trans hv (by simpa using hmul)
+    have hpow : 2^(k+1)*v=2*p := by
+      dsimp [p]
+      rw [Nat.pow_succ]
+      ac_rfl
+    have hf0 : p+5≤v+w+k := by rw [hpow] at hf; omega
+    have hprev := ih (by omega) (by simpa [p] using hf0)
+    calc
+      backCheck n m v w = backCheck n (m-k) p (v+w+k-p) := by
+        simpa only [p] using hprev
+      _ = _ := by
+        let q := v+w+k-p
+        have hguard : p+4≤q := by dsimp [q]; rw [hpow] at hf; omega
+        have hlt : p<q := by omega
+        have hidx : m-k=(m-(k+1))+1 := by omega
+        change backCheck n (m-k) p q = _
+        rw [hidx,backCheck,if_pos hlt]
+        have hdec : decide (0<m-(k+1) ∧ 2≤p ∧ p+4≤q)=true :=
+          decide_eq_true ⟨by omega,hp,hguard⟩
+        rw [hdec,Bool.true_and,hpow]
+        have hq : q-p+1=v+w+(k+1)-2*p := by dsimp [q]; omega
+        rw [hq]
+
+/-- Exact run jump in the selected predecessor branch, including the
+    possibility that the last jump reaches the original cost-zero root. -/
+theorem one_jump (n m v w k : Nat) (hm : k≤m) (hw : 5≤w)
+    (hf : 2^k*w+1≤v+w+k) :
+    backCheck n m v w =
+      backCheck n (m-k) (v+w+k-2^k*w) (2^k*w) := by
+  induction k with
+  | zero => simp
+  | succ k ih =>
+    let p := 2^k*w
+    have hp : 5≤p := by
+      have hpow : 1≤2^k := Nat.one_le_pow _ _ (by decide)
+      have hmul := Nat.mul_le_mul_right w hpow
+      dsimp [p]
+      exact Nat.le_trans hw (by simpa using hmul)
+    have hpow : 2^(k+1)*w=2*p := by
+      dsimp [p]
+      rw [Nat.pow_succ]
+      ac_rfl
+    have hf0 : p+1≤v+w+k := by rw [hpow] at hf; omega
+    have hprev := ih (by omega) (by simpa [p] using hf0)
+    calc
+      backCheck n m v w = backCheck n (m-k) (v+w+k-p) p := by
+        simpa only [p] using hprev
+      _ = _ := by
+        let q := v+w+k-p
+        have hguard : p≤q := by dsimp [q]; rw [hpow] at hf; omega
+        have hlt : ¬q<p := by omega
+        have hidx : m-k=(m-(k+1))+1 := by omega
+        change backCheck n (m-k) q p = _
+        rw [hidx,backCheck,if_neg hlt]
+        have hdec : decide (2≤q ∧ 5≤p)=true :=
+          decide_eq_true ⟨by omega,hp⟩
+        rw [hdec,Bool.true_and,hpow]
+        have hq : q-p+1=v+w+(k+1)-2*p := by dsimp [q]; omega
+        rw [hq]
+
+/-- The power feeder is a single point on each fixed-mass diagonal,
+    with its dyadic index determined by a strict dyadic band. -/
+theorem power_boundary_coords (S v w j : Nat) (hm : v+w=S)
+    (hv : 5≤v) (hw : 6≤w) (ho : v%2=1) (h : w+v/2=7*2^j) :
+    7*2^j+3≤S ∧ S+5≤14*2^j ∧
+      v=2*S-14*2^j-1 ∧ w=14*2^j+1-S := by
+  omega
+
+theorem power_boundary_index_unique (S j k : Nat)
+    (hj : 7*2^j+3≤S ∧ S+5≤14*2^j)
+    (hk : 7*2^k+3≤S ∧ S+5≤14*2^k) : j=k := by
+  by_cases h : j<k
+  · have hp := Nat.pow_le_pow_right (show 0<2 by decide) (show j+1≤k by omega)
+    rw [Nat.pow_succ] at hp
+    omega
+  · by_cases h' : k<j
+    · have hp := Nat.pow_le_pow_right (show 0<2 by decide) (show k+1≤j by omega)
+      rw [Nat.pow_succ] at hp
+      omega
+    · omega
+
+#print axioms zero_jump
+#print axioms one_jump
+#print axioms power_boundary_coords
+#print axioms power_boundary_index_unique
+
 end BB6.Agent43P1Reverse
