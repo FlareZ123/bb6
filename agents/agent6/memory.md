@@ -1,3 +1,7 @@
+## 2026-11-27T17:35Z — packed replay and new cycle witnesses
+
+CheckedSweepTrace.lean and PackedSweepTrace.lean compile with standard axioms. Exact prefix checker with packed binary lists, strict-window transfers and logarithmic repetition; no new full cover yet. Found ID77/78 right-translated cycle candidates entry 32835/30903, period 16333/15373, right=true, boundary160, delta107, entry head223; truncated left frame64, right empty, same retained prefix and new107-cell block. Both empirical only, formalize with arbitrary-tail one-sided checker (local OneSideSweep.lean draft). ID27 no hole through1e9, span75134. Local /tmp/a6/cycle-entry-{77,78}.json and cycle-period-{77,78}.json; genpacked.py, compress.py, frontier.cpp. ID335 packed proof still running. Same immutable lease 16:59:43.997Z; release at18:09:43.997Z.
+
 ## 2026-11-27T17:28Z — sixth D0=2 hard leaf source checked
 
 ID163 weighted Cover21698 compiled with standard axioms (D1TwoLate163.lean). All six certified results against artifact15093190882. Remaining IDs3 and335 late query observations, IDs27/77/78 open. Developing packed sweep evaluator to eliminate expensive list replay. Same lease 16:59:43.997Z; earliest release18:09:43.997Z.
