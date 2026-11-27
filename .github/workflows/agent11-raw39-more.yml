@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583]
         required: true
 permissions:
   contents: write
@@ -641,3 +641,15 @@ jobs:
           path: im-results/agent43-raw39-4084/Raw39LE4084Pump.lean
           if-no-files-found: error
           retention-days: 30
+
+
+  pump_search_1583:
+    if: ${{ inputs.branch == 'pump-search-1583' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Search exact frozen 1583 for one-sided arbitrary-tail recurrence
+        run: |
+          set -euo pipefail
+          python im-results/agent43-raw39-4084/search_pump.py im-results/agent11-raw39/0LE-frontier.json.xz.b64 1583 3000000
