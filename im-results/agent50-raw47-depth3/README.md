@@ -21,6 +21,13 @@ The 37 newly consumed IDs are 59,62,63,64,65,67,73,74,75,78,81,82,85,88,89,90,91
 
 The cap-10,000 scan produced 45,817 open leaves. FAR through five states closes 43,659 candidates; n-grams of widths 2–10 close 1,498 (544 overlap). Adding the original 30 hard-leaf theorems leaves 1,192 candidate leaves across 382 depth-three parents. Agent12's run-graph discovery and Agent2's carry proofs provide further witnesses; only exact parent audits and accepted composition reduce the checked roster. Do not rerun discovery assigned to those agents. `SplitPrefix.lean` and `shard_prefix.py` supply an optional bounded-memory strategy for oversized trees.
 
+
+### Parent 601/609 recovery (2026-11-27 18:50 UTC)
+
+Previous paired job 46033647191 failed. Exact local enumeration gave 25 and 32 residual leaves; the frozen FAR5 bank covers 53 of the combined 57, cheap run-graph certificates cover three, and exhaustive FAR6 search supplies the final witness `1010232450112` for `1RB0LE_1RC1LA_0RD1LB_1LD0RC_1LF---_1RD0LB`. [Raw47FAR609.lean](Raw47FAR609.lean) directly proves nonhalting of every compatible completion, kernel checked locally against the accepted FastFAR dependencies. The exact literal-keyed witness is incorporated in generate_graph_parents.py (97222c5e). Both separate parent jobs passed source CI [46052244263](https://github.com/FlareZ123/bb6/actions/runs/46052244263): `BB6.Agent50.Raw47D3G601.all_quotient` and `BB6.Agent50.Raw47D3G609.all_quotient`, weighted bound 10006, standard axioms only, no partial children. Artifact 15225405955 (601, sha256:29019a53670ebd5c1b1e7cf10c925fba3cb32bea8a22ac4e6114b818e655199f) and 15224842816 (609, sha256:6116c43d39af6885872e9ce6f8dbdea57e511e2fecc697dbac08364782f05dbc). Pending composition, no global removal yet.
+
+The earlier U61 source proof also passed [46033320715](https://github.com/FlareZ123/bb6/actions/runs/46033320715), with bound 143977. Merge the earlier eight graph runs via 46051657196, then 46052244263 and the new 120-parent middle sweep 46051808874. Use the lifted theorem only at bound 143977. Compact roster evidence is now emitted by composition, with exact count checked by Lean; no speculative count should be reported.
+
 ## Historical experiments
 
 The verified depth-2 Raw47 cut leaves 114 five-hole residuals, none certified by FAR through six states. This experiment increases the local split depth from 2 to 3 while keeping the same 1,000-step simulation cap and 32-frame cycle lookback. It then runs the FAR5 bank over every resulting open residual.
