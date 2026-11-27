@@ -20,3 +20,18 @@ For a high bit at position j, H=2^j, its weight is (q+j)*H. For any lower word L
 - Existing unresolved n=45352466 run 45935332194 ended at the 900,000,000 budget, not extinction. Last checkpoint s=884372737, 23 canonical children, artifact 15172862750. No new critical-index exclusion follows merely from this optimization.
 
 For implementation purposes F<INT_MAX, k<=32, X<2^63. Mode selection remains opt-in generally; the existing packed-prefix-compact workflow now selects mode 1 for its actual continuation, after accepted tests. A 1.1B continuation from artifact run 45935332194 was dispatched 06:14Z (no result yet). A failed initial proof audit is not a certificate; do not classify the critical index on this basis.
+
+## Integer-only reciprocal mode (accepted)
+
+For H=2^32, M=2^k<=G=F-1, z<F<2^31, 0<=Y<M, set R=min(H-1,floor(MH/G)), S=floor(YH/G), T=zR+S, X=Mz+Y. Then GR<=MH<=G(R+1), GS<=YH<G(S+1). Thus GT<=HX<GT+G(z+1)<=GT+GH. Consequently b=floor(T/H) <= floor(X/G) <= b+1. One upward correction if X-bG>=G gives the exact quotient. R clipping at M=G is covered by the non-strict upper inequality. Products fit 64 bits because z<2^31, R,S<2^32; shifted fitting gives k<=30 and quotient<=M+1. The SIMD implementation uses unsigned 32x32 products and evaluates corr(k,B)-B directly by masks of k-1-i, rather than multiplying by q and subtracting the original weighted word. No floating-point estimate/fallback is needed for these SIMD lanes. Scalar mode 6 retains mode 1's corrected scalar routine.
+
+[IntegerReciprocal.lean](IntegerReciprocal.lean), estimate_near and correct_eq, passed original-source CI [45951249327](https://github.com/FlareZ123/bb6/actions/runs/45951249327), pinned commit 40b3a16d053871281463284f56cf5548451633b9, ordinary axioms only. C++ exact small=13956108 large=2800000 simd=2800832 including power-of-two G and extremal targets/endpoints; seven modes reproduce identical CHILD and END lists for n3342. Same-run Mclock/s:
+
+| F | original | shifted | integer shifted |
+|---:|---:|---:|---:|
+|100000000|14618.6|18411.5|22951.4|
+|650000000|16401|20486.4|25586.9|
+|1000000000|16397.2|20547.5|25535.1|
+|2000000000|16993.1|21209.1|26508.7|
+
+Mode 6 is opt-in (P1_FIT=6). These are isolated query rates, not complete scan speeds. Current n45 continuation 45950487343 uses pinned mode 1 and is not interrupted. No numerical extinction claimed.
