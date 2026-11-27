@@ -49,6 +49,7 @@ on:
           - canonical54-four-sharp
           - canonical46-ready-union
           - canonical46-ready-resume
+          - canonical-extra-ready
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -126,6 +127,17 @@ on:
         type: string
         required: false
         default: "45908591612"
+
+      ready_resume_run_id:
+        description: "Accepted ready-subset predecessor run ID"
+        type: string
+        required: false
+        default: "46031670976"
+      extra_parent_runs:
+        description: "JSON raw ID to accepted source producer run ID"
+        type: string
+        required: false
+        default: '{"63":45948590270,"61":46032302566,"67":46032521543,"59":45897242410}'
 
 jobs:
   source-audit-canonical70:
@@ -2540,5 +2552,44 @@ jobs:
         with:
           name: canonical46-ready-union-diagnostics
           path: /tmp/a2-ready-union/*-delta/evidence/
+          if-no-files-found: warn
+          retention-days: 7
+
+  canonical_extra_ready:
+    name: Consume accepted extra parent Covers on ready-subset predecessor
+    if: ${{ inputs.target == 'canonical-extra-ready' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compose independent accepted extra parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+          READY_RUN: ${{ inputs.ready_resume_run_id }}
+          PARENT_RUNS: ${{ inputs.extra_parent_runs }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent2-ready-union/extra_ready_union.py
+          python im-results/agent2-ready-union/extra_ready_union.py --work /tmp/a31-extra-ready --ready-run-id "$READY_RUN" --parents "$PARENT_RUNS"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical-extra-ready-thin-delta
+          path: /tmp/a31-extra-ready/extra-delta/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: canonical-extra-ready-diagnostics
+          path: /tmp/a31-extra-ready/extra-delta/evidence/
           if-no-files-found: warn
           retention-days: 7

@@ -1,0 +1,3 @@
+# Raw61 accepted weighted parent bound
+
+The six-shard Lean 4.36.0-rc2 proof of BB6.Agent31Raw61.literal_cover has succeeded in run 46032302566, source c4be396420ba95b26c9ad041d94134c4e6b18473. Parent table 1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------, weighted bound 1962; 25^5 = 9,765,625 completions. Final artifact 15214449431, SHA256 0bc3480f56de38493916903a10b46a44def34f35199c370152797d9ef75b40e0. This is an upper bound, not a sharpness claim or global roster removal. Follow-on extra-ready consumer handles Raw61 independently after the accepted seven-ready predecessor.
