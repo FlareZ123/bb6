@@ -30,9 +30,11 @@ jobs:
           lean -o im-results/agent30-429-coarse-exit/BB429CoarseExitSource.olean im-results/agent30-429-coarse-exit/BB429CoarseExitSource.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429CoarseExitExtended.olean im-results/agent30-429-coarse-exit/BB429CoarseExitExtended.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance.olean im-results/agent30-429-coarse-exit/BB429Resonance.lean 2>&1 | tee -a "$LOG"
-          lean im-results/agent30-429-coarse-exit/BB429Resonance234.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429Resonance234.olean im-results/agent30-429-coarse-exit/BB429Resonance234.lean 2>&1 | tee -a "$LOG"
+          lean im-results/agent30-429-coarse-exit/BB429ResonanceSlope.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429.CoarseExit.d234_post' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_second_nonresonant_mod9' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.Resonance.resonant_post_jSlope' depends on axioms:" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "Unexpected sorryAx"; exit 1
           fi
