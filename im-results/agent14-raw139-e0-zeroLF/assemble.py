@@ -82,7 +82,7 @@ def load(partition):
     print('expanded exact witness tree:',dict(counts),flush=True)
     return tree,blocks
 
-def make(partition,out,roots,cap=185,packed=False):
+def make(partition,out,roots,cap=185,packed=False,split_root13=False):
     tree,blocks=load(partition);out.mkdir(parents=True,exist_ok=True)
     modmap={};manifest=[]
     def put(name,s,deps):
@@ -134,7 +134,7 @@ def make(partition,out,roots,cap=185,packed=False):
             _,k,s,kids=n;terms=[]
             for j,(ch,v) in enumerate(zip(kids,ORDER)):
                 t2=t[:s]+[v]+t[s+1:]
-                if ch[0]=='split' or unresolved(ch):
+                if ch[0]=='split' or unresolved(ch) or (split_root13 and name=='ZLFRoot13'):
                     cn=f'{name}_{j}';emit(ch,t2,cn,prem);deps.add(cn);terms.append(f'.covered p{cn} c{cn}')
                 else:terms.append(f'.closed ({plain(ch,deps)})')
             term=f'.split {k} {slot(s)} (byHybridMove [\n'+',\n'.join(terms)+'])'
@@ -149,10 +149,10 @@ def make(partition,out,roots,cap=185,packed=False):
         pack(bids(n),root)
         assert unresolved(n)==(root==18)
         emit(n,t,f'ZLFRoot{root:02d}','premise' if root==18 else 'True')
-    batch(out,manifest)
+    batch(out,manifest,split_root13=split_root13)
     print('generated',len(manifest),'pre-batch modules',flush=True)
 
-def batch(out,names):
+def batch(out,names,split_root13=False):
     groups={};result=[];pending=[];weight=0;idx=0
     def flush():
         nonlocal pending,weight,idx
@@ -170,12 +170,12 @@ def batch(out,names):
         deps=set(re.findall(r'^import (\w+)$',s,re.M));s=re.sub(r'^import \w+\n','',s,flags=re.M)
         if len(pending)>=12 or weight+len(s)>40000:flush()
         pending.append((n,s,deps));weight+=len(s)
-        if re.fullmatch(r'ZLFRoot\d\d',n):flush()
+        if re.fullmatch(r'ZLFRoot\d\d',n) or (split_root13 and re.fullmatch(r'ZLFRoot13_\d+',n)):flush()
     flush()
     for n in names:
         if n not in result:(out/(n+'.lean')).unlink()
     for n in names:
-        if re.fullmatch(r'ZLFRoot\d\d',n):
+        if re.fullmatch(r'ZLFRoot\d\d',n) or (split_root13 and re.fullmatch(r'ZLFRoot13_\d+',n)):
             (out/(n+'.lean')).write_text('import '+groups[n]+'\n');result.append(n)
     (out/'batched.txt').write_text('\n'.join(result)+'\n')
 
@@ -190,7 +190,7 @@ if __name__=='__main__':
     a=argparse.ArgumentParser();a.add_argument('out',type=pathlib.Path)
     a.add_argument('--partition',type=pathlib.Path,default=BASE/'partition.json')
     a.add_argument('--roots',type=int,nargs='+',default=list(range(24)))
-    a.add_argument('--cap',type=int,default=185);a.add_argument('--packed',action='store_true');a.add_argument('--final',action='store_true')
+    a.add_argument('--cap',type=int,default=185);a.add_argument('--packed',action='store_true');a.add_argument('--final',action='store_true');a.add_argument('--split-root13',action='store_true',help='emit independently compilable children of root13')
     a=a.parse_args()
     if a.final:final(a.out)
-    else:make(a.partition,a.out,a.roots,a.cap,a.packed)
+    else:make(a.partition,a.out,a.roots,a.cap,a.packed,split_root13=a.split_root13)
