@@ -28,8 +28,9 @@ theorem marked_one_mod_nine_regular (u Q : Nat) :
       packet (3*j+3) 2 (2*Q+3)
         BB6.Agent2PacketP2Reset.marker := by
     have he := e_packet m 0 (2*Q+3) BB6.Agent2PacketP2Reset.marker
+    have hp : (2*Q+3)+3=2*Q+6 := by omega
     simpa only [BB6.Agent37EMarkerResidual.marked,
-      Nat.zero_add,hin,hout] using he
+      Nat.zero_add,hin,hout,hp] using he
   obtain ⟨S,a,r,b,hA⟩ :=
     BB6.Agent35MarkerOne.a_marker_regular j 2 (2*Q+3)
   refine ⟨12*m*m+49*m+58+S,a,r,b,?_⟩
