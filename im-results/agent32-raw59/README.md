@@ -1,6 +1,6 @@
 # Raw59 six-hole refinement
 
-## Current parent and canonical integration state — 26 November 2026
+## Current parent and canonical integration state — 27 November 2026
 
 **Exact weighted parent maximum: 4,136,171 (source-accepted).** The parent is
 
