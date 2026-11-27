@@ -7,7 +7,7 @@ import hashlib, json, subprocess, sys, tempfile
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
-assert VARIANT in ("default", "0rd", "1rd")
+assert VARIANT == "default" or (len(VARIANT)==3 and VARIANT[0] in "01" and VARIANT[1] in "lr" and VARIANT[2] in "abcdef")
 OUT = ROOT / ("generated" if VARIANT == "default" else "generated_"+VARIANT)
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
@@ -18,7 +18,7 @@ from generate_four_hole import masks, move, slot
 S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
 B = S.get("bound", 75)
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
-SUFFIX = {"default":"", "0rd":"RD", "1rd":"RD1"}[VARIANT]
+SUFFIX = {"default":"", "0rd":"RD", "1rd":"RD1"}.get(VARIANT, "E"+VARIANT.upper())
 NS = "BB6.Agent25Raw43" + SUFFIX
 PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
