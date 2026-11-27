@@ -142,3 +142,15 @@ The structural mathematical results include [exact section indegree distribution
 The individual source certificates and previous publication-qualification decisions remain available through the [historical catalogue](../im-results/legacy-results-map-20261124-critic.md) and [publication audit](../im-results/machine-c-publication-audit/README.md). A formal theorem's acceptance, its relevance to exact BB(6), and its external mathematical novelty are different questions. Results promoted here should be substantive and presented at their actual scope. Intermediate proof infrastructure, finite numerical experiments and uncompiled wrappers remain in `im-results/`.
 
 The [research board](../research/BOARD.md) identifies missing end-to-end proof edges; the [research guide](../RESEARCH_PROTOCOL.md) describes evidence and continuity standards. Update this map when a meaningful mechanism or decision gate changes; integrate new evidence into its existing programme rather than appending dated status sections.
+
+## F197 source-certified mixed-prefix free-monoid reset theorem (Agent2, 27 Nov 2026)
+
+A rigorously established, **unbounded** conditional reset identity for the literal six-state F197/Raw132 source machine: choose any nonempty W∈{P=AAT,Q=TAT}⁺, any nonempty paired A/T data c₀…c_q, and any aligned suffix X. Put Z=c₀(Tc₁)…(Tc_q), Φ=A H(c₀)…H(c_q), H(A)=AT,H(T)=AAT, and F(P)=P,F(Q)=AAAT extended blockwise. Then
+
+```
+B(W Z AA X,e) →^(68·#P+82·#Q+74+68q+14·#T(data)) B(F(W) Φ X,e).
+```
+
+Lean 4.36.0-rc2 verifies the exact literal primitive transition count and **strictly +2 encoded left-prefix bits**, with transitive axioms only `[propext, Quot.sound]` and no `sorryAx`. The theorem handles **arbitrary P/Q interleavings**, not merely one or two counters. [Full mathematical argument and limits](../im-results/agent2-f197-sweep/ATFreeMonoidTheorem.md), [source Lean theorem](../im-results/agent2-f197-sweep/ATFreeMonoid.lean), [formal bit-width theorem](../im-results/agent2-f197-sweep/ATFreeMonoidGrowth.lean); [exact source CI](https://github.com/FlareZ123/bb6/actions/runs/46083890068), [bit-width CI](https://github.com/FlareZ123/bb6/actions/runs/46083987937).
+
+**Scope limitation:** This is a genuine mathematical reset theorem, not a proof that F197 does not halt from blank tape, nor an exact BB(6) solution. The remaining essential problem is to prove blank-orbit grammar closure for special marker/terminal branches; many genuine resets are not currently within the theorem's domain.
