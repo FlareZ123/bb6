@@ -1,0 +1,131 @@
+{
+  "table": "1RB---_1RC0RE_0RD---_1LD0RB_---1RD_------",
+  "e1": "1RD",
+  "cap": 1000,
+  "lookback": 32,
+  "bound": 1713,
+  "rootQuery": [
+    "split",
+    11,
+    8
+  ],
+  "stats": {
+    "cycle": 4203,
+    "split": 212,
+    "last": 641,
+    "open": 33
+  },
+  "openRows": [
+    "1RB---_1RC0RE_0RD0LC_1LD0RB_0LF1RD_1LE0LA",
+    "1RB---_1RC0RE_0RD1LB_1LD0RB_0LF1RD_1LE1LA",
+    "1RB---_1RC0RE_0RD1RD_1LD0RB_0LF1RD_1LE1LB",
+    "1RB---_1RC0RE_0RD1LB_1LD0RB_0LF1RD_1LE1RB",
+    "1RB---_1RC0RE_0RD1LB_1LD0RB_0LF1RD_1LE1RC",
+    "1RB---_1RC0RE_0RD0LD_1LD0RB_0LF1RD_1LF0LA",
+    "1RB---_1RC0RE_0RD0LD_1LD0RB_0RF1RD_1LF0LA",
+    "1RB---_1RC0RE_0RD0RA_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD0RB_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD0RD_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD0RE_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD1LE_1LD0RB_1LF1RD_0LE0LA",
+    "1RB---_1RC0RE_0RD0RB_1LD0RB_1LF1RD_0LE0LB",
+    "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF1RD_0LE0LB",
+    "1RB---_1RC0RE_0RD0RD_1LD0RB_1LF1RD_0LE0LB",
+    "1RB---_1RC0RE_0RD0RE_1LD0RB_1LF1RD_0LE0LB",
+    "1RB---_1RC0RE_0RD1LE_1LD0RB_1LF1RD_0LE0LB",
+    "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF1RD_0LE1LB",
+    "1RB---_1RC0RE_0RD0RD_1LD0RB_1LF1RD_0LE1LB",
+    "1RB---_1RC0RE_0RD1LB_1LD0RB_1LF1RD_0LE1LB",
+    "1RB1RD_1RC0RE_0RD---_1LD0RB_1LF1RD_0LE1RA",
+    "1RB1RF_1RC0RE_0RD---_1LD0RB_1LF1RD_0LE1RA",
+    "1RB---_1RC0RE_0RD1RD_1LD0RB_1LF1RD_0LE1RC",
+    "1RB---_1RC0RE_0RD1RF_1LD0RB_1LF1RD_0LE1RC",
+    "1RB---_1RC0RE_0RD1LB_1LD0RB_1LF1RD_0LE1RD",
+    "1RB---_1RC0RE_0RD---_1LD0RB_1LF1RD_0LE1RE",
+    "1RB---_1RC0RE_0RD---_1LD0RB_1LF1RD_0LE1RF",
+    "1RB---_1RC0RE_0RD1RE_1LD0RB_1LF1RD_0LF1LB",
+    "1RB---_1RC0RE_0RD---_1LD0RB_1LF1RD_0LF1RB",
+    "1RB---_1RC0RE_0RD---_1LD0RB_1LF1RD_0LF1RE",
+    "1RB---_1RC0RE_0RD0LD_1LD0RB_1LF1RD_1LF0LA",
+    "1RB0LF_1RC0RE_0RD---_1LD0RB_1RF1RD_1LA0RE"
+  ],
+  "witnesses": {
+    "1": "00112344444",
+    "2": "000",
+    "3": "000",
+    "4": "000",
+    "5": "00112344444",
+    "6": "00112344444",
+    "13": "000",
+    "14": "000",
+    "15": "000",
+    "16": "000",
+    "17": "000",
+    "18": "000",
+    "19": "000",
+    "20": "000",
+    "21": "00101",
+    "22": "00101",
+    "23": "000",
+    "24": "000",
+    "25": "000",
+    "26": "00101",
+    "27": "00101",
+    "28": "000",
+    "30": "001213321",
+    "31": "00112344444",
+    "32": "000"
+  },
+  "growth": {
+    "0": {
+      "table": "1RB---_1RC0RE_0RD0LC_1LD0RB_0LF1RD_1LE0LA",
+      "module": "Raw43RD1M0",
+      "partial": "BB6.Agent25Raw43RD1M0.table",
+      "never": "BB6.Agent25Raw43RD1M0.never"
+    },
+    "8": {
+      "table": "1RB---_1RC0RE_0RD0RB_1LD0RB_1LF1RD_0LE0LA",
+      "module": "Raw43RD1Return",
+      "partial": "(BB6.Agent25Raw43RD1Growth.table .rb)",
+      "never": "(BB6.Agent25Raw43RD1Return.never .rb)"
+    },
+    "9": {
+      "table": "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF1RD_0LE0LA",
+      "module": "Raw43RD1Return",
+      "partial": "(BB6.Agent25Raw43RD1Growth.table .rc)",
+      "never": "(BB6.Agent25Raw43RD1Return.never .rc)"
+    },
+    "10": {
+      "table": "1RB---_1RC0RE_0RD0RD_1LD0RB_1LF1RD_0LE0LA",
+      "module": "Raw43RD1Return",
+      "partial": "(BB6.Agent25Raw43RD1Growth.table .rd)",
+      "never": "(BB6.Agent25Raw43RD1Return.never .rd)"
+    },
+    "11": {
+      "table": "1RB---_1RC0RE_0RD0RE_1LD0RB_1LF1RD_0LE0LA",
+      "module": "Raw43RD1Return",
+      "partial": "(BB6.Agent25Raw43RD1Growth.table .re)",
+      "never": "(BB6.Agent25Raw43RD1Return.never .re)"
+    },
+    "12": {
+      "table": "1RB---_1RC0RE_0RD1LE_1LD0RB_1LF1RD_0LE0LA",
+      "module": "Raw43RD1Return",
+      "partial": "(BB6.Agent25Raw43RD1Growth.table .le)",
+      "never": "(BB6.Agent25Raw43RD1Return.never .le)"
+    },
+    "29": {
+      "table": "1RB---_1RC0RE_0RD---_1LD0RB_1LF1RD_0LF1RB",
+      "module": "Raw43RD1M29",
+      "partial": "BB6.Agent25Raw43RD1M29.table",
+      "never": "BB6.Agent25Raw43RD1M29.never"
+    }
+  },
+  "lateLast": {
+    "7": {
+      "table": "1RB---_1RC0RE_0RD0RA_1LD0RB_1LF1RD_0LE0LA",
+      "n": 1707,
+      "s": 1
+    }
+  }
+}
