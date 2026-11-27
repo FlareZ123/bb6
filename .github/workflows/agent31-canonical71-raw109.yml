@@ -46,6 +46,7 @@ on:
           - raw115-parent
           - sharp-fourhole
           - sharp-raw99
+          - canonical54-four-sharp
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -2454,4 +2455,39 @@ jobs:
             im-results/agent31-canonical58-source-crosswalk/crosswalk.json
           if-no-files-found: warn
           compression-level: 9
+          retention-days: 30
+
+  canonical54_four_sharp:
+    name: Consume four sharp parents directly from Canonical58
+    if: ${{ inputs.target == 'canonical54-four-sharp' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile direct sharp-parent delta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent32-four-sharp/assemble_canonical54.py
+          python im-results/agent32-four-sharp/assemble_canonical54.py --work /tmp/a32-canonical54
+          test -s /tmp/a32-canonical54/delta/canonical54-four-sharp-delta.json
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: canonical54-four-sharp-delta
+          path: /tmp/a32-canonical54/delta/**
+          if-no-files-found: error
+          compression-level: 1
           retention-days: 30
