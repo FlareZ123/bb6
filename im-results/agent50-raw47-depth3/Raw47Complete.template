@@ -1,0 +1,14 @@
+import Raw47Lifted1212
+import Raw47CoverEmpty
+namespace BB6.Agent50Raw47Complete
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent47CanonicalFrontier BB6.Agent50Raw47Depth3Cut
+theorem all_quotient : ∀ m, TNFQuotientCompatible parent m → WeightedBound 143977 m :=
+  BB6.Agent50.closeEmptyQuotient BB6.Agent50Raw47Lifted1212.remaining_count BB6.Agent50Raw47Lifted1212.local_sound
+theorem cover : Cover (WeightedBound 143977) parent :=
+  BB6.Agent50.coverEmptyQuotient BB6.Agent50Raw47Lifted1212.remaining_count BB6.Agent50Raw47Lifted1212.local_sound
+theorem cover_at (B : Nat) (h : 143977 ≤ B) : Cover (WeightedBound B) parent :=
+  BB6.Agent50.raiseWeightedCover h cover
+#print axioms all_quotient
+#print axioms cover
+#print axioms cover_at
+end BB6.Agent50Raw47Complete
