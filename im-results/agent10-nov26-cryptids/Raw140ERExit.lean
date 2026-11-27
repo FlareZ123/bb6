@@ -17,8 +17,8 @@ theorem trip115_snoc (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    simp only [trip115,List.cons_append]
-    rw [← ih]
+    change (S 1::S 1::S 5::trip115 (n+1)) = (S 1::S 1::S 5::trip115 n) ++ [S 1,S 1,S 5]
+    simp only [List.cons_append,ih]
 
 theorem pump (n : Nat) (X Y : List Sym) :
     run base (21*n)
