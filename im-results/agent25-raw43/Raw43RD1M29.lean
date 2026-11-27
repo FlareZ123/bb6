@@ -53,41 +53,37 @@ private theorem returnOne (L R : List Bool) :
 private theorem returnZeros (n : Nat) (R : List Bool) :
     run0 table (2*(n+2)) ⟨5,Z++rep Z n++[false,false,true],[true]++R⟩ =
       some ⟨5,[true],[false,false,false]++rep Z n++[false,true]++R⟩ := by
-  have h := sweepL table 5 [] [] Z Z 2 returnOne (n+2) [true] ([true]++R)
   have he : rep Z (n+2) = Z++rep Z n++Z := by
-    rw [show n+2=(n+1)+1 by omega,rep,rep_snoc]
-    rfl
+    change Z++rep Z (n+1) = Z++rep Z n++Z
+    rw [show rep Z (n+1)=rep Z n++Z from (rep_snoc Z n).symm]
+    simp only [List.append_assoc]
   have hr : rep Z (n+2)++([true]++R) =
       [false,false,false]++rep Z n++[false,true]++R := by
     rw [he]
     have hz := rotate false [false] n
     change [false]++rep Z n=rep Z n++[false] at hz
     have hh := congrArg (fun a => Z++a++[false,true]++R) hz
-    simpa only [Z,List.append_assoc] using hh.symm
-  rw [he] at h
-  have hs : Z++rep Z n++[false,false,true] = Z++rep Z n++Z++[true] := by
-    simp only [List.append_assoc]; rfl
-  rw [← he] at hr
-  -- Keep the sweep conclusion in its original form, then align both words.
-  have h' := sweepL table 5 [] [] Z Z 2 returnOne (n+2) [true] ([true]++R)
-  simp only [List.nil_append] at h'
-  rw [hr,he] at h'
-  simpa only [Z,List.append_assoc] using h'
+    simpa only [Z,List.append_assoc,List.cons_append,List.nil_append] using hh.symm
+  have h := sweepL table 5 [] [] Z Z 2 returnOne (n+2) [true] ([true]++R)
+  simp only [List.nil_append] at h
+  rw [hr,he] at h
+  simpa only [Z,List.append_assoc,List.cons_append,List.nil_append] using h
 
 theorem carry (n : Nat) (bs : List Bool) :
     ∃ t, run0 table t (stage n bs) = some (target n bs) := by
   induction bs generalizing n with
   | nil =>
-    have h1 := carryBlank (rep Z n++[false,false,true])
-    have h2 := returnZeros n []
-    have h := join0 (by simpa only [stage,encode,List.append_assoc] using h1)
-      (by simpa only [List.append_nil] using h2)
+    have h1 : run0 table 5 (stage n []) =
+        some ⟨5,Z++rep Z n++[false,false,true],[true]++([] : List Bool)⟩ := by
+      simpa only [stage,encode,List.append_assoc] using carryBlank (rep Z n++[false,false,true])
+    have h := join0 h1 (returnZeros n [])
     exact ⟨_,by simpa only [target,inc,encode,List.append_nil,List.append_assoc] using h⟩
   | cons b bs ih =>
     cases b
-    · have h1 := carryZero (rep Z n++[false,false,true]) (encode bs)
-      have h2 := returnZeros n (encode bs)
-      have h := join0 (by simpa only [stage,encode,Z,List.append_assoc] using h1) h2
+    · have h1 : run0 table 5 (stage n (false::bs)) =
+          some ⟨5,Z++rep Z n++[false,false,true],[true]++encode bs⟩ := by
+        simpa only [stage,encode,Z,List.append_assoc] using carryZero (rep Z n++[false,false,true]) (encode bs)
+      have h := join0 h1 (returnZeros n (encode bs))
       exact ⟨_,by simpa only [target,inc,encode,List.append_assoc] using h⟩
     · have h1 := carryOne (rep Z n++[false,false,true]) (encode bs)
       have h1' : run0 table 4 (stage n (true::bs)) = some (stage (n+1) bs) := by
