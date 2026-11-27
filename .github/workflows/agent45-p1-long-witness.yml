@@ -54,10 +54,10 @@ jobs:
         run: |
           set -euo pipefail
           D="im-results/agent45-p1-delayed-carry"
-          export LEAN_PATH="$D:im-results/agent9-p1-reverse-block:im-results/agent43-p1-high-cost-reset-count:im-results/agent9-p1-first-return:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
+          export LEAN_PATH="$D:im-results/agent23-p1-residue-period:im-results/agent9-p1-reverse-block:im-results/agent43-p1-high-cost-reset-count:im-results/agent9-p1-first-return:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           lean --version
           git rev-parse HEAD
-          python tools/lean_compile_deps.py "$D/LongBlockCover.lean" | tee /tmp/long-core.log
+          python tools/lean_compile_deps.py "$D/PackedJump.lean" | tee /tmp/long-core.log
           python tools/lean_compile_deps.py "im-results/agent43-p1-high-cost-reset-count/LongConeSource.lean" | tee -a /tmp/long-core.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/long-core.log; then exit 1; fi
           python - <<'PY'
@@ -66,6 +66,7 @@ jobs:
           log = Path('/tmp/long-core.log').read_text()
           profiles = {
               "BB6.Agent45ReverseBlock": ("all_weight_corr","word_value_gap","witness_word_sound","rows_cover"),
+              "BB6.Agent45PackedJump": ("rotate_sound","packedNeg_sound","packedLift_sound","packedReduced_sound","live_bits_jump"),
               "BB6.Agent45LongBlock": ("digits_targetWord","rewindTarget_sound","live_bits_extend","live_bits_to_list","live_list_extend","extend_word_eq","midpoint_rows_recovered","covered_next_rows","covered_empty_rows"),
           }
           for ns, names in profiles.items():
@@ -93,7 +94,7 @@ jobs:
           set -euo pipefail
           D="im-results/agent45-p1-delayed-carry"
           G="$PWD/.long-witness"
-          export LEAN_PATH="$G:$D:im-results/agent9-p1-reverse-block:im-results/agent43-p1-high-cost-reset-count:im-results/agent9-p1-first-return:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
+          export LEAN_PATH="$G:$D:im-results/agent23-p1-residue-period:im-results/agent9-p1-reverse-block:im-results/agent43-p1-high-cost-reset-count:im-results/agent9-p1-first-return:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           python "$D/gen_long_witness.py" "$G" --n "$N" --h "$H" --stages "$STAGES" --initial "$INITIAL" --chunk "$CHUNK" --long "$LONG"
           while IFS= read -r module; do
             echo "CHECK $module"
