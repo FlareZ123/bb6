@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -530,3 +530,50 @@ jobs:
           path: /tmp/raw56-le-final/**
           if-no-files-found: error
           retention-days: 30
+
+  raw56_reparent_assembly:
+    if: inputs.child == 'raw56-reparent-assembly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore accepted Raw56 root dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-reparent-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reconstruct pinned sources and apply certificate compression
+        run: |
+          set -euo pipefail
+          D="$GITHUB_WORKSPACE/im-results/agent4-raw56-reparent"
+          mkdir -p /tmp/raw56-reparent-src
+          cat "$D"/source.tar.xz.b64.0[0-4] | base64 -d > /tmp/raw56-reparent.tar.xz
+          echo 'bd70d009d0ca78be4eabe4efb47e4fed93a81c9dee56b999bc7ce7491d61d167  /tmp/raw56-reparent.tar.xz' | sha256sum -c -
+          tar -xJf /tmp/raw56-reparent.tar.xz -C /tmp/raw56-reparent-src
+          cd /tmp/raw56-reparent-src
+          cp "$D"/minimize_cert.py "$D"/apply_compression.py .
+          python apply_compression.py
+      - name: Compile exact reparent assembly
+        run: |
+          set -euo pipefail
+          cd /tmp/raw56-reparent-src
+          lean --version
+          python reproduce.py --base /tmp/raw56-reparent-base/a1-raw56-root-consumer --lean "$(which lean)" 2>&1 | tee /tmp/raw56-reparent.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-reparent.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw56-reparent-assembly
+          path: |
+            /tmp/raw56-reparent-src
+            /tmp/raw56-reparent.log
+          if-no-files-found: error
