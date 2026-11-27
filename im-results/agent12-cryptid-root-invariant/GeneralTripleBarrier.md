@@ -1,7 +1,6 @@
 # All binary triple-containing G words halt
 
-**New all-parameter source-clause theorem (paper proof); Lean source
-acceptance pending.** It supersedes the restricted tail language in
+**New all-parameter source-clause theorem (paper proof); [Lean source append](GeneralTripleBarrier.append.lean) is prepared, full source acceptance pending.** It supersedes the restricted tail language in
 [DoubleSuffixBarrier.md](DoubleSuffixBarrier.md). This is not an authentic
 blank-root verdict.
 
@@ -168,7 +167,6 @@ The Good condition is essential to this argument. This is not a
 nonhalting verdict for that prepared configuration.
 
 The finite tests are not the proof. The source-clause induction
-above is the mathematical advance; a direct Lean formalization
-using the pinned source clauses is the next acceptance gate. No
+above is the mathematical advance; the direct [Lean formalization](GeneralTripleBarrier.append.lean) using the pinned source clauses is now prepared. It extends the kernel-accepted separated-double source closure without importing the older hazard append files. Full kernel acceptance remains the next gate. No
 authentic #85/#490 blank trajectory has been shown to enter the
 expanded region. No parent Cover or numerical BB(6) bound follows.

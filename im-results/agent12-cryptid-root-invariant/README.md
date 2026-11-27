@@ -14,7 +14,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Current strongest prepared-state barrier
 
-[General triple halting theorem](GeneralTripleBarrier.md): every prepared G(M,U), M>=1, with binary U containing 111, halts. The new invariant pairs each token 2 with a preceding 1, preserving the triple in high-token returns and making all low-token branches fatal. The exact cost recurrence and quadratic bound are proved by source-clause derivation; 42,287 binary-word replays and 36 arbitrary good-token/tail cases agree. Full original-source Lean acceptance is pending. The [separated-double theorem](DoubleSuffixBarrier.md) is the simpler special case with v in (0|01|0011)*, independently submitted for source compilation. Neither theorem gives an authentic blank-root decision.
+[General triple halting theorem](GeneralTripleBarrier.md): every prepared G(M,U), M>=1, with binary U containing 111, halts. The new invariant pairs each token 2 with a preceding 1, preserving the triple in high-token returns and making all low-token branches fatal. The exact cost recurrence and quadratic bound are proved by source-clause derivation; 42,287 binary-word replays and 36 arbitrary good-token/tail cases agree. Full original-source Lean acceptance is pending. The [separated-double theorem](DoubleSuffixBarrier.md) is the simpler special case with v in (0|01|0011)*, kernel-accepted in [run 46041206114](https://github.com/FlareZ123/bb6/actions/runs/46041206114) with standard axioms. Neither theorem gives an authentic blank-root decision.
 
 ## Research map and evidence status
 

@@ -1,10 +1,6 @@
 # Triple-one halting barrier with arbitrary separated doubles
 
-**Status:** new all-parameter paper derivation from the pinned original #85
-source clauses, with finite exact source-transcription replay. A standalone
-Lean append, [DoubleSuffixBarrier.append.lean](DoubleSuffixBarrier.append.lean),
-is prepared; full source compilation and axiom acceptance are pending.
-No authentic root verdict or global Cover is claimed.
+**Status:** original-source kernel accepted in [run 46041206114](https://github.com/FlareZ123/bb6/actions/runs/46041206114), source commit 8a01806ecfa6090d8331c42eca9f0be9f2edc938, job 140649099883, pinned Lean 4.35.0-rc4. The [Lean append](DoubleSuffixBarrier.append.lean) exports a12G_double_suffix_halts; the double exposures, token barrier, and G theorem all have only [propext, Classical.choice, Quot.sound]. The counted cost formula remains a source-clause paper derivation, supported by finite replay. No authentic root verdict or global Cover is claimed.
 
 This restricted language is now subsumed by the [general triple-containing binary-word theorem](GeneralTripleBarrier.md), which removes the separation condition using a paired-token invariant. The simpler exact three-block recurrence below remains a useful independent source-proof slice.
 
@@ -103,13 +99,12 @@ Actual V8 run: all 364 grammar block sequences of length at most 5;
 tails and multiple high tokens exercise representation changes.
 These finite tests are not the inductive proof.
 
-The new append uses only the original source's named token clauses
-and the earlier core sweep helper, not the old failing hazard1011
+The accepted append uses only the original source's named token clauses
+and the earlier core sweep helper, not the old hazard1011
 encoding. The source pin uses Lean 4.35.0-rc4. The current invocation's
 local container and Python returned ClientError before even executing
 the random draw; V8 and the GitHub connector work. The existing manual
-workflow is extended with a separate double mode. Full source acceptance
-requires a successful build and approved transitive axiom profiles.
+workflow is extended with a separate double mode. The complete source build succeeded and all four new exported profiles were inspected.
 
 ## What this does and does not resolve
 
