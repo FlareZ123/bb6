@@ -119,7 +119,7 @@ def main():
             shutil.copy(temp/"open.txt",source/"open.txt")
             shutil.copy(args.out/"far.txt",source/"far.txt")
             mod=f"Raw41New{args.index:03d}"
-            run(["python3",str(R47/"gen_children.py"),str(source),mod,str(bound),table,
+            run(["python3",str(R47/"gen_children.py"),str(source.resolve()),mod,str(bound),table,
                  "--standalone"],cwd=source)
             print(f"PROOF SOURCE READY: {mod}Closed.lean (NOT YET COMPILED)",flush=True)
 if __name__=="__main__":
