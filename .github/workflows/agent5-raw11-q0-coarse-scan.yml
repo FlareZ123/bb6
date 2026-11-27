@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, pumps, cover, counter, pair143, roster143]
+        options: [legacy, full, pumps, cover, counter, pair143, roster143, ten143]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -356,3 +356,44 @@ jobs:
           path: im-results/agent5-weighted-tnf-queue/q0-143-exact-frontier.json
           if-no-files-found: error
           retention-days: 30
+  ten143:
+    if: inputs.mode == 'ten143'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact ten remaining return regions
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent5-weighted-tnf-queue/Raw11Q0Ten143.lean \
+            --workdir /tmp/raw11-q0-ten143 \
+            --manifest /tmp/raw11-q0-ten143/manifest.json \
+            --jobs 2 --lean lean \
+            --label raw11-q0-143-ten \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-143-ten-fixtures.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/discover-tail.cjs \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee /tmp/raw11-q0-ten143.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-q0-ten143.log; then exit 1; fi
+          for id in {0..9}; do
+            grep -F "BB6Coverage.Agent31Pump.Tails.Raw11Q0Ten143.M$id.cover' depends on axioms:" /tmp/raw11-q0-ten143.log
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-143-ten
+          path: |
+            /tmp/raw11-q0-ten143/
+            /tmp/raw11-q0-ten143.log
+          if-no-files-found: warn
+          retention-days: 30
+
