@@ -117,19 +117,19 @@ theorem exitB (b : Bool) (l r : Stream) :
 
 def phase (n : Nat) : Config := A (ones 11 (zeros 3 (ones (2*n) z))) z
 
-theorem growth (b : Bool) (n : Nat) :
-    run b (10*n+123+3*extra b) (phase n) = some (phase (n+4)) := by
-  have h0 : run b 40 (phase n) =
-      some (L (ones 1 (zeros 3 (ones (2*n) z))) (ones 10 z)) :=
-    lsweepBlank b 5 _
-  have h1 := chain b h0 (odd b (ones (2*n) z) (ones 10 z))
-  have h2 := chain b h1 (lsweep b n z (ones 2 (zeros 1 (ones 11 z))))
-  have h3 := chain b h2 (turnBlank b (ones (2*n) (ones 2 (zeros 1 (ones 11 z)))))
-  have ha : run b (2*n+2) (A (ones 5 z) (ones (2*n) (ones 2 (zeros 1 (ones 11 z))))) =
-      some (A (ones (2*n+2) (ones 5 z)) (zeros 1 (ones 11 z))) := by
+theorem growthGen (b : Bool) (n : Nat) (l : Stream) :
+    run b (10*n+123+3*extra b)
+      (A (ones 11 (zeros 3 (ones (2*n) (zeros 3 l)))) z) =
+      some (A (ones 11 (zeros 3 (ones (2*(n+4)) l))) z) := by
+  have h0 := lsweepBlank b 5 (ones 1 (zeros 3 (ones (2*n) (zeros 3 l))))
+  have h1 := chain b h0 (odd b (ones (2*n) (zeros 3 l)) (ones 10 z))
+  have h2 := chain b h1 (lsweep b n (zeros 3 l) (ones 2 (zeros 1 (ones 11 z))))
+  have h3 := chain b h2 (turn3 b l (ones (2*n) (ones 2 (zeros 1 (ones 11 z)))))
+  have ha : run b (2*n+2) (A (ones 5 l) (ones (2*n) (ones 2 (zeros 1 (ones 11 z))))) =
+      some (A (ones (2*n+2) (ones 5 l)) (zeros 1 (ones 11 z))) := by
     rw [←ones_add (2*n) 2 (zeros 1 (ones 11 z))]
     exact asweep b (2*n+2) _ _
-  let s := ones 1 (ones (2*n+2) (ones 5 z))
+  let s := ones 1 (ones (2*n+2) (ones 5 l))
   have h4 := chain b h3 ha
   have h5 := chain b h4 (enterB b _ (ones 11 z))
   have h6 := chain b h5 (bsweep b 11 s z)
@@ -141,16 +141,19 @@ theorem growth (b : Bool) (n : Nat) :
   have h10 := chain b h9 (lsweepBlank b 3 (zeros 6 s))
   have h11 := chain b h10 (turn3 b (zeros 3 s) (ones 6 z))
   have h12 := chain b h11 (asweep b 6 (ones 5 (zeros 3 s)) z)
-  have hs : s = ones (2*(n+4)) z := by
-    dsimp [s]
-    rw [←ones_add (2*n+2) 5 z,←ones_add 1 (2*n+2+5) z]
-    congr 1
-    omega
-  have ht : 40+6+8*n+(10+extra b)+(2*n+2)+1+11+2+(10+extra b)+1+8*3+(10+extra b)+6 =
+  have hs : s = ones (2*(n+4)) l := by
+    dsimp only [s]
+    rw [←ones_add (2*n+2) 5 l,←ones_add 1 (2*n+2+5) l]
+    rw [show 1+(2*n+2+5)=2*(n+4) by omega]
+  have ht : 8*5+6+8*n+(10+extra b)+(2*n+2)+1+11+2+(10+extra b)+1+8*3+(10+extra b)+6 =
       10*n+123+3*extra b := by omega
   rw [ht] at h12
   rw [hs] at h12
   exact h12
+
+theorem growth (b : Bool) (n : Nat) :
+    run b (10*n+123+3*extra b) (phase n) = some (phase (n+4)) := by
+  simpa only [phase,zeros_z] using growthGen b n z
 
 theorem never_phase (b : Bool) (n k : Nat) : run b n (phase k) ≠ none := by
   induction n using Nat.strongRecOn generalizing k with
