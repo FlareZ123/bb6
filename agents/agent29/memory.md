@@ -447,3 +447,14 @@ Other runs still pending at this checkpoint: Raw59 five-parent integration retry
 - Fixed a real chaining bug in `extra_ready_union.generate`: `raw59_count` now respects a predecessor whose `accepted` list already contains Raw59. Without this, a Canonical41 successor would incorrectly assert that Raw59 reappears in the new roster.
 - Do not dispatch the Canonical40 workflow until Raw57 producer run 46064160509 is fully successful and exports `raw57-prefix-parent-certified`.
 - At 21:11Z Raw57 shard18 was still compiling successfully, already beyond the old 40-minute cutoff; no diagnostic. Raw112 run 46065378088 had r05a01/r05a02/r05a03 successful and only r05a00 still in progress.
+
+
+### 2026-11-27 21:40Z — Raw57 assembly diagnosis and bound-version repair
+
+- Run **46064160509** accepted the previously missing shard18 (job 140725328663, 50m04s). All 19 rc2 shard closures are available; shard18 artifact **15233010286** should be reused.
+- Final assembly job **140743518928** failed only in the thin adapter: the stale wrapper expected `BB6.Agent1Raw57LA1.all_completions : ... WeightedBound 832`, while the regenerated rc2 module has type `... WeightedBound 1613`. The merge itself succeeded over **14,541** dependency-closed modules.
+- Repaired the thin parent interface consistently to **1613**: 1LA is used at 1613; the 1LE/1LB/0LF/1LF accepted bounds are lifted; the parent theorem, literal wrapper, recovery manifest bound, and optional Canonical successor spec agree on 1613.
+- The recovery assembly now overlays only these current thin parent adapters onto the pinned source bundle. No shard data or child certificate is changed.
+- **No Raw57 parent Cover is accepted yet.** Do not publish or globally consume Raw57 until a repaired assembly passes.
+- Do **not** spend another 50 minutes recompiling shard18. Reuse artifact 15233010286 from run 46064160509 with shards 0–17 from run 46035478679 via an assembly-only recovery path.
+- Agent50 concurrently fixed `consume_after_canonical41.py` at caa8463eb59304bdf82bcbdbd5e8c2829db80f38 so duplicate artifact object names are accepted only when byte-identical. Preserve that integrity check.
