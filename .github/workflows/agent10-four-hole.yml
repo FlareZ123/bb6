@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw43_extra_child:
         description: 'Raw43 E1 sibling variant'
@@ -357,7 +357,7 @@ jobs:
           retention-days: 30
       - name: Compose source-accepted Raw43 B0RA, B0LA or B1LA children
         id: raw43_b0_compose
-        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose' || inputs.target == 'raw43-b1la-reduced'
+        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose' || inputs.target == 'raw43-b1la-reduced' || inputs.target == 'raw43-b0le-reduced'
         env:
           GH_TOKEN: ${{ github.token }}
           PINS: ${{ inputs.raw43_b1rc_pins }}
@@ -373,6 +373,10 @@ jobs:
             raw43-b0la-compose)
               branch=b0la; slot=c; ns=B0LA; bound=1771; b1=0LA
               variants='0la 0lb 0le 0re 1la 1lb 1le 1re' ;;
+            raw43-b0le-reduced)
+              branch=b0le; slot=e; ns=B0LE; bound=287; b1=0LE
+              variants='0lc 0le 0ra 0rb 0re 0rf 1lc 1rb 1re'
+              claim=cover; suffix=Reduced; kind=reduced; checks=residual_count ;;
             raw43-b1la-reduced)
               branch=b1la; slot=a; ns=B1LA; bound=602; b1=1LA
               variants='0lb 0lc 0ld 0le 0rc 0re 1lb 1lc 1le 1rc 1re'
@@ -412,7 +416,7 @@ jobs:
           echo "work=$work" >> "$GITHUB_OUTPUT"
           echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
       - name: Retain Raw43 branch proof
-        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose' || inputs.target == 'raw43-b1la-reduced'
+        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose' || inputs.target == 'raw43-b1la-reduced' || inputs.target == 'raw43-b0le-reduced'
         uses: actions/upload-artifact@v4
         with:
           name: ${{ steps.raw43_b0_compose.outputs.artifact }}
