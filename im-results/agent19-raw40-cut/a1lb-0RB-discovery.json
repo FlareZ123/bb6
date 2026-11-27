@@ -1,0 +1,2535 @@
+{
+  "parent": "1RB1LB_1RC---_0RD0RB_1LD1LA_------_------",
+  "opens": 336,
+  "initialBound": 192,
+  "witness": {
+    "n": 191,
+    "slot": 10,
+    "delay": 0,
+    "delayPath": [],
+    "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RE1RF_HHH0LA"
+  },
+  "bound": 192,
+  "exactWitness": {
+    "n": 191,
+    "slot": 10,
+    "delay": 0,
+    "delayPath": [],
+    "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RE1RF_HHH0LA"
+  },
+  "far": [
+    {
+      "id": 2,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RC1RF_1LA---",
+      "code": "000"
+    },
+    {
+      "id": 3,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0RC_0LB---",
+      "code": "000"
+    },
+    {
+      "id": 4,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1RB_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 5,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0LA_0RB---",
+      "code": "000"
+    },
+    {
+      "id": 6,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0LB_0RB---",
+      "code": "000"
+    },
+    {
+      "id": 7,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1RD_0RB---",
+      "code": "000"
+    },
+    {
+      "id": 8,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0LA_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 9,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0RB_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 10,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1LB_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 12,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1RB_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 13,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1LB_1LA---",
+      "code": "000"
+    },
+    {
+      "id": 14,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1RF_1LB---",
+      "code": "000"
+    },
+    {
+      "id": 15,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1LB_1LC---",
+      "code": "000"
+    },
+    {
+      "id": 16,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF0RC_1RD---",
+      "code": "000"
+    },
+    {
+      "id": 17,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1RF_1RD---",
+      "code": "000"
+    },
+    {
+      "id": 22,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RB_------",
+      "code": "000"
+    },
+    {
+      "id": 23,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 24,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_0LE---",
+      "code": "000"
+    },
+    {
+      "id": 25,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_0RA---",
+      "code": "000"
+    },
+    {
+      "id": 26,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_1LB---",
+      "code": "000"
+    },
+    {
+      "id": 28,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_1RA---",
+      "code": "000"
+    },
+    {
+      "id": 29,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_1RC---",
+      "code": "000"
+    },
+    {
+      "id": 30,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_1RD---",
+      "code": "000"
+    },
+    {
+      "id": 31,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 32,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LE_------",
+      "code": "000"
+    },
+    {
+      "id": 38,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RE_------",
+      "code": "000"
+    },
+    {
+      "id": 39,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_0LA---",
+      "code": "000"
+    },
+    {
+      "id": 40,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_0LC---",
+      "code": "000"
+    },
+    {
+      "id": 41,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_0RB---",
+      "code": "000"
+    },
+    {
+      "id": 42,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_1LA---",
+      "code": "000"
+    },
+    {
+      "id": 43,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_1LB---",
+      "code": "000"
+    },
+    {
+      "id": 44,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_1LC---",
+      "code": "000"
+    },
+    {
+      "id": 45,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1RF_1RD---",
+      "code": "000"
+    },
+    {
+      "id": 46,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LD0RF_0LA---",
+      "code": "000"
+    },
+    {
+      "id": 47,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LD1RB_------",
+      "code": "000"
+    },
+    {
+      "id": 48,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LD1RF_0RA---",
+      "code": "000"
+    },
+    {
+      "id": 49,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LD1RF_1RC---",
+      "code": "000"
+    },
+    {
+      "id": 51,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA0RC_------",
+      "code": "000"
+    },
+    {
+      "id": 52,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA0RF_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 53,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 56,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA1RF_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 57,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RB1RF_1LA---",
+      "code": "000"
+    },
+    {
+      "id": 58,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RB1RF_1LB---",
+      "code": "000"
+    },
+    {
+      "id": 59,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RB1RF_1RD---",
+      "code": "000"
+    },
+    {
+      "id": 60,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RC0RC_------",
+      "code": "000"
+    },
+    {
+      "id": 61,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RC0RF_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 62,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RB_0LA---",
+      "code": "000"
+    },
+    {
+      "id": 63,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1LB_0LA---",
+      "code": "000"
+    },
+    {
+      "id": 64,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1RF_0LA---",
+      "code": "000"
+    },
+    {
+      "id": 65,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1LB_0LE---",
+      "code": "000"
+    },
+    {
+      "id": 66,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RC_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 67,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RD_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 68,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1LC_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 69,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RC_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 70,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RF_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 71,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1LB_1RA---",
+      "code": "000"
+    },
+    {
+      "id": 72,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF0RC_1RB---",
+      "code": "000"
+    },
+    {
+      "id": 73,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RF1LA_1RB---",
+      "code": "000"
+    },
+    {
+      "id": 79,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC0RB_------",
+      "code": "000"
+    },
+    {
+      "id": 81,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC0RB_------",
+      "code": "000"
+    },
+    {
+      "id": 82,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RB_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 83,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RB_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 84,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD0RB_------",
+      "code": "000"
+    },
+    {
+      "id": 87,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 88,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 93,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 94,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 95,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RE_0LC---",
+      "code": "000"
+    },
+    {
+      "id": 96,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RE_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 97,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RE_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 98,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RE_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 99,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RF0RE_1LD---",
+      "code": "000"
+    },
+    {
+      "id": 100,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 105,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0LC0RF",
+      "code": "000"
+    },
+    {
+      "id": 107,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0RC0RF",
+      "code": "000"
+    },
+    {
+      "id": 108,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0RD0RF",
+      "code": "000"
+    },
+    {
+      "id": 109,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_1LD0RF",
+      "code": "000"
+    },
+    {
+      "id": 112,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC1LE_------",
+      "code": "000"
+    },
+    {
+      "id": 136,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---1RF_0RC0RF",
+      "code": "000"
+    },
+    {
+      "id": 137,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---1RF_0RD0RF",
+      "code": "000"
+    },
+    {
+      "id": 138,
+      "table": "1RB1LB_1RC1LB_0RD0RB_1LD1LA_------_------",
+      "code": "000"
+    },
+    {
+      "id": 139,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LA0LE_------",
+      "code": "000"
+    },
+    {
+      "id": 140,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LA1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 141,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LA1RD_------",
+      "code": "000"
+    },
+    {
+      "id": 142,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LA1RF_---1LA",
+      "code": "000"
+    },
+    {
+      "id": 143,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0LC_------",
+      "code": "000"
+    },
+    {
+      "id": 145,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0RA_------",
+      "code": "000"
+    },
+    {
+      "id": 146,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0RF_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 147,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0RF_---1RA",
+      "code": "000"
+    },
+    {
+      "id": 148,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0RF_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 149,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB1RC_------",
+      "code": "000"
+    },
+    {
+      "id": 150,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB1RF_---0LC",
+      "code": "000"
+    },
+    {
+      "id": 151,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB1RF_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 152,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LD0RF_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 153,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LD1RF_---0RA",
+      "code": "000"
+    },
+    {
+      "id": 154,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LD1RF_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 155,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LE1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 161,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA0LE_------",
+      "code": "000"
+    },
+    {
+      "id": 163,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 164,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1LE_------",
+      "code": "000"
+    },
+    {
+      "id": 165,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1RA_------",
+      "code": "000"
+    },
+    {
+      "id": 166,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1RD_------",
+      "code": "000"
+    },
+    {
+      "id": 167,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1RF_---1LA",
+      "code": "000"
+    },
+    {
+      "id": 168,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1RF_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 169,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA1RF_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 171,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RC1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 173,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RC1RF_---1LD",
+      "code": "000"
+    },
+    {
+      "id": 174,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RD1RF_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 175,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RE1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 176,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RE1RD_------",
+      "code": "000"
+    },
+    {
+      "id": 177,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LB_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 178,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LE_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 179,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RA_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 180,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RD_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 181,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF0LA_---0LB",
+      "code": "000"
+    },
+    {
+      "id": 182,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LA_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 183,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LB_---0RC",
+      "code": "000"
+    },
+    {
+      "id": 184,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RD_---0RC",
+      "code": "000"
+    },
+    {
+      "id": 185,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF0LA_---0RD",
+      "code": "000"
+    },
+    {
+      "id": 186,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LB_---0RD",
+      "code": "000"
+    },
+    {
+      "id": 187,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RD_---0RD",
+      "code": "000"
+    },
+    {
+      "id": 188,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LB_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 189,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LE_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 190,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RA_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 191,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RD_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 192,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RF_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 193,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LB_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 194,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1LE_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 195,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RA_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 196,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RD_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 197,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RF1RF_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 198,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1LC1RE_------",
+      "code": "000"
+    },
+    {
+      "id": 202,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RB1RF_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 204,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1LB_------",
+      "code": "000"
+    },
+    {
+      "id": 205,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1LE_------",
+      "code": "000"
+    },
+    {
+      "id": 206,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1RA_------",
+      "code": "000"
+    },
+    {
+      "id": 207,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1RD_------",
+      "code": "000"
+    },
+    {
+      "id": 208,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1RF_---1LA",
+      "code": "000"
+    },
+    {
+      "id": 209,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1RF_---1LB",
+      "code": "000"
+    },
+    {
+      "id": 210,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC1RF_---1RD",
+      "code": "000"
+    },
+    {
+      "id": 212,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0LB_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 214,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0RA_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 215,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0RB_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 216,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LB_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 217,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LE_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 218,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RA_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 219,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RC_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 220,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RD_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 221,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RF_---0LA",
+      "code": "000"
+    },
+    {
+      "id": 223,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LB_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 224,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LE_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 225,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RA_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 226,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RD_---0RB",
+      "code": "000"
+    },
+    {
+      "id": 227,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LD_---0RC",
+      "code": "000"
+    },
+    {
+      "id": 228,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0LA_---0RD",
+      "code": "000"
+    },
+    {
+      "id": 229,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0RF_---0RD",
+      "code": "000"
+    },
+    {
+      "id": 235,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0LA_---1RB",
+      "code": "000"
+    },
+    {
+      "id": 236,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LB_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 237,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LE_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 238,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RA_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 239,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1RD_---1RC",
+      "code": "000"
+    },
+    {
+      "id": 240,
+      "table": "1RB1LB_1RC1RD_0RD0RB_1LD1LA_------_------",
+      "code": "000"
+    },
+    {
+      "id": 243,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD0LD_------",
+      "code": "000"
+    },
+    {
+      "id": 245,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1RB0LD_------",
+      "code": "000"
+    },
+    {
+      "id": 251,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LC0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 252,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 257,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RC0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 258,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 259,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF0RE_0LC---",
+      "code": "000"
+    },
+    {
+      "id": 260,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF0RE_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 261,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF0RE_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 262,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF0RE_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 263,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF0RE_1LD---",
+      "code": "000"
+    },
+    {
+      "id": 264,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LD0RE_------",
+      "code": "000"
+    },
+    {
+      "id": 269,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---0RF_0LC0RF",
+      "code": "000"
+    },
+    {
+      "id": 271,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---0RF_0RC0RF",
+      "code": "000"
+    },
+    {
+      "id": 272,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---0RF_0RD0RF",
+      "code": "000"
+    },
+    {
+      "id": 273,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---0RF_1LD0RF",
+      "code": "000"
+    },
+    {
+      "id": 274,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LA1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 275,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 276,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LE1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 287,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RC1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 288,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 289,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF1LA_0LC---",
+      "code": "000"
+    },
+    {
+      "id": 290,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF1LA_0LD---",
+      "code": "000"
+    },
+    {
+      "id": 291,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF1LA_0RC---",
+      "code": "000"
+    },
+    {
+      "id": 292,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF1LA_0RD---",
+      "code": "000"
+    },
+    {
+      "id": 293,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RF1LA_1LD---",
+      "code": "000"
+    },
+    {
+      "id": 294,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LD1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 295,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LE1LA_------",
+      "code": "000"
+    },
+    {
+      "id": 309,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LA1LE_------",
+      "code": "000"
+    },
+    {
+      "id": 316,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1LF_1LD0RF",
+      "code": "000"
+    },
+    {
+      "id": 332,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1RF_0RC0RF",
+      "code": "000"
+    },
+    {
+      "id": 333,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1RF_0RD0RF",
+      "code": "000"
+    },
+    {
+      "id": 334,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1RF_0LF1LD",
+      "code": "000"
+    },
+    {
+      "id": 335,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1RF_1LF1LD",
+      "code": "000"
+    },
+    {
+      "id": 74,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0LB_0LB---",
+      "code": "100"
+    },
+    {
+      "id": 75,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0LB_0LD---",
+      "code": "100"
+    },
+    {
+      "id": 76,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LB0LF_1LA---",
+      "code": "100"
+    },
+    {
+      "id": 77,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RD0LF_1LC---",
+      "code": "100"
+    },
+    {
+      "id": 80,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF0RB_0RD---",
+      "code": "100"
+    },
+    {
+      "id": 85,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0RB_0LC---",
+      "code": "100"
+    },
+    {
+      "id": 86,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0RB_1LD---",
+      "code": "100"
+    },
+    {
+      "id": 89,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF0RE_0LC---",
+      "code": "100"
+    },
+    {
+      "id": 90,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF0RE_0RC---",
+      "code": "100"
+    },
+    {
+      "id": 91,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF0RE_0RD---",
+      "code": "100"
+    },
+    {
+      "id": 92,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF0RE_1LD---",
+      "code": "100"
+    },
+    {
+      "id": 101,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0RE_0LC---",
+      "code": "100"
+    },
+    {
+      "id": 102,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF0RE_1LD---",
+      "code": "100"
+    },
+    {
+      "id": 110,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF1LA_0LB---",
+      "code": "100"
+    },
+    {
+      "id": 111,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LF1LC_0LB---",
+      "code": "100"
+    },
+    {
+      "id": 113,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LD1LF_0LA---",
+      "code": "100"
+    },
+    {
+      "id": 114,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC1LF_0RB---",
+      "code": "100"
+    },
+    {
+      "id": 115,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LD1LF_0RB---",
+      "code": "100"
+    },
+    {
+      "id": 116,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC1LF_0RB---",
+      "code": "100"
+    },
+    {
+      "id": 117,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RD1LF_0RB---",
+      "code": "100"
+    },
+    {
+      "id": 118,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD1LF_0RB---",
+      "code": "100"
+    },
+    {
+      "id": 119,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC1LF_0RC---",
+      "code": "100"
+    },
+    {
+      "id": 120,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC1LF_0RC---",
+      "code": "100"
+    },
+    {
+      "id": 121,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD1LF_0RC---",
+      "code": "100"
+    },
+    {
+      "id": 122,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LB1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 123,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 124,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LD1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 125,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 126,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 127,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RD1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 128,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD1LF_1LB---",
+      "code": "100"
+    },
+    {
+      "id": 129,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LB1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 130,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LC1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 131,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LD1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 132,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0LF1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 133,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RC1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 134,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_0RD1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 135,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1LD1LF_1RD---",
+      "code": "100"
+    },
+    {
+      "id": 241,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0LD_---1RA",
+      "code": "100"
+    },
+    {
+      "id": 242,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0LD_---1RC",
+      "code": "100"
+    },
+    {
+      "id": 244,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF0LD_---0LA",
+      "code": "100"
+    },
+    {
+      "id": 246,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1RA0LF_---0LD",
+      "code": "100"
+    },
+    {
+      "id": 247,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD0LF_---1LA",
+      "code": "100"
+    },
+    {
+      "id": 248,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1RB0LF_---1LA",
+      "code": "100"
+    },
+    {
+      "id": 249,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF0RD_---0LB",
+      "code": "100"
+    },
+    {
+      "id": 250,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF0RD_---0LD",
+      "code": "100"
+    },
+    {
+      "id": 277,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---0LA",
+      "code": "100"
+    },
+    {
+      "id": 278,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---0LB",
+      "code": "100"
+    },
+    {
+      "id": 279,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---0LC",
+      "code": "100"
+    },
+    {
+      "id": 280,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---0RC",
+      "code": "100"
+    },
+    {
+      "id": 281,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---0RD",
+      "code": "100"
+    },
+    {
+      "id": 282,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---1LA",
+      "code": "100"
+    },
+    {
+      "id": 283,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 284,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---1LD",
+      "code": "100"
+    },
+    {
+      "id": 285,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---1RC",
+      "code": "100"
+    },
+    {
+      "id": 286,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LA_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 296,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---0LA",
+      "code": "100"
+    },
+    {
+      "id": 297,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---0LB",
+      "code": "100"
+    },
+    {
+      "id": 298,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---0LC",
+      "code": "100"
+    },
+    {
+      "id": 299,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---1LA",
+      "code": "100"
+    },
+    {
+      "id": 300,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---1LC",
+      "code": "100"
+    },
+    {
+      "id": 301,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---1LD",
+      "code": "100"
+    },
+    {
+      "id": 303,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LC_---0LC",
+      "code": "100"
+    },
+    {
+      "id": 304,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LC_---0RC",
+      "code": "100"
+    },
+    {
+      "id": 305,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LC_---0RD",
+      "code": "100"
+    },
+    {
+      "id": 306,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LC_---1LD",
+      "code": "100"
+    },
+    {
+      "id": 307,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LC_---0LC",
+      "code": "100"
+    },
+    {
+      "id": 308,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LC_---1LD",
+      "code": "100"
+    },
+    {
+      "id": 310,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD1LF_---0LA",
+      "code": "100"
+    },
+    {
+      "id": 317,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LA1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 318,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 319,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 320,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RC1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 321,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 322,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LD1LF_---1LB",
+      "code": "100"
+    },
+    {
+      "id": 323,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LA1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 324,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 325,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 326,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RC1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 327,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 328,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LD1LF_---1RD",
+      "code": "100"
+    },
+    {
+      "id": 329,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1RB_---0LB",
+      "code": "100"
+    },
+    {
+      "id": 330,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1RB_---0LD",
+      "code": "100"
+    },
+    {
+      "id": 331,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1RE_---0LB",
+      "code": "100"
+    },
+    {
+      "id": 27,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0RF_1LE---",
+      "code": "00101"
+    },
+    {
+      "id": 106,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0LD0RF",
+      "code": "00101"
+    },
+    {
+      "id": 211,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RE0RF_---0RD",
+      "code": "00101"
+    },
+    {
+      "id": 222,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF1LB_---0LE",
+      "code": "00101"
+    },
+    {
+      "id": 253,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0RE_0LC---",
+      "code": "00101"
+    },
+    {
+      "id": 254,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0RE_0RC---",
+      "code": "00101"
+    },
+    {
+      "id": 255,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0RE_0RD---",
+      "code": "00101"
+    },
+    {
+      "id": 256,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LF0RE_1LD---",
+      "code": "00101"
+    },
+    {
+      "id": 265,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF0RE_0LC---",
+      "code": "00101"
+    },
+    {
+      "id": 266,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF0RE_1LD---",
+      "code": "00101"
+    },
+    {
+      "id": 270,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---0RF_0LD0RF",
+      "code": "00101"
+    },
+    {
+      "id": 312,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1LF_0LC0RF",
+      "code": "00101"
+    },
+    {
+      "id": 313,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1LF_0LD0RF",
+      "code": "00101"
+    },
+    {
+      "id": 314,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1LF_0RC0RF",
+      "code": "00101"
+    },
+    {
+      "id": 315,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_---1LF_0RD0RF",
+      "code": "00101"
+    },
+    {
+      "id": 1,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0LF1RB_---1RD",
+      "code": "1010202"
+    },
+    {
+      "id": 50,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LF1RB_---1LA",
+      "code": "1010202"
+    },
+    {
+      "id": 21,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0LF_---1RE",
+      "code": "1011211"
+    },
+    {
+      "id": 33,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LF_---0LE",
+      "code": "1011211"
+    },
+    {
+      "id": 36,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LF_---1RA",
+      "code": "1011211"
+    },
+    {
+      "id": 311,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LB1LF_---0LE",
+      "code": "1011211"
+    },
+    {
+      "id": 20,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0LF_---1LE",
+      "code": "1011212"
+    },
+    {
+      "id": 35,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LF_---1LE",
+      "code": "1011212"
+    },
+    {
+      "id": 37,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LF_---1RC",
+      "code": "1011212"
+    },
+    {
+      "id": 18,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0LF_---0LA",
+      "code": "1012101"
+    },
+    {
+      "id": 144,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LB0LF_---0RB",
+      "code": "1012101"
+    },
+    {
+      "id": 213,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF0LF_---0LA",
+      "code": "1012101"
+    },
+    {
+      "id": 267,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0LD0RF_---0RE",
+      "code": "0012111"
+    },
+    {
+      "id": 268,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_0RD0RF_---0RE",
+      "code": "0012111"
+    },
+    {
+      "id": 19,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB0LF_---0RE",
+      "code": "1012121"
+    },
+    {
+      "id": 34,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1LB1LF_---0RA",
+      "code": "1012121"
+    },
+    {
+      "id": 302,
+      "table": "1RB1LB_1RC1RE_0RD0RB_1LD1LA_1LF1LA_---1LE",
+      "code": "101020303"
+    },
+    {
+      "id": 231,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF---_0LD0RF",
+      "code": "101121313"
+    },
+    {
+      "id": 234,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF---_1LD0RF",
+      "code": "101121313"
+    },
+    {
+      "id": 200,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1LF---_0RA0LE",
+      "code": "101121323"
+    },
+    {
+      "id": 201,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1LF---_1RC0LE",
+      "code": "101121323"
+    },
+    {
+      "id": 0,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0LF0RC_---1RB",
+      "code": "101210321"
+    },
+    {
+      "id": 78,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_1RD0LF_1LE---",
+      "code": "101232123"
+    },
+    {
+      "id": 230,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF---_0LC0RF",
+      "code": "101232123"
+    },
+    {
+      "id": 172,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RC1LF_1LA---",
+      "code": "101232221"
+    },
+    {
+      "id": 199,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1LC1RF_---1RE",
+      "code": "101232221"
+    },
+    {
+      "id": 232,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF---_0RC0RF",
+      "code": "101232221"
+    },
+    {
+      "id": 233,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RF---_0RD0RF",
+      "code": "101232223"
+    },
+    {
+      "id": 11,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_0RF1LF_0RC---",
+      "code": "00123342444"
+    },
+    {
+      "id": 156,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LF0RF_---0LA",
+      "code": "10123412303"
+    },
+    {
+      "id": 170,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RC0LF_1RD---",
+      "code": "10123444144"
+    }
+  ],
+  "compact": [
+    {
+      "id": 103,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0LD0RC",
+      "ok": true,
+      "states": 45,
+      "edges": 15,
+      "edge_counts": [
+        9,
+        6
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          0,
+          0,
+          0,
+          5,
+          0,
+          6,
+          0,
+          7,
+          0,
+          4,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+          0,
+          4,
+          0,
+          1
+        ]
+      ],
+      "summary_counts": [
+        8,
+        5
+      ],
+      "method": [
+        "rungram",
+        [
+          2,
+          1,
+          1,
+          4,
+          4
+        ],
+        [
+          2,
+          1,
+          1,
+          4,
+          4
+        ]
+      ]
+    },
+    {
+      "id": 104,
+      "table": "1RB1LB_1RC0RE_0RD0RB_1LD1LA_---0RF_0RC0RC",
+      "ok": true,
+      "states": 55,
+      "edges": 15,
+      "edge_counts": [
+        9,
+        6
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          3,
+          2,
+          3,
+          0,
+          4,
+          0,
+          5,
+          0,
+          6,
+          0,
+          3,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+          0,
+          4,
+          0,
+          1
+        ]
+      ],
+      "summary_counts": [
+        7,
+        5
+      ],
+      "method": [
+        "rungram",
+        [
+          1,
+          1,
+          1,
+          4,
+          4
+        ],
+        [
+          1,
+          1,
+          1,
+          4,
+          4
+        ]
+      ]
+    },
+    {
+      "id": 157,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LF1LB_---1LB",
+      "ok": true,
+      "states": 285,
+      "edges": 94,
+      "edge_counts": [
+        55,
+        39
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          9,
+          0,
+          7,
+          0,
+          5,
+          6,
+          0,
+          0,
+          0,
+          8,
+          18,
+          0,
+          16,
+          10,
+          0,
+          0,
+          11,
+          12,
+          15,
+          0,
+          13,
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0,
+          0,
+          0,
+          19,
+          22,
+          0,
+          20,
+          21,
+          0,
+          0,
+          0,
+          23,
+          26,
+          0,
+          24,
+          25,
+          0,
+          0,
+          0,
+          27,
+          30,
+          0,
+          28,
+          29,
+          39,
+          0,
+          37,
+          31,
+          0,
+          0,
+          32,
+          33,
+          36,
+          0,
+          34,
+          35,
+          0,
+          0,
+          0,
+          0,
+          0,
+          38,
+          0,
+          0,
+          0,
+          40,
+          43,
+          0,
+          41,
+          42,
+          0,
+          0,
+          0,
+          44,
+          47,
+          0,
+          45,
+          46,
+          0,
+          0,
+          0,
+          48,
+          50,
+          0,
+          49,
+          29,
+          39,
+          51,
+          0,
+          0,
+          32
+        ],
+        [
+          0,
+          1,
+          9,
+          2,
+          7,
+          3,
+          5,
+          4,
+          20,
+          11,
+          0,
+          6,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0,
+          10,
+          0,
+          0,
+          12,
+          0,
+          0,
+          13,
+          18,
+          14,
+          16,
+          15,
+          32,
+          22,
+          0,
+          17,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          24,
+          23,
+          0,
+          0,
+          0,
+          25,
+          30,
+          26,
+          28,
+          27,
+          35,
+          34,
+          0,
+          29,
+          0,
+          0,
+          0,
+          31,
+          0,
+          0,
+          0,
+          33,
+          0,
+          0,
+          24,
+          23,
+          0,
+          33
+        ]
+      ],
+      "summary_counts": [
+        52,
+        36
+      ],
+      "method": [
+        "ngram",
+        10,
+        10
+      ]
+    },
+    {
+      "id": 158,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LF1RD_---1LB",
+      "ok": true,
+      "states": 313,
+      "edges": 94,
+      "edge_counts": [
+        55,
+        39
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          9,
+          0,
+          7,
+          0,
+          5,
+          6,
+          0,
+          0,
+          0,
+          8,
+          18,
+          0,
+          16,
+          10,
+          0,
+          0,
+          11,
+          12,
+          15,
+          0,
+          13,
+          14,
+          0,
+          0,
+          0,
+          0,
+          0,
+          17,
+          0,
+          0,
+          0,
+          19,
+          22,
+          0,
+          20,
+          21,
+          0,
+          0,
+          0,
+          23,
+          26,
+          0,
+          24,
+          25,
+          0,
+          0,
+          0,
+          27,
+          30,
+          0,
+          28,
+          29,
+          39,
+          0,
+          37,
+          31,
+          0,
+          0,
+          32,
+          33,
+          36,
+          0,
+          34,
+          35,
+          0,
+          0,
+          0,
+          0,
+          0,
+          38,
+          0,
+          0,
+          0,
+          40,
+          43,
+          0,
+          41,
+          42,
+          0,
+          0,
+          0,
+          44,
+          47,
+          0,
+          45,
+          46,
+          0,
+          0,
+          0,
+          48,
+          50,
+          0,
+          49,
+          29,
+          39,
+          51,
+          0,
+          0,
+          32
+        ],
+        [
+          0,
+          1,
+          9,
+          2,
+          7,
+          3,
+          5,
+          4,
+          20,
+          11,
+          0,
+          6,
+          0,
+          0,
+          0,
+          8,
+          0,
+          0,
+          0,
+          10,
+          0,
+          0,
+          12,
+          0,
+          0,
+          13,
+          18,
+          14,
+          16,
+          15,
+          32,
+          22,
+          0,
+          17,
+          0,
+          0,
+          0,
+          19,
+          0,
+          0,
+          0,
+          21,
+          0,
+          0,
+          24,
+          23,
+          0,
+          0,
+          0,
+          25,
+          30,
+          26,
+          28,
+          27,
+          35,
+          34,
+          0,
+          29,
+          0,
+          0,
+          0,
+          31,
+          0,
+          0,
+          0,
+          33,
+          0,
+          0,
+          24,
+          23,
+          0,
+          33
+        ]
+      ],
+      "summary_counts": [
+        52,
+        36
+      ],
+      "method": [
+        "ngram",
+        10,
+        10
+      ]
+    },
+    {
+      "id": 159,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LF1LB_---1RB",
+      "ok": true,
+      "states": 81,
+      "edges": 23,
+      "edge_counts": [
+        15,
+        8
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          6,
+          0,
+          5,
+          0,
+          0,
+          4,
+          7,
+          8,
+          2,
+          3,
+          9,
+          0,
+          0,
+          8,
+          7
+        ],
+        [
+          0,
+          1,
+          4,
+          2,
+          6,
+          3,
+          5,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "summary_counts": [
+        10,
+        7
+      ],
+      "method": [
+        "rungram",
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": 160,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0LF1RD_---1RB",
+      "ok": true,
+      "states": 81,
+      "edges": 23,
+      "edge_counts": [
+        15,
+        8
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          6,
+          0,
+          5,
+          0,
+          0,
+          4,
+          7,
+          8,
+          2,
+          3,
+          9,
+          0,
+          0,
+          8,
+          7
+        ],
+        [
+          0,
+          1,
+          4,
+          2,
+          6,
+          3,
+          5,
+          2,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      "summary_counts": [
+        10,
+        7
+      ],
+      "method": [
+        "rungram",
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ],
+        [
+          2,
+          2,
+          2,
+          2,
+          2
+        ]
+      ]
+    },
+    {
+      "id": 162,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_0RA0LF_---0LC",
+      "ok": true,
+      "states": 149,
+      "edges": 40,
+      "edge_counts": [
+        26,
+        14
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          5,
+          0,
+          12,
+          0,
+          0,
+          6,
+          7,
+          0,
+          0,
+          8,
+          11,
+          0,
+          9,
+          10,
+          15,
+          0,
+          21,
+          0,
+          0,
+          13,
+          14,
+          0,
+          0,
+          0,
+          0,
+          16,
+          17,
+          0,
+          0,
+          18,
+          20,
+          0,
+          19,
+          10,
+          15,
+          0,
+          0,
+          22,
+          23,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+          5,
+          4,
+          0,
+          0,
+          6,
+          7,
+          0,
+          0,
+          0,
+          8,
+          0,
+          9,
+          11,
+          10,
+          0,
+          0,
+          6,
+          7
+        ]
+      ],
+      "summary_counts": [
+        24,
+        12
+      ],
+      "method": [
+        "ngram",
+        6,
+        6
+      ]
+    },
+    {
+      "id": 203,
+      "table": "1RB1LB_1RC1LE_0RD0RB_1LD1LA_1RC0LF_---0LC",
+      "ok": true,
+      "states": 125,
+      "edges": 40,
+      "edge_counts": [
+        26,
+        14
+      ],
+      "dfa": [
+        [
+          0,
+          1,
+          4,
+          2,
+          3,
+          5,
+          0,
+          12,
+          0,
+          0,
+          6,
+          7,
+          0,
+          0,
+          8,
+          11,
+          0,
+          9,
+          10,
+          15,
+          0,
+          21,
+          0,
+          0,
+          13,
+          14,
+          0,
+          0,
+          0,
+          0,
+          16,
+          17,
+          0,
+          0,
+          18,
+          20,
+          0,
+          19,
+          10,
+          15,
+          0,
+          0,
+          22,
+          23,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          2,
+          0,
+          3,
+          5,
+          4,
+          0,
+          0,
+          6,
+          7,
+          0,
+          0,
+          0,
+          8,
+          0,
+          9,
+          11,
+          10,
+          0,
+          0,
+          6,
+          7
+        ]
+      ],
+      "summary_counts": [
+        24,
+        12
+      ],
+      "method": [
+        "ngram",
+        6,
+        6
+      ]
+    }
+  ],
+  "unresolved": [
+    {
+      "id": 54,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA1LF_---1LB"
+    },
+    {
+      "id": 55,
+      "table": "1RB1LB_1RC0LE_0RD0RB_1LD1LA_1RA1LF_---1RD"
+    }
+  ],
+  "late": []
+}
