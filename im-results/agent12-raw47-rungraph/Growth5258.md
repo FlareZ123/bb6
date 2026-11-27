@@ -1,0 +1,7 @@
+# Raw47 hard leaf 5258: exact two-sweep growth
+
+**Accepted** [CI 45971938822](https://github.com/FlareZ123/bb6/actions/runs/45971938822), graph-parent job 140414271146, artifact 15185253295, SHA256 5a4720bc8673f0700e148efb59fdbb9cb15a758cc0f5eb1e4cb2e5449ebc62df. Source `Raw47Growth5258.lean` and parent207 quotient audit compiled. The growth/never theorems use only propext and Quot.sound; parent uses the standard three axioms.
+
+Literal table `1RB---_1RC0LF_0RD0LE_1LD0RC_1RA0RE_0LE1LB`, undefined A1. In the exact zipper representation (left includes scanned bit), let B=100000100000. The family has q=A, left=010, right=10000 B^n B 100010. At raw step 1038 the blank machine reaches n=0. For every n, the exact raw-step return has cost 1308+520n and produces n+1. The proof is a sequence of 27 local phases: finite framed corridors, two arbitrary-tail sweep inductions with per-block costs 380 and 140, and zero-time block rotations proved by `moveCut`. At the final join the list identity `rep B (n+1)=rep B n ++ B` is proved explicitly. No extrapolation from bounded simulations. Positive costs imply arbitrarily long defined runs and nonhalting for every completion of A1.
+
+Together with the already accepted five Agent2 leaves, `Raw47Complement3423.lean`, and `Raw47ParityTriple.lean`, this closes all original ten hard10 leaf tables in the earlier run-graph discovery residual. The whole Raw47 parent cylinder is still open pending exhaustive parent/partial-roster composition.
