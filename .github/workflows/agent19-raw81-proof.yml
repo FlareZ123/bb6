@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next, raw40-a1lb-final-pair, raw40-a1lb-0rc, raw40-a1lb-all]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next, raw40-a1lb-final-pair, raw40-a1lb-0rc, raw40-a1lb-all, raw40-local-bundle]
         default: raw81
 permissions:
   contents: read
@@ -427,3 +427,26 @@ jobs:
             im-results/agent19-raw40-cut/a1lb/*/shards/*.olean
             im-results/agent19-raw40-cut/a1lb/*/enum.log
           if-no-files-found: warn
+
+  raw40-local-bundle:
+    if: inputs.target == 'raw40-local-bundle'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+      - name: Package exact source and discovery inputs for local kernel development
+        run: |
+          set -euo pipefail
+          tar -czf /tmp/raw40-local-sources.tar.gz \
+            im-results/agent19-raw40-cut \
+            im-results/agent32-raw59/FastBiDFA.lean \
+            im-results/agent32-raw59/emit_rungram.py \
+            im-results/agent46-raw13-cut/Agent46AutoPump.lean
+          sha256sum /tmp/raw40-local-sources.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw40-local-sources
+          path: /tmp/raw40-local-sources.tar.gz
+          if-no-files-found: error
