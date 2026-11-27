@@ -12,7 +12,7 @@ const move=j=>`⟨${bit(j%4>>1)},${bit(j%2)},${j>>2}⟩`;
 const fill=(a,i,j)=>a.map((t,k)=>i===k?moves[j]:t);
 const fresh=a=>Math.max(...a.filter(x=>x!=='---').map(x=>x.charCodeAt(2)-64),...a.map((x,i)=>x==='---'?0:1+(i>>1)));
 const id=Number(process.argv[2]),input=process.argv[3],output=process.argv[4],CHUNK=Number(process.argv[5]||400),MOD=Number(process.argv[6]||6000);
-if(![138,140,141,142,143,154].includes(id)||!input||!output||!Number.isSafeInteger(CHUNK)||CHUNK<25||!Number.isSafeInteger(MOD)||MOD<CHUNK)throw Error('usage: id scan-artifact-dir outputdir [chunk=400] [module=6000]');
+if(!Number.isSafeInteger(id)||id<0||!input||!output||!Number.isSafeInteger(CHUNK)||CHUNK<25||!Number.isSafeInteger(MOD)||MOD<CHUNK)throw Error('usage: id scan-artifact-dir outputdir [chunk=400] [module=6000]');
 fs.mkdirSync(output,{recursive:true});
 const summary=JSON.parse(fs.readFileSync(path.join(input,'summary.json'),'utf8')),tree=JSON.parse(fs.readFileSync(path.join(input,'tree.json'),'utf8'));
 const route=require('../agent47-raw11-adapter/raw11-route.json');
@@ -30,6 +30,18 @@ for (const x of require('./q0-143-ten-fixtures.json')) {
  const k=norm(x.table);
  if(regionCuts.has(k))throw Error('duplicate region cut '+k);
  regionCuts.set(k,{root:143,mod:'Raw11Q0Ten143',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Ten143.M'+x.index});
+}
+// Discovery-only extension for unresolved final-hole tables. The generated
+// packed trace is still independently checked against the exact source table.
+function findLongHole(a,limit=100000){
+ if(a.filter(t=>t==='---').length!==1)return null;
+ const tape=new Uint8Array(2*limit+5);let h=limit+2,q=0;
+ for(let n=0;n<=limit;n++){
+  const slot=2*q+tape[h],tr=a[slot];
+  if(tr==='---')return {table:a.join(''),n,slot};
+  tape[h]=+tr[0];h+=tr[1]==='R'?1:-1;q=tr.charCodeAt(2)-65;
+ }
+ return null;
 }
 const regionLeaves=[];
 const repairs=new Map(),residuals=[],resIndex=new Map(),longs=[],census=new WeakMap(),external=new WeakMap();
@@ -49,7 +61,8 @@ function register(t,a,f){
  else if(t[0]==='g'){stats.pump++;x=true;if(pumps.get(t[1])!==a.join(''))throw Error('wrong pump table')}
  else if(t[0]==='u'||t[0]==='c'){
   if(norm(t[1])!==a.join(''))throw Error('wrong residual table');
-  const c=longMap.get(a.join('')), g=regionCuts.get(a.join(''));
+  const g=regionCuts.get(a.join(''));
+  const c=longMap.get(a.join(''))||(!g&&t[0]==='u'?findLongHole(a):null);
   if(t[0]==='u'&&g){
    if(g.root!==id||a.filter(t=>t==='---').length!==1)throw Error('wrong region proof domain');
    t.splice(0,t.length,'v',regionLeaves.length);regionLeaves.push({...g,table:a.join('')});stats.region++;x=true;
