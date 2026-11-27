@@ -86,7 +86,7 @@ src=src.replace(old,'')
 exec(compile(src,'package6.make with sparse emitter','exec'),package6.__dict__)
 package6.make(spec,part,original)
 for p in original.glob('Raw139E0OneRABlock*.lean'):
-    p.write_text('import OneRASparse2\nimport OneRASparse3\nimport OneRASparse4\nset_option linter.unusedVariables false\n'+p.read_text())
+    p.write_text('import OneRASparse2\nimport OneRASparse3\nimport OneRASparse4\n'+p.read_text())
 
 # The existing weighted-prefix transformer uses literal table matching.
 # Reuse it with the distinct OneRA long-leaf namespace.
