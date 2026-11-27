@@ -188,7 +188,7 @@ theorem epoch (n : Nat) : run0 table (cost n) (family n)=some (family (n+1)) := 
     simp only [List.append_assoc,← repAdd]
     congr 2
     omega
-  simp only [List.append_assoc] at hl H
+  try simp only [List.append_assoc] at hl H
   rw [hl] at H
   have h4 := sweepL table 0 [true] [] W Q 4 back (2*n+4) [] [true,true,true]
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h4
