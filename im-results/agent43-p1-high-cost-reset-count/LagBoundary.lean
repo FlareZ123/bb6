@@ -9,7 +9,7 @@ open BB6.Agent43LagExact
 /-- A reachable critical hub requires a cone endpoint in one of these
 three arithmetic sets. The even-power feeder is tested at its immediately
 preceding odd depth. -/
-def Boundary (n m v w : Nat) : Prop :=
+def Boundary (n _m v w : Nat) : Prop :=
   w≤11 ∨ v=2 ∨ (5≤v ∧ v%2=1 ∧ ∃ j, j<n ∧ w+v/2=7*2^j)
 
 theorem even_feeder_boundary (n b d m t k c : Nat) (hn : 14≤n)
@@ -114,7 +114,8 @@ theorem critical_reset_requires_guarded_boundary (n : Nat) (hn : 14≤n)
   obtain ⟨b,d',m,hpos,hcone,hB⟩ := critical_hub_has_boundary n hn hR
   have hL := source_to_legal n b d' m hn hcone
   obtain ⟨B,a,hT,hv,hw,hW⟩ := (legal_iff_guarded_trace n m _ _ hn he).mp ⟨hL,hpos⟩
-  rw [hv,hw] at hB hW
+  rw [hv,hw] at hB
+  rw [hw] at hW
   exact ⟨m,B,a,hT,hW,hB⟩
 
 theorem low_boundary_wall (n m v w : Nat) (hmass : v+w+n+m+1=total n)
