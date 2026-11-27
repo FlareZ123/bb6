@@ -51,21 +51,22 @@ def fSection (L R : List Bool) : Z0 := ⟨5,false::L,R.tail⟩
 
 theorem section_blank : run0 table 12 ⟨0,[],[]⟩ =
     some (fSection (bits "111") (bits "01")) := by
-  simpa only [fSection,bits,List.tail_cons] using blank_entry
+  simpa [fSection,bits] using blank_entry
 
 /-- Straight A→B branch when the right word is exactly 01. -/
 theorem phase_a_simple (L : List Bool) :
     run0 table 18 (fSection L (bits "01")) =
       some (fSection (bits "110011"++L) []) := by
-  simpa only [fSection,bits,List.tail_cons,List.tail_nil] using forward18_blank L
+  simpa [fSection,bits] using forward18_blank L
 
 /-- Eight-step A→B rule when the next right digit has 1 zero. -/
 theorem phase_a_short (L w : List Bool) (hw : Word w) :
     run0 table 8
       (fSection L (bits "01"++zeros 1++bits "101"++w)) =
       some (fSection (bits "111110"++L) w) := by
-  have hh := word_head_zero hw
-  simpa [fSection,bits,zeros,hh,List.append_assoc] using forward8 L w
+  have h := forward8 L w
+  rw [word_head_zero hw] at h
+  simpa [fSection,bits,zeros,List.append_assoc] using h
 
 /-- Eighteen-step A→B rule when the next right zero count >=6. -/
 theorem phase_a_long (L w : List Bool) (hw : Word w) (k : Nat) :
@@ -76,23 +77,26 @@ theorem phase_a_long (L w : List Bool) (hw : Word w) (k : Nat) :
   have hz : zeros (5*(k+1)+1) = zeros 4++zeros (5*k+2) := by
     rw [hn,zeros_add]
   have hw2 : Word (w2 k++w) := Word.two k w hw
-  have hh := word_head_zero hw2
-  simpa [fSection,hh,w2,bits,zeros,hz,List.append_assoc] using
-    forward18 L (w2 k++w)
+  have h := forward18 L (w2 k++w)
+  rw [word_head_zero hw2] at h
+  rw [hz]
+  simpa [fSection,w2,bits,zeros,List.append_assoc] using h
 
 /-- The 11-step B→B first W2(0) packet. -/
 theorem phase_b_two (L w : List Bool) (hw : Word w) :
     run0 table 11 (fSection L (w2 0++w)) =
       some (fSection (bits "11111"++L) w) := by
-  have hh := word_head_zero hw
-  simpa [fSection,hh,w2,bits,zeros,List.append_assoc] using forward11a L w
+  have h := forward11a L w
+  rw [word_head_zero hw] at h
+  simpa [fSection,w2,bits,zeros,List.append_assoc] using h
 
 /-- The 11-step B→B first W4(0) packet. -/
 theorem phase_b_four (L w : List Bool) (hw : Word w) :
     run0 table 11 (fSection L (w4 0++w)) =
       some (fSection (bits "1100111"++L) w) := by
-  have hh := word_head_zero hw
-  simpa [fSection,hh,w4,bits,zeros,List.append_assoc] using forward11b L w
+  have h := forward11b L w
+  rw [word_head_zero hw] at h
+  simpa [fSection,w4,bits,zeros,List.append_assoc] using h
 
 /-- Exhaustive phase A forward closure, before the B carry obligations. -/
 theorem phase_a_step (L R : List Bool) (hL : LeftA L) (hR : RightA R) :
