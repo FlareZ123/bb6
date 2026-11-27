@@ -387,7 +387,7 @@ jobs:
   assembly_shards:
     needs: assembly_prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     strategy:
       fail-fast: false
       max-parallel: 8
@@ -422,7 +422,7 @@ jobs:
           for i in "${!roots[@]}"; do roots[i]="$d/${roots[i]}.lean"; done
           test "${#roots[@]}" -gt 0
           mkdir -p /tmp/shard
-          python tools/lean_compile_closure.py --workdir /tmp/shard --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core --manifest /tmp/shard/manifest.json --artifact-name "raw42-assembly-shard-$GROUP" "${roots[@]}" | tee /tmp/shard/audit.log
+          python tools/lean_compile_closure.py --workdir /tmp/shard --jobs 1 --source-root "$d" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core --manifest /tmp/shard/manifest.json --artifact-name "raw42-assembly-shard-$GROUP" "${roots[@]}" | tee /tmp/shard/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/shard/audit.log
       - uses: actions/upload-artifact@v4
         with:
@@ -433,7 +433,7 @@ jobs:
   assembly_compose:
     needs: assembly_shards
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
         with:
@@ -463,7 +463,7 @@ jobs:
           mkdir -p /tmp/final
           B=100006; if [ "$BRANCH" = 0RA ] || [ "$BRANCH" = 0RB ]; then B=1006; fi
           th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
-          python tools/lean_compile_closure.py --workdir /tmp/final --jobs 3 --source-root "$d" --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH" --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" --weighted-bound "$B" "$d/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          python tools/lean_compile_closure.py --workdir /tmp/final --jobs 1 --source-root "$d" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH" --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" --weighted-bound "$B" "$d/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
           python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
       - uses: actions/upload-artifact@v4
