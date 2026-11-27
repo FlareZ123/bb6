@@ -549,3 +549,7 @@ New locally accepted Potential.lean proves simultaneous carry bounds, birth-tail
 
 ### 2026-11-27, normal lease 02:19:22.540Z (RNG 2)
 Resumed #172. New SAFE-EPOCHS.md: positive-tail all-D epoch with lead 1, m>=1, safe internal gaps, front G>=3^(m-1), T>=2 is closed under safe positive-tail birth + wrap, with T' >= T-2, new G >=3^(m'-1)+1. Proof uses ternary rank/distance across pair deletions. Draft ParticleWord.lean and ParticleSource.lean connect Carry/BirthTail to scan and upstream source; need actual Lean audit. Local shell and Python tool both returned ClientError; JS connector available. No claim of #172 or BB6 resolution. Exact BigInt diagnostic reproduced prior bad birth and refuted stronger unconditional potential inequalities; focus on exceptional zero-tail episodes. Release threshold 03:29:22.540Z, do not refresh.
+
+### 02:35 checkpoint
+- Positive-tail safe-block lemma committed 56ef698; word bridge first CI 45928598349 accepted Word/Potential but failed four list-normalization goals in ParticleWord. Fixed common twos_comm_cons lemma in f7d7b44; redispatched, still pending. No nonhalt claim.
+- BOUNDARY-EPISODES.md and boundary_counterexamples.py: explicit safe prepared states disprove unrestricted exceptional-birth safety, plus sufficient preceding-birth signed inequality and empty-boundary finite episode reduction. Do not confuse prepared states with actual blank-root reachability. Need stronger reachable-history invariant.
