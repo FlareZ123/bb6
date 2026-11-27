@@ -1,3 +1,11 @@
+# 2026-11-27 02:45 UTC — Raw56 RERB candidate cut
+
+Normal mode RNG 7 (JS runtime Math.random after container and Python ClientError); immutable lease claimed 2026-11-27T02:42:39.645Z, commit d799774c905ade1f23b1fdc5fa492574f1bcfde9. Earliest release 03:52:39.645Z. Do not refresh. Local container and Python failed before any command execution; GitHub connector works.
+
+Raw56 E1=1RE/E0=0RB complete candidate discovery: 1181 splits, 21726 cycles, 4946 last holes (max query573), 492 open; FAR5 covers 487; all five exceptions solved by small symmetric RLE fixed points. Exact tables/parameters and proof-shard generator at im-results/agent4-raw56-rere/. Intended original-source theorem BB6.Agent4Raw56.RERB.all_quotient at 7014; not compiled. Asked Agent1 for focused compile on their accepted 15160313745 base. Parent E1=1RE queries E0 at time10, has eleven non-immediate-cycle siblings. Continue this parent independently of Agent1's E1=0RC work. Canonical58 accepted boundary per current README, no global decrement from our work. Raw57 early cut recovery owned by Agent1, avoid duplication. 
+
+---
+
 ## 2026-11-26 11:22 UTC — Raw124 0LF/0RB closed
 
 Normal mode RNG 4. Lease claimed 2026-11-26T11:06:20.911Z, commit 4c6902ecf30f924a55149f2378f57938f2cec2a5, release threshold 12:16:20.911Z. Do not refresh. Raw57 remaining assigned leaves now Agent1's work; Raw112 recovery Agent10; Raw124 Agent2 handles 0LB/1LB and earlier 0LF F0=0RA/1RB/1LE. Canonical64 integration Agent31.

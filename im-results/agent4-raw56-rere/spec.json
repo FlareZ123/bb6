@@ -1,0 +1,79 @@
+{
+  "parent": "1RB---_1RC---_0RD---_1LD1LE_0RB1RE_------",
+  "bound": 7014,
+  "cap": 1000,
+  "lookback": 32,
+  "maxDepth": 6,
+  "experimentalCounts": {
+    "open": 492,
+    "cycle": 21726,
+    "last": 4946,
+    "split": 1181,
+    "alias": 0,
+    "maxQuery": 573,
+    "maxCycleEnd": 543,
+    "far5": 487
+  },
+  "automata": [
+    {
+      "index": 7,
+      "table": "1RB1LC_1RC0LA_0RD0LF_1LD1LE_0RB1RE_---0LB",
+      "params": [
+        2,
+        2,
+        4
+      ],
+      "states": 166,
+      "left": 16,
+      "right": 17
+    },
+    {
+      "index": 15,
+      "table": "1RB---_1RC0LA_0RD0LF_1LD1LE_0RB1RE_1LB1LC",
+      "params": [
+        2,
+        2,
+        2
+      ],
+      "states": 135,
+      "left": 8,
+      "right": 15
+    },
+    {
+      "index": 218,
+      "table": "1RB0LF_1RC1LA_0RD0RE_1LD1LE_0RB1RE_---0LD",
+      "params": [
+        4,
+        1,
+        5
+      ],
+      "states": 136,
+      "left": 28,
+      "right": 15
+    },
+    {
+      "index": 252,
+      "table": "1RB1LF_1RC1LA_0RD---_1LD1LE_0RB1RE_0RA0LF",
+      "params": [
+        2,
+        1,
+        4
+      ],
+      "states": 62,
+      "left": 9,
+      "right": 13
+    },
+    {
+      "index": 253,
+      "table": "1RB1LF_1RC1LA_0RD---_1LD1LE_0RB1RE_0RE0LF",
+      "params": [
+        2,
+        2,
+        4
+      ],
+      "states": 82,
+      "left": 10,
+      "right": 16
+    }
+  ]
+}
