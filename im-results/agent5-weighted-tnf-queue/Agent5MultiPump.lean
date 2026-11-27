@@ -35,7 +35,7 @@ theorem Word.pop_sound {w : Word} {a : Bool} {r : Word}
                          <;> obtain ⟨rfl,rfl⟩ := h <;> simp [Word.eval]
 
 theorem Word.push_sound (xs : List Bool) (w : Word) (n m : Nat) :
-    (w.push xs).eval n = xs ++ w.eval n m := by
+    (w.push xs).eval n m = xs ++ w.eval n m := by
   cases w <;> simp [Word.push,Word.eval,List.append_assoc]
 
 structure PZ where
