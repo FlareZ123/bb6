@@ -125,81 +125,37 @@ theorem blank_no_u5_residual_m8w_partial (w s m : Nat)
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
   have hm' : 32*s=32+105*(8*w)+m := by omega
-  have hid := u5_residual_m_identity (8*w) s m hs' hm'
-  have hm7 := u5_residual_m_mod7 (8*w) m hid
-  have hp8 : (m+1)%8=1 := by
-    have hr3 : 3≤201+3360*w := by omega
-    have hdiv : 8∣2^(201+3360*w) := by
-      change 2^3∣2^(201+3360*w)
-      exact Nat.pow_dvd_pow 2 hr3
-    have hpowmod : (2^(201+3360*w))%8=0 :=
-      Nat.mod_eq_zero_of_dvd hdiv
-    have hsum0 :
-        (211*(m+1)+10669+22155*(8*w))%8=0 := by
-      rw [hid]
-      rw [show 201+420*(8*w)=201+3360*w by omega]
-      rw [Nat.mul_mod,hpowmod]
+  have hp8 : (m+1)%8=1 := by omega
+  have hpge : 3≤m+1 := by
+    have hid := u5_residual_m_identity (8*w) s m hs' hm'
+    have hm7 := u5_residual_m_mod7 (8*w) m hid
     omega
-  have hpge : 33≤m+1 := by omega
-  have hX : 302+512*s-4*(201+3360*w)=16*m+10 := by omega
-  intro hreach
-  rcases hreach with ⟨time,ht⟩
-  cases time with
-  | zero =>
-      simp [BB6.Agent8Section.run] at ht
+  intro hr
+  obtain ⟨a,k,hP,hstep⟩ := BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 _ 3 (by omega) hr
+  have hedge : secNext (a,k)=some (302+512*s-4*(201+420*(8*w)),3) := by
+    simpa only [show 201+420*(8*w)=201+3360*w by omega] using hstep
+  rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hedge with h0 | ⟨q,U,hq,hbound,hdecomp,ha,hk⟩
+  · rw [h0.1,h0.2] at hP
+    let t := m/8
+    have hp : m+1=8*t+1 := by dsimp [t]; omega
+    have ht : 1≤t := by omega
+    rcases hw with hwEven|hw3
+    · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w_even
+        w s m t hs hm hp hwEven ht hP
+    · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w3
+        w s m t hs hm hp hw3 ht hP
+  · by_cases hq1 : q=1
+    · subst q
+      simp at hdecomp hk
+      have ha1 : a=2*(m+1)-3 := by omega
+      have hk1 : k=7*(m+1)-4 := by omega
+      rw [ha1,hk1] at hP
+      exact u5_q1_parent_unreachable (m+1) hp8 hpge hP
+    · have hd : 4∣2^(2*q-2) := by
+        change 2^2∣2^(2*q-2)
+        exact Nat.pow_dvd_pow 2 (by omega)
+      have hd' : 4∣m+1 := hdecomp ▸ Nat.dvd_mul_right_of_dvd hd U
       omega
-  | succ n =>
-      cases hprev : BB6.Agent8Section.run BB6.Agent46.secNext n
-          (some (5,1)) with
-      | none =>
-          simp [BB6.Agent8Section.run,hprev] at ht
-      | some state =>
-          rcases state with ⟨a,k⟩
-          have hedge : BB6.Agent46.secNext (a,k)=some (16*m+10,3) := by
-            simpa [BB6.Agent8Section.run,hprev,hX] using ht
-          have hX' : 302+512*s-4*(201+420*(8*w))=16*m+10 := by omega
-          have hedge' : BB6.Agent46.secNext (a,k)=
-              some (302+512*s-4*(201+420*(8*w)),3) := by
-            simpa only [hX'] using hedge
-          rcases u5_residual_y3_parent_fan (8*w) s m a k hs' hm' hedge' with
-              hq0 | ⟨q,U,hqpos,hqbound,hdecomp,hU,hk⟩
-          · have hparent : CReach (8*(m+1)-3) (4*(m+1)-1) := by
-              rw [hq0.1,hq0.2] at hprev
-              exact ⟨n,hprev⟩
-            let t := (m+1)/8
-            have hp : m+1=8*t+1 := by
-              dsimp [t]
-              omega
-            have ht : 1≤t := by dsimp [t]; omega
-            rcases hw with hwEven|hw3
-            · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w_even
-                w s m t hs hm hp hwEven ht hparent
-            · exact BB6.Agent11U5M8Q0Partial.blank_no_u5_q0_parent_w3
-                w s m t hs hm hp hw3 ht hparent
-          · have hq1 : q=1 := by
-              by_cases hqeq : q=1
-              · exact hqeq
-              · exfalso
-                have hq2 : 2≤q := by omega
-                have hdiv : 4∣2^(2*q-2) := by
-                  change 2^2∣2^(2*q-2)
-                  exact Nat.pow_dvd_pow 2 (by omega)
-                rcases hdiv with ⟨d,hd⟩
-                have hpdiv : 4∣m+1 := by
-                  refine ⟨d*U,?_⟩
-                  calc
-                    m+1=2^(2*q-2)*U := hdecomp
-                    _=(4*d)*U := by rw [hd]
-                    _=4*(d*U) := by ac_rfl
-                omega
-            subst q
-            have hUeq : U=m+1 := by simpa using hdecomp.symm
-            have hA : a=2*(m+1)-3 := by omega
-            have hK : k=7*(m+1)-4 := by omega
-            have hparent : CReach (2*(m+1)-3) (7*(m+1)-4) := by
-              rw [hA,hK] at hprev
-              exact ⟨n,hprev⟩
-            exact u5_q1_parent_unreachable (m+1) hp8 hpge hparent
 
 /-- The u=5 residual B_s cylinder is blank-unreachable for M=8*w
 when w is even or w=3 mod 8. -/
