@@ -71,18 +71,14 @@ theorem source_forced_one (b : Nat) (s : Pair) (choice : Option Nat)
   · have hallowed : Allowed s v n := allowed_actual hb hm hn hpar
     have hnmem : n ∈ List.range (v+1) := List.mem_range.mpr (by omega)
     have hline :
-        decide (HighValid s n)=true ∧
-        (if choice=some n then true else excluded (b-(n+2)) (high s n))=true := by
+        (decide (HighValid s n)=true) ∧
+        ((if choice=some n then true else excluded (b-(n+2)) (high s n))=true) := by
       have hline0 := List.all_eq_true.mp hh n hnmem
-      change (if Allowed s v n then
-        decide (HighValid s n) &&
-        (if choice=some n then true else excluded (b-(n+2)) (high s n))
-        else true)=true at hline0
-      have hline1 := (show
-          decide (HighValid s n) &&
-          (if choice=some n then true else excluded (b-(n+2)) (high s n))=true by
-        simpa only [hallowed, ite_true] using hline0)
-      exact Bool.and_eq_true.mp hline1
+      have hline1 :
+          (decide (HighValid s n) &&
+            (if choice=some n then true else excluded (b-(n+2)) (high s n)))=true := by
+        simpa only [hallowed, ite_true] using hline0
+      simpa only [Bool.and_eq_true] using hline1
     have hvalid : HighValid s n := by
       simpa only [decide_eq_true_eq] using hline.1
     have hchildLarge := large_high (by have := hv.1; omega : n+2≤b) hl hq hw
