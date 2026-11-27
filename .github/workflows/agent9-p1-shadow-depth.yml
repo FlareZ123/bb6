@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -52,6 +52,35 @@ jobs:
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check shifted divisor and greedy high-bit reverse blocks
+        if: inputs.target == 'shifted-reverse'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          export LEAN_PATH="$D:im-results/agent45-p1-delayed-carry"
+          python tools/lean_compile_deps.py "$D/ShiftedReverseBlock.lean" | tee /tmp/shifted-reverse.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/shifted-reverse.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/shifted-reverse.log').read_text()
+          for name in ('corr_shift_bound','shifted_word_near','shiftedFast_iff','corr_adjacent_gap','weight_adjacent','valid_split','greedyFast_iff','greedyFast_iff_walk'):
+              decl = "'BB6.Agent9ShiftedReverse."+name+"'"
+              m = re.search(re.escape(decl)+r" depends on axioms:\s*\[([^\]]*)\]",log)
+              if not m:
+                  assert decl+" does not depend on any axioms" in log,decl
+                  continue
+              assert {x.strip() for x in m.group(1).split(",") if x.strip()} <= {"propext","Classical.choice","Quot.sound"},decl
+          PY
+          g++ -O3 -march=native -std=c++17 "$D/shifted_reverse_test.cpp" -o /tmp/shifted-test
+          /tmp/shifted-test
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-shifted
+          for mode in 0 1 2 3 4 5; do
+            P1_FIT="$mode" OMP_NUM_THREADS=1 /tmp/p1-shifted 3342 14000 417 half > "/tmp/shifted-$mode.log"
+            grep -Fx 'END 3342 13768' "/tmp/shifted-$mode.log"
+            grep -E '^CHILD |^END ' "/tmp/shifted-$mode.log" > "/tmp/shifted-$mode.children"
+            diff -u /tmp/shifted-0.children "/tmp/shifted-$mode.children"
+          done
       - name: Check exact fixed-width delayed-state equivalence
         if: inputs.target == 'compact-state'
         run: |
