@@ -108,7 +108,7 @@ theorem d_sweep (n : Nat) (R : List Bool) :
       have ht : 8*(n+1)+16=8+(8*n+16) := by omega
       have ha : alt ((n+1)+2)=alt (n+2)++[false,true] := by
         rw [show (n+1)+2=(n+2)+1 by omega,alt_succ_right]
-      simpa only [ht,ha,List.append_assoc,List.cons_append] using h
+      simpa only [ht,ha,List.append_assoc,List.cons_append,List.nil_append] using h
 
 /-- Final nine instructions D0 D0 D1 B1 E0 A1 A0 B0 C1. -/
 theorem reset_finish (R : List Bool) :
