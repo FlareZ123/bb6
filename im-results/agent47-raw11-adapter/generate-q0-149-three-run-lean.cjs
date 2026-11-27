@@ -20,9 +20,32 @@ function seg(w,n,m,X,Y){
 const T=(x,y)=>[[u(y),z(2),u(x)],[z(1)]];
 const S=(x,b,W)=>[[z(2),u(x)],[...lit("10"),u(b),...W]];
 const all=(a,b)=>a.map((v,i)=>[v,b[i]]);
+function normalize(xs){
+ let acc=[];
+ for(let i=xs.length-1;i>=0;i--){
+  let s=xs[i],a=s.match(/^block (true|false) \((.*)\)$/),b=s.match(/^rep \(block (true|false) \((.*)\)\) (.*)$/);
+  if(b)a=[null,b[1],b[2]+"*"+b[3]];
+  if(!a){acc.unshift({tail:s});continue;}
+  let bit=a[1],n=a[2];
+  if(acc.length&&acc[0].bit===bit){n="("+n+")+("+acc.shift().n+")";}
+  acc.unshift({bit,n});
+ }
+ return acc;
+}
+const normExpr=xs=>expr(xs.map(s=>s.tail||run(s.bit,s.n)));
+function eqProof(a,b){
+ if(a.length!==b.length)throw Error("different normalized shapes "+JSON.stringify({a,b}));
+ if(!a.length)return "rfl";
+ let x=a[0],y=b[0],h;
+ if(x.tail!==undefined){if(x.tail!==y.tail)throw Error("different tails");h="rfl";}
+ else {if(x.bit!==y.bit)throw Error("different bits");h="congrArg (block "+x.bit+") (show ("+x.n+") = ("+y.n+") by omega)";}
+ if(a.length===1)return h;
+ return "congrArg₂ List.append ("+h+") ("+eqProof(a.slice(1),b.slice(1))+")";
+}
 function proof(a,b,cn,pad){
  if(pad!==undefined)return "      exact "+pad+"\n";
- return "      apply weq_of_eq\n      have e : ("+expr(a)+") = ("+expr(b)+") := by\n        simp only [List.append_assoc,blockRep,blockJoin,blockJoinLast] <;> congr <;> omega\n      simpa [T,S,U,Z,Tails.PZ.eval,Tails.Word.eval,cert_"+cn+",block,rep,List.append_assoc] using e\n";
+ let na=normalize(a),nb=normalize(b);
+ return "      apply weq_of_eq\n      have e : ("+expr(a)+") = ("+expr(b)+") := by\n        calc\n          _ = ("+normExpr(na)+") := by simp only [List.append_assoc,blockRep,blockJoin,blockJoinLast]\n          _ = ("+normExpr(nb)+") := "+eqProof(na,nb)+"\n          _ = _ := by simp only [List.append_assoc,blockRep,blockJoin,blockJoinLast]\n      simpa [T,S,U,Z,Tails.PZ.eval,Tails.Word.eval,cert_"+cn+",block,rep,List.append_assoc] using e\n";
 }
 function gen(m){
  let out="namespace M"+m.index+"\ndef table : PartialMachine := fun s => match s.1.val,s.2 with\n"+tbl(m.table)+"\n  | _,_ => none\n";
