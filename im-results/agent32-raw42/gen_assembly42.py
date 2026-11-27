@@ -42,7 +42,16 @@ if branch in ('0RA','0RB'):
         late={309:'.cycle 311 656 false 9',496:'.last 622 (4,true)',1654:'.cycle 2101 842 true 1'}
     else:late={292:'.cycle 618 19 false (-8)',1569:'.last 565 (4,false)'}
 else:
-    assert not (src/'hard.txt').read_text().strip(), 'unresolved discovery leaves: no closed Cover'
+    from emit_block42 import emit_cases
+    hard={int(i):code for i,code in (line.split() for line in (src/'hard.txt').read_text().splitlines())}
+    rows=[x for x in json.loads((raw/'block42_witnesses.json').read_text()) if x['branch']==branch and x['id'] in hard]
+    assert len({x['id'] for x in rows})==len(rows)
+    for x in rows:
+        i=x['id'];assert x['code']==hard[i]==opens[i].replace('_','')
+    assert set(hard)=={x['id'] for x in rows}, f'unresolved discovery leaves: {set(hard)-{x["id"] for x in rows}}'
+    for x,mod in zip(rows,emit_cases(repo,out,rows)):
+        i=x['id'];ns=f'BB6.Agent32Raw42{branch}.Block.Leaf{i}'
+        register_proof(i,f'.proven {ns}.table {ns}.live',mod)
     for filename,kind,script in [('ngram.txt','NGram','emit_ngram42.py'),('run.txt','Run','emit_run42.py')]:
         for row in src.joinpath(filename).read_text().splitlines():leafproof(row,kind,script,False)
     for row in (src/'known.txt').read_text().splitlines():

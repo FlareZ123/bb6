@@ -4,7 +4,7 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested, discovery, assembly]
+        options: [rb, wide, nested, discovery, assembly, block]
         default: rb
       assembly_branch:
         type: choice
@@ -433,5 +433,61 @@ jobs:
         with:
           name: raw42-certified-${{ inputs.assembly_branch }}
           path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: error
+  block:
+    if: inputs.variant == 'block'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 5
+      matrix:
+        branch: [0LA, 0LE, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RE]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/core-old
+      - name: Generate and source-check isolated block-FAR certificates
+        env:
+          BRANCH: ${{ matrix.branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-block"
+          mkdir -p /tmp/block
+          python "$d/emit_block42.py" . "$g" "$BRANCH" | tee /tmp/block/generate.log
+          mapfile -t roots < <(sed -n 's/^ROOTS //p' /tmp/block/generate.log | tr ' ' '\n')
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          test "${#roots[@]}" -gt 0
+          python tools/lean_compile_closure.py --workdir /tmp/block --jobs 2 --source-root "$g" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/block/manifest.json --artifact-name "raw42-block-$BRANCH" "${roots[@]}" | tee /tmp/block/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/block/audit.log
+          python - "$BRANCH" /tmp/block/audit.log <<'PY'
+          import json,sys
+          from pathlib import Path
+          b,log=sys.argv[1:]
+          s=Path(log).read_text()
+          rows=[x for x in json.loads(Path('im-results/agent32-raw42/block42_witnesses.json').read_text()) if x['branch']==b]
+          for x in rows:
+              assert f"'BB6.Agent32Raw42{b}.Block.Leaf{x['id']}.live' depends on axioms:" in s,x
+          print('Accepted',len(rows),'block witnesses in',b)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-block-${{ matrix.branch }}
+          path: /tmp/block/
           retention-days: 30
           if-no-files-found: error
