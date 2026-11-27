@@ -37,7 +37,22 @@ def prepare(w):
     save(w/"zip-missing.json",sorted(FAILED))
     save(w/"zip-plan.json",{"changed":changed,"reused":len(entries),"missing":sorted(FAILED)})
     print("zipper checker for",len(changed),"unaccepted declarations; preserved",len(entries),"objects",flush=True)
+def last(w):
+    core=load(w/"core.json");pool=w/"resume-pool"
+    entries={e["module"]:e for e in load(w/"resume-pool.json")["modules"]}
+    for d in sorted((w/"resume-cuts").iterdir()):
+        if (d/"manifest.json").exists():merge(core,entries,pool,d/"manifest.json",d/"build")
+    roots=set(load(w/"resume-roots.json"))
+    missing=roots-entries.keys()
+    assert missing=={"ZRCRecovery00Kid19Batch0107"},missing
+    for n,e in entries.items():
+        f=w/"imports"/(n+".lean")
+        if f.is_file():assert digest(f)==e["source_sha256"],n
+    save(w/"resume-pool.json",dict(core,modules=list(entries.values()),module_count=len(entries)))
+    save(w/"zip-missing.json",sorted(missing))
+    print("Continue only final root; preserved",len(entries),"source-identical objects",flush=True)
 if __name__=="__main__":
     w=Path(sys.argv[2]).resolve()
     if sys.argv[1]=="prepare":prepare(w)
+    elif sys.argv[1]=="last":last(w)
     elif sys.argv[1]=="finish":finish(w)
