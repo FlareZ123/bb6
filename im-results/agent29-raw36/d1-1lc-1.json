@@ -1,0 +1,138 @@
+{
+  "base": "1RB---_1RC---_0RD---_0LD1LC_------_------",
+  "query": [
+    "hole",
+    6,
+    5
+  ],
+  "bank": "candidate.json",
+  "options": {
+    "short": 80,
+    "period": 60,
+    "long": 2000,
+    "longPeriod": 256,
+    "maxNodes": 1600000
+  },
+  "results": [
+    {
+      "move": "1LB",
+      "parent": "1RB---_1RC---_0RD1LB_0LD1LC_------_------",
+      "stats": {
+        "nodes": 198025,
+        "split": 8251,
+        "cycle": 158722,
+        "far": 1804,
+        "last": 29248,
+        "open": 0,
+        "halt": 37499,
+        "score": 80
+      },
+      "mass": {
+        "halt": "17359523",
+        "nonhalt": "226781102",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 1804
+      }
+    },
+    {
+      "move": "1LE",
+      "parent": "1RB---_1RC---_0RD1LE_0LD1LC_------_------",
+      "stats": {
+        "nodes": 404497,
+        "split": 16854,
+        "cycle": 303938,
+        "far": 6167,
+        "last": 77538,
+        "open": 0,
+        "halt": 94392,
+        "score": 78
+      },
+      "mass": {
+        "halt": "19812288",
+        "nonhalt": "224328337",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 6167
+      }
+    },
+    {
+      "move": "1RA",
+      "parent": "1RB---_1RC---_0RD1RA_0LD1LC_------_------",
+      "stats": {
+        "nodes": 170737,
+        "split": 7114,
+        "cycle": 129819,
+        "far": 4128,
+        "last": 29676,
+        "open": 0,
+        "halt": 36790,
+        "score": 85
+      },
+      "mass": {
+        "halt": "16477726",
+        "nonhalt": "227662899",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 4128
+      }
+    },
+    {
+      "move": "1RB",
+      "parent": "1RB---_1RC---_0RD1RB_0LD1LC_------_------",
+      "stats": {
+        "nodes": 112681,
+        "split": 4695,
+        "cycle": 91143,
+        "far": 2585,
+        "last": 14258,
+        "open": 0,
+        "halt": 18953,
+        "score": 75
+      },
+      "mass": {
+        "halt": "15646433",
+        "nonhalt": "228494192",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 2585
+      }
+    },
+    {
+      "move": "1RE",
+      "parent": "1RB---_1RC---_0RD1RE_0LD1LC_------_------",
+      "stats": {
+        "nodes": 211393,
+        "split": 8808,
+        "cycle": 164312,
+        "far": 4443,
+        "last": 33830,
+        "open": 0,
+        "halt": 42638,
+        "score": 86
+      },
+      "mass": {
+        "halt": "17782430",
+        "nonhalt": "226358195",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 4443
+      }
+    }
+  ]
+}
