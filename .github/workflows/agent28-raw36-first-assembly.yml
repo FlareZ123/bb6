@@ -1,0 +1,54 @@
+name: Agent 28 Raw36 first F0 all-cases mathematical assembly
+run-name: Raw36 first F0 arithmetic theorem ${{ github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        type: string
+        required: false
+      target:
+        type: choice
+        options: [Counters, Progress, Never]
+        default: Counters
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check source two-counter assembly
+        run: |
+          set -euo pipefail
+          TARGET="${{ inputs.target }}"
+          [[ "$TARGET" = Counters || "$TARGET" = Progress || "$TARGET" = Never ]]
+          D=im-results/agent28-raw36-first-hard
+          work=/tmp/a28-raw36-first-assembly
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 4 \
+            --manifest "$work/manifest.json" --label raw36-first-$TARGET \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36First$TARGET.$([[ "$TARGET" = Counters ]] && echo root_a || ([[ "$TARGET" = Progress ]] && echo phaseA || echo never)) \
+            --artifact-name raw36-first-assembly \
+            "$D/Raw36First$TARGET.lean" 2>&1 | tee /tmp/a28-first-assembly.log
+          cp /tmp/a28-first-assembly.log "$work/audit.log"
+      - name: Retain source closure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-first-assembly
+          path: |
+            /tmp/a28-raw36-first-assembly/
+            /tmp/a28-first-assembly.log
+          if-no-files-found: warn
+          retention-days: 30
