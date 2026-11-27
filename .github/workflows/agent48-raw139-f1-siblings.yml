@@ -10,7 +10,7 @@ on:
         description: Branch depth, A6 root, C1 batch or E0 proof
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long]
+        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long, e0graftprep]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
-    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' }}
+    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' && inputs.kind != 'e0graftprep' }}
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.kind == 'e0parent' && 180 || 60 }}
     steps:
@@ -275,3 +275,28 @@ jobs:
             .tmp/a48-e0long/build/*.olean
             .tmp/a48-e0long/manifest.json
             .tmp/a48-e0long/log
+
+  graft-prep:
+    if: ${{ inputs.kind == 'e0graftprep' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Recover original search partition (candidate data only)
+        uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0parent-OneLA-certified
+          run-id: 45884008735
+          github-token: ${{ github.token }}
+          path: /tmp/a48-oneLA-base
+      - run: bash im-results/agent48-raw139-e0-1la/graft-prepare.sh /tmp/a48-oneLA-base
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-graft-sources
+          include-hidden-files: true
+          path: .tmp/a48-oneLA-graft/

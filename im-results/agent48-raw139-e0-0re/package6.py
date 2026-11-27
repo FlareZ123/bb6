@@ -87,7 +87,17 @@ def make(spec, partition, out):
     def imports_for(src):
         blocks = {block_module[int(i)] for i in re.findall(r'Blocks\.H(\d+)\.ctr',src)}
         branches = {module_for[n] for n in re.findall(r'\b[pth](R\d+(?:_\d+)*)\b',src) if n in module_for}
-        names = sorted(blocks | branches | set(spec['external_imports']))
+        if 'external_module_by_namespace' in spec:
+            # Import a heavy external certificate only in the branch citing it.
+            mapping=spec['external_module_by_namespace']
+            assert set(mapping.values())==set(spec['external_imports'])
+            refs=set(re.findall(r'\.proven ([A-Za-z0-9_.]+)\.ctr ',src))
+            refs={p for p in refs if not p.startswith(ns+'Blocks.H')}
+            assert refs<=set(mapping), refs-set(mapping)
+            external={mapping[p] for p in refs}
+        else:
+            external=set(spec['external_imports'])
+        names = sorted(blocks | branches | external)
         return 'import FastThreeHoleAudit\n'+''.join(f'import {m}\n' for m in names)
 
     def leaf(n):
@@ -197,7 +207,10 @@ def make(spec, partition, out):
     for i,(v,ch) in enumerate(zip(ORDER,kids)):
         t=spec['parent'].copy(); t[s]=v
         items.append((ch,t,f'R{i}'))
-    rootkids=emit_children(items)
+    if spec.get('independent_root_children'):
+        rootkids=[emit_group([item])[0] if item[0][0]=='split' else (leaf(item[0]),None) for item in items]
+    else:
+        rootkids=emit_children(items)
     lines=[f'def pRoot : PartialMachine := fromCodes {spec["parent"]}',
            f'def tRoot : Audit := .split {steps} {slot(s)} (byMove [\n'+',\n'.join(a for a,_ in rootkids)+'])',
            f'''theorem hRoot : fastCheck {B} pRoot tRoot = true := by
