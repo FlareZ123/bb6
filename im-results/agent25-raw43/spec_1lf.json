@@ -6399,61 +6399,19 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 71,
+  "growth": {
+    "71": {
       "table": "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF1LF_0LE0LA",
-      "query": [
-        "open"
-      ],
-      "bidfa": {
-        "status": "fail",
-        "states": 3197,
-        "params": [
-          [
-            4,
-            3,
-            3,
-            2,
-            2
-          ],
-          [
-            4,
-            3,
-            3,
-            2,
-            2
-          ]
-        ]
-      }
+      "module": "Raw43LF1Growth",
+      "partial": "BB6.Agent25Raw43LF1M71.table",
+      "never": "BB6.Agent25Raw43LF1M71.never"
     },
-    {
-      "i": 82,
+    "82": {
       "table": "1RB---_1RC0RE_0RD0RC_1LD0RB_1RF1LF_0LE0LA",
-      "query": [
-        "open"
-      ],
-      "bidfa": {
-        "status": "fail",
-        "states": 3779,
-        "params": [
-          [
-            4,
-            3,
-            3,
-            2,
-            2
-          ],
-          [
-            4,
-            3,
-            3,
-            2,
-            2
-          ]
-        ]
-      }
+      "module": "Raw43LF1Growth",
+      "partial": "BB6.Agent25Raw43LF1M82.table",
+      "never": "BB6.Agent25Raw43LF1M82.never"
     }
-  ]
+  },
+  "unresolved": []
 }
