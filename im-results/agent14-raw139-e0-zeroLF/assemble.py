@@ -157,7 +157,7 @@ def batch(out,names,split_root13=False):
     def flush():
         nonlocal pending,weight,idx
         if not pending:return
-        name=f'{pending[0][0].split("_")[0]}Batch{idx:04d}';idx+=1
+        name=f'{"ZLF13" if split_root13 else pending[0][0].split("_")[0]}Batch{idx:04d}';idx+=1
         deps=set();sources=[];here={n for n,s,d in pending}
         for n,s,d in pending:
             deps|={groups.get(x,x) for x in d if x not in here};sources.append(s);groups[n]=name
