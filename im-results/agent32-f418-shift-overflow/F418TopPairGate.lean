@@ -22,9 +22,14 @@ theorem oddChain_top_shape {N last : Nat} (hc : OddChain N last) :
         rw [Nat.mul_add,Nat.mul_one,←Nat.pow_add] at hm
         have hpow : 2^(j+1)=2^j*2 := Nat.pow_succ _ _
         omega
-      · rw [he,Nat.mul_add,Nat.mul_one,Nat.mul_comm 2,←Nat.mul_assoc,←Nat.pow_succ]
-        rw [Nat.mul_add,Nat.mul_add,←Nat.pow_add,←Nat.pow_add]
-        ac_rfl
+      · calc
+          2^j*(2*Q+1)=2^(j+1)*Q+2^j := by
+            rw [Nat.pow_succ,Nat.mul_add,Nat.mul_one]; ac_rfl
+          _=2^(j+1)*(2^(h+last+1)+2^h+R)+2^j := by rw [he]
+          _=2^(j+1+h+last+1)+2^(j+1+h)+(2^(j+1)*R+2^j) := by
+            rw [Nat.mul_add,Nat.mul_add,←Nat.pow_add,←Nat.pow_add]
+            rw [show j+1+(h+last+1)=j+1+h+last+1 by omega]
+            omega
 
 theorem pow_interval_unique {N a b : Nat}
     (ha : 2^a≤N ∧ N<2^(a+1)) (hb : 2^b≤N ∧ N<2^(b+1)) : a=b := by
@@ -97,7 +102,7 @@ theorem modest_gate_top_pair {b : Prefix} {Q W last : Nat}
   have hp4 : 2^h=4*2^(h-2) := by
     calc
       2^h=2^(2+(h-2)) := congrArg (fun n : Nat => 2^n) (by omega)
-      _=4*2^(h-2) := by rw [Nat.pow_add]; rfl
+      _=4*2^(h-2) := by rw [Nat.pow_add]
   have hRtop : 2^h≤Q-b.C := by
     by_cases hle : 2^h≤Q-b.C
     · exact hle
@@ -110,10 +115,15 @@ theorem modest_gate_top_pair {b : Prefix} {Q W last : Nat}
   rw [hhW,Nat.pow_succ] at hQt
   let R := Q-b.C-2^h
   have hR : R<2^h := by dsimp [R]; omega
+  have heR : 2^h+R=Q-b.C := by
+    change 2^h+((Q-b.C)-2^h)=Q-b.C
+    rw [Nat.add_comm]
+    exact Nat.sub_add_cancel hRtop
   have he : b.next Q W=2^(W+b.E)+2^h+R := by
-    unfold next
-    dsimp [R]
-    omega
+    calc
+      b.next Q W=2^(W+b.E)+(Q-b.C) := by unfold next; omega
+      _=2^(W+b.E)+(2^h+R) := congrArg (fun x : Nat => 2^(W+b.E)+x) heR.symm
+      _=2^(W+b.E)+2^h+R := by omega
   have hg := oddChain_top_gap hc (show h<W+b.E by simp [h,L,E]; omega) hR he
   have hlast : last=7*b.p+3 := by simp [h,L,E] at hg; omega
   have ho := oddChain_odd hc
