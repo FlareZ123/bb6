@@ -758,3 +758,16 @@ Next: (1) inspect run 45862412792; if Raw59 rebuild and Canonical59 consumer pas
 - Correct direct route: `Canonical53FiveReadyParentsGraft.lean` + `assemble_canonical53_from58.py` remove Raw124, Raw106, Raw79, Raw83 and Raw85 directly from accepted Canonical58. All five unique-membership checks, pairwise distinctness, 58→53 count, Raw59 retention, soundness and fixed-score theorem are in one Lean layer. Workflow target `canonical53-five-ready-from58`; run **45917062842** queued/running.
 - Agent32 recovery run **45916636924** independently reconstructs Raw124 and then Raw59 from accepted Canonical58, targeting 56. If both it and 45917062842 accept, next union cut should remove Raw124+Raw59+Raw106+Raw79+Raw83+Raw85 exactly once each, targeting **52**. Agent32 notified in communications/agent32/20261127T0031Z_agent31-corrected-canonical58-five-parent-route.md.
 - Raw67 source-identical reuse run **45916427850** remains independent and valid; if accepted, it can be added to the strongest accepted roster with a fresh membership check.
+
+
+## 2026-11-27T00:45Z — discovered three overlooked source-accepted whole parents; Canonical50 target
+
+- Systematic scan of the actual 58 raw indices found three whole-parent source audits that stale intermediate READMEs still called pending:
+  - Raw69 run 45585422842, artifact 15007309346 `raw69-bound-certified`, digest 59ed35c0a1477fd402efc26c36a04d5bbf73d33558a9e2985525c836ce405023, source rev 748b52c544dec5d432888f59afbdcb15a68b37d9, theorem `BB6.Agent21Raw69.all_completions`, bound 7014.
+  - Raw73 run 45584889944, artifact 15008541852, digest 3bf907a782e40c0b914efd61c678c29fedd86ee0d270a91a8c0b93534ac913fb, rev 6b646833d5796ba29c9bca26efbfec8df3e729f0, theorem `BB6.Agent21Raw73.all_completions`, bound 7014.
+  - Raw78 run 45585432166, artifact 15007424155, digest 81aa9e8207e73eb71ed0afcfc5a40a68ef6295f4f22941efcffc7c75bc5b5c87, rev 748b52c544dec5d432888f59afbdcb15a68b37d9, theorem `BB6.Agent21Raw78.all_completions`, bound 7014.
+  Each workflow completed successfully under pinned Lean 4.36.0-rc2 using `lean_compile_closure.py` with forbidden-axiom grep and durable manifest-bearing artifact.
+- Added `Canonical50EightReadyParentsGraft.lean` and `assemble_canonical50_from58.py`: direct accepted Canonical58 consumer for Raw124+Raw106+Raw79+Raw83+Raw85+Raw69+Raw73+Raw78. It checks eight unique memberships, pairwise distinctness, exact 58→50 count, Raw59 retention, soundness and champion-score conditional theorem. Legacy three artifacts are pinned by run/id/digest/size/revision and compiler manifests.
+- Superseded/cancelled the weaker 58→53 run 45917790075 and dispatched eight-parent run **45918508612** on head 62391a69f66a5c249396f4e6b502b6d2c1cd0ee7.
+- Broadcast exact parent artifact metadata in `communications/broadcast/20261127T0045Z_agent31-raw69-73-78-already-accepted.md`.
+- Expected next counts if other pending gates accept: Agent32 Raw124+Raw59 plus these seven other ready parents yields 49 retained; add accepted Raw67 yields 48. Existing staged 52/51 sources predate discovery and should be superseded by stronger 49/48 consumers rather than published as final frontier.
