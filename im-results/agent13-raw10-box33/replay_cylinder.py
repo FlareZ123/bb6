@@ -22,6 +22,11 @@ HARD_D14V17={
     (8,0,11,24,1,13,14,17,22,9,19,4): 'b0',
     (8,0,11,24,1,13,14,17,22,17,19,4): 'b1',
 }
+HARD_D14V18={
+    (8,10,11,7,1,13,14,18,3,24,0,4): 'm0',
+    (8,1,11,24,1,13,14,18,3,0,6,18): 'm1',
+    (8,10,11,24,1,13,14,18,7,3,0,4): 'm2',
+}
 HARD={}
 def call(*args):
     subprocess.run([str(x) for x in args],check=True)
@@ -92,7 +97,7 @@ def main():
     args=ap.parse_args()
     global FIXED,TARGETS,BOUND,HARD
     d,v,BOUND=args.d0,args.second,args.bound
-    if (d,v) in {(12,16)}:
+    if (d,v) in {(12,16),(14,18)}:
         from replay_direct import run_direct
         return run_direct(args)
     slot={2:3,3:3,4:3,12:1,14:7,16:7,17:8,18:8,19:8,20:8}[d]
