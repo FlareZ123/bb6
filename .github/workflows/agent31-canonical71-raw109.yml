@@ -138,7 +138,7 @@ on:
         description: "JSON raw ID to accepted source producer run ID"
         type: string
         required: false
-        default: '{"63":45948590270,"61":46032302566,"67":46032521543,"59":45897242410}'
+        default: '{"63":45948590270,"61":46032302566,"67":46034483043,"59":45897242410}'
 
 jobs:
   source-audit-canonical70:

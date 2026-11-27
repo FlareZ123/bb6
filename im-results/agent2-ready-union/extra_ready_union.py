@@ -18,7 +18,7 @@ PARENTS = {
     "61": ("BB6.Agent31Raw61", 1962, "1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------"),
     "67": ("BB6.Agent10Raw67", 808, "1RB---_1RC1LB_0RD---_1LD1RE_---0LB_------"),
 }
-RUNS = {"63": 45948590270, "61": 46032302566, "67": 46032521543, "59": 45897242410}
+RUNS = {"63": 45948590270, "61": 46032302566, "67": 46034483043, "59": 45897242410}
 
 
 def artifact(run_id, name):
@@ -84,7 +84,7 @@ def prepare_prefix(raw, run_id, folder, evidence):
     manifests = []
     for path in metadata.rglob("*.json"):
         report = json.loads(path.read_text())
-        if report.get("claim", {}).get("theorem") == ns + ".literal_cover":
+        if (report.get("claim") or {}).get("theorem") == ns + ".literal_cover":
             manifests.append((path, report))
     assert len(manifests) == 1
     path, report = manifests[0]
@@ -93,6 +93,7 @@ def prepare_prefix(raw, run_id, folder, evidence):
     assert report["claim"]["weighted_bound"] == bound
     prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
     assert report["lean_binary"]["sha256"] == a68.sha(prefix / "bin" / "lean")
+    assert report["lean_version"] == subprocess.check_output(["lean", "--version"], text=True).strip()
     assert any(x["module"] == module for x in report["roots"])
     allowed = {x["module"] + ".olean": x["olean_sha256"] for x in report["modules"]}
     assert len(allowed) == len(report["modules"])
