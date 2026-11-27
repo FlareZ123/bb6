@@ -20,11 +20,11 @@ New depth-0 row (0, code 13): [7,24,11,24,14,24,24,13,24,24,24,24], ordinary cod
 
 All partition identities checked by arity-aware counts. Prefix-sharing census with exact translated cycles, small FAR, state graph closure and last-hole leaves; untrusted discovery, not Lean proof. Compressed sources reconstruct with Python standard library: lzma.decompress(base64.b64decode(Path(...).read_text())). Compile g++ -O3 -std=c++17. Run d1 D0 250, which writes /tmp/d1-0rd-d0-D0-cap250.txt. Run strong input 1 then run stage 2 on stage-1 open lines converted to '250 TABLE'. Strong adapts Agent47/32 sparse ngram and Agent48 block FAR; adds exact-replayed hash-assisted cycle candidate search. Candidate holdouts include both late queries (must expand multi-hole cases) and unclassified machines.
 
-D0=8 and 9 have zero stage-2 open leaves (late multi-hole queries still require expansion). The sole D0=6 stage-2 open leaf is solved below; D0=2 has ten certified leaves among its eleven former open cases. No complete branch bound is certified.
+D0=8 and 9 have zero stage-2 open leaves (late multi-hole queries still require expansion). The sole D0=6 stage-2 open leaf is solved below; D0=2 has source-checked Covers for all eleven former stage-2 open leaves. No complete branch bound is certified.
 
-## D0=2: ten source-checked hard-leaf covers
+## D0=2: all eleven source-checked hard-leaf Covers
 
-The two-stage census is now preserved by exact table code in [D0TwoHoldouts.tsv](D0TwoHoldouts.tsv). Stage 1: 11,088 ngram, 6,855 block, 405 cycle, 507 first-hole and 356 open candidates (19,211 total). Stage 2 on those 356: 120 ngram, 209 block, 16 first-hole and eleven open. Of the eleven, six now have complete nonhalting proofs and four have finite weighted Covers. ID3 has a computationally observed first query at 795,108, with sharded proof compilation in progress. ID27 is resolved by an all-time reset invariant below. The stage-1 and stage-2 finite classifications are not yet collectively certified.
+The two-stage census is now preserved by exact table code in [D0TwoHoldouts.tsv](D0TwoHoldouts.tsv). Stage 1: 11,088 ngram, 6,855 block, 405 cycle, 507 first-hole and 356 open candidates (19,211 total). Stage 2 on those 356: 120 ngram, 209 block, 16 first-hole and eleven open. All eleven now have kernel-checked Covers: six nonhalting proofs and five finite weighted Covers. ID3 reaches the sole missing F1 slot after exactly 795,108 ordinary moves, giving bound 795,109; ID27 is resolved by an all-time reset invariant below. The stage-1 and stage-2 finite classifications are not yet collectively certified.
 
 * [D1NestedGrowth.lean](D1NestedGrowth.lean), theorem `BB6.Agent6D1NestedGrowth.two_cover`: ID209 shares the exact nested pair-of-zero recursion with the prior D0=6 hard leaf despite different internal state routes. From blank after eight steps, the E family has left stack `0^(2k+2)101` and empty right stack; arbitrary-tail DP/EP macros prove growth for all k by induction on k+j then k.
 * [D1TwoUnary.lean](D1TwoUnary.lean), theorems `cover354` and `cover355`: both tables enter the B family after seven steps with left stack `1^(4k+2)01` and empty right stack. A shared recursion grows the left run by four ones; the general four-zero consuming macro uses two lower-index recursive sweeps. Exact terminal blank return and positive growth are proved independently of any empirical pattern extrapolation.
@@ -33,8 +33,21 @@ The two-stage census is now preserved by exact table code in [D0TwoHoldouts.tsv]
 
 * [D1TwoLate163.lean](D1TwoLate163.lean), theorem `cover`: exact first query of F0 at step 21,697, using 44 independently checked zipper segments and their composition; weighted bound 21,698.
 
-The three nonhalting theorems quantify over every compatible completion and arbitrary weighted bound B; the three finite-arrival Covers use the indicated concrete bounds. They compiled locally with Lean 4.36.0-rc2 against the existing accepted Raw139 normalized artifact 15093190882, with only propext, Classical.choice and Quot.sound. No full parent closure, fresh dependency build, or global roster cut is claimed.
+These three nonhalting examples quantify over every compatible completion and arbitrary weighted bound B; the three finite-arrival examples use the indicated concrete bounds. They compiled locally with Lean 4.36.0-rc2 against the existing accepted Raw139 normalized artifact 15093190882, with only propext, Classical.choice and Quot.sound. No full parent closure, fresh dependency build, or global roster cut is claimed.
 
+
+### ID3: exact final hard-leaf Cover by a reusable local-rule dictionary
+
+For `[7,19,11,0,14,23,2,13,9,16,5,24]`, the generated theorem `A6ID3.readArrival` proves `(knownRun p 795108).map readSlot = some (5,true)`; `A6ID3.cover : Cover (WeightedBound 795109) p` closes every compatible completion via the source last-hole certificate. Both exported theorems compiled locally in Lean 4.36.0-rc2 against accepted artifact 15093190882, with only propext, Classical.choice, Quot.sound. The 407 distinct local rules cover 49,695 ordered applications (49,694 of length 16 and one of length 4). All 50 replay shards and the final consumer compiled. This is the last of the eleven hard leaves, not the whole D0=2 parent.
+
+[A6BitTrace.lean](A6BitTrace.lean) uses length-free binary naturals for the two zero-padded tape halves, proving exact commutation with the original projected run and transport to knownRun. [A6WindowMacro.lean](A6WindowMacro.lean) checks a finite window with explicit left/right lengths and proves arbitrary-tail extension via division and remainder by two. Each Rule carries its own kernel proof of the strict finite-window run. The replay checks only matching prefixes and reattaches untouched quotient tails; the local proof is shared by every occurrence. Unlike repeated-block sweep replay, a local rule may execute an arbitrary finite mixed-direction word. This exploits recurrent short windows even when the large tape does not exhibit repeated homogeneous sweeps.
+
+Copy the two Lean files and [genID3.py](genID3.py) into the extracted normalized artifact's build directory, set LEAN_PATH to that directory, compile A6BitTrace and A6WindowMacro to .olean, then run:
+
+    python3 genID3.py > modules-id3.txt
+    while read -r m; do lean -o "$m.olean" "$m.lean" || exit 1; done < modules-id3.txt
+
+The deterministic Python generator is untrusted: every rule and replay equality is checked using rfl, and eval_reach joins the exact primitive-step costs. Local blob SHA-1s of the compiled inputs are 1f35fdcf1041cfbf650134a323d6a0d51af85002, 5fe466b4b376e6d0c200b07e75bf387ae6ceb2d6, and 3a0fdd6dd0d1a8da581c71ca60f83e2fba58fcdb respectively. No fresh upstream dependency rebuild or canonical roster reduction is claimed.
 
 ## Exact symbolic closure of D0=1LB hard two-hole leaf
 
