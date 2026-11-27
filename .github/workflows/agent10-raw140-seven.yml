@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, threeHoleCut]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,17 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = variantLoops ]; then
+          if [ "$TARGET" = threeHoleCut ]; then
+            python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
+            python im-results/agent10-nov26-cryptids/generate_raw140_long.py
+            node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_double_entry.js
+            python im-results/agent10-nov26-cryptids/generate_raw140_three_hole_cut.py
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-cut --jobs 3 im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean 2>&1 | tee /tmp/raw140-proof.log
+            for t in checked remaining_count sound cover; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "BB6.Agent10Raw140ThreeHole.$t"
+            done
+          elif [ "$TARGET" = variantLoops ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_loops.js
             python tools/lean_compile_closure.py --workdir /tmp/raw140-variant --jobs 3 im-results/agent10-nov26-cryptids/Raw140VariantLoops.lean 2>&1 | tee /tmp/raw140-proof.log
             for i in 28 39 77 81 86 88; do
@@ -74,4 +84,7 @@ jobs:
         if: always()
         with:
           name: raw140-${{ inputs.target }}-axioms
-          path: /tmp/raw140-proof.log
+          path: |
+            /tmp/raw140-proof.log
+            im-results/agent10-nov26-cryptids/raw140-three-hole-pending.json
+            im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean
