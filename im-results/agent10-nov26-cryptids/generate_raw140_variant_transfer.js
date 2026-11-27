@@ -93,3 +93,5 @@ theorem erMany (M : Table) (ext : Extends M) (n : Nat) (X Y : List Sym) :
   return "import Raw140ExtraCore\nnamespace Raw140VariantTransfer\nopen BB6BlockFAR Raw140Orbit Raw140Extra\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"+defs+rules.join("\n")+more+"\n"+variants.map(v=>"#print axioms transferMany"+v[0]).join("\n")+"\n#print axioms erMany\nend Raw140VariantTransfer\n";
 }
 if(require.main===module)fs.writeFileSync(path.join(__dirname,"Raw140VariantTransfer.lean"),emit());
+
+module.exports={rule,exits};
