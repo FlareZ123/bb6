@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-1rd-growth, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-1rd-growth, raw43-1rd, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw108_groups:
         description: 'JSON list of individual Raw108 groups to certify'
@@ -158,6 +158,32 @@ jobs:
         with:
           name: raw43-1rd-growth-proof
           path: /tmp/a25-raw43-1rd-growth/
+          retention-days: 30
+      - name: Certify Raw43 B1=0RE E1=1RD
+        if: inputs.target == 'raw43-1rd'
+        run: |
+          set -euo pipefail
+          root=im-results/agent25-raw43
+          work=/tmp/a25-raw43-1rd
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python "$root/generate.py" 1rd
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label raw43-1rd \
+            --theorem BB6.Agent25Raw43RD1.all43child --weighted-bound 1713 --artifact-name raw43-1rd-proof \
+            --provenance-input "$root/spec_1rd.json" --provenance-input "$root/generate.py" \
+            --provenance-input im-results/agent2-tnf-raw124/fast_partition.cpp \
+            --provenance-input im-results/agent31-three-hole-tnf/generate_four_hole.py \
+            "$root/generated_1rd/Raw43RD1Data.lean" 2>&1 | tee /tmp/a25-raw43-1rd.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-raw43-1rd.log BB6.Agent25Raw43RD1.all43child BB6.Agent25Raw43RD1Return.never BB6.Agent25Raw43RD1M0.never BB6.Agent25Raw43RD1M29.never
+          cp /tmp/a25-raw43-1rd.log "$work/audit.log"
+      - name: Retain Raw43 1RD child proof
+        if: inputs.target == 'raw43-1rd'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw43-1rd-proof
+          path: /tmp/a25-raw43-1rd/
           retention-days: 30
       - name: Certify complete Raw83 parent and attained bound
         if: inputs.target == 'raw83-exact'
