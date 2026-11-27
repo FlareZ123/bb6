@@ -14,13 +14,24 @@ open BB6.Agent31PacketSource
 private theorem regular_eq_source (a q b : Nat) (ha : 2 ≤ a) :
     BB6.Agent2BoundaryBZero.regularSection a q b =
       DRegularSource.sourceSection ⟨a,q,b⟩ := by
-  have hp : List.replicate a true =
-      [true,true] ++ List.replicate (a-2) true := by
-    rw [show a=2+(a-2) by omega, List.replicate_append_replicate]
-    rfl
   simp only [BB6.Agent2BoundaryBZero.regularSection,
     DRegularSource.sourceSection, CryptidBoundary.init]
-  rw [hp]
+  have hrepAdd (m n : Nat) :
+      List.replicate (m+n) true =
+        List.replicate m true ++ List.replicate n true := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+      rw [show Nat.succ m + n = (m+n)+1 by omega]
+      rw [List.replicate_succ]
+      rw [ih]
+      rw [←List.cons_append]
+      rw [←List.replicate_succ]
+  have hrep : List.replicate a true =
+      [true,true] ++ List.replicate (a-2) true := by
+    rw [show a = 2+(a-2) by omega, hrepAdd]
+    simp
+  rw [hrep]
   simp [List.append_assoc]
 
 private theorem e_output_packet (k q : Nat) (hq : 2 ≤ q) :
