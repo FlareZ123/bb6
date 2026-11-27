@@ -97,7 +97,7 @@ jobs:
           work=/tmp/agent14-e0-counts
           mkdir -p "$work"
           python3 tools/lean_compile_closure.py \
-            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0OneRFConditional.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0TenAcceptedConditional.lean \
             --workdir "$work/build" \
             --jobs 4 \
             --manifest "$work/manifest.json" \
@@ -123,6 +123,10 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedE0OneRFFinite.normalizedAfterEight_count' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0OneRFConditional.remainingTables_cover_from_60_oneRF' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0OneRFConditional.remainingTables_cover_from_59_eight' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedFinite.normalizedAfterTen_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedFinite.normalizedAfterEleven_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.remainingTables_cover_from_57' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.remainingTables_cover_from_56' depends on axioms: [propext," "$work/log"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
             --workdir "$work/prospective-build" \
@@ -148,6 +152,8 @@ jobs:
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0CutsFinite.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0OneRFFinite.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0OneRFConditional.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedE0TenAcceptedFinite.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedE0TenAcceptedConditional.olean
             /tmp/agent14-e0-counts/prospective-log
             /tmp/agent14-e0-counts/prospective-manifest.json
             /tmp/agent14-e0-counts/prospective-build/Raw139NormalizedE0CutsProspective.olean
