@@ -1,0 +1,51 @@
+name: Agent 24 rooted quotient exact source bridge
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  rooted-quotient:
+    runs-on: ubuntu-latest
+    timeout-minutes: 18
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Prove rooted quotient exactness in original source semantics
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a24-rooted
+          cp im-results/agent8-coverage-contract/Frontier.lean /tmp/a24-rooted/
+          cp im-results/agent8-coverage-contract/Symmetry.lean /tmp/a24-rooted/
+          cp im-results/agent24-rooted-quotient-rigidity/RootedLiveQuotient.lean /tmp/a24-rooted/
+          cp im-results/agent24-rooted-quotient-rigidity/RootedSourceBridge.lean /tmp/a24-rooted/
+          cd /tmp/a24-rooted
+          export LEAN_PATH=/tmp/a24-rooted
+          lean -o Frontier.olean Frontier.lean 2>&1 | tee /tmp/a24-frontier.log
+          lean -o Symmetry.olean Symmetry.lean 2>&1 | tee /tmp/a24-symmetry.log
+          lean -o RootedLiveQuotient.olean RootedLiveQuotient.lean 2>&1 | tee /tmp/a24-rooted.log
+          lean -o RootedSourceBridge.olean RootedSourceBridge.lean 2>&1 | tee /tmp/a24-bridge.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/a24-*.log; then
+            echo 'Forbidden proof hole or compiler error' >&2
+            exit 1
+          fi
+      - name: Independent finite q0/frontier audit (diagnostic, not certificate)
+        run: node im-results/agent24-rooted-quotient-rigidity/raw11-six-tail-audit.cjs | tee /tmp/a24-audit.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a24-rooted-quotient-source-bridge
+          path: |
+            /tmp/a24-frontier.log
+            /tmp/a24-symmetry.log
+            /tmp/a24-rooted.log
+            /tmp/a24-bridge.log
+            /tmp/a24-audit.json
+          if-no-files-found: warn
