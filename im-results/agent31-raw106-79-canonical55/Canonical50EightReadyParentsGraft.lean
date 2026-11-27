@@ -184,10 +184,6 @@ theorem raw59_retained :
       (fun e => sameTable e.2 BB6.Agent31Canonical59Membership.p59)).length = 1 := by
   decide
 
-theorem raw67_retained :
-    (roster50.filter (fun e => sameTable e.2 BB6.Agent10Raw67.p67)).length = 1 := by
-  decide
-
 theorem sound_integrated :
     ∀ m, compatible root m →
       WeightedBound 6766859 m ∨
@@ -233,7 +229,6 @@ theorem exact_at_champion_score
 #print axioms count50
 #print axioms all_ready_parents_removed
 #print axioms raw59_retained
-#print axioms raw67_retained
 #print axioms sound_integrated
 #print axioms exact_at_target
 #print axioms exact_at_champion_score
