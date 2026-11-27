@@ -119,7 +119,9 @@ theorem never (h : Hard) : NeverHalts (table h) := by
     · exact Box33D14Counter.never_blank false n
     · exact Box33D14Counter.never_blank true n
   cases hr : run (table h) n blank with
-  | none => exact False.elim (hn (by simpa [hr] using he.symm))
+  | none =>
+    rw [hr] at he
+    exact False.elim (hn he.symm)
   | some c => rfl
 
 def partialTable (h : Hard) : PartialMachine := fun s => some (table h s)
