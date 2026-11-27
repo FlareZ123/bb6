@@ -117,6 +117,8 @@ can have an eventually constant even F-run length**. The proof handles
 both eventually fixed pair type and eventually alternating pair type,
 including the exceptional m=0 boundary cases D=0 and D=4.
 
+**Two central ingredients are now locally Lean-certified:** [the all-odd-denominator rational packing bound](PeriodicGridPacking.lean) and [integer-affine rigidity for contracting linearly forced recurrences](AffineOrbitRigidity.lean), using Lean 4.36.0-rc2 with only standard axioms. The formal files do **not** yet link the original machine's signed path to the rotation list or formalize the primitive cyclic word argument.
+
 The stronger [all-period F-run obstruction](PeriodicRunNoGo.md) proves
 at the paper level that **no infinite admissible signed path has an
 eventually periodic even F-run length sequence**. This subsumes the

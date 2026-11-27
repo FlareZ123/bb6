@@ -1,6 +1,6 @@
 # All eventually periodic F-run schedules are impossible in the #429 signed inverse model
 
-**Status: paper-level proof, not yet independently peer-reviewed or Lean kernel-certified.** This is a universal structural no-go for *hypothetical infinite paths* in the established signed compressed inverse model. It is **not** a decision of #429's authentic blank orbit or BB(6). It strictly strengthens the older [constant-run obstruction](ConstantRunObstruction.md): the run lengths may follow *any* finite periodic pattern, rather than one fixed value.
+**Status: complete paper-level argument, not yet independently peer-reviewed or fully Lean kernel-certified.** The independent arithmetic pieces [PeriodicGridPacking.lean](PeriodicGridPacking.lean) and [AffineOrbitRigidity.lean](AffineOrbitRigidity.lean) compile in Lean 4.36.0-rc2 with standard axioms only. The missing formal step is the **original-model periodic-word and rotation-to-grid connection**; the theorem for authentic signed paths is therefore not yet kernel-certified. This is a universal structural no-go for *hypothetical infinite paths* in the established signed compressed inverse model. It is **not** a decision of #429's authentic blank orbit or BB(6). It strictly strengthens the older [constant-run obstruction](ConstantRunObstruction.md): the run lengths may follow *any* finite periodic pattern, rather than one fixed value.
 
 ## Statement and exact model
 
