@@ -113,3 +113,7 @@ The E1=0LE child now has a complete candidate audit at weighted threshold 727. I
 |1LD|85|0|
 
 The E1-specific generator accepts explicit `b1re_e1*` names and uses slot 9, distinct from E0 slot 8. No full B1=1RE or Raw43 parent Cover is established.
+
+### B1=1RE, E1=0LC: M41 binary-counter closure
+
+M41 enters A0 after 27 transitions. Write P(n)=(10)^n 0100 (left list includes the scanned cell). A0(n) has left 00 P(2n+1) and empty right list; A1(j,R) has left P(2j+2), where R is any finite word of 1101/1111 digits ending in 110. Initialization costs 4n+24 and creates n one-digits. A zero-digit is removed at cost 4 with j incremented; a one-digit becomes a zero-digit after restoring j leading one-digits at cost 4j+20; the terminal word leads to A0(j+1) at cost 4. Every case preserves the invariant with positive cost. `Raw43B1REE1LCM41.lean` proves the completion-level `never` theorem (local Lean 4.36.0-rc2, axioms propext and Quot.sound, using the relevant source excerpts). The E1=0LC spec has no unresolved leaves; full source audit pending.

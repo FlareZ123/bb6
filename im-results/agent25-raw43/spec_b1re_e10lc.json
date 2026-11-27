@@ -1209,14 +1209,13 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 41,
+  "growth": {
+    "41": {
       "table": "1RB1RD_1RC1RE_0RD1LF_1LD0RB_0RA0LC_1LC---",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43B1REE1LCM41",
+      "partial": "BB6.Agent25Raw43B1REE1LCM41.table",
+      "never": "BB6.Agent25Raw43B1REE1LCM41.never"
     }
-  ]
+  },
+  "unresolved": []
 }
