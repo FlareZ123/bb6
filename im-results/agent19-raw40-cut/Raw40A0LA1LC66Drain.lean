@@ -137,6 +137,7 @@ theorem gapLoop (m a r c : Nat) (v : List Token) (hr : 1 ≤ r) :
   induction m generalizing a with
   | zero =>
     have hs := gapSplit a 0 r c (E a ++ [2]) v hr
+    simp only [Nat.mul_zero,Nat.zero_add] at hs
     have hd := standardAll a 2 [] ((r,c)::v)
     have e : 2+5*a+14 = 6+5*(a+0+2) := by omega
     have H := Reach.trans hs hd
