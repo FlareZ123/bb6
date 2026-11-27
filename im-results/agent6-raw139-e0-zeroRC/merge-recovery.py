@@ -6,20 +6,28 @@ core=json.loads((work/'core.json').read_text())
 pool=work/'recovery-pool';pool.mkdir(exist_ok=True)
 entries={}
 for i in range(16):
-    cut=work/'cuts'/f'raw139-zeroRC-cut-{i:02d}'
-    m=json.loads((cut/'manifest.json').read_text())
-    assert m['proof_source_revision']==core['proof_source_revision']
-    assert m['lean_version']==core['lean_version'] and m['lean_binary']['sha256']==core['lean_binary']['sha256']
-    for n in (work/'recovery-groups'/f'{i:02d}.txt').read_text().splitlines():
-        assert any(e['module']==n for e in m['modules']),n
-    for e in m['modules']:
-        src=cut/'build'/e['olean_path']
-        assert hashlib.sha256(src.read_bytes()).hexdigest()==e['olean_sha256'],e['module']
-        if e['module'] in entries:
-            assert entries[e['module']]['module_identity_sha256']==e['module_identity_sha256'],e['module']
-        else:
-            entries[e['module']]=e
-            dest=pool/e['olean_path'];dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dest)
+    label=f'raw139-zeroRC-cut-{i:02d}'
+    full=work/'cuts'/label
+    parts=sorted((work/'cuts').glob(label+'-part*'))
+    assert not (full.exists() and parts),label
+    cuts=[full] if full.exists() else parts
+    assert cuts,label
+    names=set()
+    for cut in cuts:
+        m=json.loads((cut/'manifest.json').read_text())
+        assert m['proof_source_revision']==core['proof_source_revision']
+        assert m['lean_version']==core['lean_version'] and m['lean_binary']['sha256']==core['lean_binary']['sha256']
+        for e in m['modules']:
+            names.add(e['module'])
+            src=cut/'build'/e['olean_path']
+            assert hashlib.sha256(src.read_bytes()).hexdigest()==e['olean_sha256'],e['module']
+            if e['module'] in entries:
+                assert entries[e['module']]['module_identity_sha256']==e['module_identity_sha256'],e['module']
+            else:
+                entries[e['module']]=e
+                dest=pool/e['olean_path'];dest.parent.mkdir(parents=True,exist_ok=True);shutil.copy2(src,dest)
+    expected=set((work/'recovery-groups'/f'{i:02d}.txt').read_text().splitlines())
+    assert expected<=names,(label,expected-names)
 manifest=work/'recovery-pool.json'
 manifest.write_text(json.dumps(dict(core,modules=list(entries.values()),module_count=len(entries))))
 for root in (0,7,12,18):

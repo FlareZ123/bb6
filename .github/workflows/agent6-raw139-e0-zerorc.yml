@@ -12,7 +12,7 @@ on:
         options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof]
         default: zeroRC
       recovery_run_id:
-        description: Reuse accepted root artifacts from run 45846437127 (oneRE) or 45827711630 (zeroRC)
+        description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), or zeroRC's thirteen successful cut groups (45906701973)
         type: string
         default: ''
 permissions:
@@ -462,7 +462,7 @@ jobs:
           retention-days: 14
 
   recover-zeroRC-cuts:
-    if: inputs.recovery_run_id == '45827711630' && inputs.variant == 'zeroRC'
+    if: (inputs.recovery_run_id == '45827711630' || inputs.recovery_run_id == '45906701973') && inputs.variant == 'zeroRC'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     env:
@@ -471,7 +471,8 @@ jobs:
       fail-fast: false
       max-parallel: 4
       matrix:
-        group: ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15']
+        group: ${{ fromJSON(inputs.recovery_run_id == '45906701973' && '["08","10","13"]' || '["00","01","02","03","04","05","06","07","08","09","10","11","12","13","14","15"]') }}
+        part: ${{ fromJSON(inputs.recovery_run_id == '45906701973' && '["0","1","2","3"]' || '["all"]') }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -491,7 +492,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: raw139-e0-zeroRC-core-and-sources
-          run-id: ${{ inputs.recovery_run_id }}
+          run-id: 45827711630
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC
       - name: Recover exact declaration cuts
@@ -501,21 +502,33 @@ jobs:
           python3 im-results/agent13-block-far/specialize.py 4
           python3 im-results/agent6-raw139-e0-zeroRC/repack.py .tmp/a6-zeroRC
       - name: Compile independent child covers
+        id: compile_cut
         env:
           GROUP: ${{ matrix.group }}
+          PART: ${{ matrix.part }}
         run: |
           set -euo pipefail
           work=.tmp/a6-zeroRC
           roots=()
-          while IFS= read -r module; do roots+=("$work/imports/$module.lean"); done < "$work/recovery-groups/$GROUP.txt"
+          i=0
+          while IFS= read -r module; do
+            if [[ "$PART" == all ]] || (( i % 4 == PART )); then roots+=("$work/imports/$module.lean"); fi
+            i=$((i+1))
+          done < "$work/recovery-groups/$GROUP.txt"
+          if (( ${#roots[@]} == 0 )); then
+            echo "No roots in this subpart"
+            exit 0
+          fi
+          echo "nonempty=true" >> "$GITHUB_OUTPUT"
           mkdir -p "$work/cut/build"
           python3 tools/lean_compile_closure.py "${roots[@]}" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir /tmp/a6-zeroRC-cut --jobs 2 --manifest "$work/cut/manifest.json" --label "raw139-zeroRC-cut-$GROUP" | tee "$work/cut/log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/cut/log"
           printf '%s\n' "$RECOVERY_SHA" > "$work/cut/recovery-source-sha.txt"
           find /tmp/a6-zeroRC-cut -name '*.olean' -exec cp '{}' "$work/cut/build/" ';'
       - uses: actions/upload-artifact@v4
+        if: steps.compile_cut.outputs.nonempty == 'true'
         with:
-          name: raw139-zeroRC-cut-${{ matrix.group }}
+          name: raw139-zeroRC-cut-${{ matrix.group }}${{ matrix.part != 'all' && format('-part{0}', matrix.part) || '' }}
           path: .tmp/a6-zeroRC/cut
           include-hidden-files: true
           retention-days: 14
@@ -544,7 +557,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: raw139-e0-zeroRC-core-and-sources
-          run-id: ${{ inputs.recovery_run_id }}
+          run-id: 45827711630
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC
       - name: Recover exact declaration cuts
@@ -556,9 +569,16 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           pattern: raw139-e0-zeroRC-root*-certified
-          run-id: ${{ inputs.recovery_run_id }}
+          run-id: 45827711630
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC/shards
+      - uses: actions/download-artifact@v4
+        if: inputs.recovery_run_id == '45906701973'
+        with:
+          pattern: raw139-zeroRC-cut-*
+          run-id: 45906701973
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/cuts
       - uses: actions/download-artifact@v4
         with:
           pattern: raw139-zeroRC-cut-*
