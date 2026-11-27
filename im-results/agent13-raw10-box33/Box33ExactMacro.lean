@@ -76,9 +76,9 @@ theorem exactNever (s : ExactSpec M L R) (step : Config → Option Config)
     intro h
     obtain ⟨t,ht',m',ls',rs',he⟩ := exactProgress s step hs ht m ls rs
     by_cases hn : n≤t
-    · rw [←show n+(t-n)=t by omega,run_add,h] at he
+    · rw [←show n+(t-n)=t by omega,Box33PrefixMacro.run_add,h] at he
       contradiction
-    · rw [←show t+(n-t)=n by omega,run_add,he,Option.bind_some] at h
+    · rw [←show t+(n-t)=n by omega,Box33PrefixMacro.run_add,he,Option.bind_some] at h
       exact ih _ (by omega) m' ls' rs' h
 
 #print axioms exactNever
