@@ -17,18 +17,26 @@ src=src.replace(anchor,"imports+=''.join('import '+m+'\\n' for m in os.environ.g
 # evaluating its huge primitive prefix. Isolate its exact leaf, and transport
 # the accepted check across finite table equality. All enclosing split nodes
 # still use the original canonical checker and nores theorem.
-if os.environ.get('RAW40_ACCELERATED_LAST_JSON'):
+if os.environ.get('RAW40_ACCELERATED_LAST_JSON') or os.environ.get('RAW40_ACCELERATED_SPLIT_JSON'):
     anchor="def gen_shard(t,p,cut,name,expr,lines):"
     assert anchor in src
-    src=src.replace(anchor,'''accelerated=json.loads(os.environ['RAW40_ACCELERATED_LAST_JSON'])
-def contains_accelerated(t):
+    src=src.replace(anchor,'''accelerated=json.loads(os.environ.get('RAW40_ACCELERATED_LAST_JSON') or '{}')
+accelerated_splits=json.loads(os.environ.get('RAW40_ACCELERATED_SPLIT_JSON') or '{}')
+split_names={}
+def contains_accelerated(t,p):
     if t[0]=='open': return t[1] in accelerated
-    return t[0]=='split' and any(contains_accelerated(k) for k in t[3])
+    if t[0]!='split':return False
+    if show(p) in accelerated_splits:return True
+    _,n,s,kids=t
+    return any(contains_accelerated(k,p[:s]+[move(i)]+p[s+1:]) for i,k in enumerate(kids))
 
 def gen_shard(t,p,cut,name,expr,lines):''')
     anchor="    if size(t)<=threshold:"
     assert anchor in src
-    src=src.replace(anchor,"    if (t[0]!='split' or size(t)<=threshold) and (t[0]!='split' or not contains_accelerated(t)):")
+    src=src.replace(anchor,"    if (t[0]!='split' or size(t)<=threshold) and (t[0]!='split' or not contains_accelerated(t,p)):")
+    anchor="    lines.append(f'abbrev p{name} := {expr}')"
+    assert anchor in src
+    src=src.replace(anchor,"    if t[0]=='split' and show(p) in accelerated_splits:split_names[name]=accelerated_splits[show(p)]\n"+anchor)
     anchor="        lines.append(f'theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by decide +kernel')"
     assert anchor in src
     src=src.replace(anchor,'''        if t[0]=='open' and t[1] in accelerated:
@@ -44,6 +52,19 @@ theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by
   exact {ns}.checked {cut}""")
         else:
             lines.append(f'theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by decide +kernel')''')
+    anchor="    proof=f'''theorem ck{name}"
+    assert anchor in src
+    src=src.replace(anchor,'''    if name in split_names:
+        ns=split_names[name]
+        xs[-1]=f"""theorem q{name} : zipQueryOK {B} p{name} {n} {slot(s)} = true := by
+  have eq : p{name} = {ns}.table := by
+    funext s
+    rcases s with ⟨q,b⟩
+    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+    rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> rfl
+  rw [eq]
+  exact {ns}.query_ok"""
+'''+anchor)
 anchor="        return\n    assert t[0]=='split';n,s,children=t[1:];names=[]"
 assert anchor in src
 src=src.replace(anchor,"        if t[0]!='alias':lines.append(f'theorem nr{name} : canonicalResiduals p{name} {cut} t{name} = [] := by decide +kernel')\n"+anchor)
@@ -88,6 +109,7 @@ def flush():
 def visit(t,p,cut,name,expr):
     global current,curSize,curLines
     sz=size(t)
+    if os.environ.get('RAW40_ACCELERATED_SPLIT_JSON') and t[0]=='split' and show(p) in accelerated_splits:split_names[name]=accelerated_splits[show(p)]
     if sz<=moduleLimit:
         if current and curSize+sz>moduleLimit:flush()
         if current is None:current=nextName()
