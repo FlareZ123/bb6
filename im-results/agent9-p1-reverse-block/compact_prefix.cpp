@@ -17,6 +17,7 @@
 #include <vector>
 #include <immintrin.h>
 #include <omp.h>
+#include "reduced_jump.hpp"
 using U=uint64_t; using I=uint32_t; using W=__uint128_t;
 constexpr I missing=UINT32_MAX;
 using std::vector;
@@ -137,16 +138,14 @@ template<class T,class Get,class Put>size_t apply_pipe(vector<T>& a,const vector
  }
  return w;
 }
-template<class Word>vector<I> live(I start,I F,Word y,U&work){
- I r=std::min(I(22),F-start),q=F-r;uint32_t M=1u<<r,mask=M-1,Y=y(q,r);
- Seen small(M);vector<uint32_t>res{Y};small.insert(Y);
- for(int j=0;j<r;j++){
-  uint32_t shift=uint32_t((U(q+j)<<j)&mask),count=res.size();
-  for(uint32_t i=0;i<count;i++){uint32_t c=(res[i]-shift)&mask;if(small.insert(c))res.push_back(c);}
- }
+static unsigned jump_limit=22;
+// Reuse the exact target-independent modular support across all prefixes
+// of a stage. Only the cyclic translation by each target Y changes.
+template<class Word>vector<I> live_with_plan(I start,I F,Word y,U&work,const bb6_jump::Plan& plan){
+ I r=I(plan.r),q=I(plan.q);if(U(q)+r!=F||q<start)throw std::runtime_error("jump plan clock");
  vector<I>a;
- a.reserve(std::min(U(q), U(res.size())*((U(q)+M-1)/M)));
- for(U base=0;base<U(q);base+=M)for(auto x:res)if(base+x<U(q))a.push_back(I(base+x));
+ a.reserve(std::min(U(q),U(plan.residues.size())*((U(q)+plan.modulus-1)/plan.modulus)));
+ plan.lift(y(q,r),[&](int c){a.push_back(I(c));});
  Seen seen(q);
  while(q>start&&!a.empty()){
   // Dense early images dedup more frequently; sparse late images are fused.
@@ -156,6 +155,11 @@ template<class Word>vector<I> live(I start,I F,Word y,U&work){
   a.resize(w);for(I c:a)seen.clear(c);q=bs.back().q;
  }
  return a;
+}
+template<class Word>vector<I> live(I start,I F,Word y,U&work){
+ I r=std::min(I(jump_limit),F-start);
+ bb6_jump::Plan plan(int(F-r),int(r));
+ return live_with_plan(start,F,y,work,plan);
 }
 template<class Word>vector<I> filter(I start,I F,Word y,I root,const vector<I>&ends,U&work){
  if(ends.size()>INT_MAX)throw std::runtime_error("mid count");
@@ -234,12 +238,13 @@ static void load(const std::string& path,I n,I K,I h,bool half,I&s,I&gap,vector<
 }
 int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
+ if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
  bool half=argc>=5&&std::string(argv[4])=="half";
  if(argc>=5&&!half&&std::string(argv[4])!="full")return 2;
  std::string path=argc==6?argv[5]:"";
  U nn=std::stoull(argv[1]),KK=std::stoull(argv[2]),hh=std::stoull(argv[3]);
- if(nn>UINT32_MAX||KK>UINT32_MAX||hh>UINT32_MAX||nn+KK+3>=UINT32_MAX)return 2;
+ if(nn>UINT32_MAX||KK>UINT32_MAX||hh>UINT32_MAX||nn+KK+3>=INT_MAX)return 2;
  I n=I(nn),K=I(KK),h=I(hh);if(n<14||n%2||K<=n||h<1||h>n)return 2;
  U A=U(n)+K+2,L=2*(U(n)+3*U(K)+10)+6;W prod=W(A)*L;
  auto safe=[&](U g){int64_t e=int64_t(n)-int64_t(g);return e>=126||(e>=0&&(W(6)<<e)>prod);};
@@ -252,10 +257,12 @@ int main(int argc,char**argv){
  for(;U(s)+n<=K&&!gs.empty();){
   struct Part{vector<Prefix>next;vector<I>accepted;U work=0,fw=0;size_t mids=0;};vector<Part>parts(gs.size());
   for(auto&g:gs){U bound=U(g.run)+h+1;if(!safe(bound))throw std::runtime_error("conservative margin");maxgap=std::max(maxgap,I(bound));}
+  I end=2*n+s+3,jump=std::min(I(jump_limit),n-h);
+  bb6_jump::Plan plan(int(end-jump),int(jump));
 #pragma omp parallel for schedule(dynamic)
   for(int gi=0;gi<(int)gs.size();gi++){
    const auto&g=gs[gi];auto&part=parts[gi];auto y=[&](I q,unsigned k){return g.word(int64_t(q)-2*int64_t(n)-3,k,h);};
-   auto mids=live(n+s+h+3,2*n+s+3,y,part.work);part.mids=mids.size();
+   auto mids=live_with_plan(n+s+h+3,end,y,part.work,plan);part.mids=mids.size();
    auto good=filter(n+s+3,n+s+h+3,y,g.carry,mids,part.fw);
    for(I a:good){Prefix g2=child(n,s,h,g,a);if(half&&s==1&&g2.blocks[0]->get(0)!=1)continue; // low appended 7B bit = (3+7*x)%2; x=0 iff bit=1
     part.next.push_back(std::move(g2));part.accepted.push_back(a);}
