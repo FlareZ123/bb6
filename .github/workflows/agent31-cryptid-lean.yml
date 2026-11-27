@@ -70,5 +70,6 @@ jobs:
         run: |
           set -euo pipefail
           lean -o im-results/agent31-f197-macro/Macro.olean im-results/agent31-f197-macro/Macro.lean
-          lean im-results/agent31-f197-macro/ResetDescentCore.lean | tee /tmp/f197-reset-core.log
+          lean im-results/agent31-f197-macro/ResetTransport.lean | tee /tmp/f197-reset-core.log
+          lean im-results/agent31-f197-macro/ResetDescentCore.lean | tee -a /tmp/f197-reset-core.log
           ! grep -q sorryAx /tmp/f197-reset-core.log
