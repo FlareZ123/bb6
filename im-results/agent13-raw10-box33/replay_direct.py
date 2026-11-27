@@ -88,6 +88,7 @@ def run_direct(args):
             ([12,15],'Box33D17V22RunSummary','nested'),
             ([11,34],'Box33D17V22RunExtra','nested'),
             ([13],'Box33D17V22Cycle','single'),
+            ([33],'Box33D17V22M33','single'),
         ]
         for ids,mod,style in specs:
             for i in ids:
