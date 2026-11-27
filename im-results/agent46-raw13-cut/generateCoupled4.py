@@ -96,7 +96,11 @@ end {tag}""")
 def main():
     path=D/"coupled4-candidates.json"
     data=json.loads(path.read_text()) if path.exists() else dict(far=[],auto=[],last=[],unresolved=[])
-    fixtures=data["auto"]
+    manual={
+        "1RB1LD1RC0RB1LA1RE1LF0LA0LA0RD1LA---":"zeroLA",
+        "1RB1LD1RC0RB1LA1RE1LF0LA1RA0RD1LA---":"oneRA",
+    }
+    fixtures=[f for f in data["auto"] if f["table"] not in manual]
     auton={x["table"]:i for i,x in enumerate(fixtures)}
     assert len(auton)==len(fixtures)
     emit_fixtures(fixtures,D/(MODULE+"Auto.lean"),MODULE+"Auto")
@@ -113,7 +117,7 @@ def main():
         subprocess.run(["g++","-std=c++17","-O3",str(D/"frontier_graft.cpp"),"-o",str(exe)],check=True)
         args=[tmp/x for x in ("far","auto","graft.txt","late")]
         args[0].write_text("".join(f"{t} {r} {d}\n" for t,r,d in data["far"]))
-        args[1].write_text("\n".join(auton)+"\n")
+        args[1].write_text("\n".join([*auton,*manual])+"\n")
         args[2].write_text(GRAFT+"\n")
         args[3].write_text("".join(f"{t} {n} {s}\n" for t,(n,s) in late.items()))
         tree=json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),*map(str,args)],input=ROOT+" 6 4\n",text=True))
@@ -131,6 +135,9 @@ def main():
             raw,rev,df=v;dfa=list(map(int,df));a,b,z=saturate(codes(raw),dfa,rev)
             return f".closed (.far {boolean(rev)} {len(dfa)//2} ⟨0,{fmt(dfa)},{fmt(a)},{fmt(b)},{z}⟩)"
         if tag=="auto":
+            if v[0] in manual:
+                x=manual[v[0]];ns="BB6.Agent46Raw13Stride3Counter"
+                return f".closed (.proven ({ns}.p .{x}) ({ns}.never .{x}))"
             i=auton[v[0]];return f".closed (.proven {AUTO}.p{i} {AUTO}.never{i})"
         if tag=="late":
             i=late_names[v[0]];return f".bounded L{i}.p {B} L{i}.bound"
@@ -153,7 +160,7 @@ theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
         assert k is not None
         tag=f"{i:02}";name=MODULE+"Kid"+tag;modules.append(name)
         p=f"next {move(MOVES[i])}"
-        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late"],
+        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late","Raw13Stride3Counter"],
               f"def kid{tag} {H} : Cut := {emit(k)}\n"+
               f"theorem checked{tag} {H} : check {B} ({p}) 6 (kid{tag} h) = true := by rfl\n")
     terms=",".join(f"kid{i:02} h" for i in range(24))
