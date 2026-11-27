@@ -96,3 +96,9 @@ if(typeof module!=="undefined")module.exports={calc};
 if(typeof require!=="undefined"&&require.main===module)
   for(const K of process.argv.slice(2).map(Number))console.log(JSON.stringify(calc(K)));
 ```
+
+## Further exact reduction: saturated upper cylinder
+
+Write w_j=(q+j)2^j for j<d. Suppose that for every e=m,...,d-1, there is a weight with valuation exactly e. Pick one such weight per e; these are distinct. The subset sums of the picked weights modulo 2^d are exactly the multiples of 2^m, by triangular binary lifting (at step e the chosen weight toggles bit e without changing lower bits). Thus, separating those picked weights from the other weights, the entire suffix support is the inverse image of its projection modulo 2^m. The odd affine bijection of each prefix preserves that periodicity, as does union across prefixes in the row. Consequently we can construct and count each row at modulus 2^m, then multiply its cardinality by 2^(d-m). No approximation or independence hypothesis is involved.
+
+Choose the smallest m such that all valuations m,...,d-1 occur. The projected suffix support requires only j<m (all later weights vanish). See affine_suffix_period.js. Independently computed results match the prior counts at K=26,32,34, with respective visits 1,633,064; 134,456,608; 328,354,772 instead of 2,855,720; 166,227,136; 577,108,724. At K=34, among 5,618 rows, 3,192 retain all 17 suffix bits, 1,408 collapse two high bits, and 1,018 collapse four high bits. This is a paper-proved optimization and exact-integer test, not an accepted Lean certificate. 
