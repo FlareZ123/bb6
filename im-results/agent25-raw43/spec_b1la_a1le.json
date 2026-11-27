@@ -18973,15 +18973,13 @@
       "partial": "BB6.Agent25Raw43B1LAA1LEM805.table",
       "never": "BB6.Agent25Raw43B1LAA1LEM805.never",
       "module": "Raw43B1LAA1LEM805"
+    },
+    "823": {
+      "table": "1RB1LE_1RC1LA_0RD---_1LD0RB_0LF1LC_0LA0RC",
+      "partial": "BB6.Agent25Raw43B1LAA1LEM823.table",
+      "never": "BB6.Agent25Raw43B1LAA1LEM823.never",
+      "module": "Raw43B1LAA1LEM823"
     }
   },
-  "unresolved": [
-    {
-      "i": 823,
-      "table": "1RB1LE_1RC1LA_0RD---_1LD0RB_0LF1LC_0LA0RC",
-      "query": [
-        "open"
-      ]
-    }
-  ]
+  "unresolved": []
 }
