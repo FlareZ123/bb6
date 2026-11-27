@@ -26,6 +26,11 @@ const regionCuts=new Map([
  ['1RB1LC1RC0RD0LA1RB0RE1RE1LF0LA0LC---', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M0'}],
  ['1RB1LC1RC0RD0LA1RB1RE0RF1LE0LC---0LB', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M1'}],
 ]);
+for (const x of require('./q0-143-ten-fixtures.json')) {
+ const k=norm(x.table);
+ if(regionCuts.has(k))throw Error('duplicate region cut '+k);
+ regionCuts.set(k,{root:143,mod:'Raw11Q0Ten143',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Ten143.M'+x.index});
+}
 const regionLeaves=[];
 const repairs=new Map(),residuals=[],resIndex=new Map(),longs=[],census=new WeakMap(),external=new WeakMap();
 const pre='Agent5Q0Coarse'+id,base=pre+'Base',longMod=pre+'Long',modules=[];
