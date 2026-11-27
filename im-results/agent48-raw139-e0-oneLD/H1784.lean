@@ -19,6 +19,7 @@ theorem value_ones (u : Nat) : value (ones u)+1=2^u := by
   induction u with
   | zero => rfl
   | succ u ih =>
+    change value (rep [true] u)+1=2^u at ih
     simp only [rep,List.cons_append,List.nil_append,value,Nat.pow_succ]
     omega
 
@@ -30,8 +31,11 @@ theorem value_zeros (u : Nat) : value (zeros u)=0 := by
 theorem inc_value (u : Nat) (w : List Bool) :
     value (zeros u++true::w) = value (ones u++false::w)+1 := by
   induction u with
-  | zero => rfl
+  | zero =>
+    change 1+2*value w = 2*value w+1
+    omega
   | succ u ih =>
+    change value (rep [false] u++true::w)=value (rep [true] u++false::w)+1 at ih
     simp only [rep,List.cons_append,List.nil_append,value,List.append_assoc]
     omega
 
