@@ -424,14 +424,14 @@ jobs:
             /tmp/raw10-box33-d17v22-m33
             /tmp/raw10-box33-d17v22-m33.log
           if-no-files-found: error
-      - name: Check six D17V23 two-ended and anchored macro proofs
+      - name: Check D17V23 two-ended, anchored and growing-sweep macro proofs
         if: inputs.target == 'weighted-tnf-raw10-box33-d17v23-macro'
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           W=/tmp/raw10-box33-d17v23-macro
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent13.Box33D17V23Exact.M1.compatible_never --theorem BB6.Agent13.Box33D17V23Exact.M2.compatible_never --theorem BB6.Agent13.Box33D17V23Exact.M3.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M0.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M4.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M11.compatible_never im-results/agent13-raw10-box33/Box33D17V23MacroAudit.lean | tee "$W.log"
-          python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent13.Box33D17V23Exact.M1.compatible_never BB6.Agent13.Box33D17V23Exact.M2.compatible_never BB6.Agent13.Box33D17V23Exact.M3.compatible_never BB6.Agent13.Box33D17V23Anchored.M0.compatible_never BB6.Agent13.Box33D17V23Anchored.M4.compatible_never BB6.Agent13.Box33D17V23Anchored.M11.compatible_never
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent13.Box33D17V23Exact.M1.compatible_never --theorem BB6.Agent13.Box33D17V23Exact.M2.compatible_never --theorem BB6.Agent13.Box33D17V23Exact.M3.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M0.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M4.compatible_never --theorem BB6.Agent13.Box33D17V23Anchored.M11.compatible_never --theorem BB6.Agent13.Box33D17V23M20.compatible_never im-results/agent13-raw10-box33/Box33D17V23MacroAudit.lean | tee "$W.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent13.Box33D17V23Exact.M1.compatible_never BB6.Agent13.Box33D17V23Exact.M2.compatible_never BB6.Agent13.Box33D17V23Exact.M3.compatible_never BB6.Agent13.Box33D17V23Anchored.M0.compatible_never BB6.Agent13.Box33D17V23Anchored.M4.compatible_never BB6.Agent13.Box33D17V23Anchored.M11.compatible_never BB6.Agent13.Box33D17V23M20.compatible_never
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw10-box33-d17v23-macro'
         with:
