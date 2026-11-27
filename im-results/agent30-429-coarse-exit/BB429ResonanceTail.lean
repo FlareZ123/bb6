@@ -88,8 +88,7 @@ theorem phase_cycles_direct_return
     (hClo : 72*X≤C)
     (hChi : C≤4*(d0*16^J)+27)
     (hClow : 8*(d0*16^J)+21≤5*C) :
-    run (4*J+2) (phase u0 d0)=some
-      (11, C-(d0*16^J)+d0*16^J+13) := by
+    run (4*J+2) (phase u0 d0)=some (11,C+13) := by
   let D := d0*16^J
   have hD : D≤36*X := by simpa [D] using hDhi
   have hCD : D≤C := by omega
@@ -124,7 +123,6 @@ theorem phase_cycles_direct_return
   constructor
   · trivial
   · rw [hcoordU]
-    omega
 
 #print axioms phase_false_rotate
 #print axioms phase_direct_return
