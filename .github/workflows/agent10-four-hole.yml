@@ -256,6 +256,7 @@ jobs:
           theorem="BB6.Agent25Raw43${suffix}.all43child"
           bound=$(python -c 'import json,sys;print(json.load(open(sys.argv[1]))["bound"])' "$root/spec_$VARIANT.json")
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --manifest "$work/manifest.json" --label "raw43-$VARIANT" \
             --theorem "$theorem" --weighted-bound "$bound" --artifact-name raw43-extra-proof \
             --provenance-input "$root/spec_$VARIANT.json" --provenance-input "$root/generate.py" \
