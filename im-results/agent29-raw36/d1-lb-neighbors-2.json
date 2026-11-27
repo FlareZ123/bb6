@@ -1,0 +1,112 @@
+{
+  "base": "1RB---_1RC---_0RD---_0LD1LB_------_------",
+  "query": [
+    "hole",
+    6,
+    3
+  ],
+  "bank": "candidate.json",
+  "options": {
+    "short": 160,
+    "long": 2000,
+    "maxNodes": 1200000
+  },
+  "results": [
+    {
+      "move": "0RA",
+      "parent": "1RB---_1RC0RA_0RD---_0LD1LB_------_------",
+      "stats": {
+        "nodes": 231433,
+        "split": 9643,
+        "cycle": 180018,
+        "far": 2502,
+        "last": 39270,
+        "open": 0,
+        "halt": 48913,
+        "score": 131
+      },
+      "mass": {
+        "halt": "18507145",
+        "nonhalt": "225633480",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 2502
+      }
+    },
+    {
+      "move": "0RB",
+      "parent": "1RB---_1RC0RB_0RD---_0LD1LB_------_------",
+      "stats": {
+        "nodes": 110761,
+        "split": 4615,
+        "cycle": 89847,
+        "far": 1739,
+        "last": 14560,
+        "open": 0,
+        "halt": 19175,
+        "score": 166
+      },
+      "mass": {
+        "halt": "15573935",
+        "nonhalt": "228566690",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 1739
+      }
+    },
+    {
+      "move": "1LA",
+      "parent": "1RB---_1RC1LA_0RD---_0LD1LB_------_------",
+      "stats": {
+        "nodes": 492865,
+        "split": 20536,
+        "cycle": 348995,
+        "far": 12242,
+        "last": 111092,
+        "open": 0,
+        "halt": 131628,
+        "score": 166
+      },
+      "mass": {
+        "halt": "20596692",
+        "nonhalt": "223543933",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 12242
+      }
+    },
+    {
+      "move": "1RA",
+      "parent": "1RB---_1RC1RA_0RD---_0LD1LB_------_------",
+      "stats": {
+        "nodes": 350929,
+        "split": 14622,
+        "cycle": 260741,
+        "far": 7288,
+        "last": 68278,
+        "open": 0,
+        "halt": 82900,
+        "score": 166
+      },
+      "mass": {
+        "halt": "19791628",
+        "nonhalt": "224348997",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 7288
+      }
+    }
+  ]
+}
