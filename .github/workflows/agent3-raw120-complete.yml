@@ -5,8 +5,12 @@ on:
       mode:
         description: Build the parent, repair 1LB, or integrate into the eleven-parent core
         type: choice
-        options: [all, repair-1lb, integrate-65, scan-normalized-cryptids, raw139-e0-zeroRA, raw139-e0-integrate]
+        options: [all, repair-1lb, integrate-65, scan-normalized-cryptids, raw139-e0-zeroRA, raw139-e0-integrate, raw139-affine8938]
         default: repair-1lb
+      affine_source_sha:
+        description: Exact source revision for affine8938 audit
+        type: string
+        default: ""
       raw139_subcover_run_id:
         description: Optional Agent6 run ID containing the 43-sibling Raw139 core and consumer artifacts
         type: string
@@ -663,5 +667,91 @@ jobs:
             /tmp/a3e0-prepared/build/A3E0RACover.lean
             /tmp/a3e0-prepared/build/A3E0RACover.olean
             /tmp/a3-e0-parent.log
+          if-no-files-found: error
+          retention-days: 14
+
+  affine8938_prepare:
+    if: inputs.mode == 'raw139-affine8938'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.affine_source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate certificates and compile exact checker closure
+        run: bash im-results/agent3-raw139-oneLA8938/formal_prepare.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-affine8938-prepared
+          path: /tmp/8938lean
+          if-no-files-found: error
+          retention-days: 14
+  affine8938_shards:
+    if: inputs.mode == 'raw139-affine8938'
+    needs: affine8938_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.affine_source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-affine8938-prepared
+          path: /tmp/8938lean
+      - name: Kernel replay independent finite chunks
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: bash im-results/agent3-raw139-oneLA8938/formal_shard.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-affine8938-shard-${{ matrix.shard }}
+          path: /tmp/8938shard
+          if-no-files-found: error
+          retention-days: 14
+  affine8938_join:
+    if: inputs.mode == 'raw139-affine8938'
+    needs: affine8938_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.affine_source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-affine8938-prepared
+          path: /tmp/8938lean
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-affine8938-shard-*
+          merge-multiple: true
+          path: /tmp/8938shard
+      - name: Join exact source-certified recurrence and blank seed
+        run: bash im-results/agent3-raw139-oneLA8938/formal_join.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-affine8938-certified
+          path: /tmp/8938lean
           if-no-files-found: error
           retention-days: 14

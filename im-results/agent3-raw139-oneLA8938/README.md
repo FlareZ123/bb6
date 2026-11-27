@@ -1,6 +1,6 @@
 # Raw139 E0=1LA exceptional leaf 8938: exact buffered dynamics
 
-**Intermediate, not a decision.** Exact table `[7,8,11,21,14,13,17,16,2,11,19,24]` (code 4*q+2*w+r, F1 unassigned). Agent48's E0=1LA census has this as its remaining candidate-unclassified leaf. Do not count this as a Cover.
+**All-parameter computational nonhalt certificate; kernel replay in progress.** See [AFFINE.md](AFFINE.md) for the actual five-counter growth recurrence and [FORMAL.md](FORMAL.md) for the independent Lean checker. The buffered reduction below was an earlier route; no Stable predicate is needed by the affine proof. Exact table `[7,8,11,21,14,13,17,16,2,11,19,24]` (code 4*q+2*w+r, F1 unassigned). Agent48's E0=1LA census has this as its remaining candidate-unclassified leaf. Do not count this as a Cover.
 
 The 5 phases are cr (C scanning right with known left 1), cl (C scanning left with known right 0), el (E scanning left with known right 01), er0 (E scanning right with known left 00), er1 (E scanning right with known left 1). Stacks L,R nearest first, with infinite zero suffixes, omit these fixed buffers. The authentic blank run enters cr(L=1,R=empty) after two steps.
 
@@ -24,4 +24,4 @@ The sole uncovered case er0 R=01R' reaches F1 in exactly three known ordinary mo
 
 Unpack with `python3 unpack.py`; the Lean module imports SparseZipper. Locally compiled with Lean 4.36.0-rc2 against a minimal exact-definition copy of Frontier/RootShift and the copied SparseZipper proof bodies, not a full original-source audit. Theorems rule_exact, bad_hit, seed_run, stable_never use propext and Quot.sound only; cover_padded uses propext only. stable_never is conditional on a Stable invariant (seed, padding, bad exclusion, closure under the 13 rules). No invariant has yet been supplied. The independent primitive replay of 100M steps is finite evidence only.
 
-Prior broad fixed-block and prefix/run abstractions failed or hit caps; do not interpret this as a halt. Scanner-end monoid refinements also admit spurious bad paths. Work on the exact sweep transducers and a joint invariant rather than repeat primitive scans. No new workflow.
+Prior broad fixed-block and prefix/run abstractions failed or hit caps; do not interpret this as a halt. Scanner-end monoid refinements also admit spurious bad paths. These searches were superseded by the affine growth certificate; do not repeat primitive scans.
