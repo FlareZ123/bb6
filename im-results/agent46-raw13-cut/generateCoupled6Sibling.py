@@ -124,6 +124,18 @@ def main(mv):
             ns_counter="BB6Coverage.Agent31Pump.Auto."+("CounterLeft" if side=="L" else "Counter")+"."+name
             for i,x in enumerate(batch):
                 manual[x["table"]]=f".closed (.proven {ns_counter}.p{i} {ns_counter}.never{i})"
+    from emitRadixMarkerBank import emit_fixture
+    for kind in ("Radix","Marker"):
+        bank_file=D/("coupled6-extra-"+kind.lower()+".json")
+        bank=json.loads(bank_file.read_text()) if bank_file.exists() else []
+        selected=[x for x in bank if x["table"] in data["unresolved"] and x["table"] not in manual]
+        assert len({x["table"] for x in selected})==len(selected)
+        for i,x in enumerate(selected):
+            name=mod+kind+str(i)
+            emit_fixture(x,D/(name+".lean"),name,kind)
+            extra_imports.append(name)
+            ns="BB6Coverage.Agent31Pump.Auto."+kind+"."+name
+            manual[x["table"]]=f".closed (.proven {ns}.p {ns}.never)"
     records=data["certs"]+[x for x in extras if x["table"] in data["unresolved"] and x["table"] not in manual]
     assert set(data["unresolved"])==set(manual)|{x["table"] for x in extras if x["table"] in data["unresolved"]}
     names={x["table"]:i for i,x in enumerate(records)}
