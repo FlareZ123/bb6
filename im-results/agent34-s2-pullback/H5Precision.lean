@@ -179,6 +179,79 @@ theorem lifted_w15_source (r w k : Nat)
 #print axioms lifted_w15_quarter_miss
 #print axioms lifted_w15_source
 
+
+/-- The signed stop residue is affine at any base parameter. Every
+    simultaneous shift by 1024 preserves its first 33 bits. -/
+theorem arbitrary_base_residue33 (r0 w0 r w : Nat) :
+    residue 33 (stopResidue (J (r0+1024*r)) (M (r0+1024*r) (w0+1024*w))) =
+      residue 33 (stopResidue (J r0) (M r0 w0)) := by
+  simp only [residue, stopResidue, J, M, Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
+  rw [Pair.mk.injEq]
+  constructor
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨(r:Int), ?_⟩
+    change _ = (8589934592:Int) * _
+    omega
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨-2*(r:Int)-3*(w:Int), ?_⟩
+    change _ = (8589934592:Int) * _
+    omega
+
+theorem arbitrary_base33_source (r0 w0 r w k : Nat)
+    (hcert : excluded 33 (stopResidue (J r0) (M r0 w0)) = true)
+    (hstop :
+       k+J (r0+1024*r)+3*M (r0+1024*r) (w0+1024*w)+4 =
+       2^(2*M (r0+1024*r) (w0+1024*w)+2)*(J (r0+1024*r)+2)) :
+    ¬ BB6.Agent3.CReach (2*J (r0+1024*r)+1) k := by
+  have hb : 33 ≤ 2*M (r0+1024*r) (w0+1024*w)+1 := by unfold M; omega
+  apply source_stop_cylinder_excluded 33
+    (J (r0+1024*r)) (M (r0+1024*r) (w0+1024*w))
+    (J (r0+1024*r)) (M (r0+1024*r) (w0+1024*w)) k (Or.inl hb)
+    (cong_refl 33 _) (cong_refl 33 _) hstop
+  unfold excluded
+  rw [arbitrary_base_residue33]
+  exact hcert
+
+/-- Second 33-bit base in the correlated diagonal family. -/
+theorem base33_r512_w527 :
+    excluded 33 (stopResidue (J 512) (M 512 527)) = true := by decide
+theorem base32_r512_w527 :
+    excluded 32 (stopResidue (J 512) (M 512 527)) = false := by decide
+
+theorem diagonal33_source (n w k : Nat)
+    (hstop :
+      k+J (512*n)+3*M (512*n) (15+512*n+1024*w)+4 =
+      2^(2*M (512*n) (15+512*n+1024*w)+2)*(J (512*n)+2)) :
+    ¬ BB6.Agent3.CReach (2*J (512*n)+1) k := by
+  by_cases heven : n%2=0
+  · let t := n/2
+    have hn : n=2*t := by dsimp [t]; omega
+    have hj : J (512*n) = J (0+1024*t) := by unfold J; omega
+    have hm : M (512*n) (15+512*n+1024*w) =
+        M (0+1024*t) (15+1024*(t+w)) := by unfold M; omega
+    have hs : k+J (0+1024*t)+3*M (0+1024*t) (15+1024*(t+w))+4 =
+       2^(2*M (0+1024*t) (15+1024*(t+w))+2)*(J (0+1024*t)+2) := by
+      simpa only [hj, hm] using hstop
+    have hr := arbitrary_base33_source 0 15 t (t+w) k base33_w15 hs
+    simpa only [hj] using hr
+  · let t := n/2
+    have hn : n=2*t+1 := by dsimp [t]; omega
+    have hj : J (512*n) = J (512+1024*t) := by unfold J; omega
+    have hm : M (512*n) (15+512*n+1024*w) =
+        M (512+1024*t) (527+1024*(t+w)) := by unfold M; omega
+    have hs : k+J (512+1024*t)+3*M (512+1024*t) (527+1024*(t+w))+4 =
+       2^(2*M (512+1024*t) (527+1024*(t+w))+2)*(J (512+1024*t)+2) := by
+      simpa only [hj, hm] using hstop
+    have hr := arbitrary_base33_source 512 527 t (t+w) k base33_r512_w527 hs
+    simpa only [hj] using hr
+
+#print axioms arbitrary_base_residue33
+#print axioms arbitrary_base33_source
+#print axioms base33_r512_w527
+#print axioms diagonal33_source
+
 #print axioms high_stop_excluded_cap
 #print axioms base37
 #print axioms lifted37
