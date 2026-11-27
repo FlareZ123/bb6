@@ -130,9 +130,12 @@ theorem certAt (i : V) (p : P) (o : V) (a : P) (h : Rel i p o) :
   have h' := List.all_eq_true.mp cert (i,p,o) h
   exact List.all_eq_true.mp h' a (List.mem_finRange a)
 
+theorem pairCases : ∀ a : P, a=0 ∨ a=1 ∨ a=2 ∨ a=3 := by decide
 theorem certStart : ∀ a : P, match d 0 a with
     | none => True
-    | some i => Rel i a 0 := by decide
+    | some i => Rel i a 0 := by
+  intro a
+  rcases pairCases a with rfl|rfl|rfl|rfl <;> decide
 
 theorem zeroStep : ∀ q : V, zerosOK q = true →
     ∃ j : V, d q 0 = some j ∧ zerosOK j = true := by decide
@@ -176,7 +179,9 @@ theorem goodPrefix {q j : V} {u w : List P}
       simp only [ha,Option.bind_some] at h
       exact Good.cons ha (ih h)
 
-def pair (p : P) (l : Stream) : Stream := word [decide (p.val ≥ 2),decide (p.val % 2 = 1)] l
+def pair (p : P) (l : Stream) : Stream :=
+  if p=0 then word [false,false] l else if p=1 then word [false,true] l
+  else if p=2 then word [true,false] l else word [true,true] l
 def tapePrefix : List P → Stream → Stream
   | [],l => l
   | p::w,l => pair p (tapePrefix w l)
@@ -229,11 +234,11 @@ def cost (p : P) : Nat := if p=0 then 6 else if p=1 then 14 else 10
 
 theorem scanMacro (p a p' : P) (b : Bool) (h : mv p a = some (p',b)) (l r : Stream) :
     run (cost p) (S (pair p (pair a l)) r) = some (S (pair p' l) (rtPair b r)) := by
-  have hp : p=0 ∨ p=1 ∨ p=2 ∨ p=3 := by omega
-  have ha : a=0 ∨ a=1 ∨ a=2 ∨ a=3 := by omega
+  have hp := pairCases p
+  have ha := pairCases a
   rcases hp with rfl|rfl|rfl|rfl <;> rcases ha with rfl|rfl|rfl|rfl <;>
     simp [mv] at h <;> obtain ⟨rfl,rfl⟩ := h <;>
-    simp [cost,S,A,pair,rtPair,cfg,run,step,left,right,word]
+    simp [cost,S,A,pair,rtPair,cfg,run,step,left,right,word] <;> rfl
 
 theorem turnMacro (a : P) (h : a=0 ∨ a=1) (l r : Stream) :
     run 6 (S (pair 2 (pair a l)) r) =
