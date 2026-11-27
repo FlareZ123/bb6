@@ -8,6 +8,10 @@ from generate_four_hole import masks, slot, move, refine, parse
 sys.path.insert(0, str(ROOT.parent / "agent10-tnf-multipump"))
 from chunk_checks import partition
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
+# E and F are fresh at this first hole. The F child is covered by the
+# original-source state-renaming theorem from its E sibling, so no F
+# audit tree need be regenerated or compiled.
+REPRESENTATIVE_CHILDREN = tuple(i for i in range(24) if i % 6 != 5)
 SPEC = json.loads((ROOT / "candidate.json").read_text())
 HEADER = """import Raw36Cut
 set_option maxRecDepth 100000
@@ -61,7 +65,7 @@ end BB6.Agent29Raw36
     (ROOT/f"Raw36Kid{i:02d}.lean").write_text(body)
     print(f"Generated {nm}: {n} proof chunks",flush=True)
 def assemble():
-    out="".join(f"import Raw36Kid{i:02d}\n" for i in range(24))+HEADER.split("\n",1)[1]
+    out="import Raw36Symmetry\n" + "".join(f"import Raw36Kid{i:02d}\n" for i in REPRESENTATIVE_CHILDREN)+HEADER.split("\n",1)[1]
     out+="""
 theorem children_bound (mv : Move) (m : Machine) (hm : compatible (child mv) m) : WeightedBound 162 m := by
   rcases mv with ⟨w,r,q⟩
@@ -70,7 +74,11 @@ theorem children_bound (mv : Move) (m : Machine) (hm : compatible (child mv) m) 
   all_goals cases w <;> cases r
 """
     for q,w,r in product(range(6),range(2),range(2)):
-        out+=f"  · exact kid{12*w+6*r+q:02d}_bound m hm\n"
+        if q == 5:
+            i = 12*w + 6*r + 4
+            out+=f"  · exact childF_bound 162 {str(bool(w)).lower()} {str(bool(r)).lower()} kid{i:02d}_bound m hm\n"
+        else:
+            out+=f"  · exact kid{12*w+6*r+q:02d}_bound m hm\n"
     out+="""
 open BB6.Agent47PartialAudit
 theorem branch_bound (m : Machine) (hm : compatible branch m) : WeightedBound 162 m := by
@@ -96,8 +104,8 @@ if __name__=="__main__":
     ap.add_argument("children",nargs="*",type=int)
     ap.add_argument("--limit",type=int,default=300)
     args=ap.parse_args()
-    selected=args.children or list(range(24))
+    selected=args.children or list(REPRESENTATIVE_CHILDREN)
     for i in selected:
         assert 0<=i<24
         generate(i,args.limit)
-    if set(selected)==set(range(24)): assemble()
+    if set(selected)==set(REPRESENTATIVE_CHILDREN): assemble()
