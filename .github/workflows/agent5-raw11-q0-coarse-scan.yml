@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -728,4 +728,44 @@ jobs:
             /tmp/coarse-certified/
             /tmp/coarse-cover.log
           if-no-files-found: error
+          retention-days: 30
+
+  frame150:
+    if: inputs.mode == 'frame150'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check three frame-debt return invariants
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py im-results/agent5-weighted-tnf-queue/Raw11Q0Frame150Rules.lean \
+            --workdir /tmp/raw11-q0-frame150 \
+            --manifest /tmp/raw11-q0-frame150/manifest.json \
+            --jobs 2 --lean lean \
+            --label raw11-q0-150-frame \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-150-frame-run-invariant.md \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee /tmp/raw11-q0-frame150.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw11-q0-frame150.log; then exit 1; fi
+          grep -F "BB6Coverage.Agent31Pump.Frame150.Raw11.M0.cover' depends on axioms:" /tmp/raw11-q0-frame150.log
+          grep -F "BB6Coverage.Agent31Pump.Frame150.Raw11.M1.cover' depends on axioms:" /tmp/raw11-q0-frame150.log
+          grep -F "BB6Coverage.Agent31Pump.Frame150.Raw11.M2.cover' depends on axioms:" /tmp/raw11-q0-frame150.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-150-frame
+          path: |
+            /tmp/raw11-q0-frame150/
+            /tmp/raw11-q0-frame150.log
+          if-no-files-found: warn
           retention-days: 30
