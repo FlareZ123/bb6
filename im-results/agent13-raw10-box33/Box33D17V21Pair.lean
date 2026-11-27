@@ -46,7 +46,7 @@ theorem lsweep (b : Bool) (n : Nat) (l r : Stream) :
   | succ n ih =>
     rw [show 5*(n+1)=5+5*n by omega,
       show ones (n+1) l=ones 1 (ones n l) by rfl,run_add,lstep,Option.bind_some,ih]
-    rw [show ones (n+1) r=ones n (ones 1 r) by rw [←rep_add]; congr 1; omega]
+    rw [show ones (n+1) r=ones n (ones 1 r) from rep_add _ _ _ _]
 
 theorem turn (b : Bool) (r : Stream) :
     run b 10 (L z r) = some (R (ones 5 z) r) := by
@@ -66,7 +66,7 @@ theorem rsweep (b : Bool) (k : Nat) (l r : Stream) :
       show ones (5+5*k) r=ones 5 (ones (5*k) r) from rep_add _ _ _ _,
       run_add,rstep,Option.bind_some,ih]
     rw [show ones (5+5*k) l=ones (5*k) (ones 5 l) by
-      rw [←rep_add]; congr 1; omega]
+      rw [show 5+5*k=5*k+5 by omega]; exact rep_add _ _ _ _]
 
 def phase (k : Nat) : Config := R (ones (5*k) z) z
 theorem growth (b : Bool) (k : Nat) :
