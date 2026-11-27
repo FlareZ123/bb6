@@ -1,31 +1,21 @@
-# Raw11 extra 28, D1=0LC: checked weighted bound 42
+# Raw11 Extra28: first-hole refinement and binary-counter proofs
 
-Status: local Lean 4.36.0-rc2 check against the compiled source artifact from Agent47's existing Raw11 route (artifact 15144626755). Not yet included in a global route certificate.
+Parent: `1RB0LB_1RC1LC_0LA0LD_------_------_------`. The first hole is D1 at step 9. Eight ordinary children close by translated side cycles. D1=0LC has a prior locally checked WeightedBound 42 (3309 nodes); D1=0LD now has a locally kernel-checked WeightedBound 64 (3357 nodes). The ten other ordinary children still require full kernel-checked Covers. This is not a complete Raw11 parent Cover or a global roster reduction.
 
-Exact parent: 1RB0LB_1RC1LC_0LA0LD_------_------_------ (extra index 28, zero-based in raw11-route.json).
-Exact covered child: 1RB0LB_1RC1LC_0LA0LD_---0LC_------_------.
-Theorem: BB6.Agent44Extra28D1LC.cover : Cover (WeightedBound bound) parent, bound = 42.
-Axioms: propext, Classical.choice, Quot.sound only.
+## Checked D1=0LD result
 
-First-hole tree: 3309 nodes (2684 translated cycles, 349 last-hole leaves, 138 splits, 136 total closed-state leaves, 2 initially open).
-One open leaf 1RB0LB_1RC1LC_0LA0LD_0RE0LC_1LD1RF_1RE--- is closed by two-stack automata with six states per stack.
-The other, 1RB0LB_1RC1LC_0LA0LD_0RE0LC_1RF---_1LC1RE, has a direct binary-counter invariant. At E, the left half is a zero followed by k copies of 11 and arbitrary finite zeros. The right half consists of binary digits with zero separators. A 1 advances the carry in two transitions; a 0 sets the bit and resets k, using 3+2k+1 transitions. The blank run reaches the invariant in 12 steps. The symbolic proof never queries E1. Lean proves arbitrary-length runs and transfers them to the original compatible machine using the existing zipper/run soundness lemmas. Both never and cover are checked.
+`BB6.Agent44Extra28LD.cover : Cover (WeightedBound 64) parent`. The exact child is `1RB0LB_1RC1LC_0LA0LD_---0LD_------_------`. The certificate tree has 2839 translated cycles, 371 last-hole leaves, 140 normalized splits, five two-stack automata leaves and two symbolic leaves; maximum ordinary query index 58. The two symbolic leaves share an unbounded binary counter: at E the left tape is zero followed by k copies of 11 and a zero sentinel, and the right tape comprises bits separated by zeros. A carry over one takes two transitions; resetting at zero erases the carry and returns to the least significant bit in 2k+4 steps. Blank entry occurs after 12 steps. The proof uses the actual SweepPumping / zipper transport to NeverHalts, not a finite simulation. Both F0=1LC and F0=1LD variants are checked.
+
+`Raw11Extra28LDRefine.consume` gives a conditional parent Cover at any B>=64, assuming the already established LC child lifted to 64 and the ten remaining exact obligations. `exactCodes` checks their table codes. The remaining D1 moves are 1RB,0RC,1LC,0RD,1LD,1RD,0LE,0RE,1LE,1RE.
+
+An additional original-source checked counter theorem, `BB6.Agent44Counter28RE.never`, closes the prepared leaf `1RB0LB1RC1LC0LA0LD1LF1RE1RD---0RE0LF` from blank entry at step 20; this is not yet a Cover for the whole D1=1RE child.
 
 ## Reproduction
 
-Unpack source.tar.gz in an empty directory. With Python 3 and g++ installed, run:
-    python generate.py
-    python split.py
+`ld-source.tar.gz` contains the generator, both symbolic source modules, the checked refinement, manifest, and hashes of the exact checked generated source. Extract in an empty directory; run `BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs" node generate.cjs`, then `sha256sum -c LD-checked.sha256`. Use Lean 4.36.0-rc2 and artifact 15144626755 (exact original source dependency closure), with LEAN_PATH including the working directory and extracted a47-raw11-root52 directory. Compile Raw11Counter28LD, Raw11Counter28RE, Raw11Extra28LDBase, Raw11Extra28LDPart0 through Part4, Raw11Extra28LDJoin and Raw11Extra28LDRefine with lean -o MODULE.olean MODULE.lean. All passed locally, with standard axioms only (propext, Classical.choice, Quot.sound), no sorryAx/native_decide. Local GitHub DNS unavailable; dependencies transferred by artifact and repository writes by connector.
 
-Extract the dependency artifact 15144626755, set LEAN_PATH to the working directory plus its a47-raw11-root52 directory, and use Lean 4.36.0-rc2 to compile, in order:
-    Raw11Counter28
-    Raw11Extra28D1LCBase
-    Raw11Extra28D1LCPart0 through Part4 (independent)
-    Raw11Extra28D1LCJoin
+The previous LC certificate remains in source.tar.gz; extract separately, run python generate.py then python split.py, compile Raw11Counter28, Raw11Extra28D1LCBase, Part0..4 and Join, then the separately stored Raw11Extra28Refine.lean. Its checked hashes are in checked.sha256. Both child results use the existing PhaseTree and PhaseFrontier libraries.
 
-Use lean -o MODULE.olean MODULE.lean for each. The split is needed to avoid monolithic compilation timeout. The finite scanner uses bounded 128-bit tape encodings and treats overflow as unknown; none of its assertions are trusted by the kernel. The emitted proof checks every leaf and every normalized split, using the existing PhaseTree and PhaseFrontier libraries. No native_decide or sorryAx occurs in the printed axioms. SHA256 manifest identifies the locally checked sources. No new CI workflow.
+## Complete candidate discovery for remaining children (not yet kernel checked)
 
-## Remaining work
-
-The original extra28 has now been checked by Raw11Extra28Refine.lean (compile after Join). The first hole is D1 at step 9. Eight children close by side cycles, and D1=0LC by the new theorem. The 11 remaining ordinary children are D1=1RB,0RC,1LC,0LD,0RD,1LD,1RD,0LE,0RE,1LE,1RE. The theorem exactCodes checks the exact residual list. consume lifts to any B≥42 and makes remaining obligations explicit. Printed axioms: propext, Classical.choice, Quot.sound. No global roster change is claimed.
-SHA256 Raw11Extra28Refine.lean: 22a891decafe3ba34e1b4938dbc823d1a0a41d327bf62d887be627f52741ca7a.
+All ten remaining children now have complete bounded-tree candidate discoveries; all initially open leaves were solved by finite automata except the source-checked RE counter. For D1=0RE one harder leaf `1RB0LB1RC1LC0LA0LD1LF0RE1RD1RA---1LE` requires ngram width 10 (78/84 stack states, 474 reachable rows). Candidate bounds in move order: 1RB 72, 0RC 84, 1LC 101, 0RD 79, 1LD 96, 1RD 119, 0LE 81, 0RE 150, 1LE 141, 1RE 158. Do not claim these bounds until the exact complete trees and parent consumer compile. Next work: shard kernel checks, compose LC and LD plus ten siblings, then consume Extra28 into the exact Raw11 route.
