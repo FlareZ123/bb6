@@ -92,13 +92,22 @@ def verify_legacy(raw: str, work: Path):
     ]
     assert len(roots) == 1, [str(p) for p in roots]
 
-    manifests = [
-        p for p in work.rglob("manifest.json")
-        if "metadata" not in p.parts
-    ]
-    assert len(manifests) == 1, [str(p) for p in manifests]
-    manifest_path = manifests[0]
-    manifest = json.loads(manifest_path.read_text())
+    candidates = []
+    for path in work.rglob("*.json"):
+        if "metadata" in path.parts:
+            continue
+        try:
+            manifest = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        claim = manifest.get("claim") or {}
+        if (
+            manifest.get("artifact_name") == spec["artifact_name"]
+            and claim.get("theorem") == spec["theorem"]
+        ):
+            candidates.append((path, manifest))
+    assert len(candidates) == 1, [str(p) for p, _ in candidates]
+    manifest_path, manifest = candidates[0]
     assert manifest["proof_source_revision"] == spec["revision"]
     assert "4.36.0-rc2" in manifest["lean_version"]
     assert manifest["artifact_name"] == spec["artifact_name"]
