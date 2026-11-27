@@ -65,6 +65,7 @@ on:
           - sourceAgent2ThirdTwoEdges
           - sourceAgent2ThirdStrictness
           - sourceAgent2TwoConeHalting
+          - sourceAgent2FirstStrict
           - sourceAgent2ThirdBroad
           - sourceAgent2ThirdBroadTwoEdges
           - sourceAgent2ThirdBroadStrictness
@@ -313,6 +314,9 @@ jobs:
               ;;
             sourceAgent2TwoConeHalting)
               target=im-results/agent2-c-oddodd-cone/TwoConeHaltingCriterion.lean
+              ;;
+            sourceAgent2FirstStrict)
+              target=im-results/agent2-c-oddodd-cone/FirstImageStrictSource.lean
               ;;
             sourceAgent2ThirdBroad)
               target=im-results/agent2-c-oddodd-cone/ThirdImageBroadConeSource.lean
