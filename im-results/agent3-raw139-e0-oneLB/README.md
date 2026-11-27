@@ -27,3 +27,9 @@ Run `bash im-results/agent3-raw139-e0-oneLB/reproduce.sh` from a checkout with L
 ## Next mathematical edge
 
 Complete the other C1 siblings of E0=1LB, using the same exact first-query mechanism. Six immediate translated-cycle C1 choices are 11,12,14,16,17,18 (ordinary codes). They do not by themselves decide the whole E0 parent. The C1=0LC subcover must be consumed in an exact parent split before any roster reduction.
+
+## C1=1LC sibling: computationally complete, bound 61185
+
+The exact child [7,24,11,24,14,10,24,16,6,11,24,24] has first D0 query at step 12. At cap 450 its full first-query tree has 685 splits, 11,340 translated cycles, 3,209 final-hole leaves, 969 FAR leaves and 238 initially open leaves. The 238 are closed computationally by 233 block invariants and five final-hole executions. A direct replay of the last holdout [7,3,11,21,14,10,1,16,6,11,24,13] reaches F0 at exactly 61,179 steps, head +27; all others have late query at most 2,727. Weighted bound 61,185 includes halt and maximum blank delay. Five of the six initially stubborn tables admit deeper width-two automata; explicit recipes in discover-oneLC.py. All other block recipes are selected by a deterministic short search. No open computational leaves remain in this child.
+
+Run reproduce-oneLC.sh, or workflow kind e0parent sibling OneLBC1OneLC. Original-source Lean acceptance is separate; long replay may need a chunked checked proof if direct evaluation is too expensive.

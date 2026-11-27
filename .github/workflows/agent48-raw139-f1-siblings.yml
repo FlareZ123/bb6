@@ -47,6 +47,7 @@ jobs:
               ZeroRD) bash im-results/agent48-raw139-e0-0rd/reproduce-parent.sh ;;
               OneRB) bash im-results/agent48-raw139-e0-1rb/reproduce-parent.sh ;;
               OneLBC1ZeroLC) bash im-results/agent3-raw139-e0-oneLB/reproduce.sh ;;
+              OneLBC1OneLC) bash im-results/agent3-raw139-e0-oneLB/reproduce-oneLC.sh ;;
               OneLA) bash im-results/agent48-raw139-e0-1la/reproduce-parent.sh ;;
               *) echo "Unknown E0 parent: $SIBLING" >&2; exit 2 ;;
             esac
@@ -73,7 +74,7 @@ jobs:
             bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
           fi
       - uses: actions/upload-artifact@v4
-        if: ${{ always() && (inputs.sibling != 'OneLBC1ZeroLC' || success()) }}
+        if: ${{ always() && ((inputs.sibling != 'OneLBC1ZeroLC' && inputs.sibling != 'OneLBC1OneLC') || success()) }}
         with:
           name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-certified
           include-hidden-files: true
