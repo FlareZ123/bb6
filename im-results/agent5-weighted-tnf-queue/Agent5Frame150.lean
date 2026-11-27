@@ -74,7 +74,9 @@ theorem runEq (p : PartialMachine) (k : Nat) {a b c : Z0}
     have he : (p (a.q,a.l.headD false)).bind id = (p (b.q,b.l.headD false)).bind id := by
       rw [hab.state,hab.left.head]
     cases hm : (p (a.q,a.l.headD false)).bind id with
-    | none => simp only [run0,step0,hm,Option.map_none,Option.bind_none] at h
+    | none =>
+      simp only [run0,step0,hm,Option.map_none,Option.bind_none] at h
+      cases h
     | some mv =>
       have hm' : (p (b.q,b.l.headD false)).bind id = some mv := he.symm.trans hm
       have h' : run0 p k (move0 mv a) = some c := by simpa only [run0,step0,hm,Option.map_some,Option.bind_some] using h
