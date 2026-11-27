@@ -101,6 +101,7 @@ inductive ZeroPath (p : Params) : S → List Code → Prop where
 theorem zero_path (p : Params) (s : S) (cs : List Code) (h : zeroCodes p s=some cs) :
     ZeroPath p s cs := by
   unfold zeroCodes at h
+  dsimp only at h
   split at h
   · rename_i hs
     subst s; cases h; exact .done
@@ -206,6 +207,7 @@ theorem next_sound (p : Params) (b : Gate) (n m : Nat) (l : Stream)
     (h : concreteStep p n=.next m) :
     ∃ t l', 0<t ∧ runCore p b t (root n l) = some (root m l') := by
   unfold concreteStep at h
+  dsimp only at h
   split at h
   · contradiction
   · rename_i hs
@@ -220,6 +222,7 @@ theorem next_sound (p : Params) (b : Gate) (n m : Nat) (l : Stream)
 theorem drift_sound (p : Params) (b : Gate) (n : Nat) (l : Stream)
     (h : concreteStep p n=.drift) (t : Nat) : runCore p b t (root n l) ≠ none := by
   unfold concreteStep at h
+  dsimp only at h
   split at h
   · contradiction
   · rename_i hs
