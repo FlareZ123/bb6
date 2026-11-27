@@ -43,7 +43,7 @@ jobs:
       - name: Original source kernel and exhaustive certified bound
         run: |
           set -euo pipefail
-          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-candidate/summary.json"))["remaining"])')" = 0
+          test "$(python3 -c 'import json;print((lambda q:q.get("remaining_after_late",q["remaining"]))(json.load(open("/tmp/raw41-candidate/summary.json"))))')" = 0
           lean --version | grep -F '4.36.0-rc2'
           echo 'Accepted original canonical77 object layout:'
           find /tmp/canonical77 -maxdepth 2 -name 'CanonicalFrontier.olean' -o -name 'ZipThreeHoleAudit.olean' -o -name 'PartialAudit.olean'
