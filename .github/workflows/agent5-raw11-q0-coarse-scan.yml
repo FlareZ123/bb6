@@ -445,6 +445,7 @@ jobs:
     timeout-minutes: 45
     outputs:
       id: ${{ steps.prepare.outputs.id }}
+      remaining: ${{ steps.frontier.outputs.remaining }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -477,13 +478,35 @@ jobs:
           set -euo pipefail
           node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK"
           python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py partition /tmp/coarse-generated 8
+      - name: Retain generated proof and exact residual frontier before compilation
+        id: frontier
+        run: |
+          python - <<'PY'
+          import json, os
+          m = json.load(open('/tmp/coarse-generated/manifest.json'))
+          n = len(m['remaining'])
+          tag = 'raw11-q0-prepared-%d-B%d-R%d' % (m['id'], m['bound'], n)
+          for table in m['remaining'][:3]:
+              tag += '-' + table.replace('_','')
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              print('remaining='+str(n), file=f)
+              print('tag='+tag, file=f)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ steps.frontier.outputs.tag }}
+          path: /tmp/coarse-generated/
+          if-no-files-found: error
+          retention-days: 30
       - name: Install Lean 4.36.0-rc2
+        if: steps.frontier.outputs.remaining == '0'
         run: |
           set -euo pipefail
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Compile common source dependency closure once
+        if: steps.frontier.outputs.remaining == '0'
         env:
           ID: ${{ steps.prepare.outputs.id }}
         run: |
@@ -495,6 +518,7 @@ jobs:
             --label "q0 $ID sharded core" 2>&1 | tee /tmp/coarse-core.log
           if grep -Eq 'sorryAx|native_decide' /tmp/coarse-core.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
+        if: steps.frontier.outputs.remaining == '0'
         with:
           name: raw11-q0-sharded-core-${{ steps.prepare.outputs.id }}
           path: |
@@ -505,7 +529,7 @@ jobs:
           retention-days: 30
 
   sharded-check:
-    if: inputs.mode == 'cover-sharded'
+    if: inputs.mode == 'cover-sharded' && needs.sharded-core.outputs.remaining == '0'
     needs: sharded-core
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -558,7 +582,7 @@ jobs:
           retention-days: 30
 
   sharded-join:
-    if: inputs.mode == 'cover-sharded'
+    if: inputs.mode == 'cover-sharded' && needs.sharded-core.outputs.remaining == '0'
     needs: [sharded-core, sharded-check]
     runs-on: ubuntu-latest
     timeout-minutes: 45
