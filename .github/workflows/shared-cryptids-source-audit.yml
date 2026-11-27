@@ -481,7 +481,7 @@ jobs:
             echo "::error::F289 exact-step pilot contains a prohibited axiom or native_decide"
             exit 1
           fi
-      - name: Check F289 exact counted roots using forward paired certificates
+      - name: Check F289 exact counted roots using independent edge certificates
         if: ${{ inputs.verify_f289_counted_roots }}
         working-directory: /tmp/cryptids
         shell: bash
@@ -494,17 +494,39 @@ jobs:
           for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleExactTransfer RleCountedAll; do
             cp "$src/agent17-f289-exact-cost/$m.lean" BB6Agent42/
           done
-          node "$src/agent16-counted-rle/generate_pair_roots.cjs" 5 > BB6Agent42/RleCountedRoots.lean
-          cp BB6Agent42/RleCountedRoots.lean /tmp/f289-counted-roots/
-          sha256sum BB6Agent42/RleCountedRoots.lean | tee /tmp/f289-counted-roots/generated.sha256
+          node "$src/agent16-counted-rle/generate_edge_roots.cjs" BB6Agent42 500 | tee /tmp/f289-counted-roots/generator.log
+          cp BB6Agent42/Rle*.lean BB6Agent42/edge-{modules.txt,stats.json} /tmp/f289-counted-roots/
+          (cd BB6Agent42; sha256sum Rle*.lean) > /tmp/f289-counted-roots/generated.sha256
           export LEAN_PATH=BB6Agent42
-          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleCountedRoots RleExactTransfer RleCountedAll; do
+          check_module() {
+            set -euo pipefail
+            local m="$1"
             echo "Checking $m"
-            lake env lean -j 1 -s 131072 -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" 2>&1 | tee "/tmp/f289-counted-roots/$m.log"
+            if ! lake env lean -j 1 -s 65536 -o "BB6Agent42/$m.olean" "BB6Agent42/$m.lean" > "/tmp/f289-counted-roots/$m.log" 2>&1; then
+              tail -100 "/tmp/f289-counted-roots/$m.log"
+              return 1
+            fi
             if grep -Eq 'sorryAx|native_decide' "/tmp/f289-counted-roots/$m.log"; then
               echo "::error::forbidden axiom or native_decide in $m"
               exit 1
             fi
+            grep -E 'depends on axioms|does not depend on any axioms' "/tmp/f289-counted-roots/$m.log" || true
+          }
+          export -f check_module
+          for m in RleCostAlgebra RleCountedAtoms RleCountedMacros RleDispatchCosts RleCountedDispatch RleEdgePath RleEdgeEndpoints; do
+            check_module "$m"
+          done
+          grep -E '^RleEdge(First|Second)[0-9]+ /tmp/f289-counted-roots/
+      - name: Preserve F289 independent edge proof logs and generated certificates
+        if: ${{ always() && inputs.verify_f289_counted_roots }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: f289-edge-counted-roots
+          path: /tmp/f289-counted-roots/
+          if-no-files-found: warn
+ BB6Agent42/edge-modules.txt | xargs -P 2 -n 1 bash -c 'check_module "$1"' _
+          for m in RleCountedRoots RleExactTransfer RleCountedAll; do
+            check_module "$m"
           done
           cp BB6Agent42/Rle*.olean /tmp/f289-counted-roots/
       - name: Preserve F289 paired root proof logs and generated certificates
