@@ -1,6 +1,6 @@
 # Raw140 sibling 86: three-phase expanding return system
 
-Status: complete paper-level nonhalting argument, exact finite root and symbolic local-rule replay checked, arithmetic invariant checked by Lean 4.36.0-rc2. The original-machine Lean composition and parent integration remain unaccepted. No canonical roster reduction is claimed.
+Status: COMPLETE original-machine Lean 4.36.0-rc2 kernel proof. `Raw14086Cover.lean` proves `Raw14086.never` for every compatible completion and `Raw14086.cover` for arbitrary weighted bound. The exact source closure was recovered from CI artifacts 15219683851 and 15220415544 and compiled locally, with standard axioms only (`propext`, `Classical.choice`, `Quot.sound`); no `sorryAx`. Source commits 761bc8f (A0), fe7a859 (common ER exit), 0fe5459 (B0), 820acbf (complete cover). A2 original-source CI 46039925450 passed. Parent integration is pending the focused `cut86` workflow; no canonical roster reduction is claimed.
 
 Table: 1RB1RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_1RC---, codes [7,23,11,12,15,1,6,18,4,17,11,24]. F1 is absent. Use the nearest-first three-bit block convention of Raw140OrbitCore. Exact primitive blank simulation for 6892 steps gives state A, head 38, configuration AR(3^39 2,2), with all exterior cells zero.
 
@@ -24,7 +24,7 @@ The return maps are:
 - A0(p): put n=floor((p-5)/6),s=(p-5)%6. If p even, termC(2p+6+5n,s). If p odd, termC(2p+15+5(n+carry(s)-2),next(s)).
 - B0(p): put n=floor((p-3)/6),s=(p-3)%6,n'=n+carry(s)-1,s'=next(s). If p odd, termA(2p+6+5n',s'). If p even, termA(2p+15+5(n'+carry(s')-2),next(s')).
 
-All outputs have exponent at least 2p. Raw14086Arithmetic.lean proves this and the required lower bounds on triplet counts; kernel axiom profiles only propext, Quot.sound, Classical.choice. Initial exponent 39; by induction every return is applicable. All paths below are positive finite runs using the partial table, hence the blank run is infinite and never queries F1. The conclusion applies to each of the 25 possible F1 completions. This is a paper derivation, not a claim of accepted source Lean closure.
+All outputs have exponent at least 2p. Raw14086Arithmetic.lean proves this and the required lower bounds on triplet counts; kernel axiom profiles only propext, Quot.sound, Classical.choice. Initial exponent 39; by induction every return is applicable. All paths below are positive finite runs using the partial table, hence the blank run is infinite and never queries F1. The conclusion applies to each of the 25 possible F1 completions. The derivation is implemented by `Raw14086D.lean`, `Raw14086C.lean`, `Raw14086B.lean`, `Raw14086Entry.lean`, and `Raw14086Cover.lean`.
 
 ## Derivation
 
@@ -38,4 +38,4 @@ B0(p): bSeed gives ER(1 333 5^(p-4),152). The common ER bank law, applied p-4 ti
 
 ## Evidence boundaries
 
-The primitive root replay and all 34 variant-local paths were checked; an independent accelerated section simulator also matched the entire arithmetic return for 108 cases (all three section kinds, exponents 24 through 59). The latter is a regression check, not the proof of the unbounded statement. The symbolic paths and inductive common rules are the paper proof. Remaining tasks: compile the exact original-source local-rule bank, compose the common phases and seed in Lean, obtain NeverHalts and weighted Cover, and consume the exact leaf in the Raw140 three-hole cut. Sibling 36's existing exact source bridge is separate. Do not subtract either from the parent or canonical roster before checked composition.
+The primitive root replay and all 34 variant-local paths were checked; an independent accelerated section simulator also matched the entire arithmetic return for 108 cases (all three section kinds, exponents 24 through 59). The latter is a regression check, not the proof of the unbounded statement. The symbolic paths and inductive common rules are the paper proof. The exact original-source local bank, all three return phases, entry and NeverHalts/weighted Cover have passed Lean locally. Remaining task: consume the exact leaf in the checked Raw140 three-hole cut. Sibling 36's existing exact source bridge is separate. Do not subtract either from the parent or canonical roster before checked composition.
