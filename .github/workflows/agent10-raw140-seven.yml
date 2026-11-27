@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42, counter42full, low42, dterms42, cbank42, d86, c86, cover86, cut86, cutFamily]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42, counter42full, low42, dterms42, source42, cbank42, d86, c86, cover86, cut86, cutFamily]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,19 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = c86 ] || [ "$TARGET" = cover86 ]; then
+          if [ "$TARGET" = source42 ]; then
+            cd im-results/agent10-nov26-cryptids
+            for g in double variant_transfer 42_counter er_suffix 42_low 42_right; do
+              node "generate_raw140_${g}.js"
+            done
+            for pair in mixed:Mixed bmixed:BMixed bmixed_end:BMixedEnd word:Word aword:AWord dexit:DExit extratail:ExtraTail; do
+              gen="${pair%:*}"
+              mod="${pair#*:}"
+              python "generate_raw140_42_${gen}.py" > "Raw14042${mod}Local.lean"
+            done
+            mkdir -p /tmp/raw140-source42
+            cp Raw140*.lean generate_raw140_42*.py generate_raw140_42*.js /tmp/raw140-source42/
+          elif [ "$TARGET" = c86 ] || [ "$TARGET" = cover86 ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_double.js
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
             node im-results/agent10-nov26-cryptids/generate_raw140_42_counter.js
@@ -216,6 +228,7 @@ jobs:
           path: |
             /tmp/raw140-proof.log
             /tmp/raw140-c86/*.lean
+            /tmp/raw140-source42/
             /tmp/raw140-cut/Raw140*.lean
             im-results/agent10-nov26-cryptids/raw140-three-hole-pending.json
             im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean
