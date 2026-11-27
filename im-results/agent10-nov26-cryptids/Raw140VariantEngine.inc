@@ -194,8 +194,8 @@ theorem cmacro_spec (v : Fin 5 → ℕ) {s t : CState} (h : cmacro s = some t) :
   | some u =>
     cases hv : symStep u with
     | none => simp [cmacro,hu,hv] at h
-    | some v =>
-      have ht : cofSym v = some t := by simpa [cmacro,hu,hv] using h
+    | some u' =>
+      have ht : cofSym u' = some t := by simpa [cmacro,hu,hv] using h
       rw [csym_spec v hu,← cofSym_spec v ht]
       exact symStep_sound v hv
 
@@ -226,8 +226,8 @@ theorem cadvance_spec (v : Fin 5 → ℕ) (M : Machine (Fin 2) (Fin 6)) (he : Ex
     cases hv : cmacro u with
     | none =>
       exact ReachesPlus.single (cstep_spec v (by simpa [cadvance,hu,hv] using h))
-    | some v =>
-      have ht : v = t := by simpa [cadvance,hu,hv] using h
+    | some u' =>
+      have ht : u' = t := by simpa [cadvance,hu,hv] using h
       subst t
       exact reachesPlus_ext M he (cmacro_spec v hv)
 
