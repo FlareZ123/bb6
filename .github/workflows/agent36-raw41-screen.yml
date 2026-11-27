@@ -16,6 +16,14 @@ on:
         description: Maximum FAR DFA size (default 5; 6 is expensive)
         type: string
         default: '5'
+      late:
+        description: Optional original open-index:step:slot for exact late last-hole closure
+        type: string
+        default: ''
+      min_bound:
+        description: Safe weighted bound for late first-hole certificate
+        type: string
+        default: '0'
       search_seconds:
         description: Seconds allowed for exact FAR search
         type: string
@@ -56,6 +64,7 @@ jobs:
         run: |
           python3 im-results/agent36-raw41/close_candidate.py \
             --index ${{ inputs.index }} --dfa ${{ inputs.dfa }} --time ${{ inputs.search_seconds }} \
+            --late "${{ inputs.late }}" --min-bound ${{ inputs.min_bound }} \
             --out raw41-target-candidate
           cat raw41-target-candidate/summary.json
       - uses: actions/upload-artifact@v4
