@@ -2,12 +2,12 @@ import Box17AuditCore
 import Raw10EncodedSourceBridge
 
 namespace BB6.Agent17.Box28Simple
-open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode slot index leafCheck leafCheck_sound Witness)
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
-def partial (d0 : Fin 25) (d1 : Option (Fin 25)) : PartialMachine := fun s =>
+def cylinder (d0 : Fin 25) (d1 : Option (Fin 25)) : PartialMachine := fun s =>
   match s with
   | (0,false) => some (decode 8)
   | (1,false) => some (decode 11)
@@ -64,10 +64,10 @@ def accepted (p : PartialMachine) (w : Option Witness) : Bool :=
   | some v => leafCheck 11 #[] p v
 
 theorem first_checks : ∀ d0 : Fin 25,
-    accepted (partial d0 none) (firstWitness d0) = true := by decide
+    accepted (cylinder d0 none) (firstWitness d0) = true := by decide
 
 theorem second_checks : ∀ d0 d1 : Fin 25,
-    accepted (partial d0 (some d1)) (secondWitness d0 d1) = true := by decide
+    accepted (cylinder d0 (some d1)) (secondWitness d0 d1) = true := by decide
 
 theorem witness_sound (p : PartialMachine) (w : Option Witness)
     (ha : accepted p w = true) (hw : w.isSome = true)
@@ -80,13 +80,13 @@ theorem witness_sound (p : PartialMachine) (w : Option Witness)
     simp at hi
 
 theorem first_bound (d0 : Fin 25) (m : Machine)
-    (h : (firstWitness d0).isSome = true) (hm : compatible (partial d0 none) m) :
+    (h : (firstWitness d0).isSome = true) (hm : compatible (cylinder d0 none) m) :
     WeightedBound 11 m :=
   witness_sound _ _ (first_checks d0) h m hm
 
 theorem second_bound (d0 d1 : Fin 25) (m : Machine)
     (h : (secondWitness d0 d1).isSome = true)
-    (hm : compatible (partial d0 (some d1)) m) : WeightedBound 11 m :=
+    (hm : compatible (cylinder d0 (some d1)) m) : WeightedBound 11 m :=
   witness_sound _ _ (second_checks d0 d1) h m hm
 
 -- Connect these cylinder proofs to the actual base34 source rectangle.
@@ -104,13 +104,13 @@ theorem compatible_parent (m : Machine) (hm : Fits raw10Remainder[28]! m)
     (d0 : Fin 25) (d1 : Option (Fin 25))
     (h0 : m (3,false) = decode d0)
     (h1 : ∀ v, d1 = some v → m (3,true) = decode v) :
-    compatible (partial d0 d1) m := by
+    compatible (cylinder d0 d1) m := by
   obtain ⟨ha,hb,hc,hd⟩ := parent_rows m hm
   intro s t ht
   obtain ⟨q,b⟩ := s
   have hq : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
-    cases d1 <;> simp [partial] at ht ⊢ <;> simp_all
+    cases d1 <;> simp [cylinder] at ht ⊢ <;> simp_all
 
 theorem parent_first (m : Machine) (hm : Fits raw10Remainder[28]! m)
     (d0 : Fin 25) (h0 : m (3,false) = decode d0)
