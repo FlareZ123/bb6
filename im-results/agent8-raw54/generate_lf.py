@@ -38,7 +38,7 @@ def witness_sections():
         else: out[key].append(line.split())
     return out
 
-def main():
+def main(sharded=False):
     certs, imports = {}, {}
     specs=witness_sections()
     with tempfile.TemporaryDirectory() as d:
@@ -93,6 +93,10 @@ def main():
     assert len(residual)==0
     assert all(row.count("---")==1 for row in residual)
     (ROOT/"lf-unresolved.txt").write_text("".join(f"{misses.index(row)}:{row}\n" for row in residual))
+    if sharded:
+        from generate_sharded_children import assemble
+        assemble(ROOT,tree,certs,imports,PARENT,BOUND,"LF","BB6.Agent8Raw54.LF","Raw54LFBase",Counter(split=1926,cycle=28735,last=14366,open=1198))
+        return
     stats=Counter()
     def build(t):
         tag,*v=t
@@ -162,4 +166,4 @@ theorem cover : ∀ m, compatible parent m → WeightedBound {BOUND} m := by
 """)
     assert stats==Counter(split=1926,cycle=28735,last=14366,open=1198),stats
     print(stats,"FAR",len(far),"other witnesses",len(imports),"unresolved",len(residual))
-if __name__=="__main__": main()
+if __name__=="__main__": main("--complete-sharded" in sys.argv)
