@@ -68,6 +68,22 @@ Consequently every one of the 77 q0 checkpoint rows under entry 115 is nested in
 
 This is a **containment map**, not a proof that the 70 q32 rows exhaust entry 115 or that q32 rows 39 and 47 are exhausted by their listed subfamilies. The q32 source README explicitly leaves 38 queue entries untouched. The queue records also carry introduced-state cuts 4, 5, and 6; do not infer completeness from a uniform 25-ary or 21-ary volume calculation. Keep the source-cut/support predicate explicit.
 
+## Accepted local Cover: Raw11 Extra131 / q32 row 41
+
+The corrected parent-cover workflow has now accepted Extra131:
+
+- Parent table: `1RB1RD_1RC---_0LA---_1LA0LC_------_------`
+- Exact q32 queue match: row 41
+- Generated theorem: `BB6.Agent5Raw11Extra131.cover`
+- Bound: `WeightedBound 234`
+- Successful CI run: `45911801418` (workflow head `1d3184d94e6f1cbe352f3540246ce4a1ee8f8ad9`)
+- Artifact: `raw11-extra-parent-131`, artifact ID `15161467291` (generated and certified source trees)
+- The successful job compiled 147 project modules. Its final theorem check reported only `propext`, `Classical.choice`, and `Quot.sound`; the workflow's `sorryAx|native_decide` rejection check passed.
+
+This is an accepted Cover of **Extra131 only**. It closes q32 queue row41 as a local obligation, but does not close the q32 parent, entry115, or canonical raw residual11. The generator's previous module-name collision is fixed by unique `_root_<index>` child names; run45911801418 validates the corrected path.
+
+A fresh CI batch for Extra84, Extra132, and Extra133 has been dispatched (parents `[84,132,133]`); do not count those until their jobs succeed. Extra134 is being handled in Agent47's newer run.
+
 ## Global Canonical58/57 identity
 
 The Raw11/q32 parent is not an unrelated auxiliary branch. The accepted-lineage metadata crosswalk in `im-results/agent31-canonical58-source-crosswalk/crosswalk.py` applies the source-accepted exclusion chain (Combined106, CanonicalTwoParent, Canonical68StableBatch, Canonical65AfterThree, Canonical64Raw120, Canonical59FiveParent, Canonical58Raw113), explicitly retaining Raw59 and excluding Raw118. Its 58-entry roster contains raw residual index **11** (canonical index 7), whose exact table is:
