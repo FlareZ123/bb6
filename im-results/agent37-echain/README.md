@@ -64,6 +64,45 @@ They do not establish authenticity of a blank-root visit or a new
 BB(6) bound. They compress the exceptional E-zero and E-two cases in
 the [107-call packet reconstruction](Astep2PacketTransducer.md).
 
+## Two independent alternating stacks and complementary 0011 guard (27 November 2026)
+
+The local source machine admits a universal A/0 turn for every `r≥0`,
+arbitrary left tape `L`, and arbitrary right tail `Y`:
+`11(01)^r00Y → D/1, 1^(2r+4)Y` in exactly `4r+12`
+primitive transitions, leaving `L` intact
+([E2AlternatingTurn.lean](E2AlternatingTurn.lean)). Combining this
+with unbounded D and B sweeps and the exact E source prefix yields
+the **two-stack** laws, for arbitrary `k≥0, r≥1, q≥1, Y`:
+
+- `M(3k+4,q,2;(01)^r00Y) → M(8k+5,0,2q+2;0 1^(2r+6)Y)`,
+  at `12k²+49k+60+4q+4r` primitive steps.
+- At `q=0`: `M(3k+4,0,2;(01)^r00Y) → M(8k+3,0,4;010101011 1^(2r−2)Y)`,
+  at `12k²+49k+96+4r` steps.
+
+Both are proved with all parameters, not extrapolated from samples, in
+[E2AlternatingPacket.lean](E2AlternatingPacket.lean), checked against
+the **literal original six-state machine** in
+[CI 46082265496](https://github.com/FlareZ123/bb6/actions/runs/46082265496).
+[E2AlternatingAll.lean](E2AlternatingAll.lean) unifies the two cases for
+all `k,q,r≥0` (its input has `(01)^(r+1)00Y`), and proves the
+observational version with an **implicit** far-right `00` after the
+entire `(01)^(r+1)` suffix, verified in
+[CI 46082491713](https://github.com/FlareZ123/bb6/actions/runs/46082491713).
+
+A separate local `r=0` corridor, when the right tail begins `0011Y`,
+takes **four fewer steps** to the same respective endpoints as the
+`0100Y` rule in the previous section:
+`M(3k+4,q,2;0011Y) → M(8k+5,0,2q+2;01^8Y)`,
+for `q≥1` at `12k²+49k+60+4q` steps, and for `q=0` reaches
+`M(8k+3,0,4;010101011Y)` at `12k²+49k+96` steps.
+See [E2DoubleZeroGuard.lean](E2DoubleZeroGuard.lean),
+[CI 46082697518](https://github.com/FlareZ123/bb6/actions/runs/46082697518).
+
+All these results are **prepared source-section theorems**. They make
+no new assertion about any genuine blank-root reachability or the
+total BB(6) function. Keep the independent physical blank-equivalence
+boundary explicit when composing theorems.
+
 ## Arbitrary-depth original-source E-chain
 
 [**EChainSource.lean**](EChainSource.lean) proves `BB6.Agent37EChain.chain_return` for every depth `d), `h≥1), `q,p≥0), and arbitrary binary tail `Y`:
