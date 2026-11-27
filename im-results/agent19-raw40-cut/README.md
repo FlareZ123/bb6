@@ -12,7 +12,7 @@ Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, first unassigned A1 query af
 | 0RB | 637 | Candidate, several child proofs accepted; full consumer pending |
 | 1RB | 1130 | Candidate, full consumer pending |
 | 0LB | 75493794 | Complete certificate candidate, [CI 45939992957](https://github.com/FlareZ123/bb6/actions/runs/45939992957) pending |
-| 1LA | 790 | Complete certificate candidate; [grammar accepted](https://github.com/FlareZ123/bb6/actions/runs/45943030210), [aggregate CI 45943412131](https://github.com/FlareZ123/bb6/actions/runs/45943412131) pending |
+| 1LA | 790 | Source accepted [aggregate CI 45943412131](https://github.com/FlareZ123/bb6/actions/runs/45943412131), [consumer](Raw40A1LA.lean) |
 
 The maxima are weighted first-hole scores in the repository convention; only an accepted universal consumer and attainment establish exactness. Other A1 families remain incompletely classified. None of the local bounds is a claim that BB(6) is solved.
 
@@ -31,7 +31,7 @@ The maxima are weighted first-hole scores in the repository convention; only an 
 | 1RE | 5818 | 5616 | 202 | 0 | 790 |
 | Total | 18122 | 17434 | 685 | 3 | 790 |
 
-Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary steps, halt, no delay. [Full consumer](Raw40A1LA.lean), [partition](Raw40A1LABase.lean), [generator](prepare_a1la.py), [rebuild](reproduce-A1LA.sh). Discovery banks `a1la-<B1>-discovery.json` retain exact literal tables and certificate data, so rebuilding does not rerun FAR discovery. The three special machines are proved by a variable-length unary-run grammar, not a cutoff or an affine-growth extrapolation; see [proof](A1LA-unary-grammar.md) and [Lean source](Raw40A1LAUnaryGrammar.lean). The three original-source nonhalting proofs passed Lean 4.36.0-rc2 in CI 45943030210. All aggregate claims remain candidates until checked.
+Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary steps, halt, no delay. [Full consumer](Raw40A1LA.lean), [partition](Raw40A1LABase.lean), [generator](prepare_a1la.py), [rebuild](reproduce-A1LA.sh). Discovery banks `a1la-<B1>-discovery.json` retain exact literal tables and certificate data, so rebuilding does not rerun FAR discovery. The three special machines are proved by a variable-length unary-run grammar, not a cutoff or an affine-growth extrapolation; see [proof](A1LA-unary-grammar.md) and [Lean source](Raw40A1LAUnaryGrammar.lean). The three original-source nonhalting proofs passed Lean 4.36.0-rc2 in CI 45943030210. The aggregate passed CI 45943412131, establishing the exact weighted family maximum 790.
 
 ## A1=0LB: delayed halt and nonhalting certificates
 
@@ -39,9 +39,9 @@ Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary s
 
 B1=1RE leaf198 has a compact 16/17 asymmetric n-gram certificate candidate with 2229 reachable configurations, 95 left and 581 right summaries and 735 predecessor edges; [data](a0lb198-compact.json). All 39 lag-bank leaves have finite closure candidates. These exploit lag-XOR followed by bounded run/residue summaries; exact tables and graphs are saved. The three multi-hole late queries are expanded rather than treated as nonhalting.
 
-## A1=1LC: five classified five-hole candidates
+## A1=1LC: nine classified five-hole candidates
 
-All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). The first CI accepted leaf39's individual theorem, but failed on list algebra for leaf95/118; the repaired source awaits a fresh build.
+All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). The first CI accepted leaf39's individual theorem, but failed on list algebra for leaf95/118; all three repaired proofs passed CI 45944874921; the same build stopped at a reserved identifier in 0RC leaf88, since corrected and locally checked.
 
 | B1 | Open leaves | FAR | Compact | Direct sweep/pump | Weighted candidate |
 |---|---:|---:|---:|---:|---:|
@@ -50,9 +50,13 @@ All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact perio
 | 1LB | 479 | 475 | 4 | 0 | 118 |
 | 1RC | 308 | 292 | 16 | 0 | 298 |
 | 1LE | 1093 | 1033 | 60 | 0 | 872 |
-| Total | 2469 | 2332 | 133 | 4 | — |
+| 0LE | 1137 | 1061 | 75 | 1 | 794 |
+| 0RD | 790 | 712 | 67 | 0 | 5756 (11 late queries) |
+| 1LC | 77 | 77 | 0 | 0 | 107 |
+| 1RD | 73 | 71 | 2 | 0 | 150 |
+| Total | 4546 | 4253 | 277 | 5 | 11 late queries |
 
-For 0RC leaf88, entry at step563 followed by an exact 288-step prefix rewrite inserts 11110000, leaving all suffix bits untouched; [Lean proof candidate](Raw40A1LC0RCLeaf88.lean). The 0RC attaining witness includes one unit of blank delay. [Five-child rebuild](reproduce-A1LC0LC.sh), [0RC exactness candidate](Raw40A1LC0RCExact.lean), [1LB exactness candidate](Raw40A1LC1LBExact.lean), [1RC exactness candidate](Raw40A1LC1RCExact.lean). For 1LE the exact witness `1RB1LC_1RC1LE_0RD0LF_1LD1LA_HHH0RC_1RC0LB` reaches E0 after 871 ordinary moves and attains 872 with zero blank delay; its primitive halting and delay theorems passed local Lean 4.36.0-rc2 using the accepted Canonical77 bundle. The 60 compact candidates include seven previously unresolved unary-sweep machines (IDs 337–343); two-run summaries with unary length reduced modulo five close all seven finite graphs (392–524 live abstract states, 36–42 predecessor edges). [Literal bank](a1lc-1LE-discovery.json), [candidate exactness](Raw40A1LC1LEExact.lean). Full coverage and aggregate acceptance pending.
+For 0RC leaf88, entry at step563 followed by an exact 288-step prefix rewrite inserts 11110000, leaving all suffix bits untouched; [Lean proof candidate](Raw40A1LC0RCLeaf88.lean). The 0RC attaining witness includes one unit of blank delay. [Nine-child rebuild](reproduce-A1LC0LC.sh), [0RC exactness candidate](Raw40A1LC0RCExact.lean), [1LB exactness candidate](Raw40A1LC1LBExact.lean), [1RC exactness candidate](Raw40A1LC1RCExact.lean). For 1LE the exact witness `1RB1LC_1RC1LE_0RD0LF_1LD1LA_HHH0RC_1RC0LB` reaches E0 after 871 ordinary moves and attains 872 with zero blank delay; its primitive halting and delay theorems passed local Lean 4.36.0-rc2 using the accepted Canonical77 bundle. The 60 compact candidates include seven previously unresolved unary-sweep machines (IDs 337–343); two-run summaries with unary length reduced modulo five close all seven finite graphs (392–524 live abstract states, 36–42 predecessor edges). [Literal bank](a1lc-1LE-discovery.json), [candidate exactness](Raw40A1LC1LEExact.lean). The 0LE last residual has a locally kernel-accepted [nested-sweep proof](Raw40A1LC0LELeaf1.lean): entry 145, positive epoch cost 150+56n, unary run growth by four per epoch. The 0RD eleven late leaves are all one-hole, with exact query times 2415–5755; their weighted maximum candidate is 5756, attained at leaf42. All nine exactness sources and certificate banks are integrated by the same rebuild. Aggregate acceptance pending.
 
 ## Reusable mechanisms and baseline
 

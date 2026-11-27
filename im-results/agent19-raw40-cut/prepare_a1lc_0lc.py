@@ -9,18 +9,17 @@ ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
 c=sys.argv[1] if len(sys.argv)>1 else '0LC'
-assert c in ('0LC','1LB','0RC','1RC','1LE')
+assert c in ('0LC','1LB','0RC','1RC','1LE','0LE','0RD','1LC','1RD')
 spec=json.loads((ROOT/f'a1lc-{c}-discovery.json').read_text())
-p=spec['parent']; B=spec['initialBound']
+p=spec['parent']; B=spec.get('bound',spec['initialBound'])
 assert p==f'1RB1LC_1RC{c}_0RD---_1LD1LA_------_------'
-assert not spec['late']
 out=ROOT/'a1lc'/c
 out.mkdir(parents=True,exist_ok=True)
 exe=out/'enumerate_canon'
 subprocess.run(['g++','-std=c++20','-O3',str(ROOT/'enumerate_canon.cpp'),'-o',str(exe)],check=True)
 run=subprocess.run([str(exe),p],cwd=out,check=True,text=True,capture_output=True)
 (out/'enum.log').write_text(run.stdout)
-assert int(re.search(r'maxscore=(\d+)',run.stdout)[1])==B
+assert int(re.search(r'maxscore=(\d+)',run.stdout)[1])==spec['initialBound']
 opens=(out/'open.txt').read_text().splitlines()
 assert len(opens)==spec['opens'] and len(set(opens))==len(opens)
 def norm(t):return t.replace('_','')
@@ -53,6 +52,9 @@ if c=='0LC':
              95:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RB0RF_---0LD',
              118:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RF0LD_---1RB'}
     mod='Raw40A1LC0LCPeriodic'
+elif c=='0LE':
+    special={1:'1RB1LC_1RC0LE_0RD0RF_1LD1LA_1RB0LA_---1RE'}
+    mod='Raw40A1LC0LELeaf1'
 elif c=='0RC':
     special={88:'1RB1LC_1RC0RC_0RD0RE_1LD1LA_0RF0LF_0LA---'}
     mod='Raw40A1LC0RCLeaf88'
@@ -65,6 +67,13 @@ for v in spec['unresolved']:
     assert opens[i]==special[i]
     proven[opens[i]]=f'BB6.Agent19Raw40.A1LC{c}.Leaf{i}'
 if mod:mods.append(mod)
+late={}
+for v in spec['late']:
+    i=validate(v)
+    assert opens[i].count('---')==1 and norm(opens[i])[3*v['slot']:3*v['slot']+3]=='---'
+    assert v['n']+1+v['delay']<=B
+    late[opens[i]]=(v['n'],v['slot'])
+(out/'late.txt').write_text(''.join(f'{t} {n} {s}\n' for t,(n,s) in late.items()))
 assert ids==set(range(len(opens)))
 (out/'far5.txt').write_text(''.join(f'{i} {code}\n' for i,code in sorted(far.items())))
 (out/'proven.txt').write_text(''.join(f'{t} {ns}\n' for t,ns in proven.items()))

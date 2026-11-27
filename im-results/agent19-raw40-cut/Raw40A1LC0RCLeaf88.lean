@@ -17,13 +17,13 @@ def table : PartialMachine := fun s =>
   | 4,true => some (some ⟨false,false,5⟩)
   | 5,false => some (some ⟨false,false,0⟩)
   | _,_ => none
-abbrev prefix : List Bool := [true,true,true,true,false,false,false,false,false,false,false,false,true,true,true,true,false,false,false,false,false,false]
+abbrev pre : List Bool := [true,true,true,true,false,false,false,false,false,false,false,false,true,true,true,true,false,false,false,false,false,false]
 abbrev period : List Bool := [true,true,true,true,false,false,false,false]
 abbrev tail7 : List Bool := [true,true,true,true,true,true,true]
-def family (n : Nat) : Z0 := ⟨0,[],prefix++rep period n++tail7⟩
+def family (n : Nat) : Z0 := ⟨0,[],pre++rep period n++tail7⟩
 theorem entry : run0 table 563 ⟨0,[],[]⟩ = some (family 0) := by rfl
-theorem pump (R : List Bool) : run0 table 288 ⟨0,[],prefix++R⟩ =
-    some ⟨0,[],prefix++period++R⟩ := by rfl
+theorem pump (R : List Bool) : run0 table 288 ⟨0,[],pre++R⟩ =
+    some ⟨0,[],pre++period++R⟩ := by rfl
 theorem epoch (n : Nat) : run0 table 288 (family n) = some (family (n+1)) := by
   simpa only [family,rep,List.append_assoc] using pump (rep period n++tail7)
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
