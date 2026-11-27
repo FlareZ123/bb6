@@ -2437,7 +2437,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python "$root/generate.py" "${children[@]}"
+          python "$root/generate_corrected.py" "${children[@]}"
           roots=()
           proven=(BB6.Agent29Raw36.cover)
           for i in "${children[@]}"; do
@@ -2447,9 +2447,9 @@ jobs:
             proven+=("BB6.Agent29Raw36.${kid}_bound")
           done
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" \
-            --label "raw36-shard-$GROUP" --weighted-bound 162 --artifact-name "raw36-shard-$GROUP" \
+            --label "raw36-shard-$GROUP" --weighted-bound 1022 --artifact-name "raw36-shard-$GROUP" \
             --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" \
-            --provenance-input "$root/generate.py" "${roots[@]}" 2>&1 | tee "/tmp/a29-raw36-shard-$GROUP.log"
+            --provenance-input "$root/generate_corrected.py" --provenance-input "im-results/agent7-raw36-transfer/fixture.tsv.gz.b64" --provenance-input "im-results/agent7-raw36-transfer/sweep_recipes.jsonl" "${roots[@]}" 2>&1 | tee "/tmp/a29-raw36-shard-$GROUP.log"
           python im-results/agent4-raw109/audit_axioms.py "/tmp/a29-raw36-shard-$GROUP.log" "${proven[@]}"
           cp "/tmp/a29-raw36-shard-$GROUP.log" "$work/audit.log"
       - name: Retain source-checked Raw36 shard
