@@ -1,0 +1,87 @@
+name: Raw139 E0=1LC resumable exact branches
+on:
+  workflow_dispatch:
+    inputs:
+      roots:
+        description: JSON array of unresolved two-digit roots
+        required: true
+        default: '["00","05","06","07","12"]'
+        type: string
+      source_run:
+        description: Original successful shared core artifact run
+        required: true
+        default: '45914394333'
+        type: string
+      source_sha:
+        description: Original exact proof source revision
+        required: true
+        default: f05ea44fc3676f736db95279a2ee5c091960c618
+        type: string
+      previous_run:
+        description: Optional preceding progress artifact run (only selected unresolved roots)
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: read
+  actions: read
+env:
+  BASE: im-results/agent4-raw139-e0-oneLC
+  WORK: .tmp/a4-oneLC
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        root: ${{ fromJSON(inputs.roots) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Fetch the pinned recovery driver without changing proof source revision
+        run: |
+          git fetch --depth 1 origin "$GITHUB_WORKFLOW_SHA"
+          git show "$GITHUB_WORKFLOW_SHA:$BASE/resume_root.py" > /tmp/resume_root.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLC-core-and-sources
+          path: .tmp/a4-oneLC
+          run-id: ${{ inputs.source_run }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        if: inputs.previous_run != ''
+        with:
+          name: raw139-e0-oneLC-root${{ matrix.root }}-progress
+          path: .tmp/a4-oneLC/previous
+          run-id: ${{ inputs.previous_run }}
+          github-token: ${{ github.token }}
+      - name: Reconstruct pinned sources
+        run: |
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+      - name: Compile and checkpoint
+        id: compile
+        env:
+          ROOT_INDEX: ${{ matrix.root }}
+        run: python3 /tmp/resume_root.py "$WORK" "$ROOT_INDEX"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLC-root${{ matrix.root }}-progress
+          path: .tmp/a4-oneLC/resume
+          include-hidden-files: true
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: steps.compile.outputs.certified == 'true'
+        with:
+          name: raw139-e0-oneLC-root${{ matrix.root }}-certified
+          path: .tmp/a4-oneLC/resume
+          include-hidden-files: true
+          retention-days: 14
