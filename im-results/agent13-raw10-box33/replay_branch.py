@@ -68,7 +68,7 @@ def main():
     def write(name,imports,body):
         oldwrite(name.replace('Box4','Box33Branch'),
                  [x.replace('Box4','Box33Branch') for x in imports],
-                 body.replace('Box4','Box33Branch').replace('3640','101'))
+                 body.replace('Box4','Box33Branch'))
     emitter.write=write
     long={};stack=[];hard_seen=set();counts={}
     for target in TARGETS:
