@@ -231,4 +231,50 @@ theorem power_boundary_index_unique (S j k : Nat)
 #print axioms power_boundary_coords
 #print axioms power_boundary_index_unique
 
+
+/-- A complete fixed-index exclusion needs at most seven endpoint tests
+per positive cost. No delayed-prefix cutoff or numerical margin is assumed. -/
+theorem critical_reset_no_reach_of_families (n : Nat) (hn : 14≤n) (he : n%2=0)
+    (h : ∀ m, 0<m → m+n+9≤BB6.P1CarryExact.total n →
+      let S := BB6.P1CarryExact.total n-(n+m+1)
+      (∀ w, 6≤w → w≤10 → backCheck n m (S-w) w=false) ∧
+      ((n+m)%2=0 → backCheck n m 2 (S-2)=false) ∧
+      (∀ j, j<n → 7*2^j+3≤S → S+5≤14*2^j →
+        backCheck n m (2*S-14*2^j-1) (14*2^j+1-S)=false)) :
+    ¬ BB6.Agent1.Reach 2 (14*2^n-2*n-10) := by
+  intro hr
+  obtain ⟨m,B,a,hT,hW,hB⟩ := critical_reset_requires_guarded_boundary n hn he hr
+  have hG := guarded_trace_to_micro hn he hT
+  have ht := guarded_trace_trace hT
+  have hm := (BB6.Agent45.DelayedCarry.trace_bounds n m B a ht).1
+  have hc := guarded_back hn hG
+  let v := rightAt n m B a
+  let w := leftAt n m B a
+  change 6≤w at hW
+  change Boundary n m v w at hB
+  change backCheck n m v w=true at hc
+  change GuardedMicro n m v w at hG
+  have hv : 2≤v := by cases hG <;> omega
+  have hmass := micro_mass n m v w hn (guarded_micro hG)
+  change v+w+n+m+1=BB6.P1CarryExact.total n at hmass
+  let S := BB6.P1CarryExact.total n-(n+m+1)
+  have hS : v+w=S := by dsimp [S]; omega
+  have hcases := h m hm (by omega)
+  change (∀ w, 6≤w → w≤10 → backCheck n m (S-w) w=false) ∧
+    ((n+m)%2=0 → backCheck n m 2 (S-2)=false) ∧
+    (∀ j, j<n → 7*2^j+3≤S → S+5≤14*2^j →
+      backCheck n m (2*S-14*2^j-1) (14*2^j+1-S)=false) at hcases
+  rcases hB with hsmall | ⟨h2,hpar⟩ | ⟨h5,hodd,j,hj,hpow⟩
+  · have hv' : v=S-w := by omega
+    rw [hv',hcases.1 w hW hsmall] at hc
+    contradiction
+  · have hw' : w=S-2 := by omega
+    rw [h2,hw',hcases.2.1 hpar] at hc
+    contradiction
+  · obtain ⟨hlo,hhi,hv',hw'⟩ := power_boundary_coords S v w j hS h5 hW hodd hpow
+    rw [hv',hw',hcases.2.2 j hj hlo hhi] at hc
+    contradiction
+
+#print axioms critical_reset_no_reach_of_families
+
 end BB6.Agent43P1Reverse
