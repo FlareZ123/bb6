@@ -114,6 +114,10 @@ seen=set(); extra_seen=set(); stats=Counter()
 def render(t,p,cut,imports):
     tag=t[0];stats[tag]+=1
     if tag=='skip':return '.keep'
+    if tag=='early':
+        audit,mod=early_proofs[t[1]]
+        imports.add(mod)
+        return f'.closed ({audit})'
     if tag=='cycle':return f'.closed (.cycle {t[1]} {t[2]} {str(t[3]).lower()} ({t[4]}))'
     if tag=='last':return f'.closed (.last {t[1]} {slot(t[2])})'
     if tag=='open':
@@ -167,8 +171,17 @@ def generate(t,p,cut,name,expr):
             sib=mod+'Small';write(sib,sibling_imports,siblings);imports.add(sib)
         join(lines,name,n,s,cut)
     write(mod,imports,lines);return mod
-tree=json.loads(src.joinpath('tree.json').read_text());size(tree)
-mod=generate(tree,parent,cut0,'Root','p');assert len(seen)==len(opens) and extra_seen==set(late_children)
+tree=json.loads(src.joinpath('tree.json').read_text())
+from early_prune42 import install
+early_proofs,pruned_open,pruned_extra,pruned_stats=install(raw,out,branch,tree,ids,late_splits)
+size(tree)
+mod=generate(tree,parent,cut0,'Root','p')
+assert seen.isdisjoint(pruned_open) and seen|pruned_open==set(range(len(opens)))
+assert extra_seen.isdisjoint(pruned_extra) and extra_seen|pruned_extra==set(late_children)
+print('early exact cylinders',len(pruned_stats),'replaced tree nodes',sum(pruned_stats.values()),
+      'open leaves',len(pruned_open),'late leaves',len(pruned_extra))
+(out/'early-prune.json').write_text(json.dumps({'branch':branch,'cuts':pruned_stats,
+    'removed_open':len(pruned_open),'removed_late':len(pruned_extra)},indent=2)+'\n')
 write(prefix+'Cover',[mod],[f'''theorem root_support : TNFSupport p {cut0} := by
   intro s t h
   rcases s with ⟨q,b⟩
@@ -180,7 +193,7 @@ write(prefix+'Cover',[mod],[f'''theorem root_support : TNFSupport p {cut0} := by
   closedCover {B} {cut0} p tRoot (by decide) root_support (by decide)
     (weightedTNFNoAssignedHalt_refine _ _ _ BB6.Agent32Raw42.parent_nohalt) cRoot
 #print axioms cover'''])
-print('open',len(seen),'modules',len(list(out.glob('*.lean'))),'leaf stats',stats)
+print('open',len(seen),'early-pruned',len(pruned_open),'modules',len(list(out.glob('*.lean'))),'leaf stats',stats)
 
 # Assign independent bottom-level tree modules by their actual imported source cost.
 roots=[p for p in out.glob(prefix+'Root*.lean') if not any(l.startswith('import '+prefix+'Root') for l in p.read_text().splitlines())]
