@@ -50,6 +50,7 @@ jobs:
             lean -DmaxRecDepth=30000 -DmaxHeartbeats=30000000 -o "$dir/$m.olean" "$dir/$m.lean"
           done
           lean -o "$p/Branch29Roster31.olean" "$p/Branch29Roster31.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
+          lean "$p/Branch29BurstMod262144.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           lean "$p/Branch29SignedFloor1M.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           ! grep -q 'sorryAx' /tmp/agent22-branch29-audit.log
           ! grep -q 'native_decide' /tmp/agent22-branch29-audit.log
