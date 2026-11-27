@@ -1,0 +1,194 @@
+name: Agent 36 sixteen new Raw41 canonical FAR graft (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36 original checker
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079291525
+          name: raw41-target-88
+          path: /tmp/raw41-sources/088
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079609608
+          name: raw41-target-90
+          path: /tmp/raw41-sources/090
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079446203
+          name: raw41-target-123
+          path: /tmp/raw41-sources/123
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080258110
+          name: raw41-target-99
+          path: /tmp/raw41-sources/099
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080253555
+          name: raw41-target-101
+          path: /tmp/raw41-sources/101
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080248837
+          name: raw41-target-134
+          path: /tmp/raw41-sources/134
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080517850
+          name: raw41-target-125
+          path: /tmp/raw41-sources/125
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46081252305
+          name: raw41-target-81
+          path: /tmp/raw41-sources/081
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082081815
+          name: raw41-target-83
+          path: /tmp/raw41-sources/083
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46081924731
+          name: raw41-target-84-auto
+          path: /tmp/raw41-sources/084
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082086301
+          name: raw41-target-92
+          path: /tmp/raw41-sources/092
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082404067
+          name: raw41-target-116
+          path: /tmp/raw41-sources/116
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082718350
+          name: raw41-target-128-auto
+          path: /tmp/raw41-sources/128
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46083019785
+          name: raw41-target-024-auto
+          path: /tmp/raw41-sources/024
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46083148884
+          name: raw41-target-34-auto
+          path: /tmp/raw41-sources/034
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46083148884
+          name: raw41-target-131-auto
+          path: /tmp/raw41-sources/131
+      - name: Compile the exact local 153-to-137 quotient cut
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          for t in 088 090 123 099 101 134 125 081 083 084 092 116 128 024 034 131; do
+            test "$(python3 -c "import json;print((lambda q:q.get('remaining_after_auto',q.get('remaining_after_late',q['remaining'])))(json.load(open('/tmp/raw41-sources/$t/summary.json'))))")" = 0
+          done
+          SRC=.tmp/agent36-raw41-newsixteen
+          D=im-results/agent47-raw41-cut
+          R=im-results/agent19-raw40-cut
+          mkdir -p "$SRC"
+          for t in 088 090 123 099 101 134 125 081 083 084 092 116 128 024 034 131; do
+            cp /tmp/raw41-sources/$t/lean/*.lean "$SRC/"
+          done
+          export LEAN_PATH="$SRC:/tmp/canonical77:$D:$R:im-results/agent47-rooted-tnf:im-results/agent13-coverage:im-results/agent8-coverage-contract:im-results/agent50-weighted-tnf-pilot:im-results/agent31-three-hole-tnf:im-results/agent46-raw13-cut"
+          lean -o "$SRC/RootShift.olean" im-results/agent8-coverage-contract/RootShift.lean 2>&1 | tee /tmp/a36-rootshift.log
+          lean -o "$SRC/SparseZipper.olean" im-results/agent50-weighted-tnf-pilot/SparseZipper.lean 2>&1 | tee /tmp/a36-zipper.log
+          lean -o "$SRC/SweepPumping.olean" im-results/agent31-three-hole-tnf/SweepPumping.lean 2>&1 | tee /tmp/a36-sweep.log
+          lean -o "$SRC/Agent46AutoPump.olean" im-results/agent46-raw13-cut/Agent46AutoPump.lean 2>&1 | tee /tmp/a36-autopump.log
+          lean -o "$SRC/Raw41New084Auto.olean" "$SRC/Raw41New084Auto.lean" 2>&1 | tee /tmp/a36-auto84.log
+          lean -o "$SRC/Raw41New128Auto.olean" "$SRC/Raw41New128Auto.lean" 2>&1 | tee /tmp/a36-auto128.log
+          for t in 024 034 131; do
+            lean -o "$SRC/Raw41New${t}Auto.olean" "$SRC/Raw41New${t}Auto.lean" 2>&1 | tee /tmp/a36-auto${t}.log
+          done
+          lean -o "$SRC/Raw41LBLA.olean" "$D/Raw41LBLA.lean" 2>&1 | tee /tmp/a36-lbla.log
+          lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/a36-canonical.log
+          lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/a36-empty.log
+          ( cd "$D" && python3 generate_two.py )
+          lean -o "$SRC/Raw41TwoCut.olean" "$D/Raw41TwoCut.lean" 2>&1 | tee /tmp/a36-two.log
+          lean -o "$SRC/Raw41CanonicalCut.olean" "$D/Raw41CanonicalCut.lean" 2>&1 | tee /tmp/a36-canoncut.log
+          for t in 088 090 123 099 101 134 125 081 083 084 092 116 128 024 034 131; do
+            MOD=Raw41New$t
+            lean -o "$SRC/$MOD"Base.olean "$SRC/$MOD"Base.lean 2>&1 | tee /tmp/a36-$t-base.log
+            for n in $(seq -w 0 23); do
+              lean -o "$SRC/$MOD"Branch$n.olean "$SRC/$MOD"Branch$n.lean 2>&1 | tee /tmp/a36-$t-branch$n.log
+            done
+            lean -o "$SRC/$MOD"Closed.olean "$SRC/$MOD"Closed.lean 2>&1 | tee /tmp/a36-$t-closed.log
+          done
+          lean -o "$SRC/Raw41NewThreeGraft.olean" \
+            im-results/agent36-raw41/Raw41NewThreeGraft.lean 2>&1 | tee /tmp/a36-graft.log
+          lean -o "$SRC/Raw41NewSixGraft.olean" \
+            im-results/agent36-raw41/Raw41NewSixGraft.lean 2>&1 | tee /tmp/a36-sixgraft.log
+          lean -o "$SRC/Raw41NewSevenGraft.olean" \
+            im-results/agent36-raw41/Raw41NewSevenGraft.lean 2>&1 | tee /tmp/a36-sevengraft.log
+          lean -o "$SRC/Raw41NewEightGraft.olean" \
+            im-results/agent36-raw41/Raw41NewEightGraft.lean 2>&1 | tee /tmp/a36-eightgraft.log
+          lean -o "$SRC/Raw41NewElevenGraft.olean" \
+            im-results/agent36-raw41/Raw41NewElevenGraft.lean 2>&1 | tee /tmp/a36-elevengraft.log
+          lean -o "$SRC/Raw41NewThirteenGraft.olean" \
+            im-results/agent36-raw41/Raw41NewThirteenGraft.lean 2>&1 | tee /tmp/a36-thirteengraft.log
+          lean -o "$SRC/Raw41NewSixteenGraft.olean" \
+            im-results/agent36-raw41/Raw41NewSixteenGraft.lean 2>&1 | tee /tmp/a36-sixteengraft.log
+          grep -F 'afterNewSixteen_count' /tmp/a36-sixteengraft.log
+          grep -F 'globalNewSixteen_sound' /tmp/a36-sixteengraft.log
+          if grep -ER 'sorryAx|native_decide' /tmp/a36-*.log; then exit 1; fi
+          echo 'CERTIFIED: sixteen FAR, symbolic AutoPump and finite first-hole complete children, local 153->137 and old global 229->213 Raw41 refinement.'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-newsixteen-graft-audit
+          path: |
+            /tmp/a36-graft.log
+            /tmp/a36-sixgraft.log
+            /tmp/a36-sevengraft.log
+            /tmp/a36-eightgraft.log
+            /tmp/a36-elevengraft.log
+            /tmp/a36-thirteengraft.log
+            /tmp/a36-sixteengraft.log
+            /tmp/a36-canoncut.log
+            /tmp/a36-*-closed.log
+          retention-days: 45
