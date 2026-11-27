@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -576,4 +576,49 @@ jobs:
           path: |
             /tmp/raw56-reparent-src
             /tmp/raw56-reparent.log
+          if-no-files-found: error
+
+  raw56_root_pilot:
+    if: inputs.child == 'raw56-root-pilot'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore frozen pilot certificate sources
+        run: |
+          set -euo pipefail
+          P="$GITHUB_WORKSPACE/im-results/agent4-raw56-root-pilot"
+          R="$GITHUB_WORKSPACE/im-results/agent4-raw56-reparent"
+          mkdir -p /tmp/raw56-pilot
+          cat "$R"/source.tar.xz.b64.0[0-4] | base64 -d > /tmp/reparent.tar.xz
+          cat "$P"/pilot.tar.xz.b64.0* | base64 -d > /tmp/pilot.tar.xz
+          echo 'bd70d009d0ca78be4eabe4efb47e4fed93a81c9dee56b999bc7ce7491d61d167  /tmp/reparent.tar.xz' | sha256sum -c -
+          echo '7511d777aac6b8b98beb351584c90ee4744a79ca232b7bb4f1b6ac2f09c56523  /tmp/pilot.tar.xz' | sha256sum -c -
+          tar -xJf /tmp/reparent.tar.xz -C /tmp/raw56-pilot
+          tar -xJf /tmp/pilot.tar.xz -C /tmp/raw56-pilot
+          cp "$P"/{RunStack.lean,emit_run_stack.py,m19569_certificate.py,Raw56LCM20376.lean,generate_m5334.py} /tmp/raw56-pilot/
+          cp "$R"/{minimize_cert.py,apply_compression.py} /tmp/raw56-pilot/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-pilot-frozen-source
+          path: /tmp/raw56-pilot
+          if-no-files-found: error
+      - name: Materialize candidate certificate inputs
+        run: |
+          set -euo pipefail
+          cd /tmp/raw56-pilot
+          g++ -O3 -std=c++17 fastabstract.cpp -o fastabstract
+          g++ -O3 -std=c++17 query_batch.cpp -o query_batch
+          python scan_banked.py 0RD 1LC
+          python emit_symbolic.py E10RD E11LC
+          python emit_multi.py
+          python emit_grammar.py
+          python m19569_certificate.py --write M19569.json
+          python emit_run_stack.py M19569.json
+          python generate_m5334.py > Raw56LCM5334.lean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw56-pilot-generated-source
+          path: /tmp/raw56-pilot
           if-no-files-found: error
