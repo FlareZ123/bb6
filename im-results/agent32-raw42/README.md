@@ -13,9 +13,24 @@ The following exact first-level Covers have already passed pinned original-sourc
 | 0RE | [45996645063](https://github.com/FlareZ123/bb6/actions/runs/45996645063) | 15198405532 |
 | 1RB | [45996253830](https://github.com/FlareZ123/bb6/actions/runs/45996253830) | 15196792976 |
 
-0RB now has a **complete source-accepted Cover at weighted bound 1006**: CI 46051022197 exports artifact 15225325950 (and repaired group-5 artifact 15224134446), using the seven accepted CI shards and an explicit exact-source FastBiDFA module override. 1LA has seven successful shards (run 45996630344), 1RA six (run 45996637267). Target only their missing groups. No complete Raw42 parent or global roster reduction yet.
+0RB now has a **complete source-accepted Cover at weighted bound 1006**: CI 46051022197 exports artifact 15225325950 (and repaired group-5 artifact 15224134446), using the seven accepted CI shards and an explicit exact-source FastBiDFA module override. 1LA has seven successful shards (run 45996630344), 1RA seven across runs 45996637267 and 46053095897 (new group 4 artifact 15225662884). The only missing groups are 1LA group 7 and 1RA group 1. Their concrete blockers, Run902 and Run3138, now have reduced original-source Lean-checked certificates (below). No complete Raw42 parent or global roster reduction yet.
 
 [Raw42CanonicalJoin.lean](Raw42CanonicalJoin.lean) provides the checked final interface: exactly 12 canonical residual B1 child Covers at a common bound B≥12 imply the full Raw42 parent Cover. It applies the existing weighted TNF fresh-state renaming theorem with support cut 4, so each of the four F aliases is discharged by its E representative; no independent proof for an alias is required. The conditional theorem and exact count compile locally, standard axioms only. This is a parent assembly interface, not a closed parent.
+
+## Relation-labelled DFA quotient for 1LA/1RA assembly bottlenecks
+
+The interrupted recovery jobs [46053090463](https://github.com/FlareZ123/bb6/actions/runs/46053090463) and [46053095897](https://github.com/FlareZ123/bb6/actions/runs/46053095897) stopped (exit 143) respectively at old list certificates Raw421LARun902 and Raw421RARun3138. They were below the old 50 KB conversion threshold. Direct conversion of the full 902 witness to the existing trie checker was also too expensive in the local test.
+
+The new [minimize_bidfa.py](minimize_bidfa.py) labels each left DFA state by its exact set of (machine state, scanned bit, right state) allowed triples, and dually for right states. Refine each partition until both symbol transitions preserve classes; number the blank class zero. Project transitions, allowed edges and the abstract safety relation onto the quotient. Equality of relation labels ensures that any representative of a merged class can be substituted on either side of a permitted abstract configuration; the stable partition preserves pushed symbol transitions. The generator is untrusted: every projected witness is checked by the unchanged original-source FastBiDFA soundness theorem.
+
+| Exact leaf | Old (left,right,configurations) | Quotient | Local Lean elapsed / peak RSS |
+|---|---|---|---|
+| 1LA/902 `1RB0LE1RC1LA0RD0LF1LD0LB1LC1RB---0RB` | (142,107,1652) | (71,72,601) | 9.05 s / 2,129,892 KB |
+| 1RA/3138 `1RB1LE1RC1RA0RD0RF1LD0LB1LC0LA0RB---` | (155,54,2070) | (54,27,467) | 3.35 s / 1,509,280 KB |
+
+Both original-source `live` theorems compiled with Lean 4.36.0-rc2, using exact FastBiDFA Git blob 9cc8be5b1b4afcd3c9cd87865b8a1e94095f1a2f and original core artifact 15195788488. Axiom profiles are [propext, Classical.choice, Quot.sound], no sorryAx or native_decide. Original generated source artifacts are 15195778487 and 15195733756. Reproduce by running minimize_bidfa.py on each original list module, convert_bidfa.py, then replacing the concrete proof `:= by decide` with `:= by decide +kernel` before compiling. Exact resulting source SHA256 values respectively 1f78626e80c6f3b3bd191af035ee443a3d1e542baaedf17b8728a44f0fa35561 and a309c647c292d1daf2b8bdd6fe74564868479abdfddaa532fe385f55db64cf5b.
+
+The existing manual recovery target now reuses the seven accepted groups for each branch, including 1RA group 4 from the second run (proof source revision cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c). It restores the exact previous generated source for those accepted modules; only missing imports may be replaced from their original list witnesses. It performs relation quotienting before trie conversion on expensive remaining witnesses and records before/after counts. Source revision 4b3a61a7086128e9737ee10df1285fb30fa32739 is dispatched for both branches. Fresh whole-child acceptance remains pending; these are checked alternative certificates for two previously discovered open leaves, not a new global roster removal.
 
 ## Established original-source cuts
 
