@@ -15,7 +15,7 @@ static vector<I> jump(I q,unsigned r){I M=I(1)<<r,mask=M-1;Seen seen(M);vector<I
 // Existence is monotone in suffix length. At the earliest live clock the
 // canonical carry is the maximal folded carry; at even clocks it is a birth.
 static I birth_clock(I F,unsigned k,I z,U& probes){unsigned lo=0,hi=k;I c=z;while(hi-lo>1){unsigned m=lo+(hi-lo)/2;++probes;I p=Block(F,m).parent(z);if(p){lo=m;c=p;}else hi=m;}I b=F-lo;if(c!=(b-2)/2)throw runtime_error("first failure is not maximal folded carry");return b;}
-static vector<I> run(I L,I R,unsigned r,I F,unsigned cap,bool verbose){if(L<14||L>R||U(R)+4>F||F>U(2)*L+3||F>=2000000000||r>26||!cap||cap>29)throw runtime_error("arguments");r=min<unsigned>(r,F-(R+4));I q=F-r;auto t=chrono::steady_clock::now();auto a=jump(q,r);Seen next((q-2)/2+1);vector<I>hits;U visits=0,probes=0,failures=0,blocks=0;
+static vector<I> run(I L,I R,unsigned r,I F,unsigned cap,bool verbose){if(L<14||L>R||U(R)+4>F||F>U(2)*L+3||F>=4000000000U||r>26||!cap||cap>29)throw runtime_error("arguments");r=min<unsigned>(r,F-(R+4));I q=F-r;auto t=chrono::steady_clock::now();auto a=jump(q,r);Seen next((q-2)/2+1);vector<I>hits;U visits=0,probes=0,failures=0,blocks=0;
  if(verbose)cout<<"F="<<F<<" q="<<q<<" jump="<<r<<" folded initial="<<a.size()<<endl;
  auto record=[&](I b){if(b%2==0&&L+4<=b&&b<=R+4)hits.push_back(b-4);};
  while(q>L+4&&!a.empty()){unsigned k=min({cap,unsigned(q-(L+4)),unsigned(63-__builtin_clzll(q)-1)});if(!k)throw runtime_error("fit");I p=q-k;Block block(q,k);
