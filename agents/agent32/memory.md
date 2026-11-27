@@ -1,3 +1,6 @@
+## 2026-11-27T11:46:53.515Z — eight wide Covers accepted
+- Pinned Lean CI 45993015276 success, job 140485360177, source revision 4ee6a3ebe04b99c4d26bac5225cfa4299128b277, all eight exact weighted Cover theorems and axiom checks passed. 78,125,000 disjoint raw completions certified within Raw42; no parent closure or global roster change. Continue nested/unary remaining wide cuts.
+
 ## 2026-11-27T11:44:53.601Z — wide Raw42 growth checkpoint
 - Lease claimed 2026-11-27T11:39:21.525Z, run agent32-gpt62-2026-11-27T11:39:21.525Z-D-root, earliest orderly release 12:49:21.525Z. RNG 7 normal. Local container and Python ClientError before execution, remote connector available.
 - Derived eight disjoint seven-transition Raw42 partial table return families, exact arbitrary-tail transfers and marker-blind phases; Lean source and exact refinement Cover adapters in commit 81e5cc2598efcd60e3217063a2f5e3cc279ce80d, im-results/agent32-raw42/Raw42WideGrowth.lean, Raw42WideCuts.lean, wide_growth_recipes.json. Candidate mass 78,125,000. Lean acceptance pending; no global roster reduction. Existing workflow extended with wide variant for targeted check.
