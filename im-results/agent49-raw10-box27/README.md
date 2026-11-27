@@ -12,7 +12,7 @@
 
 `generate_slice.py` deterministically regenerates the candidate and emits independent Lean chunks. `Box27SliceCore.lean` uses existing source-level Box17 terminal and Agent4 finite-stack checkers, splits all 25 alternatives, and connects the root to raw10Remainder[27]. No finite simulation limit is trusted by Lean. The 41 automata supplant the older symbolic-only seed census. Largest joint invariant: 97 states. Local Lean is available but local GitHub checkout DNS is unavailable; original-source verification is required in CI.
 
-Broader D0=14,D1=17 slice: candidate scan of 244,140,625 completions, 8 open cylinders (mass 200), of which 3 subsequently have lag-XOR finite-stack candidates; 5 still require work. No claim of closure for this broader slice or Box27.
+Broader D0=14,D1=17 slice: candidate scan of 244,140,625 completions, 8 open cylinders (mass 200), of which 3 subsequently have lag-XOR finite-stack candidates; 5 still require work. No claim of closure for this broader slice or Box27. The [masked-counter proof](MASKED-COUNTER.md) supplies two further exact one-hole nonhalting arguments, with the original-source audit still required; candidate discovery sets are not assumed identical.
 
 ## Earlier single-cylinder investigation
 
