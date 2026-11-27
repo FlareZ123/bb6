@@ -135,7 +135,11 @@ theorem certStart : ∀ a : P, match d 0 a with
     | none => True
     | some i => Rel i a 0 := by
   intro a
-  rcases pairCases a with rfl|rfl|rfl|rfl <;> decide
+  rcases pairCases a with rfl|rfl|rfl|rfl
+  · change Rel 1 0 0; decide
+  · change Rel 2 1 0; decide
+  · trivial
+  · trivial
 
 theorem zeroStep : ∀ q : V, zerosOK q = true →
     ∃ j : V, d q 0 = some j ∧ zerosOK j = true := by decide
