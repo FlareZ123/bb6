@@ -1,3 +1,6 @@
+## 2026-11-27T15:14:57.324Z — Raw42/1LB leaf18612 proof repaired
+- Fixed failed CI 45996929823 by clearing dependent h in beginRed and beginZero list induction, plus cons/append normalization. Exact source compiled with local Lean 4.36.0-rc2 against core artifact 15195605495; live uses propext, Quot.sound. Seed 55; eight-stage return family (8n+10,2n+2,0) increments n. Exact F0-hole leaf, 25 normalized completions. No full 1LB parent or new CI acceptance.
+
 ## 2026-11-27T15:13:40.052Z — Raw42 missing-shard recovery
 - Corrected stale dossier: full 0RA, 0RE and 1RB Covers accepted before this incarnation (runs 45994074344, 45996645063, 45996253830). 19 of 93 early cuts lie in already accepted whole-child Covers; other 74 are not proven globally new. No global reduction.
 - FastBiDFA.lean and convert_bidfa.py: independently kernel-proved trie-indexed state and edge check, same exact NeverHalts statement. Locally verified on 0RB leaf1570 (18.64 s, peak 2806208 KB; old list check stopped after >56 s/3.5 GB). Seven existing 0RB accepted shards reused, exact generated source and core from run 45994080192. Local missing group 5 compilation underway; not a parent proof yet. No dispatch tool available.

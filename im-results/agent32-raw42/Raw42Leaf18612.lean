@@ -40,11 +40,12 @@ theorem beginRed (n : Nat) (L R : List Bool) :
   have h : run0 p 3 ⟨3,[false,false] ++ [true] ++ ones n ++ [true,true,true,true,false] ++ L,R⟩ =
       some ⟨1,ones n ++ [true,true,true,true,false] ++ L,[false,true,true] ++ R⟩ := by rfl
   have e : ones (n+5) = [true] ++ ones n ++ [true,true,true,true] := by
+    clear h
     induction n with
     | zero => rfl
     | succ n ih => simp only [ones,rep,List.append_assoc,List.cons_append,List.nil_append] at ih ⊢
                    exact congrArg (List.cons true) ih
-  rw [e]; simpa only [List.append_assoc] using h
+  rw [e]; simpa only [List.append_assoc,List.cons_append,List.nil_append] using h
 
 theorem turnRed (L R : List Bool) :
     run0 p 8 ⟨1,[true,true,true,true,false] ++ L,R⟩ =
@@ -80,11 +81,12 @@ theorem beginZero (n : Nat) (R : List Bool) :
   have h : run0 p 4 ⟨3,[false,false,false] ++ [true] ++ ones n ++ [true,true,true,true],R⟩ =
       some ⟨1,ones n ++ [true,true,true,true],[false,true,true,true] ++ R⟩ := by rfl
   have e : ones (n+5) = [true] ++ ones n ++ [true,true,true,true] := by
+    clear h
     induction n with
     | zero => rfl
     | succ n ih => simp only [ones,rep,List.append_assoc,List.cons_append,List.nil_append] at ih ⊢
                    exact congrArg (List.cons true) ih
-  rw [e]; simpa only [List.append_assoc] using h
+  rw [e]; simpa only [List.append_assoc,List.cons_append,List.nil_append] using h
 
 theorem zeroTail (t : Nat) (R : List Bool) :
     run0 p (4*t+11) ⟨3,[false,false,false] ++ ones (t+4),R⟩ =
