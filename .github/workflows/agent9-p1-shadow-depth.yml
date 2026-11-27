@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -40,7 +40,7 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'packed-prefix-compact' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse' || inputs.target == 'affine-residue') && 90 || 20 }}
+    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'packed-prefix-compact' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse' || inputs.target == 'pair-path-finite' || inputs.target == 'affine-residue') && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -577,8 +577,9 @@ jobs:
           PY
 
       - name: Check hybrid packed/sparse interval certificate
-        if: inputs.target == 'pair-sparse'
+        if: inputs.target == 'pair-sparse' || inputs.target == 'pair-path-finite'
         env:
+          CERT_TARGET: ${{ inputs.target }}
           PAIR_LO: ${{ inputs.pair_lo }}
           PAIR_HI: ${{ inputs.pair_hi }}
           PAIR_BLOCK: ${{ inputs.pair_block }}
@@ -591,7 +592,9 @@ jobs:
           export LEAN_PATH="$G:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry"
           lean --version
           git rev-parse HEAD
-          python "$D/gen_pair_sparse.py" "$PAIR_LO" "$PAIR_HI" --block "$PAIR_BLOCK" --group "$PAIR_GROUP" --output "$G/PairSparseFinite.lean" | tee /tmp/pair-sparse.log
+          EXTRA=()
+          if [[ "$CERT_TARGET" == pair-path-finite ]]; then EXTRA+=(--path-blocks); fi
+          python "$D/gen_pair_sparse.py" "$PAIR_LO" "$PAIR_HI" --block "$PAIR_BLOCK" --group "$PAIR_GROUP" "${EXTRA[@]}" --output "$G/PairSparseFinite.lean" | tee /tmp/pair-sparse.log
           python tools/lean_compile_deps.py "$G/PairSparseFinite.lean" | tee -a /tmp/pair-sparse.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/pair-sparse.log; then exit 1; fi
           python - <<'PY'
@@ -599,7 +602,10 @@ jobs:
           from pathlib import Path
           log = Path('/tmp/pair-sparse.log').read_text()
           final = 'critical_reset_no_reach_sparse_' + os.environ['PAIR_LO'] + '_' + os.environ['PAIR_HI']
-          for name in ("pairSparseBack_sound", "pairSparse_step", "pairSparseChunk_sound", "pairSparse_convert", "pairSparse_extend", "pairSparse_interval", final):
+          names = ["pairSparseBack_sound", "pairSparse_step", "pairSparseChunk_sound", "pairSparse_convert", "pairSparse_extend", "pairSparse_interval", final]
+          if os.environ["CERT_TARGET"] == "pair-path-finite":
+              names += ["scanOne_cover", "pairPathBlock_sound", "pairPathBlock_extend"]
+          for name in names:
               decl = f"'BB6.Agent9PairCarry.{name}'"
               if f"{decl} does not depend on any axioms" in log:
                   print(name, [])
