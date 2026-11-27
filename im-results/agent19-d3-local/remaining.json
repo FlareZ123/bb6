@@ -1,0 +1,655 @@
+[
+  {
+    "address": [
+      "0LD"
+    ],
+    "table": "1RB0LC1RC0LD1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "0LE"
+    ],
+    "table": "1RB0LC1RC0LE1LA0LD0RB---------------",
+    "mass": 19531250
+  },
+  {
+    "address": [
+      "0RA"
+    ],
+    "table": "1RB0LC1RC0RA1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "0RB"
+    ],
+    "table": "1RB0LC1RC0RB1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "0RC"
+    ],
+    "table": "1RB0LC1RC0RC1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "0RD"
+    ],
+    "table": "1RB0LC1RC0RD1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "0RE"
+    ],
+    "table": "1RB0LC1RC0RE1LA0LD0RB---------------",
+    "mass": 19531250
+  },
+  {
+    "address": [
+      "1LB"
+    ],
+    "table": "1RB0LC1RC1LB1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1LC"
+    ],
+    "table": "1RB0LC1RC1LC1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1LD"
+    ],
+    "table": "1RB0LC1RC1LD1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1LE"
+    ],
+    "table": "1RB0LC1RC1LE1LA0LD0RB---------------",
+    "mass": 19531250
+  },
+  {
+    "address": [
+      "1RA"
+    ],
+    "table": "1RB0LC1RC1RA1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1RB"
+    ],
+    "table": "1RB0LC1RC1RB1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1RD"
+    ],
+    "table": "1RB0LC1RC1RD1LA0LD0RB---------------",
+    "mass": 9765625
+  },
+  {
+    "address": [
+      "1RE",
+      "0LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0LC---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0LD---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0LE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0LE---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0LF---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0RB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0RB---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0RC---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0RD---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0RE---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "0RF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---0RF---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1LB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1LB---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1LC---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1LD---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1LE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1LE---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1LF---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RA---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0LA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0LA------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0LB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0LB------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0LC------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0LD------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0LF------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RA------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RB------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RC------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RD------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RE------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "0RF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB0RF------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1LA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1LA------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1LC------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1LD------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1LF------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RA------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RB------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RC------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RD------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RE------",
+    "mass": 31250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0LA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LA---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0LB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LB---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LC---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LD---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0LF---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RA---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0RB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RB---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RC---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RD---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "0RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF0RE---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1LA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LA---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1LC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LC---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1LD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LD---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1LE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LE---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1LF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1LF---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1RA---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RB"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1RB---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1RC---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RD",
+      "0RA"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB0RA1RB1RF1RD---",
+    "mass": 50
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RD",
+      "0RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB0RE1RB1RF1RD---",
+    "mass": 50
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RD",
+      "1RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB1RD1RB1RF1RD---",
+    "mass": 50
+  },
+  {
+    "address": [
+      "1RE",
+      "1RB",
+      "1RF",
+      "1RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1RE---",
+    "mass": 1250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RC"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RC---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RD"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RD---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RE"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RE---------",
+    "mass": 781250
+  },
+  {
+    "address": [
+      "1RE",
+      "1RF"
+    ],
+    "table": "1RB0LC1RC1RE1LA0LD0RB---1RF---------",
+    "mass": 781250
+  }
+]

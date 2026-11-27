@@ -9,6 +9,7 @@ on:
         default: raw77
         options:
           - raw77
+          - d3-local
           - raw40-crossing-preflight
           - raw40-leaf66-preflight
           - raw40-leaf66-full
@@ -108,3 +109,14 @@ jobs:
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
             exit 1
           fi
+      - name: Verify D3 local cut and symbolic sibling proofs
+        if: ${{ inputs.target == 'd3-local' }}
+        env:
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/a19-d3-local --jobs 2 im-results/agent19-d3-local/D3LocalCut.lean | tee /tmp/a19-d3-local.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-d3-local.log; then exit 1; fi

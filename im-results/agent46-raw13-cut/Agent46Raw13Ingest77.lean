@@ -88,7 +88,7 @@ def d3Leaf : PartialMachine :=
   BB6.Agent47WeightedHalt.forgetHaltRows BB6.Agent19HardRoot.D3
 
 def d3ResidualCandidates : List Entry :=
-  raw13Residuals.filter (fun e => tableOK e.2 d3Leaf)
+  raw13Residuals.filter (fun e => BB6.Agent19HardRoot.parentCheck e.2 BB6.Agent19HardRoot.D3)
 
 theorem d3ResidualCandidates_length : d3ResidualCandidates.length = 1 := by
   decide
@@ -96,8 +96,17 @@ theorem d3ResidualCandidates_length : d3ResidualCandidates.length = 1 := by
 def d3ResidualEntry : Entry := d3ResidualCandidates.head!
 
 theorem d3ResidualEntry_refines_hardroot :
-    tableOK d3ResidualEntry.2 d3Leaf = true := by
+    BB6.Agent19HardRoot.parentCheck d3ResidualEntry.2 BB6.Agent19HardRoot.D3 = true := by
   decide
+
+theorem d3ResidualEntry_compatible : compatible d3ResidualEntry.2 BB6.Agent19HardRoot.D3 :=
+  (BB6.Agent19HardRoot.parentCheck_iff _ _).mp d3ResidualEntry_refines_hardroot
+
+theorem d3ResidualEntry_leaf_extends :
+    ∀ m, compatible d3Leaf m → compatible d3ResidualEntry.2 m :=
+  BB6.Agent19HardRoot.leaf_extends_parent _ _
+    (BB6.Agent19HardRoot.ordinaryParentCheck_sound _ (by decide))
+    d3ResidualEntry_compatible
 
 /-- The unique descendant is reached by A1=0LC, C1=0LD, D0=0RB. -/
 theorem d3ResidualEntry_address :
@@ -111,6 +120,7 @@ theorem d3Leaf_weightedBound_iff (B : Nat) :
       ∀ k, HaltsAfter BB6.Agent19HardRoot.D3 k → k+1 ≤ B := by
   simpa [d3Leaf] using BB6.Agent19HardRoot.D3_cover_iff B
 
+#print axioms d3ResidualEntry_leaf_extends
 #print axioms parent_count77
 #print axioms refined_count77
 #print axioms refined_sound77
