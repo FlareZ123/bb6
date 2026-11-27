@@ -179,6 +179,7 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
     · rintro ⟨hc,B,hB,he⟩
       have hS := nat_sub_residue M Y (q*B+digitWeight k B) hMpos
       have he' := he
+      change (cmod:Int) = ((Y:Int)-weight q k B) % (M:Int) at he'
       rw [weight_eq_nat q k B hB] at he'
       rw [←hS] at he'
       have hres' : cmod =
@@ -189,7 +190,7 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
   have hbigEq : c-cmod = 2^k*(c/2^k) := by
     have hdiv := Nat.div_add_mod c M
     have hdiv' : c/2^k*2^k+cmod=c := by
-      simpa [M,cmod] using hdiv
+      simpa [M,cmod,Nat.mul_comm] using hdiv
     calc
       c-cmod = (c/2^k*2^k+cmod)-cmod := by rw [hdiv']
       _ = c/2^k*2^k := Nat.add_sub_cancel_right _ _
@@ -206,7 +207,7 @@ theorem jump_member_iff_reduced (q k Y c : Nat) :
       ((Y:Int)-(cmod:Int))-((Y:Int)-(c:Int)) := by
     have heq : ((Y:Int)-(cmod:Int))-((Y:Int)-(c:Int)) =
         (c:Int)-(cmod:Int) := by omega
-    simpa [heq] using hsmallInt
+    rw [heq]; exact hsmallInt
   have hcong :
       Rep (reducedModulus q k : Int) ((Y:Int)-(cmod:Int))
         (reducedWeights q k) ↔
@@ -245,14 +246,14 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
     have hxmem : (x.toNat:Int) ∈ reducedResidues q k Y := by
       simpa [hxcast] using hx
     have hRepX := (mem_reducedResidues_iff q k Y x.toNat hxnat).mp hxmem
-    have hdiff : c-x.toNat = j*M := by omega
+    have hdiff : c-x.toNat = M*j := by rw [Nat.mul_comm M j]; omega
     have hdivInt : (M:Int) ∣ (c:Int)-(x.toNat:Int) :=
       nat_sub_dvd_int c x.toNat M j (by omega) hdiff
     have hxy : (M:Int) ∣
         ((Y:Int)-(x.toNat:Int))-((Y:Int)-(c:Int)) := by
       have heq : ((Y:Int)-(x.toNat:Int))-((Y:Int)-(c:Int)) =
           (c:Int)-(x.toNat:Int) := by omega
-      simpa [heq] using hdivInt
+      rw [heq]; exact hdivInt
     have hRepC := (rep_congr (M:Int) ((Y:Int)-(x.toNat:Int))
       ((Y:Int)-(c:Int)) (reducedWeights q k) hxy).mp hRepX
     exact (jump_member_iff_reduced q k Y c).mpr ⟨hc,hRepC⟩
@@ -262,7 +263,7 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
     have hr : r<M := Nat.mod_lt c hMpos
     have hdivEq : c-r = M*(c/M) := by
       have hdiv := Nat.div_add_mod c M
-      have hdiv' : c/M*M+r=c := by simpa [r] using hdiv
+      have hdiv' : c/M*M+r=c := by simpa [r,Nat.mul_comm] using hdiv
       calc
         c-r = (c/M*M+r)-r := by rw [hdiv']
         _ = c/M*M := Nat.add_sub_cancel_right _ _
@@ -273,7 +274,7 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
         ((Y:Int)-(r:Int))-((Y:Int)-(c:Int)) := by
       have heq : ((Y:Int)-(r:Int))-((Y:Int)-(c:Int)) =
           (c:Int)-(r:Int) := by omega
-      simpa [heq] using hdivInt
+      rw [heq]; exact hdivInt
     have hRepR := (rep_congr (M:Int) ((Y:Int)-(r:Int))
       ((Y:Int)-(c:Int)) (reducedWeights q k) hxy).mpr hRep
     have hres : (r:Int) ∈ reducedResidues q k Y :=
@@ -286,8 +287,10 @@ theorem mem_reducedLift_iff (q k Y c : Nat) :
         (fun x => (c/M)*M+x.toNat) := by
       apply List.mem_map.mpr
       refine ⟨(r:Int),hres,?_⟩
-      have h := Nat.div_add_mod c M
-      simpa [r,Nat.mul_comm] using h
+      rw [Int.toNat_natCast]
+      change (c/M)*M+c%M=c
+      rw [Nat.mul_comm (c/M) M]
+      exact Nat.div_add_mod c M
     have hflat : c ∈ (List.range (q/M+1)).flatMap
         (fun j => (reducedResidues q k Y).map (fun x => j*M+x.toNat)) := by
       exact List.mem_flatMap.mpr ⟨c/M,hj,by simpa using hitems⟩
