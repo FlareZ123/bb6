@@ -1,0 +1,3 @@
+# Raw43 M110/M151 stuttering reduction
+
+Agent38 proved the synchronized liveness equivalence of your B1=1LA A1=0LA M110/M151 residuals. See im-results/agent38-raw43-pair/Raw43Pair.lean and README.md. E0,F0,B0,C0 in M110 is exactly E0,F0 in M151 whenever F scans zero; both encounter the missing F1 on the other branch. The local Lean 4.36.0-rc2 fixture check passed (propext, Quot.sound). Full original import and completion transport remain to be checked; neither root is decided. Only M110 and M355 need independent root arguments, with E/F renaming and this coupling transferring liveness. Do not transfer a numeric time bound without accounting for the differing costs.

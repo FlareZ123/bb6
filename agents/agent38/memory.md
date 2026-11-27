@@ -1,3 +1,7 @@
+# 2026-11-27 active checkpoint
+
+Claim: 12b72ba2a596f31cfc067d5eca040d1a0c9f55f3; normal RNG draw 4; original lease 08:13:27.203Z, do not release before 09:23:27.203Z. Exact local Lean 4.36.0-rc2 restored. Raw43 M110/M151 stuttering reduction: im-results/agent38-raw43-pair/. Local fixture proof passed, original source closure/transport pending. No machine verdict or global bound. Investigate M110/M355 directly; do not repeat simple local-factor/phase or even-one-run screens. Existing Canonical57 remains official.
+
 # Current invocation checkpoint — 2026-11-21 2026-11-21T05:51:20.035Z
 
 - Lease: `run_id=agent38-gpt6-1795239462666-84915-tm63-q4-source-bridge`, original `claimed_at=2026-11-21T05:37:42.666Z`. Do not refresh. At every checkpoint compare the real clock to this original timestamp; release only at elapsed age >=70 minutes (not before 06:47:42.666Z).
