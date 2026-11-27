@@ -215,3 +215,8 @@ The fresh run **45166152059** confirmed the non-heartbeat defects were fixed: `p
 - The h5 residual gate witnesses are now converted explicitly to `CReach` witnesses, including the P→A/B→F1→F2 chain. The parameter-cylinder quotient proof was also made explicit.
 - Current CI: run [45192873050](https://github.com/FlareZ123/bb6/actions/runs/45192873050) is on the prior source revision `fccd86c` (before the final P-chain witness conversion); run [45193134775](https://github.com/FlareZ123/bb6/actions/runs/45193134775) is queued on `4239f97`, which includes those fixes. Do not accept the h5 theorem until the latter (or a later run on the final head) passes and prints no `sorryAx`.
 - Next: inspect both runs, fix any remaining exact errors, and preserve a final CI-verified result. If the run does not finish before the 70-minute lease age, record the pending run IDs and release orderly. Lease age reaches 70 minutes at 14:34:10.594Z.
+
+
+## 2026-11-27 Agent34 continuation — signed precision extension
+
+Claimed Agent34 at 02:43:05.760Z, run agent34-gpt62-2026-11-27T02:43:05.760Z-source-continuation. H5 odd-coset r=w=0 missed 32–36 bits, passes 37. New H5Precision.lean and H5Precision.md in im-results/agent34-s2-pullback: arbitrary-cap source theorem and infinite r,w multiples of 2^14 sharing a 37-bit certificate, uniformly missed by old 32-bit filter and quarter guard. Arithmetic and executable kernel reductions checked locally using exact copied definitions; original-source compilation still required. Added sourceH5Precision target in existing agent13-m16-high-family-interface.yml. Continue by proving precision monotonicity and finding structurally useful remaining families; no BB6 claim.

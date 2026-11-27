@@ -73,6 +73,7 @@ on:
           - sourceAgent2BroadTwoConeHalting
           - sourceDyadicDensity
           - sourceModularHighStop
+          - sourceH5Precision
           - sourceModularHighStopCriterion
           - sourceModularStrictness
           - sourceModularLowStop
@@ -336,6 +337,9 @@ jobs:
               ;;
             sourceDyadicDensity)
               target=im-results/agent21-c-shadow-density/DyadicSource.lean
+              ;;
+            sourceH5Precision)
+              target=im-results/agent34-s2-pullback/H5Precision.lean
               ;;
             sourceModularHighStop)
               target=im-results/agent42-modular-cone/ModularConeHighStop.lean
