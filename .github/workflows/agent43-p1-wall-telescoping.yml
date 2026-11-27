@@ -20,6 +20,7 @@ on:
           - finite-gate-join
           - modular-unbounded
           - lag-partition
+          - adaptive-batch
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -29,6 +30,37 @@ on:
 permissions:
   contents: read
 jobs:
+  adaptive-batch:
+    if: inputs.target == 'adaptive-batch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        index: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and independently check sparse range certificates
+        run: |
+          set -euo pipefail
+          AG43=im-results/agent43-p1-high-cost-reset-count
+          GEN="$PWD/adaptive-batch"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent50-p1-dyadic-width:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent9-p1-first-return:$AG43:$GEN"
+          python "$AG43/gen_adaptive_batch.py" "${{ matrix.index }}" "$GEN"
+          python tools/lean_compile_deps.py "$GEN/AdaptiveBatch${{ matrix.index }}.lean" | tee /tmp/adaptive.log
+          grep -F 'adaptive_interval' /tmp/adaptive.log
+          if grep -Eq 'sorryAx|error:' /tmp/adaptive.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: adaptive-batch-${{ matrix.index }}
+          path: adaptive-batch/
+          if-no-files-found: error
+          retention-days: 7
   block-shards:
     if: inputs.target == 'margin-block-parallel'
     runs-on: ubuntu-latest
@@ -69,7 +101,7 @@ jobs:
           retention-days: 3
   source-wall:
     needs: block-shards
-    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix'
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' && inputs.target != 'adaptive-batch'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
