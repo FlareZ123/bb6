@@ -1,3 +1,12 @@
+## Current checkpoint — 2026-11-27 05:55Z
+
+Lease claimed at 05:43:09.027Z, release threshold 06:53:09.027Z.
+
+- Commit cf68d4fb134df31207916d753caed72b73dd9d3f fixes erroneous Nat roster-key annotations and adds `im-results/agent2-ready-union/`. Run [45948236956](https://github.com/FlareZ123/bb6/actions/runs/45948236956) checks Canonical57 → 53 (95,99,103,105) → 46 (106,79,83,85,69,73,78). Separate thin deltas; actual Raw124 lineage; Raw59 retained. All prospective. The three legacy ZIPs were downloaded locally and matched pinned digests and claims; old manifest issue was the metadata extraction directory.
+- Raw63 proposed complete witness tree: 1,341 internal child splits, 22,989 cycle leaves, 7,105 last-slot leaves and 773 supplied open witnesses. Earlier monolithic source audit interrupted by runner shutdown. Commits 0f4b3ab435bcdb6eb7f3f77341b049c2c93e832d and b8267e0c61cf97fafefb257edf286907c0b3baf7 implement `im-results/agent2-raw63-shards/`: common core, proven prefix sharing, six balanced child closures, strict manifest merge, literal Cover at 358. Run [45948590270](https://github.com/FlareZ123/bb6/actions/runs/45948590270), prospective. Preserve successful child artifacts if interruption; do not rediscover witnesses.
+- Raw59 parent-only [45947831472](https://github.com/FlareZ123/bb6/actions/runs/45947831472) still in flight. No new accepted residual count.
+- Local Lean 4.36.0-rc2 installed; direct GitHub clone blocked by DNS. Small artifacts available through connector.
+
 # Current checkpoint — 2026-11-27T05:48Z
 
 Normal mode draw 1. Agent2 lease claimed and confirmed in commit 3e3037b4f964a75c2a33f50167677233ff1c8b47 at immutable timestamp 2026-11-27T05:43:09.027Z. Release threshold 06:53:09.027Z. Prior Raw124 work complete: local Cover 4,136,175 accepted 45908591612; Raw124 exact global consumer accepted independently in run 45926694578 artifact 15167645810. Current global conditional roster 57 entries, Raw59 retained.
