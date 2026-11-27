@@ -1,0 +1,644 @@
+{
+  "upstream": "f7f883d7292cf43d817f14fb1780554171dbd049",
+  "rows": [
+    {
+      "id": "raw39_180",
+      "raw": 39,
+      "rle": "1RB1LE_1RC1RF_0RD0LB_1LD0RA_0LA0LE_0RCHHH",
+      "sha": "c8f9d025e47c7f0d720a33315e4afe9061ba93ad",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C0"
+        },
+        {
+          "time": 3,
+          "slot": "D0"
+        },
+        {
+          "time": 5,
+          "slot": "D1"
+        },
+        {
+          "time": 6,
+          "slot": "A1"
+        },
+        {
+          "time": 7,
+          "slot": "E0"
+        },
+        {
+          "time": 12,
+          "slot": "C1"
+        },
+        {
+          "time": 13,
+          "slot": "B1"
+        },
+        {
+          "time": 14,
+          "slot": "F0"
+        },
+        {
+          "time": 34,
+          "slot": "E1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "1LE",
+        "1RC",
+        "1RF",
+        "0RD",
+        "0LB",
+        "1LD",
+        "0RA",
+        "0LA",
+        "0LE",
+        "0RC",
+        "HHH"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB1LE_1RC1RF_0RD0LB_1LD0RA_0LA0LE_0RCHHH"
+    },
+    {
+      "id": "raw13_new",
+      "raw": 13,
+      "rle": "1RB1LD_1RC0LA_1LA0RE_1LB1LA_1RF0RB_HHH0LB",
+      "sha": "aefc843b9426bfe1525b7fb4bfcdc4a959c83689",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C0"
+        },
+        {
+          "time": 3,
+          "slot": "A1"
+        },
+        {
+          "time": 4,
+          "slot": "D1"
+        },
+        {
+          "time": 6,
+          "slot": "B1"
+        },
+        {
+          "time": 8,
+          "slot": "D0"
+        },
+        {
+          "time": 10,
+          "slot": "C1"
+        },
+        {
+          "time": 11,
+          "slot": "E1"
+        },
+        {
+          "time": 41,
+          "slot": "E0"
+        },
+        {
+          "time": 42,
+          "slot": "F1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "1LD",
+        "1RC",
+        "0LA",
+        "1LA",
+        "0RE",
+        "1LB",
+        "1LA",
+        "1RF",
+        "0RB",
+        "HHH",
+        "0LB"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB1LD_1RC0LA_1LA0RE_1LB1LA_1RF0RB_HHH0LB"
+    },
+    {
+      "id": "raw10_1",
+      "raw": 10,
+      "rle": "1RB0LC_1LC0RE_1RA1LD_1LA1LC_1RF0RA_HHH0LA",
+      "sha": "3ee0fe23c1f9def2bbab05e3e9c6dd4de7b1712a",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "D0"
+        },
+        {
+          "time": 5,
+          "slot": "B1"
+        },
+        {
+          "time": 6,
+          "slot": "E1"
+        },
+        {
+          "time": 7,
+          "slot": "A1"
+        },
+        {
+          "time": 8,
+          "slot": "C0"
+        },
+        {
+          "time": 12,
+          "slot": "D1"
+        },
+        {
+          "time": 26,
+          "slot": "E0"
+        },
+        {
+          "time": 27,
+          "slot": "F1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0LC",
+        "1LC",
+        "0RE",
+        "1RA",
+        "1LD",
+        "1LA",
+        "1LC",
+        "1RF",
+        "0RA",
+        "HHH",
+        "0LA"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0LC_1LC0RE_1RA1LD_1LA1LC_1RF0RA_HHH0LA"
+    },
+    {
+      "id": "raw10_2",
+      "raw": 10,
+      "rle": "1RB0LD_1LC0RE_HHH1LD_1LE1LA_1RA0LF_1LC1RE",
+      "sha": "36f95e52219cb48aa8a750f85804b6266be2eeae",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "D0"
+        },
+        {
+          "time": 4,
+          "slot": "E0"
+        },
+        {
+          "time": 5,
+          "slot": "A1"
+        },
+        {
+          "time": 6,
+          "slot": "D1"
+        },
+        {
+          "time": 8,
+          "slot": "B1"
+        },
+        {
+          "time": 26,
+          "slot": "E1"
+        },
+        {
+          "time": 27,
+          "slot": "F0"
+        },
+        {
+          "time": 66,
+          "slot": "F1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0LD",
+        "1LC",
+        "0RE",
+        "HHH",
+        "1LD",
+        "1LE",
+        "1LA",
+        "1RA",
+        "0LF",
+        "1LC",
+        "1RE"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0LD_1LC0RE_HHH1LD_1LE1LA_1RA0LF_1LC1RE"
+    },
+    {
+      "id": "raw10_3",
+      "raw": 10,
+      "rle": "1RB0LE_1LC1RD_1LA0RB_1RC1RB_1LF0LC_HHH0RC",
+      "sha": "3f489c609c02f1efbb2b25635cc82b6f39e59367",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "B1"
+        },
+        {
+          "time": 4,
+          "slot": "D0"
+        },
+        {
+          "time": 5,
+          "slot": "C0"
+        },
+        {
+          "time": 6,
+          "slot": "A1"
+        },
+        {
+          "time": 7,
+          "slot": "E1"
+        },
+        {
+          "time": 20,
+          "slot": "D1"
+        },
+        {
+          "time": 34,
+          "slot": "E0"
+        },
+        {
+          "time": 35,
+          "slot": "F1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0LE",
+        "1LC",
+        "1RD",
+        "1LA",
+        "0RB",
+        "1RC",
+        "1RB",
+        "1LF",
+        "0LC",
+        "HHH",
+        "0RC"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0LE_1LC1RD_1LA0RB_1RC1RB_1LF0LC_HHH0RC"
+    },
+    {
+      "id": "raw10_4",
+      "raw": 10,
+      "rle": "1RB0LF_1LC0LA_HHH1RD_1RF1RE_1LF1RD_1LB0RE",
+      "sha": "6065b3806a4851757954f3e86e4f53987ada4eb5",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "D1"
+        },
+        {
+          "time": 4,
+          "slot": "E0"
+        },
+        {
+          "time": 5,
+          "slot": "F1"
+        },
+        {
+          "time": 6,
+          "slot": "E1"
+        },
+        {
+          "time": 7,
+          "slot": "D0"
+        },
+        {
+          "time": 8,
+          "slot": "F0"
+        },
+        {
+          "time": 9,
+          "slot": "B1"
+        },
+        {
+          "time": 10,
+          "slot": "A1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0LF",
+        "1LC",
+        "0LA",
+        "HHH",
+        "1RD",
+        "1RF",
+        "1RE",
+        "1LF",
+        "1RD",
+        "1LB",
+        "0RE"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0LF_1LC0LA_HHH1RD_1RF1RE_1LF1RD_1LB0RE"
+    },
+    {
+      "id": "raw10_5",
+      "raw": 10,
+      "rle": "1RB0RC_1LC0RB_1LD0LD_1RA1LE_HHH0LF_1LB1LF",
+      "sha": "0cdef65047b15f7a734c5b72209b1e07eccd1e64",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "D0"
+        },
+        {
+          "time": 5,
+          "slot": "B1"
+        },
+        {
+          "time": 7,
+          "slot": "C0"
+        },
+        {
+          "time": 8,
+          "slot": "D1"
+        },
+        {
+          "time": 9,
+          "slot": "E1"
+        },
+        {
+          "time": 10,
+          "slot": "F0"
+        },
+        {
+          "time": 14,
+          "slot": "A1"
+        },
+        {
+          "time": 23,
+          "slot": "F1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0RC",
+        "1LC",
+        "0RB",
+        "1LD",
+        "0LD",
+        "1RA",
+        "1LE",
+        "HHH",
+        "0LF",
+        "1LB",
+        "1LF"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0RC_1LC0RB_1LD0LD_1RA1LE_HHH0LF_1LB1LF"
+    },
+    {
+      "id": "raw10_6",
+      "raw": 10,
+      "rle": "1RB0RD_1LC0LE_0RA0LB_1RC1RF_1LB1RD_0RCHHH",
+      "sha": "e0fb656a0b63dc09d07ad66ba0ff0a000398aba9",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 4,
+          "slot": "C0"
+        },
+        {
+          "time": 5,
+          "slot": "A1"
+        },
+        {
+          "time": 6,
+          "slot": "D0"
+        },
+        {
+          "time": 8,
+          "slot": "B1"
+        },
+        {
+          "time": 9,
+          "slot": "E0"
+        },
+        {
+          "time": 13,
+          "slot": "D1"
+        },
+        {
+          "time": 14,
+          "slot": "F0"
+        },
+        {
+          "time": 64,
+          "slot": "E1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0RD",
+        "1LC",
+        "0LE",
+        "0RA",
+        "0LB",
+        "1RC",
+        "1RF",
+        "1LB",
+        "1RD",
+        "0RC",
+        "HHH"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0RD_1LC0LE_0RA0LB_1RC1RF_1LB1RD_0RCHHH"
+    },
+    {
+      "id": "raw10_7",
+      "raw": 10,
+      "rle": "1RB1RF_1LC0RF_1LE0LD_1RC0LB_HHH1RA_1LB1RA",
+      "sha": "5a4310a16259b1a87f4f594319d7180981eacf6f",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "C1"
+        },
+        {
+          "time": 3,
+          "slot": "D0"
+        },
+        {
+          "time": 4,
+          "slot": "C0"
+        },
+        {
+          "time": 5,
+          "slot": "E1"
+        },
+        {
+          "time": 6,
+          "slot": "A1"
+        },
+        {
+          "time": 7,
+          "slot": "F1"
+        },
+        {
+          "time": 11,
+          "slot": "D1"
+        },
+        {
+          "time": 12,
+          "slot": "B1"
+        },
+        {
+          "time": 13,
+          "slot": "F0"
+        }
+      ],
+      "table": [
+        "1RB",
+        "1RF",
+        "1LC",
+        "0RF",
+        "1LE",
+        "0LD",
+        "1RC",
+        "0LB",
+        "HHH",
+        "1RA",
+        "1LB",
+        "1RA"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB1RF_1LC0RF_1LE0LD_1RC0LB_HHH1RA_1LB1RA"
+    },
+    {
+      "id": "raw0_new",
+      "raw": 0,
+      "rle": "1RB0LC_0LA1RD_1LA0RE_1RE0RF_1LFHHH_1LB1RF",
+      "sha": "6f9912f929ed22e9f1453d8d9ff2d5a30abebf04",
+      "path": [
+        {
+          "time": 1,
+          "slot": "B0"
+        },
+        {
+          "time": 2,
+          "slot": "A1"
+        },
+        {
+          "time": 3,
+          "slot": "C0"
+        },
+        {
+          "time": 5,
+          "slot": "B1"
+        },
+        {
+          "time": 6,
+          "slot": "D0"
+        },
+        {
+          "time": 7,
+          "slot": "E0"
+        },
+        {
+          "time": 8,
+          "slot": "F1"
+        },
+        {
+          "time": 10,
+          "slot": "F0"
+        },
+        {
+          "time": 12,
+          "slot": "D1"
+        },
+        {
+          "time": 16,
+          "slot": "C1"
+        }
+      ],
+      "table": [
+        "1RB",
+        "0LC",
+        "0LA",
+        "1RD",
+        "1LA",
+        "0RE",
+        "1RE",
+        "0RF",
+        "1LF",
+        "HHH",
+        "1LB",
+        "1RF"
+      ],
+      "module": "BusyBeaver.BB6.NonHalt.M_1RB0LC_0LA1RD_1LA0RE_1RE0RF_1LFHHH_1LB1RF"
+    }
+  ],
+  "excludedKnown": [
+    "A6",
+    "Pomme"
+  ],
+  "otherNewHalting": [
+    "1RB0RB_0LC1RA_1RD1LC_1LA1LE_1LF0LD_HHH0LA",
+    "1RB0RD_1RC0LF_0LA0RB_1REHHH_1LB1RA_0LE0LF",
+    "1RB1LD_1LC0RF_0RD0LB_1LB0LE_1LAHHH_0RA0RF"
+  ]
+}
