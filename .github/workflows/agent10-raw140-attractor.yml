@@ -1,0 +1,56 @@
+name: Agent10 Raw140 restricted attractor (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: Check restricted attractor or extend it to concrete entries
+        type: choice
+        options: [core, entries]
+        default: core
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean and source
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet d1d231afe3a5f6310ac9f956d5687b5a45d7a13d
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = d1d231afe3a5f6310ac9f956d5687b5a45d7a13d
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/local/share/powershell
+      - name: Compile restricted nine-row theorem
+        working-directory: /tmp/cryptids
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw140-attractor-logs
+          printf '%s\n' leanprover/lean4:v4.36.0-rc2 > lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          rm -f lake-manifest.json
+          lake update
+          lake exe cache get
+          dir="$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids"
+          if [ "$TARGET" = core ]; then
+            python "$dir/restrict_raw140_attractor.py" /tmp/cryptids
+          else
+            python "$dir/restrict_raw140_attractor.py" /tmp/cryptids "$dir/Raw140AttractorEvaluator.inc"
+          fi
+          lake build BusyBeaver.BB6.NonHalt.Raw140RestrictedAttractor 2>&1 | tee /tmp/raw140-attractor-logs/core.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/raw140-attractor-logs/core.log; then exit 1; fi
+          grep -q 'restricted_entry_ext.*depends on axioms' /tmp/raw140-attractor-logs/core.log
+          if [ "$TARGET" = entries ]; then
+            bash "$dir/check_raw140_attractor_entries.sh"
+          fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw140-attractor-audit
+          path: /tmp/raw140-attractor-logs
