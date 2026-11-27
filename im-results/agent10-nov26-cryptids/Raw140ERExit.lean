@@ -72,31 +72,41 @@ theorem exitBank (n p : Nat) (s : Tail) :
     Reach base
       (boundary 4 true (S 1::(trip133 (n+2) ++ U 3 p ++ [S 2])) (tailWord s))
       (boundary 0 true (U 3 (p+11) ++ [S 2]) (trip115 (n+extra s) ++ tailWord (rho s))) := by
-  let X := trip133 (n+2) ++ U 3 p ++ [S 2]
   cases s with
   | t542 =>
-    have h₁ := prep542 X
+    have h₁ := prep542 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 1 n p [S 5,S 2]
-    exact Reach.trans ⟨_,h₁⟩ h₂
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
+    have h := Reach.trans ⟨_,h₁⟩ h₂
+    simpa only [extra,rho,tailWord,Nat.add_zero,List.append_assoc] using h
   | t152 =>
-    have h₁ := prep152 X
+    have h₁ := prep152 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 1 n p [S 1,S 2,S 1]
-    exact Reach.trans ⟨_,h₁⟩ h₂
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
+    have h := Reach.trans ⟨_,h₁⟩ h₂
+    simpa only [extra,rho,tailWord,Nat.add_zero,List.append_assoc] using h
   | t1121 =>
-    have h₁ := prep1121 X
+    have h₁ := prep1121 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 0 n p [S 5,S 2,S 1,S 5]
-    exact Reach.trans ⟨_,h₁⟩ h₂
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
+    have h := Reach.trans ⟨_,h₁⟩ h₂
+    simpa only [extra,rho,tailWord,Nat.add_zero,List.append_assoc] using h
   | t5215 =>
-    have h₁ := prep5215 X
+    have h₁ := prep5215 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 0 n p [S 1,S 1,S 5,S 5]
-    exact Reach.trans ⟨_,h₁⟩ h₂
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
+    have h := Reach.trans ⟨_,h₁⟩ h₂
+    simpa only [extra,rho,tailWord,Nat.add_zero,List.append_assoc] using h
   | t1155 =>
-    have h₁ := prep1155 X
+    have h₁ := prep1155 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 2 n p [S 5,S 1,S 1]
-    exact Reach.trans ⟨_,h₁⟩ h₂
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
+    have h := Reach.trans ⟨_,h₁⟩ h₂
+    simpa only [extra,rho,tailWord,Nat.add_zero,List.append_assoc] using h
   | t11511 =>
-    have h₁ := prep11511 X
+    have h₁ := prep11511 (trip133 (n+2) ++ (U 3 p ++ [S 2]))
     have h₂ := startExit 2 n p [S 5,S 5,S 4,S 2]
+    simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h₂
     have h := Reach.trans ⟨_,h₁⟩ h₂
     simpa only [extra,rho,tailWord,trip115_snoc,U,List.replicate_succ,List.replicate_zero,List.cons_append,List.append_assoc,List.nil_append] using h
 
