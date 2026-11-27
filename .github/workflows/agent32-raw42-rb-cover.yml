@@ -628,7 +628,7 @@ jobs:
           for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
           out=/tmp/shards/raw42-assembly-shard-5
           mkdir -p "$out"
-          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir "$out" --jobs 1 --source-root "$g" \
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir "$out" --jobs 1 --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
             --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core \
             --manifest "$out/manifest.json" --artifact-name raw42-assembly-shard-5 "${roots[@]}" | tee "$out/audit.log"
           ! grep -Eq 'sorryAx|native_decide' "$out/audit.log"
@@ -645,7 +645,7 @@ jobs:
           g="$d/generated-assembly"
           python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$g/shards.json"
           mkdir -p /tmp/final
-          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 --source-root "$g" \
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
             --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
             --manifest /tmp/final/manifest.json --artifact-name raw42-certified-0RB \
             --theorem BB6.Agent32Raw420RB.Closed.cover --parent-table '1RB---_1RC0RB_0RD---_1LD0LB_------_------' \
