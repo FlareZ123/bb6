@@ -36,11 +36,11 @@ theorem scan (n : Nat) (X Y : List Sym) :
   | zero => simp [T,B,run]
   | succ n ih =>
     cases n with
-    | zero => simpa [T,B] using rightScanOne X Y
+    | zero => simpa [T,B,Mbase] using rightScanOne X Y
     | succ n =>
       have h0 := rightScanOne X (S 4::S 4::(T n ++ S 6::Y))
       have h1 := ih (S 5::S 5::S 4::X)
-      simpa only [T,B,List.cons_append,List.append_assoc,List.nil_append,
+      simpa only [Mbase,T,B,List.cons_append,List.append_assoc,List.nil_append,
         show (5+1+1+3+7+1+1+5+1+1+3+7+1+1+5+1+1)+45*(n+1)=45*(n+1+1) by omega] using join h0 h1
 
 theorem pump (n : Nat) (X Y : List Sym) :
@@ -52,7 +52,7 @@ theorem pump (n : Nat) (X Y : List Sym) :
   | succ n ih =>
     have h0 := rightPumpOne (B n ++ X) Y
     have h1 := ih (S 6::S 4::S 4::Y)
-    simpa only [bank_cons,trip_snoc,List.cons_append,List.append_assoc,List.nil_append,
+    simpa only [Mbase,bank_cons,trip_snoc,List.cons_append,List.append_assoc,List.nil_append,
       show (3*3+7+1+1+3)+21*n=21*(n+1) by omega] using join h0 h1
 
 theorem tailTurn (s : Tail) (X : List Sym) :
