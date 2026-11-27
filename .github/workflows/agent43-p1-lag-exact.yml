@@ -1,0 +1,28 @@
+name: P1 exact delayed-trace converse
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  exact-lag:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source dependencies
+        run: |
+          set -e
+          A=im-results/agent45-p1-delayed-carry
+          B=im-results/agent50-p1-dyadic-width
+          C=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$A:$B:$C"
+          lean --version
+          lean -o "$B/P1CarryExact.olean" "$B/P1CarryExact.lean"
+          lean -o "$A/LagCore.olean" "$A/LagCore.lean"
+          lean -o "$A/LagMicro.olean" "$A/LagMicro.lean"
+          lean -o "$C/LagExact.olean" "$C/LagExact.lean"
