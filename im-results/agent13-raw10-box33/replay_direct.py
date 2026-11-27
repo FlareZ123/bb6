@@ -75,6 +75,27 @@ def run_direct(args):
     call(work/'rle_scan',-1)
     known,source={(14,17):(HARD_D14V17,'Box33D14Source'),(14,18):(HARD_D14V18,'Box33D14V18Source')}.get((d,v),({},None))
     cycles={}
+    known_specs={}
+    if (d,v)==(17,22):
+        hard=json.loads((HERE/'d17v22-hard.json').read_text())['machines']
+        specs=[
+            ([7],'Box33D17V22Counter','single'),
+            ([1,2,3,4,5,6,8,10,16,19,20,23,24,32],'Box33D17V22CarryFamily','enum'),
+            ([14],'Box33D17V22Unary','single'),
+            ([0],'Box33D17V22M0','single'),
+            ([9,17,18,21,22,25,26,27,28,31],'Box33D17V22PrefixFamily','nested'),
+            ([29,30],'Box33D17V22PrefixExtra','nested'),
+            ([12,15],'Box33D17V22RunSummary','nested'),
+            ([11,34],'Box33D17V22RunExtra','nested'),
+            ([13],'Box33D17V22Cycle','single'),
+        ]
+        for ids,mod,style in specs:
+            for i in ids:
+                nm=f'm{i}'
+                known[tuple(hard[i])]=nm
+                qual=f'BB6.Agent13.{mod}'+(f'.M{i}' if style=='nested' else '')
+                arg=f' .m{i}' if style=='enum' else ''
+                known_specs[nm]=(mod,qual,arg)
     if (d,v)==(17,21):
         known={
             (8,18,11,0,1,13,17,10,21,14,24,4):'m0',
@@ -130,9 +151,16 @@ def run_direct(args):
     em.write=write
     (out/(family+'Tree.lean')).write_text(f'import Box33DirectTree\nnamespace {ns}\nabbrev SafeBox := BB6.Agent13.Box33Direct.SafeBox\nend {ns}\n')
     if known:
-        txt=f'import {family}Tree\nimport {source}\nnamespace {ns}\nopen BB6Coverage BB6.Agent13.Box33Direct\n'
-        for nm in sorted(set(known.values())):
-            txt+=f'def {nm} : Known {B} := ⟨{source}.partialTable .{nm}, good_never _ _ ({source}.compatible_never .{nm})⟩\n'
+        if known_specs:
+            imports=''.join('import '+mod+'\n' for mod in sorted({v[0] for v in known_specs.values()}))
+            txt=f'import {family}Tree\n'+imports+f'namespace {ns}\nopen BB6Coverage BB6.Agent13.Box33Direct\n'
+            for nm in sorted(set(known.values())):
+                _,qual,arg=known_specs[nm]
+                txt+=f'def {nm} : Known {B} := ⟨{qual}.partialTable{arg}, good_never _ _ ({qual}.compatible_never{arg})⟩\n'
+        else:
+            txt=f'import {family}Tree\nimport {source}\nnamespace {ns}\nopen BB6Coverage BB6.Agent13.Box33Direct\n'
+            for nm in sorted(set(known.values())):
+                txt+=f'def {nm} : Known {B} := ⟨{source}.partialTable .{nm}, good_never _ _ ({source}.compatible_never .{nm})⟩\n'
         (out/(family+'DirectKnown.lean')).write_text(txt+f'end {ns}\n')
     boxes=em.bank_modules('B')
     masks=[tuple(e['mask']) for e in json.load(open('greedyboxes.json'))['boxes']]
