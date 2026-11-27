@@ -1,3 +1,11 @@
+# 2026-11-27T16:02:12.302Z checkpoint — four exact nonhalting leaf proofs drafted
+
+- Lease remains 2026-11-27T15:27:16.425Z; earliest release 16:37:16.425Z (elapsed 34.93128333333333 min).
+- Exact frozen frontier extraction runs 46028022676 (148/149) and 46028391565 (150/151), branches agent5-q0-<id>-roster-<runid>; JSON paths q0-<id>-exact-frontier.json. 150: 17 open,45 caps, 11 finite first-hole traces <=16059; 151:9 open,69 caps,8 finite <=16503. These are partial trees, not full classification. New resume only expands cap leaves (300+700 test byte-identical to fresh 1000). 148/149 resume run46028015821; 150/151 resume dispatched from 46026792866 at a2cfc789457064d8c954372deac777e36d40e427. Do not repeat accepted scan prefixes.
+- Three exact q0-150 E0-hole siblings F0=0LA/0LD/0RD: unbounded frame/run invariant debt sum(m_i-1) <= g+1-b, positive E1 returns, proof dossier q0-150-frame-run-invariant.md commit4eba61835192008c4f5810d634643df4f27ac809. Generic zero-padding transport and invariant Agent5Frame150.lean; concrete kernel local return certificates Raw11Q0Frame150Rules.lean commit2d134ac972bddaa66893c7887385f4cce9baab63, CI run46029918180 pinned28082f6522f23baa6eb67b4bfe5d8f784551a0e5. Mathematical proof independent of simulation horizon; source acceptance still pending.
+- Only genuine open leaf of original q0-151 scan has B1 hole: 1RB1LC_1RC---_0LA1RD_0RE1LD_1RA0RF_0RC0LB. Blank seed at 4866, C with head-inclusive left prefix 011101000111, empty R. Exact 26-step return inserts 0111 after that prefix for arbitrary left tail X. Source Raw11Q0Linear151.lean commit787b43e4b11896fab2da68d4b877b822eb5630c9, independent manual CI dispatch linear151 pinned a2cfc789. This gives arbitrary-bound Cover once kernel accepts. Need exact table ingestion in frozen generator after source pass.
+- q0-148 two hard leaves and q0-149 two hard leaves remain; no successful proof from learned finite-window automata. q0-150 three other hard leaves remain. q0-143 parent sharded run46025751384 still active last check. Local shell/Python remain unavailable. No global bound or exact BB6.
+
 # 2026-11-27 15:42 UTC checkpoint — new exact normalized scans and faster retained proof assembly
 
 - Immutable Agent5 lease unchanged: 15:27:16.425Z, earliest release 16:37:16.425Z.
