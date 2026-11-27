@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084]
         required: true
 permissions:
   contents: write
@@ -598,5 +598,46 @@ jobs:
         with:
           name: raw39-le-gap-${{ matrix.leaf }}
           path: /tmp/a11-gap-${{ matrix.leaf }}/
+          if-no-files-found: error
+          retention-days: 30
+
+
+  pump_4084:
+    if: ${{ inputs.branch == 'pump-4084' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and check exact arbitrary-tail pump
+        run: |
+          set -euo pipefail
+          root=im-results/agent43-raw39-4084
+          python im-results/agent13-coverage/unpack.py
+          python "$root/generate_pump.py" "$root/Raw39LE4084Pump.lean"
+          work=/tmp/a43-4084-pump
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 \
+            --manifest "$work/manifest.json" --label "Raw39 0LE 4084 pump" \
+            --theorem BB6.Agent43Raw39LE4084Pump.never --artifact-name raw39-0le-4084-pump \
+            --provenance-input "$root/generate_pump.py" \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            "$root/Raw39LE4084Pump.lean" 2>&1 | tee /tmp/a43-4084.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a43-4084.log BB6.Agent43Raw39LE4084Pump.never BB6.Agent43Raw39LE4084Pump.arbitrary_tail
+          if grep -Eq 'sorryAx|native_decide' /tmp/a43-4084.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-0le-4084-pump
+          path: /tmp/a43-4084-pump/
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-0le-4084-source
+          path: im-results/agent43-raw39-4084/Raw39LE4084Pump.lean
           if-no-files-found: error
           retention-days: 30
