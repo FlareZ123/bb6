@@ -6,7 +6,7 @@ on:
       target:
         description: "Finite exact section prelude or complete infinite invariant"
         type: choice
-        options: [core, grammar, full]
+        options: [core, grammar, carry, full]
         default: core
 
 permissions:
@@ -31,6 +31,9 @@ jobs:
           TARGET="im-results/agent38-raw43-pair/M62Core.lean"
           if [[ "${{ inputs.target }}" == "grammar" ]]; then
             TARGET="im-results/agent38-raw43-pair/M62Grammar.lean"
+          fi
+          if [[ "${{ inputs.target }}" == "carry" ]]; then
+            TARGET="im-results/agent38-raw43-pair/M62Carry.lean"
           fi
           if [[ "${{ inputs.target }}" == "full" ]]; then
             TARGET="im-results/agent38-raw43-pair/M62Proof.lean"
