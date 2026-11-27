@@ -57,6 +57,7 @@ struct DSU {
 struct Entry{I c;int id;};
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
 using bb6_shifted::Block8;
+using bb6_shifted::Block16;
 #endif
 // Deduplication at the boundary of a composed partial function is exact:
 // duplicate intermediate carries have identical remaining paths.
@@ -70,7 +71,20 @@ template<class Word>vector<Block> make_pipe(I F,I start,const Word& y,unsigned l
 template<class T,class Get,class Put>size_t apply_pipe(vector<T>& a,const vector<Block>& bs,Get get,Put put,U&work){
  size_t j=0,w=0;
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
- if(a.size()>=8){
+ if(bb6_shifted::fit_mode==7&&a.size()>=16){
+  vector<Block16> simd;simd.reserve(bs.size());for(auto& b:bs)simd.emplace_back(b);
+  for(;j+16<=a.size();j+=16){
+   T saved[16];I in[16];for(unsigned k=0;k<16;k++){saved[k]=a[j+k];in[k]=get(saved[k]);}
+   auto z=_mm512_loadu_si512(in);__mmask16 active=65535;
+   for(auto& b:simd){
+    work+=__builtin_popcount(unsigned(active));z=b.parent_vec(z,active);
+    active=_mm512_cmp_epu32_mask(z,_mm512_set1_epi32(missing),_MM_CMPINT_NE);
+    if(!active)break;
+   }
+   I out[16];_mm512_storeu_si512(out,z);
+   for(unsigned k=0;k<16;k++)if(out[k]!=missing&&put(saved[k],out[k]))a[w++]=saved[k];
+  }
+ }else if(a.size()>=8){
   vector<Block8> simd;simd.reserve(bs.size());for(auto& b:bs)simd.emplace_back(b);
   for(;j+8<=a.size();j+=8){
    T saved[8];I in[8];for(unsigned k=0;k<8;k++){saved[k]=a[j+k];in[k]=get(saved[k]);}
@@ -194,7 +208,7 @@ static void load(const std::string& path,I n,I K,I h,bool half,I&s,I&gap,vector<
 int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
  bb6_shifted::fit_mode=0; // legacy default until measured selection
- if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>6)return 2;bb6_shifted::fit_mode=unsigned(x);}
+ if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>7)return 2;bb6_shifted::fit_mode=unsigned(x);}
  if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
  bool half=argc>=5&&std::string(argv[4])=="half";
