@@ -1,6 +1,6 @@
 # Raw39 1LE F1 siblings: exact four-mode gap/stack reduction
 
-**Status:** locally kernel-checked exact original-semantics macro transport and conditional nonhalting interface for 5777, 5779, 5787. No complete inductive invariant, leaf decision or parent Cover yet. Unlike the earlier sampled run grammar, the reduction includes arbitrary untouched left and right tails, actual blank entry, and all-time positive primitive-cost transport.
+**Status:** locally kernel-checked complete nonhalting theorem for 5777, 5779, 5787 on exact original-semantics artifact-linked dependencies. Their every compatible completion is nonhalting. Fresh source-CI acceptance and parent assembly remain pending. Unlike the earlier sampled run grammar, the reduction includes arbitrary untouched left and right tails, actual blank entry, and all-time positive primitive-cost transport.
 
 ## Literal tables and boundary
 
@@ -35,7 +35,7 @@ The B rules act on g x with g=1 or 3 and h=g+2 (the c/e rules allow any gap); th
 - fS -> B,S,3 1 1 h x;
 - empty stack -> A,empty,h x, including the next P and Q setup (171 primitive steps).
 
-Every listed transition has a positive exact primitive cost for each variant. The frames are bit words, with c,d,e,f variant-specific. All details are in the formal modules. The partial abstract system deliberately has no A/2, F/3, or unsupported B rule: proving these are avoided on the authentic orbit is the open obligation. The gap system is independent of the F1 variant, though primitive costs differ.
+Every listed transition has a positive exact primitive cost for each variant. The frames are bit words, with c,d,e,f variant-specific. All details are in the formal modules. The partial abstract system deliberately has no A/2, F/3, or unsupported B rule: the grammar below proves these are avoided on the authentic orbit. The gap system is independent of the F1 variant, though primitive costs differ.
 
 ## Proof and reproduction
 
@@ -55,9 +55,27 @@ Local Lean 4.36.0-rc2 (compiler SHA256 matches artifact manifest) compiled both 
 
 `BB6.Agent11Raw39Gap.step_sound`, `start_sound` and `never_of_invariant` have axioms [propext, Quot.sound]. The last theorem proves NeverHalts for every compatible total completion of each table if an invariant I contains initial and every I configuration has a Step successor in I. No sorryAx or native_decide. The source-certified macro system removes the need to model the three raw tables independently.
 
-## Next proof obligation
+## Closed inductive grammar (2026-11-27)
 
-Construct an all-time invariant of the four-mode reduction, for example via a finite automaton on each stack and an inductive relation on their states, or a recursive typed gap language. A3 pushes a; B/a unwinding prepends 1 and increases the first gap by 2; the resulting section map obeys f(3x)=3f(x), f(5x)=311x, f(12x)=5f(x), f(115x)=511f(x) whenever the recursive subrun returns. The c rescan means a simple single-pass transducer is insufficient. These equations are paper consequences of the checked primitive rules, not separately formalized totality statements.
+Let f be the next A/empty-stack section word (a normalized B return has its first gap increased by two). Define G by the seven terminal words 1, 51, 111, 55111, 115111, 5111, 11111; prefix 3; and the eight prefixes below applied to arbitrary G suffixes.
+
+| Input | Next section |
+| --- | --- |
+| 3x | 3 f(x) |
+| 1135x | 51312x |
+| 51312x | 3 111312x |
+| 111312x | 5512 f(x) |
+| 5512x | 3 11512x |
+| 11512x | 5115 f(x) |
+| 5115x | 3 11115x |
+| 11115x | 535 f(x) |
+| 535x | 3 1135x |
+
+The terminal transitions are 1 -> 51 -> 3111; 111 -> 55111 -> 3115111; 115111 -> 51155111 (= 5115·5111); 5111 -> 311111; 11111 -> 5355111 (= 535·5111). Every rule returns in finitely many positive-cost primitive steps and preserves G. The two nested rescans reduce to f on the proper grammatical suffix, so ordinary structural induction suffices; no assumption that arbitrary words return is used.
+
+`Raw391LEGapGrammar.lean` (packed separately as [Raw391LEGapGrammar.lean.xz.b64](Raw391LEGapGrammar.lean.xz.b64), SHA256 627855a60e4c2f7df514aacd99a90365997e771c6f3c950d9da5f6be55676de0) defines `Path`, `Eval` with arbitrary preserved frame stack, `Good`, and `good_eval`. The key nested rescan lemmas are `ev111312` and `ev11115`. `good_eval` is axiom-free. `never` has only propext and Quot.sound. The three sources compile Macros -> System -> Grammar in Lean 4.36.0-rc2 with the exact dependencies above. The earlier bounded failed experiments are not needed for the proof.
+
+The proof is a literal-table nonhalting result; source CI and the full normalized 1LE child audit are separate acceptance obligations. Only leaf 180 remains discovery-open in 1LE.
 
 ## Earlier experiments and falsifiers
 

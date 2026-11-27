@@ -1,6 +1,6 @@
 """Exact dispatch of custom LE witnesses and explicit conditional tree joins."""
 from pathlib import Path
-import base64,hashlib,lzma
+import base64,hashlib,json,lzma
 from shutil import copyfile
 from prepare_semantic_branch import Builder
 from unpack_le_sweeps import unpack
@@ -25,6 +25,18 @@ def custom_le(branch,out):
         add('Raw39LE5883',[5883])
         add('Raw39LE7634',[7634])
     elif branch=='1LE':
+        gap_sources=json.loads(lzma.decompress(base64.b64decode((ROOT/'Raw391LEGapSystem.json.xz.b64').read_text())))
+        gap_hashes={'Raw391LEGapMacros.lean':'bb37b243540b04fee8959850e8fc3b005aec670c768864268e3e10b934fe371a','Raw391LEGapSystem.lean':'3e4e6420568daf8e65f784742b29d3a1797aa3e82efea21517bf063de79536a7'}
+        assert set(gap_sources)==set(gap_hashes)
+        for name,code in gap_sources.items():
+            assert hashlib.sha256(code.encode()).hexdigest()==gap_hashes[name]
+            (out/name).write_bytes(code.encode())
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw391LEGapGrammar.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='627855a60e4c2f7df514aacd99a90365997e771c6f3c950d9da5f6be55676de0'
+        (out/'Raw391LEGapGrammar.lean').write_bytes(source)
+        ns='BB6.Agent11Raw39Gap'
+        for i in (5777,5779,5787):
+            result[i]=('Raw391LEGapGrammar',f'{ns}.table .v{i}',f'{ns}.never .v{i}')
         source=lzma.decompress(base64.b64decode((ROOT/'Raw391LE8865.lean.xz.b64').read_text()))
         assert hashlib.sha256(source).hexdigest()=='ddb1c6799ae01327774bdd7e798f5be707dbfc62430f052a442c5e0090203427'
         (out/'Raw391LE8865.lean').write_bytes(source)
