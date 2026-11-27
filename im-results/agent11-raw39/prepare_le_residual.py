@@ -32,6 +32,10 @@ def custom_le(branch,out):
         assert hashlib.sha256(source).hexdigest()=='ebbe7b389ab65e2ea3877f604010b9aa911e781b1cc8bea27e0b956cd960dd68'
         (out/'Raw39LE3334.lean').write_bytes(source)
         add('Raw39LE3334',[3334],packed=True)
+        source=lzma.decompress(base64.b64decode((ROOT/'Raw39LE1300.lean.xz.b64').read_text()))
+        assert hashlib.sha256(source).hexdigest()=='06a3cbe6e832fb7aef15967a0ad9b36f4f9c3ee10d8ef83bf2d61396dd37cb8a'
+        (out/'Raw39LE1300.lean').write_bytes(source)
+        add('Raw39LE1300',[1300],packed=True)
     elif branch=='1LE':
         gap_sources=json.loads(lzma.decompress(base64.b64decode((ROOT/'Raw391LEGapSystem.json.xz.b64').read_text())))
         gap_hashes={'Raw391LEGapMacros.lean':'bb37b243540b04fee8959850e8fc3b005aec670c768864268e3e10b934fe371a','Raw391LEGapSystem.lean':'3e4e6420568daf8e65f784742b29d3a1797aa3e82efea21517bf063de79536a7'}
