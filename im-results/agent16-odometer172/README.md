@@ -36,3 +36,8 @@ The residue is 1, introducing charge 2. This is not a halt. At event 200,000 the
 There are 286 particles, one charge 2 at gap index 72, trailing gap 82,101,657. Counts: 80,058 wraps; 80,055 births; 39,880 safe collisions; 7 drains. No halt or unsupported interaction reached.
 
 Reproduce with `python events.py --events 200000 --check-events`. Every event can be checked against a sparse independent direct-word implementation. The jump formula follows from the ternary carry count; this is finite computational evidence, not a global proof. Next investigate suffix projections and transport of exceptional charges.
+
+
+## Positive-tail epoch reduction and source bridge
+
+[SAFE-EPOCHS.md](SAFE-EPOCHS.md) proves a finite-block safety lemma with explicit tail budget and no assumption of zero pair deletions. [ParticleWord.lean](ParticleWord.lean) and [ParticleSource.lean](ParticleSource.lean) are draft formal connections to the pinned upstream word dynamics; pending Lean verification. The global exceptional birth guard remains open.

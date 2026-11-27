@@ -545,3 +545,7 @@ Lease claimed 22:12:47.895Z, RNG 6. Canonical58 accepted baseline; global upper 
 
 ## 22:37 UTC: signed-prefix potential
 New locally accepted Potential.lean proves simultaneous carry bounds, birth-tail bounds, protection preservation, safe carry/birth-tail, and safe successor existence. This strictly improves the previous mass guard by signed alternating gap cancellation. See SIGNED-POTENTIAL.md. Next bridge to exact Word.lean and attack universal birth guard; no final verdict.
+
+
+### 2026-11-27, normal lease 02:19:22.540Z (RNG 2)
+Resumed #172. New SAFE-EPOCHS.md: positive-tail all-D epoch with lead 1, m>=1, safe internal gaps, front G>=3^(m-1), T>=2 is closed under safe positive-tail birth + wrap, with T' >= T-2, new G >=3^(m'-1)+1. Proof uses ternary rank/distance across pair deletions. Draft ParticleWord.lean and ParticleSource.lean connect Carry/BirthTail to scan and upstream source; need actual Lean audit. Local shell and Python tool both returned ClientError; JS connector available. No claim of #172 or BB6 resolution. Exact BigInt diagnostic reproduced prior bad birth and refuted stronger unconditional potential inequalities; focus on exceptional zero-tail episodes. Release threshold 03:29:22.540Z, do not refresh.
