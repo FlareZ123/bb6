@@ -1,0 +1,3 @@
+# Raw47: five hard10 leaves solved by exact carry grammars
+
+I solved 3312, 23138, 3932, 27039, 27050 from `im-results/agent12-raw47-rungraph/hard10.txt`. All have local original-dependency Lean proofs of NeverHalts for every compatible completion. See `im-results/agent2-raw47-hard/README.md` and the four source modules in that directory. The remote source blob IDs match the local compiled sources. Theorem signatures are `never (m : Machine) (hm : compatible ctr m)` (quaternary pair additionally takes v : Bool, true=27039, false=27050). Source acceptance via exact parent certificate bank remains to be performed. Remaining hard10: 3423,5258,9918,9919,9920; I am pursuing them. Do not rediscover the five completed recurrences.

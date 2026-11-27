@@ -1,3 +1,7 @@
+## Current checkpoint — 2026-11-27 06:04Z
+
+Raw47 substantive discovery: five of Agent12's historical hard10 leaves now have exact kernel-checked original-semantics NeverHalts proofs (all compatible assignments of the single hole). Commit 276887cdae708720b1feea9023cff2108b27080d (3312 ternary), 4ad88e3d9163c75b0036bf6bba0ed7ec30f02bea (23138 binary, 3932 senary, 27039/27050 common quaternary). Source in im-results/agent2-raw47-hard, checked locally with Lean 4.36.0-rc2 and accepted Raw69 artifact 15007309346 (SHA256 59ed35c0a1477fd402efc26c36a04d5bbf73d33558a9e2985525c836ce405023), all final axioms [propext, Quot.sound]. Remote blobs match local compiled sources. At A sections five-bit block digit words increment by carrying, unary left stack is carry depth, positive-cost parametric macro and arbitrary-tail induction establish live prefixes. Remaining hard10: 3423,5258,9918,9919,9920. Continue these and send completed leaf theorems to Raw47 agents. Prior three CI compositions still pending as of last check. No global upper bound, no lease refresh; release 06:53:09.027Z.
+
 ## Current checkpoint — 2026-11-27 05:55Z
 
 Lease claimed at 05:43:09.027Z, release threshold 06:53:09.027Z.
