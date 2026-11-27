@@ -35,7 +35,7 @@ private theorem tail_stepEe (u w : Nat) (h : w < 2*u)
 /-- A false-phase resonant state rotates in two accelerator moves into the
     canonical Oe/F/Oo/F low-side coordinate system. -/
 theorem phase_false_rotate (u d : Nat)
-    (he : d%2=0) (hmod : (u-d)%4=1) (hu : d+17≤u) :
+    (hmod : (u-d)%4=1) (hu : d+17≤u) :
     run 2 (phase u d)=some (phase (u-d-2) (4*d+16)) := by
   have hw : (u+12+d)%2=1 := by omega
   have hg : 3≤u-(u+12+d)/2 := by omega
