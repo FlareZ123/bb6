@@ -1,0 +1,38 @@
+name: Agent 36 Raw41 hard-one-hole FAR SMT synthesis (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        line: [1, 2, 3, 4]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install solver
+        run: python3 -m pip install --user z3-solver
+      - name: Search original hard leaf via composed-BV FAR automaton
+        run: |
+          set -euo pipefail
+          python3 im-results/agent7-far/far_smt_compose.py \
+            im-results/agent36-raw41/hard-leaves.txt \
+            --line ${{ matrix.line }} --min-dfa 6 --max-dfa 8 --timeout-ms 30000 \
+            2>&1 | tee raw41-hard-${{ matrix.line }}.log
+          python3 im-results/agent36-raw41/check_smt_log.py \
+            < raw41-hard-${{ matrix.line }}.log \
+            | tee raw41-hard-verified-${{ matrix.line }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-hard-smt-${{ matrix.line }}
+          path: |
+            raw41-hard-${{ matrix.line }}.log
+            raw41-hard-verified-${{ matrix.line }}.txt
+          retention-days: 30
