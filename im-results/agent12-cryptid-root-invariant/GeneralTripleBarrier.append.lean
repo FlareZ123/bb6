@@ -9,6 +9,8 @@ private inductive A12Pairable : List ℕ → Prop
   | other {k : ℕ} {T : List ℕ} (hk : k ≠ 2) :
       A12Pairable T → A12Pairable (k::T)
   | pair {T : List ℕ} : A12Pairable T → A12Pairable (1::2::T)
+  -- Zero is a protected cut: no pairing condition beyond it.
+  | cut (T : List ℕ) : A12Pairable (0::T)
 
 private inductive A12Good : List ℕ → Prop
   | mk {k : ℕ} {T : List ℕ} (hk : 0 < k) (hne : k ≠ 2)
@@ -65,6 +67,7 @@ private theorem a12Paired_split (X : List ℕ) (hX : A12Pairable X) :
   | @pair T hT ih =>
     obtain ⟨B,P,S,hB,hS,he⟩ := ih
     exact ⟨1::2::B,P++[1,0],S,.pair hB,hS,by rw [he]; rfl⟩
+  | cut T => exact ⟨[],[],0::T,.nil,.zero T,rfl⟩
 
 -- Either B was all ones, or the collected P contains a first 10 block.
 private theorem a12Scan_cases {B P : List ℕ} (h : A12Scan B P) :
@@ -84,7 +87,7 @@ private theorem a12Scan_cases {B P : List ℕ} (h : A12Scan B P) :
   | @pair B P h ih =>
     rcases ih with ⟨d,hB,hP⟩ | ⟨z,Q,hP,hQ⟩
     · right
-      exact ⟨d,[],by rw [hP]; rfl,.nil⟩
+      exact ⟨d,[],by rw [hP],.nil⟩
     · right
       exact ⟨z,Q++[1,0],by rw [hP]; simp [List.append_assoc],
         a12Collect_append hQ (.oneZero .nil)⟩
@@ -206,8 +209,8 @@ private theorem a12Good_zero (X : List ℕ) (hx : A12Good X)
       (tok_CR (X++[0,0]) W (0::L)) (tok_CR (X'++[0,0]) W L) := by
   cases hx with
   | @mk k T hk hn hT =>
-    exact ⟨(k+2)::T,.mk (by omega) (by omega) hT,
-      tok_CR_zero k (T++[0,0]) W L⟩
+    refine ⟨(k+2)::T,.mk (by omega) (by omega) hT,?_⟩
+    simpa only [List.cons_append] using tok_CR_zero k (T++[0,0]) W L
 
 private theorem a12Good_oneZero (X : List ℕ) (hx : A12Good X)
     (W : List (ℕ × ℕ)) (L : List ℕ) :
@@ -215,8 +218,8 @@ private theorem a12Good_oneZero (X : List ℕ) (hx : A12Good X)
       (tok_CR (X++[0,0]) W (1::0::L)) (tok_CR (X'++[0,0]) W L) := by
   cases hx with
   | @mk k T hk hn hT =>
-    exact ⟨1::(k+3)::T,.mk (by decide) (by decide) (.other (by omega) hT),
-      tok_CR_1_0 k (T++[0,0]) W L⟩
+    refine ⟨1::(k+3)::T,.mk (by decide) (by decide) (.other (by omega) hT),?_⟩
+    simpa only [List.cons_append] using tok_CR_1_0 k (T++[0,0]) W L
 
 private theorem a12Good_startDouble (X : List ℕ) (hx : A12Good X)
     (W : List (ℕ × ℕ)) (c : ℕ) (L : List ℕ) :
