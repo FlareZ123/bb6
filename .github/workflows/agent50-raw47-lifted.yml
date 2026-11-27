@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical]
+        options: [late-parent, lift, canonical, canonical39]
         default: late-parent
       base_run:
         type: string
@@ -169,6 +169,44 @@ jobs:
           path: |
             /tmp/a50-canonical40-raw47/canonical40-raw47-delta/**
             /tmp/a50-canonical40-raw47.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
+
+  canonical39:
+    if: inputs.mode == 'canonical39'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Compose Raw47 on accepted Canonical40 Raw57 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW47_RUN: ${{ inputs.raw47_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW47_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent50-raw47-canonical41/consume_after_canonical40.py
+          python im-results/agent50-raw47-canonical41/consume_after_canonical40.py \
+            --work /tmp/a50-canonical39-raw47 \
+            --raw47-run-id "$RAW47_RUN" | tee /tmp/a50-canonical39-raw47.log
+          test -s /tmp/a50-canonical39-raw47/canonical39-raw47-delta/delta.json
+          cat /tmp/a50-canonical39-raw47/canonical39-raw47-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical39-raw47-thin-delta
+          path: |
+            /tmp/a50-canonical39-raw47/canonical39-raw47-delta/**
+            /tmp/a50-canonical39-raw47.log
           if-no-files-found: error
           compression-level: 1
           retention-days: 30
