@@ -75,6 +75,7 @@ on:
           - sourceModularHighStop
           - sourceH5Precision
           - sourceH5Spine
+          - sourceH5Exact
           - sourceModularHighStopCriterion
           - sourceModularStrictness
           - sourceModularLowStop
@@ -344,6 +345,9 @@ jobs:
               ;;
             sourceH5Spine)
               target=im-results/agent34-s2-pullback/H5ForcedSpine.lean
+              ;;
+            sourceH5Exact)
+              target=im-results/agent34-s2-pullback/H5ExactSpine.lean
               ;;
             sourceModularHighStop)
               target=im-results/agent42-modular-cone/ModularConeHighStop.lean
