@@ -221,7 +221,7 @@ jobs:
           VARIANT: ${{ inputs.raw43_extra_child }}
         run: |
           set -euo pipefail
-          [[ "$VARIANT" =~ ^([01][lr][a-f]|b[01][lr][a-f]_[ace][01][lr][a-f])$ ]]
+          [[ "$VARIANT" =~ ^([01][lr][a-f]|b[01][lr][a-f]_([ac]|e1?)[01][lr][a-f])$ ]]
           root=im-results/agent25-raw43
           work=/tmp/a25-raw43-extra
           python im-results/agent13-coverage/unpack.py
