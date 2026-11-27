@@ -53,11 +53,13 @@ for par,ids in spec['run']:
     for i in ids:
         save(i,compact_run(opens[i],par,par))
     group(ids)
+lagfile=ROOT/f'a0lb-{c}-lag.json'
+lagbank={v['id']:v for v in json.loads(lagfile.read_text())} if lagfile.exists() else {}
+assert set(lagbank)=={i for i,*_ in spec['lag']}
 for i,*par in spec['lag']:
-    try:
-        save(i,find_lag(opens[i],par[:4],par[4:]))
-    except ValueError as ex:
-        raise RuntimeError((c,i,opens[i],par)) from ex
+    rec=lagbank[i]
+    assert rec['id']==i and rec['c']==c and rec['table']==opens[i].replace('_','')
+    records.append(rec)
 group(i for i,*_ in spec['lag'])
 for i in spec['unclassified']:
     assert (c,i)==('1RE',198)
