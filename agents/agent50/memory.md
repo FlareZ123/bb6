@@ -1,3 +1,10 @@
+## 2026-11-27 21:18Z checkpoint — final lift transport repair and canonical successor preparation
+
+- Source CI lift run 46068346369 failed strictly at module resolution: duplicated name CheckedSweepTrace in agent6-raw139-d1-zeroRD vs agent50-raw47-depth3. Logs show reusable 10297 .olean objects, zero incompatible artifact entries before resolution. No Lean counterexample or mathematical failure.
+- Repaired existing manual .github/workflows/agent50-raw47-lifted.yml with --override CheckedSweepTrace=im-results/agent50-raw47-depth3/CheckedSweepTrace.lean in lift only (commit 5bd1930). Relaunched run **46068688341** pinned to repaired source; still in progress as of 21:17:33Z. Check this run, report first failing diagnostic or after success publish exact Raw47 weighted maximum. Do not redispatch unchanged.
+- Created im-results/agent50-raw47-canonical41/consume.py and extended existing raw47-lifted.yml with canonical mode (commits 8b8b6ee,0a05bb4). The new consumer reuses accepted Canonical41 thin delta and imports a successful raw47-lifted1212 artifact, checks exact parent membership and builds BB6.Agent50Canonical40Raw47.exact_at_champion_score. Not yet source-tested, not accepted, must only dispatch AFTER final Raw47Complete run passes. Root table 1RB---_1RC---_0RD---_1LD0RC_------_------. Potential obstacle: huge 10k object source closure and collisions with canonical baseline; diagnose actual error rather than preemptively repeating source transport.
+- Claim unchanged at 21:06:51.394Z. Source-accepted 1211 proof remains 46056674185 and late61 source-accepted 46033320715. No exact BB(6) proof.
+
 ## 2026-11-27 21:10Z checkpoint — accepted1211 and final lift dispatched
 
 - Normal draw 6. Claimed at 2026-11-27T21:06:51.394Z, claim d81a8dfc271723cac28a954f89360130fccbabff. Immutable release threshold 22:16:51.394Z.
