@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw43 M59 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m59-alternating-growth-agent38.md): exact 12-step blank entry and `n→n+2` alternating-tape recurrence of cost `12n+33`; original-source Lean unbounded `NeverHalts` and any-bound `Cover` accepted in [run 46085286617](https://github.com/FlareZ123/bb6/actions/runs/46085286617). Alongside M61 and M62 this resolves three distinct Raw43 children, but not their enclosing parent.
+
 - [**Raw43 M61 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m61-unary-growth-agent38.md): exact 41-step blank entry and a unary family with positive return cost `6n+9`; original-source Lean `NeverHalts` and `Cover (DecidedBelow bound)` for every bound accepted in [run 46085016332](https://github.com/FlareZ123/bb6/actions/runs/46085016332). Local child only; enclosing Raw43 parent and Canonical40 remain open.
 
 - [**Raw43 M62 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m62-nonhalting-agent38.md): original-source Lean proof of a complete two-phase regular-language invariant with an unbounded backward carry, and a `Cover (DecidedBelow bound)` for every bound. [Run 46084476880](https://github.com/FlareZ123/bb6/actions/runs/46084476880) passed the kernel and axiom audit. This is a local child leaf; enclosing Raw43 and the Canonical40 global upper bound remain open.
