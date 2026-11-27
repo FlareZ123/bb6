@@ -127,6 +127,8 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedFinite.normalizedAfterEleven_count' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.remainingTables_cover_from_57' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.remainingTables_cover_from_56' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.raw139_p0_cover_from_57' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0TenAcceptedConditional.raw139_p0_cover_from_56' depends on axioms: [propext," "$work/log"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
             --workdir "$work/prospective-build" \
