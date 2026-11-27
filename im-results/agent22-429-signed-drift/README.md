@@ -125,3 +125,14 @@ identities are CI-checked in the manual workflow (run
 [45683408657](https://github.com/FlareZ123/bb6/actions/runs/45683408657),
 pinned Lean 4.36.0-rc2, success on 2026-11-25). The result remains
 intermediate and belongs in im-results, not results/.
+
+
+## New source-rooted branch29 theorems (27 November 2026)
+
+**Accepted:** The true blank-start #429 accelerated orbit cannot reach branch29 states with `q\bmod1024` in eight new entire residue classes; 29 more `q\bmod2048` classes are also wholly excluded. Composing with Agent18's existing sound 38/1024 necessary restriction yields the new **31/2048 necessary roster**. The three complete kernel/source checks passed: [45919337704](https://github.com/FlareZ123/bb6/actions/runs/45919337704), [45919753140](https://github.com/FlareZ123/bb6/actions/runs/45919753140), and [45919871438](https://github.com/FlareZ123/bb6/actions/runs/45919871438).
+
+**Accepted:** The original source-connected signed-tree finite-precision theorem now excludes final-reset burst lengths `n<1,280,127` on this feeder, assuming the exact branch-7 terminal equation and `n>=18`; [CI 45920774208](https://github.com/FlareZ123/bb6/actions/runs/45920774208). This strengthens the earlier accepted `n>=16,255` floor and is a necessary bound on a particular feeder, not a machine halt decision.
+
+**Pending:** A 31-class congruence-filtered signed certificate targets `n>=128,000,127`; no acceptance claim until its full CI source check completes.
+
+For exact lists, source proofs, methodology, acceptance status, and research gaps, see [NEW_RESIDUE_AND_BURST_RESULTS.md](NEW_RESIDUE_AND_BURST_RESULTS.md). New reusable arbitrary-modulus shifted-affine certificate bridge: [Branch29ShiftedCert.lean](Branch29ShiftedCert.lean).
