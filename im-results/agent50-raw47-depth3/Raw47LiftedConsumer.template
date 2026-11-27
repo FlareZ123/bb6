@@ -1,0 +1,27 @@
+import Raw47Accepted@@BASE@@
+import Raw47Late61Parent
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+set_option Elab.async false
+namespace BB6.Agent50Raw47Lifted@@TOTAL@@
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent47CanonicalFrontier BB6.Agent50Raw47Depth3Cut BB6.Agent50FastKey
+
+def lateKey := tableCode BB6.Agent50Raw47Late61Parent.p
+def remaining := BB6.Agent50Raw47Accepted@@BASE@@.remaining.filter fun e => !(tableCode e.2 == lateKey)
+
+theorem remaining_count : remaining.length = @@REMAIN@@ := by decide +kernel
+
+theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
+    WeightedBound 143977 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m := by
+  rcases BB6.Agent50Raw47Accepted@@BASE@@.local_sound m hm with hb | ⟨e,he,hq⟩
+  · exact Or.inl (fun n d hn hd => Nat.le_trans (hb n d hn hd) (by decide))
+  · cases hk : tableCode e.2 == lateKey with
+    | true =>
+      have hp : e.2 = BB6.Agent50Raw47Late61Parent.p := tableCode_inj (beq_iff_eq.mp hk)
+      rw [hp] at hq
+      exact Or.inl (BB6.Agent50Raw47Late61Parent.all_quotient m hq)
+    | false => exact Or.inr ⟨e,List.mem_filter.mpr ⟨he,by simp [hk]⟩,hq⟩
+
+#print axioms remaining_count
+#print axioms local_sound
+end BB6.Agent50Raw47Lifted@@TOTAL@@

@@ -1,5 +1,7 @@
 import CanonicalFrontier
 import CheckedSweepTrace
+import CheckedLateHole
+import TraceCost
 import ZipThreeHoleAudit
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -20,36 +22,25 @@ def p : PartialMachine := fun s => match s.1.val,s.2 with
   | 4,true => some (some ⟨false,true,1⟩)
   | 5,true => some (some ⟨true,false,1⟩)
   | _,_ => none
-open BB6.Agent50CheckedSweepTrace
+open BB6.Agent50CheckedSweepTrace BB6.Agent50TraceCost
 def a : LeftRule p := ⟨0,[],[],[true],[true],1,by intro L R; rfl⟩
 def d : LeftRule p := ⟨3,[],[],[false],[true],1,by intro L R; rfl⟩
 def bf : LeftRule p := ⟨1,[],[],[true, true],[true] ++ [false],2,by intro L R; rfl⟩
 def c : RightRule p := ⟨2,[false],[],[true] ++ [false],[false, false],2,by intro L R; rfl⟩
 def b : RightRule p := ⟨1,[false],[false],[true, true],[true, true],6,by intro L R; rfl⟩
 @@TRACE@@
-theorem query : zipRead p 143975 = some (5,false) := by
-  have h : (zrun p 143975 start).map project = some z@@END@@ := (run_project p 143975 start).trans run_exact
-  unfold zipRead
-  cases hr : zrun p 143975 start with
-  | none => simp [hr] at h
-  | some z =>
-    have he : project z = z@@END@@ := by simpa [hr] using h
-    have H := congrArg (fun u : Z0 => (u.q,u.l.headD false)) he
-    change some (z.q,z.l.headD false) = some (5,false)
-    exact congrArg some H
+theorem query : zipRead p 143975 = some (5,false) := BB6.Agent50CheckedLateHole.zipRead_of_run0 p 143975 z@@END@@ run_exact
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
-theorem delay_bound : weightOK p (5,false) 143975 143977 = true := by decide
-theorem checked : zipCheck 143977 p (.last 143975 (5,false)) = true := by
-  simp only [zipCheck,zipQueryOK,query,decide_true,Bool.true_and]
-  exact (by decide : decide (p (5,false) = none) && weightOK p (5,false) 143975 143977 && restOK p (5,false) = true)
 theorem nohalt : weightedTNFNoAssignedHalt p := by
   intro s; rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
-theorem weighted (m : Machine) (hm : compatible p m) : WeightedBound 143977 m :=
-  (certifiedZip 143977 p (.last 143975 (5,false)) root nohalt checked).sound m hm
-theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 143977 m := quotientSafe root weighted m hm
+theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 143977 m :=
+  BB6.Agent50CheckedLateHole.quotient_of_query p 143975 143977 (5,false) query root nohalt (by decide) (by decide) (by decide) m hm
+
+theorem attained : HaltsAfter (BB6.Agent50CheckedLateHole.haltCompletion p) 143975 ∧ 1 ∈ delays (zeroNext (BB6.Agent50CheckedLateHole.haltCompletion p)) 0 :=
+  ⟨BB6.Agent50CheckedLateHole.exact_halt p 143975 (5,false) query (by decide), by decide⟩
 #print axioms run_exact
 #print axioms all_quotient
+#print axioms attained
 end BB6.Agent50Raw47Late61Macro
-

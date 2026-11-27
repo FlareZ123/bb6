@@ -56,14 +56,14 @@ for i,(q,l,r) in enumerate(states[1:],1):
     k,cs=chunks[i-1]
     a.append(f'def z{i} : Z0 := ⟨{q},{enc(l)},{enc(r)}⟩')
     a.append(f'def cs{i} : List (Cmd p) := ['+', '.join(cs)+']')
-    a.append(f'theorem h{i} : run0 p {k} z{i-1} = some z{i} := trace_sound cs{i} z{i-1} z{i} (by decide +kernel)')
+    a.append(f'theorem h{i} : run0 p {k} z{i-1} = some z{i} := trace_at p cs{i} {k} z{i-1} z{i} rfl (by decide +kernel)')
 cur=[(i-1,i,chunks[i-1][0],f'h{i}') for i in range(1,len(states))]
 while len(cur)>1:
     nxt=[]
     for i in range(0,len(cur),2):
         if i+1==len(cur):nxt.append(cur[i]);continue
         lo,mid,n1,pr1=cur[i];mid2,hi,n2,pr2=cur[i+1];assert mid==mid2
-        name=f'j{lo}_{hi}';a.append(f'theorem {name} : run0 p {n1+n2} z{lo} = some z{hi} := join0 {pr1} {pr2}');nxt.append((lo,hi,n1+n2,name))
+        name=f'j{lo}_{hi}';a.append(f'theorem {name} : run0 p {n1+n2} z{lo} = some z{hi} := join_at p {n1} {n2} {n1+n2} z{lo} z{mid} z{hi} rfl {pr1} {pr2}');nxt.append((lo,hi,n1+n2,name))
     cur=nxt
 _,end,n,pr=cur[0]
 a.append(f'theorem run_exact : run0 p 143975 ⟨0,[],[]⟩ = some z{end} := {pr}')

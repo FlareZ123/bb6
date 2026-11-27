@@ -1,0 +1,123 @@
+name: Agent 50 Raw47 late-hole and lifted bound
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [late-parent, lift]
+        default: late-parent
+      base_run:
+        type: string
+        default: '46031130982'
+      base_count:
+        type: number
+        default: 807
+      late_run:
+        type: string
+        default: ''
+permissions:
+  contents: read
+  actions: read
+jobs:
+  late:
+    if: inputs.mode == 'late-parent'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45970362016
+          name: raw47-graph-parents-1
+          path: /tmp/a50-u61
+      - name: Certify the exact late-halting leaf and close parent 61
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw47-depth3
+          W=.tmp/a50-late61
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-u61
+          python "$D/generate_late61.py" "$W/imports/Raw47Late61Macro.lean"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem BB6.Agent50Raw47Late61Parent.all_quotient --parent-table '1RB1LA_1RC---_0RD0LE_1LD0RC_0LA---_------' --weighted-bound 143977 --artifact-name raw47-late61 --provenance-input "$D/generate_late61.py" --provenance-input "$D/Raw47Late61Macro.template" "$D/Raw47Late61Parent.lean" 2>&1 | tee "$W/log"
+          python - "$W/log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          for name in ('BB6.Agent50Raw47Late61Macro.run_exact','BB6.Agent50Raw47Late61Macro.attained','BB6.Agent50Raw47Late61Macro.all_quotient','BB6.Agent50Raw47Late61Parent.only_remaining','BB6.Agent50Raw47Late61Parent.all_quotient'):
+              m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'},(name,m.group(1))
+              else: assert f"'{name}' does not depend on any axioms" in log,name
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw47-late61
+          path: |
+            .tmp/a50-late61/imports/
+            .tmp/a50-late61/build/
+            .tmp/a50-late61/manifest.json
+            .tmp/a50-late61/log
+          if-no-files-found: error
+  lift:
+    if: inputs.mode == 'lift'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.base_run }}
+          name: raw47-accepted${{ inputs.base_count }}
+          path: /tmp/a50-base
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.late_run }}
+          name: raw47-late61
+          path: /tmp/a50-late
+      - name: Lift the old exact cut and remove the checked late parent
+        id: lift
+        env:
+          BASE_COUNT: ${{ inputs.base_count }}
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw47-depth3
+          W=.tmp/a50-lifted
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-base /tmp/a50-late
+          N=$((BASE_COUNT+1))
+          echo "count=$N" >> "$GITHUB_OUTPUT"
+          sed -e "s/@@BASE@@/$BASE_COUNT/g" -e "s/@@TOTAL@@/$N/g" -e "s/@@REMAIN@@/$((1212-N))/g" "$D/Raw47LiftedConsumer.template" > "$W/imports/Raw47Lifted$N.lean"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "BB6.Agent50Raw47Lifted$N.local_sound" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 143977 --artifact-name "raw47-lifted$N" --provenance-input "$D/Raw47LiftedConsumer.template" "$W/imports/Raw47Lifted$N.lean" 2>&1 | tee "$W/log"
+          python - "$W/log" "$N" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          for suffix in ('remaining_count','local_sound'):
+              name='BB6.Agent50Raw47Lifted'+sys.argv[2]+'.'+suffix
+              m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
+              else: assert f"'{name}' does not depend on any axioms" in log,name
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw47-lifted${{ steps.lift.outputs.count }}
+          path: |
+            .tmp/a50-lifted/imports/
+            .tmp/a50-lifted/build/
+            .tmp/a50-lifted/manifest.json
+            .tmp/a50-lifted/log
+          if-no-files-found: error
