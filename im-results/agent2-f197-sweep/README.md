@@ -1,4 +1,11 @@
-# F197: exact run reductions, guarded safety and reset-growth families
+# F197 exact reductions, guarded safety, and source-certified reset monoid
+
+**Strongest theorem (Lean, original source machine):** [arbitrary mixed P/Q reset monoid](ATFreeMonoidTheorem.md) for any nonempty W∈{P=AAT,Q=TAT}⁺, nonempty A/T data `c₀...c_q`, Z=c₀(Tc₁)...(Tc_q), Φ=A H(c₀)...H(c_q), H(A)=AT,H(T)=AAT, F(P)=P,F(Q)=AAAT, and any aligned left continuation X:
+```
+B(W Z AA X,e) → B(F(W) Φ X,e)
+steps = 68·#P + 82·#Q + 74 + 68q + 14·#T(data)
+```
+Both the exact source run and **strict +2 finite-bit growth** are kernel-certified under Lean 4.36.0-rc2, only `[propext, Quot.sound]`, no sorryAx. Proof files: [ATFreeMonoidCore.lean](ATFreeMonoidCore.lean), [ATFreeMonoid.lean](ATFreeMonoid.lean), [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean), and [ATGeneralParser.lean](ATGeneralParser.lean); CIs [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068) and [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937). This subsumes the prior P^n / complementary TAT counter families, which remain historical intermediate evidence. **The genuine blank-tape nonhalting invariant and BB(6) are still open**; concentrate on J/U/C marker and non-AA terminal coverage, not further P/Q lifts.
 
 **Strongest source-certified result:** the [unbounded complementary-AT reset family](ATPairedTheorem.md) is a Lean-accepted exact literal-source identity for arbitrary run-aligned suffixes and every finite A/T data list. It gives `TAT Z AA X → AAAT Φ X`, exactly `156+68q+14t` live steps and +2 left bits (Lean run 46080673465, only `propext, Quot.sound`). The [older parametric P-prefix rules](ParametricReset.md) and [Agent31 paired-AA program](../agent31-f197-macro/PairedResetCandidate.md) complement this result. **No published blank-orbit nonhalting theorem for F197 follows:** the set of genuine reset words is not yet proved closed under the known positive-growth rewrites.
 
