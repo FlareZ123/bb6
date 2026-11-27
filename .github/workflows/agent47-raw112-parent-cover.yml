@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [parent, carry, closed, assemble-existing, recover, retry]
+        options: [parent, carry, closed, assemble-existing, recover, retry, factor-plan]
         default: closed
       source_run_id:
         type: string
@@ -38,6 +38,57 @@ permissions:
   contents: read
   actions: read
 jobs:
+  factor_r05a00_plan:
+    if: inputs.mode == 'factor-plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - name: Factor Raw112Kid05_00 without compiling
+        run: |
+          set -euo pipefail
+          python im-results/agent10-raw112-recovery/factor_missing.py \
+            im-results/agent47-raw112-cut/Raw112Kid05_00.lean | tee /tmp/a47-r05a00-factor.log
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path("im-results/agent47-raw112-cut")
+          rows = []
+          for p in sorted(root.glob("Raw112Kid05_00*.lean")):
+              imports = [line.split()[1] for line in p.read_text().splitlines()
+                         if line.startswith("import Raw112Kid05_00")]
+              rows.append({"module": p.stem, "bytes": p.stat().st_size, "imports": imports})
+          report = {
+              "module_count": len(rows),
+              "max_bytes": max(r["bytes"] for r in rows),
+              "root": next(r for r in rows if r["module"] == "Raw112Kid05_00"),
+              "modules": rows,
+          }
+          out = Path("/tmp/a47-r05a00-factor-plan")
+          out.mkdir()
+          (out / "factor-plan.json").write_text(json.dumps(report, indent=2) + "\n")
+          print(json.dumps({
+              "module_count": report["module_count"],
+              "max_bytes": report["max_bytes"],
+              "root_imports": report["root"]["imports"],
+          }, indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw112-r05a00-factor-plan
+          path: /tmp/a47-r05a00-factor-plan/**
+          if-no-files-found: error
+          retention-days: 7
+
   generate_raw112:
     if: inputs.mode == 'parent' || inputs.mode == 'closed'
     runs-on: ubuntu-latest
