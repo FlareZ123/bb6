@@ -75,7 +75,7 @@ theorem carry (n : Nat) (bs : List Bool) :
   | nil =>
     have h1 : run0 table 5 (stage n []) =
         some ⟨5,Z++rep Z n++[false,false,true],[true]++([] : List Bool)⟩ := by
-      simpa only [stage,encode,List.append_assoc] using carryBlank (rep Z n++[false,false,true])
+      simpa only [stage,encode,List.append_assoc,List.append_nil] using carryBlank (rep Z n++[false,false,true])
     have h := join0 h1 (returnZeros n [])
     exact ⟨_,by simpa only [target,inc,encode,List.append_nil,List.append_assoc] using h⟩
   | cons b bs ih =>
