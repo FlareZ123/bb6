@@ -9,7 +9,9 @@ source = out/'imports'
 obj = out/'reusable'
 source.mkdir(parents=True, exist_ok=True)
 obj.mkdir(parents=True, exist_ok=True)
-artifacts = [Path(x).resolve() for x in sys.argv[2:]]
+resume = '--resume' in sys.argv[2:]
+artifacts = [Path(x).resolve() for x in sys.argv[2:] if x != '--resume']
+assert artifacts
 def digest(p): return hashlib.sha256(p.read_bytes()).hexdigest()
 def manifest_at(p):
     paths = list(p.rglob('manifest.json'))
@@ -19,6 +21,11 @@ selected = {}
 omitted = []
 revisions = set()
 base = None
+if resume:
+    base = json.loads((out/'reusable.json').read_text())
+    assert base['schema_version'] == 1
+    selected = {m['module']:m for m in base['modules']}
+    revisions.update(base.get('source_revisions',[]))
 for artifact in artifacts:
     path=manifest_at(artifact)
     root=path.parent
