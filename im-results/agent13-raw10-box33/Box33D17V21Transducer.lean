@@ -315,7 +315,7 @@ theorem progress {c : Config} (hc : Inv c) :
       | some o' =>
         rw [he] at h
         have hrel : Rel j p' o' := of_decide_eq_true h
-        refine ⟨cost p,by unfold cost; split <;> (try split) <;> decide,_,?_,?_⟩
+        refine ⟨cost p,by unfold cost; split <;> (try split) <;> decide,S (pair p' (tape (tl w))) (rightTape (b::u)),?_,?_⟩
         · rw [tapeSplit w]
           exact scanMacro p (hd w) p' b hm (tape (tl w)) (rightTape u)
         · refine ⟨j,p',o',tl w,b::u,hrel,hw',?_,rfl⟩
