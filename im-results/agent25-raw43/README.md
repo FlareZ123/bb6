@@ -1,26 +1,32 @@
-# Raw43: five-hole child bounds
+# Raw43: canonical parent cut and five-hole child bounds
 
-Parent: `1RB---_1RC---_0RD---_1LD0RB_------_------` (seven holes). Its first missing transition is B1. The following two children fix B1=0RE and E1 as indicated. The complete parent requires all other branches too.
+Parent: `1RB---_1RC---_0RD---_1LD0RB_------_------` (seven holes). First missing transition B1; E/F renaming preserves the parent and blank start.
 
-| E1 | Candidate weighted bound | Side cycles | Last holes | Split nodes | Remaining certificates |
-| --- | ---: | ---: | ---: | ---: | --- |
-| 0LE | 75 | 5371 | 995 | 279 | 51 FAR, 1 universal growth |
-| 0RD | 49 | 2878 | 273 | 137 | 1 FAR |
+## Source-accepted progress
 
-Each child has 25^5 = 9,765,625 raw completions. Neither complete child is claimed source-accepted in this note. No parent or canonical roster deletion follows until the full original-source checks and composition pass.
+| E1, with B1=0RE | Weighted bound | Side cycles | Last holes | Split nodes | Additional certificates | CI |
+| --- | ---: | ---: | ---: | ---: | --- | --- |
+| 0LE | 75 | 5371 | 995 | 279 | 51 FAR + 1 growth | [45806858894](https://github.com/FlareZ123/bb6/actions/runs/45806858894) |
+| 0RD | 49 | 2878 | 273 | 137 | 1 FAR | [45921443774](https://github.com/FlareZ123/bb6/actions/runs/45921443774) |
+| 1RD | 1713 | 4203 | 641 | 212 | 25 FAR + 1 late last + 7 growth | [45922723471](https://github.com/FlareZ123/bb6/actions/runs/45922723471) |
 
-## New 0RD child: complete finite certificate candidate
+Each child covers all 25^5 = 9,765,625 raw completions. WeightedBound includes first-one delay. Source theorem names respectively `BB6.Agent25Raw43.all43child`, `BB6.Agent25Raw43RD.all43child`, `BB6.Agent25Raw43RD1.all43child`.
 
-For `1RB---_1RC0RE_0RD---_1LD0RB_---0RD_------`, the exact-trace candidate enumeration (1000-step discovery cap, lookback 32) gives 9,271,750 completions in translated-cycle leaves, 493,850 in bounded-query/total-table leaves, and 25 in the single remaining partial table `1RB0LF_1RC0RE_0RD---_1LD0RB_1RF0RD_1LA0RE`. The maximum missing-transition query time is 43, so the weighted cutoff candidate is 49 (one halting step plus at most five first-one delay steps).
+`Raw43ParentCut.lean` gives a source-accepted conditional reduction of Raw43 to 21 canonical residuals instead of the 23 from the initial two-level cut. It absorbs 0LE and 0RD, not yet 1RD. See [45922648873](https://github.com/FlareZ123/bb6/actions/runs/45922648873), exact theorem `BB6.Agent25Raw43Parent.cover`. **Raw43 remains open**; this is not a canonical roster deletion.
 
-The remaining table admits a one-state FAR witness with orientation 0, delta [0,0], left masks [2,4,8,26,32,16,64], right masks [32,16,64,2,8,16,64], and blank-zero closure mask 64. Every FAR closure implication is satisfied and the start bit is absent. This covers all 25 C1 completions, not merely the all-nonhalt choice. The census was computed in JavaScript using 32-bit rolling hashes solely for candidate selection and direct versioned-tape comparison for side equality. The existing C++ 64-bit generator is the independent reproducibility route; the new spec checks the exact open roster, root query, and tree census before emitting Lean certificates.
+## Universal growth
 
-Run `python im-results/agent25-raw43/generate.py 0rd` after preparing the existing shared source. The generated theorem is `BB6.Agent25Raw43RD.all43child`, with exact target `WeightedBound 49`. Use existing workflow agent10-four-hole.yml target raw43-0rd. Local shell and Python failed at the tool boundary (ClientError, before any command execution); no local Lean compilation or C++ replay was possible this invocation. The generated theorem is a draft until a successful original-source compiler and axiom audit.
+- 0LE M29: `1RB0RF_1RC0RE_0RD0RA_1LD0RB_1LF0LE_1LB---`. In left-includes-scanned zipper notation, S(n) = (A,[1,0,1],(01)^n 0). Entry S(1) after 16; S(n) → S(n+3) in 8n+28 steps.
+- 1RD: `Raw43RD1Growth.lean` establishes shared E-state sweeps. `Raw43RD1Return.lean` resolves five variants of the C1 instruction; return from A([], (01)^m) to A([], (01)^f(m)) with f(m)=2m+3, 3 ceil(m/2)+3, or 3 floor(m/2)+3. `Raw43RD1M0.lean` gives linear alternating-block growth. `Raw43RD1M29.lean` proves a little-endian binary counter invariant covering both missing entries A1/C1.
+- 0RD M0: `1RB0LF_1RC0RE_0RD---_1LD0RB_1RF0RD_1LA0RE`; one-state FAR orientation 0, delta [0,0], left masks [2,4,8,26,32,16,64], right masks [32,16,64,2,8,16,64], blank-zero closure mask 64.
 
-## Prior 0LE child
+## Active candidate siblings
 
-Candidate enumeration: 9,237,475 cycle completions, 525,050 bounded-query/total-table completions, and 3,100 open completions. The spec supplies FAR witnesses for 51 leaves. For the last partial table M29, `1RB0RF_1RC0RE_0RD0RA_1LD0RB_1LF0LE_1LB---`, define S(n) = (A, [1,0,1], (01)^n 0) in the left-includes-scanned-cell zipper convention. Blank reaches S(1) after 16 steps. Two arbitrary-tail sweeps, a right turn and left turn give S(n) -> S(n+3) in exactly 8n+28 steps. Hence S(3k+1) grows forever, never querying F1. Entry and growth equalities were locally Lean-checked against copied zipper definitions in the prior invocation; original-source adapter and complete child audit not established here.
+| E1 | Weighted candidate bound | FAR | Other certificates / gaps |
+| --- | ---: | ---: | --- |
+| 0RE | 41 | 122 | complete candidate |
+| 1RE | 128 | 177 | 2 growth drafts |
+| 0RF | 144 | 138 | 5 unresolved |
+| 1LB | 115 | 159 | 5 unresolved |
 
-## Parent strategy
-
-E/F relabeling fixes the parent and the blank start. The already existing weighted symmetry transport can mirror B1=0RE into B1=0RF (E1 becomes F1), avoiding duplicate certification of these two isomorphic branches. The E/F-fixed branches and remaining E1 choices still need actual certificates. Do not infer full Raw43 closure from these two children.
+The exact open roster, split census and FAR candidates are in `spec_*.json`. `discover.js` uses 32-bit rolling hashes only for candidate selection and exact versioned-tape comparison; it is not a trusted proof checker. `generate.py` independently uses the C++ enumerator and emits Lean exact certificates. Existing workflow agent10-four-hole.yml supports raw43-child, raw43-0rd, raw43-1rd, raw43-parent-cut, and raw43-extra (raw43_extra_child=0re or 1re etc). Local shell and Python returned ClientError before execution; original-source CI is the compilation route. No unverified candidate is promoted to a certified bound.
