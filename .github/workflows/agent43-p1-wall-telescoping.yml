@@ -22,6 +22,12 @@ on:
           - lag-partition
           - lag-pair
           - lag-pair-finite
+      lag_case:
+        description: "Delayed certificate index"
+        required: false
+        type: choice
+        default: '124834'
+        options: ['124834', '164446']
       chain_case:
         description: "Exceptional index for margin-chain"
         required: false
@@ -49,21 +55,27 @@ jobs:
           export LEAN_PATH="$AG43:im-results/agent9-p1-first-return:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent50-p1-dyadic-width:im-results/agent28-p1-word-automaton:im-results/agent28-p1-full-prefix:im-results/agent50-p1-subwall"
           python tools/lean_compile_deps.py "$AG43/LagPairSource.lean" | tee /tmp/lag-pair.log
           if grep -Eq 'sorryAx|error:' /tmp/lag-pair.log; then exit 1; fi
-      - name: Check finite delayed index 124834
+      - name: Check selected finite delayed index
         if: inputs.target == 'lag-pair-finite'
         run: |
           set -euo pipefail
           AG43=im-results/agent43-p1-high-cost-reset-count
           GEN="$PWD/lag-pair-cert"
           export LEAN_PATH="$AG43:im-results/agent9-p1-first-return:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent50-p1-dyadic-width:im-results/agent28-p1-word-automaton:im-results/agent28-p1-full-prefix:im-results/agent50-p1-subwall:$GEN"
-          python "$AG43/gen_lag_pair.py" --output "$GEN"
+          N="${{ inputs.lag_case }}"
+          case "$N" in
+            124834) H=62416 ;;
+            164446) H=82222 ;;
+            *) exit 2 ;;
+          esac
+          python "$AG43/gen_lag_pair.py" --n "$N" --h "$H" --output "$GEN"
           python tools/lean_compile_deps.py "$GEN/LagPairFinite.lean" | tee /tmp/lag-pair-finite.log
-          grep -F 'critical_reset_no_reach_124834' /tmp/lag-pair-finite.log
+          grep -F "critical_reset_no_reach_$N" /tmp/lag-pair-finite.log
           if grep -Eq 'sorryAx|error:' /tmp/lag-pair-finite.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'lag-pair-finite' && always()
         with:
-          name: lag-pair-124834
+          name: lag-pair-${{ inputs.lag_case }}
           path: lag-pair-cert/*.lean
           if-no-files-found: ignore
           retention-days: 7

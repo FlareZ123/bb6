@@ -37,3 +37,6 @@ Independent JavaScript exact integer calculation, h=62416, gives the following c
 Thus the candidate is empty at s=249665, so n+s=374499 is below practicalCut(124834)+1. This is not a new numerical extinction record; previous numerical evidence was stronger. The new purpose is a source-level kernel certificate. gen_lag_pair.py emits chunked dense and sparse covers and recovery checks. The finite workflow has been dispatched; its conclusion is not claimed yet.
 
 Local Python and container tool calls return ClientError; Lean was checked by the exact 4.36.0-rc2 CI environment. Concurrent main branch CAS conflicts were retried using the original content blobs, not forced updates.
+
+## Candidate n=164446
+The previous numerical result K=174338 is already known (Agent28). The conservative paired proof proposal, independent exact JS integer computation with h=82222, gives 12 midpoint half-carries from the initial parent and one canonical extension (carry 127494, word length 82223); the second parent at s=82223 has 18 midpoint half-carries, none with the correct initial carry and canonical word. Thus the proposed half cover is empty at s=164445, hence n+s=328891 < 3n. Visits 5858600 and 7202131 respectively. The generalized workflow now accepts this index as a separate target; no new kernel numerical theorem asserted until CI succeeds.
