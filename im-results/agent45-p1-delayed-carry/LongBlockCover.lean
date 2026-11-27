@@ -2,6 +2,7 @@ import LongBlockWitness
 import ReverseLagBlocks
 import BitSpread
 import BatchCarryChunks
+import PairCarryCore
 import PackedMidpoint
 
 namespace BB6.Agent45LongBlock
@@ -60,20 +61,20 @@ theorem packedBack_sound (L q y bits z c : Nat)
     (hcap : z<2^L) (hb : bits.testBit z=true)
     (hw : Walk (q+1) z [y] c) :
     (packedBack (spreadPlan2 L L) q y bits).testBit c=true := by
-  cases hw with
-  | step ys a yy b r hp hy hbb ha hr he =>
-    cases hp
-    simp only [List.length_nil,Nat.zero_add,Nat.add_sub_cancel] at ha hr he
-    have hbound : 2*z+y<2*q := by
-      rcases (show b=0 ∨ b=1 by omega) with h|h <;> simp [h] at he <;> omega
-    have hmod : (2*z+y)%q=c := by
-      rw [he,Nat.add_mod]
-      simp [Nat.mod_eq_of_lt hr]
-    unfold packedBack
-    rw [spread_plan_eq]
-    change (reverseStep L q y bits).testBit c=true
-    rw [←hmod]
-    exact reverseStep_sound L q y bits z (by omega) hcap hbound hb
+  obtain ⟨B,hB,he⟩ := eq_of_walk hw
+  have hr := walk_bound hw
+  simp only [List.length_cons,List.length_nil,Nat.zero_add,Nat.add_sub_cancel] at hr hB he
+  have hstep : 2*z+y=c+q*B := by
+    rcases (show B=0 ∨ B=1 by omega) with h|h <;> simp [h,digits,corr,Nat.add_comm] at he ⊢ <;> omega
+  have hbound : 2*z+y<2*q := by
+    rcases (show B=0 ∨ B=1 by omega) with h|h <;> simp [h] at hstep <;> omega
+  have hmod : (2*z+y)%q=c := by
+    rw [hstep,Nat.mul_comm q B,Nat.add_mul_mod_self_right,Nat.mod_eq_of_lt hr]
+  unfold packedBack
+  rw [spread_plan_eq]
+  change (reverseStep L q y bits).testBit c=true
+  rw [←hmod]
+  exact reverseStep_sound L q y bits z (by omega) hcap hbound hb
 
 def rewindTarget (plan : List (Nat×Nat)) (n s B : Nat) : Nat → Nat → Nat
   | 0,bits => bits
@@ -106,6 +107,8 @@ def LiveList (n B s k : Nat) (xs : List Nat) : Prop :=
 theorem live_bits_init (n B s : Nat) : LiveBits n B s 0 (2^(n+s+3)-1) := by
   intro z c hw
   have hb := walk_bound hw
+  rw [Nat.testBit_two_pow_sub_one]
+  apply decide_eq_true
   simpa using hb
 
 theorem live_bits_extend (L n B s j d bits out : Nat)
