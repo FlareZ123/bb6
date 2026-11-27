@@ -830,7 +830,7 @@ jobs:
           mv /tmp/p1-compact-in/p1-45352466-half.chk /tmp/p1-45352466-half.chk
           sha256sum /tmp/p1-45352466-half.chk
           set +e
-          P1_FUSE=128 OMP_NUM_THREADS=2 /tmp/p1-compact 45352466 "$SCAN_K" 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half-resume.log
+          P1_FIT=1 P1_FUSE=128 OMP_NUM_THREADS=2 /tmp/p1-compact 45352466 "$SCAN_K" 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half-resume.log
           rc=${PIPESTATUS[0]}
           set -e
           if [[ "$rc" == 1 ]]; then
