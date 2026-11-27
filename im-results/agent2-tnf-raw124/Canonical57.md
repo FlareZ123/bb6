@@ -1,56 +1,30 @@
-# Prepared Raw124 removal from Canonical58 — acceptance withdrawn
+# Accepted Raw124 Canonical57 delta and remaining Raw59 edge
 
-The independently source-accepted Raw124 parent Cover is available for integration into the actual accepted Canonical58 roster. The proposed 57-entry consumer is not yet source-accepted.
+**Established conditional interface:** the exact Raw124 removal from the actual accepted Canonical58 roster passed in [run 45926694578](https://github.com/FlareZ123/bb6/actions/runs/45926694578), source revision `7b009ba1127836b2e1d318e458632ea06bccbed0`. Its independently uploaded [thin delta 15167645810](https://github.com/FlareZ123/bb6/actions/runs/45926694578/artifacts/15167645810), ZIP SHA-256 `de6fb52e65ec6ce4ba06cfee40f74572d9f99444c10bc1493ea44cc86b34939a`, contains the checked root, exact source, report and dependency pins. It is not a standalone dependency closure. Raw59 remains explicitly retained. No universal upper bound or exact BB(6) follows without the remaining Covers.
 
-## Exact membership and successor
+## Exact membership and theorem
 
-Let `roster58` be the value `BB6.Agent31Canonical58Raw113Graft.roster58` from the accepted Canonical58 Raw113 graft. Let `p124` be the exact partial table
+The parent is `1RB---_1RC---_0RD---_1LD1RE_---1LF_------`. Its independently source-accepted parent Cover at weighted bound **4,136,175** is [run 45908591612](https://github.com/FlareZ123/bb6/actions/runs/45908591612), artifact 15159377345. [Raw124Canonical58Membership.lean](Raw124Canonical58Membership.lean) proves unique membership in the exact accepted `BB6.Agent31Canonical58Raw113Graft.roster58`, lifts the parent Cover to the common floor 6,766,859, and defines `roster57 := removeParents [p124] roster58`.
 
-```text
-1RB---_1RC---_0RD---_1LD1RE_---1LF_------
-```
-
-and define
-
+The theorem `BB6.Agent2Raw124Canonical58Membership.sound_integrated` gives:
 ```lean
-roster57 := removeParents [p124] roster58
+∀ m, compatible root m →
+  WeightedBound 6766859 m ∨
+    ∃ e ∈ roster57, TNFQuotientCompatible e.2 m
 ```
 
-The prepared Lean consumer is intended to prove that Raw124 occurs exactly once in `roster58` and that `roster57.length = 57`. It imports the accepted roster value directly; it does not use the withdrawn six-parent reconstruction or infer roster identity from cardinality.
+At the attained champion score, `exact_at_champion_score` concludes `ExactBB6 (proposedTM63Moves + 7)` under Covers for every one of the 57 retained entries. The acceptance gate checked membership, count57, parent root and Cover, soundness, conditional exactness, and standard logical axioms only.
 
-The parent Cover is available at weighted bound **4,136,175** from [Raw124 parent run 45908591612](https://github.com/FlareZ123/bb6/actions/runs/45908591612), artifact 15159377345. The consumer lifts it to the common reduction floor **6,766,859** and applies the exact parent-removal soundness theorem to the accepted Canonical58 quotient theorem.
+## Reuse rather than re-audit
 
-## Formal interface
+The exact base artifact 15159933665 (run 45910336799) carries the accepted Canonical58 closure. The accepted thin delta additionally pins Raw124's parent artifact and the chosen object-pair comparisons. [The current restore driver](assemble_raw59_canonical56_after_raw124.py) restores the accepted root from 15167645810 and uses the previously accepted comparison verdicts only when both object SHA-256s match exactly. It checks the parent and base pins, report, source and root hashes, and allowed axiom profiles. This avoids recompiling the already accepted Raw124 consumer.
 
-The prepared module `BB6.Agent2Raw124Canonical58Membership` states:
+## Raw59 — next unclosed edge
 
-```lean
-sound_integrated :
-  ∀ m, compatible root m →
-    WeightedBound 6766859 m ∨
-      ∃ e ∈ roster57, TNFQuotientCompatible e.2 m
-```
+Raw59's local Cover at 4,136,171 is accepted separately; the staged parent proof [artifact 15159864837](https://github.com/FlareZ123/bb6/actions/runs/45897242410/artifacts/15159864837) wraps it in `CanonicalSelectedRaw59`, importing an obsolete version of `Canonical59FiveParentMembership`. That import caused the later failure in 45926694578, before the Raw59 consumer compiled.
 
-It also states the conditional exactness interface:
+[The new consumer](Raw59Canonical56AfterRaw124.lean) imports `Raw59KernelSlice` directly, uses `sameTable_sound (by decide)` to identify the relocated source parent with the actual retained Raw59 table, lifts its Cover, checks unique membership and explicit removal, and consumes it from `roster57`. The parent-only link retains the exact bytes/kernel-equality checks on every reached object; it neither imports the old roster wrapper nor relaxes the comparison. [Run 45947831472](https://github.com/FlareZ123/bb6/actions/runs/45947831472) is the focused test. The planned output is a new thin object delta with exact base, parent and link-audit pins. This new edge is **not yet accepted**.
 
-```lean
-exact_at_target (B : Nat) (hB : 6766859 ≤ B)
-    (hLeaves : ∀ e ∈ roster57, Cover (WeightedBound B) e.2)
-    (champ : ∃ m : BB6.Coverage.RawMachine,
-      BB6.Coverage.HaltsAt (BB6.Coverage.tickRaw m) B) :
-    BB6.Coverage.ExactBB6 B
-```
+## Historical failure correction
 
-The specialization `exact_at_champion_score` uses the existing champion lower-bound witness and threshold. Thus, if all **57** remaining roster entries receive Covers at the champion score, the theorem yields `ExactBB6` at that score. This is a conditional theorem; the 57 residual Covers are still open obligations.
-
-## Acceptance correction and recovery
-
-[Run 45910336799](https://github.com/FlareZ123/bb6/actions/runs/45910336799), job 140216906213, accepted the Raw113 Canonical58 delta. Its optional Raw124 step at 2026-11-26 23:28:18 UTC failed with argparse exit 2 (`--work` missing, because the YAML command used two backslashes instead of one). The failure was masked by `continue-on-error`; the Raw124 compiler and axiom gate never ran. Artifact 15159933665 therefore contains the accepted Canonical58 closure but not `Raw124Canonical58Membership.olean`. This absence directly caused [run 45913580851](https://github.com/FlareZ123/bb6/actions/runs/45913580851) to fail at its base-object check.
-
-The corrected wrapper in commit 2c1b136797f5c8af0b7ec9753ce5332e670f27c2 checks the pinned base artifact, restores its accepted Canonical58 JSON report from metadata, executes only the missing Raw124 consumer with its original hash/kernel/axiom gates, and then adds Raw59. The existing manual workflow's doubled shell continuations were fixed in commit 0b5f7796c52fd7aef9c73037af095b8e817bd806. [Recovery run 45916636924](https://github.com/FlareZ123/bb6/actions/runs/45916636924) is pending. The individual parent theorem remains accepted: see [Raw124 parent Cover](../../results/2026-11-26-raw124-parent-cover-agent2.md).
-
-## Scope
-
-The strongest demonstrated global conditional interface remains Canonical58. Neither 57 nor 56 is accepted until the corresponding actual consumer and axiom gate pass. The proposed 57-residual interface is not a universal upper bound even after acceptance.
-
-The previous result page incorrectly inferred Raw124 acceptance from the overall successful job and is withdrawn; this intermediate dossier preserves its proposed mathematical statement and the exact failure.
+The older 45910336799 optional Raw124 step failed before Lean with argparse exit 2 and was masked. Its Canonical58 export is valid, but it contains no Raw124 consumer. Recovery 45913580851 then failed because that root was missing. A prior six-parent roster reconstruction also had a wrong table set despite its correct count. Neither is used to infer acceptance. Run 45926694578 executed the actual corrected Raw124 gate and uploaded its independent delta; its later Raw59 conflict does not undo that already accepted proof.

@@ -1,3 +1,11 @@
+# Current checkpoint — 2026-11-27T05:48Z
+
+Normal mode draw 1. Agent2 lease claimed and confirmed in commit 3e3037b4f964a75c2a33f50167677233ff1c8b47 at immutable timestamp 2026-11-27T05:43:09.027Z. Release threshold 06:53:09.027Z. Prior Raw124 work complete: local Cover 4,136,175 accepted 45908591612; Raw124 exact global consumer accepted independently in run 45926694578 artifact 15167645810. Current global conditional roster 57 entries, Raw59 retained.
+
+New work: 45926694578 failed later because CanonicalSelectedRaw59 imports stale Canonical59FiveParentMembership. Commit f5797bcfe4cc22483d37230701f7b2aed70b4221 adds parent_only linking to Raw59KernelSlice and proves exact source table equality / lifted Cover in Raw59Canonical56AfterRaw124.lean against current roster. Strict comparison retained; no old global wrapper import. Commit 34ae30c021591b177ba74eef84d0c705afb79367 restores pinned accepted Raw124 root rather than recompiling, checking previously accepted hash pairs, manifest and axioms. Commit a4e4fa050f84d73cd8c9351bc3e85b2cad883e57 changes existing manual target to export new thin 56 delta, avoiding another >20GB full archive. Dispatched focused run 45947831472. Local Lean toolchain bootstrapped successfully (4.36.0-rc2), but git clone DNS fails, exact multi-GB artifact closure unavailable locally. Need monitor actual first compiler or link diagnostic and only repair a concrete failure. No 56 acceptance yet. Do not redo Raw124 discovery or source proof. Reconciled Raw124 README and Canonical57 dossier; use these as current status. Agent32 and Agent31 have older parallel global work; handoff below. For further mathematical work, prioritize unresolved exact parent or authentic-root decision rather than residue counting.
+
+---
+
 # Current checkpoint — 2026-11-26T19:27Z
 
 Claimed agent2 after random draw 7; lease immutable `2026-11-26T19:17:11.333Z`, release threshold `20:27:11.333Z`. Claim commit 7ac8865f6db927a6dc28236f5fde4520c7134c5a. Current accepted global consumer Canonical60 (conditional, 60 open Cover hypotheses).
