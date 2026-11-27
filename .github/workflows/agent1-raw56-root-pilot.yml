@@ -1,0 +1,164 @@
+name: Agent1 Raw56 root-pilot source acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-pilot-generated-source
+          path: /tmp/raw56-pilot-source
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46062134943'
+      - name: Build exact source graph and repair invalid transferred FAR witnesses
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/root_pilot_accept.py prepare --source /tmp/raw56-pilot-source --out /tmp/raw56-pilot-prep
+          cat /tmp/raw56-pilot-prep/accept-summary.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-root-pilot-prepared
+          path: /tmp/raw56-pilot-prep
+          if-no-files-found: error
+
+  certs:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [E10RD, E11LC]
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-pilot-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check finite and growth certificates
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw56/root_pilot_accept.py compile-certs --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards 4 --out /tmp/rootpilot-cert
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rootpilot-cert-${{ matrix.tag }}-${{ matrix.shard }}
+          path: /tmp/rootpilot-cert
+          if-no-files-found: error
+
+  cuts:
+    needs: certs
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [E10RD, E11LC]
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-pilot-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-cert-${{ matrix.tag }}-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check canonical cut subtree shard
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/root_pilot_accept.py compile-cut --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards 4 --out /tmp/rootpilot-cut
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rootpilot-cut-${{ matrix.tag }}-${{ matrix.shard }}
+          path: /tmp/rootpilot-cut
+          if-no-files-found: error
+
+  assemble:
+    needs: cuts
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [E10RD, E11LC]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-pilot-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-cert-${{ matrix.tag }}-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-cut-${{ matrix.tag }}-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Assemble and strict-audit branch Cover
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/root_pilot_accept.py compile-final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --tag '${{ matrix.tag }}' --out /tmp/rootpilot-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-root-pilot-${{ matrix.tag }}-source-accepted
+          path: /tmp/rootpilot-final
+          if-no-files-found: error
