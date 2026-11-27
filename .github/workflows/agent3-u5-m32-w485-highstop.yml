@@ -18,6 +18,7 @@ on:
           - q0-secondary-cylinders
           - w7-q0-parent-fan
           - linear-rank
+          - u5-affine-highstop
         default: m32-w485-highstop
 
 permissions:
@@ -100,6 +101,13 @@ jobs:
                 im-results/agent15-c-halting/U5Q0W7U23Mod512.lean \
                 im-results/agent15-c-halting/U5Q0W7U19Mod2560.lean \
                 --jobs 4 --workdir /tmp/lean-closure-w7-q0-parent-fan 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              ;;
+            u5-affine-highstop)
+              python3 tools/lean_compile_closure.py \
+                im-results/agent15-c-halting/U5AffineHighStop.lean \
+                --jobs 4 --workdir /tmp/lean-closure-u5-affine-highstop 2>&1 | tee "/tmp/lean-closure-reports/${target}.log"
+              grep -F 'high_stop_excluded' "/tmp/lean-closure-reports/${target}.log"
+              if grep -E 'sorryAx|native_decide|_native' "/tmp/lean-closure-reports/${target}.log"; then exit 1; fi
               ;;
             linear-rank)
               python3 tools/lean_compile_closure.py \
