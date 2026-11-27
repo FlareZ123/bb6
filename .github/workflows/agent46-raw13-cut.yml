@@ -495,10 +495,10 @@ jobs:
         run: |
           set -euo pipefail
           export LEAN_PATH=/tmp/a46-source
-          cp "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean" /tmp/a46-source/
-          cp "$GITHUB_WORKSPACE/im-results/agent46-raw13-cut/Raw13CoupledParentSource.lean" /tmp/a46-source/
-          lake env lean -o /tmp/a46-source/CryptidsTapeAdapter.olean /tmp/a46-source/CryptidsTapeAdapter.lean | tee /tmp/a46-adapter.log
-          lake env lean -o /tmp/a46-source/Raw13CoupledParentSource.olean /tmp/a46-source/Raw13CoupledParentSource.lean | tee /tmp/a46-unconditional.log
+          cp "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent46-raw13-cut/Raw13CoupledParentSource.lean" .
+          lake env lean -o /tmp/a46-source/CryptidsTapeAdapter.olean CryptidsTapeAdapter.lean 2>&1 | tee /tmp/a46-adapter.log
+          lake env lean -o /tmp/a46-source/Raw13CoupledParentSource.olean Raw13CoupledParentSource.lean 2>&1 | tee /tmp/a46-unconditional.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a46-adapter.log /tmp/a46-unconditional.log; then exit 1; fi
       - name: Preserve unconditional audit
         uses: actions/upload-artifact@v4
