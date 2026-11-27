@@ -251,7 +251,7 @@ theorem grow (n : Nat) :
     run0 table (40*n+53) (sect n) = some (sect (n+1)) := by
   let j := 4*n+2
   have he : rep O (4*n+6) = M++O++rep O j := by
-    rw [show 4*n+6=j+4 by dsimp [j]; omega,show j+4=4+j by omega,rep_add O 4 j] <;> rfl
+    rw [show 4*n+6=j+4 by rfl,show j+4=4+j by omega,rep_add O 4 j] <;> rfl
   have h1 : run0 table 9 (sect n) = some ⟨0,[false]++O,M++rep O j⟩ := by
     rw [sect,he]
     exact enter (rep O j)
