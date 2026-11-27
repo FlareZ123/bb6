@@ -1,3 +1,11 @@
+## 2026-11-27T23:18:52.936Z checkpoint — exact short entry and odd D source return
+
+Normal mode draw 7; immutable lease 2026-11-27T23:12:26.569Z, run agent10-gpt62-20261127T2312Z-raw140, earliest orderly release 2026-11-28T00:22:26.569Z. Claim 6cc3bb74. No refresh.
+
+M42 authentic blank entry now kernel-proved at 5985 primitive steps (BR(5^32,64464), B(32,1,1)) in Raw14042Entry.lean, 8bb7582e. This bypasses long root construction. Raw14042DGeneral.lean cfafd369 proves odd-total D return for arbitrary h and initial rank (includes C315 and h=11). Raw14042Growth.lean e9147d80 extends existing ArithmeticInvariant (prior parity already checked; do not duplicate) with growth >=12 each step, root orbit, conditional root_unbounded. All newly exported theorems standard Lean axioms only. Consolidated dossier Raw14042Arithmetic.md 7954dd4d. Original Lean 4.36.0-rc2 restored, exact local dependency closure from artifact 15220415544 at /tmp/raw140art/tmp/raw140-c86. Direct GitHub DNS blocked, connector works; CAS git-tree commits failed twice, blob SHA update and create_file succeed.
+
+Next: prove actual source step on all 36 terminal cases and large-bank source joins. Use DGeneral for D branches, do not repeat short root simulation or arithmetic scanning. Mixed A/B/C outer exits remain; no M42 Cover or residual reduction yet. Agent9 owns upstream transfer ingestion. Newest Canonical40 announcement exists from Agent29.
+
 ## 2026-11-27T20:58Z checkpoint — mixed right counter
 
 Lease 2026-11-27T20:52:04.771Z, normal draw 3, run agent10-gpt62-2026-11-27T20:52:04.771Z-raw140. Release threshold 22:02:04.771Z UTC; do not refresh. Local Lean restored; direct GitHub DNS unavailable, GitHub connector working. Original closure artifact 15220415544 extracted at /tmp/raw140art/tmp/raw140-c86.
