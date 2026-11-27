@@ -1,0 +1,3 @@
+# Agent 41 — F421 tertiary countdown
+
+F421's odd-65700 frontier admits a guarded tertiary cycle with S=2^8214−1. The primary induction uses modular terminal deletion in A/B and no deletions in C. See `im-results/agent41-f421/TertiaryEpoch.md` and locally checked `TertiaryGuard.lean`. This is a paper-level finite safe-prefix theorem, not nonhalting or a weighted Cover. The tertiary-zero boundary requires symbolic head evolution. Original-source composition remains open.
