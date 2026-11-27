@@ -280,3 +280,30 @@ Actual lease age 70.422 minutes, threshold reached. Final discovery-only census 
 - 09:29Z: Agent38 handoff integrated all six A1=0LA growth candidates (Raw43Octal four, Raw43Run two). Four locally full-proved by Agent38; final entry/transport of remaining pair pending source CI. This is candidate integration only, not official acceptance. Bound 4174 for A1=0LA.
 
 - 09:35Z: E1=0LF threshold 1130 complete candidate, M19 periodic 11-bit block transfer proof (93/111/196/11/3 step macros, genuine blank entry 250); locally accepted standard axioms only. E1=1RE candidate 147 complete. Five initial 1RE child CI gates passed (45971431247,45972103423,45972109802,45972117182,45972124125). Other source audits dispatched.
+
+
+## 2026-11-27T21:43Z — Raw43 reduced to B0LE; B0LE frontier compressed
+
+Normal mode RNG=2. Immutable claim `2026-11-27T20:37:09.730Z`, run `agent25-gpt56sol-20261127T203709730Z-raw43`; orderly-release threshold 21:47:09.730Z.
+
+Major candidate reductions this incarnation:
+- `Raw43B1LECut.lean` / `Raw43B1LECompose.lean`: all 20 nontrivial B1=1LE child banks are candidate-complete. Final E1LF leaf M1725 reaches its sole last hole E1 at step 11286, giving bound 11292.
+- `Raw43B1RECut.lean` / `Raw43B1RECompose.lean`: 16 nontrivial E1 child banks candidate-complete; eight other E1 choices are exact side cycles; proposed parent bound 4044.
+- `Raw43B1LACompose.lean`: Agent38's six A1=0LA growth proofs complete the previously residual bank; proposed full 12-child parent bound 4174.
+- `Raw43ParentCutExpandedNine.lean`: after B0LA+B1LA+B1LE+B1RE plus prior ExpandedFive branches, candidate Raw43 has exactly one canonical residual, proved equal to B1=0LE. This is the sharp dependency boundary; do not call it source-accepted until child composition gates pass.
+
+B0LE:
+- Existing accepted reduced branch had eight E0 residuals. `Raw43B0LEExpanded.lean` folds candidate-complete 0LA,0LF,1LE,1RA and proves exact remaining E0 roster {1LA,1LB,1LF,1RF}.
+- Standard+deep finite-state abstraction collapsed the raw open leaves dramatically:
+  * 1LA: 246 -> 13 -> 6; late-last i9@1135, i10@1211, i60@2963, and late shift cycle i31=(entry25134, period57, right, boundary51), leaving genuine long-lived i44 and i62 among the deep survivors.
+  * 1LB: 180 -> 23 -> 2; i841 is last-hole@1569; i746 enters D0 on a fresh leftmost blank at step1983 and then follows the permanent 1LD ray. `Raw43B0LEE1LBI746.lean` formalizes this; source gate dispatched near release.
+  * 1LF: discovery 861 opens -> 64 -> 4 long-lived survivors i330,i331,i396,i746.
+  * 1RF: 42 opens -> 2 by ordinary BiDFA. M177 has a source-certified alternating-sweep recurrence `Raw43B0LEE1RFM177.never`; M81 is closed by a new asymmetric chunk BiDFA (left {width2,k5,c2,m1}, right {width2,k2,c1,m1}, 6757 states, 1738 edges). The complete 1RF child compile reached all generated BiDFA modules and then runner-shutdown; rerun queued. No Lean diagnostic preceded shutdown.
+- Therefore the genuine long-lived mathematical frontier after current discoveries is seven machines: 1LA i44/i62 and 1LF i330/i331/i396/i746, plus any source-integration issue only; 1LB i746 and 1LA i31 are structurally solved, 1RF is candidate-solved. Deep BiDFA artifact results for 1LA/1LB/1LF still need to be merged into persistent specs before whole-child generation.
+
+Infrastructure:
+- Raw43 audits pin `FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean` to avoid the Raw42 module-name collision.
+- Added discovery/abstraction tools `discover_b0le_residual.js`, `abstract_b0le.js`, `deep_abstract_b0le.js`, `search_m81_abstract.js`, `late_classify_b0le.js`.
+- GitHub Actions experienced repeated runner shutdowns; distinguish them from Lean failures. Do not spend next incarnation repeatedly rerunning old gates before merging the deep abstraction artifacts and attacking the seven real long-lived machines.
+
+No exact BB(6) value or global upper bound is established.
