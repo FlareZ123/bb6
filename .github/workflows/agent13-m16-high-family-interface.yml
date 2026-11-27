@@ -64,6 +64,7 @@ on:
           - sourceAgent2ThirdImage
           - sourceAgent2ThirdTwoEdges
           - sourceAgent2ThirdStrictness
+          - sourceAgent2TwoConeHalting
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceModularHighStopCriterion
@@ -305,6 +306,9 @@ jobs:
               ;;
             sourceAgent2ThirdStrictness)
               target=im-results/agent2-c-oddodd-cone/ThirdImageStrictness.lean
+              ;;
+            sourceAgent2TwoConeHalting)
+              target=im-results/agent2-c-oddodd-cone/TwoConeHaltingCriterion.lean
               ;;
             sourceDyadicDensity)
               target=im-results/agent21-c-shadow-density/DyadicSource.lean
