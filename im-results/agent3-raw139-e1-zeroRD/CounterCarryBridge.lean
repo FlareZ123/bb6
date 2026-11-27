@@ -99,7 +99,7 @@ theorem step_sound (v : Variant) (m : Machine) (hm : compatible (ctr v) m) (c : 
     ∃ c', rawStep m c = some c' ∧ observe c' = d := by
   rw [step_eq,(observed_slot c).1,(observed_slot c).2] at hs
   change (tableMove v (readSlot c)).map (fun mv => moveC mv (observe c)) = some d at hs
-  cases ht : tableMove (readSlot c) with
+  cases ht : tableMove v (readSlot c) with
   | none => simp [ht] at hs
   | some mv =>
     have hctr : ctr v (readSlot c) = some (some mv) := by rw [table_match,ht]; rfl
