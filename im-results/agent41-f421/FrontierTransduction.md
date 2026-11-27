@@ -1,6 +1,6 @@
 # Exact F421 frontier transduction
 
-**Status:** Exact paper derivation of a one-word return map for the authentic blank-root orbit; primitive replay corroborates it. No all-time avoidance invariant or nonhalting decision is established. The original-machine Lean bridge is a separate obligation.
+**Status:** Exact paper derivation of a one-word return map for the authentic blank-root orbit; primitive replay corroborates it. No all-time avoidance invariant or nonhalting decision is established. `F421Frontier.lean` checks the return and its original-machine bridge in Lean. [F421FirstSeed.lean](F421FirstSeed.lean) instantiates them from the blank tape through the first secondary zero frontier.
 
 Table: `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`. F1 alone is undefined. A frontier configuration has state D, left word u including the scanned bit in near-to-far order (zero padded), and right word 1 followed by blanks. The blank start reaches this frontier with u=11, head=1, in three transitions.
 

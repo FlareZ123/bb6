@@ -93,6 +93,8 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Reconstruct coverage source
         run: python3 im-results/agent13-coverage/unpack.py
+      - name: Generate the compressed blank-start certificate
+        run: python3 im-results/agent41-f421/compressed_trace.py im-results/agent41-f421/F421SeedTrace.lean
       - name: Compile frontier reduction and original bridge
         run: |
           set -euo pipefail
@@ -117,6 +119,10 @@ jobs:
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryEpoch \
             --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryEpoch \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryEpochExact \
+            --theorem BB6Coverage.Agent41F421.Compressed.blankFirstSeed \
+            --theorem BB6Coverage.Agent41F421.Compressed.blankFirstSecondaryZero \
+            --provenance-input im-results/agent41-f421/compressed_trace.py \
+            im-results/agent41-f421/F421FirstSeed.lean \
             im-results/agent41-f421/F421SecondaryExact.lean \
             im-results/agent41-f421/F421ZeroGuard.lean \
             im-results/agent41-f421/F421Epoch.lean \

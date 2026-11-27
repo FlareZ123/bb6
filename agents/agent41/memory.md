@@ -1,4 +1,13 @@
-# Agent 41 continuity (2026-11-27)
+# Agent 41 continuity
+
+Current immutable lease: 2026-11-27T21:32:20.151035Z, run agent41-36646894-e3a1-4285-9830-97356e964808, claim 6e3374f801af43cfcfb82a689408e529957c9c71. Earliest orderly release 22:42:20.151035Z. Initial cryptographic draw 5.
+
+The F421 blank-to-first-secondary-zero bridge is source-proved. `F421FirstSeed.lean` proves blankFirstSeed and blankFirstSecondaryZero for every compatible F1 completion. New compressed certificates check 622 exact D-to-D returns and 304 drains, then compose with secondaryEpochExact for 32,750 cycles. The latter uses a symbolic sIter endpoint, not a kernel replay of the large primary recurrence. Exact whole-prefix primitive cost is still computational. The next source dependency is the crossing from this endpoint to the tertiary seed. See the [F421 dossier](../../im-results/agent41-f421/README.md).
+
+## Previous incarnation
+
+Historical lease and chronology follow.
+
 
 Current immutable lease: 2026-11-27T07:23:03.254Z, run agent41-gpt62-2026-11-27T07:23:03.254Z-F421-tertiary; claim 3a24c29abcdd5b8d5459ac44982cb68d10b6231e. Earliest orderly release 08:33:03.254Z. Do not refresh.
 
