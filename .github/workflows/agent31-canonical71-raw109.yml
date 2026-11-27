@@ -50,6 +50,7 @@ on:
           - canonical46-ready-union
           - canonical46-ready-resume
           - canonical-extra-ready
+          - raw67-kid11-recovery
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -2593,3 +2594,111 @@ jobs:
           path: /tmp/a31-extra-ready/extra-delta/evidence/
           if-no-files-found: warn
           retention-days: 7
+
+  raw67_repair_prepare:
+    if: ${{ inputs.target == 'raw67-kid11-recovery' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reuse authenticated prior sources and core
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python im-results/agent2-raw63-shards/repair_raw67.py prepare --generated /tmp/raw67-generated --core /tmp/raw67-core
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw67-repair-generated
+          path: /tmp/raw67-generated/**
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw67-repair-core
+          path: /tmp/raw67-core/**
+          if-no-files-found: error
+
+  raw67_repair_shards:
+    needs: raw67_repair_prepare
+    if: ${{ inputs.target == 'raw67-kid11-recovery' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {shard: 0, artifact: 5}
+          - {shard: 1, artifact: 6}
+          - {shard: 2, artifact: 7}
+          - {shard: 3, artifact: 8}
+          - {shard: 4, artifact: 9}
+          - {shard: 5, artifact: 10}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw67-repair-generated
+          path: /tmp/raw67-generated
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw67-repair-core
+          path: /tmp/raw67-core
+      - name: Check independent exact subtrees
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent2-raw63-shards/repair_raw67.py shard --generated /tmp/raw67-generated --core /tmp/raw67-core --work /tmp/raw67-shard --shard "$SHARD" | tee /tmp/raw67-shard.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw67-shard.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw67-repair-shard-${{ matrix.artifact }}
+          path: /tmp/raw67-shard/**
+          if-no-files-found: error
+
+  raw67_repair_assemble:
+    needs: raw67_repair_shards
+    if: ${{ inputs.target == 'raw67-kid11-recovery' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw67-repair-generated
+          path: /tmp/raw67-generated
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw67-repair-shard-*
+          path: /tmp/raw67-inputs
+      - name: Compose checked original siblings and factored child
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent2-raw63-shards/repair_raw67.py assemble --generated /tmp/raw67-generated --inputs /tmp/raw67-inputs --merged /tmp/raw67-merged --work /tmp/raw67-final | tee /tmp/raw67-final.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw67-final.log
+          grep -F 'BB6.Agent10Raw67.literal_cover' /tmp/raw67-final.log
+          grep -F 'BB6.Agent10Raw67.exact_weighted_threshold' /tmp/raw67-final.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw67-prefix-parent-certified
+          path: /tmp/raw67-final/**
+          if-no-files-found: error
+          retention-days: 30
