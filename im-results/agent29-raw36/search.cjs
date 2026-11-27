@@ -22,7 +22,7 @@ function makeSearch(codes, opts={}) {
     for(;;){
       let z=halt,zz;do{zz=z;for(let j=0;j<N;j++)if(T[j]&z)z|=bit(j);if(z&one)return null}while(z!==zz);
       let changed=false;
-      for(const [dst,src,off] of rules){let v=T[dst],b=T[src];while(b){const m=b&-b;const k=wide?m.toString(2).length-1:31-Math.clz32(m);v|=T[off+k];b^=m}if(v!==T[dst]){T[dst]=v;change=true}}
+      for(const [dst,src,off] of rules){let v=T[dst],b=T[src];while(b){const m=b&-b;const k=wide?m.toString(2).length-1:31-Math.clz32(m);v|=T[off+k];b^=m}if(v!==T[dst]){T[dst]=v;changed=true}}
       if(!changed)return c.code;
     }
   }
