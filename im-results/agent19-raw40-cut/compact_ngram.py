@@ -23,18 +23,16 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0, str(ROOT.parent / 'agent32-raw59'))
 from emit_rungram import emit, witness
 
-def compact(table, widths, cap=1000000):
+def abstract(table, starts, pushf, method, cap=1000000):
     p = table.replace('_', '')
     assert len(p) == 36
     p = [p[i:i+3] for i in range(0, 36, 3)]
-    masks = [(1 << k)-1 for k in widths]
-    assert min(widths) >= 1
     push = [{}, {}]
     incoming = [defaultdict(set), defaultdict(set)]
     waiting = [defaultdict(list), defaultdict(list)]
-    for e in incoming:
-        e[0].add((0, 0))
-    states = {(0, 0, 0, 0)}
+    for i,e in enumerate(incoming):
+        e[starts[i]].add((0, starts[i]))
+    states = {(0, 0, *starts)}
     work = deque(states)
 
     def add(q, a, l, r):
@@ -53,9 +51,9 @@ def compact(table, widths, cap=1000000):
         m = p[2*q+a]
         w, d, n = int(m[0]), m[1], ord(m[2])-65
         if d == 'R':
-            add(n, bit, ((l << 1)|w)&masks[0], old)
+            add(n, bit, pushf[0](l,w), old)
         else:
-            add(n, bit, old, ((r << 1)|w)&masks[1])
+            add(n, bit, old, pushf[1](r,w))
 
     while work:
         state = work.popleft()
@@ -65,7 +63,7 @@ def compact(table, widths, cap=1000000):
             raise ValueError('abstraction reaches unassigned transition')
         w, d = int(m[0]), m[1]
         side, src, x = (0,l,r) if d == 'R' else (1,r,l)
-        dst = ((src<<1)|w)&masks[side]
+        dst = pushf[side](src,w)
         push[side][src,w] = dst
         edge = w, src
         if edge not in incoming[side][dst]:
@@ -84,7 +82,7 @@ def compact(table, widths, cap=1000000):
         # A summary actually occurring in a state has a predecessor edge.
         live = sorted(x for x, es in incoming[side].items() if es)
         index = {x:i for i,x in enumerate(live)}
-        assert index[0] == 0
+        assert index[starts[side]] == 0
         delta = [0] * (2*len(live))
         for (x,b), y in push[side].items():
             delta[2*index[x]+b] = index[y]
@@ -95,8 +93,51 @@ def compact(table, widths, cap=1000000):
     new_counts = [sum(map(len,x.values())) for x in ed]
     assert len(ss) == len(states) and new_counts == counts
     return dict(table=table.replace('_',''),dfa=dfa,states=len(states),
-                edges=sum(counts),method=['compact-ngram',*widths],
+                edges=sum(counts),method=method,
                 summary_counts=sizes,edge_counts=counts)
+
+def ngram(k):
+    assert k >= 1
+    mask = (1 << k)-1
+    return lambda s,b: ((s<<1)|b)&mask
+
+def rungram(params):
+    runs,c0,c1,m0,m1=params
+    C,M=[c0,c1],[m0,m1]
+    assert runs>=1 and min(C+M)>=1
+    def push(s,b):
+        if not s and b==0:
+            return ()
+        if s and s[0]==b:
+            n=s[1]+1
+            if n>=C[b]+M[b]:
+                n=C[b]
+            return (b,n,*s[2:])
+        return (b,1,*s)[:2*runs]
+    return push
+
+def laggram(params):
+    k,r,m0,m1=params
+    base=rungram([r,1,1,m0,m1])
+    mask=(1<<k)-1
+    def push(s,b):
+        word,tail=s
+        if k==0:
+            return (0,base(tail,b))
+        return (((word<<1)|b)&mask,base(tail,word>>(k-1)))
+    return push
+
+def compact(table, widths, cap=1000000):
+    return abstract(table,[0,0],[ngram(k) for k in widths],
+                    ['compact-ngram',*widths],cap)
+
+def compact_run(table,left,right,cap=1000000):
+    return abstract(table,[(),()],[rungram(left),rungram(right)],
+                    ['compact-run',left,right],cap)
+
+def compact_lag(table,left,right,cap=1000000):
+    return abstract(table,[(0,()),(0,())],[laggram(left),laggram(right)],
+                    ['compact-lag',left,right],cap)
 
 def lean(record, namespace):
     return ('import FastBiDFA\nset_option maxRecDepth 100000\n'
