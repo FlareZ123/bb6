@@ -1,12 +1,18 @@
-name: Agent10 Raw140 seven-machine growth proof
+name: Agent10 Raw140 growth proof
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: Independently checked growth family
+        type: choice
+        options: [seven, extra]
+        default: extra
 permissions:
   contents: read
 jobs:
   proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -15,17 +21,27 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile proof and exact coverage bridge
+      - name: Compile selected proof and exact coverage bridge
+        env:
+          TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          python tools/lean_compile_closure.py --workdir /tmp/raw140-seven --jobs 3 im-results/agent10-nov26-cryptids/Raw140SevenCover.lean 2>&1 | tee /tmp/raw140-seven.log
-          for i in $(seq 0 6); do
-            python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-seven.log "Raw140Orbit.V$i.never"
-          done
+          if [ "$TARGET" = extra ]; then
+            python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-extra --jobs 3 im-results/agent10-nov26-cryptids/Raw140ExtraCover.lean 2>&1 | tee /tmp/raw140-proof.log
+            for i in $(seq 0 14); do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Extra.X$i.cover"
+            done
+          else
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-seven --jobs 3 im-results/agent10-nov26-cryptids/Raw140SevenCover.lean 2>&1 | tee /tmp/raw140-proof.log
+            for i in $(seq 0 6); do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Orbit.V$i.never"
+            done
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw140-seven-axioms
-          path: /tmp/raw140-seven.log
+          name: raw140-${{ inputs.target }}-axioms
+          path: /tmp/raw140-proof.log
