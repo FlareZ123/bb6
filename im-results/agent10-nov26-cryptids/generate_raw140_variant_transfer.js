@@ -84,7 +84,7 @@ theorem erMany (M : Table) (ext : Extends M) (n : Nat) (X Y : List Sym) :
         some (boundary 4 true (S 1 :: S 1 :: S 3 :: S 3 :: X) (trip n ++ Y)) :=
       run_ext M ext _ _ _ (erTriplet X (trip n ++ Y))
     have h1 := ih (S 1 :: S 3 :: S 3 :: X)
-    simpa only [trip,bank,List.cons_append,List.append_assoc,
+    simpa only [trip,bank,List.cons_append,List.append_assoc,List.nil_append,
       show 45+45*n=45*(n+1) by omega] using join h0 h1
 `;
   for(let [id,a,f,j,k,prefix,cost] of variants){
