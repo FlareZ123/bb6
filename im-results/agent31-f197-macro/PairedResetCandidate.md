@@ -111,3 +111,29 @@ them are T, the source core has `6q+6+2t` tape bits while the output core has
 `6q+8+2t`.  Therefore every paired-AA rewrite increases left reset
 bit-length by **exactly 2**.  The already-derived P^n M descent also has
 exactly +2 bit growth; the three J-boundary rules have +3 or +5.
+
+
+## Complementary AT branch: carry-state reduction
+
+The apparent `AT` parser obstruction is smaller than it first looks.  After
+a maximal leading `P^n` is stripped, the paired parser reads an initial data
+letter and then packets `T c_i`.  If the first non-continuation packet is
+`AT` rather than `AA`, the already-understood scanner can still consume
+all preceding data packets.  Only the final data letter and `AT` remain.
+
+Thus there are exactly two terminal source forms:
+
+```
+A A T Y = P Y
+T A T Y.
+```
+
+The first is literally a carried P into the suffix; the second is one new
+finite terminal case.  Therefore the complementary branch should be modeled
+as a small **carry state** (P-carried suffix versus TAT terminal), not as a
+catalogue of all J/U/C marker outputs seen after a complete reset.
+
+This observation suggests the next proof architecture: reuse the parametric
+scanner for the prefix, add exact terminal lemmas for P-carried and TAT
+states, and recurse on the suffix transducer.  It also explains why attempts
+to assign one context-free replacement to the whole AT branch fail.
