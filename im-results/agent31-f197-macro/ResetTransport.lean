@@ -4,6 +4,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace F197
+open Q
 
 /-
 At a B boundary the accelerated sweep coordinate omits one guaranteed zero
