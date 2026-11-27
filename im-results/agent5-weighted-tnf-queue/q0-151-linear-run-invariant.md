@@ -1,0 +1,3 @@
+# Raw11 q0-151 linear holdout
+
+Exact partial table `1RB1LC_1RC---_0LA1RD_0RE1LD_1RA0RF_0RC0LB`. Blank seed after 4866 moves: C at the right edge, head-inclusive left prefix `011101000111`, empty right list. For arbitrary left suffix X, 26 assigned moves return to C and insert `0111` after the prefix. The checked symbolic certificate in `Raw11Q0Linear151.lean` proves this for every suffix, not just sampled ones. Iterating supplies arbitrary positive live prefixes for every compatible completion, hence never halts. Original-source Lean closure run 46030059759 compiled all 17 modules and the cover with [propext, Classical.choice, Quot.sound]; job failed only because this provenance note was missing. No parent q0-151 cover or global result yet.
