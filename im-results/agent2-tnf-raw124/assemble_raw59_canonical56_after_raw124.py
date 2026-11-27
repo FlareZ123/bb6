@@ -7,12 +7,14 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import zipfile
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE.parent / "agent31-shared-core"))
 
 import assemble_canonical68 as a68
 import assemble_canonical59_raw59_graft as raw59
+import assemble_raw124_canonical57 as raw124
 
 REPO = "FlareZ123/bb6"
 BASE_RUN = 45910336799
@@ -25,6 +27,102 @@ RAW124_PARENT_RUN = 45908591612
 RAW124_PARENT_ARTIFACT_ID = 15159377345
 RAW124_PARENT_ARTIFACT_SHA = "9ec5b5b86fe4f78d636fd9a37891cabdd0017c04c8fc62f74f4ef6022ffcfa15"
 NS = "BB6.Agent2Canonical56Raw59AfterRaw124"
+RAW124_DELTA_RUN = 45926694578
+RAW124_DELTA_ID = 15167645810
+RAW124_DELTA_SHA = "de6fb52e65ec6ce4ba06cfee40f74572d9f99444c10bc1493ea44cc86b34939a"
+RAW124_DELTA_REVISION = "7b009ba1127836b2e1d318e458632ea06bccbed0"
+
+
+def restore_raw124_delta(work, linked, base_item):
+    """Restore the exact previously accepted Raw124 edge, without recompilation.
+
+    The earlier overall run failed only in its subsequent Raw59 step. Its
+    independently uploaded, pinned delta is accepted. Reuse the old kernel
+    equality verdicts only for byte-identical pairs of objects.
+    """
+    run = a68.api_json(f"repos/{REPO}/actions/runs/{RAW124_DELTA_RUN}")
+    assert run["head_sha"] == RAW124_DELTA_REVISION
+    info = a68.api_json(f"repos/{REPO}/actions/artifacts/{RAW124_DELTA_ID}")
+    assert info["workflow_run"]["id"] == RAW124_DELTA_RUN
+    assert info["name"] == "canonical57-raw124-thin-delta" and not info["expired"]
+    assert info["digest"] == "sha256:" + RAW124_DELTA_SHA
+    archive = work / f"{RAW124_DELTA_ID}.zip"
+    with archive.open("wb") as stream:
+        subprocess.run(["gh", "api", f"repos/{REPO}/actions/artifacts/{RAW124_DELTA_ID}/zip"],
+                       stdout=stream, check=True)
+    assert a68.sha(archive) == RAW124_DELTA_SHA
+    delta = work / "raw124-delta"
+    delta.mkdir()
+    names = {"delta.json", "raw124-canonical58-membership.json",
+             "Raw124Canonical58Membership.lean", "Raw124Canonical58Membership.olean"}
+    with zipfile.ZipFile(archive) as z:
+        entries = [i for i in z.infolist() if not i.is_dir()]
+        assert len(entries) == len(names)
+        assert {Path(i.filename).name for i in entries} == names
+        for i in entries:
+            (delta / Path(i.filename).name).write_bytes(z.read(i))
+    archive.unlink()
+    manifest = json.loads((delta / "delta.json").read_text())
+    report_path = delta / "raw124-canonical58-membership.json"
+    report = json.loads(report_path.read_text())
+    root = delta / "Raw124Canonical58Membership.olean"
+    source = delta / "Raw124Canonical58Membership.lean"
+    assert manifest["status"] == "source-accepted Canonical58-to-57 Raw124 thin delta"
+    assert manifest["source_revision"] == RAW124_DELTA_REVISION
+    assert manifest["base_run_id"] == BASE_RUN and manifest["base_artifact_id"] == base_item["id"]
+    assert manifest["base_artifact_sha256"] == BASE_ARTIFACT_SHA
+    assert manifest["base_source_revision"] == BASE_SOURCE_REVISION
+    assert manifest["base_root_sha256"] == a68.sha(linked / "Canonical58Raw113Graft.olean")
+    assert manifest["parent_run_id"] == RAW124_PARENT_RUN
+    assert manifest["parent_artifact_id"] == RAW124_PARENT_ARTIFACT_ID
+    assert manifest["parent_artifact_sha256"] == RAW124_PARENT_ARTIFACT_SHA
+    assert manifest["remaining_residual_count"] == 57
+    assert manifest["report_sha256"] == a68.sha(report_path)
+    assert manifest["graft_root_sha256"] == report["graft_olean_sha256"] == a68.sha(root)
+    assert manifest["graft_source_sha256"] == report["graft_source_sha256"] == a68.sha(source)
+    assert manifest["axioms"] == report["axioms"]
+    assert all(set(v) <= {"propext", "Classical.choice", "Quot.sound"}
+               for v in report["axioms"].values())
+    required = ("p124_count64", "p124_count58", "p124_root", "p124_cover", "count57",
+                "sound_integrated", "exact_at_target", "exact_at_champion_score")
+    assert all("BB6.Agent2Raw124Canonical58Membership." + n in report["axioms"] for n in required)
+
+    parent_work = work.parent / "raw124-parent-artifact"
+    parent_work.mkdir(exist_ok=False)
+    _, dirs, parent_manifest_path, parent_manifest = raw124.verify_raw124_parent(
+        RAW124_PARENT_RUN, parent_work)
+    assert a68.sha(parent_manifest_path) == report["raw124_parent_manifest_sha256"]
+    assert parent_manifest["objects"]["Raw124ParentComplete.olean"] == report["raw124_parent_olean_sha256"]
+    audit = report["parent_link_audit"]
+    collisions = {x["module"]: x for x in audit["collisions"]}
+    assert len(collisions) == len(audit["collisions"])
+    observed = set()
+    modules = set()
+    for obj in audit["objects"]:
+        name, digest = obj["module"], obj["sha256"]
+        assert name == Path(name).name and name.endswith(".olean") and name not in modules
+        modules.add(name)
+        hits = [d / name for d in dirs if (d / name).is_file()]
+        assert len(hits) == 1 and a68.sha(hits[0]) == digest, name
+        dest = linked / name
+        if dest.is_file():
+            chosen = a68.sha(dest)
+            if chosen != digest:
+                prior = collisions[name]
+                assert prior["equal"] and prior["chosen"] == chosen and prior["other"] == digest
+                observed.add(name)
+        else:
+            assert name not in collisions
+            shutil.copy2(hits[0], dest)
+    assert observed == set(collisions)
+    assert "Raw124ParentComplete.olean" in modules
+    assert a68.sha(linked / "Raw124ParentComplete.olean") == report["raw124_parent_olean_sha256"]
+    shutil.rmtree(parent_work)
+    shutil.copy2(root, linked / root.name)
+    result = work / report_path.name
+    shutil.copy2(report_path, result)
+    print(f"Restored accepted Raw124 delta {RAW124_DELTA_ID} ({len(modules)} parent objects)", flush=True)
+    return result
 
 
 def verify_base(work: Path, run_id: int, resume: bool = False):
@@ -66,12 +164,7 @@ def verify_base(work: Path, run_id: int, resume: bool = False):
         assert graft.is_file() and reports57[0].is_file()
     if not graft.exists():
         assert not reports57, [str(p) for p in reports57]
-        subprocess.run(
-            [sys.executable, str(HERE / "assemble_raw124_canonical57.py"),
-             "--work", str(work), "--raw124-run-id", str(RAW124_PARENT_RUN)],
-            check=True,
-        )
-        report_path = work / "raw124-canonical58-membership.json"
+        report_path = restore_raw124_delta(work, linked, item)
     else:
         # a68.download extracts JSON exclusively under metadata/.
         assert len(reports57) == 1, [str(p) for p in reports57]
@@ -156,7 +249,7 @@ def main():
         manifest = json.loads((work / "raw124-delta/delta.json").read_text())
         assert manifest["graft_root_sha256"] == base_report["graft_olean_sha256"]
         assert manifest["report_sha256"] == a68.sha(base_report_path)
-    else:
+    elif not (work / "raw124-delta").is_dir():
         export_raw124_delta(work, linked, base_artifact, base_report_path, base_report)
     if args.prepare_only:
         return
