@@ -45,7 +45,7 @@ jobs:
           python3 - <<'PY'
           import pathlib,re
           s=pathlib.Path('SpaceNeedlePotentialSource.source.log').read_text()
-          expected=['valuationThreeSource','valuationFourSource','valuationFiveSource']
+          expected=['allValuationsSource','valuationThreeSource','valuationFourSource','valuationFiveSource']
           for name in expected:
               hit=re.search(r"'BB6\.Agent20NeedlePotentialSource\."+name+r"' depends on axioms: \[([^\]]*)\]",s)
               assert hit, name
