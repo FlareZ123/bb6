@@ -31,7 +31,45 @@ theorem remainingTables_cover_from_56 (B : Nat)
   remainingTables_cover_from_filter B acceptedE0Eleven hParents
     (by simpa [normalizedAfterEleven] using hNorm)
 
+/-- Exact normalized Raw139 *parent* theorem, not just its 67-row residual
+    partition: the original 43 accepted-spine siblings, two continuation
+    bridges and terminal champion p7 remain explicit premises. All ten
+    already source-certified E0 parent cylinders and the 57 other E0 rows
+    appear without duplication, with no global-roster assumption. -/
+theorem raw139_p0_cover_from_57 (B : Nat)
+    (hb : 59 ≤ B)
+    (ha : ∀ r ∈ acceptedRows, Cover (WeightedBound B) (child r.1 r.2))
+    (hParents : ∀ q ∈ acceptedE0Ten, Cover (WeightedBound B) q)
+    (hNorm : ∀ p ∈ normalizedAfterTen, Cover (WeightedBound B) p)
+    (hrc : Cover (WeightedBound B) (leaf rowRC) →
+      Cover (WeightedBound B) (child rowRC.1 rowRC.2))
+    (hre : Cover (WeightedBound B) (leaf rowRE) →
+      Cover (WeightedBound B) (child rowRE.1 rowRE.2))
+    (hf : Cover (WeightedBound B) p7) :
+    Cover (WeightedBound B) p0 :=
+  BB6.Agent14Raw139Core.raw139_cover B hb ha
+    (remainingTables_cover_from_57 B hParents hNorm) hrc hre hf
+
+/-- Eleven-parent specialization when ZeroLF is source-accepted: exactly
+    56 normalized raw139 residual table Covers remain, retaining all other
+    original source hypotheses and the first-query delay semantics. -/
+theorem raw139_p0_cover_from_56 (B : Nat)
+    (hb : 59 ≤ B)
+    (ha : ∀ r ∈ acceptedRows, Cover (WeightedBound B) (child r.1 r.2))
+    (hParents : ∀ q ∈ acceptedE0Eleven, Cover (WeightedBound B) q)
+    (hNorm : ∀ p ∈ normalizedAfterEleven, Cover (WeightedBound B) p)
+    (hrc : Cover (WeightedBound B) (leaf rowRC) →
+      Cover (WeightedBound B) (child rowRC.1 rowRC.2))
+    (hre : Cover (WeightedBound B) (leaf rowRE) →
+      Cover (WeightedBound B) (child rowRE.1 rowRE.2))
+    (hf : Cover (WeightedBound B) p7) :
+    Cover (WeightedBound B) p0 :=
+  BB6.Agent14Raw139Core.raw139_cover B hb ha
+    (remainingTables_cover_from_56 B hParents hNorm) hrc hre hf
+
 #print axioms remainingTables_cover_from_57
 #print axioms remainingTables_cover_from_56
+#print axioms raw139_p0_cover_from_57
+#print axioms raw139_p0_cover_from_56
 
 end BB6.Agent14Raw139NormalizedE0TenAcceptedConditional
