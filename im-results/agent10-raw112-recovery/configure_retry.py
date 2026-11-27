@@ -27,7 +27,10 @@ RETRY_GROUPS = {
     "r04a": [f"Raw112Kid04_{i:02d}" for i in range(0, 8)],
     "r04b": [f"Raw112Kid04_{i:02d}" for i in range(8, 16)],
     "r04c": [f"Raw112Kid04_{i:02d}" for i in range(16, 24)],
-    "r05a0": [f"Raw112Kid05_{i:02d}" for i in range(0, 4)],
+    "r05a00": ["Raw112Kid05_00"],
+    "r05a01": ["Raw112Kid05_01"],
+    "r05a02": ["Raw112Kid05_02"],
+    "r05a03": ["Raw112Kid05_03"],
     "r05a1": [f"Raw112Kid05_{i:02d}" for i in range(4, 8)],
 }
 
