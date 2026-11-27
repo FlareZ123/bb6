@@ -22,6 +22,10 @@ def main(mv):
     late={x["table"]:x for x in data["last"]}
     manual={}
     extra_imports=[]
+    if mv=="0LE":
+        ns="BB6.Agent46Raw13Coupled6Drift0LE"
+        extra_imports=["Raw13Coupled6Drift0LE"]
+        manual["1RB1LD1RC---1LA1RE1LE0LA1RF0LE1RA0RF"]=f".closed (.proven {ns}.p {ns}.never)"
     if mv=="1LB":
         ns_late="BB6.Agent46Raw13Coupled6Late1LB"
         ns_nested="BB6.Agent46Raw13Coupled6Nested1LB"
