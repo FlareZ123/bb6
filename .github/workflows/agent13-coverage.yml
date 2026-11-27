@@ -654,7 +654,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent17-raw10-box28
           python tools/lean_compile_closure.py --workdir /tmp/a17-box28-hard --jobs 3 "$D/Box28HardSource.lean" 2>&1 | tee /tmp/a17-box28-hard.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a17-box28-hard.log BB6.Agent17.Box28HardSource.counter_compatible_never
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a17-box28-hard.log BB6.Agent17.Box28HardSource.counter_compatible_never BB6.Agent17.Box28HardSource.sweep_compatible_never
       - name: Check Box15 exact delay graph and finite attainment witness
         if: inputs.target == 'weighted-tnf-raw10-box15-delay'
         run: |
