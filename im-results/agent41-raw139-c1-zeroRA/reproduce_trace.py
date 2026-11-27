@@ -77,6 +77,8 @@ def main():
             (work/(name+'.lean')).write_text(src,encoding='utf-8')
         batches.append(names); previous=names
     shutil.copyfile(HERE/'Result78.lean',work/'Result78.lean')
+    if '--sources-only' in sys.argv:
+        return
     env={**os.environ,'LEAN_PATH':str(work)}
     def compile(name):
         subprocess.run(['lean','-j','1','-o',name+'.olean',name+'.lean'],cwd=work,env=env,check=True)
