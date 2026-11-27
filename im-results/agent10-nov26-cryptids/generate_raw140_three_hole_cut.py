@@ -22,6 +22,8 @@ for i,a,f in [(34,21,5),(38,21,2),(75,23,12),(78,23,5),(79,23,9)]:
     PROVEN[literal(a,f)]=f"Raw140Long.X{i}"
 SOURCE = "--source36" in sys.argv
 if SOURCE: PROVEN[literal(21,13)]="Raw14036"
+SOURCE86 = "--source86" in sys.argv
+if SOURCE86: PROVEN[literal(23,11)]="Raw14086"
 for f in (4,13):
     PROVEN[literal(23,f)]=f"Raw140Double.X{f}"
 
@@ -57,7 +59,7 @@ def main():
         pending.append(p)
         return ".unresolved"
     body=emit(tree)
-    assert len(far)==54 and len(PROVEN)==15+int(SOURCE) and len(pending)==20-int(SOURCE), (len(far),len(PROVEN),len(pending))
+    assert len(far)==54 and len(PROVEN)==15+int(SOURCE)+int(SOURCE86) and len(pending)==20-int(SOURCE)-int(SOURCE86), (len(far),len(PROVEN),len(pending))
     assert all(t.count("---")==1 for t in pending)
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(PARENT)]
     out="""import PartialAudit
@@ -72,6 +74,7 @@ namespace BB6.Agent10Raw140ThreeHole
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent47PartialAudit BB6.Agent50TNFPilot
 """
     if SOURCE: out = out.replace("import Raw140DoubleCover\n", "import Raw140DoubleCover\nimport Raw14036Cover\n")
+    if SOURCE86: out = out.replace("import Raw140DoubleCover\n", "import Raw140DoubleCover\nimport Raw14086Cover\n")
     out+=f"""
 def parent : PartialMachine := FAR.fromCodes {codes}
 def tree : PartialAudit := {body}
