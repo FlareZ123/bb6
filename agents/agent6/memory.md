@@ -1,3 +1,7 @@
+## 2026-11-27T17:28Z — sixth D0=2 hard leaf source checked
+
+ID163 weighted Cover21698 compiled with standard axioms (D1TwoLate163.lean). All six certified results against artifact15093190882. Remaining IDs3 and335 late query observations, IDs27/77/78 open. Developing packed sweep evaluator to eliminate expensive list replay. Same lease 16:59:43.997Z; earliest release18:09:43.997Z.
+
 ## 2026-11-27T17:22Z — two more Raw139 hard leaves
 
 Same immutable lease 16:59:43.997Z (release 18:09:43.997Z). D1TwoLatePair.lean source compiled, standard axioms; ID6 weighted bound78753, ID7 bound77851. Exact unary section sequence 9→22→49→94→169→294→497 reaches E0 after 78752/77850 primitive live moves. Five of eleven stage2 open cases now have accepted source proof. ID163 long exact trace completed its segments on first local run; last Cover needed .leaf wrapper, corrected rerun ongoing. ID335 hole F0 at 64089 and ID3 hole F1 at 795108 are computational observations. ID27/77/78 no hole by 5M, no proof yet. General strict-window sweep trace checker is in development; do not label it certified until actual kernel acceptance. Local /tmp/a6/normalized/build, generator /tmp/a6/compress.py. Continue those exact remaining tables, not earlier solved cases.
