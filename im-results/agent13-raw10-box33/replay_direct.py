@@ -74,10 +74,22 @@ def run_direct(args):
     Path('rlestart-1.txt').write_text(''.join(' '.join(map(str,t))+'\n' for t in opens))
     call(work/'rle_scan',-1)
     known,source={(14,17):(HARD_D14V17,'Box33D14Source'),(14,18):(HARD_D14V18,'Box33D14V18Source')}.get((d,v),({},None))
+    unresolved=[]
     for l in open('rlehard-1.txt'):
         t=tuple(map(int,l.split()))
-        assert t in known,(t,'unresolved exact leaf')
-        late[t]=('known',known[t])
+        if t not in known:
+            unresolved.append(t)
+        else:
+            late[t]=('known',known[t])
+    if unresolved:
+        out.mkdir(parents=True,exist_ok=True)
+        (out/'UNACCEPTED-unresolved.json').write_text(json.dumps({
+            'd0':d,'second':v,'proposed_bound':B,
+            'remaining':unresolved},indent=2)+'\n')
+        print('unresolved leaves:',len(unresolved),flush=True)
+        for t in unresolved[:100]:
+            print('UNACCEPTED',list(t),flush=True)
+        raise RuntimeError('incomplete discovery; no weighted bound certified')
     stack=[]
     for l in open('rle-1.txt'):
         a=list(map(int,l.split()));assert len(a)==21;stack.append([a[:12],a[12:16],a[16:20]])
