@@ -277,3 +277,7 @@ Lean 4.36.0-rc2 was reconstructed and actually run locally. Two independent kern
 
 ### Same invocation: finite-word affine transfer
 Added locally compiled PeriodicMacroTransfer.lean: source-independent exact half-rank signed pair/F macro representation 4^j*u'=u+r+c, r'=r+3j+a; finite Walk transfer theorem M*U=u+A*r+B, R=r+T by induction; for arbitrary repeated fixed word with M>=2, theorem periodic_word_is_affine yields exact integer-linear first-coordinate orbit. All output axiom profiles [propext, Classical.choice, Quot.sound]. Imports the previously locally compiled AffineOrbitRigidity.lean. Still need original SignedDrift pair/F bridge and primitive rotation list for full no-periodic signed theorem. No blank-root decision.
+
+
+### General integer denominator simplification
+Improved and locally recompiled PeriodicGridPacking.lean: the U=(0,1/12) union (1/4,1/3) packing inequality holds for EVERY positive denominator K, including even K, not just odd reduced denominators. The proof splits all twelve classes modulo12 and retains the injective integer rank. The new no_periodic_rank_budget_direct derives contradiction from a list of t distinct Good K rotations and K<=6t (t>0), with no gcd, reduced fraction, or oddness assumption. Simplified PeriodicRunNoGo.md accordingly; proof no longer needs prove q|K or oddness. Only primitive-word rotation list/source-bridge remain. Lean 4.36.0-rc2 standard axioms, no sorryAx.

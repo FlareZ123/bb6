@@ -1,6 +1,6 @@
 # All eventually periodic F-run schedules are impossible in the #429 signed inverse model
 
-**Status: complete paper-level argument, not yet independently peer-reviewed or fully Lean kernel-certified.** The independent arithmetic pieces [PeriodicGridPacking.lean](PeriodicGridPacking.lean) and [AffineOrbitRigidity.lean](AffineOrbitRigidity.lean) compile in Lean 4.36.0-rc2 with standard axioms only. The missing formal step is the **original-model periodic-word and rotation-to-grid connection**; the theorem for authentic signed paths is therefore not yet kernel-certified. This is a universal structural no-go for *hypothetical infinite paths* in the established signed compressed inverse model. It is **not** a decision of #429's authentic blank orbit or BB(6). It strictly strengthens the older [constant-run obstruction](ConstantRunObstruction.md): the run lengths may follow *any* finite periodic pattern, rather than one fixed value.
+**Status: complete paper-level argument, not yet independently peer-reviewed or fully Lean kernel-certified.** The independent arithmetic pieces [PeriodicGridPacking.lean](PeriodicGridPacking.lean) (now for **all** denominators) and [AffineOrbitRigidity.lean](AffineOrbitRigidity.lean) compile in Lean 4.36.0-rc2 with standard axioms only. The missing formal step is the **original-model periodic-word and rotation-to-grid connection**; the theorem for authentic signed paths is therefore not yet kernel-certified. This is a universal structural no-go for *hypothetical infinite paths* in the established signed compressed inverse model. It is **not** a decision of #429's authentic blank orbit or BB(6). It strictly strengthens the older [constant-run obstruction](ConstantRunObstruction.md): the run lengths may follow *any* finite periodic pattern, rather than one fixed value.
 
 ## Statement and exact model
 
@@ -39,21 +39,22 @@ Its E/S type fixes the parity of \(u_n\) and the residue of \(D_n\bmod8\) for ev
 \]
 Set \(x_i=v_i/K\). Then \(x_{i+1}=(x_i+1)/4^{j_i}\). This recurrence depends on \(j_i\), not on the pair type. Its one-primitive-\(j\)-period map is an affine contraction of ratio \(4^{-t}\), and its square fixes \(x_i\) when the types toggle. A contraction whose square fixes a point already fixes that point; hence \(x_i\) is periodic after **one** primitive \(j\)-period.
 
-**3. Pure base-4 digits and denominator packing.** The slope recurrence constructs a purely periodic radix-4 expansion of \(x_0\), using one digit 1 followed by \(j_i-1\) zeros for each gap. Its minimal digit period is precisely \(t\): a shorter digit period would induce a shorter cyclic period in the gaps between successive digits 1, contradicting the primitive \(j\)-period. There is at least one zero (since \(t>a\)) and at least one one.
+**3. Pure base-4 digits and direct integer-grid packing.** The slope recurrence constructs a purely periodic radix-4 expansion of \(x_0=v_0/K\), using one digit 1 followed by \(j_i-1\) zeros for each gap. Its minimal digit period is precisely \(t\): a shorter digit period would induce a shorter cyclic period in the gaps between successive digits 1, contradicting the primitive \(j\)-period. There is at least one zero (since \(t>a\)) and at least one one.
 
-Reduce \(x_0=p/q\). The slope representation \(x_0=v_0/K\) gives **\(q\mid K\)**. Periodicity of its base-4 digits gives \(q\mid4^t-1\), so \(q\) is odd. Its \(t\) distinct cyclic digit rotations are distinct fractions \(r/q\), all with digits 0 or 1. Every rotation lies in
+**No reduction to lowest terms is necessary.** Multiplying \(x_0=v_0/K\) successively by 4 and taking fractional parts gives its \(t\) distinct cyclic digit rotations. Each is a fraction \(r/K\) with an integer \(r\in\{1,\ldots,K-1\}\). Every rotation lies in
 \[
 U=(0,1/12)\ \cup\ (1/4,1/3).
 \]
-Indeed a first digit zero bounds the value strictly between 0 and \(0.0\overline1_4=1/12\); a first digit one bounds it strictly between \(1/4\) and \(0.\overline1_4=1/3\), using the presence of both digits.
+A first digit zero gives a number strictly between 0 and \(0.0\overline1_4=1/12\); a first digit one gives a number strictly between \(1/4\) and \(0.\overline1_4=1/3\), because the word contains both digits.
 
-**Odd-grid lemma.** For odd \(q>0\), the number of \(r\in\{1,\ldots,q-1\}\) with \(r/q\in U\) is at most \(\lfloor(q-1)/6\rfloor\). To check exactly, write \(q=12h+\rho\) for \(\rho=1,3,5,7,9,11\). The counts of gridpoints in the first/second interval are respectively
+**General grid-packing lemma (kernel checked).** For **every positive integer** \(K\), not merely odd \(K\), the number of \(r\in\{1,\ldots,K-1\}\) with \(r/K\in U\) is at most \(\lfloor(K-1)/6\rfloor\). Indeed the exact count is
 \[
-(h,h),\quad(h,h),\quad(h,h),\quad(h,h+1),\quad(h,h),\quad(h,h+1).
+N(K)=\lfloor(K-1)/12\rfloor+\lfloor(K-1)/3\rfloor-\lfloor K/4\rfloor
+\le\lfloor(K-1)/6\rfloor,
 \]
-Thus \(t\le\lfloor(q-1)/6\rfloor\), giving the universal lower bound
+where the final inequality holds in all twelve classes modulo 12. The Lean theorem PeriodicGrid.grid_packing_all directly proves the sharp upper bound through an injective integer-rank map without using fractions. Therefore
 \[
-\boxed{q\ge6t+1}.
+t\le\lfloor(K-1)/6\rfloor,\qquad\boxed{K\ge6t+1}.
 \]
 
 **4. Rank budget contradiction.** One pair with \(m_i=2(j_i-1)\) subsequent F blocks contributes rank increment \(6j_i+4\) if E, or \(6j_i+8\) if S.
@@ -67,7 +68,7 @@ If the types require two primitive periods, the second copy interchanges every E
 \[
 C=12t+12a,\qquad K=3(t+a)\le6t.
 \]
-In both cases \(K\le6t\), contradicting \(q\mid K\) and \(q\ge6t+1\). **QED.**
+In both cases \(K\le6t\), directly contradicting the integer-grid lower bound \(K\ge6t+1\). **QED.**
 
 ## Scope, reproducibility and missing quantifier
 
