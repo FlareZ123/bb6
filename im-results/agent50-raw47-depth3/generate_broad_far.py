@@ -1,6 +1,7 @@
 """Source-checked broad FAR-only parent proofs, fixed 674 candidates, 8 shards."""
 from pathlib import Path
 import base64,lzma,hashlib,json,subprocess,sys,tempfile
+from shard_prefix import node_count, write_sharded
 here=Path(__file__).resolve().parent
 out=Path(sys.argv[1]).resolve()
 out.mkdir(parents=True,exist_ok=True)
@@ -9,8 +10,10 @@ assert 0<=shard<8
 mask=base64.b64decode((here/'broad-far-parents.b64').read_text())
 assert len(mask)==1212 and set(mask)=={0,1} and sum(mask)==674
 ids=[i for i,v in enumerate(mask) if v][shard::8]
-if len(sys.argv)>3:
-    offset,size=map(int,sys.argv[3:5])
+split_large='--split-large' in sys.argv
+args=[a for a in sys.argv[3:] if a!='--split-large']
+if args:
+    offset,size=map(int,args)
     assert 0<=offset<len(ids) and 1<=size<=len(ids)-offset
     ids=ids[offset:offset+size]
 raw=(here/'raw47-depth3.open').read_bytes()
@@ -105,7 +108,10 @@ theorem bound (m : Machine) (hm : compatible p m) : WeightedBound 10006 m :=
 theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m :=\n  quotientSafe root bound m hm\n#print axioms all_quotient
 end BB6.Agent50.Raw47D3FAR{i}
 '''
-    (out/f'Raw47D3FAR{i}.lean').write_text(source)
+    if split_large and node_count(trees[i])>1500 and trees[i][0]=='split':
+        write_sharded(out,i,trees[i],source,emit)
+    else:
+        (out/f'Raw47D3FAR{i}.lean').write_text(source)
 
 (out/'ids.txt').write_text('\n'.join(map(str,ids))+'\n')
 print(f'Shard {shard}: {len(ids)} complete parent certificates, {len(leaves)} FAR leaves.')
