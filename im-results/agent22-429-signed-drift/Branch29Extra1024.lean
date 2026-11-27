@@ -22,7 +22,7 @@ namespace BB429Branch29Extra1024
 set_option maxRecDepth 65536
 set_option maxHeartbeats 0
 
-private def cutResidues : List Nat := [15,47,79,191,255,383,447,639]
+def cutResidues : List Nat := [15,47,79,191,255,383,447,639]
 private def cutTargets : List BB429.State :=
   cutResidues.map (fun q => (32*q+29,64*q+55))
 
