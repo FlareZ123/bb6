@@ -1,8 +1,8 @@
 import Raw140DoubleCore
 namespace Raw140Double
 open BB6BlockFAR Raw140Orbit Raw140Extra
-set_option maxRecDepth 100000
-set_option maxHeartbeats 0
+set_option maxRecDepth 4096
+set_option maxHeartbeats 1000000
 
 def orbitCfg (m n : Nat) (s : Tail) : Prim :=
   boundary 1 true (U 5 m) (word (trips n) ++ tailWord s)
