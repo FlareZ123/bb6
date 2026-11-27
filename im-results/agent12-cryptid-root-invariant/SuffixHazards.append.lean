@@ -36,12 +36,12 @@ theorem a12EL_hazard111 (L : List (ℕ × ℕ)) :
       (step target c).isNone := by
   have h : ReachesPlus target
       (cfg_EL_n_n ((0,0)::L) [(1,0),(1,0),(1,0)])
-      (tok_CR [1,1,1,0] [] (2::L.map Prod.fst)) := by
+      (tok_CR [1,1,1,1,0] [] (2::L.map Prod.fst)) := by
     unfold cfg_EL_n_n tok_CR
     rw [encRight_d0_s0, encRight_eq_nat L]
     simp only [encLeft_d1_s0, encLeft_nil]
     texecute 65
-  obtain ⟨c,hc,hh⟩ := tok_CR_add2_halts [1,1,1,0] [] 0 (L.map Prod.fst)
+  obtain ⟨c,hc,hh⟩ := tok_CR_add2_halts [1,1,1,1,0] [] 0 (L.map Prod.fst)
   exact ⟨c,ReachesPlus.trans h hc,hh⟩
 
 /-- Two zeros of left framing suffice; the remaining tail is arbitrary. -/
@@ -54,7 +54,7 @@ theorem a12EL_hazard1011 (L : List (ℕ × ℕ)) :
     unfold cfg_EL_n_n cfg_CR_n_n
     simp only [encRight_d0_s0, encLeft_d0_s0, encLeft_d1_s0, encLeft_nil]
     rw [encRight_succ 1 0 L, encRight_d1_s0]
-    execute 113
+    execute 113 <;> rfl
   obtain ⟨c,hc,hh⟩ := tok_CR_add2_halts [] [(12,0)] 0 (L.map Prod.fst)
   have hc' : ReachesPlus target (cfg_CR_n_n ((2,0)::L) [(12,0)]) c := by
     simpa only [tok_CR, cfg_CR_n_n, encTokens_nil, encRight_eq_nat, List.map_cons, Prod.fst] using hc
