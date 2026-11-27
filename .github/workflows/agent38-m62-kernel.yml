@@ -1,0 +1,36 @@
+name: Agent38 Raw43 M62 regular zipper theorem (Lean)
+run-name: "Agent38 M62 source check: ${{ inputs.target }}"
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Finite exact section prelude or complete infinite invariant"
+        type: choice
+        options: [core, full]
+        default: core
+
+permissions:
+  contents: read
+
+jobs:
+  m62-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct exact source and compile M62 theorem
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          TARGET="im-results/agent38-raw43-pair/M62Core.lean"
+          if [[ "${{ inputs.target }}" == "full" ]]; then
+            TARGET="im-results/agent38-raw43-pair/M62Proof.lean"
+          fi
+          python tools/lean_compile_closure.py --workdir /tmp/agent38-m62 --jobs 4 "$TARGET" 2>&1 | tee /tmp/agent38-m62.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent38-m62.log
