@@ -54,7 +54,7 @@ theorem a12EL_hazard1011 (L : List (ℕ × ℕ)) :
     unfold cfg_EL_n_n cfg_CR_n_n
     simp only [encRight_d0_s0, encLeft_d0_s0, encLeft_d1_s0, encLeft_nil]
     rw [encRight_succ 1 0 L, encRight_d1_s0]
-    rw [show encLeft [(12,0)] = (1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> default) by
+    rw [show encLeft [(12,0)] = ((1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (1 : Fin 2) >> (default : ListBlank (Fin 2))) by
       rw [encLeft_mod1 12 0 [], Nat.mod_one 0, encLeft_run_s0 12 []]
       rfl]
     execute 113
