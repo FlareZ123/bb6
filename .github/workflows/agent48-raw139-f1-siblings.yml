@@ -88,6 +88,19 @@ jobs:
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
 
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() && (inputs.sibling == 'OneLBC1ZeroLC' || inputs.sibling == 'OneLBC1OneLC') }}
+        with:
+          name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-incomplete
+          include-hidden-files: true
+          if-no-files-found: ignore
+          path: |
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/partition.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/spec-compact.json
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/imports/*.lean
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
+            .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/log
+
   a6-ingestion:
     if: ${{ inputs.kind == 'a6' }}
     runs-on: ubuntu-latest

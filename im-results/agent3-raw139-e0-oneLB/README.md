@@ -1,13 +1,13 @@
 # Raw139 E0=1LB: exact C1 subcovers
 
-The normalized depth-two E0=1LB parent is `[7,24,11,24,14,24,24,16,6,11,24,24]` (ordinary transition code (4q+2w+r), 24 unknown). Its first unknown slot is C1 at primitive time 9. The full weighted Cover is **not yet proved**. The C1=0LC child is accepted in original-source Lean; C1=1LC is computationally complete and its source gate is in progress. Neither constitutes a global roster cut.
+The normalized depth-two E0=1LB parent is `[7,24,11,24,14,24,24,16,6,11,24,24]` (ordinary transition code (4q+2w+r), 24 unknown). Its first unknown slot is C1 at primitive time 9. The full weighted Cover is **not yet proved**. The C1=0LC child is accepted in original-source Lean; C1=1LC is computationally complete; its first source gate was interrupted and the long replay is now chunked. Neither constitutes a global roster cut.
 
 ## Established child covers and open obligations
 
 | C1 code | Exact child table | Bound | Status |
 |---|---|---:|---|
 | 8 (0LC) | [7,24,11,24,14,8,24,16,6,11,24,24] | 574 | Original-source Lean accepted, [run 45934344615](https://github.com/FlareZ123/bb6/actions/runs/45934344615), [artifact 15169732599](https://github.com/FlareZ123/bb6/actions/runs/45934344615/artifacts/15169732599), pinned source 227a5454ea2bc0c3ce765c0ca7fc6cb1c43e7d98 |
-| 10 (1LC) | [7,24,11,24,14,10,24,16,6,11,24,24] | 61185 | Computational discovery complete; source [run 45934601426](https://github.com/FlareZ123/bb6/actions/runs/45934601426) in progress, pinned source 7467766e7062b6e44e7de95d20e5fcf10c4f31ff |
+| 10 (1LC) | [7,24,11,24,14,10,24,16,6,11,24,24] | 61185 | Computational discovery complete; source [run 45934601426](https://github.com/FlareZ123/bb6/actions/runs/45934601426) interrupted by runner shutdown, no parent theorem, pinned source 7467766e7062b6e44e7de95d20e5fcf10c4f31ff |
 
 Accepted theorem for code 8: `BB6.Agent3E0OneLBC1ZeroLC.weighted : Cover (WeightedBound 574) parent`. Its checker uses the original FastThreeHoleAudit and BlockFAR2/BlockFAR and the standard-axiom gate. This is an exact child cylinder, not an entire parent. The intended code-10 theorem is `BB6.Agent3E0OneLBC1OneLC.weighted : Cover (WeightedBound 61185) parent`.
 
@@ -28,7 +28,7 @@ The other 16 choices remain to be closed. The original C1 halt alternative must 
 
 Both children first read D0 at time 12. The 450-step full-history replay checks translated half-tape equality and FAR fixed-point saturation; the leaf count is exactly (1+23s) for (s) ordinary split nodes. Halt alternatives at splits are separately covered by the weighted source checker. A final-hole cylinder is exhausted by possible halt there or a total ordinary-transition table, which cannot halt.
 
-The code-8 late table `[7,24,11,5,14,8,21,16,6,11,1,15]` reaches its final hole A1 at 568. Code-10's hardest late table `[7,3,11,21,14,10,1,16,6,11,24,13]` reaches F0 at 61179, head +27; all other late queries are at most 2727. Adding one halt step and maximum five incoming blank-delay steps gives the stated weighted bounds. The latter long replay may require a chunked proof if direct kernel evaluation is too expensive.
+The code-8 late table `[7,24,11,5,14,8,21,16,6,11,1,15]` reaches its final hole A1 at 568. Code-10's hardest late table `[7,3,11,21,14,10,1,16,6,11,24,13]` reaches F0 at 61179, head +27; all other late queries are at most 2727. Adding one halt step and maximum five incoming blank-delay steps gives the stated weighted bounds. The first source run compiled block-FAR modules and many branch modules, but the runner shut down (exit 143) before parent completion. The revised reproduce-oneLC.sh uses the existing emit_late.py (4,000-step checked packed replay chunks) and WeightedAudit/transform-graft.py for the 61,179-step leaf. All generated module names are renamed to prevent collision with the OneLA parent artifacts. No new simulator assumption or repeated discovery campaign.
 
 ## Reproduction and parent strategy
 
