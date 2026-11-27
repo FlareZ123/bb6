@@ -13,8 +13,8 @@ from pathlib import Path
 def digest(x):
     return hashlib.sha256(json.dumps(x, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
-def plan(directory, out, count):
-    files={p.stem:p for p in directory.glob("Raw54OneRA*.lean")}
+def plan(directory, out, count, stem='Raw54OneRA', root='Raw54OneRACut'):
+    files={p.stem:p for p in directory.glob(stem+"*.lean")}
     graph={m: [d for d in re.findall(r"^import (\S+)$", p.read_text(), re.M) if d in files] for m,p in files.items()}
     memo={}
     def closure(m):
@@ -25,16 +25,16 @@ def plan(directory, out, count):
     weight={m: int((files[m].stat().st_size+8000)**1.15) for m in files}
     def cost(ms):
         return sum(weight[m] for m in ms)
-    full=closure("Raw54OneRACut")
+    full=closure(root)
     target=max(1,cost(full)//(2*count))
     frontier=set()
     def cut(m):
-        if m.startswith("Raw54OneRAShard") and graph[m] and cost(closure(m))>target and any(d.startswith("Raw54OneRAShard") for d in graph[m]):
+        if m.startswith(stem+"Shard") and graph[m] and cost(closure(m))>target and any(d.startswith(stem+"Shard") for d in graph[m]):
             for d in graph[m]:
                 cut(d)
         else:
             frontier.add(m)
-    for m in graph["Raw54OneRACut"]:
+    for m in graph[root]:
         cut(m)
     bins=[[] for _ in range(count)]
     deps=[set() for _ in bins]
@@ -48,11 +48,11 @@ def plan(directory, out, count):
         (out/f"{i}.txt").write_text("".join(f"{m}.lean\n" for m in sorted(roots)))
         print(i,len(roots),len(deps[i]),cost(deps[i]),flush=True)
 
-def merge(slices,out,count):
+def merge(slices,out,count,artifact='raw54-onera'):
     manifests=[]
     candidates={}
     for i in range(count):
-        folder=slices/f"raw54-onera-slice-{i}"
+        folder=slices/f"{artifact}-slice-{i}"
         manifest=json.loads((folder/"manifest.json").read_text())
         assert manifest["schema_version"]==1
         manifests.append(manifest)
@@ -99,11 +99,11 @@ def merge(slices,out,count):
         unresolved.difference_update(ready)
     merged=dict(base,modules=[chosen[m] for m in sorted(chosen)],module_count=len(chosen),
                 roots=[],claim={"theorem":None,"parent_table":None,"weighted_bound":None},
-                artifact_name=None,label="oneRA compatible slice objects",
+                artifact_name=None,label=f"{artifact} compatible slice objects",
                 source_revisions=sorted({r for x in manifests for r in x["source_revisions"]}))
     (out/"manifest.json").write_text(json.dumps(merged,indent=2,sort_keys=True)+"\n")
     print("compatible objects",len(chosen),"omitted (recompile)",len(skipped))
 
 if __name__=="__main__":
-    mode,src,out,count=sys.argv[1:]
-    (plan if mode=="plan" else merge)(Path(src),Path(out),int(count))
+    mode,src,out,count,*extra=sys.argv[1:]
+    (plan if mode=="plan" else merge)(Path(src),Path(out),int(count),*extra)

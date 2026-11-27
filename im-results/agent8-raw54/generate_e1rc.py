@@ -2,20 +2,52 @@
 Discovery is untrusted; source-level checks prove every leaf and join.
 """
 from pathlib import Path
-from collections import Counter
+from collections import Counter, defaultdict
 import argparse, hashlib, json, subprocess, sys, tempfile
 from generate_rf_witnesses import ROOT, masks, parse, fuse_sparse
 from generate_rf_run_quotients import run_search, edge_count
 from emit_mask import emit_data
 from generate_sharded_children import assemble
-sys.path.insert(0,str(ROOT.parent/"agent47-raw111-cut"))
-from emit_sparse import emit as emit_ngram
 sys.path.insert(0,str(ROOT.parent/"agent8-tnf-raw117"))
 import raw112_multisweep as multi
 PARENT="1RB---_1RC---_0RD---_1LD0LE_---0RC_------"
 NS="BB6.Agent8Raw54.E1RC"
 BOUND=623
 STATS=Counter(split=12182,cycle=215468,last=58266,open=6453)
+
+def mask_ngram(work,i,table,k):
+    """Exact relabeling of the sparse n-gram push/pop graph.
+    The existing MaskBiDFA kernel checker independently certifies closure.
+    """
+    res=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {table}\n",text=True)
+    ident,width,n,L,R,S=res.split()
+    assert (int(ident),int(width))==(i,k)
+    M=1<<k
+    st=[(v//(M*M),(v//M)%M,v%M) for v in map(int,S.rstrip(",").split(","))]
+    words=[{0},{0}];rawE=[[],[]]
+    for _,l,r in st:words[0].add(l);words[1].add(r)
+    for d,raw in enumerate((L,R)):
+        for x,m in (map(int,a.split(":")) for a in raw.rstrip(",").split(",")):
+            for b in (0,1):
+                if m&(1<<b):
+                    prev=(x>>1)|(b<<(k-1))
+                    rawE[d].append((x,x&1,prev))
+                    words[d].update((x,prev))
+    ids=[{w:i for i,w in enumerate(sorted(ws))} for ws in words]
+    D=[[0]*(2*len(ws)) for ws in words]
+    E=[defaultdict(set),defaultdict(set)]
+    for d in (0,1):
+        for x,b,y in rawE[d]:
+            a,c=ids[d][x],ids[d][y]
+            assert D[d][2*c+b] in (0,a)
+            D[d][2*c+b]=a
+            E[d][a].add((b,c))
+    S={(s,ids[0][l],ids[1][r]) for s,l,r in st}
+    assert len(S)==int(n)
+    mod=f"Raw54E1RCMask{i}"
+    emit_data(ROOT,mod,table,D,E,S)
+    print(mod,len(S),len(D[0])//2,len(D[1])//2,edge_count(E),flush=True)
+    return mod,"BB6.Agent32AsymNGram."+mod
 
 def collect(work, only_sweeps=False):
     for folder,src,exe in [
@@ -60,13 +92,7 @@ def collect(work, only_sweeps=False):
             for i in map(int,v[cut+1:]):
                 if tag=="N":
                     k,=params
-                    res=subprocess.check_output([str(work/"ngram"),str(k)],input=f"{i} {misses[i]}\n",text=True)
-                    ident,data=res.split(maxsplit=1)
-                    assert int(ident)==i
-                    width,n,L,R,_=data.split()
-                    edges=lambda s:sum(int(a.split(":")[1]).bit_count() for a in s.rstrip(",").split(","))
-                    mod,ns=emit_ngram(ROOT,i,misses[i],data,width=k,module_name=f"Raw54E1RCSparse{i}",expected=(int(n),edges(L),edges(R)))
-                    fuse_sparse(ROOT,mod)
+                    mod,ns=mask_ngram(work,i,misses[i],k)
                 else:
                     D,n,info=run_search(misses[i],params)
                     assert D is not None,(i,n,info)
