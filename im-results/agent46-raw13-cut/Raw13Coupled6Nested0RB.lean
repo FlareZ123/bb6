@@ -93,7 +93,7 @@ theorem innerInc (d : Bool × Bool) (j : Nat) (bits L : List Bool) :
       some (A (false::false::W) (rep U j++T)) := by
     simpa only [I,encO_append,encO_rep,encO,T,List.append_assoc,List.cons_append,List.nil_append,W] using h
   have g := reset d j (false::W)
-  refine ⟨_,?_⟩
+  refine ⟨2*j+(2*j+4),?_⟩
   simpa only [I,encO_append,encO_rep,encO,Z,List.append_assoc,List.cons_append,List.nil_append,W] using join0 h' g
 
 theorem replicate_right (j : Nat) (b : Bool) : List.replicate (j+1) b = List.replicate j b++[b] := by
@@ -215,7 +215,7 @@ theorem outerInc (d : Bool × Bool) (j m : Nat) (bits : List Bool) :
       some (A (T++rep Z (m+1)++U++(rep Z j++true::L)) [true]) := by
     simpa only [List.append_assoc] using g
   have H := join0 (join0 h' g') hn
-  refine ⟨_,?_⟩
+  refine ⟨2*j+(2*j+2*m+8)+n,?_⟩
   simpa only [O,encO_append,encO_rep,encO,Z,List.append_assoc,List.cons_append,List.nil_append,L] using H
 
 def count : Nat → Nat
