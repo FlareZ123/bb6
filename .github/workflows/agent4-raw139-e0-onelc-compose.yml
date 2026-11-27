@@ -1,0 +1,78 @@
+name: Raw139 E0=1LC compose recovered certified roots
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact pinned proof revision
+        required: true
+        default: f05ea44fc3676f736db95279a2ee5c091960c618
+        type: string
+      source_run:
+        description: Run supplying the shared core and generated sources
+        required: true
+        default: '45914394333'
+        type: string
+      root_runs:
+        description: JSON object mapping recovered root indices (00 through 23) to run IDs; others use source_run
+        required: true
+        default: '{}'
+        type: string
+permissions:
+  contents: read
+  actions: read
+env:
+  BASE: im-results/agent4-raw139-e0-oneLC
+  WORK: .tmp/a4-oneLC
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLC-core-and-sources
+          path: .tmp/a4-oneLC
+          run-id: ${{ inputs.source_run }}
+          github-token: ${{ github.token }}
+      - name: Download the 24 certified root artifacts
+        env:
+          ROOT_RUNS: ${{ inputs.root_runs }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, os, pathlib, subprocess
+          runs=json.loads(os.environ['ROOT_RUNS'])
+          roots=[f'{i:02d}' for i in range(24)]
+          assert isinstance(runs,dict) and set(runs)<=set(roots)
+          for root in roots:
+              run=str(runs.get(root,os.environ['SOURCE_RUN']))
+              assert run.isascii() and run.isdigit()
+              name=f'raw139-e0-oneLC-root{root}-certified'
+              dst=pathlib.Path(os.environ['WORK'])/'shards'/name
+              dst.mkdir(parents=True,exist_ok=True)
+              subprocess.run(['gh','run','download',run,'-R',os.environ['GITHUB_REPOSITORY'],'-n',name,'-D',str(dst)],check=True)
+          PY
+      - name: Compose and kernel-check parent Cover
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$BASE/compose.py" "$WORK"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLC-parent-certified
+          path: |
+            .tmp/a4-oneLC/parent
+            .tmp/a4-oneLC/imports
+          include-hidden-files: true
+          retention-days: 14
