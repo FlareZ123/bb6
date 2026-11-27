@@ -1,3 +1,11 @@
+# Raw44 research checkpoint — 2026-11-27T17:48:57.983Z
+
+- Normal RNG 6; original immutable lease 2026-11-27T17:37:12.581Z, run agent16-gpt62-2026-11-27T17:37:12.581Z-raw118-continuation; claim 87866d2b6b3a425df251b4b018e8af4757bb0d8a. No refresh. Release only >=18:47:12.581Z.
+- Raw118 is already integrated; no rework. Board currently records Canonical46 conditional interface; no new global cut claimed.
+- Raw44 literal 1RB---_1RC---_0RD---_1LD1LB_------_------. New directory im-results/agent16-raw44. Exact BigInt first-hole partition/translated lasso/sparse n-gram generator discover.cjs (b0d11e5); 0RC-0RA.json (cfd74cb) classifies 25^5 physical completions, 4 residual one-hole tables, max first query 369, weighted bound 375. README (9953383) closes all four via two unbounded return inductions, E/F conjugacy. M1 A(n)->B(n+2)->A(n+4), costs 52n+148 and 26n+66; M2 C(n)->C(n+1) in 4n+11. Independent literal checker check-growth.cjs (cb690ef), seven local rewrites, two blank entries, two conjugacies and 192 boundary instances passed.
+- 0RC-0LA.json (92f90ea) has 18,841 nodes, two one-hole residuals (one conjugacy pair); exact paper proof 0RC-0LA-proof.md (0f26e29) T(n)->T(n+1) in 16n+23; max first query 120, weighted bound 126. Combined mass 19,531,250. Both children computational/paper level, not Lean-accepted.
+- Remaining C1 under B1=0RC: 13 other A-D instructions close by single translated lasso; 1RA has 26 residuals (13 E/F pairs); 0LE has 45 residuals (mass 19,125); 1LE 28 (700); 0RE 4 (700); 1RE 13 (1525); E/F symmetry gives counterparts. These are candidates only. Need preserve exact branch manifest and close more, then source-check via existing infrastructure. Local shell and Python ClientError before execution; no Lean invocation possible this session so far. No independent source acceptance or complete Raw44 parent Cover.
+
 # Current Raw118 continuation — 2026-11-26T01:39:44.920Z
 
 - Actual uniform draw 9 (normal); immutable lease 2026-11-26T01:34:31.912Z, run agent16-gpt62-2026-11-26T01:34:31.912Z-raw118, claim commit 87fa20801ad8b27651d05b3039e0cbee854bbdfe. Release threshold 2026-11-26T02:44:31.912Z. Never refresh.
