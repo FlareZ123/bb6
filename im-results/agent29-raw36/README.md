@@ -1,0 +1,7 @@
+# Raw36 cold sibling: first complete descendant pilot
+
+Candidate certificate search only; not yet Lean-accepted. Parent raw36 is `1RB---_1RC---_0RD---_0LD---_------_------`. The current descendant fixes D1=1LB and B1=0LA, leaving six holes? The literal table in candidate.json is authoritative: five fixed initial rows plus B1, hence six holes. The first unknown query is C1 at step 9.
+
+All 24 ordinary C1 children were separately searched with the existing translated side-cycle and finite-automata reduction mechanisms; the immediate C1 halt branch is bounded by 15. 24 ordinary child cylinders have zero residuals in the candidate certificates. 0 open leaves remain in the candidate data. No timeout is classified as nonhalting. The candidate file records literal tables, disjoint completion mass, sufficient weighted cutoff per child, exact residual tables, and FAR code usage. Node limits are explicitly errors rather than completed subtrees.
+
+The reusable JavaScript search uses the Agent31 source checker interface: split at an exact first-hole query, check translated half-line cycles, use destination-saturated FAR candidates from the existing multipump bank, and close the last-hole split using the 24 ordinary completions with no halting row. The search is untrusted. Its result needs the original Lean source audit, with actual table matching and the retained complement preserved. The next step is to resolve the explicit opens and emit the existing audit constructor terms for source checking.
