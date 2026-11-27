@@ -131,9 +131,7 @@ The script passed in the JS runtime on 2026-11-27. These are
 diagnostic finite checks; the universal claim follows from the
 framed computations and induction above.
 
-Formalize only Lead, Merge, Erase with existing SweepPumping
-sweepR/sweepL, then compose Join and Split and lift the reduced
-rules to the drain inductions. For the empty left/right cases,
+Candidate sources [Raw40A0LA1LC66Macros.lean](Raw40A0LA1LC66Macros.lean) and [Raw40A0LA1LC66Drain.lean](Raw40A0LA1LC66Drain.lean) implement the framed computations using SweepPumping and the positive normalized reachability induction, respectively. Their precise source composition and kernel acceptance remain outstanding. For the empty left/right cases,
 use padded zipper equivalence or an explicit sufficient zero
 frame, not equality of raw finite zipper lists with unequal
 trailing zero padding. No parent coverage or canonical decrement

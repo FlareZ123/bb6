@@ -10,6 +10,7 @@ on:
         options:
           - raw77
           - raw40-crossing-preflight
+          - raw40-leaf66-preflight
       source_revision:
         description: 'Exact source SHA for Raw40 preflight; blank retains the dispatch revision for raw77'
         required: false
@@ -54,6 +55,20 @@ jobs:
           lean --version
           python tools/lean_compile_closure.py --workdir /tmp/a19-raw40-crossing --jobs 2 im-results/agent19-raw40-cut/Raw40OrientedCrossing.lean | tee /tmp/a19-raw40-crossing.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-crossing.log; then
+            echo 'Forbidden proof placeholder or native_decide in closure' >&2
+            exit 1
+          fi
+      - name: Focused Raw40 leaf66 normalized induction and framed macro preflight
+        if: ${{ inputs.target == 'raw40-leaf66-preflight' }}
+        env:
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          lean --version
+          python tools/lean_compile_closure.py --workdir /tmp/a19-raw40-leaf66 --jobs 2 im-results/agent19-raw40-cut/Raw40A0LA1LC66Drain.lean im-results/agent19-raw40-cut/Raw40A0LA1LC66Macros.lean | tee /tmp/a19-raw40-leaf66.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-leaf66.log; then
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
             exit 1
           fi
