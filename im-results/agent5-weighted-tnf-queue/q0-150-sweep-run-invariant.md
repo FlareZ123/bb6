@@ -1,0 +1,3 @@
+# q0-150 F0-hole unary sweep
+
+Exact table `1RB1LC_1RC1RB_0LA1LD_1LA0RE_1RD1RF_---1RD`. Blank seed at 3382 assigned steps reaches A with empty head-inclusive left word and right word 0 followed by 77 ones. For each n≥0, the checked return takes 162+6n assigned steps and adds three ones to the right run of 77+3n. The two repeated sweep certificates and finite turns are in Raw11Q0Sweep150.lean, whose cover compiled with only [propext, Classical.choice, Quot.sound] in run 46030509053. Its workflow failed only because this note was missing. This excludes the whole partial-table cylinder, independently of halting horizon; no parent claim yet.
