@@ -148,3 +148,65 @@ theorem a12CR_collectable_triple_halts (P : List (ℕ × ℕ)) (hp : a12Collecta
       exact ⟨c,ReachesPlus.trans h hc,hh⟩
 
 #print axioms a12CR_collectable_triple_halts
+
+private theorem a12Binary_append (v w : List Bool) :
+    a12Binary (v ++ w) = a12Binary v ++ a12Binary w := by
+  simp [a12Binary]
+
+private theorem a12EL_scan_binary (v : List Bool) (L R : List (ℕ × ℕ)) :
+    v = [] ∨ ReachesPlus target
+      (cfg_EL_n_n ((0,0)::L) (a12Binary v ++ R))
+      (cfg_EL_n_n ((0,0)::(a12Binary v.reverse ++ L)) R) := by
+  induction v generalizing L with
+  | nil => exact Or.inl rfl
+  | cons b v ih =>
+    cases b
+    · have h1 := a12EL_zero ((0,0)::L) (a12Binary v ++ R)
+      rcases ih ((0,0)::L) with rfl | h2
+      · exact Or.inr h1
+      · right
+        have h := ReachesPlus.trans h1 h2
+        simpa [List.reverse_cons, a12Binary_append, a12Binary,
+          List.append_assoc] using h
+    · have h1 := a12EL_one L (a12Binary v ++ R)
+      rcases ih ((1,0)::L) with rfl | h2
+      · exact Or.inr h1
+      · right
+        have h := ReachesPlus.trans h1 h2
+        simpa [List.reverse_cons, a12Binary_append, a12Binary,
+          List.append_assoc] using h
+
+theorem a12EL_triple_collectable_tail_halts (v : List Bool)
+    (hv : a12Collectable (a12Binary v.reverse)) (L : List (ℕ × ℕ)) :
+    ∃ c, ReachesPlus target
+      (cfg_EL_n_n ((0,0)::L) ([(1,0),(1,0),(1,0)] ++ a12Binary v)) c ∧
+      (step target c).isNone := by
+  let P := a12Binary v.reverse
+  let LL := P ++ (1,0)::(1,0)::(1,0)::L
+  rcases a12EL_scan_binary ([true,true,true] ++ v) L [] with he | h1
+  · simp at he
+  have h1' : ReachesPlus target
+      (cfg_EL_n_n ((0,0)::L) ([(1,0),(1,0),(1,0)] ++ a12Binary v))
+      (cfg_EL_n_n ((0,0)::LL) []) := by
+    simpa [LL, P, a12Binary_append, List.reverse_append, a12Binary,
+      List.append_assoc] using h1
+  have h2 := a12EL_empty ((0,0)::LL)
+  have h3 := a12CR_zero_pair 0 LL []
+  obtain ⟨c,hc,hh⟩ := a12CR_collectable_triple_halts P hv L [(2,0)]
+    (Or.inl ⟨0,[],rfl⟩)
+  exact ⟨c,ReachesPlus.trans h1' (ReachesPlus.trans h2 (ReachesPlus.trans h3 hc)),hh⟩
+
+theorem a12G_binary_111_collectable_tail_halts (k : ℕ) (w v : List Bool)
+    (hv : a12Collectable (a12Binary v.reverse)) :
+    ∃ c, ReachesPlus target
+      (cfg_CR_n_n [(0,0)] (List.replicate (k+1) (0,0) ++
+        (a12Binary w ++ ([(1,0),(1,0),(1,0)] ++ a12Binary v)))) c ∧
+      (step target c).isNone := by
+  let S := [(1,0),(1,0),(1,0)] ++ a12Binary v
+  have h := a12G_to_EL k (a12Binary w ++ S)
+  obtain ⟨c,hc,hh⟩ := a12EL_prefix_halts S
+    (a12EL_triple_collectable_tail_halts v hv) w
+    (List.replicate (k+2) (0,0) ++ [(1,0)])
+  exact ⟨c,ReachesPlus.trans h hc,hh⟩
+
+#print axioms a12G_binary_111_collectable_tail_halts
