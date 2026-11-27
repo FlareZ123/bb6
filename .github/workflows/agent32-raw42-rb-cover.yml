@@ -4,8 +4,15 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested, discovery]
+        options: [rb, wide, nested, discovery, assembly]
         default: rb
+      assembly_branch:
+        type: choice
+        options: [0LA, 0LE, 0RA, 0RB, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RB, 1RE]
+        default: 0RA
+      discovery_run:
+        type: string
+        default: ''
       source_revision:
         type: string
         default: ''
@@ -266,4 +273,165 @@ jobs:
             /tmp/discovery/*.json
             /tmp/discovery/*.log
           retention-days: 14
+          if-no-files-found: error
+  assembly_prepare:
+    if: inputs.variant == 'assembly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      groups: ${{ steps.generate.outputs.groups }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Recover previously classified 0RA/0RB tree
+        if: inputs.assembly_branch == '0RA' || inputs.assembly_branch == '0RB'
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/search
+          g++ -O3 -std=c++20 im-results/agent32-linear-side-cycle/enumerate_tnf.cpp -o /tmp/enumerate
+          g++ -O3 -std=c++20 im-results/agent19-raw40-cut/farbank.cpp -o /tmp/farbank
+          (cd /tmp/search; /tmp/enumerate "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" 500; awk '{gsub(/_/,"");print NR-1,$0}' open.txt | /tmp/farbank 5 >far5.txt 2>far.log)
+          if [ "$BRANCH" = 0RA ]; then
+            echo 'ab3c426dbda4916f0779b982c2206ea2fd79de1406963adbafe4c0c914e9559d  /tmp/search/open.txt' | sha256sum -c
+          else
+            echo '63c9635d19dfc729af663e17cf0bd07b4a3fc18e6e9d4945603fe185b8361ac6  /tmp/search/open.txt' | sha256sum -c
+          fi
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch != '0RA' && inputs.assembly_branch != '0RB'
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.discovery_run }}
+          name: raw42-discovery-${{ inputs.assembly_branch }}
+          path: /tmp/search
+      - name: Generate source tree and independent shards
+        id: generate
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          python "$d/gen_assembly42.py" . "$BRANCH" /tmp/search "$d/generated-assembly"
+          echo "groups=$(cat "$d/generated-assembly/matrix.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly/
+          retention-days: 14
+          if-no-files-found: error
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/core-old
+      - name: Compile common dependency closure only
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          mkdir -p /tmp/core
+          python tools/lean_compile_closure.py --workdir /tmp/core --jobs 3 --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/core/manifest.json --artifact-name raw42-assembly-core "$d/Raw42AssemblyCore.lean" | tee /tmp/core/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/core/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-core
+          path: /tmp/core/
+          retention-days: 14
+          if-no-files-found: error
+  assembly_shards:
+    needs: assembly_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        group: ${{ fromJSON(needs.assembly_prepare.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly/
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-assembly-core
+          path: /tmp/core/
+      - name: Check independent trees and their exceptional witnesses
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42/generated-assembly
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$d/shards.json" "$GROUP")
+          for i in "${!roots[@]}"; do roots[i]="$d/${roots[i]}.lean"; done
+          test "${#roots[@]}" -gt 0
+          mkdir -p /tmp/shard
+          python tools/lean_compile_closure.py --workdir /tmp/shard --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core --manifest /tmp/shard/manifest.json --artifact-name "raw42-assembly-shard-$GROUP" "${roots[@]}" | tee /tmp/shard/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/shard/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-shard-${{ matrix.group }}
+          path: /tmp/shard/
+          retention-days: 14
+          if-no-files-found: error
+  assembly_compose:
+    needs: assembly_shards
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly/
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - name: Check full exact first-transition Cover
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42/generated-assembly
+          python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$d/shards.json"
+          mkdir -p /tmp/final
+          B=100006; if [ "$BRANCH" = 0RA ] || [ "$BRANCH" = 0RB ]; then B=1006; fi
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py --workdir /tmp/final --jobs 3 --source-root "$d" --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH" --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" --weighted-bound "$B" "$d/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-${{ inputs.assembly_branch }}
+          path: /tmp/final/
+          retention-days: 30
           if-no-files-found: error
