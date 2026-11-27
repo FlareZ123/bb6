@@ -315,6 +315,8 @@ theorem reducedExponent_final24 (q r h : Nat)
   have hh := final24_reduced q (r-8) h hk
   omega
 
+#print axioms reducedExponent_le
+#print axioms reducedResidues_range
 #print axioms rep_congr
 #print axioms mem_subsetSums_iff
 #print axioms mem_reducedResidues_iff
