@@ -1,6 +1,6 @@
 # Raw140: uniform conversion law for the other thirteen siblings
 
-**Mathematical finite-context identities, with a generated Lean draft; original-source acceptance pending.** This complements the six accepted affine AR loops in Raw140VariantLoops.lean. None of these new identities is by itself a blank-root or nonhalting decision.
+**Kernel-accepted finite-context identities and induction:** [run 45964979037](https://github.com/FlareZ123/bb6/actions/runs/45964979037), revision `57bec522c1f914627bb5dc5e0ee34b1a12de246a`. This complements the six accepted affine AR loops in Raw140VariantLoops.lean. None of these new identities is by itself a blank-root or nonhalting decision.
 
 In nearest-first three-bit block notation, write AR and ER for A and E entering the right block at its low end, and let X,Y be arbitrary block stacks. For each variant in the table below, the following exact primitive-transition identity holds:
 ```
@@ -31,4 +31,4 @@ For the remaining n tokens use the common-table identity ER(1X,115Y) -> ER(1133X
 
 The new transfer law removes all unbounded length dependence from the variant-sensitive part of the thirteen conversions; all remaining bulk processing is common-table behavior. The bank now has a short variant-specific suffix (some contain 2,5,6,7), rather than the homogeneous 3-bank preserved by the six earlier loops. Next close the common ER suffix dynamics on those finitely many suffix types; do not infer nonhalting from the transfer or the finite entry samples.
 
-Reproduce: node generate_raw140_variant_transfer.js, then the manual agent10-raw140-seven workflow target variantTransfer. The generated Lean file is a draft until the exact axiom audit succeeds. No global roster reduction claimed.
+Reproduce: node generate_raw140_variant_transfer.js, then the manual agent10-raw140-seven workflow target variantTransfer. The generated Lean file passed the exact source and axiom audit. No global roster reduction claimed.
