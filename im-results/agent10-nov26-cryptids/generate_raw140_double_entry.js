@@ -18,11 +18,11 @@ function build(f,target,m,n,s,expectedK){
  if(le===512||t===target){j++;lines.push("def s"+j+" : RState := "+fmt(),"theorem e"+j+" : Raw140Sweep.execute "+M+" "+le+" s"+(j-1)+" = some ("+cost+",s"+j+") := by decide +kernel");edges.push([j,le,cost]);cost=0;le=0}}
  const expand=S=>S.map(([a,n])=>String(a).repeat(n)).join("");
  if(t!==target||k!==expectedK||q!==1||d!==1||expand(L)!=="5".repeat(m)||expand(R)!=="644".repeat(n)+s)throw Error("entry mismatch");
- lines.push("theorem entry : run "+M+" "+target+" primBlank = some (section "+m+" "+n+" .s"+s+") := by",
+ lines.push("theorem entry : run "+M+" "+target+" primBlank = some (orbitCfg "+m+" "+n+" .s"+s+") := by",
  "  have h0 : run "+M+" 2 primBlank = some s0.prim := run_ext "+M+" (fill_extends _ _) _ _ _ base_start");
  for(let [j,le,cost] of edges)lines.push("  have h"+j+" := join h"+(j-1)+" (Raw140Sweep.execute_sound "+M+" "+le+" "+cost+" s"+(j-1)+" s"+j+" e"+j+")");
  lines.push("  exact h"+j,
- "theorem good : Good (section "+m+" "+n+" .s"+s+") := ⟨"+m/2+","+(n-2)+",_,by decide,rfl⟩",
+ "theorem good : Good (orbitCfg "+m+" "+n+" .s"+s+") := ⟨"+m/2+","+(n-2)+",_,by decide,rfl⟩",
  "theorem forever (k : Nat) : ∃ c, run "+M+" k primBlank = some c := foreverEntry "+M+" progress"+f+" "+target+" _ good entry k",
  "#print axioms forever","end X"+f);
  return lines.join("\n")+"\n";
