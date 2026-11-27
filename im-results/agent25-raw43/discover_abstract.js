@@ -10,7 +10,7 @@ function dfa(params){
  let key=w.join(","),j=ids.get(key);if(j===undefined){j=words.length;ids.set(key,j);words.push(w);delta.push([-1,-1])}delta[i][b]=j;return j}
  return {push,finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}
 }
-function winDfa(k){const M=2**k;return {push:(x,b)=>(x*2+b)%M,finish:()=>Array.from({length:2*M},(_,i)=>i%M),size:()=>M}}
+function winDfa(k){const M=2**k,ids=new Map([[0,0]]),words=[0],delta=[[-1,-1]];return {push:(x,b)=>{if(delta[x][b]>=0)return delta[x][b];let w=(words[x]*2+b)%M,j=ids.get(w);if(j===undefined){j=words.length;ids.set(w,j);words.push(w);delta.push([-1,-1])}delta[x][b]=j;return j},finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}}
 function solve(table,left,right,cap=30000){
  const tr=typeof table==="string"?parse(table):table,d=[typeof left==="number"?winDfa(left):dfa(left),typeof right==="number"?winDfa(right):dfa(right)],edges=[new Map(),new Map()],waiting=[new Map(),new Map()],seen=new Set(),todo=[],H=2**24,Q=H*H;let fail=false,limit=false;
  function add(s,l,r){const x=s*Q+l*H+r;if(seen.has(x))return;seen.add(x);todo.push([s,l,r]);if(tr[s]<0)fail=true;if(todo.length>cap||l>=H||r>=H)limit=true}
