@@ -4,7 +4,7 @@
 
 ## Theorems
 
-**First missing image.** For every natural (x,y,t), writing (S=x+y),
+**Strict first-to-second image gap.** For every natural (x,y,t), writing (S=x+y),
 
 [
 x\equiv5\pmod8,\quad y\equiv3\pmod8,\quad
@@ -13,7 +13,7 @@ S\equiv48\pmod{64},\quad y\ge8
 \mathrm{run}(F,t,\mathrm{some}(5,1))\ne\mathrm{some}(x,y).
 ]
 
-This source-excluded cylinder has ambient natural density **1/512**. The theorem eliminates all original-source direct, exceptional (a=0,1), and high-bounce predecessor branches, uniformly in the recursion depth. Every possible predecessor ((a,k)) would have (k\ge5), (k\equiv1\pmod2), (a+k\equiv1\pmod4). This contradicts the original `BB6.Agent3.section_odd_image` image invariant, which forces the sum of any actual output with odd right coordinate at least five to be (0) or (3\pmod4). The actual seed ((5,1)) is outside the cylinder. Source theorem `BB6.Agent2COddOddCone.blank_unreachable` in [OddOddConeSource.lean](../im-results/agent2-c-oddodd-cone/OddOddConeSource.lean); unchanged-source Lean [CI 45919216509, SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/45919216509).
+This source-excluded cylinder has ambient natural density **1/512**. A separate constructive original-source theorem proves that **every target actually has one genuine incoming section edge, while none has two**: it lies in the strict image stratum (I_1\\setminus I_2). The explicit parent is `a=(x+y-4)/2, k=(x+3*y-10)/4`; the unchanged section inverse certifies the depth-zero even-bounce edge. Source [FirstImageStrictSource.lean](../im-results/agent2-c-oddodd-cone/FirstImageStrictSource.lean), original-source Lean [CI 45921780574, SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/45921780574). The theorem eliminates all original-source direct, exceptional (a=0,1), and high-bounce predecessor branches, uniformly in the recursion depth. Every possible predecessor ((a,k)) would have (k\ge5), (k\equiv1\pmod2), (a+k\equiv1\pmod4). This contradicts the original `BB6.Agent3.section_odd_image` image invariant, which forces the sum of any actual output with odd right coordinate at least five to be (0) or (3\pmod4). The actual seed ((5,1)) is outside the cylinder. Source theorem `BB6.Agent2COddOddCone.blank_unreachable` in [OddOddConeSource.lean](../im-results/agent2-c-oddodd-cone/OddOddConeSource.lean); unchanged-source Lean [CI 45919216509, SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/45919216509).
 
 **Strict second-to-third image gap.** If
 
@@ -49,7 +49,7 @@ Their congruences on (m\bmod4) are disjoint. Combined, they eliminate a **5/1024
 
 For both source cones, the previous **fully recursive six-sector forced-inverse filter** `BB6.Agent11SixForced.sixForcedExcluded` returns **false**: the normalizer fixes each target in the first cone, and strips just the first genuine inverse in the third-image cone before stopping at the source-forbidden parent. Thus the new theorems add information unavailable from that particular preexisting fixed-target exclusion Boolean. They need not be logically independent of every other arithmetic or quotient filter in the repository. The first-cone strictness source audit [CI 45920107435, SUCCESS](https://github.com/FlareZ123/bb6/actions/runs/45920107435) checked this exact claim.
 
-The [first-source lossless halting criterion](../im-results/agent2-c-oddodd-cone/OddOddHighIntegration.lean) is accepted in [CI 45919935795](https://github.com/FlareZ123/bb6/actions/runs/45919935795). Its [combined two-cone refinement](../im-results/agent2-c-oddodd-cone/BroadTwoConeHaltingCriterion.lean) retains the original low stopping branch and adds both high-parameter exclusions to `BB6.Agent11SixAll.blank_halts_iff_six_both` without changing either original exact root decider. As always, these are **lossless reductions of still-unbounded existential quantifiers**, not decisions.
+The [first-source lossless halting criterion](../im-results/agent2-c-oddodd-cone/OddOddHighIntegration.lean) is accepted in [CI 45919935795](https://github.com/FlareZ123/bb6/actions/runs/45919935795). Its [combined two-cone refinement](../im-results/agent2-c-oddodd-cone/BroadTwoConeHaltingCriterion.lean), **kernel-accepted in [CI 45921234582](https://github.com/FlareZ123/bb6/actions/runs/45921234582)**, retains the original low stopping branch and adds both high-parameter exclusions to `BB6.Agent11SixAll.blank_halts_iff_six_both` without changing either original exact root decider. As always, these are **lossless reductions of still-unbounded existential quantifiers**, not decisions.
 
 ## Reproducibility and open boundary
 
