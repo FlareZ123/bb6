@@ -20,6 +20,18 @@ on:
       parents:
         type: string
         default: '8 23 37 50 55'
+      base_run:
+        type: string
+        default: '45968079265'
+      base_count:
+        type: number
+        default: 678
+      extra_runs:
+        type: string
+        default: '45968108909 45968115223 45968121970 45968129488'
+      expected_count:
+        type: number
+        default: 702
 
 permissions:
   contents: read
@@ -40,27 +52,29 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45953219227
-          name: raw47-accepted120
+          run-id: ${{ inputs.base_run }}
+          name: raw47-accepted${{ inputs.base_count }}
           path: /tmp/a50-base
       - name: Download newly accepted nonoverlapping batches
         env:
           GH_TOKEN: ${{ github.token }}
+          EXTRA_RUNS: ${{ inputs.extra_runs }}
         run: |
           set -euo pipefail
+          [[ "$EXTRA_RUNS" =~ ^[0-9]+(\ [0-9]+)*$ ]]
           mkdir -p /tmp/a50-extra
-          gh run download 45952979794 --name raw47-far-3-0-12 --dir /tmp/a50-extra/raw47-far-3-0-12
-          gh run download 45952990815 --name raw47-far-4-0-12 --dir /tmp/a50-extra/raw47-far-4-0-12
-          gh run download 45954021548 --name raw47-graph-parents --dir /tmp/a50-extra/raw47-graph-parents
-          # Pin the completed successful sweep artifacts. Failed batches have no accepted export.
-          printf '%s\n' raw47-far-0-12-12 raw47-far-0-24-12 raw47-far-0-36-12 raw47-far-0-48-12 raw47-far-0-60-12 raw47-far-0-72-12 raw47-far-0-84-1 raw47-far-2-0-12 raw47-far-2-12-12 raw47-far-2-24-12 raw47-far-2-36-12 raw47-far-2-48-12 raw47-far-2-60-12 raw47-far-2-72-12 raw47-far-3-12-12 raw47-far-3-24-12 raw47-far-3-48-12 raw47-far-3-60-12 raw47-far-3-72-12 raw47-far-4-12-12 raw47-far-4-24-12 raw47-far-4-36-12 raw47-far-4-48-12 raw47-far-4-60-12 raw47-far-4-72-12 raw47-far-5-0-12 raw47-far-5-12-12 raw47-far-5-24-12 raw47-far-5-36-12 raw47-far-5-60-12 raw47-far-5-72-12 raw47-far-6-0-12 raw47-far-6-12-12 raw47-far-6-24-12 raw47-far-6-36-12 raw47-far-6-48-12 raw47-far-6-60-12 raw47-far-6-72-12 raw47-far-7-0-12 raw47-far-7-12-12 raw47-far-7-24-12 raw47-far-7-36-12 raw47-far-7-48-12 raw47-far-7-60-12 raw47-far-7-72-12 > /tmp/a50-sweep-names
-          test "$(wc -l < /tmp/a50-sweep-names)" -eq 45
-          while IFS= read -r name; do
-            [[ "$name" =~ ^raw47-far-[0-7]-[0-9]+-[0-9]+$ ]]
-            gh run download 45953448124 --name "$name" --dir "/tmp/a50-extra/$name"
-          done < /tmp/a50-sweep-names
+          for id in $EXTRA_RUNS; do
+            test "$(gh run view "$id" --json conclusion --jq .conclusion)" = success
+            mapfile -t names < <(gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | .name' | grep -E '^raw47-(far-[0-7]-[0-9]+-[0-9]+|graph-parents)$')
+            test "${#names[@]}" -gt 0
+            for name in "${names[@]}"; do
+              gh run download "$id" --name "$name" --dir "/tmp/a50-extra/$id-$name"
+            done
+          done
       - name: Compose accepted parent covers using the verified packed key
         id: composition
+        env:
+          EXPECTED_COUNT: ${{ inputs.expected_count }}
         run: |
           set -euo pipefail
           D=im-results/agent50-raw47-depth3
@@ -71,7 +85,7 @@ jobs:
           python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-base /tmp/a50-extra/*
           M=$(python "$D/generate_fast_consumer.py" "$W/imports")
           N=${M#Raw47Accepted}
-          test "$N" -eq 678
+          test "$N" -eq "$EXPECTED_COUNT"
           echo "count=$N" >> "$GITHUB_OUTPUT"
           python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "BB6.Agent50$M.local_sound" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 10006 --artifact-name "raw47-accepted$N" --provenance-input "$D/raw47-depth3.open" --provenance-input "$D/generate_fast_consumer.py" "$W/imports/$M.lean" 2>&1 | tee "$W/log"
           python - "$W/log" "$M" <<'PY'
