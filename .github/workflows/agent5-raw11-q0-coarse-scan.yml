@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -116,6 +116,92 @@ jobs:
           name: raw11-coarse-full-${{ matrix.id }}
           path: ${{ runner.temp }}/coarse-${{ matrix.id }}/
           if-no-files-found: warn
+          retention-days: 30
+
+  resume:
+    if: inputs.mode == 'resume'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-${{ matrix.id }}
+          path: /tmp/coarse-previous
+      - name: Resume capped nodes only
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/resume-q0-prefix.cjs "$ID" /tmp/coarse-previous "$RUNNER_TEMP/coarse-$ID"
+          cat "$RUNNER_TEMP/coarse-$ID/summary.json" >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-coarse-full-${{ matrix.id }}
+          path: ${{ runner.temp }}/coarse-${{ matrix.id }}/
+          if-no-files-found: error
+          retention-days: 30
+
+  roster:
+    if: inputs.mode == 'roster'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-${{ matrix.id }}
+          path: /tmp/coarse-previous
+      - name: Preserve exact frontier, without rescanning
+        env:
+          ID: ${{ matrix.id }}
+          GENERATION_RUN: ${{ inputs.generation_run }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, os, pathlib
+          i=int(os.environ['ID'])
+          s=json.loads(pathlib.Path('/tmp/coarse-previous/summary.json').read_text())
+          route=json.loads(pathlib.Path('im-results/agent47-raw11-adapter/raw11-route.json').read_text())
+          assert s['id']==i and s['table']==route['targets'][i]
+          assert len(s['opens'])==s['stats']['open'] and len(s['pending'])==s['stats']['cap']
+          s['generation_run']=os.environ['GENERATION_RUN']
+          pathlib.Path(f'im-results/agent5-weighted-tnf-queue/q0-{i}-exact-frontier.json').write_text(json.dumps(s,indent=2)+'\n')
+          PY
+          git config user.name 'Agent 5 CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git add "im-results/agent5-weighted-tnf-queue/q0-$ID-exact-frontier.json"
+          git commit -m "Agent 5: preserve q0-$ID exact retained frontier from run $GENERATION_RUN"
+          git push origin "HEAD:refs/heads/agent5-q0-$ID-roster-$RUN_ID"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-${{ matrix.id }}-exact-frontier
+          path: im-results/agent5-weighted-tnf-queue/q0-${{ matrix.id }}-exact-frontier.json
+          if-no-files-found: error
           retention-days: 30
 
   pumps:
