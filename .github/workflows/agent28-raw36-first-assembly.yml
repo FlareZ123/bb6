@@ -8,7 +8,7 @@ on:
         required: false
       target:
         type: choice
-        options: [Counters, Progress, Never]
+        options: [Counters, Align, Progress, Never]
         default: Counters
 permissions:
   contents: read
@@ -31,14 +31,20 @@ jobs:
         run: |
           set -euo pipefail
           TARGET="${{ inputs.target }}"
-          [[ "$TARGET" = Counters || "$TARGET" = Progress || "$TARGET" = Never ]]
+          case "$TARGET" in
+            Counters) THEOREM=root_a ;;
+            Align) THEOREM=transfer_A9 ;;
+            Progress) THEOREM=phaseA ;;
+            Never) THEOREM=never ;;
+            *) exit 2 ;;
+          esac
           D=im-results/agent28-raw36-first-hard
           work=/tmp/a28-raw36-first-assembly
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python tools/lean_compile_closure.py --workdir "$work" --jobs 4 \
             --manifest "$work/manifest.json" --label raw36-first-$TARGET \
-            --theorem BB6Coverage.Agent31Pump.Auto.Raw36First$TARGET.$([[ "$TARGET" = Counters ]] && echo root_a || ([[ "$TARGET" = Progress ]] && echo phaseA || echo never)) \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36First$TARGET.$THEOREM \
             --artifact-name raw36-first-assembly \
             "$D/Raw36First$TARGET.lean" 2>&1 | tee /tmp/a28-first-assembly.log
           cp /tmp/a28-first-assembly.log "$work/audit.log"
