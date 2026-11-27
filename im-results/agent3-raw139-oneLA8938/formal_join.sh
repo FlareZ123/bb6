@@ -6,7 +6,7 @@ test "$(find /tmp/8938shard -name '*.olean' | wc -l)" = 127
 cp /tmp/8938shard/*.olean "$work/build/"
 export LEAN_PATH="$work/build"
 for name in SeedReach GrowthReach Raw139Affine8938Never; do
-  lean -j 1 -o "$work/build/$name.olean" "$work/$name.lean" 2>&1 | tee "$work/$name.log"
+  lean -j 1 --root="$work" -o "$work/build/$name.olean" "$work/$name.lean" 2>&1 | tee "$work/$name.log"
   ! grep -E 'sorryAx|native_decide|ofReduceBool|declaration uses .sorry.' "$work/$name.log"
 done
 python3 - "$work/Raw139Affine8938Never.log" <<'PY'

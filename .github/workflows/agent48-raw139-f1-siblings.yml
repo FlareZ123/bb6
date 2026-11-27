@@ -10,7 +10,7 @@ on:
         description: Branch depth, A6 root, C1 batch or E0 proof
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent]
+        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
-    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' }}
+    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' }}
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.kind == 'e0parent' && 180 || 60 }}
     steps:
@@ -191,3 +191,87 @@ jobs:
             .tmp/a48-c1-batch/log
             .tmp/a48-c1-batch/imports/*.lean
             .tmp/a48-c1-batch/build/*.olean
+
+  long-prep:
+    if: ${{ inputs.kind == 'e0long' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - run: bash im-results/agent48-raw139-e0-1la/packed-prepare.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-packed-prep
+          include-hidden-files: true
+          path: |
+            .tmp/a48-e0long/imports/
+            .tmp/a48-e0long/build/*.olean
+            .tmp/a48-e0long/core-manifest.json
+            .tmp/a48-e0long/source-sha
+  long-shard:
+    needs: long-prep
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-packed-prep
+          path: .tmp/a48-e0long
+      - run: bash im-results/agent48-raw139-e0-1la/packed-shard.sh
+        env:
+          SHARD: ${{ matrix.shard }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-packed-shard-${{ matrix.shard }}
+          include-hidden-files: true
+          path: .tmp/a48-e0long-shard/
+  long-join:
+    needs: [long-prep,long-shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-packed-prep
+          path: .tmp/a48-e0long
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneLA-packed-shard-*
+          path: .tmp/a48-e0long-shards
+      - run: bash im-results/agent48-raw139-e0-1la/packed-join.sh .tmp/a48-e0long-shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-packed-cycle-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a48-e0long/imports/
+            .tmp/a48-e0long/build/*.olean
+            .tmp/a48-e0long/manifest.json
+            .tmp/a48-e0long/log
