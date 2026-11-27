@@ -24,7 +24,7 @@ const s=makeSearch(spec.codes,spec.options);
 const p=s.parse(spec.parent);p[spec.query[2]]=i;
 const got=s.run(p,true);
 const {tree,...stats}=got;
-require('node:assert/strict').deepEqual(stats,spec.results[i]);
+require('node:assert/strict').deepEqual({move:s.decode(i),...stats},spec.results[i]);
 process.stdout.write(JSON.stringify(tree));
 """
 def term(p,t):
