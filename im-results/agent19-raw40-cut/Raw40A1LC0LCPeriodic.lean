@@ -19,7 +19,7 @@ theorem doubleRep (p : List Bool) (n : Nat) : rep (p++p) n=rep p (2*n) := by
   | zero => rfl
   | succ n ih =>
     rw [rep,ih,show 2*(n+1)=2+2*n by omega,repAdd]
-    rfl
+    simp [rep]
 theorem padW (n : Nat) : W++rep W (2*n)++W=rep W (2*n+2) := by
   change rep W 1++rep W (2*n)++rep W 1=rep W (2*n+2)
   rw [←repAdd,←repAdd]
@@ -124,10 +124,10 @@ theorem epoch (n : Nat) : run0 table (cost n) (family n)=some (family (n+1)) := 
   have h4 := sweepL table 0 [true] [true] W Q 6 back (2*n+4) [] W
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h4
   have h5 := last (rep Q (2*n+4)++W)
-  simp only [List.append_assoc] at h5
+  try simp only [List.append_assoc] at h5
   have H := join0 (join0 H h4) h5
   have he := rightEq n
-  simp only [List.append_assoc] at he H
+  try simp only [List.append_assoc] at he H
   rw [←he] at H
   simpa only [family,cost,List.append_assoc,show 10+6*n+14+6*(2*n+4)+3=51+18*n by omega] using H
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
@@ -193,10 +193,10 @@ theorem epoch (n : Nat) : run0 table (cost n) (family n)=some (family (n+1)) := 
   have h4 := sweepL table 0 [true] [] W Q 4 back (2*n+4) [] [true,true,true]
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h4
   have h5 := last (rep Q (2*n+4)++[true,true,true])
-  simp only [List.append_assoc] at h5
+  try simp only [List.append_assoc] at h5
   have H := join0 (join0 H h4) h5
   have he := rightEq n
-  simp only [List.append_assoc] at he H
+  try simp only [List.append_assoc] at he H
   rw [←he] at H
   simpa only [family,cost,List.append_assoc,show 5+4*n+13+4*(2*n+4)+3=37+12*n by omega] using H
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
