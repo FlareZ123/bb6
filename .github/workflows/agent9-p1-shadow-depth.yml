@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -40,7 +40,7 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse') && 90 || 20 }}
+    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse' || inputs.target == 'affine-residue') && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -52,6 +52,31 @@ jobs:
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact infinite dyadic residue support
+        if: inputs.target == 'affine-residue'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-first-return
+          G="$PWD/.affine-residue"
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D:$G"
+          lean --version
+          git rev-parse HEAD
+          python "$D/gen_affine_table.py" 10 10 --group 1 --out "$G"
+          python tools/lean_compile_deps.py "$G/AffineFinite10_10.lean" | tee /tmp/affine-residue.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/affine-residue.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/affine-residue.log').read_text()
+          names = ("advance_rep", "rep_unique", "width_pos_iff_nodes", "width_pos_iff_mask", "critical_reset_requires_mask", "table_eq", "residueCount_eq", "mask_eq", "count_exact", "critical_reset_no_reach")
+          allowed = {"propext", "Classical.choice", "Quot.sound"}
+          for n in names:
+              hits = re.findall(r"'BB6\.Agent9AffineResidue\.(?:AffineFinite10_10\.)?" + n + r"' depends on axioms: \[([^\]]*)\]", log, re.S)
+              assert len(hits)==1, (n,hits)
+              axioms = {x.strip() for x in hits[0].split(',') if x.strip()}
+              assert axioms <= allowed, (n,axioms)
+              print(n, sorted(axioms))
+          PY
       - name: Check full original P1 shadow cones, finite q29 certificate
         if: inputs.target == 'shadow'
         run: |
