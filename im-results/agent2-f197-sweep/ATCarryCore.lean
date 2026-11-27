@@ -225,6 +225,38 @@ theorem atc_counter_base (l : Tape) (hl : l 0 = true) :
 
 #print axioms atc_counter_base
 
+/-- Generic aligned-right terminal AAA/uR, source-exact. -/
+theorem atc_terminal_A_u (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 47
+      (other B (pre [ true, false, true, false, true, false ] l) (pre [ false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, true, false, true, false ] l, pre [ false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 14 m = some (47, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 14 m 47 m' hv hc
+
+#print axioms atc_terminal_A_u
+
+/-- Generic aligned-right terminal TAA/uR, source-exact. -/
+theorem atc_terminal_T_u (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 57
+      (other B (pre [ true, true, false, false, true, false, true, false ] l) (pre [ false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, true, false, false, true, false, true, false ] l, pre [ false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 17 m = some (57, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 17 m 57 m' hv hc
+
+#print axioms atc_terminal_T_u
+
 #print axioms atc_preconsume
 
 #print axioms atc_consume_e
