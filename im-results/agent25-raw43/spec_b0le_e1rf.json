@@ -4548,18 +4548,18 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
+  "growth": {
+    "177": {
+      "table": "1RB---_1RC0LE_0RD0RC_1LD0RB_1RF1LF_0LE0LA",
+      "module": "Raw43B0LEE1RFM177",
+      "partial": "BB6.Agent25Raw43B0LEE1RFM177.table",
+      "never": "BB6.Agent25Raw43B0LEE1RFM177.never"
+    }
+  },
   "unresolved": [
     {
       "i": 81,
       "table": "1RB1LF_1RC0LE_0RD0RB_1LD0RB_1RF---_0LA0LB",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 177,
-      "table": "1RB---_1RC0LE_0RD0RC_1LD0RB_1RF1LF_0LE0LA",
       "query": [
         "open"
       ]
