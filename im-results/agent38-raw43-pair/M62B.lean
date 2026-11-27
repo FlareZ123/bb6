@@ -36,7 +36,7 @@ theorem carry_b_after_prepare (t s V : List Bool)
     (hp : run0 table 13 z =
       some ⟨0,ones 2++(t++s),bits "101"++V⟩) :
     ∃ n L' R', 0<n ∧ LeftA L' ∧ RightA R' ∧
-      run0 table n z = some (section L' R') := by
+      run0 table n z = some (fSection L' R') := by
   have h0 := outer_first_zero hs
   have h00 := outer_second_zero hs
   have hd := outer_drop hs
@@ -65,7 +65,7 @@ theorem carry_b_after_prepare (t s V : List Bool)
       refine ⟨13+(((5*a+2)+10)+4),ones 3++s.drop 2,
         bits "01"++zeros (5*a+1)++bits "101"++V,by omega,
         hleft,hr,?_⟩
-      simpa [section,bits,hd,List.append_assoc,Nat.add_assoc] using h
+      simpa [fSection,bits,hd,List.append_assoc,Nat.add_assoc] using h
   | more c w hw =>
       have he : ones 2 ++ ((ones (5*(c+1))++false::w)++s) =
           ones ((5*(c+1))+2)++(false::w++s) := by
@@ -98,35 +98,35 @@ theorem carry_b_after_prepare (t s V : List Bool)
         bits "01"++zeros (5*a+1)++bits "101"++((payload++w4 c)++V),
         by omega,hleft,hright,?_⟩
       rw [hcodeeq] at h
-      simpa [section,bits,hd,List.append_assoc,Nat.add_assoc] using h
+      simpa [fSection,bits,hd,List.append_assoc,Nat.add_assoc] using h
 
 /-- Whether the first five 0s are explicitly represented or implicit
 in the blank suffix makes no mathematical difference to the carry. -/
 theorem prepare_five (t s V : List Bool) :
-    run0 table 13 (section (t++s) (zeros 5++V)) =
+    run0 table 13 (fSection (t++s) (zeros 5++V)) =
       some ⟨0,ones 2++(t++s),bits "101"++V⟩ := by
-  simpa [section,zeros,bits,List.append_assoc] using carry_prepare (t++s) V
+  simpa [fSection,zeros,bits,List.append_assoc] using carry_prepare (t++s) V
 
 theorem prepare_empty (t s : List Bool) :
-    run0 table 13 (section (t++s) []) =
+    run0 table 13 (fSection (t++s) []) =
       some ⟨0,ones 2++(t++s),bits "101"⟩ := by
-  simpa [section] using carry_prepare_blank (t++s)
+  simpa [fSection] using carry_prepare_blank (t++s)
 
 /-- The complete unbounded B→A return, for any B-frame stack,
 after the five 0s, with an arbitrary well-formed W suffix. -/
 theorem phase_b_carry_five (t s V : List Bool)
     (ht : BFrame t) (hs : OuterTail s) (hv : Word V) :
     ∃ n L' R', 0<n ∧ LeftA L' ∧ RightA R' ∧
-      run0 table n (section (t++s) (zeros 5++V)) =
-        some (section L' R') :=
+      run0 table n (fSection (t++s) (zeros 5++V)) =
+        some (fSection L' R') :=
   carry_b_after_prepare t s V ht hs hv _
     (prepare_five t s V)
 
 theorem phase_b_carry_empty (t s : List Bool)
     (ht : BFrame t) (hs : OuterTail s) :
     ∃ n L' R', 0<n ∧ LeftA L' ∧ RightA R' ∧
-      run0 table n (section (t++s) []) =
-        some (section L' R') :=
+      run0 table n (fSection (t++s) []) =
+        some (fSection L' R') :=
   carry_b_after_prepare t s [] ht hs Word.nil _
     (prepare_empty t s)
 
