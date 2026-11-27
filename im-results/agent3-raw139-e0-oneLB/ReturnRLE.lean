@@ -60,8 +60,7 @@ theorem a_input (n : Nat) (w : Word) :
   | succ n ih =>
     calc
       _ = 8 * (7 * pack (input (List.replicate n .a) w) + 2) := by
-        simp only [List.replicate_succ,input,token,List.cons_append,List.nil_append,pack,Bool.toNat,z,o]
-        omega
+        simp [List.replicate_succ,input,token,List.cons_append,List.nil_append,pack,Bool.toNat,z,o] <;> omega
       _ = _ := by rw [ih,Nat.pow_succ]; ac_rfl
 
 theorem a_output (n : Nat) (w : Word) :
@@ -71,8 +70,7 @@ theorem a_output (n : Nat) (w : Word) :
   | succ n ih =>
     calc
       _ = 8 * (7 * pack (output (List.replicate n .a) w) + 1) := by
-        simp only [List.replicate_succ,output,phi,List.cons_append,List.nil_append,pack,Bool.toNat,z,o]
-        omega
+        simp [List.replicate_succ,output,phi,List.cons_append,List.nil_append,pack,Bool.toNat,z,o] <;> omega
       _ = _ := by rw [ih,Nat.pow_succ]; ac_rfl
 
 theorem b_input (n : Nat) (w : Word) :
@@ -82,8 +80,7 @@ theorem b_input (n : Nat) (w : Word) :
   | succ n ih =>
     calc
       _ = 2 * (pack (input (List.replicate n .b) w) + 1) := by
-        simp only [List.replicate_succ,input,token,List.cons_append,List.nil_append,pack,Bool.toNat,z,o]
-        omega
+        simp [List.replicate_succ,input,token,List.cons_append,List.nil_append,pack,Bool.toNat,z,o] <;> omega
       _ = _ := by rw [ih,Nat.pow_succ]; ac_rfl
 
 theorem b_output (n : Nat) (w : Word) :
@@ -226,10 +223,10 @@ theorem row_sound (slow : Bool) (e : Row) :
   cases b
   · have h := packed00 slow (expand rs) w
     simp only [retClock,left_cost,right_cost,frontNum_eq,pack,Bool.toNat,inPack_correct,outPack_correct,hw] at h
-    simpa [cost,before,after,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,Nat.add_assoc] using h
+    simpa [cost,before,after,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,← Nat.add_assoc] using h
   · have h := packed0110 slow (expand rs) w
     simp only [retClock,left_cost,right_cost,frontNum_eq,pack,Bool.toNat,inPack_correct,outPack_correct,hw] at h
-    simpa [cost,before,after,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,Nat.add_assoc] using h
+    simpa [cost,before,after,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,← Nat.add_assoc] using h
 
 -- A checker of adjacent macro states and accumulated primitive step counts.
 def replay (slow : Bool) : List Row → Nat → Option (Nat × Nat)
@@ -273,7 +270,7 @@ theorem stop_sound (slow : Bool) (rs : RLE) (tail : Nat) :
   refine ⟨enc (gate w (codeRev (expand rs) [o])),?_,gate_read _ _⟩
   have h := packed0111 slow (expand rs) w
   simp only [stopClock,left_cost,frontNum_eq,pack,Bool.toNat,inPack_correct,hw] at h
-  simpa [stopCost,stopBefore,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,Nat.add_assoc] using h
+  simpa [stopCost,stopBefore,pack,z,o,Bool.toNat,hw,← Nat.mul_assoc,Nat.mul_add,← Nat.add_assoc] using h
 
 #print axioms row_sound
 #print axioms replay_sound
