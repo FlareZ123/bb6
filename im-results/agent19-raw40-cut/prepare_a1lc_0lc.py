@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Regenerate the canonical A1=1LC B1=0LC proof trees from saved certificate banks.
+"""Regenerate the canonical A1=1LC five-hole proof trees from saved certificate banks.
 No FAR or graph discovery is repeated; every supplied witness is re-encoded
-and kernel checked. The three residuals have exact periodic-sweep proofs.
+and kernel checked. Special residuals use exact periodic-sweep proofs.
 """
 import json,os,re,subprocess,sys
 from pathlib import Path
@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
 c=sys.argv[1] if len(sys.argv)>1 else '0LC'
-assert c in ('0LC','1LB','0RC','1RC')
+assert c in ('0LC','1LB','0RC','1RC','1LE')
 spec=json.loads((ROOT/f'a1lc-{c}-discovery.json').read_text())
 p=spec['parent']; B=spec['initialBound']
 assert p==f'1RB1LC_1RC{c}_0RD---_1LD1LA_------_------'

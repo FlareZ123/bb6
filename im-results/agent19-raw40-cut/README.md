@@ -39,7 +39,7 @@ Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary s
 
 B1=1RE leaf198 has a compact 16/17 asymmetric n-gram certificate candidate with 2229 reachable configurations, 95 left and 581 right summaries and 735 predecessor edges; [data](a0lb198-compact.json). All 39 lag-bank leaves have finite closure candidates. These exploit lag-XOR followed by bounded run/residue summaries; exact tables and graphs are saved. The three multi-hole late queries are expanded rather than treated as nonhalting.
 
-## A1=1LC: four new five-hole candidates
+## A1=1LC: five classified five-hole candidates
 
 All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). The first CI accepted leaf39's individual theorem, but failed on list algebra for leaf95/118; the repaired source awaits a fresh build.
 
@@ -49,9 +49,10 @@ All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact perio
 | 0RC | 467 | 427 | 39 | 1 | 321 |
 | 1LB | 479 | 475 | 4 | 0 | 118 |
 | 1RC | 308 | 292 | 16 | 0 | 298 |
-| Total | 1376 | 1299 | 73 | 4 | — |
+| 1LE | 1093 | 1033 | 60 | 0 | 872 |
+| Total | 2469 | 2332 | 133 | 4 | — |
 
-For 0RC leaf88, entry at step563 followed by an exact 288-step prefix rewrite inserts 11110000, leaving all suffix bits untouched; [Lean proof candidate](Raw40A1LC0RCLeaf88.lean). The 0RC attaining witness includes one unit of blank delay. [Four-child rebuild](reproduce-A1LC0LC.sh), [0RC exactness candidate](Raw40A1LC0RCExact.lean), [1LB exactness candidate](Raw40A1LC1LBExact.lean), [1RC exactness candidate](Raw40A1LC1RCExact.lean). Aggregate acceptance pending.
+For 0RC leaf88, entry at step563 followed by an exact 288-step prefix rewrite inserts 11110000, leaving all suffix bits untouched; [Lean proof candidate](Raw40A1LC0RCLeaf88.lean). The 0RC attaining witness includes one unit of blank delay. [Five-child rebuild](reproduce-A1LC0LC.sh), [0RC exactness candidate](Raw40A1LC0RCExact.lean), [1LB exactness candidate](Raw40A1LC1LBExact.lean), [1RC exactness candidate](Raw40A1LC1RCExact.lean). For 1LE the exact witness `1RB1LC_1RC1LE_0RD0LF_1LD1LA_HHH0RC_1RC0LB` reaches E0 after 871 ordinary moves and attains 872 with zero blank delay; its primitive halting and delay theorems passed local Lean 4.36.0-rc2 using the accepted Canonical77 bundle. The 60 compact candidates include seven previously unresolved unary-sweep machines (IDs 337–343); two-run summaries with unary length reduced modulo five close all seven finite graphs (392–524 live abstract states, 36–42 predecessor edges). [Literal bank](a1lc-1LE-discovery.json), [candidate exactness](Raw40A1LC1LEExact.lean). Full coverage and aggregate acceptance pending.
 
 ## Reusable mechanisms and baseline
 
