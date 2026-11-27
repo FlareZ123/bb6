@@ -74,13 +74,28 @@ def run_direct(args):
     Path('rlestart-1.txt').write_text(''.join(' '.join(map(str,t))+'\n' for t in opens))
     call(work/'rle_scan',-1)
     known,source={(14,17):(HARD_D14V17,'Box33D14Source'),(14,18):(HARD_D14V18,'Box33D14V18Source')}.get((d,v),({},None))
+    cycles={}
+    if (d,v)==(17,21):
+        known={
+            (8,18,11,0,1,13,17,10,21,14,24,4):'m0',
+            (8,6,11,14,1,13,17,10,21,0,24,4):'m1',
+            (8,9,11,0,1,13,17,17,21,23,24,2):'m6',
+        }
+        source='Box33D17V21Source'
+        cycles={
+            (8,6,11,2,1,13,17,0,21,17,24,3):('side',2130,89,0,-33),
+            (8,2,11,12,1,13,17,0,21,17,24,3):('side',2482,103,0,-17),
+            (8,14,11,0,1,13,17,22,21,11,24,2):('side',2092,1630,1,26),
+        }
     unresolved=[]
     for l in open('rlehard-1.txt'):
         t=tuple(map(int,l.split()))
-        if t not in known:
-            unresolved.append(t)
-        else:
+        if t in cycles:
+            late[t]=cycles[t]
+        elif t in known:
             late[t]=('known',known[t])
+        else:
+            unresolved.append(t)
     if unresolved:
         out.mkdir(parents=True,exist_ok=True)
         (out/'UNACCEPTED-unresolved.json').write_text(json.dumps({
