@@ -38,6 +38,7 @@ jobs:
           a=p.read_text().rstrip().splitlines()
           assert a[-1].strip()==ending
           b=Path("../bb6/im-results/agent12-cryptid-root-invariant/TokenCounterCorrection.append.lean").read_text()
+          b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/SuffixHazards.append.lean").read_text()
           p.write_text("\n".join(a[:-1])+"\n\n"+b+"\n"+ending+"\n")
           PY
           set -o pipefail
