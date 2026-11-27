@@ -26,6 +26,7 @@ on:
           - canonical57-raw112-delta
           - canonical56-raw59-graft
           - canonical56-raw59-after-raw124
+          - canonical57-raw124-delta
           - canonical57-raw83-delta
           - canonical58-source-crosswalk
           - canonical55-raw83-graft
@@ -1822,7 +1823,7 @@ jobs:
 
   canonical56_raw59_after_raw124:
     name: Recover Raw124 from Canonical58 and add Raw59 to produce Canonical56
-    if: ${{ inputs.target == 'canonical56-raw59-after-raw124' }}
+    if: ${{ inputs.target == 'canonical56-raw59-after-raw124' || inputs.target == 'canonical57-raw124-delta' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     permissions:
@@ -1838,7 +1839,23 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version
-      - name: Compile missing Raw124 and Raw59 consumers from the pinned Canonical58 base
+      - name: Compile the independent Raw124 consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL57_RUN_ID: ${{ inputs.canonical57_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py
+          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py --work /tmp/a2-canonical56-raw59-after-raw124 --canonical57-run-id "$CANONICAL57_RUN_ID" --prepare-only 2>&1 | tee /tmp/a2-canonical57-raw124.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical57-raw124-thin-delta
+          path: /tmp/a2-canonical56-raw59-after-raw124/raw124-delta/**
+          if-no-files-found: error
+          retention-days: 30
+      - name: Compile Raw59 after the accepted Raw124 consumer
+        if: ${{ inputs.target == 'canonical56-raw59-after-raw124' }}
         env:
           GH_TOKEN: ${{ github.token }}
           CANONICAL57_RUN_ID: ${{ inputs.canonical57_run_id }}
@@ -1848,7 +1865,7 @@ jobs:
           [[ "$CANONICAL57_RUN_ID" =~ ^[0-9]+$ ]]
           [[ "$RAW59_SLICE_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py
-          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py --work /tmp/a2-canonical56-raw59-after-raw124 --canonical57-run-id "$CANONICAL57_RUN_ID" --raw59-run-id "$RAW59_SLICE_RUN_ID" 2>&1 | tee /tmp/a2-canonical56-raw59-after-raw124.log
+          python im-results/agent2-tnf-raw124/assemble_raw59_canonical56_after_raw124.py --work /tmp/a2-canonical56-raw59-after-raw124 --canonical57-run-id "$CANONICAL57_RUN_ID" --raw59-run-id "$RAW59_SLICE_RUN_ID" --resume 2>&1 | tee /tmp/a2-canonical56-raw59-after-raw124.log
           test -s /tmp/a2-canonical56-raw59-after-raw124/canonical56-raw59-after-raw124.json
           python - <<'PY'
           import json
@@ -1861,7 +1878,7 @@ jobs:
           assert "native_decide" not in str(report["axioms"])
           PY
       - uses: actions/upload-artifact@v4
-        if: success()
+        if: ${{ success() && inputs.target == 'canonical56-raw59-after-raw124' }}
         with:
           name: canonical56-raw59-after-raw124-integrated
           path: |
@@ -1883,6 +1900,7 @@ jobs:
             /tmp/a2-canonical56-raw59-after-raw124/*.json
             /tmp/a2-canonical56-raw59-after-raw124/*.log
             /tmp/a2-canonical56-raw59-after-raw124.log
+            /tmp/a2-canonical57-raw124.log
           if-no-files-found: warn
           retention-days: 30
 
