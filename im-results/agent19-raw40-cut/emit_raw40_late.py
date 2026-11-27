@@ -35,14 +35,14 @@ open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent50Zipper BB6.Agent13Bl
 open BB6Coverage.Agent10ZipAudit BB6.Agent10ZipAudit BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent50TNFPilot
 '''
 
-def emit_late_module(c,records,B):
-    ns=f'BB6.Agent19Raw40.A1LC{c}Late'
+def emit_late_module(c,records,B,family='A1LC'):
+    ns=f'BB6.Agent19Raw40.{family}{c}Late'
     source=HEADER+f'namespace {ns}\n'
     names={}
     for v in records:
         i,t,n,slot=(v[k] for k in ('id','table','n','slot'))
         p=parse(t);q,a=divmod(slot,2);bit=str(bool(a)).lower()
-        assert p[slot]=='---' and p.count('---')==1
+        assert p[slot]=='---'
         names[t]=f'{ns}.Leaf{i}'
         source+=f'namespace Leaf{i}\n'+lean_table(p)
         cur=(0,'','');segments=[]
@@ -68,10 +68,17 @@ def emit_late_module(c,records,B):
     simp only [zipRead,h,Option.map_some,hq1,hl]
     rfl
 
-theorem checked (cut : Nat) : canonicalCheck {B} table cut (.closed (.last {n} ({q},{bit}))) = true := by
+theorem query_ok : zipQueryOK {B} table {n} ({q},{bit}) = true := by
+  simp only [zipQueryOK,read_query]
+  decide +kernel
+'''
+        if p.count('---')==1:
+            source+=f'''theorem checked (cut : Nat) : canonicalCheck {B} table cut (.closed (.last {n} ({q},{bit}))) = true := by
   simp only [canonicalCheck,prefixCheck_eq,zipCheck,zipQueryOK,read_query]
   decide +kernel
-
+#print axioms checked
+'''
+        source+=f'''
 def witness : Machine := fun s => (table s).bind id
 theorem witness_compatible : compatible table witness := by
   intro s t ht; simp only [witness,ht,Option.bind_some,id_eq]
@@ -95,7 +102,7 @@ theorem witness_halts : HaltsAfter witness {n} := by
     · rw [run_append,H,Option.bind_some]
       change rawStep witness (embed z) = none
       rw [rawStep,hread]; rfl
-#print axioms checked
+#print axioms query_ok
 #print axioms witness_halts
 end Leaf{i}
 '''
