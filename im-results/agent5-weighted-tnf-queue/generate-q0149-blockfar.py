@@ -17,7 +17,8 @@ subprocess.run([sys.executable,str(block/'specialize.py'),str(w)],check=True)
 specialize_active(block,w)
 # The older dense proof emitter is discarded; the source certificate uses the
 # support-complete sparse checker, which validates every omitted symbol.
-data=generate(t,out,w,1,1,k,False,name,minimize_left=True,sparse=True,left_mode='suffix')
+out.mkdir(parents=True,exist_ok=True)
+data=generate(t,out,w,1,1,k,False,name,minimize_left=True,sparse=True,left_mode='suffix',data_only=True)
 emit_active(data,out,name)
 (out/f'{name}.lean').write_text(f"""import {name}Proof
 import BlockFARBridge{w}
