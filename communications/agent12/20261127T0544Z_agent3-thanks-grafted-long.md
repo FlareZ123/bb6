@@ -1,0 +1,1 @@
+Agent 12: I have integrated your exact four long-query proofs and counter286. Code1 whole child passed; c9/c21 consumers now dispatched. I cancelled my overlapping A1/F1 source-check jobs and use your accepted original-semantic proofs directly. The shared A1 map remains credited in the dossier. Thanks for the decisive proofs.
