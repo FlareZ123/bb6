@@ -1,0 +1,1808 @@
+{
+  "note": "Candidate witnesses for original-source checking only; mathematically accepted only when Lean CI checks all 74",
+  "root": "1RB---_1RC---_0RD---_1LC---_------_------",
+  "params": {
+    "cap": 200,
+    "search_max_entry_exclusive": 60,
+    "search_max_period": 20
+  },
+  "counts": {
+    "first_level": 11,
+    "new_second_level": 74,
+    "open": 120,
+    "cap": 2,
+    "alias": 24
+  },
+  "second_level": [
+    {
+      "table": "1RB---_1RC---_0RD0LC_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LC"
+      },
+      "entry": 10,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LD_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LD"
+      },
+      "entry": 8,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RC_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RC"
+      },
+      "entry": 23,
+      "period": 3,
+      "right": false,
+      "boundary": 3,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RD_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RD"
+      },
+      "entry": 11,
+      "period": 3,
+      "right": false,
+      "boundary": 1,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LC_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LC"
+      },
+      "entry": 9,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LD_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LD"
+      },
+      "entry": 8,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RC_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 7,
+      "right": true,
+      "boundary": 1,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RD_1LC0LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "0LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RD"
+      },
+      "entry": 10,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RD---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RD"
+      },
+      "entry": 3,
+      "period": 4,
+      "right": true,
+      "boundary": 2,
+      "delta": 0
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "0LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LA---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0LA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LB---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0LB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0LC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LD---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0LD"
+      },
+      "entry": 3,
+      "period": 4,
+      "right": true,
+      "boundary": 2,
+      "delta": 0
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 5
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RD---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RD"
+      },
+      "entry": 3,
+      "period": 4,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 4,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1LC"
+      },
+      "entry": 4,
+      "period": 3,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 5
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "0RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 4,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC0LB_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "0LB"
+      },
+      "entry": 8,
+      "period": 9,
+      "right": false,
+      "boundary": 2,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC0RA_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "0RA"
+      },
+      "entry": 0,
+      "period": 8,
+      "right": true,
+      "boundary": 0,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC0RB_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "0RB"
+      },
+      "entry": 1,
+      "period": 7,
+      "right": true,
+      "boundary": 1,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC0RC_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 6,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC0RD_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "0RD"
+      },
+      "entry": 3,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC1RA_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "1RA"
+      },
+      "entry": 0,
+      "period": 8,
+      "right": true,
+      "boundary": 0,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC1RB_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "1RB"
+      },
+      "entry": 1,
+      "period": 7,
+      "right": true,
+      "boundary": 1,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC1RC_0RD---_1LC1LA_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LA"
+      },
+      "second": {
+        "slot": 3,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 6,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LC_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LC"
+      },
+      "entry": 9,
+      "period": 7,
+      "right": false,
+      "boundary": 1,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RA_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RA"
+      },
+      "entry": 0,
+      "period": 8,
+      "right": true,
+      "boundary": 0,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RB_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RB"
+      },
+      "entry": 1,
+      "period": 7,
+      "right": true,
+      "boundary": 1,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RC_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 6,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RD_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RD"
+      },
+      "entry": 3,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LC_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LC"
+      },
+      "entry": 9,
+      "period": 5,
+      "right": false,
+      "boundary": 1,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RA_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RA"
+      },
+      "entry": 0,
+      "period": 8,
+      "right": true,
+      "boundary": 0,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RB_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RB"
+      },
+      "entry": 1,
+      "period": 7,
+      "right": true,
+      "boundary": 1,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RC_1LC1LB_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LB"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 6,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LC_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LC"
+      },
+      "entry": 10,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LD_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LD"
+      },
+      "entry": 8,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RC_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RC"
+      },
+      "entry": 31,
+      "period": 3,
+      "right": false,
+      "boundary": 7,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RD_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RD"
+      },
+      "entry": 11,
+      "period": 3,
+      "right": false,
+      "boundary": 1,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LC_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LC"
+      },
+      "entry": 9,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LD_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LD"
+      },
+      "entry": 8,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RC_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 8,
+      "right": true,
+      "boundary": 1,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RD_1LC1LD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1LD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RD"
+      },
+      "entry": 10,
+      "period": 3,
+      "right": false,
+      "boundary": 0,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RD---_------",
+      "first": {
+        "slot": 7,
+        "move": "1LE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RD"
+      },
+      "entry": 5,
+      "period": 2,
+      "right": true,
+      "boundary": 2,
+      "delta": 0
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LB_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LB"
+      },
+      "entry": 4,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LD_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0LD"
+      },
+      "entry": 10,
+      "period": 5,
+      "right": false,
+      "boundary": 1,
+      "delta": -1
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RC_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 7,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RD_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "0RD"
+      },
+      "entry": 5,
+      "period": 3,
+      "right": true,
+      "boundary": 3,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LD_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1LD"
+      },
+      "entry": 12,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RC_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 7,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RD_1LC1RD_------_------",
+      "first": {
+        "slot": 7,
+        "move": "1RD"
+      },
+      "second": {
+        "slot": 5,
+        "move": "1RD"
+      },
+      "entry": 5,
+      "period": 3,
+      "right": true,
+      "boundary": 3,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LD---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0LD"
+      },
+      "entry": 5,
+      "period": 2,
+      "right": true,
+      "boundary": 3,
+      "delta": 0
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 5
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RD---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RD"
+      },
+      "entry": 3,
+      "period": 4,
+      "right": true,
+      "boundary": 2,
+      "delta": 2
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "0RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 4,
+      "delta": 1
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RA---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RA"
+      },
+      "entry": 0,
+      "period": 7,
+      "right": true,
+      "boundary": 0,
+      "delta": 5
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RB---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RB"
+      },
+      "entry": 1,
+      "period": 6,
+      "right": true,
+      "boundary": 1,
+      "delta": 4
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RC---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RC"
+      },
+      "entry": 2,
+      "period": 5,
+      "right": true,
+      "boundary": 2,
+      "delta": 3
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RE---_------",
+      "first": {
+        "slot": 7,
+        "move": "1RE"
+      },
+      "second": {
+        "slot": 8,
+        "move": "1RE"
+      },
+      "entry": 6,
+      "period": 1,
+      "right": true,
+      "boundary": 4,
+      "delta": 1
+    }
+  ],
+  "open": [
+    {
+      "table": "1RB---_1RC---_0RD0LA_1LC0LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LB_1LC0LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LE_1LC0LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RA_1LC0LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RB_1LC0LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RE_1LC0LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LA_1LC0LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LB_1LC0LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LE_1LC0LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RA_1LC0LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RB_1LC0LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RE_1LC0LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_0RF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RD---_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0LE_1RF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LE---_------",
+      "slot": 9,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0LF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_0RF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LA---_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LB---_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LD---_------",
+      "slot": 9,
+      "n": 10
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LE---_------",
+      "slot": 9,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1LF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RD---_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC0RE_1RF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC0LA_0RD---_1LC1LA_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC0LC_0RD---_1LC1LA_------_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC0LD_0RD---_1LC1LA_------_------",
+      "slot": 1,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC0LE_0RD---_1LC1LA_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC0RE_0RD---_1LC1LA_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC1LA_0RD---_1LC1LA_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC1LB_0RD---_1LC1LA_------_------",
+      "slot": 5,
+      "n": 12
+    },
+    {
+      "table": "1RB---_1RC1LC_0RD---_1LC1LA_------_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC1LD_0RD---_1LC1LA_------_------",
+      "slot": 1,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC1LE_0RD---_1LC1LA_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC1RD_0RD---_1LC1LA_------_------",
+      "slot": 5,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC1RE_0RD---_1LC1LA_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LA_1LC1LB_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LB_1LC1LB_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LD_1LC1LB_------_------",
+      "slot": 3,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LE_1LC1LB_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RE_1LC1LB_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LA_1LC1LB_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LB_1LC1LB_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LD_1LC1LB_------_------",
+      "slot": 3,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LE_1LC1LB_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RD_1LC1LB_------_------",
+      "slot": 3,
+      "n": 11
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RE_1LC1LB_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LA_1LC1LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LB_1LC1LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LE_1LC1LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RA_1LC1LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RB_1LC1LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RE_1LC1LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LA_1LC1LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LB_1LC1LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LE_1LC1LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RA_1LC1LD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RB_1LC1LD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RE_1LC1LD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_0RF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1LE_1RF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LA_1LC1RD_------_------",
+      "slot": 1,
+      "n": 11
+    },
+    {
+      "table": "1RB---_1RC---_0RD0LE_1LC1RD_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RA_1LC1RD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RB_1LC1RD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD0RE_1LC1RD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LA_1LC1RD_------_------",
+      "slot": 3,
+      "n": 9
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LB_1LC1RD_------_------",
+      "slot": 3,
+      "n": 10
+    },
+    {
+      "table": "1RB---_1RC---_0RD1LE_1LC1RD_------_------",
+      "slot": 8,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RA_1LC1RD_------_------",
+      "slot": 1,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RB_1LC1RD_------_------",
+      "slot": 3,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD1RE_1LC1RD_------_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_0RF---_------",
+      "slot": 10,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LA---_------",
+      "slot": 1,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LB---_------",
+      "slot": 3,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LC---_------",
+      "slot": 5,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LD---_------",
+      "slot": 9,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LE---_------",
+      "slot": 9,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1LF---_------",
+      "slot": 11,
+      "n": 7
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RD---_------",
+      "slot": 5,
+      "n": 8
+    },
+    {
+      "table": "1RB---_1RC---_0RD---_1LC1RE_1RF---_------",
+      "slot": 10,
+      "n": 7
+    }
+  ],
+  "caps": [
+    "1RB---_1RC---_0RD0LC_1LC1RD_------_------",
+    "1RB---_1RC---_0RD1LC_1LC1RD_------_------"
+  ]
+}
