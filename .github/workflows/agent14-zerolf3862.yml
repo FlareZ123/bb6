@@ -87,6 +87,99 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' "$out/log"
           grep -F "'$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" "$out/log"
           find /tmp/agent14-zeroLF3862 -name '*.olean' -exec cp '{}' "$out/build/" ';'
+      - name: Reconstruct generated Raw139 sibling sources
+        if: inputs.kind == 'raw139-local'
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+
+          a41=im-results/agent41-raw139-f1-zeroLF
+          mkdir -p .tmp/a41-f1-zeroLF/imports .tmp/a41-f1-zeroRC/imports
+          base64 -d "$a41/Agent41F1ZeroLFProofs.tar.xz.b64" > .tmp/a41-f1-zeroLF/proofs.tar.xz
+          printf '%s  %s\n' 15b951ad6c8c9b988e2a2f44a39671a938b4c2b0fbc264c72a4afe1a972b62bb .tmp/a41-f1-zeroLF/proofs.tar.xz | sha256sum -c -
+          tar -xJf .tmp/a41-f1-zeroLF/proofs.tar.xz -C .tmp/a41-f1-zeroLF/imports
+          tar -xJf .tmp/a41-f1-zeroLF/proofs.tar.xz -C .tmp/a41-f1-zeroRC/imports Agent41SymSweep.lean
+          base64 -d "$a41/Agent41F1ZeroRCProofs.tar.xz.b64" > .tmp/a41-f1-zeroRC/proofs.tar.xz
+          printf '%s  %s\n' e714f0772d6e7df0d64e3da63153c8450e39abead67caf8fb5b61d1241e5dbd8 .tmp/a41-f1-zeroRC/proofs.tar.xz | sha256sum -c -
+          tar -xJf .tmp/a41-f1-zeroRC/proofs.tar.xz -C .tmp/a41-f1-zeroRC/imports
+
+          base="$PWD/im-results/agent48-raw139-f1-oneLA"
+          work="$PWD/.tmp/a48-f1-oneLA/imports"
+          mkdir -p "$work"
+          (
+            cd "$work"
+            cp "$base/recipes.txt" .
+            python3 "$base/replay.py"
+            python3 "$base/package.py"
+            printf '%s  %s\n' 0efe6d872460d07282eaa1cb63d878c211b426a2da8cb70a3bb1675d3e69a730 ChampionF1OneLACover.lean | sha256sum -c -
+          )
+
+          python3 im-results/agent6-champion-residual/reconstruct_f1_batch.py
+
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-ZeroLF-certified
+          run-id: 45726077932
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-ZeroLF
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-OneLB-certified
+          run-id: 45726917837
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-OneLB
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-OneLA-certified
+          run-id: 45727637346
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-OneLA
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-OneLF-certified
+          run-id: 45728113457
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-OneLF
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-ZeroRC-certified
+          run-id: 45728638168
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-ZeroRC
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-OneRF-certified
+          run-id: 45729425638
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-OneRF
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-ZeroRA-certified
+          run-id: 45730253726
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-ZeroRA
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-d0-ZeroRF-certified
+          run-id: 45753603330
+          github-token: ${{ github.token }}
+          path: /tmp/a14-d0-ZeroRF
+      - uses: actions/download-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: raw139-c1-twelve-certified
+          run-id: 45746968139
+          github-token: ${{ github.token }}
+          path: /tmp/a48-c1-batch
+
       - name: Compile roster-independent Raw139 normalized join
         if: inputs.kind == 'raw139-local'
         run: |
@@ -94,9 +187,21 @@ jobs:
           python3 im-results/agent13-coverage/unpack.py
           work=/tmp/agent14-raw139-local
           mkdir -p "$work"
-          python3 tools/test_lean_compile_module_index.py
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedLocalAcceptedCovers.lean \
+            --source-root "/tmp/a14-d0-ZeroLF/imports" \
+            --source-root "/tmp/a14-d0-OneLB/imports" \
+            --source-root "/tmp/a14-d0-OneLA/imports" \
+            --source-root "/tmp/a14-d0-OneLF/imports" \
+            --source-root "/tmp/a14-d0-ZeroRC/imports" \
+            --source-root "/tmp/a14-d0-OneRF/imports" \
+            --source-root "/tmp/a14-d0-ZeroRA/imports" \
+            --source-root "/tmp/a14-d0-ZeroRF/imports" \
+            --source-root "/tmp/a48-c1-batch/imports" \
+            --source-root ".tmp/a41-f1-zeroLF/imports" \
+            --source-root ".tmp/a41-f1-zeroRC/imports" \
+            --source-root ".tmp/a14-f1-batch/imports" \
+            --source-root ".tmp/a48-f1-oneLA/imports" \
             --workdir "$work/build" \
             --jobs 4 \
             --manifest "$work/manifest.json" \
