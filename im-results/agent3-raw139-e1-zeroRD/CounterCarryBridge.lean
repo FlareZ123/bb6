@@ -115,7 +115,7 @@ theorem run_sound (v : Variant) (m : Machine) (hm : compatible (ctr v) m) (n : N
   induction n generalizing c with
   | zero => exact ⟨c,rfl,Option.some.inj hs⟩
   | succ n ih =>
-    cases ht : CounterCarry.step (observe c) with
+    cases ht : CounterCarry.step v (observe c) with
     | none => simp [CounterCarry.run,ht] at hs
     | some e =>
       obtain ⟨c',hc',he⟩ := step_sound v m hm c e ht
