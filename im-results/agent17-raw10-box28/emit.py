@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Generate an exact source proof for a completed Box28 D0=14,D1=17/18
+"""Generate an exact source proof for a completed Box28 D0=14,D1=3/4/17/18/19/20
 discovery cut. Reuses the accepted reflective one-halt/stack proof method.
 Requires preserved discovery artifact, not a second classification scan.
 Refuses any unresolved leaf. The generated source must pass Lean separately.
 """
 from pathlib import Path
-import argparse, json, os, sys
+import argparse, json, os, sys, shutil
 from math import prod
 HERE=Path(__file__).resolve().parent
 BASE=HERE.parent/'agent13-raw10-box4'
@@ -39,11 +39,13 @@ def source_core(out, name, d1, bound):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--d1',type=int,choices=(17,18),required=True)
+    p.add_argument('--d1',type=int,choices=(3,4,17,18,19,20),required=True)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--far',type=Path)
     a=p.parse_args()
     work=a.work.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
+    far=a.far.resolve() if a.far else None
     os.chdir(work);fixed=[8,-1,11,-1,11,13,14,a.d1,-1,-1,-1,-1]
     name='Box28D'+str(a.d1)
     summary=json.load(open('summary.json'))
@@ -54,15 +56,66 @@ def main():
       (8,14,11,24,11,13,14,17,3,15,4,0):('sweep',11,'sweepPartial','sweep_compatible_never'),
     } if a.d1==17 else {}
     remaining={tuple(t) for v in summary.values() for t in v['open_rows']}
-    assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
-    if hard_rows:
-        ns='BB6.Agent17.Box28HardSource'
-        lines=[f'import {name}Tree','import Box28HardSource',
-          f'namespace BB6.Agent13.{name}','open BB6Coverage']
-        for row,(label,target,part,proof) in hard_rows.items():
-            lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
-        lines.append(f'end BB6.Agent13.{name}')
-        put(out,name+'HardBank','\n'.join(lines)+'\n')
+    if far:
+        assert a.d1 in (3,4,19,20)
+        manifest=json.loads((far/'far_manifest.json').read_text())
+        assert not manifest['open_rows']
+        solved={tuple(row):param for row,param in manifest['solved']}
+        assert set(solved)==remaining, ('FAR coverage mismatch',set(solved)^remaining)
+        imports=[name+'Tree']
+        defs=[]
+        for i,row in enumerate(sorted(remaining)):
+            width,cap,mod,runs,flip,mode=solved[row]
+            assert len(row)==12 and min(row)>=0 and row.count(0)==1
+            target=row.index(0)
+            label=f'far{i:02d}'
+            stem=f'{name}Far{i:02d}'
+            ns=f'BB6BlockFAR{width}'
+            for suffix in ('Packed','Proof'):
+                shutil.copyfile(far/(stem+suffix+'.lean'),out/(stem+suffix+'.lean'))
+            bridge=stem+'Source'
+            q=f'BB6.Agent13.{name}.{stem}'
+            imports.append(bridge)
+            im=[f'import {stem}Proof',f'import BlockFARBridge{width}',f'import {name}Core']
+            if flip: im.append(f'import MirrorTransport{width}')
+            table=f'{ns}.{stem}.machine'
+            projected=f'{ns}.mirrorTable {table}' if flip else table
+            proof=(f'{ns}.never_of_mirror projected (by simpa only [projected, {ns}.mirrorTable_involutive] using {ns}.{stem}.never)' if flip else f'{ns}.{stem}.never')
+            codes=','.join(map(str,row))
+            body=f'''namespace {q}
+open BB6Coverage BB6.Agent49Box BB6.Agent13.Box17
+def row : PartialMachine := fun s => some (decode ([{codes}] : List (Fin 25))[2*s.1.val+s.2.toNat]!)
+def projected : {ns}.Table := {projected}
+theorem projection (s : Slot) :
+    match {ns}.partialTable projected s with
+    | none => True
+    | some t => row s = some t := by
+  rcases s with ⟨q,b⟩
+  revert q b
+  decide
+theorem compatible_never (m : Machine) (hm : compatible row m) : NeverHalts m := by
+  apply {ns}.transfer_never projected m
+  · intro s t ht
+    have h := projection s
+    rw [ht] at h
+    exact hm s t h
+  · exact {proof}
+end {q}
+'''
+            put(out,bridge,'\n'.join(im)+'\n'+body)
+            hard_rows[row]=(label,target,None,None)
+            defs.append(f'def {label} : Known {target} := ⟨{q}.row, good_never {target} _ {q}.compatible_never⟩')
+        put(out,name+'HardBank','\n'.join([*(f'import {m}' for m in imports),f'namespace BB6.Agent13.{name}','open BB6Coverage',*defs,f'end BB6.Agent13.{name}'])+'\n')
+    else:
+        assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
+        if hard_rows:
+            ns='BB6.Agent17.Box28HardSource'
+            lines=[f'import {name}Tree','import Box28HardSource',
+              f'namespace BB6.Agent13.{name}','open BB6Coverage']
+            for row,(label,target,part,proof) in hard_rows.items():
+                lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
+            lines.append(f'end BB6.Agent13.{name}')
+            put(out,name+'HardBank','\n'.join(lines)+'\n')
     max_late=max(v['late_max_halt'][0] for v in summary.values())
     bound=max(3640,max_late+5)
     source_core(out,name,a.d1,bound)
