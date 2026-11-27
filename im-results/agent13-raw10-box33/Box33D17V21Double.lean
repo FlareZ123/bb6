@@ -79,8 +79,8 @@ theorem turnBlank (b : Bool) (r : Stream) :
   simpa only [zeros_z] using turn3 b z r
 
 theorem turn2 (b : Bool) (l r : Stream) :
-    run b (6+extra b) (L (zeros 2 (ones 1 l)) r) =
-    some (A (ones 1 l) (word [false,false,false,true] r)) := by
+    run b (6+extra b) (L (zeros 2 (ones 2 l)) r) =
+    some (A (ones 2 l) (word [false,false,false,true] r)) := by
   cases b <;> simp [extra,L,A,cfg,run,step,left,right,ones,zeros,rep,word]
 
 theorem astep (b : Bool) (l r : Stream) :
@@ -134,6 +134,7 @@ theorem growthGen (b : Bool) (n : Nat) (l : Stream) :
   have h5 := chain b h4 (enterB b _ (ones 11 z))
   have h6 := chain b h5 (bsweep b 11 s z)
   have hx : run b 2 (B (zeros 11 s) z) = some (L (zeros 9 s) (ones 1 z)) := by
+    rw [show zeros 11 s=zeros 2 (zeros 9 s) from zeros_add 2 9 s]
     simpa only [zeros_z] using exitB b (zeros 9 s) z
   have h7 := chain b h6 hx
   have h8 := chain b h7 (turn3 b (zeros 6 s) (ones 1 z))
