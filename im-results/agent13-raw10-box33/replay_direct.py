@@ -97,6 +97,11 @@ def run_direct(args):
                 qual=f'BB6.Agent13.{mod}'+(f'.M{i}' if style=='nested' else '')
                 arg=f' .m{i}' if style=='enum' else ''
                 known_specs[nm]=(mod,qual,arg)
+    if (d,v)==(17,24):
+        bank=json.loads((HERE/'d17v24-pair-blocks.json').read_text())
+        for i,record in bank.items():
+            nm=f'pair{i}';known[tuple(record['machine'])]=nm
+            known_specs[nm]=('Box33D17V24PairBlocks',f'BB6.Agent13.Box33D17V24PairBlocks.M{i}','')
     if (d,v)==(17,21):
         known={
             (8,18,11,0,1,13,17,10,21,14,24,4):'m0',

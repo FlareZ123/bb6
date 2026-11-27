@@ -36,4 +36,49 @@ function compress(m,L,R){
   L=nl;R=nr;if(stop)return {L,R,count:C.states.length,history};
  }
 }
-module.exports={discover,closure,compress};
+
+// Block runs anchored at the first nonzero push above the blank seed.
+// Preserve an unfinished width-w block, and the k nearest runs of complete
+// blocks, saturating repeated block lengths at c modulo p.
+// The result is a candidate; the independent Lean checker verifies all
+// abstract stack edges and reachable configurations.
+function discoverBlock(m,lp,rp,cap=25000){
+ const sides=[lp,rp].map(params=>({params,tab:[{phase:0,prefix:0,runs:[]}],ids:new Map(),delta:[[-1,-1]],edges:[[[0,0]]],wait:[[]]}));
+ function push(d,i,b){
+  const s=sides[d];let j=s.delta[i][b];if(j>=0)return j;
+  if(i===0&&b===0)return s.delta[i][b]=0;
+  const v=s.tab[i],[w,k,c,p]=s.params;
+  let phase=v.phase+1,prefix=(v.prefix<<1)|b,runs=v.runs;
+  if(phase===w){
+   const sym=prefix;phase=0;prefix=0;runs=runs.map(x=>x.slice());
+   if(runs.length&&runs[0][0]===sym){const n=runs[0][1]+1;runs[0][1]=n>=c+p?c:n}
+   else runs=[[sym,1],...runs].slice(0,k);
+  }
+  const key=phase+"/"+prefix+"/"+runs.map(x=>x.join(":")).join(",");
+  j=s.ids.get(key);
+  if(j===undefined){j=s.tab.length;s.ids.set(key,j);s.tab.push({phase,prefix,runs});s.delta.push([-1,-1]);s.edges.push([]);s.wait.push([])}
+  return s.delta[i][b]=j;
+ }
+ let seen=new Set(["0,0,0,0"]),todo=[[0,0,0,0]],failure=false;
+ function add(q,a,l,r){
+  if(m[2*q+a]<=0){failure=true;return}
+  const key=[q,a,l,r].join(",");
+  if(!seen.has(key)){if(todo.length>=cap){failure=true;return}seen.add(key);todo.push([q,a,l,r])}
+ }
+ function pop(st,e,j){const [q,a,l,r]=st,v=m[q*2+a]-1,n=v>>2,[b,i]=e;if(v&1)add(n,b,j,i);else add(n,b,i,j)}
+ for(let t=0;t<todo.length&&!failure;t++){
+  const st=todo[t],[q,a,l,r]=st,v=m[2*q+a]-1;
+  if(v<0)return null;
+  const w=v>>1&1,d=v&1?0:1,old=d?r:l,x=d?l:r,j=push(d,old,w),s=sides[d],o=sides[1-d];
+  if(!s.edges[j].some(([b,i])=>b===w&&i===old)){
+   const e=[w,old];s.edges[j].push(e);
+   for(const [st2,j2] of s.wait[j]){pop(st2,e,j2);if(failure)break}
+  }
+  if(failure)break;
+  o.wait[x].push([st,j]);for(const e of o.edges[x]){pop(st,e,j);if(failure)break}
+ }
+ if(failure)return null;
+ return {lp,rp,L:sides[0].delta.map(x=>x.map(y=>Math.max(0,y))),R:sides[1].delta.map(x=>x.map(y=>Math.max(0,y))),count:todo.length};
+}
+
+module.exports={discover,discoverBlock,closure,compress};
