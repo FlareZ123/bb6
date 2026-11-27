@@ -35,3 +35,18 @@ For H=2^32, M=2^k<=G=F-1, z<F<2^31, 0<=Y<M, set R=min(H-1,floor(MH/G)), S=floor(
 |2000000000|16993.1|21209.1|26508.7|
 
 Mode 6 is opt-in (P1_FIT=6). These are isolated query rates, not complete scan speeds. Current n45 continuation 45950487343 uses pinned mode 1 and is not interrupted. No numerical extinction claimed.
+
+## Sixteen-lane exact reverse image
+
+Mode 7 packs the whole carry vector into sixteen unsigned 32-bit lanes. Only the two interleaved fixed-point reciprocal products need 64-bit precision. With F<2^31, G=F-1, and exact quotient b, the provisional underestimate b0 is at most one below b, so 0<=X-b0*G<2G<2^32. Computing this difference modulo 2^32 gives its exact integer value, despite X and b0*G individually exceeding 2^32. The corrected remainder is <G. For B<M<=G, corr(k,B)-B<=M-k-1, hence c0<2G; even for an invalid quotient B>=M the packed masks evaluate only the low k bits, and the explicit B<M guard prevents accepting it. For B+1<M the adjacent weight gap is q+2*lowbit(B+1)-2<2G. The second candidate requires an explicit c0>=gap guard in the packed kernel to exclude modular underflow. This is a written machine-arithmetic justification, not a formal verification of the C++ implementation.
+
+A first audit, CI 45951765623, lacked AVX512 and therefore tested only scalar code. Targeted hardware-required [CI 45952558096](https://github.com/FlareZ123/bb6/actions/runs/45952558096), source d1702a90d6474b625fdd664f93d856a22f28525c, actually executed 3,602,496 SIMD comparisons (including mixed masks), 14,933,008 small cases and 3,200,000 large cases. Modes 6 and 7 yielded identical n3342 CHILD/END lists. Same-run isolated rates:
+
+| F | mode 0 | mode 1 | mode 6 | mode 7 (Mclock/s) |
+|---:|---:|---:|---:|---:|
+|100000000|14727.3|18718.4|23127.3|40791.1|
+|650000000|16504.3|20915.3|25710.7|45269.8|
+|1000000000|16370.1|20923.5|25634.6|45255.3|
+|2000000000|17032.2|21473.9|26620.4|47060.1|
+
+Mode 7 is the fastest tested kernel, about 2.76x the original isolated throughput at F=1e9. A full continuation speedup is not established; mode 7 requires AVX512F/DQ/VL to take the packed path. The existing long n45 continuation was dispatched before this implementation and is not interrupted.
