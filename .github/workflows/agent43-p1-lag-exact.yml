@@ -27,3 +27,4 @@ jobs:
           lean -o "$A/LagMicro.olean" "$A/LagMicro.lean"
           lean -o "$C/LagExact.olean" "$C/LagExact.lean"
           lean -o "$C/LagGuarded.olean" "$C/LagGuarded.lean"
+          lean -o "$C/LagGuardedTrace.olean" "$C/LagGuardedTrace.lean"
