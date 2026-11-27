@@ -1855,14 +1855,29 @@ jobs:
           assert "native_decide" not in str(report["axioms"])
           PY
       - uses: actions/upload-artifact@v4
-        if: always()
+        if: success()
         with:
           name: canonical56-raw59-after-raw124-integrated
           path: |
-            /tmp/a2-canonical56-raw59-after-raw124/**
+            /tmp/a2-canonical56-raw59-after-raw124/linked/**
+            /tmp/a2-canonical56-raw59-after-raw124/generated/**
+            /tmp/a2-canonical56-raw59-after-raw124/metadata/**
+            /tmp/a2-canonical56-raw59-after-raw124/*.json
+            /tmp/a2-canonical56-raw59-after-raw124/*.log
             /tmp/a2-canonical56-raw59-after-raw124.log
           if-no-files-found: warn
           compression-level: 0
+          retention-days: 30
+
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: canonical56-raw59-after-raw124-diagnostics
+          path: |
+            /tmp/a2-canonical56-raw59-after-raw124/*.json
+            /tmp/a2-canonical56-raw59-after-raw124/*.log
+            /tmp/a2-canonical56-raw59-after-raw124.log
+          if-no-files-found: warn
           retention-days: 30
 
   canonical55_raw83_graft:
