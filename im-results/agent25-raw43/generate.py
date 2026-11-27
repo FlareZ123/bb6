@@ -2,12 +2,13 @@
 from pathlib import Path
 from collections import Counter
 from itertools import product
-import hashlib, json, subprocess, sys, tempfile
+import hashlib, json, re, subprocess, sys, tempfile
 
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
-assert VARIANT == "default" or (len(VARIANT)==3 and VARIANT[0] in "01" and VARIANT[1] in "lr" and VARIANT[2] in "abcdef")
+B1RC = re.fullmatch(r"b1rc_c([01][lr][a-f])", VARIANT)
+assert VARIANT == "default" or re.fullmatch(r"[01][lr][a-f]", VARIANT) or B1RC
 OUT = ROOT / ("generated" if VARIANT == "default" else "generated_"+VARIANT)
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
@@ -120,9 +121,16 @@ def generate():
             if t[0]=="split":
                 return set().union(*(deps(k) for k in t[3]))
             return set()
+        p0 = "(refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩))"
+        if B1RC:
+            c1 = B1RC.group(1).upper()
+            assert S["table"] == f"1RB---_1RC1RC_0RD{c1}_1LD0RB_------_------"
+            base_expr = f"refine (refine {p0} (1,true) (some ⟨true,true,2⟩)) (2,true) (some {move(c1)})"
+        else:
+            base_expr = f"refine (refine {p0} (1,true) (some ⟨false,true,4⟩)) (4,true) (some {move(S.get('e1','0LE'))})"
         emit(PREFIX+"Base",["ZipPrefixAudit"],f"""
 abbrev p43child : PartialMachine :=
-  refine (refine (refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩)) (1,true) (some ⟨false,true,4⟩)) (4,true) (some {move(S.get("e1","0LE"))})
+  {base_expr}
 theorem p43child_root : p43child initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem p43child_nohalt : weightedTNFNoAssignedHalt p43child :=
   weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take 3) firstOneCylinder_no_assigned_halt)))
