@@ -79,6 +79,69 @@ theorem pack_surj (n : Nat) : ∃ xs, pack xs=n := by
     | succ k ih => rw [Nat.pow_succ]; omega
   exact hp n
 
+theorem repCat_affine (xs : List Bool) (n v : Nat) :
+    repCat xs n v = repCat xs n 0 + (2^xs.length)^n*v := by
+  induction n with
+  | zero => simp [repCat]
+  | succ n ih =>
+    simp only [repCat,cat,ih,Nat.mul_add,Nat.pow_succ]
+    simp [Nat.mul_comm,Nat.mul_left_comm,Nat.add_assoc]
+
+theorem repCat_geom_add (xs : List Bool) (n : Nat) :
+    repCat xs n 0 * (2^xs.length-1) + pack xs = pack xs * (2^xs.length)^n := by
+  let q := 2^xs.length
+  have hq : 0 < q := Nat.pow_pos (by decide)
+  have eq : q-1+1=q := by omega
+  change repCat xs n 0 * (q-1) + pack xs = pack xs * q^n
+  induction n with
+  | zero => simp [repCat]
+  | succ n ih =>
+    change (pack xs + q * repCat xs n 0) * (q-1) + pack xs = pack xs * q^(n+1)
+    calc
+      _ = q * (repCat xs n 0 * (q-1) + pack xs) := by
+        rw [Nat.mul_add,Nat.add_mul,Nat.mul_assoc]
+        have h : pack xs * (q-1) + pack xs = q * pack xs := by
+          calc
+            _ = pack xs * (q-1) + pack xs * 1 := by simp
+            _ = pack xs * q := by rw [← Nat.mul_add,eq]
+            _ = q * pack xs := Nat.mul_comm _ _
+        omega
+      _ = pack xs * q^(n+1) := by rw [ih,Nat.pow_succ]; ac_rfl
+
+/-- Closed form for repeated binary block packing. -/
+def repCatFast (xs : List Bool) (n v : Nat) : Nat :=
+  if xs.isEmpty then v else
+    let q := 2^xs.length
+    let power := q^n
+    pack xs * (power-1) / (q-1) + power*v
+
+theorem repCatFast_eq (xs : List Bool) (n v : Nat) : repCatFast xs n v = repCat xs n v := by
+  cases xs with
+  | nil =>
+    simp only [repCatFast,List.isEmpty,ite_true]
+    induction n with
+    | zero => rfl
+    | succ n ih =>
+      change v = cat [] (repCat [] n v)
+      rw [← ih]; simp [cat,pack]
+  | cons b bs =>
+    let xs := b::bs
+    let q := 2^xs.length
+    have hq : 1 < q := by
+      change 1 < 2^(bs.length+1)
+      rw [Nat.pow_succ]
+      have hp : 0 < 2^bs.length := Nat.pow_pos (by decide)
+      omega
+    have hp : 0 < q^n := Nat.pow_pos (by omega)
+    have he := repCat_geom_add xs n
+    change repCat xs n 0 * (q-1) + pack xs = pack xs * q^n at he
+    have hm : pack xs * (q^n-1) = repCat xs n 0 * (q-1) := by
+      rw [Nat.mul_sub_left_distrib,Nat.mul_one]
+      omega
+    change pack xs * (q^n-1) / (q-1) + q^n*v = repCat xs n v
+    rw [hm,Nat.mul_div_cancel _ (by omega)]
+    exact (repCat_affine xs n v).symm
+
 theorem sweepRP (p : PartialMachine) (q : Fin 6) (lp rp I O : List Bool) (k n L R : Nat)
     (h : Auto.knownRun p k ⟨q,lp,rp++I⟩ = some ⟨q,lp++O,rp⟩) :
     runP p (k*n) ⟨q,cat lp L,cat rp (repCat I n R)⟩ =
@@ -118,16 +181,16 @@ def action (p : PartialMachine) (z : P) : Action → Option (Nat × P)
   | .right lp rp I O k n =>
     let L := z.l / 2^lp.length
     let R := z.r / 2^(rp.length+I.length*n)
-    if z = ⟨z.q,cat lp L,cat rp (repCat I n R)⟩ ∧
+    if z = ⟨z.q,cat lp L,cat rp (repCatFast I n R)⟩ ∧
       Auto.knownRun p k ⟨z.q,lp,rp++I⟩ = some ⟨z.q,lp++O,rp⟩ then
-      some (k*n,⟨z.q,cat lp (repCat O n L),cat rp R⟩)
+      some (k*n,⟨z.q,cat lp (repCatFast O n L),cat rp R⟩)
     else none
   | .left lp rp I O k n =>
     let L := z.l / 2^(lp.length+I.length*n)
     let R := z.r / 2^rp.length
-    if z = ⟨z.q,cat lp (repCat I n L),cat rp R⟩ ∧
+    if z = ⟨z.q,cat lp (repCatFast I n L),cat rp R⟩ ∧
       Auto.knownRun p k ⟨z.q,lp++I,rp⟩ = some ⟨z.q,lp,rp++O⟩ then
-      some (k*n,⟨z.q,cat lp L,cat rp (repCat O n R)⟩)
+      some (k*n,⟨z.q,cat lp L,cat rp (repCatFast O n R)⟩)
     else none
 
 theorem action_sound (p : PartialMachine) (z : P) (op : Action) {out : Nat × P}
@@ -144,6 +207,7 @@ theorem action_sound (p : PartialMachine) (z : P) (op : Action) {out : Nat × P}
     next hc =>
       simp only [Option.some.injEq] at h
       subst out
+      simp only [repCatFast_eq] at hc ⊢
       exact (congrArg (runP p (k*n)) hc.1).trans (sweepRP p z.q lp rp I O k n _ _ hc.2)
     next => simp at h
   | left lp rp I O k n =>
@@ -152,6 +216,7 @@ theorem action_sound (p : PartialMachine) (z : P) (op : Action) {out : Nat × P}
     next hc =>
       simp only [Option.some.injEq] at h
       subst out
+      simp only [repCatFast_eq] at hc ⊢
       exact (congrArg (runP p (k*n)) hc.1).trans (sweepLP p z.q lp rp I O k n _ _ hc.2)
     next => simp at h
 
@@ -181,5 +246,13 @@ theorem traceRun_sound (p : PartialMachine) (ops : List Action) (z : P) {out : N
         subst out
         exact joinP (action_sound p z op ha) (ih y hb)
 
+/-- Explicit cost prevents elaboration from unfolding long concrete runs. -/
+theorem joinP_at (p : PartialMachine) (n k t : Nat) (a b c : P)
+    (ht : n+k=t) (h : runP p n a = some b) (g : runP p k b = some c) : runP p t a = some c := by
+  rw [← ht]
+  exact joinP h g
+
+#print axioms repCatFast_eq
+#print axioms joinP_at
 #print axioms traceRun_sound
 end BB6.Agent5PackedSweep
