@@ -10,7 +10,7 @@ set_option maxHeartbeats 0
 set_option linter.unusedSimpArgs false
 
 inductive Kind where
-  | m1 | m2 | m3 | m4 | m5 | m6 | m8 | m10
+  | m1 | m2 | m3 | m4 | m5 | m6 | m8 | m10 | m16 | m19 | m20 | m23 | m24 | m32
   deriving DecidableEq
 inductive Mode where
   | a | c | x
@@ -123,6 +123,85 @@ def step (v : Kind) (c : C9Pair.Config) : Option C9Pair.Config :=
     | .F,false => some (right .A true c)
     | .F,true => some (left .E false c)
 
+  | .m16 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => some (left .D false c)
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .F true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => none
+    | .E,false => some (right .F false c)
+    | .E,true => some (left .F false c)
+    | .F,false => some (right .A false c)
+    | .F,true => some (left .D true c)
+  | .m19 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => some (left .D false c)
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .F true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => some (left .D true c)
+    | .E,false => some (right .F false c)
+    | .E,true => some (left .D false c)
+    | .F,false => some (right .A false c)
+    | .F,true => none
+  | .m20 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => some (left .D false c)
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .F true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => some (left .D true c)
+    | .E,false => some (right .F false c)
+    | .E,true => some (right .C true c)
+    | .F,false => some (right .A false c)
+    | .F,true => none
+  | .m23 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => none
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .F true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => some (left .D false c)
+    | .E,false => some (right .F false c)
+    | .E,true => some (right .B true c)
+    | .F,false => some (right .A false c)
+    | .F,true => some (left .D false c)
+  | .m24 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => none
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .F true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => some (left .D false c)
+    | .E,false => some (right .F false c)
+    | .E,true => some (right .B true c)
+    | .F,false => some (right .A false c)
+    | .F,true => some (left .C false c)
+  | .m32 => match c.q,c.a with
+    | .A,false => some (right .B true c)
+    | .A,true => some (right .F true c)
+    | .B,false => some (left .C true c)
+    | .B,true => some (right .C true c)
+    | .C,false => some (left .A false c)
+    | .C,true => some (left .D false c)
+    | .D,false => some (left .E false c)
+    | .D,true => some (left .D false c)
+    | .E,false => some (right .F false c)
+    | .E,true => some (right .B true c)
+    | .F,false => some (right .A false c)
+    | .F,true => none
+
 def run (v : Kind) : Nat → C9Pair.Config → Option C9Pair.Config
   | 0,c => some c
   | n+1,c => (step v c).bind (run v n)
@@ -142,7 +221,8 @@ abbrev stack (v : Kind) (k : Nat) := rep (block v) k (base v)
 
 def sweepQ : Kind → Q
   | .m2 | .m3 | .m5 => .E
-  | .m6 => .D
+  | .m6 | .m19 | .m20 | .m23 | .m24 | .m32 => .D
+  | .m16 => .F
   | _ => .C
 def modeQ (v : Kind) : Mode → Q
   | .a => .A
@@ -153,53 +233,72 @@ def scan : Mode → Bool
   | _ => true
 def sweepMode (x : Bool) : Mode := if x then .x else .c
 
-def digitBits (d : Bool × Bool) (r : Stream) : Stream := word [d.1,d.2,false] r
-def digits : List (Bool × Bool) → Stream
+def middleZero : Kind → Bool
+  | .m16 | .m19 | .m20 => true
+  | _ => false
+def digitBits (v : Kind) (d : Bool × Bool) (r : Stream) : Stream :=
+  if middleZero v then word [d.1,false,d.2] r else word [d.1,d.2,false] r
+def digits (v : Kind) : List (Bool × Bool) → Stream
   | [] => z
-  | d::w => digitBits d (digits w)
+  | d::w => digitBits v d (digits v w)
 def phase (v : Kind) (s : Mode) (k : Nat) (w : List (Bool × Bool)) : C9Pair.Config :=
-  cfg (modeQ v s) (stack v k) (push (scan s) (digits w))
+  cfg (modeQ v s) (stack v k) (push (scan s) (digits v w))
 
+def earlyCarry : Kind → Bool
+  | .m10 | .m16 | .m19 | .m20 | .m23 | .m24 | .m32 => true
+  | _ => false
 def carry (v : Kind) (a b : Bool) : Bool :=
-  if v = .m10 then a && !b else a && b
+  if earlyCarry v then a && !b else a && b
 def inc (a b : Bool) : Bool × Bool := (!a,if a then !b else b)
 def digitMode (v : Kind) (a b : Bool) : Mode :=
-  if carry v a b then .a else if a && !b then .x else .c
+  if carry v a b then .a else if a then .x else .c
 
+def d1Cost : Kind → Nat
+  | .m5 | .m8 => 6
+  | .m10 | .m16 | .m19 | .m20 | .m23 | .m24 => 3
+  | .m32 => 5
+  | _ => 4
+def d3Cost : Kind → Nat
+  | .m1 => 5
+  | .m10 | .m23 | .m24 | .m32 => 4
+  | .m16 | .m19 => 6
+  | .m20 => 8
+  | _ => 3
 def digitCost (v : Kind) (a b : Bool) : Nat :=
-  if !a then 2
-  else if b then
-    match v with | .m1 => 5 | .m10 => 4 | _ => 3
-  else
-    match v with | .m5 | .m8 => 6 | .m10 => 3 | _ => 4
+  if a then if b then d3Cost v else d1Cost v else 2
 
 def popCost (v : Kind) (x : Bool) : Nat :=
   match v with
-  | .m5 => 5
+  | .m5 | .m20 | .m23 | .m24 | .m32 => 5
   | .m3 => if x then 3 else 5
   | _ => 3
 def turnCost (v : Kind) (x : Bool) : Nat :=
   match v with
   | .m1 | .m8 => 8
   | .m3 => if x then 6 else 8
+  | .m16 | .m19 | .m20 => if x then 8 else 4
+  | .m23 | .m24 | .m32 => 4
   | _ => 6
-def popDigit (v : Kind) : Bool × Bool :=
-  if v = .m10 then (false,true) else (false,false)
+def popDigit (v : Kind) (x : Bool) : Bool × Bool :=
+  match v with
+  | .m10 | .m23 | .m24 | .m32 => (false,true)
+  | .m16 | .m19 | .m20 => (false,x)
+  | _ => (false,false)
 
 -- All the following equalities hold for arbitrary left/right tails, not just samples.
 theorem digitMacro (v : Kind) (a b : Bool) (l r : Stream) :
-    run v (digitCost v a b) (cfg .A l (push false (digitBits (a,b) r))) =
+    run v (digitCost v a b) (cfg .A l (push false (digitBits v (a,b) r))) =
       some (cfg (modeQ v (digitMode v a b))
         (if carry v a b then word (block v) l else l)
-        (push (scan (digitMode v a b)) (if carry v a b then r else digitBits (inc a b) r))) := by
+        (push (scan (digitMode v a b)) (if carry v a b then r else digitBits v (inc a b) r))) := by
   cases v <;> cases a <;> cases b <;>
-    simp [digitCost,carry,inc,digitMode,block,oneBase,modeQ,sweepQ,scan,digitBits,cfg,run,step,left,right,word]
+    simp [digitCost,d1Cost,d3Cost,carry,earlyCarry,inc,digitMode,block,oneBase,modeQ,sweepQ,scan,digitBits,middleZero,cfg,run,step,left,right,word]
 
 theorem popMacro (v : Kind) (x : Bool) (l r : Stream) :
     run v (popCost v x) (cfg (modeQ v (sweepMode x)) (word (block v) l) (push true r)) =
-      some (cfg (modeQ v .x) l (push true (digitBits (popDigit v) r))) := by
+      some (cfg (modeQ v .x) l (push true (digitBits v (popDigit v x) r))) := by
   cases v <;> cases x <;>
-    simp [popCost,popDigit,sweepMode,block,oneBase,modeQ,sweepQ,digitBits,cfg,run,step,left,right,word]
+    simp [popCost,popDigit,sweepMode,block,oneBase,modeQ,sweepQ,digitBits,middleZero,cfg,run,step,left,right,word]
 
 theorem turnMacro (v : Kind) (x : Bool) (r : Stream) :
     run v (turnCost v x) (cfg (modeQ v (sweepMode x)) (base v) (push true r)) =
@@ -209,7 +308,7 @@ theorem turnMacro (v : Kind) (x : Bool) (r : Stream) :
 
 theorem digitProgress (v : Kind) (a b : Bool) (k : Nat) (w : List (Bool × Bool)) :
     ∃ t : Nat, 0<t ∧ ∃ s' k' w', run v t (phase v .a k ((a,b)::w)) = some (phase v s' k' w') := by
-  have he := digitMacro v a b (stack v k) (digits w)
+  have he := digitMacro v a b (stack v k) (digits v w)
   have ht : 0 < digitCost v a b := by cases v <;> cases a <;> cases b <;> decide
   cases hc : carry v a b with
   | false =>
@@ -224,10 +323,14 @@ theorem sweepProgress (v : Kind) (x : Bool) (k : Nat) (w : List (Bool × Bool)) 
   cases k with
   | zero =>
     exact ⟨turnCost v x,by cases v <;> cases x <;> decide,.a,0,w,
-      by simpa [phase,stack,sweepMode,scan,modeQ] using turnMacro v x (digits w)⟩
+      by cases x
+         · simpa [phase,stack,sweepMode,scan,modeQ] using turnMacro v false (digits v w)
+         · simpa [phase,stack,sweepMode,scan,modeQ] using turnMacro v true (digits v w)⟩
   | succ k =>
-    exact ⟨popCost v x,by cases v <;> cases x <;> decide,.x,k,popDigit v::w,
-      by simpa [phase,stack,digits,sweepMode,scan] using popMacro v x (stack v k) (digits w)⟩
+    exact ⟨popCost v x,by cases v <;> cases x <;> decide,.x,k,popDigit v x::w,
+      by cases x
+         · simpa [phase,stack,digits,sweepMode,scan] using popMacro v false (stack v k) (digits v w)
+         · simpa [phase,stack,digits,sweepMode,scan] using popMacro v true (stack v k) (digits v w)⟩
 
 theorem progress (v : Kind) (s : Mode) (k : Nat) (w : List (Bool × Bool)) :
     ∃ t : Nat, 0<t ∧ ∃ s' k' w', run v t (phase v s k w) = some (phase v s' k' w') := by
@@ -236,7 +339,7 @@ theorem progress (v : Kind) (s : Mode) (k : Nat) (w : List (Bool × Bool)) :
     cases w with
     | nil =>
       have he : phase v .a k [] = phase v .a k [(false,false)] := by
-        simp [phase,digits,digitBits,word]
+        cases v <;> simp [phase,digits,digitBits,middleZero,word]
       rw [he]
       exact digitProgress v false false k []
     | cons d w =>
@@ -263,7 +366,7 @@ def initWord (v : Kind) : List (Bool × Bool) :=
   if oneBase v then [(true,false)] else []
 def blank : C9Pair.Config := cfg .A z z
 theorem init (v : Kind) : run v (initCost v) blank = some (phase v .a 0 (initWord v)) := by
-  cases v <;> simp [initCost,initWord,oneBase,phase,stack,base,digits,digitBits,modeQ,scan,blank,cfg,run,step,left,right,word]
+  cases v <;> simp [initCost,initWord,oneBase,phase,stack,base,digits,digitBits,middleZero,modeQ,scan,blank,cfg,run,step,left,right,word]
 
 theorem never_blank (v : Kind) (n : Nat) : run v n blank ≠ none := by
   intro h
@@ -286,6 +389,12 @@ def codes : Kind → List (Fin 25)
   | .m8 => [8,19,11,24,1,13,17,0,22,9,12,2]
   | .m10 => [8,0,11,24,1,13,17,19,22,9,4,17]
 def table (v : Kind) : Machine := fun s => decode ((codes v).getD (index s).val 0)
+  | .m16 => [8,13,11,24,1,13,17,0,22,21,2,15]
+  | .m19 => [8,13,11,24,1,13,17,15,22,13,2,0]
+  | .m20 => [8,13,11,24,1,13,17,15,22,12,2,0]
+  | .m23 => [8,0,11,24,1,13,17,13,22,8,2,13]
+  | .m24 => [8,0,11,24,1,13,17,13,22,8,2,9]
+  | .m32 => [8,24,11,12,1,13,17,13,22,8,2,0]
 abbrev project := Box33Source.project false
 
 theorem map_step (v : Kind) (c : BB6Coverage.Config) :
