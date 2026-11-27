@@ -118,7 +118,7 @@ private theorem inputShape (k q r : Nat) (ys : List Bool) :
   rw [hw,hn]
   rfl
 
-private theorem outputPositive (k q r : Nat) (ys : List Bool) :
+theorem outputPositive (k q r : Nat) (ys : List Bool) :
     (⟨[],false,List.replicate (8*k+3) true ++
       (shortPacket (q+1) (List.replicate (2*r) true ++ ys)),5⟩ : Cfg) =
     packet (8*k+5) 0 (2*(q+1)+2)
@@ -136,7 +136,7 @@ private theorem outputPositive (k q r : Nat) (ys : List Bool) :
   simp [shortPacket,packet,word,oppairs,hp,List.append_assoc]
   simpa [List.replicate] using hr
 
-private theorem outputZero (k r : Nat) (ys : List Bool) :
+theorem outputZero (k r : Nat) (ys : List Bool) :
     (⟨[],false,List.replicate (8*k+3) true ++
       (zeroOut ++ (List.replicate (2*r) true ++ ys)),5⟩ : Cfg) =
     packet (8*k+3) 0 4
