@@ -111,4 +111,5 @@ jobs:
             .long-witness/modules.txt
             /tmp/long-core.log
             /tmp/long-numeric.log
+          include-hidden-files: true
           retention-days: 7
