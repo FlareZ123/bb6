@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5, oneLF]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -20,9 +20,9 @@ permissions:
   actions: read
 env:
   VARIANT: ${{ inputs.variant || 'zeroRC' }}
-  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || inputs.variant == 'zeroLF' && 'ZLF' || inputs.variant == 'oneRF' && 'ORF' || 'ZRC' }}
-  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || inputs.variant == 'zeroLF' && 'BB6.Agent14E0LFParent' || inputs.variant == 'oneRF' && 'BB6.Agent6E0OneRF' || 'BB6.Agent6E0ZeroRC' }}
-  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || '1673363' }}
+  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || inputs.variant == 'zeroLF' && 'ZLF' || inputs.variant == 'oneRF' && 'ORF' || inputs.variant == 'oneLF' && 'OLF' || 'ZRC' }}
+  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || inputs.variant == 'zeroLF' && 'BB6.Agent14E0LFParent' || inputs.variant == 'oneRF' && 'BB6.Agent6E0OneRF' || inputs.variant == 'oneLF' && 'BB6.Agent6E0OneLF' || 'BB6.Agent6E0ZeroRC' }}
+  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || inputs.variant == 'oneLF' && '90794' || '1673363' }}
 jobs:
   prepare:
     if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep' && inputs.variant != 'oneLFSweep9135' && inputs.variant != 'oneLFListSym' && inputs.variant != 'oneLFSweep14327' && inputs.variant != 'oneLFWidth5'
@@ -37,6 +37,20 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        if: inputs.variant == 'oneLF'
+        with:
+          name: raw139-oneLF-partition
+          run-id: 45932206380
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        if: inputs.variant == 'oneLF'
+        with:
+          pattern: raw139-oneLF-search-*
+          run-id: 45932206380
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF/discovery
       - name: Reconstruct exact candidate and proof sources once
         run: |
           set -euo pipefail
@@ -45,6 +59,13 @@ jobs:
           mkdir -p "$work/imports"
           if [[ "$VARIANT" == zeroLF ]]; then
             bash im-results/agent14-raw139-e0-zeroLF/prepare.sh sources
+          elif [[ "$VARIANT" == oneLF ]]; then
+            python3 "$base/assemble.py" "$work/imports" --directory "$work"
+            python3 "$base/assemble.py" "$work/imports" --final
+            python3 im-results/agent13-coverage/unpack.py
+            python3 im-results/agent13-block-far/specialize.py 4
+            python3 im-results/agent13-block-far/specialize.py 5
+            rm -rf "$work/discovery" "$work/partition.json" "$work/open.json"
           else
             python3 "$base/reproduce.py"
             python3 "$base/assemble.py" "$work/imports"
@@ -98,6 +119,9 @@ jobs:
           source_args=()
           if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
           if [[ "$VARIANT" == zeroRF ]]; then proofs=("$base/ZeroRF1892Cover.lean" "$base/ZeroRF4570.lean"); fi
+          if [[ "$VARIANT" == oneLF ]]; then
+            proofs=("$base/OneLFZipHybrid.lean" im-results/agent13-block-far/BlockFARBridge5.lean im-results/agent47-raw111-cut/SparseNGram.lean)
+          fi
           if [[ "$VARIANT" == oneRF ]]; then
             proofs=("$work/imports/ORFExceptionalAudit.lean")
             source_args=(--source-root "$work/imports" --precompiled-manifest /tmp/a6-oneRF-proof/merged.json --precompiled-dir /tmp/a6-oneRF-proof/merged)
@@ -152,6 +176,7 @@ jobs:
           else
             python3 im-results/agent13-coverage/unpack.py
             python3 im-results/agent13-block-far/specialize.py 4
+            if [[ "$VARIANT" == oneLF ]]; then python3 im-results/agent13-block-far/specialize.py 5; fi
           fi
       - name: Compile exact branch
         env:
@@ -202,6 +227,7 @@ jobs:
           else
             python3 im-results/agent13-coverage/unpack.py
             python3 im-results/agent13-block-far/specialize.py 4
+            if [[ "$VARIANT" == oneLF ]]; then python3 im-results/agent13-block-far/specialize.py 5; fi
             python3 im-results/agent6-raw139-e0-${VARIANT}/compose.py "$work"
           fi
       - uses: actions/upload-artifact@v4
