@@ -2,6 +2,8 @@
 import hashlib,json,pathlib,shutil,subprocess,sys
 work=pathlib.Path(sys.argv[1]).resolve()
 run=sys.argv[2]
+recovery=sys.argv[3] if len(sys.argv)>3 else ''
+recovered_codes={0,1,3,7} if recovery else set()
 out=work/'parent';build=out/'build';imports=work/'imports'
 build.mkdir(parents=True,exist_ok=True);imports.mkdir(parents=True,exist_ok=True)
 digest=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
@@ -11,7 +13,7 @@ cuts=[]
 for c in codes:
  root=work/'shards'/f'raw139-zeroLC-branch-{c}-certified'
  src=work/'sources'/f'raw139-zeroLC-branch-{c}-sources'/'imports'
- cuts.append((root,src,f'BB6.Agent6ZeroLCBroad.C{c:02d}.cZLCBroadRoot{c:02d}',80377,run))
+ cuts.append((root,src,f'BB6.Agent6ZeroLCBroad.C{c:02d}.cZLCBroadRoot{c:02d}',80377,recovery if c in recovered_codes else run))
 cuts.append((work/'child9',work/'child9'/'imports','BB6.Agent6E0ZeroLCD0RC.cRaw139E0ZeroLCD0RC',616,'45942651816'))
 for root,src,theorem,bound,expected_run in cuts:
  m=json.loads((root/'manifest.json').read_text())
