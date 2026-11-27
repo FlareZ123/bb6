@@ -5,7 +5,7 @@ on:
       target:
         description: Check restricted attractor or extend it to concrete entries
         type: choice
-        options: [core, evaluator, entries]
+        options: [core, evaluator, entries, mirror36]
         default: core
 permissions:
   contents: read
@@ -38,7 +38,11 @@ jobs:
           lake update
           lake exe cache get
           dir="$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids"
-          if [ "$TARGET" = core ]; then
+          if [ "$TARGET" = mirror36 ]; then
+            python "$dir/generate_raw140_mirror36.py" /tmp/cryptids "$dir/Raw140Mirror36.inc"
+            lake build BusyBeaver.BB6.NonHalt.Raw140Mirror36 2>&1 | tee /tmp/raw140-attractor-logs/mirror36.log
+            exit 0
+          elif [ "$TARGET" = core ]; then
             python "$dir/restrict_raw140_attractor.py" /tmp/cryptids
           else
             python "$dir/restrict_raw140_attractor.py" /tmp/cryptids "$dir/Raw140AttractorEvaluator.inc"
