@@ -1,4 +1,4 @@
-# Raw56 E1=0RE: source-checked local frontier (2026-11-26)
+# Raw56: source-checked local frontier (2026-11-27)
 
 ## Root query and conditional frontier
 
@@ -30,6 +30,20 @@ The focused retry [45896758638](https://github.com/FlareZ123/bb6/actions/runs/45
 The first thin consumer attempt [45900392377](https://github.com/FlareZ123/bb6/actions/runs/45900392377) exposed a type mismatch between the generated child table and the hand-written refinement. `Raw56RootConsumer.lean` now proves the exact table equality with `sameTable_sound (by decide)` and transports the child theorem across it. The focused rerun [45912699461](https://github.com/FlareZ123/bb6/actions/runs/45912699461) **succeeded**: 747 project modules compiled; `child_table_eq` has axioms `[propext, Quot.sound]`; `sound19_closed` has axioms `[propext, Classical.choice, Quot.sound]`; and the strict checker accepted all seven profiles. It exported artifact `raw56-root-frontier-source-accepted`, ID **15160313745**, SHA-256 `6513147b3929ab6b707225b6592a882025e234d498ed8baca40216489b469b3d` (220,548,045 bytes).
 
 No Raw56 parent Cover, full parent closure, global roster decrement or BB(6) upper bound is claimed. The global conditional baseline is Canonical58 after the Raw113 integration; this local Raw56 frontier does not alter that roster.
+
+## E1=0RC: verified C1=1RD subbranch (2026-11-27)
+
+The E1=0RC child first queries C1 at time 7. `Raw56E1RCCut.lean` proves five translated-cycle closures and a conditional 19-way frontier. `Raw56E1RCConsumer.lean` consumes the completed C1=1RD branch using an exact table-equality lemma, leaving 18 canonical residual representatives under E1=0RC. This is a refinement inside one of the 19 Raw56 root residuals, not a closed E1=0RC child.
+
+The completed table is `1RB---_1RC---_0RD1RD_1LD1LE_---0RC_------`. At cap 1000, lookback 32 and depth 6 the first-hole tree contains 791 splits, 15,146 cycle leaves, 2,946 last-hole leaves and 102 open leaves (no aliases). The maximal query and cycle-end times were 567 and 917. Of the open leaves, 98 have FAR witnesses with at most five states, three use witness 1012345214422, and the final leaf at zero-based index 3 has an explicit growth proof.
+
+For M3 (`1RB0LF_1RC0LB_0RD1RD_1LD1LE_0LA0RC_---1LA`), let the A-state zipper have left stack 011 and right stack 0111(01)^n00R. The exact transition over 48+14n steps sends (n,R) to (n+1,11R), for arbitrary R. The blank entry at step 83 has n=0 and R=1111. Rightward 12-step transfers, a 12-step and 9-step turn, leftward 2-step transfers, and a 21-step return establish this recurrence; `never_of_growth` gives nonhalting for every compatible completion. This is formalized in `Raw56RC_RD_M3.lean`.
+
+Original Lean 4.36.0-rc2 was reconstructed locally. The base is the source-accepted 747-module artifact 15160313745 above, with all manifest olean hashes checked. All 57 generated modules compiled against that base. `BB6.Agent1Raw56.RCRD.all_quotient` and `.all` prove weighted bound 7014; `BB6.Agent1Raw56E1RC.sound18_closed` proves the conditional child refinement. These three theorems have axioms [propext, Classical.choice, Quot.sound]; the M3 growth and never theorems and the table equality have [propext, Quot.sound]. No sorry or native_decide dependency. Source commit f7f26307250bf1f91462a5d4701c96031b29b9a7 contains the exact locally compiled handwritten sources and emitter.
+
+### Reproduction of C1=1RD
+
+Run `python im-results/agent1-raw56/prepare_rc_rd.py /tmp/raw56-rc-rd` from the repository. Compile M3 and the generated modules in the order of generated/manifest.json with the accepted base artifact on LEAN_PATH, then the cut and consumer. The exact original classifier and FAR source blobs are checked by the preparation script. The tree, open list, exhaustive FAR and combined witness bank SHA-256 digests are pinned in the script. The candidate computation is untrusted; the universal bound comes from the kernel-checked canonical certificate and source semantics.
 
 ## Reproduction
 

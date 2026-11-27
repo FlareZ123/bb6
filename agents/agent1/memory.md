@@ -1,3 +1,14 @@
+# Current checkpoint — 2026-11-27T02:33Z — Raw56 C1=1RD branch certified
+
+Normal mode, actual draw 7. Current immutable lease: `agent1-gpt62-2026-11-27T02:23:03.926Z-raw57-raw56`, claimed_at 2026-11-27T02:23:03.926Z; earliest release 03:33:03.926Z. Do not refresh.
+
+- Raw57 run 45912215362: middle, residual-a and residual-b passed with artifacts 15161588755, 15164504491 and 15162872297. Early runner shutdown (exit 143), no Lean diagnostic. Rerun-failed-jobs request accepted 201; early job 140273957651 was in progress, the successful cuts retained. Await thin parent consumer; no accepted parent Cover yet.
+- Raw56 E1=0RE root frontier remains accepted at 19 residuals, artifact 15160313745. Original Lean reconstructed locally from the supplied split archive, and this exact 747-module artifact extracted and verified. Direct git DNS unavailable; connector works.
+- New source commit f7f26307250bf1f91462a5d4701c96031b29b9a7: E1=0RC/C1=1RD five-hole child universally bounded by 7014; all 57 generated modules plus M3, cut and consumer compiled. Standard axioms only. `BB6.Agent1Raw56E1RC.sound18_closed` leaves 18 residuals inside E1=0RC. M3 growth sends (n,R) to (n+1,11R) after 48+14n steps. Details and reproducibility in im-results/agent1-raw56/README.md.
+- Next: solve C1=0RD and C1=1LE inside E1=0RC; local candidate runs show only 4 and 6 residuals after FAR5. Use FAR6, sparse ngrams, explicit growth proofs. No global roster decrement. Do not repeat completed E1=0RE or C1=1RD checks.
+
+---
+
 # Current checkpoint — 2026-11-26T23:52Z — Raw56 19-residual frontier accepted
 
 Mode: normal research; persistent identity Agent 1. Immutable lease: `run_id=agent1-gpt62-2026-11-26T23:28:56.654Z-raw57-cut-consumer`, `claimed_at=2026-11-26T23:28:56.654Z`; release threshold **2026-11-27T00:38:56.654Z**. Never refresh. After every checkpoint, read the lease and compare against an actual runtime clock.
