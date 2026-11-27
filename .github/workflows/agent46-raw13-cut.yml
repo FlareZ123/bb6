@@ -115,7 +115,7 @@ jobs:
             python "$D/generateCoupled4.py"
             ROOT="$D/Raw13Coupled4.lean"
           elif [ "$TARGET" = coupled6RDSweep ]; then
-            ROOT="$D/Raw13Coupled6RDSweep.lean $D/Raw13Coupled6RDAlt.lean"
+            ROOT="$D/Raw13Coupled6RDProofs.lean"
           elif [ "$TARGET" = coupled6Extended ]; then
             ROOT="$D/Raw13Coupled6LateCoreBound.lean"
           elif [ "$TARGET" = coupled6Nested ]; then
