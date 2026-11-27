@@ -8,6 +8,12 @@ late="$PWD/im-results/agent48-raw139-e0-1la"
 export PYTHONPATH="$block:$old:$checker"
 work="$PWD/.tmp/a3-oneLB-c$c"
 mkdir -p "$work/imports" "$work/build"
+shift 2
+reuse=()
+if (( $# )); then
+  python3 "$base/merge-bank.py" "$work/reuse" "$work/imports" "$@"
+  reuse=(--precompiled-manifest "$work/reuse/manifest.json" --precompiled-dir "$work/reuse")
+fi
 python3 "$base/graft.py" "$src/c$c" "$work" "$c"
 if [[ "$c" == "01" ]]; then
   cp im-results/agent12-raw139-oneLB-c1-286/Counter286{,Bridge}.lean "$work/imports/"
@@ -43,7 +49,7 @@ PY
 )
 python3 im-results/agent13-coverage/unpack.py
 python3 tools/lean_compile_closure.py "$work/imports/${meta[0]}Weighted.lean" \
- --source-root "$work/imports" --workdir "$work/build" --jobs 3 \
+ --source-root "$work/imports" --workdir "$work/build" --jobs 3 "${reuse[@]}" \
  --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
  --override SparseZipper=im-results/agent50-weighted-tnf-pilot/SparseZipper.lean \
  --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \

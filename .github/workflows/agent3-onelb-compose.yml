@@ -6,8 +6,13 @@ on:
         description: Exact source commit
         required: true
         type: string
+      child_code:
+        description: 09 or 21 to certify one child; omit for parent composition
+        required: false
+        type: string
+        default: ''
       extra_artifacts:
-        description: Space-separated accepted code 1,9,21 artifact IDs (omit for explicit conditional parent)
+        description: Space-separated accepted child or compressed replay artifact IDs
         required: false
         default: ''
         type: string
@@ -28,14 +33,25 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Consume exact child banks
+        if: ${{ inputs.child_code == '' }}
         env:
           GH_TOKEN: ${{ github.token }}
           EXTRA: ${{ inputs.extra_artifacts }}
         run: |
           [[ "$EXTRA" =~ ^[0-9\ ]*$ ]]
           bash im-results/agent3-raw139-e0-oneLB/check-parent.sh $EXTRA
+      - name: Consume exact compressed replay bank
+        if: ${{ inputs.child_code != '' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXTRA: ${{ inputs.extra_artifacts }}
+          CODE: ${{ inputs.child_code }}
+        run: |
+          [[ "$EXTRA" =~ ^[0-9\ ]+$ ]]
+          [[ "$CODE" == 09 || "$CODE" == 21 ]]
+          bash im-results/agent3-raw139-e0-oneLB/check-child-bank.sh "$CODE" $EXTRA
       - uses: actions/upload-artifact@v4
-        if: success()
+        if: ${{ success() && inputs.child_code == '' }}
         with:
           name: raw139-OneLB-parent-checked
           include-hidden-files: true
@@ -45,7 +61,7 @@ jobs:
             .tmp/a3-oneLB-parent/build/*.olean
             .tmp/a3-oneLB-parent/log
       - uses: actions/upload-artifact@v4
-        if: failure()
+        if: ${{ failure() && inputs.child_code == '' }}
         with:
           name: raw139-OneLB-parent-incomplete
           include-hidden-files: true
@@ -54,3 +70,16 @@ jobs:
             .tmp/a3-oneLB-parent/imports/*.lean
             .tmp/a3-oneLB-parent/build/*.olean
             .tmp/a3-oneLB-parent/log
+      - uses: actions/upload-artifact@v4
+        if: ${{ success() && inputs.child_code != '' }}
+        with:
+          name: raw139-oneLB-c${{ inputs.child_code }}-certified
+          include-hidden-files: true
+          path: .tmp/a3-oneLB-c${{ inputs.child_code }}/
+      - uses: actions/upload-artifact@v4
+        if: ${{ failure() && inputs.child_code != '' }}
+        with:
+          name: raw139-oneLB-c${{ inputs.child_code }}-incomplete
+          include-hidden-files: true
+          if-no-files-found: ignore
+          path: .tmp/a3-oneLB-c${{ inputs.child_code }}/
