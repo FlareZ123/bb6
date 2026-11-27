@@ -30,3 +30,17 @@ Each child covers all 25^5 = 9,765,625 raw completions. WeightedBound includes f
 | 1LB | 115 | 159 | 5 unresolved |
 
 The exact open roster, split census and FAR candidates are in `spec_*.json`. `discover.js` uses 32-bit rolling hashes only for candidate selection and exact versioned-tape comparison; it is not a trusted proof checker. `generate.py` independently uses the C++ enumerator and emits Lean exact certificates. Existing workflow agent10-four-hole.yml supports raw43-child, raw43-0rd, raw43-1rd, raw43-parent-cut, and raw43-extra (raw43_extra_child=0re or 1re etc). Local shell and Python returned ClientError before execution; original-source CI is the compilation route. No unverified candidate is promoted to a certified bound.
+
+## 2026-11-27 branch closure
+
+**B1=1RC is source-accepted in full**, weighted bound 382: [CI 45934715974](https://github.com/FlareZ123/bb6/actions/runs/45934715974), `BB6.Agent25Raw43B1RC.all_completions` and `.cover`. The canonical cut checks six residuals and the child proof artifacts independently establish their bounds. This classifies 25^6 physical completions (244,140,625).
+
+| B1 | Child slot | Child variants | Weighted bounds | Status at checkpoint |
+|---|---|---|---|---|
+| 1RC | C1 | 0LA,0LE,0RE,1LA,1LE,1RE | 118,112,105,75,96,382 | Full parent accepted |
+| 0RC | C1 | 0LE,0RE,1LE,1RE | 620,239,546,94 | First two source accepted: 45934720356,45935729499; others running: 45936394408,45936493979 |
+| 0RA | A1 | 0LE,0RC,0RE,1LB,1LE,1RE | 273,88,390,223,238,107 | Complete candidates; CI 45936971246,45936864320,45936975051,45936867896,45936979251,45936870974 |
+
+The 0RC certificates include five new universal nonhalting machine proofs: digit-stack M2, paired alternating-block returns for 0RE, base-four counter M146, and alternating-block M155. Source files `Raw43B0RCC0LEM2.lean`, `Raw43B0RCC0REGrowth.lean`, `Raw43B0RCC1LEM146.lean`, `Raw43B0RCC1REM155.lean`. The 0RA candidates use 869 FAR, 297 BiDFA, 7 late halts and 9 late cycles; eleven hard leaves resolved with periodic-block BiDFA compression, including period-2 mod-3 cases. No additional residual candidate remains in these three branches.
+
+For source-accepted children, use manual `agent10-four-hole.yml` targets `raw43-b1rc-compose`, `raw43-b0rc-compose`, `raw43-b0ra-compose` with `raw43_b1rc_pins` mapping child variants to successful run IDs. Exact Lean dependency manifests permit artifact reuse. Earlier 13-E1-child composition was interrupted by runner shutdown; no complete seven-hole parent claim yet.
