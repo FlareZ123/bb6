@@ -112,7 +112,13 @@ theorem count52 : roster52.length = 52 := by decide
 theorem all_four_removed :
     ∀ p ∈ [p106, p79, p83, p85],
       (roster52.filter (fun e => sameTable e.2 p)).length = 0 := by
-  decide
+  intro p hp
+  simp only [List.mem_cons, List.mem_singleton] at hp
+  rcases hp with rfl | rfl | rfl | rfl
+  · decide
+  · decide
+  · decide
+  · decide
 
 theorem raw59_still_removed :
     (roster52.filter (fun e => sameTable e.2 p59)).length = 0 := by decide
