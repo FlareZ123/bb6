@@ -1,0 +1,69 @@
+name: Agent 36 original Lean source verification Raw41 mixed AutoPump+FAR child084 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Lean 4.36 checker
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46081924731
+          name: raw41-target-84-auto
+          path: /tmp/raw41-auto84
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77
+      - name: Recompile the original Automaton proof and all 24 child branches
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-auto84/summary.json"))["remaining_after_auto"])')" = 0
+          lean --version | grep -F '4.36.0-rc2'
+          SRC=.tmp/agent36-raw41-auto84-lean
+          D=im-results/agent47-raw41-cut
+          R=im-results/agent19-raw40-cut
+          mkdir -p "$SRC"
+          cp -a /tmp/raw41-auto84/lean/. "$SRC/"
+          export LEAN_PATH="$SRC:/tmp/canonical77:$D:$R:im-results/agent8-coverage-contract:im-results/agent50-weighted-tnf-pilot:im-results/agent31-three-hole-tnf:im-results/agent46-raw13-cut:im-results/agent47-rooted-tnf:im-results/agent13-coverage"
+          lean -o "$SRC/RootShift.olean" im-results/agent8-coverage-contract/RootShift.lean 2>&1 | tee /tmp/a36-auto-root.log
+          lean -o "$SRC/SparseZipper.olean" im-results/agent50-weighted-tnf-pilot/SparseZipper.lean 2>&1 | tee /tmp/a36-auto-zipper.log
+          lean -o "$SRC/SweepPumping.olean" im-results/agent31-three-hole-tnf/SweepPumping.lean 2>&1 | tee /tmp/a36-auto-sweep.log
+          lean -o "$SRC/Agent46AutoPump.olean" im-results/agent46-raw13-cut/Agent46AutoPump.lean 2>&1 | tee /tmp/a36-auto-pump.log
+          lean -o "$SRC/Raw41New084Auto.olean" "$SRC/Raw41New084Auto.lean" 2>&1 | tee /tmp/a36-auto-leaves.log
+          lean -o "$SRC/Raw41LBLA.olean" "$D/Raw41LBLA.lean" 2>&1 | tee /tmp/a36-auto-lbla.log
+          lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/a36-auto-partial.log
+          lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/a36-auto-empty.log
+          lean -o "$SRC/Raw41New084Base.olean" "$SRC/Raw41New084Base.lean" 2>&1 | tee /tmp/a36-auto-base.log
+          for n in $(seq -w 0 23); do
+            lean -o "$SRC/Raw41New084Branch$n.olean" "$SRC/Raw41New084Branch$n.lean" \
+              2>&1 | tee "/tmp/a36-auto-branch-$n.log"
+          done
+          lean -o "$SRC/Raw41New084Closed.olean" "$SRC/Raw41New084Closed.lean" 2>&1 | tee /tmp/a36-auto-closed.log
+          grep -F 'Raw41New084_bound' /tmp/a36-auto-closed.log
+          if grep -ER 'sorryAx|native_decide' /tmp/a36-auto-*.log; then exit 1; fi
+          echo "CERTIFIED: Raw41 child084 complete mixed 47 FAR and 2 symbolic pumps"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-auto84-lean-check
+          path: |
+            /tmp/a36-auto-*.log
+            /tmp/raw41-auto84/summary.json
+          retention-days: 35
