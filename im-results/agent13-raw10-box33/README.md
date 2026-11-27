@@ -68,7 +68,7 @@ Reproduce the discovery with node discover_d17v21_m8.js. Box33D17V21Transducer.l
 
 ## D0=17, E0=22: complete candidate witness bank for 35 records
 
-The direct all-completion replay 46024678907 left the 35 indexed records in d17v22-hard.json (34 exact tables and one partial table with 625 completions). **33 records have accepted source-level proofs; the last two now have explicit candidate certificates.** The complete parent bound is not yet accepted. The bank is consumed by replay_direct.py, which checks exact table compatibility for every known leaf and independently checks the full branch tree.
+The direct all-completion replay 46024678907 left the 35 indexed records in d17v22-hard.json (34 exact tables and one partial table with 625 completions). **34 records have accepted source-level proofs; the remaining translated-cycle candidate is awaiting a successful audit.** The complete parent bound is not yet accepted. The bank is consumed by replay_direct.py, which checks exact table compatibility for every known leaf and independently checks the full branch tree.
 
 | Records | Mathematical mechanism | Source status |
 |---|---|---|
@@ -80,15 +80,15 @@ The direct all-completion replay 46024678907 left the 35 indexed records in d17v
 | 12,15 | Run-summary two-sided automata | 46043494236 accepted |
 | 11,34 | Additional compressed two-sided automata | 46044291552 accepted |
 | 13 | Translated recurrence entry 9078, period 444, right, boundary 51 | Source audit 46045090030 cancelled; candidate retained |
-| 33 | New asymmetric run-summary inductive relation | Candidate, manual audit dispatched |
+| 33 | New asymmetric run-summary inductive relation | 46056266624 accepted |
 
-### Final unresolved record 33: asymmetric run-length abstraction
+### Resolved record 33: asymmetric run-length abstraction
 
 The exact table is [8,24,11,12,1,13,17,13,22,1,2,0] = 1RB1RF_1LC1RC_0LA0LD_0LE0LD_0RF0LA_0RA---. Existing equal-cap searches did not resolve it. A new summary retains the five nearest runs on each side, saturating zero runs at length 5 and one runs at length 3 (no XOR lag; saturation is not a congruence claim about concrete tape behavior). The discovered push/pop edge relation and reachable configuration relation close without any halt transition: 26 left states, 447 right states and 13,641 configuration tuples. Agent5's relational quotient algorithm compresses the witness to **17 left states, 53 right states and 1,373 reachable tuples**, maintaining closure under the actual machine moves. The certificate does not infer nonhalting from a finite primitive simulation: it proposes an inductive relation under every possible pop edge, with the blank seeds included.
 
 - discover_m33_run_summary.js implements discovery for the successful asymmetric parameters.
 - d17v22-m33-run-summary.json contains the compressed push tables and the discovery/quotient dimensions.
-- Box33D17V22M33.lean contains the explicit pop edges, state relation, twelve kernel checks and compatible_never theorem, using the unchanged TwoSidedAutomata soundness interface. Until its audit passes this is a finite candidate certificate, not an accepted source theorem.
+- Box33D17V22M33.lean contains the explicit pop edges, state relation, twelve kernel checks and compatible_never theorem, using the unchanged TwoSidedAutomata soundness interface. Source audit 46056266624 passed, including the authentic source theorem and standard-axiom audit.
 - The source bridge uses the exact encoded table, and replay_direct.py now includes all 35 records. A complete direct-tree sourceBound remains the required next result, including the proof for record 13.
 
 ### Other mechanisms and reproducibility
@@ -96,3 +96,9 @@ The exact table is [8,24,11,12,1,13,17,13,22,1,2,0] = 1RB1RF_1LC1RC_0LA0LD_0LE0L
 Box33PrefixMacro.lean defines mode-specific fixed prefixes over arbitrary finite block lists and proves positive progress implies NeverHalts. The untrusted symbolic search discover_prefix_carry.js uses untouched tail markers and greatest-fixed-point pruning; emit_prefix_lean.js emits universally quantified finite macro identities. The exact-empty variant discover_prefix_exact.js handles nonzero terminal alphabets. The run-aware two-sided approach is adapted from Agent40 and the quotient from Agent5. For m7 the root carries digits ab0, left stack blocks 011, and two arbitrary rows never queried. For m14, the blank start reaches an A phase after 49 steps with 5k+7 left ones; the next phase follows in 36k+63 steps. These are source-accepted individual leaf theorems, not a complete rectangle-33 proof.
 
 The remaining proof obligation is a kernel-accepted all-completion bound for each child (including D17V21, whose full replay was cancelled despite accepted leaves), then the parent and global canonical composition. No BB(6) upper bound or roster deletion follows from the local witness bank alone.
+
+## Automated residual witness synthesis and D17V23
+
+Commit 265418522b3b16b27ff62639399df3325cc54339 generalizes run-summary saturation to separate zero and one caps and periods, supports partial tables while rejecting every queried unassigned row, and applies relational quotient compression. `auto_run_summary.js` tries a fixed small parameter bank and emits independent Lean modules using the established TwoSidedAutomata checker. `replay_direct.py` incorporates the generated modules as exact partial-table witnesses; its source bound remains conditional on every leaf closing and every emitted kernel check succeeding. This is not a new trusted decision procedure.
+
+D17V23's fresh 127-step first-hole enumeration accounts for all 244,140,625 completions: 18,386,686 in immediate halt leaves, 225,006,189 in finite nonhalt-candidate leaves (including total-table reduction), and 747,750 in 12,438 unresolved partial leaves. These are unverified discovery counts, not a weighted upper bound. The automatic full replay is run 46056821091. The D17V21 and D17V22 parent replays are 46056414853 and 46056361384 respectively. No parent or global roster removal is asserted before an accepted sourceBound.
