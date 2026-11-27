@@ -5,7 +5,7 @@ on:
       target:
         description: Check restricted attractor or extend it to concrete entries
         type: choice
-        options: [core, entries]
+        options: [core, evaluator, entries]
         default: core
 permissions:
   contents: read
