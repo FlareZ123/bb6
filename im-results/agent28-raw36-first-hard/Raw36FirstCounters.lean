@@ -47,6 +47,38 @@ theorem rep_offset (n k : Nat) :
     rep pair (2*n+k) = rep pair k ++ rep quad n := by
   rw [Nat.add_comm (2*n) k,rep_add,rep_two]
 
+
+/-- Fixed first-counter prefixes for the machine's two phase states. -/
+def Apre (c : Nat) : List Bool :=
+  [false,true,true,true,false,true] ++ rep pair (c-1)
+def Bpre (c : Nat) : List Bool :=
+  [true] ++ rep pair (c-1)
+def tailWord (v : Nat) : List Bool := mark ++ rep pair v ++ suffix
+
+/-- A-mode phase word, with the repeated exponent separated from a
+    positive odd fixed offset c. -/
+theorem A_special (n c v : Nat) (hc : 1 ≤ c) :
+    A (2*n+c) v =
+      ⟨0,[],Apre c ++ rep quad n ++ tailWord v⟩ := by
+  have h : 2*n+c-1 = (c-1)+2*n := by omega
+  simp [A,Apre,tailWord,h,rep_add,rep_two,List.append_assoc]
+
+theorem B_special (n c v : Nat) (hc : 1 ≤ c) :
+    B (2*n+c) v =
+      ⟨1,[],Bpre c ++ rep quad n ++ tailWord v⟩ := by
+  have h : 2*n+c-1 = (c-1)+2*n := by omega
+  simp [B,Bpre,tailWord,h,rep_add,rep_two,List.append_assoc]
+
+theorem A_target (n c v : Nat) :
+    A c (2*n+v) =
+      ⟨0,[],(Apre c ++ mark ++ rep pair v) ++ rep quad n ++ suffix⟩ := by
+  simp [A,Apre,rep_offset,List.append_assoc]
+
+theorem B_target (n c v : Nat) :
+    B c (2*n+v) =
+      ⟨1,[],(Bpre c ++ mark ++ rep pair v) ++ rep quad n ++ suffix⟩ := by
+  simp [B,Bpre,rep_offset,List.append_assoc]
+
 theorem root_a :
     run0 Raw36FirstOverflowA2.p 13244 ⟨0,[],[]⟩ = some (A 17 52) := by
   simpa only [show Raw36FirstRoot.rootA.eval 0 = A 17 52 by decide] using
