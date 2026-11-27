@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       cuts:
-        description: 'JSON array of saved cut names; "carry" checks shared family; "transducer" checks reset-capable scan'
+        description: 'JSON array of saved cut names; "carry" checks shared family; "transducer" checks reset-capable scan; "erase" checks erasing-rewind scan'
         required: true
         default: '["d18v14"]'
 permissions:
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Replay selected bank and materialize exact source tree
-        if: matrix.cut != 'carry' && matrix.cut != 'join' && matrix.cut != 'transducer'
+        if: matrix.cut != 'carry' && matrix.cut != 'join' && matrix.cut != 'transducer' && matrix.cut != 'erase'
         run: |
           set -euo pipefail
           [[ "$CUT" =~ ^d([0-9]+)v([0-9]+)$ ]]
@@ -50,6 +50,9 @@ jobs:
             python im-results/agent13-coverage/unpack.py
             python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 2 --manifest /tmp/box28-olean/manifest.json "$D/Box28TransducerSource.lean" 2>&1 | tee /tmp/box28-audit.log
             python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log BB6.Agent17.Box28TransducerSource.rectangle_bound BB6.Agent17.Box28TransducerSource.max_halts BB6.Agent17.Box28TransducerSource.max_base
+          elif [ "$CUT" = erase ]; then
+            python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 4 --manifest /tmp/box28-olean/manifest.json "$D/Box28EraseScanSource.lean" 2>&1 | tee /tmp/box28-audit.log
+            python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log BB6.Agent17.Box28EraseScanSource.compatible_never
           elif [ "$CUT" = carry ]; then
             python im-results/agent13-coverage/unpack.py
             python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 4 --manifest /tmp/box28-olean/manifest.json "$D/Box28CarryFamilySource.lean" 2>&1 | tee /tmp/box28-audit.log
