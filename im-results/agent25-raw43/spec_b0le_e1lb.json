@@ -1807,7 +1807,14 @@
     }
   },
   "lateCycle": {},
-  "growth": {},
+  "growth": {
+    "746": {
+      "table": "1RB1RA_1RC0LE_0RD1RF_1LD0RB_1LB1LD_0RA---",
+      "module": "Raw43B0LEE1LBI746",
+      "partial": "BB6.Agent25Raw43B0LEE1LBI746.table",
+      "never": "BB6.Agent25Raw43B0LEE1LBI746.never"
+    }
+  },
   "unresolved": [
     {
       "i": 0,
@@ -2925,13 +2932,6 @@
     {
       "i": 745,
       "table": "1RB1LC_1RC0LE_0RD1RF_1LD0RB_1LB1RE_0RA---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 746,
-      "table": "1RB1RA_1RC0LE_0RD1RF_1LD0RB_1LB1LD_0RA---",
       "query": [
         "open"
       ]
