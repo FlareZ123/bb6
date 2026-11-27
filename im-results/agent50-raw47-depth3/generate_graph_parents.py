@@ -30,6 +30,26 @@ for line in (graph_here/'hard10.txt').read_text().splitlines():
         assert (parent,t) not in hard_bank
         hard_bank[parent,t]=(module,partial,proof,n)
 assert len(hard_bank)==len(hard_specs)
+
+# Nine previously kernel-checked source recurrences from Agent12. Keep
+# the concrete table in the ledger; the Lean .proven gate checks it.
+pump_specs = {
+    13006: (667,'1RB1LE1RC0LA0RD1LE1LD0RC0LB0LF---0RC'),
+    13224: (668,'1RB---1RC0LE0RD1LE1LD0RC0LB1LF---0LD'),
+    16274: (694,'1RB0LD1RC---0RD1LE1LD0RC0LF1LA1RC0LE'),
+    16326: (695,'1RB---1RC0RF0RD1LE1LD0RC0LF1LC1RA0LF'),
+    19433: (775,'1RB1LE1RC0RD0RD1LE1LD0RC1LA1LF---0LB'),
+    19504: (775,'1RB1LE1RC1RB0RD1LE1LD0RC1LA0LF---0LD'),
+    25862: (957,'1RB1RE1RC0LA0RD1RA1LD0RC1LB1RF---0RB'),
+    25895: (959,'1RB1RE1RC0RF0RD1RA1LD0RC1LF0LC---0LA'),
+    25918: (959,'1RB1RE1RC0RF0RD1RA1LD0RC1LF1RB---0LA'),
+}
+for n,(parent,t) in pump_specs.items():
+    prefix=f'BB6.Agent12Raw47Pumps.H{n}'
+    assert len(t)==36 and (parent,t) not in hard_bank
+    hard_bank[parent,t]=('Raw47NewPumps',prefix+'.ctr',prefix+'.never',n)
+assert len(hard_bank)==len(hard_specs)+len(pump_specs)
+
 raw=(here/'raw47-depth3.open').read_bytes()
 assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d'
 rows=raw.decode().splitlines()
