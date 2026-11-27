@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupledSource, coupled4, coupledNested]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupled5SAT, coupled5Hard, coupledSource, coupled4, coupledNested]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -21,7 +21,7 @@ permissions:
   contents: write
 jobs:
   check:
-    if: inputs.target != 'coupled4Discover' && inputs.target != 'coupled5Discover' && inputs.target != 'coupledSource'
+    if: inputs.target != 'coupled4Discover' && inputs.target != 'coupled5Discover' && inputs.target != 'coupled5SAT' && inputs.target != 'coupledSource'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -105,7 +105,9 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           D=im-results/agent46-raw13-cut
-          if [ "$TARGET" = coupledNested ]; then
+          if [ "$TARGET" = coupled5Hard ]; then
+            ROOT="$D/Raw13Coupled5Hard1LCrd.lean"
+          elif [ "$TARGET" = coupledNested ]; then
             ROOT="$D/Raw13NestedBundle.lean"
           elif [ "$TARGET" = coupled4 ]; then
             python "$D/generate_coupled_entry.py"
@@ -564,5 +566,37 @@ jobs:
           for attempt in 1 2 3 4 5; do
             if git push origin HEAD:main; then exit 0; fi
             git pull --rebase origin main
+          done
+          exit 1
+
+  coupled5-sat:
+    if: inputs.target == 'coupled5SAT'
+    runs-on: ubuntu-latest
+    timeout-minutes: 16
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install SAT library
+        run: sudo apt-get update -qq && sudo apt-get install -y libz3-4
+      - name: Solve literal remaining 1LC residual by bounded DFA SAT
+        run: |
+          python im-results/agent46-raw13-cut/satCoupled5.py
+      - name: Publish successful independent candidate only
+        run: |
+          set -euo pipefail
+          D=im-results/agent46-raw13-cut
+          if [ ! -s "$D/coupled5-1LC-re-sat.json" ]; then exit 0; fi
+          cp "$D/coupled5-1LC-re-sat.json" /tmp/a46-sat.json
+          git config user.name "Agent 46"
+          git config user.email "agent46@users.noreply.github.com"
+          for i in 1 2 3 4 5; do
+            git fetch origin main
+            git reset --hard origin/main
+            cp /tmp/a46-sat.json "$D/coupled5-1LC-re-sat.json"
+            git add "$D/coupled5-1LC-re-sat.json"
+            git diff --cached --quiet && exit 0
+            git commit -m "Agent 46: bounded SAT candidate for irregular 1LC holdout"
+            git push origin HEAD:main && exit 0
           done
           exit 1
