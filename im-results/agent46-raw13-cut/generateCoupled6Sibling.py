@@ -98,6 +98,19 @@ def main(mv):
         ns_auto="BB6Coverage.Agent31Pump.Auto."+name
         for i,x in enumerate(batch):
             manual[x["table"]]=f".closed (.proven {ns_auto}.p{i} {ns_auto}.never{i})"
+    from emitCounterBank import emit_counter
+    counter_file=D/"coupled6-extra-counter.json"
+    counters=json.loads(counter_file.read_text()) if counter_file.exists() else []
+    for side in ("L","R"):
+        batch=[x for x in counters if x["side"]==side and x["table"] in data["unresolved"] and x["table"] not in manual]
+        assert len({x["table"] for x in batch})==len(batch)
+        if batch:
+            name=mod+"Counter"+side
+            emit_counter(batch,D/(name+".lean"),name,side)
+            extra_imports.append(name)
+            ns_counter="BB6Coverage.Agent31Pump.Auto."+("CounterLeft" if side=="L" else "Counter")+"."+name
+            for i,x in enumerate(batch):
+                manual[x["table"]]=f".closed (.proven {ns_counter}.p{i} {ns_counter}.never{i})"
     records=data["certs"]+[x for x in extras if x["table"] in data["unresolved"] and x["table"] not in manual]
     assert set(data["unresolved"])==set(manual)|{x["table"] for x in extras if x["table"] in data["unresolved"]}
     names={x["table"]:i for i,x in enumerate(records)}
