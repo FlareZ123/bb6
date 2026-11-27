@@ -1166,21 +1166,19 @@
       ]
     }
   },
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 95,
+  "growth": {
+    "95": {
       "table": "1RB---_1RC0RC_0RD0RE_1LD0RB_1LF1LA_0LE0LE",
-      "query": [
-        "open"
-      ]
+      "partial": "(BB6.Agent25Raw43B0RCC0REGrowth.table false)",
+      "never": "(BB6.Agent25Raw43B0RCC0REGrowth.never false)",
+      "module": "Raw43B0RCC0REGrowth"
     },
-    {
-      "i": 96,
+    "96": {
       "table": "1RB---_1RC0RC_0RD0RE_1LD0RB_1LF1LA_0LE0RF",
-      "query": [
-        "open"
-      ]
+      "partial": "(BB6.Agent25Raw43B0RCC0REGrowth.table true)",
+      "never": "(BB6.Agent25Raw43B0RCC0REGrowth.never true)",
+      "module": "Raw43B0RCC0REGrowth"
     }
-  ]
+  },
+  "unresolved": []
 }
