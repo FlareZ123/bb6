@@ -208,7 +208,7 @@ def Good (w : List Bool) : Prop := countZeros w % 2 = 0
 theorem countPadZeros (n : Nat) (w : List Bool) :
     countZeros (List.replicate n false ++ w)=n+countZeros w := by
   induction n with
-  | zero => rfl
+  | zero => simp
   | succ n ih => simp only [List.replicate_succ,List.cons_append,countZeros,ih]; omega
 
 theorem countPadOnes (n : Nat) (w : List Bool) :
