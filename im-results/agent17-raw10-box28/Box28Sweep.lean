@@ -126,14 +126,50 @@ theorem right_iter (k : Nat) (l : Stream) :
   | succ k ih =>
     rw [show 10*(k+1)+9 = 10+(10*k+9) by omega, run_add, right_cycle, Option.bind_some, ih, ← rep_add]
     congr 1
-    congr 1
-    omega
 
 theorem recur (k : Nat) : run (43+16*k) (root k) = some (root (k+1)) := by
   rw [show 43+16*k = 4+2*(3*k)+3+9+18+(10*k+9) by omega]
   rw [run_add, run_add, run_add, run_add, run_add, enter, Option.bind_some,
-    left_pair_iter, Option.bind_some, finish_left, Option.bind_some, clear_tail, Option.bind_some]
-  -- unfold one pair sectionAt the turn and retain the rest as an arbitrary stream.
-  sorry
+    left_pair_iter, Option.bind_some, finish_left, Option.bind_some]
+  change ((run 9 (sectionAt .A (ones 2) (push true (push true (bits [false,true] (p01 (3*k) (bits [false,false,true] zeros))))))).bind (run 18)).bind (run (10*k+9)) = _
+  rw [clear_tail, Option.bind_some]
+  change (run 18 (sectionAt .A zeros (bits [false,true,false,false,false,false,true] (p01 (3*k) (bits [false,false,true] zeros))))).bind (run (10*k+9)) = _
+  rw [turn, Option.bind_some]
+  change run (10*k+9) (sectionAt .A gap (bits [false,true,false,false] (push true (p01 (3*k) (bits [false,false,true] zeros))))) = _
+  rw [shift_pairs]
+  change run (10*k+9) (rightPhase gap k) = _
+  rw [right_iter]
+  congr 1
+  unfold root
+  congr 1
+
+def blank : Config := ⟨.A,zeros,false,zeros⟩
+
+theorem init : run 28 blank = some (root 0) := by
+  simp [blank, root, sectionAt, gap, run, step, left, right, rep, ones, zeros, pop_push, push_zero]
+
+theorem never_root (n k : Nat) : run n (root k) ≠ none := by
+  induction n using Nat.strongRecOn generalizing k with
+  | ind n ih =>
+    intro h
+    have hr := recur k
+    by_cases hn : n ≤ 43+16*k
+    · have e : 43+16*k = n+(43+16*k-n) := by omega
+      rw [e, run_add, h] at hr
+      contradiction
+    · have e : n = (43+16*k)+(n-(43+16*k)) := by omega
+      rw [e, run_add, hr] at h
+      exact ih _ (by omega) (k+1) h
+
+theorem never_blank (n : Nat) : run n blank ≠ none := by
+  intro h
+  by_cases hn : n ≤ 28
+  · have hi := init
+    have e : 28 = n+(28-n) := by omega
+    rw [e, run_add, h] at hi
+    contradiction
+  · have e : n = 28+(n-28) := by omega
+    rw [e, run_add, init] at h
+    exact never_root (n-28) 0 h
 
 end BB6.Agent17.Box28Sweep
