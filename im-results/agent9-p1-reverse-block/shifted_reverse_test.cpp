@@ -21,7 +21,7 @@ static void require(bool h){if(!h){std::cerr<<"mismatch\n";std::exit(1);}}
 int main(){
  std::mt19937_64 rng(0x9d3b9b2c);
  U small=0,large=0,simd=0;
- for(unsigned mode=0;mode<=6;++mode){
+ for(unsigned mode=0;mode<=7;++mode){
   fit_mode=mode;
   for(I F=18;F<=90;++F)for(I rem=1;rem<=9;++rem){
    Block b(F,rem);
@@ -34,8 +34,8 @@ int main(){
    alignas(64) U zz[8],out[8];
    for(unsigned i=0;i<8;++i){zz[i]=rng()%(F+U(1));U a=0,c=0;auto x=scalar(b,I(zz[i]),&a),y=b.parent(I(zz[i]),&c);require(x==y&&(x==missing||a==c));++large;}
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
-   Block8 v(b);_mm512_store_si512(out,v.parent_vec(_mm512_load_si512(zz),255));
-   for(unsigned i=0;i<8;++i){U a;require(out[i]==scalar(b,I(zz[i]),&a));++simd;}
+   if(mode==7){alignas(64) I z16[16],o16[16];for(unsigned i=0;i<16;++i)z16[i]=i<8?I(zz[i]):I(rng()%(F+U(1)));Block16 v(b);__mmask16 m=__mmask16(rng());_mm512_store_si512(o16,v.parent_vec(_mm512_load_si512(z16),m));for(unsigned i=0;i<16;++i){U a;require(o16[i]==((m>>i)&1?scalar(b,z16[i],&a):missing));++simd;}}
+   else {Block8 v(b);_mm512_store_si512(out,v.parent_vec(_mm512_load_si512(zz),255));for(unsigned i=0;i<8;++i){U a;require(out[i]==scalar(b,I(zz[i]),&a));++simd;}}
 #endif
   }
  }
@@ -50,6 +50,7 @@ int main(){
    alignas(64) U zz[8]={0,1,F/2,F-3,F-2,F-1,F,UINT32_MAX},out[8];
    Block8 v(b);_mm512_store_si512(out,v.parent_vec(_mm512_load_si512(zz),255));
    for(unsigned i=0;i<8;++i){U a;require(out[i]==scalar(b,I(zz[i]),&a));++simd;}
+   alignas(64) I z16[16],o16[16];for(unsigned i=0;i<16;++i)z16[i]=I(zz[i%8]);Block16 v16(b);_mm512_store_si512(o16,v16.parent_vec(_mm512_load_si512(z16),65535));for(unsigned i=0;i<16;++i){U a;require(o16[i]==scalar(b,z16[i],&a));++simd;}
 #endif
   }
  }
@@ -58,12 +59,14 @@ int main(){
  // the metric is clock-queries/second, not a whole-scan speedup.
  for(I F: {100000000u,650000000u,1000000000u,2000000000u}){
   std::vector<U> zz(1<<20);for(auto& z:zz)z=rng()%F;
-  for(unsigned mode=0;mode<=6;++mode){fit_mode=mode;Block b(F,64);b.Y=0x9abcdef01234ull&((U(1)<<b.k)-1);
+  std::vector<I> zz32(zz.begin(),zz.end());
+  for(unsigned mode=0;mode<=7;++mode){fit_mode=mode;Block b(F,64);b.Y=0x9abcdef01234ull&((U(1)<<b.k)-1);
    auto start=std::chrono::steady_clock::now();U sum=0;
    for(int pass=0;pass<12;++pass){
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
-    Block8 v(b);__m512i acc=_mm512_setzero_si512();
-    for(size_t j=0;j<zz.size();j+=8)acc=_mm512_add_epi64(acc,v.parent_vec(_mm512_loadu_si512(zz.data()+j),255));
+    __m512i acc=_mm512_setzero_si512();
+    if(mode==7){Block16 v(b);for(size_t j=0;j<zz32.size();j+=16){auto c=v.parent_vec(_mm512_loadu_si512(zz32.data()+j),65535);acc=_mm512_add_epi64(acc,_mm512_cvtepu32_epi64(_mm512_castsi512_si256(c)));acc=_mm512_add_epi64(acc,_mm512_cvtepu32_epi64(_mm512_extracti64x4_epi64(c,1)));}}
+    else {Block8 v(b);for(size_t j=0;j<zz.size();j+=8)acc=_mm512_add_epi64(acc,v.parent_vec(_mm512_loadu_si512(zz.data()+j),255));}
     sum+=U(_mm512_reduce_add_epi64(acc));
 #else
     for(U z:zz)sum+=b.parent(I(z));
