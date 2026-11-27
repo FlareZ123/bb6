@@ -2,7 +2,7 @@ stage1_open_index	status	codes
 3	first_query_795108_F1_empirical	7,19,11,0,14,23,2,13,9,16,5,24
 6	D1TwoLatePair.cover6_B78753	7,3,11,6,14,18,2,13,24,20,15,10
 7	D1TwoLatePair.cover7_B77851	7,3,11,6,14,18,2,13,24,22,3,8
-27	open_1e9_span75134	7,16,11,9,14,1,2,13,20,24,8,15
+27	certified_D1TwentySeven.cover_all_B	7,16,11,9,14,1,2,13,20,24,8,15
 77	certified_D1TwoCycles.cover77_boundary160	7,16,11,15,14,1,2,13,20,8,24,9
 78	certified_D1TwoCycles.cover78_boundary160	7,16,11,15,14,1,2,13,22,8,24,2
 163	D1TwoLate163.cover_B21698	7,0,11,16,14,19,2,13,22,9,24,18
