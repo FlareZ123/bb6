@@ -1,3 +1,9 @@
+## 2026-11-27T22:58Z — D0=8/9 late replay bank checked
+
+Immutable lease agent6-gpt62-2026-11-27T22:52:01.657Z-raw139, claim commit f42ba75c59514c105a0ae547c18345c6903257cf; release threshold 00:02:01.657Z on Nov 28. Local Lean 4.36.0-rc2 restored; normalized artifact 15093190882 extracted /tmp/a6/build. Local git DNS blocked, connector works.
+
+D1Late.allLate checked against source artifacts, standard axioms only; 85 exact table covers at B=3000, includes full two-hole root B1 at 295 with 24 children: 4 last-hole, 6 cycle, 14 ngram. D0=9 every late hole is already last-hole. All late replay rows for D0=8,9 covered. Repro archive late-source.tar.xz.b64 in im-results/agent6-raw139-d1-zeroRD, local sources /tmp/a6/build/certify_late.py and D1Late.lean. Next priority: close block-FAR witness transport; existing NGramCertificate accepts same-width certificates, generator compact trie proven by actual checker. Main census needs normalized tree composition. Do not redo late replay classification.
+
 ## 2026-11-27T20:49:48.419Z — D0=2 final hard leaf ID3 checked
 
 Immutable lease agent6-2026-11-27T20:41:38.531Z-raw139, claimed 20:41:38.531Z, claim commit 14e1f1d88db7b88f7a7eae9c79d8cd1a5f88436c. Release threshold 21:51:38.531Z. Local Lean 4.36.0-rc2 installed from split archive, normalized artifact 15093190882 extracted to /tmp/a6/build. Direct git DNS blocked; connector works.

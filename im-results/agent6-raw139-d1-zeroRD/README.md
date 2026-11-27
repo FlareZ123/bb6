@@ -20,7 +20,17 @@ New depth-0 row (0, code 13): [7,24,11,24,14,24,24,13,24,24,24,24], ordinary cod
 
 All partition identities checked by arity-aware counts. Prefix-sharing census with exact translated cycles, small FAR, state graph closure and last-hole leaves; untrusted discovery, not Lean proof. Compressed sources reconstruct with Python standard library: lzma.decompress(base64.b64decode(Path(...).read_text())). Compile g++ -O3 -std=c++17. Run d1 D0 250, which writes /tmp/d1-0rd-d0-D0-cap250.txt. Run strong input 1 then run stage 2 on stage-1 open lines converted to '250 TABLE'. Strong adapts Agent47/32 sparse ngram and Agent48 block FAR; adds exact-replayed hash-assisted cycle candidate search. Candidate holdouts include both late queries (must expand multi-hole cases) and unclassified machines.
 
-D0=8 and 9 have zero stage-2 open leaves (late multi-hole queries still require expansion). The sole D0=6 stage-2 open leaf is solved below; D0=2 has source-checked Covers for all eleven former stage-2 open leaves. No complete branch bound is certified.
+D0=8 and 9 have zero stage-2 open leaves. All their late replay leaves (85 exact tables: 48 hole cases and 37 translated cycles) now have a kernel-checked weighted Cover at B=3000. Only one late hole has more than one unassigned slot, and its full 24 ordinary children plus the halt branch are checked. The abstract ngram/block and earlier census leaves still require parent integration.
+
+## D0=8 and D0=9: complete late-replay cut
+
+The exact certificate bank is reproducible from [late-source.tar.xz.b64](late-source.tar.xz.b64), containing the untrusted generator and two fixed witness manifests. Extract with `base64 -d late-source.tar.xz.b64 | tar -xJf -`. In the accepted normalized artifact 15093190882 build directory, run `python certify_late.py --roots lateRoots.tsv --children lateChildren.tsv`, then `LEAN_PATH=. lean -o D1Late.olean D1Late.lean`. The generated module SHA-256 is 138dfdbc02d63f28ac39d44d9ec19f7d2baecfaab646be83990f0c40b3c05cf3. Local Lean 4.36.0-rc2 checked `BB6.Agent6D1Late.allLate` with only propext, Classical.choice, Quot.sound. The `tables` list is an exact list of the 85 partial-machine roots, not a statement about the complete census partition.
+
+The formerly multi-hole table [7,24,11,24,14,16,8,13,20,1,23,3] first queries B1 at 295 ordinary moves. Its 24 ordinary children partition into four last-hole arrivals at 296 or 297, six translated cycles, and 14 ngram certificates (13 width-2 and one width-5). The exact source `zipCheck` checks the split, every child's table identity, the weighted halt allowance, and the leaf certificate. It needs no remaining hypotheses. Ngram certificates use a compact trie constructor from sorted row keys, with every closure equality reduced by the kernel. No new axiom or trusted discovery algorithm.
+
+The late D0=8 set is 28 hole cases (including this two-hole parent) and 16 cycles; D0=9 has 20 last-hole cases and 21 cycles. The maximum checked arrival is 2782. The unresolved proof edge is full census certificate transport: 4225 ngram and 3102 block candidates for D0=8; 1688 ngram and 2134 block candidates for D0=9, besides the original 250-step census leaves. No parent or global roster cut claimed.
+
+ The sole D0=6 stage-2 open leaf is solved below; D0=2 has source-checked Covers for all eleven former stage-2 open leaves. No complete branch bound is certified.
 
 ## D0=2: all eleven source-checked hard-leaf Covers
 
