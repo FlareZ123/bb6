@@ -12,6 +12,7 @@ on:
           - at-family
           - at-general
           - at-monoid-growth
+          - at-marker
         default: paired
 
 jobs:
@@ -37,7 +38,7 @@ jobs:
           lean im-results/agent2-f197-sweep/ATTerminalCore.lean | tee /tmp/at-terminal.log
           ! grep -q sorryAx /tmp/at-terminal.log
       - name: Check complementary AT parametric cores
-        if: ${{ inputs.target == 'at-family' || inputs.target == 'at-general' || inputs.target == 'at-monoid-growth' }}
+        if: ${{ inputs.target == 'at-family' || inputs.target == 'at-general' || inputs.target == 'at-monoid-growth' || inputs.target == 'at-marker' }}
         env:
           LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
         run: |
@@ -50,7 +51,9 @@ jobs:
           lean -o im-results/agent2-f197-sweep/ATCostGrowth.olean im-results/agent2-f197-sweep/ATCostGrowth.lean | tee -a /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATCarryCore.olean im-results/agent2-f197-sweep/ATCarryCore.lean | tee -a /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATCarriedParser.olean im-results/agent2-f197-sweep/ATCarriedParser.lean | tee -a /tmp/at-family.log
-          if [ "${{ inputs.target }}" = "at-general" ]; then
+          if [ "${{ inputs.target }}" = "at-marker" ]; then
+            lean im-results/agent2-f197-sweep/MarkerLocal.lean | tee -a /tmp/at-family.log
+          elif [ "${{ inputs.target }}" = "at-general" ]; then
             lean im-results/agent2-f197-sweep/ATGeneralParser.lean | tee -a /tmp/at-family.log
           elif [ "${{ inputs.target }}" = "at-monoid-growth" ]; then
             lean -o im-results/agent2-f197-sweep/ATGeneralParser.olean im-results/agent2-f197-sweep/ATGeneralParser.lean | tee -a /tmp/at-family.log
