@@ -14,7 +14,7 @@ If every first parameter is at least 4B, both drains retain every row. The first
 
 From the authentic odd-65700 seed, evaluate 70,000 complete primary cycles, obtaining 8,428 P/Q cells. Thereafter keep that prefix and the known leading-b ghost, and discard all future births. Jump to the end of the 2^8214-1 tertiary cycles using the exact event skip. There are 6,222 deletion events and 198 surviving known Q entries, of which 197 have known P. An independent Q-only implementation gave exactly the same 195 normalized non-fixed Q entries.
 
-The following tertiary-zero crossing retains every tracked row in drain A; C restores exactly their old P/Q values. For the next secondary count T=2^8215-1, all 197 known P satisfy P_i >= 2*B_i*T+3 and all 198 Q satisfy Q_i >= B_i+2. The first ten floor(P_i/(2*B_i*T)) are 19,5,68,74,11,1690,180,431,89,276. Some P-runs are not divisible by 2B; the protected-suffix inequality handles them. This does not imply the required divisibility or budget for the remaining near-head portion.
+The following tertiary-zero crossing retains every tracked row in drain A; C restores their old P values and decreases Q_i by B_i exactly. For the next secondary count T=2^8215-1, all 197 known P satisfy P_i >= 2*B_i*T+3 and all 198 Q satisfy Q_i >= B_i+2. The first ten floor(P_i/(2*B_i*T)) are 19,5,68,74,11,1690,180,431,89,276. Some P-runs are not divisible by 2B; the protected-suffix inequality handles them. This does not imply the required divisibility or budget for the remaining near-head portion.
 
 ## Reproduce
 

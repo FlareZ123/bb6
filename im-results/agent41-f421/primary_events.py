@@ -41,7 +41,7 @@ def check():
         prev=p-1
     assert len(a)==198
     z=[(a[i+1][1]-(2*(1<<i)-1) if i+1<len(a) else 0,p-1+(1<<i)) for i,(p,q) in enumerate(a)]
-    assert z==rows # one zero crossing preserves these far P/Q rows
+    assert z==[(p,q-(1<<i)) for i,(p,q) in enumerate(rows)] # P unchanged, Q decreases by B
     assert all(p>=2*(1<<i)*t+3 for i,(p,q) in enumerate(z[:-1]))
     assert all(q>=(1<<i)+2 for i,(p,q) in enumerate(z))
     print('Exact known far rows after zero:',len(z),'known P:',len(z)-1)
