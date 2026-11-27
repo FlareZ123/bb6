@@ -11,6 +11,10 @@ on:
       checkpoint_run:
         description: "Optional earlier workflow run ID"
         default: ""
+      summary_only:
+        description: "Report previously computed result without repeating the search"
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -29,6 +33,7 @@ jobs:
           github-token: ${{ github.token }}
           path: wide-output
       - name: Compile and test
+        if: '!inputs.summary_only'
         run: |
           cd im-results/agent43-p1-high-cost-reset-count/
           g++ -O3 -march=native wide_reverse_test.cpp -o /tmp/wide-test
@@ -37,6 +42,7 @@ jobs:
           OMP_NUM_THREADS=2 P1_FUSE=8 /tmp/wide-prefix 3342 20000 1671 half | tee /tmp/small-log
           grep -E '^END 3342 [1-9][0-9]*$' /tmp/small-log
       - name: Compute outstanding index
+        if: '!inputs.summary_only'
         env:
           MINUTES: ${{ inputs.minutes }}
           BOUND: ${{ inputs.bound }}
@@ -49,8 +55,38 @@ jobs:
           rc=${PIPESTATUS[0]}
           echo "exit=$rc" | tee -a wide-output/scan.log
           if [[ "$rc" != 0 && "$rc" != 1 && "$rc" != 124 ]]; then exit "$rc"; fi
+      - name: Summarize exact numerical outcome
+        id: summary
+        if: always()
+        run: |
+          python3 - <<'PY'
+          import re, os, pathlib
+          p = pathlib.Path('wide-output/scan.log')
+          log = p.read_text() if p.exists() else ''
+          end = re.findall(r'^END 814324766 ([0-9]+)
+        with:
+          name: agent43-wide-checkpoint
+          path: wide-output/
+          retention-days: 30
+, log, re.M)
+          rc = re.findall(r'^exit=([0-9]+)
+        with:
+          name: agent43-wide-checkpoint
+          path: wide-output/
+          retention-days: 30
+, log, re.M)
+          name = 'n814-end-' + (end[-1] if end else 'unknown') + '-exit-' + (rc[-1] if rc else 'unknown')
+          pathlib.Path('wide-summary.txt').write_text(log)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              print('record='+name,file=f)
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
+        with:
+          name: ${{ steps.summary.outputs.record }}
+          path: wide-summary.txt
+      - uses: actions/upload-artifact@v4
+        if: always() && !inputs.summary_only
         with:
           name: agent43-wide-checkpoint
           path: wide-output/
