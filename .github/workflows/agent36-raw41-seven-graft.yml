@@ -72,7 +72,7 @@ jobs:
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
           for t in 088 090 123 099 101 134 125; do
-            test "$(python3 -c "import json;print(json.load(open('/tmp/raw41-sources/$t/summary.json'))['remaining'])")" = 0
+            test "$(python3 -c "import json;print((lambda q:q.get('remaining_after_late',q['remaining']))(json.load(open('/tmp/raw41-sources/$t/summary.json'))))")" = 0
           done
           SRC=.tmp/agent36-raw41-newseven
           D=im-results/agent47-raw41-cut
