@@ -39,9 +39,19 @@ Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary s
 
 B1=1RE leaf198 has a compact 16/17 asymmetric n-gram certificate candidate with 2229 reachable configurations, 95 left and 581 right summaries and 735 predecessor edges; [data](a0lb198-compact.json). All 39 lag-bank leaves have finite closure candidates. These exploit lag-XOR followed by bounded run/residue summaries; exact tables and graphs are saved. The three multi-hole late queries are expanded rather than treated as nonhalting.
 
-## A1=1LC B1=0LC: new five-hole candidate
+## A1=1LC: four new five-hole candidates
 
-All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). This is not yet kernel accepted.
+All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). The first CI accepted leaf39's individual theorem, but failed on list algebra for leaf95/118; the repaired source awaits a fresh build.
+
+| B1 | Open leaves | FAR | Compact | Direct sweep/pump | Weighted candidate |
+|---|---:|---:|---:|---:|---:|
+| 0LC | 122 | 105 | 14 | 3 | 106 |
+| 0RC | 467 | 427 | 39 | 1 | 321 |
+| 1LB | 479 | 475 | 4 | 0 | 118 |
+| 1RC | 308 | 292 | 16 | 0 | 298 |
+| Total | 1376 | 1299 | 73 | 4 | — |
+
+For 0RC leaf88, entry at step563 followed by an exact 288-step prefix rewrite inserts 11110000, leaving all suffix bits untouched; [Lean proof candidate](Raw40A1LC0RCLeaf88.lean). The 0RC attaining witness includes one unit of blank delay. [Four-child rebuild](reproduce-A1LC0LC.sh), [0RC exactness candidate](Raw40A1LC0RCExact.lean), [1LB exactness candidate](Raw40A1LC1LBExact.lean), [1RC exactness candidate](Raw40A1LC1RCExact.lean). Aggregate acceptance pending.
 
 ## Reusable mechanisms and baseline
 
