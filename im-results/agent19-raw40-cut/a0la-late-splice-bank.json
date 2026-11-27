@@ -168,5 +168,29 @@
       ]
     ],
     "increment": 912
+  },
+  "1RE/1096": {
+    "table": "1RB0LA_1RC1RA_0RD1RE_1LD1LA_---0RF_0RC0RF",
+    "entry": 483904,
+    "entryHead": 1298,
+    "period": 271120,
+    "shift": 336,
+    "side": "R",
+    "state": 2,
+    "cuts": [
+      [
+        1,
+        225
+      ],
+      [
+        907,
+        1003
+      ],
+      [
+        1253,
+        1269
+      ]
+    ],
+    "increment": 60256
   }
 }
