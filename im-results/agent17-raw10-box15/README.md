@@ -1,6 +1,6 @@
 # Raw10 base34 rectangle 15: independent discovery closure and symbolic nonhalting
 
-**Status (2026-11-27):** the discovery partition covers all 97,656,250 completions computationally. The ten final one-hole cylinders now have original-source all-time nonhalting proofs, accepted in [45908327095](https://github.com/FlareZ123/bb6/actions/runs/45908327095), with only standard axioms. The largest discovered ordinary and weighted halt score is 7791; the emitted lower-bound witness was not among the four compiled roots of that run. The entire rectangle upper bound remains unaccepted: the Family6 partition audit was interrupted after compiling its common external witness bank. The next edge is to finish the existing exact partition proof with durable sharded cuts, not another search or a fresh full monolithic compilation. No global roster reduction follows yet.
+**Status (2026-11-27):** the discovery partition covers all 97,656,250 completions computationally. The ten final one-hole cylinders now have original-source all-time nonhalting proofs, accepted in [45908327095](https://github.com/FlareZ123/bb6/actions/runs/45908327095), with only standard axioms. The largest discovered ordinary and weighted halt score is 7791; the lower-bound witness and exact incoming delay graph are now independently source-certified in [45920219572](https://github.com/FlareZ123/bb6/actions/runs/45920219572). The entire rectangle upper bound remains unaccepted: the Family6 partition audit was interrupted after compiling its common external witness bank. The next edge is to finish the existing exact partition proof with durable sharded cuts, not another search or a fresh full monolithic compilation. No global roster reduction follows yet.
 
 ## Domain and discovery partition
 
@@ -44,7 +44,7 @@ For index 0 (`1RB0LF_1LC0RB_0LE0LD_1LC1LE_1LA0RA_1LD---`), mirrored width4 macro
 
 ## Finite maximum witness
 
-Table [8,18,11,6,17,13,11,13,12,24,4,0] halts after 7790 live moves, plus the halt, giving 7791. Its zero-write transition graph has no incoming path to A, so weighted score is also 7791. All other discovered finite leaves have weighted score at most 1946 (or at most 262 among initial short leaves). [Lower.lean](Lower.lean) supplies the source lower theorem pending audit.
+Table [8,18,11,6,17,13,11,13,12,24,4,0] halts after 7790 live moves, plus the halt, giving 7791. Its zero-write transition graph has no incoming path to A, so weighted score is also 7791. All other discovered finite leaves have weighted score at most 1946 (or at most 262 among initial short leaves). [Lower.lean](Lower.lean) supplies the source lower theorem accepted in run 45920219572.
 
 ## Exact incoming blank-delay graph
 
@@ -56,7 +56,7 @@ The six zero-symbol rows have fixed codes A0=8, B0=11, C0=17, D0=11, E0 in {0,3,
 
 A zero-write directed path must end at A; the graph above exhausts such paths. An independent executable enumeration of all 250 E0/F0 pairs gives 230, 16 and 4 cases respectively. Thus the generic five-move delay allowance can be replaced with an exact per-table allowance of 0, 1 or 3, and every ordinary finite score plus that allowance equals the weighted score. The 7791 witness uses F0=4 and therefore has zero allowance. This does not prove the upper bound on the ordinary score of all completions.
 
-[Delay.lean](Delay.lean) expresses the source-level graph calculation, exact weighted equivalence, and the ordinary-to-weighted bound with at most three additional moves. Its focused source audit, including Lower.lean, is [45919670076](https://github.com/FlareZ123/bb6/actions/runs/45919670076) (queued at the time of writing); no Lean acceptance yet. The graph argument also applies to any sibling rectangle with the identical six zero-symbol domains.
+[Delay.lean](Delay.lean) expresses the source-level graph calculation, exact weighted equivalence, and the ordinary-to-weighted bound with at most three additional moves. Initial run [45919670076](https://github.com/FlareZ123/bb6/actions/runs/45919670076) found a single invalid Nat.le.trans field notation, fixed in dc4a9036. The generalized five-sibling source audit, including Lower.lean, [45920219572](https://github.com/FlareZ123/bb6/actions/runs/45920219572) succeeded. The exact graph theorem applies to original rectangles 12, 13, 14, 15 and 25.
 
 ## Source certification and next edge
 
