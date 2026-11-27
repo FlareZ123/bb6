@@ -18,11 +18,13 @@ abbrev e0Score : Nat := 6766859
 
 theorem cover_mono {A B : Nat} (hAB : A ≤ B) {p : PartialMachine}
     (h : Cover (WeightedBound A) p) : Cover (WeightedBound B) p := by
-  cases h with
-  | leaf _ hbound =>
-      refine Cover.leaf _ ?_
+  induction h with
+  | leaf p hbound =>
+      refine Cover.leaf p ?_
       intro m hm k d hk hd
       exact Nat.le_trans (hbound m hm k d hk hd) hAB
+  | branch p s hu kids ih =>
+      exact Cover.branch p s hu (fun t ht => ih t ht)
 
 theorem liftWeighted {b : Nat} {p : PartialMachine}
     (hb : b ≤ e0Score)
