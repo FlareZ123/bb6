@@ -28,10 +28,18 @@ ids={int(x.split()[0]) for x in (out/'far5.txt').read_text().splitlines()}
 assert len(ids)==F
 rs=[v for v in records if v['c']==c]
 rids={v['id'] for v in rs}; gids={g[0] for g in grams}
-parts=[ids,set(map(int,extra)),rids,gids,set(remaining)]
+known={492:('1RB0RC_1RC0RF_0RD0LE_1LD1LA_1LA---_0RC0RB','BB6.Agent19Raw40.A0RC492')} if c=='0LE' else {}
+parts=[ids,set(map(int,extra)),rids,gids,set(known),set(remaining)]
 assert len(rids)==len(rs) and set.union(*parts)==set(range(N)) and sum(map(len,parts))==N
 (out/'far_extra.txt').write_text(''.join(f'{i} {v}\n' for i,v in extra.items()))
 mods=[];proven=[]
+if known:
+    with (ROOT/'Raw40A0RC492Trace.lean').open('w') as f:
+        subprocess.run([sys.executable,str(ROOT/'emit_492.py')],cwd=ROOT,stdout=f,check=True)
+    mods.extend(['Raw40A0RC492Core','Raw40A0RC492Trace','Raw40A0RC492'])
+    for i,(t,ns) in known.items():
+        assert opens[i]==t
+        proven.append((t,ns))
 if rs:
     mod=f'Raw40A0RC{c}Run';ns=f'BB6.Agent19Raw40.A0RC{c}Run'
     for v in rs:
