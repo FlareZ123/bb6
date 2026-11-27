@@ -48,6 +48,7 @@ on:
           - sharp-raw99
           - canonical54-four-sharp
           - canonical46-ready-union
+          - canonical46-ready-resume
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -2489,7 +2490,7 @@ jobs:
 
   canonical46_ready_union:
     name: Consume four sharp and seven ready parents on accepted Canonical57
-    if: ${{ inputs.target == 'canonical46-ready-union' }}
+    if: ${{ inputs.target == 'canonical46-ready-union' || inputs.target == 'canonical46-ready-resume' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
     permissions:
@@ -2504,12 +2505,14 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Consume four sharp parents
+        if: inputs.target == 'canonical46-ready-union'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
           python im-results/agent2-ready-union/assemble_ready_union.py --work /tmp/a2-ready-union --phase sharp
       - uses: actions/upload-artifact@v4
+        if: inputs.target == 'canonical46-ready-union'
         with:
           name: canonical53-four-sharp-after-raw124-thin-delta
           path: /tmp/a2-ready-union/sharp-delta/**
@@ -2520,10 +2523,15 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
-          python im-results/agent2-ready-union/assemble_ready_union.py --work /tmp/a2-ready-union --phase ready
+          if [[ "${{ inputs.target }}" == "canonical46-ready-resume" ]]; then
+            python -m py_compile im-results/agent2-ready-union/resume_ready_union.py
+            python im-results/agent2-ready-union/resume_ready_union.py --work /tmp/a2-ready-union
+          else
+            python im-results/agent2-ready-union/assemble_ready_union.py --work /tmp/a2-ready-union --phase ready
+          fi
       - uses: actions/upload-artifact@v4
         with:
-          name: canonical46-seven-ready-after-sharp-thin-delta
+          name: ${{ inputs.target == 'canonical46-ready-resume' && 'canonical-ready-resumed-thin-delta' || 'canonical46-seven-ready-after-sharp-thin-delta' }}
           path: /tmp/a2-ready-union/ready-delta/**
           if-no-files-found: error
           retention-days: 30
@@ -2531,6 +2539,6 @@ jobs:
         if: failure()
         with:
           name: canonical46-ready-union-diagnostics
-          path: /tmp/a2-ready-union/*-delta/evidence/*.log
+          path: /tmp/a2-ready-union/*-delta/evidence/
           if-no-files-found: warn
           retention-days: 7
