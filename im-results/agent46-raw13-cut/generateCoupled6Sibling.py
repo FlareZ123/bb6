@@ -26,6 +26,26 @@ def main(mv):
         ns="BB6.Agent46Raw13Coupled6RBPattern"
         extra_imports=["Raw13Coupled6RBPattern"]
         manual["1RB1LD1RC1RB1LA1RE1LF0LA0RC0RB---1LA"]=f".closed (.proven {ns}.p {ns}.never)"
+        extra_imports += ["Raw13Coupled6Nested0RB", "Raw13Coupled6Odd0RB",
+                          "Raw13Coupled6RBPumps", "Raw13Coupled6RBTriple", "Raw13Coupled6RBDrifts"]
+        ns_nested="BB6.Agent46Raw13Coupled6Nested0RB"
+        for d,t in [("(false,false)","1RB1LD1RC0RE1LA1RE1LA0LA0LF0RB1LA---"),
+                    ("(true,false)","1RB1LD1RC0RF1LA1RE1LA0LA---0RB0LC0RB"),
+                    ("(true,true)","1RB1LD1RC0RF1LA1RE1LA0LA---0RB0LD0RB")]:
+            manual[t]=f".closed (.proven ({ns_nested}.p {d}) ({ns_nested}.never {d}))"
+        ns_odd="BB6.Agent46Raw13Coupled6Odd0RB"
+        manual["1RB1LD1RC0RE1LA1RE1LA0LA0LF0RB0LB---"]=f".closed (.proven ({ns_odd}.p ()) ({ns_odd}.never ()))"
+        ns_auto="BB6Coverage.Agent31Pump.Auto"
+        for name,filename in [("Raw13Coupled6RBPumps","coupled6-0RB-pumps.json"),
+                              ("Raw13Coupled6RBDrifts","coupled6-0RB-drifts.json")]:
+            for i,x in enumerate(json.loads((D/filename).read_text())):
+                ns_leaf=ns_auto+"."+name
+                manual[x["table"]]=f".closed (.proven {ns_leaf}.p{i} {ns_leaf}.never{i})"
+        ns_triple=ns_auto+".Raw13Coupled6RBTriple"
+        for v,t in [("a","1RB1LD1RC---1LA1RE0RF0LA1RF0RB1RC0LD"),
+                    ("b","1RB1LD1RC0LD1LA1RE0RF0LA1RB0RB---1RC"),
+                    ("c","1RB1LD1RC0LD1LA1RE1RF0LA1RB0RB---0LE")]:
+            manual[t]=f".closed (.proven ({ns_triple}.p .{v}) ({ns_triple}.never .{v}))"
     if mv=="0LE":
         ns="BB6.Agent46Raw13Coupled6Drift0LE"
         extra_imports=["Raw13Coupled6Drift0LE"]
