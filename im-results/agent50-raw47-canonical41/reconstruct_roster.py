@@ -55,6 +55,15 @@ def reconstruct():
         assert len(entries) == expected, (name, len(entries), expected)
         by_stage.append((name, len(entries),
                          [e["raw_residual_index"] for e in entries]))
+    # Independent source-manifest crosscheck: all 15 named original hard roots
+    # must still have a containing raw representative in Canonical40.
+    hard = json.loads((HERE.parent / "agent19-hard-root-crosswalk" /
+                       "crosswalk.json").read_text())
+    current40 = set(next(ids for name, _, ids in by_stage
+                         if name == "Canonical40"))
+    assert len(hard["records"]) == 15
+    assert all(record["parent"]["raw"] in current40
+               for record in hard["records"])
     return by_stage
 
 if __name__ == "__main__":

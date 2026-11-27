@@ -298,5 +298,82 @@
     "removed_raw": 47,
     "retained": 39,
     "source_acceptance": "pending"
-  }
+  },
+  "named_hard_roots": [
+    {
+      "machine": "champion",
+      "raw": 139,
+      "retained": true
+    },
+    {
+      "machine": "C",
+      "raw": 10,
+      "retained": true
+    },
+    {
+      "machine": "P1",
+      "raw": 8,
+      "retained": true
+    },
+    {
+      "machine": "Sheep",
+      "raw": 8,
+      "retained": true
+    },
+    {
+      "machine": "D0",
+      "raw": 10,
+      "retained": true
+    },
+    {
+      "machine": "D1",
+      "raw": 9,
+      "retained": true
+    },
+    {
+      "machine": "D2",
+      "raw": 10,
+      "retained": true
+    },
+    {
+      "machine": "D3",
+      "raw": 13,
+      "retained": true
+    },
+    {
+      "machine": "A6",
+      "raw": 139,
+      "retained": true
+    },
+    {
+      "machine": "r1",
+      "raw": 10,
+      "retained": true
+    },
+    {
+      "machine": "r2",
+      "raw": 9,
+      "retained": true
+    },
+    {
+      "machine": "r3",
+      "raw": 9,
+      "retained": true
+    },
+    {
+      "machine": "r4",
+      "raw": 23,
+      "retained": true
+    },
+    {
+      "machine": "r5",
+      "raw": 8,
+      "retained": true
+    },
+    {
+      "machine": "r6",
+      "raw": 23,
+      "retained": true
+    }
+  ]
 }
