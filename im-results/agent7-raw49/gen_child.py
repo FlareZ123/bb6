@@ -90,6 +90,12 @@ if idx>=15:
     for line in (root/'sweep_recipes.jsonl').read_text().splitlines():
         i,s,*_=json.loads(line)
         known_proven['_'.join(s[j:j+6] for j in range(0,36,6))]=f'BB6.Agent7Raw49BulkRecipes.M{i}'
+if idx>=15:
+    for fn,ns in [('rest_sweep_recipes.jsonl','BB6.Agent7Raw49RestSweeps'),('rle_recipes.jsonl','BB6.Agent7Raw49RLE')]:
+        if (root/fn).exists():
+            for line in (root/fn).read_text().splitlines():
+                i,s,*_=json.loads(line)
+                known_proven['_'.join(s[j:j+6] for j in range(0,36,6))]=f'{ns}.M{i}'
 proven={t:v for t,v in known_proven.items() if t in set(opens)}
 assert set(opens)==set(bank)|set(proven),set(opens)-set(bank)-set(proven)
 mod=f'Raw49C{idx}';out=root/f'child{idx}';out.mkdir(exist_ok=True)
@@ -168,6 +174,8 @@ import Raw49Doubling
 import Raw49C6Counters
 import Raw49NextSweeps
 {'import Raw49BulkRecipes' if idx>=15 else ''}
+{'import Raw49RestSweeps' if any(isinstance(v,str) and v.startswith("BB6.Agent7Raw49RestSweeps.") for v in proven.values()) else ''}
+{'import Raw49RLE' if any(isinstance(v,str) and v.startswith("BB6.Agent7Raw49RLE.") for v in proven.values()) else ''}
 {head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
