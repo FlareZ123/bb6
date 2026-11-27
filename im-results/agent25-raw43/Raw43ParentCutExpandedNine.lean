@@ -20,6 +20,8 @@ def remaining := BB6.Agent25Raw43ParentExpandedFive.remaining.filter fun e =>
 theorem remaining_count : remaining.length = 1 := by decide
 theorem root_entries : remaining.all (fun e =>
     decide (e.2 initialSlot = some (some ⟨true,true,1⟩))) = true := by decide
+theorem residual_is_b0le : remaining.all (fun e =>
+    equalTable e.2 BB6.Agent25Raw43B0LE.p) = true := by decide
 
 theorem sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
     WeightedBound 11292 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m := by
@@ -54,7 +56,17 @@ theorem cover {B : Nat} (hB : 11292 ≤ B)
   · have hf := of_decide_eq_true (List.all_eq_true.mp root_entries e he)
     exact quotientSafe hf (hRest e he).sound m hq
 
+theorem cover_from_b0le {B : Nat} (hB : 11292 ≤ B)
+    (h0 : Cover (WeightedBound B) BB6.Agent25Raw43B0LE.p) :
+    Cover (WeightedBound B) parent := by
+  apply cover hB
+  intro e he
+  have ht := List.all_eq_true.mp residual_is_b0le e he
+  rw [equalTable_sound ht]
+  exact h0
+
 #print axioms remaining_count
+#print axioms residual_is_b0le
 #print axioms sound
-#print axioms cover
+#print axioms cover_from_b0le
 end BB6.Agent25Raw43ParentExpandedNine
