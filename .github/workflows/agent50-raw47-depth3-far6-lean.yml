@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [compose, far-batch]
+        options: [compose, far-batch, far-sweep]
         default: compose
       shard:
         type: number
@@ -76,8 +76,52 @@ jobs:
             .tmp/a50-raw47-fast/log
           if-no-files-found: error
 
+  prepare:
+    if: inputs.mode != 'compose'
+    runs-on: ubuntu-latest
+    outputs:
+      batches: ${{ steps.matrix.outputs.batches }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select disjoint frozen-bank batches
+        id: matrix
+        env:
+          MODE: ${{ inputs.mode }}
+          SHARD: ${{ inputs.shard }}
+          OFFSET: ${{ inputs.offset }}
+          SIZE: ${{ inputs.size }}
+        run: |
+          python - <<'PY'
+          import base64,json,os
+          from pathlib import Path
+          mask=base64.b64decode(Path('im-results/agent50-raw47-depth3/broad-far-parents.b64').read_text())
+          assert len(mask)==1212 and sum(mask)==674
+          ids=[i for i,b in enumerate(mask) if b]
+          if os.environ['MODE']=='far-batch':
+              s,o,n=(int(os.environ[k]) for k in ('SHARD','OFFSET','SIZE'))
+              assert s in range(8) and s!=1 and 0<=o<len(ids[s::8]) and 1<=n<=len(ids[s::8])-o
+              batches=[dict(shard=s,offset=o,size=n)]
+          else:
+              batches=[]
+              for s in [0,2,3,4,5,6,7]:
+                  # Shard 0/3 first batches accepted; shard 4 already dispatched.
+                  start=12 if s in (0,3,4) else 0
+                  for o in range(start,len(ids[s::8]),12):
+                      batches.append(dict(shard=s,offset=o,size=min(12,len(ids[s::8])-o)))
+          print(batches)
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('batches='+json.dumps(batches,separators=(',',':'))+'\n')
+          PY
+
   batch:
-    if: inputs.mode == 'far-batch'
+    if: inputs.mode != 'compose'
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJSON(needs.prepare.outputs.batches) }}
+    name: FAR shard ${{ matrix.shard }} offset ${{ matrix.offset }} size ${{ matrix.size }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -95,9 +139,9 @@ jobs:
           path: /tmp/a50-far
       - name: Check a bounded batch of previously unaccepted FAR parents
         env:
-          SHARD: ${{ inputs.shard }}
-          OFFSET: ${{ inputs.offset }}
-          SIZE: ${{ inputs.size }}
+          SHARD: ${{ matrix.shard }}
+          OFFSET: ${{ matrix.offset }}
+          SIZE: ${{ matrix.size }}
         run: |
           set -euo pipefail
           test "$SHARD" != 1
@@ -122,6 +166,6 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw47-far-${{ inputs.shard }}-${{ inputs.offset }}-${{ inputs.size }}
+          name: raw47-far-${{ matrix.shard }}-${{ matrix.offset }}-${{ matrix.size }}
           path: .tmp/a50-raw47-far-batch/
           if-no-files-found: error
