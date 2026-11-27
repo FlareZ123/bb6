@@ -142,6 +142,33 @@ theorem critical_n45_no_reach (s : Nat) (hs : 2≤s)
     exact Nat.lt_of_le_of_lt (Nat.mul_le_mul ha hb)
       (Nat.lt_of_lt_of_le hsmall (Nat.mul_le_mul_left 6 hp))
 
+/-- Uniform seed for every 32-bit horizon, including later resumptions.
+    The numerical bound uses only the fixed small power 2^128. -/
+theorem qcert_n45_first_u32 (K : Nat) (hK : K≤2^32) :
+    QHalfCert 45352466 K 1 [(quotient 45352466 1 1,(45352466+2)/2)] := by
+  apply qcert_first
+  have hp : (2:Nat)^128≤2^45352466 := Nat.pow_le_pow_right (by decide) (by decide)
+  have h1 : 45352466+K+2≤45352466+2^32+2 := by omega
+  have h2 : marginSize 45352466 K≤marginSize 45352466 (2^32) := by unfold marginSize; omega
+  have hsmall : (45352466+2^32+2)*marginSize 45352466 (2^32)*2<6*2^128 := by decide
+  exact Nat.lt_of_lt_of_le (Nat.lt_of_le_of_lt (Nat.mul_le_mul_right 2 (Nat.mul_le_mul h1 h2)) hsmall) (Nat.mul_le_mul_left 6 hp)
+
+/-- Any empty compact certificate through a 32-bit horizon suffices for
+    the actual critical source exclusion. No power of size n is evaluated. -/
+theorem critical_n45_no_reach_u32 (K s : Nat) (hs : 2≤s)
+    (hK : 45352466+s≤K) (hmax : K≤2^32)
+    (hc : QHalfCert 45352466 K s []) :
+    ¬ BB6.Agent1.Reach 2 (14*2^45352466-2*45352466-10) := by
+  apply critical_no_reach_of_qcert 45352466 K s (by decide) (by decide) hs hK _ _ hc
+  · have hp : (2:Nat)^128≤2^45352466 := Nat.pow_le_pow_right (by decide) (by decide)
+    exact Nat.le_trans (show 45352466+(45352466+s)+2≤2^128 by omega) hp
+  · have hp : (2:Nat)^128≤2^45352466 := Nat.pow_le_pow_right (by decide) (by decide)
+    have h1 : 45352466+(45352466+s)+2≤45352466+2^32+2 := by omega
+    have h2 : marginSize 45352466 (45352466+s)≤marginSize 45352466 (2^32) := by unfold marginSize; omega
+    have hsmall : (45352466+2^32+2)*marginSize 45352466 (2^32)<6*2^128 := by decide
+    exact Nat.lt_of_le_of_lt (Nat.mul_le_mul h1 h2)
+      (Nat.lt_of_lt_of_le hsmall (Nat.mul_le_mul_left 6 hp))
+
 /-- Packed queue update: the low h delayed bits leave; the selected word
     enters at position n-h. -/
 theorem queue_update (n h Q X : Nat) (hh : h≤n) :
@@ -181,6 +208,8 @@ theorem queue_mul_carry_bound (h r X : Nat) (hr : r<7) (hX : X<2^h) :
 #print axioms qcert_n45_first
 #print axioms critical_no_reach_of_qcert
 #print axioms critical_n45_no_reach
+#print axioms qcert_n45_first_u32
+#print axioms critical_n45_no_reach_u32
 #print axioms queue_update
 #print axioms queue_update_split
 #print axioms queue_mul_carry_bound
