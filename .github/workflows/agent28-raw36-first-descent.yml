@@ -8,7 +8,7 @@ on:
         required: false
       target:
         type: choice
-        options: [A, B]
+        options: [A, B, B1]
         default: A
 permissions:
   contents: read
@@ -31,7 +31,7 @@ jobs:
         run: |
           set -euo pipefail
           TARGET="${{ inputs.target }}"
-          [[ "$TARGET" = A || "$TARGET" = B ]]
+          [[ "$TARGET" = A || "$TARGET" = B || "$TARGET" = B1 ]]
           D=im-results/agent28-raw36-first-hard
           work=/tmp/a28-raw36-first-descent
           python im-results/agent13-coverage/unpack.py
