@@ -208,3 +208,15 @@ for p in sorted(roots,key=lambda p:(-weight(p),p.name)):
 (out/'shards.json').write_text(json.dumps({'artifact_prefix':'raw42-assembly-shard','groups':groups},indent=2)+'\n')
 (out/'matrix.json').write_text(json.dumps(list(groups))+'\n')
 print('shard weights',sizes,'groups',len(groups),flush=True)
+
+# Large run-summary certificates use the already proved trie checker. This
+# is only a representation change; the generated live theorem is rechecked.
+# Avoid changing any generated module after a shard has been accepted.
+from convert_bidfa import convert
+converted=[]
+for p in sorted(out.glob(f'Raw42{branch}Run*.lean')):
+    if p.stat().st_size >= 50000:
+        p.write_text(convert(p.read_text()))
+        converted.append(p.stem)
+(out/'fast-converted.json').write_text(json.dumps(converted,indent=2)+'\n')
+print('large run-summary certificates converted',len(converted),flush=True)
