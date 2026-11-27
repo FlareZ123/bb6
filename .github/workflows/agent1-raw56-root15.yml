@@ -1,0 +1,75 @@
+name: Agent1 Raw56 root15 composition
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  root15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-rc-*
+          path: /tmp/raw56-rc
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46045652695'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-reparent-source-accepted
+          path: /tmp/raw56-re
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46061898661'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root17-source-accepted
+          path: /tmp/raw56-root17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064074987'
+      - name: Restore pilot certificate and cut proof objects
+        uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-*
+          path: /tmp/raw56-pilot
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064129990'
+      - name: Compose exact 15-way Raw56 root frontier
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/raw56-root17:/tmp/raw56-pilot:/tmp/raw56-pilot/E10RD:/tmp/raw56-pilot/E11LC:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
+          lean --version | grep -F '4.36.0-rc2'
+          lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean | tee /tmp/raw56-root15.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root15.log --require BB6.Agent1Raw56Root.sound15RDLC
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw56-root15.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-root15-source-accepted
+          path: |
+            /tmp/Raw56Root15.olean
+            /tmp/raw56-root15.log
+          if-no-files-found: error
