@@ -10,7 +10,7 @@ on:
         description: Branch depth, A6 root, C1 batch or E0 proof
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long, e0graftprep, e0graftcheck]
+        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long, e0graftprep, e0graftcheck, e0search]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
-    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' && inputs.kind != 'e0graftprep' && inputs.kind != 'e0graftcheck' }}
+    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' && inputs.kind != 'e0graftprep' && inputs.kind != 'e0graftcheck' && inputs.kind != 'e0search' }}
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.kind == 'e0parent' && 180 || 60 }}
     steps:
@@ -433,3 +433,25 @@ jobs:
             .tmp/a48-oneLA-final/log
             .tmp/a48-oneLA-final/imports/
             .tmp/a48-oneLA-final/extern/
+
+  e0-search:
+    if: ${{ inputs.kind == 'e0search' && inputs.sibling == 'OneLB' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Discover remaining exact OneLB C1 child certificates
+        run: bash im-results/agent3-raw139-e0-oneLB/search-rest.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw139-e0-OneLB-discovery-candidate
+          include-hidden-files: true
+          path: |
+            .tmp/a3-oneLB-discovery/c*/partition.json
+            .tmp/a3-oneLB-discovery/c*/spec-compact.json
+            .tmp/a3-oneLB-discovery/c*/unresolved.json
+            .tmp/a3-oneLB-discovery/summary.json
+            .tmp/a3-oneLB-discovery/search.log

@@ -2032,3 +2032,5 @@ Lease remains 2026-11-27T03:20:31.507Z (release not before 04:30:31.507Z). RNG 8
 
 ## 2026-11-27T03:30:34.298Z checkpoint — C1=1LC sibling
 Complete computational candidate: 685 splits, 15756 leaves (11340 cycles,3209 last,969 FAR,233 block,5 late); longest final-hole F0 query 61179, weighted bound 61185. Exact recipe search and source script in im-results/agent3-raw139-e0-oneLB/discover-oneLC.py and reproduce-oneLC.sh. Do not repeat this discovery. Previous C1=0LC CI run 45934344615 in progress. New workflow mode OneLBC1OneLC. Lease unchanged. No global roster cut until source acceptance and parent composition.
+
+C1=0LC original-source run 45934344615 succeeded (artifact 15169732599, digest sha256:678611e0dadfeb04b00cfb8ab2bb7c0d79187a4f5a35633582b80925c5ff749a); C1=1LC run 45934601426 in progress. Targeted discovery of 16 remaining C1 choices via discover-rest.py/search-rest.sh, workflow e0search/OneLB; saved partitions/specs/residuals, two worker processes. No proof claim for discovery. Six immediate cycles recorded in consolidated dossier. Lease unchanged.
