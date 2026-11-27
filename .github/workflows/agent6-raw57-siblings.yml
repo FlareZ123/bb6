@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -469,5 +469,64 @@ jobs:
         with:
           name: raw56-rc-final-source-accepted
           path: /tmp/raw56-rc-final/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_le_shard:
+    if: inputs.child == 'raw56-le-two'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        choice: [0RB, 0RC]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Replay complete LE child and compile exact quotient bound
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CHOICE: ${{ matrix.choice }}
+        run: python im-results/agent1-raw56/le/le_delta.py shard --choice "$CHOICE" --base /tmp/raw56-base --common /tmp/raw56-common --out /tmp/raw56-le-shard
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-le-shard-${{ matrix.choice }}
+          path: /tmp/raw56-le-shard/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_le_assemble:
+    if: inputs.child == 'raw56-le-two'
+    needs: raw56_le_shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-le-shard-*
+          path: /tmp/raw56-le-inputs
+      - name: Check exact 14-to-12 residual consumer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python im-results/agent1-raw56/le/le_delta.py assemble --base /tmp/raw56-base --common /tmp/raw56-common --inputs /tmp/raw56-le-inputs --out /tmp/raw56-le-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-le-two-source-accepted
+          path: /tmp/raw56-le-final/**
           if-no-files-found: error
           retention-days: 30
