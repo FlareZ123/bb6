@@ -1,5 +1,6 @@
 import Raw40A0LA1LC66Drain
 import Raw40A0LA1LC66Macros
+import Raw40A0LA1LC66Entry
 import CrossingSource
 import Lean.Elab.Tactic.Omega
 
@@ -130,5 +131,19 @@ theorem never_from_entry (m : Machine) (hm : compatible table m) (entry : Nat)
 
 #print axioms reach_sound
 #print axioms never_from_entry
+
+theorem entry (m : Machine) (hm : compatible table m) :
+    run m 93860 blank = some (fam (X 11) 10) := by
+  have H := zrun_sound table m hm 93860 ⟨0,0,[],[]⟩ Leaf66Entry.entryZ Leaf66Entry.entryRun
+  have he : embed Leaf66Entry.entryZ = fam (X 11) 10 := by
+    apply embed_congr _ _ (by decide) (by decide)
+    · exact padEq_sound _ _ (by decide +kernel)
+    · exact padEq_sound _ _ (by decide +kernel)
+  rwa [start_embed,he] at H
+
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
+  never_from_entry m hm 93860 10 (entry m hm)
+
+#print axioms never
 
 end BB6.Agent19Raw40.A0LA1LCLeaf66
