@@ -43,7 +43,7 @@ def term(p,t):
     if tag=="split":
         n,s,kids=a
         assert len(kids)==24 and p[s]=="---"
-        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(term(refine(p,s,mv),kid) for mv,kid in zip(MOVES,kids))+"\n])"
+        return f".split {n} {slot(s)} (byMove [\n"+",\n".join(term(refine(p,s,mv),kid) for mv,kid in zip(MOVES,kids))+"])"
     raise ValueError(t)
 def generate(i,limit):
     tree=json.loads(subprocess.check_output(["node","-e",NODE,str(i)],cwd=ROOT))
