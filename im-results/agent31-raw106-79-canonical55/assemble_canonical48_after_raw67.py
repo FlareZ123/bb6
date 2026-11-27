@@ -164,7 +164,7 @@ def main():
     generated = work / "generated"
     generated.mkdir()
     shutil.copy2(source, generated / source.name)
-    shutil.copy2(base_report_path, generated / "canonical52-base-report.json")
+    shutil.copy2(base_report_path, generated / "canonical49-base-report.json")
     shutil.copy2(raw67_report_path, generated / "raw67-parent-report.json")
 
     report = {
