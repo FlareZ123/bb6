@@ -7,6 +7,7 @@ import argparse, json, os, resource, subprocess, sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
 FAR=HERE.parent/'agent13-block-far'
+from cuts import stem, second_index
 
 def code_table(row):
     def code(v):
@@ -38,7 +39,7 @@ def main():
             for flip in (False,True):schedule.append([width,cap,mod,runs,flip,mode])
     solved=[];open_rows=[]
     for i,row in enumerate(rows):
-        name=f'Box28D{row[7]}Far{i:02d}'
+        name=f'{stem(row[6],row[second_index(row[6])])}Far{i:02d}'
         for param in schedule:
             try:
                 r=subprocess.run([sys.executable,str(Path(__file__).resolve()),'--one',json.dumps(row),'--param',json.dumps(param),'--out',str(a.out),'--name',name],capture_output=True,text=True,timeout=8)

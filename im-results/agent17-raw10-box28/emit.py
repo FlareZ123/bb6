@@ -5,33 +5,44 @@ Requires preserved discovery artifact, not a second classification scan.
 Refuses any unresolved leaf. The generated source must pass Lean separately.
 """
 from pathlib import Path
-import argparse, json, os, sys, shutil
+import argparse, json, os, sys, shutil, re
 from math import prod
 HERE=Path(__file__).resolve().parent
 BASE=HERE.parent/'agent13-raw10-box4'
 TEMPLATE=HERE.parent/'agent13-raw10-box33'
 BRANCH=HERE.parent/'agent13-raw10-box3-branches'
-TARGETS=(1,3,8,9,10,11)
+from cuts import TODO, fixed_for, targets_for, second_index, stem
 def put(out,name,content):
     (out/(name+'.lean')).write_text(content)
 
-def source_core(out, name, d1, bound):
+def source_core(out, name, d0, v, bound):
     s=(TEMPLATE/'Box33BranchCore.lean').read_text()
     s=s.replace('Box33Branch',name)
     s=s.replace('/-- B1=0LD and D0=0RA in the authentic Raw10 residual rectangle 33. -/',
-                f'/-- D0=0RD, D1 code {d1} in authentic Raw10 rectangle 28. -/')
-    old='  | 3 => [13]\n  | 4 => [1]\n  | 5 => [13]\n  | 6 => [2]'
-    new=f'  | 4 => [11]\n  | 5 => [13]\n  | 6 => [14]\n  | 7 => [{d1}]'
+                f'/-- D0={d0}, slot {second_index(d0)} code {v} in authentic Raw10 rectangle 28. -/')
+    si=second_index(d0)
+    fixed=fixed_for(d0,v)
+    old='  | 0 => [8]\n  | 2 => [11]\n  | 3 => [13]\n  | 4 => [1]\n  | 5 => [13]\n  | 6 => [2]'
+    new='\n'.join(f'  | {i} => [{c}]' for i,c in enumerate(fixed) if c>=0)
     assert s.count(old)==1
     s=s.replace(old,new)
-    s=s.replace('index s = 3','index s = 7').replace('i = 3 then ([13]',f'i = 7 then ([{d1}]')
-    s=s.replace('then [decode 13]',f'then [decode {d1}]').replace('then [decode 2]','then [decode 14]')
-    s=s.replace('([2] : List (Fin 25))','([14] : List (Fin 25))')
-    s=s.replace('s = slot 3','s = slot 7').replace('slot 3)','slot 7)')
-    s=s.replace('decode 13 ∈',f'decode {d1} ∈').replace('decode 2 ∈','decode 14 ∈')
+    # One simultaneous substitution: avoids confusing code 2 with a newly inserted code.
+    replacements={
+        'index s = 3':f'index s = {si}',
+        'i = 3 then ([13]':f'i = {si} then ([{v}]',
+        'then [decode 13]':f'then [decode {v}]',
+        'then [decode 2]':f'then [decode {d0}]',
+        '([2] : List (Fin 25))':f'([{d0}] : List (Fin 25))',
+        's = slot 3':f's = slot {si}',
+        'slot 3)':f'slot {si})',
+        'decode 13 ∈':f'decode {v} ∈',
+        'decode 2 ∈':f'decode {d0} ∈',
+    }
+    s=re.sub('|'.join(map(re.escape,replacements)),lambda m:replacements[m[0]],s)
     s=s.replace('raw10Remainder[33]','raw10Remainder[28]').replace('boxes[33]','boxes[28]').replace('(33 : Fin 34)','(28 : Fin 34)')
-    s=s.replace('t = 1 ∨ 7 ≤ t.val','t = 1 ∨ t = 3 ∨ 8 ≤ t.val')
-    s=s.replace('i = 1 ∨ 7 ≤ i.val','i = 1 ∨ i = 3 ∨ 8 ≤ i.val')
+    ts=targets_for(d0)
+    for var in ('t','i'):
+        s=s.replace(f'{var} = 1 ∨ 7 ≤ {var}.val',' ∨ '.join(f'{var} = {t}' for t in ts))
     s=s.replace('101',str(bound))
     put(out,name+'Core',s)
     s=(TEMPLATE/'Box33BranchTree.lean').read_text().replace('Box33Branch',name).replace('101',str(bound))
@@ -39,25 +50,26 @@ def source_core(out, name, d1, bound):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--d1',type=int,choices=(3,4,17,18,19,20),required=True)
+    p.add_argument('--d0',type=int,choices=tuple(TODO),default=14)
+    p.add_argument('--d1','--code',dest='d1',type=int,required=True)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--far',type=Path)
     a=p.parse_args()
     work=a.work.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
     far=a.far.resolve() if a.far else None
-    os.chdir(work);fixed=[8,-1,11,-1,11,13,14,a.d1,-1,-1,-1,-1]
-    name='Box28D'+str(a.d1)
+    os.chdir(work);fixed=fixed_for(a.d0,a.d1)
+    TARGETS=targets_for(a.d0)
+    name=stem(a.d0,a.d1)
     summary=json.load(open('summary.json'))
     assert set(map(int,summary))==set(TARGETS),'incomplete discovery'
     hard_rows={
       (8,0,11,24,11,13,14,17,22,9,19,4):('counterFalse',1,'counterPartial false','counter_compatible_never false'),
       (8,0,11,24,11,13,14,17,22,17,19,4):('counterTrue',1,'counterPartial true','counter_compatible_never true'),
       (8,14,11,24,11,13,14,17,3,15,4,0):('sweep',11,'sweepPartial','sweep_compatible_never'),
-    } if a.d1==17 else {}
+    } if (a.d0,a.d1)==(14,17) else {}
     remaining={tuple(t) for v in summary.values() for t in v['open_rows']}
     if far:
-        assert a.d1 in (3,4,19,20)
         manifest=json.loads((far/'far_manifest.json').read_text())
         assert not manifest['open_rows']
         solved={tuple(row):param for row,param in manifest['solved']}
@@ -125,7 +137,7 @@ end {q}
             put(out,name+'HardBank','\n'.join(lines)+'\n')
     max_late=max(v['late_max_halt'][0] for v in summary.values())
     bound=max(3640,max_late+5)
-    source_core(out,name,a.d1,bound)
+    source_core(out,name,a.d0,a.d1,bound)
     sys.path[:0]=[str(BASE),str(BRANCH)]
     import finish,greedy
     from domain_lag_rle import run
@@ -184,18 +196,14 @@ end {q}
         result=parse(root);assert next(f,None) is None
         return result
     for target in TARGETS:emitter.tree_modules(target,load(target),boxes)
+    pred=' ∨ '.join(f't = {t}' for t in TARGETS)
+    cases='\n'.join(f'  · exact slice{t}' for t in TARGETS)
     emitter.write(name+'Closure',[f'{name}Slice{t}' for t in TARGETS],f'''namespace BB6.Agent13.{name}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box
-theorem allSlices : ∀ t : Fin 12, (t = 1 ∨ t = 3 ∨ 8 ≤ t.val) → Good t (root t) := by
+theorem allSlices : ∀ t : Fin 12, ({pred}) → Good t (root t) := by
   intro t ht
-  have h : t = 1 ∨ t = 3 ∨ t = 8 ∨ t = 9 ∨ t = 10 ∨ t = 11 := by omega
-  rcases h with h|h|h|h|h|h <;> subst t
-  · exact slice1
-  · exact slice3
-  · exact slice8
-  · exact slice9
-  · exact slice10
-  · exact slice11
+  rcases ht with {'|'.join('h' for _ in TARGETS)} <;> subst t
+{cases}
 theorem sourceBound : ∀ m, Fits sourceDomain m → WeightedBound {bound} m :=
   source_upper allSlices
 #print axioms sourceBound

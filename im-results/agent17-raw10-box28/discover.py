@@ -11,7 +11,7 @@ import argparse, json, os, shutil, subprocess, sys
 HERE = Path(__file__).resolve().parent
 BASE = HERE.parent / 'agent13-raw10-box4'
 BRANCH = HERE.parent / 'agent13-raw10-box3-branches'
-TARGETS = (1,3,8,9,10,11)
+from cuts import TODO, fixed_for, targets_for
 
 def call(*args):
     subprocess.run([str(x) for x in args], check=True)
@@ -33,25 +33,35 @@ def prepare(work, fixed):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--d0',type=int,choices=(14,16),default=14)
-    p.add_argument('--d1',type=int,required=True)
+    p.add_argument('--d0',type=int,choices=tuple(TODO),default=14)
+    p.add_argument('--d1','--code',dest='d1',type=int,required=True)
     p.add_argument('--work',type=Path,required=True)
-    p.add_argument('--targets',type=int,nargs='+',default=TARGETS)
+    p.add_argument('--targets',type=int,nargs='+')
+    p.add_argument('--reuse-initial',action='store_true',help='Reuse existing exact scan and ngram output for the same cut')
     args=p.parse_args()
-    todo={14:(3,4,17,18,19,20),16:(1,3,4,5,7,8,17,18,19,20)}
-    assert args.d1 in todo[args.d0], 'only unresolved normalized cuts'
-    fixed=[8,-1,11,-1,11,13,args.d0,args.d1,-1,-1,-1,-1]
+    fixed=fixed_for(args.d0,args.d1)
+    targets=targets_for(args.d0)
+    if args.targets is None:args.targets=targets
     work=args.work.resolve();work.mkdir(parents=True,exist_ok=True);os.chdir(work)
     prepare(work,fixed)
     sys.path.insert(0,str(BASE))
     import finish
     allstats={};max_halt=(0,None)
     for target in args.targets:
-        assert target in TARGETS
+        assert target in targets
         ds=tuple((v,) if v>=0 else (0,) if i==target else tuple(range(1,25)) for i,v in enumerate(fixed))
         def mass(t):return prod(len(ds[i]) for i,v in enumerate(t) if v<0)
-        call(work/'scan',target)
-        call(work/'classify',target)
+        if not args.reuse_initial:
+            call(work/'scan',target)
+            call(work/'classify',target)
+        else:
+            assert (work/f'open{target}.txt').is_file() and (work/f'ngram{target}.txt').is_file() and (work/f'hard{target}.txt').is_file()
+            for name in ('open','ngram','hard'):
+                for line in open(f'{name}{target}.txt'):
+                    row=tuple(map(int,line.split()[:12]))
+                    assert len(row)==12 and row[target]==0
+                    assert all(row[i]==v for i,v in enumerate(fixed) if v>=0)
+                    assert all(v==-1 or v in ds[i] for i,v in enumerate(row))
         pending=[tuple(map(int,l.split())) for l in open(f'hard{target}.txt') if l.strip()]
         initial_mass=sum(map(mass,pending));terminal_mass=0
         long=[];rlestart=[];counts=Counter()
