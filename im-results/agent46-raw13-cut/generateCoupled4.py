@@ -95,44 +95,25 @@ end {tag}""")
 def main():
     path=D/"coupled4-candidates.json"
     data=json.loads(path.read_text()) if path.exists() else dict(far=[],auto=[],last=[],unresolved=[])
-    manual={
-        "1RB1LD1RC0RB1LA1RE1LF0LA0LA0RD1LA---":("Raw13Stride3Counter","zeroLA"),
-        "1RB1LD1RC0RB1LA1RE1LF0LA1RA0RD1LA---":("Raw13Stride3Counter","oneRA"),
-        "1RB1LD1RC0RB1LA1RE1LF0LA1LE0RD1LA---":("Raw13Stride3Counter","oneLE"),
-        "1RB1LD1RC0RB1LA1RE1LF0LA1RC0RD1LA---":("Raw13Stride3Counter","oneRC"),
-        "1RB1LD1RC1LE1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneLE"),
-        "1RB1LD1RC1RC1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneRC"),
-        "1RB1LD1RC1LC1LA1RE1LF0LA1LB0RD0RC---":("Raw13EvenPairSweep","b1"),
-        "1RB1LD1RC---1LA1RE1LF0LA1LF0RD0RC1LC":("Raw13EvenPairSweep","f1"),
-    }
-    fixtures=[f for f in data["auto"] if f["table"] not in manual]
+    # The complete transferred bank supersedes the hand-written sweep/transfer
+    # candidates on this literal roster. Reconstruct witnesses independently.
+    import sys
+    sys.path.insert(0,str(D.parent/"agent32-raw59"))
+    from emit_rungram import emit as emit_bidfa
+    records=json.loads((D/"coupled4-bidfa.json").read_text())["records"]
+    bidfa={x["table"]:i for i,x in enumerate(records)}
+    assert len(bidfa)==len(records) and set(bidfa)==set(data["unresolved"])
+    ns="BB6.Agent46Raw13Coupled4BiDFA"
+    src=["import FastBiDFA","set_option maxRecDepth 100000","set_option maxHeartbeats 0",
+         "namespace "+ns,"open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA"]
+    for i,x in enumerate(records):
+        src.append(emit_bidfa(i,x["table"],*x["dfa"],[x["states"],x["edges"]]))
+    src.append("end "+ns)
+    (D/(MODULE+"BiDFA.lean")).write_text("\n".join(src)+"\n")
+    fixtures=data["auto"]
     auton={x["table"]:i for i,x in enumerate(fixtures)}
     assert len(auton)==len(fixtures)
     emit_fixtures(fixtures,D/(MODULE+"Auto.lean"),MODULE+"Auto")
-    from pathlib import Path
-    rawlist=(D/"coupled4-hard.txt").read_text().split()
-    fw={t:(rev,df) for t,rev,df in data["far"]}
-    transfers={}
-    transfer_lines=[]
-    for srcidx,dstidx,R in [(49,47,35704029313),(51,55,34630289537)]:
-        src,dst=rawlist[srcidx],rawlist[dstidx]
-        if dst in auton or dst in fw or dst in manual:continue
-        tag=f"T{dstidx}"
-        if src in auton:
-            i=auton[src];sp=f"{AUTO}.p{i}";proof=f"{AUTO}.never{i}"
-        elif src in fw:
-            rev,df=fw[src];dfa=list(map(int,df));a,b,z=saturate(codes(src),dfa,rev)
-            sp=f"{tag}Source";proof=f"{tag}SourceNever";pp=f"(FAR.reflectPartial {sp})" if rev else sp
-            transfer_lines += [f"def {sp} : PartialMachine := FAR.fromCodes {fmt(codes(src))}",
-                f"def {tag}FAR : FAR.Data {len(dfa)//2} := ⟨0,{fmt(dfa)},{fmt(a)},{fmt(b)},{z}⟩",
-                f"theorem {tag}OK : {tag}FAR.fastValid {pp} = true := by decide",
-                f"theorem {proof} : ∀ m, compatible {sp} m → NeverHalts m := BB6.Agent31ThreeHole.farSound {sp} {boolean(rev)} {tag}FAR {tag}OK"]
-        else:continue
-        transfers[dst]=tag
-        transfer_lines += [f"def {tag} : PartialMachine := FAR.fromCodes {fmt(codes(dst))}",
-            f"theorem {tag}Never : ∀ m, compatible {tag} m → NeverHalts m := BB6.Agent46FiniteStateTransfer.never (p:={sp}) (R:={R}) (by decide) {proof}",
-            f"#print axioms {tag}Never"]
-    write(MODULE+"Transfer",["FiniteStateTransfer",MODULE+"Auto","Agent46CompleteCut"],"\n".join(transfer_lines))
     late={LATE:(62122,11)}
     for t,n,s in data["last"]:
         if t in late:assert late[t]==(n,s)
@@ -146,7 +127,7 @@ def main():
         subprocess.run(["g++","-std=c++17","-O3",str(D/"frontier_graft.cpp"),"-o",str(exe)],check=True)
         args=[tmp/x for x in ("far","auto","graft.txt","late")]
         args[0].write_text("".join(f"{t} {r} {d}\n" for t,r,d in data["far"]))
-        args[1].write_text("\n".join([*auton,*manual,*transfers])+"\n")
+        args[1].write_text("\n".join([*auton,*bidfa])+"\n")
         args[2].write_text(GRAFT+"\n")
         args[3].write_text("".join(f"{t} {n} {s}\n" for t,(n,s) in late.items()))
         tree=json.loads(subprocess.check_output([str(exe),str(D/"frontier-dfa-bank.txt"),*map(str,args)],input=ROOT+" 6 4\n",text=True))
@@ -164,11 +145,9 @@ def main():
             raw,rev,df=v;dfa=list(map(int,df));a,b,z=saturate(codes(raw),dfa,rev)
             return f".closed (.far {boolean(rev)} {len(dfa)//2} ⟨0,{fmt(dfa)},{fmt(a)},{fmt(b)},{z}⟩)"
         if tag=="auto":
-            if v[0] in transfers:
-                tag=transfers[v[0]];return f".closed (.proven {tag} {tag}Never)"
-            if v[0] in manual:
-                module,x=manual[v[0]];ns="BB6.Agent46"+module
-                return f".closed (.proven ({ns}.p .{x}) ({ns}.never .{x}))"
+            if v[0] in bidfa:
+                i=bidfa[v[0]]; tag=f"{ns}.M{i}"
+                return f".closed (.proven {tag}.table {tag}.never)"
             i=auton[v[0]];return f".closed (.proven {AUTO}.p{i} {AUTO}.never{i})"
         if tag=="late":
             i=late_names[v[0]];return f".bounded L{i}.p {B} L{i}.bound"
@@ -191,7 +170,7 @@ theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
         assert k is not None
         tag=f"{i:02}";name=MODULE+"Kid"+tag;modules.append(name)
         p=f"next {move(MOVES[i])}"
-        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"Transfer","Raw13Stride3Counter","Raw13NestedSweep","Raw13EvenPairSweep"],
+        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"BiDFA"],
               f"def kid{tag} {H} : Cut := {emit(k)}\n"+
               f"theorem checked{tag} {H} : check {B} ({p}) 6 (kid{tag} h) = true := by rfl\n")
     terms=",".join(f"kid{i:02} h" for i in range(24))
