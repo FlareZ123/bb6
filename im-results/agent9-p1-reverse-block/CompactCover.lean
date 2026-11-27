@@ -77,12 +77,10 @@ theorem queue_margin_sound (n K s h B : Nat) (hs : 1≤s) (ho : B%2=1)
     exact Nat.lt_of_lt_of_le (Nat.mul_lt_mul_of_pos_right hgap (Nat.two_pow_pos _))
       (Nat.mul_le_mul_left (6*2^n) hr)
 
-theorem qcert_next (n K s h : Nat) (ps qs : List QPrefix)
-    (hn : 1≤n) (heven : n%2=0) (hs : 1≤s) (hhn : h≤n)
-    (hc : QHalfCert n K s ps) (hm : QMidpointCover n s h ps qs)
-    (hg : ∀ p ∈ ps, QueueMargin n K s h p.1) :
-    QHalfCert n K (s+h) qs := by
-  refine ⟨qcover_next n s h ps qs hs hhn hc.cover hm,?_⟩
+theorem qmargin_next (n K s h : Nat) (ps : List QPrefix)
+    (hn : 1≤n) (heven : n%2=0) (hs : 1≤s)
+    (hc : QHalfCert n K s ps) (hg : ∀ p ∈ ps, QueueMargin n K s h p.1) :
+    ∀ j, 1≤j → j≤s+h → LateMargin n K j := by
   intro j hj hjt
   by_cases hjs : j≤s
   · exact hc.margins j hj hjs
@@ -115,6 +113,50 @@ theorem qcert_next (n K s h : Nat) (ps qs : List QPrefix)
   exact Nat.lt_of_le_of_lt hL (Nat.lt_of_lt_of_le hmargin
     (Nat.mul_le_mul_left (6*2^n) hr))
 
+theorem qcert_next (n K s h : Nat) (ps qs : List QPrefix)
+    (hn : 1≤n) (heven : n%2=0) (hs : 1≤s) (hhn : h≤n)
+    (hc : QHalfCert n K s ps) (hm : QMidpointCover n s h ps qs)
+    (hg : ∀ p ∈ ps, QueueMargin n K s h p.1) :
+    QHalfCert n K (s+h) qs :=
+  ⟨qcover_next n s h ps qs hs hhn hc.cover hm,qmargin_next n K s h ps hn heven hs hc hg⟩
+
+/-- The actual canonical filter is needed at s=1.  The abstract queue
+    intentionally forgets that first selected bit after it leaves the window. -/
+def QTraceMidpointCover (n s h : Nat) (ps qs : List QPrefix) : Prop :=
+  ∀ B a C c, (quotient n s B,a)∈ps → Trace n s B a → C%4=1 →
+    Extend n s B a h C c →
+    (∃ D d, Extend n (s+h) C c (n-h) D d) → (quotient n (s+h) C,c)∈qs
+
+theorem qcover_next_trace (n s h : Nat) (ps qs : List QPrefix)
+    (hs : 1≤s) (hhn : h≤n) (hc : QHalfCovered n s ps)
+    (hm : QTraceMidpointCover n s h ps qs) :
+    QHalfCovered n (s+h) qs := by
+  intro B a C c ht hmod he
+  obtain ⟨D,d,hd,hdmod,hpre⟩ := canonical_prefix n (s+h) B a ht hmod s hs (by omega)
+  have hpre' : Extend n s D d h B a := by simpa using hpre
+  have hfull := extend_append n s D d h B a n C c hpre' he
+  obtain ⟨G,g,hshort⟩ := extend_prefix n s D d (h+n) C c n hfull (by omega)
+  obtain ⟨F,f,htail⟩ := extend_prefix n (s+h) B a n C c (n-h) he (by omega)
+  exact hm D d B a (hc D d G g hd hdmod hshort) hd hmod hpre' ⟨F,f,htail⟩
+
+theorem qcert_next_trace (n K s h : Nat) (ps qs : List QPrefix)
+    (hn : 1≤n) (heven : n%2=0) (hs : 1≤s) (hhn : h≤n)
+    (hc : QHalfCert n K s ps) (hm : QTraceMidpointCover n s h ps qs)
+    (hg : ∀ p∈ps,QueueMargin n K s h p.1) :
+    QHalfCert n K (s+h) qs :=
+  ⟨qcover_next_trace n s h ps qs hs hhn hc.cover hm,qmargin_next n K s h ps hn heven hs hc hg⟩
+
+/-- A larger certified search budget may be shrunk to the first empty
+    midpoint layer. The margin polynomial is monotone in K. -/
+theorem qcert_shrink (n K K' s : Nat) (ps : List QPrefix) (hK : K'≤K)
+    (hc : QHalfCert n K s ps) : QHalfCert n K' s ps := by
+  refine ⟨hc.cover,?_⟩
+  intro j hj hjs B a ht
+  have h1 : n+K'+2≤n+K+2 := by omega
+  have h2 : marginSize n K'≤marginSize n K := by unfold marginSize; omega
+  exact Nat.lt_of_le_of_lt (Nat.mul_le_mul_right _ (Nat.mul_le_mul h1 h2))
+    (hc.margins j hj hjs B a ht)
+
 theorem qcert_empty (n K s : Nat) (hn : 1≤n) (heven : n%2=0) (hs : 2≤s)
     (hc : QHalfCert n K s []) : Cert n K s [] := by
   have hh : HalfCovered n s [] := by
@@ -123,6 +165,10 @@ theorem qcert_empty (n K s : Nat) (hn : 1≤n) (heven : n%2=0) (hs : 2≤s)
     simp at h
   exact ⟨by simpa using complete_half n s [] hn heven hs hh,hc.margins⟩
 
+#print axioms qmargin_next
+#print axioms qcover_next_trace
+#print axioms qcert_next_trace
+#print axioms qcert_shrink
 #print axioms qcert_of_half
 #print axioms qcover_next
 #print axioms queue_margin_sound
