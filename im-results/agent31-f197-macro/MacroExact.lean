@@ -26,7 +26,6 @@ theorem macroRunExact_sound (k : Nat) (m : MacroConfig) (tot : Nat)
       | some nm =>
           rcases nm with ⟨n, m1⟩
           rw [hs] at h
-          simp only [Option.bind_some] at h
           cases hr : macroRunExact k m1 with
           | none => simp [hr] at h
           | some sm =>
