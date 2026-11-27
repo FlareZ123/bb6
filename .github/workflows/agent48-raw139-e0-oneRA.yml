@@ -1,5 +1,5 @@
-name: Raw139 E0 OneRA kernel certification
-run-name: Raw139 E0 OneRA ${{ inputs.source_sha }}
+name: Raw139 E0 OneRA and OneLD kernel certification
+run-name: Raw139 E0 ${{ inputs.target }} ${{ inputs.source_sha }}
 on:
   workflow_dispatch:
     inputs:
@@ -7,10 +7,19 @@ on:
         description: Exact repository commit containing the OneRA sources
         required: true
         type: string
+      target:
+        description: Certificate target
+        type: choice
+        default: oneRA
+        options:
+          - oneRA
+          - h1784-tape
+          - h1784
 permissions:
   contents: read
 jobs:
   prepare:
+    if: inputs.target == 'oneRA'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -102,3 +111,43 @@ jobs:
             .tmp/a48-oneRA-final/log
             .tmp/a48-oneRA-final/imports/
             .tmp/a48-oneRA-final/extern/
+
+  h1784:
+    if: inputs.target == 'h1784-tape' || inputs.target == 'h1784'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile H1784 against original semantics
+        env:
+          TARGET: ${{ inputs.target }}
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          dir=im-results/agent48-raw139-e0-oneLD
+          mkdir -p .tmp/h1784/build
+          root="$dir/H1784Tape.lean"
+          if [[ "$TARGET" == h1784 ]]; then root="$dir/H1784.lean"; fi
+          python3 tools/lean_compile_closure.py "$root" --source-root "$dir" \
+            --workdir .tmp/h1784/build --jobs 3 --manifest .tmp/h1784/manifest.json \
+            --label "$TARGET" \
+            --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
+            --override SparseZipper=im-results/agent50-weighted-tnf-pilot/SparseZipper.lean \
+            --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
+            --override Frontier=im-results/agent8-coverage-contract/Frontier.lean | tee .tmp/h1784/log
+          ! grep -E 'sorryAx|native_decide|ofReduceBool|declaration uses .sorry.' .tmp/h1784/log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-${{ inputs.target }}-certified
+          include-hidden-files: true
+          path: |
+            .tmp/h1784/build/*.olean
+            .tmp/h1784/manifest.json
+            .tmp/h1784/log
