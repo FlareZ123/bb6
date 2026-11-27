@@ -9,14 +9,15 @@ Both use original canonical cut depth 7, cap 1000, lookback 32 and the frozen cr
 | E1 | open leaves | FAR-bank accepted candidates | further finite stack | late last-hole | FAR6 | universal growth checked in Lean | unresolved |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 0RD | 17081 | 16395 | 674 | 1 | 0 | 11 | 0 |
-| 1LC | 22268 | 21356 | 861 | 28 | 1 | 19 | 3 |
+| 1LC | 22268 | 21356 | 861 | 28 | 1 | 20 | 2 |
 
-0RD is candidate-complete, not yet aggregate-certified; the 1LC unresolved tables are M5334, M19569, M20376:
+0RD is candidate-complete, not yet aggregate-certified; the 1LC unresolved tables are M5334 and M19569:
 - 1RB0LA_1RC0RA_0RD1RF_1LD1LE_0RB1LC_---1RA
 - 1RB0LE_1RC---_0RD1RA_1LD1LE_1RF1LC_0RD0RA
-- 1RB---_1RC0LB_0RD1LA_1LD1LE_1RF1LC_0LE0RF
 
-All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. FAR and finite-stack candidates require original checker acceptance; every generated growth lemma already checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
+M20376 (`1RB---_1RC0LB_0RD1LA_1LD1LE_1RF1LC_0LE0RF`) is now closed for every compatible completion by [Raw56LCM20376.lean](Raw56LCM20376.lean). The exact blank entry at step 27 reaches A with left stack `001` (scanned cell included), right `110`. The general family has right `11(1111)^n0` and left a word of digits `00ab`, optionally ending with `001`. Digits with `a=0` increment to `a=1` in `26+4n` steps; digit `a=1,b=0` changes to `a=0,b=1` in `30+4n`; `a=b=1` removes that digit and increases carry depth in ten steps. The first two cases prepend `n` zero digits and reset carry depth; empty and truncated final digit have checked extension rules. All macro identities hold for arbitrary untouched suffixes. Positive-cost closure gives arbitrarily long original-machine live prefixes. `BB6.Agent4Raw56LCM20376.never` compiled with Lean 4.36.0-rc2 against artifact 15160313745, importing `SweepPumping` from that exact accepted closure, with only `[propext, Quot.sound]`. No aggregate parent proof yet. Source SHA256 `7cc528a9008b659bf13d1ac58eb48b2088d85a535fcf1a002699365c372fc19d`.
+
+All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. FAR and finite-stack candidates require original checker acceptance; every generated growth lemma and the M20376 invariant already checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
 
 ## Reusable advances
 
