@@ -1,0 +1,56 @@
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+set_option Elab.async false
+namespace BB6.Agent50Raw47Accepted108
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent47CanonicalFrontier BB6.Agent50Raw47Depth3Cut
+
+def slots : List Slot := (List.finRange 6).flatMap fun q => [false,true].map fun b => (q,b)
+def tableKey (p : PartialMachine) := slots.map p
+
+theorem tableKey_inj {p q : PartialMachine} (h : tableKey p = tableKey q) : p = q := by
+  funext s
+  change slots.map p = slots.map q at h
+  apply List.map_inj_left.mp h
+  rcases s with ⟨q,b⟩
+  exact List.mem_flatMap.mpr ⟨q,List.mem_finRange q,List.mem_map.mpr ⟨b,by cases b <;> simp,rfl⟩⟩
+
+def closed : List {p : PartialMachine // ∀ m, TNFQuotientCompatible p m → WeightedBound 10006 m} :=
+[
+@@ENTRIES@@
+]
+
+def closedKeys := closed.map fun a => tableKey a.val
+
+def isClosed (p : PartialMachine) : Bool :=
+  let key := tableKey p
+  closedKeys.any fun k => decide (k = key)
+
+theorem isClosed_sound {p : PartialMachine} (h : isClosed p = true)
+    (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m := by
+  obtain ⟨k,hk,hkp⟩ := List.any_eq_true.mp h
+  obtain ⟨a,_,hak⟩ := List.mem_map.mp hk
+  have he : a.val = p := tableKey_inj (hak.trans (of_decide_eq_true hkp))
+  rw [← he] at hm
+  exact a.property m hm
+
+def remaining := canonicalRemaining.filter fun e => !(isClosed e.2)
+
+theorem closed_count : closed.length = 108 := by decide
+
+theorem remaining_count : remaining.length = 1104 := by decide
+
+/-- All completions of the authentic Raw47 parent either satisfy the weighted bound
+or belong, up to TNF quotient, to one of the remaining depth-three cylinders. -/
+theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
+    WeightedBound 10006 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m := by
+  rcases canonical_local_sound_84 m hm with hb | ⟨e,he,hs⟩
+  · exact Or.inl (fun n d h halt => Nat.le_trans (hb n d h halt) (by decide))
+  · cases hc : isClosed e.2 with
+    | true => exact Or.inl (isClosed_sound hc m hs)
+    | false => exact Or.inr ⟨e,List.mem_filter.mpr ⟨he,by simp [hc]⟩,hs⟩
+
+#print axioms tableKey_inj
+#print axioms closed_count
+#print axioms remaining_count
+#print axioms local_sound
+end BB6.Agent50Raw47Accepted108
