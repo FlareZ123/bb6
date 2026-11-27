@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRFProof]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof]
         default: zeroRC
       recovery_run_id:
         description: Reuse accepted root artifacts from run 45846437127 (oneRE) or 45827711630 (zeroRC)
@@ -20,9 +20,9 @@ permissions:
   actions: read
 env:
   VARIANT: ${{ inputs.variant || 'zeroRC' }}
-  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || inputs.variant == 'zeroLF' && 'ZLF' || 'ZRC' }}
-  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || inputs.variant == 'zeroLF' && 'BB6.Agent14E0LFParent' || 'BB6.Agent6E0ZeroRC' }}
-  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || '1673363' }}
+  ROOT_PREFIX: ${{ inputs.variant == 'oneRE' && 'ORE' || inputs.variant == 'zeroRF' && 'ZRF' || inputs.variant == 'zeroLF' && 'ZLF' || inputs.variant == 'oneRF' && 'ORF' || 'ZRC' }}
+  PROOF_NS: ${{ inputs.variant == 'oneRE' && 'BB6.Agent6E0OneRE' || inputs.variant == 'zeroRF' && 'BB6.Agent6E0ZeroRF' || inputs.variant == 'zeroLF' && 'BB6.Agent14E0LFParent' || inputs.variant == 'oneRF' && 'BB6.Agent6E0OneRF' || 'BB6.Agent6E0ZeroRC' }}
+  BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || '1673363' }}
 jobs:
   prepare:
     if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof'
@@ -52,6 +52,43 @@ jobs:
             python3 im-results/agent13-coverage/unpack.py
             python3 im-results/agent13-block-far/specialize.py 4
           fi
+      - uses: actions/download-artifact@v4
+        if: inputs.variant == 'oneRF'
+        with:
+          name: raw139-oneRF-special-sources
+          run-id: 45906404568
+          github-token: ${{ github.token }}
+          path: /tmp/a6-oneRF-proof
+      - uses: actions/download-artifact@v4
+        if: inputs.variant == 'oneRF'
+        with:
+          name: raw139-oneRF-special-core
+          run-id: 45906404568
+          github-token: ${{ github.token }}
+          path: /tmp/a6-oneRF-proof
+      - uses: actions/download-artifact@v4
+        if: inputs.variant == 'oneRF'
+        with:
+          pattern: raw139-oneRF-trace-*
+          run-id: 45906404568
+          github-token: ${{ github.token }}
+          path: /tmp/a6-oneRF-proof/shards
+      - name: Reuse all 16 checked symbolic trace cuts and audit the exceptional leaves
+        if: inputs.variant == 'oneRF'
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-oneRF
+          old=/tmp/a6-oneRF-proof
+          python3 im-results/agent6-raw139-e0-oneRF/merge4563.py "$old"
+          cp "$old"/imports/*.lean "$work/imports/"
+          cat > "$work/imports/ORFExceptionalAudit.lean" <<'EOF'
+          import RF4563Never
+          import OneRF1271_5
+          import OneRF4868
+          #print axioms BB6.Agent6RF4563.tableCover
+          #print axioms BB6.Agent6E0OneRF1271_5.never
+          #print axioms BB6.Agent6E0OneRF4868.never
+          EOF
       - name: Compile shared source-connected dependency closure
         run: |
           set -euo pipefail
@@ -61,6 +98,10 @@ jobs:
           source_args=()
           if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
           if [[ "$VARIANT" == zeroRF ]]; then proofs=("$base/ZeroRF1892Cover.lean" "$base/ZeroRF4570.lean"); fi
+          if [[ "$VARIANT" == oneRF ]]; then
+            proofs=("$work/imports/ORFExceptionalAudit.lean")
+            source_args=(--source-root "$work/imports" --precompiled-manifest /tmp/a6-oneRF-proof/merged.json --precompiled-dir /tmp/a6-oneRF-proof/merged)
+          fi
           if [[ "$VARIANT" == zeroLF ]]; then
             base=im-results/agent14-raw139-e0-zeroLF
             proofs=("$base/ConditionalHybrid.lean" "$base/E0LFPortfolio.lean" "$work/imports/E0LF3863Packed.lean" "$work/imports/ZLFOpen.lean")
@@ -68,6 +109,11 @@ jobs:
           fi
           python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-zeroRC/Hybrid.lean "${proofs[@]}" im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean "${source_args[@]}" --workdir "/tmp/a6-${VARIANT}-core" --jobs 2 --manifest "$work/core.json" --label raw139-e0-${VARIANT}-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
+          if [[ "$VARIANT" == oneRF ]]; then
+            for thm in BB6.Agent6RF4563.tableCover BB6.Agent6E0OneRF1271_5.never BB6.Agent6E0OneRF4868.never; do
+              grep -F "'$thm' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/core.log" || grep -F "'$thm' depends on axioms: [propext, Quot.sound]" "$work/core.log"
+            done
+          fi
           mkdir -p "$work/core"
           find /tmp/a6-${VARIANT}-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
       - uses: actions/upload-artifact@v4
@@ -402,7 +448,8 @@ jobs:
           python3 im-results/agent13-coverage/unpack.py
           python3 im-results/agent6-raw139-e0-oneRF/merge4563.py "$work"
           mkdir -p "$work/final/build"
-          python3 tools/lean_compile_closure.py "$work/imports/RF4563Never.lean" "$work/imports/OneRF1271_5.lean" --source-root "$work/imports" --precompiled-manifest "$work/merged.json" --precompiled-dir "$work/merged" --workdir /tmp/a6-oneRF-proof-final --jobs 2 --manifest "$work/final/manifest.json" --label raw139-oneRF-exceptional-leaves | tee "$work/final/log"
+          printf '%s\n' 'import RF4563Never' 'import OneRF1271_5' '#print axioms BB6.Agent6RF4563.tableCover' '#print axioms BB6.Agent6E0OneRF1271_5.never' > "$work/imports/ORFSpecialAudit.lean"
+          python3 tools/lean_compile_closure.py "$work/imports/ORFSpecialAudit.lean" --source-root "$work/imports" --precompiled-manifest "$work/merged.json" --precompiled-dir "$work/merged" --workdir /tmp/a6-oneRF-proof-final --jobs 2 --manifest "$work/final/manifest.json" --label raw139-oneRF-exceptional-leaves | tee "$work/final/log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/final/log"
           grep -F 'BB6.Agent6RF4563.tableCover' "$work/final/log"
           grep -F 'BB6.Agent6E0OneRF1271_5.never' "$work/final/log"
