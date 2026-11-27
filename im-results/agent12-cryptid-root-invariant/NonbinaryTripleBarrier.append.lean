@@ -137,7 +137,9 @@ private theorem a12PairedOrdinary_tokens {T : List (ℕ × ℕ)}
   induction h with
   | nil => exact .nil
   | @other x T hx h ih =>
-    exact .other (by omega) ih
+    exact .other (by
+      change x.1 + 1 ≠ 2
+      omega) ih
   | pair h ih => exact .pair ih
 
 /-- Any entry >=2 with a paired ordinary tail is fatal after a protected triple. -/
