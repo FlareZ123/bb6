@@ -1,0 +1,45 @@
+[
+  {
+    "child": "0LE",
+    "opens": 884,
+    "nodes": 57721,
+    "initialBound": 751,
+    "bound": 11076,
+    "witness": {
+      "score": 11076,
+      "n": 11075,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC1RE_0RD0LE_1LD1LA_1RF0RC_1RBHHH"
+    },
+    "counts": {
+      "far": 809,
+      "compact": 65,
+      "cycle": 3,
+      "late": 6,
+      "crossing": 1
+    }
+  },
+  {
+    "child": "0RB",
+    "opens": 415,
+    "nodes": 13677,
+    "initialBound": 519,
+    "bound": 1213,
+    "witness": {
+      "score": 1213,
+      "n": 1212,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC1RE_0RD0RB_1LD1LA_1RF0RC_1LAHHH"
+    },
+    "counts": {
+      "far": 373,
+      "compact": 40,
+      "cycle": 1,
+      "late": 1
+    }
+  }
+]
