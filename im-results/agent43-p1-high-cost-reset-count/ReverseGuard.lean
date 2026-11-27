@@ -21,6 +21,10 @@ def backCheck (n : Nat) : Nat → Nat → Nat → Bool
 theorem guarded_right_pos {n m v w : Nat} (h : GuardedMicro n m v w) : 0<v := by
   cases h <;> omega
 
+theorem guarded_right_ge_two {n m v w : Nat} (hm : 0<m)
+    (h : GuardedMicro n m v w) : 2≤v := by
+  cases h <;> omega
+
 theorem guarded_left_ge_five {n m v w : Nat} (hn : 14≤n)
     (h : GuardedMicro n m v w) : 5≤w := by
   induction h with
@@ -254,7 +258,7 @@ theorem critical_reset_no_reach_of_families (n : Nat) (hn : 14≤n) (he : n%2=0)
   change Boundary n m v w at hB
   change backCheck n m v w=true at hc
   change GuardedMicro n m v w at hG
-  have hv : 2≤v := by cases hG <;> omega
+  have hv : 2≤v := guarded_right_ge_two hm hG
   have hmass := micro_mass n m v w hn (guarded_micro hG)
   change v+w+n+m+1=BB6.P1CarryExact.total n at hmass
   let S := BB6.P1CarryExact.total n-(n+m+1)
