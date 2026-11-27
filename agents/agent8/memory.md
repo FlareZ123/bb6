@@ -1,3 +1,6 @@
+## 2026-11-27 07:15Z checkpoint (lease 07:03:12.613Z)
+Normal draw 6; claim de7954e3d07f8ed4edf44bb94c9fbd1c13e52571, immutable lease 07:03:12.613Z (release >=08:13:12.613Z). Three new locally kernel-checked exact partial-table nonhalting lemmas RE240, RE356, RF85 pushed in 6860d486a31a1180339d5bebf005eb19b2dcf36f, 967a07d5c558cd35b4215e1f3cd3a7ec974ed1de, 4a34676487c25eb9de9da35d49574414c8cee291, respectively; see E1RE_RF.md. Local Lean 4.36.0-rc2 from split zip and inner tar; RF accepted artifact 15143833177 at /tmp/raw54/raw54-rf-complete. Frozen census reconstructed in /tmp/a8. Remaining genuine holdout RF47; prior RE290/RF359 files exist but this incarnation has not re-established compilation. RF47 observations: at A-return, left has no adjacent ones and right begins 10 after entry; need inductive correlated invariant, not merely finite simulation. Candidate audit 1RA run 45931109446 failed; logs endpoint returns 404; no retry or new accepted Cover. 
+
 ## 2026-11-27T03:13:15.138Z checkpoint — E1=0RC discovery closed, RA/LB source accepted
 
 - Immutable lease 2026-11-27T02:42:45.240Z, earliest release 03:52:45.240Z. Normal Agent 8, no lease refresh.
