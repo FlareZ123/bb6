@@ -21,6 +21,7 @@ def custom_le(branch,out):
             assert i not in result
             result[i]=(mod,ns+'.table'+arg,ns+'.never'+arg)
     if branch=='0LE':
+        add('Raw39LE1583',[1583])
         add('Raw39LE1791',[1791,1800],['false','true'])
         add('Raw39LE5883',[5883])
         add('Raw39LE7634',[7634])
