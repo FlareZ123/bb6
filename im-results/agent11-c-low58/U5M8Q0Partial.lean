@@ -19,7 +19,7 @@ theorem blank_no_u5_q0_t5 (u : Nat) :
       (by omega) (by omega) (by omega) (by omega) (by omega) (by omega)).mp h
     have hx : ((352*u+219)+(336*u+209)-4)/2=344*u+212 := by omega
     have hy : ((352*u+219)+3*(336*u+209)-10)/4=340*u+209 := by omega
-    simpa only [hx,hy] using hiff
+    simpa only [CReach,hx,hy] using hiff
   exact BB6.Agent11M0SumZeroVerified.blank_no_odd_sum_one
     (344*u+212) (340*u+209)
     (by omega) (by omega) (by omega) (by omega) hA
@@ -63,14 +63,14 @@ private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
   have h1' : CReach (48*t+2) (40*t+1) := by
     have hx : ((64*t+5)+(32*t+3)-4)/2=48*t+2 := by omega
     have hy : ((64*t+5)+3*(32*t+3)-10)/4=40*t+1 := by omega
-    simpa only [hx,hy] using h1
+    simpa only [CReach,hx,hy] using h1
   have h2 := (evenodd_four_blank_reach_iff
     (48*t+2) (40*t+1)
     (by omega) (by omega) (by omega) (by omega)).mp h1'
   have h2' : CReach (44*t-1) (42*t-1) := by
     have hx : ((48*t+2)+(40*t+1)-5)/2=44*t-1 := by omega
     have hy : ((48*t+2)+3*(40*t+1)-9)/4=42*t-1 := by omega
-    simpa only [hx,hy] using h2
+    simpa only [CReach,hx,hy] using h2
   exact h2'
 
 /-- The q=0 parent is excluded for even w: t is even, so X has odd
@@ -142,7 +142,7 @@ private theorem u5_pow_mod_six_mod9 (n : Nat) :
       have hmod : n%6=(n-6)%6 := by omega
       rw [he,u5_pow_period_six_mod9]
       rw [ih (n-6) hm]
-      rw [hmod]
+      rw [show (n-6+6)%6=(n-6)%6 by omega]
 
 /-- The power of seven modulo nineteen depends only on the exponent
     modulo three, since 7^3=1 (mod 19). -/
@@ -162,7 +162,7 @@ private theorem u5_pow_mod_three_mod19 (q : Nat) :
       have hmod : q%3=(q-3)%3 := by omega
       rw [he,u5_pow_period_three_mod19]
       rw [ih (q-3) hm]
-      rw [hmod]
+      rw [show (q-3+3)%3=(q-3)%3 by omega]
 
 private theorem u5_pow7_mod19_ne18 (q : Nat) :
     7^q%19 ≠ 18 := by
@@ -188,10 +188,10 @@ theorem u5_q0_sum_quotient_not_power (t S n : Nat)
     exact hS
   have h9 : (16*2^n+13)%9=0 := by
     rw [hEq]
-    simp
+    omega
   have h19 : (16*2^n+13)%19=0 := by
     rw [hEq]
-    simp
+    omega
   have hmod9 :
       (16*2^n+13)%9 = (7*(2^n%9)+4)%9 := by omega
   rw [hmod9] at h9

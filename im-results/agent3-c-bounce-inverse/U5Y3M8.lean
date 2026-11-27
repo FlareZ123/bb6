@@ -216,7 +216,7 @@ private theorem u5Orbit_reach_iff (M s n : Nat)
   obtain ⟨hy,he,h0,h7⟩ := u5Orbit_gate M s n hs hn
   have hiff := BB6.Agent46.six_even_right_blank_reach_iff
     (u5Orbit s n).1 (u5Orbit s n).2 hy he h0 h7
-  simpa [u5Orbit] using hiff
+  simpa [u5Orbit,CReach] using hiff
 
 /-- The entire u=5 family B_s is exactly equivalent, at unbounded
 time, to its terminal y=3 state. This proves all r inverse gates in one
