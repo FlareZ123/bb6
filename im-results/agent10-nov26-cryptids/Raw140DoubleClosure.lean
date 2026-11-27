@@ -13,6 +13,8 @@ theorem dIterTriple (k n : Nat) (V : List Bool) (s : Tail) :
   have h := dIter k [S 4] (V ++ trips n) s
   simpa only [word_append,word_four,trips_add,List.append_assoc] using h
 
+theorem reachRun {M : Table} {a b : Prim} {k : Nat} (h : run M k a = some b) : Reach M a b := ⟨k,h⟩
+
 theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
     ∃ r t, 2 ≤ r ∧ Reach base
       (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s)))
@@ -40,7 +42,7 @@ theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have h₁₀ : Reach base
       (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s)))
       (orbitCfg (4*p+14) z (rho t)) := by
-    have hₐ := Reach.trans ⟨_,h₁⟩ ⟨_,h₂⟩
+    have hₐ := Reach.trans (reachRun h₁) (reachRun h₂)
     have h_b := Reach.trans hₐ h₃
     have h_c := Reach.trans h_b h₄
     have h_d := Reach.trans h_c h₅
@@ -66,13 +68,13 @@ theorem core13 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have h₅ : Reach base
       (boundary 3 false (U 5 (2*p+2)) (S 2::(word (trips (n+1)) ++ tailWord s)))
       (boundary 3 false X (word [false,false,false] ++ word (trips (n+carry s)) ++ tailWord (rho s))) := by
-    have hₐ := Reach.trans ⟨_,h₁⟩ ⟨_,h₂⟩
-    have h_b := Reach.trans (Reach.trans hₐ h₃) ⟨_,h₄⟩
-    simpa only [trips_add,word_append,List.append_assoc,word,List.cons_append,List.nil_append] using h_b
+    have hₐ := Reach.trans (reachRun h₁) (reachRun h₂)
+    have h_b := Reach.trans (Reach.trans hₐ h₃) (reachRun h₄)
+    simpa only [trips_add,word_append,List.append_assoc,word,List.cons_append,List.nil_append,Bool.false_eq_true,ite_false] using h_b
   have h₆ := dIterTriple (2*p+4) (n+carry s) [false,false,false] (rho s)
   have h₇ : Reach base (boundary 3 false X (word [false,false,false] ++ word (trips (n+carry s)) ++ tailWord (rho s)))
       (boundary 3 false [S 4] (U 4 (2*p+7) ++ word (trips r) ++ tailWord t)) := by
-    simpa only [X,r,c,t,U,word,List.replicate_succ,List.cons_append,List.nil_append,List.append_assoc,rep_cons] using h₆
+    simpa only [X,r,c,t,U,word,List.replicate_succ,List.cons_append,List.nil_append,List.append_assoc,rep_cons,Bool.false_eq_true,ite_false] using h₆
   have h₈ := dEndE (2*p+6) (word (trips r) ++ tailWord t)
   have h₉ := eEven (p+3) 1 (word (trips r) ++ tailWord t)
   have h₁₀ : Reach base (E 1 (2*p+6) (word (trips r) ++ tailWord t)) (orbitCfg (4*p+16) r t) := by
@@ -92,7 +94,7 @@ theorem progress4 (a : Prim) (ha : Good a) :
     rw [hm]
     exact h₁
   obtain ⟨r,t,hr,h₃⟩ := core4 p n s hp
-  obtain ⟨k,hk⟩ := Reach.ext (fill_extends _ _) h₃
+  obtain ⟨k,hk⟩ := Reach.ext (M := M4) (fill_extends _ _) h₃
   refine ⟨7+k,orbitCfg (4*p+14) r t,by omega,?_,join h₂ hk⟩
   refine ⟨2*p+7,r-2,t,by omega,?_⟩
   rw [show 2*(2*p+7) = 4*p+14 by omega,show r-2+2=r by omega]
@@ -107,7 +109,7 @@ theorem progress13 (a : Prim) (ha : Good a) :
     rw [hm]
     exact h₁
   obtain ⟨r,t,hr,h₃⟩ := core13 p n s hp
-  obtain ⟨k,hk⟩ := Reach.ext (fill_extends _ _) h₃
+  obtain ⟨k,hk⟩ := Reach.ext (M := M13) (fill_extends _ _) h₃
   refine ⟨19+k,orbitCfg (4*p+16) r t,by omega,?_,join h₂ hk⟩
   refine ⟨2*p+8,r-2,t,by omega,?_⟩
   rw [show 2*(2*p+8) = 4*p+16 by omega,show r-2+2=r by omega]
