@@ -32,7 +32,7 @@ write(f'OneLCSweep{i}Rules',['OneLCSweep'],rules_source)
 def combine(a,b,leaf,pre='join'):
     if b-a==1:return '',leaf(b)
     m=(a+b)//2;u,un=combine(a,m,leaf,pre);v,vn=combine(m,b,leaf,pre);nm=f'{pre}_{a}_{b}'
-    return u+v+f'theorem {nm} : runF a {cost[b]-cost[a]} c{a} = some c{b} := runF_join {un} {vn}\n',nm
+    return u+v+f'theorem {nm} : runF a {cost[b]-cost[a]} c{a} = some c{b} := joinExact a {cost[m]-cost[a]} {cost[b]-cost[m]} {cost[b]-cost[a]} c{a} c{m} c{b} rfl {un} {vn}\n',nm
 
 names=[];ends=[0]
 for start in range(0,len(A),32):
@@ -47,7 +47,7 @@ for start in range(0,len(A),32):
             proof=f'by exact sweepF{"R" if d else "L"} p a table {q} {bits(lp)} {bits(rp)} {bits(I)} {bits(O)} {k1} rule{rn} {n} {val(L)} {val(R)}'
         s+=f'theorem e{j+1} : runF a {k} c{j} = some c{j+1} := {proof}\n'
     u,un=combine(start,stop,lambda k:f'e{k}');s+=u+f'theorem block{len(names)} : runF a {cost[stop]-cost[start]} c{start} = some c{stop} := {un}\n'
-    write(name,[f'OneLCSweep{i}Rules'],s);names.append(name);ends.append(stop)
+    write(name,[f'OneLCSweep{i}Rules','OneLCJoinExact'],s);names.append(name);ends.append(stop)
 
 def merge(a,b):
     if b-a==1:return '',f'block{a}'
