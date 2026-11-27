@@ -44,7 +44,8 @@ jobs:
           lean -o im-results/agent31-f197-macro/MacroExact.olean im-results/agent31-f197-macro/MacroExact.lean
           lean -o im-results/agent2-f197-sweep/ATPairedCore.olean im-results/agent2-f197-sweep/ATPairedCore.lean | tee /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATAlignedCore.olean im-results/agent2-f197-sweep/ATAlignedCore.lean | tee -a /tmp/at-family.log
-          lean im-results/agent2-f197-sweep/ATPaired.lean | tee -a /tmp/at-family.log
+          lean -o im-results/agent2-f197-sweep/ATPaired.olean im-results/agent2-f197-sweep/ATPaired.lean | tee -a /tmp/at-family.log
+          lean im-results/agent2-f197-sweep/ATCostGrowth.lean | tee -a /tmp/at-family.log
           ! grep -q sorryAx /tmp/at-family.log
       - name: Check paired reset transducer
         if: ${{ inputs.target == 'paired' || inputs.target == '' }}
