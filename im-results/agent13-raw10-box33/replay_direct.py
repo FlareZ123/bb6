@@ -2,7 +2,7 @@
 every split, last-row reduction, simulation witness and abstract certificate."""
 from pathlib import Path
 import json, os, shutil, sys
-from replay_cylinder import HERE,BASE,BRANCH,call,HARD_D14V17
+from replay_cylinder import HERE,BASE,BRANCH,call,HARD_D14V17,HARD_D14V18
 
 SCAN_MAIN=r'''
 uint64_t counts[5]={},mass[5]={};int maxhalt=0;
@@ -73,7 +73,7 @@ def run_direct(args):
         late[t]=z
     Path('rlestart-1.txt').write_text(''.join(' '.join(map(str,t))+'\n' for t in opens))
     call(work/'rle_scan',-1)
-    known=HARD_D14V17 if (d,v)==(14,17) else {}
+    known,source={(14,17):(HARD_D14V17,'Box33D14Source'),(14,18):(HARD_D14V18,'Box33D14V18Source')}.get((d,v),({},None))
     for l in open('rlehard-1.txt'):
         t=tuple(map(int,l.split()))
         assert t in known,(t,'unresolved exact leaf')
@@ -100,9 +100,9 @@ def run_direct(args):
     em.write=write
     (out/(family+'Tree.lean')).write_text(f'import Box33DirectTree\nnamespace {ns}\nabbrev SafeBox := BB6.Agent13.Box33Direct.SafeBox\nend {ns}\n')
     if known:
-        txt=f'import {family}Tree\nimport Box33D14Source\nnamespace {ns}\nopen BB6Coverage BB6.Agent13.Box33Direct\n'
+        txt=f'import {family}Tree\nimport {source}\nnamespace {ns}\nopen BB6Coverage BB6.Agent13.Box33Direct\n'
         for nm in sorted(set(known.values())):
-            txt+=f'def {nm} : Known {B} := ⟨Box33D14Source.partialTable .{nm}, good_never _ _ (Box33D14Source.compatible_never .{nm})⟩\n'
+            txt+=f'def {nm} : Known {B} := ⟨{source}.partialTable .{nm}, good_never _ _ ({source}.compatible_never .{nm})⟩\n'
         (out/(family+'DirectKnown.lean')).write_text(txt+f'end {ns}\n')
     boxes=em.bank_modules('B')
     masks=[tuple(e['mask']) for e in json.load(open('greedyboxes.json'))['boxes']]
