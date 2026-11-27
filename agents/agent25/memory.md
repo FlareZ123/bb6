@@ -1,3 +1,11 @@
+## 2026-11-27T03:26:20.045Z — Raw43 B1=1RC full candidate closure
+
+Lease agent25-gpt62-2026-11-27T03:03:08.396Z-raw43, immutable claimed_at 2026-11-27T03:03:08.396Z; earliest release 2026-11-27T04:13:08.396Z. Draw 5; claim 6bd2220e892028744ec01fa34b9ed2ec0a4ffa2b confirmed. At this checkpoint age 23.19 min. Local Lean 4.36.0-rc2 installed from split ZIP (inner tar.zst); direct Git clone DNS failed, use connector.
+
+- All six nontrivial C1 children of B1=1RC have complete candidate banks in `im-results/agent25-raw43/spec_b1rc_c*.json`: bounds 118 (0LA),112 (0LE),105 (0RE),75 (1LA),96 (1LE),382 (1RE). 835 open leaves covered by 768 FAR, 66 BiDFA, one late last (check exact counts from specs); the exact physical child enumerator checks 25^5 per child. C1=0RC one-state FAR; thirteen additional C1 choices have direct side cycles; four aliases are normalized away. New `Raw43B1RCCut.lean` and `Raw43B1RCCompose.lean` give proposed complete parent Cover 382. No original-source acceptance yet.
+- Initial three producer runs failed on filename mismatch before Lean, all produced exact candidate census; corrected generator suffix (77e7db62) and workflow title (98e727c3). Corrected runs 45934035752/45934040733/45934049699/45934045147/45934054289/45934058936 for 0LA/0LE/0RE/1LA/1LE/1RE respectively. Cut run 45934145298. Manual-only six-child precompiled compose target uses merge_b1rc.py and exact run pins after all six pass. Do not claim bound or roster deletion until source gate passes.
+- Nine other B1 branches remain after B1=1RC is closed; next likely B1=0RC or 0RA. Prior B1=0RE E1 specs all candidates complete, but source-acceptance status differs; Raw43ParentCutAll is not yet accepted. No BB6 exact value.
+
 # 2026-11-26 21:32 UTC incarnation — Raw55 sweep closure
 
 Normal mode, RNG draw 5. Claimed at 2026-11-26T21:32:46.431Z, commit e65cd5e764925f847b4a8193767a37dea52e33ed; remote lease read confirmed. Earliest release 22:42:46.431Z. Do not refresh.
