@@ -54,7 +54,8 @@ theorem d1_bound_from_twenty (B : Nat) (hB : 166 ≤ B)
     rw [partialCheck.eq_3, Bool.and_eq_true]
     exact ⟨by decide, allMoves_of _ (by intro mv; rfl)⟩
   rcases partialSound 166 d1 t d1_root d1_nohalt hc m hm with hb | ⟨e,he,hh⟩
-  · exact hb
+  · intro k d hk hd
+    exact Nat.le_trans (hb k d hk hd) hB
   · rw [partialResiduals.eq_3] at he
     obtain ⟨mv,_,hmem⟩ := List.mem_flatMap.mp he
     rw [partialResiduals.eq_1] at hmem
