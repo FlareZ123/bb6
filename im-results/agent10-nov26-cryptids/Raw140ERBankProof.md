@@ -117,14 +117,8 @@ Thus the previously expensive transition from a whole left bank to the
 variant-specific A1/F0 branches is reduced to affine updates plus a
 finite suffix. The two-triplet variants retain a parity bit.
 
-## 2026-11-27 11:26 UTC: sibling 42 depleted-defect exit
+## Sibling 42 depleted-defect exit (accepted)
 
-The common nine-row table also admits, for p>=1 and arbitrary right suffix Y,
-ER(33325 3^p 2,1115 Y) -> AR(3^(p+12) 2,115 Y), cost 54p+403.
-The symbolic path is generated as finish42 with p-1 as its Lean parameter in generate_raw140_er_suffix.js. This path does not inspect Y. CI run 45989547335 compiled the generated local file and Raw140ERSuffix.bank successfully, before failure in the separate exit composition. The current exit composition is being repaired; its last successful subtheorems are not yet a new root verdict.
+The stronger common-table law ER(33325 3^p2,1Y) -> AR(3^(p+12)2,Y), p>=1, cost 54p+403, replaces the earlier 1115-tail version. Combined with pumpAny and transferMany42 it yields the full six-suffix return for n>=2, not merely n>=3. Raw14042Bank.return42 passed CI 46005422665. See Raw14042Counter.md for the opposite-counter derivation and root connection.
 
-Combine the accepted sibling-42 conversion (AR(3^p2,(115)^n Y) -> ER(1(133)^(n-1)25 3^p2,Y), time 37+45(n-1)) with the six suffix preparations, prepareCarry, tripLoop, pump and finish42. For p>=1,n>=3, this yields the candidate exact macro return
-AR(3^p2,(115)^n s) -> AR(3^(p+12)2,(115)^(n-2+epsilon(s)) rho(s)).
-Correction: the emitted 115 from finish42 makes the correct exponent n-2+epsilon(s), since the pump consumes n-3 carry triplets. Cost is 37+45(n-1)+prep(s)+5+3(k(s)+1)+21(n-2)+54p+403. This is a finite phase, not a closed invariant. The case n<3 is the next substantive bottleneck. Do not infer nonhalting from this phase alone.
-
-Separate source result: exact sibling id36 (1RB0RF_1RC0LD_1RD0RA_1LB1LE_0LB0RE_0RD---) is covered by BB6.Agent10Nov26.n12_cover from Nov26Pair2.lean. Pinned upstream source audit 45989202041 SUCCESS; n12_eq, n12_never, n12_cover all have only propext, Classical.choice, Quot.sound. This is a proved one-hole cylinder (25 completions), but the generated three-hole cut has not yet consumed it, so its checked remaining_count is still 20. The companion n8_cover also passed.
+Separate source result: exact sibling id36 is covered by BB6.Agent10Nov26.n12_cover from Nov26Pair2.lean (pinned audit 45989202041 SUCCESS). This is a proved one-hole cylinder (25 completions); the checked parent cut still has 20 unresolved leaves until the graft is accepted.
