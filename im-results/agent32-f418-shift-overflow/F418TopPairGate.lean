@@ -121,7 +121,7 @@ theorem modest_gate_top_pair {b : Prefix} {Q W last : Nat}
     exact Nat.sub_add_cancel hRtop
   have he : b.next Q W=2^(W+b.E)+2^h+R := by
     calc
-      b.next Q W=2^(W+b.E)+(Q-b.C) := by unfold next; omega
+      b.next Q W=2^(W+b.E)+(Q-b.C) := by unfold next; exact Nat.add_sub_assoc hb _
       _=2^(W+b.E)+(2^h+R) := congrArg (fun x : Nat => 2^(W+b.E)+x) heR.symm
       _=2^(W+b.E)+2^h+R := by omega
   have hg := oddChain_top_gap hc (show h<W+b.E by simp [h,L,E]; omega) hR he
