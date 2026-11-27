@@ -9,9 +9,19 @@ Both use original canonical cut depth 7, cap 1000, lookback 32 and the frozen cr
 | E1 | open leaves | FAR-bank accepted candidates | further finite stack | late last-hole | FAR6 | universal growth checked in Lean | unresolved |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 0RD | 17081 | 16395 | 674 | 1 | 0 | 11 | 0 |
-| 1LC | 22268 | 21356 | 861 | 28 | 1 | 21 | 1 |
+| 1LC | 22268 | 21356 | 862 (includes M19569 run-stack certificate) | 28 | 1 | 21 | 0 |
 
-0RD is candidate-complete, not yet aggregate-certified. The sole remaining 1LC discovery holdout is M19569 (`1RB0LE_1RC---_0RD1RA_1LD1LE_1RF1LC_0RD0RA`).
+Both branches are candidate-complete, not aggregate-certified. M19569 has a computationally checked finite invariant; its Lean source bridge is outstanding.
+
+### M19569: exact finite run-stack invariant
+
+Table `1RB0LE_1RC---_0RD1RA_1LD1LE_1RF1LC_0RD0RA`. At primitive step 34 the blank orbit enters A with left word 001 and right word 0111, nearest cell first. Write the left word as 00 followed by positive one-runs separated by single zeros, and the right word as positive zero/one run pairs. Trailing blank zeros are immaterial. The left stack alphabet is a positive run length; the right alphabet encodes (b,c) as 256b+c.
+
+[m19569_certificate.py](m19569_certificate.py) discovers a finite inverse-edge graph using the nearest two left runs and three right pairs as summaries. Discovery uses arithmetic return formulas, but its separate verifier does not invoke those formulas. It verifies 706 finite primitive traces with arbitrary untouched suffixes, checks 30,449 combinations of possible residual stack states, and checks the exact blank entry. The discovery fixed point has 13,679 microconfigurations, 1,057 non-bottom inverse edges, 36 left and 444 right summaries, and 706 section pairs. The only hole is B1; no replay uses it.
+
+**Soundness argument.** Interpret state 0 as accepting the empty stack. An edge (t,x,s) accepts x::tail at t whenever tail is accepted at s. A section is permitted if its concrete left/right run stacks are accepted by some listed state pair. For any accepted stack, popping at most two/three symbols along its accepting derivation yields one of the enumerated (prefix, residual state) pairs. If a prefix is shorter than the pop limit, the remainder is empty; otherwise the remainder is arbitrary. Primitive framed replay refuses to read an unknown suffix, and checks the exact resulting prefixes (up to trailing zero padding only on known blank ends). Therefore each successful replay holds for every represented suffix and never accesses B1. The verifier checks that the rewritten prefixes can be pushed onto the same residual states to produce another permitted section pair. All costs are positive. Starting with the checked step-34 entry, induction supplies arbitrarily long live prefixes for every completion of B1. This is a finite computational certificate with a mathematical soundness argument, not a claim based on sampled orbits.
+
+Run `python3 m19569_certificate.py --write M19569.json` and separately `python3 m19569_certificate.py --read M19569.json`. The latter skips discovery. The exact finite graph and primitive traces still need Lean kernel acceptance and a compatible-completion bridge to the Raw56 aggregate. No global cut is claimed.
 
 ### M5334: exact 25-block growth
 
