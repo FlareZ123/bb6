@@ -163,7 +163,23 @@ def main():
         compile_roots([a.generated/(x+".lean") for x in s["groups"][a.shard]],
                       a.generated,a.core,a.work,"57")
     else:
+        # The shard schedule fingerprints the *original* source closure.
+        # Validate and merge all nineteen accepted shard objects first.
+        # Only then replace the four uncompiled final consumer modules with
+        # their tracked corrected sources (1613 instead of the stale 832
+        # interface). This preserves every producer-source identity and
+        # makes the revised consumer's source hashes visible in the final
+        # compilation manifest; no precompiled proof object is patched.
         merge(a.inputs,a.merged,a.generated,prefix="raw57-rc2")
+        for name in ("Raw57ParentConsumer.lean",
+                     "Raw57ParentConsumerWithLALE.lean",
+                     "Raw57ParentComplete.lean", "Raw57ParentCover.lean"):
+            source, target = HERE/name, a.generated/name
+            assert source.is_file() and target.is_file(), name
+            before, after = digest(target), digest(source)
+            if before != after:
+                shutil.copy2(source,target)
+                print(f"Updated uncompiled final consumer {name}: {before} -> {after}",flush=True)
         compile_roots([a.generated/"Raw57ParentCover.lean"],a.generated,a.merged,a.work,"57",final=True)
 
 if __name__=="__main__":
