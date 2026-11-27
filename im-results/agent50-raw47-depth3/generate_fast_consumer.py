@@ -3,7 +3,7 @@ Every packed key is checked against its actual Lean table, and the kernel checks
 the residual count. No witness discovery or positional roster assumption.
 """
 from pathlib import Path
-import hashlib, re, sys
+import hashlib, json, re, sys
 here=Path(__file__).resolve().parent
 p=Path(sys.argv[1]).resolve()
 raw=(here/'raw47-depth3.open').read_bytes()
@@ -34,4 +34,13 @@ for i,m in zip(ids,imports):
 body=(here/'Raw47AcceptedFast.template').read_text().replace('@@ENTRIES@@',',\n'.join(entries)).replace('@@TREE@@',tree(keys)).replace('@@N@@',str(N)).replace('@@REMAIN@@',str(len(rows)-N))
 name=f'Raw47Accepted{N}'
 (p/(name+'.lean')).write_text('\n'.join('import '+x for x in ['Raw47Depth3Cut','FastKey']+imports)+'\n'+body)
+(p/'accepted-roster.json').write_text(json.dumps({
+    'theorem': f'BB6.Agent50{name}.local_sound',
+    'weighted_bound': 10006,
+    'roster_sha256': hashlib.sha256(raw).hexdigest(),
+    'closed_count': N,
+    'remaining_count': len(rows)-N,
+    'closed': [{'id': i, 'table': rows[i], 'module': names[i]} for i in sorted(names)],
+    'remaining': [{'id': i, 'table': row} for i,row in enumerate(rows) if i not in names],
+}, indent=2)+'\n')
 print(name)
