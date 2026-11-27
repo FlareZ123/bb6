@@ -15,7 +15,7 @@ from generate_four_hole import masks
 B=1006 if branch in ('0RA','0RB') else 100006
 opens=src.joinpath('open.txt').read_text().splitlines()
 ids={t:i for i,t in enumerate(opens)};assert len(ids)==len(opens)
-bank={};proof={};proof_mod={};late={}
+bank={};proof={};proof_mod={};late={};late_splits={};late_children={}
 for file in ['far5.txt','far6.txt']:
     if (src/file).exists():
         for row in (src/file).read_text().splitlines():
@@ -44,11 +44,26 @@ if branch in ('0RA','0RB'):
 else:
     from emit_block42 import emit_cases
     hard={int(i):code for i,code in (line.split() for line in (src/'hard.txt').read_text().splitlines())}
-    rows=[x for x in json.loads((raw/'block42_witnesses.json').read_text()) if x['branch']==branch and x['id'] in hard]
+    for row in json.loads((raw/'late42_subtrees.json').read_text()):
+        if row['branch']!=branch:continue
+        j=row['id'];assert j in hard and hard[j]==row['code']==opens[j].replace('_','')
+        late_splits[j]=row['tree']
+        for k in row['tree'][3]:
+            if k[0]=='open':
+                assert k[2] not in late_children
+                late_children[k[2]]=k[1]
+    if branch=='1LB':
+        j=18612
+        assert hard[j]=='1RB1RA1RC1LB0RD1RE1LD0LB0RA0RF---0RD'
+        register_proof(j,'.proven BB6.Agent32Raw421LB.Leaf18612.p BB6.Agent32Raw421LB.Leaf18612.live','Raw42Leaf18612')
+    expected={j:v for j,v in hard.items() if j not in late_splits and j not in proof}
+    expected.update(late_children)
+    rows=[x for x in json.loads((raw/'block42_witnesses.json').read_text()) if x['branch']==branch and x['id'] in expected]
     assert len({x['id'] for x in rows})==len(rows)
     for x in rows:
-        i=x['id'];assert x['code']==hard[i]==opens[i].replace('_','')
-    assert set(hard)=={x['id'] for x in rows}, f'unresolved discovery leaves: {set(hard)-{x["id"] for x in rows}}'
+        i=x['id'];assert x['code']==expected[i]
+        if i<len(opens):assert x['code']==opens[i].replace('_','')
+    assert set(expected)=={x['id'] for x in rows}, f'unresolved discovery leaves: {set(expected)-{x["id"] for x in rows}}'
     for x,mod in zip(rows,emit_cases(repo,out,rows)):
         i=x['id'];ns=f'BB6.Agent32Raw42{branch}.Block.Leaf{i}'
         register_proof(i,f'.proven {ns}.table {ns}.live',mod)
@@ -67,7 +82,7 @@ else:
         else:
             assert k=='last'
             n,s=map(int,args);late[j]=f'.last {n} ({s//2},{str(bool(s%2)).lower()})'
-assert set(bank)|set(proof)|set(late)==set(range(len(opens))) and len(bank)+len(proof)+len(late)==len(opens)
+assert set(bank)|set(proof)|set(late)|set(late_splits)==set(range(len(opens)))|set(late_children) and len(bank)+len(proof)+len(late)+len(late_splits)==len(opens)+len(late_children)
 def parse(t):
     t=t.replace('_','');return [t[i:i+3] for i in range(0,36,3)]
 def show(p):return '_'.join(''.join(p[i:i+2]) for i in range(0,12,2))
@@ -95,14 +110,19 @@ root=prefix+'Base';write(root,['Raw42AssemblyCore'],[f'abbrev p := BB6.Agent32Ra
 sizes={}
 def size(t):
     v=1+sum(size(k) for k in t[3]) if t[0]=='split' else 1;sizes[id(t)]=v;return v
-seen=set(); stats=Counter()
+seen=set(); extra_seen=set(); stats=Counter()
 def render(t,p,cut,imports):
     tag=t[0];stats[tag]+=1
     if tag=='skip':return '.keep'
     if tag=='cycle':return f'.closed (.cycle {t[1]} {t[2]} {str(t[3]).lower()} ({t[4]}))'
     if tag=='last':return f'.closed (.last {t[1]} {slot(t[2])})'
     if tag=='open':
-        assert t[1]==show(p);j=ids[t[1]];assert j not in seen;seen.add(j)
+        if len(t)==3:
+            j=t[2];assert j in late_children and t[1]==late_children[j]==show(p).replace('_','')
+            assert j not in extra_seen;extra_seen.add(j)
+        else:
+            assert t[1]==show(p);j=ids[t[1]];assert j not in seen;seen.add(j)
+        if j in late_splits:return render(late_splits[j],p,cut,imports)
         if j in bank:v=far(bank[j],p)
         elif j in proof:v=proof[j];imports.add(proof_mod[j])
         else:v=late[j]
@@ -148,7 +168,7 @@ def generate(t,p,cut,name,expr):
         join(lines,name,n,s,cut)
     write(mod,imports,lines);return mod
 tree=json.loads(src.joinpath('tree.json').read_text());size(tree)
-mod=generate(tree,parent,cut0,'Root','p');assert len(seen)==len(opens)
+mod=generate(tree,parent,cut0,'Root','p');assert len(seen)==len(opens) and extra_seen==set(late_children)
 write(prefix+'Cover',[mod],[f'''theorem root_support : TNFSupport p {cut0} := by
   intro s t h
   rcases s with ⟨q,b⟩
