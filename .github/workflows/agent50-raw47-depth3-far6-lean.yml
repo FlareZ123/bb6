@@ -36,49 +36,44 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45940910607
-          name: raw47-broad-far-1
-          path: /tmp/a50-far
+          run-id: 45952099904
+          name: raw47-accepted108
+          path: /tmp/a50-base
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 45939716326
-          name: raw47-pump-parent-proofs
-          path: /tmp/a50-pump
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ github.token }}
-          run-id: 45940530291
-          name: raw47-pump-parent-proofs
-          path: /tmp/a50-counter
-      - name: Compose previously accepted exact parent covers
+          run-id: 45952295374
+          name: raw47-far-0-0-12
+          path: /tmp/a50-batch0
+      - name: Compose 120 exact parent covers using the verified packed key
         run: |
           set -euo pipefail
           D=im-results/agent50-raw47-depth3
-          W=.tmp/a50-raw47-accepted108
+          W=.tmp/a50-raw47-fast
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-far /tmp/a50-pump /tmp/a50-counter
-          python "$D/generate_accepted108.py" "$W/imports"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem BB6.Agent50Raw47Accepted108.local_sound --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 10006 --artifact-name raw47-accepted108 --provenance-input "$D/raw47-depth3.open" --provenance-input "$D/broad-far-parents.b64" --provenance-input "$D/raw47-depth3.json" --provenance-input "$D/generate_accepted108.py" "$W/imports/Raw47Accepted108.lean" 2>&1 | tee "$W/log"
+          python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-base /tmp/a50-batch0
+          M=$(python "$D/generate_fast_consumer.py" "$W/imports" 120)
+          test "$M" = Raw47Accepted120
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "BB6.Agent50Raw47Accepted120.local_sound" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 10006 --artifact-name raw47-accepted120 --provenance-input "$D/raw47-depth3.open" --provenance-input "$D/generate_fast_consumer.py" "$W/imports/$M.lean" 2>&1 | tee "$W/log"
           python - "$W/log" <<'PY'
           import re,sys
           log=open(sys.argv[1]).read()
-          for n in ('closed_count','remaining_count','local_sound'):
-              name='BB6.Agent50Raw47Accepted108.'+n
+          for n in ('keys_eq','closed_count','remaining_count','local_sound'):
+              name='BB6.Agent50Raw47Accepted120.'+n
               m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
               else: assert f"'{name}' does not depend on any axioms" in log,name
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw47-accepted108
+          name: raw47-accepted120
           path: |
-            .tmp/a50-raw47-accepted108/imports/
-            .tmp/a50-raw47-accepted108/build/
-            .tmp/a50-raw47-accepted108/manifest.json
-            .tmp/a50-raw47-accepted108/log
+            .tmp/a50-raw47-fast/imports/
+            .tmp/a50-raw47-fast/build/
+            .tmp/a50-raw47-fast/manifest.json
+            .tmp/a50-raw47-fast/log
           if-no-files-found: error
 
   batch:
