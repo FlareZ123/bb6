@@ -9,10 +9,14 @@ export WORKERS="${WORKERS:-4}"
 export LEAN_PATH="$root:$LEAN_DEPS"
 "$LEAN" --version
 check() { local f="$1"; "$LEAN" -j1 -o "${f%.lean}.olean" "$f"; }
-for m in CanonicalPartial Raw40Nores Raw40A1LC0LCPeriodic; do check "$m.lean"; done
+for m in CanonicalPartial Raw40Nores Raw40A1LC0LCPeriodic Raw40A1LC0RCLeaf88; do check "$m.lean"; done
 (cd ../agent32-raw59; "$LEAN" -j1 -o "$root/FastBiDFA.olean" FastBiDFA.lean)
-python3 prepare_a1lc_0lc.py
-for f in Raw40A1LC0LCCompact*.lean; do check "$f"; done
-python3 build_manifests.py "$root/a1lc/0LC/shards"
-export LEAN_PATH="$LEAN_PATH:$root/a1lc/0LC/shards"
-check Raw40A1LC0LCExact.lean
+dirs=()
+for c in 0LC 0RC 1LB 1RC; do
+  python3 prepare_a1lc_0lc.py "$c"
+  for f in Raw40A1LC"${c}"Compact*.lean; do check "$f"; done
+  dirs+=("$root/a1lc/$c/shards")
+done
+python3 build_manifests.py "${dirs[@]}"
+for d in "${dirs[@]}"; do export LEAN_PATH="$LEAN_PATH:$d"; done
+for c in 0LC 0RC 1LB 1RC; do check "Raw40A1LC${c}Exact.lean"; done
