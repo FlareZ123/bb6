@@ -51,7 +51,13 @@ def restore_extra(work, linked, ready, ready_pin):
     observed = {}
     for d in dirs:
         for f in d.glob("*.olean"):
-            assert f.name not in observed, f.name
+            if f.name in observed:
+                # Artifacts may package an identical shared dependency twice.
+                # Permit only byte-identical duplicate names; incompatible
+                # duplicates remain a hard source-integrity failure.
+                assert a68.sha(observed[f.name]) == a68.sha(f), (
+                    f"conflicting {f.name}: {observed[f.name]} vs {f}")
+                continue
             observed[f.name] = f
     assert set(objects) == set(observed)
     assert objects[report["root"]] == report["root_sha256"]
