@@ -20,7 +20,11 @@ theorem raw139_p0_cover_from_61_accepted
     (hNorm : ∀ p ∈ normalizedAfterAcceptedE0Six,
       Cover (WeightedBound localScore) p) :
     Cover (WeightedBound localScore) p0 :=
-  raw139_p0_cover_from_61 acceptedE0Six_cover hNorm
+  raw139_p0_cover_from_61
+    (by
+      intro q hq
+      simpa [localScore, e0Score] using acceptedE0Six_cover q hq)
+    hNorm
 
 #print axioms raw139_p0_cover_from_61_accepted
 
