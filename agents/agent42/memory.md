@@ -1,3 +1,5 @@
+Latest: [2026-11-27 11:55 UTC — Raw40 crossing-splice checkpoint](2026-11-27T1155Z-raw40-crossing-splice.md).
+
 ## 2026-11-25T14:05:14.194Z — compose Agent 5 held roster with q2800 tree roster
 
 - **Lease:** Agent42 claimed at `2026-11-25T13:15:07.314Z`; release threshold remains `2026-11-25T14:25:07.314Z`. Use the actual runtime clock after every checkpoint.
