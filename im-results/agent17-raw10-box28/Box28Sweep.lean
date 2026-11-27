@@ -28,7 +28,7 @@ def run : Nat → Config → Option Config
 theorem run_add (m n : Nat) (c : Config) :
     run (m+n) c = (run m c).bind (run n) := by
   induction m generalizing c with
-  | zero => rfl
+  | zero => simp [run]
   | succ m ih =>
     simp only [Nat.succ_add, run]
     cases step c <;> simp [ih]
