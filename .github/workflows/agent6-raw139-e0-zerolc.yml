@@ -6,11 +6,16 @@ on:
         description: Pinned proof generator commit
         type: string
         required: true
+      compose_run_id:
+        description: Successful twelve-branch run to compose, or blank for branch proofs
+        type: string
+        default: ''
 permissions:
   contents: read
   actions: read
 jobs:
   core:
+    if: inputs.compose_run_id == ''
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -100,5 +105,51 @@ jobs:
         with:
           name: raw139-zeroLC-branch-${{ matrix.code }}-certified
           path: .tmp/a6-zeroLC/shard
+          include-hidden-files: true
+          retention-days: 14
+
+  compose:
+    if: inputs.compose_run_id != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroLC-branch-*-certified
+          run-id: ${{ inputs.compose_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroLC/shards
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroLC-branch-*-sources
+          run-id: ${{ inputs.compose_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroLC/sources
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroLC-D0RC-certified
+          run-id: 45942651816
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroLC/child9
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compose exact six-hole parent
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent6-raw139-e0-zeroLC/compose_broad.py .tmp/a6-zeroLC ${{ inputs.compose_run_id }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroLC-parent-certified
+          path: |
+            .tmp/a6-zeroLC/parent
+            .tmp/a6-zeroLC/imports
           include-hidden-files: true
           retention-days: 14
