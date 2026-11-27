@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42, counter42, right42, counter42full]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,15 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = right42 ]; then
+          if [ "$TARGET" = counter42full ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_42_counter.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-counter42full --jobs 3 im-results/agent10-nov26-cryptids/Raw14042Counter.lean 2>&1 | tee /tmp/raw140-proof.log
+            for t in counterStep counterIter; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw14042Counter.$t"
+            done
+          elif [ "$TARGET" = right42 ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_double.js
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
             node im-results/agent10-nov26-cryptids/generate_raw140_42_right.js
