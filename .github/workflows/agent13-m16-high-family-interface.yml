@@ -60,6 +60,7 @@ on:
           - sourceAgent2OddOdd
           - sourceAgent2OddOddVal3
           - sourceAgent2OddOddStrictness
+          - sourceAgent2OddOddIntegration
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceModularHighStopCriterion
@@ -289,6 +290,9 @@ jobs:
               ;;
             sourceAgent2OddOddStrictness)
               target=im-results/agent2-c-oddodd-cone/OddOddStrictness.lean
+              ;;
+            sourceAgent2OddOddIntegration)
+              target=im-results/agent2-c-oddodd-cone/OddOddHighIntegration.lean
               ;;
             sourceDyadicDensity)
               target=im-results/agent21-c-shadow-density/DyadicSource.lean
