@@ -223,6 +223,9 @@ theorem one_terminal_regular_canonical
         (packet d.a d.q d.p BB6.Agent2PacketOneReentry.fixedTail)
         (BB6.Agent2BoundaryBZero.regularSection d.a (d.q+2) 5)
       rw [ha',hp1]
+      change ObsEq
+        (packet (3*k+4) d.q 1 (false :: List.replicate 6 true))
+        (BB6.Agent2BoundaryBZero.regularSection (3*k+4) (d.q+2) 5)
       rw [BB6.Agent2BoundaryBZero.e_one_regular]
       exact BB6.Padding.cfgEq_refl _
     simpa only [regularSection_sourceSection d.a (d.q+2) 5 hfloor] using hreg
@@ -247,7 +250,8 @@ theorem all_safe_packets_canonical
       run T (packet c.a c.q c.p
         BB6.Agent2PacketOneReentry.fixedTail) =
       packet d.a d.q d.p BB6.Agent2PacketOneReentry.fixedTail := by
-    simpa [d,physical,toState,packet,word] using hraw
+    simpa [d, BB6.Agent31PacketPaths.physical,
+      BB6.Agent2PacketNormalizeSource.toState,packet,word] using hraw
   have hfirst :
       ObsEq
         (run T (packet c.a c.q c.p
