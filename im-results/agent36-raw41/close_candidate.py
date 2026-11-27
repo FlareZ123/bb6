@@ -67,6 +67,7 @@ def main():
     parser.add_argument("--time",type=int,default=600)
     parser.add_argument("--out",type=Path,default=Path("/tmp/raw41-closure"))
     parser.add_argument("--late",action="append",default=[],help="Original open-index:exact-step:read-slot; e.g. 2:1423:9")
+    parser.add_argument("--far-override",action="append",default=[],help="Original open-index:reflectedDFAcode; verified by the existing FAR constructor")
     parser.add_argument("--min-bound",type=int,default=0)
     args=parser.parse_args()
     assert args.index>=0 and args.dfa in range(1,9)
@@ -126,6 +127,26 @@ def main():
                         idx=int(match.group(1)); cert=match.group(2)
                         if idx<len(leaves) and len(cert)%2:
                             found[idx]=cert
+        # The SMT synthesis is untrusted; independently reconstruct each
+        # externally discovered compact DFA using the original source FAR
+        # fixed-point checker before including it in Lean source.
+        overrides={}
+        for item in args.far_override:
+            if not item.strip():continue
+            i,code=item.split(":")
+            idx=int(i)
+            assert 0<=idx<len(leaves) and idx not in overrides
+            assert re.fullmatch(r"[01][0-9]+",code) and len(code)%2
+            normalized=leaves[idx].replace("_","")
+            vals=tuple(-1 if normalized[k]=="-" else
+                int(normalized[k])*12+6*(normalized[k+1]=="R")+ord(normalized[k+2])-65
+                for k in range(0,36,3))
+            g["far"](code,vals)
+            overrides[idx]=code
+        for idx,code in overrides.items():
+            if idx in found:
+                assert found[idx]==code,(idx,found[idx],code)
+            found[idx]=code
         (args.out/"far.txt").write_text("".join(f"{i} {v}\n" for i,v in sorted(found.items())))
         missing=[(i,v) for i,v in enumerate(leaves) if i not in found]
         (args.out/"missing.txt").write_text("".join(f"{i} {v}\n" for i,v in missing))
@@ -134,6 +155,7 @@ def main():
         summary=dict(index=args.index,table=table,bound=bound,opens=len(leaves),
              far_certificates=len(found),remaining=len(missing),
              late_last_holes={str(i): {"step":n,"slot":sl} for i,(n,sl) in late.items()},
+             external_far_overrides={str(i):v for i,v in overrides.items()},
              remaining_after_late=len(remaining_after_late),
              bank_size=len(bank),timeout=truncated,
              proof_status="FAR candidates only, pending Lean source check")
