@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79]
+        options: [seven, extra, long4, long79, doubleLocal]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,13 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = extra ]; then
+          if [ "$TARGET" = doubleLocal ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-double-local --jobs 3 im-results/agent10-nov26-cryptids/Raw140DoubleLocal.lean 2>&1 | tee /tmp/raw140-proof.log
+            for t in convert1 convert2 tail6405; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Double.$t"
+            done
+          elif [ "$TARGET" = extra ]; then
             python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
             python tools/lean_compile_closure.py --workdir /tmp/raw140-extra --jobs 3 im-results/agent10-nov26-cryptids/Raw140ExtraNovelCover.lean 2>&1 | tee /tmp/raw140-proof.log
             python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Extra.X11.cover"
