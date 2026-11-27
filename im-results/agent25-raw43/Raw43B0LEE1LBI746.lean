@@ -32,13 +32,13 @@ def cost (_ : Nat) : Nat := 1
 
 theorem first :
     run0 table 1983 ⟨0,[],[]⟩ = some (family 0) := by
-  native_decide
+  decide
 
 theorem positive (k : Nat) : 0 < cost k := by simp [cost]
 
 theorem growth (k : Nat) :
     run0 table (cost k) (family k) = some (family (k+1)) := by
-  simp [cost, family, rep, run0, move0]
+  simp [cost, family, rep, run0, step0, table, move0]
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
   never_of_growth table family 1983 cost first positive growth m hm
