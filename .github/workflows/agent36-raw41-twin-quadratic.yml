@@ -28,6 +28,12 @@ jobs:
           run-id: 46083019785
           name: raw41-target-024-auto
           path: /tmp/quad024
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77
       - name: Check separate growth orbits and prove exact common quadratic checkpoints
         run: |
           set -euo pipefail
@@ -35,7 +41,7 @@ jobs:
           mkdir -p "$SRC"
           cp /tmp/quad128/lean/Raw41New128Auto.lean "$SRC/"
           cp /tmp/quad024/lean/Raw41New024Auto.lean "$SRC/"
-          export LEAN_PATH="$SRC:im-results/agent8-coverage-contract:im-results/agent50-weighted-tnf-pilot:im-results/agent31-three-hole-tnf:im-results/agent46-raw13-cut"
+          export LEAN_PATH="$SRC:/tmp/canonical77:im-results/agent8-coverage-contract:im-results/agent50-weighted-tnf-pilot:im-results/agent31-three-hole-tnf:im-results/agent46-raw13-cut"
           lean -o "$SRC/RootShift.olean" im-results/agent8-coverage-contract/RootShift.lean 2>&1 | tee /tmp/a36-twin-root.log
           lean -o "$SRC/SparseZipper.olean" im-results/agent50-weighted-tnf-pilot/SparseZipper.lean 2>&1 | tee /tmp/a36-twin-zipper.log
           lean -o "$SRC/SweepPumping.olean" im-results/agent31-three-hole-tnf/SweepPumping.lean 2>&1 | tee /tmp/a36-twin-sweep.log
