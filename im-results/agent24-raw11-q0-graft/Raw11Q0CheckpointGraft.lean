@@ -15,6 +15,21 @@ set_option maxHeartbeats 0
 def extendsTable (p q : PartialMachine) : Prop :=
   ∀ s, p s = none ∨ q s = p s
 
+/-- Executable finite quantification over the twelve transition slots. -/
+instance (p q : PartialMachine) : Decidable (extendsTable p q) := by
+  apply decidable_of_iff
+    (∀ a : Fin 6, (p (a,false) = none ∨ q (a,false) = p (a,false)) ∧
+                    (p (a,true) = none ∨ q (a,true) = p (a,true)))
+  constructor
+  · intro h ⟨a,b⟩
+    cases b
+    · exact (h a).1
+    · exact (h a).2
+  · intro h a
+    constructor
+    · exact h (a,false)
+    · exact h (a,true)
+
 theorem extendsTable_compat {p q : PartialMachine}
     (h : extendsTable p q) : ∀ s t, p s = some t → q s = some t := by
   intro s t hs
@@ -116,13 +131,36 @@ def conflictMoves (a b : Move) : Prop :=
   a.write ≠ b.write ∨ a.right ≠ b.right ∨
     ((a.next.val < 3 ∨ b.next.val < 3) ∧ a.next ≠ b.next)
 
+instance (a b : Move) : Decidable (conflictMoves a b) := by
+  unfold conflictMoves
+  infer_instance
+
 def slotConflict (p q : PartialMachine) (s : Slot) : Prop :=
   match p s, q s with
   | some (some a), some (some b) => conflictMoves a b
   | _, _ => False
 
+instance (p q : PartialMachine) (s : Slot) : Decidable (slotConflict p q s) := by
+  unfold slotConflict
+  split <;> infer_instance
+
 def rootConflict (p q : PartialMachine) : Prop :=
   ∃ s : Slot, s.1.val < 3 ∧ slotConflict p q s
+
+/-- Constructive witness search; no classical Decidable instance enters kernel checks. -/
+instance (p q : PartialMachine) : Decidable (rootConflict p q) := by
+  apply decidable_of_iff
+    (∃ a : Fin 6, (a.val < 3 ∧ slotConflict p q (a,false)) ∨
+                    (a.val < 3 ∧ slotConflict p q (a,true)))
+  constructor
+  · rintro ⟨a,h⟩
+    rcases h with h | h
+    · exact ⟨(a,false), h.1, h.2⟩
+    · exact ⟨(a,true), h.1, h.2⟩
+  · rintro ⟨⟨a,b⟩,ha,hc⟩
+    cases b
+    · exact ⟨a, Or.inl ⟨ha,hc⟩⟩
+    · exact ⟨a, Or.inr ⟨ha,hc⟩⟩
 
 theorem rootConflict_elim {p q : PartialMachine} (h : rootConflict p q) :
     ∃ s : Slot, s.1.val < 3 ∧
@@ -265,9 +303,11 @@ def raw11FrontierExpected : List String := [
   "1RB1RD_1RC---_0LA---_------_------_------"
 ]
 
-theorem raw11FrontierManifest_exact :
-    raw11FrontierTables.map encodeTable = raw11FrontierExpected := by
-  decide +kernel
+/-- Diagnostic for comparing the source-computed frontier with the JSON-exported
+    manifest.  The earlier equality assertion is *false* under the imported
+    source; it must not be treated as an accepted source identity. -/
+#eval ((raw11FrontierTables.map encodeTable).zip raw11FrontierExpected).filter
+  (fun p => p.1 != p.2)
 
 theorem raw11FrontierTables_length :
     raw11FrontierTables.length = 116 := by
@@ -569,7 +609,7 @@ theorem q0Coarse_restricted_partition {p : PartialMachine}
   have hOriginal : TNFQuotientCompatible p m := ⟨e, he0, hpm⟩
   have hparent : compatible parent (renameTable e m) := by
     intro s t hs
-    exact hpm s t (hpExt s t hs)
+    exact hpm s t (extendsTable_compat hpExt s t hs)
   have htnf : TNFQuotientCompatible parent m := ⟨e, he0, hparent⟩
   rcases partition m htnf with hsafe | ⟨entry, hentry, hentryTnf⟩
   · exact Or.inl hsafe
