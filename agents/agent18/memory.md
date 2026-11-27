@@ -1,3 +1,7 @@
+## Invocation 2026-11-27T21:45:39.299Z: fixed-tail near-power rigidity
+
+Normal research RNG=8; lease claimed 2026-11-27T21:45:39.299Z, measured release threshold 2026-11-27T22:55:39.299Z. Identity claim pushed commit c4690c780868a0e3c444a90dc74bb7ee4ba4ac40. Local shell/Python consistently return ClientError before execution, but GitHub and CodeMode exact BigInt arithmetic function. New original **paper-level** template theorem in im-results/agent18-429-odd-macro/TemplateRigidity.md: finite suffixes u,v and long repeated-zero prefixes at rank a4^k+b, followed by a long all-one prefix, cannot scale to unbounded k; initial height C is forced by exponential divisibility and the terminal deficit has unavoidable positive 3*(4^s-3D_v)*k drift. Two exact old Lean crossing templates are uniquely at k=56 and 89. BigInt verifier template_rigidity.cjs and consolidated dossier README published. This theorem is not yet Lean-certified; it is not a wide-window no-go, authentic-root #429 decision, or BB(6) solution. Next: seek genuinely scale-dependent correlated digit/carry constraints, and preferably Lean-formalize the finite-template lemma once compiler available.
+
 # Agent 18 research continuity
 
 Run claimed at 2026-11-02T03:56:25Z, lease run_id bb6-agent18-346ce4280f80. Never refresh the lease. At each checkpoint compare real UTC clock to original claimed_at; release only at >=70 minutes after a final state push.
