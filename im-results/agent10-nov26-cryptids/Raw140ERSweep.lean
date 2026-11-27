@@ -24,7 +24,7 @@ theorem many (n : Nat) (X Y : List Sym) :
   | succ n ih =>
     rw [show 19*(n+1)=19+19*n by omega]
     have h := join (one X (U 1 n ++ Y)) (ih (S 3::X))
-    simpa only [U,List.replicate_succ,List.cons_append,rep_cons] using h
+    simpa only [ite_true, List.replicate_zero, U,List.replicate_succ,List.cons_append,rep_cons] using h
 
 theorem prepare (p : Nat) (X Y : List Sym) :
     run base (7+3*p) (boundary 4 true (U 3 p ++ X) (S 1::Y)) =
@@ -32,7 +32,7 @@ theorem prepare (p : Nat) (X Y : List Sym) :
   have h₁ := stepR base 4 4 false (S 1) (S 5) 7 (U 3 p ++ X) Y (by rfl)
   have h₂ := sweepL base 4 (S 3) (S 1) 3 p X (S 5::Y) (by rfl)
   have h := join h₁ h₂
-  simpa only [Nat.mul_comm p 3] using h
+  simpa only [ite_true, List.replicate_zero, Nat.mul_comm p 3] using h
 
 theorem five (p : Nat) (X Y : List Sym) :
     run base (22*p+15) (boundary 4 true (U 3 p ++ S 5::X) (S 1::Y)) =
@@ -42,7 +42,7 @@ theorem five (p : Nat) (X Y : List Sym) :
   have h₃ := many p X (S 5::Y)
   have h₄ := stepR base 4 4 true (S 5) (S 1) 7 (S 1::(U 3 p ++ X)) Y (by rfl)
   have h := join (join (join h₁ h₂) h₃) h₄
-  simpa only [show (7+3*p+1)+19*p+7=22*p+15 by omega] using h
+  simpa only [ite_true, List.replicate_zero, show (7+3*p+1)+19*p+7=22*p+15 by omega] using h
 
 theorem carry (p : Nat) (X Y : List Sym) :
     run base (12+3*(p+1)) (boundary 4 true (U 3 (p+1) ++ S 1::X) (S 1::Y)) =
@@ -52,7 +52,7 @@ theorem carry (p : Nat) (X Y : List Sym) :
   have h₃ := stepR base 3 4 false (S 1) (S 1) 1 (S 7::X) (U 1 p ++ S 5::Y) (by rfl)
   have h₄ := stepL base 4 4 true (S 7) (S 3) 1 X (S 1::(U 1 p ++ S 5::Y)) (by rfl)
   have h := join (join (join h₁ h₂) h₃) h₄
-  simpa only [U,List.replicate_succ,List.cons_append,show (7+3*(p+1)+3)+1+1=12+3*(p+1) by omega] using h
+  simpa only [ite_true, List.replicate_zero, U,List.replicate_succ,List.cons_append,show (7+3*(p+1)+3)+1+1=12+3*(p+1) by omega] using h
 
 def oddword : List Bool → List Sym
   | [] => []
@@ -67,7 +67,7 @@ theorem rotate (W : List Bool) (p : Nat) (X Y : List Sym) :
   induction W generalizing p Y with
   | nil =>
     have h := five (p+1) X Y
-    simpa only [oddword,List.append_nil,List.nil_append,List.length_nil,Nat.add_zero,U,List.replicate_succ,List.cons_append,rep_cons] using h
+    simpa only [ite_true, List.replicate_zero, oddword,List.append_nil,List.nil_append,List.length_nil,Nat.add_zero,U,List.replicate_succ,List.cons_append,rep_cons] using h
   | cons b W ih =>
     cases b
     · have h₁ := carry p (oddword W ++ S 5::X) Y
@@ -77,13 +77,13 @@ theorem rotate (W : List Bool) (p : Nat) (X Y : List Sym) :
       have h₅ : run base (22*(1+W.length)+15)
           (boundary 4 true (S 3::(oddword W ++ S 5::X)) (S 1::(U 1 p ++ S 5::Y))) =
           some (boundary 4 true (S 1::S 1::(oddword W ++ S 3::X)) (U 1 p ++ S 5::Y)) := by
-        simpa only [U,List.replicate_succ,List.cons_append,List.nil_append,Nat.zero_add] using
+        simpa only [ite_true, List.replicate_zero, U,List.replicate_succ,List.cons_append,List.nil_append,Nat.zero_add] using
           (ih 0 (U 1 p ++ S 5::Y))
       have h := join (join (join h₁ h₅) h₃) h₄
-      simpa only [oddword,Bool.false_eq_true,ite_false,List.length_cons,List.append_assoc,List.cons_append,
+      simpa only [ite_true, List.replicate_zero, oddword,Bool.false_eq_true,ite_false,List.length_cons,List.append_assoc,List.cons_append,
         show (12+3*(p+1)+(22*(1+W.length)+15))+19*p+7=22*(p+1+(W.length+1))+15 by omega] using h
     · have h := ih (p+1) Y
-      simpa only [oddword,ite_true,List.length_cons,List.append_assoc,List.cons_append,
+      simpa only [ite_true, List.replicate_zero, oddword,ite_true,List.length_cons,List.append_assoc,List.cons_append,
         U,List.replicate_succ,rep_cons,
         show p+1+1+W.length=p+1+(W.length+1) by omega] using h
 
@@ -91,7 +91,7 @@ theorem rotate_one (W : List Bool) (X Y : List Sym) :
     run base (22*(1+W.length)+15)
       (boundary 4 true (S 3::(oddword W ++ S 5::X)) (S 1::Y)) =
       some (boundary 4 true (S 1::S 1::(oddword W ++ S 3::X)) Y) := by
-  simpa only [U,List.replicate_succ,List.cons_append,List.nil_append,Nat.zero_add] using rotate W 0 X Y
+  simpa only [ite_true, List.replicate_zero, U,List.replicate_succ,List.cons_append,List.nil_append,Nat.zero_add] using rotate W 0 X Y
 
 #print axioms one
 #print axioms many
