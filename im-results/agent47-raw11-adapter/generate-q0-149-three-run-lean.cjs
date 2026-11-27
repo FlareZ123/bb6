@@ -22,7 +22,7 @@ const S=(x,b,W)=>[[z(2),u(x)],[...lit("10"),u(b),...W]];
 const all=(a,b)=>a.map((v,i)=>[v,b[i]]);
 function proof(a,b,cn,pad){
  if(pad!==undefined)return "      exact "+pad+"\n";
- return "      apply weq_of_eq\n      have e : ("+expr(a)+") = ("+expr(b)+") := by\n        simp only [List.append_assoc,blockRep,blockJoin,blockJoinLast]\n        congr <;> omega\n      simpa [T,S,U,Z,Tails.PZ.eval,Tails.Word.eval,cert_"+cn+",block,rep,List.append_assoc] using e\n";
+ return "      apply weq_of_eq\n      have e : ("+expr(a)+") = ("+expr(b)+") := by\n        simp only [List.append_assoc,blockRep,blockJoin,blockJoinLast] <;> congr <;> omega\n      simpa [T,S,U,Z,Tails.PZ.eval,Tails.Word.eval,cert_"+cn+",block,rep,List.append_assoc] using e\n";
 }
 function gen(m){
  let out="namespace M"+m.index+"\ndef table : PartialMachine := fun s => match s.1.val,s.2 with\n"+tbl(m.table)+"\n  | _,_ => none\n";
