@@ -114,15 +114,25 @@ jobs:
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
             --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
             --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
-            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
-            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
-            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
-            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
-            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Six_count' does not depend on any axioms" "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Seven_count' does not depend on any axioms" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Six_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Seven_count' depends on axioms: [propext," "$work/log"
+          python3 tools/lean_compile_closure.py \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
+            --workdir "$work/prospective-build" \
+            --jobs 4 \
+            --manifest "$work/prospective-manifest.json" \
+            --label agent14-raw139-e0-prospective-counts \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            | tee "$work/prospective-log"
+          ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/prospective-log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsProspective.normalizedAfterSixPlusZeroRC_count' depends on axioms: [propext," "$work/prospective-log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsProspective.normalizedAfterSixPlusZeroRCPlusZeroLF_count' depends on axioms: [propext," "$work/prospective-log"
       - uses: actions/upload-artifact@v4
         if: inputs.kind == 'e0-counts'
         with:
@@ -131,6 +141,9 @@ jobs:
             /tmp/agent14-e0-counts/log
             /tmp/agent14-e0-counts/manifest.json
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0CutsFinite.olean
+            /tmp/agent14-e0-counts/prospective-log
+            /tmp/agent14-e0-counts/prospective-manifest.json
+            /tmp/agent14-e0-counts/prospective-build/Raw139NormalizedE0CutsProspective.olean
           if-no-files-found: error
           retention-days: 14
 
