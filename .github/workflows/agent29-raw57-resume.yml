@@ -101,10 +101,8 @@ jobs:
         run: |
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
-          cp im-results/agent1-raw57/Raw57ParentConsumer.lean /tmp/raw57-generated/
-          cp im-results/agent1-raw57/Raw57ParentConsumerWithLALE.lean /tmp/raw57-generated/
-          cp im-results/agent1-raw57/Raw57ParentComplete.lean /tmp/raw57-generated/
-          cp im-results/agent1-raw57/Raw57ParentCover.lean /tmp/raw57-generated/
+          # recover_rc2.py validates the original source schedule before replacing
+          # only the previously uncompiled final consumer modules.
           python im-results/agent1-raw57/recover_rc2.py assemble \
             --generated /tmp/raw57-generated \
             --inputs /tmp/raw57-inputs \
