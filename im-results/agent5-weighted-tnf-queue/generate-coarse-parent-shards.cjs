@@ -67,7 +67,7 @@ function register(t,a,f){
 const a=parse(summary.table),f=fresh(a);
 if(register(tree,a,f)!==summary.stats.nodes)throw Error('wrong tree census');
 const B0=B;
-const imports=xs=>[...new Set(['FastPhaseTree','PhaseFrontier',...xs])].map(x=>'import '+x).join('\n')+'\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\n';
+const imports=xs=>[...new Set(['FastPhaseTree','CachedPhaseTree','PhaseFrontier',...xs])].map(x=>'import '+x).join('\n')+'\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\n';
 const ns=n=>`namespace BB6.${n}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\n`;
 function write(name,s){fs.writeFileSync(path.join(output,name+'.lean'),s);modules.push(name)}
 const baseLines=[ns(base),`def parent : PartialMachine := ${table(a)}`];
@@ -146,7 +146,7 @@ function local(t,a,f,p,name,lines,imps,allowSplit=false){
  }
  if(census.get(t)<=CHUNK&&!external.get(t)){
   const c='cert'+name,h='checked'+name;
-  lines.push(`def ${c} : Tree := ${emit(t,a,f)}\ntheorem ${h} : BB6.Agent5FastPhaseTree.check ${B} ${p} ${c} = true := by decide +kernel\ntheorem ${safe}${H} : ${safeTy(p)} := BB6.Agent5FastPhaseTree.sound ${B} _ ${c} (by decide) ${h}\n`);return safe;
+  lines.push(`def ${c} : Tree := ${emit(t,a,f)}\ntheorem ${h} : BB6.Agent5CachedPhaseTree.rootCheck ${B} ${p} ${c} = true := by decide +kernel\ntheorem ${safe}${H} : ${safeTy(p)} := BB6.Agent5CachedPhaseTree.sound ${B} _ ${c} (by decide) ${h}\n`);return safe;
  }
  if(t[0]!=='h'||!t[3].length)throw Error('expected split');
  const kids=[];
