@@ -104,7 +104,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-echain
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent32-cryptid-third:im-results/agent31-d-exceptional:im-results/agent2-packet-shift:im-results/agent37-echain:im-results/agent32-cryptid-padding
     steps:
       - uses: actions/checkout@v4
       - name: Restore original machine and install Lean
@@ -132,5 +132,9 @@ jobs:
           lean -o "$D/EGenericTurn.olean" "$D/EGenericTurn.lean"
           lean "$Q/PacketEZeroAnyTail.lean" | tee axioms.log
           lean "$Q/E2ShortQ3.lean" | tee -a axioms.log
-          lean "$Q/E2ShortPositive.lean" | tee -a axioms.log
+          lean -o "$Q/E2ShortPositive.olean" "$Q/E2ShortPositive.lean" | tee -a axioms.log
+          P=im-results/agent32-cryptid-padding
+          lean -o "$P/Generic.olean" "$P/Generic.lean"
+          lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
+          lean "$Q/E2ShortPhysical.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
