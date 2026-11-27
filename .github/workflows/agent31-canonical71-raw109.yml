@@ -31,6 +31,7 @@ on:
           - canonical55-raw83-graft
           - canonical53-five-ready-from58
           - canonical50-eight-ready-from58
+          - canonical47-sharp-after-eight
           - canonical49-raw59-after-eight
           - canonical48-after-raw67
           - raw67-parent-reuse
@@ -2161,6 +2162,64 @@ jobs:
             /tmp/a31-canonical48-after-raw67/generated/**
             /tmp/a31-canonical48-after-raw67/canonical48-raw67-after-direct-raw59.json
             /tmp/a31-canonical48-after-raw67/canonical48-raw67-after-direct-raw59.log
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+
+  canonical47_sharp_after_eight:
+    name: Consume Raw95 Raw103 Raw105 after Canonical50
+    if: ${{ inputs.target == 'canonical47-sharp-after-eight' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile and audit Canonical50-to-47 sharp-parent graft
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL50_RUN_ID: ${{ inputs.canonical50_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL50_RUN_ID" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent31-raw106-79-canonical55/assemble_canonical47_sharp_after_eight.py
+          python im-results/agent31-raw106-79-canonical55/assemble_canonical47_sharp_after_eight.py \
+            --work /tmp/a31-canonical47-sharp \
+            --canonical50-run-id "$CANONICAL50_RUN_ID" \
+            2>&1 | tee /tmp/a31-canonical47-sharp.log
+          test -s /tmp/a31-canonical47-sharp/canonical47-sharp-parents.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("/tmp/a31-canonical47-sharp/canonical47-sharp-parents.json").read_text())
+          assert report["canonical50_residual_count"] == 50
+          assert report["remaining_residual_count"] == 47
+          assert report["all_three_unique_membership_in_canonical50"]
+          assert report["all_three_pairwise_distinct"]
+          assert report["raw59_retained"]
+          assert report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: canonical47-sharp-parents-integrated
+          path: |
+            /tmp/a31-canonical47-sharp/linked/**
+            /tmp/a31-canonical47-sharp/generated/**
+            /tmp/a31-canonical47-sharp/canonical47-sharp-parents.json
+            /tmp/a31-canonical47-sharp/canonical47-sharp-parents.log
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
