@@ -1,25 +1,18 @@
 # F421: one-hole Raw139 holdout
 
-## Exact target
-
-The standard blank-start table is `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`, with initial state A and single unassigned instruction F1. The family ledger identifies this rooted member as F421; its canonical representative appears in `im-results/agent8-coverage-contract/LedgerTextRows.lean` with state order FDAEBC, canonical root C, and no reflection.
-
-It is the unresolved E0=1LD, A1=0LC branch of the seven-hole Raw139 parent in `im-results/agent41-raw139-small/Raw139SmallPair.lean`, distinct from the source-proved E0=1LD, A1=0LE neighbor and E0=1LA sweep closure.
+The standard blank-start table is `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`, initial state A, sole unassigned F1. The canonical representative in `im-results/agent8-coverage-contract/LedgerTextRows.lean` has order FDAEBC, root C, no reflection. This is the open E0=1LD,A1=0LC branch of the Raw139 seven-hole audit, distinct from its source-proved neighbors.
 
 ## Strongest current reduction
 
-[FrontierTransduction.md](FrontierTransduction.md) gives the exact D-to-D return map: F1 is reached precisely by a bad 111 token in the left parser. [CarryCountdown.md](CarryCountdown.md) derives a new two-return principal phase, a binary countdown on regular tape cells, and a closed-form transition count over whole countdown intervals. The regular-cell safety lemma is independent of the untouched suffix. The remaining mathematical obligation is the exceptional boundary behavior when the marker value becomes zero or a cell degenerates.
+[FrontierTransduction.md](FrontierTransduction.md) gives the exact D-to-D word return; F1 is reached precisely on a bad 111 parse. [CarryCountdown.md](CarryCountdown.md) derives the principal two-return phase and strict regular binary countdown. [BoundaryEpoch.md](BoundaryEpoch.md) extends it to **complete regular drains with terminal P-run deletion**, exact primitive cost, and a **secondary binary countdown** in the exceptional tail. This consists of three boundary macros and three regular drains, with explicit prefix and positivity premises. The far-to-near drain recurrence avoids expanding any number of terminal collapses.
 
-The C++ implementation (`compressed.cpp`, `carry.cpp`) evaluated 10^18 principal macros, representing exactly **2741467853641781568730607840197912170 primitive transitions**, without reading F1. The largest single skipped block was 2^56-1 macros. The calculation was cross-checked with the unaccelerated word formula on 12,000 examples and the per-macro engine through 20 million macros. See the derivation for reproducibility and proof boundaries.
+The local arbitrary-precision engine reached 10^50 principal macros (exactly 28573549291907737747121673600169498036340127855568021245374953124058438783837935224986696975611208306 primitive moves) without F1. A full-drain run reached odd macro 5000 with exact 1245-bit cost. The secondary tail at odd 190 has 15 cells and marker integer 32750. The remaining mathematical target is primary-prefix guard closure and the secondary-zero/degeneration boundary. This is paper-level conditional mathematics and finite computation, not an all-time machine verdict, Lean acceptance of the new results, or BB(6) lower bound.
 
-This is a finite safe prefix, not a source-accepted Lean theorem, a proof of nonhalting or a new BB(6) lower bound. The missing F1 completion halts only if that row is eventually reached.
+## Reproduction
 
-## Earlier independent evidence
-
-The original primitive blank-start simulator completed 2 billion transitions without reading F1. Complete tape checkpoints are `state-1b.json` (state D, head 88184, visited [-69,89969], 45013 ones) and `state-2b.json` (state B, head 119870, visited [-69,124107], 62084 ones). The nearly alternating tape motivated the pair-run representation. `frontier_map.py` compared the first 1000 word returns with primitive simulation (711352 steps).
-
-FAR searches through canonical DFA size 6 did not supply a witness. `search_far.cpp` and the existing manual `.github/workflows/agent41-raw139-small.yml` preserve the size-six search and its checker. These finite failures do not establish impossibility of a larger FAR invariant.
-
-## Research target
-
-Close the exceptional odd-epoch and carry-degeneration dynamics, or find the first unsafe token and establish its exact primitive cost. The regular-cell reduction is a starting point for that proof. `F421Frontier.lean` contains original-machine frontier lemmas; this file's existence does not itself establish source acceptance of the new countdown reduction.
+- `frontier_map.py`: exact bit-word formula, compared against 1000 primitive returns (711352 steps).
+- `compressed.cpp`, `carry.cpp`, `test_compressed.py`: earlier bounded-integer run compression and strict carry skip (10^18 macros, exactly 2741467853641781568730607840197912170 moves).
+- `boundary.py`: arbitrary-precision whole-drain and secondary arithmetic; commands and proof premises in BoundaryEpoch.md.
+- `F421Frontier.lean`: original-machine frontier reduction source; its presence does not establish acceptance of the new countdown theorems.
+- `state-1b.json`, `state-2b.json`: independent finite primitive checkpoints.
+- `search_far.cpp`: canonical DFA size-six FAR search, no certificate; does not rule out larger automata.
