@@ -109,6 +109,7 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Six_count' does not depend on any axioms" "$work/log"
