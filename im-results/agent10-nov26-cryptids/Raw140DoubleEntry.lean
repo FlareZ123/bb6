@@ -42,7 +42,7 @@ def s17 : RState := ⟨3,false,[(S 5,1),(S 2,1),(S 4,2),(S 5,2),(S 4,1),(S 5,2),
 theorem e17 : Raw140Sweep.execute M4 512 s16 = some (11596,s17) := by decide +kernel
 def s18 : RState := ⟨1,true,[(S 5,78)],[(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 2,1)]⟩
 theorem e18 : Raw140Sweep.execute M4 62 s17 = some (2834,s18) := by decide +kernel
-theorem entry : run M4 42133 primBlank = some (section 78 5 .s62) := by
+theorem entry : run M4 42133 primBlank = some (orbitCfg 78 5 .s62) := by
   have h0 : run M4 2 primBlank = some s0.prim := run_ext M4 (fill_extends _ _) _ _ _ base_start
   have h1 := join h0 (Raw140Sweep.execute_sound M4 512 1824 s0 s1 e1)
   have h2 := join h1 (Raw140Sweep.execute_sound M4 512 1542 s1 s2 e2)
@@ -63,7 +63,7 @@ theorem entry : run M4 42133 primBlank = some (section 78 5 .s62) := by
   have h17 := join h16 (Raw140Sweep.execute_sound M4 512 11596 s16 s17 e17)
   have h18 := join h17 (Raw140Sweep.execute_sound M4 62 2834 s17 s18 e18)
   exact h18
-theorem good : Good (section 78 5 .s62) := ⟨39,3,_,by decide,rfl⟩
+theorem good : Good (orbitCfg 78 5 .s62) := ⟨39,3,_,by decide,rfl⟩
 theorem forever (k : Nat) : ∃ c, run M4 k primBlank = some c := foreverEntry M4 progress4 42133 _ good entry k
 #print axioms forever
 end X4
@@ -105,7 +105,7 @@ def s17 : RState := ⟨4,false,[(S 2,1)],[(S 1,1),(S 5,1),(S 4,38),(S 6,1),(S 4,
 theorem e17 : Raw140Sweep.execute M13 512 s16 = some (1688,s17) := by decide +kernel
 def s18 : RState := ⟨1,true,[(S 5,80)],[(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 4,2),(S 6,1),(S 2,2),(S 1,1)]⟩
 theorem e18 : Raw140Sweep.execute M13 311 s17 = some (14855,s18) := by decide +kernel
-theorem entry : run M13 44429 primBlank = some (section 80 5 .s6221) := by
+theorem entry : run M13 44429 primBlank = some (orbitCfg 80 5 .s6221) := by
   have h0 : run M13 2 primBlank = some s0.prim := run_ext M13 (fill_extends _ _) _ _ _ base_start
   have h1 := join h0 (Raw140Sweep.execute_sound M13 512 1824 s0 s1 e1)
   have h2 := join h1 (Raw140Sweep.execute_sound M13 512 1542 s1 s2 e2)
@@ -126,7 +126,7 @@ theorem entry : run M13 44429 primBlank = some (section 80 5 .s6221) := by
   have h17 := join h16 (Raw140Sweep.execute_sound M13 512 1688 s16 s17 e17)
   have h18 := join h17 (Raw140Sweep.execute_sound M13 311 14855 s17 s18 e18)
   exact h18
-theorem good : Good (section 80 5 .s6221) := ⟨40,3,_,by decide,rfl⟩
+theorem good : Good (orbitCfg 80 5 .s6221) := ⟨40,3,_,by decide,rfl⟩
 theorem forever (k : Nat) : ∃ c, run M13 k primBlank = some c := foreverEntry M13 progress13 44429 _ good entry k
 #print axioms forever
 end X13
