@@ -34,27 +34,27 @@ theorem liftWeighted {b : Nat} {p : PartialMachine}
 
 theorem e0ZeroRA_eq_parent :
     e0ZeroRA = BB6.Agent3E0RA.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0ZeroRE_eq_parent :
     e0ZeroRE = BB6.Agent48Raw139E0ZeroRE.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0ZeroRB_eq_parent :
     e0ZeroRB = BB6.Agent48Raw139E0ZeroRB.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0ZeroRD_eq_parent :
     e0ZeroRD = BB6.Agent48Raw139E0ZeroRD.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0ZeroRF_eq_parent :
     e0ZeroRF = BB6.Agent6E0ZeroRF.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0OneRE_eq_parent :
     e0OneRE = BB6.Agent6E0OneRE.parent := by
-  exact BB6.Agent31FourHoleRoster.sameTable_sound (by decide)
+  exact BB6.Agent14Raw139Core.sameTable_sound (by decide)
 
 theorem e0ZeroRA_cover :
     Cover (WeightedBound e0Score) e0ZeroRA := by
