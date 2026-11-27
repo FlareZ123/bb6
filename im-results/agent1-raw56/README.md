@@ -43,7 +43,9 @@ Original Lean 4.36.0-rc2 was reconstructed locally. The base is the source-accep
 
 ### Additional E1=0RC branches: C1=0RD and C1=1LE
 
-[Four source-checked unary sweep leaves](UnarySweepLeaves.md) resolve the four hard individual machines left after FAR6 and sparse fixed-point discovery. Both candidate trees are complete; the exhaustive shard builds and parent consumer are still required. The verified local frontier remains 18.
+[Four source-checked unary sweep leaves](UnarySweepLeaves.md) resolve the four hard individual machines left after FAR6 and sparse fixed-point discovery. The width-8 sparse witness (346 joint configurations, 19 left and 29 right edges) also compiled. Both complete branch certificates have passed all 126 generated modules against the pinned source-accepted base with Lean 4.36.0-rc2. `BB6.Agent1Raw56.RC0RD.all_quotient` and `BB6.Agent1Raw56.RC1LE.all_quotient` prove weighted bound 7014, as do their `.all` variants. `Raw56E1RCUnaryConsumer.lean` proves exact table equalities and `sound16`, conditional only on the previously source-checked `1RD` theorem. The 16-member list has an explicit `count16` proof. The full combined wrapper still needs a rebuilt `Raw56RCRDAll` olean; no new assumptions beyond the previously accepted 1RD theorem. All four complete branch theorems and `sound16` use only [propext, Classical.choice, Quot.sound].
+
+`prepare_rc_unary.py OUT` regenerates both cuts and FAR banks with SHA-256 pins, plus the sparse data via Agent47's exact emitter; compile the four handwritten leaf modules and `UnarySweep` first, then each generated manifest and the consumer. The source-checked local refinements do not reduce the global roster. Discovery has also exposed a late C1=0LF query at 9474 steps, so any complete E1=0RC proof must use a larger weighted bound than 7014.
 
 ## Reproduction of C1=1RD
 
