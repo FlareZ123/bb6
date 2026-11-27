@@ -137,4 +137,5 @@ jobs:
           lean -o "$P/Generic.olean" "$P/Generic.lean"
           lean -o "$P/BoundaryPadding.olean" "$P/BoundaryPadding.lean"
           lean "$Q/E2ShortPhysical.lean" | tee -a axioms.log
+          lean "$Q/E2ShortZero.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
