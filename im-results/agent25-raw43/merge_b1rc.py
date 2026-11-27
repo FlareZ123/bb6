@@ -7,19 +7,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 branch = sys.argv[4] if len(sys.argv) > 4 else "b1rc"
-VARIANTS = {"b1rc": ("0la", "0le", "0re", "1la", "1le", "1re"), "b0rc": ("0le", "0re", "1le", "1re")}[branch]
+VARIANTS = {"b1rc": ("0la", "0le", "0re", "1la", "1le", "1re"), "b0rc": ("0le", "0re", "1le", "1re"), "b0ra": ("0le","0rc","0re","1lb","1le","1re")}[branch]
 src, out = map(Path, sys.argv[1:3])
 out.mkdir(parents=True, exist_ok=True)
 pins = json.loads(sys.argv[3])
 assert set(pins) == set(VARIANTS)
+slot = "a" if branch == "b0ra" else "c"
 entries = {}
 revisions = set()
 base = None
 for v in VARIANTS:
     d = src / v
     m = json.loads((d / "manifest.json").read_text())
-    spec = json.loads((ROOT / f"spec_{branch}_c{v}.json").read_text())
-    expected = f"BB6.Agent25Raw43{branch.upper()}_C{v.upper()}.all43child"
+    spec = json.loads((ROOT / f"spec_{branch}_{slot}{v}.json").read_text())
+    expected = f"BB6.Agent25Raw43{branch.upper()}_{slot.upper()}{v.upper()}.all43child"
     assert m["schema_version"] == 1
     assert m["workflow"]["run_id"] == str(pins[v]), (v, "wrong run")
     assert m["claim"]["theorem"] == expected, (v, m["claim"])
