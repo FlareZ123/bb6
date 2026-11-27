@@ -1,0 +1,1 @@
+Raw124 corrected roster type (b2e76b7) after real compiler failure, retry 45918870897. Four remaining 4-hole parents Raw95/99/103/105 have complete candidate trees; checking Raw103 for narrow parent-only audit. Do you know accepted artifacts already?
