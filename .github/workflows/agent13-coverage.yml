@@ -3241,6 +3241,7 @@ jobs:
             test -s /tmp/raw49-generated/child7/Raw49C7All.lean
             test -s /tmp/raw49-generated/child2/Raw49C2All.lean
             test -s /tmp/raw49-generated/child5/Raw49C5All.lean
+            test -s /tmp/raw49-generated/child6/Raw49C6All.lean
             test -s /tmp/raw49-generated/child3/Raw49C3All.lean
             test -s /tmp/raw49-generated/child4/Raw49C4All.lean
             test -s /tmp/raw49-generated/child8/Raw49C8All.lean
@@ -3283,7 +3284,7 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw55-progress ]; then
             target=im-results/agent25-raw55/Raw55Progress.lean
           elif [ "$TARGET" = weighted-tnf-raw49-progress ]; then
-            target=im-results/agent7-raw49/Raw49Progress113.lean
+            target=im-results/agent7-raw49/Raw49Progress112.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             target=im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw47-depth3-far6 ]; then
@@ -3296,6 +3297,7 @@ jobs:
               --source-root /tmp/raw49-generated/child7 \
               --source-root /tmp/raw49-generated/child2 \
               --source-root /tmp/raw49-generated/child5 \
+              --source-root /tmp/raw49-generated/child6 \
               --source-root /tmp/raw49-generated/child3 \
               --source-root /tmp/raw49-generated/child4 \
               --source-root /tmp/raw49-generated/child8 \
@@ -3334,6 +3336,12 @@ jobs:
               "BB6.Agent7.Raw49C7.all_quotient",
               "BB6.Agent7Raw49Progress113.refined",
               "BB6.Agent7Raw49Progress113.residual_count",
+              "BB6.Agent7Raw49C6Counters.M600.never",
+              "BB6.Agent7Raw49C6Counters.M608.never",
+              "BB6.Agent7Raw49C6Counters.M613.never",
+              "BB6.Agent7.Raw49C6.all_quotient",
+              "BB6.Agent7Raw49Progress112.refined",
+              "BB6.Agent7Raw49Progress112.residual_count",
           ]
           for name in names:
               m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
@@ -3398,7 +3406,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw49-progress'
         uses: actions/upload-artifact@v4
         with:
-          name: raw49-progress-proof-113
+          name: raw49-progress-proof-112
           path: |
             /tmp/raw49-generated/child*/*.lean
             /tmp/raw49-generated/trials/*
