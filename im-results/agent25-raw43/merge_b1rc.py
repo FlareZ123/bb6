@@ -11,6 +11,8 @@ VARIANTS = {"b0le": ("0lc","0le","0ra","0rb","0re","0rf","1lc","1rb","1re"), "b1
 src, out = map(Path, sys.argv[1:3])
 out.mkdir(parents=True, exist_ok=True)
 pins = json.loads(sys.argv[3])
+if branch == 'b0le' and '1le' in pins:
+    VARIANTS += ('1le',)
 assert set(pins) == set(VARIANTS)
 slot = "e" if branch == "b0le" else "a" if branch in {"b0ra","b1ra","b1la"} else "c"
 entries = {}
