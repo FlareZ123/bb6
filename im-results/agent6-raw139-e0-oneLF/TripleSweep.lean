@@ -66,7 +66,9 @@ theorem rightPhase (v : Kind) (m : Nat) :
   have h := sweepR (p v) 0 [false] [] P Q 2 (right2 v) m Q ([true,true]++rep W m)
   have h' : run0 (p v) (2*m) ⟨0,[false]++Q,rep P m++[true,true]++rep W m⟩ =
       some ⟨0,[false]++rep Q (m+1),[true,true]++rep W m⟩ := by
-    rw [← rep_snoc Q m]
+    have eq : [false]++rep Q m++Q = [false]++rep Q (m+1) := by
+      rw [List.append_assoc,rep_snoc]
+    rw [eq] at h
     simpa only [List.nil_append,List.append_assoc] using h
   have h2 := sweepR (p v) 0 [true,false,true] [] W W 5 (right5 v) m (rep Q (m+1)) []
   have h2' : run0 (p v) (5*m) ⟨0,[true,false,true]++rep Q (m+1),rep W m⟩ =
@@ -117,16 +119,13 @@ theorem advanceEven (v : Kind) (j : Nat) :
     simpa only [rep,List.append_assoc] using h3
   have H := join0 (join0 (join0 h h2') h3') (leftEnd v j (rep (W++W) (j+1)))
   rw [show overhead v+7*(2*j)+14+10*j+3+(4*j+3)=overhead v+14*(2*j)+20 by omega] at H
-  rw [← rep_double W,show 2*(j+1)=1+(2*j+1) by omega,rep_add] at H
-  have eq : [true]++rep Q (2*j+1)++rep W 1++rep W (2*j+1) = (F (2*j+1)).r := by
-    rw [← F_right]
-    simp only [rep,List.append_nil]
-    rw [← List.append_assoc ([true]++rep Q (2*j+1)) Q [true]]
-    simp only [W,Q,List.append_assoc,List.cons_append,List.nil_append]
-  -- Normalize the repeated word before identifying the new family.
-  have eq' : [true]++rep Q (2*j+1)++(rep W 1++rep W (2*j+1))=(F (2*j+1)).r := by
-    simpa only [List.append_assoc] using eq
-  rw [eq'] at H
+  have eq : [true]++rep Q (2*j+1)++rep (W++W) (j+1) = (F (2*j+1)).r := by
+    rw [← rep_double W,show 2*(j+1)=1+(2*j+1) by omega,rep_add W 1,← F_right]
+    have e : rep Q (2*j+1+1)=rep Q (2*j+1)++Q := (rep_snoc Q (2*j+1)).symm
+    rw [e]
+    rw [show rep W 1 = Q++[true] by rfl]
+    simp only [List.append_assoc]
+  rw [eq] at H
   exact H
 
 theorem advanceOdd (v : Kind) (j : Nat) :
@@ -141,8 +140,13 @@ theorem advanceOdd (v : Kind) (j : Nat) :
   have h3 := odd6 v (rep Q (2*j+1)) (rep (W++W) j)
   have h3' : run0 (p v) 6 ⟨2,[true]++W++rep Q (2*j+1+1),t++rep (W++W) j⟩ =
       some ⟨2,Q++rep (Q++Q) (j+1),[true]++rep (W++W) (j+1)⟩ := by
-    rw [← rep_double Q,show 2*(j+1)=1+(2*j+1) by omega,rep_add]
-    simpa only [rep,List.append_nil,List.append_assoc] using h3
+    have e : rep (Q++Q) (j+1)=Q++rep Q (2*j+1) := by
+      rw [← rep_double Q,show 2*(j+1)=2*j+1+1 by omega]
+      rfl
+    rw [e]
+    have eW : rep (W++W) (j+1)=(W++W)++rep (W++W) j := rfl
+    rw [eW]
+    simpa only [List.append_assoc] using h3
   have H := join0 (join0 (join0 h h2') h3') (leftEnd v (j+1) ([true]++rep (W++W) (j+1)))
   rw [show overhead v+7*(2*j+1)+14+10*j+6+(4*(j+1)+3)=overhead v+14*(2*j+1)+20 by omega,
       ← rep_double W,show 2*(j+1)=2*j+2 by omega] at H
