@@ -28,6 +28,9 @@ def custom_le(branch,out):
         assert hashlib.sha256(source).hexdigest()=='9624031627f50c7ab9e607119b402b57a76aad7a1963f5d2707b98675122c91a'
         (out/'Raw39LE3414.lean').write_bytes(source)
         add('Raw39LE3414',[3414],packed=True)
+        from alternating_gap_bidfa import generate as generate3334
+        generate3334(out/'Raw39LE3334.lean')
+        add('Raw39LE3334',[3334],packed=True)
     elif branch=='1LE':
         gap_sources=json.loads(lzma.decompress(base64.b64decode((ROOT/'Raw391LEGapSystem.json.xz.b64').read_text())))
         gap_hashes={'Raw391LEGapMacros.lean':'bb37b243540b04fee8959850e8fc3b005aec670c768864268e3e10b934fe371a','Raw391LEGapSystem.lean':'3e4e6420568daf8e65f784742b29d3a1797aa3e82efea21517bf063de79536a7'}
