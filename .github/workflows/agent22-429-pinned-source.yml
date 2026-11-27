@@ -1,0 +1,82 @@
+name: Agent 22 pinned original Cryptids branch29 128-million floor (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  original-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    env:
+      UPSTREAM_SHA: c86f15861709b76042998c5211c7b2f83991621b
+      ORIGINAL_MODULE: BusyBeaver.BB6.M_1RB0LF_1RC1RA_0RD0RB_1LEHHH_0LA1LE_1RD1LA
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original pinned Lean 4.35.0-rc4
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Checkout exact published Cryptids source revision
+        shell: bash
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet "$UPSTREAM_SHA"
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = "$UPSTREAM_SHA"
+      - name: Download original pinned Mathlib cache
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          lake exe cache get
+          df -h /
+      - name: Build original unchanged machine accelerator
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: lake build "$ORIGINAL_MODULE"
+      - name: Compile exact selected predecessor and signed source closure
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          python "$GITHUB_WORKSPACE/im-results/agent22-429-signed-drift/reconstruct.py"
+          for dir in \
+              im-results/agent5-429-rank \
+              im-results/agent6-harmonic429 \
+              im-results/agent18-429-253 \
+              im-results/agent18-429-root-invariants \
+              im-results/agent30-429-even16 \
+              im-results/agent39-429-1021 \
+              im-results/agent33-429-24 \
+              im-results/agent22-429-signed-drift; do
+            for src in "$GITHUB_WORKSPACE/$dir/"*.lean; do
+              cp "$src" .
+            done
+          done
+          mkdir -p .lake/build/lib/lean
+          compile_local() {
+            local mod="$1"
+            if [[ "$mod" = Lean* || "$mod" = BusyBeaver.* ]]; then return 0; fi
+            if [[ ! -f "$mod.lean" ]]; then
+              echo "Missing local import '$mod' (may be provided by upstream)"
+              return 0
+            fi
+            if [[ -f ".lake/build/lib/lean/$mod.olean" ]]; then return 0; fi
+            local dep
+            while read -r word dep; do
+              [[ "$word" = import ]] || continue
+              compile_local "$dep"
+            done < "$mod.lean"
+            echo "::group::Compile pinned-original closure $mod"
+            lake env lean -DmaxRecDepth=65536 -DmaxHeartbeats=0 \
+              -o ".lake/build/lib/lean/$mod.olean" "$mod.lean"
+            echo "::endgroup::"
+          }
+          compile_local Agent22Branch29OriginalSource
+          lake env lean Agent22Branch29OriginalSource.lean 2>&1 | tee /tmp/agent22-original-source-axioms.log
+          ! grep -q 'sorryAx' /tmp/agent22-original-source-axioms.log
+          ! grep -q 'native_decide' /tmp/agent22-original-source-axioms.log
