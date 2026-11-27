@@ -10,6 +10,7 @@ PY
 )
 for id in "$@"; do ids+=("$id"); done
 dirs=()
+python3 im-results/agent13-coverage/unpack.py
 for id in "${ids[@]}"; do
   [[ "$id" =~ ^[0-9]+$ ]]
   mkdir -p "/tmp/oneLB-banks/$id"
@@ -22,7 +23,6 @@ python3 "$base/emit-parent.py" "$work/imports" "${dirs[@]}"
 root=ParentPartial
 claim=parent_cover
 if [[ -f "$work/imports/ParentAssembly.lean" ]]; then root=ParentAssembly; claim=all_completions_weighted; fi
-python3 im-results/agent13-coverage/unpack.py
 python3 tools/lean_compile_closure.py "$work/imports/$root.lean" \
  --source-root "$work/imports" --workdir "$work/build" --jobs 3 \
  --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \

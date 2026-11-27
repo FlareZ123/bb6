@@ -8,6 +8,7 @@ late="$PWD/im-results/agent48-raw139-e0-1la"
 export PYTHONPATH="$block:$old:$checker"
 work="$PWD/.tmp/a3-oneLB-c$c"
 mkdir -p "$work/imports" "$work/build"
+python3 im-results/agent13-coverage/unpack.py
 shift 2
 reuse=()
 if (( $# )); then
@@ -65,7 +66,6 @@ import sys,json
 s=json.load(open(sys.argv[1]));print(s['prefix']);print(s['namespace']);print(s['bound']);print(json.dumps(s['parent']))
 PY
 )
-python3 im-results/agent13-coverage/unpack.py
 python3 tools/lean_compile_closure.py "$work/imports/${meta[0]}Weighted.lean" \
  --source-root "$work/imports" --workdir "$work/build" --jobs 3 "${reuse[@]}" \
  --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
