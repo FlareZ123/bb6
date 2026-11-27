@@ -166,9 +166,12 @@ private theorem inputShape (k q : Nat) (ys : List Bool) :
       _ = _ := by
             rw [oppairsFalse]
             simp [shortFront,List.replicate,List.append_assoc]
-  simp only [packet,word,init,List.replicate_zero,
-    List.nil_append,List.cons_append]
-  rw [hn,hw]
+  have hword : word (q+1) 2
+      (false :: true :: false :: false :: ys) =
+      false :: (pairs (q+1) ++ (shortFront ++ ys)) := by
+    simpa [word] using hw
+  simp only [packet,init]
+  rw [hword,hn]
   rfl
 
 private theorem outputShape (k q : Nat) (ys : List Bool) :
