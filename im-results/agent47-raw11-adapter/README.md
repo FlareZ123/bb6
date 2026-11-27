@@ -15,7 +15,10 @@ The original route, `Raw11Route.lean`, refines Raw11 using 38 first-hole splits,
 | Six capped extra parents (126–130,137) | 237 | `Raw11Root52CappedParentsConsume.lean`, [CI 45911662010](https://github.com/FlareZ123/bb6/actions/runs/45911662010) |
 | Ten translated-cycle q0 parents (136,137,139,144–147,152,153,155) | 227 | `Raw11Q0FreshClosed.lean`, local Lean 4.36.0-rc2, source/olean dependency artifacts below |
 
-| Sixty further q0 parents, reconstructed from the known coarse certificate family | **167** | `Raw11Q0BankSmall.lean`, `Raw11Q0BankSmallPart0.lean`, `Raw11Q0BankSmallPart1.lean`, local kernel check |
+| Sixty further q0 parents, reconstructed from the known coarse certificate family | 167 | `Raw11Q0BankSmall.lean`, `Raw11Q0BankSmallPart0.lean`, `Raw11Q0BankSmallPart1.lean`, local kernel check |
+
+| Nine larger q0 parents (25,27,30,35,37,41,45,47,50) | 158 | `Raw11Q0BankLarge.lean`, nine proof parts; local kernel check |
+| Root28 with reconstructed exceptional finite automaton | **157** | `Raw11Q0BankHeld28.lean`, `Raw11Q0BankHeld28Part0.lean`; local kernel check |
 
 The 46 extra Covers comprise 35 complete at-most-four-hole trees (including recurrence-backed 92/124) and eleven five-hole trees 85–90,125,135,136,138,139. The six capped extra parents have respective bounds 167,168,125,214,131,180. Their count must not be confused with q0 indices of the same number. Parent 52 sets the overall local cap 4663. The prior six-q0 bounds are 200,81,144,90,64,151; additional parents 33,49,51 have bounds 162,234,208.
 
@@ -44,9 +47,13 @@ Reproduce the sources with `node generate-q0-bank-consume.cjs Raw11Q0BankSmall R
 
 All five exported theorem axiom profiles are [propext, Classical.choice, Quot.sound]. This is a source-level transfer of prior mathematical coverage into the exact remaining Lean roster, rather than a claim to have newly discovered all sixty closures.
 
+## Additional ten complete q0 parents
+
+The nine larger known source parents were reconstructed in Lean at bound 100 (9,753 nodes, maximum queried halt bound 99), source commit abbf310c39dbcea04392fbf8c713540e069c76d9. All nine proof parts and the exact roster consumer compiled locally; their remote blobs equal the compiled source hashes. Root28 contains a difficult exceptional finite-automaton leaf; its original push transitions were recovered from the older Root28Lean source and reused in the independent certificate generator. Root28's full 289-node tree and exact consumer compiled locally, at bound 100. The exported covers, exact membership, remaining census and conditional coverage theorem use only [propext, Classical.choice, Quot.sound]. Together these establish 299→157 at B≥4663. No global BB(6) upper bound follows without the retained obligations.
+
 ## Outstanding obligations
 
-The immediate remaining extra-parent candidates are 84,131,132,133,134,140; their previous proof attempts and source generators are preserved in the historical record. A parent may be removed only after its exact Cover and membership are established. The six coarser q0 nodes identified above may instead be solved by covering their four first-D children using the exact first-hole split at B1. The remaining 167 roster entries must all be bounded (or refined exhaustively with all complements retained) before the Raw11 parent is closed. No Canonical57 removal is yet justified.
+The immediate remaining extra-parent candidates are 84,131,132,133,134,140; their previous proof attempts and source generators are preserved in the historical record. A parent may be removed only after its exact Cover and membership are established. The six coarser q0 nodes identified above may instead be solved by covering their four first-D children using the exact first-hole split at B1. The remaining 157 roster entries must all be bounded (or refined exhaustively with all complements retained) before the Raw11 parent is closed. No Canonical57 removal is yet justified.
 
 The original Coq checkpoint route is a separate proof system: `Agent47Q0NineParentMembership.v` and `Agent47Raw11RestrictedQ0.v` establish exact membership and restriction identities, with the corrected conditional bridge in `Agent13Raw11Q0Bridge.v`. Nine parent source safety proofs at a common bound 234 were originally sought for the 94 automata bank leaves. The accepted Lean results do not by themselves constitute a Coq queue consumption.
 

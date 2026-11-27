@@ -6,6 +6,8 @@ for(let k of [2,3,4]){const n=2**k;dfas.push(Array.from({length:2*n},(_,i)=>[0,1
 function runDFA(cap,mod,depth){const states=[[]],ids=new Map([['',0]]),dfa=[];for(let j=0;j<states.length;j++){const old=states[j];dfa.push([0,1].map(b=>{let s;if(!old.length&&!b)s=[];else if(old.length&&old[0][0]===b)s=[[b,Math.min(cap,old[0][1]+1),(old[0][2]+1)%mod],...old.slice(1)];else s=[[b,1,1%mod],...old.slice(0,depth-1)];let k=JSON.stringify(s);if(!ids.has(k)){ids.set(k,states.length);states.push(s)}return ids.get(k)}))}return dfa;}
 const bank=[...dfas];for(const [c,m,d] of [[1,2,1],[1,3,1],[1,4,1],[2,2,1],[2,3,1],[3,1,1],[2,1,2],[3,1,2],[1,2,2],[1,3,2],[2,2,2],[1,4,2],[1,2,3],[2,1,3],[3,2,1],[1,5,1],[1,6,1]])bank.push(runDFA(c,m,d));
 const pairs=bank.map((_,i)=>[i,i]);for(let i=0;i<bank.length;i++)for(let j=0;j<bank.length;j++)if(i!==j)pairs.push([i,j]);pairs.sort((a,b)=>bank[a[0]].length*bank[a[1]].length-bank[b[0]].length*bank[b[1]].length);
+const specialL=[[0,1],[3,2],[0,4],[0,0],[0,5],[6,2],[0,0]],specialR=[[0,1],[2,3],[4,4],[5,6],[4,4],[7,8],[9,10],[4,4],[4,4],[4,4],[11,12],[4,4],[13,14],[7,4],[9,15],[11,12]];
+const li=bank.length;bank.push(specialL,specialR);pairs.push([li,li+1]);
 function sourceMitmCert(a,L,R){const ds=[L,R],E=ds.map(d=>d.map(()=>new Set())),W=ds.map(d=>d.map(()=>[])),seen=new Set(),rows=[],nr=R.length,nl=L.length;
  const key=(q,a,l,r)=>((2*q+a)*nl+l)*nr+r;
  function add(q,a,l,r){let k=key(q,a,l,r);if(!seen.has(k)){seen.add(k);rows.push([q,a,l,r]);}}
