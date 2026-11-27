@@ -121,7 +121,7 @@ theorem bank (n : Nat) (W : List Bool) (X : List Sym) (s : Tail) :
     have h₂ := ih (advanceWord W s) (rho s)
     have h₃ : Reach base (boundary 4 true (S 1::(oddword W ++ U 5 (n+1) ++ X)) (tailWord s))
         (boundary 4 true (S 1::(oddword (advanceWord W s) ++ U 5 n ++ X)) (tailWord (rho s))) := by
-      refine ⟨_,?_⟩
+      refine ⟨22*W.length+cost s,?_⟩
       simpa only [ite_true, List.replicate_zero, advanceWord,oddword_append,oddword,ite_true,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using h₁
     exact Reach.trans h₃ h₂
 
