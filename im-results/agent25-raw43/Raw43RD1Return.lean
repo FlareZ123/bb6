@@ -35,7 +35,7 @@ theorem fastReturn (b : Bool) (m : Nat) :
     have hs := sweepR (table k) 2 [true,true] [] P P (fastCost b) (fastOne b) n [true] []
     have hs' : run0 (table k) (fastCost b*n) ⟨2,[true,true,true],rep P n⟩ =
         some ⟨2,[true,true]++rep P n++[true],[]⟩ := by
-      simpa only [List.nil_append,List.append_nil] using hs
+      simpa only [List.nil_append,List.append_nil,List.cons_append] using hs
     have h2 := fastEnd b (rep P n++[true])
     have h3 := cZero k (P++rep P n++[true])
     have h4 := bounce k 0 ([false,false]++P++rep P n++[true])
@@ -50,8 +50,8 @@ theorem fastReturn (b : Bool) (m : Nat) :
         (by simpa only [List.append_assoc] using h3)⟩
     have h45 : Reaches k (E ([false,false]++P++rep P n++[true]) 0)
         (E (rep P n++[true]) 3) := by
-      exact trans h4 ⟨4,by simpa only [P,rep,List.append_nil,List.append_assoc] using h5⟩
-    exact trans (trans (trans (trans ⟨2,h0⟩ ⟨_,hs'⟩) h23) h45) h6
+      exact BB6.Agent25Raw43RD1Growth.trans h4 ⟨4,by simpa only [P,rep,List.append_nil,List.append_assoc] using h5⟩
+    exact BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans ⟨2,h0⟩ ⟨_,hs'⟩) h23) h45) h6
 
 private def T : List Bool := [true,false,false,false]
 private theorem rcOne (L R : List Bool) :
@@ -80,23 +80,26 @@ theorem rcEven (n : Nat) :
   have hs := sweepR (table .rc) 2 [true] [] (P++P) T 4 rcOne n [true,true] P
   have hs' : run0 (table .rc) (4*n) ⟨2,[true,true,true],rep (P++P) n++P⟩ =
       some ⟨2,[true]++rep T n++[true,true],P⟩ := by
-    simpa only [List.nil_append] using hs
+    simpa only [List.nil_append,List.cons_append] using hs
   have h2 := rcEnd (rep T n++[true,true])
   have h3 := cZero .rc ([false,false,false]++rep T n++[true,true])
   have h23 : Reaches .rc ⟨2,[true]++rep T n++[true,true],P⟩
       (E (block 2++rep (block 1) n++ending 0) 0) := by
-    have hh := join0 h2 (by simpa only [T,List.append_assoc] using h3)
+    have h2' : run0 (table .rc) 4 ⟨2,[true]++rep T n++[true,true],P⟩ =
+        some ⟨2,[false,true]++([false,false,false]++rep T n++[true,true]),[]⟩ := by
+      simpa only [T,List.append_assoc,List.cons_append,List.nil_append] using h2
+    have hh := join0 h2' h3
     have he : [false,false]++([false,false,false]++rep T n++[true,true]) =
         block 2++rep (block 1) n++ending 0 := by
       have h := tRotate n
       have h' := congrArg (fun a => [false,false,false,false,false]++a++[true]) h
-      simpa only [block,ending,rep,Z,P,List.append_assoc,List.nil_append] using h'
+      simpa only [block,ending,rep,Z,P,List.append_assoc,List.nil_append,List.cons_append] using h'
     rw [he] at hh
     exact ⟨_,by simpa only [List.append_assoc] using hh⟩
   have h4 := eStep .rc 2 0 (rep (block 1) n++ending 0)
   have h5 := chain .rc 1 0 n 4
   rw [show 4+(1+2)*n+0+2=3*n+6 by omega] at h5
-  exact trans (trans (trans (trans ⟨2,h0⟩ ⟨_,hs'⟩) h23) (by
+  exact BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans ⟨2,h0⟩ ⟨_,hs'⟩) h23) (by
     simpa only [List.append_assoc] using h4)) h5
 
 theorem rcOdd (n : Nat) :
@@ -111,7 +114,7 @@ theorem rcOdd (n : Nat) :
     have hs := sweepR (table .rc) 2 [true] [] (P++P) T 4 rcOne (n+1) [true,true] []
     have hs' : run0 (table .rc) (4*(n+1)) ⟨2,[true,true,true],rep (P++P) (n+1)⟩ =
         some ⟨2,[true]++rep T (n+1)++[true,true],[]⟩ := by
-      simpa only [List.nil_append,List.append_nil] using hs
+      simpa only [List.nil_append,List.append_nil,List.cons_append] using hs
     have h2 := rcTurn ([false,false,false]++rep T n++[true,true])
     have h2' : Reaches .rc ⟨2,[true]++rep T (n+1)++[true,true],[]⟩
         (E (block 1++block 2++rep (block 1) n++ending 0) 0) := by
@@ -119,14 +122,14 @@ theorem rcOdd (n : Nat) :
           block 1++block 2++rep (block 1) n++ending 0 := by
         have h := tRotate n
         have h' := congrArg (fun a => [false,false,false,true,false,false,false,false,false]++a++[true]) h
-        simpa only [block,ending,rep,Z,P,List.append_assoc,List.nil_append] using h'
+        simpa only [block,ending,rep,Z,P,List.append_assoc,List.nil_append,List.cons_append] using h'
       rw [he] at h2
-      exact ⟨15,by simpa only [rep,T,List.append_assoc] using h2⟩
+      exact ⟨15,by simpa only [rep,T,List.append_assoc,List.cons_append,List.nil_append] using h2⟩
     have h3 := eStep .rc 1 0 (block 2++rep (block 1) n++ending 0)
     have h4 := eStep .rc 2 3 (rep (block 1) n++ending 0)
     have h5 := chain .rc 1 0 n 7
     rw [show 7+(1+2)*n+0+2=3*(n+1)+6 by omega] at h5
-    exact trans (trans (trans (trans (trans ⟨2,h0⟩ ⟨_,hs'⟩) h2')
+    exact BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans ⟨2,h0⟩ ⟨_,hs'⟩) h2')
       (by simpa only [List.append_assoc] using h3))
       (by simpa only [List.append_assoc] using h4)) h5
 
@@ -163,13 +166,13 @@ private theorem rightForm (n : Nat) (odd : Bool) :
     rw [Nat.add_zero]
     have h := rotate true [false] (2*n)
     change [true]++rep P (2*n) = rep Q (2*n)++[true] at h
-    rw [rep_double] at h
+    rw [rep_double Q n] at h
     exact h
   · change [true]++rep P (2*n+1) = rep X n++[true,false,true]
     have h := rotate true [false] (2*n+1)
     change [true]++rep P (2*n+1) = rep Q (2*n+1)++[true] at h
-    rw [rep_add,rep_double] at h
-    simpa only [rep,Q,List.append_nil,List.append_assoc] using h
+    rw [rep_add Q (2*n) 1,rep_double Q n] at h
+    simpa only [rep,Q,X,List.append_nil,List.append_assoc,List.cons_append,List.nil_append] using h
 
 theorem middleLarge (b odd : Bool) (n : Nat) :
     Reaches (middleKind b) (A (2*n+2+(if odd then 1 else 0))) (A (3*n+6)) := by
@@ -186,14 +189,14 @@ theorem middleLarge (b odd : Bool) (n : Nat) :
   have hs := sweepR (table k) 4 [true] [] X (block 1) (middleCost b) (midOne b) n (ending 1) (midTail odd)
   have hs' : run0 (table k) (middleCost b*n) ⟨4,[true]++ending 1,rep X n++midTail odd⟩ =
       some ⟨4,[true]++rep (block 1) n++ending 1,midTail odd⟩ := by
-    simpa only [List.nil_append] using hs
+    simpa only [List.nil_append,List.cons_append] using hs
   have hf := midEnd b odd (rep (block 1) n++ending 1)
   have hf' : Reaches k ⟨4,[true]++rep (block 1) n++ending 1,midTail odd⟩
       (E (rep (block 1) (n+1)++ending 1) 0) := by
     exact ⟨_,by simpa only [rep,List.append_assoc] using hf⟩
   have hc := chain k 1 1 (n+1) 0
   rw [show 0+(1+2)*(n+1)+1+2=3*n+6 by omega] at hc
-  exact trans (trans (trans (trans ⟨2,h0⟩ ⟨_,h1'⟩) ⟨_,hs'⟩) hf') hc
+  exact BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans ⟨2,h0⟩ ⟨_,h1'⟩) ⟨_,hs'⟩) hf') hc
 
 theorem middleReturn (b : Bool) (m : Nat) :
     Reaches (middleKind b) (A m) (A (3*(m/2)+3)) := by
@@ -229,13 +232,13 @@ theorem positiveEpoch (k : Kind) (m : Nat) :
     ∃ n, 0<n ∧ run0 (table k) n (A m) = some (A (next k m)) := by
   obtain ⟨n,h⟩ := returns k m
   refine ⟨n, ?_, h⟩
-  by_contra hn
-  have hn' : n=0 := by omega
-  subst n
-  have hh : A m = A (next k m) := Option.some.inj h
-  have hl := congrArg (fun a : Z0 => a.r.length) hh
-  have ht : 2*m = 2*next k m := by simpa only [A,rep_length,P,List.length_cons,List.length_nil] using hl
-  cases k <;> simp [next] at ht <;> omega
+  by_cases hn : n=0
+  · subst n
+    have hh : A m = A (next k m) := Option.some.inj h
+    have hl := congrArg (fun a : Z0 => a.r.length) hh
+    have ht : 2*m = 2*next k m := by simpa [A,rep_length,P] using hl
+    cases k <;> simp [next] at ht <;> omega
+  · omega
 
 def orbit (k : Kind) : Nat → Nat
   | 0 => 0
