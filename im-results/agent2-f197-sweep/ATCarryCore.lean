@@ -257,6 +257,38 @@ theorem atc_terminal_T_u (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
 
 #print axioms atc_terminal_T_u
 
+/-- Full right-tail generic terminal decoder J/AsR. -/
+theorem atc_junction_A_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 32
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (32, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 8 m 32 m' hv hc
+
+#print axioms atc_junction_A_general
+
+/-- Full right-tail generic terminal decoder J/ACuR. -/
+theorem atc_junction_T_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 36
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 9 m = some (36, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 9 m 36 m' hv hc
+
+#print axioms atc_junction_T_general
+
 #print axioms atc_preconsume
 
 #print axioms atc_consume_e
