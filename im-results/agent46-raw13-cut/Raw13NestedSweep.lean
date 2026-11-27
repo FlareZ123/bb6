@@ -75,7 +75,7 @@ theorem drainBlank (v : Variant) (n : Nat) (L : List Bool) :
       some ⟨4,L,false::ones (n+1)⟩ := by
   have h := join0 (drainFirst v (ones n++L)) (drain v n L [true])
   simpa only [ones_cons,List.cons_append,show 3*(n+1)=3+3*n by omega,
-    ones_add,show ones 1 = [true] by rfl] using h
+    show ones n ++ [true] = ones (n+1) from rep_snoc [true] n] using h
 
 def U (n : Nat) : Z0 := ⟨4,[],false::ones n⟩
 def RPhase (k j : Nat) : Z0 :=
@@ -190,8 +190,10 @@ theorem AProgress (v : Variant) (n : Nat) (hn : 2≤n) :
     have he : n=2*(j+1) := by dsimp [j]; omega
     have h1 := ADrain v (j+1) []
     have h2 := evenEnd v j
-    rw [← he,List.append_nil] at h1
-    exact ⟨2*(j+1)+(2+2*j+1),LPhase 0 j,by omega,join0 h1 h2,Or.inr (Or.inr ⟨0,j,rfl⟩)⟩
+    have h1' : run0 (p v) (2*(j+1)) ⟨0,ones n,[true]⟩ =
+        some ⟨0,[],rep pair (j+1)++[true]⟩ := by
+      simpa only [he,List.append_nil] using h1
+    exact ⟨2*(j+1)+(2+2*j+1),LPhase 0 j,by omega,join0 h1' h2,Or.inr (Or.inr ⟨0,j,rfl⟩)⟩
   · let j := n/2
     have he : n=2*j+1 := by dsimp [j]; omega
     have h1 := ADrain v j [true]

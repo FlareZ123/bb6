@@ -96,8 +96,10 @@ def main():
     path=D/"coupled4-candidates.json"
     data=json.loads(path.read_text()) if path.exists() else dict(far=[],auto=[],last=[],unresolved=[])
     manual={
-        "1RB1LD1RC0RB1LA1RE1LF0LA0LA0RD1LA---":"zeroLA",
-        "1RB1LD1RC0RB1LA1RE1LF0LA1RA0RD1LA---":"oneRA",
+        "1RB1LD1RC0RB1LA1RE1LF0LA0LA0RD1LA---":("Raw13Stride3Counter","zeroLA"),
+        "1RB1LD1RC0RB1LA1RE1LF0LA1RA0RD1LA---":("Raw13Stride3Counter","oneRA"),
+        "1RB1LD1RC1LE1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneLE"),
+        "1RB1LD1RC1RC1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneRC"),
     }
     fixtures=[f for f in data["auto"] if f["table"] not in manual]
     auton={x["table"]:i for i,x in enumerate(fixtures)}
@@ -161,7 +163,7 @@ def main():
             if v[0] in transfers:
                 tag=transfers[v[0]];return f".closed (.proven {tag} {tag}Never)"
             if v[0] in manual:
-                x=manual[v[0]];ns="BB6.Agent46Raw13Stride3Counter"
+                module,x=manual[v[0]];ns="BB6.Agent46"+module
                 return f".closed (.proven ({ns}.p .{x}) ({ns}.never .{x}))"
             i=auton[v[0]];return f".closed (.proven {AUTO}.p{i} {AUTO}.never{i})"
         if tag=="late":
