@@ -28,7 +28,7 @@ def run : Nat → Config → Option Config
 theorem run_add (m n : Nat) (c : Config) :
     run (m+n) c = (run m c).bind (run n) := by
   induction m generalizing c with
-  | zero => rfl
+  | zero => simp [run]
   | succ m ih =>
     simp only [Nat.succ_add,run]
     cases step c <;> simp [ih]
@@ -44,6 +44,7 @@ def carry (k : Nat) (l : Stream) : Config := ⟨.B,l,true,ones k⟩
 theorem rep_tail (n : Nat) (r : Stream) :
     rep true n (push true r) = rep true (n+1) r := by
   rw [rep_add true n 1 r]
+  rfl
 
 theorem open_root (k : Nat) :
     run 3 (root k) = some (scan k (push true zeros)) := by
@@ -85,12 +86,14 @@ theorem recur (k : Nat) :
     run (10+4*k) (root k) = some (root (k+1)) := by
   have hs : run (3+k) (root k) = some (scan 0 (ones (k+1))) := by
     rw [run_add,open_root,Option.bind_some,scan_iter,rep_tail]
+    rfl
   have hc : run (3+k+1) (root k) = some (carry k (ones 1)) := by
     rw [run_add,hs,Option.bind_some,start_carry]
   have hd : run (3+k+1+3*k) (root k) = some (carry 0 (ones (k+1))) := by
     rw [run_add,hc,Option.bind_some,carry_iter]
     change some (carry 0 (rep true k (push true zeros))) = some (carry 0 (ones (k+1)))
     rw [rep_tail]
+    rfl
   have h := run_add (3+k+1+3*k) 6 (root k)
   rw [hd,Option.bind_some,carry_finish] at h
   simpa only [show 3+k+1+3*k+6 = 10+4*k by omega] using h
