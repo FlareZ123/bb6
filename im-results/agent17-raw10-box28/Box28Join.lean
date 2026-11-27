@@ -56,7 +56,7 @@ theorem parent_bound (B : Nat) (hB : 11 ≤ B)
     have he : second d = Box28FirstHole.nextIndex d := by simp [second,hneq]
     apply h (d,v) ?_ m
     · simp only [canonical,List.mem_append,List.mem_flatMap,List.mem_map]
-      exact Or.inr ⟨d,hd,v,hv,rfl⟩
+      exact Or.inr (Or.inr ⟨d,hd,v,hv,rfl⟩)
     · exact fit_cut d v m hm h0 (he.symm ▸ h1)
 
 /-- Only the listed, genuinely open cut keys survive this source theorem. -/
