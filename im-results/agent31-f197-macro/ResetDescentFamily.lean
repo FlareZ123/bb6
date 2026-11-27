@@ -89,13 +89,13 @@ theorem consume_e_succ (n : Nat) (l : Tape) :
   exact consume_us_iter n l dTail
 
 /-- Decode x·s^k·d by moving k+1 copies of P onto the left. -/
-theorem decoder_iter (k : Nat) (l : Tape) :
+theorem decoder_iter (k : Nat) (l : Tape) (hl : l 0 = true) :
     run (decoderCost k) (other B (jpre l) (xRight (sPow k dTail))) =
       some (other B (pPow (k+1) l) eRight) := by
   induction k generalizing l with
   | zero =>
       simpa [decoderCost, sPow, pPow, jpre, xRight, dTail, eRight, ppre]
-        using reset_decoder_d l
+        using reset_decoder_d l hl
   | succ k ih =>
       change run (32 + decoderCost k)
         (other B (jpre l) (xRight (spre (sPow k dTail)))) =
@@ -111,7 +111,7 @@ theorem decoder_iter (k : Nat) (l : Tape) :
             simpa [jpre, ppre, xRight, spre] using
               reset_decoder_s l (sPow k dTail)]
       simp only [Option.bind_some]
-      rw [ih (l := ppre l), pPow_ppre]
+      rw [ih (l := ppre l) (by rfl), pPow_ppre]
 
 def mta (l : Tape) : Tape :=
   pre [true, false, false, true, true, false, false, true, false,
@@ -152,7 +152,7 @@ theorem reset_descent_three (l : Tape) :
         simpa [mta, mkta, uRight, sPow, spre, dTail, jpre, xRight] using
           reset_descent_middle_d_321 l]
   simp only [Option.bind_some]
-  simpa [decoderCost, sPow, pPow] using decoder_iter 0 (mkta l)
+  simpa [decoderCost, sPow, pPow] using decoder_iter 0 (mkta l) (by rfl)
 
 /-- For every k, this is n=k+4:
     P^(k+4) M T A  ->  P^(k+2) M K T A,
@@ -173,7 +173,7 @@ theorem reset_descent_ge_four (k : Nat) (l : Tape) :
         simpa [mta, mkta, uRight, sPow, spre, jpre, xRight] using
           reset_descent_middle_s_321 l (sPow k dTail)]
   simp only [Option.bind_some]
-  simpa using decoder_iter (k+1) (mkta l)
+  simpa using decoder_iter (k+1) (mkta l) (by rfl)
 
 #print axioms consume_us_iter
 #print axioms consume_e_succ
