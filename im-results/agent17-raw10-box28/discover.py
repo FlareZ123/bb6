@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Reuse exact Box4 one-halt scans on the new Box28 D0=14,D1 in {3,4,17,18,19,20} cuts.
+"""Reuse exact Box4 one-halt scans on the new Box28 D0=14 or 16, normalized unresolved D1 cuts.
 Discovery is untrusted. Retain all unresolved rows and exact mass accounting.
 Do not repeat completed targets or claim a source bound from this script.
 """
@@ -33,11 +33,14 @@ def prepare(work, fixed):
 
 def main():
     p=argparse.ArgumentParser()
-    p.add_argument('--d1',type=int,choices=(3,4,17,18,19,20),required=True)
+    p.add_argument('--d0',type=int,choices=(14,16),default=14)
+    p.add_argument('--d1',type=int,required=True)
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--targets',type=int,nargs='+',default=TARGETS)
     args=p.parse_args()
-    fixed=[8,-1,11,-1,11,13,14,args.d1,-1,-1,-1,-1]
+    todo={14:(3,4,17,18,19,20),16:(1,3,4,5,7,8,17,18,19,20)}
+    assert args.d1 in todo[args.d0], 'only unresolved normalized cuts'
+    fixed=[8,-1,11,-1,11,13,args.d0,args.d1,-1,-1,-1,-1]
     work=args.work.resolve();work.mkdir(parents=True,exist_ok=True);os.chdir(work)
     prepare(work,fixed)
     sys.path.insert(0,str(BASE))
