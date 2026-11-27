@@ -30,10 +30,8 @@ jobs:
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
           if [ "$TARGET" = extra ]; then
             python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
-            python tools/lean_compile_closure.py --workdir /tmp/raw140-extra --jobs 3 im-results/agent10-nov26-cryptids/Raw140ExtraCover.lean 2>&1 | tee /tmp/raw140-proof.log
-            for i in $(seq 0 14); do
-              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Extra.X$i.cover"
-            done
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-extra --jobs 3 im-results/agent10-nov26-cryptids/Raw140ExtraNovelCover.lean 2>&1 | tee /tmp/raw140-proof.log
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Extra.X11.cover"
           else
             python tools/lean_compile_closure.py --workdir /tmp/raw140-seven --jobs 3 im-results/agent10-nov26-cryptids/Raw140SevenCover.lean 2>&1 | tee /tmp/raw140-proof.log
             for i in $(seq 0 6); do
