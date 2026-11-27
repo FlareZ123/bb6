@@ -71,7 +71,11 @@ theorem all_never (w : Witness) (hw : w ∈ witnesses) :
     ∀ m : Machine, compatible (child w.move) m → NeverHalts m := by
   have h : check w = true :=
     List.all_eq_true.mp all_checked w hw
-  have hparts := Bool.and_eq_true.mp h
+  have hparts :
+      decide (0 < w.period) = true ∧
+        fastSideCycleCheck (child w.move) w.entry w.period
+          w.right w.boundary = true := by
+    simpa [check, Bool.and_eq_true] using h
   exact fastSideCycleCheck_sound (child w.move) w.entry w.period
       w.right w.boundary (of_decide_eq_true hparts.1) hparts.2
 
