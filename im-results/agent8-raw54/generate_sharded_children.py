@@ -2,10 +2,20 @@
 from collections import Counter
 from generate_ra import Node, zrun, table, refine, all_moves, slot, move, MOVES, fuse_sparse, parse
 
-def assemble(root_dir,tree,certs,deps,parent_code,BOUND,label,namespace,base,expected,threshold=50):
+def assemble(root_dir,tree,certs,deps,parent_code,BOUND,label,namespace,base,expected,threshold=50,leaf_checks=None):
+    leaf_checks=leaf_checks or {}
     stats=Counter()
     root=Node(tree,certs,deps,stats)
     assert stats==expected,stats
+    # A prechecked expensive leaf must remain an independent theorem.
+    def enlarge(node,p):
+        if node.children:
+            for c,mv in zip(node.children,MOVES):
+                enlarge(c,refine(p,node.s,mv))
+            node.size=sum(c.size for c in node.children)
+        elif node.tag=='open' and p in leaf_checks:
+            node.size=threshold+1
+    if leaf_checks:enlarge(root,parse(parent_code))
     for module in sorted(set(deps.values())):
         if (root_dir/(module+"Data.lean")).exists():
             fuse_sparse(root_dir,module)
@@ -25,6 +35,14 @@ open BB6Coverage.Agent50Zipper BB6Coverage.Agent31Pump BB6.Agent48PrefixAudit
         body=[]
         def local(n,c,p2,e2,prefix):
             imports.update(c.deps)
+            if c.tag=='open' and p2 in leaf_checks:
+                module,table_name,proof=leaf_checks[p2]
+                imports.add(module)
+                body.extend([f"def {n} : Audit := {c.term()}",
+                    f"theorem {n}_checked : zipCheck {BOUND} ({e2}) {n} = true := by",
+                    f"  have h : ({e2}) = {table_name} := tableOK_sound _ _ (by decide)",
+                    "  rw [h]",f"  exact {proof}"])
+                return
             body.extend([
                 f"def {n} : Audit := {c.term()}",
                 f"def {n}Table : PartialMachine := {table(p2)}",
