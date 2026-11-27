@@ -12,7 +12,7 @@ The normalized depth-two E0=1LB parent is `[7,24,11,24,14,24,24,16,6,11,24,24]` 
 Accepted theorem for code 8: `BB6.Agent3E0OneLBC1ZeroLC.weighted : Cover (WeightedBound 574) parent`. Its checker uses the original FastThreeHoleAudit and BlockFAR2/BlockFAR and the standard-axiom gate. This is an exact child cylinder, not an entire parent. The intended code-10 theorem is `BB6.Agent3E0OneLBC1OneLC.weighted : Cover (WeightedBound 61185) parent`.
 
 Six other C1 ordinary choices immediately enter a translated cycle; candidate witnesses are (start,period,direction,boundary): 11:(2,8,false,2); 12:(6,4,false,0); 14:(6,4,false,0); 16:(4,6,false,1); 17:(14,3,true,2); 18:(9,2,true,-2).
-The other 16 choices remain to be closed. The original C1 halt alternative must also be covered.
+The other 16 choices now have complete computational witness recipes, including four long final-hole executions (see [long returns](long-returns.md)). Agent12 has independently kernel-checked nonhalting of the only previously unresolved single-hole leaf, [code 1 leaf 286](../agent12-raw139-oneLB-c1-286/README.md), against the accepted code-8 build. The exact leaf is grafted via `BB6.Agent12Counter286.never`; the code-1 whole child still requires its pinned source consumer to compile. The original C1 halt alternative and the full parent composition also remain to be covered.
 
 ## Exact first-query partitions
 

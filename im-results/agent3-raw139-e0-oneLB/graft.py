@@ -20,8 +20,10 @@ for i,r in spec['proven'].items():put(i,['proven',r])
 for r in ext['single']:
  if r['c']==c:
   i=r['index']; assert old[i]==r['table']
-  assert 'wide' in r,('unresolved',c,i)
-  put(i,['wide',*r['wide']])
+  if 'wide' in r:put(i,['wide',*r['wide']])
+  elif 'last' in r:put(i,['last',*r['last']])
+  elif 'proven' in r:put(i,['proven',r['proven']])
+  else:raise ValueError(('unresolved',c,i))
 for r in ext['split']:
  if r['c']==c:
   i=r['index'];assert old[i]==r['table']
@@ -29,7 +31,7 @@ for r in ext['split']:
   assert sorted(x['v'] for x in r['children'])==list(range(24))
   put(i,['split',r['query'],{x['v']:x for x in r['children']}])
 assert set(solved)==set(range(len(old))),('unresolved',c, sorted(set(range(len(old)))-set(solved)))
-opens=[];groups=defaultdict(list);late={};proven={};mapping={};wide={};counts=Counter();maxquery=0
+opens=[];groups=defaultdict(list);late={};proven={};mapping=dict(spec.get('external_module_by_namespace',{}));wide={};counts=Counter();maxquery=0
 def node(t,w,key):
  global maxquery
  typ,*a=w
@@ -48,6 +50,13 @@ def node(t,w,key):
  if typ=='last':
   assert t.count(24)==1 and first_hole(t,a[0])==('hole',*a)
   late[str(i)]=a
+ elif typ=='proven':
+  ns,=a
+  if ns=='BB6.Agent12Counter286':
+   assert t==[7,21,11,13,14,1,24,16,6,11,16,11]
+   mapping[ns]='Counter286Bridge'
+  assert ns in mapping,ns
+  proven[str(i)]=ns
  elif typ=='wide':
   width,cap,mod,runs,flip,phase=a
   if width<=3 and not flip:groups[tuple(a)].append(i)

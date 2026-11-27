@@ -9,6 +9,9 @@ export PYTHONPATH="$block:$old:$checker"
 work="$PWD/.tmp/a3-oneLB-c$c"
 mkdir -p "$work/imports" "$work/build"
 python3 "$base/graft.py" "$src/c$c" "$work" "$c"
+if [[ "$c" == "01" ]]; then
+  cp im-results/agent12-raw139-oneLB-c1-286/Counter286{,Bridge}.lean "$work/imports/"
+fi
 if [[ "$(cat "$work/wide.json")" != "{}" ]]; then
   python3 "$base/emit-wide.py" "$work/imports" "$work/wide.json"
 fi
