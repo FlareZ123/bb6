@@ -1,0 +1,42 @@
+name: Agent 36 Raw41 child024 single hard leaf affine-pump search (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  infer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082155259
+          name: raw41-smt-target-24
+          path: .tmp/raw41-child024-batch
+      - name: Seek finite symbolic sweep proof for 128 last leaf
+        run: |
+          set -euo pipefail
+          mapfile -t A < <(python3 - <<'PY'
+          import json
+          z=json.load(open('.tmp/raw41-child024-batch/summary.json'))
+          r=next(t for t in z['rows'] if t['open_leaf']==10)
+          print(r['open_leaf'])
+          print(r['table'])
+          PY
+          )
+          python3 im-results/agent36-raw41/probe_auto.py \
+            --leaf "${A[0]}" --table "${A[1]}" --seconds 95 \
+            --out raw41-auto-child024.json
+          head -c 2000 raw41-auto-child024.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-auto-child024
+          path: raw41-auto-child024.json
+          retention-days: 30
