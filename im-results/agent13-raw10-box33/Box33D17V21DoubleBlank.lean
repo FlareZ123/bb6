@@ -7,34 +7,37 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option linter.unusedSimpArgs false
 
+private theorem word1101 (r : Stream) :
+    word [true,true,false,true] r = ones 2 (zeros 1 (ones 1 r)) := rfl
+
 -- Exact short prefix, compressed into verified sweep and turnaround rules.
 theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
   have h0 : run b (10+extra b) (A z z) = some (A (ones 5 z) z) := by
-    simpa only [L,zeros_z] using turn3 b z z
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b z z
   have p0 := reach b h0
   have h1 : run b 16 (A (ones 5 z) z) = some (A (ones 1 z) (zeros 2 (ones 4 z))) := by
     exact lsweepBlank b 2 (ones 1 z)
   have p1 := trans b p0 (reach b h1)
   have h2 : run b 6 (A (ones 1 z) (zeros 2 (ones 4 z))) = some (A z (zeros 2 (ones 2 (zeros 1 (ones 5 z))))) := by
-    simpa only [L,zeros_z] using odd b z (ones 4 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using odd b z (ones 4 z)
   have p2 := trans b p1 (reach b h2)
   have h3 : run b (10+extra b) (A z (zeros 2 (ones 2 (zeros 1 (ones 5 z))))) = some (A (ones 5 z) (ones 2 (zeros 1 (ones 5 z)))) := by
-    simpa only [L,zeros_z] using turn3 b z (ones 2 (zeros 1 (ones 5 z)))
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b z (ones 2 (zeros 1 (ones 5 z)))
   have p3 := trans b p2 (reach b h3)
   have h4 : run b 2 (A (ones 5 z) (ones 2 (zeros 1 (ones 5 z)))) = some (A (ones 7 z) (zeros 1 (ones 5 z))) := by
     exact asweep b 2 (ones 5 z) (zeros 1 (ones 5 z))
   have p4 := trans b p3 (reach b h4)
   have h5 : run b 1 (A (ones 7 z) (zeros 1 (ones 5 z))) = some (B (ones 8 z) (ones 5 z)) := by
-    simpa only [L,zeros_z] using enterB b (ones 7 z) (ones 5 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using enterB b (ones 7 z) (ones 5 z)
   have p5 := trans b p4 (reach b h5)
   have h6 : run b 5 (B (ones 8 z) (ones 5 z)) = some (B (zeros 5 (ones 8 z)) z) := by
     exact bsweep b 5 (ones 8 z) z
   have p6 := trans b p5 (reach b h6)
   have h7 : run b 2 (B (zeros 5 (ones 8 z)) z) = some (A (zeros 3 (ones 8 z)) (zeros 2 (ones 1 z))) := by
-    simpa only [L,zeros_z] using exitB b (zeros 3 (ones 8 z)) z
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using exitB b (zeros 3 (ones 8 z)) z
   have p7 := trans b p6 (reach b h7)
   have h8 : run b (10+extra b) (A (zeros 3 (ones 8 z)) (zeros 2 (ones 1 z))) = some (A (ones 13 z) (ones 1 z)) := by
-    simpa only [L,zeros_z] using turn3 b (ones 8 z) (ones 1 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (ones 8 z) (ones 1 z)
   have p8 := trans b p7 (reach b h8)
   have h9 : run b 1 (A (ones 13 z) (ones 1 z)) = some (A (ones 14 z) z) := by
     exact asweep b 1 (ones 13 z) z
@@ -43,7 +46,7 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 7 z
   have p10 := trans b p9 (reach b h10)
   have h11 : run b (10+extra b) (A z (zeros 2 (ones 14 z))) = some (A (ones 5 z) (ones 14 z)) := by
-    simpa only [L,zeros_z] using turn3 b z (ones 14 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b z (ones 14 z)
   have p11 := trans b p10 (reach b h11)
   have h12 : run b 14 (A (ones 5 z) (ones 14 z)) = some (A (ones 19 z) z) := by
     exact asweep b 14 (ones 5 z) z
@@ -52,25 +55,25 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 9 (ones 1 z)
   have p13 := trans b p12 (reach b h13)
   have h14 : run b 6 (A (ones 1 z) (zeros 2 (ones 18 z))) = some (A z (zeros 2 (ones 2 (zeros 1 (ones 19 z))))) := by
-    simpa only [L,zeros_z] using odd b z (ones 18 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using odd b z (ones 18 z)
   have p14 := trans b p13 (reach b h14)
   have h15 : run b (10+extra b) (A z (zeros 2 (ones 2 (zeros 1 (ones 19 z))))) = some (A (ones 5 z) (ones 2 (zeros 1 (ones 19 z)))) := by
-    simpa only [L,zeros_z] using turn3 b z (ones 2 (zeros 1 (ones 19 z)))
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b z (ones 2 (zeros 1 (ones 19 z)))
   have p15 := trans b p14 (reach b h15)
   have h16 : run b 2 (A (ones 5 z) (ones 2 (zeros 1 (ones 19 z)))) = some (A (ones 7 z) (zeros 1 (ones 19 z))) := by
     exact asweep b 2 (ones 5 z) (zeros 1 (ones 19 z))
   have p16 := trans b p15 (reach b h16)
   have h17 : run b 1 (A (ones 7 z) (zeros 1 (ones 19 z))) = some (B (ones 8 z) (ones 19 z)) := by
-    simpa only [L,zeros_z] using enterB b (ones 7 z) (ones 19 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using enterB b (ones 7 z) (ones 19 z)
   have p17 := trans b p16 (reach b h17)
   have h18 : run b 19 (B (ones 8 z) (ones 19 z)) = some (B (zeros 19 (ones 8 z)) z) := by
     exact bsweep b 19 (ones 8 z) z
   have p18 := trans b p17 (reach b h18)
   have h19 : run b 2 (B (zeros 19 (ones 8 z)) z) = some (A (zeros 17 (ones 8 z)) (zeros 2 (ones 1 z))) := by
-    simpa only [L,zeros_z] using exitB b (zeros 17 (ones 8 z)) z
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using exitB b (zeros 17 (ones 8 z)) z
   have p19 := trans b p18 (reach b h19)
   have h20 : run b (10+extra b) (A (zeros 17 (ones 8 z)) (zeros 2 (ones 1 z))) = some (A (ones 5 (zeros 14 (ones 8 z))) (ones 1 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 14 (ones 8 z)) (ones 1 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 14 (ones 8 z)) (ones 1 z)
   have p20 := trans b p19 (reach b h20)
   have h21 : run b 1 (A (ones 5 (zeros 14 (ones 8 z))) (ones 1 z)) = some (A (ones 6 (zeros 14 (ones 8 z))) z) := by
     exact asweep b 1 (ones 5 (zeros 14 (ones 8 z))) z
@@ -79,7 +82,7 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 3 (zeros 14 (ones 8 z))
   have p22 := trans b p21 (reach b h22)
   have h23 : run b (10+extra b) (A (zeros 14 (ones 8 z)) (zeros 2 (ones 6 z))) = some (A (ones 5 (zeros 11 (ones 8 z))) (ones 6 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 11 (ones 8 z)) (ones 6 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 11 (ones 8 z)) (ones 6 z)
   have p23 := trans b p22 (reach b h23)
   have h24 : run b 6 (A (ones 5 (zeros 11 (ones 8 z))) (ones 6 z)) = some (A (ones 11 (zeros 11 (ones 8 z))) z) := by
     exact asweep b 6 (ones 5 (zeros 11 (ones 8 z))) z
@@ -88,25 +91,25 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 5 (ones 1 (zeros 11 (ones 8 z)))
   have p25 := trans b p24 (reach b h25)
   have h26 : run b 6 (A (ones 1 (zeros 11 (ones 8 z))) (zeros 2 (ones 10 z))) = some (A (zeros 8 (ones 8 z)) (zeros 2 (ones 2 (zeros 1 (ones 11 z))))) := by
-    simpa only [L,zeros_z] using odd b (zeros 8 (ones 8 z)) (ones 10 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using odd b (zeros 8 (ones 8 z)) (ones 10 z)
   have p26 := trans b p25 (reach b h26)
   have h27 : run b (10+extra b) (A (zeros 8 (ones 8 z)) (zeros 2 (ones 2 (zeros 1 (ones 11 z))))) = some (A (ones 5 (zeros 5 (ones 8 z))) (ones 2 (zeros 1 (ones 11 z)))) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 5 (ones 8 z)) (ones 2 (zeros 1 (ones 11 z)))
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 5 (ones 8 z)) (ones 2 (zeros 1 (ones 11 z)))
   have p27 := trans b p26 (reach b h27)
   have h28 : run b 2 (A (ones 5 (zeros 5 (ones 8 z))) (ones 2 (zeros 1 (ones 11 z)))) = some (A (ones 7 (zeros 5 (ones 8 z))) (zeros 1 (ones 11 z))) := by
     exact asweep b 2 (ones 5 (zeros 5 (ones 8 z))) (zeros 1 (ones 11 z))
   have p28 := trans b p27 (reach b h28)
   have h29 : run b 1 (A (ones 7 (zeros 5 (ones 8 z))) (zeros 1 (ones 11 z))) = some (B (ones 8 (zeros 5 (ones 8 z))) (ones 11 z)) := by
-    simpa only [L,zeros_z] using enterB b (ones 7 (zeros 5 (ones 8 z))) (ones 11 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using enterB b (ones 7 (zeros 5 (ones 8 z))) (ones 11 z)
   have p29 := trans b p28 (reach b h29)
   have h30 : run b 11 (B (ones 8 (zeros 5 (ones 8 z))) (ones 11 z)) = some (B (zeros 11 (ones 8 (zeros 5 (ones 8 z)))) z) := by
     exact bsweep b 11 (ones 8 (zeros 5 (ones 8 z))) z
   have p30 := trans b p29 (reach b h30)
   have h31 : run b 2 (B (zeros 11 (ones 8 (zeros 5 (ones 8 z)))) z) = some (A (zeros 9 (ones 8 (zeros 5 (ones 8 z)))) (zeros 2 (ones 1 z))) := by
-    simpa only [L,zeros_z] using exitB b (zeros 9 (ones 8 (zeros 5 (ones 8 z)))) z
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using exitB b (zeros 9 (ones 8 (zeros 5 (ones 8 z)))) z
   have p31 := trans b p30 (reach b h31)
   have h32 : run b (10+extra b) (A (zeros 9 (ones 8 (zeros 5 (ones 8 z)))) (zeros 2 (ones 1 z))) = some (A (ones 5 (zeros 6 (ones 8 (zeros 5 (ones 8 z))))) (ones 1 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 6 (ones 8 (zeros 5 (ones 8 z)))) (ones 1 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 6 (ones 8 (zeros 5 (ones 8 z)))) (ones 1 z)
   have p32 := trans b p31 (reach b h32)
   have h33 : run b 1 (A (ones 5 (zeros 6 (ones 8 (zeros 5 (ones 8 z))))) (ones 1 z)) = some (A (ones 6 (zeros 6 (ones 8 (zeros 5 (ones 8 z))))) z) := by
     exact asweep b 1 (ones 5 (zeros 6 (ones 8 (zeros 5 (ones 8 z))))) z
@@ -115,7 +118,7 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 3 (zeros 6 (ones 8 (zeros 5 (ones 8 z))))
   have p34 := trans b p33 (reach b h34)
   have h35 : run b (10+extra b) (A (zeros 6 (ones 8 (zeros 5 (ones 8 z)))) (zeros 2 (ones 6 z))) = some (A (ones 5 (zeros 3 (ones 8 (zeros 5 (ones 8 z))))) (ones 6 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 3 (ones 8 (zeros 5 (ones 8 z)))) (ones 6 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 3 (ones 8 (zeros 5 (ones 8 z)))) (ones 6 z)
   have p35 := trans b p34 (reach b h35)
   have h36 : run b 6 (A (ones 5 (zeros 3 (ones 8 (zeros 5 (ones 8 z))))) (ones 6 z)) = some (A (ones 11 (zeros 3 (ones 8 (zeros 5 (ones 8 z))))) z) := by
     exact asweep b 6 (ones 5 (zeros 3 (ones 8 (zeros 5 (ones 8 z))))) z
@@ -124,28 +127,28 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 5 (ones 1 (zeros 3 (ones 8 (zeros 5 (ones 8 z)))))
   have p37 := trans b p36 (reach b h37)
   have h38 : run b 6 (A (ones 1 (zeros 3 (ones 8 (zeros 5 (ones 8 z))))) (zeros 2 (ones 10 z))) = some (A (ones 8 (zeros 5 (ones 8 z))) (zeros 2 (ones 2 (zeros 1 (ones 11 z))))) := by
-    simpa only [L,zeros_z] using odd b (ones 8 (zeros 5 (ones 8 z))) (ones 10 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using odd b (ones 8 (zeros 5 (ones 8 z))) (ones 10 z)
   have p38 := trans b p37 (reach b h38)
   have h39 : run b 32 (A (ones 8 (zeros 5 (ones 8 z))) (zeros 2 (ones 2 (zeros 1 (ones 11 z))))) = some (A (zeros 5 (ones 8 z)) (zeros 2 (ones 10 (zeros 1 (ones 11 z))))) := by
     exact lsweep b 4 (zeros 5 (ones 8 z)) (ones 2 (zeros 1 (ones 11 z)))
   have p39 := trans b p38 (reach b h39)
   have h40 : run b (10+extra b) (A (zeros 5 (ones 8 z)) (zeros 2 (ones 10 (zeros 1 (ones 11 z))))) = some (A (ones 5 (zeros 2 (ones 8 z))) (ones 10 (zeros 1 (ones 11 z)))) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 2 (ones 8 z)) (ones 10 (zeros 1 (ones 11 z)))
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 2 (ones 8 z)) (ones 10 (zeros 1 (ones 11 z)))
   have p40 := trans b p39 (reach b h40)
   have h41 : run b 10 (A (ones 5 (zeros 2 (ones 8 z))) (ones 10 (zeros 1 (ones 11 z)))) = some (A (ones 15 (zeros 2 (ones 8 z))) (zeros 1 (ones 11 z))) := by
     exact asweep b 10 (ones 5 (zeros 2 (ones 8 z))) (zeros 1 (ones 11 z))
   have p41 := trans b p40 (reach b h41)
   have h42 : run b 1 (A (ones 15 (zeros 2 (ones 8 z))) (zeros 1 (ones 11 z))) = some (B (ones 16 (zeros 2 (ones 8 z))) (ones 11 z)) := by
-    simpa only [L,zeros_z] using enterB b (ones 15 (zeros 2 (ones 8 z))) (ones 11 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using enterB b (ones 15 (zeros 2 (ones 8 z))) (ones 11 z)
   have p42 := trans b p41 (reach b h42)
   have h43 : run b 11 (B (ones 16 (zeros 2 (ones 8 z))) (ones 11 z)) = some (B (zeros 11 (ones 16 (zeros 2 (ones 8 z)))) z) := by
     exact bsweep b 11 (ones 16 (zeros 2 (ones 8 z))) z
   have p43 := trans b p42 (reach b h43)
   have h44 : run b 2 (B (zeros 11 (ones 16 (zeros 2 (ones 8 z)))) z) = some (A (zeros 9 (ones 16 (zeros 2 (ones 8 z)))) (zeros 2 (ones 1 z))) := by
-    simpa only [L,zeros_z] using exitB b (zeros 9 (ones 16 (zeros 2 (ones 8 z)))) z
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using exitB b (zeros 9 (ones 16 (zeros 2 (ones 8 z)))) z
   have p44 := trans b p43 (reach b h44)
   have h45 : run b (10+extra b) (A (zeros 9 (ones 16 (zeros 2 (ones 8 z)))) (zeros 2 (ones 1 z))) = some (A (ones 5 (zeros 6 (ones 16 (zeros 2 (ones 8 z))))) (ones 1 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 6 (ones 16 (zeros 2 (ones 8 z)))) (ones 1 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 6 (ones 16 (zeros 2 (ones 8 z)))) (ones 1 z)
   have p45 := trans b p44 (reach b h45)
   have h46 : run b 1 (A (ones 5 (zeros 6 (ones 16 (zeros 2 (ones 8 z))))) (ones 1 z)) = some (A (ones 6 (zeros 6 (ones 16 (zeros 2 (ones 8 z))))) z) := by
     exact asweep b 1 (ones 5 (zeros 6 (ones 16 (zeros 2 (ones 8 z))))) z
@@ -154,7 +157,7 @@ theorem initSmall (b : Bool) : Reaches b (A z z) (X 8 2 4) := by
     exact lsweepBlank b 3 (zeros 6 (ones 16 (zeros 2 (ones 8 z))))
   have p47 := trans b p46 (reach b h47)
   have h48 : run b (10+extra b) (A (zeros 6 (ones 16 (zeros 2 (ones 8 z)))) (zeros 2 (ones 6 z))) = some (A (ones 5 (zeros 3 (ones 16 (zeros 2 (ones 8 z))))) (ones 6 z)) := by
-    simpa only [L,zeros_z] using turn3 b (zeros 3 (ones 16 (zeros 2 (ones 8 z)))) (ones 6 z)
+    simpa only [L,zeros_z,word1101,←ones_add,←zeros_add,Nat.reduceAdd] using turn3 b (zeros 3 (ones 16 (zeros 2 (ones 8 z)))) (ones 6 z)
   have p48 := trans b p47 (reach b h48)
   have h49 : run b 6 (A (ones 5 (zeros 3 (ones 16 (zeros 2 (ones 8 z))))) (ones 6 z)) = some (A (ones 11 (zeros 3 (ones 16 (zeros 2 (ones 8 z))))) z) := by
     exact asweep b 6 (ones 5 (zeros 3 (ones 16 (zeros 2 (ones 8 z))))) z
@@ -175,7 +178,6 @@ theorem initLarge (b : Bool) : Reaches b (A z z) (phase 153) := by
     unfold X phase
     rw [show zeros 0 (ones (2*13) z)=ones (2*13) z by rfl]
     rw [←ones_add (2*140) (2*13) z]
-    rfl
   exact he ▸ h8
 
 def blank : Config := A z z
