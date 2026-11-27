@@ -70,7 +70,9 @@ theorem growth (k : Nat) :
   have H := join0 (join0 (join0 (join0 h0 h1) h2) h3) h4
   rw [← List.append_assoc [true,true,false],exchange] at H
   have J := join0 H h5
-  have h5' : rep Y k++Y++[true,false,false,true] = rep Y (k+1)++[true,false,false,true] := by rw [← List.append_assoc,rep_snoc]; rfl
+  have h5' : rep Y k ++ (Y ++ [true, false, false, true]) = rep Y (k+1) ++ [true, false, false, true] := by
+    rw [← List.append_assoc,rep_snoc]
+    rfl
   rw [h5'] at J
   have K := join0 (join0 (join0 J h6) h7) h8
   rw [show 11+5*k+20+17*k+24+7*k+22+17*(k+1)+28=46*k+122 by omega] at K
