@@ -18,6 +18,16 @@ def expandedResiduals := residuals.filter fun e =>
 
 theorem expandedResidual_count : expandedResiduals.length = 4 := by decide
 
+def r1la : PartialMachine := refine p (4,false) (some ⟨true,false,0⟩)
+def r1lb : PartialMachine := refine p (4,false) (some ⟨true,false,1⟩)
+def r1lf : PartialMachine := refine p (4,false) (some ⟨true,false,5⟩)
+def r1rf : PartialMachine := refine p (4,false) (some ⟨true,true,5⟩)
+def expandedRoster (q : PartialMachine) : Bool :=
+  equalTable q r1la || equalTable q r1lb || equalTable q r1lf || equalTable q r1rf
+
+theorem expandedResidual_roster :
+    expandedResiduals.all (fun e => expandedRoster e.2) = true := by decide
+
 theorem expandedReduced (m : Machine) (hm : TNFQuotientCompatible p m) :
     WeightedBound 2598 m ∨ ∃ e ∈ expandedResiduals, TNFQuotientCompatible e.2 m := by
   rcases reduced m hm with hb | ⟨e,he,hq⟩
@@ -58,6 +68,7 @@ theorem expandedCover {B : Nat} (hB : 2598 ≤ B)
     exact quotientSafe hf (hRest e he).sound m hq
 
 #print axioms expandedResidual_count
+#print axioms expandedResidual_roster
 #print axioms expandedReduced
 #print axioms expandedCover
 end BB6.Agent25Raw43B0LE
