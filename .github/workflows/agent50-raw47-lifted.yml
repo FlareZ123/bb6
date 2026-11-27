@@ -102,12 +102,21 @@ jobs:
           N=$((BASE_COUNT+1))
           echo "count=$N" >> "$GITHUB_OUTPUT"
           sed -e "s/@@BASE@@/$BASE_COUNT/g" -e "s/@@TOTAL@@/$N/g" -e "s/@@REMAIN@@/$((1212-N))/g" "$D/Raw47LiftedConsumer.template" > "$W/imports/Raw47Lifted$N.lean"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "BB6.Agent50Raw47Lifted$N.local_sound" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 143977 --artifact-name "raw47-lifted$N" --provenance-input "$D/Raw47LiftedConsumer.template" "$W/imports/Raw47Lifted$N.lean" 2>&1 | tee "$W/log"
+          root="$W/imports/Raw47Lifted$N.lean"
+          theorem="BB6.Agent50Raw47Lifted$N.local_sound"
+          if [[ "$N" == 1212 ]]; then
+            cp "$D/Raw47Complete.template" "$W/imports/Raw47Complete.lean"
+            root="$W/imports/Raw47Complete.lean"
+            theorem="BB6.Agent50Raw47Complete.cover"
+          fi
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "$theorem" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 143977 --artifact-name "raw47-lifted$N" --provenance-input "$D/Raw47LiftedConsumer.template" "$root" 2>&1 | tee "$W/log"
           python - "$W/log" "$N" <<'PY'
           import re,sys
           log=open(sys.argv[1]).read()
-          for suffix in ('remaining_count','local_sound'):
-              name='BB6.Agent50Raw47Lifted'+sys.argv[2]+'.'+suffix
+          names=['BB6.Agent50Raw47Lifted'+sys.argv[2]+'.'+suffix for suffix in ('remaining_count','local_sound')]
+          if int(sys.argv[2])==1212:
+              names.extend('BB6.Agent50Raw47Complete.'+suffix for suffix in ('all_quotient','cover','cover_at'))
+          for name in names:
               m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
               else: assert f"'{name}' does not depend on any axioms" in log,name
