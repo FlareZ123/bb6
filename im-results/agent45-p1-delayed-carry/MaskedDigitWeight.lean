@@ -11,7 +11,7 @@ def maskedWeight (o B : Nat) : Nat :=
   16*(B &&& (0xFFFF0000FFFF0000 >>> o)) +
   32*(B &&& (0xFFFFFFFF00000000 >>> o))
 
-private theorem and_split (x y : Nat) : x &&& y = 2*((x/2) &&& (y/2)) + (x%2)*(y%2) := by
+theorem mask_and_split (x y : Nat) : x &&& y = 2*((x/2) &&& (y/2)) + (x%2)*(y%2) := by
   have h := Nat.div_add_mod (x &&& y) 2
   rw [Nat.and_div_two] at h
   have hm := Nat.and_mod_two_eq_one (a:=x) (b:=y)
@@ -26,7 +26,7 @@ private theorem and_split (x y : Nat) : x &&& y = 2*((x/2) &&& (y/2)) + (x%2)*(y
   rw [he] at h
   exact h.symm
 
-private theorem shr_div (x o : Nat) : (x >>> o)/2 = x >>> (o+1) := by
+theorem mask_shr_div (x o : Nat) : (x >>> o)/2 = x >>> (o+1) := by
   simp [Nat.shiftRight_eq_div_pow, Nat.div_div_eq_div_mul, Nat.pow_succ]
 
 private theorem maskIndex : ∀ i : Fin 64, maskedWeight i.val 1 = i.val := by decide
@@ -35,9 +35,9 @@ theorem weight_step (o B : Nat) (ho : o<64) :
     maskedWeight o B = 2*maskedWeight (o+1) (B/2) + o*(B%2) := by
   have hi := maskIndex ⟨o,ho⟩
   simp only [maskedWeight] at hi ⊢
-  rw [and_split B, and_split B, and_split B, and_split B, and_split B, and_split B]
-  simp only [shr_div]
-  rw [and_split 1, and_split 1, and_split 1, and_split 1, and_split 1, and_split 1] at hi
+  rw [mask_and_split B, mask_and_split B, mask_and_split B, mask_and_split B, mask_and_split B, mask_and_split B]
+  simp only [mask_shr_div]
+  rw [mask_and_split 1, mask_and_split 1, mask_and_split 1, mask_and_split 1, mask_and_split 1, mask_and_split 1] at hi
   simp at hi
   rcases (show B%2=0 ∨ B%2=1 by omega) with hb|hb <;> simp only [hb, Nat.mul_zero, Nat.zero_mul, Nat.one_mul, Nat.add_zero] <;> omega
 
@@ -77,7 +77,7 @@ def maskedFast (F k X : Nat) : Option Nat :=
   | none => maskedCandidate F k X (X/F+1)
 
 theorem maskedFast_eq (F k X : Nat) (hk : k≤64) : maskedFast F k X = fast F k X := by
-  simp [maskedFast,fast,maskedCandidate_eq _ _ _ _ hk]
+  simp [maskedFast,fast,maskedCandidate_eq _ _ _ _ hk] <;> rfl
 
 theorem maskedFast_iff_walk (F z : Nat) (ys : List Nat) (r : Nat)
     (hys : ∀ y∈ys, y≤1) (hfit : 2^(ys.length+1)≤F) (hk : ys.length≤64) :
