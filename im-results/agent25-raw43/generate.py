@@ -7,7 +7,7 @@ import hashlib, json, re, subprocess, sys, tempfile
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
-B1C1 = re.fullmatch(r"b([01][lr][a-f])_([ace])([01][lr][a-f])", VARIANT)
+B1C1 = re.fullmatch(r"b([01][lr][a-f])_([ac]|e1?)([01][lr][a-f])", VARIANT)
 assert VARIANT == "default" or re.fullmatch(r"[01][lr][a-f]", VARIANT) or B1C1
 OUT = ROOT / ("generated" if VARIANT == "default" else "generated_"+VARIANT)
 OUT.mkdir(exist_ok=True)
@@ -129,7 +129,7 @@ def generate():
         p0 = "(refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩))"
         if B1C1:
             b1, slot_name, c1 = (x.upper() for x in B1C1.groups())
-            pos = {"A":1,"C":5,"E":8}[slot_name]
+            pos = {"A":1,"C":5,"E":8,"E1":9}[slot_name]
             tab = list("1RB---1RC"+b1+"0RD---1LD0RB------------")
             tab[3*pos:3*pos+3] = c1
             assert S["table"].replace("_","") == "".join(tab)

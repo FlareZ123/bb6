@@ -68,7 +68,7 @@ Full eight-child parent composition: [45955232997](https://github.com/FlareZ123/
 
 All eight specs `spec_b0la_c*.json` have zero unresolved candidates. For 1RE, four difficult machines have constructive nonhalting invariants accepted together by source CI 45940958043. M234 returns from A([],0 1^(5n+13)) to A([],0 1^(5n+18)) in 22n+85 steps. M292 implements an unbounded digit-stack grammar with five-cell blocks. M195 and M200 share a sweep: A([1],00000001 (000001)^n T) returns to the same section with n+1 and terminal T toggled between empty and 01. The 26-step entry, 12-step right transfer, boundary turn (46/32 or 44/30), and 20/18-step left transfer and finish prove closure by positive-cost macro steps. See `Raw43B0LAC1REM{234,292,195200}.lean` for quantified arbitrary-tail equations and genuine blank-start bridges; these are included in the accepted 1RE child proof.
 
-Local shell and Python remain unavailable in this invocation (ClientError/TooManyActiveSessionsError before commands). Original-source manual workflow is used for selective acceptance checks; no new workflow. The exact source revision of the 1RE preflight is `55faa0285a87441cb72777ec1f615bf6868bb67f`.
+Earlier incarnations had local shell failures. The present toolchain is usable; original-source manual workflow remains available for exact acceptance checks. No new workflow. The exact source revision of the 1RE preflight is `55faa0285a87441cb72777ec1f615bf6868bb67f`.
 
 ## B1=1LA: A1 child banks
 
@@ -99,3 +99,17 @@ Manual `raw43-b0la-compose` now uses the same exact source/manifest consumer as 
 - A1=1LB: 24 unary-growth leaves closed by modulus 6 or 12 on the one-runs. The remaining E/F pair M25/M87 uses period-2/4 block compression, c=3,m=2,k=12, 1132 graph states. Source accepted.
 - A1=0LE: 25 leaves closed by period-specific block summaries. M850–852 have common explicit ten-state FAR code `001239949596799895999` (left grammar bottom-up 11 then repetitions of 100, optional leading zero; absorbing invalid sink). M776 uses seven-state right FAR `101213433533623` (alternating prefix on unary ones, length mod 4). Arbitrary-width discovery checker in `discover_far_big.js`; original-source checker unchanged. Source gate pending.
 - A1=0LA: asymmetric lag-XOR resolves M145/238,M155/247,M354/376. Aligned block-symbol rungram (new width/k/c/m in discover_abstract.js) resolves M156/248 at width 6,k=5,c=2,m=3 (17729 abstract states). Only M110/202,M151/243,M355/377 remain. Their mixed-period sweeps resist symmetric and asymmetric rungrams, period-block compression, lag-XOR, k-future trie folding and trace-restricted variants. These failures are not evidence of halting. The complete exact census and certificates are in spec_b1la_a0la.json.
+
+## B1=1RE: E1 child banks
+
+The E1=0LE child now has a complete candidate audit at weighted threshold 727. Its three hard leaves M55/M56/M57 differ only in F0, and share a ternary-counter induction in `Raw43B1REE0LEM555657.lean`. In left-includes-scanned notation, A carries a prefix of k digits as 3k+b ones, where b=0 or 2. Digits 000,100,010 encode 0,1,2. Digit 2 advances three live moves; digit 0 or 1 enters F, whose all-ones sweep rewrites the carried prefix as zero digits. The three distinct F0 boundary procedures take 1,17,23 moves. A reserved higher zero digit ensures that every carry terminates; induction on N proves a live prefix of length at least N from an explicitly padded blank tape. The padding embeds exactly to the physical blank configuration. Local Lean 4.36.0-rc2 checked `padded_live` and `never` using verbatim relevant semantic and transport excerpts of Frontier, RootShift, SparseZipper and SweepPumping, with axioms [propext, Quot.sound]. Full original import closure and exact child audit remain to be run; the threshold is not yet source-accepted.
+
+| E1 | Weighted candidate threshold | Unresolved candidate leaves |
+|---|---:|---|
+|0LB|75|M105|
+|0LC|112|M41|
+|0LE|727|0 (three new growth certificates)|
+|1LC|684|0|
+|1LD|85|0|
+
+The E1-specific generator accepts explicit `b1re_e1*` names and uses slot 9, distinct from E0 slot 8. No full B1=1RE or Raw43 parent Cover is established.
