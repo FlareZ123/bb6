@@ -2,6 +2,7 @@ import LongBlockCover
 import TraceComplementCover
 
 namespace BB6.Agent45LongBlock
+open BB6.Agent45ReverseBlock
 open BB6.Agent45.DelayedCarry
 open BB6.Agent43P1Complement
 
