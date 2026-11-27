@@ -76,10 +76,14 @@ jobs:
           out = Path("/tmp/a47-r05a00-factor-plan")
           out.mkdir()
           (out / "factor-plan.json").write_text(json.dumps(report, indent=2) + "\n")
+          branchers = [r for r in rows if len(r["imports"]) > 1]
+          first_branch = min(branchers, key=lambda r: (len(r["module"]), r["module"])) if branchers else None
           print(json.dumps({
               "module_count": report["module_count"],
               "max_bytes": report["max_bytes"],
               "root_imports": report["root"]["imports"],
+              "first_branch_module": None if first_branch is None else first_branch["module"],
+              "first_branch_imports": [] if first_branch is None else first_branch["imports"],
           }, indent=2))
           PY
       - uses: actions/upload-artifact@v4
