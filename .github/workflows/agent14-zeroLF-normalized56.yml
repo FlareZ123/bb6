@@ -66,7 +66,6 @@ jobs:
             --manifest "$work/check/manifest.json" \
             --label raw139-e0-zeroLF-56-normalized \
             --theorem BB6.Agent14Raw139E0ZeroLF56AfterSource.raw139_p0_from_56_with_zeroLF_source \
-            --weighted-bound 19007 \
             --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --override FastFAR=im-results/agent7-far/FastFAR.lean \
