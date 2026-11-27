@@ -6,6 +6,10 @@ on:
       source_ref:
         type: string
         required: false
+      target:
+        type: choice
+        options: [A, B]
+        default: A
 permissions:
   contents: read
   actions: read
@@ -26,20 +30,22 @@ jobs:
       - name: Check original-source arbitrary-suffix descent
         run: |
           set -euo pipefail
+          TARGET="${{ inputs.target }}"
+          [[ "$TARGET" = A || "$TARGET" = B ]]
           D=im-results/agent28-raw36-first-hard
           work=/tmp/a28-raw36-first-descent
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
-            --manifest "$work/manifest.json" --label raw36-first-descent-A \
-            --theorem BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.transport \
+            --manifest "$work/manifest.json" --label raw36-first-descent-$TARGET \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36FirstDescent$TARGET.transport \
             --artifact-name raw36-first-descent-A-proof \
-            "$D/Raw36FirstDescentA.lean" 2>&1 | tee /tmp/a28-raw36-descent.log
+            "$D/Raw36FirstDescent$TARGET.lean" 2>&1 | tee /tmp/a28-raw36-descent.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a28-raw36-descent.log \
             BB6Coverage.Agent31Pump.Auto.OpenRight.step_attach \
             BB6Coverage.Agent31Pump.Auto.OpenRight.traceRun_sound \
-            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.checked \
-            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.transport
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescent$TARGET.checked \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescent$TARGET.transport
           cp /tmp/a28-raw36-descent.log "$work/audit.log"
       - name: Retain source closure
         if: always()
