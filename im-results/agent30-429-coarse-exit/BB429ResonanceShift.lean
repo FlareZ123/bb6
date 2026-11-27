@@ -24,6 +24,38 @@ theorem phaseBlocks_shift (U V : Nat → Int) (e ph : Nat → Bool) (n : Nat)
   have h := hs (i+1) (by omega)
   simpa only [show i+1+1=i+2 by omega,show (i+1)+1=i+2 by omega] using h
 
+
+/-- If the initial odd-rank phase agrees with the parity of the remaining
+    block count, alternating PhaseBlocks always finish in phase false. -/
+theorem phaseBlocks_end_false
+    (U V : Nat → Int) (e ph : Nat → Bool) (n : Nat)
+    (hs : PhaseBlocks U V e ph n)
+    (hstart : ph 0=decide (n%2=1)) :
+    ph n=false := by
+  induction n generalizing U V e ph with
+  | zero =>
+      simpa using hstart
+  | succ n ih =>
+      have hhead := hs 0 (by omega)
+      have hpar :
+          decide ((n+1)%2=1) = !decide (n%2=1) := by
+        have hb := Nat.mod_lt n (by decide : 0<2)
+        by_cases hz : n%2=0
+        · have hsuc : (n+1)%2=1 := by omega
+          simp [hz,hsuc]
+        · have hone : n%2=1 := by omega
+          have hsuc : (n+1)%2=0 := by omega
+          simp [hone,hsuc]
+      have hstart' : ph 1=decide (n%2=1) := by
+        rw [hhead.1,hstart,hpar]
+        simp
+      have hshift := phaseBlocks_shift U V e ph n hs
+      have hh := ih
+        (fun k => U (k+1)) (fun k => V (k+1))
+        (fun k => e (k+1)) (fun k => ph (k+1))
+        hshift hstart'
+      simpa only [show n+1=n+1 by rfl] using hh
+
 /-- A leading false ordinary block is exactly FF at the transformed level:
     U is multiplied by four and V-error increases by 18. -/
 theorem phaseBlocks_false_head
@@ -65,6 +97,7 @@ theorem budget_false_shift (i : Nat) (y : Int) :
 
 #print axioms word4_shift_false
 #print axioms phaseBlocks_shift
+#print axioms phaseBlocks_end_false
 #print axioms d234_false_head_rescale
 #print axioms d234_y_shift
 #print axioms budget_false_shift
