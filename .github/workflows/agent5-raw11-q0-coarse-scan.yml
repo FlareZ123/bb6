@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
+        options: [legacy, full, full-prefix, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -85,7 +85,7 @@ jobs:
           retention-days: 30
 
   full:
-    if: inputs.mode == 'full'
+    if: inputs.mode == 'full' || inputs.mode == 'full-prefix'
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -103,9 +103,12 @@ jobs:
       - name: Complete first-hole candidate scan with retained open and capped leaves
         env:
           ID: ${{ matrix.id }}
+          MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
-          node im-results/agent5-weighted-tnf-queue/scan-q0-coarse-full.cjs "$ID" "$RUNNER_TEMP/coarse-$ID"
+          SCANNER=scan-q0-coarse-full.cjs
+          if [ "$MODE" = full-prefix ]; then SCANNER=scan-q0-prefix.cjs; fi
+          node "im-results/agent5-weighted-tnf-queue/$SCANNER" "$ID" "$RUNNER_TEMP/coarse-$ID"
           cat "$RUNNER_TEMP/coarse-$ID/summary.json" >> "$GITHUB_STEP_SUMMARY"
       - uses: actions/upload-artifact@v4
         if: always()
