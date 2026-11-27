@@ -31,3 +31,8 @@ For each fixed d in the 25 allowed classes, choose fixed s with d≤16^s; j=m-s 
 ## Reproduction
 
 Compile unchanged BB429Rank.lean to BB429Rank.olean, then compile BB429CoarseExit.lean to BB429CoarseExit.olean and check BB429CoarseExitSource.lean with LEAN_PATH containing both module directories. No mathlib dependency. Relevant novelty relative to [the fixed-word low-side classification](../agent6-harmonic429/LowSideTerminalClassification.md) is the bounded-word/forced-return result for scale-separated deviations, not a stronger claim about all prepared states. External priority not established.
+
+
+## Extension: all-class prefix safety and zero-residue exit
+
+`BB429CoarseExitExtended.lean` formalizes the prepared-state composition, the stronger exact phase/error invariant, and the zero-residue escape. It supersedes the earlier exclusion of both 0 and 18 modulo 27. With phase baseline φ=-18 or +6, the defect 3ε−2η stays at least φ, and ordinary non-F blocks multiply the excess by four. F,F creates strict excess when η≥27. For y>153, a halt in the separated prefix is impossible, even for d=18 modulo 27. At the middle index a surviving d=0 modulo 27 trajectory has leading ratio 2/3 and strict positive actual corridor excess. The excess grows geometrically until a section return. `prepared_except18` proves safe return for every d≠18 modulo 27 with d≤16^s, j≥2, the cycle guard and stated separation, within 12m+31 accelerator steps. The other 25 residue classes retain the earlier tighter bound. These are prepared-section statements, not a blank-root proof. Exact relevant source declarations compiled locally with Lean 4.36.0-rc2; the new module's printed axiom audits contain only standard Lean axioms. Full unchanged dependency CI has not been run.
