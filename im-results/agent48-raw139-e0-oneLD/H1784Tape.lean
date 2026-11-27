@@ -77,7 +77,10 @@ theorem step_eq (p : PartialMachine) {x y z : Z0} (h : EqZ x y)
   unfold step0 at hx ⊢
   rw [← hk]
   cases hv : (p (x.q,x.l.headD false)).bind id with
-  | none => simp [hv] at hx
+  | none =>
+    have bad : (none : Option Z0) = some z := by
+      simpa only [hv,Option.map_none] using hx
+    contradiction
   | some mv =>
     simp only [hv,Option.map_some,Option.some.injEq] at hx
     refine ⟨move0 mv y,?_,?_⟩
