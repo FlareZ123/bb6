@@ -54,6 +54,7 @@ jobs:
           elif [[ "$KIND" == e0sweep ]]; then
             case "$SIBLING" in
               ZeroRE) bash im-results/agent48-raw139-e0-0re/reproduce-sweep.sh ;;
+              OneLBD0) bash im-results/agent3-raw139-e0-oneLB/check-d0.sh ;;
               OneLBF1Return) bash im-results/agent3-raw139-e0-oneLB/check-f1-return.sh ;;
               OneLBReturn) bash im-results/agent3-raw139-e0-oneLB/check-return.sh ;;
               OneLAGrowth) bash im-results/agent48-raw139-e0-1la/reproduce-growth.sh ;;
@@ -91,7 +92,7 @@ jobs:
             .tmp/a48-${{ inputs.kind }}-${{ inputs.sibling }}/build/*.olean
 
       - uses: actions/upload-artifact@v4
-        if: ${{ failure() && (inputs.sibling == 'OneLBC1ZeroLC' || inputs.sibling == 'OneLBC1OneLC' || inputs.sibling == 'OneLBReturn' || inputs.sibling == 'OneLBF1Return') }}
+        if: ${{ failure() && (inputs.sibling == 'OneLBC1ZeroLC' || inputs.sibling == 'OneLBC1OneLC' || inputs.sibling == 'OneLBReturn' || inputs.sibling == 'OneLBF1Return' || inputs.sibling == 'OneLBD0') }}
         with:
           name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-incomplete
           include-hidden-files: true
