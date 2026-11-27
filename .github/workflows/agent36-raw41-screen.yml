@@ -6,7 +6,7 @@ on:
       mode:
         description: Run full canonical screen or target exact FAR discovery
         type: choice
-        options: [screen, close]
+        options: [screen, close, inspect]
         default: screen
       index:
         description: Canonical residual index (0–152) for targeted FAR run
@@ -26,7 +26,7 @@ permissions:
 
 jobs:
   screen:
-    if: inputs.mode != 'close'
+    if: inputs.mode == 'screen'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -64,3 +64,38 @@ jobs:
           name: raw41-target-${{ inputs.index }}
           path: raw41-target-candidate/
           retention-days: 30
+  inspect:
+    if: inputs.mode == 'inspect'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079605531
+          name: raw41-target-81
+          path: /tmp/holdout-81
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079613167
+          name: raw41-target-125
+          path: /tmp/holdout-125
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46079295993
+          name: raw41-target-84
+          path: /tmp/holdout-84
+      - name: Print exact residual tables for mathematical attacks
+        run: |
+          set -euo pipefail
+          for n in 81 125 84; do
+            echo "==== RAW41 CHILD $n ===="
+            cat "/tmp/holdout-$n/summary.json"
+            cat "/tmp/holdout-$n/missing.txt"
+          done
