@@ -8,6 +8,30 @@ python3 im-results/agent13-coverage/unpack.py
 gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15175093456/zip" > /tmp/a3-e1-core.zip
 unzip -q /tmp/a3-e1-core.zip -d /tmp/a3-e1-core
 python3 im-results/agent3-raw139-e0-oneLB/merge-bank.py "$work/reuse" "$work/imports" /tmp/a3-e1-core
+if [[ "$kind" == E1D0CounterCarry ]]; then
+  python3 tools/lean_compile_closure.py "$base/CounterCarryBridge.lean" \
+    --source-root "$work/imports" --workdir "$work/build" --jobs 2 \
+    --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
+    --override SparseZipper=im-results/agent50-weighted-tnf-pilot/SparseZipper.lean \
+    --override Symmetry=im-results/agent8-coverage-contract/Symmetry.lean \
+    --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
+    --precompiled-manifest "$work/reuse/manifest.json" --precompiled-dir "$work/reuse" \
+    --manifest "$work/manifest.json" --label "$kind" \
+    --theorem BB6.Agent3CounterCarry.never --artifact-name raw139-E1D0CounterCarry-certified \
+    --provenance-input "$base/CounterCarry.lean" --provenance-input "$base/CounterCarryBridge.lean" | tee "$work/log"
+  python3 - "$work/log" <<'PY'
+import re,sys
+s=open(sys.argv[1]).read()
+for name in ["CounterCarry.increment","CounterCarry.never","BB6.Agent3CounterCarry.never","BB6.Agent3CounterCarry.weighted"]:
+ m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",s,re.S)
+ if m: used={x.strip() for x in m.group(1).split(",") if x.strip()}
+ elif "'"+name+"' does not depend on any axioms" in s: used=set()
+ else: raise SystemExit("Missing axiom audit: "+name)
+ assert used<={"propext","Classical.choice","Quot.sound"},(name,used)
+ print(name,sorted(used))
+PY
+  exit 0
+fi
 case "$kind" in
 E1D0ZeroRD) d=13; emitter=emit-d0rd.py; recipes=recipes-d0rd.json; hash=3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127; suffix=ZeroRD; B=679;;
 E1D0OneRB) d=7; emitter=emit-d0rb1.py; recipes=recipes-d0rb1.json; hash=b6d3c1914722160084d71c5631f0dd344943d0c985b45cbfb8827851e8b75ce5; suffix=OneRB; B=435;;
