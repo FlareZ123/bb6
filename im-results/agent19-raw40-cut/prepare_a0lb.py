@@ -9,6 +9,7 @@ search failure is treated as nonhalting. Generated Lean remains the checker.
 import json,os,re,subprocess,sys
 from pathlib import Path
 from compact_ngram import compact,compact_run,find_lag
+from emit_raw40_late import emit_late_module
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
@@ -118,11 +119,12 @@ group(i for i,*_ in spec['late'])
 assert set.union(*groups)==set(range(len(opens))) and sum(map(len,groups))==len(opens),(c,list(map(len,groups)),len(opens))
 
 # The expansion operates on literal tables, not unstable post-expansion indices.
-expand=set(spec.get('expand',[])); replacements={};late={};accelerated={}
+expand=set(spec.get('expand',[])); replacements={};late={};accelerated={};query_records=[]
 far_by_table={opens[i]:v for i,v in bank.items()}
 for i,n,s in spec['late']:
     t=opens[i]
     assert t.replace('_','')[3*s:3*s+3]=='---'
+    if (c,i)!=('1LB',561):query_records.append(dict(id=i,table=t,n=n,slot=s))
     if i in expand:
         assert t.count('---')>1
         subtree,leaves=runenum('expandlate',t,out/f'expand{i}','200000')
@@ -163,7 +165,17 @@ assert len(opens2)==len(far_by_table)+len(proven)+len(late)
 (out/'far_extra.txt').write_text('')
 (out/'proven.txt').write_text(''.join(f'{t} {ns}\n' for t,ns in proven.items()))
 (out/'late.txt').write_text(''.join(f'{t} {n} {s}\n' for t,(n,s) in late.items()))
+accelerated_splits={}
+if query_records:
+    mod=f'Raw40A0LB{c}Late'
+    source,names=emit_late_module(c,query_records,B,family='A0LB')
+    (ROOT/(mod+'.lean')).write_text(source)
+    mods.append(mod)
+    accelerated.update({t:ns for t,ns in names.items() if t in late})
+    accelerated_splits={t:ns for t,ns in names.items() if t in replacements}
 (out/'imports.txt').write_text(' '.join(mods))
-env=dict(os.environ,RAW40_PROOF_IMPORTS=' '.join(mods),RAW40_ACCELERATED_LAST_JSON=json.dumps(accelerated) if accelerated else '')
+env=dict(os.environ,RAW40_PROOF_IMPORTS=' '.join(mods),
+         RAW40_ACCELERATED_LAST_JSON=json.dumps(accelerated) if accelerated else '',
+         RAW40_ACCELERATED_SPLIT_JSON=json.dumps(accelerated_splits) if accelerated_splits else '')
 subprocess.run([sys.executable,str(ROOT/'certify_modular.py'),str(out),str(out/'shards'),p,str(B),'Raw40C0LB'+c,'96','600'],env=env,check=True)
 print(c,'initial opens',len(opens),'final opens',len(opens2),'FAR',len(far_by_table),'proven',len(proven),'late',len(late),'bound',B,flush=True)
