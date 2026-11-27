@@ -3,8 +3,6 @@ import BB429Resonance
 namespace BB429.CoarseExit
 
 open BB429.LowReturnBand
-open BB429.Resonance
-
 private theorem r234_stepF (u w : Nat) (h : 2*u+3 ≤ w) :
     next (u,w) = some (2*u+3,w-2*u-3) := by
   simp [next,h]
@@ -48,19 +46,21 @@ theorem d234_phase (j : Nat) :
         3*(d234PhaseU j)+234*16^j := by
     dsimp [d234PhaseU]
     rw [Nat.pow_add]
-    norm_num
+    rw [show 16^2=256 by decide]
     omega
   have hg : 5*(234*16^j)+7 ≤ d234PhaseU j := by
     dsimp [d234PhaseU]
     omega
   have h := prepared_phase 2 j 234 (d234PhaseU j)
     (by decide) (by decide) hc hg
-  simpa only [show 4*(j+2)+3+4*j=8*j+11 by omega] using h.1
+  rw [show 8*j+11=4*(j+2)+3+4*j by omega]
+  exact h.1
 
 /-- The six resonant ordinary blocks after the d=234 phase are exact.
     Their branch word is
       Oe F Oo F Oe F F F Oe F F F.
     Crucially the leading 16^j contribution to the first counter cancels. -/
+set_option maxHeartbeats 5000000 in
 theorem d234_tail (j : Nat) :
     run 12 (phase (d234PhaseU j) (234*16^j)) =
       some (416*j+4797,18432*16^j-808*j-9293) := by
