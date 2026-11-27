@@ -14,9 +14,9 @@ from convert_bidfa import convert
 from split_small42 import split
 
 BRANCHES = {
-    "1LA": (45996630344, "c6b62dd1569ddf09c162da82a21e10afcfd58de8", {"7"},
+    "1LA": (45996630344, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"7"},
             {"Raw421LARun889", "Raw421LARun892"}),
-    "1RA": (45996637267, "a9602a5d0815bce4249c7479d1154d5460a3aba0", {"1", "4"},
+    "1RA": (45996637267, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"1", "4"},
             {"Raw421RARun7114", "Raw421RARun7242", "Raw421RARun7267"}),
 }
 
