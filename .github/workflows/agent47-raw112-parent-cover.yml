@@ -26,6 +26,14 @@ on:
         type: string
         default: '["r01a-rest0","r01a-rest1","r01a-deep","r04a","r04b","r04c","r05a0","r05a1"]'
         description: JSON array of retry groups to compile; when resuming, list only groups missing from the supplied resume runs
+      r05a_children:
+        type: string
+        default: '["r05a00","r05a01","r05a02","r05a03"]'
+        description: Physical r05a0 child jobs to compile when retry_groups is exactly ["r05a0"]
+      r05a_split_resume_run_id:
+        type: string
+        default: ''
+        description: Prior split-r05a0 run whose successful unselected child artifacts should be reused
 permissions:
   contents: read
   actions: read
@@ -1036,7 +1044,7 @@ jobs:
       fail-fast: false
       max-parallel: 2
       matrix:
-        group: ${{ inputs.retry_groups == '["r05a0"]' && fromJSON('["r05a00","r05a01","r05a02","r05a03"]') || fromJSON(inputs.retry_groups) }}
+        group: ${{ inputs.retry_groups == '["r05a0"]' && fromJSON(inputs.r05a_children) || fromJSON(inputs.retry_groups) }}
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact Raw112 producer closure-tool provenance
@@ -1245,6 +1253,31 @@ jobs:
           merge-multiple: false
           run-id: ${{ inputs.prior_recovery_run_id }}
           github-token: ${{ github.token }}
+      - name: Restore already accepted split r05a0 children
+        if: ${{ inputs.r05a_split_resume_run_id != '' && inputs.retry_groups == '["r05a0"]' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SPLIT_RUN: ${{ inputs.r05a_split_resume_run_id }}
+          NEW_CHILDREN: ${{ inputs.r05a_children }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a47-raw112-current-retry
+          python3 - <<'PY' > /tmp/a47-r05a-reuse.txt
+          import json, os
+          new = set(json.loads(os.environ["NEW_CHILDREN"]))
+          all_children = {"r05a00", "r05a01", "r05a02", "r05a03"}
+          assert new <= all_children and new
+          for group in sorted(all_children - new):
+              print(group)
+          PY
+          while read -r group; do
+            [ -n "$group" ] || continue
+            gh run download "$SPLIT_RUN" \
+              --repo "${{ github.repository }}" \
+              --name "raw112-shard-$group" \
+              --dir "/tmp/a47-raw112-current-retry/raw112-shard-$group"
+            test -s "/tmp/a47-raw112-current-retry/raw112-shard-$group/manifest.json"
+          done < /tmp/a47-r05a-reuse.txt
       - uses: actions/download-artifact@v4
         with:
           pattern: raw112-shard-r*
@@ -1317,6 +1350,8 @@ jobs:
           RESUME_RETRY_RUN_ID: ${{ inputs.resume_retry_run_id }}
           RESUME_RETRY_RUN_ID2: ${{ inputs.resume_retry_run_id2 }}
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
+          R05A_CHILDREN_JSON: ${{ inputs.r05a_children }}
+          R05A_SPLIT_RESUME_RUN_ID: ${{ inputs.r05a_split_resume_run_id }}
         run: |
           set -euo pipefail
           if [ "$RETRY_GROUPS_JSON" = '["r05a0"]' ]; then
@@ -1339,6 +1374,12 @@ jobs:
           summary["resumed_from_retry_run_ids"] = resume_ids
           summary["new_retry_groups"] = selected
           summary["reused_retry_groups"] = sorted(set(all_groups) - set(selected)) if resume_ids else []
+          split_resume = os.environ.get("R05A_SPLIT_RESUME_RUN_ID", "").strip()
+          summary["r05a_split_resumed_from_run_id"] = int(split_resume) if split_resume else None
+          summary["r05a_new_children"] = (
+              sorted(json.loads(os.environ["R05A_CHILDREN_JSON"]))
+              if selected == ["r05a0"] else []
+          )
           path.write_text(json.dumps(summary, indent=2, sort_keys=True) + "\n")
           PY
       - uses: actions/upload-artifact@v4
