@@ -74,4 +74,10 @@ jobs:
           lean -o im-results/agent31-f197-macro/ResetTransport.olean im-results/agent31-f197-macro/ResetTransport.lean | tee -a /tmp/f197-reset-core.log
           lean -o im-results/agent31-f197-macro/ResetDescentCore.olean im-results/agent31-f197-macro/ResetDescentCore.lean | tee -a /tmp/f197-reset-core.log
           lean im-results/agent31-f197-macro/ResetDescentFamily.lean | tee -a /tmp/f197-reset-core.log
+          lean im-results/agent31-f197-macro/ResetBoundary.lean | tee -a /tmp/f197-reset-core.log
+          lean -o im-results/agent31-f197-macro/PairedScanCore.olean im-results/agent31-f197-macro/PairedScanCore.lean | tee -a /tmp/f197-reset-core.log
+          lean -o im-results/agent31-f197-macro/PairedTerminalCore.olean im-results/agent31-f197-macro/PairedTerminalCore.lean | tee -a /tmp/f197-reset-core.log
+          lean -o im-results/agent31-f197-macro/PairedDecoderCore.olean im-results/agent31-f197-macro/PairedDecoderCore.lean | tee -a /tmp/f197-reset-core.log
+          lean -o im-results/agent31-f197-macro/PairedScan.olean im-results/agent31-f197-macro/PairedScan.lean | tee -a /tmp/f197-reset-core.log
+          lean im-results/agent31-f197-macro/PairedReset.lean | tee -a /tmp/f197-reset-core.log
           ! grep -q sorryAx /tmp/f197-reset-core.log
