@@ -78,13 +78,13 @@ j_k\equiv\delta_{r_0}^{-1}\,
 r_{0,k+1}=r_{0,k}+j_k\,165\cdot67^{k-1}.\tag{9}
 \]
 
-For legal, not merely integral, inverse edges, note \(B_r\ge2^{9^r+3}\ge64^r\), so r≥k implies B_r≥67^k **does not follow** from 64^r alone. Instead r≥k+1 ensures \(B_r\ge2^{9^{k+1}+3}>67^k\), and an explicit valid witness in each residue class is r=r_(0,k)+(k+1)·165·67^(k-1), which is certainly at least k+1. The affine iterate has exact closed form
+For legal, not merely integral, inverse edges, note \(B_r\ge2^{9^r+3}\ge128^r\) because \(9^r\ge7r\) for all positive r. Thus r≥k already implies \(B_r\ge67^k\); an explicit valid witness in each residue class is \(r=r_{0,k}+k\cdot165\cdot67^{k-1}\). The affine iterate has exact closed form
 \[
 V^j(B)=\frac{64^j(3B+224)-224\cdot67^j}{3\cdot67^j}.
 \]
-For B≥67^k and k≥2, the (k-1)st intermediate target is at least \(67\cdot64^{k-1}-224/3>104\). Every earlier intermediate target is larger because V(y)<y for positive y. The k=1 case with r≥2 already has B_r>104. All required q are nonnegative and the source \(32(2q+3)\) has exact valuation5. Therefore every class has infinitely many legal k-predecessor histories.
+For B≥67^k and k≥2, the (k-1)st intermediate target is at least \(67\cdot64^{k-1}-224/3>104\). Every earlier intermediate target is larger because V(y)<y for positive y. The k=1 case has B_r≥8000>104. All required q are nonnegative and the source \(32(2q+3)\) has exact valuation5. Therefore every class has infinitely many legal k-predecessor histories.
 
-The [exact 67-adic audit](v5_tower_audit.py) tests the complete 165-residue base census, checks all five unit derivatives, and computes eight Hensel lifts in each branch via the original finite geometric polynomial rather than the claimed derivative formula. The accompanying [general modulus scan](scan_v5_context.md) is not part of the proof.
+The [exact 67-adic audit](v5_tower_audit.py) tests the complete 165-residue base census, checks all five unit derivatives, and computes eight Hensel lifts in each branch via the original finite geometric polynomial rather than the claimed derivative formula. These checks are a finite regression, not a substitute for the all-k binomial proof above.
 
 ## Research significance and limit
 
