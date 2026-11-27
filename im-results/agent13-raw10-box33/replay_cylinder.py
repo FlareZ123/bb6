@@ -12,6 +12,16 @@ BRANCH=HERE.parent/'agent13-raw10-box3-branches'
 FIXED=None
 TARGETS=None
 BOUND=None
+HARD_D14V17={
+    (8,24,11,6,1,13,14,17,3,11,4,0): 'm0',
+    (8,14,11,24,1,13,14,17,3,15,4,0): 'm1',
+    (8,24,11,6,1,13,14,17,12,11,4,0): 'm2',
+    (8,24,11,6,1,13,14,17,24,11,4,0): 'm3',
+    (8,10,11,7,1,13,14,17,24,21,4,0): 'm4',
+    (8,10,11,7,1,13,14,17,24,23,4,0): 'm5',
+    (8,0,11,24,1,13,14,17,22,9,19,4): 'b0',
+    (8,0,11,24,1,13,14,17,22,17,19,4): 'b1',
+}
 HARD={}
 def call(*args):
     subprocess.run([str(x) for x in args],check=True)
@@ -80,11 +90,12 @@ def main():
     ap.add_argument('--bound',type=int,required=True)
     ap.add_argument('--work')
     args=ap.parse_args()
-    global FIXED,TARGETS,BOUND
+    global FIXED,TARGETS,BOUND,HARD
     d,v,BOUND=args.d0,args.second,args.bound
     slot={2:3,3:3,4:3,12:1,14:7,16:7,17:8,18:8,19:8,20:8}[d]
     assert 1<=v<=24 and BOUND>=11
     family=f'Box33D{d}V{v}'
+    HARD=HARD_D14V17 if (d,v)==(14,17) else {}
     FIXED=[8,-1,11,-1,1,13,d,-1,-1,-1,-1,-1]
     FIXED[slot]=v
     TARGETS=tuple(i for i,x in enumerate(FIXED) if x<0)
