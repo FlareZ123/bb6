@@ -129,10 +129,13 @@ def generate(t,p,cut,name,expr):
     if sizes[id(t)]<=400:small(t,p,cut,name,expr,lines,imports)
     else:
         n,s,kids=t[1:];lines.append(f'abbrev p{name} := {expr}')
+        siblings=[]; sibling_imports={root}
         for i,k in enumerate(kids):
             sub=f'{name}_{i:02}';e=f'refine ({expr}) {slot(s)} (some {mv(i)})';pp=p[:s]+[move(i)]+p[s+1:];cc=cut+(i%6==cut)
             if sizes[id(k)] >200:imports.add(generate(k,pp,cc,sub,e))
-            else:small(k,pp,cc,sub,e,lines,imports)
+            else:small(k,pp,cc,sub,e,siblings,sibling_imports)
+        if siblings:
+            sib=mod+'Small';write(sib,sibling_imports,siblings);imports.add(sib)
         join(lines,name,n,s,cut)
     write(mod,imports,lines);return mod
 tree=json.loads(src.joinpath('tree.json').read_text());size(tree)
@@ -151,7 +154,7 @@ write(prefix+'Cover',[mod],[f'''theorem root_support : TNFSupport p {cut0} := by
 print('open',len(seen),'modules',len(list(out.glob('*.lean'))),'leaf stats',stats)
 
 # Assign independent bottom-level tree modules by their actual imported source cost.
-roots=[p for p in out.glob(prefix+'Root_*.lean') if not any(l.startswith('import '+prefix+'Root') for l in p.read_text().splitlines())]
+roots=[p for p in out.glob(prefix+'Root*.lean') if not any(l.startswith('import '+prefix+'Root') for l in p.read_text().splitlines())]
 if not roots:roots=[out/(prefix+'Root.lean')]
 groups={str(i):[] for i in range(min(8,len(roots)))}
 sizes=[0]*len(groups)
