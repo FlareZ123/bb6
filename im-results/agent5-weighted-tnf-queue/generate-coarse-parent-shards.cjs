@@ -95,8 +95,9 @@ const eq=(p,q)=>`have hEq : ${p} = ${q} := BB6.Agent47PhaseFrontier.sameTable_so
 // Packed long last-hole traces. The original-source lemma converts the packed
 // final read slot to a knownRun first-hole witness without recomputing the run.
 if(longs.length){
- const lines=[ns(longMod),'open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree'];
  for(let k=0;k<longs.length;k++){
+  const name=longMod+k;
+  const lines=[ns(name),'open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree'];
   const c=longs[k],t=parse(c.table),p='p'+k;
   lines.push(`def ${p} : PartialMachine := ${table(t)}`);
   lines.push(`def z${k}_0 : P := startP`);
@@ -115,8 +116,8 @@ if(longs.length){
   }
   if(2*q+Number(l&1n)!==c.slot||t[c.slot]!=='---')throw Error('wrong final hole '+c.table);
   lines.push(`theorem safe${k} : ${safeTy(p)} := lastPacked ${B} ${p} ${c.n} ${slot(c.slot)} z${k}_${c.n} run${k}_${c.n} (by decide) (by decide) (by decide) (by decide) (by decide)\n#print axioms safe${k}`);
+  lines.push(`end BB6.${name}\n`);write(name,imports([])+lines.join('\n'));
  }
- lines.push(`end BB6.${longMod}\n`);write(longMod,imports([])+lines.join('\n'));
 }
 function emit(t,a,f){
  switch(t[0]){
@@ -151,7 +152,7 @@ function local(t,a,f,p,name,lines,imps,allowSplit=false){
   let other,proof;
   if(t[0]==='g'){imps.add('Raw11Q0CoarsePumps');other=pumpNS+'.p'+t[1];proof=`Cover.sound (${pumpNS}.cover${t[1]} ${B}) m hm`}
   else if(t[0]==='v'){const g=regionLeaves[t[1]];if(!g||g.table!==a.join(''))throw Error('wrong external region leaf');imps.add(g.mod);other=g.ns+'.table';proof=`Cover.sound (${g.ns}.cover ${B}) m hm`}
-  else if(t[0]==='l'){imps.add(longMod);other='BB6.'+longMod+'.p'+t[1];proof=`BB6.${longMod}.safe${t[1]} m hm`}
+  else if(t[0]==='l'){const name=longMod+t[1];imps.add(name);other='BB6.'+name+'.p'+t[1];proof=`BB6.${name}.safe${t[1]} m hm`}
   else{other='BB6.'+base+'.remaining'+t[1];proof=`hR ${other} BB6.${base}.mem${t[1]} m hm`}
   lines.push(`theorem ${safe}${H} : ${safeTy(p)} := by
   intro m hm
