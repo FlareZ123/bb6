@@ -5,6 +5,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent14Raw139NormalizedE0CutsFinite
 
+open BB6Coverage
 open BB6.Agent14Raw139Core
 
 def e0ZeroRA : PartialMachine := leaf (2, ⟨false, true, 0⟩)
