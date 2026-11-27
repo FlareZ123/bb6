@@ -1,3 +1,7 @@
+## Checkpoint 2026-11-27T08:20:07.967Z (current Agent11 lease 07:39:21.737Z)
+
+1LE180 remains open. New exact pushdown reduction with one abstract tape, one exact stack and phase-sensitive seven-state left grammar; see Raw391LE180PDS.md and raw391le180_pds.py. Tested suffix, SAT and CEGAR refinements, no closure; do not repeat brute window growth. Prior 28 arbitrary sweep inverse exclusions retained. Pivot to 0LE3334/3414/4084 rather than spend entire lease on unsuccessful abstraction. No accepted parent or global bound.
+
 ## 2026-11-27T07:52Z — live checkpoint (lease 07:39:21.737Z)
 
 Recovered frozen Raw39/1LE leaf 180 and derived exact A-to-A prefix transduction plus arbitrary left-sweep rule. Saved `im-results/agent11-raw39/Raw391LE180Sections.md` and `raw391le180_sections.py`. All 28 alternating inverse images of the bad language reject padded blanks, but full closure remains open. Try guarded DFA inference, not raw step replay. Local Python and Lean installed; repository DNS unavailable. No roster update. Lease remains original; next eligible release 08:49:21.737Z.
