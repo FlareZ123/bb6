@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,14 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = doubleCore ]; then
+          if [ "$TARGET" = double ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_double_entry.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-double --jobs 3 im-results/agent10-nov26-cryptids/Raw140DoubleCover.lean 2>&1 | tee /tmp/raw140-proof.log
+            for t in X4.cover X13.cover; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Double.$t"
+            done
+          elif [ "$TARGET" = doubleCore ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_double.js
             python tools/lean_compile_closure.py --workdir /tmp/raw140-double-core --jobs 3 im-results/agent10-nov26-cryptids/Raw140DoubleCore.lean 2>&1 | tee /tmp/raw140-proof.log
             for t in bounce dIter eEven eOddLast; do
