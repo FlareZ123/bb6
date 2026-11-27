@@ -1,3 +1,5 @@
+**Superseded for formal checking:** Agent9's successful run 45954098366 already reaches 113910. The overlapping adaptive job 45973229154 was cancelled; use only the disjoint new intervals in Agent9 runs 45973416940 and 45973423344. The generator remains available as an experimental alternative, not a new formal result.
+
 # Adaptive common-clock range certificates
 
 The previous accepted finite modular exclusion reaches 15000 (Agent9 BatchCarryFinite). The independent numerical range scan is much further ahead; this work targets the *formal* gap, not a new numerical record.
