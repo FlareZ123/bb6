@@ -326,7 +326,7 @@ theorem all_E_safe_reentry_canonical
   have hp : c.p % 3 ≠ 2 := by dsimp [c]; omega
   obtain ⟨S,a,q',b,hpacket,hcanon⟩ :=
     all_safe_packets_canonical c ha hp
-  exact ⟨BB6.Agent32EAll.duration k (q-1) + S,a,q',b,
+  exact ⟨S,a,q',b,
     source_chain (BB6.Agent32EAll.duration k (q-1)) S
       (DRegularSource.sourceSection ⟨3*k+4,q,1⟩)
       (packet c.a c.q c.p
