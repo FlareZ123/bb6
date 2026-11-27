@@ -77,7 +77,7 @@ def slot(s):return f'({s//2},{b(s%2)})'
 @functools.lru_cache(maxsize=None)
 def far(code,table):
     rev=int(code[0]);D=list(map(int,code[1:]));n=len(D)//2
-    assert rev in (0,1) and 1<=n<=5 and len(D)==2*n and D[0]==0 and all(0<=x<n for x in D)
+    assert rev in (0,1) and 1<=n<=6 and len(D)==2*n and D[0]==0 and all(0<=x<n for x in D)
     N=6*n+1;H=N-1;halt=1<<H;T=[0]*(2*N);T[H]=T[N+H]=halt;rules=[]
     p=table.replace('_','');p=[p[i:i+3] for i in range(0,36,3)]
     for l in range(n):
@@ -125,6 +125,12 @@ with tempfile.TemporaryDirectory() as temp:
     inp=''.join(f'{j} {t.replace("_","")}\n' for j,(_,t) in enumerate(leaves))
     run=subprocess.run([str(work/'far'),'0',str(work/'bank')],input=inp,text=True,capture_output=True,check=True)
     bank={int(line.split()[0]):line.split()[1] for line in run.stdout.splitlines()}
+    # Exact, locally kernel-checked FAR6 witness for the difficult 609 leaf.
+    extra_far={(609,'1RB0LE1RC1LA0RD1LB1LD0RC1LF---1RD0LB'):'1010232450112'}
+    for j,(i,t) in enumerate(leaves):
+        key=(i,t.replace('_',''))
+        if key in extra_far:
+            bank.setdefault(j,extra_far[key])
     cert={(i,t):bank[j] for j,(i,t) in enumerate(leaves) if j in bank}
     # Stable identifiers independent of parent selection and batching.
     counts={}
