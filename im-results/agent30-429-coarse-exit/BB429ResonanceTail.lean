@@ -124,8 +124,30 @@ theorem phase_cycles_direct_return
   · trivial
   · rw [hcoordU]
 
+
+/-- Compose the false-phase rotation with the geometric evacuation.  This is
+    the exact dynamical endgame needed by a minimal Cantor resonance. -/
+theorem false_resonance_evacuation
+    (u d J X C : Nat)
+    (hmod : (u-d)%4=1) (hu : d+17≤u)
+    (hJ : 1≤J) (hX : 2≤X)
+    (hC : C=3*(u-d-2)+(4*d+16)+24*J)
+    (hDhi : (4*d+16)*16^J≤36*X)
+    (hClo : 72*X≤C)
+    (hChi : C≤4*((4*d+16)*16^J)+27)
+    (hClow : 8*((4*d+16)*16^J)+21≤5*C) :
+    run (4*J+4) (phase u d)=some (11,C+13) := by
+  have hrot := phase_false_rotate u d hmod hu
+  have he : (4*d+16)%2=0 := by omega
+  have hp : ((u-d-2)+1)%4=(4*d+16)%4 := by omega
+  have htail := phase_cycles_direct_return J (u-d-2) (4*d+16) X C
+    hJ (by omega) he hp hC hX hDhi hClo hChi hClow
+  rw [show 4*J+4=2+(4*J+2) by omega,run_add,hrot]
+  simpa only [Option.bind_some] using htail
+
 #print axioms phase_false_rotate
 #print axioms phase_direct_return
 #print axioms phase_cycles_direct_return
+#print axioms false_resonance_evacuation
 
 end BB429.CoarseExit
