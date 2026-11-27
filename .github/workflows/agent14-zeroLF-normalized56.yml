@@ -49,7 +49,7 @@ jobs:
           python3 im-results/agent14-raw139-e0-zeroLF/unpack3862.py .tmp/zeroLF56/imports
           test -f .tmp/zeroLF56/accepted/manifest.json
           test -f .tmp/zeroLF56/conditional/imports/ZLFRoot13.lean
-          test -f .tmp/zeroLF56/imports/Cover3862.lean
+          test -f im-results/agent14-raw139-e0-zeroLF/Cover3862.lean
       - name: Source compile direct normalized 56-case consumer
         run: |
           set -euo pipefail
