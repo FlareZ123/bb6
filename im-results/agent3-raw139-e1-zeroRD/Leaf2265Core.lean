@@ -91,6 +91,8 @@ theorem run_add (n k : Nat) (c : Cfg) :
 abbrev Runs (n : Nat) (c d : Cfg) := run n c = some d
 theorem chain {n m : Nat} {a b c : Cfg}
     (h : Runs n a b) (j : Runs m b c) : Runs (n+m) a c := by
+  change run (n+m) a = some c
+  change run n a = some b at h
   rw [run_add,h]; exact j
 
 def S (k : Nat) (r : Ray) : Cfg := A blank (rep P k r)
@@ -105,7 +107,8 @@ theorem rightP (k : Nat) (l r : Ray) :
     have h : Runs 2 (A l (rep P (k+1) r)) (A (pre P l) (rep P k r)) := rfl
     have j := chain h (ih (pre P l))
     rw [rep_push] at j
-    simpa only [show 2*(k+1)=2+2*k by omega] using j
+    simp only [show 2*(k+1)=2+2*k by omega] at j
+    exact j
 theorem reverseP (k : Nat) (l r : Ray) :
     Runs (2*k) (A (rep P k l) (cons true r)) (A l (cons true (rep Q k r))) := by
   induction k generalizing r with
@@ -115,7 +118,8 @@ theorem reverseP (k : Nat) (l r : Ray) :
         (A (rep P k l) (cons true (pre Q r))) := rfl
     have j := chain h (ih (pre Q r))
     rw [rep_push] at j
-    simpa only [show 2*(k+1)=2+2*k by omega] using j
+    simp only [show 2*(k+1)=2+2*k by omega] at j
+    exact j
 theorem reverseExit (k : Nat) (r : Ray) :
     Runs (2*k+2) (A (rep P k blank) (cons true r)) (S (k+1) (cons false r)) := by
   have h := reverseP k blank r
@@ -131,7 +135,8 @@ theorem reverseExit (k : Nat) (r : Ray) :
 theorem one (k : Nat) (r : Ray) :
     Runs (4*k+2) (S k (cons true r)) (S (k+1) (cons false r)) := by
   have h := chain (rightP k blank (cons true r)) (reverseExit k r)
-  simpa only [show 2*k+(2*k+2)=4*k+2 by omega] using h
+  simp only [show 2*k+(2*k+2)=4*k+2 by omega] at h
+  exact h
 
 theorem cSweep (k : Nat) (l r : Ray) :
     Runs k (C l (rep O k r)) (C (rep O k l) r) := by
@@ -141,7 +146,8 @@ theorem cSweep (k : Nat) (l r : Ray) :
     have h : Runs 1 (C l (rep O (k+1) r)) (C (pre O l) (rep O k r)) := rfl
     have j := chain h (ih (pre O l))
     rw [rep_push] at j
-    simpa only [show k+1=1+k by omega] using j
+    simp only [show k+1=1+k by omega] at j
+    exact j
 theorem gSweep (k : Nat) (l r : Ray) :
     Runs (6*k) (A (rep O (4*k) l) (cons true r))
       (A l (cons true (rep G k r))) := by
@@ -154,7 +160,8 @@ theorem gSweep (k : Nat) (l r : Ray) :
       rfl
     have j := chain h (ih (pre G r))
     rw [rep_push] at j
-    simpa only [show 6*(k+1)=6+6*k by omega] using j
+    simp only [show 6*(k+1)=6+6*k by omega] at j
+    exact j
 theorem dSweep (k : Nat) (l r : Ray) :
     Runs (2*k) (D (rep Q k l) (cons false r))
       (D l (cons false (rep P k r))) := by
@@ -165,7 +172,8 @@ theorem dSweep (k : Nat) (l r : Ray) :
         (D (rep Q k l) (cons false (pre P r))) := rfl
     have j := chain h (ih (pre P r))
     rw [rep_push] at j
-    simpa only [show 2*(k+1)=2+2*k by omega] using j
+    simp only [show 2*(k+1)=2+2*k by omega] at j
+    exact j
 theorem dExit (k : Nat) (r : Ray) :
     Runs (2*k+2) (D (rep Q k blank) (cons false r))
       (S 0 (pre [false,true,true] (rep P k r))) := by
@@ -194,7 +202,8 @@ theorem initialPos (k d : Nat) (r : Ray) :
     rw [show d+1+2=3+d by omega,rep_add]
     rfl
   have g := chain h j
-  simpa only [show 2*k+2+(d+1)+5=2*k+d+8 by omega] using g
+  simp only [show 2*k+2+(d+1)+5=2*k+d+8 by omega] at g
+  exact g
 theorem initialZero (k : Nat) (r : Ray) :
     Runs (2*(k+1)+7) (S (k+1) (pre [false,false,false] r))
       (A (cons true (rep P k blank)) (pre [false,true,true,true] r)) := by
@@ -202,7 +211,8 @@ theorem initialZero (k : Nat) (r : Ray) :
   have j : Runs 5 (C (rep O 2 (rep P (k+1) blank)) (cons false r))
       (A (cons true (rep P k blank)) (pre [false,true,true,true] r)) := rfl
   have g := chain h j
-  simpa only [show 2*(k+1)+2+0+5=2*(k+1)+7 by omega] using g
+  simp only [show 2*(k+1)+2+0+5=2*(k+1)+7 by omega] at g
+  exact g
 theorem initialG (k j s : Nat) (r : Ray) :
     Runs (2*k+10*j+s+8)
       (S k (pre [false,false] (rep O (4*j+s+1) (cons false r))))
@@ -214,7 +224,8 @@ theorem initialG (k j s : Nat) (r : Ray) :
       (A (rep O (4*j) (rep O s (rep P k blank))) (cons true (pre [true,true,true] r))) := by
     rw [← rep_add]; exact h
   have v := chain h' g
-  simpa only [show 2*k+(4*j+s)+8+6*j=2*k+10*j+s+8 by omega] using v
+  simp only [show 2*k+(4*j+s)+8+6*j=2*k+10*j+s+8 by omega] at v
+  exact v
 
 theorem enterD (k : Nat) (r : Ray) :
     Runs 2 (A (cons true (rep P k blank)) (cons true r))
@@ -234,7 +245,8 @@ theorem zeroTurn (k : Nat) (r : Ray) :
   have h := enterDZero k r
   have j := dExit k (pre [false,false,true,false] r)
   have g := chain h j
-  simpa only [show 6+(2*k+2)=2*k+8 by omega] using g
+  simp only [show 6+(2*k+2)=2*k+8 by omega] at g
+  exact g
 
 -- Full one-return formulas, with the suffix G=1100 kept in factored form.
 theorem ret0 (k : Nat) (r : Ray) :
@@ -243,7 +255,8 @@ theorem ret0 (k : Nat) (r : Ray) :
   have h := initialZero k r
   have j := zeroTurn k (cons true r)
   have g := chain h j
-  simpa only [show 2*(k+1)+7+(2*k+8)=4*(k+1)+13 by omega] using g
+  simp only [show 2*(k+1)+7+(2*k+8)=4*(k+1)+13 by omega] at g
+  exact g
 theorem ret4 (k j : Nat) (r : Ray) :
     Runs (4*(k+1)+13+10*(j+1))
       (S (k+1) (pre [false,false] (rep O (4*(j+1)) (cons false r))))
@@ -254,14 +267,16 @@ theorem ret4 (k j : Nat) (r : Ray) :
       (S (k+1) (pre [false,false] (rep O (4*(j+1)) (cons false r))))
       (A (pre [true,true,true,false] (cons true (rep P k blank)))
         (cons true (rep G j (pre [true,true,true] r)))) := by
-    simpa only [show 4*j+3+1=4*(j+1) by omega] using h
+    simp only [show 4*j+3+1=4*(j+1) by omega] at h
+    exact h
   have turn : Runs 6 (A (pre [true,true,true,false] (cons true (rep P k blank)))
       (cons true (rep G j (pre [true,true,true] r))))
       (A (cons true (rep P k blank))
         (pre [false,true,true,false,false] (rep G j (pre [true,true,true] r)))) := rfl
   have z := zeroTurn k (pre [false,false] (rep G j (pre [true,true,true] r)))
   have g := chain (chain h' turn) z
-  simpa only [show 2*(k+1)+10*j+3+8+6+(2*k+8)=4*(k+1)+13+10*(j+1) by omega] using g
+  simp only [show 2*(k+1)+10*j+3+8+6+(2*k+8)=4*(k+1)+13+10*(j+1) by omega] at g
+  exact g
 theorem ret1 (k j : Nat) (r : Ray) :
     Runs (4*k+10+10*j)
       (S k (pre [false,false] (rep O (4*j+1) (cons false r))))
@@ -270,9 +285,11 @@ theorem ret1 (k j : Nat) (r : Ray) :
   have h' : Runs (2*k+10*j+8)
       (S k (pre [false,false] (rep O (4*j+1) (cons false r))))
       (A (rep P k blank) (cons true (rep G j (pre [true,true,true] r)))) := by
-    simpa only [Nat.add_zero] using h
+    simp only [Nat.add_zero] at h
+    exact h
   have g := chain h' (reverseExit k (rep G j (pre [true,true,true] r)))
-  simpa only [show 2*k+10*j+8+(2*k+2)=4*k+10+10*j by omega] using g
+  simp only [show 2*k+10*j+8+(2*k+2)=4*k+10+10*j by omega] at g
+  exact g
 theorem ret2 (k j : Nat) (r : Ray) :
     Runs (4*k+13+10*j)
       (S k (pre [false,false] (rep O (4*j+2) (cons false r))))
@@ -282,10 +299,12 @@ theorem ret2 (k j : Nat) (r : Ray) :
   have h' : Runs (2*k+10*j+9)
       (S k (pre [false,false] (rep O (4*j+2) (cons false r))))
       (A (cons true (rep P k blank)) (cons true (rep G j (pre [true,true,true] r)))) := by
-    simpa only [show 4*j+1+1=4*j+2 by omega,show 2*k+10*j+1+8=2*k+10*j+9 by omega] using h
+    simp only [show 4*j+1+1=4*j+2 by omega,show 2*k+10*j+1+8=2*k+10*j+9 by omega] at h
+    exact h
   have g := chain (chain h' (enterD k (rep G j (pre [true,true,true] r))))
       (dExit k (pre [false,false] (rep G j (pre [true,true,true] r))))
-  simpa only [show 2*k+10*j+9+2+(2*k+2)=4*k+13+10*j by omega] using g
+  simp only [show 2*k+10*j+9+2+(2*k+2)=4*k+13+10*j by omega] at g
+  exact g
 theorem terminal3 (k j : Nat) (r : Ray) :
     Runs (2*k+13+10*j)
       (S k (pre [false,false] (rep O (4*j+3) (cons false r))))
@@ -294,14 +313,16 @@ theorem terminal3 (k j : Nat) (r : Ray) :
   have h' : Runs (2*k+10*j+10)
       (S k (pre [false,false] (rep O (4*j+3) (cons false r))))
       (A (pre [true,true] (rep P k blank)) (cons true (rep G j (pre [true,true,true] r)))) := by
-    simpa only [show 4*j+2+1=4*j+3 by omega,show 2*k+10*j+2+8=2*k+10*j+10 by omega] using h
+    simp only [show 4*j+2+1=4*j+3 by omega,show 2*k+10*j+2+8=2*k+10*j+10 by omega] at h
+    exact h
   have t : Runs 3 (A (pre [true,true] (rep P k blank)) (cons true (rep G j (pre [true,true,true] r))))
       (E (rep Q k blank) (pre [false,false,false,false] (rep G j (pre [true,true,true] r)))) := by
     cases k with
     | zero => rfl
     | succ k => rw [Qblank]; rfl
   have g := chain h' t
-  simpa only [show 2*k+10*j+10+3=2*k+13+10*j by omega] using g
+  simp only [show 2*k+10*j+10+3=2*k+13+10*j by omega] at g
+  exact g
 
 def blankCfg : Cfg := A blank blank
 theorem seed : Runs 13 blankCfg (S 3 blank) := rfl
