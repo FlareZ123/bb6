@@ -12,7 +12,7 @@ on:
         options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof]
         default: zeroRC
       recovery_run_id:
-        description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), or zeroRC's thirteen successful cut groups (45906701973)
+        description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
         type: string
         default: ''
 permissions:
@@ -589,6 +589,187 @@ jobs:
           work=.tmp/a6-zeroRC
           python3 im-results/agent6-raw139-e0-zeroRC/merge-recovery.py "$work"
           printf '%s\n' "$RECOVERY_SHA" > "$work/parent/recovery-source-sha.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroRC-parent-certified
+          path: |
+            .tmp/a6-zeroRC/parent
+            .tmp/a6-zeroRC/imports
+          include-hidden-files: true
+          retention-days: 14
+
+  prepare-zeroRC-resume:
+    if: inputs.recovery_run_id == '45916648450' && inputs.variant == 'zeroRC'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    outputs:
+      matrix: ${{ steps.plan.outputs.matrix }}
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dfb6abff540a4decf4c46f147393a3e89025034
+      - name: Fetch pinned recovery source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          for script in repack.py resume.py; do
+            git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/$script" > "im-results/agent6-raw139-e0-zeroRC/$script"
+          done
+          python3 -m py_compile im-results/agent6-raw139-e0-zeroRC/resume.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroRC-core-and-sources
+          run-id: 45827711630
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroRC-cut-*
+          run-id: 45906701973
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/cuts
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroRC-cut-*
+          run-id: 45916648450
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/cuts
+      - name: Preserve all accepted cuts and decompose only missing batches
+        id: plan
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroRC
+          python3 im-results/agent6-raw139-e0-zeroRC/repack.py "$work"
+          python3 im-results/agent6-raw139-e0-zeroRC/resume.py prepare "$work"
+          echo "matrix=$(python3 -c 'import json;print(json.dumps({"root":json.load(open(".tmp/a6-zeroRC/resume-roots.json"))},separators=(",",":")))')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroRC-resume-plan
+          path: |
+            .tmp/a6-zeroRC/imports
+            .tmp/a6-zeroRC/core.json
+            .tmp/a6-zeroRC/resume-pool
+            .tmp/a6-zeroRC/resume-pool.json
+            .tmp/a6-zeroRC/resume-roots.json
+            .tmp/a6-zeroRC/resume-plan.json
+            .tmp/a6-zeroRC/recovery-groups
+          include-hidden-files: true
+          retention-days: 14
+
+  check-zeroRC-resume:
+    needs: prepare-zeroRC-resume
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.prepare-zeroRC-resume.outputs.matrix) }}
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+      CUT_ROOT: ${{ matrix.root }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dfb6abff540a4decf4c46f147393a3e89025034
+      - name: Fetch pinned recovery source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/resume.py" > im-results/agent6-raw139-e0-zeroRC/resume.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-zeroRC-resume-plan
+          path: .tmp/a6-zeroRC
+      - name: Check one missing exact child and preserve dependency-closed partial work
+        id: check
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroRC
+          dst="$work/resume-cut"
+          build=/tmp/a6-zeroRC-resume
+          mkdir -p "$dst"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          set +e
+          timeout --kill-after=15s 12m python3 tools/lean_compile_closure.py "$work/imports/$CUT_ROOT.lean" --source-root "$work/imports" --precompiled-manifest "$work/resume-pool.json" --precompiled-dir "$work/resume-pool" --workdir "$build" --jobs 2 --manifest "$dst/manifest.json" --label "raw139-zeroRC-resume-$CUT_ROOT" | tee "$dst/log"
+          rc=${PIPESTATUS[0]}
+          set -e
+          ! grep -Eq 'sorryAx|ofReduceBool' "$dst/log"
+          if [[ "$rc" == 0 ]]; then
+            complete=true
+          else
+            complete=false
+            python3 tools/lean_compile_closure.py "$work/imports/$CUT_ROOT.lean" --source-root "$work/imports" --manifest-only --allow-missing-objects --artifact-dir "$build" --manifest "$dst/manifest.json" --label "raw139-zeroRC-resume-partial-$CUT_ROOT"
+          fi
+          python3 im-results/agent6-raw139-e0-zeroRC/resume.py collect "$work" "$build" "$dst" "$complete"
+          echo "complete=$complete" >> "$GITHUB_OUTPUT"
+          printf '%s\n' "$RECOVERY_SHA" > "$dst/recovery-source-sha.txt"
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.complete == 'true'
+        with:
+          name: raw139-zeroRC-resume-${{ matrix.root }}
+          path: .tmp/a6-zeroRC/resume-cut
+          include-hidden-files: true
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: steps.check.outputs.complete == 'false'
+        with:
+          name: raw139-zeroRC-resume-partial-${{ matrix.root }}
+          path: .tmp/a6-zeroRC/resume-cut
+          include-hidden-files: true
+          retention-days: 14
+      - name: Fail closed unless the exact child completed
+        if: always()
+        run: test "${{ steps.check.outputs.complete }}" = true
+
+  compose-zeroRC-resume:
+    needs: [prepare-zeroRC-resume, check-zeroRC-resume]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    env:
+      RECOVERY_SHA: ${{ inputs.source_sha }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 9dfb6abff540a4decf4c46f147393a3e89025034
+      - name: Fetch pinned recovery source
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/resume.py" > im-results/agent6-raw139-e0-zeroRC/resume.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-zeroRC-resume-plan
+          path: .tmp/a6-zeroRC
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-zeroRC-resume-ZRCRecovery*
+          path: .tmp/a6-zeroRC/resume-cuts
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-zeroRC-root*-certified
+          run-id: 45827711630
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/shards
+      - name: Compose all 24 exact roots with unchanged parent theorem
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent6-raw139-e0-zeroRC/resume.py finish .tmp/a6-zeroRC
+          printf '%s\n' "$RECOVERY_SHA" > .tmp/a6-zeroRC/parent/recovery-source-sha.txt
       - uses: actions/upload-artifact@v4
         with:
           name: raw139-e0-zeroRC-parent-certified
