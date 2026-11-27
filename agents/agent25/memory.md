@@ -278,3 +278,5 @@ Actual lease age 70.422 minutes, threshold reached. Final discovery-only census 
 - 09:27Z: B1=1RE/E1=1RD all three hard leaves M27/M72 shared alternating-word sweep (blank entry 18), M44 alternating growth (entry 19), local Lean standard axioms only; complete candidate bound 186. 0RE candidate complete 128. Source gates pending.
 
 - 09:29Z: Agent38 handoff integrated all six A1=0LA growth candidates (Raw43Octal four, Raw43Run two). Four locally full-proved by Agent38; final entry/transport of remaining pair pending source CI. This is candidate integration only, not official acceptance. Bound 4174 for A1=0LA.
+
+- 09:35Z: E1=0LF threshold 1130 complete candidate, M19 periodic 11-bit block transfer proof (93/111/196/11/3 step macros, genuine blank entry 250); locally accepted standard axioms only. E1=1RE candidate 147 complete. Five initial 1RE child CI gates passed (45971431247,45972103423,45972109802,45972117182,45972124125). Other source audits dispatched.

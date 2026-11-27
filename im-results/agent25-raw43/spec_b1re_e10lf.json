@@ -3596,14 +3596,13 @@
     }
   },
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 19,
+  "growth": {
+    "19": {
       "table": "1RB---_1RC1RE_0RD1RA_1LD0RB_0RC0LF_1LE0LF",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43B1REE1LFM19",
+      "partial": "BB6.Agent25Raw43B1REE1LFM19.table",
+      "never": "BB6.Agent25Raw43B1REE1LFM19.never"
     }
-  ]
+  },
+  "unresolved": []
 }
