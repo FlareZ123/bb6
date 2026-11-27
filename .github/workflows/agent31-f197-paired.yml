@@ -1,6 +1,15 @@
 name: Agent31 F197 paired transducer Lean
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Proof family to verify'
+        required: false
+        type: choice
+        options:
+          - paired
+          - at-terminal
+        default: paired
 
 jobs:
   kernel-check:
@@ -14,7 +23,18 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
+      - name: Check complementary AT terminal proof
+        if: ${{ inputs.target == 'at-terminal' }}
+        env:
+          LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent31-f197-macro/Macro.olean im-results/agent31-f197-macro/Macro.lean
+          lean -o im-results/agent31-f197-macro/MacroExact.olean im-results/agent31-f197-macro/MacroExact.lean
+          lean im-results/agent2-f197-sweep/ATTerminalCore.lean | tee /tmp/at-terminal.log
+          ! grep -q sorryAx /tmp/at-terminal.log
       - name: Check paired reset transducer
+        if: ${{ inputs.target != 'at-terminal' }}
         env:
           LEAN_PATH: im-results/agent31-f197-macro
         run: |
