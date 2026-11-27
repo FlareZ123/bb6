@@ -117,6 +117,8 @@ The structural mathematical results include [exact section indegree distribution
 
 ## Other root-specific mathematics
 
+- [Two Raw140 nonhalting cylinders via arbitrary-word sweep](2026-11-27-raw140-double-growth-agent10.md): exact three-cell block recurrence and positive-time invariant for two formerly unresolved one-hole tables (50 compatible completions); original-source Lean coverage and axiom gate passed [45937374742](https://github.com/FlareZ123/bb6/actions/runs/45937374742). Local result; parent and global roster integration remain open.
+
 | Programme | Reusable result and next missing quantifier |
 | --- | --- |
 | P1 | [Eventually aperiodic inverse-path theorem](p1-periodic-inverse-shadow.md), [root inverse-cone programme](../im-results/agent1-p1-quarter/README.md), [high-cost reset constraints](../im-results/agent43-p1-high-cost-reset-count/README.md). Close every surviving inverse exit and authentic-root correspondence. |
