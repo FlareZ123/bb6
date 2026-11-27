@@ -22,7 +22,7 @@ The finite discovery scan expanded first encountered holes in the A1/F0/F1 slots
 | 1LF | 0LE | 7302 | A(40) | 605 |
 | 1LF | 0RE | 7296 | A(40) | 605 |
 
-F1 is unassigned in all rows. The other fixed rows are the base in Raw140OrbitCore. The universal phase costs are 18n+62 and 18n+82, so A(n) -> A(n+6) costs 36n+198. The new Lean core has been compiled locally against the exact repository BlockMacro, Raw140OrbitCore, generated phase laws and Raw140SevenOrbit (standard axioms only); all fifteen entries have also compiled locally (standard axioms only). The original-source weighted bridge is separate and pending. No complete Raw140 Cover, accepted residual count reduction, or BB(6) verdict is claimed.
+F1 is unassigned in all rows. The other fixed rows are the base in Raw140OrbitCore. The universal phase costs are 18n+62 and 18n+82, so A(n) -> A(n+6) costs 36n+198. The new Lean core has been compiled locally against the exact repository BlockMacro, Raw140OrbitCore, generated phase laws and Raw140SevenOrbit (standard axioms only); all fifteen entries have also compiled locally (standard axioms only). The novel X11 original-source weighted bridge passed run [45922816736](https://github.com/FlareZ123/bb6/actions/runs/45922816736), head 8c9037dbe020a7fe85ae656f7e831613a674c173, exporting Raw140Extra.X11.cover for arbitrary B. No complete Raw140 Cover, accepted residual count reduction, or BB(6) verdict is claimed.
 
 Reproduce with generate_raw140_orbit_phases.py then generate_raw140_extra.py. Use the existing manual agent10-raw140-seven.yml with target extra, not the already accepted seven target. The generator is untrusted; the source bridge proves literal table equality and exports arbitrary-bound Covers only after all entry proofs pass.
 

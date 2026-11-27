@@ -5,14 +5,14 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra]
+        options: [seven, extra, long4, long79]
         default: extra
 permissions:
   contents: read
 jobs:
   proof:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 55
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean
@@ -32,6 +32,13 @@ jobs:
             python im-results/agent10-nov26-cryptids/generate_raw140_extra.py
             python tools/lean_compile_closure.py --workdir /tmp/raw140-extra --jobs 3 im-results/agent10-nov26-cryptids/Raw140ExtraNovelCover.lean 2>&1 | tee /tmp/raw140-proof.log
             python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Extra.X11.cover"
+          elif [ "$TARGET" = long4 ] || [ "$TARGET" = long79 ]; then
+            if [ "$TARGET" = long4 ]; then ids="34 38 75 78"; cover=Raw140LongFourCover; else ids=79; cover=Raw140Long79Cover; fi
+            python im-results/agent10-nov26-cryptids/generate_raw140_long.py $ids
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-long --jobs 2 "im-results/agent10-nov26-cryptids/$cover.lean" 2>&1 | tee /tmp/raw140-proof.log
+            for i in $ids; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140Long.X$i.cover"
+            done
           else
             python tools/lean_compile_closure.py --workdir /tmp/raw140-seven --jobs 3 im-results/agent10-nov26-cryptids/Raw140SevenCover.lean 2>&1 | tee /tmp/raw140-proof.log
             for i in $(seq 0 6); do
