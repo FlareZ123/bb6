@@ -300,27 +300,37 @@
     "141": "100",
     "142": "000"
   },
-  "growth": {},
-  "unresolved": [
-    [
-      13,
-      "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF0RF_0LE0LA"
-    ],
-    [
-      20,
-      "1RB0LF_1RC0RE_0RD---_1LD0RB_1RA0RF_0LF1LA"
-    ],
-    [
-      73,
-      "1RB0LF_1RC0RE_0RD---_1LD0RB_1RF0RF_1LA1LB"
-    ],
-    [
-      103,
-      "1RB1LA_1RC0RE_0RD1LA_1LD0RB_---0RF_1LF0LA"
-    ],
-    [
-      119,
-      "1RB0LE_1RC0RE_0RD---_1LD0RB_0LA0RF_1LF0RA"
-    ]
-  ]
+  "growth": {
+    "13": {
+      "table": "1RB---_1RC0RE_0RD0RC_1LD0RB_1LF0RF_0LE0LA",
+      "module": "Raw43RF0Growth",
+      "partial": "BB6.Agent25Raw43RF0M13.table",
+      "never": "BB6.Agent25Raw43RF0M13.never"
+    },
+    "20": {
+      "table": "1RB0LF_1RC0RE_0RD---_1LD0RB_1RA0RF_0LF1LA",
+      "module": "Raw43RF0Growth",
+      "partial": "BB6.Agent25Raw43RF0M20.table",
+      "never": "BB6.Agent25Raw43RF0M20.never"
+    },
+    "73": {
+      "table": "1RB0LF_1RC0RE_0RD---_1LD0RB_1RF0RF_1LA1LB",
+      "module": "Raw43RF0Growth",
+      "partial": "BB6.Agent25Raw43RF0M73.table",
+      "never": "BB6.Agent25Raw43RF0M73.never"
+    },
+    "103": {
+      "table": "1RB1LA_1RC0RE_0RD1LA_1LD0RB_---0RF_1LF0LA",
+      "module": "Raw43RF0Growth",
+      "partial": "BB6.Agent25Raw43RF0M103.table",
+      "never": "BB6.Agent25Raw43RF0M103.never"
+    },
+    "119": {
+      "table": "1RB0LE_1RC0RE_0RD---_1LD0RB_0LA0RF_1LF0RA",
+      "module": "Raw43RF0Growth",
+      "partial": "BB6.Agent25Raw43RF0M119.table",
+      "never": "BB6.Agent25Raw43RF0M119.never"
+    }
+  },
+  "unresolved": []
 }
