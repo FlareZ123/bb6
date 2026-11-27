@@ -112,6 +112,8 @@ def run_direct(args):
             (8,2,11,12,1,13,17,0,21,17,24,3):('side',2482,103,0,-17),
             (8,14,11,0,1,13,17,22,21,11,24,2):('side',2092,1630,1,26),
         }
+    if known and not known_specs and source:
+        for nm in set(known.values()):known_specs[nm]=(source,f'BB6.Agent13.{source}',f' .{nm}')
     unresolved=[]
     for l in open('rlehard-1.txt'):
         t=tuple(map(int,l.split()))
@@ -121,8 +123,26 @@ def run_direct(args):
             late[t]=('known',known[t])
         else:
             unresolved.append(t)
+    auto_files={}
+    if unresolved:
+        # Discover proof-carrying candidate leaves; never treat success as a
+        # trusted verdict. The generated exact source modules are imported
+        # by DirectKnown and the tree audit checks partial-table equality.
+        adir=work/'auto-run-summary'
+        shutil.rmtree(adir,ignore_errors=True);adir.mkdir()
+        inp=adir/'input.json';inp.write_text(json.dumps(unresolved))
+        call('node',HERE/'auto_run_summary.js',inp,adir,family)
+        manifest=json.loads((adir/'auto-run-manifest.json').read_text())
+        for i,record in enumerate(manifest['found']):
+            t=tuple(record['table']);nm=f'auto{i}';mod=record['module']
+            known[t]=nm;known_specs[nm]=(mod,record['namespace'],'')
+            late[t]=('known',nm)
+        for f in adir.iterdir():
+            if f.suffix in {'.lean','.json'}:auto_files[f.name]=f.read_text()
+        unresolved=[tuple(t) for t in manifest['missing']]
     if unresolved:
         out.mkdir(parents=True,exist_ok=True)
+        for name,body in auto_files.items():(out/name).write_text(body)
         (out/'UNACCEPTED-unresolved.json').write_text(json.dumps({
             'd0':d,'second':v,'proposed_bound':B,
             'remaining':unresolved},indent=2)+'\n')
@@ -146,6 +166,7 @@ def run_direct(args):
     import emit_proof as em
     sys.argv=argv;em.HERE=work;em.OUT=out
     shutil.rmtree(out,ignore_errors=True);out.mkdir(parents=True,exist_ok=True)
+    for name,body in auto_files.items():(out/name).write_text(body)
     oldwrite=em.write
     def write(name,imports,body):
         oldwrite(name.replace('Box4',family),[i.replace('Box4',family) for i in imports],body.replace('Box4',family))
