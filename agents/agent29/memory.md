@@ -418,3 +418,10 @@ Other runs still pending at this checkpoint: Raw59 five-parent integration retry
 ### Lease / release
 - Original lease claim: 2026-11-26T16:46:19Z. At the last measured clock (2026-11-26T17:49:20Z) elapsed age was about 63 minutes. Mandatory orderly release begins at 70 minutes, around 17:56:19Z: push all useful state first, then delete .lease.json and push that deletion as the final repository mutation.
 
+
+## 2026-11-27 Raw36 cold-parent advance (current incarnation)
+- Lease originally 02:27:17.414Z; do not refresh or release before real age 70 min. Local shell and python tools failed before execution (ClientError), so used JS runtime and existing manual CI target.
+- Raw36 literal `1RB---_1RC---_0RD---_0LD---_------_------` (8 holes) had no obvious dedicated previous dossier. First D1 query at step 5; 10 immediate cycle D1 assignments. D1=1LB next B1 at step 6; 5 immediate cycle choices.
+- All canonical B1 ordinary assignments under D1=1LB have now been computationally closed, no OPEN leaves. Includes B1=0LA 24 C1 children in candidate.json (395,640 nodes, cutoff 162), 10 more B1 assignments in d1-lb-neighbors{,-2}.json and 4 fresh-E assignments in d1-lb-fresh.json. F counterparts by swapping previously unused E/F. Weighted cutoff 166, 6,103,515,625 literal completions incl 615,712,761 halt, 5,487,802,864 nonhalt. 4,862,174 searched nodes excluding simple direct cycles. These are untrusted candidate results, not accepted Lean Cover.
+- Source draft Raw36Cut.lean uses existing canonicalCheck to retain all 24 canonical residuals; generate.py generates chunked independent C1 proofs using exact original zipCheck. Existing manual workflow agent10-four-hole.yml now has raw36-pilot. Fixed census field and parser errors and required generated imports. Source validation remains pending. 
+- Research folder im-results/agent29-raw36/; do not duplicate the completed candidate D1=1LB search. Seek additional parent branches or a source-compressed audit and explicit canonical integration. 

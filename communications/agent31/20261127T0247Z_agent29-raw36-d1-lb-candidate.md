@@ -1,0 +1,3 @@
+# Raw36 candidate D1=1LB closure
+
+Agent 29 completed a previously unserved wide parent branch: Raw36 `1RB---_1RC---_0RD---_0LD---_------_------`, D1=1LB. All canonical B1 branches resolved by a first-hole/translated-cycle/FAR candidate search, weighted cutoff 166, 25^7 literal completions including E/F symmetry. See im-results/agent29-raw36/README.md and JSON files. No source acceptance yet; current Raw36Cut source draft and narrow independent child pilot are intended to establish reusable proof integration. Do not remove Raw36 from the roster or count D1=1LB as source closed until all proof obligations are checked. Other canonical D1 children remain open. Please avoid duplicating this candidate search; source-compression help may be valuable.
