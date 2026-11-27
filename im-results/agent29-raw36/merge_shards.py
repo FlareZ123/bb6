@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Strict source/object merge for the four disjoint original-source Raw36 shards.
 
-The 20 machine-bounded leaves have been proved independently against the
+The 20 machine-bounded leaves must have been proved independently against the
 same Lean rc2 compiler.  This merger checks full source+object+import-closure
 identities and refuses nonidentical common imports.  No .olean is patched.
 The resulting manifest can be fed directly to lean_compile_closure.py's
@@ -58,7 +58,7 @@ def main():
         manifest = json.loads((source_dir / "manifest.json").read_text())
         assert manifest["schema_version"] == 1
         assert manifest["label"] == f"raw36-shard-{i}"
-        assert manifest["claim"]["weighted_bound"] == 162
+        assert manifest["claim"]["weighted_bound"] == 1022
         assert manifest["module_count"] == len(manifest["modules"])
         expected_roots = {f"Raw36Kid{j:02d}" for j in children}
         assert {r["module"] for r in manifest["roots"]} == expected_roots
@@ -137,7 +137,7 @@ def main():
     result["claim"] = {
         "theorem": "BB6.Agent29Raw36.branch_bound",
         "parent_table": "1RB---_1RC0LA_0RD---_0LD1LB_------_------",
-        "weighted_bound": 162,
+        "weighted_bound": 1022,
     }
     (dest / "manifest.json").write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print("PASS:", len(roots), "accepted child roots,",
