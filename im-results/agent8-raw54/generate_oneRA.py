@@ -171,7 +171,7 @@ def assemble(tree,certs,deps,threshold):
     stats=Counter()
     root=Node(tree,certs,deps,stats)
     assert stats==Counter(split=2765,cycle=47151,last=14626,open=1819),stats
-    write("Raw54OneRABase",["Raw54OneRALate"],"""abbrev parent : PartialMachine := BB6.Agent8Raw54.OneRALate.parent
+    write("Raw54OneRABase",["Raw54OneRAParent"],"""abbrev parent : PartialMachine := BB6.Agent8Raw54.OneRALate.parent
 theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := BB6.Agent8Raw54.OneRALate.parent_root
 theorem parent_nohalt : weightedTNFNoAssignedHalt parent := BB6.Agent8Raw54.OneRALate.parent_nohalt""")
     enlarge_late(root,threshold)

@@ -36,6 +36,9 @@ def plan(directory, out, count, stem='Raw54OneRA', root='Raw54OneRACut'):
             frontier.add(m)
     for m in graph[root]:
         cut(m)
+    if stem == 'Raw54OneRA':
+        # Do not independently compile a root already in another frontier closure.
+        frontier={m for m in frontier if not any(m != n and m in closure(n) for n in frontier)}
     bins=[[] for _ in range(count)]
     deps=[set() for _ in bins]
     for m in sorted(frontier,key=lambda m:(-cost(closure(m)),m)):

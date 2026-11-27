@@ -25,5 +25,7 @@ def emit(rows,out):
   b,d,q=M0.a[j];s.append(f'  have hc{i} : compatible '+('parent' if i==0 else f'p{i-1}')+f' witness := refine_preserves_compat '+('parent' if i==0 else f'p{i-1}')+f' witness ({j//2},{str(bool(j%2)).lower()}) (some ⟨{str(b=="1").lower()},{str(d=="R").lower()},{ord(q)-65}⟩) (by decide) '+('h3' if i==3 else f'hc{i+1}'))
  s += ['  exact hc0','theorem witness_halts : HaltsAfter witness 39446 := by\n  obtain ⟨hr,hh,_⟩ := zipQueryOK_sound query\n  have hm : compatible (refine table (0,true) none) witness := weightedTNFDefaultCompletion_compatible _\n  cases he : knownRun table 39446 with\n  | none => simp [he] at hr\n  | some c =>\n    have hs : readSlot c = (0,true) := by simpa [he] using hr\n    apply first_hole_halts table 39446 c he\n    · simpa [hs] using hh\n    · simpa [hs] using hm','theorem witness_delay : 0 ∈ delays (zeroNext witness) 0 := by decide','theorem attained : ∃ m, compatible parent m ∧ HaltsAfter m 39446 ∧ 0 ∈ delays (zeroNext m) 0 :=\n  ⟨witness,witness_parent,witness_halts,witness_delay⟩','#print axioms cover','#print axioms attained','end M39447','end BB6.Agent8Raw54.OneRALate']
  out.write_text('\n'.join(s)+'\n')
+ from repair_oneRA_late import repair
+ repair(out.parent, update_base=False)
 if __name__=='__main__':
  emit(Path(sys.argv[1]).read_text().splitlines(),Path(sys.argv[2]))
