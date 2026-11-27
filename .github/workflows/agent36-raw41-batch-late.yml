@@ -1,0 +1,45 @@
+name: Agent 36 Raw41 late first-hole census (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: Maximum primitive transitions per unresolved one-hole machine
+        type: string
+        default: '2000000'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080134973
+          name: raw41-batch-far-${{ matrix.shard }}
+          path: .tmp/a36-batch-far
+      - name: Run independent exact blank-prefix first-hole timer
+        run: |
+          set -euo pipefail
+          g++ -std=c++20 -O3 im-results/agent36-raw41/simulate_missing.cpp -o .tmp/a36-late-simulator
+          python3 im-results/agent36-raw41/scan_missing_late.py \
+            --batch .tmp/a36-batch-far/.tmp/a36-raw41-batch-${{ matrix.shard }}.json \
+            --simulator .tmp/a36-late-simulator \
+            --limit ${{ inputs.limit }} \
+            --out .tmp/a36-late-${{ matrix.shard }}.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-late-${{ matrix.shard }}
+          path: .tmp/a36-late-${{ matrix.shard }}.json
+          retention-days: 30
