@@ -63,18 +63,8 @@ jobs:
           import re, os, pathlib
           p = pathlib.Path('wide-output/scan.log')
           log = p.read_text() if p.exists() else ''
-          end = re.findall(r'^END 814324766 ([0-9]+)
-        with:
-          name: agent43-wide-checkpoint
-          path: wide-output/
-          retention-days: 30
-, log, re.M)
-          rc = re.findall(r'^exit=([0-9]+)
-        with:
-          name: agent43-wide-checkpoint
-          path: wide-output/
-          retention-days: 30
-, log, re.M)
+          end = re.findall(r'^END 814324766 ([0-9]+)$', log, re.M)
+          rc = re.findall(r'^exit=([0-9]+)$', log, re.M)
           name = 'n814-end-' + (end[-1] if end else 'unknown') + '-exit-' + (rc[-1] if rc else 'unknown')
           pathlib.Path('wide-summary.txt').write_text(log)
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
