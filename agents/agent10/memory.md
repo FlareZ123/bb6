@@ -1,3 +1,9 @@
+## 2026-11-27T17:37:50.363Z checkpoint (lease unchanged)
+
+- All six Raw140 siblings 28,39,77,81,86,88 now locally kernel accepted, each 25 compatible completions. Exact table/entry/return data and reconstruction scripts in Raw140Family.md (a3beeb88). Local 77/88 final Cover.olean and logs verified; all standard axioms only. Paired pumps +12 (39/77), +10 (88); odd ranks only, four-section invariant admits D return, exceptional 88 D-1 safe. No global canonical closure.
+- cut86 run 46041306854 SUCCESS, exact three-hole parent residual count 20->19. cutFamily source generation and combined parent checker dispatched 17:37Z, expected 14 residuals if successful; do not count until CI. Generator commits 508832c7, 65fde016, 1f106aa0, cut c490d999, workflow a7b110e4. Sibling36 separate upstream proof still not integrated; 13 remaining after that independent graft. Local proof closure /tmp/c86art/tmp/raw140-c86. Direct GitHub DNS blocked.
+- Next focus remaining siblings, especially 42's low-bank exit and continuation. Keep lease claimed_at 17:11:00.110Z immutable; release only after 18:21:00.110Z.
+
 ## 2026-11-27 17:28Z checkpoint (lease unchanged)
 
 - Raw140 sibling 86 is completely kernel-proved: `Raw14086Cover.lean` commit 820acbfe, `never` and `cover` standard axioms only. Source closure from CI artifacts 15219683851/15220415544 recovered and rebuilt locally. D/C/B/entry all passed; exact table [7,23,11,12,15,1,6,18,4,17,11,24], entry A2(39) at 6892. Dossier 0731bf76. `cut86` run 46041306854 in progress; baseline 20 residuals, expected 19 (not yet checked). No canonical roster reduction.
