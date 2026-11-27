@@ -98,3 +98,53 @@ private theorem a12CR_triple_zero_high (a : ℕ) (L R : List (ℕ × ℕ)) :
       (step target c).isNone := a12CR_triple_zeros_high 0 a L R
 
 #print axioms a12CR_triple_zeros_high
+
+private theorem a12CR_one_zero_pair (b : ℕ) (L R : List (ℕ × ℕ)) :
+    ReachesPlus target
+      (cfg_CR_n_n ((1,0)::(0,0)::L) ((b,0)::R))
+      (cfg_CR_n_n L ((0,0)::(b+3,0)::R)) := by
+  unfold cfg_CR_n_n
+  simp only [encRight_d1_s0, encRight_d0_s0, encLeft_d0_s0]
+  rw [encLeft_succ (b+2) 0 R, encLeft_succ (b+1) 0 R, encLeft_succ b 0 R]
+  execute 5
+
+inductive a12Collectable : List (ℕ × ℕ) → Prop
+  | nil : a12Collectable []
+  | zero {P} : a12Collectable P → a12Collectable ((0,0)::P)
+  | oneZero {P} : a12Collectable P → a12Collectable ((1,0)::(0,0)::P)
+
+def a12HighRight (R : List (ℕ × ℕ)) : Prop :=
+  (∃ a T, R = (a+2,0)::T) ∨ (∃ a T, R = (0,0)::(a+2,0)::T)
+
+theorem a12CR_collectable_triple_halts (P : List (ℕ × ℕ)) (hp : a12Collectable P)
+    (L R : List (ℕ × ℕ)) (hr : a12HighRight R) :
+    ∃ c, ReachesPlus target
+      (cfg_CR_n_n (P ++ (1,0)::(1,0)::(1,0)::L) R) c ∧
+      (step target c).isNone := by
+  induction hp generalizing R with
+  | nil =>
+    rcases hr with ⟨a,T,rfl⟩ | ⟨a,T,rfl⟩
+    · exact a12CR_triple_positive a L T
+    · exact a12CR_triple_zero_high a L T
+  | @zero P hP ih =>
+    let LL := P ++ (1,0)::(1,0)::(1,0)::L
+    rcases hr with ⟨a,T,rfl⟩ | ⟨a,T,rfl⟩
+    · have h := a12CR_zero_pair (a+2) LL T
+      obtain ⟨c,hc,hh⟩ := ih ((a+2+2,0)::T) (Or.inl ⟨a+2,T,rfl⟩)
+      exact ⟨c,ReachesPlus.trans h hc,hh⟩
+    · have h := a12CR_zero_pair 0 LL ((a+2,0)::T)
+      obtain ⟨c,hc,hh⟩ := ih ((2,0)::(a+2,0)::T) (Or.inl ⟨0,_,rfl⟩)
+      exact ⟨c,ReachesPlus.trans h hc,hh⟩
+  | @oneZero P hP ih =>
+    let LL := P ++ (1,0)::(1,0)::(1,0)::L
+    rcases hr with ⟨a,T,rfl⟩ | ⟨a,T,rfl⟩
+    · have h := a12CR_one_zero_pair (a+2) LL T
+      obtain ⟨c,hc,hh⟩ := ih ((0,0)::(a+2+3,0)::T) (Or.inr ⟨a+3,T,by
+        have he : a+2+3 = a+3+2 := by omega
+        rw [he]⟩)
+      exact ⟨c,ReachesPlus.trans h hc,hh⟩
+    · have h := a12CR_one_zero_pair 0 LL ((a+2,0)::T)
+      obtain ⟨c,hc,hh⟩ := ih ((0,0)::(3,0)::(a+2,0)::T) (Or.inr ⟨1,_,rfl⟩)
+      exact ⟨c,ReachesPlus.trans h hc,hh⟩
+
+#print axioms a12CR_collectable_triple_halts
