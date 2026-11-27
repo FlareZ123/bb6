@@ -20,7 +20,7 @@ Theorem q0_raw11_refinesb_true :
 Proof. vm_compute. reflexivity. Qed.
 
 Theorem q0_raw11_checkpoint_counts :
-  (List.length (fst q0_raw11_queue), List.length (snd q0_raw11_queue)) = (156, 1).
+  (List.length (fst q0_raw11_queue), List.length (snd q0_raw11_queue)) = (156%nat, 1%nat).
 Proof. vm_compute. reflexivity. Qed.
 
 Definition q0_raw11_tables : list string :=
