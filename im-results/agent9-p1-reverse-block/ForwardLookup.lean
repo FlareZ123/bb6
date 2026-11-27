@@ -63,6 +63,7 @@ theorem forward_iff_walk (q c z : Nat) (ys : List Nat)
   · intro h
     obtain ⟨B,hB,hval⟩ := List.mem_filterMap.mp h
     have hres := (words_mem q ys.length c (digits ys) B hY).mp hB
+    dsimp only at hval
     split at hval
     · rename_i hh
       have hz : (c+wordWeight q ys.length B-digits ys)/2^ys.length=z := by
