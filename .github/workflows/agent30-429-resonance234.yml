@@ -33,12 +33,20 @@ jobs:
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance234.olean im-results/agent30-429-coarse-exit/BB429Resonance234.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429ResonanceSlope.olean im-results/agent30-429-coarse-exit/BB429ResonanceSlope.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429ResonanceEven.olean im-results/agent30-429-coarse-exit/BB429ResonanceEven.lean 2>&1 | tee -a "$LOG"
-          lean im-results/agent30-429-coarse-exit/BB429Resonance234Even.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429Resonance234Even.olean im-results/agent30-429-coarse-exit/BB429Resonance234Even.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent6-harmonic429/BB429LowBoundary.olean im-results/agent6-harmonic429/BB429LowBoundary.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429ResonanceError.olean im-results/agent30-429-coarse-exit/BB429ResonanceError.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429ResonanceErrorBand.olean im-results/agent30-429-coarse-exit/BB429ResonanceErrorBand.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429ResonanceMinimal.olean im-results/agent30-429-coarse-exit/BB429ResonanceMinimal.lean 2>&1 | tee -a "$LOG"
+          lean im-results/agent30-429-coarse-exit/BB429ResonanceTail.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429.CoarseExit.d234_post' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_second_nonresonant_mod9' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.Resonance.resonant_post_jSlope' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.return_from_exact_burst_even' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_large_non8' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.d234_error_band_arith' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.d234_minimal_phase_error_band' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.phase_cycles_direct_return' depends on axioms:" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "Unexpected sorryAx"; exit 1
           fi
