@@ -46,13 +46,24 @@ def group(ids):
 def save(i,rec):
     assert rec['table']==opens[i].replace('_','')
     records.append(dict(id=i,c=c,**rec))
-for i,k in spec['gram']:
-    save(i,compact(opens[i],[k,k]))
-group(i for i,k in spec['gram'])
-for par,ids in spec['run']:
-    for i in ids:
-        save(i,compact_run(opens[i],par,par))
-    group(ids)
+runfile=ROOT/f'a0lb-{c}-rungram.json'
+if runfile.exists():
+    runbank={v['id']:v for v in json.loads(runfile.read_text())}
+    wanted={i for i,k in spec['gram']}|{i for par,ids in spec['run'] for i in ids}
+    assert set(runbank)==wanted
+    for i in sorted(wanted):
+        rec=runbank[i]
+        assert rec['id']==i and rec['c']==c and rec['table']==opens[i].replace('_','')
+        records.append(rec)
+    group(wanted)
+else:
+    for i,k in spec['gram']:
+        save(i,compact(opens[i],[k,k]))
+    group(i for i,k in spec['gram'])
+    for par,ids in spec['run']:
+        for i in ids:
+            save(i,compact_run(opens[i],par,par))
+        group(ids)
 lagfile=ROOT/f'a0lb-{c}-lag.json'
 lagbank={v['id']:v for v in json.loads(lagfile.read_text())} if lagfile.exists() else {}
 assert set(lagbank)=={i for i,*_ in spec['lag']}
