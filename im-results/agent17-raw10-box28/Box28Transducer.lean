@@ -93,15 +93,17 @@ theorem scan_period (p : OneParams) (r : Fin 6) (k : Nat) :
 
 /-- The two gap/marker moves and at most two subsequent zero moves.
     None means the zero orbit never reaches A. -/
-def tailCodes (p : Params) (s : S) : Option (List Code) :=
-  let c := zero p s
-  let d := one p.o (dst c)
-  let q := dst d
-  if q=0 then some [c,d] else
+def zeroCodes (p : Params) (q : S) : Option (List Code) :=
+  if q=0 then some [] else
     let e := zero p q
-    if dst e=0 then some [c,d,e] else
+    if dst e=0 then some [e] else
       let f := zero p (dst e)
-      if dst f=0 then some [c,d,e,f] else none
+      if dst f=0 then some [e,f] else none
+
+def postState (p : Params) (s : S) : S := dst (one p.o (dst (zero p s)))
+def startCodes (p : Params) (s : S) : List Code := [zero p s,one p.o (dst (zero p s))]
+def tailCodes (p : Params) (s : S) : Option (List Code) :=
+  (zeroCodes p (postState p s)).map (fun cs => startCodes p s ++ cs)
 
 def countList : List Code → Nat → Nat
   | [],r => r
@@ -129,14 +131,12 @@ theorem count_all (l : List Code) (r : Nat) (h : l.all wr = true) :
 
 theorem tail_length (p : Params) (s : S) (l : List Code) (h : tailCodes p s = some l) :
     2≤l.length := by
-  unfold tailCodes at h
-  split at h
-  · cases h; decide
-  · split at h
-    · cases h; decide
-    · split at h
-      · cases h; decide
-      · contradiction
+  cases hz : zeroCodes p (postState p s) with
+  | none => simp [tailCodes,hz] at h
+  | some cs =>
+    simp [tailCodes,hz] at h
+    subst l
+    simp [startCodes]
 
 inductive Outcome where
   | halt
