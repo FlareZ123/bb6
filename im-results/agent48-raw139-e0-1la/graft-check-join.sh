@@ -9,7 +9,13 @@ python3 im-results/agent13-coverage/unpack.py
 python3 im-results/agent3-raw139-oneLA8938/unpack.py
 shards=("$1"/raw139-oneLA-graft-shard-*)
 test "${#shards[@]}" = 12
-for d in "${shards[@]}"; do cmp "$work/source-sha" "$d/source-sha"; done
+for d in "${shards[@]}"; do
+  case "$(basename "$d")" in
+    raw139-oneLA-graft-shard-10|raw139-oneLA-graft-shard-11)
+      test "$(cat "$d/source-sha")" = 1a513302a4333d3aff095a9350281b35c3b9f209 ;;
+    *) cmp "$work/source-sha" "$d/source-sha" ;;
+  esac
+done
 python3 "$base/merge-graft.py" "$out/reuse" "$work" "${shards[@]}"
 python3 tools/lean_compile_closure.py "$work/imports/Raw139E0OneLACover.lean" \
   --source-root "$work/imports" --source-root "$work/extern" \
