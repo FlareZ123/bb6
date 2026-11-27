@@ -252,6 +252,90 @@ theorem diagonal33_source (n w k : Nat)
 #print axioms base33_r512_w527
 #print axioms diagonal33_source
 
+
+/-- For every H5 parameter pair, the *direct* predecessor of the exact
+    source stopping target is excluded by one common eight-bit certificate.
+    This does not remove the two high predecessors, whose inverse-depth
+    parameter is one or three. -/
+theorem h5_direct_base8 :
+    excluded 8 (direct (stopResidue (J 0) (M 0 0))) = true := by decide
+
+private theorem h5_root_matches9 (r w k : Nat)
+    (he : k+J r+3*M r w+4=2^(2*M r w+2)*(J r+2)) :
+    Matches 9 (2*J r+1) k (stopResidue (J 0) (M 0 0)) := by
+  apply stop_cylinder_matches 9 (J 0) (M 0 0) (J r) (M r w) k
+  · unfold M; omega
+  · unfold Cong
+    refine ⟨8192*(r:Int), ?_⟩
+    change _ = (512:Int) * _
+    simp only [J, Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
+    omega
+  · unfold Cong
+    refine ⟨8192*(r:Int)+16384*(w:Int), ?_⟩
+    change _ = (512:Int) * _
+    simp only [M, Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
+    omega
+  · exact he
+
+/-- New all-parameter source ancestor reduction: every genuinely
+    blank-reachable stopping state in the full H5 odd-coset two-parameter
+    family must descend from a high predecessor at n=1 or n=3. Neither
+    high alternative is asserted absent. -/
+theorem h5_root_only_two_high (r w k : Nat)
+    (he : k+J r+3*M r w+4=2^(2*M r w+2)*(J r+2))
+    (hr : BB6.Agent3.CReach (2*J r+1) k) :
+    ∃ a t n, BB6.Agent3.CReach a t ∧ (n=1 ∨ n=3) ∧
+      (2*J r+1)+k+((2*J r+1)+k)%2 =
+        2^(n+1)*(a+2+((2*J r+1)+k)%2) ∧
+      2*t+a+7+3*n = (2*J r+1)+2*k := by
+  let x := 2*J r+1
+  let s := stopResidue (J 0) (M 0 0)
+  have hm9 : Matches 9 x k s := by
+    simpa only [x, s] using h5_root_matches9 r w k he
+  have hlarge : Large 9 k :=
+    large_weaken (by unfold M; omega : 9≤2*M r w+1)
+      (stop_size (J r) (M r w) k he)
+  have hm7 : Matches 7 x k s :=
+    ⟨cong_weaken (by decide : 7≤9) hm9.1,
+     cong_weaken (by decide : 7≤9) hm9.2⟩
+  have hqmod : (q s)%I 7 = (64:Int) := by decide
+  have hqraw := cong_nat_mod (q_matches (by decide : 1≤7) hm7)
+  rw [hqmod] at hqraw
+  have hval : (x+k+(x+k)%2)%P (6+1) = P 6 := by
+    have hnat : (x+k+(x+k)%2)%128=64 := by
+      have hraw : (((x+k+(x+k)%2)%128:Nat):Int)=64 := by
+        simpa [P] using hqraw
+      omega
+    simpa [P] using hnat
+  have h8 : 8≤k := large_y (by decide : 2≤9) hlarge
+  have hgt : P 6 < x+k+(x+k)%2 := by
+    have hb : 3*512≤k+2 := by simpa [Large,P] using hlarge
+    dsimp [P, x]
+    omega
+  have hkeven : k%2=0 := by
+    have hc : Cong 1 (k:Int) s.y :=
+      cong_weaken (by decide : 1≤9) hm9.2
+    have h := cong_nat_mod hc
+    have hz : s.y%I 1=0 := by decide
+    rw [hz] at h
+    have hn : (((k%2:Nat)):Int)=0 := by simpa [P] using h
+    omega
+  have hxodd : x%2=1 := by dsimp [x]; omega
+  obtain ⟨a,t,hparent,hinv⟩ := source_parent x k 6 hr h8 hval hgt
+  rcases hinv with ⟨_,ha,ht⟩ | ⟨n,hn,hpar,hq,hw⟩
+  · have hchild : Matches 8 a t (direct s) :=
+      direct_matches (by decide : 1≤9) hm9 ha ht (by decide : s.y%2=0)
+    have hchildlarge : Large 8 t :=
+      large_direct (by decide : 1≤9) hlarge ht
+    exact False.elim
+      ((source_excluded 8 (direct s) h5_direct_base8 a t hchildlarge hchild) hparent)
+  · have hodd : (x+k)%2=1 := by omega
+    have hn13 : n=1 ∨ n=3 := by omega
+    exact ⟨a,t,n,hparent,hn13,hq,hw⟩
+
+#print axioms h5_direct_base8
+#print axioms h5_root_only_two_high
+
 #print axioms high_stop_excluded_cap
 #print axioms base37
 #print axioms lifted37
