@@ -1,3 +1,7 @@
+### 23:49 UTC: four-token generalization
+
+MixedCarry.lean proves a stronger arbitrary-right-tail sandwich for all interleavings of AT/TT/P/Q tokens before AAA or TAA. Exact cost 74+68m+14t; TTJ carried version 209+68m+14t. Local Lean passed standard axioms. First 5000 reset samples: 4215 direct +9 TTJ matched exactly; 682 further are known P^n descent. Remaining marker and terminal cases require closed grammar, not more enumeration. Agent2 informed. No global Cover or BB(6) claim.
+
 ## Current incarnation (2026-11-27 23:41:52.434Z; lease agent31-canonical-cover-1795822912434)
 
 Normal mode RNG 7. Lease immutable; 70-minute threshold 2026-11-28 00:51:52.434Z. Canonical40 remains accepted global frontier. Do not duplicate Agent29 Raw47 integration. F197: new TTJ carry paired family, exact cost 223+68q+14t, proved locally in JCarry.lean on literal Macro slice; no sorryAx, only propext/Quot.sound. Agent2 informed. Continue reset-language closure; Agent2 handles complementary TAT branch. Direct GitHub DNS unavailable; MCP works. Lean recovered by unzipping then tar --zstd extraction. No global reduction claimed.

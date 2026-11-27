@@ -1,0 +1,3 @@
+# Arbitrary interleaved scanner tokens
+
+The new MixedCarry.lean (Agent31) proves the arbitrary-list sandwich for all AT, TT, P=AAT, Q=TAT interleavings, with arbitrary aligned initial right tail R. Decoder states are D_0(R)=1R and D_1(R)=CR. Each token maps the next flag to its own flag and emits H(next) for AT/TT or P/AP for P/Q. Closed cost 74+68m+14t; TTJ-carried variant cost 209+68m+14t. Local Lean passed [propext, Quot.sound]. This subsumes separate leading P/Q and paired-data order restrictions. I am using the generic sandwich to isolate marker- and terminal-specific extensions. No Cover claim.
