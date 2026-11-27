@@ -36,37 +36,71 @@ theorem live_bits_to_buckets (n B s k bits : Nat) (bs : List (Nat × List Nat))
   rw [←he]
   exact hOld z c hw
 
-/-- Linear adjacent-run deduplication. Membership is preserved even without
-    a sorting hypothesis; mergeSort ensures that all duplicates are removed. -/
-def dedupRuns : List Nat → List Nat
-  | [] => []
-  | x::xs => match dedupRuns xs with
-    | [] => [x]
-    | y::ys => if x=y then y::ys else x::y::ys
+/-- Explicit fuel makes merge and sort reducible in the trusted kernel.
+    Membership is preserved even if the fuel is insufficient or the input
+    is not sorted. -/
+def mergeFuel : Nat → List Nat → List Nat → List Nat
+  | 0,xs,ys => xs++ys
+  | _+1,[],ys => ys
+  | _+1,x::xs,[] => x::xs
+  | f+1,x::xs,y::ys =>
+    if x<y then x::mergeFuel f xs (y::ys)
+    else if y<x then y::mergeFuel f (x::xs) ys
+    else x::mergeFuel f xs ys
 
-theorem mem_dedupRuns (xs : List Nat) (c : Nat) : c∈dedupRuns xs ↔ c∈xs := by
-  induction xs with
-  | nil => simp [dedupRuns]
-  | cons x xs ih =>
-    rw [dedupRuns]
-    split
-    · rename_i h
-      simp [←ih,h]
-    · rename_i y ys h
-      by_cases hx : x=y
-      · subst x; simp [←ih,h]
-      · simp [hx,←ih,h]
+theorem mergeFuel_mem (f : Nat) (xs ys : List Nat) (c : Nat) :
+    c∈mergeFuel f xs ys ↔ c∈xs ∨ c∈ys := by
+  induction f generalizing xs ys with
+  | zero => simp [mergeFuel]
+  | succ f ih =>
+    cases xs with
+    | nil => simp [mergeFuel]
+    | cons x xs =>
+      cases ys with
+      | nil => simp [mergeFuel]
+      | cons y ys =>
+        simp only [mergeFuel]
+        by_cases h : x<y
+        · simp only [h,ite_true,List.mem_cons,ih]; simp [or_assoc,or_left_comm]
+        · simp only [h,ite_false]
+          by_cases h' : y<x
+          · simp only [h',ite_true,List.mem_cons,ih]; simp [or_assoc,or_left_comm]
+          · have he : x=y := by omega
+            subst y
+            simp only [Nat.lt_irrefl,ite_false,List.mem_cons,ih]; simp [or_assoc,or_left_comm]
 
-def sortUnique (xs : List Nat) : List Nat := dedupRuns xs.mergeSort
-
-theorem sortUnique_mem (xs : List Nat) (c : Nat) : c∈sortUnique xs ↔ c∈xs := by
-  rw [sortUnique,mem_dedupRuns,List.mem_mergeSort]
-
-def mergeUnique (xs ys : List Nat) : List Nat := dedupRuns (xs.merge ys)
+def mergeUnique (xs ys : List Nat) : List Nat := mergeFuel (xs.length+ys.length) xs ys
 
 theorem mergeUnique_mem (xs ys : List Nat) (c : Nat) :
-    c∈mergeUnique xs ys ↔ c∈xs ∨ c∈ys := by
-  rw [mergeUnique,mem_dedupRuns,List.mem_merge]
+    c∈mergeUnique xs ys ↔ c∈xs ∨ c∈ys := mergeFuel_mem _ _ _ _
+
+def sortFuel : Nat → List Nat → List Nat
+  | 0,xs => xs
+  | _+1,[] => []
+  | _+1,[x] => [x]
+  | f+1,x::y::xs =>
+    let l := x::y::xs
+    let h := l.length/2
+    mergeUnique (sortFuel f (l.take h)) (sortFuel f (l.drop h))
+
+theorem sortFuel_mem (f : Nat) (xs : List Nat) (c : Nat) : c∈sortFuel f xs ↔ c∈xs := by
+  induction f generalizing xs with
+  | zero => rfl
+  | succ f ih =>
+    cases xs with
+    | nil => simp [sortFuel]
+    | cons x xs =>
+      cases xs with
+      | nil => simp [sortFuel]
+      | cons y ys =>
+        simp only [sortFuel,mergeUnique_mem,ih]
+        rw [←List.mem_append,List.take_append_drop]
+
+def sortUnique (xs : List Nat) : List Nat := sortFuel (xs.length.log2+1) xs
+
+theorem sortUnique_mem (xs : List Nat) (c : Nat) : c∈sortUnique xs ↔ c∈xs := sortFuel_mem _ _ _
+
+example : sortUnique [2,7,1,7,3,2,2,9,1]=[1,2,3,7,9] := by decide +kernel
 
 /-- A local reverse cover can be certified independently of every other shard. -/
 def BlockShard (n B s j : Nat) (old new : List Nat) : Prop :=
