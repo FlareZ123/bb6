@@ -58,6 +58,7 @@ on:
           - sourceHighCylinder
           - sourceUnifiedShadow
           - sourceAgent2OddOdd
+          - sourceAgent2OddOddVal3
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceModularHighStopCriterion
@@ -281,6 +282,9 @@ jobs:
               ;;
             sourceAgent2OddOdd)
               target=im-results/agent2-c-oddodd-cone/OddOddConeSource.lean
+              ;;
+            sourceAgent2OddOddVal3)
+              target=im-results/agent2-c-oddodd-cone/OddOddVal3Source.lean
               ;;
             sourceDyadicDensity)
               target=im-results/agent21-c-shadow-density/DyadicSource.lean
