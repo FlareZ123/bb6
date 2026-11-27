@@ -62,4 +62,7 @@ end M${id}\n`;
 }
 const fs=require("fs"),path=require("path");
 const d=JSON.parse(fs.readFileSync(path.join(__dirname,"d17v22-prefix-certificates.json"),"utf8"));
-process.stdout.write(emit(d));
+if(process.argv[2]==="extended") {
+  const e=JSON.parse(fs.readFileSync(path.join(__dirname,"d17v22-prefix-extended.json"),"utf8"));
+  process.stdout.write(emit(e).replaceAll("Box33D17V22PrefixFamily","Box33D17V22PrefixExtra"));
+} else process.stdout.write(emit(d));
