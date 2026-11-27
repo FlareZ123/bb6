@@ -6,11 +6,11 @@ namespace BB6.Agent46Raw13Stride3Counter
 open BB6Coverage BB6Coverage.Agent31Pump
 open BB6Coverage.Agent31Pump.Auto (knownRun knownRun_sound extend)
 
-inductive Variant where | zeroLA | oneRA
+inductive Variant where | zeroLA | oneRA | oneLE | oneRC
   deriving DecidableEq
 
 def actionCode : Variant → Nat
-  | .zeroLA => 0 | .oneRA => 3
+  | .zeroLA => 0 | .oneRA => 3 | .oneLE => 18 | .oneRC => 11
 
 def p (v : Variant) : PartialMachine :=
   FAR.fromCodes [7,14,11,5,2,19,22,0,actionCode v,13,2,24]
@@ -118,38 +118,151 @@ theorem carry (v : Variant) (xs : List Bool) (k : Nat) (R : List Bool) :
       simpa only [inc,enc,Z,List.append_assoc,List.cons_append,List.nil_append] using h
 
 
-/-- F0=1LA consumes three tape symbols per binary digit instead of four. -/
+/-- Short variants increment once without changing the runway. -/
+def growing : Variant → Bool
+  | .zeroLA | .oneRA => false
+  | _ => true
+
 def shortCost : Variant → Nat
   | .zeroLA => 3
   | .oneRA => 5
+  | _ => 0
 
-theorem short (v : Variant) (L : List Bool) :
+theorem short (v : Variant) (hv : growing v = false) (L : List Bool) :
     run0 (p v) (shortCost v) ⟨4,leftFrame++L,Ones⟩ =
       some ⟨0,L,rightFrame++Ones⟩ := by
-  cases v <;> rfl
+  cases v <;> simp [growing] at hv <;> rfl
 
-theorem shortRun (v : Variant) (xs : List Bool) :
+theorem shortRun (v : Variant) (hv : growing v = false) (xs : List Bool) :
     ∃ cost, 0<cost ∧ run0 (p v) cost (E xs 0) = some (E (inc xs) 0) := by
   have h1 : run0 (p v) (shortCost v) (E xs 0) = some ⟨0,enc xs,rightFrame++Ones⟩ := by
-    simpa only [E,rep,List.nil_append] using short v (enc xs)
+    simpa only [E,rep,List.nil_append] using short v hv (enc xs)
   obtain ⟨c,hc,h2⟩ := carry v xs 0 Ones
   refine ⟨shortCost v+c,by omega,?_⟩
   exact join0 h1 (by simpa only [E,rep,List.nil_append,List.append_nil] using h2)
 
-def allowed (z : Z0) : Prop := ∃ xs, z = E xs 0
+def Three : List Bool := [true,true,true]
+
+def E' (xs : List Bool) (j : Nat) : Z0 :=
+  ⟨4,leftFrame++enc xs,rep RPair j++Three⟩
+
+def rightCost : Variant → Nat
+  | .oneLE => 6 | .oneRC => 2 | _ => 0
+
+def turnCost : Variant → Nat
+  | .oneLE => 9 | .oneRC => 5 | _ => 0
+
+def turnCost' : Variant → Nat
+  | .oneLE => 11 | .oneRC => 7 | _ => 0
+
+theorem rightOne (v : Variant) (hv : growing v = true) (L R : List Bool) :
+    run0 (p v) (rightCost v) ⟨4,leftFrame++L,[]++RPair++R⟩ =
+      some ⟨4,leftFrame++Ones++L,[]++R⟩ := by
+  cases v <;> simp [growing] at hv <;> rfl
+
+theorem turn (v : Variant) (hv : growing v = true) (L : List Bool) :
+    run0 (p v) (turnCost v) ⟨4,leftFrame++L,Ones⟩ =
+      some ⟨0,Ones++Ones++L,Ones⟩ := by
+  cases v <;> simp [growing] at hv <;> rfl
+
+theorem turn' (v : Variant) (hv : growing v = true) (L : List Bool) :
+    run0 (p v) (turnCost' v) ⟨4,leftFrame++L,Three⟩ =
+      some ⟨0,Ones++Ones++Ones++L,[true]⟩ := by
+  cases v <;> simp [growing] at hv <;> rfl
+
+theorem leftOne (v : Variant) (L R : List Bool) :
+    run0 (p v) 2 ⟨0,[]++Ones++L,[]++R⟩ =
+      some ⟨0,[]++L,[]++LPair++R⟩ := by
+  cases v <;> rfl
+
+theorem pairs_align_two (j : Nat) :
+    rep LPair (j+2)++Ones = rightFrame++(rep RPair j++Three) := by
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+    change false::true::(rep LPair (j+2)++Ones) =
+      false::true::(rightFrame++(rep RPair j++Three))
+    exact congrArg (fun x => false::true::x) ih
+
+theorem pairs_align_three (j : Nat) :
+    rep LPair (j+3)++[true] = rightFrame++(rep RPair (j+1)++Ones) :=
+  BB6.Agent46Raw13BinarySiblings.pairs_align j
+
+/-- One return changes the terminal pair to a triple while incrementing
+    the stride-three binary digits. -/
+theorem growPair (v : Variant) (hv : growing v = true) (xs : List Bool) (j : Nat) :
+    ∃ cost, 0<cost ∧ run0 (p v) cost (E xs j) = some (E' (inc xs) j) := by
+  have h1 := sweepR (p v) 4 leftFrame [] RPair Ones (rightCost v) (rightOne v hv) j (enc xs) Ones
+  have h1' : run0 (p v) (rightCost v*j) (E xs j) =
+      some ⟨4,leftFrame++rep Ones j++enc xs,Ones⟩ := by
+    simpa only [E,List.nil_append] using h1
+  have h2 := turn v hv (rep Ones j++enc xs)
+  have h2' : run0 (p v) (turnCost v) ⟨4,leftFrame++rep Ones j++enc xs,Ones⟩ =
+      some ⟨0,rep Ones (j+2)++enc xs,Ones⟩ := by
+    simpa only [rep,List.append_assoc] using h2
+  have h3 := sweepL (p v) 0 [] [] Ones LPair 2 (leftOne v) (j+2) (enc xs) Ones
+  have h3' : run0 (p v) (2*(j+2)) ⟨0,rep Ones (j+2)++enc xs,Ones⟩ =
+      some ⟨0,enc xs,rightFrame++(rep RPair j++Three)⟩ := by
+    simpa only [List.nil_append,pairs_align_two] using h3
+  obtain ⟨c,hc,h4⟩ := carry v xs 0 (rep RPair j++Three)
+  have h4' : run0 (p v) c ⟨0,enc xs,rightFrame++(rep RPair j++Three)⟩ =
+      some (E' (inc xs) j) := by
+    simpa only [E',rep,List.nil_append,List.append_nil] using h4
+  exact ⟨rightCost v*j+turnCost v+2*(j+2)+c,by omega,join0 (join0 (join0 h1' h2') h3') h4'⟩
+
+/-- The triple phase increments once again and restores the pair while
+    increasing the runway exponent by one. -/
+theorem growTriple (v : Variant) (hv : growing v = true) (xs : List Bool) (j : Nat) :
+    ∃ cost, 0<cost ∧ run0 (p v) cost (E' xs j) = some (E (inc xs) (j+1)) := by
+  have h1 := sweepR (p v) 4 leftFrame [] RPair Ones (rightCost v) (rightOne v hv) j (enc xs) Three
+  have h1' : run0 (p v) (rightCost v*j) (E' xs j) =
+      some ⟨4,leftFrame++rep Ones j++enc xs,Three⟩ := by
+    simpa only [E',List.nil_append] using h1
+  have h2 := turn' v hv (rep Ones j++enc xs)
+  have h2' : run0 (p v) (turnCost' v) ⟨4,leftFrame++rep Ones j++enc xs,Three⟩ =
+      some ⟨0,rep Ones (j+3)++enc xs,[true]⟩ := by
+    simpa only [rep,List.append_assoc] using h2
+  have h3 := sweepL (p v) 0 [] [] Ones LPair 2 (leftOne v) (j+3) (enc xs) [true]
+  have h3' : run0 (p v) (2*(j+3)) ⟨0,rep Ones (j+3)++enc xs,[true]⟩ =
+      some ⟨0,enc xs,rightFrame++(rep RPair (j+1)++Ones)⟩ := by
+    simpa only [List.nil_append,pairs_align_three] using h3
+  obtain ⟨c,hc,h4⟩ := carry v xs 0 (rep RPair (j+1)++Ones)
+  have h4' : run0 (p v) c ⟨0,enc xs,rightFrame++(rep RPair (j+1)++Ones)⟩ =
+      some (E (inc xs) (j+1)) := by
+    simpa only [E,rep,List.nil_append,List.append_nil] using h4
+  exact ⟨rightCost v*j+turnCost' v+2*(j+3)+c,by omega,join0 (join0 (join0 h1' h2') h3') h4'⟩
+
+theorem growRun (v : Variant) (hv : growing v = true) (xs : List Bool) (j : Nat) :
+    ∃ cost, 0<cost ∧ run0 (p v) cost (E xs j) = some (E (inc (inc xs)) (j+1)) := by
+  obtain ⟨a,ha,h1⟩ := growPair v hv xs j
+  obtain ⟨b,hb,h2⟩ := growTriple v hv (inc xs) j
+  exact ⟨a+b,by omega,join0 h1 h2⟩
+
+def allowed (v : Variant) (z : Z0) : Prop :=
+  ∃ xs j, (growing v = false → j = 0) ∧ z = E xs j
 
 theorem first (v : Variant) : run0 (p v) 34 ⟨0,[],[]⟩ = some (E [true] 0) := by
   cases v <;> decide
 
 theorem never (v : Variant) (m : Machine) (hm : compatible (p v) m) : NeverHalts m := by
-  apply BB6.Agent46Raw13BinarySiblings.never_of_return (p v) allowed 34 (E [true] 0)
-    (first v) ⟨[true],rfl⟩ _ m hm
+  apply BB6.Agent46Raw13BinarySiblings.never_of_return (p v) (allowed v) 34 (E [true] 0)
+    (first v) ⟨[true],0,by simp,rfl⟩ _ m hm
   intro z hz
-  obtain ⟨xs,rfl⟩ := hz
-  obtain ⟨k,hk,hr⟩ := shortRun v xs
-  exact ⟨k,E (inc xs) 0,hk,hr,inc xs,rfl⟩
+  obtain ⟨xs,j,hj,rfl⟩ := hz
+  cases h : growing v with
+  | false =>
+    have hj0 := hj h
+    subst j
+    obtain ⟨k,hk,hr⟩ := shortRun v h xs
+    exact ⟨k,E (inc xs) 0,hk,hr,inc xs,0,by simp,rfl⟩
+  | true =>
+    obtain ⟨k,hk,hr⟩ := growRun v h xs j
+    exact ⟨k,E (inc (inc xs)) (j+1),hk,hr,inc (inc xs),j+1,by simp [h],rfl⟩
 
 #print axioms carry
+#print axioms growPair
+#print axioms growTriple
+#print axioms growRun
 #print axioms shortRun
 #print axioms never
 end BB6.Agent46Raw13Stride3Counter

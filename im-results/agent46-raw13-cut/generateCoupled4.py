@@ -98,6 +98,8 @@ def main():
     manual={
         "1RB1LD1RC0RB1LA1RE1LF0LA0LA0RD1LA---":("Raw13Stride3Counter","zeroLA"),
         "1RB1LD1RC0RB1LA1RE1LF0LA1RA0RD1LA---":("Raw13Stride3Counter","oneRA"),
+        "1RB1LD1RC0RB1LA1RE1LF0LA1LE0RD1LA---":("Raw13Stride3Counter","oneLE"),
+        "1RB1LD1RC0RB1LA1RE1LF0LA1RC0RD1LA---":("Raw13Stride3Counter","oneRC"),
         "1RB1LD1RC1LE1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneLE"),
         "1RB1LD1RC1RC1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneRC"),
     }
@@ -187,7 +189,7 @@ theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
         assert k is not None
         tag=f"{i:02}";name=MODULE+"Kid"+tag;modules.append(name)
         p=f"next {move(MOVES[i])}"
-        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"Transfer","Raw13Stride3Counter"],
+        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"Transfer","Raw13Stride3Counter","Raw13NestedSweep"],
               f"def kid{tag} {H} : Cut := {emit(k)}\n"+
               f"theorem checked{tag} {H} : check {B} ({p}) 6 (kid{tag} h) = true := by rfl\n")
     terms=",".join(f"kid{i:02} h" for i in range(24))
