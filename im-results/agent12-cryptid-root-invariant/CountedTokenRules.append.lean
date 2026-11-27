@@ -127,6 +127,7 @@ private theorem a12cDRsweep (z : ℕ) (K L : List ℕ) :
   | succ z ih =>
     have h := ReachesIn.trans (a12c_DR_zero K [] (List.replicate z 0 ++ L))
       (ih (1::K))
+    change ReachesIn target (4+4*z) (tok_DR (2::K) [] (List.replicate (z+1) 0 ++ L)) (tok_DR (2::(List.replicate z 1 ++ 1::K)) [] L) at h
     rw [a12_rep_push 1 z K] at h
     have hc : 4+4*z = 4*(z+1) := by omega
     rw [hc] at h
