@@ -30,6 +30,7 @@ on:
           - canonical58-source-crosswalk
           - canonical55-raw83-graft
           - canonical53-five-ready-from58
+          - canonical50-eight-ready-from58
           - canonical52-after-raw59
           - canonical51-after-raw67
           - raw67-parent-reuse
@@ -2141,6 +2142,59 @@ jobs:
           path: |
             /tmp/a31-canonical51-after-raw67/**
             /tmp/a31-canonical51-after-raw67.log
+          if-no-files-found: error
+          compression-level: 0
+          retention-days: 30
+
+
+  canonical50_eight_ready_from58:
+    name: Consume eight accepted ready parents from Canonical58
+    if: ${{ inputs.target == 'canonical50-eight-ready-from58' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile and audit direct Canonical58-to-50 eight-parent graft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent31-raw106-79-canonical55/assemble_canonical50_from58.py
+          python im-results/agent31-raw106-79-canonical55/assemble_canonical50_from58.py \
+            --work /tmp/a31-canonical50-eight-ready \
+            2>&1 | tee /tmp/a31-canonical50-eight-ready.log
+          test -s /tmp/a31-canonical50-eight-ready/canonical50-eight-ready-parents.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("/tmp/a31-canonical50-eight-ready/canonical50-eight-ready-parents.json").read_text())
+          assert report["canonical58_residual_count"] == 58
+          assert report["remaining_residual_count"] == 50
+          assert report["all_eight_unique_membership_in_canonical58"]
+          assert report["all_eight_pairwise_distinct"]
+          assert report["raw59_retained"]
+          assert report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: canonical50-eight-ready-parents-integrated
+          path: |
+            /tmp/a31-canonical50-eight-ready/**
+            /tmp/a31-canonical50-eight-ready.log
           if-no-files-found: error
           compression-level: 0
           retention-days: 30
