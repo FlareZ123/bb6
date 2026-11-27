@@ -46,7 +46,7 @@ private theorem no_zero_parent (s n : Nat)
 private theorem even_parent_forbidden (a k x y n : Nat)
     (ha : a % 2 = 0) (ha2 : 2 ≤ a) (hhigh : a < 2*k)
     (hx : x % 8 = 1) (hy : y % 8 = 7)
-    (hs : (x+y) % 16 = 8)
+    (hy8 : 8≤y) (hs : (x+y) % 16 = 8)
     (hS : x+y = 2^n * (2*(a-1)+6))
     (hC : (2*k-a+3)+(2*(a-1)+6)+3*n = x+2*y) :
     5≤k ∧ k%2=1 ∧ (a+k)%4=1 := by
@@ -125,7 +125,7 @@ theorem all_parent_forbidden (a k x y : Nat)
   by_cases hae : a%2=0
   · simp only [if_pos hae] at h
     rcases h with ⟨n,hS,hC⟩
-    exact even_parent_forbidden a k x y n hae ha2 (by omega) hx hy hs hS hC
+    exact even_parent_forbidden a k x y n hae ha2 (by omega) hx hy hy8 hs hS hC
   simp only [if_neg hae] at h
   rcases h with ⟨n,hS,_⟩
   have hmod : (x+y)%2=0 := by omega
