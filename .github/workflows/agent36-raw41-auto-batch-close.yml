@@ -1,0 +1,41 @@
+name: Agent 36 source-proof Raw41 families 034 and 131 from independent affine pumps (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { index: 34, shard: 2 }
+          - { index: 131, shard: 3 }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46082958378
+          name: raw41-batch-auto-${{ matrix.shard }}
+          path: .tmp/raw41-source-auto
+      - name: Generate exact canonical proof plus all symbolic invariants
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/close_auto_batch.py \
+            --batch .tmp/raw41-source-auto/a36-batch-auto-${{ matrix.shard }}.json \
+            --index ${{ matrix.index }} \
+            --out .tmp/raw41-target-${{ matrix.index }}-auto
+          ls -lh .tmp/raw41-target-${{ matrix.index }}-auto/lean/
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-target-${{ matrix.index }}-auto
+          path: .tmp/raw41-target-${{ matrix.index }}-auto/
+          retention-days: 45
