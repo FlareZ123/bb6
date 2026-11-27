@@ -74,12 +74,12 @@ theorem runEq (p : PartialMachine) (k : Nat) {a b c : Z0}
     have he : (p (a.q,a.l.headD false)).bind id = (p (b.q,b.l.headD false)).bind id := by
       rw [hab.state,hab.left.head]
     cases hm : (p (a.q,a.l.headD false)).bind id with
-    | none => simp [run0,step0,hm] at h
+    | none => simp only [run0,step0,hm,Option.map_none,Option.bind_none] at h
     | some mv =>
       have hm' : (p (b.q,b.l.headD false)).bind id = some mv := he.symm.trans hm
-      have h' : run0 p k (move0 mv a) = some c := by simpa [run0,step0,hm] using h
+      have h' : run0 p k (move0 mv a) = some c := by simpa only [run0,step0,hm,Option.map_some,Option.bind_some] using h
       obtain ⟨d,hd,hcd⟩ := ih (moveEq mv hab) h'
-      exact ⟨d,by simpa [run0,step0,hm'] using hd,hcd⟩
+      exact ⟨d,by simpa only [run0,step0,hm',Option.map_some,Option.bind_some] using hd,hcd⟩
 
 def RE (p : PartialMachine) (s t : Z0) : Prop :=
   ∃ k u, 0 < k ∧ run0 p k s = some u ∧ ZEq u t
@@ -332,9 +332,9 @@ theorem rightCut (sp : Bool) (c : LC) (b : Bool) (g : List Nat) (z : Option Nat)
       | true =>
         cases c with
         | two => have h := hc rfl; simp [capacity] at h
-        | blank => exact ⟨.two,[true,true] ++ triples a,rfl,rfl⟩
-        | one => exact ⟨.two,[true,true] ++ triples a,rfl,rfl⟩
-        | large => exact ⟨.two,[true,true] ++ triples a,rfl,rfl⟩
+        | blank => exact ⟨.two,[true,true] ++ triples a,rfl,by simp [rightWord,rightPost,rightAfter,runs,triples,rep,List.append_assoc]⟩
+        | one => exact ⟨.two,[true,true] ++ triples a,rfl,by simp [rightWord,rightPost,rightAfter,runs,triples,rep,List.append_assoc]⟩
+        | large => exact ⟨.two,[true,true] ++ triples a,rfl,by simp [rightWord,rightPost,rightAfter,runs,triples,rep,List.append_assoc]⟩
   | cons a xs =>
     cases b with
     | false =>
