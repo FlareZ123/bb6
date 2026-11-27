@@ -1,6 +1,6 @@
 # Separated repeated-factor obstruction for P1
 
-**Status:** standalone arithmetic theorem, locally kernel-checked Lean 4.36.0-rc2, no sorryAx. Original-source trace bridge still pending. Not an extinction or blank-machine verdict.
+**Status:** standalone arithmetic theorem, locally kernel-checked Lean 4.36.0-rc2, no sorryAx. Original-source trace bridge now checked locally against the unchanged LagCore.lean (blob 11a318851f288c99f04cc63fb83af3012166bc91). Not an extinction or blank-machine verdict.
 
 Let three occurrences of a length-L word x have signed clock offsets p,s from the first. Their right coordinates c,d,e follow the same recurrence at those shifted clocks. Set a_j=u(d_j-c_j)+v(e_j-c_j), with up+vs=g>0. Then 2a_{j+1}=a_j+g*x_j. For affine clock q±j and positive paired coordinates c,w bounded by C, write g=2^r h with h odd.
 
@@ -17,3 +17,12 @@ Files (build in order with LEAN_PATH=. and lean -o NAME.olean NAME.lean):
 - ReturnGeneral.lean: no_small_slope, no_small_gcd_returns.
 
 All printed axioms are propext, Classical.choice, Quot.sound only.
+
+
+## Source bridge and uniform dyadic corollary
+
+ReturnTrace.lean directly proves trace_path from the original Agent45 Trace, retaining the actual binary word W and paired positive coordinates at every chronological position. No assumption about the delayed target being zero is used. ReturnSource.lean derives trace_no_small_gcd_repeat and the two-copy dyadic specialization. ReturnScaled.lean divides the slope before confinement, sharpening the magnitude requirement from 2^A to 2^(A+r). For dyadic offsets the unit case needs no 2h overhead.
+
+**Uniform corollary (source-kernel-checked):** for every even n≥14 and Trace n m W a, every two factors of length 2n+6 at distance 2^r, both wholly contained in W, differ. This bound is independent of r. Indeed T=7*2^n<2^(n+3), and the mass bound gives r≤n+3; choose A=n+3-r, K=n+3. Divisibility by 2^r removes that many bits of initial slope magnitude, and trimming r bits leaves A+K steps. This is not an exclusion of every long word; the number of possible factors is too large for a direct pigeonhole argument.
+
+Reproduce by copying only the unchanged ../agent45-p1-delayed-carry/LagCore.lean into an isolated build directory with these seven new files, compiling LagCore first, then ReturnGCD, ReturnSlope, ReturnObstruction, ReturnGeneral, ReturnTrace, ReturnSource, ReturnScaled with LEAN_PATH=. All terminal printed axioms are ordinary (propext, Classical.choice, Quot.sound). No workflow was added or needed. No new numerical extinction or BB(6) decision.
