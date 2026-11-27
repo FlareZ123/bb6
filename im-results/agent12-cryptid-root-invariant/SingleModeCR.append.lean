@@ -14,13 +14,29 @@ structure A12CRPoint where
   left : List ℕ
   deriving DecidableEq, Repr
 
-def a12PointCfg (s : A12CRPoint) : Cfg (Fin 2) (Fin 6) :=
-  tok_CR ((s.headMinusOne+1)::s.rightTail) [] s.left
+def a12TokenTape : List ℕ → ListBlank (Fin 2)
+  | [] => default
+  | k::K => (([1] : List (Fin 2)) ^ k) +> ((0 : Fin 2) >> a12TokenTape K)
 
-private def a12ELword (r v : ℕ) (L : List ℕ) : List ℕ :=
+private theorem a12TokenTape_eq (K : List ℕ) :
+    a12TokenTape K = encTokens K [] := by
+  induction K with
+  | nil => rfl
+  | cons k K ih => simp only [a12TokenTape,encTokens,ih]
+
+def a12PointCfg (s : A12CRPoint) : Cfg (Fin 2) (Fin 6) :=
+  (a12TokenTape ((s.headMinusOne+1)::s.rightTail)) {{C}}>
+    (encRight (s.left.map (fun x => (x,0))))
+
+private theorem a12PointCfg_eq (s : A12CRPoint) :
+    a12PointCfg s = tok_CR ((s.headMinusOne+1)::s.rightTail) [] s.left := by
+  unfold a12PointCfg tok_CR
+  rw [a12TokenTape_eq, encRightNat_eq]
+
+def a12ELword (r v : ℕ) (L : List ℕ) : List ℕ :=
   List.replicate (r+1) 0 ++ (v+1)::L
 
-private def a12ELnorm (x r v : ℕ) (L : List ℕ) : ℕ × ℕ × ℕ :=
+def a12ELnorm (x r v : ℕ) (L : List ℕ) : ℕ × ℕ × ℕ :=
   if v=0 ∧ L=[] then
     (x%3,r+4*(x/3),a12HCost (x/3) (r+1))
   else (x,r,0)
@@ -54,10 +70,11 @@ private theorem a12ELzero (K L : List ℕ) :
     have h : tok_EL [0] [] L = tok_EL [0,0] [] L := by
       unfold tok_EL
       simp only [encTokens_zero, encTokens_nil, encLeft_nil, ListBlank.cons_zero_default]
-    simpa [h] using a12c_EL_0_cons 0 [] [] L
+    rw [h]
+    exact a12c_EL_0_cons 0 [] [] L
   | cons k K => exact a12c_EL_0_cons k K [] L
 
-private def a12CostAdd {α : Type} (n : ℕ) (p : ℕ × α) : ℕ × α :=
+def a12CostAdd {α : Type} (n : ℕ) (p : ℕ × α) : ℕ × α :=
   (n+p.1,p.2)
 
 -- The first two fields are the number of extra leading zeros and
@@ -78,9 +95,10 @@ private theorem a12ELscan_sound (K : List ℕ) (r v : ℕ) (L : List ℕ) :
     ReachesIn target (a12ELscan K r v L).1
       (tok_EL K [] (a12ELword r v L))
       (a12PointCfg (a12ELscan K r v L).2) := by
+  simp only [a12PointCfg_eq]
   induction K generalizing r v L with
   | nil =>
-    simp only [a12ELscan,a12PointCfg]
+    simp only [a12ELscan]
     rw [a12ELblank]
     exact a12c_EL_0_cons 0 [] [] (a12ELword r v L)
   | cons x K ih =>
@@ -104,7 +122,7 @@ private theorem a12ELscan_sound (K : List ℕ) (r v : ℕ) (L : List ℕ) :
 
 /-- Decompose a left stack as zeros followed by an optional positive digit.
 The digit in the optional pair is its value minus one. -/
-private def a12SplitZeros : List ℕ → ℕ × Option (ℕ × List ℕ)
+def a12SplitZeros : List ℕ → ℕ × Option (ℕ × List ℕ)
   | [] => (0,none)
   | 0::L =>
     let p := a12SplitZeros L
@@ -135,6 +153,7 @@ def a12DRreturn (K L : List ℕ) : ℕ × A12CRPoint :=
 private theorem a12DRreturn_sound (K L : List ℕ) :
     ReachesIn target (a12DRreturn K L).1
       (tok_DR (2::K) [] L) (a12PointCfg (a12DRreturn K L).2) := by
+  simp only [a12PointCfg_eq]
   have hL := a12SplitZeros_sound L
   rcases hs : a12SplitZeros L with ⟨z,p⟩
   rw [hs] at hL
@@ -152,12 +171,12 @@ private theorem a12DRreturn_sound (K L : List ℕ) :
     exact ReachesIn.trans h (a12ELscan_sound K z 0 [])
   | some p =>
     rcases p with ⟨v,T⟩
-    simp only [a12DRreturn,hs,a12PointCfg]
+    simp only [a12DRreturn,hs]
     rw [hL]
     exact ReachesIn.trans (a12cDRsweep z K ((v+1)::T))
       (a12c_DR_succ (List.replicate z 1 ++ K) [] v T)
 
-private def a12Live (c : ℕ) (p : ℕ × A12CRPoint) : ℕ × Option A12CRPoint :=
+def a12Live (c : ℕ) (p : ℕ × A12CRPoint) : ℕ × Option A12CRPoint :=
   (c+p.1,some p.2)
 
 -- Exact arithmetic, on arbitrary finite lists. The executable run-length
@@ -184,6 +203,7 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
     match a12CRCostStep s with
     | (n,some t) => 0<n ∧ ReachesIn target n (a12PointCfg s) (a12PointCfg t)
     | (n,none) => ∃ q, ReachesIn target n (a12PointCfg s) q ∧ (step target q).isNone := by
+  simp only [a12PointCfg_eq]
   rcases s with ⟨k,K,L⟩
   cases L with
   | nil =>
@@ -223,13 +243,14 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
         · simp only [a12CRCostStep,a12Live]
           exact ⟨by omega,ReachesIn.trans (a12c_CR_1_add2 (k+1) K [] b L)
             (a12DRreturn_sound (1::(k+1)::K) (b::L))⟩
-    · exact a12c_CR_add2_halts ((k+1)::K) [] a L
+    · simpa only [a12CRCostStep] using a12c_CR_add2_halts ((k+1)::K) [] a L
 
 def a12CRNext (s : A12CRPoint) : Option A12CRPoint := (a12CRCostStep s).2
 
 def a12Root85 : A12CRPoint := ⟨2,[],[0,0]⟩
 
 theorem a12Root85_exact : ReachesIn target 11 (init []) (a12PointCfg a12Root85) := by
+  rw [a12PointCfg_eq]
   change ReachesIn target 11 (init []) (cfg_CR_n_n [(0,0),(0,0)] [(2,0)])
   unfold cfg_CR_n_n
   have hL : encLeft [(2,0)] =
