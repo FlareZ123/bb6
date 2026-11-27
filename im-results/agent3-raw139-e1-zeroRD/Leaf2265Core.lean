@@ -107,7 +107,7 @@ theorem rightP (k : Nat) (l r : Ray) :
     have h : Runs 2 (A l (rep P (k+1) r)) (A (pre P l) (rep P k r)) := rfl
     have j := chain h (ih (pre P l))
     rw [rep_push] at j
-    simp only [show 2*(k+1)=2+2*k by omega] at j
+    rw [show 2+2*k=2*(k+1) by omega] at j
     exact j
 theorem reverseP (k : Nat) (l r : Ray) :
     Runs (2*k) (A (rep P k l) (cons true r)) (A l (cons true (rep Q k r))) := by
@@ -118,7 +118,7 @@ theorem reverseP (k : Nat) (l r : Ray) :
         (A (rep P k l) (cons true (pre Q r))) := rfl
     have j := chain h (ih (pre Q r))
     rw [rep_push] at j
-    simp only [show 2*(k+1)=2+2*k by omega] at j
+    rw [show 2+2*k=2*(k+1) by omega] at j
     exact j
 theorem reverseExit (k : Nat) (r : Ray) :
     Runs (2*k+2) (A (rep P k blank) (cons true r)) (S (k+1) (cons false r)) := by
@@ -146,7 +146,7 @@ theorem cSweep (k : Nat) (l r : Ray) :
     have h : Runs 1 (C l (rep O (k+1) r)) (C (pre O l) (rep O k r)) := rfl
     have j := chain h (ih (pre O l))
     rw [rep_push] at j
-    simp only [show k+1=1+k by omega] at j
+    rw [Nat.add_comm 1 k] at j
     exact j
 theorem gSweep (k : Nat) (l r : Ray) :
     Runs (6*k) (A (rep O (4*k) l) (cons true r))
@@ -160,7 +160,7 @@ theorem gSweep (k : Nat) (l r : Ray) :
       rfl
     have j := chain h (ih (pre G r))
     rw [rep_push] at j
-    simp only [show 6*(k+1)=6+6*k by omega] at j
+    rw [show 6+6*k=6*(k+1) by omega] at j
     exact j
 theorem dSweep (k : Nat) (l r : Ray) :
     Runs (2*k) (D (rep Q k l) (cons false r))
@@ -172,7 +172,7 @@ theorem dSweep (k : Nat) (l r : Ray) :
         (D (rep Q k l) (cons false (pre P r))) := rfl
     have j := chain h (ih (pre P r))
     rw [rep_push] at j
-    simp only [show 2*(k+1)=2+2*k by omega] at j
+    rw [show 2+2*k=2*(k+1) by omega] at j
     exact j
 theorem dExit (k : Nat) (r : Ray) :
     Runs (2*k+2) (D (rep Q k blank) (cons false r))
