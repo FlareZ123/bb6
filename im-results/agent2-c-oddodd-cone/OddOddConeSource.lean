@@ -1,0 +1,217 @@
+import UnifiedShadow
+import Lean.Elab.Tactic.Omega
+
+set_option maxHeartbeats 0
+set_option maxRecDepth 100000
+
+namespace BB6.Agent2COddOddCone
+
+open BB6.Agent46
+
+/-- An even bounce source contributes four factors of 2 at depth >=3.
+    The proposed target has exact valuation four, so its depth is <=2. -/
+private theorem depth_lt_three (a n s : Nat)
+    (ha : a % 2 = 0) (ha2 : 2 ≤ a)
+    (hs : s % 64 = 48)
+    (h : s = 2^n * (2*(a-1)+6)) : n < 3 := by
+  by_cases hn : n < 3
+  · exact hn
+  have hn3 : 3 ≤ n := by omega
+  let r := n - 3
+  have hr : n = r+3 := by dsimp [r]; omega
+  have hb4 : (2*(a-1)+6) % 4 = 0 := by omega
+  have hdvd : 4 ∣ (2*(a-1)+6) := Nat.dvd_of_mod_eq_zero hb4
+  cases hdvd with
+  | intro q hq =>
+    have hpower : 2^(r+3) = 8*2^r := by simp [Nat.pow_add]; omega
+    have hmul : 2^(r+3) * (2*(a-1)+6) = 32*(2^r*q) := by
+      rw [hq, hpower]
+      simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+    rw [hr, hmul] at h
+    omega
+
+private theorem no_zero_parent (s n : Nat)
+    (hs : s%64=48) (heq : s=2^n*8) : False := by
+  by_cases h0 : n=0
+  · subst n
+    simp at heq
+    omega
+  by_cases h1 : n=1
+  · subst n
+    simp at heq
+    omega
+  by_cases h2 : n=2
+  · subst n
+    simp at heq
+    omega
+  have hn : 3≤n := by omega
+  let r := n-3
+  have hr : n = r+3 := by dsimp [r]; omega
+  have he : 2^(r+3)*8 = 64*2^r := by
+    rw [Nat.pow_add]
+    simp only [show 2^3=8 by decide]
+    omega
+  rw [hr, he] at heq
+  omega
+
+private theorem even_parent_forbidden (a k x y n : Nat)
+    (ha : a % 2 = 0) (ha2 : 2 ≤ a) (hhigh : a < 2*k)
+    (hx : x % 8 = 5) (hy : y % 8 = 3)
+    (hs : (x+y) % 64 = 48)
+    (hS : x+y = 2^n * (2*(a-1)+6))
+    (hC : (2*k-a+3)+(2*(a-1)+6)+3*n = x+2*y) :
+    5≤k ∧ k%2=1 ∧ (a+k)%4=1 := by
+  have hn := depth_lt_three a n (x+y) ha ha2 hs hS
+  have hn1 : n ≠ 1 := by
+    intro h1
+    subst n
+    simp at hS hC
+    omega
+  by_cases h0 : n=0
+  · subst n
+    simp at hS hC
+    omega
+  have h2 : n=2 := by omega
+  subst n
+  simp at hS hC
+  omega
+
+private theorem no_odd_power (s a n : Nat)
+    (hs : s % 2=0)
+    (h : s+1=2^n*(2*(a-1)+8)) : False := by
+  have hh : 2*(a-1)+8=2*(a-1+4) := by omega
+  rw [hh] at h
+  have hmul : 2^n*(2*(a-1+4))=2*(2^n*(a-1+4)) := by
+    simp only [Nat.mul_assoc, Nat.mul_left_comm, Nat.mul_comm]
+  rw [hmul] at h
+  omega
+
+private theorem no_one_power (s n : Nat)
+    (hs : s%2=0)
+    (h : s+1=2^n*16) : False := by
+  have hmul : 2^n*16=2*(2^n*8) := by omega
+  rw [hmul] at h
+  omega
+
+/-- The complete unchanged-source section inverse grammar forces every
+    parent of the odd-odd 48/64 cone into a forbidden odd-image class.
+    All direct, zero/one, and unbounded bounce cases are discharged. -/
+theorem all_parent_forbidden (a k x y : Nat)
+    (hx : x%8=5) (hy : y%8=3)
+    (hs : (x+y)%64=48)
+    (h : BB6.Agent46.sectionPreimageCriterion a k x y) :
+    5≤k ∧ k%2=1 ∧ (a+k)%4=1 := by
+  unfold BB6.Agent46.sectionPreimageCriterion at h
+  by_cases ha0 : a=0
+  · simp only [if_pos ha0] at h
+    by_cases hk0 : k=0
+    · simp [hk0] at h
+    by_cases hk1 : k=1
+    · simp only [if_neg hk0,if_pos hk1] at h
+      omega
+    simp only [if_neg hk0,if_neg hk1] at h
+    rcases h with ⟨n,hs0,_⟩
+    exact False.elim (no_zero_parent (x+y) n hs hs0)
+  by_cases ha1 : a=1
+  · simp only [if_neg ha0,if_pos ha1] at h
+    by_cases hk0 : k=0
+    · simp [hk0] at h
+    by_cases hk1 : k=1
+    · simp [hk0,hk1] at h
+    by_cases hk2 : k=2
+    · simp only [if_neg hk0,if_neg hk1,if_pos hk2] at h
+      omega
+    by_cases hk3 : k=3
+    · simp only [if_neg hk0,if_neg hk1,if_neg hk2,if_pos hk3] at h
+      omega
+    simp only [if_neg hk0,if_neg hk1,if_neg hk2,if_neg hk3] at h
+    rcases h with ⟨n,hs1,_⟩
+    have hmod : (x+y)%2=0 := by omega
+    exact False.elim (no_one_power (x+y) n hmod hs1)
+  have ha2 : 2≤a := by omega
+  simp only [if_neg ha0,if_neg ha1] at h
+  by_cases hk0 : k=0
+  · simp [hk0] at h
+  simp only [if_neg hk0] at h
+  by_cases hreg : 2*k≤a
+  · simp only [if_pos hreg] at h
+    rcases h with ⟨_,hy0⟩
+    omega
+  simp only [if_neg hreg] at h
+  by_cases hae : a%2=0
+  · simp only [if_pos hae] at h
+    rcases h with ⟨n,hS,hC⟩
+    exact even_parent_forbidden a k x y n hae ha2 (by omega) hx hy hs hS hC
+  simp only [if_neg hae] at h
+  rcases h with ⟨n,hS,_⟩
+  have hmod : (x+y)%2=0 := by omega
+  exact False.elim (no_odd_power (x+y) a n hmod hS)
+
+/-- Every node of this infinite two-dimensional congruence cone is
+    unreachable from the authentic blank-derived Machine C section root. -/
+theorem blank_unreachable (x y : Nat)
+    (hx : x%8=5) (hy : y%8=3)
+    (hy8 : 8≤y) (hs : (x+y)%64=48) :
+    ¬ BB6.Agent3.CReach x y := by
+  intro hr
+  obtain ⟨a,k,hpre,hedge⟩ :=
+    BB6.Agent13UnifiedShadow.source_parent_of_right_ge8 x y hy8 hr
+  obtain ⟨hk5,hkodd,hksum⟩ :=
+    all_parent_forbidden a k x y hx hy hs hedge
+  exact (BB6.Agent13TwoParent.odd_forbidden_image a k
+    hk5 hkodd (Or.inl hksum)) hpre
+
+private theorem power_lower (m : Nat) : 4*m+4 ≤ 2^(2*m+2) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+    rw [show 2*(m+1)+2=2*m+2+2 by omega, Nat.pow_add]
+    change 4*(m+1)+4 ≤ 2^(2*m+2)*4
+    omega
+
+/-- The high-stop equation transfers the source-forbidden cone to the
+    previously unbounded (m ≡ 1 mod 4, j ≡ 3m+50 mod 64) parameter lattice. -/
+theorem high_stop_cone_coordinates (j m k : Nat)
+    (hm5 : 5 ≤ m) (hm4 : m%4=1)
+    (hj64 : j%64 = (3*m+50)%64)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    (2*j+3)%8=5 ∧ k%8=3 ∧ (2*j+3+k)%64=48 ∧ 8≤k := by
+  have hp6 : (2:Nat)^6 ∣ 2^(2*m+2) := Nat.pow_dvd_pow 2 (by omega)
+  have hp64 : 64 ∣ 2^(2*m+2) := by
+    simpa only [show (2:Nat)^6=64 by decide] using hp6
+  have hdiv : 64 ∣ (k+j+3*m+5) := by
+    rw [hstop]
+    exact Nat.dvd_trans hp64 (Nat.dvd_mul_right _ _)
+  have hzero : (k+j+3*m+5)%64=0 := Nat.mod_eq_zero_of_dvd hdiv
+  have hlower := power_lower m
+  have hj0 := Nat.mul_le_mul_right j (by omega : 1≤2^(2*m+2))
+  have hj : j ≤ 2^(2*m+2)*j := by simpa using hj0
+  have hm : 3*m+13 ≤ 2^(2*m+2)*3 := by
+    have h := Nat.mul_le_mul_right 3 hlower
+    omega
+  rw [Nat.mul_add] at hstop
+  constructor
+  · omega
+  constructor
+  · omega
+  constructor
+  · omega
+  · omega
+
+/-- Original blank-orbit exclusion of an infinite 1/256-density high-stop
+    parameter lattice; no cutoff on the index or stopping counter. -/
+theorem high_stop_blank_unreachable (j m k : Nat)
+    (hm5 : 5≤m) (hm4 : m%4=1)
+    (hj64 : j%64=(3*m+50)%64)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    ¬ BB6.Agent3.CReach (2*j+3) k := by
+  obtain ⟨hx,hy,hs,hy8⟩ :=
+    high_stop_cone_coordinates j m k hm5 hm4 hj64 hstop
+  exact blank_unreachable (2*j+3) k hx hy hy8 hs
+
+#print axioms all_parent_forbidden
+#print axioms blank_unreachable
+#print axioms high_stop_cone_coordinates
+#print axioms high_stop_blank_unreachable
+
+end BB6.Agent2COddOddCone
