@@ -6,7 +6,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [compose, far-batch, far-sweep, graph-batch]
+        options: [compose, far-batch, far-sweep, graph-batch, graph-partial]
         default: compose
       shard:
         type: number
@@ -188,7 +188,7 @@ jobs:
           if-no-files-found: error
 
   graph:
-    if: inputs.mode == 'graph-batch'
+    if: startsWith(inputs.mode, 'graph-')
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -207,6 +207,7 @@ jobs:
       - name: Produce and check complete mixed FAR/run-graph parent bounds
         env:
           PARENTS: ${{ inputs.parents }}
+          MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
           [[ "$PARENTS" =~ ^[0-9]+(\ [0-9]+)*$ ]]
@@ -217,15 +218,25 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           read -ra ids <<< "$PARENTS"
-          python "$D/generate_graph_parents.py" "$W/imports" "${ids[@]}"
+          if [[ "$MODE" == graph-partial ]]; then
+            python "$D/generate_graph_parents.py" "$W/imports" --partial "${ids[@]}"
+          else
+            python "$D/generate_graph_parents.py" "$W/imports" "${ids[@]}"
+          fi
+          shopt -s nullglob
+          roots=("$W"/imports/Raw47D3G*.lean "$W"/imports/Raw47D3U*.lean)
+          test "${#roots[@]}" -gt 0
           M=$(find /tmp/a50-far -name manifest.json -print -quit)
           test -n "$M"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 mixed FAR/graph parents $PARENTS" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$W/imports/graph-hits.txt" "$W"/imports/Raw47D3G*.lean 2>&1 | tee "$W/log"
-          python - "$W/log" "$W/imports/ids.txt" <<'PY'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 mixed FAR/graph parents $PARENTS" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$W/imports/graph-hits.txt" "${roots[@]}" 2>&1 | tee "$W/log"
+          python - "$W/log" "$W/imports/ids.txt" "$W/imports/partial-ids.txt" <<'PY'
           import re,sys
           log=open(sys.argv[1]).read()
-          for i in map(int,open(sys.argv[2])):
-              name=f'BB6.Agent50.Raw47D3G{i}.all_quotient'
+          names=[f'BB6.Agent50.Raw47D3G{i}.all_quotient' for i in map(int,open(sys.argv[2]))]
+          for line in open(sys.argv[3]):
+              i,n=map(int,line.split())
+              names.extend([f'BB6.Agent50.Raw47D3U{i}.remaining_count',f'BB6.Agent50.Raw47D3U{i}.local_sound'])
+          for name in names:
               m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
               else: assert f"'{name}' does not depend on any axioms" in log,name

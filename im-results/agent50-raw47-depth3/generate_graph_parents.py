@@ -1,13 +1,14 @@
 """Generate parent coverage using FAR and Agent12 run-graph certificates.
 Each generated graph is checked in Lean; no discovery result is trusted.
-Usage: generate_graph_parents.py OUT parent_id [parent_id ...]
+Usage: generate_graph_parents.py OUT [--partial] parent_id [parent_id ...]
 """
 from pathlib import Path
 import base64,lzma,hashlib,json,subprocess,sys,tempfile
 here=Path(__file__).resolve().parent
 out=Path(sys.argv[1]).resolve()
 out.mkdir(parents=True,exist_ok=True)
-ids=list(map(int,sys.argv[2:]))
+partial_mode='--partial' in sys.argv[2:]
+ids=list(map(int,[x for x in sys.argv[2:] if x!='--partial']))
 assert len(set(ids))==len(ids)>0 and all(0<=i<1212 for i in ids)
 mask=base64.b64decode((here/'broad-far-parents.b64').read_text())
 hard={int(x.split()[1]) for x in (here/'hard30.txt').read_text().splitlines()}
@@ -130,10 +131,10 @@ with tempfile.TemporaryDirectory() as temp:
     deep,left=search(['80000','999999'],left)
     # Exact soundness is independent of which search proposes the graph.
     # Use asymmetric candidates only for the remaining failures.
-    asym,left=search(['asym','5000','50000'],left) if left.strip() else ('','')
+    asym,left=search(['asym','5000','50000'],left) if left.strip() and not partial_mode else ('',left)
     hits=cheap+deep+asym
     (out/'unresolved.txt').write_text(left)
-    assert not left.strip(),left
+    if not partial_mode: assert not left.strip(),left
     # Persist the compact witnesses, exact parent association and emitted proof source.
     (out/'graph-hits.txt').write_text(hits)
     (out/'graph-parents.json').write_text(json.dumps(miss,indent=2))
@@ -141,11 +142,15 @@ with tempfile.TemporaryDirectory() as temp:
         {'parent':i,'table':t,'module':v[0],'partial':v[1],'proof':v[2],'historical_id':v[3]}
         for (i,t),v in sorted(used_hard.items())],indent=2)+'\n')
     graph={miss[int(line.split()[0])]:int(line.split()[0]) for line in hits.splitlines()}
-    assert len(graph)==len(miss)
-    assert len(leaves)==len(cert)+len(graph)+len(used_hard)
+    unresolved={miss[int(line.split()[0])] for line in left.splitlines()}
+    assert set(graph).isdisjoint(unresolved)
+    assert set(graph)|unresolved==set(miss.values())
+    assert len(leaves)==len(cert)+len(graph)+len(used_hard)+len(unresolved)
+    (out/'unresolved-parents.json').write_text(json.dumps([
+        {'parent':i,'table':t} for i,t in sorted(unresolved)],indent=2)+'\n')
     with (out/'graphs.txt').open('w') as fp:
         subprocess.run([str(work/'run_search'),'emit'],input=hits,text=True,stdout=fp,check=True)
-    subprocess.run([sys.executable,str(graph_here/'emit_graph.py'),str(out/'graphs.txt'),str(out)],check=True)
+    if hits.strip(): subprocess.run([sys.executable,str(graph_here/'emit_graph.py'),str(out/'graphs.txt'),str(out)],check=True)
     print(f'Graph parents {ids}: {len(leaves)} open leaves, {len(cert)} FAR, {len(graph)} run-graph, {len(used_hard)} exact carry proofs')
 def emit(t,i):
     tag,*a=t
@@ -160,19 +165,39 @@ def emit(t,i):
         n=f'BB6.Agent12Raw47.Run{graph[i,a[0]]}'
         return f'.proven {n}.parent {n}.never'
     raise ValueError(t)
+def unknown_count(t,i):
+    tag,*a=t
+    if tag=='split': return sum(unknown_count(c,i) for c in a[2])
+    return int(tag=='open' and (i,a[0]) in unresolved)
+
+def emit_partial(t,i):
+    if unknown_count(t,i)==0: return '.closed ('+emit(t,i)+')'
+    tag,*a=t
+    if tag=='open': return '.unresolved'
+    assert tag=='split'
+    return f'.split {a[0]} {slot(a[1])} (byPartialMove [\n'+',\n'.join(emit_partial(c,i) for c in a[2])+'\n])'
+
+full_ids=[]
+partial_ids=[]
 for i in ids:
+    nleft=unknown_count(trees[i],i)
+    assert nleft==sum(j==i for j,_ in unresolved)
+    if nleft: partial_ids.append((i,nleft))
+    else: full_ids.append(i)
     p=rows[i].replace('_',''); r=[]
     for s in range(12):
         x=p[3*s:3*s+3]
         if x!='---':r.append(f'  | {s//2},{b(s%2)} => some (some ⟨{b(int(x[0]))},{b(x[1]=="R")},{ord(x[2])-65}⟩)')
     modules=sorted(g for (j,t),g in graph.items() if j==i)
     hard_modules=sorted({v[0] for (j,t),v in used_hard.items() if j==i})
-    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import Run{g}\n' for g in modules)+f'''import CanonicalPartial
+    kind='U' if nleft else 'G'
+    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import Run{g}\n' for g in modules)+('import PartialPrefixAudit\n' if nleft else '')+f'''import CanonicalPartial
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option Elab.async false
-namespace BB6.Agent50.Raw47D3G{i}
+namespace BB6.Agent50.Raw47D3{kind}{i}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent48PrefixAudit BB6.Agent50TNFPilot BB6.Agent47CanonicalFrontier
+{'open BB6.Agent50PartialPrefix BB6.Agent47PartialAudit' if nleft else ''}
 
 def p : PartialMachine := fun s => match s.1.val,s.2 with
 '''+ '\n'.join(r)+f'''
@@ -183,14 +208,28 @@ theorem nohalt : weightedTNFNoAssignedHalt p := by
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 
-def tree : Audit := {emit(trees[i],i)}
+'''
+    if nleft:
+        source+=f'''def tree : PartialAudit := {emit_partial(trees[i],i)}
+theorem checked : partialPrefixCheck 10006 p tree = true := by decide
+def remaining := partialResiduals p tree
+theorem remaining_count : remaining.length = {nleft} := by decide
+theorem local_sound (m : Machine) (hm : TNFQuotientCompatible p m) :
+    WeightedBound 10006 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
+  partialQuotientSound 10006 p tree root nohalt checked m hm
+#print axioms remaining_count
+#print axioms local_sound
+'''
+    else:
+        source+=f'''def tree : Audit := {emit(trees[i],i)}
 theorem checked : prefixCheck 10006 p tree = true := by decide
 theorem bound (m : Machine) (hm : compatible p m) : WeightedBound 10006 m :=
   (certifiedZip 10006 p tree root nohalt (by simpa only [prefixCheck_eq] using checked)).sound m hm
 theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m :=\n  quotientSafe root bound m hm\n#print axioms all_quotient
-end BB6.Agent50.Raw47D3G{i}
 '''
-    (out/f'Raw47D3G{i}.lean').write_text(source)
+    source+=f'end BB6.Agent50.Raw47D3{kind}{i}\n'
+    (out/f'Raw47D3{kind}{i}.lean').write_text(source)
 
-(out/'ids.txt').write_text('\n'.join(map(str,ids))+'\n')
-print(f'Generated {len(ids)} complete mixed FAR/graph parent certificates.')
+(out/'ids.txt').write_text(''.join(f'{i}\n' for i in full_ids))
+(out/'partial-ids.txt').write_text(''.join(f'{i} {n}\n' for i,n in partial_ids))
+print(f'Generated {len(full_ids)} complete and {len(partial_ids)} partial mixed FAR/graph parent certificates.')
