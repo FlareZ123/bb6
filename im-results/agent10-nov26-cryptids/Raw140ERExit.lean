@@ -48,7 +48,7 @@ theorem startExit (j n p : Nat) (Y : List Sym) :
   have h₂ := tripLoop (trip133 n ++ X) (U 1 j ++ Y)
   have h₃ := pump n X (U 1 j ++ Y)
   have h₄ := exitCost p (trip115 n ++ U 1 j ++ Y)
-  refine ⟨_,?_⟩
+  refine ⟨5+3*(j+1)+(7+3*3+3+1+1)+21*n+(36*p+298),?_⟩
   have h₁' : run base (5+3*(j+1))
       (boundary 4 false (U 3 (j+1) ++ trip133 (n+2) ++ X) Y) =
       some (boundary 4 true (S 3::S 3::S 3::S 1::S 3::S 3::(trip133 n ++ X)) (S 1::(U 1 j ++ Y))) := by
