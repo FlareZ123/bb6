@@ -764,3 +764,5 @@ After the 19:45 checkpoint, added Raw40A0LABase.lean (conditional parent, 12 chi
 
 ## 2026-11-27 D3 local path checkpoint
 Claim f1d3b00d base; actual lease claimed 23:42:52.288Z. Critic routing request: corrected equality-vs-containment bug in Agent46Raw13Ingest77; staged exact five-split local cut with 75 residuals, 3 symbolic pump candidates (0LB,0RB,1RC) and 34 cheap candidate closures. See im-results/agent19-d3-local/README.md. Source check pending; do not claim closure. Original D3 leaf and 74 siblings retained. D1=1RD and 0RE remain difficult. Prior Raw40 oriented adapter awaiting source compile. Local Lean extracted and available but repository checkout blocked by DNS.
+
+D3 checkpoint: source CI 46084594090 passed the initial 75-residual cut and three pumping proofs. Added the 1RD alternating nested drain proof candidate, updated residual count to 74 pending source check. See D3LocalRD.lean. No D3 decision.

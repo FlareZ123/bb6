@@ -1,5 +1,6 @@
 import Agent46Raw13Base
 import D3LocalPumps
+import D3LocalRD
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -137,7 +138,7 @@ def cut : Cut :=
     .closed (.cycle 26 10 true (3)),
     .closed (.last 53 (5,true)),
     .closed (.proven BB6Coverage.Agent31Pump.D3Counter.p BB6Coverage.Agent31Pump.D3Counter.never),
-    .unresolved,
+    .closed (.proven BB6Coverage.Agent31Pump.D3RD.p BB6Coverage.Agent31Pump.D3RD.never),
     .closed (.cycle 26 10 true (3)),
     .closed (.cycle 28 9 true (6))
   ]),
@@ -157,9 +158,9 @@ def remaining : List (List Move × PartialMachine) := residuals parent 4 cut
 
 theorem checked : check 21269 parent 4 cut = true := by decide
 
-theorem remaining_count : remaining.length = 75 := by decide
+theorem remaining_count : remaining.length = 74 := by decide
 
-theorem remaining_mass : openMass 6 4 cut = 181508275 := by decide
+theorem remaining_mass : openMass 6 4 cut = 181508250 := by decide
 
 def d3Leaf : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -180,7 +181,7 @@ def otherRemaining : List (List Move × PartialMachine) :=
   remaining.filter (fun e => !tableOK e.2 d3Leaf)
 
 theorem d3_count : (remaining.filter (fun e => tableOK e.2 d3Leaf)).length = 1 := by decide
-theorem other_count : otherRemaining.length = 74 := by decide
+theorem other_count : otherRemaining.length = 73 := by decide
 
 theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
     WeightedBound 21269 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
