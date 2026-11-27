@@ -102,7 +102,7 @@ theorem guarded_micro_to_trace {n i v w : Nat} (hn : 14≤n) (heven : n%2=0)
         refine ⟨1,(n+2)/2,GuardedTrace.first,?_⟩
         simp [quotient] <;> omega
     · obtain ⟨B,a,ht,hq⟩ := ih (by omega)
-      have hv' : 2*u+1*(n+m+3)=v+total n*1 := by simpa using hv.symm
+      have hv' : 2*u+1*(n+m+3)=v+total n*1 := by simpa [total,BB6.P1CarryExact.total] using hv.symm
       obtain ⟨c,hstep,hQ⟩ := lift_quotient n m B a v u 1 (by omega) hq hv'
       have he0 := coords_eq n m B a v w hn (guarded_micro h) hq
       have hG := GuardedMicro.one m v w u z h hs hu hv hw

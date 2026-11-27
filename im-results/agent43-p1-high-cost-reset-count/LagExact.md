@@ -1,6 +1,6 @@
 # Exact all-depth lifting of the delayed P1 carry
 
-Status: mathematical proof; Lean source draft, not yet compiled. This is a structural reduction, not a P1 decision or an exact BB(6) result.
+Status: Lean 4.36.0-rc2 checked against unchanged dependencies in CI [46028318194](https://github.com/FlareZ123/bb6/actions/runs/46028318194); ordinary axioms only, no sorryAx. This is a structural reduction, not a P1 decision or an exact BB(6) result.
 
 Let n ≥ 14 be even, T = 7·2^n, A = T−n−3, and q_i = floor(T B_i / 2^i). In Agent45's existing Trace relation, B_i is the low selected-bit word, a_i the small carry, x_i ∈ {0,1} the next bit, and y_i = q_i mod 2. Its exact edge equations are
 
@@ -33,4 +33,4 @@ A second elementary proof of the cost bound uses the already-established weighte
 
 The exponential depth bound A is much larger than the practical O(n) cutoff needed by LongConeSource. It does not close an unbounded n family. Moreover Micro is not automatically LegalGap beyond n: one must retain the source guards w≥10 and even at starts and v'≥2,w'≥6 at ends of complete gaps. The exact endpoint map above permits direct tests of those guards without reconstructing a second inverse history. It also separates the actual finite-length problem from infinite-word periodicity arguments.
 
-Lean source: LagExact.lean imports the existing LagMicro and P1CarryExact without modifying them. The local Lean environment is currently unavailable; compilation status must be checked before promoting any theorem to a kernel-certified result.
+Lean source: LagExact.lean imports the existing LagMicro and P1CarryExact without modifying them. Local container/Python was unavailable, so the pinned CI check was used. The initial quotient normalization error was fixed in the accepted run.
