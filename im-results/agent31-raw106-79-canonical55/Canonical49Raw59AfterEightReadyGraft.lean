@@ -1,5 +1,5 @@
 import Canonical50EightReadyParentsGraft
-import Raw59Exact
+import CanonicalSelectedRaw59
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -13,7 +13,7 @@ open BB6.Agent31StableParentBatch
 open BB6ChampionArithmetic
 
 abbrev baseRoster := BB6.Agent31Canonical50EightReadyParents.roster50
-abbrev p59 : PartialMachine := BB6.Agent32Raw59.p59
+abbrev p59 : PartialMachine := BB6.Agent31Canonical59Membership.p59
 
 theorem p59_count50 :
     (baseRoster.filter (fun e => sameTable e.2 p59)).length = 1 := by decide
@@ -21,12 +21,8 @@ theorem p59_count50 :
 theorem p59_root :
     p59 initialSlot = some (some ⟨true,true,1⟩) := by decide
 
-theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
-  apply Cover.leaf
-  intro m hm k d hk hd
-  exact Nat.le_trans
-    (BB6.Agent32Raw59Exact.bound m hm k d hk hd)
-    (by decide : 4136171 ≤ 6766859)
+theorem p59_cover : Cover (WeightedBound 6766859) p59 :=
+  BB6.Agent32CanonicalSelectedRaw59.p59_cover
 
 noncomputable def roster49 : List (Nat × PartialMachine) :=
   removeParents [p59] baseRoster

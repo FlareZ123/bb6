@@ -99,9 +99,10 @@ def main():
     assert delta["run_id"] == RAW59_STAGE_RUN, delta
     assert delta["artifact_id"] == RAW59_STAGE_ARTIFACT_ID, delta
     assert delta["artifact_sha256"] == RAW59_STAGE_SHA256, delta
-    assert delta["claim"]["theorem"] == "BB6.Agent32Raw59Exact.cover", delta["claim"]
+    assert delta["claim"]["theorem"] == "BB6.Agent32Raw59Exact.exact_bound", delta["claim"]
     assert delta["claim"]["bound"] == 4136171, delta["claim"]
-    assert (linked / "Raw59Exact.olean").is_file()
+    assert (linked / "CanonicalSelectedRaw59.olean").is_file()
+    assert (linked / "Raw59KernelSlice.olean").is_file()
 
     source = HERE / "Canonical49Raw59AfterEightReadyGraft.lean"
     output = linked / (source.stem + ".olean")

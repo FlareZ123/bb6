@@ -72,9 +72,48 @@ def add_raw59(work, linked, run_id):
         assert report["base_residual_count"] == 64 and report["remaining_residual_count"] == 63
         assert not report["raw59_retained"] and not report["rejected"]
         assert len(report["accepted"]) == 1 and report["accepted"][0]["label"] == "raw59"
+        # The source manifest names the exact-bound theorem; the staged
+        # relocation and candidate gate certify the Cover separately.
         claim = report["accepted"][0]
-        assert claim["theorem"] == "BB6.Agent32Raw59Exact.cover"
-        assert claim["bound"] <= 6766859
+        source_claim = {
+            "label": "raw59",
+            "run_id": 45786187618,
+            "revision": "a3afaf00d33e66212250c2ad99169b3b7e308363",
+            "artifact_id": 15100876549,
+            "artifact_name": "raw59-exact-certified",
+            "digest": "3659fb6d4c7a9215a60418642bba0d0f23717b7444cf8852f09624418228ba69",
+            "root": "Raw59Exact",
+            "theorem": "BB6.Agent32Raw59Exact.exact_bound",
+            "table": "1RB---_1RC---_0RD---_1LD1RE_---1LA_------",
+            "bound": 4136171,
+            "size": 816911124,
+        }
+        for key, value in source_claim.items():
+            assert claim.get(key) == value, (key, claim.get(key), value)
+        assert "4.36.0-rc2" in report["lean_version"]
+        allowed = {"propext", "Classical.choice", "Quot.sound"}
+        for name in ("BB6.Agent32CanonicalSelectedRaw59.p59_source_eq",
+                     "BB6.Agent32CanonicalSelectedRaw59.p59_cover",
+                     "BB6.Agent31Canonical59Membership.p59_count64"):
+            assert name in claim["axioms"] and set(claim["axioms"][name]) <= allowed, name
+        assert all(set(v) <= allowed for v in claim["axioms"].values())
+        assert all(set(v) <= allowed for v in report["axioms"].values())
+        assert report["exact_at_champion_score"] in report["axioms"]
+        audit_files = [i for i in z.infolist() if not i.is_dir()
+                       and PurePosixPath(i.filename).name == "selected-link-audit.json"]
+        assert len(audit_files) == 1, [i.filename for i in audit_files]
+        audit_bytes = z.read(audit_files[0])
+        assert hashlib.sha256(audit_bytes).hexdigest() == report["selected_link_audit_sha256"]
+        parent_audits = json.loads(audit_bytes)
+        assert len(parent_audits) == 1 and parent_audits[0]["label"] == "raw59"
+        assert parent_audits[0]["accepted"]
+        relocation = parent_audits[0]["relocation"]
+        if artifact["name"] == "canonical64-raw59-staged-integrated":
+            assert relocation["mode"] == "staged" and relocation["report"]["complete"]
+            assert set(relocation["axioms"]["A32Raw59Slice.BB6.Agent32Raw59Exact.cover"]) <= allowed
+        else:
+            assert "PASS: saved" in relocation["log"]
+            assert "ROOT BB6.Agent32Raw59Exact.cover -> A32Raw59Slice.BB6.Agent32Raw59Exact.cover" in relocation["log"]
         entries = {}
         for i in z.infolist():
             if i.is_dir():
@@ -91,6 +130,8 @@ def add_raw59(work, linked, run_id):
                 new_objects.append(name)
         root = linked / "CanonicalSelectedRaw59.olean"
         assert root.is_file() and a68.sha(root) == claim["olean_sha256"]
+        slice_root = linked / "Raw59KernelSlice.olean"
+        assert slice_root.is_file() and a68.sha(slice_root) == relocation["output_sha256"]
         prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
         reached = subprocess.check_output(
             ["lean", "--run", str(HERE / "WalkImportClosure.lean"),
