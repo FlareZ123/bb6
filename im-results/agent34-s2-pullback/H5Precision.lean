@@ -94,6 +94,91 @@ theorem lifted_source (r w k : Nat)
     (J (16384*r)) (M (16384*r) (16384*w))
     (J (16384*r)) (M (16384*r) (16384*w)) k (Or.inl hb)
     (cong_refl 37 _) (cong_refl 37 _) hstop (lifted37 r w)
+
+/-- A substantially wider 33-bit H5 certificate in a phase-guard-free coset.
+    The affine stop residue has differences 2^33*r and -2^33*(2*r+3*w). -/
+theorem base33_w15 :
+    excluded 33 (stopResidue (J 0) (M 0 15)) = true := by decide
+theorem base32_w15 :
+    excluded 32 (stopResidue (J 0) (M 0 15)) = false := by decide
+
+theorem lifted_w15_residue33 (r w : Nat) :
+    residue 33 (stopResidue (J (1024*r)) (M (1024*r) (15+1024*w))) =
+      residue 33 (stopResidue (J 0) (M 0 15)) := by
+  simp only [residue, stopResidue, J, M, Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
+  rw [Pair.mk.injEq]
+  constructor
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨(r:Int), ?_⟩
+    change _ = (8589934592:Int) * _
+    omega
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨-2*(r:Int)-3*(w:Int), ?_⟩
+    change _ = (8589934592:Int) * _
+    omega
+
+theorem lifted_w15_residue32 (r w : Nat) :
+    residue 32 (stopResidue (J (1024*r)) (M (1024*r) (15+1024*w))) =
+      residue 32 (stopResidue (J 0) (M 0 15)) := by
+  simp only [residue, stopResidue, J, M, Int.natCast_add, Int.natCast_mul, Int.cast_ofNat_Int]
+  rw [Pair.mk.injEq]
+  constructor
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨2*(r:Int), ?_⟩
+    change _ = (4294967296:Int) * _
+    omega
+  · apply Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
+    apply Int.emod_eq_zero_of_dvd
+    refine ⟨-4*(r:Int)-6*(w:Int), ?_⟩
+    change _ = (4294967296:Int) * _
+    omega
+
+theorem lifted_w15_33 (r w : Nat) :
+    excluded 33 (stopResidue (J (1024*r)) (M (1024*r) (15+1024*w))) = true := by
+  unfold excluded
+  rw [lifted_w15_residue33]
+  exact base33_w15
+
+theorem lifted_w15_32_miss (r w : Nat) :
+    highStopExcluded (J (1024*r)) (M (1024*r) (15+1024*w)) = false := by
+  have hJ : 2 ≤ J (1024*r) := by unfold J; omega
+  have hM : 32 ≤ 2*M (1024*r) (15+1024*w)+2 := by unfold M; omega
+  simp only [highStopExcluded, highStopBits, hJ, ite_true, Nat.min_eq_left hM, excluded]
+  rw [lifted_w15_residue32]
+  exact base32_w15
+
+theorem lifted_w15_quarter_miss (r w : Nat) :
+    ¬ ((5*(1024*r)+3*(15+1024*w)+4)%8=0 ∨
+      (5*(1024*r)+3*(15+1024*w)+17)%16=0 ∨
+      ∃ t, t∈[26,48,51,56] ∧
+        (37*(1024*r)+3*(15+1024*w)+t)%64=0) := by
+  rintro (h | h | ⟨t,ht,h⟩)
+  · omega
+  · omega
+  · simp at ht
+    rcases ht with h26 | h48 | h51 | h56 <;> subst t <;> omega
+
+/-- Genuine original-section all-time exclusion for the new 33-bit
+    coset, conditional only on the exact high-stop equation. -/
+theorem lifted_w15_source (r w k : Nat)
+    (hstop : k+J (1024*r)+3*M (1024*r) (15+1024*w)+4 =
+      2^(2*M (1024*r) (15+1024*w)+2)*(J (1024*r)+2)) :
+    ¬ BB6.Agent3.CReach (2*J (1024*r)+1) k := by
+  have hb : 33 ≤ 2*M (1024*r) (15+1024*w)+1 := by unfold M; omega
+  exact source_stop_cylinder_excluded 33
+    (J (1024*r)) (M (1024*r) (15+1024*w))
+    (J (1024*r)) (M (1024*r) (15+1024*w)) k (Or.inl hb)
+    (cong_refl 33 _) (cong_refl 33 _) hstop (lifted_w15_33 r w)
+
+#print axioms base33_w15
+#print axioms lifted_w15_33
+#print axioms lifted_w15_32_miss
+#print axioms lifted_w15_quarter_miss
+#print axioms lifted_w15_source
+
 #print axioms high_stop_excluded_cap
 #print axioms base37
 #print axioms lifted37
