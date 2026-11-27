@@ -14,6 +14,8 @@ The following exact first-level Covers have already passed pinned original-sourc
 
 0RB has seven successful shards and one failed shard (group 5, run 45994080192). 1LA has seven successful shards (run 45996630344), 1RA six (run 45996637267). Target only their missing groups. No complete Raw42 parent or global roster reduction yet.
 
+[Raw42CanonicalJoin.lean](Raw42CanonicalJoin.lean) provides the checked final interface: exactly 12 canonical residual B1 child Covers at a common bound B≥12 imply the full Raw42 parent Cover. It applies the existing weighted TNF fresh-state renaming theorem with support cut 4, so each of the four F aliases is discharged by its E representative; no independent proof for an alias is required. The conditional theorem and exact count compile locally, standard axioms only. This is a parent assembly interface, not a closed parent.
+
 ## Established original-source cuts
 
 - [Raw42Cut.lean](Raw42Cut.lean) discharges the halt child at weighted bound 12, seven direct side-cycle children B1=0LB,0LC,0LD,0RC,0RD,1LD,1RC, and the symbolic B1=1RD child via [Raw42RDGrowth.lean](Raw42RDGrowth.lean). The latter starts after 9 steps in B with right word 0 followed by k=2n+3 ones; the positive return consumes 6k+5 steps and adds two ones. Arbitrary-tail transfers and unbounded iteration prove nonhalting of every completion. The first-hole partition closes 9 of 25 choices, leaving 16 ordinary children. It covers 2,197,265,625 raw completions.

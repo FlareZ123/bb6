@@ -1,3 +1,6 @@
+## 2026-11-27T15:16:24.874Z — Raw42 canonical join checked
+- Raw42CanonicalJoin.lean proves conditional parent Cover from exactly 12 canonical residual B1 child Covers; uses TNF support cut 4 and weighted renaming to cover all F aliases. Local Lean check standard axioms, no global reduction. Fixed early CI axiom audit invocation to loop over claims.
+
 ## 2026-11-27T15:14:57.324Z — Raw42/1LB leaf18612 proof repaired
 - Fixed failed CI 45996929823 by clearing dependent h in beginRed and beginZero list induction, plus cons/append normalization. Exact source compiled with local Lean 4.36.0-rc2 against core artifact 15195605495; live uses propext, Quot.sound. Seed 55; eight-stage return family (8n+10,2n+2,0) increments n. Exact F0-hole leaf, 25 normalized completions. No full 1LB parent or new CI acceptance.
 

@@ -273,7 +273,9 @@ jobs:
           mkdir -p /tmp/early
           python tools/lean_compile_closure.py --workdir /tmp/early --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/early/manifest.json --artifact-name raw42-early "$d/Raw42EarlyNGram.lean" | tee /tmp/early/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/early/audit.log
-          python im-results/agent32-raw59/check_axioms.py /tmp/early/audit.log BB6.Agent32Raw42Early.bankCover BB6.Agent32Raw42Early.cover_all
+          for claim in BB6.Agent32Raw42Early.bankCover BB6.Agent32Raw42Early.cover_all; do
+            python im-results/agent32-raw59/check_axioms.py /tmp/early/audit.log "$claim"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: raw42-early
