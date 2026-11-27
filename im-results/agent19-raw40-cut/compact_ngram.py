@@ -117,14 +117,16 @@ def rungram(params):
     return push
 
 def laggram(params):
-    k,r,m0,m1=params
-    base=rungram([r,1,1,m0,m1])
+    # A lag-XOR maps a word of period k to an all-zero difference run.
+    # Keep the last k raw bits, then a finite residue summary of the differences.
+    k,r,c0,c1,m0,m1=params
+    base=rungram([r,c0,c1,m0,m1])
     mask=(1<<k)-1
     def push(s,b):
         word,tail=s
         if k==0:
             return (0,base(tail,b))
-        return (((word<<1)|b)&mask,base(tail,word>>(k-1)))
+        return (((word<<1)|b)&mask,base(tail,b^(word>>(k-1))))
     return push
 
 def compact(table, widths, cap=1000000):
@@ -138,6 +140,30 @@ def compact_run(table,left,right,cap=1000000):
 def compact_lag(table,left,right,cap=1000000):
     return abstract(table,[(0,()),(0,())],[laggram(left),laggram(right)],
                     ['compact-lag',left,right],cap)
+
+def find_lag(table,left,right,cap=30000):
+    """Try near the recorded lag parameters first, then modest refinements.
+    Failure of all attempts is unresolved, not evidence of halting.
+    """
+    def refinements(p):
+        k,r,m0,m1=p
+        for k1 in dict.fromkeys([k,k+1,k+2,3,4,5,6,7,8]):
+            for r1 in dict.fromkeys([r+1,r,r+2,1,2,3,4]):
+                if r1<1: continue
+                for c0,c1 in [(1,2),(1,1),(2,2),(2,1),(1,3),(3,3),(3,1)]:
+                    for a,b in dict.fromkeys([(m0,m1),(m0,4),(m0,2),(m0,3),(2*m0,m1),(m0,2*m1)]):
+                        yield (k1,r1,c0,c1,a,b)
+    if left!=right:
+        # Pair the recorded asymmetric parameters with the same refinements.
+        pairs=zip(refinements(left),refinements(right))
+    else:
+        pairs=((p,p) for p in refinements(left))
+    for l,r in pairs:
+        try:
+            return compact_lag(table,l,r,cap)
+        except ValueError:
+            pass
+    raise ValueError('lag-XOR search exhausted')
 
 def lean(record, namespace):
     return ('import FastBiDFA\nset_option maxRecDepth 100000\n'
