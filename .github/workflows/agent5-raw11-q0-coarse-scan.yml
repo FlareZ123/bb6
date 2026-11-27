@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, long-sweep]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, long-sweep, cycle149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -938,4 +938,40 @@ jobs:
             /tmp/q0-sweep-certified/
             /tmp/q0-sweep.log
           if-no-files-found: warn
+          retention-days: 30
+
+
+  cycle149:
+    if: inputs.mode == 'cycle149'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Replay exact recurrence certificates and check
+        run: |
+          set -euo pipefail
+          D=im-results/agent5-weighted-tnf-queue
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate-q0149-cycle.py" /tmp/q0149-generated
+          printf 'import Q0149H11\nimport Q0149H16\nimport Q0149H17\n' > /tmp/q0149-generated/Q0149Cycles.lean
+          python tools/lean_compile_closure.py /tmp/q0149-generated/Q0149Cycles.lean --source-root /tmp/q0149-generated --workdir /tmp/q0149-certified --manifest /tmp/q0149-certified/manifest.json --jobs 2 --lean lean --label raw11-q0-149-cycles --provenance-input "$D/generate-q0149-cycle.py" 2>&1 | tee /tmp/q0149-certified.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0149-certified.log; then exit 1; fi
+          for id in 11 16 17; do
+            grep -F "BB6.Agent50Q0149H$id.cover' depends on axioms:" /tmp/q0149-certified.log
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-149-cycles
+          path: |
+            /tmp/q0149-certified/
+            /tmp/q0149-certified.log
+          if-no-files-found: error
           retention-days: 30
