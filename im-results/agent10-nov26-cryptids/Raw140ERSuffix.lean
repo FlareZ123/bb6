@@ -14,7 +14,7 @@ theorem prepareCarry (k : Nat) (X Y : List Sym) :
   have h₃ := stepR base 3 4 false (S 1) (S 1) 1 (S 7::X) (U 1 k ++ Y) (by rfl)
   have h₄ := stepL base 4 4 true (S 7) (S 3) 1 X (S 1::(U 1 k ++ Y)) (by rfl)
   have h := join (join (join h₁ h₂) h₃) h₄
-  simpa only [U,List.replicate_succ,List.cons_append,
+  simpa only [ite_true, List.replicate_zero, U,List.replicate_succ,List.cons_append,
     show (k+1)*3+3+1+1=5+3*(k+1) by omega] using h
 
 -- Partial rotation retains k leading 1s on the right. No assumption on Y.
@@ -28,19 +28,19 @@ theorem partialRotate (W : List Bool) (k : Nat) (X Y : List Sym) :
     have h₂ := stepL base 4 4 true (S 5) (S 1) 1 X (U 1 (k+1) ++ Y) (by rfl)
     have h₃ := one X (U 1 k ++ Y)
     have h := join (join h₁ h₂) h₃
-    simpa only [oddword,List.nil_append,List.append_assoc,List.length_nil,U,List.replicate_succ,List.cons_append,
+    simpa only [ite_true, List.replicate_zero, oddword,List.nil_append,List.append_assoc,List.length_nil,U,List.replicate_succ,List.cons_append,
       show (k+1)*3+1+19=22*0+3*k+23 by omega] using h
   | cons b W ih =>
     cases b
     · have h₁ := prepareCarry k (oddword W ++ S 5::X) Y
       have h₂ := rotate_one W X (U 1 k ++ Y)
       have h := join h₁ h₂
-      simpa only [oddword,Bool.false_eq_true,ite_false,List.length_cons,List.append_assoc,U,List.replicate_succ,List.cons_append,
+      simpa only [ite_true, List.replicate_zero, oddword,Bool.false_eq_true,ite_false,List.length_cons,List.append_assoc,U,List.replicate_succ,List.cons_append,
         show 5+3*(k+1)+(22*(1+W.length)+15)=22*(W.length+1)+3*k+23 by omega] using h
     · have h₁ := ih (k+1) Y
       have h₂ := one (oddword W ++ S 3::X) (U 1 k ++ Y)
       have h := join h₁ h₂
-      simpa only [oddword,ite_true,List.length_cons,List.append_assoc,U,List.replicate_succ,List.cons_append,rep_cons,
+      simpa only [ite_true, List.replicate_zero, oddword,ite_true,List.length_cons,List.append_assoc,U,List.replicate_succ,List.cons_append,rep_cons,
         show 22*W.length+3*(k+1)+23+19=22*(W.length+1)+3*k+23 by omega] using h
 
 inductive Tail where
@@ -122,7 +122,7 @@ theorem bank (n : Nat) (W : List Bool) (X : List Sym) (s : Tail) :
     have h₃ : Reach base (boundary 4 true (S 1::(oddword W ++ U 5 (n+1) ++ X)) (tailWord s))
         (boundary 4 true (S 1::(oddword (advanceWord W s) ++ U 5 n ++ X)) (tailWord (rho s))) := by
       refine ⟨_,?_⟩
-      simpa only [advanceWord,oddword_append,oddword,ite_true,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using h₁
+      simpa only [ite_true, List.replicate_zero, advanceWord,oddword_append,oddword,ite_true,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using h₁
     exact Reach.trans h₃ h₂
 
 #print axioms partialRotate
