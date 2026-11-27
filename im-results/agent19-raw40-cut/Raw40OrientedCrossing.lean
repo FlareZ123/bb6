@@ -71,7 +71,10 @@ theorem move_orient (f s : Bool) (c : Config) (v : Move) :
       applyMove (orientConfig f s c) v := by
   rcases c with ⟨q,h,t⟩
   rcases v with ⟨w,d,q'⟩
-  simp [orientConfig,orientMove,applyMove,qmap_inv,pos_move,pos_eq]
+  simp [orientConfig,orientMove,applyMove,qmap_inv,pos_eq]
+  constructor
+  · cases f <;> cases d <;> simp [pos,dir] <;> omega
+  · rfl
 
 theorem step_orient (f s : Bool) (m : Machine) (c : Config) :
     rawStep m (orientConfig f s c) =
