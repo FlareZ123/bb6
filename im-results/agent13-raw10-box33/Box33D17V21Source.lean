@@ -3,6 +3,7 @@ import Box17AuditCore
 import Box33D17V21Pair
 import Box33D17V21Unary
 import Box33D17V21DoubleBlank
+import Box33D17V21Transducer
 
 namespace BB6.Agent13.Box33D17V21Source
 open BB6Coverage
@@ -17,6 +18,7 @@ inductive Hard where
   | m6
   | m2
   | m4
+  | m8
   deriving DecidableEq
 
 def codes : Hard → List (Fin 25)
@@ -25,6 +27,7 @@ def codes : Hard → List (Fin 25)
   | .m6 => [8,9,11,0,1,13,17,17,21,23,24,2]
   | .m2 => [8,4,11,6,1,13,17,7,21,0,24,4]
   | .m4 => [8,4,11,6,1,13,17,7,21,0,24,3]
+  | .m8 => [8,6,11,2,1,13,17,19,21,3,4,0]
 
 def table (h : Hard) : Machine := fun s => decode ((codes h).getD (index s).val 0)
 def step (h : Hard) (c : C9Pair.Config) : Option C9Pair.Config :=
@@ -34,6 +37,7 @@ def step (h : Hard) (c : C9Pair.Config) : Option C9Pair.Config :=
   | .m6 => Box33D17V21Unary.step c
   | .m2 => Box33D17V21Double.step false c
   | .m4 => Box33D17V21Double.step true c
+  | .m8 => Box33D17V21Transducer.step c
 def localRun (h : Hard) (n : Nat) (c : C9Pair.Config) : Option C9Pair.Config :=
   match h with
   | .m0 => Box33D17V21Pair.run false n c
@@ -41,6 +45,7 @@ def localRun (h : Hard) (n : Nat) (c : C9Pair.Config) : Option C9Pair.Config :=
   | .m6 => Box33D17V21Unary.run n c
   | .m2 => Box33D17V21Double.run false n c
   | .m4 => Box33D17V21Double.run true n c
+  | .m8 => Box33D17V21Transducer.run n c
 
 theorem localRun_add (h : Hard) (m n : Nat) (c : C9Pair.Config) :
     localRun h (m+n) c = (localRun h m c).bind (localRun h n) := by
@@ -50,9 +55,10 @@ theorem localRun_add (h : Hard) (m n : Nat) (c : C9Pair.Config) :
   · exact Box33D17V21Unary.run_add m n c
   · exact Box33D17V21Double.run_add false m n c
   · exact Box33D17V21Double.run_add true m n c
+  · exact Box33D17V21Transducer.run_add m n c
 
 theorem localRun_one (h : Hard) (c : C9Pair.Config) : localRun h 1 c = step h c := by
-  cases h <;> simp [localRun,step,Box33D17V21Pair.run,Box33D17V21Unary.run,Box33D17V21Double.run]
+  cases h <;> simp [localRun,step,Box33D17V21Pair.run,Box33D17V21Unary.run,Box33D17V21Double.run,Box33D17V21Transducer.run]
 
 abbrev project := Box33Source.project false
 
@@ -98,6 +104,7 @@ theorem never (h : Hard) : NeverHalts (table h) := by
     · exact Box33D17V21Unary.never_blank n
     · exact Box33D17V21Double.never_blank false n
     · exact Box33D17V21Double.never_blank true n
+    · exact Box33D17V21Transducer.never_blank n
   cases hr : run (table h) n blank with
   | none =>
     rw [hr] at he
