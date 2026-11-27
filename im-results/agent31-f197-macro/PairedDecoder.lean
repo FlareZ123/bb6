@@ -106,7 +106,7 @@ theorem pd_peel (b c : Bool) (cs : List Bool) (l : Tape) :
                 peelT_Ct_At l (pdE b ds)
 
 /-- Complete exact decoder for an arbitrary nonempty paired-prefix data word. -/
-theorem pd_decode (b : Bool) (cs : List Bool) (l : Tape) :
+theorem pd_decode (b : Bool) (cs : List Bool) (l : Tape) (hl : l 0 = true) :
     run (pdCost b cs)
       (other B (pdJ l) (pdRight (pdR b cs))) =
     some
@@ -117,10 +117,10 @@ theorem pd_decode (b : Bool) (cs : List Bool) (l : Tape) :
       cases b with
       | false =>
           simpa [pdCost, pdJ, pdRight, pdR, pdOut, pdTail] using
-            reset_decoder_d l
+            reset_decoder_d l hl
       | true =>
           simpa [pdCost, pdJ, pdRight, pdR, pdOut, pdTail] using
-            decoder_base_T l
+            decoder_base_T l hl
   | cons c cs ih =>
       change run (pdPeelCost c + pdCost b cs)
         (other B (pdJ l) (pdRight (pdR b (c::cs)))) =
@@ -129,7 +129,7 @@ theorem pd_decode (b : Bool) (cs : List Bool) (l : Tape) :
             (pre [false,false,true] blank))
       rw [run_add, pd_peel b c cs l]
       simp only [Option.bind_some]
-      simpa [pdTail] using ih (l := pdH c l)
+      simpa [pdTail] using ih (l := pdH c l) (by cases c <;> rfl)
 
 def pdTrueCount : List Bool → Nat
   | [] => 0
