@@ -140,7 +140,9 @@ private theorem a12H_normalizes (p x k : ℕ) (W : List (ℕ × ℕ)) (hx : 3 �
       right
       exact ⟨(0+1+2*(r+1))%3, 2+4*((0+1+2*(r+1))/3),
         by omega, by
-          convert h4 using 2 <;> omega⟩
+          have he : 2+1+4*((0+1+2*(r+1))/3) = 2+4*((0+1+2*(r+1))/3)+1 := by omega
+          rw [he] at h4
+          exact h4⟩
     · left
       exact ⟨x%3,r,0,by omega,by omega,by omega,by simpa using h1⟩
   | succ p ih =>
