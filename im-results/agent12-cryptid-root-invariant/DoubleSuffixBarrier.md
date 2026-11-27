@@ -6,6 +6,8 @@ Lean append, [DoubleSuffixBarrier.append.lean](DoubleSuffixBarrier.append.lean),
 is prepared; full source compilation and axiom acceptance are pending.
 No authentic root verdict or global Cover is claimed.
 
+This restricted language is now subsumed by the [general triple-containing binary-word theorem](GeneralTripleBarrier.md), which removes the separation condition using a paired-token invariant. The simpler exact three-block recurrence below remains a useful independent source-proof slice.
+
 ## Theorem
 
 Write G(M,U)=CR([0],0^M U), where M>=1 and U is a word of

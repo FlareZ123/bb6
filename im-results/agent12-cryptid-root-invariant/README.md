@@ -14,7 +14,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Current strongest prepared-state barrier
 
-[Separated-double halting language](DoubleSuffixBarrier.md): every prepared G(M,w111v), M>=1, with binary w and v in (0|01|0011)*, halts by a uniform token-stack induction. This strictly extends the earlier isolated-one/triple-zero barriers. The exact primitive cost is computed by a three-block recurrence. Paper derivation and 19,656 exact source-transcription comparisons are complete; the standalone original-source Lean append is pending full compilation. These are not blank-root decisions. The old hazard1011 source append has a known unrelated tape-encoding failure, which the new proof avoids.
+[General triple halting theorem](GeneralTripleBarrier.md): every prepared G(M,U), M>=1, with binary U containing 111, halts. The new invariant pairs each token 2 with a preceding 1, preserving the triple in high-token returns and making all low-token branches fatal. The exact cost recurrence and quadratic bound are proved by source-clause derivation; 42,287 binary-word replays and 36 arbitrary good-token/tail cases agree. Full original-source Lean acceptance is pending. The [separated-double theorem](DoubleSuffixBarrier.md) is the simpler special case with v in (0|01|0011)*, independently submitted for source compilation. Neither theorem gives an authentic blank-root decision.
 
 ## Research map and evidence status
 
@@ -35,7 +35,7 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 
 ## Next mathematical work
 
-First consume the separated-double theorem through the exact token-mode source closure; investigate whether the authentic arithmetic return map can reach the expanded fatal suffix language, rather than extending bounded scans alone.
+Formalize the general triple theorem through the exact token-mode source closure; investigate whether the authentic arithmetic return map can reach the expanded fatal suffix language, rather than extending bounded scans alone.
 
 1. Formalize the corrected suffix-preserving prefix and the new E_n(x;T) decrement / E_n(1) bridge in the pinned #85 module; do not reuse the current failing append unchanged.
 2. Resolve the offset-six E_n(2) token closure at the new endpoint E_1192248236(2), then continue the exact modulo-3 residual chain.
