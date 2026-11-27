@@ -2,7 +2,7 @@
 from generate import ROOT as RAW_ROOT, scan, move, slot, DECODE
 from pathlib import Path
 
-def describe(raw):
+def describe(raw,holes=6):
     assert len(raw)==36
     target=[raw[i:i+3] if raw[i:i+3]!="---" else None for i in range(0,36,3)]
     p=RAW_ROOT[:];cut=3;steps=[]
@@ -17,12 +17,12 @@ def describe(raw):
         steps.append((s,mv,cut,q))
         p[s]=mv;cut=q
     r=scan(p)
-    assert r[0]=="hole" and 4<=cut<=6 and p.count(None)==6,(raw,r,cut)
+    assert r[0]=="hole" and 4<=cut<=6 and p.count(None)==holes,(raw,r,cut)
     return steps,r[1],r[2]
 
-def emit_base(raw,module,dest):
-    steps,query,qs=describe(raw)
-    assert len(steps)==3
+def emit_base(raw,module,dest,holes=6):
+    steps,query,qs=describe(raw,holes)
+    assert len(steps)==9-holes
     ns="BB6."+module
     lines=["import Agent46Raw13Base","set_option maxRecDepth 100000","set_option maxHeartbeats 0",f"namespace {ns}","open BB6Coverage BB6.Agent13BlankDelay BB6.Agent46CanonicalCut","open BB6.Agent46Raw13"]
     prev="raw13"; hprev="raw13_support"; nh="raw13_nohalt"; proof=[]
