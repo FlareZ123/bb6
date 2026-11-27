@@ -114,6 +114,9 @@ jobs:
             --theorem F421PrimaryEvents.iterateAffine \
             --theorem BB6Coverage.Agent41F421.EpochWords.tertiaryEpoch \
             --theorem BB6Coverage.Agent41F421.EpochWords.tertiaryToSecondary \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryEpoch \
+            --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryEpoch \
+            im-results/agent41-f421/F421SecondaryEpoch.lean \
             im-results/agent41-f421/F421ZeroGuard.lean \
             im-results/agent41-f421/F421Epoch.lean \
             im-results/agent41-f421/F421Odd.lean \
