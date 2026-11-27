@@ -7,6 +7,8 @@ pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
 known_proven={
+    "1RB0RC_1RC1RF_0RD0LE_1LD1RC_1LC1LA_0RA---": "BB6.Agent7Raw49Drift230574",
+    "1RB0RD_1RC1RE_0RD0LE_1LD1RC_1RF1LE_---0RA": "BB6.Agent7Raw49Nested261066",
     "1RB0LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90003",
     "1RB0LE_1RC0LA_0RD0LB_1LD1RC_0LB1LF_---0RA": "BB6.Agent7Raw49NextSweeps.M90012",
     "1RB1LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90096",
@@ -174,6 +176,8 @@ import Raw49Doubling
 import Raw49C6Counters
 import Raw49NextSweeps
 {'import Raw49BulkRecipes' if idx>=15 else ''}
+{'import Raw49Drift230574' if "BB6.Agent7Raw49Drift230574" in proven.values() else ''}
+{'import Raw49Nested261066' if "BB6.Agent7Raw49Nested261066" in proven.values() else ''}
 {'import Raw49RestSweeps' if any(isinstance(v,str) and v.startswith("BB6.Agent7Raw49RestSweeps.") for v in proven.values()) else ''}
 {'import Raw49RLE' if any(isinstance(v,str) and v.startswith("BB6.Agent7Raw49RLE.") for v in proven.values()) else ''}
 {head}
