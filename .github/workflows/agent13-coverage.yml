@@ -320,6 +320,8 @@ jobs:
           W=/tmp/raw10-box33-d17v22-symbolic
           python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent13.Box33D17V22Unary.compatible_never im-results/agent13-raw10-box33/Box33D17V22Unary.lean | tee "$W.log"
           python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent13.Box33D17V22Unary.growth BB6.Agent13.Box33D17V22Unary.compatible_never
+          python tools/lean_compile_closure.py --workdir "$W-counter" --jobs 4 --manifest "$W-counter/manifest.json" --theorem BB6.Agent13.Box33D17V22Counter.compatible_never im-results/agent13-raw10-box33/Box33D17V22Counter.lean | tee "$W-counter.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W-counter.log" BB6.Agent13.Box33D17V22Counter.progress BB6.Agent13.Box33D17V22Counter.compatible_never
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw10-box33-d17v22-symbolic'
         with:
@@ -327,6 +329,8 @@ jobs:
           path: |
             /tmp/raw10-box33-d17v22-symbolic
             /tmp/raw10-box33-d17v22-symbolic.log
+            /tmp/raw10-box33-d17v22-symbolic-counter
+            /tmp/raw10-box33-d17v22-symbolic-counter.log
           if-no-files-found: error
       - name: Search larger one-sided automata for the final D17V21 sweep machine
         if: inputs.target == 'weighted-tnf-raw10-box33-d17v21-far'
