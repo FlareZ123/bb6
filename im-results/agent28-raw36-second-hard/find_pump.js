@@ -61,9 +61,15 @@ function wordLean(w){return w.block?
   "(.periodic ["+bits(w.pre)+"] ["+bits(w.block)+"] "+wordLean(w.post)+")":
   "(.lit ["+bits(w.pre)+"])";}
 function opLean(op){if(op==="step")return ".step";
+ // Auto.Action.left names its LEFT pre first, unlike the
+ // discovery engine, which records the destination-side pre first.
+ const leftPre=op.dir==="L"?op.rp:op.lp;
+ const rightPre=op.dir==="L"?op.lp:op.rp;
+ const leftTail=op.dir==="L"?op.R:op.L;
+ const rightTail=op.dir==="L"?op.L:op.R;
  return "."+(op.dir==="R"?"right":"left")+
- " ["+bits(op.lp)+"] ["+bits(op.rp)+"] ["+bits(op.I)+"] ["+bits(op.O)+
- "] "+wordLean(op.L)+" "+wordLean(op.R)+" "+op.k;
+ " ["+bits(leftPre)+"] ["+bits(rightPre)+"] ["+bits(op.I)+"] ["+bits(op.O)+
+ "] "+wordLean(leftTail)+" "+wordLean(rightTail)+" "+op.k;
 }
 function concrete(m,k) {
  const line="11100".repeat(m)+"1100", cells=new Map();
