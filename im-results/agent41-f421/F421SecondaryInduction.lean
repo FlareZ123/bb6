@@ -62,12 +62,19 @@ theorem qBudgetDouble (B : Nat) (cs : List PC) (hq : QBudget 2 B cs) : QBudget 1
   | nil => trivial
   | cons c cs ih => exact ⟨by have h := hq.1; omega,by simpa [Nat.mul_assoc] using ih (2*B) hq.2⟩
 
+/-- The deterministic primary arithmetic of a positive secondary cycle. -/
+def sNext (b : Nat) (cs : List PC) : Nat × Nat × List PC :=
+  let (as,A,rA) := drain 0 0 (dec cs)
+  let D := 2^as.length
+  (4*D-1,6*D-1,trimQ 1 as++[⟨4*2^cs.length,b+1+A+rA-D⟩])
+
 /-- A positive secondary cycle returns the same mixed guard with one less unit.
     Leading b need only have the lower bound 3M-1, not the equality. -/
-theorem secondaryPrimaryCycle (k a b x y : Nat) (cs : List PC) (lo hi : List TC) (c : TC) (U : List Bool)
+theorem secondaryPrimaryCycleExact (k a b x y : Nat) (cs : List PC) (lo hi : List TC) (c : TC) (U : List Bool)
     (hg : sPrimary (k+1) a b cs) (hx : 4≤x) (hy : 3≤y)
     (hxs : stailGood (lo++c::hi)) (hlo : clear lo) (hc : c.f=true) :
-    ∃ a' b' ds, sPrimary k a' b' ds ∧ reaches 1 (sbody a b x y cs (lo++c::hi) U)
+    let (a',b',ds) := sNext b cs
+    sPrimary k a' b' ds ∧ reaches 1 (sbody a b x y cs (lo++c::hi) U)
       (sbody a' b' (x-1) (y-1) ds (sTouch lo++sTarget c::hi) U) := by
   rcases hg with ⟨ha,hb,hp,hq,hlen⟩
   let M := 2^cs.length
@@ -186,8 +193,28 @@ theorem secondaryPrimaryCycle (k a b x y : Nat) (cs : List PC) (lo hi : List TC)
       (by change 3*M-1≤b at hb; omega) (by omega) (by omega) hv hxs' hlo hzh hc (by omega) (by omega) hhi
       gA eA vA gB (he ▸ eB) (he ▸ vB) gC eC
     rw [hqB] at step
-    exact ⟨a',b',ds,⟨ha',hb',hp',hq',by rw [lenDs]; omega⟩,reachesWeak (by omega) step⟩
+    have hh : sNext b cs = (a',b',ds) := by
+      unfold sNext
+      rw [eA]
+      change (4*D-1,6*D-1,trimQ 1 as++[⟨4*M,b+1+A+rA-D⟩]) = _
+      rw [hDs]
+      change (4*D-1,6*D-1,trimQ 1 as++[⟨4*M,bA-D⟩]) = (a',b',trimQ 1 as++[⟨4*M,bA-D⟩])
+      dsimp [a',b',N]
+      congr 2 <;> omega
+    rw [hh]
+    exact ⟨⟨ha',hb',hp',hq',by rw [lenDs]; omega⟩,reachesWeak (by omega) step⟩
+
+theorem secondaryPrimaryCycle (k a b x y : Nat) (cs : List PC) (lo hi : List TC) (c : TC) (U : List Bool)
+    (hg : sPrimary (k+1) a b cs) (hx : 4≤x) (hy : 3≤y)
+    (hxs : stailGood (lo++c::hi)) (hlo : clear lo) (hc : c.f=true) :
+    ∃ a' b' ds, sPrimary k a' b' ds ∧ reaches 1 (sbody a b x y cs (lo++c::hi) U)
+      (sbody a' b' (x-1) (y-1) ds (sTouch lo++sTarget c::hi) U) := by
+  have h := secondaryPrimaryCycleExact k a b x y cs lo hi c U hg hx hy hxs hlo hc
+  rcases he : sNext b cs with ⟨a',b',ds⟩
+  rw [he] at h
+  exact ⟨a',b',ds,h⟩
 
 #print axioms crossTwiceEq
+#print axioms secondaryPrimaryCycleExact
 #print axioms secondaryPrimaryCycle
 end BB6Coverage.Agent41F421.EpochWords

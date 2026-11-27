@@ -116,7 +116,8 @@ jobs:
             --theorem BB6Coverage.Agent41F421.EpochWords.tertiaryToSecondary \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryEpoch \
             --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryEpoch \
-            im-results/agent41-f421/F421SecondaryEpoch.lean \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryEpochExact \
+            im-results/agent41-f421/F421SecondaryExact.lean \
             im-results/agent41-f421/F421ZeroGuard.lean \
             im-results/agent41-f421/F421Epoch.lean \
             im-results/agent41-f421/F421Odd.lean \
