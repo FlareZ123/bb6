@@ -10,7 +10,7 @@ def lastR : Prefix → Nat
 
 theorem lastR_le_p (b : Prefix) : b.lastR ≤ b.p := by
   induction b with
-  | last r => rfl
+  | last r => exact Nat.le_refl _
   | more r t ih => simp [lastR,p]; omega
 
 /-- The correction has exact valuation five times the final half-valuation.
@@ -35,7 +35,9 @@ theorem correction_exact_delay (b : Prefix) :
     have hpow : 2^k=2^d*2^(k-d) := by
       rw [←Nat.pow_add,show d+(k-d)=k by omega]
     have heven : 2^(k-d)=2*2^(k-d-1) := by
-      rw [show k-d=(k-d-1)+1 by omega,Nat.pow_succ,Nat.mul_comm]
+      calc
+        2^(k-d) = 2^((k-d-1)+1) := congrArg (fun n : Nat => 2^n) (by omega)
+        _ = 2*2^(k-d-1) := by rw [Nat.pow_succ,Nat.mul_comm]
     refine ⟨(2^(2*r+3)-1)*2^(k-d)+u,?_,?_⟩
     · rw [heven,show (2^(2*r+3)-1)*(2*2^(k-d-1)) =
         2*((2^(2*r+3)-1)*2^(k-d-1)) by ac_rfl]
