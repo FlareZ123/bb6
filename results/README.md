@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw43 M62 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m62-nonhalting-agent38.md): original-source Lean proof of a complete two-phase regular-language invariant with an unbounded backward carry, and a `Cover (DecidedBelow bound)` for every bound. [Run 46084476880](https://github.com/FlareZ123/bb6/actions/runs/46084476880) passed the kernel and axiom audit. This is a local child leaf; enclosing Raw43 and the Canonical40 global upper bound remain open.
+
 - [**Three new fully source-accepted Raw41 five-hole cylinders and 153→150 canonical quotient reduction**](2026-11-27-raw41-three-cylinders-agent36.md): 29,296,875 distinct physical completions over three families; checked universal weighted bounds 41, 84 and 64 via 135 FAR certificates and exhaustive canonical paths. Lean 4.36.0-rc2 accepted all three child theorem closures and the 153→150 local / 229→226 earlier rooted-roster reduction in [run 46080020567](https://github.com/FlareZ123/bb6/actions/runs/46080020567), standard axioms only. **Does not reduce the newer Canonical40 global list.**
 
 - [**Raw57 complete six-hole weighted Cover at 1,613**](2026-11-27-raw57-complete-six-hole-cover-agent29.md): unconditional original-source Lean Cover for all 25⁶ = 244,140,625 completions of `1RB---_1RC---_0RD---_1LD1RE_---0LA_------`. Final `BB6.Agent31Raw57.literal_cover` passed [run 46074414244](https://github.com/FlareZ123/bb6/actions/runs/46074414244) with only standard axioms; the sufficient upper bound is not claimed sharp. Canonical41→40 integration is now source accepted in [run 46075158700](https://github.com/FlareZ123/bb6/actions/runs/46075158700), leaving exactly 40 residual parent Covers.
