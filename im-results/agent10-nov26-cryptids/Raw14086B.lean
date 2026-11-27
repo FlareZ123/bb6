@@ -62,13 +62,6 @@ theorem ab_add (n m : Nat) : AB (n+m)=AB n ++ AB m := by
     change AB (n+m) ++ [S 1,S 3,S 3] = AB n ++ (AB m ++ [S 1,S 3,S 3])
     simp only [ih,List.append_assoc]
 
-theorem ta_add (n m : Nat) : TA (n+m)=TA n ++ TA m := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    rw [show n+1+m=(n+m)+1 by omega]
-    simp only [TA,Raw140VariantTransfer.trip,List.cons_append,ih]
-
 theorem bankStep (n m : Nat) (X : List Sym) (s : ATail) :
     Reach base
       (boundary 4 true (S 1::(AB n ++ U 3 m ++ S 5::X)) (aword s))
@@ -80,8 +73,11 @@ theorem bankStep (n m : Nat) (X : List Sym) (s : ATail) :
   rw [hw,carry_word] at h
   have h' : AB (ac s) ++ AB n = AB (n+ac s) := by rw [← ab_add,Nat.add_comm]
   have he : AB (ac s) ++ (AB n ++ (U 3 m ++ S 3::X)) = AB (n+ac s) ++ (U 3 (m+1) ++ X) := by
-    rw [← List.append_assoc (AB (ac s)),h',← merge 3 m 1 X]
-  simpa only [List.append_assoc,he] using (⟨_,h⟩ : Reach base _ _)
+    rw [← List.append_assoc (AB (ac s)),h']
+    congr 1
+    exact merge 3 m 1 X
+  refine ⟨22*W.length+Raw140ERSuffix.cost s,?_⟩
+  simpa only [List.append_assoc,he] using h
 
 theorem bankIter (k n m : Nat) (X : List Sym) (s : ATail) :
     Reach base (boundary 4 true (S 1::(AB n ++ U 3 m ++ U 5 k ++ X)) (aword s))
@@ -105,8 +101,8 @@ theorem exitFront (j n : Nat) (X Y : List Sym) :
   have h0 := Raw140ERSuffix.prepareCarry j (S 3::S 3::(AB n ++ X)) Y
   have h1 := Raw14042Bank.pumpAny n X (U 1 j ++ Y)
   have h := join h0 h1
-  simpa only [Raw14042Bank.bank_cons,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using
-    (⟨_,h⟩ : Reach base _ _)
+  refine ⟨5+3*(j+1)+21*n,?_⟩
+  simpa only [Raw14042Bank.bank_cons,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using h
 
 theorem exitAny (n : Nat) (X : List Sym) (s : ATail) :
     Reach base
@@ -117,32 +113,32 @@ theorem exitAny (n : Nat) (X : List Sym) (s : ATail) :
     have h0 := Raw140ERSuffixLocal.prep542 (AB (n+1) ++ X)
     have h1 := exitFront 1 n X [S 5,S 2]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
   | t152 =>
     have h0 := Raw140ERSuffixLocal.prep152 (AB (n+1) ++ X)
     have h1 := exitFront 1 n X [S 1,S 2,S 1]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
   | t1121 =>
     have h0 := Raw140ERSuffixLocal.prep1121 (AB (n+1) ++ X)
     have h1 := exitFront 0 n X [S 5,S 2,S 1,S 5]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
   | t5215 =>
     have h0 := Raw140ERSuffixLocal.prep5215 (AB (n+1) ++ X)
     have h1 := exitFront 0 n X [S 1,S 1,S 5,S 5]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
   | t1155 =>
     have h0 := Raw140ERSuffixLocal.prep1155 (AB (n+1) ++ X)
     have h1 := exitFront 2 n X [S 5,S 1,S 1]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Nat.add_zero,List.append_assoc] using Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
   | t11511 =>
     have h0 := Raw140ERSuffixLocal.prep11511 (AB (n+1) ++ X)
     have h1 := exitFront 2 n X [S 5,S 5,S 4,S 2]
     simp only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc] at h1
-    simpa only [Raw14042Bank.extra,aword,an,Raw14042Bank.trip_snoc,List.append_assoc,List.cons_append] using
+    simpa only [Raw14042Bank.extra,aword,an,Raw140ERSuffix.tailWord,Raw140ERSuffix.rho,Raw14042Bank.trip_snoc,List.append_assoc,List.cons_append,List.nil_append] using
       Reach.trans (⟨_,h0⟩ : Reach base _ _) h1
 
 theorem aPumpAll (n p : Nat) (Y : List Sym) (hp : 24 ≤ p) :
@@ -160,12 +156,12 @@ theorem aPumpAll (n p : Nat) (Y : List Sym) (hp : 24 ≤ p) :
 theorem terminalA (p : Nat) (s : ATail) (hp : 24 ≤ p) :
     R (boundary 0 true (U 3 p ++ [S 2]) (aword s)) (cfg (termA p (arank s))) := by
   cases s
-  · simpa only [aword,arank,termA,cfg,A2,show p-24+24=p by omega,show p-24+26=p+2 by omega] using rr (a542 (p-24))
-  · simpa only [aword,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+29=p+5 by omega] using rr (a152 (p-24))
-  · simpa only [aword,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+29=p+5 by omega] using rr (a1121 (p-24))
-  · simpa only [aword,arank,termA,cfg,B0,show p-24+24=p by omega,show p-24+30=p+6 by omega] using rr (a5215 (p-24))
-  · simpa only [aword,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+30=p+6 by omega] using rr (a1155 (p-24))
-  · simpa only [aword,arank,termA,cfg,B0,show p-24+24=p by omega,show p-24+33=p+9 by omega] using rr (a11511 (p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,A2,show p-24+24=p by omega,show p-24+26=p+2 by omega] using rr (a542 (p := p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+29=p+5 by omega] using rr (a152 (p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+29=p+5 by omega] using rr (a1121 (p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,B0,show p-24+24=p by omega,show p-24+30=p+6 by omega] using rr (a5215 (p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,A0,show p-24+24=p by omega,show p-24+30=p+6 by omega] using rr (a1155 (p-24))
+  · simpa only [aword,Raw140ERSuffix.tailWord,arank,termA,cfg,B0,show p-24+24=p by omega,show p-24+33=p+9 by omega] using rr (a11511 (p-24))
 
 theorem drainA (p n : Nat) (s : ATail) (hp : 24 ≤ p) :
     R (boundary 0 true (U 3 p ++ [S 2]) (TA n ++ aword s)) (cfg (termA (p+5*n) (arank s))) :=
@@ -192,12 +188,10 @@ theorem bFront (p : Nat) (hp : 24 ≤ p) :
   have hb := aTurn_balance (p-4) .t152
   have hlt := arank_lt s
   have hb' : 6*n+arank s=p-3 := by
-    dsimp only [n,s]
-    simp only [arank] at hb
-    omega
+    simpa only [n,s,arank,show p-4+1=p-3 by omega] using hb
   have hn3 : 3 ≤ n := by omega
   have h0 : Plus (B0 p) (boundary 4 true (S 1::(U 3 3 ++ U 5 (p-4))) (aword .t152)) := by
-    simpa only [B0,aword,show p-24+24=p by omega,show p-24+20=p-4 by omega,
+    simpa only [B0,aword,Raw140ERSuffix.tailWord,show p-24+24=p by omega,show p-24+20=p-4 by omega,
       U,List.replicate_succ,List.replicate_zero,List.cons_append,List.append_assoc,List.nil_append] using positive (bSeed (p := p-24)) (by omega)
   have h1 := lift (bankIter (p-4) 0 3 [] .t152)
   have h1' : R (boundary 4 true (S 1::(U 3 3 ++ U 5 (p-4))) (aword .t152))
@@ -220,9 +214,7 @@ theorem b0Return (p : Nat) (hp : 24 ≤ p) : Plus (B0 p) (cfg (ret .b0 p)) := by
   let t := an s
   have hbal := aTurn_balance (p-4) .t152
   have hbal' : 6*n+arank s=p-3 := by
-    dsimp only [n,s]
-    simp only [arank] at hbal
-    omega
+    simpa only [n,s,arank,show p-4+1=p-3 by omega] using hbal
   have hlt := arank_lt s
   have hn : n=(p-3)/6 := by omega
   have hs : arank s=(p-3)%6 := by omega
