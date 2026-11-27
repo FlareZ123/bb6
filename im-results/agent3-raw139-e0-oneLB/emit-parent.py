@@ -6,7 +6,8 @@ expected=json.loads(pathlib.Path(__file__).with_name("child-banks.json").read_te
 known={};B=187672026
 codes=[0,1,2,3,4,5,6,7,8,9,10,13,15,19,20,21,22,23]
 for directory in map(pathlib.Path,sys.argv[2:]):
-    paths=list(directory.rglob("manifest.json"));assert len(paths)==1,paths
+    paths=([directory/"manifest.json"] if (directory/"manifest.json").is_file() else
+           [p for p in directory.rglob("manifest.json") if "reuse" not in p.relative_to(directory).parts]);assert len(paths)==1,paths
     m=json.loads(paths[0].read_text());c=m["claim"]
     t=json.loads(c["parent_table"]);i=t[5]
     assert t==[7,24,11,24,14,i,24,16,6,11,24,24] and i in codes

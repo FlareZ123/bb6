@@ -6,7 +6,8 @@ imports=pathlib.Path(sys.argv[2]);imports.mkdir(parents=True,exist_ok=True)
 records={};sources={};base=None;revisions=set();claims=[]
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 for directory in map(pathlib.Path,sys.argv[3:]):
-    paths=list(directory.rglob("manifest.json"))
+    paths=([directory/"manifest.json"] if (directory/"manifest.json").is_file() else
+           [p for p in directory.rglob("manifest.json") if "reuse" not in p.relative_to(directory).parts])
     assert len(paths)==1,paths
     p=paths[0];m=json.loads(p.read_text());assert m["schema_version"]==1
     if base is None:base=m
