@@ -1,0 +1,23 @@
+[
+  {
+    "H": 3,
+    "W": 3,
+    "K": 8,
+    "Rmax": 12,
+    "mode": "repair",
+    "states": 94,
+    "processed": 94,
+    "edges": 108,
+    "done": 2,
+    "maxl": 5,
+    "maxr": 2,
+    "maxrun": 5,
+    "flushed": 31,
+    "cut": false,
+    "witness": null,
+    "topo": 94,
+    "cycle": null,
+    "complete": true,
+    "ms": 2
+  }
+]
