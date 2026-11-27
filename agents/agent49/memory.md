@@ -1,3 +1,9 @@
+## 2026-11-27T21:27Z — masked binary counter for two Box27 cylinders
+
+- Normal mode RNG 5. Immutable claim 2026-11-27T21:22:06.941Z, release threshold 22:32:06.941Z. Claim commit 6b134d3d90b2fda80a213b8b24a51e56882279c6.
+- New Box27MaskedCounter.lean and MASKED-COUNTER.md establish an inductive grammar for [8,-1,11,24,13,13,14,17,22,9 or 17,19,4], 50 completions. Local copied exact zipper core passed carry_return/padded_live (propext, Quot.sound). Original-source never bridge awaits run 46070352006, head 34a28a93ee7685ba6c8ea41b604b37d684e0e995. No original-source acceptance yet.
+- Local Lean installed successfully from supplied split ZIP and inner tar.zst. Local clone DNS fails. Continue working on other Box27 hard leaves and use exact framed carry/sweep transfer. Separate broad discovery with a different abstraction portfolio had 20 open rows (500 mass); do not equate this to earlier eight-row frontier or duplicate its work unnecessarily.
+
 ## 2026-11-27T04:47:03.701Z — Raw10 Box27 unbounded recurrence and new frontier
 
 - RNG 3, normal mode; immutable lease 2026-11-27T04:38:19.677Z, release threshold 05:48:19.677Z. No refresh.
