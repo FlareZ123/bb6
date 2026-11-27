@@ -688,6 +688,8 @@ jobs:
         run: |
           set -euo pipefail
           cd /tmp/raw56-pilot
+          g++ -O3 -std=c++20 cut.cpp -o cut
+          g++ -O3 -std=c++20 farbank.cpp -o farbank
           g++ -O3 -std=c++17 fastabstract.cpp -o fastabstract
           g++ -O3 -std=c++17 query_batch.cpp -o query_batch
           python scan_banked.py 0RD 1LC
