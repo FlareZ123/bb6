@@ -56,7 +56,7 @@ theorem midSweep (n r : Nat) :
   | succ n ih =>
     have h1 := midOne (rep H n++endL) (rep Q r)
     have h1' : run0 table 22 (mid (n+1) r) = some (mid n (r+2)) := by
-      simpa only [mid,rep,X,List.append_assoc] using h1
+      simpa only [mid,rep,X,List.append_assoc,List.cons_append,List.nil_append] using h1
     have h2 := ih (r+2)
     have h := join0 h1' h2
     rw [show 22+22*n=22*(n+1) by omega,
@@ -71,7 +71,7 @@ theorem epoch (n : Nat) :
       some ⟨4,[true]++endL,markR++rep X n⟩ := by
     unfold sect
     rw [rep_double]
-    simpa only [rep,X,List.append_assoc] using entryOne (rep X n)
+    simpa only [rep,X,List.append_assoc,List.cons_append,List.nil_append] using entryOne (rep X n)
   have hs := sweepR table 4 [true] markR X H 14 rightOne n endL []
   have hs' : run0 table (14*n) ⟨4,[true]++endL,markR++rep X n⟩ =
       some ⟨4,[true]++rep H n++endL,markR⟩ := by
@@ -80,12 +80,13 @@ theorem epoch (n : Nat) :
   have h3 := firstLeft (rep H n++endL)
   have h23 : run0 table (8+10) ⟨4,[true]++rep H n++endL,markR⟩ =
       some (mid n 1) := by
-    simpa only [mid,List.append_assoc] using join0 h2 h3
+    simpa only [mid,List.append_assoc,List.cons_append,List.nil_append] using join0 h2 h3
   have h4 := midSweep n 1
   have h5 : run0 table 22 (mid 0 (1+2*n)) = some (sect (n+1)) := by
     have h := midEnd (rep Q (1+2*n))
+    unfold sect
     rw [show 2*(n+1+1)=1+2*n+3 by omega]
-    simpa only [mid,sect,rep,X,List.nil_append,List.append_assoc] using h
+    simpa only [mid,rep,X,List.nil_append,List.append_assoc,List.cons_append] using h
   have h := join0 (join0 (join0 (join0 h0 hs') h23) h4) h5
   rw [show 13+14*n+(8+10)+22*n+22=36*(n+1)+17 by omega] at h
   exact h
