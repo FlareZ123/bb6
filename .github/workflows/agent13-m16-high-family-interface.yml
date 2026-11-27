@@ -74,6 +74,7 @@ on:
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceH5Precision
+          - sourceH5Spine
           - sourceModularHighStopCriterion
           - sourceModularStrictness
           - sourceModularLowStop
@@ -340,6 +341,9 @@ jobs:
               ;;
             sourceH5Precision)
               target=im-results/agent34-s2-pullback/H5Precision.lean
+              ;;
+            sourceH5Spine)
+              target=im-results/agent34-s2-pullback/H5ForcedSpine.lean
               ;;
             sourceModularHighStop)
               target=im-results/agent42-modular-cone/ModularConeHighStop.lean
