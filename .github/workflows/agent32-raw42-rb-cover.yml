@@ -1,0 +1,151 @@
+name: Agent 32 Raw42 0RB normalized cover
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45675872170
+          name: raw59-checked-Upgrade0LE
+          path: /tmp/core-old
+      - name: Recreate normalized tree and all certificate modules
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g++ -O3 -std=c++20 im-results/agent32-linear-side-cycle/enumerate_tnf.cpp -o /tmp/enumerate
+          g++ -O3 -std=c++20 im-results/agent19-raw40-cut/farbank.cpp -o /tmp/farbank
+          mkdir -p /tmp/search
+          (cd /tmp/search; /tmp/enumerate '1RB---_1RC0RB_0RD---_1LD0LB_------_------' 500; awk '{gsub(/_/,"");print NR-1,$0}' open.txt | /tmp/farbank 5 >far5.txt 2>far.log)
+          echo '63c9635d19dfc729af663e17cf0bd07b4a3fc18e6e9d4945603fe185b8361ac6  /tmp/search/open.txt' | sha256sum -c
+          python "$d/gen_closed42rb.py" . /tmp/search "$d/generated-rb"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          d=Path('im-results/agent32-raw42/generated-rb')
+          groups={str(i):[] for i in range(8)}
+          sizes=[0]*8
+          roots=[p for p in d.glob('Raw42RBClosedRoot_*.lean') if not any(l.startswith('import Raw42RBClosedRoot') for l in p.read_text().splitlines())]
+          assert len(roots)>=8
+          for p in sorted(roots,key=lambda p:(-p.stat().st_size,p.name)):
+              i=min(range(8),key=lambda j:sizes[j])
+              groups[str(i)].append(p.stem);sizes[i]+=p.stat().st_size
+          (d/'shards.json').write_text(json.dumps({'artifact_prefix':'raw42rb-shard','groups':groups},indent=2)+'\n')
+          print(sizes)
+          PY
+      - name: Source-check shared base and exceptional witnesses
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42/generated-rb
+          mkdir -p /tmp/rb-core
+          python tools/lean_compile_closure.py --workdir /tmp/rb-core --jobs 3 \
+            --source-root "$d" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old \
+            --manifest /tmp/rb-core/manifest.json --artifact-name raw42rb-core \
+            "$d/Raw42RBClosedBase.lean" "$d"/Raw42RBNGram*.lean "$d"/Raw42RBRun*.lean | tee /tmp/rb-core/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/rb-core/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42rb-generated
+          path: im-results/agent32-raw42/generated-rb/
+          retention-days: 7
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42rb-core
+          path: /tmp/rb-core/
+          retention-days: 7
+          if-no-files-found: error
+  shard:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        group: [0,1,2,3,4,5,6,7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42rb-generated
+          path: im-results/agent32-raw42/generated-rb
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42rb-core
+          path: /tmp/rb-core
+      - name: Check independent subtree certificates
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42/generated-rb
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$d/shards.json" "$GROUP")
+          for i in "${!roots[@]}"; do roots[i]="$d/${roots[i]}.lean"; done
+          test "${#roots[@]}" -gt 0
+          mkdir -p /tmp/rb-shard
+          python tools/lean_compile_closure.py --workdir /tmp/rb-shard --jobs 2 --source-root "$d" \
+            --precompiled-manifest /tmp/rb-core/manifest.json --precompiled-dir /tmp/rb-core \
+            --manifest /tmp/rb-shard/manifest.json --artifact-name "raw42rb-shard-$GROUP" "${roots[@]}" | tee /tmp/rb-shard/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/rb-shard/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42rb-shard-${{ matrix.group }}
+          path: /tmp/rb-shard/
+          retention-days: 7
+          if-no-files-found: error
+  compose:
+    needs: shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42rb-generated
+          path: im-results/agent32-raw42/generated-rb
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42rb-shard-*
+          path: /tmp/rb-shards
+      - name: Merge exact source closures and prove weighted Cover
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42/generated-rb
+          python im-results/agent4-raw109/merge_shards.py /tmp/rb-shards /tmp/rb-merged "$d/shards.json"
+          mkdir -p /tmp/rb-final
+          python tools/lean_compile_closure.py --workdir /tmp/rb-final --jobs 3 --source-root "$d" \
+            --precompiled-manifest /tmp/rb-merged/manifest.json --precompiled-dir /tmp/rb-merged \
+            --manifest /tmp/rb-final/manifest.json --artifact-name raw42rb-certified \
+            --theorem BB6.Agent32Raw42RB.Closed.cover --parent-table '1RB---_1RC0RB_0RD---_1LD0LB_------_------' \
+            --weighted-bound 1006 "$d/Raw42RBClosedCover.lean" | tee /tmp/rb-final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/rb-final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/rb-final/audit.log BB6.Agent32Raw42RB.Closed.cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42rb-certified
+          path: /tmp/rb-final/
+          retention-days: 30
+          if-no-files-found: error
