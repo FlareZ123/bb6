@@ -6,7 +6,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [compose, far-batch, far-sweep, graph-batch, graph-partial]
+        options: [compose, far-batch, far-sweep, graph-batch, graph-partial, graph-sweep]
         default: compose
       shard:
         type: number
@@ -64,8 +64,8 @@ jobs:
           [[ "$EXTRA_RUNS" =~ ^[0-9]+(\ [0-9]+)*$ ]]
           mkdir -p /tmp/a50-extra
           for id in $EXTRA_RUNS; do
-            test "$(gh run view "$id" --json conclusion --jq .conclusion)" = success
-            mapfile -t names < <(gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | .name' | grep -E '^raw47-(far-[0-7]-[0-9]+-[0-9]+|graph-parents)$')
+            test "$(gh run view "$id" --json status --jq .status)" = completed
+            mapfile -t names < <(gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | .name' | grep -E '^raw47-(far-[0-7]-[0-9]+-[0-9]+|graph-parents(-[0-9]+)?)$')
             test "${#names[@]}" -gt 0
             for name in "${names[@]}"; do
               gh run download "$id" --name "$name" --dir "/tmp/a50-extra/$id-$name"
@@ -201,8 +201,41 @@ jobs:
           path: .tmp/a50-raw47-far-batch/
           if-no-files-found: error
 
+  graph-prepare:
+    if: startsWith(inputs.mode, 'graph-')
+    runs-on: ubuntu-latest
+    outputs:
+      batches: ${{ steps.matrix.outputs.batches }}
+    steps:
+      - name: Partition explicitly selected parent IDs
+        id: matrix
+        env:
+          PARENTS: ${{ inputs.parents }}
+          MODE: ${{ inputs.mode }}
+          SIZE: ${{ inputs.size }}
+        run: |
+          python - <<'PY'
+          import json,os
+          ids=list(map(int,os.environ['PARENTS'].split()))
+          assert ids and len(ids)==len(set(ids)) and all(0<=i<1212 for i in ids)
+          if os.environ['MODE']=='graph-sweep':
+              n=int(os.environ['SIZE']); assert 1<=n<=10
+              batches=[dict(parents=' '.join(map(str,ids[i:i+n])),artifact=f'raw47-graph-parents-{i//n}') for i in range(0,len(ids),n)]
+          else: batches=[dict(parents=' '.join(map(str,ids)),artifact='raw47-graph-parents')]
+          assert len(batches)<=256
+          with open(os.environ['GITHUB_OUTPUT'],'a') as f:
+              f.write('batches='+json.dumps(batches,separators=(',',':'))+'\n')
+          PY
+
   graph:
     if: startsWith(inputs.mode, 'graph-')
+    needs: graph-prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        include: ${{ fromJSON(needs.graph-prepare.outputs.batches) }}
+    name: Graph parents ${{ matrix.parents }}
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -220,7 +253,7 @@ jobs:
           path: /tmp/a50-far
       - name: Produce and check complete mixed FAR/run-graph parent bounds
         env:
-          PARENTS: ${{ inputs.parents }}
+          PARENTS: ${{ matrix.parents }}
           MODE: ${{ inputs.mode }}
         run: |
           set -euo pipefail
@@ -232,7 +265,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           read -ra ids <<< "$PARENTS"
-          if [[ "$MODE" == graph-partial ]]; then
+          if [[ "$MODE" != graph-batch ]]; then
             python "$D/generate_graph_parents.py" "$W/imports" --partial "${ids[@]}"
           else
             python "$D/generate_graph_parents.py" "$W/imports" "${ids[@]}"
@@ -249,7 +282,7 @@ jobs:
           names=[f'BB6.Agent50.Raw47D3G{i}.all_quotient' for i in map(int,open(sys.argv[2]))]
           for line in open(sys.argv[3]):
               i,n=map(int,line.split())
-              names.extend([f'BB6.Agent50.Raw47D3U{i}.remaining_count',f'BB6.Agent50.Raw47D3U{i}.local_sound'])
+              names.extend([f'BB6.Agent50.Raw47D3U{i}.remaining_count',f'BB6.Agent50.Raw47D3U{i}.remaining_key_set',f'BB6.Agent50.Raw47D3U{i}.local_sound'])
           for name in names:
               m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
@@ -257,6 +290,6 @@ jobs:
           PY
       - uses: actions/upload-artifact@v4
         with:
-          name: raw47-graph-parents
+          name: ${{ matrix.artifact }}
           path: .tmp/a50-raw47-graph-batch/
           if-no-files-found: error
