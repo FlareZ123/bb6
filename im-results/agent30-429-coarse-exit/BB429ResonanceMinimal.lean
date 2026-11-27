@@ -67,15 +67,9 @@ theorem d234_scalar_window_arith
     (hq0 : 0≤q)
     (hqhi : q≤36*(m:Int)+259+8*(i:Int))
     (hC : C=72*X+q-2+24*(J:Int))
-    (hmargin : 60*m+254≤16*i+4*(N.toNat)) :
+    (hmargin : 60*(m:Int)+254≤16*(i:Int)+4*N) :
     D≤36*X ∧ 72*X≤C ∧ C≤4*D+27 ∧ 8*D+21≤5*C := by
   have hN0 : 0≤N := by omega
-  have hNnat : (N.toNat:Int)=N := by
-    rw [Int.toNat_of_nonneg hN0]
-  have hmargin' :
-      60*(m:Int)+254≤16*(i:Int)+4*N := by
-    rw [←hNnat]
-    exact_mod_cast hmargin
   have hhiN := Int.mul_le_mul_of_nonneg_right hhi hN0
   have hDhi : D≤36*X := by
     rw [hD,hX]
