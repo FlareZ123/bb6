@@ -5,6 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace F197
+open Q
 
 def ppre (t : Tape) : Tape :=
   pre [true, false, true, false, true, true, false, false] t
