@@ -1,0 +1,69 @@
+name: Agent 28 first Raw36 F0 exhaustive 20-overflow bank
+run-name: F0 all 20 residue source proofs ${{ github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        type: string
+        required: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Original-source twenty residue proofs
+        run: |
+          set -euo pipefail
+          D=im-results/agent28-raw36-first-hard
+          work=/tmp/a28-first-overflow-bank
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 4 \
+            --manifest "$work/manifest.json" --label raw36-first-overflow-20 \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowBank.all_checked \
+            --artifact-name raw36-first-overflow-bank \
+            "$D/Raw36FirstOverflowBank.lean" 2>&1 | tee /tmp/a28-first-overflow-bank.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a28-first-overflow-bank.log \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA0.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA1.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA2.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA3.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA4.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA5.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA6.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA7.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA8.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowA9.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB0.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB1.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB2.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB3.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB4.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB5.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB6.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB7.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB8.transport \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstOverflowB9.transport
+          cp /tmp/a28-first-overflow-bank.log "$work/audit.log"
+      - name: Retain source closure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-first-overflow-bank
+          path: |
+            /tmp/a28-first-overflow-bank/
+            /tmp/a28-first-overflow-bank.log
+          if-no-files-found: warn
+          retention-days: 30
