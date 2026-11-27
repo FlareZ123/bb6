@@ -24,7 +24,7 @@ on:
         description: Second previous retry run whose successful shard artifacts may be reused
       retry_groups:
         type: string
-        default: '["r01a-rest0","r01a-rest1","r01a-deep","r04a","r04b","r04c","r05a00","r05a01","r05a02","r05a03","r05a1"]'
+        default: '["r01a-rest0","r01a-rest1","r01a-deep","r04a","r04b","r04c","r05a0","r05a1"]'
         description: JSON array of retry groups to compile; when resuming, list only groups missing from the supplied resume runs
 permissions:
   contents: read
@@ -1016,28 +1016,10 @@ jobs:
           path: /tmp/a47-raw112-shards/raw112-shard-r04c/
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
-        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a00') }}
+        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a0') }}
         with:
-          name: raw112-shard-r05a00
-          path: /tmp/a47-raw112-shards/raw112-shard-r05a00/
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a01') }}
-        with:
-          name: raw112-shard-r05a01
-          path: /tmp/a47-raw112-shards/raw112-shard-r05a01/
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a02') }}
-        with:
-          name: raw112-shard-r05a02
-          path: /tmp/a47-raw112-shards/raw112-shard-r05a02/
-          if-no-files-found: error
-      - uses: actions/upload-artifact@v4
-        if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a03') }}
-        with:
-          name: raw112-shard-r05a03
-          path: /tmp/a47-raw112-shards/raw112-shard-r05a03/
+          name: raw112-shard-r05a0
+          path: /tmp/a47-raw112-shards/raw112-shard-r05a0/
           if-no-files-found: error
       - uses: actions/upload-artifact@v4
         if: ${{ (inputs.resume_retry_run_id != '' || inputs.resume_retry_run_id2 != '') && !contains(fromJSON(inputs.retry_groups), 'r05a1') }}
@@ -1054,7 +1036,7 @@ jobs:
       fail-fast: false
       max-parallel: 2
       matrix:
-        group: ${{ fromJSON(inputs.retry_groups) }}
+        group: ${{ inputs.retry_groups == '["r05a0"]' && fromJSON('["r05a00","r05a01","r05a02","r05a03"]') || fromJSON(inputs.retry_groups) }}
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact Raw112 producer closure-tool provenance
@@ -1141,13 +1123,42 @@ jobs:
           case "$GROUP" in
             r01a-deep)
               python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+              python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
               ;;
             r05a00|r05a01|r05a02|r05a03)
               child="${GROUP#r05a}"
               python im-results/agent10-raw112-recovery/factor_missing.py "im-results/agent47-raw112-cut/Raw112Kid05_${child}.lean"
+              python3 - "$GROUP" "$child" <<'PY'
+          import shutil, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, "im-results/agent10-raw112-recovery")
+          from run_retry_shard import PROVENANCE_INPUTS
+
+          group, child = sys.argv[1], sys.argv[2]
+          root = Path("im-results/agent47-raw112-cut").resolve()
+          source = root / f"Raw112Kid05_{child}.lean"
+          work = Path(f"/tmp/a47-raw112-shard-{group}")
+          precompiled = Path("/tmp/a47-raw112-partial-union")
+          if work.exists():
+              shutil.rmtree(work)
+          cmd = [
+              sys.executable, "-u", "tools/lean_compile_closure.py", str(source),
+              "--workdir", str(work), "--jobs", "1",
+              "--precompiled-dir", str(precompiled),
+              "--precompiled-manifest", str(precompiled / "manifest.json"),
+              "--manifest", str(work / "manifest.json"),
+              "--label", f"raw112-targeted-retry-{group}",
+              "--artifact-name", f"raw112-shard-{group}",
+          ]
+          for item in PROVENANCE_INPUTS:
+              cmd.extend(["--provenance-input", item])
+          subprocess.run(cmd, check=True)
+          PY
+              ;;
+            *)
+              python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
               ;;
           esac
-          python -u im-results/agent10-raw112-recovery/run_retry_shard.py --group "$GROUP" --root im-results/agent47-raw112-cut --workdir "/tmp/a47-raw112-shard-$GROUP" --precompiled-dir /tmp/a47-raw112-partial-union
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -1240,13 +1251,56 @@ jobs:
           path: /tmp/a47-raw112-current-retry
           merge-multiple: false
       - name: Reassemble the retry groups from current-run carried and new artifacts
+        env:
+          RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
+          if [ "$RETRY_GROUPS_JSON" = '["r05a0"]' ]; then
+            python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+
+          current = Path("/tmp/a47-raw112-current-retry")
+          root = Path("im-results/agent47-raw112-cut")
+          groups = {}
+          for child in ("00", "01", "02", "03"):
+              group = f"r05a{child}"
+              shard = current / f"raw112-shard-{group}"
+              source = shard / f"Raw112Kid05_{child}.lean"
+              if not (shard / "manifest.json").is_file() or not source.is_file():
+                  raise SystemExit(f"missing accepted split artifact/source for {group}")
+              shutil.copy2(source, root / source.name)
+              groups[group] = [f"Raw112Kid05_{child}"]
+          Path("/tmp/a47-r05a0-split-config.json").write_text(
+              json.dumps({
+                  "artifact_prefix": "raw112-shard",
+                  "allow_mixed_revisions": False,
+                  "groups": groups,
+              }, indent=2, sort_keys=True) + "\n"
+          )
+          PY
+            rm -rf /tmp/a47-raw112-r05a0-synth
+            python im-results/agent4-raw109/merge_shards.py               /tmp/a47-raw112-current-retry               /tmp/a47-raw112-r05a0-synth               /tmp/a47-r05a0-split-config.json
+            python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+
+          synth = Path("/tmp/a47-raw112-r05a0-synth")
+          manifest_path = synth / "manifest.json"
+          manifest = json.loads(manifest_path.read_text())
+          manifest["artifact_name"] = "raw112-shard-r05a0"
+          manifest["label"] = "raw112-targeted-retry-r05a0-split-union"
+          manifest_path.write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+          dest = Path("/tmp/a47-raw112-current-retry/raw112-shard-r05a0")
+          shutil.copytree(synth, dest, dirs_exist_ok=True)
+          print("Synthesized logical r05a0 shard from four independently accepted roots")
+          PY
+          fi
           python3 - <<'PY'
           import shutil
           from pathlib import Path
 
-          all_groups = {"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a00", "r05a01", "r05a02", "r05a03", "r05a1"}
+          all_groups = {"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a0", "r05a1"}
           destination = Path("/tmp/a47-raw112-shards")
           current = Path("/tmp/a47-raw112-current-retry")
           for group in sorted(all_groups):
@@ -1265,7 +1319,11 @@ jobs:
           RETRY_GROUPS_JSON: ${{ inputs.retry_groups }}
         run: |
           set -euo pipefail
-          python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean im-results/agent47-raw112-cut/Raw112Kid05_0{0,1,2,3}.lean
+          if [ "$RETRY_GROUPS_JSON" = '["r05a0"]' ]; then
+            python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+          else
+            python im-results/agent10-raw112-recovery/factor_missing.py im-results/agent47-raw112-cut/Raw112Kid01_01.lean im-results/agent47-raw112-cut/Raw112Kid05_0{0,1,2,3}.lean
+          fi
           python -u im-results/agent10-raw112-recovery/assemble_retry.py --root im-results/agent47-raw112-cut --shards /tmp/a47-raw112-shards --union /tmp/a47-raw112-full-union --branch-work /tmp/a47-raw112-branch-roots --parent-work /tmp/a47-raw112-parent --output /tmp/a47-raw112-assembled
           python3 - <<'PY'
           import json, os
@@ -1275,7 +1333,7 @@ jobs:
               raise SystemExit("Raw112 assembler did not produce retry-summary.json")
           summary = json.loads(path.read_text())
           selected = sorted(json.loads(os.environ["RETRY_GROUPS_JSON"]))
-          all_groups = sorted({"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a00", "r05a01", "r05a02", "r05a03", "r05a1"})
+          all_groups = sorted({"r01a-rest0", "r01a-rest1", "r01a-deep", "r04a", "r04b", "r04c", "r05a0", "r05a1"})
           resume_ids = [int(x) for x in (os.environ.get("RESUME_RETRY_RUN_ID", "").strip(), os.environ.get("RESUME_RETRY_RUN_ID2", "").strip()) if x]
           summary["resumed_from_retry_run_id"] = resume_ids[0] if len(resume_ids) == 1 else None
           summary["resumed_from_retry_run_ids"] = resume_ids
