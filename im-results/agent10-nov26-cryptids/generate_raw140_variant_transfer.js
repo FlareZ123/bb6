@@ -96,4 +96,4 @@ theorem erMany (M : Table) (ext : Extends M) (n : Nat) (X Y : List Sym) :
 }
 if(require.main===module)fs.writeFileSync(path.join(__dirname,"Raw140VariantTransfer.lean"),emit());
 
-module.exports={rule,exits};
+module.exports={rule,exits,tables};
