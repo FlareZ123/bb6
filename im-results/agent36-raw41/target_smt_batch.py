@@ -60,7 +60,7 @@ def main():
       "previous_far":row["far"],"rows":records}
     (a.out/"summary.json").write_text(json.dumps(result,indent=2)+"\n")
     print("SUMMARY",json.dumps({"index":a.index,"previous_far":row["far"],
-       "new_valid_far":sum(r.get("candidate","").startswith("SOURCE_FAR_VALID") for r in records),
+       "new_valid_far":sum((r.get("candidate") or "").startswith("SOURCE_FAR_VALID") for r in records),
        "original_missing":len(records)}),flush=True)
 if __name__=="__main__":
     main()
