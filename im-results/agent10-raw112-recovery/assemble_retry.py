@@ -211,8 +211,7 @@ def main() -> None:
         ],
         "new_retry_groups": [
             "r01a-rest0", "r01a-rest1", "r01a-deep",
-            "r04a", "r04b", "r04c",
-            "r05a00", "r05a01", "r05a02", "r05a03", "r05a1"
+            "r04a", "r04b", "r04c", "r05a0", "r05a1"
         ],
         "full_union_root_modules": 93,
         "parent_table": PARENT_TABLE,
