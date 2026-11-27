@@ -62,7 +62,7 @@ def make_block(w):
     body=a+'\ndef blockExit'+rest
     a,b=body.split('        simp [Sym.read] at hm\n',1)
     cases,rest=b.split('\ntheorem macro_sound',1)
-    cases=cases.split('      · ')[1:]
+    cases=re.split(r'(?m)^      · ',cases)[1:]
     assert len(cases)==16
     body=a+'        simp [Sym.read] at hm\n'+''.join('      · '+x for x in cases[:2*w-1]+cases[-1:])+'\ntheorem macro_sound'+rest
     body=body.replace('12289',str(6*w*A+1))
@@ -76,6 +76,7 @@ for w in (5,6):make_block(w)
 # the table, width, search recipe, namespaces, and reflection orientation.
 (out/'widegraph.py').write_text(files['widegraph.py'])
 os.chdir(out)
+sys.path.insert(0,str(out))
 for k in ids:
     T,(_,w,cap,mod,runs,flip,phase)=manifest[k]
     A=2**w;name='OneLAWide'+k
