@@ -143,7 +143,9 @@ theorem gapLoop (m a r c : Nat) (v : List Token) (hr : 1 ≤ r) :
     have H := Reach.trans hs hd
     have he : E (a+1) ++ [1] = E (a+2) := by
       simp only [E,List.replicate_succ']
-    simpa [E,inc,List.replicate_succ,e,he,List.append_assoc] using H
+    change Reach (zero (6+5*(a+1)) (E a ++ [2]) ((5+r,c)::v)) (zero (2+5*a+14) (E (a+1) ++ [1]) ((r,c)::v)) at H
+    rw [he,e] at H
+    simpa [E,inc,List.replicate_succ] using H
   | succ m ih =>
     have hs := gapSplit a (m+1) r c (E a ++ 2::E (m+1)) v hr
     have hd := standardAll a 2 (E (m+1)) ((5*(m+1)+r,c)::v)
