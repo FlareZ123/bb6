@@ -11,8 +11,14 @@ function dfa(params){
  return {push,finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}
 }
 function winDfa(k){const M=2**k,ids=new Map([[0,0]]),words=[0],delta=[[-1,-1]];return {push:(x,b)=>{if(delta[x][b]>=0)return delta[x][b];let w=(words[x]*2+b)%M,j=ids.get(w);if(j===undefined){j=words.length;ids.set(w,j);words.push(w);delta.push([-1,-1])}delta[x][b]=j;return j},finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}}
+
+function blockDfa(params){
+const {k,periods,c,m}=params,words=[""],ids=new Map([["",0]]),delta=[[-1,-1]];
+function norm(w){let changed=true;while(changed){changed=false;outer:for(let i=0;i<w.length;i++)for(const p of periods){const end=i+p*(c+m);if(end>w.length)continue;let a=w.slice(i,i+p);if(a.repeat(c+m)===w.slice(i,end)){w=w.slice(0,i)+w.slice(i+m*p);changed=true;break outer;}}}return w.slice(0,k).replace(/0+$/,"")}
+return {push:(x,b)=>{if(delta[x][b]>=0)return delta[x][b];let w=norm(b+words[x]),j=ids.get(w);if(j===undefined){j=words.length;ids.set(w,j);words.push(w);delta.push([-1,-1])}delta[x][b]=j;return j},finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}}
+
 function solve(table,left,right,cap=30000){
- const tr=typeof table==="string"?parse(table):table,d=[typeof left==="number"?winDfa(left):dfa(left),typeof right==="number"?winDfa(right):dfa(right)],edges=[new Map(),new Map()],waiting=[new Map(),new Map()],seen=new Set(),todo=[],H=2**24,Q=H*H;let fail=false,limit=false;
+ const tr=typeof table==="string"?parse(table):table,d=[typeof left==="number"?winDfa(left):Array.isArray(left)?dfa(left):blockDfa(left),typeof right==="number"?winDfa(right):Array.isArray(right)?dfa(right):blockDfa(right)],edges=[new Map(),new Map()],waiting=[new Map(),new Map()],seen=new Set(),todo=[],H=2**24,Q=H*H;let fail=false,limit=false;
  function add(s,l,r){const x=s*Q+l*H+r;if(seen.has(x))return;seen.add(x);todo.push([s,l,r]);if(tr[s]<0)fail=true;if(todo.length>cap||l>=H||r>=H)limit=true}
  function pop(st,e){const [s,l,r]=st,m=tr[s],w=m/12|0,q=m%6,dir=m%12>=6,b=e[0],src=e[1];if(dir)add(2*q+b,d[0].push(l,w),src);else add(2*q+b,src,d[1].push(r,w))}
  function list(m,i){let v=m.get(i);if(!v){v=[];m.set(i,v)}return v}
