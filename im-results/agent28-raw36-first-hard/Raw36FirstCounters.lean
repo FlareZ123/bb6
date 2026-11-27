@@ -28,7 +28,7 @@ def B (u v : Nat) : Z0 :=
 theorem rep_add (P : List Bool) (m n : Nat) :
     rep P (m+n) = rep P m ++ rep P n := by
   induction m with
-  | zero => rfl
+  | zero => simp [rep]
   | succ m ih =>
     simpa only [Nat.succ_add,rep,List.append_assoc] using
       congrArg (fun xs : List Bool => P ++ xs) ih
@@ -81,12 +81,12 @@ theorem B_target (n c v : Nat) :
 
 theorem root_a :
     run0 Raw36FirstOverflowA2.p 13244 ⟨0,[],[]⟩ = some (A 17 52) := by
-  simpa only [show Raw36FirstRoot.rootA.eval 0 = A 17 52 by decide] using
+  simpa [Raw36FirstRoot.p,show Raw36FirstRoot.rootA.eval 0 = A 17 52 by decide] using
     Raw36FirstRoot.root13244
 
 theorem root_b :
     run0 Raw36FirstOverflowA2.p 416 ⟨0,[],[]⟩ = some (B 9 1) := by
-  simpa only [show Raw36FirstRoot.rootB.eval 0 = B 9 1 by decide] using
+  simpa [Raw36FirstRoot.p,show Raw36FirstRoot.rootB.eval 0 = B 9 1 by decide] using
     Raw36FirstRoot.root416
 
 #print axioms root_a
