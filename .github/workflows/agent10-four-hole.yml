@@ -91,8 +91,8 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python "$root/generate.py" "$CHILD"
-          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw36-pilot --theorem "BB6.Agent29Raw36.${kid}_bound" --weighted-bound 162 --artifact-name raw36-pilot-proof --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" --provenance-input "$root/generate.py" "$root/${module}.lean" "$root/Raw36SymmetryCut.lean" 2>&1 | tee /tmp/a29-raw36.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36.log BB6.Agent29Raw36.cover "BB6.Agent29Raw36.${kid}_bound" BB6.Agent29Raw36.childF_to_E BB6.Agent29Raw36.childF_bound BB6.Agent29Raw36.branch_bound_from_twenty BB6.Agent29Raw36.branch_cover_from_twenty
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw36-pilot --theorem "BB6.Agent29Raw36.${kid}_bound" --weighted-bound 162 --artifact-name raw36-pilot-proof --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" --provenance-input "$root/generate.py" "$root/${module}.lean" "$root/Raw36D1Fifteen.lean" 2>&1 | tee /tmp/a29-raw36.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36.log BB6.Agent29Raw36.cover "BB6.Agent29Raw36.${kid}_bound" BB6.Agent29Raw36.childF_to_E BB6.Agent29Raw36.childF_bound BB6.Agent29Raw36.branch_bound_from_twenty BB6.Agent29Raw36.branch_cover_from_twenty BB6.Agent29Raw36.d1_bound_from_twenty BB6.Agent29Raw36.b1Audit_checked BB6.Agent29Raw36.d1_bound_from_fifteen BB6.Agent29Raw36.d1_cover_from_fifteen
           cp /tmp/a29-raw36.log "$work/audit.log"
       - name: Retain Raw36 pilot proof
         if: inputs.target == 'raw36-pilot'
