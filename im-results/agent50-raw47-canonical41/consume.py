@@ -90,6 +90,37 @@ def generate_source(prior, work):
         name.replace(old_ns, "BB6.Agent50Canonical40Raw47").
              replace("p57_", "p47_") for name in names]
 
+def preflight_membership(work, linked, evidence):
+    # Check actual Canonical41 membership before downloading the large
+    # Raw47 object closure, using a literal five-transition table.
+    source = work / "Raw47CanonicalMembership.lean"
+    source.write_text("""import Canonical41Extra63R61R67R59R122
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+namespace BB6.Agent50Raw47Membership
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent47CanonicalFrontier
+
+def p : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true => some (some ⟨false,true,2⟩)
+  | _,_ => none
+
+theorem parent_present :
+    (BB6.Agent31Canonical41Extra63R61R67R59R122.roster41.filter
+      (fun e => sameTable e.2 p)).length = 1 := by decide
+#print axioms parent_present
+end BB6.Agent50Raw47Membership
+""")
+    root, profile = u.compile_one(source, linked, evidence, [
+        "BB6.Agent50Raw47Membership.parent_present"])
+    assert set(profile["BB6.Agent50Raw47Membership.parent_present"]) <= ALLOWED
+    root.unlink()
+    print("PASS: Raw47 occurs exactly once in Canonical41", flush=True)
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
@@ -110,6 +141,7 @@ def main():
     assert ready["remaining_residual_count"] == 46
     prior, prior_pin = restore_extra(work, linked, ready, ready_pin)
     assert prior["remaining_residual_count"] == 41
+    preflight_membership(work, linked, evidence)
 
     parentdir = work / "raw47"
     parentdir.mkdir()
