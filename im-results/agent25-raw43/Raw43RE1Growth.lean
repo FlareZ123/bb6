@@ -67,6 +67,7 @@ theorem grow (n : Nat) :
       some (sect (n+1)) := by
     have he : V++rep V (2*(n+1)+1) = rep V (2*(n+2)) := by
       rw [show 2*(n+2)=(2*(n+1)+1)+1 by omega]
+      rfl
     have hr : rep V (2*(n+2))++[false] = [false]++rep U (n+2) := by
       rw [rep_double V (n+2)]
       exact (rotate false [true,true,false,true,true] (n+2)).symm
