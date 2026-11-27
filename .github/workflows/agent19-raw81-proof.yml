@@ -270,7 +270,7 @@ jobs:
             im-results/agent19-raw40-cut/a1la/*/enum.log
           if-no-files-found: warn
 
-      - name: Compile A1LC0LC periodic sweeps and exact child bound
+      - name: Compile four A1LC child bounds and direct sweep proofs
         if: inputs.target == 'raw40-a1lc-0lc'
         env:
           LEAN_DEPS: /tmp/a19-raw40-deps
@@ -285,6 +285,6 @@ jobs:
           name: raw40-a1lc-0lc
           path: |
             /tmp/a19-raw40-a1lc-0lc.log
-            im-results/agent19-raw40-cut/Raw40A1LC0LC*.olean
-            im-results/agent19-raw40-cut/a1lc/0LC/shards/*All.olean
+            im-results/agent19-raw40-cut/Raw40A1LC*.olean
+            im-results/agent19-raw40-cut/a1lc/*/shards/*All.olean
           if-no-files-found: warn
