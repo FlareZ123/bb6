@@ -1,6 +1,6 @@
 # Raw42/0RA exceptional leaf 1659: finite-state return transducer
 
-Table `1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF`, sole hole C1. This gives an exact *conditional* return grammar for the outstanding exceptional leaf. It reduces its nonhalting question to an inductive language for a small subsequential word transducer. The macro derivation and conditional nonhalting bridge are locally kernel-checked against original SweepPumping dependencies in [Raw42Leaf1659.lean](Raw42Leaf1659.lean), Lean 4.36.0-rc2, with only propext and Quot.sound. The source SHA256 is a3a051f600e6e770dbb452104049ac04bb8e327e5872b9adc0587ddc0129e1f2. No leaf decision or parent Cover is asserted.
+Table `1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF`, sole hole C1. This gives an exact *conditional* return grammar for the outstanding exceptional leaf. It reduces its nonhalting question to an inductive language for a small subsequential word transducer. The macro derivation and nonhalting bridge are locally kernel-checked against original SweepPumping dependencies in [Raw42Leaf1659.lean](Raw42Leaf1659.lean), Lean 4.36.0-rc2, with only propext and Quot.sound. The source SHA256 is a3a051f600e6e770dbb452104049ac04bb8e327e5872b9adc0587ddc0129e1f2. The leaf is now decided by the inductive invariant below. No parent Cover is yet asserted.
 
 ## Return words and literal transitions
 
@@ -24,4 +24,25 @@ The E1/C1 and intermediate active-length-two cases are deliberately outside the 
 
 ## Evidence and next edge
 
-The Python reference transducer in `trans42.py` reproduces 10,000 accelerated returns from the seed, ending with a 20,041-bit word. Its first 100 returns independently match primitive replay . This is finite evidence, not an invariant. A k-gram factor abstraction through k=26, and the forward transition-subgraph abstraction on the minimized domains of the first 400 iterates, failed to close. The domain DFA sizes grow slowly (11 at depth 1, 383 at depth 100, 532 at depth 400), so simple finite-domain iteration did not stabilize. Seek a stronger inductive regular language (e.g. ICE/SMT synthesis using the finite parser) or a structured word invariant; do not merely extend the orbit replay. The formal theorem `never_of_language` reduces the remaining proof to an inductive language of authentic return tails. The arbitrary-tail frontier and left sweep are already proved. No global roster change.
+The Python reference transducer in `trans42.py` reproduces 10,000 accelerated returns from the seed, ending with a 20,041-bit word. Its first 100 returns independently match primitive replay . This was finite evidence, not an invariant; the subsequent inductive grammar below now proves the infinite claim. A k-gram factor abstraction through k=26, and the forward transition-subgraph abstraction on the minimized domains of the first 400 iterates, failed to close. The domain DFA sizes grow slowly (11 at depth 1, 383 at depth 100, 532 at depth 400), so simple finite-domain iteration did not stabilize. The structured invariant below closes the problem. The formal theorem `never_of_language` reduces the remaining proof to an inductive language of authentic return tails. The arbitrary-tail frontier and left sweep are already proved. No global roster change.
+
+## Closed recursive invariant (source-checked)
+
+The finite-state return map does not require an indefinitely growing domain automaton. Define G(u,v) to mean the continuation parser after consuming 10 produces 0v (independent of the preceding active run), and H(u,v) the return parser on the full section tail 0u, producing 010v. The following finite grammar is closed, with all arbitrary suffixes quantified.
+
+Let B=10010, and the eight cyclic words P0..P7 be
+
+    101010101010
+    100010100010
+    10110100010
+    10000100010
+    1010100010
+    1000100010
+    101100010
+    1000010101010
+
+For G(u,v), G(Bu,Bv). A prefix P_i advances to P_{i+1 mod 8}, applying G to its remaining suffix precisely for i in {0,2,4}; the suffix is unchanged otherwise. For i in {1,3,5,7}, an additional B is emitted *before* the next phase prefix. These are direct Parse constructor identities. They imply closure of arbitrary finite nesting of B and P_i over a suitable finite tail language. Take U0=100010101 and U_i=G^i(U0) for 1≤i≤7. Exact parser terms establish G(U7, B^4 P5 P6 U0). Therefore Lang = (B | P0 | ... | P7)* {U0,...,U7} is inductively closed under G, by structural induction, with no assumption on the number or phases of nested prefixes.
+
+The six outer phases Q0..Q5 are 1000100010, 00100010, 1010100010, 100010101010, 0010100010, 101010100010. H maps Q_i u to Q_{i+1 mod 6} v when i in {0,3,5}, and to Q_{i+1 mod 6} u otherwise. The actual section tail initially 01 (u=1) reaches Q0 B P0 U0 after exactly twelve positive-time return parses; each initial parse is a checked constructor proof. Thus the union of the twelve initial suffixes and the six outer phases followed by Lang gives the required ReturnLang.
+
+**Theorem:** [Raw42Leaf1659Invariant.lean](Raw42Leaf1659Invariant.lean) exports `BB6.Agent32Raw42RA.Leaf1659.never : ∀ m, compatible table m → NeverHalts m`. Local Lean 4.36.0-rc2 source check against the accepted original SweepPumping dependency from artifact 15054146521: Lang.closed and TopLang.closed use only propext; never uses propext and Quot.sound. No native_decide, no sorry, no conjectural infinite simulation. SHA256 8c6ee62babebb40e0ca65723c069509740e865d5bb7164cb7b5724d291553184. The source file with exact original name Raw42Leaf1659.lean is compiled first. This certifies all 25 normalized choices at C1 of this particular leaf. No parent or global coverage is claimed until the checked tree joins the other leaf certificates.
