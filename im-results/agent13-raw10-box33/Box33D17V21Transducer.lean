@@ -227,7 +227,7 @@ theorem run_add (m n : Nat) (c : Config) : run (m+n) c = (run m c).bind (run n) 
 
 def cost (p : P) : Nat := if p=0 then 6 else if p=1 then 14 else 10
 
-theorem macro (p a p' : P) (b : Bool) (h : mv p a = some (p',b)) (l r : Stream) :
+theorem scanMacro (p a p' : P) (b : Bool) (h : mv p a = some (p',b)) (l r : Stream) :
     run (cost p) (S (pair p (pair a l)) r) = some (S (pair p' l) (rtPair b r)) := by
   have hp : p=0 ∨ p=1 ∨ p=2 ∨ p=3 := by omega
   have ha : a=0 ∨ a=1 ∨ a=2 ∨ a=3 := by omega
@@ -239,7 +239,7 @@ theorem turnMacro (a : P) (h : a=0 ∨ a=1) (l r : Stream) :
     run 6 (S (pair 2 (pair a l)) r) =
       some (A (pair (tp a) l) (rtPair true (rtPair true r))) := by
   rcases h with rfl|rfl <;>
-    simp [S,A,pair,tp,rtPair,cfg,run,step,left,right,word]
+    simp [S,A,pair,tp,rtPair,cfg,run,step,left,right,word] <;> rfl
 
 theorem rightMacro (b : Bool) (l r : Stream) :
     run 2 (A l (rtPair b r)) = some (A (pair (ob b) l) r) := by
@@ -315,7 +315,7 @@ theorem progress {c : Config} (hc : Inv c) :
         have hrel : Rel j p' o' := of_decide_eq_true h
         refine ⟨cost p,by unfold cost; split <;> try split <;> omega,_,?_,?_⟩
         · rw [tapeSplit w]
-          exact macro p (hd w) p' b hm (tape (tl w)) (rightTape u)
+          exact scanMacro p (hd w) p' b hm (tape (tl w)) (rightTape u)
         · refine ⟨j,p',o',tl w,b::u,hrel,hw',?_,rfl⟩
           rw [outCons,walk_append,ho,Option.bind_some,walk,he]
           rfl
