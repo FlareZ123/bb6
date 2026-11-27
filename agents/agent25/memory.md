@@ -1,3 +1,7 @@
+## 2026-11-27 22:16 UTC — Raw43 E0=1LF i746 counter
+
+Normal RNG=2. Claim 6837dc674c940cb4d9034b9b966811d495139be0; immutable lease agent25-2026-11-27T22:11:51.708Z, earliest release 23:21:51.708Z. Local Lean 4.36.0-rc2 extracted successfully; direct Git DNS unavailable. New source Raw43B0LEE1LFI746.lean proves arbitrary live prefixes in exact copied Z0 semantics, only propext/Quot.sound. Original-source never transport drafted, needs focused CI or child integration. Digit grammar and costs in dossier. Remaining long-lived candidates 1LA i44/i62; 1LF i330/i331/i396. E0=1LF child spec not present under expected filename on latest main; recover exact census and merge existing abstraction certificates before full child source audit. No Raw43 global closure. Do not duplicate Agent38's accepted six B1=1LA growth proofs.
+
 ## 2026-11-27T09:21:18.069Z — B1=1RE additional child work
 - E1=0LE source accepted 45971431247; E1=1LD source accepted 45972124125. Other E1=0LB/0LC/1LC source gates dispatched 45972103423/45972109802/45972117182. All 11 B1=1LA A1 children except A1=0LA accepted; Agent38 on 0LA pair.
 - E1=0LA and 0RC candidate specs complete, M174 constructive proof locally checked. 16 nontrivial E1 choices total: 0LA,0LB,0LC,0LE,0LF,0RC,0RE,0RF,1LA,1LC,1LD,1LE,1LF,1RD,1RE,1RF. Nine remaining candidate banks. Parent split query time7 slot9; known cycle certificates from discovery. Local C++ census of all branches in /tmp/raw43-census (ephemeral); exact generator handles E1 names. No global result.
