@@ -21,7 +21,7 @@ static void require(bool h){if(!h){std::cerr<<"mismatch\n";std::exit(1);}}
 int main(){
  std::mt19937_64 rng(0x9d3b9b2c);
  U small=0,large=0,simd=0;
- for(unsigned mode=0;mode<=5;++mode){
+ for(unsigned mode=0;mode<=6;++mode){
   fit_mode=mode;
   for(I F=18;F<=90;++F)for(I rem=1;rem<=9;++rem){
    Block b(F,rem);
@@ -39,12 +39,26 @@ int main(){
 #endif
   }
  }
+ // Include exact power-of-two G boundaries and extremal Y, z.
+ fit_mode=6;
+ for(unsigned k=1;k<=30;++k){
+  I F=(I(1)<<k)+1; if(F<18)continue;
+  Block b(F,k);
+  for(U y: {U(0),U(1),b.M-1,b.M}){
+   b.Y=y;
+#if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+   alignas(64) U zz[8]={0,1,F/2,F-3,F-2,F-1,F,UINT32_MAX},out[8];
+   Block8 v(b);_mm512_store_si512(out,v.parent_vec(_mm512_load_si512(zz),255));
+   for(unsigned i=0;i<8;++i){U a;require(out[i]==scalar(b,I(zz[i]),&a));++simd;}
+#endif
+  }
+ }
  std::cout<<"exact small="<<small<<" large="<<large<<" simd="<<simd<<"\n";
  // Same endpoint population and target seed; differing block lengths mean
  // the metric is clock-queries/second, not a whole-scan speedup.
  for(I F: {100000000u,650000000u,1000000000u,2000000000u}){
   std::vector<U> zz(1<<20);for(auto& z:zz)z=rng()%F;
-  for(unsigned mode=0;mode<=5;++mode){fit_mode=mode;Block b(F,64);b.Y=0x9abcdef01234ull&((U(1)<<b.k)-1);
+  for(unsigned mode=0;mode<=6;++mode){fit_mode=mode;Block b(F,64);b.Y=0x9abcdef01234ull&((U(1)<<b.k)-1);
    auto start=std::chrono::steady_clock::now();U sum=0;
    for(int pass=0;pass<12;++pass){
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
