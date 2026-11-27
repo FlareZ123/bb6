@@ -51,13 +51,13 @@ theorem eLongFrontPositive (m q r : Nat) (ys : List Bool) :
   exact dPositive q m (List.replicate (2*r) true ++ ys)
 
 /-- q=0 is a different D-to-B 44-step corridor after the A turn. -/
-private def zeroOut : List Bool :=
+def zeroOut : List Bool :=
   [false,true,true,true,true,false,true,false,true,false,true,false,true,true]
 
-private def zeroTail : List Bool :=
+def zeroTail : List Bool :=
   [false,true,false,true,false,true,false,true,true]
 
-private theorem dZeroClose44 (m : Nat) (ys : List Bool) :
+theorem dZeroClose44 (m : Nat) (ys : List Bool) :
     run 44
       (⟨oppairs 1 ++ (pairs (m+3) ++ [true,true]),true,
          List.replicate 6 true ++ ys,3⟩ : Cfg) =
