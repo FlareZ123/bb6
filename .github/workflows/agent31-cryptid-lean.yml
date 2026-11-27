@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [cryptid, f197-reset-core]
+        options: [cryptid, f197-reset-core, f197-mixed-carry]
         default: cryptid
 
 permissions:
@@ -81,3 +81,26 @@ jobs:
           lean -o im-results/agent31-f197-macro/PairedScan.olean im-results/agent31-f197-macro/PairedScan.lean | tee -a /tmp/f197-reset-core.log
           lean im-results/agent31-f197-macro/PairedReset.lean | tee -a /tmp/f197-reset-core.log
           ! grep -q sorryAx /tmp/f197-reset-core.log
+
+  f197-mixed-carry:
+    if: inputs.target == 'f197-mixed-carry'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check arbitrary mixed-token literal source proof
+        working-directory: im-results/agent31-f197-macro
+        env:
+          LEAN_PATH: .
+        run: |
+          set -euo pipefail
+          lean --version
+          lean -o Macro.olean Macro.lean | tee /tmp/f197-mixed.log
+          lean -o JCarry.olean JCarry.lean | tee -a /tmp/f197-mixed.log
+          lean -o MixedCarry.olean MixedCarry.lean | tee -a /tmp/f197-mixed.log
+          ! grep -q sorryAx /tmp/f197-mixed.log
