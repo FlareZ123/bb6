@@ -87,10 +87,14 @@ jobs:
         with:
           name: raw57-rc2-shard-18
           path: /tmp/raw57-inputs/raw57-rc2-shard-18
-      - name: Prove exact six-hole Raw57 parent at weighted bound 1500
+      - name: Prove complete six-hole Raw57 parent at weighted bound 1613
         run: |
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
+          cp im-results/agent1-raw57/Raw57ParentConsumer.lean /tmp/raw57-generated/
+          cp im-results/agent1-raw57/Raw57ParentConsumerWithLALE.lean /tmp/raw57-generated/
+          cp im-results/agent1-raw57/Raw57ParentComplete.lean /tmp/raw57-generated/
+          cp im-results/agent1-raw57/Raw57ParentCover.lean /tmp/raw57-generated/
           python im-results/agent1-raw57/recover_rc2.py assemble \
             --generated /tmp/raw57-generated \
             --inputs /tmp/raw57-inputs \
