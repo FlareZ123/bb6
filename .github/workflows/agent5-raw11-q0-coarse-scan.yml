@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, long-sweep]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -881,5 +881,61 @@ jobs:
           path: |
             /tmp/raw11-q0-double150/
             /tmp/raw11-q0-double150.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  long-sweep:
+    if: inputs.mode == 'long-sweep'
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Generate exact packed-sweep proof
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-long-sweep.cjs "$ID" /tmp/q0-sweep-generated
+      - name: Retain generated source
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-long-sweep-source-${{ matrix.id }}
+          path: /tmp/q0-sweep-generated/
+          retention-days: 30
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check finite sweep certificates
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py "/tmp/q0-sweep-generated/Raw11Q0LongSweep$ID.lean" \
+            --source-root /tmp/q0-sweep-generated --workdir /tmp/q0-sweep-certified \
+            --manifest /tmp/q0-sweep-certified/manifest.json --jobs 2 --lean lean \
+            --label "Raw11 q0 long sweep $ID" \
+            --provenance-input /tmp/q0-sweep-generated/manifest.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-long-sweep.cjs \
+            2>&1 | tee /tmp/q0-sweep.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0-sweep.log; then exit 1; fi
+          grep -F "BB6.Raw11Q0LongSweep$ID.cover' depends on axioms:" /tmp/q0-sweep.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-long-sweep-certified-${{ matrix.id }}
+          path: |
+            /tmp/q0-sweep-certified/
+            /tmp/q0-sweep.log
           if-no-files-found: warn
           retention-days: 30
