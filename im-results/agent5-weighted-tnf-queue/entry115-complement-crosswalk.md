@@ -68,6 +68,18 @@ Consequently every one of the 77 q0 checkpoint rows under entry 115 is nested in
 
 This is a **containment map**, not a proof that the 70 q32 rows exhaust entry 115 or that q32 rows 39 and 47 are exhausted by their listed subfamilies. The q32 source README explicitly leaves 38 queue entries untouched. The queue records also carry introduced-state cuts 4, 5, and 6; do not infer completeness from a uniform 25-ary or 21-ary volume calculation. Keep the source-cut/support predicate explicit.
 
+## Global Canonical58/57 identity
+
+The Raw11/q32 parent is not an unrelated auxiliary branch. The accepted-lineage metadata crosswalk in `im-results/agent31-canonical58-source-crosswalk/crosswalk.py` applies the source-accepted exclusion chain (Combined106, CanonicalTwoParent, Canonical68StableBatch, Canonical65AfterThree, Canonical64Raw120, Canonical59FiveParent, Canonical58Raw113), explicitly retaining Raw59 and excluding Raw118. Its 58-entry roster contains raw residual index **11** (canonical index 7), whose exact table is:
+
+```
+1RB---_1RC---_0LA---_------_------_------
+```
+
+This is the same table as the q32 parent encoding in `Q32SideLeafRoster.lean` and the parent of the Raw11 first-D route. The source-accepted Raw124 consumer removes raw124 from the actual `Canonical58Raw113Graft.roster58` to form Canonical57; it does not remove raw11. Thus raw11 remains a required member of the 57-entry successor.
+
+A formal membership preflight has been added at `im-results/agent5-weighted-tnf-queue/Raw11Canonical57Membership.lean`. It imports the actual accepted `Raw124Canonical58Membership` and states unique membership of this exact table in both the accepted Canonical58 roster and its Canonical57 successor. **This new module has not yet been CI-compiled**; until that check passes, treat the raw-index identification as a source-crosswalk result, not a new Lean theorem. No parent Cover is claimed.
+
 ## D0 complement
 
 Among the 77 q0 checkpoint rows under entry 115, the six defined D0 values absent from the checkpoint roster are:
