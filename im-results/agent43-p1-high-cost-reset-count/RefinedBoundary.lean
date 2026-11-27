@@ -1,5 +1,5 @@
 import ReverseGuard
-import ResetOdd
+import EvenQuarter
 namespace BB6.Agent43RefinedBoundary
 open BB6.Agent1Quarter BB6.Agent47P1 BB6.P1Reduction BB6.P1CarryExact
 open BB6.Agent43LagExact BB6.Agent43LagBoundary BB6.Agent43P1Reverse
@@ -12,7 +12,7 @@ def RefinedBoundary (n m v w : Nat) : Prop :=
   (5≤v ∧ v%2=1 ∧ ∃ j s, j<n ∧
     w+v/2=7*2^j ∧ s+2*j+13=14*2^j+v ∧
     BB6.Agent1.Reach 2 s ∧
-    ((s%4=2 ∧ BB6.Agent1.Reach (s-6) 3) ∨ (j%2=1 ∧ v=2*j+5)))
+    ((s%4=2 ∧ BB6.Agent1.Reach (s-6) 3) ∨ (j%4=1 ∧ v=2*j+5)))
 
 private theorem linear_power (j : Nat) : 2*j+4<7*2^j := by
   induction j with
@@ -20,12 +20,12 @@ private theorem linear_power (j : Nat) : 2*j+4<7*2^j := by
   | succ j ih => rw [Nat.pow_succ]; omega
 
 /-- In the residue-zero case the earlier reset has precisely the same
-dyadic exponent, which must be odd. -/
+dyadic exponent, which must be one modulo four. -/
 theorem seed_refinement (j v w s : Nat) (hv : 5≤v) (ho : v%2=1)
     (hw : 6≤w) (hpow : w+v/2=7*2^j)
     (hs : s+2*j+13=14*2^j+v)
     (hr : BB6.Agent1.Reach 2 s) :
-    (s%4=2 ∧ BB6.Agent1.Reach (s-6) 3) ∨ (j%2=1 ∧ v=2*j+5) := by
+    (s%4=2 ∧ BB6.Agent1.Reach (s-6) 3) ∨ (j%4=1 ∧ v=2*j+5) := by
   have hj : 1≤j := by
     by_cases h0 : j=0
     · subst j; simp at hpow; omega
@@ -37,7 +37,7 @@ theorem seed_refinement (j v w s : Nat) (hv : 5≤v) (ho : v%2=1)
   have hs12 : 12≤s := by omega
   have hse : s%2=0 := by omega
   by_cases hmod : s%4=0
-  · obtain ⟨t,ht,htodd⟩ := BB6.Agent1.reset_divfour_odd_exponent s hr hs12 hmod
+  · obtain ⟨t,ht,htodd⟩ := BB6.Agent1.reset_divfour_one_mod_four s hr hs12 hmod
     have hlo : 7*2^j<s+8 := by omega
     have hhi : s+8<28*2^j := by omega
     have heq : t=j := by
