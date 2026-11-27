@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -281,3 +281,101 @@ jobs:
             /tmp/raw57-parent-final/**
             /tmp/raw57-parent-final.log
           if-no-files-found: error
+
+  raw57_rc2_prepare:
+    if: inputs.child == 'raw57-rc2-recovery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore accepted source certificates and generate only missing early cut
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python im-results/agent1-raw57/recover_rc2.py prepare --generated /tmp/raw57-generated --core /tmp/raw57-core
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-rc2-sources
+          path: /tmp/raw57-generated/**
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-rc2-core
+          path: /tmp/raw57-core/**
+          if-no-files-found: error
+
+  raw57_rc2_shard:
+    if: inputs.child == 'raw57-rc2-recovery'
+    needs: raw57_rc2_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-sources
+          path: /tmp/raw57-generated
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-core
+          path: /tmp/raw57-core
+      - name: Compile independent exact branch with pinned compiler
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw57/recover_rc2.py shard --generated /tmp/raw57-generated --core /tmp/raw57-core --work /tmp/raw57-shard --shard "$SHARD" | tee /tmp/raw57-shard.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw57-shard.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-rc2-shard-${{ matrix.shard }}
+          path: /tmp/raw57-shard/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw57_rc2_assemble:
+    if: inputs.child == 'raw57-rc2-recovery'
+    needs: raw57_rc2_shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-sources
+          path: /tmp/raw57-generated
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw57-rc2-shard-*
+          path: /tmp/raw57-inputs
+      - name: Prove exact six-hole parent at weighted bound 1500
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw57/recover_rc2.py assemble --generated /tmp/raw57-generated --inputs /tmp/raw57-inputs --merged /tmp/raw57-merged --work /tmp/raw57-final | tee /tmp/raw57-final.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw57-final.log --require BB6.Agent31Raw57.literal_cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-prefix-parent-certified
+          path: /tmp/raw57-final/**
+          if-no-files-found: error
+          retention-days: 30
