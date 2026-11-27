@@ -77,7 +77,6 @@ private theorem no_one_source (S n : Nat)
           have he : 2^(n+2)*16=64*2^n := by
             have hp : 2^(n+2)=2^n*4 := by
               rw [Nat.pow_add]
-              decide
             rw [hp]
             calc
               (2^n*4)*16=(4*16)*2^n := by ac_rfl
