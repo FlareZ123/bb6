@@ -57,7 +57,7 @@ theorem lsweep (k : Nat) (l r : Stream) :
       show ones (5+5*k) l=ones 5 (ones (5*k) l) from rep_add _ _ _ _,
       run_add,lstep,Option.bind_some,ih]
     rw [show zeros (5+5*k) r=zeros (5*k) (zeros 5 r) by
-      rw [←rep_add]; congr 1; omega]
+      rw [show 5+5*k=5*k+5 by omega]; exact rep_add _ _ _ _]
 
 theorem turn (r : Stream) :
     run 4 (L (ones 1 z) r) = some (F z (zeros 5 r)) := by
@@ -74,7 +74,7 @@ theorem rsweep (n : Nat) (l r : Stream) :
   | succ n ih =>
     rw [show n+1=1+n by omega,show zeros (1+n) r=zeros 1 (zeros n r) from rep_add _ _ _ _,
       run_add,rstep,Option.bind_some,ih]
-    rw [show ones (1+n) l=ones n (ones 1 l) by rw [←rep_add]; congr 1; omega]
+    rw [show ones (1+n) l=ones n (ones 1 l) by rw [show 1+n=n+1 by omega]; exact rep_add _ _ _ _]
 
 theorem finish (l : Stream) :
     run 1 (F l (push true z)) = some (cfg .A (push false l) z) := by
@@ -89,7 +89,11 @@ theorem growth (k : Nat) :
       run_add,run_add,run_add,run_add,start,Option.bind_some]
   rw [show ones (5*k+1) z=ones (5*k) (ones 1 z) from rep_add _ _ _ _,
       lsweep,Option.bind_some,turn,Option.bind_some]
-  rw [←rep_add,←rep_add,show 5+5*k+4=5*k+9 by omega,rsweep,Option.bind_some,finish]
+  rw [show zeros 5 (zeros (5*k) (zeros 4 (push true z)))=zeros (5*k+9) (push true z) by
+    calc
+      _ = zeros 5 (zeros (5*k+4) (push true z)) := congrArg (zeros 5) (rep_add [false] (5*k) 4 _).symm
+      _ = zeros (5+(5*k+4)) (push true z) := (rep_add [false] 5 (5*k+4) _).symm
+      _ = _ := by rw [show 5+(5*k+4)=5*k+9 by omega],rsweep,Option.bind_some,finish]
   rw [show 5*(k+1)+4=5*k+9 by omega]
 
 def blank : Config := cfg .A z z
