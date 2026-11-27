@@ -57,6 +57,18 @@ for n,(parent,t) in pump_specs.items():
     hard_bank[parent,t]=('Raw47NewPumps',prefix+'.ctr',prefix+'.never',n)
 assert len(hard_bank)==len(hard_specs)+len(pump_specs)
 
+# Agent2 shared binary counter, exact one-hole tables. The two variants
+# have identical macro orbit; the undefined row is never read.
+binary_specs = {
+    95200006: (932, '1RB1LB1RC0LE0RD1RA1LD0RC0LF---0RD1RB', 'true'),
+    95700003: (937, '1RB1LE1RC---0RD1RA1LD0RC0LF0LE0RD1RB', 'false'),
+}
+for n,(parent,t,v) in binary_specs.items():
+    prefix='BB6.Agent2Raw47Binary932937'
+    assert len(t)==36 and (parent,t) not in hard_bank
+    hard_bank[parent,t]=('Raw47Binary932937',f'({prefix}.ctr {v})',f'({prefix}.never {v})',n)
+assert len(hard_bank)==len(hard_specs)+len(pump_specs)+len(binary_specs)
+
 raw=(here/'raw47-depth3.open').read_bytes()
 assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d'
 rows=raw.decode().splitlines()
