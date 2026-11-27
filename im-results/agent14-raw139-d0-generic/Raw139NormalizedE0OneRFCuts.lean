@@ -1,4 +1,4 @@
-import Raw139NormalizedE0OneRFFinite
+import Raw139NormalizedE0OneRFConditional
 import Raw139NormalizedE0Cuts
 
 set_option maxRecDepth 1000000
@@ -19,16 +19,9 @@ theorem remaining_cover_from_subset (ps : List PartialMachine)
     (hParents : ∀ q ∈ ps, Cover (WeightedBound localScore) q)
     (hNorm : ∀ p ∈ remainingTables.filter (fun x => !(matchesAny x ps)),
       Cover (WeightedBound localScore) p) :
-    ∀ p ∈ remainingTables, Cover (WeightedBound localScore) p := by
-  intro p hp
-  by_cases hHit : matchesAny p ps = true
-  · rcases matchesAny_witness hHit with ⟨q, hq, hSame⟩
-    rw [BB6.Agent14Raw139Core.sameTable_sound hSame]
-    exact hParents q hq
-  · have hFiltered :
-        p ∈ remainingTables.filter (fun x => !(matchesAny x ps)) :=
-      List.mem_filter.mpr ⟨hp, by simp [hHit]⟩
-    exact hNorm p hFiltered
+    ∀ p ∈ remainingTables, Cover (WeightedBound localScore) p :=
+  BB6.Agent14Raw139NormalizedE0OneRFConditional.remainingTables_cover_from_filter
+    localScore ps hParents hNorm
 
 /-- Six existing parents plus accepted OneRF leave sixty actual normalized
     Raw139 subcylinders; only their Covers remain as hypotheses. -/
