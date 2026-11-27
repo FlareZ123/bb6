@@ -5,7 +5,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent29Raw36
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
-open BB6.Agent47PartialAudit
+open BB6.Agent31ThreeHole BB6.Agent47PartialAudit
 
 /-- The twenty genuinely different C1 choices after identifying the
     two still-unused machine labels E and F. -/
