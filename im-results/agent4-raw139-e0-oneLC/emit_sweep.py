@@ -52,8 +52,9 @@ for start in range(0,len(A),32):
 def merge(a,b):
     if b-a==1:return '',f'block{a}'
     m=(a+b)//2;u,un=merge(a,m);v,vn=merge(m,b);aa,bb=ends[a],ends[b];nm=f'blocks_{a}_{b}'
-    return u+v+f'theorem {nm} : runF a {cost[bb]-cost[aa]} c{aa} = some c{bb} := runF_join {un} {vn}\n',nm
-u,un=merge(0,len(names));j=len(A);s=u+f'theorem whole : runF a {N} ⟨0,0,0⟩ = some c{j} := {un}\ntheorem read : (knownRun p {N}).map readSlot = some {slot} := read_of_runF table whole\ntheorem cover : Cover (WeightedBound 204890) p := last_of_read 204890 p {N} {slot} read (by decide) (by decide) (by decide) (by decide)\n#print axioms cover\n'
-write(f'OneLCSweep{i}',names,s)
+    mm=ends[m]
+    return u+v+f'theorem {nm} : runF a {cost[bb]-cost[aa]} c{aa} = some c{bb} := joinExact a {cost[mm]-cost[aa]} {cost[bb]-cost[mm]} {cost[bb]-cost[aa]} c{aa} c{mm} c{bb} rfl {un} {vn}\n',nm
+u,un=merge(0,len(names));write(f'OneLCSweep{i}Merge',names+['OneLCJoinExact'],u);j=len(A);s=f'theorem whole : runF a {N} ⟨0,0,0⟩ = some c{j} := {un}\ntheorem read : (knownRun p {N}).map readSlot = some {slot} := read_of_runF table whole\ntheorem cover : Cover (WeightedBound 204890) p := last_of_read 204890 p {N} {slot} read (by decide) (by decide) (by decide) (by decide)\n#print axioms cover\n'
+write(f'OneLCSweep{i}',[f'OneLCSweep{i}Merge'],s)
 print('emitted',len(names),'chunks',len(rules),'rules')
 (out/f'OneLCLate{i}.lean').write_text(f'import OneLCSweep{i}\nnamespace BB6.Agent4E0OneLCLate.H{i}\nopen BB6Coverage BB6.Agent13BlankDelay\nabbrev p : PartialMachine := H{i}Sweep.p\ntheorem cover : Cover (WeightedBound 204890) p := H{i}Sweep.cover\nend BB6.Agent4E0OneLCLate.H{i}\n')
