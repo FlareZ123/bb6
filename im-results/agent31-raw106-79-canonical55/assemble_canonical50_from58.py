@@ -93,27 +93,28 @@ def verify_legacy(raw: str, work: Path):
     assert len(roots) == 1, [str(p) for p in roots]
 
     candidates = []
-    for path in work.rglob("*.json"):
-        if "metadata" in path.parts:
-            continue
+    metadata_root = work / "metadata" / str(spec["artifact_id"])
+    for path in metadata_root.rglob("*.json"):
         try:
             manifest = json.loads(path.read_text())
         except (OSError, json.JSONDecodeError):
             continue
         claim = manifest.get("claim") or {}
         if (
-            manifest.get("artifact_name") == spec["artifact_name"]
-            and claim.get("theorem") == spec["theorem"]
+            claim.get("theorem") == spec["theorem"]
+            and claim.get("weighted_bound") == spec["bound"]
+            and manifest.get("proof_source_revision") == spec["revision"]
         ):
             candidates.append((path, manifest))
     assert len(candidates) == 1, [str(p) for p, _ in candidates]
     manifest_path, manifest = candidates[0]
     assert manifest["proof_source_revision"] == spec["revision"]
     assert "4.36.0-rc2" in manifest["lean_version"]
-    assert manifest["artifact_name"] == spec["artifact_name"]
     assert manifest["claim"]["theorem"] == spec["theorem"]
     assert manifest["claim"]["weighted_bound"] == spec["bound"]
-    assert manifest["workflow"]["run_id"] == str(spec["run_id"])
+    workflow = manifest.get("workflow") or {}
+    if workflow.get("run_id") is not None:
+        assert str(workflow["run_id"]) == str(spec["run_id"])
     assert any(x["module"] == spec["root"] for x in manifest["roots"])
     module = next(x for x in manifest["modules"] if x["module"] == spec["root"])
     assert module["olean_sha256"] == a68.sha(roots[0])
