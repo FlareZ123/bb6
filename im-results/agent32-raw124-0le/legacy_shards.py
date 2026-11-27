@@ -81,13 +81,13 @@ def compile_roots(roots, generated, core, work, branch=None):
                  "--provenance-input",str(HERE/"legacy_shards.py")]
     subprocess.run(args+[str(generated/(r+".lean")) for r in roots],check=True)
 
-def merge(inputs, merged, generated):
+def merge(inputs, merged, generated, prefix=None):
     s=schedule(generated)
     manifests=[]
     entries={}
     merged.mkdir(parents=True,exist_ok=True)
     for i,group in enumerate(s["groups"]):
-        folder=inputs/f"raw124-legacy-{s['branch']}-shard-{i}"
+        folder=inputs/f"{prefix or 'raw124-legacy-' + s['branch']}-shard-{i}"
         m=json.loads((folder/"manifest.json").read_text())
         assert m["schema_version"]==1
         if manifests:
