@@ -28,10 +28,10 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 3 |
+| 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 2 |
 | 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 1 |
 
-Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; only propext and Quot.sound:
+Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; standard axioms only:
 
 - [0LE 5883](Raw39LE5883.md): unbounded base-four carry grammar.
 - [0LE 1791 and 1800](Raw39LE1791.md): alternating residue-three run-count grammar.
@@ -63,4 +63,6 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 - [0LE 3414](Raw39LE3414.md): six-phase affine growth; locally kernel-checked against fresh original semantics, exact cost 1252+864n.
 - [0LE 3334](Raw39LE3334.md): alternating-gap finite abstraction, 3161 quotient configurations, local kernel proof on exact original checker dependencies.
 
-Remaining 0LE IDs: 1300, 1583, 4084. Remaining 1LE ID: 180. [Exact A-return and rational sweep reduction](Raw391LE180Sections.md) isolates its first undefined query and excludes a finite number of arbitrary-length sweep alternations; it is not yet an inductive invariant. [One-stack pushdown reduction](Raw391LE180PDS.md) gives an exact safety-certificate criterion and a phase-sensitive left-language invariant; no abstraction has closed the leaf. The semantic generator dispatches delayed cycles and 54 custom leaves (locally checked, some source-accepted). Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
+- [0LE 1300](Raw39LE1300.md): positive-cost returns through two unbounded periodic sweep families, locally kernel-checked.
+
+Remaining 0LE IDs: 1583, 4084. Remaining 1LE ID: 180. [Exact A-return and rational sweep reduction](Raw391LE180Sections.md) isolates its first undefined query and excludes a finite number of arbitrary-length sweep alternations; it is not yet an inductive invariant. [One-stack pushdown reduction](Raw391LE180PDS.md) gives an exact safety-certificate criterion and a phase-sensitive left-language invariant; no abstraction has closed the leaf. The semantic generator dispatches delayed cycles and 55 custom leaves (locally checked, some source-accepted). Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
