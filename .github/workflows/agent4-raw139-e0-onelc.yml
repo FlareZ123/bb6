@@ -1,0 +1,140 @@
+name: Raw139 E0=1LC exact Cover
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+env:
+  BASE: im-results/agent4-raw139-e0-oneLC
+  WORK: .tmp/a4-oneLC
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate source from exact saved recipes
+        run: |
+          set -euo pipefail
+          mkdir -p "$WORK/imports"
+          tar -xzf "$BASE/proof-generators.tar.gz" -C "$BASE" wide_prepare.py assemble_lc.py restore_recipes.py
+          tar -xOf "$BASE/proof-generators.tar.gz" OneLCHybrid.lean > "$WORK/imports/OneLCHybrid.lean"
+          gzip -dc "$BASE/recipes-compact.json.gz" > "$WORK/recipes-compact.json"
+          python3 "$BASE/restore_recipes.py" "$WORK/recipes-compact.json" "$WORK"
+          python3 -c 'import sys;sys.path.insert(0,sys.argv[1]);from reproduce import partition;partition()' "$BASE"
+          cp "$BASE/partition.json" "$WORK/"
+          echo "7cb06d7c9c8dcf6ea282ff84b904e3bf7278e3c697e57eeda53280b27a1bfdda  $WORK/partition.json" | sha256sum -c -
+          gzip -dc "$BASE/E0OneLC1661.lean.gz" > "$WORK/imports/E0OneLC1661.lean"
+          python3 "$BASE/wide_prepare.py" im-results/agent1-raw139-e0-oneRD/wide-source.tar.gz "$WORK/imports"
+          (cd "$WORK/imports"; python3 emit_wide6.py; python3 emit_wide12.py)
+          rm -rf "$WORK/imports/wideorig"
+          python3 "$BASE/emit_nat_late.py" "$WORK" "$WORK/imports"
+          python3 "$BASE/assemble_lc.py" "$WORK" "$WORK/imports" --jobs 4
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+      - name: Compile shared checker and exceptional leaves
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py "$WORK/imports/OneLCHybrid.lean" "$BASE/OneLCNat.lean" "$BASE/E0OneLCCycles.lean" "$WORK/imports/E0OneLC1661.lean" "$WORK/imports/E0OneLC134Proof.lean" "$WORK/imports/E0OneLC15474Proof.lean" --source-root "$WORK/imports" --workdir /tmp/a4-oneLC-core --jobs 2 --manifest "$WORK/core.json" --label raw139-e0-oneLC-core --provenance-input "$BASE/proof-generators.tar.gz" --provenance-input "$BASE/recipes-compact.json.gz" --provenance-input "$BASE/emit_nat_late.py" | tee "$WORK/core.log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$WORK/core.log"
+          mkdir -p "$WORK/core"
+          find /tmp/a4-oneLC-core -name '*.olean' -exec cp '{}' "$WORK/core/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLC-core-and-sources
+          path: |
+            .tmp/a4-oneLC/imports
+            .tmp/a4-oneLC/core
+            .tmp/a4-oneLC/core.json
+            .tmp/a4-oneLC/core.log
+          include-hidden-files: true
+          retention-days: 14
+  shard:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        root: ['00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23']
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLC-core-and-sources
+          path: .tmp/a4-oneLC
+      - name: Reconstruct shared generated source dependencies
+        run: |
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+      - name: Compile exact branch
+        env:
+          ROOT_INDEX: ${{ matrix.root }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$WORK/shard"
+          python3 tools/lean_compile_closure.py "$WORK/imports/OLCRoot${ROOT_INDEX}.lean" --source-root "$WORK/imports" --precompiled-manifest "$WORK/core.json" --precompiled-dir "$WORK/core" --workdir /tmp/a4-oneLC-branch --jobs 2 --manifest "$WORK/shard/manifest.json" --label "raw139-e0-oneLC-root${ROOT_INDEX}" --theorem "BB6.Agent4E0OneLCParent.cOLCRoot${ROOT_INDEX}" --weighted-bound 204890 | tee "$WORK/shard/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$WORK/shard/log"
+          mkdir -p "$WORK/shard/build"
+          find /tmp/a4-oneLC-branch -name '*.olean' -exec cp '{}' "$WORK/shard/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLC-root${{ matrix.root }}-certified
+          path: .tmp/a4-oneLC/shard
+          include-hidden-files: true
+          retention-days: 14
+  compose:
+    needs: [prepare,shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLC-core-and-sources
+          path: .tmp/a4-oneLC
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-oneLC-root*-certified
+          path: .tmp/a4-oneLC/shards
+      - name: Compose exact parent Cover
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$BASE/compose.py" "$WORK"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLC-parent-certified
+          path: |
+            .tmp/a4-oneLC/parent
+            .tmp/a4-oneLC/imports
+          include-hidden-files: true
+          retention-days: 14
