@@ -35,5 +35,6 @@ jobs:
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent33-429-24/BB429InverseKernel.olean im-results/agent33-429-24/BB429InverseKernel.lean
           lean -o im-results/agent18-429-root-invariants/BB429FiniteAvoidance.olean im-results/agent18-429-root-invariants/BB429FiniteAvoidance.lean
           lean "$p/Branch29Extra1024.lean" 2>&1 | tee /tmp/agent22-branch29-audit.log
+          lean "$p/Branch29Extra2048.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           ! grep -q 'sorryAx' /tmp/agent22-branch29-audit.log
           ! grep -q 'native_decide' /tmp/agent22-branch29-audit.log
