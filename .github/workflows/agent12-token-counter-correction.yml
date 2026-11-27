@@ -1,0 +1,45 @@
+name: Agent 12 corrected token normalization source proof (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 24
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: google-deepmind/cryptids
+          ref: 3647718b5df22e1a61462dec0376bd204526285a
+          path: cryptids
+          persist-credentials: false
+      - uses: actions/checkout@v4
+        with:
+          path: bb6
+          persist-credentials: false
+      - name: Install pinned original-source Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.35.0-rc4
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore Mathlib cache
+        working-directory: cryptids
+        run: lake exe cache get
+      - name: Append independent proof and kernel-check
+        working-directory: cryptids
+        env:
+          LEAN_NUM_THREADS: "1"
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path("BusyBeaver/BB6/Accelerations/M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA.lean")
+          ending="end BusyBeaver.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA"
+          a=p.read_text().rstrip().splitlines()
+          assert a[-1].strip()==ending
+          b=Path("../bb6/im-results/agent12-cryptid-root-invariant/TokenCounterCorrection.append.lean").read_text()
+          p.write_text("\n".join(a[:-1])+"\n\n"+b+"\n"+ending+"\n")
+          PY
+          set -o pipefail
+          lake build BusyBeaver.BB6.Accelerations.M_1RBHHH_0RC0RE_1RD1RF_1LE0LB_1RC0LD_1RC1RA 2>&1 | tee /tmp/token-proof.log
+          if grep -q 'sorryAx' /tmp/token-proof.log; then exit 1; fi
