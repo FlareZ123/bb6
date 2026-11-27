@@ -79,9 +79,23 @@ theorem witness_compatible : compatible parent witness := by
     contradiction
   · simp [witness,weightedTNFDefaultCompletion,refine,e,hs]
 
-theorem witness_halts : HaltsAfter witness 133 := by decide
+theorem witness_halts : HaltsAfter witness 133 := by
+  constructor <;> first | rfl | decide
+
+theorem exact_threshold (h : NeverHalts published) (B : Nat) :
+    (∀ m, compatible parent m → WeightedBound B m) ↔ 134 ≤ B := by
+  constructor
+  · intro hb
+    have hz := firstOne_terminal parent (by decide) witness witness_compatible
+    have hd : 0 ∈ delays (zeroNext witness) 0 :=
+      (mem_delays_iff hz).mpr ⟨0, TerminalPath.stop 0 hz⟩
+    have hw := hb witness witness_compatible 133 0 witness_halts hd
+    omega
+  · intro hb m hm k d hk hd
+    exact Nat.le_trans (bound h m hm k d hk hd) hb
 
 #print axioms bound
 #print axioms witness_compatible
 #print axioms witness_halts
+#print axioms exact_threshold
 end BB6.Agent46Raw13CoupledParent
