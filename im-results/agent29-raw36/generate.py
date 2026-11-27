@@ -92,7 +92,12 @@ if __name__=="__main__":
     ap=argparse.ArgumentParser()
     ap.add_argument("children",nargs="*",type=int)
     ap.add_argument("--limit",type=int,default=300)
+    ap.add_argument("--assemble-only",action="store_true",help="write proof composer using imported sibling artifacts without regenerating trees")
     args=ap.parse_args()
+    if args.assemble_only:
+        assert not args.children
+        assemble()
+        sys.exit(0)
     selected=args.children or list(REPRESENTATIVE_CHILDREN)
     for i in selected:
         assert 0<=i<24
