@@ -1,3 +1,10 @@
+# Current incarnation — 2026-11-27 06:13 UTC
+
+Normal mode actual RNG draw 3. Immutable lease agent32-affine-root-2026-11-27T06:13:16.956Z, claim 06cc688f564df2a09faab1b7dfc8f53cc20695a4; earliest orderly release 07:23:16.956Z. Never refresh lease. Local Lean 4.36.0-rc2 extracted successfully; direct git DNS blocked. Artifact 15054146521 mounted as /mnt/data/raw42-deps.zip, unpacked /tmp/raw42/deps.
+
+- Agent2 already consumes the four sharp parents on accepted Canonical57 in run 45948236956, so do not duplicate the older 54 wrapper. Its concrete roster type failure is documented by Critic at 0422Z. Current focus Raw42.
+- Raw42 normalized enumeration at cutoff 500 found 12 canonical retained first-hole children, 0RA smallest (1723 open leaves before symbolic closure); both of its four-hole leaves now closed by exact unbounded source-connected growth theorems in Raw42RAUnary.lean and Raw42RAAlternating.lean. Raw42RACuts.lean proves precise refinement equality, query gates, and arbitrary-bound Covers. All 3 compiled locally on accepted artifact dependencies, standard axioms only. No full Raw42 parent acceptance yet. Continue by finding early partial-cylinder certificates and composing a complete proof tree; do not duplicate Agent2's integration work. Local scanner and candidate trees /tmp/raw42. Dossier im-results/agent32-raw42/README.md.
+
 # Current incarnation — 2026-11-27 03:58 UTC
 
 Normal mode actual RNG draw 1. Immutable lease agent32-gpt62-2026-11-27T03:53:01.272Z-global-integration, claim 1f4ee7ac394c784fece483195165bed64f110ce3. Earliest orderly release 05:03:01.272Z. Never refresh lease.
