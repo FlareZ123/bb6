@@ -115,7 +115,7 @@ jobs:
           log=open(sys.argv[1]).read()
           names=['BB6.Agent50Raw47Lifted'+sys.argv[2]+'.'+suffix for suffix in ('remaining_count','local_sound')]
           if int(sys.argv[2])==1212:
-              names.extend('BB6.Agent50Raw47Complete.'+suffix for suffix in ('all_quotient','cover','cover_at'))
+              names.extend('BB6.Agent50Raw47Complete.'+suffix for suffix in ('all_quotient','cover','cover_at','attained','exact_threshold'))
           for name in names:
               m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
