@@ -77,16 +77,16 @@ def main():
         hard_rows={tuple(row):(f'row{i}',row.index(0),None,None) for i,row in enumerate(d2v13_rows)}
     carry = a.d0==18 and a.d1 in (12,14,18)
     carry_rows={tuple([8,ac,11,0,11,13,18,15,a.d1,24,4,12]) for ac in (20,24)} & remaining if carry else set()
-    if carry_rows and not far:
+    if carry_rows:
         hard_rows.update({row:(f'carry{i}',3,None,None) for i,row in enumerate(sorted(carry_rows))})
     if far:
         manifest=json.loads((far/'far_manifest.json').read_text())
-        assert not manifest['open_rows']
+        assert set(map(tuple,manifest['open_rows'])) <= set(hard_rows)
         solved={tuple(row):param for row,param in manifest['solved']}
-        assert set(solved)==remaining, ('FAR coverage mismatch',set(solved)^remaining)
+        assert set(solved)|set(hard_rows)==remaining, ('FAR coverage mismatch',(set(solved)|set(hard_rows))^remaining)
         imports=[name+'Tree']
         defs=[]
-        for i,row in enumerate(sorted(remaining)):
+        for i,row in enumerate(sorted(solved)):
             width,cap,mod,runs,flip,mode=solved[row]
             assert len(row)==12 and row.count(0)==1
             target=row.index(0)
@@ -94,7 +94,10 @@ def main():
             farstem=f'{name}Far{i:02d}'
             ns=f'BB6BlockFAR{width}'
             for suffix in ('Packed','Proof'):
-                shutil.copyfile(far/(farstem+suffix+'.lean'),out/(farstem+suffix+'.lean'))
+                src=(far/(farstem+suffix+'.lean')).read_text()
+                if width==3:
+                    src=src.replace('BB6BlockFAR.','BB6BlockFAR3.').replace('import BlockFAR\n','import BlockFAR3\n').replace('import RangeCheck\n','import RangeCheck3\n')
+                (out/(farstem+suffix+'.lean')).write_text(src)
             bridge=farstem+'Source'
             q=f'BB6.Agent13.{name}.{farstem}'
             imports.append(bridge)
@@ -134,32 +137,37 @@ end {q}
             put(out,bridge,'\n'.join(im)+'\n'+body)
             hard_rows[row]=(label,target,None,None)
             defs.append(f'def {label} : Known {target} := ⟨{q}.row, good_never {target} _ {q}.compatible_never⟩')
-        put(out,name+'HardBank','\n'.join([*(f'import {m}' for m in imports),f'namespace BB6.Agent13.{name}','open BB6Coverage',*defs,f'end BB6.Agent13.{name}'])+'\n')
+        far_imports=imports[1:]; far_defs=defs
     else:
+        far_imports=[];far_defs=[]
         assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
-        if hard_rows:
-            ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryFamilySource' if carry_rows else 'BB6.Agent17.Box28HardSource'
-            lines=[f'import {name}Tree','import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryFamilySource' if carry_rows else 'Box28HardSource'),
-              f'namespace BB6.Agent13.{name}','open BB6Coverage']
-            for row,(label,target,part,proof) in hard_rows.items():
-                if d2v13:
-                    i=label[3:]
-                    lines.append(f'def {label} : Known {target} := ⟨{ns}.row {i}, fun m _ hm => {ns}.rowBound _ {i} m hm⟩')
-                elif row in carry_rows:
-                    e={12:'.c',14:'.d',18:'.e'}[a.d1]
-                    two=str(row[1]==24).lower()
-                    codes=','.join('some '+str(v) for v in row)
-                    lines.append(f'''def {label}Row : PartialMachine := fun s => (([{codes}] : List (Option (Fin 25)))[2*s.1.val+s.2.toNat]!).map BB6.Agent13.Box17.decode
+    if hard_rows:
+        ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryFamilySource' if carry_rows else 'BB6.Agent17.Box28HardSource'
+        analytic_rows=set(hard_rows)-set(solved) if far else set(hard_rows)
+        lines=[f'import {name}Tree',*(f'import {m}' for m in far_imports)]
+        if analytic_rows:
+            lines.append('import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryFamilySource' if carry_rows else 'Box28HardSource'))
+        lines.extend([f'namespace BB6.Agent13.{name}','open BB6Coverage',*far_defs])
+        for row in sorted(analytic_rows):
+            label,target,part,proof=hard_rows[row]
+            if d2v13:
+                i=label[3:]
+                lines.append(f'def {label} : Known {target} := ⟨{ns}.row {i}, fun m _ hm => {ns}.rowBound _ {i} m hm⟩')
+            elif row in carry_rows:
+                e={12:'.c',14:'.d',18:'.e'}[a.d1]
+                two=str(row[1]==24).lower()
+                codes=','.join('some '+str(v) for v in row)
+                lines.append(f'''def {label}Row : PartialMachine := fun s => (([{codes}] : List (Option (Fin 25)))[2*s.1.val+s.2.toNat]!).map BB6.Agent13.Box17.decode
  theorem {label}Never (m : Machine) (hm : compatible {label}Row m) : NeverHalts m := by
   apply {ns}.compatible_never {two} {e} m
   intro s t ht
   have h : ∀ (q : Fin 6) (b : Bool), ({ns}.partialTable {two} {e} (q,b)).isSome = true → {ns}.partialTable {two} {e} (q,b) = {label}Row (q,b) := by decide
   exact hm s t ((h s.1 s.2 (by simp [ht])).symm ▸ ht)
  def {label} : Known {target} := ⟨{label}Row, good_never {target} _ {label}Never⟩''')
-                else:
-                    lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
-            lines.append(f'end BB6.Agent13.{name}')
-            put(out,name+'HardBank','\n'.join(lines)+'\n')
+            else:
+                lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
+        lines.append(f'end BB6.Agent13.{name}')
+        put(out,name+'HardBank','\n'.join(lines)+'\n')
     max_late=max(v['late_max_halt'][0] for v in summary.values())
     bound=max(3640,max_late+5)
     source_core(out,name,a.d0,a.d1,bound)
