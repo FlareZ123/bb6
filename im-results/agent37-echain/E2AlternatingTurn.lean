@@ -107,7 +107,24 @@ theorem aTurnAll (r : Nat) (L ys : List Bool) :
       [true,false,false] ++ ys,0⟩ : Cfg) = _
   exact aHundredRun (r+1) L ys
 
+/-- The zero-alternating-pair base has the same A->D shape. -/
+private theorem aTurnZero (L ys : List Bool) :
+    run 12 (aStart 0 L ys) =
+    ⟨L,true,List.replicate 4 true ++ ys,3⟩ := by
+  simp [aStart,aFront,run,step,goL,goR,oppairs,List.append_assoc]
+
+/-- The universal 11(01)^r00 -> D1 turn actually holds for *every* r>=0.
+    The r=0 base is a separate direct twelve-step local path. -/
+theorem aTurnAllNat (r : Nat) (L ys : List Bool) :
+    run (4*r+12) (aStart r L ys) =
+    ⟨L,true,List.replicate (2*r+4) true ++ ys,3⟩ := by
+  cases r with
+  | zero => exact aTurnZero L ys
+  | succ r =>
+      simpa [Nat.succ_eq_add_one] using aTurnAll r L ys
+
 #print axioms aHundredRun
 #print axioms aTurnAll
+#print axioms aTurnAllNat
 
 end BB6.Agent37E2AlternatingTurn
