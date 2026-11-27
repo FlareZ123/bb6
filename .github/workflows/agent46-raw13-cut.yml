@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupledSource]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -21,7 +21,7 @@ permissions:
   contents: write
 jobs:
   check:
-    if: inputs.target != 'coupled4Discover'
+    if: inputs.target != 'coupled4Discover' && inputs.target != 'coupledSource'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -448,3 +448,58 @@ jobs:
             git pull --rebase origin main
           done
           exit 1
+
+  source-coupled:
+    if: inputs.target == 'coupledSource'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile local exact proof closure
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          D=im-results/agent46-raw13-cut
+          python "$D/generate_coupled_entry.py"
+          python "$D/emitauto.py" "$D/coupled3-auto.json" "$D/Raw13Coupled3Auto.lean" Raw13Coupled3Auto
+          python tools/lean_compile_closure.py --workdir /tmp/a46-source --jobs 4 "$D/Raw13Coupled3.lean" im-results/agent4-coverage-smoke/RelativeTape.lean | tee /tmp/a46-source.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-source.log; then exit 1; fi
+      - name: Build unchanged upstream theorem at pinned revision
+        run: |
+          set -euo pipefail
+          git clone --quiet https://github.com/google-deepmind/cryptids.git /tmp/cryptids
+          git -C /tmp/cryptids checkout --quiet 3647718b5df22e1a61462dec0376bd204526285a
+          test "$(git -C /tmp/cryptids rev-parse HEAD)" = 3647718b5df22e1a61462dec0376bd204526285a
+          sudo rm -rf /usr/local/lib/android /opt/hostedtoolcache /usr/share/dotnet /usr/share/swift /usr/local/share/powershell
+          cd /tmp/cryptids
+          printf '%s\n' leanprover/lean4:v4.36.0-rc2 > lean-toolchain
+          sed -i 's/v4.35.0-rc4/v4.36.0-rc2/g' lakefile.toml
+          rm -f lake-manifest.json
+          lake update
+          lake exe cache get
+          lake build BusyBeaver.Bridge BusyBeaver.BB6.NonHalt.M_1RB1LD_1RC0RB_1LA1RE_1LF0LA_1LA0RD_1LCHHH
+      - name: Prove unconditional two- and three-hole bounds
+        working-directory: /tmp/cryptids
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/a46-source
+          cp "$GITHUB_WORKSPACE/im-results/agent10-nov26-cryptids/CryptidsTapeAdapter.lean" /tmp/a46-source/
+          cp "$GITHUB_WORKSPACE/im-results/agent46-raw13-cut/Raw13CoupledParentSource.lean" /tmp/a46-source/
+          lake env lean -o /tmp/a46-source/CryptidsTapeAdapter.olean /tmp/a46-source/CryptidsTapeAdapter.lean | tee /tmp/a46-adapter.log
+          lake env lean -o /tmp/a46-source/Raw13CoupledParentSource.olean /tmp/a46-source/Raw13CoupledParentSource.lean | tee /tmp/a46-unconditional.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-adapter.log /tmp/a46-unconditional.log; then exit 1; fi
+      - name: Preserve unconditional audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-coupled-unconditional
+          path: |
+            /tmp/a46-unconditional.log
+            /tmp/a46-adapter.log
+            /tmp/a46-source
