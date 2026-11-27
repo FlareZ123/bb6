@@ -9,8 +9,7 @@ namespace BB6.Agent14Canonical57Raw139AcceptedE0SixDirect
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6ChampionArithmetic
-open BB6.Agent31FourHoleRoster
-open BB6.Agent6Raw139Normalized
+open BB6.Agent14Raw139Core
 open BB6.Agent14Raw139NormalizedLocalAccepted
 open BB6.Agent14Raw139NormalizedE0CutsFinite
 open BB6.Agent14Raw139NormalizedAcceptedE0Six61Local
