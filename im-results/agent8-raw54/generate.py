@@ -49,6 +49,7 @@ def sweeps():
 def main(sharded=False):
     ap=argparse.ArgumentParser()
     ap.add_argument("--sweeps-only",action="store_true")
+    ap.add_argument("--complete-sharded",action="store_true")
     a=ap.parse_args()
     certs,imports=sweeps()
     if a.sweeps_only:
@@ -118,7 +119,7 @@ def main(sharded=False):
     residual=[row for row in rows if row not in certs]
     assert residual==[line.split(":")[1] for line in (ROOT/"unresolved.txt").read_text().splitlines()]
     assert not residual
-    if sharded:
+    if sharded or a.complete_sharded:
         from generate_sharded_children import assemble
         assemble(ROOT,tree,certs,imports,PARENT,BOUND,"LB","BB6.Agent8Raw54","Raw54Base",Counter(split=1515,cycle=25133,last=8567,open=1146))
         return
