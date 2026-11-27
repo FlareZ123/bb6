@@ -7,7 +7,9 @@ theorem one0010 (k : Nat) (r : Ray) :
     Runs (8*k+20) (S k (pre [false,false,true,false] r)) (S (k+4) r) := by
   have h : Runs (4*k+10) (S k (pre [false,false,true,false] r))
       (S (k+1) (pre P (pre [true,true] r))) := by
-    simpa only [Nat.mul_zero,Nat.add_zero] using ret1 k 0 r
+    have h0 := ret1 k 0 r
+    simp only [Nat.mul_zero,Nat.add_zero] at h0
+    exact h0
   rw [S_push] at h
   have j := one (k+2) (cons true r)
   have g := chain h j
