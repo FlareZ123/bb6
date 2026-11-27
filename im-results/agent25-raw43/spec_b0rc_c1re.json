@@ -778,15 +778,13 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 155,
+  "growth": {
+    "155": {
       "table": "1RB---_1RC0RC_0RD1RE_1LD0RB_1LF1LA_0LE0LE",
-      "query": [
-        "open"
-      ],
-      "searched": true
+      "partial": "BB6.Agent25Raw43B0RCC1REM155.table",
+      "never": "BB6.Agent25Raw43B0RCC1REM155.never",
+      "module": "Raw43B0RCC1REM155"
     }
-  ]
+  },
+  "unresolved": []
 }
