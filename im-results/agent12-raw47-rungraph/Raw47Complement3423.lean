@@ -58,6 +58,12 @@ theorem packR_ones (n : Nat) (d : List Bool) :
   | zero => rfl
   | succ n ih => simp only [List.replicate_succ,List.cons_append,packR,rep,ih,List.append_assoc,oo]
 
+theorem packR_allZeros (n : Nat) : packR (List.replicate n false) = rep oz n := by
+  simpa only [List.append_nil,packR] using packR_zeros n []
+
+theorem packR_allOnes (n : Nat) : packR (List.replicate n true) = rep oo n := by
+  simpa only [List.append_nil,packR] using packR_ones n []
+
 theorem zeroComm (n : Nat) : [false] ++ rep zz n = rep zz n ++ [false] := by
   exact rotate false [false] n
 
@@ -73,7 +79,7 @@ theorem enterC (k : Nat) (d R : List Bool) :
     cases d <;> rfl
   have h2 : run0 ctr (2*k) ⟨1,[true,true] ++ packL d,[true] ++ rep oo k ++ zz ++ R⟩ =
       some ⟨1,[true] ++ rep zz k ++ [true] ++ packL d,[true] ++ zz ++ R⟩ := by
-    simpa only [List.append_assoc] using
+    simpa only [List.append_assoc,List.cons_append,List.nil_append] using
       sweepR ctr 1 [true] [true] oo zz 2 (by intro L R; rfl) k ([true] ++ packL d) (zz ++ R)
   have h3 : run0 ctr 3 ⟨1,[true] ++ rep zz k ++ [true] ++ packL d,[true] ++ zz ++ R⟩ =
       some ⟨2,[false,true] ++ rep zz (k+1) ++ [true] ++ packL d,R⟩ := rfl
@@ -91,7 +97,7 @@ theorem decrementPrefix (k j : Nat) (d R : List Bool) :
   have h2 : run0 ctr (2*j)
       ⟨2,[false,true] ++ rep zz (k+1) ++ [true] ++ packL d,rep oz j ++ oo ++ R⟩ =
       some ⟨2,[false] ++ rep zz j ++ [true] ++ rep zz (k+1) ++ [true] ++ packL d,oo ++ R⟩ := by
-    simpa only [List.nil_append,List.append_assoc] using
+    simpa only [List.nil_append,List.append_assoc,List.cons_append] using
       sweepR ctr 2 [false] [] oz zz 2 (by intro L R; rfl) j
         ([true] ++ rep zz (k+1) ++ [true] ++ packL d) (oo ++ R)
   have h3 : run0 ctr 3
@@ -125,7 +131,7 @@ theorem decrementPrefix (k j : Nat) (d R : List Bool) :
   rw [hL,hR] at h6
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6
   rw [show 2*k+4+2*j+3+2*(j+1)+1+4 = 2*k+4*j+14 by omega] at H
-  exact H
+  simpa only [List.append_assoc] using H
 
 -- On exhaustion, the right counter is refilled with k+1 ones and a
 -- longer tail, and the left ray is reset to blank.
@@ -134,12 +140,12 @@ theorem resetPrefix (k n : Nat) (T : List Bool) :
       some (cfg 0 [] (List.replicate (k+1) true) (rep oo n ++ [true] ++ T)) := by
   have h1 : run0 ctr (2*k+4) (cfg k [] (List.replicate n false) T) =
       some ⟨2,[false,true] ++ rep zz (k+1) ++ [true],rep oz n ++ zo ++ T⟩ := by
-    simpa only [cfg,packR_zeros,packR,packL,List.append_nil,List.append_assoc] using
+    simpa only [cfg,packR_allZeros,packR,packL,List.append_nil,List.append_assoc] using
       enterC k [] (rep oz n ++ zo ++ T)
   have h2 : run0 ctr (2*n)
       ⟨2,[false,true] ++ rep zz (k+1) ++ [true],rep oz n ++ zo ++ T⟩ =
       some ⟨2,[false] ++ rep zz n ++ [true] ++ rep zz (k+1) ++ [true],zo ++ T⟩ := by
-    simpa only [List.nil_append,List.append_assoc] using
+    simpa only [List.nil_append,List.append_assoc,List.cons_append] using
       sweepR ctr 2 [false] [] oz zz 2 (by intro L R; rfl) n
         ([true] ++ rep zz (k+1) ++ [true]) (zo ++ T)
   have h3 : run0 ctr 1
@@ -171,7 +177,7 @@ theorem resetPrefix (k n : Nat) (T : List Bool) :
       some ⟨0,[],oo ++ zz ++ rep oo (k+1) ++ zo ++ rep oo n ++ [true] ++ T⟩ := rfl
   have H := join0 (join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6) h7
   rw [show 2*k+4+2*n+1+2*(n+1)+2+2*(k+1)+8 = 4*k+4*n+19 by omega] at H
-  simpa only [cfg,left0,packR_ones,packR,List.append_nil,List.append_assoc,rep] using H
+  simpa only [cfg,left0,packR_allZeros,packR_allOnes,packR,List.append_nil,List.append_assoc,rep] using H
 
 -- Canonical finite low-endian left digits: no redundant final zero.
 def Valid : List Bool → Prop
@@ -338,8 +344,8 @@ theorem goodStep (k : Nat) (d w T : List Bool) (hd : Valid d) (hb : Balance k d 
         decrementPrefix k j d (packR s ++ zo ++ T)
     have h2 : run0 ctr (2*((carry pushed).1+1))
         ⟨0,[true] ++ packL pushed,zz ++ packR w' ++ zo ++ T⟩ =
-        some (cfg (carry pushed).1 (carry pushed).2 w' T) :=
-      carryRun pushed hp (zz ++ packR w' ++ zo ++ T)
+        some (cfg (carry pushed).1 (carry pushed).2 w' T) := by
+      simpa only [cfg,List.append_assoc] using carryRun pushed hp (zz ++ packR w' ++ zo ++ T)
     refine ⟨(carry pushed).1,(carry pushed).2,w',T,
       2*k+4*j+14+2*((carry pushed).1+1),by omega,carryValid pushed hp,?_,join0 h1 h2⟩
     have hm : val pushed = 2^k*(1+2*val d) := by simp only [pushed,valZeros,val,if_true]
