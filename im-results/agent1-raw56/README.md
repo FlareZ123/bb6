@@ -29,7 +29,7 @@ The focused retry [45896758638](https://github.com/FlareZ123/bb6/actions/runs/45
 
 The first thin consumer attempt [45900392377](https://github.com/FlareZ123/bb6/actions/runs/45900392377) exposed a type mismatch between the generated child table and the hand-written refinement. `Raw56RootConsumer.lean` now proves the exact table equality with `sameTable_sound (by decide)` and transports the child theorem across it. The focused rerun [45912699461](https://github.com/FlareZ123/bb6/actions/runs/45912699461) **succeeded**: 747 project modules compiled; `child_table_eq` has axioms `[propext, Quot.sound]`; `sound19_closed` has axioms `[propext, Classical.choice, Quot.sound]`; and the strict checker accepted all seven profiles. It exported artifact `raw56-root-frontier-source-accepted`, ID **15160313745**, SHA-256 `6513147b3929ab6b707225b6592a882025e234d498ed8baca40216489b469b3d` (220,548,045 bytes).
 
-No Raw56 parent Cover, full parent closure, global roster decrement or BB(6) upper bound is claimed. The global conditional baseline is Canonical58 after the Raw113 integration; this local Raw56 frontier does not alter that roster.
+No Raw56 parent Cover, full parent closure, global roster decrement or BB(6) upper bound is claimed. The global conditional baseline is maintained separately; this local Raw56 frontier does not alter that roster.
 
 ## E1=0RC: verified C1=1RD subbranch (2026-11-27)
 
@@ -49,7 +49,7 @@ Original Lean 4.36.0-rc2 was reconstructed locally. The base is the source-accep
 
 ## Complete candidate coverage of the other sixteen C1 choices
 
-See [Portfolio.md](Portfolio.md) for the exact replay spec, combined abstraction method, and mixed-bound requirement. Every remaining C1 choice is candidate-complete; the full source checks and mixed-bound consumer are still outstanding. No local parent or global roster closure is asserted.
+See [Portfolio.md](Portfolio.md) for the exact replay spec, combined abstraction method, and mixed-bound requirement. Every remaining C1 choice is candidate-complete. The exact conditional mixed-bound composition and root 19→18 adapter are now locally source-checked (see Portfolio.md); the concrete nineteen-branch proof-object union remains outstanding. No local parent or global roster closure is asserted.
 
 ## Reproduction of C1=1RD
 
