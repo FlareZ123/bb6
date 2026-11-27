@@ -7,6 +7,10 @@ on:
         type: choice
         options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
+      raw36_child:
+        description: 'C1 move index 0..23 for the Raw36 six-hole child audit (F-targets are symmetry aliases)'
+        type: string
+        default: '1'
       raw43_extra_child:
         description: 'Raw43 E1 sibling variant'
         type: string
@@ -71,18 +75,24 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check Raw36 canonical cut and five-hole pilot
+      - name: Check Raw36 canonical cut, E/F symmetry and selected child
         if: inputs.target == 'raw36-pilot'
+        env:
+          CHILD: ${{ inputs.raw36_child }}
         run: |
           set -euo pipefail
+          [[ "$CHILD" =~ ^(0|[1-9]|1[0-9]|2[0-3])$ ]]
+          [[ $((CHILD % 6)) != 5 ]] || { echo "F target covered by the E/F source bridge"; exit 1; }
+          printf -v kid 'kid%02d' "$CHILD"
+          printf -v module 'Raw36Kid%02d' "$CHILD"
           root=im-results/agent29-raw36
           work=/tmp/a29-raw36-pilot
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python "$root/generate.py" 1
-          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw36-pilot --theorem BB6.Agent29Raw36.kid01_bound --weighted-bound 162 --artifact-name raw36-pilot-proof --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" --provenance-input "$root/generate.py" "$root/Raw36Kid01.lean" "$root/Raw36Symmetry.lean" 2>&1 | tee /tmp/a29-raw36.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36.log BB6.Agent29Raw36.cover BB6.Agent29Raw36.kid01_bound BB6.Agent29Raw36.childF_to_E BB6.Agent29Raw36.childF_bound
+          python "$root/generate.py" "$CHILD"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw36-pilot --theorem "BB6.Agent29Raw36.${kid}_bound" --weighted-bound 162 --artifact-name raw36-pilot-proof --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" --provenance-input "$root/generate.py" "$root/${module}.lean" "$root/Raw36Symmetry.lean" 2>&1 | tee /tmp/a29-raw36.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36.log BB6.Agent29Raw36.cover "BB6.Agent29Raw36.${kid}_bound" BB6.Agent29Raw36.childF_to_E BB6.Agent29Raw36.childF_bound
           cp /tmp/a29-raw36.log "$work/audit.log"
       - name: Retain Raw36 pilot proof
         if: inputs.target == 'raw36-pilot'
