@@ -2,6 +2,20 @@ name: Agent 50 Raw47 accepted depth-3 composition
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [compose, far-batch]
+        default: compose
+      shard:
+        type: number
+        default: 0
+      offset:
+        type: number
+        default: 0
+      size:
+        type: number
+        default: 12
 
 permissions:
   contents: read
@@ -9,6 +23,7 @@ permissions:
 
 jobs:
   lean:
+    if: inputs.mode == 'compose'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -64,4 +79,54 @@ jobs:
             .tmp/a50-raw47-accepted108/build/
             .tmp/a50-raw47-accepted108/manifest.json
             .tmp/a50-raw47-accepted108/log
+          if-no-files-found: error
+
+  batch:
+    if: inputs.mode == 'far-batch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45940910607
+          name: raw47-broad-far-1
+          path: /tmp/a50-far
+      - name: Check a bounded batch of previously unaccepted FAR parents
+        env:
+          SHARD: ${{ inputs.shard }}
+          OFFSET: ${{ inputs.offset }}
+          SIZE: ${{ inputs.size }}
+        run: |
+          set -euo pipefail
+          test "$SHARD" != 1
+          D=im-results/agent50-raw47-depth3
+          W=.tmp/a50-raw47-far-batch
+          mkdir -p "$W/imports" "$W/build"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python "$D/generate_broad_far.py" "$W/imports" "$SHARD" "$OFFSET" "$SIZE"
+          M=$(find /tmp/a50-far -name manifest.json -print -quit)
+          test -n "$M"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 FAR shard $SHARD offset $OFFSET size $SIZE" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$D/broad-far-parents.b64" --provenance-input "$D/broad-far-bank.xz.b64" "$W"/imports/Raw47D3FAR*.lean 2>&1 | tee "$W/log"
+          python - "$W/log" "$W/imports/ids.txt" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          for i in map(int,open(sys.argv[2])):
+              name=f'BB6.Agent50.Raw47D3FAR{i}.all_quotient'
+              m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
+              else: assert f"'{name}' does not depend on any axioms" in log,name
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw47-far-${{ inputs.shard }}-${{ inputs.offset }}-${{ inputs.size }}
+          path: .tmp/a50-raw47-far-batch/
           if-no-files-found: error

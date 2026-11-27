@@ -9,6 +9,10 @@ assert 0<=shard<8
 mask=base64.b64decode((here/'broad-far-parents.b64').read_text())
 assert len(mask)==1212 and set(mask)=={0,1} and sum(mask)==674
 ids=[i for i,v in enumerate(mask) if v][shard::8]
+if len(sys.argv)>3:
+    offset,size=map(int,sys.argv[3:5])
+    assert 0<=offset<len(ids) and 1<=size<=len(ids)-offset
+    ids=ids[offset:offset+size]
 raw=(here/'raw47-depth3.open').read_bytes()
 assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d'
 rows=raw.decode().splitlines()
