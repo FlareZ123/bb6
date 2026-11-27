@@ -47,21 +47,23 @@ For source-accepted children, use manual `agent10-four-hole.yml` targets `raw43-
 
 ### Expanded five-branch candidate bank
 
-All 31 five-hole child specs across B1=1RC,0RC,0RA,1RA,1LB now have complete certificates. Bound candidates 382,620,390,519,289 respectively. Source accepted: full 1RC, 0RC and 0RA parents (45934715974,45937283185,45953249331). New 1RA and 1LB source gates not yet dispatched due to saturated runner queue. 1RA last two machines solved by period-12 block-DFA; 1LB last five machines solved by locally kernel-checked universal growth lemmas (`Raw43B1LBC0LAGrowth.lean`, `Raw43B1LBC1RAGrowth.lean`, `Raw43B1LBC1LEM103.lean`). See agent25 memory for exact run and dispatch details. `Raw43ParentCutExpandedFive.lean` is the candidate 23→5 canonical parent reduction at 1713; all outstanding child and composition acceptance must succeed before this reduction is a certified result. Other B1 branches with outstanding work include 0LA,0LE,1LA,1LE,1RE. The 0LA candidate is now complete (below). Manual `raw43-parent-reuse` mode `expandedfive` reuses successful artifacts with explicit pins and validates their exact source identities. No universal BB6 bound yet.
+All 31 five-hole child specs across B1=1RC,0RC,0RA,1RA,1LB now have complete certificates. Bound candidates 382,620,390,519,289 respectively. Source accepted: full 1RC, 0RC and 0RA parents (45934715974,45937283185,45953249331). New 1RA and 1LB source gates not yet dispatched due to saturated runner queue. 1RA last two machines solved by period-12 block-DFA; 1LB last five machines solved by locally kernel-checked universal growth lemmas (`Raw43B1LBC0LAGrowth.lean`, `Raw43B1LBC1RAGrowth.lean`, `Raw43B1LBC1LEM103.lean`). See agent25 memory for exact run and dispatch details. `Raw43ParentCutExpandedFive.lean` is the candidate 23→5 canonical parent reduction at 1713; all outstanding child and composition acceptance must succeed before this reduction is a certified result. Other B1 branches with outstanding work include 0LE,1LA,1LE,1RE. The 0LA candidate is now complete (below). Manual `raw43-parent-reuse` mode `expandedfive` reuses successful artifacts with explicit pins and validates their exact source identities. No universal BB6 bound yet.
 
-## B1=0LA: complete candidate branch
+## B1=0LA: source-accepted parent bound 1771
 
-`Raw43B0LACut.lean` is an eight-residual canonical cut at candidate weighted bound 1771; C1=0RC has a two-state FAR and the other side closures are cycles or E/F aliases. `Raw43B0LACompose.lean` connects the child bounds to the quotient and ordinary completion predicates. Both parent modules still require original-source acceptance.
+Full eight-child parent composition: [45955232997](https://github.com/FlareZ123/bb6/actions/runs/45955232997), `BB6.Agent25Raw43B0LA.all_completions`. This closes all 25^6 raw completions.
+
+`Raw43B0LACut.lean` is an eight-residual canonical cut at candidate weighted bound 1771; C1=0RC has a two-state FAR and the other side closures are cycles or E/F aliases. `Raw43B0LACompose.lean` connects the child bounds to the quotient and ordinary completion predicates. Both parent modules are source-accepted.
 
 | C1 | Weighted bound | FAR | BiDFA | Late last | Late cycle | Growth | Source acceptance |
 |---|---:|---:|---:|---:|---:|---:|---|
 |0LA|337|86|28|2|0|0|[45940147007](https://github.com/FlareZ123/bb6/actions/runs/45940147007) success|
-|0LB|129|94|128|0|0|0|[45953737515](https://github.com/FlareZ123/bb6/actions/runs/45953737515) dispatched|
-|0LE|172|408|105|0|1|0|[45953742298](https://github.com/FlareZ123/bb6/actions/runs/45953742298) dispatched|
-|0RE|235|445|28|1|0|0|[45953747932](https://github.com/FlareZ123/bb6/actions/runs/45953747932) dispatched|
-|1LA|113|226|38|0|0|0|[45953753821](https://github.com/FlareZ123/bb6/actions/runs/45953753821) dispatched|
-|1LB|195|204|104|0|6|0|[45953757431](https://github.com/FlareZ123/bb6/actions/runs/45953757431) dispatched|
-|1LE|158|666|92|0|1|0|[45953762245](https://github.com/FlareZ123/bb6/actions/runs/45953762245) dispatched|
+|0LB|129|94|128|0|0|0|[45953737515](https://github.com/FlareZ123/bb6/actions/runs/45953737515) success|
+|0LE|172|408|105|0|1|0|[45953742298](https://github.com/FlareZ123/bb6/actions/runs/45953742298) success|
+|0RE|235|445|28|1|0|0|[45953747932](https://github.com/FlareZ123/bb6/actions/runs/45953747932) success|
+|1LA|113|226|38|0|0|0|[45953753821](https://github.com/FlareZ123/bb6/actions/runs/45953753821) success|
+|1LB|195|204|104|0|6|0|[45953757431](https://github.com/FlareZ123/bb6/actions/runs/45953757431) success|
+|1LE|158|666|92|0|1|0|[45953762245](https://github.com/FlareZ123/bb6/actions/runs/45953762245) success|
 |1RE|1771|379|54|4|4|4|[45940958043](https://github.com/FlareZ123/bb6/actions/runs/45940958043) success|
 
 All eight specs `spec_b0la_c*.json` have zero unresolved candidates. For 1RE, four difficult machines have constructive nonhalting invariants accepted together by source CI 45940958043. M234 returns from A([],0 1^(5n+13)) to A([],0 1^(5n+18)) in 22n+85 steps. M292 implements an unbounded digit-stack grammar with five-cell blocks. M195 and M200 share a sweep: A([1],00000001 (000001)^n T) returns to the same section with n+1 and terminal T toggled between empty and 01. The 26-step entry, 12-step right transfer, boundary turn (46/32 or 44/30), and 20/18-step left transfer and finish prove closure by positive-cost macro steps. See `Raw43B0LAC1REM{234,292,195200}.lean` for quantified arbitrary-tail equations and genuine blank-start bridges; these are included in the accepted 1RE child proof.
@@ -74,19 +76,26 @@ The canonical split has twelve nontrivial A1 child cylinders. Complete candidate
 
 | A1 | Weighted candidate threshold | Open leaves still unresolved | Source gate |
 |---|---:|---:|---|
-|0LA|4174|14|not closed|
+|0LA|4174|6|not closed|
 |0LB|132|0|[45953260396](https://github.com/FlareZ123/bb6/actions/runs/45953260396) success|
-|0LC|190|0|candidate|
-|0LD|127|0|candidate|
-|0LE|489|29|not closed|
-|0RC|126|0|candidate|
-|0RE|119|0|candidate|
-|1LB|325|26|not closed|
-|1LC|52|0|candidate|
-|1LE|602|1|two growth drafts pending source check|
-|1RC|55|0|candidate|
-|1RE|134|3|not closed|
+|0LC|190|0|[45956808526](https://github.com/FlareZ123/bb6/actions/runs/45956808526) queued|
+|0LD|127|0|[45956818528](https://github.com/FlareZ123/bb6/actions/runs/45956818528) queued|
+|0LE|489|0|[45955470096](https://github.com/FlareZ123/bb6/actions/runs/45955470096) pending|
+|0RC|126|0|[45956824286](https://github.com/FlareZ123/bb6/actions/runs/45956824286) queued|
+|0RE|119|0|[45956829850](https://github.com/FlareZ123/bb6/actions/runs/45956829850) queued|
+|1LB|325|0|[45954656171](https://github.com/FlareZ123/bb6/actions/runs/45954656171) success|
+|1LC|52|0|[45956836451](https://github.com/FlareZ123/bb6/actions/runs/45956836451) queued|
+|1LE|602|0|[45954501034](https://github.com/FlareZ123/bb6/actions/runs/45954501034) success|
+|1RC|55|0|[45956842821](https://github.com/FlareZ123/bb6/actions/runs/45956842821) queued|
+|1RE|134|0|[45954593167](https://github.com/FlareZ123/bb6/actions/runs/45954593167) success|
 
-Candidate thresholds for unresolved children are not certified upper bounds. All twelve banks are persisted in `spec_b1la_a*.json`. Lag-XOR abstraction in `discover_abstract.js` transfers Agent19's compression to M147/M239 (1512 graph states; lag [8,3,2,2,1,1] both sides). A1=1LE M468 uses asymmetric rungram [3,2,2,3,1] vs width 8. M805 has six-one growth in 18n+27 steps from blank-entry B([],1^(6n+4)); M122 has three-pair growth in 36n+63 steps from A([], (01)^(3n+3)). Their Lean sources are drafts until CI passes.
+Candidate thresholds for unresolved children are not certified upper bounds. All twelve banks are persisted in `spec_b1la_a*.json`. Lag-XOR abstraction in `discover_abstract.js` transfers Agent19's compression to M147/M239 (1512 graph states; lag [8,3,2,2,1,1] both sides). A1=1LE M468 uses asymmetric rungram [3,2,2,3,1] vs width 8. M805 has six-one growth in 18n+27 steps from blank-entry B([],1^(6n+4)); M122 has three-pair growth in 36n+63 steps from A([], (01)^(3n+3)). Both growth proofs and M823's positive-cost ternary digit-stack invariant are source-accepted in CI 45954501034. M823 uses arbitrary-tail 2–4 step closure rules on A/D sections with right (001)^k111 and left a two-bit header followed by triple digits and an optional two-bit terminal.
 
-Manual `raw43-b0la-compose` now uses the same exact source/manifest consumer as prior branches. Once all eight child gates pass, supply explicit C1 run pins. Local runtime unavailable; no new workflow introduced.
+Manual `raw43-b0la-compose` now uses the same exact source/manifest consumer as prior branches. All eight gates passed and the exact pinned parent composition succeeded. Local runtime unavailable; no new workflow introduced.
+
+### Decider extensions for B1=1LA
+
+- A1=1RE: M624/M625/M626 closed by asymmetric mod-five rungrams (95/420/433 abstract states); source accepted.
+- A1=1LB: 24 unary-growth leaves closed by modulus 6 or 12 on the one-runs. The remaining E/F pair M25/M87 uses period-2/4 block compression, c=3,m=2,k=12, 1132 graph states. Source accepted.
+- A1=0LE: 25 leaves closed by period-specific block summaries. M850–852 have common explicit ten-state FAR code `001239949596799895999` (left grammar bottom-up 11 then repetitions of 100, optional leading zero; absorbing invalid sink). M776 uses seven-state right FAR `101213433533623` (alternating prefix on unary ones, length mod 4). Arbitrary-width discovery checker in `discover_far_big.js`; original-source checker unchanged. Source gate pending.
+- A1=0LA: asymmetric lag-XOR resolves M145/238,M155/247,M354/376. Aligned block-symbol rungram (new width/k/c/m in discover_abstract.js) resolves M156/248 at width 6,k=5,c=2,m=3 (17729 abstract states). Only M110/202,M151/243,M355/377 remain. Their mixed-period sweeps resist symmetric and asymmetric rungrams, period-block compression, lag-XOR, k-future trie folding and trace-restricted variants. These failures are not evidence of halting. The complete exact census and certificates are in spec_b1la_a0la.json.
