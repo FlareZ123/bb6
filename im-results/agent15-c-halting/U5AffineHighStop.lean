@@ -98,16 +98,16 @@ private theorem q0_parent_reach_implies_X (t : Nat) (ht : 1≤t)
   have hy : ((48*t+2)+3*(40*t+1)-9)/4=42*t-1 := by omega
   simpa only [CReach,hx,hy] using h2
 
-theorem terminal_excluded (w s m : Nat)
+theorem terminal_excluded_of_x (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
-    (hm : 32*s=32+840*w+m) (hc : wFilter w=true) :
+    (hm : 32*s=32+840*w+m) (hX : ¬ CReach (44*(m/8)-1) (42*(m/8)-1)) :
     ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
   let t := m/8
   have hp : m+1=8*t+1 := by dsimp [t]; omega
   have hid := BB6.Agent3U5M16Residual.u5_m8_t_identity w s m t hs hm hp
   obtain ⟨n,ht,_⟩ := residual_index w t hid
   have htge : 60≤t := by omega
-  have hX := x_excluded w t hid hc
+  change ¬ CReach (44*t-1) (42*t-1) at hX
   have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
   have hm' : 32*s=32+105*(8*w)+m := by omega
@@ -133,9 +133,9 @@ theorem terminal_excluded (w s m : Nat)
       have hd' : 4 ∣ m+1 := hdecomp ▸ Nat.dvd_mul_right_of_dvd hd U
       omega
 
-theorem high_stop_excluded (w s m : Nat)
+theorem high_stop_excluded_of_x (w s m : Nat)
     (hs : 211*s+129=5*2^(201+3360*w))
-    (hm : 32*s=32+840*w+m) (hc : wFilter w=true) :
+    (hm : 32*s=32+840*w+m) (hX : ¬ CReach (44*(m/8)-1) (42*(m/8)-1)) :
     ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
   have hp : 8 ∣ (2:Nat)^(201+3360*w) := by
     change 2^3 ∣ 2^(201+3360*w)
@@ -149,7 +149,7 @@ theorem high_stop_excluded (w s m : Nat)
     have hs' : 211*s+129=5*2^(201+420*(8*w)) := by
       simpa only [show 201+420*(8*w)=201+3360*w by omega] using hs
     have ht := (BB6.Agent3U5M8.u5_residual_six_even_right_chain (8*w) s hs').mp h
-    apply terminal_excluded w s m hs hm hc
+    apply terminal_excluded_of_x w s m hs hm hX
     simpa only [show 201+420*(8*w)=201+3360*w by omega] using ht
   intro h
   have h' : CReach (17+64*(2*s+1)) (28+96*(2*s+1)) := by
@@ -167,6 +167,23 @@ theorem high_stop_excluded (w s m : Nat)
   · rw [hR.1,hR.2] at hP
     exact hB hP
 
+theorem terminal_excluded (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m) (hc : wFilter w=true) :
+    ¬ CReach (302+512*s-4*(201+3360*w)) 3 := by
+  have hp : m+1=8*(m/8)+1 := by omega
+  have hid := BB6.Agent3U5M16Residual.u5_m8_t_identity w s m (m/8) hs hm hp
+  exact terminal_excluded_of_x w s m hs hm (x_excluded w (m/8) hid hc)
+
+theorem high_stop_excluded (w s m : Nat)
+    (hs : 211*s+129=5*2^(201+3360*w))
+    (hm : 32*s=32+840*w+m) (hc : wFilter w=true) :
+    ¬ CReach (2*(39+64*s)+3) (3*(39+64*s)+7) := by
+  have hp : m+1=8*(m/8)+1 := by omega
+  have hid := BB6.Agent3U5M16Residual.u5_m8_t_identity w s m (m/8) hs hm hp
+  exact high_stop_excluded_of_x w s m hs hm (x_excluded w (m/8) hid hc)
+
+#print axioms high_stop_excluded_of_x
 #eval (List.range 65536).foldl (fun n w => if wFilter w then n+1 else n) (0 : Nat)
 #eval (List.range 8).map (fun r => (List.range 8192).foldl
   (fun n j => if wFilter (8*j+r) then n+1 else n) (0 : Nat))
