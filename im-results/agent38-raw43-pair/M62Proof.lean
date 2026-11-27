@@ -98,6 +98,8 @@ theorem live (N : Nat) :
       obtain ⟨a,z',ha,hr,hi'⟩ := step_inv z hi
       exact ⟨t+a,z',by omega,join0 hz hr,hi'⟩
 
+open BB6Coverage.Agent50Zipper
+
 /-- Original six-state semantics: EVERY completion of missing F1
   is nonhalting from the blank tape. -/
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
