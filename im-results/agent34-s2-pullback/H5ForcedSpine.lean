@@ -144,7 +144,7 @@ theorem h5_spine_terminal_bits : spineBits h5Spine 23=3 := by decide
 theorem h5_spine_terminal_residue :
     spineResidue h5Spine 23 (stopResidue (J 0) (M 0 0)) = ⟨7,0⟩ := by decide
 
-private theorem h5_root_matches23 (r w k : Nat)
+theorem h5_root_matches23 (r w k : Nat)
     (he : k+J r+3*M r w+4=2^(2*M r w+2)*(J r+2)) :
     Matches 23 (2*J r+1) k (stopResidue (J 0) (M 0 0)) := by
   have hsource : Matches 23 (2*J r+1) k (stopResidue (J r) (M r w)) :=
