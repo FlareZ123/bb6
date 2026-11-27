@@ -6,6 +6,14 @@ on:
         description: Exact source revision
         required: true
         type: string
+      kind:
+        description: Audit target
+        required: true
+        type: choice
+        default: zerolf
+        options:
+          - zerolf
+          - raw139-local
       parent_run_id:
         description: Completed conditional parent audit run (empty for proof-only)
         type: string
@@ -31,26 +39,28 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Generate exact 3862 proof shards
+        if: inputs.kind == 'zerolf'
         run: |
           set -euo pipefail
           base=im-results/agent14-raw139-e0-zeroLF
           python3 im-results/agent13-coverage/unpack.py
           python3 "$base/unpack3862.py" .tmp/zeroLF3862/imports
       - uses: actions/download-artifact@v4
-        if: inputs.parent_run_id != ''
+        if: inputs.kind == 'zerolf' && inputs.parent_run_id != ''
         with:
           name: raw139-e0-zeroLF-parent-certified
           run-id: ${{ inputs.parent_run_id }}
           github-token: ${{ github.token }}
           path: .tmp/zeroLF3862/conditional
       - uses: actions/download-artifact@v4
-        if: inputs.proof_run_id != ''
+        if: inputs.kind == 'zerolf' && inputs.proof_run_id != ''
         with:
           name: raw139-zeroLF3862-certified
           run-id: ${{ inputs.proof_run_id }}
           github-token: ${{ github.token }}
           path: .tmp/zeroLF3862/exception
       - name: Check proof or compose with the conditional parent
+        if: inputs.kind == 'zerolf'
         env:
           PARENT_RUN: ${{ inputs.parent_run_id }}
           PROOF_RUN: ${{ inputs.proof_run_id }}
@@ -77,7 +87,44 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' "$out/log"
           grep -F "'$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" "$out/log"
           find /tmp/agent14-zeroLF3862 -name '*.olean' -exec cp '{}' "$out/build/" ';'
+      - name: Compile roster-independent Raw139 normalized join
+        if: inputs.kind == 'raw139-local'
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          work=/tmp/agent14-raw139-local
+          mkdir -p "$work"
+          python3 tools/test_lean_compile_module_index.py
+          python3 tools/lean_compile_closure.py \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedLocalAcceptedCovers.lean \
+            --workdir "$work/build" \
+            --jobs 4 \
+            --manifest "$work/manifest.json" \
+            --label agent14-raw139-local-normalized \
+            --provenance-input im-results/agent14-raw139-d0-generic/Raw139NormalizedLocalAcceptedCovers.lean \
+            --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
+            --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            | tee "$work/log"
+          ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedLocalAccepted.raw139_cover_after_accepted_local' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
       - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'raw139-local'
+        with:
+          name: agent14-raw139-local-normalized
+          path: |
+            /tmp/agent14-raw139-local/log
+            /tmp/agent14-raw139-local/manifest.json
+            /tmp/agent14-raw139-local/build/Raw139NormalizedLocalAcceptedCovers.olean
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'zerolf'
         with:
           name: ${{ inputs.parent_run_id == '' && 'raw139-zeroLF3862-certified' || 'raw139-e0-zeroLF-unconditional-certified' }}
           path: .tmp/zeroLF3862/final
