@@ -29,7 +29,7 @@ theorem reset_descent_middle_321 (l r : Tape)
               true, false, true, true, false, false] l)
         (pre [false, true, false] r)) := by
   rw [← decompose_bit l true hl, ← decompose_bit r true hr]
-  rfl
+  simp [run, step, moveR, moveL, other, d, pre, tail, cons]
 
 /-
 The n=2 endpoint after the repeated-P consumer.  The right word here is
@@ -53,7 +53,7 @@ theorem reset_descent_n2_middle_316 (l : Tape) (hl : l 0 = true) :
               true, false, false] l)
         (pre [false, true] blank)) := by
   rw [← decompose_bit l true hl]
-  rfl
+  simp [run, step, moveR, moveL, other, d, pre, tail, cons]
 
 #print axioms reset_descent_middle_321
 #print axioms reset_descent_n2_middle_316
