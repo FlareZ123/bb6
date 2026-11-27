@@ -112,6 +112,8 @@ jobs:
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
             --theorem F421PrimaryEvents.iterPrefix \
             --theorem F421PrimaryEvents.iterateAffine \
+            --theorem BB6Coverage.Agent41F421.EpochWords.tertiaryEpoch \
+            im-results/agent41-f421/F421Epoch.lean \
             im-results/agent41-f421/F421Odd.lean \
             im-results/agent41-f421/PrimaryGuard.lean \
             im-results/agent41-f421/F421MergedDrain.lean \

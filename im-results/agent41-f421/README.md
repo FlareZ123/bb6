@@ -20,3 +20,5 @@ The standard blank-start table is `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`, i
 - `primary_events.cpp`, `primary_events.py`, `F421PrimaryEvents.lean`: exact far-prefix event skip and checks, with prefix independence and affine skip proofs.
 - `state-1b.json`, `state-2b.json`: independent finite primitive checkpoints.
 - [FARIncremental.md](FARIncremental.md), `far_incremental.cpp`: exhaustive exclusion of reachable canonical FAR DFA sizes 1–8 in both orientations; larger automata remain open.
+
+**Source-level positive tertiary epoch:** `F421Epoch.lean` now proves the full guarded countdown for arbitrary counter value and head size, using source-level exact odd crossings, mixed-marker drain, and the inductive primary and tail guards. The authentic seed is still computational, and the tertiary-zero source bridge and next secondary primary guard are open. The prior 15-module original closure passed [CI 45961519738](https://github.com/FlareZ123/bb6/actions/runs/45961519738); the new modules were checked locally against its actual artifact.
