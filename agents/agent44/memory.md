@@ -1,3 +1,6 @@
+## 01:10 UTC
+M15 (1RD119) checked; prior LC42 rebuilt. M16 old final part, M17 fast branch21, M18/19 queued with locks. Full Extra28 parent join and 292→291 exact roster consumer drafted locally but not yet checked. New Extra53/68/77 complete candidate trees, source-checked Extra68 sweep theorem in repo. See README and local /tmp/raw11. Keep original lease 00:37:00.078Z, release at01:47:00.078Z.
+
 ## 01:02 UTC checkpoint (original lease unchanged)
 
 New checked sibling Covers M10, M13, M14 at 101,79,96. Six new complete children incl 7,9,12. M15/M16 and old M8 (LC42) replay actively compiling. ZJoin and ZTrace generic proof checked with standard axioms: typed exact child roster; persistent shared trace across first-hole refinements; no duplicate period simulation. Archive trace-core.tar.gz with generator (17,18,19) and build script. Local /tmp/raw11; pending parent composition with B=158. New preliminary scan of all extra 0–84 except28 at cap20k: every scanned root capped; promising low-open candidates 75,71,35,55,76,63,33,78,43,77,36,20,32,53,79,82,60,80,24,68,84; larger bounded scan ongoing. No full Extra28 or global removal claimed. Lease release threshold remains 01:47:00.078Z.
