@@ -1,7 +1,8 @@
 #pragma once
 // Exact shifted-divisor / high-bit greedy reverse block.
 // mode 0: original fitted quotient and two digit weights.
-// mode 1: shifted quotient; mode >=2: allow mode-1 extra high bits.
+// mode 1: shifted quotient; modes 2..5: extra greedy high bits.
+// mode 6: shifted fit with exact fixed-point SIMD quotient estimate.
 // Proof: SHIFTED-REVERSE.md and ShiftedReverseBlock.lean.
 #include <algorithm>
 #include <cstdint>
@@ -17,11 +18,11 @@ static inline int log2floor(U x){return 63-__builtin_clzll(x);}
 static inline int fit(I F,I rem){
  if(F<3||!rem)throw std::runtime_error("reverse clock");
  if(!fit_mode)return int(std::min({rem,I(30),I(std::max(1,log2floor(F)-1))}));
- return int(std::min({rem,I(32),I(log2floor(F-1)+fit_mode-1),F-2}));
+ return int(std::min({rem,I(32),I(log2floor(F-1)+(fit_mode==6?1:fit_mode)-1),F-2}));
 }
 struct Block {
- I q; int k,r; U Y,F,M,G; double inv; bool legacy;
- Block(I end,I rem):q(end-fit(end,rem)),k(fit(end,rem)),r(k),Y(0),F(end),legacy(!fit_mode){
+ I q; int k,r; U Y,F,M,G; double inv; bool legacy,integer;
+ Block(I end,I rem):q(end-fit(end,rem)),k(fit(end,rem)),r(k),Y(0),F(end),legacy(!fit_mode),integer(fit_mode==6){
   if(!legacy){while(r>1&&(U(1)<<r)>U(q)+r-1)--r;}
   G=legacy?F:U(q)+r-1;M=(U(1)<<r)-1;inv=1.0/G;
   if(!legacy&&(U(1)<<r)>G)throw std::runtime_error("shifted fit");
@@ -50,7 +51,20 @@ struct Block {
 #if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
 struct Block8 {
  const Block& b; __m512i G,q,M,Y,shift,one,zero,two; __m512d inv;
- explicit Block8(const Block& x):b(x),G(_mm512_set1_epi64(x.G)),q(_mm512_set1_epi64(x.q)),M(_mm512_set1_epi64(x.M)),Y(_mm512_set1_epi64(x.Y)),shift(_mm512_set1_epi64(x.k)),one(_mm512_set1_epi64(1)),zero(_mm512_setzero_si512()),two(_mm512_set1_epi64(2)),inv(_mm512_set1_pd(x.inv)){}
+ __m512i R,S,cm[5];
+ explicit Block8(const Block& x):b(x),G(_mm512_set1_epi64(x.G)),q(_mm512_set1_epi64(x.q)),M(_mm512_set1_epi64(x.M)),Y(_mm512_set1_epi64(x.Y)),shift(_mm512_set1_epi64(x.k)),one(_mm512_set1_epi64(1)),zero(_mm512_setzero_si512()),two(_mm512_set1_epi64(2)),inv(_mm512_set1_pd(x.inv)){
+  if(x.integer){
+   if(x.k!=x.r||x.G>UINT32_MAX||x.F>INT32_MAX||x.k>30)throw std::runtime_error("integer reciprocal range");
+   constexpr U H=U(1)<<32;
+   // R is clipped only at G=M_radix; the theorem permits equality
+   // in the upper R inequality and requires strictness only for S.
+   U rr=std::min(H-1,((x.M+1)<<32)/x.G),ss=(x.Y<<32)/x.G;
+   R=_mm512_set1_epi64(rr);S=_mm512_set1_epi64(ss);
+   U masks[5]={};for(unsigned i=0;i<unsigned(x.k);++i)
+    for(unsigned j=0;j<5;++j)if((unsigned(x.k-1)-i)>>j&1)masks[j]|=U(1)<<i;
+   for(unsigned j=0;j<5;++j)cm[j]=_mm512_set1_epi64(masks[j]);
+  }
+ }
  static __m512i wt(__m512i w){
   auto a=_mm512_and_si512(w,_mm512_set1_epi64(0xAAAAAAAAAAAAAAAAull));
   auto b=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xCCCCCCCCCCCCCCCCull)),1);
@@ -59,7 +73,34 @@ struct Block8 {
   auto e=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFFFF0000FFFF0000ull)),4);
   return _mm512_add_epi64(_mm512_add_epi64(_mm512_add_epi64(a,b),_mm512_add_epi64(c,d)),e);
  }
+ __m512i parent_integer(__m512i z,__mmask8 active)const{
+  active&=_mm512_cmp_epu64_mask(z,_mm512_set1_epi64(b.F),_MM_CMPINT_LT);
+  z=_mm512_maskz_mov_epi64(active,z);
+  auto X=_mm512_add_epi64(_mm512_sllv_epi64(z,shift),Y);
+  // All inputs are <2^32; VPMULUDQ computes exact 32x32->64.
+  auto B=_mm512_srli_epi64(_mm512_add_epi64(_mm512_mul_epu32(z,R),S),32);
+  auto rem=_mm512_sub_epi64(X,_mm512_mul_epu32(B,G));
+  auto up=_mm512_cmp_epu64_mask(rem,G,_MM_CMPINT_NLT);
+  B=_mm512_mask_add_epi64(B,up,B,one);
+  rem=_mm512_mask_sub_epi64(rem,up,rem,G);
+  // X-qB-D(B) = rem + sum_i (k-1-i)*bit_i(B)*2^i.
+  auto a=_mm512_and_si512(B,cm[0]);
+  auto d=_mm512_slli_epi64(_mm512_and_si512(B,cm[1]),1);
+  auto e=_mm512_slli_epi64(_mm512_and_si512(B,cm[2]),2);
+  auto f=_mm512_slli_epi64(_mm512_and_si512(B,cm[3]),3);
+  auto g=_mm512_slli_epi64(_mm512_and_si512(B,cm[4]),4);
+  auto c0=_mm512_add_epi64(rem,_mm512_add_epi64(_mm512_add_epi64(a,d),_mm512_add_epi64(_mm512_add_epi64(e,f),g)));
+  auto B1=_mm512_add_epi64(B,one);
+  auto low=_mm512_and_si512(B1,_mm512_sub_epi64(zero,B1));
+  auto delta=_mm512_add_epi64(q,_mm512_sub_epi64(_mm512_slli_epi64(low,1),two));
+  auto c1=_mm512_sub_epi64(c0,delta);
+  auto good0=active&_mm512_cmp_epu64_mask(c0,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B,M,_MM_CMPINT_LE);
+  auto good1=active&_mm512_cmp_epu64_mask(c1,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B1,M,_MM_CMPINT_LE);
+  auto c=_mm512_mask_blend_epi64(good1,_mm512_set1_epi64(missing),c1);
+  return _mm512_mask_mov_epi64(c,good0,c0);
+ }
  __m512i parent_vec(__m512i z,__mmask8 active)const{
+  if(b.integer)return parent_integer(z,active);
   active&=_mm512_cmp_epu64_mask(z,_mm512_set1_epi64(b.F),_MM_CMPINT_LT);
   auto X=_mm512_add_epi64(_mm512_sllv_epi64(z,shift),Y);
   X=_mm512_maskz_mov_epi64(active,X);
