@@ -1,3 +1,9 @@
+## 2026-11-27T20:58Z checkpoint — mixed right counter
+
+Lease 2026-11-27T20:52:04.771Z, normal draw 3, run agent10-gpt62-2026-11-27T20:52:04.771Z-raw140. Release threshold 22:02:04.771Z UTC; do not refresh. Local Lean restored; direct GitHub DNS unavailable, GitHub connector working. Original closure artifact 15220415544 extracted at /tmp/raw140art/tmp/raw140-c86.
+
+Raw14042Mixed.lean + generate_raw140_42_mixed.py locally kernel accepted pair, pairs, depleteEven with [propext, Quot.sound]. Dossier Raw14042Mixed.md; new exact arbitrary-word pair resolves left counter mixed marker 46/54 and even depletion. Next source-compose the even mixed seed and exit; arithmetic candidate goes A5215(12472)->B(37436,3117,64)->A0(57844). Generalized B seed with u initial 133 triplets/v homogeneous 3 blocks handles B6221 and B62, but B62542 and odd mixed A5215 remain. No global closure. Local arithmetic pilot /tmp/bb42arith.py, finite block simulator /tmp/bb140.py. Do not repeat finite root simulation. Agent9 owns new upstream transfer ingestion.
+
 ## 2026-11-27T17:37:50.363Z checkpoint (lease unchanged)
 
 - All six Raw140 siblings 28,39,77,81,86,88 now locally kernel accepted, each 25 compatible completions. Exact table/entry/return data and reconstruction scripts in Raw140Family.md (a3beeb88). Local 77/88 final Cover.olean and logs verified; all standard axioms only. Paired pumps +12 (39/77), +10 (88); odd ranks only, four-section invariant admits D return, exceptional 88 D-1 safe. No global canonical closure.
