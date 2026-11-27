@@ -30,8 +30,9 @@ private theorem a12_dr_sweep (k : ℕ) (K : List ℕ)
     have h1 := tok_DR_zero K W (List.replicate (k+1) 0 ++ L)
     have h2 := ih (1 :: K) L
     have h3 := ReachesPlus.trans h1 h2
-    have he := a12_rep_push (1:ℕ) (k+1) K
-    simpa only [he] using h3
+    change ReachesPlus target (tok_DR (2::K) W (List.replicate (k+2) 0 ++ L)) (tok_DR (2::(List.replicate (k+1) 1 ++ (1::K))) W L) at h3
+    rw [a12_rep_push (1:ℕ) (k+1) K] at h3
+    exact h3
 
 private theorem a12_el_sweep (k : ℕ) (K : List ℕ)
     (W : List (ℕ × ℕ)) (L : List ℕ) :
@@ -138,7 +139,8 @@ private theorem a12H_normalizes (p x k : ℕ) (W : List (ℕ × ℕ)) (hx : 3 �
       have h4 := ReachesPlus.trans h1 (ReachesPlus.trans h2 h3)
       right
       exact ⟨(0+1+2*(r+1))%3, 2+4*((0+1+2*(r+1))/3),
-        by omega, by exact h4⟩
+        by omega, by
+          convert h4 using 2 <;> omega⟩
     · left
       exact ⟨x%3,r,0,by omega,by omega,by omega,by simpa using h1⟩
   | succ p ih =>
@@ -167,7 +169,7 @@ private theorem a12S_zero_consumes (r p : ℕ) (W : List (ℕ × ℕ)) :
       (tok_DR (2 :: (2*r+9) :: List.replicate p 1 ++ [0]) W [0,0,0,1]) := by
   have h1 := a12_dr_sweep r (0 :: List.replicate (p+1) 1 ++ [0]) W [1]
   have h2 := tok_DR_1_nil_28 (List.replicate (r+1) 1 ++
-      0 :: List.replicate (p+1) 1 ++ [0]) W
+      (0 :: (List.replicate (p+1) 1 ++ [0]))) W
   have h3 := a12_el_sweep (r+1) (0 :: List.replicate (p+1) 1 ++ [0]) W [0,0,0,1]
   have hz : List.replicate (r+2) (0:ℕ) ++ [0,0,0,1] =
       List.replicate (r+5) 0 ++ [1] := by
