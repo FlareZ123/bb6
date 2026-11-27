@@ -1,0 +1,38 @@
+name: Agent 36 Raw41 hard leaf DFA 9-10 SMT (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    strategy:
+      fail-fast: false
+      matrix:
+        line: [2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install solver
+        run: python3 -m pip install --user z3-solver
+      - name: Seek full nonhalting FAR at DFA 9 and 10
+        run: |
+          set -euo pipefail
+          python3 im-results/agent7-far/far_smt_compose.py \
+            im-results/agent36-raw41/hard-leaves.txt \
+            --line ${{ matrix.line }} --min-dfa 9 --max-dfa 10 --timeout-ms 120000 \
+            2>&1 | tee raw41-deep-${{ matrix.line }}.log
+          python3 im-results/agent36-raw41/check_smt_log.py \
+            < raw41-deep-${{ matrix.line }}.log \
+            | tee raw41-deep-verified-${{ matrix.line }}.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-deep-smt-${{ matrix.line }}
+          path: |
+            raw41-deep-${{ matrix.line }}.log
+            raw41-deep-verified-${{ matrix.line }}.txt
+          retention-days: 30
