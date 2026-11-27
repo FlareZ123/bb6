@@ -55,8 +55,7 @@ theorem qtrace_midpoint_of_live (n s h : Nat) (ps : List QPrefix)
       subst s
       obtain ⟨_,hB,hodd,_⟩ := trace_bounds n 1 B a ht
       have hB' : B=1 := by simp at hB; omega
-      rw [hB'] at hC
-      simp only [Nat.reducePow] at hC
+      change C=B+2*(qCode n 1 (quotient n 1 B) h c).1 at hC
       omega
     · exact Or.inl hs
   unfold qRecoverCanonical
