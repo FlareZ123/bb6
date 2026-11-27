@@ -939,6 +939,23 @@ jobs:
                   shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
                   config["groups"][group] = RETRY_GROUPS[group]
 
+              # Raw112Kid01_01 is deliberately maxRecDepth-patched inside the accepted
+              # r01a-deep shard. When reusing that shard, restore its exact checked
+              # source before merge_shards verifies checkout/source identity.
+              if "r01a-deep" in reused:
+                  deep_source = next(
+                      (d / "raw112-shard-r01a-deep" / "Raw112Kid01_01.lean"
+                       for d in reversed(prior_dirs)
+                       if (d / "raw112-shard-r01a-deep" / "Raw112Kid01_01.lean").is_file()),
+                      None,
+                  )
+                  if deep_source is None:
+                      raise SystemExit("missing patched Raw112Kid01_01.lean in resumed r01a-deep shard")
+                  shutil.copy2(
+                      deep_source,
+                      Path("im-results/agent47-raw112-cut/Raw112Kid01_01.lean"),
+                  )
+
           expected = expected_roots("partial")
           for group in reused:
               expected.update(RETRY_GROUPS[group])
