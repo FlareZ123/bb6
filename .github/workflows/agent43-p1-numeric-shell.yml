@@ -5,7 +5,7 @@ on:
       target:
         description: Arithmetic proof target
         type: choice
-        options: [numeric-shell, chunk-margin]
+        options: [numeric-shell, chunk-margin, word-plane]
         default: numeric-shell
       source_ref:
         description: Exact source commit (optional)
@@ -46,3 +46,14 @@ jobs:
             grep -F "BB6.Agent43P1Complement.$t'" /tmp/chunk-margin.log
           done
           if grep -E 'sorryAx|native_decide' /tmp/chunk-margin.log; then exit 1; fi
+      - name: Compile word-local reverse plane bridge
+        if: inputs.target == 'word-plane'
+        run: |
+          set -eo pipefail
+          N=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$N:im-results/agent45-p1-delayed-carry:im-results/agent9-p1-reverse-block"
+          python tools/lean_compile_deps.py "$N/WordPlaneSource.lean" | tee /tmp/word-plane.log
+          for t in reverseCover_append reverseCover_plane reverseCover_sparse; do
+            grep -F "BB6.Agent43WordPlane.$t'" /tmp/word-plane.log
+          done
+          if grep -E 'sorryAx|native_decide' /tmp/word-plane.log; then exit 1; fi
