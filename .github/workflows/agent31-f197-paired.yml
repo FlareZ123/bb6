@@ -14,6 +14,7 @@ on:
           - at-general
           - at-monoid
           - at-monoid-full
+          - at-monoid-growth
         default: paired
 
 jobs:
@@ -39,7 +40,7 @@ jobs:
           lean im-results/agent2-f197-sweep/ATTerminalCore.lean | tee /tmp/at-terminal.log
           ! grep -q sorryAx /tmp/at-terminal.log
       - name: Check complementary AT parametric cores
-        if: ${{ inputs.target == 'at-family' || inputs.target == 'at-probe' || inputs.target == 'at-general' || inputs.target == 'at-monoid' || inputs.target == 'at-monoid-full' }}
+        if: ${{ inputs.target == 'at-family' || inputs.target == 'at-probe' || inputs.target == 'at-general' || inputs.target == 'at-monoid' || inputs.target == 'at-monoid-full' || inputs.target == 'at-monoid-growth' }}
         env:
           LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
         run: |
@@ -63,6 +64,11 @@ jobs:
             lean -o im-results/agent2-f197-sweep/ATGeneralParser.olean im-results/agent2-f197-sweep/ATGeneralParser.lean | tee -a /tmp/at-family.log
             lean -o im-results/agent2-f197-sweep/ATFreeMonoidCore.olean im-results/agent2-f197-sweep/ATFreeMonoidCore.lean | tee -a /tmp/at-family.log
             lean im-results/agent2-f197-sweep/ATFreeMonoid.lean | tee -a /tmp/at-family.log
+          elif [ "${{ inputs.target }}" = "at-monoid-growth" ]; then
+            lean -o im-results/agent2-f197-sweep/ATGeneralParser.olean im-results/agent2-f197-sweep/ATGeneralParser.lean | tee -a /tmp/at-family.log
+            lean -o im-results/agent2-f197-sweep/ATFreeMonoidCore.olean im-results/agent2-f197-sweep/ATFreeMonoidCore.lean | tee -a /tmp/at-family.log
+            lean -o im-results/agent2-f197-sweep/ATFreeMonoid.olean im-results/agent2-f197-sweep/ATFreeMonoid.lean | tee -a /tmp/at-family.log
+            lean im-results/agent2-f197-sweep/ATFreeMonoidGrowth.lean | tee -a /tmp/at-family.log
           else
             lean im-results/agent2-f197-sweep/ATCounter.lean | tee -a /tmp/at-family.log
           fi
