@@ -81,10 +81,10 @@ theorem carryGhosts (a b : Nat) (cs : List Row) (c : Row) (U : List Bool)
     or run lengths. The arithmetic plan retains unmarked zero-P ghosts,
     whose tape words are exactly the merged Q runs. -/
 theorem generalDrainAt (N : Nat) (cs : List Row) (a b : Nat) (U : List Bool)
-    (hb : 2≤b) (hg : good 0 cs) (he : count 0 cs=N) :
+    (hb : 2≤b) (hg : F421DrainPlan.good 0 cs) (he : count 0 cs=N) :
     ∃ n, count 0 cs≤n ∧ run0 table n
       (frontier (rep P a++rep Q b++farWord cs++U)) =
-      some (frontier (rep P (a+2*count 0 cs)++rep Q (b+count 0 cs)++farWord (finish 0 cs)++U)) := by
+      some (frontier (rep P (a+2*count 0 cs)++rep Q (b+count 0 cs)++farWord (F421DrainPlan.finish 0 cs)++U)) := by
   induction N using Nat.strongRecOn generalizing cs a b with
   | ind N ih =>
     rcases splitMarked cs with hm|⟨fs,c,ns,rfl,hm,hn⟩
@@ -93,9 +93,9 @@ theorem generalDrainAt (N : Nat) (cs : List Row) (a b : Nat) (U : List Bool)
     · let xs := fs++c::ns
       let ys := fs++termStep c::ns.map lowStep
       obtain ⟨hg',hC,hF,⟨hp,hq⟩,hlow⟩ := splitPlan fs ns c 0 hm hn hg
-      change good 0 ys at hg'
+      change F421DrainPlan.good 0 ys at hg'
       change count 0 xs=count 0 ys+1 at hC
-      change finish 0 xs=finish 0 ys at hF
+      change F421DrainPlan.finish 0 xs=F421DrainPlan.finish 0 ys at hF
       change count 0 xs=N at he
       have hlow' : lowGood ns.reverse := by
         intro x hx
@@ -115,10 +115,10 @@ theorem generalDrainAt (N : Nat) (cs : List Row) (a b : Nat) (U : List Bool)
       exact ⟨k+n,by omega,join0 hr' hr2⟩
 
 theorem generalDrain (cs : List Row) (a b : Nat) (U : List Bool)
-    (hb : 2≤b) (hg : good 0 cs) :
+    (hb : 2≤b) (hg : F421DrainPlan.good 0 cs) :
     ∃ n, count 0 cs≤n ∧ run0 table n
       (frontier (rep P a++rep Q b++farWord cs++U)) =
-      some (frontier (rep P (a+2*count 0 cs)++rep Q (b+count 0 cs)++farWord (finish 0 cs)++U)) :=
+      some (frontier (rep P (a+2*count 0 cs)++rep Q (b+count 0 cs)++farWord (F421DrainPlan.finish 0 cs)++U)) :=
   generalDrainAt (count 0 cs) cs a b U hb hg rfl
 
 #print axioms carryGhosts

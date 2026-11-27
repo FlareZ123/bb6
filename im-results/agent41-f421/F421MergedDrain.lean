@@ -3,41 +3,41 @@ import TertiaryGuard
 
 namespace BB6Coverage.Agent41F421.MergedDrain
 open Agent31Pump Regular F421DrainPlan
-open F421TertiaryGuard (Cell drain)
-open GeneralDrain (farWord rowWord)
+open F421TertiaryGuard (drain)
+open GeneralDrain (rowWord)
 
-def toRow (m : Bool) (c : Cell) : Row := ⟨c.p,c.q,m⟩
-def rows (m : Bool) (cs : List Cell) : List Row := cs.map (toRow m)
-def word (m : Bool) (cs : List Cell) : List Bool := farWord (rows m cs)
+def toRow (m : Bool) (c : F421TertiaryGuard.Cell) : Row := ⟨c.p,c.q,m⟩
+def rows (m : Bool) (cs : List F421TertiaryGuard.Cell) : List Row := cs.map (toRow m)
+def word (m : Bool) (cs : List F421TertiaryGuard.Cell) : List Bool := GeneralDrain.farWord (rows m cs)
 
-def guarded (h : Nat) : List Cell → Prop
+def guarded (h : Nat) : List F421TertiaryGuard.Cell → Prop
   | [] => True
   | c::cs => 2≤c.q ∧ 1≤c.p ∧ (c.p ≤ 2*h+1 → c.p%2=1) ∧
       guarded (h + (min c.p (2*h+1)+1)/2) cs
 
-theorem planGuard (cs : List Cell) (h : Nat) (hg : guarded h cs) : good h (rows true cs) := by
+theorem planGuard (cs : List F421TertiaryGuard.Cell) (h : Nat) (hg : guarded h cs) : F421DrainPlan.good h (rows true cs) := by
   induction cs generalizing h with
   | nil => trivial
   | cons c cs ih =>
     rcases hg with ⟨hq,hp,he,ht⟩
     exact ⟨⟨hq,fun _ => hp,he⟩,ih _ ht⟩
 
-theorem allOddGuard (cs : List Cell) (h : Nat) (hg : ∀ c∈cs, 2≤c.q ∧ c.p%2=1) : guarded h cs := by
+theorem allOddGuard (cs : List F421TertiaryGuard.Cell) (h : Nat) (hg : ∀ c∈cs, 2≤c.q ∧ c.p%2=1) : guarded h cs := by
   induction cs generalizing h with
   | nil => trivial
   | cons c cs ih =>
     obtain ⟨hq,hp⟩ := hg c (by simp)
     exact ⟨hq,by omega,fun _ => hp,ih _ (fun x hx => hg x (by simp [hx]))⟩
 
-/-- The normalized calculation gives the same terminal count and tape word
+/-- The normalized calculation gives the same terminal F421DrainPlan.count and tape word
     as the exact arbitrary-marker plan. The trailing carry merges into
     the next surviving Q run, or into the leading Q at the near end. -/
-theorem drainWord (cs : List Cell) (h carry : Nat) :
+theorem drainWord (cs : List F421TertiaryGuard.Cell) (h carry : Nat) :
     let (ys,H,r) := drain h carry cs
-    count h (rows true cs) = H ∧
-      farWord (finish h (rows true cs)) ++ rep Q carry = rep Q r ++ word false ys := by
+    F421DrainPlan.count h (rows true cs) = H ∧
+      GeneralDrain.farWord (F421DrainPlan.finish h (rows true cs)) ++ rep Q carry = rep Q r ++ word false ys := by
   induction cs generalizing h carry with
-  | nil => simp [drain,count,rows,finish,farWord,GeneralDrain.nearWord,word]
+  | nil => simp [drain,F421DrainPlan.count,rows,F421DrainPlan.finish,GeneralDrain.farWord,GeneralDrain.nearWord,word]
   | cons c cs ih =>
     by_cases hd : c.p≤2*h+1
     · let t := (c.p+1)/2
@@ -47,8 +47,8 @@ theorem drainWord (cs : List Cell) (h carry : Nat) :
       have hi := ih (h+t) (carry+c.q+t)
       rw [he] at hi
       simp only [drain,if_pos hd, ← show t=(c.p+1)/2 from rfl,he]
-      change count (nextH h (toRow true c)) (rows true cs)=H ∧
-        farWord (finishRow h (toRow true c)::finish (nextH h (toRow true c)) (rows true cs)) ++ rep Q carry = rep Q r ++ word false ys
+      change F421DrainPlan.count (nextH h (toRow true c)) (rows true cs)=H ∧
+        GeneralDrain.farWord (finishRow h (toRow true c)::F421DrainPlan.finish (nextH h (toRow true c)) (rows true cs)) ++ rep Q carry = rep Q r ++ word false ys
       rw [hn,hf,GeneralDrain.farCons]
       refine ⟨hi.1,?_⟩
       simp only [rowWord,rep, Bool.false_eq_true, if_false,List.nil_append]
@@ -60,16 +60,16 @@ theorem drainWord (cs : List Cell) (h carry : Nat) :
       have hi := ih (2*h+1) 0
       rw [he] at hi
       simp only [drain,if_neg hd,he]
-      change count (nextH h (toRow true c)) (rows true cs)=H ∧
-        farWord (finishRow h (toRow true c)::finish (nextH h (toRow true c)) (rows true cs)) ++ rep Q carry = rep Q r ++ word false (⟨c.p-(2*h+1),c.q+h+1+carry⟩::ys)
+      change F421DrainPlan.count (nextH h (toRow true c)) (rows true cs)=H ∧
+        GeneralDrain.farWord (finishRow h (toRow true c)::F421DrainPlan.finish (nextH h (toRow true c)) (rows true cs)) ++ rep Q carry = rep Q r ++ word false (⟨c.p-(2*h+1),c.q+h+1+carry⟩::ys)
       rw [hn,hf,GeneralDrain.farCons]
       refine ⟨hi.1,?_⟩
-      have hi' : farWord (finish (2*h+1) (rows true cs)) = rep Q r ++ word false ys := by simpa [rep] using hi.2
+      have hi' : GeneralDrain.farWord (F421DrainPlan.finish (2*h+1) (rows true cs)) = rep Q r ++ word false ys := by simpa [rep] using hi.2
       rw [hi']
       simp only [word,rows,List.map_cons,GeneralDrain.farCons,rowWord,toRow,Bool.false_eq_true,if_false,List.append_nil]
       simp only [repAdd,List.append_assoc]
 
-theorem mergedDrain (cs : List Cell) (a b : Nat) (U : List Bool)
+theorem mergedDrain (cs : List F421TertiaryGuard.Cell) (a b : Nat) (U : List Bool)
     (hb : 2≤b) (hg : guarded 0 cs) :
     let (ys,H,r) := drain 0 0 cs
     ∃ n, H≤n ∧ run0 table n (frontier (rep P a++rep Q b++word true cs++U)) =
@@ -77,7 +77,7 @@ theorem mergedDrain (cs : List Cell) (a b : Nat) (U : List Bool)
   rcases he : drain 0 0 cs with ⟨ys,H,r⟩
   have hw := drainWord cs 0 0
   rw [he] at hw
-  have he' : farWord (finish 0 (rows true cs))=rep Q r++word false ys := by simpa [rep] using hw.2
+  have he' : GeneralDrain.farWord (F421DrainPlan.finish 0 (rows true cs))=rep Q r++word false ys := by simpa [rep] using hw.2
   obtain ⟨n,hn,hr⟩ := GeneralDrain.generalDrain (rows true cs) a b U hb (planGuard cs 0 hg)
   rw [hw.1,he'] at hr
   refine ⟨n,hw.1 ▸ hn,?_⟩
