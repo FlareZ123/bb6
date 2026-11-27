@@ -2,6 +2,11 @@ name: Agent47 Raw11 capped-parent consumer
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [capped, q0-banks]
+        default: capped
 
 permissions:
   actions: read
@@ -9,6 +14,7 @@ permissions:
 
 jobs:
   consume:
+    if: inputs.mode == 'capped'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -100,5 +106,72 @@ jobs:
           path: |
             /tmp/capped-consumer
             im-results/agent47-raw11-adapter/Raw11Root52CappedParentsConsume.lean
+          if-no-files-found: error
+          retention-days: 30
+
+  bank-consume:
+    if: inputs.mode == 'q0-banks'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download immutable proof dependencies
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/bank-deps /tmp/bank-output
+          for id in 15159003899 15161045625 15159257293 15154832729 15154568902 15154569169 15154663882 15158958272 15017647753 15014940132; do
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" -o "/tmp/$id.zip"
+            mkdir -p "/tmp/bank-deps/$id"
+            if [ "$id" = 15014940132 ]; then
+              unzip -q "/tmp/$id.zip" 'BlockMacro.*' 'BlockFAR.*' 'SparseBlockFAR.*' 'RangeCheck.*' 'BlockFARBridge.*' 'Frontier.olean' -d "/tmp/bank-deps/$id"
+            else
+              unzip -q "/tmp/$id.zip" -d "/tmp/bank-deps/$id"
+            fi
+          done
+      - name: Compile locally established bank and held cuts
+        run: |
+          set -euo pipefail
+          D=/tmp/bank-deps
+          BASE="$D/15159003899/tmp/a47-raw11-root52-known"
+          CAPPED="$D/15161045625/tmp/capped-consumer"
+          cmp "$BASE/Frontier.olean" "$D/15014940132/Frontier.olean"
+          export LEAN_PATH="/tmp/bank-output:$BASE:$CAPPED:$D/15017647753:$D/15014940132"
+          for id in 15159257293 15154832729 15154568902 15154569169 15154663882 15158958272; do
+            P="$(find "$D/$id" -type d -name raw11-certified -print -quit)"
+            test -n "$P"
+            LEAN_PATH="$LEAN_PATH:$P"
+          done
+          export LEAN_PATH
+          SRC=im-results/agent47-raw11-adapter
+          compile() {
+            lean -j1 -o "/tmp/bank-output/$1.olean" "$SRC/$1.lean" | tee "/tmp/bank-output/$1.log"
+            if grep -Eq 'sorryAx|native_decide' "/tmp/bank-output/$1.log"; then exit 1; fi
+          }
+          compile Raw11Q0Held156
+          compile Raw11Q0FreshClosed
+          compile Raw11Q0BankSmallPart0
+          compile Raw11Q0BankSmallPart1
+          compile Raw11Q0BankSmall
+          for i in $(seq 0 8); do compile "Raw11Q0BankLargePart$i"; done
+          compile Raw11Q0BankLarge
+          compile Raw11Q0BankHeld28Part0
+          compile Raw11Q0BankHeld28
+          compile Raw11Q0Combined
+          grep -F "'BB6.Agent47Raw11Q0Combined.remaining_census' depends on axioms:" /tmp/bank-output/Raw11Q0Combined.log
+          grep -F "'BB6.Agent47Raw11Q0Combined.cover_from_remaining' depends on axioms:" /tmp/bank-output/Raw11Q0Combined.log
+      - name: Preserve accepted bank and consumer proof objects
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-bank-consumption
+          path: /tmp/bank-output
           if-no-files-found: error
           retention-days: 30
