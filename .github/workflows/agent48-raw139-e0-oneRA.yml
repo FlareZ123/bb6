@@ -1,0 +1,104 @@
+name: Raw139 E0 OneRA kernel certification
+run-name: Raw139 E0 OneRA ${{ inputs.source_sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact repository commit containing the OneRA sources
+        required: true
+        type: string
+permissions:
+  contents: read
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh prepare
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRA-common
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneRA/imports/
+            .tmp/a48-oneRA/extern/
+            .tmp/a48-oneRA/build/*.olean
+            .tmp/a48-oneRA/manifest.json
+            .tmp/a48-oneRA/shard-plan.json
+            .tmp/a48-oneRA/spec-compact.json
+            .tmp/a48-oneRA/source-sha
+            .tmp/a48-oneRA/log
+  shard:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRA-common
+          path: .tmp/a48-oneRA
+      - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh shard
+        env:
+          SHARD: ${{ matrix.shard }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRA-shard-${{ matrix.shard }}
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneRA-shard/build/*.olean
+            .tmp/a48-oneRA-shard/manifest.json
+            .tmp/a48-oneRA-shard/source-sha
+            .tmp/a48-oneRA-shard/log
+  join:
+    needs: [prepare,shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneRA-common
+          path: .tmp/a48-oneRA
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneRA-shard-*
+          path: /tmp/oneRA-shards
+      - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh join /tmp/oneRA-shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneRA-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneRA-final/build/*.olean
+            .tmp/a48-oneRA-final/manifest.json
+            .tmp/a48-oneRA-final/log
+            .tmp/a48-oneRA-final/imports/
+            .tmp/a48-oneRA-final/extern/
