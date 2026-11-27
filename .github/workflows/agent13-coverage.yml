@@ -7470,7 +7470,8 @@ jobs:
             python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --source-root "$S" --manifest "$W/manifest.json" --theorem BB6.Agent17.Box28D22.sourceBound --weighted-bound 3640 --parent-table 'raw10Remainder[28] D0=14 D1=22' --artifact-name raw10-box28-d22-accepted "$D/Box28D22.lean" 2>&1 | tee "$W/audit.log"
             python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" BB6.Agent17.Box28Symmetry.transportFor BB6.Agent17.Box28D22.sourceBound BB6.Agent17.Box28D22.parentCutBound
           else
-            python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" "$D/Box28Orbit.lean" 2>&1 | tee "$W/audit.log"
+            python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" "$D/Box28Whole.lean" 2>&1 | tee "$W/audit.log"
+            python im-results/agent4-raw109/audit_axioms.py "$W/audit.log" BB6.Agent17.Box28GrowthParent.parent_bound BB6.Agent17.Box28FirstHole.closed_bound BB6.Agent17.Box28Whole.parent_bound
           fi
       - uses: actions/upload-artifact@v4
         with:
