@@ -46,7 +46,7 @@ def sweeps():
         imports[code]=name
     return certs,imports
 
-def main():
+def main(sharded=False):
     ap=argparse.ArgumentParser()
     ap.add_argument("--sweeps-only",action="store_true")
     a=ap.parse_args()
@@ -118,6 +118,10 @@ def main():
     residual=[row for row in rows if row not in certs]
     assert residual==[line.split(":")[1] for line in (ROOT/"unresolved.txt").read_text().splitlines()]
     assert not residual
+    if sharded:
+        from generate_sharded_children import assemble
+        assemble(ROOT,tree,certs,imports,PARENT,BOUND,"LB","BB6.Agent8Raw54","Raw54Base",Counter(split=1515,cycle=25133,last=8567,open=1146))
+        return
     stats=Counter()
     def build(t):
         tag,*v=t
@@ -187,4 +191,4 @@ theorem cover : ∀ m, compatible parent m → WeightedBound {BOUND} m := by
 """)
     assert stats==Counter(split=1515,cycle=25133,last=8567,open=1146),stats
     print(stats,"FAR",len(far),"sweeps",len(imports),"unresolved",len(residual))
-if __name__=="__main__": main()
+if __name__=="__main__": main("--complete-sharded" in sys.argv)
