@@ -76,9 +76,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -100,7 +100,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -179,9 +180,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -203,7 +204,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -300,9 +302,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -324,7 +326,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -403,9 +406,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -427,7 +430,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -506,9 +510,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -530,7 +534,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -600,9 +605,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -624,7 +629,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -703,9 +709,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -727,7 +733,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -797,9 +804,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -821,7 +828,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -891,9 +899,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -915,7 +923,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
@@ -994,9 +1003,9 @@ theorem sound : Sound spec step := by
   intro m a d l r
   cases a with
   | none => cases m <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
   | some a => cases m <;> cases a <;> cases d <;>
-      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,run,step,left,right,word]
+      simp [spec,shape,leftWord,rightWord,rule,atShape,inLeft,outLeft,blocks,Box33PrefixMacro.run,step,left,right,word]
 
 theorem zero_eq : word (spec.rightWord spec.zeroDigit) z = z := by
   simp [spec,rightWord,word]
@@ -1018,7 +1027,8 @@ theorem never : NeverHalts table := by
   apply sourceNever table step project_step
   intro n
   have hn := neverPhase spec step sound positive zero_eq n spec.initial [] []
-  exact hn
+  change Box33PrefixMacro.run step n ⟨.A,z,false,z⟩ ≠ none
+  simpa [phase,spec,shape,atShape,blocks,word] using hn
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
