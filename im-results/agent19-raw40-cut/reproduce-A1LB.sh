@@ -23,3 +23,7 @@ done
 python3 build_manifests.py "${dirs[@]}"
 for d in "${dirs[@]}"; do export LEAN_PATH="$LEAN_PATH:$d"; done
 for c in "${cases[@]}"; do check "Raw40A1LB${c}Exact.lean"; done
+if (( ${#cases[@]} == 16 )); then
+  check Raw40A1LBBase.lean
+  check Raw40A1LB.lean
+fi
