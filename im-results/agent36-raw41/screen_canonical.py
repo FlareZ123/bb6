@@ -82,10 +82,10 @@ def main():
                     text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,
                     timeout=p.timeout)
                 first=r.stdout.splitlines()[0] if r.stdout else ""
-                stats=dict((k,int(v)) for k,v in re.findall(r"(cycle|last|open|split):(\\d+)",first))
+                stats=dict((k,int(v)) for k,v in re.findall(r"(cycle|last|open|split):(\d+)",first))
                 if r.returncode or not stats:
                     raise ValueError(f"enumerator rc={r.returncode}, output={r.stdout[-400:]!r}")
-                score_match=re.search(r"maxscore=(\\d+)",r.stdout)
+                score_match=re.search(r"maxscore=(\d+)",r.stdout)
                 row={**x,"canonical_index":i,**stats,
                     "maxscore":int(score_match.group(1)) if score_match else None,
                     "status":"scanned"}
@@ -104,7 +104,7 @@ def main():
         "proof_status":"discovery only","canonical_total":153,
         "shard":p.shard,"shards":p.shards,"previous_tables_excluded":len(PREVIOUS_TABLES),
         "rows":rows}
-    p.output.write_text(json.dumps(result,indent=2)+"\\n")
+    p.output.write_text(json.dumps(result,indent=2)+"\n")
     ranked=sorted((r for r in rows if r["status"]=="scanned"),
                   key=lambda r:(r.get("open",999999),r["canonical_index"]))
     print("BEST OPEN-LEAF COUNTS",flush=True)
