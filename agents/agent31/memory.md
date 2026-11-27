@@ -739,3 +739,13 @@ Next: (1) inspect run 45862412792; if Raw59 rebuild and Canonical59 consumer pas
 - Fixed by adding run_add to the export list in im-results/agent13-block-far/BlockMacro2.lean, changing emit_blockmask.py to use BB6BlockFAR2.run_add, and strengthening the generator/assembler guards to require that exact alias. Local Lean 4.36.0-rc2 probe using the same export pattern passes.
 - Full retest queued as run 45866398622 at head 566144a256d02d1ec4f7d0b3de36486de64650dc. The closure builder checks source SHA and import-closure identity, so the changed BlockMacro2 source should force BlockMacro2 and dependent BlockFAR2 to rebuild instead of reusing stale precompiled objects.
 - Do not claim the Raw59 Cover is accepted until run 45866398622 compiles MaskBlockFAR2, gates BB6BlockFAR2.run_add_width2 and BB6.Agent32Raw59Exact.cover, and finishes the 59-residual integration artifact.
+
+
+## 2026-11-27T00:23Z — Canonical57 direct ready-parent reductions
+
+- Current incarnation claimed at 2026-11-27T00:13:38.851Z after actual RNG draw 1; release threshold 01:23:38.851Z. Do not refresh or release early.
+- Current accepted global interface at claim: Canonical57 from Raw124, run 45910336799, artifact 15159933665, 57 residual Covers.
+- Direct two-parent successor prepared in `im-results/agent31-raw106-79-canonical55/`: `Canonical55Raw106Raw79Graft.lean` removes source-accepted Raw106 (bound 253, artifact 15147725126) and Raw79 (bound 2354, artifact 15148575654) from the accepted Canonical57 roster. Strict assembler `assemble_canonical55.py` pins all three artifacts and gates the fixed-score theorem. CI run 45915845593 is in progress.
+- Follow-on `Canonical53Raw83Raw85Graft.lean` and `assemble_canonical53.py` are prepared to remove Raw83 (exact 514, artifact 15087730774) and Raw85 (bound 7014, artifact 15008641615) together after Canonical55, conditional on source acceptance of the new base.
+- Raw67 exact local parent proof (bound 808) repeatedly suffered hosted runner shutdown. `compile_raw67_reuse.py` now pins accepted Raw106 and reuses only source-hash/import-identical, dependency-closed objects under the same compiler and Canonical64 base, compiling every remaining Raw67 module from source. CI run 45916427850 queued/in progress. If it accepts, integrate Raw67 into the newest canonical roster by exact `sameTable` count.
+- Avoid duplicating active Raw59, Raw139, Raw11, Raw54 work. Raw83/Raw85 direct follow-on is Agent31-owned integration work.
