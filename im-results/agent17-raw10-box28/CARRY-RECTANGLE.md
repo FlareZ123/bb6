@@ -1,4 +1,4 @@
-# Two complete carry rectangles: exact weighted bound eight (candidate)
+# Two complete carry rectangles: exact weighted bound eight (source-certified)
 
 The two background rows are [8,20,11,?,11,13,18,15,?,24,4,12] and [8,24,11,?,11,13,18,15,?,24,4,12]. B1 and E0 range independently over all 25 transition codes. Hence 1,250 complete tables, not merely the one-halt subset. All fixed slots are live.
 
@@ -8,4 +8,4 @@ For the latter two, the common triple language is (111|110|101)*01 0^infinity. A
 
 The aggregate mathematical bound is exactly eight attempts including halt. The halters have no nonzero incoming blank delay to A, and [8,20,11,0,11,13,18,15,21,24,4,12] attains eight. There are 58 halting tables and 1,192 nonhalting tables in the disjoint union (counts follow from the classification, not a kernel count theorem). This replaces the previous six special cylinders with one complete pair of rectangles, though many simple cases already had short witnesses. It does not close the full D0=18 source box or establish a global Busy Beaver upper bound.
 
-Lean source candidate: Box28CarryRectangle.lean (rectangle_bound, max_halts, max_base). The first 15 entry proofs now use finite list configurations and kernel-checkable exact prefixes, not large recursive simp expansions. Box28CarryTail01.lean proves the alternate marker recurrence. No new source acceptance until the complete audit succeeds.
+Lean source: Box28CarryRectangle.lean (rectangle_bound, max_halts, max_base). The first 15 entry proofs now use finite list configurations and kernel-checkable exact prefixes, not large recursive simp expansions. Box28CarryTail01.lean proves the alternate marker recurrence. The exact rectangle theorem, maximum witness and all entry-gate lemmas passed [45955400075](https://github.com/FlareZ123/bb6/actions/runs/45955400075). The numerical classification counts are derived from the split, not a separately certified counting theorem. The emitter uses `rectangle_mono` directly to discharge compatible residual rows from any cut, and FAR search skips those rows when invoked with `--skip-carry`.

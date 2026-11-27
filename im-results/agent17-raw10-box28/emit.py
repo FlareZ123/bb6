@@ -11,7 +11,7 @@ HERE=Path(__file__).resolve().parent
 BASE=HERE.parent/'agent13-raw10-box4'
 TEMPLATE=HERE.parent/'agent13-raw10-box33'
 BRANCH=HERE.parent/'agent13-raw10-box3-branches'
-from cuts import TODO, fixed_for, targets_for, second_index, stem
+from cuts import TODO, fixed_for, targets_for, second_index, stem, carry_rectangle
 def put(out,name,content):
     (out/(name+'.lean')).write_text(content)
 
@@ -75,10 +75,11 @@ def main():
     d2v13 = (a.d0,a.d1)==(2,13)
     if d2v13:
         hard_rows={tuple(row):(f'row{i}',row.index(0),None,None) for i,row in enumerate(d2v13_rows)}
-    carry = a.d0==18 and a.d1 in (12,14,18)
-    carry_rows={tuple([8,ac,11,0,11,13,18,15,a.d1,24,4,12]) for ac in (20,24)} & remaining if carry else set()
+    carry_rows={row for row in remaining if carry_rectangle(row)}
     if carry_rows:
-        hard_rows.update({row:(f'carry{i}',3,None,None) for i,row in enumerate(sorted(carry_rows))})
+        hard_rows.update({row:(f'carry{i}',row.index(0),None,None) for i,row in enumerate(sorted(carry_rows))})
+    max_late=max(v['late_max_halt'][0] for v in summary.values())
+    bound=max(3640,max_late+5)
     if far:
         manifest=json.loads((far/'far_manifest.json').read_text())
         assert set(map(tuple,manifest['open_rows'])) <= set(hard_rows)
@@ -86,7 +87,8 @@ def main():
         assert set(solved)|set(hard_rows)==remaining, ('FAR coverage mismatch',(set(solved)|set(hard_rows))^remaining)
         imports=[name+'Tree']
         defs=[]
-        for i,row in enumerate(sorted(solved)):
+        for row in sorted(solved):
+            i=sorted(remaining).index(row)
             width,cap,mod,runs,flip,mode=solved[row]
             assert len(row)==12 and row.count(0)==1
             target=row.index(0)
@@ -142,11 +144,11 @@ end {q}
         far_imports=[];far_defs=[]
         assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
     if hard_rows:
-        ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryFamilySource' if carry_rows else 'BB6.Agent17.Box28HardSource'
+        ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryRectangle' if carry_rows else 'BB6.Agent17.Box28HardSource'
         analytic_rows=set(hard_rows)-set(solved) if far else set(hard_rows)
         lines=[f'import {name}Tree',*(f'import {m}' for m in far_imports)]
         if analytic_rows:
-            lines.append('import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryFamilySource' if carry_rows else 'Box28HardSource'))
+            lines.append('import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryRectangle' if carry_rows else 'Box28HardSource'))
         lines.extend([f'namespace BB6.Agent13.{name}','open BB6Coverage',*far_defs])
         for row in sorted(analytic_rows):
             label,target,part,proof=hard_rows[row]
@@ -154,22 +156,19 @@ end {q}
                 i=label[3:]
                 lines.append(f'def {label} : Known {target} := ⟨{ns}.row {i}, fun m _ hm => {ns}.rowBound _ {i} m hm⟩')
             elif row in carry_rows:
-                e={12:'.c',14:'.d',18:'.e'}[a.d1]
                 two=str(row[1]==24).lower()
-                codes=','.join('some '+str(v) for v in row)
+                codes=','.join('none' if v<0 else 'some '+str(v) for v in row)
                 lines.append(f'''def {label}Row : PartialMachine := fun s => (([{codes}] : List (Option (Fin 25)))[2*s.1.val+s.2.toNat]!).map BB6.Agent13.Box17.decode
- theorem {label}Never (m : Machine) (hm : compatible {label}Row m) : NeverHalts m := by
-  apply {ns}.compatible_never {two} {e} m
+ theorem {label}Bound (m : Machine) (hm : compatible {label}Row m) : BB6.Agent13BlankDelay.WeightedBound {bound} m := by
+  apply {ns}.rectangle_mono {bound} (by decide) {two} m
   intro s t ht
-  have h : ∀ (q : Fin 6) (b : Bool), ({ns}.partialTable {two} {e} (q,b)).isSome = true → {ns}.partialTable {two} {e} (q,b) = {label}Row (q,b) := by decide
+  have h : ∀ (q : Fin 6) (b : Bool), (BB6.Agent17.Box28CarryGateSource.baseTable {two} (q,b)).isSome = true → BB6.Agent17.Box28CarryGateSource.baseTable {two} (q,b) = {label}Row (q,b) := by decide
   exact hm s t ((h s.1 s.2 (by simp [ht])).symm ▸ ht)
- def {label} : Known {target} := ⟨{label}Row, good_never {target} _ {label}Never⟩''')
+ def {label} : Known {target} := ⟨{label}Row, fun m _ hm => {label}Bound m hm⟩''')
             else:
                 lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
         lines.append(f'end BB6.Agent13.{name}')
         put(out,name+'HardBank','\n'.join(lines)+'\n')
-    max_late=max(v['late_max_halt'][0] for v in summary.values())
-    bound=max(3640,max_late+5)
     source_core(out,name,a.d0,a.d1,bound)
     sys.path[:0]=[str(BASE),str(BRANCH)]
     import finish,greedy

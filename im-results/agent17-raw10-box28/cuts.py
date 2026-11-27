@@ -21,3 +21,8 @@ def targets_for(d0):
 
 def stem(d0,v):
     return f'Box28D{v}' if d0==14 else f'Box28D{d0}V{v}'
+
+
+def carry_rectangle(row):
+    """Exact subset of the two source-certified carry rectangles, gates free."""
+    return len(row)==12 and row[1] in (20,24) and all(row[i]==v for i,v in {0:8,2:11,4:11,5:13,6:18,7:15,9:24,10:4,11:12}.items())

@@ -7,7 +7,7 @@ import argparse, json, os, resource, subprocess, sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
 FAR=HERE.parent/'agent13-block-far'
-from cuts import stem, second_index
+from cuts import stem, second_index, carry_rectangle
 
 def code_table(row):
     def code(v):
@@ -26,6 +26,7 @@ def one(row, param, out, name):
 
 def main():
     p=argparse.ArgumentParser();p.add_argument('--work',type=Path);p.add_argument('--out',type=Path,required=True)
+    p.add_argument('--skip-carry',action='store_true',help='Use the accepted exact carry rectangle instead of FAR search')
     p.add_argument('--one');p.add_argument('--param');p.add_argument('--name',default='Box28Far')
     a=p.parse_args()
     if a.one:
@@ -40,6 +41,10 @@ def main():
     solved=[];open_rows=[]
     (a.out/'far_manifest.json').write_text(json.dumps({'solved':solved,'open_rows':open_rows},indent=2))
     for i,row in enumerate(rows):
+        if a.skip_carry and carry_rectangle(row):
+            open_rows.append(row)
+            print('CARRY',json.dumps(row),flush=True)
+            continue
         name=f'{stem(row[6],row[second_index(row[6])])}Far{i:02d}'
         for param in schedule:
             try:
@@ -50,5 +55,6 @@ def main():
         else:
             open_rows.append(row);print('OPEN',json.dumps(row),flush=True)
         (a.out/'far_manifest.json').write_text(json.dumps({'solved':solved,'open_rows':open_rows},indent=2))
+    (a.out/'far_manifest.json').write_text(json.dumps({'solved':solved,'open_rows':open_rows},indent=2))
     print('FINAL',len(solved),len(open_rows),flush=True)
 if __name__=='__main__':main()
