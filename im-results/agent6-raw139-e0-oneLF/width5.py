@@ -1,7 +1,7 @@
 """Generate the exact width-five certificate sources, no search replay."""
 import json, pathlib, sys
 ROOT=pathlib.Path(__file__).resolve().parents[2]
-sys.path.insert(0,str(ROOT/'im-results/agent48-raw139-f1-oneRA'))
+sys.path[:0]=[str(ROOT/'im-results/agent48-raw139-f1-oneRA'),str(ROOT/'im-results/agent48-raw139-f1-oneLA')]
 from blockcert import generate
 from package import block_source as original_block_source
 def emit(out, rec):
