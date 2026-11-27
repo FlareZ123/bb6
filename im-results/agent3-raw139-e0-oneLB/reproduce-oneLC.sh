@@ -26,6 +26,7 @@ for p in list(d.glob("*.lean")):
     if q!=p:p.unlink()
     q.write_text(s)
 PY
+rm -rf "$work/raw-imports"
 cat > "$work/imports/Raw139E0OneLBC1OneLCWeighted.lean" <<'LEAN'
 import Raw139E0OneLBC1OneLCCover
 namespace BB6.Agent3E0OneLBC1OneLC
