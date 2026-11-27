@@ -20,3 +20,14 @@ All start at A with left zipper 00, right 11 after seven transitions. For arbitr
 
 ## Frozen candidate ledger
 [e1ra-ledger.txt](e1ra-ledger.txt) and [e1rb-ledger.txt](e1rb-ledger.txt) contain disjoint exhaustive classifications of the original misses. RA: 245 FAR, 185 sparse n-gram, 3 proved symbolic, 140 remaining; RB: 276 FAR, 248 sparse n-gram, 233 remaining. Additional FAR code pool consists of the lexicographically sorted union of F codes in e1rc/e1re/e1rf/oneRA ledgers and zeroRB-far-groups minus original bank. Sparse search tries widths 3,4,5,6,7,8,9,10,12,14,16,18,20,24,28 with original two-million-state cap and stops on cap. Each N row regenerates via the existing ngram_sparse.cpp. F/N entries are candidate certificates and must be independently kernel-checked by the future full Cover generator; only P denotes an accepted individual Lean theorem.
+
+## Complete discovery classification (2026-11-27)
+
+Both frozen miss lists now have **zero unresolved discovery rows**. The superseding ledgers select smaller witnesses where the original n-gram graphs were expensive.
+
+| E1 | FAR | N-gram | Run DFA | Grouped-run DFA | Affine | Exact prior triple | Late holes | Translated cycles |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0RA | 245 | 162 | 129 | 23 | 6 | 3 | 4 | 1 |
+| 0RB | 276 | 221 | 210 | 35 | 4 | 0 | 9 | 2 |
+
+The new grouped-run abstraction retains the current run and a pending tuple of completed run lengths; completed groups of identical tuples are counted modulo a threshold/period. [grouped_run_search.py](grouped_run_search.py) reconstructs the deterministic push graph. This is an untrusted discovery device; the original MaskBiDFA checker certifies each emitted finite invariant. It also handles alternating and periodic patterns that defeated ordinary run-length summaries. The ten S recurrences were all locally checked in Lean 4.36.0-rc2 using the existing SweepPumping semantics, axioms propext and Quot.sound. In particular RA485 has section B([], (01)^(3n+2)) after 19 moves and epoch cost 14n+33; each epoch adds three pairs. Remaining H/Z entries encode exact replay and cycle witnesses. The maximum discovered late first holes are RA502 (27668 ordinary moves, F0, candidate score 27669), RB301 (12632 ordinary moves, A1, exact weighted score 12634 including one incoming delay). RB301 cover and attainer compiled locally. Full aggregate source acceptance is still pending, so these are not yet established parent upper bounds.
