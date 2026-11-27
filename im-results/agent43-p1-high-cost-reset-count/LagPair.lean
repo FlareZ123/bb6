@@ -56,10 +56,10 @@ theorem pairBack_sound (L r t bits a b : Nat) (ha : a<2^L) (hb : b<r)
     simp [ht]
   · subst b
     rw [h4] at ht
-    simp [zeroExtra,ht]
+    simp [zeroExtra,ht,hb0]
   · subst b
     rw [h5] at ht
-    simp [zeroExtra,ht]
+    simp [zeroExtra,ht,hb0]
 
 def Live (n P F r : Nat) (p : Nat → Prop) :=
   ∀ a z, FixedWalk n P (2*r) a (F-2*r) z → p (a/2)
@@ -88,7 +88,7 @@ theorem dense_extend (L n P F r d bits out : Nat) (hd : d<r) (hF : 2*r<F) (hcap 
   | zero =>
     have he : bits=out := by simpa [denseRun] using hcheck
     subst out
-    simpa using prev
+    simpa [denseRun] using prev
   | succ d ih =>
     have hnew := live_step L n P F (r-1) bits (by omega) (by omega)
       (by simpa [show r-1+1=r by omega] using prev)
