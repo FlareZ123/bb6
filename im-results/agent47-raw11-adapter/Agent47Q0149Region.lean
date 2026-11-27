@@ -20,6 +20,8 @@ theorem blockRep (v : Bool) (a n : Nat) : rep (block v a) n = block v (a*n) := b
 theorem blockJoin (v : Bool) (a b : Nat) (X : List Bool) :
     block v a ++ (block v b ++ X) = block v (a+b) ++ X := by
   rw [blockAdd,List.append_assoc]
+theorem blockJoinLast (v : Bool) (a b : Nat) :
+    block v a ++ block v b = block v (a+b) := (blockAdd v a b).symm
 theorem blockZero (v : Bool) : block v 0 = [] := rfl
 
 theorem Uadd (a b : Nat) : U (a+b) = U a ++ U b := blockAdd true a b
@@ -29,7 +31,9 @@ def T (x y : Nat) : Z0 := ⟨0,U y ++ [false,false] ++ U x,[false]⟩
 def S (x b : Nat) (W : List Bool) : Z0 := ⟨2,[false,false] ++ U x,[true,false] ++ U b ++ W⟩
 def S4 (x b c d : Nat) := S x b (Z c ++ U d)
 
-theorem weq_of_eq {a b : List Bool} (h : a=b) : WEq a b := h ▸ WEq.refl a
+theorem weq_of_eq {a b : List Bool} (h : a=b) : WEq a b := by
+  subst b
+  exact WEq.refl _
 
 def R0 (p : PartialMachine) (s t : Z0) : Prop :=
   ∃ k u, run0 p k s = some u ∧ ZEq u t
@@ -88,7 +92,7 @@ theorem reduceN {p} (r : Rules p) (x b n c d : Nat) (hb : b%2=0) (hp : 0<b) :
 theorem mergeOne (x b : Nat) : S4 x b 0 1 = S x (b+1) [] := by
   unfold S4 S
   rw [Uadd]
-  rfl
+  simp [Z,U,block,rep,List.append_assoc]
 
 theorem exceptional {p} (r : Rules p) (k : Nat) :
     RE p (S4 (2*k) (4*k+4) 3 1) (T (2*k+8) (4*k+18)) := by
