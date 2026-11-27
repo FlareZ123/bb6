@@ -375,15 +375,19 @@
     "177": "000",
     "178": "000"
   },
-  "growth": {},
-  "unresolved": [
-    [
-      10,
-      "1RB1LF_1RC0RE_0RD0LD_1LD0RB_0LA1RE_1LE---"
-    ],
-    [
-      55,
-      "1RB0LF_1RC0RE_0RD---_1LD0RB_1LA1RE_0LE0LA"
-    ]
-  ]
+  "growth": {
+    "10": {
+      "table": "1RB1LF_1RC0RE_0RD0LD_1LD0RB_0LA1RE_1LE---",
+      "module": "Raw43RE1Growth",
+      "partial": "BB6.Agent25Raw43RE1M10.table",
+      "never": "BB6.Agent25Raw43RE1M10.never"
+    },
+    "55": {
+      "table": "1RB0LF_1RC0RE_0RD---_1LD0RB_1LA1RE_0LE0LA",
+      "module": "Raw43RE1Growth",
+      "partial": "BB6.Agent25Raw43RE1M55.table",
+      "never": "BB6.Agent25Raw43RE1M55.never"
+    }
+  },
+  "unresolved": []
 }
