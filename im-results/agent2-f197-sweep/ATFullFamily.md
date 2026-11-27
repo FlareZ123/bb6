@@ -1,5 +1,8 @@
 # F197 complementary-AT family with arbitrary leading P counter
 
+> **Superseded by a stronger completed Lean proof.** This entire two-parameter identity is now a specialization of [the fully kernel-certified arbitrary mixed P/Q theorem](ATFreeMonoidTheorem.md), `F197.fmFullFamilyClosed` in [ATFreeMonoid.lean](ATFreeMonoid.lean), CI [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068), and strict +2 finite-bit growth in [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean), CI [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937). Set W=P^n Q (Q=TAT), so #P=n, #Q=1 and the mixed-word formula becomes `156+68(n+q)+14t` exactly. The standalone `ATCounter.lean` induction is historical, **not** a remaining proof obligation.
+
+
 **Research status (27 Nov 2026, 23:27 UTC).** The statement below is an exact mathematical consequence of explicit local source-certified rules and their inductive composition. All local rules and the arbitrary-length carry transducer already passed Lean 4.36.0-rc2 CI [46081395759](https://github.com/FlareZ123/bb6/actions/runs/46081395759) and [46081264262](https://github.com/FlareZ123/bb6/actions/runs/46081264262). The first monolithic Lean certificate `ATCounter.lean` exceeded a ten-minute CI timeout **without diagnostic output**, so its full parametric composition is pending a smaller/profiler-assisted kernel check. Do not report `atp_full_family_closed` as kernel-accepted until it is. There is no global blank-orbit nonhalting proof.
 
 ## Exact two-parameter identity
