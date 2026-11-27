@@ -22,11 +22,13 @@ theorem zeroLF_is_exact_normalized_E0 :
 /-- Transport a verified finite weighted Cover to a larger time cutoff. -/
 theorem monotone_cover {A B : Nat} (hAB : A ≤ B) {p : PartialMachine}
     (h : Cover (WeightedBound A) p) : Cover (WeightedBound B) p := by
-  cases h with
-  | leaf _ hbound =>
-      refine Cover.leaf _ ?_
+  induction h with
+  | leaf p hbound =>
+      refine Cover.leaf p ?_
       intro m hm k d hk hd
       exact Nat.le_trans (hbound m hm k d hk hd) hAB
+  | branch p s hu kids ih =>
+      exact Cover.branch p s hu (fun t ht => ih t ht)
 
 /-- First unconditional original-source ZeroLF normalized E0 Cover, at any
     B >= 19007, after the exact 3862 source proof is joined to the parent. -/
