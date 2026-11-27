@@ -25,8 +25,7 @@ theorem trace_micro_exact (n m B a : Nat) (hn : 14 ≤ n) (heven : n%2=0)
       · change total n-n-2=2*v
         omega
     refine ⟨v,v,hm,hp,hp,?_⟩
-    change v+(n+2)/2=total n/2
-    omega
+    simp [quotient] <;> omega
   | step i B a x c h hx he ih =>
     obtain ⟨v,w,hM,hv,hw,hq⟩ := ih
     have hmass := BB6.P1CarryExact.micro_mass n i v w hn hM
