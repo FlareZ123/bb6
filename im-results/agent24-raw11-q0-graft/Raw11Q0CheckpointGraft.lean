@@ -303,11 +303,6 @@ def raw11FrontierExpected : List String := [
   "1RB1RD_1RC---_0LA---_------_------_------"
 ]
 
-/-- The original frontier enumeration has a different order than the
-    historical JSON export.  Record the discrepancy without assuming an
-    invalid pointwise identity. -/
-#eval (raw11FrontierTables.map encodeTable == raw11FrontierExpected)
-
 /-- Order-independent certification of the exact first-D source frontier
     against the saved table manifest.  Sorted equality retains multiplicities
     and can be used safely to transport finite membership facts. -/
