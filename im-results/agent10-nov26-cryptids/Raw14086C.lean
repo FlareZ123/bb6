@@ -24,7 +24,7 @@ theorem ct_balance (k : Nat) (s : CTail) :
   | succ k ih =>
     have h := ih (cn s)
     have h' := cbalance s
-    simp only [ct,Raw14042Counter.turn] at h ⊢
+    change 6*(ccarry s + (ct k (cn s)).1) + crank (ct k (cn s)).2 = k+1+crank s
     omega
 
 -- Depletion of the marker costs two suffix rotations, and leaves an even bank.
@@ -106,7 +106,7 @@ theorem twoPumpAll (p j b : Nat) (Y : List Sym) :
       simpa only [Raw140VariantTransfer.Mbase,
         show 2*(j+1)+b+1=(2*j+b)+1+1+1 by omega,
         U,List.replicate_succ,List.cons_append,List.append_assoc] using
-        (⟨_,h0⟩ : Reach Raw140VariantTransfer.Mbase _ _)
+        (show Reach base _ _ from ⟨_,h0⟩)
     simpa only [show p+4+4*j=p+4*(j+1) by omega] using Reach.trans h0' (ih (p+4))
 
 -- Input bank of two symbols has one surplus two when p is odd.
@@ -117,7 +117,10 @@ theorem cFront (p : Nat) (hp : 24 ≤ p) :
   let X := U 3 (p-7) ++ [S 2]
   have h0 := positive (seedCounter X) (by omega)
   have h0' : Plus (A0 p) (counterCfg 7 0 X .c31) := by
-    simpa only [A0,counterCfg,T,cword,X,show p=(p-7)+7 by omega,U,List.replicate_succ,
+    have hp7 : U 3 p ++ [S 2] = U 3 7 ++ X := by
+      dsimp only [X]
+      rw [merge,show 7+(p-7)=p by omega]
+    simpa only [A0,counterCfg,T,cword,X,hp7,U,List.replicate_succ,List.replicate_zero,
       List.cons_append,List.append_assoc,List.nil_append] using h0
   have h1 := lift (counterIter (p-7) 7 0 [S 2] .c31)
   have h2 := lift (depleteC p (ct (p-7) .c31).1 (ct (p-7) .c31).2)
