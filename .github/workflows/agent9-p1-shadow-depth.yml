@@ -58,7 +58,7 @@ jobs:
           set -euo pipefail
           D=im-results/agent9-p1-reverse-block
           export LEAN_PATH="$D:im-results/agent45-p1-delayed-carry"
-          python tools/lean_compile_deps.py "$D/ShiftedReverseBlock.lean" | tee /tmp/shifted-reverse.log
+          python tools/lean_compile_deps.py "$D/IntegerReciprocal.lean" | tee /tmp/shifted-reverse.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/shifted-reverse.log; then exit 1; fi
           python - <<'PY'
           import re
@@ -71,11 +71,19 @@ jobs:
                   assert decl+" does not depend on any axioms" in log,decl
                   continue
               assert {x.strip() for x in m.group(1).split(",") if x.strip()} <= {"propext","Classical.choice","Quot.sound"},decl
+              
+          for name in ('estimate_near','correct_eq'):
+              decl = "'BB6.Agent9IntegerReciprocal."+name+"'"
+              m = re.search(re.escape(decl)+r" depends on axioms:\s*\[([^\]]*)\]",log)
+              if not m:
+                  assert decl+" does not depend on any axioms" in log,decl
+                  continue
+              assert {x.strip() for x in m.group(1).split(",") if x.strip()} <= {"propext","Classical.choice","Quot.sound"},decl
           PY
           g++ -O3 -march=native -std=c++17 "$D/shifted_reverse_test.cpp" -o /tmp/shifted-test
           /tmp/shifted-test
           g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-shifted
-          for mode in 0 1 2 3 4 5; do
+          for mode in 0 1 2 3 4 5 6; do
             P1_FIT="$mode" OMP_NUM_THREADS=1 /tmp/p1-shifted 3342 14000 417 half > "/tmp/shifted-$mode.log"
             grep -Fx 'END 3342 13768' "/tmp/shifted-$mode.log"
             grep -E '^CHILD |^END ' "/tmp/shifted-$mode.log" > "/tmp/shifted-$mode.children"
