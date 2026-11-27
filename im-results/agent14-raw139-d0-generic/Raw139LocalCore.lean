@@ -271,6 +271,26 @@ theorem sideCover (B : Nat) (i : Fin 7) (mv : Move) (h : sideClosed i mv = true)
   rcases he' with ⟨rfl,rfl⟩
   exact Cover.leaf _ (fun m hm => weighted_never B m (residualWitnessOK_sound _ _ hw' m hm))
 
+/-- All 24 ordinary instructions, kept local so Raw139 does not import the
+    global four-hole roster merely for enumeration. -/
+def allMoves : List Move :=
+  (List.finRange 6).flatMap fun q =>
+    [false, true].flatMap fun w =>
+      [false, true].map fun r => ⟨w, r, q⟩
+
+theorem allMoves_complete (mv : Move) : mv ∈ allMoves := by
+  rcases mv with ⟨w, r, q⟩
+  have hq : q ∈ List.finRange 6 := List.mem_finRange q
+  have hw : w ∈ [false, true] := by cases w <;> simp
+  have hr : r ∈ [false, true] := by cases r <;> simp
+  unfold allMoves
+  apply List.mem_flatMap.mpr
+  refine ⟨q, hq, ?_⟩
+  apply List.mem_flatMap.mpr
+  refine ⟨w, hw, ?_⟩
+  apply List.mem_map.mpr
+  exact ⟨r, hr, rfl⟩
+
 def allRows : List (Fin 7 × Move) := (List.finRange 7).flatMap (fun i => allMoves.map (fun mv => (i,mv)))
 def remainingRows : List (Fin 7 × Move) := allRows.filter (fun r => decide (r.2.next.val ≤ cut r.1 ∧ r.2 ≠ chosen r.1 ∧ r ∉ acceptedRows) && !sideClosed r.1 r.2)
 def rowRC : Fin 7 × Move := (6,⟨false,true,2⟩)
