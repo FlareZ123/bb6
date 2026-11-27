@@ -1,0 +1,8 @@
+# E1=0RD / D0=0RD exact six-hole cylinder
+
+Table `[7,24,11,24,14,24,13,16,24,13,24,24]`. **Complete computational candidate, original-source Lean check still required.** This is a distinct sibling of the D0=0RE cylinder. Using the original 450-step replay/FAR partition with at most two DFA states, there are 3819 splits, 70638 translated-cycle leaves, 15497 last-hole leaves, 1252 small FAR leaves, and 451 additional leaves (total 87838 ordinary leaves). Every extra leaf now has a concrete recipe: 446 unreflected width-2 block invariants, one width-3 invariant, three final-hole queries and one translated cycle. No unknown residue.
+
+The three exact late queries are index 61 at 673/F0, 64 at 571/F0, 87 at 468/F1; verified independently using an explicit finite-support primitive tape. Index 220 has a left-drifting side cycle: entry 1125, period 188, boundary -10, displacement -4; whole relevant half-tape equality independently verified. The late table at 673 is `[7,10,11,5,14,20,13,16,2,13,24,17]`. The largest ordinary first query is 245; the candidate weighted bound is 679 (673 moves, one halt, at most five initial delay moves).
+
+## Reproduce
+Use the existing untrusted replay.cpp with arguments `450 2 7 24 11 24 14 24 13 16 24 13 24 24`. Partition SHA256: `3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127`. The exact open-order recipes are checked in as recipes-d0rd.json. Use emit-d0rd.py against that partition, with the shared blockcert.py on PYTHONPATH. The reused original audit checks all split nodes, halt alternatives and leaves. The generator and discovery are untrusted; no claim of an accepted Cover until all original imports and generated modules pass the standard-axiom gate. No global roster cut.

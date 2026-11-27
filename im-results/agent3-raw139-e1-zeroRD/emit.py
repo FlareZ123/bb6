@@ -56,7 +56,7 @@ def main(part,recipes,out,cap):
  out.mkdir(parents=True,exist_ok=True);p=json.loads(part.read_text());solved={int(i):v for i,v in json.loads(recipes.read_text()).items()}
  tree,opens=p['tree'],p['open'];idx={tuple(t):i for i,t in enumerate(opens)}
  assert len(idx)==len(opens)==len(solved) and set(solved)==set(range(len(opens)))
- assert all(v[0] in ('block','last') for v in solved.values())
+ assert all(v[0] in ('block','last','cycle') for v in solved.values())
  B=max([p['counts']['maxquery']]+[v[1][0] for v in solved.values() if v[0]=='last'])+6
  base='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'
  blocks={};bi=[i for i,v in solved.items() if v[0]=='block']
@@ -85,7 +85,7 @@ def main(part,recipes,out,cap):
    rev,d,dfa,t0,t1,z=a;return f'.far {bl(rev)} {d} ⟨0,{dfa},{t0},{t1},{z}⟩'
   if k=='open':
    i=idx[tuple(a[0])];s=solved[i]
-   if s[0]=='last':return leaf(('last',*s[1]))
+   if s[0] in ('last','cycle'):return leaf((s[0],*s[1]))
    return f'.proven {NS}Blocks.H{i}.ctr {NS}Blocks.H{i}.never'
   raise ValueError(k)
  def emit_check(name,t,steps,s,children,lines):
