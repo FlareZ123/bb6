@@ -105,3 +105,20 @@ function scanPrefix(table,options={}){
 }
 module.exports={scanPrefix};
 
+
+if(require.main===module){
+ const fs=require('node:fs'),path=require('node:path');
+ const {search,searchPeriodic}=require('./q0-open-automata.cjs');
+ const {verify}=require('./verify-coarse-pumps.cjs');
+ const pumps=require('./q0-coarse-pumps.json');for(const c of pumps)verify(c);
+ const known=new Map(pumps.map(c=>[c.table,c.root]));
+ const route=require('../agent47-raw11-adapter/raw11-route.json');
+ const id=Number(process.argv[2]),out=process.argv[3],cap=Number(process.argv[4]||2000000);
+ if(!Number.isSafeInteger(id)||!route.targets[id]||!out||!Number.isSafeInteger(cap)||cap<1)throw Error('usage: q0 id output-dir [node cap]');
+ const result=scanPrefix(route.targets[id],{search,searchPeriodic,known,cap});
+ fs.mkdirSync(out,{recursive:true});
+ const {tree,...summary}=result;summary.id=id;summary.cap=cap;summary.scanner='shared-prefix-v1';
+ fs.writeFileSync(path.join(out,'summary.json'),JSON.stringify(summary,null,2)+'\n');
+ fs.writeFileSync(path.join(out,'tree.json'),JSON.stringify(tree));
+ console.log(JSON.stringify(summary));
+}
