@@ -56,7 +56,7 @@ def main(part,recipes,out,cap):
  out.mkdir(parents=True,exist_ok=True);p=json.loads(part.read_text());solved={int(i):v for i,v in json.loads(recipes.read_text()).items()}
  tree,opens=p['tree'],p['open'];idx={tuple(t):i for i,t in enumerate(opens)}
  assert len(idx)==len(opens)==len(solved) and set(solved)==set(range(len(opens)))
- assert all(v[0] in ('block','last','cycle') for v in solved.values())
+ assert all(v[0] in ('block','last','cycle','counter') for v in solved.values())
  B=max([p['counts']['maxquery']]+[v[1][0] for v in solved.values() if v[0]=='last'])+6
  base='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'
  blocks={};bi=[i for i,v in solved.items() if v[0]=='block']
@@ -74,6 +74,7 @@ def main(part,recipes,out,cap):
  base+=f'namespace {NS}\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit BB6Coverage.Agent10ZipAudit BB6.Agent3PackedAudit BB6.Agent48PackedPrefix\n'
  def imports_for(s):
   needed={blocks[int(i)] for i in re.findall(r'Blocks\.H(\d+)\.ctr',s)}
+  if 'BB6.Agent3CounterCarry.ctr' in s:needed.add('CounterCarryBridge')
   needed|={module_for[n] for n in re.findall(r'\b[pth](R\d+(?:_\d+)*)\b',s) if n in module_for}
   return 'import FastThreeHoleAudit\nimport PackedPrefixAudit\n'+''.join(f'import {m}\n' for m in sorted(needed))
  def leaf(n):
@@ -86,6 +87,9 @@ def main(part,recipes,out,cap):
   if k=='open':
    i=idx[tuple(a[0])];s=solved[i]
    if s[0] in ('last','cycle'):return leaf((s[0],*s[1]))
+   if s[0]=='counter':
+    assert i==s[1] and i in (210,251,657)
+    return f'.proven BB6.Agent3CounterCarry.ctr{i} BB6.Agent3CounterCarry.never{i}'
    return f'.proven {NS}Blocks.H{i}.ctr {NS}Blocks.H{i}.never'
   raise ValueError(k)
  def emit_check(name,t,steps,s,children,lines):

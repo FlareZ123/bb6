@@ -33,6 +33,7 @@ PY
   exit 0
 fi
 case "$kind" in
+E1D0ZeroLA) d=0; emitter=emit-d0la.py; recipes=recipes-d0la.json; hash=badd35612f9653ed71106e91dde892cbe7dbf4072da92663cd49549eb7af49d1; suffix=ZeroLA; B=4653;;
 E1D0ZeroRD) d=13; emitter=emit-d0rd.py; recipes=recipes-d0rd.json; hash=3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127; suffix=ZeroRD; B=679;;
 E1D0OneRB) d=7; emitter=emit-d0rb1.py; recipes=recipes-d0rb1.json; hash=b6d3c1914722160084d71c5631f0dd344943d0c985b45cbfb8827851e8b75ce5; suffix=OneRB; B=435;;
 E1D0ZeroRE) d=17; emitter=emit.py; recipes=recipes.json; hash=3d69cf3e91812cebf72213a743adbf463e7d0bfd8733092ccaec1bc06315b2a6; suffix=ZeroRE; B=533;;
