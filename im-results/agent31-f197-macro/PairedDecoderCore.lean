@@ -4,6 +4,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace F197
+open Q
 
 /-
 Exact local decoder-peel rules for the paired-prefix reset family.
@@ -34,7 +35,7 @@ theorem peelA_u_t (l r : Tape) :
     pre [false,false,true,false,true,true,true,true,false,false,false] r⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 16 m = some (60,m') := by
-    dsimp [m,m']; rw [← decompose l, ← decompose r]; rfl
+    dsimp [m,m']; rw [← decompose l, ← decompose r]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 16 m 60 m' hv hc
 
 theorem peelA_u_At (l r : Tape) :
@@ -55,7 +56,7 @@ theorem peelA_u_At (l r : Tape) :
     pre [false,false,true,false,true,true,false,true,true,true,false,false,false] r⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 16 m = some (60,m') := by
-    dsimp [m,m']; rw [← decompose l, ← decompose r]; rfl
+    dsimp [m,m']; rw [← decompose l, ← decompose r]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 16 m 60 m' hv hc
 
 theorem peelT_Ct_t (l r : Tape) :
@@ -76,7 +77,7 @@ theorem peelT_Ct_t (l r : Tape) :
     pre [false,false,true,false,true,true,true,true,false,false,false] r⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 17 m = some (64,m') := by
-    dsimp [m,m']; rw [← decompose l, ← decompose r]; rfl
+    dsimp [m,m']; rw [← decompose l, ← decompose r]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 17 m 64 m' hv hc
 
 theorem peelT_Ct_At (l r : Tape) :
@@ -97,7 +98,7 @@ theorem peelT_Ct_At (l r : Tape) :
     pre [false,false,true,false,true,true,false,true,true,true,false,false,false] r⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 17 m = some (64,m') := by
-    dsimp [m,m']; rw [← decompose l, ← decompose r]; rfl
+    dsimp [m,m']; rw [← decompose l, ← decompose r]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 17 m 64 m' hv hc
 
 theorem peelA_u_e (l : Tape) :
@@ -116,7 +117,7 @@ theorem peelA_u_e (l : Tape) :
     pre [false,false,true,false,true,true] blank⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 16 m = some (60,m') := by
-    dsimp [m,m']; rw [← decompose l]; rfl
+    dsimp [m,m']; rw [← decompose l]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 16 m 60 m' hv hc
 
 theorem peelA_u_Ae (l : Tape) :
@@ -137,7 +138,7 @@ theorem peelA_u_Ae (l : Tape) :
     pre [false,false,true,false,true,true,false,true] blank⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 16 m = some (60,m') := by
-    dsimp [m,m']; rw [← decompose l]; rfl
+    dsimp [m,m']; rw [← decompose l]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 16 m 60 m' hv hc
 
 theorem peelT_Ct_e (l : Tape) :
@@ -156,7 +157,7 @@ theorem peelT_Ct_e (l : Tape) :
     pre [false,false,true,false,true,true] blank⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 17 m = some (64,m') := by
-    dsimp [m,m']; rw [← decompose l]; rfl
+    dsimp [m,m']; rw [← decompose l]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 17 m 64 m' hv hc
 
 theorem peelT_Ct_Ae (l : Tape) :
@@ -177,7 +178,7 @@ theorem peelT_Ct_Ae (l : Tape) :
     pre [false,false,true,false,true,true,false,true] blank⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 17 m = some (64,m') := by
-    dsimp [m,m']; rw [← decompose l]; rfl
+    dsimp [m,m']; rw [← decompose l]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 17 m 64 m' hv hc
 
 /-- Decoder base for leading data bit T: x·C·e becomes A A A T. -/
@@ -198,7 +199,7 @@ theorem decoder_base_T (l : Tape) :
     pre [false,false,true] blank⟩
   have hv : valid m := by rfl
   have hc : macroRunExact 8 m = some (31,m') := by
-    dsimp [m,m']; rw [← decompose l]; rfl
+    dsimp [m,m']; rw [← decompose l]; simp [macroRunExact, macroStep, pre, tail, cons]
   simpa [m,m',physical] using macroRunExact_sound 8 m 31 m' hv hc
 
 #print axioms decoder_base_T
