@@ -16,3 +16,11 @@ The 227 bank entries have at most 1,318 abstract configurations and 92 sparse st
 4. To rediscover from the four artifacts use `python factor_search.py depth0.zip depth1.zip depth2.zip depth3.zip`. The deterministic fixture path avoids redundant search.
 
 This is a locally kernel-checked certificate bank against recovered accepted objects, not an independently dispatched full-source Raw36 parent audit. Raw36 remains open and BB(6) remains unsolved.
+
+## Affine sweeps and counter continuation
+
+Among the 164 residual literals, symbolic sweep discovery supplied 161 distinct exact affine-growth certificates. Reconstruct the bank and emit Lean files with `python sweep_search.py /tmp/autolean`. Canonical JSON SHA256 `a831464ee07644ab283ca4e5ca2045fb86aefe9749347d1c339b2bece5518015`; each literal is encoded by A–X = 12*write+6*right+next, Y = missing transition. All certificates are candidates until their `Agent46AutoPump.check` theorem checks; 24 of 161 were independently checked at this checkpoint, remaining local checks in progress. The existing Raw13 `emitGrowthBank.emit_growth` is reused.
+
+The first of the other three literals, `1RB1LF1RC0LA0RD1RE0LD1LB0RC---0LE0LB`, is fully kernel checked in `Raw36Counter1.lean` against the accepted objects plus locally compiled existing `Agent46OpenLeftSweep.lean`. It exposes `BB6Coverage.Agent31Pump.Auto.Raw36Counter1.never` with axioms [propext, Quot.sound]. It has A-state frame (encode(bits) ++ terminal, 01000) with little-endian digits 110/111 and terminal either empty (width positive) or 1. Exact normal carry replaces 111^k 110 by 110^k 111 at cost 8k+24 for an arbitrary protected left tail. Phase-0 all-ones width k+1 becomes phase 1, k zeros and one high one at cost 8k+26. Phase-1 all-ones width k becomes phase 0, k+1 zeros at cost 8k+24. Blank seed t=17. These three positive-cost transitions close the invariant at every width.
+
+The remaining two literals without a discovered proof are `1RB1RD1RC0LA0RD1RE0LD1LB1LD1RF---0RB` and `1RB0LB1RC0LA0RD1RE0LD1LB0RF---1LD0RA`. Neither parent coverage nor a new canonical decrement is claimed.
