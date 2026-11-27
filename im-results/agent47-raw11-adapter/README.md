@@ -1,6 +1,6 @@
 # Raw11 conditional parent coverage
 
-**Current locally kernel-checked interface: 167 residual cylinders at any common bound B ≥ 4663.** The original Raw11 parent is `1RB---_1RC---_0LA---_------_------_------`. No complete Raw11 Cover or BB(6) upper bound follows yet. The last CI-accepted interface has 237 residuals; the seventy additional Covers described below were compiled locally against its immutable accepted dependency artifacts.
+**Current locally kernel-checked interface: 157 residual cylinders at any common bound B ≥ 4663.** The original Raw11 parent is `1RB---_1RC---_0LA---_------_------_------`. No complete Raw11 Cover or BB(6) upper bound follows yet. The last CI-accepted interface has 237 residuals; the eighty additional Covers described below were compiled locally against its immutable accepted dependency artifacts.
 
 ## Exact route and consumers
 
@@ -50,6 +50,12 @@ All five exported theorem axiom profiles are [propext, Classical.choice, Quot.so
 ## Additional ten complete q0 parents
 
 The nine larger known source parents were reconstructed in Lean at bound 100 (9,753 nodes, maximum queried halt bound 99), source commit abbf310c39dbcea04392fbf8c713540e069c76d9. All nine proof parts and the exact roster consumer compiled locally; their remote blobs equal the compiled source hashes. Root28 contains a difficult exceptional finite-automaton leaf; its original push transitions were recovered from the older Root28Lean source and reused in the independent certificate generator. Root28's full 289-node tree and exact consumer compiled locally, at bound 100. The exported covers, exact membership, remaining census and conditional coverage theorem use only [propext, Classical.choice, Quot.sound]. Together these establish 299→157 at B≥4663. No global BB(6) upper bound follows without the retained obligations.
+
+## Held q0 index 156: exact weighted Cover
+
+The held cylinder `1RB1RD_1RC0LD_0LA0RE_1LA1LB_0RF---_0LA1RA` is now closed in Lean for **every** compatible completion and every bound B. Reuse Agent13's source-accepted BlockFAR theorem `BB6Generated.Q00000.source_never` from [CI 45605504334](https://github.com/FlareZ123/bb6/actions/runs/45605504334), rather than rebuilding a large primitive automaton. `Raw11Q0Held156.lean` proves exact literal equality, base-26 code 27872153587416843, membership count one in the CI-accepted 237 roster, and an unconditional per-cylinder Cover. Its `cover_from_remaining` and kernel-checked census establish an independent **299→236** conditional route at B≥4663. The generic `discharge` theorem works on any roster, including the 157-entry route once its exact composition is compiled; the combined 156 census is not yet kernel-checked.
+
+Reproduce using the existing immutable 237 dependency artifacts documented above, Q00000 artifact 15017647753 (SHA-256 25422042e61384d732ff7f8420f16ae932858cb42f5c9975bd7a1b3ca63f375f; source commit d477d96f68e6d10c305355eaea09a8bf89269b54; width 3, cap 2, modulus 2, runs 5, no flip), and BlockFAR dependencies from accepted Raw110 artifact 15014940132. The original BlockMacro, BlockFAR, SparseBlockFAR, RangeCheck and BlockFARBridge source blobs match the pinned Q00000 revision; the shared Frontier.olean is byte-identical to the 237 route dependency. Lean 4.36.0-rc2 compiled the new module locally, exit 0. Source SHA-256 9f31a5f6a64ce09db3eb17bed903efabb994af53173eb5674dfa12413f829da4. All eight printed theorems use only standard axioms (propext, Classical.choice, Quot.sound, or subsets). No sorryAx or native_decide.
 
 ## Outstanding obligations
 
