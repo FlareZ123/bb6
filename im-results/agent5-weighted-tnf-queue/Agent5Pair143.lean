@@ -95,12 +95,12 @@ theorem codeBlock {X a b} (h : Code X a b) :
 theorem codeBlocks (j k : Nat) :
     Code (B j ++ true::V k) (2*j+1) (j+2*k) := by
   induction j with
-  | zero => exact codeUnary k
+  | zero => simpa [B,rep] using codeUnary k
   | succ j ih =>
     have h := codeBlock ih
     have ha : 2*j+1+2 = 2*(j+1)+1 := by omega
     have hb : j+2*k+1 = (j+1)+2*k := by omega
-    rw [ha,hb] at h
+    rw [hb,ha] at h
     exact h
 
 def EndWord (j k : Nat) := [true,true,true,false] ++ B j ++ true::V k
@@ -119,6 +119,7 @@ theorem section2 {p} (L : LeftRules p) (R : RightRules p) (k j : Nat) :
   have c := leftScan L (codeEnd j k) 0 1
   have he : 1+(j+2*k+2) = 3+j+2*k := by omega
   rw [he] at c
+  simp only [Nat.zero_add] at c
   exact (a.trans b).trans c
 
 theorem section3 {p} (L : LeftRules p) (R : RightRules p) (k j : Nat) :
@@ -128,6 +129,7 @@ theorem section3 {p} (L : LeftRules p) (R : RightRules p) (k j : Nat) :
   have c := leftScan L (codeEnd j k) 0 1
   have he : 1+(j+2*k+2) = 3+j+2*k := by omega
   rw [he] at c
+  simp only [Nat.zero_add] at c
   exact (a.trans b).trans c
 
 def E (n : Nat) := S (2*n) (5*n+2)
