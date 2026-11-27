@@ -1,4 +1,4 @@
-import Macro
+import MacroExact
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -8,11 +8,10 @@ namespace F197
 /-
 At a B boundary the accelerated sweep coordinate omits one guaranteed zero
 between the current cell and its shortened right word.  Thus the Macro.lean
-right stack is 0 :: (shortened sweep right).  The theorems below use the
-literal Macro.lean coordinate.
+right stack is 0 :: (shortened sweep right).  These proofs execute the exact
+verified macro semantics and then appeal to macroRunExact_sound.
 -/
 
-/-- Consume one P=AAT block when the shortened right word begins 0·u. -/
 theorem reset_P_consume_us (l r : Tape) :
     run 36
       (other B
@@ -22,10 +21,21 @@ theorem reset_P_consume_us (l r : Tape) :
       (other B l
         (pre [false, false, true, true, true, true, false, false, false,
               true, true, true, true, true, false, false, false] r)) := by
-  rw [← decompose l, ← decompose r]
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  let m : MacroConfig :=
+    ⟨.B,
+      pre [true, false, true, false, true, true, false, false] l,
+      pre [false, false, true, true, true, true, false, false, false] r⟩
+  let m' : MacroConfig :=
+    ⟨.B, l,
+      pre [false, false, true, true, true, true, false, false, false,
+           true, true, true, true, true, false, false, false] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 13 m = some (36, m') := by
+    dsimp [m, m']
+    rw [← decompose l, ← decompose r]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 13 m 36 m' hv hc
 
-/-- First P-consumption from terminal reset right e. -/
 theorem reset_P_consume_e (l : Tape) :
     run 36
       (other B
@@ -35,11 +45,21 @@ theorem reset_P_consume_e (l : Tape) :
       (other B l
         (pre [false, false, true, true, true, true, false, false, false,
               true, true] blank)) := by
-  rw [← decompose l]
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  let m : MacroConfig :=
+    ⟨.B,
+      pre [true, false, true, false, true, true, false, false] l,
+      pre [false, false, true] blank⟩
+  let m' : MacroConfig :=
+    ⟨.B, l,
+      pre [false, false, true, true, true, true, false, false, false,
+           true, true] blank⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 13 m = some (36, m') := by
+    dsimp [m, m']
+    rw [← decompose l]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 13 m 36 m' hv hc
 
-/-- One decoder step: J on the left and x·s on the shortened right transfer
-    one P behind J while deleting the s. -/
 theorem reset_decoder_s (l r : Tape) :
     run 32
       (other B
@@ -51,10 +71,23 @@ theorem reset_decoder_s (l r : Tape) :
         (pre [true, false, false, true, false, true, false, true, true,
               false, false] l)
         (pre [false, false, true, false] r)) := by
-  rw [← decompose l, ← decompose r]
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  let m : MacroConfig :=
+    ⟨.B,
+      pre [true, false, false] l,
+      pre [false, false, true, false, true, true, true, true, true,
+           false, false, false] r⟩
+  let m' : MacroConfig :=
+    ⟨.B,
+      pre [true, false, false, true, false, true, false, true, true,
+           false, false] l,
+      pre [false, false, true, false] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (32, m') := by
+    dsimp [m, m']
+    rw [← decompose l, ← decompose r]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 8 m 32 m' hv hc
 
-/-- Terminal decoder step x·d -> e, replacing leading J by P. -/
 theorem reset_decoder_d (l : Tape) :
     run 27
       (other B
@@ -64,8 +97,20 @@ theorem reset_decoder_d (l : Tape) :
       (other B
         (pre [true, false, true, false, true, true, false, false] l)
         (pre [false, false, true] blank)) := by
-  rw [← decompose l]
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  let m : MacroConfig :=
+    ⟨.B,
+      pre [true, false, false] l,
+      pre [false, false, true, false, true, true] blank⟩
+  let m' : MacroConfig :=
+    ⟨.B,
+      pre [true, false, true, false, true, true, false, false] l,
+      pre [false, false, true] blank⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 7 m = some (27, m') := by
+    dsimp [m, m']
+    rw [← decompose l]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 7 m 27 m' hv hc
 
 #print axioms reset_P_consume_us
 #print axioms reset_P_consume_e
