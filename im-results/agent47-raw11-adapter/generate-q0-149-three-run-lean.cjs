@@ -40,7 +40,7 @@ function eqProof(a,b){
  if(x.tail!==undefined){if(x.tail!==y.tail)throw Error("different tails");h="rfl";}
  else {if(x.bit!==y.bit)throw Error("different bits");h="congrArg (block "+x.bit+") (show ("+x.n+") = ("+y.n+") by omega)";}
  if(a.length===1)return h;
- return "congrArg₂ List.append ("+h+") ("+eqProof(a.slice(1),b.slice(1))+")";
+ return "appendCong ("+h+") ("+eqProof(a.slice(1),b.slice(1))+")";
 }
 function proof(a,b,cn,pad){
  if(pad!==undefined)return "      exact "+pad+"\n";
@@ -84,4 +84,4 @@ function gen(m){
  out+="theorem cover (B : Nat) : Cover (WeightedBound B) table :=\n  .leaf _ fun m hm => weighted_never B m (never m hm)\n#print axioms cover\nend M"+m.index+"\n";
  return out;
 }
-console.log("import Agent47Q0149Region\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\nnamespace BB6Coverage.Agent31Pump.Q0149.Raw11\nopen BB6Coverage Agent31Pump Frame150 BB6.Agent13BlankDelay\n"+build().map(gen).join("\n")+"\nend BB6Coverage.Agent31Pump.Q0149.Raw11");
+console.log("import Agent47Q0149Region\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\nnamespace BB6Coverage.Agent31Pump.Q0149.Raw11\nopen BB6Coverage Agent31Pump Frame150 BB6.Agent13BlankDelay\ntheorem appendCong {a b c d : List Bool} (h : a = b) (g : c = d) : a ++ c = b ++ d := by cases h; cases g; rfl\n"+build().map(gen).join("\n")+"\nend BB6Coverage.Agent31Pump.Q0149.Raw11");
