@@ -129,12 +129,14 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python "$root/generate.py"
-          python "$root/generate.py" 0rd
+          for v in 0rd 1rd 0re 1re 0rf 1lb 0rc 0lf 1la 1le 1rf 1lf; do
+            python "$root/generate.py" "$v"
+          done
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" --label raw43-parent-cut \
-            --theorem BB6.Agent25Raw43Parent.cover --artifact-name raw43-parent-cut-proof \
-            "$root/Raw43ParentCut.lean" 2>&1 | tee /tmp/a25-raw43-parent.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-raw43-parent.log BB6.Agent25Raw43Parent.remaining_count BB6.Agent25Raw43Parent.sound BB6.Agent25Raw43Parent.cover
+            --theorem BB6.Agent25Raw43ParentAll.cover --artifact-name raw43-parent-cut-proof \
+            "$root/Raw43ParentCutAll.lean" 2>&1 | tee /tmp/a25-raw43-parent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-raw43-parent.log BB6.Agent25Raw43ParentAll.remaining_count BB6.Agent25Raw43ParentAll.sound BB6.Agent25Raw43ParentAll.cover
           cp /tmp/a25-raw43-parent.log "$work/audit.log"
       - name: Retain Raw43 parent cut proof
         if: inputs.target == 'raw43-parent-cut'
