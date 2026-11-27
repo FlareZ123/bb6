@@ -53,7 +53,11 @@ def kids (h : NeverHalts published) : Move → Cut := byCutMove [
   .bounded BB6.Raw13Coupled5SiblingOneRF.parent 10007 BB6.Raw13Coupled5SiblingOneRF.bound]
 def parentCut (h : NeverHalts published) : Cut := .split 9 (3,false) (kids h)
 
-theorem parent_support : TNFSupport parent 5 := by decide
+theorem parent_support : TNFSupport parent 5 := by
+  have h1 : TNFSupport p1 4 := refine_support BB6.Agent46Raw13.raw13 (0,true) ⟨true,false,3⟩ 3 4 BB6.Agent46Raw13.raw13_support (by decide) (by decide) (by decide)
+  have h2 : TNFSupport p2 4 := refine_support p1 (3,true) ⟨false,false,0⟩ 4 4 h1 (by decide) (by decide) (by decide)
+  have h3 : TNFSupport p3 5 := refine_support p2 (2,true) ⟨true,true,4⟩ 4 5 h2 (by decide) (by decide) (by decide)
+  exact refine_support p3 (4,true) ⟨false,true,3⟩ 5 5 h3 (by decide) (by decide) (by decide)
 theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
   weightedTNFNoAssignedHalt_refine _ _ _ (
   weightedTNFNoAssignedHalt_refine _ _ _ (
