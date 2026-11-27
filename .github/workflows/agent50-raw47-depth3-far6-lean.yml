@@ -275,7 +275,8 @@ jobs:
           test "${#roots[@]}" -gt 0
           M=$(find /tmp/a50-far -name manifest.json -print -quit)
           test -n "$M"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 mixed FAR/graph parents $PARENTS" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$W/imports/graph-hits.txt" "${roots[@]}" 2>&1 | tee "$W/log"
+          jobs=2; if [[ "${#ids[@]}" -eq 1 ]]; then jobs=1; fi
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs "$jobs" --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 mixed FAR/graph parents $PARENTS" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$W/imports/graph-hits.txt" "${roots[@]}" 2>&1 | tee "$W/log"
           python - "$W/log" "$W/imports/ids.txt" "$W/imports/partial-ids.txt" <<'PY'
           import re,sys
           log=open(sys.argv[1]).read()

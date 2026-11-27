@@ -268,7 +268,7 @@ theorem bound (m : Machine) (hm : compatible p m) : WeightedBound 10006 m :=
 theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m :=\n  quotientSafe root bound m hm\n#print axioms all_quotient
 '''
     source+=f'end BB6.Agent50.Raw47D3{kind}{i}\n'
-    if len(source)>100000 and trees[i][0]=='split':
+    if len(source)>45000 and trees[i][0]=='split':
         write_sharded(out,i,trees[i],source,kind,emit,emit_partial)
     else:
         (out/f'Raw47D3{kind}{i}.lean').write_text(source)

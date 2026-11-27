@@ -1,10 +1,11 @@
 """Recursively certify oversized mixed audit trees in bounded source shards."""
-def write_sharded(out,i,tree,source,kind,emit,emit_partial,limit=75000):
+def write_sharded(out,i,tree,source,kind,emit,emit_partial,limit=35000):
     root=f'Raw47D3{kind}{i}'
     ns='BB6.Agent50.'+root
     partial=kind=='U'
     typ='PartialAudit' if partial else 'Audit'
     checker='partialPrefixCheck' if partial else 'prefixCheck'
+    quick='quickPartialCheck_eq' if partial else 'quickCheck_eq'
     split='BB6.Agent50SplitMixedPrefix.partialSplit_checked' if partial else 'split_checked'
     selector='byPartialMove' if partial else 'byMove'
     emitter=emit_partial if partial else emit
@@ -33,7 +34,7 @@ open BB6.Agent47PartialAudit BB6.Agent50PartialPrefix BB6.Agent50SplitPrefix
         txt=emitter(t,i)
         if t[0]!='split' or len(txt)<=limit:
             body=head+f'def {term} : {typ} := {txt}\n'
-            body+=f'theorem {check} : {checker} 10006 ({pexpr}) {term} = true := by decide +kernel\n'
+            body+=f'theorem {check} : {checker} 10006 ({pexpr}) {term} = true := (BB6.Agent50QuickPrefix.{quick} 10006 ({pexpr}) {term}).symm.trans (by decide +kernel)\n'
         else:
             _,n,s,kids=t
             assert len(kids)==24
