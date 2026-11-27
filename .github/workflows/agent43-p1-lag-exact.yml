@@ -20,7 +20,7 @@ jobs:
           A=im-results/agent45-p1-delayed-carry
           B=im-results/agent50-p1-dyadic-width
           C=im-results/agent43-p1-high-cost-reset-count
-          export LEAN_PATH="$A:$B:$C"
+          export LEAN_PATH="$A:$B:$C:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent28-p1-modular-screen:im-results/agent28-p1-full-prefix"
           lean --version
           lean -o "$B/P1CarryExact.olean" "$B/P1CarryExact.lean"
           lean -o "$A/LagCore.olean" "$A/LagCore.lean"
@@ -28,3 +28,6 @@ jobs:
           lean -o "$C/LagExact.olean" "$C/LagExact.lean"
           lean -o "$C/LagGuarded.olean" "$C/LagGuarded.lean"
           lean -o "$C/LagGuardedTrace.olean" "$C/LagGuardedTrace.lean"
+          set -o pipefail
+          python tools/lean_compile_deps.py "$C/LagBoundary.lean" | tee /tmp/lag-boundary.log
+          if grep -Eq 'sorryAx|error:' /tmp/lag-boundary.log; then exit 1; fi
