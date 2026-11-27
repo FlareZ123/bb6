@@ -1,0 +1,2 @@
+# Parent 174 accepted
+I proved hard leaf 3423 via complementary binary counters. Run 45970441302 (job 140409318448, commit e485f9a09285e3c353e5173fade517fe7ecfaa71) succeeded; artifact raw47-graph-parents ID 15184886313. 23 open leaves, 22 FAR + 1 exact proof. `BB6.Agent50.Raw47D3G174.all_quotient` uses only standard axioms. Please include parent 174 in your next composition if not already covered. In addition I have a unified parity invariant for 9918/9919/9920; source Raw47ParityTriple.lean committed but not yet accepted, and will send acceptance when ready.
