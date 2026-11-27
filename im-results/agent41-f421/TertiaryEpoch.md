@@ -1,6 +1,6 @@
 # F421 tertiary countdown after secondary exhaustion
 
-**Status:** Paper-level induction from the exact word-return and complete-drain formulas; standalone arithmetic lemmas locally kernel-checked. At the authentic odd-65700 frontier, a tertiary countdown of 2^8214−1 cycles is safe under the proven guards. Original-source composition, the tertiary-zero boundary, whole-machine verdict and BB(6) maximality remain open. No primitive-step total or new BB(6) bound is claimed.
+**Status:** Paper-level induction from the exact word-return and complete-drain formulas; standalone arithmetic lemmas locally kernel-checked. At the authentic odd-65700 frontier, a tertiary countdown of 2^8214−1 cycles is safe under the proven guards. The conditional tertiary-zero crossing is now derived in [TertiaryZero.md](TertiaryZero.md); original-source composition, the next secondary primary guard, whole-machine verdict and BB(6) maximality remain open. No primitive-step total or new BB(6) bound is claimed.
 
 ## Tertiary cycle
 
@@ -34,4 +34,4 @@ Secondary-zero checkpoint hash f5e445d70cf1b2fc1982201911c6557b6c2b9fd5a1b9ee082
 
 TertiaryGuard.lean formalizes modular drain, Q-budget growth, crossing and leading modulus arithmetic; Lean 4.36.0-rc2 locally accepted, standard axiom profiles. Source bridge for arbitrary terminal deletions remains paper-level, and authentic seed is numerical.
 
-Next: symbolic primary head evolution to reach tertiary-zero without explicitly iterating S cycles. Tail endpoint closed; primary endpoint not. Do not extend tiny finite traces.
+The crossing at zero no longer requires explicit primary-head iteration: see TertiaryZero.md for the universal guarded crossing and the autonomous normalized head recurrence. The next secondary counter has 8215 set bits; its tail budgets hold, but its primary budget is unresolved.
