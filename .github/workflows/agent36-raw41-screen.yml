@@ -12,6 +12,14 @@ on:
         description: Canonical residual index (0–152) for targeted FAR run
         type: string
         default: '88'
+      dfa:
+        description: Maximum FAR DFA size (default 5; 6 is expensive)
+        type: number
+        default: 5
+      search_seconds:
+        description: Seconds allowed for exact FAR search
+        type: number
+        default: 900
 
 permissions:
   contents: read
@@ -47,7 +55,7 @@ jobs:
       - name: Reuse exact canonical enumeration and search FAR
         run: |
           python3 im-results/agent36-raw41/close_candidate.py \
-            --index ${{ inputs.index }} --dfa 5 --time 900 \
+            --index ${{ inputs.index }} --dfa ${{ inputs.dfa }} --time ${{ inputs.search_seconds }} \
             --out raw41-target-candidate
           cat raw41-target-candidate/summary.json
       - uses: actions/upload-artifact@v4
