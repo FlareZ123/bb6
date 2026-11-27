@@ -50,7 +50,9 @@ theorem grow (n : Nat) :
   have h2 := sweepR table 0 [false] [false] U W 12 right n W []
   have h2' : run0 table (12*n) ⟨0,[false]++W,[false]++rep U n⟩ =
       some ⟨0,[false]++rep W (n+1),[false]⟩ := by
-    simpa only [List.append_nil,rep_snoc,rep] using h2
+    simp only [List.append_assoc,List.append_nil] at h2
+    rw [rep_snoc W n] at h2
+    exact h2
   have h3 := turn (rep W (n+1))
   have h3' : run0 table 9 ⟨0,[false]++rep W (n+1),[false]⟩ =
       some ⟨0,[true]++rep T (2*(n+1)+1),[false]⟩ := by
@@ -64,7 +66,7 @@ theorem grow (n : Nat) :
   have h5' : run0 table 3 ⟨0,[true],rep V (2*(n+1)+1)++[false]⟩ =
       some (sect (n+1)) := by
     have he : V++rep V (2*(n+1)+1) = rep V (2*(n+2)) := by
-      rw [show 2*(n+2)=(2*(n+1)+1)+1 by omega,rep]
+      rw [show 2*(n+2)=(2*(n+1)+1)+1 by omega]
     have hr : rep V (2*(n+2))++[false] = [false]++rep U (n+2) := by
       rw [rep_double V (n+2)]
       exact (rotate false [true,true,false,true,true] (n+2)).symm
@@ -137,7 +139,7 @@ theorem grow (n : Nat) :
   have h34 : run0 table 8 ⟨0,[false]++rep [true] (j+1),[true]++tail n⟩ =
       some ⟨0,[true]++rep O (n+1),tail (n+1)⟩ := by
     have h := join0 h3 h4
-    rw [← hj,rep_double [true] (n+1)] at h
+    rw [← hj,rep_double [true] (n+1)] at h ⊢
     simpa only [tail,O,rep,List.append_assoc,List.cons_append,List.nil_append] using h
   have h5 := sweepL table 0 [true] [] O Z 2 left (n+1) [] (tail (n+1))
   have h5' : run0 table (2*(n+1)) ⟨0,[true]++rep O (n+1),tail (n+1)⟩ =
