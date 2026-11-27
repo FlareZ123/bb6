@@ -7,6 +7,12 @@ namespace BB6Coverage.Agent31Pump.Tails.Raw11Q0Ten143
 open BB6Coverage Agent31Pump BB6.Agent13BlankDelay
 open BB6Coverage.Agent31Pump.Pair143 Region143
 
+private theorem u1 : U 1 = [true] := rfl
+private theorem u2 : U 2 = [true,true] := rfl
+private theorem u3 : U 3 = [true,true,true] := rfl
+private theorem u4 : U 4 = [true,true,true,true] := rfl
+private theorem u5 : U 5 = [true,true,true,true,true] := rfl
+
 namespace M0
 def table : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -72,7 +78,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨15*j+22, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -80,7 +86,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨15*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 394 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
@@ -158,7 +164,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨15*j+22, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -166,7 +172,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨15*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 394 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
@@ -242,7 +248,7 @@ theorem right2 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+2))
     rw [show 5*j+2=5*j+2 by omega,Uadd]
   refine ⟨21*j+17, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right2,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right2 check_right2 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right2,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right2 check_right2 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P (EndWord j k) 0 1) := by
@@ -250,7 +256,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨21*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightRules table := ⟨right2,right3⟩
 theorem seed : run0 table 70 ⟨0,[],[]⟩ = some (O 0) := by decide +kernel
@@ -327,7 +333,7 @@ theorem right2 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+2))
     rfl
   refine ⟨23*j+17, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right2,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right2 check_right2 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right2,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right2 check_right2 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P (EndWord j k) 0 1) := by
@@ -336,7 +342,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rfl
   refine ⟨23*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightRules table := ⟨right2,right3⟩
 theorem seed : run0 table 70 ⟨0,[],[]⟩ = some (O 0) := by decide +kernel
@@ -412,7 +418,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨15*j+22, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -420,7 +426,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨15*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 394 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
@@ -496,7 +502,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨15*j+22, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -504,7 +510,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨15*j+13, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 394 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
@@ -584,7 +590,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)
     rw [show 3*(j+1)=3*j+3 by omega,Uadd]
   refine ⟨13*j+20, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,three,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,three,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right1 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)+1)))
     (A ([false,true,false,true] ++ rep [true,false,true] j ++ V k) [false,false,true]) := by
@@ -592,7 +598,7 @@ theorem right1 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)
     rw [show 3*(j+1)+1=3*j+4 by omega,Uadd]
   refine ⟨13*j+10, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,three,Iblock,IIIblock,EndWord,B,cert_right1,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right1 check_right1 j 0 (V k) []
+  simpa [A,P,Z,rep,three,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right1,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right1 check_right1 j 0 (V k) []
 
 theorem turn (X : List Bool) : Reach table (A ([false,true,false,true] ++ X) [false,false,true]) (A ([true,false,true,true,false,true] ++ X) [false,false,true]) :=
   ⟨14,by simpa [A,cert_turn,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_turn check_turn 0 0 X []⟩
@@ -600,9 +606,13 @@ theorem right : RightIII table where
   right0 := right0
   right1 k j := by
     have h := turn (rep [true,false,true] j ++ V k)
+    have hword : [true,false,true,true,false,true] ++ (rep [true,false,true] j ++ V k) =
+        [true,false] ++ IIIblock (j+1) ++ true::V k := by
+      simpa [List.append_assoc] using IIIturnWord j (V k)
+    rw [hword] at h
     have h' : Reach table (A ([false,true,false,true] ++ rep [true,false,true] j ++ V k) [false,false,true])
       (P ([true,false] ++ IIIblock (j+1) ++ true::V k) 0 1) := by
-      simpa [P,Z,U,rep,List.append_assoc,IIIturnWord] using h
+      simpa [P,Z,U,rep,List.append_assoc] using h
     exact (right1 k j).trans h'
 theorem seed : run0 table 148 ⟨0,[],[]⟩ = some (EIII 1) := by decide +kernel
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := neverIII left right 148 seed m hm
@@ -677,7 +687,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨13*j+20, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -685,7 +695,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨13*j+11, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 352 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
@@ -765,7 +775,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)
     rw [show 3*(j+1)=3*j+3 by omega,Uadd]
   refine ⟨11*j+18, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,three,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,three,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right1 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)+1)))
     (A ([false,true,false,true] ++ rep [true,false,true] j ++ V k) [false,false,true]) := by
@@ -773,7 +783,7 @@ theorem right1 (k j : Nat) : Reach table (A (true::true::V k) (false::U (3*(j+1)
     rw [show 3*(j+1)+1=3*j+4 by omega,Uadd]
   refine ⟨11*j+8, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,three,Iblock,IIIblock,EndWord,B,cert_right1,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right1 check_right1 j 0 (V k) []
+  simpa [A,P,Z,rep,three,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right1,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right1 check_right1 j 0 (V k) []
 
 theorem turn (X : List Bool) : Reach table (A ([false,true,false,true] ++ X) [false,false,true]) (A ([true,false,true,true,false,true] ++ X) [false,false,true]) :=
   ⟨12,by simpa [A,cert_turn,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_turn check_turn 0 0 X []⟩
@@ -781,9 +791,13 @@ theorem right : RightIII table where
   right0 := right0
   right1 k j := by
     have h := turn (rep [true,false,true] j ++ V k)
+    have hword : [true,false,true,true,false,true] ++ (rep [true,false,true] j ++ V k) =
+        [true,false] ++ IIIblock (j+1) ++ true::V k := by
+      simpa [List.append_assoc] using IIIturnWord j (V k)
+    rw [hword] at h
     have h' : Reach table (A ([false,true,false,true] ++ rep [true,false,true] j ++ V k) [false,false,true])
       (P ([true,false] ++ IIIblock (j+1) ++ true::V k) 0 1) := by
-      simpa [P,Z,U,rep,List.append_assoc,IIIturnWord] using h
+      simpa [P,Z,U,rep,List.append_assoc] using h
     exact (right1 k j).trans h'
 theorem seed : run0 table 132 ⟨0,[],[]⟩ = some (EIII 1) := by decide +kernel
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := neverIII left right 132 seed m hm
@@ -860,7 +874,7 @@ theorem right0 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*(j+1)
     rw [show 5*(j+1)=5*j+5 by omega,Uadd]
   refine ⟨7*j+16, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right0,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right0 check_right0 j 0 (V k) []
 
 theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3)))
     (P ([true,true,true,false] ++ Iblock j ++ true::V k) 0 1) := by
@@ -868,7 +882,7 @@ theorem right3 (k j : Nat) : Reach table (A (true::true::V k) (false::U (5*j+3))
     rw [show 5*j+3=5*j+3 by omega,Uadd]
   refine ⟨7*j+17, ?_⟩
   rw [he]
-  simpa [A,P,Z,rep,five,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
+  simpa [A,P,Z,rep,five,u1,u2,u3,u4,u5,Iblock,IIIblock,EndWord,B,cert_right3,PZ.eval,Word.eval,List.append_assoc] using check_sound table cert_right3 check_right3 j 0 (V k) []
 
 theorem right : RightI table := ⟨right0,right3⟩
 theorem seed : run0 table 468 ⟨0,[],[]⟩ = some (EI 1) := by decide +kernel
