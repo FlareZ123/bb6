@@ -57,6 +57,7 @@ on:
           - sourceHighShadow
           - sourceHighCylinder
           - sourceUnifiedShadow
+          - sourceAgent2OddOdd
           - sourceDyadicDensity
           - sourceModularHighStop
           - sourceModularHighStopCriterion
@@ -277,6 +278,9 @@ jobs:
               ;;
             sourceUnifiedShadow)
               target=im-results/agent13-residual-frontier/UnifiedShadow.lean
+              ;;
+            sourceAgent2OddOdd)
+              target=im-results/agent2-c-oddodd-cone/OddOddConeSource.lean
               ;;
             sourceDyadicDensity)
               target=im-results/agent21-c-shadow-density/DyadicSource.lean
