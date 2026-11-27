@@ -87,7 +87,7 @@ theorem sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
       · rw [equalTable_sound hR] at hq
         have hb := quotientSafe BB6.Agent25Raw43RD.p43child_root BB6.Agent25Raw43RD.all43child m hq
         exact Or.inl (fun k d hk hd => Nat.le_trans (hb k d hk hd) (by decide))
-      · exact Or.inr ⟨e, by simp [remaining,he,hL,hR], hq⟩
+      · exact Or.inr ⟨e, by simp [remaining,before,he,hL,hR], hq⟩
 theorem cover {B : Nat} (hB : 75 ≤ B)
     (hRest : ∀ e ∈ remaining, Cover (WeightedBound B) e.2) : Cover (WeightedBound B) parent := by
   apply Cover.leaf
