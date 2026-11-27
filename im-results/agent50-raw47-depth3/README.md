@@ -1,29 +1,30 @@
-# Raw47 depth-three coverage research
+# Raw47: complete exact weighted parent closure
 
-Parent `1RB---_1RC---_0RD---_1LD0RC_------_------`.
+**Parent:** `1RB---_1RC---_0RD---_1LD0RC_------_------` (seven holes; `25^7 = 6,103,515,625` physical total completions).
 
-## Accepted exact quotient cut
+## Source-accepted theorem and status
 
-**123 open depth-three cylinders at weighted bound 10,006.** The original depth-three tree has 126 first-hole splits, 1,567 cycle closures, 120 state-introduction aliases, and 1,212 distinct canonical residuals. The exact tree cut at weighted bound 84 and its count are accepted by Lean. The current source-accepted consumer removes 1,089 residual cylinders, 282 more than accepted807.
+**All 1,212 depth-three quotient residuals are closed.** The original source proof accepted by Lean 4.36.0-rc2 establishes the exact local **weighted** maximum **143,977**:
 
-`BB6.Agent50Raw47Accepted1089.local_sound` establishes that every machine quotient-compatible with the authentic Raw47 parent either satisfies `WeightedBound 10006 m` or is quotient-compatible with a member of the exact remaining roster. The kernel checks `remaining_count` (123), `closed_count` (1089), and `keys_eq`; all four theorems have standard axioms only.
+- `BB6.Agent50Raw47Complete.cover : Cover (WeightedBound 143977) parent`
+- `BB6.Agent50Raw47Complete.all_quotient`: equivalent bound over quotient-compatible machines;
+- `BB6.Agent50Raw47Complete.exact_threshold`: for every `B`, all compatible completions satisfy `WeightedBound B` **if and only if** `143977 ≤ B`.
 
-- Accepted [run 46051657196](https://github.com/FlareZ123/bb6/actions/runs/46051657196), full proof artifact [15225945201](https://github.com/FlareZ123/bb6/actions/runs/46051657196/artifacts/15225945201), SHA256 `9e4095f6cabc1e0dd5044ad11a33f783562b5f768798a115932100f65297afef`.
-- Compact exact evidence [15225510313](https://github.com/FlareZ123/bb6/actions/runs/46051657196/artifacts/15225510313), SHA256 `973d8d7d312e4125a60c9c7c42cb3ffcc21590fd1251f826f9e3d7e6e3033dd2`, includes all closed/remaining IDs and tables, source revision, root manifest, axiom audit and artifact provenance. [Remaining 123 literal tables](remaining123.txt).
-- Exact original roster SHA256 `4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d`. `FastKey.lean` proves injectivity of the twelve-slot base-26 code and the kernel computes the exact remaining list. No positional correspondence is assumed.
-- The previous accepted807 baseline was [46031130982](https://github.com/FlareZ123/bb6/actions/runs/46031130982), artifact 15214821612. The new composition consumes the eight completed graph runs 46031706884, 46032082092, 46032804061, 46033068244, 46033502720, 46033647191, 46038945002, 46040218912. All 282 additional intended parent Covers were accepted. The streamed merger processes source-accepted artifacts one at a time and writes a compact evidence package.
+The final source closure and theorem/axiom audit passed [GitHub Actions run 46068688341](https://github.com/FlareZ123/bb6/actions/runs/46068688341), source SHA `5bd193066b82be12e3fa5e1e74477a3ff3ca5193`. Its `raw47-lifted1212` artifact is **15232511020**, archive SHA-256 `bfb3faae9359044ae0ebf1c233ec23f68d63cfee18e19dfb8db8cd584ca479c8`. Exported theorems passed an axiom audit permitting only `propext`, `Classical.choice`, and `Quot.sound`; no admitted proofs are used.
 
-## Exact remaining proof edges
+This is a genuine exact weighted maximum **for Raw47**, not the exact value of BB(6). The current accepted global conditional interface remains Canonical41; Raw47's unique membership and actual representative removal must be accepted separately. The prepared [Canonical41 consumer](../agent50-raw47-canonical41/consume.py) was dispatched in [run 46069652144](https://github.com/FlareZ123/bb6/actions/runs/46069652144), and cannot be described as accepted until that run passes.
 
-Of the 123 remaining cylinders, two now have independent complete source-accepted Covers at 10,006 (601 and 609); one has an independent complete source-accepted Cover at 143,977 (61); and the other 120 are precisely the selected middle-region parents in [46051808874](https://github.com/FlareZ123/bb6/actions/runs/46051808874). The missing edge is checked composition of these additional Covers; no complete Raw47 Cover or global representative removal is yet claimed.
+## Proof decomposition
 
-**601 and 609:** previous paired job failed. Local exact enumeration found 25 and 32 open leaves. The frozen FAR5 bank closes 53 of 57; cheap run-graph closes three; exhaustive FAR6 search finds code `1010232450112` for the last leaf `1RB0LE_1RC1LA_0RD1LB_1LD0RC_1LF---_1RD0LB`. [Raw47FAR609.lean](Raw47FAR609.lean) proves nonhalting for every compatible completion; original-source local Lean RC2 checked standard axioms. The exact literal-keyed certificate is included in the generator. Both `BB6.Agent50.Raw47D3G601.all_quotient` and `BB6.Agent50.Raw47D3G609.all_quotient` passed [source CI 46052244263](https://github.com/FlareZ123/bb6/actions/runs/46052244263), standard axioms only, zero partial children. Artifacts 15225405955 (601) and 15224842816 (609).
+The original depth-three quotient tree has 126 first-hole splits, 1,567 cycle closures, 120 state-introduction aliases, and **1,212 distinct canonical residuals**. The source-accepted low-threshold consumer `BB6.Agent50Raw47Accepted1211` closes **1,211** of them at `WeightedBound 10006`, and kernel-checks that exactly one representative remains. This passed [run 46056674185](https://github.com/FlareZ123/bb6/actions/runs/46056674185) with `raw47-accepted1211` artifact 15226844140 (SHA-256 `f212fa5d6ca37857d5efe3a7c877ced0cae6d7d367d00c08dcdfbf88dee430d9`).
 
-**61:** The exact U61 partial roster has one leaf `1RB1LA_1RC0LF_0RD0LE_1LD0RC_0LA0RB_---1LB`, key 25578468639170103. Its first undefined transition occurs after 143975 moves. Generic [CheckedSweepTrace.lean](CheckedSweepTrace.lean) proves exact finite command traces; the generated 2741-command trace uses 69 chunks. Source CI [46033320715](https://github.com/FlareZ123/bb6/actions/runs/46033320715) accepted exact weighted attainment 143977 and the parent theorem `BB6.Agent50Raw47Late61Parent.all_quotient`. See [Late61.md](Late61.md). This proof cannot enter the 10,006 cut. Lift only after composing all other parent Covers.
+The sole exceptional remaining residual is index **61**, table `1RB1LA_1RC---_0RD0LE_1LD0RC_0LA---_------`. Its hard last-hole completion `1RB1LA_1RC0LF_0RD0LE_1LD0RC_0LA0RB_---1LB` reaches its undefined slot after **143,975** ordinary moves. [`CheckedSweepTrace.lean`](CheckedSweepTrace.lean) checks the exact universal block-transfer rules; the generated trace uses **2,741 commands** in 69 chunks. A halting completion has incoming blank delay **1**, giving the sharp weighted score `143975 + 1 + 1 = 143977`. The exceptional parent bound and attainment passed [run 46033320715](https://github.com/FlareZ123/bb6/actions/runs/46033320715) (artifact 15215900592). See [Late61.md](Late61.md).
 
-**Final adapter:** [Raw47CoverEmpty.lean](Raw47CoverEmpty.lean), locally checked with standard axioms, turns an exact zero residual list into a quotient theorem and `Cover (WeightedBound B)` at the same bound, and proves monotonicity to larger B. The lifted workflow emits `Raw47Complete` only if it reaches the checked empty roster; the final template is prospective until original-source CI passes.
+The lifted `Raw47Lifted1212.remaining_count` theorem checks that filtering this single certified parent produces an *empty* residual list. `Raw47Lifted1212.local_sound`, [`Raw47CoverEmpty.lean`](Raw47CoverEmpty.lean) and the source [`Raw47Complete.template`](Raw47Complete.template) transfer the 1,211 bounded branches plus parent61 to a complete parent Cover, while [`Raw47Attainment.lean`](Raw47Attainment.lean) supplies the lower bound.
 
-**Next action:** once the middle sweep completes, merge its successful artifacts and 46052244263 against accepted1089. If any U partial survives, solve its exact leaves rather than rescan the accepted bank. If the result is accepted1211, lift using late61 run 46033320715; the final Cover workflow requires exact zero residuals. Communicate the accepted whole-parent theorem and artifact to the global consumer.
+## Reproduction and scope
+
+Run the existing manual workflow [`agent50-raw47-lifted.yml`](../../.github/workflows/agent50-raw47-lifted.yml) with `mode=lift`, `base_run=46056674185`, `base_count=1211`, `late_run=46033320715`. It retrieves the pinned accepted proofs, verifies source and object compatibility, compiles `Raw47Complete`, checks its theorem and axiom profiles and exports the source manifest and Lean objects. The exact published result and caveats are recorded in [the mathematical result](../../results/2026-11-27-raw47-exact-weighted-maximum-agent50.md).
 
 ## Historical accepted cuts and methods
 
