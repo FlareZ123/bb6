@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupled5SAT, coupled5Hard, coupled5Parent, coupled6Discover, coupled6Sibling, coupled6Late, coupled6Nested, coupled6Extended, coupled6RDSweep, coupled6RBPattern, coupled6Nested0RB, coupled6Odd0RB, coupled6MirroredCounter, coupledSource, coupled4, coupledNested]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupled5SAT, coupled5Hard, coupled5Parent, coupled6Discover, coupled6Sibling, coupled6Late, coupled6Nested, coupled6Extended, coupled6RDSweep, coupled6RBPattern, coupled6Nested0RB, coupled6Odd0RB, coupled6MirroredCounter, coupled6PhasedCounter, coupledSource, coupled4, coupledNested]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -114,6 +114,8 @@ jobs:
             python "$D/emitauto.py" "$D/coupled3-auto.json" "$D/Raw13Coupled3Auto.lean" Raw13Coupled3Auto
             python "$D/generateCoupled4.py"
             ROOT="$D/Raw13Coupled4.lean"
+          elif [ "$TARGET" = coupled6PhasedCounter ]; then
+            ROOT="$D/Raw13Coupled6PhasedCounter.lean"
           elif [ "$TARGET" = coupled6MirroredCounter ]; then
             ROOT="$D/Raw13Coupled6MirroredCounter.lean"
           elif [ "$TARGET" = coupled6Odd0RB ]; then
