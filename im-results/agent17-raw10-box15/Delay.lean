@@ -98,7 +98,7 @@ theorem source_delay_cap (m : Machine) (hm : Fits raw10Remainder[15]! m)
     (d : Nat) (hd : d ∈ delays (zeroNext m) 0) : d ≤ 3 := by
   obtain ⟨e,f,_,_,_,h⟩ := source_delay_shape m hm
   rw [h] at hd
-  exact (le_max e f d hd).trans (max_le_three e f)
+  exact Nat.le_trans (le_max e f d hd) (max_le_three e f)
 
 /-- The largest actual incoming delay, not the generic five-step allowance,
     is both necessary and sufficient for the source machine's weighted bound. -/
