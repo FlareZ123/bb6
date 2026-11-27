@@ -74,7 +74,7 @@ def phase(a,b,c):
 
 def generate(i):
     ns=f'BB6.Agent50Q0149H{i}';p=TABLES[i]
-    out=['import SweepPumping','import FastFAR','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage BB6Coverage.Agent31Pump',f'def ctr : PartialMachine := FAR.fromCodes {p}']
+    out=['import SweepPumping','import FastFAR','import WeightedTNF','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent13BlankDelay',f'def ctr : PartialMachine := FAR.fromCodes {p}']
     inner=(2,('1011',G('L')),('11',G('11'),'0000',G('R')))
     target=(2,('101111',G('L')),('1111',G('11'),G('R')))
     s,cost=emit_run('inner',p,inner,target,RECIPES[i][0],'(n : Nat) (L R : List Bool)')
@@ -123,7 +123,10 @@ theorem cycle (n : Nat) : ∃ t, 0 < t ∧ run0 ctr t (phase0 n) = some (phase0 
 noncomputable def cost (n : Nat) := Classical.choose (cycle n)
 theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m :=
   never_of_growth ctr phase0 {entry} cost seed (fun n => (Classical.choose_spec (cycle n)).1) (fun n => (Classical.choose_spec (cycle n)).2) m hm
+theorem cover (B : Nat) : Cover (WeightedBound B) ctr :=
+  .leaf _ fun m hm => weighted_never B m (never m hm)
 #print axioms never
+#print axioms cover
 end {ns}
 """)
     return '\n\n'.join(out)
