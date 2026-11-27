@@ -41,17 +41,40 @@ def verify_base(work: Path, run_id: int):
     assert not item["expired"], item["id"]
 
     dirs = a68.download((item["id"], run_id, BASE_ARTIFACT_SHA), work)
-    roots = [p for p in work.rglob("Raw124Canonical58Membership.olean")
-             if "metadata" not in p.parts]
+    # The pinned producer accepted Raw113, but its optional Raw124 shell
+    # command failed (argparse exit 2). Reuse the accepted 58 closure and
+    # execute ONLY the missing Raw124 consumer, with its original gates.
+    roots = [p for p in dirs if (p / "Canonical58Raw113Graft.olean").is_file()]
     assert len(roots) == 1, [str(p) for p in roots]
-    linked = roots[0].parent
-    assert (linked / "Canonical58Raw113Graft.olean").is_file()
-    assert (linked / "Raw124ParentComplete.olean").is_file()
+    linked = roots[0]
+    metadata = work / "metadata" / str(item["id"])
+    reports58 = list(metadata.rglob("canonical58-raw113-graft.json"))
+    assert len(reports58) == 1, [str(p) for p in reports58]
+    report58 = json.loads(reports58[0].read_text())
+    assert report58["source_revision"] == run["head_sha"]
+    assert report58["remaining_residual_count"] == 58
+    assert report58["raw59_retained"]
+    assert set(report58["base_accepted"]) == {"raw119", "raw115", "raw58", "raw108", "raw118"}
+    assert report58["olean_sha256"] == a68.sha(linked / "Canonical58Raw113Graft.olean")
+    shutil.copy2(reports58[0], work / "canonical58-raw113-graft.json")
 
-    reports = [p for p in work.rglob("raw124-canonical58-membership.json")
-               if "metadata" not in p.parts]
-    assert len(reports) == 1, [str(p) for p in reports]
-    report_path = reports[0]
+    graft = linked / "Raw124Canonical58Membership.olean"
+    reports57 = list(metadata.rglob("raw124-canonical58-membership.json"))
+    if not graft.exists():
+        assert not reports57, [str(p) for p in reports57]
+        subprocess.run(
+            [sys.executable, str(HERE / "assemble_raw124_canonical57.py"),
+             "--work", str(work), "--raw124-run-id", str(RAW124_PARENT_RUN)],
+            check=True,
+        )
+        report_path = work / "raw124-canonical58-membership.json"
+    else:
+        # a68.download extracts JSON exclusively under metadata/.
+        assert len(reports57) == 1, [str(p) for p in reports57]
+        report_path = reports57[0]
+    assert graft.is_file()
+    assert (linked / "Raw124ParentComplete.olean").is_file()
+    assert report_path.is_file()
     report = json.loads(report_path.read_text())
     assert report["status"] == "source-accepted Canonical58-to-57 Raw124 delta"
     assert report["canonical58_source_revision"] == run["head_sha"]
@@ -106,7 +129,7 @@ def main():
     )])
 
     generated = work / "generated"
-    generated.mkdir()
+    generated.mkdir(exist_ok=True)
     shutil.copy2(source, generated / source.name)
     shutil.copy2(base_report_path, generated / base_report_path.name)
     report = {
