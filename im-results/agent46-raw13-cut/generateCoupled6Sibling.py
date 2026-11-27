@@ -83,13 +83,27 @@ def main(mv):
     # Additional literal witnesses can be deposited independently.
     extra_file=D/"coupled6-extra-bidfa.json"
     extras=json.loads(extra_file.read_text()) if extra_file.exists() else []
-    records=data["certs"]+[x for x in extras if x["table"] in data["unresolved"]]
+    # Exact parametric growth fixtures, independently elaborated per sibling.
+    mod="Raw13Coupled6Sibling"+mv.replace("0","Zero").replace("1","One")
+    from emitGrowthBank import emit_growth
+    growth_file=D/"coupled6-extra-auto.json"
+    growth=json.loads(growth_file.read_text()) if growth_file.exists() else []
+    selected=[x for x in growth if x["table"] in data["unresolved"] and x["table"] not in manual]
+    assert len({x["table"] for x in selected})==len(selected)
+    for first in range(0,len(selected),8):
+        name=mod+"Auto"+str(first//8)
+        batch=selected[first:first+8]
+        emit_growth(batch,D/(name+".lean"),name)
+        extra_imports.append(name)
+        ns_auto="BB6Coverage.Agent31Pump.Auto."+name
+        for i,x in enumerate(batch):
+            manual[x["table"]]=f".closed (.proven {ns_auto}.p{i} {ns_auto}.never{i})"
+    records=data["certs"]+[x for x in extras if x["table"] in data["unresolved"] and x["table"] not in manual]
     assert set(data["unresolved"])==set(manual)|{x["table"] for x in extras if x["table"] in data["unresolved"]}
     names={x["table"]:i for i,x in enumerate(records)}
     assert len(names)==len(records) and set(names)|set(manual)|set(late)==set(data["open"])
     raw=ROOT[:27]+mv+ROOT[30:]
     cut=max(5,ord(mv[-1])-64)
-    mod="Raw13Coupled6Sibling"+mv.replace("0","Zero").replace("1","One")
     ns="BB6."+mod
     nsb=ns+"BiDFA"
     qry,qs=emit_base(raw,mod,D/(mod+"Base.lean"),holes=5)
