@@ -54,7 +54,7 @@ theorem grow (n : Nat) :
   have h3 := turn (rep W (n+1))
   have h3' : run0 table 9 ⟨0,[false]++rep W (n+1),[false]⟩ =
       some ⟨0,[true]++rep T (2*(n+1)+1),[false]⟩ := by
-    rw [rep,rep_double T (n+1)]
+    rw [show rep T (2*(n+1)+1)=T++rep T (2*(n+1)) from rfl,rep_double T (n+1)]
     simpa only [W,List.append_assoc] using h3
   have h4 := sweepL table 0 [true] [] T V 3 left (2*(n+1)+1) [] [false]
   have h4' : run0 table (3*(2*(n+1)+1)) ⟨0,[true]++rep T (2*(n+1)+1),[false]⟩ =
