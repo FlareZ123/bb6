@@ -1,0 +1,24 @@
+"use strict";
+const {build}=require("./generate-q0-149-index8.cjs");
+const m=build(),bits=s=>"["+Array.from(s,c=>c==="1"?"true":"false").join(",")+"]";
+const word=w=>typeof w==="string"?"(.lit "+bits(w)+")":"(.periodic "+bits(w[0])+" "+bits(w[1])+" "+w[2]+" "+word(w[3])+")";
+const pz=z=>"⟨"+z[0]+","+word(z[1])+","+word(z[2])+"⟩";
+const action=o=>typeof o==="number"?".steps "+o:"."+(o[0]==="L"?"left":"right")+" "+o.slice(1,5).map(bits).join(" ")+" "+o[5]+" "+word(o[6])+" "+word(o[7])+" "+o[8];
+const tbl=t=>t.replaceAll("_","").match(/.{3}/g).map((v,i)=>v==="---"?"  | "+(i>>1)+","+(!!(i%2))+" => none":"  | "+(i>>1)+","+(!!(i%2))+" => some (some ⟨"+(v[0]==="1")+","+(v[1]==="R")+","+(v.charCodeAt(2)-65)+"⟩)").join("\n");
+console.log("import Agent5TailPump\nimport Agent5MultiPump\nset_option maxHeartbeats 0\nset_option maxRecDepth 100000\nnamespace BB6Coverage.Agent31Pump.Q0149Eight\nopen BB6Coverage Agent31Pump BB6.Agent13BlankDelay");
+console.log("def table : PartialMachine := fun s => match s.1.val,s.2 with\n"+tbl(m.table)+"\n  | _,_ => none");
+console.log("def cert : Tails.Cert := ⟨"+pz(m.src)+","+pz(m.target)+",["+m.ops.map(action).join(",")+"],"+m.cost.join(",")+"⟩");
+console.log("theorem checked : Tails.check table cert = true := by decide +kernel");
+console.log("def fam (n m : Nat) : Z0 := cert.source.eval n m [] []");
+console.log("theorem rotateRep (X Y : List Bool) (n : Nat) : X ++ rep (Y++X) n = rep (X++Y) n ++ X := by\n  induction n with\n  | zero => simp [rep]\n  | succ n ih =>\n    simp only [rep,List.append_assoc] at *\n    rw [← ih]\n    simp only [List.append_assoc]");
+console.log("theorem growTarget (n m : Nat) : cert.target.eval n m [] [] = fam (n+1) (m+1) := by");
+console.log("  let X : List Bool := "+bits("01")+"\n  let Y : List Bool := "+bits(m.B.slice(2))+"\n  let A : List Bool := "+bits(m.P.slice(1)+m.B.repeat(7))+"\n  let M : List Bool := "+bits(m.M)+"\n  let D : List Bool := "+bits(m.D)+"\n  let F : List Bool := "+bits(m.F));
+console.log("  have h : A ++ X ++ rep (Y++X) n ++ (Y++M++D) ++ rep D m ++ F = A ++ rep (X++Y) (n+1) ++ M ++ rep D (m+1) ++ F := by\n    rw [List.append_assoc A X (rep (Y++X) n), rotateRep]\n    simp only [rep,List.append_assoc]\n    rw [← Auto.rep_add (X++Y) n 1]\n    simp [rep,List.append_assoc]");
+console.log("  change Z0.mk 2 [false] _ = Z0.mk 2 [false] _\n  congr 1\n  simpa [fam,cert,Tails.PZ.eval,Tails.Word.eval,X,Y,A,M,D,F,List.append_assoc] using h");
+const t=m.table.replaceAll("_","").match(/.{3}/g),step=([q,l,r])=>{let s=t[2*q+ +(l[0]||"0")];if(s==="---")throw Error("hole");return s[1]==="L"?[s.charCodeAt(2)-65,l.slice(1),s[0]+r]:[s.charCodeAt(2)-65,(r[0]||"0")+s[0]+l.slice(1),r.slice(1)]};
+const zl=a=>"⟨"+a[0]+","+bits(a[1])+","+bits(a[2])+"⟩";
+let z=[0,"",""],i=0,prev="⟨0,[],[]⟩",hs=[];
+for(let k=0;k<m.seedSteps;){let n=Math.min(1000,m.seedSteps-k);for(let j=0;j<n;j++)z=step(z);let next=zl(z);console.log("theorem seed"+i+" : run0 table "+n+" "+prev+" = some "+next+" := by decide +kernel");hs.push("seed"+i);i++;k+=n;prev=next;}
+let join=hs.reduce((a,b)=>"(join0 "+a+" "+b+")");
+console.log("theorem seed : run0 table "+m.seedSteps+" ⟨0,[],[]⟩ = some (fam 0 0) := by\n  exact "+join);
+console.log("def region (s : Z0) : Prop := ∃ n m, s = fam n m\ntheorem closed (s : Z0) (hs : region s) : ∃ k t, 0<k ∧ region t ∧ run0 table k s = some t := by\n  obtain ⟨n,m,rfl⟩ := hs\n  refine ⟨480*n+6112,fam (n+1) (m+1),by omega,⟨n+1,m+1,rfl⟩,?_⟩\n  have h := Tails.check_sound table cert checked n m [] []\n  rw [growTarget] at h\n  simpa [fam,cert] using h\ntheorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=\n  Multi.never_of_region table region 34254 (fam 0 0) seed ⟨0,0,rfl⟩ closed m hm\ntheorem cover (B : Nat) : Cover (WeightedBound B) table :=\n  .leaf _ fun m hm => weighted_never B m (never m hm)\n#print axioms cover\nend BB6Coverage.Agent31Pump.Q0149Eight");
