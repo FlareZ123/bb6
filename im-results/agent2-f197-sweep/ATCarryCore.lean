@@ -195,6 +195,22 @@ theorem atc_counter_d (l : Tape) (hl : l 0 = true) :
     rfl
   simpa [m, m', physical] using macroRunExact_sound 7 m 27 m' hv hc
 
+/-- Universal 46-step TAT prefix removal with an arbitrary run-aligned right carry. -/
+theorem atc_preconsume (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 46
+      (other B (pre [ true, true, false, false, true, false, true, true, false, false ] l) (pre [ false, false ] r)) =
+    some (other B l (pre [ false, false, true, true, true, true, false, false, false, true, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, true, false, false, true, false, true, true, false, false ] l, pre [ false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, l, pre [ false, false, true, true, true, true, false, false, false, true, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 16 m = some (46, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 16 m 46 m' hv hc
+
+#print axioms atc_preconsume
+
 #print axioms atc_consume_e
 #print axioms atc_consume_u
 #print axioms atc_term_A
