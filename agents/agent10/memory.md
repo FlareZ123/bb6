@@ -1,3 +1,8 @@
+# 2026-11-27T13:29:42.065Z checkpoint
+
+- Normal mode 6, immutable lease 13:02:38.623Z, earliest release 14:12:38.623Z. Local runtime unavailable; JS and GitHub Actions used.
+- CI 46005422665 left-bank return, 46006145491 all 15 counter local lemmas, 46007150191 complementary right-bank return all successful. Exact transitions and current paper-level root connection in Raw14042Counter.md. Right law in Raw14042Right.lean. New mixed counter pair and later low-bank path candidates recorded, no infinite closure yet. Switch to exact already-proven source sibling36 graft to advance actual residual count. Do not count local transition theorems as resolved machines.
+
 # 2026-11-27T13:19:00.837Z checkpoint (normal mode 6)
 
 Immutable lease claimed_at 2026-11-27T13:02:38.623Z; run_id agent10-gpt62-2026-11-27T13:02:38.623Z-raw140-graft; earliest release 14:12:38.623Z. Do not refresh.

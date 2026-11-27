@@ -2,10 +2,10 @@
 
 Candidate enumeration and FAR saturation are untrusted. All selected leaves and
 all first queries are checked by Lean. Long growth proofs use the already
-accepted modules; upstream id36 is deliberately retained until a source bridge
-is supplied. Run from repository root.
+accepted modules; upstream id36 is discharged through an exact source bridge. Run from repository root.
 """
 from pathlib import Path
+import sys
 import json, subprocess as sp, tempfile
 from generate_raw140_deep import far_data, slot, parse
 DIR=Path(__file__).resolve().parent
@@ -20,6 +20,8 @@ for i,(a,f) in enumerate([(21,4),(21,8),(21,1),(23,16),(23,6),(23,3),(23,15)]):
 PROVEN[literal(21,16)]="Raw140Extra.X11"
 for i,a,f in [(34,21,5),(38,21,2),(75,23,12),(78,23,5),(79,23,9)]:
     PROVEN[literal(a,f)]=f"Raw140Long.X{i}"
+SOURCE = "--source36" in sys.argv
+if SOURCE: PROVEN[literal(21,13)]="Raw14036"
 for f in (4,13):
     PROVEN[literal(23,f)]=f"Raw140Double.X{f}"
 
@@ -55,7 +57,7 @@ def main():
         pending.append(p)
         return ".unresolved"
     body=emit(tree)
-    assert len(far)==54 and len(PROVEN)==15 and len(pending)==20, (len(far),len(PROVEN),len(pending))
+    assert len(far)==54 and len(PROVEN)==15+int(SOURCE) and len(pending)==20-int(SOURCE), (len(far),len(PROVEN),len(pending))
     assert all(t.count("---")==1 for t in pending)
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(PARENT)]
     out="""import PartialAudit
@@ -69,6 +71,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent10Raw140ThreeHole
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent47PartialAudit BB6.Agent50TNFPilot
 """
+    if SOURCE: out = out.replace("import Raw140DoubleCover\n", "import Raw140DoubleCover\nimport Raw14036Cover\n")
     out+=f"""
 def parent : PartialMachine := FAR.fromCodes {codes}
 def tree : PartialAudit := {body}
