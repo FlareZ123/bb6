@@ -3,7 +3,7 @@ python generate-q0149-blockfar.py OUTDIR ID
 IDs are zero-based exact-frontier leaf indices. No search.
 """
 from pathlib import Path
-import subprocess,sys
+import subprocess,sys,re
 block=Path(__file__).resolve().parents[1]/'agent13-block-far'
 sys.path.insert(0,str(block))
 from generate_multi import generate
@@ -14,6 +14,10 @@ CASES={
 }
 out=Path(sys.argv[1]);i=int(sys.argv[2]);t,w,k=CASES[i];name=f'Q0149Block{i}';ns=f'BB6BlockFAR{w}.{name}'
 subprocess.run([sys.executable,str(block/'specialize.py'),str(w)],check=True)
+sparse=(block/'SparseBlockFAR.lean').read_text().replace('import BlockFAR',f'import BlockFAR{w}').replace('BB6BlockFAR',f'BB6BlockFAR{w}')
+sparse=re.sub(r'\b48\b',str(6*2**w),sparse)
+sparse=re.sub(r'\b8\b',str(2**w),sparse)
+(block/f'SparseBlockFAR{w}.lean').write_text(sparse)
 specialize_active(block,w)
 # The older dense proof emitter is discarded; the source certificate uses the
 # support-complete sparse checker, which validates every omitted symbol.
