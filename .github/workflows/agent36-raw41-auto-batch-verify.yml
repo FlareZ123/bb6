@@ -1,0 +1,70 @@
+name: Agent 36 kernel verify two new all-symbolic Raw41 families 034 and 131 (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {index: 34, pad: "034"}
+          - {index: 131, pad: "131"}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Lean checker
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46083148884
+          name: raw41-target-${{ matrix.index }}-auto
+          path: /tmp/raw41-allauto
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77
+      - name: Check all affine pumps and all 24 canonical branches
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-allauto/summary.json"))["remaining_after_auto"])')" = 0
+          lean --version | grep -F '4.36.0-rc2'
+          MOD=Raw41New${{ matrix.pad }}
+          SRC=.tmp/a36-raw41-batch-check-${{ matrix.pad }}
+          D=im-results/agent47-raw41-cut
+          R=im-results/agent19-raw40-cut
+          mkdir -p "$SRC"
+          cp -a /tmp/raw41-allauto/lean/. "$SRC/"
+          export LEAN_PATH="$SRC:/tmp/canonical77:$D:$R:im-results/agent8-coverage-contract:im-results/agent50-weighted-tnf-pilot:im-results/agent31-three-hole-tnf:im-results/agent46-raw13-cut:im-results/agent47-rooted-tnf:im-results/agent13-coverage"
+          lean -o "$SRC/RootShift.olean" im-results/agent8-coverage-contract/RootShift.lean 2>&1 | tee /tmp/a36-batch-root.log
+          lean -o "$SRC/SparseZipper.olean" im-results/agent50-weighted-tnf-pilot/SparseZipper.lean 2>&1 | tee /tmp/a36-batch-zipper.log
+          lean -o "$SRC/SweepPumping.olean" im-results/agent31-three-hole-tnf/SweepPumping.lean 2>&1 | tee /tmp/a36-batch-sweep.log
+          lean -o "$SRC/Agent46AutoPump.olean" im-results/agent46-raw13-cut/Agent46AutoPump.lean 2>&1 | tee /tmp/a36-batch-pump.log
+          lean -o "$SRC/$MOD"Auto.olean "$SRC/$MOD"Auto.lean 2>&1 | tee /tmp/a36-batch-auto.log
+          lean -o "$SRC/Raw41LBLA.olean" "$D/Raw41LBLA.lean" 2>&1 | tee /tmp/a36-batch-lbla.log
+          lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/a36-batch-partial.log
+          lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/a36-batch-empty.log
+          lean -o "$SRC/$MOD"Base.olean "$SRC/$MOD"Base.lean 2>&1 | tee /tmp/a36-batch-base.log
+          for n in $(seq -w 0 23); do
+            lean -o "$SRC/$MOD"Branch$n.olean "$SRC/$MOD"Branch$n.lean 2>&1 | tee /tmp/a36-batch-branch-$n.log
+          done
+          lean -o "$SRC/$MOD"Closed.olean "$SRC/$MOD"Closed.lean 2>&1 | tee /tmp/a36-batch-closed.log
+          grep -F "\${MOD}_bound" /tmp/a36-batch-closed.log
+          if grep -ER 'sorryAx|native_decide' /tmp/a36-batch-*.log; then exit 1; fi
+          echo "CERTIFIED: full original-source mixed FAR and affine pumping child \${MOD}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-auto-batch-lean-${{ matrix.index }}
+          path: /tmp/a36-batch-*.log
+          retention-days: 45
