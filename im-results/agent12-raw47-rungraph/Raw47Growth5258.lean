@@ -152,7 +152,10 @@ theorem growth (n : Nat) : run0 ctr (1308+520*n) (cfg n) = some (cfg (n+1)) := b
   have H25 := join0 H24 (phase25 n)
   have H26 := join0 H25 (phase26 n)
   rw [show 93+0+11+0+1+0+1+0+37+0+200+43+(380*n)+200+200+200+187+(140*n)+135+0+0+0+0+0+0+0+0=1308+520*n by omega] at H26
-  simpa only [cfg,rep,List.append_assoc,List.cons_append,List.nil_append,← rep_snoc] using H26
+  have hrep : rep [true,false,false,false,false,false,true,false,false,false,false,false] (n+1) = rep [true,false,false,false,false,false,true,false,false,false,false,false] n ++ [true,false,false,false,false,false,true,false,false,false,false,false] := by
+    rw [rep_snoc]
+    rfl
+  simpa only [cfg,hrep,List.append_assoc,List.cons_append,List.nil_append] using H26
 
 theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m :=
   never_of_growth ctr cfg 1038 (fun n => 1308+520*n) entry (by intro n; omega) growth m hm
