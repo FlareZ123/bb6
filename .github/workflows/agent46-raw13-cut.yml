@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupled5SAT, coupled5Hard, coupled5Parent, coupled6Discover, coupled6Sibling, coupled6Late, coupled6Nested, coupled6Extended, coupled6RDSweep, coupled6RBPattern, coupled6Nested0RB, coupled6Odd0RB, coupled6MirroredCounter, coupled6PhasedCounter, coupledSource, coupled4, coupledNested]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover, coupled5Discover, coupled5Sibling, coupled5SAT, coupled5Hard, coupled5Parent, coupled6Discover, coupled6Sibling, coupled6Late, coupled6Nested, coupled6Extended, coupled6RDSweep, coupled6RBPattern, coupled6Nested0RB, coupled6Odd0RB, coupled6MirroredCounter, coupled6PhasedCounter, coupled6GrowRadix, coupledSource, coupled4, coupledNested]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -114,6 +114,10 @@ jobs:
             python "$D/emitauto.py" "$D/coupled3-auto.json" "$D/Raw13Coupled3Auto.lean" Raw13Coupled3Auto
             python "$D/generateCoupled4.py"
             ROOT="$D/Raw13Coupled4.lean"
+          elif [ "$TARGET" = coupled6GrowRadix ]; then
+            (cd "$D" && python discoverGrowRadix.py)
+            ROOT="$D/Raw13Coupled6GrowRadixBundle.lean"
+            printf 'import GrowRadix%s\n' 20 38 39 40 41 140 148 > "$ROOT"
           elif [ "$TARGET" = coupled6PhasedCounter ]; then
             ROOT="$D/Raw13Coupled6PhasedCounter.lean"
           elif [ "$TARGET" = coupled6MirroredCounter ]; then
@@ -322,8 +326,32 @@ jobs:
             /tmp/a46-raw13/Agent46Raw13Data.olean
             /tmp/a46-raw13.log
             /tmp/a46-canonical-manifest.json
+      - name: Preserve generated growing-radix fixtures without rediscovery
+        if: always() && inputs.target == 'coupled6GrowRadix'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = 'im-results/agent46-raw13-cut/growradix-bank.json';
+            if (!fs.existsSync(path)) return;
+            const content = fs.readFileSync(path);
+            if (JSON.parse(content).length !== 7) throw new Error('Incomplete bank');
+            try {
+              const old = await github.rest.repos.getContent({
+                owner: context.repo.owner, repo: context.repo.repo, path, ref: 'main'
+              });
+              if (Buffer.from(old.data.content,'base64').equals(content)) return;
+              throw new Error('Existing distinct bank; refusing overwrite');
+            } catch (e) {
+              if (e.status !== 404) throw e;
+            }
+            await github.rest.repos.createOrUpdateFileContents({
+              owner: context.repo.owner, repo: context.repo.repo, path,
+              message: 'Agent 46: persist seven exact growing-radix candidate macro banks',
+              content: content.toString('base64'), branch: 'main'
+            });
       - name: Record exact proof targets and source audit
-        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry' || inputs.target == 'coupledLive' || inputs.target == 'coupledParent' || inputs.target == 'coupled3' || inputs.target == 'coupled4' || inputs.target == 'coupledNested' || inputs.target == 'coupled5Sibling' || inputs.target == 'coupled6Sibling' || inputs.target == 'coupled6Late' || inputs.target == 'coupled6Nested' || inputs.target == 'coupled6Extended' || inputs.target == 'coupled6RDSweep' || inputs.target == 'coupled6RBPattern' || inputs.target == 'coupled6Nested0RB' || inputs.target == 'coupled6Odd0RB' || inputs.target == 'coupled6MirroredCounter'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry' || inputs.target == 'coupledLive' || inputs.target == 'coupledParent' || inputs.target == 'coupled3' || inputs.target == 'coupled4' || inputs.target == 'coupledNested' || inputs.target == 'coupled5Sibling' || inputs.target == 'coupled6Sibling' || inputs.target == 'coupled6Late' || inputs.target == 'coupled6Nested' || inputs.target == 'coupled6Extended' || inputs.target == 'coupled6RDSweep' || inputs.target == 'coupled6RBPattern' || inputs.target == 'coupled6Nested0RB' || inputs.target == 'coupled6Odd0RB' || inputs.target == 'coupled6MirroredCounter' || inputs.target == 'coupled6PhasedCounter' || inputs.target == 'coupled6GrowRadix'
         env:
           TARGET: ${{ inputs.target }}
           BRANCHES: ${{ inputs.branches }}
@@ -333,7 +361,7 @@ jobs:
           lean --version >> /tmp/a46-raw13/proof-targets.txt
           cp /tmp/a46-raw13.log /tmp/a46-raw13/proof-audit.log
       - name: Preserve compiled raw13 source closure
-        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry' || inputs.target == 'coupledLive' || inputs.target == 'coupledParent' || inputs.target == 'coupled3' || inputs.target == 'coupled4' || inputs.target == 'coupledNested' || inputs.target == 'coupled5Sibling' || inputs.target == 'coupled6Sibling' || inputs.target == 'coupled6Late' || inputs.target == 'coupled6Nested' || inputs.target == 'coupled6Extended' || inputs.target == 'coupled6RDSweep' || inputs.target == 'coupled6RBPattern' || inputs.target == 'coupled6Nested0RB' || inputs.target == 'coupled6Odd0RB' || inputs.target == 'coupled6MirroredCounter'
+        if: inputs.target == 'branchBatch' || inputs.target == 'branch1420' || inputs.target == 'branch484' || inputs.target == 'branch540' || inputs.target == 'cut' || inputs.target == 'corridor' || inputs.target == 'ingest77' || inputs.target == 'd3frontier' || inputs.target == 'phase' || inputs.target == 'zeroLE5' || inputs.target == 'oneLE' || inputs.target == 'coupledEntry' || inputs.target == 'coupledLive' || inputs.target == 'coupledParent' || inputs.target == 'coupled3' || inputs.target == 'coupled4' || inputs.target == 'coupledNested' || inputs.target == 'coupled5Sibling' || inputs.target == 'coupled6Sibling' || inputs.target == 'coupled6Late' || inputs.target == 'coupled6Nested' || inputs.target == 'coupled6Extended' || inputs.target == 'coupled6RDSweep' || inputs.target == 'coupled6RBPattern' || inputs.target == 'coupled6Nested0RB' || inputs.target == 'coupled6Odd0RB' || inputs.target == 'coupled6MirroredCounter' || inputs.target == 'coupled6PhasedCounter' || inputs.target == 'coupled6GrowRadix'
         uses: actions/upload-artifact@v4
         with:
           name: raw13-closure-certified

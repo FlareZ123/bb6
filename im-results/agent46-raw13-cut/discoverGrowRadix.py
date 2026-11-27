@@ -124,7 +124,11 @@ def emit(d,ns,output):
  s.extend([f'def cert : GrowRadix.Cert := ⟨⟨digit,terminal⟩,{d["entry"]},normalZ,normalS,terminalZ,terminalS⟩','theorem checked : Checked p cert := by constructor <;> decide','theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := GrowRadix.never p cert checked m hm','#print axioms never','end '+name,''])
  Path(output).write_text('\n'.join(s))
 if __name__=='__main__':
+ cache=Path('growradix-bank.json')
+ existing={d['table']:d for d in json.loads(cache.read_text())} if cache.exists() else {}
  bank=[]
  for i in map(int,sys.argv[1:] or list(TABLES)):
-  d=infer(i);bank.append(d);emit(d,f'Leaf{i}',f'GrowRadix{i}.lean')
- Path('growradix-bank.json').write_text(json.dumps(bank,separators=(',',':'))+'\n')
+  d=existing.get(TABLES[i]) or infer(i)
+  bank.append(d);emit(d,f'Leaf{i}',f'GrowRadix{i}.lean')
+ if not sys.argv[1:]:
+  cache.write_text(json.dumps(bank,separators=(',',':'))+'\n')
