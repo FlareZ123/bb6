@@ -56,8 +56,8 @@ def roots_for(group: str) -> list[str]:
         return [f"Raw112Kid04_{i:02d}" for i in range(8, 16)]
     if group == "r04c":
         return [f"Raw112Kid04_{i:02d}" for i in range(16, 24)]
-    if group == "r05a0":
-        return [f"Raw112Kid05_{i:02d}" for i in range(0, 4)]
+    if group in {"r05a00", "r05a01", "r05a02", "r05a03"}:
+        return [f"Raw112Kid05_{int(group[-1]):02d}"]
     if group == "r05a1":
         return [f"Raw112Kid05_{i:02d}" for i in range(4, 8)]
     raise ValueError(f"unknown retry group: {group}")
