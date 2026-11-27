@@ -278,8 +278,10 @@ theorem progress {c : Config} (hc : Inv c) :
   simp only [obligation,hj] at h
   by_cases hp : p=2
   · subst p
-    simp only [if_pos rfl,Bool.and_eq_true,beq_iff_eq,Bool.or_eq_true] at h
-    obtain ⟨ha,ht⟩ := h
+    change ((hd w == 0 || hd w == 1) && (walk o [1,1,tp (hd w)] == some j)) = true at h
+    have hh : (hd w = 0 ∨ hd w = 1) ∧ walk o [1,1,tp (hd w)] = some j := by
+      simpa only [Bool.and_eq_true,Bool.or_eq_true,beq_iff_eq] using h
+    obtain ⟨ha,ht⟩ := hh
     let v := true::true::u
     let l := pair (tp (hd w)) (tape (tl w))
     have h1 := turnMacro (hd w) ha (tape (tl w)) (rightTape u)
@@ -307,6 +309,7 @@ theorem progress {c : Config} (hc : Inv c) :
     | some m =>
       obtain ⟨p',b⟩ := m
       rw [hm] at h
+      change (match d o (ob b) with | none => false | some o' => decide (Rel j p' o')) = true at h
       cases he : d o (ob b) with
       | none => simp [he] at h
       | some o' =>
