@@ -38,7 +38,7 @@ theorem exact_trail (n P r d a c z : Nat) (hd : d<r)
         have h3' : Edge n P (2*q+2) e v := by
           simpa [show 2*q+2=2*(r-d) by omega] using h3
         obtain ⟨ha,hc,hu,hp⟩ := pair_parent n P q a b e v h1 h2 h3'
-        have htr := ih (by omega) e ht
+        have htr := ih e (by omega) ht
         simp only [trail,htr]
         change pred q (shift n P q) (e/2)=some (a/2)
         simp [pred,hu,hp]
@@ -56,7 +56,7 @@ theorem trail_add (n P r a d k : Nat) (hd : d+k≤r) :
     | none => rfl
     | some b =>
       simp only [Option.bind_some,trail]
-      have hr : r-(d+(k+1))=r-d-(k+1) := by omega
+      have hr : r-(d+k+1)=r-d-(k+1) := by omega
       rw [hr]
 
 /-- Tagged candidates preserve the midpoint identity through merges.
