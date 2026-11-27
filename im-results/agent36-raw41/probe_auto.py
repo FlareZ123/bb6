@@ -24,11 +24,13 @@ def word(w:Word):
 
 def main():
     a=argparse.ArgumentParser()
-    a.add_argument("--leaf",type=int,required=True,choices=sorted(TWO_HARD))
+    a.add_argument("--leaf",type=int,required=True)
+    a.add_argument("--table",type=str,default=None,help="Exact optional one-hole table (use instead of built-in child084 pair)")
     a.add_argument("--seconds",type=int,default=45)
     a.add_argument("--out",type=Path,required=True)
     x=a.parse_args()
-    table=TWO_HARD[x.leaf]
+    table=x.table or TWO_HARD[x.leaf]
+    assert len(table.replace("_",""))==36
     print(f"Raw41 child084 leaf{x.leaf}: {table}",flush=True)
     import time
     start=time.monotonic()
