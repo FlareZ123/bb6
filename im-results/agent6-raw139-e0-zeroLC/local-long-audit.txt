@@ -1,0 +1,2 @@
+Local Lean 4.36.0-rc2: all 45 modules completed, all nine exact Cover (WeightedBound 80377) certificates c0..c8 depend only on [propext, Classical.choice, Quot.sound].
+Longest replay: 80371 known moves, sole hole slot 3, 157 chunks, max packed tape integer width 393 bits; explicit @joinP parameters eliminate costly elaborator unification (final 80371 join/cover compiled in 0.98s).

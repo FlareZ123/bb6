@@ -30,7 +30,7 @@ for i,(t,n,s) in enumerate(H):
  src=''.join('import '+a+'\n' for a in cutmods)+header
  def join(lo,hi):
   if hi==lo+1:return f'step{i}_{lo}'
-  mid=(lo+hi)//2;return f'(joinP {join(lo,mid)} {join(mid,hi)})'
+  mid=(lo+hi)//2;return f'(@joinP {p} {points[mid][0]-points[lo][0]} {points[hi][0]-points[mid][0]} z{i}_{lo} z{i}_{mid} z{i}_{hi} {join(lo,mid)} {join(mid,hi)})'
  j=len(points)-1;src+=f'''theorem run{i} : runP {p} {n} startP = some z{i}_{j} := {join(0,j)}
 theorem read{i} : BB6Coverage.Agent10ZipAudit.zipRead {p} {n} = some ({s//2},{str(bool(s%2)).lower()}) := by
   rw [← readRunP_eq]
