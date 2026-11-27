@@ -102,7 +102,8 @@ theorem d1_bound_from_fifteen (B : Nat) (hB : 162 ≤ B)
     b1Audit_checked m hm with hb | ⟨e,he,hh⟩
   · intro k d hk hd
     exact Nat.le_trans (hb k d hk hd) hB
-  · rw [partialResiduals.eq_3] at he
+  · change e ∈ partialResiduals d1 (.split 6 (1,true) b1Kids) at he
+    rw [partialResiduals.eq_3] at he
     obtain ⟨mv,_,hmem⟩ := List.mem_flatMap.mp he
     have hno : mv ∉ b1Cycles := by
       intro hc
