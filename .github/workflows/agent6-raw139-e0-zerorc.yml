@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5, oneLFFastWidth5, oneLFSparseWidth5, oneLFSweep1352, oneLF]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5, oneLFFastWidth5, oneLFSparseWidth5, oneLFSweep1352, oneLF, zeroLCD0RC]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || inputs.variant == 'oneLF' && '90794' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep' && inputs.variant != 'oneLFSweep9135' && inputs.variant != 'oneLFListSym' && inputs.variant != 'oneLFSweep14327' && inputs.variant != 'oneLFWidth5' && inputs.variant != 'oneLFFastWidth5' && inputs.variant != 'oneLFSparseWidth5' && inputs.variant != 'oneLFSweep1352'
+    if: inputs.variant != 'zeroLCD0RC' && inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep' && inputs.variant != 'oneLFSweep9135' && inputs.variant != 'oneLFListSym' && inputs.variant != 'oneLFSweep14327' && inputs.variant != 'oneLFWidth5' && inputs.variant != 'oneLFFastWidth5' && inputs.variant != 'oneLFSparseWidth5' && inputs.variant != 'oneLFSweep1352'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -1302,5 +1302,42 @@ jobs:
           path: |
             .tmp/a6-zeroRC/parent
             .tmp/a6-zeroRC/imports
+          include-hidden-files: true
+          retention-days: 14
+
+
+  exact-zeroLC-D0RC:
+    if: inputs.variant == 'zeroLCD0RC'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct and compile exact five-hole E0=0LC D0=0RC Cover
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLC-D0RC
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent6-raw139-e0-zeroLC/d0rc_exact.py "$work"
+          python3 tools/lean_compile_closure.py "$work/imports/Raw139E0ZeroLCD0RC.lean" --source-root "$work/imports" --workdir /tmp/a6-zeroLC-D0RC-build --jobs 2 --manifest "$work/manifest.json" --label raw139-e0-zeroLC-D0RC --theorem BB6.Agent6E0ZeroLCD0RC.cRaw139E0ZeroLCD0RC --weighted-bound 616 | tee "$work/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/log"
+          grep -F "'BB6.Agent6E0ZeroLCD0RC.cRaw139E0ZeroLCD0RC' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          mkdir -p "$work/build"
+          find /tmp/a6-zeroLC-D0RC-build -name '*.olean' -exec cp '{}' "$work/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroLC-D0RC-certified
+          path: |
+            .tmp/a6-zeroLC-D0RC/imports
+            .tmp/a6-zeroLC-D0RC/build
+            .tmp/a6-zeroLC-D0RC/manifest.json
+            .tmp/a6-zeroLC-D0RC/data.json
+            .tmp/a6-zeroLC-D0RC/log
           include-hidden-files: true
           retention-days: 14
