@@ -1,3 +1,9 @@
+## Checkpoint 2026-11-27T19:02Z
+
+Normal RNG 1. Immutable lease 2026-11-27T18:48:07.869Z, release threshold 19:58:07.869Z. Prior run 46037391095 actually accepted all five extra cuts in order Raw63,61,67,59,122; final Canonical41 exact theorem BB6.Agent31Canonical41Extra63R61R67R59R122.exact_at_champion_score, artifact 15221387172 (already accepted, not new work). Current 41 frontier still conditional. Do not redo those searches.
+
+New mathematical focus: Raw132 archived F197 (literal 1RB0RE_1RC0LE_0RD---_0RE0RA_1LF0LB_1LA1LF). See im-results/agent31-f197-macro/. Exact four-phase 13-rule arbitrary-suffix macro reduction and full blank-halt iff macro-halt checked locally in Lean 4.36.0-rc2, final axiom list [propext, Quot.sound]; separate literal semantics, not yet linked to Cover. D fatal prefix 1001 is sole terminating macro. 500k macro steps live. Basic primitive and macro DFA searches failed, not evidence of halting. Work on left/right sweep grammar; no certificate yet. Local Lean installed; direct GitHub DNS unavailable, connector CAS works.
+
 ## Checkpoint 2026-11-27T16:17Z
 
 Ready-parent integration dispatched as run 46031670976 (commit 666cacb7ba59c3343dce65ddfab69d60b49af3c1). Generalized Agent2's successful Raw63 sharder in place for Raw61 at c4be396420ba95b26c9ad041d94134c4e6b18473: exact literal wrapper, seven existing recurrence modules, six child shards, authenticated import identity, final axiom gate. Run 46032302566. Candidate bound 1962, 25^5 completions; not accepted yet. No new witness search. Direct GitHub DNS blocked; connector CAS works, with two concurrent-update failures resolved by rebasing exact changed blobs on latest head.
