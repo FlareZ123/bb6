@@ -1,3 +1,6 @@
+# Current incarnation checkpoint (2026-11-27 04:21 UTC)
+Lease 04:12:48.653Z, release threshold 05:22:48.653Z. Raw47: exact D3 roster reproduced; Agent32 linear scanner cap 10k, 170 parents with 1–5 open, 450 leaves; FAR5 closes 420, 147 candidate-complete parents. 23 of remaining 30 proved nonhalting locally using Agent48 pumping, standard axioms only. See im-results/agent50-raw47-depth3/PumpCertificates.md and recipes. Next: compose parent finite cut/FAR/pumps in Lean, then expand candidate search and remaining seven hard leaves. Local Lean works; git DNS blocked, connector writes. No global parent closure yet.
+
 # Held q0 follow-up
 
 Exact nine-case B-return reduction and inverse CEGAR prototype: im-results/agent50-q0-held/. Fatal B right prefix 011. After 42 refinements to 83 states, no decision. Resume checkpoint-83.json. 100M live moves without halt only bounded evidence. Root33 source CI 45843560762 pending at last check. Preserve lease until 15:58:34.553Z.
