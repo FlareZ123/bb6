@@ -54,7 +54,10 @@ theorem a12EL_hazard1011 (L : List (ℕ × ℕ)) :
     unfold cfg_EL_n_n cfg_CR_n_n
     simp only [encRight_d0_s0, encLeft_d0_s0, encLeft_d1_s0, encLeft_nil]
     rw [encRight_succ 1 0 L, encRight_d1_s0]
-    execute 113 <;> rfl
+    rw [show encLeft [(12,0)] = (1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> 1 >> default) by
+      rw [encLeft_mod1 12 0 [], Nat.mod_one 0, encLeft_run_s0 12 []]
+      rfl]
+    execute 113
   obtain ⟨c,hc,hh⟩ := tok_CR_add2_halts [] [(12,0)] 0 (L.map Prod.fst)
   have hc' : ReachesPlus target (cfg_CR_n_n ((2,0)::L) [(12,0)]) c := by
     simpa only [tok_CR, cfg_CR_n_n, encTokens_nil, encRight_eq_nat, List.map_cons, Prod.fst] using hc
@@ -84,5 +87,8 @@ theorem a12G_hazard1011 (k : ℕ) :
   obtain ⟨c,hc,hh⟩ := a12EL_hazard1011 (List.replicate (k+1) (0,0) ++ [(1,0)])
   exact ⟨c,ReachesPlus.trans h hc,hh⟩
 
+#print axioms a12EL_hazard111
+#print axioms a12EL_hazard1011
+#print axioms a12G_to_EL
 #print axioms a12G_hazard111
 #print axioms a12G_hazard1011
