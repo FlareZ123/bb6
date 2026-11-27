@@ -46,6 +46,19 @@ def main(mv):
                     ("b","1RB1LD1RC0LD1LA1RE0RF0LA1RB0RB---1RC"),
                     ("c","1RB1LD1RC0LD1LA1RE1RF0LA1RB0RB---0LE")]:
             manual[t]=f".closed (.proven ({ns_triple}.p .{v}) ({ns_triple}.never .{v}))"
+    if mv=="1LA":
+        extra_imports += ["Raw13Coupled6PairCounter","Raw13Coupled6PairCounter4"]
+        for modname,variants in [
+            ("PairCounter",[
+                ("a","1RB1LD1RC0RB1LA1RE1LF0LA---1LA0RE1LA"),
+                ("b","1RB1LD1RC0RB1LA1RE1LF0LA---1LA0RF1LA"),
+                ("c","1RB1LD1RC0RB1LA1RE1LF0LA---1LA1RB1LA")]),
+            ("PairCounter4",[
+                ("a","1RB1LD1RC0RB1LA1RE1LF0LA0RE1LA1LE---"),
+                ("b","1RB1LD1RC0RB1LA1RE1LF0LA1RB1LA1LE---")])]:
+            ns="BB6Coverage.Agent31Pump.Auto."+modname
+            for v,t in variants:
+                manual[t]=f".closed (.proven ({ns}.p .{v}) ({ns}.never .{v}))"
     if mv=="0LE":
         ns="BB6.Agent46Raw13Coupled6Drift0LE"
         extra_imports=["Raw13Coupled6Drift0LE"]
