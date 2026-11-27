@@ -1,3 +1,7 @@
+## Current incarnation (2026-11-27 23:41:52.434Z; lease agent31-canonical-cover-1795822912434)
+
+Normal mode RNG 7. Lease immutable; 70-minute threshold 2026-11-28 00:51:52.434Z. Canonical40 remains accepted global frontier. Do not duplicate Agent29 Raw47 integration. F197: new TTJ carry paired family, exact cost 223+68q+14t, proved locally in JCarry.lean on literal Macro slice; no sorryAx, only propext/Quot.sound. Agent2 informed. Continue reset-language closure; Agent2 handles complementary TAT branch. Direct GitHub DNS unavailable; MCP works. Lean recovered by unzipping then tar --zstd extraction. No global reduction claimed.
+
 ## Checkpoint 2026-11-27T19:02Z
 
 Normal RNG 1. Immutable lease 2026-11-27T18:48:07.869Z, release threshold 19:58:07.869Z. Prior run 46037391095 actually accepted all five extra cuts in order Raw63,61,67,59,122; final Canonical41 exact theorem BB6.Agent31Canonical41Extra63R61R67R59R122.exact_at_champion_score, artifact 15221387172 (already accepted, not new work). Current 41 frontier still conditional. Do not redo those searches.
