@@ -180,6 +180,28 @@ theorem peelT_Ct_Ae (l : Tape) :
     dsimp [m,m']; rw [← decompose l]; rfl
   simpa [m,m',physical] using macroRunExact_sound 17 m 64 m' hv hc
 
+/-- Decoder base for leading data bit T: x·C·e becomes A A A T. -/
+theorem decoder_base_T (l : Tape) :
+    run 31
+      (other B
+        (pre [true,false,false] l)
+        (pre [false,false,true,false,true,true,false,true] blank)) =
+    some
+      (other B
+        (pre [true,false,true,false,true,false,true,true,false,false] l)
+        (pre [false,false,true] blank)) := by
+  let m : MacroConfig := ⟨.B,
+    pre [true,false,false] l,
+    pre [false,false,true,false,true,true,false,true] blank⟩
+  let m' : MacroConfig := ⟨.B,
+    pre [true,false,true,false,true,false,true,true,false,false] l,
+    pre [false,false,true] blank⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (31,m') := by
+    dsimp [m,m']; rw [← decompose l]; rfl
+  simpa [m,m',physical] using macroRunExact_sound 8 m 31 m' hv hc
+
+#print axioms decoder_base_T
 #print axioms peelA_u_t
 #print axioms peelA_u_At
 #print axioms peelT_Ct_t
