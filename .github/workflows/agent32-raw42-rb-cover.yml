@@ -671,6 +671,7 @@ jobs:
     timeout-minutes: 12
     outputs:
       prior: ${{ steps.plan.outputs.prior }}
+      retry: ${{ steps.plan.outputs.retry }}
       groups: ${{ steps.transform.outputs.groups }}
     steps:
       - uses: actions/checkout@v4
@@ -683,11 +684,12 @@ jobs:
         run: |
           set -euo pipefail
           case "$BRANCH" in
-            1LA) prior=45996630344;;
-            1RA) prior=45996637267;;
+            1LA) prior=45996630344; retry=46053090463;;
+            1RA) prior=45996637267; retry=46053095897;;
             *) echo "Only 1LA and 1RA have this recovery plan"; exit 1;;
           esac
           echo "prior=$prior" >> "$GITHUB_OUTPUT"
+          echo "retry=$retry" >> "$GITHUB_OUTPUT"
       - name: Reconstruct coverage sources
         run: python im-results/agent13-coverage/unpack.py
       - uses: actions/download-artifact@v4
@@ -695,6 +697,12 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ steps.plan.outputs.prior }}
           name: raw42-assembly-generated
+          path: /tmp/raw42-original
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.plan.outputs.retry }}
+          name: raw42-recovery-generated
           path: im-results/agent32-raw42/generated-assembly
       - uses: actions/download-artifact@v4
         with:
@@ -702,6 +710,13 @@ jobs:
           run-id: ${{ steps.plan.outputs.prior }}
           pattern: raw42-assembly-shard-*
           path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1RA'
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.plan.outputs.retry }}
+          name: raw42-assembly-shard-4
+          path: /tmp/shards/raw42-assembly-shard-4
       - name: Preserve all accepted source closures and repair only missing groups
         id: transform
         env:
@@ -710,7 +725,7 @@ jobs:
           set -euo pipefail
           d=im-results/agent32-raw42
           g="$d/generated-assembly"
-          python "$d/recover_assembly42.py" . "$g" /tmp/shards /tmp/shared "$BRANCH"
+          python "$d/recover_assembly42.py" . "$g" /tmp/shards /tmp/shared "$BRANCH" /tmp/raw42-original
           echo "groups=$(python -c 'import json,sys;print(json.dumps(json.load(open(sys.argv[1]))["missing_groups"]))' "$g/recovery-plan.json")" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
@@ -802,6 +817,13 @@ jobs:
           run-id: ${{ needs.recover_assembly_prepare.outputs.prior }}
           pattern: raw42-assembly-shard-*
           path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1RA'
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ needs.recover_assembly_prepare.outputs.retry }}
+          name: raw42-assembly-shard-4
+          path: /tmp/shards/raw42-assembly-shard-4
       - uses: actions/download-artifact@v4
         with:
           pattern: raw42-assembly-shard-*
