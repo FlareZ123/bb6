@@ -14,7 +14,8 @@ The standard blank-start table is `1RB0LC_1RC0RC_1LD0RB_1LA0LE_1LD1LF_1LD---`, i
 - `compressed.cpp`, `carry.cpp`, `test_compressed.py`: strict carry skip, 10^18 macros and exact primitive count 2741467853641781568730607840197912170.
 - `boundary.py`: arbitrary-precision whole-drain and secondary arithmetic; 10^50-macro exact safe prefix and odd-5000 primitive cost recorded in BoundaryEpoch.md.
 - `prefix.cpp`, `fast_prefix.cpp`, `cross_zero.py`, `verify_tertiary.py`: autonomous prefix recurrence, byte-identical secondary-zero checkpoint, new tertiary seed and exact-cycle checks.
-- `F421Frontier.lean`, `F421Regular.lean`, `F421Drain.lean`, `F421Odd.lean`, `PrimaryGuard.lean`, `TertiaryGuard.lean`: frontier, regular-budget and arithmetic proofs; distinguish local copied-model checks from original-source closure. General terminal-deletion drain and higher-level composition still require source formalization.
+- `F421Frontier.lean`, `F421Regular.lean`, `F421Drain.lean`, `F421Odd.lean`, `PrimaryGuard.lean`, `TertiaryGuard.lean`: frontier, regular-budget and arithmetic proofs; distinguish local copied-model checks from original-source closure. [GeneralDrain.md](GeneralDrain.md) gives the new arbitrary terminal-deletion drain theorem candidate; source closure audit and higher-level composition remain required.
+- `F421DrainPlan.lean`, `F421GeneralDrain.lean`: generic mixed-marker drain with zero-P ghosts and arbitrary terminal deletions; local plan proof accepted, source closure audit pending.
 - `tertiary_zero.py`, `TertiaryHead.lean`: exact conditional zero-crossing experiments and normalized head arithmetic; the authentic tail is computed but the authentic primary endpoint is not.
 - `state-1b.json`, `state-2b.json`: independent finite primitive checkpoints.
 - [FARIncremental.md](FARIncremental.md), `far_incremental.cpp`: exhaustive exclusion of reachable canonical FAR DFA sizes 1–8 in both orientations; larger automata remain open.
