@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -123,7 +123,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   shard:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps'
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 90
@@ -171,7 +171,7 @@ jobs:
           include-hidden-files: true
           retention-days: 14
   compose:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps'
     needs: [prepare,shard]
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -852,5 +852,37 @@ jobs:
         with:
           name: raw139-oneLF-candidate-summary
           path: .tmp/a6-oneLF/summary.json
+          include-hidden-files: true
+          retention-days: 14
+
+  certify-oneLF-sweeps:
+    if: inputs.variant == 'oneLFSweeps'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel check exact alternating-sweep recurrences
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/a6-oneLF-sweeps
+          python3 im-results/agent13-coverage/unpack.py
+          python3 tools/lean_compile_closure.py im-results/agent6-raw139-e0-oneLF/AlternatingSweep.lean --workdir /tmp/a6-oneLF-sweeps --jobs 2 --manifest .tmp/a6-oneLF-sweeps/manifest.json --label raw139-oneLF-alternating | tee .tmp/a6-oneLF-sweeps/log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/a6-oneLF-sweeps/log
+          for theorem in neverE neverD neverF; do
+            grep -F "'BB6.Agent6OneLFAlternating.$theorem' depends on axioms:" .tmp/a6-oneLF-sweeps/log
+          done
+          mkdir -p .tmp/a6-oneLF-sweeps/build
+          find /tmp/a6-oneLF-sweeps -name '*.olean' -exec cp '{}' .tmp/a6-oneLF-sweeps/build/ ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF-alternating-certified
+          path: .tmp/a6-oneLF-sweeps
           include-hidden-files: true
           retention-days: 14
