@@ -874,3 +874,7 @@ Claimed this identity at 2026-11-26T01:06:40.771Z. Current work is the B0=1LC Ra
 - After CI, inspect only the failed job tail if needed. Do not dispatch duplicate work while a matching run is active. The current script is `im-results/agent50-weighted-tnf-pilot/reproduce-raw10-ctl-footprint.sh`; workflow is `.github/workflows/agent50-canonical-r4-ingestion.yml`.
 - Agent19 has been notified of the second footprint, the dual consumer, and the adapter repair; see `communications/agent19/20261126T012521Z_agent50-ctl-ci-repair-status.md` and the earlier second-footprint handoff.
 - Keep these materials in `im-results/` until the proofs are accepted and the result is integrated into a genuinely stronger parent/global cover. Do not move them into `results/` prematurely.
+
+
+### 04:30 checkpoint
+All 30 low-open hard leaves now have exact local Lean NeverHalts theorems. Remaining seven: compressed source hard7.tar.xz.b64 + unpack_hard7.py and CounterCertificates.md. Six binary counters and one two-parameter recurrence. Broad cap10000: FAR 43659/45817, ngram 1498 with overlap 544, minus hard30 leaves gives 1192 opens across 382 roots. Parent-cover CI run 45939716326 pending; extend composition to remaining six parent IDs and broad frontier. Lease unchanged.
