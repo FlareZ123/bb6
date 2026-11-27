@@ -117,7 +117,7 @@ theorem advance (n : Nat) (X Y : List Bool) :
     Reach table (E ([true,false,true]++X) (U (3*n+4)++false::Y))
       (E ([true,false,true,true]++X) (U (3*n+1)++false::true::true::Y)) := by
   rw [show 3*n+4=4+3*n by omega,show 3*n+1=1+3*n by omega,Uadd 4,Uadd 1]
-  simpa only [advanceCert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc] using advanceRun n X Y
+  simpa only [advanceCert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc] using advanceRun n X Y
 
 theorem merge (X Y : List Bool) :
     Reach table (E ([true,false,true]++X) (true::false::Y))
@@ -128,31 +128,31 @@ theorem firstI (n : Nat) (X : List Bool) :
     Reach table (E (U 4++X) (U (9+3*n)))
       (E (U 2++X) (U (10+3*n)++[false,true])) := by
   rw [Uadd 9,Uadd 10]
-  simpa only [firstICert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc,List.append_nil] using firstIRun n X []
+  simpa only [firstICert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc,List.append_nil] using firstIRun n X []
 
 theorem firstII (n : Nat) (X : List Bool) :
     Reach table (E (U 4++X) (U (13+3*n)))
       (E (U 2++X) (U (13+3*n)++[false,true,true])) := by
   rw [Uadd 13]
-  simpa only [firstIICert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc,List.append_nil] using firstIIRun n X []
+  simpa only [firstIICert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc,List.append_nil] using firstIIRun n X []
 
 theorem drainOne (n : Nat) (X Y : List Bool) :
     Reach table (E (U 4++X) (U (10+3*n)++false::true::Y))
       (E (U 2++X) (U (10+3*n)++false::true::true::true::Y)) := by
   rw [Uadd 10]
-  simpa only [drainCert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc] using drainRun n X Y
+  simpa only [drainCert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc] using drainRun n X Y
 
 theorem finishI (n : Nat) (Y : List Bool) :
     Reach table (E (U 2) (U (10+3*n)++false::true::Y))
       (A (U (12+3*n)++false::true::true::true::true::Y)) := by
   rw [Uadd 10,Uadd 12]
-  simpa only [endICert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc] using endIRun n [] Y
+  simpa only [endICert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc] using endIRun n [] Y
 
 theorem finishII (n : Nat) (Y : List Bool) :
     Reach table (E (U 3) (U (13+3*n)++false::true::Y))
       (A (U (15+3*n)++false::true::true::true::Y)) := by
   rw [Uadd 13,Uadd 15]
-  simpa only [endIICert,Tails.PZ.eval,Tails.Word.eval,triple,List.append_assoc] using endIIRun n [] Y
+  simpa only [endIICert,Tails.PZ.eval,Tails.Word.eval,triple,E,A,Bool.false_eq_true,if_false,if_true,List.cons_append,List.nil_append,List.append_assoc] using endIIRun n [] Y
 
 theorem startE (n : Nat) (Y : List Bool) :
     PosReach table (A (U (3*n+3)++false::Y))
@@ -169,12 +169,12 @@ theorem collect (j k : Nat) (Y : List Bool) :
   induction j generalizing k Y with
   | zero =>
     rw [Nat.add_zero]
-    simpa only [collectState,collectEnd,Uadd 4,Nat.mul_zero,Nat.zero_add,List.nil_append] using merge (U k) Y
+    simpa only [collectState,collectEnd,Uadd 4,Nat.mul_zero,Nat.zero_add,List.nil_append,U,rep,List.cons_append,List.append_nil] using merge (U k) Y
   | succ j ih =>
     have h := advance j (U k) Y
     have h' : Reach table (collectState (j+1) k Y)
         (collectState j (k+1) (true::true::Y)) := by
-      simpa only [collectState,Nat.mul_succ,show 3*j+3+1=3*j+4 by omega,U,rep,List.append_assoc] using h
+      simpa only [collectState,Nat.mul_succ,show 3*j+3+1=3*j+4 by omega,U,rep,List.append_assoc,List.cons_append,List.nil_append] using h
     have g := ih (k+1) (true::true::Y)
     have eq : U (2*(j+1))++Y = U (2*j)++true::true::Y := by
       rw [show 2*(j+1)=2*j+2 by omega,Uadd]
@@ -186,7 +186,7 @@ theorem collect (j k : Nat) (Y : List Bool) :
 
 theorem initCollect (j : Nat) (Y : List Bool) :
     PosReach table (A (U (3*j+3)++false::Y)) (collectEnd j (U (2*j)++Y)) := by
-  exact (startE j Y).trans (by simpa only [collectState,Nat.zero_add,List.append_nil] using collect j 0 Y)
+  exact (startE j Y).trans (by simpa only [collectState,Nat.zero_add,List.append_nil,U,rep] using collect j 0 Y)
 
 def drainState (n l : Nat) (Y : List Bool) :=
   E (U l) (U (10+3*n)++false::true::Y)
@@ -209,6 +209,10 @@ theorem drainAll (n k l : Nat) (Y : List Bool) :
     rw [eq]
     exact h'.trans (ih (true::true::Y))
 
+theorem ucons (a b : Nat) : true :: (U a ++ U b) = U (1+(a+b)) := by
+  rw [Uadd 1,Uadd]
+  rfl
+
 def even (n : Nat) := A (U (9+6*n)++false::U (4+2*n))
 def odd (n : Nat) := A (U (12+6*n)++false::U (6+2*n))
 
@@ -221,10 +225,11 @@ theorem evenToOdd (n : Nat) : PosReach table (even n) (odd n) := by
     rw [ha] at h
     unfold collectEnd at h
     rw [hb] at h
-    rw [hc,Uadd 1,Uadd]
-    simpa only [even,List.append_assoc] using h
+    rw [ucons,← hc] at h
+    exact h
   have g := firstI (2*n) (U (2+2*n))
   have g' : Reach table (E (U (6+2*n)) (U (9+6*n))) (drainState (2*n) (4+2*n) []) := by
+    unfold drainState
     rw [show 6+2*n=4+(2+2*n) by omega,show 4+2*n=2+(2+2*n) by omega,Uadd 4,Uadd 2,show 9+6*n=9+3*(2*n) by omega]
     exact g
   have d := drainAll (2*n) (n+1) 0 []
@@ -246,18 +251,18 @@ theorem oddToEven (n : Nat) : PosReach table (odd n) (even (n+1)) := by
     rw [ha] at h
     unfold collectEnd at h
     rw [hb] at h
-    rw [hc,Uadd 1,Uadd]
-    simpa only [odd,List.append_assoc] using h
+    rw [ucons,← hc] at h
+    exact h
   have g := firstII (2*n) (U (3+2*n))
   have g' : Reach table (E (U (7+2*n)) (U (13+6*n))) (drainState (2*n+1) (5+2*n) [true]) := by
-    rw [show 7+2*n=4+(3+2*n) by omega,show 5+2*n=2+(3+2*n) by omega,Uadd 4,Uadd 2,show 13+6*n=13+3*(2*n) by omega]
     unfold drainState
+    rw [show 7+2*n=4+(3+2*n) by omega,show 5+2*n=2+(3+2*n) by omega,Uadd 4,Uadd 2,show 13+6*n=13+3*(2*n) by omega]
     rw [show 10+3*(2*n+1)=13+3*(2*n) by omega]
     exact g
   have d := drainAll (2*n+1) (n+1) 1 [true]
   have d' : Reach table (drainState (2*n+1) (5+2*n) [true]) (drainState (2*n+1) 3 (U (2*(n+1)+1))) := by
     rw [show 2*(n+1)+1=2*(n+1)+1 by rfl,Uadd]
-    simpa only [show 2*(n+1)+2+1=5+2*n by omega] using d
+    simpa only [show 2*(n+1)+2+1=5+2*n by omega,U,rep,List.append_nil] using d
   have f := finishII (2*n) (U (2*(n+1)+1))
   have f' : Reach table (drainState (2*n+1) 3 (U (2*(n+1)+1))) (even (n+1)) := by
     unfold drainState even
