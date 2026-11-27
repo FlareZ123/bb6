@@ -43,6 +43,11 @@ if records:
         mods.append(mod)
         for v in chunk:
             proven[opens[v['id']]]=ns+'.M'+str(v['id'])
+cycles={}
+for v in spec.get('cycles',[]):
+    i=validate(v)
+    assert v['period']>0 and v['entry']>=0
+    cycles[opens[i]]=(v['entry'],v['period'],'R' if v['right'] else 'L',v['bound'])
 assert not spec['unresolved']
 for v in spec['late']:
     i=validate(v)
@@ -50,6 +55,7 @@ for v in spec['late']:
     assert v['n']+1+v['delay']<=B
     late[opens[i]]=(v['n'],v['slot'])
 assert ids==set(range(len(opens)))
+(out/'cycles.txt').write_text(''.join(f'{t} {e} {k} {d} {b}\n' for t,(e,k,d,b) in cycles.items()))
 (out/'late.txt').write_text(''.join(f'{t} {n} {s}\n' for t,(n,s) in late.items()))
 (out/'far5.txt').write_text(''.join(f'{i} {code}\n' for i,code in sorted(far.items())))
 (out/'proven.txt').write_text(''.join(f'{t} {ns}\n' for t,ns in proven.items()))

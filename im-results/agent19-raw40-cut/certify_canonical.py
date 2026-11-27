@@ -10,6 +10,7 @@ if (src/'far_extra.txt').exists():
     bank.update({int(i):c for i,c in (x.split() for x in (src/'far_extra.txt').read_text().splitlines())})
 proven=dict(x.split() for x in (src/'proven.txt').read_text().splitlines()) if (src/'proven.txt').exists() else {}
 late={code:(int(n),int(s)) for code,n,s in (x.split() for x in (src/'late.txt').read_text().splitlines())} if (src/'late.txt').exists() else {}
+cycles={code:(int(e),int(k),d=='R',int(b)) for code,e,k,d,b in (x.split() for x in (src/'cycles.txt').read_text().splitlines())} if (src/'cycles.txt').exists() else {}
 opens=(src/'open.txt').read_text().splitlines();it=iter(enumerate(opens));threshold=int(sys.argv[6]) if len(sys.argv)>6 else 96
 
 def support(p):return max([2]+[max(i//2,ord(v[2])-65)+1 for i,v in enumerate(p) if v!='---'])
@@ -20,6 +21,9 @@ def ordinary(t,p):
     if t[0]=='last':return f'.last {t[1]} {slot(t[2])}'
     if t[0]=='open':
         i,code=next(it);assert t[1]==code==show(p)
+        if code in cycles:
+            e,k,d,b=cycles[code]
+            return f'.cycle {e} {k} {str(d).lower()} ({b})'
         if code in late:
             n,s=late[code]
             return f'.last {n} {slot(s)}'
