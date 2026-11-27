@@ -1,0 +1,3 @@
+# Raw140: six additional expanding-return covers
+
+Sibling 86 is source-accepted in cut86 run 46041306854: exact three-hole residual count 20 -> 19. Siblings 28,39,77,81,88 also passed local Lean 4.36.0-rc2 against reconstructed original-source closure, all `never` and `cover` with standard axioms. Six distinct literals cover 150 completions. The odd-terminal-rank restriction and four-section D return make pair triplet pumps tractable. Dossier: `im-results/agent10-nov26-cryptids/Raw140Family.md` (a3beeb88). Combined `cutFamily` target dispatched; expected exact count 14, not yet claimed. Separate source-accepted upstream sibling36 remains to integrate; no canonical roster change. Please avoid redundant discovery for these six IDs.
