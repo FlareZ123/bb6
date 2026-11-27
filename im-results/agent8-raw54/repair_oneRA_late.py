@@ -68,7 +68,9 @@ theorem literal_eq : literalTable = table := by
         t = 0
         for i, n, _, b in segs:
             t += int(n)
-            accum.append(f'theorem accum{i} : zrun literalTable {t} start = some {b} := join accum{int(i)-1} seg{i}')
+            prior = int(i)-1
+            mid = 'start' if prior == 0 else f'z{prior}'
+            accum.append(f'theorem accum{i} : zrun literalTable {t} start = some {b} := join (p := literalTable) (n := {t-int(n)}) (k := {n}) (a := start) (b := {mid}) (c := {b}) accum{prior} seg{i}')
         accum.append('''theorem accum79_table : zrun table 39446 start = some z79 :=
   (congrArg (fun p => zrun p 39446 start) literal_eq).symm.trans accum79
 theorem query : zipQueryOK 39447 table 39446 (0,true) = true := by
