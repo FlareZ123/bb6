@@ -20,3 +20,14 @@ Archive SHA256 `7235abeb3cc0324cd0b4f6a2c0a17f8ddd00fbf32a8443cef22e9c75b441ca35
 | 018 | Raw41LC1RE | 673 | 374 | 8 | 1 | `1RB0LC_1RC---_0RD1RE_1LD1RA_------_------` |
 | 022 | Raw41LD0RE | 184 | 355 | 17 | 0 | `1RB0LD_1RC0RE_0RD---_1LD1RA_------_------` |
 
+
+
+## 27 November 2026: 153-cylinder screening and new candidate proof-source
+
+New [screen_canonical.py](screen_canonical.py) reuses the original Agent47 two-query partition and Agent19 canonical enumerator, screens all 153 canonical children in four opt-in CI shards, excluding fourteen previously selected descendants. All 139 new screenings completed without timeout in [CI 46078926057](https://github.com/FlareZ123/bb6/actions/runs/46078926057). The smallest open-leaf count is ten, at **canonical child 088**, table **1RB1LB_1RC1LC_0RD---_1LD1RA_------_------**.
+
+Its exact finite-prefix tree had ten open leaves and candidate weighted maximum 41. [Source-generation CI 46079291525](https://github.com/FlareZ123/bb6/actions/runs/46079291525) produced ten independently recomputable FAR witnesses (one per leaf), and Agent47's source generator emitted 24 exhaustive canonical branches plus Raw41New088Closed.lean. The complete generated source is in artifact raw41-target-88 (ID 15236143725). This is a **candidate complete weighted Cover**, not yet an accepted proof. Original-source Lean checking has been submitted in CI 46079427793.
+
+An early exploratory search accidentally fed underscore-delimited display tables to a FAR backend that expects undelimited 36-character tables. Those initial candidates were invalid and superseded. [close_candidate.py](close_candidate.py) now strips separators; Agent47's independent source generator successfully reconstructed all ten corrected FAR witnesses.
+
+A second candidate, child084 (1RB1LB_1RC0RC_0RD---_1LD1RA_------_------), has 49 open leaves, of which 46 have corrected FAR search witnesses ([CI 46079295993](https://github.com/FlareZ123/bb6/actions/runs/46079295993)); three remain unresolved. Its candidate maximum is 737. Do not count child084 as closed or confuse these local children with the global Canonical40 quotient interface.
