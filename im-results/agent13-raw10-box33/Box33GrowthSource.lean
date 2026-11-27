@@ -23,7 +23,9 @@ theorem project_step (z : Config) :
   have hs : s=0 ∨ s=1 ∨ s=2 ∨ s=3 ∨ s=4 ∨ s=5 := by omega
   rcases hs with rfl|rfl|rfl|rfl|rfl|rfl <;> cases hb : t h <;>
     simp only [rawStep,readSlot,table,p,hb,Option.getD_some,Option.getD_none,Option.map_some,Option.map_none]
-  all_goals first | rw [Box33Source.project_applyMove false]; rfl | rfl
+  all_goals
+    simp only [project,Box33Source.project_applyMove]
+    simp [Box33Growth.step,Box33Source.project,Box33Source.q,Box33Source.perm,hb] <;> rfl
 
 theorem project_run (n : Nat) (z : Config) :
     (run table n z).map project = Box33Growth.run n (project z) := by
