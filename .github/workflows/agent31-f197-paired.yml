@@ -10,6 +10,7 @@ on:
           - paired
           - at-terminal
           - at-family
+          - at-probe
         default: paired
 
 jobs:
@@ -35,7 +36,7 @@ jobs:
           lean im-results/agent2-f197-sweep/ATTerminalCore.lean | tee /tmp/at-terminal.log
           ! grep -q sorryAx /tmp/at-terminal.log
       - name: Check complementary AT parametric cores
-        if: ${{ inputs.target == 'at-family' }}
+        if: ${{ inputs.target == 'at-family' || inputs.target == 'at-probe' }}
         env:
           LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
         run: |
@@ -48,7 +49,11 @@ jobs:
           lean -o im-results/agent2-f197-sweep/ATCostGrowth.olean im-results/agent2-f197-sweep/ATCostGrowth.lean | tee -a /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATCarryCore.olean im-results/agent2-f197-sweep/ATCarryCore.lean | tee -a /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATCarriedParser.olean im-results/agent2-f197-sweep/ATCarriedParser.lean | tee -a /tmp/at-family.log
-          lean im-results/agent2-f197-sweep/ATCounter.lean | tee -a /tmp/at-family.log
+          if [ "${{ inputs.target }}" = "at-probe" ]; then
+            lean im-results/agent2-f197-sweep/ATCounterProbe.lean | tee -a /tmp/at-family.log
+          else
+            lean im-results/agent2-f197-sweep/ATCounter.lean | tee -a /tmp/at-family.log
+          fi
           ! grep -q sorryAx /tmp/at-family.log
       - name: Check paired reset transducer
         if: ${{ inputs.target == 'paired' || inputs.target == '' }}
