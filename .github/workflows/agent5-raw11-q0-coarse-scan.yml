@@ -457,7 +457,9 @@ jobs:
           python - <<'PY'
           import json, os
           ids = json.loads(os.environ['INDICES'])
-          assert len(ids) == 1 and ids[0] in (138,140,141,142,143,154)
+          assert isinstance(ids, list) and len(ids) == 1 and type(ids[0]) is int
+          with open('im-results/agent47-raw11-adapter/raw11-route.json') as route_file:
+              assert 0 <= ids[0] < len(json.load(route_file)['targets'])
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               print('id='+str(ids[0]), file=f)
           PY
