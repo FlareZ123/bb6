@@ -1,0 +1,104 @@
+name: Raw139 E0=0LC exact broad branch covers (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned proof generator commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  core:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Certify shared backends and ten long exceptions
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLC
+          base=im-results/agent6-raw139-e0-zeroLC
+          mkdir -p "$work/imports" "$work/core"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$base/packed_long.py" "$work/imports"
+          python3 "$base/packed_cycle.py" "$work/imports"
+          python3 tools/lean_compile_closure.py "$work/imports/ZeroLCLongQueries.lean" "$work/imports/ZeroLCLongCycle.lean" im-results/agent6-raw139-e0-oneLF/OneLFZipHybrid.lean im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean im-results/agent7-far/FARBi.lean --source-root "$work/imports" --workdir /tmp/a6-zeroLC-core --jobs 2 --manifest "$work/core.json" --label raw139-e0-zeroLC-core | tee "$work/core.log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
+          for i in $(seq 0 8); do grep -F "'BB6.Agent6ZeroLCLong.c$i' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/core.log"; done
+          grep -F "'BB6.Agent6ZeroLCLongCycle.c' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/core.log"
+          find /tmp/a6-zeroLC-core -name '*.olean' -exec cp '{}' "$work/core/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroLC-core
+          path: .tmp/a6-zeroLC
+          include-hidden-files: true
+          retention-days: 14
+  branch:
+    needs: core
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        code: ['0','1','2','3','5','6','7','11','20','21','22','23']
+    env:
+      CODE: ${{ matrix.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-zeroLC-core
+          path: .tmp/a6-zeroLC
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact branch sources
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLC
+          base=im-results/agent6-raw139-e0-zeroLC
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$base/broad_exact.py" "$CODE" "$work"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroLC-branch-${{ matrix.code }}-sources
+          path: |
+            .tmp/a6-zeroLC/imports
+            .tmp/a6-zeroLC/partition.json
+            .tmp/a6-zeroLC/recipes.jsonl
+          include-hidden-files: true
+          retention-days: 14
+      - name: Check branch
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLC
+          idx=$(printf '%02d' "$CODE")
+          root="ZLCBroadRoot$idx"
+          dst="$work/shard"
+          mkdir -p "$dst/build"
+          python3 tools/lean_compile_closure.py "$work/imports/$root.lean" --source-root "$work/imports" --precompiled-manifest "$work/core.json" --precompiled-dir "$work/core" --workdir /tmp/a6-zeroLC-branch --jobs 2 --manifest "$dst/manifest.json" --label "raw139-zeroLC-broad-$idx" --theorem "BB6.Agent6ZeroLCBroad.C$idx.c$root" --weighted-bound 80377 | tee "$dst/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$dst/log"
+          grep -F "'BB6.Agent6ZeroLCBroad.C$idx.c$root' depends on axioms: [propext, Classical.choice, Quot.sound]" "$dst/log"
+          find /tmp/a6-zeroLC-branch -name '*.olean' -exec cp '{}' "$dst/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroLC-branch-${{ matrix.code }}-certified
+          path: .tmp/a6-zeroLC/shard
+          include-hidden-files: true
+          retention-days: 14
