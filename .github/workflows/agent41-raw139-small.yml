@@ -106,7 +106,10 @@ jobs:
             --theorem BB6Coverage.Agent41F421.originalRun \
             --theorem BB6Coverage.Agent41F421.originalBlankEntry \
             im-results/agent41-f421/F421Odd.lean \
+            --theorem F421TertiaryGuard.drainMod8 \
+            --theorem F421TertiaryGuard.drainQ \
             im-results/agent41-f421/PrimaryGuard.lean \
+            im-results/agent41-f421/TertiaryGuard.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a41-f421-frontier.log; then
             exit 1
@@ -115,5 +118,7 @@ jobs:
         if: always()
         with:
           name: f421-frontier-proof
-          path: /tmp/a41-f421-frontier.log
+          path: |
+            /tmp/a41-f421-frontier.log
+            /tmp/a41-f421-frontier
           retention-days: 14
