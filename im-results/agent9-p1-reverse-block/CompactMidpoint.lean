@@ -95,7 +95,8 @@ theorem qextend_walk (n s Q a k R c : Nat) (ha : a<n+s+3)
         (by unfold qTarget; omega) hx ?_ ?_ ?_
       · simpa [List.length_nil,hclock] using hd
       · simpa [List.length_nil,hclock] using hc
-      · simpa [List.length_nil,hclock,Nat.mul_comm,Nat.add_assoc] using hh
+      · rw [List.length_nil,hclock]
+        simpa [Nat.mul_comm,Nat.add_assoc] using hh
     have hcomp := walk_append hsingle (ih (by omega))
     simpa [qWord,Nat.add_assoc] using hcomp
 
