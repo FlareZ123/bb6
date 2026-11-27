@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump, affine-suffix]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -130,6 +130,23 @@ jobs:
               axioms = {x.strip() for x in m.group(1).split(",") if x.strip()}
               assert axioms <= {"propext","Classical.choice","Quot.sound"}, (decl, axioms)
               print(name, sorted(axioms))
+          PY
+      - name: Check exact affine prefix suffix reduction
+        if: inputs.target == 'affine-suffix'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-first-return
+          export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D"
+          python tools/lean_compile_deps.py "$D/AffineSuffix.lean" | tee /tmp/affine-suffix.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/affine-suffix.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/affine-suffix.log').read_text()
+          for n in ('expr_suffix','suffix_iff','width_pos_iff_suffix'):
+              hits = re.findall(r"'BB6\.Agent9AffineResidue\."+n+r"' depends on axioms: \[([^\]]*)\]",log,re.S)
+              assert len(hits)==1,(n,hits)
+              assert {a.strip() for a in hits[0].split(',')} <= {'propext','Classical.choice','Quot.sound'},(n,hits)
           PY
       - name: Check exact infinite dyadic residue support
         if: inputs.target == 'affine-residue' || inputs.target == 'affine-half'
