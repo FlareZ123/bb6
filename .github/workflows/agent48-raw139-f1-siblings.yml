@@ -10,7 +10,7 @@ on:
         description: Branch depth, A6 root, C1 batch or E0 proof
         required: true
         type: choice
-        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long, e0graftprep]
+        options: [f1, c1, d0, a6, c1batch, e0sweep, e0parent, e0long, e0graftprep, e0graftcheck]
         default: f1
       sibling:
         description: Sibling proof spec name (unused for a6)
@@ -21,7 +21,7 @@ permissions:
   contents: read
 jobs:
   certify:
-    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' && inputs.kind != 'e0graftprep' }}
+    if: ${{ inputs.kind != 'a6' && inputs.kind != 'c1batch' && inputs.kind != 'e0long' && inputs.kind != 'e0graftprep' && inputs.kind != 'e0graftcheck' }}
     runs-on: ubuntu-latest
     timeout-minutes: ${{ inputs.kind == 'e0parent' && 180 || 60 }}
     steps:
@@ -300,3 +300,134 @@ jobs:
           name: raw139-oneLA-graft-sources
           include-hidden-files: true
           path: .tmp/a48-oneLA-graft/
+
+  graft-check-prepare:
+    if: ${{ inputs.kind == 'e0graftcheck' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0parent-OneLA-certified
+          run-id: 45884008735
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-base
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-graft-sources
+          run-id: 45924589843
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-graft
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0sweep-OneLAExtension-certified
+          run-id: 45916031509
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-ext
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0sweep-OneLAWide-certified
+          run-id: 45916452751
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-wide
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-packed-cycle-certified
+          run-id: 45924267332
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-long
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-affine8938-certified
+          run-id: 45924271354
+          github-token: ${{ github.token }}
+          path: /tmp/oneLA-affine
+      - run: bash im-results/agent48-raw139-e0-1la/graft-check-prepare.sh /tmp/oneLA-base /tmp/oneLA-graft /tmp/oneLA-ext /tmp/oneLA-wide /tmp/oneLA-long /tmp/oneLA-affine
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-graft-common
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneLA-check/imports/
+            .tmp/a48-oneLA-check/extern/
+            .tmp/a48-oneLA-check/build/*.olean
+            .tmp/a48-oneLA-check/manifest.json
+            .tmp/a48-oneLA-check/shard-plan.json
+            .tmp/a48-oneLA-check/source-sha
+            .tmp/a48-oneLA-check/log
+  graft-check-shard:
+    needs: graft-check-prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-graft-common
+          path: .tmp/a48-oneLA-check
+      - run: bash im-results/agent48-raw139-e0-1la/graft-check-shard.sh
+        env:
+          SHARD: ${{ matrix.shard }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-graft-shard-${{ matrix.shard }}
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneLA-shard/build/*.olean
+            .tmp/a48-oneLA-shard/manifest.json
+            .tmp/a48-oneLA-shard/source-sha
+            .tmp/a48-oneLA-shard/log
+  graft-check-join:
+    needs: [graft-check-prepare,graft-check-shard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLA-graft-common
+          path: .tmp/a48-oneLA-check
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneLA-graft-shard-*
+          path: /tmp/oneLA-graft-shards
+      - run: bash im-results/agent48-raw139-e0-1la/graft-check-join.sh /tmp/oneLA-graft-shards
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLA-graft-certified
+          include-hidden-files: true
+          path: |
+            .tmp/a48-oneLA-final/build/*.olean
+            .tmp/a48-oneLA-final/manifest.json
+            .tmp/a48-oneLA-final/log
+            .tmp/a48-oneLA-final/imports/
+            .tmp/a48-oneLA-final/extern/
