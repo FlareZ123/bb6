@@ -1483,8 +1483,8 @@ jobs:
           set -euo pipefail
           [[ "$RAW124_PARENT_RUN_ID" =~ ^[0-9]+$ ]]
           python -m py_compile im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py
-          python im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py \\
-            --work /tmp/a31-canonical58-raw113 --raw124-run-id "$RAW124_PARENT_RUN_ID" \\
+          python im-results/agent2-tnf-raw124/assemble_raw124_canonical57.py \
+            --work /tmp/a31-canonical58-raw113 --raw124-run-id "$RAW124_PARENT_RUN_ID" \
             2>&1 | tee /tmp/a31-canonical58-raw113/raw124-canonical57-assembly.log
           test -s /tmp/a31-canonical58-raw113/raw124-canonical58-membership.json
       - uses: actions/upload-artifact@v4
@@ -1803,7 +1803,7 @@ jobs:
           retention-days: 30
 
   canonical56_raw59_after_raw124:
-    name: Add Raw59 after accepted Canonical57-Raw124 to produce Canonical56
+    name: Recover Raw124 from Canonical58 and add Raw59 to produce Canonical56
     if: ${{ inputs.target == 'canonical56-raw59-after-raw124' }}
     runs-on: ubuntu-latest
     timeout-minutes: 180
@@ -1820,7 +1820,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           export PATH="$HOME/.elan/bin:$PATH"
           lean --version
-      - name: Compile Raw59 after the accepted Canonical57-Raw124 base
+      - name: Compile missing Raw124 and Raw59 consumers from the pinned Canonical58 base
         env:
           GH_TOKEN: ${{ github.token }}
           CANONICAL57_RUN_ID: ${{ inputs.canonical57_run_id }}
