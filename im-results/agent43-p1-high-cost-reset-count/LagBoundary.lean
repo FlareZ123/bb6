@@ -9,8 +9,76 @@ open BB6.Agent43LagExact
 /-- A reachable critical hub requires a cone endpoint in one of these
 three arithmetic sets. The even-power feeder is tested at its immediately
 preceding odd depth. -/
-def Boundary (n _m v w : Nat) : Prop :=
-  w≤11 ∨ v=2 ∨ (5≤v ∧ v%2=1 ∧ ∃ j, j<n ∧ w+v/2=7*2^j)
+def Boundary (n m v w : Nat) : Prop :=
+  w≤10 ∨ (v=2 ∧ (n+m)%2=0) ∨ (5≤v ∧ v%2=1 ∧ ∃ j, j<n ∧ w+v/2=7*2^j)
+
+/-- Unlike positive_G_feeder, this retains the exceptional c=1 branch
+with its true predecessor (whose left coordinate is two larger). -/
+theorem actual_G_feeder (b d : Nat) (hb : 12≤b) (_hmod : b%4=0)
+    (hd : 0<d) (hr : BB6.Agent1.Reach b d) :
+    (∃ k, GAncestor b d k 1 ∧ BB6.Agent1.Reach (2*k-2) 5) ∨
+      (∃ k c, GAncestor b d k c ∧ 2≤c ∧ BB6.Agent1.Reach (2*k-4) (c+4)) := by
+  cases hr with
+  | init => omega
+  | next a c _ _ hpre ht =>
+    unfold BB6.Agent1.T at ht
+    by_cases hzero : c=0
+    · simp [hzero] at ht
+      omega
+    · by_cases hone : c=1
+      · simp [hzero,hone] at ht
+        omega
+      · by_cases haeven : a%2=0
+        · simp [hzero,hone,haeven] at ht
+          omega
+        · by_cases htwo : c=2
+          · simp [hzero,hone,haeven,htwo] at ht
+          · by_cases hthree : c=3
+            · simp [hzero,hone,haeven,htwo,hthree] at ht
+              have ha : BB6.Agent1.G (a/2) 1=(b,d) := by simpa using ht
+              have hanc := BB6.Agent50P1.inverse_complete (a/2) 1 b d ha (by omega)
+              obtain ⟨x,y,hprev,hxe,hax,hy⟩ :=
+                BB6.Agent1.odd_parent_general a c hpre (by omega) (by omega)
+              exact Or.inl ⟨a/2,hanc,by
+                have hx : 2*(a/2)-2=x := by omega
+                have hy' : y=5 := by omega
+                simpa [hx,hy'] using hprev⟩
+            · simp [hzero,hone,haeven,htwo,hthree] at ht
+              have he : BB6.Agent1.G (a/2+1) (c-2)=(b,d) := by simpa using ht
+              have hg := BB6.Agent50P1.inverse_complete (a/2+1) (c-2) b d he (by omega)
+              obtain ⟨x,y,hprev,hxe,hax,hy⟩ :=
+                BB6.Agent1.odd_parent_general a c hpre (by omega) (by omega)
+              refine Or.inr ⟨a/2+1,c-2,hg,by omega,?_⟩
+              have hx : 2*(a/2+1)-4=x := by omega
+              have hy' : c-2+4=y := by omega
+              simpa [hx,hy'] using hprev
+
+/-- The exceptional c=1 predecessor is not a normal inverse cone child.
+Its two-cell offset and reachable left parity rule out odd-(n+m)
+right-five witnesses outside the small-left boundary. -/
+theorem right_five_boundary (n b d m t k : Nat) (hn : 14≤n)
+    (h : OddCone (criticalLeft n) 3 b d m)
+    (hb : 12≤b) (hb4 : b%4=0) (hd : d%2=1)
+    (hi : inverseAt b d t=some (k,1))
+    (hr : BB6.Agent1.Reach (2*k-2) 5) :
+    ∃ b' d' m', 0<m' ∧ OddCone (criticalLeft n) 3 b' d' m' ∧
+      Boundary n m' ((d'-1)/2) ((b'+12)/2) := by
+  have hk := inverse_k_lower b d t k 1 hi
+  have hchild := OddCone.parent b d m t k 1 h (by omega) hb4 hd hi (by omega) (by decide)
+  have hL := source_to_legal n _ _ _ hn hchild
+  have hm := legal_mass n _ _ _ hn hL
+  have hpar := BB6.Agent1.reachable_even_mod4 (2*k-2) 5 hr (by decide) (by omega)
+  have hT : total n%2=0 := by
+    have he : 2∣2^n := Nat.pow_dvd_pow 2 (show 1≤n by omega)
+    obtain ⟨a,ha⟩ := he
+    unfold total
+    rw [ha]
+    omega
+  refine ⟨2*k-4,5,m+t+1,by omega,hchild,?_⟩
+  unfold Boundary
+  rcases hpar with hp|hp
+  · exact Or.inl (by omega)
+  · exact Or.inr (Or.inl ⟨by decide,by omega⟩)
 
 theorem even_feeder_boundary (n b d m t k c : Nat) (hn : 14≤n)
     (h : OddCone (criticalLeft n) 3 b d m)
@@ -70,31 +138,26 @@ theorem critical_hub_has_boundary (n : Nat) (hn : 14≤n)
       have hmass := legal_mass n m _ _ hn hL
       have hbe := source_even_left _ _ _ _ _ hrootEven h
       have hdo := source_odd_right _ _ _ _ _ (by decide) h
+      have hpar := BB6.Agent1.reachable_even_mod4 b d hre (by omega) hbe
       by_cases hb : b<12
       · have hmpos : 0<m := by cases h <;> omega
-        exact ⟨b,d,m,hmpos,h,Or.inl (by omega)⟩
+        exact ⟨b,d,m,hmpos,h,Or.inl (by rcases hpar with hp|hp <;> omega)⟩
       have hb4 : b%4=0 := by
         rcases BB6.Agent1.reachable_even_mod4 b d hre (by omega) hbe with h2|h4
         · omega
         · exact h4
-      by_cases hx : ∃ k, GAncestor b d k 1
-      · obtain ⟨k,ha⟩ := hx
-        obtain ⟨t,hi,_⟩ := inverseAt_complete b d k 1 ha
-        have hk := inverse_k_lower b d t k 1 hi
-        exact ⟨2*k-4,5,m+t+1,by omega,
-          OddCone.parent b d m t k 1 h (by omega) hb4 hdo hi (by omega) (by decide),
-          Or.inr (Or.inl (by decide))⟩
-      have hno : ∀ k, ¬ GAncestor b d k 1 := fun k hk => hx ⟨k,hk⟩
-      obtain ⟨k,c,ha,hpos,hpre⟩ := BB6.Agent50P1.positive_G_feeder b d
-        (by omega) hb4 (by omega) hno hre
-      obtain ⟨t,hi,_⟩ := inverseAt_complete b d k c ha
-      by_cases hodd : c%2=1
-      · have hk := inverse_k_lower b d t k c hi
-        have hchild := OddCone.parent b d m t k c h (by omega) hb4 hdo hi (by omega) hodd
-        have hL' := source_to_legal n _ _ _ hn hchild
-        have hm' := legal_mass n _ _ _ hn hL'
-        exact ih (total n-(m+t+1)) (by omega) _ _ _ rfl hchild hpre
-      · exact even_feeder_boundary n b d m t k c hn h (by omega) hb4 hdo hi (by omega) hpos hpre
+      rcases actual_G_feeder b d (by omega) hb4 (by omega) hre with
+        ⟨k,ha,hprev⟩ | ⟨k,c,ha,hpos,hpre⟩
+      · obtain ⟨t,hi,_⟩ := inverseAt_complete b d k 1 ha
+        exact right_five_boundary n b d m t k hn h (by omega) hb4 hdo hi hprev
+      · obtain ⟨t,hi,_⟩ := inverseAt_complete b d k c ha
+        by_cases hodd : c%2=1
+        · have hk := inverse_k_lower b d t k c hi
+          have hchild := OddCone.parent b d m t k c h (by omega) hb4 hdo hi (by omega) hodd
+          have hL' := source_to_legal n _ _ _ hn hchild
+          have hm' := legal_mass n _ _ _ hn hL'
+          exact ih (total n-(m+t+1)) (by omega) _ _ _ rfl hchild hpre
+        · exact even_feeder_boundary n b d m t k c hn h (by omega) hb4 hdo hi (by omega) hpos hpre
   exact aux (total n) (criticalLeft n) 3 0 (by omega) OddCone.root hr
 
 /-- Test the exceptional arithmetic endpoints directly on guarded words. -/
@@ -121,7 +184,7 @@ theorem critical_reset_requires_guarded_boundary (n : Nat) (hn : 14≤n)
 theorem low_boundary_wall (n m v w : Nat) (hmass : v+w+n+m+1=total n)
     (hw : 6≤w) (hshort : 2*(n+m)<total n+8)
     (h : Boundary n m v w) :
-    w≤11 ∨ v=2 ∨ (5≤v ∧ v%2=1 ∧ w=n+m+2) := by
+    w≤10 ∨ (v=2 ∧ (n+m)%2=0) ∨ (5≤v ∧ v%2=1 ∧ w=n+m+2) := by
   rcases h with h|h|⟨hv,ho,j,hj,hpow⟩
   · exact Or.inl h
   · exact Or.inr (Or.inl h)
@@ -137,6 +200,8 @@ theorem low_boundary_wall (n m v w : Nat) (hmass : v+w+n+m+1=total n)
       unfold total at *
       omega
 
+#print axioms actual_G_feeder
+#print axioms right_five_boundary
 #print axioms even_feeder_boundary
 #print axioms critical_hub_has_boundary
 #print axioms critical_reset_requires_guarded_boundary
