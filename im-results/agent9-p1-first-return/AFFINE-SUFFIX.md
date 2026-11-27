@@ -28,12 +28,13 @@ The accompanying JS algorithm was executed in the tool runtime. Direct canonical
 |28|14|771|7325739|11710464|
 |30|15|1542|26905355|40355616|
 |32|16|2809|101625091|166227136|
+|34|17|5618|372236349|577108724|
 
-At depth 32, 2,045,858,557 of 2,147,483,648 even residue classes (95.26771293%) are excluded. The earlier depth-20 certified count is 36,329 survivors among 524,288. The depth-32 computation is **not** kernel-certified.
+At depth 32, 2,045,858,557 of 2,147,483,648 even residue classes (95.26771293%) are excluded. At depth 34, 8,217,698,243 of 8,589,934,592 even classes (95.66659856%) are excluded. The earlier depth-20 certified count is 36,329 survivors among 524,288. The depth-32 and depth-34 computations are **not** kernel-certified.
 
 For n>=K, the original-source theorem BB6.P1CarryExact.critical_reset_requires_width_full transfers width-zero to impossibility of the critical P1 reset Reach 2 (14*2^n-2*n-10). This concerns that necessary reset, not every P1 gate or the BB(6) upper bound. The paper identity and computations above extend the residue obstruction; the new support count still needs Lean integration and acceptance. No claim that every remaining residue fails.
 
-Reproduce: node affine_suffix.js 22 24 26 28 30 32. The script uses exact small integer arithmetic and 32-bit modular multiplication, with bounded k,d. Local shell/Python/Lean tool initialization failed with ClientError in this invocation; JS runtime was available.
+Reproduce: node affine_suffix.js 22 24 26 28 30 32 34. The script uses exact small integer arithmetic and 32-bit modular multiplication, with bounded k,d. Local shell/Python/Lean tool initialization failed with ClientError in this invocation; JS runtime was available.
 
 ## Exact executable
 
