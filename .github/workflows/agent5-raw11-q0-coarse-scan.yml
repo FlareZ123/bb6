@@ -564,6 +564,55 @@ jobs:
           set -euo pipefail
           node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK"
           python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py partition /tmp/coarse-generated 8
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '149'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46056090176'
+          name: raw11-q0-149-cycles
+          path: /tmp/q0149-external/cycles
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '149'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46056731269'
+          name: raw11-q0-149-block-8
+          path: /tmp/q0149-external/block8
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '149'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46056731269'
+          name: raw11-q0-149-block-10
+          path: /tmp/q0149-external/block10
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '149'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46054422456'
+          name: raw11-q0-long-sweep-source-2
+          path: /tmp/q0149-external/long
+      - name: Stage accepted exact q0-149 leaf sources
+        if: steps.prepare.outputs.id == '149'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          root=Path('/tmp/q0149-external')
+          out=Path('/tmp/coarse-generated')
+          names=['Q0149H11','Q0149H16','Q0149H17']
+          for w,i in [(9,8),(6,10)]:
+              names += [f'{p}{w}' for p in ('ActiveSparseFAR','BlockFAR','BlockFARBridge','BlockMacro','RangeCheck','SparseBlockFAR')]
+              names += [f'Q0149Block{i}{p}' for p in ('','Packed','Proof')]
+          names += ['Raw11Q0LongSweep2'+p for p in ('','Base','Part0','Part1','Part2')]
+          for name in names:
+              matches=list(root.rglob(name+'.lean'))
+              assert len(matches)==1,(name,matches)
+              dest=out/(name+'.lean')
+              assert not dest.exists(),dest
+              shutil.copy2(matches[0],dest)
+          PY
       - name: Retain generated proof and exact residual frontier before compilation
         id: frontier
         run: |
