@@ -2,6 +2,8 @@ import BB429Resonance
 
 namespace BB429.CoarseExit
 
+set_option maxHeartbeats 50000000
+
 open BB429.LowReturnBand
 private theorem r234_stepF (u w : Nat) (h : 2*u+3 ≤ w) :
     next (u,w) = some (2*u+3,w-2*u-3) := by
@@ -47,7 +49,7 @@ theorem d234_phase (j : Nat) :
     dsimp [d234PhaseU]
     rw [Nat.pow_add]
     rw [show 16^2=256 by decide]
-    omega
+    grind +ring
   have hg : 5*(234*16^j)+7 ≤ d234PhaseU j := by
     dsimp [d234PhaseU]
     omega
@@ -60,7 +62,6 @@ theorem d234_phase (j : Nat) :
     Their branch word is
       Oe F Oo F Oe F F F Oe F F F.
     Crucially the leading 16^j contribution to the first counter cancels. -/
-set_option maxHeartbeats 5000000 in
 theorem d234_tail (j : Nat) :
     run 12 (phase (d234PhaseU j) (234*16^j)) =
       some (416*j+4797,18432*16^j-808*j-9293) := by
