@@ -1,0 +1,93 @@
+name: Raw139 normalized 56-row Cover after source ZeroLF discharge
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source checkout revision
+        required: true
+        type: string
+      zeroLF_run_id:
+        description: Accepted unconditional ZeroLF Cover run
+        required: true
+        type: string
+      parent_run_id:
+        description: Accepted original-source conditional parent run
+        required: true
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroLF-unconditional-certified
+          run-id: ${{ inputs.zeroLF_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/zeroLF56/accepted
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroLF-parent-certified
+          run-id: ${{ inputs.parent_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/zeroLF56/conditional
+      - name: Restore the identical old-source dependencies
+        run: |
+          set -euo pipefail
+          bash im-results/agent14-raw139-e0-zeroLF/prepare.sh
+          python3 im-results/agent14-raw139-e0-zeroLF/unpack3862.py .tmp/zeroLF56/imports
+          test -f .tmp/zeroLF56/accepted/manifest.json
+          test -f .tmp/zeroLF56/conditional/imports/ZLFRoot13.lean
+          test -f .tmp/zeroLF56/imports/Cover3862.lean
+      - name: Source compile direct normalized 56-case consumer
+        run: |
+          set -euo pipefail
+          work=.tmp/zeroLF56
+          mkdir -p "$work/check"
+          python3 tools/lean_compile_closure.py \
+            im-results/agent14-raw139-e0-zeroLF/Raw139E0ZeroLF56AfterSource.lean \
+            --source-root "$work/conditional/imports" \
+            --source-root "$work/imports" \
+            --precompiled-manifest "$work/accepted/manifest.json" \
+            --precompiled-dir "$work/accepted/build" \
+            --workdir /tmp/a14-zeroLF56 \
+            --jobs 4 \
+            --manifest "$work/check/manifest.json" \
+            --label raw139-e0-zeroLF-56-normalized \
+            --theorem BB6.Agent14Raw139E0ZeroLF56AfterSource.raw139_p0_from_56_with_zeroLF_source \
+            --weighted-bound 19007 \
+            --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
+            --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            | tee "$work/check/log"
+          ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/check/log"
+          grep -F "'BB6.Agent14Raw139E0ZeroLF56AfterSource.normalized_zeroLF_cover' depends on axioms: [propext," "$work/check/log"
+          grep -F "'BB6.Agent14Raw139E0ZeroLF56AfterSource.raw139_p0_from_56_with_zeroLF_source' depends on axioms: [propext," "$work/check/log"
+          cp /tmp/a14-zeroLF56/Raw139E0ZeroLF56AfterSource.olean "$work/check/"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw139-e0-zeroLF-normalized56-source-accepted
+          path: |
+            .tmp/zeroLF56/check/log
+            .tmp/zeroLF56/check/manifest.json
+            .tmp/zeroLF56/check/Raw139E0ZeroLF56AfterSource.olean
+          if-no-files-found: error
+          retention-days: 14
