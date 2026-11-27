@@ -469,7 +469,7 @@ jobs:
           set -euo pipefail
           cd im-results/agent32-f418-shift-overflow
           export LEAN_PATH=.
-          for m in F418Arithmetic F418EventSystem F418Episodes F418ReturnBounds F418NormalReturn F418HighTail F418NormalPath F418SparseGate F418RecoveryCore F418FullReturn F418SignedQueue F418QueueInvariant F418QueueHistory F418FullQueue F418PzeroBlock F418PzeroGate F418PzeroSource F418DelayedCorrection; do
+          for m in F418Arithmetic F418EventSystem F418Episodes F418ReturnBounds F418NormalReturn F418HighTail F418NormalPath F418SparseGate F418RecoveryCore F418FullReturn F418SignedQueue F418QueueInvariant F418QueueHistory F418FullQueue F418PzeroBlock F418PzeroGate F418PzeroSource F418DelayedCorrection F418TopPairGate; do
             lean -o "$m.olean" "$m.lean" 2>&1 | tee -a /tmp/f418-return-proof.log
           done
           if grep -q 'sorryAx' /tmp/f418-return-proof.log; then
@@ -491,6 +491,7 @@ jobs:
           assert "prepared_fatal" in s
           assert "correction_exact_delay" in s
           assert "odd_gap_relay" in s
+          assert "modest_gate_fatal_iff" in s
           PY
 
   raw59-refinement:
