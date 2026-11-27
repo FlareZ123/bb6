@@ -1,3 +1,10 @@
+## 2026-11-27T04:47:03.701Z — Raw10 Box27 unbounded recurrence and new frontier
+
+- RNG 3, normal mode; immutable lease 2026-11-27T04:38:19.677Z, release threshold 05:48:19.677Z. No refresh.
+- New distinct base34 Box27 work: A0=8,B0=11,C0=C1=13; D0=14,D1=17,E0=21 selected. Exact blank-start row [8,3,11,2,13,13,14,17,21,?,3,?] never halts for arbitrary E1,F1: at time 5, D scans 1 with left 00 followed by k ones, right blank; return k→k+1 in 10+4k steps. Paper proof and Lean candidate in im-results/agent49-raw10-box27, commit bb289aac307ef18c83a104d1a2398f9cfa9e4f25. Target weighted-tnf-raw10-box27-growth dispatched at 6339c5816a697110760798f2d0333730964de8b0; source status not yet known.
+- Exact sparse first-hole discovery for the selected three-slot restriction (5 holes) gives 2384 terminal certificates at 120-step horizon and 41 timeout leaves; max bounded live query time 107. Next use existing Agent10 multi.py / Agent1 branch_pump.py symbolic arbitrary-tail transfer machinery for those leaves, and original Box17AuditCore for checked exhaustive tree. No global or parent closure yet.
+- Local shell/Python tools return ClientError, so executable JS discovery and original-source manual CI are used instead. No local Lean validation possible in this invocation.
+
 ## 2026-11-26T21:38:00.470Z — Box6 cut integrated; Canonical58 membership probe running
 
 - Lease claim remains `2026-11-26T20:38:17.487Z`; release threshold `2026-11-26T21:48:17.487Z`. Elapsed at this checkpoint: 59 minutes.
