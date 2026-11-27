@@ -33,11 +33,12 @@ theorem d234_short_resonance_only35
   have hb := word4_bound e i
   have hr := word4_mod256 e i
   unfold digitResidue256 at hr
-  have hp : (4:Int)^i≤4096 := by
-    have hh : i≤6 := hi
-    have hpow := Int.pow_le_pow_right (by decide : (0:Int)≤4) hh
+  have hpN : 4^i≤(4096:Nat) := by
+    have hpow := Nat.pow_le_pow_right (by decide : 0<4) hi
     norm_num at hpow ⊢
     exact hpow
+  have hp : (4:Int)^i≤4096 := by
+    exact_mod_cast hpN
   rcases hr with h|h|h|h|h|h|h|h|h|h|h|h|h|h|h|h <;> omega
 
 /-- The unique short second resonance is itself a finite safe source
