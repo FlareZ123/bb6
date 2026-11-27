@@ -4,7 +4,7 @@ open BB6BlockFAR Raw140Orbit Raw140Extra
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
-def section (m n : Nat) (s : Tail) : Prim :=
+def orbitCfg (m n : Nat) (s : Tail) : Prim :=
   boundary 1 true (U 5 m) (word (trips n) ++ tailWord s)
 
 theorem dIterTriple (k n : Nat) (V : List Bool) (s : Tail) :
@@ -16,7 +16,7 @@ theorem dIterTriple (k n : Nat) (V : List Bool) (s : Tail) :
 theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
     ∃ r t, 2 ≤ r ∧ Reach base
       (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s)))
-      (section (4*p+14) r t) := by
+      (orbitCfg (4*p+14) r t) := by
   let c := (turn (2*p+2) s).1
   let t := (turn (2*p+2) s).2
   let r := n+1+c
@@ -39,19 +39,19 @@ theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have h₉ := eEven 1 (1+4*p+6) (word (trips z) ++ tailWord (rho t))
   have h₁₀ : Reach base
       (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s)))
-      (section (4*p+14) z (rho t)) := by
+      (orbitCfg (4*p+14) z (rho t)) := by
     have hₐ := Reach.trans ⟨_,h₁⟩ ⟨_,h₂⟩
     have h_b := Reach.trans hₐ h₃
     have h_c := Reach.trans h_b h₄
     have h_d := Reach.trans h_c h₅
     have h_e := Reach.trans (Reach.trans h_d h₈) h₉
-    simpa only [section, show 1+4*p+6+4*1+3 = 4*p+14 by omega] using h_e
+    simpa only [orbitCfg, show 1+4*p+6+4*1+3 = 4*p+14 by omega] using h_e
   exact ⟨z,rho t,hz,h₁₀⟩
 
 theorem core13 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
     ∃ r t, 2 ≤ r ∧ Reach base
       (boundary 3 false (U 5 (2*p+2)) (S 2::(word (trips (n+1)) ++ tailWord s)))
-      (section (4*p+16) r t) := by
+      (orbitCfg (4*p+16) r t) := by
   let c := (turn (2*p+4) (rho s)).1
   let t := (turn (2*p+4) (rho s)).2
   let r := n+carry s+c
@@ -75,25 +75,25 @@ theorem core13 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
     simpa only [X,r,c,t,U,word,List.replicate_succ,List.cons_append,List.nil_append,List.append_assoc,rep_cons] using h₆
   have h₈ := dEndE (2*p+6) (word (trips r) ++ tailWord t)
   have h₉ := eEven (p+3) 1 (word (trips r) ++ tailWord t)
-  have h₁₀ : Reach base (E 1 (2*p+6) (word (trips r) ++ tailWord t)) (section (4*p+16) r t) := by
-    simpa only [section,show 2*(p+3)=2*p+6 by omega,show 1+4*(p+3)+3=4*p+16 by omega] using h₉
+  have h₁₀ : Reach base (E 1 (2*p+6) (word (trips r) ++ tailWord t)) (orbitCfg (4*p+16) r t) := by
+    simpa only [orbitCfg,show 2*(p+3)=2*p+6 by omega,show 1+4*(p+3)+3=4*p+16 by omega] using h₉
   exact ⟨r,t,hr,Reach.trans (Reach.trans (Reach.trans h₅ h₇) h₈) h₁₀⟩
 
 def Good (a : Prim) : Prop :=
-  ∃ p n s, 9 ≤ p ∧ a = section (2*p) (n+2) s
+  ∃ p n s, 9 ≤ p ∧ a = orbitCfg (2*p) (n+2) s
 
 theorem progress4 (a : Prim) (ha : Good a) :
     ∃ k b, 0 < k ∧ Good b ∧ run M4 k a = some b := by
   obtain ⟨p,n,s,hp,rfl⟩ := ha
   have h₁ := reset4 (U 5 (2*p-1)) (word (trips (n+1)) ++ tailWord s)
   have hm : 2*p = (2*p-1)+1 := by omega
-  have h₂ : run M4 7 (section (2*p) (n+2) s) =
+  have h₂ : run M4 7 (orbitCfg (2*p) (n+2) s) =
       some (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s))) := by
     rw [hm]
     exact h₁
   obtain ⟨r,t,hr,h₃⟩ := core4 p n s hp
   obtain ⟨k,hk⟩ := Reach.ext (fill_extends _ _) h₃
-  refine ⟨7+k,section (4*p+14) r t,by omega,?_,join h₂ hk⟩
+  refine ⟨7+k,orbitCfg (4*p+14) r t,by omega,?_,join h₂ hk⟩
   refine ⟨2*p+7,r-2,t,by omega,?_⟩
   rw [show 2*(2*p+7) = 4*p+14 by omega,show r-2+2=r by omega]
 
@@ -102,13 +102,13 @@ theorem progress13 (a : Prim) (ha : Good a) :
   obtain ⟨p,n,s,hp,rfl⟩ := ha
   have h₁ := reset13 (U 5 (2*p-1)) (S 4::S 4::(word (trips n) ++ tailWord s))
   have hm : 2*p = (2*p-1)+1 := by omega
-  have h₂ : run M13 19 (section (2*p) (n+2) s) =
+  have h₂ : run M13 19 (orbitCfg (2*p) (n+2) s) =
       some (boundary 3 false (U 5 (2*p+2)) (S 2::(word (trips (n+1)) ++ tailWord s))) := by
     rw [hm]
     exact h₁
   obtain ⟨r,t,hr,h₃⟩ := core13 p n s hp
   obtain ⟨k,hk⟩ := Reach.ext (fill_extends _ _) h₃
-  refine ⟨19+k,section (4*p+16) r t,by omega,?_,join h₂ hk⟩
+  refine ⟨19+k,orbitCfg (4*p+16) r t,by omega,?_,join h₂ hk⟩
   refine ⟨2*p+8,r-2,t,by omega,?_⟩
   rw [show 2*(2*p+8) = 4*p+16 by omega,show r-2+2=r by omega]
 
