@@ -24,6 +24,10 @@ SOURCE = "--source36" in sys.argv
 if SOURCE: PROVEN[literal(21,13)]="Raw14036"
 SOURCE86 = "--source86" in sys.argv
 if SOURCE86: PROVEN[literal(23,11)]="Raw14086"
+FAMILY = "--family" in sys.argv
+if FAMILY:
+    for i,a,f in [(28,21,0),(39,21,6),(77,23,1),(81,23,17),(88,23,19)]:
+        PROVEN[literal(a,f)]=f"Raw140{i}"
 for f in (4,13):
     PROVEN[literal(23,f)]=f"Raw140Double.X{f}"
 
@@ -59,7 +63,7 @@ def main():
         pending.append(p)
         return ".unresolved"
     body=emit(tree)
-    assert len(far)==54 and len(PROVEN)==15+int(SOURCE)+int(SOURCE86) and len(pending)==20-int(SOURCE)-int(SOURCE86), (len(far),len(PROVEN),len(pending))
+    assert len(far)==54 and len(PROVEN)==15+int(SOURCE)+int(SOURCE86)+5*int(FAMILY) and len(pending)==20-int(SOURCE)-int(SOURCE86)-5*int(FAMILY), (len(far),len(PROVEN),len(pending))
     assert all(t.count("---")==1 for t in pending)
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(PARENT)]
     out="""import PartialAudit
@@ -75,6 +79,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit 
 """
     if SOURCE: out = out.replace("import Raw140DoubleCover\n", "import Raw140DoubleCover\nimport Raw14036Cover\n")
     if SOURCE86: out = out.replace("import Raw140DoubleCover\n", "import Raw140DoubleCover\nimport Raw14086Cover\n")
+    if FAMILY: out=out.replace("import Raw140DoubleCover\n","import Raw140DoubleCover\n"+"".join(f"import Raw140{i}Cover\n" for i in (28,39,77,81,88)))
     out+=f"""
 def parent : PartialMachine := FAR.fromCodes {codes}
 def tree : PartialAudit := {body}
