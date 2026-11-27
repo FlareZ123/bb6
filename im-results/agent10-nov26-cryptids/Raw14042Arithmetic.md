@@ -20,7 +20,11 @@ The A,B,C sections have homogeneous left exponent p, triplet count n, and tail r
        -> BR(5^(2(k+h)+2),(644)^floor((k+rank(s))/6) tail(t)),
     rank(t) = (k+rank(s)) mod 6.
 
-The common-table dIter/dEndE/eEven composition is lifted to M42. This directly provides all odd-total D auxiliary returns, including h=11, and the D phase of C315 (k=p+2,h=1,rank(s)=2), whose result is B(2p+8,floor((p+4)/6),(p+4)%6). The respective terminal-to-D entry paths still need to be composed.
+The common-table dIter/dEndE/eEven composition is lifted to M42. This directly provides all odd-total D auxiliary returns, including h=11, and the D phase of C315 (k=p+2,h=1,rank(s)=2), whose result is B(2p+8,floor((p+4)/6),(p+4)%6). All ten terminal-to-D paths are now composed in `Raw14042DTerminals.lean` (6e0102cc).
+
+## Terminal source progress (23:34 UTC)
+
+33 of 36 terminal families have local kernel-checked symbolic source reachability proofs: ten D routes in `Raw14042DTerminals`, ten even C routes and three direct returns in `Raw14042CTerminals` (223ef72a), and ten odd B routes in `Raw14042BTerminals` (e35531fe). General C and B returns are in `Raw14042CGeneral` (c38b824a) and `Raw14042BGeneral` (478ebeda). Local long affine witnesses were split into shorter checked segments; original generated dependency closure CI remains to be completed. Remaining terminal families are A5215, B62542, C35221 (each two parity branches); then assemble common encoding and positive-time step theorem.
 
 ## Remaining terminal realization
 
