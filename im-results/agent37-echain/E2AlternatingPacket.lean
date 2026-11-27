@@ -39,9 +39,10 @@ theorem eLongFrontPositive (m q r : Nat) (ys : List Bool) :
       (2*(q+1)+4) +
       ((4*(r+1)+12)+(2*(q+1)+8)) := by omega
   rw [ht,run_add,eStart_scan,run_add]
-  change run (4*(r+1)+12)
-    (aStart (r+1) (oppairs (q+2) ++
-      (pairs (m+3) ++ [true,true])) ys) = _
+  change run (2*(q+1)+8)
+    (run (4*(r+1)+12)
+      (aStart (r+1) (oppairs (q+2) ++
+        (pairs (m+3) ++ [true,true])) ys)) = _
   rw [aTurnAll]
   change run (2*(q+1)+8)
     (⟨oppairs (q+2) ++ (pairs (m+3) ++ [true,true]),true,
@@ -69,10 +70,16 @@ theorem eLongFrontZero (m r : Nat) (ys : List Bool) :
       (eStart m 0 (aFront (r+1) ++ ys)) =
       sweepB m (zeroOut ++ (List.replicate (2*r) true ++ ys)) := by
   have ht : 64+4*r = 4+((4*(r+1)+12)+44) := by omega
-  rw [ht,run_add,eStart_scan,run_add]
-  change run (4*(r+1)+12)
-    (aStart (r+1) (oppairs 1 ++
-      (pairs (m+3) ++ [true,true])) ys) = _
+  rw [ht,run_add]
+  have hscan : run 4 (eStart m 0 (aFront (r+1) ++ ys)) =
+      ⟨oppairs 1 ++ (pairs (m+3) ++ [true,true]),false,
+        aFront (r+1) ++ ys,0⟩ := by
+    simpa using eStart_scan m 0 (aFront (r+1) ++ ys)
+  rw [hscan,run_add]
+  change run 44
+    (run (4*(r+1)+12)
+      (aStart (r+1) (oppairs 1 ++
+        (pairs (m+3) ++ [true,true])) ys)) = _
   rw [aTurnAll]
   change run 44
     (⟨oppairs 1 ++ (pairs (m+3) ++ [true,true]),true,
@@ -126,7 +133,8 @@ private theorem outputPositive (k q r : Nat) (ys : List Bool) :
       List.replicate (8+2*r) true ++ ys := by
     rw [←List.replicate_append_replicate]
     rfl
-  simp [shortPacket,packet,word,oppairs,hp,hr,List.append_assoc]
+  simp [shortPacket,packet,word,oppairs,hp,List.append_assoc]
+  simpa [List.replicate] using hr
 
 private theorem outputZero (k r : Nat) (ys : List Bool) :
     (⟨[],false,List.replicate (8*k+3) true ++
