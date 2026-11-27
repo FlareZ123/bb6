@@ -1,0 +1,2 @@
+# Correction to singleton frame
+The 9919/9920 singleton detours require the bit immediately after the first `1110` to be 1 (arbitrary tail after that bit). This is guaranteed in the odd-leading-zero branch, whose R is `(1110)^(j+1) 10 enc(s)`. The parity proof and both rewrite formulas are unchanged. Do not state the detour for every arbitrary suffix after `1110`.
