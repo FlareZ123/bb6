@@ -158,10 +158,8 @@ theorem action_sound (p : PartialMachine) (op : Action) {z : PZ} {out : Result}
           some ⟨z.q,lp++O++L,rp++R⟩ := by
         simpa [Auto.extend] using Auto.knownRun_sound p k hc.2.2 L R
       cases tag with
-      | false => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using
-          sweepR p z.q lp rp I O k one n (L.eval n m) (R.eval n m)
-      | true => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using
-          sweepR p z.q lp rp I O k one m (L.eval n m) (R.eval n m)
+      | false => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using (sweepR p z.q lp rp I O k one n (L.eval n m) (R.eval n m))
+      | true => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using (sweepR p z.q lp rp I O k one m (L.eval n m) (R.eval n m))
     next => simp at h
   | left lp rp I O tag L R k =>
     simp only [action] at h
@@ -173,10 +171,8 @@ theorem action_sound (p : PartialMachine) (op : Action) {z : PZ} {out : Result}
           some ⟨z.q,lp++L,rp++O++R⟩ := by
         simpa [Auto.extend] using Auto.knownRun_sound p k hc.2.2 L R
       cases tag with
-      | false => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using
-          sweepL p z.q lp rp I O k one n (L.eval n m) (R.eval n m)
-      | true => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using
-          sweepL p z.q lp rp I O k one m (L.eval n m) (R.eval n m)
+      | false => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using (sweepL p z.q lp rp I O k one n (L.eval n m) (R.eval n m))
+      | true => simpa [PZ.eval,Word.eval,hc.1,hc.2.1,Word.push_sound] using (sweepL p z.q lp rp I O k one m (L.eval n m) (R.eval n m))
     next => simp at h
 
 def traceRun (p : PartialMachine) : List Action → PZ → Option Result
