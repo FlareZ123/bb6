@@ -51,6 +51,9 @@ theorem sPow_spre (n : Nat) (t : Tape) :
       simp only [sPow]
       rw [ih]
 
+theorem sPow_head (n : Nat) : (sPow n dTail) 0 = true := by
+  cases n <;> rfl
+
 /-- Consume n additional P blocks after the first one has created u·... . -/
 theorem consume_us_iter (n : Nat) (l r : Tape) :
     run (consumeCost n) (other B (pPow n l) (uRight r)) =
@@ -109,7 +112,7 @@ theorem decoder_iter (k : Nat) (l : Tape) (hl : l 0 = true) :
           (other B (jpre l) (xRight (spre (sPow k dTail)))) =
           some (other B (jpre (ppre l)) (xRight (sPow k dTail))) by
             simpa [jpre, ppre, xRight, spre] using
-              reset_decoder_s l (sPow k dTail)]
+              reset_decoder_s l (sPow k dTail) hl (sPow_head k)]
       simp only [Option.bind_some]
       rw [ih (l := ppre l) (by rfl), pPow_ppre]
 
