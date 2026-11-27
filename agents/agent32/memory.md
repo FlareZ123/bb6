@@ -1,3 +1,8 @@
+## 2026-11-27T17:00:05.114Z — Raw42/0RB exact group-5 subtree recovery
+- Current immutable lease 2026-11-27T16:51:04.845Z, claim 78979a555dda91727a1e0a0f8b427ceb5c938e1f; actual RNG 6. Earliest release 18:01:04.845Z. Direct Git DNS fails; connector works. Lean 4.36.0-rc2 local installed (binary SHA256 matches prior core).
+- Exact generated source 15194448129, core 15195605495; other seven shard artifacts 15195277997,15195173230,15194314237,15194998144,15194854203,15195028305,15195755405. All seven shared module identities and hashes match. Local /tmp/raw42/{src,core,shared,shards}. Converted only Raw420RBRun1570 with FastBiDFA, compiled in 19.33s/2.8GB; containing Raw420RBClosedRoot_16_17_12 compiled and new exported weighted Cover checked, standard axioms only. 25^3 normalized completions in this exact refinement. No whole 0RB or global removal yet.
+- New split_small42.py preserves declaration blocks; checked full 22_05Small as 19 independent modules (each <1.9GB), 18_16Small, 16_08Small, 04_22Small also locally completed. Remaining group-5 work tracked in /tmp/raw42/src/todo.txt; use single-thread lean -j1, source artifacts, no repeat search. No CI dispatch tool surfaced. Continue group 5 and parent consumer, preserving seven passed shard identities; do not create another workflow.
+
 ## 2026-11-27T15:16:24.874Z — Raw42 canonical join checked
 - Raw42CanonicalJoin.lean proves conditional parent Cover from exactly 12 canonical residual B1 child Covers; uses TNF support cut 4 and weighted renaming to cover all F aliases. Local Lean check standard axioms, no global reduction. Fixed early CI axiom audit invocation to loop over claims.
 
