@@ -116,7 +116,7 @@ theorem forward_sweep (n : Nat) (L : List Bool) :
         rw [show 2*(n+1) = 2*n+2 by omega,ones_add]
         rfl
       have hn : 4*(n+1) = 4+4*n := by omega
-      simpa only [hn,he,List.append_assoc,List.cons_append] using h
+      simpa only [hn,he,List.append_assoc,List.cons_append,List.nil_append] using h
 
 /-- State F on 0, two near-left ones, n right-pair tokens. -/
 def phase (n : Nat) : Z0 := ⟨5,false::ones 2,pairs n⟩
@@ -127,10 +127,11 @@ theorem growth (n : Nat) :
   have he : ones (2*n)++ones 2 = ones (2*(n+1)) := by
     rw [←ones_add]
     congr 1
-    omega
   have h1 : run0 table (4*n) (phase n) =
       some ⟨5,false::ones (2*(n+1)),[]⟩ := by
-    simpa only [phase,he] using forward_sweep n (ones 2)
+    have h0 := forward_sweep n (ones 2)
+    rw [he] at h0
+    simpa only [phase] using h0
   have h := join0 h1 (reset (n+1))
   have hn : 4*n+(2*(n+1)+7)=6*n+9 := by omega
   simpa only [hn,phase] using h
