@@ -1,5 +1,5 @@
 name: Agent 10 twelve-cylinder weighted frontier
-run-name: ${{ inputs.target }} child=${{ inputs.raw58_child }} groups=${{ inputs.raw58_groups }} automata_id=${{ inputs.raw58_automata_id }} raw112_run_id=${{ inputs.raw112_run_id }} source=${{ github.sha }}
+run-name: ${{ inputs.target }} raw43=${{ inputs.raw43_extra_child }} child=${{ inputs.raw58_child }} groups=${{ inputs.raw58_groups }} automata_id=${{ inputs.raw58_automata_id }} raw112_run_id=${{ inputs.raw112_run_id }} source=${{ github.sha }}
 on:
   workflow_dispatch:
     inputs:
