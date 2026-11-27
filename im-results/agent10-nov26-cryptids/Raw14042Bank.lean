@@ -15,7 +15,7 @@ theorem bank_cons (n : Nat) : B (n+1) = S 1::S 3::S 3::B n := by
   | zero => rfl
   | succ n ih =>
     change B (n+1) ++ [S 1,S 3,S 3] = S 1::S 3::S 3::(B n ++ [S 1,S 3,S 3])
-    rw [ih]
+    simp only [ih,List.cons_append]
 
 theorem trip_snoc (n : Nat) : T (n+1) = T n ++ [S 1,S 1,S 5] := by
   induction n with
@@ -47,6 +47,7 @@ theorem start42 (j n p : Nat) (Y : List Sym) :
   have h₁ := prepareCarry j (S 3::S 3::(B n ++ X)) Y
   have h₂ := pumpAny n X (U 1 j ++ Y)
   have h₃ := finish42Any p (T n ++ U 1 j ++ Y)
+  simp only [List.append_assoc] at h₃
   have h := join (join h₁ h₂) h₃
   refine ⟨_, ?_⟩
   simpa only [X,bank_cons,U,List.replicate_succ,List.cons_append,List.append_assoc,
@@ -104,7 +105,10 @@ theorem return42 (n p : Nat) (s : Tail) :
       (boundary 0 true (U 3 (p+1) ++ [S 2]) (T (n+2) ++ tailWord s))
       (boundary 0 true (U 3 (p+13) ++ [S 2]) (T (n+extra s) ++ tailWord (rho s))) := by
   have h₁ := Raw140VariantTransfer.transferMany42 (n+1) (U 3 (p+1) ++ [S 2]) (tailWord s)
-  have h₂ := (exit42 n p s).ext (fill_extends _ _)
+  have ext : Extends Raw140VariantTransfer.M42 := by
+    unfold Raw140VariantTransfer.M42
+    exact fill_extends _ _
+  have h₂ := Reach.ext ext (exit42 n p s)
   have h₁' : Reach Raw140VariantTransfer.M42
       (boundary 0 true (U 3 (p+1) ++ [S 2]) (T (n+2) ++ tailWord s))
       (boundary 4 true (S 1::(B (n+1) ++ [S 2,S 5] ++ U 3 (p+1) ++ [S 2])) (tailWord s)) := by
