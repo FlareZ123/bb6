@@ -534,10 +534,6 @@
         "sweeps": 0,
         "frames": 0
       },
-      "Q11base": {
-        "ok": false,
-        "total": 7
-      },
       "initial": {
         "ok": true,
         "total": 6,
@@ -615,10 +611,6 @@
         "sweeps": 0,
         "frames": 0
       },
-      "R5": {
-        "ok": false,
-        "total": 25
-      },
       "R1": {
         "ok": true,
         "total": 12,
@@ -668,6 +660,90 @@
           8
         ],
         "primitive": 8,
+        "sweeps": 0,
+        "frames": 0
+      },
+      "loop": {
+        "ok": true,
+        "total": 23,
+        "source": [
+          0,
+          [
+            "11",
+            0
+          ],
+          [
+            "011111",
+            1
+          ]
+        ],
+        "target": [
+          0,
+          [
+            "1101101",
+            0
+          ],
+          [
+            "0",
+            1
+          ]
+        ],
+        "ops": [
+          23
+        ],
+        "primitive": 23,
+        "sweeps": 0,
+        "frames": 0
+      },
+      "end2": {
+        "ok": true,
+        "total": 17,
+        "source": [
+          0,
+          [
+            "11",
+            0
+          ],
+          "011"
+        ],
+        "target": [
+          0,
+          [
+            "11101",
+            0
+          ],
+          "001"
+        ],
+        "ops": [
+          17
+        ],
+        "primitive": 17,
+        "sweeps": 0,
+        "frames": 0
+      },
+      "end3": {
+        "ok": true,
+        "total": 13,
+        "source": [
+          0,
+          [
+            "11",
+            0
+          ],
+          "0111"
+        ],
+        "target": [
+          0,
+          [
+            "11101",
+            0
+          ],
+          "001"
+        ],
+        "ops": [
+          13
+        ],
+        "primitive": 13,
         "sweeps": 0,
         "frames": 0
       }
