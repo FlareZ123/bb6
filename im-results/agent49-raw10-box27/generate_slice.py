@@ -151,7 +151,7 @@ def size(t):return 1+sum(size(c) for _,c in t[2]) if t[0]=='branch' else 1
 def emit(tree):
     out=Path(__file__).resolve().parent
     mods=[];buf=[];count=0;serial=0
-    head='set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent49.Box27Slice\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent13.Box17 (decode slot)\n'
+    head='set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent49.Box27Slice\nopen BB6Coverage BB6.Agent13BlankDelay\nopen BB6.Agent13.Box17 (decode slot)\n'
     def flush():
         nonlocal buf,count
         if not buf:return
