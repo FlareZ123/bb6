@@ -1,0 +1,5 @@
+## Width-four certificate repair
+
+Run 45926563510 failed because 31 width-four Block-FAR witnesses were encoded using the width-three checker. The exact original witness data from graft artifact 15166370777 can be decoded without discovery. The attached gzip contains the tested repair generator (SHA256 of decompressed Python: d615837aa9054086870f9e8e8bf517b8561702ddea094437af9d86f5b49ef015). Extract with gzip -dc repair-width4.py.gz > /tmp/repair-width4.py. Run with four arguments: common/imports common/extern graft/partition.json graft/spec-compact.json. Use fresh copies of the original common artifact 15166454197.
+
+Local Lean 4.36.0-rc2 accepted the new width-four semantics, sparse soundness, and witness theorems H10360, H10511, H10512, H10513, H10749, H13169, H14083, H14270, H2348, H2818, H2819. All use standard axioms only. The other 20 remain to be compiled. Shards 10 and 11 of run 45926563510 passed and have no width-four dependency; reuse them. Parent bound 881057 is still provisional until all affected shards and the final join pass. Affine H8938 was accepted by run 45924271354. No additional machine discovery is needed.
