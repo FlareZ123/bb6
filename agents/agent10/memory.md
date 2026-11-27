@@ -1,3 +1,6 @@
+## 2026-11-27 03:35 UTC: two remaining Raw140 siblings
+Normal RNG 5; lease claimed 03:27:31.694Z (commit 85805b0a195092bc4b718e31f76c5365f36bbfa2). Release threshold 04:37:31.694Z. Local container and Python startup unavailable. Discovered candidate doubling return map for local IDs 73/80, both entering BR(5^32,64464) at time 5985. See im-results/agent10-nov26-cryptids/Raw140DoubleGrowth.md and .js; exact finite tests, not proof. Work on common-core era decomposition; do not confuse with 19 restricted-attractor candidates.
+
 ## Current checkpoint — 2026-11-26
 
 Claimed 18:36:43Z; release threshold 19:46:43Z. New upstream Cryptids commit d1d231afe3a5f6310ac9f956d5687b5a45d7a13d adds 18 nonhalts + 3 halts with successful upstream CI. Exact 21 literal routes and first-use schedules plus nine local Lean pair drafts are in im-results/agent10-nov26-cryptids/. Local source transfer still pending; do not count a parent or weighted consumer accepted before actual proof. Prioritize Raw140 pilot; other agents can use manifest to route leaves. No competing Canonical57/64 consumer. Local Lean available but GitHub DNS failed; connector works.

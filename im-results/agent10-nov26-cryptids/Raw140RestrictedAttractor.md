@@ -26,3 +26,7 @@ The pinned upstream E1 mirror sibling proof constructs a closed attractor InvM(m
 73 and 80 did not match these invariants by 200 million primitive steps. The proposed proof explicitly changes the mirror table to leave D1/F0/F1 undefined, excludes macros reading D1, and recompiles the retained invariant proof in a new module; original upstream source is unmodified. This is necessary to obtain an extension-safe theorem rather than incorrectly transport a full-machine proof. Entry proofs need variant-sensitive exact evaluation, not simply the common restricted evaluator: the last use of an unfixed row occurs up to tens of millions of steps from blank.
 
 No additional accepted Cover claimed here yet. Source license and copyright are preserved in generated module. Upstream commit d1d231afe3a5f6310ac9f956d5687b5a45d7a13d, module M_1RB1RE_1LC0RA_1LA0LD_1LB0LF_0RB0LE_0LAHHH.
+
+
+## Two remaining siblings (2026-11-27)
+The previous two unresolved local IDs 73/80 exhibit a separate candidate doubling recurrence; see [Raw140DoubleGrowth.md](Raw140DoubleGrowth.md). This is finite evidence, not an attractor or nonhalting proof.
