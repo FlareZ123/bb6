@@ -75,7 +75,7 @@ def main():
         leaves=(temp/"open.txt").read_text().splitlines()
         bank=gather_bank()
         (temp/"bank.txt").write_text("\n".join(bank)+"\n")
-        jobs="\n".join(f"{i} {s}" for i,s in enumerate(leaves))+"\n"
+        jobs="\n".join(f"{i} {s.replace(chr(95), '')}" for i,s in enumerate(leaves))+"\n"
         found={}
         truncated=False
         if leaves:
