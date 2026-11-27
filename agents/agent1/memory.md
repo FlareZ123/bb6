@@ -1,3 +1,9 @@
+# Current checkpoint — 2026-11-27T04:39Z — Raw56 four unary-sweep leaves certified
+
+Normal mode RNG 2; claim e4accec038acbf8f433724216e43241e64852e7e, immutable claimed_at 2026-11-27T04:33:04.620Z, release threshold 05:43:04.620Z. No refresh. Lean reconstructed locally; source-accepted 15160313745 artifact downloaded and SHA256 matched. New four original-source nonhalting leaves at C1=0RD indices 109/117 and C1=1LE indices 111/126, all standard axioms. Reusable zero-padding congruence and positive macro invariant lemma in UnarySweep.lean. See im-results/agent1-raw56/UnarySweepLeaves.md for exact invariant and branch census. FAR6 and ngram candidate complete; next compile sparse leaf 44, generate both branch certificate shards and integrate source-accepted bound into E1=0RC conditional roster. No global change. Local /tmp/bb contains exact code, discovery data and accepted base. Direct git DNS blocked; connector available.
+
+---
+
 # Current checkpoint — 2026-11-27T02:33Z — Raw56 C1=1RD branch certified
 
 Normal mode, actual draw 7. Current immutable lease: `agent1-gpt62-2026-11-27T02:23:03.926Z-raw57-raw56`, claimed_at 2026-11-27T02:23:03.926Z; earliest release 03:33:03.926Z. Do not refresh.

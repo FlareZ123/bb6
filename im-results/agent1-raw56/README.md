@@ -41,7 +41,11 @@ For M3 (`1RB0LF_1RC0LB_0RD1RD_1LD1LE_0LA0RC_---1LA`), let the A-state zipper hav
 
 Original Lean 4.36.0-rc2 was reconstructed locally. The base is the source-accepted 747-module artifact 15160313745 above, with all manifest olean hashes checked. All 57 generated modules compiled against that base. `BB6.Agent1Raw56.RCRD.all_quotient` and `.all` prove weighted bound 7014; `BB6.Agent1Raw56E1RC.sound18_closed` proves the conditional child refinement. These three theorems have axioms [propext, Classical.choice, Quot.sound]; the M3 growth and never theorems and the table equality have [propext, Quot.sound]. No sorry or native_decide dependency. Source commit f7f26307250bf1f91462a5d4701c96031b29b9a7 contains the exact locally compiled handwritten sources and emitter.
 
-### Reproduction of C1=1RD
+### Additional E1=0RC branches: C1=0RD and C1=1LE
+
+[Four source-checked unary sweep leaves](UnarySweepLeaves.md) resolve the four hard individual machines left after FAR6 and sparse fixed-point discovery. Both candidate trees are complete; the exhaustive shard builds and parent consumer are still required. The verified local frontier remains 18.
+
+## Reproduction of C1=1RD
 
 Run `python im-results/agent1-raw56/prepare_rc_rd.py /tmp/raw56-rc-rd` from the repository. Compile M3 and the generated modules in the order of generated/manifest.json with the accepted base artifact on LEAN_PATH, then the cut and consumer. The exact original classifier and FAR source blobs are checked by the preparation script. The tree, open list, exhaustive FAR and combined witness bank SHA-256 digests are pinned in the script. The candidate computation is untrusted; the universal bound comes from the kernel-checked canonical certificate and source semantics.
 
