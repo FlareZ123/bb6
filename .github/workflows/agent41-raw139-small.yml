@@ -105,14 +105,17 @@ jobs:
             --theorem BB6Coverage.Agent41F421.badFrontier \
             --theorem BB6Coverage.Agent41F421.originalRun \
             --theorem BB6Coverage.Agent41F421.originalBlankEntry \
-            im-results/agent41-f421/F421Odd.lean \
             --theorem F421TertiaryGuard.drainMod8 \
             --theorem F421TertiaryGuard.drainQ \
-            im-results/agent41-f421/PrimaryGuard.lean \
-            im-results/agent41-f421/TertiaryGuard.lean \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
-            im-results/agent41-f421/F421GeneralDrain.lean \
+            --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
+            --theorem F421PrimaryEvents.iterPrefix \
+            --theorem F421PrimaryEvents.iterateAffine \
+            im-results/agent41-f421/F421Odd.lean \
+            im-results/agent41-f421/PrimaryGuard.lean \
+            im-results/agent41-f421/F421MergedDrain.lean \
+            im-results/agent41-f421/F421PrimaryEvents.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a41-f421-frontier.log; then
             exit 1
