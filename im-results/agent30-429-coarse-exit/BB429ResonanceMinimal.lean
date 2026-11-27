@@ -51,6 +51,56 @@ theorem d234_margin_growth (i m : Nat) (hgap : 5*i+61≤m) :
   dsimp [n] at hh ⊢
   omega
 
+
+/-- Scalar endgame after the minimal-resonance error estimate.  Here
+    N=16^(m-i), X=16^m, D is the final geometric deviation after J cycles,
+    and C is the cycle invariant.  The resonance band alone places (C,D)
+    in the exact strip required by phase_cycles_direct_return. -/
+theorem d234_scalar_window_arith
+    (i m J : Nat) (H N X d0 D C q : Int)
+    (hJnat : J=m-i+1) (hJ : 1≤J)
+    (hN : 1≤N) (hXpos : 1≤X)
+    (hX : X=H*H*N)
+    (hD : D=16*d0*N)
+    (hlo : 18*H*H < 16*d0)
+    (hhi : 4*d0≤9*H*H)
+    (hq0 : 0≤q)
+    (hqhi : q≤36*(m:Int)+259+8*(i:Int))
+    (hC : C=72*X+q-2+24*(J:Int))
+    (hmargin : 60*m+254≤16*i+4*(N.toNat)) :
+    D≤36*X ∧ 72*X≤C ∧ C≤4*D+27 ∧ 8*D+21≤5*C := by
+  have hN0 : 0≤N := by omega
+  have hNnat : (N.toNat:Int)=N := by
+    rw [Int.toNat_of_nonneg hN0]
+  have hmargin' :
+      60*(m:Int)+254≤16*(i:Int)+4*N := by
+    rw [←hNnat]
+    exact_mod_cast hmargin
+  have hhiN := Int.mul_le_mul_of_nonneg_right hhi hN0
+  have hDhi : D≤36*X := by
+    rw [hD,hX]
+    grind +ring
+  have hlo' : 18*H*H+1≤16*d0 := by omega
+  have hloN := Int.mul_le_mul_of_nonneg_right hlo' hN0
+  have hDlo : 18*X+N≤D := by
+    rw [hD,hX]
+    grind +ring
+  have hJcast : (J:Int)=(m:Int)-(i:Int)+1 := by
+    have hmi : i≤m+1 := by omega
+    exact_mod_cast hJnat
+  have hClo : 72*X≤C := by
+    rw [hC,hJcast]
+    omega
+  have hCoff :
+      C≤72*X+4*N+27 := by
+    rw [hC,hJcast]
+    omega
+  have hChi : C≤4*D+27 := by
+    omega
+  have hlast : 8*D+21≤5*C := by
+    omega
+  exact ⟨hDhi,hClo,hChi,hlast⟩
+
 /-- The abstract error band specialized to a *minimal* d=234 doubled-scale
     resonance word.  Minimal means the first temporal base-four digit is
     true; for length at least seven this alone supplies all large-scale
@@ -113,6 +163,7 @@ theorem d234_minimal_phase_error_band
     hi7 hb0 hlo hbig hhlo hh0 hhhi hrel rfl
     hxlo hxhi hzlo hzhi rfl
 
+#print axioms d234_scalar_window_arith
 #print axioms pow16_ge_100_index
 #print axioms d234_margin_growth
 #print axioms d234_minimal_scale_gap
