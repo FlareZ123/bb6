@@ -25,4 +25,4 @@ theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverH
 end M${id}\n`;
 }
 return out+"end BB6.Agent13.Box33D17V22RunSummary\n";}
-const fs=require("fs"),path=require("path");process.stdout.write(emit(JSON.parse(fs.readFileSync(path.join(__dirname,"d17v22-run-summary.json"),"utf8"))));
+const fs=require("fs"),path=require("path");const extra=process.argv[2]==="extra";process.stdout.write(emit(JSON.parse(fs.readFileSync(path.join(__dirname,extra?"d17v22-run-summary-extra.json":"d17v22-run-summary.json"),"utf8"))).replaceAll("Box33D17V22RunSummary",extra?"Box33D17V22RunExtra":"Box33D17V22RunSummary"));
