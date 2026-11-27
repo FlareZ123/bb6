@@ -35,7 +35,8 @@ theorem resonant_post_jSlope (s : Nat) (d : Int) (e : Nat → Bool)
   have hw := word4_complement e (2*s)
   have hp : (4:Int)^(2*s)=(16:Int)^s := by
     rw [Int.pow_mul]
-    norm_num
+    change (16:Int)^s=(16:Int)^s
+    rfl
   rw [hp] at hw
   rw [jSlope_word4,hp]
   omega
