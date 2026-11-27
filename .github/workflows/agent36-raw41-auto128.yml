@@ -1,0 +1,31 @@
+name: Agent 36 Raw41 child128 full mixed FAR and symbolic pumping source (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate all 24 exact exhaustive branches from source
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/close_candidate.py \
+            --index 128 --dfa 5 --time 900 \
+            --auto-json im-results/agent36-raw41/certificates/child128-leaf10-autopump.json \
+            --out .tmp/raw41-target128-auto
+          test "$(python3 -c "import json;print(json.load(open('.tmp/raw41-target128-auto/summary.json'))['remaining_after_auto'])")" = 0
+          ls -lh .tmp/raw41-target128-auto/lean/Raw41New128Auto.lean
+          cat .tmp/raw41-target128-auto/summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-target-128-auto
+          path: .tmp/raw41-target128-auto/
+          retention-days: 35
