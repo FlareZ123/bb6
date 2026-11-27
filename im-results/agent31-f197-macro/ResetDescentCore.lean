@@ -37,7 +37,8 @@ theorem reset_descent_middle_s_321 (l r : Tape) :
               false, true, false] l)
         (pre [false, false, true, false, true, true, true, true, true, false,
               false, false] r)) := by
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  rw [← decompose l, ← decompose r]
+  rfl
 
 /-- n = 3 middle core, where the preserved right suffix is the terminal d. -/
 theorem reset_descent_middle_d_321 (l : Tape) :
@@ -58,7 +59,8 @@ theorem reset_descent_middle_d_321 (l : Tape) :
               true, false, true, true, false, false, true, true, false,
               false, true, false] l)
         (pre [false, false, true, false, true, true] blank)) := by
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  rw [← decompose l]
+  rfl
 
 /-- n = 2 endpoint after the P-consumer: u s d is exhausted and the machine
     returns directly to right e, appending K=TATP on the left. -/
@@ -78,7 +80,8 @@ theorem reset_descent_n2_middle_316 (l : Tape) :
               true, true, false, false, true, false, true, false, true,
               true, false, false, true, true, false, false, true, false] l)
         (pre [false, false, true] blank)) := by
-  simp [run, step, moveR, moveL, other, tail, cons, pre]
+  rw [← decompose l]
+  rfl
 
 #print axioms reset_descent_middle_s_321
 #print axioms reset_descent_middle_d_321
