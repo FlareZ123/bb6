@@ -388,13 +388,13 @@ def codes : Kind → List (Fin 25)
   | .m6 => [8,0,11,24,1,13,17,13,22,13,19,2]
   | .m8 => [8,19,11,24,1,13,17,0,22,9,12,2]
   | .m10 => [8,0,11,24,1,13,17,19,22,9,4,17]
-def table (v : Kind) : Machine := fun s => decode ((codes v).getD (index s).val 0)
   | .m16 => [8,13,11,24,1,13,17,0,22,21,2,15]
   | .m19 => [8,13,11,24,1,13,17,15,22,13,2,0]
   | .m20 => [8,13,11,24,1,13,17,15,22,12,2,0]
   | .m23 => [8,0,11,24,1,13,17,13,22,8,2,13]
   | .m24 => [8,0,11,24,1,13,17,13,22,8,2,9]
   | .m32 => [8,24,11,12,1,13,17,13,22,8,2,0]
+def table (v : Kind) : Machine := fun s => decode ((codes v).getD (index s).val 0)
 abbrev project := Box33Source.project false
 
 theorem map_step (v : Kind) (c : BB6Coverage.Config) :
