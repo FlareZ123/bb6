@@ -1,6 +1,12 @@
 name: P1 exact delayed-trace converse
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Original-source theorem target'
+        type: choice
+        options: [refined-boundary, order-return]
+        default: refined-boundary
 permissions:
   contents: read
 jobs:
@@ -14,7 +20,17 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile short-order trace theorem
+        if: inputs.target == 'order-return'
+        run: |
+          set -e -o pipefail
+          C=im-results/agent43-p1-high-cost-reset-count
+          export LEAN_PATH="$C:im-results/agent9-p1-return-gcd:im-results/agent45-p1-delayed-carry"
+          lean --version
+          python tools/lean_compile_deps.py "$C/OrderReturnSource.lean" | tee /tmp/order-return.log
+          if grep -Eq 'sorryAx|error:' /tmp/order-return.log; then exit 1; fi
       - name: Compile exact source dependencies
+        if: inputs.target == 'refined-boundary'
         run: |
           set -e
           A=im-results/agent45-p1-delayed-carry
