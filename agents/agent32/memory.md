@@ -1,3 +1,8 @@
+## 2026-11-27T15:08:08.250Z — Raw42 early-cut checkpoint
+- Actual RNG 6, normal mode. Lease agent32-gpt62-D-2026-11-27T15:01:28.578Z; immutable claim 2649b27b3596033e8a716e1f3f515ab75adb00b3. Earliest orderly release 16:11:28.578Z.
+- Raw42EarlyNGram.lean: 93 exact seven-transition refinements, explicit small asymmetric n-gram certificates checked locally; consume all eleven accepted wide/nested growth Covers and ten immediate halts at B≥64. Exact residual count 136 over ten canonical B1 branches. `cover_all` conditional consumer compiles against the actual dependency artifacts (15054146521, 15193983498, 15195400786), Lean 4.36.0-rc2 standard axioms only. New mass 908203125, no parent/global reduction. Source SHA256 e136d9bdbb4257f192d4cf90ccfbf67d5b7c4da625acb94ec086f5731b1ad191. Direct Git DNS failed; connector works. Existing workflow early variant added, no dispatch tool exposed in this environment.
+- Local /tmp/raw42/Raw42EarlyNGram.lean, /tmp/raw42/wide_ngram.py and scan.py. First attempt reducing discovery inside kernel timed out; explicit witness data checked quickly. Next restrict deeper assembly to the exact residuals; do not duplicate previously closed cylinders. 0RA/0RB and E/F alias transport remain outside this theorem.
+
 ## 2026-11-27T11:46:53.515Z — eight wide Covers accepted
 - Pinned Lean CI 45993015276 success, job 140485360177, source revision 4ee6a3ebe04b99c4d26bac5225cfa4299128b277, all eight exact weighted Cover theorems and axiom checks passed. 78,125,000 disjoint raw completions certified within Raw42; no parent closure or global roster change. Continue nested/unary remaining wide cuts.
 

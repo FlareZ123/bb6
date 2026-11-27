@@ -39,6 +39,30 @@ Each return increments n. The derivation decomposes it into two repeated-block t
 
 The exact nested induction and Cover adapter passed [CI run 45993507004](https://github.com/FlareZ123/bb6/actions/runs/45993507004) on source revision 423208e5e23c300195d0cfffa9a730f9f084fbf8, with no nonstandard axioms. These three are disjoint from the previous eight, giving 11*25^5 = 107,421,875 additional raw normalized completions proved nonhalting. No full B1 child or parent closure is inferred.
 
+## Early second-hole coverage: 93 additional nonhalting cylinders (local original-source check)
+
+[Raw42EarlyNGram.lean](Raw42EarlyNGram.lean) closes 93 seven-transition cylinders with explicit asymmetric n-gram witnesses of widths at most three bits per side. It directly checks each certificate on the exact two-choice refinement of the authentic Raw42 parent, avoiding copied-table equality or a trusted discovery algorithm. The earlier eleven wide/nested growth Covers are imported and consumed at their exact refinement types. The ten second-hole query gates are checked at weighted bound 64, including the immediate halt choice.
+
+| B1 | Second hole (time) | New n-gram Covers | Prior growth Covers | Remaining ordinary choices |
+|---|---|---:|---:|---:|
+| 0LA | A1 (20) | 10 | 1 | 13 |
+| 0LE | E0 (7) | 9 | 0 | 15 |
+| 0RE | E0 (7) | 9 | 0 | 15 |
+| 1LA | A1 (9) | 11 | 1 | 12 |
+| 1LB | C1 (8) | 9 | 3 | 12 |
+| 1LC | C1 (32) | 9 | 3 | 12 |
+| 1LE | E0 (7) | 9 | 0 | 15 |
+| 1RA | A1 (9) | 13 | 0 | 11 |
+| 1RB | C1 (8) | 10 | 2 | 12 |
+| 1RE | E0 (7) | 4 | 1 | 19 |
+| **Total** | | **93** | **11** | **136** |
+
+The disjoint new early cylinders contain 93*25^5 = 908,203,125 normalized raw completions; the combined 104 nonhalting cylinders and ten bounded immediate halts contain 114*25^5 = 1,113,281,250. This count is disjoint from the previously closed first-level branches and the two 0RA cuts, but may overlap previously investigated descendants within these ten branches; it is not a new global roster subtraction. No fresh E/F symmetry factor is claimed. All remaining ordinary children are retained, rather than inferred nonhalting from a finite cutoff.
+
+The exported `BB6.Agent32Raw42Early.cover_all` takes Covers of the exact 136 residual refinements at any B≥64 and returns Covers of all ten first-level parents. `bankCover` independently exports each n-gram leaf at arbitrary B; `count_new`, `count_residual`, `code_distinct` and `first_distinct` check the finite partition. Local Lean 4.36.0-rc2 compilation against original-source objects from artifacts 15054146521, 15193983498 and 15195400786 succeeded. The coverage theorems depend only on propext, Classical.choice and Quot.sound; the checked counts require no axioms. Source SHA256 e136d9bdbb4257f192d4cf90ccfbf67d5b7c4da625acb94ec086f5731b1ad191. No new CI acceptance claimed. The existing manual workflow has an early variant for a pinned source-closure audit.
+
+**Next edge:** use `residual` to restrict discovery to the 136 exact subparents, join their eventual Covers through `cover_all`, and combine with 0RA/0RB and fresh-label transport. Do not re-discover these 104 nonhalting cylinders or treat the ten conditional parents as closed.
+
 ## Remaining problem and method
 
 The 16 first-level children have 12 canonical representatives under fresh E/F renaming. A normalized first-hole discovery run using the existing [linear side-cycle scanner](../agent32-linear-side-cycle/README.md), cutoff 500, found 1723 retained leaves within B1=0RA alone (1523 with one unassigned slot, 184 with two, 14 with three, 2 with four). Both four-hole leaves are exactly the new inductive families above; the counts are untrusted search output before pruning and not a certified full tree. The promising route is to test uniform symbolic growth on highest-hole retained leaves before expanding, with FAR/prefix checkers for the remaining finite tree. Do not enumerate all six-state completions directly. The complete parent Cover and global roster consumption are still open.
