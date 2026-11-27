@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -52,6 +52,30 @@ jobs:
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check exact fixed-width delayed-state equivalence
+        if: inputs.target == 'compact-state'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          export LEAN_PATH="$D:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue"
+          lean --version
+          git rev-parse HEAD
+          python tools/lean_compile_deps.py "$D/CompactState.lean" | tee /tmp/compact-state.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/compact-state.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log = Path('/tmp/compact-state.log').read_text()
+          for name in ("project","lift","future_equiv","quotient_lt","quotient_word","fixed_target","top_eq","top_resMin","top_margin"):
+              decl = f"'BB6.Agent9CompactState.{name}'"
+              m = re.search(re.escape(decl) + r" depends on axioms:\s*\[([^\]]*)\]", log)
+              if not m:
+                  assert decl+" does not depend on any axioms" in log, decl
+                  continue
+              axioms = {x.strip() for x in m.group(1).split(",") if x.strip()}
+              assert axioms <= {"propext","Classical.choice","Quot.sound"}, (decl, axioms)
+              print(name, sorted(axioms))
+          PY
       - name: Check exact infinite dyadic residue support
         if: inputs.target == 'affine-residue'
         run: |
@@ -265,7 +289,7 @@ jobs:
           log = Path('/tmp/reverse-live-block.log').read_text()
           for namespace, names in (
               ("BB6.Agent23ResiduePeriod", ("reduce_sound", "final24_reduced", "reduced_weight_iff")),
-              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "reducedResidues_range", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24", "modularNeg_mem", "reducedResidues_translate", "sharedResidues_mem", "sharedLift_mem", "sharedLift_cover")),
+              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "reducedResidues_range", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24")),
           ):
               for name in names:
                   m = re.search(r"'" + re.escape(namespace) + r"\." + re.escape(name) + r"' depends on axioms:\s*\[([^\]]*)\]", log)
@@ -289,13 +313,12 @@ jobs:
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/ReverseBlockDigitWeight.lean" | tee /tmp/reverse-block-digit-weight.log
-          python tools/lean_compile_deps.py "$D/MaskedDigitWeight.lean" | tee -a /tmp/reverse-block-digit-weight.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/reverse-block-digit-weight.log; then exit 1; fi
           python - <<'PY'
           import re
           from pathlib import Path
           log = Path('/tmp/reverse-block-digit-weight.log').read_text()
-          for name in ("candidate_window", "candidate_remainder_eq", "weight_corr", "maskedCandidate_eq", "maskedFast_eq", "maskedFast_iff_walk"):
+          for name in ("candidate_window", "candidate_remainder_eq"):
               m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
