@@ -30,6 +30,7 @@ PARENT_SOURCE_REVISION = "75e7dcf16f98efda9ab3323b0acc16633833f180"
 
 PARENTS = {
     "106": {
+        "label": "raw106",
         "artifact_id": 15147725126,
         "artifact_name": "agent10-raw106-canonical64-parent-source-accepted",
         "digest": "1f4fbd81b26b300319e229eea0893e2d0998cb480704a237f61afef84db87b85",
@@ -40,6 +41,7 @@ PARENTS = {
         "bound": 253,
     },
     "79": {
+        "label": "raw79",
         "artifact_id": 15148575654,
         "artifact_name": "agent10-raw79-canonical64-parent-source-accepted",
         "digest": "b0f95044a83bee3bd90f640a275c9ae8a2fadd754cc25d333cb434532be2b99c",
