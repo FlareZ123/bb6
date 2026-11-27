@@ -1,4 +1,5 @@
 name: Agent 5 Raw11 coarse q0 scan
+run-name: Agent 5 Raw11 q0 ${{ inputs.mode }} ${{ inputs.indices }}
 
 on:
   workflow_dispatch:
@@ -8,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, pumps, cover, counter, pair143]
+        options: [legacy, full, pumps, cover, counter, pair143, roster143]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -298,4 +299,60 @@ jobs:
             /tmp/raw11-q0-pair143/
             /tmp/raw11-q0-pair143.log
           if-no-files-found: warn
+          retention-days: 30
+
+  roster143:
+    if: inputs.mode == 'roster143'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-143
+          path: /tmp/coarse-143
+      - name: Preserve exact retained frontier from existing artifact, without a new scan
+        env:
+          GENERATION_RUN: ${{ inputs.generation_run }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json, pathlib, os
+          d=pathlib.Path('im-results/agent5-weighted-tnf-queue')
+          s=json.loads(pathlib.Path('/tmp/coarse-143/summary.json').read_text())
+          route=json.loads(pathlib.Path('im-results/agent47-raw11-adapter/raw11-route.json').read_text())
+          assert s['id']==143 and s['table']==route['targets'][143]
+          assert len(s['opens'])==s['stats']['open']
+          assert len(s['pending'])==s['stats']['cap']
+          norm=lambda t:t.replace('_','')
+          long={norm(x['table']):x for x in json.loads((d/'q0-coarse-long-holes.json').read_text()) if x['root']==143}
+          pairs={x['table'] for x in json.loads((d/'q0-143-tail-fixtures.json').read_text()).values()}
+          assert len(set(map(norm,s['opens'])))==len(s['opens'])
+          assert long.keys() <= set(map(norm,s['opens'])) and pairs <= set(map(norm,s['opens']))
+          assert not long.keys() & pairs
+          out={'generation_run':os.environ['GENERATION_RUN'],'id':143,'parent':s['table'],'stats':s['stats'],
+               'open':s['opens'],'pending':s['pending'],
+               'finite_hole_candidates':[t for t in s['opens'] if norm(t) in long],
+               'pair_proof_tables':[t for t in s['opens'] if norm(t) in pairs],
+               'remaining':[t for t in s['opens'] if norm(t) not in long and norm(t) not in pairs]}
+          (d/'q0-143-exact-frontier.json').write_text(json.dumps(out,indent=2)+'\n')
+          PY
+          git config user.name 'Agent 5 CI'
+          git config user.email 'actions@users.noreply.github.com'
+          git add im-results/agent5-weighted-tnf-queue/q0-143-exact-frontier.json
+          git commit -m "Agent 5: preserve exact q0-143 residual roster from run $GENERATION_RUN"
+          git push origin "HEAD:refs/heads/agent5-q0-143-roster-$RUN_ID"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-143-exact-frontier
+          path: im-results/agent5-weighted-tnf-queue/q0-143-exact-frontier.json
+          if-no-files-found: error
           retention-days: 30

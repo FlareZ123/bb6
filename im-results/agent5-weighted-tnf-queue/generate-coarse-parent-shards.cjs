@@ -19,9 +19,17 @@ const route=require('../agent47-raw11-adapter/raw11-route.json');
 if(summary.id!==id||summary.table!==route.targets[id])throw Error('wrong root artifact');
 const pumps=new Map(require('./q0-coarse-pumps.json').map(c=>[c.root,c.table]));
 const longMap=new Map(require('./q0-coarse-long-holes.json').map(c=>[norm(c.table),c]));
+// Each external cut is matched by its entire 12-entry table; no index/count substitution.
+// Importing the actual theorem is mandatory even when the source proof is still pending CI.
+const regionCuts=new Map([
+ ['1RB1LC1RC1RD0LA1LA---0RE0RF1RE1RA0LC', {root:138,mod:'Raw11Q0Counter138',ns:'BB6Coverage.Agent31Pump.Multi.Raw11Q0Counter138'}],
+ ['1RB1LC1RC0RD0LA1RB0RE1RE1LF0LA0LC---', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M0'}],
+ ['1RB1LC1RC0RD0LA1RB1RE0RF1LE0LC---0LB', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M1'}],
+]);
+const regionLeaves=[];
 const repairs=new Map(),residuals=[],resIndex=new Map(),longs=[],census=new WeakMap(),external=new WeakMap();
 const pre='Agent5Q0Coarse'+id,base=pre+'Base',longMod=pre+'Long',modules=[];
-const stats={nodes:0,side:0,bank:0,far:0,split:0,last:0,pump:0,long:0,open:0,capped:0};
+const stats={nodes:0,side:0,bank:0,far:0,split:0,last:0,pump:0,long:0,region:0,open:0,capped:0};
 let B=summary.stats.bound;
 function register(t,a,f){
  stats.nodes++;let n=1,x=false;
@@ -36,8 +44,11 @@ function register(t,a,f){
  else if(t[0]==='g'){stats.pump++;x=true;if(pumps.get(t[1])!==a.join(''))throw Error('wrong pump table')}
  else if(t[0]==='u'||t[0]==='c'){
   if(norm(t[1])!==a.join(''))throw Error('wrong residual table');
-  const c=longMap.get(a.join(''));
-  if(t[0]==='u'&&c){
+  const c=longMap.get(a.join('')), g=regionCuts.get(a.join(''));
+  if(t[0]==='u'&&g){
+   if(g.root!==id||a.filter(t=>t==='---').length!==1)throw Error('wrong region proof domain');
+   t.splice(0,t.length,'v',regionLeaves.length);regionLeaves.push({...g,table:a.join('')});stats.region++;x=true;
+  }else if(t[0]==='u'&&c){
    if(a.filter(t=>t==='---').length!==1||a[c.slot]!=='---')throw Error('bad last repair');
    t.splice(0,t.length,'l',longs.length);longs.push({...c,table:a.join('')});B=Math.max(B,c.n+6);stats.long++;x=true;
   }else{
@@ -118,9 +129,10 @@ function local(t,a,f,p,name,lines,imps,allowSplit=false){
   intro m hm
   ${eq(p,'BB6.'+mn+'.parent')}  exact BB6.${mn}.safe${arg} m hm\n`);return safe;
  }
- if(t[0]==='g'||t[0]==='l'||t[0]==='r'){
+ if(t[0]==='g'||t[0]==='l'||t[0]==='r'||t[0]==='v'){
   let other,proof;
   if(t[0]==='g'){imps.add('Raw11Q0CoarsePumps');other=pumpNS+'.p'+t[1];proof=`Cover.sound (${pumpNS}.cover${t[1]} ${B}) m hm`}
+  else if(t[0]==='v'){const g=regionLeaves[t[1]];if(!g||g.table!==a.join(''))throw Error('wrong external region leaf');imps.add(g.mod);other=g.ns+'.table';proof=`Cover.sound (${g.ns}.cover ${B}) m hm`}
   else if(t[0]==='l'){imps.add(longMod);other='BB6.'+longMod+'.p'+t[1];proof=`BB6.${longMod}.safe${t[1]} m hm`}
   else{other='BB6.'+base+'.remaining'+t[1];proof=`hR ${other} BB6.${base}.mem${t[1]} m hm`}
   lines.push(`theorem ${safe}${H} : ${safeTy(p)} := by
@@ -145,5 +157,5 @@ const rootSafe=local(tree,a,f,'parent','_root',lines,imps,false);
 if(residuals.length)lines.push(`theorem cover_from_remaining (hR : BB6.${base}.ResidualHyp) : Cover (WeightedBound ${B}) parent := .leaf _ (${rootSafe} hR)\n#print axioms cover_from_remaining`);
 else lines.push(`theorem cover : Cover (WeightedBound ${B}) parent := .leaf _ ${rootSafe}\n#print axioms cover`);
 lines.push(`end BB6.${pre}\n`);write(pre,imports([...imps])+lines.join('\n'));
-const manifest={id,table:summary.table,bound:B,stats,remaining:residuals.map(a=>a.join('').match(/.{6}/g).join('_')),longs,modules,chunk:CHUNK,moduleLimit:MOD,theorem:'BB6.'+pre+'.'+(residuals.length?'cover_from_remaining':'cover')};
+const manifest={id,table:summary.table,bound:B,stats,remaining:residuals.map(a=>a.join('').match(/.{6}/g).join('_')),regionLeaves,longs,modules,chunk:CHUNK,moduleLimit:MOD,theorem:'BB6.'+pre+'.'+(residuals.length?'cover_from_remaining':'cover')};
 fs.writeFileSync(path.join(output,'manifest.json'),JSON.stringify(manifest,null,2)+'\n');console.log(JSON.stringify({...manifest,modules:modules.length}));
