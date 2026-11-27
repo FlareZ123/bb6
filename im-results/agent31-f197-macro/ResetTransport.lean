@@ -21,7 +21,8 @@ theorem reset_P_consume_us (l r : Tape) :
     some
       (other B l
         (pre [false, false, true, true, true, true, false, false, false,
-              true, true, true, true, true, false, false, false] r)) := rfl
+              true, true, true, true, true, false, false, false] r)) := by
+  simp [run, step, moveR, moveL, other, tail, cons, pre]
 
 /-- First P-consumption from terminal reset right e. -/
 theorem reset_P_consume_e (l : Tape) :
@@ -32,7 +33,8 @@ theorem reset_P_consume_e (l : Tape) :
     some
       (other B l
         (pre [false, false, true, true, true, true, false, false, false,
-              true, true] blank)) := rfl
+              true, true] blank)) := by
+  simp [run, step, moveR, moveL, other, tail, cons, pre]
 
 /-- One decoder step: J on the left and x·s on the shortened right transfer
     one P behind J while deleting the s. -/
@@ -46,7 +48,8 @@ theorem reset_decoder_s (l r : Tape) :
       (other B
         (pre [true, false, false, true, false, true, false, true, true,
               false, false] l)
-        (pre [false, false, true, false] r)) := rfl
+        (pre [false, false, true, false] r)) := by
+  simp [run, step, moveR, moveL, other, tail, cons, pre]
 
 /-- Terminal decoder step x·d -> e, replacing leading J by P. -/
 theorem reset_decoder_d (l : Tape) :
@@ -57,7 +60,8 @@ theorem reset_decoder_d (l : Tape) :
     some
       (other B
         (pre [true, false, true, false, true, true, false, false] l)
-        (pre [false, false, true] blank)) := rfl
+        (pre [false, false, true] blank)) := by
+  simp [run, step, moveR, moveL, other, tail, cons, pre]
 
 #print axioms reset_P_consume_us
 #print axioms reset_P_consume_e
