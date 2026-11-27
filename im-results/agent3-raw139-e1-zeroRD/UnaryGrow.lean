@@ -30,6 +30,7 @@ def table (v : V) (q : Fin 6) (b : Bool) : Option (Bool × Bool × Fin 6) :=
   | 5,false => none
   | 5,true => some (false,true,2)
   | _,_ => none
+
 def step (v : V) (c : C) : Option C :=
   (table v c.q (c.r 0)).map fun (w,d,q) =>
     if d then ⟨q,cons w c.l,tail c.r⟩
@@ -47,6 +48,7 @@ theorem run_add (v : V) (n k : Nat) (c : C) :
     cases step v c with
     | none => rfl
     | some t => exact ih t
+
 def Reach (v : V) (c d : C) : Prop := ∃ n, run v n c = some d
 def Plus (v : V) (c d : C) : Prop := ∃ n, n > 0 ∧ run v n c = some d
 theorem Reach.refl (v : V) (c : C) : Reach v c c := ⟨0,rfl⟩
@@ -73,6 +75,7 @@ def Y (a b : Nat) : C := ⟨2,cons false (ones a blank),ones b blank⟩
 
 theorem entry (v : V) (a : Nat) : Plus v (B (a+2)) (X (a+1) 1) := by
   cases v <;> refine ⟨8,by decide,?_⟩ <;> rfl
+
 theorem leftOne (v : V) (a b : Nat) : Reach v (X (a+2) b) (X (a+1) (b+1)) := by
   cases v <;> exact ⟨7,rfl⟩
 
@@ -103,6 +106,7 @@ theorem rightSweep (v : V) (k a b : Nat) : Reach v (Y a (5*k+b)) (Y (a+5*k) b) :
     exact ih (a+5)
 
 theorem y0x0 (a : Nat) : Y a 0 = X a 0 := by simp [Y,X,ones]
+
 theorem rightExit0 (a : Nat) : Reach V.rd0 (Y a 2) (B (a+3)) := ⟨6,rfl⟩
 theorem rightExit1 (a : Nat) : Reach V.rd1 (Y a 2) (B (a+3)) := ⟨8,rfl⟩
 theorem rightExitE (a : Nat) : Reach V.re1 (Y a 2) (B (a+5)) := ⟨16,rfl⟩
