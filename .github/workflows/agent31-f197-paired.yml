@@ -50,7 +50,7 @@ jobs:
           lean -o im-results/agent2-f197-sweep/ATCarryCore.olean im-results/agent2-f197-sweep/ATCarryCore.lean | tee -a /tmp/at-family.log
           lean -o im-results/agent2-f197-sweep/ATCarriedParser.olean im-results/agent2-f197-sweep/ATCarriedParser.lean | tee -a /tmp/at-family.log
           if [ "${{ inputs.target }}" = "at-probe" ]; then
-            lean im-results/agent2-f197-sweep/ATCounterProbe.lean | tee -a /tmp/at-family.log
+            lean im-results/agent2-f197-sweep/ATCounterProbe0.lean | tee -a /tmp/at-family.log
           else
             lean im-results/agent2-f197-sweep/ATCounter.lean | tee -a /tmp/at-family.log
           fi
