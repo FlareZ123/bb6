@@ -1,0 +1,47 @@
+{
+  "0LE/366": {
+    "table": "1RB0LA_1RC1RF_0RD0LE_1LD1LA_0RB0RD_---0RE",
+    "entry": 729,
+    "entryHead": -15,
+    "period": 494,
+    "shift": -6,
+    "side": "L",
+    "cuts": [
+      [
+        3,
+        15
+      ]
+    ],
+    "increment": 112
+  },
+  "0RE/759": {
+    "table": "1RB0LA_1RC0RA_0RD0RE_1LD1LA_0RC0RF_---0LE",
+    "entry": 1243,
+    "entryHead": -15,
+    "period": 1466,
+    "shift": -8,
+    "side": "L",
+    "cuts": [
+      [
+        3,
+        23
+      ]
+    ],
+    "increment": 544
+  },
+  "0RE/792": {
+    "table": "1RB0LA_1RC0RA_0RD0RE_1LD1LA_0RC0RF_---0RD",
+    "entry": 1129,
+    "entryHead": -15,
+    "period": 1312,
+    "shift": -8,
+    "side": "L",
+    "cuts": [
+      [
+        3,
+        23
+      ]
+    ],
+    "increment": 480
+  }
+}
