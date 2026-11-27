@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3]
+        options: [core, cut, corridor, ingest, ingest77, d3frontier, phase, pump0RE, late0RE, zeroRE, zeroRC, zeroRD, zeroLC, zeroLB, zeroRA, oneLA, oneRA, zeroRB, oneLC, oneRE, oneRC, zeroRE5, oneLE, oneRD, pump0LE5, zeroLE5, branch540, branch484, branch1420, branchBatch, coupledEntry, coupledLive, coupledParent, coupled3, coupled4Discover]
         default: core
       branches:
         description: Space-separated catalogue keys for branchBatch (max 4)
@@ -21,6 +21,7 @@ permissions:
   contents: write
 jobs:
   check:
+    if: inputs.target != 'coupled4Discover'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -412,3 +413,38 @@ jobs:
                 if (error.status !== 409 || attempt === 2) throw error;
               }
             }
+
+  discover-coupled4:
+    if: inputs.target == 'coupled4Discover'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Solve the 62 remaining one-hole candidates
+        run: |
+          set -euo pipefail
+          python im-results/agent46-raw13-cut/discoverCoupled4.py /tmp/coupled4-candidates.json
+      - name: Preserve exact candidate witnesses (not a proof verdict)
+        uses: actions/upload-artifact@v4
+        with:
+          name: coupled4-candidates
+          path: /tmp/coupled4-candidates.json
+      - name: Publish unique candidate file
+        run: |
+          set -euo pipefail
+          git config user.name "Agent 46"
+          git config user.email "agent46@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+          dst=im-results/agent46-raw13-cut/coupled4-candidates.json
+          cp /tmp/coupled4-candidates.json "$dst"
+          git add "$dst"
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Agent 46: preserve four-hole residual candidate witnesses"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
