@@ -67,7 +67,6 @@ theorem step_attach (p : PartialMachine) {z y : PZ}
           simp [hr] at h
           subst y
           rw [OpenLeft.protectedPop_attach hr tail]
-          simp [OpenLeft.attach_push]
 
 def action (p : PartialMachine) (op : Action) (z : PZ) : Option Result :=
   match op with
