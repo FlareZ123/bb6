@@ -19,6 +19,7 @@
 #include <omp.h>
 #include "reduced_jump.hpp"
 #include "shifted_reverse.hpp"
+#include "forward_lookup.hpp"
 using U=uint64_t; using I=uint32_t; using W=__uint128_t;
 constexpr I missing=UINT32_MAX;
 using std::vector;
@@ -211,6 +212,14 @@ int main(int argc,char**argv){
  if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>7)return 2;bb6_shifted::fit_mode=unsigned(x);}
  if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
+ U probeVisits=0,probeWidth=65536;
+ bool probeOnly=false;
+ if(auto p=std::getenv("P1_PROBE"))probeVisits=std::stoull(p);
+ if(auto p=std::getenv("P1_PROBE_WIDTH"))probeWidth=std::stoull(p);
+ if(std::getenv("P1_PROBE_ONLY"))probeOnly=true;
+ if((probeOnly&&!probeVisits)||probeWidth<1||probeWidth>UINT32_MAX)return 2;
+ std::unique_ptr<bb6_forward::Tables> tables;
+ if(probeVisits)tables=std::make_unique<bb6_forward::Tables>(8);
  bool half=argc>=5&&std::string(argv[4])=="half";
  if(argc>=5&&!half&&std::string(argv[4])!="full")return 2;
  std::string path=argc==6?argv[5]:"";
@@ -229,15 +238,29 @@ int main(int argc,char**argv){
   struct Part{vector<Prefix>next;vector<I>accepted;U work=0,fw=0;size_t mids=0;};vector<Part>parts(gs.size());
   for(auto&g:gs){U bound=U(g.run)+h+1;if(!safe(bound))throw std::runtime_error("conservative margin");maxgap=std::max(maxgap,I(bound));}
   I end=2*n+s+3,jump=std::min(I(jump_limit),n-h);
-  bb6_jump::Plan plan(int(end-jump),int(jump));
+  std::unique_ptr<bb6_jump::Plan> plan;
+  if(!probeOnly)plan=std::make_unique<bb6_jump::Plan>(int(end-jump),int(jump));
 #pragma omp parallel for schedule(dynamic)
   for(int gi=0;gi<(int)gs.size();gi++){
    const auto&g=gs[gi];auto&part=parts[gi];auto y=[&](I q,unsigned k){return g.word(int64_t(q)-2*int64_t(n)-3,k,h);};
-   auto mids=live_with_plan(n+s+h+3,end,y,part.work,plan);part.mids=mids.size();
-   auto good=filter(n+s+3,n+s+h+3,y,g.carry,mids,part.fw);
+   vector<I> good;
+   bool complete=false;
+   if(tables){
+    auto p=bb6_forward::probe(*tables,8,n+s+3,n+s+h+3,end,y,g.carry,probeVisits,probeWidth);
+    complete=p.complete;
+#pragma omp critical
+    std::cout<<"PROBE s="<<s<<" parent="<<gi<<" complete="<<p.complete<<" depth="<<p.clock-(n+s+3)<<" visits="<<p.visits<<" peak="<<p.peak<<" mids="<<p.mids.size()<<std::endl;
+    if(complete)good=std::move(p.mids);
+   }
+   if(probeOnly)continue;
+   if(!complete){
+    auto mids=live_with_plan(n+s+h+3,end,y,part.work,*plan);part.mids=mids.size();
+    good=filter(n+s+3,n+s+h+3,y,g.carry,mids,part.fw);
+   }else part.mids=good.size();
    for(I a:good){Prefix g2=child(n,s,h,g,a);if(half&&s==1&&g2.blocks[0]->get(0)!=1)continue; // low appended 7B bit = (3+7*x)%2; x=0 iff bit=1
     part.next.push_back(std::move(g2));part.accepted.push_back(a);}
   }
+  if(probeOnly){std::cout<<"PROBE_ONLY_DONE "<<s<<std::endl;return 0;}
   vector<Prefix>next;vector<std::pair<I,I>> layer;U work=0,fw=0,mid=0;I maxrun=0;
   for(I i=0;i<parts.size();i++){auto&part=parts[i];work+=part.work;fw+=part.fw;mid+=part.mids;for(auto a:part.accepted)layer.push_back({i,a});for(auto&g:part.next){maxrun=std::max(maxrun,g.run);next.push_back(std::move(g));}}
   std::cout<<"s="<<s<<" h="<<h<<" old="<<gs.size()<<" mids="<<mid<<" next="<<next.size()<<" work="<<work<<" filter="<<fw<<" run="<<maxrun<<" gapBound="<<maxgap<<" fit="<<bb6_shifted::fit_mode<<" fuse="<<fusion_limit<<" sec="<<std::chrono::duration<double>(std::chrono::steady_clock::now()-t).count()<<std::endl;
