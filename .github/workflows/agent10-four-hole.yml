@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw43_extra_child:
         description: 'Raw43 E1 sibling variant'
@@ -90,6 +90,26 @@ jobs:
         with:
           name: raw36-pilot-proof
           path: /tmp/a29-raw36-pilot/
+          retention-days: 30
+      - name: Check Raw43 six hard-pair growth certificates
+        if: inputs.target == 'raw43-hard-pair'
+        run: |
+          set -euo pipefail
+          root=im-results/agent38-raw43-pair
+          work=/tmp/a38-raw43-hard-pair
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label raw43-hard-pair \
+            --theorem BB6.Agent38Raw43Run.never --artifact-name raw43-hard-pair-proof \
+            "$root/Raw43Run.lean" 2>&1 | tee /tmp/a38-raw43-hard-pair.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a38-raw43-hard-pair.log BB6.Agent38Raw43Octal.never BB6.Agent38Raw43Run.never
+          cp /tmp/a38-raw43-hard-pair.log "$work/audit.log"
+      - name: Retain Raw43 hard-pair proof
+        if: inputs.target == 'raw43-hard-pair'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw43-hard-pair-proof
+          path: /tmp/a38-raw43-hard-pair/
           retention-days: 30
       - name: Certify Raw43 five-hole child
         if: inputs.target == 'raw43-child'
