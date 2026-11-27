@@ -9,15 +9,21 @@ Both use original canonical cut depth 7, cap 1000, lookback 32 and the frozen cr
 | E1 | open leaves | FAR-bank accepted candidates | further finite stack | late last-hole | FAR6 | universal growth checked in Lean | unresolved |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 0RD | 17081 | 16395 | 674 | 1 | 0 | 11 | 0 |
-| 1LC | 22268 | 21356 | 861 | 28 | 1 | 20 | 2 |
+| 1LC | 22268 | 21356 | 861 | 28 | 1 | 21 | 1 |
 
-0RD is candidate-complete, not yet aggregate-certified; the 1LC unresolved tables are M5334 and M19569:
-- 1RB0LA_1RC0RA_0RD1RF_1LD1LE_0RB1LC_---1RA
-- 1RB0LE_1RC---_0RD1RA_1LD1LE_1RF1LC_0RD0RA
+0RD is candidate-complete, not yet aggregate-certified. The sole remaining 1LC discovery holdout is M19569 (`1RB0LE_1RC---_0RD1RA_1LD1LE_1RF1LC_0RD0RA`).
+
+### M5334: exact 25-block growth
+
+For M5334 (`1RB0LA_1RC0RA_0RD1RF_1LD1LE_0RB1LC_---1RA`), use `P=011` and the original zipper convention (left stack includes the scanned cell). Define `G(n)=A(P P^n 01111110, 0^10)`. The exact blank entry is `run0 p 8505 blankZ = some (G 23)`. For every natural `n`, `run0 p (9509+500*n) (G n) = some (G (n+25))`. The derivation contains 25 left sweeps of cost `13n`, 25 right sweeps of cost `7n`, five arbitrary-tail single-block identities, and 9509 fixed transitions. This proves nonhalting for **every** completion of F0, using the original raw-machine semantics through `never_of_growth`.
+
+Reconstruct the certificate with `python3 generate_m5334.py > Raw56LCM5334.lean`; compile with Lean 4.36.0-rc2 and `LEAN_PATH` pointing to the exact accepted artifact 15160313745. The [generator](generate_m5334.py) is untrusted; its emitted Lean source proves all steps using `rfl`, `sweepL`, `sweepR`, `join0`, and `omega`. The local full proof and split proof both compiled; the exported `epoch`, `entry`, and `never` use only `[propext, Quot.sound]`. Generator SHA256 `2bcd9f263c601ae6fd9259167dca22edb3481876d1496ad38ecfd400675f8aaf`; generated source SHA256 `26271eb0d6f2f584295d44d4cf27738b5def1756baf8fb04ee67ed4bbe786c37`. No parent aggregate or roster cut is asserted.
+
+### M20376: base-four carry invariant
 
 M20376 (`1RB---_1RC0LB_0RD1LA_1LD1LE_1RF1LC_0LE0RF`) is now closed for every compatible completion by [Raw56LCM20376.lean](Raw56LCM20376.lean). The exact blank entry at step 27 reaches A with left stack `001` (scanned cell included), right `110`. The general family has right `11(1111)^n0` and left a word of digits `00ab`, optionally ending with `001`. Digits with `a=0` increment to `a=1` in `26+4n` steps; digit `a=1,b=0` changes to `a=0,b=1` in `30+4n`; `a=b=1` removes that digit and increases carry depth in ten steps. The first two cases prepend `n` zero digits and reset carry depth; empty and truncated final digit have checked extension rules. All macro identities hold for arbitrary untouched suffixes. Positive-cost closure gives arbitrarily long original-machine live prefixes. `BB6.Agent4Raw56LCM20376.never` compiled with Lean 4.36.0-rc2 against artifact 15160313745, importing `SweepPumping` from that exact accepted closure, with only `[propext, Quot.sound]`. No aggregate parent proof yet. Source SHA256 `7cc528a9008b659bf13d1ac58eb48b2088d85a535fcf1a002699365c372fc19d`.
 
-All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. FAR and finite-stack candidates require original checker acceptance; every generated growth lemma and the M20376 invariant already checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
+All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. FAR and finite-stack candidates require original checker acceptance; every generated growth lemma and the M20376 and M5334 invariants already checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
 
 ## Reusable advances
 
