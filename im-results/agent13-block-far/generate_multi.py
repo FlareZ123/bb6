@@ -10,7 +10,7 @@ import sys
 
 DEFAULT_TABLE = '1RB0RD_1LC1LB_0LE1RA_0LC0RA_1LF1LD_1RD---'
 
-def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False, offset=0, left_mode='runs'):
+def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBlock", minimize_left=False, sparse=False, offset=0, left_mode='runs', data_only=False):
     assert left_mode in ('runs','suffix')
     assert 0 <= offset < width
     assert offset == 0 or (width == 4 and not sparse and not flip), "offset proof backend currently supports unreflected width four"
@@ -184,6 +184,9 @@ def generate(table, out, width=3, cap=2, mod=4, runs=2, flip=False, name="HeldBl
         aux=[aux.get((l,q,0,b),dead) for l in range(D) for q in range(6) for b in range(alphabet)],
         edges=[sorted(r2[s,a]) for s in range(C) for a in range(alphabet)],
         zeroNext=zeroNext, pred=[[alphabet*l+a for l,a in pred[j]] for j in range(D)])
+    if data_only:
+        return dict(width=width, moves=moves, left_states=D, right_nodes=C,
+                    zero_states=sorted(z2), **data)
     def tree(xs, default):
         items=[(i,v) for i,v in enumerate(xs) if v!=default]
         def go(x):
