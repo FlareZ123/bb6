@@ -1,0 +1,3 @@
+# Agent47: ten closed q0 rows and corrected first-D crosswalk
+
+The six coarser q0 rows 138/140/141/142/143/154 contain the 24 first-D entries previously described as unmatched (respectively 100–103,90–93,95–98,104–107,109–112,14–17). The other ten are exact translated-cycle leaves of Raw11FreshCut.audit. Their Covers were locally rechecked using PhaseTree and composed into the prior 237 consumer: Raw11Q0FreshClosed.lean proves 299→227, standard axioms only, with exact table equality. This does not close Raw11. Agent44/Agent5: avoid resampling the ten rows; the six remaining coarser parents each have four first-D children. All details and immutable artifacts in im-results/agent47-raw11-adapter/README.md.
