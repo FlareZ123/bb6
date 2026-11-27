@@ -1,6 +1,6 @@
 # Raw139 E0=1LB, C1=0RA, leaf 286: nonhalting by a growing binary counter
 
-Status: mathematical proof; source-level Lean integration pending. This is the only open single-hole leaf in Agent 3's residual roster blob 992b848fa8038a9ca5ff6fdd461dee0f599eeaec (source run 45935487905). Table:
+Status: **kernel-checked original-semantics nonhalting theorem; parent graft pending.** This is the only open single-hole leaf in Agent 3's residual roster blob 992b848fa8038a9ca5ff6fdd461dee0f599eeaec (source run 45935487905). Table:
 `1RB0RF_1RC0RD_1LD0RA_---0LE_1LB1RC_0LE1RC`.
 Codes [7,21,11,13,14,1,24,16,6,11,16,11]. The argument avoids D0 for every completion.
 
@@ -34,3 +34,14 @@ For s remaining separators define v as their binary value, low bit first, and N=
 ## Discovery context
 
 Cross-parent periodic-abstraction pilot: Agent25's periodic-word BiDFA (symmetric, periods 1,2,4, k=12,16,20,24,28,32,40,48, c,m=1..3, cap=30000) failed in 71/72 cases and hit the cap once. Agent19's lag-XOR push method implemented on the same JS closure (392 symmetric attempts, cap 30000) gave 276 failures and 116 caps. These are bounded negative search results only. Primitive simulation and B-return grouping exposed the five rules above. The proof uses those local identities and the counter induction, not a simulation cutoff.
+
+## Formal certificate and integration
+
+- [Counter286.lean](Counter286.lean), blob f263ade74e9c472b6663758ae52e123df3543392: checked finite seed, generic ray rules and sweep, complement-counter code (K=2^s t+2^s-1-v), allowed group induction, terminal drain, row packing, and infinite trajectory.
+- [Counter286Bridge.lean](Counter286Bridge.lean), blob 707e27724f182283583ae6fb83d79cd530b40a92: directly observes the original physical Config relative to its head, proves the observation commutes with each actual applyMove, matches all twelve slots with the original fromCodes, and transfers every successful modeled step using compatible.
+- Export `BB6.Agent12Counter286.ctr` is exactly `fromCodes [7,21,11,13,14,1,24,16,6,11,16,11]`.
+- Export `BB6.Agent12Counter286.never`: `∀ m, compatible ctr m → NeverHalts m`. Export `BB6.Agent12Counter286.weighted`: `∀ B, Cover (WeightedBound B) ctr`.
+- Reproduced locally on Lean 4.36.0-rc2 (b35cb10cf2ced51a2fd1880cfdbf75c71ab7a35a) against the original accepted Agent3 artifact **15169732599** (run 45934344615), using its build directory in LEAN_PATH. Compile Counter286.lean to Counter286.olean, then Counter286Bridge.lean. The printed axioms for both final theorems are exactly [propext, Classical.choice, Quot.sound], with no sorryAx or native_decide. No global canonical reduction is claimed by this single leaf.
+- For the existing package6.py .proven consumer, use namespace BB6.Agent12Counter286 and module Counter286Bridge; copy both source files into the existing imports directory (or include their source root). The proof avoids the absent slot, so no further D0 branches are necessary.
+
+The machine is no longer an unresolved mathematical holdout. The remaining work is integration into the exact C1=0RA parent certificate and its wider ancestor. This is a different status from acceptance of the whole parent.
