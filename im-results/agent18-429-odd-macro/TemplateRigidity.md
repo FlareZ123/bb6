@@ -73,7 +73,16 @@ The third condition makes this smaller than the divisor \(4^{\min(k,k-t+s)}=4^{s
 \[
 s>(1-\varepsilon)\log_4 k.
 \]
-Indeed if \(s\le(1-\varepsilon)\log_4 k\), then \(4^s A=O(k^{1-\varepsilon}\log k)=o(k)\), while the first and third inequalities follow because their powers have exponents at least \(k/2-O(\log k)\) and the right sides are polynomial in k. Thus scalable crossings with substantial homogeneous runs require **at least logarithmically growing complexity in the middle active suffix**; unboundedness alone was not the sharp conclusion. This is still much weaker than the all-word wide-window impossibility needed for #429.
+Indeed if \(s\le(1-\varepsilon)\log_4 k\), then \(4^s A=O(k^{1-\varepsilon}\log k)=o(k)\), while the first and third inequalities follow because their powers have exponents at least \(k/2-O(\log k)\) and the right sides are polynomial in k. More precisely, for all sufficiently large k (depending on fixed a,b), the first and third displayed inequalities hold uniformly for **all** lengths r,s,t at most k/2. Therefore every admissible crossing with r,t at most k/2 must satisfy
+\[
+3k\le 4^s(a+2b+24s+16)
+\]
+(whether s is small or large; for s>k/2 this holds automatically for sufficiently large k). Splitting into s at most \(\log_4 k\) and s greater than \(\log_4 k\) gives the sharper uniform growth bound
+\[
+\boxed{s\ \ge\ \log_4 k-\log_4(a+2b+24\log_4 k+16)+\log_4 3
+       \ =\ \log_4 k-O(\log\log k).}
+\]
+This is a **quantitative minimum active suffix length** for scalable crossings with substantial outside homogeneous runs. It is still much weaker than the all-word wide-window impossibility needed for #429.
 
 ## Sharp existing coefficient-two template: k=56 only
 
