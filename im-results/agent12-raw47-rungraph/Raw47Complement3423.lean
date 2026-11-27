@@ -113,15 +113,15 @@ theorem decrementPrefix (k j : Nat) (d R : List Bool) :
   have hL : [true,false] ++ rep zz k ++ [true] ++ packL d =
       [true] ++ packL (List.replicate k false ++ true::d) := by
     calc
-      _ = [true] ++ ([false] ++ rep zz k) ++ [true] ++ packL d := by simp only [List.append_assoc]; rfl
+      _ = [true] ++ ([false] ++ rep zz k) ++ [true] ++ packL d := by simp only [List.append_assoc] <;> rfl
       _ = [true] ++ (rep zz k ++ [false]) ++ [true] ++ packL d := by rw [zeroComm]
-      _ = _ := by simp only [packL_zeros,packL,List.append_assoc]; rfl
+      _ = _ := by simp only [packL_zeros,packL,List.append_assoc] <;> rfl
   have hR : zz ++ [true] ++ rep oo j ++ [false] ++ R =
       zz ++ rep oo j ++ oz ++ R := by
     calc
       _ = zz ++ ([true] ++ rep oo j) ++ [false] ++ R := by simp only [List.append_assoc]
       _ = zz ++ (rep oo j ++ [true]) ++ [false] ++ R := by rw [oneComm]
-      _ = _ := by simp only [List.append_assoc]; rfl
+      _ = _ := by simp only [List.append_assoc] <;> rfl
   rw [hL,hR] at h6
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6
   rw [show 2*k+4+2*j+3+2*(j+1)+1+4 = 2*k+4*j+14 by omega] at H
@@ -158,7 +158,7 @@ theorem resetPrefix (k n : Nat) (T : List Bool) :
     calc
       _ = ([false] ++ rep zz (k+1)) ++ [true] := by simp only [List.append_assoc]
       _ = (rep zz (k+1) ++ [false]) ++ [true] := by rw [zeroComm]
-      _ = _ := by simp only [List.append_assoc]; rfl
+      _ = _ := by simp only [List.append_assoc] <;> rfl
   rw [hL] at h5
   have h6 : run0 ctr (2*(k+1))
       ⟨4,rep zz (k+1) ++ [false,true],zo ++ rep oo n ++ [true] ++ T⟩ =
@@ -196,7 +196,7 @@ theorem validPush (k : Nat) (d : List Bool) (hd : Valid d) :
     refine ⟨ih,Or.inr ?_⟩
     intro h
     have he := congrArg List.length h
-    simp at he
+    simp at he <;> omega
 
 theorem carryValid (d : List Bool) (hd : Valid d) : Valid (carry d).2 := by
   induction d with
@@ -274,22 +274,26 @@ theorem validZero (d : List Bool) (hd : Valid d) (hv : val d=0) : d=[] := by
       rcases hd.2 with h|h
       · cases h
       · exact False.elim (h he)
-    · simp [val] at hv
+    · simp [val] at hv <;> omega
 
 theorem powerOdd (k n x : Nat) (h : 2^k*(1+2*x)=2^n) : k=n ∧ x=0 := by
   induction n generalizing k with
   | zero =>
-    cases k
-    · simp at h
+    cases k with
+    | zero =>
+      simp at h
       exact ⟨rfl,by omega⟩
-    · have he : 2*(2^k*(1+2*x))=1 := by
+    | succ k =>
+      have he : 2*(2^k*(1+2*x))=1 := by
         simpa only [Nat.pow_succ,Nat.pow_zero,Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm] using h
       omega
   | succ n ih =>
-    cases k
-    · simp only [Nat.pow_zero,Nat.one_mul,Nat.pow_succ] at h
+    cases k with
+    | zero =>
+      simp only [Nat.pow_zero,Nat.one_mul,Nat.pow_succ] at h
       omega
-    · have he : 2*(2^k*(1+2*x))=2*2^n := by
+    | succ k =>
+      have he : 2*(2^k*(1+2*x))=2*2^n := by
         simpa only [Nat.pow_succ,Nat.mul_assoc,Nat.mul_left_comm,Nat.mul_comm] using h
       obtain ⟨hk,hx⟩ := ih k (by omega)
       exact ⟨by omega,hx⟩
@@ -354,7 +358,7 @@ theorem arbitrarilyLive (n : Nat) :
     ∃ k d w T t, n≤t ∧ Valid d ∧ Balance k d w ∧
       run0 ctr t ⟨0,[],[]⟩ = some (cfg k d w T) := by
   induction n with
-  | zero => exact ⟨0,[],[],[],15,by omega,trivial,by decide,entry⟩
+  | zero => exact ⟨0,[],[],[],15,by omega,trivial,by rfl,entry⟩
   | succ n ih =>
     obtain ⟨k,d,w,T,t,ht,hd,hb,hr⟩ := ih
     obtain ⟨k',d',w',T',u,hu,hd',hb',hs⟩ := goodStep k d w T hd hb
