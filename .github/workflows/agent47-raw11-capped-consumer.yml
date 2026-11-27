@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, extra-shards]
+        options: [capped, q0-banks, extra-shards, q0-149-three]
         default: capped
       extra_id:
         type: choice
@@ -288,4 +288,43 @@ jobs:
             /tmp/parent-out
             /tmp/parent-source
           if-no-files-found: error
+          retention-days: 30
+
+  q0-149-three:
+    if: inputs.mode == 'q0-149-three'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and kernel-check three nonhalting cylinders
+        run: |
+          set -euo pipefail
+          p=im-results/agent47-raw11-adapter
+          node "$p/generate-q0-149-three-run-lean.cjs" > "$p/Raw11Q0Three149.lean"
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py "$p/Raw11Q0Three149.lean" \
+            --workdir /tmp/q0149-three --manifest /tmp/q0149-three/manifest.json \
+            --jobs 2 --lean lean --label q0149-three \
+            --provenance-input "$p/generate-q0-149-three-run-certs.cjs" \
+            --provenance-input "$p/generate-q0-149-three-run-lean.cjs" \
+            2>&1 | tee /tmp/q0149-three.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0149-three.log; then exit 1; fi
+          for n in 11 16 17; do
+            grep -F "BB6Coverage.Agent31Pump.Q0149.Raw11.M$n.cover' depends on axioms:" /tmp/q0149-three.log
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-149-three
+          path: |
+            /tmp/q0149-three/
+            /tmp/q0149-three.log
+            im-results/agent47-raw11-adapter/Raw11Q0Three149.lean
+          if-no-files-found: warn
           retention-days: 30
