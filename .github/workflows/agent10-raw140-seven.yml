@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit, bank42]
         default: extra
 permissions:
   contents: read
@@ -28,7 +28,15 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
-          if [ "$TARGET" = erExit ]; then
+          if [ "$TARGET" = bank42 ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-bank42 --jobs 3 im-results/agent10-nov26-cryptids/Raw14042Bank.lean 2>&1 | tee /tmp/raw140-proof.log
+            for t in pumpAny start42 exit42 return42; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw14042Bank.$t"
+            done
+          elif [ "$TARGET" = erExit ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_double.js
             node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
             python tools/lean_compile_closure.py --workdir /tmp/raw140-er-exit --jobs 3 im-results/agent10-nov26-cryptids/Raw140ERExit.lean 2>&1 | tee /tmp/raw140-proof.log
