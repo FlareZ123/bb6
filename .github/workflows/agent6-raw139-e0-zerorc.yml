@@ -110,6 +110,13 @@ jobs:
           #print axioms BB6.Agent6E0OneRF1271_5.never
           #print axioms BB6.Agent6E0OneRF4868.never
           EOF
+      - name: Reuse the seven accepted OneLF exceptional cuts
+        if: inputs.variant == 'oneLF'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python3 im-results/agent6-raw139-e0-oneLF/merge_exceptional.py /tmp/a6-oneLF-proof .tmp/a6-oneLF/imports
       - name: Compile shared source-connected dependency closure
         run: |
           set -euo pipefail
@@ -120,7 +127,8 @@ jobs:
           if [[ "$VARIANT" == oneRE ]]; then proofs=("$base/OneRE1873.lean" "$base/OneRELongQueries.lean"); fi
           if [[ "$VARIANT" == zeroRF ]]; then proofs=("$base/ZeroRF1892Cover.lean" "$base/ZeroRF4570.lean"); fi
           if [[ "$VARIANT" == oneLF ]]; then
-            proofs=("$base/OneLFZipHybrid.lean" im-results/agent13-block-far/BlockFARBridge5.lean im-results/agent47-raw111-cut/SparseNGram.lean)
+            proofs=("$base/OneLFZipHybrid.lean" "$base/OneLFExceptionalAudit.lean" im-results/agent13-block-far/BlockFARBridge5.lean im-results/agent47-raw111-cut/SparseNGram.lean)
+            source_args=(--source-root "$work/imports" --precompiled-manifest /tmp/a6-oneLF-proof/merged.json --precompiled-dir /tmp/a6-oneLF-proof/merged)
           fi
           if [[ "$VARIANT" == oneRF ]]; then
             proofs=("$work/imports/ORFExceptionalAudit.lean")
@@ -137,6 +145,9 @@ jobs:
             for thm in BB6.Agent6RF4563.tableCover BB6.Agent6E0OneRF1271_5.never BB6.Agent6E0OneRF4868.never; do
               grep -F "'$thm' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/core.log" || grep -F "'$thm' depends on axioms: [propext, Quot.sound]" "$work/core.log"
             done
+          fi
+          if [[ "$VARIANT" == oneLF ]]; then
+            test "$(grep -Ec "^'BB6.Agent6OneLFExceptional.cH[0-9_]+'.*depends on axioms: \[propext, Classical.choice, Quot.sound\]$" "$work/core.log")" -eq 18
           fi
           mkdir -p "$work/core"
           find /tmp/a6-${VARIANT}-core -name '*.olean' -exec cp '{}' "$work/core/" ';'

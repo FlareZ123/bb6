@@ -6,7 +6,6 @@ ROOT=pathlib.Path(__file__).resolve().parents[2]
 sys.path[:0]=[str(ROOT/'im-results/agent48-raw139-f1-oneRA'),str(ROOT/'im-results/agent48-raw139-f1-oneLA')]
 from blockcert import generate
 from package import block_source as original_block_source, bl, slot
-from width5 import emit as emit_width5
 from ngram_source import emit_ngram
 B=90794
 P=[7,24,11,24,14,24,24,16,22,11,24,24]
@@ -59,10 +58,7 @@ def make(p,recipe,out,roots,cap=100):
             key=(i,path);rec=exceptional[key]
             assert rec['table']==t==r[1] and key not in used
             used.add(key)
-            if 'cycle' in rec:return ['longcert','H'+str(i)+'_'+str(path[0][1]) if path else 'H'+str(i)]
-            if 'block5' in rec:return ['special',i]
-            assert i in (4231,15496,15542,9135,14327),rec
-            return ['special',i]
+            return ['longcert','H'+str(i)+'_'+str(path[0][1]) if path else 'H'+str(i)]
         if r[0]=='block':
             j=len(block);block[j]=(t,r);return ['block',j]
         if r[0]=='ngram':
@@ -74,8 +70,6 @@ def make(p,recipe,out,roots,cap=100):
     assert used==set(exceptional)
     def size(n):return sum(map(size,n[3])) if n[0]=='split' else 1
     assert size(tree)==23*(p['counts']['split']+12)+1==945048
-    for rec in records:
-        if 'block5' in rec:emit_width5(out,rec)
     for j,(t,r) in ngrams.items():emit_ngram(out,j,t,r)
     def count_blocks(n):
         if n[0]=='split':return [i for ch in n[3] for i in count_blocks(ch)]
@@ -103,16 +97,6 @@ def make(p,recipe,out,roots,cap=100):
         if k=='last':return f'.last {a[0]} {slot(a[1])}'
         if k=='far':
             rev,d,dfa,t0,t1,z=a;return f'.far {bl(rev)} {d} ⟨0,{dfa},{t0},{t1},{z}⟩'
-        if k=='special':
-            i=a[0]
-            if i in (1352,5952,17162):
-                imports.add(f'OLFWidth{i}');prefix=f'BB6.Agent6OneLFWidth5.H{i}'
-                return f'.proven {prefix}.ctr {prefix}.never'
-            if i in (4231,15496,15542):
-                imports.add('TripleSweep');v={4231:'a',15496:'b',15542:'c'}[i];prefix='BB6.Agent6OneLFTriple'
-                return f'.proven ({prefix}.p .{v}) ({prefix}.never .{v})'
-            imports.add(f'Sweep{i}');prefix=f'BB6.Agent6OneLF{i}'
-            return f'.proven {prefix}.p {prefix}.never'
         if k=='ngram':
             i=a[0];imports.add(f'OLFNGram{i}');prefix=f'BB6.Agent6OneLFNGram.H{i}'
             return f'.proven {prefix}.p {prefix}.never'
@@ -128,7 +112,7 @@ def make(p,recipe,out,roots,cap=100):
     def emit(n,t,name):
         deps={'OneLFZipHybrid'}
         if n[0]=='longcert':
-            deps.add('LongCycle');pre='BB6.Agent6OneLFLongCycle';term=f'.covered {pre}.p{n[1]} {pre}.c{n[1]}'
+            deps.add('OneLFExceptionalAudit');pre='BB6.Agent6OneLFExceptional';term=f'.covered {pre}.p{n[1]} {pre}.c{n[1]}'
         elif not hard(n) and size(n)<=cap:
             term=f'.closed ({plain(n,deps)})'
         else:
