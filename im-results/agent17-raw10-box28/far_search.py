@@ -38,6 +38,7 @@ def main():
         for mode,cap,mod,runs in [('runs',2,4,3),('suffix',1,1,4),('runs',1,3,4),('suffix',1,1,6),('runs',2,6,5)]:
             for flip in (False,True):schedule.append([width,cap,mod,runs,flip,mode])
     solved=[];open_rows=[]
+    (a.out/'far_manifest.json').write_text(json.dumps({'solved':solved,'open_rows':open_rows},indent=2))
     for i,row in enumerate(rows):
         name=f'{stem(row[6],row[second_index(row[6])])}Far{i:02d}'
         for param in schedule:
