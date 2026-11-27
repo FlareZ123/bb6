@@ -1,4 +1,5 @@
 import Box28Base4
+import Box28Sweep
 import Box33SourceBridge
 
 namespace BB6.Agent17.Box28HardSource
@@ -66,4 +67,60 @@ theorem counter_compatible_never (alt : Bool) (m : Machine)
   exact counter_never alt
 
 #print axioms counter_compatible_never
+def sweepTable : Machine := fun s =>
+  match s with
+  | (0,false) => some ⟨true,true,1⟩
+  | (0,true) => some ⟨false,true,3⟩
+  | (1,false) => some ⟨true,false,2⟩
+  | (1,true) => some ⟨true,true,5⟩
+  | (2,false) => some ⟨true,false,2⟩
+  | (2,true) => some ⟨false,false,3⟩
+  | (3,false) => some ⟨false,true,3⟩
+  | (3,true) => some ⟨false,false,4⟩
+  | (4,false) => some ⟨true,false,0⟩
+  | (4,true) => some ⟨true,false,3⟩
+  | (5,false) => some ⟨true,true,0⟩
+  | _ => none
+
+theorem sweep_step (z : Config) :
+    (rawStep sweepTable z).map project = Box28Sweep.step (project z) := by
+  rcases z with ⟨s,h,t⟩
+  have hs : s=0 ∨ s=1 ∨ s=2 ∨ s=3 ∨ s=4 ∨ s=5 := by omega
+  rcases hs with rfl|rfl|rfl|rfl|rfl|rfl <;> cases hb : t h <;>
+    simp only [rawStep,readSlot,sweepTable,hb,Option.map_some,Option.map_none]
+  all_goals
+    simp only [project, BB6.Agent13.Box33Source.project_applyMove]
+    simp [Box28Sweep.step,BB6.Agent13.Box33Source.project,BB6.Agent13.Box33Source.q,
+      BB6.Agent13.Box33Source.perm,hb] <;> rfl
+
+theorem sweep_run (n : Nat) (z : Config) :
+    (run sweepTable n z).map project = Box28Sweep.run n (project z) := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    rw [Box28Sweep.run_add n 1,← ih]
+    simp only [run]
+    cases h : run sweepTable n z with
+    | none => rfl
+    | some c =>
+      simp only [Option.bind_some,Option.map_some]
+      rw [sweep_step]
+      simp [Box28Sweep.run]
+
+theorem sweep_never : NeverHalts sweepTable := by
+  intro n
+  have h := sweep_run n blank
+  have hblank : project blank = Box28Sweep.blank := rfl
+  rw [hblank] at h
+  cases he : run sweepTable n blank with
+  | none => exact False.elim (Box28Sweep.never_blank n (by simpa [he] using h.symm))
+  | some c => rfl
+
+def sweepPartial : PartialMachine := fun s => some (sweepTable s)
+theorem sweep_compatible_never (m : Machine) (hm : compatible sweepPartial m) : NeverHalts m := by
+  have he : m = sweepTable := funext fun s => hm s _ rfl
+  rw [he]
+  exact sweep_never
+
+#print axioms sweep_compatible_never
 end BB6.Agent17.Box28HardSource
