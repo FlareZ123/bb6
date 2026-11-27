@@ -1,5 +1,4 @@
 import Raw139NormalizedE0CutsFinite
-import ChampionScoreLowerBound
 import A3E0RACover
 import Raw139E0ZeroRECover
 import Raw139E0ZeroRBCover
@@ -15,13 +14,7 @@ namespace BB6.Agent14Raw139AcceptedE0SixCover
 open BB6Coverage
 open BB6.Agent13BlankDelay
 open BB6.Agent14Raw139NormalizedE0CutsFinite
-open BB6.Agent38ChampionThreshold
-open BB6ChampionArithmetic
-
-abbrev e0Score : Nat := proposedTM63Moves + 7
-
-theorem e0Score_ge_6766859 : 6766859 ≤ e0Score :=
-  champion_score_ge_6766859
+abbrev e0Score : Nat := 6766859
 
 theorem cover_mono {A B : Nat} (hAB : A ≤ B) {p : PartialMachine}
     (h : Cover (WeightedBound A) p) : Cover (WeightedBound B) p := by
@@ -67,42 +60,42 @@ theorem e0ZeroRA_cover :
     Cover (WeightedBound e0Score) e0ZeroRA := by
   rw [e0ZeroRA_eq_parent]
   exact cover_mono
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent3E0RA.cover
 
 theorem e0ZeroRE_cover :
     Cover (WeightedBound e0Score) e0ZeroRE := by
   rw [e0ZeroRE_eq_parent]
   exact liftWeighted
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent48Raw139E0ZeroRE.all_completions_weighted
 
 theorem e0ZeroRB_cover :
     Cover (WeightedBound e0Score) e0ZeroRB := by
   rw [e0ZeroRB_eq_parent]
   exact liftWeighted
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent48Raw139E0ZeroRB.all_completions_weighted
 
 theorem e0ZeroRD_cover :
     Cover (WeightedBound e0Score) e0ZeroRD := by
   rw [e0ZeroRD_eq_parent]
   exact liftWeighted
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent48Raw139E0ZeroRD.all_completions_weighted
 
 theorem e0ZeroRF_cover :
     Cover (WeightedBound e0Score) e0ZeroRF := by
   rw [e0ZeroRF_eq_parent]
   exact cover_mono
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent6E0ZeroRF.weighted
 
 theorem e0OneRE_cover :
     Cover (WeightedBound e0Score) e0OneRE := by
   rw [e0OneRE_eq_parent]
   exact cover_mono
-    (by have h := e0Score_ge_6766859; omega)
+    (by decide)
     BB6.Agent6E0OneRE.weighted
 
 theorem acceptedE0Six_cover :
@@ -117,6 +110,7 @@ theorem acceptedE0Six_cover :
   · exact e0ZeroRF_cover
   · exact e0OneRE_cover
 
+#print axioms e0Score
 #print axioms e0ZeroRA_eq_parent
 #print axioms e0ZeroRE_eq_parent
 #print axioms e0ZeroRB_eq_parent
