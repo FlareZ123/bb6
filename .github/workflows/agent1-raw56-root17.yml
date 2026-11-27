@@ -1,0 +1,62 @@
+name: Agent1 Raw56 accepted-child root17 composition
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  root17:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Restore accepted Raw56 root dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Restore accepted E1=0RC proof-object union
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-rc-*
+          path: /tmp/raw56-rc
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46045652695'
+      - name: Restore accepted E1=1RE proof-object union
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-reparent-source-accepted
+          path: /tmp/raw56-re
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46061898661'
+      - name: Compose exact 17-way Raw56 root frontier
+        run: |
+          set -euo pipefail
+          export LEAN_PATH="/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
+          lean --version | grep -F '4.36.0-rc2'
+          lean -o /tmp/Raw56Root17.olean im-results/agent1-raw56/Raw56Root17.lean | tee /tmp/raw56-root17.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root17.log --require BB6.Agent1Raw56Root.sound17RCRE
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw56-root17.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-root17-source-accepted
+          path: |
+            /tmp/Raw56Root17.olean
+            /tmp/raw56-root17.log
+          if-no-files-found: error
