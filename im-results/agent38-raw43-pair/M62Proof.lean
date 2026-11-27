@@ -119,6 +119,12 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
       | none => simp [he] at H
       | some c => rfl
 
+/-- A complete source-level coverage leaf: all 25 completions of F1
+    satisfy DecidedBelow at any chosen upper bound by nonhalting. -/
+theorem literal_cover (bound : Nat) : Cover (DecidedBelow bound) table :=
+  Cover.leaf table (fun m hm => Or.inl (never m hm))
+
+#print axioms literal_cover
 #print axioms phase_b_step
 #print axioms live
 #print axioms never
