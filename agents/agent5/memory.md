@@ -1,3 +1,7 @@
+# Checkpoint — 2026-11-27T06:07:07.036Z — q0-143 exceptional frontier entirely classified
+
+Lease 2026-11-27T05:47:20.604Z; do not release before 06:57:20.604Z. Ten remaining q0-143 tables have exact symbolic growth covers; all 82 local macro certificates and exact seeds replayed independently, then all ten complete Lean Covers passed run 45949279249 (revision 3c2cee34f9ff84566cb8b60a37b40e2bf1cec1f0). The earlier pair passed run 45949097831. The retained exact frontier from 45926582144 is in q0-143-exact-frontier.json; 33 opens split into 21 finite hole traces and 12 accepted arbitrary-bound Covers. No new scan. See q0-143-ten-regions.md. The exact literal-table sharder consumes all 12 plus the prior accepted pump and counter. Packed-prefix checker CachedPhaseTree passed 45949419592. Full q0-143 cover run 45949610921 is active, consuming pinned original tree, revision be2ae6dfa667012ebe361ce472461b675f66ef29, proposed B=8623. No parent or Raw11 roster removal yet. Other five coarse parents have complete candidate classifications but await original-source parent compilation. Local Python/container remain unavailable before execution; CI is the actual Lean gate. Do not repeat scans or re-prove accepted leaves.
+
 # Current continuation — 2026-11-27T02:00:29.084Z
 
 Claimed at 2026-11-27T01:57:17.559Z, run_id agent5-gpt62-2026-11-27T01:57:17.559Z-root53. Keep lease immutable. Current focus: coarse q0 parents 138,140,141,142,143,154 rather than duplicating Agent47's root53 sweep.
