@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench' && inputs.target != 'shifted-simd'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -89,6 +89,23 @@ jobs:
             grep -E '^CHILD |^END ' "/tmp/shifted-$mode.log" > "/tmp/shifted-$mode.children"
             diff -u /tmp/shifted-0.children "/tmp/shifted-$mode.children"
           done
+      - name: Test sixteen-lane integer reverse blocks on AVX-512
+        if: inputs.target == 'shifted-simd'
+        run: |
+          set -euo pipefail
+          grep -m1 '^flags' /proc/cpuinfo | grep -qw avx512f
+          grep -m1 '^flags' /proc/cpuinfo | grep -qw avx512dq
+          D=im-results/agent9-p1-reverse-block
+          g++ -O3 -march=native -std=c++17 "$D/shifted_reverse_test.cpp" -o /tmp/shifted-test
+          /tmp/shifted-test | tee /tmp/shifted-simd.log
+          grep -E 'simd=[1-9][0-9]*' /tmp/shifted-simd.log
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-shifted
+          for mode in 6 7; do
+            P1_FIT="$mode" OMP_NUM_THREADS=1 /tmp/p1-shifted 3342 14000 417 half > "/tmp/shifted-$mode.log"
+            grep -Fx 'END 3342 13768' "/tmp/shifted-$mode.log"
+            grep -E '^CHILD |^END ' "/tmp/shifted-$mode.log" > "/tmp/shifted-$mode.children"
+          done
+          diff -u /tmp/shifted-6.children /tmp/shifted-7.children
       - name: Check exact fixed-width delayed-state equivalence
         if: inputs.target == 'compact-state'
         run: |
@@ -103,7 +120,7 @@ jobs:
           import re
           from pathlib import Path
           log = Path('/tmp/compact-state.log').read_text()
-          for ns, names in (("Agent9CompactState", ("project","lift","future_equiv","quotient_lt","quotient_word","fixed_target","top_eq","top_resMin","top_margin")), ("Agent9CompactCover", ("qmargin_next","qcover_next_trace","qcert_next_trace","qcert_shrink","qcert_of_half","qcover_next","queue_margin_sound","qcert_next","qcert_empty")), ("Agent9CompactMidpoint", ("qextend_word","qtarget_shift","qword_shift","qextend_walk","qcode_exact","qlive_of_jump","qmidpoint_cover_of_live","qcert_from_live")), ("Agent9CompactCertificate", ("qcode_source","qtrace_midpoint_of_live","qcert_canonical_live","qcover_empty_midpoint","qcert_empty_live","qcert_first","qcert_n45_first","critical_no_reach_of_qcert","critical_n45_no_reach","queue_update","queue_update_split","queue_mul_carry_bound"))):
+          for ns, names in (("Agent9CompactState", ("project","lift","future_equiv","quotient_lt","quotient_word","fixed_target","top_eq","top_resMin","top_margin")), ("Agent9CompactCover", ("qmargin_next","qcover_next_trace","qcert_next_trace","qcert_shrink","qcert_of_half","qcover_next","queue_margin_sound","qcert_next","qcert_empty")), ("Agent9CompactMidpoint", ("qextend_word","qtarget_shift","qword_shift","qextend_walk","qcode_exact","qlive_of_jump","qmidpoint_cover_of_live","qcert_from_live")), ("Agent9CompactCertificate", ("qcode_source","qtrace_midpoint_of_live","qcert_canonical_live","qcover_empty_midpoint","qcert_empty_live","qcert_first","qcert_n45_first","critical_no_reach_of_qcert","critical_n45_no_reach","qcert_n45_first_u32","critical_n45_no_reach_u32","queue_update","queue_update_split","queue_mul_carry_bound"))):
             for name in names:
               decl = f"'BB6.{ns}.{name}'"
               m = re.search(re.escape(decl) + r" depends on axioms:\s*\[([^\]]*)\]", log)
