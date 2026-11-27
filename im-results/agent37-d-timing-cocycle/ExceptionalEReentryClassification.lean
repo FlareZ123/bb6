@@ -30,7 +30,7 @@ theorem all_E_reentry_canonical_except_q1_mod3
   · obtain ⟨T,a,q',b,hobs,hcanon⟩ :=
       BB6.Agent37ExceptionalESafeCanonical.all_E_safe_reentry_canonical
         k q hsafe.1 hsafe.2
-    exact ⟨T,a,q',b,hobs,hcanon⟩
+    exact ⟨BB6.Agent32EAll.duration k (q-1) + T,a,q',b,hobs,hcanon⟩
 
 #print axioms all_E_reentry_canonical_except_q1_mod3
 
