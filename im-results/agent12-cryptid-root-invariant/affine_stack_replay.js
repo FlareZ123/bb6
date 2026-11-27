@@ -51,6 +51,7 @@ function advance(s,guards=null){
     else if(cmp(v,1n)===0){push(K,k);if(empty(L)){push(L,1n);push(L,0n,2n)}else{let w=pop(L);push(L,w+2n);push(L,0n,2n)}set("tEL",25n)}
     else{push(K,k);push(K,1n);push(K,2n);push(L,v-2n);set("tDR",15n)}}}
   else{set("HALT",2n);halt=true}}
+ else if(q==="tEL"&&empty(K)){set("EL",0n)}
  else if(q==="tEL"){
   let k=head(K);
   if(cmp(k,0n)===0){pop(K);if(empty(K)){bump(R,1n);set("CR",1n)}else{bump(K,1n);set("tCR",1n)}}
