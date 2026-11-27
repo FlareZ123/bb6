@@ -46,3 +46,14 @@ The local Lean compiler accepted all source with zero errors. `#print axioms six
 3. Use six-tail certificates to identify actual quotient overlaps between checkpoint queues, side proofs, and the first-D frontier. Only a verified complete partition or a parent-cover theorem can eliminate a global BB(6) parent obligation.
 
 The standalone theorem does not equate any indexed JSON roster with a Lean-generated frontier; numerical identity and coverage must be proved separately.
+## Actual-source integration (2026-11-27)
+
+[GitHub Actions run 46072130006](https://github.com/FlareZ123/bb6/actions/runs/46072130006) completed **success**. In particular `RootedSourceBridge.lean` was kernel-compiled against the actual shared source `Frontier.lean` and `Symmetry.lean`, not a hand-rolled mock. The compiled theorems `sourceCompatible_iff`, `sourceQuotient_iff`, `source_sixTailCheck_exact`, `raw11_source_sixTail_exact`, and `raw11_source_no_common` interpret exactly the genuine BB6Coverage machine, partial table, halting and state-renaming primitives. The imported `RootedLiveQuotient.lean` theorem is compiled in the same CI workflow. It does not yet prove a bound on any unresolved parent.
+
+The companion `raw11-six-tail-audit.cjs` processes the original q0 first-100 checkpoint export (156 active + 1 held) and the historical 116-row first-D JSON manifest. The independent finite probe found **165 literal overlap pairs and exactly 165 quotient-overlap pairs**; ten q0 rows have no overlap of either kind. There are **no additional pairs** induced by the six unused-state relabelings in these specific exports. This is a computed JSON crosswalk, not yet a Lean theorem equating the exported 116-row JSON ordering with the **source-computed** `Raw11FreshCut.frontier`. Do not identify JSON indices with source indices without a separate certificate; an attempted indexwise identity was false.
+
+## Next high-value proof edges
+
+1. Kernel-certify the manifest-independent ten-row Raw11 bound-18 exclusion and six-row four-match restricted frontier theorem in `../agent24-raw11-q0-graft/Raw11Q0CheckpointGraft.lean`. Its quotient-root logic now has the more general reusable alternative here.
+2. Finish the original Coq checkpoint-tail extraction in `../agent24-raw11-q0-graft/Agent24Q0Raw11Parent.v`. A finite JSON coincidence without source-table equality is not a parent cover.
+3. Discharge the actual 116 Raw11 first-D frontier families through machine-specific certificates or a complete ranked transition-graph argument; the exact overlap algorithm does not establish any such bound itself.
