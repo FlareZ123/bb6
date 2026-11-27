@@ -207,9 +207,38 @@ theorem third_image_blank_unreachable (x y time : Nat)
           obtain ⟨ha,hk⟩ := first_parent_cone a k x y hs hy he
           exact (parent_cone_blank_unreachable a k n ha hk) hp
 
+/-- Every high-stopping parameter with m=6 (mod64) and
+    j=3m+38 (mod256) lies in the new original-source missing
+    third-image congruence cylinder. -/
+theorem high_stop_coordinates (j m k : Nat)
+    (hm : m%64=6) (hj : j%256=(3*m+38)%256)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    (2*j+3+k)%256=36 ∧ k%128=49 := by
+  have hp8 : 2^8 ∣ 2^(2*m+2) := Nat.pow_dvd_pow 2 (by omega)
+  have hp256 : 256 ∣ 2^(2*m+2) := by
+    simpa only [show (2:Nat)^8=256 by decide] using hp8
+  have hdiv : 256 ∣ k+j+3*m+5 := by
+    rw [hstop]
+    exact Nat.dvd_trans hp256 (Nat.dvd_mul_right _ _)
+  have hzero : (k+j+3*m+5)%256=0 := Nat.mod_eq_zero_of_dvd hdiv
+  omega
+
+/-- A second independent infinite Machine C high-halting obstruction,
+    obtained from a three-level source-exact inverse certificate.
+    The removed high parameter lattice has density 1/16384. -/
+theorem high_stop_blank_unreachable (j m k time : Nat)
+    (hm : m%64=6) (hj : j%256=(3*m+38)%256)
+    (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
+      some (2*j+3,k) := by
+  obtain ⟨hs,hy⟩ := high_stop_coordinates j m k hm hj hstop
+  exact third_image_blank_unreachable (2*j+3) k time hs hy
+
 #print axioms all_parent_forbidden
 #print axioms parent_cone_blank_unreachable
 #print axioms first_parent_cone
 #print axioms third_image_blank_unreachable
+#print axioms high_stop_coordinates
+#print axioms high_stop_blank_unreachable
 
 end BB6.Agent2CThirdImage
