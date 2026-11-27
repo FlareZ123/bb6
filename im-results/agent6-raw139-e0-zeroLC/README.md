@@ -9,7 +9,7 @@ with the objective of proving a universal weighted halting bound for every compl
 ## Established dependencies
 
 - The four-hole cylinder `[7,24,11,24,14,20,9,16,8,11,24,24]` (E0=0LC, D0=0RC, C1=0LF) already has a kernel-checked all-completions weighted bound of **84**, covering all (25^4=390625) completions. Its theorem is `BB6.Agent6E0ZeroLC.D0ZeroRC.C1ZeroLF.all_completions_weighted`.
-- **Correction (2026-11-27):** the artifact from run 45728638168 has E0=0LD (code 12), not E0=0LC (code 8). It cannot prove the required D0=0RC child. The exact table `[7,24,11,24,14,24,9,16,8,11,24,24]` has a complete candidate partition of 15,894 leaves and bound 616. The 630 formerly open tables classify as 419 block-FAR, 194 FAR, 13 cycles and four last-hole queries; maximum query 610. `d0rc_exact.py` reconstructs its source-level proof modules. Kernel checking in progress.
+- **Correction (2026-11-27):** the artifact from run 45728638168 has E0=0LD (code 12), not E0=0LC (code 8). It cannot prove the required D0=0RC child. The exact table `[7,24,11,24,14,24,9,16,8,11,24,24]` has a complete candidate partition of 15,894 leaves and bound 616. The 630 formerly open tables classify as 419 block-FAR, 194 FAR, 13 cycles and four last-hole queries; maximum query 610. `d0rc_exact.py` reconstructs its source-level proof modules. Local Lean 4.36.0-rc2 compiled all 138 batched modules, including `Raw139E0ZeroLCD0RC`, with final axiom audit `[propext, Classical.choice, Quot.sound]`. Independent source-connected artifact run 45942651816 is pending.
 
 ## E0 parent decomposition
 
@@ -17,7 +17,7 @@ The first query is D0 at step `query_step`. Its immediate-halt (`none`) branch i
 
 - **11 direct cycle children**;
 - **12 broad D0 branches**, whose search has 13,323 initially unclassified leaves, 29 exact hard-witness exceptions, and two late multi-hole expansions;
-- **one exact D0=0RC five-hole candidate** at weighted bound 616, source checking in progress.
+- **one exact D0=0RC five-hole Cover** at weighted bound 616, locally kernel checked; CI artifact pending.
 
 The broad search's longest ordinary query is 80,371 steps, so the proposed parent weighted bound is **80,377** after the five blank-delay moves and halt tick. The hard-witness recipes and exact tables are in [`hard-witnesses.md`](hard-witnesses.md). The 13,323 leaves are computationally classified by the search/recipe layer; they are not a kernel-checked parent result until the generated Lean closure passes.
 

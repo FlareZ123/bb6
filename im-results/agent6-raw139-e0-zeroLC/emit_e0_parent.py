@@ -16,7 +16,7 @@ from emit_family import code_name, bl
 
 BASE_PARENT = [7, 24, 11, 24, 14, 24, 24, 16, 8, 11, 24, 24]
 BROAD_CODES = [0, 1, 2, 3, 5, 6, 7, 11, 20, 21, 22, 23]
-SPECIAL_CODE = 9  # D0=0RC, source-accepted at weighted bound 775.
+SPECIAL_CODE = 9  # D0=0RC, locally kernel-checked at weighted bound 616.
 GLOBAL_BOUND = 80377
 
 
@@ -37,13 +37,13 @@ def branch_proof(code: int, cycle_data: dict[int, tuple]) -> str:
         Nat.le_trans ({ns}.all_completions_weighted m hm k d hk hd) (by omega))
 """
     if code == SPECIAL_CODE:
-        ns = "BB6.Agent14Raw139D0ZeroRC"
-        return f"""    · have he : child {move} = {ns}.parent := by
+        ns = "BB6.Agent6E0ZeroLCD0RC"
+        return f"""    · have he : child {move} = {ns}.pRaw139E0ZeroLCD0RC := by
         apply BB6.Agent31ThreeHole.tableOK_sound
         decide
       rw [he]
       exact Cover.leaf _ (fun m hm k d hk hd =>
-        Nat.le_trans ({ns}.all_completions_weighted m hm k d hk hd) (by omega))
+        Nat.le_trans ({ns}.cRaw139E0ZeroLCD0RC.sound m hm k d hk hd) (by omega))
 """
     entry, period, right, boundary = cycle_data[code]
     return (
@@ -97,7 +97,7 @@ def main():
     imports = [
         "import FastThreeHoleAudit",
         "import A6ChunkSupport",
-        "import Raw139D0ZeroRCCover",
+        "import Raw139E0ZeroLCD0RC",
     ]
     imports += [
         "import A6E0LCD0" + code_name(code) + "Cover"
@@ -135,13 +135,15 @@ theorem ordinary (B : Nat) (hB : 80377 ≤ B) (mv : Move) :
     source += f"""
 theorem cover (B : Nat) (hB : 80377 ≤ B) : Cover (WeightedBound B) parent := by
   apply Cover.branch parent (3,false) (by decide)
-  intro t
+  intro t _
   cases t with
   | some mv => exact ordinary B hB mv
   | none =>
+    apply Cover.leaf
     let c : Config := (knownRun parent {query_step}).getD blank
     have hr : knownRun parent {query_step} = some c := by rfl
     have hs : readSlot c = (3,false) := by decide
+    have hh : parent (readSlot c) = none := by rw [hs]; decide
     have hw : ∀ d ∈ possibleDelays (refine parent (readSlot c) none) 0,
         d + {query_step} + 1 ≤ B := by
       intro d hd
@@ -149,7 +151,7 @@ theorem cover (B : Nat) (hB : 80377 ≤ B) : Cover (WeightedBound B) parent := b
         unfold possibleDelays at hd
         exact Nat.lt_of_lt_of_le (List.mem_filter.mp hd).1 (by decide)
       omega
-    have hc := first_hole_weighted_halt B parent {query_step} c (by decide) hr hs hw
+    have hc := first_hole_weighted_halt B parent {query_step} c (by decide) hr hh hw
     simpa only [hs] using hc
 
 theorem all_completions_weighted :

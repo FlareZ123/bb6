@@ -1,0 +1,5 @@
+Local checkpoint 2026-11-27T04:59:07Z
+Exact table [7,24,11,24,14,24,9,16,8,11,24,24]
+15,894 leaves; 630 formerly open (419 block, 194 FAR, 13 cycle, 4 last). Maxquery 610. All 138 modules compiled in local Lean 4.36.0-rc2; final audit:
+'BB6.Agent6E0ZeroLCD0RC.cRaw139E0ZeroLCD0RC' depends on axioms: [propext, Classical.choice, Quot.sound]
+The source-connected CI run 45942651816 is pending. This is a local proof, not a claim that the 12 remaining broad D0 siblings have compiled.
