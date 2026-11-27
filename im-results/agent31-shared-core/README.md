@@ -1,6 +1,6 @@
 # Canonical TNF shared-core and roster integration
 
-This directory contains intermediate proof interfaces and strict import-closure integration tools for the six-state weighted-TNF quotient. **No current result here determines exact BB(6).** The strongest accepted conditional frontier is the 58-residual Canonical58 integration ([result](../../results/2026-11-26-canonical58-raw113-delta-agent17.md), [run 45891227622](https://github.com/FlareZ123/bb6/actions/runs/45891227622)). It composes six additional exact parent Covers with Canonical64 and binds the exact champion score/witness, leaving only the 58 Covers explicit.
+This directory contains intermediate proof interfaces and strict import-closure integration tools for the six-state weighted-TNF quotient. **No current result here determines exact BB(6).** The strongest reviewed accepted conditional frontier is Canonical57 (Raw124 cut), [artifact 15167645810](https://github.com/FlareZ123/bb6/actions/runs/45926694578/artifacts/15167645810) in [run 45926694578](https://github.com/FlareZ123/bb6/actions/runs/45926694578). This thin delta extends the [Canonical58 base](../../results/2026-11-26-canonical58-raw113-delta-agent17.md) and binds the exact champion score/witness, leaving 57 Covers explicit. It requires its pinned base and parent closure.
 
 ## Current accepted mathematical boundary — 26 November 2026
 
@@ -14,11 +14,11 @@ This directory contains intermediate proof interfaces and strict import-closure 
 
 This is a conditional reduction, not a universal upper bound. The common weighted floor is 6,766,859; it is not itself the champion score.
 
-## Current next cut: Raw112 → Canonical57
+## Current next cuts: Raw59 and Raw112 after the accepted Raw124 delta
 
-Raw112's parent Cover at weighted bound 100,000 remains under source audit. The sharded retry is [run 45890012441](https://github.com/FlareZ123/bb6/actions/runs/45890012441). At 20:49 UTC, `r01a-rest0`, `r01a-rest1`, and `r04a/b/c` had succeeded; `r05a0` and `r05a1` were still running. The `r01a-deep` shard exited 143 after a runner shutdown while compiling `Raw112Kid01_01`, with no Lean theorem diagnostic. Treat that as infrastructure interruption, not a mathematical rejection; retry only the failed shard after the parent run completes.
+Raw112's parent Cover at weighted bound 100,000 remains under source audit. The sharded retry is [run 45890012441](https://github.com/FlareZ123/bb6/actions/runs/45890012441). At 20:49 UTC, `r01a-rest0`, `r01a-rest1`, and `r04a/b/c` had succeeded; `r05a0` and `r05a1` were still running. The `r01a-deep` shard exited 143 after a runner shutdown while compiling `Raw112Kid01_01`, with no Lean theorem diagnostic. Treat that as infrastructure interruption, not a mathematical rejection; retry only the failed shard after the parent run completes. See the [research board](../../research/BOARD.md) for subsequent retry evidence.
 
-The current integration target is **Canonical57**, not the superseded Canonical63 branch. `Canonical57Raw112Graft.lean` composes the Raw112 parent after the accepted Canonical58 Raw113 delta, proves exact membership and parent Cover, removes Raw112 from the 58-entry roster, proves that Raw59 remains in the complement, and exposes a 57-entry conditional exactness interface. The assembler is `im-results/agent17-raw112-canonical58/assemble_canonical58_raw112_graft.py`; the existing manual workflow target is `canonical57-raw112-delta` in `.github/workflows/agent31-canonical71-raw109.yml`. The target requires both the accepted Raw112 parent artifact and Canonical58 run 45891227622. Neither the Raw112 parent Cover nor the integrated Canonical57 delta is yet accepted. Do not report 57 until both gates pass.
+The Raw124 consumer passed and exported its thin delta in [run 45926694578](https://github.com/FlareZ123/bb6/actions/runs/45926694578) before the subsequent Raw59 link failed on differing kernel data for `Canonical59FiveParentMembership.olean`. Its manifest records the pinned reconstruction inputs. The independent proposed `Canonical57Raw112Graft.lean` removes Raw112 rather than Raw124 from Canonical58 and remains unaccepted in the reviewed evidence; after its parent Cover passes, compose the exact union of removed parent tables with the accepted Raw124 cut. No Raw59 or Raw112 cut is claimed here. See the [recovery note](../../communications/broadcast/20261127T0520Z_Critic-accept-raw124-thin-delta-and-separate-raw59-conflict.md).
 
 ## Earlier Canonical67 branch
 
@@ -37,7 +37,7 @@ The earlier long execution notes are preserved in [HISTORY-before-2026-11-26.md]
 
 ## Remaining mathematical obligation
 
-If Raw112 and the integrated Canonical57 consumer pass, the next frontier will contain 57 retained quotient representatives. Each still needs a Cover at the target champion score. The accepted Canonical58 fixed-score interface already binds the exact score/witness boundary; it does not discharge any of the remaining Covers. No exact BB(6) value or universal upper bound has been established.
+The accepted Raw124 Canonical57 interface leaves 57 retained quotient representatives, including Raw59 and Raw112. Each still needs a Cover at the target champion score. The accepted fixed-score theorem binds the exact score/witness boundary; it does not discharge the remaining Covers. No exact BB(6) value or universal upper bound has been established.
 
 
 ## Exact champion score and witness bound to Canonical64
