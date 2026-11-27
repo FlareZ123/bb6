@@ -7627,8 +7627,9 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw10-box28-d16-recover'
         run: |
           set -euo pipefail
-          test -f /tmp/d16-saved/box28-far/far_manifest.json
-          cp -a /tmp/d16-saved/box28-far /tmp/box28-far
+          mapfile -t FARS < <(find /tmp/d16-saved -name far_manifest.json -type f)
+          test "${#FARS[@]}" = 1
+          cp -a "$(dirname "${FARS[0]}")" /tmp/box28-far
           if [ "$D1" != 17 ] && [ "$D1" != 18 ] && [ -f "/tmp/d16-saved/box28-source/Box28D16V${D1}Closure.lean" ]; then
             cp -a /tmp/d16-saved/box28-source /tmp/box28-source
           fi
@@ -7662,7 +7663,9 @@ jobs:
           if [ ! -f "/tmp/box28-source/${M}Closure.lean" ]; then
             python "$D/emit.py" --d0 16 --d1 "$D1" --work /tmp/box28-work --out /tmp/box28-source --far /tmp/box28-far
           fi
-          python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 2 --source-root /tmp/box28-source --manifest /tmp/box28-olean/manifest.json "/tmp/box28-source/${M}Closure.lean" 2>&1 | tee /tmp/box28-audit.log
+          B=$(python -c 'import json; print(max(3640,max(v["late_max_halt"][0] for v in json.load(open("/tmp/box28-work/summary.json")).values())+5))')
+          ART="raw10-box28-d16-d1-${D1}-source"
+          python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 2 --source-root /tmp/box28-source --manifest /tmp/box28-olean/manifest.json --theorem "BB6.Agent13.${M}.sourceBound" --weighted-bound "$B" --parent-table "raw10Remainder[28] D0=16 E0=$D1" --artifact-name "$ART" "/tmp/box28-source/${M}Closure.lean" 2>&1 | tee /tmp/box28-audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log "BB6.Agent13.${M}.sourceBound"
       - uses: actions/upload-artifact@v4
         if: always()
@@ -7671,7 +7674,7 @@ jobs:
           path: |
             /tmp/box28-far
             /tmp/box28-source
-            /tmp/box28-olean/manifest.json
+            /tmp/box28-olean/
             /tmp/box28-audit.log
           if-no-files-found: error
           retention-days: 90
