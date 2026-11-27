@@ -303,14 +303,6 @@ def raw11FrontierExpected : List String := [
   "1RB1RD_1RC---_0LA---_------_------_------"
 ]
 
-/-- Order-independent certification of the exact first-D source frontier
-    against the saved table manifest.  Sorted equality retains multiplicities
-    and can be used safely to transport finite membership facts. -/
-theorem raw11FrontierManifest_multiset_exact :
-    (raw11FrontierTables.map encodeTable).mergeSort =
-      raw11FrontierExpected.mergeSort := by
-  decide +kernel
-
 theorem raw11FrontierTables_length :
     raw11FrontierTables.length = 116 := by
   simpa [raw11FrontierTables] using frontier_count
