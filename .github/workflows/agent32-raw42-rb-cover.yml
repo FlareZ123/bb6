@@ -4,7 +4,7 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested, early, discovery, assembly, block, hard, recover_rb5, recover_assembly]
+        options: [rb, wide, nested, early, discovery, assembly, block, hard, leaf4828, recover_rb5, recover_assembly]
         default: rb
       assembly_branch:
         type: choice
@@ -529,7 +529,7 @@ jobs:
           retention-days: 30
           if-no-files-found: error
   hard:
-    if: inputs.variant == 'hard'
+    if: inputs.variant == 'hard' || inputs.variant == 'leaf4828'
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
@@ -549,14 +549,20 @@ jobs:
           run-id: 45675872170
           name: raw59-checked-Upgrade0LE
           path: /tmp/core-old
-      - name: Check explicit growth recurrence for leaf18612
+      - name: Check requested exact leaf source
         run: |
           set -euo pipefail
           d=im-results/agent32-raw42
           mkdir -p /tmp/hard
-          python tools/lean_compile_closure.py --workdir /tmp/hard --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/hard/manifest.json --artifact-name raw42-hard "$d/Raw42Leaf18612.lean" | tee /tmp/hard/audit.log
+          root=Raw42Leaf18612
+          if [ '${{ inputs.variant }}' = leaf4828 ]; then root=Raw42Leaf4828Macros; fi
+          python tools/lean_compile_closure.py --workdir /tmp/hard --jobs 2 --source-root "$d" --precompiled-manifest /tmp/core-old/manifest.json --precompiled-dir /tmp/core-old --manifest /tmp/hard/manifest.json --artifact-name raw42-hard "$d/$root.lean" | tee /tmp/hard/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/hard/audit.log
-          python im-results/agent32-raw59/check_axioms.py /tmp/hard/audit.log BB6.Agent32Raw421LB.Leaf18612.live
+          if [ "$root" = Raw42Leaf18612 ]; then
+            python im-results/agent32-raw59/check_axioms.py /tmp/hard/audit.log BB6.Agent32Raw421LB.Leaf18612.live
+          else
+            python im-results/agent32-raw59/check_axioms.py /tmp/hard/audit.log BB6.Agent32Raw421LB.Leaf4828.macro0
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw42-hard
