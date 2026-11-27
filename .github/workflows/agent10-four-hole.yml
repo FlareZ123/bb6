@@ -383,7 +383,11 @@ jobs:
             --parent-table "1RB---_1RC${b1}_0RD---_1LD0RB_------_------" \
             --artifact-name "$artifact" \
             "$root/Raw43${ns}${suffix}.lean" 2>&1 | tee "/tmp/a25-$branch-$kind.log"
-          python im-results/agent4-raw109/audit_axioms.py "/tmp/a25-$branch-$kind.log" "$theorem.classified_all" "$theorem.all_completions" "$theorem.cover"
+          if [[ "$kind" == reduced ]]; then
+            python im-results/agent4-raw109/audit_axioms.py "/tmp/a25-$branch-$kind.log" "$theorem.residual_count" "$theorem.reduced" "$theorem.cover"
+          else
+            python im-results/agent4-raw109/audit_axioms.py "/tmp/a25-$branch-$kind.log" "$theorem.classified_all" "$theorem.all_completions" "$theorem.cover"
+          fi
           cp "/tmp/a25-$branch-$kind.log" "$work/audit.log"
           echo "work=$work" >> "$GITHUB_OUTPUT"
           echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
