@@ -198,16 +198,7 @@ with tempfile.TemporaryDirectory() as temp:
             # proof proposal never collides with a prior partial export.
             name=old+'_'+hashlib.sha256(line.encode()).hexdigest()[:16]
             src=out/(old+'.lean')
-            proof_source=src.read_text().replace('.'+old,'.'+name)
-            # This exact source check previously hit the Lean recursion guard
-            # (not a failed mathematical predicate). Isolate a deeper guard
-            # here, leaving all accepted graph-proof identities unchanged.
-            if g==83300025:
-                proof_source=proof_source.replace(
-                    'set_option maxRecDepth 100000',
-                    'set_option maxRecDepth 300000',1)
-                print(f'Large graph 83300025: parent/table={miss[g]}, witness={line}',flush=True)
-            (out/(name+'.lean')).write_text(proof_source)
+            (out/(name+'.lean')).write_text(src.read_text().replace('.'+old,'.'+name))
             src.unlink()
             graph_names[g]=name
     print(f'Graph parents {ids}: {len(leaves)} open leaves, {len(cert)} FAR, {len(graph)} run-graph, {len(used_hard)} exact carry proofs')
