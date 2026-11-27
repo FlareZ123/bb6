@@ -31235,49 +31235,43 @@
     }
   },
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 110,
+  "growth": {
+    "110": {
       "table": "1RB0LA_1RC1LA_0RD0RE_1LD0RB_0RF1RA_0LB---",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43Octal",
+      "partial": "(BB6.Agent38Raw43Octal.table false false)",
+      "never": "(BB6.Agent38Raw43Octal.never false false)"
     },
-    {
-      "i": 202,
-      "table": "1RB0LA_1RC1LA_0RD0RF_1LD0RB_0LB---_0RE1RA",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 243,
-      "table": "1RB0LA_1RC1LA_0RD0RF_1LD0RB_0RD---_1RE1RA",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 151,
+    "151": {
       "table": "1RB0LA_1RC1LA_0RD0RE_1LD0RB_1RF1RA_0RD---",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43Octal",
+      "partial": "(BB6.Agent38Raw43Octal.table true false)",
+      "never": "(BB6.Agent38Raw43Octal.never true false)"
     },
-    {
-      "i": 355,
+    "202": {
+      "table": "1RB0LA_1RC1LA_0RD0RF_1LD0RB_0LB---_0RE1RA",
+      "module": "Raw43Octal",
+      "partial": "(BB6.Agent38Raw43Octal.table false true)",
+      "never": "(BB6.Agent38Raw43Octal.never false true)"
+    },
+    "243": {
+      "table": "1RB0LA_1RC1LA_0RD0RF_1LD0RB_0RD---_1RE1RA",
+      "module": "Raw43Octal",
+      "partial": "(BB6.Agent38Raw43Octal.table true true)",
+      "never": "(BB6.Agent38Raw43Octal.never true true)"
+    },
+    "355": {
       "table": "1RB0LA_1RC1LA_0RD1RE_1LD0RB_0RF0RC_1RA---",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43Run",
+      "partial": "(BB6.Agent38Raw43Run.table false)",
+      "never": "(BB6.Agent38Raw43Run.never false)"
     },
-    {
-      "i": 377,
+    "377": {
       "table": "1RB0LA_1RC1LA_0RD1RF_1LD0RB_1RA---_0RE0RC",
-      "query": [
-        "open"
-      ]
+      "module": "Raw43Run",
+      "partial": "(BB6.Agent38Raw43Run.table true)",
+      "never": "(BB6.Agent38Raw43Run.never true)"
     }
-  ]
+  },
+  "unresolved": []
 }
