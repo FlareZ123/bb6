@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -717,6 +717,21 @@ jobs:
           compression-level: 1
           retention-days: 90
 
+      - name: Test fused exact reverse-map pipeline
+        if: inputs.target == 'packed-prefix-fuse-bench'
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-fused
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/fused_bench.cpp" -o /tmp/p1-bench
+          for FUSE in 1 16 64 128; do
+            P1_FUSE="$FUSE" OMP_NUM_THREADS=1 /tmp/p1-fused 3342 14000 417 half > "/tmp/fused-$FUSE.log"
+            grep -Fx 'END 3342 13768' "/tmp/fused-$FUSE.log"
+            grep -E '^CHILD |^END ' "/tmp/fused-$FUSE.log" > "/tmp/fused-$FUSE.children"
+            diff -u /tmp/fused-1.children "/tmp/fused-$FUSE.children"
+          done
+          OMP_NUM_THREADS=1 /tmp/p1-bench 650000000 1000000 | tee /tmp/fused-bench.log
       - name: Regression of legacy import, fixed-width checkpoint and exact continuation
         if: inputs.target == 'packed-prefix-compact'
         shell: bash
