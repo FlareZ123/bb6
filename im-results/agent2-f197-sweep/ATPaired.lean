@@ -131,23 +131,23 @@ theorem atp_scan (data ps : List Bool) (l : Tape) (hne : data ≠ [])
               cases ps with
               | nil =>
                   simpa [atpScanCost,atpSource,atpRight,atpAcc,
-                    atpJ,atpXRight,atpR] using at_term_A l hl
+                    atpJ,atpXRight,atpR,pre] using at_term_A l hl
               | cons d ds =>
                   have hr : (atpE (d::ds)) 0 = true :=
                     atpE_first (d::ds) (by simp)
                   simpa [atpScanCost,atpSource,atpRight,atpAcc,
-                    atpJ,atpXRight,atpR] using
+                    atpJ,atpXRight,atpR,pre] using
                     term_A_t_aligned l (atpE (d::ds)) hl hr
           | true =>
               cases ps with
               | nil =>
                   simpa [atpScanCost,atpSource,atpRight,atpAcc,
-                    atpJ,atpXRight,atpR] using at_term_T l hl
+                    atpJ,atpXRight,atpR,pre] using at_term_T l hl
               | cons d ds =>
                   have hr : (atpE (d::ds)) 0 = true :=
                     atpE_first (d::ds) (by simp)
                   simpa [atpScanCost,atpSource,atpRight,atpAcc,
-                    atpJ,atpXRight,atpR] using
+                    atpJ,atpXRight,atpR,pre] using
                     term_T_t_aligned l (atpE (d::ds)) hl hr
       | cons d ds =>
           have htail : d::ds ≠ [] := by simp
@@ -172,7 +172,7 @@ theorem atp_scan (data ps : List Bool) (l : Tape) (hne : data ≠ [])
                       (atpRight (atpAcc ps))) =
                     some (other B (atpSource (d::ds) l)
                       (atpRight (atpAcc (false::ps)))) by
-                    simpa [atpRight,atpAcc_false] using
+                    simpa [atpRight,atpAcc_false,pre] using
                       scan_AT_aligned (atpSource (d::ds) l) (atpAcc ps) hs ha]
               simp only [Option.bind_some]
               simpa [List.reverse_cons,List.append_assoc] using
@@ -194,7 +194,7 @@ theorem atp_scan (data ps : List Bool) (l : Tape) (hne : data ≠ [])
                       (atpRight (atpAcc ps))) =
                     some (other B (atpSource (d::ds) l)
                       (atpRight (atpAcc (true::ps)))) by
-                    simpa [atpRight,atpAcc_true] using
+                    simpa [atpRight,atpAcc_true,pre] using
                       scan_TT_aligned (atpSource (d::ds) l) (atpAcc ps) hs ha]
               simp only [Option.bind_some]
               simpa [List.reverse_cons,List.append_assoc] using
@@ -243,40 +243,40 @@ theorem atp_peel (c d : Bool) (ds : List Bool) (l : Tape)
       | nil =>
           cases d with
           | false =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 at_peel_AA l hl
           | true =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 at_peel_AT l hl
       | cons e es =>
           have he : (atpE (e::es)) 0 = true :=
             atpE_first (e::es) (by simp)
           cases d with
           | false =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 peel_A_t_aligned l (atpE (e::es)) hl he
           | true =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 peel_A_At_aligned l (atpE (e::es)) hl he
   | true =>
       cases ds with
       | nil =>
           cases d with
           | false =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 at_peel_TA l hl
           | true =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 at_peel_TT l hl
       | cons e es =>
           have he : (atpE (e::es)) 0 = true :=
             atpE_first (e::es) (by simp)
           cases d with
           | false =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 peel_T_t_aligned l (atpE (e::es)) hl he
           | true =>
-              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE] using
+              simpa [atpPeelCost,atpJ,atpH,atpXRight,atpR,atpE,pre] using
                 peel_T_At_aligned l (atpE (e::es)) hl he
 
 /-- Decoder terminates at the carried boundary for any nonempty data. -/
@@ -293,19 +293,18 @@ theorem atp_decode (data : List Bool) (l : Tape)
       | nil =>
           cases c with
           | false =>
-              simpa [atpDecCost,atpJ,atpXRight,atpR,atpOut] using
+              simpa [atpDecCost,atpJ,atpXRight,atpR,atpOut,pre] using
                 at_base_A l hl
           | true =>
-              simpa [atpDecCost,atpJ,atpXRight,atpR,atpOut] using
+              simpa [atpDecCost,atpJ,atpXRight,atpR,atpOut,pre] using
                 at_base_T l hl
       | cons d ds =>
           have htail : d::ds ≠ [] := by simp
-          change run (atpPeelCost c + atpDecCost (d::ds))
-            (other B (atpJ l) (atpXRight (atpR (c::d::ds)))) =
-            some
-              (other B (atpOut (c::d::ds) l)
-                (pre [false,false,true] blank))
-          rw [run_add, atp_peel c d ds l hl]
+          have hcost :
+              atpDecCost (c::d::ds) =
+                atpPeelCost c + atpDecCost (d::ds) := by
+            cases c <;> rfl
+          rw [hcost, run_add, atp_peel c d ds l hl]
           simp only [Option.bind_some]
           have hh : (atpH c l) 0 = true := by
             cases c <;> rfl
@@ -333,18 +332,15 @@ theorem atp_family (data : List Bool) (l : Tape)
         some
           (other B (atpSource data l)
             (atpRight (atpAcc []))) by
-        simpa [atpRight,atpAcc] using
+        simpa [atpRight,atpAcc,pre] using
           at_preconsume (atpSource data l) (atpSource_first data l hne)]
   simp only [Option.bind_some]
-  rw [show (atpRight (atpAcc [])) =
-      (pre [false,false,true,true,true,true,false,false,false,
-            true,true,false,true] blank : Tape) by rfl]
   rw [run_add]
   rw [show run (atpScanCost data)
         (other B (atpSource data l)
           (atpRight (atpAcc []))) =
         some (other B (atpJ l) (atpXRight (atpR data.reverse))) by
-        simpa using atp_scan data [] l hne hl]
+        simpa [pre] using atp_scan data [] l hne hl]
   simp only [Option.bind_some]
   exact atp_decode data.reverse l hr hl
 
