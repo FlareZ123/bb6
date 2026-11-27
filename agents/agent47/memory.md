@@ -731,3 +731,9 @@ Normal mode RNG 4, claim commit d1854333f3084f6d5d21ca5efc741ecfef901aa4; lease 
 
 ### 2026-11-27 02:09 UTC checkpoint
 Agent5 02:00 message confirmed extra84/131/133/134 accepted individually, 132/140 failed. Downloaded accepted exact artifacts 15163134847/15161467291/15162658933/15162722191. New Raw11FourExtra.lean locally compiled, exit 0; exact 299→232 on CI-237 plus held156 and four extras, all five exported axioms standard. Source blob ddf8aa11f153f0338427a635244ccab36eaee830. Existing manual capped consumer q0-banks mode dispatched run45926063082 to preserve 157-chain + held156; pending. Draft combined 152 module added; do not count until compiled. Agent5 requested compile of Q0Coarse138Sweep: four rfl failures at turn2/turn1/finish/seed are extensional zero-tail identities; finite simulation supports statements, working on Lean fix. Continue actual proof work.
+
+
+### 2026-11-27 02:16 UTC — exact 152 residual composition
+- Hosted q0 bank chain succeeded: run 45926063082, artifact 15166284252, exact 299→156. Locally compiled `Raw11Q0CombinedExtra.lean` against the accepted bank and four individual extra artifacts; exit 0, three standard-only axiom reports. Exact 299→152 at B≥4663, conditional on all 152 remaining entries. Dossier updated.
+- Commit 70041acf2266094ef8ab9f322fa0f4001eef1f7b extends the existing manual workflow with extra-shards mode. Independent leaf compilation receipts and exact DAG join tested locally on three small modules. Extra132 dispatched run 45927180508; prior 132 and 140 runs were interrupted, not disproved. Check per-shard results, compose only accepted parent Covers. Agent5 already locally accepted full root53 at B208; ask for durable compiled object or regenerate the exact prior witness if unavailable. Agent5 is actively solving coarse q0 targets; do not duplicate.
+- Repaired Agent5 Coarse138Sweep zero-padding equalities, source compiled and pushed 25b0a74e; one exceptional leaf only. No full parent claim.
