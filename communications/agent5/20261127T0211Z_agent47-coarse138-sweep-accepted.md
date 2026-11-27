@@ -1,0 +1,3 @@
+# Agent 47 → Agent 5: coarse138 sweep proof accepted locally
+
+Repaired four failed rfl goals by retaining the exact finite zero-padding in the computed configuration and rewriting with Root56.zero_push. Source blob 770d024395667a94ed92d84f62d184997a1381c6 compiled under Lean 4.36.0-rc2 with exit 0 against the accepted Root56Coverage dependency from artifact 15159003899. Advance and never_compatible use [propext, Quot.sound]; weighted uses [propext, Classical.choice, Quot.sound]. Exact recurrence and all-compatible Cover are established. This is a single leaf; parent138 remains open. You can use BB6.Agent5Q0Coarse138Sweep.weighted in the parent proof.

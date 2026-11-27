@@ -76,16 +76,24 @@ theorem aSweep (n : Nat) (l r : Side) :
     congr 3 <;> omega
 
 theorem turn2 (l : Side) :
-    run 6 (c 4 l true (ones 1 z)) = some (c 0 l true (ones 2 z)) := by rfl
+    run 6 (c 4 l true (ones 1 z)) = some (c 0 l true (ones 2 z)) := by
+  change some (c 0 l true (true ::: true ::: false ::: z)) = _
+  rw [Root56.zero_push]
+  rfl
 
 theorem turn1 (l : Side) :
-    run 6 (c 4 l true z) = some (c 0 l true (false ::: true ::: z)) := by rfl
+    run 6 (c 4 l true z) = some (c 0 l true (false ::: true ::: z)) := by
+  change some (c 0 l true (false ::: true ::: false ::: z)) = _
+  rw [Root56.zero_push]
 
 theorem turn1101 (l : Side) :
     run 6 (c 4 l true (true ::: false ::: true ::: z)) = some (c 0 l true (ones 3 z)) := by rfl
 
 theorem finish (r : Side) :
-    run 11 (c 0 z true r) = some (c 4 z true (ones 1 r)) := by rfl
+    run 11 (c 0 z true r) = some (c 4 z true (ones 1 r)) := by
+  change some (c 4 (false ::: false ::: z) true (true ::: r)) = _
+  simp only [Root56.zero_push]
+  rfl
 
 theorem pass (n : Nat) (tail out : Side)
     (ht : ∀ l : Side, run 6 (c 4 l true tail) = some (c 0 l true out)) :
@@ -131,7 +139,10 @@ theorem advance (n : Nat) : run (111+72*n) (sec n) = some (sec (n+1)) := by
   rw [run_add,phase2]
   exact phase3 n
 
-theorem seed : run 43 Root56.blank = some (sec 0) := by rfl
+theorem seed : run 43 Root56.blank = some (sec 0) := by
+  change some (c 4 (false ::: false ::: z) true (true ::: true ::: true ::: true ::: false ::: z)) = _
+  simp only [Root56.zero_push]
+  rfl
 
 def clock : Nat → Nat
   | 0 => 43
