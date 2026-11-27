@@ -1,6 +1,20 @@
-name: Agent 19 raw77 proof
+name: Agent 19 raw77 proof / focused local coverage checks
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Select the existing proof family or focused Raw40 compiler preflight'
+        required: true
+        type: choice
+        default: raw77
+        options:
+          - raw77
+          - raw40-crossing-preflight
+      source_revision:
+        description: 'Exact source SHA for Raw40 preflight; blank retains the dispatch revision for raw77'
+        required: false
+        type: string
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -9,12 +23,15 @@ jobs:
     timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Regenerate witnesses and verify original-source roster reduction
+        if: ${{ inputs.target == 'raw77' }}
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -23,6 +40,20 @@ jobs:
           python im-results/agent19-tnf-raw77/prepare.py
           python tools/lean_compile_closure.py --workdir /tmp/a19-raw77 --jobs 4 im-results/agent19-tnf-raw77/Raw77RosterBridge.lean | tee /tmp/a19-raw77.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw77.log; then
+            echo 'Forbidden proof placeholder or native_decide in closure' >&2
+            exit 1
+          fi
+      - name: Focused Raw40 oriented crossing source preflight
+        if: ${{ inputs.target == 'raw40-crossing-preflight' }}
+        env:
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          lean --version
+          python tools/lean_compile_closure.py --workdir /tmp/a19-raw40-crossing --jobs 2 im-results/agent19-raw40-cut/Raw40OrientedCrossing.lean | tee /tmp/a19-raw40-crossing.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-crossing.log; then
             echo 'Forbidden proof placeholder or native_decide in closure' >&2
             exit 1
           fi
