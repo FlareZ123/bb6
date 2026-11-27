@@ -78,6 +78,8 @@ theorem b_to_outer {t : List Bool} (h : BFrame t) :
       have he : ones 3 ++ (ones (5*(c+1)) ++ false::w) =
           ones (5*(c+1)+3) ++ false::w := by
         rw [← List.append_assoc, ← ones_add]
+        have hnum : 3+5*(c+1) = 5*(c+1)+3 := by omega
+        rw [hnum]
       rw [he]
       exact OFrame.more (c+1) w hw
 
@@ -88,6 +90,8 @@ theorem o_to_a {t : List Bool} (h : OFrame t) :
   | base a =>
       have he : ones 3 ++ ones (5*(a+1)) = ones (5*(a+1)+3) := by
         rw [← ones_add]
+        have hnum : 3+5*(a+1) = 5*(a+1)+3 := by omega
+        rw [hnum]
       rw [he]
       exact AFrame.base (a+1)
   | more c w hw =>
