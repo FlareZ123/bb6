@@ -9,9 +9,19 @@ Both use original canonical cut depth 7, cap 1000, lookback 32 and the frozen cr
 | E1 | open leaves | FAR-bank accepted candidates | further finite stack | late last-hole | FAR6 | universal growth checked in Lean | unresolved |
 |---|---:|---:|---:|---:|---:|---:|---:|
 | 0RD | 17081 | 16395 | 674 | 1 | 0 | 11 | 0 |
-| 1LC | 22268 | 21356 | 862 (includes M19569 run-stack certificate) | 28 | 1 | 21 | 0 |
+| 1LC | 22268 | 21356 | 861 | 28 | 1 | 21 | 0 |
 
-Both branches are candidate-complete, not aggregate-certified. M19569 is now kernel-proved nonhalting for every compatible completion; the aggregate branch covers remain outstanding.
+Both branches are candidate-complete. All open indices are partitioned disjointly into the five witness classes above, including M19569 under universal growth. No whole sibling bound is asserted yet.
+
+## Source assembly at common weighted bound 12000 (20:32 UTC)
+
+- Accepted base: artifact 15160313745 (747 modules, manifest SHA256 5aa3f0a21c8717b6d1e2629d97afa6402717d6c98fa640b735af2349bef339af); compiler Lean 4.36.0-rc2 SHA256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00.
+- Frozen generated input: run 46062134943, artifact 15229248243, SHA256 829d39f979f1787b21f75ca000b4d31c94e135fcff590d26e0e7397edb0226cb.
+- New source emitter and compiler: [prepare_root_aggregate.py](prepare_root_aggregate.py), [emit_root_aggregate_join.py](emit_root_aggregate_join.py), [compile_pilot_aggregate.py](compile_pilot_aggregate.py), source commit ae1e73b9298552a93a54411cb42d586aa17e0ce4. They consume the existing exact witnesses rather than running discovery again. Each E0 branch builds an independent source/object closure, and the final assembler checks hashes, exact roster equality, and the allowed axiom set.
+- Both first-query cuts checked locally in Lean: E10RD queries E0 at step 8, with 10 immediate cycles and 14 residual choices; E11LC at step 9, with 9 immediate cycles and 15 residual choices. Their `cover` theorems reduce the parent weighted bound 12000 to those exact residual child bounds. The `checked`, `count`, and `cover` axioms are all standard.
+- **New unconditional local theorem:** `BB6.Agent4Raw56.E10RDC08.all_quotient` and `all` cover E1=0RD, E0=0RC at weighted bound 12000. All 67 generated modules compiled from source against the accepted base; 22,489 tree nodes and 160 open leaves (156 FAR, 4 finite-stack). Axiom report: [propext, Classical.choice, Quot.sound].
+- Full E10RD source assembly dispatched using the existing sibling workflow, run [46064120289](https://github.com/FlareZ123/bb6/actions/runs/46064120289). E11LC special-leaf source preflight in progress. Neither whole E1 branch is claimed closed until its final unconditional theorem passes.
+- Independently, the older E1=1RE parent is source-accepted (run 46061898661, artifact 15230025742), bound 10000, see [reparent](../agent4-raw56-reparent/README.md). This is not a new global roster decrement.
 
 ### M19569: exact finite run-stack invariant
 
