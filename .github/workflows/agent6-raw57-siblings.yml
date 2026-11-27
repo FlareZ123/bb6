@@ -531,10 +531,28 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-  raw56_reparent_assembly:
+  raw56_reparent_shard:
     if: inputs.child == 'raw56-reparent-assembly'
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 80
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - shard: early
+            tags: RELA RERB RE0LB RE0LC
+          - shard: zeroRF
+            tags: RE0RF
+          - shard: zeroLF
+            tags: RE0LF
+          - shard: oneLA
+            tags: RE1LA RE1LB
+          - shard: oneLC
+            tags: RE1LC
+          - shard: oneRF
+            tags: RE1RF
+          - shard: oneLF
+            tags: RE1LF
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -551,31 +569,90 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '45912699461'
-      - name: Reconstruct pinned sources and apply certificate compression
-        run: |
-          set -euo pipefail
-          D="$GITHUB_WORKSPACE/im-results/agent4-raw56-reparent"
-          mkdir -p /tmp/raw56-reparent-src
-          cat "$D"/source.tar.xz.b64.0[0-4] | base64 -d > /tmp/raw56-reparent.tar.xz
-          echo 'bd70d009d0ca78be4eabe4efb47e4fed93a81c9dee56b999bc7ce7491d61d167  /tmp/raw56-reparent.tar.xz' | sha256sum -c -
-          tar -xJf /tmp/raw56-reparent.tar.xz -C /tmp/raw56-reparent-src
-          cd /tmp/raw56-reparent-src
-          cp "$D"/minimize_cert.py "$D"/apply_compression.py .
-          python apply_compression.py
-      - name: Compile exact reparent assembly
-        run: |
-          set -euo pipefail
-          cd /tmp/raw56-reparent-src
-          lean --version
-          python reproduce.py --base /tmp/raw56-reparent-base/a1-raw56-root-consumer --lean "$(which lean)" 2>&1 | tee /tmp/raw56-reparent.log
-          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-reparent.log
-      - uses: actions/upload-artifact@v4
-        if: always()
+      - name: Restore generated source from previous preparation
+        uses: actions/download-artifact@v4
         with:
           name: raw56-reparent-assembly
-          path: |
-            /tmp/raw56-reparent-src
-            /tmp/raw56-reparent.log
+          path: /tmp/raw56-reparent-input
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46050573564'
+      - name: Compile disjoint exact branch shard
+        env:
+          TAGS: ${{ matrix.tags }}
+        run: |
+          set -euo pipefail
+          cd /tmp/raw56-reparent-input/raw56-reparent-src
+          LEAN="$(elan which lean)"
+          "$LEAN" --version
+          python reproduce.py --no-prepare --base /tmp/raw56-reparent-base/a1-raw56-root-consumer --lean "$LEAN" --jobs 2 --tags $TAGS 2>&1 | tee /tmp/raw56-reparent-shard.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-reparent-shard.log
+          mkdir -p /tmp/raw56-reparent-output
+          find . -name '*.olean' -exec cp {} /tmp/raw56-reparent-output/ \;
+          cp /tmp/raw56-reparent-shard.log /tmp/raw56-reparent-output/
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-reparent-shard-${{ matrix.shard }}
+          path: /tmp/raw56-reparent-output
+          if-no-files-found: error
+
+  raw56_reparent_assemble:
+    if: inputs.child == 'raw56-reparent-assembly'
+    needs: raw56_reparent_shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-reparent-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-reparent-assembly
+          path: /tmp/raw56-reparent-input
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46050573564'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-reparent-shard-*
+          path: /tmp/raw56-reparent-shards
+      - name: Compose all eleven exact branch covers
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw56-reparent-final
+          python - <<'PY'
+          import pathlib, shutil
+          src=pathlib.Path('/tmp/raw56-reparent-shards')
+          out=pathlib.Path('/tmp/raw56-reparent-final')
+          assert len(list(src.iterdir()))==7
+          for p in src.glob('*/*.olean'):
+              q=out/p.name
+              if q.exists():
+                  assert q.read_bytes()==p.read_bytes(), p.name
+              else:
+                  shutil.copy2(p,q)
+          PY
+          export LEAN_PATH=/tmp/raw56-reparent-final:/tmp/raw56-reparent-base/a1-raw56-root-consumer
+          cd /tmp/raw56-reparent-input/raw56-reparent-src
+          LEAN="$(elan which lean)"
+          "$LEAN" -o /tmp/raw56-reparent-final/Raw56REParentConsumer.olean Raw56REParentConsumer.lean | tee /tmp/raw56-reparent-final/axioms.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" /tmp/raw56-reparent-final/axioms.log --require BB6.Agent4Raw56REParent.all_quotient --require BB6.Agent4Raw56REParent.rootSound18Closed
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-reparent-source-accepted
+          path: /tmp/raw56-reparent-final
           if-no-files-found: error
 
   raw56_root_pilot:
