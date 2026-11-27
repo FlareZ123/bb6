@@ -115,10 +115,10 @@ theorem setup (j : Nat) (L W : List Bool) :
   have h3 := setupExit (rep D0 (j+1)++[true]++L) ([true]++rep U j++W)
   have h2' : run0 p (4*j) (Z 1 ([false,false,false,true,true,true]++L) (rep R j++U++[true]++rep U j++W)) =
       some (Z 1 (false::(rep D0 (j+1)++[true]++L)) (U++[true]++rep U j++W)) := by
-    have hw := rep_next_tail D0 j (true::L)
-    change rep D0 j ++ (false::false::true::true::true::L) = rep D0 (j+1) ++ true::L at hw
-    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append,hw] using h2
-  simpa only [List.append_assoc,show 5+4*j+3=4*j+8 by omega] using join0 (join0 h1 h2') h3
+    simp only [Z,List.append_assoc,List.cons_append,List.nil_append] at ⊢
+    rw [← rep_next_tail D0 j (true::L)]
+    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append] using h2
+  simpa only [A,Z,List.append_assoc,List.cons_append,List.singleton_append,show 5+4*j+3=4*j+8 by omega] using join0 (join0 h1 h2') h3
 
 theorem carryCore (j : Nat) (L W : List Bool) :
     run0 p (6*j+22) (A (H++D0++L) ([true]++rep Y j++U++W)) =
@@ -127,10 +127,12 @@ theorem carryCore (j : Nat) (L W : List Bool) :
   have h2 := sweepR p 1 [true] [] Y X 3 carryStep j (X++T++L) (U++W)
   have h2' : run0 p (3*j) (Z 1 ([true]++X++T++L) (rep Y j++U++W)) =
       some (Z 1 (true::(rep X (j+1)++T++L)) (U++W)) := by
+    simp only [Z,List.append_assoc,List.cons_append,List.nil_append] at ⊢
     have hw := rep_next_tail X j (T++L)
     change rep X j ++ (false::false::true::true::true::false::true::true::L) =
       rep X (j+1) ++ (true::true::false::true::true::L) at hw
-    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append,hw] using h2
+    rw [← hw]
+    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append] using h2
   have h3 := carryExit (rep X (j+1)++T++L) W
   have h4 := dropThree (rep X (j+1)++T++L) (true::W)
   have h5 := sweepL p 3 [] [] X U 3 leftStep (j+1) (T++L) ([true]++Y++W)
@@ -146,18 +148,20 @@ theorem carryOverflowCore (k : Nat) (L : List Bool) :
   have h2 := sweepR p 1 [true] [] Y X 3 carryStep k (X++T++L) S
   have h2' : run0 p (3*k) (Z 1 ([true]++X++T++L) (rep Y k++S)) =
       some (Z 1 (true::(rep X (k+1)++T++L)) S) := by
+    simp only [Z,List.append_assoc,List.cons_append,List.nil_append] at ⊢
     have hw := rep_next_tail X k (T++L)
     change rep X k ++ (false::false::true::true::true::false::true::true::L) =
       rep X (k+1) ++ (true::true::false::true::true::L) at hw
-    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append,hw] using h2
+    rw [← hw]
+    simpa only [List.nil_append,List.append_assoc,List.cons_append,List.singleton_append] using h2
   have h3 := overflowTurn (rep X (k+1)++T++L)
   have h4 := dropFive (rep X (k+2)++T++L) [true]
   have h5 := sweepL p 3 [] [] X U 3 leftStep (k+2) (T++L) ([true]++S)
   have h6 := leftExit L (rep U (k+2)++[true]++S)
   have h3' : run0 p 9 (Z 1 (true::(rep X (k+1)++T++L)) S) =
       some (A ([true,true,true,true,true]++(rep X (k+2)++T++L)) [true]) := by
-    simpa only [rep,List.append_assoc,List.cons_append,X,T] using h3
-  simp only [List.nil_append,List.append_assoc,List.cons_append] at h1 h2' h3' h4 h5 h6 ⊢
+    simpa only [A,Z,rep,List.append_assoc,List.cons_append,List.singleton_append] using h3
+  simp only [A,Z,List.nil_append,List.append_assoc,List.cons_append,List.singleton_append] at h1 h2' h3' h4 h5 h6 ⊢
   simpa only [show 9+3*k+9+5+3*(k+2)+5=6*k+34 by omega,List.append_assoc] using
     join0 (join0 (join0 (join0 (join0 h1 h2') h3') h4) h5) h6
 
@@ -189,7 +193,7 @@ theorem overflowWords (k : Nat) :
   have h2 := pop k [true] ([false]++rep U (k+2)++[true]++S)
   have h3 := finishRoot (rep Q k++[false]++rep U (k+2)++[true]++S)
   simp only [List.append_assoc,List.cons_append,List.nil_append] at h1 h2 h3
-  simpa only [root,body,rep,List.append_assoc,List.cons_append,List.singleton_append,List.nil_append,show 6*k+34+8*k+14=14*k+48 by omega] using
+  simpa only [root,body,A,Z,rep,List.append_assoc,List.cons_append,List.singleton_append,List.nil_append,show 6*k+34+8*k+14=14*k+48 by omega] using
     join0 (join0 h1 h2) h3
 
 def enc (f : Bool → List Bool) : List Bool → List Bool

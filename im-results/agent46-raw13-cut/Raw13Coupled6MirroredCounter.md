@@ -1,6 +1,6 @@
 # Raw13 mirrored binary counter: exact exponential return
 
-**Claim (paper derivation, formal source awaiting the first exact-source compile).** The literal partial table
+**Claim (locally kernel-checked against recovered repository dependency objects; full source CI pending).** The literal partial table
 `1RB1LD1RC1RE1LA1RE1LC0LA0RF1RA---0RB`
 has an infinite blank-start orbit. Its only unassigned entry is F0. The derivation below uses only assigned transitions, and therefore applies to every compatible completion. This is one previously unresolved Raw13 coupled-six-hole leaf (E1=1RA), not a complete sibling or a global roster reduction.
 
@@ -14,7 +14,7 @@ For a little-endian bit list b let d4 encode 0→D0, 1→D1 and d3 encode 0→U,
 `frame(b)=A(H D0 d4(b) 1, 1 d3(b) S)`.
 The two words encode the same counter. The fixed low D0 is a work digit, not part of b.
 
-**Exact return:** root(k) → root(k+1) in 52·2^k+4 primitive transitions, without accessing F0. Consequently root(k) occurs at 48+52(2^k−1)+4k=52·2^k+4k−4. This makes arbitrarily long live prefixes and proves nonhalting of all compatible completions, subject to the finite identities below.
+**Exact return:** root(k) → root(k+1) in 52·2^k+4 primitive transitions, without accessing F0. Consequently root(k) occurs at 48+52(2^k−1)+4k=52·2^k+4k−4. This makes arbitrarily long live prefixes and proves nonhalting of all compatible completions, by the kernel-checked identities below.
 
 ## Primitive word rules
 
@@ -57,4 +57,4 @@ The exact cost F(k) of filling k binary digits from all-zero to all-one is F(0)=
 
 ## Evidence boundary and next step
 
-Independent JavaScript replay checked every increment for widths 0–7 (247 cases), every setup/overflow at those widths, and the exact return times. The arbitrary-tail finite calculations and the induction, rather than that finite sample, are the mathematical argument. Local shell and Python were unavailable with ClientError in this invocation. The exact Lean dependency closure and axiom profile still need CI acceptance; do not count this leaf as a source-accepted proof until the existing manual workflow's `coupled6MirroredCounter` target passes. No parent closure, complement reduction, or BB(6) solution is claimed.
+Independent JavaScript replay checked every increment for widths 0–7 (247 cases), every setup/overflow at those widths, and the exact return times. The arbitrary-tail finite calculations and the induction, rather than that finite sample, are the mathematical argument. The first source-pinned run [46037473169](https://github.com/FlareZ123/bb6/actions/runs/46037473169) rejected list-association elaboration in three sweep joins and the final overflow. The corrected module compiles locally with Lean 4.36.0-rc2 against the accepted repository proof objects recovered from artifact 15099506359. Both `rootGrowth` and `never` report exactly `[propext, Quot.sound]`. The sibling generator now selects the exact literal theorem for E1=1RA. Full source-closure CI is still pending; do not infer a complete sibling or global roster reduction. No BB(6) solution is claimed.

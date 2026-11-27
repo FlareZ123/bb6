@@ -59,6 +59,10 @@ def main(mv):
             ns="BB6Coverage.Agent31Pump.Auto."+modname
             for v,t in variants:
                 manual[t]=f".closed (.proven ({ns}.p .{v}) ({ns}.never .{v}))"
+    if mv=="1RA":
+        ns="BB6.Agent46Raw13MirroredCounter"
+        extra_imports += ["Raw13Coupled6MirroredCounter"]
+        manual["1RB1LD1RC1RE1LA1RE1LC0LA0RF1RA---0RB"]=f".closed (.proven {ns}.p {ns}.never)"
     if mv=="0LE":
         ns="BB6.Agent46Raw13Coupled6Drift0LE"
         extra_imports=["Raw13Coupled6Drift0LE"]
