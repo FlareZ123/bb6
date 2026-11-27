@@ -125,7 +125,7 @@ def make(partition,out,roots,cap=185,packed=False,split_root13=False):
     def emit(n,t,name,prem):
         deps={'ConditionalHybrid'}
         if prem!='True':deps.add('ZLFOpen')
-        if not unresolved(n) and size(n)<=cap:term=f'.closed ({plain(n,deps)})'
+        if not unresolved(n) and size(n)<=cap and not (split_root13 and name=='ZLFRoot13'):term=f'.closed ({plain(n,deps)})'
         elif n[0]=='exception':
             i=n[1];assert t==OPEN[i] and prem=='premise'
             proof='fun h => h' if packed else ('fun h => h.1' if i==3862 else 'fun h => h.2')
