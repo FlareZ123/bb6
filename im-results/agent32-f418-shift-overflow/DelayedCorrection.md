@@ -1,6 +1,6 @@
 # F418: exact low-bit correction delay and clean source-pulse relay
 
-**Scope:** new all-parameter arithmetic lemma for the existing source-connected F418 normal returns. [F418DelayedCorrection.lean](F418DelayedCorrection.lean) is a prepared Lean proof, submitted at revision `915895deb973e221338231be5b3fd7d434c6c75f` to the existing manual return-proof target ([45918102341](https://github.com/FlareZ123/bb6/actions/runs/45918102341)); kernel acceptance is pending. Local shell and Python both returned ClientError before executing commands, so the repository's constrained compiler-preflight exception applies. This result does not decide the authentic F418 root.
+**Scope:** new all-parameter arithmetic lemma for the existing source-connected F418 normal returns. [F418DelayedCorrection.lean](F418DelayedCorrection.lean) is a prepared Lean proof, submitted at revision `915895deb973e221338231be5b3fd7d434c6c75f` to the existing manual return-proof target ([45918102341](https://github.com/FlareZ123/bb6/actions/runs/45918102341)); kernel acceptance is accepted in [Lean 4.36.0-rc2 CI 45918431857](https://github.com/FlareZ123/bb6/actions/runs/45918431857). Local shell and Python both returned ClientError before executing commands, so the repository's constrained compiler-preflight exception applies. This result does not decide the authentic F418 root.
 
 ## Exact delay
 
