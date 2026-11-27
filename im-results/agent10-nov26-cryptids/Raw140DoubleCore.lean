@@ -147,13 +147,13 @@ theorem dstep (X : List Sym) (W : List Bool) (s : Tail) :
   have h₃ := stepL base 3 3 false (S 5) (S 4) 3 X
     (word W ++ word (trips (carry s)) ++ tailWord (rho s)) (by rfl)
   have h₄ := Reach.trans (Reach.trans h₁ h₂) ⟨_,h₃⟩
-  simpa only [word,word_append,List.append_assoc,List.cons_append] using h₄
+  simpa only [word,word_append,List.append_assoc,List.cons_append,Bool.false_eq_true,ite_false] using h₄
 
 theorem iter_word (k : Nat) (W : List Bool) (c d : Nat) :
     List.replicate k false ++ (false::(W ++ trips c)) ++ trips d =
       List.replicate (k+1) false ++ W ++ trips (c+d) := by
   rw [List.replicate_succ']
-  simp only [trips_add,List.append_assoc,List.singleton_append,List.cons_append]
+  simp only [trips_add,List.append_assoc,List.cons_append,List.nil_append]
 
 theorem dIter (k : Nat) (X : List Sym) (W : List Bool) (s : Tail) :
     Reach base (boundary 3 false (U 6 k ++ X) (word W ++ tailWord s))
@@ -180,7 +180,7 @@ theorem eStep (a b : Nat) (Z : List Sym) : Reach base (E a (b+2) Z) (E (a+4) b Z
   have h₃ := sweepL base 3 (S 5) (S 4) 3 (a+4) [] (S 6::(U 4 b ++ Z)) (by rfl)
   have h₄ : Reach base (E a (b+2) Z) (boundary 3 false (U 5 (a+4)) (S 6::(U 4 b ++ Z))) :=
     Reach.trans ⟨_,h₁⟩ ⟨_,h₂⟩
-  exact Reach.trans h₄ ⟨_,h₃⟩
+  exact Reach.trans h₄ ⟨_,by simpa only [U,E,List.append_nil] using h₃⟩
 
 theorem eIter (j a b : Nat) (Z : List Sym) :
     Reach base (E a (2*j+b) Z) (E (a+4*j) b Z) := by
@@ -207,8 +207,11 @@ theorem eOddLast (a : Nat) (W : List Bool) (s : Tail) :
     Reach.trans (Reach.trans ⟨_,h₁⟩ ⟨_,h₂⟩) h₃
   have h₅ := sweepL base 3 (S 5) (S 4) 3 (a+5) []
     (S 4::(word W ++ word (trips (carry s)) ++ tailWord (rho s))) (by rfl)
-  have h₆ := Reach.trans h₄ ⟨_,h₅⟩
-  simpa only [U,List.replicate_succ,List.cons_append,List.append_nil,List.append_assoc,rep_cons] using h₆
+  have h₆ : Reach base (boundary 3 false (U 5 (a+5)) (S 4::(word W ++ word (trips (carry s)) ++ tailWord (rho s))))
+      (boundary 3 false [] (U 4 (a+5) ++ S 4::(word W ++ word (trips (carry s)) ++ tailWord (rho s)))) :=
+    ⟨_,by simpa only [U,List.append_nil] using h₅⟩
+  have h₇ := Reach.trans h₄ h₆
+  simpa only [U,List.replicate_succ,List.cons_append,List.append_nil,List.append_assoc,rep_cons] using h₇
 
 #print axioms bounce
 #print axioms dIter
