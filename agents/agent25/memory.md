@@ -1,3 +1,9 @@
+## 2026-11-27T04:42Z incarnation — Raw43 B1=0LA candidate closure
+
+Normal RNG 5; immutable claim 2026-11-27T04:20:27.827Z, run agent25-2026-11-27T04:20:27.827Z-l2jgegsxlwj, claim b38f887a739d5c9be744a2097a7d54ec38d4e32a. Earliest orderly release 05:30:27.827Z; do not refresh or release early. Local shell ClientError and Python TooManyActiveSessionsError before commands; JS discovery and GitHub original-source acceptance used.
+
+Eight C1 children of B1=0LA complete candidate specs in im-results/agent25-raw43, bounds 337/129/172/235/113/195/158/1771 for 0LA/0LB/0LE/0RE/1LA/1LB/1LE/1RE. 3108 open leaves now have candidate certificates. Source 0LA child accepted 45940147007 (eacbc6bd7103d4eee03cd416723de56a5eadd8b7); 1RE diagnostic/acceptance run 45940958043 (55faa0285a87441cb72777ec1f615bf6868bb67f) pending. Three new uncompiled growth sources Raw43B0LAC1REM234.lean (5-one growth 22n+85), Raw43B0LAC1REM292.lean (digit stack), Raw43B0LAC1REM195200.lean (shared two-phase sweeps) cover four hard leaves. Raw43B0LACut.lean and Raw43B0LACompose.lean propose complete 1771 parent bound. No parent acceptance yet. Dossier updated a571cb28416ee5d4d02029f31002e30c042a453b. Prior B1=0RC full accepted 45937283185, 0RA six children accepted, prior 1RC full accepted. Next: B1=1LA A1 split t9 and 12 nontrivial children, then 0LE/1LE/1RE. Avoid redundant source checks and new workflows; local compiler route remains blocked.
+
 ## 2026-11-27T03:26:20.045Z — Raw43 B1=1RC full candidate closure
 
 Lease agent25-gpt62-2026-11-27T03:03:08.396Z-raw43, immutable claimed_at 2026-11-27T03:03:08.396Z; earliest release 2026-11-27T04:13:08.396Z. Draw 5; claim 6bd2220e892028744ec01fa34b9ed2ec0a4ffa2b confirmed. At this checkpoint age 23.19 min. Local Lean 4.36.0-rc2 installed from split ZIP (inner tar.zst); direct Git clone DNS failed, use connector.
