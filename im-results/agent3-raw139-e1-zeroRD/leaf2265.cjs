@@ -43,7 +43,7 @@ for(let i=0;i<10000;i++){
   const N=T+a[1];const expected=808309055302710301732399105636921133919495108874980019743107699471600464749233442847378894817095810992429166948707568686931771651390236209884096433253525595914426390935828906878170789519869183115472163083845213146412559801558627n;
   if(i!==435||w!=="001110111"||N!==expected)throw Error("unexpected terminal");
   const result={checks,sections:i,endpoint:{k,w,T,queryCost:a[1]},firstE0:N,weightedBound:N+6n,trace};
-  if(typeof module!=="undefined")console.log(j(result));else text(j(result));
+  if(typeof module!=="undefined"){module.exports=result;if(require.main===module)console.log(j(result))}else text(j(result));
   break
  }
  [k,w]=a;T+=a[2];
