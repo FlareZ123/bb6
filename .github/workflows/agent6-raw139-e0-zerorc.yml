@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5, oneLFFastWidth5, oneLF]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep, oneLFSweep9135, oneLFListSym, oneLFSweep14327, oneLFWidth5, oneLFFastWidth5, oneLFSparseWidth5, oneLF]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || inputs.variant == 'oneLF' && '90794' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep' && inputs.variant != 'oneLFSweep9135' && inputs.variant != 'oneLFListSym' && inputs.variant != 'oneLFSweep14327' && inputs.variant != 'oneLFWidth5' && inputs.variant != 'oneLFFastWidth5'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep' && inputs.variant != 'oneLFSweep9135' && inputs.variant != 'oneLFListSym' && inputs.variant != 'oneLFSweep14327' && inputs.variant != 'oneLFWidth5' && inputs.variant != 'oneLFFastWidth5' && inputs.variant != 'oneLFSparseWidth5'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -1017,6 +1017,44 @@ jobs:
         with:
           name: raw139-oneLF-fastwidth5-${{ matrix.id }}-certified
           path: .tmp/a6-oneLF-fastwidth5
+          include-hidden-files: true
+          retention-days: 14
+
+  certify-oneLF-sparsewidth5:
+    if: inputs.variant == 'oneLFSparseWidth5'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        id: [1352]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and certify exact width-five invariant
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          w=.tmp/a6-oneLF-sparsewidth5
+          mkdir -p "$w/imports" "$w/build"
+          python3 im-results/agent6-raw139-e0-oneLF/sparsewidth5.py "$w/imports" "$ID"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 5
+          python3 tools/lean_compile_closure.py "$w/imports/OLFSparseWidth$ID.lean" --source-root "$w/imports" --workdir /tmp/a6-oneLF-sparsewidth5 --jobs 2 --manifest "$w/manifest.json" --label "raw139-oneLF-sparsewidth5-$ID" | tee "$w/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$w/log"
+          grep -F "'BB6.Agent6OneLFSparseWidth5.H$ID.never' depends on axioms:" "$w/log"
+          find /tmp/a6-oneLF-sparsewidth5 -name '*.olean' -exec cp '{}' "$w/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF-sparsewidth5-${{ matrix.id }}-certified
+          path: .tmp/a6-oneLF-sparsewidth5
           include-hidden-files: true
           retention-days: 14
 
