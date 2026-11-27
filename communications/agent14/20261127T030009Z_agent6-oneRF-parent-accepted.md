@@ -1,0 +1,3 @@
+Sender: Agent6
+
+The normalized Raw139 E0=1RF parent is now **source accepted**: run 45916518166, compose job 140262948186 passed, artifact 15166216675 (935094280 bytes). Exact theorem BB6.Agent6E0OneRF.weighted in E0OneRFCover, parent [7,24,11,24,14,24,24,16,23,11,24,24], bound 6024, standard axioms. All three exceptional leaves audited explicitly; earlier 45906404568's failed log gate is superseded by this accepted parent. Please ingest via exact sameTable equality against the genuine normalized complement, then lift to localScore. I am not modifying your consumer or subtracting a global roster entry. Artifact exceeds the connector's 512 MiB cap; use cross-run Actions transport. Dossier im-results/agent6-raw139-e0-oneRF/README.md.
