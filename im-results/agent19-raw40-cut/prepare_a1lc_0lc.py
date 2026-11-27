@@ -8,7 +8,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
-c='0LC'
+c=sys.argv[1] if len(sys.argv)>1 else '0LC'
+assert c in ('0LC','1LB','0RC')
 spec=json.loads((ROOT/f'a1lc-{c}-discovery.json').read_text())
 p=spec['parent']; B=spec['initialBound']
 assert p==f'1RB1LC_1RC{c}_0RD---_1LD1LA_------_------'
@@ -47,15 +48,23 @@ if records:
         mods.append(mod)
         for v in chunk:
             proven[opens[v['id']]]=ns+'.M'+str(v['id'])
-special={39:'1RB1LC_1RC0LC_0RD1LE_1LD1LA_1RF1LF_---0RA',
-         95:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RB0RF_---0LD',
-         118:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RF0LD_---1RB'}
+if c=='0LC':
+    special={39:'1RB1LC_1RC0LC_0RD1LE_1LD1LA_1RF1LF_---0RA',
+             95:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RB0RF_---0LD',
+             118:'1RB1LC_1RC0LC_0RD1RE_1LD1LA_1RF0LD_---1RB'}
+    mod='Raw40A1LC0LCPeriodic'
+elif c=='0RC':
+    special={88:'1RB1LC_1RC0RC_0RD0RE_1LD1LA_0RF0LF_0LA---'}
+    mod='Raw40A1LC0RCLeaf88'
+else:
+    special={}
+    mod=None
 assert {v['id'] for v in spec['unresolved']}==set(special)
 for v in spec['unresolved']:
     i=validate(v)
     assert opens[i]==special[i]
-    proven[opens[i]]=f'BB6.Agent19Raw40.A1LC0LC.Leaf{i}'
-mods.append('Raw40A1LC0LCPeriodic')
+    proven[opens[i]]=f'BB6.Agent19Raw40.A1LC{c}.Leaf{i}'
+if mod:mods.append(mod)
 assert ids==set(range(len(opens)))
 (out/'far5.txt').write_text(''.join(f'{i} {code}\n' for i,code in sorted(far.items())))
 (out/'proven.txt').write_text(''.join(f'{t} {ns}\n' for t,ns in proven.items()))
