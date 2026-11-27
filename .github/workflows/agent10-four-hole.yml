@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, raw36-shards, raw36-reclassify, raw36-far-discover, raw36-witness, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, raw36-shards, raw36-reclassify, raw36-far-discover, raw36-witness, raw36-counterexample, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw36_child:
         description: 'C1 move index 0..23 for the Raw36 six-hole child audit (F-targets are symmetry aliases)'
@@ -94,6 +94,33 @@ jobs:
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" --label raw36-pilot --theorem "BB6.Agent29Raw36.${kid}_bound" --weighted-bound 162 --artifact-name raw36-pilot-proof --provenance-input "$root/candidate.json" --provenance-input "$root/search.cjs" --provenance-input "$root/generate.py" "$root/${module}.lean" "$root/Raw36D1Fifteen.lean" 2>&1 | tee /tmp/a29-raw36.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36.log BB6.Agent29Raw36.cover "BB6.Agent29Raw36.${kid}_bound" BB6.Agent29Raw36.childF_to_E BB6.Agent29Raw36.childF_bound BB6.Agent29Raw36.branch_bound_from_twenty BB6.Agent29Raw36.branch_cover_from_twenty BB6.Agent29Raw36.d1_bound_from_twenty BB6.Agent29Raw36.b1Audit_checked BB6.Agent29Raw36.d1_bound_from_fifteen BB6.Agent29Raw36.d1_cover_from_fifteen
           cp /tmp/a29-raw36.log "$work/audit.log"
+      - name: Certify an explicit 1016-step Raw36 halter and refute bound 162
+        if: inputs.target == 'raw36-counterexample'
+        run: |
+          set -euo pipefail
+          root=im-results/agent29-raw36
+          work=/tmp/a29-raw36-counterexample
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 --manifest "$work/manifest.json" \
+            --label raw36-counterexample --theorem BB6.Agent29Raw36SharpCounterexample.no_branch_bound_162 \
+            --artifact-name raw36-counterexample-source "$root/Raw36SharpCounterexample.lean" \
+            2>&1 | tee /tmp/a29-raw36-counterexample.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36-counterexample.log \
+            BB6.Agent29Raw36SharpCounterexample.final_query \
+            BB6.Agent29Raw36SharpCounterexample.witness_halts \
+            BB6.Agent29Raw36SharpCounterexample.branch_lower_bound \
+            BB6.Agent29Raw36SharpCounterexample.no_branch_bound_162
+          cp /tmp/a29-raw36-counterexample.log "$work/audit.log"
+      - name: Retain original-source Raw36 counterexample
+        if: inputs.target == 'raw36-counterexample'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-counterexample-source
+          path: /tmp/a29-raw36-counterexample/
+          if-no-files-found: error
+          retention-days: 30
       - name: Retain Raw36 pilot proof
         if: inputs.target == 'raw36-pilot'
         uses: actions/upload-artifact@v4
