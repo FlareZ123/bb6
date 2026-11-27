@@ -12,7 +12,7 @@ Parent `1RB---_1RC---_0RD---_1LD1LA_------_------`, first unassigned A1 query af
 | 0RB | 637 | Candidate, several child proofs accepted; full consumer pending |
 | 1RB | 1130 | Candidate, full consumer pending |
 | 0LB | 75493794 | Complete certificate candidate, [CI 45939992957](https://github.com/FlareZ123/bb6/actions/runs/45939992957) pending |
-| 1LA | 790 | Complete certificate candidate, original-source grammar and aggregate check pending |
+| 1LA | 790 | Complete certificate candidate; [grammar accepted](https://github.com/FlareZ123/bb6/actions/runs/45943030210), [aggregate CI 45943412131](https://github.com/FlareZ123/bb6/actions/runs/45943412131) pending |
 
 The maxima are weighted first-hole scores in the repository convention; only an accepted universal consumer and attainment establish exactness. Other A1 families remain incompletely classified. None of the local bounds is a claim that BB(6) is solved.
 
@@ -31,13 +31,17 @@ The maxima are weighted first-hole scores in the repository convention; only an 
 | 1RE | 5818 | 5616 | 202 | 0 | 790 |
 | Total | 18122 | 17434 | 685 | 3 | 790 |
 
-Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary steps, halt, no delay. [Full consumer](Raw40A1LA.lean), [partition](Raw40A1LABase.lean), [generator](prepare_a1la.py), [rebuild](reproduce-A1LA.sh). Discovery banks `a1la-<B1>-discovery.json` retain exact literal tables and certificate data, so rebuilding does not rerun FAR discovery. The three special machines are proved by a variable-length unary-run grammar, not a cutoff or an affine-growth extrapolation; see [proof](A1LA-unary-grammar.md) and [Lean source](Raw40A1LAUnaryGrammar.lean). All aggregate claims remain candidates until checked.
+Attainment candidate `1RB1LA_1RC1RE_0RD1RC_1LD1LA_HHH0LF_1RC1LF`: 789 ordinary steps, halt, no delay. [Full consumer](Raw40A1LA.lean), [partition](Raw40A1LABase.lean), [generator](prepare_a1la.py), [rebuild](reproduce-A1LA.sh). Discovery banks `a1la-<B1>-discovery.json` retain exact literal tables and certificate data, so rebuilding does not rerun FAR discovery. The three special machines are proved by a variable-length unary-run grammar, not a cutoff or an affine-growth extrapolation; see [proof](A1LA-unary-grammar.md) and [Lean source](Raw40A1LAUnaryGrammar.lean). The three original-source nonhalting proofs passed Lean 4.36.0-rc2 in CI 45943030210. All aggregate claims remain candidates until checked.
 
 ## A1=0LB: delayed halt and nonhalting certificates
 
 [Late witness and hard leaves](A0LB-hard-leaves.md), [full candidate consumer](Raw40A0LB.lean), [generator](prepare_a0lb.py), [rebuild](reproduce-A0LB.sh). B1=1LB leaf561 reaches E0 at exactly 75,493,793 ordinary steps and attains weighted score 75,493,794 if E0 halts. The prior individual Lean proof is accepted; its enclosing family is not yet accepted. The accelerated checker avoids evaluating all 75 million steps in the canonical audit.
 
 B1=1RE leaf198 has a compact 16/17 asymmetric n-gram certificate candidate with 2229 reachable configurations, 95 left and 581 right summaries and 735 predecessor edges; [data](a0lb198-compact.json). All 39 lag-bank leaves have finite closure candidates. These exploit lag-XOR followed by bounded run/residue summaries; exact tables and graphs are saved. The three multi-hole late queries are expanded rather than treated as nonhalting.
+
+## A1=1LC B1=0LC: new five-hole candidate
+
+All 122 initial opens have evidence: 105 FAR, 14 compact, and three [exact periodic-sweep mathematical proofs](A1LC0LC-periodic-sweeps.md). Candidate exact weighted score 106, with attainment at 105 ordinary moves plus halt, delay 0. [Lean recurrence source](Raw40A1LC0LCPeriodic.lean), [candidate exactness](Raw40A1LC0LCExact.lean), [generator](prepare_a1lc_0lc.py). This is not yet kernel accepted.
 
 ## Reusable mechanisms and baseline
 
