@@ -41,6 +41,10 @@ theorem six_normalizer_target_parent (x y : Nat)
     (hs : (x+y)%16=4) (hq : (3*(x+y)+2*y)%256=206) (hy5 : 5≤y) :
     BB6.Agent11SixForced.sixForcedNormalize x y =
       ((x+y-4)/2,(x+3*y-10)/4) := by
+  have hge : 206≤3*(x+y)+2*y := by
+    calc
+      206=(3*(x+y)+2*y)%256 := hq.symm
+      _≤3*(x+y)+2*y := Nat.mod_le _ _
   have hgate : BB6.Agent3.oddLowGate x y := by
     unfold BB6.Agent3.oddLowGate
     omega
