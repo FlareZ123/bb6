@@ -20,10 +20,21 @@ def main(mv):
     data=json.loads((D/f"coupled6-{mv}.json").read_text())
     assert data["move"]==mv
     late={x["table"]:x for x in data["last"]}
-    B=max(62123,max((x['n']+6 for x in late.values()),default=0))
+    manual={}
+    extra_imports=[]
+    if mv=="1LB":
+        ns_late="BB6.Agent46Raw13Coupled6Late1LB"
+        ns_nested="BB6.Agent46Raw13Coupled6Nested1LB"
+        extra_imports=["Raw13Coupled6Late1LBBound","Raw13Coupled6Nested1LB"]
+        for d,t in [("false","1RB1LD1RC1RA1LA1RE0LC0LA0RF1LB---0LC"),
+                    ("true","1RB1LD1RC1RA1LA1RE1LE0LA0RF1LB---0LC")]:
+            manual[t]=f".bounded ({ns_late}.p {d}) 2651340 ({ns_late}.bound {d})"
+        for d,t in [("false","1RB1LD1RC0RF1LA1RE1LA0LA---1LB0LC0RB"),
+                    ("true","1RB1LD1RC0RF1LA1RE1LA0LA---1LB0LD0RB")]:
+            manual[t]=f".closed (.proven ({ns_nested}.p {d}) ({ns_nested}.never {d}))"
+    B=max(62123,2651340 if mv=="1LB" else 0,max((x['n']+6 for x in late.values()),default=0))
     coupled4.B=B
     assert all(x["holes"]==1 and x["n"]+6<=B for x in late.values())
-    manual={}
     # Additional literal witnesses can be deposited independently.
     extra_file=D/"coupled6-extra-bidfa.json"
     extras=json.loads(extra_file.read_text()) if extra_file.exists() else []
@@ -80,8 +91,7 @@ console.log(JSON.stringify(z));
                 i=lnames[v[0]]
                 return f".bounded L{i}.p {B} L{i}.bound"
             if v[0] in manual:
-                p=manual[v[0]]
-                return f".closed (.proven {p}.p {p}.never)"
+                return manual[v[0]]
             p=f"{nsb}.M{names[v[0]]}"
             return f".closed (.proven {p}.table {p}.never)"
         if tag=="split":
@@ -91,7 +101,7 @@ console.log(JSON.stringify(z));
         return leaf_emit(t)
     # Each root child is an independently elaborated proof module, as in
     # the six-hole catalogue. Do not concatenate all 50k+ nodes in one file.
-    imports=[mod+"Base",mod+"BiDFA","Agent46CompleteCut"]
+    imports=[mod+"Base",mod+"BiDFA","Agent46CompleteCut"]+extra_imports
     if late: imports.append(mod+"Late")
     header="set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+ns+"\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent46CanonicalCut\n"
     def write(name,dependencies,body):
