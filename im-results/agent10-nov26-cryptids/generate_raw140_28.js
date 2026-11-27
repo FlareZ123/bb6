@@ -1,13 +1,16 @@
-// Regenerate the complete sibling-28 proof from the sibling-86 proof schema.
+// Regenerate the complete sibling-28 or sibling-81 proof from the sibling-86 proof schema.
 // Each proposed affine path and every finite root chunk is checked in Lean.
 const fs=require("fs"),path=require("path"),{execFileSync}=require("child_process");
 const {rule,exits,tables}=require("./generate_raw140_variant_transfer.js");
-const id=28,a=21,f=0,tend=6896,p=39;
+const id=Number(process.argv[2]||28);
+const [a,f,tend,p]=({28:[21,0,6896,39],81:[23,17,6896,39]})[id];
 const N="Raw140"+id,M="M"+id;
 const tab=[7,a,11,12,15,1,6,18,4,17,f,24];
 tables[id]=tab;
 const recipes=JSON.parse(execFileSync("python3",["-c",
-"import json,raw14086_local as r\nr.TAB="+JSON.stringify(tab)+"\nr.E=r.exits(r.TAB)\nprint(json.dumps({n:dict(start=s,end=t,path=r.recipe(s,t)) for n,(s,t) in r.S.items()}))"
+"import json,raw14086_local as r\nr.TAB="+JSON.stringify(tab)+"\nr.E=r.exits(r.TAB)\n"+
+(id===81?"for n in ['cSeed','b62','b6221','b6405','a542','a1121','a1155','c315','c3242']: r.S.pop(n)\nfor n,goal in [('b62542',r.A('3^p+31 2','')),('a5215',r.A('3^p+30 2','2')),('c35221',r.B('5^p+34',''))]: r.S[n]=(r.S[n][0],goal)\n":"")+
+"print(json.dumps({n:dict(start=s,end=t,path=r.recipe(s,t)) for n,(s,t) in r.S.items()}))"
 ],{cwd:__dirname,encoding:"utf8"}));
 const write=(s,t)=>fs.writeFileSync(path.join(__dirname,N+s+".lean"),t);
 const trans=c=>"some ⟨"+Boolean(c&2)+","+Boolean(c&1)+","+Math.floor(c/4)+"⟩";
@@ -52,4 +55,5 @@ for(const suffix of ["D","C","B","Cover"]){
  }
  write(suffix,s);
 }
+if(id===81)execFileSync("python3",[path.join(__dirname,"patch_raw140_81.py")],{stdio:"inherit"});
 console.log("Generated "+Object.keys(recipes).length+" local rules, "+k+" root macro events.");
