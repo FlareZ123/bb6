@@ -125,7 +125,7 @@ def main(mv):
             for i,x in enumerate(batch):
                 manual[x["table"]]=f".closed (.proven {ns_counter}.p{i} {ns_counter}.never{i})"
     from emitRadixMarkerBank import emit_fixture
-    for kind in ("Radix","Marker","Terminal","SweepMarker"):
+    for kind in ("Radix","Marker","Terminal","SweepMarker","PrefixTerminal"):
         bank_file=D/("coupled6-extra-"+kind.lower()+".json")
         bank=json.loads(bank_file.read_text()) if bank_file.exists() else []
         selected=[x for x in bank if x["table"] in data["unresolved"] and x["table"] not in manual]
