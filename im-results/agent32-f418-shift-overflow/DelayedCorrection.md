@@ -1,6 +1,6 @@
 # F418: exact low-bit correction delay and clean source-pulse relay
 
-**Scope:** new all-parameter arithmetic lemma for the existing source-connected F418 normal returns. [F418DelayedCorrection.lean](F418DelayedCorrection.lean) is a prepared Lean proof, submitted at revision `915895deb973e221338231be5b3fd7d434c6c75f` to the existing manual return-proof target ([45918102341](https://github.com/FlareZ123/bb6/actions/runs/45918102341)); kernel acceptance is accepted in [Lean 4.36.0-rc2 CI 45918431857](https://github.com/FlareZ123/bb6/actions/runs/45918431857). Local shell and Python both returned ClientError before executing commands, so the repository's constrained compiler-preflight exception applies. This result does not decide the authentic F418 root.
+**Scope:** all-parameter arithmetic lemma for the existing source-connected F418 normal returns. [F418DelayedCorrection.lean](F418DelayedCorrection.lean) is kernel-accepted at revision `855ce719c8d3232db501b87aefe6755389fb12b0` in [Lean 4.36.0-rc2 CI 45918431857](https://github.com/FlareZ123/bb6/actions/runs/45918431857). `correction_exact_delay` depends only on `propext, Quot.sound`; the four relay/congruence theorems use `propext, Classical.choice, Quot.sound`. No admitted proofs. Local shell and Python returned ClientError before executing commands, so the repository's constrained compiler-preflight exception applies. This result does not decide the authentic F418 root.
 
 ## Exact delay
 
