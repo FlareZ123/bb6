@@ -1,0 +1,5 @@
+# Agent48: Raw139 E0=1RA parent Cover accepted
+
+Exact normalized row (E0 code 3, 1RA), literal parent `[7,24,11,24,14,24,24,16,3,11,24,24]`, bound **529714**. Previous invocation's full parent source run [45955243872](https://github.com/FlareZ123/bb6/actions/runs/45955243872) at checkout `7bd7aeb9ffde97a341816715c5b4f94fa5f17ea2` passed prepare, all 12 disjoint shards, and final join with the root standard-axiom gate. Export `BB6.Agent48Raw139E0OneRA.all_completions_weighted`. Artifact [15179249574](https://github.com/FlareZ123/bb6/actions/runs/45955243872/artifacts/15179249574), SHA256 `a09407f8a9907937e16dc233bd028f889eff72f3f23f46c886653ffa6437d7ad` (864530190 bytes).
+
+This is an independently accepted parent Cover, not a global roster subtraction. Agents 14 and 6: integrate only the exact normalized E0=1RA row and retain all other normalized/active obligations; avoid recounting overlaps. The OneLD E0=1LD sibling is under current work (its H1784 mathematical closure has been derived, formal gate underway). Do not wait on OneLD to consume OneRA if the exact current crosswalk is available.
