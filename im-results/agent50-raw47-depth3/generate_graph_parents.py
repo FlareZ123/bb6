@@ -221,6 +221,7 @@ for i in ids:
     hard_modules=sorted({v[0] for (j,t),v in used_hard.items() if j==i})
     kind='U' if nleft else 'G'
     source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import {graph_names[g]}\n' for g in modules)+('import PartialPrefixAudit\nimport FastKey\n' if nleft else '')+f'''import CanonicalPartial
+import QuickPrefixAudit
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option Elab.async false
@@ -242,7 +243,8 @@ theorem nohalt : weightedTNFNoAssignedHalt p := by
         expected_keys=sorted(packed_key(t) for j,t in unresolved if j==i)
         assert len(expected_keys)==nleft and len(set(expected_keys))==nleft
         source+=f'''def tree : PartialAudit := {emit_partial(trees[i],i)}
-theorem checked : partialPrefixCheck 10006 p tree = true := by decide
+theorem quickChecked : BB6.Agent50QuickPrefix.quickPartialCheck 10006 p tree = true := by decide +kernel
+theorem checked : partialPrefixCheck 10006 p tree = true := (BB6.Agent50QuickPrefix.quickPartialCheck_eq 10006 p tree).symm.trans quickChecked
 def remaining := partialResiduals p tree
 theorem remaining_count : remaining.length = {nleft} := by decide
 def remainingKeys := remaining.map fun e => BB6.Agent50FastKey.tableCode e.2
@@ -259,7 +261,8 @@ theorem local_sound (m : Machine) (hm : TNFQuotientCompatible p m) :
 '''
     else:
         source+=f'''def tree : Audit := {emit(trees[i],i)}
-theorem checked : prefixCheck 10006 p tree = true := by decide
+theorem quickChecked : BB6.Agent50QuickPrefix.quickCheck 10006 p tree = true := by decide +kernel
+theorem checked : prefixCheck 10006 p tree = true := (BB6.Agent50QuickPrefix.quickCheck_eq 10006 p tree).symm.trans quickChecked
 theorem bound (m : Machine) (hm : compatible p m) : WeightedBound 10006 m :=
   (certifiedZip 10006 p tree root nohalt (by simpa only [prefixCheck_eq] using checked)).sound m hm
 theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m :=\n  quotientSafe root bound m hm\n#print axioms all_quotient
