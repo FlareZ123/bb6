@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -377,5 +377,97 @@ jobs:
         with:
           name: raw57-prefix-parent-certified
           path: /tmp/raw57-final/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_rc_common:
+    if: inputs.child == 'raw56-rc-portfolio'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Link exact accepted Raw56 base and compile shared proof delta
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python im-results/agent1-raw56/rc_delta.py common --base /tmp/raw56-base --out /tmp/raw56-rc-common
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-rc-common
+          path: /tmp/raw56-rc-common/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_rc_shard:
+    if: inputs.child == 'raw56-rc-portfolio'
+    needs: raw56_rc_common
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        group: [special, 0LF, 1LF, 1RF, 0L, 0R, 1L, 1R]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-rc-common
+          path: /tmp/raw56-rc-common
+      - name: Replay pinned candidates and certify exact C1 cuts
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GROUP: ${{ matrix.group }}
+        run: python im-results/agent1-raw56/rc_delta.py shard --group "$GROUP" --base /tmp/raw56-base --common /tmp/raw56-rc-common --out /tmp/raw56-rc-shard
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-rc-shard-${{ matrix.group }}
+          path: /tmp/raw56-rc-shard/**
+          if-no-files-found: error
+          retention-days: 30
+
+  raw56_rc_assemble:
+    if: inputs.child == 'raw56-rc-portfolio'
+    needs: raw56_rc_shard
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install and select Lean 4.36.0-rc2 explicitly
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-rc-common
+          path: /tmp/raw56-rc-common
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-rc-shard-*
+          path: /tmp/raw56-rc-inputs
+      - name: Consume all nineteen exact child bounds
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python im-results/agent1-raw56/rc_delta.py assemble --base /tmp/raw56-base --common /tmp/raw56-rc-common --inputs /tmp/raw56-rc-inputs --out /tmp/raw56-rc-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-rc-final-source-accepted
+          path: /tmp/raw56-rc-final/**
           if-no-files-found: error
           retention-days: 30

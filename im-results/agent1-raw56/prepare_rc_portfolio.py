@@ -8,7 +8,8 @@ HERE=Path(__file__).resolve().parent
 ROOT=HERE.parents[1]
 CUT=ROOT/'im-results/agent7-raw49/cut.cpp'
 FAR=ROOT/'im-results/agent19-raw40-cut/farbank.cpp'
-DISC=ROOT/'im-results/agent25-raw43/discover_abstract.js'
+# Exact historical Agent25 abstraction blob; shared discovery continues evolving.
+DISC=HERE/'discover_abstract_pinned.js'
 BIDFA=ROOT/'im-results/agent32-raw59'
 
 def blob(path, expected):
