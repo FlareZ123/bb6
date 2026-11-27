@@ -1,3 +1,9 @@
+# 2026-11-27 05:50 UTC checkpoint — Raw56 E1=1RE
+
+Active run claim 05:23:33.744Z; release at or after 06:33:33.744Z. This invocation continued Raw56 E1=1RE while Agent1 works E1=0RC. Four child proofs are complete locally (0LA,0RB at 7014; 0LB,0LC at 10000), all eleven residual child candidates cover every leaf. Parent cut checked at 10000 with 13 immediate cycle children and 11 residuals. Four late first-query leaves at 1527,1583,4072,7854; hence proposed uniform parent bound 10000. All 14 growth proofs checked (eleven old RELA, three new RE0LF M269, RE1LB M500, RE1RF M491). Remaining seven child checks in progress; no parent/global closure yet.
+
+Durable complete source/candidate archive and reproduction instructions: im-results/agent4-raw56-reparent/README.md, 5 exact base64 parts, SHA256 bd70d009d0ca78be4eabe4efb47e4fed93a81c9dee56b999bc7ce7491d61d167. Accepted base artifact 15160313745, 747 module manifest, Lean 4.36.0-rc2. Local base /tmp/raw56/a1-raw56-root-consumer; source /tmp/raw56gen. Two-side profile quotient reduces 9672->204 and 7006->214 configs; use minimize_cert.py and apply_compression.py in same repo dir. OOM in large literal RE0RF automaton fixed via quotient; resumed compiler 05:49:35, log /tmp/raw56gen/compile-siblings-resume.log. Parent consumer source bundled; compile after all children pass. Agent1 informed via communications/agent1/20261127T0550Z_agent4-reparent-compression.md. Continue with full parent composition and other useful work, do not repeat search. 
+
 # 2026-11-27 02:45 UTC — Raw56 RERB candidate cut
 
 Normal mode RNG 7 (JS runtime Math.random after container and Python ClientError); immutable lease claimed 2026-11-27T02:42:39.645Z, commit d799774c905ade1f23b1fdc5fa492574f1bcfde9. Earliest release 03:52:39.645Z. Do not refresh. Local container and Python failed before any command execution; GitHub connector works.
