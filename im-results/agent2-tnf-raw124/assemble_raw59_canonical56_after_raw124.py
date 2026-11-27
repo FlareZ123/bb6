@@ -27,7 +27,7 @@ RAW124_PARENT_ARTIFACT_SHA = "9ec5b5b86fe4f78d636fd9a37891cabdd0017c04c8fc62f74f
 NS = "BB6.Agent2Canonical56Raw59AfterRaw124"
 
 
-def verify_base(work: Path, run_id: int):
+def verify_base(work: Path, run_id: int, resume: bool = False):
     run = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}")
     assert run["conclusion"] == "success", run.get("conclusion")
     assert run["head_sha"] == BASE_SOURCE_REVISION, (run["head_sha"], BASE_SOURCE_REVISION)
@@ -40,7 +40,8 @@ def verify_base(work: Path, run_id: int):
     assert item["digest"] == "sha256:" + BASE_ARTIFACT_SHA, item["digest"]
     assert not item["expired"], item["id"]
 
-    dirs = a68.download((item["id"], run_id, BASE_ARTIFACT_SHA), work)
+    dirs = ([p.parent for p in work.rglob("Canonical58Raw113Graft.olean")]
+            if resume else a68.download((item["id"], run_id, BASE_ARTIFACT_SHA), work))
     # The pinned producer accepted Raw113, but its optional Raw124 shell
     # command failed (argparse exit 2). Reuse the accepted 58 closure and
     # execute ONLY the missing Raw124 consumer, with its original gates.
@@ -60,6 +61,9 @@ def verify_base(work: Path, run_id: int):
 
     graft = linked / "Raw124Canonical58Membership.olean"
     reports57 = list(metadata.rglob("raw124-canonical58-membership.json"))
+    if resume:
+        reports57 = [work / "raw124-canonical58-membership.json"]
+        assert graft.is_file() and reports57[0].is_file()
     if not graft.exists():
         assert not reports57, [str(p) for p in reports57]
         subprocess.run(
@@ -96,18 +100,66 @@ def verify_base(work: Path, run_id: int):
     return linked, item, report_path, report
 
 
+def export_raw124_delta(work, linked, base_artifact, report_path, report):
+    """Preserve the independently checked Raw124 root and its reconstruction inputs."""
+    delta = work / "raw124-delta"
+    delta.mkdir()
+    root = linked / "Raw124Canonical58Membership.olean"
+    source = HERE / "Raw124Canonical58Membership.lean"
+    assert a68.sha(source) == report["graft_source_sha256"]
+    shutil.copy2(root, delta / root.name)
+    shutil.copy2(source, delta / source.name)
+    shutil.copy2(report_path, delta / report_path.name)
+    manifest = {
+        "status": "source-accepted Canonical58-to-57 Raw124 thin delta",
+        "base_run_id": BASE_RUN,
+        "base_artifact_id": base_artifact["id"],
+        "base_artifact_sha256": BASE_ARTIFACT_SHA,
+        "base_source_revision": BASE_SOURCE_REVISION,
+        "base_root_sha256": report["canonical58_olean_sha256"],
+        "parent_run_id": RAW124_PARENT_RUN,
+        "parent_artifact_id": RAW124_PARENT_ARTIFACT_ID,
+        "parent_artifact_sha256": RAW124_PARENT_ARTIFACT_SHA,
+        "graft_root_sha256": a68.sha(root),
+        "graft_source_sha256": a68.sha(source),
+        "report_sha256": a68.sha(report_path),
+        "remaining_residual_count": 57,
+        "axioms": report["axioms"],
+        "replay_recipe": "Link the pinned Canonical58 and Raw124 parent artifacts "
+                         "with assemble_raw124_canonical57.py and compare "
+                         "parent_link_audit and graft hashes to the report.",
+        "source_revision": subprocess.check_output(
+            ["git", "rev-parse", "HEAD"], text=True).strip(),
+    }
+    (delta / "delta.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--work", required=True, type=Path)
     parser.add_argument("--canonical57-run-id", type=int, default=BASE_RUN)
-    parser.add_argument("--raw59-run-id", required=True, type=int)
+    parser.add_argument("--raw59-run-id", type=int)
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--prepare-only", action="store_true")
+    mode.add_argument("--resume", action="store_true")
     args = parser.parse_args()
 
     work = args.work.resolve()
-    work.mkdir(parents=True, exist_ok=False)
+    if not args.prepare_only and args.raw59_run_id is None:
+        parser.error("--raw59-run-id is required except with --prepare-only")
+    if not args.resume:
+        work.mkdir(parents=True, exist_ok=False)
     linked, base_artifact, base_report_path, base_report = verify_base(
-        work, args.canonical57_run_id
+        work, args.canonical57_run_id, resume=args.resume
     )
+    if args.resume:
+        manifest = json.loads((work / "raw124-delta/delta.json").read_text())
+        assert manifest["graft_root_sha256"] == base_report["graft_olean_sha256"]
+        assert manifest["report_sha256"] == a68.sha(base_report_path)
+    else:
+        export_raw124_delta(work, linked, base_artifact, base_report_path, base_report)
+    if args.prepare_only:
+        return
 
     # Reuse the existing Raw59 slice consumer. It checks the staged artifact's
     # accepted theorem, verifies its digest, and audits every reachable
