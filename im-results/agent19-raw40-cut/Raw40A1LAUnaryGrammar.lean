@@ -81,7 +81,7 @@ theorem consumeOne (v : Variant) (L R : List Bool) :
 theorem consumeRun (v : Variant) (n : Nat) (L R : List Bool) :
     run0 (table v) (7*n) ⟨0,false::L,[true,true,false]++U n++R⟩ =
       some ⟨0,false::(U n++L),[true,true,false]++R⟩ := by
-  simpa only [repU,List.singleton_append] using
+  simpa only [repU,List.singleton_append,List.cons_append] using
     sweepR (table v) 0 [false] [true,true,false] [true] [true] 7 (consumeOne v) n L R
 
 theorem consumeBlank (v : Variant) (n : Nat) (R : List Bool) :
@@ -103,7 +103,7 @@ theorem consumePair (v : Variant) (ls : List Nat) (n : Nat) (rs : List Nat) :
     run0 (table v) (7*(n+1)) (C ls (2::(n+1)::rs)) =
       some (consumed ls n rs) := by
   cases ls with
-  | nil => exact consumeBlank v n (blocks rs)
+  | nil => simpa only [C,consumed,inc,blocks,List.tail_cons,List.append_nil,List.append_assoc,List.cons_append] using consumeBlank v n (blocks rs)
   | cons a ls =>
     have H := consumeRun v (n+1) (U a++blocks ls) (blocks rs)
     have he : U (n+1)++(U a++blocks ls)=U (a+(n+1))++blocks ls := by
@@ -112,22 +112,22 @@ theorem consumePair (v : Variant) (ls : List Nat) (n : Nat) (rs : List Nat) :
     exact H
 
 theorem skipOne (v : Variant) (L R : List Bool) :
-    run0 (table v) 6 ⟨0,false::L,[true,true,false,false]++R⟩ =
-      some ⟨0,[false,true,true,false,true]++L,R⟩ := by cases v <;> rfl
+    run0 (table v) 6 ⟨0,false::L,[true,true,false,false,true]++R⟩ =
+      some ⟨0,[false,true,true,false,true]++L,true::R⟩ := by cases v <;> rfl
 
 theorem skipAfter (v : Variant) (ls : List Nat) (n a : Nat) (rs : List Nat) :
-    run0 (table v) 6 (consumed ls n (a::rs)) =
-      some (C (2::inc (n+2) ls) (a::rs)) := by
+    run0 (table v) 6 (consumed ls n ((a+1)::rs)) =
+      some (C (2::inc (n+2) ls) ((a+1)::rs)) := by
   cases ls with
-  | nil => exact skipOne v (U (n+1)) (U a++blocks rs)
+  | nil => simpa only [C,consumed,inc,blocks,List.tail_cons,List.append_nil,List.append_assoc,List.cons_append] using skipOne v (U (n+1)) (U a++blocks rs)
   | cons b ls =>
     have H := skipOne v (U (b+(n+1))++blocks ls) (U a++blocks rs)
     exact H
 
 theorem pairAdvance (v : Variant) (ls : List Nat) (n a : Nat) (rs : List Nat) :
-    run0 (table v) (7*(n+1)+6) (C ls (2::(n+1)::a::rs)) =
-      some (C (2::inc (n+2) ls) (a::rs)) :=
-  join0 (consumePair v ls n (a::rs)) (skipAfter v ls n a rs)
+    run0 (table v) (7*(n+1)+6) (C ls (2::(n+1)::(a+1)::rs)) =
+      some (C (2::inc (n+2) ls) ((a+1)::rs)) :=
+  join0 (consumePair v ls n ((a+1)::rs)) (skipAfter v ls n a rs)
 
 theorem endZero (v : Variant) (L : List Bool) :
     run0 (table v) 9 ⟨0,false::L,[true,true]⟩ =
@@ -152,7 +152,10 @@ theorem terminalPair (v : Variant) (ls : List Nat) (n : Nat) :
       some (C (inc (n+2) ls) [4]) := by
   have H := consumePair v ls n []
   cases ls with
-  | nil => exact join0 H (endConsumed v (U (n+1)))
+  | nil =>
+    have h : run0 (table v) 9 (consumed [] n []) = some (C (inc (n+2) []) [4]) := by
+      simpa only [consumed,C,inc,blocks,List.append_nil,List.tail_cons] using endConsumed v (U (n+1))
+    exact join0 H h
   | cons a ls => exact join0 H (endConsumed v (U (a+(n+1))++blocks ls))
 
 theorem retreat (v : Variant) (ls : List Nat) (hp : ∀ a ∈ ls, 0<a)
@@ -175,7 +178,7 @@ theorem retreat (v : Variant) (ls : List Nat) (hp : ∀ a ∈ ls, 0<a)
       obtain ⟨t,ht,hr⟩ := ih hls a ((k+1)::rs)
       have H := join0 h hr
       refine ⟨splitCost v+(a+1)+t, by omega, ?_⟩
-      simpa only [List.reverse_cons,List.append_assoc,List.singleton_append] using H
+      simpa only [List.reverse_cons,List.cons_append,List.append_assoc,List.singleton_append] using H
 
 inductive Good : List Nat → Prop
   | nil : Good []
@@ -192,7 +195,7 @@ theorem prefixGood {p : List Nat} (hp : Prefix p) (rs : List Nat) (hr : Good rs)
   induction hp generalizing rs with
   | first n => exact Good.pair (n+1) rs hr
   | more n p hp ih =>
-    simpa only [List.reverse_cons,List.append_assoc,List.singleton_append] using
+    simpa only [List.reverse_cons,List.cons_append,List.append_assoc,List.singleton_append] using
       ih ((n+3)::rs) (Good.big n rs hr)
 
 theorem prefixPositive {p : List Nat} (hp : Prefix p) : ∀ a ∈ p, 0<a := by
@@ -252,7 +255,7 @@ theorem retreatGood (v : Variant) {ls : List Nat} (hc : Ctx ls)
   cases hc with
   | nil => exact Good.pair k rs hg
   | cons p hp =>
-    simpa only [List.reverse_cons,List.append_assoc,List.singleton_append] using
+    simpa only [List.reverse_cons,List.cons_append,List.append_assoc,List.singleton_append] using
       prefixGood hp (2::(k+1)::rs) (Good.pair k rs hg)
 
 theorem terminalGood (v : Variant) {ls rs : List Nat} (hc : Ctx ls)
@@ -264,7 +267,7 @@ theorem terminalGood (v : Variant) {ls rs : List Nat} (hc : Ctx ls)
   | nil => exact Good.pair n [2] Good.two
   | cons p hp =>
     have h : 2+(n+1)=n+3 := by omega
-    simpa only [inc,h,List.reverse_cons,List.append_assoc,List.singleton_append] using
+    simpa only [inc,h,List.reverse_cons,List.cons_append,List.append_assoc,List.singleton_append] using
       prefixGood hp [n+3,2] (Good.big n [2] Good.two)
 
 theorem epoch (v : Variant) {rs : List Nat} (hg : Good rs) (hne : rs≠[])
@@ -277,8 +280,11 @@ theorem epoch (v : Variant) {rs : List Nat} (hg : Good rs) (hne : rs≠[])
     cases rs with
     | nil => exact terminalGood v hc (n+1) (7*(n+1)+9) (terminalPair v ls n)
     | cons a rs =>
-      obtain ⟨t,r',ht,hg',hne',hr⟩ := ih (by simp) (2::inc (n+2) ls) (ctxAdvance hc n)
-      exact ⟨7*(n+1)+6+t,r',by omega,hg',hne',join0 (pairAdvance v ls n a rs) hr⟩
+      cases a with
+      | zero => cases hg
+      | succ a =>
+        obtain ⟨t,r',ht,hg',hne',hr⟩ := ih (by simp) (2::inc (n+2) ls) (ctxAdvance hc n)
+        exact ⟨7*(n+1)+6+t,r',by omega,hg',hne',join0 (pairAdvance v ls n a rs) hr⟩
 
 theorem entry (v : Variant) : run0 (table v) 7 ⟨0,[],[]⟩ = some (C [] [4]) := by
   cases v <;> rfl
