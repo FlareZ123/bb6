@@ -11,6 +11,7 @@
 #include <memory>
 #include <stdexcept>
 #include <cstdio>
+#include <cstdlib>
 #include <string>
 #include <climits>
 #include <vector>
@@ -76,8 +77,7 @@ struct Block8 {
   auto e=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFFFF0000FFFF0000ull)),4);
   return _mm512_add_epi64(_mm512_add_epi64(_mm512_add_epi64(a,b),_mm512_add_epi64(c,d)),e);
  }
- void parent8(const I* in,I* out)const{
-  auto z=_mm512_cvtepu32_epi64(_mm256_loadu_si256((const __m256i*)in));
+ __m512i parent_vec(__m512i z,__mmask8 active)const{
   auto X=_mm512_add_epi64(_mm512_sllv_epi64(z,shift),Y);
   auto B=_mm512_cvttpd_epu64(_mm512_mul_pd(_mm512_cvtepu64_pd(X),inv));
   auto BF=_mm512_mullo_epi64(B,F);
@@ -87,17 +87,56 @@ struct Block8 {
   BF=_mm512_mullo_epi64(B,F);
   auto bad=_mm512_cmp_epu64_mask(BF,X,_MM_CMPINT_GT)|_mm512_cmp_epu64_mask(_mm512_add_epi64(BF,F),X,_MM_CMPINT_LE);
   auto c0=_mm512_sub_epi64(X,_mm512_add_epi64(_mm512_mullo_epi64(B,q),wt(B)));
-  auto good0=_mm512_cmp_epu64_mask(c0,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B,M,_MM_CMPINT_LE);
+  auto good0=active&_mm512_cmp_epu64_mask(c0,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B,M,_MM_CMPINT_LE);
   auto B1=_mm512_add_epi64(B,one);
   auto c1=_mm512_sub_epi64(X,_mm512_add_epi64(_mm512_mullo_epi64(B1,q),wt(B1)));
-  auto good1=_mm512_cmp_epu64_mask(c1,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B1,M,_MM_CMPINT_LE);
+  auto good1=active&_mm512_cmp_epu64_mask(c1,q,_MM_CMPINT_LT)&_mm512_cmp_epu64_mask(B1,M,_MM_CMPINT_LE);
   auto c=_mm512_mask_blend_epi64(good1,_mm512_set1_epi64(missing),c1);
   c=_mm512_mask_mov_epi64(c,good0,c0);
-  _mm256_storeu_si256((__m256i*)out,_mm512_cvtepi64_epi32(c));
-  while(bad){unsigned j=__builtin_ctz(bad);bad&=bad-1;out[j]=b.parent(in[j]);}
+  bad&=active;
+  if(bad){alignas(64) U in[8],out[8];_mm512_store_si512(in,z);_mm512_store_si512(out,c);
+   while(bad){unsigned j=__builtin_ctz(bad);bad&=bad-1;out[j]=b.parent(I(in[j]));}
+   c=_mm512_load_si512(out);
+  }
+  return c;
  }
 };
 #endif
+// Deduplication at the boundary of a composed partial function is exact:
+// duplicate intermediate carries have identical remaining paths.
+// A labelled intermediate union is needed only if its path survives.
+static unsigned fusion_limit=1;
+template<class Word>vector<Block> make_pipe(I F,I start,const Word& y,unsigned limit){
+ vector<Block> bs;bs.reserve(limit);
+ while(F>start&&bs.size()<limit){bs.emplace_back(F,F-start);auto& b=bs.back();b.Y=y(b.q,b.k);F=b.q;}
+ return bs;
+}
+template<class T,class Get,class Put>size_t apply_pipe(vector<T>& a,const vector<Block>& bs,Get get,Put put,U&work){
+ size_t j=0,w=0;
+#if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
+ if(a.size()>=8){
+  vector<Block8> simd;simd.reserve(bs.size());for(auto& b:bs)simd.emplace_back(b);
+  for(;j+8<=a.size();j+=8){
+   T saved[8];I in[8];for(unsigned k=0;k<8;k++){saved[k]=a[j+k];in[k]=get(saved[k]);}
+   auto z=_mm512_cvtepu32_epi64(_mm256_loadu_si256((const __m256i*)in));
+   __mmask8 active=255;
+   for(auto& b:simd){
+    work+=__builtin_popcount(unsigned(active));z=b.parent_vec(z,active);
+    active=_mm512_cmp_epu64_mask(z,_mm512_set1_epi64(missing),_MM_CMPINT_NE);
+    if(!active)break;
+   }
+   I out[8];_mm256_storeu_si256((__m256i*)out,_mm512_cvtepi64_epi32(z));
+   for(unsigned k=0;k<8;k++)if(out[k]!=missing&&put(saved[k],out[k]))a[w++]=saved[k];
+  }
+ }
+#endif
+ for(;j<a.size();j++){
+  T e=a[j];I c=get(e);
+  for(auto&b:bs){++work;c=b.parent(c);if(c==missing)break;}
+  if(c!=missing&&put(e,c))a[w++]=e;
+ }
+ return w;
+}
 template<class Word>vector<I> live(I start,I F,Word y,U&work){
  I r=std::min(I(22),F-start),q=F-r;uint32_t M=1u<<r,mask=M-1,Y=y(q,r);
  Seen small(M);vector<uint32_t>res{Y};small.insert(Y);
@@ -110,12 +149,11 @@ template<class Word>vector<I> live(I start,I F,Word y,U&work){
  for(U base=0;base<U(q);base+=M)for(auto x:res)if(base+x<U(q))a.push_back(I(base+x));
  Seen seen(q);
  while(q>start&&!a.empty()){
-  Block b(q,q-start);b.Y=y(b.q,b.k);work+=a.size();size_t w=0,j=0;
-#if defined(__AVX512F__) && defined(__AVX512DQ__) && defined(__AVX512VL__)
-  if(a.size()>=64){Block8 b8(b);for(;j+8<=a.size();j+=8){I c[8];b8.parent8(a.data()+j,c);for(I x:c)if(x!=missing&&seen.insert(x))a[w++]=x;}}
-#endif
-  for(;j<a.size();j++){I c=b.parent(a[j]);if(c!=missing&&seen.insert(c))a[w++]=c;}
-  a.resize(w);for(I c:a)seen.clear(c);q=b.q;
+  // Dense early images dedup more frequently; sparse late images are fused.
+  unsigned lim=std::min(fusion_limit,std::max(1u,(F-q)/128u));
+  auto bs=make_pipe(q,start,y,lim);
+  auto w=apply_pipe(a,bs,[](I e){return e;},[&](I& e,I c){e=c;return seen.insert(c);},work);
+  a.resize(w);for(I c:a)seen.clear(c);q=bs.back().q;
  }
  return a;
 }
@@ -123,10 +161,10 @@ template<class Word>vector<I> filter(I start,I F,Word y,I root,const vector<I>&e
  if(ends.size()>INT_MAX)throw std::runtime_error("mid count");
  vector<Entry>a;a.reserve(ends.size());for(int i=0;i<(int)ends.size();i++)a.push_back({ends[i],i});DSU d(a.size());
  while(F>start&&!a.empty()){
-  Block b(F,F-start);b.Y=y(b.q,b.k);work+=a.size();size_t w=0;
-  for(auto e:a){I c=b.parent(e.c);if(c!=missing)a[w++]={c,e.id};}a.resize(w);
+  auto bs=make_pipe(F,start,y,fusion_limit);
+  auto w=apply_pipe(a,bs,[](Entry e){return e.c;},[](Entry& e,I c){e.c=c;return true;},work);a.resize(w);
   if(a.size()>1)std::sort(a.begin(),a.end(),[](Entry x,Entry y){return x.c<y.c;});w=0;
-  for(auto e:a){if(w&&a[w-1].c==e.c)a[w-1].id=d.unite(a[w-1].id,e.id);else a[w++]=e;}a.resize(w);F=b.q;
+  for(auto e:a){if(w&&a[w-1].c==e.c)a[w-1].id=d.unite(a[w-1].id,e.id);else a[w++]=e;}a.resize(w);F=bs.back().q;
  }
  auto it=std::find_if(a.begin(),a.end(),[&](Entry e){return e.c==root;});if(it==a.end())return {};
  int label=d.find(it->id);vector<I>out;
@@ -196,6 +234,7 @@ static void load(const std::string& path,I n,I K,I h,bool half,I&s,I&gap,vector<
 }
 int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
+ if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
  bool half=argc>=5&&std::string(argv[4])=="half";
  if(argc>=5&&!half&&std::string(argv[4])!="full")return 2;
  std::string path=argc==6?argv[5]:"";
@@ -223,7 +262,7 @@ int main(int argc,char**argv){
   }
   vector<Prefix>next;vector<std::pair<I,I>> layer;U work=0,fw=0,mid=0;I maxrun=0;
   for(I i=0;i<parts.size();i++){auto&part=parts[i];work+=part.work;fw+=part.fw;mid+=part.mids;for(auto a:part.accepted)layer.push_back({i,a});for(auto&g:part.next){maxrun=std::max(maxrun,g.run);next.push_back(std::move(g));}}
-  std::cout<<"s="<<s<<" h="<<h<<" old="<<gs.size()<<" mids="<<mid<<" next="<<next.size()<<" work="<<work<<" filter="<<fw<<" run="<<maxrun<<" gapBound="<<maxgap<<" sec="<<std::chrono::duration<double>(std::chrono::steady_clock::now()-t).count()<<std::endl;
+  std::cout<<"s="<<s<<" h="<<h<<" old="<<gs.size()<<" mids="<<mid<<" next="<<next.size()<<" work="<<work<<" filter="<<fw<<" run="<<maxrun<<" gapBound="<<maxgap<<" fuse="<<fusion_limit<<" sec="<<std::chrono::duration<double>(std::chrono::steady_clock::now()-t).count()<<std::endl;
   for(auto e:layer)std::cout<<"CHILD "<<e.first<<" "<<e.second<<"\n";std::cout<<std::flush;
   if(next.empty()){std::cout<<"END "<<n<<" "<<n+s<<std::endl;return 0;}
   s+=h;gs=std::move(next);save(path,n,K,h,half,s,maxgap,gs);
