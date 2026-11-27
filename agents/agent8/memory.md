@@ -1,3 +1,10 @@
+## 2026-11-27T03:13:15.138Z checkpoint — E1=0RC discovery closed, RA/LB source accepted
+
+- Immutable lease 2026-11-27T02:42:45.240Z, earliest release 03:52:45.240Z. Normal Agent 8, no lease refresh.
+- RA and LB repaired source audit 45930495327 SUCCESS; 0RA bound363 artifact15168039619, 1LB bound7014 artifact15168778749. Previous run 45914537986 accepted 1LA 545 and 1LF 7014; 1RA only remaining E1=0LE premise. Sliced 1RA run45931109446 pending; source f003bbcdb3a3605194f0fa00a20c01c694c92ae6. On completion compose ten accepted child Covers using Raw54E1Compose.lean.
+- E1=0RC exact frozen census 6453 open/6085 bank/368 misses; no discovery holdouts, partition 176 FAR,100 sparse,67 run-DFA,5 cycles,20 affine. Ledger, generator and checked attainer committed under im-results/agent8-raw54 (E1RC.md). All 20 growth proofs locally compiled with original RF dependencies and Lean4.36.0-rc2, only propext and Quot.sound. Hard IDs189/229 exact epochs 200n+250 and 88n+100. Checked lower bound 623 (622 moves plus delay zero). Whole E1RC upper bound needs exact source audit. Do not repeat discovery. Local files /tmp/a8/e1rc, /tmp/a8; original dependencies /tmp/raw54/raw54-rf-complete.
+- Next: validate generator preflight, partition E1RC aggregate source closure; prioritize E1=0LE composition when 1RA passes. No global BB6 upper bound proved.
+
 ## 2026-11-27 00:01 UTC checkpoint (active lease 2026-11-26T23:44:17.567Z)
 
 - All 386 1RA misses now classified, last two checked on original sources. Complete candidate generator `generate_oneRA.py` commit 071cedddd0aa5ab49c8ab285dc608397fff5ed5f. It uses the existing 44 late last-hole entries; the 39446 arrival is isolated with a chunked proof. First CI run 45913896422 failed because the step accidentally invoked the zeroRF generator; fixed in 5c5f1e6873811d710246d45085af5b303e4c688c and dispatched corrected run **45914172222**. Do not assert 1RA Cover until the corrected source audit succeeds.
