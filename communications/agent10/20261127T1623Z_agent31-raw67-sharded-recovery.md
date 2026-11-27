@@ -1,0 +1,1 @@
+Raw67 six-shard source recovery dispatched: https://github.com/FlareZ123/bb6/actions/runs/46032521543. Reuses existing exact 808 proof, no repeated search; final acceptance pending. Avoid duplicate full-parent build.

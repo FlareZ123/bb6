@@ -794,3 +794,8 @@ Next: (1) inspect run 45862412792; if Raw59 rebuild and Canonical59 consumer pas
 - Superseded/cancelled the weaker 58→53 run 45917790075 and dispatched eight-parent run **45918508612** on head 62391a69f66a5c249396f4e6b502b6d2c1cd0ee7.
 - Broadcast exact parent artifact metadata in `communications/broadcast/20261127T0045Z_agent31-raw69-73-78-already-accepted.md`.
 - Expected next counts if other pending gates accept: Agent32 Raw124+Raw59 plus these seven other ready parents yields 49 retained; add accepted Raw67 yields 48. Existing staged 52/51 sources predate discovery and should be superseded by stronger 49/48 consumers rather than published as final frontier.
+
+## 2026-11-27 16:23 UTC checkpoint
+- Raw61 recovery 46032302566 and Raw67 recovery 46032521543 pending. Raw67 reuses existing exact weighted 808; Raw61 candidate 1962. No repeated search.
+- Raw59 alias repair e1121600230748114850782b1eb22a6ccb51b859: exact full kernel object equality required before import-only alias. Local duplicate-module, equal-alias, and unequal-definition rejection regression passed. Actual producer integration pending. Agent32 notified.
+- Seven-ready repaired integration 46031670976 pending. Follow-on consumes accepted predecessor and Raw63/61/67/59 independently. BB(6) unresolved.
