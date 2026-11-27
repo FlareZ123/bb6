@@ -163,6 +163,6 @@ The current debt envelope is independent of the largest p ever seen. Set z=max(0
 
 [AbsoluteHistory.md](AbsoluteHistory.md) derives an exact signed history formula and a repeat-block integer defect that contracts by the consumed power of two. [F418AbsoluteHistory.lean](F418AbsoluteHistory.lean) kernel-checks the generic algebra and the impossibility of repeating any single complete normal prefix forever, for all parameters and starting widths. A further paper argument excludes infinite repetition of a complete word whose projected p-word is primitive. The proof restricts periodic certificates; it does not establish a root outcome.
 
-[DelayedCorrection.md](DelayedCorrection.md) derives the exact valuation of the normal correction and a clean parity-changing pulse relay. Its proposed Lean formalization is pending CI; the bounded regression is reproduced by `node delayed_correction_regression.js`. These are intermediate results, not a proof that the relay persists.
+[DelayedCorrection.md](DelayedCorrection.md) derives the exact valuation of the normal correction and a clean parity-changing pulse relay. Its Lean formalization passed [original-source CI 45918431857](https://github.com/FlareZ123/bb6/actions/runs/45918431857) with only standard axioms; the bounded regression is reproduced by `node delayed_correction_regression.js`. These are intermediate results, not a proof that the relay persists.
 
 The remaining problem is to exclude or reach the fatal gate on the actual seed orbit. No halting/nonhalting verdict or frontier graft is claimed.
