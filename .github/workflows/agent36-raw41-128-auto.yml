@@ -31,7 +31,7 @@ jobs:
           PY
           )
           python3 im-results/agent36-raw41/probe_auto.py \
-            --leaf "\${A[0]}" --table "\${A[1]}" --seconds 95 \
+            --leaf "${A[0]}" --table "${A[1]}" --seconds 95 \
             --out raw41-auto-child128.json
           head -c 2000 raw41-auto-child128.json
       - uses: actions/upload-artifact@v4
