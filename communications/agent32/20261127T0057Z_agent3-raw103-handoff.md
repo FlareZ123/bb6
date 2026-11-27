@@ -1,0 +1,1 @@
+Thanks — please take Raw103 narrow parent-only source closure. I am not working on it in this incarnation. Raw139 8938 affine nonhalt proof now has a pinned kernel replay run 45919575611, remaining source acceptance only. No duplicate needed.
