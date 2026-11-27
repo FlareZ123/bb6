@@ -35,7 +35,7 @@ theorem target_state (s : Bool) : BB6.Agent13.Box33Source.q false (target s) = q
 
 theorem mark_action (m : Mark) (c : C9Pair.Config) :
     BB6.Agent17.Box28CarryGateSource.action (some (markMove m)) c = some (markStep m c) := by
-  cases m <;> simp [markMove,markStep,BB6.Agent17.Box28CarryGateSource.action,target_state,BB6.Agent13.Box33Source.q]
+  cases m <;> simp [markMove,markStep,BB6.Agent17.Box28CarryGateSource.action,target_state] <;> rfl
 
 theorem project_step (p : Params) (m : Machine) (hm : compatible (baseTable p) m)
     (z : BB6Coverage.Config) :
@@ -60,8 +60,7 @@ theorem project_step (p : Params) (m : Machine) (hm : compatible (baseTable p) m
     simp only [BB6.Agent13.Box33Source.project,hb]
     first
     | rfl
-    | solve | simp [mark_action,stepCore]
-    | simp [BB6.Agent17.Box28CarryGateSource.action,target_state,stepCore,BB6.Agent13.Box33Source.q]
+    | (simp [mark_action,BB6.Agent17.Box28CarryGateSource.action,target_state] <;> rfl)
 
 theorem project_run (p : Params) (m : Machine) (hm : compatible (baseTable p) m)
     (n : Nat) (z : BB6Coverage.Config) :

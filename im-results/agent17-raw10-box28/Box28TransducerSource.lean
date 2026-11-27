@@ -58,8 +58,7 @@ theorem project_step (p : Params) (m : Machine) (hm : compatible (baseTable p) m
     simp only [BB6.Agent13.Box33Source.project,hb]
     first
     | rfl
-    | simp [BB6.Agent17.Box28CarryGateSource.action,target_state,stepCore,
-        BB6.Agent13.Box33Source.q]
+    | (simp [BB6.Agent17.Box28CarryGateSource.action,target_state] <;> rfl)
 
 theorem project_run (p : Params) (m : Machine) (hm : compatible (baseTable p) m)
     (n : Nat) (z : BB6Coverage.Config) :
@@ -82,7 +81,7 @@ theorem compatible_never (p : Params) (m : Machine) (hm : compatible (baseTable 
   have h := project_run p m hm n blank
   change (BB6Coverage.run m n blank).map project =
     runCore p (sourceGate m (1,true)) n localBlank at h
-  have hn := never_blank p (sourceGate m (1,true)) n hg
+  have hn := never_blank p (sourceGate m (1,true)) hg n
   cases hr : BB6Coverage.run m n blank with
   | none => exact False.elim (hn (by simpa [hr] using h.symm))
   | some c => simp [hr]
