@@ -4,7 +4,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent19Raw40.A1LC
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent47CanonicalFrontier BB6.Agent50TNFPilot
 
-/-- The complete six-hole parent with A1 fixed to 1LA. -/
+/-- The complete six-hole parent with A1 fixed to 1LC. -/
 def p : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
