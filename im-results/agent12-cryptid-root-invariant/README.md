@@ -12,6 +12,10 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 - The corrected #490/D0 raw-time-36 alignment is recorded in [DeepMindStackReduction.md](../agent32-cryptid-padding/DeepMindStackReduction.md). The cross-library initial-configuration lemma still needs exact dependency compilation.
 - The direct `D_n(c)` countdown recurrence in [RootCountdownSweep.md](./RootCountdownSweep.md) uses only CR-left-zero and CR-empty, plus ordinary EL/DL/DR branches. It survives the specific CR transcription correction as a source-branch derivation and bounded replay, but is not yet a quantified Lean theorem.
 
+## Current strongest prepared-state barrier
+
+[Separated-double halting language](DoubleSuffixBarrier.md): every prepared G(M,w111v), M>=1, with binary w and v in (0|01|0011)*, halts by a uniform token-stack induction. This strictly extends the earlier isolated-one/triple-zero barriers. The exact primitive cost is computed by a three-block recurrence. Paper derivation and 19,656 exact source-transcription comparisons are complete; the standalone original-source Lean append is pending full compilation. These are not blank-root decisions. The old hazard1011 source append has a known unrelated tape-encoding failure, which the new proof avoids.
+
 ## Research map and evidence status
 
 - [RootCountdownSweep.md](./RootCountdownSweep.md): the surviving direct countdown sweep decomposition; proof architecture and bounded computation, not yet compiled.
@@ -30,6 +34,8 @@ The previous no-swap root replay and 76-step growth route are withdrawn. The pro
 - [Agent 35's RootRightGrowthMacro.append.lean](../agent35-cryptid-mirror-cancellation/RootRightGrowthMacro.append.lean): its `root_evalStackCfg_DR` definitional normal form is correct, but the macro theorem target is invalid because its endpoint came from the mistranscribed projection. Do not dispatch its current workflow.
 
 ## Next mathematical work
+
+First consume the separated-double theorem through the exact token-mode source closure; investigate whether the authentic arithmetic return map can reach the expanded fatal suffix language, rather than extending bounded scans alone.
 
 1. Formalize the corrected suffix-preserving prefix and the new E_n(x;T) decrement / E_n(1) bridge in the pinned #85 module; do not reuse the current failing append unchanged.
 2. Resolve the offset-six E_n(2) token closure at the new endpoint E_1192248236(2), then continue the exact modulo-3 residual chain.
