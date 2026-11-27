@@ -136,6 +136,15 @@ def main(mv):
             extra_imports.append(name)
             ns="BB6Coverage.Agent31Pump.Auto."+kind+"."+name
             manual[x["table"]]=f".closed (.proven {ns}.p {ns}.never)"
+    from emitUnaryBank import emit_unary
+    unary_file=D/"coupled6-extra-unary.json"
+    unary=json.loads(unary_file.read_text()) if unary_file.exists() else []
+    for i,x in enumerate(x for x in unary if x["table"] in data["unresolved"] and x["table"] not in manual):
+        name=mod+"Unary"+str(i)
+        emit_unary(x,D/(name+".lean"),name)
+        extra_imports.append(name)
+        ns="BB6Coverage.Agent31Pump.Auto2.UnarySweep."+name
+        manual[x["table"]]=f".closed (.proven {ns}.p {ns}.never)"
     records=data["certs"]+[x for x in extras if x["table"] in data["unresolved"] and x["table"] not in manual]
     assert set(data["unresolved"])==set(manual)|{x["table"] for x in extras if x["table"] in data["unresolved"]}
     names={x["table"]:i for i,x in enumerate(records)}
