@@ -28,3 +28,39 @@ The eight singletons are listed exactly in Box33D14Source.codes. All five indepe
 * b0/b1: at A the left tape has 3k+1 ones, and every third cell of the right stream (including scanned cell) is zero. The next-A rules preserve this guard, even for arbitrary infinite tails. The unique halt row A1 is never reached.
 
 Box33D14Source connects these local step semantics to the actual encoded Frontier machine. Box33D14V17Known supplies the eight theorem-backed exact leaves to the existing replay generator. Run the shared workflow target weighted-tnf-raw10-box33-cylinder with raw_id 14,17,790. The canonical bridge and entire weighted bound remain pending source acceptance; no global residual count change or exact BB(6) claim is made.
+
+
+## D0=17, E0=21: all nine previously open singleton machines
+
+The direct all-completion tree for this six-fixed-row cylinder (25^6 = 244,140,625 completions) previously failed on nine exact tables after its long-trace and lag/RLE passes (run 45970269468). They are now addressed by explicit nonhalting certificates, rather than longer finite simulations. Eight are source accepted; the ninth has a finite invariant whose source bridge is under compilation. The full cylinder's proposed weighted bound 1,000,000 is not yet source accepted.
+
+| Leaves | Exact proof | Source audit |
+|---|---|---|
+| m0, m1 | Unary phase 1^(5k), next phase k+1 in 36k+10 steps | 46021788697 passed |
+| m6 | Unary phase 0·1^(5k+4), next phase k+1 in 12k+22 steps | 46021788697 passed |
+| m3, m5, m7 | Translated cycles (entry, period, direction, boundary): (2130,89,L,-33), (2482,103,L,-17), (2092,1630,R,26) | 46021712667 passed |
+| m2, m4 | Shared double-sweep family and finite macro initialization | 46023652110 passed |
+| m8 | Closed regular tape-language invariant, 39-state partial DFA | finite certificate computed, full Lean bridge pending |
+
+The exact machine codes and canonical projections are in Box33D17V21Source.lean and Box33D17V21Cycles.lean. The double-sweep proof, in Box33D17V21Double*.lean, has a general rule on left stream 1^11 0^3 1^(2n) 0^3 l with blank right: it returns to 1^11 0^3 1^(2n+8) l in 10n+123 (m2) or 10n+129 (m4) ordinary moves. For X(n,g,k)=1^11 0^3 1^(2n) 0^g 1^(2k), the rule consumes three gap zeros and adds four to n; the short-gap exit X(n+1,2,k+1) reaches P(2n,k+4)=1^17 0^(2n) 1^(2(k+4)). The P(g+6,k) phase reaches X(12,g,k). The finite proof from blank reduces through these phases to X(140,0,13), equal to the permanent family phase 153. No inference from observed growth is required.
+
+### m8: finite-state return-map invariant synthesis
+
+The last table is [8,6,11,2,1,13,17,19,21,3,4,0], equivalently 1RB0RB_1LC0RA_0LA0LD_0LE1LE_0LF1LA_1RA---. At state A with scanned cell and next cell both zero, write S(l,r)=A(l,00r) with both streams nearest-first. Group left cells into pair symbols 0=00, 1=01, 2=10, 3=11. A left-sweep configuration stores one buffered pair p and an unread pair stream. On reading a pair a, the exact macro either consumes one pair of input and prepends a right pair, or turns. The emitted symbol b is 0 for right pair 11 and 1 for right pair 01; all of these right pairs can be transferred back to the left by the exact two-step rule A(l,(!b)1r) -> A(0b l,r).
+
+The return-map transducer reads the left pair stream from the head towards the tail. Its first input is stored in the buffer. The following table gives (new buffer, emitted left-pair word), or turn and copy. A dash is conservatively rejected.
+
+| p | a=0 | a=1 | a=2 | a=3 |
+|---|---|---|---|---|
+| 0 | (2,1) | (3,1) | — | — |
+| 1 | (1,0) | (0,0) | — | — |
+| 2 | turn,112 | turn,113 | — | — |
+| 3 | (2,0) | (3,0) | (0,0) | (1,0) |
+
+The nonturn macros take 6, 14, 10 moves for p=0,1,3 respectively; the turn takes 6 moves, then right-sweep transfers the accumulated pairs in reverse stack order. The two turn-emitted 1 symbols are transferred before the retained 2 or 3 and unchanged input tail. The copy state simply copies every remaining pair. Every table entry is a finite identity on arbitrary tails, not a sample.
+
+A deterministic construction searches for an inductive prefix safety language. Starting with the language of all infinite pair streams, iterate K_(n+1)=K_n intersect T^-1(K_n), rejecting a transition if the transducer rejects or if any emitted prefix leaves the monitor. Minimize each finite deterministic automaton. In each monitor, seed the edges on the all-zero path and repeatedly saturate edges visited by output streams of all paths using currently allowed input edges. Reject the abstract candidate if any output edge is forbidden by the monitor. At depth 30 this saturation stabilizes in seven rounds, with a 39-state DFA and 72 reachable input/transducer/output product states; 43 are active left-sweep triples and 28 are copy triples with identical input/output states. The initial triple accounts for the remaining state. The finite certificate itself is independent of the search algorithm: the all-zero path is accepted, every allowed input edge has a valid matching transducer action and allowed output path, and the copy states have equal monitor states.
+
+The invariant on a concrete configuration uses the unread finite pair word (with implicit infinite zeros), input-monitor state i, buffer p, reversed list of emitted bits u, and output-monitor state o. The 43 stored triples (i,p,o) restrict the active left sweep. The accumulated output word is reverse(u), converted to pair symbols. Each nonturn macro consumes a pair, advances the product relation and pushes one bit onto u. Each turn preserves the language after the complete right sweep, so the next root admits the initial relation again. If a scan never turns, the positive-length nonturn macros themselves establish nonhalting. Thus there is no need to assert that every allowed word has a finite return time.
+
+Reproduce the discovery with node discover_d17v21_m8.js. Box33D17V21Transducer.lean stores the DFA and relation, checks every finite obligation using kernel reduction, proves the primitive macro identities, and implements the positive-progress invariant argument. Box33D17V21Source.lean projects the authentic encoded source machine to the same local transition semantics. The final source acceptance must exclude sorryAx; the current compiler fallback is the existing targeted manual workflow because container.exec and python.exec both failed with ClientError before local Lean could run. No global BB(6) or canonical-roster decrement is claimed.
