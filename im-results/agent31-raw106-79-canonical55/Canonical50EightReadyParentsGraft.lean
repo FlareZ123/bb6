@@ -167,7 +167,7 @@ theorem parents_cover :
   · exact p73_cover
   · exact p78_cover
 
-noncomputable def roster50 : List (Nat × PartialMachine) :=
+noncomputable def roster50 :=
   removeParents readyParents BB6.Agent31Canonical58Raw113Graft.roster58
 
 theorem count50 : roster50.length = 50 := by decide

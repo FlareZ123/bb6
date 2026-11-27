@@ -38,7 +38,7 @@ theorem parents_cover :
     ∀ p ∈ sharpParents, Cover (WeightedBound 6766859) p :=
   BB6.Agent32FourSharp.parent_covers 6766859 (by decide)
 
-noncomputable def roster54 : List (Nat × PartialMachine) :=
+noncomputable def roster54 :=
   removeParents sharpParents baseRoster
 
 theorem count54 : roster54.length = 54 := by decide

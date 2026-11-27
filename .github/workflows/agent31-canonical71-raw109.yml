@@ -47,6 +47,7 @@ on:
           - sharp-fourhole
           - sharp-raw99
           - canonical54-four-sharp
+          - canonical46-ready-union
         default: canonical74
         required: true
       raw59_slice_run_id:
@@ -2485,3 +2486,51 @@ jobs:
           if-no-files-found: error
           compression-level: 1
           retention-days: 30
+
+  canonical46_ready_union:
+    name: Consume four sharp and seven ready parents on accepted Canonical57
+    if: ${{ inputs.target == 'canonical46-ready-union' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Consume four sharp parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent2-ready-union/assemble_ready_union.py --work /tmp/a2-ready-union --phase sharp
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical53-four-sharp-after-raw124-thin-delta
+          path: /tmp/a2-ready-union/sharp-delta/**
+          if-no-files-found: error
+          retention-days: 30
+      - name: Consume seven additional ready parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python im-results/agent2-ready-union/assemble_ready_union.py --work /tmp/a2-ready-union --phase ready
+      - uses: actions/upload-artifact@v4
+        with:
+          name: canonical46-seven-ready-after-sharp-thin-delta
+          path: /tmp/a2-ready-union/ready-delta/**
+          if-no-files-found: error
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: canonical46-ready-union-diagnostics
+          path: /tmp/a2-ready-union/*-delta/evidence/*.log
+          if-no-files-found: warn
+          retention-days: 7
