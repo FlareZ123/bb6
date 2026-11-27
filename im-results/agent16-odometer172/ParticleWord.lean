@@ -17,6 +17,12 @@ theorem twos_add (n m : Nat) : twos (n+m) = twos n ++ twos m := by
   | zero => simp [twos]
   | succ n ih => simp [Nat.succ_add, twos, ih]
 
+theorem twos_comm_cons (n : Nat) (q : List Nat) :
+    twos n ++ 2::q = 2 :: (twos n ++ q) := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp [twos, ih]
+
 theorem highs_falses (n : Nat) : highs (falses n) = twos n := by
   induction n with
   | zero => rfl
@@ -95,7 +101,7 @@ theorem carryForm_scan {w v : List Nat} (h : CarryForm w v) (n : Nat) :
     simpa [highs_app, phi_app, highs_falses, phi_falses, twos] using
       scan_end (falses n ++ p)
   | oneForm p q =>
-    simpa [highs_app, phi_app, highs_falses, phi_falses, twos, List.append_assoc] using
+    simpa [highs_app, phi_app, highs_falses, phi_falses, twos, List.append_assoc, twos_comm_cons] using
       scan_one (falses n ++ p) q
 
 theorem carry_scan {xs ys : List Cell} {z z' : Boundary} {e : Nat}
@@ -121,16 +127,16 @@ theorem birth_tail_shape {xs ys : List Cell} (h : BirthTail xs ys) :
     left
     refine ⟨true :: falses g, ?_, ?_⟩
     · simp [pword, phaseWord, boundaryWord, highs_app, highs, highs_falses,
-        twos_add, twos, List.append_assoc]
+        twos_add, twos, List.append_assoc, twos_comm_cons]
     · simp [pword, phaseWord, boundaryWord, highs, highs_falses]
   | remove => exact Or.inr (Or.inr ⟨rfl,rfl⟩)
   | replace g =>
     right; left
     refine ⟨true :: falses g, ?_, ?_⟩
     · simp [pword, phaseWord, boundaryWord, highs_app, highs, highs_falses,
-        twos, List.append_assoc]
+        twos, List.append_assoc, twos_comm_cons]
     · simp [pword, phaseWord, boundaryWord, highs_app, highs, highs_falses,
-        twos_add, twos, List.append_assoc]
+        twos_add, twos, List.append_assoc, twos_comm_cons]
   | @cons g xs ys hne ht ih =>
     rcases ih with ⟨p,hx,hy⟩ | ⟨p,hx,hy⟩ | ⟨hx,hy⟩
     · left
@@ -151,18 +157,18 @@ theorem birth_tail_scan {xs ys : List Cell} (h : BirthTail xs ys) (n : Nat) :
   · refine ⟨.one,0,fun _ => rfl,?_⟩
     rw [hx]
     simp only [pword, phaseWord, hy, Nat.add_zero]
-    simpa [highs_app, highs_falses, bump, twos_add, twos, List.append_assoc] using
+    simpa [highs_app, highs_falses, bump, twos_add, twos, List.append_assoc, twos_comm_cons] using
       scan_zero_nonempty (falses n ++ p) false []
   · refine ⟨.empty,0,fun _ => rfl,?_⟩
     rw [hx]
     simp only [pword, phaseWord, hy, Nat.add_zero]
-    simpa [highs_app, highs_falses, highs, bump, twos_add, twos, List.append_assoc] using
+    simpa [highs_app, highs_falses, highs, bump, twos_add, twos, List.append_assoc, twos_comm_cons] using
       scan_zero_nonempty (falses n ++ p) true []
   · subst xs
     subst ys
     refine ⟨.empty,1,by simp,?_⟩
     simpa [pword, phaseWord, boundaryWord, highs_app, highs, highs_falses,
-      bump, twos_add, twos, List.append_assoc] using
+      bump, twos_add, twos, List.append_assoc, twos_comm_cons] using
       scan_zero_nonempty (falses n) true []
 
 theorem birth_empty_scan (n : Nat) :
@@ -172,7 +178,7 @@ theorem birth_empty_scan (n : Nat) :
   | zero => rfl
   | succ n =>
     simpa [pword, phaseWord, boundaryWord, highs_app, highs_falses, highs,
-      bump, twos_add, twos, List.append_assoc] using
+      bump, twos_add, twos, List.append_assoc, twos_comm_cons] using
       scan_zero_nonempty (falses n) false []
 
 structure ParticleState where
