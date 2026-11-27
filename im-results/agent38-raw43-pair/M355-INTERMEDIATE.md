@@ -1,0 +1,5 @@
+# M355/M377 intermediate run-coded invariant
+
+Four phase macros (phase0--phase3) transform arbitrary periodic prefix length and an arbitrary number of even runs. The local proof also establishes ordinary carry across arbitrary stack depth. These are exact statements, not finite trace extrapolations. No complete nonhalting theorem for M355/M377 yet.
+
+High-word candidate grammar (simulation-derived, not yet certified): tokens a=(5,2), b=(10,2), c=(10,6), d=(10,8), e=(4,2), f=(5,4), g=(4,6), h=(4,8) mean zero-run length and subsequent one-run length. C0=ba, C1=adea, C(r+2)=ac(fg)^r fhea. D_r=C_r without final a. After fixed 1^8 high prefix, possible high word is a sequence of C codes followed by H0(T)=tail5(T), H1(r,T)=D_r tail5(T), or H2(k,n,T), n even >=6: k=0 -> a(10,n)tail5(T); k>=1 -> ac(fg)^(k-1) f(4,n)tail5(T). T is a list of positive even runs each preceded by 5 zeros; H0/H1 require nonempty T. The T pass increases the run before the first gap >=10 by two and reduces gap by six. The U pass gives ordinary carries C_r C_s -> C0^r C_(s+1). Remaining terminal cases must be proven, including initial entry and padding. Do not mark M355/M377 resolved.
