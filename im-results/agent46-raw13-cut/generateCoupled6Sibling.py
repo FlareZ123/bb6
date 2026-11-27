@@ -32,7 +32,16 @@ def main(mv):
         for d,t in [("false","1RB1LD1RC0RF1LA1RE1LA0LA---1LB0LC0RB"),
                     ("true","1RB1LD1RC0RF1LA1RE1LA0LA---1LB0LD0RB")]:
             manual[t]=f".closed (.proven ({ns_nested}.p {d}) ({ns_nested}.never {d}))"
-    B=max(62123,2651340 if mv=="1LB" else 0,max((x['n']+6 for x in late.values()),default=0))
+    if mv in ("1LD","1RD"):
+        ns="BB6.Agent46Raw13Coupled6LateCore"
+        extra_imports=["Raw13Coupled6LateCoreBound"]
+        if mv=="1LD":
+            for d,t in [("false","1RB1LD1RC1RA1LA1RE0LC0LA0RF1LD---0LC"),
+                        ("true","1RB1LD1RC1RA1LA1RE1LE0LA0RF1LD---0LC")]:
+                manual[t]=f".bounded ({ns}.Dtab {d}) 2651346 ({ns}.boundD {d})"
+        else:
+            manual["1RB1LD1RC1RA1LA1RE1LE0LA0RF1RD---0LC"]=f".bounded {ns}.Rtab 2651346 {ns}.boundR"
+    B=max(62123,2651340 if mv=="1LB" else 2651346 if mv in ("1LD","1RD") else 0,max((x['n']+6 for x in late.values()),default=0))
     coupled4.B=B
     assert all(x["holes"]==1 and x["n"]+6<=B for x in late.values())
     # Additional literal witnesses can be deposited independently.
