@@ -65,9 +65,11 @@ end BB6.Agent29Raw36
     (ROOT/f"Raw36Kid{i:02d}.lean").write_text(body)
     print(f"Generated {nm}: {n} proof chunks",flush=True)
 def assemble():
-    out="import Raw36Symmetry\n" + "".join(f"import Raw36Kid{i:02d}\n" for i in REPRESENTATIVE_CHILDREN)+HEADER.split("\n",1)[1]
+    out="import Raw36SymmetryCut\n" + "".join(f"import Raw36Kid{i:02d}\n" for i in REPRESENTATIVE_CHILDREN)+HEADER.split("\n",1)[1]
     out+="""
-theorem children_bound (mv : Move) (m : Machine) (hm : compatible (child mv) m) : WeightedBound 162 m := by
+theorem children_bound : ∀ mv ∈ representatives, ∀ m,
+    compatible (child mv) m → WeightedBound 162 m := by
+  intro mv hmv m hm
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
@@ -75,26 +77,13 @@ theorem children_bound (mv : Move) (m : Machine) (hm : compatible (child mv) m) 
 """
     for q,w,r in product(range(6),range(2),range(2)):
         if q == 5:
-            i = 12*w + 6*r + 4
-            out+=f"  · exact childF_bound 162 {str(bool(w)).lower()} {str(bool(r)).lower()} kid{i:02d}_bound m hm\n"
+            out+=f"  · exact False.elim ((by decide : (⟨{str(bool(w)).lower()},{str(bool(r)).lower()},5⟩ : Move) ∉ representatives) hmv)\n"
         else:
             out+=f"  · exact kid{12*w+6*r+q:02d}_bound m hm\n"
     out+="""
-open BB6.Agent47PartialAudit
-theorem branch_bound (m : Machine) (hm : compatible branch m) : WeightedBound 162 m := by
-  let t : PartialAudit := .split 9 (2,true) (fun _ => .unresolved)
-  have hc : partialCheck 162 branch t = true := by
-    rw [partialCheck.eq_3, Bool.and_eq_true]
-    exact ⟨by decide, allMoves_of _ (by intro mv; rfl)⟩
-  rcases partialSound 162 branch t branch_root branch_nohalt hc m hm with h|⟨e,he,hh⟩
-  · exact h
-  · rw [partialResiduals.eq_3] at he
-    obtain ⟨mv,_,hmem⟩ := List.mem_flatMap.mp he
-    rw [partialResiduals.eq_1] at hmem
-    obtain ⟨e',he',heq⟩ := List.mem_map.mp hmem
-    have he'' : e' = ([], child mv) := by simpa only [List.mem_singleton] using he'
-    rw [← heq,he''] at hh
-    exact children_bound mv m hh
+theorem branch_bound (m : Machine) (hm : compatible branch m) : WeightedBound 162 m :=
+  branch_bound_from_twenty 162 (by decide) children_bound m hm
+#print axioms children_bound
 #print axioms branch_bound
 end BB6.Agent29Raw36
 """
