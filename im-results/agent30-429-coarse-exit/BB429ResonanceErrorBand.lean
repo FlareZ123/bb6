@@ -18,7 +18,7 @@ theorem d234_error_band_arith
     (hi : 7≤i)
     (hb0 : 0≤b)
     (hlo : 500*(i:Int)≤b)
-    (hbig : 4096≤b)
+    (hbig : 3500≤b)
     (hhlo : h≤4*b)
     (hh0 : 0≤h)
     (hhhi : 3*b+1≤h)
