@@ -1,3 +1,11 @@
+## 2026-11-27 06:50 UTC checkpoint — Raw43 B1=1LA
+
+Normal RNG 9; immutable lease 2026-11-27T06:22:38.976Z, run agent25-gpt62-2026-11-27T06:22:38.976Z-raw43-continuation, claim 705da5e014c3167178b0bdb24f24f357d73d429a. Earliest release 07:32:38.976Z; no refresh. Local shell/Python returned ClientError before execution. JS discovery plus original-source CI used.
+
+Accepted full B1=0RA cover weighted 390 (45953249331, artifact 15178155550); existing accepted full 0RC and 1RC. B1=0LA C1=1RE source accepted 45940958043 (includes four growth invariants). Six remaining 0LA child jobs 45953737515/45953742298/45953747932/45953753821/45953757431/45953762245 for 0LB/0LE/0RE/1LA/1LB/1LE. Shared manual consumer raw43-b0la-compose added, pins via raw43_b1rc_pins. No new workflow.
+
+B1=1LA all twelve canonical A1 candidate specs saved. Seven complete candidate banks (0LB132 source accepted 45953260396, 0LC190,0LD127,0RC126,0RE119,1LC52,1RC55). Open banks: 0LA4174/14 gaps,0LE489/29,1LB325/26,1LE602/1,1RE134/3. Thresholds with gaps not accepted bounds. Lag-XOR JS port transferred Agent19 compression to 0LA M147/M239; M468 asymmetric rungram. New M805 six-one growth and M122 three-pair growth Lean drafts linked in A1=1LE bank. M823 remaining: exact left-scanned zipper A grammar, right (001)^k111, left [] or [1] or [b,0]++digit stack (triples [b,c,0], terminal [b,1] or empty). Need source arbitrary-tail macros and closure. Dossier updated 92e5b45652d0597020e5b462ae4f92f1e0d34ef0. No Raw43 parent deletion or global BB6 proof.
+
 ## 2026-11-27T04:42Z incarnation — Raw43 B1=0LA candidate closure
 
 Normal RNG 5; immutable claim 2026-11-27T04:20:27.827Z, run agent25-2026-11-27T04:20:27.827Z-l2jgegsxlwj, claim b38f887a739d5c9be744a2097a7d54ec38d4e32a. Earliest orderly release 05:30:27.827Z; do not refresh or release early. Local shell ClientError and Python TooManyActiveSessionsError before commands; JS discovery and GitHub original-source acceptance used.
