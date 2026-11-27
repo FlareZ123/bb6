@@ -122,13 +122,13 @@ theorem repeat_sound (m : Macro) (h : Valid m) (n : Nat) (a b : Word) :
       have h2 := ih (m.y++a) b
       simp only [beginS,endS,hm,if_false,rep,List.append_nil] at h1 h2
       simp only [beginS,endS,hm,if_false,rep]
-      rw [← rep_last]
+      rw [rep_last] at h2
       exact joinS h1 h2
     · have h1 := h (rep m.x n a) b
       have h2 := ih a (m.y++b)
       simp only [beginS,endS,hm,if_true,rep,List.append_nil] at h1 h2
       simp only [beginS,endS,hm,if_true,rep]
-      rw [← rep_last]
+      rw [rep_last] at h2
       exact joinS h1 h2
 
 def pre (u : Word) (x : Nat) : Nat := pack u + 2^u.length*x
@@ -199,11 +199,11 @@ structure Rule where
 
 inductive Cmd where
   | prim (n : Nat)
-  | macro (i n a b : Nat)
+  | sweep (i n a b : Nat)
 
 def applyCmd (rules : Array Rule) (z : P) : Cmd → Option (Nat × P)
   | .prim n => (runP (parent false) n z).map (fun y => (n,y))
-  | .macro i n a b => do
+  | .sweep i n a b => do
     let rule ← rules[i]?
     if z = beginP rule.data n a b then
       some (rule.data.period*n,endP rule.data n a b)
@@ -221,7 +221,7 @@ theorem apply_sound (rules : Array Rule) (z : P) (cmd : Cmd) (n : Nat) (y : P)
       simp [he] at h
       obtain ⟨hk,hp⟩ := h
       subst n; subst y; exact he
-  | macro i k a b =>
+  | sweep i k a b =>
     simp only [applyCmd] at h
     cases he : rules[i]? with
     | none => simp [he] at h

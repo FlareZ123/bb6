@@ -77,7 +77,7 @@ jobs:
             bash im-results/agent48-raw139-f1-oneLA/reproduce-sibling.sh "$SIBLING"
           fi
       - uses: actions/upload-artifact@v4
-        if: ${{ always() && ((inputs.sibling != 'OneLBC1ZeroLC' && inputs.sibling != 'OneLBC1OneLC' && inputs.sibling != 'OneLBReturn' && inputs.sibling != 'OneLBF1Return') || success()) }}
+        if: ${{ always() && ((inputs.sibling != 'OneLBC1ZeroLC' && inputs.sibling != 'OneLBC1OneLC' && inputs.sibling != 'OneLBReturn' && inputs.sibling != 'OneLBF1Return' && inputs.sibling != 'OneLBD0') || success()) }}
         with:
           name: raw139-${{ inputs.kind }}-${{ inputs.sibling }}-certified
           include-hidden-files: true

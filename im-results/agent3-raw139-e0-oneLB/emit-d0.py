@@ -57,7 +57,7 @@ while steps<N:
         if pending:rows.append(f".prim {pending}");pending=0
         y=r//m["V"] if m["left"] else l//m["U"]
         a,b=(x,y) if m["left"] else (y,x)
-        rows.append(f".macro {i} {n} {hex(a)} {hex(b)}")
+        rows.append(f".sweep {i} {n} {hex(a)} {hex(b)}")
         for _ in range(n):y=m["py"]+m["Y"]*y
         if m["left"]:z=q,m["pu"]+m["U"]*x,m["pv"]+m["V"]*y
         else:z=q,m["pu"]+m["U"]*y,m["pv"]+m["V"]*x
