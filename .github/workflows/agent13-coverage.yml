@@ -3245,6 +3245,21 @@ jobs:
             test -s /tmp/raw49-generated/child3/Raw49C3All.lean
             test -s /tmp/raw49-generated/child4/Raw49C4All.lean
             test -s /tmp/raw49-generated/child8/Raw49C8All.lean
+            test -s /tmp/raw49-generated/child9/Raw49C9All.lean
+            test -s /tmp/raw49-generated/child10/Raw49C10All.lean
+            test -s /tmp/raw49-generated/child11/Raw49C11All.lean
+            test -s /tmp/raw49-generated/child12/Raw49C12All.lean
+            test -s /tmp/raw49-generated/child13/Raw49C13All.lean
+            test -s /tmp/raw49-generated/child14/Raw49C14All.lean
+            test -s /tmp/raw49-generated/child16/Raw49C16All.lean
+            test -s /tmp/raw49-generated/child17/Raw49C17All.lean
+            test -s /tmp/raw49-generated/child18/Raw49C18All.lean
+            test -s /tmp/raw49-generated/child19/Raw49C19All.lean
+            test -s /tmp/raw49-generated/child20/Raw49C20All.lean
+            test -s /tmp/raw49-generated/child21/Raw49C21All.lean
+            test -s /tmp/raw49-generated/child22/Raw49C22All.lean
+            test -s /tmp/raw49-generated/child24/Raw49C24All.lean
+            test -s /tmp/raw49-generated/child25/Raw49C25All.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             g++ -std=c++20 -O3 im-results/agent7-raw49/cut.cpp -o /tmp/raw47-cut
             /tmp/raw47-cut '1RB---_1RC---_0RD---_1LD0RC_------_------' 1000 32 2 /tmp/raw47 | tee /tmp/raw47-cut.log
@@ -3284,7 +3299,7 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw55-progress ]; then
             target=im-results/agent25-raw55/Raw55Progress.lean
           elif [ "$TARGET" = weighted-tnf-raw49-progress ]; then
-            target=im-results/agent7-raw49/Raw49Progress112.lean
+            target=im-results/agent7-raw49/Raw49Progress97.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             target=im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw47-depth3-far6 ]; then
@@ -3301,6 +3316,21 @@ jobs:
               --source-root /tmp/raw49-generated/child3 \
               --source-root /tmp/raw49-generated/child4 \
               --source-root /tmp/raw49-generated/child8 \
+              --source-root /tmp/raw49-generated/child9 \
+              --source-root /tmp/raw49-generated/child10 \
+              --source-root /tmp/raw49-generated/child11 \
+              --source-root /tmp/raw49-generated/child12 \
+              --source-root /tmp/raw49-generated/child13 \
+              --source-root /tmp/raw49-generated/child14 \
+              --source-root /tmp/raw49-generated/child16 \
+              --source-root /tmp/raw49-generated/child17 \
+              --source-root /tmp/raw49-generated/child18 \
+              --source-root /tmp/raw49-generated/child19 \
+              --source-root /tmp/raw49-generated/child20 \
+              --source-root /tmp/raw49-generated/child21 \
+              --source-root /tmp/raw49-generated/child22 \
+              --source-root /tmp/raw49-generated/child24 \
+              --source-root /tmp/raw49-generated/child25 \
               --workdir /tmp/a47-rootsibling --jobs 4 "$target" | tee /tmp/a47-rootsibling.log
           else
             python tools/lean_compile_closure.py --workdir /tmp/a47-rootsibling --jobs 4 "$target" | tee /tmp/a47-rootsibling.log
@@ -3342,6 +3372,25 @@ jobs:
               "BB6.Agent7.Raw49C6.all_quotient",
               "BB6.Agent7Raw49Progress112.refined",
               "BB6.Agent7Raw49Progress112.residual_count",
+              "BB6.Agent7.Raw49C9.all_quotient",
+              "BB6.Agent7.Raw49C10.all_quotient",
+              "BB6.Agent7.Raw49C11.all_quotient",
+              "BB6.Agent7.Raw49C12.all_quotient",
+              "BB6.Agent7.Raw49C13.all_quotient",
+              "BB6.Agent7.Raw49C14.all_quotient",
+              "BB6.Agent7.Raw49C16.all_quotient",
+              "BB6.Agent7.Raw49C17.all_quotient",
+              "BB6.Agent7.Raw49C18.all_quotient",
+              "BB6.Agent7.Raw49C19.all_quotient",
+              "BB6.Agent7.Raw49C20.all_quotient",
+              "BB6.Agent7.Raw49C21.all_quotient",
+              "BB6.Agent7.Raw49C22.all_quotient",
+              "BB6.Agent7.Raw49C24.all_quotient",
+              "BB6.Agent7.Raw49C25.all_quotient",
+              "BB6.Agent7Raw49Progress106.refined",
+              "BB6.Agent7Raw49Progress106.residual_count",
+              "BB6.Agent7Raw49Progress97.refined",
+              "BB6.Agent7Raw49Progress97.residual_count",
           ]
           for name in names:
               m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
@@ -3406,7 +3455,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw49-progress'
         uses: actions/upload-artifact@v4
         with:
-          name: raw49-progress-proof-112
+          name: raw49-progress-proof-97
           path: |
             /tmp/raw49-generated/child*/*.lean
             /tmp/raw49-generated/trials/*
