@@ -3,10 +3,10 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: Proof group (core, hazards, extended, double, general, nonbinary)
+        description: Proof group (core, hazards, extended, double, general, nonbinary, single)
         default: core
         type: choice
-        options: [core, hazards, extended, double, general, nonbinary]
+        options: [core, hazards, extended, double, general, nonbinary, single]
 permissions:
   contents: read
 jobs:
@@ -58,6 +58,9 @@ jobs:
               b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/GeneralTripleBarrier.append.lean").read_text()
           if os.environ["PROOF_MODE"] == "nonbinary":
               b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/NonbinaryTripleBarrier.append.lean").read_text()
+          if os.environ["PROOF_MODE"] == "single":
+              b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/CountedTokenRules.append.lean").read_text()
+              b+="\n"+Path("../bb6/im-results/agent12-cryptid-root-invariant/SingleModeCR.append.lean").read_text()
           p.write_text("\n".join(a[:-1])+"\n\n"+b+"\n"+ending+"\n")
           PY
           set -o pipefail
