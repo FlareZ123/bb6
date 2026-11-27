@@ -5,8 +5,12 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks]
+        options: [capped, q0-banks, extra-shards]
         default: capped
+      extra_id:
+        type: choice
+        options: ['132', '140']
+        default: '132'
 
 permissions:
   actions: read
@@ -173,5 +177,115 @@ jobs:
         with:
           name: raw11-q0-bank-consumption
           path: /tmp/bank-output
+          if-no-files-found: error
+          retention-days: 30
+
+  extra-generate:
+    if: inputs.mode == 'extra-shards'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45896597080
+          pattern: raw11-six-hole-*
+          merge-multiple: true
+          path: /tmp/six-hole
+      - name: Generate exact parent proof DAG
+        env:
+          SIX_HOLE_DATA: /tmp/six-hole
+          RAW11_EXTENDED_AUTOMATA: '1'
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs "${{ inputs.extra_id }}" /tmp/parent-source
+          echo "$GITHUB_SHA" > /tmp/parent-source/generation-revision.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parent-source-${{ inputs.extra_id }}
+          path: /tmp/parent-source
+          if-no-files-found: error
+          retention-days: 30
+
+  extra-leaves:
+    needs: extra-generate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        group: [0, 1, 2, 3, 4, 5, 6, 7]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+      - uses: actions/download-artifact@v4
+        with:
+          name: parent-source-${{ inputs.extra_id }}
+          path: /tmp/parent-source
+      - name: Check independent exact leaf modules
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-shards.py leaf /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known /tmp/parent-out --group "${{ matrix.group }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parent-leaf-${{ inputs.extra_id }}-${{ matrix.group }}
+          path: /tmp/parent-out
+          if-no-files-found: warn
+          retention-days: 30
+
+  extra-join:
+    needs: extra-leaves
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+      - uses: actions/download-artifact@v4
+        with:
+          name: parent-source-${{ inputs.extra_id }}
+          path: /tmp/parent-source
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: parent-leaf-${{ inputs.extra_id }}-*
+          merge-multiple: true
+          path: /tmp/parent-out
+      - name: Join exact proof DAG
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-shards.py join /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known /tmp/parent-out
+          test -f "/tmp/parent-out/Agent5Raw11Extra${{ inputs.extra_id }}.olean"
+          grep -F 'cover' "/tmp/parent-out/Agent5Raw11Extra${{ inputs.extra_id }}.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parent-complete-${{ inputs.extra_id }}
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
           if-no-files-found: error
           retention-days: 30
