@@ -66,7 +66,6 @@ theorem queue_margin_sound (n K s h B : Nat) (hs : 1≤s) (ho : B%2=1)
   · have hd : 2 ∣ (2:Nat)^s := by simpa using Nat.pow_dvd_pow 2 hs
     have hmod : ((7*B)%2^s)%2=1 := by
       rw [Nat.mod_mod_of_dvd _ hd,Nat.mul_mod,ho]
-      decide
     have hpos : 0<(7*B)%2^s := by omega
     have hlt := Nat.mod_lt (7*B) (Nat.two_pow_pos s)
     have hr : 1≤resMin s B := by unfold resMin; exact Nat.le_min.mpr ⟨by omega,by omega⟩
