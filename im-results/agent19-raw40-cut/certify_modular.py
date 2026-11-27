@@ -13,6 +13,37 @@ src=src.replace(anchor,"imports='import Raw40Nores\\n' if")
 anchor="base=imports+head+f'-- {show(parent)}"
 assert anchor in src
 src=src.replace(anchor,"imports+=''.join('import '+m+'\\n' for m in os.environ.get('RAW40_PROOF_IMPORTS','').split())\n"+anchor)
+# A source-proved accelerated first-hole certificate must be checked without
+# evaluating its huge primitive prefix. Isolate its exact leaf, and transport
+# the accepted check across finite table equality. All enclosing split nodes
+# still use the original canonical checker and nores theorem.
+if os.environ.get('RAW40_ACCELERATED_LAST_JSON'):
+    anchor="def gen_shard(t,p,cut,name,expr,lines):"
+    assert anchor in src
+    src=src.replace(anchor,'''accelerated=json.loads(os.environ['RAW40_ACCELERATED_LAST_JSON'])
+def contains_accelerated(t):
+    if t[0]=='open': return t[1] in accelerated
+    return t[0]=='split' and any(contains_accelerated(k) for k in t[3])
+
+def gen_shard(t,p,cut,name,expr,lines):''')
+    anchor="    if size(t)<=threshold:"
+    assert anchor in src
+    src=src.replace(anchor,"    if (t[0]!='split' or size(t)<=threshold) and (t[0]!='split' or not contains_accelerated(t)):")
+    anchor="        lines.append(f'theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by decide +kernel')"
+    assert anchor in src
+    src=src.replace(anchor,'''        if t[0]=='open' and t[1] in accelerated:
+            ns=accelerated[t[1]]
+            assert t[1] in late
+            lines.append(f"""theorem peq{name} : p{name} = {ns}.table := by
+  funext s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> rfl
+theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by
+  rw [peq{name}]
+  exact {ns}.checked {cut}""")
+        else:
+            lines.append(f'theorem c{name} : canonicalCheck {B} p{name} {cut} t{name} = true := by decide +kernel')''')
 anchor="        return\n    assert t[0]=='split';n,s,children=t[1:];names=[]"
 assert anchor in src
 src=src.replace(anchor,"        if t[0]!='alias':lines.append(f'theorem nr{name} : canonicalResiduals p{name} {cut} t{name} = [] := by decide +kernel')\n"+anchor)
