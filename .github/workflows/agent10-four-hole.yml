@@ -221,14 +221,14 @@ jobs:
           VARIANT: ${{ inputs.raw43_extra_child }}
         run: |
           set -euo pipefail
-          [[ "$VARIANT" =~ ^([01][lr][a-f]|b1rc_c[01][lr][a-f])$ ]]
+          [[ "$VARIANT" =~ ^([01][lr][a-f]|b[01][lr][a-f]_c[01][lr][a-f])$ ]]
           root=im-results/agent25-raw43
           work=/tmp/a25-raw43-extra
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python "$root/generate.py" "$VARIANT"
-          if [[ "$VARIANT" == b1rc_c* ]]; then
+          if [[ "$VARIANT" == b*_c* ]]; then
             suffix="${VARIANT^^}"
           else
             suffix="E${VARIANT^^}"
