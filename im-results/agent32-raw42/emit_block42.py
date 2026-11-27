@@ -49,6 +49,8 @@ end BB6.Agent32Raw42{branch}.Block.Leaf{i}
         core={p.stem:'Raw42Iso'+p.stem for p in t.glob('*.lean') if not p.stem.startswith('Raw42')}
         for p in t.glob('*.lean'):
             s=p.read_text().replace('BB6BlockFAR','BB6Raw42BlockFAR').replace('BB6.Agent32MaskBiDFA','BB6.Agent32Raw42BlockMask')
+            if p.stem=='BlockFARBridge2':
+                s=s.replace('namespace BB6Raw42BlockFAR2\n','namespace BB6Raw42BlockFAR2\nopen BB6Raw42BlockFAR (primStep cons tail)\n')
             s=re.sub(r'^import (\w+)$',lambda m:'import '+core.get(m[1],m[1]),s,flags=re.M)
             q=out/(core.get(p.stem,p.stem)+'.lean')
             if q.exists():assert q.read_text()==s,q
