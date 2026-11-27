@@ -39,13 +39,13 @@ theorem idx_split (k j B : Nat) :
     have hm : B%(p*2)=B%2+2*((B/2)%p) := by
       rw [Nat.mul_comm p 2,Nat.mod_mul]
     have hmoddiv : (B%(p*2))/2=(B/2)%p := by rw [hm]; omega
-    have hdecomp : B/2=(B/2)%p+p*(B/(p*2)) := by rw [←hdiv]; exact (Nat.div_add_mod (B/2) p).symm
+    have hdecomp : B/2=(B/2)%p+p*(B/(p*2)) := by rw [←hdiv]; simpa [Nat.add_comm] using (Nat.div_add_mod (B/2) p).symm
     rw [show k+1+j=k+j+1 by omega,idx,ih (B/2),Nat.pow_succ,idx,hmoddiv,hdiv]
     change 2*(idx k (B/2%p)+p*(idx j (B/(p*2))+k*(B/(p*2)))+B/2) =
       2*(idx k (B/2%p)+B/2%p)+p*2*(idx j (B/(p*2))+(k+1)*(B/(p*2)))
-    rw [hdecomp]
-    simp only [Nat.mul_add,Nat.add_mul,Nat.one_mul]
-    ac_rfl
+    calc
+      _ = 2*(idx k (B/2%p)+p*(idx j (B/(p*2))+k*(B/(p*2)))+(B/2%p+p*(B/(p*2)))) := congrArg (fun x => 2*(idx k (B/2%p)+p*(idx j (B/(p*2))+k*(B/(p*2)))+x)) hdecomp
+      _ = _ := by simp only [Nat.mul_add,Nat.add_mul,Nat.one_mul]; ac_rfl
 
 theorem idx_pad (k j B : Nat) (hb : B<2^k) : idx (k+j) B=idx k B := by
   rw [idx_split,Nat.mod_eq_of_lt hb,Nat.div_eq_of_lt hb,idx_zero]
@@ -139,7 +139,7 @@ theorem planes_eq (L B : Nat) (hb : B<2^(2^L)) :
     have hhi : hi<p := by
       apply (Nat.div_lt_iff_lt_mul hp).2
       simpa [hp2] using hb
-    have he : B=lo+p*hi := (Nat.div_add_mod B p).symm
+    have he : B=lo+p*hi := by simpa [lo,hi,Nat.add_comm] using (Nat.div_add_mod B p).symm
     rw [show 2^(L+1)=M+M by rw [Nat.pow_succ]; dsimp [M]; omega,idx_split]
     change planeSum (L+1) B (L+1)=idx M lo+p*(idx M hi+M*hi)
     conv_lhs => rw [he]

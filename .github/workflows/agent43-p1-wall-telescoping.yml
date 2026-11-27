@@ -22,6 +22,7 @@ on:
           - lag-partition
           - lag-pair
           - lag-pair-finite
+          - lag-pair-weight
       lag_case:
         description: "Delayed certificate index"
         required: false
@@ -38,7 +39,7 @@ permissions:
   contents: read
 jobs:
   lag-pair:
-    if: inputs.target == 'lag-pair' || inputs.target == 'lag-pair-finite'
+    if: inputs.target == 'lag-pair' || inputs.target == 'lag-pair-finite' || inputs.target == 'lag-pair-weight'
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -53,7 +54,10 @@ jobs:
           set -euo pipefail
           AG43=im-results/agent43-p1-high-cost-reset-count
           export LEAN_PATH="$AG43:im-results/agent9-p1-first-return:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent50-p1-dyadic-width:im-results/agent28-p1-word-automaton:im-results/agent28-p1-full-prefix:im-results/agent50-p1-subwall"
-          python tools/lean_compile_deps.py "$AG43/LagPairTags.lean" | tee /tmp/lag-pair.log
+          TARGET=LagPairTags
+          if [ "${{ inputs.target }}" = lag-pair-finite ]; then TARGET=LagPairSource; fi
+          if [ "${{ inputs.target }}" = lag-pair-weight ]; then TARGET=PackedDigitWeight; fi
+          python tools/lean_compile_deps.py "$AG43/$TARGET.lean" | tee /tmp/lag-pair.log
           if grep -Eq 'sorryAx|error:' /tmp/lag-pair.log; then exit 1; fi
       - name: Check selected finite delayed index
         if: inputs.target == 'lag-pair-finite'
@@ -119,7 +123,7 @@ jobs:
           retention-days: 3
   source-wall:
     needs: block-shards
-    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' && inputs.target != 'lag-pair' && inputs.target != 'lag-pair-finite'
+    if: always() && (needs.block-shards.result == 'success' || needs.block-shards.result == 'skipped') && inputs.target != 'packed-prefix' && inputs.target != 'lag-pair' && inputs.target != 'lag-pair-finite' && inputs.target != 'lag-pair-weight'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
