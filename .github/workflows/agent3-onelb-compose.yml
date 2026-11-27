@@ -1,0 +1,56 @@
+name: Agent3 OneLB parent composition
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Exact source commit
+        required: true
+        type: string
+      extra_artifacts:
+        description: Space-separated accepted code 1,9,21 artifact IDs (omit for explicit conditional parent)
+        required: false
+        default: ''
+        type: string
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Consume exact child banks
+        env:
+          GH_TOKEN: ${{ github.token }}
+          EXTRA: ${{ inputs.extra_artifacts }}
+        run: |
+          [[ "$EXTRA" =~ ^[0-9\ ]*$ ]]
+          bash im-results/agent3-raw139-e0-oneLB/check-parent.sh $EXTRA
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw139-OneLB-parent-checked
+          include-hidden-files: true
+          path: |
+            .tmp/a3-oneLB-parent/manifest.json
+            .tmp/a3-oneLB-parent/imports/*.lean
+            .tmp/a3-oneLB-parent/build/*.olean
+            .tmp/a3-oneLB-parent/log
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: raw139-OneLB-parent-incomplete
+          include-hidden-files: true
+          if-no-files-found: ignore
+          path: |
+            .tmp/a3-oneLB-parent/imports/*.lean
+            .tmp/a3-oneLB-parent/build/*.olean
+            .tmp/a3-oneLB-parent/log
