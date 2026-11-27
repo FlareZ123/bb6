@@ -86,3 +86,28 @@ paired packet decomposition is the stronger surviving structure.
 
 Do not cite this file as a proof until the grouped-map induction or Lean
 formalization is completed.
+
+## Exact transducer decomposition now encoded in Lean
+
+The n=0 family has now been decomposed into two recursive exact machines:
+
+- `PairedScanCore.lean` / `PairedTerminalCore.lean`: packet rules
+  `AT` (8 steps), `TT` (18 steps), and terminal `AAA` / `TAA`
+  (47 / 57 steps).
+- `PairedScan.lean`: recursive scanner from
+  `c0 (T c1)...(T cq) AA X` to a J-headed decoder word.
+- `PairedDecoderCore.lean`: eight 60/64-step local decoder peels plus the
+  T-base.
+- `PairedReset.lean`: composition of scanner and decoder for every nonempty
+  Boolean data list.  This theorem is still **pending a green CI run**; keep it
+  in `im-results/` until the no-`sorryAx` kernel check succeeds.
+
+The decomposition gives the cost formula without fitting:
+scanner cost `47 + 8q + 10t`, decoder cost `27 + 60q + 4t`, hence
+`74 + 68q + 14t` for n=0.
+
+It also gives an exact growth identity.  If there are q+1 data bits and t of
+them are T, the source core has `6q+6+2t` tape bits while the output core has
+`6q+8+2t`.  Therefore every paired-AA rewrite increases left reset
+bit-length by **exactly 2**.  The already-derived P^n M descent also has
+exactly +2 bit growth; the three J-boundary rules have +3 or +5.
