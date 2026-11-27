@@ -74,6 +74,10 @@ theorem source_forced_one (b : Nat) (s : Pair) (choice : Option Nat)
         (decide (HighValid s n)=true) ∧
         ((if choice=some n then true else excluded (b-(n+2)) (high s n))=true) := by
       have hline0 := List.all_eq_true.mp hh n hnmem
+      change (if Allowed s v n then
+        decide (HighValid s n) &&
+        (if choice=some n then true else excluded (b-(n+2)) (high s n))
+        else true)=true at hline0
       have hline1 :
           (decide (HighValid s n) &&
             (if choice=some n then true else excluded (b-(n+2)) (high s n)))=true := by
