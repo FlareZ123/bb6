@@ -44,8 +44,7 @@ for p in src.glob('*.lean'):
       if tuple(t) in BANK:
        N,S,mod,parent,proof,B=BANK[tuple(t)]
        assert (n,s)==(N,S) and B<=spec["bound"]
-       if B!=spec["bound"]:
-        proof=f'(fun m hm k d hk hd => Nat.le_trans ({proof} m hm k d hk hd) (by decide +kernel))'
+       proof=f'({proof} {spec["bound"]} (by decide +kernel))'
        line=f'.bounded ({parent}) {proof}'+tail
        imports.add(mod)
       else:

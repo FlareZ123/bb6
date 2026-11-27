@@ -15,8 +15,26 @@ if (( $# )); then
   reuse=(--precompiled-manifest "$work/reuse/manifest.json" --precompiled-dir "$work/reuse")
 fi
 python3 "$base/graft.py" "$src/c$c" "$work" "$c"
-if [[ "$c" == "01" ]]; then
+extra_provenance=()
+if [[ "$c" == "01" || "$c" == "09" || "$c" == "21" ]]; then
   cp im-results/agent12-raw139-oneLB-c1-286/Counter286{,Bridge}.lean "$work/imports/"
+fi
+if [[ "$c" == "09" || "$c" == "21" ]]; then
+  a1="$PWD/im-results/agent12-raw139-oneLB-lateA1"
+  rr="$PWD/im-results/agent12-raw139-oneLB-repeat-replay"
+  cp "$a1/LateCert.lean" "$rr/RepeatReplay.lean" "$work/imports/"
+  g++ -O3 -std=c++17 "$rr/discover.cpp" -o "$work/discover-repeat"
+  if [[ "$c" == "09" ]]; then
+    python3 "$a1/gen_a1.py" "$work/imports/LateA1Checked.lean"
+    "$work/discover-repeat" 0 > "$work/c209.txt"
+    python3 "$rr/gen_repeat.py" 209 "$work/c209.txt" "$work/imports/Late209Checked.lean"
+    extra_provenance+=(--provenance-input "$a1/gen_a1.py" --provenance-input "$work/c209.txt")
+  else
+    "$work/discover-repeat" 1 > "$work/c892.txt"
+    python3 "$rr/gen_repeat.py" 892 "$work/c892.txt" "$work/imports/Late892Checked.lean"
+    extra_provenance+=(--provenance-input "$work/c892.txt")
+  fi
+  extra_provenance+=(--provenance-input "$rr/discover.cpp" --provenance-input "$rr/gen_repeat.py")
 fi
 if [[ "$(cat "$work/wide.json")" != "{}" ]]; then
   python3 "$base/emit-wide.py" "$work/imports" "$work/wide.json"
@@ -60,7 +78,7 @@ python3 tools/lean_compile_closure.py "$work/imports/${meta[0]}Weighted.lean" \
  --provenance-input "$work/spec-compact.json" --provenance-input "$base/residuals.json" \
  --provenance-input "$base/graft.py" --provenance-input "$base/emit-wide.py" \
  --provenance-input "$checker/package6.py" --provenance-input "$base/transform-compressed.py" --provenance-input "$base/compressed.py" \
- --provenance-input "$late/emit_late.py" | tee "$work/log"
+ --provenance-input "$late/emit_late.py" "${extra_provenance[@]}" | tee "$work/log"
 python3 - "$work/log" "${meta[1]}" <<'PY'
 import pathlib,re,sys
 s=pathlib.Path(sys.argv[1]).read_text()
