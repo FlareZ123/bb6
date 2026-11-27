@@ -27,7 +27,7 @@ theorem witness_compatible : compatible p witness := by
     | have h : p (_,_) = none := by decide; rw [h] at ht; contradiction
     | cases ht <;> rfl
 
-theorem witness_halts : HaltsAfter witness 107 := by
+theorem witness_halts : HaltsAfter witness 106 := by
   constructor <;> rfl
 theorem witness_delay : 0 ∈ delays (zeroNext witness) 0 := by decide
 
@@ -37,7 +37,7 @@ theorem exact_weighted : (∀ m, compatible p m → WeightedBound 107 m) ∧
   intro B hB
   refine ⟨witness, witness_compatible, ?_⟩
   intro hb
-  have h := hb 107 0 witness_halts witness_delay
+  have h := hb 106 0 witness_halts witness_delay
   omega
 #print axioms exact_weighted
 end BB6.Agent19Raw40.Raw40C1LC1LC

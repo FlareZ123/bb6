@@ -1,3 +1,4 @@
+import Raw40A1LC0RDLate
 import Raw40C1LC0RDAll
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -28,7 +29,7 @@ theorem witness_compatible : compatible p witness := by
     | cases ht <;> rfl
 
 theorem witness_halts : HaltsAfter witness 5755 := by
-  constructor <;> rfl
+  exact A1LC0RDLate.Leaf42.witness_halts
 theorem witness_delay : 0 ∈ delays (zeroNext witness) 0 := by decide
 
 theorem exact_weighted : (∀ m, compatible p m → WeightedBound 5756 m) ∧
