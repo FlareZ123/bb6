@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step, low-scale, three-step-strip, raw106-source, raw79-source, raw67-source]
+        options: [n10, gap-two-three-step, low-scale, three-step-strip, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
         default: n10
 
 permissions:

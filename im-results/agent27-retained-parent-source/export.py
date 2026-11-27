@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export exact generated source of the retained Raw106 cylinder for local Lean compilation.
+"""Export exact generated source of retained cylinders for local Lean compilation.
 The export is not a certificate; the original audit terms must all kernel-check.
 """
 import json
@@ -16,11 +16,16 @@ def run(*args):
     subprocess.run([str(x) for x in args],cwd=REPO,check=True)
 
 def export(raw,out):
-    if raw not in {"67","79","106"}:
+    if raw not in {"61","63","67","79","106"}:
         raise ValueError("Unsupported retained parent")
     py=sys.executable
     root=REPO/'im-results/agent10-tnf-multipump'
     run(py,REPO/'im-results/agent13-coverage/unpack.py')
+    if raw == '61':
+        for suffix in ('tripling','recursive_unary','residue_unary','multiphase','d120','language353','a244'):
+            run(py,REPO/f'im-results/agent48-raw61/emit_{suffix}.py')
+    elif raw == '63':
+        run(py,REPO/'im-results/agent48-raw63-counter/emit_counter.py')
     run(py,root/'generate.py',raw)
     run(py,root/'chunk_checks.py',root,'Raw'+raw,'--limit','96')
     source=root/f'Raw{raw}Data.lean'

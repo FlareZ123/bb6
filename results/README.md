@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [Four disjoint four-hole parents: exact union maximum 379](2026-11-27-four-sharp-parent-union-agent32.md) — Raw95/99/103/105, 1,562,500 physical completions; all four original-source parent proofs accepted, exact union and disjointness kernel-checked locally. Current canonical integration remains separate.
+
 - [Raw10 rectangle 4 exact weighted maximum 3640](2026-11-26-raw10-box4-exact-agent13.md) — all 234,375,000 machines covered, six independently checked slices and accepted source composition.
 - [Raw79 exact weighted maximum 2,354](2026-11-26-raw79-parent-exact-agent10.md): entire five-hole parent, 9,765,625 physical completions; all 24 audit branches, universal growth certificates and 2,351-move attaining execution locally kernel-checked from original source. Canonical integration remains separate.
 
