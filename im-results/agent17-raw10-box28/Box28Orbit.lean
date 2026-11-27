@@ -1,6 +1,7 @@
 import Box17AuditCore
 import Raw10EncodedSourceBridge
 import WeightedTNF
+import Box28Simple
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -85,6 +86,51 @@ theorem ef_bound (B : Nat) (d : Fin 4)
   rw [← domain_source]
   exact ef_fits d m hm
 
+theorem parent_fits (m : Machine) (hm : Fits raw10Remainder[28]! m)
+    (d1 : Fin 25) (h0 : m (3,false) = decode 14) (h1 : m (3,true) = decode d1) :
+    Fits (sourceDomain d1) m := by
+  intro s
+  unfold sourceDomain
+  by_cases h7 : index s = 7
+  · rw [if_pos h7]
+    have hs : s = slot 7 := by rw [← slot_index s,h7]
+    rw [hs]
+    change m (3,true) ∈ [decode d1]
+    simp [h1]
+  · rw [if_neg h7]
+    by_cases h6 : index s = 6
+    · rw [if_pos h6]
+      have hs : s = slot 6 := by rw [← slot_index s,h6]
+      rw [hs]
+      change m (3,false) ∈ [decode 14]
+      simp [h0]
+    · rw [if_neg h6]
+      exact hm s
+
+def hardCodes : List (Fin 25) := [3,4,17,18,19,20]
+
+theorem classify : ∀ d1 : Fin 25,
+    (BB6.Agent17.Box28Simple.secondWitness 14 d1).isSome = true ∨
+    d1 ∈ hardCodes ∨ ∃ d : Fin 4, d1 = fCode d := by decide
+
+theorem d14_bound (B : Nat) (hB : 11 ≤ B)
+    (h : ∀ d1 ∈ hardCodes, ∀ m, Fits (sourceDomain d1) m → WeightedBound B m)
+    (m : Machine) (hm : Fits raw10Remainder[28]! m)
+    (h0 : m (3,false) = decode 14) : WeightedBound B m := by
+  have e : raw10Remainder[28]! (3,true) = (List.finRange 25).map decode := by decide
+  have hh := hm (3,true)
+  rw [e] at hh
+  obtain ⟨d1,_,he⟩ := List.mem_map.mp hh
+  have hf := parent_fits m hm d1 h0 he.symm
+  rcases classify d1 with hs | hh | ⟨d,hd⟩
+  · have hb := BB6.Agent17.Box28Simple.parent_second m hm 14 d1 h0 he.symm hs
+    intro k j hk hj
+    exact Nat.le_trans (hb k j hk hj) hB
+  · exact h d1 hh m hf
+  · subst d1
+    exact ef_bound B d (h (eCode d) ((by decide : ∀ d : Fin 4, eCode d ∈ hardCodes) d)) m hf
+
+#print axioms d14_bound
 #print axioms domain_source
 #print axioms ef_bound
 end BB6.Agent17.Box28Orbit
