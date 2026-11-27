@@ -99,6 +99,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent50Raw47Membership
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent47CanonicalFrontier
+open BB6.Agent31FourHoleRoster
 
 def p : PartialMachine := fun s =>
   match s.1.val,s.2 with
