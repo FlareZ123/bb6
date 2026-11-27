@@ -26,7 +26,7 @@ def run (alt : Bool) : Nat → Config → Option Config
 theorem run_add (alt : Bool) (m n : Nat) (c : Config) :
     run alt (m+n) c = (run alt m c).bind (run alt n) := by
   induction m generalizing c with
-  | zero => rfl
+  | zero => simp [run]
   | succ m ih =>
     simp only [Nat.succ_add, run]
     cases step alt c <;> simp [ih]
@@ -76,7 +76,7 @@ theorem start (alt : Bool) (ds : List Digit) :
 
 theorem carry (alt : Bool) (k : Nat) (s : Stream) :
     run alt 3 (atA k (block true true s)) = some (atA (k+1) s) := by
-  have h : 3*(k+1)+1 = (3*k+1)+3 := by omega
+  have h : 3*(k+1) = 3*k+3 := by omega
   simp [atA, block, run, step, right, ones, rep, h, pop_push, push_zero]
 
 theorem stop_even (alt : Bool) (k : Nat) (b : Bool) (s : Stream) :
@@ -90,12 +90,18 @@ theorem stop_one (alt : Bool) (k : Nat) (s : Stream) :
   have h : 3*(k+1) = (3*k+1)+2 := by omega
   simp [atA, atE, block, run, step, left, right, ones, rep, h, pop_push, push_zero]
 
+theorem rep_push (b : Bool) (n : Nat) (s : Stream) :
+    rep b n (push b s) = push b (rep b n s) := by
+  induction n with
+  | zero => rfl
+  | succ n ih => simp only [rep, ih]
+
 theorem even_return (alt : Bool) (k : Nat) (b : Bool) (ds : List Digit) :
     run alt (4+3*k) (atA k (block false b (encode ds))) =
       some (root (List.replicate k .zero ++ (if b then .three else .one) :: ds)) := by
   rw [run_add, stop_even, Option.bind_some, clear_all]
   cases b <;>
-    simp [root, atE, zeroes_encode, encode, block, ← rep_add, rep]
+    simp [root, atE, zeroes_encode, encode, block, rep_push]
 
 theorem one_return (alt : Bool) (k : Nat) (ds : List Digit) :
     run alt (3+3*(k+1)) (atA k (block true false (encode ds))) =
