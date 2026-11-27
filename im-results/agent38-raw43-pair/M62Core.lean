@@ -31,6 +31,10 @@ theorem forward18 (L R : List Bool) :
       some ⟨5,R.headD false::bits "110011"++L,R.tail⟩ := by
   cases R <;> rfl
 
+theorem forward18_blank (L : List Bool) :
+    run0 table 18 ⟨5,false::L,[true]⟩ =
+      some ⟨5,false::bits "110011"++L,[]⟩ := by rfl
+
 theorem forward8 (L R : List Bool) :
     run0 table 8 ⟨5,false::L,bits "10101"++R⟩ =
       some ⟨5,R.headD false::bits "111110"++L,R.tail⟩ := by
@@ -52,6 +56,7 @@ theorem blank_entry :
       some ⟨5,false::bits "111",bits "1"⟩ := by rfl
 
 #print axioms forward18
+#print axioms forward18_blank
 #print axioms forward8
 #print axioms forward11a
 #print axioms forward11b
