@@ -275,8 +275,7 @@ theorem progress {c : Config} (hc : Inv c) :
   obtain ⟨i,p,o,w,u,hr,hw,ho,rfl⟩ := hc
   obtain ⟨j,hj,hw'⟩ := goodNext hw
   have h := certAt i p o (hd w) hr
-  unfold obligation at h
-  rw [hj] at h
+  simp only [obligation,hj] at h
   by_cases hp : p=2
   · subst p
     simp only [if_pos rfl,Bool.and_eq_true,beq_iff_eq,Bool.or_eq_true] at h
