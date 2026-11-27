@@ -1,0 +1,45 @@
+name: Agent 36 Raw41 child084 full mixed FAR and symbolic pumping source (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46081769036
+          name: raw41-auto-leaf-8
+          path: .tmp/raw41-auto8
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46081769036
+          name: raw41-auto-leaf-14
+          path: .tmp/raw41-auto14
+      - name: Generate all 24 exact exhaustive branches from source
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/close_candidate.py \
+            --index 84 --dfa 5 --time 900 \
+            --far-override '22:1012134545555' \
+            --auto-json .tmp/raw41-auto8/raw41-auto-leaf-8.json \
+            --auto-json .tmp/raw41-auto14/raw41-auto-leaf-14.json \
+            --out .tmp/raw41-target84-auto
+          test "$(python3 -c "import json;print(json.load(open('.tmp/raw41-target84-auto/summary.json'))['remaining_after_auto'])")" = 0
+          ls -lh .tmp/raw41-target84-auto/lean/Raw41New084Auto.lean
+          cat .tmp/raw41-target84-auto/summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-target-84-auto
+          path: .tmp/raw41-target84-auto/
+          retention-days: 35
