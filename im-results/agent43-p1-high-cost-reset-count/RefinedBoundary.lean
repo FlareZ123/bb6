@@ -185,4 +185,68 @@ theorem critical_reset_requires_refined (n : Nat) (hn : 14≤n)
 
 #print axioms seed_refinement
 #print axioms critical_reset_requires_refined
+
+/-- The authentic seed condition implies a purely arithmetic restriction
+on the dyadic-band candidate. -/
+theorem power_seed_parity (n m v w j s : Nat) (hn : 14≤n)
+    (hmass : v+w+n+m+1=total n)
+    (ho : v%2=1) (hpow : w+v/2=7*2^j)
+    (hs : s+2*j+13=14*2^j+v)
+    (hcond : (s%4=2 ∧ BB6.Agent1.Reach (s-6) 3) ∨
+      (j%4=1 ∧ v=2*j+5)) :
+    (n+m+j)%2=1 ∨ (j%4=1 ∧ v+w=7*2^j+j+3) := by
+  have hT : total n%2=0 := by
+    have he : 2∣2^n := Nat.pow_dvd_pow 2 (show 1≤n by omega)
+    obtain ⟨a,ha⟩ := he
+    unfold total
+    rw [ha]
+    omega
+  rcases hcond with ⟨hmod,_⟩ | ⟨hj,hv⟩
+  · exact Or.inl (by omega)
+  · exact Or.inr ⟨hj,by omega⟩
+
+/-- At most six candidates per cost, with the power candidate tested only
+in the parity-allowed case or at the isolated quarter-exponent cost. -/
+theorem critical_reset_no_reach_of_six_families (n : Nat)
+    (hn : 14≤n) (he : n%2=0)
+    (h : ∀ m, 0<m → m+n+9≤total n →
+      let S := total n-(n+m+1)
+      (∀ w, (w=6 ∨ w=7 ∨ w=8 ∨ w=10) →
+        backCheck n m (S-w) w=false) ∧
+      ((n+m)%2=0 → backCheck n m 2 (S-2)=false) ∧
+      (∀ j, j<n → 7*2^j+3≤S → S+5≤14*2^j →
+        ((n+m+j)%2=1 ∨ (j%4=1 ∧ S=7*2^j+j+3)) →
+        backCheck n m (2*S-14*2^j-1) (14*2^j+1-S)=false)) :
+    ¬ BB6.Agent1.Reach 2 (14*2^n-2*n-10) := by
+  intro hr
+  obtain ⟨m,v,w,hm,hW,hc,hB⟩ := critical_reset_requires_refined n hn he hr
+  have hG := back_guarded n m v w hn hc
+  have hv := guarded_right_ge_two hm hG
+  have hmass := micro_mass n m v w hn (guarded_micro hG)
+  change v+w+n+m+1=total n at hmass
+  let S := total n-(n+m+1)
+  have hS : v+w=S := by dsimp [S]; omega
+  have hcases := h m hm (by omega)
+  change (∀ w, (w=6 ∨ w=7 ∨ w=8 ∨ w=10) →
+        backCheck n m (S-w) w=false) ∧
+      ((n+m)%2=0 → backCheck n m 2 (S-2)=false) ∧
+      (∀ j, j<n → 7*2^j+3≤S → S+5≤14*2^j →
+        ((n+m+j)%2=1 ∨ (j%4=1 ∧ S=7*2^j+j+3)) →
+        backCheck n m (2*S-14*2^j-1) (14*2^j+1-S)=false) at hcases
+  rcases hB with hsmall | ⟨h2,hpar⟩ | ⟨h5,hodd,j,s,hj,hpow,hs,hrs,hcond⟩
+  · have hv' : v=S-w := by omega
+    rw [hv',hcases.1 w hsmall] at hc
+    contradiction
+  · have hw' : w=S-2 := by omega
+    rw [h2,hw',hcases.2.1 hpar] at hc
+    contradiction
+  · have hp := power_seed_parity n m v w j s hn hmass hodd hpow hs hcond
+    rw [hS] at hp
+    obtain ⟨hlo,hhi,hv',hw'⟩ := power_boundary_coords S v w j hS h5 hW hodd hpow
+    rw [hv',hw',hcases.2.2 j hj hlo hhi hp] at hc
+    contradiction
+
+#print axioms power_seed_parity
+#print axioms critical_reset_no_reach_of_six_families
+
 end BB6.Agent43RefinedBoundary
