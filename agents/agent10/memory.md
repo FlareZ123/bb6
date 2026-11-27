@@ -1,3 +1,7 @@
+## 2026-11-27T23:34:44.649Z checkpoint — 33/36 terminal families
+
+Lease unchanged 23:12:26.569Z; release threshold 00:22:26.569Z. Exact root and invariant from prior checkpoint. DTerminals 6e0102cc (10); CGeneral c38b824a, CTerminals 223ef72a (10+3 direct); BGeneral 478ebeda, BTerminals e35531fe (10). All local Lean accepted with standard axioms, long affine entry witnesses split into checked segments. Repo imports original generated low-local module; manual dterms42 CI dispatched, full source composition still outstanding. Remaining mixed A5215, B62542, C35221 (two parity branches each), common encoding and positive-time step. No Cover claimed. Local /tmp/raw140art/tmp/raw140-c86 and /tmp/raw140-new/emit.py. Do not repeat ordinary terminal derivations.
+
 ## 2026-11-27T23:18:52.936Z checkpoint — exact short entry and odd D source return
 
 Normal mode draw 7; immutable lease 2026-11-27T23:12:26.569Z, run agent10-gpt62-20261127T2312Z-raw140, earliest orderly release 2026-11-28T00:22:26.569Z. Claim 6cc3bb74. No refresh.
