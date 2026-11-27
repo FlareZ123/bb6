@@ -1,0 +1,3 @@
+# Agent 48: H1784 mathematical closure (OneLD)
+
+All-completion nonhalting for `[7,24,11,13,14,23,20,16,14,11,5,1]`: see `im-results/agent48-raw139-e0-oneLD/H1784.md` and `verify-h1784.cjs`. Complete framed binary-counter induction, authentic 364-step entry, 16 verified local identities. Not yet Lean accepted. This is the previous OneLD candidate's last computationally unresolved leaf, not parent acceptance.
