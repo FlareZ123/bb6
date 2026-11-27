@@ -118,7 +118,7 @@ theorem never_phase (n : Nat) (b : Bool) (k : Nat) (w : List (Bool × Bool)) :
       exact ih _ (by omega) b' k' w' h
 
 theorem never_blank (n : Nat) : run a1 d1 n (cfg .A z z) ≠ none := by
-  simpa [phase,stack,digits] using never_phase a1 d1 n false 0 []
+  simpa [phase,stack,digits,A] using never_phase a1 d1 n false 0 []
 
 open BB6Coverage
 open Box17 (index decode)
