@@ -68,6 +68,7 @@ theorem rightPhase (v : Kind) (m : Nat) :
       some ⟨0,[false]++rep Q (m+1),[true,true]++rep W m⟩ := by
     have eq : [false]++rep Q m++Q = [false]++rep Q (m+1) := by
       rw [List.append_assoc,rep_snoc]
+      rfl
     rw [eq] at h
     simpa only [List.nil_append,List.append_assoc] using h
   have h2 := sweepR (p v) 0 [true,false,true] [] W W 5 (right5 v) m (rep Q (m+1)) []
@@ -145,7 +146,7 @@ theorem advanceOdd (v : Kind) (j : Nat) :
       rfl
     rw [e]
     have eW : rep (W++W) (j+1)=(W++W)++rep (W++W) j := rfl
-    rw [eW]
+    rw [eW,show rep Q (2*j+1+1)=Q++rep Q (2*j+1) by rfl]
     simpa only [List.append_assoc] using h3
   have H := join0 (join0 (join0 h h2') h3') (leftEnd v (j+1) ([true]++rep (W++W) (j+1)))
   rw [show overhead v+7*(2*j+1)+14+10*j+6+(4*(j+1)+3)=overhead v+14*(2*j+1)+20 by omega,
