@@ -77,7 +77,14 @@ jobs:
           for id in $EXTRA_RUNS; do
             test "$(gh run view "$id" --json status --jq .status)" = completed
             gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | {id,name,digest,workflow_run}' >> "$W/evidence/extra-artifacts.jsonl"
-            mapfile -t names < <(gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | .name' | grep -E '^raw47-(far-[0-7]-[0-9]+-[0-9]+|graph-parents(-[0-9]+)?)
+            mapfile -t names < <(gh api "repos/${{ github.repository }}/actions/runs/$id/artifacts" --paginate --jq '.artifacts[] | select(.expired==false) | .name' | grep -E '^raw47-(far-[0-7]-[0-9]+-[0-9]+|graph-parents(-[0-9]+)?)$')
+            test "${#names[@]}" -gt 0
+            for name in "${names[@]}"; do
+              gh run download "$id" --name "$name" --dir /tmp/a50-extra
+              python "$D/merge_accepted_artifacts.py" "$W" --resume /tmp/a50-extra
+              rm -rf /tmp/a50-extra
+            done
+          done
       - name: Compose accepted parent covers using the verified packed key
         id: composition
         env:
