@@ -15,7 +15,7 @@ theorem reverseCover_append (q : Nat) (xs ys : List Nat) (starts mid ends : Nat 
     ReverseCover q (xs++ys) starts ends := by
   intro z c hw hz
   have hw' : Walk (q+xs.length+ys.length) z (xs++ys) c := by simpa [Nat.add_assoc] using hw
-  obtain ⟨d,ht,hp⟩ := walk_split _ _ _ _ hw'
+  obtain ⟨d,ht,hp⟩ := walk_split _ _ _ _ _ hw'
   have he : q+xs.length+ys.length-ys.length=q+xs.length := by omega
   rw [he] at hp
   exact h1 d c hp (h2 z d ht hz)
@@ -33,7 +33,7 @@ theorem reverseCover_plane (q : Nat) (ys : List Nat) (ends starts : Rows) (lane 
   have hM : 2^ys.length=64*2^(ys.length-6) := by
     calc
       2^ys.length = 2^(6+(ys.length-6)) := congrArg (fun j : Nat => 2^j) (by omega)
-      _ = _ := by rw [Nat.pow_add]; rfl
+      _ = _ := by rw [Nat.pow_add]
   rw [hM] at hm
   have hc := walk_bound hw
   rw [Nat.add_sub_cancel] at hc
