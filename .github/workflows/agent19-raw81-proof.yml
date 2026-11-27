@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc]
         default: raw81
 permissions:
   contents: read
@@ -103,7 +103,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
 
   raw40-a1rc:
-    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la'
+    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la' || inputs.target == 'raw40-a1lc-0lc'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -268,4 +268,23 @@ jobs:
             im-results/agent19-raw40-cut/Raw40A1LA*.olean
             im-results/agent19-raw40-cut/a1la/*/shards/*All.olean
             im-results/agent19-raw40-cut/a1la/*/enum.log
+          if-no-files-found: warn
+
+      - name: Compile A1LC0LC periodic sweeps and exact child bound
+        if: inputs.target == 'raw40-a1lc-0lc'
+        env:
+          LEAN_DEPS: /tmp/a19-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A1LC0LC.sh | tee /tmp/a19-raw40-a1lc-0lc.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw40-a1lc-0lc.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'raw40-a1lc-0lc'
+        with:
+          name: raw40-a1lc-0lc
+          path: |
+            /tmp/a19-raw40-a1lc-0lc.log
+            im-results/agent19-raw40-cut/Raw40A1LC0LC*.olean
+            im-results/agent19-raw40-cut/a1lc/0LC/shards/*All.olean
           if-no-files-found: warn
