@@ -7119,18 +7119,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: 45920307876
           path: /tmp/box28-work
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Emit and audit complete weighted source rectangle from saved discovery cut
+      - name: Emit source from saved discovery cut
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
-          D=im-results/agent17-raw10-box28
-          python "$D/emit.py" --d1 "$D1" --work /tmp/box28-work --out /tmp/box28-source
+          python im-results/agent17-raw10-box28/emit.py --d1 "$D1" --work /tmp/box28-work --out /tmp/box28-source
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl --retry 3 -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          for n in 1 2 3; do sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2 && break; [ "$n" != 3 ] || exit 1; done
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Audit complete weighted source rectangle
+        run: |
+          set -euo pipefail
           python tools/lean_compile_closure.py --workdir /tmp/box28-olean --jobs 4 --source-root /tmp/box28-source "/tmp/box28-source/Box28D${D1}Closure.lean" 2>&1 | tee /tmp/box28-audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/box28-audit.log "BB6.Agent13.Box28D${D1}.sourceBound"
       - uses: actions/upload-artifact@v4
