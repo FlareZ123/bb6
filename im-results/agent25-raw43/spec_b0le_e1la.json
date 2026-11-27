@@ -1606,7 +1606,17 @@
       "s": 11
     }
   },
-  "lateCycle": {},
+  "lateCycle": {
+    "31": {
+      "table": "1RB0LA_1RC0LE_0RD0RE_1LD0RB_1LA1RF_1RD---",
+      "cycle": [
+        25134,
+        57,
+        1,
+        51
+      ]
+    }
+  },
   "growth": {},
   "unresolved": [
     {
@@ -1626,13 +1636,6 @@
     {
       "i": 23,
       "table": "1RB0LA_1RC0LE_0RD0RC_1LD0RB_1LA1LF_0RA---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 31,
-      "table": "1RB0LA_1RC0LE_0RD0RE_1LD0RB_1LA1RF_1RD---",
       "query": [
         "open"
       ]
