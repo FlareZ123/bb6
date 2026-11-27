@@ -125,3 +125,12 @@ After 21 genuine blank-start transitions M105 enters A scanning zero, with left 
 ### B1=1RE, further candidate banks
 
 E1=0LA: threshold 223, 175 FAR + 60 BiDFA, zero gaps. E1=0RC: threshold 127, 243 FAR + 5 BiDFA + one growth. M174 has left grammar over 001,101,000,100 with terminator [] or 1, right (001)^k 01. The three-step carry removes 100 (or terminal 1); increment cases advance 001→101→000→100, reset k preceding zero digits; the empty word rebuilds them with a new terminal 1. Direct blank entry at step 23. `Raw43B1REE1RCM174.lean` gives locally checked arbitrary-length return, invariant and `never` (propext, Quot.sound). Both complete candidate banks still require original-source CI.
+
+
+## 2026-11-27 late update: Raw43 candidate frontier is B1=0LE only
+
+The strongest current candidate parent theorem is `Raw43ParentCutExpandedNine.lean`: after the already-developed branches B0LA, B1LA, B1LE and B1RE are composed with the earlier five-branch reduction, its residual list has length one and that residual is definitionally checked to be the B1=0LE parent. This is a candidate dependency reduction, not yet a source-accepted Raw43 cover.
+
+For B1=0LE, `Raw43B0LEExpanded.lean` reduces the eight residual E0 cylinders of the accepted reduced cut to four: E0 in {1LA,1LB,1LF,1RF}. Finite-state abstraction then shrank the hard open frontiers from 246/180/861/42 leaves respectively to tiny structured sets. New exact closures include late last-hole hits at steps 1135,1211,2963,1569; a shift cycle for 1LA i31 at entry 25134 with period57; a permanent blank-left D0 ray for 1LB i746 after step1983; the source-certified M177 alternating-sweep recurrence; and a 6757-state asymmetric chunk BiDFA for the last M81 case in 1RF.
+
+After these discoveries, the currently known genuinely long-lived recurrence frontier is seven last-hole machines: 1LA i44/i62 and 1LF i330/i331/i396/i746, with source/integration work still required for the already-solved 1LB/1RF material. Deep abstraction outputs must be merged into the persistent child specs before claiming complete 1LA/1LB/1LF child theorems. No exact BB(6) value or universal six-state upper bound follows yet.
