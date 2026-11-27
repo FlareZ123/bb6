@@ -2,12 +2,18 @@ name: Agent 31 cryptid universal macros (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        type: choice
+        options: [cryptid, f197-reset-core]
+        default: cryptid
 
 permissions:
   contents: read
 
 jobs:
   kernel-check:
+    if: inputs.target == 'cryptid'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -45,3 +51,24 @@ jobs:
           LEAN_PATH: im-results/agent31-cryptid-boundary
         run: |
           lean im-results/agent31-cryptid-boundary/BlankTrace.lean
+
+  f197-reset-core:
+    if: inputs.target == 'f197-reset-core'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Check F197 literal macro and reset descent core
+        env:
+          LEAN_PATH: im-results/agent31-f197-macro
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent31-f197-macro/Macro.olean im-results/agent31-f197-macro/Macro.lean
+          lean im-results/agent31-f197-macro/ResetDescentCore.lean | tee /tmp/f197-reset-core.log
+          ! grep -q sorryAx /tmp/f197-reset-core.log
