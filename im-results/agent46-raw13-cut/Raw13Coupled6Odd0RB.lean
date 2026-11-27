@@ -126,7 +126,7 @@ theorem innerFill2 (d : Unit) (j : Nat) (bits L : List Bool) :
       simpa only [List.replicate_succ,List.cons_append] using g
     have hf : Reach d (I (true::(List.replicate (j+1) false++true::bits)) L)
       (I (List.replicate (j+3) true++bits) L) := by
-      simpa only [replicate_right (j+2) true,List.append_assoc,List.singleton_append,List.replicate_succ,List.cons_append] using f
+      simpa only [replicate_right (j+2) true,List.append_assoc,List.singleton_append,List.replicate_succ,List.cons_append,List.nil_append] using f
     simpa only [replicate_right j false,List.append_assoc,List.singleton_append] using reach_join (reach_join h hg) hf
 
 theorem overflowTail (d : Unit) (L R : List Bool) :
