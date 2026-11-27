@@ -8,7 +8,7 @@ open BB6.Agent17.Box28Symmetry
 
 /-- The exact D1=22 sibling inherits the accepted D1=18 weighted bound. -/
 theorem sourceBound : ∀ m, Fits (sourceCut 22) m → WeightedBound 3640 m :=
-  transport rename_22_18 (fun m hm => BB6.Agent13.Box28D18.sourceBound m hm)
+  transportFor 14 22 (fun m hm => BB6.Agent13.Box28D18.sourceBound m hm)
 
 theorem parentCutBound (m : Machine) (hm : Fits raw10Remainder[28]! m)
     (h0 : m (slot 6) = decode 14) (h1 : m (slot 7) = decode 22) :
