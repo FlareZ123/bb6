@@ -7,7 +7,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent14Raw139NormalizedE0Cuts
 
 open BB6Coverage
-open BB6.Agent6Raw139Normalized
+open BB6.Agent14Raw139Core
 open BB6.Agent14Raw139NormalizedLocalAccepted
 open BB6.Agent14Raw139NormalizedE0CutsFinite
 
@@ -21,7 +21,7 @@ theorem remainingTables_cover_from_61
   intro p hp
   by_cases hHit : matchesAny p acceptedE0Six = true
   · rcases matchesAny_witness hHit with ⟨q, hq, hSame⟩
-    rw [BB6.Agent31FourHoleRoster.sameTable_sound hSame]
+    rw [BB6.Agent14Raw139Core.sameTable_sound hSame]
     exact hParents q hq
   · exact hNorm p (List.mem_filter.mpr
       ⟨hp, by simp [normalizedAfterAcceptedE0Six, hHit]⟩)
@@ -49,7 +49,7 @@ theorem remainingTables_cover_from_60
   intro p hp
   by_cases hHit : matchesAny p acceptedE0Seven = true
   · rcases matchesAny_witness hHit with ⟨q, hq, hSame⟩
-    rw [BB6.Agent31FourHoleRoster.sameTable_sound hSame]
+    rw [BB6.Agent14Raw139Core.sameTable_sound hSame]
     exact hParents q hq
   · exact hNorm p (List.mem_filter.mpr
       ⟨hp, by simp [normalizedAfterAcceptedE0Seven, hHit]⟩)
