@@ -121,7 +121,7 @@ def emit(d,ns,output):
   s.append(f'def {k} : Fin 3 → Macro := fun i => match i.val with\n'+''.join(f'  | {i} => {macro2(d["macros"][f"d{i}{j}"])}\n' for i in range(2))+'  | _ => '+macro2(d['macros'][f'd2{j}']))
  for k,j in [('terminalZ',0),('terminalS',1)]:
   s.append(f'def {k} (b : Bool) : Macro := if b then {macro2(d["macros"][f"t1{j}"])} else {macro2(d["macros"][f"t0{j}"])}')
- s.extend([f'def cert : GrowRadix.Cert := ⟨⟨digit,terminal⟩,{d["entry"]},normalZ,normalS,terminalZ,terminalS⟩','theorem checked : Checked p cert := by constructor <;> decide','theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := GrowRadix.never p cert checked m hm','#print axioms never','end '+name,''])
+ s.extend([f'def cert : GrowRadix.Cert := ⟨⟨digit,terminal⟩,{d["entry"]},normalZ,normalS,terminalZ,terminalS⟩','theorem checked : Checked p cert := by\n  constructor\n  · decide\n  · decide\n  · decide\n  · intro b; cases b <;> unfold checkClosed <;> decide\n  · intro b; cases b <;> unfold checkClosed <;> decide','theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := GrowRadix.never p cert checked m hm','#print axioms never','end '+name,''])
  Path(output).write_text('\n'.join(s))
 if __name__=='__main__':
  cache=Path('growradix-bank.json')

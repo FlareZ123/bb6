@@ -9,10 +9,13 @@ ordinary increments preserve the phase. Unlike the earlier positive-width
 checker, the symbolic macro directly quantifies over all carry lengths. -/
 structure Phase where
   q : Fin 6
-  left pre post : List Bool
+  left : List Bool
+  pre : List Bool
+  post : List Bool
 
 structure Shape (n : Nat) where
-  zero one : List Bool
+  zero : List Bool
+  one : List Bool
   phase : Fin n → Phase
   successor : Fin n → Fin n
   extension : Fin n → List Bool

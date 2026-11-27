@@ -61,7 +61,8 @@ def main(mv):
                 manual[t]=f".closed (.proven ({ns}.p .{v}) ({ns}.never .{v}))"
     if mv=="1RA":
         ns="BB6.Agent46Raw13MirroredCounter"
-        extra_imports += ["Raw13Coupled6MirroredCounter"]
+        extra_imports += ["Raw13Coupled6MirroredCounter", "Raw13Coupled6UnaryRecursion"]
+        manual["1RB1LD1RC0RB1LA1RE1LF0LA1LC1RA1LE---"]=".closed (.proven BB6.Agent46Raw13UnaryRecursion.p BB6.Agent46Raw13UnaryRecursion.never)"
         manual["1RB1LD1RC1RE1LA1RE1LC0LA0RF1RA---0RB"]=f".closed (.proven {ns}.p {ns}.never)"
     if mv=="0LE":
         ns="BB6.Agent46Raw13Coupled6Drift0LE"
