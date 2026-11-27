@@ -18,7 +18,7 @@ theorem consumeC (p n : Nat) (s : CTail) :
   have h0 : Reach base
       (boundary 0 true (S 4::U 6 (p+1) ++ [S 4]) (S 2::S 2::(T (n+1) ++ cword s)))
       (boundary 4 true (S 2::X) (S 3::S 2::S 2::(T n ++ cword s))) := by
-    simpa only [X,T,U,List.replicate_succ,List.cons_append,List.append_assoc] using
+    simpa only [Mbase,X,T,U,List.replicate_succ,List.cons_append,List.append_assoc] using
       rr (initC (U 6 p ++ [S 4]) (S 2::S 2::(T n ++ cword s)))
   have h1 := scanTwo 2 X (T n ++ cword s)
   have h2 := scanTrip n (U 6 2 ++ X) (cword s)
@@ -27,7 +27,7 @@ theorem consumeC (p n : Nat) (s : CTail) :
   have h5 : Reach base
       (boundary 1 false X (U 2 4 ++ T (n+ccarry s) ++ cword (next s)))
       (boundary 0 true (U 3 (p+3) ++ [S 2]) (U 2 5 ++ T (n+ccarry s) ++ cword (next s))) := by
-    simpa only [X,U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc,
+    simpa only [Mbase,X,U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,List.append_assoc,
       show p+1+2=p+3 by omega] using rr (finishC (p+1) (T (n+ccarry s) ++ cword (next s)))
   simp only [X,U,List.append_assoc,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append] at h0 h1 h2 h3 h4 h5
   exact Reach.trans (Reach.trans (Reach.trans (Reach.trans (Reach.trans h0 h1) h2) h3) h4) h5
@@ -37,7 +37,7 @@ theorem pumpTwo2 (p : Nat) (Y : List Sym) :
       (boundary 0 true (U 3 (p+8) ++ [S 2]) (S 2::Y)) := by
   have h0 := twoPump p (S 2::S 2::Y)
   have h1 := twoPump (p+4) Y
-  simpa only [U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,
+  simpa only [Mbase,U,List.replicate_succ,List.replicate_zero,List.cons_append,List.nil_append,
       show p+4+4=p+8 by omega] using rr (join h0 h1)
 
 theorem returnC (p n : Nat) (s : CTail) :
