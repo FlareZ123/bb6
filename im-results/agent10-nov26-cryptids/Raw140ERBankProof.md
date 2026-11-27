@@ -78,3 +78,41 @@ This complements the right-bank arbitrary-word bounce for alphabet
 {4,6} in Raw140DoubleGrowthProof.md. Remaining task: identify a closed
 global orbit using these two bank transductions and the variant-specific
 A1/F0 conversions; neither bank alone is an infinite recurrence.
+
+## Depleted-bank exit (derived 04:25 UTC)
+
+For n,p>=0, after the bank has been depleted, there is a second common-table
+identity:
+ER(1 (133)^(n+2) 3^p2,s)
+ -> AR(3^(p+11)2,(115)^(n+epsilon(s)) rho(s)),
+where epsilon=1 exactly for s=11511. This holds with all three
+A1/F0/F1 entries undefined. Proof uses the six preparations above.
+Write j=k from the preparation table, and Y its right suffix. The path
+EL3^(j+1) EL1 DR1 EL7 gives
+ER(333 (133)^(n+1) 3^p2,1^(j+1)Y), cost 5+3(j+1).
+The path ER1 EL3^3 EL1 DR1 EL7 gives
+ER(333 X,1115 Z) from ER(333133 X,1 Z), cost 21.
+Iterating it n+1 times yields
+ER(3^(p+3)2,1115 (115)^n 1^jY).
+Finally the homogeneous path
+ER1 EL3^(p+3) EL2 BL0 CR1^(p+4) CR5 BL6^(p+4) BL4 BR2^(p+5)
+BR1 DL5^(p+6) DL0 AR4^(p+6) AR0 DR1 EL7 ER1 EL3^(p+7) EL2
+BL0 CR1^(p+8) CR5 BL6^(p+8) BL4 BR2^(p+9) BR5 DL5^(p+10)
+DL0 AR4^(p+11)
+has cost 36p+298 and produces AR(3^(p+11)2,(115)^n 1^jY).
+For the first five preparations 1^jY=rho(s); for the last it is
+115 rho(s). The local paths were symbolically generated with an opaque
+suffix, not sampled; Raw140ERExit.lean expresses the composition.
+
+This connects to the six **accepted** affine conversion identities in
+Raw140VariantLoops.lean, CI 45937613031 (commit
+4d68aee93fd9d59e049cac03525bee6d8dfa5bc6):
+* IDs 28,81,86: AR(3^p2,115Y) -> AR(3^(p+5)2,Y), costs 18p+83
+  (28,81) or 18p+81 (86).
+* IDs 39,77: AR(3^p2,(115)^2Y) -> AR(3^(p+12)2,Y), p>=1,
+  costs 54p+384 (39) or 54p+382 (77).
+* ID 88: AR(3^p2,(115)^2Y) -> AR(3^(p+10)2,Y), cost 36p+254.
+
+Thus the previously expensive transition from a whole left bank to the
+variant-specific A1/F0 branches is reduced to affine updates plus a
+finite suffix. The two-triplet variants retain a parity bit.
