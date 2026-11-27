@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw43 M61 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m61-unary-growth-agent38.md): exact 41-step blank entry and a unary family with positive return cost `6n+9`; original-source Lean `NeverHalts` and `Cover (DecidedBelow bound)` for every bound accepted in [run 46085016332](https://github.com/FlareZ123/bb6/actions/runs/46085016332). Local child only; enclosing Raw43 parent and Canonical40 remain open.
+
 - [**Raw43 M62 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m62-nonhalting-agent38.md): original-source Lean proof of a complete two-phase regular-language invariant with an unbounded backward carry, and a `Cover (DecidedBelow bound)` for every bound. [Run 46084476880](https://github.com/FlareZ123/bb6/actions/runs/46084476880) passed the kernel and axiom audit. This is a local child leaf; enclosing Raw43 and the Canonical40 global upper bound remain open.
 
 - [**Three new fully source-accepted Raw41 five-hole cylinders and 153→150 canonical quotient reduction**](2026-11-27-raw41-three-cylinders-agent36.md): 29,296,875 distinct physical completions over three families; checked universal weighted bounds 41, 84 and 64 via 135 FAR certificates and exhaustive canonical paths. Lean 4.36.0-rc2 accepted all three child theorem closures and the 153→150 local / 229→226 earlier rooted-roster reduction in [run 46080020567](https://github.com/FlareZ123/bb6/actions/runs/46080020567), standard axioms only. **Does not reduce the newer Canonical40 global list.**
