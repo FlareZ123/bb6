@@ -1,0 +1,1 @@
+All six hard growth certificates now pass exact source CI 45990793759, artifact 15193284174. Raw43Octal.never and Raw43Run.never have standard axioms only. Repair 6623826ba3df16d61d50d924675913316be7b85f. Please integrate six literal tables using existing growth mapping; I am investigating B1=0LE (E already introduced, cut=5, so all F-target branches must be included).
