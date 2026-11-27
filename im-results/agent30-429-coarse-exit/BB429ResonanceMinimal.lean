@@ -4,6 +4,27 @@ namespace BB429.CoarseExit
 
 set_option maxHeartbeats 20000000
 
+
+/-- A minimal d=234 second-resonance word is exponentially shorter than its
+    scale.  The deliberately weak linear consequence m ≥ 5i+61 is already
+    enough to make the final geometric-cycle margin enormous. -/
+theorem d234_minimal_scale_gap
+    (i m : Nat) (e : Nat → Bool)
+    (hi7 : 7≤i) (hfirst : e 0=true)
+    (hres :
+      (2496:Int)*(m:Int)+23808 =
+        36+108*word4 e i) :
+    5*i+61≤m := by
+  have hw := word4_first_true e i (by omega) hfirst
+  have hp := pow4_ge_500_index i hi7
+  have hp' : (500:Int)*(i:Int)≤(4:Int)^(i-1) := by
+    exact_mod_cast hp
+  have hb : (500:Int)*(i:Int)≤word4 e i := by omega
+  have hiI : (7:Int)≤(i:Int) := by exact_mod_cast hi7
+  have hmI : (5:Int)*(i:Int)+61≤(m:Int) := by
+    omega
+  exact_mod_cast hmI
+
 /-- The abstract error band specialized to a *minimal* d=234 doubled-scale
     resonance word.  Minimal means the first temporal base-four digit is
     true; for length at least seven this alone supplies all large-scale
@@ -66,6 +87,7 @@ theorem d234_minimal_phase_error_band
     hi7 hb0 hlo hbig hhlo hh0 hhhi hrel rfl
     hxlo hxhi hzlo hzhi rfl
 
+#print axioms d234_minimal_scale_gap
 #print axioms d234_minimal_phase_error_band
 
 end BB429.CoarseExit
