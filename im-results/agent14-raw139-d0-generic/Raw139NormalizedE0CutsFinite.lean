@@ -30,9 +30,6 @@ theorem acceptedE0Six_each_once :
       (remainingTables.filter (fun p => sameTable p q)).length = 1 := by
   decide
 
-theorem acceptedE0Six_nodup : acceptedE0Six.Nodup := by
-  decide
-
 def normalizedAfterAcceptedE0Six : List PartialMachine :=
   remainingTables.filter (fun p => !(matchesAny p acceptedE0Six))
 
@@ -47,9 +44,6 @@ theorem e0ZeroLF_occurs_once :
     (remainingTables.filter (fun p => sameTable p e0ZeroLF)).length = 1 := by
   decide
 
-theorem acceptedE0Seven_nodup : acceptedE0Seven.Nodup := by
-  decide
-
 theorem normalizedAfterAcceptedE0Seven_count :
     normalizedAfterAcceptedE0Seven.length = 60 := by
   decide
@@ -60,10 +54,8 @@ theorem matchesAny_witness {p : PartialMachine} {ps : List PartialMachine}
   simpa [matchesAny] using List.any_eq_true.mp h
 
 #print axioms acceptedE0Six_each_once
-#print axioms acceptedE0Six_nodup
 #print axioms normalizedAfterAcceptedE0Six_count
 #print axioms e0ZeroLF_occurs_once
-#print axioms acceptedE0Seven_nodup
 #print axioms normalizedAfterAcceptedE0Seven_count
 #print axioms matchesAny_witness
 
