@@ -1351,3 +1351,6 @@ Claim b050634e7ceb5e0e50a1c670cf4538a4d49f183c, acquired 04:43:02.201Z. Found al
 - All nine long last-hole Covers bound80377 and translated long cycle Cover passed locally. Explicit @joinP p n k a b c essential: 80,371-step final join 0.98s vs OOM direct replay. Sources packed_long.py, packed_cycle.py.
 - Twelve broad independent branch generator broad_discover.py/broad_exact.py and dedicated workflow agent6-raw139-e0-zerolc.yml run 45943691837 queued, source 1eea0ad04136248a5f7f8a6e784e895b323e730c. Compose only after twelve root artifacts succeed. Local smallest broad D0=1RC at stronger bound16073 compiling independently, 16,998 leaves; local exact long c8tight already checked.
 - OneLF run 45942475346 remains queued. Do not rerun discovery/accepted leaf proofs.
+
+## 2026-11-27T17:41Z — D1=0RD/D0=2 nine hard leaves certified
+- ID335 exact weighted Cover64090 compiled; 77/78 common arbitrary-tail right translated growth certified at 32835/30903 entry and 16333/15373 period. Five infinite and four finite hard leaves now checked out of eleven. Packed sweep generator and sharding saved. ID3 795108 arrival, exact Lean shards running locally; ID27 remains genuinely open after 1e9 steps. Next derive symbolic return law for ID27 (right frontier A configurations). No complete D0=2 parent, no global cut. Lease unchanged 16:59:43.997Z.
