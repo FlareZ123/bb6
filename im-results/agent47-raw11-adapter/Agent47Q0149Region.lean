@@ -126,7 +126,7 @@ theorem exceptional {p} (r : Rules p) (k : Nat) :
   have n : RE p (S4 (2*k+6) (4*k+16) 1 1) (T (2*k+8) (4*k+18)) := by
     simpa [S4,Z,U,block,rep,show 2*k+6+2=2*k+8 by omega,show 4*k+16+2=4*k+18 by omega] using
       r.finish (2*k+6) (4*k+16) (by omega) (by omega)
-  exact thenP (then0 (thenP (then0 (thenP (then0 (thenP (then0 (thenP (thenP a b) c) d) e) f) g) j) l) m) n
+  exact thenP (then0 (thenP (then0 (thenP (then0 (thenP (thenP (then0 (thenP (a) b) c) d) e) f) g) j) l) m) n
 
 def P (k : Nat) := T (8*k) (16*k+2)
 def Q (k : Nat) := T (8*k+2) (16*k+4)
