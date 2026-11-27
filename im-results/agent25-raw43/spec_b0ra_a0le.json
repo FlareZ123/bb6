@@ -1,0 +1,993 @@
+{
+  "table": "1RB0LE_1RC0RA_0RD---_1LD0RB_------_------",
+  "cap": 200,
+  "lookback": 32,
+  "stats": {
+    "cycle": 8535,
+    "split": 471,
+    "last": 2101,
+    "open": 198
+  },
+  "rootQuery": [
+    "split",
+    8,
+    8
+  ],
+  "openRows": [
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LE1LF_0LA---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0LE1RF_1LE0RF",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1LE",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1LF",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1RF",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA0RC",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA0RE",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA1LA",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA1RC",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA0RD",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA0RE",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA1LA",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA1RC",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0LF---_1LA1LE",
+    "1RB0LE_1RC0RA_0RD0RD_1LD0RB_0LF---_1LA1LE",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_0LF---_1LA1LE",
+    "1RB0LE_1RC0RA_0RD1LC_1LD0RB_0LF---_1LA1RA",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0LA",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0RA",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0RE",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LA",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LB",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LE",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1RC",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1RF",
+    "1RB0LE_1RC0RA_0RD1RD_1LD0RB_0LF0LB_1LA---",
+    "1RB0LE_1RC0RA_0RD1RD_1LD0RB_0LF0LF_1LA---",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_0LF---_1LB0RC",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_0LF---_1LC1RA",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_0LF0LE_1LC---",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LF0LA",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1RE1LA",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1RE1LA",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1RE1LA",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0LF0RE_1RE1LF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0LF1RE_1RE1LF",
+    "1RB0LE_1RC0RA_0RD1RE_1LD0RB_0RF0RE_0RC---",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0RF---_1LB---",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0RF---_1LE1LB",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0RF0LE_1LE1RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0RF1LE_1LE1RF",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0RF---_1LF0LA",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0RF---_1LF0LA",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_0RF0RE_1LF1RE",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB0LA_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB0LE_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB0RB_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB1LC_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB1LE_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB1RB_---1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB1RD_---1LA",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LB---_0RC0LD",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LB---_0RC0RC",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LB---_0RC0RF",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LB---_0RC1LF",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LB---_0RB1LC",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LE0LA_------",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LE0LA_---0RB",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LE0LF_1LB---",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LE0LF_1RB---",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LE0RF_---0LA",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LE1LF_0LA---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_0LB0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_0RB0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_0RE0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_1LC0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_1LE0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_1RC0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LE1RF_1RA1LF",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LE1RF_---1RC",
+    "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF1RD_0LA---",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_0LA1RD",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_0LA0LA",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_0LA1LC",
+    "1RB0LE_1RC0RA_0RD1LD_1LD0RB_1LF---_0LA---",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0RB_0LA---",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_0LA0RB",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0LA_0LA---",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0RD_0LA---",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1LC_0LA---",
+    "1RB0LE_1RC0RA_0RD1RC_1LD0RB_1LF1LE_0LA---",
+    "1RB0LE_1RC0RA_0RD1RD_1LD0RB_1LF---_0LA0LD",
+    "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF1RD_0LA---",
+    "1RB0LE_1RC0RA_0RD0RB_1LD0RB_1LF---_0LF1LB",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF0RE_0LF1RE",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF1RE_0RE0LF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF1RE_0RE1LF",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LF---_1LA0LF",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF---_1LA0LF",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_1LA0LF",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LA0RB",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LA0RC",
+    "1RB0LE_1RC0RA_0RD0RD_1LD0RB_1LF---_1LA1LB",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LA1LB",
+    "1RB0LE_1RC0RA_0RD1RD_1LD0RB_1LF---_1LA1RC",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF1RD_1LA1RE",
+    "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LF---_1LB---",
+    "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF0RA_1LB---",
+    "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF1LA_1LB---",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_1LB0RA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_1LB1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB0LF",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB0RB",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB0RC",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB0RF",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB1LC",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LB1RC",
+    "1RB0LE_1RC0RA_0RD0RB_1LD0RB_1LF---_1LB---",
+    "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0RA_1LB---",
+    "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0RF_1LB---",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LB0RA",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0LB_1LB---",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0RD_1LB---",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF1RD_1LB---",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LB0LB",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LB0RD",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LB1RD",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1RD_1LB---",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB0LB",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB0LE",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB0RB",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB0RF",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB1LB",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB1LC",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD1RC_1LD0RB_1LF---_1LB0LF",
+    "1RB0LE_1RC0RA_0RD1RC_1LD0RB_1LF---_1LB1LF",
+    "1RB0LE_1RC0RA_0RD1RC_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LA_1LB---",
+    "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LD_1LB---",
+    "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF---_1LB0LB",
+    "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF---_1LB1LD",
+    "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF---_1LB1RB",
+    "1RB0LE_1RC0RA_0RD0LA_1LD0RB_1LF0RE_1LC---",
+    "1RB0LE_1RC0RA_0RD0LA_1LD0RB_1LF1RC_1LC---",
+    "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_1LC0RA",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LC---",
+    "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0LE_1LC---",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD1LA_1LD0RB_1LF---_1LC0RD",
+    "1RB0LE_1RC0RA_0RD1LA_1LD0RB_1LF---_1LC1LC",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_1LC1LB",
+    "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LC1RB",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0LB_1LC---",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0LE_1LC---",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1LF_1LC---",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LC0LE",
+    "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LC1LE",
+    "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LB_1LC---",
+    "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF---_1LC1LB",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF0LA_1LE---",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF---_1LF0LA",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF0RE_1LF1RE",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF0RF_1RE0LE",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1LF1RE_1RE1LF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF1LE_0LA0RF",
+    "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1RF1LF_0LA---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF1LE_0LE0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF1LE_0LE1RF",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF---_0RC---",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1RF---_0RC0RC",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1RF---_0RC0RF",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1RF---_0RC1LF",
+    "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1RF---_0RC0RF",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF0RE_1LA0RE",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1RF1LB_1LA---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF1LE_1LA0RF",
+    "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1RF1RB_1LA---",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF1RB_1LA---",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1RF---_1LC0RA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1RF---_1LC1LA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1RF---_1LC1RA",
+    "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1RF---_1LC1RD",
+    "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1RF1LF_1LC---",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF0LA_1LE---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF0LF_1LE0RA",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF0LF_1LE0RE",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF0LF_1LE1LD",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF0LF_1LE1RA",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF1LB_1LE---",
+    "1RB0LE_1RC0RA_0RD---_1LD0RB_1RF1LE_1LE1RF",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF1RC_1LE---",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF---_1LF0LA",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF---_1LF1LB",
+    "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1RF---_1LF1LB",
+    "1RB0LE_1RC0RA_0RD0RC_1LD0RB_1RF---_1LF1RC"
+  ],
+  "bound": 174,
+  "witnesses": {
+    "1": "000",
+    "28": "00101",
+    "34": "000",
+    "35": "000",
+    "36": "00101",
+    "37": "00101",
+    "38": "100",
+    "39": "000",
+    "40": "000",
+    "43": "000",
+    "44": "100",
+    "45": "100",
+    "46": "100",
+    "48": "100",
+    "49": "100",
+    "50": "100",
+    "51": "100",
+    "52": "100",
+    "53": "100",
+    "54": "100",
+    "55": "100",
+    "56": "000",
+    "57": "100",
+    "59": "00112344444",
+    "60": "00101",
+    "61": "00112344444",
+    "62": "000",
+    "63": "000",
+    "64": "000",
+    "65": "00101",
+    "66": "000",
+    "67": "00112344444",
+    "68": "00101",
+    "69": "00101",
+    "83": "100",
+    "84": "000",
+    "85": "000",
+    "86": "000",
+    "95": "0012101",
+    "99": "100",
+    "101": "100",
+    "102": "100",
+    "103": "100",
+    "104": "100",
+    "105": "100",
+    "106": "100",
+    "107": "100",
+    "108": "100",
+    "112": "100",
+    "116": "100",
+    "117": "100",
+    "118": "100",
+    "119": "100",
+    "121": "100",
+    "123": "100",
+    "124": "100",
+    "125": "100",
+    "126": "100",
+    "127": "100",
+    "128": "100",
+    "129": "100",
+    "130": "100",
+    "133": "100",
+    "134": "100",
+    "135": "100",
+    "140": "100",
+    "147": "100",
+    "148": "100",
+    "149": "100",
+    "154": "100",
+    "155": "0012101",
+    "161": "100",
+    "164": "000",
+    "165": "000",
+    "166": "000",
+    "167": "0012101",
+    "169": "000",
+    "170": "000",
+    "171": "00101",
+    "172": "100",
+    "173": "100",
+    "174": "100",
+    "175": "00101",
+    "176": "000",
+    "177": "000",
+    "178": "000",
+    "179": "000",
+    "180": "000",
+    "181": "100",
+    "183": "00101",
+    "184": "100",
+    "186": "00101",
+    "187": "00101",
+    "188": "000",
+    "189": "00101",
+    "190": "00101",
+    "191": "00101",
+    "192": "000",
+    "193": "00101",
+    "194": "1010202",
+    "195": "100",
+    "196": "100",
+    "197": "100"
+  },
+  "bidfa": {},
+  "lateLast": {},
+  "lateCycle": {},
+  "growth": {},
+  "unresolved": [
+    {
+      "i": 0,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LE1LF_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 2,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 3,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1LF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 4,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_0LF---_1LA1RF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 5,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA0RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 6,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA0RE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 7,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 8,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LA1RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 9,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA0RD",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 10,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA0RE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 11,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 12,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1LA1RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 13,
+      "table": "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0LF---_1LA1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 14,
+      "table": "1RB0LE_1RC0RA_0RD0RD_1LD0RB_0LF---_1LA1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 15,
+      "table": "1RB0LE_1RC0RA_0RD1LB_1LD0RB_0LF---_1LA1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 16,
+      "table": "1RB0LE_1RC0RA_0RD1LC_1LD0RB_0LF---_1LA1RA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 17,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 18,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0RA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 19,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA0RE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 20,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 21,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LB",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 22,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 23,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 24,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1LA1RF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 25,
+      "table": "1RB0LE_1RC0RA_0RD1RD_1LD0RB_0LF0LB_1LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 26,
+      "table": "1RB0LE_1RC0RA_0RD1RD_1LD0RB_0LF0LF_1LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 27,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_0LF---_1LB0RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 29,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_0LF0LE_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 30,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1LF0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 31,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0LF---_1RE1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 32,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_0LF---_1RE1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 33,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_0LF---_1RE1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 41,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_0RF---_1LF0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 42,
+      "table": "1RB0LE_1RC0RA_0RD0RC_1LD0RB_0RF---_1LF0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 47,
+      "table": "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LB1LC_---1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 58,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LE0LF_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 70,
+      "table": "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF1RD_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 71,
+      "table": "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_0LA1RD",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 72,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_0LA0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 73,
+      "table": "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_0LA1LC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 74,
+      "table": "1RB0LE_1RC0RA_0RD1LD_1LD0RB_1LF---_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 75,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0RB_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 76,
+      "table": "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_0LA0RB",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 77,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0LA_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 78,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0RD_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 79,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1LC_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 80,
+      "table": "1RB0LE_1RC0RA_0RD1RC_1LD0RB_1LF1LE_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 81,
+      "table": "1RB0LE_1RC0RA_0RD1RD_1LD0RB_1LF---_0LA0LD",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 82,
+      "table": "1RB0LE_1RC0RA_0RD1RF_1LD0RB_1LF1RD_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 87,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LF---_1LA0LF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 88,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF---_1LA0LF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 89,
+      "table": "1RB0LE_1RC0RA_0RD1LB_1LD0RB_1LF---_1LA0LF",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 90,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LA0RB",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 91,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LA0RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 92,
+      "table": "1RB0LE_1RC0RA_0RD0RD_1LD0RB_1LF---_1LA1LB",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 93,
+      "table": "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LA1LB",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 94,
+      "table": "1RB0LE_1RC0RA_0RD1RD_1LD0RB_1LF---_1LA1RC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 96,
+      "table": "1RB0LE_1RC0RA_0RD0LB_1LD0RB_1LF---_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 97,
+      "table": "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF0RA_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 98,
+      "table": "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF1LA_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 100,
+      "table": "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1LF---_1LB1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 109,
+      "table": "1RB0LE_1RC0RA_0RD0RB_1LD0RB_1LF---_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 110,
+      "table": "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0RA_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 111,
+      "table": "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0RF_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 113,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0LB_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 114,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF0RD_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 115,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF1RD_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 120,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1RD_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 122,
+      "table": "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LB0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 131,
+      "table": "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LA_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 132,
+      "table": "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LD_1LB---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 136,
+      "table": "1RB0LE_1RC0RA_0RD0LA_1LD0RB_1LF0RE_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 137,
+      "table": "1RB0LE_1RC0RA_0RD0LA_1LD0RB_1LF1RC_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 138,
+      "table": "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF---_1LC0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 139,
+      "table": "1RB0LE_1RC0RA_0RD0LE_1LD0RB_1LF---_1LC1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 141,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1LF---_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 142,
+      "table": "1RB0LE_1RC0RA_0RD0RE_1LD0RB_1LF0LE_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 143,
+      "table": "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LC0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 144,
+      "table": "1RB0LE_1RC0RA_0RD0RF_1LD0RB_1LF---_1LC1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 145,
+      "table": "1RB0LE_1RC0RA_0RD1LA_1LD0RB_1LF---_1LC0RD",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 146,
+      "table": "1RB0LE_1RC0RA_0RD1LA_1LD0RB_1LF---_1LC1LC",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 150,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF---_1LC0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 151,
+      "table": "1RB0LE_1RC0RA_0RD1LE_1LD0RB_1LF---_1LC1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 152,
+      "table": "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LC0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 153,
+      "table": "1RB0LE_1RC0RA_0RD1LF_1LD0RB_1LF---_1LC1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 156,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF0LE_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 157,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1LF1LF_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 158,
+      "table": "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LC0LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 159,
+      "table": "1RB0LE_1RC0RA_0RD1RB_1LD0RB_1LF---_1LC1LE",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 160,
+      "table": "1RB0LE_1RC0RA_0RD1RE_1LD0RB_1LF1LB_1LC---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 162,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF0LA_1LE---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 163,
+      "table": "1RB0LE_1RC0RA_0RD0LD_1LD0RB_1LF---_1LF0LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 168,
+      "table": "1RB0LE_1RC0RA_0RD0RA_1LD0RB_1RF1LF_0LA---",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 182,
+      "table": "1RB0LE_1RC0RA_0RD0LF_1LD0RB_1RF---_1LC1LA",
+      "query": [
+        "open"
+      ]
+    },
+    {
+      "i": 185,
+      "table": "1RB0LE_1RC0RA_0RD1RA_1LD0RB_1RF1LF_1LC---",
+      "query": [
+        "open"
+      ]
+    }
+  ]
+}
