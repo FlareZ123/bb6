@@ -1,0 +1,53 @@
+name: Agent 28 Raw36 first F0 guarded A descent
+run-name: A descent arbitrary-tail source ${{ github.sha }}
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        type: string
+        required: false
+permissions:
+  contents: read
+  actions: read
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref || github.sha }}
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check original-source arbitrary-suffix descent
+        run: |
+          set -euo pipefail
+          D=im-results/agent28-raw36-first-hard
+          work=/tmp/a28-raw36-first-descent
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" --label raw36-first-descent-A \
+            --theorem BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.transport \
+            --artifact-name raw36-first-descent-A-proof \
+            "$D/Raw36FirstDescentA.lean" 2>&1 | tee /tmp/a28-raw36-descent.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a28-raw36-descent.log \
+            BB6Coverage.Agent31Pump.Auto.OpenRight.step_attach \
+            BB6Coverage.Agent31Pump.Auto.OpenRight.traceRun_sound \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.checked \
+            BB6Coverage.Agent31Pump.Auto.Raw36FirstDescentA.transport
+          cp /tmp/a28-raw36-descent.log "$work/audit.log"
+      - name: Retain source closure
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-first-descent-A-proof
+          path: |
+            /tmp/a28-raw36-first-descent/
+            /tmp/a28-raw36-descent.log
+          if-no-files-found: warn
+          retention-days: 30
