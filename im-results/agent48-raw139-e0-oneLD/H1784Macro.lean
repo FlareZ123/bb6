@@ -18,11 +18,12 @@ theorem rep_double (p : List Bool) (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    rw [show 2*(n+1)=2+2*n by omega,rep_add]
-    simp only [rep,ih,List.append_nil,List.append_assoc]
+    change (p++p) ++ rep (p++p) n = rep p (2*(n+1))
+    rw [ih,show 2*(n+1)=2+2*n by omega,rep_add p 2 (2*n)]
+    simp only [rep,List.append_nil]
 
 theorem rep_end (p R : List Bool) (n : Nat) :
-    rep p n ++ p ++ R = rep p (n+1) ++ R := by
+    rep p n ++ (p ++ R) = rep p (n+1) ++ R := by
   rw [← List.append_assoc (rep p n) p R,rep_snoc]
   rfl
 
@@ -89,7 +90,7 @@ theorem scan_word (u : Nat) (L : List Bool) :
     [false,true,true,false,false] ++ rep K u ++ [true,true,false,true] ++ L =
       U ++ U ++ rep U u ++ [true] ++ L := by
   have h := congrArg (fun v : List Bool => U ++ v ++ L) (scan_rot u)
-  simpa only [List.cons_append,List.append_assoc] using h
+  simpa only [List.cons_append,List.nil_append,List.append_assoc] using h
 
 theorem left_rot (u : Nat) :
     false :: (rep U u ++ [true]) = rep E0 u ++ W := by
@@ -109,13 +110,13 @@ theorem over_word (u : Nat) :
     rw [ih]
 
 theorem over_right (u : Nat) (R : List Bool) :
-    rep H (2*u+1) ++ Q ++ R = rep V (u+1) ++ [true,true,false] ++ R := by
+    rep H (2*u+1) ++ (Q ++ R) = rep V (u+1) ++ ([true,true,false] ++ R) := by
   calc
     _ = (rep H (2*u+1) ++ H) ++ [true,true,false] ++ R := by
       simp only [List.append_assoc]
       rfl
     _ = (H ++ rep H (2*u+1)) ++ [true,true,false] ++ R := by rw [rep_snoc]
-    _ = _ := by rw [right_carry]
+    _ = _ := by rw [right_carry]; simp only [List.append_assoc]
 
 def Y (w : List Bool) (j : Nat) (T : List Bool) : Z0 :=
   A (B w) (rep Q j ++ T)
@@ -153,7 +154,8 @@ theorem x_core (u j : Nat) (L T T' : List Bool) (c : Nat)
   rw [hleft] at h7
   have h7' : run0 ctr 9 (D (U++U++rep U u++[true]++L) (rep Q j++T')) =
       some (A (W++rep E0 u++W++L) (rep Q (j+1)++T')) := by
-    simpa only [rep,List.append_assoc] using h7
+    simpa only [rep,List.append_assoc,List.cons_append,List.nil_append] using h7
+  simp only [List.append_assoc] at h1' h2 h3' h4 h5 h6 h7' ⊢
   exact rjoin (rjoin (rjoin (rjoin (rjoin (rjoin (exactR h1') (exactR h2)) (exactR h3')) (exactR h4)) h5) (exactR h6)) (exactR h7')
 
 theorem x_step (w : List Bool) (u j : Nat) (T T' : List Bool) (c : Nat)
@@ -177,6 +179,7 @@ theorem y_core (u j : Nat) (L T T' : List Bool) (c : Nat)
     have h := congrArg (fun v : List Bool => v ++ rep Q j ++ T') (right_carry u)
     rw [← h]
     simpa only [List.append_assoc] using h5
+  simp only [List.append_assoc] at h1 h2 h3 h4 h5' ⊢
   exact rjoin (rjoin (rjoin (rjoin (exactR h1) h2) (exactR h3)) (exactR h4)) (exactR h5')
 
 theorem y_step (u j : Nat) (w T T' : List Bool) (c : Nat)
@@ -184,13 +187,15 @@ theorem y_step (u j : Nat) (w T T' : List Bool) (c : Nat)
     Live (Y (ones u++false::w) j T)
       (A (B w) (rep V (u+1)++rep Q j++T')) := by
   refine ⟨7*j+c+7*j+2*(2*u+1)+4,by omega,?_⟩
-  simpa only [Y,B,word_ones] using y_core u j (enc w) T T' c turn
+  unfold Y
+  rw [word_ones]
+  exact y_core u j (enc w) T T' c turn
 
 theorem main_inc (u j : Nat) (w : List Bool) :
     Live (Y (ones u++false::w) j T101) (Y (zeros u++true::w) (j+1) T101) := by
   have h := y_step u j w T101 (Q++[true]) 16 (fun M => exactR (turn101 M))
   have h' : Live (Y (ones u++false::w) j T101) (X w u j [true]) := by
-    simpa only [X,rep_end] using h
+    simpa only [X,List.append_assoc,rep_end] using h
   exact live_join h' (x_step w u j [true] T101 8 (fun M => exactR (turn1 M)))
 
 theorem aux_inc (u j i : Nat) (w : List Bool) :
@@ -200,7 +205,7 @@ theorem aux_inc (u j i : Nat) (w : List Bool) :
     exactR (turn100 M (rep Q (i+1)++[true]))
   have h := y_step u j w (aux (i+1)) (Q++tail110 i) 8 ht
   have h' : Live (Y (ones u++false::w) j (aux (i+1))) (X w u j (tail110 i)) := by
-    simpa only [X,rep_end] using h
+    simpa only [X,List.append_assoc,rep_end] using h
   exact live_join h' (x_step w u j (tail110 i) (aux i) 4
     (fun M => exactR (turn110 M (rep Q i++[true]))))
 
@@ -214,6 +219,7 @@ theorem aux_end (u j : Nat) (w : List Bool) :
     refine ⟨rfl,same_refl _,?_⟩
     change Same (rep V (u+1)++rep Q j++[true,false,true,true])
       (rep V (u+1)++rep Q (j+1)++[])
+    simp only [List.append_assoc]
     rw [← rep_end Q [] j]
     simp only [List.append_nil]
     exact same_append (rep V (u+1)) (same_append (rep Q j) (same_zero [true,false,true,true]))
@@ -232,12 +238,11 @@ theorem main_over (u j : Nat) :
   have h3 := p_sweep j (B (ones u)) (Q++[true])
   have h3' : run0 ctr (7*j) (D (rep P j++B (ones u)) (Q++[true])) =
       some (D (rep W (2*u+1)) (Q++rep Q j++[true])) := by
-    rw [word_all u] at h3
-    simpa only [rep_end,rep,List.append_assoc] using h3
+    simpa only [word_all,List.append_assoc,rep_end,rep] using h3
   have h4 := w_sweep (2*u+1) [] (Q++rep Q j++[true])
   have h4' : run0 ctr (2*(2*u+1)) (D (rep W (2*u+1)) (Q++rep Q j++[true])) =
       some (D [] (rep V (u+1)++[true,true,false]++rep Q j++[true])) := by
-    simpa only [List.append_nil,over_right] using h4
+    simpa only [List.append_nil,List.append_assoc,over_right] using h4
   have h5 := over_turn (rep V (u+1)++[true,true,false]++rep Q j++[true])
   have h6 := f_sweep (u+1) [true,true] ([true,true,false]++rep Q j++[true])
   have h7 := over_finish ([true,false,false]++rep K u++[true,true]) (rep Q j++[true])
@@ -250,8 +255,9 @@ theorem main_over (u j : Nat) :
     have g : false :: ([true,false,false]++rep K u++[true,true]) =
         W ++ rep E0 (u+1) := e
     rw [g] at h7
-    simpa only [rep,List.append_assoc] using h7
+    simpa only [rep,List.append_assoc,List.cons_append,List.nil_append] using h7
   refine ⟨7*j+16+7*j+2*(2*u+1)+6+6*(u+1)+6,by omega,?_⟩
+  simp only [List.append_assoc] at h1 h2 h3' h4' h5 h6 h7' ⊢
   exact rjoin (rjoin (rjoin (rjoin (rjoin (rjoin (exactR h1) (exactR h2)) (exactR h3')) (exactR h4')) h5) (exactR h6)) (exactR h7')
 
 #print axioms main_inc
