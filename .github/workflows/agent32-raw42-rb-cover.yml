@@ -10,6 +10,8 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -78,6 +80,8 @@ jobs:
         group: [0,1,2,3,4,5,6,7]
     steps:
       - uses: actions/checkout@v4
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
@@ -117,6 +121,8 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
+      - name: Reconstruct canonical coverage sources
+        run: python im-results/agent13-coverage/unpack.py
       - name: Install pinned Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
