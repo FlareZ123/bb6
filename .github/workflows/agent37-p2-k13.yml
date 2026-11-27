@@ -170,4 +170,4 @@ jobs:
         run: |
           set -euo pipefail
           lean --version
-          python3 -u im-results/agent37-echain/reproduce-safe-e.py ExceptionalESafeCanonical
+          python3 -u im-results/agent37-echain/reproduce-safe-e.py ExceptionalESafeCanonical ExceptionalEReentryClassification RegularSafeEBridge
