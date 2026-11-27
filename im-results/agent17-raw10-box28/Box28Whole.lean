@@ -43,10 +43,43 @@ theorem classify_d0 : ∀ d ∈ d0Domain,
     (Box28Simple.firstWitness d).isSome = true ∨ d = 14 ∨ d = 16 ∨
       d ∈ Box28FirstHole.otherD0 ∨ efCode d ∈ Box28FirstHole.otherD0 := by decide
 
+/-- Remove only the additional E/F twins when D0 is fixed by the swap and
+    the first free slot is B1. E0 cuts with D0 in E are not reduced here. -/
+def normalResidual (d : Fin 25) : List (Fin 25) :=
+  (Box28FirstHole.residual d).filter (fun v => decide (17 ≤ d.val ∨ v.val ≤ 20))
+
+theorem normal_residual_count :
+    (Box28FirstHole.otherD0.flatMap normalResidual).length = 102 := by decide
+
+theorem mirror_residual : ∀ d ∈ Box28FirstHole.otherD0,
+    ∀ v ∈ Box28FirstHole.residual d, v ∉ normalResidual d →
+      efCode d = d ∧ Box28FirstHole.nextIndex d = 3 ∧
+      efCode v ∈ normalResidual d := by decide
+
+theorem normalized_first_hole (B : Nat) (hB : 11 ≤ B) (d : Fin 25)
+    (hd : d ∈ Box28FirstHole.otherD0)
+    (h : ∀ v ∈ normalResidual d,
+      ∀ m, Fits raw10Remainder[28]! m → m (3,false) = decode d →
+        m (slot (Box28FirstHole.nextIndex d)) = decode v → WeightedBound B m)
+    (m : Machine) (hm : Fits raw10Remainder[28]! m)
+    (h0 : m (3,false) = decode d) : WeightedBound B m := by
+  apply Box28FirstHole.d0_bound B hB d ?_ m hm h0
+  intro v hv m' hm' hd' hv'
+  by_cases hn : v ∈ normalResidual d
+  · exact h v hn m' hm' hd' hv'
+  · obtain ⟨hfix,hi,hmem⟩ := mirror_residual d hd v hv hn
+    apply (weightedBound_rename_iff B ef (by decide) m').mp
+    apply h (efCode v) hmem (renameTable ef m') (fits_parent_renamed m' hm')
+    · change (m' (3,false)).map (renameMove ef) = decode d
+      rw [hd',ef_code_decode,hfix]
+    · rw [hi] at hv' ⊢
+      change (m' (slot 3)).map (renameMove ef) = decode (efCode v)
+      rw [hv',ef_code_decode]
+
 theorem parent_bound (B : Nat) (hB : 11 ≤ B)
     (h14 : ∀ d ∈ Box28Orbit.hardCodes, ∀ m, Fits (sourceCutFor 14 d) m → WeightedBound B m)
     (h16 : ∀ d ∈ Box28Orbit.hardCodes16, ∀ m, Fits (sourceCutFor 16 d) m → WeightedBound B m)
-    (hrest : ∀ d ∈ Box28FirstHole.otherD0, ∀ v ∈ Box28FirstHole.residual d,
+    (hrest : ∀ d ∈ Box28FirstHole.otherD0, ∀ v ∈ normalResidual d,
       ∀ m, Fits raw10Remainder[28]! m → m (3,false) = decode d →
       m (slot (Box28FirstHole.nextIndex d)) = decode v → WeightedBound B m) :
     ∀ m, Fits raw10Remainder[28]! m → WeightedBound B m := by
@@ -63,9 +96,9 @@ theorem parent_bound (B : Nat) (hB : 11 ≤ B)
     exact Box28Orbit.d14_bound B hB h14 m hm he.symm
   · subst d
     exact Box28Orbit.d16_bound B hB h16 m hm he.symm
-  · exact Box28FirstHole.d0_bound B hB d (hrest d h) m hm he.symm
+  · exact normalized_first_hole B hB d h (hrest d h) m hm he.symm
   · apply (weightedBound_rename_iff B ef (by decide) m).mp
-    apply Box28FirstHole.d0_bound B hB (efCode d) (hrest _ h) _ (fits_parent_renamed m hm)
+    apply normalized_first_hole B hB (efCode d) h (hrest _ h) _ (fits_parent_renamed m hm)
     change (m (3,false)).map (renameMove ef) = decode (efCode d)
     rw [← he,ef_code_decode]
 
