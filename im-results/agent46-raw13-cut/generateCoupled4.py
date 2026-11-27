@@ -222,15 +222,16 @@ theorem residual_mass {H} : openMass 4 6 (parentCut h) = {masses["open"]} := by 
     if not counts["open"]:
         out+=f"""
 theorem witness_compatible : compatible parent L0.witness := by
+  have hpoint : ∀ s : Slot, parent s = none ∨ parent s = some (L0.witness s) := by
+    intro s
+    rcases s with ⟨q,b⟩
+    have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+    rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
   intro s t hs
-  rcases s with ⟨q,b⟩
-  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
-    (first | exact hs | contradiction | simp_all [parent, BB6.Agent46Raw13CoupledParent.p5,
-      BB6.Agent46Raw13CoupledParent.p4, BB6.Agent46Raw13CoupledParent.p3,
-      BB6.Agent46Raw13CoupledParent.p2, BB6.Agent46Raw13CoupledParent.p1,
-      BB6.Agent46Raw13.raw13, BB6.Agent46Raw13.afterB, L0.witness, L0.p,
-      weightedTNFDefaultCompletion, refine, FAR.fromCodes])
+  rcases hpoint s with h | h
+  · rw [h] at hs
+    contradiction
+  · exact Option.some.inj (h.symm.trans hs)
 
 theorem empty_complement {H} : residuals parent 6 (parentCut h) = [] :=
   List.length_eq_zero_iff.mp (residual_count h)
