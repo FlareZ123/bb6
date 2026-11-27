@@ -4,7 +4,7 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested, early, discovery, assembly, block, hard]
+        options: [rb, wide, nested, early, discovery, assembly, block, hard, recover_rb5]
         default: rb
       assembly_branch:
         type: choice
@@ -561,5 +561,100 @@ jobs:
         with:
           name: raw42-hard
           path: /tmp/hard/
+          retention-days: 30
+          if-no-files-found: error
+
+  recover_rb5:
+    if: inputs.variant == 'recover_rb5'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45994080192
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45994080192
+          name: raw42-assembly-core
+          path: /tmp/core
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45994080192
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - name: Repair only the missing source closure
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python - "$g" <<'PY'
+          import json,sys
+          from pathlib import Path
+          g=Path(sys.argv[1])
+          cfg=json.loads((g/'shards.json').read_text())
+          assert set(cfg['groups'])==set(map(str,range(8)))
+          assert len(cfg['groups']['5'])==29
+          assert {p.name for p in Path('/tmp/shards').iterdir()} == {f"raw42-assembly-shard-{i}" for i in range(8) if i!=5}
+          changed={'Raw420RBRun1570','Raw420RBClosedRoot_22_05Small','Raw420RBClosedRoot_18_16Small','Raw420RBClosedRoot_16_08Small','Raw420RBClosedRoot_04_22Small','Raw420RBClosedRoot_16_16Small','Raw420RBClosedRoot_22_04Small'}
+          for p in Path('/tmp/shards').glob('*/manifest.json'):
+              m=json.loads(p.read_text())
+              assert m['proof_source_revision']=='b33829a9592ecb17d3697b0fc305856062300d61'
+              assert not changed.intersection(x['module'] for x in m['modules']),p
+          cfg['allow_mixed_revisions']=True
+          (g/'shards.json').write_text(json.dumps(cfg,indent=2)+'\n')
+          PY
+          python "$d/convert_bidfa.py" "$g/Raw420RBRun1570.lean"
+          for stem in 22_05 18_16 16_08 04_22 16_16 22_04; do
+            python "$d/split_small42.py" "$g/Raw420RBClosedRoot_${stem}Small.lean"
+          done
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"]["5"]))' "$g/shards.json")
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          out=/tmp/shards/raw42-assembly-shard-5
+          mkdir -p "$out"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir "$out" --jobs 1 --source-root "$g" \
+            --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core \
+            --manifest "$out/manifest.json" --artifact-name raw42-assembly-shard-5 "${roots[@]}" | tee "$out/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$out/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-shard-5
+          path: /tmp/shards/raw42-assembly-shard-5
+          retention-days: 30
+          if-no-files-found: error
+      - name: Compose all eight exact shards and check complete 0RB Cover
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$g/shards.json"
+          mkdir -p /tmp/final
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 --source-root "$g" \
+            --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json --artifact-name raw42-certified-0RB \
+            --theorem BB6.Agent32Raw420RB.Closed.cover --parent-table '1RB---_1RC0RB_0RD---_1LD0LB_------_------' \
+            --weighted-bound 1006 "$g/Raw420RBClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log BB6.Agent32Raw420RB.Closed.cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-0RB
+          path: /tmp/final
           retention-days: 30
           if-no-files-found: error
