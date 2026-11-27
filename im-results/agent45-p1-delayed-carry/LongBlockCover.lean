@@ -249,7 +249,7 @@ theorem extend_word_eq (n s B a k C c : Nat)
       simp only [digits,Nat.mul_zero,Nat.zero_add,Nat.pow_succ]
       have hp : 2^k*2*d=2^k*(2*d) := by ac_rfl
       have he' := congrArg (2^k*·) he
-      simp only [Nat.mul_add] at he'
+      rw [Nat.mul_add,Nat.mul_add] at he'
       have hcomm : 2^k*(x*(n+(s+k)+3))=(n+s+k+3)*(2^k*x) := by
         rw [show n+(s+k)+3=n+s+k+3 by omega]; ac_rfl
       rw [hcomm] at he'
