@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb]
         default: raw81
 permissions:
   contents: read
@@ -103,7 +103,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
 
   raw40-a1rc:
-    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198'
+    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -170,7 +170,7 @@ jobs:
           assert old == new
           assert old['states'] == 2229 and old['summary_counts'] == [95,581] and old['edge_counts'] == [95,640]
           PY
-          lean -j1 -o FastBiDFA.olean ../agent32-raw59/FastBiDFA.lean
+          (cd ../agent32-raw59; lean -j1 -o "$root/FastBiDFA.olean" FastBiDFA.lean)
           python compact_ngram.py --data a0lb198-compact.json --namespace BB6.Agent19Raw40.A0LB1RECompact > Raw40A0LB198.lean
           lean -j1 -o Raw40A0LB198.olean Raw40A0LB198.lean | tee /tmp/a0lb198-lean.log
           python - <<'PY'
@@ -193,3 +193,33 @@ jobs:
             im-results/agent19-raw40-cut/Raw40A0LB198.olean
             im-results/agent19-raw40-cut/FastBiDFA.olean
           if-no-files-found: error
+
+      - name: Compile all A0LB child bounds and exact family maximum
+        if: inputs.target == 'raw40-a0lb'
+        env:
+          LEAN_DEPS: /tmp/a19-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A0LB.sh | tee /tmp/a19-raw40-a0lb.log
+          python - <<'PY'
+          import re
+          s=open('/tmp/a19-raw40-a0lb.log').read()
+          assert not re.search(r'\b(sorryAx|native_decide)\b',s)
+          for n in ['children','all_quotient','exact_weighted']:
+              m=re.search(r"'BB6\.Agent19Raw40\.A0LB\."+n+r"' depends on axioms: \[([^\]]*)\]",s)
+              assert m,n
+              assert set(m[1].split(', ')) <= {'propext','Classical.choice','Quot.sound'},m[0]
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'raw40-a0lb'
+        with:
+          name: raw40-a0lb-source-audit
+          path: |
+            /tmp/a19-raw40-a0lb.log
+            /tmp/a19-raw40-pin.json
+            im-results/agent19-raw40-cut/Raw40A0LB*.olean
+            im-results/agent19-raw40-cut/a0lb/*/shards/*All.olean
+            im-results/agent19-raw40-cut/a0lb/*/enum.log
+            im-results/agent19-raw40-cut/a0lb/*/compact.json
+          if-no-files-found: warn
