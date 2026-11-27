@@ -1,0 +1,38 @@
+name: Agent 36 broad symbolic pumping candidate census for Raw41 (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  infer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46080134973
+          name: raw41-batch-far-${{ matrix.shard }}
+          path: .tmp/a36-batch-far
+      - name: Search each unsolved exact one-hole leaf for finite symbolic affine pumps
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/batch_auto.py \
+            --batch .tmp/a36-batch-far/a36-raw41-batch-${{ matrix.shard }}.json \
+            --out .tmp/a36-batch-auto-${{ matrix.shard }}.json \
+            --seconds 3 --limit 20000
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-batch-auto-${{ matrix.shard }}
+          path: .tmp/a36-batch-auto-${{ matrix.shard }}.json
+          retention-days: 35
