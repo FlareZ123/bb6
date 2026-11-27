@@ -265,7 +265,7 @@ jobs:
           log = Path('/tmp/reverse-live-block.log').read_text()
           for namespace, names in (
               ("BB6.Agent23ResiduePeriod", ("reduce_sound", "final24_reduced", "reduced_weight_iff")),
-              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "reducedResidues_range", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24")),
+              ("BB6.Agent9JumpResidue", ("rep_congr", "mem_subsetSums_iff", "reducedExponent_le", "reducedResidues_range", "mem_reducedResidues_iff", "jump_member_iff_reduced", "mem_reducedLift_iff", "reducedLiftResidues_cover", "reducedExponent_final24", "modularNeg_mem", "reducedResidues_translate", "sharedResidues_mem", "sharedLift_mem", "sharedLift_cover")),
           ):
               for name in names:
                   m = re.search(r"'" + re.escape(namespace) + r"\." + re.escape(name) + r"' depends on axioms:\s*\[([^\]]*)\]", log)
@@ -289,12 +289,13 @@ jobs:
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/ReverseBlockDigitWeight.lean" | tee /tmp/reverse-block-digit-weight.log
+          python tools/lean_compile_deps.py "$D/MaskedDigitWeight.lean" | tee -a /tmp/reverse-block-digit-weight.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/reverse-block-digit-weight.log; then exit 1; fi
           python - <<'PY'
           import re
           from pathlib import Path
           log = Path('/tmp/reverse-block-digit-weight.log').read_text()
-          for name in ("candidate_window", "candidate_remainder_eq"):
+          for name in ("candidate_window", "candidate_remainder_eq", "weight_corr", "maskedCandidate_eq", "maskedFast_eq", "maskedFast_iff_walk"):
               m = re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' depends on axioms:\s*\[([^\]]*)\]", log)
               if not m and re.search(r"'BB6\.Agent45ReverseBlock\."+re.escape(name)+r"' does not depend on any axioms", log):
                   print(name, [])
