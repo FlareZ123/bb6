@@ -160,7 +160,7 @@ theorem checked : check 21269 parent 4 cut = true := by decide
 
 theorem remaining_count : remaining.length = 74 := by decide
 
-theorem remaining_mass : openMass 6 4 cut = 181508250 := by decide
+theorem remaining_mass : openMass 6 4 cut = 181508225 := by decide
 
 def d3Leaf : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
