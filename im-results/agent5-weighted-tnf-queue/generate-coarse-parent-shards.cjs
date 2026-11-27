@@ -22,6 +22,11 @@ const longMap=new Map(require('./q0-coarse-long-holes.json').map(c=>[norm(c.tabl
 // Each external cut is matched by its entire 12-entry table; no index/count substitution.
 // Importing the actual theorem is mandatory even when the source proof is still pending CI.
 const regionCuts=new Map([
+ ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LA1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M0'}],
+ ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M1'}],
+ ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0RD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M2'}],
+ ['1RB1LC1RC---0LA1RD0RE1LD1RA0RF0RC0LB', {root:151,mod:'Raw11Q0Linear151',ns:'BB6Coverage.Agent31Pump.Raw11Q0Linear151'}],
+ ['1RB1LC1RC1RB0LA1LD1LA0RE1RD1RF---1RD', {root:150,mod:'Raw11Q0Sweep150',ns:'BB6Coverage.Agent31Pump.Raw11Q0Sweep150'}],
  ['1RB1LC1RC1RD0LA1LA---0RE0RF1RE1RA0LC', {root:138,mod:'Raw11Q0Counter138',ns:'BB6Coverage.Agent31Pump.Multi.Raw11Q0Counter138'}],
  ['1RB1LC1RC0RD0LA1RB0RE1RE1LF0LA0LC---', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M0'}],
  ['1RB1LC1RC0RD0LA1RB1RE0RF1LE0LC---0LB', {root:143,mod:'Raw11Q0Pair143Rules',ns:'BB6Coverage.Agent31Pump.Tails.Raw11Q0Pair143.M1'}],
