@@ -284,6 +284,9 @@ def main():
         "canonical57_artifact_sha256": BASE_ARTIFACT_SHA,
         "canonical57_source_revision": base_report["canonical58_source_revision"],
         "canonical57_residual_count": 57,
+        "canonical57_raw124_delta_artifact_id": RAW124_DELTA_ID,
+        "canonical57_raw124_delta_sha256": RAW124_DELTA_SHA,
+        "canonical57_raw124_root_sha256": base_report["graft_olean_sha256"],
         "canonical58_residual_count": 58,
         "canonical58_base_run_id": base_report["canonical58_base_run_id"],
         "canonical58_artifact_sha256": base_report["canonical58_artifact_sha256"],
@@ -310,12 +313,35 @@ def main():
     }
     report_path = work / "canonical56-raw59-after-raw124.json"
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
-    # Publish one self-contained linked closure, not all the extracted
-    # predecessor families. The successful Lean consumer used only this
-    # directory as LEAN_PATH, and the report binds the checked root hash.
-    packaged = work / "linked"
-    assert not packaged.exists(), packaged
-    linked.rename(packaged)
+    # Publish the new consumer as a thin delta. The authenticated predecessor
+    # artifacts already carry its exact reachable dependencies; publishing
+    # another multi-GB copy of those objects would delay acceptance.
+    delta = work / "raw59-delta"
+    delta.mkdir()
+    for path in (source, output, report_path, work / "raw59-link-audit.json"):
+        shutil.copy2(path, delta / path.name)
+    shutil.copy2(work / "raw124-delta/delta.json", delta / "raw124-delta.json")
+    manifest = {
+        "status": "source-accepted Canonical57-Raw124 to Canonical56-Raw59 thin delta",
+        "remaining_residual_count": 56,
+        "base_delta_artifact_id": RAW124_DELTA_ID,
+        "base_delta_artifact_sha256": RAW124_DELTA_SHA,
+        "base_delta_root_sha256": base_report["graft_olean_sha256"],
+        "raw59_staged_artifact_id": raw59_delta["artifact_id"],
+        "raw59_staged_artifact_sha256": raw59_delta["artifact_sha256"],
+        "raw59_link_audit_sha256": raw59_delta["link_audit_sha256"],
+        "raw59_linked_root": raw59_delta["linked_root"],
+        "raw59_slice_root_sha256": raw59_delta["slice_olean_sha256"],
+        "graft_root_sha256": a68.sha(output),
+        "graft_source_sha256": a68.sha(source),
+        "report_sha256": a68.sha(report_path),
+        "axioms": profiles,
+        "source_revision": report["source_revision"],
+        "replay_recipe": "Restore the pinned Raw124 delta, link only Raw59KernelSlice "
+                         "from the pinned staged artifact using the saved link audit, "
+                         "and install the checked Raw59Canonical56AfterRaw124 root.",
+    }
+    (delta / "delta.json").write_text(json.dumps(manifest, indent=2, sort_keys=True) + "\n")
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
 
 
