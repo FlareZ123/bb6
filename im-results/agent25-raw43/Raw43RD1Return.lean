@@ -50,7 +50,7 @@ theorem fastReturn (b : Bool) (m : Nat) :
         (by simpa only [List.append_assoc] using h3)⟩
     have h45 : Reaches k (E ([false,false]++P++rep P n++[true]) 0)
         (E (rep P n++[true]) 3) := by
-      exact BB6.Agent25Raw43RD1Growth.trans h4 ⟨4,by simpa only [P,rep,List.append_nil,List.append_assoc] using h5⟩
+      exact BB6.Agent25Raw43RD1Growth.trans h4 ⟨4,by simpa only [P,rep,List.append_nil,List.append_assoc,List.cons_append,List.nil_append] using h5⟩
     exact BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans (BB6.Agent25Raw43RD1Growth.trans ⟨2,h0⟩ ⟨_,hs'⟩) h23) h45) h6
 
 private def T : List Bool := [true,false,false,false]
