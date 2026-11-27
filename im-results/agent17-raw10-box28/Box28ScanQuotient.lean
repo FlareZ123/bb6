@@ -239,7 +239,8 @@ theorem never_root (p : Params) (b : Gate) (t n : Nat)
         exact hg
 
 theorem init (p : Params) (b : Gate) :
-    runCore p b 4 localBlank = some (root 0) := by rfl
+    runCore p b 4 localBlank = some (root 0) := by
+  simp [runCore,stepCore,localBlank,root,atScan,state,tail,pair,ones,rep,left,right]
 
 theorem never_blank (p : Params) (b : Gate) (t : Nat)
     (h : good p 1 = true) : runCore p b t localBlank ≠ none := by
