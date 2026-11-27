@@ -49,14 +49,13 @@ theorem test_delays (e f : Fin 25) (he : e ∈ allowedE) :
   revert e f
   decide +kernel
 
-theorem source_delay_shape (m : Machine) (hm : Fits raw10Remainder[15]! m) :
+theorem delay_shape_of_domains (m : Machine)
+    (hm : ∀ q : Fin 6, m (q,false) ∈ (zeroDomains q).map decodeCode) :
     ∃ e f : Fin 25, e ∈ allowedE ∧
       m (4,false) = decodeCode e ∧ m (5,false) = decodeCode f ∧
       delays (zeroNext m) 0 = delayList e f := by
-  have getCode (q : Fin 6) : ∃ v, v ∈ zeroDomains q ∧ decodeCode v = m (q,false) := by
-    have h := hm (q,false)
-    rw [even_domain] at h
-    exact List.mem_map.mp h
+  have getCode (q : Fin 6) : ∃ v, v ∈ zeroDomains q ∧ decodeCode v = m (q,false) :=
+    List.mem_map.mp (hm q)
   obtain ⟨e,he,hee⟩ := getCode 4
   obtain ⟨f,_,hff⟩ := getCode 5
   have he' : e ∈ allowedE := by simpa [zeroDomains] using he
@@ -75,6 +74,31 @@ theorem source_delay_shape (m : Machine) (hm : Fits raw10Remainder[15]! m) :
     unfold zeroNext
     rw [hrows q]
   exact ⟨e,f,he',hee.symm,hff.symm,by rw [hz,test_delays e f he']⟩
+
+/-- This exact graph is shared by the five B1 sibling rectangles. -/
+theorem family_even_domain (i : Fin 34) (hi : i.val ∈ ([12,13,14,15,25] : List Nat))
+    (q : Fin 6) : raw10Remainder[i.val]! (q,false) = (zeroDomains q).map decodeCode := by
+  have h : ∀ (j : Fin 34) (r : Fin 6),
+      j.val ∈ ([12,13,14,15,25] : List Nat) →
+      BB6.Agent49BoxEncoded.boxes[j.val]! (slotIndex (r,false)) = zeroDomains r := by
+    decide +kernel
+  rw [exact_box_at_index i (q,false), h i q hi]
+
+theorem family_delay_shape (i : Fin 34) (hi : i.val ∈ ([12,13,14,15,25] : List Nat))
+    (m : Machine) (hm : Fits raw10Remainder[i.val]! m) :
+    ∃ e f : Fin 25, e ∈ allowedE ∧
+      m (4,false) = decodeCode e ∧ m (5,false) = decodeCode f ∧
+      delays (zeroNext m) 0 = delayList e f := by
+  apply delay_shape_of_domains m
+  intro q
+  rw [← family_even_domain i hi q]
+  exact hm (q,false)
+
+theorem source_delay_shape (m : Machine) (hm : Fits raw10Remainder[15]! m) :
+    ∃ e f : Fin 25, e ∈ allowedE ∧
+      m (4,false) = decodeCode e ∧ m (5,false) = decodeCode f ∧
+      delays (zeroNext m) 0 = delayList e f :=
+  family_delay_shape (15 : Fin 34) (by decide) m hm
 
 theorem max_mem (e f : Fin 25) : delayMax e f ∈ delayList e f := by
   by_cases hf : f = 1 ∨ f = 2
@@ -130,6 +154,8 @@ theorem source_weighted_from_ordinary (m : Machine) (hm : Fits raw10Remainder[15
   have h2 := source_delay_cap m hm d hd
   omega
 
+#print axioms family_even_domain
+#print axioms family_delay_shape
 #print axioms even_domain
 #print axioms test_delays
 #print axioms source_delay_shape
