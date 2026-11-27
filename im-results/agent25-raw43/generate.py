@@ -6,17 +6,20 @@ import hashlib, json, subprocess, sys, tempfile
 
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
-OUT = ROOT / "generated"
+VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
+assert VARIANT in ("default", "0rd")
+OUT = ROOT / ("generated" if VARIANT == "default" else "generated_0rd")
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
     "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
     "agent32-raw59")]
 from generate_four_hole import masks, move, slot
 
-S = json.loads((ROOT/"spec.json").read_text())
-B = 75
+S = json.loads((ROOT/("spec.json" if VARIANT == "default" else "spec_0rd.json")).read_text())
+B = S.get("bound", 75)
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
-NS = "BB6.Agent25Raw43"
+NS = "BB6.Agent25Raw43" + ("" if VARIANT == "default" else "RD")
+PREFIX = "Raw43" + ("" if VARIANT == "default" else "RD")
 CHUNK = 240
 SHARD = 5000
 
@@ -44,12 +47,16 @@ def generate():
         subprocess.run([str(work/"enumerate"),S["table"],str(S["cap"]),str(S["lookback"]),str(prefix)],check=True)
         raw=prefix.with_suffix(".open").read_bytes()
         treebytes=prefix.with_suffix(".json").read_bytes()
-        assert digest(raw)==S["openSHA256"]
-        assert digest(treebytes)==S["treeSHA256"]
+        if "openSHA256" in S:
+            assert digest(raw)==S["openSHA256"]
+        if "treeSHA256" in S:
+            assert digest(treebytes)==S["treeSHA256"]
         rows=raw.decode().splitlines()
-        assert len(rows)==len(set(rows))==52
+        assert len(rows)==len(set(rows))==S.get("stats", {"open":52})["open"]
+        if "openRows" in S:
+            assert rows == S["openRows"]
         tree=json.loads(treebytes)
-        assert tree[:3]==["split",8,8]
+        assert tree[:3]==S.get("rootQuery", ["split",8,8])
         index={row:i for i,row in enumerate(rows)}
         cert={}
         modules={}
@@ -72,7 +79,7 @@ def generate():
             sizes[id(t)]=n
             return n
         inspect(tree)
-        assert stats==Counter(cycle=5371,last=995,open=52,split=279)
+        assert stats==Counter(S.get("stats", dict(cycle=5371,last=995,open=52,split=279)))
         used=set()
         def render(t):
             tag,*v=t
@@ -92,9 +99,9 @@ def generate():
             if t[0]=="split":
                 return set().union(*(deps(k) for k in t[3]))
             return set()
-        emit("Raw43Base",["ZipPrefixAudit"],f"""
+        emit(PREFIX+"Base",["ZipPrefixAudit"],f"""
 abbrev p43child : PartialMachine :=
-  refine (refine (refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩)) (1,true) (some ⟨false,true,4⟩)) (4,true) (some ⟨false,false,4⟩)
+  refine (refine (refine (pathEnd root 2 (path.take 3)).1 (3,true) (some ⟨false,true,1⟩)) (1,true) (some ⟨false,true,4⟩)) (4,true) (some {move(S.get("e1","0LE"))})
 theorem p43child_root : p43child initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem p43child_nohalt : weightedTNFNoAssignedHalt p43child :=
   weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ (pathEnd_nohalt root 2 (path.take 3) firstOneCylinder_no_assigned_halt)))
@@ -137,9 +144,9 @@ theorem c_{name} : zipCheck {B} {p} t_{name} = true := by
             out.append(combine(p,name,n,s,names))
             return "".join(out)
         def shard(t,p,name):
-            mod=f"Raw43Shard_{name}"
+            mod=f"{PREFIX}Shard_{name}"
             if sizes[id(t)]<=SHARD:
-                emit(mod,["Raw43Base",*sorted(deps(t))],
+                emit(mod,[PREFIX+"Base",*sorted(deps(t))],
                      f"abbrev p_{name} := {p}\n"+local(t,f"p_{name}",name))
                 return mod
             assert t[0]=="split"
@@ -151,7 +158,7 @@ theorem c_{name} : zipCheck {B} {p} t_{name} = true := by
             return mod
         mod=shard(tree,"p43child","root")
         assert used==set(range(len(rows)))
-        emit("Raw43Data",[mod],f"""
+        emit(PREFIX+"Data",[mod],f"""
 noncomputable def certificate43child : WeightedTNFCertificate {B} p43child 6 :=
   certifiedZip {B} p43child t_root p43child_root p43child_nohalt c_root
 theorem all43child : ∀ m, compatible p43child m → WeightedBound {B} m :=

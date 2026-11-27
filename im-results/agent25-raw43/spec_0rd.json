@@ -1,0 +1,25 @@
+{
+  "table": "1RB---_1RC0RE_0RD---_1LD0RB_---0RD_------",
+  "cap": 1000,
+  "lookback": 32,
+  "bound": 49,
+  "e1": "0RD",
+  "rootQuery": [
+    "split",
+    17,
+    8
+  ],
+  "stats": {
+    "cycle": 2878,
+    "last": 273,
+    "open": 1,
+    "split": 137
+  },
+  "openRows": [
+    "1RB0LF_1RC0RE_0RD---_1LD0RB_1RF0RD_1LA0RE"
+  ],
+  "witnesses": {
+    "0": "000"
+  },
+  "growth": {}
+}
