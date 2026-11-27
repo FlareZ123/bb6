@@ -18,7 +18,7 @@ theorem parent_eq_literal : BB6.Agent1Raw57Parent.parent = literalParent := by
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl | rfl | rfl | rfl | rfl | rfl <;> cases b <;> decide
 
-theorem literal_cover : Cover (WeightedBound 1500) literalParent := by
+theorem literal_cover : Cover (WeightedBound 1613) literalParent := by
   rw [← parent_eq_literal]
   exact BB6.Agent1Raw57Complete.parent_cover
 
