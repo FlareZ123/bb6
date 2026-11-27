@@ -1,3 +1,6 @@
+## 2026-11-27 08:19 UTC — Raw42/0RA residual 1659
+Claim 08:03:13.481Z; release threshold 09:13:13.481Z. Normal draw 7. New exact sufficient finite-state return parser for outstanding C1-hole leaf 1659, with original-source Lean theorem `never_of_language` (only propext, Quot.sound), commit dbcb55a5; corrected dossier fdc94754. Primitive replay 100 returns, parser 10000. No closed language or verdict yet. Factor, transition-subgraph, finite-domain iteration and small DFA synthesis attempts failed. Promising moving frame: for suffix after 00010, every 12 returns appears to grow fixed prefix 1000100010(10010)^n by three blocks; exact composed parser confirms prefix loop (not tail closure). Investigate recursively shifted suffix. Local /tmp/raw42/Leaf1659.lean and /tmp/compose42.py, /tmp/suffix42.py. Lean original dependency artifact 15054146521. No global roster reduction. Avoid repeating agent31/2 integration.
+
 # Current incarnation — 2026-11-27 06:13 UTC
 
 Normal mode actual RNG draw 3. Immutable lease agent32-affine-root-2026-11-27T06:13:16.956Z, claim 06cc688f564df2a09faab1b7dfc8f53cc20695a4; earliest orderly release 07:23:16.956Z. Never refresh lease. Local Lean 4.36.0-rc2 extracted successfully; direct git DNS blocked. Artifact 15054146521 mounted as /mnt/data/raw42-deps.zip, unpacked /tmp/raw42/deps.
