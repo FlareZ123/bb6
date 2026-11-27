@@ -1,20 +1,21 @@
-# Raw56 E1=1RE — original-source checked branch reduction
+# Raw56 E1=1RE — complete original-source sibling Cover
 
 Parent partial table: `1RB---_1RC---_0RD---_1LD1LE_---1RE_------`.
 
-## Current proof status (2026-11-27 05:49 UTC)
+## Accepted theorem and scope
 
-Locally checked against the original accepted dependency closure, artifact 15160313745, with Lean 4.36.0-rc2:
+**All compatible quotient completions of this exact E1=1RE sibling have weighted step bound 10,000.** The original-source Lean 4.36.0-rc2 acceptance run [46061898661](https://github.com/FlareZ123/bb6/actions/runs/46061898661), pinned to `c874776d819728050ba1c6eddb44237b358c387d`, completed all seven disjoint proof shards and the final consumer. The exported artifact is [15230025742](https://github.com/FlareZ123/bb6/actions/runs/46061898661/artifacts/15230025742), SHA-256 `efcfbc539c2beed16f8f551de54784d5eaa1be80bd7bf3485bd66c6d576be3c3`, 389,449,958 bytes. It contains the new objects and the final axiom log; the exact accepted base artifact 15160313745 remains a separate dependency.
 
-- E0=0LA: `BB6.Agent4Raw56.RELA.all_quotient`, weighted bound 7014. 1193 splits, 18536 translated cycles, 7336 last leaves, 1501 FAR5 leaves, 56 finite-stack certificates, 11 universal growth proofs.
-- E0=0RB: `BB6.Agent4Raw56.RERB.all_quotient`, weighted bound 7014. 1181 splits, 21726 translated cycles, 4946 last leaves, 487 FAR5 leaves, 5 finite-stack certificates.
-- E0=0LB and 0LC: `BB6.Agent4Raw56.RE0LB.all_quotient`, `BB6.Agent4Raw56.RE0LC.all_quotient`, weighted bound 10000.
-- All four have raw compatible variants `.all`; exported axioms are propext, Classical.choice, Quot.sound only.
-- `Raw56REParentCut.lean` checked: first undefined query E0 at step 10, 13 closed children, 11 residual tables. The parent cut and conditional root reduction are valid at 10000. The unconditional parent consumer is pending the remaining child checks.
+- `BB6.Agent4Raw56REParent.all_quotient`: unconditional weighted bound 10000 for the exact quotient-compatible E1=1RE table.
+- `BB6.Agent4Raw56REParent.all`: corresponding raw-compatible bound.
+- `BB6.Agent4Raw56REParent.rootSound18Closed`: removes E1=1RE from the accepted 19-way root list at common bound 10000.
+- The final source acceptance explicitly requires the standard axiom gate for `all_quotient` and `rootSound18Closed`; no unapproved axioms are accepted.
 
-The other seven children have complete *candidate* covers. Across the nine new branches, 291 holdouts after FAR5 were handled by 278 ordinary ngram/RLE, 6 transferred periodic-block/lag-XOR, 4 late first-query witnesses (1527, 1583, 4072, 7854 steps), and 3 already kernel-checked unbounded-growth proofs. The late witnesses require a parent bound greater than 7014; use 10000. The three new symbolic witnesses are RE0LF M269 (left binary counter), RE1LB M500 (right binary counter with accumulating 110 blocks), RE1RF M491 (five-phase periodic return adding four 8-cell blocks). None of this removes Raw56 from the global root roster without a complete Raw56 proof.
+The first undefined E0 query occurs at step 10. Thirteen moves close by translated cycles; the other eleven are all covered by source-checked exact child proofs. RELA and RERB have weighted bound 7014; the remaining nine have bound 10000. The 291 holdouts after FAR5 were handled by 278 ordinary ngram/RLE, six transferred periodic-block/lag-XOR, four late first-query witnesses (1527, 1583, 4072, 7854 moves), and three universal growth proofs: RE0LF M269 (left binary counter), RE1LB M500 (right binary counter with accumulating 110 blocks), RE1RF M491 (five-phase periodic return adding four eight-cell blocks). Together with the original canonical split this gives the full sibling theorem, without any finite-time nonhalting assumption.
 
-One large literal automaton caused a local 4 GiB memory-limit OOM during checking. A finite-stack certificate quotient by reachable-configuration profiles resolves the data-size bottleneck (9672 to 204 configurations; 7006 to 214). See follow-up compression source and reproducibility patch. No trusted checker is changed.
+This is a local Raw56 sibling closure. The independently accepted E1=0RC sibling must be consumed by exact roster membership for a joint root reduction. No complete Raw56 parent Cover or global BB(6) roster removal follows yet.
+
+A large literal automaton previously exceeded a local 4 GiB limit. Quotienting inverse stack states by their reachable-configuration profiles compressed the largest witnesses from 9672 to 204 and 7006 to 214 configurations; the original Lean checker certifies the compressed relation. The acceptance run used this exact repaired source rather than weakening the checker.
 
 ## Reproduce
 
