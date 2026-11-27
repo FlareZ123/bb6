@@ -68,7 +68,7 @@ theorem scan_one (n : Nat) (hn : 2 ≤ n) (L R : List Bool)
       some ⟨0,L,zeros 3++(zeros (n-2)++bits "101"++R)⟩ := by
     have hone : ones (n+1) = true::ones n := by
       simp [ones,List.replicate_succ]
-    simpa only [hone,hzeros,List.append_assoc] using
+    simpa only [hone,hzeros,List.append_assoc,List.cons_append] using
       erase_ones (n+1) L (bits "101"++R)
   have h2 := carry_q L (zeros (n-2)++bits "101"++R) hL
   have h := join0 h1 h2
@@ -123,7 +123,7 @@ theorem scan_a {u : List Bool} (hu : AFrame u) (L R : List Bool)
       have h1 : run0 table ((5*(b+1)+1)+9)
           ⟨0,true::((ones (5*(b+1)+1)++false::u)++L),bits "101"++R⟩ =
           some ⟨0,true::(u++L),bits "101"++(w4 b++R)⟩ := by
-        simpa only [hnum,w4,List.append_assoc,List.tail_cons] using h1raw
+        simpa only [hnum,w4,List.append_assoc,List.cons_append,List.tail_cons] using h1raw
       obtain ⟨t,c,ht,hc,h2⟩ := ih L (w4 b++R) hL
       have h := join0 h1 h2
       refine ⟨((5*(b+1)+1)+9)+t,c++w4 b,by omega,ACode.more b c hc,?_⟩
