@@ -1341,3 +1341,134 @@ jobs:
             .tmp/a6-zeroLC-D0RC/log
           include-hidden-files: true
           retention-days: 14
+
+  recover-zeroLF-root13-prepare:
+    if: inputs.variant == 'zeroLF' && inputs.recovery_run_id == '45908931018'
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-zeroLF-core-and-sources
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroLF
+      - name: Generate split root13 from exact old partition
+        run: |
+          set -euo pipefail
+          base=im-results/agent14-raw139-e0-zeroLF
+          work=.tmp/a6-zeroLF
+          bash "$base/prepare.sh"
+          python3 "$base/assemble.py" "$work/imports" --partition "$work/partition.json" --roots 13 --packed --split-root13
+          for i in $(seq 0 23); do test -f "$work/imports/ZLFRoot13_${i}.lean"; done
+          test -f "$work/imports/ZLFRoot13.lean"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-zeroLF-root13-split-sources
+          path: .tmp/a6-zeroLF
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-zeroLF-root13-children:
+    if: inputs.variant == 'zeroLF' && inputs.recovery_run_id == '45908931018'
+    needs: recover-zeroLF-root13-prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        child: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-zeroLF-root13-split-sources
+          path: .tmp/a6-zeroLF
+      - name: Compile exact child Cover
+        env:
+          CHILD: ${{ matrix.child }}
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLF
+          bash im-results/agent14-raw139-e0-zeroLF/prepare.sh
+          mkdir -p "$work/child"
+          python3 tools/lean_compile_closure.py "$work/imports/ZLFRoot13_${CHILD}.lean" \
+            --source-root "$work/imports" --precompiled-manifest "$work/core.json" \
+            --precompiled-dir "$work/core" --workdir /tmp/a6-zeroLF-root13-child \
+            --jobs 1 --manifest "$work/child/manifest.json" --label "zeroLF-root13-child${CHILD}" \
+            --theorem "BB6.Agent14E0LFParent.cZLFRoot13_${CHILD}" \
+            --weighted-bound 19007 | tee "$work/child/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/child/log"
+          mkdir -p "$work/child/build"
+          find /tmp/a6-zeroLF-root13-child -name '*.olean' -exec cp '{}' "$work/child/build/" ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroLF-root13-child${{ matrix.child }}-certified
+          path: .tmp/a6-zeroLF/child
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-zeroLF-root13-parent:
+    if: inputs.variant == 'zeroLF' && inputs.recovery_run_id == '45908931018'
+    needs: recover-zeroLF-root13-children
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-zeroLF-root13-split-sources
+          path: .tmp/a6-zeroLF
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-zeroLF-root13-child*-certified
+          path: .tmp/a6-zeroLF/children
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-zeroLF-root*-certified
+          run-id: ${{ inputs.recovery_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroLF/shards
+      - name: Compile merged root13 and parent
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-zeroLF
+          base=im-results/agent14-raw139-e0-zeroLF
+          bash "$base/prepare.sh"
+          python3 "$base/merge_root13.py" "$work"
+          target="$work/shards/raw139-e0-zeroLF-root13-certified"
+          mkdir -p "$target/build"
+          python3 tools/lean_compile_closure.py "$work/imports/ZLFRoot13.lean" \
+            --source-root "$work/imports" --precompiled-manifest "$work/root13-merged/manifest.json" \
+            --precompiled-dir "$work/root13-merged/build" --workdir /tmp/a6-zeroLF-root13-parent \
+            --jobs 1 --manifest "$target/manifest.json" --label raw139-e0-zeroLF-root13-recovered \
+            --theorem BB6.Agent14E0LFParent.cZLFRoot13 --weighted-bound 19007 | tee "$target/log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$target/log"
+          find /tmp/a6-zeroLF-root13-parent -name '*.olean' -exec cp '{}' "$target/build/" ';'
+          python3 "$base/compose.py" "$work"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-zeroLF-parent-certified
+          path: |
+            .tmp/a6-zeroLF/parent
+            .tmp/a6-zeroLF/imports
+          include-hidden-files: true
+          retention-days: 14
