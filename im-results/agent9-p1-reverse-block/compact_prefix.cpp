@@ -74,7 +74,7 @@ struct Block8 {
   auto c=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xF0F0F0F0F0F0F0F0ull)),2);
   auto d=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFF00FF00FF00FF00ull)),3);
   auto e=_mm512_slli_epi64(_mm512_and_si512(w,_mm512_set1_epi64(0xFFFF0000FFFF0000ull)),4);
-  return _mm512_add_epi64(_mm512_add_epi64(a,b),_mm512_add_epi64(c,d),e);
+  return _mm512_add_epi64(_mm512_add_epi64(_mm512_add_epi64(a,b),_mm512_add_epi64(c,d)),e);
  }
  void parent8(const I* in,I* out)const{
   auto z=_mm512_cvtepu32_epi64(_mm256_loadu_si256((const __m256i*)in));
