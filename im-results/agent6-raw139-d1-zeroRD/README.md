@@ -20,7 +20,17 @@ New depth-0 row (0, code 13): [7,24,11,24,14,24,24,13,24,24,24,24], ordinary cod
 
 All partition identities checked by arity-aware counts. Prefix-sharing census with exact translated cycles, small FAR, state graph closure and last-hole leaves; untrusted discovery, not Lean proof. Compressed sources reconstruct with Python standard library: lzma.decompress(base64.b64decode(Path(...).read_text())). Compile g++ -O3 -std=c++17. Run d1 D0 250, which writes /tmp/d1-0rd-d0-D0-cap250.txt. Run strong input 1 then run stage 2 on stage-1 open lines converted to '250 TABLE'. Strong adapts Agent47/32 sparse ngram and Agent48 block FAR; adds exact-replayed hash-assisted cycle candidate search. Candidate holdouts include both late queries (must expand multi-hole cases) and unclassified machines.
 
-At first checkpoint D0=8 and 9 had zero open leaves after stage 2 (late multi-hole queries still require expansion), D0=6 one open, D0=2 eleven. No claim of certified bounds until proof synthesis.
+D0=8 and 9 have zero stage-2 open leaves (late multi-hole queries still require expansion). The sole D0=6 stage-2 open leaf is solved below; D0=2 has three certified nonhalting leaves among its eleven former open cases. No complete branch bound is certified.
+
+## D0=2: three new source-checked hard-leaf covers
+
+The two-stage census is now preserved by exact table code in [D0TwoHoldouts.tsv](D0TwoHoldouts.tsv). Stage 1: 11,088 ngram, 6,855 block, 405 cycle, 507 first-hole and 356 open candidates (19,211 total). Stage 2 on those 356: 120 ngram, 209 block, 16 first-hole and eleven open. Of the eleven, three now have complete nonhalting proofs, one has a computationally observed late first query at step 21,697, and seven remain open. The stage-1 and stage-2 finite classifications are not yet collectively certified.
+
+* [D1NestedGrowth.lean](D1NestedGrowth.lean), theorem `BB6.Agent6D1NestedGrowth.two_cover`: ID209 shares the exact nested pair-of-zero recursion with the prior D0=6 hard leaf despite different internal state routes. From blank after eight steps, the E family has left stack `0^(2k+2)101` and empty right stack; arbitrary-tail DP/EP macros prove growth for all k by induction on k+j then k.
+* [D1TwoUnary.lean](D1TwoUnary.lean), theorems `cover354` and `cover355`: both tables enter the B family after seven steps with left stack `1^(4k+2)01` and empty right stack. A shared recursion grows the left run by four ones; the general four-zero consuming macro uses two lower-index recursive sweeps. Exact terminal blank return and positive growth are proved independently of any empirical pattern extrapolation.
+
+All three theorems quantify over every compatible completion and arbitrary weighted bound B. They compiled locally with Lean 4.36.0-rc2 against the existing accepted Raw139 normalized artifact 15093190882, with only propext, Classical.choice and Quot.sound. No full parent closure, fresh dependency build, or global roster cut is claimed.
+
 
 ## Exact symbolic closure of D0=1LB hard two-hole leaf
 
