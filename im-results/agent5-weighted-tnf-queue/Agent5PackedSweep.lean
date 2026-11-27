@@ -40,8 +40,7 @@ theorem pack_append (xs ys : List Bool) : pack (xs++ys) = cat xs (pack ys) := by
   | nil => simp [cat,pack]
   | cons x xs ih =>
     simp only [List.cons_append,pack,ih,cat,List.length_cons,Nat.pow_succ,Nat.mul_add,Nat.add_assoc]
-    rw [Nat.mul_comm 2 (2^xs.length),Nat.mul_assoc]
-    simp [Nat.mul_assoc]
+    simp [Nat.mul_assoc,Nat.mul_comm]
 
 def repCat (xs : List Bool) : Nat → Nat → Nat
   | 0,v => v
@@ -52,6 +51,10 @@ theorem pack_rep (xs : List Bool) (n : Nat) (ys : List Bool) :
   induction n with
   | zero => rfl
   | succ n ih => simp [rep,repCat,List.append_assoc,pack_append,ih]
+
+theorem cat_rep (xs : List Bool) (n : Nat) (ys : List Bool) :
+    cat (rep xs n) (pack ys) = repCat xs n (pack ys) :=
+  (pack_append (rep xs n) ys).symm.trans (pack_rep xs n ys)
 
 theorem pack_surj_aux (f n : Nat) (h : n < 2^f) : ∃ xs, pack xs=n := by
   induction f generalizing n with
@@ -64,8 +67,9 @@ theorem pack_surj_aux (f n : Nat) (h : n < 2^f) : ∃ xs, pack xs=n := by
     refine ⟨(n%2 == 1)::xs,?_⟩
     simp only [pack,hxs]
     by_cases hn : n%2=1
-    · simp [hn]; omega
-    · simp [hn]; omega
+    · first | omega | (simp [hn]; omega)
+    · have he : (n%2 == 1) = false := beq_eq_false_iff_ne.mpr hn
+      rw [he]; change 0 + 2 * (n / 2) = n; omega
 
 theorem pack_surj (n : Nat) : ∃ xs, pack xs=n := by
   apply pack_surj_aux (n+1)
@@ -87,7 +91,7 @@ theorem sweepRP (p : PartialMachine) (q : Fin 6) (lp rp I O : List Bool) (k n L 
   have hh := sweepR p q lp rp I O k one n l r
   have he := (encode0_run p (k*n) ⟨q,lp++l,rp++rep I n++r⟩).symm
   rw [hh] at he
-  simpa only [Option.map_some,encode0,List.append_assoc,pack_append,pack_rep] using he
+  simpa only [Option.map_some,encode0,List.append_assoc,pack_append,pack_rep,cat_rep] using he
 
 theorem sweepLP (p : PartialMachine) (q : Fin 6) (lp rp I O : List Bool) (k n L R : Nat)
     (h : Auto.knownRun p k ⟨q,lp++I,rp⟩ = some ⟨q,lp,rp++O⟩) :
@@ -101,7 +105,7 @@ theorem sweepLP (p : PartialMachine) (q : Fin 6) (lp rp I O : List Bool) (k n L 
   have hh := sweepL p q lp rp I O k one n l r
   have he := (encode0_run p (k*n) ⟨q,lp++rep I n++l,rp++r⟩).symm
   rw [hh] at he
-  simpa only [Option.map_some,encode0,List.append_assoc,pack_append,pack_rep] using he
+  simpa only [Option.map_some,encode0,List.append_assoc,pack_append,pack_rep,cat_rep] using he
 
 inductive Action where
   | steps (k : Nat)
@@ -168,12 +172,12 @@ theorem traceRun_sound (p : PartialMachine) (ops : List Action) (z : P) {out : N
     | none => simp [ha] at h
     | some a =>
       rcases a with ⟨k,y⟩
-      simp only [ha,Option.bind_some] at h
+      simp only [ha] at h
       cases hb : traceRun p y ops with
       | none => simp [hb] at h
       | some b =>
         rcases b with ⟨n,t⟩
-        simp only [hb,Option.bind_some,Option.some.injEq] at h
+        simp [hb] at h
         subst out
         exact joinP (action_sound p z op ha) (ih y hb)
 
