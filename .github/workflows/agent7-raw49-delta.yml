@@ -1,0 +1,48 @@
+name: Agent 7 Raw49 source-accepted 97 to 95 delta
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  delta:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw49-progress-proof-97
+          run-id: 46052879709
+          github-token: ${{ github.token }}
+          repository: FlareZ123/bb6
+          path: /tmp/raw49base
+      - name: Install exact Lean version
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile new witnesses and two exact child Covers
+        run: |
+          set -euo pipefail
+          lean --version
+          base=$(dirname "$(find /tmp/raw49base -name Raw49Progress97.olean -print -quit)")
+          test -s "$base/Raw49Progress97.olean"
+          test -s "$base/Raw49BulkRecipes.olean"
+          bash im-results/agent7-raw49/prepare_delta.sh /tmp/raw49delta 23 26
+          python im-results/agent7-raw49/compile_delta.py "$base" /tmp/raw49delta /tmp/raw49objects 23 26 | tee /tmp/raw49delta.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw49delta.log \
+            BB6.Agent7Raw49Drift230574.never \
+            BB6.Agent7Raw49Nested261066.never \
+            BB6.Agent7.Raw49C23.all_quotient \
+            BB6.Agent7.Raw49C26.all_quotient \
+            BB6.Agent7Raw49Progress95.refined \
+            BB6.Agent7Raw49Progress95.residual_count
+      - name: Preserve thin delta and exact generation inputs
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw49-progress-95-delta
+          path: |
+            /tmp/raw49objects/**
+            /tmp/raw49delta/trials/*
+            /tmp/raw49delta.log
