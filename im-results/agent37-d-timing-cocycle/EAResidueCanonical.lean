@@ -1,6 +1,7 @@
 import Lean.Elab.Tactic.Omega
 import EFirstAPacket
 import AP2PacketBoundarySource
+import PacketRank
 import BoundaryBZero
 
 set_option maxRecDepth 8192
@@ -94,7 +95,7 @@ theorem ea_q1_residue_canonical (t q : Nat)
       (packet c.a c.q c.p BB6.Agent2AP2PacketBoundary.fixedTail)
       (DRegularSource.sourceSection ⟨a,3,2⟩)
       hEA hA
-  · exact ⟨hfloor,Or.inl (by decide)⟩
+  · exact ⟨hfloor,Or.inl (show (3:Nat) ≠ 0 by decide)⟩
 
 #print axioms ea_q1_residue_canonical
 
