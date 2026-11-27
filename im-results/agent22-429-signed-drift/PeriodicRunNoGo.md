@@ -39,23 +39,13 @@ Its E/S type fixes the parity of \(u_n\) and the residue of \(D_n\bmod8\) for ev
 \]
 Set \(x_i=v_i/K\). Then \(x_{i+1}=(x_i+1)/4^{j_i}\). This recurrence depends on \(j_i\), not on the pair type. Its one-primitive-\(j\)-period map is an affine contraction of ratio \(4^{-t}\), and its square fixes \(x_i\) when the types toggle. A contraction whose square fixes a point already fixes that point; hence \(x_i\) is periodic after **one** primitive \(j\)-period.
 
-**3. Pure base-4 digits and direct integer-grid packing.** The slope recurrence constructs a purely periodic radix-4 expansion of \(x_0=v_0/K\), using one digit 1 followed by \(j_i-1\) zeros for each gap. Its minimal digit period is precisely \(t\): a shorter digit period would induce a shorter cyclic period in the gaps between successive digits 1, contradicting the primitive \(j\)-period. There is at least one zero (since \(t>a\)) and at least one one.
+**3. Reverse-unique valuation packing.** The new locally kernel-checked [finite valuation theorem](ValuationPackingNoGo.md) says that if the source values v_i are distinct, satisfy 0<3v_i<K, and 4^{j_i}v_{i+1}=v_i+K with j_i>=1, then
+\[
+\sum_i j_i\le\lfloor(K-1)/6\rfloor.
+\]
+For each i and every s=1,...,j_i, the pair (v_i,s) contributes the quotient 4^{j_i-s}v_{i+1}. Each quotient lies in (0,K/12) union (K/4,K/3), and the map from (v_i,s) to this quotient is injective. The exact all-denominator integer-grid counting lemma proves the bound.
 
-**No reduction to lowest terms is necessary.** Multiplying \(x_0=v_0/K\) successively by 4 and taking fractional parts gives its \(t\) distinct cyclic digit rotations. Each is a fraction \(r/K\) with an integer \(r\in\{1,\ldots,K-1\}\). Every rotation lies in
-\[
-U=(0,1/12)\ \cup\ (1/4,1/3).
-\]
-A first digit zero gives a number strictly between 0 and \(0.0\overline1_4=1/12\); a first digit one gives a number strictly between \(1/4\) and \(0.\overline1_4=1/3\), because the word contains both digits.
-
-**General grid-packing lemma (kernel checked).** For **every positive integer** \(K\), not merely odd \(K\), the number of \(r\in\{1,\ldots,K-1\}\) with \(r/K\in U\) is at most \(\lfloor(K-1)/6\rfloor\). Indeed the exact count is
-\[
-N(K)=\lfloor(K-1)/12\rfloor+\lfloor(K-1)/3\rfloor-\lfloor K/4\rfloor
-\le\lfloor(K-1)/6\rfloor,
-\]
-where the final inequality holds in all twelve classes modulo 12. The Lean theorem PeriodicGrid.grid_packing_all directly proves the sharp upper bound through an injective integer-rank map without using fractions. Therefore
-\[
-t\le\lfloor(K-1)/6\rfloor,\qquad\boxed{K\ge6t+1}.
-\]
+In the primitive cyclic j-word the sources v_i are necessarily distinct. If v_r=v_s at distinct positions, then the preceding edges share a successor quotient. The checked reverse uniqueness theorem forces their previous sources and gap lengths equal. Iterating backwards makes the primitive gap word invariant under shift s-r, contradiction. Thus the valuation theorem gives K>=6t+1 for t=sum j_i. This replaces the longer rational base-4 rotation argument and requires no assumption about the parity of K. The valuation and abstract rank contradiction are kernel checked; the finite cyclic backward-induction/source bridge is still paper-level.
 
 **4. Rank budget contradiction.** One pair with \(m_i=2(j_i-1)\) subsequent F blocks contributes rank increment \(6j_i+4\) if E, or \(6j_i+8\) if S.
 

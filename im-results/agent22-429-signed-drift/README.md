@@ -121,6 +121,8 @@ including the exceptional m=0 boundary cases D=0 and D=4.
 
 The new [finite triple-repeat obstruction](FiniteTripleNoGo.md) now excludes long **finite cubes** of primitive signed pair/F words whenever (4^J>2\lfloor(r_0+2C)/3\rfloor). The exact triple-affine part is kernel-checked in [FiniteTripleRigidity.lean](FiniteTripleRigidity.lean) and [FiniteTripleMacro.lean](FiniteTripleMacro.lean); the complete primitive-rotation and original-source bridge remain paper-level. This excludes finite patterns even within aperiodic paths, though cube-free alternatives remain possible.
 
+The [kernel-checked exact valuation budget](ValuationPackingNoGo.md) now sharpens both no-go proofs: the new source-independent [ValuationPacking.lean](ValuationPacking.lean) and [ValuationEdges.lean](ValuationEdges.lean) prove that distinct admissible sources with 4^j*w=v+K have total j at most floor((K-1)/6). Quotient reverse-uniqueness also removes the previous fractional digit-period argument. The full source/cyclic-primitivity theorem is not yet integrated in Lean.
+
 The stronger [all-period F-run obstruction](PeriodicRunNoGo.md) proves
 at the paper level that **no infinite admissible signed path has an
 eventually periodic even F-run length sequence**. This subsumes the

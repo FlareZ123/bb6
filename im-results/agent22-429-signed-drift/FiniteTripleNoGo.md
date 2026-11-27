@@ -52,15 +52,7 @@ The right side is an integer with absolute value at most \(2H<M\), so divisibili
 \]
 They therefore remain equal at every intermediate phase. At the end of the word the next phase is the original phase, and \(s_{\mathrm{end}}=s_0\). The positive start slope and this recurrence make all \(s_i\) positive integers.
 
-**3. Convert to a primitive radix-4 cycle.** Pair type at a fixed phase is the same in copies 0 and 1. The E/S parity guards force \(s_i\) even, and fixed residues of \(D=2r-6u\bmod8\) imply \(2C-6s_i\equiv0\bmod8\), so \(C\) is even. Write \(s_i=2v_i>0\), \(C=2K>0\). Then the finite cyclic slopes obey
-\[
-4^{j_i}v_{i+1}=v_i+K.
-\]
-The recurrence has the unique fixed cycle associated with the primitive \(j\)-word; in the doubled typed-period case the same contraction argument shows that the normalized \(v_i/K\) values repeat already after one primitive \(j\)-period. Thus their radix-4 digits have one 1 per run-length gap \(j_i\) and zeros between 1s. Because that gap word is primitive and contains at least one \(j_i>1\), its shortest base-4 digit period is exactly \(t\), with both digits 0 and 1 present. The \(t\) distinct cyclic digit rotations are fractions \(z/K\) with \(z\in\{1,\ldots,K-1\}\), each in the two disjoint windows
-\[
-(0,1/12)\ \cup\ (1/4,1/3).
-\]
-The all-denominator [Lean grid-packing theorem](PeriodicGridPacking.lean) gives \(K\ge6t+1\).
+**3. Finite reverse uniqueness and valuation packing.** The three-repeat rigidity supplies integral cyclic slopes satisfying 4^{j_i}v_{i+1}=v_i+K and 0<3v_i<K. The primitive gap word has distinct sources v_i: equality at two positions, combined with the checked unique-predecessor quotient rule, forces equality of all previous j letters and hence a shorter period. The exact checked [finite valuation-family budget](ValuationPackingNoGo.md) now gives K>=6t+1 without constructing rational digit rotations. The primitive-backwards composition and original-source link remain to be formalized.
 
 **4. Rank budget.** If the full typed word is one primitive \(j\)-period, writing \(e+s=a\) for its pair types gives \(C=3t+2e+4s\), so
 \[
