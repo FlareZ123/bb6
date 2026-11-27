@@ -48,28 +48,40 @@ def late_module(raw,n,s,index):
     assert n+1+max(dist)<=B
     tag=f"L{index}"
     lines=[f"namespace {tag}","open BB6Coverage.Agent50Zipper BB6Coverage.Agent10ZipAudit",
-           f"def p : PartialMachine := FAR.fromCodes {fmt(codes(raw))}"]
+           f"def p : PartialMachine := FAR.fromCodes {fmt(codes(raw))}",
+           """-- Arithmetic transport is checked independently of the run reduction.
+theorem join_exact (n k t : Nat) (a b c : Z) (ht : n+k=t)
+    (h : zrun p n a = some b) (g : zrun p k b = some c) :
+    zrun p t a = some c := by
+  subst t
+  exact join h g
+theorem read_of_trace (n : Nat) (z : Z)
+    (h : zrun p n BB6Coverage.Agent31Pump.start = some z) :
+    zipRead p n = some (z.q,z.l.headD false) := by
+  unfold zipRead
+  rw [h]
+  rfl"""]
     def bs(xs):return bits("".join(map(str,xs)))
+    def cfg(i):return "BB6Coverage.Agent31Pump.start" if i==0 else f"z{i}"
     for i,(_,q,h,l,r) in enumerate(points):
-        lines.append(f"def z{i} : Z := ⟨{q},({h}),{bs(l)},{bs(r)}⟩")
+        if i:lines.append(f"def z{i} : Z := ⟨{q},({h}),{bs(l)},{bs(r)}⟩")
     for i in range(len(points)-1):
         k=points[i+1][0]-points[i][0]
-        lines.append(f"theorem t{i}_{i+1} : zrun p {k} z{i} = some z{i+1} := by rfl")
+        lines.append(f"theorem t{i}_{i+1} : zrun p {k} {cfg(i)} = some {cfg(i+1)} := by rfl")
     def merge(a,b):
         if b==a+1:return f"t{a}_{b}"
         c=(a+b)//2
         x,y=merge(a,c),merge(c,b)
-        k=points[b][0]-points[a][0]
+        n1=points[c][0]-points[a][0]
+        n2=points[b][0]-points[c][0]
+        k=n1+n2
         nm=f"t{a}_{b}"
-        lines.append(f"theorem {nm} : zrun p {k} z{a} = some z{b} := join {x} {y}")
+        lines.append(f"theorem {nm} : zrun p {k} {cfg(a)} = some {cfg(b)} := join_exact {n1} {n2} {k} {cfg(a)} {cfg(c)} {cfg(b)} (by decide) {x} {y}")
         return nm
     last=len(points)-1
     trace=merge(0,last)
-    lines.append(f"""theorem trace : zrun p {n} start = some z{last} := {trace}
-theorem read_ok : zipRead p {n} = some {slot(s)} := by
-  unfold zipRead
-  rw [trace]
-  rfl
+    lines.append(f"""theorem read_ok : zipRead p {n} = some {slot(s)} :=
+  read_of_trace {n} {cfg(last)} {trace}
 theorem checked : zipCheck {B} p (.last {n} {slot(s)}) = true := by
   simp only [zipCheck, zipQueryOK, read_ok] <;> rfl
 theorem nohalt : weightedTNFNoAssignedHalt p := by
@@ -80,13 +92,17 @@ theorem nohalt : weightedTNFNoAssignedHalt p := by
 theorem bound (m : Machine) (hm : compatible p m) : WeightedBound {B} m :=
   (certifiedZip {B} p (.last {n} {slot(s)}) (by decide) nohalt checked).sound m hm
 def witness : Machine := weightedTNFDefaultCompletion p
-theorem witness_halts : HaltsAfter witness {n} := by
-  have hr := zrun_sound p witness (weightedTNFDefaultCompletion_compatible p) {n} start z{last} trace
-  rw [start_embed] at hr
-  constructor
-  · rw [hr]; rfl
-  · rw [show {n+1} = {n}+1 by rfl, run_append, hr]
-    rfl
+theorem halt_from_read (n : Nat) (s : Slot)
+    (hr : zipRead p n = some s) (hh : p s = none) : HaltsAfter witness n := by
+  apply (weightedTNF_halt_iff_firstHole p nohalt n).2
+  rw [zipRead_eq] at hr
+  cases hc : knownRun p n with
+  | none => simp [hc] at hr
+  | some c =>
+    have hs : readSlot c = s := by simpa [hc] using hr
+    exact ⟨c,rfl,by rw [hs]; exact hh⟩
+theorem witness_halts : HaltsAfter witness {n} :=
+  halt_from_read {n} {slot(s)} read_ok (by decide)
 #print axioms bound
 #print axioms witness_halts
 end {tag}""")
