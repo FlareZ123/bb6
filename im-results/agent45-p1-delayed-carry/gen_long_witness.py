@@ -145,10 +145,10 @@ class Writer:
     def emit(self, body, imports=None):
         name = f"LW{len(self.modules):04}"
         if imports is None:
-            imports = [self.modules[-1]] if self.modules else ["LongBlockCover","LongConeSource"]
+            imports = [self.modules[-1]] if self.modules else ["LongBlockHalf","PackedJump","LongConeSource"]
         hdr = "\n".join("import "+x for x in imports)
         hdr += "\nset_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n"
-        hdr += "open BB6.Agent45ReverseBlock BB6.Agent45LongBlock BB6.Agent45.DelayedCarry\n"
+        hdr += "open BB6.Agent45ReverseBlock BB6.Agent45LongBlock BB6.Agent45.DelayedCarry BB6.Agent43P1Complement\n"
         (self.root/(name+".lean")).write_text(hdr+body+"\n")
         self.modules.append(name)
         return name
@@ -160,12 +160,15 @@ class Writer:
 def generate(args):
     n,h = args.n,args.h
     assert n >= 8000 and n%2 == 0 and 0 < h < n
-    assert 0 < args.chunk <= args.initial and args.long > 0
+    assert 0 < args.chunk <= args.initial and args.long >= 0
+    cover_type = "HalfCovered" if args.half else "Covered"
+    recover = "recoverHalfRows" if args.half else "recoverRows"
+    next_lemma = "half_covered_next_rows" if args.half else "covered_next_rows"
     w = Writer(args.out)
     s = 1
     ps = [(1,(n+2)//2)]
     w.emit(f"def ps0 : List Prefix := {lean_prefixes(ps)}\n"
-           f"theorem cover0 : Covered {n} 1 ps0 := covered_first {n}")
+           f"theorem cover0 : {cover_type} {n} 1 ps0 := {'half_covered_first' if args.half else 'covered_first'} {n}")
     for stage in range(args.stages):
         suffix = n-h
         F = 2*n+s+3
@@ -204,7 +207,7 @@ def generate(args):
             prev = cur
             print("PACK",stage,i,F,d,len(xs),flush=True)
             while d < suffix and xs:
-                j = min(args.long,suffix-d)
+                j = min(args.long or max(1,d),suffix-d)
                 start = s+n-d-j
                 y = target_digits(n,start,B,j)
                 f = n+start+j+3
@@ -235,7 +238,7 @@ def generate(args):
             y = target_digits(n,s,B,h)
             f = n+s+h+3
             mids = [witness(f,h,y,z) for z in xs]
-            out = [(B+(R << s),z) for z,R,c in mids if c==a]
+            out = [(B+(R << s),z) for z,R,c in mids if c==a and (not args.half or (B+(R << s))%4==1)]
             next_ps.extend(out)
             w.emit(f"def {tag}_mid : List WitnessRow := {lean_rows(mids)}\n"
                    f"theorem {tag}_ends : {tag}_mid.map Prod.fst = {prev}_xs := by decide +kernel\n"
@@ -268,20 +271,33 @@ def generate(args):
                     body += f"    · change ({rows_name} {b}).all (rowCheck {(h-1).bit_length()} {n+s+h+3} {h} (targetDigits {n} {s} {b} {h})) = true\n"
                     body += f"      rw [{tag}_lookup]\n      exact {tag}_check\n"
         body += f"def ps{stage+1} : List Prefix := {lean_prefixes(next_ps)}\n"
-        body += f"theorem rec{stage} : recoverRows {s} ps{stage} {rows_name} = ps{stage+1} := by decide +kernel\n"
+        body += f"theorem rec{stage} : {recover} {s} ps{stage} {rows_name} = ps{stage+1} := by decide +kernel\n"
         if next_ps:
-            body += f"theorem cover{stage+1} : Covered {n} {s+h} ps{stage+1} := by\n"
-            body += f"  exact covered_next_rows {(h-1).bit_length()} {n} {s} {h} ps{stage} ps{stage+1} {rows_name} "
+            body += f"theorem cover{stage+1} : {cover_type} {n} {s+h} ps{stage+1} := by\n"
+            body += f"  exact {next_lemma} {(h-1).bit_length()} {n} {s} {h} ps{stage} ps{stage+1} {rows_name} "
             body += f"(by decide) (by decide) (by decide) cover{stage} {mname} rec{stage}\n"
         else:
-            body += f"theorem emptyCover : Covered {n} {s} [] := by\n"
-            body += f"  exact covered_empty_rows {(h-1).bit_length()} {n} {s} {h} ps{stage} {rows_name} "
-            body += f"(by decide) (by decide) cover{stage} {mname} rec{stage}\n"
+            final_s = s
+            if args.half:
+                if s >= 2:
+                    body += f"theorem emptyHalf : HalfCovered {n} {s} [] := by\n"
+                    body += f"  exact half_covered_empty_rows {(h-1).bit_length()} {n} {s} {h} ps{stage} {rows_name} "
+                    body += f"(by decide) (by decide) (by decide) cover{stage} {mname} rec{stage}\n"
+                else:
+                    final_s = s+h
+                    body += f"theorem emptyHalf : HalfCovered {n} {final_s} [] := by\n"
+                    body += f"  exact half_covered_next_rows {(h-1).bit_length()} {n} {s} {h} ps{stage} [] {rows_name} "
+                    body += f"(by decide) (by decide) (by decide) cover{stage} {mname} rec{stage}\n"
+                body += f"theorem emptyCover : Covered {n} {final_s} [] := half_empty_to_full {n} {final_s} (by decide) (by decide) (by decide) emptyHalf\n"
+            else:
+                body += f"theorem emptyCover : Covered {n} {s} [] := by\n"
+                body += f"  exact covered_empty_rows {(h-1).bit_length()} {n} {s} {h} ps{stage} {rows_name} "
+                body += f"(by decide) (by decide) cover{stage} {mname} rec{stage}\n"
             body += f"theorem p1_excluded_{n} : ¬ BB6.Agent1.Reach 2 (14*2^{n}-2*{n}-10) := by\n"
-            body += f"  exact BB6.Agent43LongCone.critical_reset_no_reach_of_short_lag {n} {s} "
+            body += f"  exact BB6.Agent43LongCone.critical_reset_no_reach_of_short_lag {n} {final_s} "
             body += "(by decide) (by decide) (by decide) (by decide +kernel) emptyCover\n"
             body += f"#print axioms p1_excluded_{n}\n"
-            body += f'#eval "P1_LONG_CERTIFIED n={n} s={s}"\n'
+            body += f'#eval "P1_LONG_CERTIFIED n={n} s={final_s}"\n'
         w.emit(body)
         print("STAGE",stage,s,len(ps),len(next_ps),flush=True)
         if not next_ps:
@@ -302,4 +318,5 @@ if __name__ == "__main__":
     parser.add_argument("--initial",type=int,default=512)
     parser.add_argument("--chunk",type=int,default=256)
     parser.add_argument("--long",type=int,default=8192)
+    parser.add_argument("--half",action="store_true")
     generate(parser.parse_args())
