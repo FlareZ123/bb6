@@ -16,8 +16,13 @@ def main():
     assert {r['id'] for r in spec}==selected
     assert all(rows[r['id']]==r['table'] for r in spec)
     sys.path.insert(0,str(BIDFA));from emit_rungram import emit
+    from motif_quotient import minimize
     results=json.loads(subprocess.check_output(['node',str(HERE/'motif_replay.cjs')],input=json.dumps(spec).encode()))
+    by_id={s['id']:s for s in spec}
     for z in results:
+        d,p,s=minimize(z['table'],z['dfa'])
+        z=dict(z,dfa=d,states=len(s),edges=sum(map(len,p))+2)
+        assert [z['states'],z['edges']]==by_id[z['id']]['quotient']
         i=z['id'];mod=f'Raw56LEMotif{i}'
         txt='\n'.join(['import FastBiDFA','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace BB6.Agent1Raw56.LEMotif','open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA',emit(i,z['table'],*z['dfa'],[z['states'],z['edges']]),'end BB6.Agent1Raw56.LEMotif',''])
         (out/(mod+'.lean')).write_text(txt)
