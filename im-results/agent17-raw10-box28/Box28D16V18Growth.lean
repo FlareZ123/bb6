@@ -67,20 +67,16 @@ theorem clear_all (n : Nat) (l r : Stream) :
   induction n generalizing r with
   | zero => rfl
   | succ n ih =>
-    rw [show n+1=1+n by omega,run_add]
     change run n (atLeft .A (rep true n l) (push false r)) = _
-    rw [ih,rep_push]
-    rfl
+    simpa only [rep,rep_push] using ih (push false r)
 theorem fill_all (n : Nat) (l r : Stream) :
     run n (atRight .D l (rep false n r)) =
       some (atRight .D (rep true n l) r) := by
   induction n generalizing l with
   | zero => rfl
   | succ n ih =>
-    rw [show n+1=1+n by omega,run_add]
     change run n (atRight .D (push true l) (rep false n r)) = _
-    rw [ih,rep_push]
-    rfl
+    simpa only [rep,rep_push] using ih (push true l)
 theorem entry (k : Nat) (l r : Stream) :
     run 5 ⟨.E,push false (rep true (k+2) l),true,push false r⟩ =
       some (atLeft .A (rep true (k+3) l) (pair r)) := by
@@ -159,8 +155,7 @@ theorem progress (n : Nat) :
   refine ⟨(gap n+25)+u+v,by omega,?_⟩
   have hr := reset (gap n) zeros
   rw [zero_push] at hr
-  rw [run_add,run_add,hr,Option.bind_some,hu,Option.bind_some,hv]
-  rfl
+  rw [run_add,run_add,hr,Option.bind_some,hu,Option.bind_some,hv] <;> rfl
 theorem never_root (t n : Nat) : run t (root (gap n) zeros) ≠ none := by
   induction t using Nat.strongRecOn generalizing n with
   | ind t ih =>
