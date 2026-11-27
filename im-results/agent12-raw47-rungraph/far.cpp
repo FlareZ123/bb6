@@ -21,10 +21,10 @@ bool check(const std::string &p,int rev){
   if(r!=rev)T[dst]=U(1)<<(6*D[2*l+w]+nxt);
   else for(int j=0;j<n;j++)for(int b=0;b<2;b++)if(D[2*j+b]==l)rules[nr++]={dst,b*N+6*j+nxt,w*N};
  }
- while(true){U z=halt;while(true){U old=z;for(int j=0;j<N;j++)if(T[j]&z)z|=1<<j;if(z&1)return false;if(old==z)break;}
+ while(true){U z=halt;while(true){U old=z;for(int j=0;j<N;j++)if(T[j]&z)z|=U(1)<<j;if(z&1)return false;if(old==z)break;}
   bool changed=false;for(int i=0;i<nr;i++){auto [dst,src,off]=rules[i];U v=T[dst],bits=T[src];while(bits){v|=T[off+std::countr_zero(bits)];bits&=bits-1;}if(v!=T[dst]){T[dst]=v;changed=true;}}
   if(!changed)return true;
  }
 }
 void test(int rev){tested++;for(auto&m:ms)if(!m.solved&&check(m.table,rev)){m.solved=true;solved++;std::cout<<m.id<<' '<<rev;for(int i=0;i<2*n;i++)std::cout<<D[i];std::cout<<'\n';}}
-int main(int argc,char**argv){Machine m;while(std::cin>>m.id>>m.table)ms.push_back(m);std::ifstream f(argv[1]);std::string code;while(f>>code){n=(code.size()-1)/2;if(n>5)continue;for(int i=0;i<2*n;i++)D[i]=code[i+1]-'0';test(code[0]-'0');}for(auto&m:ms)if(!m.solved)std::cerr<<m.id<<' '<<m.table<<'\n';}
+int main(int argc,char**argv){Machine m;while(std::cin>>m.id>>m.table)ms.push_back(m);std::ifstream f(argv[1]);std::string code;while(f>>code){n=(code.size()-1)/2;if(n>10)continue;for(int i=0;i<2*n;i++)D[i]=code[i+1]-'0';test(code[0]-'0');}for(auto&m:ms)if(!m.solved)std::cerr<<m.id<<' '<<m.table<<'\n';}
