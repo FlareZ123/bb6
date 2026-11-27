@@ -13,8 +13,13 @@ from pathlib import Path
 from convert_bidfa import convert
 from split_small42 import split
 from minimize_bidfa import minimize
+from coarsen_ngram import transform as coarsen_ngram
 
 BRANCHES = {
+    "0LA": (46054728374, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "3", "7"},
+            {"Raw420LARun1243", "Raw420LARun2550", "Raw420LARun365"}),
+    "1LC": (46054733910, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"0", "1", "4", "5", "6", "7"},
+            {"Raw421LCRun620", "Raw421LCRun9216"}),
     "1LA": (45996630344, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"7"},
             {"Raw421LARun889", "Raw421LARun892"}),
     "1RA": (45996637267, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"1"},
@@ -72,6 +77,14 @@ def prepare(repo, g, shards, shared, branch, original):
                 p.write_text(convert(reduced).replace(":= by decide\n", ":= by decide +kernel\n"))
                 changes[module] = ["trie"]
                 reductions[module] = {"before": before, "after": after}
+    if branch == "1LC" and "Raw421LCNGram7" in remaining:
+        module = "Raw421LCNGram7"
+        p = generated[module]
+        reduced, before, after = coarsen_ngram((original / p.name).read_text())
+        assert before == (4096, 256, 45392) and after == (101, 64, 1770)
+        p.write_text(reduced)
+        changes[module] = ["trie"]
+        reductions[module] = {"before": before, "after": after}
     for module in sorted(remaining):
         p = generated[module]
         if re.fullmatch(r".*Root(?:_\d\d)*Small", module) and p.stat().st_size >= 50000:
