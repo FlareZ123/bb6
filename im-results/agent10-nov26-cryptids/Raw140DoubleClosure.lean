@@ -26,7 +26,9 @@ theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have hc : 3 ≤ c := turn_ge_three (2*p+2) s (by omega)
   have h₁ := convert1 (2*p) (S 4::S 4::(word (trips (n+1)) ++ tailWord s))
   have h₂ := cr4turn (U 6 (2*p+2) ++ [S 4]) (S 4::(word (trips (n+1)) ++ tailWord s))
-  have h₃ := dIterTriple (2*p+2) (n+1) [true,false] s
+  have h₃ : Reach base (boundary 3 false (U 6 (2*p+2) ++ [S 4]) (S 6::S 4::(word (trips (n+1)) ++ tailWord s)))
+      (boundary 3 false [S 4] (U 4 (2*p+2) ++ (S 6::S 4::(word (trips r) ++ tailWord t)))) := by
+    simpa [word, r,c,t,List.append_assoc] using dIterTriple (2*p+2) (n+1) [true,false] s
   have h₄ := dEndE (2*p+1) (S 6::S 4::(word (trips r) ++ tailWord t))
   have h₅ := eIter p 1 1 (S 6::S 4::(word (trips r) ++ tailWord t))
   have h₆ := eOddLast (1+4*p) (trips r) t
@@ -38,7 +40,8 @@ theorem core4 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have hz : 2 ≤ z := by dsimp [z,r]; omega
   rw [hr] at h₇
   have h₈ : Reach base (E (1+4*p) 1 (S 6::S 4::(word (trips r) ++ tailWord t)))
-      (E (1+4*p+6) 2 (word (trips z) ++ tailWord (rho t))) := h₇
+      (E (1+4*p+6) 2 (word (trips z) ++ tailWord (rho t))) := by
+    simpa [E,trips,triple,word,U,List.append_assoc] using h₇
   have h₉ := eEven 1 (1+4*p+6) (word (trips z) ++ tailWord (rho t))
   have h₁₀ : Reach base
       (boundary 3 false (U 5 (2*p)) (S 2::S 4::S 4::(word (trips (n+1)) ++ tailWord s)))
@@ -76,7 +79,9 @@ theorem core13 (p n : Nat) (s : Tail) (hp : 9 ≤ p) :
   have h₇ : Reach base (boundary 3 false X (word [false,false,false] ++ word (trips (n+carry s)) ++ tailWord (rho s)))
       (boundary 3 false [S 4] (U 4 (2*p+7) ++ word (trips r) ++ tailWord t)) := by
     simpa only [X,r,c,t,U,word,List.replicate_succ,List.cons_append,List.nil_append,List.append_assoc,rep_cons,Bool.false_eq_true,ite_false] using h₆
-  have h₈ := dEndE (2*p+6) (word (trips r) ++ tailWord t)
+  have h₈ : Reach base (boundary 3 false [S 4] (U 4 (2*p+7) ++ word (trips r) ++ tailWord t))
+      (E 1 (2*p+6) (word (trips r) ++ tailWord t)) := by
+    simpa only [List.append_assoc] using dEndE (2*p+6) (word (trips r) ++ tailWord t)
   have h₉ := eEven (p+3) 1 (word (trips r) ++ tailWord t)
   have h₁₀ : Reach base (E 1 (2*p+6) (word (trips r) ++ tailWord t)) (orbitCfg (4*p+16) r t) := by
     simpa only [orbitCfg,show 2*(p+3)=2*p+6 by omega,show 1+4*(p+3)+3=4*p+16 by omega] using h₉
