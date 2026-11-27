@@ -99,7 +99,8 @@ theorem rectangle_bound (p : Params) (m : Machine) (hm : compatible (baseTable p
     WeightedBound 38 m := by
   rcases p with ⟨a,e,f,ze,zf⟩
   rcases all_checks a e f ze zf with hg | hf
-  · exact weighted_of_never _ (compatible_never _ m hm hg)
+  · apply weighted_of_never
+    exact compatible_never _ m hm hg
   · cases hc : blankCost ⟨a,e,f,ze,zf⟩ with
     | none => simp [finiteOK,hc] at hf
     | some n =>
