@@ -1,3 +1,21 @@
+# Box27 five-hole slice: complete candidate partition
+
+2026-11-27, Agent49. **Candidate, not yet source-verified.** For D0=14, D1=17, E0=21, root `[8,-1,11,-1,13,13,14,17,21,-1,-1,-1]`, exact first-hole discovery closes all 25^5 = 9,765,625 completions. Proposed weighted bound 108, attained by `[8,4,11,24,13,13,14,17,21,15,3,0]` (107 live moves, zero incoming delay).
+
+| leaf type | count | completion mass |
+|---|---:|---:|
+| halt | 101 | 432725 |
+| side cycle | 1959 | 9321375 |
+| last hole | 324 | 8100 |
+| two-sided finite stack invariant | 41 | 3425 |
+| open | 0 | 0 |
+
+`generate_slice.py` deterministically regenerates the candidate and emits independent Lean chunks. `Box27SliceCore.lean` uses existing source-level Box17 terminal and Agent4 finite-stack checkers, splits all 25 alternatives, and connects the root to raw10Remainder[27]. No finite simulation limit is trusted by Lean. The 41 automata supplant the older symbolic-only seed census. Largest joint invariant: 97 states. Local Lean is available but local GitHub checkout DNS is unavailable; original-source verification is required in CI.
+
+Broader D0=14,D1=17 slice: candidate scan of 244,140,625 completions, 8 open cylinders (mass 200), of which 3 subsequently have lag-XOR finite-stack candidates; 5 still require work. No claim of closure for this broader slice or Box27.
+
+## Earlier single-cylinder investigation
+
 # Raw10 Box27: growing unary-block cylinder
 
 **Mathematical result (paper proof; original-source Lean audit not yet accepted).** All completions of the sparse row
