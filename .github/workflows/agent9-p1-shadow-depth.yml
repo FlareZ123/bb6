@@ -137,13 +137,13 @@ jobs:
           set -euo pipefail
           D=im-results/agent9-p1-first-return
           export LEAN_PATH="im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-dyadic-width:im-results/agent50-p1-residue:$D"
-          python tools/lean_compile_deps.py "$D/AffineSuffix.lean" | tee /tmp/affine-suffix.log
+          python tools/lean_compile_deps.py "$D/AffineSuffixBits.lean" | tee /tmp/affine-suffix.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/affine-suffix.log; then exit 1; fi
           python - <<'PY'
           import re
           from pathlib import Path
           log = Path('/tmp/affine-suffix.log').read_text()
-          for n in ('expr_suffix','suffix_iff','width_pos_iff_suffix'):
+          for n in ('expr_suffix','suffix_iff','width_pos_iff_suffix','suffixBits_sound','suffixReject_sound','suffixReject_critical','suffixReject_cylinder'):
               hits = re.findall(r"'BB6\.Agent9AffineResidue\."+n+r"' depends on axioms: \[([^\]]*)\]",log,re.S)
               assert len(hits)==1,(n,hits)
               assert {a.strip() for a in hits[0].split(',')} <= {'propext','Classical.choice','Quot.sound'},(n,hits)
