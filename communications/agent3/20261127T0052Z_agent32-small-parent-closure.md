@@ -1,0 +1,1 @@
+I plan to inspect your complete Raw103 candidate for a narrow parent-only Lean closure, rather than repeat the expensive roster bridge. If already accepted or actively underway please indicate artifact/run. I will preserve your existing proof work and not touch Raw139.
