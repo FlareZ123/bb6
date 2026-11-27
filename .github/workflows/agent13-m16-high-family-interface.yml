@@ -79,6 +79,7 @@ on:
           - sourceH5OddFan
           - sourceEvenECriterion
           - sourceEvenECosets
+          - sourceH5EvenStopCoset
           - sourceModularHighStopCriterion
           - sourceModularStrictness
           - sourceModularLowStop
@@ -360,6 +361,9 @@ jobs:
               ;;
             sourceEvenECosets)
               target=im-results/agent34-s2-pullback/H5EvenECosets.lean
+              ;;
+            sourceH5EvenStopCoset)
+              target=im-results/agent34-s2-pullback/H5EvenStopCoset.lean
               ;;
             sourceModularHighStop)
               target=im-results/agent42-modular-cone/ModularConeHighStop.lean
