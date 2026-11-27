@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -40,13 +40,13 @@ permissions:
 jobs:
   source:
     runs-on: ubuntu-latest
-    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse' || inputs.target == 'affine-residue') && 90 || 20 }}
+    timeout-minutes: ${{ (inputs.target == 'packed-prefix' || inputs.target == 'packed-prefix-resume' || inputs.target == 'packed-prefix-resume-2' || inputs.target == 'packed-prefix-resume-next' || inputs.target == 'packed-prefix-compact' || inputs.target == 'pair-chunks' || inputs.target == 'pair-sparse' || inputs.target == 'affine-residue') && 90 || 20 }}
     steps:
       - uses: actions/checkout@v4
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -712,6 +712,102 @@ jobs:
             /tmp/p1-45352466-half.chk
             /tmp/p1-45352466-half-resume.log
             /tmp/p1-resume-regression.log
+          if-no-files-found: ignore
+          compression-level: 1
+          retention-days: 90
+
+      - name: Regression of legacy import, fixed-width checkpoint and exact continuation
+        if: inputs.target == 'packed-prefix-compact'
+        shell: bash
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          BASE=5a2bdc111a72f7967ef5b8bf54d6909102adceb1
+          git fetch --depth=1 origin "$BASE"
+          git show "$BASE:im-results/agent43-p1-high-cost-reset-count/packed_prefix.cpp" > /tmp/packed_prefix_base.cpp
+          python "$D/prepare_packed_resume.py" /tmp/packed_prefix_base.cpp /tmp/packed_prefix_old.cpp
+          g++ -O3 -march=native -std=c++17 -fopenmp /tmp/packed_prefix_old.cpp -o /tmp/p1-old
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-compact
+          sha256sum "$D/compact_prefix.cpp"
+          export OMP_NUM_THREADS=1
+          /tmp/p1-old 3342 14000 417 half > /tmp/p1-reference.log
+          grep -Fx 'END 3342 13768' /tmp/p1-reference.log
+          set +e
+          /tmp/p1-old 3342 10000 417 half /tmp/p1-regression.chk > /tmp/p1-legacy.log
+          rc=$?
+          set -e
+          test "$rc" = 1
+          grep -Fx 'END 3342 0' /tmp/p1-legacy.log
+          set +e
+          /tmp/p1-compact 3342 12000 417 half /tmp/p1-regression.chk > /tmp/p1-compact-1.log
+          rc=$?
+          set -e
+          test "$rc" = 1
+          grep -E '^RESUME .*legacy=1 ' /tmp/p1-compact-1.log
+          grep -Fx 'END 3342 0' /tmp/p1-compact-1.log
+          /tmp/p1-compact 3342 14000 417 half /tmp/p1-regression.chk > /tmp/p1-compact-2.log
+          grep -E '^RESUME .*legacy=0 ' /tmp/p1-compact-2.log
+          grep -Fx 'END 3342 13768' /tmp/p1-compact-2.log
+          /tmp/p1-compact 3342 14000 417 half > /tmp/p1-compact-full.log
+          grep -Fx 'END 3342 13768' /tmp/p1-compact-full.log
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          def stages(path):
+              return [tuple(map(int,m.groups())) for m in re.finditer(r'^s=(\d+) h=\d+ old=(\d+) mids=(\d+) next=(\d+)',Path(path).read_text(),re.M)]
+          def children(path):
+              return re.findall(r'^CHILD \d+ \d+$',Path(path).read_text(),re.M)
+          ref=stages('/tmp/p1-reference.log')
+          legacy=stages('/tmp/p1-legacy.log')
+          a=stages('/tmp/p1-compact-1.log')
+          b=stages('/tmp/p1-compact-2.log')
+          full=stages('/tmp/p1-compact-full.log')
+          assert ref == legacy+a+b == full, (ref,legacy+a+b,full)
+          assert children('/tmp/p1-compact-1.log')+children('/tmp/p1-compact-2.log') == children('/tmp/p1-compact-full.log')[-(sum(x[3] for x in a+b)):], 'midpoint mismatch'
+          print('All',len(ref),'stage counts and resumed child lists agree')
+          PY
+      - name: Download prior P1 continuation artifact
+        if: inputs.target == 'packed-prefix-compact'
+        uses: actions/download-artifact@v4
+        with:
+          name: p1-packed-prefix-n45352466-resume-${{ inputs.resume_run }}
+          run-id: ${{ inputs.resume_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/p1-compact-in
+      - name: Continue n=45352466 with fixed-width checkpoints
+        if: inputs.target == 'packed-prefix-compact'
+        shell: bash
+        env:
+          SCAN_K: ${{ inputs.resume_k }}
+        run: |
+          set -euo pipefail
+          [[ "$SCAN_K" =~ ^[0-9]+$ ]] && (( SCAN_K <= 900000000 )) || exit 2
+          mv /tmp/p1-compact-in/p1-45352466-half.chk /tmp/p1-45352466-half.chk
+          sha256sum /tmp/p1-45352466-half.chk
+          set +e
+          OMP_NUM_THREADS=2 /tmp/p1-compact 45352466 "$SCAN_K" 34014336 half /tmp/p1-45352466-half.chk | tee /tmp/p1-45352466-half-resume.log
+          rc=${PIPESTATUS[0]}
+          set -e
+          if [[ "$rc" == 1 ]]; then
+            grep -Fx 'END 45352466 0' /tmp/p1-45352466-half-resume.log
+          elif [[ "$rc" == 0 ]]; then
+            grep -Eq '^END 45352466 [1-9][0-9]*$' /tmp/p1-45352466-half-resume.log
+          else
+            exit "$rc"
+          fi
+          echo "resume_exit_code=$rc"
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'packed-prefix-compact'
+        with:
+          name: p1-packed-prefix-n45352466-resume-${{ github.run_id }}
+          path: |
+            /tmp/p1-45352466-half.chk
+            /tmp/p1-45352466-half-resume.log
+            /tmp/p1-reference.log
+            /tmp/p1-legacy.log
+            /tmp/p1-compact-1.log
+            /tmp/p1-compact-2.log
+            /tmp/p1-compact-full.log
           if-no-files-found: ignore
           compression-level: 1
           retention-days: 90
