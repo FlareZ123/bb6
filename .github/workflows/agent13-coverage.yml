@@ -182,8 +182,9 @@ jobs:
           W=/tmp/raw10-box33-cylinder
           python im-results/agent13-coverage/unpack.py
           python "$D/replay_cylinder.py" --d0 "$d" --second "$v" --bound "$b"
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem "BB6.Agent13.$F.sourceBound" "$D/generated/$F/${F}Closure.lean" | tee /tmp/raw10-box33-cylinder.log
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem "BB6.Agent13.$F.sourceBound" --parent-table "Box33D0.child $d $v" --weighted-bound "$b" --artifact-name raw10-box33-cylinder --provenance-input "$D/replay_cylinder.py" --provenance-input "$D/replay_direct.py" "$D/generated/$F/${F}Closure.lean" | tee /tmp/raw10-box33-cylinder.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box33-cylinder.log "BB6.Agent13.$F.sourceBound"
+          cp /tmp/raw10-box33-cylinder.log "$W/lean.log"
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw10-box33-cylinder'
         with:
@@ -193,6 +194,15 @@ jobs:
             /tmp/raw10-box33-cylinder.log
             im-results/agent13-raw10-box33/generated/
           if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: failure() && inputs.target == 'weighted-tnf-raw10-box33-cylinder'
+        with:
+          name: raw10-box33-cylinder-UNACCEPTED-diagnostics
+          path: |
+            /tmp/raw10-box33-cylinder
+            /tmp/raw10-box33-cylinder.log
+            im-results/agent13-raw10-box33/generated/
+          if-no-files-found: warn
       - name: Check Raw10 box33 source partition and growth proof
         if: inputs.target == 'weighted-tnf-raw10-box33-cut'
         run: |
