@@ -122,21 +122,21 @@ theorem onesScan (p : Params) (b : Gate) (n : Nat) (s : S) (l r : Stream) :
   induction n generalizing s l with
   | zero => rfl
   | succ n ih =>
-    rw [runCore,rep,step_one,Option.bind_some,ih,rep_push]
-    rfl
+    rw [runCore,rep,step_one,Option.bind_some,ih,rep_push] <;> rfl
 
 theorem gap (p : Params) (b : Gate) (n : Nat) (s : S) (hs : s≠0) :
     runCore p b 2 (atScan s (ones n) tail) =
       some (atScan (afterGap p s) (ones (n+2)) zeros) := by
   change runCore p b 2 (atScan s (ones n) (push false (push true zeros))) = _
-  rw [runCore,step_zero p b s _ _ hs,Option.bind_some,runCore,step_one]
-  rfl
+  rw [runCore,step_zero p b s _ _ hs,Option.bind_some,runCore,step_one] <;> rfl
 
 theorem zero_one (p : Params) (b : Gate) (s : S) (n : Nat) (hs : s≠0) :
     runCore p b 1 (atScan s (ones n) zeros) =
       some (atScan (zero p s) (ones (n+1)) zeros) := by
-  rw [runCore_one,← zero_push]
-  exact step_zero p b s _ _ hs
+  rw [runCore_one]
+  have hh := step_zero p b s (ones n) zeros hs
+  rw [zero_push] at hh
+  exact hh
 
 theorem zeroScan (p : Params) (b : Gate) (s z : S) (n : Nat)
     (h : zeroHit p s = some z) :
@@ -188,8 +188,7 @@ theorem turn (p : Params) (b : Gate) (n : Nat) :
 
 theorem turn_back (p : Params) (b : Gate) (n : Nat) :
     runCore p b (n+5) (atScan 0 (ones (n+1)) zeros) = some (root (n+1)) := by
-  rw [show n+5=3+(n+2) by omega,runCore_add,turn,Option.bind_some,rewind]
-  rfl
+  rw [show n+5=3+(n+2) by omega,runCore_add,turn,Option.bind_some,rewind] <;> rfl
 
 theorem scanGap (p : Params) (b : Gate) (n : Nat)
     (h : iter (one p) n 1 ≠ 0) :
