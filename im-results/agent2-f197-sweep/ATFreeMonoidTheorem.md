@@ -1,6 +1,6 @@
 # F197: exact mixed-prefix free-monoid reset transducer
 
-**Status:** a new **unbounded, literal six-state source-machine theorem**, accepted by Lean 4.36.0-rc2 (CI [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068)); transitive axioms for `F197.fmFullFamilyClosed` are exactly `[propext, Quot.sound]`, with no `sorryAx`. Formal bit-length consequence in `ATFreeMonoidGrowth.lean` is undergoing its own CI check as of 2026-11-27 23:42 UTC. The result does **not** imply complete F197 blank-tape nonhalting or an exact BB(6) value.
+**Status:** a new **unbounded, literal six-state source-machine theorem**, accepted by Lean 4.36.0-rc2 (CI [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068)); transitive axioms for `F197.fmFullFamilyClosed` are exactly `[propext, Quot.sound]`, with no `sorryAx`. The strict +2-bit lemma `fmStrictBitGrowth` and the exact finite-bit source normal form `fmFullFamilyBits` also passed Lean CI [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937), with only `propext, Quot.sound` and no `sorryAx`. The result does **not** imply complete F197 blank-tape nonhalting or an exact BB(6) value.
 
 ## The theorem
 
@@ -52,7 +52,7 @@ Proof files:
 - [ATGeneralParser.lean](ATGeneralParser.lean): independently proved unbounded C-free data parser, with no hard-coded C suffix; CI [46083147039](https://github.com/FlareZ123/bb6/actions/runs/46083147039).
 - [ATFreeMonoidCore.lean](ATFreeMonoidCore.lean): universally quantified exact `fmConsumeRest` and `fmDecodeRest` list inductions, no `sorryAx`; CI [46083811592](https://github.com/FlareZ123/bb6/actions/runs/46083811592).
 - [ATFreeMonoid.lean](ATFreeMonoid.lean): exact `fmSourceHead`, `fmDecodeHead`, `fmConsumeWord`, `fmDecodeWord`, `fmFullFamily`, `fmCostFormula`, and `fmFullFamilyClosed`; CI [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068) (all only `propext, Quot.sound`).
-- [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean): explicit finite bitword encoding and `fmStrictBitGrowth` (+2), with source normal form `fmFullFamilyBits` (check CI status before citing as kernel accepted).
+- [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean): explicit finite bitword encoding and `fmStrictBitGrowth` (+2), with source normal form `fmFullFamilyBits`, both kernel accepted in [CI 46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937).
 
 ## Significance and next obstacle
 
