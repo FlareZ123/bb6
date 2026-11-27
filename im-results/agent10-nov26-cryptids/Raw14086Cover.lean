@@ -7,6 +7,7 @@ open BB6BlockFAR Raw140Orbit Raw140Extra Raw14086Local Raw14086Arithmetic
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot
 set_option maxRecDepth 4096
 set_option maxHeartbeats 1000000
+attribute [local irreducible] BB6BlockFAR.run boundary
 theorem return_sound (k : Kind) (p : Nat) (hp : 24 ≤ p) : Plus (cfg (k,p)) (cfg (ret k p)) := by
   cases k with
   | a0 => exact a0Return p hp
