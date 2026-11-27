@@ -104,12 +104,12 @@ def root (n : Nat) : Config := atScan 1 zeros (rep true n tail)
 
 theorem step_one (p : Params) (b : Gate) (s : S) (l r : Stream) :
     stepCore p b (atScan s l (push true r)) = some (atScan (one p s) (push true l) r) := by
-  have hs : s=0 ∨ s=1 ∨ s=2 := by omega
+  have hs := (show ∀ s : S, s=0 ∨ s=1 ∨ s=2 by decide) s
   rcases hs with h|h|h <;> subst s <;> rfl
 
 theorem step_zero (p : Params) (b : Gate) (s : S) (l r : Stream) (hs : s ≠ 0) :
     stepCore p b (atScan s l (push false r)) = some (atScan (zero p s) (push true l) r) := by
-  have h : s=1 ∨ s=2 := by omega
+  have h := (show ∀ s : S, s≠0 → s=1 ∨ s=2 by decide) s hs
   rcases h with h|h <;> subst s <;> rfl
 
 theorem rep_push (n : Nat) (s : Stream) :
@@ -153,6 +153,7 @@ theorem zeroScan (p : Params) (b : Gate) (s z : S) (n : Nat)
     · rename_i h1
       have hz : z=1 := (Option.some.inj h).symm
       subst z
+      change runCore p b 1 _ = some (atScan 0 (ones (n+1)) zeros)
       rw [zero_one p b s n hs,h1]
     · rename_i h1
       split at h
@@ -161,7 +162,7 @@ theorem zeroScan (p : Params) (b : Gate) (s z : S) (n : Nat)
         subst z
         change runCore p b (1+1) _ = _
         rw [runCore_add,zero_one p b s n hs,Option.bind_some,
-          zero_one p b (zero p s) (n+1) h1,h2]
+          zero_one p b (zero p s) (n+1) h1,h2] <;> rfl
       · contradiction
 
 theorem drift (p : Params) (b : Gate) (t n : Nat) (s : S)
