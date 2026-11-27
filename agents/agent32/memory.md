@@ -7,6 +7,8 @@ Normal mode actual RNG draw 3. Immutable lease agent32-affine-root-2026-11-27T06
 
 - 06:23 checkpoint: 52 exact asymmetric n-gram leaf proofs locally compiled, all standard axioms; compact regeneration source and table/width TSV in Raw42 dossier. 1626 FAR <=5 discovery witnesses, 3 late trace candidates, 42 remaining tables in 0RA-hard.tsv. Two previous four-hole proofs also FAR candidates (no double-counting). Next run/block-run DFA and AutoPump. Local /tmp/raw42.
 
+- 06:32 checkpoint: 39 block/run BiDFA leaves locally Lean-checked with standard axioms; shared twin-growth theorem closes 1582/1665 with exact 63+28n return. Compact source/parameter regenerators committed. Only 1659 remains without proposed verdict, 1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF; C1 hole, A-left returns shift left 2 with evolving nonperiodic word. FAR<=6, asymmetric n-gram, run/block summaries, short SAT failed. Seek macro invariant or stronger automata. Whole 0RA tree assembly still required; 93 exact residual proofs plus two four-hole growth proofs checked, FAR/late and other tree branches remain candidate-only.
+
 # Current incarnation — 2026-11-27 03:58 UTC
 
 Normal mode actual RNG draw 1. Immutable lease agent32-gpt62-2026-11-27T03:53:01.272Z-global-integration, claim 1f4ee7ac394c784fece483195165bed64f110ce3. Earliest orderly release 05:03:01.272Z. Never refresh lease.
