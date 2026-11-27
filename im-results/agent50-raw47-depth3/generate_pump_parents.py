@@ -10,13 +10,17 @@ here=Path(__file__).resolve().parent
 repo=here.parents[1]
 out=Path(sys.argv[1]).resolve()
 out.mkdir(parents=True,exist_ok=True)
-ids=[29,97,109,116,171,176,216,237,260,303,351,517,597,933,1039,1050,1060]
+remaining='--remaining' in sys.argv
+ids=[16,418,739,913,984,1047] if remaining else [29,97,109,116,171,176,216,237,260,303,351,517,597,933,1039,1050,1060]
 raw=(here/'raw47-depth3.open').read_bytes()
 assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402571f887c20fdcd4c4b0bce41d'
 rows=raw.decode().splitlines()
 hard=[line.split()[2] for line in (here/'hard30.txt').read_text().splitlines()]
 pumpids=[int(line.split()[0]) for line in (here/'pump-recipes.txt').read_text().splitlines()]
-pumps={hard[i]:i for i in pumpids}
+pumps={hard[i]:f'BB6.Agent50Raw47Pumps.H{i}' for i in pumpids}
+if remaining:
+    pumps.update({hard[i]:f'BB6.Agent50Raw47Counters.H{i}' for i in (0,16,22,24,25,27)})
+    pumps[hard[21]]='BB6.Agent50Raw47Hard21'
 
 def b(x):return str(bool(x)).lower()
 def slot(s):return f'({s//2},{b(s%2)})'
@@ -61,9 +65,9 @@ with tempfile.TemporaryDirectory() as temp:
         subprocess.run([str(work/'enum'),rows[i],'10000'],cwd=work,stdout=subprocess.DEVNULL,check=True)
         trees[i]=json.loads((work/'tree.json').read_text())
         leaves.extend((i,t) for t in (work/'open.txt').read_text().splitlines())
-    assert len(leaves)==57
+    assert len(leaves)==(12 if remaining else 57)
     residual=[(i,t) for i,t in leaves if t not in pumps]
-    assert len(residual)==34
+    assert len(residual)==(5 if remaining else 34)
     inp=''.join(f'{j} {t.replace("_","")}\n' for j,(_,t) in enumerate(residual))
     run=subprocess.run([str(work/'far'),'5'],input=inp,text=True,capture_output=True,check=True)
     bank={int(line.split()[0]):line.split()[1] for line in run.stdout.splitlines()}
@@ -78,13 +82,16 @@ def emit(t,i):
     if tag=='open':
         row=a[0]
         if row in pumps:
-            h=f'BB6.Agent50Raw47Pumps.H{pumps[row]}'
+            h=pumps[row]
             return f'.proven {h}.ctr {h}.never'
         return far(cert[i,row],row)
     raise ValueError(t)
 
-with (out/'Raw47Pumps.lean').open('w') as f:
-    subprocess.run([sys.executable,str(here/'generate_pumps.py')],stdout=f,check=True)
+if remaining:
+    subprocess.run([sys.executable,str(here/'unpack_hard7.py'),str(out)],check=True)
+else:
+    with (out/'Raw47Pumps.lean').open('w') as f:
+        subprocess.run([sys.executable,str(here/'generate_pumps.py')],stdout=f,check=True)
 
 for i in ids:
     p=rows[i].replace('_',''); r=[]
@@ -92,7 +99,7 @@ for i in ids:
         x=p[3*s:3*s+3]
         if x!='---':r.append(f'  | {s//2},{b(s%2)} => some (some ⟨{b(int(x[0]))},{b(x[1]=="R")},{ord(x[2])-65}⟩)')
     source=f'''import ZipPrefixAudit
-import Raw47Pumps
+{('import Raw47Counters'+chr(10)+'import Raw47Hard21') if remaining else 'import Raw47Pumps'}
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option Elab.async false
