@@ -15,6 +15,7 @@ on:
           - zerolf
           - raw139-local
           - e0-counts
+          - c1-zeroRA
       parent_run_id:
         description: Completed conditional parent audit run (empty for proof-only)
         type: string
@@ -294,4 +295,36 @@ jobs:
           name: ${{ inputs.parent_run_id == '' && 'raw139-zeroLF3862-certified' || 'raw139-e0-zeroLF-unconditional-certified' }}
           path: .tmp/zeroLF3862/final
           include-hidden-files: true
+          retention-days: 14
+
+      - name: Download the accepted C1 common core
+        if: inputs.kind == 'c1-zeroRA'
+        uses: actions/download-artifact@v4
+        with:
+          name: raw139-c1-twelve-certified
+          run-id: 45746968139
+          github-token: ${{ github.token }}
+          path: /tmp/a14-c1-base
+      - name: Compose exact C1 ZeroRA parent
+        if: inputs.kind == 'c1-zeroRA'
+        run: |
+          set -euo pipefail
+          bash im-results/agent14-raw139-c1-zeroRA/reproduce.sh /tmp/a14-c1-base /tmp/a14-c1-zerora
+      - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'c1-zeroRA' && success()
+        with:
+          name: raw139-c1-zeroRA-certified
+          path: |
+            /tmp/a14-c1-zerora/manifest.json
+            /tmp/a14-c1-zerora/log
+            /tmp/a14-c1-zerora/imports/*.lean
+            /tmp/a14-c1-zerora/build/*.olean
+          if-no-files-found: error
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'c1-zeroRA' && failure()
+        with:
+          name: raw139-c1-zeroRA-diagnostics
+          path: /tmp/a14-c1-zerora/log
+          if-no-files-found: ignore
           retention-days: 14
