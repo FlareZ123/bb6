@@ -231,13 +231,13 @@ theorem right : RightRules table where
     have a := loop j 2 (V k)
     have b := r2 (C j ++ V k)
     have b' : Reach table (A (true::true::(C j ++ V k)) (false::U 2)) (P (EndWord j k) 0 1) := by
-      simpa [P,EndWord,Z,U,rep,List.append_assoc,rotate] using b
+      simpa [P,EndWord,Z,U,rep,List.append_assoc,Pair143.rotate] using b
     exact a.trans b'
   right3 k j := by
     have a := loop j 3 (V k)
     have b := r3 (C j ++ V k)
     have b' : Reach table (A (true::true::(C j ++ V k)) (false::U 3)) (P (EndWord j k) 0 1) := by
-      simpa [P,EndWord,Z,U,rep,List.append_assoc,rotate] using b
+      simpa [P,EndWord,Z,U,rep,List.append_assoc,Pair143.rotate] using b
     exact a.trans b'
 
 theorem seed : run0 table 70 ⟨0,[],[]⟩ = some (O 0) := by decide +kernel

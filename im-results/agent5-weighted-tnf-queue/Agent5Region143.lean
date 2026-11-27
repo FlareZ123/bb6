@@ -57,7 +57,7 @@ theorem IIIturnWord (j : Nat) (X : List Bool) :
   have q := Agent31Pump.rotate true [true,false] j
   simp only [List.cons_append,List.nil_append] at q
   simp only [IIIblock,rep,List.append_assoc,List.cons_append,List.nil_append]
-  exact congrArg (fun w : List Bool => [true,false,true,true,false] ++ w ++ X) q
+  simpa [List.append_assoc] using congrArg (fun w : List Bool => [true,false,true,true,false] ++ w ++ X) q
 
 structure RightI (p : PartialMachine) where
   right0 : ∀ k j, Reach p (A (true::true::V k) (false::U (5*(j+1))))
