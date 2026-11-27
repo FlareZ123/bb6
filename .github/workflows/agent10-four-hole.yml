@@ -388,6 +388,10 @@ jobs:
           input="/tmp/a25-$branch-input"
           artifact="raw43-$branch-$kind-proof"
           theorem="BB6.Agent25Raw43$ns"
+          if [[ "$branch" == b0le ]] && jq -e 'has("1le")' <<< "$PINS" >/dev/null; then
+            variants="$variants 1le"; bound=730; suffix=Refined
+            theorem=BB6.Agent38Raw43B0LERefined
+          fi
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
