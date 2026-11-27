@@ -69,14 +69,14 @@ function emit(f,dir,mod){
    if(j===0)lines.push("def z0 : P := "+point(g.start));
    lines.push("def z"+(j+1)+" : P := "+point(g.end),"def ops"+j+" : List Action := ["+g.ops.map(op).join(",\n")+"]",
     "theorem step"+j+" : runP table "+g.n+" z"+j+" = some z"+(j+1)+" := traceRun_sound table ops"+j+" z"+j+" (out := ("+g.n+",z"+(j+1)+")) (by decide +kernel)",
-    "theorem run"+j+" : runP table "+(time+g.n)+" z0 = some z"+(j+1)+" := "+(j?"joinP run"+(j-1)+" step"+j:"step"+j));
+    "theorem run"+j+" : runP table "+(time+g.n)+" z0 = some z"+(j+1)+" := "+(j?"joinP_at table "+time+" "+g.n+" "+(time+g.n)+" z0 z"+j+" z"+(j+1)+" rfl run"+(j-1)+" step"+j:"step"+j));
    time+=g.n;j++;
   }
   lines.push("theorem segment : runP table "+time+" z0 = some z"+j+" := run"+(j-1),"#print axioms segment","end "+ns);
   fs.writeFileSync(path.join(dir,name+".lean"),lines.join("\n")+"\n");modules.push(name);parts.push({name,time,end:"BB6."+name+".z"+j});
  }
  const lines=[...parts.map(x=>"import "+x.name),...common,"namespace BB6."+mod];
- let time=0;for(let i=0;i<parts.length;i++){let p=parts[i];time+=p.time;lines.push("theorem prefix"+i+" : runP table "+time+" startP = some "+p.end+" := "+(i?"joinP prefix"+(i-1)+" BB6."+p.name+".segment":"BB6."+p.name+".segment"))}
+ let time=0;for(let i=0;i<parts.length;i++){let p=parts[i],prev=time;time+=p.time;lines.push("theorem prefix"+i+" : runP table "+time+" startP = some "+p.end+" := "+(i?"joinP_at table "+prev+" "+p.time+" "+time+" startP "+parts[i-1].end+" "+p.end+" rfl prefix"+(i-1)+" BB6."+p.name+".segment":"BB6."+p.name+".segment"))}
  const end=parts.at(-1).end;
  lines.push("theorem cover (B : Nat) (h : "+(r.n+6)+" ≤ B) : Cover (WeightedBound B) table := Cover.leaf table (lastPacked B table "+r.n+" "+slot(r.slot)+" "+end+" prefix"+(parts.length-1)+" (by decide) (by decide) (by decide) (by decide) h)","#print axioms cover","end BB6."+mod);
  fs.writeFileSync(path.join(dir,mod+".lean"),lines.join("\n")+"\n");modules.push(mod);
