@@ -52,7 +52,11 @@ theorem transferL (L R : List Bool) :
 
 theorem finish (n : Nat) : run0 p 8
     ⟨1,[],[true,true] ++ rep [true] n ++ [false,true,true,true,true] ++ rep [true,true] n⟩ =
-    some (family (n+1)) := by rfl
+    some (family (n+1)) := by
+  have h : run0 p 8
+      ⟨1,[],[true,true] ++ rep [true] n ++ [false,true,true,true,true] ++ rep [true,true] n⟩ =
+      some ⟨1,[],[false,true,true,true] ++ rep [true] n ++ [false,true,true,true,true] ++ rep [true,true] n⟩ := by rfl
+  simpa only [family,rep,List.append_assoc,List.cons_append,List.nil_append,List.append_nil] using h
 
 theorem grow (n : Nat) : run0 p (4*n+21) (family n) = some (family (n+1)) := by
   have h0 := entry n
