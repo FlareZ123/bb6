@@ -110,6 +110,10 @@ jobs:
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
+            --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
+            --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
+            --override M0EvenEightValuationEncoding=im-results/agent48-counted-inc0/M0EvenEightValuationEncoding.lean \
+            --override M2EvenResidueTwo=im-results/agent42-champion-terminal/M2EvenResidueTwo.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Six_count' does not depend on any axioms" "$work/log"
