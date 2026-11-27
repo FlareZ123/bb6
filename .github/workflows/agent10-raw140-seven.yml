@@ -5,7 +5,7 @@ on:
       target:
         description: Independently checked growth family
         type: choice
-        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, threeHoleCut, erSweep, erSuffix, erExit]
+        options: [seven, extra, long4, long79, doubleLocal, doubleCore, double, variantLoops, variantTransfer, threeHoleCut, erSweep, erSuffix, erExit]
         default: extra
 permissions:
   contents: read
@@ -58,6 +58,13 @@ jobs:
             for t in checked remaining_count sound cover; do
               python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "BB6.Agent10Raw140ThreeHole.$t"
             done
+          elif [ "$TARGET" = variantTransfer ]; then
+            node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-transfer --jobs 3 im-results/agent10-nov26-cryptids/Raw140VariantTransfer.lean 2>&1 | tee /tmp/raw140-proof.log
+            for i in 31 35 37 40 41 42 43 44 45 46 74 83 85; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw140VariantTransfer.transferMany$i"
+            done
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log Raw140VariantTransfer.erMany
           elif [ "$TARGET" = variantLoops ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_loops.js
             python tools/lean_compile_closure.py --workdir /tmp/raw140-variant --jobs 3 im-results/agent10-nov26-cryptids/Raw140VariantLoops.lean 2>&1 | tee /tmp/raw140-proof.log
@@ -108,3 +115,4 @@ jobs:
             /tmp/raw140-proof.log
             im-results/agent10-nov26-cryptids/raw140-three-hole-pending.json
             im-results/agent10-nov26-cryptids/Raw140ThreeHoleCut.lean
+            im-results/agent10-nov26-cryptids/Raw140VariantTransfer.lean
