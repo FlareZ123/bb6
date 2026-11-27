@@ -44,7 +44,7 @@ The kth rational iterate of T is integral precisely if B=C_k mod35^k. For k=1 th
 \[
 r\equiv r_k\pmod{t_k=6\cdot35^{k-1}} \tag{5}
 \]
-such that T^k(B_r) is integral. For every fixed k, all sufficiently large indices in this progression give k consecutive **legal** valuation-four incoming edges before the known prepared terminal transition. Therefore there are cancellation terminal feeders of arbitrarily deep legal valuation-four ancestry. This does **not** imply that any such counter lies on the genuine blank-root orbit b=3.
+such that T^k(B_r) is integral. For every k>=2, **every positive index in its class with r>=k** gives k consecutive **legal** valuation-four incoming edges before the known prepared terminal transition. In particular, r=r_k+k*t_k is an explicit guaranteed witness at every depth. Therefore there are cancellation terminal feeders of arbitrarily deep legal valuation-four ancestry. This does **not** imply that any such counter lies on the genuine blank-root orbit b=3.
 
 The depth-two class is **r=88 mod210**. The first nested representatives are:
 
@@ -111,7 +111,9 @@ For k>=2, assume the unique r_k modulo t_k satisfying B_r=C_k mod35^k. Its 35 li
 j_k\equiv22\,(C_{k+1}-B_{r_k})/35^k\pmod{35},
 \qquad r_{k+1}=r_k+j_k t_k. \tag{11}
 \]
-This is an exact constructive induction for every natural k. Finally, B_r tends to infinity with r. For each fixed k and sufficiently large r in the class, all finitely many intermediate rational affine iterates T^i(B_r) exceed 55; the divisibility already proved makes them integers. Therefore all k inverse transitions are source-legal, and the feeder has its established final terminal transition.
+This is an exact constructive induction for every natural k. Finally, there is a simple **explicit uniform positivity bound**, stronger than eventual positivity. As A_r>=128, the leading summand of P_r gives B_r>=(A_r/2)(A_r-3)>=A_r^2/4=2^(9^r+3). Since 9^r>=6r for r>=1, B_r>=64^r>=35^k whenever r>=k. The closed affine iterate
+T^(k-1)(B)=(32^(k-1)(3B+80)-80*35^(k-1))/(3*35^(k-1))
+is at least 35*32^(k-1)-80/3>55 for k>=2 and B>=35^k. Earlier iterates are larger because T(y)<y for positive y; hence every one of the k inverse edges is legal. The k=1 case has B_r>=2^12>55. Therefore **all r>=k in the residue class yield actual k-edge prepared histories**, and r=r_k+k*t_k is an explicit witness at every depth.
 
 ## Verification, prior work and limitation
 
