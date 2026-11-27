@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump, affine-suffix]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump, affine-suffix, affine-suffix-compute]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench' && inputs.target != 'shifted-simd' && inputs.target != 'forward-probe-checkpoint' && inputs.target != 'bitmap-jump'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench' && inputs.target != 'shifted-simd' && inputs.target != 'forward-probe-checkpoint' && inputs.target != 'bitmap-jump' && inputs.target != 'affine-suffix-compute'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -131,6 +131,15 @@ jobs:
               assert axioms <= {"propext","Classical.choice","Quot.sound"}, (decl, axioms)
               print(name, sorted(axioms))
           PY
+      - name: Compute deep exact affine support using reusable bitmap plans
+        if: inputs.target == 'affine-suffix-compute'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-first-return
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/affine_suffix.cpp" -o /tmp/affine-suffix
+          OMP_NUM_THREADS=2 /tmp/affine-suffix 26 36 38 40 | tee /tmp/affine-suffix-counts.txt
+          grep -q 'K 26 k 13 rows 448 count 1891518 ' /tmp/affine-suffix-counts.txt
+        # Exact-integer research output, not a kernel certificate.
       - name: Check exact affine prefix suffix reduction
         if: inputs.target == 'affine-suffix'
         run: |
