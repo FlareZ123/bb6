@@ -172,7 +172,7 @@ class Writer:
     def emit(self, body, imports=None):
         name = f"LW{len(self.modules):04}"
         if imports is None:
-            imports = [self.modules[-1]] if self.modules else ["LongBlockHalf","PackedJump","LongConeSource"]
+            imports = [self.modules[-1]] if self.modules else ["LongBlockHalf","PackedJump","LongBlockShards","LongConeSource"]
         hdr = "\n".join("import "+x for x in imports)
         hdr += "\nset_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n"
         hdr += "open BB6.Agent45ReverseBlock BB6.Agent45LongBlock BB6.Agent45.DelayedCarry BB6.Agent43P1Complement BB6.Agent45PackedJump\n"
@@ -183,6 +183,84 @@ class Writer:
     def finish(self):
         (self.root/"modules.txt").write_text("\n".join(self.modules)+"\n")
 
+
+
+def emit_nat_fragments(w, name, xs, size=1024):
+    """Avoid elaborating an unbounded list literal in one declaration."""
+    if len(xs) <= size:
+        return f"def {name} : List Nat := {lean_list(xs)}\n"
+    refs = []
+    for i in range(0,len(xs),size):
+        ref = f"{name}_{i//size}"
+        w.emit(f"def {ref} : List Nat := {lean_list(xs[i:i+size])}")
+        refs.append(ref)
+    return f"def {name} : List Nat := " + " ++ ".join(refs) + "\n"
+
+
+def emit_bucket_conversion(w, tag, n, b, s, d, prev, xs):
+    by_base = {}
+    for x in xs:
+        lo = x//4096*4096
+        by_base.setdefault(lo,[]).append(x-lo)
+    refs = []
+    items = list(by_base.items())
+    for i in range(0,len(items),32):
+        ref = f"{tag}_bucket{i//32}"
+        body = lean_list(f"({lo},{lean_list(positions)})" for lo,positions in items[i:i+32])
+        w.emit(f"def {ref} : List (Nat × List Nat) := {body}")
+        refs.append(ref)
+    bs = " ++ ".join(refs) or "[]"
+    w.emit(f"def {tag}_buckets : List (Nat × List Nat) := {bs}\n"
+           f"def {tag}_xs : List Nat := bucketMembers {tag}_buckets\n"
+           f"theorem {tag}_cover : LiveList {n} {b} {s} {d} {tag}_xs := by\n"
+           f"  exact live_bits_to_buckets {n} {b} {s} {d} {prev}_bits "
+           f"{tag}_buckets {prev}_cover (by decide +kernel)")
+
+
+def emit_shards(w, tag, n, b, start, j, d, prev, xs, rows, cap):
+    """Check row batches separately; merge output sets in a balanced tree."""
+    L = (j-1).bit_length()
+    F = n+start+j+3
+    step = max(1,min(cap,2_000_000//max(1,j)))
+    nodes = []
+    for i in range(0,len(rows),step):
+        shard = rows[i:i+step]
+        old = xs[i:i+step]
+        new = sorted({c for z,R,c in shard if c<F-j})
+        name = f"{tag}_leaf{i//step}"
+        body = f"def {name}_old : List Nat := {lean_list(old)}\n"
+        body += f"def {name}_rows : List WitnessRow := {lean_rows(shard)}\n"
+        body += f"def {name}_out : List Nat := {lean_list(new)}\n"
+        body += f"theorem {name}_cover : BlockShard {n} {b} {start} {j} {name}_old {name}_out := by\n"
+        body += f"  exact block_shard_rows {L} {n} {b} {start} {j} {name}_old {name}_out {name}_rows "
+        body += "(by decide) (by decide +kernel) (by decide +kernel) (by decide +kernel)"
+        w.emit(body)
+        nodes.append((name,new))
+    level = 0
+    while len(nodes)>1:
+        nxt = []
+        for i in range(0,len(nodes)-1,2):
+            a,A = nodes[i]
+            bname,B = nodes[i+1]
+            name = f"{tag}_merge{level}_{i//2}"
+            new = sorted(set(A).union(B))
+            body = emit_nat_fragments(w,f"{name}_out",new)
+            body += f"def {name}_old : List Nat := {a}_old ++ {bname}_old\n"
+            body += f"theorem {name}_cover : BlockShard {n} {b} {start} {j} {name}_old {name}_out := by\n"
+            body += f"  exact block_shard_merge {n} {b} {start} {j} {a}_old {bname}_old {a}_out {bname}_out {name}_out "
+            body += f"{a}_cover {bname}_cover (by decide +kernel)"
+            w.emit(body)
+            nxt.append((name,new))
+        if len(nodes)%2:
+            nxt.append(nodes[-1])
+        nodes = nxt
+        level += 1
+    root,new = nodes[0]
+    w.emit(f"def {tag}_xs : List Nat := {root}_out\n"
+           f"theorem {tag}_cover : LiveList {n} {b} {start} {d+j} {tag}_xs := by\n"
+           f"  exact live_list_extend_shards {n} {b} {start} {j} {d} "
+           f"{prev}_xs {tag}_xs {root}_old {prev}_cover (by decide +kernel) {root}_cover")
+    return new
 
 def generate(args):
     n,h = args.n,args.h
@@ -237,10 +315,13 @@ def generate(args):
                 d += j
             xs = bit_members(bits)
             cur = tag+f"_s{d}"
-            w.emit(f"def {cur}_xs : List Nat := {lean_list(xs)}\n"
-                   f"theorem {cur}_cover : LiveList {n} {b} {s+n-d} {d} {cur}_xs := by\n"
-                   f"  exact live_bits_to_list {n} {b} {s+n-d} {d} {prev}_bits "
-                   f"{cur}_xs {prev}_cover (by decide +kernel)")
+            if args.shard:
+                emit_bucket_conversion(w,cur,n,b,s+n-d,d,prev,xs)
+            else:
+                w.emit(f"def {cur}_xs : List Nat := {lean_list(xs)}\n"
+                       f"theorem {cur}_cover : LiveList {n} {b} {s+n-d} {d} {cur}_xs := by\n"
+                       f"  exact live_bits_to_list {n} {b} {s+n-d} {d} {prev}_bits "
+                       f"{cur}_xs {prev}_cover (by decide +kernel)")
             prev = cur
             print("PACK",stage,i,F,d,len(xs),flush=True)
             while d < suffix and xs:
@@ -251,12 +332,15 @@ def generate(args):
                 rows = [witness(f,j,y,z) for z in xs]
                 new = sorted({c for z,R,c in rows if c<f-j})
                 cur = tag+f"_s{d+j}"
-                w.emit(f"def {cur}_rows : List WitnessRow := {lean_rows(rows)}\n"
-                       f"def {cur}_xs : List Nat := {lean_list(new)}\n"
-                       f"theorem {cur}_cover : LiveList {n} {b} {start} {d+j} {cur}_xs := by\n"
-                       f"  exact live_list_extend {(j-1).bit_length()} {n} {b} {start} {j} {d} "
-                       f"{prev}_xs {cur}_xs {cur}_rows (by decide) {prev}_cover "
-                       f"(by decide +kernel) (by decide +kernel) (by decide +kernel)")
+                if args.shard:
+                    assert new == emit_shards(w,cur,n,b,start,j,d,prev,xs,rows,args.shard)
+                else:
+                    w.emit(f"def {cur}_rows : List WitnessRow := {lean_rows(rows)}\n"
+                           f"def {cur}_xs : List Nat := {lean_list(new)}\n"
+                           f"theorem {cur}_cover : LiveList {n} {b} {start} {d+j} {cur}_xs := by\n"
+                           f"  exact live_list_extend {(j-1).bit_length()} {n} {b} {start} {j} {d} "
+                           f"{prev}_xs {cur}_xs {cur}_rows (by decide) {prev}_cover "
+                           f"(by decide +kernel) (by decide +kernel) (by decide +kernel)")
                 print("LONG",stage,i,f,j,len(xs),len(new),flush=True)
                 prev, xs = cur,new
                 d += j
@@ -355,6 +439,7 @@ if __name__ == "__main__":
     parser.add_argument("--initial",type=int,default=512)
     parser.add_argument("--chunk",type=int,default=256)
     parser.add_argument("--long",type=int,default=8192)
+    parser.add_argument("--shard",type=int,default=0)
     parser.add_argument("--jump",type=int,default=0)
     parser.add_argument("--half",action="store_true")
     generate(parser.parse_args())
