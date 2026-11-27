@@ -119,7 +119,7 @@ theorem left1 (n : Nat) (L : List Bool) :
       some (A (H0++L) (J++rep P n++Tail)) := by
   have h : run0 p (5*n+6) (A (Z++rep P n++H1++L) [true]) =
       some (A (X++[true]++(H0++L)) (rep Q n++T)) := by
-    simpa only [List.append_assoc] using drain n (H1++L)
+    simpa only [H1,H0,List.append_assoc,List.cons_append,List.nil_append] using drain n (H1++L)
   have g := turn (H0++L) (rep Q n++T)
   rw [turnWord] at g
   simpa only [show 5*n+6+3=5*n+9 by omega] using join0 h g
@@ -127,14 +127,14 @@ theorem left1 (n : Nat) (L : List Bool) :
 theorem lastWord (n : Nat) :
     rep Y 3++(V++(rep Q n++T)) = S++rep P (n+1)++Tail := by
   rw [turnWord,show rep P (n+1)=P++rep P n by rfl]
-  simp only [List.append_assoc]
+  simp only [Y,J,S,P,W,rep,List.append_assoc,List.cons_append,List.nil_append]
 
 theorem left2 (n : Nat) (L : List Bool) :
     run0 p (5*n+15) (A (Z++rep P n++H2++L) [true]) =
       some (A (G++L) (S++rep P (n+1)++Tail)) := by
   have h : run0 p (5*n+6) (A (Z++rep P n++H2++L) [true]) =
       some (A (X++[true]++(rep U 3++G++L)) (rep Q n++T)) := by
-    simpa only [List.append_assoc] using drain n (H2++L)
+    simpa only [H2,G,U,rep,List.append_assoc,List.cons_append,List.nil_append] using drain n (H2++L)
   have g := turn (rep U 3++G++L) (rep Q n++T)
   have f := pairLeft 3 (G++L) (V++(rep Q n++T))
   have f' : run0 p 6 (A (rep U 3++G++L) (V++(rep Q n++T))) =
@@ -157,7 +157,7 @@ theorem seed : run0 p 223 (A [] []) = some (root 0) := by rfl
 
 theorem advance (n : Nat) : run0 p (20*n+111) (root n) = some (root (n+1)) := by
   have h := advanceAux (n+1) (rep V n++[true,true,true,true,false,true,true,true])
-  simpa only [root,rep,List.append_assoc,show 20*(n+1)+91=20*n+111 by omega] using h
+  simpa only [root,rep,G,V,List.append_assoc,List.cons_append,List.nil_append,show 20*(n+1)+91=20*n+111 by omega] using h
 
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
   never_of_growth p root 223 (fun n => 20*n+111) seed (fun n => by omega) advance m hm
