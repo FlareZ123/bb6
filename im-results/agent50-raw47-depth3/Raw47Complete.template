@@ -1,5 +1,6 @@
 import Raw47Lifted1212
 import Raw47CoverEmpty
+import Raw47Attainment
 namespace BB6.Agent50Raw47Complete
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent47CanonicalFrontier BB6.Agent50Raw47Depth3Cut
 theorem all_quotient : ∀ m, TNFQuotientCompatible parent m → WeightedBound 143977 m :=
@@ -8,6 +9,14 @@ theorem cover : Cover (WeightedBound 143977) parent :=
   BB6.Agent50.coverEmptyQuotient BB6.Agent50Raw47Lifted1212.remaining_count BB6.Agent50Raw47Lifted1212.local_sound
 theorem cover_at (B : Nat) (h : 143977 ≤ B) : Cover (WeightedBound B) parent :=
   BB6.Agent50.raiseWeightedCover h cover
+theorem attained : ∃ m : Machine, compatible parent m ∧ HaltsAfter m 143975 ∧ 1 ∈ delays (zeroNext m) 0 :=
+  BB6.Agent50Raw47Attainment.attainment
+theorem exact_threshold (B : Nat) : (∀ m, compatible parent m → WeightedBound B m) ↔ 143977 ≤ B := by
+  constructor
+  · exact BB6.Agent50Raw47Attainment.lower B
+  · intro h; exact (cover_at B h).sound
+#print axioms attained
+#print axioms exact_threshold
 #print axioms all_quotient
 #print axioms cover
 #print axioms cover_at
