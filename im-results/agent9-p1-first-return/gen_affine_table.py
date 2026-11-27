@@ -18,9 +18,13 @@ def expand(k, ps):
         yield r + P*t, (C+t*S)//2, S
 
 
-def table(k, d):
-    ps = [(0, 1, 1)]
-    for i in range(1, k):
+def table(k, d, half=False):
+    if half:
+        assert k>=2
+        ps = [(2, 1, 1)]
+    else:
+        ps = [(0, 1, 1)]
+    for i in range(2 if half else 1, k):
         ps = list(expand(i, ps))
     grouped = defaultdict(list)
     for p in ps:
@@ -43,12 +47,15 @@ def main():
     ap.add_argument('d', type=int)
     ap.add_argument('--group', type=int, default=1)
     ap.add_argument('--out', type=Path, required=True)
+    ap.add_argument('--canonical-half', action='store_true')
     args = ap.parse_args()
     k, d, group = args.k, args.d, args.group
     assert k>=1 and d>=0 and group>=1
     out=args.out
     out.mkdir(parents=True,exist_ok=True)
-    rows=table(k,d)
+    rows=table(k,d,args.canonical_half)
+    base='AffineHalf' if args.canonical_half else 'AffineTable'
+    proof=f'rw [checkRows_half {k} {d} (by decide)]; decide +kernel' if args.canonical_half else 'decide +kernel'
     count=sum(m.bit_count() for r,m in rows)
     name=f'AffineFinite{k}_{d}'
     imports=[]
@@ -57,7 +64,7 @@ def main():
         sub=f'{name}_Rows{j:04d}'
         imports.append(sub)
         data=',\n  '.join(f'({r}, 0x{m:x})' for r,m in rows[i:i+group])
-        (out/(sub+'.lean')).write_text(f'''import AffineTable
+        (out/(sub+'.lean')).write_text(f'''import {base}
 namespace BB6.Agent9AffineResidue.{name}
 set_option maxRecDepth 200000
 set_option maxHeartbeats 0
@@ -65,7 +72,7 @@ set_option exponentiation.threshold 200000
 
 def rows{j} : List (Nat×Nat) := [
   {data}]
-theorem rows{j}_ok : checkRows {k} {d} rows{j}=true := by decide +kernel
+theorem rows{j}_ok : checkRows {k} {d} rows{j}=true := by {proof}
 end BB6.Agent9AffineResidue.{name}
 ''')
     n=len(imports)
