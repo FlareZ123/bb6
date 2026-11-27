@@ -80,7 +80,9 @@ theorem right1 (k : Nat) :
     run0 p (2*(k+2)) ⟨0,[],rep X (k+1)++[true]⟩ =
       some ⟨0,[false]++rep U (k+2),[]⟩ := by
   have h := join0 (bulkRight k [true]) (rEnd1 (rep U (k+1)))
-  simpa only [show 2*(k+1)+2=2*(k+2) by omega] using h
+  have w : [false,true,true]++rep U (k+1) = [false]++rep U (k+2) := by
+    rw [show rep U (k+2) = U++rep U (k+1) by rfl] <;> rfl
+  simpa only [w,show 2*(k+1)+2=2*(k+2) by omega] using h
 
 theorem leftSweep (k : Nat) (L R : List Bool) :
     run0 p (2*k) ⟨0,rep U k++L,R⟩ =
@@ -114,7 +116,7 @@ theorem entry (n : Nat) :
     rw [Nat.add_comm n 4,rep_add,List.append_assoc]
   have b : rep X 9++([true]++(rep Y n++[true])) = rep X (n+9)++U := by
     rw [← List.append_assoc [true] (rep Y n) [true],rot]
-    rw [List.append_assoc,← List.append_assoc (rep X 9) (rep X n),← rep_add,Nat.add_comm 9 n]
+    rw [List.append_assoc,← List.append_assoc (rep X 9) (rep X n),← rep_add,Nat.add_comm 9 n] <;> rfl
   rw [fam,a,←b]
   exact entry101 (rep Y n++[true])
 
