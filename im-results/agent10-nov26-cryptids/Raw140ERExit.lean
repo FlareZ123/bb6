@@ -1,6 +1,7 @@
 import Raw140ERSuffix
 namespace Raw140ERExit
-open BB6BlockFAR Raw140Orbit Raw140Extra Raw140Double Raw140ERSweep Raw140ERSuffix Raw140ERSuffixLocal
+open BB6BlockFAR Raw140Orbit Raw140Extra Raw140ERSweep Raw140ERSuffix Raw140ERSuffixLocal
+open Raw140Double (Reach)
 set_option maxRecDepth 4096
 set_option maxHeartbeats 1000000
 attribute [local irreducible] boundary run
@@ -30,14 +31,16 @@ theorem pump (n : Nat) (X Y : List Sym) :
     have h₁ := tripLoop (trip133 n ++ X) (S 1::S 1::S 5::Y)
     have h₂ := ih (S 1::S 1::S 5::Y)
     have h := join h₁ h₂
-    simpa only [trip133,trip115_snoc,List.cons_append,List.append_assoc,
+    simpa only [trip133,trip115_snoc,List.cons_append,List.append_assoc,List.nil_append,
       show (7+3*3+3+1+1)+21*n=21*(n+1) by omega] using h
 
 theorem exitCost (p : Nat) (Y : List Sym) :
     run base (36*p+298) (boundary 4 true (U 3 (p+3) ++ [S 2]) (S 1::S 1::S 1::S 5::Y)) =
       some (boundary 0 true (U 3 (p+11) ++ [S 2]) Y) := by
   have h := finishBank p Y
-  convert h using 1 <;> omega
+  have hc : 7+(p+3)*3+3+1+(p+4)*3+5+(p+4)*3+5+(p+5)*3+1+(p+6)*3+3+(p+6)*3+3+1+1+7+(p+7)*3+3+1+(p+8)*3+5+(p+8)*3+5+(p+9)*3+1+(p+10)*3+3+(p+11)*3 = 36*p+298 := by omega
+  rw [hc] at h
+  exact h
 
 theorem startExit (j n p : Nat) (Y : List Sym) :
     Reach base
