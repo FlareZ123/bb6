@@ -14,6 +14,7 @@ sys.path[:0] = [str(IM/x) for x in (
     "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
     "agent32-raw59")]
 from generate_four_hole import masks, move, slot
+from emit_rungram import emit as emit_bidfa
 
 S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
 B = S.get("bound", 75)
@@ -76,6 +77,16 @@ def generate():
                 assert rows[i]==table
                 cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
                 modules[i]="Raw43M29"
+        for key,leaf in S.get("bidfa",{}).items():
+            i=int(key)
+            assert rows[i]==leaf["table"]
+            name=PREFIX+"BiDFA"+str(i)
+            namespace=NS+"BiDFA"+str(i)
+            body=emit_bidfa(i,rows[i],*leaf["dfa"],[leaf["states"],leaf["edges"]])
+            emit(name,["FastBiDFA"],body,namespace,
+                 "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA")
+            cert[i]=f".proven {namespace}.M{i}.table {namespace}.M{i}.never"
+            modules[i]=name
         for key,leaf in S.get("lateLast",{}).items():
             i=int(key)
             assert rows[i]==leaf["table"]
