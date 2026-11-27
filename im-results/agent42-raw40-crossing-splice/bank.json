@@ -1,0 +1,392 @@
+{
+  "1RB-71": {
+    "table": "1RB0LA_1RC0RE_0RD1RB_1LD1LA_0RF1RE_0LA---",
+    "entry": 362,
+    "entryHead": -10,
+    "period": 468,
+    "shift": -8,
+    "cuts": [
+      [
+        10,
+        30
+      ]
+    ],
+    "increment": 160
+  },
+  "1RB-74": {
+    "table": "1RB0LA_1RC0RE_0RD1RB_1LD1LA_1RF1RE_0LC---",
+    "entry": 362,
+    "entryHead": -10,
+    "period": 468,
+    "shift": -8,
+    "cuts": [
+      [
+        10,
+        30
+      ]
+    ],
+    "increment": 160
+  },
+  "1RB-75": {
+    "table": "1RB0LA_1RC0RE_0RD1RB_1LD1LA_1RF1RE_1RC---",
+    "entry": 336,
+    "entryHead": -10,
+    "period": 430,
+    "shift": -8,
+    "cuts": [
+      [
+        10,
+        30
+      ]
+    ],
+    "increment": 144
+  },
+  "1RB-153": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_0LA---",
+    "entry": 320,
+    "entryHead": -14,
+    "period": 364,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        15
+      ],
+      [
+        23,
+        28
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-154": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_0LC---",
+    "entry": 324,
+    "entryHead": -14,
+    "period": 368,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        14,
+        24
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-155": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_0LD---",
+    "entry": 1689,
+    "entryHead": -41,
+    "period": 652,
+    "shift": -8,
+    "cuts": [
+      [
+        6,
+        12
+      ],
+      [
+        60,
+        66
+      ]
+    ],
+    "increment": 96
+  },
+  "1RB-156": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_0RA---",
+    "entry": 586,
+    "entryHead": -18,
+    "period": 262,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        32,
+        38
+      ]
+    ],
+    "increment": 48
+  },
+  "1RB-157": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_0RB---",
+    "entry": 634,
+    "entryHead": -18,
+    "period": 290,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        24,
+        32
+      ]
+    ],
+    "increment": 54
+  },
+  "1RB-158": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_1LB---",
+    "entry": 310,
+    "entryHead": -14,
+    "period": 342,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        15
+      ],
+      [
+        28,
+        31
+      ]
+    ],
+    "increment": 120
+  },
+  "1RB-159": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_1LD---",
+    "entry": 320,
+    "entryHead": -14,
+    "period": 364,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        14,
+        24
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-160": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_1RB---",
+    "entry": 544,
+    "entryHead": -18,
+    "period": 236,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        27,
+        32
+      ]
+    ],
+    "increment": 42
+  },
+  "1RB-161": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_0RF0RC_1RD---",
+    "entry": 502,
+    "entryHead": -18,
+    "period": 210,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        32,
+        35
+      ]
+    ],
+    "increment": 36
+  },
+  "1RB-185": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_0LA---",
+    "entry": 309,
+    "entryHead": -15,
+    "period": 776,
+    "shift": -16,
+    "cuts": [
+      [
+        2,
+        14
+      ],
+      [
+        14,
+        30
+      ]
+    ],
+    "increment": 456
+  },
+  "1RB-186": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_0LC---",
+    "entry": 320,
+    "entryHead": -14,
+    "period": 364,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        15
+      ],
+      [
+        23,
+        28
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-188": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1LA---",
+    "entry": 88,
+    "entryHead": -6,
+    "period": 92,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ]
+    ],
+    "increment": 24
+  },
+  "1RB-189": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1LD---",
+    "entry": 324,
+    "entryHead": -14,
+    "period": 368,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        14,
+        24
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-190": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1LE---",
+    "entry": 550,
+    "entryHead": -18,
+    "period": 238,
+    "shift": -4,
+    "cuts": [
+      [
+        3,
+        9
+      ],
+      [
+        27,
+        32
+      ]
+    ],
+    "increment": 42
+  },
+  "1RB-191": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1RB---",
+    "entry": 308,
+    "entryHead": -14,
+    "period": 340,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        15
+      ],
+      [
+        28,
+        31
+      ]
+    ],
+    "increment": 120
+  },
+  "1RB-192": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1RC---",
+    "entry": 318,
+    "entryHead": -14,
+    "period": 362,
+    "shift": -8,
+    "cuts": [
+      [
+        3,
+        15
+      ],
+      [
+        23,
+        28
+      ]
+    ],
+    "increment": 132
+  },
+  "1RB-193": {
+    "table": "1RB0LA_1RC1RE_0RD1RB_1LD1LA_1RF0RC_1RD---",
+    "entry": 3392,
+    "entryHead": -56,
+    "period": 2516,
+    "shift": -20,
+    "cuts": [
+      [
+        5,
+        35
+      ],
+      [
+        90,
+        95
+      ]
+    ],
+    "increment": 690
+  },
+  "0RD-71": {
+    "table": "1RB0LA_1RC0RE_0RD0RD_1LD1LA_0RF1RE_0LA---",
+    "entry": 374,
+    "entryHead": -10,
+    "period": 486,
+    "shift": -8,
+    "cuts": [
+      [
+        10,
+        30
+      ]
+    ],
+    "increment": 168
+  },
+  "0RD-73": {
+    "table": "1RB0LA_1RC0RE_0RD0RD_1LD1LA_1RF1RE_1RC---",
+    "entry": 348,
+    "entryHead": -10,
+    "period": 448,
+    "shift": -8,
+    "cuts": [
+      [
+        10,
+        30
+      ]
+    ],
+    "increment": 152
+  },
+  "1LA-156": {
+    "table": "1RB0LA_1RC1RE_0RD1LA_1LD1LA_---0RF_0RB0RC",
+    "entry": 2340,
+    "entryHead": -42,
+    "period": 2172,
+    "shift": -18,
+    "cuts": [
+      [
+        5,
+        26
+      ],
+      [
+        63,
+        84
+      ]
+    ],
+    "increment": 702
+  }
+}
