@@ -344,7 +344,7 @@ theorem modularNeg_mem (M : Int) (ws : List Int) (x : Int) :
     rw [ih]
     constructor
     · rintro (h|⟨a,ha,rfl⟩)
-      · exact Or.inl h
+      · exact Or.inl (List.mem_map.mp h)
       · have ha' := (ih a).mp ha
         obtain ⟨s,hs,rfl⟩ := List.mem_map.mp ha'
         right
@@ -352,7 +352,7 @@ theorem modularNeg_mem (M : Int) (ws : List Int) (x : Int) :
         rw [Int.emod_sub_emod]
         congr 1 <;> omega
     · rintro (h|⟨a,⟨s,hs,rfl⟩,rfl⟩)
-      · exact Or.inl h
+      · exact Or.inl (List.mem_map.mpr h)
       · right
         refine ⟨(-s)%M,(ih _).mpr (List.mem_map.mpr ⟨s,hs,rfl⟩),?_⟩
         rw [Int.emod_sub_emod]
