@@ -60,7 +60,7 @@ theorem run_sound (alt : Bool) (e : Box28CarryFamily.Entry) (m : Machine) (hm : 
     (z : Config) (c : C9Pair.Config) (hc : Box28CarryFamily.run alt e n (project z) = some c) :
     ∃ d, run m n z = some d ∧ project d = c := by
   induction n generalizing c with
-  | zero => exact ⟨z,rfl,by simpa [Box28CarryFamily.run] using hc⟩
+  | zero => exact ⟨z,rfl,by simpa only [Box28CarryFamily.run_zero,Option.some.injEq] using hc⟩
   | succ n ih =>
     rw [Box28CarryFamily.run_add alt e n 1] at hc
     cases hp : Box28CarryFamily.run alt e n (project z) with
@@ -68,7 +68,7 @@ theorem run_sound (alt : Bool) (e : Box28CarryFamily.Entry) (m : Machine) (hm : 
     | some a =>
       obtain ⟨d,hd,hproj⟩ := ih a hp
       have hs : Box28CarryFamily.step alt e (project d) = some c := by
-        simpa [hp,Box28CarryFamily.run,hproj] using hc
+        simpa only [hp,Option.bind_some,Box28CarryFamily.run_one,hproj] using hc
       obtain ⟨d',hd',hproj'⟩ := step_sound alt e m hm d c hs
       exact ⟨d',by simp [run,hd,hd'],hproj'⟩
 

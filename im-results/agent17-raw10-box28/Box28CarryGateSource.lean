@@ -57,7 +57,11 @@ theorem project_step (two : Bool) (m : Machine) (hm : compatible (baseTable two)
   rcases z with ⟨s,h,t⟩
   have hs : s=0 ∨ s=1 ∨ s=2 ∨ s=3 ∨ s=4 ∨ s=5 := by omega
   rcases hs with rfl|rfl|rfl|rfl|rfl|rfl <;> cases hb : t h <;> cases two <;>
-    simp only [readSlot,hb,hA0,hA1,hB0,hC0,hC1,hD0,hD1,hE1,hF0,hF1] <;> rfl
+    simp only [readSlot,hb,hA0,hA1,hB0,hC0,hC1,hD0,hD1,hE1,hF0,hF1]
+  all_goals
+    unfold project
+    simp only [BB6.Agent13.Box33Source.project,hb]
+    rfl
 
 theorem project_run (two : Bool) (m : Machine) (hm : compatible (baseTable two) m)
     (n : Nat) (z : BB6Coverage.Config) :

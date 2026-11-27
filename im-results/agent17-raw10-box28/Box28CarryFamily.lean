@@ -194,6 +194,11 @@ def entryAction (e : Entry) (c : Config) : Option Config := some (match e with
   | .e => right .E false c)
 def step (two : Bool) (e : Entry) := stepCore two (fun _ => none) (entryAction e)
 def run (two : Bool) (e : Entry) := runCore two (fun _ => none) (entryAction e)
+@[simp] theorem run_zero (two : Bool) (e : Entry) (c : Config) :
+    run two e 0 c = some c := rfl
+@[simp] theorem run_one (two : Bool) (e : Entry) (c : Config) :
+    run two e 1 c = step two e c := runCore_one two _ _ c
+
 theorem run_add (two : Bool) (e : Entry) (m n : Nat) (c : Config) :
     run two e (m+n) c = (run two e m c).bind (run two e n) :=
   runCore_add two _ _ m n c
