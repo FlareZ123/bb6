@@ -109,7 +109,7 @@ jobs:
             root="$W/imports/Raw47Complete.lean"
             theorem="BB6.Agent50Raw47Complete.cover"
           fi
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "$theorem" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 143977 --artifact-name "raw47-lifted$N" --provenance-input "$D/Raw47LiftedConsumer.template" "$root" 2>&1 | tee "$W/log"
+          python tools/lean_compile_closure.py --override CheckedSweepTrace=im-results/agent50-raw47-depth3/CheckedSweepTrace.lean --workdir "$W/build" --jobs 1 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "$theorem" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 143977 --artifact-name "raw47-lifted$N" --provenance-input "$D/Raw47LiftedConsumer.template" "$root" 2>&1 | tee "$W/log"
           python - "$W/log" "$N" <<'PY'
           import re,sys
           log=open(sys.argv[1]).read()
