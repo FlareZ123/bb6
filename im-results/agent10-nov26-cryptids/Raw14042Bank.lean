@@ -47,9 +47,11 @@ theorem start42 (j n p : Nat) (Y : List Sym) :
   have h₁ := prepareCarry j (S 3::S 3::(B n ++ X)) Y
   have h₂ := pumpAny n X (U 1 j ++ Y)
   have h₃ := finish42Any p (T n ++ U 1 j ++ Y)
+  have hc : 7+(3*3)+3+3+3+(p*3)+3+1+((p+1)*3)+5+((p+1)*3)+5+((p+3)*3)+1+((p+4)*3)+3+((p+4)*3)+3+1+1+7+((p+5)*3)+3+1+((p+6)*3)+5+((p+6)*3)+5+((p+7)*3)+1+((p+8)*3)+3+((p+8)*3)+3+1+1+7+((p+9)*3)+3+1+((p+10)*3)+5+((p+10)*3)+5+((p+11)*3)+1+((p+12)*3)+3+((p+13)*3) = 54*p+457 := by omega
+  rw [hc] at h₃
   simp only [List.append_assoc] at h₃
   have h := join (join h₁ h₂) h₃
-  refine ⟨_, ?_⟩
+  refine ⟨5+3*(j+1)+21*n+(54*p+457), ?_⟩
   simpa only [X,bank_cons,U,List.replicate_succ,List.cons_append,List.append_assoc,
     List.nil_append] using h
 
@@ -112,7 +114,7 @@ theorem return42 (n p : Nat) (s : Tail) :
   have h₁' : Reach Raw140VariantTransfer.M42
       (boundary 0 true (U 3 (p+1) ++ [S 2]) (T (n+2) ++ tailWord s))
       (boundary 4 true (S 1::(B (n+1) ++ [S 2,S 5] ++ U 3 (p+1) ++ [S 2])) (tailWord s)) := by
-    refine ⟨_, ?_⟩
+    refine ⟨37+45*(n+1), ?_⟩
     simpa only [T,B,Raw140VariantTransfer.trip,List.cons_append,List.nil_append,List.append_assoc] using h₁
   exact Reach.trans h₁' h₂
 
