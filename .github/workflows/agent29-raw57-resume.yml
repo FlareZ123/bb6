@@ -2,6 +2,11 @@ name: Agent29 Raw57 rc2 shard18 resume
 run-name: Raw57 rc2 recover shard18 and assemble
 on:
   workflow_dispatch:
+    inputs:
+      assemble_only:
+        description: 'Reuse source-accepted shard 18 from run 46064160509; skip its 50-minute rebuild'
+        type: boolean
+        default: false
 
 permissions:
   actions: read
@@ -9,6 +14,7 @@ permissions:
 
 jobs:
   shard18:
+    if: ${{ !inputs.assemble_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 85
     steps:
@@ -55,6 +61,7 @@ jobs:
 
   assemble:
     needs: shard18
+    if: ${{ always() && (inputs.assemble_only || needs.shard18.result == 'success') }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -87,6 +94,9 @@ jobs:
         with:
           name: raw57-rc2-shard-18
           path: /tmp/raw57-inputs/raw57-rc2-shard-18
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.assemble_only && '46064160509' || github.run_id }}
       - name: Prove complete six-hole Raw57 parent at weighted bound 1613
         run: |
           set -euo pipefail
