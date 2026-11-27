@@ -8,7 +8,15 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, pumps]
+        options: [legacy, full, pumps, cover]
+      generation_run:
+        description: Retained full-scan run with candidate tree artifacts
+        type: string
+        default: '45926582144'
+      chunk:
+        description: Maximum ordinary certificate chunk nodes
+        type: string
+        default: '400'
       revision:
         description: Exact source revision (empty uses dispatch SHA)
         type: string
@@ -143,5 +151,71 @@ jobs:
           path: |
             /tmp/raw11-q0-pumps/
             /tmp/raw11-q0-pumps.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  cover:
+    if: inputs.mode == 'cover'
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    env:
+      ID: ${{ matrix.id }}
+      CHUNK: ${{ inputs.chunk }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-${{ matrix.id }}
+          path: /tmp/coarse-candidate
+      - name: Generate exact sharded Lean source from the retained candidate
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK"
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile complete original-source proof closure
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          THEOREM="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["theorem"])')"
+          TABLE="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["table"])')"
+          BOUND="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["bound"])')"
+          python tools/lean_compile_closure.py "/tmp/coarse-generated/Agent5Q0Coarse$ID.lean" \
+            --source-root /tmp/coarse-generated \
+            --workdir /tmp/coarse-certified \
+            --manifest /tmp/coarse-certified/manifest.json \
+            --jobs 4 --lean lean \
+            --label "Raw11 q0 coarse $ID" \
+            --theorem "$THEOREM" --parent-table "$TABLE" --weighted-bound "$BOUND" \
+            --provenance-input /tmp/coarse-candidate/summary.json \
+            --provenance-input /tmp/coarse-candidate/tree.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/scan-q0-coarse-full.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-coarse-long-holes.json \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee /tmp/coarse-cover.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/coarse-cover.log; then exit 1; fi
+          grep -F "$THEOREM' depends on axioms:" /tmp/coarse-cover.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-coarse-cover-${{ matrix.id }}
+          path: |
+            /tmp/coarse-generated/
+            /tmp/coarse-certified/
+            /tmp/coarse-cover.log
           if-no-files-found: warn
           retention-days: 30
