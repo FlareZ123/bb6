@@ -983,7 +983,7 @@ jobs:
           retention-days: 14
 
   prepare-zeroRC-zipresume:
-    if: inputs.recovery_run_id == '45931841142' && inputs.variant == 'zeroRC'
+    if: (inputs.recovery_run_id == '45931841142' || inputs.recovery_run_id == '45934672187') && inputs.variant == 'zeroRC'
     runs-on: ubuntu-latest
     timeout-minutes: 15
     outputs:
@@ -995,15 +995,30 @@ jobs:
         with:
           ref: 9dfb6abff540a4decf4c46f147393a3e89025034
       - uses: actions/download-artifact@v4
+        if: inputs.recovery_run_id == '45931841142'
         with:
           name: raw139-zeroRC-resume-plan
           run-id: 45931841142
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC
       - uses: actions/download-artifact@v4
+        if: inputs.recovery_run_id == '45934672187'
+        with:
+          name: raw139-zeroRC-zipresume-plan
+          run-id: 45934672187
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC
+      - uses: actions/download-artifact@v4
         with:
           pattern: raw139-zeroRC-resume-ZRCRecovery*
           run-id: 45931841142
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/resume-cuts
+      - uses: actions/download-artifact@v4
+        if: inputs.recovery_run_id == '45934672187'
+        with:
+          pattern: raw139-zeroRC-resume-*
+          run-id: 45934672187
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC/resume-cuts
       - name: Switch only unaccepted declarations to zipper traces
@@ -1016,7 +1031,11 @@ jobs:
             git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-zeroRC/$script" > "im-results/agent6-raw139-e0-zeroRC/$script"
           done
           git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/OneLFZipHybrid.lean" > "$work/imports/OneLFZipHybrid.lean"
-          python3 im-results/agent6-raw139-e0-zeroRC/zipresume.py prepare "$work"
+          if [[ "${{ inputs.recovery_run_id }}" == 45934672187 ]]; then
+            python3 im-results/agent6-raw139-e0-zeroRC/zipresume.py last "$work"
+          else
+            python3 im-results/agent6-raw139-e0-zeroRC/zipresume.py prepare "$work"
+          fi
           echo "matrix=$(python3 -c 'import json;print(json.dumps({"root":json.load(open(".tmp/a6-zeroRC/zip-missing.json"))},separators=(",",":")))')" >> "$GITHUB_OUTPUT"
       - uses: actions/upload-artifact@v4
         with:
@@ -1135,6 +1154,13 @@ jobs:
         with:
           pattern: raw139-zeroRC-resume-ZRCRecovery*
           run-id: 45931841142
+          github-token: ${{ github.token }}
+          path: .tmp/a6-zeroRC/resume-cuts
+      - uses: actions/download-artifact@v4
+        if: inputs.recovery_run_id == '45934672187'
+        with:
+          pattern: raw139-zeroRC-resume-ZRCRecovery*
+          run-id: 45934672187
           github-token: ${{ github.token }}
           path: .tmp/a6-zeroRC/resume-cuts
       - uses: actions/download-artifact@v4
