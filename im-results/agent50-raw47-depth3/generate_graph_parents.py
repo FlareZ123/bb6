@@ -122,9 +122,11 @@ with tempfile.TemporaryDirectory() as temp:
                 g=2000000+100000*i+index
                 assert g not in miss
                 miss[g]=(i,t)
-    subprocess.run(['g++','-O3','-std=c++20',str(here/'run_portfolio.cpp'),'-o',str(work/'run_search')],check=True)
+    subprocess.run(['g++','-O3','-std=c++20',str(graph_here/'run_search.cpp'),'-o',str(work/'run_search')],check=True)
+    subprocess.run(['g++','-O3','-std=c++20',str(here/'run_portfolio.cpp'),'-o',str(work/'run_portfolio')],check=True)
     def search(args,inp):
-        run=subprocess.run([str(work/'run_search'),*args],input=inp,text=True,capture_output=True,check=True)
+        exe='run_portfolio' if args[0]=='portfolio' else 'run_search'
+        run=subprocess.run([str(work/exe),*args],input=inp,text=True,capture_output=True,check=True)
         return run.stdout,run.stderr
     inp=''.join(f'{g} {t.replace("_","")}\n' for g,(i,t) in miss.items())
     portfolio,left=search(['portfolio',str(here/'graph-portfolio.txt'),'10000'],inp)
@@ -179,6 +181,12 @@ def emit(t,i):
         n='BB6.Agent12Raw47.'+graph_names[graph[i,a[0]]]
         return f'.proven {n}.parent {n}.never'
     raise ValueError(t)
+def packed_key(t):
+    t=t.replace('_','')
+    assert len(t)==36
+    return sum((25 if t[j:j+3]=='---' else 4*(ord(t[j+2])-65)+2*int(t[j])+(t[j+1]=='R'))*26**(j//3)
+               for j in range(0,36,3))
+
 def unknown_count(t,i):
     tag,*a=t
     if tag=='split': return sum(unknown_count(c,i) for c in a[2])
@@ -205,7 +213,7 @@ for i in ids:
     modules=sorted(g for (j,t),g in graph.items() if j==i)
     hard_modules=sorted({v[0] for (j,t),v in used_hard.items() if j==i})
     kind='U' if nleft else 'G'
-    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import {graph_names[g]}\n' for g in modules)+('import PartialPrefixAudit\n' if nleft else '')+f'''import CanonicalPartial
+    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import {graph_names[g]}\n' for g in modules)+('import PartialPrefixAudit\nimport FastKey\n' if nleft else '')+f'''import CanonicalPartial
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option Elab.async false
@@ -224,14 +232,22 @@ theorem nohalt : weightedTNFNoAssignedHalt p := by
 
 '''
     if nleft:
+        expected_keys=sorted(packed_key(t) for j,t in unresolved if j==i)
+        assert len(expected_keys)==nleft and len(set(expected_keys))==nleft
         source+=f'''def tree : PartialAudit := {emit_partial(trees[i],i)}
 theorem checked : partialPrefixCheck 10006 p tree = true := by decide
 def remaining := partialResiduals p tree
 theorem remaining_count : remaining.length = {nleft} := by decide
+def remainingKeys := remaining.map fun e => BB6.Agent50FastKey.tableCode e.2
+def expectedKeys : List Nat := {expected_keys}
+theorem remaining_key_set :
+    remainingKeys.all (fun k => expectedKeys.contains k) = true ∧
+    expectedKeys.all (fun k => remainingKeys.contains k) = true := by decide +kernel
 theorem local_sound (m : Machine) (hm : TNFQuotientCompatible p m) :
     WeightedBound 10006 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
   partialQuotientSound 10006 p tree root nohalt checked m hm
 #print axioms remaining_count
+#print axioms remaining_key_set
 #print axioms local_sound
 '''
     else:

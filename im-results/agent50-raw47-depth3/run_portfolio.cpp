@@ -6,9 +6,7 @@
 #undef main
 
 int main(int argc,char**argv) {
-  if(argc < 2 || std::string(argv[1])!="portfolio")
-    return raw47_original_main(argc,argv);
-  if(argc!=4) return 2;
+  if(argc!=4 || std::string(argv[1])!="portfolio")return 2;
   std::ifstream bank(argv[2]);
   if(!bank) return 2;
   int cap=std::stoi(argv[3]);
