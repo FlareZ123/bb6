@@ -35,7 +35,7 @@ def allOne (p : OneParams) : Nat → S → Bool
 theorem scan_add (p : OneParams) (n m : Nat) (s : S) (r : Nat) :
     scan p (n+m) s r = scan p m (scan p n s r).1 (scan p n s r).2 := by
   induction n generalizing s r with
-  | zero => rfl
+  | zero => simp [scan]
   | succ n ih => rw [Nat.succ_add,scan,scan,ih]
 
 theorem scan_shift (p : OneParams) (n : Nat) (s : S) (r d : Nat) :
@@ -45,10 +45,11 @@ theorem scan_shift (p : OneParams) (n : Nat) (s : S) (r d : Nat) :
   | zero => rfl
   | succ n ih =>
     simp only [scan,allOne]
-    cases hw : wr (one p s)
-    · simp [inc,hw]
+    by_cases hw : wr (one p s) = true
     · simp only [inc,hw,if_true,Bool.true_and]
       rw [show r+d+1=r+1+d by omega,ih]
+    · have hf : wr (one p s) = false := Bool.eq_false_iff.mpr hw
+      simp [inc,hf]
 
 /-- The finite check is over just the 216 one-transition triples and six
     residues, not over all machines or unbounded lengths. At length at
@@ -115,10 +116,11 @@ theorem count_shift (l : List Code) (r d : Nat) :
   | nil => rfl
   | cons c cs ih =>
     simp only [countList,List.all_cons]
-    cases hw : wr c
-    · simp [inc,hw]
+    by_cases hw : wr c = true
     · simp only [inc,hw,if_true,Bool.true_and]
       rw [show r+d+1=r+1+d by omega,ih]
+    · have hf : wr c = false := Bool.eq_false_iff.mpr hw
+      simp [inc,hf]
 
 theorem count_all (l : List Code) (r : Nat) (h : l.all wr = true) :
     countList l r = r+l.length := by
@@ -179,12 +181,12 @@ theorem step_period (p : Params) (r : Fin 6) (k : Nat) :
       match tailCodes p h.1 with
       | none => Outcome.drift
       | some l => Outcome.next (countList l (h.2+ if allOne p.o 6 h.1 then 6*k else 0))) with
-    | .halt => .halt | .drift => .drift | .next m => .next (classOf m)) =
+    | Outcome.halt => Outcome.halt | Outcome.drift => Outcome.drift | Outcome.next m => Outcome.next (classOf m)) =
     (match (if h.1=0 then Outcome.halt else
       match tailCodes p h.1 with
       | none => Outcome.drift
       | some l => Outcome.next (countList l h.2)) with
-    | .halt => .halt | .drift => .drift | .next m => .next (classOf m))
+    | Outcome.halt => Outcome.halt | Outcome.drift => Outcome.drift | Outcome.next m => Outcome.next (classOf m))
   by_cases ha : h.1=0
   · simp [ha]
   · simp only [ha,if_false]
@@ -203,7 +205,7 @@ theorem step_period (p : Params) (r : Fin 6) (k : Nat) :
           change (scan p.o 6 h.1 h.2).1=h.1 ∧
             (if allOne p.o 6 h.1 then (scan p.o 6 h.1 h.2).2=h.2+6 ∧ n≤h.2+2
              else (scan p.o 6 h.1 h.2).2=h.2) at hf
-          rw [hb,if_true] at hf
+          simp only [hb, ite_true, eq_self] at hf
           have hc := count_all l h.2 hl
           have hlen := tail_length p h.1 l ht
           have h8 : 8≤countList l h.2 := by dsimp [n] at hf; omega
