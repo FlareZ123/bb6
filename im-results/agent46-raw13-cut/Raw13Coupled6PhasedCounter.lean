@@ -57,4 +57,54 @@ theorem checked : PhaseCounter.Checked p cert := by constructor <;> decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := PhaseCounter.never p cert checked m hm
 #print axioms never
 end M1RB
+
+namespace ThreePhase
+def phases (i : Fin 3) : Phase :=
+  match i.val with
+  | 0 => ⟨5,[true,false],[false,true,false,true,true,true],[true]⟩
+  | 1 => ⟨0,[false,false,false],[false,true,false,true,true,true],[]⟩
+  | _ => ⟨0,[false,false,false],[false,true,false,true,true,true],[false,true,true]⟩
+def shape : PhaseCounter.Shape 3 :=
+  ⟨[false,true,false,true,false,true],[false,true,false,true,true,true],phases,fun i => ⟨(i.val+1)%3,by omega⟩,fun i => if i.val=2 then [false] else []⟩
+
+namespace F0RA
+/-- 1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RA -/
+def p : PartialMachine := FAR.fromCodes [7,14,11,19,2,19,21,0,13,3,24,1]
+def incF : Macro := ⟨([.step] ++ [.right [false] [true,false,true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [false,false]) (.lit [false,true,false,true,false,true]) 8] ++ List.replicate 15 .step ++ [.left [true,true,true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [false,false]) (.lit [true,true]) 6] ++ List.replicate 24 .step),14,40⟩
+def incA : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit [false,true,false,true,false,true]) 8] ++ List.replicate 13 .step ++ [.left [true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true,true]) 6] ++ List.replicate 24 .step),14,40⟩
+def enter : Macro := ⟨([.step] ++ [.right [false] [true,false,true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [false,false]) (.lit [true]) 8] ++ List.replicate 8 .step ++ [.left [true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [false,false]) (.lit []) 6] ++ List.replicate 20 .step),14,29⟩
+def phase1 : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit []) 8] ++ List.replicate 9 .step ++ [.left [true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true]) 6] ++ List.replicate 22 .step),14,34⟩
+def exit : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit [false,true,true]) 8] ++ List.replicate 12 .step ++ [.left [true,true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true]) 6] ++ List.replicate 26 .step),14,41⟩
+def normal (i : Fin 3) : Macro := if i.val=0 then incF else incA
+def overflow (i : Fin 3) : Macro :=
+  match i.val with
+  | 0 => enter
+  | 1 => phase1
+  | _ => exit
+def cert : PhaseCounter.Cert 3 := ⟨ThreePhase.shape,32,0,[],normal,overflow⟩
+theorem checked : PhaseCounter.Checked p cert := by constructor <;> decide
+theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := PhaseCounter.never p cert checked m hm
+#print axioms never
+end F0RA
+
+namespace F0RB
+/-- 1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RB -/
+def p : PartialMachine := FAR.fromCodes [7,14,11,19,2,19,21,0,13,3,24,5]
+def incF : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,false,false]) (.lit [false,true,false,true,false,true]) 8] ++ List.replicate 13 .step ++ [.left [true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,false,false]) (.lit [true,true]) 6] ++ List.replicate 24 .step),14,40⟩
+def incA : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit [false,true,false,true,false,true]) 8] ++ List.replicate 13 .step ++ [.left [true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true,true]) 6] ++ List.replicate 24 .step),14,40⟩
+def enter : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,false,false]) (.lit [true]) 8] ++ List.replicate 6 .step ++ [.left [true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,false,false]) (.lit []) 6] ++ List.replicate 20 .step),14,29⟩
+def phase1 : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit []) 8] ++ List.replicate 9 .step ++ [.left [true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true]) 6] ++ List.replicate 22 .step),14,34⟩
+def exit : Macro := ⟨(List.replicate 3 .step ++ [.right [false] [true,true,true] [false,true,false,true,true,true] [true,true,true,true,true,true] (.lit [true,true,true,false,false]) (.lit [false,true,true]) 8] ++ List.replicate 12 .step ++ [.left [true,true,true,true,true,true,true,true,true] [] [true,true,true,true,true,true] [false,true,false,true,false,true] (.lit [true,true,true,false,false]) (.lit [true]) 6] ++ List.replicate 26 .step),14,41⟩
+def normal (i : Fin 3) : Macro := if i.val=0 then incF else incA
+def overflow (i : Fin 3) : Macro :=
+  match i.val with
+  | 0 => enter
+  | 1 => phase1
+  | _ => exit
+def cert : PhaseCounter.Cert 3 := ⟨ThreePhase.shape,32,0,[],normal,overflow⟩
+theorem checked : PhaseCounter.Checked p cert := by constructor <;> decide
+theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := PhaseCounter.never p cert checked m hm
+#print axioms never
+end F0RB
+end ThreePhase
 end BB6.Agent46Raw13PhasedCounter

@@ -32,3 +32,12 @@ If F(k) denotes the time to fill k zero digits to all ones, then F(0)=0 and F(k+
 The full return from phase 0 all zero width k to phase 0 all zero width k+1 includes the outer fill, giving the especially simple times 264·2^k - 112 and 248·2^k - 102 respectively. Every abstract transition has strictly positive cost. Every finite bit list either has an all-ones overflow or a normal carry, hence the phase language supplies unbounded live prefixes in every completion. No F0 query occurs.
 
 The new generic Agent46PhaseCounterCheck.lean handles finite phase controllers with arbitrary phase frames, successor phases, extension words, and zero-inclusive symbolic carry lengths. Raw13Coupled6PhasedCounter.lean contains the twelve distinct concrete macros (two normal and four overflow for each table), plus exact seed and soundness statements. Source-level acceptance pending; do not count these leaves until the pinned CI run passes. The formal theorem proves nonhalting; the exact costs above follow from the checked macro costs and the elementary binary-fill recurrence.
+
+## Three-phase variants: B1=1RE
+
+The same controller theorem handles two more literal leaves:
+
+- `1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RA`
+- `1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RB`
+
+The phase frames use the same P=010111, but six-bit digits D0=010101 and D1=010111. Retain phases 0, 1, 2 only; the phase-2 overflow goes directly to phase 0, appending one zero. The seed remains step 32. Exact all-width normal carries cost 14j+40, and overflow costs are 14k+29, 14k+34, 14k+41. The same two-sweep structure is checked by ten literal macros. The complete return from phase 0 width k zeros to phase 0 width k+1 zeros costs 3(54(2^k-1)-14k)+42k+104 = 162·2^k-58. Both F1=0RA and F1=0RB are independently represented; no assumption of equivalent transitions is needed. Source acceptance pending.
