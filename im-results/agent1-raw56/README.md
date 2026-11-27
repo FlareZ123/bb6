@@ -47,6 +47,10 @@ Original Lean 4.36.0-rc2 was reconstructed locally. The base is the source-accep
 
 `prepare_rc_unary.py OUT` regenerates both cuts and FAR banks with SHA-256 pins, plus the sparse data via Agent47's exact emitter; compile the four handwritten leaf modules and `UnarySweep` first, then each generated manifest and the consumer. The source-checked local refinements do not reduce the global roster. Discovery has also exposed a late C1=0LF query at 9474 steps, so any complete E1=0RC proof must use a larger weighted bound than 7014.
 
+## Complete candidate coverage of the other sixteen C1 choices
+
+See [Portfolio.md](Portfolio.md) for the exact replay spec, combined abstraction method, and mixed-bound requirement. Every remaining C1 choice is candidate-complete; the full source checks and mixed-bound consumer are still outstanding. No local parent or global roster closure is asserted.
+
 ## Reproduction of C1=1RD
 
 Run `python im-results/agent1-raw56/prepare_rc_rd.py /tmp/raw56-rc-rd` from the repository. Compile M3 and the generated modules in the order of generated/manifest.json with the accepted base artifact on LEAN_PATH, then the cut and consumer. The exact original classifier and FAR source blobs are checked by the preparation script. The tree, open list, exhaustive FAR and combined witness bank SHA-256 digests are pinned in the script. The candidate computation is untrusted; the universal bound comes from the kernel-checked canonical certificate and source semantics.
