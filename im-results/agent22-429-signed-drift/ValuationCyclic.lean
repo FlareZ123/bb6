@@ -48,6 +48,37 @@ private theorem periodic_int_mul (N : Int) (f : Int → Nat)
       rw [hh]
       exact periodic_nat_sub N f hperiod x (k+1)
 
+theorem periodic_past_constant (n : Nat) (f : Int → Nat)
+    (hn : 0 < n)
+    (hper : ∀ i : Int, f (i+(n:Int))=f i)
+    (a : Int) (c : Nat)
+    (hall : ∀ k : Nat, 0 < k → f (a-(k:Int))=c) :
+    ∀ i : Int, f i=c := by
+  intro i
+  let N : Int := (n:Int)
+  let w : Int := a-1-i
+  let rem : Int := w%N
+  let q : Int := w/N
+  have hNpos : 0 < N := by dsimp [N]; omega
+  have hr0 : 0 ≤ rem := Int.emod_nonneg w (by omega : N ≠ 0)
+  have hrlt : rem < N := Int.emod_lt_of_pos w hNpos
+  let k : Nat := rem.toNat+1
+  have hkpos : 0 < k := by dsimp [k]; omega
+  have hcast : (rem.toNat:Int)=rem := Int.toNat_of_nonneg hr0
+  have hdiv : w=rem+q*N := by
+    have he := Int.emod_def w N
+    have hc := Int.mul_comm N (w/N)
+    dsimp [rem,q] at *
+    omega
+  have ha : a-(k:Int)=i+q*N := by
+    dsimp [k,w] at *
+    omega
+  have hv := hall k hkpos
+  rw [ha] at hv
+  have hp := periodic_int_mul N f hper i q
+  rw [hp] at hv
+  exact hv
+
 def MinimalPeriod (n : Nat) (j : Int → Nat) : Prop :=
   ∀ d : Nat, 0 < d → d < n →
     ∃ i : Int, j (i+(d:Int)) ≠ j i
@@ -125,7 +156,7 @@ theorem no_primitive_periodic_slope (K n : Nat) (v j : Int → Nat)
     omega
   exact no_primitive_window K n v j h hprim hpos hK
 
+#print axioms periodic_past_constant
 #print axioms no_primitive_periodic_slope
 #print axioms minimal_period_backward_primitive
-#print axioms periodic_int_mul
 end ValuationPacking
