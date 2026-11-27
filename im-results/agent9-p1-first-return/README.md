@@ -4,6 +4,8 @@
 
 **New computational method:** [Exact reverse-block and prefix-only carry](../agent9-p1-reverse-block/README.md) extends the finite experimental range and removes terminal endpoint propagation. See the linked dossier for current evidence and remaining exceptions.
 
+**Sharded paired-clock certificates (in progress).** [PairChunks.lean](PairChunks.lean) and [gen_pair_chunks.py](gen_pair_chunks.py) construct bounded-memory kernel checks from the original paired-clock cover. Each checkpoint is an untrusted packed integer, and each equality is checked by `decide +kernel` in a fresh group of Lean modules. An explicit exception list may retain common-clock survivors, which are then tested at their own full modular horizon; the final interval theorem must close every exception. Exact Python proposal for 22,502..33,750 found one common-clock survivor, 31,634, whose singleton proposal has no surviving center. Full original-source numerical CI is pending; no new certified interval is claimed yet. The unsharded local arithmetic attempt exhausted the 4 GiB cgroup, motivating module boundaries rather than another monolithic check.
+
 ## Main theorems and status
 
 | Original-source consequence | Lean file | Exact-source CI |
