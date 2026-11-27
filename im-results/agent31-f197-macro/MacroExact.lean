@@ -5,10 +5,13 @@ namespace F197
 /-- Exact-cost iterator for the already-verified four-phase macro machine. -/
 def macroRunExact : Nat → MacroConfig → Option (Nat × MacroConfig)
   | 0, m => some (0, m)
-  | k+1, m => do
-      let (n, m') ← macroStep m
-      let (s, m'') ← macroRunExact k m'
-      some (n+s, m'')
+  | k+1, m =>
+      match macroStep m with
+      | none => none
+      | some (n, m') =>
+          match macroRunExact k m' with
+          | none => none
+          | some (s, m'') => some (n+s, m'')
 
 theorem macroRunExact_sound (k : Nat) (m : MacroConfig) (tot : Nat)
     (m' : MacroConfig) (hv : valid m)
@@ -22,19 +25,18 @@ theorem macroRunExact_sound (k : Nat) (m : MacroConfig) (tot : Nat)
   | succ k ih =>
       simp only [macroRunExact] at h
       cases hs : macroStep m with
-      | none => simp [hs] at h
+      | none =>
+          simp [hs] at h
       | some nm =>
           rcases nm with ⟨n, m1⟩
           rw [hs] at h
-          change (match macroRunExact k m1 with
-            | none => none
-            | some sm => some (n + sm.1, sm.2)) = some (tot, m') at h
           cases hr : macroRunExact k m1 with
-          | none => simp [hr] at h
+          | none =>
+              simp [hr] at h
           | some sm =>
               rcases sm with ⟨s, m2⟩
               rw [hr] at h
-              simp only [Option.bind_some, Option.some.injEq, Prod.mk.injEq] at h
+              simp only [Option.some.injEq, Prod.mk.injEq] at h
               rcases h with ⟨rfl, rfl⟩
               have hstep : run n (physical m) = some (physical m1) :=
                 macro_sound hv hs
