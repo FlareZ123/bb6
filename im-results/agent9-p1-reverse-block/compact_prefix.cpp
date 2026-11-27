@@ -210,8 +210,9 @@ int main(int argc,char**argv){
  if(argc<4||argc>6)return 2;
  bb6_shifted::fit_mode=0; // legacy default until measured selection
  if(auto p=std::getenv("P1_FIT")){auto x=std::stoul(p);if(x>7)return 2;bb6_shifted::fit_mode=unsigned(x);}
- if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>26)return 2;jump_limit=unsigned(x);}
+ if(auto p=std::getenv("P1_JUMP")){auto x=std::stoul(p);if(x>30)return 2;jump_limit=unsigned(x);}
  if(auto p=std::getenv("P1_FUSE")){auto x=std::stoul(p);if(x<1||x>256)return 2;fusion_limit=unsigned(x);}
+ if(auto p=std::getenv("P1_PLAN")){auto x=std::stoul(p);if(x>1)return 2;bb6_jump::bitmap_plan=bool(x);}
  U probeVisits=0,probeWidth=65536;
  bool probeOnly=false;
  if(auto p=std::getenv("P1_PROBE"))probeVisits=std::stoull(p);
