@@ -14,6 +14,7 @@ on:
         options:
           - zerolf
           - raw139-local
+          - e0-counts
       parent_run_id:
         description: Completed conditional parent audit run (empty for proof-only)
         type: string
@@ -87,6 +88,42 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' "$out/log"
           grep -F "'$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" "$out/log"
           find /tmp/agent14-zeroLF3862 -name '*.olean' -exec cp '{}' "$out/build/" ';'
+      - name: Audit finite normalized E0 cuts
+        if: inputs.kind == 'e0-counts'
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          work=/tmp/agent14-e0-counts
+          mkdir -p "$work"
+          python3 tools/lean_compile_closure.py \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsFinite.lean \
+            --workdir "$work/build" \
+            --jobs 4 \
+            --manifest "$work/manifest.json" \
+            --label agent14-raw139-e0-counts \
+            --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
+            --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
+            --override FastFAR=im-results/agent7-far/FastFAR.lean \
+            --override SideCycle=im-results/agent50-weighted-tnf-pilot/SideCycle.lean \
+            --override WeightedTNFQueueOrbit=im-results/agent13-weighted-first-one/WeightedTNFQueueOrbit.lean \
+            --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
+            --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
+            --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            | tee "$work/log"
+          ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Six_count' does not depend on any axioms" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedE0CutsFinite.normalizedAfterAcceptedE0Seven_count' does not depend on any axioms" "$work/log"
+      - uses: actions/upload-artifact@v4
+        if: inputs.kind == 'e0-counts'
+        with:
+          name: agent14-raw139-e0-counts
+          path: |
+            /tmp/agent14-e0-counts/log
+            /tmp/agent14-e0-counts/manifest.json
+            /tmp/agent14-e0-counts/build/Raw139NormalizedE0CutsFinite.olean
+          if-no-files-found: error
+          retention-days: 14
+
       - name: Reconstruct generated Raw139 sibling sources
         if: inputs.kind == 'raw139-local'
         run: |
