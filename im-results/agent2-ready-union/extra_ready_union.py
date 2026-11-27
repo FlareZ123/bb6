@@ -14,11 +14,12 @@ u, a68, base, selected = resume.u, resume.a68, resume.base, resume.selected
 HERE, REPO = resume.HERE, resume.REPO
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 PARENTS = {
+    "122": ("BB6.Agent43Raw122SharpParent", 6659487, "1RB---_1RC---_0RD---_1LD1RE_---0LF_------"),
     "63": ("BB6.Agent2Raw63", 358, "1RB---_1RC1LA_0RD---_1LD1RE_---0LB_------"),
     "61": ("BB6.Agent31Raw61", 1962, "1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------"),
     "67": ("BB6.Agent10Raw67", 808, "1RB---_1RC1LB_0RD---_1LD1RE_---0LB_------"),
 }
-RUNS = {"63": 45948590270, "61": 46032302566, "67": 46034483043, "59": 45897242410}
+RUNS = {"63": 45948590270, "61": 46032302566, "67": 46034483043, "59": 45897242410, "122": 45866162212}
 
 
 def artifact(run_id, name):
@@ -77,14 +78,15 @@ def restore_ready(work, linked, prior, run_id):
 
 def prepare_prefix(raw, run_id, folder, evidence):
     ns, bound, table = PARENTS[raw]
-    module = f"Raw{raw}ParentCover"
-    run, item, pin = artifact(run_id, f"raw{raw}-prefix-parent-certified")
+    module = "Raw122SharpParent" if raw == "122" else f"Raw{raw}ParentCover"
+    theorem = ns + (".parent_bound" if raw == "122" else ".literal_cover")
+    run, item, pin = artifact(run_id, "raw122-sharp-parent" if raw == "122" else f"raw{raw}-prefix-parent-certified")
     dirs = a68.download(pin, folder)
     metadata = folder / "metadata" / str(item["id"])
     manifests = []
     for path in metadata.rglob("*.json"):
         report = json.loads(path.read_text())
-        if (report.get("claim") or {}).get("theorem") == ns + ".literal_cover":
+        if (report.get("claim") or {}).get("theorem") == theorem:
             manifests.append((path, report))
     assert len(manifests) == 1
     path, report = manifests[0]
@@ -103,7 +105,7 @@ def prepare_prefix(raw, run_id, folder, evidence):
     shutil.copy2(path, evidence / f"raw{raw}-manifest.json")
     return {"label": "raw" + raw, "root": module, "run_id": run_id,
             "artifact_id": item["id"], "artifact_sha256": pin[2],
-            "revision": run["head_sha"], "theorem": ns + ".literal_cover",
+            "revision": run["head_sha"], "theorem": theorem,
             "bound": bound, "table": table}, dirs
 
 
@@ -113,7 +115,7 @@ def generate(raws, prior, prior_ns, folder):
     module = f"Canonical{count}Extra" + "R".join(raws)
     ns = "BB6.Agent31" + module
     text = ["import " + Path(prior["root"]).stem]
-    text += ["import Raw59KernelSlice" if r == "59" else f"import Raw{r}ParentCover" for r in raws]
+    text += ["import Raw59KernelSlice" if r == "59" else "import Raw122SharpParent" if r == "122" else f"import Raw{r}ParentCover" for r in raws]
     template = (HERE / "Canonical46SevenReadyAfterSharp.lean").read_text()
     header = template[template.index("set_option"):template.index("abbrev p106")]
     text.append(header.replace("BB6.Agent2Canonical46SevenReady", ns))
@@ -131,13 +133,14 @@ theorem p59_cover : Cover (WeightedBound 6766859) p59 := by
 """
         else:
             pns, bound, _ = PARENTS[raw]
-            parent = pns + ".literalParent"
+            parent = "BB6.Agent43Raw122.parent" if raw == "122" else pns + ".literalParent"
+            proof = pns + (".parent_bound" if raw == "122" else ".literal_cover.sound")
             extra = f"""
 theorem p{raw}_cover : Cover (WeightedBound 6766859) p{raw} := by
   apply Cover.leaf
   intro m hm k d hk hd
   exact Nat.le_trans
-    ({pns}.literal_cover.sound m hm k d hk hd)
+    ({proof} m hm k d hk hd)
     (by decide : {bound} ≤ 6766859)
 """
         text.append(f"""
@@ -175,7 +178,8 @@ theorem raw59_count :
 """)
     tail = template[template.index("theorem sound_integrated"):template.index("#print axioms")]
     text.append(tail.replace("BB6.Agent2Canonical53FourSharp", prior_ns)
-                .replace("roster53", f"roster{n}").replace("roster46", f"roster{count}"))
+                .replace("roster46", "__NEW_ROSTER__").replace("roster53", f"roster{n}")
+                .replace("__NEW_ROSTER__", f"roster{count}"))
     names = [f"p{r}_count{n}" for r in raws] + [f"p{r}_cover" for r in raws]
     if "59" in raws:
         names.append("p59_source_eq")
