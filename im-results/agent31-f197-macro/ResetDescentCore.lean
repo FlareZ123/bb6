@@ -23,7 +23,7 @@ theorem reset_descent_middle_s_321 (l r : Tape) :
         (pre [true, false, false, true, true, false, false, true, false,
               true, false, true, true, false, false, true, false, true,
               false, true, false, true, true, false, false, true, false] l)
-        (pre [false, true, true, true, true, false, false, false, true,
+        (pre [false, false, true, true, true, true, false, false, false, true,
               true, true, true, true, false, false, false, true, true,
               true, true, true, false, false, false, true, true, true,
               true, true, false, false, false] r)) =
@@ -35,7 +35,7 @@ theorem reset_descent_middle_s_321 (l r : Tape) :
               false, true, false, true, true, false, false, true, false,
               true, false, true, true, false, false, true, true, false,
               false, true, false] l)
-        (pre [false, true, false, true, true, true, true, true, false,
+        (pre [false, false, true, false, true, true, true, true, true, false,
               false, false] r)) := rfl
 
 /-- n = 3 middle core, where the preserved right suffix is the terminal d. -/
@@ -45,7 +45,7 @@ theorem reset_descent_middle_d_321 (l : Tape) :
         (pre [true, false, false, true, true, false, false, true, false,
               true, false, true, true, false, false, true, false, true,
               false, true, false, true, true, false, false, true, false] l)
-        (pre [false, true, true, true, true, false, false, false, true,
+        (pre [false, false, true, true, true, true, false, false, false, true,
               true, true, true, true, false, false, false, true, true,
               true, true, true, false, false, false, true, true] blank)) =
     some
@@ -56,7 +56,7 @@ theorem reset_descent_middle_d_321 (l : Tape) :
               false, true, false, true, true, false, false, true, false,
               true, false, true, true, false, false, true, true, false,
               false, true, false] l)
-        (pre [false, true, false, true, true] blank)) := rfl
+        (pre [false, false, true, false, true, true] blank)) := rfl
 
 /-- n = 2 endpoint after the P-consumer: u s d is exhausted and the machine
     returns directly to right e, appending K=TATP on the left. -/
@@ -66,7 +66,7 @@ theorem reset_descent_n2_middle_316 (l : Tape) :
         (pre [true, false, false, true, true, false, false, true, false,
               true, false, true, true, false, false, true, false, true,
               false, true, false, true, true, false, false, true, false] l)
-        (pre [false, true, true, true, true, false, false, false, true,
+        (pre [false, false, true, true, true, true, false, false, false, true,
               true, true, true, true, false, false, false, true, true] blank)) =
     some
       (other B
@@ -75,7 +75,7 @@ theorem reset_descent_n2_middle_316 (l : Tape) :
               false, true, false, true, true, false, false, true, false,
               true, true, false, false, true, false, true, false, true,
               true, false, false, true, true, false, false, true, false] l)
-        (pre [false, true] blank)) := rfl
+        (pre [false, false, true] blank)) := rfl
 
 #print axioms reset_descent_middle_s_321
 #print axioms reset_descent_middle_d_321
