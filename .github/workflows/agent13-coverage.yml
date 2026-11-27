@@ -2955,6 +2955,8 @@ jobs:
             python im-results/agent10-tnf-multipump/generate.py 66 70 80
             bash im-results/agent7-raw49/prepare.sh /tmp/raw49-generated
             test -s /tmp/raw49-generated/child0/Raw49C0All.lean
+            test -s /tmp/raw49-generated/child1/Raw49C1All.lean
+            test -s /tmp/raw49-generated/child7/Raw49C7All.lean
             test -s /tmp/raw49-generated/child2/Raw49C2All.lean
             test -s /tmp/raw49-generated/child5/Raw49C5All.lean
             test -s /tmp/raw49-generated/child3/Raw49C3All.lean
@@ -2999,7 +3001,7 @@ jobs:
           elif [ "$TARGET" = weighted-tnf-raw55-progress ]; then
             target=im-results/agent25-raw55/Raw55Progress.lean
           elif [ "$TARGET" = weighted-tnf-raw49-progress ]; then
-            target=im-results/agent7-raw49/Raw49Progress115.lean
+            target=im-results/agent7-raw49/Raw49Progress113.lean
           elif [ "$TARGET" = weighted-tnf-raw47-far5 ]; then
             target=im-results/agent19-d1-pilot/Raw47Far5Agent31Graft.lean
           elif [ "$TARGET" = weighted-tnf-raw47-depth3-far6 ]; then
@@ -3008,6 +3010,8 @@ jobs:
           if [ "$TARGET" = weighted-tnf-raw49-progress ]; then
             python tools/lean_compile_closure.py \
               --source-root /tmp/raw49-generated/child0 \
+              --source-root /tmp/raw49-generated/child1 \
+              --source-root /tmp/raw49-generated/child7 \
               --source-root /tmp/raw49-generated/child2 \
               --source-root /tmp/raw49-generated/child5 \
               --source-root /tmp/raw49-generated/child3 \
@@ -3042,6 +3046,12 @@ jobs:
               "BB6.Agent7.Raw49C8.all_quotient",
               "BB6.Agent7Raw49Progress115.refined",
               "BB6.Agent7Raw49Progress115.residual_count",
+              "BB6.Agent7Raw49Doubling.never",
+              "BB6.Agent7Raw49C1Guard.never",
+              "BB6.Agent7.Raw49C1.all_quotient",
+              "BB6.Agent7.Raw49C7.all_quotient",
+              "BB6.Agent7Raw49Progress113.refined",
+              "BB6.Agent7Raw49Progress113.residual_count",
           ]
           for name in names:
               m = re.search(r"'" + re.escape(name) + r"' depends on axioms: \[([^\]]*)\]", log)
@@ -3106,7 +3116,7 @@ jobs:
         if: inputs.target == 'weighted-tnf-raw49-progress'
         uses: actions/upload-artifact@v4
         with:
-          name: raw49-progress-proof-115
+          name: raw49-progress-proof-113
           path: |
             /tmp/raw49-generated/child*/*.lean
             /tmp/raw49-generated/trials/*

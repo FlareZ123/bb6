@@ -7,6 +7,31 @@ pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
 known_proven={
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0LA0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .la0 false","BB6.Agent7Raw49C1Guard.never .la0 false"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0LA0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .la0 true","BB6.Agent7Raw49C1Guard.never .la0 true"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0LD0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .ld0 false","BB6.Agent7Raw49C1Guard.never .ld0 false"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0LD0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .ld0 true","BB6.Agent7Raw49C1Guard.never .ld0 true"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0RD0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .rd0 false","BB6.Agent7Raw49C1Guard.never .rd0 false"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0RD0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .rd0 true","BB6.Agent7Raw49C1Guard.never .rd0 true"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1LA0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .la1 false","BB6.Agent7Raw49C1Guard.never .la1 false"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1LA0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .la1 true","BB6.Agent7Raw49C1Guard.never .la1 true"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1LD0LF_0RF1RA": ("BB6.Agent7Raw49C1Guard.table .ld1 false","BB6.Agent7Raw49C1Guard.never .ld1 false"),
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1LD0LF_1RF1RA": ("BB6.Agent7Raw49C1Guard.table .ld1 true","BB6.Agent7Raw49C1Guard.never .ld1 true"),
+    "1RB0LE_1RC0RF_0RD0LA_1LD1RC_0LE1LA_1RA---": "BB6.Agent7Raw49MutatedFAR.M110",
+    "1RB0LE_1RC0RF_0RD0LA_1LD1RC_1RD1LA_1RA---": "BB6.Agent7Raw49MutatedFAR.M111",
+    "1RB0LE_1RC1LE_0RD0LA_1LD1RC_1RF1LB_0RA---": "BB6.Agent7Raw49AutoSweeps.M112",
+    "1RB0LE_1RC0RE_0RD0LA_1LD1RC_1RF1LC_1RA---": "BB6.Agent7Raw49AutoSweeps.M113",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_0LF1LE_0LA1RA": "BB6.Agent7Raw49MutatedFAR.M114",
+    "1RB0LE_1RC1LF_0RD0LA_1LD1RC_0RA1LF_0LB---": "BB6.Agent7Raw49MutatedFAR.M115",
+    "1RB0LE_1RC0RA_0RD0LA_1LD1RC_0RF1LF_1LA---": "BB6.Agent7Raw49AutoSweeps.M116",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1RB1LF_1LB0RA": "BB6.Agent7Raw49MutatedFAR.M117",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1RB1LF_1LB0RF": "BB6.Agent7Raw49AutoSweeps.M118",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1RB1LF_1LB1RA": "BB6.Agent7Raw49MutatedFAR.M119",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1RB1LF_1LB1RD": "BB6.Agent7Raw49MutatedFAR.M120",
+    "1RB0LE_1RC0RF_0RD0LA_1LD1RC_1LA1RE_1RB---": "BB6.Agent7Raw49MutatedFAR.M121",
+    "1RB0LE_1RC0LF_0RD0LA_1LD1RC_1RA1RE_---1LB": "BB6.Agent7Raw49Doubling",
+    "1RB0LE_1RC1LF_0RD0LA_1LD1RC_0RA1RF_0LB---": "BB6.Agent7Raw49MutatedFAR.M123",
+    "1RB0LE_1RC---_0RD0LA_1LD1RC_1LA1RF_1RF0RB": "BB6.Agent7Raw49MutatedFAR.M124",
     "1RB1RA_1RC0LE_0RD0LA_1LD1RC_0LA0LF_---1LB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .a","BB6.Agent7Raw49C7Sweeps.Triple.never .a"),
     "1RB1RA_1RC0LE_0RD0LA_1LD1RC_1LB0LF_---1LB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .b","BB6.Agent7Raw49C7Sweeps.Triple.never .b"),
     "1RB1RA_1RC0LE_0RD0LA_1LD1RC_1LB1LF_---0RB": ("BB6.Agent7Raw49C7Sweeps.Triple.table .c","BB6.Agent7Raw49C7Sweeps.Triple.never .c"),
@@ -98,6 +123,10 @@ import Raw49Alternating
 import Raw49ThreeSweeps
 import Raw49SixSweeps
 import Raw49C7Sweeps
+import Raw49C1Guard
+import Raw49AutoSweeps
+import Raw49MutatedFAR
+import Raw49Doubling
 {head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
