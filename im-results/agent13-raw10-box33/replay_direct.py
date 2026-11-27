@@ -100,6 +100,9 @@ def run_direct(args):
     if (d,v)==(17,23):
         hard=json.loads((HERE/'d17v23-hard.json').read_text())['machines']
         specs=[[[5,6,8,9,12,13,15,16],"Box33D17V23Block5"],[[7,10,14,17],"Box33D17V23Block7"],[[19],"Box33D17V23Block19"],[[24],"Box33D17V23Block24"],[[25],"Box33D17V23Block25"],[[1,2,3],"Box33D17V23Exact"],[[0,4,11],"Box33D17V23Anchored"]]
+        for i in [18,22,23]:
+            nm=f'm{i}';known[tuple(hard[i])]=nm
+            known_specs[nm]=('Box33D17V23Carry','BB6.Agent13.Box33D17V23Carry',f' .{nm}')
         known[tuple(hard[20])]='m20'
         known_specs['m20']=('Box33D17V23M20','BB6.Agent13.Box33D17V23M20','')
         known[tuple(hard[21])]='m21'
