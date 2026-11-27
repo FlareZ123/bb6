@@ -47,7 +47,7 @@ jobs:
           set -euo pipefail
           AG43=im-results/agent43-p1-high-cost-reset-count
           export LEAN_PATH="$AG43:im-results/agent9-p1-first-return:im-results/agent45-p1-delayed-carry:im-results/agent28-p1-modular-screen:im-results/agent28-p1-delayed-carry:im-results/agent9-p1-reverse-block:im-results/agent1-p1-map:im-results/agent47-p1-finite-inverse:im-results/agent1-p1-quarter:im-results/agent50-p1-residue:im-results/agent50-p1-dyadic-width:im-results/agent28-p1-word-automaton:im-results/agent28-p1-full-prefix:im-results/agent50-p1-subwall"
-          python tools/lean_compile_deps.py "$AG43/LagPair.lean" | tee /tmp/lag-pair.log
+          python tools/lean_compile_deps.py "$AG43/LagPairSource.lean" | tee /tmp/lag-pair.log
           if grep -Eq 'sorryAx|error:' /tmp/lag-pair.log; then exit 1; fi
   block-shards:
     if: inputs.target == 'margin-block-parallel'
