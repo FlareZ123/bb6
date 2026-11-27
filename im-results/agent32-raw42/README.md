@@ -28,6 +28,17 @@ The first-hole cut and all three new modules were checked locally with Lean 4.36
 
 Each return increments n. The derivation decomposes it into two repeated-block transfers and fixed entry/turn/finish phases. Each transfer is a fixed primitive run over arbitrary untouched left and right tails. The symbolic simulator checks fixed phases without inspecting the repeated-word marker and transfers without inspecting either opaque tail. Exact recipes are in [wide_growth_recipes.json](wide_growth_recipes.json). The Lean implementation uses the original SweepPumping induction, with exact path-refinement equalities in the Cover adapters. The pinned source check [45993015276](https://github.com/FlareZ123/bb6/actions/runs/45993015276) passed all eight original-source Cover theorems and their standard-axiom checks. These eight subcylinders certify 8*25^5 = 78,125,000 additional normalized raw completions, without expanding the five remaining slots. The full Raw42 parent remains open.
 
+
+### Nested and two-run growth extensions (accepted)
+
+[Raw42NestedGrowth.lean](Raw42NestedGrowth.lean) and [Raw42NestedCuts.lean](Raw42NestedCuts.lean) add three more seven-transition cylinders:
+
+- B1=1LB, C1=0LD: B with empty left, right 01^(n+2)01^(2n+2), entry 15, return 4n+21 to n+1. The two growing runs are tracked independently by arbitrary-tail transfers.
+- B1=1LB, C1=0RD: B with empty left, right 01^b, entry 12 at b=4. Outer pass costs 4b+5 and enters B with right 1^b011. Inner pass maps 1^a01^c to 1^(a-1)01^(c+2), cost 4a+1; iterate to a=0. Hence b becomes 2b+2, total cost 2b^2+7b+5.
+- B1=1LC, C1=1LC: same outer family and entry 14; inner state is C for a>0, B at a=0. Inner pass costs 4a+3, giving total return 2b^2+9b+5 and b becomes 2b+2.
+
+The exact nested induction and Cover adapter passed [CI run 45993507004](https://github.com/FlareZ123/bb6/actions/runs/45993507004) on source revision 423208e5e23c300195d0cfffa9a730f9f084fbf8, with no nonstandard axioms. These three are disjoint from the previous eight, giving 11*25^5 = 107,421,875 additional raw normalized completions proved nonhalting. No full B1 child or parent closure is inferred.
+
 ## Remaining problem and method
 
 The 16 first-level children have 12 canonical representatives under fresh E/F renaming. A normalized first-hole discovery run using the existing [linear side-cycle scanner](../agent32-linear-side-cycle/README.md), cutoff 500, found 1723 retained leaves within B1=0RA alone (1523 with one unassigned slot, 184 with two, 14 with three, 2 with four). Both four-hole leaves are exactly the new inductive families above; the counts are untrusted search output before pruning and not a certified full tree. The promising route is to test uniform symbolic growth on highest-hole retained leaves before expanding, with FAR/prefix checkers for the remaining finite tree. Do not enumerate all six-state completions directly. The complete parent Cover and global roster consumption are still open.
