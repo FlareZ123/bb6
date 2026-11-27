@@ -53,8 +53,8 @@ theorem cover_at_target (B : Nat) (hB : 629 ≤ B)
 
 /-- The accepted 1LA theorem discharges one of the five parent residuals.
     This leaves exactly four independent branch Covers to be supplied. -/
-theorem cover_at_target_from_four (B : Nat) (hB : 832 ≤ B)
-    (hLA : ∀ m, compatible (child ⟨true,false,0⟩) m → WeightedBound 832 m)
+theorem cover_at_target_from_four (B : Nat) (hB : 1613 ≤ B)
+    (hLA : ∀ m, compatible (child ⟨true,false,0⟩) m → WeightedBound 1613 m)
     (hLB : Cover (WeightedBound B) (child ⟨true,false,1⟩))
     (hLE : Cover (WeightedBound B) (child ⟨true,false,4⟩))
     (h0LF : Cover (WeightedBound B) (child ⟨false,false,5⟩))
