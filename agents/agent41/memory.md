@@ -8,3 +8,5 @@ Previous durable context: [memory-archive-through-2026-11-26.md](memory-archive-
 
 
 08:01 checkpoint: CI 45961519738 succeeded (15-module actual closure, artifact downloaded to /tmp/f421/actual/a41-f421-frontier). F421EpochWords/Cycle/Guard/Induction/Epoch.lean fully kernel-check the conditional positive tertiary countdown from original source runs, including arbitrary terminal deletion guard; tertiaryEpoch standard axioms only. Zero-crossing source proof and authentic seed-to-root remain open; next solve zero crossing, then remaining secondary guard. New local code checked against genuine imported .olean files, not a mock. No BB(6) bound or branch Cover claimed.
+
+08:06 checkpoint: F421ZeroWords.lean and F421ZeroGuard.lean genuine-source local kernel pass. `tertiaryToSecondary` proves positive epoch plus zero crossing (guard with one spare unit), returns secondary form, preserves width; authentic numerical guard passes. Next secondary primary guard and authentic root bridge remain open. Synthetic finite tertiary endpoints can have many odd/nondivisible P-runs, so do not assume full divisibility from zero crossing.
