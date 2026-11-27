@@ -9,7 +9,7 @@ on:
       variant:
         description: Select the E0 transition
         type: choice
-        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps]
+        options: [zeroRC, oneRE, zeroRF, zeroLF, oneRF, oneRFProof, oneLFSearch, oneLFSweeps, oneLFLongCycle, oneLFTripleSweep]
         default: zeroRC
       recovery_run_id:
         description: Reuse oneRE roots (45846437127), zeroRC roots (45827711630), thirteen successful cut groups (45906701973), or the four remaining subparts (45916648450)
@@ -25,7 +25,7 @@ env:
   BOUND: ${{ inputs.variant == 'oneRE' && '19745' || inputs.variant == 'zeroRF' && '2043' || inputs.variant == 'zeroLF' && '19007' || inputs.variant == 'oneRF' && '6024' || '1673363' }}
 jobs:
   prepare:
-    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps'
+    if: inputs.recovery_run_id == '' && inputs.variant != 'oneRFProof' && inputs.variant != 'oneLFSearch' && inputs.variant != 'oneLFSweeps' && inputs.variant != 'oneLFLongCycle' && inputs.variant != 'oneLFTripleSweep'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     steps:
@@ -884,5 +884,36 @@ jobs:
         with:
           name: raw139-oneLF-alternating-certified
           path: .tmp/a6-oneLF-sweeps
+          include-hidden-files: true
+          retention-days: 14
+
+  certify-oneLF-holdout:
+    if: inputs.variant == 'oneLFLongCycle' || inputs.variant == 'oneLFTripleSweep'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      MODULE: ${{ inputs.variant == 'oneLFLongCycle' && 'LongCycle' || 'TripleSweep' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel check exact holdouts
+        run: |
+          set -euo pipefail
+          mkdir -p .tmp/a6-oneLF-holdout/build
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 tools/lean_compile_closure.py "im-results/agent6-raw139-e0-oneLF/$MODULE.lean" --workdir /tmp/a6-oneLF-holdout --jobs 2 --manifest .tmp/a6-oneLF-holdout/manifest.json --label "raw139-oneLF-$MODULE" | tee .tmp/a6-oneLF-holdout/log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/a6-oneLF-holdout/log
+          find /tmp/a6-oneLF-holdout -name '*.olean' -exec cp '{}' .tmp/a6-oneLF-holdout/build/ ';'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF-${{ env.MODULE }}-certified
+          path: .tmp/a6-oneLF-holdout
           include-hidden-files: true
           retention-days: 14
