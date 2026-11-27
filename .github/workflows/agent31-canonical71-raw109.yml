@@ -30,6 +30,7 @@ on:
           - canonical58-source-crosswalk
           - canonical55-raw83-graft
           - canonical55-raw106-raw79
+          - raw67-parent-reuse
           - canonical63-preflight
           - canonical65-three
           - canonical65-integrated
@@ -1906,6 +1907,58 @@ jobs:
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
+
+
+  raw67_parent_reuse:
+    name: Source-accept Raw67 with exact Raw106 object reuse
+    if: ${{ inputs.target == 'raw67-parent-reuse' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Reuse source-identical Raw106 objects and compile Raw67 remainder
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent31-raw106-79-canonical55/compile_raw67_reuse.py
+          python im-results/agent31-raw106-79-canonical55/compile_raw67_reuse.py \
+            --work /tmp/a31-raw67-reuse \
+            2>&1 | tee /tmp/a31-raw67-reuse.log
+          test -s /tmp/a31-raw67-reuse/output/report.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("/tmp/a31-raw67-reuse/output/report.json").read_text())
+          assert report["raw"] == "67"
+          assert report["parent"]["cover_theorem"] == "BB6.Agent10Raw67.parent_cover"
+          assert report["parent"]["bound"] == 808
+          assert report["raw106_reuse"]["reused_module_count"] > 0
+          assert report["compiled_source_module_count"] > 0
+          assert "sorryAx" not in str(report["parent"]["axioms"])
+          assert "native_decide" not in str(report["parent"]["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: agent31-raw67-parent-source-accepted-reuse
+          path: |
+            /tmp/a31-raw67-reuse/output/**
+            /tmp/a31-raw67-reuse.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 90
 
 
   canonical55_raw106_raw79:
