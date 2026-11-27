@@ -60,7 +60,11 @@ const specs=[
   ["mixedBack5","base","5 5 2 2 X","Y",3,0,"X","2 2 4 4 Y",1,0],
   ["pump644","base","3^p 2","6 4 4 Y",0,1,"3^p+4 2","6 Y",0,1],
   ["a6ToB","base","3^p 2","6 Y",0,1,"5^p+3","Y",1,1],
-  ["a24ToD","base","3^p 2","2 4 Y",0,1,"6^p+2 4","6 Y",3,0]
+  ["a24ToD","base","3^p 2","2 4 Y",0,1,"6^p+2 4","6 Y",3,0],
+  ["initC","base","4 6 X","2 2 3 Y",0,1,"2 5 2 6 X","3 Y",4,1],
+  ["finishC","base","5 2 6^p 4","2^4 Y",1,0,"3^p+2 2","2^5 Y",0,1],
+  ["lowC315",42,"3^p 2","2 3 2 2 3 1 5",0,1,"3^p+13 2","2",0,1],
+  ["evenFinish","base","3^p 2","1 1 5 Y",4,1,"1 3^p+4 2","Y",4,1]
 ];
 let out="import Raw140VariantTransfer\nnamespace Raw14042LowLocal\nopen BB6BlockFAR Raw140Orbit Raw140Extra Raw140VariantTransfer\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n";
 out+=specs.map(x=>derive(...x)).join("\n")+"\n"+specs.map(x=>"#print axioms "+x[0]).join("\n")+"\nend Raw14042LowLocal\n";
