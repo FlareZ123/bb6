@@ -238,5 +238,55 @@ theorem u5_shadow_x_excluded (f w t : Nat) (ht : 1≤t)
   obtain ⟨a,k,hp,hedge⟩ := BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 x y hx hr
   exact ⟨a,k,hp,(complete_section_inverse a k x y (by omega)).mp hedge⟩
 
+private theorem affine_mod (m a c w z : Nat) (h : w%m=z%m) :
+    (a*w+c)%m=(a*z+c)%m := by
+  rw [Nat.add_mod,Nat.mul_mod,h]
+  rw [Nat.add_mod (a*z) c m,Nat.mul_mod a z m]
+
+private theorem u5Shadow_mod (b w z : Nat) (h : w%2^b=z%2^b) :
+    (u5Shadow w).x%2^b=(u5Shadow z).x%2^b ∧
+    (u5Shadow w).y%2^b=(u5Shadow z).y%2^b := by
+  unfold u5Shadow
+  have hx (u : Nat) : 44*(1360+22155*u)+211=974820*u+60051 := by omega
+  have hy (u : Nat) : 42*(1360+22155*u)+211=930510*u+57331 := by omega
+  simp only [hx,hy]
+  exact ⟨affine_mod _ _ _ _ _ h,affine_mod _ _ _ _ _ h⟩
+
+/-- Transfer a single small rational shadow to its whole residue cylinder,
+    keeping the true exponent guard explicit. -/
+theorem u5_congruent_cylinder (b w z t : Nat) (ht : 1≤t)
+    (hb : b≤201+3360*w) (hw : w%2^b=z%2^b)
+    (h : 211*t+1360+22155*w=20*2^(201+3360*w)) :
+    congruent b (44*t-1) (42*t-1) (u5Shadow z) := by
+  have hc := u5_congruent w t ht h
+  obtain ⟨hx,hy⟩ := u5Shadow_mod b w z hw
+  have hxx : 2^b∣211*(44*t-1)+(u5Shadow w).x :=
+    Nat.dvd_trans (Nat.pow_dvd_pow 2 hb) hc.1
+  have hyy : 2^b∣211*(42*t-1)+(u5Shadow w).y :=
+    Nat.dvd_trans (Nat.pow_dvd_pow 2 hb) hc.2
+  constructor
+  · apply Nat.dvd_of_mod_eq_zero
+    have hh := Nat.mod_eq_zero_of_dvd hxx
+    rw [Nat.add_mod,hx] at hh
+    rw [Nat.add_mod]
+    exact hh
+  · apply Nat.dvd_of_mod_eq_zero
+    have hh := Nat.mod_eq_zero_of_dvd hyy
+    rw [Nat.add_mod,hy] at hh
+    rw [Nat.add_mod]
+    exact hh
+
+theorem u5_shadow_x_excluded_cylinder (f b w z t : Nat) (ht : 1≤t)
+    (hb : b≤201+3360*w) (hw : w%2^b=z%2^b)
+    (h : 211*t+1360+22155*w=20*2^(201+3360*w))
+    (hc : check f b (u5Shadow z)=true) : ¬BB6.Agent3.CReach (44*t-1) (42*t-1) := by
+  apply check_sound BB6.Agent3.CReach ?_ BB6.Agent13TwoParent.odd_forbidden_image f b
+    _ _ (u5Shadow z) hc (u5_congruent_cylinder b w z t ht hb hw h)
+  intro x y hx hy hr
+  obtain ⟨a,k,hp,hedge⟩ := BB6.Agent11M0SumZeroVerified.cReach_parent_of_left_gt5 x y hx hr
+  exact ⟨a,k,hp,(complete_section_inverse a k x y (by omega)).mp hedge⟩
+
+#print axioms u5_shadow_x_excluded_cylinder
+
 #print axioms u5_shadow_x_excluded
 end BB6.Agent15RationalShadow211
