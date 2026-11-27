@@ -1,7 +1,6 @@
 // Untrusted candidate search: exhaustive accessible, canonical DFAs through five states.
-#define main strict_frontier_main
+#define AGENT46_FRONTIER_LIBRARY
 #include "frontier_complete.cpp"
-#undef main
 void enumerateD(int d,DFA& a,int mx,vector<DFA>& out){
  if(int(a.size())==2*d){if(mx==d-1)out.push_back(a);return;}
  if(int(a.size()/2)>mx)return;

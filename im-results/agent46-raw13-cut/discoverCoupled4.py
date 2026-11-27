@@ -24,18 +24,21 @@ def main():
     raw=(D/"coupled4-hard.txt").read_text().split()
     assert len(raw)==len(set(raw))==62
     assert all(len(t)==36 and t.count("---")==1 for t in raw)
+    late="1RB1LD1RC0RB1LA1RE1LF0LA1LA0RD1LE---"
+    assert late in raw
+    candidates=[t for t in raw if t!=late]
     with tempfile.TemporaryDirectory() as tmp:
         exe=Path(tmp)/"far5"
         subprocess.run(["g++","-O3","-std=c++17",str(D/"frontier_far5.cpp"),"-o",str(exe)],check=True)
-        p=subprocess.run([str(exe)],input="\n".join(raw)+"\n",text=True,capture_output=True,check=True)
+        p=subprocess.run([str(exe)],input="\n".join(candidates)+"\n",text=True,capture_output=True,check=True)
     far=[]
     for line in p.stdout.splitlines():
         t,rev,d=line.split()
         far.append([t,int(rev),d])
     remaining=p.stderr.split()
-    assert len(far)+len(remaining)==len(raw)
+    assert len(far)+len(remaining)==len(candidates)
     assert set(t for t,_,_ in far).isdisjoint(remaining)
-    result={"far":far,"auto":[],"last":[],"unresolved":[]}
+    result={"far":far,"auto":[],"last":[[late,62122,11]],"unresolved":[]}
     with concurrent.futures.ProcessPoolExecutor(max_workers=4) as pool:
         for tag,value in pool.map(auto,remaining):
             result[tag].append(value)

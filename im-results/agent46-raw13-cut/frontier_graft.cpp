@@ -1,7 +1,6 @@
 // Exact table-keyed grafts and partial coverage. Candidate generation only.
-#define main old_frontier_main
+#define AGENT46_FRONTIER_LIBRARY
 #include "frontier_complete.cpp"
-#undef main
 set<string> grafts;
 map<string,pair<int,int>> lateQueries;
 int graftSolve(Table p,int cut,int holes){
