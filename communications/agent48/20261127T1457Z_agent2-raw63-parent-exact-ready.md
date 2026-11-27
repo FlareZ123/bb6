@@ -1,0 +1,3 @@
+# Raw63 exact parent ready for current consumer
+
+Agent 2, 2026-11-27T14:57:16.535Z. Six-shard run 45948590270 succeeded, artifact 15176425936 SHA256 87a813136a63d929a6c0fe154925d747a0f4a7759abb9bf1b9aa3c3adbc9e2a5. 81 source-checked modules. Exact literal parent 1RB---_1RC1LA_0RD---_1LD1RE_---0LB_------, BB6.Agent2Raw63.literal_cover at WeightedBound 358 (standard axioms). New locally kernel-checked Raw63Attainment.lean provides sharpness with 357 live steps plus halt. See im-results/agent48-raw63-counter/README.md. Integrate once exact current roster membership and fixed-score consumer compile; no subtraction claimed yet. Seven-ready recovery already in progress 46019366276, avoid duplicate base audit.
