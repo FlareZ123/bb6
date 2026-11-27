@@ -2,7 +2,7 @@ import Raw43RD1Growth
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent25Raw43RF0M13
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth (rep_add rep_double)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth
 def table : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -69,7 +69,9 @@ theorem grow (n : Nat) :
   have h6' : run0 table 4 ⟨4,[true,true],[false]++rep V n++rep Q 3⟩ =
       some (sect (n+1)) := by
     have hh : Q++rep V n++rep Q 3 = rep Q (2*(n+1+1)) := by
-      rw [List.append_assoc,← rep_double Q n, ← rep_add Q (2*n) 3]
+      rw [List.append_assoc]
+      change Q++(rep (Q++Q) n++rep Q 3) = _
+      rw [← rep_double Q n, ← rep_add Q (2*n) 3]
       change rep Q 1 ++ rep Q (2*n+3) = _
       rw [← rep_add]
       congr 1
@@ -78,6 +80,8 @@ theorem grow (n : Nat) :
       rotate false [true] (2*(n+1+1))
     have h6out : [false]++(Q++(rep V n++rep Q 3)) = (sect (n+1)).r := by
       rw [← List.append_assoc Q (rep V n) (rep Q 3),hh,hr]
+      rfl
+    simp only [List.append_assoc] at h6
     rw [h6out] at h6
     exact h6
   have h := join0 (join0 (join0 (join0 (join0 h1 h2') h3) h4') h5') h6'
@@ -89,7 +93,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 end BB6.Agent25Raw43RF0M13
 
 namespace BB6.Agent25Raw43RF0M20
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth (rep_add rep_double)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth
 def table : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -147,7 +151,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 end BB6.Agent25Raw43RF0M20
 
 namespace BB6.Agent25Raw43RF0M73
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth (rep_add rep_double)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth
 def table : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -211,7 +215,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 end BB6.Agent25Raw43RF0M73
 
 namespace BB6.Agent25Raw43RF0M103
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth (rep_add rep_double)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth
 def table : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -247,8 +251,7 @@ theorem grow (n : Nat) :
     run0 table (40*n+53) (sect n) = some (sect (n+1)) := by
   let j := 4*n+2
   have he : rep O (4*n+6) = M++O++rep O j := by
-    rw [show 4*n+6=j+4 by dsimp [j]; omega,show j+4=4+j by omega,rep_add O 4 j]
-    rfl
+    rw [show 4*n+6=j+4 by dsimp [j]; omega,show j+4=4+j by omega,rep_add O 4 j] <;> rfl
   have h1 : run0 table 9 (sect n) = some ⟨0,[false]++O,M++rep O j⟩ := by
     rw [sect,he]
     exact enter (rep O j)
@@ -260,8 +263,7 @@ theorem grow (n : Nat) :
     exact h2
   have h3 := turn (rep O (j+1))
   have he3 : M++rep O (j+1) = rep O (j+4) := by
-    rw [show j+4=3+(j+1) by omega,rep_add O 3 (j+1)]
-    rfl
+    rw [show j+4=3+(j+1) by omega,rep_add O 3 (j+1)] <;> rfl
   rw [he3] at h3
   have h4 := sweepL table 0 [] [] O O 1 left (j+4) [] [true,true,true,true]
   have h4' : run0 table (j+4) ⟨0,rep O (j+4),[true,true,true,true]⟩ =
@@ -279,7 +281,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
 end BB6.Agent25Raw43RF0M103
 
 namespace BB6.Agent25Raw43RF0M119
-open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth (rep_add rep_double)
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent25Raw43RD1Growth
 def table : PartialMachine := fun s =>
   match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -335,6 +337,7 @@ private theorem rightAll (n : Nat) (L : List Bool) :
     rw [show 30+30*(n+1)=30*(n+1+1) by omega] at h
     have hh : rep U (n+1)++(U++L) = rep U (n+1+1)++L := by
       rw [← List.append_assoc,rep_snoc U (n+1)]
+      rfl
     simpa only [List.append_assoc,hh] using h
 private theorem rightStart (n : Nat) :
     run0 table (30*(n+1)) (sect n) =
