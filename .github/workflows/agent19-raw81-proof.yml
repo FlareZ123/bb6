@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next, raw40-a1lb-final-pair]
         default: raw81
 permissions:
   contents: read
@@ -103,7 +103,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
 
   raw40-a1rc:
-    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la' || inputs.target == 'raw40-a1lc-0lc' || inputs.target == 'raw40-a1lb' || inputs.target == 'raw40-a1lb-next'
+    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la' || inputs.target == 'raw40-a1lc-0lc' || inputs.target == 'raw40-a1lb' || inputs.target == 'raw40-a1lb-next' || inputs.target == 'raw40-a1lb-final-pair'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -339,6 +339,33 @@ jobs:
           name: raw40-a1lb-next-source-audit
           path: |
             /tmp/a19-raw40-a1lb-next.log
+            im-results/agent19-raw40-cut/Raw40A1LB*.olean
+            im-results/agent19-raw40-cut/a1lb/*/shards/*All.olean
+          if-no-files-found: warn
+
+      - name: Compile two remaining complete Raw40 A1LB child bounds
+        if: inputs.target == 'raw40-a1lb-final-pair'
+        env:
+          LEAN_DEPS: /tmp/a19-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A1LB.sh 0LE 1LE | tee /tmp/a19-raw40-a1lb-final-pair.log
+          python - <<'PY'
+          import re
+          s=open('/tmp/a19-raw40-a1lb-final-pair.log').read()
+          assert not re.search(r'\b(sorryAx|native_decide)\b',s)
+          for c in ['0LE','1LE']:
+              m=re.search(r"'BB6\.Agent19Raw40\.Raw40C1LB"+c+r"\.exact_weighted' depends on axioms: \[([^\]]*)\]",s)
+              assert m,c
+              assert set(m[1].split(', ')) <= {'propext','Classical.choice','Quot.sound'},m[0]
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'raw40-a1lb-final-pair'
+        with:
+          name: raw40-a1lb-final-pair-source-audit
+          path: |
+            /tmp/a19-raw40-a1lb-final-pair.log
             im-results/agent19-raw40-cut/Raw40A1LB*.olean
             im-results/agent19-raw40-cut/a1lb/*/shards/*All.olean
           if-no-files-found: warn
