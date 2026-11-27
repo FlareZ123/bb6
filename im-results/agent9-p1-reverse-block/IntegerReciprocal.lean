@@ -33,8 +33,7 @@ theorem estimate_near (G H M Y z R S : Nat)
     have he2 : H*(M*z)=(M*H)*z := by ac_rfl
     rw [he1,he2,Nat.mul_comm H Y,Nat.mul_one]
     rw [Nat.mul_add,Nat.mul_one,Nat.add_mul] at hh
-    have he3 : G*z=z*G := Nat.mul_comm _ _
-    rw [he3]
+    rw [Nat.mul_add,Nat.mul_one] at hShi
     omega
   have h3 := Nat.mul_le_mul_left G hz
   have h4 : H*X<G*T+G*H := by omega
