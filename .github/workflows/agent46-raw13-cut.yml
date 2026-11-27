@@ -297,6 +297,11 @@ jobs:
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 \
               --precompiled-manifest /tmp/a46-canonical-manifest.json \
               --precompiled-dir /tmp/a47-canonical "$ROOT" | tee /tmp/a46-raw13.log
+          elif [ "$TARGET" = coupled6Sibling ]; then
+            # The generator imports agent32-raw59/emit_rungram.py, whose Cert API is
+            # incompatible with the distinct same-named raw42 module.
+            python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 \
+              --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean "$ROOT" | tee /tmp/a46-raw13.log
           else
             python tools/lean_compile_closure.py --workdir /tmp/a46-raw13 --jobs 4 "$ROOT" | tee /tmp/a46-raw13.log
           fi
