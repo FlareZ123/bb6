@@ -105,7 +105,8 @@ jobs:
             --theorem BB6Coverage.Agent41F421.badFrontier \
             --theorem BB6Coverage.Agent41F421.originalRun \
             --theorem BB6Coverage.Agent41F421.originalBlankEntry \
-            im-results/agent41-f421/F421Frontier.lean \
+            im-results/agent41-f421/F421Odd.lean \
+            im-results/agent41-f421/PrimaryGuard.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a41-f421-frontier.log; then
             exit 1

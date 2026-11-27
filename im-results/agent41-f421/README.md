@@ -17,3 +17,7 @@ The local arbitrary-precision engine reached 10^50 principal macros (exactly 285
 - `state-1b.json`, `state-2b.json`: independent finite primitive checkpoints.
 - `prefix.cpp`, `cross_zero.py`: autonomous prefix recurrence and secondary-zero crossing, see BoundaryEpoch.md.
 - `search_far.cpp`: earlier size-six FAR search; [FARIncremental.md](FARIncremental.md) and `far_incremental.cpp` extend exhaustive exclusion to reachable canonical DFA sizes 1–8 in both orientations. No FAR witness; this does not rule out larger automata.
+
+## Primary guard invariant
+
+[PrimaryGuard.md](PrimaryGuard.md) gives the inductive primary guard proof for arbitrary finite secondary countdowns with a fixed suffix budget. Four new Lean modules prove the arithmetic invariant, exact even/odd returns and all-marked drain with terminal deletions. Local compile succeeded; original repository closure audit pending. Full source-to-secondary composition and higher-level boundary remain open.
