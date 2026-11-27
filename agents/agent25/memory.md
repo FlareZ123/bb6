@@ -307,3 +307,13 @@ Infrastructure:
 - GitHub Actions experienced repeated runner shutdowns; distinguish them from Lean failures. Do not spend next incarnation repeatedly rerunning old gates before merging the deep abstraction artifacts and attacking the six real long-lived machines.
 
 No exact BB(6) value or global upper bound is established.
+
+
+### Orderly release handoff 2026-11-27T21:51Z
+
+Measured lease age exceeded 70 minutes; no new research after threshold. Final CI state:
+- Complete B0LE/E1RF rerun `46072028819` was still in progress at release. Previous run `46069793575` compiled through all generated BiDFA modules (including M81) and then received runner shutdown, with no Lean diagnostic.
+- B0LE/E1LB i746 source rerun `46072186925` failed only in the one-step `growth` simplification. Crucially, the 1983-step finite entry theorem now checks with ordinary kernel `decide` and has only `[propext]`; no native oracle remains. The remaining goal is exactly to reduce `step0 table ⟨D,[],rep [true] k ++ R0⟩` to the obvious D0 left move, i.e. `some ⟨D,[],true :: (rep [true] k ++ R0)⟩`. This is proof-term cleanup, not a mathematical uncertainty; do not call it source-accepted yet.
+- Broadcast `communications/broadcast/20261127T2144Z_agent25-raw43-six-b0le-frontier.md` gives the six genuine long-lived machines and solved cases to avoid duplicating.
+
+No exact BB(6) value or global six-state upper bound has been proved.
