@@ -1,0 +1,162 @@
+{
+  "base": "1RB---_1RC---_0RD---_0LD0LA_------_------",
+  "query": [
+    "hole",
+    6,
+    1
+  ],
+  "bank": "candidate.json",
+  "options": {
+    "short": 80,
+    "period": 60,
+    "long": 2000,
+    "longPeriod": 256,
+    "maxNodes": 1200000
+  },
+  "results": [
+    {
+      "move": "1LA",
+      "parent": "1RB1LA_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 300025,
+        "split": 12501,
+        "cycle": 187408,
+        "far": 33300,
+        "last": 66816,
+        "open": 0,
+        "halt": 79317,
+        "score": 86
+      },
+      "mass": {
+        "halt": "17832141",
+        "nonhalt": "226308484",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 33300
+      }
+    },
+    {
+      "move": "1LB",
+      "parent": "1RB1LB_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 323425,
+        "split": 13476,
+        "cycle": 227824,
+        "far": 11093,
+        "last": 71032,
+        "open": 0,
+        "halt": 84508,
+        "score": 86
+      },
+      "mass": {
+        "halt": "18512932",
+        "nonhalt": "225627693",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 11093
+      }
+    },
+    {
+      "move": "0LE",
+      "parent": "1RB0LE_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 128449,
+        "split": 5352,
+        "cycle": 94236,
+        "far": 3690,
+        "last": 25171,
+        "open": 0,
+        "halt": 30523,
+        "score": 86
+      },
+      "mass": {
+        "halt": "14075371",
+        "nonhalt": "230065254",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 3690
+      }
+    },
+    {
+      "move": "0RE",
+      "parent": "1RB0RE_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 89569,
+        "split": 3732,
+        "cycle": 65038,
+        "far": 4488,
+        "last": 16311,
+        "open": 0,
+        "halt": 20043,
+        "score": 86
+      },
+      "mass": {
+        "halt": "13273611",
+        "nonhalt": "230867014",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 4488
+      }
+    },
+    {
+      "move": "1LE",
+      "parent": "1RB1LE_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 569281,
+        "split": 23720,
+        "cycle": 381486,
+        "far": 25448,
+        "last": 138627,
+        "open": 0,
+        "halt": 162347,
+        "score": 86
+      },
+      "mass": {
+        "halt": "21470027",
+        "nonhalt": "222670598",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 25448
+      }
+    },
+    {
+      "move": "1RE",
+      "parent": "1RB1RE_1RC---_0RD---_0LD0LA_------_------",
+      "stats": {
+        "nodes": 276505,
+        "split": 11521,
+        "cycle": 185876,
+        "far": 20602,
+        "last": 58506,
+        "open": 0,
+        "halt": 70027,
+        "score": 86
+      },
+      "mass": {
+        "halt": "17500531",
+        "nonhalt": "226640094",
+        "open": "0"
+      },
+      "expected": "244140625",
+      "opens": [],
+      "used": {
+        "000": 20602
+      }
+    }
+  ]
+}
