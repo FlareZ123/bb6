@@ -61,7 +61,8 @@ theorem reset_P_consume_e (l : Tape) :
     rfl
   simpa [m, m', physical] using macroRunExact_sound 13 m 36 m' hv hc
 
-theorem reset_decoder_s (l r : Tape) :
+theorem reset_decoder_s (l r : Tape)
+    (hl : l 0 = true) (hr : r 0 = true) :
     run 32
       (other B
         (pre [true, false, false] l)
@@ -85,8 +86,8 @@ theorem reset_decoder_s (l r : Tape) :
   have hv : valid m := by rfl
   have hc : macroRunExact 8 m = some (32, m') := by
     dsimp [m, m']
-    rw [← decompose l, ← decompose r]
-    simp [macroRunExact, macroStep, pre, tail, cons]
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
   simpa [m, m', physical] using macroRunExact_sound 8 m 32 m' hv hc
 
 theorem reset_decoder_d (l : Tape) (hl : l 0 = true) :
