@@ -306,9 +306,13 @@ theorem atp_decode (data : List Bool) (l : Tape)
             cases c <;> rfl
           rw [hcost, run_add, atp_peel c d ds l hl]
           simp only [Option.bind_some]
-          have hh : (atpH c l) 0 = true := by
-            cases c <;> rfl
-          simpa [atpOut] using ih (l := atpH c l) htail hh
+          cases c with
+          | false =>
+              simpa [atpOut] using
+                ih (l := atpH false l) htail (by rfl)
+          | true =>
+              simpa [atpOut] using
+                ih (l := atpH true l) htail (by rfl)
 
 /-- Unbounded F197 complementary AT family. For all nonempty Boolean data,
     source TAT Z(data) AA X reaches AAAT Phi(data) X with exactly
