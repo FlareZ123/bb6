@@ -69,7 +69,7 @@ theorem grow (n : Nat) :
   have h6' : run0 table 4 ⟨4,[true,true],[false]++rep V n++rep Q 3⟩ =
       some (sect (n+1)) := by
     have hh : Q++rep V n++rep Q 3 = rep Q (2*(n+1+1)) := by
-      rw [← rep_double Q n, ← rep_add Q (2*n) 3]
+      rw [List.append_assoc,← rep_double Q n, ← rep_add Q (2*n) 3]
       change rep Q 1 ++ rep Q (2*n+3) = _
       rw [← rep_add]
       congr 1
@@ -78,8 +78,8 @@ theorem grow (n : Nat) :
       rotate false [true] (2*(n+1+1))
     have h6out : [false]++(Q++(rep V n++rep Q 3)) = (sect (n+1)).r := by
       rw [← List.append_assoc Q (rep V n) (rep Q 3),hh,hr]
-      rfl
-    simpa only [List.append_assoc,h6out,sect] using h6
+    rw [h6out] at h6
+    exact h6
   have h := join0 (join0 (join0 (join0 (join0 h1 h2') h3) h4') h5') h6'
   rw [show 2+4*n+11+6+6*n+4=10*(n+1)+13 by omega] at h
   exact h
@@ -128,12 +128,16 @@ theorem grow (n : Nat) :
   have h2 := sweepR table 0 [false] [] U T 3 right n T [false,false]
   have h2' : run0 table (3*n) ⟨0,[false]++T,rep U n++[false,false]⟩ =
       some ⟨0,[false]++rep T (n+1),[false,false]⟩ := by
-    simpa only [List.nil_append,rep_snoc,rep] using h2
+    simp only [List.append_assoc,List.nil_append] at h2
+    rw [rep_snoc T n] at h2
+    exact h2
   have h3 := turn (rep T (n+1))
   have h4 := sweepL table 0 [] [] T U 3 left (n+1) [] (U++[false,false])
   have h4' : run0 table (3*(n+1)) ⟨0,rep T (n+1),U++[false,false]⟩ =
       some (sect (n+1)) := by
-    simpa only [sect,List.nil_append,List.append_nil,← List.append_assoc,rep_snoc,rep] using h4
+    simp only [List.nil_append,List.append_nil] at h4
+    rw [← List.append_assoc,rep_snoc U (n+1)] at h4
+    exact h4
   have h := join0 (join0 (join0 h1 h2') h3) h4'
   rw [show 3+3*n+13+3*(n+1)=6*(n+1)+13 by omega] at h
   exact h
@@ -251,7 +255,9 @@ theorem grow (n : Nat) :
   have h2 := sweepR table 0 [false] M O O 9 right j O []
   have h2' : run0 table (9*j) ⟨0,[false]++O,M++rep O j⟩ =
       some ⟨0,[false]++rep O (j+1),M⟩ := by
-    simpa only [List.append_nil,rep_snoc,rep] using h2
+    simp only [List.append_assoc,List.append_nil] at h2
+    rw [rep_snoc O j] at h2
+    exact h2
   have h3 := turn (rep O (j+1))
   have he3 : M++rep O (j+1) = rep O (j+4) := by
     rw [show j+4=3+(j+1) by omega,rep_add O 3 (j+1)]
@@ -327,7 +333,9 @@ private theorem rightAll (n : Nat) (L : List Bool) :
     have h2 := ih (U++L)
     have h := join0 h1 (by simpa only [List.append_assoc] using h2)
     rw [show 30+30*(n+1)=30*(n+1+1) by omega] at h
-    simpa only [rep,rep_snoc,List.append_assoc,← List.append_assoc] using h
+    have hh : rep U (n+1)++(U++L) = rep U (n+1+1)++L := by
+      rw [← List.append_assoc,rep_snoc U (n+1)]
+    simpa only [List.append_assoc,hh] using h
 private theorem rightStart (n : Nat) :
     run0 table (30*(n+1)) (sect n) =
       some ⟨0,L0++rep U n,[false]⟩ := by
@@ -348,7 +356,9 @@ theorem grow (n : Nat) :
   have h3 := sweepL table 0 L1 [] U W 12 left n [] W
   have h3' : run0 table (12*n) ⟨0,L1++rep U n,W⟩ =
       some ⟨0,L1,rep W (n+1)⟩ := by
-    simpa only [List.nil_append,List.append_nil,rep_snoc,rep] using h3
+    simp only [List.nil_append,List.append_nil] at h3
+    rw [rep_snoc W n] at h3
+    exact h3
   have h4 := finish (rep W (n+1))
   have h4' : run0 table 12 ⟨0,L1,rep W (n+1)⟩ = some (sect (n+1)) := by
     simpa only [sect,rep] using h4
