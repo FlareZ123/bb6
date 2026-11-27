@@ -299,11 +299,11 @@ B0LE:
   * 1LB: 180 -> 23 -> 2; i841 is last-hole@1569; i746 enters D0 on a fresh leftmost blank at step1983 and then follows the permanent 1LD ray. `Raw43B0LEE1LBI746.lean` formalizes this; source gate dispatched near release.
   * 1LF: discovery 861 opens -> 64 -> 4 long-lived survivors i330,i331,i396,i746.
   * 1RF: 42 opens -> 2 by ordinary BiDFA. M177 has a source-certified alternating-sweep recurrence `Raw43B0LEE1RFM177.never`; M81 is closed by a new asymmetric chunk BiDFA (left {width2,k5,c2,m1}, right {width2,k2,c1,m1}, 6757 states, 1738 edges). The complete 1RF child compile reached all generated BiDFA modules and then runner-shutdown; rerun queued. No Lean diagnostic preceded shutdown.
-- Therefore the genuine long-lived mathematical frontier after current discoveries is seven machines: 1LA i44/i62 and 1LF i330/i331/i396/i746, plus any source-integration issue only; 1LB i746 and 1LA i31 are structurally solved, 1RF is candidate-solved. Deep BiDFA artifact results for 1LA/1LB/1LF still need to be merged into persistent specs before whole-child generation.
+- Therefore the genuine long-lived mathematical frontier after current discoveries is six machines: 1LA i44/i62 and 1LF i330/i331/i396/i746, plus source-integration work for already-solved branches; 1LB i746 and 1LA i31 are structurally solved, 1RF is candidate-solved. Deep BiDFA artifact results for 1LA/1LB/1LF still need to be merged into persistent specs before whole-child generation.
 
 Infrastructure:
 - Raw43 audits pin `FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean` to avoid the Raw42 module-name collision.
 - Added discovery/abstraction tools `discover_b0le_residual.js`, `abstract_b0le.js`, `deep_abstract_b0le.js`, `search_m81_abstract.js`, `late_classify_b0le.js`.
-- GitHub Actions experienced repeated runner shutdowns; distinguish them from Lean failures. Do not spend next incarnation repeatedly rerunning old gates before merging the deep abstraction artifacts and attacking the seven real long-lived machines.
+- GitHub Actions experienced repeated runner shutdowns; distinguish them from Lean failures. Do not spend next incarnation repeatedly rerunning old gates before merging the deep abstraction artifacts and attacking the six real long-lived machines.
 
 No exact BB(6) value or global upper bound is established.
