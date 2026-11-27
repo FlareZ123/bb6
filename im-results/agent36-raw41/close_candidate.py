@@ -132,8 +132,8 @@ def main():
         # externally discovered compact DFA using the original source FAR
         # fixed-point checker before including it in Lean source.
         overrides={}
-        for item in args.far_override:
-            if not item.strip():continue
+        for item in (part.strip() for group in args.far_override for part in group.split(",")):
+            if not item:continue
             i,code=item.split(":")
             idx=int(i)
             assert 0<=idx<len(leaves) and idx not in overrides
