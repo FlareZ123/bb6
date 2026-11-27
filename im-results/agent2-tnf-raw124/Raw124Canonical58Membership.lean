@@ -57,7 +57,7 @@ theorem parents_cover :
 
 /-- The exact 57-entry successor is obtained from the accepted Canonical58
     roster, not from a same-cardinality hand-reconstructed substitute. -/
-noncomputable def roster57 : List (Nat × PartialMachine) :=
+noncomputable def roster57 :=
   removeParents [p124] BB6.Agent31Canonical58Raw113Graft.roster58
 
 theorem count57 : roster57.length = 57 := by decide
