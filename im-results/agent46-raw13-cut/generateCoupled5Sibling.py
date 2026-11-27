@@ -15,10 +15,12 @@ B=1007
 def main(mv):
     assert mv in MOVES and mv!="1LF"
     data=json.loads((D/f"coupled5-{mv}.json").read_text())
-    assert data["move"]==mv and not data["unresolved"] and not data["last"]
+    assert data["move"]==mv and not data["last"]
+    manual={"1RB1LD1RC1RA1LA1RE0LC0LA0RF0RD---1RC":"BB6.Agent46Raw13Coupled5Hard0LC"} if mv=="0LC" else {}
+    assert set(data["unresolved"])==set(manual)
     records=data["certs"]
     names={x["table"]:i for i,x in enumerate(records)}
-    assert len(names)==len(records) and set(names)==set(data["open"])
+    assert len(names)==len(records) and set(names)|set(manual)==set(data["open"])
     raw=ROOT[:18]+mv+ROOT[21:]
     cut=max(5,ord(mv[-1])-64)
     mod="Raw13Coupled5Sibling"+mv.replace("0","Zero").replace("1","One")
@@ -38,7 +40,7 @@ const [file,bankFile,dataFile,x]=process.argv.slice(1);
 const m=new Function(fs.readFileSync(file,"utf8"))();
 const bank=fs.readFileSync(bankFile,"utf8").trim().split(/\s+/).map(s=>[...s].map(Number));
 const data=JSON.parse(fs.readFileSync(dataFile,"utf8"));
-const z=m.scan(Number(x),bank,new Set(data.certs.map(x=>x.table)));
+const z=m.scan(Number(x),bank,new Set([...data.certs.map(x=>x.table),...data.unresolved]));
 console.log(JSON.stringify(z));
 """
     z=json.loads(subprocess.check_output(["node","-e",node,str(D/"scanCoupled5.js"),
@@ -46,7 +48,7 @@ console.log(JSON.stringify(z));
     tree=z["tree"]
     assert not z["open"] and tree[:3]==["split",qry,qs] and z["max_query"]+6<=B
     cnt,mass=Counter(),Counter();tally(tree,4,cut,cnt,mass)
-    assert sum(mass.values())==25**4 and not cnt["open"] and cnt["auto"]==len(records)
+    assert sum(mass.values())==25**4 and not cnt["open"] and cnt["auto"]==len(records)+len(manual)
     print(mv,cnt,mass,flush=True)
     def emit(t):
         if t is None:return ".unresolved"
@@ -55,6 +57,9 @@ console.log(JSON.stringify(z));
             table,rev,df=v;dfa=list(map(int,df));a,b,k=saturate(codes(table),dfa,rev)
             return f".closed (.far {boolean(rev)} {len(dfa)//2} ⟨0,{fmt(dfa)},{fmt(a)},{fmt(b)},{k}⟩)"
         if tag=="auto":
+            if v[0] in manual:
+                p=manual[v[0]]
+                return f".closed (.proven {p}.p {p}.never)"
             p=f"{nsb}.M{names[v[0]]}"
             return f".closed (.proven {p}.table {p}.never)"
         if tag=="split":
@@ -79,7 +84,7 @@ theorem bound (m : Machine) (hm : compatible parent m) : WeightedBound {B} m := 
 #print axioms empty_complement
 #print axioms bound
 """
-    (D/(mod+".lean")).write_text(f"import {mod}Base\nimport {mod}BiDFA\nimport Agent46CompleteCut\n"
+    (D/(mod+".lean")).write_text(("import Raw13Coupled5Hard0LC\n" if manual else "")+f"import {mod}Base\nimport {mod}BiDFA\nimport Agent46CompleteCut\n"
         f"set_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace {ns}\n"
         "open BB6Coverage BB6.Agent13BlankDelay BB6.Agent46CanonicalCut\n"+body+f"\nend {ns}\n")
     return mod

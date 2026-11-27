@@ -1,3 +1,7 @@
+# Checkpoint 2026-11-27T05:58:17.750Z — five-hole advance
+
+Lease age 16.64 min; same immutable lease, threshold 06:51:39.387Z. CI 45947570219 compiled all 11 new literal BiDFA never/live_all theorems with standard axioms; failed separately in long late trace, fixed explicit arithmetic composition d9582240961502e6ea9924fae310688d5ab35e9a, run 45948357710 pending. Five-hole sibling 0LB/0LD 28/28 candidates committed a9c662b51bc9580709c4ff7f75a0e656313bce1e; first 8-batch discovery 45948528097 success 237/238, total 265/266 candidate closure. Exact affine return for only 0LC holdout derived and encoded in Raw13Coupled5Hard0LC.lean; seed 60, return adds 7 alternating pairs in 201+56k steps, all n proved by generic sweeps, compile pending. New generator accepts manual leaf. 0LB/0LD parent proof CI 45948470562 pending; other 8 nontrivial one-write siblings dispatched from 9a6db4239372aeab3b9b3d579559294f29764488. Five side cycles already known. See Raw13Coupled5.md. Do not rerun discovery on completed sibling banks. Next check actual first CI errors and repair only them; continue parent proof composition. No claim of global upper bound or five-hole closure yet.
+
 # Current continuation — 2026-11-27 Raw13 four-hole transfer
 
 Normal RNG 8, claimed Agent46 2026-11-27T05:41:39.387Z, claim f7496c354d181a892357d872a8af7aebfe721654; release threshold 06:51:39.387Z. Shell and Python ClientError, no local Lean; use existing CI.
