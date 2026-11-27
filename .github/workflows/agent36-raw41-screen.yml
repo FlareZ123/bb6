@@ -2,12 +2,23 @@ name: Agent 36 Raw41 unresolved canonical-child screen (manual)
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: Run full canonical screen or target exact FAR discovery
+        type: choice
+        options: [screen, close]
+        default: screen
+      index:
+        description: Canonical residual index (0–152) for targeted FAR run
+        type: string
+        default: '88'
 
 permissions:
   contents: read
 
 jobs:
   screen:
+    if: inputs.mode != 'close'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     strategy:
@@ -26,4 +37,22 @@ jobs:
         with:
           name: raw41-screen-${{ matrix.shard }}
           path: raw41-screen-shard-${{ matrix.shard }}.json
+          retention-days: 30
+  close:
+    if: inputs.mode == 'close'
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reuse exact canonical enumeration and search FAR
+        run: |
+          python3 im-results/agent36-raw41/close_candidate.py \
+            --index ${{ inputs.index }} --dfa 5 --time 900 \
+            --out raw41-target-candidate
+          cat raw41-target-candidate/summary.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-target-${{ inputs.index }}
+          path: raw41-target-candidate/
           retention-days: 30
