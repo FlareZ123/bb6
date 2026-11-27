@@ -11,11 +11,19 @@ set_option linter.unusedSimpArgs false
 abbrev project := BB6.Agent13.Box33Source.project false
 
 def target (s : Bool) : Fin 6 := if s then 5 else 4
+def zeroMove (m : ZeroMove) : Move :=
+  match m with
+  | .scan s w => ⟨w,true,target s⟩
+  | .dR w => ⟨w,true,3⟩
+  | .dL => ⟨false,false,3⟩
+
 def markMove (m : Mark) : Move :=
   match m with
   | .a w => ⟨w,true,0⟩
   | .b => ⟨true,true,1⟩
   | .scan s w => ⟨w,true,target s⟩
+  | .dR w => ⟨w,true,3⟩
+  | .dL w => ⟨w,false,3⟩
 
 def baseTable (p : Params) : PartialMachine := fun s =>
   match s with
@@ -24,14 +32,18 @@ def baseTable (p : Params) : PartialMachine := fun s =>
   | (2,true) => some (some ⟨false,false,3⟩)
   | (3,false) => some (some ⟨false,true,4⟩)
   | (3,true) => some (some ⟨false,false,3⟩)
-  | (4,false) => some (some ⟨(p.z false).2,true,target (p.z false).1⟩)
-  | (5,false) => some (some ⟨(p.z true).2,true,target (p.z true).1⟩)
+  | (4,false) => some (some (zeroMove (p.z false)))
+  | (5,false) => some (some (zeroMove (p.z true)))
   | (4,true) => some (some (markMove (p.o false)))
   | (5,true) => some (some (markMove (p.o true)))
   | _ => none
 
 theorem target_state (s : Bool) : BB6.Agent13.Box33Source.q false (target s) = q s := by
   cases s <;> rfl
+
+theorem zero_action (m : ZeroMove) (c : C9Pair.Config) :
+    BB6.Agent17.Box28CarryGateSource.action (some (zeroMove m)) c = some (zeroStep m c) := by
+  cases m <;> simp [zeroMove,zeroStep,BB6.Agent17.Box28CarryGateSource.action,target_state] <;> rfl
 
 theorem mark_action (m : Mark) (c : C9Pair.Config) :
     BB6.Agent17.Box28CarryGateSource.action (some (markMove m)) c = some (markStep m c) := by
@@ -47,8 +59,8 @@ theorem project_step (p : Params) (m : Machine) (hm : compatible (baseTable p) m
   have hC1 := hm (2,true) (some ⟨false,false,3⟩) rfl
   have hD0 := hm (3,false) (some ⟨false,true,4⟩) rfl
   have hD1 := hm (3,true) (some ⟨false,false,3⟩) rfl
-  have hE0 := hm (4,false) (some ⟨(p.z false).2,true,target (p.z false).1⟩) rfl
-  have hF0 := hm (5,false) (some ⟨(p.z true).2,true,target (p.z true).1⟩) rfl
+  have hE0 := hm (4,false) (some (zeroMove (p.z false))) rfl
+  have hF0 := hm (5,false) (some (zeroMove (p.z true))) rfl
   have hE1 := hm (4,true) (some (markMove (p.o false))) rfl
   have hF1 := hm (5,true) (some (markMove (p.o true))) rfl
   rcases z with ⟨s,h,t⟩
@@ -60,7 +72,7 @@ theorem project_step (p : Params) (m : Machine) (hm : compatible (baseTable p) m
     simp only [BB6.Agent13.Box33Source.project,hb]
     first
     | rfl
-    | (simp [mark_action,BB6.Agent17.Box28CarryGateSource.action,target_state] <;> rfl)
+    | (simp only [zero_action,mark_action] <;> rfl)
 
 theorem project_run (p : Params) (m : Machine) (hm : compatible (baseTable p) m)
     (n : Nat) (z : BB6Coverage.Config) :

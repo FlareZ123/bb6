@@ -1,28 +1,41 @@
 import Box28CarryFamily
-
 namespace BB6.Agent17.Box28EraseScan
 open C9Pair
-open BB6.Agent17.Box28CarryFamily (Gate pair localBlank)
-open BB6.Agent13.Box33BinaryCounter (zeros zero_head zero_pop zero_push rep rep_add)
-set_option maxRecDepth 100000
-set_option maxHeartbeats 0
+open BB6.Agent13.Box33BinaryCounter (zeros zero_head zero_pop zero_push)
+open BB6.Agent17.Box28CarryFamily (Gate localBlank)
 set_option linter.unusedSimpArgs false
+set_option maxHeartbeats 0
 
 def q (s : Bool) : Q := if s then .F else .E
+inductive ZeroMove where
+  | scan (s w : Bool)
+  | dR (w : Bool)
+  | dL
+  deriving DecidableEq
 inductive Mark where
   | a (w : Bool)
   | b
   | scan (s w : Bool)
+  | dR (w : Bool)
+  | dL (w : Bool)
   deriving DecidableEq
 structure Params where
-  z : Bool → Bool × Bool
+  z : Bool → ZeroMove
   o : Bool → Mark
+
+def zeroStep (m : ZeroMove) (c : Config) : Config :=
+  match m with
+  | .scan s w => right (q s) w c
+  | .dR w => right .D w c
+  | .dL => left .D false c
 
 def markStep (m : Mark) (c : Config) : Config :=
   match m with
   | .a w => right .A w c
   | .b => right .B true c
   | .scan s w => right (q s) w c
+  | .dR w => right .D w c
+  | .dL w => left .D w c
 
 def stepCore (p : Params) (a b c : Gate) (x : Config) : Option Config :=
   match x.q,x.a with
@@ -34,8 +47,8 @@ def stepCore (p : Params) (a b c : Gate) (x : Config) : Option Config :=
   | .C,true => some (left .D false x)
   | .D,false => some (right .E false x)
   | .D,true => some (left .D false x)
-  | .E,false => some (right (q (p.z false).1) (p.z false).2 x)
-  | .F,false => some (right (q (p.z true).1) (p.z true).2 x)
+  | .E,false => some (zeroStep (p.z false) x)
+  | .F,false => some (zeroStep (p.z true) x)
   | .E,true => some (markStep (p.o false) x)
   | .F,true => some (markStep (p.o true) x)
 
@@ -51,122 +64,104 @@ theorem runCore_add (p : Params) (a b c : Gate) (m n : Nat) (x : Config) :
     rw [Nat.succ_add]; simp only [runCore]
     cases stepCore p a b c x <;> simp [ih]
 
-def atScan (s : Bool) (l r : Stream) : Config := ⟨q s,l,r 0,pop r⟩
-def atLeft (l r : Stream) : Config := ⟨.D,pop l,l 0,r⟩
-def ray (n : Nat) (l : Stream) : Stream := rep true n (push false l)
-def tail : Stream := pair false true zeros
-def root (n : Nat) (l : Stream) : Config := atScan false (push false l) (rep false n tail)
+/-- At most one marker in the rightward stream. -/
+inductive Sparse : Stream → Prop where
+  | blank : Sparse zeros
+  | marker : Sparse (push true zeros)
+  | zero {s : Stream} : Sparse s → Sparse (push false s)
 
-theorem push_ray (w : Bool) (n : Nat) (l : Stream) :
-    ∃ m l', push w (ray n l) = ray m l' := by
+theorem sparse_pop (s : Stream) (h : Sparse s) : Sparse (pop s) := by
+  cases h with
+  | blank => exact .blank
+  | marker => exact .blank
+  | zero h => exact h
+
+theorem sparse_true (s : Stream) (h : Sparse s) (hh : s 0=true) : pop s=zeros := by
+  cases h with
+  | blank => contradiction
+  | marker => rfl
+  | zero h => contradiction
+
+theorem sparse_bit (w : Bool) : Sparse (push w zeros) := by
   cases w
-  · exact ⟨0,ray n l,rfl⟩
-  · exact ⟨n+1,l,rfl⟩
+  · exact .zero .blank
+  · exact .marker
 
-theorem zero_step (p : Params) (a b c : Gate) (s : Bool) (l u : Stream) :
-    stepCore p a b c (atScan s l (push false u)) =
-      some (atScan (p.z s).1 (push (p.z s).2 l) u) := by cases s <;> rfl
+/-- State-sensitive one-marker invariant, with no constraint on the
+    farther-left tape. A1, B1 and C0 are never queried. -/
+def Good (x : Config) : Prop :=
+  match x.q with
+  | .A => x.a=false ∧ x.r=zeros
+  | .B => x.a=false ∧ x.r=zeros ∧ x.l 0=true
+  | .C => x.a=true ∧ Sparse x.r
+  | .D => Sparse x.r
+  | .E | .F => Sparse (push x.a x.r)
 
-theorem scan_prefix (p : Params) (a b c : Gate) (n : Nat) (s : Bool) (r : Nat) (l u : Stream) :
-    ∃ s' r' l', runCore p a b c n (atScan s (ray r l) (rep false n u)) =
-      some (atScan s' (ray r' l') u) := by
-  induction n generalizing s r l with
-  | zero => exact ⟨s,r,l,rfl⟩
-  | succ n ih =>
-    obtain ⟨r',l',he⟩ := push_ray (p.z s).2 r l
-    obtain ⟨s'',r'',l'',hr⟩ := ih (p.z s).1 r' l'
-    exact ⟨s'',r'',l'',by rw [runCore,rep,zero_step,Option.bind_some,he,hr]⟩
+theorem good_right_scan (s w : Bool) (x : Config) (h : Sparse x.r) :
+    Good (right (q s) w x) := by
+  cases s <;> simpa [Good,right,q] using h
 
-theorem drift (p : Params) (a b c : Gate) (t : Nat) (s : Bool) (l : Stream) :
-    runCore p a b c t (atScan s l zeros) ≠ none := by
-  induction t generalizing s l with
+theorem good_zero (m : ZeroMove) (x : Config) (h : Sparse x.r) : Good (zeroStep m x) := by
+  cases m with
+  | scan s w => exact good_right_scan s w x h
+  | dR w => exact sparse_pop _ h
+  | dL => exact .zero h
+
+theorem good_marker (m : Mark) (x : Config) (h : x.r=zeros) : Good (markStep m x) := by
+  rcases x with ⟨s,l,a,r⟩
+  change r=zeros at h
+  subst r
+  cases m with
+  | a w => exact ⟨rfl,rfl⟩
+  | b => exact ⟨rfl,rfl,rfl⟩
+  | scan s w => exact good_right_scan s w _ .blank
+  | dR w => exact .blank
+  | dL w => exact sparse_bit w
+
+theorem good_scan_zero (m : ZeroMove) (s : Q) (l r : Stream) (h : Sparse (push false r)) :
+    Good (zeroStep m ⟨s,l,false,r⟩) := by
+  apply good_zero
+  simpa using sparse_pop _ h
+
+theorem good_scan_marker (m : Mark) (s : Q) (l r : Stream) (h : Sparse (push true r)) :
+    Good (markStep m ⟨s,l,true,r⟩) := by
+  apply good_marker
+  simpa using sparse_true _ h rfl
+
+theorem progress (p : Params) (a b c : Gate) (x : Config) (hx : Good x) :
+    ∃ y, stepCore p a b c x=some y ∧ Good y := by
+  rcases x with ⟨s,l,u,r⟩
+  cases s <;> cases u <;> simp only [Good] at hx
+  case A.false =>
+    obtain ⟨_,hr⟩ := hx
+    subst r
+    exact ⟨_,rfl,⟨rfl,rfl,rfl⟩⟩
+  case A.true => exact False.elim (Bool.noConfusion hx.1)
+  case B.false =>
+    obtain ⟨_,hr,hl⟩ := hx
+    subst r
+    exact ⟨_,rfl,⟨hl,.marker⟩⟩
+  case B.true => exact False.elim (Bool.noConfusion hx.1)
+  case C.false => exact False.elim (Bool.noConfusion hx.1)
+  case C.true => exact ⟨_,rfl,.zero hx.2⟩
+  case D.false => exact ⟨_,rfl,good_right_scan false false _ hx⟩
+  case D.true => exact ⟨_,rfl,.zero hx⟩
+  case E.false => exact ⟨_,rfl,good_scan_zero (p.z false) _ _ _ hx⟩
+  case E.true => exact ⟨_,rfl,good_scan_marker (p.o false) _ _ _ hx⟩
+  case F.false => exact ⟨_,rfl,good_scan_zero (p.z true) _ _ _ hx⟩
+  case F.true => exact ⟨_,rfl,good_scan_marker (p.o true) _ _ _ hx⟩
+
+theorem never_good (p : Params) (a b c : Gate) (t : Nat) (x : Config) (hx : Good x) :
+    runCore p a b c t x ≠ none := by
+  induction t generalizing x with
   | zero => simp [runCore]
   | succ t ih =>
-    have h := zero_step p a b c s l zeros
-    rw [zero_push] at h
-    rw [runCore,h,Option.bind_some]
-    exact ih _ _
-
-theorem rewind (p : Params) (a b c : Gate) (r : Nat) (l u : Stream) :
-    runCore p a b c (r+1) (atLeft (ray r l) u) =
-      some (atScan false (push false l) (rep false r u)) := by
-  induction r generalizing u with
-  | zero => rfl
-  | succ r ih =>
-    rw [show r+1+1=1+(r+1) by omega,runCore_add]
-    change (some (atLeft (ray r l) (push false u))).bind _ = _
-    rw [Option.bind_some,ih,rep_add false r 1] <;> rfl
-
-theorem mark_step (p : Params) (a b c : Gate) (s : Bool) (l : Stream) :
-    stepCore p a b c (atScan s l (push true zeros)) =
-      some (markStep (p.o s) (atScan s l (push true zeros))) := by cases s <;> rfl
-
-theorem turnA (p : Params) (a b c : Gate) (w : Bool) (s : Bool) (r : Nat) (l : Stream) :
-    runCore p a b c 3 (markStep (.a w) (atScan s (ray r l) (push true zeros))) =
-      some (atLeft (push w (ray r l)) tail) := by rfl
-
-theorem turnB (p : Params) (a b c : Gate) (s : Bool) (r : Nat) (l : Stream) :
-    runCore p a b c 2 (markStep .b (atScan s (ray r l) (push true zeros))) =
-      some (atLeft (ray r l) tail) := by rfl
-
-theorem progress (p : Params) (a b c : Gate) (n : Nat) (l : Stream) :
-    (∃ t m l', 0<t ∧ runCore p a b c t (root n l) = some (root m l')) ∨
-    (∀ t, runCore p a b c t (root n l) ≠ none) := by
-  obtain ⟨s,r,l',h⟩ := scan_prefix p a b c (n+1) false 0 l (push true zeros)
-  rw [rep_add false n 1] at h
-  change runCore p a b c (n+1) (root n l) = some (atScan s (ray r l') (push true zeros)) at h
-  have hmark : runCore p a b c (n+1+1) (root n l) =
-      some (markStep (p.o s) (atScan s (ray r l') (push true zeros))) := by
-    rw [runCore_add,h,Option.bind_some]
-    simp [runCore,mark_step]
-  cases hm : p.o s with
-  | a w =>
-    left
-    obtain ⟨r',l'',he⟩ := push_ray w r l'
-    refine ⟨n+2+3+(r'+1),r',l'',by omega,?_⟩
-    rw [runCore_add,runCore_add,show n+2=n+1+1 by omega,hmark,hm,Option.bind_some,
-      turnA,he,Option.bind_some,rewind]
-    rfl
-  | b =>
-    left
-    refine ⟨n+2+2+(r+1),r,l',by omega,?_⟩
-    rw [runCore_add,runCore_add,show n+2=n+1+1 by omega,hmark,hm,Option.bind_some,
-      turnB,Option.bind_some,rewind]
-    rfl
-  | scan s' w =>
-    right; intro t ht
-    rw [hm] at hmark
-    change runCore p a b c (n+1+1) (root n l) =
-      some (atScan s' (push w (ray r l')) zeros) at hmark
-    by_cases hle : t≤n+1+1
-    · rw [show n+1+1=t+(n+1+1-t) by omega,runCore_add,ht] at hmark; contradiction
-    · rw [show t=(n+1+1)+(t-(n+1+1)) by omega,runCore_add,hmark,Option.bind_some] at ht
-      exact drift p a b c _ _ _ ht
-
-theorem never_root (p : Params) (a b c : Gate) (t n : Nat) (l : Stream) :
-    runCore p a b c t (root n l) ≠ none := by
-  induction t using Nat.strongRecOn generalizing n l with
-  | ind t ih =>
-    rcases progress p a b c n l with ⟨u,m,l',hu,hr⟩|h
-    · intro ht
-      by_cases hle : t≤u
-      · rw [show u=t+(u-t) by omega,runCore_add,ht] at hr; contradiction
-      · rw [show t=u+(t-u) by omega,runCore_add,hr,Option.bind_some] at ht
-        exact ih _ (by omega) m l' ht
-    · exact h t
-
-theorem init (p : Params) (a b c : Gate) :
-    runCore p a b c 4 localBlank = some (root 0 zeros) := by
-  simp [runCore,stepCore,localBlank,root,atScan,q,tail,pair,rep,left,right]
+    obtain ⟨y,hs,hy⟩ := progress p a b c x hx
+    rw [runCore,hs,Option.bind_some]
+    exact ih y hy
 
 theorem never_blank (p : Params) (a b c : Gate) (t : Nat) :
-    runCore p a b c t localBlank ≠ none := by
-  intro ht
-  have hi := init p a b c
-  by_cases hle : t≤4
-  · rw [show 4=t+(4-t) by omega,runCore_add,ht] at hi; contradiction
-  · rw [show t=4+(t-4) by omega,runCore_add,hi,Option.bind_some] at ht
-    exact never_root p a b c _ 0 zeros ht
+    runCore p a b c t localBlank ≠ none := never_good p a b c t _ ⟨rfl,rfl⟩
 
 #print axioms never_blank
 end BB6.Agent17.Box28EraseScan
