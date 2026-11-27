@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b1ra-compose, raw43-b1lb-compose, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw43_extra_child:
         description: 'Raw43 E1 sibling variant'
@@ -335,43 +335,61 @@ jobs:
           name: raw43-b0rc-complete-proof
           path: /tmp/a25-b0rc-complete/
           retention-days: 30
-      - name: Compose six source-accepted Raw43 B0RA children
-        if: inputs.target == 'raw43-b0ra-compose'
+- name: Compose source-accepted Raw43 B0RA or B0LA children
+        id: raw43_b0_compose
+        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose'
         env:
           GH_TOKEN: ${{ github.token }}
           PINS: ${{ inputs.raw43_b1rc_pins }}
+          TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           root=im-results/agent25-raw43
-          work=/tmp/a25-b0ra-complete
+          case "$TARGET" in
+            raw43-b0ra-compose)
+              branch=b0ra; slot=a; ns=B0RA; bound=390; b1=0RA
+              variants='0le 0rc 0re 1lb 1le 1re' ;;
+            raw43-b0la-compose)
+              branch=b0la; slot=c; ns=B0LA; bound=1771; b1=0LA
+              variants='0la 0lb 0le 0re 1la 1lb 1le 1re' ;;
+            *) exit 1 ;;
+          esac
+          work="/tmp/a25-$branch-complete"
+          base="/tmp/a25-$branch-base"
+          input="/tmp/a25-$branch-input"
+          artifact="raw43-$branch-complete-proof"
+          theorem="BB6.Agent25Raw43$ns"
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          for v in 0le 0rc 0re 1lb 1le 1re; do
+          for v in $variants; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > /tmp/run-$v.json
-            jq -e --arg title "raw43-extra raw43=b0ra_a$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' /tmp/run-$v.json
-            gh run download "$id" -n raw43-extra-proof -D "/tmp/a25-b0ra-input/$v"
-            jq -e --arg sha "$(jq -r .head_sha /tmp/run-$v.json)" '.proof_source_revision == $sha' "/tmp/a25-b0ra-input/$v/manifest.json"
-            python "$root/generate.py" "b0ra_a$v"
+            jq -e --arg title "raw43-extra raw43=${branch}_${slot}$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' /tmp/run-$v.json
+            gh run download "$id" -n raw43-extra-proof -D "$input/$v"
+            jq -e --arg sha "$(jq -r .head_sha /tmp/run-$v.json)" '.proof_source_revision == $sha' "$input/$v/manifest.json"
+            python "$root/generate.py" "${branch}_${slot}$v"
           done
-          python "$root/merge_b1rc.py" /tmp/a25-b0ra-input /tmp/a25-b0ra-base "$PINS" b0ra
+          python "$root/merge_b1rc.py" "$input" "$base" "$PINS" "$branch"
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
-            --precompiled-manifest /tmp/a25-b0ra-base/manifest.json --precompiled-dir /tmp/a25-b0ra-base \
-            --manifest "$work/manifest.json" --label raw43-b0ra-complete \
-            --theorem BB6.Agent25Raw43B0RA.all_completions --weighted-bound 390 \
-            --parent-table '1RB---_1RC0RA_0RD---_1LD0RB_------_------' \
-            --artifact-name raw43-b0ra-complete-proof \
-            "$root/Raw43B0RACompose.lean" 2>&1 | tee /tmp/a25-b0ra-complete.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/a25-b0ra-complete.log BB6.Agent25Raw43B0RA.classified_all BB6.Agent25Raw43B0RA.all_completions BB6.Agent25Raw43B0RA.cover
-          cp /tmp/a25-b0ra-complete.log "$work/audit.log"
-      - name: Retain Raw43 B0RA complete proof
-        if: inputs.target == 'raw43-b0ra-compose'
+            --precompiled-manifest "$base/manifest.json" --precompiled-dir "$base" \
+            --manifest "$work/manifest.json" --label "raw43-$branch-complete" \
+            --theorem "$theorem.all_completions" --weighted-bound "$bound" \
+            --parent-table "1RB---_1RC${b1}_0RD---_1LD0RB_------_------" \
+            --artifact-name "$artifact" \
+            "$root/Raw43${ns}Compose.lean" 2>&1 | tee "/tmp/a25-$branch-complete.log"
+          python im-results/agent4-raw109/audit_axioms.py "/tmp/a25-$branch-complete.log" "$theorem.classified_all" "$theorem.all_completions" "$theorem.cover"
+          cp "/tmp/a25-$branch-complete.log" "$work/audit.log"
+          echo "work=$work" >> "$GITHUB_OUTPUT"
+          echo "artifact=$artifact" >> "$GITHUB_OUTPUT"
+      - name: Retain Raw43 B0 branch complete proof
+        if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose'
         uses: actions/upload-artifact@v4
         with:
-          name: raw43-b0ra-complete-proof
-          path: /tmp/a25-b0ra-complete/
+          name: ${{ steps.raw43_b0_compose.outputs.artifact }}
+          path: ${{ steps.raw43_b0_compose.outputs.work }}/
           retention-days: 30
+
       - name: Compose seven source-accepted Raw43 B1RA children
         if: inputs.target == 'raw43-b1ra-compose'
         env:
