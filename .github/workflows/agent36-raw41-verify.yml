@@ -1,0 +1,72 @@
+name: Agent 36 exact Raw41 canonical-child source verification (manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        description: Three-digit canonical Raw41 child index
+        type: string
+        default: '88'
+      candidate_run:
+        description: Successful Raw41 target proof-source producer run
+        type: string
+        default: '46079291525'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install the original Lean checker
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.candidate_run }}
+          name: raw41-target-${{ inputs.index }}
+          path: /tmp/raw41-candidate
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45554648116
+          name: canonical77-certified
+          path: /tmp/canonical77
+      - name: Original source kernel and exhaustive certified bound
+        run: |
+          set -euo pipefail
+          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-candidate/summary.json"))["remaining"])')" = 0
+          lean --version | grep -F '4.36.0-rc2'
+          echo 'Accepted original canonical77 object layout:'
+          find /tmp/canonical77 -maxdepth 2 -name 'CanonicalFrontier.olean' -o -name 'ZipThreeHoleAudit.olean' -o -name 'PartialAudit.olean'
+          SRC=/tmp/raw41-candidate/lean
+          D=im-results/agent47-raw41-cut
+          R=im-results/agent19-raw40-cut
+          export LEAN_PATH="$SRC:/tmp/canonical77:$D:$R:im-results/agent47-rooted-tnf:im-results/agent13-coverage"
+          lean -o "$SRC/Raw41LBLA.olean" "$D/Raw41LBLA.lean" 2>&1 | tee /tmp/raw41-lbla.log
+          lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/raw41-canonical-partial.log
+          lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/raw41-empty.log
+          printf -v MOD 'Raw41New%03d' "${{ inputs.index }}"
+          lean -o "$SRC/\${MOD}Base.olean" "$SRC/\${MOD}Base.lean" 2>&1 | tee /tmp/raw41-base.log
+          for n in $(seq -w 0 23); do
+            lean -o "$SRC/\${MOD}Branch\${n}.olean" "$SRC/\${MOD}Branch\${n}.lean" \
+              2>&1 | tee "/tmp/raw41-branch-\${n}.log"
+          done
+          lean -o "$SRC/\${MOD}Closed.olean" "$SRC/\${MOD}Closed.lean" 2>&1 | tee /tmp/raw41-closed.log
+          grep -F "\${MOD}_bound" /tmp/raw41-closed.log
+          if grep -ER 'sorryAx|native_decide' /tmp/raw41-*.log; then exit 1; fi
+          echo "CERTIFIED: exact source canonical bound, original accepted core"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-lean-verification-${{ inputs.index }}
+          path: /tmp/raw41-*.log
+          retention-days: 45
