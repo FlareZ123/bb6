@@ -1,4 +1,5 @@
 name: Agent 50 Raw47 accepted depth-3 composition
+run-name: Raw47 ${{ inputs.mode }} shard ${{ inputs.shard }} offset ${{ inputs.offset }} size ${{ inputs.size }}
 
 on:
   workflow_dispatch:
@@ -50,7 +51,10 @@ jobs:
           mkdir -p /tmp/a50-extra
           gh run download 45952979794 --name raw47-far-3-0-12 --dir /tmp/a50-extra/raw47-far-3-0-12
           gh run download 45952990815 --name raw47-far-4-0-12 --dir /tmp/a50-extra/raw47-far-4-0-12
-          gh api --paginate 'repos/${{ github.repository }}/actions/runs/45953448124/artifacts?per_page=100' --jq '.artifacts[] | select(.expired == false) | .name' > /tmp/a50-sweep-names
+          gh run download 45954021548 --name raw47-graph-parents --dir /tmp/a50-extra/raw47-graph-parents
+          # Pin the completed successful sweep artifacts. Failed batches have no accepted export.
+          printf '%s\n' raw47-far-0-12-12 raw47-far-0-24-12 raw47-far-0-36-12 raw47-far-0-48-12 raw47-far-0-60-12 raw47-far-0-72-12 raw47-far-0-84-1 raw47-far-2-0-12 raw47-far-2-12-12 raw47-far-2-24-12 raw47-far-2-36-12 raw47-far-2-48-12 raw47-far-2-60-12 raw47-far-2-72-12 raw47-far-3-12-12 raw47-far-3-24-12 raw47-far-3-48-12 raw47-far-3-60-12 raw47-far-3-72-12 raw47-far-4-12-12 raw47-far-4-24-12 raw47-far-4-36-12 raw47-far-4-48-12 raw47-far-4-60-12 raw47-far-4-72-12 raw47-far-5-0-12 raw47-far-5-12-12 raw47-far-5-24-12 raw47-far-5-36-12 raw47-far-5-60-12 raw47-far-5-72-12 raw47-far-6-0-12 raw47-far-6-12-12 raw47-far-6-24-12 raw47-far-6-36-12 raw47-far-6-48-12 raw47-far-6-60-12 raw47-far-6-72-12 raw47-far-7-0-12 raw47-far-7-12-12 raw47-far-7-24-12 raw47-far-7-36-12 raw47-far-7-48-12 raw47-far-7-60-12 raw47-far-7-72-12 > /tmp/a50-sweep-names
+          test "$(wc -l < /tmp/a50-sweep-names)" -eq 45
           while IFS= read -r name; do
             [[ "$name" =~ ^raw47-far-[0-7]-[0-9]+-[0-9]+$ ]]
             gh run download 45953448124 --name "$name" --dir "/tmp/a50-extra/$name"
@@ -67,7 +71,7 @@ jobs:
           python "$D/merge_accepted_artifacts.py" "$W" /tmp/a50-base /tmp/a50-extra/*
           M=$(python "$D/generate_fast_consumer.py" "$W/imports")
           N=${M#Raw47Accepted}
-          test "$N" -ge 144
+          test "$N" -eq 678
           echo "count=$N" >> "$GITHUB_OUTPUT"
           python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --source-root "$W/imports" --precompiled-manifest "$W/reusable.json" --precompiled-dir "$W/reusable" --manifest "$W/manifest.json" --theorem "BB6.Agent50$M.local_sound" --parent-table '1RB---_1RC---_0RD---_1LD0RC_------_------' --weighted-bound 10006 --artifact-name "raw47-accepted$N" --provenance-input "$D/raw47-depth3.open" --provenance-input "$D/generate_fast_consumer.py" "$W/imports/$M.lean" 2>&1 | tee "$W/log"
           python - "$W/log" "$M" <<'PY'
