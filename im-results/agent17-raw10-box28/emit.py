@@ -48,7 +48,21 @@ def main():
     name='Box28D'+str(a.d1)
     summary=json.load(open('summary.json'))
     assert set(map(int,summary))==set(TARGETS),'incomplete discovery'
-    assert all(not v['open_count'] for v in summary.values()),'unresolved discovery rows; solve first'
+    hard_rows={
+      (8,0,11,24,11,13,14,17,22,9,19,4):('counterFalse',1,'counterPartial false','counter_compatible_never false'),
+      (8,0,11,24,11,13,14,17,22,17,19,4):('counterTrue',1,'counterPartial true','counter_compatible_never true'),
+      (8,14,11,24,11,13,14,17,3,15,4,0):('sweep',11,'sweepPartial','sweep_compatible_never'),
+    } if a.d1==17 else {}
+    remaining={tuple(t) for v in summary.values() for t in v['open_rows']}
+    assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
+    if hard_rows:
+        ns='BB6.Agent17.Box28HardSource'
+        lines=[f'import {name}Tree','import Box28HardSource',
+          f'namespace BB6.Agent13.{name}','open BB6Coverage']
+        for row,(label,target,part,proof) in hard_rows.items():
+            lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
+        lines.append(f'end BB6.Agent13.{name}')
+        put(out,name+'HardBank','\n'.join(lines)+'\n')
     max_late=max(v['late_max_halt'][0] for v in summary.values())
     bound=max(3640,max_late+5)
     source_core(out,name,a.d1,bound)
@@ -89,6 +103,7 @@ def main():
     def late_node(t,target):
         for i,b in enumerate(masks):
             if greedy.subset(greedy.domain_mask(t),b):return Node(t,'a',(i,))
+        if t in hard_rows:return Node(t,'known',(name+'HardBank',f'BB6.Agent13.{name}.{hard_rows[t][0]}'))
         w=long[t]
         if w[0]=='halt':return Node(t,'h',(w[1],))
         if w[0] in ('cycle','side'):return Node(t,'c',tuple(w[1:]))
