@@ -17,9 +17,26 @@ cases=( "$@" )
 if (( ${#cases[@]} == 0 )); then cases=(1RD 1LB 0RD 0LB); fi
 for c in "${cases[@]}"; do
   python3 prepare_a1lb.py "$c"
-  for f in Raw40A1LB"${c}"Late.lean Raw40A1LB"${c}"Compact*.lean; do [[ ! -f "$f" ]] || check "$f"; done
   dirs+=("$root/a1lb/$c/shards")
 done
+python3 - "$@" <<'PY'
+import concurrent.futures,os,pathlib,subprocess,sys
+root=pathlib.Path.cwd()
+cases=sys.argv[1:] or ['1RD','1LB','0RD','0LB']
+fs=[]
+for c in cases:
+    fs.extend(sorted(root.glob(f'Raw40A1LB{c}Compact*.lean')))
+    late=root/f'Raw40A1LB{c}Late.lean'
+    if late.exists():fs.append(late)
+def check(f):
+    p=subprocess.run([os.environ['LEAN'],'-j1','-o',str(f.with_suffix('.olean')),f.name],
+                     cwd=root,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    f.with_suffix('.log').write_text(p.stdout)
+    print(f.name,p.returncode,p.stdout,flush=True)
+    assert p.returncode==0 and 'sorryAx' not in p.stdout,f
+with concurrent.futures.ThreadPoolExecutor(max_workers=int(os.environ['WORKERS'])) as pool:
+    list(pool.map(check,fs))
+PY
 python3 build_manifests.py "${dirs[@]}"
 for d in "${dirs[@]}"; do export LEAN_PATH="$LEAN_PATH:$d"; done
 for c in "${cases[@]}"; do check "Raw40A1LB${c}Exact.lean"; done

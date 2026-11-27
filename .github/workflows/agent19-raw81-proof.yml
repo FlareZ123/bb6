@@ -5,7 +5,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next, raw40-a1lb-final-pair, raw40-a1lb-0rc]
+        options: [raw81, canonical-three-parent, raw38-cut, raw40-a1rc, raw40-a0lb198, raw40-a0lb, raw40-a1la-grammar, raw40-a1la, raw40-a1lc-0lc, raw40-a1lb, raw40-a1lb-next, raw40-a1lb-final-pair, raw40-a1lb-0rc, raw40-a1lb-all]
         default: raw81
 permissions:
   contents: read
@@ -103,7 +103,7 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-raw38.log; then exit 1; fi
 
   raw40-a1rc:
-    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la' || inputs.target == 'raw40-a1lc-0lc' || inputs.target == 'raw40-a1lb' || inputs.target == 'raw40-a1lb-next' || inputs.target == 'raw40-a1lb-final-pair' || inputs.target == 'raw40-a1lb-0rc'
+    if: inputs.target == 'raw40-a1rc' || inputs.target == 'raw40-a0lb198' || inputs.target == 'raw40-a0lb' || inputs.target == 'raw40-a1la-grammar' || inputs.target == 'raw40-a1la' || inputs.target == 'raw40-a1lc-0lc' || inputs.target == 'raw40-a1lb' || inputs.target == 'raw40-a1lb-next' || inputs.target == 'raw40-a1lb-final-pair' || inputs.target == 'raw40-a1lb-0rc' || inputs.target == 'raw40-a1lb-all'
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -395,4 +395,35 @@ jobs:
             /tmp/a19-raw40-a1lb-0rc.log
             im-results/agent19-raw40-cut/Raw40A1LB*.olean
             im-results/agent19-raw40-cut/a1lb/*/shards/*All.olean
+          if-no-files-found: warn
+
+      - name: Compile complete Raw40 A1LB parent and attained maximum
+        if: inputs.target == 'raw40-a1lb-all'
+        env:
+          LEAN_DEPS: /tmp/a19-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A1LB.sh 0LB 0LD 0LE 0RB 0RC 0RD 0RE 1LB 1LC 1LD 1LE 1RA 1RB 1RC 1RD 1RE | tee /tmp/a19-raw40-a1lb-all.log
+          python - <<'PY'
+          import re
+          s=open('/tmp/a19-raw40-a1lb-all.log').read()
+          assert not re.search(r'\b(sorryAx|native_decide)\b',s)
+          for n in ['children','all_quotient','exact_weighted']:
+              m=re.search(r"'BB6\.Agent19Raw40\.A1LB\."+n+r"' depends on axioms: \[([^\]]*)\]",s)
+              assert m,n
+              assert set(m[1].split(', ')) <= {'propext','Classical.choice','Quot.sound'},m[0]
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.target == 'raw40-a1lb-all'
+        with:
+          name: raw40-a1lb-all-source-audit
+          path: |
+            /tmp/a19-raw40-a1lb-all.log
+            im-results/agent19-raw40-cut/Raw40A1LB*.olean
+            im-results/agent19-raw40-cut/CanonicalPartial.olean
+            im-results/agent19-raw40-cut/Raw40Nores.olean
+            im-results/agent19-raw40-cut/FastBiDFA.olean
+            im-results/agent19-raw40-cut/a1lb/*/shards/*.olean
+            im-results/agent19-raw40-cut/a1lb/*/enum.log
           if-no-files-found: warn
