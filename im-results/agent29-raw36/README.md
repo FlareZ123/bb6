@@ -1,54 +1,41 @@
-# Raw36: large first-hole branch and state-symmetry reduction
+# Raw36: source-checked symmetry, corrected FAR semantics, and open descendants
 
-**Status: computational candidate partition; source-level certification incomplete.** Raw36 is the eight-hole parent `1RB---_1RC---_0RD---_0LD---_------_------`. Its first undefined query is D1 at primitive step 5. The canonical `Raw36Cut.lean` proposes a sound quotient cut: ten D1 ordinary choices close by direct translated cycles; D1=1LB first reaches B1, where five additional direct cycles close. The remaining parent children are explicitly retained as obligations. This is **not** a Raw36 parent Cover and is **not** a BB(6) maximality proof.
+**Status (27 November 2026):** Exact Raw36 parent solution **not** established; BB(6) remains open. The main eight-hole Raw36 parent is `1RB---_1RC---_0RD---_0LD---_------_------`. `Raw36Cut.lean` source-checks its first-hole **conditional reduction** to 24 further obligations, not an unconditional parent bound.
 
-## Candidate complete descendant and original-source proof route
+## Source-accepted mathematical statements
 
-The six-hole descendant `1RB---_1RC0LA_0RD---_0LD1LB_------_------` first queries C1 at step 9. The exhaustive first-hole search (`candidate.json` and `search.cjs`) reports, over all 25^6 = **244,140,625** literal total completions:
+- CI [46073656511](https://github.com/FlareZ123/bb6/actions/runs/46073656511) source-accepted `BB6.Agent29Raw36.kid01_bound` at weighted **162** on all C1=0LB completions of the six-hole B1=0LA descendant; standard axioms only, artifact **15233523548**. This is an *unconditional five-hole-cylinder* bound, irrespective of subsequent candidate-search corrections.
+- CI [46074069071](https://github.com/FlareZ123/bb6/actions/runs/46074069071) source-accepted `BB6.Agent29Raw36.childF_to_E`, `childF_bound`, and `kid02_bound` with standard axioms, artifact **15234711459**. The E/F theorem is a universal source-level equivalence because both labels are unused at the B1=0LA/C1 split. It reduces four paired choices (0LF, 0RF, 1LF, 1RF) to the E counterparts. All 24 ordinary C1 moves are represented by **20** physical classes, plus the genuine halt branch.
+- `Raw36SymmetryCut.lean` and `Raw36D1SymmetryCut.lean` give conditional 20-class parent Bound/Cover interfaces; `Raw36D1Fifteen.lean` additionally supplies the five original B1 cycle certificates to reduce the **seven-hole D1=1LB** cylinder to only **15** unresolved B1 children. These additional wrappers are **source drafts pending successful CI**, not yet accepted theorems. The first wrapper CI failure [46074167509](https://github.com/FlareZ123/bb6/actions/runs/46074167509) was the localized missing import scope of `allMoves_of` (fixed in source), not a failed mathematical certificate.
 
-| Status in untrusted candidate classifier | Literal completions |
-| --- | ---: |
-| Halting | 20,583,715 |
-| Nonhalting | 223,556,910 |
-| OPEN | 0 |
-| **Total** | **244,140,625** |
+## Important invalidation: unsound candidate FAR classifier
 
-The 24 ordinary C1 branches have 395,640 candidate nodes: 16,484 splits, 288,336 translated cycles, 10,830 FAR closures and 79,990 last-slot closures. The reported sufficient weighted bound is **162**, including incoming blank delay; it is not asserted sharp. All statements above are deterministic generator claims, **not** Lean-certified bounds until their original-source child checks compile.
+At revision `d9349db4f71f0c31157b103af17f5fe4513254af`, `search.cjs` fixed a real logic bug: its FAR closure originally wrote `change=true` where the loop tested `changed`, prematurely declaring a fixed point after one propagation round. Therefore **all historical candidate-only claims** in `candidate.json`, `d1-*.json`, and the old README alleging zero OPEN and B1 cutoff 162/166 are untrusted. This is **not** a Lean kernel issue: `generate_four_hole.py:masks` independently detected several bad FAR witnesses, which stopped [raw36-shards CI 46074818850](https://github.com/FlareZ123/bb6/actions/runs/46074818850) before spurious source proofs could compile.
 
-`generate.py` reconstructs each selected branch independently from the exact table, verifies its expected search statistics, emits Lean `Audit` terms, and factors large audit trees through the existing chunking utility. A full invocation now emits a `Raw36Branch.lean` composer referencing the selected representative child proofs. The existing manual `agent10-four-hole.yml` selector `raw36-pilot` performs a narrow original-source compilation of `Raw36Kid01.kid01_bound`; run [46073656511](https://github.com/FlareZ123/bb6/actions/runs/46073656511) was dispatched against revision `a6922000f5446849adcf2d05c1cbe14d92645db0`. Its result must be checked before asserting proof acceptance.
+The corrected candidate enumeration has now run successfully in four independent Node jobs, [46075062027](https://github.com/FlareZ123/bb6/actions/runs/46075062027). Relative to the obsolete first-hole results, **seven of the twenty E/F-representative C1 children differ**:
 
-### Exact E/F symmetry and certificate-size saving
+| C1 move | Correctly unresolved OPEN search leaves | Corrected observed maximum weighted halt score |
+| --- | ---: | ---: |
+| 0LE | 5 | 123 |
+| 0RE | 38 | 190 |
+| 1LE | 8 | 130 |
+| 1RA | 134 | 171 |
+| 1RB | 94 | 169 |
+| 1RC | 82 | 61 |
+| 1RE | 32 | **1022** |
+| **Total** | **393** | |
 
-E and F are unused in this six-hole branch before C1 is assigned. `Raw36Symmetry.lean` defines their state transposition and derives a branch-specific conditional transport:
+Every other representative child has **zero observed OPEN leaves** under the corrected search with the original automaton bank, and exactly the historical search node counts. *OPEN leaf count is not a count of machine completions.* In particular, **the previous proposed weighted cutoff 162 for the entire six-hole descendant is false as a computational hypothesis**: its 1RE child now has a simulated halting witness with score 1022 (not yet separately source-extracted or Lean checked). Neither the previous 25^6 nor 25^7 candidate halting/nonhalting census can be promoted to a theorem.
 
-```lean
-theorem childF_bound (B : Nat) (w r : Bool)
-    (h : ∀ m, compatible (child ⟨w,r,4⟩) m → WeightedBound B m)
-    (m : Machine) (hm : compatible (child ⟨w,r,5⟩) m) :
-    WeightedBound B m
-```
+`reclassify.cjs` reproduces these corrected results without rewriting the historical JSON. `recover_far.cjs` enumerates all rooted binary one-sided DFA candidates through four states to seek exact nonhalting certificates for those 393 OPEN leaves. Its resulting candidates must be rechecked in Lean via `masks()`; no new complete bound is asserted before that.
 
-The argument uses the existing source `rename_compatible_unused`, `firstOne_terminal`, and `weighted_rename_back`; its trust is precisely that of those source theorems **if the new bridge compiles**. The new bridge has not yet passed a source audit. It is included as an additional root in subsequent `raw36-pilot` dispatches, without new workflow creation.
+## The precise intended source route
 
-Accordingly, the generator no longer reconstructs the four F-target audits (C1 choices 0LF, 0RF, 1LF, 1RF). The F children are supplied by `childF_bound` from 0LE, 0RE, 1LE, 1RE in the final composer. This preserves all 24 ordinary branches while reducing the generated candidate trees from **395,640 to 256,436 nodes**, a saving of **139,204 nodes (35.18%)** before Lean compilation. These are source-code and deterministic-count properties, not accepted math until the combined proof compiles. The machine equivalence is a genuine universal state relabeling, not an empirical equality of the four search outputs.
+1. Use source-accepted 20-class symmetry and five immediate B1 cycles. In `Raw36D1Fifteen.lean`, the **fifteen** retained B1 actions are 0LA, 0LB, 0LE, 0RA, 0RB, 0RC, 0RD, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RC, 1RE. The five closed cycle actions are 0LC, 0LD, 1LD, 1RB, 1RD. Parent bound claims are conditional on genuine accepted children.
+2. For the six-hole B1=0LA descendant, find mathematically sound certificates (new FAR DFA codes, deeper translated cycles, or separate invariants) for the 393 reopened search leaves, and set any proposed bound at least 1022 if the witnessed halt is confirmed. Regenerate `candidate.json` using fixed `search.cjs` only once complete; the current `generate.py` intentionally compares against the obsolete JSON and rejects unsafe attempts.
+3. Source-certify the twenty representative C1 children, merge checked objects via `merge_shards.py`, and compile `Raw36Branch.lean` with the **correct** verified bound. Its present fixed-162 composer is a *template to revise*, not a valid proof. Then handle the other fourteen retained B1 children and all remaining Raw36 D1 branches.
+4. `results/` remains reserved for genuinely publishable mathematical progress; these unfinished candidates and engineering scripts remain here in `im-results/`.
 
-## D1=1LB seven-hole candidate closure
+The four-way candidate E/F symmetry originally saved **139,204 of 395,640 candidate tree nodes (35.18%)** in the *historical* generated-tree workload. This remains a valid source-level state-symmetry reduction but does not certify the flawed nonhalting leaves.
 
-The three B1 follow-up JSON collections also record the other ten ordinary B1 descendants and four fresh-label descendants with no OPEN nodes. Together with B1=0LA (`candidate.json`), the five direct cycles, B1 halt, and four E/F symmetry aliases, they purport to exhaust the entire D1=1LB cylinder. Candidate literal-completion census:
-
-| Status | Completions |
-| --- | ---: |
-| Halting | 615,712,761 |
-| Nonhalting | 5,487,802,864 |
-| **Total** | **6,103,515,625 = 25^7** |
-| OPEN | 0 |
-
-The 15 searched canonical B1 branches have 4,862,174 candidate nodes, excluding their early cuts. Sufficient candidate weighted cutoff **166**. Fresh-E/F multiplicity-two branches are B1=0LE, 0RE, 1LE and 1RE; the other eleven branches have multiplicity one. These census and bound claims remain computational candidates pending formally checked source certificates.
-
-## Missing theorem and next decision
-
-1. Check `Raw36Cut`, the E/F transport and the first generated child on the existing manual original-source CI target; repair actual compiler diagnostics, without rerunning candidate discovery.
-2. Source-certify the remaining representative C1 child proofs using bounded groups and strict imported-object manifests, then compile `Raw36Branch.branch_bound` at 162. This would close one six-hole descendant, **not yet D1=1LB**.
-3. Compose the other B1 descendant proofs, the explicit B1 transition partition and the E/F relabelings to cover D1=1LB at 166. Finally address the other retained D1 cylinders and its exact current canonical roster membership. There is no valid global roster deletion yet.
-
-Three earlier pilot failures were generation/integration defects (metadata alignment, parser terminator formatting, and missing imports), not falsifications of the candidate mathematical partition. The corrected source and experimental JSON are retained here. Do not confuse zero OPEN in search output with a kernel-certified universal bound.
+Related CI selectors in the existing `agent10-four-hole.yml` workflow: `raw36-pilot` (single original-source child), `raw36-shards` (currently blocked by invalid FAR candidates), `raw36-reclassify` (corrected census), and `raw36-far-discover` (new automaton search). No accepted global roster decrement is claimed from Raw36.
