@@ -29,14 +29,13 @@ theorem macroRunExact_sound (k : Nat) (m : MacroConfig) (tot : Nat)
           simp [hs] at h
       | some nm =>
           rcases nm with ⟨n, m1⟩
-          rw [hs] at h
+          simp only [hs] at h
           cases hr : macroRunExact k m1 with
           | none =>
               simp [hr] at h
           | some sm =>
               rcases sm with ⟨s, m2⟩
-              rw [hr] at h
-              simp only [Option.some.injEq, Prod.mk.injEq] at h
+              simp only [hr, Option.some.injEq, Prod.mk.injEq] at h
               rcases h with ⟨rfl, rfl⟩
               have hstep : run n (physical m) = some (physical m1) :=
                 macro_sound hv hs
