@@ -9,7 +9,7 @@ with the objective of proving a universal weighted halting bound for every compl
 ## Established dependencies
 
 - The four-hole cylinder `[7,24,11,24,14,20,9,16,8,11,24,24]` (E0=0LC, D0=0RC, C1=0LF) already has a kernel-checked all-completions weighted bound of **84**, covering all (25^4=390625) completions. Its theorem is `BB6.Agent6E0ZeroLC.D0ZeroRC.C1ZeroLF.all_completions_weighted`.
-- **Correction (2026-11-27):** the artifact from run 45728638168 has E0=0LD (code 12), not E0=0LC (code 8). It cannot prove the required D0=0RC child. The exact table `[7,24,11,24,14,24,9,16,8,11,24,24]` has a complete candidate partition of 15,894 leaves and bound 616. The 630 formerly open tables classify as 419 block-FAR, 194 FAR, 13 cycles and four last-hole queries; maximum query 610. `d0rc_exact.py` reconstructs its source-level proof modules. Local Lean 4.36.0-rc2 compiled all 138 batched modules, including `Raw139E0ZeroLCD0RC`, with final axiom audit `[propext, Classical.choice, Quot.sound]`. Independent source-connected artifact run 45942651816 is pending.
+- **Correction (2026-11-27):** the artifact from run 45728638168 has E0=0LD (code 12), not E0=0LC (code 8). It cannot prove the required D0=0RC child. The exact table `[7,24,11,24,14,24,9,16,8,11,24,24]` has a complete candidate partition of 15,894 leaves and bound 616. The 630 formerly open tables classify as 419 block-FAR, 194 FAR, 13 cycles and four last-hole queries; maximum query 610. `d0rc_exact.py` reconstructs its source-level proof modules. Local Lean 4.36.0-rc2 compiled all 138 batched modules, including `Raw139E0ZeroLCD0RC`, with final axiom audit `[propext, Classical.choice, Quot.sound]`. Independent source-connected CI run [45942651816](https://github.com/FlareZ123/bb6/actions/runs/45942651816) **succeeded**; artifact 15173493877 (`raw139-e0-zeroLC-D0RC-certified`).
 
 ## E0 parent decomposition
 
@@ -17,7 +17,7 @@ The first query is D0 at step `query_step`. Its immediate-halt (`none`) branch i
 
 - **11 direct cycle children**;
 - **12 broad D0 branches**, whose search has 13,323 initially unclassified leaves, 29 exact hard-witness exceptions, and two late multi-hole expansions;
-- **one exact D0=0RC five-hole Cover** at weighted bound 616, locally kernel checked; CI artifact pending.
+- **one exact D0=0RC five-hole Cover** at weighted bound 616, source-accepted by run 45942651816.
 
 The broad search's longest ordinary query is 80,371 steps, so the proposed parent weighted bound is **80,377** after the five blank-delay moves and halt tick. The hard-witness recipes and exact tables are in [`hard-witnesses.md`](hard-witnesses.md). The 13,323 leaves are computationally classified by the search/recipe layer; they are not a kernel-checked parent result until the generated Lean closure passes.
 
@@ -40,3 +40,6 @@ The opt-in input `e0_zeroLC_parent=true` in `.github/workflows/agent6-champion-r
 at bound **80,377**. The artifact `agent6-e0-zeroLC-parent-<source-sha>` contains generated sources, certificate data, compiled objects, the Lean manifest, and the copied D0=0RC source.
 
 **Current status: candidate parent; Lean CI acceptance is pending.** Do not report the full E0=0LC parent as kernel-checked until the workflow succeeds and its theorem axiom audit contains only `propext`, `Classical.choice`, and `Quot.sound`. This directory remains intermediate research; no entry is added to `results/`.
+
+## Exact broad branch proof architecture (2026-11-27)
+All nine long last-hole leaves and the translated cycle exception are kernel checked locally; see `packed_long.py`, `packed_cycle.py` and `local-long-audit.txt`. The 80,371-step trace uses 157 packed replay pieces; explicit join parameters avoid expensive unification. The 7,679+740-step cycle uses 60 bounded zipper entry pieces and a separately checked period window. `broad_exact.py` reuses exact hard tables and the original search, composing 12 independent weighted Cover roots at 80,377. CI run [45943691837](https://github.com/FlareZ123/bb6/actions/runs/45943691837) is queued. No full E0 parent claim until all twelve broad roots and the final exact parent check succeed.
