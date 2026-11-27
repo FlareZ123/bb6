@@ -52,13 +52,14 @@ def proposal(lo: int, hi: int, block: int, threshold: int, work: int):
     return R,L,sorted(hits),dense,sparse,visits
 
 
-def chain(lo: int, hi: int, block: int, group: int, threshold: int, work: int, directory: Path):
+def chain(lo: int, hi: int, block: int, group: int, threshold: int, work: int, directory: Path, path_blocks: bool = False):
     R,L,hits,dense,sparse,visits=proposal(lo,hi,block,threshold,work)
     ns=f'BB6.Agent9PairCarry.S{lo}_{hi}'; prefix=f'PairSparse{lo}_{hi}_'
     body=[f'def skip : List Nat := {hits}', f'def cp0 : Nat := halfMask {R}',
           f'theorem pc0 : PairCertificate skip {R} {hi} {R} cp0 :=',
           f'  pairCert_start skip {R} {hi} (by decide)']
-    prev='PairSparse'; shard=0; count=0
+    prev='PairPathBlock' if path_blocks else 'PairSparse'; shard=0; count=0
+    extend='pairPathBlock_extend' if path_blocks else 'pairSparse_extend'
     def flush():
         nonlocal prev,shard,count,body
         mod=f'{prefix}{shard:04}'
@@ -81,7 +82,7 @@ def chain(lo: int, hi: int, block: int, group: int, threshold: int, work: int, d
         start=sparse[i-1][0]
         body += [f'def sp{i} : List Nat := {xs}',
                  f'theorem sc{i} : PairSparseCertificate skip {R} {hi} {r} sp{i} :=',
-                 f'  pairSparse_extend skip {R} {hi} {start} {start-r} sp{i-1} sp{i} (by decide) (by decide) sc{i-1} (by decide +kernel)']
+                 f'  {extend} skip {R} {hi} {start} {start-r} sp{i-1} sp{i} (by decide) (by decide) sc{i-1} (by decide +kernel)']
         count+=1
         if count==group: flush()
     r,xs=sparse[-1]
@@ -94,10 +95,10 @@ def chain(lo: int, hi: int, block: int, group: int, threshold: int, work: int, d
     return prev,ns,hits
 
 
-def make(lo: int, hi: int, block: int, group: int, threshold: int, work: int, output: Path):
+def make(lo: int, hi: int, block: int, group: int, threshold: int, work: int, output: Path, path_blocks: bool = False):
     assert group>0
     output.parent.mkdir(parents=True,exist_ok=True)
-    mod,ns,hits=chain(lo,hi,block,group,threshold,work,output.parent)
+    mod,ns,hits=chain(lo,hi,block,group,threshold,work,output.parent,path_blocks)
     imports=[mod]
     for n in hits:
         mod,_,remaining=chain(n,n,block,group,threshold,work,output.parent)
@@ -127,4 +128,5 @@ if __name__=='__main__':
     p.add_argument('--threshold',type=int,default=512)
     p.add_argument('--work',type=int,default=5000)
     p.add_argument('--output',type=Path,default=Path('PairSparseFinite.lean'))
-    a=p.parse_args(); make(a.lo,a.hi,a.block,a.group,a.threshold,a.work,a.output)
+    p.add_argument('--path-blocks',action='store_true')
+    a=p.parse_args(); make(a.lo,a.hi,a.block,a.group,a.threshold,a.work,a.output,a.path_blocks)
