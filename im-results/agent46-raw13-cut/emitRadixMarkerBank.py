@@ -31,6 +31,22 @@ def emit_fixture(d,output,ns,kind):
         for name in ['moveZ','moveS','overZ','overS']:
             s.append(f'def {name} : Macro := '+macro(d['macros'][name]))
         s.append(f'def cert : Marker.Cert := ⟨shape,{d["entry"]},freeZ,freeS,markZ,markS,moveZ,moveS,overZ,overS⟩')
+    elif kind=='Terminal':
+        k=len(d['digits'])-1
+        t=len(d['terms'])-1
+        s.extend([fn('digit',d['digits']),fn('terminal',d['terms']),
+            f'def next : Fin {t+1} → Fin {t+1} := fun i => match i.val with\n'+''.join(f'  | {i} => {x}\n' for i,x in enumerate(d['nexts'][:-1]))+'  | _ => '+str(d['nexts'][-1]),
+            f'def ext : Fin {t+1} → List (Fin {k+1}) := fun i => match i.val with\n'+''.join(f'  | {i} => {x}\n' for i,x in enumerate(d['exts'][:-1]))+'  | _ => '+str(d['exts'][-1]),
+            f'def shape : Terminal.Shape {k} {t} := ⟨{d["q"]},{bits(d["left"])},digit,terminal,next,ext⟩',
+            fns('nz',d['nz']),fns('ns',d['ns']),fns('tz',d['tz']),fns('ts',d['ts']),
+            f'def cert : Terminal.Cert {k} {t} := ⟨shape,{d["entry"]},{d["seed"]},{d["top"]},nz,ns,tz,ts⟩'])
+    elif kind=='SweepMarker':
+        s.extend([fn('free',d['free']),f'def shape : SweepMarker.Shape := ⟨{d["q"]},{bits(d["left"])},free,{bits(d["mark"])},{bits(d["sentinel"])},{bits(d["unmarked"])}⟩',
+            fns('normalZ',[d['macros'][f'd{i}Z'] for i in range(3)]),
+            fns('normalS',[d['macros'][f'd{i}S'] for i in range(3)])])
+        for name in ['moveZ','moveS','endZ','endS','overZ','overS']:
+            s.append(f'def {name} : Macro := '+macro(d['macros'][name]))
+        s.append(f'def cert : SweepMarker.Cert := ⟨shape,{d["entry"]},normalZ,normalS,moveZ,moveS,endZ,endS,overZ,overS⟩')
     else:
         raise ValueError(kind)
     s.extend([f'theorem checked : {kind}.Checked p cert := by constructor <;> decide',
