@@ -49,7 +49,42 @@ def verify_base(work):
     return linked, report
 
 
-def add_raw59(work, linked, run_id, *, parent_only=False):
+def exact_bridge_alias(work, linked, reached_names, new_objects):
+    """Coalesce the two generated width-four bridges only on exact kernel equality.
+
+    The accepted Raw59 parent was checked in an isolated environment. Its
+    Raw59LB1BlockBridge4 source is generated from the same template as the
+    canonical BlockFARBridge4, but Lean forbids importing both definitions.
+    Preserve the original module name as a new, ordinary Lean import-only shim.
+    Downstream accepted proof terms still see exactly the same declarations.
+    """
+    old_name = "Raw59LB1BlockBridge4.olean"
+    base_name = "BlockFARBridge4.olean"
+    if old_name not in reached_names or not (linked / base_name).is_file():
+        return None
+    assert old_name in new_objects and base_name not in new_objects, "alias must replace only new producer object"
+    old, canonical = linked / old_name, linked / base_name
+    compare = HERE.parent / "agent13-raw125" / "CompareKernelImports.lean"
+    proc = subprocess.run(["lean", "--run", str(compare), str(canonical), str(old)],
+                          stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+    assert proc.returncode == 0, ("width-four bridge definitions differ; refuse alias", proc.stdout)
+    report = {"producer_module": old_name, "canonical_module": base_name,
+              "producer_sha256": a68.sha(old), "canonical_sha256": a68.sha(canonical),
+              "kernel_equal": True, "comparison": proc.stdout.strip()}
+    scratch = work / "raw59-exact-bridge-alias"
+    scratch.mkdir()
+    source = scratch / "Raw59LB1BlockBridge4.lean"
+    source.write_text("import BlockFARBridge4\n")
+    output = scratch / old_name
+    a68.compile_module(source, output, dict(os.environ, LEAN_PATH=str(linked)), scratch / "alias.log")
+    report["alias_source_sha256"] = a68.sha(source)
+    report["alias_olean_sha256"] = a68.sha(output)
+    shutil.copy2(output, old)
+    (scratch / "alias.json").write_text(json.dumps(report, indent=2) + "\n")
+    return report
+
+
+def add_raw59(work, linked, run_id, *, parent_only=False, repair_exact_alias=False):
     # The old candidate wrapper imports a historical global membership module.
     # A new consumer can use the accepted parent proof directly and check its
     # table against its own roster without importing that obsolete wrapper.
@@ -169,6 +204,7 @@ def add_raw59(work, linked, run_id, *, parent_only=False):
         for name in new_objects:
             if name not in reached_names:
                 (linked / name).unlink()
+    alias = exact_bridge_alias(work, linked, reached_names, new_objects) if repair_exact_alias else None
     archive.unlink()
     (work / "raw59-link-audit.json").write_text(json.dumps(audit, indent=2) + "\n")
     print(f"Verified Raw59 delta: {len(reached_names)} reached objects, "
@@ -176,6 +212,7 @@ def add_raw59(work, linked, run_id, *, parent_only=False):
     return {"run_id": run_id, "revision": run["head_sha"], "artifact_id": aid,
             "artifact_sha256": expected, "claim": claim,
             "linked_root": root_module, "slice_olean_sha256": relocation["output_sha256"],
+            "exact_bridge_alias": alias,
             "link_audit_sha256": a68.sha(work / "raw59-link-audit.json")}
 
 
