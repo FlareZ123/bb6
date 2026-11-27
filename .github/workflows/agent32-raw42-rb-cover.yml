@@ -4,7 +4,7 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested, early, discovery, assembly, block, hard, recover_rb5]
+        options: [rb, wide, nested, early, discovery, assembly, block, hard, recover_rb5, recover_assembly]
         default: rb
       assembly_branch:
         type: choice
@@ -656,5 +656,170 @@ jobs:
         with:
           name: raw42-certified-0RB
           path: /tmp/final
+          retention-days: 30
+          if-no-files-found: error
+
+  recover_assembly_prepare:
+    if: inputs.variant == 'recover_assembly'
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    outputs:
+      prior: ${{ steps.plan.outputs.prior }}
+      groups: ${{ steps.transform.outputs.groups }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Select pinned interrupted assembly
+        id: plan
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          case "$BRANCH" in
+            1LA) prior=45996630344;;
+            1RA) prior=45996637267;;
+            *) echo "Only 1LA and 1RA have this recovery plan"; exit 1;;
+          esac
+          echo "prior=$prior" >> "$GITHUB_OUTPUT"
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.plan.outputs.prior }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.plan.outputs.prior }}
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - name: Preserve all accepted source closures and repair only missing groups
+        id: transform
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python "$d/recover_assembly42.py" . "$g" /tmp/shards /tmp/shared "$BRANCH"
+          echo "groups=$(python -c 'import json,sys;print(json.dumps(json.load(open(sys.argv[1]))["missing_groups"]))' "$g/recovery-plan.json")" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-recovery-generated
+          path: im-results/agent32-raw42/generated-assembly/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-recovery-shared
+          path: /tmp/shared/
+          retention-days: 14
+          if-no-files-found: error
+  recover_assembly_missing:
+    needs: recover_assembly_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        group: ${{ fromJSON(needs.recover_assembly_prepare.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-recovery-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-recovery-shared
+          path: /tmp/shared
+      - name: Compile one missing group with exact accepted shared objects
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$g/shards.json" "$GROUP")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          mkdir -p /tmp/shard
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/shard --jobs 1 --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/shared/manifest.json --precompiled-dir /tmp/shared \
+            --manifest /tmp/shard/manifest.json --artifact-name "raw42-assembly-shard-$GROUP" "${roots[@]}" | tee /tmp/shard/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/shard/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-shard-${{ matrix.group }}
+          path: /tmp/shard/
+          retention-days: 30
+          if-no-files-found: error
+  recover_assembly_compose:
+    needs: [recover_assembly_prepare, recover_assembly_missing]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-recovery-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ needs.recover_assembly_prepare.outputs.prior }}
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - name: Consume the complete exact eight-shard partition
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$g/shards.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH" \
+            --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" \
+            --weighted-bound 100006 "$g/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-${{ inputs.assembly_branch }}
+          path: /tmp/final/
           retention-days: 30
           if-no-files-found: error
