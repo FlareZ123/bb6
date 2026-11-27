@@ -122,17 +122,19 @@ with tempfile.TemporaryDirectory() as temp:
                 g=2000000+100000*i+index
                 assert g not in miss
                 miss[g]=(i,t)
-    subprocess.run(['g++','-O3','-std=c++20',str(graph_here/'run_search.cpp'),'-o',str(work/'run_search')],check=True)
+    subprocess.run(['g++','-O3','-std=c++20',str(here/'run_portfolio.cpp'),'-o',str(work/'run_search')],check=True)
     def search(args,inp):
         run=subprocess.run([str(work/'run_search'),*args],input=inp,text=True,capture_output=True,check=True)
         return run.stdout,run.stderr
     inp=''.join(f'{g} {t.replace("_","")}\n' for g,(i,t) in miss.items())
-    cheap,left=search(['10000','150'],inp)
+    portfolio,left=search(['portfolio',str(here/'graph-portfolio.txt'),'10000'],inp)
+    cheap,left=search(['10000','150'],left)
     deep,left=search(['80000','999999'],left)
     # Exact soundness is independent of which search proposes the graph.
     # Use asymmetric candidates only for the remaining failures.
     asym,left=search(['asym','5000','50000'],left) if left.strip() and not partial_mode else ('',left)
-    hits=cheap+deep+asym
+    hits=portfolio+cheap+deep+asym
+    print(f'Portfolio: {len(portfolio.splitlines())}/{len(miss)} novel graph candidates',flush=True)
     (out/'unresolved.txt').write_text(left)
     if not partial_mode: assert not left.strip(),left
     # Persist the compact witnesses, exact parent association and emitted proof source.
@@ -150,7 +152,19 @@ with tempfile.TemporaryDirectory() as temp:
         {'parent':i,'table':t} for i,t in sorted(unresolved)],indent=2)+'\n')
     with (out/'graphs.txt').open('w') as fp:
         subprocess.run([str(work/'run_search'),'emit'],input=hits,text=True,stdout=fp,check=True)
-    if hits.strip(): subprocess.run([sys.executable,str(graph_here/'emit_graph.py'),str(out/'graphs.txt'),str(out)],check=True)
+    graph_names={}
+    if hits.strip():
+        subprocess.run([sys.executable,str(graph_here/'emit_graph.py'),str(out/'graphs.txt'),str(out)],check=True)
+        for line in hits.splitlines():
+            g=int(line.split()[0])
+            old=f'Run{g}'
+            # Same table/parameters keep the same module identity. A different
+            # proof proposal never collides with a prior partial export.
+            name=old+'_'+hashlib.sha256(line.encode()).hexdigest()[:16]
+            src=out/(old+'.lean')
+            (out/(name+'.lean')).write_text(src.read_text().replace('.'+old,'.'+name))
+            src.unlink()
+            graph_names[g]=name
     print(f'Graph parents {ids}: {len(leaves)} open leaves, {len(cert)} FAR, {len(graph)} run-graph, {len(used_hard)} exact carry proofs')
 def emit(t,i):
     tag,*a=t
@@ -162,7 +176,7 @@ def emit(t,i):
         if (i,a[0]) in used_hard:
             _,partial,proof,_=used_hard[i,a[0]]
             return f'.proven {partial} {proof}'
-        n=f'BB6.Agent12Raw47.Run{graph[i,a[0]]}'
+        n='BB6.Agent12Raw47.'+graph_names[graph[i,a[0]]]
         return f'.proven {n}.parent {n}.never'
     raise ValueError(t)
 def unknown_count(t,i):
@@ -191,7 +205,7 @@ for i in ids:
     modules=sorted(g for (j,t),g in graph.items() if j==i)
     hard_modules=sorted({v[0] for (j,t),v in used_hard.items() if j==i})
     kind='U' if nleft else 'G'
-    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import Run{g}\n' for g in modules)+('import PartialPrefixAudit\n' if nleft else '')+f'''import CanonicalPartial
+    source=''.join(f'import {m}\n' for m in hard_modules)+''.join(f'import {graph_names[g]}\n' for g in modules)+('import PartialPrefixAudit\n' if nleft else '')+f'''import CanonicalPartial
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 set_option Elab.async false
