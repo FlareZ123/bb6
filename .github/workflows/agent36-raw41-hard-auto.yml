@@ -1,0 +1,31 @@
+name: Agent 36 Raw41 child084 remaining affine sweep search (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  infer:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    strategy:
+      fail-fast: false
+      matrix:
+        leaf: [8, 14]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Infer source-checkable symbolic pump from original code
+        run: |
+          set -euo pipefail
+          python3 im-results/agent36-raw41/probe_auto.py \
+            --leaf ${{ matrix.leaf }} --seconds 60 \
+            --out raw41-auto-leaf-${{ matrix.leaf }}.json
+          cat raw41-auto-leaf-${{ matrix.leaf }}.json | head -c 1000
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw41-auto-leaf-${{ matrix.leaf }}
+          path: raw41-auto-leaf-${{ matrix.leaf }}.json
+          retention-days: 30
