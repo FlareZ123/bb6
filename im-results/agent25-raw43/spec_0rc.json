@@ -1774,34 +1774,13 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
-  "unresolved": [
-    {
-      "i": 43,
+  "growth": {
+    "43": {
       "table": "1RB1LF_1RC0RE_0RD1LE_1LD0RB_0LA0RC_0LE---",
-      "query": [
-        "open"
-      ],
-      "bidfa": {
-        "status": "fail",
-        "states": 1328,
-        "params": [
-          [
-            4,
-            3,
-            3,
-            1,
-            1
-          ],
-          [
-            4,
-            3,
-            3,
-            1,
-            1
-          ]
-        ]
-      }
+      "module": "Raw43RC0M43",
+      "partial": "BB6.Agent25Raw43RC0M43.table",
+      "never": "BB6.Agent25Raw43RC0M43.never"
     }
-  ]
+  },
+  "unresolved": []
 }
