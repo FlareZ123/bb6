@@ -1,0 +1,57 @@
+name: Agent43 P1 wide outstanding index
+on:
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "Maximum compute minutes"
+        default: "32"
+      bound:
+        description: "Carry budget K"
+        default: "3257299064"
+      checkpoint_run:
+        description: "Optional earlier workflow run ID"
+        default: ""
+permissions:
+  contents: read
+  actions: read
+jobs:
+  outstanding:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore optional checkpoint
+        if: inputs.checkpoint_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: agent43-wide-checkpoint
+          run-id: ${{ inputs.checkpoint_run }}
+          github-token: ${{ github.token }}
+          path: wide-output
+      - name: Compile and test
+        run: |
+          cd im-results/agent43-p1-high-cost-reset-count/
+          g++ -O3 -march=native wide_reverse_test.cpp -o /tmp/wide-test
+          /tmp/wide-test
+          g++ -O3 -march=native -fopenmp wide_prefix.cpp -o /tmp/wide-prefix
+          OMP_NUM_THREADS=2 P1_FUSE=8 /tmp/wide-prefix 3342 20000 1671 half | tee /tmp/small-log
+          grep -E '^END 3342 [1-9][0-9]*$' /tmp/small-log
+      - name: Compute outstanding index
+        env:
+          MINUTES: ${{ inputs.minutes }}
+          BOUND: ${{ inputs.bound }}
+        run: |
+          set -o pipefail
+          mkdir -p wide-output
+          export OMP_NUM_THREADS=2 P1_FUSE=16 P1_PLAN=1 P1_JUMP=26
+          set +e
+          timeout "${MINUTES}m" /tmp/wide-prefix 814324766 "$BOUND" 407162383 half wide-output/frontier.bin | tee wide-output/scan.log
+          rc=${PIPESTATUS[0]}
+          echo "exit=$rc" | tee -a wide-output/scan.log
+          if [[ "$rc" != 0 && "$rc" != 1 && "$rc" != 124 ]]; then exit "$rc"; fi
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent43-wide-checkpoint
+          path: wide-output/
+          retention-days: 30
