@@ -1,0 +1,57 @@
+[
+  {
+    "child": "1LC",
+    "id": 201,
+    "table": "1RB0LA_1RC1RE_0RD1LC_1LD1LA_0RF0RC_1RD---",
+    "entry": 0,
+    "period": 868,
+    "right": false,
+    "bound": 15,
+    "shift": -30,
+    "entryHead": 0
+  },
+  {
+    "child": "1RC",
+    "id": 160,
+    "table": "1RB0LA_1RC1RE_0RD1RC_1LD1LA_0RD0RF_---0RE",
+    "entry": 0,
+    "period": 404,
+    "right": false,
+    "bound": 15,
+    "shift": -16,
+    "entryHead": 0
+  },
+  {
+    "child": "1RB",
+    "id": 54,
+    "table": "1RB0LA_1RC0RE_0RD1RB_1LD1LA_---0RF_1LB0LD",
+    "entry": 381,
+    "period": 354,
+    "right": false,
+    "bound": 4,
+    "shift": -12,
+    "entryHead": -15
+  },
+  {
+    "child": "0RD",
+    "id": 150,
+    "table": "1RB0LA_1RC1RE_0RD0RD_1LD1LA_---0RF_0LA0RA",
+    "entry": 905,
+    "period": 288,
+    "right": false,
+    "bound": 5,
+    "shift": -8,
+    "entryHead": -15
+  },
+  {
+    "child": "1LA",
+    "id": 161,
+    "table": "1RB0LA_1RC1RE_0RD1LA_1LD1LA_0RB0RF_---0RD",
+    "entry": 628,
+    "period": 356,
+    "right": false,
+    "bound": 5,
+    "shift": -12,
+    "entryHead": -12
+  }
+]
