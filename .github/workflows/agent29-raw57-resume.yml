@@ -1,0 +1,108 @@
+name: Agent29 Raw57 rc2 shard18 resume
+run-name: Raw57 rc2 recover shard18 and assemble
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  shard18:
+    runs-on: ubuntu-latest
+    timeout-minutes: 85
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Restore exact Raw57 sources from the 18-of-19 accepted run
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-sources
+          path: /tmp/raw57-generated
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 46035478679
+      - name: Restore exact Raw57 core from the 18-of-19 accepted run
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-core
+          path: /tmp/raw57-core
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 46035478679
+      - name: Compile only missing shard 18
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw57/recover_rc2.py shard \
+            --generated /tmp/raw57-generated \
+            --core /tmp/raw57-core \
+            --work /tmp/raw57-shard \
+            --shard 18 | tee /tmp/raw57-shard.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw57-shard.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-rc2-shard-18
+          path: /tmp/raw57-shard/**
+          if-no-files-found: error
+          retention-days: 30
+
+  assemble:
+    needs: shard18
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Restore exact Raw57 sources
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-sources
+          path: /tmp/raw57-generated
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 46035478679
+      - name: Restore accepted shards 0 through 17
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw57-rc2-shard-*
+          path: /tmp/raw57-inputs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: 46035478679
+      - name: Restore newly accepted shard 18
+        uses: actions/download-artifact@v4
+        with:
+          name: raw57-rc2-shard-18
+          path: /tmp/raw57-inputs/raw57-rc2-shard-18
+      - name: Prove exact six-hole Raw57 parent at weighted bound 1500
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw57/recover_rc2.py assemble \
+            --generated /tmp/raw57-generated \
+            --inputs /tmp/raw57-inputs \
+            --merged /tmp/raw57-merged \
+            --work /tmp/raw57-final | tee /tmp/raw57-final.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw57-final.log \
+            --require BB6.Agent31Raw57.literal_cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw57-prefix-parent-certified
+          path: |
+            /tmp/raw57-final/**
+            /tmp/raw57-final.log
+          if-no-files-found: error
+          retention-days: 30
