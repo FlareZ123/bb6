@@ -9,6 +9,7 @@ on:
         options:
           - paired
           - at-terminal
+          - at-family
         default: paired
 
 jobs:
@@ -33,8 +34,18 @@ jobs:
           lean -o im-results/agent31-f197-macro/MacroExact.olean im-results/agent31-f197-macro/MacroExact.lean
           lean im-results/agent2-f197-sweep/ATTerminalCore.lean | tee /tmp/at-terminal.log
           ! grep -q sorryAx /tmp/at-terminal.log
+      - name: Check complementary AT parametric cores
+        if: ${{ inputs.target == 'at-family' }}
+        env:
+          LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent31-f197-macro/Macro.olean im-results/agent31-f197-macro/Macro.lean
+          lean -o im-results/agent31-f197-macro/MacroExact.olean im-results/agent31-f197-macro/MacroExact.lean
+          lean -o im-results/agent2-f197-sweep/ATPairedCore.olean im-results/agent2-f197-sweep/ATPairedCore.lean | tee /tmp/at-family.log
+          ! grep -q sorryAx /tmp/at-family.log
       - name: Check paired reset transducer
-        if: ${{ inputs.target != 'at-terminal' }}
+        if: ${{ inputs.target == 'paired' || inputs.target == '' }}
         env:
           LEAN_PATH: im-results/agent31-f197-macro
         run: |
