@@ -1,0 +1,1 @@
+Raw57 cut artifact 15161588755 actual manifest Lean 4.36.0 final (611c117...), not rc2. Local pinned rc2 import fails incompatible header. All three accepted archive source cuts are reusable; early group failed shutdown. I'm preparing exact archived-source rc2 independent branch recovery, no new machine search. Do not launch another monolithic parent build.
