@@ -147,7 +147,7 @@ theorem O_to_E {p} (L : LeftRules p) (R : RightRules p) (n : Nat) :
     PosReach p (O n) (E (n+1)) := by
   have h := section3 L R (2*n+2) n
   have ha : 2*n+2 = 2*(n+1) := by omega
-  have hb : 3+n+2*(2*n+2) = 5*(n+1)+2 := by omega
+  have hb : 3+n+2*(2*(n+1)) = 5*(n+1)+2 := by omega
   rw [ha,hb] at h
   exact h
 
