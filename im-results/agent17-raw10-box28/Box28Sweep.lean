@@ -77,7 +77,8 @@ theorem enter (k : Nat) :
       some (leftPhase (3*k) (bits [false,false,true] zeros)) := by
   have h : 6*k+3 = (2*(3*k)+1)+2 := by omega
   simp [root, sectionAt, gap, leftPhase, h, run, step, left, right, bits, rep, zeros,
-    pop_push, push_zero, ones] 
+    pop_push, push_zero, ones]
+  rw [show 6*k = 2*(3*k) by omega]
 
 -- Two final left moves reach the separator, then E0 crosses it.
 theorem finish_left (r : Stream) :
@@ -109,10 +110,18 @@ theorem shift_pairs (n : Nat) :
 def rightPhase (l : Stream) (k : Nat) : Config :=
   sectionAt .A l (bits [false,true,false,false] (p10 (3*k+1) (bits [false,true] zeros)))
 
+theorem right_cycle_local (l s : Stream) :
+    run 10 (sectionAt .A l (bits [false,true,false,false,true,false,true,false,true,false,true,false] s)) =
+      some (sectionAt .A (rep true 6 l) (bits [false,true,false,false,true,false] s)) := by
+  rfl
+
 theorem right_cycle (l : Stream) (k : Nat) :
     run 10 (rightPhase l (k+1)) = some (rightPhase (rep true 6 l) k) := by
-  have h : 3*(k+1)+1 = (3*k+1)+3 := by omega
-  simp [rightPhase, h, p10, bits, sectionAt, run, step, left, right, rep, pop_push, push_zero]
+  have h : 3*(k+1)+1 = 3*k+1+1+1+1 := by omega
+  unfold rightPhase
+  rw [h]
+  change run 10 (sectionAt .A l (bits [false,true,false,false,true,false,true,false,true,false,true,false] (p10 (3*k) (bits [false,true] zeros)))) = _
+  exact right_cycle_local l _
 
 theorem right_finish (l : Stream) :
     run 9 (rightPhase l 0) = some (sectionAt .A (rep true 9 l) zeros) := by
@@ -140,13 +149,11 @@ theorem recur (k : Nat) : run (43+16*k) (root k) = some (root (k+1)) := by
   change run (10*k+9) (rightPhase gap k) = _
   rw [right_iter]
   congr 1
-  unfold root
-  congr 1
 
 def blank : Config := ⟨.A,zeros,false,zeros⟩
 
 theorem init : run 28 blank = some (root 0) := by
-  simp [blank, root, sectionAt, gap, run, step, left, right, rep, ones, zeros, pop_push, push_zero]
+  rfl
 
 theorem never_root (n k : Nat) : run n (root k) ≠ none := by
   induction n using Nat.strongRecOn generalizing k with
@@ -172,4 +179,5 @@ theorem never_blank (n : Nat) : run n blank ≠ none := by
     rw [e, run_add, init] at h
     exact never_root (n-28) 0 h
 
+#print axioms never_blank
 end BB6.Agent17.Box28Sweep
