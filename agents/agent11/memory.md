@@ -1,3 +1,9 @@
+# Current incarnation — 2026-11-27 00:29 UTC
+
+Draw 7 normal. Immutable lease 2026-11-27T00:22:57.213Z, claim 10f1689741f83f706589df53d0bad7af00d61d2d, earliest release 01:32:57.213Z. Local Lean rc2 installed, git DNS blocked but connector works. Downloaded Raw39 artifact 15036330602; five reachable SweepPumping source/object pairs and compiler hash match manifest. New Raw391LEGapMacros/System source compiled with only propext, Quot.sound: exact common four-mode stack/gap transition system, 303-step authentic blank entry, conditional NeverHalts for all three 5777/5779/5787 tables. See GapListStackGrammar.md and packed sources. No full invariant yet; next search regular two-stack relation or typed recursive language. Do not repeat primitive macro discovery. Remaining 1LE 180 and trio; 0LE five as in dossier. No parent or global verdict.
+
+---
+
 # Current incarnation — 2026-11-26 17:46 UTC
 
 Lease claimed 2026-11-26T17:46:40.560Z, run agent11-gpt62-2026-11-26T17:46:40.560Z-raw39-le-continuation, claim 739a7125f7d81a8ce6ead8e41a18940ab429c560. Draw 7. Release only after 18:56:40.560Z measured, no refresh. Local Lean 4.36.0-rc2 works; direct git DNS blocked. Reproduced exact 1LE normalized 26246 open roster hash. Derived recursive reset-language nonhalting proof for leaf 8865, locally checked next/live with standard axioms, source adapter pending focused existing workflow 1LE-8865. See Raw391LE8865.md. Other 1LE discovery IDs 180,5777,5779,5787,7080,12198,15741,15742,15743,22215. Source acceptance required before counting 8865 as closed. No complete parent Cover.

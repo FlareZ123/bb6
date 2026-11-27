@@ -1,77 +1,64 @@
-# Raw39 1LE F1 siblings: gap-list orbit and candidate stack grammar
+# Raw39 1LE F1 siblings: exact four-mode gap/stack reduction
 
-**Status: experimental / proof-pending.** This note concerns the three remaining 1LE siblings 5777, 5779 and 5787. It does not establish nonhalting, and it must not be promoted to `results/` until the macro return and invariant are proved.
+**Status:** locally kernel-checked exact original-semantics macro transport and conditional nonhalting interface for 5777, 5779, 5787. No complete inductive invariant, leaf decision or parent Cover yet. Unlike the earlier sampled run grammar, the reduction includes arbitrary untouched left and right tails, actual blank entry, and all-time positive primitive-cost transport.
 
-## Boundary encoding
+## Literal tables and boundary
 
-At the observed state-F, symbol-0 boundary, the left tape is exactly `00`. Encode each right-tape zero gap by
+The three tables share `1RB1LE_1RC0LE_0RD---_1LD0RA_0LB0RF_1RE` with F1 respectively `0RC,0RE,1RC`. C1 remains undefined. At time 170 the F0 section has left zipper list 00 (current included), right gap list [1,5,1], encoded by gap(g)=0^g11. P takes 70 steps and changes [1,5]W to [3,1,2]W. Q preparation takes 63 steps and enters A scan on W with stack base 11100111110011. Thus time 303 is the authentic abstract initial configuration (A, empty stack, [1]).
 
-`gap(g) = 0^g 11`.
+## Exact reduction
 
-The right tape is a concatenation of these blocks. After the common initial prefix, the observed boundary orbit alternates:
+A configuration is (mode, stack of frames with top first, gap word); the gap alphabet is {1,2,3,5}. A and F scan the first bit of the encoded word (or blank zero when empty); H is an F1 boundary after consuming two adjacent gap ones; B unwinds the stack. The fixed stack prefixes for A/F/H (excluding the current cell) are respectively 00, 01000, 0101000. Let x denote the unmodified word suffix, S the stack, and a–f the six frame types.
 
-- P phase: `[1,5] ++ W  ->  [3,1,2] ++ W`
-- Q phase: `[3,1,2] ++ W  ->  [1,5] ++ f(W)`
-
-The P phase takes 70 primitive steps on the sampled orbit and leaves the tail unchanged. The Q phase is more complicated; its cost depends on the tail and on the F1 completion.
-
-The three tables differ only at F1:
-
-| Residual | F1 action |
+| Mode/input | Successor |
 | --- | --- |
-| 5777 | `0RC` |
-| 5779 | `0RE` |
-| 5787 | `1RC` |
+| A / 3x | A, aS, x |
+| A / 1x | F, S, x |
+| A / 5x | B, S, 111x |
+| A / empty | B, S, 11 |
+| F / 2x | A, bS, x |
+| F / 1x | H, S, x |
+| F / 5x | B, S, 312x |
+| F / empty | B, S, 31 |
+| H / 1x | A, cS, x |
+| H / 2x | A, dS, x |
+| H / 3x | F, eS, x |
+| H / 5x | A, fS, x |
+| H / empty | B, S, 3111 |
 
-For the first 20 Q phases, the simulator produced the same output (f(W)) for all three variants. Their primitive costs differ when F1 is visited. The first examples are:
+The B rules act on g x with g=1 or 3 and h=g+2 (the c/e rules allow any gap); their outputs are:
+- aS -> B,S,1 h x;
+- bS -> B,S,3 h x;
+- cS -> A,bS,g x (this rescan is the essential previously missing mechanism);
+- dS -> B,S,3 1 h x;
+- eS -> B,S,3 1 g x;
+- fS -> B,S,3 1 1 h x;
+- empty stack -> A,empty,h x, including the next P and Q setup (171 primitive steps).
 
-| Input tail (W) | Common output (f(W)) | Q cost: 5777 / 5779 / 5787 | F1 visits |
-| --- | --- | ---: | ---: |
-| `[1]` | `[5,1]` | 150 / 150 / 150 | 0 / 0 / 0 |
-| `[5,1]` | `[3,1,1,1]` | 118 / 118 / 118 | 0 / 0 / 0 |
-| `[3,1,1,1]` | `[3,5,5,1,1,1]` | 318 / 310 / 306 | 2 / 2 / 2 |
-| `[3,5,5,1,1,1]` | `[3,3,1,1,5,1,1,1]` | 142 / 142 / 142 | 0 / 0 / 0 |
-| `[3,3,1,1,5,1,1,1]` | `[3,3,5,1,1,5,5,1,1,1]` | 452 / 448 / 444 | 3 / 3 / 3 |
+Every listed transition has a positive exact primitive cost for each variant. The frames are bit words, with c,d,e,f variant-specific. All details are in the formal modules. The partial abstract system deliberately has no A/2, F/3, or unsupported B rule: proving these are avoided on the authentic orbit is the open obligation. The gap system is independent of the F1 variant, though primitive costs differ.
 
-These are exact outputs of the finite simulator, not a proof that every grammatical input returns. In the first 20 Q phases, F1 visits occur only on even-indexed phases from index 2 onward; the output tails remain identical across the three completions.
+## Proof and reproduction
 
-Reproduce the experiment with [`gaplist_orbit.py`](gaplist_orbit.py). It checks both P and Q boundary returns, verifies that P preserves the tail, and rejects any divergence among the three Q outputs.
+Packed JSON [Raw391LEGapSystem.json.xz.b64](Raw391LEGapSystem.json.xz.b64) contains two UTF-8 Lean sources. Extract with:
+```python
+import json, lzma, base64
+from pathlib import Path
+data=json.loads(lzma.decompress(base64.b64decode(Path("Raw391LEGapSystem.json.xz.b64").read_text())))
+for name,source in data.items():
+    Path(name).write_text(source)
+```
+Source SHA256:
+- Raw391LEGapMacros.lean: bb37b243540b04fee8959850e8fc3b005aec670c768864268e3e10b934fe371a
+- Raw391LEGapSystem.lean: 3e4e6420568daf8e65f784742b29d3a1797aa3e82efea21517bf063de79536a7
 
-## Candidate run grammar
+Local Lean 4.36.0-rc2 (compiler SHA256 matches artifact manifest) compiled both modules against source-accepted Raw39 artifact 15036330602 (run 45639153728). The reachable SweepPumping/Frontier/RootShift/SparseZipper/Symmetry source and object pairs match the artifact manifest; SweepPumping source SHA256 346daa8772700ee235c8342a1128153c43317dd1724e8f95b5e004e50fbd732f. Compile in that artifact directory with LEAN_PATH pointing to it, Macros first then System. This is a locally checked original-source artifact link, not a fresh CI acceptance or a complete machine verdict.
 
-Classify a gap (g) as:
+`BB6.Agent11Raw39Gap.step_sound`, `start_sound` and `never_of_invariant` have axioms [propext, Quot.sound]. The last theorem proves NeverHalts for every compatible total completion of each table if an invariant I contains initial and every I configuration has a Step successor in I. No sorryAx or native_decide. The source-certified macro system removes the need to model the three raw tables independently.
 
-- **X-gap** when (g\geq 3) (observed values 3 and 5);
-- **Y-gap** when (g\leq 2) (observed values 1 and 2).
+## Next proof obligation
 
-Group consecutive gaps of the same class into runs, weighting a run by the sum of its gap values. The observed tails after the initial `[1]` have the form
+Construct an all-time invariant of the four-mode reduction, for example via a finite automaton on each stack and an inductive relation on their states, or a recursive typed gap language. A3 pushes a; B/a unwinding prepends 1 and increases the first gap by 2; the resulting section map obeys f(3x)=3f(x), f(5x)=311x, f(12x)=5f(x), f(115x)=511f(x) whenever the recursive subrun returns. The c rescan means a simple single-pass transducer is insufficient. These equations are paper consequences of the checked primitive rules, not separately formalized totality statements.
 
-`X-run · (Y-run · X-run)* · trailing-Y-run`.
+## Earlier experiments and falsifiers
 
-Equivalently, each such tail is a candidate `Core ++ Y^+` word, where `Core` consists of alternating nonempty X-runs and Y-runs and ends in an X-run. Every X-run has weight at least 3 (the terminal one at least 2); every Y-run is nonempty. The initial tail `[1]` is a separate all-Y base case.
-
-Examples:
-
-- `[3,3,1,1,5,1,1,1]` parses as X-weight 6, Y-weight 2, X-weight 5, trailing Y-weight 3.
-- `[3,3,3,1,1,1,1,5,5,1,1,1]` parses as X-weight 9, Y-weight 4, X-weight 10, trailing Y-weight 3.
-- `[3,3,3,5,3,5,3,1,1,1,1,1]` parses as X-weight 25, trailing Y-weight 5.
-
-This resembles the `Core` / `StackGood` / `unwindGap` architecture in [`Raw391LEBlockRuns.md`](Raw391LEBlockRuns.md), but it is not yet the same formal language or a verified transport of that proof. The working hypothesis is that the A/F sweeps save X-run weights as stack frames and later unwind them across Y-runs. The left-tape traces are suggestive, not a proof of that interpretation.
-
-## Search already attempted
-
-- The bounded FAR/SMT search for 5777 found no certificate at DFA sizes 1–7 in the completed orientations; both size-8 orientations timed out.
-- For residual 180, sizes 1–6 found no certificate; at size 7 one orientation was UNSAT and the other timed out; both size-8 orientations timed out.
-- A radius-0-through-8 local-window closure is too coarse: arbitrary unseen far bits introduce spurious halt contexts.
-
-These are bounded negative search results only. They do not establish that a regular invariant does not exist, and they do not classify any residual.
-
-## Highest-value next steps
-
-1. Run `python3 im-results/agent11-raw39/gaplist_orbit.py --iterations 20` (or the corresponding CI target) to reproduce the boundary data independently.
-2. Formalize the candidate `GapCore` language and a saved-run stack encoding. Determine whether the actual tape view should use a trailing-Y suffix, a reflected view, or a different phase boundary.
-3. Derive the exact small-step `run0` lemmas for the P and Q phases. The Q theorem must be parameterized over the three F1 actions while proving a common output tail.
-4. Prove a recursive scan/unwind theorem for every `GapCore` input in the reachable grammar, including the base cases. Only then can the proof exclude C1 and establish nonhalting.
-5. Keep residual 180 separate. It did not visit F1 in a one-million-step blank simulation, but that observation and the bounded FAR search are not a proof.
-
-The source-inspection target `inspect-1LE-proof-sources` in `.github/workflows/agent11-raw39-more.yml` extracts the full `Raw391LEBlockRuns` and `Raw391LE12198` proof sources from their packed archives. Use them as proof-pattern references, not as evidence that this new grammar has already been proved.
+The original [gaplist_orbit.py](gaplist_orbit.py) remains useful for finite comparisons of the three variants. The previously proposed alternating X/Y gap-run grammar is too broad: prepared tail [2,1] reaches C1 (5777, at Q step 65), and [3,1,3,1] returns a zero gap. Bounded local-window and raw FAR/SMT attempts did not close the three tables (sizes 1–7 unsuccessful, 8 timed out), nor did they close the separate residual 180. These failures do not prove impossibility of a stronger regular or context-free invariant.

@@ -50,7 +50,7 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 - [1LE 21614,21623](Raw391LEDriftPair.lean): exact translated left drift, entry 1154/1124, period 2158/2108, fixed inserted 30-bit block before arbitrary tail.
 
 - [1LE 6270,16538](Raw391LEBlockRuns.md): ternary block-run language, with separate end and gap unwinding proofs for arbitrarily many saved runs.
-- [1LE 5777/5779/5787](GapListStackGrammar.md): experimental F0 gap-list orbit and candidate saved-run grammar; reproducible simulator at [gaplist_orbit.py](gaplist_orbit.py). This is not yet a nonhalting proof.
+- [1LE 5777/5779/5787](GapListStackGrammar.md): exact four-mode gap/stack macro reduction, 303-step blank entry and original-source artifact-linked conditional nonhalting theorem; remaining obligation is a common inductive invariant. No leaf verdict yet.
 
 - [1LE 8865](Raw391LE8865.md): recursive reset-language proof, source-accepted run 45871946437 / artifact 15141704829.
 
