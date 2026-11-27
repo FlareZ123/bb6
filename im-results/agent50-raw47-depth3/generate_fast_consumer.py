@@ -1,4 +1,4 @@
-"""Compose any bank of accepted Raw47 D3 FAR or pump parent modules.
+"""Compose any bank of accepted Raw47 D3 FAR, graph or pump parent modules.
 Every packed key is checked against its actual Lean table, and the kernel checks
 the residual count. No witness discovery or positional roster assumption.
 """
@@ -11,7 +11,7 @@ assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402
 rows=raw.decode().splitlines()
 names={}
 for path in p.glob('Raw47D3*.lean'):
-    m=re.fullmatch(r'Raw47D3(FAR|P)(\d+)',path.stem)
+    m=re.fullmatch(r'Raw47D3(FAR|G|P)(\d+)',path.stem)
     if not m: continue
     i=int(m.group(2)); assert 0<=i<len(rows) and i not in names,i
     names[i]=path.stem
@@ -30,7 +30,7 @@ imports=[names[i] for i in ids]
 entries=[]
 for i,m in zip(ids,imports):
     n='BB6.Agent50.'+m
-    entries.append(f'  ⟨{n}.p, '+(f'{n}.all_quotient' if m.startswith('Raw47D3FAR') else f'quotientSafe {n}.root {n}.bound')+'⟩')
+    entries.append(f'  ⟨{n}.p, '+(f'{n}.all_quotient' if m.startswith(('Raw47D3FAR','Raw47D3G')) else f'quotientSafe {n}.root {n}.bound')+'⟩')
 body=(here/'Raw47AcceptedFast.template').read_text().replace('@@ENTRIES@@',',\n'.join(entries)).replace('@@TREE@@',tree(keys)).replace('@@N@@',str(N)).replace('@@REMAIN@@',str(len(rows)-N))
 name=f'Raw47Accepted{N}'
 (p/(name+'.lean')).write_text('\n'.join('import '+x for x in ['Raw47Depth3Cut','FastKey']+imports)+'\n'+body)

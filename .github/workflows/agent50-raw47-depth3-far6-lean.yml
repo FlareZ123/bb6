@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [compose, far-batch, far-sweep]
+        options: [compose, far-batch, far-sweep, graph-batch]
         default: compose
       shard:
         type: number
@@ -16,6 +16,9 @@ on:
       size:
         type: number
         default: 12
+      parents:
+        type: string
+        default: '8 23 37 50 55'
 
 permissions:
   contents: read
@@ -87,7 +90,7 @@ jobs:
           if-no-files-found: error
 
   prepare:
-    if: inputs.mode != 'compose'
+    if: startsWith(inputs.mode, 'far-')
     runs-on: ubuntu-latest
     outputs:
       batches: ${{ steps.matrix.outputs.batches }}
@@ -124,7 +127,7 @@ jobs:
           PY
 
   batch:
-    if: inputs.mode != 'compose'
+    if: startsWith(inputs.mode, 'far-')
     needs: prepare
     strategy:
       fail-fast: false
@@ -178,4 +181,53 @@ jobs:
         with:
           name: raw47-far-${{ matrix.shard }}-${{ matrix.offset }}-${{ matrix.size }}
           path: .tmp/a50-raw47-far-batch/
+          if-no-files-found: error
+
+  graph:
+    if: inputs.mode == 'graph-batch'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: 45940910607
+          name: raw47-broad-far-1
+          path: /tmp/a50-far
+      - name: Produce and check complete mixed FAR/run-graph parent bounds
+        env:
+          PARENTS: ${{ inputs.parents }}
+        run: |
+          set -euo pipefail
+          [[ "$PARENTS" =~ ^[0-9]+(\ [0-9]+)*$ ]]
+          D=im-results/agent50-raw47-depth3
+          W=.tmp/a50-raw47-graph-batch
+          mkdir -p "$W/imports" "$W/build"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          read -ra ids <<< "$PARENTS"
+          python "$D/generate_graph_parents.py" "$W/imports" "${ids[@]}"
+          M=$(find /tmp/a50-far -name manifest.json -print -quit)
+          test -n "$M"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --precompiled-manifest "$M" --precompiled-dir "$(dirname "$M")/build" --manifest "$W/manifest.json" --label "Raw47 mixed FAR/graph parents $PARENTS" --weighted-bound 10006 --provenance-input "$D/raw47-depth3.open" --provenance-input "$W/imports/graph-hits.txt" "$W"/imports/Raw47D3G*.lean 2>&1 | tee "$W/log"
+          python - "$W/log" "$W/imports/ids.txt" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          for i in map(int,open(sys.argv[2])):
+              name=f'BB6.Agent50.Raw47D3G{i}.all_quotient'
+              m=re.search(r"'"+re.escape(name)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(m.group(1).split(', ')) <= {'propext','Quot.sound','Classical.choice'}, (name,m.group(1))
+              else: assert f"'{name}' does not depend on any axioms" in log,name
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw47-graph-parents
+          path: .tmp/a50-raw47-graph-batch/
           if-no-files-found: error
