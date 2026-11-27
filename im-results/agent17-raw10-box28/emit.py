@@ -55,9 +55,11 @@ def main():
     p.add_argument('--work',type=Path,required=True)
     p.add_argument('--out',type=Path,required=True)
     p.add_argument('--far',type=Path)
+    p.add_argument('--bank',type=Path,help='Previously selected certificate seed list; reconstruct masks, no discovery')
     a=p.parse_args()
     work=a.work.resolve();out=a.out.resolve();out.mkdir(parents=True,exist_ok=True)
     far=a.far.resolve() if a.far else None
+    bank=a.bank.resolve() if a.bank else None
     os.chdir(work);fixed=fixed_for(a.d0,a.d1)
     TARGETS=targets_for(a.d0)
     name=stem(a.d0,a.d1)
@@ -73,6 +75,10 @@ def main():
     d2v13 = (a.d0,a.d1)==(2,13)
     if d2v13:
         hard_rows={tuple(row):(f'row{i}',row.index(0),None,None) for i,row in enumerate(d2v13_rows)}
+    carry = a.d0==18 and a.d1 in (12,14,18)
+    carry_rows={tuple([8,ac,11,0,11,13,18,15,a.d1,24,4,12]) for ac in (20,24)} & remaining if carry else set()
+    if carry_rows and not far:
+        hard_rows.update({row:(f'carry{i}',3,None,None) for i,row in enumerate(sorted(carry_rows))})
     if far:
         manifest=json.loads((far/'far_manifest.json').read_text())
         assert not manifest['open_rows']
@@ -85,18 +91,18 @@ def main():
             assert len(row)==12 and row.count(0)==1
             target=row.index(0)
             label=f'far{i:02d}'
-            stem=f'{name}Far{i:02d}'
+            farstem=f'{name}Far{i:02d}'
             ns=f'BB6BlockFAR{width}'
             for suffix in ('Packed','Proof'):
-                shutil.copyfile(far/(stem+suffix+'.lean'),out/(stem+suffix+'.lean'))
-            bridge=stem+'Source'
-            q=f'BB6.Agent13.{name}.{stem}'
+                shutil.copyfile(far/(farstem+suffix+'.lean'),out/(farstem+suffix+'.lean'))
+            bridge=farstem+'Source'
+            q=f'BB6.Agent13.{name}.{farstem}'
             imports.append(bridge)
-            im=[f'import {stem}Proof',f'import BlockFARBridge{width}',f'import {name}Core']
+            im=[f'import {farstem}Proof',f'import BlockFARBridge{width}',f'import {name}Core']
             if flip: im.append(f'import MirrorTransport{width}')
-            table=f'{ns}.{stem}.machine'
+            table=f'{ns}.{farstem}.machine'
             projected=f'{ns}.mirrorTable {table}' if flip else table
-            proof=(f'{ns}.never_of_mirror projected (by simpa only [projected, {ns}.mirrorTable_involutive] using {ns}.{stem}.never)' if flip else f'{ns}.{stem}.never')
+            proof=(f'{ns}.never_of_mirror projected (by simpa only [projected, {ns}.mirrorTable_involutive] using {ns}.{farstem}.never)' if flip else f'{ns}.{farstem}.never')
             codes=','.join('none' if v<0 else f'some {v}' for v in row)
             body=f'''namespace {q}
 open BB6Coverage BB6.Agent49Box BB6.Agent13.Box17
@@ -132,13 +138,24 @@ end {q}
     else:
         assert remaining==set(hard_rows),('unexpected unresolved rows',remaining)
         if hard_rows:
-            ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28HardSource'
-            lines=[f'import {name}Tree','import '+('Box28D2V13Residual' if d2v13 else 'Box28HardSource'),
+            ns='BB6.Agent17.Box28D2V13Residual' if d2v13 else 'BB6.Agent17.Box28CarryFamilySource' if carry_rows else 'BB6.Agent17.Box28HardSource'
+            lines=[f'import {name}Tree','import '+('Box28D2V13Residual' if d2v13 else 'Box28CarryFamilySource' if carry_rows else 'Box28HardSource'),
               f'namespace BB6.Agent13.{name}','open BB6Coverage']
             for row,(label,target,part,proof) in hard_rows.items():
                 if d2v13:
                     i=label[3:]
                     lines.append(f'def {label} : Known {target} := ⟨{ns}.row {i}, fun m _ hm => {ns}.rowBound _ {i} m hm⟩')
+                elif row in carry_rows:
+                    e={12:'.c',14:'.d',18:'.e'}[a.d1]
+                    two=str(row[1]==24).lower()
+                    codes=','.join('some '+str(v) for v in row)
+                    lines.append(f'''def {label}Row : PartialMachine := fun s => (([{codes}] : List (Option (Fin 25)))[2*s.1.val+s.2.toNat]!).map BB6.Agent13.Box17.decode
+ theorem {label}Never (m : Machine) (hm : compatible {label}Row m) : NeverHalts m := by
+  apply {ns}.compatible_never {two} {e} m
+  intro s t ht
+  have h : ∀ (q : Fin 6) (b : Bool), ({ns}.partialTable {two} {e} (q,b)).isSome = true → {ns}.partialTable {two} {e} (q,b) = {label}Row (q,b) := by decide
+  exact hm s t ((h s.1 s.2 (by simp [ht])).symm ▸ ht)
+ def {label} : Known {target} := ⟨{label}Row, good_never {target} _ {label}Never⟩''')
                 else:
                     lines.append(f'def {label} : Known {target} := ⟨{ns}.{part}, good_never {target} _ ({ns}.{proof})⟩')
             lines.append(f'end BB6.Agent13.{name}')
@@ -158,6 +175,12 @@ end {q}
     finish.domain_for=domain_for
     greedy.BASE=[1<<v if v>=0 else (1<<25)-1 for v in fixed]
     greedy.run=run;greedy.HERE=work
+    import modular_run
+    oldcert=greedy.cert
+    def cert(t,p):
+        if p[0]=='m':return modular_run.run(t,p[1],100000)
+        return oldcert(t,p)
+    greedy.cert=cert;emitter.cert=cert
     emitter.HERE=work;emitter.OUT=out;emitter.domain_for=domain_for
     oldwrite=emitter.write
     def write(mod,imports,body):
@@ -171,7 +194,16 @@ end {q}
             v=list(map(int,line.split()));assert len(v)==21
             stack.append([v[:12],v[12:16],v[16:20]])
     json.dump({'stack':stack,'block':[]},open('survivors.json','w'))
-    sys.argv=['greedy.py'];greedy.main();sys.argv=argv
+    if bank:
+        entries=[]
+        for row,param in json.loads(bank.read_text()):
+            c=greedy.compress(cert(row,param))
+            mask=greedy.safe_mask(c)
+            assert greedy.subset(greedy.domain_mask(row),mask)
+            entries.append({'t':row,'param':param,'mask':mask,'states':len(c['states'])})
+        json.dump({'boxes':entries,'total':len(entries)},open('greedyboxes.json','w'))
+    else:
+        sys.argv=['greedy.py'];greedy.main();sys.argv=argv
     # Build first-hole proof tree from exact source slice domains.
     import subprocess
     from discover import prepare
