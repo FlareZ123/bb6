@@ -22,7 +22,7 @@ permissions:
 jobs:
   compose:
     runs-on: ubuntu-latest
-    timeout-minutes: 65
+    timeout-minutes: ${{ inputs.child_code == 'E1D0ZeroLE' && 180 || 65 }}
     steps:
       - uses: actions/checkout@v4
         with:

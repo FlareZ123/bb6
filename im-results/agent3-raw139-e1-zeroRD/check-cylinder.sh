@@ -33,6 +33,7 @@ PY
   exit 0
 fi
 case "$kind" in
+E1D0ZeroLE) d=16; emitter=emit-d0le.py; recipes=recipes-d0le.json; hash=ee587f95632ca2d9a914f9777ab7243061396a6e5edb0e7f973178365be70a4b; suffix=ZeroLE; B=456;;
 E1D0ZeroLA) d=0; emitter=emit-d0la.py; recipes=recipes-d0la.json; hash=badd35612f9653ed71106e91dde892cbe7dbf4072da92663cd49549eb7af49d1; suffix=ZeroLA; B=4653;;
 E1D0ZeroRD) d=13; emitter=emit-d0rd.py; recipes=recipes-d0rd.json; hash=3bef0ba1d4b421a915b4ff650622f11aa78c8ad71710a226b206a26fa0fd6127; suffix=ZeroRD; B=679;;
 E1D0OneRB) d=7; emitter=emit-d0rb1.py; recipes=recipes-d0rb1.json; hash=b6d3c1914722160084d71c5631f0dd344943d0c985b45cbfb8827851e8b75ce5; suffix=OneRB; B=435;;
@@ -47,6 +48,10 @@ if [[ "$kind" == E1D0ZeroRE ]]; then
  python3 "$base/$emitter" "$work/partition.json" "$base/$recipes" "$work/imports" 600
 else
  python3 "$base/$emitter" "$work/partition.json" "$work/imports" 600
+fi
+if [[ "$kind" == E1D0ZeroLE ]]; then
+  # Closure resolver must see original, checked ray/reflect definitions.
+  cp "$base"/UnaryGrow{,Bridge,Reflect}.lean "$work/imports/"
 fi
 root="A3E1ZeroRDD0${suffix}Cover"
 ns="BB6.Agent3Raw139E1ZeroRDD0${suffix}"

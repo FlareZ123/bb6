@@ -9,6 +9,10 @@ ORDER=[4*q+2*w+r for w in range(2) for r in range(2) for q in range(6)]
 PARENT=[7,24,11,24,14,24,17,16,24,13,24,24]
 NS='BB6.Agent3Raw139E1ZeroRDD0ZeroRE'
 PREFIX='A3E1ZeroRDD0ZeroRE'
+COUNTER_NS='BB6.Agent3CounterCarry'
+COUNTER_MODULE='CounterCarryBridge'
+COUNTER_IDS=(210,251,657)
+MIN_BOUND=0
 def bl(x):return str(bool(x)).lower()
 def slot(s):return f'({s//2},{bl(s%2)})'
 def mov(v):return f'⟨{bl(v&2)},{bl(v&1)},{v//4}⟩'
@@ -17,7 +21,7 @@ def vec(xs,b,stride=16):return f'⟨{b},{stride},#['+','.join(hex(pack(xs[i:i+st
 def rows(xs,b):
  k=max(1,max(map(len,xs)))
  return f'⟨{vec([pack([v+1 for v in x],b) for x in xs],b*k,8)},{b},{k}⟩'
-def block_source(i,t,c):
+def block_source(i,t,c,reflected=False):
  ns='BB6BlockFAR2' if c['width']==2 else 'BB6BlockFAR'
  assert c['width'] in (2,3)
  d,n=c['left_states'],c['right_nodes'];b=max(d,n).bit_length();pb=(2**c['width']*d).bit_length()
@@ -50,6 +54,13 @@ theorem never (m : BB6Coverage.Machine) (hm : BB6Coverage.compatible ctr m) : BB
   BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever
 end {ns2}
 """
+ if reflected:
+  # The certificate's machine has all directions flipped. Bind its exact
+  # 12 slots to the reflected ORIGINAL partial table, not to ctr itself.
+  src=src.replace('theorem same : ctr = BB6BlockFAR.partialTable machine :=',
+    'theorem same : BB6.Agent3UnaryGrow.reflectPartial ctr = BB6BlockFAR.partialTable machine :=')
+  src=src.replace('BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever',
+    'BB6.Agent3UnaryGrow.reflected_never machine ctr same forever m hm')
  return src
 
 def main(part,recipes,out,cap):
@@ -57,14 +68,15 @@ def main(part,recipes,out,cap):
  tree,opens=p['tree'],p['open'];idx={tuple(t):i for i,t in enumerate(opens)}
  assert len(idx)==len(opens)==len(solved) and set(solved)==set(range(len(opens)))
  assert all(v[0] in ('block','last','cycle','counter') for v in solved.values())
- B=max([p['counts']['maxquery']]+[v[1][0] for v in solved.values() if v[0]=='last'])+6
+ B=max(MIN_BOUND,max([p['counts']['maxquery']]+[v[1][0] for v in solved.values() if v[0]=='last'])+6)
  base='set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n'
  blocks={};bi=[i for i,v in solved.items() if v[0]=='block']
  for k in range(0,len(bi),8):
   mod=f'{PREFIX}Block{k//8:02d}';src='import BlockFAR2\nimport BlockFARBridge\nimport FastThreeHoleAudit\n'+base
+  if any(solved[i][1][-2] for i in bi[k:k+8]):src='import UnaryGrowReflect\n'+src
   for i in bi[k:k+8]:
-   r=solved[i][1];assert not r[-2];c=generate(opens[i],*r[:-1],phase=r[-1],event_limit=50000);assert c is not None
-   src+=block_source(i,opens[i],c);blocks[i]=mod
+   r=solved[i][1];c=generate(opens[i],*r[:-1],phase=r[-1],event_limit=50000);assert c is not None
+   src+=block_source(i,opens[i],c,reflected=r[-2]);blocks[i]=mod
   (out/(mod+'.lean')).write_text(src)
  sizes={}
  def size(n):
@@ -74,7 +86,7 @@ def main(part,recipes,out,cap):
  base+=f'namespace {NS}\nopen BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit BB6Coverage.Agent10ZipAudit BB6.Agent3PackedAudit BB6.Agent48PackedPrefix\n'
  def imports_for(s):
   needed={blocks[int(i)] for i in re.findall(r'Blocks\.H(\d+)\.ctr',s)}
-  if 'BB6.Agent3CounterCarry.ctr' in s:needed.add('CounterCarryBridge')
+  if COUNTER_NS+'.ctr' in s:needed.add(COUNTER_MODULE)
   needed|={module_for[n] for n in re.findall(r'\b[pth](R\d+(?:_\d+)*)\b',s) if n in module_for}
   return 'import FastThreeHoleAudit\nimport PackedPrefixAudit\n'+''.join(f'import {m}\n' for m in sorted(needed))
  def leaf(n):
@@ -88,8 +100,8 @@ def main(part,recipes,out,cap):
    i=idx[tuple(a[0])];s=solved[i]
    if s[0] in ('last','cycle'):return leaf((s[0],*s[1]))
    if s[0]=='counter':
-    assert i==s[1] and i in (210,251,657)
-    return f'.proven BB6.Agent3CounterCarry.ctr{i} BB6.Agent3CounterCarry.never{i}'
+    assert i==s[1] and i in COUNTER_IDS
+    return f'.proven {COUNTER_NS}.ctr{i} {COUNTER_NS}.never{i}'
    return f'.proven {NS}Blocks.H{i}.ctr {NS}Blocks.H{i}.never'
   raise ValueError(k)
  def emit_check(name,t,steps,s,children,lines):
