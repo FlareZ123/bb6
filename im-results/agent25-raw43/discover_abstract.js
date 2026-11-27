@@ -19,8 +19,17 @@ return {push:(x,b)=>{if(delta[x][b]>=0)return delta[x][b];let w=norm(b+words[x])
 
 // Agent19 lag-XOR transfer: preserve k raw bits and summarize the difference word.
 function lagDfa(params){const [k,...v]=params.lag,base=dfa(v),mask=2**k-1,words=[[0,0]],ids=new Map([["0,0",0]]),delta=[[-1,-1]];return {push:(i,b)=>{if(delta[i][b]>=0)return delta[i][b];let [w,s]=words[i],a=[(2*w+b)&mask,base.push(s,b^(w>>(k-1)))],key=a.join(","),j=ids.get(key);if(j===undefined){j=words.length;ids.set(key,j);words.push(a);delta.push([-1,-1])}delta[i][b]=j;return j},finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length}}
+
+// Block-symbol rungram: anchor chunk alignment at the first nonblank cell.
+// Preserve the incomplete chunk, compress repeated complete chunk symbols.
+function chunkDfa(params){
+ const {width,k,c,m}=params,words=[[0,0,[]]],ids=new Map([["0,0,",0]]),delta=[[-1,-1]];
+ function push(i,b){if(delta[i][b]>=0)return delta[i][b];let [n,w,r]=words[i];if(i===0&&!b)return 0;w=2*w+b;n++;if(n===width){if(r[0]===w){let a=r[1]+1;if(a===c+m)a=c;r=[w,a,...r.slice(2)]}else r=[w,1,...r].slice(0,2*k);n=0;w=0}let key=n+","+w+","+r.join(","),j=ids.get(key);if(j===undefined){j=words.length;ids.set(key,j);words.push([n,w,r]);delta.push([-1,-1])}delta[i][b]=j;return j}
+ return {push,finish:()=>delta.flat().map(x=>Math.max(0,x)),size:()=>words.length};
+}
+
 function solve(table,left,right,cap=30000){
- const tr=typeof table==="string"?parse(table):table,d=[typeof left==="number"?winDfa(left):Array.isArray(left)?dfa(left):left.lag?lagDfa(left):blockDfa(left),typeof right==="number"?winDfa(right):Array.isArray(right)?dfa(right):right.lag?lagDfa(right):blockDfa(right)],edges=[new Map(),new Map()],waiting=[new Map(),new Map()],seen=new Set(),todo=[],H=2**24,Q=H*H;let fail=false,limit=false;
+ const tr=typeof table==="string"?parse(table):table,d=[typeof left==="number"?winDfa(left):Array.isArray(left)?dfa(left):left.lag?lagDfa(left):left.width?chunkDfa(left):blockDfa(left),typeof right==="number"?winDfa(right):Array.isArray(right)?dfa(right):right.lag?lagDfa(right):right.width?chunkDfa(right):blockDfa(right)],edges=[new Map(),new Map()],waiting=[new Map(),new Map()],seen=new Set(),todo=[],H=2**24,Q=H*H;let fail=false,limit=false;
  function add(s,l,r){const x=s*Q+l*H+r;if(seen.has(x))return;seen.add(x);todo.push([s,l,r]);if(tr[s]<0)fail=true;if(todo.length>cap||l>=H||r>=H)limit=true}
  function pop(st,e){const [s,l,r]=st,m=tr[s],w=m/12|0,q=m%6,dir=m%12>=6,b=e[0],src=e[1];if(dir)add(2*q+b,d[0].push(l,w),src);else add(2*q+b,src,d[1].push(r,w))}
  function list(m,i){let v=m.get(i);if(!v){v=[];m.set(i,v)}return v}
