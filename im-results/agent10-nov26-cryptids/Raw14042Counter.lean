@@ -122,6 +122,12 @@ theorem backAll (n m : Nat) (X : List Sym) (s : CTail) :
 def counterCfg (m n : Nat) (X : List Sym) (s : CTail) : Prim :=
   boundary 4 true (S 2::S 7::X) (S 3::(U 2 m ++ T n ++ cword s))
 
+theorem two_shift (m : Nat) (Y : List Sym) :
+    U 2 m ++ S 2::S 2::Y = S 2::S 2::(U 2 m ++ Y) := by
+  induction m with
+  | zero => rfl
+  | succ m ih => simp only [U,List.replicate_succ,List.cons_append] at *; rw [ih]
+
 theorem counterStep (m n : Nat) (X : List Sym) (s : CTail) :
     Reach base (counterCfg m n (S 3::X) s) (counterCfg (m+1) (n+ccarry s) X (next s)) := by
   let Z := S 7::S 3::X
@@ -130,14 +136,9 @@ theorem counterStep (m n : Nat) (X : List Sym) (s : CTail) :
   have h2 := prep s (B n ++ U 6 m ++ Z)
   have h3 := backAll n m Z s
   have h4 := finishStep X (U 2 m ++ T (n+ccarry s) ++ cword (next s))
+  simp only [List.append_assoc] at h0 h1 h2 h3 h4
   have h := Reach.trans (Reach.trans (Reach.trans h0 h1) h2) h3
-  -- The leading m twos commute with the two boundary twos.
-  have he : U 2 m ++ S 2::S 2::(T (n+ccarry s) ++ cword (next s)) =
-      S 2::S 2::(U 2 m ++ T (n+ccarry s) ++ cword (next s)) := by
-    induction m with
-    | zero => rfl
-    | succ m ih => simp only [U,List.replicate_succ,List.cons_append] at *; rw [ih]
-  rw [he] at h
+  rw [two_shift] at h
   have h5 : Reach base _ _ := ⟨_,h4⟩
   simpa only [counterCfg,Z,U,List.replicate_succ,List.cons_append,List.append_assoc] using Reach.trans h h5
 
