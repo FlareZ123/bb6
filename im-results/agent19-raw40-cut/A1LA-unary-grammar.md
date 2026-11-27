@@ -22,11 +22,11 @@ All three machines reach C([], [4]) in exactly 7 ordinary transitions. The follo
    run7(A,0X,1101Y)=(A,01X,110Y).
    The same identity holds with an implicit left blank, taking X empty. Repeating n>0 times from R=[2,n]++S leaves left inc(L,n) and right word 110 followed by the delimiter and runs of S (or only 110 if S=[]).
 3. **Skip.** For nonempty S the preceding result has right word 1100W(S). Exactly 6 moves give
-   run6(A,0X,1100Y)=(A,01101X,Y).
+   run6(A,0X,11001Y)=(A,01101X,1Y), where the next run is positive.
    So a complete consume+skip from C(L,[2,n]++S) with S nonempty reaches C(2::inc(L,n+1),S) after 7n+6 moves.
 4. **End.** With right word 11 or 110 (remaining cells blank), exactly 9 moves yield right word 1111 and increment the nearest left run by 1. Thus C(L,[2]) -> C(inc(L,1),[4]); the terminal pair [2,n] takes 7n+9 moves to C(inc(L,n+1),[4]).
 
-For rule 1, the finite zipper identities before sweeping A1 are (A,0X,111Y) -> (A,X,1101Y), in 7 or 9 moves; implicit-left-blank version has X empty. Rules 2–4 are literally common to the three tables despite different intermediate C1/F1 moves. All operations have positive cost and avoid E0 by direct inspection. These identities prove the rules for arbitrary tails; induction on a or n proves the repeated sweeps. No finite-duration extrapolation is used.
+For rule 1, the finite zipper identities before sweeping A1 are (A,0X,111Y) -> (A,X,1101Y), in 7 or 9 moves; implicit-left-blank version has X empty. Rules 2–4 are literally common to the three tables despite different intermediate C1/F1 moves. All operations have positive cost and avoid E0 by direct inspection. These identities prove the rules for arbitrary untouched tails under the displayed local premises; induction on a or n proves the repeated sweeps. No finite-duration extrapolation is used.
 
 ## Inductive grammar and epoch
 
