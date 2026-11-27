@@ -155,8 +155,8 @@ def main():
             for t in rlestart:f.write(' '.join(map(str,t))+'\n')
         call(work/'rle_scan',target)
         for l in open(f'rle{target}.txt'):
-            v=list(map(int,l.split()));assert len(v)==21
-            stack.append([v[:12],v[12:16],v[16:20]])
+            record=list(map(int,l.split()));assert len(record)==21
+            stack.append([record[:12],record[12:16],record[16:20]])
         for l in open(f'rlehard{target}.txt'):
             t=tuple(map(int,l.split()))
             assert t in HARD,(target,t,'unclosed: not a known symbolic leaf')
