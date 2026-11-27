@@ -209,6 +209,22 @@ theorem atc_preconsume (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
     rfl
   simpa [m, m', physical] using macroRunExact_sound 16 m 46 m' hv hc
 
+/-- Final C/e right carry decodes an AAAT output at exact cost 31. -/
+theorem atc_counter_base (l : Tape) (hl : l 0 = true) :
+    run 31
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true ] blank)) =
+    some (other B (pre [ true, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true ] blank)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true ] blank⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true ] blank⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (31, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 8 m 31 m' hv hc
+
+#print axioms atc_counter_base
+
 #print axioms atc_preconsume
 
 #print axioms atc_consume_e
