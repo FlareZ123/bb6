@@ -1,0 +1,64 @@
+name: Agent 5 Raw11 coarse q0 scan
+
+on:
+  workflow_dispatch:
+    inputs:
+      indices:
+        description: JSON array of q0 target indices to scan
+        required: true
+        default: "[138,140,141,142,143,154]"
+        type: string
+      previous:
+        description: Previous Raw11 q0 consumer module
+        required: true
+        default: "Raw11Q0BankSmall"
+        type: string
+      old_count:
+        description: Previous remaining roster size
+        required: true
+        default: "167"
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate candidate q0 Covers
+        env:
+          INDICES: \${{ inputs.indices }}
+          PREVIOUS: \${{ inputs.previous }}
+          OLD_COUNT: \${{ inputs.old_count }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/raw11-q0-coarse"
+          cp im-results/agent47-raw11-adapter/raw11-route.json "$RUNNER_TEMP/raw11-q0-coarse/raw11-route.json"
+          cd "$RUNNER_TEMP/raw11-q0-coarse"
+          IDS="$(node -e 'const xs=JSON.parse(process.env.INDICES); if(!Array.isArray(xs)||xs.some(x=>!Number.isInteger(x))) process.exit(2); process.stdout.write(xs.join(" "))')"
+          node "$GITHUB_WORKSPACE/im-results/agent47-raw11-adapter/generate-q0-bank-consume.cjs" Raw11Q0Coarse "$PREVIOUS" "$OLD_COUNT" $IDS | tee scan-summary.json
+          python - <<'PY'
+          import json, pathlib
+          rows=json.loads(pathlib.Path("scan-summary.json").read_text())
+          lines=["## Raw11 coarse q0 scan","", "| q0 index | closed | nodes | bound | side | split | last | open | automata | cap |","|---:|:---:|---:|---:|---:|---:|---:|---:|---:|---:|"]
+          for r in rows:
+              s=r.get("stats",{})
+              lines.append(f"| {r['id']} | {'yes' if r['closed'] else 'no'} | {r['nodes']} | {r['bound']} | {s.get('side',0)} | {s.get('split',0)} | {s.get('last',0)} | {s.get('open',0)} | {s.get('auto',0)} | {s.get('cap',0)} |")
+          pathlib.Path("summary.md").write_text("\n".join(lines)+"\n")
+          PY
+          cat summary.md >> "$GITHUB_STEP_SUMMARY"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-coarse-q0-scan
+          path: |
+            \${{ runner.temp }}/raw11-q0-coarse/*.lean
+            \${{ runner.temp }}/raw11-q0-coarse/scan-summary.json
+            \${{ runner.temp }}/raw11-q0-coarse/summary.md
+          if-no-files-found: error
+          retention-days: 30
