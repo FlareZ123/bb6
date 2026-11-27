@@ -137,3 +137,21 @@ This observation suggests the next proof architecture: reuse the parametric
 scanner for the prefix, add exact terminal lemmas for P-carried and TAT
 states, and recurse on the suffix transducer.  It also explains why attempts
 to assign one context-free replacement to the whole AT branch fail.
+
+
+## Why the leading-P lift costs 68 per block
+
+The empirical `+68n` term for a preserved leading `P^n` is not an opaque
+fit.  It matches the two exact transport mechanisms already present in the
+machine:
+
+- each leading P is consumed into the right-side stack at **36** primitive
+  steps per block;
+- the same stored unit is restored through the J-headed decoder at **32**
+  primitive steps per block.
+
+Thus each carried leading P contributes `36+32=68` steps while reappearing
+unchanged on the left.  This suggests a clean proof of the full n-family:
+generalize the n=0 scanner to an initial right stack containing the P-counter,
+then use the existing parametric decoder to restore that counter after the
+paired data have been decoded.  No new fitted constant is needed.
