@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
 """Rebuild Raw40 A1=1LB certificate banks without rediscovering any proofs."""
-import json,os,re,subprocess,sys
+import base64,hashlib,json,os,re,struct,subprocess,sys,zlib
 from pathlib import Path
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
+from compact_ngram import compact,compact_run,compact_lag
 from emit_raw40_late import emit_late_module
 c=sys.argv[1]
-spec=json.loads((ROOT/f'a1lb-{c}-discovery.json').read_text())
+recipe=ROOT/f'a1lb-{c}-frontier-recipe.json'
+spec=json.loads((recipe if recipe.exists() else ROOT/f'a1lb-{c}-discovery.json').read_text())
 p=spec['parent']; B=spec.get('bound',spec['initialBound'])
 assert p==f'1RB1LB_1RC---_0RD{c}_1LD1LA_------_------'
 out=ROOT/'a1lb'/c
@@ -19,6 +21,27 @@ run=subprocess.run([str(exe),p],cwd=out,check=True,text=True,capture_output=True
 assert int(re.search(r'maxscore=(\d+)',run.stdout)[1])==spec['initialBound']
 opens=(out/'open.txt').read_text().splitlines()
 assert len(opens)==spec['opens'] and len(set(opens))==len(opens)
+if recipe.exists():
+    assert hashlib.sha256((out/'open.txt').read_bytes()).hexdigest()==spec['roster_sha256']
+    spec['far']=[]
+    for chunk in spec['prefixChunks']:
+        data=json.loads((ROOT/f'a1lb-{c}-far-{chunk}.json').read_text())
+        spec['far'].extend(data['found'])
+    raw=zlib.decompress(base64.b64decode(spec['codes_zlib']))
+    assert len(raw)==2*(len(opens)-spec['first'])
+    for i,(code,) in enumerate(struct.iter_unpack('<H',raw),spec['first']):
+        if code:
+            spec['far'].append(dict(id=i,table=opens[i],code=spec['bank'][code-1]))
+    assert len(spec['far'])==spec['farCount']
+    spec['compact']=[]
+    for group in spec['compactGroups']:
+        k,r,c0,c1,m0,m1=group['params']
+        for i in group['ids']:
+            table=opens[i]
+            record=(compact(table,[k,k]) if r==0 else
+                    compact_run(table,[r,c0,c1,m0,m1],[r,c0,c1,m0,m1]) if k==0 else
+                    compact_lag(table,group['params'],group['params']))
+            spec['compact'].append(dict(record,id=i,table=table))
 far={};proven={};mods=[];ids=set();late={}
 def validate(v):
     i=v['id']

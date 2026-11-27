@@ -75,9 +75,7 @@
     "0200-0499",
     "0500-0999"
   ],
-  "unresolved": [
-    1922
-  ],
+  "unresolved": [],
   "cycles": [
     {
       "id": 8,
@@ -126,9 +124,16 @@
       "n": 1302,
       "slot": 10,
       "delay": 0
+    },
+    {
+      "id": 1922,
+      "table": "1RB1LB_1RC0RF_0RD0RE_1LD1LA_0RC1LE_---1RB",
+      "n": 19584,
+      "slot": 10,
+      "delay": 0
     }
   ],
-  "boundCandidate": 10269,
+  "boundCandidate": 19585,
   "farCount": 2835,
   "compactGroups": [
     {
@@ -628,5 +633,6 @@
         2883
       ]
     }
-  ]
+  ],
+  "bound": 19585
 }
