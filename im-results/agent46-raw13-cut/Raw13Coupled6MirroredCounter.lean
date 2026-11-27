@@ -189,7 +189,7 @@ theorem overflowWords (k : Nat) :
   have h2 := pop k [true] ([false]++rep U (k+2)++[true]++S)
   have h3 := finishRoot (rep Q k++[false]++rep U (k+2)++[true]++S)
   simp only [List.append_assoc,List.cons_append,List.nil_append] at h1 h2 h3
-  simpa only [root,body,rep,List.append_assoc,List.cons_append,List.singleton_append,show 6*k+34+8*k+14=14*k+48 by omega] using
+  simpa only [root,body,rep,List.append_assoc,List.cons_append,List.singleton_append,List.nil_append,show 6*k+34+8*k+14=14*k+48 by omega] using
     join0 (join0 h1 h2) h3
 
 def enc (f : Bool → List Bool) : List Bool → List Bool
