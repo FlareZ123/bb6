@@ -1,0 +1,24 @@
+[
+  {
+    "child": "0RE",
+    "opens": 1988,
+    "nodes": 64489,
+    "initialBound": 937,
+    "bound": 22169,
+    "witness": {
+      "score": 22169,
+      "n": 22168,
+      "slot": 10,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC0LF_0RD0RE_1LD1LA_0LB1RF_HHH0RC"
+    },
+    "counts": {
+      "far": 1732,
+      "compact": 195,
+      "cycle": 31,
+      "late": 23,
+      "crossing": 7
+    }
+  }
+]
