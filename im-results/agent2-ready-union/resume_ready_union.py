@@ -164,6 +164,40 @@ def subset_source(raws, out):
     return path, ns, [ns + "." + n for n in names]
 
 
+
+def preflight_membership(generated, evidence):
+    """Elaborate the actual generated list eliminations without parent artifacts."""
+    lines = ["import Lean"]
+    for count in (1, 2, 7):
+        source, _, _ = subset_source(RAW_IDS[:count], generated)
+        text = source.read_text()
+        roster = re.search(r"(?m)^abbrev readyParents : List PartialMachine :=\s*(\[[^\n]+\])", text)
+        assert roster is not None
+        ordered = re.findall(r"p(\d+)", roster.group(1))
+        assert len(ordered) == count
+        lines.append(f"namespace Cardinality{count}")
+        lines.extend(f"abbrev p{r} : Nat := {r}" for r in ordered)
+        lines.append("abbrev readyParents : List Nat := " + roster.group(1))
+        for name, suffix in (("parents_root", "root"), ("parents_cover", "cover"),
+                             ("all_ready_parents_removed", None)):
+            body = text.split(f"theorem {name} :", 1)[1].split(":= by\n", 1)[1].split("\n\n", 1)[0]
+            if suffix:
+                hyps = " ".join(f"(p{r}_{suffix} : P p{r})" for r in ordered)
+                lines.append(f"theorem {name} (P : Nat → Prop) {hyps} : ∀ p ∈ readyParents, P p := by")
+            else:
+                lines.append(f"theorem {name} : ∀ p ∈ readyParents, p ≤ {max(map(int, ordered))} := by")
+            lines.append(body)
+        lines.append(f"end Cardinality{count}")
+    fixture = evidence / "GeneratedReadyMembershipPreflight.lean"
+    fixture.write_text("\n".join(lines) + "\n")
+    result = subprocess.run(["lean", str(fixture)], text=True, stdout=subprocess.PIPE,
+                            stderr=subprocess.STDOUT)
+    (evidence / "generated-membership-preflight.log").write_text(result.stdout)
+    if result.returncode:
+        raise ValueError("generated ready membership preflight failed: " + result.stdout)
+    print("PASS: generated root, Cover and removal eliminations for 1, 2, 7 parents", flush=True)
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
@@ -177,6 +211,7 @@ def main():
     objects.mkdir()
     generated = work / "generated"
     generated.mkdir()
+    preflight_membership(generated, evidence)
     linked, _, _, base_report = base.verify_base(work, base.BASE_RUN)
     prior = restore_sharp(work, linked, base_report)
     families, rejected = {}, {}

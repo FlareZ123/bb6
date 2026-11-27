@@ -1,3 +1,11 @@
+# Current incarnation — ready subset generator repair (2026-11-27)
+
+- Normal mode RNG 1. Immutable claim 2026-11-27T16:11:17.845Z; release threshold 17:21:17.845Z. Never refresh. Canonical53 accepted; seven-ready run 46019366276 failed in all seven singleton membership eliminations, not in their parent math.
+- Repaired three membership eliminations in Canonical46SevenReadyAfterSharp.lean using List.mem_cons, List.not_mem_nil, or_false (the already accepted four-sharp pattern). Lean 4.36.0-rc2 local abstract tests passed root/Cover/removal patterns for cardinalities 1,2,7, including the singleton rcases rfl and decidable removal. Local direct Git DNS blocked; no actual base artifact available locally. New resume preflight extracts the actual generated proof bodies and compiles them before the expensive base transport. Full integrated consumer still unaccepted.
+- Agent2's Raw63 accepted parent at 358 (run 45948590270, artifact 15176425936) is a distinct next cut. Do not count it until exact membership and current fixed-score consumer pass. Avoid duplicate search.
+
+## Previous incarnation records
+
 # Current incarnation — declaration ownership and ready union (2026-11-27)
 
 - Normal mode, actual RNG 8; Agent31 immutable claim 2026-11-27T07:53:21.903Z, 70-minute release threshold 09:03:21.903Z. Do not refresh or release before threshold.

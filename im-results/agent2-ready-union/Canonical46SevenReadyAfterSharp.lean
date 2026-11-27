@@ -127,7 +127,7 @@ theorem p78_cover : Cover (WeightedBound 6766859) p78 := by
 theorem parents_root :
     ∀ p ∈ readyParents, p initialSlot = some (some ⟨true,true,1⟩) := by
   intro p hp
-  simp only [readyParents, List.mem_cons, List.mem_singleton] at hp
+  simp only [readyParents, List.mem_cons, List.not_mem_nil, or_false] at hp
   rcases hp with rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · exact p106_root
   · exact p79_root
@@ -140,7 +140,7 @@ theorem parents_root :
 theorem parents_cover :
     ∀ p ∈ readyParents, Cover (WeightedBound 6766859) p := by
   intro p hp
-  simp only [readyParents, List.mem_cons, List.mem_singleton] at hp
+  simp only [readyParents, List.mem_cons, List.not_mem_nil, or_false] at hp
   rcases hp with rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · exact p106_cover
   · exact p79_cover
@@ -159,7 +159,7 @@ theorem all_ready_parents_removed :
     ∀ p ∈ readyParents,
       (roster46.filter (fun e => sameTable e.2 p)).length = 0 := by
   intro p hp
-  simp only [readyParents, List.mem_cons, List.mem_singleton] at hp
+  simp only [readyParents, List.mem_cons, List.not_mem_nil, or_false] at hp
   rcases hp with rfl | rfl | rfl | rfl | rfl | rfl | rfl <;> decide
 
 theorem raw59_retained :
