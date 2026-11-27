@@ -45,9 +45,9 @@ theorem exitTwo (b : Bool) (n k : Nat) :
   have h0 := lsweepBlank b 5 (ones 1 (zeros 3 (ones u (zeros 2 (ones v z)))))
   have h1 := chain b h0 (odd b (ones u (zeros 2 (ones v z))) (ones 10 z))
   have h2 := chain b h1 (lsweep b (n+1) (zeros 2 (ones v z)) r)
-  have hv : ones v z = ones 1 (ones (2*k+1) z) := by
+  have hv : ones v z = ones 2 (ones (2*k) z) := by
     dsimp [v]
-    rw [show 2*(k+1)=1+(2*k+1) by omega]
+    rw [show 2*(k+1)=2+2*k by omega]
     exact ones_add _ _ _
   have ht : run b (6+extra b) (L (zeros 2 (ones v z)) (ones u r)) =
       some (L (ones v z) (zeros 1 (ones 1 (ones u r)))) := by
@@ -94,6 +94,7 @@ theorem odd17 (b : Bool) (l : Stream) :
   have h5 := chain b h4 (bsweep b 17 (ones 8 l) z)
   have hx : run b 2 (B (zeros 17 (ones 8 l)) z) =
       some (L (zeros 15 (ones 8 l)) (ones 1 z)) := by
+    rw [show zeros 17 (ones 8 l)=zeros 2 (zeros 15 (ones 8 l)) from zeros_add 2 15 _]
     simpa only [zeros_z] using exitB b (zeros 15 (ones 8 l)) z
   have h6 := chain b h5 hx
   have h7 := chain b h6 (turn3 b (zeros 12 (ones 8 l)) (ones 1 z))
@@ -109,6 +110,7 @@ theorem odd11 (b : Bool) (l : Stream) :
   have h5 := chain b h4 (bsweep b 11 (ones 8 l) z)
   have hx : run b 2 (B (zeros 11 (ones 8 l)) z) =
       some (L (zeros 9 (ones 8 l)) (ones 1 z)) := by
+    rw [show zeros 11 (ones 8 l)=zeros 2 (zeros 9 (ones 8 l)) from zeros_add 2 9 _]
     simpa only [zeros_z] using exitB b (zeros 9 (ones 8 l)) z
   have h6 := chain b h5 hx
   have h7 := chain b h6 (turn3 b (zeros 6 (ones 8 l)) (ones 1 z))
