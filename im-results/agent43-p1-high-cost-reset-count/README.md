@@ -1,3 +1,5 @@
+**Exact critical endpoint test (27 November):** [ReverseGuard.md](ReverseGuard.md) gives a source-accepted deterministic inverse test, its exact run-jump identities, and a complete seven-candidate-per-cost sufficient rejection criterion (CI 46047767028 and 46048266524). The separate wide delayed computation found extinction for n=814324766 at 2n+1; this is numerical only, not a Lean index exclusion. The unbounded cost/index quantifiers remain open.
+
 **New reusable source theorems:** [Modular carry aperiodicity and exact forward blocks](CarryAperiodicForwardBlock.md) gives the finite repetition obstruction for the original BatchCarry weighted-word equation (CI 45590461666), and the exact two-candidate ordinary-block accelerator with a source-certified reset-free guard (CI 45589502759). Neither is an all-time machine decision.
 
 **Update 2026-11-25:** [Margin-free delayed-carry source bridge](LongConeSource.md) passed original-source CI 45587713288. An empty delayed cover by the practical long-cone cutoff now excludes the authentic critical reset without additional margin checks. No new unconditional index exclusion.

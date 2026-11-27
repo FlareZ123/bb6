@@ -1,6 +1,6 @@
 # Deterministic reverse test for the P1 critical boundary
 
-**Status:** original-source Lean 4.36.0-rc2 proof in [ReverseGuard.lean](ReverseGuard.lean), accepted at f4b1462c774be61e8db33ff68db35dc002c9eb85 by [CI 46047767028](https://github.com/FlareZ123/bb6/actions/runs/46047767028). This is not a P1 or BB(6) decision.
+**Status:** original-source Lean 4.36.0-rc2 proof in [ReverseGuard.lean](ReverseGuard.lean), accepted at f4b1462c774be61e8db33ff68db35dc002c9eb85 by [CI 46047767028](https://github.com/FlareZ123/bb6/actions/runs/46047767028). The seven-candidate theorem was accepted at d90c094fbb65ab214a2399d9ec4cba5e83871617 by [CI 46048266524](https://github.com/FlareZ123/bb6/actions/runs/46048266524). This is not a P1 or BB(6) decision.
 
 ## Exact inverse branch
 
@@ -14,6 +14,16 @@ The former requires w≥5 and v≥w, as its parent right coordinate must be posi
 The Boolean recursion tests these exact branches and the original root. The reverse direction is not merely a relaxation: each accepted predecessor satisfies the original guarded unit equation by the conserved mass. Induction gives an iff for every n≥14 and every cost, and the terminal guard w≥6 then gives the full LegalGap relation. It follows that guarded endpoint histories have a unique reverse branch sequence. This differs from the earlier right-five-only FirstReturn interface: it handles any endpoint and its actual asymmetric guards, including the unfinished last gap.
 
 The source bridge consumes the three necessary boundary families from [LagBoundary.lean](LagBoundary.lean) (accepted source CI 46033272360): w≤10; v=2 with n+m even; or v odd ≥5 and w+floor(v/2)=7·2^j for j<n. Excluding the Boolean test on all such positive-cost, w≥6 endpoints excludes the authentic critical reset, without a delayed-word cutoff. The universal boundary exclusion itself remains open.
+
+## Seven candidate endpoints per cost
+
+Write S=T−n−m−1. The source boundary witness must have 1≤m≤T−n−9 and one of these coordinates:
+
+- (S−w,w) for w=6,7,8,9,10;
+- (2,S−2) if n+m is even;
+- (2S−14·2^j−1,14·2^j+1−S) with j<n and 7·2^j+3≤S≤14·2^j−5.
+
+The dyadic bands in the third family are disjoint, so there is at most one possible j at any m. The new theorem critical_reset_no_reach_of_families consumes the complete pointwise rejection of these at most seven candidates directly, with the original Reach predicate and no heuristic cutoff. It is finite for fixed n, but exponential in n; interval and symbolic parameter rejection remain the intended uses.
 
 ## Exact reverse blocks (kernel accepted)
 
