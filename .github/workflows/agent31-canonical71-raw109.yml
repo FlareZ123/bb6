@@ -31,6 +31,7 @@ on:
           - canonical55-raw83-graft
           - canonical55-raw106-raw79
           - canonical53-raw83-raw85
+          - canonical53-four-ready-direct
           - raw67-parent-reuse
           - canonical63-preflight
           - canonical65-three
@@ -2077,6 +2078,59 @@ jobs:
           path: |
             /tmp/a31-canonical53-raw83-raw85/**
             /tmp/a31-canonical53-raw83-raw85.log
+          if-no-files-found: warn
+          compression-level: 0
+          retention-days: 30
+
+
+  canonical53_four_ready_direct:
+    name: Directly consume Raw106 Raw79 Raw83 Raw85 from Canonical57
+    if: ${{ inputs.target == 'canonical53-four-ready-direct' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          export PATH="$HOME/.elan/bin:$PATH"
+          lean --version
+      - name: Compile and audit direct four-parent Canonical53 graft
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent31-raw106-79-canonical55/assemble_canonical53_direct.py
+          python im-results/agent31-raw106-79-canonical55/assemble_canonical53_direct.py \
+            --work /tmp/a31-canonical53-four-ready \
+            2>&1 | tee /tmp/a31-canonical53-four-ready.log
+          test -s /tmp/a31-canonical53-four-ready/canonical53-four-ready-parents.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          report=json.loads(Path("/tmp/a31-canonical53-four-ready/canonical53-four-ready-parents.json").read_text())
+          assert report["canonical57_residual_count"] == 57
+          assert report["remaining_residual_count"] == 53
+          assert report["all_four_unique_membership_in_canonical57"]
+          assert report["all_four_pairwise_distinct"]
+          assert report["raw124_already_removed"]
+          assert report["olean_sha256"]
+          assert "sorryAx" not in str(report["axioms"])
+          assert "native_decide" not in str(report["axioms"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical53-four-ready-parents-integrated
+          path: |
+            /tmp/a31-canonical53-four-ready/**
+            /tmp/a31-canonical53-four-ready.log
           if-no-files-found: warn
           compression-level: 0
           retention-days: 30
