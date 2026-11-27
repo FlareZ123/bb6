@@ -195,6 +195,166 @@ theorem atc_counter_d (l : Tape) (hl : l 0 = true) :
     rfl
   simpa [m, m', physical] using macroRunExact_sound 7 m 27 m' hv hc
 
+/-- Universal 46-step TAT prefix removal with an arbitrary run-aligned right carry. -/
+theorem atc_preconsume (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 46
+      (other B (pre [ true, true, false, false, true, false, true, true, false, false ] l) (pre [ false, false ] r)) =
+    some (other B l (pre [ false, false, true, true, true, true, false, false, false, true, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, true, false, false, true, false, true, true, false, false ] l, pre [ false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, l, pre [ false, false, true, true, true, true, false, false, false, true, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 16 m = some (46, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 16 m 46 m' hv hc
+
+/-- Final C/e right carry decodes an AAAT output at exact cost 31. -/
+theorem atc_counter_base (l : Tape) (hl : l 0 = true) :
+    run 31
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true ] blank)) =
+    some (other B (pre [ true, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true ] blank)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true ] blank⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true ] blank⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (31, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 8 m 31 m' hv hc
+
+#print axioms atc_counter_base
+
+/-- Generic aligned-right terminal AAA/uR, source-exact. -/
+theorem atc_terminal_A_u (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 47
+      (other B (pre [ true, false, true, false, true, false ] l) (pre [ false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, true, false, true, false ] l, pre [ false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 14 m = some (47, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 14 m 47 m' hv hc
+
+#print axioms atc_terminal_A_u
+
+/-- Generic aligned-right terminal TAA/uR, source-exact. -/
+theorem atc_terminal_T_u (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 57
+      (other B (pre [ true, true, false, false, true, false, true, false ] l) (pre [ false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, true, false, false, true, false, true, false ] l, pre [ false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 17 m = some (57, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 17 m 57 m' hv hc
+
+#print axioms atc_terminal_T_u
+
+/-- Full right-tail generic terminal decoder J/AsR. -/
+theorem atc_junction_A_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 32
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 8 m = some (32, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 8 m 32 m' hv hc
+
+#print axioms atc_junction_A_general
+
+/-- Full right-tail generic terminal decoder J/ACuR. -/
+theorem atc_junction_T_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 36
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 9 m = some (36, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 9 m 36 m' hv hc
+
+#print axioms atc_junction_T_general
+
+/-- Paired decoder atc_peel_AA_general, arbitrary aligned right carry. -/
+theorem atc_peel_AA_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 60
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, false, false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, false, false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 16 m = some (60, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 16 m 60 m' hv hc
+
+#print axioms atc_peel_AA_general
+
+/-- Paired decoder atc_peel_AT_general, arbitrary aligned right carry. -/
+theorem atc_peel_AT_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 60
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, false, false, false, true, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, true, true, false, false, false, true, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 16 m = some (60, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 16 m 60 m' hv hc
+
+#print axioms atc_peel_AT_general
+
+/-- Paired decoder atc_peel_TA_general, arbitrary aligned right carry. -/
+theorem atc_peel_TA_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 64
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, false, false, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, false, false, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false, true, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 17 m = some (64, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 17 m 64 m' hv hc
+
+#print axioms atc_peel_TA_general
+
+/-- Paired decoder atc_peel_TT_general, arbitrary aligned right carry. -/
+theorem atc_peel_TT_general (l r : Tape) (hl : l 0 = true) (hr : r 0 = true) :
+    run 64
+      (other B (pre [ true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, false, false, false, true, false, true, true, true, true, false, false, false ] r)) =
+    some (other B (pre [ true, false, false, true, false, true, false, true, true, false, false ] l) (pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r)) := by
+  let m : MacroConfig := ⟨.B, pre [ true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, false, false, false, true, false, true, true, true, true, false, false, false ] r⟩
+  let m' : MacroConfig := ⟨.B, pre [ true, false, false, true, false, true, false, true, true, false, false ] l, pre [ false, false, true, false, true, true, false, true, true, true, true, false, false, false ] r⟩
+  have hv : valid m := by rfl
+  have hc : macroRunExact 17 m = some (64, m') := by
+    dsimp [m, m']
+    rw [← decompose_bit l true hl, ← decompose_bit r true hr]
+    rfl
+  simpa [m, m', physical] using macroRunExact_sound 17 m 64 m' hv hc
+
+#print axioms atc_peel_TT_general
+
+#print axioms atc_preconsume
+
 #print axioms atc_consume_e
 #print axioms atc_consume_u
 #print axioms atc_term_A
