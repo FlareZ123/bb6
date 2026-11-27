@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, pumps, cover, counter, pair143, roster143, ten143, cached]
+        options: [legacy, full, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -435,3 +435,182 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+
+  sharded-core:
+    if: inputs.mode == 'cover-sharded'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    outputs:
+      id: ${{ steps.prepare.outputs.id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Select exactly one frozen parent
+        id: prepare
+        env:
+          INDICES: ${{ inputs.indices }}
+        run: |
+          python - <<'PY'
+          import json, os
+          ids = json.loads(os.environ['INDICES'])
+          assert len(ids) == 1 and ids[0] in (138,140,141,142,143,154)
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+              print('id='+str(ids[0]), file=f)
+          PY
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-${{ steps.prepare.outputs.id }}
+          path: /tmp/coarse-candidate
+      - name: Generate and partition frozen proof
+        env:
+          ID: ${{ steps.prepare.outputs.id }}
+          CHUNK: ${{ inputs.chunk }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK"
+          python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py partition /tmp/coarse-generated 8
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile common source dependency closure once
+        env:
+          ID: ${{ steps.prepare.outputs.id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py "/tmp/coarse-generated/Agent5Q0Coarse${ID}Core.lean" \
+            --source-root /tmp/coarse-generated --workdir /tmp/coarse-core \
+            --manifest /tmp/coarse-core/manifest.json --jobs 4 --lean lean \
+            --label "q0 $ID sharded core" 2>&1 | tee /tmp/coarse-core.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/coarse-core.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-sharded-core-${{ steps.prepare.outputs.id }}
+          path: |
+            /tmp/coarse-generated/
+            /tmp/coarse-core/
+            /tmp/coarse-core.log
+          if-no-files-found: error
+          retention-days: 30
+
+  sharded-check:
+    if: inputs.mode == 'cover-sharded'
+    needs: sharded-core
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0,1,2,3,4,5,6,7]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw11-q0-sharded-core-${{ needs.sharded-core.outputs.id }}
+          path: /tmp
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check dependency-closed source shard
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          mapfile -t MODS < "/tmp/coarse-generated/shard-$SHARD.txt"
+          mkdir -p /tmp/coarse-shard
+          if [ "${#MODS[@]}" -eq 0 ]; then
+            cp /tmp/coarse-core/manifest.json /tmp/coarse-shard/manifest.json
+            echo 'Empty shard' > /tmp/coarse-shard/check.log
+          else
+            ROOTS=()
+            for mod in "${MODS[@]}"; do ROOTS+=("/tmp/coarse-generated/$mod.lean"); done
+            python tools/lean_compile_closure.py "${ROOTS[@]}" \
+              --source-root /tmp/coarse-generated --workdir /tmp/coarse-shard \
+              --manifest /tmp/coarse-shard/manifest.json --jobs 2 --lean lean \
+              --precompiled-manifest /tmp/coarse-core/manifest.json --precompiled-dir /tmp/coarse-core \
+              --label "q0 subroot shard $SHARD" 2>&1 | tee /tmp/coarse-shard/check.log
+            if grep -Eq 'sorryAx|native_decide' /tmp/coarse-shard/check.log; then exit 1; fi
+            python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py thin /tmp/coarse-core /tmp/coarse-shard
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-q0-sharded-part-${{ needs.sharded-core.outputs.id }}-${{ matrix.shard }}
+          path: /tmp/coarse-shard/
+          if-no-files-found: error
+          retention-days: 30
+
+  sharded-join:
+    if: inputs.mode == 'cover-sharded'
+    needs: [sharded-core, sharded-check]
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw11-q0-sharded-core-${{ needs.sharded-core.outputs.id }}
+          path: /tmp
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw11-q0-sharded-part-${{ needs.sharded-core.outputs.id }}-*
+          path: /tmp/coarse-parts
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.generation_run }}
+          name: raw11-coarse-full-${{ needs.sharded-core.outputs.id }}
+          path: /tmp/coarse-candidate
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Merge exact objects and check actual parent Cover
+        env:
+          ID: ${{ needs.sharded-core.outputs.id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          PARTS=(/tmp/coarse-parts/raw11-q0-sharded-part-"$ID"-*)
+          test "${#PARTS[@]}" -eq 8
+          python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py merge /tmp/coarse-core /tmp/coarse-union "${PARTS[@]}"
+          THEOREM="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["theorem"])')"
+          TABLE="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["table"])')"
+          BOUND="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["bound"])')"
+          python tools/lean_compile_closure.py "/tmp/coarse-generated/Agent5Q0Coarse$ID.lean" \
+            --source-root /tmp/coarse-generated --workdir /tmp/coarse-certified \
+            --manifest /tmp/coarse-certified/manifest.json --jobs 2 --lean lean \
+            --precompiled-manifest /tmp/coarse-union/manifest.json --precompiled-dir /tmp/coarse-union \
+            --label "Raw11 q0 coarse $ID sharded" --theorem "$THEOREM" --parent-table "$TABLE" --weighted-bound "$BOUND" \
+            --provenance-input /tmp/coarse-candidate/summary.json \
+            --provenance-input /tmp/coarse-candidate/tree.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py \
+            2>&1 | tee /tmp/coarse-cover.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/coarse-cover.log; then exit 1; fi
+          grep -F "$THEOREM' depends on axioms:" /tmp/coarse-cover.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw11-coarse-cover-${{ needs.sharded-core.outputs.id }}
+          path: |
+            /tmp/coarse-generated/
+            /tmp/coarse-certified/
+            /tmp/coarse-cover.log
+          if-no-files-found: error
+          retention-days: 30
