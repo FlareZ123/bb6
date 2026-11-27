@@ -5,7 +5,7 @@
 
 ## Exact proof
 
-Use nearest-first left word L and right word R, **including** the scanned cell at the beginning of R; both are zero padded. Write a configuration as q(L;R). The five identities below follow by executing the stated read-slot words on the given finite prefixes. Untouched tails are arbitrary unless explicitly written blank. A superscript on a word means repetition, not exponentiation of a number.
+Use nearest-first left word L and right word R, **including** the scanned cell at the beginning of R; both are zero padded. Write a configuration as q(L;R). The six identities below follow by executing the stated read-slot words on the given finite prefixes. Untouched tails are arbitrary unless explicitly written blank. A superscript on a word means repetition, not exponentiation of a number.
 
 | Input | Exact output | Steps | Read slots |
 |---|---|---:|---|
@@ -34,3 +34,5 @@ The total return cost is 111+72n. Therefore the live prefix times are exactly t(
 The candidate Lean implementation [Q0Coarse138Sweep.lean](Q0Coarse138Sweep.lean) follows the accepted original-machine bridge in Root56Coverage and the symbolic sweep structure in Raw11Q053Sweep. It is **uncompiled**: local shell and Python both returned ClientError before execution. The proof above is independent of compilation; the exported Lean Cover is not accepted until the exact dependency closure and axiom profiles pass.
 
 The bank generator (agent47-raw11-adapter/generate-q0-bank-consume.cjs) stops at the first unresolved child. Scan 138: 6,555 side leaves, 356 splits, 1,371 last-hole leaves, 197 automata candidates, one open leaf. Max observed weighted bound 100. Other coarse q0 parents also stop at an exceptional leaf; no complete scan or parent Cover is implied by this count.
+
+The [six-parent symbolic fixture dossier](q0-coarse-pumps.md) also gives a checker-compatible exact two-return certificate for this leaf.
