@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -46,7 +46,7 @@ jobs:
         with:
           ref: ${{ inputs.source_ref || github.sha }}
       - name: Install Lean
-        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench' && inputs.target != 'shifted-simd'
+        if: inputs.target != 'packed-prefix' && inputs.target != 'packed-prefix-resume' && inputs.target != 'packed-prefix-resume-2' && inputs.target != 'packed-prefix-resume-next' && inputs.target != 'packed-prefix-compact' && inputs.target != 'packed-prefix-fuse-bench' && inputs.target != 'shifted-simd' && inputs.target != 'forward-probe-checkpoint'
         run: |
           curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sed -i 's/curl -sSfL/curl --retry 5 --retry-all-errors --retry-delay 5 -sSfL/g' /tmp/elan-init.sh
@@ -809,6 +809,47 @@ jobs:
             diff -u /tmp/fused-1.children "/tmp/fused-$FUSE.children"
           done
           OMP_NUM_THREADS=1 /tmp/p1-bench 650000000 1000000 | tee /tmp/fused-bench.log
+      - name: Exact forward block lookup and midpoint probe
+        if: inputs.target == 'forward-lookup'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          export LEAN_PATH="$D:im-results/agent45-p1-delayed-carry"
+          g++ -O3 -std=c++17 "$D/test_forward_lookup.cpp" -o /tmp/test-forward-lookup
+          /tmp/test-forward-lookup
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-lookup
+          P1_FIT=0 OMP_NUM_THREADS=1 /tmp/p1-lookup 3342 14000 417 half >/tmp/p1-no-probe.log
+          P1_FIT=0 P1_PROBE=1000000 OMP_NUM_THREADS=1 /tmp/p1-lookup 3342 14000 417 half >/tmp/p1-probe.log
+          grep -E '^CHILD |^END ' /tmp/p1-no-probe.log >/tmp/no-probe.children
+          grep -E '^CHILD |^END ' /tmp/p1-probe.log >/tmp/probe.children
+          diff -u /tmp/no-probe.children /tmp/probe.children
+          grep -Fx 'END 3342 13768' /tmp/probe.children
+          python tools/lean_compile_deps.py "$D/ForwardLookup.lean" | tee /tmp/forward-lookup.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/forward-lookup.log; then exit 1; fi
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          log=Path('/tmp/forward-lookup.log').read_text()
+          for name in ('weight_mod_clock','words_mem','forward_iff_walk'):
+              m=re.search(r"'BB6\.Agent9ForwardLookup\."+name+r"' depends on axioms: \[([^\]]*)\]",log)
+              if not m and f"'BB6.Agent9ForwardLookup.{name}' does not depend on any axioms" in log: continue
+              assert m and {a.strip() for a in m.group(1).split(',') if a.strip()} <= {'propext','Classical.choice','Quot.sound'},name
+          PY
+      - name: Download saved frontier for bounded forward-only diagnostics
+        if: inputs.target == 'forward-probe-checkpoint'
+        uses: actions/download-artifact@v4
+        with:
+          name: p1-packed-prefix-n45352466-resume-${{ inputs.resume_run }}
+          run-id: ${{ inputs.resume_run }}
+          github-token: ${{ github.token }}
+          path: /tmp/p1-probe-in
+      - name: Probe saved n45 roots without repeating reverse sweep
+        if: inputs.target == 'forward-probe-checkpoint'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-reverse-block
+          g++ -O3 -march=native -std=c++17 -fopenmp "$D/compact_prefix.cpp" -o /tmp/p1-lookup
+          P1_PROBE_ONLY=1 P1_PROBE=16777216 P1_PROBE_WIDTH=65536 OMP_NUM_THREADS=2 /tmp/p1-lookup 45352466 1100000000 34014336 half /tmp/p1-probe-in/p1-45352466-half.chk
       - name: Regression of legacy import, fixed-width checkpoint and exact continuation
         if: inputs.target == 'packed-prefix-compact'
         shell: bash
