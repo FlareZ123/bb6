@@ -10,7 +10,8 @@ import sys
 
 ROOT = Path(__file__).resolve().parent
 work = Path(sys.argv[1])
-expanded = sys.argv[2] == "expanded"
+mode = sys.argv[2]
+expanded = mode in {"expanded","expandedfive"}
 pins = json.loads(os.environ["PINS"])
 variants = ["default","0rd","1rd","0re","1re","0rf","1lb","0rc","0lf","1la","1le","1rf","1lf"]
 suffixes = {"default":"","0rd":"RD","1rd":"RD1"}
@@ -20,7 +21,7 @@ for v in variants:
     spec = json.loads((ROOT/("spec.json" if v=="default" else f"spec_{v}.json")).read_text())
     expected[f"BB6.Agent25Raw43{suffix}.all43child"] = (v,spec.get("bound",75))
 if expanded:
-    for v,b in [("b1rc",382),("b0rc",620),("b0ra",390)]:
+    for v,b in [("b1rc",382),("b0rc",620),("b0ra",390)]+([("b1ra",519),("b1lb",289)] if mode=="expandedfive" else []):
         expected[f"BB6.Agent25Raw43{v.upper()}.all_completions"] = (v,b)
 dest = work/"union"
 dest.mkdir(parents=True,exist_ok=True)
@@ -78,6 +79,6 @@ if expanded:
     for branch,slot,children in [
         ("b1rc","c","0la 0le 0re 1la 1le 1re"),
         ("b0rc","c","0le 0re 1le 1re"),
-        ("b0ra","a","0le 0rc 0re 1lb 1le 1re")]:
+        ("b0ra","a","0le 0rc 0re 1lb 1le 1re")]+([("b1ra","a","0lc 0le 0rc 0re 1lc 1le 1re"),("b1lb","c","0la 0le 0ra 0re 1la 1le 1ra 1re")] if mode=="expandedfive" else []):
         for v in children.split():
             subprocess.run([sys.executable,str(ROOT/"generate.py"),f"{branch}_{slot}{v}"],check=True)
