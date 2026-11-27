@@ -14,7 +14,7 @@ u, a68, base, selected = resume.u, resume.a68, resume.base, resume.selected
 HERE, REPO = resume.HERE, resume.REPO
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 PARENTS = {
-    "57": ("BB6.Agent31Raw57", 1500, "1RB---_1RC---_0RD---_1LD1RE_---0LA_------"),
+    "57": ("BB6.Agent31Raw57", 1613, "1RB---_1RC---_0RD---_1LD1RE_---0LA_------"),
     "122": ("BB6.Agent43Raw122SharpParent", 6659487, "1RB---_1RC---_0RD---_1LD1RE_---0LF_------"),
     "63": ("BB6.Agent2Raw63", 358, "1RB---_1RC1LA_0RD---_1LD1RE_---0LB_------"),
     "61": ("BB6.Agent31Raw61", 1962, "1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------"),
