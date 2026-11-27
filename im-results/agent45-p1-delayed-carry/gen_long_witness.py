@@ -257,14 +257,16 @@ def generate(args):
         # A single previous ps equality can also be decomposed with rcases.
         for islive in [True,False]:
             body += "  · intro B a hp" + (" z c hw\n" if islive else "\n")
-            body += f"    simp only [ps{stage},List.mem_cons,List.mem_singleton,Prod.mk.injEq] at hp\n"
+            body += f"    simp only [ps{stage},List.mem_cons,List.not_mem_nil,or_false,Prod.mk.injEq] at hp\n"
             body += f"    rcases hp with {cases}\n"
             for tag,b,prev in branch:
-                body += f"    · rw [{tag}_lookup]\n"
                 if islive:
-                    body += f"      rw [{tag}_ends]\n      exact {prev}_cover z c (by simpa [{b},Nat.add_assoc] using hw)\n"
+                    body += f"    · change c ∈ ({rows_name} {b}).map Prod.fst\n"
+                    body += f"      rw [{tag}_lookup,{tag}_ends]\n"
+                    body += f"      exact {prev}_cover z c hw\n"
                 else:
-                    body += f"      exact {tag}_check\n"
+                    body += f"    · change ({rows_name} {b}).all (rowCheck {(h-1).bit_length()} {n+s+h+3} {h} (targetDigits {n} {s} {b} {h})) = true\n"
+                    body += f"      rw [{tag}_lookup]\n      exact {tag}_check\n"
         body += f"def ps{stage+1} : List Prefix := {lean_prefixes(next_ps)}\n"
         body += f"theorem rec{stage} : recoverRows {s} ps{stage} {rows_name} = ps{stage+1} := by decide +kernel\n"
         if next_ps:
