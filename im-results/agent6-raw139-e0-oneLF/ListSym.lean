@@ -46,7 +46,7 @@ def lenCoeff : LS → Nat × Nat × Nat
 def lengthAt (a : Nat × Nat × Nat) (x y : Nat) := a.1+a.2.1*x+a.2.2*y
 theorem len_ev (s : LS) (x y : Nat) : (ev s (env x y)).length=lengthAt (lenCoeff s) x y := by
   induction s with
-  | nil => rfl
+  | nil => simp [ev,lenCoeff,lengthAt]
   | cons a s ih =>
     cases h : lenCoeff s with
     | mk b c =>
@@ -84,7 +84,7 @@ structure State where
   l : LS
   r : LS
 def State.eval (s : State) (x y : Nat) : Z0 := ⟨s.q,ev s.l (env x y),ev s.r (env x y)⟩
-def State.same (d : Widths) (a b : State) : Bool := decide (a.q=b.q) && same d a.l b.l && same d a.r b.r
+def State.same (d : Widths) (a b : State) : Bool := decide (a.q=b.q) && BB6.Agent6ListSym.same d a.l b.l && BB6.Agent6ListSym.same d a.r b.r
 theorem State.same_sound (d : Widths) (a b : State) (h : a.same d b=true) (x y : Nat) : a.eval x y=b.eval x y := by
   simp only [State.same,Bool.and_eq_true,decide_eq_true_eq] at h
   unfold State.eval
