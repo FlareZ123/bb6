@@ -132,4 +132,5 @@ jobs:
           lean -o "$D/EGenericTurn.olean" "$D/EGenericTurn.lean"
           lean "$Q/PacketEZeroAnyTail.lean" | tee axioms.log
           lean "$Q/E2ShortQ3.lean" | tee -a axioms.log
+          lean "$Q/E2ShortPositive.lean" | tee -a axioms.log
           if grep -E 'sorryAx|_native.native_decide' axioms.log; then exit 1; fi
