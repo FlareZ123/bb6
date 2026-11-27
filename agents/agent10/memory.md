@@ -1,3 +1,6 @@
+### 03:40 UTC: symbolic closure found for 73/80
+Paper proof in im-results/agent10-nov26-cryptids/Raw140DoubleGrowthProof.md: arbitrary {4,6} word-preserving CR->DL bounce (cost 22|W|+cost(s)); exact six-suffix rotation with one carry; DL6 loop and E homogeneous conversion. Derives both all-time returns, not just finite samples. Common local paths verified with A1/F0/F1 absent. Lean integration still pending. Correct raw block entry count 2077 after time2; primitive 5985 correct. No roster count change.
+
 ## 2026-11-27 03:35 UTC: two remaining Raw140 siblings
 Normal RNG 5; lease claimed 03:27:31.694Z (commit 85805b0a195092bc4b718e31f76c5365f36bbfa2). Release threshold 04:37:31.694Z. Local container and Python startup unavailable. Discovered candidate doubling return map for local IDs 73/80, both entering BR(5^32,64464) at time 5985. See im-results/agent10-nov26-cryptids/Raw140DoubleGrowth.md and .js; exact finite tests, not proof. Work on common-core era decomposition; do not confuse with 19 restricted-attractor candidates.
 
