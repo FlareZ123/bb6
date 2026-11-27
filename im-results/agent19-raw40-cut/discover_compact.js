@@ -9,7 +9,9 @@ function enumerate(table,options={}){
  const bits=Array.from({length:W},(_,i)=>1n<<BigInt(i));
  const below=bits.map(b=>2n*b-1n), mask=(1n<<BigInt(W))-1n,above=bits.map(b=>mask^(b-1n));
  const p=parse(table),opens=[],wanted=options.wanted?new Set(options.wanted):null;
- let nodes=0,done=false,openCount=0;
+ let nodes=0,done=false,openCount=0,maxScore=-1,maxWitness=null;
+ function delay(p,state=0,seen=1){let best=[];for(let q=0;q<6;q++)if(!(seen>>q&1)){let a=p[2*q];if(a===-1||(a>=0&&a<12&&a%6===state)){let path=[q,...delay(p,q,seen|(1<<q))];if(path.length>best.length)best=path}}return best}
+ function record(p,n,s){let q=p.slice();q[s]=-2;let path=delay(q),score=n+1+path.length;if(score>maxScore){maxScore=score;maxWitness={n,slot:s,delay:path.length,delayPath:path,table:q.map(m=>m===-2?'HHH':m<0?'---':(m>=12?'1':'0')+(m%12>=6?'R':'L')+String.fromCharCode(65+m%6)).join('').match(/.{6}/g).join('_')}}}
  function classify(p){
   let q=0,h=O,t=0n,tr=[],prev=[[],[],[],[],[],[]];
   for(let n=0;n<=L;n++){
@@ -38,12 +40,13 @@ function enumerate(table,options={}){
    if(wanted&&opens.length===wanted.size)done=true;
    return;
   }
+  record(p,a[1],a[2]);
   if(p.filter(x=>x<0).length===1)return;
   let cut=2;for(let i=0;i<12;i++)if(p[i]>=0)cut=Math.max(cut,Math.floor(i/2)+1,p[i]%6+1);
   let s=a[2],b=p.slice();
   for(let i=0;i<24;i++)if(i%6<=cut){b[s]=i;visit(b);if(done)return}
  }
- visit(p);return {nodes,openCount,opens,stopped:done};
+ visit(p);return {nodes,openCount,opens,stopped:done,maxScore,maxWitness};
 }
 function solve(table,fs,cap=30000){
  const p=parse(table),dict=fs.map(f=>new Map([[f.start,0]])),val=fs.map(f=>[f.start]),delta=[[0,0],[0,0]],incoming=[[new Set([0])],[new Set([0])]],wait=[[],[]],todo=[],seen=new Set();
