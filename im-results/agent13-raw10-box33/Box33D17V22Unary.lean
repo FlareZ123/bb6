@@ -80,18 +80,24 @@ def phase (k : Nat) : C9Pair.Config := L (ones (5*k+7) z) z
 def blank : C9Pair.Config := cfg .A z z
 
 theorem init : run 49 blank = some (phase 0) := by
-  simp [blank,phase,L,cfg,run,step,left,right,ones,rep,word]
+  have h0 : run 10 blank = some (L (ones 4 z) z) := by
+    simp [blank,L,cfg,run,step,left,right,ones,rep,word]
+  have h1 : run 20 (L (ones 4 z) z) = some (L z (ones 4 z)) := leftSweep 4 z z
+  have h2 : run 11 (R (ones 2 z) (ones 1 (ones 4 z))) = some (R (ones 7 z) z) := by
+    simpa [ones,rep,word] using rightStep (ones 2 z) z
+  rw [show 49=10+20+8+11 by decide,run_add,run_add,run_add,h0,Option.bind_some,h1,Option.bind_some,turn,Option.bind_some,h2]
+  simp [phase,L,R,word]
 
 theorem growth (k : Nat) : run (36*k+63) (phase k) = some (phase (k+1)) := by
   unfold phase
   rw [show 36*k+63=5*(5*k+7)+8+11*(k+1)+9 by omega,
       run_add,run_add,run_add,leftSweep,Option.bind_some,turn,Option.bind_some]
   rw [show ones 1 (ones (5*k+7) z) = ones (5*(k+1)+3) z by
-      rw [← rep_add [true] 1 (5*k+7) z]; congr 1 <;> omega,
+      rw [← rep_add [true] 1 (5*k+7) z,show 1+(5*k+7)=5*(k+1)+3 by omega],
       show ones (5*(k+1)+3) z = ones (5*(k+1)) (ones 3 z) from rep_add _ _ _ _,
       rightSweep,Option.bind_some,finish]
   rw [← rep_add [true] (5*(k+1)) 2 z, ← rep_add [true] 5 (5*(k+1)+2) z]
-  congr 2 <;> omega
+  rw [show 5+(5*(k+1)+2)=5*(k+1)+7 by omega]
 
 theorem never_phase (n k : Nat) : run n (phase k) ≠ none := by
   induction n using Nat.strongRecOn generalizing k with
