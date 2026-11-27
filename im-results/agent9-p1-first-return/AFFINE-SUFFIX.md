@@ -1,6 +1,6 @@
 # Exact half-depth affine suffix transform
 
-This is intermediate work, not a P1 solution or a Lean-certified numerical result.
+The general prefix/suffix equivalence is Lean-certified against original source. The depth-40 numerical support remains an exact computational result, not a kernel-certified count or P1 decision.
 
 Use the definitions and prefix representation in [AffineResidue.lean](AffineResidue.lean). A valid prefix at depth k has parameters (r,a,B), with r < 2^k, B odd, and expr(r,xs)=1+2^k*a. For a full parameter n=r+2^k*T and a d-bit suffix b, define S(q,b)=sum_j b_j*(q+j)*2^j and U(b)=sum_j b_j*2^j, with q=r+k+3.
 
@@ -29,8 +29,11 @@ The accompanying JS algorithm was executed in the tool runtime. Direct canonical
 |30|15|1542|26905355|40355616|
 |32|16|2809|101625091|166227136|
 |34|17|5618|372236349|577108724|
+|36|18|9601|1437341097|1827449280 (reduced)|
+|38|19|19202|5454086135|4631103552 (reduced)|
+|40|20|36329|21580352722|35980580560 (reduced)|
 
-At depth 32, 2,045,858,557 of 2,147,483,648 even residue classes (95.26771293%) are excluded. At depth 34, 8,217,698,243 of 8,589,934,592 even classes (95.66659856%) are excluded. The earlier depth-20 certified count is 36,329 survivors among 524,288. The depth-32 and depth-34 computations are **not** kernel-certified.
+At depth 32, 2,045,858,557 of 2,147,483,648 even residue classes (95.26771293%) are excluded. At depth 34, 8,217,698,243 of 8,589,934,592 even classes (95.66659856%) are excluded. The earlier depth-20 certified count is 36,329 survivors among 524,288. At depth 40, 528,175,461,166 of 549,755,813,888 even classes (96.07455670739%) are excluded. The depth-36 through depth-40 computation ran successfully in [CI 45966383779](https://github.com/FlareZ123/bb6/actions/runs/45966383779) using [affine_suffix.cpp](affine_suffix.cpp), with the depth-26 regression agreeing with the JS implementation. All numerical counts above depth 20 are **not** kernel-certified.
 
 For n>=K, the original-source theorem BB6.P1CarryExact.critical_reset_requires_width_full transfers width-zero to impossibility of the critical P1 reset Reach 2 (14*2^n-2*n-10). This concerns that necessary reset, not every P1 gate or the BB(6) upper bound. The paper identity and computations above extend the residue obstruction; the new support count still needs Lean integration and acceptance. No claim that every remaining residue fails.
 
@@ -97,7 +100,9 @@ if(typeof require!=="undefined"&&require.main===module)
   for(const K of process.argv.slice(2).map(Number))console.log(JSON.stringify(calc(K)));
 ```
 
-## Further exact reduction: saturated upper cylinder
+## Reusing the weighted-jump period reduction for affine rows
+
+The upper-cylinder reduction is an application of the already established weighted-jump reduction in [JumpResidueReduced.lean](../agent9-p1-reverse-block/JumpResidueReduced.lean) and [reduced_jump.hpp](../agent9-p1-reverse-block/reduced_jump.hpp), rather than a new general subset-sum theorem. Here it allows an exact reduction of affine row images and their cardinalities.
 
 Write w_j=(q+j)2^j for j<d. Suppose that for every e=m,...,d-1, there is a weight with valuation exactly e. Pick one such weight per e; these are distinct. The subset sums of the picked weights modulo 2^d are exactly the multiples of 2^m, by triangular binary lifting (at step e the chosen weight toggles bit e without changing lower bits). Thus, separating those picked weights from the other weights, the entire suffix support is the inverse image of its projection modulo 2^m. The odd affine bijection of each prefix preserves that periodicity, as does union across prefixes in the row. Consequently we can construct and count each row at modulus 2^m, then multiply its cardinality by 2^(d-m). No approximation or independence hypothesis is involved.
 
@@ -105,4 +110,4 @@ Choose the smallest m such that all valuations m,...,d-1 occur. The projected su
 
 ## Formal algebra status
 
-Original-source Lean CI [45965851217](https://github.com/FlareZ123/bb6/actions/runs/45965851217), pinned at a2d799e1ba0ad15d61bac60be6a78e8983a12b5b, passed the standard-axiom audit for expr_suffix, suffix_iff, and width_pos_iff_suffix. These certify the general prefix/suffix equivalence for all k>0 and d<=k, without relying on the canonical-half reduction. The numerical depth-34 count and saturated-cylinder optimization remain paper/executable results, not kernel-certified numeric theorems. Initial CI 45965615677 failed on nonzero witness and rewrite syntax; fixed in the successful commit.
+Original-source Lean CI [45965851217](https://github.com/FlareZ123/bb6/actions/runs/45965851217), pinned at a2d799e1ba0ad15d61bac60be6a78e8983a12b5b, passed the standard-axiom audit for expr_suffix, suffix_iff, and width_pos_iff_suffix. These certify the general prefix/suffix equivalence for all k>0 and d<=k, without relying on the canonical-half reduction. The numerical depth-40 count and affine row integration remain paper/executable results, not kernel-certified numeric theorems. Initial CI 45965615677 failed on nonzero witness and rewrite syntax; fixed in the successful commit.
