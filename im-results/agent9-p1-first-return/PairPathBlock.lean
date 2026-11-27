@@ -61,7 +61,9 @@ theorem scanOne_ok_le (skip : List Nat) (hi r a d j : Nat)
     (hj : j≤d) (h : (scanOne skip hi r a d).1=true) :
     (scanOne skip hi r a j).1=true := by
   induction d with
-  | zero => have he : j=0 := by omega; simpa [he] using h
+  | zero =>
+    have he : j=0 := by omega
+    simpa [he] using h
   | succ d ih =>
     by_cases he : j=d+1
     · simpa [he] using h
