@@ -323,4 +323,85 @@ theorem reducedExponent_final24 (q r h : Nat)
 #print axioms reducedLiftResidues_cover
 #print axioms reducedExponent_final24
 
+/-- A single deduplicated negative subset-sum support is reusable at every
+    target sharing q,k. Reduction after each weight is exact. -/
+def modularNeg (M : Int) : List Int → List Int
+  | [] => [0 % M]
+  | w::ws =>
+    let old := modularNeg M ws
+    (old ++ old.map (fun x => (x-w)%M)).eraseDups
+
+theorem modularNeg_mem (M : Int) (ws : List Int) (x : Int) :
+    x ∈ modularNeg M ws ↔
+      x ∈ (subsetSums ws).map (fun s => (-s)%M) := by
+  induction ws generalizing x with
+  | nil => simp [modularNeg,subsetSums]
+  | cons w ws ih =>
+    simp only [modularNeg,List.mem_eraseDups,List.mem_append,List.mem_map,
+      subsetSums,List.map_append]
+    rw [ih]
+    constructor
+    · rintro (h|⟨a,ha,rfl⟩)
+      · exact Or.inl h
+      · have ha' := (ih a).mp ha
+        obtain ⟨s,hs,rfl⟩ := List.mem_map.mp ha'
+        right
+        refine ⟨s+w,⟨s,hs,rfl⟩,?_⟩
+        rw [Int.emod_sub_emod]
+        congr 1 <;> omega
+    · rintro (h|⟨a,⟨s,hs,rfl⟩,rfl⟩)
+      · exact Or.inl h
+      · right
+        refine ⟨(-s)%M,(ih _).mpr (List.mem_map.mpr ⟨s,hs,rfl⟩),?_⟩
+        rw [Int.emod_sub_emod]
+        congr 1 <;> omega
+
+theorem reducedResidues_translate (q k Y : Nat) :
+    reducedResidues q k Y =
+      (reducedResidues q k 0).map
+        (fun x => ((Y:Int)+x) % (reducedModulus q k : Int)) := by
+  unfold reducedResidues
+  rw [List.map_map]
+  apply List.map_congr_left
+  intro s hs
+  simp only [Function.comp_apply,Int.natCast_zero,Int.zero_sub]
+  rw [Int.add_emod_emod]
+  congr 1
+
+/-- Membership, independent of sorting, deduplication and target translation. -/
+def sharedSupport (q k : Nat) : List Int :=
+  (modularNeg (reducedModulus q k : Int) (reducedWeights q k)).mergeSort
+
+def sharedResidues (q k Y : Nat) : List Int :=
+  (sharedSupport q k).map (fun x => ((Y:Int)+x) % (reducedModulus q k : Int))
+
+theorem sharedResidues_mem (q k Y : Nat) (x : Int) :
+    x ∈ sharedResidues q k Y ↔ x ∈ reducedResidues q k Y := by
+  rw [reducedResidues_translate]
+  simp only [sharedResidues,sharedSupport,List.mem_map,List.mem_mergeSort,
+    modularNeg_mem,reducedResidues,Int.natCast_zero,Int.zero_sub]
+
+def sharedLift (q k Y : Nat) : List Nat :=
+  let M := reducedModulus q k
+  ((List.range (q/M+1)).flatMap
+    (fun j => (sharedResidues q k Y).map (fun x => j*M+x.toNat))).filter (·<q)
+
+theorem sharedLift_mem (q k Y c : Nat) :
+    c ∈ sharedLift q k Y ↔ c ∈ reducedLiftResidues q k Y := by
+  simp only [sharedLift,reducedLiftResidues,List.mem_filter,List.mem_flatMap,
+    List.mem_map,sharedResidues_mem]
+
+theorem sharedLift_cover (q : Nat) (ys : List Nat) :
+    BB6.Agent9ReverseBlock.JumpCover (q+ys.length) ys
+      (sharedLift q ys.length (digits ys)) := by
+  intro c hc
+  exact (sharedLift_mem q ys.length (digits ys) c).2
+    (reducedLiftResidues_cover q ys c hc)
+
+#print axioms modularNeg_mem
+#print axioms reducedResidues_translate
+#print axioms sharedResidues_mem
+#print axioms sharedLift_mem
+#print axioms sharedLift_cover
+
 end BB6.Agent9JumpResidue
