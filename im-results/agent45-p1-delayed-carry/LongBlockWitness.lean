@@ -41,10 +41,10 @@ def witnessCheck (L F k X B out : Nat) : Bool :=
     (if X-W<q then out==X-W else
        (out==q && (decide (B+1=2^k) || decide (X<wordValue L F k (B+1)))))
 
-theorem witness_sound (L F k X B out C c : Nat)
+theorem witness_word_sound (L F k X B out C c : Nat)
     (hL : k≤2^L) (hC : C<2^k) (hc : c<F-k)
     (he : X+corr k C=F*C+c)
-    (hcheck : witnessCheck L F k X B out=true) : out=c := by
+    (hcheck : witnessCheck L F k X B out=true) : out=c ∧ B=C := by
   have hFk : k≤F := by omega
   have hw := word_value_eq L F k C hFk hL hC
   have hx : X=wordValue L F k C+c := by omega
@@ -61,7 +61,7 @@ theorem witness_sound (L F k X B out C c : Nat)
           omega
         · omega
     rw [hBC] at hrest
-    omega
+    exact ⟨by omega,hBC⟩
   · simp [hlt] at hrest
     obtain ⟨_,hnext⟩ := hrest
     by_cases h : C<B
@@ -78,6 +78,12 @@ theorem witness_sound (L F k X B out C c : Nat)
           · have hg := word_value_gap L F k (B+1) C hFk hL (by omega) hC
             omega
         rcases hnext with hlast|hnext <;> omega
+
+theorem witness_sound (L F k X B out C c : Nat)
+    (hL : k≤2^L) (hC : C<2^k) (hc : c<F-k)
+    (he : X+corr k C=F*C+c)
+    (hcheck : witnessCheck L F k X B out=true) : out=c :=
+  (witness_word_sound L F k X B out C c hL hC hc he hcheck).1
 
 /-- Any genuine original-source Walk has the unique certified predecessor.
     In particular a sentinel witness excludes all Walks from that endpoint. -/
@@ -113,6 +119,7 @@ theorem rows_cover (L F : Nat) (ys : List Nat) (rows : List WitnessRow)
 
 #print axioms word_value_eq
 #print axioms word_value_gap
+#print axioms witness_word_sound
 #print axioms witness_sound
 #print axioms witness_walk
 #print axioms rows_cover
