@@ -33,6 +33,48 @@ The positive linear integer \(3ck+H\) eventually lies strictly between zero and 
 
 This rules out **fixed finite tails** scaling to infinity. It does *not* address histories whose nontrivial suffix lengths themselves increase with k; these are still compatible with the [wide-radius obligation](../agent1-429-q0-23-7/Q0HalfWindow.md).
 
+## Quantitative, word-uniform strengthening
+
+The argument also yields a **fully explicit obstruction covering every choice of words of the given lengths**, not just one fixed u,v. In particular there is no need to fix the parity of k.
+
+Let \(r=|u|,s=|v|\) and \(r,s,t\le k\), with \(a\ge1,b\ge0\). Define
+\[
+ B=a+2b+21r+16,\qquad A=a+2b+24s+16.
+\]
+Then **no strict exact path of the displayed three-block form exists if all three conditions hold**:
+\[
+ \boxed{4^{\,k-\max(r,s)}>B,\qquad
+        3k>4^s A,\qquad
+        4^{\,k-\max(s,t)}>3k+A.}
+\]
+This is a uniform arithmetic test depending only on a,b,k and the three word lengths, not on their contents.
+
+**Proof of explicit bounds.** The initial rank is \(p_0=a4^k-3k+\gamma\) with \(\gamma=b+3r-L_u-\epsilon\) and \(|\gamma|\le b+12r+2\). The strict cone bounds the positive integer C after the first zero run by \(C\le a4^r+b+12r+2\). The first-tail constant \(F_u\), built from the phase offsets and ranks \(b-L_u+L_i\), satisfies
+\[
+ |F_u|\le(b+9r+12)(4^r-1)/3.
+\]
+Hence \(|C+F_u|\le4^r B\). The first displayed condition implies
+\[
+4^{\min(k,k-s+r)}=4^{r+k-\max(r,s)}>4^r B,
+\]
+forcing \(C+F_u=0\) by divisibility. The resulting *integer* height Q at the start of v satisfies \(3Q<a4^s\), from \(4^rQ=aD_u4^s\) and \(3D_u<4^r\).
+
+Now the rank at the start of v is \(a4^k+3k+\eta\), where \(|\eta|\le b+3s+2\); its final rank offset \(H_p\) obeys \(|H_p|\le b+12s+2\). The finite v recurrence gives a constant \(H_y=Q+\sum_{i<s}4^i[v_i(\eta+L_i)+\operatorname{off}_i]\), with
+\[
+3|H_y|<4^s(a+b+12s+14).
+\]
+Consequently the constant \(H=4^sH_p-3H_y\) in the deficit identity obeys \(|H|<4^s A\). Since \(1\le c=4^s-3D_v\le4^s\), the second displayed condition makes the integer \(3ck+H\) strictly positive, and
+\[
+0<3ck+H<4^s(3k+A).
+\]
+The third condition makes this smaller than the divisor \(4^{\min(k,k-t+s)}=4^{s+k-\max(s,t)}\). Contradiction. QED.
+
+**Asymptotic consequence.** Fix a,b and any \(\varepsilon>0\). For all sufficiently large k, *uniformly over all u and v*, if \(r,t\le k/2\), then any such crossing must have
+\[
+s>(1-\varepsilon)\log_4 k.
+\]
+Indeed if \(s\le(1-\varepsilon)\log_4 k\), then \(4^s A=O(k^{1-\varepsilon}\log k)=o(k)\), while the first and third inequalities follow because their powers have exponents at least \(k/2-O(\log k)\) and the right sides are polynomial in k. Thus scalable crossings with substantial homogeneous runs require **at least logarithmically growing complexity in the middle active suffix**; unboundedness alone was not the sharp conclusion. This is still much weaker than the all-word wide-window impossibility needed for #429.
+
 ## Sharp existing coefficient-two template: k=56 only
 
 For even \(k\ge10\), require rank \(2\cdot4^k+2\) after \(w=0^{k-9}\texttt{101100000}\), then \(v=0^{k-10}\texttt{1011111111}\) followed by \(k-10\) ones. Write \(T=4^k\). Necessarily
