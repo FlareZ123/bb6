@@ -1,0 +1,24 @@
+name: Agent 20 Space Needle Raw10 original-table leaf (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore source modules and verify exact leaf
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 tools/lean_compile_closure.py im-results/agent20-needle-raw10-routing/SpaceNeedleRaw10.lean --workdir /tmp/a20-needle-raw10 --jobs 4 --manifest /tmp/a20-needle-raw10-manifest.json --theorem BB6.Agent20NeedleRaw10.cover_iff 2>&1 | tee /tmp/a20-needle-raw10.log
+          if grep -Eq 'sorryAx|native_decide|Lean.ofReduceBool' /tmp/a20-needle-raw10.log; then exit 1; fi
+          grep -F '[lean-closure] SUCCESS' /tmp/a20-needle-raw10.log
