@@ -1,4 +1,5 @@
-import UnifiedShadow
+import FullSectionInverse
+import Agent3CImage
 import Lean.Elab.Tactic.Omega
 
 set_option maxHeartbeats 0
@@ -147,19 +148,35 @@ theorem all_parent_forbidden (a k x y : Nat)
   have hmod : (x+y)%2=0 := by omega
   exact False.elim (no_odd_power (x+y) a n hmod hS)
 
-/-- Every node of this infinite two-dimensional congruence cone is
-    unreachable from the authentic blank-derived Machine C section root. -/
+/-- Every node of the 48/64 odd-odd cone is unreachable on the
+    authentic original-machine section orbit, at every time. -/
 theorem blank_unreachable (x y : Nat)
     (hx : x%8=5) (hy : y%8=3)
-    (hy8 : 8≤y) (hs : (x+y)%64=48) :
-    ¬ BB6.Agent3.CReach x y := by
-  intro hr
-  obtain ⟨a,k,hpre,hedge⟩ :=
-    BB6.Agent13UnifiedShadow.source_parent_of_right_ge8 x y hy8 hr
-  obtain ⟨hk5,hkodd,hksum⟩ :=
-    all_parent_forbidden a k x y hx hy hs hedge
-  exact (BB6.Agent13TwoParent.odd_forbidden_image a k
-    hk5 hkodd (Or.inl hksum)) hpre
+    (hy8 : 8≤y) (hs : (x+y)%64=48) (time : Nat) :
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠ some (x,y) := by
+  intro h
+  cases time with
+  | zero =>
+      simp [BB6.Agent8Section.run] at h
+      omega
+  | succ n =>
+      cases hp : BB6.Agent8Section.run BB6.Agent46.secNext n (some (5,1)) with
+      | none => simp [BB6.Agent8Section.run,hp] at h
+      | some p =>
+          rcases p with ⟨a,k⟩
+          have he : BB6.Agent46.secNext (a,k)=some (x,y) := by
+            simpa [BB6.Agent8Section.run,hp] using h
+          have hcrit :=
+            (BB6.Agent46.complete_section_inverse a k x y (by omega)).mp he
+          obtain ⟨hk5,hkodd,hksum⟩ :=
+            all_parent_forbidden a k x y hx hy hs hcrit
+          cases n with
+          | zero =>
+              simp [BB6.Agent8Section.run] at hp
+              omega
+          | succ nn =>
+              have hi := BB6.Agent3.blank_section_odd_image nn a k hp hk5 hkodd
+              omega
 
 private theorem power_lower (m : Nat) : 4*m+4 ≤ 2^(2*m+2) := by
   induction m with
@@ -204,10 +221,12 @@ theorem high_stop_blank_unreachable (j m k : Nat)
     (hm5 : 5≤m) (hm4 : m%4=1)
     (hj64 : j%64=(3*m+50)%64)
     (hstop : k+j+3*m+5=2^(2*m+2)*(j+3)) :
-    ¬ BB6.Agent3.CReach (2*j+3) k := by
+    ∀ time, BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
+      some (2*j+3,k) := by
+  intro time
   obtain ⟨hx,hy,hs,hy8⟩ :=
     high_stop_cone_coordinates j m k hm5 hm4 hj64 hstop
-  exact blank_unreachable (2*j+3) k hx hy hy8 hs
+  exact blank_unreachable (2*j+3) k hx hy hy8 hs time
 
 #print axioms all_parent_forbidden
 #print axioms blank_unreachable
