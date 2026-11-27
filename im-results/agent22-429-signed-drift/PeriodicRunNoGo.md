@@ -74,3 +74,12 @@ In both cases \(K\le6t\), contradicting \(q\mid K\) and \(q\ge6t+1\). **QED.**
 This is a **general mathematical proof for the compressed signed model**, building on the existing checked model/compression/parity lemmas. The argument itself is not yet a compiled original-source Lean theorem. Independent [periodic_slope_obstruction_check.py](periodic_slope_obstruction_check.py) exhaustively validates all primitive base-4 gap words of length at most 17 and both E/S initial types: 261,554 type cycles with no denominator/rank exception. The finite computation is corroboration, not a replacement for the unbounded proof.
 
 A full Lean formalization would certify this new model-level universal structural theorem. Even then, **aperiodic** sequences of mixed F-run lengths remain possible candidates and the source-machine blank-root halting question remains open. Further finite schedules or fixed residues do not close the remaining infinite-path quantifier.
+
+
+### Exact finite-word half-rank transfer (Lean)
+
+The added [PeriodicMacroTransfer.lean](PeriodicMacroTransfer.lean) represents a paired E/S block followed by \(m=2(j-1)\) F blocks as an exact half-rank macro:
+\[
+4^j u'=u+r+c,\qquad r'=r+3j+a,\qquad r=(6u+D)/2,
+\]
+with \((c,a)=(4,2)\) for E and \((10,4)\) for S. PeriodicMacro.transfer proves by induction that every fixed finite typed word has an affine input/output transfer \(M U=u+A r+B\), \(R=r+T\). PeriodicMacro.periodic_word_is_affine then applies the kernel-certified discrete rigidity theorem to any repeated word, returning an exact integral slope and its defining relation. These two claims compile locally with standard axioms. This source-independent algebra closes the **word-to-affine** part of the proof, not the original signed-to-macro bridge or the primitive digit-rotation construction.
