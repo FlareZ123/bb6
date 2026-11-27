@@ -92,6 +92,9 @@ def main():
     args=ap.parse_args()
     global FIXED,TARGETS,BOUND,HARD
     d,v,BOUND=args.d0,args.second,args.bound
+    if (d,v) in {(12,16)}:
+        from replay_direct import run_direct
+        return run_direct(args)
     slot={2:3,3:3,4:3,12:1,14:7,16:7,17:8,18:8,19:8,20:8}[d]
     assert 1<=v<=24 and BOUND>=11
     family=f'Box33D{d}V{v}'
