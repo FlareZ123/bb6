@@ -335,7 +335,7 @@ jobs:
           name: raw43-b0rc-complete-proof
           path: /tmp/a25-b0rc-complete/
           retention-days: 30
-- name: Compose source-accepted Raw43 B0RA or B0LA children
+      - name: Compose source-accepted Raw43 B0RA or B0LA children
         id: raw43_b0_compose
         if: inputs.target == 'raw43-b0ra-compose' || inputs.target == 'raw43-b0la-compose'
         env:
