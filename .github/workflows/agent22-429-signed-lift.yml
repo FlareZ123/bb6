@@ -31,9 +31,13 @@ jobs:
           lean -o "$p/SignedDrift.olean" "$p/SignedDrift.lean"
           lean -o "$p/SignedLift.olean" "$p/SignedLift.lean"
           lean -DmaxHeartbeats=2000000 "$p/Branch13_15.lean"
-          lean -DmaxHeartbeats=2000000 "$p/SignedSource.lean"
+          lean -DmaxHeartbeats=2000000 -o "$p/SignedSource.olean" "$p/SignedSource.lean"
+          lean "$p/Branch29SignedFloor.lean" 2>&1 | tee /tmp/agent22-signed-floor-audit.log
+          ! grep -q 'sorryAx' /tmp/agent22-signed-floor-audit.log
+          ! grep -q 'native_decide' /tmp/agent22-signed-floor-audit.log
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent33-429-24/BB429InverseKernel.olean im-results/agent33-429-24/BB429InverseKernel.lean
           lean -o im-results/agent18-429-root-invariants/BB429FiniteAvoidance.olean im-results/agent18-429-root-invariants/BB429FiniteAvoidance.lean
+          lean -o "$p/Branch29ShiftedCert.olean" "$p/Branch29ShiftedCert.lean"
           lean "$p/Branch29Extra1024.lean" 2>&1 | tee /tmp/agent22-branch29-audit.log
           lean "$p/Branch29Extra2048.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           for m in BB429SevenStrong BB429OddResetGate BB429Reset31 BB429NoThree BB429Even16 BB429Branch7 BB429Branch29 BB429Branch29Mod16 BB429Branch29Mod64 BB429Branch29Mod128 BB429Branch29Odd31 BB429Branch29Reflect BB429Branch29Reflect1024 BB429Branch29Small BB429Branch29All; do
