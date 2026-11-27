@@ -1410,7 +1410,7 @@ jobs:
             --theorem "BB6.Agent14E0LFParent.cZLFRoot13_${CHILD}" \
             --weighted-bound 19007 | tee "$work/child/log"
           ! grep -Eq 'sorryAx|ofReduceBool|native_decide' "$work/child/log"
-          grep -E "^'BB6.Agent14E0LFParent.cZLFRoot13_\$\{CHILD\}' depends on axioms: \\[propext, (Classical.choice, )?Quot.sound\\]$" "$work/child/log"
+          grep -E "^'BB6.Agent14E0LFParent.cZLFRoot13_${CHILD}' depends on axioms: \\[propext, (Classical.choice, )?Quot.sound\\]$" "$work/child/log"
           mkdir -p "$work/child/build"
           find /tmp/a6-zeroLF-root13-child -name '*.olean' -exec cp '{}' "$work/child/build/" ';'
       - uses: actions/upload-artifact@v4
