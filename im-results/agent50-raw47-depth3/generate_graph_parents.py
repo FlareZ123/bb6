@@ -3,7 +3,8 @@ Each generated graph is checked in Lean; no discovery result is trusted.
 Usage: generate_graph_parents.py OUT [--partial] parent_id [parent_id ...]
 """
 from pathlib import Path
-import base64,lzma,hashlib,json,subprocess,sys,tempfile
+import base64,lzma,hashlib,json,subprocess,sys,tempfile,functools
+from shard_mixed_prefix import write_sharded
 here=Path(__file__).resolve().parent
 out=Path(sys.argv[1]).resolve()
 out.mkdir(parents=True,exist_ok=True)
@@ -57,6 +58,7 @@ assert hashlib.sha256(raw).hexdigest()=='4ae501c6ae90d482f77d8ba65b060717112e402
 rows=raw.decode().splitlines()
 def b(x):return str(bool(x)).lower()
 def slot(s):return f'({s//2},{b(s%2)})'
+@functools.lru_cache(maxsize=None)
 def far(code,table):
     rev=int(code[0]);D=list(map(int,code[1:]));n=len(D)//2
     assert rev in (0,1) and 1<=n<=5 and len(D)==2*n and D[0]==0 and all(0<=x<n for x in D)
@@ -259,7 +261,10 @@ theorem bound (m : Machine) (hm : compatible p m) : WeightedBound 10006 m :=
 theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 10006 m :=\n  quotientSafe root bound m hm\n#print axioms all_quotient
 '''
     source+=f'end BB6.Agent50.Raw47D3{kind}{i}\n'
-    (out/f'Raw47D3{kind}{i}.lean').write_text(source)
+    if len(source)>100000 and trees[i][0]=='split':
+        write_sharded(out,i,trees[i],source,kind,emit,emit_partial)
+    else:
+        (out/f'Raw47D3{kind}{i}.lean').write_text(source)
 
 (out/'ids.txt').write_text(''.join(f'{i}\n' for i in full_ids))
 (out/'partial-ids.txt').write_text(''.join(f'{i} {n}\n' for i,n in partial_ids))
