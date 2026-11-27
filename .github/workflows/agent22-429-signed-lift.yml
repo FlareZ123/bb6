@@ -33,6 +33,7 @@ jobs:
           lean -DmaxHeartbeats=2000000 "$p/Branch13_15.lean"
           lean -DmaxHeartbeats=2000000 -o "$p/SignedSource.olean" "$p/SignedSource.lean"
           lean "$p/Branch29SignedFloor.lean" 2>&1 | tee /tmp/agent22-signed-floor-audit.log
+          lean "$p/Branch29SignedFloor10k.lean" 2>&1 | tee -a /tmp/agent22-signed-floor-audit.log
           ! grep -q 'sorryAx' /tmp/agent22-signed-floor-audit.log
           ! grep -q 'native_decide' /tmp/agent22-signed-floor-audit.log
           lean -DmaxRecDepth=30000 -DmaxHeartbeats=50000000 -o im-results/agent33-429-24/BB429InverseKernel.olean im-results/agent33-429-24/BB429InverseKernel.lean
