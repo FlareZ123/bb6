@@ -27,6 +27,43 @@ where `I_a` is F scanning a zero, with blank left tape and `a` leading ones on t
 
 `ObsEq` is the repository's physical far-blank observational equivalence. It is not raw finite-list equality: in particular, one of the regular endpoints below differs from its `regularSection` representation by one explicit trailing blank zero.
 
+## All-stack guarded E-two packet return (27 November 2026)
+
+The exact original six-state source now admits an **all-`k,q`** transition
+for the short E-two frontier `0100Y`. Write `M(a,q,p;Y)` as above.
+[**E2ShortAll.lean**](E2ShortAll.lean) proves both branches of the single
+case split with no arbitrary finite upper bound and arbitrary binary `Y`:
+
+- **Zero alternating pairs:** `M(3k+4,0,2;0100Y) → M(8k+3,0,4;010101011Y)`,
+  in exactly `12k²+49k+100` primitive steps. This route uses the B-state sweep.
+- **Positive alternating pairs (`q≥1`):**
+  `M(3k+4,q,2;0100Y) → M(8k+5,0,2q+2;01⁸Y)`,
+  in exactly `12k²+49k+64+4q` primitive steps. The source proof
+  uses an unbounded D-state pair sweep, not numerical sampling.
+
+The `short_all_implicit_blank` theorem furthermore proves the **physical
+infinite-tape** result when the only explicit tail bits are `01`:
+the machine's implicit zeros supply the two guard zeros. This is
+`BB6.BoundaryPadding.ObsEq`, not literal equality of finite lists.
+The individual source proofs are
+[PacketEZeroAnyTail.lean](PacketEZeroAnyTail.lean),
+[E2ShortQ3.lean](E2ShortQ3.lean),
+[E2ShortPositive.lean](E2ShortPositive.lean),
+[E2ShortPhysical.lean](E2ShortPhysical.lean) and
+[E2ShortZero.lean](E2ShortZero.lean). The same work also certifies, for
+all `k,q,Y`, the E-zero packet transition
+`M(3k+4,q,0;01Y) → M(8k+5,0,2q+7;Y)` at
+`12k²+49k+50+4q` primitive steps.
+
+**Source status:** both branches, their single all-q wrapper, and the
+unpadded physical theorem passed original-machine Lean 4.36.0-rc2
+[CI 46081744437](https://github.com/FlareZ123/bb6/actions/runs/46081744437),
+with standard axioms `propext` and `Quot.sound`; no `sorryAx` or
+native decision axiom. These are conditional prepared-tape transitions.
+They do not establish authenticity of a blank-root visit or a new
+BB(6) bound. They compress the exceptional E-zero and E-two cases in
+the [107-call packet reconstruction](Astep2PacketTransducer.md).
+
 ## Arbitrary-depth original-source E-chain
 
 [**EChainSource.lean**](EChainSource.lean) proves `BB6.Agent37EChain.chain_return` for every depth `d), `h≥1), `q,p≥0), and arbitrary binary tail `Y`:
