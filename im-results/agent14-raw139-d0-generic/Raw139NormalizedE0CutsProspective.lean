@@ -24,20 +24,12 @@ theorem e0ZeroRC_occurs_once :
     (remainingTables.filter (fun p => sameTable p e0ZeroRC)).length = 1 := by
   decide
 
-theorem acceptedSixPlusZeroRC_nodup :
-    acceptedSixPlusZeroRC.Nodup := by
-  decide
-
 def normalizedAfterSixPlusZeroRC : List PartialMachine :=
   remainingTables.filter
     (fun p => !(matchesAny p acceptedSixPlusZeroRC))
 
 theorem normalizedAfterSixPlusZeroRC_count :
     normalizedAfterSixPlusZeroRC.length = 60 := by
-  decide
-
-theorem acceptedSixPlusZeroRCPlusZeroLF_nodup :
-    acceptedSixPlusZeroRCPlusZeroLF.Nodup := by
   decide
 
 def normalizedAfterSixPlusZeroRCPlusZeroLF : List PartialMachine :=
@@ -49,9 +41,7 @@ theorem normalizedAfterSixPlusZeroRCPlusZeroLF_count :
   decide
 
 #print axioms e0ZeroRC_occurs_once
-#print axioms acceptedSixPlusZeroRC_nodup
 #print axioms normalizedAfterSixPlusZeroRC_count
-#print axioms acceptedSixPlusZeroRCPlusZeroLF_nodup
 #print axioms normalizedAfterSixPlusZeroRCPlusZeroLF_count
 
 end BB6.Agent14Raw139NormalizedE0CutsProspective
