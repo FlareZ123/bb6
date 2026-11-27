@@ -7,6 +7,9 @@ src=pathlib.Path(sys.argv[1]);out=pathlib.Path(sys.argv[2]);out.mkdir(parents=Tr
 part,spec=(json.load(open(x)) for x in sys.argv[3:5]); threshold=int(sys.argv[5]) if len(sys.argv)>5 else 10000
 late={tuple(part['open'][int(k)]):(k,n,s) for k,(n,s) in spec['late'].items() if n>=threshold}
 assert len(late)==sum(n>=threshold for n,s in spec['late'].values()); seen=collections.Counter()
+weighted={tuple(part['open'][int(k)]):(k,entry) for k,entry in spec.get('weighted_external',{}).items()}
+assert len(weighted)==len(spec.get('weighted_external',{})) and not set(weighted)&set(late)
+seen_weighted=collections.Counter()
 for p in src.glob('*.lean'):
  text=p.read_text()
  if ' : Audit := ' not in text:
@@ -42,6 +45,12 @@ for p in src.glob('*.lean'):
       k,n,s=late[tuple(t)]; assert term==f'.last {n} ({s//2},{str(bool(s%2)).lower()})',(term,k,n,s)
       ns=f'BB6.Agent48OneLALate.R{k}';line=f'.bounded {ns}.parent {ns}.all_completions_weighted'+tail
       imports.add('OneLALate'+k);seen[k]+=1
+     elif tuple(t) in weighted:
+      k,entry=weighted[tuple(t)];ns=entry['namespace']
+      assert entry['table']==t and entry['kind']=='weighted' and entry['bound']==spec['bound']
+      assert term==f'.proven {ns}.ctr {ns}.never',(term,k,ns)
+      line=f'.bounded {ns}.ctr {ns}.all_completions_weighted'+tail
+      imports.add(spec['external_module_by_namespace'][ns]);seen_weighted[k]+=1
      else: line='.ordinary ('+term+')'+tail
     else: assert re.fullmatch(r't\w+(?:\]\))*[,]?',line),line[:120]
     advance()
@@ -55,4 +64,5 @@ for p in src.glob('*.lean'):
  text=re.sub(r'(^theorem h[^\n]+ := by) decide \+kernel$',r'\1\n  rw [← checkPrefix_eq]\n  decide +kernel',text,flags=re.M)
  (out/p.name).write_text(text)
 assert set(seen)=={k for k,n,s in late.values()} and all(v==1 for v in seen.values()),seen
-print('Exact late imports:',sorted(seen))
+assert set(seen_weighted)=={k for k,_ in weighted.values()} and all(v==1 for v in seen_weighted.values()),seen_weighted
+print('Exact late imports:',sorted(seen),'weighted external:',sorted(seen_weighted))

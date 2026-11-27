@@ -29,7 +29,8 @@ def packed_tree(name,rows):
     return f'def {name}Chunks (i : Nat) : Nat × Nat := {tree(0,len(chunks))}\ndef {name} (i : Nat) : Nat := if i < {len(rows)} then let p := {name}Chunks (i/16); (p.2 >>> (p.1*(i%16))) % (2^p.1) else 0\n'
 
 recipes={i:r for r,ids in spec['block_groups'] for i in ids}
-assert len(recipes)==8205
+assert len(recipes)==sum(len(ids) for _,ids in spec['block_groups'])
+assert len(recipes)=={'Raw139E0OneRA':8205,'Raw139E0OneLD':17501}[spec['prefix']]
 def sparse_source(i,t,c):
     w=c['width'];A=2**w;D,N=c['left_states'],c['right_nodes'];d,n=D-1,N-1
     ns=f'BB6.Agent48F1OneRABlocks.H{i}'
@@ -77,7 +78,7 @@ def sparse_source(i,t,c):
 # Reuse the checked parent-tree emitter, only switching the block witness
 # representation and allowing mirrored witnesses. No alteration to split order,
 # first-hole replay or checker semantics.
-spec['external_module_by_namespace']={'BB6Coverage.Agent48.H4620':'H4620'}
+spec.setdefault('external_module_by_namespace',{'BB6Coverage.Agent48.H4620':'H4620'})
 package6.block_source=sparse_source
 src=inspect.getsource(package6.make)
 old='            assert not f  # block_source transfers the unreflected table\n'
@@ -85,13 +86,14 @@ assert src.count(old)==1
 src=src.replace(old,'')
 exec(compile(src,'package6.make with sparse emitter','exec'),package6.__dict__)
 package6.make(spec,part,original)
-for p in original.glob('Raw139E0OneRABlock*.lean'):
+for p in original.glob(spec['prefix']+'Block*.lean'):
     p.write_text('import OneRASparse2\nimport OneRASparse3\nimport OneRASparse4\n'+p.read_text())
 
 # The existing weighted-prefix transformer uses literal table matching.
 # Reuse it with the distinct OneRA long-leaf namespace.
 transform=(base.parent/'agent48-raw139-e0-1la'/'transform-graft.py').read_text()
-transform=transform.replace('OneLALate','OneRALate')
+family=spec['prefix'].removeprefix('Raw139E0')
+transform=transform.replace('OneLALate',family+'Late')
 argv=sys.argv[:]
 sys.argv=['transform',str(original),str(imports),argv[1],argv[2],'10000']
 exec(compile(transform,'OneRA weighted-prefix transform','exec'),{'__name__':'__main__'})
@@ -99,7 +101,7 @@ sys.argv=argv
 
 # Balance independent root child modules by source closure size. This is
 # scheduling, not evidence or pruning.
-prefix='Raw139E0OneRA'
+prefix=spec['prefix']
 root=imports/(prefix+'Cover.lean')
 def deps(p):return [m for l in p.read_text().splitlines() if l.startswith('import ') for m in l.split()[1:]]
 allfiles={p.stem:p for p in imports.glob('*.lean')}

@@ -8,6 +8,8 @@ part,spec=(json.load(open(x)) for x in sys.argv[1:3])
 out=pathlib.Path(sys.argv[3]);out.mkdir(parents=True,exist_ok=True)
 threshold=int(sys.argv[4]) if len(sys.argv)>4 else 10000
 B=spec['bound']
+family=spec['prefix'].removeprefix('Raw139E0')
+assert family in ('OneRA','OneLD')
 names=[];roots=[];mapping={}
 BASE="""def tab : PartialMachine := fun s => (lookup s.1 s.2).map some
 theorem same : parent = tab := tableOK_sound _ _ (by decide +kernel)
@@ -42,7 +44,7 @@ theorem join {n k : Nat} {a c d : P}
 for i,(N,S) in sorted(spec['late'].items(),key=lambda p:int(p[0])):
     if N<threshold:continue
     T=part['open'][int(i)];assert T.count(24)==1 and T[S]==24
-    prefix=f'OneRALate{i}';ns=f'BB6.Agent48OneRALate.R{i}'
+    prefix=f'{family}Late{i}';ns=f'BB6.Agent48{family}Late.R{i}'
     def write(suffix,body):
         (out/(prefix+suffix+'.lean')).write_text(body)
         return prefix+suffix

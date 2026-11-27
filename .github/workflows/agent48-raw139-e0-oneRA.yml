@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       source_sha:
-        description: Exact repository commit containing the OneRA sources
+        description: Exact repository commit containing the certificate sources
         required: true
         type: string
       target:
@@ -13,13 +13,16 @@ on:
         default: oneRA
         options:
           - oneRA
+          - oneLD
           - h1784-tape
           - h1784
 permissions:
   contents: read
+env:
+  FAMILY: ${{ inputs.target }}
 jobs:
   prepare:
-    if: inputs.target == 'oneRA'
+    if: inputs.target == 'oneRA' || inputs.target == 'oneLD'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
@@ -34,17 +37,17 @@ jobs:
       - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh prepare
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-oneRA-common
+          name: raw139-${{ inputs.target }}-common
           include-hidden-files: true
           path: |
-            .tmp/a48-oneRA/imports/
-            .tmp/a48-oneRA/extern/
-            .tmp/a48-oneRA/build/*.olean
-            .tmp/a48-oneRA/manifest.json
-            .tmp/a48-oneRA/shard-plan.json
-            .tmp/a48-oneRA/spec-compact.json
-            .tmp/a48-oneRA/source-sha
-            .tmp/a48-oneRA/log
+            .tmp/a48-${{ inputs.target }}/imports/
+            .tmp/a48-${{ inputs.target }}/extern/
+            .tmp/a48-${{ inputs.target }}/build/*.olean
+            .tmp/a48-${{ inputs.target }}/manifest.json
+            .tmp/a48-${{ inputs.target }}/shard-plan.json
+            .tmp/a48-${{ inputs.target }}/spec-compact.json
+            .tmp/a48-${{ inputs.target }}/source-sha
+            .tmp/a48-${{ inputs.target }}/log
   shard:
     needs: prepare
     runs-on: ubuntu-latest
@@ -65,20 +68,20 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw139-oneRA-common
-          path: .tmp/a48-oneRA
+          name: raw139-${{ inputs.target }}-common
+          path: .tmp/a48-${{ inputs.target }}
       - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh shard
         env:
           SHARD: ${{ matrix.shard }}
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-oneRA-shard-${{ matrix.shard }}
+          name: raw139-${{ inputs.target }}-shard-${{ matrix.shard }}
           include-hidden-files: true
           path: |
-            .tmp/a48-oneRA-shard/build/*.olean
-            .tmp/a48-oneRA-shard/manifest.json
-            .tmp/a48-oneRA-shard/source-sha
-            .tmp/a48-oneRA-shard/log
+            .tmp/a48-${{ inputs.target }}-shard/build/*.olean
+            .tmp/a48-${{ inputs.target }}-shard/manifest.json
+            .tmp/a48-${{ inputs.target }}-shard/source-sha
+            .tmp/a48-${{ inputs.target }}-shard/log
   join:
     needs: [prepare,shard]
     runs-on: ubuntu-latest
@@ -94,23 +97,23 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: raw139-oneRA-common
-          path: .tmp/a48-oneRA
+          name: raw139-${{ inputs.target }}-common
+          path: .tmp/a48-${{ inputs.target }}
       - uses: actions/download-artifact@v4
         with:
-          pattern: raw139-oneRA-shard-*
+          pattern: raw139-${{ inputs.target }}-shard-*
           path: /tmp/oneRA-shards
       - run: bash im-results/agent48-raw139-e0-oneRA/pipeline.sh join /tmp/oneRA-shards
       - uses: actions/upload-artifact@v4
         with:
-          name: raw139-oneRA-certified
+          name: raw139-${{ inputs.target }}-certified
           include-hidden-files: true
           path: |
-            .tmp/a48-oneRA-final/build/*.olean
-            .tmp/a48-oneRA-final/manifest.json
-            .tmp/a48-oneRA-final/log
-            .tmp/a48-oneRA-final/imports/
-            .tmp/a48-oneRA-final/extern/
+            .tmp/a48-${{ inputs.target }}-final/build/*.olean
+            .tmp/a48-${{ inputs.target }}-final/manifest.json
+            .tmp/a48-${{ inputs.target }}-final/log
+            .tmp/a48-${{ inputs.target }}-final/imports/
+            .tmp/a48-${{ inputs.target }}-final/extern/
 
   h1784:
     if: inputs.target == 'h1784-tape' || inputs.target == 'h1784'
