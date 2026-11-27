@@ -9,7 +9,7 @@ permissions:
 jobs:
   rooted-quotient:
     runs-on: ubuntu-latest
-    timeout-minutes: 18
+    timeout-minutes: 24
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -26,12 +26,14 @@ jobs:
           cp im-results/agent8-coverage-contract/Symmetry.lean /tmp/a24-rooted/
           cp im-results/agent24-rooted-quotient-rigidity/RootedLiveQuotient.lean /tmp/a24-rooted/
           cp im-results/agent24-rooted-quotient-rigidity/RootedSourceBridge.lean /tmp/a24-rooted/
+          cp im-results/agent24-rooted-quotient-rigidity/RootedBankDisjoint.lean /tmp/a24-rooted/
           cd /tmp/a24-rooted
           export LEAN_PATH=/tmp/a24-rooted
           lean -o Frontier.olean Frontier.lean 2>&1 | tee /tmp/a24-frontier.log
           lean -o Symmetry.olean Symmetry.lean 2>&1 | tee /tmp/a24-symmetry.log
           lean -o RootedLiveQuotient.olean RootedLiveQuotient.lean 2>&1 | tee /tmp/a24-rooted.log
           lean -o RootedSourceBridge.olean RootedSourceBridge.lean 2>&1 | tee /tmp/a24-bridge.log
+          lean -o RootedBankDisjoint.olean RootedBankDisjoint.lean 2>&1 | tee /tmp/a24-bank.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/a24-*.log; then
             echo 'Forbidden proof hole or compiler error' >&2
             exit 1
@@ -47,5 +49,6 @@ jobs:
             /tmp/a24-symmetry.log
             /tmp/a24-rooted.log
             /tmp/a24-bridge.log
+            /tmp/a24-bank.log
             /tmp/a24-audit.json
           if-no-files-found: warn
