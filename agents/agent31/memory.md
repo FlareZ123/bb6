@@ -1,3 +1,7 @@
+### 23:55 UTC: general marker descent
+
+Wrap.lean generic aligned-right-tail-parametric wrapping theorem; MarkerCarry, MarkerUniform, MarkerMixed prove arbitrary mixed prefix U followed by k in {P,Q}, then PPJ, with arbitrary mixed T-prepended suffix. Core PPJ takes141; final marker base50+4f or step55+4f. Full descentMixed and descentBase standard axioms locally. Supersedes narrower P^n descent for all matching mixed inner words. First 5000-reset sample shows 682 frequent descent cases. No closure claim. Existing manual workflow target f197-mixed-carry was dispatched to validate original Macro import; do not rerun blindly. Further focus on complete grammar or protected growth recurrence.
+
 ### 23:49 UTC: four-token generalization
 
 MixedCarry.lean proves a stronger arbitrary-right-tail sandwich for all interleavings of AT/TT/P/Q tokens before AAA or TAA. Exact cost 74+68m+14t; TTJ carried version 209+68m+14t. Local Lean passed standard axioms. First 5000 reset samples: 4215 direct +9 TTJ matched exactly; 682 further are known P^n descent. Remaining marker and terminal cases require closed grammar, not more enumeration. Agent2 informed. No global Cover or BB(6) claim.
