@@ -4,7 +4,7 @@ on:
     inputs:
       variant:
         type: choice
-        options: [rb, wide, nested]
+        options: [rb, wide, nested, discovery]
         default: rb
       source_revision:
         type: string
@@ -237,4 +237,33 @@ jobs:
           name: raw42-nested
           path: /tmp/nested/
           retention-days: 30
+          if-no-files-found: error
+  discovery:
+    if: inputs.variant == 'discovery'
+    runs-on: ubuntu-latest
+    timeout-minutes: 14
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        branch: [0LA, 0LE, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RB, 1RE]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_revision || github.sha }}
+      - name: Discover residual machine witnesses, without redoing RA/RB
+        env:
+          BRANCH: ${{ matrix.branch }}
+        run: |
+          set -euo pipefail
+          python im-results/agent32-raw42/discover42.py . "$BRANCH" /tmp/discovery
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-discovery-${{ matrix.branch }}
+          path: |
+            /tmp/discovery/*.txt
+            /tmp/discovery/*.json
+            /tmp/discovery/*.log
+          retention-days: 14
           if-no-files-found: error
