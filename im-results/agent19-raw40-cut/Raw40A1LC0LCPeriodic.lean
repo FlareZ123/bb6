@@ -21,11 +21,13 @@ theorem doubleRep (p : List Bool) (n : Nat) : rep (p++p) n=rep p (2*n) := by
     rw [rep,ih,show 2*(n+1)=2+2*n by omega,repAdd]
     rfl
 theorem padW (n : Nat) : W++rep W (2*n)++W=rep W (2*n+2) := by
-  rw [show W=rep W 1 by rfl,←repAdd,←repAdd]
+  change rep W 1++rep W (2*n)++rep W 1=rep W (2*n+2)
+  rw [←repAdd,←repAdd]
   congr 1
   omega
 theorem splitQ (n : Nat) : Q++rep V (n+1)++Q=rep Q (2*n+4) := by
-  rw [doubleRep,show Q=rep Q 1 by rfl,←repAdd,←repAdd]
+  change rep Q 1++rep V (n+1)++rep Q 1=rep Q (2*n+4)
+  rw [doubleRep,←repAdd,←repAdd]
   congr 1
   omega
 namespace Leaf39
@@ -102,11 +104,9 @@ theorem back (L R : List Bool) : run0 table 6 ⟨0,[true]++W++L,[true]++R⟩ =
     some ⟨0,[true]++L,[true]++Q++R⟩ := by rfl
 theorem last (R : List Bool) : run0 table 3 ⟨0,[true],[true]++R⟩ = some ⟨0,[false],W++R⟩ := by rfl
 theorem rightEq (n : Nat) : pre++rep V (n+1)++post=W++rep Q (2*n+4)++W := by
-  have he := splitQ n
-  simp only [List.append_assoc] at he
-  change W++(Q++(rep V (n+1)++(Q++W))) = _
-  rw [← List.append_assoc (rep V (n+1)),← List.append_assoc Q,he]
-  simp only [List.append_assoc]
+  calc
+    _ = W++(Q++rep V (n+1)++Q)++W := by simp only [List.append_assoc]; rfl
+    _ = _ := by rw [splitQ]
 theorem epoch (n : Nat) : run0 table (cost n) (family n)=some (family (n+1)) := by
   have h1 := start (rep V n++post)
   have h2 := sweepR table 1 [false] [] V T 6 forward n T post
@@ -164,22 +164,21 @@ theorem back (L R : List Bool) : run0 table 4 ⟨0,[true]++W++L,R⟩ =
     some ⟨0,[true]++L,Q++R⟩ := by rfl
 theorem last (R : List Bool) : run0 table 3 ⟨0,[true],R⟩ = some ⟨0,[false],[true]++R⟩ := by rfl
 theorem rightEq (n : Nat) : pre++rep V (n+1)++post=[true]++rep Q (2*n+4)++[true,true,true] := by
-  have he := splitQ n
-  simp only [List.append_assoc] at he
-  change [true]++(Q++(rep V (n+1)++(Q++[true,true,true]))) = _
-  rw [← List.append_assoc (rep V (n+1)),← List.append_assoc Q,he]
-  simp only [List.append_assoc]
+  calc
+    _ = [true]++(Q++rep V (n+1)++Q)++[true,true,true] := by simp only [List.append_assoc]; rfl
+    _ = _ := by rw [splitQ]
 theorem epoch (n : Nat) : run0 table (cost n) (family n)=some (family (n+1)) := by
   have h1 := start (rep V n++post)
   have h2 := sweepR table 1 [false] [] V T 4 forward n [true,true,true] post
   have h3 := finish (rep T n) 
   have he : rep T n++[true,true,true]=[true,true,true]++rep T n := by
-    induction n with
-    | zero => rfl
-    | succ n ih =>
-      simp only [rep,List.append_assoc]
-      rw [ih]
-      rfl
+    have eq : rep T n=rep [true] (4*n) := by
+      rw [doubleRep]
+      change rep ([true]++[true]) (2*n)=_
+      rw [doubleRep,show 2*(2*n)=4*n by omega]
+    rw [eq]
+    change rep [true] (4*n)++rep [true] 3=rep [true] 3++rep [true] (4*n)
+    rw [←repAdd,←repAdd,Nat.add_comm]
   simp only [List.nil_append,List.append_nil,List.append_assoc] at h1 h2 h3
   rw [he] at h2
   have H := join0 (join0 h1 h2) h3
