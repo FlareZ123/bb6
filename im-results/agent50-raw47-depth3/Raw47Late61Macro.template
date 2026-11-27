@@ -1,0 +1,55 @@
+import CanonicalFrontier
+import CheckedSweepTrace
+import ZipThreeHoleAudit
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+set_option Elab.async false
+namespace BB6.Agent50Raw47Late61Macro
+open BB6Coverage BB6Coverage.Agent50Zipper BB6Coverage.Agent31Pump BB6Coverage.Agent10ZipAudit
+open BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot BB6.Agent10ZipAudit BB6.Agent47CanonicalFrontier
+def p : PartialMachine := fun s => match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true => some (some ⟨true,false,0⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true => some (some ⟨false,false,5⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 2,true => some (some ⟨false,false,4⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true => some (some ⟨false,true,2⟩)
+  | 4,false => some (some ⟨false,false,0⟩)
+  | 4,true => some (some ⟨false,true,1⟩)
+  | 5,true => some (some ⟨true,false,1⟩)
+  | _,_ => none
+open BB6.Agent50CheckedSweepTrace
+def a : LeftRule p := ⟨0,[],[],[true],[true],1,by intro L R; rfl⟩
+def d : LeftRule p := ⟨3,[],[],[false],[true],1,by intro L R; rfl⟩
+def bf : LeftRule p := ⟨1,[],[],[true, true],[true] ++ [false],2,by intro L R; rfl⟩
+def c : RightRule p := ⟨2,[false],[],[true] ++ [false],[false, false],2,by intro L R; rfl⟩
+def b : RightRule p := ⟨1,[false],[false],[true, true],[true, true],6,by intro L R; rfl⟩
+@@TRACE@@
+theorem query : zipRead p 143975 = some (5,false) := by
+  have h : (zrun p 143975 start).map project = some z@@END@@ := (run_project p 143975 start).trans run_exact
+  unfold zipRead
+  cases hr : zrun p 143975 start with
+  | none => simp [hr] at h
+  | some z =>
+    have he : project z = z@@END@@ := by simpa [hr] using h
+    have H := congrArg (fun u : Z0 => (u.q,u.l.headD false)) he
+    change some (z.q,z.l.headD false) = some (5,false)
+    exact congrArg some H
+theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
+theorem delay_bound : weightOK p (5,false) 143975 143977 = true := by decide
+theorem checked : zipCheck 143977 p (.last 143975 (5,false)) = true := by
+  simp only [zipCheck,zipQueryOK,query,decide_true,Bool.true_and]
+  exact (by decide : decide (p (5,false) = none) && weightOK p (5,false) 143975 143977 && restOK p (5,false) = true)
+theorem nohalt : weightedTNFNoAssignedHalt p := by
+  intro s; rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
+theorem weighted (m : Machine) (hm : compatible p m) : WeightedBound 143977 m :=
+  (certifiedZip 143977 p (.last 143975 (5,false)) root nohalt checked).sound m hm
+theorem all_quotient (m : Machine) (hm : TNFQuotientCompatible p m) : WeightedBound 143977 m := quotientSafe root weighted m hm
+#print axioms run_exact
+#print axioms all_quotient
+end BB6.Agent50Raw47Late61Macro
+
