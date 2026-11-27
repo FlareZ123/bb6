@@ -7,19 +7,20 @@ import hashlib, json, subprocess, sys, tempfile
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
 VARIANT = sys.argv[1] if len(sys.argv) > 1 else "default"
-assert VARIANT in ("default", "0rd")
-OUT = ROOT / ("generated" if VARIANT == "default" else "generated_0rd")
+assert VARIANT in ("default", "0rd", "1rd")
+OUT = ROOT / ("generated" if VARIANT == "default" else "generated_"+VARIANT)
 OUT.mkdir(exist_ok=True)
 sys.path[:0] = [str(IM/x) for x in (
     "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
     "agent32-raw59")]
 from generate_four_hole import masks, move, slot
 
-S = json.loads((ROOT/("spec.json" if VARIANT == "default" else "spec_0rd.json")).read_text())
+S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
 B = S.get("bound", 75)
 MOVES = [w+d+q for w,d,q in product("01","LR","ABCDEF")]
-NS = "BB6.Agent25Raw43" + ("" if VARIANT == "default" else "RD")
-PREFIX = "Raw43" + ("" if VARIANT == "default" else "RD")
+SUFFIX = {"default":"", "0rd":"RD", "1rd":"RD1"}[VARIANT]
+NS = "BB6.Agent25Raw43" + SUFFIX
+PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
 SHARD = 5000
 
@@ -67,9 +68,18 @@ def generate():
             cert[i]=f".far {str(code[0]=='1').lower()} {d} ⟨0,{D},{L},{R},{z}⟩"
         for key,table in S["growth"].items():
             i=int(key)
-            assert rows[i]==table
-            cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
-            modules[i]="Raw43M29"
+            if isinstance(table,dict):
+                assert rows[i]==table["table"]
+                cert[i]=f'.proven {table["partial"]} {table["never"]}'
+                modules[i]=table["module"]
+            else:
+                assert rows[i]==table
+                cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
+                modules[i]="Raw43M29"
+        for key,leaf in S.get("lateLast",{}).items():
+            i=int(key)
+            assert rows[i]==leaf["table"]
+            cert[i]=f'.last {leaf["n"]} {slot(leaf["s"])}'
         assert set(cert)==set(range(len(rows)))
         stats=Counter()
         sizes={}
