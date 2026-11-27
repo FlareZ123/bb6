@@ -61,7 +61,7 @@ def cert : Cert := ⟨132,family,6,ops,84,854⟩
 
 theorem checked : Auto.check p cert = true := by decide
 
-theorem return (n : Nat) :
+theorem growth (n : Nat) :
     run0 p (84*n+854) (family.eval n) =
       some (family.eval (n+6)) := by
   simpa [Nat.add_comm] using Auto.check_growth p cert checked n
@@ -70,5 +70,6 @@ theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
   Auto.check_never p cert checked m hm
 
 #print axioms checked
+#print axioms growth
 #print axioms never
 end BB6Coverage.Agent31Pump.Auto.Raw36Counter2
