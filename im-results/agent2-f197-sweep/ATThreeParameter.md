@@ -1,5 +1,8 @@
 # Candidate F197 three-parameter carry theorem (two independent P counters)
 
+> **No longer a conjecture:** this three-parameter identity is a kernel-certified corollary of [the stronger arbitrary mixed P/Q theorem](ATFreeMonoidTheorem.md), `F197.fmFullFamilyClosed` in [ATFreeMonoid.lean](ATFreeMonoid.lean), CI [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068), with exact +2 finite-bit growth in [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean), CI [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937). Choose W=P^n Q P^m (P=AAT, Q=TAT). The block substitution is `F(W)=P^n AAAT P^m`, and the closed cost is `156+68(n+m+q)+14t`. The exploratory 1,600-case sweep below predates the complete source proof; its uncertainty statements are retained as historical methodology, **not** current theorem status.
+
+
 **Status: new experimentally validated exact-reset family, not yet Lean certified.** One 1600-case reproducible randomized macro-simulation sweep found no counterexample; no unbounded n,m proof should be claimed until the generic carried scanner and two counter decoders are composed. This is an extension of the [full leading-counter derivation](ATFullFamily.md), whose own Lean induction is still undergoing resource-bounded compilation.
 
 ## Candidate theorem
