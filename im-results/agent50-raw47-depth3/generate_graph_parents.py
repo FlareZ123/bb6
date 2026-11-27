@@ -17,6 +17,7 @@ graph_here=here.parent/'agent12-raw47-rungraph'
 # Exact table-keyed original-semantics proofs, never matched by a scan ID alone.
 # The .proven checker independently compares each literal table with ctr.
 hard_specs={
+    3423: ('Raw47Complement3423','BB6.Agent12Raw47Complement3423.ctr','BB6.Agent12Raw47Complement3423.never',174),
     3312: ('Raw47Ternary3312','BB6.Agent2Raw47Ternary3312.ctr','BB6.Agent2Raw47Ternary3312.never',173),
     3932: ('Raw47Senary3932','BB6.Agent2Raw47Senary3932.ctr','BB6.Agent2Raw47Senary3932.never',187),
     23138: ('Raw47Binary23138','BB6.Agent2Raw47Binary23138.ctr','BB6.Agent2Raw47Binary23138.never',841),
