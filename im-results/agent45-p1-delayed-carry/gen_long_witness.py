@@ -109,6 +109,33 @@ def packed_back(plan, q, y, bits):
     return (u | (u >> q)) & ((1 << q)-1)
 
 
+
+def packed_jump(q, k, Y):
+    """Exact modular support, removing half-period weights before expansion."""
+    weights = [(q+j) << j for j in range(k-1,-1,-1)]
+    exponent = k
+    while exponent:
+        M = 1 << exponent
+        idx = next((i for i,w in enumerate(weights) if w%M==M//2),None)
+        if idx is None:
+            break
+        weights.pop(idx)
+        exponent -= 1
+    M = 1 << exponent
+    mask = (1 << M)-1
+    def rot(b,s):
+        s %= M
+        return ((b << s) | (b >> (M-s))) & mask
+    b = 1
+    for w in reversed(weights):
+        b |= rot(b,-w)
+    b = rot(b,Y)
+    for t in range((q//M).bit_length()+1):
+        if M << t >= q:
+            break
+        b |= b << (M << t)
+    return b & ((1 << q)-1)
+
 def bit_members(x):
     ans = []
     # bytes avoid repeatedly clearing bits of a huge integer
@@ -148,7 +175,7 @@ class Writer:
             imports = [self.modules[-1]] if self.modules else ["LongBlockHalf","PackedJump","LongConeSource"]
         hdr = "\n".join("import "+x for x in imports)
         hdr += "\nset_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n"
-        hdr += "open BB6.Agent45ReverseBlock BB6.Agent45LongBlock BB6.Agent45.DelayedCarry BB6.Agent43P1Complement\n"
+        hdr += "open BB6.Agent45ReverseBlock BB6.Agent45LongBlock BB6.Agent45.DelayedCarry BB6.Agent43P1Complement BB6.Agent45PackedJump\n"
         (self.root/(name+".lean")).write_text(hdr+body+"\n")
         self.modules.append(name)
         return name
@@ -161,6 +188,7 @@ def generate(args):
     n,h = args.n,args.h
     assert n >= 8000 and n%2 == 0 and 0 < h < n
     assert 0 < args.chunk <= args.initial and args.long >= 0
+    assert 0 <= args.jump <= min(args.initial,30)
     cover_type = "HalfCovered" if args.half else "Covered"
     recover = "recoverHalfRows" if args.half else "recoverRows"
     next_lemma = "half_covered_next_rows" if args.half else "covered_next_rows"
@@ -180,11 +208,20 @@ def generate(args):
             b = tag+"_B"
             w.emit(f"def {b} : Nat := {lean_num(B)}")
             prev = tag+"_init"
-            bits = (1 << F)-1
-            w.emit(f"def {prev}_bits : Nat := 2^{F}-1\n"
-                   f"theorem {prev}_cover : LiveBits {n} {b} {s+n} 0 {prev}_bits := "
-                   f"live_bits_init {n} {b} {s+n}")
-            d = 0
+            d = min(args.jump,suffix)
+            if d:
+                start = s+n-d
+                bits = packed_jump(F-d,d,target_digits(n,start,B,d))
+                w.emit(f"def {prev}_bits : Nat := {lean_num(bits)}\n"
+                       f"theorem {prev}_cover : LiveBits {n} {b} {start} {d} {prev}_bits := by\n"
+                       f"  have he : packedReducedJump {F-d} {d} (targetDigits {n} {start} {b} {d}) = {prev}_bits := by decide +kernel\n"
+                       f"  rw [←he]\n"
+                       f"  exact live_bits_jump {n} {b} {start} {d}")
+            else:
+                bits = (1 << F)-1
+                w.emit(f"def {prev}_bits : Nat := 2^{F}-1\n"
+                       f"theorem {prev}_cover : LiveBits {n} {b} {s+n} 0 {prev}_bits := "
+                       f"live_bits_init {n} {b} {s+n}")
             while d < min(args.initial,suffix):
                 j = min(args.chunk,min(args.initial,suffix)-d)
                 start = s+n-d-j
@@ -318,5 +355,6 @@ if __name__ == "__main__":
     parser.add_argument("--initial",type=int,default=512)
     parser.add_argument("--chunk",type=int,default=256)
     parser.add_argument("--long",type=int,default=8192)
+    parser.add_argument("--jump",type=int,default=0)
     parser.add_argument("--half",action="store_true")
     generate(parser.parse_args())
