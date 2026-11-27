@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/'agent32-raw59'))
 from emit_rungram import emit
 c=sys.argv[1] if len(sys.argv)>1 else '0LC'
-assert c in ('0LC','1LB','0RC')
+assert c in ('0LC','1LB','0RC','1RC')
 spec=json.loads((ROOT/f'a1lc-{c}-discovery.json').read_text())
 p=spec['parent']; B=spec['initialBound']
 assert p==f'1RB1LC_1RC{c}_0RD---_1LD1LA_------_------'
