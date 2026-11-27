@@ -1,6 +1,6 @@
 # Three stubborn Raw40 A1=1LA/B1=0RE leaves: unary-run grammar
 
-**Mathematical result (paper proof; Lean integration not yet accepted):** all compatible completions of the following partial machines are nonhalting from blank. The missing entry is E0 in all three.
+**Kernel-accepted mathematical result ([CI 45943030210](https://github.com/FlareZ123/bb6/actions/runs/45943030210), source aff5d9f0482e8b582f6db6cd9decc5123fd97718):** all compatible completions of the following partial machines are nonhalting from blank. The missing entry is E0 in all three.
 
 | Canonical leaf | Partial table |
 |---|---|
@@ -45,4 +45,4 @@ Every epoch returns to the left blank with a nonempty G list in a positive numbe
 
 ## Integration
 
-This closes the three mathematical residuals of the A1=1LA/B1=0RE discovery bank, subject to formal checker integration. The proof uses a variable-length run-list grammar rather than an affine fixed-word pump or bounded two-sided stack abstraction. The complete A1=1LA family is not yet a kernel-accepted bound. Preserve the exact original leaf tables when integrating.
+This closes the three mathematical residuals of the A1=1LA/B1=0RE discovery bank, with the individual nonhalting theorems kernel-accepted. The proof uses a variable-length run-list grammar rather than an affine fixed-word pump or bounded two-sided stack abstraction. The enclosing complete A1=1LA family is not yet a kernel-accepted bound. Preserve the exact original leaf tables when integrating.
