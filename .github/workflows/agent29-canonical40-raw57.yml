@@ -1,0 +1,51 @@
+name: Agent29 Canonical41 to Raw57 successor
+run-name: Canonical41 plus Raw57 -> Canonical40
+on:
+  workflow_dispatch:
+    inputs:
+      raw57_run_id:
+        description: Accepted Raw57 prefix-parent producer run ID
+        type: string
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Audit Canonical41 and consume accepted Raw57 parent
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW57_RUN_ID: ${{ inputs.raw57_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW57_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent29-raw57-consumer/consume_after_canonical41.py
+          python im-results/agent29-raw57-consumer/consume_after_canonical41.py \
+            --work /tmp/a29-canonical40 \
+            --raw57-run-id "$RAW57_RUN_ID" | tee /tmp/a29-canonical40.log
+          test -s /tmp/a29-canonical40/canonical40-delta/delta.json
+          cat /tmp/a29-canonical40/canonical40-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical40-raw57-thin-delta
+          path: |
+            /tmp/a29-canonical40/canonical40-delta/**
+            /tmp/a29-canonical40.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
