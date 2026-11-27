@@ -57,7 +57,7 @@ function emit(f,dir,mod){
  const pack=s=>s.length?BigInt("0b"+[...s].reverse().join("")):0n;
  const point=z=>"⟨"+z.q+","+pack(z.L)+","+pack(z.R)+"⟩";
  const op=o=>o.steps?".steps "+o.steps:(o.d>0?".right ":".left ")+[o.lp,o.rp,o.I,o.O].map(bits).join(" ")+" "+o.k+" "+o.n;
- const common=["import PackedSweep","set_option maxRecDepth 100000","set_option maxHeartbeats 0","open BB6Coverage BB6Coverage.Agent13PackedZipper BB6.Agent5PackedSweep BB6.Agent5FastPhaseTree BB6.Agent13BlankDelay"];
+ const common=["import Agent5PackedSweep","set_option maxRecDepth 100000","set_option maxHeartbeats 0","open BB6Coverage BB6Coverage.Agent13PackedZipper BB6.Agent5PackedSweep BB6.Agent5FastPhaseTree BB6.Agent13BlankDelay"];
  const base=mod+"Base",parts=[],modules=[base];
  fs.writeFileSync(path.join(dir,base+".lean"),common.join("\n")+"\nnamespace BB6."+mod+"\ndef table : PartialMachine := "+table(f.table.replaceAll("_","").match(/.../g))+"\nend BB6."+mod+"\n");
  // Independent contiguous segments; no repeated compilation of earlier steps.
