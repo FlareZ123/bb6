@@ -15,7 +15,7 @@ def atCountT : List Bool → Nat
 theorem atCountT_append (a b : List Bool) :
     atCountT (a ++ b) = atCountT a + atCountT b := by
   induction a with
-  | nil => rfl
+  | nil => simp [atCountT]
   | cons c cs ih =>
       cases c <;> simp [atCountT, ih, Nat.add_assoc]
 
@@ -114,7 +114,7 @@ theorem atpSourceBits_sound (data : List Bool) (l : Tape) :
       | nil => cases c <;> rfl
       | cons d ds =>
           cases c <;>
-            simp [atpSource, atpSourceBits, atpPre_append, ih]
+            simp [atpSource, atpSourceBits, ih, pre]
 
 theorem atpOutBits_sound (data : List Bool) (l : Tape) :
     atpOut data l = pre (atpOutBits data) l := by
