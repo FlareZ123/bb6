@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shard Raw61/Raw63's existing complete witness tree with the proven prefix checker."""
+"""Shard Raw61/Raw63/Raw67's existing complete witness tree with the proven prefix checker."""
 import argparse
 import hashlib
 import json
@@ -16,6 +16,7 @@ from legacy_shards import merge, schedule
 PARENTS = {
     "61": ("1RB---_1RC0LA_0RD---_1LD1RE_---0LB_------", "1962", "Agent31Raw61"),
     "63": ("1RB---_1RC1LA_0RD---_1LD1RE_---0LB_------", "358", "Agent2Raw63"),
+    "67": ("1RB---_1RC1LB_0RD---_1LD1RE_---0LB_------", "808", "Agent10Raw67"),
 }
 
 
@@ -36,7 +37,7 @@ def prepare(generated, raw):
             run(f"im-results/agent48-raw61/emit_{emitter}.py")
         for name in ("All", "Tripling", "RecursiveUnary", "ResidueUnary", "Multiphase", "D120", "Language353", "A244"):
             shutil.copy2(HERE.parent / "agent48-raw61" / f"Agent48Raw61{name}.lean", generated)
-    else:
+    elif raw == "63":
         run("im-results/agent48-raw63-counter/emit_counter.py")
         shutil.copy2(HERE.parent / "agent48-raw63-counter/Agent48Raw63Counter.lean", generated)
     run("im-results/agent10-tnf-multipump/generate.py", raw)
@@ -45,7 +46,11 @@ def prepare(generated, raw):
     kids = [f"Raw{raw}Kid{i:02}" for i in range(24)]
     for name in [f"Raw{raw}{n}" for n in ("Base", "Pumps", "Data")] + kids:
         shutil.copy2(source / (name + ".lean"), generated)
-    shutil.copy2(HERE / f"Raw{raw}ParentCover.lean", generated)
+    if raw == "67":
+        for name in ("Raw67Recursive", "Raw67Attainment", "Raw67ParentCover"):
+            shutil.copy2(source / (name + ".lean"), generated)
+    else:
+        shutil.copy2(HERE / f"Raw{raw}ParentCover.lean", generated)
     groups = [[] for _ in range(6)]
     loads = [0] * len(groups)
     for name in sorted(kids, key=lambda n: -(generated / (n + ".lean")).stat().st_size):
