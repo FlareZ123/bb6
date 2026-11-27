@@ -22,7 +22,7 @@ sys.path.insert(0, str(HERE.parent / "agent2-raw63-shards"))
 from repair_raw67 import fetch as fetch_core, split_children, MOVES
 from shard import compile_roots, merge, schedule, digest, PARENTS
 
-PARENTS["57"] = ("1RB---_1RC---_0RD---_1LD1RE_---0LA_------", "1500", "Agent31Raw57")
+PARENTS["57"] = ("1RB---_1RC---_0RD---_1LD1RE_---0LA_------", "1613", "Agent31Raw57")
 EARLY = ["RA", "RB0", "RC0", "RB1", "RC1", "RE1", "RE0", "RF0"]
 MIDDLE = ["LB0", "LC0", "LD0", "RA1", "RF1", "LC1"]
 RESIDUAL = ["LA1", "LB1", "LE1", "LF0", "LF1"]
