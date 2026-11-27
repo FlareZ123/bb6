@@ -29,5 +29,5 @@ jobs:
           lean -o "$C/LagGuarded.olean" "$C/LagGuarded.lean"
           lean -o "$C/LagGuardedTrace.olean" "$C/LagGuardedTrace.lean"
           set -o pipefail
-          python tools/lean_compile_deps.py "$C/LagBoundary.lean" | tee /tmp/lag-boundary.log
+          python tools/lean_compile_deps.py "$C/ReverseGuard.lean" | tee /tmp/lag-boundary.log
           if grep -Eq 'sorryAx|error:' /tmp/lag-boundary.log; then exit 1; fi
