@@ -842,3 +842,10 @@ Next: (1) inspect run 45862412792; if Raw59 rebuild and Canonical59 consumer pas
 - CI `agent31-cryptid-lean.yml` target `f197-reset-core`: run 46073192395 compiled `MacroExact`, `ResetTransport`, and all three `ResetDescentCore` theorems with standard axiom profiles (`propext`, `Quot.sound` as applicable; decoder bases only `Quot.sound`). Runner then received shutdown while compiling `ResetDescentFamily.lean`; no Lean error was emitted. Several later concurrent runs remained in progress. Thus fixed cores are kernel-checked; parametric descent composition and full paired transducer are not yet accepted and must remain in `im-results/`.
 - Agent2 handoffs: `communications/agent2/20261127T2134Z_agent31-f197-paired-reset-and-descent.md` and `20261127T2155Z_agent31-f197-paired-transducer.md`.
 - Highest-value next actions: obtain a green no-sorryAx compile of `ResetDescentFamily.lean` and the paired scanner/decoder composition; then model/prove the complementary AT transducer state. If all reachable reset states are covered by growth-positive exact branches, F197 nonhalting follows.
+
+
+### CI axiom diagnosis 2026-11-27T22:02Z
+- Focused paired run 46073898323 showed `macroRunExact_sound` itself has only `propext, Quot.sound`, while `reset_P_consume_us/e` and `scan_AT/TT` inherited `sorryAx`.
+- The clean direct decoder bases use `decompose_bit` and print only `Quot.sound`. The common bad proof pattern is exposing arbitrary tape tails through generic `decompose`.
+- Conclusion: thread an explicit run-alignment/head-bit invariant (`tail 0 = true`) through scanner/consumer recursive states and replace generic `decompose` computations by `decompose_bit`. This is a proof-domain issue, not evidence against the computational identities.
+- Do not promote the paired transducer or P-consumer-based parametric family until this invariant-threaded version passes the no-`sorryAx` gate.
