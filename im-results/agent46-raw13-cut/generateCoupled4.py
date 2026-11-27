@@ -102,6 +102,8 @@ def main():
         "1RB1LD1RC0RB1LA1RE1LF0LA1RC0RD1LA---":("Raw13Stride3Counter","oneRC"),
         "1RB1LD1RC1LE1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneLE"),
         "1RB1LD1RC1RC1LA1RE1LF0LA0RC0RD0LE---":("Raw13NestedSweep","oneRC"),
+        "1RB1LD1RC1LC1LA1RE1LF0LA1LB0RD0RC---":("Raw13EvenPairSweep","b1"),
+        "1RB1LD1RC---1LA1RE1LF0LA1LF0RD0RC1LC":("Raw13EvenPairSweep","f1"),
     }
     fixtures=[f for f in data["auto"] if f["table"] not in manual]
     auton={x["table"]:i for i,x in enumerate(fixtures)}
@@ -189,7 +191,7 @@ theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
         assert k is not None
         tag=f"{i:02}";name=MODULE+"Kid"+tag;modules.append(name)
         p=f"next {move(MOVES[i])}"
-        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"Transfer","Raw13Stride3Counter","Raw13NestedSweep"],
+        write(name,[MODULE+"Base",MODULE+"Auto",MODULE+"Late",MODULE+"Transfer","Raw13Stride3Counter","Raw13NestedSweep","Raw13EvenPairSweep"],
               f"def kid{tag} {H} : Cut := {emit(k)}\n"+
               f"theorem checked{tag} {H} : check {B} ({p}) 6 (kid{tag} h) = true := by rfl\n")
     terms=",".join(f"kid{i:02} h" for i in range(24))
