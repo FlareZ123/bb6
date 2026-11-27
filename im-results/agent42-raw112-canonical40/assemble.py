@@ -28,6 +28,7 @@ NS = "BB6.Agent42Canonical40Raw112"
 
 
 def restore_extra(work: Path, linked: Path, ready_report: dict, ready_pin: dict, run_id: int):
+    work.mkdir(parents=True, exist_ok=True)
     run, item, pin = extra.artifact(run_id, "canonical-extra-ready-thin-delta")
     dirs = a68.download(pin, work)
     metadata = work / "metadata" / str(item["id"])
