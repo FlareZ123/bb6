@@ -131,7 +131,6 @@ def main():
     generated = work / "generated"
     generated.mkdir(exist_ok=True)
     shutil.copy2(source, generated / source.name)
-    shutil.copy2(base_report_path, generated / base_report_path.name)
     report = {
         "status": "source-accepted Canonical57-Raw124 to Canonical56-Raw59 graft",
         "canonical57_run_id": args.canonical57_run_id,
@@ -166,6 +165,12 @@ def main():
     }
     report_path = work / "canonical56-raw59-after-raw124.json"
     report_path.write_text(json.dumps(report, indent=2, sort_keys=True) + "\n")
+    # Publish one self-contained linked closure, not all the extracted
+    # predecessor families. The successful Lean consumer used only this
+    # directory as LEAN_PATH, and the report binds the checked root hash.
+    packaged = work / "linked"
+    assert not packaged.exists(), packaged
+    linked.rename(packaged)
     print(json.dumps(report, indent=2, sort_keys=True), flush=True)
 
 
