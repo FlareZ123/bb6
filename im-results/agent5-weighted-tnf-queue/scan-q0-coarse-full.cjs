@@ -62,7 +62,7 @@ if(require.main===module){
  const known=new Map(pumps.map(c=>[c.table,c.root]));
  const route=require('../agent47-raw11-adapter/raw11-route.json');
  const id=Number(process.argv[2]),out=process.argv[3],cap=Number(process.argv[4]||2000000);
- if(![138,140,141,142,143,154].includes(id)||!out||!Number.isSafeInteger(cap)||cap<1)throw Error('usage: q0 id output-dir [node cap]');
+ if(!Number.isSafeInteger(id)||!route.targets[id]||!out||!Number.isSafeInteger(cap)||cap<1)throw Error('usage: q0 id output-dir [node cap]');
  const table=route.targets[id],r=scan(table,{search,searchPeriodic,known,cap});
  fs.mkdirSync(out,{recursive:true});
  const {tree,...summary}=r;summary.id=id;summary.cap=cap;
