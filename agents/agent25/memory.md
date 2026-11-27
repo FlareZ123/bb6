@@ -1,3 +1,7 @@
+## 2026-11-27T09:21:18.069Z — B1=1RE additional child work
+- E1=0LE source accepted 45971431247; E1=1LD source accepted 45972124125. Other E1=0LB/0LC/1LC source gates dispatched 45972103423/45972109802/45972117182. All 11 B1=1LA A1 children except A1=0LA accepted; Agent38 on 0LA pair.
+- E1=0LA and 0RC candidate specs complete, M174 constructive proof locally checked. 16 nontrivial E1 choices total: 0LA,0LB,0LC,0LE,0LF,0RC,0RE,0RF,1LA,1LC,1LD,1LE,1LF,1RD,1RE,1RF. Nine remaining candidate banks. Parent split query time7 slot9; known cycle certificates from discovery. Local C++ census of all branches in /tmp/raw43-census (ephemeral); exact generator handles E1 names. No global result.
+
 ## 2026-11-27T09:13:57.076Z — M105 proved
 - M105 locally checked with completion-level never and only standard axioms. B1=1RE E1=0LB spec complete; all five currently prepared B1=1RE E1 specs now have no unresolved leaves. Source-level audit still required. M41 checkpoint 98f2cd1d.
 - Immutable lease remains 09:03:10.615Z; earliest release 10:13:10.615Z. Next: dispatch source audits and establish complete parent cut; investigate any other canonical B1=1RE branches.

@@ -106,9 +106,9 @@ The E1=0LE child now has a complete candidate audit at weighted threshold 727. I
 
 | E1 | Weighted candidate threshold | Unresolved candidate leaves |
 |---|---:|---|
-|0LB|75|M105|
-|0LC|112|M41|
-|0LE|727|0 (three new growth certificates)|
+|0LB|75|0 (M105 growth)|
+|0LC|112|0 (M41 growth)|
+|0LE|727|0 (three growth certificates, source accepted [45971431247](https://github.com/FlareZ123/bb6/actions/runs/45971431247))|
 |1LC|684|0|
 |1LD|85|0|
 
@@ -121,3 +121,7 @@ M41 enters A0 after 27 transitions. Write P(n)=(10)^n 0100 (left list includes t
 ### B1=1RE, E1=0LB: M105 unary/alternating recycling
 
 After 21 genuine blank-start transitions M105 enters A scanning zero, with left 0 1^7 and empty right list. More generally let B(k,R) have left 0 1^(8k+7). In 16k+58 transitions B(k,[]) returns to B(0,(10)^(4k+3)1). In 48k+74 transitions B(k,101U) returns to B(k+1,U.tail) whenever U.headD false=false. Restricting nonempty right words to (10)^(2j+1)1 makes this exactly closed: j=0 gives an empty word; otherwise j decrements. The proof uses arbitrary-length F/A sweeps (each exact macro checked, costs established by induction), then inducts over any number of returns. `Raw43B1REE1LBM105.lean` proves `never` for all compatible completions, locally checked under Lean 4.36.0-rc2 with propext and Quot.sound only against the relevant source excerpts. This removes the last unresolved leaf of the five prepared B1=1RE child specs, but source gates and exhaustive parent composition remain necessary.
+
+### B1=1RE, further candidate banks
+
+E1=0LA: threshold 223, 175 FAR + 60 BiDFA, zero gaps. E1=0RC: threshold 127, 243 FAR + 5 BiDFA + one growth. M174 has left grammar over 001,101,000,100 with terminator [] or 1, right (001)^k 01. The three-step carry removes 100 (or terminal 1); increment cases advance 001→101→000→100, reset k preceding zero digits; the empty word rebuilds them with a new terminal 1. Direct blank entry at step 23. `Raw43B1REE1RCM174.lean` gives locally checked arbitrary-length return, invariant and `never` (propext, Quot.sound). Both complete candidate banks still require original-source CI.
