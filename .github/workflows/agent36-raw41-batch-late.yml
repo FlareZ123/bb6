@@ -33,7 +33,7 @@ jobs:
           set -euo pipefail
           g++ -std=c++20 -O3 im-results/agent36-raw41/simulate_missing.cpp -o .tmp/a36-late-simulator
           python3 im-results/agent36-raw41/scan_missing_late.py \
-            --batch .tmp/a36-batch-far/.tmp/a36-raw41-batch-${{ matrix.shard }}.json \
+            --batch .tmp/a36-batch-far/a36-raw41-batch-${{ matrix.shard }}.json \
             --simulator .tmp/a36-late-simulator \
             --limit ${{ inputs.limit }} \
             --out .tmp/a36-late-${{ matrix.shard }}.json
