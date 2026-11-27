@@ -43,7 +43,7 @@ theorem expr_suffix (k : Nat) (xs ys : List Bool) (p : Node)
 
 theorem scaled_residue (k d A : Nat) (hk : 0<k) :
     (1+2^k*A)%2^(k+d)=1 ↔ A%2^d=0 := by
-  have h1 : 1<2^k := Nat.one_lt_two_pow hk
+  have h1 : 1<2^k := Nat.one_lt_two_pow (by omega)
   rw [Nat.pow_add,Nat.mod_mul,Nat.add_mul_mod_self_left,
     Nat.add_mul_div_left _ _ (Nat.two_pow_pos k),
     Nat.mod_eq_of_lt h1,Nat.div_eq_of_lt h1,Nat.zero_add]
@@ -91,7 +91,7 @@ theorem width_pos_iff_suffix (k d n : Nat) (hk : 0<k) (hd : d≤k) :
     have hpre : expr n xs%2^k=1 := by
       have hdiv : 2^k ∣ 2^(k+d) := Nat.pow_dvd_pow 2 (by omega)
       have hm := congrArg (fun x : Nat => x%2^k) he
-      rw [Nat.mod_mod_of_dvd _ hdiv,Nat.mod_eq_of_lt (Nat.one_lt_two_pow hk)] at hm
+      rw [Nat.mod_mod_of_dvd _ hdiv,Nat.mod_eq_of_lt (Nat.one_lt_two_pow (by omega))] at hm
       rw [←hxy,expr_append,show 1+xs.length=k by omega,absSum_eq,
         Nat.add_mul_mod_self_left] at hm
       exact hm
@@ -115,8 +115,8 @@ theorem width_pos_iff_suffix (k d n : Nat) (hk : 0<k) (hd : d≤k) :
     · have hn : n=p.r+2^k*(n/2^k) := by
         rw [hr]
         exact (Nat.mod_add_div n _).symm
-      conv_lhs => rw [hn]
-      exact (suffix_iff k d xs ys p (n/2^k) hk hd hx').mpr he
+      have hf := (suffix_iff k d xs ys p (n/2^k) hk hd hx').mpr he
+      rwa [←hn] at hf
 
 #print axioms expr_suffix
 #print axioms suffix_iff
