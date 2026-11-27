@@ -7,6 +7,23 @@ pcode=(root/'r49.open').read_text().splitlines()[idx]
 parent=[pcode.replace('_','')[i:i+3] for i in range(0,36,3)]
 tree=json.loads((root/f'trials/{idx}.json').read_text());opens=(root/f'trials/{idx}.open').read_text().splitlines();bank={opens[int(i)]:c for i,c in (x.split() for x in (root/f'trials/{idx}.far').read_text().splitlines())}
 known_proven={
+    "1RB0LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90003",
+    "1RB0LE_1RC0LA_0RD0LB_1LD1RC_0LB1LF_---0RA": "BB6.Agent7Raw49NextSweeps.M90012",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90096",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---1LB": "BB6.Agent7Raw49NextSweeps.M90097",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_0LB0LF_---1LD": "BB6.Agent7Raw49NextSweeps.M90098",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_0LF0LE_0LB---": "BB6.Agent7Raw49NextSweeps.M90111",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1LB0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90181",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1LB0LF_---1LD": "BB6.Agent7Raw49NextSweeps.M90184",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1LB1LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90197",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1LF0LE_1LB---": "BB6.Agent7Raw49NextSweeps.M90217",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1LF0RE_1LC---": "BB6.Agent7Raw49NextSweeps.M90223",
+    "1RB1LE_1RC0LA_0RD0LB_1LD1RC_1RE0LF_---0LB": "BB6.Agent7Raw49NextSweeps.M90243",
+    "1RB0LE_1RC0RE_0RD0LB_1LD1RC_1RA0LF_1LA---": "BB6.Agent7Raw49NextSweeps.M110140",
+    "1RB0LE_1RC0RE_0RD0LB_1LD1RC_1RA1LF_0LA---": "BB6.Agent7Raw49NextSweeps.M110141",
+    "1RB---_1RC1LE_0RD0LB_1LD1RC_0LF0LB_0LA1LA": "BB6.Agent7Raw49NextSweeps.M130007",
+    "1RB0LD_1RC1LE_0RD0LB_1LD1RC_1RF1RA_---1RE": "BB6.Agent7Raw49NextSweeps.M131063",
+    "1RB0RD_1RC1LE_0RD0LB_1LD1RC_1RF1RA_---1RE": "BB6.Agent7Raw49NextSweeps.M131094",
     "1RB1LE_1RC1RF_0RD0LA_1LD1RC_0LB0LE_1RB---": "BB6.Agent7Raw49C6Counters.M600",
     "1RB1LE_1RC1RF_0RD0LA_1LD1RC_0RB0LE_1RB---": "BB6.Agent7Raw49MutatedFAR.M601",
     "1RB1LE_1RC1LF_0RD0LA_1LD1RC_0LB0LF_0LA---": "BB6.Agent7Raw49MutatedFAR.M602",
@@ -145,6 +162,7 @@ import Raw49AutoSweeps
 import Raw49MutatedFAR
 import Raw49Doubling
 import Raw49C6Counters
+import Raw49NextSweeps
 {head}
 def p : PartialMachine := {table(parent)}
 theorem root : p initialSlot = some (some ⟨true,true,1⟩) := by decide
