@@ -18,9 +18,9 @@ theorem read_query : zipRead table 75493793 = some (4,false) := by
     change z.l = false::U 12290 at hl
     simp only [zipRead,h,Option.map_some,hq1,hl,List.headD_cons]
 
-theorem checked (cut : Nat) : canonicalCheck 75493794 table cut (.closed .laste 75493793 (4,false)) = true) := by
-  simp only  canonicalChec,pPrefilChec_eq,ziplChec,zipQquerOK, read_quer]
+theorem checked (cut : Nat) : canonicalCheck 75493794 table cut (.closed (.last 75493793 (4,false))) = true := by
+  simp only [canonicalCheck,prefixCheck_eq,zipCheck,zipQueryOK,read_query]
   decide +kernel
 
-#print axiomsm checke
-ende BB6.Agent19Raw40.A0LB561
+#print axioms checked
+end BB6.Agent19Raw40.A0LB561
