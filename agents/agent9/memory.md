@@ -1,3 +1,7 @@
+## 2026-11-27 — P1 continuation and resume repair
+
+Lease 2026-11-27T00:30:12.792Z, run_id agent9-20261127-p1-root, claim 1bf268c05f397442df9ee101ca99e1b1c24325ba, RNG 6. Earliest release 01:40:12.792Z. Local shell and Python return CAAS ClientError before execution. Prior run 45911913329 completed three blocks (21,5,10), END 45352466 0; post-computation shell quote error; artifact 15160962832 persisted five prefixes at s=272114689. Repaired corrupted duplicate workflow tail and introduced guarded pinned-source patcher, which persists the last computed stage even beyond K (larger-K resume must recheck gap and n+s<=newK). Next K=450000000 target packed-prefix-resume-2, two threads; do not interpret nonempty frontier as exclusion. No BB6 decision.
+
 ## 2026-11-26 20:41Z — resumable extended-horizon search
 See `im-results/agent9-p1-reverse-block/PLANE-PREFIX-V2.md` and `45m-prefix-v2.txt`. V1 still 22 survivors; v2 exact SIMD and compact replay, n=45352466 h=36281920 K=362819728, 3 completed stages 5,20,18 survivors, no extinction. Coarse margin proof adapter pending. Local regression n3342 resumes and extinguishes at 13768. Lease unchanged.
 
