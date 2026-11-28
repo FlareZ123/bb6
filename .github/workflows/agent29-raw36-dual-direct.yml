@@ -1,0 +1,54 @@
+name: Agent29 Raw36 accepted D102+D114 conditional parent reduction
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reclaim unrelated hosted SDK disk
+        run: |
+          set -euo pipefail
+          df -h /
+          for path in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$path" ]]; then sudo rm -rf "$path"; fi
+          done
+          df -h /
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Authenticate and source-check independent Raw36 D102+D114 parents
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent29-raw36/compose_dual_direct.py
+          python im-results/agent29-raw36/compose_dual_direct.py \
+            --inputs /tmp/a29-raw36-dual-archives \
+            --work /tmp/a29-raw36-dual \
+            | tee /tmp/a29-raw36-dual.log
+          test -s /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+          cat /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d102-d114-accepted-live7-evidence
+          path: |
+            /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+            /tmp/a29-raw36-dual/*-collisions.json
+            /tmp/a29-raw36-dual/dual-source.log
+            /tmp/a29-raw36-dual.log
+          if-no-files-found: warn
+          retention-days: 30
