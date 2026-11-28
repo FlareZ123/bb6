@@ -1,0 +1,142 @@
+name: Agent44 resumable Raw11 parent checkpoint
+
+on:
+  workflow_dispatch:
+    inputs:
+      parent_id:
+        description: Raw11 extra parent id
+        required: true
+        type: choice
+        options: ['132','140']
+      source_run:
+        description: Run containing parent-source-<id>-repaired (bootstrap only)
+        required: false
+        type: string
+      prior_run:
+        description: Prior checkpoint run id (leave empty for bootstrap)
+        required: false
+        type: string
+      max_fresh:
+        description: Maximum fresh Lean modules to compile this run
+        required: true
+        default: '8'
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  checkpoint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Download bootstrap source
+        if: inputs.prior_run == ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.source_run }}
+          name: parent-source-${{ inputs.parent_id }}-repaired
+          path: /tmp/bootstrap-source
+
+      - name: Download prior checkpoint
+        if: inputs.prior_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.prior_run }}
+          name: raw11-${{ inputs.parent_id }}-checkpoint
+          path: /tmp/checkpoint
+
+      - name: Recover source and accepted object state
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PARENT_ID: ${{ inputs.parent_id }}
+          PRIOR_RUN: ${{ inputs.prior_run }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/parent-source /tmp/parent-out
+          if [ -z "$PRIOR_RUN" ]; then
+            cp -a /tmp/bootstrap-source/. /tmp/parent-source/
+            case "$PARENT_ID" in
+              132)
+                pairs='1:15167752700 2:15167528142 3:15167803036 4:15167811958 5:15168810518 6:15167956708 7:15167922399'
+                ;;
+              140)
+                pairs='1:15249375242 2:15248303641 3:15249526182 4:15249696079 5:15249002463 6:15248789926 7:15248848323'
+                ;;
+              *) exit 2 ;;
+            esac
+            for pair in $pairs; do
+              group="${pair%%:*}"
+              id="${pair#*:}"
+              curl -fsSL -H "Authorization: Bearer $GH_TOKEN"                 -H "Accept: application/vnd.github+json"                 "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"                 -o "/tmp/leaf-$id.zip"
+              unzip -o -q "/tmp/leaf-$id.zip" -d /tmp/parent-out
+              test -s "/tmp/parent-out/receipt-$group.json"
+            done
+          else
+            src="$(find /tmp/checkpoint -type f -name "Agent5Raw11Extra${PARENT_ID}.lean" -print -quit)"
+            receipt="$(find /tmp/checkpoint -type f -name repair-receipt.json -print -quit)"
+            test -n "$src"
+            test -n "$receipt"
+            cp -a "$(dirname "$src")/." /tmp/parent-source/
+            cp -a "$(dirname "$receipt")/." /tmp/parent-out/
+          fi
+          test -s "/tmp/parent-source/Agent5Raw11Extra${PARENT_ID}.lean"
+          echo "source_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
+          echo "checkpoint_objects=$(find /tmp/parent-out -name '*.olean' | wc -l)"
+
+      - name: Advance exact kernel DAG by bounded fresh modules
+        env:
+          RAW11_REPAIR_ID: ${{ inputs.parent_id }}
+          RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
+          if [ -f "/tmp/parent-out/Agent5Raw11Extra${RAW11_REPAIR_ID}.olean" ]; then
+            grep -F "'BB6.Agent5Raw11Extra${RAW11_REPAIR_ID}.cover' depends on axioms:" /tmp/checkpoint.log
+            echo complete > /tmp/parent-out/status.txt
+          else
+            grep -F 'checkpoint' /tmp/checkpoint.log
+            echo partial > /tmp/parent-out/status.txt
+          fi
+          if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
+          {
+            echo "parent_id=${RAW11_REPAIR_ID}"
+            echo "source_run=${{ inputs.source_run }}"
+            echo "prior_run=${{ inputs.prior_run }}"
+            echo "max_fresh=${RAW11_REPAIR_MAX_FRESH}"
+            echo "head_sha=${GITHUB_SHA}"
+            echo "lean_version=$(lean --version)"
+          } > /tmp/parent-out/checkpoint-provenance.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-${{ inputs.parent_id }}-checkpoint
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+          if-no-files-found: warn
+          retention-days: 30
