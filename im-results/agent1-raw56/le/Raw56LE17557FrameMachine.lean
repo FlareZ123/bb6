@@ -10,6 +10,17 @@ def hitAction : Bool → Action
 
 def hitWord (w : List Bool) : List Action := w.map hitAction
 
+def hitCost : Bool → Nat
+  | true => 7
+  | false => 1
+
+theorem lowCost_cons (a : Bool) (w : List Bool) :
+    lowCost (a :: w) = hitCost a + lowCost w := by
+  cases a <;> simp [lowCost, countB, countC, hitCost] <;> omega
+
+@[simp] theorem hitWord_cons (a : Bool) (w : List Bool) :
+    hitWord (a :: w) = hitAction a :: hitWord w := rfl
+
 /-- Abstract finite-zero-run stack semantics of the rank-labelled action
     grammar.  A normal action pushes the exact low-side cost of its frame.
     B/carry consume seven/one cells and pop a frame exactly at exhaustion. -/
@@ -36,13 +47,30 @@ theorem execLow_append (u v : List Action) (st : List Nat) :
       | none => simp [h]
       | some st' => simp [h, ih]
 
-@[simp] theorem hitWord_append (u v : List Bool) :
-    hitWord (u ++ v) = hitWord u ++ hitWord v := by
-  simp [hitWord]
-
 theorem lowCost_cons_pos (a : Bool) (w : List Bool) :
     1 ≤ lowCost (a :: w) := by
-  cases a <;> simp [lowCost, countB, countC] <;> omega
+  rw [lowCost_cons]
+  cases a <;> simp [hitCost] <;> omega
+
+theorem stepLow_hit_last (a : Bool) (st : List Nat) :
+    stepLow (hitAction a) (hitCost a :: st) = some st := by
+  cases a <;> rfl
+
+theorem stepLow_hit_more (a b : Bool) (w : List Bool) (st : List Nat) :
+    stepLow (hitAction a) (lowCost (a :: b :: w) :: st) =
+      some (lowCost (b :: w) :: st) := by
+  rw [lowCost_cons]
+  have hp : 1 ≤ lowCost (b :: w) := lowCost_cons_pos b w
+  have htail : lowCost (b :: w) ≠ 0 := by omega
+  cases a with
+  | false =>
+      have hlt : ¬ (1 + lowCost (b :: w) < 1) := by omega
+      have hne : 1 + lowCost (b :: w) ≠ 1 := by omega
+      simp [hitAction, hitCost, stepLow, hlt, hne, htail]
+  | true =>
+      have hlt : ¬ (7 + lowCost (b :: w) < 7) := by omega
+      have hne : 7 + lowCost (b :: w) ≠ 7 := by omega
+      simp [hitAction, hitCost, stepLow, hlt, hne, htail]
 
 /-- A nonempty hit word consumes exactly its own low-side cost and pops the
     frame.  No special property of the recursive frame word is needed here:
@@ -51,15 +79,10 @@ theorem hitWord_consumes_own_cost (a : Bool) (w : List Bool) (st : List Nat) :
     execLow (hitWord (a :: w)) (lowCost (a :: w) :: st) = some st := by
   induction w generalizing a st with
   | nil =>
-      cases a <;> simp [hitWord, execLow, stepLow, lowCost, countB, countC]
+      cases a <;> rfl
   | cons b w ih =>
-      have hp : 1 ≤ lowCost (b :: w) := lowCost_cons_pos b w
-      cases a <;>
-        simp only [hitWord, List.map_cons, execLow] <;>
-        simp [stepLow, lowCost, countB, countC] at hp ⊢ <;>
-        split <;> try omega
-      · simpa [hitWord] using ih b st
-      · simpa [hitWord] using ih b st
+      rw [hitWord_cons, execLow, stepLow_hit_more]
+      exact ih b st
 
 theorem frame_nonempty (r : Nat) : frame r ≠ [] := by
   cases r <;> simp [frame]
