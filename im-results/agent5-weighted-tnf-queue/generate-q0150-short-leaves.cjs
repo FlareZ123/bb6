@@ -30,7 +30,7 @@ function P(i,t){
  const bool=b=>b?"true":"false";
  const rows=t.map((m,j)=>m==="---"?"":`  | ${j>>1},${bool(m[1]==="1")} => some (some ⟨${bool(m[0]==="1")},${bool(m[1]==="R")},${m.charCodeAt(2)-65}⟩)\n`).join("");
  let lines=[
- "import FastPhaseTree","import CachedPhaseTree","import PhaseFrontier",
+ "import FastPhaseTree","import CachedPhaseTree","import PhaseFrontier","import ExactOneHoleOrdinary",
  "set_option maxHeartbeats 0","set_option maxRecDepth 100000",
  `namespace ${name}`,
  "open BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree",
@@ -52,7 +52,8 @@ function P(i,t){
  if(n>=100000||t[2*q+Number(l&1n)]!=="---")throw Error("not a first-hole short leaf "+i);
  if(prev!==n){const z="z"+n,step="step"+n,run="run"+n;lines.push(`def ${z} : P := ⟨${q},${l},${r}⟩`);lines.push(`theorem ${step} : runP p ${n-prev} z${prev} = some ${z} := by decide +kernel`);lines.push(`theorem ${run} : runP p ${n} startP = some ${z} := ${prev===0?step:"joinP run"+prev+" "+step}`);}
  const slot=2*q+Number(l&1n),cert=`theorem safe : ∀ m, compatible p m → WeightedBound 13007752 m :=\n  lastPacked 13007752 p ${n} (${q},${bool(slot%2)}) z${n} run${n} (by decide) (by decide) (by decide) (by decide) (by decide)`;
- lines.push(cert,"#print axioms safe",`end ${name}`,"");
+ const exact=`theorem exact : ∀ m, compatible p m → BB6.Agent5ExactOneHole.OrdinaryBound 13007747 m :=\n  BB6.Agent5ExactOneHole.lastPackedExact 13007747 p ${n} (${q},${bool(slot%2)}) z${n} run${n} (by decide) (by decide) (by decide) (by decide)`;
+ lines.push(cert,exact,"#print axioms safe","#print axioms exact",`end ${name}`,"");
  const filename=ns+".lean";fs.writeFileSync(path.join(dir,filename),lines.join("\n"));
  return {index:i,steps:n,slot,table:Array.from({length:6},(_,j)=>t[2*j]+t[2*j+1]).join("_"),module:ns,filename};
 }
