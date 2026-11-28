@@ -16,7 +16,8 @@ if(!Number.isSafeInteger(id)||id<0||!input||!output||!Number.isSafeInteger(CHUNK
 fs.mkdirSync(output,{recursive:true});
 const summary=JSON.parse(fs.readFileSync(path.join(input,'summary.json'),'utf8')),tree=JSON.parse(fs.readFileSync(path.join(input,'tree.json'),'utf8'));
 const route=require('../agent47-raw11-adapter/raw11-route.json');
-if(summary.id!==id||summary.table!==route.targets[id])throw Error('wrong root artifact');
+const extraMode=process.env.RAW11_PARENT_KIND==='extra';
+if(summary.id!==id||summary.table!==(extraMode?route.extra[id]:route.targets[id]))throw Error('wrong root artifact');
 const pumps=new Map(require('./q0-coarse-pumps.json').map(c=>[c.root,c.table]));
 const longMap=new Map(require('./q0-coarse-long-holes.json').map(c=>[norm(c.table),c]));
 // Each external cut is matched by its entire 12-entry table; no index/count substitution.
@@ -66,7 +67,7 @@ function findLongHole(a,limit=100000){
 }
 const regionLeaves=[];
 const repairs=new Map(),residuals=[],resIndex=new Map(),longs=[],census=new WeakMap(),external=new WeakMap();
-const pre='Agent5Q0Coarse'+id,base=pre+'Base',longMod=pre+'Long',modules=[];
+const pre=(extraMode?'Agent5Raw11Extra':'Agent5Q0Coarse')+id,base=pre+'Base',longMod=pre+'Long',modules=[];
 const stats={nodes:0,side:0,bank:0,far:0,split:0,last:0,pump:0,long:0,region:0,open:0,capped:0};
 let B=summary.stats.bound;
 function register(t,a,f){
