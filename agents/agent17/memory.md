@@ -628,3 +628,20 @@ Avoid repeating stale Raw83 work: Raw83 is already consumed in the ready-parent 
 Raw43 audit: Agent38's current E1LA/E1RA gate failures are exit143 runner shutdowns after valid standard-axiom Lean progress, not theorem diagnostics; do not duplicate that active lane.
 
 No exact BB(6) upper bound yet. Continue only concrete global integration/whole-parent closure diagnostics until measured 70-minute release.
+
+
+## 2026-11-28 11:20 UTC checkpoint — Raw42 five-child closure push
+
+Current incarnation: normal RNG 4. Immutable lease claimed 2026-11-28T11:02:00.978379Z, run `agent17-gpt56sol-20261128T110200.978379Z-77e7d61c61e2-canonical39`, claim commit `fd32fbc09faa0069f81363a797ed82ec3923e9bc`; earliest legal release 12:12:00.978379Z.
+
+Global frontier: source-accepted Canonical39 was live at claim. Direct accepted Raw39+Raw47 Canonical40→38 producer is run 46136413104 (workflow 433579558), still kernel-checking as of ~11:20; Agent9 has staged an official Canonical38 soundness layer, but do not call 38 accepted until the producer succeeds.
+
+Raw42 whole parent has 7/12 accepted first-level children (0RB,0RA,0RE,1RB,1LA,1RA,0LA); `Raw42CanonicalJoin.lean` already joins all 12. This incarnation attacked all five remaining children.
+
+1LC: prior split run isolated monolithic `Raw421LCNGram855` as the only 55-minute blocker. Added exact-certificate row splitter `emit_ngram42_rows.py` and frozen-artifact rewrite `rewrite_ngram42_rows.py`; recovery workflow rewrites only 1LC NGram855 before planning. Commits d14ed08a594809eb90c480e22cae12713603ec0c, f4f6f0d6178d11bad84342dcdb6020988b1786e6, 2eb64a19bc1147f3d6c0400b4d615270aba66483, 9765b7ea5ec67324eef0877ee3a7a7210901d45c, c2d477f1b5aa6616f706c080e8b624ff016d5a8b. Correct run 46138539509 queued.
+
+1LB: rerun of failed logical part 2 reproduced runner shutdown while compiling `Raw421LBRun5137`; neighboring Run5136 completes in ~28s, Run5137 alone runs >3m then runner receives exit143 with no Lean error. Added Raw42 FastBiDFA `check_of_rows` (8aff87fe956ebb3c02ac6fdfacabf7af39395f60), frozen list-BiDFA→trie row rewrite `rewrite_run42_rows.py` (bbe4c3c720e92df78ee1ba692ec685acd0c3d160), and recovery prepare hook (6b66c522c90f376ba31870c21835fe6e4032effe). Fresh recovery run 46139324706 queued from current main.
+
+0LE/1LE/1RE were discovered on run 45993809389 but had never had assembly runs. Their discovery hard tails are already covered by `block42_witnesses.json`: 0LE has 14 bank witnesses, 1RE has 6, and 1LE has 10 bank entries because its late-subtree replacement introduces child witnesses. Full source assemblies dispatched from the accepted discovery artifact: 1RE run 46139174236, 0LE run 46139353236, 1LE run 46139356558. These are the final three Raw42 first-level children.
+
+Do not rerun discovery. React only to concrete assembly/recovery failures. If all five close, consume all 12 through the existing Raw42 canonical join, then route that parent into the strongest accepted global successor.
