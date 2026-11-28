@@ -14,23 +14,26 @@ increment of the exact attained champion. The proof never evaluates
 
 private def secondRight : Nat := 2^63-1
 
-theorem second_increment_ge_pow1024 :
-    2^1024 ≤ proposedIncrementCost 1 6 71 secondRight := by
-  have h64 : 64 ≤ secondRight := by decide
-  have h1024 : 1024 ≤ secondRight := by decide
-  have hpow : 2^1024 ≤ 4^secondRight := by
+private theorem second_increment_general (b : Nat)
+    (h64 : 64 ≤ b) (h1024 : 1024 ≤ b) (hsmall : 9*b ≤ 2^128) :
+    2^1024 ≤ proposedIncrementCost 1 6 71 b := by
+  have hpow : 2^1024 ≤ 4^b := by
     calc
       2^1024 ≤ 4^1024 := Nat.pow_le_pow_left (by decide) _
-      _ ≤ 4^secondRight :=
+      _ ≤ 4^b :=
         Nat.pow_le_pow_right (by decide) h1024
-  have hsmall : 9*secondRight ≤ 4^secondRight := by
+  have hb : 9*b ≤ 4^b := by
     calc
-      9*secondRight ≤ 2^128 := by decide
+      9*b ≤ 2^128 := hsmall
       _ = 4^64 := by decide
-      _ ≤ 4^secondRight :=
-        Nat.pow_le_pow_right (by decide) h64
+      _ ≤ 4^b := Nat.pow_le_pow_right (by decide) h64
   unfold proposedIncrementCost
   omega
+
+theorem second_increment_ge_pow1024 :
+    2^1024 ≤ proposedIncrementCost 1 6 71 secondRight := by
+  exact second_increment_general secondRight
+    (by decide) (by decide) (by decide)
 
 theorem second_increment_le_first_section :
     proposedIncrementCost 1 6 71 secondRight ≤
