@@ -177,6 +177,89 @@ same substitution `sigma(A)=ABA, sigma(B)=BBA` seen in the branch word.
 `analyze_17557_renorm.py` reproduces the literal primitive-step audit and
 checks the level map on every corresponding triad boundary through level 7.
 
+## Algebraic reduction of the conjugacy
+
+The exact triad formulas reduce the two conjugacy identities to elementary
+run-length identities; no long primitive trace is needed once the symbolic
+domain is fixed.
+
+For a normal A-triad, the lower second 1-run has
+`b in {13,29,61,125,...}`. After level raising it is `2*b+3`.
+The high-level sequence is therefore:
+
+```
+A:  left zero runway becomes 2*b-3
+B:  the runway becomes       2*b-10
+A:  boundary b=5 consumes one more zero, leaving 2*b-11.
+```
+
+The lower A-triad leaves a zero runway `b-6`; hence the left-side part of
+`rho∘A = ABA∘rho` is exactly
+
+```
+rhoZero(b-6) = 2*b-11.
+```
+
+For the reachable family `b-6 in {7,23,55,119,...}`, this follows directly
+from the signed-residue rule. On the right, the same three high triads give
+
+```
+1^6 0 1^(rho(c)+13) 0^(rho(z)-6) ...
+```
+
+which is exactly `rho` of the lower result
+`1^2 0 1^(c+5) 0^(z-2) ...`; the final/nonfinal 1-run cases agree
+separately with the right-run rules.
+
+For a B-triad with left zero runway `ell`, the high sequence `BBA`
+removes `7+7+1=15` zeros. The lower B-triad removes 7, so its left-side
+conjugacy is exactly
+
+```
+rhoZero(ell-7) = rhoZero(ell) - 15.
+```
+
+Every finite `ell` seen in the reachable family satisfies this identity.
+The right side after `BBA` is
+
+```
+1^6 0 1^13 0^(2*a-3) 1^(rho(b)+3) ...
+```
+
+and this is exactly the right-run renormalization of the lower B result
+
+```
+1^2 0 1^5 0^(a-1) 1^(b+3) ...
+```
+
+including the terminal/nonterminal case for the `b` block.
+
+Finally, when the lower A-triad is the carry case `b=5`, the raised
+configuration has second block 13. Its first high A is normal, the following
+B exhausts the generated seven-zero runway, and the last high A is the
+`b=5` carry. If the lower left begins `1^d 0^ell L`, the two adjacent
+raised 1-runs merge to length `2*d+2*a+4`; the carry therefore emits a
+first right block of length
+
+```
+2*d + 2*a + 10 = 2*(d+a+4)+2,
+```
+
+exactly the first-run rule applied to the lower carry output. The remaining
+left equality is the one-cell identity
+
+```
+rhoZero(ell-1) = rhoZero(ell)-1,
+```
+
+which holds on the finite reachable zero-run classes (with the all-blank tail
+handled as the obvious infinite-zero case).
+
+Thus the semantic part of the conjugacy has been reduced to proving that the
+reachable symbolic domain has the stated run classes and that the three
+displayed `rhoZero` arithmetic identities are preserved. This is a much
+smaller induction than replaying the exponentially growing epoch.
+
 ## Remaining proof obligation
 
 The infinite proof has therefore narrowed to a local renormalization theorem:
