@@ -28,6 +28,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--conditional", action="store_true")
+    ap.add_argument("--two-parents", action="store_true", help="source-check direct Raw39+Raw47 batch-to-38 conditional quotient")
     a = ap.parse_args()
     work = a.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -65,7 +66,7 @@ def main():
         json.dumps(receipt, indent=2, sort_keys=True) + "\n")
     print("PASS: exact Canonical40 Raw39 membership and Raw47 distinction", flush=True)
 
-    if a.conditional:
+    if a.conditional or a.two_parents:
         names = [
             "BB6.Agent11Raw39Canonical40Conditional.parent_count40",
             "BB6.Agent11Raw39Canonical40Conditional.parent_root",
@@ -112,6 +113,34 @@ def main():
         receipt["loose_threshold_root_sha256"]=c.a68.sha(root3)
         (evidence/"membership.json").write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
         print("PASS: Canonical40 soundness at any target threshold ≥6766859; exactness from parent Cover at target",flush=True)
+
+        if a.two_parents:
+            batch = [
+                "BB6.Agent11Raw39Raw47Batch38.parents_distinct",
+                "BB6.Agent11Raw39Raw47Batch38.parent39_present",
+                "BB6.Agent11Raw39Raw47Batch38.parent47_present",
+                "BB6.Agent11Raw39Raw47Batch38.parent_roots",
+                "BB6.Agent11Raw39Raw47Batch38.count38",
+                "BB6.Agent11Raw39Raw47Batch38.raw39_removed",
+                "BB6.Agent11Raw39Raw47Batch38.raw47_removed",
+                "BB6.Agent11Raw39Raw47Batch38.sound38_at",
+                "BB6.Agent11Raw39Raw47Batch38.exact38_at_champion",
+            ]
+            source4 = HERE / "Raw39Raw47Batch38.lean"
+            root4, profiles4 = c.u.compile_one(source4, linked, evidence, batch)
+            assert set(profiles4) == set(batch), profiles4
+            assert all(set(ax) <= ALLOWED for ax in profiles4.values())
+            shutil.copy2(root4, evidence / root4.name)
+            receipt["batch38_claim"] = (
+                "source-accepted direct Canonical40 to conditional 38 quotient; exact two parent Covers at target score"
+            )
+            receipt["batch38_theorems"] = batch
+            receipt["batch38_axioms"] = profiles4
+            receipt["batch38_root_sha256"] = c.a68.sha(root4)
+            (evidence / "membership.json").write_text(
+                json.dumps(receipt, indent=2, sort_keys=True) + "\\n")
+            print("PASS: direct Canonical40→38 quotient with explicit Raw39/Raw47 target-score Cover premises", flush=True)
+
 
 if __name__ == "__main__":
     main()
