@@ -412,8 +412,9 @@ theorem terminal_last_anchor_high_growth_bound
   rcases hfRun_second_pow_bound hhf with ⟨highs,hlen,hbound⟩
   refine ⟨q,R,c,m,highs,hchain,hhf,hc,hlen,?_⟩
   rcases hc with rfl | rfl
-  · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
-      (show D+3 ≤ 2^highs * 4 from hbound)
+  · have hb : D+3 ≤ 2^highs * 4 := hbound
+    have hp : 0 < 2^highs := Nat.two_pow_pos highs
+    omega
   · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hbound
 
 /-- Any genuine terminal H/F suffix from a root anchor has positive length and
