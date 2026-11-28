@@ -678,6 +678,13 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46144287707'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-split-checks-source-accepted
+          path: /tmp/split-parent
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46144287707'
       - name: Check direct eight-table residual subset proof without giant trace list
         run: |
           set -euo pipefail
