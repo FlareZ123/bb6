@@ -1,0 +1,38 @@
+name: Agent23 Raw34 D1=1RD assigned halt certificates (manual)
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  certified-leaves:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct pinned local source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+      - name: Compile exact source theorem closure and audit axioms
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
+            im-results/agent23-raw34-frontier/Raw34D1RDHalting12.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent23-raw34-halters-source-audit
+          path: /tmp/agent23-raw34-halters/audit.log
+          retention-days: 14
