@@ -170,8 +170,11 @@ theorem every_mask_never (bits : Nat) (hb : bits ∈ masks)
   have hg : maskGood bits = true :=
     List.all_eq_true.mp all_roots_checked bits hb
   have hs : masked bits 0 false false false false false = true := by
-    have h := Bool.and_eq_true.mp hg
-    exact h.1
+    have h : decide (masked bits 0 false false false false false = true) = true := by
+      have hh := hg
+      simp only [maskGood, Bool.and_eq_true] at hh
+      exact hh.1
+    exact of_decide_eq_true h
   exact never_of_permitted (masked bits) m hs hm
 
 #print axioms count
