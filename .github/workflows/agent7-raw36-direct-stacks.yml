@@ -1,0 +1,45 @@
+name: Agent7 Raw36 direct D1 inverse-stack candidate discovery
+run-name: Raw36 direct D1=${{ inputs.index }} exact table N-gram search
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        type: choice
+        options: ['0','1','4','10','12','16','22']
+        default: '1'
+      source_run_id:
+        type: string
+        default: '46122807180'
+      kmax:
+        description: 'Max N-gram window, 5 is conservative'
+        type: choice
+        options: ['3','4','5','6']
+        default: '5'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  stacks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-census
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-direct-census
+      - name: Reconstruct exact inverse-stack N-gram candidates
+        run: |
+          set -euo pipefail
+          python im-results/agent7-raw36-direct/scan_stacks.py \
+            --census /tmp/a7-direct-census/direct$(printf '%02d' ${{ inputs.index }}).json.gz \
+            --out /tmp/a7-stacks --workers 4 --kmax ${{ inputs.kmax }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-stack-candidates
+          path: /tmp/a7-stacks/
+          if-no-files-found: warn
+          retention-days: 30
