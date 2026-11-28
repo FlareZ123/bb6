@@ -201,6 +201,21 @@ theorem rootHits_lowCost (n : Nat) :
   simp [Nat.pow_succ]
   omega
 
+/-- At root level there is no defect at all: because B/C counts are equal,
+    the high-side cost is exactly twice the low-side cost. -/
+theorem rootHits_high_twice_low (n : Nat) :
+    highCost (rootHits n) = 2 * lowCost (rootHits n) := by
+  rcases rootHits_counts n with ⟨hb,hc⟩
+  unfold highCost lowCost
+  rw [hb,hc]
+  omega
+
+theorem rootHits_highCost (n : Nat) :
+    highCost (rootHits n) = 2^(n+5) := by
+  rw [rootHits_high_twice_low, rootHits_lowCost]
+  rw [show n+5 = (n+4)+1 by omega, Nat.pow_succ]
+  omega
+
 theorem rootHits_nonempty (n : Nat) : rootHits n ≠ [] := by
   intro h
   have hc := (rootHits_counts n).1
@@ -230,6 +245,8 @@ theorem actionEpoch_consumes_root (n : Nat) (st : List Nat) :
 #print axioms actionEpoch_rootTraceBelow
 #print axioms rootHits_counts
 #print axioms rootHits_lowCost
+#print axioms rootHits_high_twice_low
+#print axioms rootHits_highCost
 #print axioms actionEpoch_consumes_root
 #print axioms hitWord_consumes_own_cost
 #print axioms outerTraceBelow_exec
