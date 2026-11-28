@@ -343,6 +343,157 @@ theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
   have h := join0 hIZ hR
   simpa [rep, List.append_assoc] using h
 
+theorem D0D1_to_E (L R : List Bool) :
+    run0 p 2 ⟨3, false :: true :: true :: L, R⟩ =
+      some ⟨4, true :: L, true :: true :: R⟩ := by
+  rfl
+
+theorem E_Z_tail_to_A (L R : List Bool) :
+    run0 p 3 ⟨4, true :: false :: false :: L, R⟩ =
+      some ⟨0, L, false :: true :: false :: R⟩ := by
+  rfl
+
+/-- First Z return of a B triad.  The left side contains the head blank plus
+    seven explicit zero cells; the physical right one-runs have lengths A+2
+    and B+1. -/
+theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
+    run0 p (2*A+2*B+15)
+      ⟨0, rep [false] 8 ++ L,
+        rep [true] (A+2) ++ [false] ++
+        rep [true] (B+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0, rep [false] 5 ++ L,
+        [false,true] ++ rep [false] (A+3) ++
+          rep [true] (B+4) ++ rep [false] z ++ R⟩ := by
+  let LT : List Bool := rep [false] 7 ++ L
+  let RT : List Bool := rep [false] z ++ R
+  let tailB : List Bool :=
+    [false] ++ rep [true] (B+1) ++ rep [false] (z+2) ++ R
+  have h1 :
+      run0 p 1
+        ⟨0, false :: LT, rep [true] (A+2) ++ tailB⟩ =
+      some
+        ⟨1, true :: true :: LT, rep [true] (A+1) ++ tailB⟩ := by
+    simp [rep, run0, step0, p, move0, List.append_assoc]
+  have h2 := B_sweep_ones (A+1) (true :: LT) tailB
+  have h3 :
+      run0 p 2
+        ⟨1, true :: rep [true] (A+1) ++ true :: LT,
+          [false] ++ rep [true] (B+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+        ⟨2,
+          true :: true :: true :: rep [true] (A+1) ++ true :: LT,
+          rep [true] B ++ rep [false] (z+2) ++ R⟩ := by
+    have ht := B_turn_to_C
+      (rep [true] (A+1) ++ true :: LT)
+      (rep [true] B ++ rep [false] (z+2) ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have h4 := C_sweep_ones B
+    (true :: true :: rep [true] (A+1) ++ true :: LT)
+    (rep [false] (z+2) ++ R)
+  have h5 :
+      run0 p 2
+        ⟨2,
+          true :: rep [false] B ++
+            true :: true :: rep [true] (A+1) ++ true :: LT,
+          false :: false :: RT⟩ =
+      some
+        ⟨3,
+          false :: rep [false] (B+2) ++
+            rep [true] (A+4) ++ LT,
+          RT⟩ := by
+    have ht := C_to_D_zero
+      (rep [false] B ++
+        true :: true :: rep [true] (A+1) ++ true :: LT) RT
+    simpa [rep, List.append_assoc] using ht
+  have h6 := D_sweep_left_zeros (B+2)
+    (rep [true] (A+4) ++ LT) RT
+  have h7 :
+      run0 p 2
+        ⟨3, false :: rep [true] (A+4) ++ LT,
+          rep [true] (B+2) ++ RT⟩ =
+      some
+        ⟨4, true :: rep [true] (A+2) ++ LT,
+          rep [true] (B+4) ++ RT⟩ := by
+    have ht := D0D1_to_E
+      (rep [true] (A+2) ++ LT)
+      (rep [true] (B+2) ++ RT)
+    simpa [rep, List.append_assoc] using ht
+  have h8 := E_sweep_left_ones (A+2) LT
+    (rep [true] (B+4) ++ RT)
+  have h9 :
+      run0 p 3
+        ⟨4, true :: LT,
+          rep [false] (A+2) ++ rep [true] (B+4) ++ RT⟩ =
+      some
+        ⟨0, rep [false] 5 ++ L,
+          [false,true] ++ rep [false] (A+3) ++
+            rep [true] (B+4) ++ RT⟩ := by
+    have ht := E_Z_tail_to_A (rep [false] 5 ++ L)
+      (rep [false] (A+2) ++ rep [true] (B+4) ++ RT)
+    simpa [LT, rep, List.append_assoc] using ht
+  have h := join0 (join0 (join0 (join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6) h7) h8) h9
+  simpa [LT, RT, tailB, rep, List.append_assoc] using h
+
+/-- The second B-triad Z return is completely local and always costs eleven. -/
+theorem B_second_Z_return (L R : List Bool) :
+    run0 p 11
+      ⟨0, [false,false,false,false,false] ++ L,
+        [false,true,false,false,false] ++ R⟩ =
+      some
+      ⟨0, [false,false] ++ L,
+        [false,true,false,true,true,true,true,false] ++ R⟩ := by
+  rfl
+
+/-- Full source-level B-triad rewrite. -/
+theorem B_triad (A B z : Nat) (L R : List Bool) :
+    run0 p (2*A+2*B+35)
+      ⟨0, rep [false] 8 ++ L,
+        rep [true] (A+2) ++ [false] ++
+        rep [true] (B+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0, false :: L,
+        [true,true,false] ++ rep [true] 5 ++
+          rep [false] (A+1) ++ rep [true] (B+4) ++
+          rep [false] z ++ R⟩ := by
+  have h1 := B_first_Z_return A B z L R
+  have h2 :
+      run0 p 11
+        ⟨0, rep [false] 5 ++ L,
+          [false,true] ++ rep [false] (A+3) ++
+            rep [true] (B+4) ++ rep [false] z ++ R⟩ =
+      some
+        ⟨0, rep [false] 2 ++ L,
+          [false,true,false] ++ rep [true] 4 ++
+            rep [false] (A+1) ++ rep [true] (B+4) ++
+            rep [false] z ++ R⟩ := by
+    have ht := B_second_Z_return L
+      (rep [false] A ++ rep [true] (B+4) ++ rep [false] z ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have h3 :
+      run0 p 9
+        ⟨0, rep [false] 2 ++ L,
+          [false,true,false] ++ rep [true] 4 ++
+            rep [false] (A+1) ++ rep [true] (B+4) ++
+            rep [false] z ++ R⟩ =
+      some
+        ⟨0, false :: L,
+          [true,true,false] ++ rep [true] 5 ++
+            rep [false] (A+1) ++ rep [true] (B+4) ++
+            rep [false] z ++ R⟩ := by
+    have ht := R_return_normal L
+      (rep [true] 3 ++ rep [false] (A+1) ++
+        rep [true] (B+4) ++ rep [false] z ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have h12 := join0 h1 h2
+  have h := join0 h12 h3
+  simpa [rep, List.append_assoc] using h
+
+#print axioms D0D1_to_E
+#print axioms E_Z_tail_to_A
+#print axioms B_first_Z_return
+#print axioms B_second_Z_return
+#print axioms B_triad
 #print axioms carry_prelude7
 #print axioms R_return_carry
 #print axioms A_triad_carry
