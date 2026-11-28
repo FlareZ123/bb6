@@ -163,6 +163,9 @@ theorem target_halt_implies_eight_ray
                   have hminR : 0<min ru rv := by
                     have hm := Nat.min_le_right qx qy
                     omega
+                  have huR : 0<ru := by
+                    have hm := Nat.min_le_left ru rv
+                    omega
                   have hqxLarge : 2*(n+3)+15≤qx := by
                     have hm := Nat.min_le_left qx qy
                     omega
@@ -172,7 +175,7 @@ theorem target_halt_implies_eight_ray
                       hscaleR hqxLarge hstepR
                   exact ⟨tr,ru,rv,n,hr,hn,hminRLower,hscaleR,
                     ordinary_four_to_eight (n+3) n ru rv qx qy
-                      hscaleR hsep hord hfour⟩
+                      hscaleR hsep huR hord hfour⟩
 
 /-- This is an exact conditional nonhalting reduction at eight source
 rays. Establishing the all-time root avoidance premise remains open. -/
