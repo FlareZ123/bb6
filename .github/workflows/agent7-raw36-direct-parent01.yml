@@ -61,7 +61,7 @@ jobs:
           mkdir -p /tmp/a7-direct01-full
           python im-results/agent7-raw36-direct/derive_drift.py \
             --out /tmp/a7-direct01-full/Raw36D101Hard10.lean --chunk 180
-          python im-results/agent7-raw36-direct/generate_direct.py \
+          RAW36_AUTOMATA_SUFFIX=Fresh python im-results/agent7-raw36-direct/generate_direct.py \
             /tmp/direct01-tree.json /tmp/a7-direct01-full \
             im-results/agent7-raw36-direct/evidence01.xz.b64 \
             ${{ inputs.max_parts }} 1 all \
@@ -142,11 +142,23 @@ jobs:
           obj=Path('/tmp/accepted/a7-direct-check')/(stem+'.olean')
           assert sha(src)==root['source_sha256'], (stem,'accepted source digest mismatch')
           assert sha(obj)==root['olean_sha256'], (stem,'object digest mismatch')
+          Path('/tmp/out').mkdir(parents=True,exist_ok=True)
           for name,entry in a.items():
               if name==stem: continue
+              if name.startswith('Raw36D101Automata'):
+                  # These are the exact legacy automata objects used by the
+                  # already accepted child proof.  Fresh children now use the
+                  # disjoint Raw36D101FreshAutomata* family.
+                  old_src=Path('/tmp/accepted/a7-direct-source')/(name+'.lean')
+                  old_obj=Path('/tmp/accepted/a7-direct-check')/(name+'.olean')
+                  assert old_src.is_file() and old_obj.is_file(), (stem,'legacy automata payload missing',name)
+                  assert sha(old_src)==entry['source_sha256'], (stem,'legacy automata source digest mismatch',name)
+                  assert sha(old_obj)==entry['olean_sha256'], (stem,'legacy automata object digest mismatch',name)
+                  (Path('/tmp/out')/(name+'.lean')).write_bytes(old_src.read_bytes())
+                  (Path('/tmp/out')/(name+'.olean')).write_bytes(old_obj.read_bytes())
+                  continue
               assert name in c, (stem,'dependency absent from fresh common closure',name)
               assert c[name]['module_identity_sha256']==entry['module_identity_sha256'], (stem,'dependency identity mismatch',name)
-          Path('/tmp/out').mkdir(parents=True,exist_ok=True)
           (Path('/tmp/out')/(stem+'.lean')).write_bytes(src.read_bytes())
           (Path('/tmp/out')/(stem+'.olean')).write_bytes(obj.read_bytes())
           print('accepted exact child source/object identity reused',stem,root['module_identity_sha256'])
