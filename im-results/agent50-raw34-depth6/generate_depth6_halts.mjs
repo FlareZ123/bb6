@@ -97,7 +97,7 @@ const fHalts=open5.slice(0,limit).map(x=>{
  const r=trace(codes);assert.equal(r.kind,"halt");assert.equal(r.t,x.n);
  return {codes,n:x.n,path:x.path.concat({slot:x.slot,code:1})};
 });
-const maxHalt=Math.max(...fHalts.map(x=>x.n));
+const maxHalt=fHalts.reduce((m,x)=>Math.max(m,x.n),0);
 assert(maxHalt<=100);
 
 function verifyPrefixTree(leaves){
