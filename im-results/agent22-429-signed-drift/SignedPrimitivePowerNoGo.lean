@@ -54,4 +54,27 @@ theorem source_no_primitive_finite_power
     (hsafe 0) (hsafe 1) (hsafe 2) hlargeBound hj hlarge hprim
 
 #print axioms source_no_primitive_finite_power
+
+/-- Direct usable repetition bound: every literal signed-source repetition of a
+    primitive positive-j word with a genuine F run stays below the exact
+    finite-power rigidity threshold. -/
+theorem source_primitive_power_bound
+    (x : PeriodicMacro.Letter) (xs : List PeriodicMacro.Letter)
+    (u D : Nat → Nat) (n r0 : Nat)
+    (hs : ∀ i : Nat, i≤n+1 →
+      SourceWalk (x::xs) (u i) (D i) (u (i+1)) (D (i+1)))
+    (hr0 : 6*u 0+D 0=2*r0)
+    (hj : ∀ y : PeriodicMacro.Letter, y∈x::xs → 0<y.j)
+    (hlarge : ∃ y : PeriodicMacro.Letter, y∈x::xs ∧ 1<y.j)
+    (hprim : CyclicPrimitive (by simp : 0<(x::xs).length)
+      (PeriodicMacro.slopeExponentFun (x::xs))) :
+    (PeriodicMacro.M (x::xs))^n ≤
+      2*((r0+2*PeriodicMacro.T (x::xs))/3) := by
+  by_contra hnot
+  have hbig : 2*((r0+2*PeriodicMacro.T (x::xs))/3) <
+      (PeriodicMacro.M (x::xs))^n := by omega
+  exact source_no_primitive_finite_power x xs u D n r0 hs hr0 hbig
+    hj hlarge hprim
+
+#print axioms source_primitive_power_bound
 end SignedPairMacroBridge
