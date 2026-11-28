@@ -1,6 +1,6 @@
 # Two certified nonhalting six-state cylinders via suffix-parametric glider recurrences
 
-**28 November 2026. Theorem (Lean 4.36.0-rc2, standard axioms only).** Two distinct partial six-state binary Turing machines, each specifying eleven of twelve transition slots, have a blank-tape nonhalting execution **for every possible completion of their remaining transition**. Consequently their **50 distinct complete six-state binary machines** (25 completions per parent, including the possible halting instruction) all run forever. This is a local universal nonhalting result, **not** a determination of BB(6) or a reduction of the current 40-way canonical global condition.
+**28 November 2026. Theorem (Lean 4.36.0-rc2, standard axioms only).** Two distinct partial six-state binary Turing machines, each specifying eleven of twelve transition slots, have a blank-tape nonhalting execution **for every possible completion of their remaining transition**. Consequently their **50 distinct complete six-state binary machines** (25 completions per parent, including the possible halting instruction) all run forever. Of those 50 completions, **48 have no halting instruction anywhere and therefore never halt for a trivial syntactic reason**; the substantive new assertions are that the **two remaining halt-completion machines** also never reach their halting slots. These are local universal nonhalting results, **not** a determination of BB(6) or a reduction of the current 40-way canonical global condition.
 
 ## Source-level theorem A: right-moving glider, period 226
 
