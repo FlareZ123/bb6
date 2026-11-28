@@ -134,10 +134,14 @@ theorem behindMany (n : Nat) (X Y : List Sym) :
   induction n generalizing X with
   | zero => simp [U, run]
   | succ n ih =>
-    have h := join (behindOne X (U 1 n ++ Y)) (ih (S 3::X))
-    simpa only [U, List.replicate_succ, List.replicate_succ',
-      List.cons_append, List.singleton_append, List.append_assoc,
-      show 19*(n+1)=19+19*n by omega] using h
+    have h0 := ih X (S 1 :: Y)
+    have h1 := behindOne (U 3 n ++ X) Y
+    have h := join h0 h1
+    have hIn : U 1 (n+1) ++ Y = U 1 n ++ S 1 :: Y := by
+      simp only [U, List.replicate_succ', List.singleton_append, List.append_assoc]
+    have hOut : U 3 (n+1) ++ X = S 3 :: (U 3 n ++ X) := by
+      simp only [U, List.replicate_succ, List.cons_append]
+    simpa only [hIn, hOut, show 19*n+19=19*(n+1) by omega] using h
 '''
 print(prefix)
 startL=parse('1 1 3^p 5 5 5 5 5 5 X');startR=parse('2 1 5')
