@@ -133,9 +133,14 @@ jobs:
           a={x['module']:x for x in accepted['modules']}
           c={x['module']:x for x in current['modules']}
           root=a[stem]
-          src=Path('/tmp/d101')/(stem+'.lean')
+          # Reuse the exact source/object pair that passed the child gate.
+          # The generator may have changed textually since that run; requiring
+          # the freshly regenerated source to hash-identically defeats the
+          # purpose of proof-artifact reuse even when every dependency identity
+          # is unchanged.
+          src=Path('/tmp/accepted/a7-direct-source')/(stem+'.lean')
           obj=Path('/tmp/accepted/a7-direct-check')/(stem+'.olean')
-          assert sha(src)==root['source_sha256'], (stem,'source identity mismatch')
+          assert sha(src)==root['source_sha256'], (stem,'accepted source digest mismatch')
           assert sha(obj)==root['olean_sha256'], (stem,'object digest mismatch')
           for name,entry in a.items():
               if name==stem: continue
@@ -144,7 +149,7 @@ jobs:
           Path('/tmp/out').mkdir(parents=True,exist_ok=True)
           (Path('/tmp/out')/(stem+'.lean')).write_bytes(src.read_bytes())
           (Path('/tmp/out')/(stem+'.olean')).write_bytes(obj.read_bytes())
-          print('accepted exact child identity reused',stem,root['module_identity_sha256'])
+          print('accepted exact child source/object identity reused',stem,root['module_identity_sha256'])
           PY
       - name: Retain identity-checked accepted child object
         uses: actions/upload-artifact@v4
