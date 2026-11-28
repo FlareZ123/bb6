@@ -27,6 +27,33 @@ The following exact first-level Covers have already passed pinned original-sourc
 - **1LB:** **closed.** The previous targeted run 46155553883 accepted all four repaired subparts, then failed only while merging because generated source files had not been restored. Commit `6ee2af1d08bfb6ea711e9410ad8d4675c747641f` restores that authenticated source bundle before `merge_shards.py`. Merge-only run **46157568267** then passed the corrected union and final original-source eight-shard Cover theorem; artifact **15268606297** is the accepted child closure.
 - **0LE / 1LE / 1RE:** original assembly runs [46142039950](https://github.com/FlareZ123/bb6/actions/runs/46142039950), [46142043725](https://github.com/FlareZ123/bb6/actions/runs/46142043725), and [46142047495](https://github.com/FlareZ123/bb6/actions/runs/46142047495) retained generated source and shared compiled core but no complete shard artifacts. Source compilation repeatedly ended in runner shutdown (exit 143), not a exhibited counterexample to the certificates. [split_all_assembly42.py](split_all_assembly42.py) now subdivides the **same eight original root groups** into up to four dependency-closed parts per group, proves equality of the full root multiset by construction, and retains every original certificate. The manual [agent32-raw42-e-split.yml](../../.github/workflows/agent32-raw42-e-split.yml) checks each part via the original Lean checker, authenticates their exact union with `merge_shards.py`, and only then accepts the whole child if its bound-100006 theorem and standard-axiom audit pass. Current exact-split acceptance runs are **46156341083 (0LE)**, **46157367536 (1LE)**, and **46157370847 (1RE)**. The partition itself is not a Cover; each whole child is accepted only if its exact union and final theorem pass.
 
+## Partial observed-edge congruences: expensive 1RE witnesses
+
+The new [partial_ngram_quotient.py](partial_ngram_quotient.py) handles frozen asymmetric NGram and list BiDFA leaf certificates. Unlike full-transition DFA minimization, it constrains only pushes actually present in the blank-seeded inductive closure. Label each left state by its set of allowed (control state, scanned bit, right state) triples, and vice versa. Merge equal-labelled classes, requiring congruent destinations only when both representatives have an observed transition on the same symbol. Complete unobserved transitions arbitrarily (to blank); keep blank class 0. Alternate sides and recompute the least state/edge fixed point from blank after every quotient. A projected old invariant is closed because the source of every permitted push or pop can be substituted inside the equal relation label, and each observed push respects the quotient. The implementation additionally tests the fresh closure, and the resulting certificate is checked by the unchanged original FastBiDFA theorem. No discovery code is a trusted proof step.
+
+The concrete source blockers in 1RE, with exact leaf table and exported theorem preserved, checked locally with Lean 4.36.0-rc2:
+
+| Leaf type / ID | Original joint configurations | Quotient joint configurations | Lean seconds |
+|---|---:|---:|---:|
+| NGram 32983 | 30507 | 598 | 3.60 |
+| NGram 32984 | 30507 | 598 | 3.89 |
+| NGram 32998 | 30507 | 598 | 3.14 |
+| NGram 32987 | 30187 | 742 | 4.03 |
+| NGram 32985 | 13288 | 658 | 3.53 |
+| NGram 32999 | 13221 | 612 | 3.24 |
+| NGram 32988 | 4497 | 273 | 1.88 |
+| NGram 27128 | 6605 | 401 | 2.14 |
+| Run 22912 | 1793 | 53 | 1.30 |
+| Run 6779 | 1877 | 619 | 4.87 |
+| Run 11398 | 1464 | 481 | 2.31 |
+| Run 27224 | 948 | 112 | 0.89 |
+| Run 22935 | 767 | 92 | 0.84 |
+| Run 8945 | 649 | 141 | 0.86 |
+
+All fourteen original-source leaf `live` theorems report only propext, Classical.choice, Quot.sound. Both unchanged exact root modules Raw421REClosedRoot_23_05_12 (g1p0) and Raw421REClosedRoot_23_05_13 (g0p0) compiled locally in about 14 s using the replacement certificates. Source artifact 15267968993, core 15267978988, exact FastBiDFA checker objects from accepted 15268979830. A discovery-only scan of all 183 frozen 1RE NGram leaves reduced aggregate joint states 227867→35709, and all 767 list Run leaves reduced 67477→44567; these scans alone do not establish Lean acceptance. Small certificates need not be converted: trie rendering can increase their source size.
+
+Exact repair runs [46165303934](https://github.com/FlareZ123/bb6/actions/runs/46165303934) (g0p0) and [46165311421](https://github.com/FlareZ123/bb6/actions/runs/46165311421) (g1p0) use the existing [E rescue workflow](../../.github/workflows/agent10-raw42-e-leaf-recover.yml), new `compact_ngram` input; `compact_run` is also available for Run blockers. The original 1RE g3p0/g3p1 runs stopped on Run6779/Run22912, respectively, both now have local compact leaf proofs. No whole 1RE child Cover is claimed before the exact union and original-source check. Preserve all accepted partitions.
+
 ## Relation-labelled DFA quotient for 1LA/1RA assembly bottlenecks
 
 The interrupted recovery jobs [46053090463](https://github.com/FlareZ123/bb6/actions/runs/46053090463) and [46053095897](https://github.com/FlareZ123/bb6/actions/runs/46053095897) stopped (exit 143) respectively at old list certificates Raw421LARun902 and Raw421RARun3138. They were below the old 50 KB conversion threshold. Direct conversion of the full 902 witness to the existing trie checker was also too expensive in the local test.
