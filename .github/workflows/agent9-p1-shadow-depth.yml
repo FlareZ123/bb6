@@ -998,4 +998,5 @@ jobs:
           lean --version
           git rev-parse HEAD
           python tools/lean_compile_deps.py "$D/CyclicTrace.lean" | tee /tmp/cyclic-order.log
+          python tools/lean_compile_deps.py "$D/CyclicTraceShort.lean" | tee -a /tmp/cyclic-order.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/cyclic-order.log; then exit 1; fi
