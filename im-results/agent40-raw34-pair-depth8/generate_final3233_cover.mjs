@@ -352,7 +352,7 @@ finalRows.map(r=>"  ["+r.join(",")+"]").join(",\n"),
 "          have hm : r = row ∨ row ∈ rs := by simpa [eq_comm] using hr",
 "          rcases hm with hEq | hr",
 "          · subst row",
-"            have hp : sameTable (table r) (table w.codes) = true ∧"
+"            have hp : sameTable (table r) (table w.codes) = true ∧",
 "                rowCheck w = true := by",
 "              simpa only [pairCheck, Bool.and_eq_true] using hh.1",
 "            rw [sameTable_sound (table r) (table w.codes) hp.1]",
