@@ -1,4 +1,5 @@
 import DiagonalCoordinates
+import F321BackwardBarrier
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -99,6 +100,56 @@ theorem resetEpoch_strict {R c R' c' : Nat}
   have h1 := outerRun_X_monotone ho
   have h2 := resetMove_output_above_X hr
   omega
+
+/-- Every outer epoch is an exact canonical source-counter run. -/
+theorem outerRun_counterReach {n a d A D : Nat}
+    (h : OuterRun n a d A D) : CounterReach a d n A D := by
+  induction h with
+  | nil => exact CounterReach.nil
+  | step h hm ih =>
+      exact CounterReach.step ih (outerMove_source hm)
+
+/-- Every reset epoch is an exact source run of one more step. -/
+theorem resetEpoch_counterReach {R c R' c' : Nat}
+    (h : ResetEpoch R c R' c') :
+    ∃ n, CounterReach R c (n+1) R' c' := by
+  rcases h with ⟨n,a,d,ho,hr⟩
+  refine ⟨n, ?_⟩
+  exact CounterReach.step (outerRun_counterReach ho) (resetMove_source hr)
+
+/-- Finite chains of reset epochs. -/
+inductive ResetChain : Nat → Nat → Nat → Nat → Nat → Prop
+  | nil (R c) : ResetChain 0 R c R c
+  | step {n R c A e B f} :
+      ResetChain n R c A e → ResetEpoch A e B f →
+      ResetChain (n+1) R c B f
+
+theorem resetChain_monotone {n R c A e : Nat}
+    (h : ResetChain n R c A e) : R ≤ A := by
+  induction h with
+  | nil => exact Nat.le_refl _
+  | step hc he ih =>
+      have hs := resetEpoch_strict he
+      omega
+
+theorem resetChain_strict {n R c A e : Nat}
+    (h : ResetChain (n+1) R c A e) : R < A := by
+  cases h with
+  | step hc he =>
+      have hm := resetChain_monotone hc
+      have hs := resetEpoch_strict he
+      omega
+
+/-- In particular the exact reset-epoch skeleton has no positive cycle. -/
+theorem no_reset_cycle {n R c e : Nat}
+    (h : ResetChain (n+1) R c R e) : False := by
+  have hs := resetChain_strict h
+  omega
+
+#print axioms outerRun_counterReach
+#print axioms resetEpoch_counterReach
+#print axioms resetChain_strict
+#print axioms no_reset_cycle
 
 #print axioms outerMove_source
 #print axioms resetMove_source
