@@ -94,6 +94,8 @@ def main():
         # Stronger algebraic consequence: at any larger threshold, parent
         # Cover can be consumed directly, rather than at floor 6,766,859.
         loose=[
+            "BB6.Agent11Raw39Canonical40LooseThreshold.sound40_at",
+            "BB6.Agent11Raw39Canonical40LooseThreshold.remove_many_at",
             "BB6.Agent11Raw39Canonical40LooseThreshold.parents_cover_at",
             "BB6.Agent11Raw39Canonical40LooseThreshold.sound_at",
             "BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_target",
