@@ -8,6 +8,7 @@ on:
         options:
           - five-shift
           - signed-short
+          - root-short
         default: five-shift
         required: true
 
@@ -34,8 +35,35 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=100000 "$p" 2>&1 | tee /tmp/agent33-signed-short.log
           ! grep -q 'sorryAx' /tmp/agent33-signed-short.log
           ! grep -q 'native_decide' /tmp/agent33-signed-short.log
+  root-short:
+    if: ${{ inputs.target == 'root-short' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check authenticated infinite genuine-root exclusion candidates
+        env:
+          LEAN_PATH: im-results/agent5-429-rank:im-results/agent6-harmonic429:im-results/agent39-429-1021:im-results/agent33-429-signed-short
+        run: |
+          set -euo pipefail
+          lean -o im-results/agent5-429-rank/BB429Rank.olean im-results/agent5-429-rank/BB429Rank.lean
+          lean -o im-results/agent6-harmonic429/BB429Mod8.olean im-results/agent6-harmonic429/BB429Mod8.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootEven8.olean im-results/agent39-429-1021/BB429RootEven8.lean
+          lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
+          lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
+          p=im-results/agent33-429-signed-short
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=100000 -o "$p/BB429RootShortArithmetic.olean" "$p/BB429RootShortArithmetic.lean" 2>&1 | tee /tmp/agent33-root-short.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=100000 "$p/BB429RootShortSource.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
+          ! grep -q 'sorryAx' /tmp/agent33-root-short.log
+          ! grep -q 'native_decide' /tmp/agent33-root-short.log
   source-proof:
-    if: ${{ inputs.target != 'signed-short' }}
+    if: ${{ inputs.target == 'five-shift' }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
