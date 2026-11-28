@@ -62,7 +62,8 @@ theorem ray_coords (x y a b t : Nat) :
     have hz0 := twice_Z x y
     rw [hp] at hz1
     rw [hx] at hz1
-    change Z (x+2*a*t) (y+(2*b+1)*t)=Z x y-(a:Int)*(t:Int)
+    change Z (x+2*a*t) (y+(2*b+1)*t)=Z x y+(-(a:Int))*(t:Int)
+    rw [Int.neg_mul]
     omega
 
 /-- One universal dyadic precision works for every nonnegative affine ray
