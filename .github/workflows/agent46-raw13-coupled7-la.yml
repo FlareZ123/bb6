@@ -19,6 +19,8 @@ jobs:
           ref: ${{ inputs.source_ref }}
       - name: Reconstruct compressed project sources
         run: python im-results/agent13-coverage/unpack.py
+      - name: Generate Raw13 coupled entry source
+        run: python im-results/agent46-raw13-cut/generate_coupled_entry.py
       - name: Kernel-check both seven-hole LA cycle closures
         run: |
           set -euo pipefail
