@@ -3,6 +3,7 @@ import F421SecondaryQGuard
 
 namespace BB6Coverage.Agent41F421.EpochWords
 open F421SecondaryLifetimes
+open F421TertiaryGuard (drain)
 
 /-- Exact source-machine secondary primary-word length law, in two-symbol
     pairs. It covers arbitrary guarded terminal P-cell deletions and Q merges.
