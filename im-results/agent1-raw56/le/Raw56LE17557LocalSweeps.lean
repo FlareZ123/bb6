@@ -157,6 +157,80 @@ theorem I_return (a b c z : Nat) (L R : List Bool) :
   have h := join0 h1234 h5
   simpa [tail, afterB, rep, List.append_assoc] using h
 
+theorem AB_zero_to_C (L R : List Bool) :
+    run0 p 2 ⟨0, false :: L, false :: true :: R⟩ =
+      some ⟨2, true :: true :: true :: L, R⟩ := by
+  rfl
+
+theorem C_to_D_zero (L R : List Bool) :
+    run0 p 2 ⟨2, true :: L, false :: false :: R⟩ =
+      some ⟨3, false :: false :: false :: L, R⟩ := by
+  rfl
+
+theorem D_Z_tail_to_A (L R : List Bool) :
+    run0 p 5 ⟨3, false :: true :: true :: false :: false :: L, R⟩ =
+      some ⟨0, L, false :: true :: false :: true :: true :: R⟩ := by
+  rfl
+
+/-- Exact second (Z) return.  It reduces the finite left zero runway by three
+    and transfers the erased c-run into the right-side 0-1-0 / one-run form. -/
+theorem Z_return (a b c z : Nat) (L R : List Bool) :
+    run0 p (2*c+13)
+      ⟨0,
+        rep [false] (b+4) ++ rep [true] (a+3) ++ L,
+        [false] ++ rep [true] (c+2) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0,
+        rep [false] (b+1) ++ rep [true] (a+3) ++ L,
+        [false,true,false] ++ rep [true] (c+5) ++
+          rep [false] z ++ R⟩ := by
+  let LT : List Bool := rep [false] (b+3) ++ rep [true] (a+3) ++ L
+  let RT : List Bool := rep [false] z ++ R
+  have h1 :
+      run0 p 2
+        ⟨0, false :: LT,
+          false :: true :: rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+        ⟨2, true :: true :: true :: LT,
+          rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ := by
+    have ht := AB_zero_to_C LT
+      (rep [true] (c+1) ++ rep [false] (z+2) ++ R)
+    simpa [List.append_assoc] using ht
+  have h2 := C_sweep_ones (c+1) (true :: true :: LT)
+    (rep [false] (z+2) ++ R)
+  have h3 :
+      run0 p 2
+        ⟨2, true :: rep [false] (c+1) ++ true :: true :: LT,
+          false :: false :: RT⟩ =
+      some
+        ⟨3, false :: rep [false] (c+3) ++ true :: true :: LT, RT⟩ := by
+    have ht := C_to_D_zero
+      (rep [false] (c+1) ++ true :: true :: LT) RT
+    simpa [rep, List.append_assoc] using ht
+  have h4 := D_sweep_left_zeros (c+3)
+    (true :: true :: LT) RT
+  have h5 :
+      run0 p 5
+        ⟨3, false :: true :: true :: LT,
+          rep [true] (c+3) ++ RT⟩ =
+      some
+        ⟨0,
+          rep [false] (b+1) ++ rep [true] (a+3) ++ L,
+          [false,true,false] ++ rep [true] (c+5) ++ RT⟩ := by
+    have ht := D_Z_tail_to_A
+      (rep [false] (b+1) ++ rep [true] (a+3) ++ L)
+      (rep [true] (c+3) ++ RT)
+    simpa [LT, rep, List.append_assoc] using ht
+  have h12 := join0 h1 h2
+  have h123 := join0 h12 h3
+  have h1234 := join0 h123 h4
+  have h := join0 h1234 h5
+  simpa [LT, RT, rep, List.append_assoc] using h
+
+#print axioms AB_zero_to_C
+#print axioms C_to_D_zero
+#print axioms D_Z_tail_to_A
+#print axioms Z_return
 #print axioms B_turn_to_C
 #print axioms C_I_turn_to_A
 #print axioms I_return
