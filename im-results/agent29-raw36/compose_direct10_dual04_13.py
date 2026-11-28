@@ -61,7 +61,14 @@ def main():
         assert len(report["results"])==5
         assert {x["table"] for x in report["results"]}==expected_zeroLF
         zeroLF_keys={t for t in keys if t[24:27]=="0LF"}
-        assert zeroLF_keys=={t.replace("_","") for t in expected_zeroLF}
+        expected_zeroLF_keys={t.replace("_","") for t in expected_zeroLF}
+        assert expected_zeroLF_keys<=zeroLF_keys
+        # The five search targets must be exactly the still-missing leaves
+        # after the authenticated FAR/structured candidate bank, not all
+        # source-census leaves under this first-E0 move.
+        missing_zeroLF={t for t in zeroLF_keys
+                        if fixture["data"][keys.index(t)] is None}
+        assert missing_zeroLF==expected_zeroLF_keys,missing_zeroLF
         for item in report["results"]:
             table=item["table"].replace("_","")
             assert table in zeroLF_keys
@@ -149,7 +156,9 @@ def main():
       "one_new_machine":LITERAL,"new_machine_certificate":["r",6,9,5,1318],
       "candidate_0LE":{"original_open":13,"far":12,"structured":1},
       "candidate_1LB":{"original_open":len(keys13),"far":far13,"structured":structured13,"new_r":1},
-      "candidate_0LF":({"original_open":len(zeroLF_keys),"new_nonhalting":len(zeroLF_results),
+      "candidate_0LF":({"source_open_tables":len(zeroLF_keys),
+                        "previously_certified":len(zeroLF_keys)-len(zeroLF_results),
+                        "new_nonhalting":len(zeroLF_results),
                         "certificates":zeroLF_results} if include_zeroLF else None),
       "predecessor_source":predecessor["claim"],
       "root_olean_sha256":base.file_sha(last),
