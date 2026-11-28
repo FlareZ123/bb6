@@ -125,19 +125,19 @@ jobs:
                   n += 1
               print(root, n, flush=True)
               assert n > 0, root
-          aliases = {
-              'Raw56PilotE10RDAll': Path('E10RD/Raw56PilotE10RDAll.olean'),
-              'Raw56PilotE11LCAll': Path('E11LC/Raw56PilotE11LCAll.olean'),
-              'Raw56PilotE10RBAll': Path('E10RB/Raw56PilotE10RBAll.olean'),
-          }
-          for name, rel in aliases.items():
-              src = out / rel
-              assert src.is_file(), src
-              dst = out / f'{name}.olean'
-              if dst.exists() and dst.resolve().read_bytes() != src.read_bytes():
-                  raise SystemExit(f'LEAN_OBJECT_COLLISION alias {name}')
-              if not dst.exists():
-                  dst.symlink_to(src.resolve())
+          # The cut compiler stores tag-local modules below E10RD/E11LC/E10RB
+          # while those generated modules import one another by basename.
+          # Recreate the exact per-tag LEAN_PATH behavior in the merged root by
+          # exposing every tag-local object at the root as a checked alias.
+          for tag in ('E10RD', 'E11LC', 'E10RB'):
+              tagdir = out / tag
+              assert tagdir.is_dir(), tagdir
+              for src in tagdir.glob('*.olean'):
+                  dst = out / src.name
+                  if dst.exists() and dst.resolve().read_bytes() != src.read_bytes():
+                      raise SystemExit(f'LEAN_OBJECT_COLLISION alias {src.name}')
+                  if not dst.exists():
+                      dst.symlink_to(src.resolve())
           for rel in [
               Path('finite/E10RD'), Path('finite/E11LC'), Path('finite/E10RB'),
               Path('E10RD'), Path('E11LC'), Path('E10RB'),
