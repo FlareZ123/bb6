@@ -979,25 +979,47 @@ jobs:
           set -euo pipefail
           root=im-results/agent25-raw43
           work=/tmp/a25-raw43-reuse
-          [[ "$MODE" == all || "$MODE" == expanded || "$MODE" == expandedfive ]]
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          python "$root/merge_parent.py" "$work" "$MODE"
-          if [[ "$MODE" == expandedfive ]]; then
-            suffix=ExpandedFive
-          elif [[ "$MODE" == expanded ]]; then
-            suffix=Expanded
-          else
-            suffix=All
+          [[ "$MODE" == all || "$MODE" == expanded || "$MODE" == expandedfive || "$MODE" == complete ]]
+          if [[ "$MODE" != complete ]]; then
+            python im-results/agent13-coverage/unpack.py
+            python im-results/agent31-three-hole-tnf/generate_sweeps.py
+            python im-results/agent31-three-hole-tnf/generate_four_hole.py
           fi
-          ns="BB6.Agent25Raw43Parent$suffix"
+          python "$root/merge_parent.py" "$work" "$MODE"
+          source_args=()
+          parent_args=()
+          if [[ "$MODE" == complete ]]; then
+            ns=BB6.Agent38Raw43ParentComplete
+            claim=all_completions
+            bound=11292
+            src=im-results/agent38-raw43-pair/Raw43ParentComplete.lean
+            checks=("$ns.cover" "$ns.all_completions")
+            source_args=(--source-root "$work/inputs"
+              --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean
+              --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean
+              --override M44Data=im-results/agent38-raw43-pair/M44Data.lean)
+            parent_args=(--parent-table '1RB---_1RC---_0RD---_1LD0RB_------_------')
+          else
+            if [[ "$MODE" == expandedfive ]]; then
+              suffix=ExpandedFive
+            elif [[ "$MODE" == expanded ]]; then
+              suffix=Expanded
+            else
+              suffix=All
+            fi
+            ns="BB6.Agent25Raw43Parent$suffix"
+            claim=cover
+            bound=1713
+            src="$root/Raw43ParentCut$suffix.lean"
+            checks=("$ns.remaining_count" "$ns.sound" "$ns.cover")
+          fi
           python tools/lean_compile_closure.py --workdir "$work/compiled" --jobs 2 \
+            "${source_args[@]}" "${parent_args[@]}" \
             --precompiled-dir "$work/union" --precompiled-manifest "$work/union/manifest.json" \
             --manifest "$work/compiled/manifest.json" --label "raw43-parent-$MODE" \
-            --theorem "$ns.cover" --weighted-bound 1713 --artifact-name "raw43-parent-$MODE-proof" \
-            "$root/Raw43ParentCut$suffix.lean" 2>&1 | tee "$work/audit.log"
-          python im-results/agent4-raw109/audit_axioms.py "$work/audit.log" "$ns.remaining_count" "$ns.sound" "$ns.cover"
+            --theorem "$ns.$claim" --weighted-bound "$bound" --artifact-name "raw43-parent-$MODE-proof" \
+            "$src" 2>&1 | tee "$work/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$work/audit.log" "${checks[@]}"
           cp "$work/audit.log" "$work/compiled/audit.log"
       - name: Retain Raw43 reduced parent proof
         if: inputs.target == 'raw43-parent-reuse'
