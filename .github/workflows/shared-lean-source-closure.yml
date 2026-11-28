@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "coverage-generators", "raw40-a0la", "raw40-round4", "raw40-round5", "q0151-macro"]
+        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "q0151-macro"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -62,6 +62,11 @@ jobs:
           elif [[ "$PREPARATION_PROFILE" == "raw40-round5" ]]; then
             test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40Round5Exact.lean"
             test -f im-results/agent19-raw40-cut/prepare_round5.py
+          elif [[ "$PREPARATION_PROFILE" == "raw40-a0la-complete" ]]; then
+            test "$PROOF_ROOT" = "im-results/agent42-raw40-crossing-splice/Raw40A0LAExact.lean"
+            test -f im-results/agent19-raw40-cut/prepare_round4.py
+            test -f im-results/agent19-raw40-cut/prepare_round5.py
+            test -f im-results/agent19-raw40-cut/prepare_a0la.py
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
             test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/${RAW40_CHILD}/shards/Raw40C0LA${RAW40_CHILD}All.lean"
@@ -92,7 +97,7 @@ jobs:
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
       - name: Generate source-pinned three/four-hole coverage modules
-        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' || inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' }}
+        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' || inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' || inputs.preparation_profile == 'raw40-a0la-complete' }}
         run: |
           set -euo pipefail
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
@@ -121,6 +126,19 @@ jobs:
           esac
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
+      - name: Regenerate all twelve Raw40 A0LA child sources
+        if: ${{ inputs.preparation_profile == 'raw40-a0la-complete' }}
+        env:
+          PROOF_ROOT: ${{ inputs.root }}
+        run: |
+          set -euo pipefail
+          python im-results/agent19-raw40-cut/prepare_round5.py
+          python im-results/agent19-raw40-cut/prepare_round4.py
+          for child in 0LE 0RB 0RD 0RE 1LA 1LC 1LE 1RB 1RC 1RE; do
+            python im-results/agent19-raw40-cut/prepare_a0la.py "$child"
+          done
+          test -f "$PROOF_ROOT"
+          sha256sum "$PROOF_ROOT"
       - name: Compile exact transitive Lean source, reject compiler errors
         env:
           PROOF_ROOT: ${{ inputs.root }}
@@ -129,7 +147,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/lean-source-closure
           overrides=()
-          if [[ "$PREPARATION_PROFILE" == "raw40-a0la" ]]; then
+          if [[ "$PREPARATION_PROFILE" == "raw40-a0la" || "$PREPARATION_PROFILE" == "raw40-a0la-complete" ]]; then
             # prepare_a0la.py explicitly uses agent32-raw59's generator.
             # The raw42 FastBiDFA module has a different source identity.
             overrides+=(--override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean)
