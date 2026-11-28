@@ -123,7 +123,7 @@ def main():
         root_names=["BB6.Agent11Raw39Closed.parent_bound"],
         prefix="A11Raw39Slice",
         tool=stage_tool,
-        comparator=REPO / "im-results/agent13-raw125/CompareKernelImports.lean",
+        comparator_batch=HERE / "CompareKernelImportsBatch.lean",
         chunk_size=args.chunk_size)
     if not report["complete"] or (
         "BB6.Agent11Raw39Closed.parent_bound" not in names):
@@ -162,6 +162,7 @@ def main():
             "mode": report["mode"], "chunk_size": report["chunk_size"],
             "affected_modules": report["affected_modules"],
             "selected_declarations": report["selected_declarations"],
+            "kernel_comparison": report["kernel_comparison"],
             "chunks": len(report["chunks"]),
             "copied_modules": copied,
         },
