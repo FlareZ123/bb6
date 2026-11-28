@@ -83,7 +83,8 @@ jobs:
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6Bridge.olean" "$a2/Phase6Bridge.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$e/HighFarRootTargets.olean" "$e/HighFarRootTargets.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$e/FirstMixedAnchorRoot.olean" "$e/FirstMixedAnchorRoot.lean" | tee -a /tmp/f321-terminal-candidate.log
-          LEAN_PATH="$e:$a2" lean "$e/SecondMixedAnchorExclusion.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e:$a2" lean -o "$e/SecondMixedAnchorExclusion.olean" "$e/SecondMixedAnchorExclusion.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e:$a2" lean "$e/ThirdMixedAnchorExclusion.lean" | tee -a /tmp/f321-terminal-candidate.log
           ! grep -q sorryAx /tmp/f321-terminal-candidate.log
 
       - name: Kernel-check F321 odd-depth source-counter inverse theorem
