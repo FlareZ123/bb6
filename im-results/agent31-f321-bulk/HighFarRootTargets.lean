@@ -32,9 +32,9 @@ theorem smallAnchorMove_source {a d R c : Nat}
     exact CounterMove.equal a
   · rcases hM with hEven | hOdd
     · rcases hEven with ⟨h1,h2,hp,rfl,rfl⟩
-      exact CounterMove.middleEven d h1 h2 hp
+      exact CounterMove.middleEven a d h1 h2 hp
     · rcases hOdd with ⟨h1,h2,hp,rfl,rfl⟩
-      exact CounterMove.middleOdd d h1 h2 hp
+      exact CounterMove.middleOdd a d h1 h2 hp
 
 def dangerM (k : Nat) : Nat := 8*k+6
 def dangerN (k : Nat) : Nat := 24*k+22
