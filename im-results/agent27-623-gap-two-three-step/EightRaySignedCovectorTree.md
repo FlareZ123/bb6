@@ -225,3 +225,21 @@ H_1=878, H_2=451, H_3=309, H_4=261, H_5=245, H_6=240.
 Thus after six low ternary digits, the scalar carry magnitude is at most 240, uniformly over the eight rays, all four sector phases, and arbitrary input digits. In particular, \`240<3^5\`.
 
 This coefficient-only bound does **not** by itself imply that a nonzero high quotient forces a large absolute scalar form: for a negative Euclidean quotient, a low residue near \`3^k-1\` can partially cancel it. A complete exclusion still needs the signed-complement argument showing that the authentic nonmonochromatic middle output prevents the long all-2 (negative) or all-0 (positive) low-residue pattern required for a small absolute value.
+
+
+## Signed-complement criterion for a small absolute form
+
+Let the first k Euclidean ternary digits of an integer scalar form F be represented by
+
+\`\`\`
+F = 3^k*q + r,   0 <= r < 3^k.
+\`\`\`
+
+If \`abs(F)<=W<3^k\`, then \`q\` must be either 0 or -1. Indeed, q>=1 gives F>=3^k>W, while q<=-2 gives F<=-3^k-1.
+
+- If q=0, then r=F<=W. Every ternary digit d_j of r with \`3^j>W\` must therefore be 0.
+- If q=-1, then \`r2=3^k-1-r=-F-1\` lies in \`[0,W-1]\`. The ternary digits of r2 are \`2-d_j\`, so every digit d_j with \`3^j>W\` must be 2.
+
+Consequently, a nonmonochromatic block of output digits entirely at positions j satisfying \`3^j>W\` rules out \`abs(F)<=W\`. This argument does not require a separate magnitude bound on q: a small signed integer forces the high digits of its low residue to be uniformly 0 or uniformly 2 according to the sign.
+
+For the eight strips, \`W=1422*ell+15216\`. The exact remaining transducer task is therefore to locate a nonmonochromatic output block J within the first k digits, with \`3^min(J)>1422*ell+15216\`, while preserving the true carry at the moving S-window cut. The carry magnitude bound above is secondary; the signed-complement criterion is stronger.
