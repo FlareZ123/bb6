@@ -41,12 +41,16 @@ def main():
  P='1RB---_1RC'+MOVES[i]+'_0RD---_0LD1LB_------_------';cut=max(4,i%6+1)
  evidence=json.loads(gzip.decompress(base64.b64decode((ROOT/f'd1-{i:02d}-evidence.json.gz.b64').read_text())))
  far={parse(t):code for t,code in evidence['far']};records=evidence['sweep'];sweeps={parse(rec[1]):rec[0] for rec in records};manual={parse(t):ns for t,ns in evidence.get('manual',[])}
+ cycles={parse(t):a for t,a in evidence.get('cycle',[])}
+ assert not evidence.get('missing'),evidence.get('missing')
+ allsets=[set(far),set(sweeps),set(manual),set(cycles)];assert sum(map(len,allsets))==len(set().union(*allsets))
+ manual_imports=''.join(f'import {ns.removeprefix("BB6.Agent29")}\n' for ns in sorted(set(manual.values())))
  assert len(far)==len(evidence['far']) and len(sweeps)==len(records) and not set(far)&set(sweeps) and not (set(far)|set(sweeps))&set(manual)
  inp=out/f'{stem}SweepRecipes.jsonl';inp.write_text(''.join(json.dumps(r)+'\n' for r in records))
  subprocess.run([sys.executable,str(ROOT.parent/'agent7-raw49'/'emit_sweep_recipes.py'),str(inp),OPEN_NS,str(out/f'{stem}Sweeps.lean')],check=True)
  got=json.loads(a.tree.read_text() if a.tree else subprocess.check_output(['node',str(ROOT/'canonical_search.cjs'),P,str(cut),'tree'],text=True))
  B=evidence['bound'];assert got['parent']==P and got['cut']==cut and got['stats']['score']<=B
- assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)
+ assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)
  tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
  used={}
  def render(p,c,t):
@@ -58,6 +62,8 @@ def main():
   if tag=='open':
    assert p==parse(x[0]) and p not in used
    if p in far:used[p]='FAR';return farterm(p,far[p])
+   if p in cycles:
+    used[p]='late-cycle';e,k,r,b=cycles[p];return f'.cycle {e} {k} {str(r).lower()} ({b})'
    if p in manual:used[p]='manual';ns=manual[p];return f'.proven {ns}.table {ns}.never'
    assert p in sweeps,(p,x);used[p]='sweep';ns=f'{OPEN_NS}.M{sweeps[p]}';return f'.proven {ns}.table {ns}.never'
   assert tag=='split';n,s,kids=x;assert len(kids)==24 and p[s]=='---' and s//2<c
@@ -79,7 +85,7 @@ def main():
    body.append(f'def {name} : Audit := .split {n} {slot(s)} (byMove {xs})\ntheorem {name}_checked : BB6.Agent29CanonicalFast.check {B} {pexpr} {c} {name} = true :=\n  split24 {B} {pexpr} {c} {n} {slot(s)} {xs} (by rfl)\n    '+'\n    '.join(proofs)+'\n');return name
   c=max(cut,i%6+1);mv=move(MOVES[i]);pexpr=f'(b1Child {mv})';emit(refine(parse(P),s,MOVES[i]),c,t,pexpr,nm)
   body.append(f'theorem {nm}_bound : ∀ m, compatible {pexpr} m → WeightedBound {B} m :=\n  BB6.Agent29CanonicalFast.bound {B} {pexpr} {c} {nm} (by decide) (supportOK_sound _ _ (by decide)) (b1Child_root {mv}) (b1Child_nohalt {mv}) {nm}_checked\n#print axioms {nm}_bound\n')
-  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+('import Raw36B1RCCounter\n' if manual else '')+HEAD+'\n'.join(body)+END)
+  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+HEAD+'\n'.join(body)+END)
   print(nm,size(t),counter,flush=True)
  (out/f'{stem}Base.lean').write_text('import CanonicalPrefixFast\nimport Raw36Cut\n'+HEAD+base(a.index,cut,n,s)+END)
  terms=[];proofs=[];imports=[]
