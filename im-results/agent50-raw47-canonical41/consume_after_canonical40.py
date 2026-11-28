@@ -130,7 +130,8 @@ def generate_source(prior, work):
 
 
 
-def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *, chunked=False):
+def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *,
+                        chunked=False, resume_from=None):
     """Kernel-replay only the import-affected Raw47 declaration cone.
 
     Source producer was independently accepted; checked kernel replay preserves
@@ -170,7 +171,7 @@ def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *, ch
             root_names=["BB6.Agent50Raw47Complete.cover_at"],
             prefix="A50Raw47Slice", tool=scratch / "kernelstage",
             comparator_batch=c.selected.HERE.parent / "agent11-raw39" / "CompareKernelImportsBatch.lean",
-            allow_compatible=True, chunk_size=64)
+            allow_compatible=True, chunk_size=64, resume_from=resume_from)
     else:
         report, objects, names = relocate(
             producer_files=files,base=linked,work=work/"raw47-kernel-replay",
