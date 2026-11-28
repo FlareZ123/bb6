@@ -40,7 +40,6 @@ PARAMS=[]
 def worker(item):
     index,table,candidates=item
     machine=tuple(table.replace("_","")[j:j+3] for j in range(0,36,3))
-    signal.signal(signal.SIGALRM,timed_out)
     start=time.monotonic()
     for j,p in enumerate(candidates,1):
         try:
