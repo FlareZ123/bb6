@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, global-parent-chunked, chunked-kernel-smoke]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, canonical40-batch38, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, global-parent-chunked, chunked-kernel-smoke]
         required: true
       onele_run:
         description: 'Successful complete 1LE semantic audit run ID (parent-join only)'
@@ -723,7 +723,7 @@ jobs:
           python im-results/agent43-raw39-4084/search_pump.py im-results/agent11-raw39/0LE-frontier.json.xz.b64 1583 3000000
 
   canonical40_membership:
-    if: ${{ inputs.branch == 'canonical40-membership' || inputs.branch == 'canonical40-conditional' }}
+    if: ${{ inputs.branch == 'canonical40-membership' || inputs.branch == 'canonical40-conditional' || inputs.branch == 'canonical40-batch38' }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -743,6 +743,8 @@ jobs:
           option=()
           if [ "${{ inputs.branch }}" = canonical40-conditional ]; then
             option=(--conditional)
+          elif [ "${{ inputs.branch }}" = canonical40-batch38 ]; then
+            option=(--two-parents)
           fi
           python im-results/agent11-raw39/check_canonical40_membership.py \
             --work /tmp/a11-raw39-canonical40-membership "${option[@]}"
