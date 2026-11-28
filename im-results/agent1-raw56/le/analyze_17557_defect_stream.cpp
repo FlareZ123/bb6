@@ -27,8 +27,10 @@ vector<Run> rhoR(const vector<Run>&R){if(R.size()<3||R.size()%2!=0||R.front().b!
 bool same(const vector<Run>&a,const vector<Run>&b){if(a.size()!=b.size())return false;for(size_t i=0;i<a.size();i++)if(a[i].b!=b[i].b||a[i].n!=b[i].n)return false;return true;}
 vector<int> marks(const vector<Run>&lo,const vector<Run>&hi){auto p=rhoL(lo);if(p.size()!=hi.size())return {-99};vector<int>ms;int zi=0;for(size_t i=0;i<p.size();i++){if(p[i].b!=hi[i].b)return {-98};if(inf(p[i].n)||inf(hi[i].n)){if(p[i].n!=hi[i].n)return {-97};}else if(p[i].n!=hi[i].n){if(!p[i].b&&hi[i].n==p[i].n-8)ms.push_back(zi);else return {-96};}if(!p[i].b&&!inf(p[i].n))zi++;}return ms;}
 string sigma(string w){string o;o.reserve(w.size()*3);for(char c:w)o+=c=='A'?"ABA":"BBA";return o;}
+string sigmaPow(string w,int d){while(d--)w=sigma(w);return w;}
+int episodeRank(size_t len){if(len<2||len%2)return -1;size_t x=len/2;int r=0;while(x>1){if(x%3)return -1;x/=3;r++;}return r;}
 int main(int argc,char**argv){int maxn=argc>1?atoi(argv[1]):15;string w="ABBA";for(int n=2;n<=maxn;n++){
- Z lo=checkpoint(n),hi=checkpoint(n+1);map<string,long long>dist;long long multi=0,bad=0,rightBad=0,transitionBad=0,guardBad=0;int maxmark=-1;
+ Z lo=checkpoint(n),hi=checkpoint(n+1);map<string,long long>dist;long long multi=0,bad=0,rightBad=0,transitionBad=0,guardBad=0,epBad=0;int maxmark=-1;long long epStart=-1;string epWord="";int epMax=-1;map<int,long long>epRanks;
  for(size_t k=0;k<=w.size();k++){
    auto ms=marks(lo.L,hi.L);if(!ms.empty()&&ms[0]<-90){bad++;}else{if(ms.size()>1)multi++;for(int m:ms)maxmark=max(maxmark,m);string key=ms.empty()?"none":"";for(int m:ms){if(!key.empty())key+=",";key+=to_string(m);}dist[key]++;}
    if(!same(rhoR(lo.R),hi.R))rightBad++;
@@ -58,10 +60,21 @@ int main(int argc,char**argv){int maxn=argc>1?atoi(argv[1]):15;string w="ABBA";f
      transitionBad++;
      if(transitionBad<5)cerr<<"transition mismatch n="<<n<<" k="<<k<<" c="<<c<<"\n";
    }
+   if(ms.empty() && !actualNext.empty()){
+     epStart=k;epWord=string(1,c);epMax=actualNext[0];
+   } else if(!ms.empty() && epStart>=0){
+     epWord.push_back(c);epMax=max(epMax,ms[0]);
+     if(actualNext.empty()){
+       int r=episodeRank(epWord.size());
+       if(r<0||epWord!=sigmaPow("BA",r)||epMax!=(r+1)/2)epBad++;
+       else epRanks[r]++;
+       epStart=-1;epWord.clear();epMax=-1;
+     }
+   }
  }
  if(!same(lo.L,checkpoint(n+1).L)||!same(lo.R,checkpoint(n+1).R)||!same(hi.L,checkpoint(n+2).L)||!same(hi.R,checkpoint(n+2).R)){cerr<<"checkpoint fail n="<<n<<"\n";return 3;}
- cout<<"n="<<n<<" boundaries="<<w.size()+1<<" rightBad="<<rightBad<<" relationBad="<<bad<<" multi="<<multi<<" transitionBad="<<transitionBad<<" guardBad="<<guardBad<<" maxmark="<<maxmark;for(auto [k,v]:dist)cout<<" "<<k<<"="<<v;cout<<"\n";
- if(rightBad||bad||multi||transitionBad||guardBad){cerr<<"relation violation at n="<<n<<"\n";return 4;}
+ cout<<"n="<<n<<" boundaries="<<w.size()+1<<" rightBad="<<rightBad<<" relationBad="<<bad<<" multi="<<multi<<" transitionBad="<<transitionBad<<" guardBad="<<guardBad<<" episodeBad="<<epBad<<" maxmark="<<maxmark;for(auto [k,v]:dist)cout<<" "<<k<<"="<<v;cout<<"\n";
+ if(rightBad||bad||multi||transitionBad||guardBad||epBad||epStart>=0){cerr<<"relation violation at n="<<n<<"\n";return 4;}
  if(n>=10&&n<=15){
    static const vector<map<string,long long>>expected={
     {{"none",26243},{"0",2}},
