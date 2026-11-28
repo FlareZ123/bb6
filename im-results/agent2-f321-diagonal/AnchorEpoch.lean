@@ -417,7 +417,6 @@ theorem terminal_last_anchor_high_growth_bound
   refine ⟨q,R,c,m,highs,hchain,hhf,hc,hlen,?_⟩
   rcases hc with rfl | rfl
   · have hb : D+3 ≤ 2^highs * 4 := hbound
-    have hp : 0 < 2^highs := Nat.two_pow_pos highs
     omega
   · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hbound
 
