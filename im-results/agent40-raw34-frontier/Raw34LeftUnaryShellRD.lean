@@ -91,9 +91,18 @@ theorem grow (n : Nat) :
   have h5' : run0 p (n+1)
       ⟨5,[true,true,false,true,true],rep [true] (n+1)⟩ =
       some ⟨5,[true]++rep [true] (n+1)++[true,false,true,true],[]⟩ := by
-    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h5
+    simpa only [List.cons_append,List.nil_append,List.append_assoc,List.append_nil] using h5
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3') h4) h5') h6
   have ht : 1+1+(n+2)+2+(n+1)+1=2*n+8 := by omega
+  have hshift : rep [true] (n+1)++[true,false,true,true] =
+      [true]++rep [true] (n+1)++[false,true,true] := by
+    calc
+      _ = (rep [true] (n+1)++[true])++[false,true,true] := by
+        simp only [List.append_assoc,List.cons_append,List.nil_append]
+      _ = ([true]++rep [true] (n+1))++[false,true,true] := by
+        rw [rep_snoc]
+      _ = _ := by simp only [List.append_assoc]
+  rw [hshift] at H
   simpa [word,rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc,ht] using H
 
 def family (k : Nat) : Z0 := word (2*k)
