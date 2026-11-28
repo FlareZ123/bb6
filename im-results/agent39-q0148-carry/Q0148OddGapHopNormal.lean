@@ -68,8 +68,7 @@ theorem u_marker_even_closed (n : Nat) :
   have hlast : aRun (2*n) ++ [.alternating,.alternating] =
       aRun (2*n+2) := by
     simpa [aRun] using (aRun_add (2*n) 2).symm
-  rw [hlast] at h
-  simpa [carryFold,carryStep,List.append_assoc] using h
+  simpa [carryFold,carryStep,List.append_assoc, ← hlast] using h
 
 /-- The zero-length even gap is different: U M emits two A tokens
     and resets carry immediately, with no intermediate marker. -/

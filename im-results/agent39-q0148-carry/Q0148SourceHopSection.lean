@@ -44,11 +44,8 @@ theorem gapChainOut_snoc (rs : List Nat) (z : Nat) :
       simp [gapChainOut,gapChain,aRun_snoc,List.append_assoc]
   | cons r rs ih =>
       simp only [List.cons_append,gapChainOut,gapChain]
-      have ha := aRun_two_snoc r
-      simpa [ih,ha,List.append_assoc] using
-        congrArg
-          (fun v : List LeftChunk =>
-             [.alternating,.alternating,.separatedMarker] ++ aRun r ++ v) ih
+      rw [List.append_assoc, ih]
+      simp only [← aRun_two_snoc r, List.append_assoc, List.cons_append, List.nil_append]
 
 /-- Uniform exact canonical chunk-splice for an arbitrary chain of
     old groups with lengths >=3: first return group has j+3 As,
@@ -80,10 +77,10 @@ theorem ordinary_hop_bits (n j : Nat) (rs : List Nat) (z : Nat)
         gapChainOut (rs ++ [z])) L
   rw [h]
   have hc := ordinary_hop_chunks j rs z
-  simpa only [List.append_assoc] using
+  simpa only [List.append_assoc, List.cons_append, List.nil_append] using
     congrArg
       (fun cs : List LeftChunk =>
-        inputBits (aRun (n+2) ++ [.separatedMarker] ++ cs) ++
+        inputBits (aRun (n+2) ++ (.separatedMarker :: cs)) ++
           [false] ++ L) hc
 
 /-- The first marked hop, with no previously crossed marker groups.
@@ -103,8 +100,16 @@ theorem first_hop_source (n j : Nat) (L R : List Bool) :
   have h := marked_hop_source n j [] ([false,false] ++ L) R
   have hb := absorb_u_two_blanks
     (aRun (n+2) ++ [.separatedMarker] ++ aRun j) L
-  simpa [carryFold,carryBits,aRun_snoc,
-    inputBits_append, List.append_assoc] using h
+  simp only [List.append_nil,carryFold,carryBits] at h
+  have hb' : inputBits (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ [.alternating]) =
+      inputBits (aRun (n+2) ++ [.separatedMarker] ++ aRun (j+1)) := by
+    simp only [List.append_assoc,aRun_snoc]
+  rw [hb'] at hb
+  simp only [carryBits] at hb
+  -- normalize association without unfolding inputBits
+  simp only [List.append_assoc] at h hb ⊢
+  rw [hb] at h
+  exact h
 
 /-- The completely general nonterminal E1 marker-hop source step:
     arbitrary old group sizes >=3, arbitrarily many old groups.
@@ -125,7 +130,9 @@ theorem ordinary_hop_source (n j : Nat) (rs : List Nat) (z : Nat)
   have h := gapChain_marked_hop_source n j (rs ++ [z])
       ([false,false] ++ L) R
   have hb := ordinary_hop_bits n j rs z L
-  simpa [List.append_assoc] using h
+  simp only [carryBits,List.append_assoc] at hb h ⊢
+  rw [hb] at h
+  exact h
 
 #print axioms aRun_snoc
 #print axioms aRun_two_snoc

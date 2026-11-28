@@ -50,9 +50,11 @@ theorem a3_marker_portal_word (xs : List Nat) (n : Nat) (R : List Bool) :
       [true,false,true,false] ++ rep [true,false] (2*n) ++
         [true,true,false] ++
         ([true,false] ++ outputBits (a3Third xs) ++ [false] ++ R) := by
-  simp [a3Third, normalizedBlocks_append, normalizedBlocks,
-    outputBits_append, output_aRun, carryRight, chunkBits,
-    List.append_assoc]
+  have hh : a3Third (xs ++ [n]) = a3Third xs ++ (.separatedMarker :: aRun (2*n)) := by
+    simp only [a3Third,normalizedBlocks_append,normalizedBlocks,List.append_nil,List.append_assoc]
+  rw [hh,outputBits_append]
+  simp only [outputBits,output_aRun,carryRight,chunkBits,List.append_assoc]
+  rfl
 
 /-- Original source return from an a=3 arbitrary odd-gap boundary
     to the first (leftmost) E1 marker, after three physical blank turns
@@ -97,9 +99,11 @@ theorem a1_marker_portal_word (xs : List Nat) (n : Nat) (R : List Bool) :
         [true,true,false] ++
         ([true,false] ++ outputBits (.separatedMarker ::
           normalizedBlocks xs) ++ R) := by
-  simp [a1First, normalizedBlocks_append, normalizedBlocks,
-    outputBits_append, output_aRun, carryRight, chunkBits,
-    List.append_assoc]
+  have hh : a1First xs n = (.separatedMarker :: normalizedBlocks xs) ++ (.separatedMarker :: aRun (2*n)) := by
+    simp only [a1First,normalizedBlocks_append,normalizedBlocks,List.append_nil,List.cons_append]
+  rw [hh,outputBits_append]
+  simp only [outputBits,output_aRun,carryRight,chunkBits,List.append_assoc]
+  rfl
 
 /-- Original a=1 source reaches the first E1 marker in a defined,
     strictly positive number of steps for every finite even-gap list.

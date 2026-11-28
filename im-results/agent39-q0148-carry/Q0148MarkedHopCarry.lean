@@ -57,7 +57,7 @@ theorem marker_phase (j : Nat) :
     [true,true] ++ rep [false,true] (j+2) =
       [true,true,false,true,false,true] ++ rep [false,true] j := he
     _ = [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
-          simpa only [List.append_assoc] using h
+          simpa only [List.append_assoc, List.cons_append, List.nil_append] using h
 
 /-- The source right-continuation head prefix is a canonical left
     chunk word A^(n+2) M A^j followed by a dangling one bit.
@@ -143,7 +143,7 @@ theorem marked_hop_bitword (n j : Nat) (tail : List LeftChunk)
     _ = [true,false] ++ inputBits
         (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ f.1) ++
           carryBits f.2 ++ L := by
-            simp [inputBits_append,input_aRun,chunkBits,
+            simp [inputBits_append,input_aRun,inputBits,chunkBits,
               List.append_assoc]
 
 /-- Original open-table source theorem: the exact markedHopN execution
@@ -166,7 +166,7 @@ theorem marked_hop_source (n j : Nat) (tail : List LeftChunk)
   dsimp only
   have h := markedHopN (aRun (j+2) ++ tail) n L R
   have hb := marked_hop_bitword n j tail L
-  rw [hb] at h
+  rw [outputRightChunks_rightSeq, hb] at h
   simpa only [List.append_assoc] using h
 
 #print axioms stagger01

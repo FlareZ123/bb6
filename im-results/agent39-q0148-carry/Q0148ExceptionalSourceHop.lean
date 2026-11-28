@@ -27,11 +27,9 @@ theorem gapChainOut_close_two (rs : List Nat) :
   induction rs with
   | nil => rfl
   | cons r rs ih =>
-      have h := congrArg
-        (fun v : List LeftChunk =>
-          [.alternating,.alternating,.separatedMarker] ++ aRun r ++ v) ih
-      simpa [gapChainOut,gapChain,aRun_two_snoc,
-        List.append_assoc] using h
+      simp only [gapChainOut,gapChain]
+      rw [List.append_assoc,ih]
+      simp only [← aRun_two_snoc r,List.append_assoc,List.cons_append,List.nil_append]
 
 /-- The exceptional gap-two terminal marked-hop word is exactly
     canonical: the last M has no following As (new far-left gap=1). -/
@@ -39,9 +37,8 @@ theorem final_two_hop_chunks (j : Nat) (rs : List Nat) :
     (aRun j ++ gapChainOut rs ++ [.alternating,.alternating]) ++
        [.separatedMarker] =
       aRun (j+2) ++ gapChain rs ++ [.separatedMarker] := by
-  rw [List.append_assoc,gapChainOut_close_two]
-  rw [← aRun_two_snoc j]
-  simp only [List.append_assoc]
+  rw [List.append_assoc (aRun j) (gapChainOut rs),gapChainOut_close_two]
+  simp only [← aRun_two_snoc j,List.append_assoc]
 
 /-- Exact terminal bitword: final T residue plus two fresh blank
     zeros contributes precisely one M and one residual zero. -/
@@ -59,10 +56,10 @@ theorem final_two_hop_bits (n j : Nat) (rs : List Nat)
         gapChainOut rs ++ [.alternating,.alternating]) L
   rw [h]
   have hc := final_two_hop_chunks j rs
-  simpa only [List.append_assoc] using
+  simpa only [List.append_assoc,List.cons_append,List.nil_append] using
     congrArg
       (fun cs : List LeftChunk =>
-        inputBits (aRun (n+2) ++ [.separatedMarker] ++ cs) ++
+        inputBits (aRun (n+2) ++ (.separatedMarker :: cs)) ++
         [false] ++ L) hc
 
 /-- An original qE source step with old far-left gap exactly TWO.
@@ -87,7 +84,10 @@ theorem final_two_hop_source (n j : Nat) (rs : List Nat)
       (gapChain rs ++ [.separatedMarker,.alternating])
       ([false,false] ++ L) R
   have hb := final_two_hop_bits n j rs L
-  simpa [gapChain_end_two,List.append_assoc] using h
+  simp only [gapChain_end_two,Prod.fst,Prod.snd] at h
+  simp only [List.append_assoc] at h hb ⊢
+  rw [hb] at h
+  exact h
 
 /-- Just before the gap-two exception, an ordinary source step with
     last old gap exactly THREE creates the required short M A tail. -/
@@ -104,7 +104,7 @@ theorem prepare_two_hop_source (n j : Nat) (rs : List Nat)
         [.separatedMarker,.alternating]) ++
       [false] ++ L,[false] ++ R⟩ := by
   have h := ordinary_hop_source n j rs 0 L R
-  simpa [gapChain,List.append_assoc] using h
+  simpa [gapChain,aRun,List.append_assoc] using h
 
 #print axioms gapChainOut_close_two
 #print axioms final_two_hop_chunks

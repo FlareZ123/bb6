@@ -64,7 +64,6 @@ theorem gapChain_u (rs : List Nat) :
   | cons r rs ih =>
       simp only [gapChain,gapChainOut,fold_append]
       rw [u_marker_any_posttwo,ih]
-      simp only [List.append_assoc]
 
 /-- First exceptional leftmost gap of length two: final M A has
     output A A and *T* residue, independently of earlier large gaps. -/
