@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Original-source consume two complete E0 branches of Raw36 D1=0RE.
+"""Original-source consume selected complete E0 branches of Raw36 D1=0RE.
 
 One common generator pass names every FAR/stack producer exactly once,
-avoiding identity collisions between E0=0LE's 13 candidates and E0=1LB's
-40 candidates, the latter including the NEW 'r',6,9,5,1318 proof.
+avoiding identity collisions between the E0=0LE, E0=1LB and optional
+E0=0LF candidate families. Every generated witness is rechecked by Lean.
 All producer modules are checked by Lean; no candidate result is trusted.
 """
 import argparse,base64,hashlib,json,lzma,os,subprocess,sys
