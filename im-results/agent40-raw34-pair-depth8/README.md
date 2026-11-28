@@ -138,10 +138,20 @@ semantics and the state-major physical choice order.  Starting from the
   state set reachable from A, so it is a candidate for the existing
   `Cert.closed 0 ss` source theorem.
 
-Consequently the candidate-level physical remainder is now exactly
-**56,900 = 40*625 + 1,276*25** tables.  The other 2,614,350 physical
-completions in the depth-six residual mass have finite source-certificate
-shapes.  This 56,900 figure remains intermediate until the corresponding
+Consequently the first deeper cut leaves **56,900 = 40*625 + 1,276*25**
+physical completions.  Exhausting the final holes gives a much smaller exact
+candidate frontier: all 23,040 ordinary/ordinary completions of the 40
+two-hole cylinders are closed-state nonhalters, and all 30,624 ordinary
+completions of the 1,276 one-hole cylinders are closed-state nonhalters.
+Three of the 1,276 HALT completions halt finitely.  Therefore the remaining
+candidate frontier is exactly **3,233 complete machines = 1,960 + 1,273**.
+A direct simulator run additionally found no halt among these 3,233 through
+one million ordinary moves; that simulation is exploratory evidence, not a
+proof.
+
+Thus 2,668,017 of the original 2,671,250 depth-six residual physical
+completions already have finite certificate shapes or finite halts at the
+candidate level.  This 56,900 figure remains intermediate until the corresponding
 source bank is kernel checked; `generate_full8_covers.mjs` separately
 source-generates complete row Covers for the large easy tranche, while
 `generate_pair_depth6_plan.mjs --root-shards` removes the monolithic
