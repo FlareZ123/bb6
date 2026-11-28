@@ -78,6 +78,11 @@ def run_direct(args):
     cycles={}
     late_fixed={}
     known_specs={}
+    if (d,v)==(17,18):
+        for i,t in enumerate([[8,6,11,4,1,13,17,15,18,23,4,0],[8,20,11,24,1,13,17,9,18,6,16,0],[8,9,11,24,1,13,17,19,18,4,2,0]]):
+            nm=f'v18m{i}';known[tuple(t)]=nm
+            mod=f'Box33D17V18M{i}'
+            known_specs[nm]=(mod,f'BB6.Agent13.{mod}','')
     if (d,v)==(17,22):
         hard=json.loads((HERE/'d17v22-hard.json').read_text())['machines']
         specs=[
