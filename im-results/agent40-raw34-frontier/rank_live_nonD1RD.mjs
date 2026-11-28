@@ -236,8 +236,13 @@ const fLongSource=process.argv.includes("--include-f-long")
   : [];
 if(fLongSource.length)assert.equal(fLongSource.length,4);
 if(!disjointCycleAudit)fLongSource.forEach(add);
+const eLongSource=process.argv.includes("--include-e-long")
+  ? parseSourceCycles(readFileSync(join(dir,"Raw34ELongSideCycles.lean"),"utf8"))
+  : [];
+if(eLongSource.length)assert.equal(eLongSource.length,4);
+if(!disjointCycleAudit)eLongSource.forEach(add);
 const countedCycles=disjointCycleAudit?0:cycleSource.length;
-const countedLong=disjointCycleAudit?0:fLongSource.length;
+const countedLong=disjointCycleAudit?0:fLongSource.length+eLongSource.length;
 const counterCount=counters.length+countedLong+raySource.length+countedCycles+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
@@ -483,12 +488,13 @@ if(withWindow7MaskBank){
 let cycleAudit=null;
 if(disjointCycleAudit){
  const groups={};
- const seen=[...cycleSource,...fLongSource];
- for(let i=0;i<fLongSource.length;i++){
-  for(let j=i+1;j<fLongSource.length;j++)
-   assert(!overlap(fLongSource[i],fLongSource[j]),"late four overlap");
+ const seen=[...cycleSource,...fLongSource,...eLongSource];
+ const late=[...fLongSource,...eLongSource];
+ for(let i=0;i<late.length;i++){
+  for(let j=i+1;j<late.length;j++)
+   assert(!overlap(late[i],late[j]),"late witnesses overlap");
   for(const q of cycleSource)
-   assert(!overlap(fLongSource[i],q),"late four overlap generated F bank");
+   assert(!overlap(late[i],q),"late witness overlaps generated F bank");
  }
  let newPhysical=0n,grossPhysical=0n;
  for(const p of seen){
@@ -498,8 +504,8 @@ if(disjointCycleAudit){
   const covered=coveredInsideCube(coverageRoot,p);
   assert(covered<=mass,"restriction exceeds cylinder mass");
   const fresh=mass-covered;
-  const isLong=fLongSource.includes(p);
-  const key=isLong?"late-four":"fixed-"+fixed;
+  const key=fLongSource.includes(p)?"late-F":
+    eLongSource.includes(p)?"late-E":"fixed-"+fixed;
   if(!groups[key])groups[key]={cylinders:0,gross:0n,alreadyCovered:0n,fresh:0n};
   groups[key].cylinders++;
   groups[key].gross+=mass;
@@ -565,6 +571,7 @@ console.log(JSON.stringify({
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
   fLongSideCyclePatterns:fLongSource.length,
+  eLongSideCyclePatterns:eLongSource.length,
   fDepth5CyclePatterns:fDepth5Source.length,
   eConjugateCyclePatterns:eCycleSource.length,
   eDepth5CyclePatterns:eDepth5Source.length,
