@@ -50,3 +50,17 @@ Local Lean 4.36.0-rc2 compilation against the exact current `SourceCounter.lean`
 ## Status and use
 
 This is an exact theorem about the published F321 source counter map, not an original-tape nonhalting proof, a Raw132 parent Cover, or a BB(6) upper bound. Its value is that arbitrary high/far epochs can now be compressed inside Lean without trusting the JavaScript bulk runner. The next high-value step is to build the maximal-exit selector and reset-to-reset invariant on top of these formulas, then connect that invariant through the already staged original-machine/high-level bridge.
+
+
+## Root phase and reset-family theorems
+
+`Phase6.lean` proves that every positive-time state reachable from the authentic seed belongs to
+`(a mod2,d mod6) ∈ {(0,1),(0,2),(1,5)}`. `Phase12.lean` refines this to a small mod-12 invariant and yields the exact reachable middle-even predecessor shape.
+
+`ResetHigh.lean` combines the root invariant with the arbitrary High theorem. A reachable middle-odd reset followed only by High steps can hit the terminal diagonal only at a run length `k≡4 (mod8)`, with terminal parameter `D+3=4*2^k`.
+
+`ResetEven.lean` proves the complementary middle-even result: a reachable middle-even reset followed only by High steps can hit the terminal diagonal only for `k mod16∈{7,11,15}`, with `D+3=5*2^k`. Thus the generic `k≡3 (mod4)` family loses its complete `3 mod16` subfamily.
+
+`Phase6Bridge.lean` transports the local reachability invariant into the repository's canonical `CounterReach 1 1` relation. GitHub Actions runs 46128503550 and 46128963897 both completed successfully against the repository dependency closure.
+
+A paper corollary of the two terminal formulas is that all sufficiently long middle-reset-to-High terminal candidates share `D≡4093 (mod12288)`; only the small parameters `61`, `637`, and `10237` precede that stable tail. The current uniform affine-ray generator does not close `4093 mod12288` because its inverse cone reaches a threshold case whose Far predecessor exists only for positive ray parameter. Splitting that boundary is the next concrete exact target.

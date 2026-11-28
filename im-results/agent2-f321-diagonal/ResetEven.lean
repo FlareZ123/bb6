@@ -53,6 +53,16 @@ theorem middleEven_high_terminal_length_mod4
   simp [Nat.pow_add, X, Y] at heq
   omega
 
+/-- Terminal parameter family for a middle-even reset followed only by highs. -/
+theorem middleEven_high_terminal_parameter
+    {k a A D : Nat}
+    (hh : HighRun k (4*a+6) 2 A D)
+    (ht : A = D + 1) :
+    D + 3 = 5 * 2^k := by
+  have hc := high_run_coordinates hh
+  unfold Y at hc
+  omega
+
 /-- Combining the generic mod-4 equation with the root-specific Phase12
     invariant leaves exactly three high-run length classes modulo 16. -/
 theorem middleEven_high_terminal_length_mod16_candidates
@@ -68,5 +78,6 @@ theorem middleEven_high_terminal_length_mod16_candidates
 
 #print axioms middleEven_high_terminal_not_mod16_three
 #print axioms middleEven_high_terminal_length_mod4
+#print axioms middleEven_high_terminal_parameter
 #print axioms middleEven_high_terminal_length_mod16_candidates
 end BB6.Agent2F321ResetEven
