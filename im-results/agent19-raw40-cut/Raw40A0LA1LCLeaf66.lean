@@ -71,7 +71,7 @@ theorem step_sound (m : Machine) (hm : compatible table m)
     have e : n+t+6 = n+4+(t+1)+1 := by omega
     rw [e] at H
     refine ⟨2*n+16,j,by omega,?_⟩
-    simpa only [fam,zero,leftWord,rightWord,List.append_assoc, show O 0 = [] by rfl, show W 3 = [false,false,false] by rfl, List.nil_append] using H
+    simpa only [fam,zero,leftWord,rightWord,List.append_assoc, show O 0 = [] by rfl, show W 3 = [false,false,false] by rfl, List.nil_append, List.cons_append] using H
   | split k b g c u v hb hg =>
     obtain ⟨n,rfl⟩ : ∃ n : Nat, b=n+4 := ⟨b-4,by omega⟩
     obtain ⟨d,rfl⟩ : ∃ d : Nat, g=5+d := ⟨g-5,by omega⟩
@@ -95,7 +95,8 @@ theorem step_sound (m : Machine) (hm : compatible table m)
         fam ⟨k,n+4,u,[]⟩ h := by
       unfold fam
       apply embed_congr (liftZ h (A (O k++leftWord u) (O (n+4)++[false,false,false,false,false]++[]))) (liftZ h (A (O k++leftWord u) (O (n+4)++rightWord []))) rfl rfl (fun _ => rfl)
-      exact append_getD _ _ _ (padEq_sound [false,false,false,false,false] [] (by decide))
+      simpa only [liftZ,A,rightWord,List.append_nil] using
+        (append_getD (O (n+4)) [false,false,false,false,false] [] (padEq_sound [false,false,false,false,false] [] (by decide)))
     rw [he] at H
     have e : n+4-3=n+1 := by omega
     refine ⟨2*n+k+31,j,by omega,?_⟩
