@@ -9,9 +9,9 @@ not a global BB(6) reduction.
 
 **Best currently established local proof status:** eight of the twelve
 nontrivial first-D1 children have complete, locally Lean-4.36.0-rc2-checked
-original-source certificate trees. The other four have complete *candidate*
-proof trees, but their exact final joins and parent composition have not
-passed an original-source CI audit. Thus the candidate parent bound 158
+original-source certificate trees. Of the other four candidate proof trees, **D1=1RE (index19) is now
+original-source Lean accepted** at weighted bound158. Indices16–18 and the
+final parent composition have not yet passed a complete source audit. Thus the candidate parent bound 158
 is **conditional**, never a published universal bound.
 
 ## Exact 20-way split and current certificates
@@ -34,7 +34,7 @@ The other twelve indices, with their proposed weighted bounds, are:
 | 16 | 0LE | 81 | complete candidate, join outstanding |
 | 17 | 0RE | 150 | complete candidate, join outstanding |
 | 18 | 1LE | 141 | complete candidate, join outstanding |
-| 19 | 1RE | 158 | complete candidate, join outstanding |
+| 19 | 1RE | 158 | **original-source Lean kernel accepted**; [matrix job 19, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
 
 The new portable
 [`Raw11Extra28AllChildren.lean`](Raw11Extra28AllChildren.lean)
