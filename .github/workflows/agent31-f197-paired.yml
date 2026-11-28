@@ -18,11 +18,13 @@ on:
           - root-scout
           - root-generate
           - blank-root
+          - blank-root-parallel
           - cover-bridge
         default: paired
 
 jobs:
   kernel-check:
+    if: ${{ inputs.target != 'blank-root-parallel' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -193,3 +195,79 @@ jobs:
           echo "Root parts:"
           find "$b" -maxdepth 1 -name 'RootPart*.lean' | wc -l
           test -s "$b/RootTheorem.lean"
+
+  # RootPartN modules are independent, so this replay does not waste 120
+  # serial runner-minutes re-proving each of the 208 chain sections.
+  f197-par-base:
+    if: ${{ inputs.target == 'blank-root-parallel' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and kernel-certify shared self/root rule banks
+        run: bash im-results/agent2-f197-sweep/parallel_root.sh base
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f197-par-base
+          path: ${{ runner.temp }}/f197-par-base.tar.gz
+          retention-days: 7
+
+  f197-par-parts:
+    if: ${{ inputs.target == 'blank-root-parallel' }}
+    needs: [f197-par-base]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0, 1, 2, 3]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: f197-par-base
+          path: ${{ runner.temp }}/f197-par-download
+      - name: Certify independent root path shard
+        run: bash im-results/agent2-f197-sweep/parallel_root.sh shard ${{ matrix.shard }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f197-par-part-${{ matrix.shard }}
+          path: ${{ runner.temp }}/f197-par-part-${{ matrix.shard }}.tar.gz
+          retention-days: 7
+
+  f197-par-complete:
+    if: ${{ inputs.target == 'blank-root-parallel' }}
+    needs: [f197-par-parts]
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: f197-par-*
+          path: ${{ runner.temp }}/f197-par-download
+          merge-multiple: true
+      - name: Certify full blank-root theorem and original-source weighted Cover
+        run: bash im-results/agent2-f197-sweep/parallel_root.sh final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f197-par-complete
+          path: |
+            ${{ runner.temp }}/f197-par-complete.tar.gz
+            ${{ runner.temp }}/f197-root-axioms.log
+          retention-days: 7
