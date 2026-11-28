@@ -48,7 +48,21 @@ def main() -> int:
 
     for shard in range(args.expected_shards):
         directory = args.shards_root / f"raw43-b0le-shard-{shard}"
+        expected_shard_roots = {
+            path.stem for pos, path in enumerate(batch_sources)
+            if pos % args.expected_shards == shard
+        }
         manifest_path = directory / "manifest.json"
+        if not expected_shard_roots:
+            empty_marker = directory / "EMPTY"
+            if not empty_marker.is_file():
+                raise FileNotFoundError(
+                    f"missing explicit empty-shard marker for shard {shard}: {empty_marker}"
+                )
+            if manifest_path.exists():
+                raise ValueError(f"unexpected manifest for empty shard {shard}")
+            print(f"Accepted explicit empty shard {shard}/{args.expected_shards}", flush=True)
+            continue
         if not manifest_path.is_file():
             raise FileNotFoundError(f"missing shard manifest: {manifest_path}")
         manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -82,6 +96,12 @@ def main() -> int:
                 raise ValueError(f"Lean compiler mismatch in shard {shard}")
 
         shard_roots = {entry["module"] for entry in manifest.get("roots", [])}
+        if shard_roots != expected_shard_roots:
+            missing = sorted(expected_shard_roots - shard_roots)
+            extra = sorted(shard_roots - expected_shard_roots)
+            raise ValueError(
+                f"shard {shard} root assignment mismatch: missing={missing}, extra={extra}"
+            )
         unknown_roots = shard_roots - expected_batches
         if unknown_roots:
             raise ValueError(f"shard {shard} has non-BiDFA roots: {sorted(unknown_roots)}")
