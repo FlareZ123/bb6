@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [bundle, raw11-extra28]
+        options: [bundle, raw11-extra28, raw11-eight]
         default: bundle
 permissions:
   contents: read
@@ -144,6 +144,121 @@ jobs:
         if: always()
         with:
           name: agent44-raw11-extra28-child-${{ matrix.sibling }}
+          path: /tmp/raw11-output
+          if-no-files-found: ignore
+          retention-days: 30
+
+  raw11-eight:
+    if: inputs.mode == 'raw11-eight'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        sibling: [7, 8, 9, 10, 12, 13, 14, 15]
+    env:
+      SIBLING: ${{ matrix.sibling }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original-source Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Recover accepted original-source closure and child certificate generators
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw11 /tmp/raw11-deps /tmp/raw11-output
+          curl --retry 2 --retry-delay 5 -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/15144626755/zip" \
+            -o /tmp/raw11-deps.zip
+          unzip -q /tmp/raw11-deps.zip -d /tmp/raw11-deps
+          for a in source ld-source siblings-source; do
+            tar -xzf "im-results/agent44-raw11-extra28/$a.tar.gz" -C /tmp/raw11
+          done
+          test "$(find /tmp/raw11-deps -name '*.olean' | wc -l)" -gt 0
+          echo "SOURCE_SHA=$(git rev-parse HEAD)"
+          echo "SIBLING=$SIBLING"
+
+      - name: Generate exact already-discovered child source
+        run: |
+          set -euo pipefail
+          cd /tmp/raw11
+          export BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs"
+          if [ "$SIBLING" = 8 ]; then
+            python generate.py
+            python split.py
+            test -f Raw11Extra28D1LCJoin.lean
+          elif [ "$SIBLING" = 12 ]; then
+            node generate.cjs
+            test -f Raw11Extra28LDJoin.lean
+          else
+            python prepare-siblings.py
+            bash generate-siblings.sh "$SIBLING"
+            test -f "Raw11Extra28M${SIBLING}Join.lean"
+          fi
+
+      - name: Compile complete source-dependent child Cover
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          export LEAN_PATH="/tmp/raw11:$(find /tmp/raw11-deps -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
+          cd /tmp/raw11
+          if [ "$SIBLING" = 8 ]; then
+            pre=Raw11Extra28D1LC
+            lean -o Raw11Counter28.olean Raw11Counter28.lean
+            lean -o "$pre"Base.olean "$pre"Base.lean
+            for f in $(ls "$pre"Part*.lean | sort -V); do
+              lean -o "${f%.lean}.olean" "$f" 2>&1 | tee "/tmp/raw11-output/${f%.lean}.log"
+            done
+            lean -o "$pre"Join.olean "$pre"Join.lean 2>&1 | tee /tmp/raw11-output/join.log
+          elif [ "$SIBLING" = 12 ]; then
+            pre=Raw11Extra28LD
+            lean -o Raw11Counter28LD.olean Raw11Counter28LD.lean
+            lean -o "$pre"Base.olean "$pre"Base.lean
+            for f in $(ls "$pre"Part*.lean | sort -V); do
+              lean -o "${f%.lean}.olean" "$f" 2>&1 | tee "/tmp/raw11-output/${f%.lean}.log"
+            done
+            lean -o "$pre"Join.olean "$pre"Join.lean 2>&1 | tee /tmp/raw11-output/join.log
+          else
+            lean -o Raw11Counter28RE.olean Raw11Counter28RE.lean
+            bash compile-siblings.sh "$SIBLING" 2>&1 | tee /tmp/raw11-output/join.log
+          fi
+          if grep -ER 'sorryAx|native_decide' /tmp/raw11-output/*.log 2>/dev/null; then
+            echo 'Forbidden proof axiom' >&2
+            exit 1
+          fi
+          grep -E "'BB6\.[^']+\.(cover|safe)' depends on axioms:" /tmp/raw11-output/join.log
+
+      - name: Preserve source, proof objects and exact diagnostic
+        if: always()
+        run: |
+          set +e
+          mkdir -p /tmp/raw11-output/compiled
+          if [ -d /tmp/raw11 ]; then
+            cd /tmp/raw11
+            cp ./*.olean /tmp/raw11-output/compiled/ 2>/dev/null
+            if [ "$SIBLING" = 8 ]; then
+              tar -czf /tmp/raw11-output/child8-source.tar.gz Raw11Extra28D1LC*.lean Raw11Counter28.lean
+            elif [ "$SIBLING" = 12 ]; then
+              tar -czf /tmp/raw11-output/child12-source.tar.gz Raw11Extra28LD*.lean Raw11Counter28LD.lean
+            else
+              tar -czf "/tmp/raw11-output/child${SIBLING}-source.tar.gz" Raw11Extra28M"$SIBLING"*.lean
+            fi
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent44-raw11-extra28-confirmed-${{ matrix.sibling }}
           path: /tmp/raw11-output
           if-no-files-found: ignore
           retention-days: 30
