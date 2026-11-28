@@ -55,7 +55,7 @@ jobs:
             test -f "$PROOF_ROOT"
           elif [[ "$PREPARATION_PROFILE" == "raw10-i-stream" ]]; then
             case "$PROOF_ROOT" in
-              im-results/agent13-raw10-box33/Box33D17V12IEntry.lean|im-results/agent13-raw10-box33/Box33D17V12IAll.lean|im-results/agent13-raw10-box33/Box33D17V12IRegularToggle.lean) ;;
+              im-results/agent13-raw10-box33/Box33D17V12IEntry.lean|im-results/agent13-raw10-box33/Box33D17V12IAll.lean|im-results/agent13-raw10-box33/Box33D17V12IRegularToggle.lean|im-results/agent13-raw10-box33/Box33D17V12ICarryScan.lean) ;;
               *) echo "Unsupported Raw10 I root: $PROOF_ROOT"; exit 1 ;;
             esac
             test -f "$PROOF_ROOT"
