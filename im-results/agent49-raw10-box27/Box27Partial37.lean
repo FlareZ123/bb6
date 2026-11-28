@@ -22,7 +22,7 @@ The 187 original-code pairs represent 187 * 25^6 = 45,654,296,875
 complete Turing tables. This is a source-local bound, not BB(6).
 -/
 namespace BB6.Agent49.Box27Partial37
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 open BB6.Agent49
 

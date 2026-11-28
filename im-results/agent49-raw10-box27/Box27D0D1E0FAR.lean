@@ -14,7 +14,7 @@ a concrete two-sided stack invariant checked by Lean's kernel.
 No overlap with the broader D0 fast, D0/D1 FAR, D0/E0 FAR, D17 parent.
 -/
 namespace BB6.Agent49.Box27D0D1E0FAR
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 def table (d0 d1 e0 : Fin 25) : PartialMachine := fun s => match s with

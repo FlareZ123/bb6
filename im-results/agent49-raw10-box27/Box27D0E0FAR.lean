@@ -6,7 +6,7 @@ set_option maxHeartbeats 0
 /-! Four genuine Box27 D0/E0 cylinders, with D1 entirely unrestricted.
     They lie outside the previously selected 160 D0/D1 pairs. -/
 namespace BB6.Agent49.Box27D0E0FAR
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 def table (d0 e0 : Fin 25) : PartialMachine := fun s => match s with

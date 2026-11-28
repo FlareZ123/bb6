@@ -9,7 +9,7 @@ set_option maxHeartbeats 0
     and D0D1/D0E0/triple cuts by D0 code.
     All finite-stack relations are explicitly Lean-checked. -/
 namespace BB6.Agent49.Box27D0B1FAR
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 def table (d0 v : Fin 25) : PartialMachine := fun s => match s with

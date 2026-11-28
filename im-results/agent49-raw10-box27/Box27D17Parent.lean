@@ -8,7 +8,7 @@ import Box27EasyE0
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent49.Box27D17Parent
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 /-- All 25 values of E0, rather than one selected five-hole slice, are covered.

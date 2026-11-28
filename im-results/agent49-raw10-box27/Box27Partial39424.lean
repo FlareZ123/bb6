@@ -20,7 +20,7 @@ The E0=24,D0=14,D1=17 witness attains 255, proving sharpness.
 This is NOT a global six-state Busy Beaver bound.
 -/
 namespace BB6.Agent49.Box27Partial39424
-open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 open BB6.Agent49
 

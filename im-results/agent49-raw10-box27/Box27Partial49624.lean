@@ -20,7 +20,7 @@ The bound is attained by the exact E0=24 source witness.
 This is a source-relative cut, not the global BB(6) maximum.
 -/
 namespace BB6.Agent49.Box27Partial49624
-open BB6Coverage BB6Coverage.Agent13BlankDelay
+open BB6Coverage BB6.Agent13BlankDelay
 open BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 open BB6.Agent49
