@@ -68,7 +68,7 @@ The compact bank `direct-01-partial.json.xz.b64` now supplies replayable two-sid
 - `1RB1LF_1RC1LE_0RD1RB_0LD0LB_0LA0RE_1LB---`
 - `1RB1RE_1RC1LE_0RD0RB_0LD0LB_1RA0LF_---1LD`
 
-This is an intermediate descendant closure, not yet a Cover of the direct D1=0LB parent.
+The 313 emitted `NeverHalts` theorems are source-accepted by [run 46123293966](https://github.com/FlareZ123/bb6/actions/runs/46123293966), artifact 15254827367, SHA-256 `bceede8d409935cd00b17e176ef47672a1bd53397cbe38f20532e97838aca92f`. This is an intermediate descendant closure, not yet a Cover of the direct D1=0LB parent; exactly the seven literals above remain.
 
 ## Remaining research
 
