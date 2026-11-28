@@ -83,7 +83,7 @@ jobs:
           cd /tmp/raw11
           export BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs"
           python prepare-siblings.py
-          node make-periodic.cjs
+          if [ "$SIBLING" = 17 ]; then node make-periodic.cjs; fi
           if [ "$SIBLING" = 16 ]; then
             bash generate-siblings.sh "$SIBLING"
             test -f "Raw11Extra28M16Join.lean"
@@ -136,6 +136,8 @@ jobs:
               mkdir -p /tmp/raw11-output/leaf-logs
               cp -a logs/. /tmp/raw11-output/leaf-logs/
             fi
+            mkdir -p /tmp/raw11-output/compiled
+            cp -a ./*.olean /tmp/raw11-output/compiled/ 2>/dev/null
           fi
 
       - uses: actions/upload-artifact@v4
