@@ -168,7 +168,9 @@ def batch(out,names,split_root13=False):
         if n.startswith('ZLFBlock'):
             flush();groups[n]=n;result.append(n);continue
         deps=set(re.findall(r'^import (\w+)$',s,re.M));s=re.sub(r'^import \w+\n','',s,flags=re.M)
-        if len(pending)>=12 or weight+len(s)>40000:flush()
+        max_pending = 4 if split_root13 else 12
+        max_weight = 12000 if split_root13 else 40000
+        if len(pending)>=max_pending or weight+len(s)>max_weight:flush()
         pending.append((n,s,deps));weight+=len(s)
         if re.fullmatch(r'ZLFRoot\d\d',n) or (split_root13 and re.fullmatch(r'ZLFRoot13_\d+',n)):flush()
     flush()
