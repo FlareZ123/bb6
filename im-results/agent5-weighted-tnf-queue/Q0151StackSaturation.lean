@@ -19,6 +19,7 @@ inductive Action (C S R : Type) where
   | push (next : C) (saved : S)
   | pop (request : R)
   | bad
+  deriving DecidableEq, Repr
 
 def SafeAction {C S R : Type} (Good : C → Prop)
     (Saved : S → Prop) (resume : R → S → C) : Action C S R → Prop
