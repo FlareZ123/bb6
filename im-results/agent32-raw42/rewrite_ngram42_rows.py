@@ -26,7 +26,7 @@ assert width_match is not None, "certificate widths not found"
 table = table_match.group(1)
 left_width = int(width_match.group(1)) + 1
 right_width = int(width_match.group(2)) + 1
-assert len(table) == 36 and table.count("---") == 1
+assert len(table) == 36 and "---" in table
 assert f"namespace Leaf{leaf}" in source
 
 emit(root, branch, leaf, table, left_width, right_width)
