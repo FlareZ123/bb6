@@ -397,6 +397,7 @@ jobs:
             im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve50.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve49.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve48.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified18Finite.lean \
             --workdir "$work/build" \
             --jobs 4 \
             --manifest "$work/manifest.json" \
@@ -445,6 +446,9 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve49.raw139_p0_cover_from_49' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve48.normalizedAfterTwelvePlusSeven_count' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve48.raw139_p0_cover_from_48' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified18Finite.normalizedAfterSourceAcceptedEighteen_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified18Finite.normalizedAfterProspectiveNineteen_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified18Finite.remainingTables_cover_from_49_certified' depends on axioms: [propext," "$work/log"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
             --workdir "$work/prospective-build" \
@@ -479,6 +483,7 @@ jobs:
             /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve50.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve49.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve48.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedCertified18Finite.olean
             /tmp/agent14-e0-counts/prospective-log
             /tmp/agent14-e0-counts/prospective-manifest.json
             /tmp/agent14-e0-counts/prospective-build/Raw139NormalizedE0CutsProspective.olean

@@ -1,5 +1,13 @@
 # Raw139 normalized p0 decomposition and accepted E0 parents
 
+## 28 November 2026: certified 18-parent / 49-row frontier; ZeroLF would make 19 / 48
+
+The normalized Raw139 complement has now been reconciled against **eighteen whole-parent cylinders with independent original-source acceptance**.  The eleven previously certified E0 parents are joined by C1=1LC (bound 598, run 45581126485), F1=0LD (124, run 45612965271), E0=1LF (90,794, run 46093526398), C1=0LA (266, run 45596109440), C1=0LC (321, same run), E0=1LA (881,057, run 45936484460), and E0=0LC (80,377, run 45968078984).  The pending E0=0LF/ZeroLF parent is intentionally **not** counted among those eighteen.
+
+[Raw139NormalizedCertified18Finite.lean](Raw139NormalizedCertified18Finite.lean) defines the eighteen exact physical parent tables as one list, proves each occurs exactly once in the authentic 67-row normalized residual family, and proves that their exact complement has **49 rows**.  Adding the separate prospective ZeroLF row gives nineteen parents and an exact **48-row** complement.  Its generic reinsertion theorems preserve every Cover hypothesis; the 48-row statement is explicitly prospective until ZeroLF source acceptance.
+
+[Raw139NormalizedCertified18Champion.lean](Raw139NormalizedCertified18Champion.lean) composes those exact complements through the existing normalized Raw139 spine adapter: at the champion cutoff the 43 sibling Covers, both continuation bridges, and terminal p7 certificate disappear from the exposed local interface.  The source-certified form is therefore eighteen parent Covers plus 49 residual-row Covers; the ZeroLF-prospective form is nineteen plus 48.  This remains a local Raw139 conditional Cover interface, not a global Canonical40 elimination or a BB(6) upper bound.
+
 ## 27 November 2026: Ten independently certified E0 parents — source-accepted 57/56 reduction
 
 Three additional *previously source-accepted* exact E0 six-hole parents are E0=1RA (code 3, Agent48 bound 529,714, [run 45955243872](https://github.com/FlareZ123/bb6/actions/runs/45955243872)), E0=1LB (code 6, Agent3 bound 187,672,026, [run 45969459350](https://github.com/FlareZ123/bb6/actions/runs/45969459350)), and E0=1LD (code 14, Agent48 bound 29,607,414, [run 46026798568](https://github.com/FlareZ123/bb6/actions/runs/46026798568)). Every bound is below the existing source-proved champion floor `2^63` (`BB6.Agent38ChampionThreshold.champion_score_ge_pow63`). These are distinct from the original six normalized E0 accepted parent rows and the newly integrated E0=1RF row.
