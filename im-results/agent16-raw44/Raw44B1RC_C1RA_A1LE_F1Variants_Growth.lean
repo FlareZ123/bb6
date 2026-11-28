@@ -38,10 +38,10 @@ def Z (n : Nat) : List Bool := rep [true,true,false,true] n
 
 private theorem rep_add (P : List Bool) (n m : Nat) :
     rep P (n+m) = rep P n ++ rep P m := by
-  induction m with
-  | zero => simp only [Nat.add_zero,rep,List.append_nil]
-  | succ m ih =>
-    rw [show n+(m+1)=(n+m)+1 by omega,rep,ih,rep,List.append_assoc]
+  induction n with
+  | zero => simp only [Nat.zero_add,rep,List.nil_append]
+  | succ n ih =>
+    simp only [Nat.succ_add,rep,ih,List.append_assoc]
 
 private theorem rep2 (n : Nat) :
     rep [true,true] n = ones (2*n) := by
