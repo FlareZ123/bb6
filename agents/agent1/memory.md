@@ -759,3 +759,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - Exact repair run **46172480971** succeeded for 0LE/g3p3: `SUCCESS: compiled 180 project modules from 45 root(s)`; artifact **15274758931**, SHA-256 **944ca53ce0ae83cce5a68406752c2a196bf32a6d811e2a2b5f23e8aa1c0a403b**. Workflow's no-`sorryAx`/no-`native_decide` gate passed; only standard Lean axioms were logged.
 - All three 0LE g3p1/g3p2/g3p3 compact-part repairs are now successful. README updated in commit **ea25a1d00312662dcec64c8f9b7dadb5252df3f9**. The remaining 0LE failed parts still needing replacement are g4p3, g5p1, g5p3; earlier g0p2/g1p2/g2p0/g2p2 repairs already succeeded. Wait for remaining artifacts and source siblings before 0LE composition.
+
+
+## 2026-11-28T18:12:01.861Z checkpoint — 1LE g6p2 runner recovery
+
+- 1LE source run **46157367536** developed a sixth failed partition, **g6p2**. Its job log shows successful compilation of many modules and then exit143 / runner shutdown during `Raw421LERun1594`, not a Lean theorem error. Exact-part compact recovery dispatched as **46174512216** (queued).
+- 1LE's other failed partitions are already covered by existing repairs or active runs: g0p1 **46159201564**, g1p0 **46162745345**, g0p3 **46162748878**, g4p0 **46172225874**, g1p2 **46172484764**. The 11-slot composer is sufficient. README update commit **fa91f9e75a4302f28e553a24968f0903842dbdff**.
