@@ -16,6 +16,7 @@ on:
           - self-embedding
           - original-cylinder
           - post-basin
+          - post-basin-quick
           - computer-certificate
           - root-scout
           - root-generate
@@ -29,7 +30,7 @@ on:
 
 jobs:
   kernel-check:
-    if: ${{ inputs.target != 'blank-root-parallel' }}
+    if: ${{ inputs.target != 'blank-root-parallel' && inputs.target != 'post-basin-quick' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -304,4 +305,50 @@ jobs:
           path: |
             ${{ runner.temp }}/f197-par-complete.tar.gz
             ${{ runner.temp }}/f197-root-axioms.log
+          retention-days: 7
+
+  # Reuse the already kernel-compiled source proof cache from the parallel
+  # blank-root CI, avoiding a redundant 17-minute source rebuild.
+  f197-post-basin-quick:
+    if: ${{ inputs.target == 'post-basin-quick' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: f197-par-base
+          run-id: 46100750502
+          github-token: ${{ github.token }}
+          path: ${{ runner.temp }}/f197-par-download
+      - name: Certify F197 giant reservoir basin and all original completions
+        shell: bash
+        run: |
+          set -euo pipefail
+          d="$RUNNER_TEMP/f197-post-basin"
+          mkdir -p "$d"
+          tar -xzf "$RUNNER_TEMP/f197-par-download/f197-par-base.tar.gz" -C "$d"
+          cp im-results/agent2-f197-sweep/{PostBasin,GenericBasin,GenericBasinCover}.lean "$d/"
+          cp im-results/agent8-coverage-contract/Frontier.lean "$d/"
+          cp im-results/agent31-f197-macro/CoverBridge.lean "$d/"
+          cd "$d"
+          export LEAN_PATH=.
+          : > "$RUNNER_TEMP/f197-post-basin-axioms.log"
+          for m in PostBasin GenericBasin Frontier CoverBridge GenericBasinCover; do
+            lean -j 1 -o "$m.olean" "$m.lean" | tee -a "$RUNNER_TEMP/f197-post-basin-axioms.log"
+          done
+          ! grep -q sorryAx "$RUNNER_TEMP/f197-post-basin-axioms.log"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: f197-post-basin-quick
+          path: ${{ runner.temp }}/f197-post-basin-axioms.log
           retention-days: 7
