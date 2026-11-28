@@ -43,6 +43,52 @@ def LocalOK (p : PartialMachine)
         successor5 P mv l2 l1 r1 r2 true = true
     | _ => False
 
+/-- Computationally finite local closure checker: its output is
+a *Bool*, so a universal finite table assertion has constructive
+decidability even when the partial machine's instruction is symbolic. -/
+def localStepBoolean (p : PartialMachine)
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
+    (q : Fin 6) (l2 l1 c r1 r2 : Bool) : Bool :=
+  if P q l2 l1 c r1 r2 then
+    match p (q,c) with
+    | some (some mv) =>
+        successor5 P mv l2 l1 r1 r2 false &&
+        successor5 P mv l2 l1 r1 r2 true
+    | _ => false
+  else true
+
+/-- A generic soundness bridge from a computational Boolean oracle
+to the original (noncomputational) mathematical LocalOK proposition. -/
+theorem localOK_of_check (p : PartialMachine)
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
+    (h : ∀ q l2 l1 c r1 r2,
+      localStepBoolean p P q l2 l1 c r1 r2 = true) :
+    LocalOK p P := by
+  intro q l2 l1 c r1 r2 hsupport
+  have hs := h q l2 l1 c r1 r2
+  have hc :
+      (match p (q,c) with
+       | some (some mv) =>
+         successor5 P mv l2 l1 r1 r2 false &&
+         successor5 P mv l2 l1 r1 r2 true
+       | _ => false) = true := by
+    simpa [localStepBoolean, hsupport] using hs
+  cases hrow : p (q,c) with
+  | none => simp [hrow] at hc
+  | some opt =>
+    cases opt with
+    | none => simp [hrow] at hc
+    | some mv =>
+      have hb :
+          (successor5 P mv l2 l1 r1 r2 false &&
+           successor5 P mv l2 l1 r1 r2 true) = true := by
+        simpa [hrow] using hc
+      have hpair :
+          successor5 P mv l2 l1 r1 r2 false = true ∧
+          successor5 P mv l2 l1 r1 r2 true = true :=
+        Bool.and_eq_true.mp hb
+      simpa [hrow] using hpair
+
 theorem localOK_step (p : PartialMachine)
     (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
     (h : LocalOK p P) :
