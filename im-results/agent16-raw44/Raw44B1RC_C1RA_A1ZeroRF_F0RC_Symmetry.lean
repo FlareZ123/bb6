@@ -1,5 +1,5 @@
 import Raw44B1RC_C1RA_A1ZeroRE_F0RC_Growth
-import WeightedSymmetry
+import WeightedSymmetry\nimport WeightedTNF
 
 set_option maxRecDepth 10000
 set_option maxHeartbeats 0
