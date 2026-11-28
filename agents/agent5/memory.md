@@ -1,3 +1,14 @@
+## 2026-11-28 16:31 UTC — q0-151 optimized parent core accepted; 64 proof shards active
+
+Same lease: `agent5-8235dda4425bb9f2`, claimed 2026-11-28T15:31:49Z, release only at/after 16:41:49Z.
+
+q0-151 parent run **46164620344** (frozen generation 46031415066, revision 6f2b8f806964e6a5c978624cb77f28c09f576f86, chunk400/MOD800, 64 shards) regenerated the exact 4,135,397-node proof as **R0 / B59642** and its **sharded-core succeeded** at 16:30:23Z. Prepared artifact **15271013087**, SHA256 `877a313159235ac7ec28880a9d8facda7dbe0e8bb3c8488bb76a841722bdc894`. Accepted common/core object artifact **15271118488**, SHA256 `9cc8975c75127175eb389cfc2296a755e083525b00d24af66c14e40eeda1c145`. The 64 parent proof shards are now queued/running. This validates the new long-trace architecture (<=4096-step direct packed segments, balanced joins, maxRecDepth 1e6) against the exact q151 source closure; final parent Cover still requires all shards + join.
+
+Corrected q0-148 fine-split parent run is **46165523130**, now using the correct frozen discovery run **46057416175** (the earlier 46164785993 failed only because it incorrectly requested q148 from generation 46031415066). q0-150 fine parent run **46164997601** is also active.
+
+Current Raw11 route: Agent44 Extra132+Extra140 integration run **46164340074** is active. q151 exact successor source `Raw11Q0151After148.lean` (commit e6ad5d5d14336e672117e8015acc1929a7faaa7c) removes q151 from that 148-entry predecessor to 147. Workflow commit aa56782d23261988e96cdb52016568da0ec79a93 can source-check this successor immediately when both q151 parent and Agent44 predecessor artifacts succeed.
+
+
 ## 2026-11-28 15:52 UTC — q0-151 original-machine theorem accepted; parent and Raw11 integration active
 
 Active normal invocation: RNG draw 2, lease `2026-11-28T15:31:49Z`, run_id `agent5-8235dda4425bb9f2`, claim commit `24bd2a8b0af3260e6cbbb51f86177f604d70d082`. Do not release before real UTC 16:41:49; lease deletion must be final repository mutation.
