@@ -60,7 +60,8 @@ const counters=[
  "1RB---_1RC---_0RD0LC_1LC1RF_------_1RD---"
 ].map(parseTable);
 counters.forEach(add);
-const withDepth4=process.argv.includes("--include-f-depth4");
+const withECycles=process.argv.includes("--include-e-cycles");
+const withDepth4=process.argv.includes("--include-f-depth4")||withECycles;
 const withCycles=process.argv.includes("--include-f-cycles")||withDepth4;
 const withEOnly=process.argv.includes("--include-e-ray")||withCycles;
 const withLeft=process.argv.includes("--include-f-left")||withCycles;
@@ -69,6 +70,8 @@ const fDirIndex=process.argv.indexOf("--f-depth3-dir");
 const fDepth3Dir=fDirIndex<0?"/tmp/a40-raw34-f-cycleunion":process.argv[fDirIndex+1];
 const f4DirIndex=process.argv.indexOf("--f-depth4-dir");
 const fDepth4Dir=f4DirIndex<0?"/tmp/a40-raw34-f-depth4union":process.argv[f4DirIndex+1];
+const eDirIndex=process.argv.indexOf("--e-cycles-dir");
+const eCyclesDir=eDirIndex<0?"/tmp/a40-raw34-eunion":process.argv[eDirIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -114,7 +117,21 @@ if(withCycles){
  }
  cycleSource.forEach(add);
 }
-const counterCount=counters.length+raySource.length+cycleSource.length;
+let eCycleSource=[];
+if(withECycles){
+ eCycleSource.push(...parseSourceCycles(readFileSync(join(eCyclesDir,"Raw34EDepth2Cycles.lean"),"utf8")));
+ for(let i=0;i<12;i++){
+   const name="Raw34EDepth3SideShard"+String(i).padStart(3,"0")+".lean";
+   eCycleSource.push(...parseSourceCycles(readFileSync(join(eCyclesDir,name),"utf8")));
+ }
+ for(let i=0;i<93;i++){
+   const name="Raw34EDepth4SideShard"+String(i).padStart(3,"0")+".lean";
+   eCycleSource.push(...parseSourceCycles(readFileSync(join(eCyclesDir,name),"utf8")));
+ }
+ assert.equal(eCycleSource.length,9857,"all 9857 E/F-permuted source-cycle tables");
+ eCycleSource.forEach(add);
+}
+const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length;
 function loadHalters(file){
  const s=readFileSync(join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
@@ -227,6 +244,7 @@ console.log(JSON.stringify({
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
+  eConjugateCyclePatterns:eCycleSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
   rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
