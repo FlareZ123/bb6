@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families]
         default: late-parent
       base_run:
         type: string
@@ -803,3 +803,64 @@ jobs:
             /tmp/a40-raw34-cde/frontier-1rd.json
           if-no-files-found: error
           retention-days: 30
+
+  raw34-closed-families:
+    if: inputs.mode == 'raw34-closed-families'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check Raw34 closed CDE/CDF/CDEF families and exact union
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-raw34-families
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent40Raw34ClosedCDEF.all_cdef \
+            --artifact-name raw34-closed-families \
+            im-results/agent40-raw34-frontier/Raw34ClosedFamilies.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for group,last in (('CDE','all_cde'),('CDF','all_cdf'),('CDEF','all_cdef')):
+              for name in ('closed_table','first3','never','moves_distinct','move_closed',last):
+                  full='BB6.Agent40Raw34Closed'+group+'.'+name
+                  m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+                  else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: original-source Raw34 CDE/CDF/CDEF family theorems, standard axioms only')
+          PY
+          node im-results/agent40-raw34-frontier/audit_closed_family_union.mjs \
+            | tee "$W/union.log"
+          node im-results/agent40-raw34-frontier/export_frontier.mjs 1RD \
+            > "$W/raw34-1RD-frontier-dag.json"
+          node - "$W/raw34-1RD-frontier-dag.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['provablyNonhaltingFromAcceptedCylinderPatterns']=='3320312500'
+          assert x['outsideTheseCertificates']=='2783203125'
+          assert x['openCylinderCount']=='420909'
+          print('PASS: explicit Raw34 D1=1RD complement DAG and cardinality')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-closed-families-with-overlap
+          path: |
+            /tmp/a40-raw34-families/closure.log
+            /tmp/a40-raw34-families/manifest.json
+            /tmp/a40-raw34-families/union.log
+            /tmp/a40-raw34-families/raw34-1RD-frontier-dag.json
+          if-no-files-found: error
+          retention-days: 30
+          compression-level: 3
