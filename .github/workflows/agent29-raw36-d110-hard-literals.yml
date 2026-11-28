@@ -1,0 +1,42 @@
+name: Agent29 Raw36 D1=0RE choose exact next symbolic holdouts
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  sample:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-structured-candidates
+          run-id: 46154479283
+          github-token: ${{ github.token }}
+          path: /tmp/a29-structured
+      - name: Print exact unresolved families by next E0 action
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          from collections import defaultdict
+          import hashlib,json
+          a=Path('/tmp/a29-structured/remaining.txt')
+          rows=sorted(x.strip() for x in a.read_text().splitlines() if x.strip())
+          assert len(rows)==124 and len(rows)==len(set(rows))
+          digest=hashlib.sha256('\n'.join(rows).encode()).hexdigest()
+          assert digest=='422702c205bfd6cdcb8d9c585e2ebab62f020fd4f8addbee014bf1f3965dfc7f'
+          by=defaultdict(list)
+          for r in rows:
+              raw=r.replace('_','')
+              assert len(raw)==36
+              by[raw[24:27]].append(r)
+          print('COUNT',json.dumps({k:len(v) for k,v in sorted(by.items())},sort_keys=True))
+          for k in ['1LB','0LF','0RF','1LE','1LA','1RF','1LF']:
+              print('LITERALS',k,json.dumps(by[k][:min(len(by[k]),12)]))
+          PY
