@@ -29,28 +29,32 @@ theorem source_S (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (8*z+7680*v+7,8*z+9216*v+19) =
       some (4*z+3072*v+5,16*z+18432*v+34) := by
   simp only [BB429.next]
-  repeat' (split <;> try omega)
+  repeat' (split <;> try contradiction)
+  all_goals simp_all [Prod.mk.injEq,Option.some.injEq]
   all_goals omega
 
 theorem source_F_inner (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (4*z+3072*v+5,16*z+18432*v+34) =
       some (8*z+6144*v+13,8*z+12288*v+21) := by
   simp only [BB429.next]
-  repeat' (split <;> try omega)
+  repeat' (split <;> try contradiction)
+  all_goals simp_all [Prod.mk.injEq,Option.some.injEq]
   all_goals omega
 
 theorem source_E (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (8*z+6144*v+13,8*z+12288*v+21) =
       some (4*z+6,16*z+24576*v+42) := by
   simp only [BB429.next]
-  repeat' (split <;> try omega)
+  repeat' (split <;> try contradiction)
+  all_goals simp_all [Prod.mk.injEq,Option.some.injEq]
   all_goals omega
 
 theorem source_F_outer (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (4*z+6,16*z+24576*v+42) =
       some (8*z+15,8*z+24576*v+27) := by
   simp only [BB429.next]
-  repeat' (split <;> try omega)
+  repeat' (split <;> try contradiction)
+  all_goals simp_all [Prod.mk.injEq,Option.some.injEq]
   all_goals omega
 
 /-- Four genuine accelerated forward steps from the renormalized
@@ -81,11 +85,8 @@ theorem arbitrary_inverse_depth (n : Nat) :
   | succ n ih =>
     intro z
     have hv : 1 ≤ 16^n := by
-      induction n with
-      | zero => decide
-      | succ n ih =>
-        rw [Nat.pow_succ]
-        omega
+      have hpos : 0 < 16^n := Nat.pow_pos (by omega)
+      omega
     obtain ⟨s,hs⟩ := ih (z+960*16^n-1)
     refine ⟨s, ?_⟩
     have hm := source_four_step z (16^n) hv
