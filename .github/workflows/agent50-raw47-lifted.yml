@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-e-depth5-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-depth5-full-union-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-e-depth5-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-depth5-full-union-audit, raw34-rank-mdd-baseline, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1724,6 +1724,35 @@ jobs:
             /tmp/a40-raw34-f-e-cycles-audit/e2-census.json
             /tmp/a40-raw34-f-e-cycles-audit/e3-census.json
             /tmp/a40-raw34-f-e-cycles-audit/e4-census.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-rank-mdd-baseline:
+    if: inputs.mode == 'raw34-rank-mdd-baseline'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cross-check reduced-MDD exact counter against independent Raw34 baseline
+        run: |
+          set -euo pipefail
+          W=/tmp/a50-raw34-rank-mdd-baseline
+          mkdir -p "$W"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs             | tee "$W/baseline.json"
+          python - "$W/baseline.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['totalResidualD1not1RD']=='5471912359'
+          assert x['plusAgent23Residual']=='5582309901'
+          assert x['mddNodes']>2
+          print('PASS: reduced 25-way MDD reproduces the established exact Raw34 baseline')
+          print('MDD nodes:',x['mddNodes'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-rank-mdd-baseline
+          path: /tmp/a50-raw34-rank-mdd-baseline/
           if-no-files-found: warn
           retention-days: 30
 
