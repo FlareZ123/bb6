@@ -76,7 +76,9 @@ theorem block_normalization_output (ns : List Nat) :
   | cons n ns ih =>
       have h := fold_append .eleven
         (aRun (2*n) ++ [.separatedMarker]) (evenBlocks ns)
-      rw [even_run_output, ih] at h
+      rw [even_run_output] at h
+      dsimp only at h
+      rw [ih] at h
       simpa only [evenBlocks,normalizedBlocks,List.append_assoc] using h
 
 /-- A trailing A^0 leaves carry S, corresponding to the a=1 branch. -/
