@@ -131,6 +131,7 @@ theorem cover :
 end BB6.Agent50Raw34PairDepth6
 `;
 writeFileSync(join(output,"Raw34PairDepth6Plan.lean"),source);
+writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
 const report={
  parentCodes,d1:"0LF",f0:"0LA",physicalParentCompletions:String(25n**6n),
  nodeCount:nodes.length,residualCount:rows.length,rootIndex,
