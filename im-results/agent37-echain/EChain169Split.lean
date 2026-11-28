@@ -286,6 +286,44 @@ theorem reset2187_1627_source_reentry (v Q : Nat) :
     omega
   · exact Or.inl (by decide)
 
+
+/-- The first child of the t ≡ 2 (mod 3) residual closes for Q≥2:
+    one additional E packet reaches the universal A-marker family. -/
+theorem reset2187_655_source_reentry (v Q : Nat) (hQ : 2 ≤ Q) :
+    ∃ (T a q b : Nat),
+      ObsEq
+        (run T (packet (3*(2187*v+655)+4) Q 2
+          (false :: List.replicate 6 true)))
+        (DRegularSource.sourceSection ⟨a,q,b⟩) ∧
+      DRegular.Canon ⟨a,q,b⟩ := by
+  apply finish_A_to_source
+    (packet (3*(2187*v+655)+4) Q 2
+      (false :: List.replicate 6 true))
+    (2097152*v+628722) 3 (2*Q-3)
+  refine ⟨time243_169 (9*v+2) Q +
+      eTime (786432*v+235770) 1, ?_⟩
+  rw [run_add]
+  have hp := prefix243_169 (9*v+2) Q
+  have hin :
+      262144*(9*v+2)+183026 =
+        3*(786432*v+235770)+4 := by omega
+  rw [hp,hin]
+  have he :
+      run (eTime (786432*v+235770) 1)
+        (packet (3*(786432*v+235770)+4) 1 (2*Q)
+          BB6.Agent35K4Shapes.marker) =
+      packet (8*(786432*v+235770)+9) 3 (2*Q-3)
+        BB6.Agent35K4Shapes.marker := by
+    have hP : 2*Q-3+3 = 2*Q := by omega
+    simpa [hP] using
+      (BB6.Agent31PacketSource.e_packet
+        (786432*v+235770) 1 (2*Q-3)
+        BB6.Agent35K4Shapes.marker)
+  have hout :
+      8*(786432*v+235770)+9 =
+        3*(2097152*v+628722)+3 := by omega
+  rw [he,hout]
+
 #print axioms prefix729_412
 #print axioms reset729_412_source_reentry
 
