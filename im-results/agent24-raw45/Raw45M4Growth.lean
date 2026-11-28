@@ -68,13 +68,12 @@ theorem growth (n : Nat) :
   have h4 : run0 table 1 ⟨1,[],[true,true]++ones (3*n+5)⟩ =
       some ⟨2,[true,true],ones (3*n+6)⟩ := by
     have ha : ones (3*n+6) = [true]++ones (3*n+5) := by
-      rw [show 3*n+6=1+(3*n+5) by omega]
       rfl
     simpa only [ha,List.append_assoc,List.cons_append,List.nil_append] using bturn ([true]++ones (3*n+5))
   have h5 : run0 table (3*n+6) ⟨2,[true,true],ones (3*n+6)⟩ =
       some ⟨2,[true]++zeros (3*n+6)++[true],[]⟩ := by
     simpa only [ones,zeros,Nat.one_mul,List.nil_append,
-                List.append_nil] using
+                List.append_nil,List.cons_append] using
       sweepR table 2 [true] [] [true] [false] 1 cstep
         (3*n+6) [true] []
   have h6 : run0 table 2 ⟨2,[true]++zeros (3*n+6)++[true],[]⟩ =
