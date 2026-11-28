@@ -6,19 +6,14 @@ open F421TertiaryGuard (QBudget drain)
 open F421SecondaryLifetimes
 
 theorem qAtLeastBudget (k B : Nat) (cs : List PC)
-    (hq : QBudget k B cs) : qAtLeast B cs := by
+    (hk : 1≤k) (hq : QBudget k B cs) : qAtLeast B cs := by
   induction cs generalizing B with
   | nil => trivial
   | cons c cs ih =>
-    refine ⟨?_,ih (2*B) hq.2⟩
+    refine ⟨?_,ih (2*B) hk hq.2⟩
     have h := hq.1
+    have hm := Nat.mul_le_mul_right B hk
     omega
-
-theorem decQBudget (k B : Nat) (cs : List PC)
-    (hq : QBudget k B cs) : QBudget k B (dec cs) := by
-  induction cs generalizing B with
-  | nil => trivial
-  | cons c cs ih => exact ⟨hq.1,ih (2*B) hq.2⟩
 
 /-- Exact aggregate Q-mass law for every source-level guarded secondary
     cycle. Deletion and merge patterns influence only the survivor count. -/
@@ -35,7 +30,7 @@ theorem secondaryQMassGuarded (k a b : Nat) (cs : List PC)
   rcases he : drain 0 0 (dec cs) with ⟨as,A,r⟩
   rw [he] at hqa
   rcases hqa with ⟨hqa,hlenA,hcount⟩
-  have hqa' : qAtLeast 1 as := qAtLeastBudget 2 1 as hqa
+  have hqa' : qAtLeast 1 as := qAtLeastBudget 2 1 as (by decide) hqa
   have hlen' : as.length≤cs.length := by
     simpa [dec] using hlenA
   have hD : 2^as.length≤2^cs.length :=
@@ -46,6 +41,7 @@ theorem secondaryQMassGuarded (k a b : Nat) (cs : List PC)
     omega
   have h := secondaryQMass b cs hcap htime (by rw [he]; exact hqa')
     (by rw [he]; exact hD) hb'
+  rw [he] at h
   exact h
 
 #print axioms secondaryQMassGuarded
