@@ -30,21 +30,6 @@ def crt(a,m,b,n):
 def target(p,w,k):
     return -2**w*(2*w-3)*pow(3,-1,p**k)%p**k
 
-def lift(p,ord2,period_base,base_r,slope_fn,w,k):
-    r=base_r
-    for d in range(1,k):
-        period=period_base*p**(d-1)
-        m=p**(d+1)
-        slope=slope_fn(r)%p
-        assert slope!=0
-        assert B(r,d,ord2=ord2,p=p)==target(p,w,d)
-        assert (B(r+period,p,d+1,ord2)-B(r,p,d+1,ord2))%m==slope*p**d
-        diff=(target(p,w,d+1)-B(r,p,d+1,ord2))%m
-        assert diff%p**d==0
-        r+=period*(diff//p**d*pow(slope,-1,p)%p)
-        assert B(r,p,d+1,ord2)==target(p,w,d+1)
-    return r,period_base*p**(k-1)
-
 def full_lift(p,ord2,period_base,base_r,slope_fn,w,k):
     r=base_r
     for d in range(1,k):
