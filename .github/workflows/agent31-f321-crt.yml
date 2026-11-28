@@ -7,65 +7,89 @@ permissions:
   contents: read
 
 jobs:
-  finite-graphs:
-    strategy:
-      fail-fast: false
-      matrix:
-        modulus: [384, 512]
+  finite384:
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
+      - name: Install Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/lean" --version
-      - name: Kernel-prove independently generated finite graph
+      - name: Kernel-check mod384 graph
         run: |
           set -euo pipefail
           q=im-results/agent31-f321-mod384
-          lean -o "$q/Mod${{ matrix.modulus }}Graph.olean" "$q/Mod${{ matrix.modulus }}Graph.lean" | tee /tmp/graph.log
-          ! grep -Eq 'sorryAx|native_decide' /tmp/graph.log
+          lean -o "$q/Mod384Graph.olean" "$q/Mod384Graph.lean" | tee /tmp/check.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/check.log
       - uses: actions/upload-artifact@v4
         with:
-          name: f321-mod${{ matrix.modulus }}-graph-olean
-          path: im-results/agent31-f321-mod384/Mod${{ matrix.modulus }}Graph.olean
-          if-no-files-found: error
+          name: f321-graph384
+          path: im-results/agent31-f321-mod384/Mod384Graph.olean
           retention-days: 1
 
-  source-crt:
-    needs: finite-graphs
+  mod512-chunks:
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        chunk: [0, 1, 2, 3, 4, 5, 6, 7]
     runs-on: ubuntu-latest
-    timeout-minutes: 12
+    timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
+      - name: Install Lean
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-          "$HOME/.elan/bin/lean" --version
+      - name: Kernel-check a single 32768-pair graph rectangle
+        run: |
+          set -euo pipefail
+          q=im-results/agent31-f321-mod384
+          lean -o "$q/Mod512Core.olean" "$q/Mod512Core.lean" | tee /tmp/check.log
+          LEAN_PATH="$q" lean -o "$q/Mod512Chunk${{ matrix.chunk }}.olean" "$q/Mod512Chunk${{ matrix.chunk }}.lean" | tee -a /tmp/check.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/check.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f321-graph512-chunk-${{ matrix.chunk }}
+          path: im-results/agent31-f321-mod384/Mod512Chunk${{ matrix.chunk }}.olean
+          retention-days: 1
+
+  source-crt:
+    needs: [finite384, mod512-chunks]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - uses: actions/download-artifact@v4
         with:
-          name: f321-mod384-graph-olean
+          name: f321-graph384
           path: im-results/agent31-f321-mod384
       - uses: actions/download-artifact@v4
         with:
-          name: f321-mod512-graph-olean
+          pattern: f321-graph512-chunk-*
+          merge-multiple: true
           path: im-results/agent31-f321-mod384
-      - name: Kernel-prove both authentic source-counter transports and CRT
+      - name: Kernel-compose all small graph pieces, source transports, and CRT
         run: |
           set -euo pipefail
           e=im-results/agent31-f321-bulk
           q=im-results/agent31-f321-mod384
-          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-crt.log
-          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-crt.log
-          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/f321-crt.log
-          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-crt.log
-          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-crt.log
-          LEAN_PATH="$e:$q" lean -o "$q/Mod384Source.olean" "$q/Mod384Source.lean" | tee -a /tmp/f321-crt.log
-          LEAN_PATH="$e:$q" lean -o "$q/Mod512Source.olean" "$q/Mod512Source.lean" | tee -a /tmp/f321-crt.log
-          LEAN_PATH="$e:$q" lean "$q/Mod1536CRT.lean" | tee -a /tmp/f321-crt.log
-          ! grep -Eq 'sorryAx|native_decide' /tmp/f321-crt.log
+          LEAN_PATH="$q" lean -o "$q/Mod512Core.olean" "$q/Mod512Core.lean" | tee /tmp/crt.log
+          LEAN_PATH="$q" lean -o "$q/Mod512Graph.olean" "$q/Mod512Graph.lean" | tee -a /tmp/crt.log
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee -a /tmp/crt.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/crt.log
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/crt.log
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/crt.log
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod384Source.olean" "$q/Mod384Source.lean" | tee -a /tmp/crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Source.olean" "$q/Mod512Source.lean" | tee -a /tmp/crt.log
+          LEAN_PATH="$e:$q" lean "$q/Mod1536CRT.lean" | tee -a /tmp/crt.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/crt.log
