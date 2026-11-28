@@ -2077,8 +2077,12 @@ jobs:
               'shortSide':455952,'halts':20605,'long':38568,
               'closedReachable':38568}
           assert x['classifiedPhysicalCandidate']==2614350
-          assert x['remainingPhysicalCandidate']==56900
-          print('PASS: corrected Raw34 pair candidate frontier is 56,900 physical tables')
+          assert x['remainingPhysicalBeforeLastHoleClosure']==56900
+          assert x['lastHoleClosure']=={
+              'long6Closed':23040,'long6Hard':1960,
+              'long7Closed':30624,'long7Halts':3,'long7Hard':1273}
+          assert x['finalCandidatePhysical']==3233
+          print('PASS: corrected Raw34 pair candidate frontier is 3,233 complete machines')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
