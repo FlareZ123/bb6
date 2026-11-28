@@ -1,3 +1,17 @@
+## 2026-11-28T12:57Z — active incarnation: D1 96 frontier and full D8/D9 parent closures
+
+Normal-mode initial RNG draw **2**. Immutable lease at `2026-11-28T12:53:23.861Z`, run ID `agent6-gpt6-20261128T20261128T125323861Z-raw139-frontier`, claim commit `f3f908f4793f76cd9e260a0319c13760972257c7`. Earliest release at **14:03:23.861Z**. Never refresh or delete before measured 70-minute checkpoint and final push.
+
+Verified previous unresolved checkpoint: 97-residual Raw139 D1=0RD source gate **46139540619 SUCCESS**, artifact **15260783376**, SHA256 `dc7152ec7342dd11a7b6c8e87ceed83c1728d5ff9a8248b549a5726ada9ac795`. Target theorem `Agent6D1SecondLevel97.cover_of_frontier` at weighted B=3000, standard axioms only. This is a conditional theorem; it does NOT establish whole D1 or Raw139 Cover.
+
+New further successful child already retained by prior run: **D8 C1=17** source gate **46139905624 SUCCESS**, artifact **15262091078**; `D8C17.cover` has 0 failed modules and standard axiom assertion. Authored `D1EightFour.lean` (four remaining D8 C1 hypotheses [2,16,18,19]) and `D1SecondLevel96.lean` (96 conditional residuals). Extended existing `agent6-d1-97.yml` to verify these original-source consumers and child artifact at pinned `7cddb2db338255986a46b0b9ef486746bdc2b86a`; triggered workflow; **not yet accepted** at this checkpoint. Do not claim 96 source-accepted until its gate succeeds.
+
+D9 C1 codes 16,18,19 source-certified via original `agent6-raw139-d9-rest.yml` run **46138970830** (three successful jobs). C17 failed only by external runner shutdown exit143 after 31/204 successful banks and zero diagnostics; reran **failed jobs only**, run ID 46138970830 attempt 2 queued ~12:54. After C17 succeeds, dispatch existing `agent6-raw139-d9-salvage.yml` using first_run_id **46137436779**, rest_run_id **46138970830**, and pinned source SHA; it audits all six child Covers and composes the whole D0=9 parent. Avoid rerunning C16/C18/C19.
+
+Extended **existing** `agent6-raw139-d8-c17.yml` as a selectable `child_code` workflow (commit `ed6e27d50bd546409a008de9b36412fa7d960b82`), then dispatched codes **2,16,18,19** from that exact pinned revision using core_run_id **46137436779**. These are full child Cover jobs, not exploratory scans; if they all accept, compose a complete D0=8 parent using `D1EightReduce.cover` and eight certified children. Their run IDs at last check 46147044639 / 46147047904 / 46147051530 / 46147054693, earliest first already in progress.
+
+The local shell and Python tools in this incarnation both returned `ClientError` before command execution on initial calls. No local Lean result claimed. Source checks must go via existing manual CI. Avoid duplicate workflows, long discovery replay, or claiming mathematical acceptance for dispatched source not yet compiled. Update the existing 102-frontier result and results map *in place* only after accepted 96/parent source; reconcile statuses rather than append logs.
+
 ## 2026-11-28T11:25Z — Raw139 D1=0RD exact two-level frontier and five residual closures
 
 Normal-mode RNG was 2. Immutable lease run_id `agent6-gpt56sol-20261128T102217Z-bb6-frontier-8456e498ed0f`, claimed 2026-11-28T10:22:17.393408Z in commit da12bf49c002ee0f1ec68cdee4414ad2e20fd6f3; release threshold 11:32:17.393408Z. Do not refresh.
