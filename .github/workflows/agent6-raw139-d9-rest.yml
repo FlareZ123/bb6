@@ -30,6 +30,7 @@ jobs:
     timeout-minutes: 80
     env:
       CODE: ${{ inputs.child_code }}
+      BANK_BATCH: '2'
     steps:
       - uses: actions/checkout@v4
         with:
@@ -50,11 +51,13 @@ jobs:
           set -euo pipefail
           work=.tmp/a6-d9rest
           pipe="$work/pipeline"
+          # The downloaded core predates the configurable bank-index fix.
+          cp im-results/agent6-raw139-d1-zeroRD/d9-pipeline/replace_alt.py "$pipe/"
           chmod +x "$pipe/cert_census" "$pipe/strong" "$pipe/strong_emit" "$pipe/altblock"
           root="$work/d9c$CODE"
           ns="D9C$CODE"
           python3 "$pipe/discover.py" 9 "$CODE" "$root"
-          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" 2 "$ns"
+          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" "$BANK_BATCH" "$ns"
           python3 - "$root/certs.jsonl" "$root/alt.in" <<'PY'
           import json,sys
           src,dst=sys.argv[1:]
@@ -67,12 +70,12 @@ jobs:
           if test -s "$root/alt.in"; then
             "$pipe/altblock" "$root/alt.in" > "$root/alt.out"
             "$pipe/strong_emit" "$root/alt.out" > "$root/alt.jsonl"
-            python3 "$pipe/replace_alt.py" "$root" "$ns"
+            python3 "$pipe/replace_alt.py" "$root" "$ns" "$BANK_BATCH"
           else
             : > "$root/alt.out"
             : > "$root/alt.jsonl"
           fi
-          python3 "$pipe/gen_tree_general.py" "$root/tree-9-$CODE.txt" "$root/src" 384 9 "$CODE" 8 "$root/late.json"
+          python3 "$pipe/gen_tree_general.py" "$root/tree-9-$CODE.txt" "$root/src" 384 9 "$CODE" "$BANK_BATCH" "$root/late.json"
           python3 "$pipe/group_chunks.py" "$root/src" "$ns" 4
           cp "$pipe/D1PackedTree.lean" "$pipe/D1QuickTree.lean" "$pipe/D1TreeTools.lean" "$root/src/"
       - name: Diagnose generated C17 bank pressure
