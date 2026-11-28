@@ -1,0 +1,127 @@
+name: Agent10 accepted Raw42 Canonical39 to 38
+
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run:
+        description: 'Successful Raw42 twelve-child parent compose run'
+        required: true
+        type: string
+      parent_artifact:
+        description: 'Artifact containing raw42-parent-certified closure'
+        required: true
+        type: string
+        default: 'raw42-parent-compose'
+      onele_run:
+        description: 'Accepted Raw39 1LE source run'
+        required: true
+        type: string
+        default: '46114235329'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate run IDs
+        run: |
+          set -euo pipefail
+          [[ "${{ inputs.parent_run }}" =~ ^[0-9]+$ ]]
+          [[ "${{ inputs.onele_run }}" =~ ^[0-9]+$ ]]
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.parent_run }}
+          name: ${{ inputs.parent_artifact }}
+          path: /tmp/raw42-parent-artifact
+      - name: Reconstruct accepted Raw39 Canonical39 lineage
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent32-raw42/check_canonical39_after_raw39.py \
+            --work /tmp/a10-canonical39 \
+            --onele-run "${{ inputs.onele_run }}" --chunk-size 64
+      - name: Authenticate accepted Raw42 parent closure
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json, shutil
+          from pathlib import Path
+
+          artifact = Path('/tmp/raw42-parent-artifact')
+          manifests = []
+          for p in artifact.rglob('manifest.json'):
+              try:
+                  m = json.loads(p.read_text())
+              except Exception:
+                  continue
+              if m.get('artifact_name') == 'raw42-parent-certified':
+                  manifests.append((p, m))
+          assert len(manifests) == 1, [str(p) for p, _ in manifests]
+          p, m = manifests[0]
+          root = p.parent
+          claim = m.get('claim', {})
+          assert claim.get('theorem') == 'BB6.Agent17Raw42AcceptedParent.cover_global', claim
+          assert claim.get('weighted_bound') == 6766859, claim
+          assert claim.get('parent_table') == '1RB---_1RC---_0RD---_1LD0LB_------_------', claim
+          assert m.get('lean_version','').startswith('Lean (version 4.36.0-rc2'), m.get('lean_version')
+
+          def sha(path):
+              return hashlib.sha256(path.read_bytes()).hexdigest()
+
+          linked = Path('/tmp/a10-canonical39/canonical')
+          copied = 0
+          for item in m['modules']:
+              rel = Path(item['olean_path'])
+              src = root / rel
+              assert src.is_file(), (item['module'], src)
+              assert sha(src) == item['olean_sha256'], item['module']
+              dst = linked / rel
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              if dst.exists():
+                  assert sha(dst) == sha(src), f'conflicting object {item["module"]}'
+              else:
+                  shutil.copy2(src, dst)
+                  copied += 1
+          assert any(x['module'] == 'Raw42AcceptedParent' for x in m['modules'])
+          print(f'authenticated {len(m["modules"])} parent modules; copied {copied}')
+          PY
+      - name: Kernel-check unconditional 39 to 38 successor
+        run: |
+          set -euo pipefail
+          linked=/tmp/a10-canonical39/canonical
+          out=/tmp/a10-successor
+          mkdir -p "$out"
+          LEAN_PATH="$linked" lean -j1 -o "$out/Raw42Canonical38Successor.olean" \
+            im-results/agent10-raw42-canonical38/Raw42Canonical38Successor.lean \
+            | tee "$out/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$out/audit.log"
+          for th in \
+            BB6.Agent10Raw42Canonical38Successor.raw42_cover \
+            BB6.Agent10Raw42Canonical38Successor.count38 \
+            BB6.Agent10Raw42Canonical38Successor.removed_parent_absent \
+            BB6.Agent10Raw42Canonical38Successor.sound_integrated \
+            BB6.Agent10Raw42Canonical38Successor.exact_at_champion_score
+          do
+            python im-results/agent32-raw59/check_axioms.py "$out/audit.log" "$th"
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-canonical38-accepted
+          path: |
+            /tmp/a10-successor/
+            /tmp/a10-canonical39/evidence/
+          if-no-files-found: warn
+          retention-days: 30
