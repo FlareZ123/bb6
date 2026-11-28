@@ -1496,6 +1496,9 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Finite source check of 3-carry boundary macros
+        run: |
+          node im-results/agent5-weighted-tnf-queue/q0-148-carry-transducer.cjs
       - name: Original-source q0-148 parametric sweep validation
         run: |
           set -euo pipefail
