@@ -26,6 +26,8 @@ open BB6.Agent5Q0151MacroTransfer
 open BB6.Agent5Q0151PackedRightExt
 open BB6.Agent5Q0151SourceActions1
 open BB6.Agent5Q0151SourceActions3
+open BB6.Agent5Q0151Category
+open BB6Coverage.Agent13PackedZipper
 
 theorem c_two_source (s : List Bool) (stack : List (List Bool))
     (R : List Bool) (hs : Scan s.reverse) :
@@ -34,9 +36,9 @@ theorem c_two_source (s : List Bool) (stack : List (List Bool))
         (popTail stack) (s ++ true::R)) := by
   cases stack with
   | nil =>
-      simpa [popSaved,popTail,alt] using (c_even_empty 0 s R hs)
+      simpa [popSaved,popTail,alt,BB6Coverage.Agent31Pump.rep] using (c_even_empty 0 s R hs)
   | cons saved remaining =>
-      simpa [popSaved,popTail,alt] using
+      simpa [popSaved,popTail,alt,BB6Coverage.Agent31Pump.rep] using
         (c_even_pop 0 s saved remaining R hs)
 
 theorem c_two_refines (s : List Bool) (hs : SegGood s)
@@ -55,7 +57,7 @@ theorem c_two_refines (s : List Bool) (hs : SegGood s)
   have hrequest :
       segConcat (segAppend (segAppend emptySegment s) [true])
         (rightSig rest) = rightSig decoded := by
-    simpa [alt,altWord] using hsig
+    simpa [alt,altWord,BB6Coverage.Agent31Pump.rep] using hsig
   have hcut : (2,rightSig rest) ∈ cut (rightSig (1::rest)) := by
     simpa [actualNext,cat] using cut_real_next (1::rest) hlive
   have hact : Action.pop (rightSig decoded) ∈
@@ -67,7 +69,7 @@ theorem c_two_refines (s : List Bool) (hs : SegGood s)
   have hmacro := c_two_source s stack (runBits rest) hs.1
   have hp : pack (s ++ true::runBits rest) =
       pack (runBits decoded) := by
-    simpa [alt,List.append_assoc] using hpack
+    simpa [alt,List.append_assoc,BB6Coverage.Agent31Pump.rep] using hpack
   have hright :
       boundary 1 (popSaved stack ++ [true,true,true,true])
         (popTail stack) (s ++ true::runBits rest) =
