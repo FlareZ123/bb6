@@ -156,6 +156,15 @@ jobs:
           test -s /tmp/parent-source/Agent44Extra140Root6Root9Root20Leaf03RowsProof.lean
           test "$(wc -c < "$leaf")" -lt 25000
 
+          # The two largest state rows still approach the local 3.6 GB kernel
+          # ceiling as single decide terms. Split their exact tries at depth 3.
+          for row in 05 07; do
+            python im-results/agent44-raw11-extra28/split_trie_row.py \
+              "/tmp/parent-source/Agent44Extra140Root6Root9Root20Leaf03RowsRowData${row}.lean" 3 \
+              | tee "/tmp/extra140-leaf03-row${row}-trie-split.log"
+            test -s "/tmp/parent-source/Agent44Extra140Root6Root9Root20Leaf03RowsRowCheck${row}.lean"
+          done
+
       - name: Advance exact kernel DAG by bounded fresh modules
         id: advance
         env:
