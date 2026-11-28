@@ -58,6 +58,18 @@ Self-test compares the symbolic search to independent height-by-height replay fo
 
 As [Q0StripCross](../agent1-429-q0-23-7/Q0StripCross.lean) proves equivalence of the exact wide window and its signed carry formulation under its size hypotheses, the finite result points to a **smaller remaining proof obligation**: prove the all-scale exclusion for \(k\ge21\), and separately import this finite arithmetic certificate into a trustworthy formal consumer. The original q0 reduction only requires \(k\ge12\), while the Agent18 odd-reset theorem also allows \(k=11\); both ranges are now computationally covered through 20. The old \(k\ge12\) interface remains the only compiled theorem until that composition is accepted.
 
+## Numerical consequences for authentic-root parameter interfaces (conditional on source acceptance)
+
+The published wide-window reductions choose the crossing exponent **only at** \(k=t_0\) or \(k=t_0+1\), where \(4^{t_0}\le 2p<4^{t_0+1}\) and \(p\) is the signed-macro starting rank. Therefore \(2p<4^{20}\) forces \(k\le20\). This gives sharp, easily audited candidate-parameter ranges from the computational certificate:
+
+| existing signed source reduction | doubled starting rank \(2p\) | largest parameter satisfying \(2p<4^{20}\) |
+| --- | --- | ---: |
+| Agent 1 q0: \(m=8u+5,\ p=24u+22\) | \(48u+44\) | **\(u=22,906,492,244\)** |
+| Odd FF: \(m=13+16t,\ p=53+48t\) | \(106+96t\) | **\(t=11,453,246,121\)** |
+| Odd FE: \(m=8+16t,\ p=36+48t\) | \(72+96t\) | **\(t=11,453,246,121\)** |
+
+The arithmetic is \(4^{20}=1,099,511,627,776\), and the maxima are respectively \(\lfloor(4^{20}-45)/48\rfloor\), \(\lfloor(4^{20}-107)/96\rfloor\), and \(\lfloor(4^{20}-73)/96\rfloor\). The existing q0 wide theorem starts at \(u\ge10^6\), and the odd FF/FE theorems start at \(t\ge43,750\); their previously certified small-parameter cases address the lower ranges. **If** the 180-rank integer exclusion is imported as an accepted theorem, composition would exclude the respective signed paths at *every* parameter through the values above. It is not presently an original-source accepted parameter exclusion, since the finite computation itself has no Lean proof consumer. For \(2p\ge4^{20}\), the k=20 branch may still be selected in some cases; these displayed bounds are safe sufficient conditions rather than maximal parameter coverage.
+
 ## Remaining unknown
 
 Enumeration cost roughly doubles per additional k: 48,973,194 interval nodes for the 18 ranks at k=20. Extending scale by scale is **not** a solution to the unbounded quantifier. A valuable next advance would turn the reverse intervals' structure into a uniform symbolic bound. Otherwise this is a finite-scale check and should not absorb repeated compute. The [fixed-tail rigidity](TemplateRigidity.md) and exact-carry reductions remain complementary routes to the unbounded case.
