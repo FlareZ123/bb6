@@ -38,7 +38,8 @@ theorem start_checked :
 
 theorem all_windows_checked :
     LocalOK parent (masked windowMask) := by
-  decide
+  unfold LocalOK
+  decide +kernel
 
 /-- True original-blank all-time nonhalting, uniformly across the
     entire three-unassigned-slot 25^3 physical cylinder. -/
