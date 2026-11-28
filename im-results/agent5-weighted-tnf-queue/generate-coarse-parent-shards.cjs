@@ -22,6 +22,7 @@ const longMap=new Map(require('./q0-coarse-long-holes.json').map(c=>[norm(c.tabl
 // Each external cut is matched by its entire 12-entry table; no index/count substitution.
 // Importing the actual theorem is mandatory even when the source proof is still pending CI.
 const regionCuts=new Map([
+ ['1RB1LC1RC0RE0LA0LD1LA0RF1RB1RD0RC---', {root:148,mod:'Q0148WeightedCover',ns:'BB6.Agent5Q0148NeverCover'}],
  ['1RB1LC1RC1RA0LA0LD1LA0RE0RF---1RD0LB', {root:148,mod:'Raw11Q0RightGlider148',ns:'BB6Coverage.Agent31Pump.Raw11Q0RightGlider148'}],
  ['1RB1LC1RC0LF0LA0RD1RA1RE1LF1RD---0LB', {root:149,mod:'Q0149H11',ns:'BB6.Agent50Q0149H11',tableField:'ctr'}],
  ['1RB1LC1RC---0LA0RD1RA1RE1LF1RD1LC0LF', {root:149,mod:'Q0149H16',ns:'BB6.Agent50Q0149H16',tableField:'ctr'}],
