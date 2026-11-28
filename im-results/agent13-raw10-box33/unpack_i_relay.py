@@ -7,7 +7,7 @@ from unpack_i_parametric import unpack as unpack_base
 HERE = Path(__file__).resolve().parent
 ARCHIVE = HERE / "Box33D17V12IRelay.lean.xz.b64"
 DEST = HERE / "Box33D17V12IRelay.lean"
-EXPECTED_SHA256 = "41050fb6247dfdc906b94c03484c36934c53483d038931daf7c6aece4e8a00fb"
+EXPECTED_SHA256 = "7c6180466522fa9ee286bfc62cceb323a1c3573f00b0c71cd95d0f0813909b4f"
 
 if __name__ == "__main__":
     unpack_base()
