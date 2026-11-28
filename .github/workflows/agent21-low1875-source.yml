@@ -162,5 +162,7 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent21-c-shadow-density/DyadicHighEdge.lean \
             im-results/agent21-c-shadow-density/DyadicValuation.lean \
-            im-results/agent21-c-shadow-density/DyadicStrip.lean \
+            im-results/agent21-c-shadow-density/DyadicFirstBranch.lean \
+            im-results/agent21-c-shadow-density/DyadicStripSigned.lean \
+            im-results/agent21-c-shadow-density/DyadicFuel.lean \
             --workdir /tmp/a21-dyadic-duality --jobs 4 --lean "$(command -v lean)"
