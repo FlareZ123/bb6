@@ -63,7 +63,7 @@ theorem growth (n : Nat) :
       ⟨1,[true,true],rightWord n⟩ =
       some ⟨1,[true]++rep [true,true] (2*n+1)++[true],[false]⟩ := by
     simpa only [rightWord,List.nil_append,List.append_nil,
-                List.append_assoc] using
+                List.append_assoc,List.cons_append] using
       sweepR table 1 [true] [] [false,true] [true,true] 2 bpair
         (2*n+1) [true] [false]
   have hleft : [true]++rep [true,true] (2*n+1)++[true] =
@@ -78,7 +78,7 @@ theorem growth (n : Nat) :
       congrArg (fun v : List Bool => [true,true,true]++v) hc
   have hright : [true]++rep [true,true] (2*n+3) =
       [true,true,true,true,true,true,true]++rep [true,true] (2*n) := by
-    rw [show 2*n+3=3+(2*n) by omega]
+    rw [show 2*n+3=(2*n)+3 by omega]
     rfl
   have h3 : run0 table 9
       ⟨1,[true]++rep [true,true] (2*n+1)++[true],[false]⟩ =
