@@ -1,14 +1,14 @@
 # Raw37 A-tail to C-tail bridge
 
-## Formalized fixed instance
+## Lean certificate authored; CI verification pending
 
-The new Lean file `Raw14037ATailBridge.lean` certifies the framed transition
+The new Lean file `Raw14037ATailBridge.lean` contains a framed certificate for the transition
 
 [
 G(15,3^{70}X,11511)\;\longrightarrow\;G(25,3^{65}X,31)
 ]
 
-for arbitrary untouched left suffix (X). The certificate uses 943 block exits and 2,629 primitive transitions. It is stated over the common base table, not the M37 completion, so the theorem should lift unchanged to every sibling completion that extends that base.
+for arbitrary untouched left suffix (X). The proposed certificate uses 943 block exits and 2,629 primitive transitions; the targeted workflow has been added but has not yet completed. It is stated over the common base table, not the M37 completion, so it does not depend on sibling-specific rows. A separate table-extension lemma is still needed to state the corresponding reachability theorem for each completed sibling.
 
 The proof uses `Raw140Framed.execute_sound` with an open left context. The computed path preserves the suffix (X); a simulator probe with opaque block 8 confirms it is not read. For the exact (v=15,w=65,X=[2]) path, transition counts by state/bit are:
 
