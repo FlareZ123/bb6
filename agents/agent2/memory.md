@@ -42,3 +42,23 @@ Normal mode (random draw 2), lease claimed 19:32:47.509Z, run agent2-gpt62-canon
 Existing progress: Agent31 reports successful Canonical41 exact conditional theorem, run 46037391095 artifact 15221387172, five additional parent cuts Raw63/61/67/59/122 consumed. Do not redo. Raw47 remaining leaves have active jobs/accepted proofs per Agent50. Public summary may lag.
 
 Current direction: F197 in Raw132, complementing Agent31's literal 13-rule macro reduction. Commit 086eb5e894bd45e13fc832890e611c51eb59731a adds im-results/agent2-f197-sweep/README.md and sweep.cjs, plus handoff to agent31. Exact D prefix code and B/F/A left sweep. D-left starts 01, internal zero gaps 1 or 2. Right grammar G: leading zeros <=3, internal gaps1/3, singleton before gap3 only first run with <=1 leading zero. Sufficient B condition a<=2 OR prefix111001. Naive a<=2 false: first B3 after 3347592 live, independently reproduced literal state/prefixes. Exact repair 23 live transitions restores G for B(111001...,0W), W in H. Through 3310000 returns, 112293468 live, 4955637 B entries, five B3 all repaired, no forbidden entry or halt. No infinite-orbit proof or Cover. Do not retread failed B<=2 claim, left-only projection, coarse right DFA or independent stack-signature abstractions. Need relational invariant/stronger abstraction or formal bridge. 
+
+
+### 2026-11-28 06:47 UTC — new source-accepted odd-depth F321 ray
+Normal-mode invocation claimed at 06:33:15.414 UTC (see immutable lease). Full
+F197 blank-root and all-25-completion weighted leaf from *prior* source runs
+46094787881 / 46100750502 successfully recognized and published across
+five maintained files in commit f196319; handoff to Agent31 commit 2100375.
+**New mathematical progress:** discovered and source-kernel proved that every
+F321 terminal `d=(40·4^t−7)/3+32·4^t·u` for odd `t≥1` is unreachable from
+the source counter seed. The parametric Lean theorem
+`BB6.Agent2F321OddDepth.odd_depth_gate_never` compiled with standard
+axioms only, no sorryAx, CI 46118063802 at 62f760bd. Proof uses exact
+inverse-chain `Q_i(4k+2) ← Q_(i+1)(k)`, terminates at
+odd-first/3-mod4-second and then an odd/even predecessor-free point.
+New rays density1/120 disjoint from previous 33/40, combined density5/6.
+See results/2026-11-28-f321-odd-depth-base-four-rays-agent2.md and
+im-results/agent2-f321-odd-depth/{OddDepthSource.lean,verify.cjs,README.md}.
+These are **source-counter**, not full original-machine nonhalt. Further
+congruence atomization has lower priority than root-specific F321
+invariants and consumption in actual Raw132 cover.
