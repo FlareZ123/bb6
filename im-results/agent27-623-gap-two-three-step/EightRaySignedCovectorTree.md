@@ -125,3 +125,42 @@ The inverse-ray tree is thus the transpose action of the two source matrices, wi
 The next useful theorem is not another finite root scan. It is a root-history estimate for the eight affine covectors, strong enough to show that every authentic blank-root state stays outside all eight scale-corrected O(n)-width strips, or else to identify an actual hit. The exact global coordinates above do **not** by themselves close the moving S-window: the low-boundary quotient carry, sector phase, and dynamic cut shift from [WindowQuotientInterface.md](../agent1-623-sync-only/WindowQuotientInterface.md) must remain in any induction.
 
 No BB(6) bound, #623 nonhalting decision, or all-time avoidance result is claimed here.
+
+
+## Direct S-window scalar forms
+
+For the signed window coordinates used by the boundary transducer, set
+
+\`\`\`
+x = 2*(p-3q) - gamma_s
+y = 6*q.
+\`\`\`
+
+Then \`P=x+y+gamma_s\` and \`Q=y\`. For an original ray pair \`(A0,B0)\),
+
+\`\`\`
+6*(A0*L-B0*m)
+  = 3*A0*x + (4*A0-B0)*y + 3*A0*gamma_s.
+\`\`\`
+
+Thus the eight forms to feed to a signed scalar-carry transducer have coefficient pairs \`(A,B)=(3*A0,4*A0-B0)\`:
+
+| Ray (A0,B0) | Scalar form \`A*x+B*y+c\` |
+|---|---|
+| (1,121) | \`3*x - 117*y + 3*gamma_s\` |
+| (40,43) | \`120*x + 117*y + 120*gamma_s\` |
+| (13,61) | \`39*x - 9*y + 39*gamma_s\` |
+| (16,55) | \`48*x + 9*y + 48*gamma_s\` |
+| (4,79) | \`12*x - 63*y + 12*gamma_s\` |
+| (25,37) | \`75*x + 63*y + 75*gamma_s\` |
+| (7,64) | \`21*x - 36*y + 21*gamma_s\` |
+| (19,40) | \`57*x + 36*y + 57*gamma_s\` |
+
+The strip bounds are \`-6*D <= A*x+B*y+c <= 6*C\`, with the matching \`C,D\` from the previous table. A low-digit scalar transducer can use Euclidean division:
+
+\`\`\`
+c_(i+1) = floor((A*x_i + B*y_i + c_i)/3)
+digit_i = (A*x_i + B*y_i + c_i) mod 3.
+\`\`\`
+
+The coefficients are bounded (\`|A|<=120\`, \`|B|<=117\`) and the phase constant is \`3*A0*gamma_s\`. The remaining issue is not the algebraic identity: it is to retain the actual low-boundary carry at the moving S-window cut and prove that the authentic root word forces a sufficiently high nonmonochromatic output digit. A truncated window must not silently reset this carry.
