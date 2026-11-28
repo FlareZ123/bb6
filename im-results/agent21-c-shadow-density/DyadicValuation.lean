@@ -1,4 +1,5 @@
 import ModularCone
+import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent21Duality
 open BB6.Agent42ModularCone
@@ -13,7 +14,10 @@ theorem double_emod (z d : Int) (hd : 0<d) :
   have h0 : 0≤z%d := Int.emod_nonneg _ (by omega : d≠0)
   have h1 : z%d<d := Int.emod_lt_of_pos _ hd
   have hsplit := Int.emod_add_mul_ediv z d
-  have hdelta : 2*z-2*(z%d)=2*(d*(z/d)) := by omega
+  have hdelta : 2*z-2*(z%d)=2*(d*(z/d)) := by
+    calc
+      2*z-2*(z%d) = 2*(z%d+d*(z/d))-2*(z%d) := by rw [hsplit]
+      _ = 2*(d*(z/d)) := by omega
   have hdiv : 2*d∣2*z-2*(z%d) := by
     refine ⟨z/d,?_⟩
     rw [hdelta]
@@ -21,7 +25,9 @@ theorem double_emod (z d : Int) (hd : 0<d) :
   have hcong : (2*z)%(2*d)=(2*(z%d))%(2*d) :=
     Int.emod_eq_emod_iff_emod_sub_eq_zero.mpr
       (Int.emod_eq_zero_of_dvd hdiv)
-  rw [Int.emod_eq_of_lt (by omega) (by omega)] at hcong
+  have hrhs : (2*(z%d))%(2*d)=2*(z%d) :=
+    Int.emod_eq_of_lt (by omega) (by omega)
+  rw [hrhs] at hcong
   exact hcong
 
 theorem valuation_le (b : Nat) (z : Int) : valuation b z≤b := by
