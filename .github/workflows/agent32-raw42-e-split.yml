@@ -104,7 +104,7 @@ jobs:
           set -euo pipefail
           d=im-results/agent32-raw42
           g="$d/generated-assembly"
-          mapfile -t roots < <(python -c 'import json,sys;print("\\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$g/split-plan.json" "$PART")
+          mapfile -t roots < <(python -c 'import json,sys;print(*json.load(open(sys.argv[1]))["groups"][sys.argv[2]],sep=chr(10))' "$g/split-plan.json" "$PART")
           test "${#roots[@]}" -gt 0
           for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
           mkdir -p /tmp/part
