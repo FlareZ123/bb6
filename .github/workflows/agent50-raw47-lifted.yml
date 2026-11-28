@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -17,6 +17,10 @@ on:
         default: ''
       raw47_run:
         description: Source-accepted Raw47Complete producer run for global Canonical41 consumption
+        type: string
+        default: ''
+      canonical39_run:
+        description: Accepted Canonical39 Raw47 successor run for conditional Raw39 consumption
         type: string
         default: ''
       raw34_parent:
@@ -227,6 +231,44 @@ jobs:
           path: |
             /tmp/a50-canonical39-raw47/canonical39-raw47-delta/**
             /tmp/a50-canonical39-raw47.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
+
+  canonical38-raw39-conditional:
+    if: inputs.mode == 'canonical38-raw39-conditional'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Prove Raw39 is the unique next obligation on the accepted Raw47 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL39_RUN: ${{ inputs.canonical39_run }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL39_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent45-canonical38-raw39/consume_after_raw47.py
+          python im-results/agent45-canonical38-raw39/consume_after_raw47.py \
+            --work /tmp/a45-canonical38-raw39 \
+            --canonical39-run-id "$CANONICAL39_RUN" | tee /tmp/a45-canonical38-raw39.log
+          test -s /tmp/a45-canonical38-raw39/canonical38-raw47-raw39-conditional-delta/delta.json
+          cat /tmp/a45-canonical38-raw39/canonical38-raw47-raw39-conditional-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical38-raw47-raw39-conditional-delta
+          path: |
+            /tmp/a45-canonical38-raw39/canonical38-raw47-raw39-conditional-delta/**
+            /tmp/a45-canonical38-raw39.log
           if-no-files-found: error
           compression-level: 1
           retention-days: 30
