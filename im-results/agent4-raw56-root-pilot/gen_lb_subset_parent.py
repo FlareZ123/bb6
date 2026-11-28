@@ -39,14 +39,14 @@ def generate(prep: Path, helper: Path):
 theorem subset_{kk} (e : List Move × PartialMachine)
     (he : e ∈ canonicalResiduals p_{kk} {max(5,k%6+1)} t_{kk}) : e.2 ∈ allTables := by
   have h : e.2 ∈ (canonicalResiduals p_{kk} {max(5,k%6+1)} t_{kk}).map Prod.snd :=
-    List.mem_map_of_mem Prod.snd he
+    List.mem_map_of_mem he
   simp only [nr_{kk},List.map_nil,List.map_cons,{EQ},
     List.mem_cons,List.not_mem_nil,or_false] at h
   all_goals simp only [allTables,List.mem_cons,List.not_mem_nil,or_false]
-  all_goals simp_all
+  all_goals try simp_all
   all_goals grind
 """)
-    childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit\nopen BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent47CanonicalFrontier\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
+    childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedSimpArgs false\nnamespace "+NS+"\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit\nopen BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent47CanonicalFrontier\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
     (d/"Raw56LBTopChildren.lean").write_text(childrenSource)
     # First-query discrimination exactly mirrors the source-accepted cktop
     # proof's 24 terms, so it never expands a giant concatenated list.
