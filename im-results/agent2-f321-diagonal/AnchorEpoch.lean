@@ -353,6 +353,37 @@ theorem terminal_has_last_anchor_HF
         rcases he with ⟨j,a,d,hj,ha⟩
         exact (anchorMove_bounds ha).1
 
+def highCount : List InverseLetter → Nat
+  | [] => 0
+  | .high :: w => highCount w + 1
+  | .far :: w => highCount w
+
+def farCount : List InverseLetter → Nat
+  | [] => 0
+  | .high :: w => farCount w
+  | .far :: w => farCount w + 1
+
+theorem word_count_length (w : List InverseLetter) :
+    highCount w + farCount w = w.length := by
+  induction w with
+  | nil => rfl
+  | cons b bs ih =>
+      cases b <;> simp [highCount,farCount] at ih ⊢ <;> omega
+
+theorem compile_shift_counts (w : List InverseLetter) :
+    (compile w).shift = highCount w + 2*farCount w := by
+  induction w with
+  | nil => rfl
+  | cons b bs ih =>
+      cases b <;> simp [compile,advance,highCount,farCount] at ih ⊢ <;> omega
+
+theorem compile_sumDecrease_counts (w : List InverseLetter) :
+    (compile w).sumDecrease = highCount w + 6*farCount w := by
+  induction w with
+  | nil => rfl
+  | cons b bs ih =>
+      cases b <;> simp [compile,advance,highCount,farCount] at ih ⊢ <;> omega
+
 /-- Pure arithmetic identity for every compiled H/F inverse word.  High adds
     (sumDecrease,shift,length)=(1,1,1); Far adds (6,2,1). -/
 theorem compile_cost_identity (w : List InverseLetter) :
@@ -527,6 +558,34 @@ theorem terminal_last_anchor_shift_phase
 #print axioms anchorMove_output_shape
 #print axioms root_anchorChain_endpoint_shape
 #print axioms terminal_last_anchor_shift_phase
+
+/-- Root interpretation of the shift phase: the High count parity is selected
+    by the last anchor's small second counter. -/
+theorem terminal_last_anchor_highCount_phase
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) ∧
+      (c=1 → highCount w % 2 = 0) ∧
+      (c=2 → highCount w % 2 = 1) := by
+  rcases terminal_last_anchor_shift_phase h with
+    ⟨q,R,c,m,w,hchain,hc,hlen,hw,hcost,hc2,hc1⟩
+  have hs := compile_shift_counts w
+  refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,?_,?_⟩
+  · intro hc1'
+    have hp := hc1 hc1'
+    omega
+  · intro hc2'
+    have hp := hc2 hc2'
+    omega
+
+#print axioms word_count_length
+#print axioms compile_shift_counts
+#print axioms compile_sumDecrease_counts
+#print axioms terminal_last_anchor_highCount_phase
 
 #print axioms compile_cost_identity
 #print axioms terminal_last_anchor_cost_equation
