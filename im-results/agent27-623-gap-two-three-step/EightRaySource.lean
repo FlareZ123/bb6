@@ -58,7 +58,7 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
     rcases ht with h1 | h2 | h3 | h4
     · have htransport := ordinary_source_ray_transport
         40 1 N u v x y (N+3*n+61) (53*N+23*n+377)
-        hhi hsep hu hord (by simpa using h1.2) h1.1
+        hhi hsep hu hord (by simpa using h1.2) (by simpa using h1.1)
       left
       right
       constructor <;> omega
@@ -89,7 +89,7 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
     rcases ht with h1 | h2 | h3 | h4
     · have htransport := ordinary_source_ray_transport
         1 40 N u v x y (53*N+23*n+377) (N+3*n+61)
-        hhi hsep hu hord h1.1 (by simpa using h1.2)
+        hhi hsep hu hord (by simpa using h1.1) (by simpa using h1.2)
       left
       left
       constructor <;> omega
