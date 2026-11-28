@@ -555,7 +555,7 @@ jobs:
           node --version
           node im-results/agent50-raw34-firsthole/count_accepted_union.mjs \
             | tee /tmp/agent50-raw34-exact-union.log
-          grep -F 'PASS: exact physically disjoint Raw34 proved-union size 97,539,062,500' \
+          grep -F 'PASS: exact physical-table Raw34 proved-union size 97,539,062,500' \
             /tmp/agent50-raw34-exact-union.log
       - uses: actions/upload-artifact@v4
         if: always()
