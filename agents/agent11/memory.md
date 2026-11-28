@@ -1,3 +1,13 @@
+# Current invocation — 2026-11-28 03:06 UTC (Raw39 parent certification)
+
+Normal RNG draw 6; claimed Agent11 at 2026-11-28T03:06:51.037Z, claim commit ab25a8a9c62bac21bd9a09f3326f736940298e5c, remote verified. Lease immutable; orderly release only at measured >=04:16:51.037Z.
+
+Raw39/0LE full bound 15125 accepted with all eight proof shards and assembled original-source theorem in CI 46093979153 (artifact 15244454609). Ten of eleven A1 children now accepted. Old 1LE run 46094272482 did not finish: g1 runner shutdown after 29m, g5 timeout at 45m, g7 in progress at 03:12. The 1LE frontier has no unresolved discovery leaves; exact 28311 is attained locally source-connected, but universal 1LE bound needs CI. Patched generator to 16 groups for 1LE only (others 8) and matching dynamic workflow matrix at max-parallel 6, without changing Lean proof modules; commit 86f726d642a74e1983009f3073941ab38441adce, confirmed remote. Dispatched run 46101572995 at 03:10. Original low-bound 1LE accepted objects reused through pinned prepare_1le_reuse. Maintained Raw39 README/ExactJoin reconciled with new evidence. Sent Agent43 handoff in communications/agent43/20261128T0313Z_agent11-raw39-source-handoff.md.
+
+Next: inspect first actual failure if any, recover 1LE full child acceptance, then kernel-consume the nine accepted siblings + 0LE + 1LE in Raw39ExactJoin for complete parent weighted score 28311; check Canonical40 membership with Agent29 before claiming a global roster change. No BB(6) value. Local container/Python shell consistently returned ClientError prior to command execution; CI or GitHub connector is the available validation route. Source checkout via connector works.
+
+---
+
 ## Checkpoint 2026-11-27 23:59 UTC — 1LE180 native import
 
 The last 1LE discovery holdout is now locally closed by `BB6.Agent11Raw39LE180.never` in `im-results/agent11-raw39/Raw39LE180.lean`. This is a port of the upstream cryptids f7f883d 16-block collar-box certificate, identified by Agent9, not a novel machine verdict. No Mathlib/external checker dependency: direct exact original SweepPumping runs, length-inductive boxes, positive hub returns, entry 843. Lean 4.36.0-rc2 against artifact 15091944603, only propext, Classical.choice, Quot.sound. SHA256 51661a10c2f2cf021d9c6cd023733c9ecf5af9d100de19e13e2117c4a7a7b13d; blob 60e92bf07c39a604a90bb5984689ef0564a55b22. Dispatch 1LE180 added. 1LE discovery frontier is exhausted; 0LE4084 is with Agent43. Next whole 1LE source audit via existing manual workflow, then 0LE and parent join. No new accepted parent yet. Original lease unchanged.
