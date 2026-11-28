@@ -164,3 +164,38 @@ digit_i = (A*x_i + B*y_i + c_i) mod 3.
 \`\`\`
 
 The coefficients are bounded (\`|A|<=120\`, \`|B|<=117\`) and the phase constant is \`3*A0*gamma_s\`. The remaining issue is not the algebraic identity: it is to retain the actual low-boundary carry at the moving S-window cut and prove that the authentic root word forces a sufficiently high nonmonochromatic output digit. A truncated window must not silently reset this carry.
+
+
+## Uniform strip-width target for the S-window proof
+
+Across all eight rows, after substituting N=n+3, the largest upper-side error is
+
+\`\`\`
+C_max(n) = 237*n + 1825,
+\`\`\`
+
+and the largest lower-side error is
+
+\`\`\`
+D_max(n) = 116*n + 820.
+\`\`\`
+
+Therefore every eight-ray cone is excluded as soon as its corresponding scalar form F satisfies
+
+\`\`\`
+abs(F) > W(n),   W(n) = 1422*n + 10950.
+\`\`\`
+
+Using the transported scale relation n<=ell+3 (where ell is the authentic S-mass window depth), it suffices to prove
+
+\`\`\`
+abs(F) > 1422*ell + 15216.
+\`\`\`
+
+A transducer proof that finds a nonzero ternary output digit at position k, while bounding the actual low-boundary scalar carry by H, would give a sufficient inequality of the form
+
+\`\`\`
+3^k - H > 1422*ell + 15216.
+\`\`\`
+
+This isolates the quantitative target for the moving-window argument. The coefficient ranges alone do not prove the needed carry bound or the required high nonzero digit; those remain the genuine open steps.
