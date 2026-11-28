@@ -128,7 +128,16 @@ jobs:
       - name: Restore E11LB certificate objects
         uses: actions/download-artifact@v4
         with:
-          pattern: rootpilot-lb-*
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - name: Restore E11LB long-certificate objects
+        uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
           path: /tmp/rootpilot-certs
           merge-multiple: true
           github-token: ${{ secrets.GITHUB_TOKEN }}
