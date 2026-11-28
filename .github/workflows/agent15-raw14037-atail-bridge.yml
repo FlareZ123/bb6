@@ -1,0 +1,34 @@
+name: Agent15 Raw37 A-tail bridge
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate dependencies and compile the framed bridge
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
+          node im-results/agent10-nov26-cryptids/generate_raw140_double.js
+          node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+          node im-results/agent10-nov26-cryptids/generate_raw140_42_counter.js
+          node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
+          mkdir -p /tmp/raw140-37-a-tail
+          python tools/lean_compile_closure.py --workdir /tmp/raw140-37-a-tail --jobs 3 im-results/agent15-raw140-hard-prefix/Raw14037ATailBridge.lean 2>&1 | tee /tmp/raw140-37-a-tail.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-37-a-tail.log Raw14037ATailBridge.t11511_to_c31
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw14037-atail-bridge-axioms
+          path: /tmp/raw140-37-a-tail.log
