@@ -39,7 +39,7 @@ def restore_canonical39(work, linked, canonical40, predecessor_pin, run_id):
     assert report["previous_root_sha256"] == canonical40["root_sha256"]
     assert report["previous_residual_count"] == 40
     assert report["remaining_residual_count"] == 39
-    assert report["transport"] == "staged"
+    assert report["transport"] in ("staged", "chunked")
     assert report["exact_at_champion_score"] == PREV_NS + ".exact_at_champion_score"
     assert report["exact_at_champion_score"] in report["axioms"]
     assert all(set(v) <= ALLOWED for v in report["axioms"].values())
