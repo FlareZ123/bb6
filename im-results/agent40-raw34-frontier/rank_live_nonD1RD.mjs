@@ -70,8 +70,12 @@ const withDepth6Tranche=process.argv.includes("--include-depth6-tranche");
 const withDepth6Halts=process.argv.includes("--include-depth6-halts");
 const withWindow5MaskBank=process.argv.includes("--include-window5-mask-bank");
 const window5Families=withWindow5MaskBank
-  ? JSON.parse(readFileSync(join(dir,"../agent50-raw34-window5/mask-bank-128.json"),"utf8"))
-      .ranked.map(x=>x.domainMasks)
+  ? [
+    ...JSON.parse(readFileSync(join(dir,"../agent50-raw34-window5/mask-bank-128.json"),"utf8"))
+       .ranked.map(x=>x.domainMasks),
+    ...JSON.parse(readFileSync(join(dir,"../agent50-raw34-window5/ef-conjugate-bank-128.json"),"utf8"))
+       .conjugates.map(x=>x.domainMasks)
+  ]
   : [];
 const withLateHalts=process.argv.includes("--include-late-halts");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
