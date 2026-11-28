@@ -44,3 +44,51 @@ A separate test of 450 randomized \`G\` inputs (more B tokens, random gaps 1–8
 The central missing piece is a symbolic **first-return theorem for arbitrary exponents and number of B tokens**, not a longer finite run or another local-radius BFS. The machine visibly performs repeated left-sweeps via the transparent \`C0 -> A1 -> C0\` alternation across long \`10\` regions; the \`C1 -> D0 -> A1\` sequence processes a double-one marker. Derive a finite set of parametric tape-rewrite and sweep lemmas that (i) never trigger F1, (ii) terminate an entire epoch, and (iii) preserve at least one A separator between consecutive B markers and the final two A tokens. Once established, compose the 147-step blank-start bridge and the positive-return invariant to obtain a source Cover for q0-148. The hypothesis is regular as a *set of section configurations*, but its Turing-machine return function may involve unbounded arithmetic and should not be assumed a finite-state transducer without proof.
 
 This approach is independent of the bounded SMT two-stack automata search; the latter had no certificate for DFA pairs up to 4x4 and single-sided composed FAR at d6–7 was UNSAT for q0-151. Do not classify q0-148 as nonhalting until the parametric return theorem is fully proved.
+
+
+## Explicit symbolic sweeps (new proof candidate; CI axiom audit pending)
+
+The source file \`Q0148BoundarySweep.lean\` constructs the following **universally quantified** computations using the original partial table and the trusted \`Agent31Pump.Auto.knownRun_sound\` and \`Agent5PackedSweep.sweepLP/sweepRP\` transfer frameworks. All terms are ordinary two-sided tape-stack configurations with unknown tails \`L,R\`.
+
+- In state C reading 0, a **leftward** \`10\` transfer costs 2 steps and leaves the transferred two symbols unchanged in near-head stack order:
+  \`knownRun p 2 <C, left=010, right=empty> = <C,left=0,right=10>\`.
+- In state C reading 0, a **leftward** separated-marker \`11010\` transfer costs 5 steps:
+  \`knownRun p 5 <C,left=011010,right=empty> = <C,left=0,right=11010>\`.
+  In geometric tape order this is the local rewrite **\`0 AB \` to \`0 BA\`**, where A=10, B=110. Thus a left scan moves a B marker left across its preceding A separator without inspecting other cells.
+- In state A reading 0, a **rightward** \`10\` transfer (after fixed right zero) costs 6 steps and emits \`01\` on the left:
+  \`knownRun p 6 <A,left=0,right=010> = <A,left=001,right=0>\`.
+- A **rightward** \`11010\` transfer costs 15 steps and emits the reversed \`01011\`:
+  \`knownRun p 15 <A,left=0,right=011010> = <A,left=001011,right=0>\`.
+- The E1 entry is an exact three-step local computation:
+  \`knownRun p 3 <E,left=10,right=010> = <C,left=0,right=1110>\`.
+  This turns the last two A tokens into a temporary 1110 sentinel on the right. At the leftmost boundary, there are two exact terminal transfers: \`C, left=00\` -> \`A,left=0,right=0\` in 1 step; \`C,left=01100\` -> \`A,left=0,right=1010\` in 4 steps. They account for leading A exponent positive and zero, respectively.
+
+Define \`LeftChunk := A | M\`, with near-left stack encoding \`bits(A)=10\`, \`bits(M)=11010\`, cost 2/5. For an arbitrary **list** of chunks \`cs\`, \`scanChunks\` is proved by list induction from the two exact one-block transfer lemmas. It consumes all chunks leftward, reverses their order onto the right stack, never touches arbitrary outer tails, and runs in exactly \`scanCost cs\` steps. The analogous \`scanRightChunks\` consumes chunks rightward at cost 6/15 per block and reverses each block's near-stack orientation.
+
+The two **full leftward turn** lemmas are the central result candidates (in source, with arbitrary \`cs,L,R\`):
+
+\`\`\`
+halfSweepPositive:
+  run0 p (3 + scanCost(cs) + 1)
+    <E, 10 ++ inputBits(cs) ++ 0 ++ L, 010 ++ R>
+  = <A, 0 ++ L, 0 ++ outputBits(cs) ++ 1110 ++ R>
+
+halfSweepZero:
+  run0 p (3 + scanCost(cs) + 4)
+    <E, 10 ++ inputBits(cs) ++ 1100 ++ L, 010 ++ R>
+  = <A, 0 ++ L, 1010 ++ outputBits(cs) ++ 1110 ++ R>
+\`\`\`
+
+The positive-leading branch naturally applies to a checkpoint word \`A^a B A^b1 ... B A^c\` with a≥1, internal gaps≥1 and c≥2. Construct \`cs\` from the **rightmost** c−2 A blocks, then one M block and b_last−1 A blocks, etc., ending with the first M and a−1 A blocks. The total transfer cost is \`|W|−4\` (there are \`|W|−4\` symbols in those chunks), so the E→left-boundary turn takes exactly **\`|W|\` steps**. For a=0, omit the first unguarded B from the chunk list and use \`halfSweepZero\`; that turn also takes **\`|W|\` steps**. Both cases avoid F1 by construction. They specify the resulting tape, rather than merely its runtime.
+
+The first **bidirectional** formula for positive leading gap is also in Lean source as \`firstRoundPositive\`, using reversed chunk order and the identity \`rightScanCost = 3 * scanCost\`:
+
+\`\`\`
+run0 p (4 + 4 * scanCost(cs))
+  <E, 10 ++ inputBits(cs) ++ 0 ++ L, 010 ++ R>
+ = <A, 0 ++ rightScanOutput(cs) ++ L, 01110 ++ R>
+\`\`\`
+
+This is the exact symbolic round ending at the **right-hand 1110 sentinel**, at time \`4|W|−12\` for \`|W|=scanCost(cs)+4\`. Every step is source-defined. It does **not** yet prove how the sentinel is processed, nor that another checkpoint is reached. The remaining mathematical task is a parametric right-edge gadget/return argument (possibly multiple alternating sweeps) that maps the resulting configuration back into \`G\` after finitely many steps.
+
+These derivations were checked independently against the exact transition table and committed to native Lean with \`#print axioms\`, but this note deliberately withholds the phrase "Lean verified" until GitHub Actions compilation succeeds. They are strictly intermediate and do not close the source leaf.
