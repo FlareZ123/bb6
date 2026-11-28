@@ -8,6 +8,7 @@ const source = String.raw`import Raw44CutAssembled
 import Raw44B1RC_C1RA_A1LE_F0LE_Growth
 import Raw44B1RC_C1RA_A1LE_F1Variants_Growth
 import WeightedSymmetry
+import WeightedTNF
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
