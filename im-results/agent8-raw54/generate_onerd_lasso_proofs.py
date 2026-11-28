@@ -81,7 +81,12 @@ def t : BankAudit := .cycle {e} {k} {str(right).lower()} ({b})
 /-- Kernel computation is the security boundary: C++ discovery is untrusted. -/
 theorem checked : bankCheck [] 1006 p t = true := by decide +kernel
 theorem firstOne : p initialSlot = some (some ⟨true,true,1⟩) := by decide +kernel
-theorem nohalt : weightedTNFNoAssignedHalt p := by decide +kernel
+theorem nohalt : weightedTNFNoAssignedHalt p := by
+  intro s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
+  all_goals cases b <;> decide +kernel
 
 /-- If accepted, every full completion of this literal partial table
     is nonhalting (hence satisfies any weighted bound). -/
