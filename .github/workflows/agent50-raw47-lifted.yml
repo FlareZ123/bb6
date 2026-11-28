@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-ef-left-rays, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1260,6 +1260,49 @@ jobs:
         with:
           name: raw34-EF-left-ray-1024-source
           path: /tmp/a40-raw34-ef-left/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-ef-left-audit:
+    if: inputs.mode == 'raw34-ef-left-audit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Original physical 25-ary union of all 1,080 left/right ray cylinders
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-raw34-ef-left-union
+          mkdir -p "$W/generated"
+          node im-results/agent40-raw34-frontier/generate_ef_left_ray.mjs \
+            --output "$W/generated" | tee "$W/ef-left-census.json"
+          node --max-old-space-size=6144 \
+            im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-e-ray --include-f-left \
+            | tee "$W/rays-48-baseline.json"
+          node --max-old-space-size=6144 \
+            im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-ef-left-ray --ef-left-dir "$W/generated" \
+            | tee "$W/rays-1080-complement.json"
+          python - "$W" <<'PY'
+          import json,sys,os
+          W=sys.argv[1]
+          a=json.load(open(os.path.join(W,"rays-48-baseline.json")))
+          b=json.load(open(os.path.join(W,"rays-1080-complement.json")))
+          assert a['rayPatterns']==48
+          assert b['rayPatterns']==1080
+          before=int(a['totalResidualD1not1RD'])
+          after=int(b['totalResidualD1not1RD'])
+          assert 0<=after<=before
+          print('PASS: 1080 physical E/F left/right ray patterns exact source complement')
+          print('New physical coverage beyond 48 source rays:',before-after)
+          print('Remaining non-D1=1RD physical complement:',after)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-ef-left-rays-exact-union
+          path: /tmp/a40-raw34-ef-left-union/
           if-no-files-found: warn
           retention-days: 30
 
