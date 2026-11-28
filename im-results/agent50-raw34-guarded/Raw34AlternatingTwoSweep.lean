@@ -11,9 +11,9 @@ The Raw34 D1=0LD C1=0LA depth-three holdout
 admits an exact two-sweep unbounded growth recurrence.
 
 At the nth left-frontier checkpoint the head is in B, its left tape
-is empty, and its right tape is 001(01)^(2n). The nth epoch costs
+is empty, and its right tape is 001(01)^(2n)0 (including the zipper's explicit trailing zero). The nth epoch costs
 28n+44 ordinary steps and increases the alternating marked block to
-001(01)^(2n+2). This proves NeverHalts for EVERY total completion,
+001(01)^(2n+2)0. This proves NeverHalts for EVERY total completion,
 including completions in which E1,F0,F1 are HALT. The one-block sweep
 lemmas quantify over arbitrary untouched left/right tails.
 -/
@@ -33,7 +33,7 @@ def p : PartialMachine := fun s =>
 
 def P : List Bool := [false,true]
 def family (n : Nat) : Z0 :=
-  ⟨1, [], [false,false,true] ++ rep P (2*n)⟩
+  ⟨1, [], [false,false,true] ++ rep P (2*n) ++ [false]⟩
 
 theorem first : run0 p 9 ⟨0,[],[]⟩ = some (family 0) := by decide
 
@@ -52,14 +52,14 @@ theorem right_one (L R : List Bool) :
 
 /-- The blank right frontier has a four-step turn into C. -/
 theorem right_frontier (L : List Bool) :
-    run0 p 4 ⟨1,[true]++L,[false,false]⟩ =
+    run0 p 4 ⟨1,[true]++L,[false,false,false]⟩ =
       some ⟨2,[false,true,true,false,true]++L,[]⟩ := by
   rfl
 
 /-- C/D's right-frontier turn enters B for the opposite sweep. -/
 theorem left_turn (L : List Bool) :
     run0 p 7 ⟨2,[false,true,true,false,true]++L,[]⟩ =
-      some ⟨1,P++L,[false,false,true]⟩ := by
+      some ⟨1,P++L,[false,false,true,false]⟩ := by
   rfl
 
 /-- Eight source actions transport one 01 block leftward. -/
@@ -71,28 +71,28 @@ theorem left_one (L R : List Bool) :
 theorem growth (n : Nat) :
     run0 p (28*n+44) (family n) = some (family (n+1)) := by
   have h0 : run0 p 11 (family n) =
-      some ⟨1,[true],[false,false]++rep P (2*n+1)⟩ := by
-    have h := prepare (rep P (2*n))
+      some ⟨1,[true],[false,false]++rep P (2*n+1)++[false]⟩ := by
+    have h := prepare (rep P (2*n)++[false])
     simpa only [family, P, rep, List.append_assoc] using h
   have hR : run0 p (6*(2*n+1))
-      ⟨1,[true],[false,false]++rep P (2*n+1)⟩ =
-      some ⟨1,[true]++rep P (2*n+1),[false,false]⟩ := by
+      ⟨1,[true],[false,false]++rep P (2*n+1)++[false]⟩ =
+      some ⟨1,[true]++rep P (2*n+1),[false,false,false]⟩ := by
     have h := sweepR p 1 [true] [false,false] P P 6
-      right_one (2*n+1) [] []
+      right_one (2*n+1) [] [false]
     simpa using h
   have hF : run0 p 4
-      ⟨1,[true]++rep P (2*n+1),[false,false]⟩ =
+      ⟨1,[true]++rep P (2*n+1),[false,false,false]⟩ =
       some ⟨2,[false,true,true,false,true]++rep P (2*n+1),[]⟩ :=
     right_frontier (rep P (2*n+1))
   have hT : run0 p 7
       ⟨2,[false,true,true,false,true]++rep P (2*n+1),[]⟩ =
-      some ⟨1,rep P (2*n+2),[false,false,true]⟩ := by
+      some ⟨1,rep P (2*n+2),[false,false,true,false]⟩ := by
     simpa [rep] using left_turn (rep P (2*n+1))
   have hL : run0 p (8*(2*n+2))
-      ⟨1,rep P (2*n+2),[false,false,true]⟩ =
+      ⟨1,rep P (2*n+2),[false,false,true,false]⟩ =
       some (family (n+1)) := by
     have h := sweepL p 1 [] [false,false,true] P P 8
-      left_one (2*n+2) [] []
+      left_one (2*n+2) [] [false]
     have hsize : 2*(n+1) = 2*n+2 := by omega
     simpa only [family,hsize,List.nil_append,List.append_nil] using h
   have h := join0 h0 (join0 hR (join0 hF (join0 hT hL)))
