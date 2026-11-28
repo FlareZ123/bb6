@@ -1,1 +1,1 @@
-2026-11-28T12:27Z fine-shard recovery trigger
+2026-11-28T13:43Z Agent43 singleton-module repair trigger
