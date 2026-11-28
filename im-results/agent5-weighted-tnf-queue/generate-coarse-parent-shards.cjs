@@ -155,13 +155,13 @@ if(longs.length){
    for(let j=0;j<nodes.length;j+=2){
     if(j+1===nodes.length){next.push(nodes[j]);continue;}
     const a=nodes[j],b=nodes[j+1];if(a.end!==b.start)throw Error('nonadjacent long spans');
-    const joinName=name+'Join'+level+'_'+(j>>1),joinLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
+    const joinName=name+'Join'+level+'_'+(j>>1),joinLines=[`set_option maxRecDepth 1000000\nnamespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
     joinLines.push(`theorem span${k}_${a.start}_${b.end} : runP ${p} ${b.end-a.start} z${k}_${a.start} = some z${k}_${b.end} := joinP span${k}_${a.start}_${a.end} span${k}_${b.start}_${b.end}`);
     joinLines.push(`end BB6.${name}\n`);write(joinName,imports([a.mod,b.mod])+joinLines.join('\n'));next.push({start:a.start,end:b.end,mod:joinName});
    }
    nodes=next;
   }
-  const final=nodes[0],lines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
+  const final=nodes[0],lines=[`set_option maxRecDepth 1000000\nnamespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
   if(final.start!==0||final.end!==c.n)throw Error('wrong long span cover');
   lines.push(`theorem run${k}_${c.n} : runP ${p} ${c.n} startP = some z${k}_${c.n} := span${k}_0_${c.n}`);
   lines.push(`theorem safe${k} : ${safeTy(p)} := lastPacked ${B} ${p} ${c.n} ${slot(c.slot)} z${k}_${c.n} run${k}_${c.n} (by decide) (by decide) (by decide) (by decide) (by decide)\n#print axioms safe${k}`);
