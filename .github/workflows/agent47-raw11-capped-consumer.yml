@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, q0-151-root53, q0-148-pending, extra-resume-132, extra-repair-132, extra-repair-140, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, q0-151-root53, q0-148-pending, extra-resume-132, extra-repair-132, extra-repair-140, q0-root53-source, q0-root53-sharp, q0-root53-sharp-only, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -1134,5 +1134,89 @@ jobs:
           path: |
             /tmp/q0151-root53
             im-results/agent47-raw11-adapter/Raw11Q0Root53After152.lean
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  # Exact 203-step family theorem, recompiling only *new* sharp proofs:
+  # immutable accepted full 30,793-node weighted original, generic check
+  # method and literal halter are imported by their pinned accepted objects.
+  q0-root53-sharp-only:
+    if: inputs.mode == 'q0-root53-sharp-only'
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45815437524
+          name: q0-root53-generated-source
+          path: /tmp/q053-frozen
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46109014135
+          name: raw11-q0-root53-complete-source
+          path: /tmp/accepted-objects/original-root53
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46110753510
+          name: standalone-lean-source-closure
+          path: /tmp/accepted-objects/ordinary-checker
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46111133174
+          name: standalone-lean-source-closure
+          path: /tmp/accepted-objects/203-halter
+      - name: Reuse frozen original sources; generate only new sharp proofs
+        run: |
+          set -euo pipefail
+          witness="$(find /tmp/q053-frozen -name q0-auto-candidate.json -print -quit)"
+          test -n "$witness"
+          python im-results/agent47-raw11-adapter/generate-q0-root53-sharp-only.py \
+            "$(dirname "$witness")" /tmp/q053-sharp-only \
+            | tee /tmp/q053-sharp-only-generation.log
+          test -f /tmp/q053-sharp-only/Q0Root53SharpWitness.lean
+          test -f /tmp/q053-sharp-only/Q0Root53SharpParent.lean
+      - name: Kernel-check all new sharp sources and exact 203-step family maximum
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-sharp-only.py \
+            /tmp/q053-sharp-only /tmp/accepted-objects /tmp/q053-sharp-only-certified \
+            2>&1 | tee /tmp/q053-sharp-only-source.log
+          grep -F "'Q0Root53SharpWitness.family_exact_203' depends on axioms:" \
+            /tmp/q053-sharp-only-source.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q053-sharp-only-source.log; then
+            echo 'nonstandard axiom found' >&2; exit 1
+          fi
+          sha256sum im-results/agent47-raw11-adapter/generate-q0-root53-sharp-only.py \
+            im-results/agent47-raw11-adapter/compile-sharp-only.py \
+            > /tmp/q053-sharp-only-certified/generator-sha256.txt
+          lean --version | tee /tmp/q053-sharp-only-certified/toolchain.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: root53-exact-ordinary-203-sharp-only
+          path: |
+            /tmp/q053-sharp-only-certified
+            /tmp/q053-sharp-only
+            /tmp/q053-sharp-only-source.log
+            /tmp/q053-sharp-only-generation.log
           if-no-files-found: warn
           retention-days: 30
