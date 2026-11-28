@@ -1,6 +1,6 @@
 # Raw44 / B1=0RC / C1=0RE: the four formerly unresolved residuals
 
-**Status:** locally Lean-checked infinite recurrences for every exceptional residual, with source-CI acceptance pending. The finite first-hole partition is reproducible but has not yet been turned into a source-accepted global `Cover`. This is a five-hole child, not all Raw44.
+**Status: original-source Lean accepted.** The four exceptional residuals and the complete 27,265-node first-hole partition are assembled into `Cover (WeightedBound 211) parent` for this five-hole C1=0RE child; [assembly CI 46107082911](https://github.com/FlareZ123/bb6/actions/runs/46107082911) succeeded. This is not the full Raw44 parent.
 
 The fixed partial machine is
 
@@ -19,7 +19,7 @@ Run `node discover.cjs '{"second":"0RE"}'` in this directory. Exact enumeration 
 | Four nonhalting growth candidates below | 700 |
 | **Total** | **9,765,625 = 25⁵** |
 
-The 700 residual completions are not finite cutoffs: they are handled by mathematically quantified positive-cost returns from the **actual blank start**. All recurrences below were compiled by Lean 4.36.0-rc2 against a local fixture that reproduces the repository's exact `Z0` and `run0` definitions plus the source's `sweepL/sweepR` theorems. Only full original-source compilation and axiom audit can warrant source acceptance. We have submitted each to the shared manual source gate `agent38-m62-kernel.yml`.
+The 700 residual completions are not finite cutoffs: they are handled by mathematically quantified positive-cost returns from the **actual blank start**. The recurrence modules were first developed and locally compiled against a fixture reproducing the exact `Z0`, `run0`, `sweepL` and `sweepR` interfaces. All four then passed original-source Lean 4.36.0-rc2 compilation and the axiom gate: M7 [46104882632](https://github.com/FlareZ123/bb6/actions/runs/46104882632), M4 [46105172131](https://github.com/FlareZ123/bb6/actions/runs/46105172131), M6 [46105351870](https://github.com/FlareZ123/bb6/actions/runs/46105351870), M5 [46105492096](https://github.com/FlareZ123/bb6/actions/runs/46105492096).
 
 | Identifier | Exact partial table; remaining hole(s) | Blank entry | Return-section family and exact cost | Locally compiled Lean |
 | --- | --- | ---: | --- | --- |
@@ -32,4 +32,4 @@ The `Z0` left word **includes the head**, while its right word excludes the head
 
 At each proof's entry the native partial table reaches the indicated family from the blank start without querying an undefined row. The positive-cost return lemma `never_of_growth` then proves `NeverHalts m` **for every compatible completed machine**. Their disjoint physical mass is `25 + 25 + 25 + 625 = 700`. The finite-classifier mass and these all-depth proofs together give a **conditional** five-hole weighted maximum no greater than 211, but a real source-level five-hole `Cover` still requires replaying/checking all 27,265 finite tree nodes and 214 n-gram certificates, and combining the four `.proven` leaves. Do not report 211 as a kernel-accepted upper bound yet.
 
-First source-check dispatch run IDs (status to be updated from actual CI): M7 `46104882632`, M4 `46105172131`, M6 `46105351870`, M5 `46105492096`. Keep original source table compatibility, axiom audits, and finite-tree provenance distinct.
+The full generated finite tree, all 214 n-gram certificates, translated-cycle checks and four symbolic residuals passed the assembled original-source gate in [CI 46107082911](https://github.com/FlareZ123/bb6/actions/runs/46107082911). The resulting theorem is `BB6.Agent16Raw44Cut.weighted_bound`, yielding `Cover (WeightedBound 211) parent`. This is a five-hole child, not the full Raw44 parent.

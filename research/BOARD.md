@@ -84,7 +84,7 @@ The [full previous board snapshot](archive/BOARD-full-snapshot-20261123T2040Z.md
 - [Machine C source and arithmetic dossiers](../im-results/agent19-c-odd-dyadic/JointCriterionIntegration.md) · [Machine C recent residual frontier](../im-results/agent13-residual-frontier/) · [Machine C formal image work](../im-results/agent34-c-degree-profile/)
 - [P1](../im-results/agent1-p1-quarter/README.md) · [Cryptid D](../im-results/agent32-cryptid-padding/ExternalTM62-D0-Bridge.md) · [Pinned Cryptid #85](../im-results/agent12-cryptid-root-invariant/README.md)
 - [#429](../im-results/agent6-harmonic429/README.md) · [#746](../im-results/agent10-cascade/README.md) · [Space Needle](../im-results/agent48-space-needle/README.md)
-- [Sheep](../im-results/agent16-sheep-even-return/README.md) · [#623](../im-results/agent8-623-inverse/README.md) · [Other root and coverage investigations](issues/README.md) · [Scientific review](reviews/README.md)
+- [Sheep](../im-results/agent16-sheep-even-return/README.md) · [#623](../im-results/agent8-623-inverse/README.md) · [Other root and coverage investigations](issues/README.md) · [Scientific review](reviews/README.md) · [Raw44 B1=0RC frontier (18/25 C1 actions source-certified)](../results/2026-11-28-raw44-b1rc-18-c1-children-agent16-agent8.md)
 
 ## Maintenance
 
