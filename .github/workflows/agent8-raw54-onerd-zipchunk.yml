@@ -36,7 +36,7 @@ jobs:
           python "$D/generate_onerd_zipchunk.py" --index "$IDX" --out "$D/$MOD.lean"
           W=/tmp/raw54-zipchunk-$IDX
           python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-zipchunk-$IDX.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-zipchunk-$IDX.log "$NAMESPACE.cover"
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-zipchunk-$IDX.log "$NAMESPACE.cover" "$NAMESPACE.witness_halts"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
