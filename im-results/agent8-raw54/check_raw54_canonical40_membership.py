@@ -24,6 +24,7 @@ CLAIMS = [
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
+    ap.add_argument("--conditional", action="store_true")
     a = ap.parse_args()
     work = a.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -58,6 +59,32 @@ def main() -> None:
     (evidence / "membership.json").write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n")
     print("PASS: exact Canonical40 Raw54 membership", flush=True)
+
+    if a.conditional:
+        names = [
+            "BB6.Agent8Raw54Canonical40Conditional.parent_count40",
+            "BB6.Agent8Raw54Canonical40Conditional.parents_pairwise_distinct",
+            "BB6.Agent8Raw54Canonical40Conditional.parents_root",
+            "BB6.Agent8Raw54Canonical40Conditional.count39",
+            "BB6.Agent8Raw54Canonical40Conditional.removed_parent_absent",
+            "BB6.Agent8Raw54Canonical40Conditional.conditional_sound",
+            "BB6.Agent8Raw54Canonical40Conditional.conditional_exact_at_champion",
+        ]
+        source2 = HERE / "Raw54Canonical40Conditional.lean"
+        root2, profiles2 = c.u.compile_one(source2, linked, evidence, names)
+        assert set(profiles2) == set(names), profiles2
+        assert all(set(ax) <= ALLOWED for ax in profiles2.values()), profiles2
+        shutil.copy2(root2, evidence / root2.name)
+        receipt["claim"] = (
+            "source-accepted Canonical40 to conditional 39 quotient through one explicit Raw54 Cover"
+        )
+        receipt["conditional_theorems"] = names
+        receipt["conditional_axioms"] = profiles2
+        receipt["conditional_root"] = root2.name
+        receipt["conditional_root_sha256"] = c.a68.sha(root2)
+        (evidence / "membership.json").write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+        print("PASS: Canonical40→39 source theorem with one explicit Raw54 Cover premise", flush=True)
 
 
 if __name__ == "__main__":
