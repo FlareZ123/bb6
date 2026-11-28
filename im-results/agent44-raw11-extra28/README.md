@@ -1,64 +1,56 @@
-# Current Raw11 continuation status — 2026-11-28 14:40 UTC
+# Current Raw11 continuation status — 2026-11-28 16:15 UTC
 
-This directory's older Extra28 narrative below is historical. **Extra28 is now
-source-accepted**, and the staged Raw11 route is source-accepted at exact
-**299→150** after q0-root53 plus Extra28 (CI **46120220611**). The live work is
-therefore the two exact remaining generated parents Extra132 and Extra140,
-which can remove further members of that accepted complement. No statement
-here is a global BB(6) upper bound.
+This directory's older Extra28 narrative below is historical. **Extra28 and
+Extra140 are now source-accepted**, and the staged Raw11 route is
+source-accepted at exact **299→149** after q0-root53, Extra28 and Extra140
+(CI **46160470242**). No statement here is a global BB(6) upper bound.
 
-- **Extra132** (bound 691): resumable source audit run **46154482484**
-  advanced the exact generated DAG to **139/163 accepted modules** (artifact
-  **15266699152**, SHA256
-  `e13c7c046b1082edb3ec18ae60c52141696a72f066011bed7cd2746d3de01162`).
-  The next repaired run compiled all five formerly missing 0.65–0.86 MB row
-  definitions and the exact certificate data, then runner-shutdown occurred
-  inside `RowCheck01`; a local unsplit `RowCheck03` also exceeded the
-  process memory ceiling. This isolates the remaining bottleneck to
-  `stateStepOK` evaluation over giant trie rows, not certificate discovery.
-  The resumable workflow now accepts explicit `ROW:DEPTH` trie splits and
-  invalidates only affected cached objects. Exact trie geometry showed that
-  splitting the eleven nontrivial rows as
-  `00:5 01:2 02:3 03:5 04:3 05:5 06:5 07:5 08:5 10:4 11:5`
-  makes every literal trie chunk at most **28,884 bytes** while preserving the
-  exact rows as shallow trees of opaque chunks. Run **46157544723** is the
-  first source audit of this all-row factorization. No complete Extra132 Cover
-  is claimed until its top theorem is accepted.
+- **Extra140** (bound 491) is complete and source accepted. Run
+  **46157091467** accepted all **205/205 transformed modules** and the top
+  theorem `BB6.Agent5Raw11Extra140.cover` with exactly
+  `[propext, Classical.choice, Quot.sound]`. The complete-parent artifact is
+  **15268500784** (`parent-complete-140-repaired`, SHA256
+  `a4098e5860e17ba27d18109fe553d0426a40196e95f09f8b64acd0402f42527f`).
+  The exact Raw11 consumer subsequently passed CI **46160470242**, proving
+  literal membership and census **150→149**.
 
-- **Extra140** (bound 491): the transformed exact source DAG is now
-  **fully locally kernel-checked, 205/205 modules** on Lean 4.36.0-rc2. The
-  top theorem `BB6.Agent5Raw11Extra140.cover` prints only
-  `[propext, Classical.choice, Quot.sound]`. Run **46155855956** crossed the
-  former 409 KB hard blocker and checkpointed 131 accepted transformed
-  modules (artifact **15268120230**, SHA256
-  `ea6a8de13e858a54b64f8ab3d4ad0ea171a2026343dcc6f53acafa405cfff18b`);
-  run **46156345255** advanced this to **147/205** (artifact
-  **15268385005**, SHA256
-  `daabac8861b1292f69236ce7fa0923a04b3b3da1c17053170b05d5dcf8f55380`).
-  Full source-acceptance run **46157091467** then **succeeded**: all
-  **205/205 transformed modules** were accepted and the top theorem
-  `BB6.Agent5Raw11Extra140.cover` printed exactly
-  `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or
-  `native_decide`. Complete-parent artifact **15268500784**
-  (`parent-complete-140-repaired`) has SHA256
-  `a4098e5860e17ba27d18109fe553d0426a40196e95f09f8b64acd0402f42527f`.
-  Exact Raw11 150→149 integration audit **46157584217** was dispatched from
-  this accepted bundle and must succeed before that global roster reduction
-  is counted accepted.
+- **Extra132** (bound 691) no longer has the former giant
+  `stateStepOK` memory blocker. The exact frozen TwoSidedAutomata witness has
+  left/right stack sizes **2097/133** and exact state/symbol row census
+  `[9510,811,1696,11030,1834,13603,11465,12024,9152,0,5153,7161]`,
+  totaling **83,439** abstract states. The new
+  `BitPackedSplit.lean` soundness interface consumes independently
+  kernel-checked row validity and bounded chunk checks without re-reducing the
+  entire stack in one Boolean term. `repack_extra132.py` deterministically
+  reconstructs the exact packed certificate from the frozen source and emits
+  proof-sized Lean modules.
 
-- Reusable transformations are
-  `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`, and
-  `split_trie_row.py`. They preserve literal certificates/tables and change
-  only proof-object granularity; `TwoSidedAutomataRows.check_of_rows` is the
-  kernel composition lemma. The live resumable workflow
-  `.github/workflows/agent44-raw11-parent-checkpoint.yml` applies these
-  transformations under the same standard-axiom audit.
+  On local Lean 4.36.0-rc2 the full packed certificate proves
+  `nonhalt` and `weighted` with exactly
+  `[propext, Classical.choice, Quot.sound]`; grafting only that proof boundary
+  into the unchanged generated parent DAG compiles all five reverse
+  dependencies through **`BB6.Agent5Raw11Extra132.cover`**, again with the
+  same standard axiom profile and no `sorryAx` or `native_decide`.
+  Source replay is running as **CI 46163290235** through the resumable parent
+  workflow. Count Extra132 as source accepted only if that run reaches and
+  audits the top theorem.
 
-Once Extra140 reaches its top `Cover`, the already-checked staged consumer
-`Raw11Extra140After150.lean` gives exact **150→149**. Once both Extra132 and
-Extra140 are accepted, `Raw11ThreePendingAfter151.lean` combines them with
-the already accepted Extra28 parent for the deeper exact reduction. Until the
-parent checkpoints succeed, those consumers remain conditional.
+- Reusable proof-engineering artifacts are
+  `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`,
+  `split_trie_row.py`, **`repack_extra132.py`**,
+  `TwoSidedAutomataRows.lean`, and **`BitPackedSplit.lean`**. The bit-packed
+  split method is especially useful for exact automata certificates where a
+  semantically small row check expands a large stack representation
+  repeatedly.
+
+- The direct staged consumer
+  `Raw11Extra132140After150.lean` already proves the exact conditional
+  **150→148** census from Extra132+Extra140. Its workflow
+  `.github/workflows/agent44-raw11-extra132140-after150.yml` has been repaired
+  to use the accepted Extra28 dependency bank and pinned Lean installer. Once
+  Extra132 is source accepted, this is the preferred immediate integration
+  edge.
+
 
 ---
 
