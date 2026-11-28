@@ -49,7 +49,7 @@ T(k)=170+sum_{n=0}^{k-1}(448n+612)
     =170+224k^2+388k.
 ]
 
-The orbit therefore has infinitely many defined steps. Since it never queries A1, every compatible total completion follows this same orbit and cannot halt.
+The orbit therefore has infinitely many defined steps. Since it never queries A1, every compatible total completion follows this same orbit and cannot halt. The left zipper list has length (16n+16), so each section return extends the represented tape by 16 cells while the return cost grows linearly; the cumulative running time is consequently quadratic in the section index.
 
 ## Formal verification
 
