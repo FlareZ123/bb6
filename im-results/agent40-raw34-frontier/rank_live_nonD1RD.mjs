@@ -409,10 +409,10 @@ function coveredCount(id,at){
  if(base===undefined){base=0n;for(const child of n.ch)base+=coveredCount(child,n.at+1);countMemo.set(id,base);}
  return pow[n.at-at]*base;
 }
-/-- Physical cylinder restriction counting without constructing a new MDD.
+/** Physical cylinder restriction counting without constructing a new MDD.
     A reduced node can skip variables; only unfixed skipped variables
     contribute a factor 25. This avoids 4GB heap growth when adding 9857
-    source cylinders to an already-large full-union decision diagram. --/
+    source cylinders to an already-large full-union decision diagram. */
 function coveredInsideCube(root,cube){
  assert.equal(cube.length,8);
  const memo=new Map();
