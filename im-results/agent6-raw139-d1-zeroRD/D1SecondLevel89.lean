@@ -80,7 +80,7 @@ theorem cover_of_frontier (B : Nat) (hB : 3000 ≤ B)
   · apply BB6.Agent6D1NineReduce.cover B (by omega)
     intro k hk
     simp [BB6.Agent6D1NineReduce.hard] at hk
-    rcases hk with rfl | rfl | rfl | rfl | rfl | rfl
+    rcases hk with rfl | rfl | rfl | rfl | rfl | rfl | rfl
     · exact cover_mono hB BB6.Agent6D1NineFour.c2
     · exact cover_mono hB BB6.Agent6D1NineFour.c6
     · exact cover_mono hB BB6.Agent6D1NineOne.c16
