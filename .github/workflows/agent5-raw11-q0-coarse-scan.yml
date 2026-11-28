@@ -643,28 +643,14 @@ jobs:
                   assert not dest.exists(),dest
                   shutil.copy2(src,dest)
           PY
-      - uses: actions/download-artifact@v4
+      - name: Generate exact q0-150 late-sweep source within parent consumer
         if: steps.prepare.outputs.id == '150'
-        with:
-          github-token: ${{ github.token }}
-          run-id: '46090041659'
-          name: raw11-q0-long-sweep-source-3
-          path: /tmp/q0150-external/long3
-      - uses: actions/download-artifact@v4
-        if: steps.prepare.outputs.id == '150'
-        with:
-          github-token: ${{ github.token }}
-          run-id: '46090041659'
-          name: raw11-q0-long-sweep-source-4
-          path: /tmp/q0150-external/long4
-      - uses: actions/download-artifact@v4
-        if: steps.prepare.outputs.id == '150'
-        with:
-          github-token: ${{ github.token }}
-          run-id: '46090041659'
-          name: raw11-q0-long-sweep-source-5
-          path: /tmp/q0150-external/long5
-      - name: Stage the three newly checked long q0-150 traces
+        run: |
+          set -euo pipefail
+          for i in 3 4 5; do
+            node im-results/agent5-weighted-tnf-queue/generate-long-sweep.cjs "$i" "/tmp/q0150-external/long$i"
+          done
+      - name: Stage all three new q0-150 late-sweep source files
         if: steps.prepare.outputs.id == '150'
         run: |
           set -euo pipefail
