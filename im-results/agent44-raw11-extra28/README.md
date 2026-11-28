@@ -1,3 +1,43 @@
+# Current Raw11 continuation status — 2026-11-28 14:40 UTC
+
+This directory's older Extra28 narrative below is historical. **Extra28 is now
+source-accepted**, and the staged Raw11 route is source-accepted at exact
+**299→150** after q0-root53 plus Extra28 (CI **46120220611**). The live work is
+therefore the two exact remaining generated parents Extra132 and Extra140,
+which can remove further members of that accepted complement. No statement
+here is a global BB(6) upper bound.
+
+- **Extra132** (bound 691): resumable source audit run **46154482484** advanced
+  the exact generated DAG to **139/163 accepted modules**, leaving 24. Artifact
+  **15266699152** (`raw11-132-checkpoint`) has SHA256
+  `e13c7c046b1082edb3ec18ae60c52141696a72f066011bed7cd2746d3de01162`.
+  A continuation was dispatched from that exact checkpoint.
+- **Extra140** (bound 491): the frozen audit is at **115/130 accepted original
+  modules**. Run **46154387464** proved 11/12 independently split children of
+  the sole 836,410-byte blocker; the remaining 409,267-byte TwoSidedAutomata
+  child alone hit runner shutdown. The proof-granularity transformation now
+  splits that child into its exact twelve state/symbol rows, then splits the
+  two largest row tries at depth 3. Local Lean 4.36.0-rc2 checks established
+  that the 83 KB Row05 decomposition yields eight 9–11 KB `decide +kernel`
+  obligations (about 2.3–2.4 GB peak each) and a sub-second recomposition
+  theorem with axiom profile `[propext]`; Row07's analogous eight checks and
+  recomposition also pass locally.
+- Reusable transformations are
+  `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`, and
+  `split_trie_row.py`. They preserve literal certificates/tables and change
+  only proof-object granularity; `TwoSidedAutomataRows.check_of_rows` is the
+  kernel composition lemma. The live resumable workflow
+  `.github/workflows/agent44-raw11-parent-checkpoint.yml` applies these
+  transformations under the same standard-axiom audit.
+
+Once Extra140 reaches its top `Cover`, the already-checked staged consumer
+`Raw11Extra140After150.lean` gives exact **150→149**. Once both Extra132 and
+Extra140 are accepted, `Raw11ThreePendingAfter151.lean` combines them with
+the already accepted Extra28 parent for the deeper exact reduction. Until the
+parent checkpoints succeed, those consumers remain conditional.
+
+---
+
 # Raw11 Extra28: twelve-child proof frontier toward a complete parent Cover
 
 **Exact parent:** `1RB0LB_1RC1LC_0LA0LD_------_------_------`.
