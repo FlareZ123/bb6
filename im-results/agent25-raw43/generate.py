@@ -2,7 +2,7 @@
 from pathlib import Path
 from collections import Counter
 from itertools import product
-import hashlib, json, re, subprocess, sys, tempfile
+import hashlib, json, os, re, subprocess, sys, tempfile
 
 ROOT = Path(__file__).resolve().parent
 IM = ROOT.parent
@@ -25,6 +25,7 @@ NS = "BB6.Agent25Raw43" + SUFFIX
 PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
 SHARD = 5000
+BIDFA_BATCH = max(1, int(os.environ.get("RAW43_BIDFA_BATCH", "1")))
 
 def emit(name, imports, body, namespace=NS, opens=None):
     if opens is None:
@@ -35,6 +36,13 @@ def emit(name, imports, body, namespace=NS, opens=None):
         + "set_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"
         + f"namespace {namespace}\nopen {opens}\n"
         + body + f"\nend {namespace}\n")
+
+def emit_bidfa_batch(name, entries):
+    opens = "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA"
+    parts = ["import FastBiDFA\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"]
+    for namespace, body in entries:
+        parts.append(f"namespace {namespace}\nopen {opens}\n{body}\nend {namespace}\n")
+    (OUT/(name+".lean")).write_text("".join(parts))
 
 def compile_cpp(src, out):
     subprocess.run(["g++","-std=c++20","-O3",str(src),"-o",str(out)],check=True)
@@ -78,16 +86,27 @@ def generate():
                 assert rows[i]==table
                 cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
                 modules[i]="Raw43M29"
+        bidfa_pending=[]
         for key,leaf in S.get("bidfa",{}).items():
             i=int(key)
             assert rows[i]==leaf["table"]
             name=PREFIX+"BiDFA"+str(i)
             namespace=NS+"BiDFA"+str(i)
             body=emit_bidfa(i,rows[i],*leaf["dfa"],[leaf["states"],leaf["edges"]])
-            emit(name,["FastBiDFA"],body,namespace,
-                 "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA")
             cert[i]=f".proven {namespace}.M{i}.table {namespace}.M{i}.never"
-            modules[i]=name
+            if BIDFA_BATCH == 1:
+                emit(name,["FastBiDFA"],body,namespace,
+                     "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA")
+                modules[i]=name
+            else:
+                bidfa_pending.append((i,namespace,body))
+        if BIDFA_BATCH > 1:
+            for off in range(0,len(bidfa_pending),BIDFA_BATCH):
+                chunk=bidfa_pending[off:off+BIDFA_BATCH]
+                name=PREFIX+"BiDFABatch"+str(off//BIDFA_BATCH)
+                emit_bidfa_batch(name,[(namespace,body) for _,namespace,body in chunk])
+                for i,_,_ in chunk:
+                    modules[i]=name
         for key,leaf in S.get("lateLast",{}).items():
             i=int(key)
             assert rows[i]==leaf["table"]

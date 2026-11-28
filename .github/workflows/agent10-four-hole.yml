@@ -543,6 +543,9 @@ jobs:
             b0le_e1rf)
               python "$root/prepare_b0le_bank.py" 1rf "$root/spec_$VARIANT.json" "$root/spec_$VARIANT.json" ;;
           esac
+          case "$VARIANT" in
+            b0le_e*) export RAW43_BIDFA_BATCH=24 ;;
+          esac
           python "$root/generate.py" "$VARIANT"
           if [[ "$VARIANT" == b*_* ]]; then
             suffix="${VARIANT^^}"
