@@ -195,10 +195,24 @@ theorem attainer_in_slice : compatible root attainer := by
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> simp [root] at ht ⊢ <;>
     first | subst t; decide | contradiction
 
+/-- Exact weighted maximum over the five-hole physical cylinder.
+    A valid halting trace at score 108 witnesses sharpness. -/
+theorem exact_weighted (B : Nat) :
+    (∀ m, compatible root m → WeightedBound B m) ↔ 108 ≤ B := by
+  constructor
+  · intro h
+    have hd : 0 ∈ delays (zeroNext attainer) 0 := by decide
+    have hb := h attainer attainer_in_slice 107 0 attainer_halts hd
+    omega
+  · intro h m hm k d hk hd
+    have hb := bound m hm k d hk hd
+    omega
+
 #print axioms bound
 #print axioms parent_bound
 #print axioms attainer_halts
 #print axioms attainer_in_slice
+#print axioms exact_weighted
 end BB6.Agent49.Box27Slice
 '''
     (out/'Box27SliceSource.lean').write_text(source)
