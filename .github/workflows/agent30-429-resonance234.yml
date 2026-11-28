@@ -49,7 +49,7 @@ jobs:
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance234Complete.olean im-results/agent30-429-coarse-exit/BB429Resonance234Complete.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance234All.olean im-results/agent30-429-coarse-exit/BB429Resonance234All.lean 2>&1 | tee -a "$LOG"
           lean im-results/agent30-429-coarse-exit/BB429ResonancePhysical.lean 2>&1 | tee -a "$LOG"
-          grep -F "'BB429.CoarseExit.d882_post_m' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.d882_post' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_post' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_second_nonresonant_mod9' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.Resonance.resonant_post_jSlope' depends on axioms:" "$LOG"
