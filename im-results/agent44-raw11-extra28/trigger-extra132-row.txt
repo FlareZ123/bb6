@@ -1,1 +1,1 @@
-2026-11-28T13:51Z Agent43 equation-style PartialMachine trigger
+2026-11-28T13:59Z Agent43 duplicate-declaration repair trigger
