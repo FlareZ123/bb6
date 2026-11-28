@@ -54,6 +54,8 @@ class Builder:
         return i
     def close_far(self,i,p,c):
         self.nodes[i]=('far',c);self.stats['far']+=1;self.mass['far']+=25**p.count(None)
+    def close_pump(self,i,p,c):
+        self.nodes[i]=('pump',c);self.stats['pump']+=1;self.mass['pump']+=25**p.count(None)
     def rows(self):
         return [codes(n[1]) for n in self.nodes if n[0]=='pending']
     def finish(self,p):
@@ -92,8 +94,36 @@ def resolve(builders,far,far_limit,cap2):
             if p in certs:b.close_far(i,p,certs[p])
             else:b.pending.append((i,p))
 
+def lean_bits(s):
+    return '['+','.join('true' if x=='1' else 'false' for x in s)+']'
+
+def lean_word(w):
+    if not w:return '.lit []'
+    pre=w[0] if isinstance(w[0],str) else ''
+    rest=w[1:] if isinstance(w[0],str) else w
+    if not rest:return f'.lit {lean_bits(pre)}'
+    x=rest[0];block=x['g'] if isinstance(x,dict) else x.p
+    return f'.periodic {lean_bits(pre)} {lean_bits(block)} ({lean_word(rest[1:])})'
+
+def lean_pump(c):
+    entry,fam,(ops,_)=c
+    q,l,r=fam
+    f=f'⟨{q},{lean_word(l)},{lean_word(r)}⟩'
+    actions=[];a=b=run=0
+    for op in ops:
+        if op[0]=='step':run+=1;b+=1;continue
+        if run:actions.append(f'List.replicate {run} .step');run=0
+        side,_,sp,dp,P,O,k,sr,dr=op[3]
+        lp,rp,L,R=(sp,dp,sr,dr) if side=='L' else (dp,sp,dr,sr)
+        direction='left' if side=='L' else 'right'
+        actions.append(f'[.{direction} {lean_bits(lp)} {lean_bits(rp)} {lean_bits(P)} {lean_bits(O)} ({lean_word(L)}) ({lean_word(R)}) {k}]')
+        a+=k
+    if run:actions.append(f'List.replicate {run} .step')
+    return f'⟨{entry},{f},1,({" ++ ".join(actions) or "[]"}),{a},{b}⟩'
+
 def lean_compact_node(n,rowidx):
     kind,*a=n
+    if kind=='pump':return f'.leaf (.pump {lean_pump(a[0])})'
     if kind=='pending':return f'.residual {rowidx[tuple(codes(a[0]))]}'
     if kind=='last':
         s,k=a;return f'.leaf (.last ({s//2},{str(bool(s%2)).lower()}) {k})'
@@ -126,7 +156,7 @@ def emit_parent(p,slot,children,names,nss,bound,out,name):
     ns='BB6.Agent50'+name
     lines=[*(f'import {n}' for n in names),'set_option maxRecDepth 100000','set_option maxHeartbeats 0',
            f'namespace {ns}','open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50Raw34Plan',
-           f'def parent : PartialMachine := table {codes(p)}',
+           f'def codes : List Nat := {codes(p)}','def parent : PartialMachine := table codes',
            f'def rows : List (List Nat) := [{", ".join(x+".codes" for x in nss)}]',
            'def nodes : Array (PlanNode CompactCert) := #[',
            f'  .split ({slot//2},{str(bool(slot%2)).lower()}) {list(range(1,26))},',
@@ -141,15 +171,17 @@ def emit_parent(p,slot,children,names,nss,bound,out,name):
                   '  simp only [rows,List.mem_cons,List.not_mem_nil,or_false] at hm',
                   '  rcases hm with '+' | '.join('rfl' for _ in nss),
                   *(f'  · exact {x}.cover' for x in nss)]
-        a,n,d=max((b.attainer for b in children if b.attainer),key=lambda x:x[1]+1+x[2])
-        assert n+1+d==bound
-        lines += [f'def attainer : PartialMachine := table {codes(a)}',
+        if any(b.attainer for b in children):
+            a,n,d=max((b.attainer for b in children if b.attainer),key=lambda x:x[1]+1+x[2])
+            assert n+1+d<=bound
+            lines += [f'def attainer : PartialMachine := table {codes(a)}',
                   'def attainerMachine : Machine := fun s => (attainer s).getD none',
                   f'theorem attained : ∃ m, compatible parent m ∧ HaltsAfter m {n} ∧ {d} ∈ delays (zeroNext m) 0 := by',
                   '  have hm : compatible attainer attainerMachine := by','    intro s t ht','    simp [attainerMachine,ht]',
                   '  exact ⟨attainerMachine,extendsTable_sound parent attainer (by decide) _ hm,',
                   f'    finiteHaltCheck_exact attainer {n} (by decide +kernel) _ hm,by decide⟩',
-                  '#print axioms cover','#print axioms attained']
+                  '#print axioms attained']
+        lines += ['#print axioms cover']
     lines += ['#print axioms conditional',f'end {ns}','']
     (out/(name+'.lean')).write_text('\n'.join(lines))
 
