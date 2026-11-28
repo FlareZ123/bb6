@@ -4,7 +4,7 @@
 
 ## Exact source and boundary
 
-The original six-state table is `[8,24,11,18,1,13,17,3,12,0,4,21]`, equivalently `1RB1RF_1LC0RE_0LA0LD_0LE1LA_1RC---_1RA0LF`, with only E1 halting. The existing `MacroI` standalone source proves a 490-step blank entry to `phase(3,1010111 0∞)`, where `phase(j,r)=A(blank-left,01010010(0010)^j r)`. A directly reproduced 926-step blank trace reaches `phase(5,10101 00001 0∞)`. All words below are tape bits in **nearest-first order**; all suffixes are eventually zero.
+The original six-state table is `[8,24,11,18,1,13,17,3,12,0,4,21]`, equivalently `1RB1RF_1LC0RE_0LA0LD_0LE1LA_1RC---_1RA0LF`, with only E1 halting. The existing `MacroI` standalone source proves a 490-step blank entry to `phase(3,1010111 0∞)`, where `phase(j,r)=A(blank-left,01010010(0010)^j r)`. A directly reproduced 1500-step blank trace reaches `phase(7,10101 00001 0∞)`; at step 926 the earlier boundary is only `phase(5,10101 01 0∞)`. All words below are tape bits in **nearest-first order**; all suffixes are eventually zero.
 
 A *section return* `F_j(U)` means running the original primitive table from `phase(j,10101 U 0∞)` until it first reaches `phase(j+2,10101 V 0∞)` with blank left and no halt. The phase index increases by TWO for each such return; the candidate successor is the composition `F_{j+2}(F_j(U))`, increasing j by FOUR. It is a common error to normalize both simulated stages to the same j and claim this alone proves the authentic orbit.
 
@@ -46,7 +46,7 @@ Every right-hand side belongs to the same N/B syntactic class *by construction*,
 
 **The decisive unproved original-machine theorem** is: for every odd outer phase index j reached from the 490-step blank entry (or, more strongly, every natural j), and every `N` represented by the grammar, the physical machine has some strictly positive finite transition count taking
 `phase(j,10101 Z N 0∞)` **without halting** to `phase(j+4,10101 Z nextN(N) 0∞)`.
-The proof must establish the exact tape geometry, finite step count, and original-machine stream/source bridge. Then the 926-step root entry and strong induction on prospective halt times would prove genuine nonhalting of machine I.
+The proof must establish the exact tape geometry, finite step count, and original-machine stream/source bridge. Then the 1500-step root entry and strong induction on prospective halt times would prove genuine nonhalting of machine I.
 
 The zero-carry branch is already a formal consequence of the existing arbitrary-suffix `evenPacket`, `oddPacket`, and `carryPacket` identities: uniformly in j and *arbitrary* infinite remainder r,
 ```text
