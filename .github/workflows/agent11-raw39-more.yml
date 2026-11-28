@@ -365,7 +365,7 @@ jobs:
       fail-fast: false
       max-parallel: 6
       matrix:
-        group: ${{ fromJSON(inputs.branch == '1LE' && '["g0","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10","g11","g12","g13","g14","g15"]' || '["g0","g1","g2","g3","g4","g5","g6","g7"]') }}
+        group: ${{ fromJSON(inputs.branch == '1LE' && '["gold","g1a","g1b","g5a","g5b"]' || '["g0","g1","g2","g3","g4","g5","g6","g7"]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
