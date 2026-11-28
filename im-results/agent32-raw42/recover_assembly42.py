@@ -14,11 +14,13 @@ from convert_bidfa import convert
 from split_small42 import split
 from minimize_bidfa import minimize
 from coarsen_ngram import transform as coarsen_ngram
+from repair_long_cycles import repair as repair_cycles
 
 BRANCHES = {
     "0LA": (46054728374, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "3", "7"},
             {"Raw420LARun1243", "Raw420LARun2550", "Raw420LARun365"}),
-    "1LC": (46054733910, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "4", "5", "7"},
+    "1LB": (46100532768, "49dbedc169879d3e3a8d249d7600322b0c1a265b", {"0", "1"}, set()),
+    "1LC": (46054733910, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "4", "7"},
             {"Raw421LCRun620", "Raw421LCRun9216"}),
     "1LA": (45996630344, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"7"},
             {"Raw421LARun889", "Raw421LARun892"}),
@@ -42,6 +44,7 @@ def prepare(repo, g, shards, shared, branch, original):
             ("1RA", "4"): "cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c",
             ("1LC", "0"): "3a7aa1928d7caa6c6a6e64b4f1aa7b95276b2e53",
             ("1LC", "6"): "3a7aa1928d7caa6c6a6e64b4f1aa7b95276b2e53",
+            ("1LC", "5"): "49dbedc169879d3e3a8d249d7600322b0c1a265b",
         }
         expected = extra_revisions.get((branch, i), revision)
         assert m["proof_source_revision"] == expected, (i, m["proof_source_revision"])
@@ -67,11 +70,11 @@ def prepare(repo, g, shards, shared, branch, original):
         for module in cfg["groups"][i]:
             visit(module)
 
-    changes = {}
+    changes = repair_cycles(g, branch, remaining, accepted)
     reductions = {}
     for module in sorted(remaining):
         p = generated[module]
-        if re.fullmatch(r"Raw42" + branch + r"Run\d+", module):
+        if branch not in {"1LB", "1LC"} and re.fullmatch(r"Raw42" + branch + r"Run\d+", module):
             # Reuse the original list witness, even if the previous recovery
             # converted this unaccepted module to a trie. Preserve accepted
             # module bytes and identities; only re-encode this missing slice.
@@ -81,7 +84,7 @@ def prepare(repo, g, shards, shared, branch, original):
                 p.write_text(convert(reduced).replace(":= by decide\n", ":= by decide +kernel\n"))
                 changes[module] = ["trie"]
                 reductions[module] = {"before": before, "after": after}
-    if branch == "1LC" and "Raw421LCNGram7" in remaining:
+    if branch == "1LC" and "Raw421LCNGram7" in remaining and "FastCert" not in generated["Raw421LCNGram7"].read_text():
         module = "Raw421LCNGram7"
         p = generated[module]
         reduced, before, after = coarsen_ngram((original / p.name).read_text())
@@ -94,7 +97,7 @@ def prepare(repo, g, shards, shared, branch, original):
         if re.fullmatch(r".*Root(?:_\d\d)*Small", module) and p.stat().st_size >= 50000:
             outputs = split(p)
             if outputs:
-                changes[module] = [x.stem for x in outputs]
+                changes.setdefault(module, []).extend(x.stem for x in outputs)
     assert set(changes).isdisjoint(accepted)
     assert all(x not in accepted for m, xs in changes.items() for x in xs if x != "trie")
     cfg["allow_mixed_revisions"] = True

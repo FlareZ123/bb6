@@ -687,7 +687,8 @@ jobs:
             1LA) prior=45996630344; retry=46053090463;;
             1RA) prior=45996637267; retry=46053095897;;
             0LA) prior=46054728374; retry=46054728374;;
-            1LC) prior=46054733910; retry=46089674173;;
+            1LB) prior=46100532768; retry=46100532768;;
+            1LC) prior=46054733910; retry=46100529988;;
             *) echo "No recovery plan for $BRANCH"; exit 1;;
           esac
           echo "prior=$prior" >> "$GITHUB_OUTPUT"
@@ -708,7 +709,7 @@ jobs:
           name: raw42-recovery-generated
           path: im-results/agent32-raw42/generated-assembly
       - name: Restore original generated sources for first recovery
-        if: inputs.assembly_branch == '0LA'
+        if: inputs.assembly_branch == '0LA' || inputs.assembly_branch == '1LB'
         run: |
           mkdir -p im-results/agent32-raw42/generated-assembly
           cp -a /tmp/raw42-original/. im-results/agent32-raw42/generated-assembly/
@@ -729,16 +730,23 @@ jobs:
         if: inputs.assembly_branch == '1LC'
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ steps.plan.outputs.retry }}
+          run-id: 46089674173
           name: raw42-assembly-shard-0
           path: /tmp/shards/raw42-assembly-shard-0
       - uses: actions/download-artifact@v4
         if: inputs.assembly_branch == '1LC'
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ steps.plan.outputs.retry }}
+          run-id: 46089674173
           name: raw42-assembly-shard-6
           path: /tmp/shards/raw42-assembly-shard-6
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.plan.outputs.retry }}
+          name: raw42-assembly-shard-5
+          path: /tmp/shards/raw42-assembly-shard-5
       - name: Preserve all accepted source closures and repair only missing groups
         id: transform
         env:
@@ -764,7 +772,7 @@ jobs:
   recover_assembly_missing:
     needs: recover_assembly_prepare
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 55
     strategy:
       fail-fast: false
       max-parallel: 2
@@ -850,16 +858,23 @@ jobs:
         if: inputs.assembly_branch == '1LC'
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ needs.recover_assembly_prepare.outputs.retry }}
+          run-id: 46089674173
           name: raw42-assembly-shard-0
           path: /tmp/shards/raw42-assembly-shard-0
       - uses: actions/download-artifact@v4
         if: inputs.assembly_branch == '1LC'
         with:
           github-token: ${{ github.token }}
-          run-id: ${{ needs.recover_assembly_prepare.outputs.retry }}
+          run-id: 46089674173
           name: raw42-assembly-shard-6
           path: /tmp/shards/raw42-assembly-shard-6
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ needs.recover_assembly_prepare.outputs.retry }}
+          name: raw42-assembly-shard-5
+          path: /tmp/shards/raw42-assembly-shard-5
       - uses: actions/download-artifact@v4
         with:
           pattern: raw42-assembly-shard-*
