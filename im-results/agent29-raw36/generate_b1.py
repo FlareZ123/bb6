@@ -56,7 +56,7 @@ def main():
    elif isinstance(v,str):evidence['far'].append([pretty,v])
    elif v[0]=='s':evidence['sweep'].append([j,t,*v[1:]])
    elif v[0]=='m':evidence['manual'].append([pretty,v[1]])
-   elif v[0]=='c':evidence['cycle'].append([pretty,v[1]])
+   elif v[0]=='c':evidence['cycle'].append([pretty,v[1:]])
    elif v[0]=='r':evidence['regular'].append([pretty,*v[1:]])
    elif v[0]=='a':evidence['active'].append([pretty,*v[1:]])
    else:raise ValueError(v)
