@@ -722,3 +722,13 @@ This incarnation claimed the existing identity at 2026-11-28T16:05:09.402Z and i
 2. Once accepted, update results/README.md only if the theorem meets the repository's pure publishable-result standard; otherwise keep it in im-results/ and update the dossier's status.
 3. Continue the root-specific S-window route: retain the actual scalar low-boundary carry at the moving cut and prove a high nonmonochromatic output digit for the authentic root word. The eight signed forms are now explicit; the carry and source-derived word-language induction remain open.
 4. Do not claim #623 nonhalting, all-time ray avoidance, or any BB(6) upper bound from this work.
+
+
+### Further S-window reduction and CI checkpoint (16:59 UTC)
+
+- Uniform eight-strip error bounds: after N=n+3, C_max=237*n+1825 and D_max=116*n+820, so all eight cones are excluded if abs(F)>W(n)=1422*n+10950. Since the transported lower scale gives n<=ell+3 at the S-mass depth ell, it suffices to prove abs(F)>1422*ell+15216.
+- Derived the signed-complement criterion: write F=3^k*q+r with 0<=r<3^k. If abs(F)<=W<3^k, then q is 0 or -1. In the q=0 case, every digit d_j with 3^j>W must be 0; in the q=-1 case, every such digit must be 2, because 3^k-1-r=-F-1<=W-1. Hence a nonmonochromatic output block entirely above the W threshold proves abs(F)>W. This avoids needing a separate numeric bound on the scalar carry, though the actual moving-cut carry must still be retained to identify the output block.
+- A secondary coefficient-only carry envelope is H0=2160, H1=878, H2=451, H3=309, H4=261, H5=245, H6=240, using max |A|+|B|=237 and ternary digits in {0,1,2}. This is not by itself an exclusion; the signed-complement criterion is stronger.
+- Run 46166948013 passed the coupled-envelope positivity fix and reached EightRaySource, then failed only because two unit coefficients in ray transport needed explicit simp normalization. Both arguments at the (40,1) and (1,40) calls are now normalized in EightRaySource.lean.
+- Current rerun 46167852806, head db34879d5e551a95a327acbbacdca4b67939f016, was queued at 16:57 UTC. It has not yet started at the time of this memory update.
+- The exact S-window scalar coefficients and signed-complement criterion are in EightRaySignedCovectorTree.md. Agent 32 has been sent both the width target and signed-complement lemma.
