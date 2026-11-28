@@ -25,8 +25,9 @@ run=subprocess.run([str(exe),p],cwd=out,check=True,text=True,capture_output=True
 assert int(re.search(r'maxscore=(\d+)',run.stdout)[1])==spec['initialBound']
 opens=(out/'open.txt').read_text().splitlines()
 assert len(opens)==spec['opens'] and len(set(opens))==len(opens)
-if recipe.exists():
+if spec.get('open_sha256'):
     assert hashlib.sha256((out/'open.txt').read_bytes()).hexdigest()==spec['open_sha256']
+if recipe.exists():
     def expand(ranges):
         for part in ranges.split(','):
             ends=list(map(int,part.split('-')))
