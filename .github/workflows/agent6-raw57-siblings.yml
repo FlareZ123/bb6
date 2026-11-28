@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la' && inputs.child != 'raw56-le-1ra'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -554,11 +554,12 @@ jobs:
           retention-days: 7
 
   raw56_le_0lb:
-    if: inputs.child == 'raw56-le-0lb' || inputs.child == 'raw56-le-1la'
+    if: inputs.child == 'raw56-le-0lb' || inputs.child == 'raw56-le-1la' || inputs.child == 'raw56-le-1ra'
     runs-on: ubuntu-latest
     timeout-minutes: 180
     env:
-      E0: ${{ inputs.child == 'raw56-le-1la' && '1LA' || '0LB' }}
+      E0: ${{ inputs.child == 'raw56-le-1ra' && '1RA' || (inputs.child == 'raw56-le-1la' && '1LA' || '0LB') }}
+      BOUND: ${{ inputs.child == 'raw56-le-1ra' && '14000' || '7014' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install source-pinned Lean 4.36.0-rc2
@@ -589,7 +590,7 @@ jobs:
             --source-root "/tmp/raw56-le-e0/${E0}gen" \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --manifest /tmp/raw56-le-e0-closure/manifest.json --label "raw56-le-e0-${E0}" \
-            --theorem "BB6.Agent1Raw56.LE${E0}.all_quotient" --weighted-bound 7014 \
+            --theorem "BB6.Agent1Raw56.LE${E0}.all_quotient" --weighted-bound "$BOUND" \
             --parent-table "1RB---_1RC---_0RD---_1LD1LE_${E0}0LE_------" \
             --artifact-name "raw56-le${E0}-source-accepted" \
             --provenance-input im-results/agent1-raw56/le/prepare_le0lb.py \
@@ -601,7 +602,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: ${{ inputs.child == 'raw56-le-1la' && 'raw56-le1LA-source-accepted' || 'raw56-le0LB-source-accepted' }}
+          name: ${{ inputs.child == 'raw56-le-1ra' && 'raw56-le1RA-source-accepted' || (inputs.child == 'raw56-le-1la' && 'raw56-le1LA-source-accepted' || 'raw56-le0LB-source-accepted') }}
           path: |
             /tmp/raw56-le-e0-closure/**
             /tmp/raw56-le-prepare.log
