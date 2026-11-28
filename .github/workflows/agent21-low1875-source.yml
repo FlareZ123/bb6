@@ -17,7 +17,7 @@ permissions:
 
 jobs:
   source-proof:
-    if: \${{ inputs.target != 'dyadic-density' }}
+    if: ${{ inputs.target != 'dyadic-density' }}
     runs-on: ubuntu-latest
     timeout-minutes: 40
     steps:
