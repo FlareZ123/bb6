@@ -1,5 +1,5 @@
 import ObstructionAlignment
-import EqualHigh
+import EqualHighMod384
 import F321BackwardBarrier
 import Lean.Elab.Tactic.Omega
 
@@ -18,6 +18,7 @@ open BB6.Agent31F321Density
 open BB6.Agent2F321ObstructionAlignment
 open BB6.Agent2F321Bulk
 open BB6.Agent2F321EqualHigh
+open BB6.Agent2F321EqualHighMod384
 
 def farWord : Nat → List InverseLetter
   | 0 => []
@@ -173,10 +174,14 @@ theorem equalHigh_tail_blocks_depth
     (ht : A = D + 1)
     (hdepth : 2*depth ≤ k+2) :
     (k % 24 = 12 ∨ k % 24 = 18) ∧
+      k % 768 ∈ equalHighAllowedK768 ∧
       ¬ NoResidueWord depth D := by
   have hphase := equal_high_terminal_length_mod24 hn hr hh ht
+  have hk := equalHigh_root_k_mod768 hn hr hh ht
   constructor
   · exact hphase
+  constructor
+  · exact hk
   · apply nearMinusThree_blocks_NoResidueWord
     exact equalHigh_terminal_nearMinusThree hh ht hdepth
 
