@@ -5,7 +5,7 @@ on:
       target:
         description: 'Original root-cost audit or modulus-three source factor theorem'
         type: choice
-        options: [root-cost, anti3]
+        options: [root-cost, anti3, anti5]
         default: root-cost
 
 permissions:
@@ -58,7 +58,7 @@ jobs:
           grep -F "BB6.Agent9RootCost.rootCostPotentialDelta" /tmp/root-cost-potential.log
 
   anti3:
-    if: inputs.target == 'anti3'
+    if: inputs.target == 'anti3' || inputs.target == 'anti5'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -79,7 +79,13 @@ jobs:
           export LEAN_PATH="$root:$lag"
           lean --version
           lean -o "$lag/LagCore.olean" "$lag/LagCore.lean"
-          for f in ReturnGCD ReturnSlope ReturnObstruction ReturnGeneral ReturnTrace ReturnSource ReturnScaled Anti3Core Anti3Full Anti3Source Anti3Trace; do
+          modules='ReturnGCD ReturnSlope ReturnObstruction ReturnGeneral ReturnTrace ReturnSource ReturnScaled'
+          if [ "${{ inputs.target }}" = anti5 ]; then
+            modules="$modules Anti5Core Anti5Interior Anti5Full Anti5Source Anti5Trace"
+          else
+            modules="$modules Anti3Core Anti3Full Anti3Source Anti3Trace"
+          fi
+          for f in $modules; do
             echo "ORIGINAL SOURCE MODULE $f"
             lean -o "$root/$f.olean" "$root/$f.lean" 2>&1 | tee "/tmp/agent9-$f.log"
             if grep -Eq 'sorryAx|error:' "/tmp/agent9-$f.log"; then exit 1; fi
