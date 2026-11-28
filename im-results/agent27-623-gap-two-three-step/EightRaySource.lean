@@ -45,6 +45,7 @@ satisfies one of the eight explicit one-sided rational cones. -/
 theorem ordinary_four_to_eight (N n u v x y : Nat)
     (hhi : min u v+3<3^N)
     (hsep : min u v+N+10≤max u v)
+    (hu : 0<u)
     (hord : OrdinaryStep u v x y)
     (ht : coupledFourRayCone N n x y) :
     eightRayCone N n u v := by
@@ -57,20 +58,20 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
     rcases ht with h1 | h2 | h3 | h4
     · have htransport := ordinary_source_ray_transport
         40 1 N u v x y (N+3*n+61) (53*N+23*n+377)
-        hhi hsep hord h1.2 h1.1
+        hhi hsep hu hord h1.2 h1.1
       left
       right
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         16 13 N u v x y (13*N+23*n+167) (17*N+3*n+103)
-        hhi hsep hord h2.2 h2.1
+        hhi hsep hu hord h2.2 h2.1
       right
       left
       right
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         25 4 N u v x y (4*N+10*n+84) (32*N+10*n+219)
-        hhi hsep hord h3.2 h3.1
+        hhi hsep hu hord h3.2 h3.1
       right
       right
       left
@@ -78,7 +79,7 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         19 7 N u v x y (7*N+10*n+99) (23*N+10*n+162)
-        hhi hsep hord h4.2 h4.1
+        hhi hsep hu hord h4.2 h4.1
       right
       right
       right
@@ -88,20 +89,20 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
     rcases ht with h1 | h2 | h3 | h4
     · have htransport := ordinary_source_ray_transport
         1 40 N u v x y (53*N+23*n+377) (N+3*n+61)
-        hhi hsep hord h1.1 h1.2
+        hhi hsep hu hord h1.1 h1.2
       left
       left
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         13 16 N u v x y (17*N+3*n+103) (13*N+23*n+167)
-        hhi hsep hord h2.1 h2.2
+        hhi hsep hu hord h2.1 h2.2
       right
       left
       left
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         4 25 N u v x y (32*N+10*n+219) (4*N+10*n+84)
-        hhi hsep hord h3.1 h3.2
+        hhi hsep hu hord h3.1 h3.2
       right
       right
       left
@@ -109,7 +110,7 @@ theorem ordinary_four_to_eight (N n u v x y : Nat)
       constructor <;> omega
     · have htransport := ordinary_source_ray_transport
         7 19 N u v x y (23*N+10*n+162) (7*N+10*n+99)
-        hhi hsep hord h4.1 h4.2
+        hhi hsep hu hord h4.1 h4.2
       right
       right
       right
