@@ -4,8 +4,14 @@ on:
   workflow_dispatch:
     inputs:
       source_run:
-        description: Successful Agent44 threshold-1 source run
+        description: Run containing the repaired Extra132 source
         required: true
+        default: '46118792322'
+        type: string
+      source_artifact:
+        description: Exact repaired source artifact name
+        required: true
+        default: parent-source-132-repaired
         type: string
       max_fresh:
         description: Fresh support modules to compile before checkpoint
@@ -39,13 +45,13 @@ jobs:
           name: raw11-root52-known-consumption
           path: /tmp/base
 
-      - name: Download threshold-1 exact source
+      - name: Download exact repaired source
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FlareZ123/bb6
           run-id: ${{ inputs.source_run }}
-          name: parent-source-132-threshold1
+          name: ${{ inputs.source_artifact }}
           path: /tmp/source-artifact
 
       - name: Recover source and seven accepted leaf banks
@@ -64,7 +70,7 @@ jobs:
             unzip -o -q "/tmp/leaf-$id.zip" -d /tmp/parent-out
             test -s "/tmp/parent-out/receipt-$group.json"
           done
-          giant="$(cat /tmp/parent-source/giant-module.txt)"
+          giant='Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean'
           test -s "/tmp/parent-source/$giant"
           echo "GIANT=$giant" >> "$GITHUB_ENV"
           echo "source_modules_before=$(find /tmp/parent-source -name '*.lean' | wc -l)"
@@ -90,7 +96,8 @@ jobs:
           if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
           {
             echo "parent_id=132"
-            echo "threshold1_source_run=${{ inputs.source_run }}"
+            echo "source_run=${{ inputs.source_run }}"
+            echo "source_artifact=${{ inputs.source_artifact }}"
             echo "giant_original_module=$GIANT"
             echo "target_module=Agent44Extra132GiantProof"
             echo "max_fresh=${{ inputs.max_fresh }}"
