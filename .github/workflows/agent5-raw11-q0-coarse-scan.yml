@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -892,6 +892,65 @@ jobs:
           path: |
             /tmp/raw11-q0-frame150/
             /tmp/raw11-q0-frame150.log
+          if-no-files-found: warn
+          retention-days: 30
+
+  far-hard:
+    if: inputs.mode == 'far-hard'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+      max-parallel: 2
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Targeted regular-language source-certificate discovery
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/find-hard-leaf-far.cjs "$ID" "/tmp/agent5-q0-far-$ID" 620 2>&1 | tee "/tmp/agent5-q0-far-$ID.log"
+          cat "/tmp/agent5-q0-far-$ID/summary.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: Kernel-check discovered original-source FAR certificate
+        if: success()
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          if ! test -f "/tmp/agent5-q0-far-$ID/winner.json"; then
+            echo 'No finite certificate found in bounded targeted search'
+            exit 0
+          fi
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python im-results/agent13-coverage/unpack.py
+          ROOT="$(find "/tmp/agent5-q0-far-$ID" -name '*.lean' -print -quit)"
+          test -n "$ROOT"
+          python tools/lean_compile_closure.py "$ROOT" \
+            --workdir "/tmp/agent5-q0-far-check-$ID" \
+            --jobs 2 --lean lean \
+            --label "raw11-q0-hard-far-$ID" \
+            --provenance-input im-results/agent5-weighted-tnf-queue/find-hard-leaf-far.cjs \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee "/tmp/agent5-q0-far-check-$ID.log"
+          if grep -Eq 'sorryAx|native_decide' "/tmp/agent5-q0-far-check-$ID.log"; then exit 1; fi
+          grep -F '.cover' "/tmp/agent5-q0-far-check-$ID.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent5-q0-hard-far-${{ matrix.id }}
+          path: |
+            /tmp/agent5-q0-far-${{ matrix.id }}/
+            /tmp/agent5-q0-far-${{ matrix.id }}.log
+            /tmp/agent5-q0-far-check-${{ matrix.id }}.log
           if-no-files-found: warn
           retention-days: 30
 
