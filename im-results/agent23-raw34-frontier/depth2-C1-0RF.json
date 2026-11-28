@@ -1,0 +1,7065 @@
+{
+  "status": "Finite candidate witnesses, not Lean-accepted until CI",
+  "parentIndex": 68,
+  "parentC1": "0RF",
+  "maxHaltStep": 12,
+  "count": {
+    "halt": 10,
+    "side": 149,
+    "open": 89,
+    "timeout": 2
+  },
+  "sourceFixedSlots": 4,
+  "physicalMass": {
+    "newCandidate": "62109375",
+    "unclassified": "35546875"
+  },
+  "all": [
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 8,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        1,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        2,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        3,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        4,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 14,
+        "period": 7,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        5,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        6,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        7,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        8,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        9,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        10,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        11,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        12,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        13,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        14,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        15,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 6,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        16,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 10,
+        "period": 6,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        17,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        18,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        19,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        20,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        21,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        22,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        23,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        24,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LE",
+      "secondSlot": "E0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        25,
+        0,
+        0,
+        6
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 10,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        1,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        2,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        3,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        4,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 14,
+        "period": 7,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        5,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        6,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "side",
+        "entry": 13,
+        "period": 1,
+        "right": false,
+        "boundary": -1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        7,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        8,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        9,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        10,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        11,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        12,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        13,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        14,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 3,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        15,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 6,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        16,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 10,
+        "period": 6,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        17,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        18,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "side",
+        "entry": 13,
+        "period": 1,
+        "right": false,
+        "boundary": -1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        19,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        20,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        21,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        22,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        23,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        24,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0LF",
+      "secondSlot": "F0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        25,
+        7
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 8,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        1,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        2,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        3,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        4,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        5,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 13
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        6,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        7,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        8,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        9,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        10,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        11,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        12,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        13,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        14,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        15,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 6,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        16,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 8,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        17,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 13
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        18,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        19,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        20,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        21,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        22,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        23,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        24,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RE",
+      "secondSlot": "E0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        25,
+        0,
+        0,
+        12
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 10,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        1,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        2,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        3,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        4,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        5,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        6,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "side",
+        "entry": 17,
+        "period": 1,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        7,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        8,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        9,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        10,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        11,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        12,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        13,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        14,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 3,
+        "right": true,
+        "boundary": 4
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        15,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 6,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        16,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 8,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        17,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        18,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "side",
+        "entry": 31,
+        "period": 1,
+        "right": false,
+        "boundary": 7
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        19,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        20,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        21,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        22,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        23,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        24,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "0RF",
+      "secondSlot": "F0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        25,
+        13
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        1,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        2,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 11,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        3,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        4,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 6,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        5,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        6,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 15
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        7,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 11,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        8,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 10,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        9,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 9,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        10,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        11,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        12,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        13,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        14,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "side",
+        "entry": 18,
+        "period": 7,
+        "right": false,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 7,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        16,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 7,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        17,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        18,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 15
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        19,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 11,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        20,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 10,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        21,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 9,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        22,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        23,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        24,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LA",
+      "secondSlot": "B1",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        25,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        0,
+        14
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        1,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 12,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        2,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 11,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        3,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        4,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 6,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        5,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        6,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 19
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        7,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 12,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        8,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 11,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        9,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        10,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 9,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        11,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        12,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 11,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        13,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 13
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        14,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 3,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        15,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        16,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 7,
+        "period": 9,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        17,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        18,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 25
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        19,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 12,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        20,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 11,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        21,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        22,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 6,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        23,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 12
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        24,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LB",
+      "secondSlot": "F0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "side",
+        "entry": 11,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        25,
+        15
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 8,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        1,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 13
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        2,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        3,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 20
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        4,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 14,
+        "period": 7,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        5,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        6,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        7,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        8,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        9,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        10,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        11,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        12,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 8,
+        "period": 2,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        13,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        14,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 14
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        15,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "timeout",
+        "step": 100
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        16,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 16,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        17,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        18,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        19,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        20,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        21,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        22,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        23,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        24,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LE",
+      "secondSlot": "E0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        25,
+        0,
+        0,
+        18
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 10,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        1,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 14,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        2,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "side",
+        "entry": 4,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        3,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 11,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        4,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 14,
+        "period": 7,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        5,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        6,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "side",
+        "entry": 13,
+        "period": 1,
+        "right": false,
+        "boundary": -1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        7,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        8,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        9,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        10,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        11,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        12,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 8,
+        "period": 2,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        13,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        14,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 14
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        15,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "timeout",
+        "step": 100
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        16,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 16,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        17,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        18,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "side",
+        "entry": 13,
+        "period": 1,
+        "right": false,
+        "boundary": -1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        19,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        20,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        21,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        22,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        23,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        24,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1LF",
+      "secondSlot": "F0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "side",
+        "entry": 15,
+        "period": 3,
+        "right": false,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        25,
+        19
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 8,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        1,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        2,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        3,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        4,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        5,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        6,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "side",
+        "entry": 8,
+        "period": 2,
+        "right": true,
+        "boundary": 4
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        7,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        8,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        9,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        10,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        11,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        12,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        13,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        14,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        15,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 7,
+        "period": 3,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        16,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 6,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        17,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        18,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 11
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        19,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        20,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        21,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        22,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        23,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        24,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RE",
+      "secondSlot": "E0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "open",
+        "slot": 10,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        25,
+        0,
+        0,
+        24
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "HALT",
+      "result": {
+        "kind": "halt",
+        "slot": 10,
+        "step": 9
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        1,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        2,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        3,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 10,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        4,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 5,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        5,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        6,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0LF",
+      "result": {
+        "kind": "side",
+        "entry": 8,
+        "period": 2,
+        "right": true,
+        "boundary": 4
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        7,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        8,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        9,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        10,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RD",
+      "result": {
+        "kind": "side",
+        "entry": 3,
+        "period": 7,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        11,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        12,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "0RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        13,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LA",
+      "result": {
+        "kind": "open",
+        "slot": 1,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        14,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LB",
+      "result": {
+        "kind": "open",
+        "slot": 3,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        15,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LC",
+      "result": {
+        "kind": "side",
+        "entry": 7,
+        "period": 3,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        16,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LD",
+      "result": {
+        "kind": "side",
+        "entry": 5,
+        "period": 6,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        17,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LE",
+      "result": {
+        "kind": "open",
+        "slot": 9,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        18,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1LF",
+      "result": {
+        "kind": "side",
+        "entry": 8,
+        "period": 3,
+        "right": true,
+        "boundary": 4
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        19,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RA",
+      "result": {
+        "kind": "side",
+        "entry": 0,
+        "period": 10,
+        "right": true,
+        "boundary": 0
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        20,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RB",
+      "result": {
+        "kind": "side",
+        "entry": 1,
+        "period": 9,
+        "right": true,
+        "boundary": 1
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        21,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RC",
+      "result": {
+        "kind": "side",
+        "entry": 2,
+        "period": 8,
+        "right": true,
+        "boundary": 2
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        22,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RD",
+      "result": {
+        "kind": "side",
+        "entry": 6,
+        "period": 4,
+        "right": true,
+        "boundary": 3
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        23,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RE",
+      "result": {
+        "kind": "open",
+        "slot": 8,
+        "step": 10
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        24,
+        25
+      ],
+      "mass": "390625"
+    },
+    {
+      "parentIndex": 68,
+      "firstSlot": "F1",
+      "firstAction": "1RF",
+      "secondSlot": "F0",
+      "secondAction": "1RF",
+      "result": {
+        "kind": "side",
+        "entry": 9,
+        "period": 1,
+        "right": true,
+        "boundary": 5
+      },
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        13,
+        16,
+        23,
+        0,
+        0,
+        25,
+        25
+      ],
+      "mass": "390625"
+    }
+  ]
+}
