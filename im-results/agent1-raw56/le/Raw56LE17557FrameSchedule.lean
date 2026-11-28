@@ -351,20 +351,23 @@ theorem prefixWeight_unbounded (t : Nat) :
 /-- Second-right-run length carried by a rank-r normal-A action. -/
 def normalB (r : Nat) : Nat := 2^(r+4) - 3
 
+theorem pow_ge16 (r : Nat) : 16 ≤ 2^(r+4) := by
+  have h : 2^4 ≤ 2^(r+4) :=
+    Nat.pow_le_pow_right (by decide) (by omega)
+  simpa using h
+
 theorem normalB_ge6 (r : Nat) : 6 ≤ normalB r := by
   unfold normalB
-  have hp : 16 ≤ 2^(r+4) := by
-    have h : 2^4 ≤ 2^(r+4) := Nat.pow_le_pow_right' (by omega) (by omega)
-    norm_num at h ⊢
-    exact h
+  have hp := pow_ge16 r
   omega
 
 /-- The formerly empirical normal-A residue guard is forced by frame rank. -/
 theorem normalB_mod8 (r : Nat) : normalB r % 8 = 5 := by
   unfold normalB
+  have hp := pow_ge16 r
   have hpow : 2^(r+4) % 8 = 0 := by
-    rw [show r+4 = 3 + (r+1) by omega, Nat.pow_add, Nat.mul_mod]
-    norm_num
+    rw [show r+4 = 3 + (r+1) by omega, Nat.pow_add]
+    simp
   omega
 
 /-- A rank-r frame is born from normal A with b = 2^(r+4)-3:
