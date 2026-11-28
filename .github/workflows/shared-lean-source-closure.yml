@@ -32,7 +32,7 @@ on:
         default: "1RB"
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   source-proof:
@@ -215,7 +215,7 @@ jobs:
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
       - name: Regenerate all twelve Raw40 A0LA child sources
-        if: ${{ inputs.preparation_profile == 'raw40-a0la-complete' }}
+        if: ${{ inputs.preparation_profile == 'raw40-a0la-complete' || inputs.preparation_profile == 'raw40-a1lc-child' }}
         env:
           PROOF_ROOT: ${{ inputs.root }}
         run: |
@@ -280,6 +280,25 @@ jobs:
               print(f"{name} : {sorted(deps)}")
           print(f"PASS: {len(targets)} distinct {suffix} theorems, only standard Lean axioms")
           PY
+      - name: Commit generated Raw40 A1LC 1RA source after kernel and axiom audit
+        if: ${{ inputs.preparation_profile == 'raw40-a1lc-child' }}
+        run: |
+          set -euo pipefail
+          git config user.name "Agent 19"
+          git config user.email "agent19@users.noreply.github.com"
+          git add im-results/agent19-raw40-cut/a1lc-1RA-discovery.json
+          git add -A im-results/agent19-raw40-cut/a1lc/1RA
+          for f in im-results/agent19-raw40-cut/Raw40C1LC1RA*.lean im-results/agent19-raw40-cut/Raw40A1LC1RACompact*.lean; do
+            if [[ -f "$f" ]]; then git add "$f"; fi
+          done
+          if git diff --cached --quiet; then
+            echo "No generated Raw40 A1LC 1RA proof files to commit"
+            exit 1
+          fi
+          git commit -m "Agent 19: add source-checked Raw40 A1LC 1RA child"
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
       - name: Preserve compiled source closure, manifest and diagnostics
         if: always()
         uses: actions/upload-artifact@v4
