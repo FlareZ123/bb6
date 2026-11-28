@@ -207,6 +207,114 @@ theorem finalOut_eq_family_succ (n : Nat) : finalOut n = family (n+1) := by
   · simpa [finalOut, family, A, B] using normalizeFinal (A n + 1) (B n)
   · rfl
 
+def C (n : Nat) : Nat := 4*n+2
+def D (n : Nat) : Nat := 2*n+1
+
+/-- Exact first-phase endpoint, kept in sweep-native form. -/
+def p1raw (n : Nat) : Z0 :=
+  ⟨4,[],
+    [false,false,true,true,false,true,true,false] ++
+      rep [true,true] (D n) ++ [true,true] ++
+      rep [false,true,true] (4*n+1) ++
+      [false,false,true,true,false,false,true,true]⟩
+
+/-- Exact P2 endpoint after the fixed 16-step turnaround. -/
+def p2raw (n : Nat) : Z0 :=
+  ⟨4,[],
+    [false,false,false,false,false,true,false,true,true,false] ++
+      rep [true,true] (D n) ++ [true,true] ++
+      rep [false,true,true] (4*n+1) ++
+      [false,false,true,true,false,false,true,true]⟩
+
+theorem start41 (L : List Bool) :
+    run0 table 41 ⟨5,[false]++L,[]⟩ =
+      some ⟨4,L,[false,false,true,true,false,false,true,true]⟩ := by
+  rfl
+
+theorem finish31 (R : List Bool) :
+    run0 table 31 ⟨4,[true,true,false,true,true,false,true],R⟩ =
+      some ⟨4,[],[false,false,true,true,false,true,true]++R⟩ := by
+  rfl
+
+theorem turn16 (R : List Bool) :
+    run0 table 16 ⟨4,[],[false,false,true,true,false,true,true,false]++R⟩ =
+      some ⟨4,[],[false,false,false,false,false,true,false,true,true,false]++R⟩ := by
+  rfl
+
+theorem phase_first_raw (n : Nat) :
+    run0 table (88*n+116) (family n) = some (p1raw n) := by
+  have h0 : run0 table 41 (family n) =
+      some ⟨4,
+        [true] ++ rep [true,false,true] (C n) ++
+          rep [false,true] (D n) ++ [true,false,true,true,false,true],
+        [false,false,true,true,false,false,true,true]⟩ := by
+    simpa [family, C, D, List.append_assoc] using
+      start41
+        ([true] ++ rep [true,false,true] (C n) ++
+          rep [false,true] (D n) ++ [true,false,true,true,false,true])
+
+  have h1 : run0 table (15*(C n))
+      ⟨4,[true] ++ rep [true,false,true] (C n) ++
+          rep [false,true] (D n) ++ [true,false,true,true,false,true],
+        [false,false,true,true,false,false,true,true]⟩ =
+      some ⟨4,
+        [true] ++ rep [false,true] (D n) ++ [true,false,true,true,false,true],
+        rep [false,true,true] (C n) ++
+          [false,false,true,true,false,false,true,true]⟩ := by
+    have h := sweepL table 4 [true] [] [true,false,true] [false,true,true] 15
+      left15 (C n)
+      (rep [false,true] (D n) ++ [true,false,true,true,false,true])
+      [false,false,true,true,false,false,true,true]
+    simpa [List.append_assoc] using h
+
+  have h2 : run0 table (14*(D n))
+      ⟨4,[true] ++ rep [false,true] (D n) ++ [true,false,true,true,false,true],
+        rep [false,true,true] (C n) ++
+          [false,false,true,true,false,false,true,true]⟩ =
+      some ⟨4,[true,true,false,true,true,false,true],
+        [false] ++ rep [true,true] (D n) ++ [true,true] ++
+          rep [false,true,true] (4*n+1) ++
+          [false,false,true,true,false,false,true,true]⟩ := by
+    have h := sweepL table 4 [true] [false] [false,true] [true,true] 14
+      left14 (D n) [true,false,true,true,false,true]
+      ([true,true] ++ rep [false,true,true] (4*n+1) ++
+        [false,false,true,true,false,false,true,true])
+    have hc : C n = (4*n+1)+1 := by simp [C]; omega
+    rw [hc] at *
+    simpa [rep, List.append_assoc] using h
+
+  have h3 : run0 table 31
+      ⟨4,[true,true,false,true,true,false,true],
+        [false] ++ rep [true,true] (D n) ++ [true,true] ++
+          rep [false,true,true] (4*n+1) ++
+          [false,false,true,true,false,false,true,true]⟩ =
+      some (p1raw n) := by
+    simpa [p1raw, List.append_assoc] using finish31
+      ([false] ++ rep [true,true] (D n) ++ [true,true] ++
+        rep [false,true,true] (4*n+1) ++
+        [false,false,true,true,false,false,true,true])
+
+  have H := join0 h0 (join0 h1 (join0 h2 h3))
+  have hc :
+      41 + (15*(C n) + (14*(D n) + 31)) = 88*n+116 := by
+    simp [C,D]
+    omega
+  simpa only [hc] using H
+
+theorem phase_turn_raw (n : Nat) :
+    run0 table 16 (p1raw n) = some (p2raw n) := by
+  simpa [p1raw, p2raw, List.append_assoc] using
+    turn16
+      (rep [true,true] (D n) ++ [true,true] ++
+        rep [false,true,true] (4*n+1) ++
+        [false,false,true,true,false,false,true,true])
+
+theorem phase_to_p2raw (n : Nat) :
+    run0 table (88*n+132) (family n) = some (p2raw n) := by
+  have H := join0 (phase_first_raw n) (phase_turn_raw n)
+  have hc : (88*n+116)+16 = 88*n+132 := by omega
+  simpa only [hc] using H
+
 theorem phase_final (n : Nat) :
     run0 table (136*n+204) (p4 n) = some (finalOut n) := by
   have h0 : run0 table 21 (p4 n) =
@@ -359,6 +467,8 @@ theorem phase_final_family (n : Nat) :
   rw [← finalOut_eq_family_succ n]
   exact phase_final n
 
+#print axioms phase_first_raw
+#print axioms phase_to_p2raw
 #print axioms phase_final
 #print axioms phase_final_family
 end BB6.Agent9Raw43B1LEE0LFM559
