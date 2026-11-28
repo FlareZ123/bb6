@@ -46,6 +46,13 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
           run-id: 46109014135
           name: raw11-q0-root53-complete-source
           path: /tmp/root53
@@ -122,7 +129,7 @@ jobs:
               *":$dir:"*) ;;
               *) LEAN_PATH="$LEAN_PATH:$dir" ;;
             esac
-          done < <(find /tmp/deps /tmp/q0151 /tmp/root53 /tmp/base                     /tmp/extra28-eight /tmp/extra28-four /tmp/extra132 /tmp/extra140                     -type f -name '*.olean' | sort)
+          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53 /tmp/base                     /tmp/extra28-eight /tmp/extra28-four /tmp/extra132 /tmp/extra140                     -type f -name '*.olean' | sort)
           export LEAN_PATH
 
           lean -j1 -o /tmp/build/Raw11Extra28AllChildren.olean             im-results/agent44-raw11-extra28/Raw11Extra28AllChildren.lean
