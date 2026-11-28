@@ -1,4 +1,4 @@
-import DyadicRows
+import DyadicRays
 import ModularConeSource
 
 namespace BB6.Agent21Dyadic
@@ -21,6 +21,15 @@ theorem source_all_rows_sparse (d : Nat) (hd : 0<d) :
       Large (n+2) y → BB6.Agent3.CReach x y → (y:Int)%P n∈R :=
   all_rows_sparse BB6.Agent3.CReach BB6.Agent42ModularCone.source_parent d hd
 
+/-- Uniform dyadic sparsity for every authentic Machine C section ray with
+    even left increment and odd right increment. -/
+theorem source_ray_sparse (d : Nat) (hd : 0<d) :
+    ∃ n, ∀ x y a b : Nat, ∃ R : List Int, d*R.length≤2^n ∧
+      ∀ t : Nat, Large (n+2) (y+(2*b+1)*t) →
+        BB6.Agent3.CReach (x+2*a*t) (y+(2*b+1)*t) → (t:Int)%P n∈R :=
+  ray_sparse BB6.Agent3.CReach BB6.Agent42ModularCone.source_parent d hd
+
+#print axioms source_ray_sparse
 #print axioms source_all_rows_sparse
 #print axioms source_low_sparse
 #print axioms source_high_sparse
