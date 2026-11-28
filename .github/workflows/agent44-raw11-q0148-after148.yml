@@ -204,6 +204,9 @@ jobs:
             for theorem in literal_code parent_matches_source member_in_148 remaining_census parent_cover raw11_cover_from_147; do
               grep -F "'$theorem_prefix.$theorem' depends on axioms:" /tmp/build/consumer.log
             done
+            for theorem in parent_cover raw11_cover_from_147; do
+              grep -F "'$theorem_prefix.$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/build/consumer.log
+            done
           else
             for theorem in literal_code member_in_148 remaining_census q0148_cover raw11_cover_from_147; do
               grep -F "'$theorem_prefix.$theorem' depends on axioms:" /tmp/build/consumer.log
