@@ -42,7 +42,12 @@ theorem signed_first_gap (x y : Int) (r b : Nat) (w : List Nat)
     have hpart : P r∣P r*acc (signedS x y+shift r) w :=
       Int.dvd_mul_right _ _
     have hsub := Int.dvd_sub hbig hpart
-    convert hsub using 1 <;> omega
+    have heq : (signedZ x y+offset (signedS x y) r)+
+        P r*acc (signedS x y+shift r) w -
+        P r*acc (signedS x y+shift r) w =
+          signedZ x y+offset (signedS x y) r := by omega
+    rw [heq] at hsub
+    exact hsub
   have htwo : (signedZ x y+offset (signedS x y) r)%2=0 := by
     have hh : P 1∣signedZ x y+offset (signedS x y) r :=
       Int.dvd_trans (P_dvd 1 r hr) hfirst
@@ -95,7 +100,12 @@ theorem signed_first_gap_min (x y : Int) (r b : Nat) (w : List Nat)
     have hpart : P (min r b)∣P r*acc (signedS x y+shift r) w :=
       Int.dvd_trans (P_dvd _ _ hminr) (Int.dvd_mul_right _ _)
     have hs := Int.dvd_sub hbig hpart
-    convert hs using 1 <;> omega
+    have heq : (signedZ x y+offset (signedS x y) r)+
+        P r*acc (signedS x y+shift r) w -
+        P r*acc (signedS x y+shift r) w =
+          signedZ x y+offset (signedS x y) r := by omega
+    rw [heq] at hs
+    exact hs
   have htwo : (signedZ x y+offset (signedS x y) r)%2=0 := by
     have hh : P 1∣signedZ x y+offset (signedS x y) r :=
       Int.dvd_trans (P_dvd 1 _ hminpos) hfirst
