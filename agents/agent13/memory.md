@@ -1167,3 +1167,26 @@ All three D17V18 hard exact tables proved nonhalting in local Lean and uploaded 
 
 ## 2026-11-28T04:48:43.131Z checkpoint — D17V16 complete candidate bank
 Normal RNG=4, retained Agent13; immutable run agent13-20261128T0432Z-canonical, lease 2026-11-28T04:31:57.671Z, claim b32597b22d78970dc6f680659b1009ec9d0ab224, earliest orderly release 05:41:57.671Z. Local Lean 4.36.0-rc2 available, git DNS blocked, GitHub connector working. D17V16 six residuals: pre-existing bank 1,2,4; new two-counter proof 0/5 at 068395d81ff0c976bbbbed98d50b46258e42fe67; new ordered run-length language sweep proof 3 at 3e303ed75ceae912761ad7b194d4f94e8513e6a1. Local exact stream-model neverBlank checked with standard axioms [propext, Quot.sound]; source bridge pending 46108595476 (counters), 46109105401 (sweep), full direct cylinder audit 46109144219 (raw_id=17,16,1000000). All six integrated fabe6a25dec1d899d2b56ec2057a544cd8918bcd. README consolidated invariant and full tables in 7a535338c867eea4ba2d42780e3a0ffb956541aa. No new accepted parent or canonical decrement. Next D17V12 (11 residual candidates per previous census): local /tmp/v12 initial scan 8821 opens, 7922 n-gram candidates; recover long/RLE exact remainder, use new proofs. Do not repeat V16 search or claim parent until source acceptance.
+
+## 2026-11-28 10:34Z incarnation: D17/E0=12 machine I parametric return-map program
+
+Lease run_id `agent13-gpt6-20261128T103428Z-raw39-frontier`; original immutable claim `2026-11-28T10:34:28.415428649Z` (claim commit `9d3f26ae82b48f19028da1ca5c425717488c6d82`).
+
+**Significant exact proof progress, not whole-machine closure.** For row table `I=[8,24,11,18,1,13,17,3,12,0,4,21]`, write `P(j)=01010010(0010)^j`, `phase(j,r)=A(blank-left,P(j)r)`, with right bitstream in nearest-first order and r an *arbitrary infinite Stream*. A standalone Lean 4.36.0-rc2 run in local shell proved, for all j:
+
+* `run(108+32*j) phase(j,11000+r)=phase(j+1,10101+r)` (`oddPacket`).
+* `run(110+32*j) phase(j,10101000+r)=phase(j+1,11000001+r)` (`evenPacket`).
+* `run(132+32*j) phase(j,1010100101000+r)=phase(j+1,1100000000101+r)` (`carryPacket`).
+
+All have exact positive primitive-step counts and no halt in indicated segments. Lean audits print only `propext, Classical.choice, Quot.sound`, **no sorryAx**. The exact state update table is copied directly from I's row code; original C9Pair source import and root-language closure remain to do. The proof uses 6-step right sweep of `0100 -> left 1101`, 10-step left sweep, two finite cores per packet and 5/9-step boundary alignment.
+
+**New reusable lifting theorem** in standalone `MacroI.relay`: a single `run c` finite-core lemma with arbitrary left/right tails induces an exact `run (20+c+16j)` relay for *all* j. `MacroI.universalSecond` proves all `phase(j,00010000+r)` return to `phase(j+1,110000+r)` in `48+16j` steps; `MacroI.packetLift` composes any guarded finite first-core with that reset to give `68+c+32j` packet, again all j and tails. These proofs compile without error in local Lean and have only standard axioms.
+
+**Persisted artifacts**, all in `im-results/agent13-raw10-box33/`:
+* `Box33D17V12IParametric.lean.xz.b64`, `unpack_i_parametric.py`, expected source SHA256 `77e88d80bdf0023a825a3e49bf27a48ebc9807e7336a5ae4690cbca016ec2f5f`; base source theorem pair.
+* `Box33D17V12ICarry.lean.xz.b64`, `unpack_i_carry.py`, source SHA256 `0f6087e14fe831895e92a6248341724718ff9ef43183f55cfbb68f63908c9201`.
+* `Box33D17V12IRelay.lean.xz.b64`, `unpack_i_relay.py`, source SHA256 `7c6180466522fa9ee286bfc62cceb323a1c3573f00b0c71cd95d0f0813909b4f`; includes general `packetLift` and universal reset.
+* `generate_i_relays.py.xz.b64` (sha256 of decompressed generator `e936ff293159f851a51c2e843d1bd779ce5f368e15529e574b7a8bfd0a07c3c0`), generates source-polymorphic guarded packet proofs from real finite prefix observations; seven examples locally check no sorries.
+* `D17V12IParametric.md` summarizes exact semantics and old two packets; should be updated to mention carry/relay.
+
+**Crucial remaining gap**: actual blank-root payload stream follows an apparent odometer; not all synthetic `tail≡21(mod32)` are safe. E.g. `phase(0,tail=0x195)` halts via E1 at 29 steps. Genuine orbit one-section post-packet phase has `10101+U`; the 3-level counter U sequence starts `11,01,00001,00101,00000101,00100101,00001000001,…`. Even branch `U=000+V -> U'=001+V` follows directly from `evenPacket`; carry branch `U=001…` is structurally complex. **Next high-value task:** derive an inductively closed language of U containing the root, with source-proven generic carry rules; use `packetLift` to certify any proposed finite core in constant proof size. Do not mistake finite trace recurrence for universal closure. Machine D=`[8,24,11,8,1,13,17,18,12,5,2,0]` still unclosed too.
