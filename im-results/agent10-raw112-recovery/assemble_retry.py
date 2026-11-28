@@ -66,15 +66,29 @@ def run_compile(
         subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
 
 
-def verify_reuse(manifest_path: Path, expected_compiled: set[str], label: str) -> None:
+def verify_reuse(manifest_path: Path, expected_compiled: set[str], label: str,
+                 precompiled_seed: Path | None = None) -> None:
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
     modules = {item["module"] for item in manifest["modules"]}
     missing = expected_compiled - modules
     if missing:
         raise ValueError(f"{label}: missing compiled modules {sorted(missing)}")
-    expected_reused = modules - expected_compiled
     core = manifest.get("precompiled_core") or {}
     reused = set(core.get("reused_modules", []))
+    if precompiled_seed is None:
+        # Branch aggregators have no new external dependencies: exactly the
+        # named root modules should be compiled from original source.
+        expected_reused = modules - expected_compiled
+    else:
+        # Raw112ClosedCover additionally imports Raw112SiblingNever and
+        # ResidualCover, which are not 24-branch shard dependencies. Those
+        # modules legitimately compile fresh from checked-in source; what
+        # matters is that *every* already certified source-identical object in
+        # the full 24-branch seed was actually reused unchanged.
+        seed = json.loads((precompiled_seed / "manifest.json").read_text(encoding="utf-8"))
+        expected_reused = modules & {item["module"] for item in seed["modules"]}
+        if expected_compiled & reused:
+            raise ValueError(f"{label}: a target proof root was not rebuilt")
     if reused != expected_reused:
         raise ValueError(
             f"{label}: unexpected rebuilt dependencies: "
@@ -260,6 +274,7 @@ def main() -> None:
         parent_work / "manifest.json",
         {"Raw112Data", "Raw112ClosedCover"},
         "parent Cover",
+        precompiled_seed=seed,
     )
     subprocess.run(
         [
