@@ -36,7 +36,14 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
 
     out=Path(out);out.mkdir(exist_ok=True,parents=True);got=json.loads(Path(treefile).read_text());fixture=json.loads(lzma.decompress(base64.b64decode(Path(fixture_file).read_text())))
     keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
-    assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest'];rows=list(zip(keys,fixture['data']));evidence=dict(rows);B=fixture['bound'];assert B>=got['stats']['score'];P=parse(got['parent']);cut=got['cut'];assert raw(P)=='1RB---1RC---0RD---0LD'+MOVES[index]+'------------' and cut==max(4,index%6+1)
+    assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest'];rows=list(zip(keys,fixture['data']))
+    extras=ROOT/'extra-hard01.json'
+    if extras.exists():
+        direct=json.loads(extras.read_text())
+        assert set(direct)<=set(keys)
+        assert all(v is None or v==direct[t] for t,v in rows if t in direct)
+        rows=[(t,direct.get(t,v)) for t,v in rows]
+    evidence=dict(rows);B=fixture['bound'];assert B>=got['stats']['score'];P=parse(got['parent']);cut=got['cut'];assert raw(P)=='1RB---1RC---0RD---0LD'+MOVES[index]+'------------' and cut==max(4,index%6+1)
     tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
     if child is not None:
         assert 0<=child<24 and child%6<=cut and kids[child][0]!='skip'
