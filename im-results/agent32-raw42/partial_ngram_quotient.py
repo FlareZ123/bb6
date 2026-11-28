@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compact frozen asymmetric NGram or list-BiDFA witnesses via partial congruences.
+"""Compact frozen asymmetric NGram, list-BiDFA or FastCert witnesses via partial congruences.
 
 Discovery only: the replacement must pass the original Lean FastBiDFA checker.
 Never modify the transition table, namespace, or exported live theorem.
@@ -89,11 +89,63 @@ def load_run(source):
     return m, trans, D, E, S
 
 
+
+def load_fast(source):
+    m = re.search(
+        r'def cert : FastCert := ⟨\s*(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*'
+        r'#\[([^\]]*)\],\s*#\[([^\]]*)\],\s*(\d+),\s*#\[([^\]]*)\]\s*⟩\n',
+        source, re.S,
+    )
+    assert m, "expected original FastCert"
+    D = [ast.literal_eval(s) for s in m.groups()[:2]]
+    E = []
+    for d, s in zip(D, m.groups()[2:4]):
+        tokens = iter(re.findall(r"\.(?:empty|leaf|branch)", s))
+        e = {(t, v%2, v//2) for t in range(len(d)//2) for v in decode(tokens)}
+        assert next(tokens, None) is None
+        E.append(e)
+    nr = int(m[5])
+    assert nr == len(D[1])//2
+    tokens = iter(re.findall(r"\.(?:empty|leaf|branch)", m[6]))
+    S = {(i//2, i%2, v//nr, v%nr)
+         for i in range(12) for v in decode(tokens)}
+    assert next(tokens, None) is None
+    trans = {
+        (int(q), int(a == "true")): (int(w == "true"), int(d == "true"), int(j))
+        for q,a,w,d,j in re.findall(
+            r"\| \((\d), (true|false)\) => some \(some ⟨(true|false), (true|false), (\d)⟩\)",
+            source,
+        )
+    }
+    for d,e in zip(D,E):
+        assert all(d[2*u+b] == t for t,b,u in e)
+    return m, trans, D, E, S
+
+
+def prune(D, E, S):
+    """Remove unreachable summary states and ignore unobserved pushes."""
+    P, DD, EE = [], [], []
+    for k, e in enumerate(E):
+        active = {0} | {z[2+k] for z in S} | {v for t,b,u in e for v in (t,u)}
+        p = {i:j for j,i in enumerate(sorted(active))}
+        P.append(p)
+        dd = [0]*(2*len(p))
+        ee = {(p[t],b,p[u]) for t,b,u in e}
+        for t,b,u in ee:
+            dd[2*u+b] = t
+        DD.append(dd)
+        EE.append(ee)
+    SS = {(q,a,P[0][l],P[1][r]) for q,a,l,r in S}
+    return DD, EE, SS
+
+
 def load(source):
     if "import AsymNGram\n" in source:
         return load_ngram(source)
     if "import BiDFA\n" in source:
         return load_run(source)
+    if "import FastBiDFA\n" in source:
+        return load_fast(source)
     raise ValueError("unsupported witness format")
 
 
@@ -264,7 +316,9 @@ def transform(src):
     assert out is not None, "original fixed point not reproduced"
     EE,T = out
     assert T <= S and all(e <= old for e, old in zip(EE,E))
-    D,E,S = exact_quotient(trans,D,EE,T)
+    D,E,S = prune(D,EE,T)
+    assert close(trans,D,cap=len(S)+1) == (E,S)
+    D,E,S = exact_quotient(trans,D,E,S)
     return render(src,m,D,E,S),before,stats(D,E,S)
 
 
