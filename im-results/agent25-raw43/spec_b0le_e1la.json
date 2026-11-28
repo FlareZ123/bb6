@@ -1617,7 +1617,62 @@
       ]
     }
   },
-  "growth": {},
+  "growth": {
+    "59": {
+      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA0RD_0LD---",
+      "module": "M59Proof",
+      "partial": "BB6.Agent38M59.table",
+      "never": "BB6.Agent38M59.never"
+    },
+    "61": {
+      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
+      "module": "M61Proof",
+      "partial": "BB6.Agent38M61.table",
+      "never": "BB6.Agent38M61.never"
+    },
+    "62": {
+      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA1RA_0RE---",
+      "module": "M62Proof",
+      "partial": "BB6.Agent38M62.table",
+      "never": "BB6.Agent38M62.never"
+    },
+    "176": {
+      "table": "1RB0LF_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
+      "module": "M176Proof",
+      "partial": "BB6.Agent38M176.table",
+      "never": "BB6.Agent38M176.never"
+    },
+    "413": {
+      "table": "1RB1LA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
+      "module": "M413Proof",
+      "partial": "BB6.Agent38M413.table",
+      "never": "BB6.Agent38M413.never"
+    },
+    "558": {
+      "table": "1RB1LC_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
+      "module": "M558Proof",
+      "partial": "BB6.Agent38M558.table",
+      "never": "BB6.Agent38M558.never"
+    },
+    "627": {
+      "table": "1RB1RA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_1RC---",
+      "module": "M627Proof",
+      "partial": "BB6.Agent38M627.table",
+      "never": "BB6.Agent38M627.never"
+    },
+    "711": {
+      "table": "1RB1RC_1RC0LE_0RD1RF_1LD0RB_1LA1LD_0RD---",
+      "module": "M711Proof",
+      "partial": "BB6.Agent38M711.table",
+      "never": "BB6.Agent38M711.never"
+    },
+    "905": {
+      "table": "1RB1RF_1RC0LE_0RD---_1LD0RB_1LA1LD_0RD1RF",
+      "module": "M905Proof",
+      "partial": "BB6.Agent38M905.table",
+      "never": "BB6.Agent38M905.never"
+    }
+  },
   "unresolved": [
     {
       "i": 12,
@@ -1678,27 +1733,6 @@
     {
       "i": 44,
       "table": "1RB0LA_1RC0LE_0RD1RA_1LD0RB_1LA1LF_---0LD",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 59,
-      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA0RD_0LD---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 61,
-      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 62,
-      "table": "1RB0LA_1RC0LE_0RD1RF_1LD0RB_1LA1RA_0RE---",
       "query": [
         "open"
       ]
@@ -1867,13 +1901,6 @@
     {
       "i": 174,
       "table": "1RB0LF_1RC0LE_0RD1RF_1LD0RB_1LA---_0RC0RF",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 176,
-      "table": "1RB0LF_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
       "query": [
         "open"
       ]
@@ -2411,13 +2438,6 @@
       ]
     },
     {
-      "i": 413,
-      "table": "1RB1LA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
-      "query": [
-        "open"
-      ]
-    },
-    {
       "i": 516,
       "table": "1RB1LA_1RC0LE_0RD---_1LD0RB_1LA1RF_1RE1RB",
       "query": [
@@ -2469,13 +2489,6 @@
     {
       "i": 541,
       "table": "1RB1LB_1RC0LE_0RD1LF_1LD0RB_1LA1RB_---1LC",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 558,
-      "table": "1RB1LC_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RE---",
       "query": [
         "open"
       ]
@@ -2665,13 +2678,6 @@
     {
       "i": 625,
       "table": "1RB1RA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_0RA---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 627,
-      "table": "1RB1RA_1RC0LE_0RD1RF_1LD0RB_1LA1LB_1RC---",
       "query": [
         "open"
       ]
@@ -2875,13 +2881,6 @@
     {
       "i": 710,
       "table": "1RB1RC_1RC0LE_0RD1RF_1LD0RB_1LA0RD_0RD---",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 711,
-      "table": "1RB1RC_1RC0LE_0RD1RF_1LD0RB_1LA1LD_0RD---",
       "query": [
         "open"
       ]
@@ -3288,13 +3287,6 @@
     {
       "i": 904,
       "table": "1RB1RF_1RC0LE_0RD---_1LD0RB_1LA0RD_0RD1RF",
-      "query": [
-        "open"
-      ]
-    },
-    {
-      "i": 905,
-      "table": "1RB1RF_1RC0LE_0RD---_1LD0RB_1LA1LD_0RD1RF",
       "query": [
         "open"
       ]
