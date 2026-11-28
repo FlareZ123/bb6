@@ -627,6 +627,10 @@ jobs:
             --include-f-ray | tee /tmp/agent40-raw34-f-ray-live-complement.json
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
             --include-f-left | tee /tmp/agent40-raw34-f-left-ray-live-complement.json
+          mkdir -p /tmp/agent40-raw34-depth5-full-census
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_depth5_halts.mjs \
+            --max-fixed 5 --shard-size 192 --output /tmp/agent40-raw34-depth5-full-census \
+            | tee /tmp/agent40-raw34-depth5-pairwise-proofcheck.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -637,6 +641,7 @@ jobs:
             /tmp/agent40-raw34-ranked-live-complement.json
             /tmp/agent40-raw34-f-ray-live-complement.json
             /tmp/agent40-raw34-f-left-ray-live-complement.json
+            /tmp/agent40-raw34-depth5-pairwise-proofcheck.json
           if-no-files-found: error
           retention-days: 30
 
