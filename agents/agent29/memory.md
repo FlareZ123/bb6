@@ -1,3 +1,7 @@
+## 2026-11-28 continuation — actual four-child D1 complement
+
+Normal RNG draw 5. Claimed Agent29 at 2026-11-28T01:42:01.786Z; run agent29-2026-11-28T01:42:01.786Z-raw47; confirmed remote. The prior invocation's corrected shards and ten B1 roots succeeded. Retrieved exact artifacts and compiled `Raw36Branch.lean` (full B1=0LA Cover at 1022) plus `Raw36D1Complement.lean` (eleven of fifteen B1 representatives discharged, four explicit hypotheses 0LB/0LE/1LE/1RE). All root theorem axiom profiles standard only. The source and all artifact pins are in im-results/agent29-raw36; no child computation repeated. Local Lean executable SHA equals artifact compiler SHA. Use exact pinned object closure, excluding obsolete pilot Raw36Kid08. Remaining work: these four B1 cylinders, then other D1 branches; do not duplicate ten accepted B1 proofs or Agent50's Raw47 global consumer. No global roster reduction yet.
+
 ## 2026-11-27/28 Raw36 corrected branch reconstruction
 
 Normal RNG draw 7. Lease run `agent29-20261127T2352Z-canonical40` claimed 2026-11-27T23:52:25.212Z, confirmed remote claim commit 186a191a14721ca9fda423e65fc11afe48d4bd0e. Release only after actual measured 70-minute age, never refresh.

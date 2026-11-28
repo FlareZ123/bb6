@@ -1,0 +1,183 @@
+[
+  {
+    "name": "raw36-shard-0",
+    "artifact_id": 15239571145,
+    "run_id": 46085477064,
+    "revision": "7a78c06e431a4110e5af8df227b51812dcaf7e74",
+    "sha256": "04d7d207ba60341f4d99f2e524f9a274e011acd7d780d2dc881d207652e71be3",
+    "roots": [
+      "Raw36Kid00",
+      "Raw36Kid01",
+      "Raw36Kid02",
+      "Raw36Kid03",
+      "Raw36Kid04"
+    ],
+    "bound": 1022
+  },
+  {
+    "name": "raw36-shard-1",
+    "artifact_id": 15238499202,
+    "run_id": 46085477064,
+    "revision": "7a78c06e431a4110e5af8df227b51812dcaf7e74",
+    "sha256": "a3a053cea49d24b50f73301bb3d62b87d6a05337806c7a2e75d68f9d58f0e81e",
+    "roots": [
+      "Raw36Kid06",
+      "Raw36Kid07",
+      "Raw36Kid08",
+      "Raw36Kid09",
+      "Raw36Kid10"
+    ],
+    "bound": 1022
+  },
+  {
+    "name": "raw36-shard-2",
+    "artifact_id": 15239064102,
+    "run_id": 46085477064,
+    "revision": "7a78c06e431a4110e5af8df227b51812dcaf7e74",
+    "sha256": "16cca63e90ee7ad506dfafc50d83429b777860300aa745e2c8323770ff70217d",
+    "roots": [
+      "Raw36Kid12",
+      "Raw36Kid13",
+      "Raw36Kid14",
+      "Raw36Kid15",
+      "Raw36Kid16"
+    ],
+    "bound": 1022
+  },
+  {
+    "name": "raw36-shard-3",
+    "artifact_id": 15239978197,
+    "run_id": 46085477064,
+    "revision": "7a78c06e431a4110e5af8df227b51812dcaf7e74",
+    "sha256": "b861bef2471902c511b505a8461b1c5712cf76531fbc379be7a1e709d7fb4e46",
+    "roots": [
+      "Raw36Kid18",
+      "Raw36Kid19",
+      "Raw36Kid20",
+      "Raw36Kid21",
+      "Raw36Kid22"
+    ],
+    "bound": 1022
+  },
+  {
+    "name": "raw36-pilot-proof",
+    "artifact_id": 15234902017,
+    "run_id": 46076282287,
+    "revision": "a24ea6fbbbe50d8a393ce49631f77e2ed26e29dc",
+    "sha256": "f5008e9910a7d9929aa6af03669d538632e64ac0bfbf87cde9fa24393207c111",
+    "roots": [
+      "Raw36D1Fifteen"
+    ],
+    "bound": 162
+  },
+  {
+    "name": "raw36-b1-6",
+    "artifact_id": 15241456595,
+    "run_id": 46089144018,
+    "revision": "cc36985ca4cdf999a07b1f094e3a88f2bbb1ca26",
+    "sha256": "09b09ca2aa3b0ef841c0390add97e0ab3f6cecad6afe40f1e7a0185b5d2364d2",
+    "roots": [
+      "Raw36B106"
+    ],
+    "bound": 225
+  },
+  {
+    "name": "raw36-b1-7",
+    "artifact_id": 15240236503,
+    "run_id": 46087166988,
+    "revision": "f7df108e664a318be3e3cd9114677c52524091f8",
+    "sha256": "ddfdc2993630a60e0368b2d273d59fa07490e23771d36e4d85fae920cc6c29c6",
+    "roots": [
+      "Raw36B107"
+    ],
+    "bound": 326
+  },
+  {
+    "name": "raw36-b1-8",
+    "artifact_id": 15240191527,
+    "run_id": 46087166988,
+    "revision": "f7df108e664a318be3e3cd9114677c52524091f8",
+    "sha256": "355d6e01e5afe7b015a35ea499a5c48a200529e65d7983037b0e7a71badbb8ad",
+    "roots": [
+      "Raw36B108"
+    ],
+    "bound": 105
+  },
+  {
+    "name": "raw36-b1-9",
+    "artifact_id": 15239309480,
+    "run_id": 46087166988,
+    "revision": "f7df108e664a318be3e3cd9114677c52524091f8",
+    "sha256": "d25210f67801f9ee9b8c282a95df6a3910f73c298acd8d7fdadb9e79d3b0acec",
+    "roots": [
+      "Raw36B1RD"
+    ],
+    "bound": 85
+  },
+  {
+    "name": "raw36-b1-10",
+    "artifact_id": 15242360828,
+    "run_id": 46089144018,
+    "revision": "cc36985ca4cdf999a07b1f094e3a88f2bbb1ca26",
+    "sha256": "be3fcaaa2f8423a686b12d2fcfc580c4297fd1fbbb4e749310c1686fcf97114b",
+    "roots": [
+      "Raw36B110"
+    ],
+    "bound": 245
+  },
+  {
+    "name": "raw36-b1-12",
+    "artifact_id": 15242397102,
+    "run_id": 46089144018,
+    "revision": "cc36985ca4cdf999a07b1f094e3a88f2bbb1ca26",
+    "sha256": "60830feac09312ec39023b98fd7d67f7c609eb2df365b91cc4c5eb9385d925ef",
+    "roots": [
+      "Raw36B112"
+    ],
+    "bound": 551
+  },
+  {
+    "name": "raw36-b1-13",
+    "artifact_id": 15240986373,
+    "run_id": 46087166988,
+    "revision": "f7df108e664a318be3e3cd9114677c52524091f8",
+    "sha256": "8be0167778341138ea098e6188b0a282901f7a8edc6e6a5d171bc6ebba97864d",
+    "roots": [
+      "Raw36B113"
+    ],
+    "bound": 415
+  },
+  {
+    "name": "raw36-b1-14",
+    "artifact_id": 15240727480,
+    "run_id": 46087583776,
+    "revision": "edb09b57a04380df0bafc9f53bea5876bf8b0a5f",
+    "sha256": "5ea85a4d5c62ae7f150e72c1d109b02a343d564cbb60103fdab5d17c279dd407",
+    "roots": [
+      "Raw36B114"
+    ],
+    "bound": 288
+  },
+  {
+    "name": "raw36-b1-18",
+    "artifact_id": 15241768281,
+    "run_id": 46089144018,
+    "revision": "cc36985ca4cdf999a07b1f094e3a88f2bbb1ca26",
+    "sha256": "70e29343baf027a22dd9393402546b3a7e4e31482c05e81294ba9ea0fc52f91f",
+    "roots": [
+      "Raw36B118"
+    ],
+    "bound": 263
+  },
+  {
+    "name": "raw36-b1-20",
+    "artifact_id": 15239643588,
+    "run_id": 46087166988,
+    "revision": "f7df108e664a318be3e3cd9114677c52524091f8",
+    "sha256": "eb770a4351cdeb0c9f19f7b996f97f3510abdc00938250fb762caf3085b0bb6f",
+    "roots": [
+      "Raw36B120"
+    ],
+    "bound": 95
+  }
+]

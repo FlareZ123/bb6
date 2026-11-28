@@ -1,55 +1,37 @@
-# Raw36: source-checked symmetry, corrected FAR semantics, and open descendants
+# Raw36: source-checked B1 parent cover and exact four-child complement
 
-**Status (28 November 2026, 00:00 UTC):** Exact Raw36 parent solution **not** established; BB(6) remains open. The main eight-hole Raw36 parent is `1RB---_1RC---_0RD---_0LD---_------_------`. `Raw36Cut.lean` source-checks its first-hole **conditional reduction** to 24 further obligations, not an unconditional parent bound.
+**Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. For its seven-hole D1=1LB descendant `1RB---_1RC---_0RD---_0LD1LB_------_------`, the locally compiled original-source theorem `BB6.Agent29Raw36.d1_cover_from_four` reduces the entire weighted Cover to **four** exact B1 cylinders: **0LB, 0LE, 1LE, 1RE**. It consumes all eleven other retained representatives, the five closed cycles, the four E/F aliases and the real halt choice. It holds for any common weighted threshold B ≥ 1022. This is a conditional theorem; no remaining child or full Raw36 parent is claimed solved by it.
 
-## Source-accepted mathematical statements
+## Closed B1 cylinders
 
-- CI [46073656511](https://github.com/FlareZ123/bb6/actions/runs/46073656511) source-accepted `BB6.Agent29Raw36.kid01_bound` at weighted **162** on all C1=0LB completions of the six-hole B1=0LA descendant; standard axioms only, artifact **15233523548**. This is an *unconditional five-hole-cylinder* bound, irrespective of subsequent candidate-search corrections.
-- CI [46074069071](https://github.com/FlareZ123/bb6/actions/runs/46074069071) source-accepted `BB6.Agent29Raw36.childF_to_E`, `childF_bound`, and `kid02_bound` with standard axioms, artifact **15234711459**. The E/F theorem is a universal source-level equivalence because both labels are unused at the B1=0LA/C1 split. It reduces four paired choices (0LF, 0RF, 1LF, 1RF) to the E counterparts. All 24 ordinary C1 moves are represented by **20** physical classes, plus the genuine halt branch.
-- `Raw36SymmetryCut.lean` and `Raw36D1SymmetryCut.lean` give conditional 20-class parent Bound/Cover interfaces; `Raw36D1Fifteen.lean` additionally supplies the five original B1 cycle certificates to reduce the **seven-hole D1=1LB** cylinder to only **15** unresolved B1 children. These additional wrappers are **source drafts pending successful CI**, not yet accepted theorems. The first wrapper CI failure [46074167509](https://github.com/FlareZ123/bb6/actions/runs/46074167509) was the localized missing import scope of `allMoves_of` (fixed in source), not a failed mathematical certificate.
+All ten non-0LA rows below have source-accepted original-machine weighted covers at the indicated threshold. The B1=0LA row now also has an unconditional local source-compiled `branch_cover`; its twenty independently accepted child objects are composed using the source-level symmetry theorem.
 
-## Important invalidation: unsound candidate FAR classifier
+| B1 action | Weighted bound | Source evidence |
+| --- | ---: | --- |
+| 0LA | 1022 | [four shards](https://github.com/FlareZ123/bb6/actions/runs/46085477064), local `Raw36Branch.lean` |
+| 0RA | 225 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15241456595 |
+| 0RB | 326 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15240236503 |
+| 0RC | 105 | same run, artifact 15240191527 |
+| 0RD | 85 | same run, artifact 15239309480 |
+| 0RE | 245 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15242360828 |
+| 1LA | 551 | same run, artifact 15242397102 |
+| 1LB | 415 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15240986373 |
+| 1LC | 288 | [46087583776](https://github.com/FlareZ123/bb6/actions/runs/46087583776), artifact 15240727480 |
+| 1RA | 263 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15241768281 |
+| 1RC | 95 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15239643588 |
 
-At revision `d9349db4f71f0c31157b103af17f5fe4513254af`, `search.cjs` fixed a real logic bug: its FAR closure originally wrote `change=true` where the loop tested `changed`, prematurely declaring a fixed point after one propagation round. Therefore **all historical candidate-only claims** in `candidate.json`, `d1-*.json`, and the old README alleging zero OPEN and B1 cutoff 162/166 are untrusted. This is **not** a Lean kernel issue: `generate_four_hole.py:masks` independently detected several bad FAR witnesses, which stopped [raw36-shards CI 46074818850](https://github.com/FlareZ123/bb6/actions/runs/46074818850) before spurious source proofs could compile.
+The five immediate B1 cycles (0LC, 0LD, 1LD, 1RB, 1RD) and E/F transport are source-accepted in [46076282287](https://github.com/FlareZ123/bb6/actions/runs/46076282287), artifact 15234902017. The four retained open actions are literal children of `b1Child` in `Raw36D1SymmetryCut.lean`.
 
-The corrected candidate enumeration has now run successfully in four independent Node jobs, [46075062027](https://github.com/FlareZ123/bb6/actions/runs/46075062027). Relative to the obsolete first-hole results, **seven of the twenty E/F-representative C1 children differ**:
+**Composition evidence.** On 28 November 2026, the four corrected shard ZIPs, the relevant pilot closure and ten B1 branch ZIPs were retrieved and matched against the GitHub artifact SHA-256 digests. Common imported source/object identities agree; the pilot's obsolete Raw36Kid08 is excluded in favor of the corrected shard object. Using the exact Lean 4.36.0-rc2 executable (SHA-256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00), `Raw36Branch.lean` and `Raw36D1Complement.lean` compiled locally. The final `branch_cover` and `d1_cover_from_four` both report only `[propext, Classical.choice, Quot.sound]`. The local root source SHA-256 digests are 4d255a57c9d994364beba263dccb93dca1fd530190e41d63227a38323b0e3811 and f30b8a06e54d695db57e17a93b42e0344a152f7c32e129e3940bc68099c33db6, respectively. The compiled root object SHA-256 values are da675f9c71914204ec6f0f6cd83a79449d0940b22cdc40c1d428334ca8d83931 and 6534567c04e5989a842dc69438ffdb0d7a7ceca4519b49fa89733f69c705497f. [accepted_pins.json](accepted_pins.json) records all input artifacts; [compose_accepted.py](compose_accepted.py) reconstructs the exact selected dependency union and the two new roots without rebuilding the expensive child trees.
 
-| C1 move | Correctly unresolved OPEN search leaves | Corrected observed maximum weighted halt score |
-| --- | ---: | ---: |
-| 0LE | 5 | 123 |
-| 0RE | 38 | 190 |
-| 1LE | 8 | 130 |
-| 1RA | 134 | 171 |
-| 1RB | 94 | 169 |
-| 1RC | 82 | 61 |
-| 1RE | 32 | **1022** |
-| **Total** | **393** | |
+## B1=0LA source boundary and earlier FAR correction
 
-Every other representative child has **zero observed OPEN leaves** under the corrected search with the original automaton bank, and exactly the historical search node counts. *OPEN leaf count is not a count of machine completions.* In particular, **the previous proposed weighted cutoff 162 for the entire six-hole descendant is false as a computational hypothesis**: its 1RE child now has a simulated halting witness with score 1022 (not yet separately source-extracted or Lean checked). Neither the previous 25^6 nor 25^7 candidate halting/nonhalting census can be promoted to a theorem.
+The six-hole parent `1RB---_1RC0LA_0RD---_0LD1LB_------_------` admits the source-level C1 E/F equivalence, reducing 24 ordinary moves to 20 representatives plus the true halt action. The earlier candidate-only FAR classifier prematurely stopped its fixed-point iteration (it wrote `change` instead of `changed`). The independent Lean generator rejected that bad evidence. The corrected census identified 393 OPEN leaves across seven C1 representatives (0LE: 5; 0RE: 38; 1LE: 8; 1RA: 134; 1RB: 94; 1RC: 82; 1RE: 32). The exact-table evidence is 350 transferred FAR, 27 reconstructed FAR (codes 101230333/101023202), and 16 sweep invariants. The old duplicate sweep literal ID360 was replaced with its authentic C1=1RE table.
 
-`reclassify.cjs` reproduces these corrected results without rewriting the historical JSON. `recover_far.cjs` enumerates all rooted binary one-sided DFA candidates through four states to seek exact nonhalting certificates for those 393 OPEN leaves. Its resulting candidates must be rechecked in Lean via `masks()`; no new complete bound is asserted before that.
+All twenty corrected child roots passed [46085477064](https://github.com/FlareZ123/bb6/actions/runs/46085477064), pinned to `7a78c06e431a4110e5af8df227b51812dcaf7e74`. The corrected conservative threshold 1022 is now a theorem via `Raw36Branch.lean`. The former bound 162 for the entire B1=0LA cylinder is formally false: [46075570333](https://github.com/FlareZ123/bb6/actions/runs/46075570333) accepted the explicit 1016 ordinary-step halter and a weighted lower bound of 1017. Thus the current proven maximum interval is [1017,1022]; exact sharpness at 1022 is not asserted.
 
-## Corrected B1=0LA reconstruction
+## Remaining research
 
-The corrected `generate_corrected.py` rebuilds the actual twenty representative trees, rather than trusting the stale `candidate.json` census. Each of the 393 OPEN tables is matched exactly, with the following disjoint evidence:
+Close B1=0LB, 0LE, 1LE and 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close other D1 descendants from `Raw36Cut.lean`, whose original eight-hole parent remains open. The global Canonical40 frontier is unchanged by this local refinement.
 
-| Evidence | OPEN leaves |
-| --- | ---: |
-| Agent7 transferred FAR fixture | 350 |
-| Independently reconstructed FAR codes 101230333, 101023202 | 27 |
-| Agent7 sweep invariants | 16 |
-| Total | 393 |
-
-The generator rejects unmatched/duplicate OPEN tables, reconstructs each FAR mask, checks the exact fixture hash, and requires the full twenty-tree union to equal the evidence count. Sweep certificates enter through `Audit.proven`, whose Lean checker checks all twelve table slots. The former sweep recipe 360 accidentally duplicated recipe 145 (C1=1RA); the corrected C1=1RE table is `1RB1LF_1RC0LA_0RD1RE_0LD1LB_1RB0LB_---0LE`. Agent29 independently checked its unbounded recurrence in original-source Lean 4.36.0-rc2 (standard axioms), and the corrected Agent7 fixture now has sixteen distinct literal tables. The generated module of all sixteen sweeps compiled locally with standard axioms against the accepted dependency artifact. All twenty trees were generated successfully and all eight direct-cycle representatives (02,03,06,07,08,09,14,15) compiled locally; the large child proof checks remain underway. This is complete **candidate coverage of this six-hole descendant**, not yet a source-accepted universal theorem.
-
-The corrected conservative bound is 1022. Four-shard source check [46085477064](https://github.com/FlareZ123/bb6/actions/runs/46085477064) uses the new generator and original Lean sources pinned at `7a78c06e431a4110e5af8df227b51812dcaf7e74`. The old fixed-162 manifest is rejected by the updated merger. Successful independent child roots must be composed with the E/F transport and actual first-hole split; the generated `Raw36Branch.lean` aims to establish `branch_bound` and `branch_cover` at 1022, with standard axioms.
-
-## Remaining source route
-
-1. Finish the corrected 20 C1 representatives and source-accept the six-hole B1=0LA cover.
-2. Use the source-accepted E/F symmetry and the five immediate B1 cycles. In `Raw36D1Fifteen.lean`, the fifteen retained B1 actions are 0LA, 0LB, 0LE, 0RA, 0RB, 0RC, 0RD, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RC, 1RE. Five closed cycle actions are 0LC, 0LD, 1LD, 1RB, 1RD. Establish the other fourteen child covers and all remaining Raw36 D1 branches.
-3. Only accepted original-source theorems can justify promotion to `results/` or any global roster reduction.
-
-The four-way candidate E/F symmetry originally saved 139,204 of 395,640 candidate tree nodes (35.18%) in the historical generated-tree workload. It remains a valid source-level state-symmetry reduction, irrespective of the old unsound classifier.
-
-Existing CI selectors: `raw36-pilot`, `raw36-shards` (corrected 1022), `raw36-reclassify`, `raw36-far-discover`. BB(6) and Raw36 remain open.
+Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.
