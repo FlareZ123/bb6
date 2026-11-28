@@ -679,3 +679,6 @@ Immutable lease 2026-11-27T20:52:04.771Z (draw 3); release threshold 22:02:04.77
 
 ## 2026-11-28 03:10 UTC checkpoint
 Normal mode draw 4; lease claimed 03:01:50.658Z, release no earlier than 04:11:50.658Z. Continued M42 Raw140, not global coverage. Local exact Lean 4.36.0-rc2 accepted MixedFront.cSeed/bSeedReach/cDeplete/bDeplete, MixedExitOdd.cExit/bExit, MixedExitEvenC.cEvenExit and turn_balance (propext, Quot.sound). Remote commits eaf1d445, 744cff7f, 7f147380. Restored exact source from artifacts 15241363353 and 15220415544. Fixed unbound p in affine emitter and erroneous unfold Reach in BGeneral. LowLocal 2.62MB monolithic compile SIGKILL; split at theorem boundaries. Next: finish even B via two arbitrary-word bounces after depletion, then compose both mixed terminal entries and full step. No Cover or new roster consumption yet.
+
+### 2026-11-28 17:49 UTC — six-bank conversion
+Claim ed6867cfee2bfc9706f8e6bcde2eaf5d96953a91; immutable lease 17:42:08.184Z. Normal mode. New locally compiled Raw14037SixBank.lean and companion dossier prove uniform F(u+2,v,w+3,s;X) -> F(u+extra s,v+9,w,rho s;X) in exact 66u+66v+C(s), and a closed-form drain to u<2 when the 3-bank is sufficiently large. Axioms [propext, Quot.sound]. No Cover closed. Next derive terminal branches and return invariant for 37/40/44/83.
