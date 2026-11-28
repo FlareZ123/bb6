@@ -87,6 +87,7 @@ jobs:
         env:
           RAW11_REPAIR_ID: '140'
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+          RAW11_REPAIR_MODULE_TIMEOUT: '240'
         run: |
           set -euo pipefail
           python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
