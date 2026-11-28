@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Compact a frozen asymmetric NGram witness using partial DFA congruences.
+"""Compact frozen asymmetric NGram or list-BiDFA witnesses via partial congruences.
 
 Discovery only: the replacement must pass the original Lean FastBiDFA checker.
 Never modify the transition table, namespace, or exported live theorem.
@@ -7,6 +7,7 @@ Never modify the transition table, namespace, or exported live theorem.
 from collections import defaultdict, deque
 from pathlib import Path
 import re
+import ast
 import sys
 
 
@@ -27,7 +28,7 @@ def decode(tokens):
     return out
 
 
-def load(source):
+def load_ngram(source):
     m = re.search(r"def cert : Cert := ⟨(\d+),\s*(\d+),\s*(.*?)⟩\n", source, re.S)
     assert m, "expected original NGram certificate"
     nl, nr = map(int, m.groups()[:2])
@@ -53,6 +54,47 @@ def load(source):
     for d, e in zip(D, E):
         assert all(d[2*u+b] == t for t,b,u in e)
     return m, trans, D, E, S
+
+
+
+def load_run(source):
+    m = re.search(
+        r'def cert : Cert := ⟨\s*(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*'
+        r'(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*(\[[^\]]*\])\s*⟩\n',
+        source, re.S,
+    )
+    assert m, "expected original list BiDFA certificate"
+    D = [ast.literal_eval(s) for s in m.groups()[:2]]
+    assert all(len(d)%2 == 0 and all(0 <= t < len(d)//2 for t in d) for d in D)
+    E = [
+        {(int(t), int(b == "true"), int(u))
+         for t,b,u in re.findall(r"⟨(\d+),\s*(true|false),\s*(\d+)⟩", s)}
+        for s in m.groups()[2:4]
+    ]
+    S = {
+        (int(q), int(a == "true"), int(l), int(r))
+        for q,a,l,r in re.findall(
+            r"⟨(\d+),\s*(true|false),\s*(\d+),\s*(\d+)⟩", m[5]
+        )
+    }
+    trans = {
+        (int(q), int(a == "true")): (int(w == "true"), int(d == "true"), int(j))
+        for q,a,w,d,j in re.findall(
+            r"\| \((\d), (true|false)\) => some \(some ⟨(true|false), (true|false), (\d)⟩\)",
+            source,
+        )
+    }
+    for d,e in zip(D,E):
+        assert all(d[2*u+b] == t for t,b,u in e)
+    return m, trans, D, E, S
+
+
+def load(source):
+    if "import AsymNGram\n" in source:
+        return load_ngram(source)
+    if "import BiDFA\n" in source:
+        return load_run(source)
+    raise ValueError("unsupported witness format")
 
 
 def close(trans, D, cap):
@@ -208,9 +250,11 @@ def render(src, m, D, E, S):
         (str(D[0]),str(D[1]),ar(el),ar(er),str(nr),ar(rows))
     ) + "⟩\n"
     src = src[:m.start()] + cert + src[m.end():]
-    return src.replace("import AsymNGram","import FastBiDFA").replace(
-        "BB6.Agent32AsymNGram","BB6.Agent32FastBiDFA"
-    ).replace(":= by decide\n",":= by decide +kernel\n")
+    return (src.replace("import AsymNGram\n", "import FastBiDFA\n")
+            .replace("import BiDFA\n", "import FastBiDFA\n")
+            .replace("BB6.Agent32AsymNGram", "BB6.Agent32FastBiDFA")
+            .replace("BB6Coverage.Agent16BiDFA", "BB6.Agent32FastBiDFA")
+            .replace(":= by decide\n", ":= by decide +kernel\n"))
 
 
 def transform(src):
