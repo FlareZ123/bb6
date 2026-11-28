@@ -34,9 +34,9 @@ jobs:
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
       - name: Join both accepted whole parents directly on Canonical40
         env:
-          GH_TOKEN: \${{ github.token }}
-          RAW47_RUN_ID: \${{ inputs.raw47_run_id }}
-          ONELE_RUN: \${{ inputs.onele_run }}
+          GH_TOKEN: ${{ github.token }}
+          RAW47_RUN_ID: ${{ inputs.raw47_run_id }}
+          ONELE_RUN: ${{ inputs.onele_run }}
         run: |
           set -euo pipefail
           [[ "$RAW47_RUN_ID" =~ ^[0-9]+$ ]]
