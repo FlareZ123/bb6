@@ -7,6 +7,11 @@ on:
         description: Reuse run 46064129990; rebuild only cancelled E11LC cut shard 0
         type: boolean
         default: false
+      branch:
+        description: Frozen candidate branch to check (legacy verifies 0RD and 1LC)
+        type: choice
+        options: [legacy, E10RB]
+        default: legacy
 
 permissions:
   contents: read
@@ -29,8 +34,12 @@ jobs:
       - name: Build exact source graph and repair invalid transferred FAR witnesses
         run: |
           set -euo pipefail
-          python im-results/agent1-raw56/root_pilot_accept.py prepare --source /tmp/raw56-pilot-source --out /tmp/raw56-pilot-prep
-          cat /tmp/raw56-pilot-prep/accept-summary.json
+          if [ '${{ inputs.branch }}' = E10RB ]; then
+            python im-results/agent4-raw56-root-pilot/prepare_branch.py --source /tmp/raw56-pilot-source --out /tmp/raw56-pilot-prep --ledger im-results/agent4-raw56-root-pilot/E10RB-ledger.json.gz.b64
+          else
+            python im-results/agent1-raw56/root_pilot_accept.py prepare --source /tmp/raw56-pilot-source --out /tmp/raw56-pilot-prep
+            cat /tmp/raw56-pilot-prep/accept-summary.json
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw56-root-pilot-prepared
@@ -44,8 +53,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [E10RD, E11LC]
-        shard: [0, 1, 2, 3]
+        tag: ${{ fromJSON(inputs.branch == 'E10RB' && '["E10RB"]' || '["E10RD","E11LC"]') }}
+        shard: ${{ fromJSON(inputs.branch == 'E10RB' && '[0,1,2,3,4,5,6,7]' || '[0,1,2,3]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -70,7 +79,7 @@ jobs:
         run: |
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
-          python im-results/agent1-raw56/root_pilot_accept.py compile-certs --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards 4 --out /tmp/rootpilot-cert
+          python im-results/agent1-raw56/root_pilot_accept.py compile-certs --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards '${{ inputs.branch == 'E10RB' && 8 || 4 }}' --out /tmp/rootpilot-cert
       - uses: actions/upload-artifact@v4
         with:
           name: rootpilot-cert-${{ matrix.tag }}-${{ matrix.shard }}
@@ -80,12 +89,12 @@ jobs:
   cuts:
     needs: certs
     runs-on: ubuntu-latest
-    timeout-minutes: 55
+    timeout-minutes: ${{ inputs.branch == 'E10RB' && 90 || 55 }}
     strategy:
       fail-fast: false
       matrix:
-        tag: [E10RD, E11LC]
-        shard: [0, 1, 2, 3]
+        tag: ${{ fromJSON(inputs.branch == 'E10RB' && '["E10RB"]' || '["E10RD","E11LC"]') }}
+        shard: ${{ fromJSON(inputs.branch == 'E10RB' && '[0,1,2,3,4,5,6,7]' || '[0,1,2,3]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -114,7 +123,7 @@ jobs:
       - name: Check canonical cut subtree shard
         run: |
           set -euo pipefail
-          python im-results/agent1-raw56/root_pilot_accept.py compile-cut --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards 4 --out /tmp/rootpilot-cut
+          python im-results/agent1-raw56/root_pilot_accept.py compile-cut --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --tag '${{ matrix.tag }}' --shard '${{ matrix.shard }}' --shards '${{ inputs.branch == 'E10RB' && 8 || 4 }}' --out /tmp/rootpilot-cut
       - uses: actions/upload-artifact@v4
         with:
           name: rootpilot-cut-${{ matrix.tag }}-${{ matrix.shard }}
@@ -128,7 +137,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: [E10RD, E11LC]
+        tag: ${{ fromJSON(inputs.branch == 'E10RB' && '["E10RB"]' || '["E10RD","E11LC"]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
