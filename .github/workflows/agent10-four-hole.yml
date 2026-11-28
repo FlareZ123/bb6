@@ -2467,6 +2467,13 @@ jobs:
             module="Raw36B1$padded"
             theorem="BB6.Agent29${module}.cover"
             provenance=(--provenance-input "$a7/prepare.py" --provenance-input "$a7/scan_tree.cpp" --provenance-input "$a7/generate_cover.py" --provenance-input "$a7/stack_candidates.py" --provenance-input "$fixture")
+          elif [[ "$INDEX" == 22 ]]; then
+            fixture="$root/d1-22-compact.json.xz.b64"
+            python "$root/generate_b1.py" "$INDEX"
+            bound=$(python -c 'import base64,lzma,json,sys; print(json.loads(lzma.decompress(base64.b64decode(open(sys.argv[1]).read())))["bound"])' "$fixture")
+            module="Raw36B1$padded"
+            theorem="BB6.Agent29${module}.cover"
+            provenance=(--provenance-input "$root/generate_b1.py" --provenance-input "$root/active_cert.py" --provenance-input "$root/emit_b122_150.py" --provenance-input "$root/emit_b122_153.py" --provenance-input "$fixture")
           else
             python "$root/generate_b1.py" "$INDEX"
             fixture="$root/d1-$padded-evidence.json.gz.b64"
