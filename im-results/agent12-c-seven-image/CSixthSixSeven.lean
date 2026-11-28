@@ -78,16 +78,19 @@ private theorem p_parent_cases_13 (a k u v : Nat)
         · rcases n with _|n
           · simp at hs
             omega
-          · have hd : 64 ∣
+          · have hp4 : 4 ∣ (2:Nat)^(n+2) := by
+              have hp := Nat.pow_dvd_pow 2 (show 2≤n+2 by omega)
+              simpa only [show (2:Nat)^2=4 by decide] using hp
+            obtain ⟨p,hp⟩ := hp4
+            have hd : 64 ∣
                 (1113+650*u+1298*v)+(321+187*u+375*v)+1 := by
-              refine ⟨2^n,?_⟩
+              refine ⟨p,?_⟩
               calc
                 (1113+650*u+1298*v)+(321+187*u+375*v)+1 =
                     2^(n+2)*16 := by simpa using hs
-                _ = 64*2^n := by
-                  rw [Nat.pow_add]
-                  norm_num
-                  ac_rfl
+                _ = (4*p)*16 := by rw [hp]
+                _ = (4*16)*p := by ac_rfl
+                _ = 64*p := by rfl
             have hm := Nat.mod_eq_zero_of_dvd hd
             omega
     · by_cases hk0 : k=0
@@ -135,7 +138,8 @@ private theorem p_parent_cases_13 (a k u v : Nat)
                     (1113+650*u+1298*v)+(321+187*u+375*v)+1 =
                         2^n*(2*(a-1)+8) := hs
                     _ = (8*p)*(4*q) := by rw [hp,hq]
-                    _ = 32*(p*q) := by ring
+                    _ = (8*4)*(p*q) := by ac_rfl
+                    _ = 32*(p*q) := by rfl
                 have hm := Nat.mod_eq_zero_of_dvd h32
                 omega
               rcases (show n=0 ∨ n=1 ∨ n=2 by omega) with hn0|hn1|hn2
@@ -147,7 +151,7 @@ private theorem p_parent_cases_13 (a k u v : Nat)
                 right
                 omega
               · subst n
-                norm_num at hs hc
+                simp only [show (2:Nat)^2=4 by decide] at hs hc
                 omega
 
 private theorem no_two_caseB (a k : Nat)
