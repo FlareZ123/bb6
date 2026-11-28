@@ -905,7 +905,7 @@ jobs:
             | tee "$W/graph-union.log"
           node im-results/agent40-raw34-frontier/refine_agent23_second_stage.mjs \
             > "$W/source-accepted-agent23-d1rd.log"
-          node - "$W/source-accepted-agent23-d1rd.log" <<'PY'
+          python - "$W/source-accepted-agent23-d1rd.log" <<'PY'
           import json,sys
           x=json.load(open(sys.argv[1]))
           assert x['oldAndAgent23ProvedBothHaltAndDiverge']=='4713281250'
