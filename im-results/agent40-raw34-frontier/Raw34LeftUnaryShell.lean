@@ -87,9 +87,18 @@ theorem grow (n : Nat) :
   have h4' : run0 p n
       ⟨5,[true,true,false,true,true],rep [true] n⟩ =
       some ⟨5,[true]++rep [true] n++[true,false,true,true],[]⟩ := by
-    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h4
+    simpa only [List.cons_append,List.nil_append,List.append_assoc,List.append_nil] using h4
   have H := join0 (join0 (join0 (join0 h1 h2') h3) h4') h5
   have ht : 1+(n+1)+2+n+1=2*n+5 := by omega
+  have hshift : rep [true] n++[true,false,true,true] =
+      [true]++rep [true] n++[false,true,true] := by
+    calc
+      _ = (rep [true] n++[true])++[false,true,true] := by
+        simp only [List.append_assoc,List.cons_append,List.nil_append]
+      _ = ([true]++rep [true] n)++[false,true,true] := by
+        rw [rep_snoc]
+      _ = _ := by simp only [List.append_assoc]
+  rw [hshift] at H
   simpa [word,rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc,ht] using H
 
 theorem all_time_never (m : Machine)
