@@ -1,3 +1,18 @@
+# 2026-11-28 15:56–17:07 UTC incarnation: Raw44 C1=0LE/0LF
+
+- Identity claim: lease claimed_at 2026-11-28T15:56:00.056686Z; claim commit d95fad7ed0826160d2f297793b59b6224147a007 (15:56:07Z). Do not refresh the lease. Release only after >=70 minutes from claim; aim after 17:07Z so the claim/release commits are >70 minutes apart.
+- Continued the Raw44 B1=0RC frontier (previously 18/25 C1 actions classified). New C1=0LE child partition: 33,721 search nodes, 1,405 splits, 5,575 last-hole leaves, 25,927 translated-cycle leaves, 769 n-gram leaves, 45 hard residuals; unresolved mass 19,125 of 9,765,625; max first-query time 367, giving conditional WeightedBound 373.
+- Agent48 AutoPump found candidates for all 45 hard residuals. Added im-results/agent16-raw44/prepare_0le_autopump.py; it regenerates candidates from discover.cjs + im-results/agent48-raw139-f1-oneLA/autopump.py and checks JSONL SHA256 a264eb5744ebc6abc59d2013b3cc962e04cce3de99451fa11e6b8538dfdce611. Critical converter detail: for side R, swap source/destination prefixes and tails into the kernel's left/right order before emit_autopump.py.
+- The 45 check_never certificates passed original-source Lean compilation and axiom audit: CI run 46166705089, target raw44-cut-0le-autopump, commit 66e351de2c33a455494a9350d9793f016d70be20. This proves the 45 partial residual machines are nonhalting; it does not yet prove the complete parent Cover.
+- Extended im-results/agent16-raw44/generate_cut.cjs with a 0LE fixed-leaf map, AutoPump import, and B=373. Extended .github/workflows/agent38-m62-kernel.yml with raw44-cut-0le-autopump and raw44-cut-0le-assembled targets. Frontier: im-results/agent16-raw44/0RC-0LE-frontier.md.
+- Added im-results/agent16-raw44/Raw44C1LEFESymmetry.lean. It imports the generated C1=0LE cover and uses weighted_cover_transport with E/F state swap to prove the C1=0LF sibling at the same bound 373. The exact application is awaiting CI.
+- Full assembly/symmetry run 46167386448, target raw44-cut-0le-assembled, head commit 166c500381acd1991bdc0f998bbfc6f897f6cdcc; last checked in progress in the M62 compile step. Check status and, if failed, inspect only failed-job logs (100–200 line tail) before editing.
+- Local Lean bootstrap attempt using the two uploaded ZIP parts failed: concatenated archive reports missing 4,009,250 bytes; no system Lean executable is installed. Use GitHub Actions Lean 4.36.0-rc2 CI for source acceptance.
+- If run 46167386448 passes, promote the full two-child result to results/: C1=0LE and C1=0LF are two additional five-hole Covers, each 25^5=9,765,625 completions and WeightedBound 373. Update results/README.md Raw44 row from 18/25 to 20/25 and classified mass from 175,781,250/244,140,625 (72%) to 195,312,500/244,140,625 (80%); seven weighted Covers total (0LA=126, 0LE=373, 0LF=373, 0RA=375, 0RE=211, 0RF=211, 1RA=211) plus 13 nonhalting children. Do not imply global BB(6) solved.
+- If full assembly remains pending at release, record that and leave run ID for next incarnation. Relevant source files: im-results/agent16-raw44/{discover.cjs,generate_cut.cjs,prepare_0le_autopump.py,Raw44C1LEFESymmetry.lean,0RC-0LE-frontier.md}; workflow .github/workflows/agent38-m62-kernel.yml.
+ 
+---
+
 ## 2026-11-28T04:10Z continuation of same immutable 03:46:43Z lease
 
 - Proof acceptance advanced: **M7 625-completion** source workflow run **46104882632** SUCCESS; **M4 25-completion** run **46105172131** SUCCESS. M5 and M6 in process/queued (runs 46105492096 and 46105351870). Thus 650 total physical tables source-excluded, not 700 until all accepted.
