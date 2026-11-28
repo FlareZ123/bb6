@@ -441,16 +441,14 @@ theorem terminal_last_anchor_first_high
     ⟨q,R,c,m,hchain,hhf,hc⟩
   have hR0 := anchorChain_linear_growth hchain (by decide)
   have hR : 6 ≤ R := by omega
-  have hm : 0 < m := by
-    by_contra hz
-    have hm0 : m=0 := by omega
-    subst m
-    cases hhf
-    rcases hc with rfl | rfl <;> omega
-  obtain ⟨j,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : m ≠ 0)
-  rcases hfRun_first_step hhf with ⟨B,C,hfirst,htail⟩
-  have hh := anchor_hfMove_is_high hR hc hfirst
-  exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.2.1,hh.2.2,htail⟩
+  cases m with
+  | zero =>
+      cases hhf
+      rcases hc with rfl | rfl <;> omega
+  | succ j =>
+      rcases hfRun_first_step hhf with ⟨B,C,hfirst,htail⟩
+      have hh := anchor_hfMove_is_high hR hc hfirst
+      exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.2.1,hh.2.2,htail⟩
 
 /-- A one-step suffix from a genuine root anchor cannot already be terminal. -/
 theorem root_anchor_one_high_not_terminal
