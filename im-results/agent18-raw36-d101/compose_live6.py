@@ -74,7 +74,7 @@ def main():
     archives=a.inputs.resolve(); archives.mkdir(parents=True,exist_ok=True)
     work=a.work.resolve()
 
-    subprocess.run([sys.executable,str(HERE/"compose_dual_direct.py"),
+    subprocess.run([sys.executable,str(HERE.parent/"agent29-raw36"/"compose_dual_direct.py"),
                     "--inputs",str(archives),"--work",str(work)],check=True)
 
     d101=absorb_d101(a.d101_run,archives,work)
