@@ -37,7 +37,7 @@ theorem front_complete (c suffix t : Nat)
   refine ⟨c,hc,?_⟩
   apply List.mem_map.mpr
   refine ⟨suffix,?_,rfl⟩
-  exact List.mem_filter.mpr ⟨hs,hp⟩
+  exact List.mem_filter.mpr ⟨hs,by simpa [hp]⟩
 
 theorem cut_complete (first c suffix : Nat)
     (hf : first ≠ 0)
