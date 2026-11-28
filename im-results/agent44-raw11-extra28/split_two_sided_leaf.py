@@ -207,7 +207,7 @@ def main() -> None:
     write_module(
         out, data_name, [prefix + "Left", prefix + "Right", *row_mods], proof_ns,
         "open BB6.Agent4Automata\n"
-        f"def table : PartialMachine := {table_expr(literal_table)}\n"
+        f"{table_expr(literal_table)}\n"
         "def cert : BB6.Agent4Automata.Cert := ⟨left,right,#["
         + ",".join(f"row{j:02}" for j in range(12)) + "]⟩\n#print axioms cert",
     )
