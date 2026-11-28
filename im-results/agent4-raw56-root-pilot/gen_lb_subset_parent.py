@@ -37,8 +37,8 @@ def generate(prep: Path, helper: Path):
         kk=f"{k:02}"
         children.append(f"""
 theorem subset_{kk} (e : List Move × PartialMachine)
-    (he : e ∈ canonicalResiduals p_{kk} 5 t_{kk}) : e.2 ∈ allTables := by
-  have h : e.2 ∈ (canonicalResiduals p_{kk} 5 t_{kk}).map Prod.snd :=
+    (he : e ∈ canonicalResiduals p_{kk} {max(5,k%6+1)} t_{kk}) : e.2 ∈ allTables := by
+  have h : e.2 ∈ (canonicalResiduals p_{kk} {max(5,k%6+1)} t_{kk}).map Prod.snd :=
     List.mem_map_of_mem Prod.snd he
   simp only [nr_{kk},List.map_nil,List.map_cons,{EQ},
     List.mem_cons,List.not_mem_nil,or_false] at h
