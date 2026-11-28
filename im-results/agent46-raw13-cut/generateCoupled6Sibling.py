@@ -64,6 +64,32 @@ def main(mv):
         extra_imports += ["Raw13Coupled6MirroredCounter", "Raw13Coupled6UnaryRecursion"]
         manual["1RB1LD1RC0RB1LA1RE1LF0LA1LC1RA1LE---"]=".closed (.proven BB6.Agent46Raw13UnaryRecursion.p BB6.Agent46Raw13UnaryRecursion.never)"
         manual["1RB1LD1RC1RE1LA1RE1LC0LA0RF1RA---0RB"]=f".closed (.proven {ns}.p {ns}.never)"
+        ns_phase="BB6.Agent46Raw13PhasedCounter"
+        extra_imports += ["Raw13Coupled6PhasedCounter"]
+        for name,t in [
+            ("M0LE","1RB1LD1RC0LE1LA1RE0RF0LA0RD1RA---0RB"),
+            ("M1RB","1RB1LD1RC1RB1LA1RE0RF0LA0RD1RA---0RB"),
+            ("ThreePhase.F0RA","1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RA"),
+            ("ThreePhase.F0RB","1RB1LD1RC1RE1LA1RE0RF0LA0RD1RA---0RB")]:
+            ns_p=ns_phase+"."+name
+            manual[t]=f".closed (.proven {ns_p}.p {ns_p}.never)"
+        from discoverGrowRadix import emit as emit_growradix, TABLES as GROW_TABLES
+        bank={x["table"]:x for x in json.loads((D/"growradix-bank.json").read_text())}
+        for i in (38,39,40,41):
+            t=GROW_TABLES[i]
+            name=f"GrowRadix{i}"
+            emit_growradix(bank[t],f"Leaf{i}",D/(name+".lean"))
+            extra_imports.append(name)
+            ns_grow=f"BB6Coverage.Agent31Pump.Auto2.GrowRadix.Leaf{i}"
+            manual[t]=f".closed (.proven {ns_grow}.p {ns_grow}.never)"
+        import tempfile
+        with tempfile.TemporaryDirectory() as td:
+            trace=Path(td)/"trace.tsv"
+            subprocess.run([sys.executable,str(D/"hierarchy_accelerate.py"),"--trace",str(trace),"--check-until","0"],check=True)
+            subprocess.run([sys.executable,str(D/"gen_ra_cert.py"),str(trace),str(D)],check=True)
+        extra_imports.append("Raw13RAFinal")
+        ns_ra="BB6Coverage.Agent31Pump.Raw13Coupled6OneRA"
+        manual["1RB1LD1RC0RB1LA1RE1LC0LA0RF1RA---0LC"]=f".bounded {ns_ra}Hierarchy.p 44423003584937617011264491061 {ns_ra}Replay.raw13OneRA_bound"
     if mv=="0LE":
         ns="BB6.Agent46Raw13Coupled6Drift0LE"
         extra_imports=["Raw13Coupled6Drift0LE"]
@@ -95,7 +121,7 @@ def main(mv):
                           ("true","true","1RB1LD1RC1RA1LA1RE1LF0LA0RB1RD---1LD")]:
                 manual[t]=f".closed (.proven ({ns_sweep}.p {d} {f}) ({ns_sweep}.never {d} {f}))"
             manual["1RB1LD1RC0RD1LA1RE1LB0LA1RF1RD---1RA"]=f".closed (.proven {ns_alt}.p {ns_alt}.never)"
-    B=max(62123,2651340 if mv=="1LB" else 2651346 if mv in ("1LD","1RD") else 0,max((x['n']+6 for x in late.values()),default=0))
+    B=max(62123,44423003584937617011264491061 if mv=="1RA" else 0,2651340 if mv=="1LB" else 2651346 if mv in ("1LD","1RD") else 0,max((x['n']+6 for x in late.values()),default=0))
     coupled4.B=B
     assert all(x["holes"]==1 and x["n"]+6<=B for x in late.values())
     # Additional literal witnesses can be deposited independently.

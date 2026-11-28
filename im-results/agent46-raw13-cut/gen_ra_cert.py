@@ -21,5 +21,5 @@ for gi,start in enumerate(range(0,n,1000)):
         s+=f'theorem {c} : PackedOK {z(a)} {dt} {z(b)} :=\n  replayP_sound (by decide : replayP {b-a} {z(a)} = some ({dt},{z(b)}))\n\n'
     s+=f'theorem {group} : PackedOK {z(start)} {rows[end][0]-rows[start][0]} {z(end)} :=\n  {join(chunks)}\n#print axioms {group}\nend {ns}\n';(out/f'{name}.lean').write_text(s)
 s='import Raw13Coupled6OneRAPackedCover\n'+''.join('import '+name+'\n' for name,_ in groups)+head+'open BB6.Agent13BlankDelay\n'
-s+=f'theorem raw13OneRA_assigned : PackedOK {z(0)} count {z(n)} :=\n  {join([g for _,g in groups])}\n\ntheorem raw13OneRA_cover : Cover (WeightedBound bound) p :=\n  packed_cover raw13OneRA_assigned (by decide) (by decide)\n#print axioms raw13OneRA_assigned\n#print axioms raw13OneRA_cover\nend {ns}\n'
+s+=f'theorem raw13OneRA_assigned : PackedOK {z(0)} count {z(n)} :=\n  {join([g for _,g in groups])}\n\ntheorem raw13OneRA_cover : Cover (WeightedBound bound) p :=\n  packed_cover raw13OneRA_assigned (by decide) (by decide)\n\ntheorem raw13OneRA_bound (m : Machine) (hm : compatible p m) : WeightedBound bound m :=\n  raw13OneRA_cover.sound m hm\n#print axioms raw13OneRA_bound\n#print axioms raw13OneRA_assigned\n#print axioms raw13OneRA_cover\nend {ns}\n'
 (out/'Raw13RAFinal.lean').write_text(s)
