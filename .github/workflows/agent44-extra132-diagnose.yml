@@ -1,0 +1,72 @@
+name: Agent44 diagnose Extra132 giant automaton
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download exact repaired Extra132 source
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46118792322
+          name: parent-source-132-repaired
+          path: /tmp/src
+
+      - name: Extract giant-module identity without compiling
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re, hashlib, json
+          target=next(Path('/tmp/src').rglob('Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean'))
+          s=target.read_text()
+          print('path',target)
+          print('bytes',len(s.encode()))
+          print('sha256',hashlib.sha256(s.encode()).hexdigest())
+          print('automata_literals',s.count('(.automata '))
+          print('imports',re.findall(r'^import\s+(.+)$',s,re.M))
+
+          # Recover exact partial-machine transitions from the first parent definition.
+          m=re.search(r'def parent : PartialMachine := fun \(q,b\) => match q\.val,b with\n(.*?)(?=\n(?:def|theorem|end) )',s,re.S)
+          if m:
+            trans={}
+            for q,b,w,r,n in re.findall(r'\|\s*(\d+),(true|false)\s*=>\s*some \(some ⟨(true|false),(true|false),(\d+)⟩\)',m.group(1)):
+              trans[(int(q),b=='true')]=(w=='true',r=='true',int(n))
+            def code(t):
+              if t is None: return '---'
+              w,r,n=t
+              return f"{1 if w else 0}{'R' if r else 'L'}{'ABCDEF'[n]}"
+            table='_'.join(code(trans.get((q,b))) for q in range(6) for b in (False,True))
+            print('parent_table',table)
+            print('parent_table_norm',table.replace('_',''))
+
+          # Show only theorem/definition skeleton; redact large automaton literal.
+          red=re.sub(r'\(\.automata\s+.*?\)(?=\n\s*theorem|\n\s*def|\n\s*\)|\nend)', '(.automata <REDACTED>)', s, flags=re.S)
+          for line in red.splitlines():
+            if line.startswith(('namespace ','def parent','def p','theorem safe','theorem checked','theorem cover','#print axioms','end ')):
+              print('SKEL',line[:1000])
+
+          # Measure each automata literal approximately by balanced parentheses from marker.
+          starts=[m.start() for m in re.finditer(r'\(\.automata ',s)]
+          for i,st in enumerate(starts):
+            depth=0; end=None
+            for j,ch in enumerate(s[st:],st):
+              if ch=='(': depth+=1
+              elif ch==')':
+                depth-=1
+                if depth==0:
+                  end=j+1; break
+            blob=s[st:end] if end else s[st:]
+            print('automata',i,'bytes',len(blob.encode()),'sha256',hashlib.sha256(blob.encode()).hexdigest())
+          PY
