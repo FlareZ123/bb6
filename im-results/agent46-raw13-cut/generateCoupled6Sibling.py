@@ -63,6 +63,9 @@ def main(mv):
         extra_imports.append("Raw13LDNested")
         manual["1RB1LD1RC---1LA1RE0LF0LA0RF0LD0LA0RB"]=".closed (.proven BB6.Agent46Raw13LDNested.p BB6.Agent46Raw13LDNested.never)"
     if mv=="0RC":
+        subprocess.run([sys.executable,str(D/"gen_rc_counter.py")],check=True)
+        extra_imports.append("Raw13RCCounter")
+        manual["1RB1LD1RC0LD1LA1RE0RF0LA1RB0RC---0RB"]=".closed (.proven BB6.Agent46Raw13RCCounter.p BB6.Agent46Raw13RCCounter.never)"
         extra_imports.append("Raw13RCDouble")
         manual["1RB1LD1RC1LB1LA1RE1LF0LA1RB0RC---1LC"]=".closed (.proven BB6.Agent46Raw13RCDouble.p BB6.Agent46Raw13RCDouble.never)"
     if mv=="0RE":
