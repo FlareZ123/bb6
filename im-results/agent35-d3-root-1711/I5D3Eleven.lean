@@ -229,6 +229,40 @@ theorem horizonEleven_ge_old : horizonSeven ≤ horizonEleven := by
 theorem horizonEleven_ge_10pow1458 : 10^1458 ≤ horizonEleven :=
   Nat.le_trans horizonSeven_ge_10pow1458 horizonEleven_ge_old
 
+/-- Numeric magnitude of the authentic eleventh regular exit, once its
+    fastRun certificate and original-source transport are composed. -/
+theorem t11_ge_10pow12000 : 10^12000 ≤ t11 := by decide
+
+/-- Quantitative true-blank, original-machine nonhalting horizon:
+    the eleventh E-first-return alone has quadratic cost in the
+    40,171-bit unary parameter. No eventual halting claim is made. -/
+theorem horizonEleven_ge_10pow24000 : 10^24000 ≤ horizonEleven := by
+  have hbig := t11_ge_10pow12000
+  have hmult : t11 ≤ 3*t11+1 := by omega
+  have hsq : t11*t11 ≤ (3*t11+1)*(3*t11+1) :=
+    Nat.mul_le_mul hmult hmult
+  have hfirst :
+      (3*t11+1)*(3*t11+1) ≤
+        BB6.Agent31SecondSource.firstCost t11 2 := by
+    dsimp [BB6.Agent31SecondSource.firstCost]
+    omega
+  have hcost :
+      BB6.Agent31SecondSource.firstCost t11 2 ≤
+        q5FourthCost t11 := by
+    dsimp [q5FourthCost]
+    omega
+  have hsum : q5FourthCost t11 ≤ horizonEleven := by
+    dsimp [horizonEleven,sourceElapsedEleven,tailElevenCost]
+    omega
+  have hmulbig := Nat.mul_le_mul hbig hbig
+  have hpow : 10^24000 = (10^12000)*(10^12000) := by
+    have heq : (24000:Nat) = 12000+12000 := by omega
+    rw [heq,pow_add]
+  rw [hpow]
+  exact Nat.le_trans hmulbig
+    (Nat.le_trans hsq (Nat.le_trans hfirst (Nat.le_trans hcost hsum)))
+
+
 #print axioms raw8_data
 #print axioms raw9_data
 #print axioms raw10_data
@@ -239,5 +273,7 @@ theorem horizonEleven_ge_10pow1458 : 10^1458 ≤ horizonEleven :=
 #print axioms root_source_eleven
 #print axioms parsed_D3_no_halt_through_eleven
 #print axioms horizonEleven_ge_10pow1458
+#print axioms t11_ge_10pow12000
+#print axioms horizonEleven_ge_10pow24000
 
 end BB6.Agent35I5Eleven
