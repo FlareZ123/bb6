@@ -227,6 +227,50 @@ theorem Z_return (a b c z : Nat) (L R : List Bool) :
   have h := join0 h1234 h5
   simpa [LT, RT, rep, List.append_assoc] using h
 
+/-- Exact nine-step normal third return (the b>5 branch). -/
+theorem R_return_normal (L R : List Bool) :
+    run0 p 9
+      ⟨0, false :: false :: L, [false,true,false,true] ++ R⟩ =
+      some ⟨0, false :: L, [true,true,false,true,true] ++ R⟩ := by
+  rfl
+
+/-- Source-level normal A-triad rewrite.  With physical right-run lengths
+    a+1, d+6, c+1 and z+2, the triad creates a d-cell finite zero runway on
+    the left (plus the head blank) and performs the claimed right rewrite. -/
+theorem A_triad_normal (a d c z : Nat) (L R : List Bool) :
+    run0 p (a+d+2*c+35)
+      ⟨0, false :: L,
+        rep [true] (a+1) ++ [false] ++
+        rep [true] (d+6) ++ [false] ++
+        rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0,
+        rep [false] (d+1) ++ rep [true] (a+3) ++ L,
+        [true,true,false] ++ rep [true] (c+6) ++
+          rep [false] z ++ R⟩ := by
+  have hI := I_return a (d+1) c z L R
+  have hZ := Z_return a (d+1) c z L R
+  have hR :
+      run0 p 9
+        ⟨0,
+          rep [false] (d+2) ++ rep [true] (a+3) ++ L,
+          [false,true,false] ++ rep [true] (c+5) ++
+            rep [false] z ++ R⟩ =
+      some
+        ⟨0,
+          rep [false] (d+1) ++ rep [true] (a+3) ++ L,
+          [true,true,false] ++ rep [true] (c+6) ++
+            rep [false] z ++ R⟩ := by
+    have ht := R_return_normal
+      (rep [false] d ++ rep [true] (a+3) ++ L)
+      (rep [true] (c+4) ++ rep [false] z ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have hIZ := join0 hI hZ
+  have h := join0 hIZ hR
+  simpa [rep, List.append_assoc] using h
+
+#print axioms R_return_normal
+#print axioms A_triad_normal
 #print axioms AB_zero_to_C
 #print axioms C_to_D_zero
 #print axioms D_Z_tail_to_A
