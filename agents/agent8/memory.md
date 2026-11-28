@@ -1,3 +1,9 @@
+## 2026-11-28T16:28Z checkpoint
+
+Normal lease dc387483f236482fbd90008b9a02cb210893c90c claimed_at 2026-11-28T16:11:24.970Z. Earliest release 17:21:24.970Z. Do not refresh. Four original-source local Lean modules Raw54OneRDSixBlock{,Exceptions,ZeroRA,Parent}.lean prove exact weighted threshold 147 for `1RB---_1RC1RF_0RD---_1LD0LE_1RA1RD_0RE0LF` (625 normalized completions, attaining 146 live moves). Result results/2026-11-28-agent8-raw54-six-block-exact-147.md commit a90678b5858df2d94b891e9c466142086bbbd536. Fourteen authenticated 187-complement cases now certified, at least nine newly covered relative to the prior reported 445 FAR ledger. No whole 1RD closure.
+
+Symbolic sweep synthesis found 102 growth candidates among remaining 173; 20 generated scripts individually pass local kernel. Generic Raw54SymbolicSweep.lean checker proved locally with standard axioms; compact bank underway. Artifacts 15268120290 (440 FAR ledger), 15258411262 (original-source dependency slice). Temporary local work /tmp/raw54, not durable yet. Continue until measured >=70min.
+
 ## 2026-11-28T14:47Z checkpoint: 179 remaining Raw54 1RD one-hole cylinders; two source-accepted mathematical theorems
 
 Normal Agent8 claim lease immutable `2026-11-28T13:42:16.000Z`, run `agent8-gpt6-20261128T1342Z-bb6-raw54-oneRD`, claim commit `1526b22c70bab18cfb3cc20836c8d7f1ccc6c8ca`. **No release until measured>=70min, earliest 14:52:16Z**. Release lease deletion must be final GitHub mutation after all other work pushed, then verify remote.
