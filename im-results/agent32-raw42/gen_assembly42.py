@@ -26,9 +26,17 @@ def register_proof(j,v,mod):
 def leafproof(row,kind,script,one_based):
     i,s,*rest=row.split();j=int(i)-int(one_based);assert opens[j].replace('_','')==s
     mod=f'Raw42{branch}{kind}{j}'; ns=f'BB6.Agent32Raw42{branch}.{kind}.Leaf{j}'
-    inputrow=' '.join([str(j),s,*rest])+'\n'
-    code=subprocess.check_output([sys.executable,str(raw/script)],input=inputrow,text=True)
-    out.joinpath(mod+'.lean').write_text(code.replace('Agent32Raw42RA','Agent32Raw42'+branch))
+    inputrow=' '.join([str(j),s,*rest])+'\\n'
+    # Raw42/1LC leaf 855 is a very large but ordinary AsymNGram witness.
+    # Its monolithic decidable check exceeds the CI job window; split the exact
+    # same certificate into independently kernel-checked state/symbol rows.
+    if branch=='1LC' and kind=='NGram' and j==855:
+        assert len(rest)==2
+        from emit_ngram42_rows import emit
+        mod=emit(out,branch,j,s,*map(int,rest))
+    else:
+        code=subprocess.check_output([sys.executable,str(raw/script)],input=inputrow,text=True)
+        out.joinpath(mod+'.lean').write_text(code.replace('Agent32Raw42RA','Agent32Raw42'+branch))
     register_proof(j,f'.proven {ns}.table {ns}.live',mod)
 if branch in ('0RA','0RB'):
     suffix='' if branch=='0RA' else 'rb'
