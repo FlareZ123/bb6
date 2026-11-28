@@ -3153,12 +3153,13 @@ jobs:
           mkdir -p "$W"
           python tools/lean_compile_closure.py --workdir "$W/build" --jobs 5 \
             --manifest "$W/manifest.json" --artifact-name raw34-window7-infinite \
-            "$D"/Window7DomainShard*.lean 2>&1 | tee "$W/closure.log"
+            "$D"/Window7DomainShard*.lean "$D"/Window7Witness.lean 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           python - "$W/closure.log" <<'PY'
           import sys
           s=open(sys.argv[1]).read()
           assert "'BB6.Agent50Window7.never_of_permitted7'" in s
+          assert "'BB6.Agent50Window7Witness.never'" in s
           for i in range(8):
               for suffix in ("all_domains_checked","all_roots_checked"):
                   name=f"BB6.Agent50Window7DomainShard{i}.{suffix}"
