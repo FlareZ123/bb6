@@ -24,8 +24,9 @@ def FarSpec.dfa (s : FarSpec) : List (Fin s.d) :=
   s.raw.map fun n => ⟨n % s.d, Nat.mod_lt _ s.pos⟩
 
 def farSpecCheck (p : PartialMachine) (s : FarSpec) : Bool :=
-  let q := if s.rev then FAR.reflectPartial p else p
-  (FAR.fastTryDfa q ⟨0,s.pos⟩ s.dfa).isSome
+  match s.rev with
+  | false => (FAR.fastTryDfa p ⟨0,s.pos⟩ s.dfa).isSome
+  | true => (FAR.fastTryDfa (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa).isSome
 
 private theorem fromTry {d : Nat} (p : PartialMachine) (start : Fin d)
     (dfa : List (Fin d))
@@ -38,16 +39,18 @@ private theorem fromTry {d : Nat} (p : PartialMachine) (start : Fin d)
 theorem farSpecCheck_sound (p : PartialMachine) (s : FarSpec)
     (h : farSpecCheck p s = true) (m : Machine) (hm : compatible p m) :
     NeverHalts m := by
-  by_cases hr : s.rev = true
-  · have ht :
-        (FAR.fastTryDfa (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa).isSome = true := by
-      simpa [farSpecCheck,hr] using h
-    exact FAR.reflectNever m
-      (fromTry (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa ht
-        (reflectTable m) (FAR.reflectCompatible p m hm))
-  · have ht : (FAR.fastTryDfa p ⟨0,s.pos⟩ s.dfa).isSome = true := by
-      simpa [farSpecCheck,hr] using h
-    exact fromTry p ⟨0,s.pos⟩ s.dfa ht m hm
+  cases hr : s.rev with
+  | false =>
+      have ht : (FAR.fastTryDfa p ⟨0,s.pos⟩ s.dfa).isSome = true := by
+        simpa [farSpecCheck,hr] using h
+      exact fromTry p ⟨0,s.pos⟩ s.dfa ht m hm
+  | true =>
+      have ht :
+          (FAR.fastTryDfa (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa).isSome = true := by
+        simpa [farSpecCheck,hr] using h
+      exact FAR.reflectNever m
+        (fromTry (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa ht
+          (reflectTable m) (FAR.reflectCompatible p m hm))
 
 /-- Compact partial audit: FAR leaves carry only an index into a checked DFA
     bank. Unresolved leaves are retained exactly. -/
