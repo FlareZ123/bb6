@@ -1,0 +1,60 @@
+name: Agent1 Raw56 five novel finite-stack leaf theorems
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  original_lean:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install source-pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Restore source-accepted dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-le-transplant-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Generate five distinct full original-source certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/le/prove_motif_transplants.py /tmp/raw56-le-transplants | tee /tmp/raw56-transplants-generator.log
+      - name: Check each nonhalting theorem with unmodified Lean kernel
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          export LEAN_PATH="/tmp/raw56-le-transplants:/tmp/raw56-le-transplant-base/a1-raw56-root-consumer"
+          lean -o /tmp/raw56-le-transplants/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-transplants-checker.log
+          for id in 12323 21463 21805 21807 22621; do
+            lean -o "/tmp/raw56-le-transplants/Raw56LEMotif${id}.olean" "/tmp/raw56-le-transplants/Raw56LEMotif${id}.lean" 2>&1 | tee "/tmp/raw56-le-transplants/${id}.log"
+          done
+          cat /tmp/raw56-le-transplants/{12323,21463,21805,21807,22621}.log > /tmp/raw56-transplants-proofs.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-transplants-proofs.log \
+            --require BB6.Agent1Raw56.LEMotif.M12323.never \
+            --require BB6.Agent1Raw56.LEMotif.M21463.never \
+            --require BB6.Agent1Raw56.LEMotif.M21805.never \
+            --require BB6.Agent1Raw56.LEMotif.M21807.never \
+            --require BB6.Agent1Raw56.LEMotif.M22621.never
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-transplants-proofs.log /tmp/raw56-transplants-checker.log
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le-five-transplanted-motifs-source-accepted
+          path: |
+            /tmp/raw56-le-transplants/**
+            /tmp/raw56-transplants-*.log
+          if-no-files-found: error
+          retention-days: 30
