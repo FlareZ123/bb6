@@ -243,6 +243,9 @@ def main():
                 "BB6.Agent11Raw39ThresholdReduction.oneLE_lower_bound",
                 "BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE",
             ]
+            targets_by_module["Raw39CoverSpectrum"]=[
+                "BB6.Agent11Raw39CoverSpectrum.cover_iff_oneLE",
+            ]
         for name,theorems in targets_by_module.items():
             compile_missing(name,linked,evidence,index,busy,compiled)
             extra_log=evidence/(name+".log")
