@@ -161,9 +161,26 @@ theorem d882_post_Uc (j : Nat) :
   simp [Uc]
   omega
 
+/-- At the d=882 post state, an ordinary second Cantor resonance can occur
+    only when the low-side cycle index is j=1 (mod 9), equivalently total
+    prepared scale m=j+3 is 4 (mod 9). -/
+theorem d882_second_resonance_mod9 (j I : Nat) (e : Nat → Bool)
+    (h : (1176:Int)*(j:Int)+45444 = 18+54*word4 e I) :
+    j%9=1 := by
+  omega
+
+/-- The doubled second resonance is confined to j=4 (mod 9), equivalently
+    total prepared scale m=j+3 is 7 (mod 9). -/
+theorem d882_second_even_resonance_mod9 (j I : Nat) (e : Nat → Bool)
+    (h : (1176:Int)*(j:Int)+45444 = 36+108*word4 e I) :
+    j%9=4 := by
+  omega
+
 #print axioms d882_phase
 #print axioms d882_tail
 #print axioms d882_post
 #print axioms d882_post_Uc
+#print axioms d882_second_resonance_mod9
+#print axioms d882_second_even_resonance_mod9
 
 end BB429.CoarseExit
