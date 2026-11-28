@@ -158,3 +158,23 @@ The six witnesses have replay sizes 88--216 and quotient stack-state shapes
 between (9,12) and (20,22).  After all currently source-checked inherited FAR,
 structured, mutation, late-hole, generic, and periodic families, **89 / 3841**
 exact D1=1LA canonical OPEN tables remain without a certificate.
+
+
+## Period-four quotient sweep: 77 unresolved
+
+Exhausting the period-four quotient family on the 89 remaining exact literals
+finds **twelve** additional nonhalting certificates.  The compact witnesses are
+in `period4_extra12.tsv`; `emit_period4_extra12.py` regenerates the
+independent `TwoSidedAutomata` source.
+
+All twelve generated `never` theorems compiled locally under Lean
+4.36.0-rc2 and each reported exactly
+`[propext, Classical.choice, Quot.sound]`.  Generated source SHA256:
+`dfb5f0406eb3ae90bd69c1a383def4160571f2afdc1f344a9c1b10193d9a15cc`;
+olean SHA256:
+`21c51b3e479049bfd629e93faff1747f5bb245c9a655dbc055d84f54b6e44212`.
+
+After removing these twelve exact tables, **77 / 3841** saved canonical
+D1=1LA OPEN literals remain without a current certificate.  The sorted
+77-line residual roster SHA256 is
+`daa2caa8fcd72ba0653ce8477320b90613be70efbbed1ebf5edb37c9a8fef388`.
