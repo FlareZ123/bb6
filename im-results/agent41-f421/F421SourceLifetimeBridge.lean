@@ -1,5 +1,5 @@
 import F421SecondaryLifetimes
-import F421TertiaryGuard
+import TertiaryGuard
 
 namespace F421SecondaryLifetimes
 open F421TertiaryGuard
