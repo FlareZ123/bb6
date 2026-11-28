@@ -147,7 +147,7 @@ for(let ix=0;ix<24;ix++){
   }
   ngText+=`end BB6.Agent16Raw44Cut.NG${tag}\n`;
   fs.writeFileSync(path.join(out,`Raw44CutNG${tag}.lean`),ngText);
-  const kid=`${imports}import Raw44CutNG${tag}\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent16Raw44Cut\nopen BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay\ndef kid${tag} ${hs} : Audit :=\n${tree}\ntheorem kid${tag}_checked ${hs} : zipCheck ${B} (refine parent ${slot(first)} (some ${move(m)})) (kid${tag} ${has}) = true := by decide +kernel\n#print axioms kid${tag}_checked\nend BB6.Agent16Raw44Cut\n`;
+  const kid=`${imports}import Raw44CutNG${tag}\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent16Raw44Cut\nopen BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay\ndef kid${tag} ${hs} : Audit :=\n${tree}\ntheorem kid${tag}_checked ${hs} : zipCheck ${B} (refine parent ${slot(first)} (some ${move(m)})) (kid${tag} ${has}) = true := by decide +kernel +revert\n#print axioms kid${tag}_checked\nend BB6.Agent16Raw44Cut\n`;
   fs.writeFileSync(path.join(out,`Raw44CutKid${tag}.lean`),kid);
   children.push(tag);stats.push({ix,ng:ngCases.length,hard:hardCount,size:kid.length,ngSize:ngText.length});
 }
