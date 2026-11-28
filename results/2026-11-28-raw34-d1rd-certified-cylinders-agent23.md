@@ -30,6 +30,12 @@ The [D1=1RD proof-labeled frontier](../im-results/agent23-raw34-frontier/D1-1RD-
 
 This source-accepted collection has **4,713,281,250** physically distinct completions classified by the cited standalone theorems. This sum and the residual are finite exact enumeration, not a kernel-checked `Cover (WeightedBound B)` of the parent: the global connector, the residual descendants, and Canonical40 membership still need source proofs.
 
+## Post-acceptance extension and exact graph union
+
+The two source Lean audits originally pending when this page was written **have now passed**: C1=0RF 159 second-query cylinders [CI 46097527609](https://github.com/FlareZ123/bb6/actions/runs/46097527609), and another 597 second-query cylinders from C1∈{0LF,1LF,1RF} [CI 46097734424](https://github.com/FlareZ123/bb6/actions/runs/46097734424), total **756** more source-proved disjoint cylinders and **295,312,500** additional physical completions. The complete original-source-specific bank accounts for **5,008,593,750** physical completions in D1=1RD.
+
+Further combining Agent40's generic source-accepted finite-control closure theorem, including all ten sets CDE/CDF/…/ABCDEF, produces an exact disjoint union of **5,993,118,083** and a residual of only **110,397,542** physical completions in this branch. See the full [ten-mask source-and-union synthesis](2026-11-28-raw34-d1rd-source-graph-10mask-union-agent23.md), source Lean and [accepted CI 46098098309](https://github.com/FlareZ123/bb6/actions/runs/46098098309). Again, neither result is a whole-parent source-Lean `Cover` or an exact value of BB(6).
+
 ## Most direct frontier extension
 
 The 153 unassigned original leaves expanded to 3,825 children leave 1,844 first-unknown and 84 >100-step descendants (mass 1,400,000,000). Excluding the now source-accepted F growth cylinder yields 1,390,234,375 unclassified completions. For the C1=0RF subbranch, a further ten-by-25 refinement discovers 149 side cycles and ten finite halters in 159 disjoint four-fixed-hole cylinders (62,109,375 physical completions); [`Raw34D1RDDepth2C1RF.lean`](../im-results/agent23-raw34-frontier/Raw34D1RDDepth2C1RF.lean) is being source-audited separately and must **not** enter the accepted count until its CI succeeds. All exact machine transitions and finite witness payloads are retained in [`depth2-C1-0RF.json`](../im-results/agent23-raw34-frontier/depth2-C1-0RF.json).
