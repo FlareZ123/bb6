@@ -32,6 +32,26 @@ theorem weightedZero_weight_unique (z w₁ w₂ : Nat)
   unfold weightedZero at heq
   omega
 
+/-- The defect weight subtracts directly from the quotient by eight. -/
+theorem weightedZero_quotient8 (z w : Nat) (h : 8*w ≤ rhoZero z) :
+    weightedZero z w / 8 = rhoZero z / 8 - w := by
+  unfold weightedZero
+  omega
+
+/-- The base rho map doubles the low quotient, with the signed-residue-7
+    representative contributing one carry. -/
+theorem rhoZero_quotient8 (z : Nat) :
+    rhoZero z / 8 =
+      2 * (z / 8) + (if z % 8 = 7 then 1 else 0) := by
+  unfold rhoZero
+  split <;> omega
+
+/-- Combined quotient form of the weighted relation. -/
+theorem weightedZero_quotient_formula (z w : Nat) (h : 8*w ≤ rhoZero z) :
+    weightedZero z w / 8 =
+      2 * (z / 8) + (if z % 8 = 7 then 1 else 0) - w := by
+  rw [weightedZero_quotient8 z w h, rhoZero_quotient8]
+
 /-- The base zero-run map preserves residue modulo eight exactly. -/
 theorem rhoZero_mod8 (z : Nat) : rhoZero z % 8 = z % 8 := by
   unfold rhoZero
@@ -274,6 +294,9 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
 
 #print axioms weightedZero_recover
 #print axioms weightedZero_weight_unique
+#print axioms weightedZero_quotient8
+#print axioms rhoZero_quotient8
+#print axioms weightedZero_quotient_formula
 #print axioms rhoZero_mod8
 #print axioms weightedZero_mod8
 #print axioms push_zero
