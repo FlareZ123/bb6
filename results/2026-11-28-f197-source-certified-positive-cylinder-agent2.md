@@ -21,7 +21,7 @@ The Lean theorem `F197.Agent2Self.self_embedding` asserts that **for every infin
 B(P^72 HEAD L^35 l, e)  -->+  B(P^72 HEAD L^35 f(l), e).
 ```
 
-Here `f` is an explicit guarded suffix transformer: in the checked proof it prepends seven `L` blocks, then `732592001087343536` additional `L` blocks, then `T` and a fixed finite marker continuation `Y`, before the unchanged `l`. Equivalently the `L` exponent in the prefix of `f(l)` is **732592001087343543**. Every such new suffix still starts with a 1. In particular, iterating this positive return yields a well-defined infinite execution of the literal F197 transition table for **every** configuration in this cylinder.
+Here `f` is an explicit guarded suffix transformer: in the checked proof it prepends seven `L` blocks, then `732592001087343536` additional `L` blocks, then `T` and a fixed finite marker continuation `Y`, before the unchanged `l`. Equivalently the `L` exponent in the prefix of `f(l)` is **732592001087343543**. Every such new suffix still starts with a 1. In particular, iterating this positive return yields a well-defined infinite execution of the literal F197 transition table for **every** configuration in this cylinder. Since `L=AATAAATAUJTT` has precisely **36 physical tape bits**, this source-certified return explicitly inserts **26,373,312,039,144,367,548 bits** just from its repeated `L` prefix, apart from the further `T` and finite marker word. This counts actual encoded tape bits, not macro steps; repetition yields an arbitrarily long growing prefix while the retained suffix is never inspected.
 
 The stronger `F197.Agent2Self.self_nonhalt` proves directly:
 
