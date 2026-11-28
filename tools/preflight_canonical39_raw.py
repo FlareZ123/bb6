@@ -29,11 +29,13 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "im-results/agent50-raw47-canonical41/canonical40-raw-index-audit.json"
-ACCEPTED_CONSUMER = "46129131784"
-REMOVED_ON_CANONICAL39 = 39
+ACCEPTED_CONSUMERS = {"Canonical39": "46129131784", "Canonical38": "46150267242"}
+RAW112_TABLE = "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
 
 
-def load_snapshot():
+def load_snapshot(stage):
+    if stage not in ACCEPTED_CONSUMERS:
+        raise ValueError("unknown accepted stage")
     data = json.loads(MANIFEST.read_text(encoding="utf-8"))
     if data.get("status") != "manifest-reconstructed; not kernel-certified roster identity":
         raise ValueError("reconstruction status changed; re-audit before preflight")
@@ -41,24 +43,30 @@ def load_snapshot():
     if len(entries) != 40:
         raise ValueError("expected 40 canonical40 rows")
     raw_map = {row["raw"]: row["table"] for row in entries}
-    if len(raw_map) != 40 or REMOVED_ON_CANONICAL39 not in raw_map:
-        raise ValueError("canonical40 row IDs changed or Raw39 not found")
+    if len(raw_map) != 40 or 39 not in raw_map or 112 not in raw_map:
+        raise ValueError("canonical40 rows changed or necessary parent absent")
     if not data.get("history") or data["history"][-1].get("stage") != "Canonical40":
-        raise ValueError("expected canonical40 to be the last recorded accepted stage")
+        raise ValueError("expected canonical40 to be last recorded base stage")
     if data["history"][-1].get("remaining") != 40:
         raise ValueError("canonical40 historical count changed")
-    # The independent original-source consumer removes exactly Raw39.
-    retained = {r: t for r, t in raw_map.items() if r != REMOVED_ON_CANONICAL39}
-    if len(retained) != 39:
+    if normalized_table(raw_map[112]) != normalized_table(RAW112_TABLE):
+        raise ValueError("Raw112 literal table differs from source-accepted parent")
+    after39 = {r: t for r, t in raw_map.items() if r != 39}
+    if len(after39) != 39:
         raise ValueError("canonical39 reconstructed complement count != 39")
+    retained = (after39 if stage == "Canonical39"
+                else {r: t for r, t in after39.items() if r != 112})
+    if len(retained) != (39 if stage == "Canonical39" else 38):
+        raise ValueError("selected reconstructed complement count is wrong")
     removed_at = {
         raw: item["stage"]
         for item in data["history"]
         for raw in item["removed"]
     }
-    removed_at[REMOVED_ON_CANONICAL39] = "Canonical39"
+    removed_at[39] = "Canonical39"
+    if stage == "Canonical38":
+        removed_at[112] = "Canonical38"
     return retained, removed_at
-
 
 def normalized_table(value):
     compact = "".join(value.upper().split()).replace("_", "")
@@ -76,7 +84,7 @@ def normalized_table(value):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--accepted", required=True, choices=["Canonical39"],
+    parser.add_argument("--accepted", required=True, choices=["Canonical39", "Canonical38"],
                         help="explicit source-accepted roster snapshot (not a live query)")
     parser.add_argument("--table", help="exact 12-transition table; requires one raw ID")
     parser.add_argument("raw_ids", type=int, nargs="+", metavar="RAW")
@@ -84,13 +92,13 @@ def main(argv=None):
     if args.table and len(args.raw_ids) != 1:
         parser.error("--table requires exactly one raw ID")
     try:
-        retained, removed_at = load_snapshot()
+        retained, removed_at = load_snapshot(args.accepted)
         exact_table = normalized_table(args.table) if args.table else None
     except (OSError, ValueError, KeyError, json.JSONDecodeError) as err:
         print(f"PREFLIGHT INDETERMINATE: {err}", file=sys.stderr)
         return 3
 
-    print(f"Advisory snapshot Canonical39 (source consumer {ACCEPTED_CONSUMER}); "
+    print(f"Advisory snapshot {args.accepted} (source consumer {ACCEPTED_CONSUMERS[args.accepted]}); "
           "not a proof and not an automatic latest-roster check.")
     failed = False
     for raw in args.raw_ids:

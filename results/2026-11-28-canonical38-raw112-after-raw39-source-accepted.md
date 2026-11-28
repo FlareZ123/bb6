@@ -7,7 +7,7 @@ The accepted weighted-TNF global quotient now has a source-checked
 
 Starting from the source-accepted Canonical39 roster obtained after Raw39,
 the retained Raw112 parent
-`1RB---_1RC---_0RD---_1LD0RB_------_------`
+`1RB---_1RC---_0RD---_1LD1RE_---1LC_------`
 occurs exactly once.  Its independently accepted whole-parent theorem
 
 ```text
