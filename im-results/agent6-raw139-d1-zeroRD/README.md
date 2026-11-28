@@ -22,6 +22,23 @@ All partition identities checked by arity-aware counts. Prefix-sharing census wi
 
 D0=8 and 9 have zero stage-2 open leaves. All their late replay leaves (85 exact tables: 48 hole cases and 37 translated cycles) now have a kernel-checked weighted Cover at B=3000. Only one late hole has more than one unassigned slot, and its full 24 ordinary children plus the halt branch are checked. The abstract ngram/block and earlier census leaves still require parent integration.
 
+## Exact second-level reduction map
+
+The hard D0 frontier now has four compact kernel theorems exposing its next exact split.
+[D1SixReduce.lean](D1SixReduce.lean) reaches C1 at step 7 and reduces D0=6 to ten hard
+ordinary codes `[0,2,4,6,9,15,16,17,18,19]`; the other ten codes are exact cycles.
+[D1EightReduce.lean](D1EightReduce.lean) and [D1NineReduce.lean](D1NineReduce.lean)
+respectively reduce D0=8 to eight C1 children and D0=9 to six. Finally
+[D1LateD0Reduce.lean](D1LateD0Reduce.lean) reaches the newly introduced E0 slot at step 6
+for D0=16 and D0=17 (TNF support cut 5), discharging twelve of 24 admissible actions by
+exact cycles in each case. Their remaining hard sets are respectively
+`[2,6,9,12,14,15,16,18,20,21,22,23]` and
+`[2,6,8,9,10,14,16,18,20,21,22,23]`. Local Lean 4.36.0-rc2 checks all four reduction
+theorems with only `propext`, `Classical.choice`, and `Quot.sound`; D0=8 additionally
+has pinned source acceptance in CI 46136123205. These are conditional composition
+theorems: they identify the exact child Covers still required rather than asserting those
+children are all closed.
+
 ## D0=8 and D0=9: complete late-replay cut
 
 [D1EightReduce.lean](D1EightReduce.lean) now kernel-checks the exact D0=8 first-C1 reduction. For
