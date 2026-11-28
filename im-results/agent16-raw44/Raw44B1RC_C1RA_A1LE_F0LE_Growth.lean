@@ -36,6 +36,13 @@ def X (n : Nat) : List Bool := rep [false,true] n
 def Y (n : Nat) : List Bool := rep [true,false,true,false] n
 def Z (n : Nat) : List Bool := rep [true,true,false,true] n
 
+private theorem rep_add (P : List Bool) (n m : Nat) :
+    rep P (n+m) = rep P n ++ rep P m := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp only [rep,ih,List.append_assoc]
+
 private theorem rep2 (n : Nat) :
     rep [true,true] n = ones (2*n) := by
   induction n with
@@ -82,7 +89,7 @@ private theorem rotateX (n : Nat) :
       X (2*(n+1)+5) ++ [true] =
         [false,true,false,true] ++ (X (2*n+5) ++ [true]) := by
           rw [show 2*(n+1)+5=2+(2*n+5) by omega]
-          rfl
+          simp only [X,rep,List.append_assoc]
       _ = [false,true,false,true] ++
           ([false,true,false] ++ Y (n+1) ++ [true,false,true,true]) := by rw [ih]
       _ = [false,true,false] ++ Y (n+2) ++ [true,false,true,true] := by rfl
@@ -164,7 +171,7 @@ theorem stageF (n : Nat) :
   have h2 : run0 table 4
       ⟨5,[true,true,true,true],V n ++ [false,true,false,true]⟩ =
       some (leftA n) := by
-    simpa only [leftA,V,List.append_assoc] using
+    simpa only [leftA,V,rep,List.append_assoc] using
       ffinish (V n ++ [false,true,false,true])
   simpa only [show 4*n+4=4*n+4 by rfl] using join0 h1 h2
 
@@ -174,7 +181,7 @@ theorem stageA (n : Nat) :
   have h1 : run0 table 3 (leftA n) =
       some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by
     have H := afront3 ([false] ++ V n ++ [false,true,false,true])
-    simpa only [leftA,V,rotateV,List.append_assoc,List.nil_append] using H
+    simpa [leftA,V,rep,rotateV,List.append_assoc,List.nil_append] using H
   have h2 : run0 table (6*(n+1))
       ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ =
       some ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ := by
@@ -185,8 +192,14 @@ theorem stageA (n : Nat) :
       ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ =
       some (rightD n) := by
     have H := afinish3 (rep [true,true,true,true] (n+1) ++ [true,true,true])
-    simpa only [rightD,rep4,ones,List.append_assoc,
-      show 4*n+8=4*(n+1)+4 by omega,List.cons_append] using H
+    have hones : [true] ++ rep [true,true,true,true] (n+1) ++ [true,true,true] =
+        ones (4*n+8) := by
+      rw [rep4]
+      unfold ones
+      rw [show 4*n+8 = (1+4*(n+1))+3 by omega]
+      rw [rep_add,rep_add]
+      rfl
+    simpa only [rightD,List.append_assoc,hones] using H
   have H := join0 (join0 h1 h2) h3
   have ht : (3+6*(n+1))+3=6*n+12 := by omega
   simpa only [ht] using H
@@ -200,21 +213,36 @@ theorem stageD (n : Nat) :
     simpa only [rightD] using dzero3 (ones (4*n+8))
   have h2 : run0 table 5 ⟨3,ones (4*n+8),[true,true,true]⟩ =
       some ⟨0,[false] ++ ones (4*n+6),[false,true,true,true]⟩ := by
-    simpa only [ones,show 4*n+8=(4*n+6)+2 by omega,List.cons_append] using
-      dturn5 (ones (4*n+6))
+    have hsplit : ones (4*n+8) = [true,true] ++ ones (4*n+6) := by
+      unfold ones
+      rw [show 4*n+8=2+(4*n+6) by omega]
+      rfl
+    simpa only [hsplit] using dturn5 (ones (4*n+6))
   have h3 : run0 table 5
       ⟨0,[false] ++ ones (4*n+6),[false,true,true,true]⟩ =
       some ⟨0,ones (4*n+8),[false,true,true]⟩ := by
-    simpa only [ones,List.cons_append] using amiddle5 (ones (4*n+6))
+    have hsplit : ones (4*n+8) = [true,true] ++ ones (4*n+6) := by
+      unfold ones
+      rw [show 4*n+8=2+(4*n+6) by omega]
+      rfl
+    simpa only [hsplit] using amiddle5 (ones (4*n+6))
   have h4 : run0 table (4*n+8)
       ⟨0,ones (4*n+8),[false,true,true]⟩ =
       some (leftA2 n) := by
     have H := sweepL table 0 [] [] [true,true] [false,true]
       2 astep2 (2*n+4) [] [false,true,true]
-    simpa only [leftA2,ones,rep2,X,
-      show 2*(2*n+4)=4*n+8 by omega,
-      show 2*(2*n+4)=4*n+8 by omega,
-      List.nil_append,List.append_assoc,rep_snoc] using H
+    have hl : rep [true,true] (2*n+4) = ones (4*n+8) := by
+      rw [rep2,show 2*(2*n+4)=4*n+8 by omega]
+    have hr : rep [false,true] (2*n+4) ++ [false,true,true] =
+        X (2*n+5) ++ [true] := by
+      unfold X
+      rw [show 2*n+5=(2*n+4)+1 by omega]
+      calc
+        rep [false,true] (2*n+4) ++ [false,true,true] =
+          (rep [false,true] (2*n+4) ++ [false,true]) ++ [true] := by
+            simp only [List.append_assoc,List.cons_append]
+        _ = rep [false,true] ((2*n+4)+1) ++ [true] := by rw [rep_snoc]; rfl
+    simpa only [leftA2,hl,hr,List.append_nil,List.nil_append] using H
   have H := join0 (join0 (join0 h1 h2) h3) h4
   have ht : ((3+5)+5)+(4*n+8)=4*n+21 := by omega
   simpa only [ht] using H
@@ -237,7 +265,11 @@ theorem stageA2 (n : Nat) :
       ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ =
       some (phase (n+1)) := by
     have H := afinish10 (Z (n+1) ++ [true,true,true])
-    simpa only [phase,rotateZ,List.append_assoc] using H
+    have hz : [true] ++ (Z (n+1) ++ [true,true,true]) =
+        U (n+1) ++ [true,true,true,true] := by
+      rw [← List.append_assoc]
+      exact rotateZ n
+    simpa only [phase,hz] using H
   have H := join0 (join0 h1 h2) h3
   have ht : (3+6*(n+1))+10=6*n+19 := by omega
   simpa only [ht] using H
