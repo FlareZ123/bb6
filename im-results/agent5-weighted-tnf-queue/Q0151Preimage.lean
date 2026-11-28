@@ -16,13 +16,13 @@ theorem mask_pre_zero (c t : Nat) :
     maskAccept (pre c t) 0 = maskAccept t (dnext 0 c) := by
   cases h0 : maskAccept t (dnext 0 c) <;>
     cases h1 : maskAccept t (dnext 1 c) <;>
-    simp [pre,h0,h1,maskAccept]
+    simp only [pre,h0,h1,ite_true,ite_false] <;> decide
 
 theorem mask_pre_one (c t : Nat) :
     maskAccept (pre c t) 1 = maskAccept t (dnext 1 c) := by
   cases h0 : maskAccept t (dnext 0 c) <;>
     cases h1 : maskAccept t (dnext 1 c) <;>
-    simp [pre,h0,h1,maskAccept]
+    simp only [pre,h0,h1,ite_true,ite_false] <;> decide
 
 def LiveMode (g : Int) : Prop :=
   g = -1 ∨ g = 0 ∨ g = 1
