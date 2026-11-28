@@ -1,4 +1,5 @@
 module
+public import BusyBeaver.Defs.Core
 import all F412CountedDispatch
 import all F412CountedPure
 import all BusyBeaver.BB6.Halt.M_1RB1RC_1LC0LF_1RF0LD_0RE1LB_1RCHHH_1LD0RA
@@ -285,18 +286,26 @@ theorem rootLive :
     ∃ cfg : Cfg (Fin 2) (Fin 6),
       ReachesIn target_tm 9217091204829760959746640857348768637582782 (init []) cfg ∧
       step target_tm cfg = none := by
+  let L : List SymTok := [.item .zero, .item (.run 1), .item (.run 1), .item (.run 0), .item (.run 1), .item
+        (.run 0), .item .zero, .item .zero, .item (.run 1), .item (.run 0), .item (.run 1), .item
+        (.run 2), .rep12 68766212839422643803, .item (.run 2), .repB1 343831064197113217107, .item
+        (.run 0)]
+  let R : List SymTok := [.item (.run 1), .item (.run 0), .item (.run 1), .item (.run 1), .item (.run 0),
+        .item (.run 1), .item .zero, .item (.run 3), .item (.run 1), .item (.run 1)]
+  have hEnd :
+      evalSym target_tm symChk21383 =
+        cfgDL target_tm (.zero :: encSymL L) (.run 0 :: encSymR R) := by
+    rfl
   have h0 := init_to_BB_exact
   have hs := reachesIn_trans h0 (reachesIn_trans prefix_exact (reachesIn_trans chunk1_exact
     (reachesIn_trans chunk2_exact (reachesIn_trans chunk3_exact
       (reachesIn_trans chunk4_exact (reachesIn_trans chunk5_exact chunk6_exact))))))
-  have hf := step_DL_zero_halt_exact
-    (encSymL [.item .zero, .item (.run 1), .item (.run 1), .item (.run 0), .item (.run 1), .item
-        (.run 0), .item .zero, .item .zero, .item (.run 1), .item (.run 0), .item (.run 1), .item
-        (.run 2), .rep12 68766212839422643803, .item (.run 2), .repB1 343831064197113217107, .item
-        (.run 0)])
-    (encSymR [.item (.run 1), .item (.run 0), .item (.run 1), .item (.run 1), .item (.run 0),
-        .item (.run 1), .item .zero, .item (.run 3), .item (.run 1), .item (.run 1)])
-  exact ⟨_, reachesIn_trans hs hf, rfl⟩
+  rw [hEnd] at hs
+  have hf := step_DL_zero_halt_exact (encSymL L) (encSymR R)
+  have hBoth := reachesIn_trans hs hf
+  refine ⟨_, ?_, ?_⟩
+  · simpa only [ReachesIn, Nat.reduceAdd, Nat.add_assoc] using hBoth
+  · rfl
 
 public section
 
