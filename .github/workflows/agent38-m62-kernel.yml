@@ -6,7 +6,7 @@ on:
       target:
         description: "Finite exact section prelude or complete infinite invariant"
         type: choice
-        options: [core, grammar, carry, right, b, full, m61, m59, m176, m413, m558, m627, m711, m905, raw45-m6, raw45-m1, raw45-m2, raw45-m5, raw45-m3, raw45-m4, raw45-b1la-a1lc-l1, raw45-b1la-a1lc-l2, raw45-b1la-a1lc-ngram, raw45-b1la-a1lc-cut]
+        options: [core, grammar, carry, right, b, full, m61, m59, m176, m413, m558, m627, m711, m905, raw45-m6, raw45-m1, raw45-m2, raw45-m5, raw45-m3, raw45-m4, raw45-b1la-a1lc-l1, raw45-b1la-a1lc-l2, raw45-b1la-a1lc-ngram, raw45-b1la-a1lc-cut, raw45-cut-kid04]
         default: core
 
 permissions:
@@ -67,6 +67,9 @@ jobs:
           fi
           if [[ "${{ inputs.target }}" == "raw45-m1" ]]; then
             TARGET="im-results/agent24-raw45/Raw45M1Growth.lean"
+          fi
+          if [[ "${{ inputs.target }}" == "raw45-cut-kid04" ]]; then
+            TARGET="im-results/agent24-raw45/Raw45CutKid04.lean"
           fi
           if [[ "${{ inputs.target }}" == "raw45-b1la-a1lc-cut" ]]; then
             TARGET="im-results/agent24-raw45/Raw45B1LA_A1LC_FullCut.lean"
