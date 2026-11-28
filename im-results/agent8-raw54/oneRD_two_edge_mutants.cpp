@@ -7,6 +7,9 @@
 #include "oneRD_mutant_bank.cpp"
 #undef main
 #include <set>
+#include <algorithm>
+#include <chrono>
+#include <utility>
 #include <sstream>
 #include <tuple>
 
