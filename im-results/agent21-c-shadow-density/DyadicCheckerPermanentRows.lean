@@ -48,7 +48,7 @@ theorem source_checker_permanent_dense_on_all_rows
       ∀ c y : Nat, n≤c →
         (y:Int)%BB6.Agent21Dyadic.P n∉R →
         excluded c ⟨(x:Int),(y:Int)⟩=true ∧
-        (Large c y → ¬BB6.Agent3.CReach x y) := by
+        (Large n y → ¬BB6.Agent3.CReach x y) := by
   obtain ⟨n,hn⟩ := checker_dense_on_all_rows d hd
   refine ⟨n,?_⟩
   intro x
@@ -63,9 +63,9 @@ theorem source_checker_permanent_dense_on_all_rows
   have hc : excluded c s=true := excluded_monotone_le n c hnc s hb
   refine ⟨hc,?_⟩
   intro hl
-  have hm : Matches c x y s := by
+  have hm : Matches n x y s := by
     constructor <;> simp [Cong,s]
-  exact source_excluded c s hc x y hl hm
+  exact source_excluded n s hb x y hl hm
 
 #print axioms checker_dense_on_all_rows
 #print axioms source_checker_permanent_dense_on_all_rows

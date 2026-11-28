@@ -18,7 +18,7 @@ theorem source_checker_permanent_dense_on_even_odd_rays
       ∀ c t : Nat, n≤c →
         (t:Int)%BB6.Agent21Dyadic.P n∉R →
         excluded c ⟨((x+2*a*t:Nat):Int),((y+(2*b+1)*t:Nat):Int)⟩=true ∧
-          (Large c (y+(2*b+1)*t) →
+          (Large n (y+(2*b+1)*t) →
             ¬BB6.Agent3.CReach (x+2*a*t) (y+(2*b+1)*t)) := by
   obtain ⟨n,hn⟩ := checker_dense_on_even_odd_rays d hd
   refine ⟨n,?_⟩
@@ -37,9 +37,9 @@ theorem source_checker_permanent_dense_on_even_odd_rays
     excluded_monotone_le n c hnc p hbase
   refine ⟨hcert,?_⟩
   intro hl
-  have hm : Matches c (x+2*a*t) (y+(2*b+1)*t) p := by
+  have hm : Matches n (x+2*a*t) (y+(2*b+1)*t) p := by
     constructor <;> simp [Cong,p]
-  exact source_excluded c p hcert _ _ hl hm
+  exact source_excluded n p hbase _ _ hl hm
 
 #print axioms source_checker_permanent_dense_on_even_odd_rays
 end BB6.Agent21Duality
