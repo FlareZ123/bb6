@@ -37,7 +37,7 @@ theorem leaf2265_cover_at_large :
     leaf2265_bound_le_large
 
 theorem large_le_attained_champion :
-    largeBound ≤ BB6Coverage.Agent48DirectRoot.proposedTM63Moves + 7 := by
+    largeBound ≤ BB6ChampionArithmetic.proposedTM63Moves + 7 := by
   exact BB6.Agent3ChampionPow1024.champion_score_ge_pow_of_le
     32768 (by decide)
 
@@ -46,7 +46,7 @@ theorem large_le_attained_champion :
 theorem lift_hybrid_cover (p : PartialMachine)
     (h : Cover (WeightedBound largeBound) p) :
     Cover (WeightedBound
-      (BB6Coverage.Agent48DirectRoot.proposedTM63Moves + 7)) p := by
+      (BB6ChampionArithmetic.proposedTM63Moves + 7)) p := by
   apply Cover.leaf
   intro m hm k d hk hd
   exact Nat.le_trans (h.sound m hm k d hk hd)
