@@ -1,28 +1,26 @@
-import Raw40OrientedCrossing
+import Raw40LateCrossingTripleEntry
+import Raw40LateCrossingTripleLeft
+import Raw40LateCrossingTripleRightA
+import Raw40LateCrossingTripleRightB
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-namespace BB6Coverage.Agent19Raw40LateCrossing
-open BB6Coverage Agent42Crossing Agent19OrientedCrossing
-namespace C1REM1096
-def table : PartialMachine := fun slot => match slot.1.val,slot.2 with
-  | 0,false => some (some ⟨true,true,1⟩)
-  | 0,true => some (some ⟨false,false,0⟩)
-  | 1,false => some (some ⟨true,true,2⟩)
-  | 1,true => some (some ⟨true,true,0⟩)
-  | 2,false => some (some ⟨false,true,3⟩)
-  | 2,true => some (some ⟨true,true,4⟩)
-  | 3,false => some (some ⟨true,false,3⟩)
-  | 3,true => some (some ⟨true,false,0⟩)
-  | 4,true => some (some ⟨false,true,5⟩)
-  | 5,false => some (some ⟨false,true,2⟩)
-  | 5,true => some (some ⟨false,true,5⟩)
-  | _,_ => none
-def oriented : PartialMachine := orientPartial true true table
-def cert : Certificate := witnessFrom oriented (initialZ true) 483904 271120 [(1,225), (907,1003), (1253,1269)]
-theorem checkedCert : checkedFrom oriented cert (initialZ true) 483904 (-1298) := by decide +kernel
+namespace BB6Coverage.Agent19Raw40LateCrossing.C1REM1096
+open BB6Coverage Agent42Crossing Agent19OrientedCrossing Agent50Zipper
+def cert : Certificate := ⟨leftCells,headCell,[seg0,seg1,seg2,seg3,seg4,seg5,seg6]⟩
+theorem bankOK : certOK oriented cert := by
+  refine ⟨headOK,leftCellsOK,?_⟩
+  exact ⟨right0OK,pump0,right1OK,pump1,right2OK,pump2,right3OK,pump3,right4OK,pump4,right5OK,pump5,right6OK,pump6,rfl⟩
+theorem checkedCert : checkedFrom oriented cert (initialZ true) 483904 (-1298) := by
+  refine ⟨bankOK,?_,?_,?_,?_⟩
+  · decide +kernel
+  · decide +kernel
+  · decide +kernel
+  · unfold entryOKFrom
+    rw [entryRun]
+    decide +kernel
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
   never_oriented true true table cert 483904 (-1298) checkedCert m hm
+#print axioms bankOK
 #print axioms never
-end C1REM1096
 
-end BB6Coverage.Agent19Raw40LateCrossing
+end BB6Coverage.Agent19Raw40LateCrossing.C1REM1096
