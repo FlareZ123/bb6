@@ -96,19 +96,56 @@ jobs:
         run: |
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
-          # Preserve the module directory structure produced by each accepted
-          # source closure.  The previous basename-flattening step destroyed
-          # names such as finite.E10RD.F*, causing Lean to fail before it could
-          # check the root theorem and silently selected among colliding F*.olean
-          # files from different accepted sibling closures.
-          for required in \
-            /tmp/raw56-root17/Raw56Root17.olean \
-            /tmp/raw56-pilot-finals/E10RD/Raw56PilotE10RDAll.olean \
-            /tmp/raw56-pilot-finals/E11LC/Raw56PilotE11LCAll.olean \
-            /tmp/raw56-pilot-rb-final/E10RB/Raw56PilotE10RBAll.olean; do
-            test -f "$required"
-          done
-          export LEAN_PATH="$(IFS=:; echo "/tmp:/tmp/raw56-root17:/tmp/raw56-pilot-recovered:/tmp/raw56-pilot-recovered/E11LC:/tmp/raw56-pilot-finals/E10RD:/tmp/raw56-pilot-finals/E11LC:/tmp/raw56-pilot:/tmp/raw56-pilot/E10RD:/tmp/raw56-pilot/E11LC:/tmp/raw56-pilot-rb-final/E10RB:/tmp/raw56-pilot-rb:/tmp/raw56-pilot-rb/E10RB:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer")"
+          # Merge the three accepted pilot closures by their actual module paths.
+          # A single tree is required because Lean resolves a dotted prefix such
+          # as finite from one search root; separate roots cannot supply
+          # finite.E10RD, finite.E11LC and finite.E10RB simultaneously.
+          python - <<'PY'
+          from pathlib import Path
+          roots = [
+              Path('/tmp/raw56-pilot'),
+              Path('/tmp/raw56-pilot-recovered'),
+              Path('/tmp/raw56-pilot-finals'),
+              Path('/tmp/raw56-pilot-rb'),
+              Path('/tmp/raw56-pilot-rb-final'),
+          ]
+          out = Path('/tmp/raw56-root14-union')
+          out.mkdir(exist_ok=True)
+          for root in roots:
+              n = 0
+              for src in root.rglob('*.olean'):
+                  rel = src.relative_to(root)
+                  dst = out / rel
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  if dst.exists():
+                      if dst.resolve().read_bytes() != src.read_bytes():
+                          raise SystemExit(f'LEAN_OBJECT_COLLISION {rel}: {dst.resolve()} != {src}')
+                  else:
+                      dst.symlink_to(src.resolve())
+                  n += 1
+              print(root, n, flush=True)
+              assert n > 0, root
+          aliases = {
+              'Raw56PilotE10RDAll': Path('E10RD/Raw56PilotE10RDAll.olean'),
+              'Raw56PilotE11LCAll': Path('E11LC/Raw56PilotE11LCAll.olean'),
+              'Raw56PilotE10RBAll': Path('E10RB/Raw56PilotE10RBAll.olean'),
+          }
+          for name, rel in aliases.items():
+              src = out / rel
+              assert src.is_file(), src
+              dst = out / f'{name}.olean'
+              if dst.exists() and dst.resolve().read_bytes() != src.read_bytes():
+                  raise SystemExit(f'LEAN_OBJECT_COLLISION alias {name}')
+              if not dst.exists():
+                  dst.symlink_to(src.resolve())
+          for rel in [
+              Path('finite/E10RD'), Path('finite/E11LC'), Path('finite/E10RB'),
+              Path('E10RD'), Path('E11LC'), Path('E10RB'),
+          ]:
+              assert (out / rel).is_dir(), rel
+          print('union modules', sum(1 for _ in out.rglob('*.olean')), flush=True)
+          PY
+          export LEAN_PATH="/tmp:/tmp/raw56-root14-union:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
           lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean 2>&1 | tee /tmp/raw56-root15.log
           lean -o /tmp/Raw56Root14.olean im-results/agent1-raw56/Raw56Root14.lean 2>&1 | tee /tmp/raw56-root14.log
           python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root15.log --require BB6.Agent1Raw56Root.sound15RDLC
