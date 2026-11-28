@@ -16,6 +16,7 @@ on:
           - recover
           - complete
           - complete-min
+          - complete-hybrid
       partial_run:
         description: "Run containing source-accepted six-residual reduced parent"
         required: false
@@ -834,4 +835,154 @@ jobs:
             /tmp/complete-min/Raw56LBCompleteMin.lean
             /tmp/complete-min/Raw56LBCompleteMin.olean
             /tmp/complete-min/Raw56LBCompleteMin.log
+          if-no-files-found: error
+
+  complete-hybrid:
+    if: ${{ inputs.target == 'complete-hybrid' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted-recovered
+          path: /tmp/partial-final
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.partial_run }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m42763-row-*
+          path: /tmp/block
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m42763-source-accepted
+          path: /tmp/block
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m23706-row-*
+          path: /tmp/block
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m23706_run }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m23706-source-accepted
+          path: /tmp/block
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m23706_run }}
+
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m39232-minimized-single-source-accepted
+          path: /tmp/min
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m39232_run }}
+
+      - name: Compose all six certified physical-machine Covers with the exact partial parent
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/complete-hybrid
+          cp im-results/agent4-two-sided-automata/{TwoSidedAutomata,TwoSidedChunks}.lean /tmp/complete-hybrid/
+          cp im-results/agent4-raw56-root-pilot/{M21049,M3923Pair,M39234,M39233,Raw56LBCompleteHybrid}.lean /tmp/complete-hybrid/
+          cp /tmp/block/M*.lean /tmp/complete-hybrid/
+          cp /tmp/block/M*.olean /tmp/complete-hybrid/
+          cp /tmp/min/M*.lean /tmp/complete-hybrid/
+          cp /tmp/min/M*.olean /tmp/complete-hybrid/
+          cd /tmp/complete-hybrid
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/partial-final:/tmp/partial-final/E11LB:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          for ID in 42763 23706; do
+            test -f "M${ID}Final.olean"
+            lean -j1 -o "M${ID}Data.olean" "M${ID}Data.lean"
+            lean -j1 -o "M${ID}Base.olean" "M${ID}Base.lean"
+          done
+          lean -j1 -o M21049.olean M21049.lean
+          lean -j1 -o M3923Pair.olean M3923Pair.lean
+          lean -j1 -o M39234.olean M39234.lean
+          lean -j1 -o M39233.olean M39233.lean
+          lean -j1 -o Raw56LBCompleteHybrid.olean Raw56LBCompleteHybrid.lean | tee Raw56LBCompleteHybrid.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" Raw56LBCompleteHybrid.log \
+            --require BB6.Agent4Raw56LB.E11LB.all_quotient \
+            --require BB6.Agent4Raw56LB.E11LB.all
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
+            "/tmp/block/M42763Final.log" --require M42763.never
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
+            "/tmp/block/M23706Final.log" --require M23706.never
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
+            "/tmp/min/M39232Min.log" --require M39232.never
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-complete-hybrid-original-source-accepted
+          path: |
+            /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
+            /tmp/complete-hybrid/Raw56LBCompleteHybrid.olean
+            /tmp/complete-hybrid/Raw56LBCompleteHybrid.log
           if-no-files-found: error
