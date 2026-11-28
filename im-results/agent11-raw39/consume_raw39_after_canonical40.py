@@ -27,6 +27,8 @@ TEN_TARGETS = [
     "BB6.Agent11Raw39SoleObligation.literal_source_equality",
     "BB6.Agent11Raw39SoleObligation.parent_bound_of_oneLE",
     "BB6.Agent11Raw39SoleObligation.parent_cover_of_oneLE",
+    "BB6.Agent11Raw39SoleObligation.parent_cover_if_oneLE_at_global",
+    "BB6.Agent11Raw39SoleObligation.exact_at_champion_if_oneLE_at_global",
     "BB6.Agent11Raw39SoleObligation.exact_at_champion_if_oneLE",
 ]
 FULL_TARGETS = [
