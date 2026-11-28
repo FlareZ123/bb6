@@ -13,6 +13,7 @@ import re
 from blockcert import generate
 
 B=148142
+LATE={1101:(148136,5),1106:(134470,5),2775:(11175,8),2962:(31937,8)}
 NS='BB6.Agent3D0LF1Ordinary'
 ORDER=[4*q+2*w+r for w in range(2) for r in range(2) for q in range(6)]
 BASE='''set_option maxRecDepth 1000000
@@ -32,11 +33,12 @@ def rows(xs,b):
     return f'⟨{vec([pack([v+1 for v in x],b) for x in xs],b*k,8)},{b},{k}⟩'
 
 def dense_block_source(name,t,c,flip):
-    ns={2:'BB6BlockFAR2',3:'BB6BlockFAR'}[c['width']]
+    ns={2:'BB6BlockFAR2',3:'BB6BlockFAR',4:'BB6BlockFAR4'}[c['width']]
+    prim='BB6BlockFAR4' if c['width']==4 else 'BB6BlockFAR'
     d,n=c['left_states'],c['right_nodes']; b=max(d,n).bit_length();pb=(2**c['width']*d).bit_length()
     moves=', '.join('none' if m is None else f'some ⟨{bl(m[0])},{bl(m[1])},{m[2]}⟩' for m in c['moves'])
     src=f'''namespace {NS}.Blocks.{name}
-def machine : BB6BlockFAR.Table := fun q b => ([{moves}] : List (Option BB6BlockFAR.Move))[2*q.val+b.toNat]?.getD none
+def machine : {prim}.Table := fun q b => ([{moves}] : List (Option {prim}.Move))[2*q.val+b.toNat]?.getD none
 def cert : {ns}.Data {d-1} {n-1} := {{
   start := 0
   pushCodes := {vec(c['push'],b)}
@@ -54,16 +56,16 @@ def cert : {ns}.Data {d-1} {n-1} := {{
         src+='\n'.join(f'theorem row_{l} : cert.rowsAt machine ({l} : Fin {d}) = true := by decide +kernel' for l in range(d))
         src+=f'\ntheorem rows_valid : cert.rowsCheck machine = true := by\n  unfold {ns}.Data.rowsCheck\n  rw [show List.finRange {d} = ({list(range(d))} : List (Fin {d})) by decide]\n  simp ['+', '.join(f'row_{l}' for l in range(d))+']\n'
         src+='theorem valid : cert.Valid machine := ⟨by decide +kernel,by decide +kernel,rows_valid⟩\n'
-    src+=f'''theorem forever : ∀ k, ∃ c, BB6BlockFAR.run machine k BB6BlockFAR.primBlank = some c :=
+    src+=f'''theorem forever : ∀ k, ∃ c, {prim}.run machine k {prim}.primBlank = some c :=
   cert.sound machine valid
 def ctr : PartialMachine := fromCodes {t}
-theorem same : {'FAR.reflectPartial ctr' if flip else 'ctr'} = BB6BlockFAR.partialTable machine :=
+theorem same : {'FAR.reflectPartial ctr' if flip else 'ctr'} = {prim}.partialTable machine :=
   tableOK_sound _ _ (by decide +kernel)
 theorem never (m : Machine) (hm : compatible ctr m) : NeverHalts m :=
   '''
-    if flip:src+='FAR.reflectNever m (BB6BlockFAR.transfer_never machine _ (by simpa only [← same] using FAR.reflectCompatible ctr m hm) forever)\n'
-    else:src+='BB6BlockFAR.transfer_never machine m (by simpa only [← same] using hm) forever\n'
-    return src+f'end {NS}.Blocks.{name}\n'
+    if flip:src+=f'FAR.reflectNever m ({prim}.transfer_never machine _ (by simpa only [← same] using FAR.reflectCompatible ctr m hm) forever)\n'
+    else:src+=f'{prim}.transfer_never machine m (by simpa only [← same] using hm) forever\n'
+    return src+f'#print axioms never\nend {NS}.Blocks.{name}\n'
 
 def build(part,plan,census,out,region_ids,cap=500):
     assert part['counts']==plan['counts']
@@ -97,16 +99,26 @@ def build(part,plan,census,out,region_ids,cap=500):
             # Census graft children are indexed by numeric transition code.
             # The original replay and byMove use write/direction/state order.
             return ['split',n,s,[materialize(ch,t[:s]+[v]+t[s+1:],f'{name}X{j}') for j,v in enumerate(ORDER) for ch in [r[1]['children'][v]]]]
+        if r[0]=='last' and r[1][0]>10000:
+            i=int(name[1:]);assert tuple(r[1])==LATE[i] and t==part['open'][i]
+            return ['late',*r[1],i]
         assert r[0] in ('last','cycle');return [r[0],*r[1]]
     selected=[]
     for i in region_ids:
         r=plan['ordinary_regions'][i];n,t=at(r['path']);assert t==r['table']
         selected.append((i,graft(n,t),t))
     print(f'{len(selected)} regions; {len(blocks)} Block-FAR witnesses',flush=True)
-    for start in range(0,len(blocks),4):
-        entries=list(blocks.items())[start:start+4]
-        mod=f'D0LF1Blocks{region_ids[0]}X{start//4}'
-        src='import BlockFAR2\nimport BlockFARBridge\nimport PackedPrefixAudit\n'+BASE
+    # Isolate large width-four certificates into their own modules.
+    groups=[];small=[]
+    for name,v in blocks.items():
+        if v[1][0]==4:groups.append([(name,v)])
+        else:small.append((name,v))
+    groups.extend(small[i:i+4] for i in range(0,len(small),4))
+    for j,entries in enumerate(groups):
+        mod=f'D0LF1Blocks{region_ids[0]}X{j}'
+        src='import BlockFAR2\nimport BlockFARBridge\nimport PackedPrefixAudit\n'
+        if any(r[0]==4 for _,(_,r) in entries):src+='import D0LF1BlockFARBridge4\n'
+        src+=BASE
         for name,(t,r) in entries:
             w,c,m,runs,flip,phase=r
             data=generate(t,w,c,m,runs,flip,phase=phase,event_limit=50000)
@@ -116,12 +128,12 @@ def build(part,plan,census,out,region_ids,cap=500):
         (out/f'{mod}.lean').write_text(src)
     sizes={}
     def size(n):
-        z=sum(map(size,n[3])) if n[0]=='split' else 1
+        z=sum(map(size,n[3])) if n[0]=='split' else cap+1 if n[0]=='late' else 1
         sizes[id(n)]=z;return z
     def literal(n):
         k,*a=n
         if k=='cycle':e,s,r,x=a;return f'.cycle {e} {s} {bl(r)} ({x})'
-        if k=='last':return f'.last {a[0]} {slot(a[1])}'
+        if k in ('last','late'):return f'.last {a[0]} {slot(a[1])}'
         if k=='far':rev,d,dfa,t0,t1,z=a;return f'.far {bl(rev)} {d} ⟨0,{dfa},{t0},{t1},{z}⟩'
         if k=='proven':return f'.proven {NS}.Blocks.{a[0]}.ctr {NS}.Blocks.{a[0]}.never'
         if k=='split':return f'.split {a[0]} {slot(a[1])} (byMove [\n'+',\n'.join(map(literal,a[2]))+'])'
@@ -129,12 +141,19 @@ def build(part,plan,census,out,region_ids,cap=500):
     def imports_for(src):
         deps={block_module[n] for n in re.findall(r'Blocks\.(H\d+(?:X\d+)*)\.ctr',src)}
         deps|={module_for[n] for n in re.findall(r'\b[pth](R\d+(?:X\d+)*)\b',src) if n in module_for}
+        deps|={f'D0LF1Late{i}' for i in re.findall(r'BB6\.Agent3D0LF1Late\.H(\d+)\.',src)}
         return 'import PackedPrefixAudit\n'+''.join(f'import {m}\n' for m in sorted(deps))
     def save(mod,lines):
         src='\n'.join(lines)+'\n';(out/f'{mod}.lean').write_text(imports_for(src)+BASE+f'namespace {NS}\n'+src+f'end {NS}\n')
     def build_sub(n,t,name):
         mod=f'D0LF1{name}';lines=[f'def p{name} : PartialMachine := fromCodes {t}']
-        if sizes[id(n)]<=cap:
+        if n[0]=='late':
+            _,steps,s,i=n;ns=f'BB6.Agent3D0LF1Late.H{i}'
+            lines.extend([f'def t{name} : Audit := {literal(n)}',f'''theorem h{name} : packedCheck {B} p{name} t{name} = true := by
+  have ht : p{name} = {ns}.parent := tableOK_sound _ _ (by decide +kernel)
+  rw [ht]
+  exact {ns}.checked'''])
+        elif sizes[id(n)]<=cap:
             lines.extend([f'def t{name} : Audit := {literal(n)}',f'theorem h{name} : packedCheck {B} p{name} t{name} = true := by\n  rw [← packedPrefixCheck_eq]\n  decide +kernel'])
         else:
             _,steps,s,kids=n
