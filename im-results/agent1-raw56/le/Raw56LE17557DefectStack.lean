@@ -16,6 +16,25 @@ def DefectStack (low weights high : List Nat) : Prop :=
 @[simp] theorem weightedZero_zero (z : Nat) : weightedZero z 0 = rhoZero z := by
   simp [weightedZero]
 
+
+/-- The base zero-run map preserves residue modulo eight exactly. -/
+theorem rhoZero_mod8 (z : Nat) : rhoZero z % 8 = z % 8 := by
+  unfold rhoZero
+  split <;> omega
+
+/-- Every admissible weighted defect also preserves the low zero-run residue.
+    Hence defect weights affect quotient/carry information but not the mod-8
+    residue automaton used by the A/B arithmetic. -/
+theorem weightedZero_mod8 (z w : Nat) (h : 8*w ≤ rhoZero z) :
+    weightedZero z w % 8 = z % 8 := by
+  have heq : weightedZero z w + 8*w = rhoZero z := by
+    unfold weightedZero
+    omega
+  have hm := congrArg (fun n : Nat => n % 8) heq
+  rw [Nat.add_mod] at hm
+  have hz := rhoZero_mod8 z
+  omega
+
 theorem push_zero {low weights high : List Nat} (h : DefectStack low weights high)
     (z : Nat) :
     DefectStack (z::low) (0::weights) (rhoZero z::high) := by
@@ -238,6 +257,8 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
   · simp only [weightedImage]
     rw [carry_regular_preserves ell w h1 h7 hbound]
 
+#print axioms rhoZero_mod8
+#print axioms weightedZero_mod8
 #print axioms push_zero
 #print axioms pop
 #print axioms b_exception_increments
