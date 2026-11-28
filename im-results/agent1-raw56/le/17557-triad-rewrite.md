@@ -255,10 +255,53 @@ rhoZero(ell-1) = rhoZero(ell)-1,
 which holds on the finite reachable zero-run classes (with the all-blank tail
 handled as the obvious infinite-zero case).
 
-Thus the semantic part of the conjugacy has been reduced to proving that the
-reachable symbolic domain has the stated run classes and that the three
-displayed `rhoZero` arithmetic identities are preserved. This is a much
-smaller induction than replaying the exponentially growing epoch.
+The zero-run arithmetic is itself finite-state. Introduce the four classes
+
+```
+Z[-1](q) = 8*q-1   (q >= 1)
+Z[ 0](q) = 8*q
+Z[ 1](q) = 8*q+1
+Z[ 2](q) = 8*q+2
+```
+
+together with the anchor `3`. Then `rhoZero` simply doubles the class
+parameter:
+
+```
+rhoZero(Z[s](q)) = Z[s](2*q).
+```
+
+The B-triad's subtraction by seven cycles exactly through the classes needed
+by its reachable left runway:
+
+```
+Z[-1](q)-7 = Z[0](q-1)
+Z[ 0](q)-7 = Z[1](q-1)
+Z[ 1](q)-7 = Z[2](q-1)
+Z[ 2](1)-7 = 3.
+```
+
+Consequently `rhoZero(ell-7)=rhoZero(ell)-15` is immediate in every B case.
+
+The A carry's subtraction by one similarly cycles
+
+```
+Z[0](q)-1 = Z[-1](q)
+Z[1](q)-1 = Z[0](q)
+Z[2](q)-1 = Z[1](q),
+```
+
+with anchors `3->2` and `1->0` (where 0 means the run disappears into the
+blank tail). Hence `rhoZero(ell-1)=rhoZero(ell)-1` is immediate in every
+carry case. The normal-A runway is always in `Z[-1]`
+(`b-6 = 7,23,55,119,...`), giving
+`rhoZero(b-6)=2*b-11`.
+
+Thus the entire **left side** of both conjugacy identities is closed by a
+five-state arithmetic grammar: four signed residues plus the anchor 3. The
+remaining symbolic-domain work is to package the right alternating-run
+shape, terminal/nonterminal final-block flag, and these left classes into a
+single invariant and check that the exact A/B triad rewrites preserve it.
 
 ## Remaining proof obligation
 
