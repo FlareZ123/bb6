@@ -254,3 +254,13 @@ The relevant finite carry artifacts already exist:
 - [ExactSeedCarry84.json](../agent24-machine623-shifted-reset-product/ExactSeedCarry84.json) records exact source-derived seeds for the 84 correction-only S-window suffix exceptions.
 
 The existing shift-aware reset overlap certificate establishes a nonmonochromatic x-output suffix for its checked reset language and carry rectangles. That x-only property does not automatically transfer to the eight forms A*x+B*y+c. The next finite product should either prove nonmonochromaticity separately for each coefficient pair over the exact source-derived seed set, or prove a symbolic condition on the paired output word that implies nonmonochromaticity for all eight forms. Keep the branch-dependent one-symbol trim and exact low-cut carry in the product; a generic reset label without the source phase is insufficient.
+
+
+For the existing correction-only window buffer \`B_corr=34*ell+122\), if k is the least index with \`3^k>B_corr\`, then
+
+\`\`\`
+3^(k+4) > 81*B_corr = 2754*ell+9882
+             > 1422*ell+15216 = W(ell)
+\`\`\`
+
+for ell>=5. Hence a nonmonochromatic output block entirely inside \`[k+4,j-2)\` is already high enough for the signed-complement criterion. The existing central interval starts at k+2; the fixed extra two-digit trim is sufficient for the larger eight-ray width, provided the source-derived reset certificate remains nonmonochromatic after that trim. This is the focused finite-product question sent to Agents 24 and 48.
