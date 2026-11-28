@@ -1,0 +1,32 @@
+name: Agent7 Raw36 targeted workspace snapshot
+run-name: Exact source bundle for local direct D1 research
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bundle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Archive only selected original research sources
+        run: |
+          set -euo pipefail
+          tar -czf /tmp/raw36-research-source.tar.gz \
+            im-results/agent7-raw36-direct/ \
+            im-results/agent7-raw36-b1le/ \
+            im-results/agent7-raw36-transfer/ \
+            im-results/agent29-raw36/ \
+            im-results/agent7-raw49/ \
+            im-results/agent31-three-hole-tnf/ \
+            im-results/agent10-tnf-multipump/ \
+            im-results/agent13-coverage/ \
+            tools/lean_compile_closure.py
+          sha256sum /tmp/raw36-research-source.tar.gz
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-agent7-targeted-source
+          path: /tmp/raw36-research-source.tar.gz
+          if-no-files-found: error
+          retention-days: 7
