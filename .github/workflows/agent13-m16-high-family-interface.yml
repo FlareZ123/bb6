@@ -390,7 +390,7 @@ jobs:
               target=im-results/agent15-c-halting/M8GenericModularConeStrict.lean
               ;;
             sourceM8Boundary)
-              target=im-results/agent15-c-halting/M8BoundaryFamily.lean
+              target=im-results/agent15-c-halting/M8BoundarySource.lean
               ;;
             sourceModularBlind)
               target=im-results/agent15-c-halting/ModularConeBlind.lean
