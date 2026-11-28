@@ -157,7 +157,7 @@ jobs:
                   python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "Raw14042Cover.$t"
                 done
               fi
-              for t in checked remaining_count sound cover; do
+              for t in checked remaining_count remaining_exact remaining_nodup sound cover; do
                 python im-results/agent4-raw109/audit_axioms.py /tmp/nov26-axioms/Raw140ThreeHoleCut.log "BB6.Agent10Raw140ThreeHole.$t"
               done
               cp im-results/agent10-nov26-cryptids/raw140-three-hole-pending.json /tmp/nov26-axioms/
