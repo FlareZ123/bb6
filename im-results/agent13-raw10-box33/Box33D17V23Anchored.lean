@@ -115,7 +115,7 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop] <;> constructor <;> rfl
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
@@ -229,7 +229,7 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop] <;> constructor <;> rfl
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
@@ -354,7 +354,7 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right,z,pop] <;> constructor <;> rfl
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
