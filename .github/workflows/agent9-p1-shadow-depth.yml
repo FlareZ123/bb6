@@ -997,5 +997,5 @@ jobs:
           export LEAN_PATH="$D:im-results/agent43-p1-high-cost-reset-count:im-results/agent45-p1-delayed-carry"
           lean --version
           git rev-parse HEAD
-          python tools/lean_compile_deps.py "$D/CyclicOrder.lean" | tee /tmp/cyclic-order.log
+          python tools/lean_compile_deps.py "$D/CyclicTrace.lean" | tee /tmp/cyclic-order.log
           if grep -E 'sorryAx|native_decide|error:' /tmp/cyclic-order.log; then exit 1; fi
