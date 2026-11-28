@@ -10,7 +10,11 @@ theorem four_edges54 (z0 z1 z2 z3 z4 : Int)
     (h3 : 0≤z3 ∧ z3≤54) (h4 : 0≤z4 ∧ z4≤54)
     (e0 : z1=4*z0 ∨ z1=4*z0-108) (e1 : z2=4*z1 ∨ z2=4*z1-108)
     (e2 : z3=4*z2 ∨ z3=4*z2-108) (e3 : z4=4*z3 ∨ z4=4*z3-108) :
-    z0=0 ∨ z0=36 := by omega
+    z0=0 ∨ z0=36 := by
+  rcases e0 with e0|e0 <;>
+    rcases e1 with e1|e1 <;>
+    rcases e2 with e2|e2 <;>
+    rcases e3 with e3|e3 <;> omega
 
 theorem scaled_bounds54 (H z : Int) (hH : 0<H)
     (h : 0≤H*z ∧ H*z≤54*H) : 0≤z ∧ z≤54 := by
