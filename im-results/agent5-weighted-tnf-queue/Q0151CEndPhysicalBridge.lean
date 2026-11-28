@@ -49,7 +49,7 @@ theorem cat_three_exact (n : Nat) (h : cat (n+1) = 3) : n = 2 := by
 theorem c_end_trim_exact (s : List Bool) (hs : SegGood s)
     (hend : (segAppend emptySegment s).last = 3) :
     ∃ pref : List Bool,
-      s = pref ++ [true] ∧ Scan pref.reverse ∧
+      s = pref ++ [true] ∧ SegGood pref ∧
       segAppend emptySegment pref =
         {segAppend emptySegment s with last := 2} := by
   obtain ⟨closed,last,hbits,hsummary⟩ := segGood_summary s hs
@@ -66,7 +66,10 @@ theorem c_end_trim_exact (s : List Bool) (hs : SegGood s)
     have h := Scan.append (Scan.one (Scan.one Scan.nil))
       (scan_closed_bits closed)
     simpa [pref,List.reverse_append,List.append_assoc] using h
-  refine ⟨pref,hpref,hscan,?_⟩
+  have hgood : SegGood pref := by
+    change Scan pref.reverse ∧ ∃ u, pref = u ++ [true]
+    exact ⟨hscan,⟨bitRuns closed ++ [true], by simp [pref,List.append_assoc]⟩⟩
+  refine ⟨pref,hpref,hgood,?_⟩
   have hp : segAppend emptySegment pref = segmentOfRuns closed 1 := by
     simpa [pref] using segmentBits_sound closed 1
   have hnow : segAppend emptySegment s = segmentOfRuns closed 2 := by
