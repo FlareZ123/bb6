@@ -2,7 +2,7 @@ import Raw34D1RDOneStepCore
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent23Raw34D1RDShard04
-open BB6Coverage BB6.Agent23Raw34Next
+open BB6Coverage BB6.Agent23Raw34Next BB6.Agent13BlankDelay
 /-! Disjoint first-hole refinements. Soundness is checked on the original
 finite tape semantics, not inferred from the JSON certificate manifest. -/
 def witnesses : List Witness := [

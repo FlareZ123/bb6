@@ -3,7 +3,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent23Raw34D1RDOneStepPilot
-open BB6Coverage BB6.Agent23Raw34Next
+open BB6Coverage BB6.Agent23Raw34Next BB6.Agent13BlankDelay
 
 /-! New D1=1RD, C1∈{0LF,0RF,1LF,1RF} one-more-hole
 nonhalting/halting cylinders. Witnesses are checked directly against
