@@ -800,6 +800,6 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 ## 2026-11-28T18:20:43.660Z checkpoint — all 0LE replacement artifacts ready
 
-- Exact repair run **46172255584** succeeded for 0LE/g4p3: `SUCCESS: compiled 166 project modules from 58 root(s)`; artifact **15275331184**, SHA-256 **3b2c39df9c68d8ab1d830fa0d18b5c5a61b2a6e3e5d7c2f9a8c50f7c0e7fce24**. This was the last of the ten failed 0LE source partitions.
+- Exact repair run **46172255584** succeeded for 0LE/g4p3: `SUCCESS: compiled 172 project modules from 46 root(s)`; artifact **15275481342**, SHA-256 **a9c4fae90c9b3a03151c06b801e07d1553861dbe262a7667eeab1a3792896e4f**. (Correction: the earlier checkpoint transcribed the wrong artifact metadata; this line now matches the successful job log.) This was the last of the ten failed 0LE source partitions.
 - All ten 0LE replacement artifacts are now successful: g0p2 46158197180, g1p2 46166673180, g2p0 46162741710, g2p2 46166458748, g3p1 46172473497, g3p2 46172477421, g3p3 46172480971, g4p3 46172255584, g5p1 46173429958, g5p3 46173693696. The original source run **46156341083** still has four active and four queued sibling shards; do not compose until those artifacts are present.
 - README update commit **c0adba07b464d0db096b2aabc80ca6d505285fd8**.
