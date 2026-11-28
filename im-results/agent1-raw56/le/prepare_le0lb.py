@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Replay exact complete E0 children of Raw56 E1=0LE, no abstraction discovery."""
+"""Generate complete E0=0LB and E0=1LA child certificates with bounded late queries."""
 import base64,gzip,hashlib,itertools,json,subprocess,sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
@@ -11,6 +11,7 @@ DISC=AGENT/'discover_abstract_pinned.js'
 BIDFA=ROOT/'im-results/agent32-raw59'
 SPEC={
 '0LB':(1800,965,'bfa778fee14a72f3d3810cafe6b6a975fbd3c383db82afca3c7ff5072510cf31','72b5aed54b6dc37696b04a937c7f4ecfc0b93ef9c8a2389a64ef64fb2fa9a6e1','2eef48b727aadb5bedd58b1b90f019dca85bd97544acd04da306a6a19747295a'),
+'1LA':(14429,1610,'89cbb29302bc8329d478aafa68bfc38118919ef50fdc3802ee077a9fd90ef296','c9b7ac657bb6eda37b025fae78bae36b9821f68a1e48b28b263665c89042e0cf','57aeec9c03c7b2645b26d4e66a8231536becfd94f1f29906ea94b10cf7316373'),
 '0RB':(8692,2520,'d6d212e9420f894b7dd336cbd0e7c65beb1ac2e2ac501b5be92a6805d8e4714b','17300b1c456d94b3a0961b46372dfc32c0f8da3cedbe2f126df48343be6094cb','b9973ca5c04018fbc91a680a73ff66d615c36827e5924c07701ee72a8b383f25'),
 '0RC':(11212,185,'bd5b562758f09fe4e2b4617936cb2e666bcb07e95ae804a24ec2194bd95a843a','a62e73826c9643c8c6f8d5b7d59ababa4d117927a867d93e2866c0da2b8bb71d','5ec9e8318ed60dc43c8fec5070e5c3c90baf687e901d4254505e1bd817974e0d'),
 }
@@ -20,7 +21,7 @@ def blob(path,expected):
     assert hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()==expected,path
 def main():
     out=Path(sys.argv[1]).resolve();out.mkdir(parents=True,exist_ok=True)
-    selected=sys.argv[2:] or ['0LB'];assert selected==['0LB']
+    selected=sys.argv[2:] or ['0LB'];assert set(selected)<={'0LB','1LA'} and len(set(selected))==len(selected)
     raw=gzip.decompress(base64.b64decode((HERE/'inventory-79.json.gz.b64').read_text()))
     sha(raw,'869a651cebab0b5eda351eb783438e7040237b3412747f3ac6265629b840da6f')
     inv=json.loads(raw)
@@ -31,10 +32,10 @@ def main():
     sys.path.insert(0,str(BIDFA));from emit_rungram import emit
     for v in selected:
         offset,count,ht,ho,hf=SPEC[v];stop=offset+count
-        hard=[2217,2218,2584,2589,2595,2600]
+        hard=[2217,2218,2584,2589,2595,2600] if v=='0LB' else [14773,14775]
         late=[row for row in inv['late'] if offset<=row[0]<stop]
         assert set(i for i in inv['remaining'] if offset<=i<stop)==set(hard)
-        assert set(r[0] for r in late)=={2148,2149}
+        assert set(r[0] for r in late)==({2148,2149} if v=='0LB' else {15458})
         assert all(r[1]=='last' and r[2]<7014 for r in late)
         assert not any(offset<=row[0]<stop for row in inv['sat'])
         stem=out/v;parent=f'1RB---_1RC---_0RD---_1LD1LE_{v}0LE_------'
