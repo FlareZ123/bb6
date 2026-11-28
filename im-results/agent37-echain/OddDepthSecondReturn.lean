@@ -39,25 +39,47 @@ theorem markerCodeIncOne (q : Nat) :
     rw [ih]
     omega
 
+
+private theorem regularSection_sourceSection
+    (a q b : Nat) (ha : 2 ≤ a) :
+    BB6.Agent2BoundaryBZero.regularSection a q b =
+      DRegularSource.sourceSection ⟨a,q,b⟩ := by
+  simp only [BB6.Agent2BoundaryBZero.regularSection,
+    DRegularSource.sourceSection, CryptidBoundary.init]
+  have hrepAdd (m n : Nat) :
+      List.replicate (m+n) true =
+        List.replicate m true ++ List.replicate n true := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+      rw [show Nat.succ m + n = (m+n)+1 by omega]
+      rw [List.replicate_succ]
+      rw [ih]
+      rw [← List.cons_append]
+      rw [← List.replicate_succ]
+  have hrep : List.replicate a true =
+      [true,true] ++ List.replicate (a-2) true := by
+    rw [show a = 2+(a-2) by omega, hrepAdd]
+    simp
+  rw [hrep]
+  simp [List.append_assoc]
+
 /-- Exact physical bridge for the marker-A zero endpoint. -/
-theorem endpointZero_sourceSection_exact (m : Nat) :
+theorem endpointZero_sourceSection_exact (m : Nat) (hm : 1 ≤ m) :
     ObsEq (BB6.Agent37EChainDoubleBReentry.endpointZero m)
       (DRegularSource.sourceSection ⟨m+1,2,2⟩) := by
   have hrep : List.replicate (m+1) true =
       List.replicate m true ++ [true] := by
-    induction m with
-    | zero => rfl
-    | succ m ih =>
-      simp [List.replicate_succ,ih,List.append_assoc]
+    rw [show m+1 = m+1 by rfl,
+      ← List.replicate_append_replicate]
+    rfl
   have heq :
       BB6.Agent37EChainDoubleBReentry.endpointZero m =
         BB6.Agent2BoundaryBZero.regularSection (m+1) 2 2 := by
     simp [BB6.Agent37EChainDoubleBReentry.endpointZero,
       BB6.Agent2BoundaryBZero.regularSection,
       CryptidBoundary.oppairs,hrep,List.append_assoc]
-  have hsec :=
-    BB6.Agent2TwentyThirdRoot.regularSection_sourceSection
-      (m+1) 2 2 (by omega)
+  have hsec := regularSection_sourceSection (m+1) 2 2 (by omega)
   rw [heq,hsec]
   exact BB6.Padding.cfgEq_refl _
 
@@ -160,7 +182,8 @@ theorem odd_depth_reset_exact
           BB6.Agent35K4Shapes.marker))
       (DRegularSource.sourceSection (oddEndpointState n t)) := by
     rw [hARaw]
-    have hs := endpointZero_sourceSection_exact (512*t+8*n+379)
+    have hs := endpointZero_sourceSection_exact
+      (512*t+8*n+379) (by omega)
     simpa [oddEndpointState,oddEndpoint] using hs
   have h01 := BB6.BoundaryPadding.source_chain
     (BB6.Agent2PacketP2Reset.eTwoTime k (3*n))
