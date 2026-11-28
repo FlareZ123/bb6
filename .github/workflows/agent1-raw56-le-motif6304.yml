@@ -35,7 +35,7 @@ jobs:
           python im-results/agent1-raw56/le/prove_motif_6304.py /tmp/raw56-motif6304 | tee /tmp/raw56-motif6304-gen.log
           export LEAN_PATH="/tmp/raw56-motif6304:/tmp/raw56-motif-base/a1-raw56-root-consumer"
           lean -o /tmp/raw56-motif6304/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-motif6304-checker.log
-          lean -o /tmp/raw56-motif6304/Raw56LEMotif6304.olean /tmp/raw56-motif6304/Raw56LEMotif6304.lean 2>&1 | tee /tmp/raw56-motif6304-axioms.log
+          (cd /tmp/raw56-motif6304 && lean -o Raw56LEMotif6304.olean Raw56LEMotif6304.lean) 2>&1 | tee /tmp/raw56-motif6304-axioms.log
           python im-results/agent1-raw57/check_axioms.py /tmp/raw56-motif6304-axioms.log --require BB6.Agent1Raw56.LEMotif.M6304.never
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-motif6304-axioms.log /tmp/raw56-motif6304-checker.log
       - uses: actions/upload-artifact@v4
