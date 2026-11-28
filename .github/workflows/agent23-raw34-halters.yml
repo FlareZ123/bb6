@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3]
         default: pilot
 
 permissions:
@@ -140,6 +140,22 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
+      - name: Source-check F-branch depth-three translated side cycles (592 candidate tables)
+        if: inputs.mode == 'f-depth3'
+        run: |
+          set -euo pipefail
+          W=/tmp/agent23-raw34-halters
+          mkdir -p "$W/generated" "$W/build"
+          node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs \\
+            --output "$W/generated" --shard-size 50 | tee "$W/generation.json"
+          mapfile -t roots < <(find "$W/generated" -maxdepth 1 -name 'Raw34FDepth3SideShard*.lean' | sort)
+          test "${#roots[@]}" -eq 12
+          python tools/lean_compile_closure.py --workdir "$W/build" \\
+            --source-root "$W/generated" --jobs 3 \\
+            "${roots[@]}" 2>&1 | tee "$W/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$W/audit.log"
+          grep -F "'BB6.Agent40FDepth3.Raw34FDepth3SideShard011.all_never'" "$W/audit.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
