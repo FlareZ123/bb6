@@ -859,7 +859,7 @@ jobs:
         run: |
           set -euo pipefail
           D=im-results/agent8-raw54
-          g++ -std=c++17 -O3 -DRAW54_LASSO_W=8192 -DRAW54_LASSO_MAXPERIOD=4096 "$D/oneRD_residual_lasso.cpp" -o /tmp/raw54-onerd-lasso
+          g++ -std=c++17 -O3 -DRAW54_LASSO_W=131072 -DRAW54_LASSO_MAXPERIOD=4096 "$D/oneRD_residual_lasso.cpp" -o /tmp/raw54-onerd-lasso
           /tmp/raw54-onerd-lasso /tmp/raw54-onerd-generated/open.txt /tmp/raw54-onerd-lasso.tsv | tee /tmp/raw54-onerd-lasso.log
           grep -q 'total=671' /tmp/raw54-onerd-lasso.log
       - uses: actions/upload-artifact@v4
