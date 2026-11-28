@@ -22,6 +22,30 @@ theorem sPrimaryWeak (k j a b : Nat) (cs : List PC)
   rcases hp with ⟨ha,hb,hp,hq,hlen⟩
   exact ⟨ha,hb,sPGoodWeak k j 1 cs hk hp,hq,hlen⟩
 
+/-- General source-level potential invariant for an arbitrary protected
+    two-cell prefix, any positive normalized lifetime suffix, and any
+    guarded finite secondary countdown. No Q-run values are evaluated. -/
+theorem secondaryPotentialProtected (k a b p0 q0 p1 q1 : Nat)
+    (hs : List PC) (xs : List Nat)
+    (hg : sPrimary k a b (⟨p0,q0⟩::⟨p1,q1⟩::hs))
+    (h0 : 2*k+3≤p0) (h1 : 4*k+5≤p1)
+    (hp : Positive xs) (hh : pProjection hs=physicalP 4 xs) :
+    let e := sIter k (a,b,⟨p0,q0⟩::⟨p1,q1⟩::hs)
+    prefixMass e.1 e.2.1 e.2.2+
+      4*2^((⟨p0,q0⟩::⟨p1,q1⟩::hs).length)+24*mass xs+23*k =
+      prefixMass a b (⟨p0,q0⟩::⟨p1,q1⟩::hs)+
+        4*2^e.2.2.length+24*mass (lifeIter k xs) := by
+  have htel := secondaryMassTelescoping k a b
+    (⟨p0,q0⟩::⟨p1,q1⟩::hs) hg
+  have hsum := lengthSumProtected k a b p0 q0 p1 q1 hs xs h0 h1 hp hh
+  have hm := lengthSumMass k xs hp
+  rcases he : sIter k (a,b,⟨p0,q0⟩::⟨p1,q1⟩::hs) with ⟨a',b',ds⟩
+  rw [he] at htel
+  simp only [Prod.fst,Prod.snd] at htel
+  rw [hsum] at htel
+  simp only [he,Prod.fst,Prod.snd]
+  omega
+
 /-- A machine-level scalar invariant at EVERY one of the 32,751
     original blank-linked secondary primary states, including deletions:
       prefixMass_k - 4*2^cellcount_k -24*weightedLifetimeMass_k +23*k
@@ -53,4 +77,5 @@ theorem firstSecondaryPotential (k : Nat) (hk : k≤32750) :
 #print axioms sPGoodWeak
 #print axioms sPrimaryWeak
 #print axioms firstSecondaryPotential
+#print axioms secondaryPotentialProtected
 end BB6Coverage.Agent41F421.EpochWords
