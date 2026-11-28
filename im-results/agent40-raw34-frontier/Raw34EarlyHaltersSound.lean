@@ -26,9 +26,14 @@ theorem finite_check_exact_halt
       have hs := finitePartialRun_sound p m hm finiteBlank c n he
       simpa only [embedFinRay_blank] using hs
     have hnone : m (c.state, finiteTape c c.head) = none := hm _ _ hhalt
+    -- Prune imports the simp lemma blank_emptyAt.  The original finite
+    -- halting checker does not import it, so rewrite the run fact into
+    -- the canonical emptyAt form before invoking simp.
+    have hr0 : run m n (emptyAt 0) = some (embedFinRay c) := by
+      simpa only [blank_emptyAt] using hr
     constructor
-    · simp [hr]
-    · simp [run, hr, rawStep, readSlot, embedFinRay, hnone]
+    · simp [hr0]
+    · simp [run, hr0, rawStep, readSlot, embedFinRay, hnone]
 
 def isShortHalt (bound : Nat) (w : Witness) : Bool :=
   match w.cert with
