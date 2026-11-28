@@ -79,6 +79,32 @@ The exported Cover theorems depend only on
 `[propext, Classical.choice, Quot.sound]`; the gate rejects `sorryAx` and
 `ofReduceBool`.
 
+## Source-certified follow-on closures at weighted bound 3000
+
+Three residual children of the D0=8 family are now fully certified and consumed:
+C1 codes 1, 3, and 6.  The corresponding retained child artifacts are **15260696627**,
+**15260299839**, and **15260935299**.  The composed theorem
+`BB6.Agent6D1EightFive.cover` is source-accepted by CI
+[46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273), artifact
+**15260876687** (SHA-256
+`64e1e1ff4c7d2359871cccaa9cbfc3e0014b7cd65b37d229ef2a3534d8b50b5e`).
+It reduces the complete D0=8 cylinder at weighted bound 3000 to only the five child
+codes `[2,16,17,18,19]`.
+
+Two residual children of D0=9, C1 codes 2 and 6, have likewise completed their entire
+kernel joins in retained artifacts **15260522869** and **15260548085**.  Their compile
+logs end in `FINAL 126 0 []` and `FINAL 118 0 []`, and the exported Covers use
+only `[propext, Classical.choice, Quot.sound]`.  The original matrix jobs were marked
+failed only after those proofs, by a subsequently corrected shell-variable assertion.
+`D1NineFour.lean` consumes these two proofs and leaves codes
+`[16,17,18,19]`; this composition remains pending independent source-gate acceptance
+at the time of this result update.
+
+These follow-on closures solve five of the 102 explicit second-level obligations at
+weighted bound 3000.  The source module `D1SecondLevel97.lean` expresses the resulting
+97-machine conditional frontier, but that stronger wrapper should be treated as pending
+until its independent source gate succeeds.
+
 ## Scope
 
 This is a strict reduction theorem for one normalized Raw139 subcylinder.  It does not
