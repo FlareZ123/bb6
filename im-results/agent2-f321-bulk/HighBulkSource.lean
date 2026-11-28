@@ -25,7 +25,7 @@ theorem highD_closed (d j:Nat) :
   | zero => simp [highD]
   | succ j ih =>
     have hpow : (d+3)*2^(j+1)=2*((d+3)*2^j) := by
-      simp [pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      simp [Nat.pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     rw [hpow]
     change 2*highD d j+3+3=2*((d+3)*2^j)
     omega
@@ -38,7 +38,7 @@ theorem highCost_closed (d j:Nat) :
   | zero => simp [highCost]
   | succ j ih =>
     have hpow : (d+3)*2^(j+1)=2*((d+3)*2^j) := by
-      simp [pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      simp [Nat.pow_succ,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
     have hd := highD_closed d j
     rw [hpow]
     change (highCost d j+highD d j+2)+(j+1)+d+3=2*((d+3)*2^j)
