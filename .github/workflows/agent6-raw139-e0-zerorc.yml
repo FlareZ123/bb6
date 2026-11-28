@@ -1362,7 +1362,7 @@ jobs:
           base=im-results/agent14-raw139-e0-zeroLF
           work=.tmp/a6-zeroLF
           bash "$base/prepare.sh"
-          python3 "$base/assemble.py" "$work/imports" --partition "$work/partition.json" --roots 13 --packed --split-root13
+          python3 "$base/assemble.py" "$work/imports" --partition "$work/partition.json" --roots 13 --cap 60 --packed --split-root13
           for i in $(seq 0 23); do test -f "$work/imports/ZLFRoot13_${i}.lean"; done
           test -f "$work/imports/ZLFRoot13.lean"
       - uses: actions/upload-artifact@v4
