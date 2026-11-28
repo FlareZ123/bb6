@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, chunked-kernel-smoke]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, global-parent-chunked, chunked-kernel-smoke]
         required: true
       onele_run:
         description: 'Successful complete 1LE semantic audit run ID (parent-join only)'
@@ -816,7 +816,7 @@ jobs:
           retention-days: 30
 
   global_raw39:
-    if: ${{ inputs.branch == 'global-sole-obligation' || inputs.branch == 'global-parent-join' }}
+    if: ${{ inputs.branch == 'global-sole-obligation' || inputs.branch == 'global-parent-join' || inputs.branch == 'global-parent-chunked' }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -840,8 +840,15 @@ jobs:
             test -n "$ONELE_RUN"
             option=(--onele-run "$ONELE_RUN")
           fi
-          python im-results/agent11-raw39/consume_raw39_after_canonical40.py \
-            --work /tmp/a11-raw39-global-source "${option[@]}"
+          if [ "${{ inputs.branch }}" = 'global-parent-chunked' ]; then
+            test -n "$ONELE_RUN"
+            python -m py_compile im-results/agent11-raw39/chunked_kernel_replay.py im-results/agent11-raw39/consume_raw39_kernel_chunked.py
+            python im-results/agent11-raw39/consume_raw39_kernel_chunked.py \
+              --work /tmp/a11-raw39-global-source --onele-run "$ONELE_RUN" --chunk-size 64
+          else
+            python im-results/agent11-raw39/consume_raw39_after_canonical40.py \
+              --work /tmp/a11-raw39-global-source "${option[@]}"
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
