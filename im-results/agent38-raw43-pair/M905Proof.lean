@@ -65,6 +65,8 @@ theorem first_four_zero :
 theorem first_four_succ (n : Nat) :
     run0 table 4 (phase (n+1)) =
       some ⟨3,[true,false,true,false,false,true,true],p001 n⟩ := by
+  change run0 table 4 ⟨5,[false,true,true],word (n+1)⟩ =
+    some ⟨3,[true,false,true,false,false,true,true],p001 n⟩
   rw [show word (n+1) = [true,false,false,true]++p001 n from by
     rw [word,word_seq n];rfl]
   rfl
@@ -88,7 +90,7 @@ theorem forward_sweep (n : Nat) (L : List Bool) :
   | succ n ih =>
       have h1 : run0 table 3 ⟨3,true::L,p001 (n+1)⟩ =
           some ⟨3,true::([false,true,false]++L),p001 n⟩ := by
-        simpa only [p001,List.cons_append] using forward_token L (p001 n)
+        simpa only [p001,List.cons_append,List.nil_append] using forward_token L (p001 n)
       have h := join0 h1 (ih ([false,true,false]++L))
       have ht : 3*((n+1)+1)=3+3*(n+1) := by omega
       have hp : p010 (n+1) = p010 n++[false,true,false] := rfl
@@ -130,7 +132,7 @@ theorem backward_sweep (n k : Nat) :
       have h1 : run0 table 7 ⟨3,dshape (n+1),word (k+1)⟩ =
           some ⟨3,dshape n,word ((k+1)+1)⟩ := by
         rw [hs]
-        simpa only [word,List.cons_append] using
+        simpa only [word,List.cons_append,List.nil_append] using
           backward_token (dshape n) (word (k+1))
       have h := join0 h1 (ih (k+1))
       have ht : 7*(n+1)=7+7*n := by omega
@@ -152,8 +154,10 @@ theorem backward (n : Nat) :
       some ⟨3,dshape n,word 1⟩ := by
     rw [he]
     exact backward_first (dshape n)
-  have h := join0 (join0 h1 (backward_sweep n 0))
-    (backward_finish n)
+  have hmid : run0 table (7*n) ⟨3,dshape n,word 1⟩ =
+      some ⟨3,dshape 0,word (n+1)⟩ := by
+    simpa only [Nat.zero_add] using backward_sweep n 0
+  have h := join0 (join0 h1 hmid) (backward_finish n)
   have ht : (8+7*n)+6=7*n+14 := by omega
   simpa only [ht,Nat.zero_add] using h
 
