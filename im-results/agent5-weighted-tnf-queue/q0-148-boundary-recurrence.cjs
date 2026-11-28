@@ -76,9 +76,8 @@ function nextBoundary(g,limit=120000){
     let word="";
     for(let i=low;i<=high+1;i++)word+=one.has(i)?"1":"0";
     const parsed=parse(word,x-low);
-    if(parsed?.g.at(-1)===4&&
-       parsed?.head?.k===parsed.g.length-1&&parsed.head.j===2)
-     return {status:"boundary",t,g:parsed.g};
+    return {status:"boundary",t,g:parsed?.g??null,
+            head:parsed?.head??null};
    }
   }
   const tr=table[2*q+a];
@@ -99,7 +98,8 @@ function main(){
   const m=g.length-1,rec=results.byMarker[m]??(results.byMarker[m]={cases:0,maxSteps:0});
   rec.cases++;
   const ok=r.status==="boundary"&&
-    JSON.stringify(r.g)===JSON.stringify(p)&&isBoundary(r.g);
+    JSON.stringify(r.g)===JSON.stringify(p)&&isBoundary(r.g)&&
+    r.head?.k===r.g.length-1&&r.head?.j===2;
   if(r.t){rec.maxSteps=Math.max(rec.maxSteps,r.t);
     results.maxSteps=Math.max(results.maxSteps,r.t)}
   if(!ok&&results.failures.length<20)
