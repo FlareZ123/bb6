@@ -130,7 +130,8 @@ theorem never_from_entry (m : Machine) (hm : compatible table m) (entry : Nat)
   intro n
   obtain ⟨t,j,ht,Ht⟩ := arbitrary n
   rw [show t=n+(t-n) by omega,run_append] at Ht
-  cases H : run m n blank with
+  change (run m n (emptyAt 0)).isSome = true
+  cases H : run m n (emptyAt 0) with
   | none => simp [H] at Ht
   | some z => rfl
 
