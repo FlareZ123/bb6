@@ -103,6 +103,24 @@ The `2^n` term accounts for rounding in the at-most-one residue count for each o
 ```
 The mean number of **formal integral** inverse words at depth `n` is therefore exactly `(3/4)^n`, and the sum of these means over **all finite depths** is `Σ_(n≥0)(3/4)^n=4`. This is a *first-moment identity* for dyadic arithmetic words, not a claim of independent paths or of an actually infinite Turing-machine execution. It explains why the modular sieve becomes sparse and why exact reverse symbolic searches can be economical. The union bound above is the corresponding first-moment estimate for *existence* of a candidate path.
 
+### The exceptional inverse rays form a 2-adic fractal of dimension at most log₂ φ
+
+The same congruence grammar gives a sharper *geometric* obstruction, not just density zero. Embed the terminal parameter line in the ring `ℤ₂` of 2-adic integers, and regard each `U_n` from above as a finite union of clopen 2-adic cylinders of radius `2^(−s_w)`. Define the residual inverse-word attractor
+```
+K = ⋂_(n≥1) U_n   ⊂ ℤ₂.
+```
+Every cylinder in the depth-n cover has radius at most `2^(−n)` because `s_w≥n`. For any real exponent `α>0`, the sum of the α-powers of their radii is exactly
+```
+Σ_(w length n) 2^(−α s_w) = (2^(−α)+2^(−2α))^n.
+```
+Set `φ=(1+√5)/2`. The parenthesized factor is smaller than 1 whenever `α>log₂ φ`. Since these covers have mesh tending to zero, the definition of Hausdorff measure implies the rigorous upper bound
+```
+                   dim_H(K) ≤ log₂ φ ≈ 0.694242.
+```
+This is an **unconditional paper-level Hausdorff-dimension bound for the formal 2-adic inverse-word attractor**, not a theorem that the actual halting parameter lives in `K`. In fact `K` is nonempty: the all-far inverse word of length `n` has `u=1`, `s=2n`, `v=3−2·4^n`, so its congruence is `d≡−3 (mod4^n)`; thus the 2-adic integer `−3` belongs to every `U_n`.
+
+A genuinely relevant asymptotic statement is the following. Let `C=ℕ∖E` be the set of integers **not** certified impossible by any bounded-depth sieve. If an ordinary unbounded sequence `d_j∈C` has a 2-adic accumulation point `x`, then `x∈K`: for each fixed depth `n`, all sufficiently large `d_j` exceed `6·2^n−3` and, since they are not in `E_n`, must belong to the clopen `U_n`. Hence **every 2-adic accumulation point of unresolved terminal parameters lies in a set of Hausdorff dimension at most log₂φ**. This identifies a narrow fractal inverse-ray problem that a future exact F321 proof would need to resolve. It does not eliminate individual finite `d`.
+
 Finally put `E=⋃_{n≥1}E_n`. As a countable union of explicitly modularly certified exclusion sets it is constructively enumerable. For any `n`, `E⊇E_n`, hence its complement has upper natural density at most `(3/4)^n`; letting `n→∞` gives
 
 ```
