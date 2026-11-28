@@ -99,3 +99,35 @@ The existing \`Q0148BoundarySweep.lean\` supplies exact source finite local gadg
 - Iterating the group-hops across each of the m' markers and simplifying gaps yields exactly the vector \`F(g)\` above. Every source epoch therefore consists of 0 or2 blank-boundary cycles followed by a finite sequence of marked E-hops. What remains is a *source-proof* that all intermediate tape shapes and boundary padding match the Lean macro hypotheses, then a formal or paper-proof link between the micro-step semantics and \`F\`.
 
 The outstanding proof obligation is now **narrow and precise**. Do not continue blind simulations: formalize \`P\`, the list-of-chunks structure, the S/U carry result for the even gap sequence, the 0/2 blank-turn recurrence, and the iterated \`markedHopN\` arithmetic. Those suffice to aim for a direct source nonhalting proof. The source macro file is still waiting for CI to compile its newest whole-cycle lemmas; syntax/typechecking errors do not count as disproving this arithmetic theorem, but those macros cannot be cited as formally verified until the kernel accepts them.
+
+
+## Exact source step-count formula for the first boundary reset (derived from the macro costs)
+
+Let \`N=|W(g)|=2(a+g1+...+g_(m-1)+4)+3m\` be the length in tape cells of a stable boundary word. The source macro decomposition above yields an unexpectedly simple **exact predicted step count to the first next E1**, not yet the next boundary:
+
+\[
+ T_{\mathrm{reset}}(g)=
+ \begin{cases}
+  5N+2g_1+10, & a=1,\ m\ge3,\\
+  13N+2g_1+66, & a=3,\ m\ge3,\\
+  293, & g=(3,4)\ (\text{base }m=1).
+ \end{cases}
+\]
+
+Explanation from literal original-source gadgets, conditional on the all-length compositions:
+- Write \`s=scanCost(cs)=N−4\`. The qE1→right sentinel round costs \`4+4s\`; the 13-step blank-right reversal yields qC0.
+- For **any** initial carry S/T/U, the source all-length left scan and terminal left reversal together cost \`s+9\` steps. Indeed bit-length conservation in the six binary carry equalities gives the emitted chunk-bit length \`s+2−length(carry)\` and the leading M adds 5, while the finite source terminal cost is \`length(carry)+2\`. Thus the first two bidirectional turns cost \`4+4s+13+s+9 = 5N+6\`, **independently of marker count or carry**.
+- If a=1, the carry after those two turns is S, and A0's right tape begins \`A^(g1+1) B...\`. Its exact source A0→E1 sweep takes \`2g1+4\` steps, producing \`T_reset=5N+2g1+10\`.
+- If a=3, the initial carry is U. The next complete blank-boundary cycle has token-word length \`N+4\` and takes \`4(N+4)+6=4N+22\` steps, yielding carry T. The next cycle has word length \`N+7\` and takes \`4(N+7)+6=4N+34\` steps, yielding S. (The general cycle cost \`4t+6\` for an input chunk list of bit length t follows by \`rightScanCost=3t\`, two blank-right steps, transducer-conserved emitted length \`t+2−length(carry)\`, and terminal cost \`length(carry)+2\`.) Finally A0→E1 takes \`2g1+4\` steps. Sum = \`13N+2g1+66\`.
+- For the exceptional base g=(3,4), N=17 and the first marker sits after four A tokens instead of g1+1; the final A0→E1 sweep costs 10, not 12, so \`5N+6+(4N+22)+(4N+34)+10=293\`. This matches the exact blank source E1 event at source time 147+293=440.
+
+For a source E1 active at group k<m on A-index j, with g_k≥j+2 and \`n=g_k−j−2\` even, the generalized source marked-hop time is likewise explicit:
+
+\[
+ T_{\mathrm{hop}}(g,k,j)=
+    13 + 8\sum_{i<k}g_i + 6j + 2g_k + 12k
+\]
+
+since the left scanned word uses \`2Σ_(i<k)g_i+2j+3k\` cells and the right continuation uses \`13+2n\` steps. After the hop, active group increments k→k+1; the next E1's head index is \`n+2\`. For k=0 the new leading gap is j; for k>0 the leading gap drops by1, active gap k becomes j+1, and next gap gains n+3. This is an exact *finite source computation* whenever the corresponding parametric macro's explicit stack/tail hypotheses are met.
+
+These formulas provide an explicit natural-number witness for every source return. Once the structural word-matching and macro compositions are typechecked, an induction proof of nonhalting does not need an abstract termination argument or potentially noncomputable search for return times.
