@@ -116,7 +116,7 @@ def source(chunk):
         if j==0:out.append(f'  have h{j} := entry{j:02d}')
         else:out.append(f'  have h{j} := join0 h{j-1} entry{j:02d}')
     out += [
-        f'  simpa only [family,rep,List.append_nil] using h{len(snapshots)-2}',
+        f'  simpa [family,pre,tail,rep] using h{len(snapshots)-2}',
         '',
         '/-- All compatible completions are nonhalting, by exact 902-step pumping. -/',
         'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=',
