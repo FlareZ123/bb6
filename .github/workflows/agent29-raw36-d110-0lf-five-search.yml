@@ -11,6 +11,11 @@ on:
           - "0LF"
           - "0RF"
         default: "0LF"
+      max_candidates:
+        description: "Candidate prefix to test (use 6000 to exhaust the current generated pool)"
+        required: false
+        type: number
+        default: 3500
 
 permissions:
   contents: read
@@ -26,7 +31,7 @@ jobs:
           set -euo pipefail
           python -m py_compile im-results/agent29-raw36/search_d110_zeroLF_five.py
           timeout 1100s python -u im-results/agent29-raw36/search_d110_zeroLF_five.py \
-            --move "${{ inputs.move }}" --max 3500 \
+            --move "${{ inputs.move }}" --max "${{ inputs.max_candidates }}" \
             --out "/tmp/a29-d110-${{ inputs.move }}-search.json" \
             | tee "/tmp/a29-d110-${{ inputs.move }}-search.log"
       - uses: actions/upload-artifact@v4
