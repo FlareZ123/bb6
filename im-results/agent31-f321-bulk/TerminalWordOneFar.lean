@@ -151,4 +151,46 @@ theorem highThenFar_anchor_one_mod3
 #print axioms highThenFar_anchor_two_impossible
 #print axioms highThenFar_anchor_one_mod3
 
+
+private theorem pow2_mod3_phase (n:Nat) :
+    (n%2=0 ∧ 2^n%3=1) ∨ (n%2=1 ∧ 2^n%3=2) := by
+  induction n with
+  | zero => left; decide
+  | succ n ih =>
+      rw [Nat.pow_succ, Nat.mul_mod]
+      rcases ih with h0 | h1
+      · right; constructor <;> omega
+      · left; constructor <;> omega
+
+/-- A single-F terminal inverse word compatible with the authentic root
+    terminal phase d == 1 (mod 6) must come from c=1 and have n == 4 (mod 6).
+    This is a root-phase arithmetic statement; the last-anchor decomposition
+    supplies exactly these hypotheses for an authentic single-F suffix. -/
+theorem highThenFar_root_phase
+    {n d R c : Nat}
+    (hc : c=1 ∨ c=2)
+    (hd : d%6=1)
+    (hp : FormalInversePath (d:Int) (highThenFar n) (R:Int) (c:Int)) :
+    c=1 ∧ n%6=4 := by
+  have hc1 : c=1 := by
+    rcases hc with rfl | rfl
+    · rfl
+    · exact False.elim (highThenFar_anchor_two_impossible hp)
+  subst c
+  have hn3 := highThenFar_anchor_one_mod3 hp
+  have heq := formal_inverse_terminal_candidate hp
+  rw [highThenFar_denom, highThenFar_num_one] at heq
+  have hm := congrArg (fun z : Int => z % 3) heq
+  have hphase := pow2_mod3_phase (n+4)
+  have hn2 : n%2=0 := by
+    rcases hphase with h0 | h1
+    · omega
+    · have hpz : ((2:Int)^(n+4)) % 3 = 2 := by exact_mod_cast h1.2
+      omega
+  constructor
+  · rfl
+  · omega
+
+#print axioms highThenFar_root_phase
+
 end BB6.Agent31F321Density
