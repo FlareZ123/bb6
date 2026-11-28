@@ -278,6 +278,16 @@ theorem terminal_has_last_anchor_HF
         rcases he with ⟨j,a,d,hj,ha⟩
         exact (anchorMove_bounds ha).1
 
+/-- Pure arithmetic identity for every compiled H/F inverse word.  High adds
+    (sumDecrease,shift,length)=(1,1,1); Far adds (6,2,1). -/
+theorem compile_cost_identity (w : List InverseLetter) :
+    (compile w).sumDecrease + 4*w.length =
+      5*(compile w).shift := by
+  induction w with
+  | nil => rfl
+  | cons b bs ih =>
+      cases b <;> simp [compile, advance] at ih ⊢ <;> omega
+
 /-- Exact last-anchor inverse-word normal form for any authentic positive-time
     halt.  The word ends at a genuine root-reachable anchor with second counter
     one or two, with no asymptotic or bounded-depth cutoff. -/
@@ -310,6 +320,32 @@ theorem terminal_last_anchor_compiled_equation
     ⟨q,R,c,m,w,hchain,hc,hlen,hw⟩
   have hcert := formal_inverse_congruence hw
   exact ⟨q,R,c,m,w,hchain,hc,hlen,hcert.1,hcert.2⟩
+
+/-- Exact Diophantine last-anchor law for any authentic halt.  Here m is
+    the H/F suffix length and shift is the dyadic denominator exponent of its
+    exact inverse word. -/
+theorem terminal_last_anchor_cost_equation
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) ∧
+      R + c + 5*(compile w).shift =
+        2*D + 1 + 4*m := by
+  rcases terminal_has_last_anchor_formal_word h with
+    ⟨q,R,c,m,w,hchain,hc,hlen,hw⟩
+  have hs := (formal_inverse_path_certificate hw).2
+  unfold sumAt at hs
+  have hcost := compile_cost_identity w
+  have hcostZ := congrArg (fun z : Nat => (z:Int)) hcost
+  norm_num at hcostZ
+  refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,?_⟩
+  omega
+
+#print axioms compile_cost_identity
+#print axioms terminal_last_anchor_cost_equation
 
 #print axioms terminal_has_last_anchor_formal_word
 #print axioms terminal_last_anchor_compiled_equation
