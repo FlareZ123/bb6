@@ -1,4 +1,4 @@
-name: Agent29 Raw36 D1=0RE two full E0 children original-source six-live proof
+name: Agent29 Raw36 D1=0RE selected E0 child original-source reductions
 
 on:
   workflow_dispatch:
@@ -65,7 +65,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Lean-kernel recheck 53 exact literal witnesses with one shared automata family
+      - name: Lean-kernel recheck exact D110 census and selected whole-child Covers
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
