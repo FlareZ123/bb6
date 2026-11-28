@@ -112,6 +112,19 @@ theorem firstSecondaryPrefixMoment :
   have hm := firstLifeMoment
   omega
 
+/-- Every primary P-run at the blank-linked endpoint is determined by
+    the single final normalized lifetime word. -/
+theorem firstSecondaryPSumMoment :
+    pSum (sIter 32750 (2047,3071,firstPrimary)).2.2 =
+      9764856+8*mass (lifeIter 32750 firstLives) := by
+  obtain ⟨a,b,hs,he,hP⟩ := firstSecondaryFar
+  have hSum := congrArg List.sum hP
+  have hValue : pSum hs=8*mass (lifeIter 32750 firstLives) := by
+    simpa [pSum,pProjection,physicalPSum] using hSum
+  rw [he]
+  simp only [Prod.fst,Prod.snd,pSumCons,hValue]
+  omega
+
 #print axioms firstSecondaryCells
 #print axioms firstSecondaryQScalar
 #print axioms firstSecondaryHeadScalar
@@ -120,4 +133,5 @@ theorem firstSecondaryPrefixMoment :
 #print axioms firstLifeMoment
 #print axioms firstSecondaryQMoment
 #print axioms firstSecondaryPrefixMoment
+#print axioms firstSecondaryPSumMoment
 end F421SecondaryLifetimes
