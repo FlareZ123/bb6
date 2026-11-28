@@ -101,7 +101,32 @@ def cut : Cut :=
     .unresolved,
     .unresolved,
     .closed (.cycle 14 2 true (2)),
-    .unresolved,
+    .split 16 (5,true) (byCutMove [
+      .closed (.last 19 (3,true)),
+      .closed (.last 23 (3,true)),
+      .closed (.last 18 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.cycle 1 29 false (3)),
+      .closed (.cycle 21 1 false (-3)),
+      .closed (.last 29 (3,true)),
+      .closed (.last 23 (3,true)),
+      .closed (.last 25 (3,true)),
+      .closed (.last 31 (3,true)),
+      .closed (.last 29 (3,true)),
+      .closed (.cycle 29 1 false (-1)),
+      .closed (.last 19 (3,true)),
+      .closed (.cycle 13 4 true (1)),
+      .closed (.last 18 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.cycle 16 2 true (1)),
+      .closed (.cycle 21 1 false (-3)),
+      .closed (.last 22 (3,true)),
+      .closed (.last 21 (3,true)),
+      .closed (.last 20 (3,true)),
+      .closed (.last 24 (3,true)),
+      .closed (.last 22 (3,true)),
+      .closed (.cycle 15 2 true (2))
+    ]),
     .unresolved,
     .unresolved,
     .unresolved,
@@ -112,8 +137,58 @@ def cut : Cut :=
     .closed (.cycle 13 3 true (1)),
     .unresolved,
     .unresolved,
-    .unresolved,
-    .unresolved,
+    .split 17 (5,true) (byCutMove [
+      .closed (.last 20 (3,true)),
+      .closed (.last 24 (3,true)),
+      .closed (.last 19 (3,true)),
+      .closed (.last 18 (3,true)),
+      .closed (.cycle 14 4 true (2)),
+      .closed (.last 31 (3,true)),
+      .closed (.last 30 (3,true)),
+      .closed (.last 24 (3,true)),
+      .closed (.last 26 (3,true)),
+      .closed (.last 32 (3,true)),
+      .closed (.last 30 (3,true)),
+      .closed (.last 26 (3,true)),
+      .closed (.last 20 (3,true)),
+      .closed (.cycle 13 5 true (1)),
+      .closed (.last 19 (3,true)),
+      .closed (.last 18 (3,true)),
+      .closed (.cycle 16 2 true (2)),
+      .closed (.cycle 19 8 false (1)),
+      .closed (.last 23 (3,true)),
+      .closed (.last 22 (3,true)),
+      .closed (.last 21 (3,true)),
+      .closed (.last 25 (3,true)),
+      .closed (.last 23 (3,true)),
+      .closed (.cycle 15 3 true (2))
+    ]),
+    .split 16 (5,true) (byCutMove [
+      .closed (.last 19 (3,true)),
+      .closed (.last 25 (3,true)),
+      .closed (.last 18 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.last 32 (3,true)),
+      .closed (.cycle 21 1 false (-3)),
+      .closed (.last 21 (3,true)),
+      .closed (.last 23 (3,true)),
+      .closed (.last 25 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.cycle 14 3 true (2)),
+      .closed (.cycle 70 1 false (8)),
+      .closed (.last 19 (3,true)),
+      .closed (.cycle 13 7 true (1)),
+      .closed (.last 18 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.cycle 16 2 true (1)),
+      .closed (.cycle 21 1 false (-3)),
+      .closed (.last 19 (3,true)),
+      .closed (.last 23 (3,true)),
+      .closed (.last 18 (3,true)),
+      .closed (.last 17 (3,true)),
+      .closed (.cycle 14 3 true (2)),
+      .closed (.cycle 15 3 true (2))
+    ]),
     .unresolved,
     .unresolved,
     .unresolved,
@@ -159,9 +234,9 @@ def remaining : List (List Move × PartialMachine) := residuals parent 4 cut
 
 theorem checked : check 21269 parent 4 cut = true := by decide
 
-theorem remaining_count : remaining.length = 72 := by decide
+theorem remaining_count : remaining.length = 69 := by decide
 
-theorem remaining_mass : openMass 6 4 cut = 171742550 := by decide
+theorem remaining_mass : openMass 6 4 cut = 171738800 := by decide
 
 def d3Leaf : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -182,7 +257,7 @@ def otherRemaining : List (List Move × PartialMachine) :=
   remaining.filter (fun e => !tableOK e.2 d3Leaf)
 
 theorem d3_count : (remaining.filter (fun e => tableOK e.2 d3Leaf)).length = 1 := by decide
-theorem other_count : otherRemaining.length = 71 := by decide
+theorem other_count : otherRemaining.length = 68 := by decide
 
 theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
     WeightedBound 21269 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
