@@ -7,7 +7,7 @@ on:
       target:
         description: Source-accepted parent to consume on the accepted Canonical39 roster
         type: choice
-        options: [raw47, raw83, raw83-85]
+        options: [raw47, raw83, raw83-85, six-ready-conditional]
         default: raw47
         required: true
       direct38_run_id:
@@ -126,4 +126,38 @@ jobs:
             /tmp/a9-raw83-85-canonical37.log
           if-no-files-found: warn
           compression-level: 1
+          retention-days: 30
+
+  six-ready-conditional:
+    if: ${{ inputs.target == 'six-ready-conditional' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Source-check six-ready-parent quotient membership on accepted Canonical39
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent9-raw83-canonical39/consume.py
+          python im-results/agent9-raw83-canonical39/consume.py \
+            --six-ready-only --work /tmp/a9-conditional33 \
+            | tee /tmp/a9-conditional33.log
+          test -s /tmp/a9-conditional33/evidence/six-ready-conditional33.json
+          cat /tmp/a9-conditional33/evidence/six-ready-conditional33.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical33-six-ready-conditional-evidence
+          path: |
+            /tmp/a9-conditional33/evidence/
+            /tmp/a9-conditional33.log
+          if-no-files-found: warn
           retention-days: 30
