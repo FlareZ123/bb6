@@ -1,0 +1,94 @@
+name: Agent 8 Raw54 1RD iterated FAR masks source audit
+
+on:
+  workflow_dispatch:
+    inputs:
+      indices:
+        description: 'JSON array of mutation indices 0..250; e.g. [0,1,2]'
+        required: true
+        default: '[0]'
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 28
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-residual-lasso
+          run-id: '46132016517'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-lasso
+      - name: Rebuild seven-round anchored FAR mutation closure
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          g++ -std=c++17 -O3 "$D/oneRD_mutant_bank.cpp" -o /tmp/oneRD-first
+          g++ -std=c++17 -O3 "$D/oneRD_bootstrap_mutants.cpp" -o /tmp/oneRD-boot
+          mkdir -p /tmp/raw54-onerd-mutant-generated
+          L=/tmp/raw54-onerd-mutant-generated
+          /tmp/oneRD-first "$D/oneRD_leancert_bank.txt" /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$L/round1.tsv" 2>&1 | tee "$L/first.log"
+          test "$(wc -l < "$L/round1.tsv")" -eq 251
+          grep -q 'roots=628 found=251 mass=11675' "$L/first.log"
+          cp "$L/round1.tsv" "$L/mutants.tsv"
+          for n in 2 3 4 5 6 7; do
+            /tmp/oneRD-boot /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$L/mutants.tsv" "$L/round$n.tsv" 2>&1 | tee "$L/round$n.log"
+            cat "$L/round$n.tsv" >> "$L/mutants.tsv"
+          done
+          test "$(wc -l < "$L/round2.tsv")" -eq 85
+          test "$(wc -l < "$L/round3.tsv")" -eq 29
+          test "$(wc -l < "$L/round4.tsv")" -eq 6
+          test "$(wc -l < "$L/round5.tsv")" -eq 13
+          test "$(wc -l < "$L/round6.tsv")" -eq 1
+          test ! -s "$L/round7.tsv"
+          test "$(wc -l < "$L/mutants.tsv")" -eq 385
+          echo "PASS: 385 distinct candidate cylinders, physical mass 16825; Lean verification remains separate"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw54-onerd-mutant-generated
+          path: /tmp/raw54-onerd-mutant-generated
+          if-no-files-found: error
+          retention-days: 90
+
+  masks:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        index: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-mutant-generated
+          path: /tmp/raw54-onerd-mutant-generated
+      - name: Kernel-check explicit FAR transition masks and physical Cover
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          IDX=${{ matrix.index }}
+          MOD=$(printf 'Raw54OneRDMask%03d' "$IDX")
+          NS=$(printf 'BB6.Agent8Raw54.OneRDMask%03d' "$IDX")
+          python "$D/far_mask_cert.py" /tmp/raw54-onerd-mutant-generated/mutants.tsv --index "$IDX" --out "$D/$MOD.lean"
+          W=/tmp/raw54-onerd-mask
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-onerd-mask.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-mask.log "$NS.valid" "$NS.cover"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-mask-${{ matrix.index }}
+          path: |
+            /tmp/raw54-onerd-mask.log
+            im-results/agent8-raw54/Raw54OneRDMask*.lean
+          if-no-files-found: ignore
+          retention-days: 90
