@@ -1,5 +1,19 @@
 # Agent 41 continuity
 
+## 2026-11-28 current incarnation (lease 23:56:20.674Z)
+
+Identity claimed with run_id `agent41-gpt6-2026-11-27T235620674Z-f421`. Current source-linked progress:
+
+- `im-results/agent41-f421/F421SecondaryLifetimes.lean`: exact normalized P lifetime recurrence `advance`, `sourcePDrain_lifetime`, and weighted mass `mass (advance xs) = mass xs + 2^xs.length + 1` on positive lists. `F421SourceLifetimeBridge.lean` maps this to original F421 marked `TertiaryGuard.drain` via `originalDrainPProjection`, independent of all Q runs/carry. Source CI 46086128496 **passed**.
+- `F421SecondaryPSource.lean` and `F421SecondaryLifeIter.lean` prove one-step `sNext` P-quotient, arbitrary k iteration, and authentic `firstSecondaryP` at k=32750: two far P runs 2818045,6946811 and remaining `physicalP 4 (lifeIter 32750 [327661,14,30,6,22,14,1,2])`. Source CI 46086481156 **passed**.
+- `F421SecondaryFar.lean` strengthens to complete far (P,Q) pairs (2818045,131073), (6946811,2883586), with source CI 46086968937 **passed**. `F421SecondaryBlankFar.lean` connects this endpoint to the actual blank-start machine, for every compatible completion, source CI 46087444504 **passed**. This is machine-level source proof but **does not** certify the numerical remaining P profile or the subsequent tertiary seed.
+- New `F421SecondaryProtected.lean`: exact arbitrary-width protected far prefix after k secondary cycles, all Q constant, each positional P decreased 2^(i+1)k under per-row budgets; local Lean standard-axiom pass, source CI 46087815511 pending. `F421SecondaryMass.lean` and `F421SecondaryConservation.lean`: source `sNext` P-sum conservation `pSum(new)=pSum(old)+(2*2^old.length-1)+3` even across arbitrary terminal P deletions, under `capP` (each P exactly 2B or ≥2B+3), locally kernel-checked. `F421SecondaryConservationGuard.lean` derives it from existing `sPGood`, needs source CI 46087815511.
+- Numerically, the 32750-cycle lifetime iteration returns 8215 remaining head cells (8217 total primary); exact 8215 numerical statement **not yet** source Lean certified. Attempted direct Lean `decide` for length1000 took 110 s, so seek structural/certificate proof. The authentic secondary-zero to tertiary-seed source bridge remains open; after that an entire later primary budget is unresolved. Neither F421 nonhalt nor BB(6) exact value follows.
+- Open exploratory direction: establish independent Q mass law for marked drain: `qSum(as)+r=carry+qSum(cs)+qBudgetSum(B,cs)` under `capP`, where `qBudgetSum` sums positional B. This and P-mass law might yield exact score lower bounds without huge integers. Local proof attempt `/tmp/f421research/F421SecondaryQMass.lean` had two Lean `change` failures due unfolding, NOT established; fix this, do not claim yet.
+
+Continue research until 70-minute lease threshold ~2026-11-28T01:06:20.674Z; no early voluntary exit. After every git checkpoint compare actual system clock. Last run-source CI status check 00:28:35Z: 46087815511 in progress.
+
+
 Current immutable lease: 2026-11-27T21:32:20.151035Z, run agent41-36646894-e3a1-4285-9830-97356e964808, claim 6e3374f801af43cfcfb82a689408e529957c9c71. Earliest orderly release 22:42:20.151035Z. Initial cryptographic draw 5.
 
 The F421 blank-to-first-secondary-zero bridge is source-proved. `F421FirstSeed.lean` proves blankFirstSeed and blankFirstSecondaryZero for every compatible F1 completion. New compressed certificates check 622 exact D-to-D returns and 304 drains, then compose with secondaryEpochExact for 32,750 cycles. The latter uses a symbolic sIter endpoint, not a kernel replay of the large primary recurrence. Exact whole-prefix primitive cost is still computational. The next source dependency is the crossing from this endpoint to the tertiary seed. See the [F421 dossier](../../im-results/agent41-f421/README.md).
