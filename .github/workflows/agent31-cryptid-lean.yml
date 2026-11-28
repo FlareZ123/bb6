@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [cryptid, f197-reset-core, f197-mixed-carry]
+        options: [cryptid, f197-reset-core, f197-mixed-carry, f197-cover-bridge]
         default: cryptid
 
 permissions:
@@ -111,3 +111,52 @@ jobs:
           lean -o CycleCert.olean CycleCert.lean | tee -a /tmp/f197-mixed.log
           lean -o EpochCycle.olean EpochCycle.lean | tee -a /tmp/f197-mixed.log
           ! grep -q sorryAx /tmp/f197-mixed.log
+
+
+  f197-cover-bridge:
+    if: inputs.target == 'f197-cover-bridge'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source closure and audit conditional weighted leaf
+        run: |
+          set -euo pipefail
+          lean --version
+          python tools/lean_compile_closure.py im-results/agent31-f197-macro/F197WeightedLeaf.lean \
+            --jobs 2 --workdir /tmp/f197-cover-closure \
+            --override Macro=im-results/agent31-f197-macro/Macro.lean \
+            --override Frontier=im-results/agent8-coverage-contract/Frontier.lean \
+            --override SparseBlankDelay=im-results/agent13-weighted-first-one/SparseBlankDelay.lean \
+            --override BlankDelaySource=im-results/agent13-weighted-first-one/BlankDelaySource.lean \
+            --override BlankDelayKernel=im-results/agent13-weighted-first-one/BlankDelayKernel.lean \
+            --override RootShift=im-results/agent8-coverage-contract/RootShift.lean \
+            --override FirstStep=im-results/agent42-coverage-normal/FirstStep.lean \
+            --override WriteOneDrift=im-results/agent4-coverage-smoke/WriteOneDrift.lean \
+            --manifest /tmp/f197-cover-closure/source-manifest.json \
+            --label 'F197 conditional weighted leaf (requires blank liveness)' \
+            --theorem F197.CoverBridge.weighted_leaf | tee /tmp/f197-cover-build.log
+          printf '%s\n' 'import F197WeightedLeaf' '#print axioms F197.CoverBridge.never_of_stream_live' '#print axioms F197.CoverBridge.table_eq_rows' '#print axioms F197.CoverBridge.only_hole' '#print axioms F197.CoverBridge.weighted_leaf' > /tmp/F197CoverAudit.lean
+          LEAN_PATH=/tmp/f197-cover-closure lean /tmp/F197CoverAudit.lean | tee /tmp/f197-cover-audit.log
+          python - <<'PY'
+          import re
+          from pathlib import Path
+          t = Path('/tmp/f197-cover-audit.log').read_text()
+          expected = ['never_of_stream_live','table_eq_rows','only_hole','weighted_leaf']
+          for name in expected:
+              m = re.search(r"'F197\.CoverBridge\."+name+r"' depends on axioms: \[([^\]]*)\]", t)
+              assert m, name
+              assert set(x.strip() for x in m.group(1).split(',')) <= {'propext','Classical.choice','Quot.sound'}, m.group(0)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: f197-conditional-weighted-leaf
+          path: |
+            /tmp/f197-cover-closure/
+            /tmp/f197-cover-audit.log
+          retention-days: 7
