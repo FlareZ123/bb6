@@ -26,6 +26,12 @@ on:
         required: false
         default: false
 
+      anchor_epoch_only:
+        description: Kernel-check exact root last-anchor HF decomposition and endpoint shape
+        type: boolean
+        required: false
+        default: false
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -33,12 +39,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify source-map inverse and explicit 33-over-40 families
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only && !inputs.single_far_root_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only && !inputs.single_far_root_only && !inputs.anchor_epoch_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000 | tee /tmp/f321-explicit.json
       - name: Verify 2^20 symbolic affine inverse-class certificate
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only && !inputs.anchor_epoch_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/affine_terminal_sieve.cjs 20 | tee /tmp/f321-affine.json
@@ -49,7 +55,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Kernel-check F321 inverse odd-numerator and sum lemmas
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only && !inputs.anchor_epoch_only }}
         run: |
           set -euo pipefail
           lean -o im-results/agent31-f321-bulk/DensityOneCore.olean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
@@ -124,6 +130,29 @@ jobs:
           LEAN_PATH="$e:$a2:$q" lean "$e/SingleFarRootClassification.lean" | tee -a /tmp/f321-single-far.log
           ! grep -q sorryAx /tmp/f321-single-far.log
 
+      - name: Kernel-check exact F321 root last-anchor decomposition and endpoint shape
+        if: ${{ inputs.anchor_epoch_only }}
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          a2=im-results/agent2-f321-diagonal
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-anchor-epoch.log
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/f321-anchor-epoch.log
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/DiagonalCoordinates.olean" "$a2/DiagonalCoordinates.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/Phase6.olean" "$a2/Phase6.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/Phase6Bridge.olean" "$a2/Phase6Bridge.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/AnchorEpoch.olean" "$a2/AnchorEpoch.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/TerminalWordCandidate.olean" "$e/TerminalWordCandidate.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/TerminalWordOneFar.olean" "$e/TerminalWordOneFar.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/TerminalWordOneFarGeneral.olean" "$e/TerminalWordOneFarGeneral.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e" lean -o "$e/TerminalWordLastFar.olean" "$e/TerminalWordLastFar.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$e/TerminalAnchorShape.olean" "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-anchor-epoch.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/f321-anchor-epoch.log
+
       - name: Kernel-check F321 odd-depth source-counter inverse theorem
         if: ${{ inputs.odd_depth_only && !inputs.mod384_only }}
         run: |
@@ -175,7 +204,7 @@ jobs:
           LEAN_PATH="$e:$q" lean -o "$q/HaltingBridgeCore.olean" "$q/HaltingBridgeCore.lean" | tee -a /tmp/f321-mod384-lean.log
           ! grep -q sorryAx /tmp/f321-mod384-lean.log
       - name: Upload exact finite computation record
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only && !inputs.anchor_epoch_only }}
         uses: actions/upload-artifact@v4
         with:
           name: f321-affine-2pow20-certificate
