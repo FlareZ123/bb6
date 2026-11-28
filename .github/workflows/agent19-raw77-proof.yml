@@ -10,6 +10,7 @@ on:
         options:
           - raw77
           - d3-local
+          - d3-all-starts
           - raw40-crossing-preflight
           - raw40-leaf66-preflight
           - raw40-leaf66-full
@@ -121,3 +122,15 @@ jobs:
           python im-results/agent19-d3-local/unpack_d3_sibling.py
           python tools/lean_compile_closure.py --workdir /tmp/a19-d3-local --jobs 2 im-results/agent19-d3-local/D3LocalCut.lean | tee /tmp/a19-d3-local.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-d3-local.log; then exit 1; fi
+      - name: Verify modified D table all-start source transport
+        if: ${{ inputs.target == 'd3-all-starts' }}
+        env:
+          SOURCE_REVISION: ${{ inputs.source_revision }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]
+          test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent19-d3-local/unpack_d3_sibling.py
+          python tools/lean_compile_closure.py --workdir /tmp/a19-d3-all --jobs 2 im-results/agent19-d3-local/D3SiblingAllSources.lean | tee /tmp/a19-d3-all.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a19-d3-all.log; then exit 1; fi
