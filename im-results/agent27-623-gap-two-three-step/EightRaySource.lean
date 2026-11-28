@@ -13,7 +13,7 @@ arbitrary-rational generic source transport theorem. This result is
 CONDITIONAL on the earlier fourth-predecessor cone and an ordinary source
 fifth-to-fourth step with strong budget and separation. It does not
 assert the real blank orbit satisfies those prerequisites or prove a halt
-decision. The true root-level fifth-predecessor bridge is future work.
+decision. The authentic blank-root bridge is supplied in FifthRayPhysicalSource; it retains a derived root-scale interval, and its end-to-end source acceptance is a separate CI target.
 -/
 
 namespace BB6.Agent27EightRaySource
