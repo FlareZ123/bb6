@@ -59,6 +59,7 @@ jobs:
           lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-odd-lean.log
           LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-odd-lean.log
           LEAN_PATH="$e" lean im-results/agent2-f321-odd-depth/OddDepthSource.lean | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean im-results/agent2-f321-odd-depth/Mod3Source.lean | tee -a /tmp/f321-odd-lean.log
           ! grep -q sorryAx /tmp/f321-odd-lean.log
       - name: Upload exact finite computation record
         if: ${{ !inputs.odd_depth_only }}

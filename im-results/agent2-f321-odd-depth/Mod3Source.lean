@@ -40,7 +40,8 @@ from the authentic F321 source-counter seed. -/
 theorem high_far_ray_unreachable (k:Nat) :
     ∀ n, ¬CounterReach 1 1 n (4*k+2) (3*k) := by
   intro n hr
-  exact multiple_three_gate_never k n (by simpa using hr)
+  have hd := source_orbit_nonzero_mod3 hr
+  omega
 
 #print axioms counter_nonzero_mod3_preserved
 #print axioms source_orbit_nonzero_mod3
