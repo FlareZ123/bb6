@@ -20,12 +20,16 @@ def main():
     for name in ("census","far","structured","archives","work"):
        a.add_argument("--"+name,required=True,type=Path)
     a.add_argument("--zeroLF-search",type=Path)
+    a.add_argument("--zeroRF-search",type=Path)
+    a.add_argument("--bound",type=int,default=2004)
     p=a.parse_args()
     work=p.work.resolve()
     staging=work.with_name(work.name+"-inputs")
     staging.mkdir(parents=True,exist_ok=False)
     p.archives.resolve().mkdir(parents=True,exist_ok=True)
     census,fixture,child04=read_parent_banks(p)
+    assert p.bound>=2004
+    fixture["bound"]=p.bound
     keys=sorted(t.replace("_","") for t in census["opens"])
     hard=LITERAL.replace("_","")
     assert len(hard)==36 and hard in keys and hard[24:27]=="1LB"
@@ -81,6 +85,48 @@ def main():
             zeroLF_results.append({"table":item["table"],"certificate":
                                    item["params"]+[item["reachable"]]})
         assert all(fixture["data"][keys.index(t)] is not None for t in zeroLF_keys)
+    zeroRF_results=[]
+    zeroRF_keys=set()
+    haltRF="1RB0LA_1RC---_0RD1RF_0LD0RE_0RF1RC_1LF1RA"
+    if p.zeroRF_search is not None:
+        assert p.zeroLF_search is not None, "E0=0RF adapter builds on the accepted E0=0LF reduction"
+        assert p.bound>=2635, "finite 0RF halt witness requires a weighted threshold >=2635"
+        report=json.loads(p.zeroRF_search.read_text())
+        assert report["kind"]=="untrusted candidate search, NOT formal Cover"
+        assert report["target"]=="Raw36 D1=0RE E0=0RF"
+        expected_zeroRF={
+          "1RB0LA_1RC---_0RD0LA_0LD0RE_0RF1RA_1LF1LC",
+          "1RB0LA_1RC---_0RD0LD_0LD0RE_0RF1RA_1LE1LF",
+          "1RB0LA_1RC---_0RD1LA_0LD0RE_0RF1RA_1LE1LF",
+          "1RB0LA_1RC---_0RD1RD_0LD0RE_0RF1RA_1LE1LF",
+          "1RB1LD_1RC0LE_0RD---_0LD0RE_0RF1RA_1LF1LA",
+          "1RB1LD_1RC1RB_0RD---_0LD0RE_0RF1RA_1LF1LA",
+        }
+        assert len(report["results"])==6 and report["found"]==6
+        assert {x["table"] for x in report["results"]}==expected_zeroRF
+        zeroRF_keys={t for t in keys if t[24:27]=="0RF"}
+        expected_zeroRF_keys={t.replace("_","") for t in expected_zeroRF}
+        halt_key=haltRF.replace("_","")
+        assert expected_zeroRF_keys<=zeroRF_keys and halt_key in zeroRF_keys
+        missing_zeroRF={t for t in zeroRF_keys
+                        if fixture["data"][keys.index(t)] is None}
+        assert missing_zeroRF==expected_zeroRF_keys|{halt_key},missing_zeroRF
+        for item in report["results"]:
+            table=item["table"].replace("_","")
+            assert table in expected_zeroRF_keys
+            assert isinstance(item["params"],list) and item["params"]
+            assert item["params"][0] in ("r","m","p")
+            assert isinstance(item["reachable"],int) and item["reachable"]>0
+            idx=keys.index(table)
+            fixture["data"][idx]=item["params"]+[item["reachable"]]
+            zeroRF_results.append({"table":item["table"],"certificate":
+                                   item["params"]+[item["reachable"]]})
+        # The seventh 0RF holdout is a finite-halting machine: 2,634 ordinary
+        # transitions reach its unique undefined B1 slot.  Audit.last checks
+        # this exact source query in Lean; the candidate simulator is not trusted.
+        assert halt_key[3:6]=="---" and halt_key[24:27]=="0RF"
+        fixture["data"][keys.index(halt_key)]=["l",2634,3]
+        assert all(fixture["data"][keys.index(t)] is not None for t in zeroRF_keys)
     src=staging/"direct10-census.json"
     src.write_text(json.dumps(census,separators=(",",":"))+"\n")
     fixture_file=staging/"direct10-two-children.xz.b64"
@@ -92,7 +138,10 @@ def main():
     predecessor=json.loads((work/"manifest.json").read_text())
     assert predecessor["claim"]["theorem"]=="BB6.Agent29Raw36.parent_cover_from_nine"
     generator=HERE/"generate_direct10_multi.py"
-    selected_children="4,5,13" if p.zeroLF_search is not None else "4,13"
+    selected=[4,13]
+    if p.zeroLF_search is not None: selected.append(5)
+    if p.zeroRF_search is not None: selected.append(11)
+    selected_children=",".join(map(str,sorted(selected)))
     subprocess.run([sys.executable,str(generator),str(src),str(work),
        str(fixture_file),"300","10",selected_children],check=True)
     run_lean(work,"Raw36D110Base")
@@ -100,14 +149,18 @@ def main():
         run_lean(work,name)
     for name in sorted(x.stem for x in work.glob("Raw36D110Sweep*.lean")):
         run_lean(work,name)
-    for kid in (("04","05","13") if p.zeroLF_search is not None else ("04","13")):
+    kids=["04","13"]
+    if p.zeroLF_search is not None: kids.append("05")
+    if p.zeroRF_search is not None: kids.append("11")
+    for kid in sorted(kids):
         r=run_lean(work,"Raw36D110Kid"+kid)
         check_axioms(r,["BB6.Agent29Raw36D110.kid"+kid+"_bound"])
     # First-level 16 side-cycle Cover source already accepted independently.
     subprocess.run([sys.executable,str(HERE/"emit_direct10_eight.py"),
        "--census",str(p.census.resolve()),
        "--source",str(work/"Raw36D110Live8.lean"),
-       "--summary",str(work/"direct10-source-16cycles.json")],check=True)
+       "--summary",str(work/"direct10-source-16cycles.json"),
+       "--bound",str(p.bound)],check=True)
     r=run_lean(work,"Raw36D110Live8")
     ns8="BB6.Agent29Raw36D110Live8."
     check_axioms(r,[ns8+x for x in ("parent_root","parent_nohalt",
@@ -125,6 +178,10 @@ def main():
         names.append(("Raw36D110Live5AfterE0LE1LB0LF","BB6.Agent29Raw36D110Live5.",(
             "child05_identity","child05_cover","live6_from_live5",
             "parent_cover_from_live5","live5_count")))
+    if p.zeroRF_search is not None:
+        names.append(("Raw36D110Live4AfterE0LE1LB0LF0RF","BB6.Agent29Raw36D110Live4.",(
+            "child11_identity","child11_cover","live5_from_live4",
+            "parent_cover_from_live4","live4_count")))
     profiles={}
     for name,ns,required in names:
         file=HERE/(name+".lean")
@@ -133,10 +190,12 @@ def main():
         profiles.update(check_axioms(compiled,[ns+x for x in required]))
     last=work/(names[-1][0]+".olean")
     include_zeroLF=p.zeroLF_search is not None
-    closed=["0LE","1LB"]+(["0LF"] if include_zeroLF else [])
-    remaining=(["0RF","1LA","1LE","1LF","1RF"] if include_zeroLF else
-               ["0LF","0RF","1LA","1LE","1LF","1RF"])
-    parent_theorem=("BB6.Agent29Raw36D110Live5.parent_cover_from_live5" if include_zeroLF
+    include_zeroRF=p.zeroRF_search is not None
+    closed=["0LE","1LB"]+ (["0LF"] if include_zeroLF else []) + (["0RF"] if include_zeroRF else [])
+    all_live=["0LF","0RF","1LA","1LB","1LE","1LF","1RF"]
+    remaining=[x for x in all_live if x not in closed]
+    parent_theorem=("BB6.Agent29Raw36D110Live4.parent_cover_from_live4" if include_zeroRF
+                    else "BB6.Agent29Raw36D110Live5.parent_cover_from_live5" if include_zeroLF
                     else "BB6.Agent29Raw36D110Live6.parent_cover_from_live6")
     receipt={
       "status":"original-source accepted D110 whole-child Covers with "
@@ -144,7 +203,7 @@ def main():
       "source_revision":subprocess.check_output(["git","rev-parse","HEAD"],
                                      cwd=REPO,text=True).strip(),
       "parent":"1RB---_1RC---_0RD---_0LD0RE_------_------",
-      "B":2004,
+      "B":p.bound,
       "E0_children_closed":closed,
       "E0_ordinary_cycle_children_closed":16,
       "remaining_E0_cover_count":len(remaining),
@@ -152,6 +211,7 @@ def main():
       "whole_E0_0LE_child_proof":"BB6.Agent29Raw36D110Live7.child04_cover",
       "whole_E0_1LB_child_proof":"BB6.Agent29Raw36D110Live6.child13_cover",
       "whole_E0_0LF_child_proof":("BB6.Agent29Raw36D110Live5.child05_cover" if include_zeroLF else None),
+      "whole_E0_0RF_child_proof":("BB6.Agent29Raw36D110Live4.child11_cover" if include_zeroRF else None),
       "parent_theorem":parent_theorem,
       "one_new_machine":LITERAL,"new_machine_certificate":["r",6,9,5,1318],
       "candidate_0LE":{"original_open":13,"far":12,"structured":1},
@@ -160,14 +220,24 @@ def main():
                         "previously_certified":len(zeroLF_keys)-len(zeroLF_results),
                         "new_nonhalting":len(zeroLF_results),
                         "certificates":zeroLF_results} if include_zeroLF else None),
+      "candidate_0RF":({"source_open_tables":len(zeroRF_keys),
+                        "previously_certified":len(zeroRF_keys)-len(zeroRF_results)-1,
+                        "new_nonhalting":len(zeroRF_results),
+                        "halting_literal":haltRF,
+                        "halting_ordinary_steps":2634,
+                        "halting_slot_index":3,
+                        "certificates":zeroRF_results} if include_zeroRF else None),
       "predecessor_source":predecessor["claim"],
       "root_olean_sha256":base.file_sha(last),
       "source_sha256":base.file_sha(HERE/(names[-1][0]+".lean")),
       "axioms":profiles,
     }
-    outname=("raw36-d110-e0le-1lb-0lf-accepted.json" if include_zeroLF
+    outname=("raw36-d110-e0le-1lb-0lf-0rf-accepted.json" if include_zeroRF
+             else "raw36-d110-e0le-1lb-0lf-accepted.json" if include_zeroLF
              else "raw36-d110-e0le-and-1lb-accepted.json")
     (work/outname).write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
-    print("PASS: all "+str(len(child04)+len(keys13)+len(zeroLF_keys))+" literal OPEN descendants in selected E0 branches Lean checked; "
-          +str(len(closed))+" whole E0 children closed, "+str(len(remaining))+" conditional E0 Covers left",flush=True)
+    print("PASS: all "+str(len(child04)+len(keys13)+len(zeroLF_keys)+len(zeroRF_keys))
+          +" literal OPEN descendants in selected E0 branches Lean checked; "
+          +str(len(closed))+" whole E0 children closed, "+str(len(remaining))
+          +" conditional E0 Covers left",flush=True)
 if __name__=="__main__":main()
