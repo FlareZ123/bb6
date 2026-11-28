@@ -1,0 +1,7 @@
+# Symbolic sweep proof bank
+
+The exact 412-row E/F-canonical residual corpus is PUMP-ROWS.txt (alphabet 0..9,a..p encodes transition code plus one; zero is an unspecified transition). SHA256: 08fccc8e066d138010e4f64677a836917e08ad3521790e7c20bd812be361e64b.
+
+The deterministic generator `python3 generate_pump_bank.py PUMP-ROWS.txt OUTPUT_DIR 2` produces 294 independent Lean modules. Compile against the original SweepPumping dependency closure, followed by Box27ProofBank and generated Box27PumpBank. All 294 generated never theorems compiled locally with Lean 4.36.0-rc2 and only standard axioms. The aggregate source hash checked by the generator is cec07de68df50bf110bf451221886fcb0d51986bb5cbc191c1201eb4012b9c13 (filename + NUL + file bytes, lexical order). The generic bank includes each original and its E/F conjugate and its knownGood theorem compiled with standard axioms. These 588 mutually disjoint partial-table cylinders (548 one-hole, 40 two-hole) cover 38,700 physical completions. This is a bank of reusable nonhalting witnesses, not yet a proof of closure for all the first-query children containing them.
+
+Discovery searches for a one-parameter word family, where the left and right tape portions can contain repeated blocks. Every emitted fixed phase is proved by definitional equality; every repeated phase is justified for arbitrary suffixes by the original sweep lemmas, and the growth theorem entails NeverHalts by induction. Search misses are inconclusive. No claim about the remaining 118 residual rows follows.
