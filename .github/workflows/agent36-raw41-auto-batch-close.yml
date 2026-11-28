@@ -34,6 +34,11 @@ jobs:
           extra=()
           if [ '${{ inputs.index }}' = 94 ]; then
             extra+=(--manual "66:Raw41New094Leaf66:BB6.Agent36Raw41Child094Leaf66.table:BB6.Agent36Raw41Child094Leaf66.never")
+          elif [ '${{ inputs.index }}' = 112 ]; then
+            extra+=(--manual "73:Raw41New112Single:(BB6.Agent36Raw41Child112Single.table false):(BB6.Agent36Raw41Child112Single.never false)")
+            extra+=(--manual "74:Raw41New112Single:(BB6.Agent36Raw41Child112Single.table true):(BB6.Agent36Raw41Child112Single.never true)")
+            extra+=(--manual "81:Raw41New112Pair:(BB6.Agent36Raw41Child112Pair.table false):(BB6.Agent36Raw41Child112Pair.never false)")
+            extra+=(--manual "86:Raw41New112Pair:(BB6.Agent36Raw41Child112Pair.table true):(BB6.Agent36Raw41Child112Pair.never true)")
           fi
           python3 im-results/agent36-raw41/close_auto_batch.py \
             --batch .tmp/raw41-source-auto/a36-batch-auto-${{ inputs.shard }}.json \

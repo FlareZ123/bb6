@@ -58,6 +58,10 @@ jobs:
           lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/a36-batch-empty.log
           if [ "$MOD" = Raw41New094 ]; then
             lean -o "$SRC/Raw41New094Leaf66.olean" im-results/agent36-raw41/Raw41New094Leaf66.lean 2>&1 | tee /tmp/a36-batch-manual.log
+          elif [ "$MOD" = Raw41New112 ]; then
+            for proof in Raw41New112Single Raw41New112Pair; do
+              lean -o "$SRC/$proof.olean" "im-results/agent36-raw41/$proof.lean" 2>&1 | tee "/tmp/a36-batch-$proof.log"
+            done
           fi
           lean -o "$SRC/$MOD"Base.olean "$SRC/$MOD"Base.lean 2>&1 | tee /tmp/a36-batch-base.log
           for n in $(seq -w 0 23); do
