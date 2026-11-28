@@ -1,0 +1,115 @@
+name: Agent10 Raw42 E repaired exact-part compose
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: choice
+        options: [0LE, 1LE, 1RE]
+        default: 1LE
+      source_run:
+        description: 'Original exact-split run with accepted sibling partitions'
+        required: true
+        type: string
+      repaired_run:
+        description: 'Successful repaired-part run'
+        required: true
+        type: string
+      repaired_part:
+        description: 'Repaired exact partition key, e.g. g0p1'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate exact composition target
+        env:
+          BRANCH: ${{ inputs.branch }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+          REPAIRED_RUN: ${{ inputs.repaired_run }}
+          PART: ${{ inputs.repaired_part }}
+        run: |
+          set -euo pipefail
+          [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
+          [[ "$REPAIRED_RUN" =~ ^[0-9]+$ ]]
+          [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
+
+      - name: Reconstruct original coverage source
+        run: python im-results/agent13-coverage/unpack.py
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+
+      - name: Restore frozen generated source and exact split plan
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+
+      - name: Download accepted original sibling partitions
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          pattern: raw42-split-${{ inputs.branch }}-g*
+          path: /tmp/parts
+
+      - name: Replace failed partition with repaired exact artifact
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
+
+      - name: Authenticate exact 32-part union and prove whole child Cover
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/parts /tmp/merged "$g/split-plan.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py \
+            --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/merged/manifest.json \
+            --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json \
+            --artifact-name "raw42-certified-${BRANCH}-repaired" \
+            --theorem "$th" \
+            --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" \
+            --weighted-bound 100006 \
+            "$g/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/final/audit.log "$th"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-certified-${{ inputs.branch }}-repaired
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: warn
