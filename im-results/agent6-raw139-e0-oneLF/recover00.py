@@ -122,7 +122,7 @@ def plan(w):
         with open(os.environ["GITHUB_OUTPUT"],"a") as f:
             print("pin="+obj["pin"],file=f)
             for phase in ("block","tree"):
-                print(phase+"_matrix="+json.dumps({"group":list(range(len(obj[phase]))))},separators=(",",":")),file=f)
+                print(phase+"_matrix="+json.dumps({"group":list(range(len(obj[phase])))},separators=(",",":")),file=f)
 
 def check_plan(w):
     p = read(w / "recovery-plan.json")
@@ -169,8 +169,7 @@ def compile_group(w, phase, group):
     same_build(read(w/"core.json"),result)
     assert set(roots) <= entries(result).keys()
     if phase == "root":
-        assert THEOREM in text
-        assert "propext" in text and "Quot.sound" in text
+        assert f"'{THEOREM}' depends on axioms: [propext, Classical.choice, Quot.sound]" in text
 
 def merge_phase(w, phase):
     p = check_plan(w)
@@ -194,6 +193,7 @@ def merge_phase(w, phase):
     assert set(p["expected_"+phase]) <= pool.keys()
     merged = dict(base)
     merged["modules"] = sorted(pool.values(),key=lambda e:e["module"])
+    merged["module_count"] = len(pool)
     write(w/(phase+"-pool.json"),merged)
     print("merged",phase,len(pool),"source-checked objects")
 
