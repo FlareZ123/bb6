@@ -40,7 +40,7 @@ theorem live7_from_live6
   intro i hi
   simp only [BB6.Agent29Raw36D110Live7.liveCodes,
     List.mem_cons, List.not_mem_nil, or_false] at hi
-  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl | rfl | rfl
+  rcases hi with rfl | rfl | rfl | rfl | rfl | rfl | rfl
   · exact h 5 (by decide)
   · exact h 11 (by decide)
   · exact h 12 (by decide)
