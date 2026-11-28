@@ -107,11 +107,11 @@ theorem carryZero (n : Nat) (R : List Bool) :
   have h3' : run0 p n
       ⟨2,[true,true]++R,rep [true] n++[false,false]⟩ =
       some ⟨2,[true]++rep [false] n++[true]++R,[false,false]⟩ := by
-    simpa only [List.append_assoc] using h3
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h3
   have h4' : run0 p 1
       ⟨2,[true]++rep [false] n++[true]++R,[false,false]⟩ =
       some ⟨2,[false]++([false]++rep [false] n++[true]++R),[false]⟩ := by
-    simpa only [List.append_assoc] using h4
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h4
   have H := join0 (join0 (join0 (join0 (join0 h0' h1) h2') h3') h4') h5
   have ht : 1+(n+1)+1+n+1+4 = 2*(n+1)+6 := by omega
   simpa only [rep,List.append_assoc,ht] using H
@@ -131,16 +131,20 @@ theorem carryBlank (n : Nat) :
   have h0' : run0 p 1 (word ([true]++rep [true] n)) =
       some ⟨1,rep [true] (n+1),[false,false]⟩ := by
     simpa only [rep,List.append_assoc] using h0
+  have h1' : run0 p (n+1)
+      ⟨1,rep [true] (n+1),[false,false]⟩ =
+      some ⟨1,[],rep [true] (n+1)++[false,false]⟩ := by
+    simpa only [List.append_nil] using h1
   have h2' : run0 p 1 ⟨1,[],rep [true] (n+1)++[false,false]⟩ =
       some ⟨2,[true,true],rep [true] n++[false,false]⟩ := by
     simpa only [rep,List.append_assoc] using h2
   have h3' : run0 p n ⟨2,[true,true],rep [true] n++[false,false]⟩ =
       some ⟨2,[true]++rep [false] n++[true],[false,false]⟩ := by
-    simpa only [List.append_assoc] using h3
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h3
   have h4' : run0 p 1 ⟨2,[true]++rep [false] n++[true],[false,false]⟩ =
       some ⟨2,[false]++([false]++rep [false] n++[true]),[false]⟩ := by
-    simpa only [List.append_assoc] using h4
-  have H := join0 (join0 (join0 (join0 (join0 h0' h1) h2') h3') h4') h5
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h4
+  have H := join0 (join0 (join0 (join0 (join0 h0' h1') h2') h3') h4') h5
   have ht : 1+(n+1)+1+n+1+4 = 2*(n+1)+6 := by omega
   simpa only [rep,List.append_assoc,ht] using H
 
@@ -158,10 +162,10 @@ theorem splitBits (R : List Bool) :
     | true =>
       rcases ih with ⟨n,T,h⟩ | ⟨n,h⟩
       · refine Or.inl ⟨n+1,T,?_⟩
-        simpa only [rep,List.append_assoc] using
+        simpa [rep,List.cons_append,List.nil_append,List.append_assoc] using
           congrArg (List.cons true) h
       · refine Or.inr ⟨n+1,?_⟩
-        simpa only [rep,List.append_assoc] using
+        simpa [rep,List.cons_append,List.nil_append,List.append_assoc] using
           congrArg (List.cons true) h
 
 /-- This is the crucial infinite-time argument: EVERY finite binary
