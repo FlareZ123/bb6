@@ -51,7 +51,10 @@ jobs:
         run: |
           set -euo pipefail
           prefix="raw42-group1-$BRANCH-part"
-          parts=3\n          if [ "$BRANCH" = "1LB" ]; then parts=6; fi\n          python im-results/agent17-raw42-recovery/split_group.py             im-results/agent32-raw42/generated-assembly 1 "$parts" "$prefix" /tmp/split.json
+          parts=3
+          if [ "$BRANCH" = "1LB" ]; then parts=6; fi
+          python im-results/agent17-raw42-recovery/split_group.py \
+            im-results/agent32-raw42/generated-assembly 1 "$parts" "$prefix" /tmp/split.json
           echo "parts=$(python -c 'import json;print(json.dumps(list(json.load(open("/tmp/split.json"))["groups"])))')" >> "$GITHUB_OUTPUT"
           python - <<'PY'
           import json
