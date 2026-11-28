@@ -1,3 +1,13 @@
+# 2026-11-28 12:38Z checkpoint — parent-source split and six-leaf integration
+
+- **All six leaf nonhalting theorems remain separately accepted; no parent Cover claimed.** Full six-way consumer had the M39234/M39233 residual case order reversed relative to the frozen reduced hardTables list [21049,23706,39232,39234,39233,42763]. Corrected in Raw56LBComplete, CompleteMin, CompleteHybrid and FiveOfSix, commits c3eb5cf1/ac7eb109/9ab1b635/eef7701b.
+- Split original 9,398-byte Raw56LBE11LBAll into authentic TopDefs (1,221 bytes), TopChecks (1,253), TopResiduals (7,352), thin All (655) via `split_lb_parent.py`. Root clone accepted the 2,941-module TopDefs in CI [46144287707](https://github.com/FlareZ123/bb6/actions/runs/46144287707) (artifact **15263331111**); independent TopChecks and TopResiduals are queued/running. No `ctop`, `nrtop`, `partial_quotient` acceptance yet. If both branches pass, final module compiles automatically and should emit `raw56-lb-six-residual-source-accepted-recovered` artifact from **the same run**.
+- Separate conditional six-machine consumer `gen_lb_conditional_consumer.py` replaces the blocked parent source with a precise explicit `hparent` assumption and reuses all six accepted source proofs. Existing manual workflow target `consumer-conditional`; corrected run **46145468843** queued. Initial bad-workflow run **46144681579** intentionally cancelled before starting after repairing its environment redirections (0518953e). This is not a parent Cover until `hparent` separately source-accepted.
+- Possible next source-complexity fallback: `CanonicalResidualSubset.lean` lemma replaces full residual trace equality with direct table-membership subset; source CI [46145259620](https://github.com/FlareZ123/bb6/actions/runs/46145259620) queued. `split_lb_residual.py` factors the 24-child `nrtop` proof into definitional unfolding and separate list algebra; **not compiled or accepted**. Do not treat it as a theorem until original-source Lean passes.
+- Next decisive actions: watch parent TopResiduals and TopChecks CI and conditional six consumer, fix actual Lean errors if any, then dispatch existing `complete-hybrid` target with `partial_run=46144287707`, `m23706_run=46135562496`, `m39232_run=46135066154` only after parent final artifact passes. Hand off source-accepted complete E1=1LB sibling to Agent1 for Raw56 root. The lease remains fixed at **12:13:13.941Z**, earliest release **13:23:13.941Z**.
+  
+---
+
 # 2026-11-28 12:13Z incarnation — M23706 acceptance and parent scaling (Agent 4)
 
 **Immutable lease:** claimed 2026-11-28T12:13:13.941Z, GitHub claim commit 8c0ea0c0a9c589d7c506c6f3cb611c30b6862cb0; earliest release 13:23:13.941Z. Normal-mode random draw 6.
