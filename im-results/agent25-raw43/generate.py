@@ -125,7 +125,9 @@ theorem renamed_table :
   funext s
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
+    simp [renamePartial, ef, swapStates, renameMove, table,
+      {rep_namespace}.M{rep_i}.table]
 private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6) = 0)
     (m : Machine) (h : NeverHalts (renameTable e m)) : NeverHalts m := by
   intro n
