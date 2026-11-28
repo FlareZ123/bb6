@@ -803,10 +803,11 @@ jobs:
           python im-results/agent11-raw39/assemble_accepted_parent.py \
             --work /tmp/a11-raw39-ten-child --ten-only
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: raw39-parent-ten-child-conditional-source
           path: /tmp/a11-raw39-ten-child/evidence/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
   global_raw39:
