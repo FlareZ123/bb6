@@ -47,7 +47,7 @@ theorem b_two_zero_refines (n : Nat) (s : List Bool)
   have haction := b2_even_action (segAppend emptySegment s)
     hlow.1 hlow.2 n rest hlive
   constructor
-  · simpa [co,segAppend_append,alt_eq_altWord,List.append_assoc]
+  · simpa [co,mkControl,segAppend_append,alt_eq_altWord,List.append_assoc]
       using haction
   · simpa [runBits] using b_two_zero n s stack (runBits rest)
 
