@@ -8,6 +8,11 @@ open BB6.Agent1Raw56.LE17557ActionGrammar
 open BB6.Agent1Raw56.LE17557FrameMachine
 open BB6.Agent1Raw56.LE17557DefectStack
 
+@[simp] theorem lowCost_append (u v : List Bool) :
+    lowCost (u ++ v) = lowCost u + lowCost v := by
+  simp [lowCost, countB, countC, List.count_append]
+  omega
+
 /-- Refinement converts each low B hit of cost 7 into the lifted BBA block of
     cost 15, while carries keep cost 1.  Hence low-cost after one action-word
     lift is exactly the high-side cost before the lift. -/
