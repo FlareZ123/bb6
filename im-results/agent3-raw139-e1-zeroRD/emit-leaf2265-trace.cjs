@@ -21,7 +21,7 @@ function macro(x){
  if(j===2)return (!(k%2n)?"twoEvenRound "+t+" "+r:k%2n&&r?"twoOddHighRound "+t+" "+(r-1):"twoOddZeroRound "+t)+" ("+ray(u)+")";
  throw Error("unexpected early terminal");
 }
-let S="import Leaf2265MacroAll\n\nnamespace BB6.Agent3Leaf2265\nset_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n\n/-! Generated source-level counted 435-section candidate.\nEvery section must be independently checked by Lean against arbitrary-tail lemmas.\nNo proof acceptance is implied by source generation. -/\n\n";
+let S="import Leaf2265MacroAll\n\nnamespace BB6.Agent3Leaf2265\nset_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n\n/-!\nExact symbolic source trace from the genuine blank-entry section S(3,blank).\nEvery segment uses a parameter-uniform, source-derived counted transition\ntheorem. The untrusted arithmetic generator selects instances only; the\nLean kernel verifies every intermediate state and count. Chunking avoids\na single enormous elaboration term.\n\nIMPORTANT: No assertion of accepted Lean compilation is made by this file's\npresence; check the pinned full-closure CI and #print axioms before promotion.\n-/\n\n";
 const chunks=[];
 for(let st=0;st<435;st+=10){
  const en=Math.min(st+10,435),ys=xs.slice(st,en),name="traceChunk"+Math.floor(st/10);
