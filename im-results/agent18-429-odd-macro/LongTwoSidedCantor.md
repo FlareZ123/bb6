@@ -55,7 +55,9 @@ For the forward portion, the center has height \(2\cdot4^h\). Successive forward
 | 12 | 66,645 | 134,818 | 135,046 | 405,040 | 134,818 | .99831 |
 | 13 | 69 | 532,162 | 532,390 | 1,597,070 | 532,162 | .99957 |
 
-Exact signed BigInt reverse and forward replay passed for R=10 and R=12; nonzero inverse digits were executed individually, zero runs were fast-forwarded using exact phase-cost identities, every terminal cone and A-height parity checked. The existing [long_past_cascade.cjs](long_past_cascade.cjs) contains the equivalent two-reset arithmetic for a fixed leading-exponent choice, and [LongPastUniformM.md](LongPastUniformM.md) proves its uniform symbolic bounds.
+The reproducible [long_two_sided_cantor.cjs](long_two_sided_cantor.cjs) **symbolic** checker verifies the R-family modular code, both exact cancellation identities, and sufficient strict-cone inequalities without constructing 4^k. Its **direct** mode (k≤200,000) reconstructs the large signed rank, replays all nonzero inverse bits, validates positive strict endpoints for every compressed zero run, independently pairs the chronological halfsteps into exact original radix-16 macro digits and checks their integrality and final center, and checks the forward macro zero endpoint. Run Node.js with no dependencies: `node im-results/agent18-429-odd-macro/long_two_sided_cantor.cjs 10 11 12`.
+
+Exact signed BigInt reverse and forward replay passed for R=10, R=11, and R=12; nonzero inverse digits were executed individually, zero runs were fast-forwarded using exact phase-cost identities, every terminal cone and A-height parity checked. The existing [long_past_cascade.cjs](long_past_cascade.cjs) contains the equivalent two-reset arithmetic for a fixed leading-exponent choice, and [LongPastUniformM.md](LongPastUniformM.md) proves its uniform symbolic bounds.
 
 For a smaller fixed k=430 witness, [LongPastMacro430.lean](LongPastMacro430.lean) contains an exact 740-step past macro path and 101-step future zero macro path centered at \((4^{430}+2,4^{202})\), submitted for pinned Lean source-closure. That fixed witness uses an earlier R=8 parametrization rather than this R≥10 family.
 
