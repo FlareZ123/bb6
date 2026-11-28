@@ -17,6 +17,7 @@ open BB6.Agent5Q0151BlankStackMore
 open BB6.Agent5Q0151RightWords
 open BB6.Agent5Q0151FiniteModel
 open BB6.Agent5Q0151StackSaturation
+open BB6.Agent5Q0151SegmentGrammar
 open BB6.Agent5Q0151SegmentRunSound
 open BB6.Agent5Q0151MacroTransfer
 open BB6.Agent5Q0151PackedRightExt
