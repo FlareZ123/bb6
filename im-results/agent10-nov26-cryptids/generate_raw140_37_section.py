@@ -135,7 +135,8 @@ theorem behindMany (n : Nat) (X Y : List Sym) :
   | zero => simp [U, run]
   | succ n ih =>
     have h := join (behindOne X (U 1 n ++ Y)) (ih (S 3::X))
-    simpa only [U, List.replicate_succ, List.cons_append, List.append_assoc,
+    simpa only [U, List.replicate_succ, List.replicate_succ',
+      List.cons_append, List.singleton_append, List.append_assoc,
       show 19*(n+1)=19+19*n by omega] using h
 '''
 print(prefix)
