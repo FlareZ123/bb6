@@ -1,0 +1,27 @@
+name: Agent24 Raw45 depth-three full residual 0
+run-name: "Agent24 Raw45 D3 full residual 0 source check"
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-proof:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact source and audit axioms
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual0.lean"
+          python tools/lean_compile_closure.py --workdir /tmp/agent24-d3-full0 --jobs 4 "$TARGET" 2>&1 | tee /tmp/agent24-d3-full0.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent24-d3-full0.log
