@@ -73,6 +73,15 @@ function leanSlot(slot){
  return `(⟨${q}, by decide⟩, ${bit})`;
 }
 function leanInt(x){return x<0?`(${x})`:String(x);}
+const closedFiveStates=new Set([0,1,2,3,5]);
+function closesWithoutE(p){
+ for(const q of closedFiveStates)for(const bit of [0,1]){
+  const action=p[2*q+bit];
+  if(action<=1)return false;
+  if(!closedFiveStates.has((action-2)%6))return false;
+ }
+ return true;
+}
 
 const p=parentCodes.slice(),nodes=[],rows=[],stats={};
 function inc(k){stats[k]=(stats[k]??0)+1;}
@@ -96,6 +105,10 @@ function build(depth){
    inc("extendedCycle"+depth);
    return pushNode(`.leaf (.side ${ww.entry} ${ww.period} ${ww.right} ${leanInt(ww.boundary)})`);
   }
+  if(f0Action==="0LD"&&closesWithoutE(p)){
+   inc("closed"+depth);
+   return pushNode(".leaf (.closed 0 [0,1,2,3,5])");
+  }
   return residual(depth,"longResidual");
  }
  if(depth>=6)return residual(depth,"openResidual");
@@ -115,10 +128,10 @@ const expected=f0Action==="0LA"?{
   longResidual5:52,extendedCycle6:353,extendedCycle5:5,longResidual4:1
  }
 }:{
- nodes:16976,rows:4318,stats:{
+ nodes:16976,rows:4276,stats:{
   halt3:1,cycle3:17,halt4:7,halt5:67,cycle5:1002,
-  halt6:604,cycle6:10155,longResidual6:82,openResidual6:4234,
-  cycle4:101,extendedCycle6:25,longResidual5:2
+  halt6:604,cycle6:10155,longResidual6:40,openResidual6:4234,
+  cycle4:101,extendedCycle6:25,longResidual5:2,closed6:42
  }
 };
 assert.equal(nodes.length,expected.nodes);
