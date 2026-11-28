@@ -56,8 +56,9 @@ theorem root_big_first_forces_ordinary_separated
     have h1 : ¬ (v%2=1 ∧ v+5≤u) := by omega
     have h2 : ¬ (v%2=0 ∧ v+3≤u) := by omega
     have h3 : u%2≠1 := by omega
+    have hneq : u≠0 := by omega
     have hd : drainB 0 u 2=some (.D x y) := by
-      simpa only [highLevelNext,if_neg hu,if_neg h1,
+      simpa only [highLevelNext,if_neg hneq,if_neg h1,
         if_neg h2,if_neg h3,if_pos hg] using hs
     have hx := drainB_first_upper_log N 0 u 2 x y hb hd
     omega
@@ -113,7 +114,7 @@ theorem target_halt_implies_eight_ray
           have heQ := run_preserves_even tq qx qy hq
           have hyQ := even_step_second_upper (n+3) qx qy px py
             heQ hscaleQ hstepQ
-          have hqMinLarge : 2*(n+3)+15≤min qx qy := by
+          have hqMinLarge : 20*(n+3)+100≤min qx qy := by
             have hpminY := Nat.min_le_right px py
             omega
           have hfour := actual_predecessor_coupled_four_ray
