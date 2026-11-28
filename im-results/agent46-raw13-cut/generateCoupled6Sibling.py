@@ -65,6 +65,10 @@ def main(mv):
     if mv=="0RC":
         extra_imports.append("Raw13RCDouble")
         manual["1RB1LD1RC1LB1LA1RE1LF0LA1RB0RC---1LC"]=".closed (.proven BB6.Agent46Raw13RCDouble.p BB6.Agent46Raw13RCDouble.never)"
+    if mv=="0RE":
+        subprocess.run([sys.executable,str(Path(__file__).with_name("gen_sweep46.py"))],check=True)
+        extra_imports.append("Raw13RECycle")
+        manual["1RB1LD1RC1LA1LA1RE1RF0LA1LB0RE---1RD"]=".closed (.proven BB6.Agent46Raw13RECycle.p BB6.Agent46Raw13RECycle.never)"
     if mv=="1RA":
         ns="BB6.Agent46Raw13MirroredCounter"
         extra_imports += ["Raw13Coupled6MirroredCounter", "Raw13Coupled6UnaryRecursion"]
