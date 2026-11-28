@@ -50,10 +50,11 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/NoUpwardSource.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/AdjacentEven.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/AdjacentReflection.lean" .
-          for module in SpaceNeedleClosed IndexPotential SpaceNeedlePotentialSource MixedValuationDisjoint NeedleMixedValuationSource MixedPotentialGeneral NeedleMixedPotentialSource AdjacentEven AdjacentReflection NoUpward NoUpwardSource; do
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/AdjacentReflectionSource.lean" .
+          for module in SpaceNeedleClosed IndexPotential SpaceNeedlePotentialSource MixedValuationDisjoint NeedleMixedValuationSource MixedPotentialGeneral NeedleMixedPotentialSource AdjacentEven AdjacentReflection AdjacentReflectionSource NoUpward NoUpwardSource; do
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean" 2>&1 | tee "$module.source.log"
           done
-          if grep -E 'sorryAx|native_decide|Lean.ofReduceBool' IndexPotential.source.log SpaceNeedlePotentialSource.source.log MixedValuationDisjoint.source.log NeedleMixedValuationSource.source.log MixedPotentialGeneral.source.log NeedleMixedPotentialSource.source.log AdjacentEven.source.log AdjacentReflection.source.log NoUpward.source.log NoUpwardSource.source.log; then
+          if grep -E 'sorryAx|native_decide|Lean.ofReduceBool' IndexPotential.source.log SpaceNeedlePotentialSource.source.log MixedValuationDisjoint.source.log NeedleMixedValuationSource.source.log MixedPotentialGeneral.source.log NeedleMixedPotentialSource.source.log AdjacentEven.source.log AdjacentReflection.source.log AdjacentReflectionSource.source.log NoUpward.source.log NoUpwardSource.source.log; then
             echo "Non-kernel proof axiom rejected" >&2
             exit 1
           fi
@@ -67,9 +68,9 @@ jobs:
               assert hit, name
               axioms={x.strip() for x in hit[1].split(',')}
               assert axioms <= {'propext','Classical.choice','Quot.sound'},(name,axioms)
-          for source, names in [('MixedValuationDisjoint.source.log',['no_three_then_five','no_five_then_three']), ('NeedleMixedValuationSource.source.log',['no_three_then_five_source','no_five_then_three_source']), ('MixedPotentialGeneral.source.log',['gap_from_potential','immediate_gap','cross_step_identity']), ('NeedleMixedPotentialSource.source.log',['mixed_source_gap','no_immediate_switch','source_cross_step']), ('NoUpward.source.log',['potential_correction_strict','no_upward_division']), ('NoUpwardSource.source.log',['no_upward_source']), ('AdjacentEven.source.log',['adjacent_even_power','adjacent_even_gap']), ('AdjacentReflection.source.log',['reflection_identity','reflection_triple_dvd','adjacent_offset_nonzero'])]:
+          for source, names in [('MixedValuationDisjoint.source.log',['no_three_then_five','no_five_then_three']), ('NeedleMixedValuationSource.source.log',['no_three_then_five_source','no_five_then_three_source']), ('MixedPotentialGeneral.source.log',['gap_from_potential','immediate_gap','cross_step_identity']), ('NeedleMixedPotentialSource.source.log',['mixed_source_gap','no_immediate_switch','source_cross_step']), ('NoUpward.source.log',['potential_correction_strict','no_upward_division']), ('NoUpwardSource.source.log',['no_upward_source']), ('AdjacentEven.source.log',['adjacent_even_power','adjacent_even_gap']), ('AdjacentReflection.source.log',['reflection_identity','reflection_triple_dvd','adjacent_offset_nonzero']), ('AdjacentReflectionSource.source.log',['source_signed_edge','source_reflection_identity'])]:
               txt=pathlib.Path(source).read_text()
-              namespace={'MixedValuationDisjoint.source.log':'BB6.Agent20MixedValuation','NeedleMixedValuationSource.source.log':'BB6.Agent20NeedleMixedSource','MixedPotentialGeneral.source.log':'BB6.Agent20MixedPotentialGeneral','NeedleMixedPotentialSource.source.log':'BB6.Agent20NeedleMixedPotentialSource','NoUpward.source.log':'BB6.Agent20NoUpward','NoUpwardSource.source.log':'BB6.Agent20NoUpwardSource','AdjacentEven.source.log':'BB6.Agent20AdjacentEven','AdjacentReflection.source.log':'BB6.Agent20AdjacentReflection'}[source]
+              namespace={'MixedValuationDisjoint.source.log':'BB6.Agent20MixedValuation','NeedleMixedValuationSource.source.log':'BB6.Agent20NeedleMixedSource','MixedPotentialGeneral.source.log':'BB6.Agent20MixedPotentialGeneral','NeedleMixedPotentialSource.source.log':'BB6.Agent20NeedleMixedPotentialSource','NoUpward.source.log':'BB6.Agent20NoUpward','NoUpwardSource.source.log':'BB6.Agent20NoUpwardSource','AdjacentEven.source.log':'BB6.Agent20AdjacentEven','AdjacentReflection.source.log':'BB6.Agent20AdjacentReflection','AdjacentReflectionSource.source.log':'BB6.Agent20AdjacentReflectionSource'}[source]
               for name in names:
                   hit=re.search(r"'"+namespace+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",txt)
                   assert hit, (source,name)
