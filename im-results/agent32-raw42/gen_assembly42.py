@@ -26,7 +26,7 @@ def register_proof(j,v,mod):
 def leafproof(row,kind,script,one_based):
     i,s,*rest=row.split();j=int(i)-int(one_based);assert opens[j].replace('_','')==s
     mod=f'Raw42{branch}{kind}{j}'; ns=f'BB6.Agent32Raw42{branch}.{kind}.Leaf{j}'
-    inputrow=' '.join([str(j),s,*rest])+'\\n'
+    inputrow=' '.join([str(j),s,*rest]) + chr(10)
     # Raw42/1LC leaf 855 is a very large but ordinary AsymNGram witness.
     # Its monolithic decidable check exceeds the CI job window; split the exact
     # same certificate into independently kernel-checked state/symbol rows.
