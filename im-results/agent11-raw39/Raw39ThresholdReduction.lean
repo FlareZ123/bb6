@@ -9,7 +9,7 @@ attainment of 28311, whereas all ten sibling first-hole branches have
 source-accepted weighted upper bounds at most 15125. Thus at *every* natural
 weighted threshold, Raw39 is bounded exactly when its 1LE child is bounded.
 No complete 1LE upper bound is assumed or asserted.
--/-
+-/
 
 namespace BB6.Agent11Raw39ThresholdReduction
 
@@ -19,9 +19,11 @@ open BB6.Agent43Raw391LEBoundLift (mono)
 
 theorem oneLE_lower_bound (B : Nat)
     (h : Bound B (child ⟨true,false,4⟩)) : 28311 ≤ B := by
-  by_contra hn
-  have hsmall : B ≤ 28310 := by omega
-  exact BB6.Agent43Raw391LELate.parent_not_bound (mono hsmall h)
+  by_cases hc : 28311 ≤ B
+  · exact hc
+  · exact False.elim
+      (BB6.Agent43Raw391LELate.parent_not_bound
+        (mono (by omega : B ≤ 28310) h))
 
 /-- An *unconditional equivalence for every finite threshold*, not only 28311.
 The RHS remains open as a whole-child upper-bound problem. -/
