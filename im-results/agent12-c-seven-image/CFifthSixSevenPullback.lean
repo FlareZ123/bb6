@@ -1,0 +1,181 @@
+import CFifthSixSeven
+import Lean.Elab.Tactic.Omega
+
+set_option maxHeartbeats 0
+set_option maxRecDepth 100000
+
+namespace BB6.Agent12SevenFifthPullback
+
+open BB6.Agent46
+
+private theorem power_linear_bound (m : Nat) :
+    4*m+4 ≤ (2:Nat)^(2*m+2) := by
+  induction m with
+  | zero => decide
+  | succ m ih =>
+      rw [show 2*(m+1)+2=2*m+2+2 by omega, Nat.pow_add]
+      change 4*(m+1)+4 ≤ (2:Nat)^(2*m+2)*4
+      omega
+
+private theorem high_score_nonnegative (j m : Nat) :
+    j+3*m+5 ≤ (2:Nat)^(2*m+2)*(j+3) := by
+  have hp : 1 ≤ (2:Nat)^(2*m+2) := Nat.pow_pos (by decide)
+  have hj : j ≤ (2:Nat)^(2*m+2)*j := by
+    simpa only [Nat.one_mul] using Nat.mul_le_mul_right j hp
+  have hP := power_linear_bound m
+  have hm : 3*m+5 ≤ 3*(2:Nat)^(2*m+2) := by omega
+  rw [Nat.mul_add]
+  omega
+
+private theorem high_stop_identity (j m : Nat) :
+    (2:Nat)^(2*m+2)*(j+3) - (j+3*m+5) + j+3*m+5 =
+      (2:Nat)^(2*m+2)*(j+3) := by
+  exact Nat.sub_add_cancel (high_score_nonnegative j m)
+
+private theorem pullback_forces_m_ge7 (j m u v : Nat)
+    (hj : j=319+512*u)
+    (hk : (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v) :
+    7≤m := by
+  have hstop : (574+1024*v)+j+3*m+5 =
+      (2:Nat)^(2*m+2)*(j+3) := by
+    rw [←hk]
+    simpa using high_stop_identity j m
+  rw [hj] at hstop
+  by_cases hge : 7≤m
+  · exact hge
+  · have hmle : m≤6 := by omega
+    rcases (show m=0 ∨ m=1 ∨ m=2 ∨ m=3 ∨ m=4 ∨ m=5 ∨ m=6 by omega)
+      with h0|h1|h2|h3|h4|h5|h6
+    all_goals subst m
+    all_goals simp at hstop
+    all_goals omega
+
+private theorem mod_1024_cancel_32 (v w : Nat)
+    (h : (574+1024*v)%32768=(574+1024*w)%32768) :
+    v%32=w%32 := by
+  omega
+
+theorem image_pullback_iff_congruence_a12_fifth (j m : Nat) :
+    (∃ u v, j=319+512*u ∧
+      (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v ∧
+      (29*u+v)%32=25) ↔
+    j%512=319 ∧ (3*m+7*j+24265)%32768=0 := by
+  constructor
+  · rintro ⟨u,v,hj,hk,hsector⟩
+    have hm7 := pullback_forces_m_ge7 j m u v hj hk
+    have hstop : (574+1024*v)+j+3*m+5 =
+        (2:Nat)^(2*m+2)*(j+3) := by
+      rw [←hk]
+      simpa using high_stop_identity j m
+    have hpow : 32768 ∣ (2:Nat)^(2*m+2) := by
+      have hp : (2:Nat)^15 ∣ (2:Nat)^(2*m+2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      simpa only [show (2:Nat)^15=32768 by decide] using hp
+    have hprod : 32768 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+      obtain ⟨q,hq⟩ := hpow
+      refine ⟨q*(j+3),?_⟩
+      rw [hq]
+      ac_rfl
+    have hmod : ((574+1024*v)+j+3*m+5)%32768=0 := by
+      rw [hstop]
+      exact Nat.mod_eq_zero_of_dvd hprod
+    have hjmod : j%512=319 := by
+      rw [hj]
+      omega
+    have hcong : (3*m+7*j+24265)%32768=0 := by
+      rw [hj] at hmod ⊢
+      omega
+    exact ⟨hjmod,hcong⟩
+  · rintro ⟨hjmod,hcong⟩
+    let u : Nat := j/512
+    have hj : j=319+512*u := by
+      dsimp [u]
+      have hd := Nat.mod_add_div j 512
+      rw [hjmod] at hd
+      omega
+    have hm512 : m%512=42 := by
+      have hdiv : 512 ∣ 32768 := by decide
+      have hmod512 : (3*m+7*j+24265)%512=0 := by
+        calc
+          (3*m+7*j+24265)%512 =
+              ((3*m+7*j+24265)%32768)%512 := by
+            symm
+            exact Nat.mod_mod_of_dvd _ hdiv
+          _ = 0 := by rw [hcong]
+      rw [hj] at hmod512
+      omega
+    have hm42 : 42≤m := by
+      have hle := Nat.mod_le m 512
+      omega
+    let k : Nat := (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)
+    have hstop : k+j+3*m+5=(2:Nat)^(2*m+2)*(j+3) := by
+      dsimp [k]
+      simpa using high_stop_identity j m
+    have hpow : 32768 ∣ (2:Nat)^(2*m+2) := by
+      have hp : (2:Nat)^15 ∣ (2:Nat)^(2*m+2) :=
+        Nat.pow_dvd_pow 2 (by omega)
+      simpa only [show (2:Nat)^15=32768 by decide] using hp
+    have hprod : 32768 ∣ (2:Nat)^(2*m+2)*(j+3) := by
+      obtain ⟨q,hq⟩ := hpow
+      refine ⟨q*(j+3),?_⟩
+      rw [hq]
+      ac_rfl
+    have hmodStop : (k+j+3*m+5)%32768=0 := by
+      rw [hstop]
+      exact Nat.mod_eq_zero_of_dvd hprod
+    have hcong' : (3*m+26498+3584*u)%32768=0 := by
+      rw [hj] at hcong
+      omega
+    have hstop' : (k+324+512*u+3*m)%32768=0 := by
+      rw [hj] at hmodStop
+      omega
+    have hmodK : k%32768=(26174+3072*u)%32768 := by
+      omega
+    have hdiv : 1024 ∣ 32768 := by decide
+    have hkmod1024 : k%1024=574 := by
+      calc
+        k%1024 = (k%32768)%1024 :=
+          (Nat.mod_mod_of_dvd k hdiv).symm
+        _ = ((26174+3072*u)%32768)%1024 := by rw [hmodK]
+        _ = (26174+3072*u)%1024 :=
+          Nat.mod_mod_of_dvd (26174+3072*u) hdiv
+        _ = 574 := by omega
+    let v : Nat := k/1024
+    have hdecomp := Nat.mod_add_div k 1024
+    have hk : k=574+1024*v := by
+      dsimp [v]
+      omega
+    have hright : 26174+3072*u=574+1024*(25+3*u) := by omega
+    have hmodEq :
+        (574+1024*v)%32768=(574+1024*(25+3*u))%32768 := by
+      calc
+        (574+1024*v)%32768 = k%32768 := by rw [hk]
+        _ = (26174+3072*u)%32768 := hmodK
+        _ = (574+1024*(25+3*u))%32768 := by rw [←hright]
+    have hv32 : v%32=(25+3*u)%32 :=
+      mod_1024_cancel_32 v (25+3*u) hmodEq
+    have hsector : (29*u+v)%32=25 := by omega
+    have hk' :
+        (2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)=574+1024*v := by
+      simpa [k] using hk
+    exact ⟨u,v,hj,hk',hsector⟩
+
+theorem blank_ne_parameter_congruence_a12_fifth (j m time : Nat)
+    (hjmod : j%512=319)
+    (hcong : (3*m+7*j+24265)%32768=0) :
+    BB6.Agent8Section.run BB6.Agent46.secNext time (some (5,1)) ≠
+      some (2*j+3,(2:Nat)^(2*m+2)*(j+3)-(j+3*m+5)) := by
+  obtain ⟨u,v,hj,hk,hsector⟩ :=
+    (image_pullback_iff_congruence_a12_fifth j m).2 ⟨hjmod,hcong⟩
+  have hblank :=
+    BB6.Agent12SevenFifth.blank_ne_band_a12_fifth u v time hsector
+  have hx : 2*j+3=641+1024*u := by omega
+  intro hrun
+  apply hblank
+  rw [hx,hk] at hrun
+  exact hrun
+
+#print axioms image_pullback_iff_congruence_a12_fifth
+#print axioms blank_ne_parameter_congruence_a12_fifth
+
+end BB6.Agent12SevenFifthPullback
