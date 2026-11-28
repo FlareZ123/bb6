@@ -92,6 +92,30 @@ theorem hfMove_X_bounds {a d A D : Nat}
     have hx := (far_coordinates a d h1 h2).1
     omega
 
+/-- In an H/F suffix, only High can increase the second counter.  Therefore
+    the endpoint second counter is bounded by the start second counter times a
+    power of two whose exponent is at most the suffix length. -/
+theorem hfRun_second_pow_bound
+    {n a d A D : Nat}
+    (h : HFRun n a d A D) :
+    ∃ highs : Nat,
+      highs ≤ n ∧ D+3 ≤ 2^highs * (d+3) := by
+  induction h with
+  | nil a d =>
+      exact ⟨0,by omega,by simp⟩
+  | @step n a d A D B C h hm ih =>
+      rcases ih with ⟨highs,hlen,hbound⟩
+      unfold HFMove at hm
+      rcases hm with hH | hF
+      · rcases hH with ⟨hg,rfl,rfl⟩
+        refine ⟨highs+1,by omega,?_⟩
+        rw [Nat.pow_succ]
+        omega
+      · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
+        refine ⟨highs,by omega,?_⟩
+        have hdrop : D-3*A+3 ≤ D+3 := by omega
+        omega
+
 theorem hfRun_first_step
     {n a d A D : Nat}
     (h : HFRun (n+1) a d A D) :
@@ -315,6 +339,28 @@ theorem compile_cost_identity (w : List InverseLetter) :
   | cons b bs ih =>
       cases b <;> simp [compile, advance] at ih ⊢ <;> omega
 
+/-- Quantitative root consequence: if the last-anchor H/F suffix has length m,
+    some number h≤m of High moves suffices to bound D+3 by 5·2^h.  Thus large
+    terminal parameters force logarithmically many High moves after the last
+    small-second anchor. -/
+theorem terminal_last_anchor_high_growth_bound
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m highs,
+      AnchorChain q 6 1 R c ∧
+      HFRun m R c (D+1) D ∧
+      (c=1 ∨ c=2) ∧
+      highs ≤ m ∧
+      D+3 ≤ 5 * 2^highs := by
+  rcases terminal_has_last_anchor_HF h with
+    ⟨q,R,c,m,hchain,hhf,hc⟩
+  rcases hfRun_second_pow_bound hhf with ⟨highs,hlen,hbound⟩
+  refine ⟨q,R,c,m,highs,hchain,hhf,hc,hlen,?_⟩
+  rcases hc with rfl | rfl
+  · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using
+      (show D+3 ≤ 2^highs * 4 from hbound)
+  · simpa [Nat.mul_comm, Nat.mul_left_comm, Nat.mul_assoc] using hbound
+
 /-- Any genuine terminal H/F suffix from a root anchor has positive length and
     begins with a High branch. -/
 theorem terminal_last_anchor_first_high
@@ -423,6 +469,8 @@ theorem terminal_last_anchor_cost_equation
 #print axioms compile_cost_identity
 #print axioms terminal_last_anchor_cost_equation
 
+#print axioms hfRun_second_pow_bound
+#print axioms terminal_last_anchor_high_growth_bound
 #print axioms terminal_last_anchor_first_high
 #print axioms terminal_has_last_anchor_formal_word_head_high
 #print axioms terminal_has_last_anchor_formal_word
