@@ -1,0 +1,33 @@
+name: Agent34 Raw43 residual559 recurrence source check
+run-name: "Agent34 Raw43 residual559 source check"
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile residual559 phase proof from exact repository sources
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir /tmp/agent34-m559 --jobs 4             im-results/agent34-raw43/Raw43B1LEE0LFM559Phase2.lean             2>&1 | tee /tmp/agent34-m559.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent34-m559.log
+      - name: Retain source-check log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent34-raw43-m559-source-check
+          path: /tmp/agent34-m559.log
+          retention-days: 30
