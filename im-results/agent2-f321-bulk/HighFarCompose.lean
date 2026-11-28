@@ -1,5 +1,6 @@
 import HighBulkSource
 import FarBulkSource
+import SourceNextBridge
 
 /-!
 Uniform composition of the F321 source-counter High and Far accelerators
@@ -38,6 +39,26 @@ theorem far_then_high (a d j k:Nat)
        (highD (d-farCost a j) k) := by
   apply counter_reach_trans (far_bulk a d j hF)
   exact high_bulk (farA a j) (d-farCost a j) k hH
+
+/-- A complete source-counter epoch: a maximal or nonmaximal
+arbitrarily long High block followed by one exact executable
+sourceNext transition. A root-certificate generator supplies only
+the High guard and the evaluated sourceNext branch, not individual
+High trace entries. -/
+theorem high_then_sourceNext {a d j A D:Nat}
+    (h:highCost d j≤a)
+    (hn:sourceNext (a-highCost d j) (highD d j)=some (A,D)) :
+    CounterReach a d (j+1) A D := by
+  have hb:=high_bulk a d j h
+  have hm:=move_of_sourceNext_some hn
+  have hseed : CounterReach (a-highCost d j) (highD d j) 0
+      (a-highCost d j) (highD d j) := CounterReach.nil
+  have htail : CounterReach (a-highCost d j) (highD d j) 1 A D := by
+    simpa using (CounterReach.step hseed hm)
+  have hboth:=counter_reach_trans hb htail
+  simpa using hboth
+
+#print axioms high_then_sourceNext
 
 #print axioms counter_reach_trans
 #print axioms high_then_far
