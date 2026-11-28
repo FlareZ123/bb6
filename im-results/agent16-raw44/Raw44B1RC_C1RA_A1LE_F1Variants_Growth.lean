@@ -38,10 +38,10 @@ def Z (n : Nat) : List Bool := rep [true,true,false,true] n
 
 private theorem rep_add (P : List Bool) (n m : Nat) :
     rep P (n+m) = rep P n ++ rep P m := by
-  induction n with
-  | zero => rfl
-  | succ n ih =>
-    simp only [rep,ih,List.append_assoc]
+  induction m with
+  | zero => simp only [Nat.add_zero,rep,List.append_nil]
+  | succ m ih =>
+    rw [show n+(m+1)=(n+m)+1 by omega,rep,ih,rep,List.append_assoc]
 
 private theorem rep2 (n : Nat) :
     rep [true,true] n = ones (2*n) := by
@@ -70,7 +70,20 @@ private theorem rep4 (n : Nat) :
 
 private theorem rotateV (n : Nat) :
     [true] ++ V (n+1) = W (n+1) ++ [true] := by
-  simpa only [V,W] using (rotate true [true,true,false] (n+1))
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    have hleft : [true] ++ V (n+2) =
+        [true,true,true,false] ++ ([true] ++ V (n+1)) := by
+      unfold V
+      rw [show n+2=1+(n+1) by omega,rep_add]
+      simp only [rep,List.append_assoc,List.cons_append]
+    have hright : W (n+2) ++ [true] =
+        [true,true,true,false] ++ (W (n+1) ++ [true]) := by
+      unfold W
+      rw [show n+2=1+(n+1) by omega,rep_add]
+      simp only [rep,List.append_assoc,List.cons_append]
+    rw [hleft,hright,ih]
 
 private theorem rotateX (n : Nat) :
     X (2*n+5) ++ [true] =
@@ -82,10 +95,18 @@ private theorem rotateX (n : Nat) :
       X (2*(n+1)+5) ++ [true] =
         [false,true,false,true] ++ (X (2*n+5) ++ [true]) := by
           rw [show 2*(n+1)+5=2+(2*n+5) by omega]
-          simp only [X,rep,List.append_assoc]
+          unfold X
+          rw [rep_add]
+          simp only [rep,List.append_assoc,List.cons_append]
       _ = [false,true,false,true] ++
           ([false,true,false] ++ Y (n+1) ++ [true,false,true,true]) := by rw [ih]
-      _ = [false,true,false] ++ Y (n+2) ++ [true,false,true,true] := by rfl
+      _ = [false,true,false] ++ Y (n+2) ++ [true,false,true,true] := by
+        have hY : Y (n+2) = [true,false,true,false] ++ Y (n+1) := by
+          unfold Y
+          rw [show n+2=1+(n+1) by omega,rep_add]
+          rfl
+        rw [hY]
+        simp only [List.append_assoc,List.cons_append]
 
 private theorem rotateZ (n : Nat) :
     [true] ++ Z (n+1) ++ [true,true,true] =
@@ -234,7 +255,7 @@ theorem stageD (toC : Bool) (n : Nat) :
       ⟨0,ones (4*n+8),[false,true,true]⟩ =
       some (leftA2 n) := by
     have H := sweepL (table toC) 0 [] [] [true,true] [false,true]
-      2 (astep2 toC) toC (2*n+4) [] [false,true,true]
+      2 (astep2 toC) (2*n+4) [] [false,true,true]
     have hl : rep [true,true] (2*n+4) = ones (4*n+8) := by
       rw [rep2,show 2*(2*n+4)=4*n+8 by omega]
     have hr : rep [false,true] (2*n+4) ++ [false,true,true] =
@@ -263,7 +284,7 @@ theorem stageA2 (toC : Bool) (n : Nat) :
       ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ =
       some ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ := by
     have H := sweepR (table toC) 0 [false] [] [true,false,true,false] [true,true,false,true]
-      6 (apacket2 toC) toC (n+1) [true,true,true] [true,false,true,true]
+      6 (apacket2 toC) (n+1) [true,true,true] [true,false,true,true]
     simpa only [Y,Z,List.cons_append,List.append_assoc,List.nil_append] using H
   have h3 : run0 (table toC) 10
       ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ =
