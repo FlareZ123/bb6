@@ -1,4 +1,4 @@
-import Raw34BinaryLeftOdometer
+import Raw34BinaryLeftOdometerBoth
 import Raw34UnaryLeftGrowth
 import WeightedTNF
 
@@ -11,9 +11,9 @@ open BB6Coverage BB6.Agent13BlankDelay
 /-!
 Original-source E/F state conjugacy transports *unbounded* Raw34
 left-binary and left-unary growth, without mirroring the tape.
-This proves E0=0LB, D1=0LE variants of the 0RC binary odometer,
-and both D1=0LE and D1=1LE variants of the 1RC unary growth.
-The three additional E-branch cylinders are disjoint from the F
+This proves E0=0LB, D1=0LE or 1LE variants of the 0RC binary
+odometer, and both D1=0LE and D1=1LE variants of the 1RC unary growth.
+The four additional E-branch cylinders are disjoint from the F
 sources because their D1 physical transitions differ.
 Until original-source Lean CI passes, these are proof candidates.
 -/
@@ -35,11 +35,12 @@ def ef : StatePerm := swapStates (4 : Fin 6) 5
 def permPartial (p : PartialMachine) : PartialMachine := fun slot =>
   (p (ef.backward slot.1,slot.2)).map (Option.map (renameMove ef))
 
-theorem binary_source_eq :
-    BB6.Agent40Raw34BinaryLeftOdometer.p = permPartial (pE false false) := by
+theorem binary_source_eq (w : Bool) :
+    BB6.Agent40Raw34BinaryLeftOdometerBoth.p w = permPartial (pE false w) := by
   have h : ∀ (s : Fin 6) (b : Bool),
-      BB6.Agent40Raw34BinaryLeftOdometer.p (s,b) =
-      permPartial (pE false false) (s,b) := by decide
+      BB6.Agent40Raw34BinaryLeftOdometerBoth.p w (s,b) =
+      permPartial (pE false w) (s,b) := by
+    cases w <;> decide
   funext slot
   rcases slot with ⟨s,b⟩
   exact h s b
@@ -86,10 +87,11 @@ theorem lift_never (p q : PartialMachine)
 
 /-- Genuine blank-start, original-source nonhalting for E0=0LB and
     C1=0RC, D1=0LE. Arbitrary A1,E1,F0,F1. -/
-theorem binary_E_never (m : Machine)
-    (hm : compatible (pE false false) m) : NeverHalts m :=
-  lift_never BB6.Agent40Raw34BinaryLeftOdometer.p (pE false false)
-    binary_source_eq BB6.Agent40Raw34BinaryLeftOdometer.all_time_never m hm
+theorem binary_E_never (w : Bool) (m : Machine)
+    (hm : compatible (pE false w) m) : NeverHalts m :=
+  lift_never (BB6.Agent40Raw34BinaryLeftOdometerBoth.p w) (pE false w)
+    (binary_source_eq w)
+    (BB6.Agent40Raw34BinaryLeftOdometerBoth.all_time_never w) m hm
 
 /-- Both E-branch write-bit unary cylinders, all free cells arbitrary. -/
 theorem unary_E_never (w : Bool) (m : Machine)
