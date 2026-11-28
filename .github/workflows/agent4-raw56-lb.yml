@@ -14,6 +14,7 @@ on:
           - m23706
           - m39232
           - recover
+          - parent-diagnose
           - complete
           - complete-min
           - complete-hybrid
@@ -472,6 +473,41 @@ jobs:
             /tmp/mblock/M*Base.log
             /tmp/mblock/M*Final.log
           if-no-files-found: error
+
+  parent-diagnose:
+    if: ${{ inputs.target == 'parent-diagnose' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-lb-prepared
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - name: Inspect exact frozen parent proof shape without rerunning certificates
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          d=Path('/tmp/raw56-lb-prepared/E11LB')
+          m=json.loads((d/'manifest.json').read_text())
+          print('manifest modules',len(m),'top parents',m[-1],flush=True)
+          for name in ['Raw56LBE11LBAll.lean','Raw56LBE11LBReduced.lean']:
+              p=d/name
+              if not p.exists():
+                  print(name,'MISSING',flush=True);continue
+              t=p.read_text();lines=t.splitlines()
+              print(name,'bytes',len(t),'lines',len(lines),flush=True)
+              for i,line in enumerate(lines):
+                  if any(x in line for x in ['theorem ctop','theorem nrtop','theorem partial_quotient','theorem exact_residuals','def ttop','def residuals','#print axioms']):
+                      print('KEY',i+1,line[:300],flush=True)
+              print('TAIL',name,flush=True)
+              for line in lines[-100:]:print(line[:450])
+          PY
 
   recover-assemble:
     if: ${{ inputs.target == 'recover' }}
