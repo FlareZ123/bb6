@@ -1506,7 +1506,7 @@ jobs:
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
                   if mm:
-                      assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                      assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else:
                       assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 25,000 new fifth-query Raw34 F sidecycle cylinders source-proved')
@@ -1560,7 +1560,7 @@ jobs:
               for name in ('count','checked','all_never'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: all 150,895 new fifth-query Raw34 F sidecycle cylinders source-proved')
           PY
@@ -1616,7 +1616,7 @@ jobs:
               for name in ('count','checked','all_never'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: all 150,895 E/F-conjugate fifth-query Raw34 sidecycles source-proved')
           PY
@@ -1674,7 +1674,7 @@ jobs:
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
                   if mm:
-                      assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                      assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else:
                       assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 25,000 E/F-conjugate fifth-query Raw34 sidecycles source-proved')
@@ -1718,7 +1718,7 @@ jobs:
               for name in ('count','checked','all_never'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 481 F plus 481 E extended-window Raw34 sidecycles source-proved')
           PY
@@ -1766,7 +1766,7 @@ jobs:
               for name in ('count','checked','all_never'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 100,000 depth-six Raw34 F sidecycles source-proved')
           PY
@@ -1817,7 +1817,7 @@ jobs:
               for name in ('count','checked','all_never'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 100,000 E/F-conjugate depth-six Raw34 sidecycles source-proved')
           PY
@@ -1870,7 +1870,7 @@ jobs:
               for name in ('count','checked','all_halt'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: all 138,017 direct depth-six Raw34 F halters source-proved')
           PY
@@ -1911,7 +1911,7 @@ jobs:
               for name in ('count','checked','all_halt'):
                   full=unit['namespace']+'.'+name
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: all 138,017 E/F-conjugate direct depth-six Raw34 halters source-proved')
           PY
@@ -1967,7 +1967,7 @@ jobs:
                   for name in ('count','checked','all_never'):
                       full=stem.rsplit('.',1)[0]+'.'+name
                       mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                      if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                      if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                       else: assert f"'{full}' does not depend on any axioms" in log,full
           assert sum_count==9857
           print('PASS: 9857 source-proved E/F-conjugate translated sidecycle partial machines')
@@ -2521,7 +2521,7 @@ jobs:
               for t in ('count','checked','short','all_halt','all_weighted'):
                   full=row['ns']+'.'+t
                   mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                  if mm: assert set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))<=allowed,(full,mm.group(1))
                   else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: all 13,884 genuinely halting depth-five source cylinders')
           PY
