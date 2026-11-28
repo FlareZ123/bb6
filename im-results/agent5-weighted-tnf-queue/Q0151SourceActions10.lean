@@ -37,7 +37,7 @@ theorem b_four_refines (n : Nat) (s : List Bool)
         (s::stack) (runBits rest)) := by
   have ha := b_four_push (segAppend emptySegment s) n rest hlive
   constructor
-  · simpa [co,alt_eq_altWord] using ha
+  · simpa [co,mkControl,alt_eq_altWord] using ha
   · simpa [runBits] using b_zero n s stack (runBits rest)
 
 theorem c_four_refines (n : Nat) (s : List Bool)
@@ -54,7 +54,7 @@ theorem c_four_refines (n : Nat) (s : List Bool)
   have ha := c_four_stay (segAppend emptySegment s)
     hlow.1 hlow.2 n rest hlive
   constructor
-  · simpa [co,segAppend_append,alt_eq_altWord,List.append_assoc]
+  · simpa [co,mkControl,segAppend_append,alt_eq_altWord,List.append_assoc]
       using ha
   · simpa [runBits] using c_zero n s stack (runBits rest)
 
@@ -70,7 +70,7 @@ theorem b_five_refines (n : Nat) (s : List Bool)
         (s::stack) (runBits rest)) := by
   have ha := b_five_push (segAppend emptySegment s) n rest hlive
   constructor
-  · simpa [co,alt_eq_altWord] using ha
+  · simpa [co,mkControl,alt_eq_altWord] using ha
   · simpa [runBits] using b_big_one n s stack (runBits rest)
 
 theorem c_five_refines (n : Nat) (s : List Bool)
@@ -87,7 +87,7 @@ theorem c_five_refines (n : Nat) (s : List Bool)
   have ha := c_five_stay (segAppend emptySegment s)
     hlow.1 hlow.2 n rest hlive
   constructor
-  · simpa [co,segAppend_append,alt_eq_altWord,List.append_assoc]
+  · simpa [co,mkControl,segAppend_append,alt_eq_altWord,List.append_assoc]
       using ha
   · simpa [runBits] using c_big_one n s stack (runBits rest)
 
