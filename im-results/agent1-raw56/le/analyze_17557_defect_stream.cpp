@@ -28,15 +28,40 @@ bool same(const vector<Run>&a,const vector<Run>&b){if(a.size()!=b.size())return 
 vector<int> marks(const vector<Run>&lo,const vector<Run>&hi){auto p=rhoL(lo);if(p.size()!=hi.size())return {-99};vector<int>ms;int zi=0;for(size_t i=0;i<p.size();i++){if(p[i].b!=hi[i].b)return {-98};if(inf(p[i].n)||inf(hi[i].n)){if(p[i].n!=hi[i].n)return {-97};}else if(p[i].n!=hi[i].n){if(!p[i].b&&hi[i].n==p[i].n-8)ms.push_back(zi);else return {-96};}if(!p[i].b&&!inf(p[i].n))zi++;}return ms;}
 string sigma(string w){string o;o.reserve(w.size()*3);for(char c:w)o+=c=='A'?"ABA":"BBA";return o;}
 int main(int argc,char**argv){int maxn=argc>1?atoi(argv[1]):15;string w="ABBA";for(int n=2;n<=maxn;n++){
- Z lo=checkpoint(n),hi=checkpoint(n+1);map<string,long long>dist;long long multi=0,bad=0,rightBad=0;int maxmark=-1;
+ Z lo=checkpoint(n),hi=checkpoint(n+1);map<string,long long>dist;long long multi=0,bad=0,rightBad=0,transitionBad=0,guardBad=0;int maxmark=-1;
  for(size_t k=0;k<=w.size();k++){
    auto ms=marks(lo.L,hi.L);if(!ms.empty()&&ms[0]<-90){bad++;}else{if(ms.size()>1)multi++;for(int m:ms)maxmark=max(maxmark,m);string key=ms.empty()?"none":"";for(int m:ms){if(!key.empty())key+=",";key+=to_string(m);}dist[key]++;}
    if(!same(rhoR(lo.R),hi.R))rightBad++;
-   if(k==w.size())break;char c=w[k];macro(lo,c);string s=c=='A'?"ABA":"BBA";for(char d:s)macro(hi,d);
+   if(k==w.size())break;char c=w[k];
+   vector<int> expectedNext=ms;
+   if(c=='A'){
+     long long b2=lo.R[2].n;
+     size_t ii=0;if(lo.L[ii].b==1)ii++;long long ell=lo.L[ii].n;
+     if(b2>5 && b2%8!=5) guardBad++;
+     if(b2==5 && !inf(ell) && ell%8==7 && !(ms.size()==1&&ms[0]==0)) guardBad++;
+     if(b2==5 && ell==1 && ms.size()==1 && ms[0]==0) guardBad++;
+     if(b2>5){if(!expectedNext.empty())expectedNext[0]++;}
+     else if(!inf(ell)&&ell==1){
+       if(!expectedNext.empty()){if(expectedNext[0]==0)expectedNext={-77};else expectedNext[0]--;}
+     } else if(!inf(ell)&&ell%8==7) expectedNext.clear();
+   } else {
+     long long ell=lo.L[0].n;
+     if(!inf(ell)&&ell%8==6&&!ms.empty()) guardBad++;
+     if(ell==7&&ms.size()==1&&ms[0]==0) guardBad++;
+     if(!inf(ell)&&ell==7){
+       if(!expectedNext.empty()){if(expectedNext[0]==0)expectedNext={-77};else expectedNext[0]--;}
+     } else if(!inf(ell)&&ell%8==6) expectedNext={0};
+   }
+   macro(lo,c);string s=c=='A'?"ABA":"BBA";for(char d:s)macro(hi,d);
+   auto actualNext=marks(lo.L,hi.L);
+   if(actualNext!=expectedNext){
+     transitionBad++;
+     if(transitionBad<5)cerr<<"transition mismatch n="<<n<<" k="<<k<<" c="<<c<<"\n";
+   }
  }
  if(!same(lo.L,checkpoint(n+1).L)||!same(lo.R,checkpoint(n+1).R)||!same(hi.L,checkpoint(n+2).L)||!same(hi.R,checkpoint(n+2).R)){cerr<<"checkpoint fail n="<<n<<"\n";return 3;}
- cout<<"n="<<n<<" boundaries="<<w.size()+1<<" rightBad="<<rightBad<<" relationBad="<<bad<<" multi="<<multi<<" maxmark="<<maxmark;for(auto [k,v]:dist)cout<<" "<<k<<"="<<v;cout<<"\n";
- if(rightBad||bad||multi){cerr<<"relation violation at n="<<n<<"\n";return 4;}
+ cout<<"n="<<n<<" boundaries="<<w.size()+1<<" rightBad="<<rightBad<<" relationBad="<<bad<<" multi="<<multi<<" transitionBad="<<transitionBad<<" guardBad="<<guardBad<<" maxmark="<<maxmark;for(auto [k,v]:dist)cout<<" "<<k<<"="<<v;cout<<"\n";
+ if(rightBad||bad||multi||transitionBad||guardBad){cerr<<"relation violation at n="<<n<<"\n";return 4;}
  if(n>=10&&n<=15){
    static const vector<map<string,long long>>expected={
     {{"none",26243},{"0",2}},
