@@ -72,11 +72,11 @@ theorem reversed_marker_geometry (n : Nat) :
   calc
     [false,true] ++ rep [false,true] n ++ [false,true,true] =
         [false,true] ++ (rep [false,true] n ++ [false]) ++ [true,true] := by
-          simp only [List.append_assoc]
+          rfl
     _ = [false,true] ++ ([false] ++ rep [true,false] n) ++ [true,true] := by
           rw [phase_rotation_geometry]
     _ = [false,true,false] ++ rep [true,false] n ++ [true,true] := by
-          simp only [List.append_assoc]
+          rfl
 
 def nearSegments : List Nat → List Bool
   | [] => []
@@ -198,12 +198,23 @@ theorem physical_to_source_geometry (a0 : Nat) (us : List Nat) :
               ([true] ++ rep [false,true] 2 ++ [false,true,true]) ++
                   ([false,true,false] ++ inputBits (evenBlocks us.reverse) ++
                     inputBits (aRun a0)) =
-                [true,false] ++
-                  inputBits (aRun 2 ++ [.separatedMarker] ++
-                    evenBlocks us.reverse ++ aRun a0) := by
-            simpa [inputBits_append,List.append_assoc] using hp
-          rw [hcombine]
-          simp [evenBlocks,List.append_assoc]
+                [true,false] ++ inputBits (aRun 2 ++ [.separatedMarker]) ++
+                  inputBits (evenBlocks us.reverse) ++ inputBits (aRun a0) := by
+            simpa only [List.append_assoc] using hp
+          have hbits :
+              inputBits (evenBlocks (1::us.reverse) ++ aRun a0) =
+                inputBits (aRun 2 ++ [.separatedMarker]) ++
+                  inputBits (evenBlocks us.reverse) ++ inputBits (aRun a0) := by
+            simp [evenBlocks,inputBits_append,List.append_assoc]
+          calc
+            ([true] ++ rep [false,true] 2 ++ [false,true,true]) ++
+                ([false,true,false] ++ inputBits (evenBlocks us.reverse) ++
+                  inputBits (aRun a0)) =
+              [true,false] ++ inputBits (aRun 2 ++ [.separatedMarker]) ++
+                inputBits (evenBlocks us.reverse) ++ inputBits (aRun a0) := hcombine
+            _ = [true,false] ++
+                inputBits (evenBlocks (1::us.reverse) ++ aRun a0) := by
+                  rw [← hbits]
 
 #print axioms reverseA_geometry
 #print axioms phase_rotation_geometry
