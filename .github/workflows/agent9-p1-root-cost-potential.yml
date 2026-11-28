@@ -5,7 +5,7 @@ on:
       target:
         description: 'Original root-cost audit or modulus-three source factor theorem'
         type: choice
-        options: [root-cost, anti3, anti5]
+        options: [root-cost, anti3, anti5, generic]
         default: root-cost
 
 permissions:
@@ -58,7 +58,7 @@ jobs:
           grep -F "BB6.Agent9RootCost.rootCostPotentialDelta" /tmp/root-cost-potential.log
 
   anti3:
-    if: inputs.target == 'anti3' || inputs.target == 'anti5'
+    if: inputs.target == 'anti3' || inputs.target == 'anti5' || inputs.target == 'generic'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -80,7 +80,9 @@ jobs:
           lean --version
           lean -o "$lag/LagCore.olean" "$lag/LagCore.lean"
           modules='ReturnGCD ReturnSlope ReturnObstruction ReturnGeneral ReturnTrace ReturnSource ReturnScaled'
-          if [ "${{ inputs.target }}" = anti5 ]; then
+          if [ "${{ inputs.target }}" = generic ]; then
+            modules="$modules AntiGeneral AntiShiftCore AntiNegacyclic AntiGeneric AntiGenericBound AntiGenericScaled AntiGenericTrace"
+          elif [ "${{ inputs.target }}" = anti5 ]; then
             modules="$modules Anti5Core Anti5Interior Anti5Full Anti5Source Anti5Trace"
           else
             modules="$modules Anti3Core Anti3Full Anti3Source Anti3Trace"
@@ -90,7 +92,9 @@ jobs:
             lean -o "$root/$f.olean" "$root/$f.lean" 2>&1 | tee "/tmp/agent9-$f.log"
             if grep -Eq 'sorryAx|error:' "/tmp/agent9-$f.log"; then exit 1; fi
           done
-          if [ "${{ inputs.target }}" = anti5 ]; then
+          if [ "${{ inputs.target }}" = generic ]; then
+            grep -F "trace_no_odd_negacyclic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-AntiGenericTrace.log
+          elif [ "${{ inputs.target }}" = anti5 ]; then
             grep -F "trace_no_five_dyadic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-Anti5Trace.log
           else
             grep -F "trace_no_three_dyadic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-Anti3Trace.log
