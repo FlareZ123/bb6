@@ -1,0 +1,59 @@
+name: Agent33 Raw112 after Raw47 Canonical39
+run-name: Canonical39 Raw47 plus Raw112 -> Canonical38
+
+on:
+  workflow_dispatch:
+    inputs:
+      canonical39_run_id:
+        description: Successful canonical39-raw47-thin-delta producer run
+        type: string
+        required: true
+      raw112_run_id:
+        description: Successful Raw112 parent producer run
+        type: string
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Consume Raw112 from exact accepted Raw47 Canonical39 roster
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL39_RUN_ID: ${{ inputs.canonical39_run_id }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL39_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent33-raw112-canonical39/assemble_after_raw47.py
+          python im-results/agent33-raw112-canonical39/assemble_after_raw47.py \
+            --work /tmp/a33-canonical38 \
+            --canonical39-run-id "$CANONICAL39_RUN_ID" \
+            --raw112-run-id "$RAW112_RUN_ID" | tee /tmp/a33-canonical38.log
+          test -s /tmp/a33-canonical38/canonical38-raw47-raw112-delta/delta.json
+          cat /tmp/a33-canonical38/canonical38-raw47-raw112-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical38-raw47-raw112-thin-delta
+          path: |
+            /tmp/a33-canonical38/canonical38-raw47-raw112-delta/**
+            /tmp/a33-canonical38.log
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
