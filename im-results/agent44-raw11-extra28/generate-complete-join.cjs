@@ -4,18 +4,18 @@
 // twelve independently kernel-accepted imported modules.
 const fs = require('node:fs'), path = require('node:path');
 const children = [
-  [7, true, true, 1, 72, 'Raw11Extra28M7','BB6.Agent44Extra28M7','parent','safe'],
+  [7, true, true, 1, 72, 'Raw11Extra28M7Join','BB6.Agent44Extra28M7','parent','safe'],
   [8, false,false,2, 42, 'Raw11Extra28D1LCJoin','BB6.Agent44Extra28D1LC','parent','safe'],
-  [9, false,true, 2, 84, 'Raw11Extra28M9','BB6.Agent44Extra28M9','parent','safe'],
-  [10,true, false,2,101, 'Raw11Extra28M10','BB6.Agent44Extra28M10','parent','safe'],
+  [9, false,true, 2, 84, 'Raw11Extra28M9Join','BB6.Agent44Extra28M9','parent','safe'],
+  [10,true, false,2,101, 'Raw11Extra28M10Join','BB6.Agent44Extra28M10','parent','safe'],
   [12,false,false,3, 64, 'Raw11Extra28LDJoin','BB6.Agent44Extra28LD','parent','safe'],
-  [13,false,true, 3, 79, 'Raw11Extra28M13','BB6.Agent44Extra28M13','parent','safe'],
-  [14,true, false,3, 96, 'Raw11Extra28M14','BB6.Agent44Extra28M14','parent','safe'],
-  [15,true, true, 3,119, 'Raw11Extra28M15','BB6.Agent44Extra28M15','parent','safe'],
-  [16,false,false,4, 81, 'Raw11Extra28M16','BB6.Agent44Extra28M16','parent','safe'],
-  [17,false,true, 4,150, 'FastRaw11M17','BB6.Agent44FastM17','p_root','safe_root'],
-  [18,true, false,4,141, 'FastRaw11M18','BB6.Agent44FastM18','p_root','safe_root'],
-  [19,true, true, 4,158, 'FastRaw11M19','BB6.Agent44FastM19','p_root','safe_root']
+  [13,false,true, 3, 79, 'Raw11Extra28M13Join','BB6.Agent44Extra28M13','parent','safe'],
+  [14,true, false,3, 96, 'Raw11Extra28M14Join','BB6.Agent44Extra28M14','parent','safe'],
+  [15,true, true, 3,119, 'Raw11Extra28M15Join','BB6.Agent44Extra28M15','parent','safe'],
+  [16,false,false,4, 81, 'Raw11Extra28M16Join','BB6.Agent44Extra28M16','parent','safe'],
+  [17,false,true, 4,150, 'FastRaw11M17Join','BB6.Agent44FastM17','p_root','safe_root'],
+  [18,true, false,4,141, 'FastRaw11M18Join','BB6.Agent44FastM18','p_root','safe_root'],
+  [19,true, true, 4,158, 'FastRaw11M19Join','BB6.Agent44FastM19','p_root','safe_root']
 ];
 const bool = b => b ? 'true' : 'false';
 const term = x => `refine BB6.Agent44Extra28AllChildren.parent (3,true) (some ⟨${bool(x[1])},${bool(x[2])},${x[3]}⟩)`;
