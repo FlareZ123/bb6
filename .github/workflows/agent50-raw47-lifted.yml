@@ -968,6 +968,8 @@ jobs:
               else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: source-proved all-time Raw34 binary-counter nonhalting, standard axioms only')
           PY
+          node im-results/agent40-raw34-frontier/audit_binary_increment.mjs \
+            | tee "$W/binary-union.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -975,6 +977,7 @@ jobs:
           path: |
             /tmp/a40-raw34-counter/closure.log
             /tmp/a40-raw34-counter/manifest.json
+            /tmp/a40-raw34-counter/binary-union.log
           if-no-files-found: error
           retention-days: 30
 
