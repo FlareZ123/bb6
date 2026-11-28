@@ -1,5 +1,5 @@
 name: Agent7 Raw36 0LB/0RE exact 902-step infinite drift
-run-name: Raw36 single holdout—902-step opaque-tail pump Lean kernel audit
+run-name: Raw36 single 902-step or D100 seven-source pump audit
 on:
   workflow_dispatch:
     inputs:
@@ -8,10 +8,15 @@ on:
         type: choice
         options: ['100','180','240','300','500']
         default: '180'
+      d100_batch:
+        description: Check seven exact Raw36 D1=0LA opaque-tail pumps
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   source-audit:
+    if: ${{ !inputs.d100_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -53,5 +58,87 @@ jobs:
             /tmp/a7-drift-source/
             /tmp/a7-drift-proof/
             /tmp/a7-drift-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-batch:
+    if: ${{ inputs.d100_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-0-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a7-d100-census
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate source-indexed seven proofs from immutable exact literals
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import gzip,hashlib,json,subprocess,sys
+          from pathlib import Path
+          got=json.loads(gzip.decompress(Path('/tmp/a7-d100-census/direct00.json.gz').read_bytes()))
+          assert got['parent']=='1RB---_1RC---_0RD---_0LD0LA_------_------'
+          keys=sorted(x.replace('_','') for x in got['opens'])
+          assert len(keys)==2255
+          assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()=='d3cff2c1257272d8af4c8087906589d4623f41dcd8cd3de98e2ae7f71d8d8ff0'
+          inp=Path('im-results/agent7-opaque-tail-pump/d100-new-pumps.txt')
+          assert hashlib.sha256(inp.read_bytes()).hexdigest()=='59fcc7085f4eb499b75deba0a7752ae631c461ce1b5a17affe587528ce34c706'
+          rows=inp.read_text().splitlines()
+          assert len(rows)==len(set(rows))==7
+          assert all(x.replace('_','') in keys for x in rows)
+          dest=Path('/tmp/a7-d100-source'); dest.mkdir(parents=True,exist_ok=True)
+          hdr='import SweepPumping\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n'
+          merged=hdr; theorem_names=[]
+          for raw in rows:
+              stem='Raw36D100P'+hashlib.sha256(raw.replace('_','').encode()).hexdigest()[:12]
+              ns='BB6.Agent7'+stem
+              path=dest/(stem+'.lean')
+              subprocess.run([sys.executable,'im-results/agent7-opaque-tail-pump/pump_emit.py',raw,str(path),ns],check=True)
+              src=path.read_text()
+              assert src.startswith(hdr)
+              merged+='\n'+src[len(hdr):]
+              theorem_names.append(ns+'.never')
+          (dest/'Raw36D100NewPumps.lean').write_text(merged)
+          sha=hashlib.sha256(merged.encode()).hexdigest()
+          assert sha=='3ba6cb6ae32b6b094a21116ee0f0a146e76142be6e3edcdfed889c1be063cfc3',sha
+          (dest/'theorems.txt').write_text('\n'.join(theorem_names)+'\n')
+          print('exact seven source proofs:',sha)
+          PY
+      - name: Compile complete original-source Lean closure and audit axioms
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-d100-proof \
+            --source-root /tmp/a7-d100-source --jobs 2 \
+            --manifest /tmp/a7-d100-proof/manifest.json \
+            --label raw36-d100-seven-opaque-pumps \
+            --artifact-name raw36-d100-seven-source-accepted \
+            --provenance-input im-results/agent7-opaque-tail-pump/detect_pump.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/pump_emit.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-pumps.txt \
+            /tmp/a7-d100-source/Raw36D100NewPumps.lean \
+            2>&1 | tee /tmp/a7-d100-audit.log
+          while IFS= read -r theorem; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-audit.log "$theorem"
+          done < /tmp/a7-d100-source/theorems.txt
+          cp /tmp/a7-d100-audit.log /tmp/a7-d100-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-seven-source-accepted
+          path: |
+            /tmp/a7-d100-source/
+            /tmp/a7-d100-proof/
+            /tmp/a7-d100-audit.log
           if-no-files-found: warn
           retention-days: 60
