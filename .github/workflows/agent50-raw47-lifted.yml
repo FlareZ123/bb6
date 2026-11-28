@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-e-depth5-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-e-depth5-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-depth5-full-union-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1724,6 +1724,67 @@ jobs:
             /tmp/a40-raw34-f-e-cycles-audit/e2-census.json
             /tmp/a40-raw34-f-e-cycles-audit/e3-census.json
             /tmp/a40-raw34-f-e-cycles-audit/e4-census.json
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-depth5-full-union-audit:
+    if: inputs.mode == 'raw34-depth5-full-union-audit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exact accepted-bank Raw34 complement with 25k F/E depth-five tranches
+        run: |
+          set -euo pipefail
+          W=/tmp/a50-raw34-depth5-full-union
+          mkdir -p "$W/f3" "$W/f4" "$W/eold" "$W/missing" "$W/efleft" "$W/f5" "$W/e5" "$W/halt5"
+          node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs \
+            --shard-size 50 --output "$W/f3" > "$W/f3.json"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
+            --shard-size 100 --output "$W/f4" > "$W/f4.json"
+          for depth in 2 3 4; do
+            node im-results/agent40-raw34-frontier/lift_f_cycles_to_e.mjs \
+              --depth "$depth" --source "$W/f$depth" --output "$W/eold" \
+              > "$W/eold-$depth.json"
+          done
+          node im-results/agent40-raw34-frontier/generate_missing_ef_old_depth3.mjs \
+            --output "$W/missing" > "$W/missing.json"
+          node im-results/agent40-raw34-frontier/generate_ef_left_ray.mjs \
+            --output "$W/efleft" > "$W/efleft.json"
+          node --max-old-space-size=6144 im-results/agent50-raw34-depth5/generate_f_depth5_cycles.mjs \
+            --limit 25000 --shard-size 200 --output "$W/f5" > "$W/f5.json"
+          node im-results/agent50-raw34-depth5/lift_f_depth5_to_e.mjs \
+            --source "$W/f5" --output "$W/e5" > "$W/e5.json"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_depth5_halts.mjs \
+            --max-fixed 5 --shard-size 192 --output "$W/halt5" > "$W/halt5.json"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-e-cycles --include-missing-ef-third --include-f-growth \
+            --include-ef-left-ray --include-f-depth5 --include-e-depth5 --include-late-halts \
+            --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" --e-cycles-dir "$W/eold" \
+            --missing-third-dir "$W/missing" --ef-left-dir "$W/efleft" \
+            --f-depth5-dir "$W/f5" --e-depth5-dir "$W/e5" --halt-depth5-dir "$W/halt5" \
+            | tee "$W/full-union.json"
+          python - "$W/full-union.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['cyclePatterns']==9857
+          assert x['fDepth5CyclePatterns']==25000
+          assert x['eConjugateCyclePatterns']==9857
+          assert x['eDepth5CyclePatterns']==25000
+          assert x['missingNonEFConjugateThirdPatterns']==168
+          assert x['fConjugateUnboundedGrowthPatterns']==2
+          assert x['additionalLateHaltPatterns']==14424
+          assert x['rayPatterns']==1080
+          assert int(x['totalResidualD1not1RD']) < 4499274937
+          print('PASS: exact full accepted-bank Raw34 complement including 50,000 new depth-five sidecycle source cylinders')
+          print('remaining non-D1=1RD:',x['totalResidualD1not1RD'])
+          print('plus D1=1RD residual:',x['plusAgent23Residual'])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-depth5-full-exact-union
+          path: /tmp/a50-raw34-depth5-full-union/
           if-no-files-found: warn
           retention-days: 30
 
