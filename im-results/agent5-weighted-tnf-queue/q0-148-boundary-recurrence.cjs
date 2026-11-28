@@ -109,7 +109,7 @@ function main(){
  // the EXACT relational invariant. No random sampling in this test.
  for(const m of [3,5,7,9,11])for(const a of [1,3]){
   function genBackward(rev){
-   const index=m-rev.length;
+   const index=(m-1)-rev.length;
    if(index===0){
     const g=[a,...rev.slice().reverse(),4];
     if(isBoundary(g))check(g);
