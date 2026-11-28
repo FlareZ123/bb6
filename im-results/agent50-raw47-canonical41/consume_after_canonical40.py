@@ -166,7 +166,8 @@ def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence):
         root_module=spec["root"],
         root_names=["BB6.Agent50Raw47Complete.cover_at"],
         prefix="A50Raw47Slice",tool=scratch/"kernelstage",
-        comparator=c.selected.HERE.parent/"agent13-raw125"/"CompareKernelImports.lean")
+        comparator=c.selected.HERE.parent/"agent13-raw125"/"CompareKernelImports.lean",
+        jobs=4, checkpoint_every=32)
     assert report["complete"]
     for file in sorted(objects.glob("*.olean")):
         dest=linked/file.name
