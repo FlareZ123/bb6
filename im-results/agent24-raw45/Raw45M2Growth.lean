@@ -54,7 +54,7 @@ theorem growth (n : Nat) :
   have h3 : run0 table (2*n) ⟨2,[true,false,true,true],ones (2*n)⟩ =
       some ⟨2,[true]++zeros (2*n)++[false,true,true],[]⟩ := by
     simpa only [ones,zeros,List.nil_append,List.append_nil,
-                Nat.one_mul,List.append_assoc] using
+                Nat.one_mul,List.append_assoc,List.cons_append,List.nil_append] using
       sweepR table 2 [true] [] [true] [false] 1 cstep
         (2*n) [false,true,true] []
   have h4 : run0 table 2 ⟨2,[true]++zeros (2*n)++[false,true,true],[]⟩ =
@@ -63,8 +63,14 @@ theorem growth (n : Nat) :
         [false,false,false,false]++zeros (2*n) := by
       rw [show 2*(n+1)+2=(2*n)+4 by omega]
       rfl
-    simpa only [phase,hz,List.append_assoc] using
-      finish (zeros (2*n)++[false,true,true])
+    have hs : zeros (2*n) ++ [false] = [false] ++ zeros (2*n) :=
+      rep_snoc [false] (2*n)
+    have hs' : zeros (2*n) ++ [false,true,true] =
+        [false] ++ zeros (2*n) ++ [true,true] := by
+      have H := congrArg (fun t : List Bool => t ++ [true,true]) hs
+      simpa only [List.append_assoc,List.cons_append,List.nil_append] using H
+    have hf := finish (zeros (2*n)++[false,true,true])
+    simpa only [phase,hz,hs',List.append_assoc,List.cons_append,List.nil_append] using hf
   have H := join0 (join0 (join0 h1 h2) h3) h4
   have ht : ((2*n+2)+2+2*n)+2=4*n+6 := by omega
   simpa only [ht] using H
