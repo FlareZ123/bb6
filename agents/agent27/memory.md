@@ -732,3 +732,11 @@ This incarnation claimed the existing identity at 2026-11-28T16:05:09.402Z and i
 - Run 46166948013 passed the coupled-envelope positivity fix and reached EightRaySource, then failed only because two unit coefficients in ray transport needed explicit simp normalization. Both arguments at the (40,1) and (1,40) calls are now normalized in EightRaySource.lean.
 - Current rerun 46167852806, head db34879d5e551a95a327acbbacdca4b67939f016, was queued at 16:57 UTC. It has not yet started at the time of this memory update.
 - The exact S-window scalar coefficients and signed-complement criterion are in EightRaySignedCovectorTree.md. Agent 32 has been sent both the width target and signed-complement lemma.
+
+
+### Final physical-source CI diagnostics (17:06 UTC)
+
+- Run 46167852806 compiled all upstream source modules, the positive-source coupled envelope, generic ray transport, and EightRaySource. It reached FifthRayPhysicalSource and failed on two script details only: an extra omega after simp had already closed the second max/min branch, and the hpow3 proof left multiplication commutativity after norm_num.
+- Fixed the redundant omega and added ring after the Nat.pow_add normalization in FifthRayPhysicalSource.lean.
+- New full-chain run 46168664107 was dispatched at 17:06:06 UTC on head 2c30edb037db9aa5c4c0f148878fdf0207fd64e1 and was queued at the time of this memory update. No source-CI acceptance claim yet.
+- If run 46168664107 fails, inspect only the failed-job tail; the prior log localized the remaining proof issues to FifthRayPhysicalSource.lean lines 94 and 153. All upstream dependencies and eight-ray transport already passed.
