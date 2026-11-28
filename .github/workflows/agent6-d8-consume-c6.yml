@@ -1,4 +1,4 @@
-name: Agent6 Raw139 D0=8 consume C1=6 (manual)
+name: Agent6 Raw139 D0=8 consume C1=1/3/6 (manual)
 on:
   workflow_dispatch:
     inputs:
@@ -25,10 +25,22 @@ jobs:
           path: .tmp/base
       - uses: actions/download-artifact@v4
         with:
+          name: agent6-raw139-d8-c1-certified
+          run-id: 46137845251
+          github-token: ${{ github.token }}
+          path: .tmp/c1
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d8-c3-certified
+          run-id: 46137845251
+          github-token: ${{ github.token }}
+          path: .tmp/c3
+      - uses: actions/download-artifact@v4
+        with:
           name: agent6-raw139-d8-c6-certified
           run-id: 46137440341
           github-token: ${{ github.token }}
-          path: .tmp/d8
+          path: .tmp/c6
       - uses: actions/download-artifact@v4
         with:
           name: agent6-raw139-d9-core
@@ -40,22 +52,34 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Check seven-child D0=8 parent interface
+      - name: Audit three child artifacts and check five-child D0=8 parent
         run: |
           set -euo pipefail
           base="$(realpath .tmp/base/build)"
-          d8="$(realpath .tmp/d8/d8c6/src)"
+          c1="$(realpath .tmp/c1/src)"
+          c3="$(realpath .tmp/c3/src)"
+          c6="$(realpath .tmp/c6/d8c6/src)"
           core="$(realpath .tmp/core/core)"
+          for spec in "1:.tmp/c1" "3:.tmp/c3" "6:.tmp/c6/d8c6"; do
+            code="${spec%%:*}"
+            root="${spec#*:}"
+            grep -F "FINAL" "$root/compile.log"
+            grep -F " 0 []" "$root/compile.log"
+            grep -F "'D8C$code.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$root/src/logs/D8C${code}Parent.log"
+            ! grep -REq 'sorryAx|ofReduceBool' "$root/src/logs"
+          done
           LEAN_PATH="$base" lean -o "$base/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean > .tmp/d1zero.log
           LEAN_PATH="$base" lean -o "$base/D1EightReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1EightReduce.lean > .tmp/d8reduce.log
-          LEAN_PATH="$base:$d8:$core" lean -o "$base/D1EightSeven.olean" im-results/agent6-raw139-d1-zeroRD/D1EightSeven.lean | tee .tmp/d8seven.log
-          grep -F "'BB6.Agent6D1EightSeven.c6' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8seven.log
-          grep -F "'BB6.Agent6D1EightSeven.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8seven.log
-          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8seven.log
+          LEAN_PATH="$base:$c1:$c3:$c6:$core" lean -o "$base/D1EightFive.olean" im-results/agent6-raw139-d1-zeroRD/D1EightFive.lean | tee .tmp/d8five.log
+          grep -F "'BB6.Agent6D1EightFive.c1' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
+          grep -F "'BB6.Agent6D1EightFive.c3' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
+          grep -F "'BB6.Agent6D1EightFive.c6' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
+          grep -F "'BB6.Agent6D1EightFive.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8five.log
       - uses: actions/upload-artifact@v4
         with:
-          name: agent6-raw139-d8-seven-child-parent
+          name: agent6-raw139-d8-five-child-parent
           path: |
-            .tmp/d8seven.log
-            .tmp/base/build/D1EightSeven.olean
+            .tmp/d8five.log
+            .tmp/base/build/D1EightFive.olean
           retention-days: 14
