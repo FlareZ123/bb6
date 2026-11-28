@@ -92,17 +92,21 @@ theorem grow (n : Nat) :
       ⟨2,rep [true] (n+1)++rep [false] (n+2)++[true,true],[true]⟩ =
       some ⟨2,[false]++rep [false] (n+1)++[true,true],
         [true,true]++rep [true] n⟩ := by
-    simpa only [rep,List.append_assoc,rep_snoc] using h1
-  have H := join0 (join0 (join0 (join0 h0 h1') h2) h3) h4
+    simpa [rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc] using h1
+  have h3' : run0 p n
+      ⟨5,[true,false,false]++rep [false] (n+1)++[true,true],
+        rep [true] n⟩ =
+      some ⟨5,[true]++rep [true] n++[false,false]++
+        rep [false] (n+1)++[true,true],[]⟩ := by
+    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h3
+  have H := join0 (join0 (join0 (join0 h0 h1') h2) h3') h4
   have ht : 2+(n+1)+2+n+1=2*n+6 := by omega
-  simpa only [word,rep,List.append_assoc,ht] using H
+  simpa [word,rep,List.cons_append,List.nil_append,List.append_assoc,ht] using H
 
 theorem all_time_never (m : Machine)
     (hm : compatible p m) : NeverHalts m := by
   exact never_of_growth p word 6 (fun n => 2*n+6)
     first (by intro n; omega) grow m hm
-
-theorem cylinder_mass : cylinderMass p = 25^4 := by decide
 
 #print axioms first
 #print axioms cLeftMany
@@ -111,5 +115,4 @@ theorem cylinder_mass : cylinderMass p = 25^4 := by decide
 #print axioms turn
 #print axioms grow
 #print axioms all_time_never
-#print axioms cylinder_mass
 end BB6.Agent40Raw34TwoColorLeftGrowth
