@@ -46,7 +46,7 @@ jobs:
       - name: Check weighted frame schedule
         run: |
           set -euo pipefail
-          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar,FrameMachine,RightLevel,AbstractEpoch,LocalSweeps}.lean /tmp/union/
+          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar,FrameMachine,RightLevel,AbstractEpoch,LocalSweeps,RankedTriads}.lean /tmp/union/
           export LEAN_PATH=/tmp/union
           cd /tmp/union
           lean -o Raw56LE17557RhoArithmetic.olean Raw56LE17557RhoArithmetic.lean 2>&1 | tee rho.log
@@ -58,7 +58,8 @@ jobs:
           lean -o Raw56LE17557RightLevel.olean Raw56LE17557RightLevel.lean 2>&1 | tee right.log
           lean -o Raw56LE17557AbstractEpoch.olean Raw56LE17557AbstractEpoch.lean 2>&1 | tee abstract.log
           lean -o Raw56LE17557LocalSweeps.olean Raw56LE17557LocalSweeps.lean 2>&1 | tee sweeps.log
-          cat rho.log defect.log frame.log episode.log action.log machine.log right.log abstract.log sweeps.log > frame-all.log
+          lean -o Raw56LE17557RankedTriads.olean Raw56LE17557RankedTriads.lean 2>&1 | tee ranked.log
+          cat rho.log defect.log frame.log episode.log action.log machine.log right.log abstract.log sweeps.log ranked.log > frame-all.log
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' frame-all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" frame-all.log \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_prefix_defect \
@@ -85,8 +86,9 @@ jobs:
             --require BB6.Agent1Raw56.LE17557LocalSweeps.Z_return \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_normal \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_carry \
-            --require BB6.Agent1Raw56.LE17557LocalSweeps.B_triad
-          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557RightLevel.{lean,olean} Raw56LE17557AbstractEpoch.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} frame-all.log /tmp/out/
+            --require BB6.Agent1Raw56.LE17557LocalSweeps.B_triad \
+            --require BB6.Agent1Raw56.LE17557RankedTriads.A_ranked_normal
+          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557RightLevel.{lean,olean} Raw56LE17557AbstractEpoch.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} Raw56LE17557RankedTriads.{lean,olean} frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
