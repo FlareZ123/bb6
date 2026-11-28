@@ -68,18 +68,22 @@ theorem no_residual (h : Certificates) :
 
 /-- All twelve authentic child Covers suffice, at their distinct checked
     bounds, for the entire Extra28 parent at bound 158. -/
-theorem completeCover (h : Certificates) :
-    Cover (WeightedBound 158) parent :=
-  .leaf _ (consume 158 parent (completeRoute h) (by decide)
+theorem safe (h : Certificates) :
+    ∀ m, compatible parent m → WeightedBound 158 m :=
+  consume 158 parent (completeRoute h) (by decide)
     (route_checked h) (by
       intro q hq
       have hn := no_residual h
       rw [hn] at hq
-      simp at hq))
+      simp at hq)
+
+theorem completeCover (h : Certificates) :
+    Cover (WeightedBound 158) parent :=
+  .leaf _ (safe h)
 
 theorem completeCoverAt (B : Nat) (hB : 158 ≤ B) (h : Certificates) :
     Cover (WeightedBound B) parent :=
-  .leaf _ (fun m hm => liftBound hB (completeCover h |>.1 m hm))
+  .leaf _ (fun m hm => liftBound hB (safe h m hm))
 
 #print axioms route_checked
 #print axioms no_residual
