@@ -132,7 +132,8 @@ private theorem p_unique_parent_25 (a k u v : Nat)
                     (1113+650*u+1298*v)+(321+187*u+375*v)+1 =
                         2^n*(2*(a-1)+8) := hs
                     _ = (2*p)*(4*q) := by rw [hp,hq]
-                    _ = 8*(p*q) := by ring
+                    _ = (2*4)*(p*q) := by ac_rfl
+                    _ = 8*(p*q) := by rfl
                 have hm := Nat.mod_eq_zero_of_dvd h8
                 omega
 
