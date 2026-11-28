@@ -374,14 +374,14 @@ theorem normalB_mod8 (r : Nat) : normalB r % 8 = 5 := by
     its low runway is b-6. -/
 theorem frame_initial_low (r : Nat) :
     lowRemaining r [] = normalB r - 6 := by
-  unfold lowRemaining countB countC
+  unfold lowRemaining normalB countB countC
   simp [Nat.pow_succ]
   omega
 
 /-- The corresponding high runway is 2*b-11. -/
 theorem frame_initial_high (r : Nat) :
     highRemaining r [] = 2 * normalB r - 11 := by
-  unfold highRemaining countB countC
+  unfold highRemaining normalB countB countC
   simp [Nat.pow_succ]
   omega
 
