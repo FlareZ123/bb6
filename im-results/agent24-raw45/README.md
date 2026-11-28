@@ -105,3 +105,87 @@ table identity into a source-sound Raw45 first-hole partition. The
 remaining 137 shallow residuals still require separate work; a
 full parent Cover must combine all descendants at the common
 champion threshold and the exact canonical membership theorem.
+
+
+## A complete mathematical recurrence for a different one-hole Raw45 branch
+
+The more distant Raw45 subbranch `B1=0LA, A1=0LC` has literal
+five-hole parent
+`1RB0LC_1RC0LA_0RD---_1LD1RB_------_------`.
+A 120/900-step translated-lasso and width-at-most-5 sparse n-gram
+depth-first first-hole enumerator yields 11,449 visited nodes,
+477 splits, 8,834 lasso leaves, 68 n-gram-closed leaves, 2,068
+last-hole leaves, and only **two** live one-hole residuals,
+which exchange E and F. These are experimental classifier counts,
+**not** an original-source accepted enumeration yet. The source
+generator's capacity was not exhausted in this run. The maximum
+remaining first-hole query was at step 95.
+
+The first one-hole residual is
+
+```text
+1RB0LC_1RC0LA_0RD1RE_1LD1RB_1LF---_0LA0LF
+```
+
+The second residual is its state-E/F conjugate:
+
+```text
+1RB0LC_1RC0LA_0RD1RF_1LD1RB_0LA0LE_1LE---
+```
+
+Write `P=001`, `B=010`, `I=011`, `Q=101`,
+`C=0000`, `U=000`, and `V=00001`. In the
+source-zipper convention (left includes the scanned cell),
+define two sections, with head in E and left word `01`:
+
+- `odd(n)` has right word `P^(n+1) B 1^(n+1)`
+- `even(n)` has right word `P^(n+1) C 1^(n+2)`
+
+The blank run enters `odd(0)` after 45 transitions. Exact
+primitive transition identities with arbitrary untouched tails
+are the four-step E0 frontier turn
+`(E,01,R)→(B,01,01R)`, the three-step
+`(B,0L,010R)→(B,0101L,R)`, the two-step odd
+right-end `(B,0L,10R)→(E,011L,R)`,
+the eight-step even right-end
+`(B,01L,000R)→(E,01L,010R)`, the seven-step
+`(E,0111011L,R)→(E,01L,00001R)`,
+and the five-step
+`(E,01011L,R)→(E,01L,001R)`.
+
+Three elementary word inductions enable the two arbitrary-length
+sweeps:
+
+```text
+01 P^m B = B^(m+1) 10
+01 P^m C = B^(m+1) 000
+Q^m 1    = 1 I^m
+```
+
+The first identity converts the odd right frontier to `B` packets;
+the second does the same for the even frontier. The third rotates
+the left `Q` packets to `I` packets, which return as `P`
+packets under five-step `E0` sweeps. The seven-step odd turn
+changes the right suffix `10` to `00001`,
+whereas the eight-step even turn changes `000` to `010`.
+
+Therefore the **exact quantified recurrences** are
+
+```text
+odd(n)  -> even(n)  in 8n+24 primitive steps
+even(n) -> odd(n+1) in 8n+28 primitive steps
+odd(n)  -> odd(n+1) in 16n+52 primitive steps
+```
+
+All epochs have positive duration. Thus every total completion
+of the one-hole literal residual avoids its hole indefinitely
+and is nonhalting; its E/F conjugate is likewise nonhalting.
+This is presently **mathematical candidate + original-source Lean
+proof pending gate**, not yet an accepted child Cover.
+Source: [Raw45B1LA_A1LC_L1Growth.lean](Raw45B1LA_A1LC_L1Growth.lean),
+[CI 46090746169](https://github.com/FlareZ123/bb6/actions/runs/46090746169).
+
+One complete source-sound proof of the five-hole branch requires
+reconstructing and checking the finite lasso/ngram decision tree
+and the conjugacy. The two outliers are not grounds for treating
+the other branches as solved without that tree.
