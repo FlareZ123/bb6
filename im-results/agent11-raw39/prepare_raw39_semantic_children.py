@@ -185,10 +185,28 @@ abbrev pChild : PartialMachine := refine p39 (0,true) (some ⟨{bs(w=="1")},{bs(
     root=prefix+('Conditional' if residual else 'Complete')
     b.emit(root,[top],'#print axioms '+tree.name+'\n')
     leaves=[(name,size) for name,size,deps in b.modules if size>1 or not any(x.startswith(b.prefix+'Chunk') for x in deps)]
-    shard_count = 16 if branch == '1LE' else 8
-    groups={f'g{i}':[] for i in range(shard_count)};weights=dict.fromkeys(groups,0)
+    # Preserve the original eight-group semantic partition and divide
+    # only the two expensive groups not yet accepted. The six accepted
+    # groups are combined into one cheap precompiled gold group.
+    groups={f'g{i}':[] for i in range(8)};weights=dict.fromkeys(groups,0)
     for name,size in sorted(leaves,key=lambda x:-x[1]):
         g=min(weights,key=weights.get);groups[g].append(name);weights[g]+=size
+    if branch=='1LE' and not residual:
+        accepted=('g0','g2','g3','g4','g6','g7')
+        old=groups
+        sizes={name:size for name,size in leaves}
+        gold=[name for g in accepted for name in old[g]]
+        groups={'gold':gold}
+        weights={'gold':sum(sizes[name] for name in gold)}
+        for target in ('g1','g5'):
+            aa,bb=target+'a',target+'b'
+            groups[aa]=[];groups[bb]=[]
+            weights[aa]=0;weights[bb]=0
+            for name in sorted(old[target],key=lambda x:-sizes[x]):
+                dest=aa if weights[aa]<=weights[bb] else bb
+                groups[dest].append(name);weights[dest]+=sizes[name]
+        assert sorted(name for names in groups.values() for name in names)==sorted(name for name,_ in leaves)
+        assert all(groups[name] for name in ('gold','g1a','g1b','g5a','g5b'))
     manifest={'root':root,'bound':data['bound_candidate'],'table':data['child'],'conditional':bool(residual),'residual':[[i,original_residual[i]] for i in sorted(residual)],'groups':groups,'weights':weights,'modules':b.modules,'stats':dict(b.stats),'normalized_nodes':tree.size,'open_count':len(ids)}
     (out/('shards-'+branch+('conditional' if residual else 'semantic')+'.json')).write_text(json.dumps(manifest,indent=2)+'\n')
     print('candidate full tree',data['stats'],'far',len(far),'special',len(special),'chunks',len(b.modules),'weights',weights,'bound',data['bound_candidate'],flush=True)
