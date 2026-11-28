@@ -1,0 +1,65 @@
+name: Agent 42 Raw40 A0RB exact source audit
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  raw40-a0rb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Retrieve accepted Canonical77 dependency bundle
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a42-raw40-deps
+          gh api repos/${{ github.repository }}/actions/artifacts/14997966221 > /tmp/a42-raw40-pin.json
+          python -c 'import json; a=json.load(open("/tmp/a42-raw40-pin.json")); assert not a["expired"] and a["workflow_run"]["id"] == 45554648116'
+          gh api repos/${{ github.repository }}/actions/artifacts/14997966221/zip > /tmp/a42-raw40-deps.zip
+          unzip -q /tmp/a42-raw40-deps.zip -d /tmp/a42-raw40-deps
+          sha256sum /tmp/a42-raw40-deps.zip
+
+      - name: Regenerate all A1=0RB child sources and exact family theorem
+        env:
+          LEAN_DEPS: /tmp/a42-raw40-deps
+          WORKERS: "4"
+        run: |
+          set -euo pipefail
+          bash im-results/agent19-raw40-cut/reproduce-A0RB.sh | tee /tmp/a42-raw40-a0rb.log
+          python - <<'PY'
+          import re
+          s=open('/tmp/a42-raw40-a0rb.log').read()
+          assert not re.search(r'\b(sorryAx|native_decide)\b',s)
+          for n in ['children','all_quotient','exact_weighted']:
+              m=re.search(r"'BB6\.Agent19Raw40\.A0RB\."+n+r"' depends on axioms: \[([^\]]*)\]",s)
+              assert m,n
+              assert set(m[1].split(', ')) <= {'propext','Classical.choice','Quot.sound'},m[0]
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw40-a0rb-source-audit
+          path: |
+            /tmp/a42-raw40-a0rb.log
+            /tmp/a42-raw40-pin.json
+            im-results/agent19-raw40-cut/Raw40A0RB*.olean
+            im-results/agent19-raw40-cut/Raw40ZeroRB*.olean
+            im-results/agent19-raw40-cut/a0rb/*/shards/*All.olean
+            im-results/agent19-raw40-cut/a0rb/*/enum.log
+          if-no-files-found: warn
