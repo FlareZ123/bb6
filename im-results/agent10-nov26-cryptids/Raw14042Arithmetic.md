@@ -22,9 +22,13 @@ The A,B,C sections have homogeneous left exponent p, triplet count n, and tail r
 
 The common-table dIter/dEndE/eEven composition is lifted to M42. This directly provides all odd-total D auxiliary returns, including h=11, and the D phase of C315 (k=p+2,h=1,rank(s)=2), whose result is B(2p+8,floor((p+4)/6),(p+4)%6). All ten terminal-to-D paths are now composed in `Raw14042DTerminals.lean` (6e0102cc).
 
-## Terminal source progress (23:34 UTC)
+## Terminal source progress (01:20 UTC)
 
-33 of 36 terminal families have local kernel-checked symbolic source reachability proofs: ten D routes in `Raw14042DTerminals`, ten even C routes and three direct returns in `Raw14042CTerminals` (223ef72a), and ten odd B routes in `Raw14042BTerminals` (e35531fe). General C and B returns are in `Raw14042CGeneral` (c38b824a) and `Raw14042BGeneral` (478ebeda). Local long affine witnesses were split into shorter checked segments; original generated dependency closure CI remains to be completed. Remaining terminal families are A5215, B62542, C35221 (each two parity branches); then assemble common encoding and positive-time step theorem.
+34 of 36 terminal families have local kernel-checked symbolic source reachability proofs: ten D routes in `Raw14042DTerminals`, ten even C routes and three direct returns in `Raw14042CTerminals` (223ef72a), and ten odd B routes in `Raw14042BTerminals` (e35531fe). General C and B returns are in `Raw14042CGeneral` (c38b824a) and `Raw14042BGeneral` (478ebeda). Local long affine witnesses were split into shorter checked segments; original generated dependency closure CI remains to be completed. Remaining terminal families are B62542 and C35221 (each two parity branches); then assemble common encoding and positive-time step theorem.
+
+## A5215 resolved for both even-exponent classes
+
+For p>=24 even, let j=(p-8)/2. [Raw14042AMixedTerminal.lean](Raw14042AMixedTerminal.lean) proves the exact common depletion into BL([],2^(j+6)46 4^(j+3)(644)^floor((j+5)/6)tail(s)), rank(s)=(j+5)%6. [Raw14042MixedOuter.lean](Raw14042MixedOuter.lean) supplies exact framed conversions and repeated pumps. When j is odd, `a5215_mod2` returns B(2p+6,floor((j+5)/6),(j+5)%6). When j is even, [Raw14042AMixedEven.lean](Raw14042AMixedEven.lean) supplies a new 66 boundary sweep, D iteration, two E banks and two consumed 644 triplets; `a5215_mod0` returns B(3p+20,p/4-1,1). Both theorems are source-level Reach M42 results, compiled locally under Lean 4.36.0-rc2 with [propext, Classical.choice, Quot.sound]. The new intermediate sweep theorems require only [propext, Quot.sound]. Commits 7dc9d1bb and 8ed47fed. No Cover reduction claimed.
 
 ## Remaining terminal realization
 
@@ -40,4 +44,4 @@ Prior local mixed proof modules: Raw14042Mixed, Raw14042BMixed, Raw14042BMixedEn
 
 ## Reproduction and status
 
-Lean 4.36.0-rc2, original dependency closure from artifact 15220415544, exact literal M42 in Raw140VariantTransfer. Newly compiled Entry, DGeneral and Growth modules have only standard axioms [propext, Classical.choice, Quot.sound] (step_growth needs only propext and Quot.sound). Reproduce ExtraTailLocal with generate_raw140_42_extratail.py, then compile Raw14042ExtraTail.lean against the Raw14042Bank dependency closure.
+Lean 4.36.0-rc2, original dependency closure from artifact 15220415544, exact literal M42 in Raw140VariantTransfer. Newly compiled Entry, DGeneral and Growth modules have only standard axioms [propext, Classical.choice, Quot.sound] (step_growth needs only propext and Quot.sound). The A5215 modules were locally compiled with the artifact closure plus the original LowLocal and Mixed generators; full current-source CI still pending. Reproduce ExtraTailLocal with generate_raw140_42_extratail.py, then compile Raw14042ExtraTail.lean against the Raw14042Bank dependency closure.
