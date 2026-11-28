@@ -64,8 +64,11 @@ consumer; it currently still requires the four outstanding child proofs.
 Source-closure CI was requested using the existing shared manual checker.
 The independent [`Raw11Extra28CodeBank.lean`](Raw11Extra28CodeBank.lean)
 offers an order-independent finite-bank variant using any proven injective
-table code. These lemmas are conditional glue, **not** a current closed
-parent or global BB(6) theorem.
+table code. This independent generic `consume_bank` theorem **passed**
+original-source Lean 4.36.0-rc2 and standard-axiom audit in
+[run 46104320797](https://github.com/FlareZ123/bb6/actions/runs/46104320797).
+These lemmas are conditional glue, **not** a current closed parent or global
+BB(6) theorem.
 
 ## Proof mechanisms and reproduction
 
@@ -114,10 +117,10 @@ now offers independently scoped modes, reusing pinned Lean 4.36.0-rc2
 and its original-source cache artifact 15144626755:
 
 - `raw11-extra28`: exact child D1 indices 16/17/18/19 in a four-job
-  matrix. Run [46105023399](https://github.com/FlareZ123/bb6/actions/runs/46105023399).
+  matrix. Run [46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773).
 - `raw11-eight`: independent source checks of existing children
   7/8/9/10/12/13/14/15 in eight jobs. Run
-  [46105098512](https://github.com/FlareZ123/bb6/actions/runs/46105098512).
+  [46105742866](https://github.com/FlareZ123/bb6/actions/runs/46105742866).
 - `raw11-final`: after both child matrices *succeed*, downloads their
   exact source-accepted proof objects and invokes
   [`assemble-complete.sh`](assemble-complete.sh) and
