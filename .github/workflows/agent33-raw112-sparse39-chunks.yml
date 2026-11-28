@@ -1,0 +1,448 @@
+name: Agent33 Raw112 Sparse39 chunk recovery
+run-name: Raw112 Sparse39 trie chunks -> parent Cover
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run_id:
+        description: Frozen Raw112 generated-source producer
+        type: string
+        required: true
+        default: "45751911115"
+      prior_recovery_run_id:
+        description: Accepted first recovery run
+        type: string
+        required: true
+        default: "45787320400"
+      retry_run_id:
+        description: Accepted targeted retry shards / split children
+        type: string
+        required: true
+        default: "46065378088"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  prepare_chunks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      chunks: ${{ steps.plan.outputs.chunks }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate frozen producer identities
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+          RETRY_RUN_ID: ${{ inputs.retry_run_id }}
+        run: |
+          set -euo pipefail
+          test "$SOURCE_RUN_ID" = 45751911115
+          test "$PRIOR_RECOVERY_RUN_ID" = 45787320400
+          test "$RETRY_RUN_ID" = 46065378088
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - name: Split 149402-state Sparse39 certificate into bounded trie chunks
+        id: plan
+        run: |
+          set -euo pipefail
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, sys
+          from pathlib import Path
+          sys.path.insert(0, "im-results/agent1-raw60")
+          from split_sparse_rows import split
+
+          root = Path("im-results/agent47-raw112-cut")
+          plan = split(root, "Raw112Sparse39", "raw112",
+                       leaf_limit=256, group_limit=3000)
+          chunks = [item["module"] for item in plan]
+          if not chunks or len(chunks) > 256:
+              raise SystemExit(f"unexpected chunk count {len(chunks)}")
+          leaves = sum(item["leaves"] for item in plan)
+          if leaves != 149402:
+              raise SystemExit(f"wrong Sparse39 state count {leaves}")
+          (root / "Raw112Sparse39SplitPlan.json").write_text(
+              json.dumps(plan, indent=2, sort_keys=True) + "\n"
+          )
+          print("chunks=" + json.dumps(chunks, separators=(",", ":")))
+          print(f"Prepared {len(chunks)} chunks covering {leaves} states",
+                file=sys.stderr)
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw112-sparse39-split-sources
+          path: |
+            im-results/agent47-raw112-cut/Raw112Sparse39*.lean
+            im-results/agent47-raw112-cut/Raw112Sparse39SplitPlan.json
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
+
+  compile_chunk:
+    needs: prepare_chunks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 16
+      matrix:
+        module: ${{ fromJSON(needs.prepare_chunks.outputs.chunks) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact Raw112 closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          test "$(git hash-object /tmp/raw112-lean_compile_closure.py)" = "$expected_blob_sha"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-sparse39-split-sources
+          path: im-results/agent47-raw112-cut
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-common-core
+          path: /tmp/a33-raw112-core
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - name: Compile one dependency-closed Sparse39 chunk
+        env:
+          MODULE: ${{ matrix.module }}
+          LEAN_NUM_THREADS: "1"
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python3 - "$MODULE" <<'PY'
+          import shutil, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, "im-results/agent10-raw112-recovery")
+          from run_retry_shard import PROVENANCE_INPUTS
+
+          module = sys.argv[1]
+          root = Path("im-results/agent47-raw112-cut")
+          source = root / f"{module}.lean"
+          if not source.is_file():
+              raise SystemExit(f"missing split source {source}")
+          work = Path(f"/tmp/a33-{module}")
+          if work.exists():
+              shutil.rmtree(work)
+          cmd = [
+              sys.executable, "-u", "tools/lean_compile_closure.py", str(source),
+              "--workdir", str(work), "--jobs", "1",
+              "--precompiled-dir", "/tmp/a33-raw112-core",
+              "--precompiled-manifest", "/tmp/a33-raw112-core/manifest.json",
+              "--manifest", str(work / "manifest.json"),
+              "--label", f"raw112-sparse39-chunk-{module}",
+              "--artifact-name", f"raw112-sparse-chunk-{module}",
+          ]
+          for item in [*PROVENANCE_INPUTS,
+                       "im-results/agent1-raw60/split_sparse_rows.py"]:
+              cmd.extend(["--provenance-input", item])
+          subprocess.run(cmd, check=True)
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-sparse-chunk-${{ matrix.module }}
+          path: /tmp/a33-${{ matrix.module }}/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+
+  assemble_sparse_and_r05a00:
+    needs: [prepare_chunks, compile_chunk]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact Raw112 closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          test "$(git hash-object /tmp/raw112-lean_compile_closure.py)" = "$expected_blob_sha"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-sparse39-split-sources
+          path: im-results/agent47-raw112-cut
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-sparse-chunk-*
+          path: /tmp/a33-raw112-chunks
+          merge-multiple: false
+      - name: Strictly merge chunks and compile Sparse39 aggregate plus Kid05_00
+        env:
+          LEAN_NUM_THREADS: "1"
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          plan = json.loads(Path(
+              "im-results/agent47-raw112-cut/Raw112Sparse39SplitPlan.json"
+          ).read_text())
+          groups = {item["module"]: [item["module"]] for item in plan}
+          Path("/tmp/a33-chunk-config.json").write_text(json.dumps({
+              "artifact_prefix": "raw112-sparse-chunk",
+              "allow_mixed_revisions": False,
+              "groups": groups,
+          }, indent=2, sort_keys=True) + "\n")
+          PY
+          rm -rf /tmp/a33-raw112-chunk-union
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a33-raw112-chunks /tmp/a33-raw112-chunk-union \
+            /tmp/a33-chunk-config.json
+
+          python3 - <<'PY'
+          import shutil, subprocess, sys
+          from pathlib import Path
+          sys.path.insert(0, "im-results/agent10-raw112-recovery")
+          from run_retry_shard import PROVENANCE_INPUTS
+
+          root = Path("im-results/agent47-raw112-cut")
+          extra = "im-results/agent1-raw60/split_sparse_rows.py"
+          def compile_one(source, work, precompiled, label, artifact):
+              work = Path(work)
+              if work.exists():
+                  shutil.rmtree(work)
+              cmd = [
+                  sys.executable, "-u", "tools/lean_compile_closure.py",
+                  str(source), "--workdir", str(work), "--jobs", "1",
+                  "--precompiled-dir", str(precompiled),
+                  "--precompiled-manifest", str(Path(precompiled) / "manifest.json"),
+                  "--manifest", str(work / "manifest.json"),
+                  "--label", label, "--artifact-name", artifact,
+              ]
+              for item in [*PROVENANCE_INPUTS, extra]:
+                  cmd.extend(["--provenance-input", item])
+              subprocess.run(cmd, check=True)
+
+          compile_one(
+              root / "Raw112Sparse39.lean",
+              "/tmp/a33-raw112-sparse39",
+              "/tmp/a33-raw112-chunk-union",
+              "raw112-sparse39-split-aggregate",
+              "raw112-sparse39-split",
+          )
+          subprocess.run([
+              sys.executable,
+              "im-results/agent10-raw112-recovery/factor_missing.py",
+              str(root / "Raw112Kid05_00.lean"),
+          ], check=True)
+          compile_one(
+              root / "Raw112Kid05_00.lean",
+              "/tmp/a33-raw112-r05a00",
+              "/tmp/a33-raw112-sparse39",
+              "raw112-r05a00-after-sparse39-split",
+              "raw112-shard-r05a00",
+          )
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-sparse39-split
+          path: /tmp/a33-raw112-sparse39/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-shard-r05a00
+          path: /tmp/a33-raw112-r05a00/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+
+  assemble_parent:
+    needs: assemble_sparse_and_r05a00
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore exact Raw112 closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          test "$(git hash-object /tmp/raw112-lean_compile_closure.py)" = "$expected_blob_sha"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-sparse39-split-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ github.run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          path: /tmp/a33-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a33-raw112-shards
+          merge-multiple: false
+          run-id: ${{ inputs.prior_recovery_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a33-raw112-old-retry
+          merge-multiple: false
+          run-id: ${{ inputs.retry_run_id }}
+          github-token: ${{ github.token }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-shard-r05a00
+          path: /tmp/a33-raw112-current/raw112-shard-r05a00
+      - name: Reuse accepted shards, synthesize r05a0, and audit parent
+        env:
+          SOURCE_RUN_ID: ${{ inputs.source_run_id }}
+          PRIOR_RECOVERY_RUN_ID: ${{ inputs.prior_recovery_run_id }}
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+
+          destination = Path("/tmp/a33-raw112-shards")
+          old = Path("/tmp/a33-raw112-old-retry")
+          current = Path("/tmp/a33-raw112-current")
+          root = Path("im-results/agent47-raw112-cut")
+
+          for group in ("r01a-rest0","r01a-rest1","r01a-deep",
+                        "r04a","r04b","r04c","r05a1"):
+              source = old / f"raw112-shard-{group}"
+              if not (source / "manifest.json").is_file():
+                  raise SystemExit(f"missing accepted carried shard {group}")
+              shutil.copytree(source, destination / source.name, dirs_exist_ok=True)
+
+          children = Path("/tmp/a33-r05a0-children")
+          children.mkdir()
+          for child in ("00","01","02","03"):
+              group = f"r05a{child}"
+              source = (current if child == "00" else old) / f"raw112-shard-{group}"
+              if not (source / "manifest.json").is_file():
+                  raise SystemExit(f"missing r05a0 child {group}")
+              shutil.copytree(source, children / source.name)
+              factored = source / f"Raw112Kid05_{child}.lean"
+              if not factored.is_file():
+                  raise SystemExit(f"missing factored source for {group}")
+              shutil.copy2(factored, root / factored.name)
+
+          Path("/tmp/a33-r05a0-config.json").write_text(json.dumps({
+              "artifact_prefix": "raw112-shard",
+              "allow_mixed_revisions": True,
+              "groups": {
+                  f"r05a{child}": [f"Raw112Kid05_{child}"]
+                  for child in ("00","01","02","03")
+              },
+          }, indent=2, sort_keys=True) + "\n")
+          PY
+          rm -rf /tmp/a33-raw112-r05a0-synth
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/a33-r05a0-children /tmp/a33-raw112-r05a0-synth \
+            /tmp/a33-r05a0-config.json
+          python3 - <<'PY'
+          import json, shutil
+          from pathlib import Path
+          synth = Path("/tmp/a33-raw112-r05a0-synth")
+          manifest = json.loads((synth / "manifest.json").read_text())
+          manifest["artifact_name"] = "raw112-shard-r05a0"
+          manifest["label"] = "raw112-targeted-retry-r05a0-sparse39-split"
+          (synth / "manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+          shutil.copytree(
+              synth, Path("/tmp/a33-raw112-shards/raw112-shard-r05a0"))
+          PY
+
+          python im-results/agent10-raw112-recovery/factor_missing.py \
+            im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+          python -u im-results/agent10-raw112-recovery/assemble_retry.py \
+            --root im-results/agent47-raw112-cut \
+            --shards /tmp/a33-raw112-shards \
+            --union /tmp/a33-raw112-full-union \
+            --branch-work /tmp/a33-raw112-branch-roots \
+            --parent-work /tmp/a33-raw112-parent \
+            --output /tmp/a33-raw112-assembled
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-closed-parent-cover
+          path: /tmp/a33-raw112-assembled/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 90
