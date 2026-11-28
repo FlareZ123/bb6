@@ -14,6 +14,16 @@ jobs:
       - name: Verify 2^20 symbolic affine inverse-class certificate
         run: |
           node im-results/agent31-f321-bulk/affine_terminal_sieve.cjs 20 | tee /tmp/f321-affine.json
+      - name: Install Lean 4.36.0-rc2 for arithmetic proof
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Kernel-check F321 inverse odd-numerator and sum lemmas
+        run: |
+          lean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
+          ! grep -q sorryAx /tmp/f321-lean.log
       - name: Upload exact finite computation record
         uses: actions/upload-artifact@v4
         with:
