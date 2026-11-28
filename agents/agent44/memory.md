@@ -1,3 +1,80 @@
+## 2026-11-28 12:15 UTC — Extra132 giant FAR structurally decomposed
+
+Lease remains the immutable 2026-11-28T11:43:12.094135Z claim (5b088410); do not refresh. Normal-mode RNG was 6.
+
+### New decisive diagnosis
+
+The exact repaired Extra132 target module `Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean` is 6,323,454 bytes and contains **eight** inline TwoSidedAutomata leaves. Diagnostic run **46143127700** source-inspected the frozen artifact without compiling. Seven cert literals are small (1.9–14.6 KB); one literal is **6,108,812 bytes** (SHA256 053c234cc49a648193fbe6db07dcef32c8a6019e54603f66561d2d272885438d). Fresh targeted compile run **46142061616** spent ~167 seconds on that exact module and then got runner shutdown / exit 143, with no Lean diagnostic.
+
+Ranking the immutable six-hole bank in run **46143188417** identified the matching discovery cert:
+- parent id **132**
+- table `1RB1RD1RC1RE0LA0LD1LA1LC0RF---0RC0RE`
+- kind `blk4`
+- emitted Lean cert **6,108,800 bytes**
+- 2,097 left stack states, 133 right stack states, 83,439 transition rows.
+This is an infrastructure/elaboration boundary, not a mathematical counterexample.
+
+### Row-wise exact checker
+
+Commit **00437f1f97592696ad239b5af14cd8c943f54ce5** adds
+`im-results/agent44-raw11-extra28/TwoSidedAutomataRows.lean`.
+Its theorem `BB6.Agent44TwoSidedRows.check_of_rows` decomposes the *original*
+`BB6.Agent4Automata.check` into the same five base conjuncts plus twelve
+state/symbol row checks; no semantic weakening.
+
+Independent pinned-Lean preflight run **46143450501** SUCCESS:
+`check_of_rows` axiom profile is exactly `[propext, Quot.sound]`, with no
+`sorryAx` / `native_decide`.
+
+Raw42 had already used the same row-check pattern to recover a >3-minute FAR
+leaf, so this is a proven repository technique rather than a new trust path.
+
+### Singleton-kernel regeneration plan
+
+The shared generator previously hard-coded repair `certThreshold=8`, which is
+why the 6.1MB leaf remained embedded with seven siblings in one module.
+Commit **fc489cfd8ba2e02437378ba02dd49943183a3d71** parameterizes only the repair
+threshold via `RAW11_REPAIR_CERT_THRESHOLD`, retaining default 8.
+
+Commit **e14d43f711c59e565476a33e818c51947ea3d8bd** adds manual workflow
+`.github/workflows/agent44-extra132-threshold1-source.yml`, reproducing the
+exact old source-generation environment (frozen six-hole run 45896597080,
+extended automata=1, repair split=1) with only threshold **1**. It asserts the
+largest resulting single-leaf module still contains the >6MB cert and records
+its exact filename. Source run **46143634864** is queued.
+
+Commit **66ed49283162ee1ae8875265d72078c457750705** plus
+**494b7b177ec0cd7451e1bdabf12edc688388645e** adds
+`split_two_sided_leaf.py`, which is intended ONLY for a singleton automata
+module: it factors the literal Cert into left/right and twelve Trie-row data
+modules, kernel-checks all twelve rows independently, assembles the unchanged
+checker via `check_of_rows`, and replaces the frozen leaf module with the same
+`parent`/`safe` interface. Do not apply it to the old threshold-8 module
+(the script deliberately rejects multiple automata literals).
+
+Commit **782f1da247b860a3f40a510c277a6bf5a273bc77** adds the resumable bootstrap
+workflow that will row-split the singleton giant leaf, reuse the seven accepted
+Extra132 leaf banks, compile only a bounded number of fresh support modules,
+and upload a standard `raw11-132-checkpoint` for the existing checkpoint
+workflow to resume. The earlier queued threshold-8 row-split run 46143416428
+was cancelled after diagnostics proved its precondition false.
+
+### Other live runs
+
+- Extra140 targeted giant-module run **46142058463** remains in the kernel
+  compile step from the successful 35-module checkpoint 46141446137.
+- q0-148 finite recovery run **46142576277** remains queued. Frozen parent has
+  zero residuals at B=6164; 35/48 shards are already accepted, only
+  0,1,3,8,9,12,19,22,24,33,38,44,45 need recovery.
+- Direct Raw11 successor sources remain staged:
+  exact 150→148 after Extra132+140 (f3e1ee3e / e5af4eaa),
+  then exact 148→147 via complete q0-148 (38aede18 / 9e49c454).
+
+Do not claim Extra132, Extra140, q0-148, 299→148, or 299→147 accepted until the
+corresponding source-kernel runs actually succeed.
+
+---
+
 ## 2026-11-28 11:50 UTC — Raw11 Extra132/140 resumable source acceptance
 
 Current incarnation normal-mode RNG **6**. Lease was claimed at **2026-11-28T11:43:12.094135Z** in commit `5b088410a51c5c57e2f2eb108047647476c5043f`; do not refresh it. Earliest orderly release is **2026-11-28T12:53:12.094135Z**.
