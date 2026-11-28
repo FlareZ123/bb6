@@ -484,6 +484,36 @@ theorem markedHopN (cs : List LeftChunk) (n : Nat) (L R : List Bool) :
 #print axioms rightContinuation
 #print axioms markedHopN
 
+
+/-- The alternative 13-step right-end gadget, valid when the 1110
+    sentinel is followed by two additional blank zeros instead of a
+    110 marker. It changes direction to a leftward C0 scan. -/
+theorem rightBlank13 :
+    Auto.knownRun p 13
+      ⟨0,[false],[false,true,true,true,false,false,false]⟩ =
+    some ⟨2,[false,true,true,false,true,false,true,true],[]⟩ := by
+  decide +kernel
+
+/-- Source-defined first expansion turn at the blank right boundary,
+    for ARBITRARILY LONG prefixed A/B-marker words and arbitrary
+    untouched outer tails. This is the other major branch of the
+    q0-148 boundary grammar: unlike marker-followed hops, it lands in
+    C0 rather than E1 and thus needs a subsequent leftward sweep. -/
+theorem rightBlankTurn (cs : List LeftChunk) (L R : List Bool) :
+    run0 p ((4 + 4 * scanCost cs) + 13)
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+         [false,true,false,false,false] ++ R⟩ =
+    some ⟨2,[false,true,true,false,true,false,true,true] ++
+          outputRightChunks (rightSequence cs) ++ L,R⟩ := by
+  have h1 := firstRoundPositive cs L ([false,false] ++ R)
+  have h2 := Auto.knownRun_sound p 13 rightBlank13
+    (outputRightChunks (rightSequence cs) ++ L) R
+  have h := join0 h1 h2
+  simpa [Auto.extend,List.append_assoc] using h
+
+#print axioms rightBlank13
+#print axioms rightBlankTurn
+
 #print axioms markedEdge13
 #print axioms markedHop
 
