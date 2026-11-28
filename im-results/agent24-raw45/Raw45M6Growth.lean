@@ -52,7 +52,7 @@ theorem growth (n : Nat) :
       sweepL table 3 [] [] [false] [true] 1 dstep (n+2) (ones (n+2)) []
   have h2 : run0 table 2 ⟨3,ones (n+2),ones (n+2)⟩ =
       some ⟨2,[true]++ones (n+3),ones n⟩ := by
-    simpa only [ones,rep,List.append_assoc] using
+    simpa only [ones,rep,List.append_assoc,List.cons_append,List.nil_append] using
       turn (ones (n+1)) (ones n)
   have h3 : run0 table n ⟨2,[true]++ones (n+3),ones n⟩ =
       some ⟨2,[true]++zeros n++ones (n+3),[]⟩ := by
@@ -60,7 +60,7 @@ theorem growth (n : Nat) :
       sweepR table 2 [true] [] [true] [false] 1 cstep n (ones (n+3)) []
   have h4 : run0 table 2 ⟨2,[true]++zeros n++ones (n+3),[]⟩ =
       some (phase (n+1)) := by
-    simpa only [phase,zeros,ones,rep,List.append_assoc] using
+    simpa only [phase,zeros,ones,rep,List.append_assoc,List.cons_append,List.nil_append] using
       finish (zeros n++ones (n+3))
   have H := join0 (join0 (join0 h1 h2) h3) h4
   have ht : ((n+2)+2+n)+2 = 2*n+6 := by omega
