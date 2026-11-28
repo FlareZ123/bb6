@@ -93,6 +93,14 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           set -euo pipefail
+          if [[ "${{ inputs.include_zeroRF }}" == "true" && "${{ inputs.include_zeroLF }}" != "true" ]]; then
+            echo "E0=0RF mode requires include_zeroLF=true because its adapter composes on Live5."
+            exit 2
+          fi
+          if [[ "${{ inputs.include_zeroRF }}" == "true" && "${{ inputs.bound }}" -lt 2635 ]]; then
+            echo "E0=0RF finite-halting witness requires bound >= 2635."
+            exit 2
+          fi
           lean --version | grep -F '4.36.0-rc2'
           python -m py_compile \
             im-results/agent29-raw36/generate_direct10_multi.py \
@@ -130,6 +138,7 @@ jobs:
           path: |
             /tmp/a29-d110-dual/raw36-d110-e0le-and-1lb-accepted.json
             /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-accepted.json
+            /tmp/a29-d110-dual/raw36-d110-e0le-1lb-0lf-0rf-accepted.json
             /tmp/a29-d110-dual/Raw36D110Kid04.lean
             /tmp/a29-d110-dual/Raw36D110Kid05.lean
             /tmp/a29-d110-dual/Raw36D110Kid13.lean
