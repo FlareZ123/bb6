@@ -31,17 +31,17 @@ theorem OptTrace.prepend {S : Type} {f : S → Option S}
     some finite genuine trace ending at a state with `next = none`. -/
 theorem eventually_none_has_terminal {S : Type} (f : S → Option S)
     (s : S) (h : ∃ n : Nat,
-    (((Option.bind · f)^[n]) (some s)).isNone) :
+    ((fun o : Option S => o.bind f)^[n] (some s)).isNone) :
     ∃ (m : Nat) (t : S), OptTrace f s m t ∧ f t = none := by
   rcases h with ⟨n,hn⟩
   induction n generalizing s with
   | zero => simp at hn
   | succ n ih =>
-      rw [Function.iterate_succ_apply] at hn
+      change ((fun o : Option S => o.bind f)^[n] (f s)).isNone at hn
       cases hs : f s with
       | none => exact ⟨0,s,OptTrace.nil,hs⟩
       | some s' =>
-          have hn' : (((Option.bind · f)^[n]) (some s')).isNone := by
+          have hn' : ((fun o : Option S => o.bind f)^[n] (some s')).isNone := by
             simpa [hs] using hn
           obtain ⟨m,t,hr,ht⟩ := ih s' hn'
           exact ⟨m+1,t,OptTrace.prepend hs hr,ht⟩
