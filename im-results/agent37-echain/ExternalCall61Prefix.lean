@@ -8,7 +8,7 @@ set_option maxRecDepth 24000
 namespace BB6.Agent37ExternalCall61
 
 open CryptidBoundary BB6.Agent31PacketSource
-open BB6.Agent37EChainBExit BB6.Agent37EChainBEEAReentry
+open BB6.Agent37EChainBExit BB6.Agent37EChain169Split
 open BB6.Agent37ExternalCall54
 
 def k55 (u : Nat) : Nat :=
