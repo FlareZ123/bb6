@@ -146,14 +146,14 @@ theorem normalA_push {low weights high : List Nat} (b : Nat)
     forces the disappearing front weight to be zero. -/
 theorem b_pop_forces_zero (w : Nat)
     (h15 : 15 ≤ weightedZero 7 w) : w = 0 := by
-  unfold weightedZero rhoZero at h15
+  simp [weightedZero, rhoZero] at h15
   omega
 
 /-- At the exact carry-pop runway length, high-side nonemptiness forces the
     disappearing front weight to be zero. -/
 theorem carry_pop_forces_zero (w : Nat)
     (h1 : 1 ≤ weightedZero 1 w) : w = 0 := by
-  unfold weightedZero rhoZero at h1
+  simp [weightedZero, rhoZero] at h1
   omega
 
 /-- Unified whole-stack B law stated directly with the semantic high-runway
