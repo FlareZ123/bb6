@@ -364,6 +364,149 @@ theorem external169_call24_prefix (v : Nat) :
         6291456*v+3983317 := by omega
   simpa [hout] using he
 
+
+def externalU4 : List Bool :=
+  [false,true,true,true]
+
+def externalCall24To32Time (r : Nat) : Nat :=
+  eTime (4586471424*r+3681829531) 0 +
+  (bTime (12230590464*r+9818212085) +
+  (bTime (32614907904*r+26181898896) +
+  (eTime (86973087744*r+69818397058) 0 +
+  (bTime (231928233984*r+186182392157) +
+  (bTime (618475290624*r+496486379088) +
+  (eTime (1649267441664*r+1323963677570) 0 +
+    (12*(4398046511104*r+3530569806855)*
+        (4398046511104*r+3530569806855) +
+      49*(4398046511104*r+3530569806855) + 58)))))))
+
+/-- The next seven forced packet edges of the authentic terminal cylinder,
+    from call 24 through the call-32 E-zero reset. -/
+theorem external_call24_to32 (r : Nat) :
+    run (externalCall24To32Time r)
+      (packet (13759414272*r+11045488597) 0 9 externalU6) =
+    packet (35184372088832*r+28244558454845) 0 11 externalU4 := by
+  let k25 := 4586471424*r+3681829531
+  let k26 := 12230590464*r+9818212085
+  let k27 := 32614907904*r+26181898896
+  let k28 := 86973087744*r+69818397058
+  let k29 := 231928233984*r+186182392157
+  let k30 := 618475290624*r+496486379088
+  let k31 := 1649267441664*r+1323963677570
+  let k32 := 4398046511104*r+3530569806855
+  have ha25 :
+      13759414272*r+11045488597 = 3*k25+4 := by
+    dsimp [k25]; omega
+  have ha26 :
+      8*k25+9 = 3*k26+2 := by
+    dsimp [k25,k26]; omega
+  have ha27 :
+      8*k26+10 = 3*k27+2 := by
+    dsimp [k26,k27]; omega
+  have ha28 :
+      8*k27+10 = 3*k28+4 := by
+    dsimp [k27,k28]; omega
+  have ha29 :
+      8*k28+9 = 3*k29+2 := by
+    dsimp [k28,k29]; omega
+  have ha30 :
+      8*k29+10 = 3*k30+2 := by
+    dsimp [k29,k30]; omega
+  have ha31 :
+      8*k30+10 = 3*k31+4 := by
+    dsimp [k30,k31]; omega
+  have ha32 :
+      8*k31+9 = 3*k32+4 := by
+    dsimp [k31,k32]; omega
+  have hout :
+      8*k32+5 = 35184372088832*r+28244558454845 := by
+    dsimp [k32]; omega
+  have he25 :
+      run (eTime k25 0)
+        (packet (3*k25+4) 0 9 externalU6) =
+      packet (8*k25+9) 2 6 externalU6 := by
+    simpa using
+      (BB6.Agent31PacketSource.e_packet k25 0 6 externalU6)
+  have hb26 :
+      run (bTime k26)
+        (packet (3*k26+2) 2 6 externalU6) =
+      packet (8*k26+10) 1 6 externalU6 :=
+    BB6.Agent31PacketSource.b_packet k26 1 6 externalU6
+  have hb27 :
+      run (bTime k27)
+        (packet (3*k27+2) 1 6 externalU6) =
+      packet (8*k27+10) 0 6 externalU6 :=
+    BB6.Agent31PacketSource.b_packet k27 0 6 externalU6
+  have he28 :
+      run (eTime k28 0)
+        (packet (3*k28+4) 0 6 externalU6) =
+      packet (8*k28+9) 2 3 externalU6 := by
+    simpa using
+      (BB6.Agent31PacketSource.e_packet k28 0 3 externalU6)
+  have hb29 :
+      run (bTime k29)
+        (packet (3*k29+2) 2 3 externalU6) =
+      packet (8*k29+10) 1 3 externalU6 :=
+    BB6.Agent31PacketSource.b_packet k29 1 3 externalU6
+  have hb30 :
+      run (bTime k30)
+        (packet (3*k30+2) 1 3 externalU6) =
+      packet (8*k30+10) 0 3 externalU6 :=
+    BB6.Agent31PacketSource.b_packet k30 0 3 externalU6
+  have he31 :
+      run (eTime k31 0)
+        (packet (3*k31+4) 0 3 externalU6) =
+      packet (8*k31+9) 2 0 externalU6 := by
+    simpa using
+      (BB6.Agent31PacketSource.e_packet k31 0 0 externalU6)
+  have htail : externalU6 = false :: true :: externalU4 := by decide
+  have he32 :
+      run (12*k32*k32+49*k32+58)
+        (packet (3*k32+4) 2 0 externalU6) =
+      packet (8*k32+5) 0 11 externalU4 := by
+    rw [htail]
+    simpa using
+      (BB6.Agent37PacketBoundary.e_zero_drop_any k32 2 externalU4)
+  unfold externalCall24To32Time
+  rw [run_add,ha25,he25,ha26,
+    run_add,hb26,ha27,
+    run_add,hb27,ha28,
+    run_add,he28,ha29,
+    run_add,hb29,ha30,
+    run_add,hb30,ha31,
+    run_add,he31,ha32,he32,hout]
+
+/-- Internal original-source composition of the actual external terminal
+    cylinder through its second E-zero reset (call 32).  The 3^14-spaced
+    P2 class is exactly the seven-trit refinement selected by the pinned
+    external replay. -/
+theorem external169_call32_prefix (r : Nat) :
+    ∃ T,
+      run T
+        (packet (3*(4782969*r+3839569)+4) 0 2
+          (false :: List.replicate 6 true)) =
+      packet (35184372088832*r+28244558454845) 0 11 externalU4 := by
+  let v := 2187*r+1755
+  let t0 := time243_169 (9*v+5) 0 +
+    (12*(786432*v+497914)*(786432*v+497914) +
+      49*(786432*v+497914)+54)
+  let t1 := externalCall24To32Time r
+  refine ⟨t0+t1,?_⟩
+  rw [run_add]
+  have h0 := external169_call24_prefix v
+  have hk :
+      2187*v+1384 = 4782969*r+3839569 := by
+    dsimp [v]; omega
+  have ha :
+      6291456*v+3983317 =
+        13759414272*r+11045488597 := by
+    dsimp [v]; omega
+  dsimp [t0]
+  rw [hk] at h0
+  rw [ha] at h0
+  rw [h0]
+  exact external_call24_to32 r
+
 #print axioms prefix729_412
 #print axioms reset729_412_source_reentry
 #print axioms prefix243_169
@@ -371,5 +514,7 @@ theorem external169_call24_prefix (v : Nat) :
 #print axioms reset2187_1627_source_reentry
 #print axioms reset2187_655_source_reentry
 #print axioms external169_call24_prefix
+#print axioms external_call24_to32
+#print axioms external169_call32_prefix
 
 end BB6.Agent37EChain169Split
