@@ -46,6 +46,23 @@ theorem immediate_gap {L D d a M B P : Nat}
     (by simpa using hpot) hB hP
   convert hgap using 1 <;> push_cast <;> ring
 
+/-- A one-step transfer of another valuation's affine potential. -/
+theorem cross_step_identity {L D d a B P : Nat}
+    (hD : D=L+3)
+    (hp : L*(3*B+d)=D*(3*P+d)) :
+    (D : Int)*(3*(P : Int)+(a : Int)) =
+    (L : Int)*(3*(B : Int)+(a : Int)) +
+      3*((a : Int)-(d : Int)) := by
+  have hI : (L : Int)*(3*(B : Int)+(d : Int)) =
+      (D : Int)*(3*(P : Int)+(d : Int)) := by
+    exact_mod_cast hp
+  have hDI : (D : Int)=(L : Int)+3 := by
+    exact_mod_cast hD
+  rw [hDI] at hI ⊢
+  linear_combination -hI
+
+#print axioms cross_step_identity
+
 #print axioms gap_from_potential
 #print axioms immediate_gap
 end BB6.Agent20MixedPotentialGeneral
