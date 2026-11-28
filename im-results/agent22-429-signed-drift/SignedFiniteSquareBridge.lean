@@ -1,7 +1,7 @@
 import SignedFinitePowerBridge
 import FiniteSquareRigidity
 
-/-! The two-/three-copy modular gap obstruction for actual guarded signed
+/-! The two-copy and three-copy modular gap obstruction for actual guarded signed
 E/S+even-F SourceWalk words. Original BB429 TM lift is separate. -/
 namespace SignedPairMacroBridge
 
