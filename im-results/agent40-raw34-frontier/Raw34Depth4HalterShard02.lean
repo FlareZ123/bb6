@@ -5,7 +5,7 @@ set_option maxHeartbeats 0
 /-! Exhaustive source-first-query Raw34 depth-four finite halting certificates,
 each under the genuine blank run, independently of other wildcards. -/
 namespace BB6.Agent40Raw34Depth4Shard02
-open BB6Coverage BB6.Agent23Raw34Next BB6.Agent40Raw34EarlyHalters
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent23Raw34Next BB6.Agent40Raw34EarlyHalters
 def witnesses : List Witness := [
   ⟨[21,0,22,16,11,13,16,14,0,0,0,1], .halt 9⟩,
   ⟨[21,1,22,17,11,13,16,14,0,0,0,0], .halt 9⟩,
