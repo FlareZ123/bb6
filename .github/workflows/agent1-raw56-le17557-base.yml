@@ -1,0 +1,52 @@
+name: Agent1 Raw56 leaf17557 base epoch source check
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  base:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check literal entry and base epoch
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/union
+          find /tmp/base -name '*.olean' -exec cp -n {} /tmp/union/ \;
+          test -f /tmp/union/SweepPumping.olean
+          cp im-results/agent1-raw56/le/Raw56LE17557Base.lean /tmp/union/
+          export LEAN_PATH=/tmp/union
+          cd /tmp/union
+          lean -o Raw56LE17557Base.olean Raw56LE17557Base.lean 2>&1 | tee base.log
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' base.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" base.log \
+            --require BB6.Agent1Raw56.LE17557Base.entryC2 \
+            --require BB6.Agent1Raw56.LE17557Base.baseEpoch
+          mkdir -p /tmp/out
+          cp Raw56LE17557Base.{lean,olean} base.log /tmp/out/
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le17557-base-source-accepted
+          path: /tmp/out/**
+          retention-days: 30
+          if-no-files-found: error
