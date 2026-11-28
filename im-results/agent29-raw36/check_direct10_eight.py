@@ -47,6 +47,8 @@ def main():
         raise RuntimeError("Raw36 D1=0RE source Lean proof rejected")
     assert not re.search(r"sorryAx|native_decide",c.stdout+c.stderr)
     observed=dict(re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]",c.stdout))
+    observed.update({name:"" for name in re.findall(
+        r"'([^']+)' does not depend on any axioms",c.stdout)})
     assert set(observed)=={NS+n for n in NAMES},observed
     assert all(set(t.strip() for t in val.split(",") if t.strip())<=ALLOWED
                for val in observed.values()),observed
