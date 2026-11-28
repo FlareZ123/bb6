@@ -120,5 +120,5 @@ theorem trace_no_odd_short_repeat {n m W a : Nat}
     exact H.bounds (i+j) (by omega)
   · exact hscale
 
-#print axioms trace_no_odd_cyclic_repeat
+#print axioms trace_no_odd_short_repeat
 end BB6.Agent9CyclicTraceShort
