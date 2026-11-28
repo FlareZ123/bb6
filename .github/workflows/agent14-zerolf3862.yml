@@ -156,6 +156,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve49.normalizedAfterTwelvePlusSix_count' depends on axioms: [propext," "$work/log"
@@ -226,6 +230,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve50.normalizedAfterTwelvePlusFive_count' depends on axioms: [propext," "$work/log"
@@ -295,6 +303,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve52Source.source_oneLF_cover' depends on axioms: [propext," "$work/log"
@@ -350,6 +362,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.sourceAcceptedExtraTwo_cover' depends on axioms: [propext," "$work/log"
@@ -392,6 +408,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
             --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -589,6 +609,10 @@ jobs:
             --override FirstHolePath=im-results/agent8-cryptids-tnf-paths/FirstHolePath.lean \
             --override FourHoleResidualRoster=im-results/agent31-three-hole-tnf/FourHoleResidualRoster.lean \
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
+            --override BlockFAR4=im-results/agent13-block-far/BlockFAR4.lean \
+            --override BlockMacro4=im-results/agent13-block-far/BlockMacro4.lean \
+            --override RangeCheck4=im-results/agent13-block-far/RangeCheck4.lean \
+            --override BlockFARBridge4=im-results/agent13-block-far/BlockFARBridge4.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedLocalAccepted.raw139_cover_after_accepted_local' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
