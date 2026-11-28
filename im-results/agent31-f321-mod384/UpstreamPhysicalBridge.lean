@@ -49,18 +49,10 @@ theorem source_next_upstream (s : HighLevelState) :
     (highLevelNext s).map decodeUpstream := by
   cases s with
   | P a d =>
-      dsimp [decodeUpstream, pairSourceNext]
-      by_cases h1 : a ≥ d+2
-      · simp [highLevelNext,sourceNext,h1,decodeUpstream]
-      · by_cases h2 : a=d+1
-        · simp [highLevelNext,sourceNext,h1,h2,decodeUpstream]
-        · by_cases h3 : a=d
-          · simp [highLevelNext,sourceNext,h1,h2,h3,decodeUpstream]
-          · by_cases h4 : 3*a+1≤d
-            · simp [highLevelNext,sourceNext,h1,h2,h3,h4,decodeUpstream]
-            · by_cases h5 : (d-a)%2=0
-              · simp [highLevelNext,sourceNext,h1,h2,h3,h4,h5,decodeUpstream]
-              · simp [highLevelNext,sourceNext,h1,h2,h3,h4,h5,decodeUpstream]
+      have hHigh : (d+1<a) = (a≥d+2) := propext (by omega)
+      have hFar : (3*a<d) = (3*a+1≤d) := propext (by omega)
+      simp [sourceNext, highLevelNext, pairSourceNext, decodeUpstream,
+        hHigh, hFar]
 
 /-- Every genuine upstream high-level trace decodes to a source-counter
     trace, and hence is covered by the exact parity-residue certificate. -/
