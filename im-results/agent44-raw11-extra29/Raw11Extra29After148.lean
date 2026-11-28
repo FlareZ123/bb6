@@ -17,10 +17,21 @@ reduction, not a BB(6) maximality theorem.
 namespace BB6.Agent44Raw11Extra29After148
 open BB6Coverage BB6.Agent13BlankDelay
 
-def parent : PartialMachine := BB6.Agent5Raw11Extra29.parent
+def parent : PartialMachine := fun (q,b) => match q.val,b with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true => some (some ⟨false,false,1⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 1,true => some (some ⟨true,false,2⟩)
+  | 2,false => some (some ⟨false,false,0⟩)
+  | 2,true => some (some ⟨false,true,3⟩)
+  | _,_ => none
+
 def prior : List PartialMachine := BB6.Agent44Raw11Extra132140After150.remaining
 def closed : List PartialMachine := [parent]
 def remaining : List PartialMachine := Q0RosterConsume.removeCovered prior closed
+
+theorem parent_matches_source : parent = BB6.Agent5Raw11Extra29.parent :=
+  BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)
 
 theorem member_in_148 : parent ∈ prior := by
   have h : prior.any (fun q => Q0ExhaustiveTree.sameTable q parent) = true := by
@@ -34,8 +45,7 @@ theorem remaining_census :
 
 theorem parent_cover (B : Nat) (hB : 4663 ≤ B) :
     Cover (WeightedBound B) parent := by
-  have heq : parent = BB6.Agent5Raw11Extra29.parent := rfl
-  rw [heq]
+  rw [parent_matches_source]
   exact Q0RosterConsume.liftCover (by omega) BB6.Agent5Raw11Extra29.cover
 
 theorem raw11_cover_from_147 (B : Nat) (hB : 4663 ≤ B)
@@ -50,6 +60,7 @@ theorem raw11_cover_from_147 (B : Nat) (hB : 4663 ≤ B)
         exact parent_cover B hB)
       hRemaining)
 
+#print axioms parent_matches_source
 #print axioms member_in_148
 #print axioms remaining_census
 #print axioms parent_cover
