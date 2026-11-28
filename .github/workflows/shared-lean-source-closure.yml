@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "q0151-macro"]
+        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "q0151-macro", "raw10-i-stream"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -53,6 +53,13 @@ jobs:
           [[ "$PROOF_ROOT" != *..* ]]
           if [[ "$PREPARATION_PROFILE" == "none" || "$PREPARATION_PROFILE" == "coverage-generators" ]]; then
             test -f "$PROOF_ROOT"
+          elif [[ "$PREPARATION_PROFILE" == "raw10-i-stream" ]]; then
+            case "$PROOF_ROOT" in
+              im-results/agent13-raw10-box33/Box33D17V12IEntry.lean|im-results/agent13-raw10-box33/Box33D17V12IAll.lean) ;;
+              *) echo "Unsupported Raw10 I root: $PROOF_ROOT"; exit 1 ;;
+            esac
+            test -f "$PROOF_ROOT"
+            test -f im-results/agent13-raw10-box33/unpack_i_rules.py
           elif [[ "$PREPARATION_PROFILE" == "q0151-macro" ]]; then
             case "$PROOF_ROOT" in
               im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean|im-results/agent5-weighted-tnf-queue/Q0151AbstractConcreteBridge.lean|im-results/agent5-weighted-tnf-queue/Q0151GoodEmptyRight.lean|im-results/agent5-weighted-tnf-queue/Q0151RegionLift.lean|im-results/agent5-weighted-tnf-queue/Q0151FullCover.lean) ;;
@@ -96,6 +103,18 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+      - name: Hydrate checksum-pinned Raw10 I stream modules
+        if: ${{ inputs.preparation_profile == 'raw10-i-stream' }}
+        run: |
+          set -euo pipefail
+          cd im-results/agent13-raw10-box33
+          python3 unpack_i_parametric.py
+          python3 unpack_i_relay.py
+          python3 unpack_i_carry.py
+          python3 unpack_i_rules.py
+          for stem in Box33D17V12IParametric Box33D17V12IRelay Box33D17V12ICarry Box33D17V12IRules; do
+            test -s "${stem}.lean"
+          done
       - name: Generate q0-151 Lean finite-control certificate
         if: ${{ inputs.preparation_profile == 'q0151-macro' }}
         env:
