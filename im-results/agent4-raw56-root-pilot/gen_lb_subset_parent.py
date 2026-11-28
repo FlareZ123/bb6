@@ -18,12 +18,12 @@ def generate(prep: Path, helper: Path):
     split_parent(prep)
     d=prep/"E11LB"
     reduced=(d/"Raw56LBE11LBReduced.lean").read_text()
-    assert reduced.count("def table6168 :")==1
+    assert reduced.count("abbrev table6168 :=")==1
     assert reduced.count("theorem residual_tables :")==1
-    block=reduced[reduced.index("def table6168 :"):reduced.index("theorem residual_tables :")]
+    block=reduced[reduced.index("abbrev table6168 :="):reduced.index("theorem residual_tables :")]
     hardline=next(x for x in reduced.splitlines() if x.startswith("def hardTables :"))
     assert all(("theorem eq"+str(i)+" :") in block for i in TABLES)
-    base="import Raw56LBTopDefs\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit\nopen BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent47CanonicalFrontier\n"
+    base=reduced[:reduced.index("abbrev table6168 :=")].replace("import Raw56LBE11LBAll","import Raw56LBTopDefs",1)
     alltable="def allTables : List PartialMachine := ["+",".join("table"+str(i) for i in TABLES)+"]\n"
     tabletxt=base+block+"\n"+alltable+hardline+"\n#print axioms eq42763\nend "+NS+"\n"
     (d/"Raw56LBTopTables.lean").write_text(tabletxt)
@@ -67,7 +67,7 @@ theorem root_residual_subset (e : List Move × PartialMachine)
   all_goals cases w <;> cases r
 """+branches+"\n#print axioms root_residual_subset\nend "+NS+"\n"
     (d/"Raw56LBTopSubset.lean").write_text(root)
-    source_head=reduced[:reduced.index("def table6168 :")]
+    source_head=reduced[:reduced.index("abbrev table6168 :=")]
     assert "import Raw56LBE11LBAll" in source_head
     source_head=source_head.replace("import Raw56LBE11LBAll",
         "import Raw56LBTopSubset\nimport Raw56LBTopChecks",1)
