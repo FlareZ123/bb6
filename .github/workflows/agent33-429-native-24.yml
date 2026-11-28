@@ -119,3 +119,16 @@ jobs:
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean"
             echo "::endgroup::"
           done
+      - name: Verify new uniform genuine-root 13 and 15 cylinders against unchanged native Cryptids source
+        working-directory: /tmp/cryptids
+        shell: bash
+        run: |
+          set -euo pipefail
+          for module in BB429Forced13 BB429Forced13More BB429Forced15 BB429Forced15More BB429NativeCylinder; do
+            cp "$GITHUB_WORKSPACE/im-results/agent33-429-signed-short/$module.lean" .
+          done
+          for module in BB429Forced13 BB429Forced13More BB429Forced15 BB429Forced15More BB429NativeCylinder; do
+            echo "::group::Native original-source cylinder check $module"
+            lake env lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o ".lake/build/lib/lean/$module.olean" "$module.lean"
+            echo "::endgroup::"
+          done
