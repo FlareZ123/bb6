@@ -209,6 +209,11 @@ Global consumption is also staged rather than inferred from raw indices:
 - `Raw42Canonical39Conditional.lean` and
   `Raw42Canonical39FromNamed.lean` expose a conditional 39→38 removal from the
   twelve named child Covers.
+  Core accepted-lineage audit run **46139898980** succeeded (artifact
+  **15261784539**): Raw42 occurs exactly once in the accepted Canonical39 roster
+  and the conditional successor has 38 Covers.  Checked axiom profiles contain
+  only `propext`, `Classical.choice`, and `Quot.sound`.  This remains
+  conditional until the Raw42 parent Cover is supplied.
 - If Agent3 direct Raw39+Raw47 Canonical38 run 46136413104 becomes accepted,
   `Raw42Canonical38DirectConditional.lean` and
   `Raw42Canonical38DirectFromNamed.lean` stage the stronger conditional 38→37
