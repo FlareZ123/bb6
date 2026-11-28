@@ -5,8 +5,8 @@ function makeSearch(codes, opts={}) {
   const decode=a=>a<0?'---':String(a/12|0)+(a%12>=6?'R':'L')+'ABCDEF'[a%6];
   const show=p=>p.map(decode).join('').match(/.{6}/g).join('_');
   const parse=s=>s.replaceAll('_','').match(/.{3}/g).map(a=>a==='---'?-1:(+a[0])*12+(a[1]==='R'?6:0)+'ABCDEF'.indexOf(a[2]));
-  const prep=code=>{const rev=+code[0],D=[...code.slice(1)].map(Number),d=D.length/2,N=6*d+1,H=N-1,inv=Array.from({length:d},()=>[]);for(let i=0;i<D.length;i++)inv[D[i]].push([i>>1,i%2]);return {code,rev,D,d,N,H,inv}};
-  const valid=code=>/^[01]0[0-9]+$/.test(code)&&code.length%2===1&&Math.max(...[...code.slice(1)].map(Number))<(code.length-1)/2;
+  const prep=code=>{const rev=+code[0],D=[...code.slice(1)].map(x=>parseInt(x,36)),d=D.length/2,N=6*d+1,H=N-1,inv=Array.from({length:d},()=>[]);for(let i=0;i<D.length;i++)inv[D[i]].push([i>>1,i%2]);return {code,rev,D,d,N,H,inv}};
+  const valid=code=>/^[01]0[0-9a-z]+$/.test(code)&&code.length%2===1&&Math.max(...[...code.slice(1)].map(x=>parseInt(x,36)))<(code.length-1)/2;
   const bank=[...new Set(codes)].filter(valid).map(prep);
   function far(p,c) {
     const {rev,D,d,N,H,inv}=c,wide=H>=31;
