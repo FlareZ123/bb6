@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     env:
-      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711:im-results/agent35-d-sixth-rejoin
+      LEAN_PATH: im-results/agent31-cryptid-boundary:im-results/agent35-d-regular-certificate:im-results/agent32-cryptid-padding:im-results/agent2-cryptid-continuity:im-results/agent25-cryptid-doublezero:im-results/agent35-cryptid-code:im-results/agent32-cryptid-third:im-results/agent3-portfolio-raw-conjugacy:im-results/agent19-d-physical-bridge:im-results/agent31-d-exceptional:im-results/agent35-d3-root-1711:im-results/agent35-d-sixth-rejoin:im-results/agent2-packet-shift
     steps:
       - uses: actions/checkout@v4
       - name: Restore exact source archives
@@ -78,6 +78,11 @@ jobs:
           G=im-results/agent35-d-sixth-rejoin
           lean -o "$R31/ESecondSource.olean" "$R31/ESecondSource.lean"
           lean -o "$R31/PacketSource.olean" "$R31/PacketSource.lean"
+          P2=im-results/agent2-packet-shift
+          lean -o "$R31/PacketRank.olean" "$R31/PacketRank.lean"
+          lean -o "$R31/PacketPaths.olean" "$R31/PacketPaths.lean"
+          lean -o "$P2/PacketSafeExit.olean" "$P2/PacketSafeExit.lean"
+          lean -DmaxRecDepth=8192 -o "$P2/PacketNormalizeSource.olean" "$P2/PacketNormalizeSource.lean"
           lean -o "$D/ERemaining.olean" "$D/ERemaining.lean"
           lean -o "$D/DRegularSourceShift.olean" "$D/DRegularSourceShift.lean"
           for module in EOneTripleReturn NoEarlierF E111FirstReturn PrefixNoF ATenFirstReturn ACodeFirstReturn; do
@@ -134,5 +139,10 @@ jobs:
           lean -DmaxRecDepth=180000 -o "$R/I5D3Eleven.olean" "$R/I5D3Eleven.lean" 2>&1 | tee /tmp/i5-d3-eleven.log
           if grep -q 'sorryAx' /tmp/i5-d3-eleven.log; then
             echo 'Unexpected sorryAx in 11-exception true-blank D3 source theorem' >&2
+            exit 1
+          fi
+          lean -DmaxRecDepth=180000 -o "$R/I5D3Twelve.olean" "$R/I5D3Twelve.lean" 2>&1 | tee /tmp/i5-d3-twelve.log
+          if grep -q 'sorryAx' /tmp/i5-d3-twelve.log; then
+            echo 'Unexpected sorryAx in twelve-event genuine D3 source theorem' >&2
             exit 1
           fi
