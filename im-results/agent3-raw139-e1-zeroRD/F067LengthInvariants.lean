@@ -83,9 +83,43 @@ theorem g_decomposition_exact (ks : List Nat) :
     omega
 
 
+/-- Sum of the actual digit values, independently of their positions. -/
+def digitSum : List Nat → Nat
+  | [] => 0
+  | k :: ks => k + digitSum ks
+
+/-- Exact decomposition of the second tower-time accumulator, using only
+    stack length, digit sum, and radix-four digit place-value.
+
+    2025·h + 8775·digitSum + 89370
+      = 18900·digitWeight + 420·16^length
+        + 88950·4^length + 30600·length.
+
+    The absence of any nested tower expression is useful for validating
+    upper bounds on source-counted F067 executions. -/
+theorem h_decomposition_exact (ks : List Nat) :
+    2025 * h ks + 8775 * digitSum ks + 89370 =
+      18900 * digitWeight ks +
+      420 * 16 ^ ks.length + 88950 * 4 ^ ks.length +
+      30600 * ks.length := by
+  induction ks with
+  | nil => decide
+  | cons k ks ih =>
+    have hg := g_decomposition_exact ks
+    have he := e_length_exact ks
+    change 2025 * (5*k + 136 + g ks + h ks + e ks) +
+      8775 * (k + digitSum ks) + 89370 =
+      18900 * (k + 4 * digitWeight ks) +
+      420 * 16 ^ (ks.length + 1) +
+      88950 * 4 ^ (ks.length + 1) + 30600 * (ks.length + 1)
+    simp only [pow_succ]
+    omega
+
+
 #print axioms d_length_exact
 #print axioms e_length_exact
 #print axioms d_length_upper
 #print axioms e_length_upper
 #print axioms g_decomposition_exact
+#print axioms h_decomposition_exact
 end BB6.Agent3F067LengthInvariants
