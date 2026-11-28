@@ -29,4 +29,5 @@ jobs:
           lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean "$q/AffineRay7933.lean" | tee -a /tmp/agent31-ray.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent31-ray.log
