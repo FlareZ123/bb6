@@ -16,6 +16,7 @@ on:
           - recover
           - parent-diagnose
           - recover-split
+          - recover-residual-step
           - consumer-conditional
           - complete
           - complete-min
@@ -658,6 +659,92 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: raw56-lb-split-${{ matrix.part }}-source-accepted
+          path: /tmp/split-parent
+          if-no-files-found: error
+
+  parent-residual-decomposed:
+    if: ${{ inputs.target == 'recover-residual-step' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    strategy:
+      fail-fast: false
+      matrix:
+        part: ['expand','flat']
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-split-defs-source-accepted
+          path: /tmp/split-parent
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46144287707'
+      - name: Kernel-check factored residual definitional unfolding or list algebra
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/split_lb_residual.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/split-parent/E11LB
+          PART='${{ matrix.part }}'
+          if [ "$PART" = expand ]; then
+            MOD=Raw56LBTopResExpand
+            THEOREM=BB6.Agent4Raw56LB.E11LB.nrtop_unfold
+          else
+            MOD=Raw56LBTopResFlat
+            THEOREM=BB6.Agent4Raw56LB.E11LB.nrtop_flat
+          fi
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/split-parent/E11LB"
+          cd /tmp/raw56-pilot-prep
+          lean -j1 -o "/tmp/split-parent/E11LB/$MOD.olean" "E11LB/$MOD.lean" | tee "/tmp/split-parent/$MOD.log"
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" "/tmp/split-parent/$MOD.log" --require "$THEOREM"
+          test -s "/tmp/split-parent/E11LB/$MOD.olean"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-residual-step-${{ matrix.part }}-source-accepted
           path: /tmp/split-parent
           if-no-files-found: error
 
