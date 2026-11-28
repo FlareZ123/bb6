@@ -1180,8 +1180,10 @@ jobs:
             --theorem BB6.Agent40Raw34Halt9New.all_sound \
             --theorem BB6.Agent40Raw34EarlyHalters.all_bank8_halt \
             --theorem BB6.Agent40Raw34EarlyHalters.all_bank9_halt \
-            --artifact-name raw34-early-halters-source \
-            im-results/agent40-raw34-frontier/Raw34EarlyHaltersSound.lean \
+            --theorem BB6.Agent40Raw34LateHalters.all_halt \
+            --theorem BB6.Agent40Raw34LateHalters.all_weighted \
+            --artifact-name raw34-early-late-halters-source \
+            im-results/agent40-raw34-frontier/Raw34LateThreeSlotHalters.lean \
             2>&1 | tee "$W/closure.log"
           python - "$W/closure.log" <<'PY'
           import re,sys
@@ -1198,7 +1200,12 @@ jobs:
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: 1067 original blank-start actual halters, standard axioms')
+          for name in ('count','checked','short','all_halt','all_weighted'):
+              full='BB6.Agent40Raw34LateHalters.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 1067 early plus 5 fully-residual late genuine halters, standard axioms')
           PY
           node im-results/agent40-raw34-frontier/audit_halt9_increment.mjs \
             | tee "$W/halting-increment.log"
