@@ -103,19 +103,40 @@ def accepted_parent(work,onele_run):
     ensure(len(receipt["producers"])==expected,"wrong accepted child count")
     return out/"linked",receipt
 
+def kernel_equivalent_duplicate(a,b,evidence):
+    """Exact kernel declarations and import descriptors may match despite
+    different elaborator metadata. Require the independent Lean comparator
+    rather than assuming identical objects from matching module names."""
+    checker=REPO/"im-results/agent13-raw125/CompareKernelImports.lean"
+    proc=subprocess.run(
+        ["lean","--run",str(checker),str(a.resolve()),str(b.resolve())],
+        cwd=REPO,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
+    audit=evidence/"kernel-duplicate-audits"
+    audit.mkdir(exist_ok=True)
+    (audit/(a.stem+".log")).write_text(
+        f"canonical={sha(a)}\nraw39={sha(b)}\n"+proc.stdout)
+    return proc.returncode==0
+
 def merge_objects(dest,canonical,parent,evidence):
     dest.mkdir()
     inventory={}
     conflicts=[]
+    kernel_equivalent=[]
     for root,tag in ((canonical,"canonical40"),(parent,"raw39-parent")):
         for f in sorted(root.glob("*.olean")):
             obj=dest/f.name
             h=sha(f)
             if obj.exists():
                 if sha(obj)!=h:
-                    conflicts.append({
-                        "module":f.name,"canonical_sha256":sha(obj),
-                        "raw39_sha256":h})
+                    if kernel_equivalent_duplicate(obj,f,evidence):
+                        kernel_equivalent.append({
+                            "module":f.name,"canonical_sha256":sha(obj),
+                            "raw39_sha256":h})
+                        inventory.setdefault(f.name,[]).append(tag)
+                    else:
+                        conflicts.append({
+                            "module":f.name,"canonical_sha256":sha(obj),
+                            "raw39_sha256":h})
                 else:
                     inventory.setdefault(f.name,[]).append(tag)
             else:
@@ -124,7 +145,9 @@ def merge_objects(dest,canonical,parent,evidence):
     (evidence/"object-merge.json").write_text(
         json.dumps({"canonical_count":len(list(canonical.glob("*.olean"))),
                     "raw39_count":len(list(parent.glob("*.olean"))),
-                    "merged_count":len(inventory),"conflicts":conflicts},
+                    "merged_count":len(inventory),
+                    "kernel_equivalent_duplicates":kernel_equivalent,
+                    "conflicts":conflicts},
                    indent=2,sort_keys=True)+"\n")
     ensure(not conflicts,
            "source/object namespace collisions (see evidence/object-merge.json): "
