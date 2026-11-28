@@ -533,7 +533,7 @@ theorem outputRightChunks_rightSeq (cs : List LeftChunk) :
   | cons c cs ih =>
       simp only [rightSequence,rightSubst,outputRightChunks_append,
         outputRightChunks,ih,List.nil_append]
-      cases c <;> rfl
+ 
 
 theorem inputBits_append (xs ys : List LeftChunk) :
     inputBits (xs ++ ys) = inputBits xs ++ inputBits ys := by
@@ -620,7 +620,7 @@ theorem rightBlankCarryShape (cs : List LeftChunk) :
   have h := congrArg
     (fun v : List Bool => [false,true,true,false,true,false] ++ v)
     (carryFoldBits Carry.eleven cs)
-  simpa [outputRightChunks_rightSeq,inputBits,carryBits,List.append_assoc] using h
+  simpa only [outputRightChunks_rightSeq,inputBits,List.append_assoc] using h
 
 /-- All three exceptional left-edge residues are handled by fixed
     original-table runs. No infinite search is required. -/
@@ -661,8 +661,12 @@ theorem twoBlankTurns (cs : List LeftChunk) (L R : List Bool) :
          [false,true,false,false,false] ++ R⟩ =
       some ⟨2,[false] ++ inputBits chunks ++ carryBits f.2 ++
                     [false,false] ++ L,R⟩ := by
-    simpa [f,chunks,rightBlankCarryShape,List.append_assoc] using
-      rightBlankTurn cs ([false,false] ++ L) R
+    have hc := congrArg
+      (fun v : List Bool => v ++ ([false,false] ++ L))
+      (rightBlankCarryShape cs)
+    have hs := rightBlankTurn cs ([false,false] ++ L) R
+    rw [hc] at hs
+    simpa [f,chunks,List.append_assoc] using hs
   have h2 : run0 p (scanCost chunks)
       ⟨2,[false] ++ inputBits chunks ++ carryBits f.2 ++
               [false,false] ++ L,R⟩ =
@@ -744,8 +748,12 @@ theorem anotherBlankCycle (tok : LeftChunk) (chunks : List LeftChunk)
           [false,false] ++ R⟩ =
       some ⟨0,[false] ++ outputRightChunks rs ++
               [false,false] ++ L,[false,false,false] ++ R⟩ := by
-    simpa [rs,rightSequenceInput,toRight,rightInput,
-           List.append_assoc] using
+    have hin (t : LeftChunk) :
+        inputRightChunks (toRight t :: rightSequence chunks) =
+          chunkBits t ++ outputBits chunks := by
+      cases t <;>
+        simp [inputRightChunks,rightSequenceInput,toRight,rightInput,chunkBits]
+    simpa [rs,hin tok,List.append_assoc] using
       scanRightChunks rs ([false,false] ++ L) ([false,false] ++ R)
   have h2 : run0 p 2
       ⟨0,[false] ++ outputRightChunks rs ++
@@ -754,7 +762,11 @@ theorem anotherBlankCycle (tok : LeftChunk) (chunks : List LeftChunk)
           [false,false] ++ L,[false] ++ R⟩ := by
     have h := Auto.knownRun_sound p 2 rightEdgeTwo
       (outputRightChunks rs ++ [false,false] ++ L) ([false] ++ R)
-    simpa [Auto.extend,rs,f,secondCarryShape,List.append_assoc] using h
+    have hc := congrArg
+      (fun v : List Bool => v ++ ([false,false] ++ L))
+      (secondCarryShape tok chunks)
+    rw [hc] at h
+    simpa [Auto.extend,rs,f,List.append_assoc] using h
   have h3 : run0 p (scanCost f.1)
       ⟨2,[false] ++ inputBits f.1 ++ carryBits f.2 ++
               [false,false] ++ L,[false] ++ R⟩ =
