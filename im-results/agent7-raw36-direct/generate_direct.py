@@ -1,5 +1,5 @@
 """Generalize the source-gated exact-key canonical auditor to direct Raw36 D1 children. Every mathematical claim is checked by original Lean kernel independently of the discovery data."""
-import sys,json,hashlib,base64,lzma
+import sys,json,hashlib,base64,lzma,os
 from pathlib import Path
 from itertools import product
 sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'agent7-raw36-b1le'))
@@ -55,7 +55,10 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
         rows=[(k,v) for k,v in rows if k in wanted]
     else:wanted=set(keys)
     assert all(v is not None for k,v in rows),(child,'missing literal certificates')
-    external=generate([(t,v) for t,v in rows if v[0]!='h'],out,STEM,'BB6.Agent7'+STEM+'Automata')
+    automata_suffix=os.environ.get('RAW36_AUTOMATA_SUFFIX','')
+    automata_stem=STEM+automata_suffix
+    automata_ns='BB6.Agent7'+automata_stem+'Automata'
+    external=generate([(t,v) for t,v in rows if v[0]!='h'],out,automata_stem,automata_ns)
     sw=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0]=='s']
     for j in range(0,len(sw),4):
         name=f'{STEM}Sweep{j//4:02d}';ns=f'{SWEEP}{j//4:02d}';body=[]
