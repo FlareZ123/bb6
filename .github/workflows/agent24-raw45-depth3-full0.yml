@@ -21,6 +21,9 @@ on:
           - residual9
           - residual10
           - residual11
+          - residual12
+          - residual13
+          - residual14
 
 permissions:
   contents: read
@@ -53,6 +56,9 @@ jobs:
             residual9) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual9.lean" ;;
             residual10) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual10.lean" ;;
             residual11) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual11.lean" ;;
+            residual12) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual12.lean" ;;
+            residual13) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual13.lean" ;;
+            residual14) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual14.lean" ;;
             *) TARGET="im-results/agent24-raw45/Raw45Depth3FullResidual0.lean" ;;
           esac
           python tools/lean_compile_closure.py --workdir /tmp/agent24-d3-full0 --jobs 4 "$TARGET" 2>&1 | tee /tmp/agent24-d3-full0.log
