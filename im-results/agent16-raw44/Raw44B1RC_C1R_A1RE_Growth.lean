@@ -39,20 +39,21 @@ private theorem pairRep (b : Bool) (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-    rw [show 2*(n+1) = 2+2*n by omega]
-    change [b,b] ++ rep [b,b] n = [b,b] ++ rep [b] (2*n)
-    rw [ih]
+    calc
+      rep [b,b] (n+1) = [b,b] ++ rep [b,b] n := by rfl
+      _ = [b,b] ++ rep [b] (2*n) := by rw [ih]
+      _ = rep [b] (2*(n+1)) := by
+        rw [show 2*(n+1)=2*n+2 by omega]
+        rfl
 
 private theorem ones3 (n : Nat) :
     ones (2*n+3) = [true,true,true] ++ ones (2*n) := by
   unfold ones
-  rw [show 2*n+3 = 3+2*n by omega]
   rfl
 
 private theorem zeros4 (n : Nat) :
     zeros (2*n+4) = [false,false,false,false] ++ zeros (2*n) := by
   unfold zeros
-  rw [show 2*n+4 = 4+2*n by omega]
   rfl
 
 private theorem zerosSucc (n : Nat) :
@@ -60,7 +61,7 @@ private theorem zerosSucc (n : Nat) :
 
 private theorem onesNext (n : Nat) :
     ones (2*(n+1)+3) = [true] ++ ones (2*n+4) := by
-  rw [show 2*(n+1)+3 = 1+(2*n+4) by omega]
+  rw [show 2*(n+1)+3 = (2*n+4)+1 by omega]
   rfl
 
 /-- B1,C1,A1 advance through three ones, entering the E/F erasure sweep. -/
@@ -99,7 +100,7 @@ theorem growth (n : Nat) :
     have H := sweepR table 4 [true] [] [true,true] [false,false]
       2 epair n ([true,true,false] ++ zeros n) []
     simpa only [zeros,ones,pairRep,List.append_assoc,
-      List.append_nil,List.nil_append] using H
+      List.cons_append,List.append_nil,List.nil_append] using H
   have h3 : run0 table 3
       ⟨4,[true] ++ zeros (2*n) ++ [true,true,false] ++ zeros n,[]⟩ =
       some ⟨3,zeros (2*n+4) ++ [true,true,false] ++ zeros n,[]⟩ := by
@@ -116,7 +117,7 @@ theorem growth (n : Nat) :
       ⟨3,[true,true,false] ++ zeros n,ones (2*n+4)⟩ =
       some (phase (n+1)) := by
     have H := dfinish (zeros n) (ones (2*n+4))
-    simpa only [phase,zerosSucc,onesNext,List.cons_append] using H
+    simpa only [phase,zerosSucc,onesNext,List.cons_append,List.nil_append] using H
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
   have ht : (((3+2*n)+3)+(2*n+4))+1 = 4*n+11 := by omega
   simpa only [ht] using H
