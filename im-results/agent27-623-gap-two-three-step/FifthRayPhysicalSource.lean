@@ -91,7 +91,6 @@ theorem target_halt_implies_eight_ray
     · simp only [Nat.max_eq_right hxy,Nat.min_eq_left hxy]
       omega
     · simp only [Nat.max_eq_left hyx,Nat.min_eq_right hyx]
-      omega
   have hscale := scale_growth n (by omega)
   have hpow : 3^(n+3)=27*3^n := by
     rw [Nat.pow_add]
@@ -154,6 +153,7 @@ theorem target_halt_implies_eight_ray
                     have hn' : n-1=n-4+3 := by omega
                     rw [hn',Nat.pow_add]
                     norm_num
+                    ring
                   have hscaleBudget : 16*(n+3)+83≤18*3^(n-4) := by
                     have hbase : 1000*n+1000≤3^(n-1) := by omega
                     rw [hpow3] at hbase
