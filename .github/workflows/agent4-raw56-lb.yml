@@ -17,6 +17,7 @@ on:
           - parent-diagnose
           - recover-split
           - recover-residual-step
+          - recover-final-factored
           - subset-lemma
           - parent-subset
           - consumer-conditional
@@ -931,6 +932,92 @@ jobs:
           python im-results/agent4-raw56-root-pilot/split_lb_parent.py --prep /tmp/raw56-pilot-prep
           mkdir -p /tmp/rootpilot-final/E11LB
           cp /tmp/split-parent/E11LB/*.olean /tmp/rootpilot-final/E11LB/
+          python -u im-results/agent4-raw56-root-pilot/compile_lb.py final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --out /tmp/rootpilot-final
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBTop*.lean /tmp/rootpilot-final/E11LB/
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBAll.lean /tmp/rootpilot-final/E11LB/
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBReduced.lean /tmp/rootpilot-final/E11LB/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted-recovered
+          path: /tmp/rootpilot-final
+          if-no-files-found: error
+
+  parent-factored-final:
+    if: ${{ inputs.target == 'recover-final-factored' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-split-*-source-accepted
+          path: /tmp/split-parent
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46144287707'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-residual-step-*-source-accepted
+          path: /tmp/split-parent
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46145821976'
+      - name: Compose source-accepted full parent and six-residual reduction
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/split_lb_residual.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/rootpilot-final/E11LB
+          cp /tmp/split-parent/E11LB/*.olean /tmp/rootpilot-final/E11LB/
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/rootpilot-final/E11LB"
+          lean -j1 -o /tmp/rootpilot-final/E11LB/Raw56LBTopResiduals.olean /tmp/raw56-pilot-prep/E11LB/Raw56LBTopResiduals.lean | tee /tmp/rootpilot-final/E11LB/Raw56LBTopResiduals.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/rootpilot-final/E11LB/Raw56LBTopResiduals.log --require BB6.Agent4Raw56LB.E11LB.exact_residuals
           python -u im-results/agent4-raw56-root-pilot/compile_lb.py final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --out /tmp/rootpilot-final
           cp /tmp/raw56-pilot-prep/E11LB/Raw56LBTop*.lean /tmp/rootpilot-final/E11LB/
           cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBAll.lean /tmp/rootpilot-final/E11LB/
