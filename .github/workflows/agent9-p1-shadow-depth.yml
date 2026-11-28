@@ -4,7 +4,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump, affine-suffix, affine-suffix-compute]
+        options: [shadow, first-return, batch-carry, batch-chunks, pair-carry, reverse-live, reverse-live-block, reverse-live-block-30, folded-block-probe, reverse-block-digit-weight, long-cone-lag, forward-block, carry-aperiodic, packed-prefix, packed-prefix-resume, packed-prefix-resume-2, packed-prefix-resume-next, packed-prefix-compact, packed-prefix-fuse-bench, half-reverse-block, packed-midpoint, pair-chunks, pair-sparse, affine-residue, compact-state, shifted-reverse, shifted-simd, pair-path, pair-path-finite, forward-lookup, forward-probe-checkpoint, affine-half, bitmap-jump, affine-suffix, affine-suffix-compute, cyclic-order]
         default: shadow
       source_ref:
         description: Exact source commit (optional; defaults to dispatch SHA)
@@ -989,3 +989,13 @@ jobs:
           if-no-files-found: ignore
           compression-level: 1
           retention-days: 90
+      - name: Check source-linked coprime Mersenne-order cyclic-factor theorem
+        if: inputs.target == 'cyclic-order'
+        run: |
+          set -euo pipefail
+          D=im-results/agent9-p1-return-gcd
+          export LEAN_PATH="$D:im-results/agent43-p1-high-cost-reset-count:im-results/agent45-p1-delayed-carry"
+          lean --version
+          git rev-parse HEAD
+          python tools/lean_compile_deps.py "$D/CyclicOrder.lean" | tee /tmp/cyclic-order.log
+          if grep -E 'sorryAx|native_decide|error:' /tmp/cyclic-order.log; then exit 1; fi
