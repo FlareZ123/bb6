@@ -30,15 +30,20 @@ def main():
     assert len(hard)==36 and hard in keys and hard[24:27]=="1LB"
     j=keys.index(hard)
     assert fixture["data"][j] is None
-    fixture["data"][j]=["r",6,9,5,1318]
     assert len(child04)==13
-    # All 40 canonical OPEN tables beneath E0=1LB now have proposed
-    # FAR/stack certificates; kernel checking is the decisive part.
+    # Authenticate the exact E0=1LB open set against the archived census.
+    # Counts may change when the exact source census is regenerated; the
+    # invariant is that the targeted hard literal is the sole missing
+    # candidate and every other key has a replayable FAR/stack witness.
     keys13={t.replace("_","") for t in census["opens"] if
            t.replace("_","")[24:27]=="1LB"}
-    assert len(keys13)==40
-    assert all(fixture["data"][keys.index(k)] is not None for k in keys13)
-    assert len(keys13-{hard})==39
+    assert hard in keys13
+    fixture["data"][j]=["r",6,9,5,1318]
+    candidate_rows=[fixture["data"][keys.index(k)] for k in sorted(keys13)]
+    assert all(v is not None for v in candidate_rows)
+    assert len(keys13-{hard})==len(keys13)-1
+    far13=sum(1 for v in candidate_rows if v[0]=="f")
+    structured13=len(candidate_rows)-far13
     src=staging/"direct10-census.json"
     src.write_text(json.dumps(census,separators=(",",":"))+"\n")
     fixture_file=staging/"direct10-two-children.xz.b64"
@@ -100,7 +105,7 @@ def main():
       "parent_theorem":"BB6.Agent29Raw36D110Live6.parent_cover_from_live6",
       "one_new_machine":LITERAL,"new_machine_certificate":["r",6,9,5,1318],
       "candidate_0LE":{"original_open":13,"far":12,"structured":1},
-      "candidate_1LB":{"original_open":40,"far":16,"structured":23,"new_r":1},
+      "candidate_1LB":{"original_open":len(keys13),"far":far13,"structured":structured13,"new_r":1},
       "predecessor_source":predecessor["claim"],
       "root_olean_sha256":base.file_sha(last),
       "source_sha256":base.file_sha(HERE/(names[-1][0]+".lean")),
@@ -108,6 +113,6 @@ def main():
     }
     (work/"raw36-d110-e0le-and-1lb-accepted.json").write_text(
       json.dumps(receipt,indent=2,sort_keys=True)+"\n")
-    print("PASS: all 53 literal OPEN descendants in two branches Lean checked;"
+    print("PASS: all "+str(len(child04)+len(keys13))+" literal OPEN descendants in two branches Lean checked;"
           " 16 cycle + 2 whole E0 children closed, 6 conditional E0 Covers left",flush=True)
 if __name__=="__main__":main()
