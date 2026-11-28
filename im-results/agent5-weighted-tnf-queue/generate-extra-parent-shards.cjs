@@ -72,7 +72,10 @@ function local(t,a,f,p,name,lines,imports,allowSplit=false){
    ((id===132 && name.startsWith('_root_12_root_19')) ||
     (id===140 && name.startsWith('_root_6'))));
  const threshold = repair ? 30 : MODULE_SPLIT_THRESHOLD;
- const certThreshold = repair ? 8 : 49;
+ const configuredCertThreshold = Number(process.env.RAW11_REPAIR_CERT_THRESHOLD || 8);
+ if(!Number.isInteger(configuredCertThreshold) || configuredCertThreshold < 1)
+   throw Error('bad RAW11_REPAIR_CERT_THRESHOLD');
+ const certThreshold = repair ? configuredCertThreshold : 49;
  if(allowSplit&&census.get(t)>threshold){
   const moduleName=prefix+'Sub'+name.replace(/[^A-Za-z0-9_]/g,'_');
   const subLines=[ns(moduleName),parent(a)];
