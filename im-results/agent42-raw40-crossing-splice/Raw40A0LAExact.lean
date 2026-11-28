@@ -18,40 +18,38 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent42Raw40A0LAExact
 open BB6Coverage BB6.Agent47CanonicalFrontier
-namespace A := BB6.Agent19Raw40.A0LA
-
-theorem eq0LB : A.child ⟨false,false,1⟩ = BB6.Agent19Raw40.Raw40C0LA0LB.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq0LE : A.child ⟨false,false,4⟩ = BB6.Agent19Raw40.Raw40C0LA0LE.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq0RB : A.child ⟨false,true,1⟩ = BB6.Agent19Raw40.Raw40C0LA0RB.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq0RD : A.child ⟨false,true,3⟩ = BB6.Agent19Raw40.Raw40C0LA0RD.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq0RE : A.child ⟨false,true,4⟩ = BB6.Agent19Raw40.Raw40C0LA0RE.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1LA : A.child ⟨true,false,0⟩ = BB6.Agent19Raw40.Raw40C0LA1LA.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1LB : A.child ⟨true,false,1⟩ = BB6.Agent19Raw40.Raw40C0LA1LB.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1LC : A.child ⟨true,false,2⟩ = BB6.Agent19Raw40.Raw40C0LA1LC.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1LE : A.child ⟨true,false,4⟩ = BB6.Agent19Raw40.Raw40C0LA1LE.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1RB : A.child ⟨true,true,1⟩ = BB6.Agent19Raw40.Raw40C0LA1RB.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1RC : A.child ⟨true,true,2⟩ = BB6.Agent19Raw40.Raw40C0LA1RC.p :=
-  A.equalTable_sound _ _ (by decide)
-theorem eq1RE : A.child ⟨true,true,4⟩ = BB6.Agent19Raw40.Raw40C0LA1RE.p :=
-  A.equalTable_sound _ _ (by decide)
+theorem eq0LB : BB6.Agent19Raw40.A0LA.child ⟨false,false,1⟩ = BB6.Agent19Raw40.Raw40C0LA0LB.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq0LE : BB6.Agent19Raw40.A0LA.child ⟨false,false,4⟩ = BB6.Agent19Raw40.Raw40C0LA0LE.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq0RB : BB6.Agent19Raw40.A0LA.child ⟨false,true,1⟩ = BB6.Agent19Raw40.Raw40C0LA0RB.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq0RD : BB6.Agent19Raw40.A0LA.child ⟨false,true,3⟩ = BB6.Agent19Raw40.Raw40C0LA0RD.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq0RE : BB6.Agent19Raw40.A0LA.child ⟨false,true,4⟩ = BB6.Agent19Raw40.Raw40C0LA0RE.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1LA : BB6.Agent19Raw40.A0LA.child ⟨true,false,0⟩ = BB6.Agent19Raw40.Raw40C0LA1LBB6.Agent19Raw40.A0LA.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1LB : BB6.Agent19Raw40.A0LA.child ⟨true,false,1⟩ = BB6.Agent19Raw40.Raw40C0LA1LB.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1LC : BB6.Agent19Raw40.A0LA.child ⟨true,false,2⟩ = BB6.Agent19Raw40.Raw40C0LA1LC.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1LE : BB6.Agent19Raw40.A0LA.child ⟨true,false,4⟩ = BB6.Agent19Raw40.Raw40C0LA1LE.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1RB : BB6.Agent19Raw40.A0LA.child ⟨true,true,1⟩ = BB6.Agent19Raw40.Raw40C0LA1RB.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1RC : BB6.Agent19Raw40.A0LA.child ⟨true,true,2⟩ = BB6.Agent19Raw40.Raw40C0LA1RC.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
+theorem eq1RE : BB6.Agent19Raw40.A0LA.child ⟨true,true,4⟩ = BB6.Agent19Raw40.Raw40C0LA1RE.p :=
+  BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
 
 /-- Every one of the twelve exact canonical residual children of A1=0LA
     has its source-proved local weighted bound. -/
 theorem children :
-    ∀ e ∈ A.bounds, ∀ m,
-      TNFQuotientCompatible (A.child e.1) m → WeightedBound e.2 m := by
+    ∀ e ∈ BB6.Agent19Raw40.A0LA.bounds, ∀ m,
+      TNFQuotientCompatible (BB6.Agent19Raw40.A0LA.child e.1) m → WeightedBound e.2 m := by
   intro e he m hm
-  simp only [A.bounds, List.mem_cons, List.mem_singleton] at he
+  simp only [BB6.Agent19Raw40.A0LA.bounds, List.mem_cons, List.mem_singleton] at he
   rcases he with rfl | rfl | rfl | rfl | rfl | rfl |
     rfl | rfl | rfl | rfl | rfl | rfl
   · rw [eq0LB] at hm
@@ -65,7 +63,7 @@ theorem children :
   · rw [eq0RE] at hm
     exact BB6.Agent19Raw40.Raw40C0LA0RE.all_quotient m hm
   · rw [eq1LA] at hm
-    exact BB6.Agent19Raw40.Raw40C0LA1LA.all_quotient m hm
+    exact BB6.Agent19Raw40.Raw40C0LA1LBB6.Agent19Raw40.A0LA.all_quotient m hm
   · rw [eq1LB] at hm
     exact BB6.Agent19Raw40.Raw40C0LA1LB.all_quotient m hm
   · rw [eq1LC] at hm
@@ -82,15 +80,15 @@ theorem children :
 /-- Unconditional weighted upper bound for the complete six-hole A1=0LA
     Raw40 subfamily. -/
 theorem upper :
-    ∀ m, TNFQuotientCompatible A.p m → WeightedBound 22169 m :=
-  A.close children
+    ∀ m, TNFQuotientCompatible BB6.Agent19Raw40.A0LA.p m → WeightedBound 22169 m :=
+  BB6.Agent19Raw40.A0LA.close children
 
 /-- Exact weighted maximum of the complete six-hole A1=0LA subfamily.
     The upper half is the twelve-child composition; the lower half is the
     explicit 22,168-step, zero-delay witness. -/
 theorem exact_weighted :
-    (∀ m, compatible A.p m → WeightedBound 22169 m) ∧
-    ∀ B < 22169, ∃ m, compatible A.p m ∧ ¬ WeightedBound B m := by
+    (∀ m, compatible BB6.Agent19Raw40.A0LA.p m → WeightedBound 22169 m) ∧
+    ∀ B < 22169, ∃ m, compatible BB6.Agent19Raw40.A0LA.p m ∧ ¬ WeightedBound B m := by
   refine ⟨?_, BB6.Agent42Raw40A0LA0REWitness.lower_sharp⟩
   intro m hm
   exact upper m (compatible_quotient hm)
