@@ -1,6 +1,6 @@
 # A source-checked 902-step opaque-tail nonhalting invariant for a Raw36 holdout
 
-**Status (2026-11-28): Lean 4.36.0-rc2 kernel-accepted locally, using only `propext` and `Quot.sound`.** This result settles one literal six-state/two-symbol partial machine under all compatible completions. It does **not** establish BB(6), nor does it by itself close the entire Raw36 direct D1=0LB parent.
+**Status (2026-11-28): Lean 4.36.0-rc2 kernel-accepted locally and in independent CI, using only `propext` and `Quot.sound`.** This result settles one literal six-state/two-symbol partial machine under all compatible completions. It does **not** establish BB(6), nor does it by itself close the entire Raw36 direct D1=0LB parent.
 
 ## Exact machine and result
 
@@ -60,7 +60,7 @@ On 2026-11-28 at approximately 08:21 UTC, after correcting only a final simplifi
 'BB6.Agent7Raw36D101Hard10.never' depends on axioms: [propext, Quot.sound]
 ```
 
-The initial CI run [46125040682](https://github.com/FlareZ123/bb6/actions/runs/46125040682) independently accepted `one` and `growth` but failed at the final `entry` elaboration because its tactic omitted unfolding the literal `pre` and `tail` constants and normalizing a nested numeral sum. The corrected source was locally kernel-accepted without `sorryAx`; a clean full-source CI rerun [46125317196](https://github.com/FlareZ123/bb6/actions/runs/46125317196) was dispatched for a persistent remote artifact.
+The initial CI run [46125040682](https://github.com/FlareZ123/bb6/actions/runs/46125040682) independently accepted `one` and `growth` but failed at the final `entry` elaboration because its tactic omitted unfolding the literal `pre` and `tail` constants and normalizing a nested numeral sum. The corrected source was locally kernel-accepted without `sorryAx`, and subsequently the independent full-source CI [run 46125317196](https://github.com/FlareZ123/bb6/actions/runs/46125317196) **completed successfully** and retained [artifact 15255990116](https://github.com/FlareZ123/bb6/actions/runs/46125317196/artifacts/15255990116) with the complete generated source, olean dependency manifest and axiom audit.
 
 The proof is directly relevant to the weighted-450 Raw36 D1=0LB audit: an exact source-indexed canonical tree has **320 OPEN leaf tables**, of which this was the last without a discovered nonhalting candidate. The other **319** have recorded exact-table FAR, N-gram, RLE, modular, or periodic-stack candidates in `im-results/agent7-raw36-direct/evidence01.xz.b64` and `extra-hard01.json`. Those 319 **remain distinct proof obligations until their original Lean audits succeed**, and the parent 450-weighted Cover is not claimed here.
 
