@@ -1,4 +1,4 @@
-import SourceCounter
+import F321BackwardBarrier
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent2F321Diagonal
@@ -140,11 +140,13 @@ theorem counterMove_X_strict {a d A D : Nat}
       omega
   | middleEven d h1 h2 hp =>
       have hx := (middle_even_coordinates a d h1 h2 hp).1
-      unfold X Y at hx ⊢
+      unfold X at hx ⊢
+      unfold Y at hx
       omega
   | middleOdd d h1 h2 hp =>
       have hx := (middle_odd_coordinates a d h1 h2 hp).1
-      unfold X Y at hx ⊢
+      unfold X at hx ⊢
+      unfold Y at hx
       omega
 
 /-- Exact n-step source reachability gains at least n in X. -/
