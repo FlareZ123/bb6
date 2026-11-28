@@ -67,7 +67,24 @@ theorem root_residual_subset (e : List Move × PartialMachine)
   all_goals cases w <;> cases r
 """+branches+"\n#print axioms root_residual_subset\nend "+NS+"\n"
     (d/"Raw56LBTopSubset.lean").write_text(root)
-    for n in ("Raw56LBTopTables","Raw56LBTopChildren","Raw56LBTopSubset"):
+    source_head=reduced[:reduced.index("def table6168 :")]
+    assert "import Raw56LBE11LBAll" in source_head
+    source_head=source_head.replace("import Raw56LBE11LBAll",
+        "import Raw56LBTopSubset\\nimport Raw56LBTopChecks",1)
+    theorem=reduced[reduced.index("theorem reduced_quotient :"):]
+    original_call="rcases partial_quotient m hm with h | ⟨e,he,hc⟩"
+    new_call="rcases canonicalSound 1000000 p 5 ttop (by decide) supported root nohalt ctop m hm with h | ⟨e,he,hc⟩"
+    assert theorem.count(original_call)==1
+    theorem=theorem.replace(original_call,new_call,1)
+    old_mid=("have hh : e.snd ∈ residuals.map Prod.snd := List.mem_map_of_mem Prod.snd he\\n"
+             "    rw [residual_tables] at hh")
+    assert theorem.count(old_mid)==1
+    theorem=theorem.replace(old_mid,"have hh : e.snd ∈ allTables := root_residual_subset e he",1)
+    reduction=source_head+theorem
+    assert reduction.count("theorem reduced_quotient :")==1
+    assert "theorem residual_tables :" not in reduction
+    (d/"Raw56LBTopSubsetReduction.lean").write_text(reduction)
+    for n in ("Raw56LBTopTables","Raw56LBTopChildren","Raw56LBTopSubset","Raw56LBTopSubsetReduction"):
         print("SOURCE",n,len((d/(n+".lean")).read_text()),flush=True)
 
 def main():
