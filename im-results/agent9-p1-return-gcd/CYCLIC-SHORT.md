@@ -46,9 +46,9 @@ Examples for every even `n>=14`:
 
 | Shift | Order witness | `B` | Forbidden factor length | Earlier `2K` bound |
 |---|---:|---:|---:|---:|
-| `9*2^r` | `9|2^6-1` | `n+7` | `2n+16` | `2n+19` |
-| `27*2^r` | `27|2^18-1` | `n+8` | `2n+29` | `2n+43` |
-| `47*2^r` | `47|2^23-1` | `n+9` | `2n+35` | `2n+53` |
+| `9*2^r` | `9|2^6-1` | `n+6` | `2n+15` | `2n+21` |
+| `27*2^r` | `27|2^18-1` | `n+8` | `2n+29` | `2n+47` |
+| `47*2^r` | `47|2^23-1` | `n+9` | `2n+35` | `2n+58` |
 
 The 9 and 27 examples have nontrivial `gcd(h,K)`; the older coprime determinant alone cannot handle them. The extra `B` bound is checked arithmetically for each n. Source specialization: [CyclicExamples.lean](CyclicExamples.lean).
 
