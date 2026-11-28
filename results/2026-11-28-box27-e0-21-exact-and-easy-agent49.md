@@ -35,8 +35,31 @@ For every such E0, leave A1,B1,E1,F0,F1 free. Each of these 20 cylinders has `25
 
 These 20 cylinders are pairwise disjoint, and disjoint from the E0=21 exact cylinder, so the two audited results jointly classify **21 × 25^5 = 205,078,125** complete tables in the D0=14,D1=17 section with **weighted upper bound 108**.
 
+## Completion of all 25 E0 children, 244,140,625 complete tables
+
+The four remaining E0 cases were independently checked in the same original six-state two-symbol machine semantics:
+
+| E0 | Exact weighted maximum | Original-source Lean CI |
+| ---: | ---: | --- |
+| 3 | **141** | [46094172421](https://github.com/FlareZ123/bb6/actions/runs/46094172421), `Box27Slice03.exact_weighted` |
+| 22 | **149** | [46113905945](https://github.com/FlareZ123/bb6/actions/runs/46113905945), `Box27Slice22.full_exact_weighted` |
+| 23 | **143** | [46094175250](https://github.com/FlareZ123/bb6/actions/runs/46094175250), `Box27Slice23.exact_weighted` |
+| 24 | **255** | [46094310742](https://github.com/FlareZ123/bb6/actions/runs/46094310742), `Box27Slice24.exact_weighted` |
+
+The E0=24 attainer `[8,21,11,18,13,13,14,17,24,0,3,6]` makes 254 live moves with zero incoming blank delay. Because every complete table with these fixed D0=14,D1=17 transitions has exactly one E0 code, the 25 independently source-accepted children yield an exhaustive disjoint union of **25×25⁵=244,140,625 complete machines**. Every one has `WeightedBound 255`; this threshold is sharp because of that E0=24 attainer. The explicit one-theorem parent binder `Box27D17Parent.exact_weighted` remains a separate compilation/audit edge; the finite disjunction of accepted child results already establishes the mathematical classification.
+
+### Exceptional E0=22: 25-completion nonhalting closure
+
+The earlier E0=22 classification left exactly the partial table
+
+```text
+[8,24,11,8,13,13,14,17,22,15,4,?]
+```
+
+with F1 unrestricted. A concrete two-sided finite-stack automaton with **ten stack states on each side and a 306-element joint control relation** now proves all 25 completions nonhalting. Its certificate is `Box27ExceptionalFAR.lean`, generated deterministically by `generate_exceptional_far.py`; Lean checks `BB6.Agent4Automata.check` and the original-source table identity, then derives `BB6.Agent49.Box27Slice22.exceptional_never`. Unconditionally (no leftover exceptional hypothesis), `Box27Slice22.full_exact_weighted` establishes exact weighted 149 across its entire 9,765,625-table E0=22 cylinder. The original-source build and axiom audit both **passed** [CI 46113905945](https://github.com/FlareZ123/bb6/actions/runs/46113905945).
+
 ## Limits and next quantifier
 
-These are source-domain-compatible subfamilies of `raw10Remainder[27]!`, but the full Raw10 Box27 parent, the remaining E0 choices 3,22,23,24, other D0/D1 choices, other Raw10 parents, and the global canonical roster are **not closed** by these theorems. No exact value of BB(6) follows. Other Box27 investigations in `im-results/agent49-raw10-box27/` target the remaining branches separately.
+The complete E0 partition is **only the fixed D0=14,D1=17 section** of original `raw10Remainder[27]!`. The other D0/D1 settings, other Raw10 boxes and the global canonical roster remain open. These local bounds do **not** determine the exact value of BB(6). Additional source-domain nonhalting cylinder proofs and an exact larger parent union are under active construction in `im-results/agent49-raw10-box27/`; their coverage percentages are not accepted mathematical claims until original-source Lean compilation and standard-axiom audits succeed.
 
 All proofs use Lean's ordinary trusted logical axioms (propositional extensionality, quotient soundness, and classical choice where dependencies require it), with reproducible source and CI artifacts.
