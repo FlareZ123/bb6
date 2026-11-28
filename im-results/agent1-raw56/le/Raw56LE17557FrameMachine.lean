@@ -98,15 +98,19 @@ theorem outerTraceBelow_exec {k : Nat} {xs : List Action} {hs : List Bool}
   induction h generalizing st with
   | nil => rfl
   | hitB h ih =>
-      simp only [execLow, hitWord, List.map_cons, hitAction]
+      simp only [execLow, hitWord_cons, hitAction]
       cases hb : stepLow .b st with
       | none => simp [hb]
-      | some st' => simpa [hb] using ih st'
+      | some st' =>
+          simp [hb]
+          exact ih st'
   | hitC h ih =>
-      simp only [execLow, hitWord, List.map_cons, hitAction]
+      simp only [execLow, hitWord_cons, hitAction]
       cases hc : stepLow .carry st with
       | none => simp [hc]
-      | some st' => simpa [hc] using ih st'
+      | some st' =>
+          simp [hc]
+          exact ih st'
   | @skip r hr xs hs h ih =>
       rw [execLow_append, closed hr st]
       simp
@@ -118,7 +122,7 @@ theorem outerTraceBelow_exec {k : Nat} {xs : List Action} {hs : List Bool}
     restoring the incoming stack verbatim. -/
 theorem segment_closes_low (r : Nat) (st : List Nat) :
     execLow (segment r) st = some st := by
-  induction r using Nat.strong_induction_on with
+  induction r using Nat.strongRecOn with
   | h r ih =>
       rw [segment_eq_normal_body]
       simp only [execLow, stepLow, Option.bind_some]
