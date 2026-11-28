@@ -1,6 +1,6 @@
-# Raw44: five-hole child reduction and two growing residual machines
+# Raw44: five-hole child reductions and exact blank-root growth proofs
 
-Status: complete computational/paper-level argument for a single child; not Lean-accepted. No whole Raw44 or global roster cut is claimed.
+**Current scope:** Within Raw44 B1=0RC, thirteen C1 choices have one translated-cycle witness each (13 × 25⁵ total tables; [Lean sources](Raw44B1RC13Cycles.lean), CI pending). The C1=0RE child has a 27,265-node first-hole certificate-generation tree and four exact all-n growth theorems; **M4 and M7 have passed original-source Lean CI**, whereas M5/M6 and the full child `Cover` are pending. The reproducible [source-tree generator](generate_cut.cjs) emits 24 checker shards, 214 NGram witness certificates and their complete `ZipThreeHoleAudit` composition. Older C1=0RA/0LA children retain computational/paper-level status. **No entire Raw44 parent Cover or global BB(6) bound is claimed.**
 
 Parent (canonical manifest Raw44): `1RB---_1RC---_0RD---_1LD1LB_------_------`. Here we study B1=0RC, C1=0RA, namely `1RB---_1RC0RC_0RD0RA_1LD1LB_------_------`.
 
