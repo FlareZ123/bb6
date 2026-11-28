@@ -10,7 +10,7 @@ theorem qAtLeastBudget (k B : Nat) (cs : List PC)
   induction cs generalizing B with
   | nil => trivial
   | cons c cs ih =>
-    refine ⟨?_,ih (2*B) hk hq.2⟩
+    refine ⟨?_,ih (2*B) hq.2⟩
     have h := hq.1
     have hm := Nat.mul_le_mul_right B hk
     omega
