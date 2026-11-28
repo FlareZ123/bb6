@@ -19,16 +19,18 @@ with m>=2:
             interior ai -> 2*ai, interior zi -> 2*zi+1,
             final am -> 2*am+1.
 
-On the left, every 1-run doubles.  Every reachable 0-run except the fixed
-anchor 3 has a unique signed-residue representation z=8*q+s with
-s in {-1,0,1,2}; rho sends it to 16*q+s.  The anchor 3 stays 3.
+On the left, every 1-run doubles.  For a zero-run z=8*q+r with
+0<=r<8, rho sends it to 16*q+r when r<=6 and to 16*q+15 when r=7.
+Equivalently, the residue-7 class is represented as the signed residue -1.
+This single map covers the larger residue family that appears at deeper
+levels.
 
 The literal primitive simulator checks all corresponding boundaries for
-levels 2->3 through 6->7 (1+4+12+36+108+324 lower macro transitions).
+levels 2->3 through 7->8 (all corresponding triad boundaries in those epochs).
 """
 
 TABLE = "1RB1LA_1RC1RB_0RD0RC_1LD1LE_1LF0LE_0LA---"
-MAX_LEVEL = 7
+MAX_LEVEL = 8
 
 
 def parse(table):
@@ -69,14 +71,8 @@ def sides(tape, head):
 
 
 def rho_zero(z):
-    if z == 3:
-        return 3
-    # The reachable family uses signed residues -1,0,1,2 modulo 8.
-    choices = [(s, (z-s)//8) for s in (-1, 0, 1, 2)
-               if z >= s and (z-s) % 8 == 0 and (z-s)//8 >= 0]
-    assert len(choices) == 1, (z, choices)
-    s, q = choices[0]
-    return 16*q + s
+    q, r = divmod(z, 8)
+    return 16*q + (15 if r == 7 else r)
 
 
 def rho_left(runs):
