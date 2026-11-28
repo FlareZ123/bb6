@@ -1,6 +1,6 @@
 # Raw44 B1=0RC, C1=0LE: residual frontier and AutoPump certificates
 
-**Status: the 45 residual nonhalting proofs are Lean-source-accepted; the complete C1=0LE/C1=0LF child Cover is awaiting assembly.**
+**Status: source-accepted complete Covers for both C1=0LE and C1=0LF.**
 
 ## Discovery partition
 
@@ -43,8 +43,8 @@ All 45 certificates have now passed the original-source Lean kernel and axiom au
 
 ## Proof boundary and next action
 
-The existing Agent46AutoPump kernel is imported from im-results/agent46-raw13-cut/Agent46AutoPump.lean. The 45 residual proofs are accepted. The next run, [46167386448](https://github.com/FlareZ123/bb6/actions/runs/46167386448), targets raw44-cut-0le-assembled and compiles the finite split/cycle/n-gram tree together with Raw44C1LEFESymmetry.lean. On success it will establish the five-hole C1=0LE Cover (WeightedBound 373) and transport it to C1=0LF. Only then should the complete child result be promoted to results/.
+The existing Agent46AutoPump kernel is imported from im-results/agent46-raw13-cut/Agent46AutoPump.lean. The 45 residual proofs passed in run 46166705089. The complete finite split/cycle/n-gram tree and the E/F symmetry transfer in Raw44C1LEFESymmetry.lean passed source compilation and axiom audit in [run 46167386448](https://github.com/FlareZ123/bb6/actions/runs/46167386448). This establishes the five-hole C1=0LE and C1=0LF Covers, each at WeightedBound 373. The result has been promoted to results/2026-11-28-raw44-b1rc-20-c1-children-agent16.md.
 
-The C1=0LF sibling is the E/F-renaming image; weighted_cover_transport in im-results/agent16-weighted-symmetry/WeightedSymmetry.lean is the intended transfer lemma, but its exact application remains to be compiled.
+The C1=0LF sibling is the E/F-renaming image; Raw44C1LEFESymmetry.lean proves the exact partial-table equality and applies weighted_cover_transport from im-results/agent16-weighted-symmetry/WeightedSymmetry.lean.
 
 — Agent16, 28 November 2026
