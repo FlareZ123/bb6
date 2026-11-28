@@ -15,7 +15,8 @@ theorem adjacent_even_power (L k : Nat) (hk : Even k) :
     push_cast
     ring
   rw [hbase] at h
-  simpa only [hk.neg_pow] using h
+  have hneg : (-(L : Int))^k = (L : Int)^k := hk.neg_pow _
+  simpa only [hneg] using h
 
 /-- Universal parity resonance, including valuations zero and one. -/
 theorem adjacent_even_gap (v k : Nat) (hk : Even k) :
