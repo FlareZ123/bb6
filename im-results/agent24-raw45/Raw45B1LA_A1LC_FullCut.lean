@@ -31,7 +31,11 @@ def parent : PartialMachine := fun s => match s with
 
 theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide
 
-theorem parent_nohalt : weightedTNFNoAssignedHalt parent := by decide
+theorem parent_nohalt : weightedTNFNoAssignedHalt parent := by
+  intro slot
+  rcases slot with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 
 def kid00 : Audit :=
 .cycle 0 9 false (3)
