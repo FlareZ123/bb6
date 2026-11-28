@@ -37,10 +37,10 @@ theorem last_hole_upper : ∀ m, compatible table m → WeightedBound 22169 m :=
         | exact ⟨_,rfl⟩
         | exact False.elim (hs rfl)
     · rw [hread]
-      have hd : possibleDelays (refine table (5,false) none) 0 = [0] := by decide
-      rw [hd]
+      have hd : (possibleDelays (refine table (5,false) none) 0).all
+          (fun d => decide (d ≤ 0)) = true := by decide
       intro d hm
-      simp only [List.mem_singleton] at hm
+      have h0 : d ≤ 0 := of_decide_eq_true (List.all_eq_true.mp hd d hm)
       omega
 
 /-- Source-exact local maximum: all completions bounded at 22,169, with
