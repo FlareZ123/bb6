@@ -58,7 +58,7 @@ theorem b_six_refines (n : Nat) (s : List Bool)
       (co true (s++[true,true,true,true]) decoded) ∈
       delta (co true s ((4*n+5)::rest)) := by
     rw [hreq] at ha
-    simpa [co,segAppend_append] using ha
+    simpa [co,mkControl,segAppend_append] using ha
   have hmacro := b_even_big n s stack (runBits rest)
   have hp : pack (alt (2*n+1) ++ true::runBits rest) =
       pack (runBits decoded) := by
@@ -114,7 +114,7 @@ theorem c_six_refines (n : Nat) (s : List Bool)
   have hact : Action.pop (rightSig decoded) ∈
       delta (co false s ((4*n+5)::rest)) := by
     rw [← hrequest]
-    simpa [co] using ha
+    simpa [co,mkControl] using ha
   have hmacro := c_six_source n s stack (runBits rest) hs.1
   have hp : pack (s ++ alt (2*n+2) ++ true::runBits rest) =
       pack (runBits decoded) := by
