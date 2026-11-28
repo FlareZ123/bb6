@@ -58,11 +58,14 @@ theorem low_first_state_split (j first : Nat) (prefix : List Nat)
     rw [hlen]
     simp [leftPad,twoPad_append,List.append_assoc]
   have hr := rightMarkers_append (first::prefix) [u,v] R
-  simpa only [firstMarkerState,List.append_assoc,
-    rightMarkers_append,ht] using congrArg
-      (fun v : List Bool =>
-        ([true,false] ++ inputBits (aRun (j+2)) ++ v))
-      ht
+  unfold firstMarkerState
+  rw [hr]
+  have he := congrArg
+    (fun z : List Bool =>
+      (⟨4,[true,false] ++ inputBits (aRun (j+2)) ++ z,
+        [false] ++ rightMarkers (first::prefix)
+          (rightMarkers [u,v] R)⟩ : Z0)) ht
+  simpa only [List.append_assoc] using he
 
 /-- Source low-branch epoch: arbitrary number of ordinary middle
     hops and the final two exceptional low-end hops, all exact. -/
