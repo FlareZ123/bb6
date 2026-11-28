@@ -47,7 +47,7 @@ theorem e_two_unary_long (k q r : Nat) (ys : List Bool) :
       ← List.replicate_append_replicate]
     rfl
   rw [hr]
-  simpa only [List.cons_append,List.append_assoc] using
+  simpa only [List.cons_append,List.append_assoc,List.nil_append] using
     (BB6.Agent37E2UnaryTail.e_two_1111 k q
       (List.replicate r true ++ ys))
 
