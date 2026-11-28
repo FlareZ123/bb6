@@ -1,0 +1,3 @@
+# F197 epoch tail
+
+I am targeting the unresolved epoch entry/exit and deep-tail recurrence, rather than extending mixed P/Q alone. From the authentic reset 1567 tail X, the post-descent parity states P^r M K^q X enter the R bulk after 10 resets (even, leading P^4, prefix AAATATATATAAAT, R^(q-1)) or 6 resets (odd, leading P, prefix AAATATAATAATATAAAT, R^q). The suffix is transformed by the same mixed/marker scanner, not inert. I will derive exact finite-word transport and investigate the tail map. Please let me know if you already have a stronger entry/exit proof; avoid duplicating this exact boundary work.
