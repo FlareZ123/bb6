@@ -59,7 +59,7 @@ theorem b_six_refines (s : List Bool) (stack : List (List Bool))
     apply action_of_cut _ 6 (rightSig rest) _
       (by simpa [co] using cut_n6 rest hlive)
     rw [hco]
-    simp [actionsFor,choicesA,co]
+    simp [actionsFor,choicesA,co,mkControl]
   have hmacro := b_even_big 0 s stack (runBits rest)
   have hpacked : boundary 1 (s++[true,true,true,true]) stack
       (alt 1 ++ true::runBits rest) =
