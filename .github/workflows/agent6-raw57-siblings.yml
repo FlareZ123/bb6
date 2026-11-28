@@ -586,7 +586,7 @@ jobs:
           lean -o Raw56LE23011Cover.olean Raw56LE23011Cover.lean 2>&1 | tee /tmp/raw56-le23011/cover.log
           cat /tmp/raw56-le23011/{checker,leaf,cover}.log > /tmp/raw56-le23011/axioms.log
           ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le23011/axioms.log
-          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le23011/axioms.log --require BB6.Agent1Raw56.LE23011.M23011.never --require BB6.Agent1Raw56.LE23011Cover.all_quotient
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" /tmp/raw56-le23011/axioms.log --require BB6.Agent1Raw56.LE23011.M23011.never --require BB6.Agent1Raw56.LE23011Cover.all_quotient
       - uses: actions/upload-artifact@v4
         if: success()
         with:
