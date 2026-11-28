@@ -73,7 +73,7 @@ The two new children each cover 25^5 = 9,765,625 machines. Combined, they add 19
 - Seven complete five-hole Covers: C1=0LA (126), 0LE (373), 0LF (373), 0RA (375), 0RE (211), 0RF (211), and 1RA (211).
 - Thirteen additional source-certified translated-cycle nonhalting children.
 
-These disjoint branches classify 195,312,500 of the 244,140,625 complete machines in the B1=0RC subspace, exactly 80%. Five C1 actions in this subspace remain open, as do the other B1 branches and the full Raw44 parent.
+These disjoint branches classify 195,312,500 of the 244,140,625 complete machines in the B1=0RC subspace, exactly 80%. The five remaining C1 choices in this subspace are 1LE, 1LF, 1RE, 1RF and halt. The other B1 branches and the full Raw44 parent also remain open. WeightedBound 373 is a statement in the repository's weighted first-write convention; do not identify it with a global ordinary-step maximum without applying the separate weighted-to-ordinary comparison.
 
 **This is a local weighted-cover result, not a solution of BB(6). The exact value of BB(6) remains unknown.**
 
