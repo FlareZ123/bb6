@@ -61,7 +61,7 @@ function sideWitness(hist){
  }
  return null;
 }
-const earlier=[],bank=[],byD={},summary={old2:0,open2:0,old3:0,open3:0,
+const earlier=[],bank=[],hardLong=[],byD={},summary={old2:0,open2:0,old3:0,open3:0,
 children:0,halt:0,stillOpen:0,longBy100:0};
 for(const d of dCodes){
  let added=0;
@@ -85,7 +85,7 @@ for(const d of dCodes){
     if(w4){bank.push({codes:p.slice(),...w4});added++;}
     else if(third.kind==="halt")summary.halt++;
     else if(third.kind==="unknown")summary.stillOpen++;
-    else summary.longBy100++;
+    else {summary.longBy100++;hardLong.push({codes:p.slice(),headAt100:third.hist.at(-1).h});}
     p[second.slot]=0;
    }
    p[first.slot]=0;
@@ -98,6 +98,7 @@ assert.deepEqual(summary,{
  halt:894,stillOpen:12156,longBy100:69
 });
 assert.equal(bank.length,9231);
+assert.equal(hardLong.length,69);
 assert.equal(new Set(bank.map(x=>x.codes.join(","))).size,bank.length);
 assert.equal(bank.every(w=>w.codes.filter((x,i)=>x!==0&&![0,2,4,6].includes(i)).length===4),true);
 const conflict=(a,b)=>a.some((x,i)=>x!==0&&b[i]!==0&&x!==b[i]);
@@ -163,6 +164,7 @@ end ${namespace}
 const volume=BigInt(bank.length)*25n**4n;
 assert.equal(volume,3605859375n);
 const report={status:"Source-generatable 4-fixed-slot half-line cycles (require Lean acceptance)",
+ hardLong,hardLongCount:hardLong.length,
  root:"1RB---_1RC---_0RD---_1LC---_------_------",
  depths:summary,byD,sourceCylinders:bank.length,physicalMassGross:String(volume),
  exactPairwiseDisjointnessComparisons:comparisons,
