@@ -41,9 +41,9 @@ theorem hfMove_source {a d A D : Nat}
   unfold HFMove at h
   rcases h with h | h
   · rcases h with ⟨hg,rfl,rfl⟩
-    exact CounterMove.high d hg
+    exact CounterMove.high a d hg
   · rcases h with ⟨h1,h2,rfl,rfl⟩
-    exact CounterMove.far d h1 h2
+    exact CounterMove.far a d h1 h2
 
 theorem anchorMove_source {a d R c : Nat}
     (h : AnchorMove a d R c) : CounterMove a d R c := by
@@ -53,31 +53,31 @@ theorem anchorMove_source {a d R c : Nat}
     exact CounterMove.equal a
   · rcases hM with h2 | h1
     · rcases h2 with ⟨hlo,hhi,hp,rfl,rfl⟩
-      exact CounterMove.middleEven d hlo hhi hp
+      exact CounterMove.middleEven a d hlo hhi hp
     · rcases h1 with ⟨hlo,hhi,hp,rfl,rfl⟩
-      exact CounterMove.middleOdd d hlo hhi hp
+      exact CounterMove.middleOdd a d hlo hhi hp
 
 theorem move_hf_or_anchor {a d A D : Nat}
     (h : CounterMove a d A D) :
     HFMove a d A D ∨ AnchorMove a d A D := by
   cases h with
-  | high a d hg =>
+  | high hg =>
       left
       unfold HFMove
       exact Or.inl ⟨hg,rfl,rfl⟩
-  | equal a =>
+  | equal =>
       right
       unfold AnchorMove
       exact Or.inl ⟨rfl,rfl,rfl⟩
-  | far a d h1 h2 =>
+  | far h1 h2 =>
       left
       unfold HFMove
       exact Or.inr ⟨h1,h2,rfl,rfl⟩
-  | middleEven a d h1 h2 hp =>
+  | middleEven h1 h2 hp =>
       right
       unfold AnchorMove
       exact Or.inr (Or.inl ⟨h1,h2,hp,rfl,rfl⟩)
-  | middleOdd a d h1 h2 hp =>
+  | middleOdd h1 h2 hp =>
       right
       unfold AnchorMove
       exact Or.inr (Or.inr ⟨h1,h2,hp,rfl,rfl⟩)
@@ -111,8 +111,13 @@ theorem hfRun_second_pow_bound
       rcases hm with hH | hF
       · rcases hH with ⟨hg,rfl,rfl⟩
         refine ⟨highs+1,by omega,?_⟩
-        rw [Nat.pow_succ]
-        omega
+        have hmul := Nat.mul_le_mul_left 2 hbound
+        calc
+          C+3 = 2*(D+3) := by omega
+          _ ≤ 2*(2^highs*(d+3)) := hmul
+          _ = 2^(highs+1)*(d+3) := by
+            rw [Nat.pow_succ]
+            ac_rfl
       · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
         refine ⟨highs,by omega,?_⟩
         have hdrop : D-3*A+3 ≤ D+3 := by omega
@@ -191,7 +196,7 @@ theorem anchorEpoch_witness_growth
     R + c + 4 + n ≤ R' := by
   have hx := (hfRun_X_bounds hhf).1
   have hb := (anchorMove_bounds ha).2.1
-  unfold X at hx
+  unfold X at hx hb
   omega
 
 theorem anchorEpoch_gain5 {R c R' c' : Nat}
@@ -353,6 +358,7 @@ theorem terminal_has_last_anchor_HF
     cases hchain
     exact Or.inl rfl
   · cases hchain with
+    | nil => contradiction
     | step h0 he =>
         rcases he with ⟨j,a,d,hj,ha⟩
         exact (anchorMove_bounds ha).1
