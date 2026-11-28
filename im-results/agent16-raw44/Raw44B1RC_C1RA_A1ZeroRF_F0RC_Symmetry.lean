@@ -33,7 +33,8 @@ theorem renamed_table :
   funext s
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
+    simp [renamePartial, ef, swapStates, renameMove, table, BB6.Agent16Raw44C1RA_A1ZeroRE_F0RC.table]
 
 private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6) = 0)
     (m : Machine) (h : NeverHalts (renameTable e m)) : NeverHalts m := by
@@ -51,7 +52,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   have hc := rename_compatible ef hm
   rw [renamed_table] at hc
   have hn := BB6.Agent16Raw44C1RA_A1ZeroRE_F0RC.never (renameTable ef m) hc
-  exact rename_never_back ef (by decide +kernel) m hn
+  exact rename_never_back ef (by simp [ef, swapStates]) m hn
 
 theorem literal_cover (bound : Nat) : Cover (DecidedBelow bound) table :=
   Cover.leaf table (fun m hm => Or.inl (never m hm))
