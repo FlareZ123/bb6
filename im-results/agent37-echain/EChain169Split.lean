@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
-import EChainBEEAReentry
+import EChainDoubleBReentry
+import PacketP2ResetSource
 import PacketEZeroAnyTail
 
 set_option maxHeartbeats 40000000
@@ -30,10 +31,61 @@ private theorem regularSection_sourceSection
   simp [List.append_assoc]
 
 open CryptidBoundary BB6.Agent31PacketSource
+open BB6.Padding BB6.BoundaryPadding
 open BB6.Agent37EChain BB6.Agent37EChainBExit
 open BB6.Agent2PacketP2Reset BB6.Agent35K4Shapes
 open BB6.Agent37EChainDoubleBReentry
-open BB6.Agent37EChainBEEAReentry
+
+
+def eTime (k q : Nat) : Nat := 12*k*k+49*k+58+6*q
+
+private theorem reset_one_E (k h Q : Nat) (hh : 1 ≤ h)
+    (hk : 2*k+1=3*h) :
+    run (BB6.Agent2PacketP2Reset.eTwoTime k Q +
+      BB6.Agent37EChain.chainTime 1 h 0)
+      (packet (3*k+4) Q 2 (false :: List.replicate 6 true)) =
+      packet (1+32*h) 2 (2*Q+3) BB6.Agent35K4Shapes.marker := by
+  have hprefix : 8*k+5=1+4*3*h := by
+    calc
+      8*k+5=4*(2*k+1)+1 := by omega
+      _=4*(3*h)+1 := by rw [hk]
+      _=1+4*3*h := by omega
+  have hm : BB6.Agent2PacketP2Reset.marker =
+      BB6.Agent35K4Shapes.marker := by decide
+  have hreset :
+      run (BB6.Agent2PacketP2Reset.eTwoTime k Q)
+        (packet (3*k+4) Q 2 (false :: List.replicate 6 true)) =
+      packet (1+4*3*h) 0 (2*Q+6)
+        BB6.Agent35K4Shapes.marker := by
+    rw [BB6.Agent2PacketP2Reset.e_two_reset,hprefix,hm]
+  have hchain :
+      run (BB6.Agent37EChain.chainTime 1 h 0)
+        (packet (1+4*3*h) 0 (3+(2*Q+3))
+          BB6.Agent35K4Shapes.marker) =
+      packet (1+32*h) 2 (2*Q+3)
+        BB6.Agent35K4Shapes.marker := by
+    simpa [BB6.Agent37EChain.chainTime] using
+      (BB6.Agent37EChain.chain_return 1 h 0 (2*Q+3)
+        BB6.Agent35K4Shapes.marker hh)
+  rw [run_add,hreset]
+  simpa using hchain
+
+private theorem finish_A_to_source (c0 : Cfg) (ka q p : Nat)
+    (hprefix : ∃ T, run T c0 =
+      packet (3*ka+3) q p BB6.Agent35K4Shapes.marker) :
+    ∃ (T a q' b : Nat),
+      ObsEq (run T c0) (DRegularSource.sourceSection ⟨a,q',b⟩) ∧
+      DRegular.Canon ⟨a,q',b⟩ := by
+  obtain ⟨Tp,hp⟩ := hprefix
+  obtain ⟨ta,n,hA,hn⟩ :=
+    BB6.Agent37EChainDoubleBReentry.all_A_marker_returns_floor ka q p
+  let floor := 2*(4*ka+3)+5
+  have hf : BB6.Agent37EChainDoubleBReentry.regularEndpointFloor c0 floor := by
+    refine ⟨Tp+ta,n,?_,hn⟩
+    rw [run_add,hp]
+    exact hA
+  exact BB6.Agent37EChainDoubleBReentry.regularEndpointFloor_sourceSection
+    c0 floor (by dsimp [floor]; omega) hf
 
 /-- Exact source-prefix time for the middle ternary child of the previously
     uncovered k ≡ 169 (mod 243) P2-reset class. -/
