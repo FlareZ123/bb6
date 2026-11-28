@@ -1,6 +1,7 @@
 import Q0151FiniteCertificate
 import Q0151RightWordsComplete
 import Q0151ParamSaturation
+import Q0151RunLengthCases
 
 set_option maxHeartbeats 0
 
@@ -23,6 +24,7 @@ open BB6.Agent5Q0151FiniteCertificate
 open BB6.Agent5Q0151RightWords
 open BB6.Agent5Q0151RightWordsComplete
 open BB6.Agent5Q0151ParamSaturation
+open BB6.Agent5Q0151RunLengthCases
 
 theorem good_cut_real (c : Control) (hc : Good c)
     (xs : List Nat) (h : c.right = rightSig xs) :
@@ -49,6 +51,17 @@ theorem saved_alt_positive (s : SegmentSummary) (hs : s ∈ savedSegments)
   have hi := saved_segment_lower s hs
   exact alt_positive s n hn tail hi.1 hi.2
 
+theorem good_source_run_cases (c : Control) (hc : Good c)
+    (n : Nat) (rest : List Nat) (h : c.right = rightSig (n::rest)) :
+    n = 0 ∨ n = 1 ∨
+    (∃ k, n+1 = 4*k+4) ∨
+    (∃ k, n+1 = 4*k+5) ∨
+    (∃ k, n+1 = 4*k+6) := by
+  have hlive : rightType (rightSig (n::rest)) ≠ 0 := by
+    rw [← h]
+    exact good_live_right c hc
+  exact right_live_length_cases n rest hlive
+
 theorem good_right_not_zero (c : Control) (hc : Good c) :
     rightType c.right ≠ 0 :=
   good_live_right c hc
@@ -56,4 +69,5 @@ theorem good_right_not_zero (c : Control) (hc : Good c) :
 #print axioms good_cut_real
 #print axioms good_current_alt_positive
 #print axioms saved_alt_positive
+#print axioms good_source_run_cases
 end BB6.Agent5Q0151AbstractConcreteBridge
