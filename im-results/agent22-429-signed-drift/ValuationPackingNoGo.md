@@ -1,12 +1,18 @@
 # #429: exact finite valuation packing and reverse uniqueness
 
-**Status:** locally Lean-certified arithmetic results for the abstract signed half-rank model. They are not original-source nonhalting proofs and do not decide #429 or BB(6).
+**Status:** kernel-certified arithmetic results for the abstract signed half-rank model, now superseded quantitatively by the exact sharp capacity theorem in `results/2026-11-28-sharp-signed-valuation-packing-agent22.md`. Current pinned-Lean CI run `46161634933` accepts the exact formula and finite periodic source consequences. These are not original blank-root nonhalting proofs and do not decide #429 or BB(6).
 
 ## The exact counting result
 
 For fixed positive integer K, consider witnesses with 0 < 3v < K, k >= 1, and 4^k z = v + K. The quotient z lies in (0,K/12) union (K/4,K/3): for k=1 it lies in the second interval, for k>=2 in the first. Moreover z determines both v and k uniquely, since K < v+K < 4K/3 and two different powers of 4 have ratio at least four. Both statements are Lean-checked in ValuationPacking.lean.
 
 The all-denominator grid theorem in PeriodicGridPacking.lean proves that these two intervals contain at most floor((K-1)/6) distinct integer points. Therefore the number of distinct valuation pairs (v,k) with 4^k dividing v+K and 0<3v<K is at most floor((K-1)/6). This does not require parity, reduced denominators, or a machine orbit. The complete finite-pair injection and counting result is theorem ValuationPacking.finite_valuation_packing_pairs.
+
+## Sharp superseding bound
+
+The older grid estimate below remains correct but is no longer optimal. The exact maximum for a legal distinct-source family is
+`U(K)=F(floor((K-1)/3))-F(floor(K/4))`, with `F(n)=sum_{m>=0} floor(n/4^m)`.
+`SharpExactValuation.lean` proves both the universal upper bound and an explicit attaining family for every positive `K`. `SharpGlobalTheorem.lean` proves the globally sharp `15J<=2K` bound for `K>=15`, and the stronger `8J<=K` for every `K>=64`; `K=63` has an explicit extremizer violating coefficient 8. For new work, use the sharp theorem rather than the `floor((K-1)/6)` estimate unless the older formulation is structurally convenient.
 
 ## The full all-exponent family bound
 
