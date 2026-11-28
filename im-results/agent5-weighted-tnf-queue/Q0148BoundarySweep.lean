@@ -216,13 +216,19 @@ theorem halfSweepPositive (cs : List LeftChunk) (L R : List Bool) :
                [true,true,true,false] ++ R⟩ := by
     simpa only [Auto.extend,List.append_assoc] using
       Auto.knownRun_sound p 3 entryOne (inputBits cs ++ [false] ++ L) R
-  have h2 := scanChunks cs ([false] ++ L) ([true,true,true,false] ++ R)
+  have h2 : run0 p (scanCost cs)
+      ⟨2,[false] ++ inputBits cs ++ [false] ++ L,
+         [true,true,true,false] ++ R⟩ =
+      some ⟨2,[false] ++ [false] ++ L,
+               outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+    simpa [List.append_assoc] using
+      scanChunks cs ([false] ++ L) ([true,true,true,false] ++ R)
   have h3 : run0 p 1
        ⟨2,[false] ++ [false] ++ L,
           outputBits cs ++ [true,true,true,false] ++ R⟩ =
        some ⟨0,[false] ++ L,
                 [false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
-    simpa only [Auto.extend,List.nil_append,List.append_assoc] using
+    simpa [Auto.extend,List.append_assoc] using
       Auto.knownRun_sound p 1 leftEndPositive L
          (outputBits cs ++ [true,true,true,false] ++ R)
   have h := join0 h1 (join0 h2 h3)
@@ -244,13 +250,19 @@ theorem halfSweepZero (cs : List LeftChunk) (L R : List Bool) :
                [true,true,true,false] ++ R⟩ := by
     simpa only [Auto.extend,List.append_assoc] using
       Auto.knownRun_sound p 3 entryOne (inputBits cs ++ [true,true,false,false] ++ L) R
-  have h2 := scanChunks cs ([true,true,false,false] ++ L) ([true,true,true,false] ++ R)
+  have h2 : run0 p (scanCost cs)
+      ⟨2,[false] ++ inputBits cs ++ [true,true,false,false] ++ L,
+         [true,true,true,false] ++ R⟩ =
+      some ⟨2,[false] ++ [true,true,false,false] ++ L,
+               outputBits cs ++ [true,true,true,false] ++ R⟩ := by
+    simpa [List.append_assoc] using
+      scanChunks cs ([true,true,false,false] ++ L) ([true,true,true,false] ++ R)
   have h3 : run0 p 4
        ⟨2,[false] ++ [true,true,false,false] ++ L,
           outputBits cs ++ [true,true,true,false] ++ R⟩ =
        some ⟨0,[false] ++ L,
                [true,false,true,false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ := by
-    simpa only [Auto.extend,List.nil_append,List.append_assoc] using
+    simpa [Auto.extend,List.append_assoc] using
       Auto.knownRun_sound p 4 leftEndZero L
          (outputBits cs ++ [true,true,true,false] ++ R)
   have h := join0 h1 (join0 h2 h3)
