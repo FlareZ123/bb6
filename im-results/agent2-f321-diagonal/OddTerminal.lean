@@ -144,3 +144,39 @@ theorem middleEven_high_terminal_no_odd_v2
 
 #print axioms middleEven_high_terminal_no_odd_v2
 end BB6.Agent2F321OddTerminal
+
+
+namespace BB6.Agent2F321OddTerminal
+open BB6.Agent31F321Density
+open BB6.Agent2F321Bulk
+open BB6.Agent2F321ResetEven
+
+/-- Exact valuation-form corollary: every odd 2-adic valuation of k+5 is
+    impossible for a root-reachable middle-even reset-to-terminal High run. -/
+theorem middleEven_high_terminal_no_odd_v2_witness
+    {n k a d A D s u : Nat}
+    (hr : CounterReach 1 1 n a d)
+    (h1 : a < d) (h2 : d < 3*a+1) (hp : (d-a)%2 = 0)
+    (hh : HighRun k (4*a+6) 2 A D)
+    (ht : A = D + 1)
+    (hk : k + 5 = 2 * 4^s * u)
+    (hu : u % 2 = 1) : False := by
+  by_cases hs : s = 0
+  · subst s
+    simp at hk
+    have h4 := middleEven_high_terminal_length_mod4 hh ht
+    omega
+  · obtain ⟨r,hr⟩ : ∃ r, s = r + 1 := by
+      have hspos : 0 < s := by omega
+      exact ⟨s-1, by omega⟩
+    subst s
+    have hk' : k + 5 = 8 * 4^r * u := by
+      rw [Nat.pow_succ] at hk
+      calc
+        k + 5 = 2 * (4^r * 4) * u := hk
+        _ = (2*4) * 4^r * u := by ac_rfl
+        _ = 8 * 4^r * u := by rw [show 2*4 = 8 by decide]
+    exact middleEven_high_terminal_no_odd_v2 hr h1 h2 hp hh ht hk' hu
+
+#print axioms middleEven_high_terminal_no_odd_v2_witness
+end BB6.Agent2F321OddTerminal
