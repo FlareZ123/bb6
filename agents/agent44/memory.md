@@ -1,3 +1,69 @@
+## 2026-11-28 04:22 UTC — genuinely source-accepted all four previously open Extra28 children
+
+Four-job original-source Lean4.36.0-rc2 CI run
+[46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773)
+**SUCCEEDED all four jobs** (16,17,18,19). It downloaded original accepted
+PhaseTree+Frontier cache artifact 15144626755, regenerated **the exact D1
+child tables** from tracked source archives, compiled each generated proof
+DAG with Lean kernel, printed the exported `cover` axioms (standard
+`propext`, `Classical.choice`, `Quot.sound`, no `sorryAx`/`native_decide`)
+and uploaded .olean and generated source objects to four 30d artifacts:
+- D1=16 0LE B81 artifact 15246879106;
+- D1=17 0RE B150 artifact 15248355458;
+- D1=18 1LE B141 artifact 15248121262;
+- D1=19 1RE B158 artifact 15247622849.
+
+These four are now **certified source original Lean kernel results**, not
+merely candidates. Their previously compiled exact generators remained
+unmodified, only required missing LD→RE dependency path fixed.
+
+Eight prior locally checked sibling source-recheck matrix run
+[46105742866](https://github.com/FlareZ123/bb6/actions/runs/46105742866):
+D1=8 0LC B42 **success** at04:18; D1=7,9,10,12,13,14,15 queued
+due CI concurrency. Source-accepted 8 and 16–19 now means five
+of twelve exact residual child proof artifacts are presently
+independently audited. Wait for remaining seven, then trigger **ONE**
+`raw11-final` dispatch using `four_run=46105738773`,
+`eight_run=46105742866` ONLY if the eight-child run concludes SUCCESS.
+
+**New lightweight, proof-independent mathematical assembly**:
+`Raw11Extra28MinimalJoin.lean` enumerates exact 12 child partial tables,
+proves Boolean coverage using `PhaseFrontier.sameTable` over the
+original-source `AllChildren.remaining` roster (no opaque proof terms
+inside the computed equality), and exposes a conditional
+`completeCover : (12 checked child safeties) → Cover (WeightedBound158) parent`.
+Dispatched original-source verification ~04:21; obtain exact run ID via
+GitHub `actions/runs?per_page=100` and filter module.
+`generate-minimal-join.cjs` constructs exact 12 proof bindings to
+real `Join` modules; `assemble-complete.sh` has been switched to
+MinimalJoin instead of earlier `CompleteJoin` (which twice failed
+Lean decidability due proof variable). The final assembly now needs
+only dependencies in source cache 15144626755, avoiding Q0.
+Backup `Raw11Extra28FromCovers.lean` was patched to project
+`AllChildren.consume` Cover via `.sound` (there had been a
+type mismatch), old CI 46106295194 canceled and rerun **46106915051**.
+Earlier proof-dependent `CompleteJoin` had third `by rfl` retry
+**46106607757** pending; prioritize MinimalJoin regardless.
+Generic proof-bank 46104320797 and exact first 20-way 46103999142
+already independently SOURCE ACCEPTED (see earlier entries).
+
+**Exact original Raw11 294→293 subtraction** source audit
+46105484000 checked the whole transitive dependency and
+`cover_from_293` with only standard axioms, but job failed
+because an *unused* `exact_member : extra28 ∈ prior` theorem
+lacked `DecidableEq (PartialMachine)`. Removed only that theorem;
+re-dispatched **46106782970**, currently queued. The exact
+`exact_complement = (294,293)` and conditional actual
+`cover_from_293` were already printed as standard-axiom in the
+failed run; accept only after fresh successful CI.
+
+**Next**: monitor remaining eight sibling jobs and MinimalJoin CI
+for actual failures; fix them by narrowly targeted patches;
+dispatch final only after full source-accepted twelve. Research
+directory README consistently tracks accepted vs pending
+math. Never infer global BB(6) upper bound from Extra28.
+
+---
 ## 2026-11-28 04:15 UTC — final twelve-child source compilation in progress
 
 **Claimed identity unchanged:** agent44 original `claimed_at`
