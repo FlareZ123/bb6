@@ -130,7 +130,7 @@ theorem alignTail (k : Nat) :
   induction k with
   | zero => rfl
   | succ k ih =>
-    simp only [rep, cTail, eTail, List.append_assoc]
+    simp only [rep, List.append_assoc]
     rw [ih]
     rfl
 
@@ -200,12 +200,9 @@ theorem normalizeFinal (m p : Nat) :
       [true,false,true,true,false,true])
 
 theorem finalOut_eq_family_succ (n : Nat) : finalOut n = family (n+1) := by
-  apply Z0.mk.injEq.mpr
-  constructor
-  · rfl
-  constructor
-  · simpa [finalOut, family, A, B] using normalizeFinal (A n + 1) (B n)
-  · rfl
+  unfold finalOut family
+  congr 1
+  simpa [A, B] using normalizeFinal (A n + 1) (B n)
 
 def C (n : Nat) : Nat := 4*n+2
 def D (n : Nat) : Nat := 2*n+1
@@ -279,7 +276,7 @@ theorem phase_first_raw (n : Nat) :
       left14 (D n) [true,false,true,true,false,true]
       ([true,true] ++ rep [false,true,true] (4*n+1) ++
         [false,false,true,true,false,false,true,true])
-    have hc : C n = (4*n+1)+1 := by simp [C]; omega
+    have hc : C n = (4*n+1)+1 := by simp [C]
     rw [hc] at *
     simpa [rep, List.append_assoc] using h
 
@@ -683,8 +680,7 @@ theorem phase_final (n : Nat) :
     have h := sweepR table 2 [true] [] [true,false,true] [true,false,true] 3
       right3C (A n) (rep [true,false] (B n) ++ cTail)
       [true,false,false,true,true]
-    rw [← rotateRightC n] at h
-    simpa [List.append_assoc] using h
+    simpa [rotateRightC n, List.append_assoc] using h
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (A n) ++
@@ -738,9 +734,9 @@ theorem phase_final (n : Nat) :
       some ⟨4,[true,true,false,false,true,false,true,true,false,true],
         [false,true,true] ++ rep [true,true] (B n) ++
           rep [false,true,true] (A n+1) ++ [false,true]⟩ := by
-    rw [alignBeforeF (B n)
-      (rep [false,true,true] (A n+1) ++ [false,true])] at h5
-    simpa [eTail, List.append_assoc] using h5
+    simpa [alignBeforeF (B n)
+      (rep [false,true,true] (A n+1) ++ [false,true]),
+      eTail, List.append_assoc] using h5
 
   have h6 : run0 table 21
       ⟨4,[true,true,false,false,true,false,true,true,false,true],
