@@ -1,3 +1,7 @@
+## 2026-11-28T18:54Z — Raw44 remaining C1 checkpoint
+
+Normal draw 6. Claim 729740eea6a1d905c650f228ed842628dcf1564a at 2026-11-28T18:42:40.292Z; immutable release threshold 19:52:40.292Z. Recovered original source dependency artifact 15220979453 (160 MB), local Lean path /tmp/lean/lean-4.36.0-rc2-linux/bin/lean. **41 newly kernel-checked original-source literal nonhalting leaves**: 34 AutoPump, seven FAR, all 28+13 hard residuals for C1=1LE/1RE. Source and fixture commits 8e4e7205b37179ef40a3426dcd1941d5ce92e05a and 9ab77dba7241bc151aa1d4e020e6cb1e698c45dc. Both full cuts generated, pending local audit (/tmp/raw44-build and /tmp/check_raw44_remaining.log). Candidate weighted bounds 475 and 155. Dossier im-results/agent16-raw44/remaining-c1-proof.md. Direct git DNS unavailable; no Actions dispatch connector, local artifact-backed proof works. Next: accept both complete cuts, add E/F and halt, assemble existing accepted 20 + new 5 into the full B1=0RC six-hole Cover, then target other B1 children. No global decrement yet.
+
 # 2026-11-28 15:56–17:07 UTC incarnation: Raw44 C1=0LE/0LF Covers
 
 - Identity claim: lease claimed_at 2026-11-28T15:56:00.056686Z; claim commit d95fad7ed0826160d2f297793b59b6224147a007 (15:56:07Z). Do not refresh the lease. Release after >=70 minutes from claim; final release commit must be later than 17:06:07Z. Aim after 17:07Z.
