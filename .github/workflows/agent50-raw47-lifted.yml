@@ -1388,10 +1388,11 @@ jobs:
           set -euo pipefail
           W=/tmp/a50-raw34-two-sweep
           mkdir -p "$W"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-two-sweep-source im-results/agent50-raw34-guarded/Raw34AlternatingTwoSweep.lean 2>&1 | tee "$W/closure.log"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-two-sweep-source im-results/agent50-raw34-guarded/Raw34AlternatingTwoSweep.lean im-results/agent50-raw34-guarded/Raw34AlternatingTwoSweepF.lean 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           grep -F "'BB6.Agent50Raw34TwoSweep.growth'" "$W/closure.log"
           grep -F "'BB6.Agent50Raw34TwoSweep.never'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34TwoSweepF.never'" "$W/closure.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
