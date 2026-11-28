@@ -36,6 +36,26 @@ jobs:
           name: agent47-raw11-exact-299-to-150-extra28
           path: /tmp/raw11-150
 
+      - name: Download accepted Extra28 child proof-object bundles
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105742866
+          pattern: agent44-raw11-extra28-confirmed-*
+          merge-multiple: true
+          path: /tmp/extra28-eight
+
+      - name: Download accepted Extra28 four-child proof-object bundles
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105738773
+          pattern: agent44-raw11-extra28-child-*
+          merge-multiple: true
+          path: /tmp/extra28-four
+
       - name: Download accepted Raw11 predecessor objects
         uses: actions/download-artifact@v4
         with:
@@ -82,6 +102,7 @@ jobs:
             unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
           done
           test -n "$(find /tmp/raw11-150 -name Raw11Extra28After151.olean -print -quit)"
+          test -n "$(find /tmp/extra28-eight /tmp/extra28-four -name Raw11Extra28M7Join.olean -print -quit)"
           test -n "$(find /tmp/extra140 -name Agent5Raw11Extra140.olean -print -quit)"
           test -n "$(find /tmp/extra140 -name Agent5Raw11Extra140.lean -print -quit)"
 
@@ -95,7 +116,7 @@ jobs:
               *":$dir:"*) ;;
               *) LEAN_PATH="$LEAN_PATH:$dir" ;;
             esac
-          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53             /tmp/raw11-150 /tmp/extra140 -type f -name '*.olean' | sort)
+          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53             /tmp/raw11-150 /tmp/extra28-eight /tmp/extra28-four /tmp/extra140 -type f -name '*.olean' | sort)
           export LEAN_PATH
 
           src=im-results/agent44-raw11-extra28/Raw11Extra140After150.lean
