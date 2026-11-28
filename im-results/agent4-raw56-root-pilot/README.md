@@ -60,6 +60,21 @@ M20376 (`1RB---_1RC0LB_0RD1LA_1LD1LE_1RF1LC_0LE0RF`) is now closed for every com
 
 For 0RD and 1LC, all 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. The complete original-source cuts for all three siblings are accepted. Every generated growth lemma and the M20376 and M5334 invariants were checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
 
+## E1=1LB: six-residual assembly and M21049 closure
+
+The frozen 1LB graph covers 43,348 open leaves: 40,968 FAR, 2,242 finite-stack, 37 late last queries (including the two segmented long proofs), two late split trees, five additional cycles, 67 single-variable growth and 21 multi-counter/grammar candidates, leaving six one-hole residuals. All 12 certificate shards, all 12 cut shards and both long-query jobs succeeded in [run 46102143574](https://github.com/FlareZ123/bb6/actions/runs/46102143574), pinned at `7147d964eb447aa6c1abedf63ea011344783d954`; the final assembly received a runner shutdown (exit 143, no Lean diagnostic). Only the failed assembly job was requeued. The partial Cover is not yet accepted as a complete source theorem. Prepared source artifact 15246586340 contains the exact six tables and refinement addresses in `E11LB/accept-meta.json`.
+
+**New original-source theorem: M21049 is nonhalting for every completion of F0.** The table is `1RB1RE_1RC0LA_0RD0RF_1LD1LE_0LB1LB_---0RE`. [M21049.lean](M21049.lean) proves `BB6.Agent4Raw56RootE11LB.M21049.never` and `.cover_never` on the original raw semantics. Both compiled locally using Lean 4.36.0-rc2 and the exact accepted Raw56 source closure artifact 15160313745, ZIP SHA256 `6513147b3929ab6b707225b6592a882025e234d498ed8baca40216489b469b3d`; both print only `[propext, Quot.sound]`. Source SHA256 `1b4eb4cc358fc116a2aa552672a682da111e0e5f44730a62dcb23544ba9b9724`.
+
+In nearest-first zipper notation let `D(b)=101b`, `O=1111`, `T=0111`, `G(b,L,n)=A(bL,0 O^n T)` and `Z(n)=A([],0 O^n T)`. The left tail L is a finite concatenation of D blocks optionally ending in the truncated block 101; exclude G with both L empty and n=0. Blank entry at step 74 is Z(1). The following exact positive-cost rules are complete on this invariant:
+
+- G(0,L,n+1) → G(0,D(0)^n D(1)L,0), and Z(n+1) similarly with empty L, in 8n+14 steps.
+- G(0,L,0) → G(1,L,0), in 6 steps.
+- G(1,D(b)L,n) → G(b,L,n+1), and G(1,101,n) → Z(n+1), in 14 steps.
+- G(1,[],n+1) → G(0,D(0)^(n+1)101,0), in 8n+40 steps.
+
+The rules are proved using arbitrary-tail fixed primitive segments and `sweepR`, not sampled induction. Positive-cost invariant closure yields arbitrarily long live prefixes; `zrun_sound` transports them to every compatible original machine. This eliminates one of the six candidate residuals; five remain (23706, 39232, 39233, 39234, 42763). No parent decrement is claimed until a checked consumer discharges the precise complement.
+
 ## Reusable advances
 
 1. fastabstract.cpp evaluates dynamic two-sided inverse-pop closure in C++ over ngram, run-length, lag-XOR and periodic-block states; portfolio_fast.py provides the ordered 3126 parameter tuples. All accepted candidates regenerated with independent Python abstractions and full finite relation closure validation.
