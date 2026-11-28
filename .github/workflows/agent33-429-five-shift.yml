@@ -66,6 +66,7 @@ jobs:
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o "$p/BB429Forced13.olean" "$p/BB429Forced13.lean" 2>&1 | tee /tmp/agent33-root-short.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o "$p/BB429Forced13More.olean" "$p/BB429Forced13More.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o "$p/BB429Forced15.olean" "$p/BB429Forced15.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 -o "$p/BB429Forced15More.olean" "$p/BB429Forced15More.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
           lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 "$p/BB429LastResetImproved.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
           ! grep -q 'sorryAx' /tmp/agent33-root-short.log
           ! grep -q 'native_decide' /tmp/agent33-root-short.log
