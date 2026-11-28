@@ -185,14 +185,16 @@ The individual source certificates and previous publication-qualification decisi
 
 The [research board](../research/BOARD.md) identifies missing end-to-end proof edges; the [research guide](../RESEARCH_PROTOCOL.md) describes evidence and continuity standards. Update this map when a meaningful mechanism or decision gate changes; integrate new evidence into its existing programme rather than appending dated status sections.
 
-## F197 source-certified mixed-prefix free-monoid reset theorem (Agent2, 27 Nov 2026)
+## F197: original-source infinite-cylinder liveness and unbounded reset monoid
 
-A rigorously established, **unbounded** conditional reset identity for the literal six-state F197/Raw132 source machine: choose any nonempty W∈{P=AAT,Q=TAT}⁺, any nonempty paired A/T data c₀…c_q, and any aligned suffix X. Put Z=c₀(Tc₁)…(Tc_q), Φ=A H(c₀)…H(c_q), H(A)=AT,H(T)=AAT, and F(P)=P,F(Q)=AAAT extended blockwise. Then
+The strongest **accepted original-source statement** is now the [F197 positive self-embedding cylinder](2026-11-28-f197-source-certified-positive-cylinder-agent2.md). For `P=AAT`, `L=AATAAATAUJTT` and the explicit finite `HEAD` defined there, **every** configuration `B(P^72 HEAD L^35 l,e)` with a 1-leading arbitrary infinite suffix `l` has a strictly positive return to the same cylinder, inserting 732,592,001,087,343,543 `L` blocks, `T` and a finite marker prefix. Hence all configurations in that family never halt, even though the tape transformation need not be periodic. Original-source Lean 4.36.0-rc2 [CI 46094555223](https://github.com/FlareZ123/bb6/actions/runs/46094555223) proved `self_embedding` and `self_nonhalt`, with only standard axioms and no `sorryAx`. The exact independent verifier also passed [run 46094784084](https://github.com/FlareZ123/bb6/actions/runs/46094784084).
+
+The accompanying [source-certified mixed-prefix free-monoid reset theorem](../im-results/agent2-f197-sweep/ATFreeMonoidTheorem.md) handles any nonempty interleaving W of P=AAT and Q=TAT, paired A/T data c₀…c_q, and aligned suffix X. With Z=c₀(Tc₁)…(Tc_q), Φ=A H(c₀)…H(c_q), H(A)=AT,H(T)=AAT, and F(P)=P,F(Q)=AAAT, it establishes
 
 ```
 B(W Z AA X,e) →^(68·#P+82·#Q+74+68q+14·#T(data)) B(F(W) Φ X,e).
 ```
 
-Lean 4.36.0-rc2 verifies the exact literal primitive transition count and **strictly +2 encoded left-prefix bits**, with transitive axioms only `[propext, Quot.sound]` and no `sorryAx`. The theorem handles **arbitrary P/Q interleavings**, not merely one or two counters. [Full mathematical argument and limits](../im-results/agent2-f197-sweep/ATFreeMonoidTheorem.md), [source Lean theorem](../im-results/agent2-f197-sweep/ATFreeMonoid.lean), [formal bit-width theorem](../im-results/agent2-f197-sweep/ATFreeMonoidGrowth.lean); [exact source CI](https://github.com/FlareZ123/bb6/actions/runs/46083890068), [bit-width CI](https://github.com/FlareZ123/bb6/actions/runs/46083987937).
+The exact literal primitive count and strict +2 encoded left-prefix bits are Lean-accepted ([source CI 46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068), [growth CI 46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937)), transitive axioms only `propext` and `Quot.sound`.
 
-**Scope limitation:** This is a genuine mathematical reset theorem, not a proof that F197 does not halt from blank tape, nor an exact BB(6) solution. The remaining essential problem is to prove blank-orbit grammar closure for special marker/terminal branches; many genuine resets are not currently within the theorem's domain.
+**Missing proof edges:** Source acceptance of the separate blank-start trace reaching the positive cylinder, integration with the original 25-completion F197 partial table, and universal resolution of the much larger Raw132 parent remain distinct obligations. The guarded Python [blank-root certificate](../im-results/agent2-f197-sweep/NonhaltingCertificate.md) is reproducible computational evidence; the root theorem's full generated source acceptance was pending at the time of this update. This does not resolve exact BB(6).
