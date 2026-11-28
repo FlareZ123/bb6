@@ -5,7 +5,7 @@ const x=require("./leaf2265.cjs");
 const bits=w=>"["+[...w].map(x=>x==="1"?"true":"false").join(",")+"]";
 const ray=w=>"(pre "+bits(w)+" blank)";
 const S=(k,w)=>"(S "+k+" "+ray(w)+")";
-const lines=["import Leaf2265Compress","namespace BB6.Agent3Leaf2265","set_option maxRecDepth 1000000","set_option maxHeartbeats 0"];
+const lines=["import Leaf2265Compress","namespace BB6.Agent3Leaf2265","set_option maxRecDepth 1000000","set_option maxHeartbeats 0","attribute [local irreducible] run","set_option linter.unusedSimpArgs false"];
 function cmd(x){lines.push("  "+x)}
 for(let i=0;i<x.sections;i++){
  const {k,w,T}=x.trace[i],v=x.trace[i+1],dt=v.T-T;
