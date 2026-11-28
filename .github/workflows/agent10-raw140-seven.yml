@@ -76,9 +76,10 @@ jobs:
             node generate_raw140_42_mixed_exit.js > Raw14042MixedExitLocal.lean
             node generate_raw140_42_b_even.js > Raw14042BEvenLocal.lean
             cd ../..
-            python tools/lean_compile_closure.py --workdir /tmp/raw140-mixed42 --jobs 3 im-results/agent10-nov26-cryptids/Raw14042SourceReach.lean 2>&1 | tee /tmp/raw140-proof.log
-            for t in drain_reach; do
-              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw14042SourceReach.$t"
+            python tools/lean_compile_closure.py --workdir /tmp/raw140-source-reach42 --jobs 3 im-results/agent10-nov26-cryptids/Raw14042TerminalReach.lean 2>&1 | tee /tmp/raw140-proof.log
+            python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log Raw14042SourceReach.drain_reach
+            for t in terminal_reach step_reach; do
+              python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-proof.log "Raw14042TerminalReach.$t"
             done
           elif [ "$TARGET" = c86 ] || [ "$TARGET" = cover86 ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_double.js
