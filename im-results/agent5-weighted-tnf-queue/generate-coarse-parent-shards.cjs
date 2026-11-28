@@ -113,62 +113,59 @@ write(base,imports([])+baseLines.join('\n'));
 const H=residuals.length?` (hR : BB6.${base}.ResidualHyp)`:'',arg=residuals.length?' hR':'';
 const safeTy=p=>`∀ m, compatible ${p} m → WeightedBound ${B} m`;
 const eq=(p,q)=>`have hEq : ${p} = ${q} := BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)\n  rw [hEq] at hm\n`;
-// Packed long last-hole traces. The original-source lemma converts the packed
-// final read slot to a knownRun first-hole witness without recomputing the run.
-// Long traces are split into independently kernel-checkable 4096-step parts.
-// Each part composes only its local 256-step decisions; the public LongK module
-// joins the resulting ~4k spans, retaining the same pK/safeK interface.
-const LONG_PART_STEPS=4096;
+// Packed long last-hole traces. The final read slot is proved from exact packed
+// segments without recomputing the whole blank run in one kernel decision.
+// Long traces use independent <=4096-step segment checks plus a balanced tree
+// of opaque joinP theorems. This parallelizes both evaluation and composition
+// while preserving the public LongK.pK / LongK.safeK interface.
+const LONG_SEGMENT_STEPS=4096;
 if(longs.length){
  for(let k=0;k<longs.length;k++){
-  const name=longMod+k;
-  const c=longs[k],t=parse(c.table),p='p'+k;
+  const name=longMod+k,c=longs[k],t=parse(c.table),p='p'+k;
   const checkpoints=[{i:0,q:0,l:0n,r:0n}];
   let q=0,l=0n,r=0n;
   for(let i=1;i<=c.n;i++){
    const m=t[2*q+Number(l&1n)];if(m==='---')throw Error('premature hole '+c.table+' '+(i-1));
    const w=BigInt(m[0]);q=m.charCodeAt(2)-65;
    if(m[1]==='R'){l=(r&1n)+2n*(w+2n*(l>>1n));r>>=1n}else{l>>=1n;r=w+2n*r}
-   if(i%256===0||i===c.n)checkpoints.push({i,q,l,r});
+   if(i%LONG_SEGMENT_STEPS===0||i===c.n)checkpoints.push({i,q,l,r});
   }
   if(2*q+Number(l&1n)!==c.slot||t[c.slot]!=='---')throw Error('wrong final hole '+c.table);
-  if(c.n<=LONG_PART_STEPS){
-   const lines=[ns(name),'open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree'];
+  if(c.n<=LONG_SEGMENT_STEPS){
+   const z=checkpoints[1],lines=[ns(name),'open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree'];
    lines.push(`def ${p} : PartialMachine := ${table(t)}`);
-   for(let j=0;j<checkpoints.length;j++){
-    const x=checkpoints[j];
-    lines.push(`def z${k}_${x.i} : P := ${x.i===0?'startP':`⟨${x.q},${x.l},${x.r}⟩`}`);
-    if(j===0)continue;
-    const prev=checkpoints[j-1],s=`step${k}_${x.i}`,run=`run${k}_${x.i}`;
-    lines.push(`theorem ${s} : runP ${p} ${x.i-prev.i} z${k}_${prev.i} = some z${k}_${x.i} := by decide +kernel`);
-    lines.push(`theorem ${run} : runP ${p} ${x.i} startP = some z${k}_${x.i} := ${prev.i===0?s:'joinP run'+k+'_'+prev.i+' '+s}`);
-   }
+   lines.push(`def z${k}_${c.n} : P := ⟨${z.q},${z.l},${z.r}⟩`);
+   lines.push(`theorem run${k}_${c.n} : runP ${p} ${c.n} startP = some z${k}_${c.n} := by decide +kernel`);
    lines.push(`theorem safe${k} : ${safeTy(p)} := lastPacked ${B} ${p} ${c.n} ${slot(c.slot)} z${k}_${c.n} run${k}_${c.n} (by decide) (by decide) (by decide) (by decide) (by decide)\n#print axioms safe${k}`);
-   lines.push(`end BB6.${name}\n`);write(name,imports([])+lines.join('\n'));
-   continue;
+   lines.push(`end BB6.${name}\n`);write(name,imports([])+lines.join('\n'));continue;
   }
   const baseName=name+'Base',baseLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
   baseLines.push(`def ${p} : PartialMachine := ${table(t)}`);
   for(const x of checkpoints)baseLines.push(`def z${k}_${x.i} : P := ${x.i===0?'startP':`⟨${x.q},${x.l},${x.r}⟩`}`);
   baseLines.push(`end BB6.${name}\n`);write(baseName,imports([])+baseLines.join('\n'));
-  const partNames=[],parts=[],chunksPerPart=LONG_PART_STEPS/256;
-  for(let lo=1,part=0;lo<checkpoints.length;lo+=chunksPerPart,part++){
-   const hi=Math.min(checkpoints.length,lo+chunksPerPart),start=checkpoints[lo-1],finish=checkpoints[hi-1];
-   const partName=name+'Part'+part,partLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
-   for(let j=lo;j<hi;j++){
-    const prev=checkpoints[j-1],x=checkpoints[j],s=`step${k}_${x.i}`,span=`span${k}_${start.i}_${x.i}`;
-    partLines.push(`theorem ${s} : runP ${p} ${x.i-prev.i} z${k}_${prev.i} = some z${k}_${x.i} := by decide +kernel`);
-    partLines.push(`theorem ${span} : runP ${p} ${x.i-start.i} z${k}_${start.i} = some z${k}_${x.i} := ${j===lo?s:`joinP span${k}_${start.i}_${prev.i} ${s}`}`);
+  let nodes=[];
+  for(let j=1;j<checkpoints.length;j++){
+   const a=checkpoints[j-1],b=checkpoints[j],partName=name+'Part'+(j-1);
+   const partLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
+   partLines.push(`theorem span${k}_${a.i}_${b.i} : runP ${p} ${b.i-a.i} z${k}_${a.i} = some z${k}_${b.i} := by decide +kernel`);
+   partLines.push(`end BB6.${name}\n`);write(partName,imports([baseName])+partLines.join('\n'));nodes.push({start:a.i,end:b.i,mod:partName});
+  }
+  for(let level=0;nodes.length>1;level++){
+   const next=[];
+   for(let j=0;j<nodes.length;j+=2){
+    if(j+1===nodes.length){next.push(nodes[j]);continue;}
+    const a=nodes[j],b=nodes[j+1];if(a.end!==b.start)throw Error('nonadjacent long spans');
+    const joinName=name+'Join'+level+'_'+(j>>1),joinLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
+    joinLines.push(`theorem span${k}_${a.start}_${b.end} : runP ${p} ${b.end-a.start} z${k}_${a.start} = some z${k}_${b.end} := joinP span${k}_${a.start}_${a.end} span${k}_${b.start}_${b.end}`);
+    joinLines.push(`end BB6.${name}\n`);write(joinName,imports([a.mod,b.mod])+joinLines.join('\n'));next.push({start:a.start,end:b.end,mod:joinName});
    }
-   partLines.push(`end BB6.${name}\n`);write(partName,imports([baseName])+partLines.join('\n'));partNames.push(partName);parts.push({start:start.i,end:finish.i});
+   nodes=next;
   }
-  const lines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
-  for(let j=0;j<parts.length;j++){
-   const x=parts[j],span=`span${k}_${x.start}_${x.end}`,run=`run${k}_${x.end}`;
-   lines.push(`theorem ${run} : runP ${p} ${x.end} startP = some z${k}_${x.end} := ${x.start===0?span:`joinP run${k}_${x.start} ${span}`}`);
-  }
+  const final=nodes[0],lines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
+  if(final.start!==0||final.end!==c.n)throw Error('wrong long span cover');
+  lines.push(`theorem run${k}_${c.n} : runP ${p} ${c.n} startP = some z${k}_${c.n} := span${k}_0_${c.n}`);
   lines.push(`theorem safe${k} : ${safeTy(p)} := lastPacked ${B} ${p} ${c.n} ${slot(c.slot)} z${k}_${c.n} run${k}_${c.n} (by decide) (by decide) (by decide) (by decide) (by decide)\n#print axioms safe${k}`);
-  lines.push(`end BB6.${name}\n`);write(name,imports([baseName,...partNames])+lines.join('\n'));
+  lines.push(`end BB6.${name}\n`);write(name,imports([final.mod])+lines.join('\n'));
  }
 }
 function emit(t,a,f){
