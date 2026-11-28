@@ -500,21 +500,19 @@ theorem terminal_last_anchor_first_two_high
       HFMove R c B C ∧
       B = R-c-2 ∧ C = 2*c+3 ∧
       HFMove B C E F ∧
-      E = B-C-2 ∧ F = 2*C+3 ∧
+      C+2 ≤ B ∧ E = B-C-2 ∧ F = 2*C+3 ∧
       HFRun j E F (D+1) D := by
   rcases terminal_last_anchor_first_high h with
     ⟨q,R,c,j,B,C,hchain,hc,hfirst,hB,hC,htail⟩
-  have hj : 0 < j := by
-    by_contra hz
-    have hj0 : j=0 := by omega
-    subst j
-    cases htail
-    exact root_anchor_one_high_not_terminal hchain hc hfirst rfl
-  obtain ⟨t,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : j ≠ 0)
-  rcases hfRun_first_step htail with ⟨E,F,hsecond,hrest⟩
-  have hs := root_anchor_second_hf_is_high hchain hc hfirst hsecond
-  exact ⟨q,R,c,t,B,C,E,F,hchain,hc,hfirst,hB,hC,
-    hsecond,hs.2.1,hs.2.2,hrest⟩
+  cases j with
+  | zero =>
+      cases htail
+      exact root_anchor_one_high_not_terminal hchain hc hfirst rfl
+  | succ j =>
+      rcases hfRun_first_step htail with ⟨E,F,hsecond,hrest⟩
+      have hs := root_anchor_second_hf_is_high hchain hc hfirst hsecond
+      exact ⟨q,R,c,j,B,C,E,F,hchain,hc,hfirst,hB,hC,
+        hsecond,hs.1,hs.2.1,hs.2.2,hrest⟩
 
 /-- Strongest local normal form currently needed: the exact terminal-seeded
     inverse word can be chosen with two leading High letters. -/
@@ -530,27 +528,15 @@ theorem terminal_has_last_anchor_formal_word_head_high_high
     ⟨q,R,c,j,B,C,E,F,hchain,hc,hfirst,hB,hC,
       hsecond,hE,hF,hrest⟩
   rcases hfRun_terminal_formal hrest with ⟨w,hlen,hw⟩
-  subst B
-  subst C
-  subst E
-  subst F
+  have ha1 : 2*(B:Int) = 2*(E:Int) + (F:Int) + 1 := by omega
+  have hd1 : 2*(C:Int) = (F:Int) - 3 := by omega
+  have hp1 : FormalInversePath (D:Int) (.high::w) (B:Int) (C:Int) :=
+    FormalInversePath.stepH hw ha1 hd1
   have hR0 : 6 ≤ R := by
     have hg := anchorChain_linear_growth hchain (by decide)
     omega
-  have hg0 := anchor_hfMove_is_high hR0 hc hfirst
-  have hg1 := root_anchor_second_hf_is_high hchain hc hfirst hsecond
-  have ha1 : 2*(((R-c-2 : Nat):Int)) =
-      2*(((R-c-2-c*2-5 : Nat):Int)) + ((2*(2*c+3)+3 : Nat):Int) + 1 := by
-    rcases hc with rfl | rfl <;> omega
-  have hd1 : 2*((2*c+3:Int)) =
-      ((2*(2*c+3)+3 : Nat):Int) - 3 := by omega
-  have hp1 : FormalInversePath (D:Int) (.high::w)
-      (((R-c-2 : Nat):Int)) ((2*c+3 : Nat):Int) :=
-    FormalInversePath.stepH hw ha1 hd1
-  have ha0 : 2*(R:Int) =
-      2*(((R-c-2 : Nat):Int)) + ((2*c+3 : Nat):Int) + 1 := by
-    rcases hc with rfl | rfl <;> omega
-  have hd0 : 2*(c:Int) = ((2*c+3 : Nat):Int) - 3 := by omega
+  have ha0 : 2*(R:Int) = 2*(B:Int) + (C:Int) + 1 := by omega
+  have hd0 : 2*(c:Int) = (C:Int) - 3 := by omega
   have hp0 : FormalInversePath (D:Int) (.high::.high::w)
       (R:Int) (c:Int) :=
     FormalInversePath.stepH hp1 ha0 hd0
@@ -569,12 +555,11 @@ theorem terminal_has_last_anchor_formal_word_head_high
   rcases terminal_last_anchor_first_high h with
     ⟨q,R,c,j,B,C,hchain,hc,hfirst,hB,hC,htail⟩
   rcases hfRun_terminal_formal htail with ⟨w,hlen,hw⟩
-  subst B
-  subst C
-  have ha : 2*(R:Int) =
-      2*(((R-c-2 : Nat):Int)) + ((2*c+3 : Nat):Int) + 1 := by
-    rcases hc with rfl | rfl <;> omega
-  have hd : 2*(c:Int) = ((2*c+3 : Nat):Int) - 3 := by omega
+  have hR : 6 ≤ R := by
+    have hg := anchorChain_linear_growth hchain (by decide)
+    omega
+  have ha : 2*(R:Int) = 2*(B:Int) + (C:Int) + 1 := by omega
+  have hd : 2*(c:Int) = (C:Int) - 3 := by omega
   have hfull : FormalInversePath (D:Int) (.high::w) (R:Int) (c:Int) :=
     FormalInversePath.stepH hw ha hd
   exact ⟨q,R,c,j,w,hchain,hc,hlen,hfull⟩
