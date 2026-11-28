@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
     inputs:
       cancellation_r13:
-        description: 'Run segmented exact GMP r=13 predecessor scan (new asymmetric bound)'
+        description: 'Run exact paired r=13 root and valuation-four child scans'
         type: boolean
         required: false
         default: false
@@ -140,13 +140,13 @@ jobs:
         range: ["1 1500000", "1500001 3000000", "3000001 5000000", "5000001 7604436"]
     steps:
       - uses: actions/checkout@v4
-      - name: Build exact segmented enumerator
+      - name: Build paired exact segmented enumerator
         run: |
           set -euo pipefail
           sudo apt-get update -qq
           sudo apt-get install -y -qq libgmp-dev
-          g++ -O3 -std=c++17 -fopenmp im-results/agent20-needle-coprime/needle13.cpp -lgmpxx -lgmp -o /tmp/needle13
-          sha256sum im-results/agent20-needle-coprime/needle13.cpp
+          g++ -O3 -std=c++17 -fopenmp im-results/agent20-needle-coprime/needle-pair.cpp -lgmpxx -lgmp -o /tmp/needle13
+          sha256sum im-results/agent20-needle-coprime/needle-pair.cpp
           git rev-parse HEAD
       - name: Exhaust assigned r13 interval
         env:
@@ -155,19 +155,23 @@ jobs:
           set -euo pipefail
           export OMP_NUM_THREADS=4
           read -r LO HI <<< "$RANGE"
-          /tmp/needle13 13 1 0 1 "$LO" "$HI" | tee /tmp/needle13.log
+          /tmp/needle13 13 "$LO" "$HI" 10000000 2>&1 | tee /tmp/needle13.log
           python3 - <<'PY'
           import math,os,pathlib,re
           lo,hi=map(int,os.environ['RANGE'].split())
-          line=next(x for x in pathlib.Path('/tmp/needle13.log').read_text().splitlines() if x.startswith('r=13 c=1'))
-          d=dict(re.findall(r'(\w+)=([^\s]+)',line))
+          line=next(x for x in pathlib.Path('/tmp/needle13.log').read_text().splitlines() if x.startswith('r=13 range='))
+          header,body=line.split(' root: ')
+          root,four=body.split(' four: ')
+          d=dict(re.findall(r'(\w+)=([^\s]*)',header))
           a=(9**13+5)//2
           cut=math.isqrt((13*14*a-1)//4)
           assert int(d['cut'])==cut==7604436
           assert d['range']==f'{lo}..{hi}'
-          assert sum(int(d[k]) for k in ('rotation','sieve','sparse','exact'))==hi-lo+1
-          assert int(d['largeZero'])==0
-          print('PASS: exact r13 segment',line)
+          for title,part,keys in [('root',root,('sieve','rotation','sparse','exact')),('four',four,('sieve','Ladic','rotation','sparse','exact'))]:
+              d=dict(re.findall(r'(\w+)=([^\s]*)',part))
+              assert sum(int(d[k]) for k in keys)==hi-lo+1
+              print('PASS: exact paired r13 segment',title,lo,hi,'parents=',d['parents'])
+          print(line)
           PY
       - name: Preserve exact segment evidence
         if: always()
