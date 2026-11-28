@@ -15,8 +15,14 @@ on:
         description: 'Exact partition key, e.g. g0p1'
         required: true
         type: string
+      proof_kind:
+        description: 'Heavy certificate representation to row-split'
+        required: true
+        type: choice
+        options: [run, ngram]
+        default: run
       leaf:
-        description: 'Exact generated Run leaf number, e.g. 3977'
+        description: 'Exact generated leaf number, e.g. Run 3977 or NGram 32983'
         required: true
         type: string
 
@@ -36,11 +42,13 @@ jobs:
           BRANCH: ${{ inputs.branch }}
           SOURCE_RUN: ${{ inputs.source_run }}
           PART: ${{ inputs.part }}
+          PROOF_KIND: ${{ inputs.proof_kind }}
           LEAF: ${{ inputs.leaf }}
         run: |
           set -euo pipefail
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
+          [[ "$PROOF_KIND" =~ ^(run|ngram)$ ]]
           [[ "$LEAF" =~ ^[0-9]+$ ]]
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
 
@@ -72,19 +80,26 @@ jobs:
           name: raw42-split-core
           path: /tmp/core
 
-      - name: Quotient the BiDFA witness and reprove it by independent FastBiDFA rows
+      - name: Row-split the oversized certificate and reprove the exact partition
         env:
           BRANCH: ${{ inputs.branch }}
           PART: ${{ inputs.part }}
+          PROOF_KIND: ${{ inputs.proof_kind }}
           LEAF: ${{ inputs.leaf }}
         run: |
           set -euo pipefail
           d=im-results/agent32-raw42
           g="$d/generated-assembly"
-          stem="Raw42${BRANCH}Run${LEAF}"
-          test -f "$g/${stem}.lean"
-          python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
-          python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
+          if [[ "$PROOF_KIND" == "run" ]]; then
+            stem="Raw42${BRANCH}Run${LEAF}"
+            test -f "$g/${stem}.lean"
+            python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
+            python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
+          else
+            stem="Raw42${BRANCH}NGram${LEAF}"
+            test -f "$g/${stem}.lean"
+            python "$d/rewrite_ngram42_rows.py" "$g" "$BRANCH" "$LEAF"
+          fi
           mapfile -t roots < <(python -c 'import json,sys;print(*json.load(open(sys.argv[1]))["groups"][sys.argv[2]],sep=chr(10))' "$g/split-plan.json" "$PART")
           test "${#roots[@]}" -gt 0
           for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
