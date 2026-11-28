@@ -1159,12 +1159,14 @@ jobs:
             --manifest "$W/manifest.json" \
             --theorem BB6.Agent40Raw34FRightRay.never \
             --theorem BB6.Agent40Raw34ERightRay.never \
+            --theorem BB6.Agent40Raw34ELeftRay.never \
             --theorem BB6.Agent40Raw34EFRightRay.never \
             --theorem BB6.Agent40Raw34FLeftRay.never \
             --theorem BB6.Agent40Raw34FDepth2Cycles.all_never \
             --artifact-name raw34-EF-ray-and-F-cycle-source \
             im-results/agent40-raw34-frontier/Raw34EFRightRay.lean \
             im-results/agent40-raw34-frontier/Raw34ERightRay.lean \
+            im-results/agent40-raw34-frontier/Raw34ELeftRay.lean \
             im-results/agent40-raw34-frontier/Raw34FLeftRay.lean \
             im-results/agent40-raw34-frontier/Raw34FDepth2Cycles.lean \
             2>&1 | tee "$W/closure.log"
@@ -1198,7 +1200,12 @@ jobs:
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: 48 E/F left/right rays plus 34 F side-cycle all-time nonhalters')
+          for name in ('count','checked','never'):
+              full='BB6.Agent40Raw34ELeftRay.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 56 E/F left/right ray sources and 34 F translated-side cycles')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
