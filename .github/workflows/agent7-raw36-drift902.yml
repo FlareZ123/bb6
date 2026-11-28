@@ -39,11 +39,20 @@ on:
         type: choice
         options: ['pilot','full']
         default: 'pilot'
+      d100_f1_exposure_batch:
+        description: Source-prove 4672258-step F1 first-hole and weighted bound
+        type: boolean
+        default: false
+      d100_f1_exposure_mode:
+        description: Compile early and late batches or complete original source
+        type: choice
+        options: ['pilot','full']
+        default: 'pilot'
 permissions:
   contents: read
 jobs:
   source-audit:
-    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch && !inputs.d100_long_epoch_batch }}
+    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch && !inputs.d100_long_epoch_batch && !inputs.d100_f1_exposure_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -346,5 +355,59 @@ jobs:
             /tmp/a7-long-epoch/certificate.json
             /tmp/a7-long-epoch-proof/
             /tmp/a7-long-epoch-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-f1-exposure:
+    if: ${{ inputs.d100_f1_exposure_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Reconstruct original source and generate exact F1 first-hole trace modules
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent7-opaque-tail-pump/f1_exposure_certificate.py \
+            --out /tmp/a7-f1-exposure --chunk 2400 --batch 30
+      - name: Source-check first and final prefix batches or all-completions weighted bound
+        run: |
+          set -euo pipefail
+          MODE=${{ inputs.d100_f1_exposure_mode }}
+          if [[ "$MODE" == "pilot" ]]; then
+            TARGETS=(/tmp/a7-f1-exposure/F1ExposureBlock000.lean /tmp/a7-f1-exposure/F1ExposureBlock064.lean)
+          else
+            test "$MODE" = full
+            TARGETS=(/tmp/a7-f1-exposure/F1ExposureBound.lean)
+          fi
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-f1-proof --source-root /tmp/a7-f1-exposure --jobs 2 \
+            --manifest /tmp/a7-f1-proof/manifest.json \
+            --label raw36-d100-f1-exposure-${{ inputs.d100_f1_exposure_mode }} \
+            --artifact-name raw36-d100-f1-exposure-${{ inputs.d100_f1_exposure_mode }} \
+            --provenance-input im-results/agent7-opaque-tail-pump/f1_exposure_certificate.py \
+            "${TARGETS[@]}" 2>&1 | tee /tmp/a7-f1-audit.log
+          if [[ "$MODE" == "pilot" ]]; then
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-f1-audit.log BB6.Agent7D100F1Exposure.block000
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-f1-audit.log BB6.Agent7D100F1Exposure.block064
+          else
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-f1-audit.log BB6.Agent7D100F1Exposure.bound
+          fi
+          cp /tmp/a7-f1-audit.log /tmp/a7-f1-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-f1-exposure-${{ inputs.d100_f1_exposure_mode }}
+          path: |
+            /tmp/a7-f1-exposure/certificate.json
+            /tmp/a7-f1-proof/
+            /tmp/a7-f1-audit.log
           if-no-files-found: warn
           retention-days: 60
