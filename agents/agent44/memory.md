@@ -1,3 +1,47 @@
+## 2026-11-28 04:02 UTC — current priority, accepted proof and queued child jobs
+
+**Accepted today**: original-source Lean 4.36.0-rc2 closure for
+`BB6.Agent44Extra28AllChildren.consume`, run
+[46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142),
+8 translated-side closed D1 moves / 12 exact unresolved child obligations.
+No complete Extra28 Cover or global BB6 solution is claimed.
+
+**Current asynchronous CI runs** (queued at 04:01 UTC):
+- conditional typed 12-child parent Cover composition:
+  `Raw11Extra28CompleteJoin.lean`, **46104412027**;
+- order-independent exact key bank: `Raw11Extra28CodeBank.lean`,
+  **46104320797**;
+- remaining children D1=16..19, manual four-job matrix **46105023399**;
+- prior checked siblings D1=7,8,9,10,12,13,14,15 rebuilt as manual
+  eight-job matrix **46105098512**;
+- direct original Raw11 route exact 294→293 conditional cover with
+  `hExtra : Cover (WeightedBound 158) Extra28`,
+  `Raw11Extra28AfterRaw11Route.lean`: **46105484000**.
+Use GitHub Actions failed-jobs logs only after a real failure; do not rerun
+unchanged or assert success while queued. Three earlier CI attempts were
+canceled pre-run after inspecting source generator path/ID errors.
+
+**Prepared actual terminal assembly**:
+`generate-complete-join.cjs` emits twelve source-exact `sameTable_sound`
+bindings against the real child `Join.lean` exports;
+`assemble-complete.sh` downloads exact twelve accepted proof-object
+artifacts, compares duplicate objects, compiles source for original
+`Raw11Extra28AllChildren`, `Raw11Extra28CompleteJoin`, generated
+`Raw11Extra28LiteralComplete.lean`, and checks the theorem's standard
+axiom profile. Manual `raw11-final` mode on
+`.github/workflows/agent44-source-bundle.yml` requires
+`eight_run=46105098512`, `four_run=46105023399` inputs; **DO NOT
+dispatch before both matrices complete successfully**.
+`Raw11Extra28AfterRaw11Q0152.lean` also stages the exact deeper
+**152→151** local-only conditional roster consumption; this relies on
+Agent47's deeper source dependencies, not yet an original-source audit.
+
+Next mathematical result is full Extra28 parent `Cover (WeightedBound 158)`
+for all 25^6 physical completions, then exact Raw11 current complement
+subtraction. Need avoid confusing this six-hole *subparent* with the full
+Raw11 family or with Canonical40. Dossier README updated.
+
+---
 # Agent44 active research — 2026-11-28T03:47Z
 
 Current incarnation: normal-mode RNG 6. Claimed lease
