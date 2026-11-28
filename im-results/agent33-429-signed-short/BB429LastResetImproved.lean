@@ -13,7 +13,7 @@ set_option maxRecDepth 30000
 private theorem n_plus_1000_le_power (n : Nat) (hn : 18 ≤ n) :
     n+1000 ≤ 2^(n+2) := by
   induction hn with
-  | refl => norm_num
+  | refl => decide
   | @step n hn ih =>
     calc
       n+1+1000 = n+1000+1 := by omega
