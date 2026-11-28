@@ -222,7 +222,7 @@ is accepted.
 
 The full-cut source uses the existing `ZipThreeHoleAudit`
 `Audit` datatype, constructs 24 first-level C1 children,
-and reduces each using `zipCheck 101` plus the source
+and reduces each using `zipCheck 96` plus the source
 `certifiedZip` soundness theorem. It does not introduce a
 trusted external oracle or alter the checker.
 
@@ -231,4 +231,40 @@ Focused CI links:
 and [full cut search](https://github.com/FlareZ123/bb6/actions/workflows/agent38-m62-kernel.yml).
 A successful full-cut original-source gate would certify all
 `25^5=9,765,625` physical completions of this exact five-hole
-Raw45 child at weighted score at most 101.
+Raw45 child at weighted score at most 96.
+
+
+## Exact 96-step halting attainment witness
+
+The complete-discovery first-hole tree has exact *weighted* maximum
+**96** (not the initial conservative 101). Re-running the six-state
+simple incoming-zero-path delay automaton used by
+`possibleDelays` on every one of the **2,545** first-hole
+nodes returned maximum `n+1+d=96` for exactly two
+literal leaves, both with `n=95` and `d=0`.
+All other discovery scores were ≤75. Thus 96 is the natural
+candidate **exact** weighted maximum for the entire five-hole child,
+*conditional* on source acceptance of the 11,449-node upper audit.
+The literal attainment witnesses (genuine E1/F1 halting rows) are:
+
+```text
+1RB0LC_1RC0LA_0RD0LE_1LD1RB_0LF---_1RF0RA
+1RB0LC_1RC0LA_0RD0LF_1LD1RB_1RE0RA_0LE---
+```
+
+The first total machine is provided in source Lean at
+[Raw45Sharp96Witness.lean](Raw45Sharp96Witness.lean).
+It proves an *actual* blank-run `HaltsAfter witness 95`,
+initial blank delay zero, and
+`¬ WeightedBound 95 witness` via exact `run` computation.
+This is independent of the hard-growth and ngram subproofs.
+Its original-source Lean+axiom gate is
+[manual CI](https://github.com/FlareZ123/bb6/actions/workflows/agent38-m62-kernel.yml)
+target `raw45-sharp96`; do not claim accepted lower bound
+until the run succeeds.
+
+The full-cut source has been sharpened everywhere to
+`zipCheck 96` and `WeightedBound 96`
+(commit 545c9c72); kid04 smoke source was also sharpened to 96.
+The exact 96 lower and full 96 upper, once source accepted,
+will make a locally exact five-hole quotient subfamily bound.
