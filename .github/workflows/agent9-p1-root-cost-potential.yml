@@ -81,7 +81,7 @@ jobs:
           lean -o "$lag/LagCore.olean" "$lag/LagCore.lean"
           modules='ReturnGCD ReturnSlope ReturnObstruction ReturnGeneral ReturnTrace ReturnSource ReturnScaled'
           if [ "${{ inputs.target }}" = generic ]; then
-            modules="$modules AntiGeneral AntiShiftCore AntiNegacyclic AntiGeneric AntiGenericBound AntiGenericScaled AntiGenericTrace"
+            modules="$modules AntiGeneral AntiShiftCore AntiNegacyclic AntiGeneric AntiGenericBound AntiGenericScaled AntiGenericTrace AntiFermatTrace"
           elif [ "${{ inputs.target }}" = anti5 ]; then
             modules="$modules Anti5Core Anti5Interior Anti5Full Anti5Source Anti5Trace"
           else
@@ -94,6 +94,9 @@ jobs:
           done
           if [ "${{ inputs.target }}" = generic ]; then
             grep -F "trace_no_odd_negacyclic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-AntiGenericTrace.log
+            for theorem in trace_no_11_shift trace_no_17_shift trace_no_43_shift trace_no_257_shift; do
+              grep -F "$theorem' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-AntiFermatTrace.log
+            done
           elif [ "${{ inputs.target }}" = anti5 ]; then
             grep -F "trace_no_five_dyadic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-Anti5Trace.log
           else
