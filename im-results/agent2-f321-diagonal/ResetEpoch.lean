@@ -128,6 +128,21 @@ theorem outerMove_X_strict {a d A D : Nat}
       have hx := (equal_coordinates a).1
       omega
 
+theorem outerMove_X_le_six {a d A D : Nat}
+    (h : OuterMove a d A D) : X A D ≤ X a d + 6 := by
+  unfold OuterMove at h
+  rcases h with hH | hRest
+  · rcases hH with ⟨hg,rfl,rfl⟩
+    have hx := (high_coordinates a d hg).1
+    omega
+  · rcases hRest with hF | hE
+    · rcases hF with ⟨h1,h2,rfl,rfl⟩
+      have hx := (far_coordinates a d h1 h2).1
+      omega
+    · rcases hE with ⟨rfl,rfl,rfl⟩
+      have hx := (equal_coordinates a).1
+      omega
+
 /-- Every non-Middle step raises X by at least one. -/
 theorem outerRun_X_growth {n a d A D : Nat}
     (h : OuterRun n a d A D) :
@@ -136,6 +151,15 @@ theorem outerRun_X_growth {n a d A D : Nat}
   | nil => omega
   | step h hm ih =>
       have hs := outerMove_X_strict hm
+      omega
+
+theorem outerRun_X_upper {n a d A D : Nat}
+    (h : OuterRun n a d A D) :
+    X A D ≤ X a d + 6*n := by
+  induction h with
+  | nil => omega
+  | step h hm ih =>
+      have hs := outerMove_X_le_six hm
       omega
 
 theorem outerRun_X_monotone {n a d A D : Nat}
@@ -148,8 +172,9 @@ theorem outerRun_X_monotone {n a d A D : Nat}
 
 /-- The next reset first counter lies strictly above the coordinate immediately
     before the reset. -/
-theorem resetMove_output_above_X {a d R c : Nat}
-    (h : ResetMove a d R c) : X a d < R := by
+theorem resetMove_output_bounds {a d R c : Nat}
+    (h : ResetMove a d R c) :
+    X a d < R ∧ R < 2 * X a d := by
   unfold ResetMove at h
   rcases h with h | h
   · rcases h with ⟨h1,h2,hp,rfl,rfl⟩
@@ -158,6 +183,22 @@ theorem resetMove_output_above_X {a d R c : Nat}
   · rcases h with ⟨h1,h2,hp,rfl,rfl⟩
     unfold X
     omega
+
+theorem resetMove_output_above_X {a d R c : Nat}
+    (h : ResetMove a d R c) : X a d < R :=
+  (resetMove_output_bounds h).1
+
+/-- Explicit two-sided distortion bound for an epoch with n non-Middle moves. -/
+theorem resetEpoch_witness_bounds
+    {n R c a d R' c' : Nat}
+    (ho : OuterRun n R c a d)
+    (hr : ResetMove a d R' c') :
+    X R c + n < R' ∧
+    R' < 2 * (X R c + 6*n) := by
+  have hlo := outerRun_X_growth ho
+  have hhi := outerRun_X_upper ho
+  have hb := resetMove_output_bounds hr
+  omega
 
 /-- Stronger form: the next reset first counter lies above the entire starting
     reset coordinate, not merely above its first counter. -/
