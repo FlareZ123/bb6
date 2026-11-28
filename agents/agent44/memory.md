@@ -1,3 +1,47 @@
+## 2026-11-28 12:30 UTC — bounded recovery pipelines live
+
+Lease remains the immutable 2026-11-28T11:43:12.094135Z claim in 5b088410; do not refresh. Normal-mode RNG 6.
+
+### Extra132
+
+- Old direct monolith target run 46142061616 confirmed the 6.323MB module exits 143 after ~167s with no Lean error.
+- Source diagnostic 46143127700: target module has 8 automata literals; one cert is ~6.109MB.
+- Six-hole rank 46143188417 identifies that exact cert as parent 132 table `1RB1RD1RC1RE0LA0LD1LA1LC0RF---0RC0RE`, kind blk4, 2097 left states, 133 right states, 83439 transition rows.
+- `TwoSidedAutomataRows.check_of_rows` preflight run 46143450501 succeeds with axioms [propext, Quot.sound].
+- Direct row-bootstrap run 46143888053 failed immediately at the structural splitter guard: the threshold-8 source still groups the huge cert with sibling proof nodes. No Lean compile occurred.
+- Generator now supports `RAW11_REPAIR_CERT_THRESHOLD` (fc489cfd) and `RAW11_REPAIR_MODULE_THRESHOLD` (509a7468).
+- Push-triggered exact recovery workflow `.github/workflows/agent44-extra132-row-push.yml` commit 8c4e4c54; trigger commit 7acf7057; run **46144683716** queued. It regenerates Extra132 with cert threshold 1, row-splits only the giant exact FAR leaf, reuses the seven immutable accepted leaf banks, and compiles six fresh modules with a 240s per-module timeout.
+- Continuations commits **32d70e6b** and **7a1b0efb** consume the prior cryptographic checkpoint automatically in bounded 12/16-module tranches and publish `parent-complete-132-repaired` only when the real top Cover object exists.
+
+### Extra140
+
+- Successful checkpoint run 46141446137 remains 35 accepted / 15 remaining.
+- Replaying target `Agent5Raw11Extra140Sub_root_6_root_9` as run 46142058463 was cancelled at 12:24 after ~25m stuck in the same module. The earlier replay had entered that same 1,160,782-byte module and got runner SIGTERM 113s later.
+- Diagnostic run **46143928956**: target has **74 automata leaves**; largest cert only **409,267 bytes**. The problem is aggregate module elaboration, not one giant FAR witness.
+- Fine threshold-5 attempt run 46144240262 failed during source-generation safety assertion before Lean; source still had a file >=500KB.
+- Push-triggered finer workflow `.github/workflows/agent44-extra140-fine-push.yml` commit 5b497949; trigger 9b7b5d71; run **46144735968** queued. It uses module threshold 2 / cert threshold 1, asserts max source <600KB, reuses the 46141446137 checkpoint by exact hashes, and compiles at most 8 fresh modules with 240s per-module timeout.
+- Continuation commit **485a0004** resumes another 16 fresh modules and publishes `parent-complete-140-repaired` only on actual top Cover.
+
+### Repair compiler reliability
+
+Commit **5c03496c6ca73bfdc295d90179bdcda79bc52471** adds `RAW11_REPAIR_MODULE_TIMEOUT`: a timed-out module deletes its partial olean and returns a normal `timeout-checkpoint`, preserving all prior receipts. Workflow timeout wiring commits ad9b115f / 3d4ac22 / faec5497 set 240s for future Agent44 repair runs.
+
+### q0-148
+
+- Complete search remains B=6164, zero residual leaves, 48 source shards; 35 accepted before this incarnation.
+- Finite recovery matrix run **46142576277** is active despite top-level “queued”: jobs 1 and 8 are in kernel checks; jobs 0 and 3 failed after ~3–4m; remaining jobs queued.
+- Targeted shard0 workflow commit **fcbc13bb** run **46144426323** is in progress, independently rechecking shard 0 with one Lean worker.
+- Do not claim the q0-148 parent Cover until all 48 shard objects merge and `BB6.Agent5Q0Coarse148.cover` source-checks.
+
+### Staged exact Raw11 successors (still conditional)
+
+- 150→149 via Extra140: source 4048d70f, workflow 5944b22a.
+- 150→148 via Extra132+140: source f3e1ee3e, workflow e5af4eaa.
+- 148→147 via q0-148: source 38aede18, workflow 9e49c454.
+None is accepted until corresponding parent Covers and source audits succeed.
+
+---
+
 ## 2026-11-28 12:15 UTC — Extra132 giant FAR structurally decomposed
 
 Lease remains the immutable 2026-11-28T11:43:12.094135Z claim (5b088410); do not refresh. Normal-mode RNG was 6.
