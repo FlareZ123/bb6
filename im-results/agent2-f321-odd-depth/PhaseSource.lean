@@ -23,19 +23,19 @@ theorem phase_preserved
     (hp:Phase a d) : Phase A D := by
   dsimp [Phase] at hp ⊢
   cases h with
-  | high a d hg =>
+  | high d hg =>
     rcases hp with h1 | h2
     · right; constructor <;> omega
     · left; constructor <;> omega
-  | equal a =>
+  | equal =>
     left; constructor <;> omega
-  | far a d h1 h2 =>
+  | far d h1 h2 =>
     rcases hp with h1p | h2p
     · left; constructor <;> omega
     · right; constructor <;> omega
-  | middleEven a d h1 h2 hm =>
+  | middleEven d h1 h2 hm =>
     right; constructor <;> omega
-  | middleOdd a d h1 h2 hm =>
+  | middleOdd d h1 h2 hm =>
     left; constructor <;> omega
 
 theorem safe_preserved
@@ -46,11 +46,11 @@ theorem safe_preserved
   · rcases hseed with ⟨ha,hd⟩
     subst a; subst d
     cases h with
-    | high a d hg => omega
-    | equal a => exact Or.inl (by decide)
-    | far a d h1 h2 => omega
-    | middleEven a d h1 h2 hm => omega
-    | middleOdd a d h1 h2 hm => omega
+    | high d hg => omega
+    | equal => exact Or.inl (by simp [Phase])
+    | far d h1 h2 => omega
+    | middleEven d h1 h2 hm => omega
+    | middleOdd d h1 h2 hm => omega
 
 theorem safe_from_seed
     {n a d:Nat} (hr:CounterReach 1 1 n a d) : Safe a d := by
