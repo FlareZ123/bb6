@@ -6,7 +6,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412Depth6Two
-open BB6Coverage BB6.Agent26F412Graft
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft
 open BB6.Agent26F412Depth7 BB6.Agent26F412ThreeHole
 
 /-- Two additional depth-six A1 nonchampion alternatives, each covered by
