@@ -67,11 +67,12 @@ function isBoundary(g){
 function nextBoundary(g,limit=120000){
  const w=encode(g),one=new Set();
  for(let i=0;i<w.length;i++)if(w[i]==="1")one.add(i);
- let q=4,x=w.length-4,rightmost=w.length-2;
+ let q=4,x=w.length-4;
  for(let t=0;t<limit;t++){
   const a=one.has(x)?1:0;
-  if(t>0&&q===4&&a===1&&x===rightmost-2){
+  if(t>0&&q===4&&a===1){
    const low=Math.min(...one),high=Math.max(...one);
+   if(x!==high-2)continue;
    let word="";
    for(let i=low;i<=high+1;i++)word+=one.has(i)?"1":"0";
    const parsed=parse(word,x-low);
@@ -84,7 +85,6 @@ function nextBoundary(g,limit=120000){
   const [w,dx,nq]=tr;
   if(w)one.add(x);else one.delete(x);
   x+=dx;q=nq;
-  rightmost=Math.max(rightmost,x);
  }
  return {status:"capped",steps:limit};
 }
