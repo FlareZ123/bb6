@@ -88,6 +88,12 @@ def main():
         roots[root.name] = raw39.sha(root)
         profiles.update(p)
 
+    # Raw39's selected replay objects and source-checked bridge are now in the
+    # canonical linked environment.  Reclaim duplicate parent/staging trees
+    # before downloading Raw112's ~1.17 GB accepted proof artifact.
+    shutil.rmtree(work / "raw39-parent", ignore_errors=True)
+    shutil.rmtree(work / "raw39-staged", ignore_errors=True)
+
     # Authenticate the already source-accepted 24-branch Raw112 parent artifact,
     # then merge its exact object family into the reconstructed Canonical39
     # environment with source/import/compiler identity checks.
