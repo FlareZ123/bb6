@@ -49,12 +49,20 @@ remaining premises has been discharged. The source-closure CI was requested
 as run [46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142);
 do not label it accepted unless that run passes.
 
-A single fully compiled joint `Route 158` with twelve `.certified`
-branches, the eight original side leaves, all exact table equalities,
-and empty residual roster would establish
-`Cover (WeightedBound 158) parent`. It requires the four outstanding
-joins and reuses the eight checked child proofs. It does not establish a
-complete Cover of the enclosing Raw11 parent or any of its other extras.
+The explicit [`Raw11Extra28CompleteJoin.lean`](Raw11Extra28CompleteJoin.lean)
+provides a **conditional complete parent theorem** at weighted bound 158:
+a typed structure `Certificates` accepts one original-child safety proof
+at each of the twelve distinct bounds above, constructs the exact twenty
+`Route 158` branches, and checks every table identity and the empty
+residual list. Once source-accepted, `completeCover` is the rigorous
+composition target for all twelve child proofs. The corresponding
+`completeCoverAt` lifts this Cover to any B≥158 for the enclosing Raw11
+consumer; it currently still requires the four outstanding child proofs.
+Source-closure CI was requested using the existing shared manual checker.
+The independent [`Raw11Extra28CodeBank.lean`](Raw11Extra28CodeBank.lean)
+offers an order-independent finite-bank variant using any proven injective
+table code. These lemmas are conditional glue, **not** a current closed
+parent or global BB(6) theorem.
 
 ## Proof mechanisms and reproduction
 
