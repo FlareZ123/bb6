@@ -92,8 +92,8 @@ checkpoint protocol:
    and the accepted Raw39 1LE run `46114235329`. Leave `resume_run_id` empty
    for a fresh replay.
 2. On every job exit (including cancellation), artifact
-   `raw47-after-raw112-checkpoint` stores `report.json` and the checked
-   `objects/*.olean` stages.
+   `raw47-after-raw112-checkpoint` stores `report.json` and only the checked
+   `objects/A50Raw47SliceChunk*.olean` stage files (not unrelated producer objects).
 3. If the run is interrupted, dispatch the same workflow with
    `resume_run_id` set to that prior run ID. `full.py --resume-from` delegates
    to `relocate_chunked`, which reconstructs the import plan and verifies each

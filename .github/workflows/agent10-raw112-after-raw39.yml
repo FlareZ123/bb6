@@ -93,7 +93,10 @@ jobs:
           report = json.loads(Path("/tmp/raw47-resume/report.json").read_text())
           chunks = report.get("chunks", [])
           assert chunks, "checkpoint contains no completed kernel chunks"
-          assert len(chunks) == len(list(Path("/tmp/raw47-resume/objects").glob("*.olean")))
+          objects = Path("/tmp/raw47-resume/objects")
+          stage_files = list(objects.glob("A50Raw47SliceChunk*.olean"))
+          assert len(chunks) == len(stage_files)
+          assert all((objects / (c["stage"] + ".olean")).is_file() for c in chunks)
           print(f"Authenticated replay checkpoint: {len(chunks)} chunks, "
                 f"{report['affected_modules']} affected modules")
           PY
@@ -119,7 +122,7 @@ jobs:
           name: raw47-after-raw112-checkpoint
           path: |
             /tmp/a10-raw112-after-raw39/raw47-kernel-replay/report.json
-            /tmp/a10-raw112-after-raw39/raw47-kernel-replay/objects/
+            /tmp/a10-raw112-after-raw39/raw47-kernel-replay/objects/A50Raw47SliceChunk*.olean
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
