@@ -212,9 +212,13 @@ theorem rootHits_high_twice_low (n : Nat) :
 
 theorem rootHits_highCost (n : Nat) :
     highCost (rootHits n) = 2^(n+5) := by
-  rw [rootHits_high_twice_low, rootHits_lowCost]
-  rw [show n+5 = (n+4)+1 by omega, Nat.pow_succ]
-  ac_rfl
+  calc
+    highCost (rootHits n) = 2 * lowCost (rootHits n) :=
+      rootHits_high_twice_low n
+    _ = 2 * 2^(n+4) := by rw [rootHits_lowCost]
+    _ = 2^(n+4) * 2 := Nat.mul_comm _ _
+    _ = 2^((n+4)+1) := (Nat.pow_succ 2 (n+4)).symm
+    _ = 2^(n+5) := by congr 1 <;> omega
 
 theorem rootHits_nonempty (n : Nat) : rootHits n ≠ [] := by
   intro h
