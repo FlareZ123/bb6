@@ -76,9 +76,9 @@ theorem check_open_duality (b f : Nat) (s : Pair) (hf : b≤f) :
                     · simp only [hy,ite_false]
                       constructor
                       · intro _ hyn
-                        exact False.elim (hy hyn)
+                        exact hyn.elim
                       · intro _
-                        rfl
+                        trivial
                   have hhigh :
                       (List.range (v+1)).all (fun n =>
                         if Allowed s v n then
@@ -139,9 +139,9 @@ theorem check_open_duality (b f : Nat) (s : Pair) (hf : b≤f) :
                   · exact hn
                   · have hval := (valvalid_iff_not_divisible b s).mpr hn
                     exact (hv (by simpa [v] using hval)).elim
-                have hQ : P b∣s.x+s.y+(s.x+s.y)%2 := by
-                  have hp : P b=I b := by
-                    simp [P,I,BB6.Agent42ModularCone.P]
+                have hQ : BB6.Agent21Dyadic.P b∣s.x+s.y+(s.x+s.y)%2 := by
+                  have hp : BB6.Agent21Dyadic.P b=I b := by
+                    simp [BB6.Agent21Dyadic.P,I,BB6.Agent42ModularCone.P]
                   rw [hp]
                   exact hdiv
                 have hopen : OpenAt (signedS s.x s.y) (signedZ s.x s.y) b :=
