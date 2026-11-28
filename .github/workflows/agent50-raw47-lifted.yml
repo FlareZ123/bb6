@@ -2084,7 +2084,7 @@ jobs:
         run: |
           set -euo pipefail
           W=/tmp/a50-raw34-depth6-full-union
-          mkdir -p "$W/f3" "$W/f4" "$W/eold" "$W/missing" "$W/efleft"             "$W/f5" "$W/e5" "$W/extended" "$W/d6" "$W/halt5"
+          mkdir -p "$W/f3" "$W/f4" "$W/eold" "$W/missing" "$W/efleft"             "$W/f5" "$W/e5" "$W/extended" "$W/d6" "$W/d6halt" "$W/halt5"
           node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs             --shard-size 50 --output "$W/f3" > "$W/f3.json"
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs             --shard-size 100 --output "$W/f4" > "$W/f4.json"
           for depth in 2 3 4; do
@@ -2096,8 +2096,9 @@ jobs:
           node im-results/agent50-raw34-depth5/lift_f_depth5_to_e.mjs             --source "$W/f5" --output "$W/e5" > "$W/e5.json"
           node im-results/agent50-raw34-depth5/generate_extended_long_cycles.mjs             --output "$W/extended" > "$W/extended.json"
           node --max-old-space-size=6144 im-results/agent50-raw34-depth6/generate_depth6_tranche.mjs             --limit 100000 --shard-size 200 --output "$W/d6" > "$W/d6.json"
+          node --max-old-space-size=6144 im-results/agent50-raw34-depth6/generate_depth6_halts.mjs             --limit 138017 --shard-size 250 --output "$W/d6halt" > "$W/d6halt.json"
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_depth5_halts.mjs             --max-fixed 5 --shard-size 192 --skip-disjointness --output "$W/halt5" > "$W/halt5.json"
-          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs             --include-e-cycles --include-missing-ef-third --include-f-growth             --include-ef-left-ray --include-f-depth5 --include-e-depth5 --include-late-halts             --include-extended-long --include-depth6-tranche             --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" --e-cycles-dir "$W/eold"             --missing-third-dir "$W/missing" --ef-left-dir "$W/efleft"             --f-depth5-dir "$W/f5" --e-depth5-dir "$W/e5" --halt-depth5-dir "$W/halt5"             --extended-long-dir "$W/extended" --depth6-dir "$W/d6"             | tee "$W/full-union.json"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs             --include-e-cycles --include-missing-ef-third --include-f-growth             --include-ef-left-ray --include-f-depth5 --include-e-depth5 --include-late-halts             --include-extended-long --include-depth6-tranche --include-depth6-halts             --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" --e-cycles-dir "$W/eold"             --missing-third-dir "$W/missing" --ef-left-dir "$W/efleft"             --f-depth5-dir "$W/f5" --e-depth5-dir "$W/e5" --halt-depth5-dir "$W/halt5"             --extended-long-dir "$W/extended" --depth6-dir "$W/d6" --depth6-halt-dir "$W/d6halt"             | tee "$W/full-union.json"
           python - "$W/full-union.json" <<'PY'
           import json,sys
           x=json.load(open(sys.argv[1]))
@@ -2107,6 +2108,7 @@ jobs:
           assert x['eDepth5CyclePatterns']==150895
           assert x['extendedLongCyclePatterns']==962
           assert x['depth6CyclePatterns']==200000
+          assert x['depth6DirectHaltPatterns']==276034
           assert x['missingNonEFConjugateThirdPatterns']==168
           assert x['fConjugateUnboundedGrowthPatterns']==2
           assert x['additionalLateHaltPatterns']==14424
