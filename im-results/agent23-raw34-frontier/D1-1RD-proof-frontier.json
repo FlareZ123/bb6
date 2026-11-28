@@ -1,0 +1,3139 @@
+{
+  "parent": "1RB---_1RC---_0RD---_1LC---_------_------",
+  "branch": "D1=1RD",
+  "slotOrder": [
+    "D1",
+    "C1",
+    "B1",
+    "A1",
+    "E0",
+    "E1",
+    "F0",
+    "F1"
+  ],
+  "alphabet": [
+    "HALT",
+    "0LA",
+    "0LB",
+    "0LC",
+    "0LD",
+    "0LE",
+    "0LF",
+    "0RA",
+    "0RB",
+    "0RC",
+    "0RD",
+    "0RE",
+    "0RF",
+    "1LA",
+    "1LB",
+    "1LC",
+    "1LD",
+    "1LE",
+    "1LF",
+    "1RA",
+    "1RB",
+    "1RC",
+    "1RD",
+    "1RE",
+    "1RF"
+  ],
+  "sourceProofs": 3087,
+  "branchRelevantProofs": 271,
+  "summary": {
+    "total": "6103515625",
+    "provedNeverHalting": "3320312500",
+    "notCoveredByTheseProofs": "2783203125",
+    "closedLeaves": 124,
+    "openLeaves": 165,
+    "nodes": 314,
+    "splits": 12,
+    "skips": 13
+  },
+  "sourceMap": {
+    "eleven": "Raw34ElevenSideCycles.lean (CI 46085109098)",
+    "depth2": "Raw34Depth2SideCycles.lean / depth2-candidate-witnesses.json (CI 46085429345)",
+    "unary": "Raw34UnaryGrowth.lean (CI 46085752374)",
+    "CD": "Raw34ClosedComponent.lean (CI 46086179976)",
+    "depth3": "Raw34Depth3Shard00..11.lean / depth3-candidate-witnesses.json (CI 46086787386)",
+    "BCD": "Raw34ClosedBCD.lean (CI 46086997664)",
+    "pump": "Raw34TripleSweepGrowth.lean (CI 46087571719)",
+    "alternating": "Raw34AlternatingGrowth.lean (CI 46087707935)"
+  },
+  "covered": [
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LA"
+      ],
+      "projection": "1RB0LA_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/958"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LC"
+      ],
+      "projection": "1RB0LC_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/959"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LD"
+      ],
+      "projection": "1RB0LD_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/960"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RA"
+      ],
+      "projection": "1RB0RA_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/961"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RB"
+      ],
+      "projection": "1RB0RB_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/962"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RC"
+      ],
+      "projection": "1RB0RC_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/963"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RD"
+      ],
+      "projection": "1RB0RD_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/964"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LC"
+      ],
+      "projection": "1RB1LC_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/965"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LD"
+      ],
+      "projection": "1RB1LD_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/966"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RA"
+      ],
+      "projection": "1RB1RA_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/967"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RB"
+      ],
+      "projection": "1RB1RB_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/968"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RC"
+      ],
+      "projection": "1RB1RC_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/969"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RD"
+      ],
+      "projection": "1RB1RD_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/970"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LB"
+      ],
+      "projection": "1RB---_1RC---_0RD0LB_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/57"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LC"
+      ],
+      "projection": "1RB---_1RC---_0RD0LC_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "CD/0LC/1RD"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LD"
+      ],
+      "projection": "1RB---_1RC---_0RD0LD_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/58"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RC"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RC---_------",
+      "mass": "9765625",
+      "source": "depth3/971"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RC"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RC---_------",
+      "mass": "9765625",
+      "source": "depth3/972"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LA"
+      ],
+      "projection": "1RB0LA_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/973"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LB"
+      ],
+      "projection": "1RB0LB_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/974"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LC"
+      ],
+      "projection": "1RB0LC_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/975"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LD"
+      ],
+      "projection": "1RB0LD_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/976"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RA"
+      ],
+      "projection": "1RB0RA_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/977"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RB"
+      ],
+      "projection": "1RB0RB_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/978"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RC"
+      ],
+      "projection": "1RB0RC_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/979"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RD"
+      ],
+      "projection": "1RB0RD_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/980"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LB"
+      ],
+      "projection": "1RB1LB_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/981"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LC"
+      ],
+      "projection": "1RB1LC_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/982"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LD"
+      ],
+      "projection": "1RB1LD_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "pump/A"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RA"
+      ],
+      "projection": "1RB1RA_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/983"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RB"
+      ],
+      "projection": "1RB1RB_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/984"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RC"
+      ],
+      "projection": "1RB1RC_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/985"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RD"
+      ],
+      "projection": "1RB1RD_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/986"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LA"
+      ],
+      "projection": "1RB---_1RC0LA_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/987"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LB"
+      ],
+      "projection": "1RB---_1RC0LB_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/988"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LC"
+      ],
+      "projection": "1RB---_1RC0LC_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/989"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LD"
+      ],
+      "projection": "1RB---_1RC0LD_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/990"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RA"
+      ],
+      "projection": "1RB---_1RC0RA_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/991"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RB"
+      ],
+      "projection": "1RB---_1RC0RB_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/992"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RC"
+      ],
+      "projection": "1RB---_1RC0RC_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/993"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RD"
+      ],
+      "projection": "1RB---_1RC0RD_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/994"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LB"
+      ],
+      "projection": "1RB---_1RC1LB_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/995"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LC"
+      ],
+      "projection": "1RB---_1RC1LC_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/996"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LD"
+      ],
+      "projection": "1RB---_1RC1LD_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "BCD/1LD/0RB/1RD"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RA"
+      ],
+      "projection": "1RB---_1RC1RA_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/997"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RB"
+      ],
+      "projection": "1RB---_1RC1RB_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/998"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RC"
+      ],
+      "projection": "1RB---_1RC1RC_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/999"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RD"
+      ],
+      "projection": "1RB---_1RC1RD_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1000"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RC"
+      ],
+      "projection": "1RB---_1RC---_0RD0RC_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/59"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RD"
+      ],
+      "projection": "1RB---_1RC---_0RD0RD_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/60"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LA"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LA_------",
+      "mass": "9765625",
+      "source": "depth3/1001"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LB"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LB_------",
+      "mass": "9765625",
+      "source": "depth3/1002"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LC"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LC_------",
+      "mass": "9765625",
+      "source": "depth3/1003"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LD"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LD_------",
+      "mass": "9765625",
+      "source": "depth3/1004"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RA"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RA_------",
+      "mass": "9765625",
+      "source": "depth3/1005"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RB"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RB_------",
+      "mass": "9765625",
+      "source": "depth3/1006"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RC"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RC_------",
+      "mass": "9765625",
+      "source": "depth3/1007"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RD"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RD_------",
+      "mass": "9765625",
+      "source": "depth3/1008"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LC"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LC_------",
+      "mass": "9765625",
+      "source": "depth3/1009"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LD"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LD_------",
+      "mass": "9765625",
+      "source": "pump/E"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RA"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RA_------",
+      "mass": "9765625",
+      "source": "depth3/1010"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RB"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RB_------",
+      "mass": "9765625",
+      "source": "depth3/1011"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RC"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RC_------",
+      "mass": "9765625",
+      "source": "depth3/1012"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RD"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RD_------",
+      "mass": "9765625",
+      "source": "depth3/1013"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LB"
+      ],
+      "projection": "1RB---_1RC0LB_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1014"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RB"
+      ],
+      "projection": "1RB---_1RC0RB_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1015"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RC"
+      ],
+      "projection": "1RB---_1RC0RC_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1016"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RD"
+      ],
+      "projection": "1RB---_1RC0RD_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1017"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RB"
+      ],
+      "projection": "1RB---_1RC1RB_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1018"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LB"
+      ],
+      "projection": "1RB---_1RC0LB_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "BCD/0LB/1LB/1RD"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LC"
+      ],
+      "projection": "1RB---_1RC0LC_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "BCD/0LC/1LB/1RD"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LD"
+      ],
+      "projection": "1RB---_1RC0LD_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1019"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RB"
+      ],
+      "projection": "1RB---_1RC0RB_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1020"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RC"
+      ],
+      "projection": "1RB---_1RC0RC_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1021"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RD"
+      ],
+      "projection": "1RB---_1RC0RD_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1022"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LB"
+      ],
+      "projection": "1RB---_1RC1LB_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1023"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LC"
+      ],
+      "projection": "1RB---_1RC1LC_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "BCD/1LC/1LB/1RD"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LD"
+      ],
+      "projection": "1RB---_1RC1LD_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1024"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RB"
+      ],
+      "projection": "1RB---_1RC1RB_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1025"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RC"
+      ],
+      "projection": "1RB---_1RC1RC_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1026"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RD"
+      ],
+      "projection": "1RB---_1RC1RD_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1027"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LC"
+      ],
+      "projection": "1RB---_1RC---_0RD1LC_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "unary"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LD"
+      ],
+      "projection": "1RB---_1RC---_0RD1LD_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/61"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RC"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RC---_------",
+      "mass": "9765625",
+      "source": "depth3/1028"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LA"
+      ],
+      "projection": "1RB0LA_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1029"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LC"
+      ],
+      "projection": "1RB0LC_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1030"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LD"
+      ],
+      "projection": "1RB0LD_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1031"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RA"
+      ],
+      "projection": "1RB0RA_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1032"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RB"
+      ],
+      "projection": "1RB0RB_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1033"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RC"
+      ],
+      "projection": "1RB0RC_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1034"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RD"
+      ],
+      "projection": "1RB0RD_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1035"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LC"
+      ],
+      "projection": "1RB1LC_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1036"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LD"
+      ],
+      "projection": "1RB1LD_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1037"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RA"
+      ],
+      "projection": "1RB1RA_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1038"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RB"
+      ],
+      "projection": "1RB1RB_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1039"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RC"
+      ],
+      "projection": "1RB1RC_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1040"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RD"
+      ],
+      "projection": "1RB1RD_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1041"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LB"
+      ],
+      "projection": "1RB---_1RC0LB_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1042"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LC"
+      ],
+      "projection": "1RB---_1RC0LC_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1043"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LD"
+      ],
+      "projection": "1RB---_1RC0LD_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1044"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RA"
+      ],
+      "projection": "1RB---_1RC0RA_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1045"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RB"
+      ],
+      "projection": "1RB---_1RC0RB_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1046"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RC"
+      ],
+      "projection": "1RB---_1RC0RC_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1047"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RD"
+      ],
+      "projection": "1RB---_1RC0RD_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1048"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LB"
+      ],
+      "projection": "1RB---_1RC1LB_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1049"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LC"
+      ],
+      "projection": "1RB---_1RC1LC_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1050"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LD"
+      ],
+      "projection": "1RB---_1RC1LD_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1051"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RA"
+      ],
+      "projection": "1RB---_1RC1RA_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1052"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RB"
+      ],
+      "projection": "1RB---_1RC1RB_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1053"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RC"
+      ],
+      "projection": "1RB---_1RC1RC_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1054"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RD"
+      ],
+      "projection": "1RB---_1RC1RD_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "source": "depth3/1055"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RC"
+      ],
+      "projection": "1RB---_1RC---_0RD1RC_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/62"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RD"
+      ],
+      "projection": "1RB---_1RC---_0RD1RD_1LC1RD_------_------",
+      "mass": "244140625",
+      "source": "depth2/63"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LD"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LD_------",
+      "mass": "9765625",
+      "source": "depth3/1056"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RA"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RA_------",
+      "mass": "9765625",
+      "source": "depth3/1057"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RB"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RB_------",
+      "mass": "9765625",
+      "source": "depth3/1058"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RC"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RC_------",
+      "mass": "9765625",
+      "source": "depth3/1059"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RD"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RD_------",
+      "mass": "9765625",
+      "source": "depth3/1060"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LC"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LC_------",
+      "mass": "9765625",
+      "source": "depth3/1061"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LD"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LD_------",
+      "mass": "9765625",
+      "source": "depth3/1062"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RA"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RA_------",
+      "mass": "9765625",
+      "source": "depth3/1063"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RB"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RB_------",
+      "mass": "9765625",
+      "source": "depth3/1064"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RC"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RC_------",
+      "mass": "9765625",
+      "source": "depth3/1065"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RD"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RD_------",
+      "mass": "9765625",
+      "source": "depth3/1066"
+    }
+  ],
+  "open": [
+    {
+      "decisions": [
+        "1RD",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD---_1LC1RD_------_------",
+      "mass": "244140625",
+      "explicitHalts": [
+        "C1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "A1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LB"
+      ],
+      "projection": "1RB0LB_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LE"
+      ],
+      "projection": "1RB0LE_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0LF"
+      ],
+      "projection": "1RB0LF_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RE"
+      ],
+      "projection": "1RB0RE_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "0RF"
+      ],
+      "projection": "1RB0RF_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LA"
+      ],
+      "projection": "1RB1LA_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LB"
+      ],
+      "projection": "1RB1LB_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LE"
+      ],
+      "projection": "1RB1LE_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1LF"
+      ],
+      "projection": "1RB1LF_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RE"
+      ],
+      "projection": "1RB1RE_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "1RF"
+      ],
+      "projection": "1RB1RF_1RC---_0RD0LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "E0"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LA"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LB"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LC"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LC---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LD"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LE"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0LF"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0LF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RA"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RB"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RD"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RE"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "0RF"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_0RF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LA"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LB"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LC"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LC---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LD"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LE"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1LF"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1LF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RA"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RB"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RD"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RE"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "1RF"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_1RF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0LF"
+      ],
+      "projection": "1RB---_1RC---_0RD0LF_1LC1RD_------_------",
+      "mass": "244140625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "A1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LE"
+      ],
+      "projection": "1RB0LE_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0LF"
+      ],
+      "projection": "1RB0LF_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RE"
+      ],
+      "projection": "1RB0RE_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "0RF"
+      ],
+      "projection": "1RB0RF_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LA"
+      ],
+      "projection": "1RB1LA_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LE"
+      ],
+      "projection": "1RB1LE_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1LF"
+      ],
+      "projection": "1RB1LF_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RE"
+      ],
+      "projection": "1RB1RE_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "1RF"
+      ],
+      "projection": "1RB1RF_1RC---_0RD0RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "B1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LE"
+      ],
+      "projection": "1RB---_1RC0LE_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0LF"
+      ],
+      "projection": "1RB---_1RC0LF_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RE"
+      ],
+      "projection": "1RB---_1RC0RE_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "0RF"
+      ],
+      "projection": "1RB---_1RC0RF_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LA"
+      ],
+      "projection": "1RB---_1RC1LA_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LE"
+      ],
+      "projection": "1RB---_1RC1LE_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1LF"
+      ],
+      "projection": "1RB---_1RC1LF_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RE"
+      ],
+      "projection": "1RB---_1RC1RE_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RB",
+        "1RF"
+      ],
+      "projection": "1RB---_1RC1RF_0RD0RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "E1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LE"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0LF"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0LF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RE"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "0RF"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---0RF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LA"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LA_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LB"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LB_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LE"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1LF"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1LF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RE"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "1RF"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_---1RF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "0RF"
+      ],
+      "projection": "1RB---_1RC---_0RD0RF_1LC1RD_------_------",
+      "mass": "244140625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "B1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LA"
+      ],
+      "projection": "1RB---_1RC0LA_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LC"
+      ],
+      "projection": "1RB---_1RC0LC_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LD"
+      ],
+      "projection": "1RB---_1RC0LD_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LE"
+      ],
+      "projection": "1RB---_1RC0LE_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0LF"
+      ],
+      "projection": "1RB---_1RC0LF_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RA"
+      ],
+      "projection": "1RB---_1RC0RA_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RE"
+      ],
+      "projection": "1RB---_1RC0RE_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "0RF"
+      ],
+      "projection": "1RB---_1RC0RF_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LA"
+      ],
+      "projection": "1RB---_1RC1LA_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LB"
+      ],
+      "projection": "1RB---_1RC1LB_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LC"
+      ],
+      "projection": "1RB---_1RC1LC_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LD"
+      ],
+      "projection": "1RB---_1RC1LD_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LE"
+      ],
+      "projection": "1RB---_1RC1LE_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1LF"
+      ],
+      "projection": "1RB---_1RC1LF_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RA"
+      ],
+      "projection": "1RB---_1RC1RA_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RC"
+      ],
+      "projection": "1RB---_1RC1RC_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RD"
+      ],
+      "projection": "1RB---_1RC1RD_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RE"
+      ],
+      "projection": "1RB---_1RC1RE_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LA",
+        "1RF"
+      ],
+      "projection": "1RB---_1RC1RF_0RD1LA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "B1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LA"
+      ],
+      "projection": "1RB---_1RC0LA_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LE"
+      ],
+      "projection": "1RB---_1RC0LE_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0LF"
+      ],
+      "projection": "1RB---_1RC0LF_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RA"
+      ],
+      "projection": "1RB---_1RC0RA_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RE"
+      ],
+      "projection": "1RB---_1RC0RE_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "0RF"
+      ],
+      "projection": "1RB---_1RC0RF_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LA"
+      ],
+      "projection": "1RB---_1RC1LA_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LE"
+      ],
+      "projection": "1RB---_1RC1LE_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1LF"
+      ],
+      "projection": "1RB---_1RC1LF_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RA"
+      ],
+      "projection": "1RB---_1RC1RA_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RE"
+      ],
+      "projection": "1RB---_1RC1RE_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LB",
+        "1RF"
+      ],
+      "projection": "1RB---_1RC1RF_0RD1LB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "E0"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LA"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LB"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LC"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LC---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LD"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LE"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0LF"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0LF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RA"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RB"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RD"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RE"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "0RF"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_0RF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LA"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LB"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LC"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LC---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LD"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LE"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1LF"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1LF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RA"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RA---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RB"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RB---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RC"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RC---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RD"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RD---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RE"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RE---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "1RF"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_1RF---_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1LF"
+      ],
+      "projection": "1RB---_1RC---_0RD1LF_1LC1RD_------_------",
+      "mass": "244140625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "A1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LB"
+      ],
+      "projection": "1RB0LB_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LE"
+      ],
+      "projection": "1RB0LE_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0LF"
+      ],
+      "projection": "1RB0LF_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RE"
+      ],
+      "projection": "1RB0RE_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "0RF"
+      ],
+      "projection": "1RB0RF_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LA"
+      ],
+      "projection": "1RB1LA_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LB"
+      ],
+      "projection": "1RB1LB_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LE"
+      ],
+      "projection": "1RB1LE_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1LF"
+      ],
+      "projection": "1RB1LF_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RE"
+      ],
+      "projection": "1RB1RE_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "1RF"
+      ],
+      "projection": "1RB1RF_1RC---_0RD1RA_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "B1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LA"
+      ],
+      "projection": "1RB---_1RC0LA_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LE"
+      ],
+      "projection": "1RB---_1RC0LE_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0LF"
+      ],
+      "projection": "1RB---_1RC0LF_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RE"
+      ],
+      "projection": "1RB---_1RC0RE_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "0RF"
+      ],
+      "projection": "1RB---_1RC0RF_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LA"
+      ],
+      "projection": "1RB---_1RC1LA_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LE"
+      ],
+      "projection": "1RB---_1RC1LE_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1LF"
+      ],
+      "projection": "1RB---_1RC1LF_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RE"
+      ],
+      "projection": "1RB---_1RC1RE_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RB",
+        "1RF"
+      ],
+      "projection": "1RB---_1RC1RF_0RD1RB_1LC1RD_------_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_------_------",
+      "mass": "9765625",
+      "explicitHalts": [
+        "E1"
+      ]
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LA"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LA_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LB"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LB_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LC"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LC_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LE"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0LF"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0LF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RE"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "0RF"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---0RF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LA"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LA_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LB"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LB_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LE"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1LF"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1LF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RE"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RE_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "1RF"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_---1RF_------",
+      "mass": "9765625"
+    },
+    {
+      "decisions": [
+        "1RD",
+        "1RF"
+      ],
+      "projection": "1RB---_1RC---_0RD1RF_1LC1RD_------_------",
+      "mass": "244140625"
+    }
+  ]
+}
