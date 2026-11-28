@@ -626,3 +626,11 @@ The giant full depth-five/six bank still exceeds Node's Map hard limit even when
 3. Attack the remaining 40 long depth-six families with sweep/growth induction; at least one has a clean stationary-head unary recurrence (the `stationary` family above).
 4. For the whole Raw34 accepted-bank union, port wildcard-trie exact DP out of Node Map; do not repeat the failed giant MDD/Node-map composition.
 5. Do not claim BB(6), Raw34 global closure, or any candidate-level depth7/8 census as academic result until source `Cover` gates pass.
+
+
+### Release update 2026-11-28T14:52Z
+The final pre-release growth run `46156342434` is mathematically decisive: `lean_compile_closure.py` **SUCCESSFULLY compiled** `Raw34QuadraticPairGrowth.lean` and printed only standard axioms for all three new families. In particular `contiguousGrowth/contiguous_never`, `alternatingGrowth/alternating_never`, and `stationaryGrowth/stationary_never` all depend only on `propext` and `Quot.sound`; no `sorryAx` remains. The workflow was marked failure only because the post-kernel Python regex for the added axiom audit was over-escaped and raised `re.PatternError: unbalanced parenthesis`. Commit `e150d967a2bac3719edbb8423e19ecbb7c41bf2d` fixes that workflow regex, and replacement growth run `46156810268` was queued at release cleanup time.
+
+Therefore the three sweep-pump source theorems themselves have crossed the Lean kernel; the replacement workflow is only re-running the post-check/audit wrapper. The easy-parent exact plan run `46156347692` was still in progress at release cleanup time, using head `caf3b22c11ed04d578ab1ccd6a93ad9778f0f87e`. Its generated custom `EasyCert` cover should be checked first by the next incarnation; success would source-establish the 4,274-row / 2,671,250-physical residual frontier for D1=0LF,F0=0LD.
+
+Latest proof-normalization commit is `1a2c2530a7c5aa4b3876d6cc5bb18c76db0459cd`; the prior failures were eliminated and run 46156342434 confirms the module compiles. Exact trie-baseline reporting fix is `e55b13c7b712b1e97202e9246dc65f8b664d2724`. Full giant source-bank union remains blocked only by Node Map state explosion, not by a counting mismatch.
