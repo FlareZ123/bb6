@@ -100,12 +100,13 @@ jobs:
           from pathlib import Path
           import sys
           p=Path(sys.argv[1]); s=p.read_text()
-          old='int limit=argc>1?atoi(argv[1]):4; if(limit<1||limit>6){cerr<<"limit must be 1..6\\n";return 2;}'
-          new='int limit=argc>1?atoi(argv[1]):4; int minD=argc>2?atoi(argv[2]):1; if(limit<1||limit>6||minD<1||minD>limit){cerr<<"invalid FAR size interval\\n";return 2;}'
+          old='int main(int argc,char**argv){int limit=argc>1?atoi(argv[1]):4;if(limit<1||limit>6)return 2;for(int d=1;d<=limit;d++){'
+          new='int main(int argc,char**argv){int limit=argc>1?atoi(argv[1]):4;int minD=argc>2?atoi(argv[2]):1;if(limit<1||limit>6||minD<1||minD>limit)return 2;for(int d=minD;d<=limit;d++){'
           assert old in s
           s=s.replace(old,new)
-          assert s.count('for(int d=1;d<=limit;d++)')==2
-          s=s.replace('for(int d=1;d<=limit;d++)','for(int d=minD;d<=limit;d++)')
+          old2='for(int d=1;d<=limit&&!found;d++)'
+          assert old2 in s
+          s=s.replace(old2,'for(int d=minD;d<=limit&&!found;d++)')
           p.write_text(s)
           PY
           g++ -O3 -std=c++20 "$W/far.cpp" -o "$W/far"
