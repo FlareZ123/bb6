@@ -73,7 +73,7 @@ From even doubled rank \(P\), each forward zero divides height by four and incre
 | 10 | 69 | 8,292 | 8,310 | 24,628 | 8,292 | 0.99783 |
 | 11 | 4,161 | 33,388 | 33,406 | 99,914 | 33,388 | 0.99946 |
 | 12 | 66,645 | 135,236 | 135,254 | 405,456 | 135,236 | 0.99987 |
-| 13 | 69 | 532,580 | 532,598 | 1,597,? | 532,580 | 0.99997 |
+| 13 | 69 | 532,580 | 532,598 | 1,597,486 | 532,580 | 0.99997 |
 
 [long_two_sided_cantor.cjs](long_two_sided_cantor.cjs) implements a **symbolic exact-integer checker** for arbitrary R without materializing \(4^k\); for k≤200,000 it additionally runs a **direct independent source macro** replay: every nonzero halfstep, rank-parity lattice, strict compressed zero-block endpoint, and original radix-16 macro digit division is checked. Execute:
 
