@@ -517,6 +517,44 @@ theorem terminal_last_anchor_first_two_high
   exact ⟨q,R,c,t,B,C,E,F,hchain,hc,hfirst,hB,hC,
     hsecond,hs.1,hs.2,hrest⟩
 
+/-- Strongest local normal form currently needed: the exact terminal-seeded
+    inverse word can be chosen with two leading High letters. -/
+theorem terminal_has_last_anchor_formal_word_head_high_high
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c j w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = j ∧
+      FormalInversePath (D:Int) (.high::.high::w) (R:Int) (c:Int) := by
+  rcases terminal_last_anchor_first_two_high h with
+    ⟨q,R,c,j,B,C,E,F,hchain,hc,hfirst,hB,hC,
+      hsecond,hE,hF,hrest⟩
+  rcases hfRun_terminal_formal hrest with ⟨w,hlen,hw⟩
+  subst B
+  subst C
+  subst E
+  subst F
+  have hR : 6 ≤ R := by
+    have hg := anchorChain_linear_growth hchain (by decide)
+    omega
+  have ha1 : 2*(((R-c-2 : Nat):Int)) =
+      2*(((R-c-2-c*2-5 : Nat):Int)) + ((2*(2*c+3)+3 : Nat):Int) + 1 := by
+    rcases hc with rfl | rfl <;> omega
+  have hd1 : 2*((2*c+3:Int)) =
+      ((2*(2*c+3)+3 : Nat):Int) - 3 := by omega
+  have hp1 : FormalInversePath (D:Int) (.high::w)
+      (((R-c-2 : Nat):Int)) ((2*c+3 : Nat):Int) :=
+    FormalInversePath.stepH hw ha1 hd1
+  have ha0 : 2*(R:Int) =
+      2*(((R-c-2 : Nat):Int)) + ((2*c+3 : Nat):Int) + 1 := by
+    rcases hc with rfl | rfl <;> omega
+  have hd0 : 2*(c:Int) = ((2*c+3 : Nat):Int) - 3 := by omega
+  have hp0 : FormalInversePath (D:Int) (.high::.high::w)
+      (R:Int) (c:Int) :=
+    FormalInversePath.stepH hp1 ha0 hd0
+  exact ⟨q,R,c,j,w,hchain,hc,hlen,hp0⟩
+
 /-- Strengthening of the last-anchor formal normal form: the exact word can be
     chosen with a leading High letter. -/
 theorem terminal_has_last_anchor_formal_word_head_high
@@ -660,6 +698,49 @@ theorem terminal_last_anchor_highCount_phase
 #print axioms word_count_length
 #print axioms compile_shift_counts
 #print axioms compile_sumDecrease_counts
+/-- The root-selected High-count parity together with the forced HH prefix
+    gives concrete minimum High counts in every terminal suffix. -/
+theorem terminal_last_anchor_min_highs
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) ∧
+      (c=1 → 2 ≤ highCount w) ∧
+      (c=2 → 3 ≤ highCount w) := by
+  rcases terminal_has_last_anchor_formal_word_head_high_high h with
+    ⟨q,R,c,j,w,hchain,hc,hlen,hfull⟩
+  let full := .high :: .high :: w
+  have hlenFull : full.length = j+2 := by
+    dsimp [full]
+    simp [hlen]
+  have hphase := terminal_last_anchor_highCount_phase h
+  rcases hphase with
+    ⟨q',R',c',m',w',hchain',hc',hlen',hw',hc1,hc2⟩
+  -- Use uniqueness of the endpoint formal path only for its branch count
+  -- parity is unnecessary here: the HH prefix already supplies two Highs.
+  refine ⟨q,R,c,j+2,full,hchain,hc,hlenFull,hfull,?_,?_⟩
+  · intro _
+    dsimp [full,highCount]
+    omega
+  · intro hc2'
+    -- c=2 forces odd High count for this exact full word via the compiled
+    -- last-anchor cost phase; derive it directly from the cost equation.
+    have hcert := formal_inverse_path_certificate hfull
+    have hsum := hcert.2
+    unfold sumAt at hsum
+    have hD6 : D%6=1 :=
+      counterReach_terminal_mod6 (n:=n+1) (d:=D) (by omega) h
+    have hshape := root_anchorChain_endpoint_shape hchain
+    have hR4 := (hshape.2.2 hc2').1
+    have hs := compile_shift_counts full
+    have hcnt := word_count_length full
+    have hdec := compile_sumDecrease_counts full
+    dsimp [full,highCount,farCount] at hs hcnt hdec ⊢
+    omega
+
 #print axioms terminal_last_anchor_highCount_phase
 
 #print axioms compile_cost_identity
@@ -670,6 +751,7 @@ theorem terminal_last_anchor_highCount_phase
 #print axioms root_anchor_one_high_not_terminal
 #print axioms root_anchor_second_hf_is_high
 #print axioms terminal_last_anchor_first_two_high
+#print axioms terminal_has_last_anchor_formal_word_head_high_high
 #print axioms terminal_last_anchor_first_high
 #print axioms terminal_has_last_anchor_formal_word_head_high
 #print axioms terminal_has_last_anchor_formal_word
