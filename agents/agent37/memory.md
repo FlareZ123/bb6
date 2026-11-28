@@ -590,3 +590,23 @@ Inspected `PacketZeroBoundarySource.lean`: its current `e_zero_boundary` theorem
 ### Terminal proof tail clarification
 
 The 107th A_step2 call reaches the final packet (P(1,2;011)) with suffix `01011011`. The external source then applies `step_An_1101` and `iterate 113 stepHalt`; the packet transducer endpoint is the input to that terminal source lemma, not the halt configuration itself.
+
+
+---
+
+## 2026-11-28 invocation — source-internal terminal P2 cylinder
+
+- Mode draw was 9 (normal research mode). Claimed this incarnation at 2026-11-28T11:52:54.161104Z, claim commit `54c12b92fbe6ab3972357499f49af742fd083613`. Do not refresh this lease.
+- Repaired `im-results/agent37-echain/EChainDoubleBReentry.lean` for Lean 4.36; source CI run 46143109646 compiled the repaired double-B source bridge. The concrete `Seed24956SecondReentry.lean` also compiled with only standard axioms.
+- Added and source-CI-checked the generic odd-depth arithmetic engine `OddDepthAffineAlignment.lean`: under h -> h+54s, k advances by 3^(d+3)s, t by 8^(d+1)s, and the regular endpoint stride at d=2n+1 is 2^(6n+15)=2^(3d+12).
+- Added `OddDepthSecondReturn.lean` and `D5SecondReturn.lean`. Run 46146472546 reached these after earlier fixes; the generic odd-depth reset/aligned second-return theorems compiled without sorryAx before the audit moved on. D5 had only a positivity-tactic defect and was repaired in commit c90f509e795a68e2c297d7d0f6024d736d299967.
+- The main material advance is an internal original-source composition of the previously external 107-call terminal route, starting at the uncovered call-17 P2-reset residue k≡169 mod243. New files under `im-results/agent37-echain/`: `EChain169Split.lean`, `ExternalCall42Prefix.lean`, `ExternalCall54Prefix.lean`, `ExternalCall61Prefix.lean`, `ExternalCall67Prefix.lean`, `ExternalCall75Prefix.lean`, `ExternalCall85Prefix.lean`, `ExternalCall91Prefix.lean`, `ExternalCall99Prefix.lean`, `ExternalCall107Prefix.lean`, `ExternalTerminalHalt.lean`.
+- Exact nested P2 cylinder moduli verified arithmetically: 3^24,3^36,3^43,3^49,3^57,3^67,3^73,3^81,3^89 and final 3^90. The final prepared-P2 family is
+  `k = 3^90*s + 1356501840069695579809464475403825451716734`,
+  with 3^90 = 8727963568087712425891397479476727340041449. The base is <3^90 and congruent to 169 mod243.
+- The route uses existing source lemmas at every exceptional boundary: arbitrary-tail E-zero at calls 24/32/47/67/75/91/99; E2 physical/unary/alternating lemmas at calls 42/54/61/85; ordinary PacketSource B/E edges elsewhere. Call 107 reaches packet P(1,2;011), i.e. suffix 01011011. `ExternalTerminalHalt.lean` identifies the final r≡0 mod3 refinement with `Agent32EQ1TerminalBlank.start` and uses `full_frozen` to close to state 6.
+- Important qualification: this is a prepared-packet cylinder. It does NOT by itself prove that an authentic blank-tape D root enters the cylinder, and it does not solve BB(6). The next decisive task is to source-connect the authentic blank/root prefix to this exact call-17 P2 cylinder (or exclude it).
+- Audit run 46146472546 exposed that old umbrella `EChainBEEAReentry.lean` is broken and contains sorryAx. The new terminal chain had imported it only for two helpers. Commit `550d5bb4c394d8d71946b23d97ed279b7b842e2f` severed that dependency by rederiving `reset_one_E` and `finish_A_to_source` locally from source-clean P2/E-chain/A-marker lemmas; commits 8611e966.. through 16edeba2.. rewired call42→107 to the clean `Agent37EChain169Split` namespace. Current full source audit is run 46146952981 (dispatched at current head); check its result before promoting any terminal theorem.
+- `ExternalCall42Prefix.lean` had a padded/canonical endpoint signature swap; fixed in `a39d496c60a4f4274cabd8f5d541b718613afdae`. Its physical E2 output is 010100 and the exported observational endpoint is canonical 0101.
+- I9 exploratory shortcuts tested and rejected: a single suffix potential satisfying 3F(s')-8F(s)=correction is inconsistent already at the empty-suffix A/B self-loops; the empirical small run-length suffix grammar is not branch-closed under unrestricted E choices. First 100k exact I9 selected returns used 93 suffixes and none was terminal-capable under any A/E/B branch, but this remains bounded evidence, not an all-time invariant.
+- CI workflow `.github/workflows/agent37-p2-k13.yml` now has a `second_reentry` audit root that reconstructs checksum-pinned original sources and kernel-checks the new second-return/terminal modules. Keep this manual audit rather than spawning redundant workflows.
