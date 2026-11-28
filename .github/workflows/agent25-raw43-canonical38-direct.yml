@@ -1,0 +1,41 @@
+name: Agent 25 Raw43 after direct Canonical38
+on:
+  workflow_dispatch:
+    inputs:
+      canonical38_run:
+        description: 'Successful Agent3 direct Raw39+Raw47 Canonical38 producer'
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Authenticate direct Canonical38 and source-check Raw43 conditional cut
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          [[ "${{ inputs.canonical38_run }}" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent25-raw43/check_canonical38_direct_raw43.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent25-raw43/check_canonical38_direct_raw43.py \
+            --work /tmp/a25-raw43-after-direct38 \
+            --canonical38-run "${{ inputs.canonical38_run }}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw43-after-direct38-conditional
+          path: /tmp/a25-raw43-after-direct38/evidence/
+          if-no-files-found: warn
+          retention-days: 30
