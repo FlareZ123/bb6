@@ -13,6 +13,11 @@ on:
         required: true
         type: string
         default: '46114235329'
+      triple:
+        description: 'Consume Raw83+Raw85+Raw112 together from Canonical39'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -20,6 +25,7 @@ permissions:
 
 jobs:
   consume:
+    if: ${{ !inputs.triple }}
     runs-on: ubuntu-latest
     timeout-minutes: 120
     steps:
@@ -57,6 +63,48 @@ jobs:
           path: |
             /tmp/a10-raw112-after-raw39/evidence/
             /tmp/a10-raw112-after-raw39.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
+
+  consume-three:
+    if: ${{ inputs.triple }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Authenticate Raw83, Raw85, Raw112 and source-check Canonical36 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+          ONELE_RUN: ${{ inputs.onele_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$ONELE_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent9-raw83-canonical39/consume83_85_112.py
+          python im-results/agent9-raw83-canonical39/consume83_85_112.py \
+            --work /tmp/a17-raw83-85-112-canonical36 \
+            --raw112-run-id "$RAW112_RUN_ID" \
+            --onele-run "$ONELE_RUN" \
+            | tee /tmp/a17-raw83-85-112-canonical36.log
+          test -s /tmp/a17-raw83-85-112-canonical36/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
+          cat /tmp/a17-raw83-85-112-canonical36/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical36-raw39-raw83-raw85-raw112-evidence
+          path: |
+            /tmp/a17-raw83-85-112-canonical36/evidence/
+            /tmp/a17-raw83-85-112-canonical36.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
