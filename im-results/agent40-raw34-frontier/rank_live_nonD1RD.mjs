@@ -230,7 +230,12 @@ const fGrowthSource=withFGrowth?[
   "1RB---_1RC---_0RD0LD_1LC0RF_------_1RD---"
 ].map(parseTable):[];
 fGrowthSource.forEach(add);
-const counterCount=counters.length+raySource.length+cycleSource.length+
+const fLongSource=process.argv.includes("--include-f-long")
+  ? parseSourceCycles(readFileSync(join(dir,"Raw34FLongSideCycles.lean"),"utf8"))
+  : [];
+if(fLongSource.length)assert.equal(fLongSource.length,4);
+fLongSource.forEach(add);
+const counterCount=counters.length+fLongSource.length+raySource.length+cycleSource.length+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length;
@@ -281,7 +286,7 @@ if(withLateHalts){
    nAdditionalLate+=loadHalters(join(haltDepth5Dir,unit.module+".lean"));
  assert.equal(nAdditionalLate,14424,"5+535+13,884 accepted late halter cylinders");
 }
-assert.equal(bank.length,4156+raySource.length+cycleSource.length+
+assert.equal(bank.length,4156+fLongSource.length+raySource.length+cycleSource.length+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length+nDepth6Halts+nAdditionalLate);
@@ -426,7 +431,7 @@ for(let d=1;d<=25;d++){
   }
  }
 }
-if(!withRay&&!withWindow5MaskBank&&!withWindow7MaskBank)assert.equal(grand,5471912359n,
+if(!withRay&&!fLongSource.length&&!withWindow5MaskBank&&!withWindow7MaskBank)assert.equal(grand,5471912359n,
  "Raw34 non-D1 residual does not match independent source union subtraction");
 if(withRay)assert(grand<5471912359n,"new F-ray sources did not reduce complement");
 let residualBeforeWindow5=0n;
@@ -492,6 +497,7 @@ console.log(JSON.stringify({
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
+  fLongSideCyclePatterns:fLongSource.length,
   fDepth5CyclePatterns:fDepth5Source.length,
   eConjugateCyclePatterns:eCycleSource.length,
   eDepth5CyclePatterns:eDepth5Source.length,
