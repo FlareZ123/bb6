@@ -1,0 +1,40 @@
+name: Agent11 Raw112 sharp weighted threshold discovery and source certification
+run-name: "Raw112 sharp: ${{ inputs.mode }}"
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Choose the deterministic finite candidate census; Lean source audit uses independent follow-up"
+        type: choice
+        required: true
+        default: candidate
+        options: [candidate]
+
+permissions:
+  contents: read
+
+jobs:
+  query-candidate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compute exact candidate from pinned late-leaf source bank
+        run: |
+          set -euo pipefail
+          python3 im-results/agent11-raw112-sharp/analyze_query_weights.py | tee /tmp/raw112-sharp-query-candidate.json
+          python3 - <<'PY'
+          import json
+          j=json.load(open('/tmp/raw112-sharp-query-candidate.json'))
+          assert j["winning_hard_index"] == 22
+          print("Candidate weighted cutoff:",j["candidate_global_weighted_score"])
+          print("Winning partial source:",j["late_leaves"][4]["partial_table"])
+          print("NOT a proof of the sharp bound; Lean certificate is separate.")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-weighted-score-candidate
+          path: /tmp/raw112-sharp-query-candidate.json
+          if-no-files-found: warn
+          retention-days: 30
