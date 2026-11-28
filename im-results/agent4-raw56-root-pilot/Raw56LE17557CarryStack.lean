@@ -40,7 +40,7 @@ theorem stack_tail_good {d : Nat} {s : List Nat}
     (hs : StackGood (d::s)) : StackGood s := by
   intro x hx
   apply hs x
-  exact List.mem_cons_of_mem d hx
+  simp [hx]
 
 theorem stack_headD_mod4 (s : List Nat) (hs : StackGood s) :
     (s.headD 0) % 4 = 0 := by
@@ -87,9 +87,39 @@ def CoupledStep (q : Queue) (s : List Nat) (k : Kind) (d : Nat)
     (q' : Queue) (s' : List Nat) : Prop :=
   Step d q k q' ∧ StackStep s k d s'
 
+/-- The first finite one-run length of a queue. -/
+def firstRun : Queue → Nat
+  | .final a => a
+  | .more a _ _ => a
+
+/-- A good event-boundary queue has first run 2 modulo four. -/
+theorem firstRun_mod4_of_good (q : Queue) (hq : Good q) :
+    firstRun q % 4 = 2 := by
+  cases q with
+  | final a =>
+      simp [Good] at hq
+  | more a g tail =>
+      cases g with
+      | zero =>
+          simp [Good] at hq
+      | succ g =>
+          cases g with
+          | zero =>
+              have hmod8 := good_first_mod8 a tail hq
+              omega
+          | succ g =>
+              simp [Good] at hq
+
+/-- The one-run stack update dictated by the source triad kind. -/
+def stackUpdate (q : Queue) (s : List Nat) (k : Kind) : List Nat :=
+  match k with
+  | .normal => (firstRun q + 2)::s
+  | .b => s
+  | .carry => s.tail
+
 /-- A good right queue and a four-divisible left one-run stack always admit
-    a coupled next triad. In particular, the carry parameter is no longer
-    an external hypothesis: it is the top of the one-run stack, or zero. -/
+    a coupled next triad. The carry parameter is the top of the one-run
+    stack, or zero when that stack is empty; it is therefore divisible by 4. -/
 theorem coupled_good_step (q : Queue) (s : List Nat)
     (hq : Good q) (hs : StackGood s) :
     ∃ k d q' s', CoupledStep q s k d q' s' ∧
@@ -98,103 +128,26 @@ theorem coupled_good_step (q : Queue) (s : List Nat)
   have hd : d % 4 = 0 := by
     simpa [d] using stack_headD_mod4 s hs
   obtain ⟨k, q', hStep, hGood'⟩ := good_step q d hd hq
-  cases hStep with
-  | normalFinal ha hb hc =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.more b 1 (.final c)) hq
-      have hmod4 : a % 4 = 2 := by omega
-      refine ⟨.normal, d, .more 2 1 (.final (c+5)), (a+2)::s, ?_, ?_, ?_, hd⟩
-      · exact ⟨Step.normalFinal ha hb hc, StackStep.normal hmod4 hd⟩
-      · exact normal_final_good c hc
-      · exact stack_push_good s a hs hmod4
-  | normalMore ha hb hc hg =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.more b 1 (.more c g tail)) hq
-      have hmod4 : a % 4 = 2 := by omega
-      have hshape : GoodTail (.more c g tail) := by
-        have hh : (a % 8 = 2 ∨ a % 8 = 6) ∧ 0 < a ∧ 5 ≤ b ∧
-            (1 = 1 ∨ ((1 % 8 = 1 ∨ 1 % 8 = 5) ∧ 5 ≤ 1)) ∧
-            GoodTail (.more c g tail) := by
-          simpa [Good] using hq
-        exact hh.2.2.2.2
-      have ht : 0 < c ∧ (g % 8 = 3 ∨ g % 8 = 7) ∧ GoodTail tail := by
-        simpa [GoodTail] using hshape
-      refine ⟨.normal, d, .more 2 1 (.more (c+5) (g-2) tail),
-        (a+2)::s, ?_, ?_, ?_, hd⟩
-      · exact ⟨Step.normalMore ha hb hc hg, StackStep.normal hmod4 hd⟩
-      · exact normal_more_good c g tail hc hg ht.2.2
-      · exact stack_push_good s a hs hmod4
-  | carryFinal ha hc hdc =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.more 5 1 (.final c)) hq
-      cases s with
-      | nil =>
-          have hd0 : d = 0 := by simp [d]
-          subst d
-          refine ⟨.carry, 0, .more (a+4) 1 (.final (c+5)), [],
-            ?_, ?_, ?_, by decide⟩
-          · exact ⟨Step.carryFinal ha hc (by decide), StackStep.carryEmpty⟩
-          · exact carry_final_good a 0 c hmod8 (by decide) hc
-          · simp [StackGood]
-      | cons top tail =>
-          have hdtop : d = top := by simp [d]
-          subst d
-          have htop : top % 4 = 0 := hs top (by simp)
-          refine ⟨.carry, top, .more (a+top+4) 1 (.final (c+5)), tail,
-            ?_, ?_, ?_, htop⟩
-          · exact ⟨Step.carryFinal ha hc htop, StackStep.carryPop⟩
-          · exact carry_final_good a top c hmod8 htop hc
-          · exact stack_tail_good hs
-  | carryMore ha hc hdc hg =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.more 5 1 (.more c g tail)) hq
-      have hshape : GoodTail (.more c g tail) := by
-        have hh : (a % 8 = 2 ∨ a % 8 = 6) ∧ 0 < a ∧ 5 ≤ 5 ∧
-            (1 = 1 ∨ ((1 % 8 = 1 ∨ 1 % 8 = 5) ∧ 5 ≤ 1)) ∧
-            GoodTail (.more c g tail) := by
-          simpa [Good] using hq
-        exact hh.2.2.2.2
-      have ht : 0 < c ∧ (g % 8 = 3 ∨ g % 8 = 7) ∧ GoodTail tail := by
-        simpa [GoodTail] using hshape
-      cases s with
-      | nil =>
-          have hd0 : d = 0 := by simp [d]
-          subst d
-          refine ⟨.carry, 0, .more (a+4) 1 (.more (c+5) (g-2) tail), [],
-            ?_, ?_, ?_, by decide⟩
-          · exact ⟨Step.carryMore ha hc (by decide) hg, StackStep.carryEmpty⟩
-          · exact carry_more_good a 0 c g tail hmod8 (by decide) hc hg ht.2.2
-          · simp [StackGood]
-      | cons top tailStack =>
-          have hdtop : d = top := by simp [d]
-          subst d
-          have htop : top % 4 = 0 := hs top (by simp)
-          refine ⟨.carry, top, .more (a+top+4) 1 (.more (c+5) (g-2) tail),
-            tailStack, ?_, ?_, ?_, htop⟩
-          · exact ⟨Step.carryMore ha hc htop hg, StackStep.carryPop⟩
-          · exact carry_more_good a top c g tail hmod8 htop hc hg ht.2.2
-          · exact stack_tail_good hs
-  | bFinal ha hb =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.final b) hq
-      refine ⟨.b, d, .more 2 1 (.more 5 (a-1) (.final (b+3))), s,
-        ?_, ?_, hs, hd⟩
-      · exact ⟨Step.bFinal ha hb, StackStep.b hd⟩
-      · exact b_final_good a b hmod8 (by omega) hb
-  | bMore ha hb hgmod hg =>
-      have hmod8 : a % 8 = 2 ∨ a % 8 = 6 :=
-        good_first_mod8 a (.more b g tail) hq
-      have hshape : GoodTail tail := by
-        have hh : (a % 8 = 2 ∨ a % 8 = 6) ∧ 0 < a ∧ 5 ≤ b ∧
-            (g = 1 ∨ ((g % 8 = 1 ∨ g % 8 = 5) ∧ 5 ≤ g)) ∧
-            GoodTail tail := by
-          simpa [Good] using hq
-        exact hh.2.2.2.2
-      refine ⟨.b, d,
-        .more 2 1 (.more 5 (a-1) (.more (b+3) (g-2) tail)), s,
-        ?_, ?_, hs, hd⟩
-      · exact ⟨Step.bMore ha hb hgmod hg, StackStep.b hd⟩
-      · exact b_more_good a b g tail hmod8 (by omega) hb hgmod hg hshape
+  let s' := stackUpdate q s k
+  have hStack : StackStep s k d s' := by
+    cases k with
+    | normal =>
+        have hmod4 : firstRun q % 4 = 2 := firstRun_mod4_of_good q hq
+        simp [s', stackUpdate]
+        exact StackStep.normal hmod4 hd
+    | b =>
+        simp [s', stackUpdate]
+        exact StackStep.b hd
+    | carry =>
+        cases s with
+        | nil =>
+            simp [s', stackUpdate, d]
+            exact StackStep.carryEmpty
+        | cons top tail =>
+            simp [s', stackUpdate, d]
+            exact StackStep.carryPop
+  have hPres := stack_step_safe hs hStack
+  exact ⟨k, d, q', s', ⟨hStep, hStack⟩, hGood', hPres.1, hPres.2⟩
 
 /-- A finite execution of coupled right-run and left one-run transitions. -/
 inductive Run : Nat → Queue → List Nat → Queue → List Nat → Prop
