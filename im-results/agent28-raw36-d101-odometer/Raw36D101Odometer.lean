@@ -296,6 +296,11 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   · exact next
   · exact hm
 
+/-- Direct Cover adapter for the Raw36 parent proof. Nonhalting satisfies
+    every finite weighted threshold. -/
+theorem cover (B : Nat) : Cover (WeightedBound B) table :=
+  .leaf table (fun m hm => weighted_never B m (never m hm))
+
 #print axioms entry
 #print axioms scanMany
 #print axioms carry0
@@ -305,4 +310,5 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
 #print axioms carryT1
 #print axioms progress
 #print axioms never
+#print axioms cover
 end BB6.Agent28Raw36D101Odometer
