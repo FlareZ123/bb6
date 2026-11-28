@@ -15,6 +15,7 @@ has been compiled and audited with Lean 4.36.0-rc2.
 namespace BB6.Agent11Raw39Closed
 
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent11SemanticChunks
+open BB6.Agent10ZipAudit
 open BB6.Agent11Raw39AcceptedSix (p39 child)
 
 theorem zeroLE_bound : Bound 15125 (child ⟨false,false,4⟩) := by
