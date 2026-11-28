@@ -293,7 +293,7 @@ theorem rightCost_append (xs ys : List RightChunk) :
     rightScanCost (xs ++ ys) =
       rightScanCost xs + rightScanCost ys := by
   induction xs with
-  | nil => rfl
+  | nil => simp [rightScanCost]
   | cons c cs ih =>
       simp only [List.cons_append,rightScanCost,ih,Nat.add_assoc]
 
@@ -326,8 +326,12 @@ theorem firstRoundPositive (cs : List LeftChunk) (L R : List Bool) :
     some ⟨0,[false] ++ outputRightChunks (rightSequence cs) ++ L,
             [false] ++ [true,true,true,false] ++ R⟩ := by
   have h1 := halfSweepPositive cs L R
-  have h2 := scanRightChunks (rightSequence cs) L ([true,true,true,false] ++ R)
-  rw [rightSequenceInput] at h2
+  have h2 : run0 p (rightScanCost (rightSequence cs))
+       ⟨0,[false] ++ L,[false] ++ outputBits cs ++ [true,true,true,false] ++ R⟩ =
+       some ⟨0,[false] ++ outputRightChunks (rightSequence cs) ++ L,
+                 [false] ++ [true,true,true,false] ++ R⟩ := by
+    simpa [rightSequenceInput,List.append_assoc] using
+      scanRightChunks (rightSequence cs) L ([true,true,true,false] ++ R)
   have h := join0 h1 h2
   have ht : (3 + (scanCost cs + 1)) +
       rightScanCost (rightSequence cs) = 4 + 4 * scanCost cs := by
