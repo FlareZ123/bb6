@@ -1,0 +1,78 @@
+name: Agent 31 F321 699 symbolic predecessor cones (12-way manual CI)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-affine:
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        shard: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      SHARD: ${{ matrix.shard }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Build exact source counter relation and reusable predecessor lemmas
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean"
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean"
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean"
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean"
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean"
+      - name: Kernel-check all assigned unbounded affine source-counter no-reach proofs
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json,os,pathlib,subprocess,sys,time
+          q=pathlib.Path("im-results/agent31-f321-mod384")
+          e=pathlib.Path("im-results/agent31-f321-bulk")
+          info=json.loads((q/"mod49152-affine-bulk.json").read_text())
+          assert len(info["progressions"])==699 and info["modulus"]==49152
+          shard=int(os.environ["SHARD"])
+          assert 0<=shard<12
+          rays=[v for i,v in enumerate(info["progressions"]) if i%12==shard]
+          out=pathlib.Path("/tmp/f321-r49152")
+          out.mkdir(exist_ok=True)
+          env=os.environ.copy()
+          env["LEAN_PATH"]=f"{e}:{q}"
+          for j,item in enumerate(rays):
+              d,nodes=item["d"],item["nodes"]
+              gen=subprocess.run(["python3",str(q/"affine_ray_generator.py"),"49152",str(d)],check=True,text=True,capture_output=True)
+              source=gen.stdout
+              assert f"theorem gate{d}_mod49152_never" in source
+              proof=out/f"Auto{d}.lean"
+              proof.write_text(source)
+              check=subprocess.run(["lean",str(proof)],env=env,text=True,capture_output=True)
+              if check.returncode!=0 or "sorryAx" in check.stdout or "sorryAx" in check.stderr or "native_decide" in check.stdout:
+                  print(f"FAIL at shard={shard} d={d} proof={proof}",flush=True)
+                  print(check.stdout,check.stderr,flush=True)
+                  sys.exit(check.returncode or 1)
+              if f"gate{d}_mod49152_never' depends on axioms:" not in check.stdout:
+                  print(f"Missing printed axiom audit d={d}: {check.stdout}",flush=True)
+                  sys.exit(1)
+              if j%10==0 or j==len(rays)-1:
+                  print(f"kernel accepted shard={shard} {j+1}/{len(rays)} d={d}, expected nodes={nodes}",flush=True)
+          (out/"accepted.txt").write_text(f"Shard {shard}: {len(rays)} universally quantified Lean-kernel source-counter nonreachability rays accepted\\n")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: f321-exact-affine-shard-${{ matrix.shard }}
+          path: /tmp/f321-r49152/accepted.txt
+          if-no-files-found: ignore
+          retention-days: 7
