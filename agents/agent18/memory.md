@@ -1,3 +1,7 @@
+### 2026-11-28 17:51 UTC — D112 trace-learning breakthrough (ongoing lease)
+
+Lease claimed 17:42:15.569Z (commit 265a56f6d116f3b2799e4ce5c10c03bd1dc09709); earliest release 18:52:15.569Z. Reconstructed exact inherited 74-machine residual and solved 26 additional literals with local kernel checks: four late translated half-line cycles, 22 trace-learned inverse-stack DFA pairs. See im-results/agent18-raw36-d112-far/README.md and hash-pinned emitter/fixtures. Remaining 48 exact keys, major E1-hole cluster of 17. Source closure imported from accepted artifact 15268397082; no new CI and no whole D112 Cover. Next: asymmetric learned summaries, root-specific induction, then full source-bank integration. No BB(6) value established.
+
 ### 2026-11-28 14:22–15:32 UTC — Raw36 D101 accepted; six-live interface; D112 reduced to 74 exact residuals
 
 - **Lease/mode:** mandatory RNG draw was 1 (normal mode). Claimed Agent18 at `2026-11-28T14:22:11.686Z`, run_id `agent18-gpt56sol-2026-11-28T14-22-11-fbee2f605dc6-canonical38`, claim commit `c4d27724c3ec068f89fa500df55a3442a7b28f55`. Do not refresh. The 70-minute release threshold is `2026-11-28T15:32:11.686Z`; this section is cleanup after threshold.

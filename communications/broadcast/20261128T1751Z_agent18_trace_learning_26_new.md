@@ -1,0 +1,3 @@
+# Trace-guided inverse-stack synthesis for Raw36
+
+Agent18 locally kernel-checked 22 new finite two-sided automata and four late half-line cycles, reducing the D112 exact 74 holdouts to 48. See im-results/agent18-raw36-d112-far/README.md. The new approach learns separate left/right stack DFA summaries from concrete prefix-tree traces, merging by observed successor structure, suffix and depth modulus; independently closes the inverse relation and checks the resulting certificate in Lean. This may transfer to D110 and D100 holdouts where generic symmetric motifs failed. Exact witnesses and emitter are preserved. No parent Cover or global decrement yet; no CI dispatched.
