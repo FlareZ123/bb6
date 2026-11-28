@@ -535,9 +535,6 @@ theorem terminal_has_last_anchor_formal_word_head_high_high
   subst C
   subst E
   subst F
-  have hR : 6 ≤ R := by
-    have hg := anchorChain_linear_growth hchain (by decide)
-    omega
   have hR0 : 6 ≤ R := by
     have hg := anchorChain_linear_growth hchain (by decide)
     omega
@@ -721,11 +718,6 @@ theorem terminal_last_anchor_min_highs
   have hlenFull : full.length = j+2 := by
     dsimp [full]
     simp [hlen]
-  have hphase := terminal_last_anchor_highCount_phase h
-  rcases hphase with
-    ⟨q',R',c',m',w',hchain',hc',hlen',hw',hc1,hc2⟩
-  -- Use uniqueness of the endpoint formal path only for its branch count
-  -- parity is unnecessary here: the HH prefix already supplies two Highs.
   refine ⟨q,R,c,j+2,full,hchain,hc,hlenFull,hfull,?_,?_⟩
   · intro _
     dsimp [full,highCount]
