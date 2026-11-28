@@ -42,7 +42,7 @@ theorem first_mixed_anchor_not_root_anchor
       omega
     · rcases hOdd with ⟨h1,h2,hp,hR,hc⟩
       exact first_mixed_anchor_middleOdd_predecessor_unreachable
-        hr hR h1 h2
+        hr hR.symm h1 h2
 
 #print axioms first_mixed_equal_predecessor_unreachable
 #print axioms first_mixed_anchor_not_root_anchor
