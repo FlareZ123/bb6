@@ -81,9 +81,9 @@ theorem all_except_23706 (m : Machine) (hm : TNFQuotientCompatible p m) :
     · subst q
       exact Or.inl (quotientSafe (by decide) safe39232 m hc)
     · subst q
-      exact Or.inl (quotientSafe (by decide) safe39233 m hc)
-    · subst q
       exact Or.inl (quotientSafe (by decide) safe39234 m hc)
+    · subst q
+      exact Or.inl (quotientSafe (by decide) safe39233 m hc)
     · subst q
       exact Or.inl (quotientSafe (by decide) safe42763 m hc)
 
