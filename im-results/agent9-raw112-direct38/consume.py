@@ -32,6 +32,8 @@ DIRECT_NS = "BB6.Agent3Canonical38Raw39Raw47Direct"
 TARGET_NS = "BB6.Agent9Canonical37Raw39Raw47Raw112Direct"
 RAW112_TABLE = "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
 RAW112_THEOREM = "BB6.Agent47Raw112.parent_cover"
+MEMBERSHIP_SOURCE = HERE / "Raw112Canonical38DirectMembership.lean"
+MEMBERSHIP_NS = "BB6.Agent9Raw112Canonical38DirectMembership"
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 
 
@@ -89,7 +91,7 @@ def restore_direct38(work: Path, linked: Path, prior40: dict, pin40: dict,
 
 def generate_source(folder: Path):
     source = folder / "Canonical37Raw39Raw47Raw112Direct.lean"
-    source.write_text("""import Canonical38Raw39Raw47Direct
+    source.write_text("""import Raw112Canonical38DirectMembership
 import Raw112ClosedCover
 
 set_option maxRecDepth 100000
@@ -105,19 +107,24 @@ open BB6ChampionArithmetic
 
 noncomputable abbrev baseRoster :=
   BB6.Agent3Canonical38Raw39Raw47Direct.roster38
-abbrev p112 : PartialMachine := BB6.Agent47Raw112.parent
+abbrev p112 : PartialMachine :=
+  BB6.Agent9Raw112Canonical38DirectMembership.p112
 abbrev removedParents : List PartialMachine := [p112]
 
 theorem p112_count38 :
-    (baseRoster.filter (fun e => sameTable e.2 p112)).length = 1 := by
-  decide
+    (baseRoster.filter (fun e => sameTable e.2 p112)).length = 1 :=
+  BB6.Agent9Raw112Canonical38DirectMembership.parent_count38
 
 theorem p112_root :
     p112 initialSlot = some (some ⟨true,true,1⟩) :=
-  BB6.Agent47Raw112.parent_root
+  BB6.Agent9Raw112Canonical38DirectMembership.parent_root
+
+theorem p112_source_eq : p112 = BB6.Agent47Raw112.parent :=
+  sameTable_sound (by decide)
 
 theorem p112_cover :
     Cover (WeightedBound (proposedTM63Moves + 7)) p112 := by
+  rw [p112_source_eq]
   apply Cover.leaf
   intro m hm k d hk hd
   exact Nat.le_trans
@@ -170,6 +177,7 @@ theorem exact_at_champion_score
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
 #print axioms p112_count38
+#print axioms p112_source_eq
 #print axioms p112_cover
 #print axioms count37
 #print axioms raw112_removed
@@ -180,6 +188,7 @@ end BB6.Agent9Canonical37Raw39Raw47Raw112Direct
 """)
     names = [
         TARGET_NS + ".p112_count38",
+        TARGET_NS + ".p112_source_eq",
         TARGET_NS + ".p112_cover",
         TARGET_NS + ".count37",
         TARGET_NS + ".raw112_removed",
@@ -193,7 +202,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
     ap.add_argument("--direct38-run-id", type=int, required=True)
-    ap.add_argument("--raw112-run-id", type=int, required=True)
+    ap.add_argument("--raw112-run-id", type=int)
+    ap.add_argument("--membership-only", action="store_true")
     args = ap.parse_args()
 
     work = args.work.resolve()
@@ -219,6 +229,48 @@ def main():
     prior38, pin38 = restore_direct38(
         work, linked, prior40, pin40, args.direct38_run_id)
     assert prior38["remaining_residual_count"] == 38
+
+    membership_output = linked / (MEMBERSHIP_SOURCE.stem + ".olean")
+    membership_log = c.a68.compile_module(
+        MEMBERSHIP_SOURCE, membership_output,
+        dict(os.environ, LEAN_PATH=str(linked)),
+        work / "membership.log")
+    membership_names = [
+        MEMBERSHIP_NS + ".parent_count38",
+        MEMBERSHIP_NS + ".parent_root",
+    ]
+    membership_profiles = c.a68.gate(membership_log, membership_names)
+    assert all(set(v) <= ALLOWED for v in membership_profiles.values())
+
+    if args.membership_only:
+        report = {
+            "status": "source-accepted Raw112 membership on direct Canonical38",
+            "source_revision": subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                cwd=HERE.parents[1], text=True).strip(),
+            "previous_delta": pin38,
+            "previous_root_sha256": prior38["root_sha256"],
+            "previous_residual_count": 38,
+            "raw112_parent_table": RAW112_TABLE,
+            "raw112_literal_count": 1,
+            "direct38_run_id": args.direct38_run_id,
+            "root": membership_output.name,
+            "root_sha256": c.a68.sha(membership_output),
+            "axioms": membership_profiles,
+        }
+        out = work / "membership"
+        out.mkdir()
+        shutil.copy2(membership_output, out / membership_output.name)
+        (out / "membership.json").write_text(
+            json.dumps(report, indent=2, sort_keys=True) + "\\n")
+        print(
+            "PASS: Raw112 occurs exactly once in accepted direct Canonical38",
+            flush=True,
+        )
+        return
+
+    if args.raw112_run_id is None:
+        raise SystemExit("--raw112-run-id is required unless --membership-only")
 
     raw112_work = work / "raw112"
     raw112_work.mkdir()
