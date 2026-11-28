@@ -60,6 +60,7 @@ const counters=[
  "1RB---_1RC---_0RD0LC_1LC1RF_------_1RD---"
 ].map(parseTable);
 counters.forEach(add);
+const disjointCycleAudit=process.argv.includes("--audit-disjoint-cycles");
 const withECycles=process.argv.includes("--include-e-cycles");
 const withMissingThird=process.argv.includes("--include-missing-ef-third");
 const withFGrowth=process.argv.includes("--include-f-growth");
@@ -160,7 +161,7 @@ if(withCycles){
    }
    assert.equal(cycleSource.length,9857,"34+592+9231 source candidates");
  }
- cycleSource.forEach(add);
+ if(!disjointCycleAudit)cycleSource.forEach(add);
 }
 let fDepth5Source=[];
 if(withFDepth5){
@@ -234,8 +235,10 @@ const fLongSource=process.argv.includes("--include-f-long")
   ? parseSourceCycles(readFileSync(join(dir,"Raw34FLongSideCycles.lean"),"utf8"))
   : [];
 if(fLongSource.length)assert.equal(fLongSource.length,4);
-fLongSource.forEach(add);
-const counterCount=counters.length+fLongSource.length+raySource.length+cycleSource.length+
+if(!disjointCycleAudit)fLongSource.forEach(add);
+const countedCycles=disjointCycleAudit?0:cycleSource.length;
+const countedLong=disjointCycleAudit?0:fLongSource.length;
+const counterCount=counters.length+countedLong+raySource.length+countedCycles+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length;
@@ -286,7 +289,7 @@ if(withLateHalts){
    nAdditionalLate+=loadHalters(join(haltDepth5Dir,unit.module+".lean"));
  assert.equal(nAdditionalLate,14424,"5+535+13,884 accepted late halter cylinders");
 }
-assert.equal(bank.length,4156+fLongSource.length+raySource.length+cycleSource.length+
+assert.equal(bank.length,4156+countedLong+raySource.length+countedCycles+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length+nDepth6Halts+nAdditionalLate);
@@ -406,6 +409,28 @@ function coveredCount(id,at){
  if(base===undefined){base=0n;for(const child of n.ch)base+=coveredCount(child,n.at+1);countMemo.set(id,base);}
  return pow[n.at-at]*base;
 }
+/-- Physical cylinder restriction counting without constructing a new MDD.
+    A reduced node can skip variables; only unfixed skipped variables
+    contribute a factor 25. This avoids 4GB heap growth when adding 9857
+    source cylinders to an already-large full-union decision diagram. --/
+function coveredInsideCube(root,cube){
+ assert.equal(cube.length,8);
+ const memo=new Map();
+ function loop(id,at){
+  if(id===0)return 0n;
+  if(id===1){let m=1n;for(let j=at;j<8;j++)if(cube[j]===0)m*=25n;return m;}
+  const key=id+","+at,hit=memo.get(key);if(hit!==undefined)return hit;
+  const n=nodes[id];assert(n.at>=at);
+  let factor=1n;
+  for(let j=at;j<n.at;j++)if(cube[j]===0)factor*=25n;
+  let sum=0n;
+  if(cube[n.at]!==0)sum=loop(n.ch[cube[n.at]-1],n.at+1);
+  else for(const child of n.ch)sum+=loop(child,n.at+1);
+  const total=factor*sum;memo.set(key,total);return total;
+ }
+ return loop(root,0);
+}
+
 function restrictAt(id,at,code){
  if(id<=1)return id;const n=nodes[id];assert(n.at>=at);
  return n.at===at?n.ch[code-1]:id;
@@ -452,6 +477,48 @@ if(withWindow7MaskBank){
  }
  assert(residualBeforeWindow7>=grand);
 }
+// Pairwise-disjoint late source cylinders do NOT need a combined MDD:
+// subtract their individual intersections with the pre-existing accepted
+// bank. The early-query generator has already asserted pairwise separation.
+let cycleAudit=null;
+if(disjointCycleAudit){
+ const groups={};
+ const seen=[...cycleSource,...fLongSource];
+ for(let i=0;i<fLongSource.length;i++){
+  for(let j=i+1;j<fLongSource.length;j++)
+   assert(!overlap(fLongSource[i],fLongSource[j]),"late four overlap");
+  for(const q of cycleSource)
+   assert(!overlap(fLongSource[i],q),"late four overlap generated F bank");
+ }
+ let newPhysical=0n,grossPhysical=0n;
+ for(const p of seen){
+  const fixed=p.filter(x=>x!==0).length;
+  assert(fixed>=2&&fixed<=4);
+  const mass=pow[8-fixed];
+  const covered=coveredInsideCube(coverageRoot,p);
+  assert(covered<=mass,"restriction exceeds cylinder mass");
+  const fresh=mass-covered;
+  const isLong=fLongSource.includes(p);
+  const key=isLong?"late-four":"fixed-"+fixed;
+  if(!groups[key])groups[key]={cylinders:0,gross:0n,alreadyCovered:0n,fresh:0n};
+  groups[key].cylinders++;
+  groups[key].gross+=mass;
+  groups[key].alreadyCovered+=covered;
+  groups[key].fresh+=fresh;
+  grossPhysical+=mass;newPhysical+=fresh;
+ }
+ const byDepth=Object.fromEntries(Object.entries(groups).map(([k,v])=>
+  [k,{cylinders:v.cylinders,gross:String(v.gross),
+    alreadyCovered:String(v.alreadyCovered),fresh:String(v.fresh)}]));
+ assert(newPhysical<=grand,"disjoint sources remove more than live complement");
+ cycleAudit={sourceCylinderCount:seen.length,grossPhysical:String(grossPhysical),
+  alreadyCoveredPhysical:String(grossPhysical-newPhysical),
+  exactFreshPhysicalIfAllSourceChecksPass:String(newPhysical),
+  baselineResidualNonD1:String(grand),
+  prospectiveResidualNonD1:String(grand-newPhysical),
+  prospectiveResidualRaw34:String(grand-newPhysical+110397542n),
+  byDepth,semantics:"Source candidates are pairwise disjoint; exact 25-way marginal subtraction from the accepted pre-cycle bank, not a Lean-certified union cardinality."};
+}
 // Optional exact residual mass inside a chosen bank of physical source cubes.
 // This makes the early-query search actionable: long-lived traces alone are
 // not proof obligations when existing source certificates already cover them.
@@ -471,7 +538,7 @@ if(queryIndex>=0){
     const reduced=slots.map(slot=>rawCodes[slot]);
     for(const x of reduced)assert(Number.isInteger(x)&&x>=0&&x<=25);
     const gross=pow[reduced.filter(x=>x===0).length];
-    const inBank=coveredCount(intersect(coverageRoot,cubeBDD(reduced)),0);
+    const inBank=coveredInsideCube(coverageRoot,reduced);
     assert(inBank<=gross);
     return {index:i,codes:rawCodes,unresolved:String(gross-inBank),
       gross:String(gross),certifiedInside:String(inBank)};
@@ -493,7 +560,7 @@ top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
   BigInt(a.residual)<BigInt(b.residual)?1:0);
 console.log(JSON.stringify({
   status:"Exact source-bank 25-way complement rank; branches are OPEN hypotheses",
-  queryCubes,
+  queryCubes,cycleAudit,
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
@@ -506,7 +573,7 @@ console.log(JSON.stringify({
   missingNonEFConjugateThirdPatterns:missingThirdSource.length,
   fConjugateUnboundedGrowthPatterns:fGrowthSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
-  rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
+  rayAndCycleNewPhysicalGain:withCycles&&!disjointCycleAudit?String(5471912359n-grand):"see cycleAudit",
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
   depth4CyclesIncluded:withDepth4,
   earlyHaltPatterns:n8,lateHaltPatterns:n9,
