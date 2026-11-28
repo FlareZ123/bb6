@@ -1,0 +1,70 @@
+name: Agent7 Raw36 direct D1 structured inverse-stack transfer
+run-name: Direct D1=${{ inputs.index }} cross-family RLE/modular/phase candidates
+on:
+  workflow_dispatch:
+    inputs:
+      index:
+        type: choice
+        options: ['0','1','4','10','12','16','22']
+        default: '1'
+      source_run_id:
+        type: string
+        default: '46122807180'
+      ngram_run_id:
+        description: 'Optional source run with same-index N-gram candidate artifact'
+        type: string
+        default: ''
+      far_run_id:
+        description: 'Optional source run with same-index FAR recovery artifact'
+        type: string
+        default: ''
+      limit:
+        description: 'Number of learned regular-stack motifs to try'
+        type: choice
+        options: ['30','60','100','200']
+        default: '60'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  structured:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-census
+          run-id: ${{ inputs.source_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-direct-census
+      - uses: actions/download-artifact@v4
+        if: inputs.ngram_run_id != ''
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-stack-candidates
+          run-id: ${{ inputs.ngram_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-ngram
+      - uses: actions/download-artifact@v4
+        if: inputs.far_run_id != ''
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-recovered
+          run-id: ${{ inputs.far_run_id }}
+          github-token: ${{ github.token }}
+          path: /tmp/a7-far
+      - name: Replay learned regular-stack motifs on exact residuals
+        run: |
+          set -euo pipefail
+          opts=()
+          if test -f /tmp/a7-ngram/ngram.json; then opts+=(--ngram /tmp/a7-ngram/ngram.json); fi
+          if test -f /tmp/a7-far/found.tsv; then opts+=(--far /tmp/a7-far/found.tsv); fi
+          python im-results/agent7-raw36-direct/scan_structured.py \
+            --census /tmp/a7-direct-census/direct$(printf '%02d' ${{ inputs.index }}).json.gz \
+            --out /tmp/a7-structured --workers 4 --limit ${{ inputs.limit }} "${opts[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ inputs.index }}-structured-candidates
+          path: /tmp/a7-structured/
+          if-no-files-found: warn
+          retention-days: 30
