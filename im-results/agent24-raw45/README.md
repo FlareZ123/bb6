@@ -189,3 +189,46 @@ One complete source-sound proof of the five-hole branch requires
 reconstructing and checking the finite lasso/ngram decision tree
 and the conjugacy. The two outliers are not grounds for treating
 the other branches as solved without that tree.
+
+
+## Full five-hole child certificate candidate
+
+The first-hole tree has now been materialized as
+[Raw45B1LA_A1LC_FullCut.lean](Raw45B1LA_A1LC_FullCut.lean)
+(267 KB). It is a single **source-checkable exact upper-bound
+candidate** for all completions of
+`1RB0LC_1RC0LA_0RD---_1LD1RB_------_------`,
+at weighted threshold **101** (root queries C1 at ordinary
+step 8, and maximum further hole query step 95). The tree has
+11,449 nodes including root, 477 split nodes including root,
+8,834 translated-cycle leaves, 2,068 last-hole leaves,
+68 two-sided local-window certificates (38 of width 1,
+14 of width 3, 16 of width 4), and precisely the
+two state-conjugate one-hole exceptions proved by the
+alternating macro recurrence above.
+
+The 68 explicit local-window proof objects and exact literal
+source machines are recorded in
+[Raw45B1LA_A1LC_NGram68.lean](Raw45B1LA_A1LC_NGram68.lean),
+generated using the existing source-accepted
+`NGramCertificate` checker. Unlike the discovery
+ngram closures, the source file has theorem statements
+`check p_i c_i = true` proven by kernel reduction and quantified
+`NeverHalts` lifts. Acceptance is pending the bank's original-source
+Lean gate; the *candidate* is not a certified upper bound until the
+entire audit, including all 8,834 translated-cycle checks,
+the 68 n-gram checkers, and both exceptional induction proofs,
+is accepted.
+
+The full-cut source uses the existing `ZipThreeHoleAudit`
+`Audit` datatype, constructs 24 first-level C1 children,
+and reduces each using `zipCheck 101` plus the source
+`certifiedZip` soundness theorem. It does not introduce a
+trusted external oracle or alter the checker.
+
+Focused CI links:
+[ngram bank](https://github.com/FlareZ123/bb6/actions/runs/46091283707)
+and [full cut search](https://github.com/FlareZ123/bb6/actions/workflows/agent38-m62-kernel.yml).
+A successful full-cut original-source gate would certify all
+`25^5=9,765,625` physical completions of this exact five-hole
+Raw45 child at weighted score strictly below 101.
