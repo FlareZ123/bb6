@@ -282,7 +282,7 @@ theorem stageA2 (n : Nat) :
   have h1 : run0 table 3 (leftA2 n) =
       some ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ := by
     have H := afront3 (Y (n+1) ++ [true,false,true,true])
-    simpa only [leftA2,rotateX,List.append_assoc,List.nil_append] using H
+    simpa [leftA2,rotateX,List.append_assoc] using H
   have h2 : run0 table (6*(n+1))
       ⟨0,[false,true,true,true],Y (n+1) ++ [true,false,true,true]⟩ =
       some ⟨0,[false] ++ Z (n+1) ++ [true,true,true],[true,false,true,true]⟩ := by
@@ -297,7 +297,7 @@ theorem stageA2 (n : Nat) :
         U (n+1) ++ [true,true,true,true] := by
       rw [← List.append_assoc]
       exact rotateZ n
-    simpa only [phase,hz,List.append_assoc] using H
+    simpa [phase,hz,List.append_assoc] using H
   have H := join0 (join0 h1 h2) h3
   have ht : (3+6*(n+1))+10=6*n+19 := by omega
   simpa only [ht] using H
