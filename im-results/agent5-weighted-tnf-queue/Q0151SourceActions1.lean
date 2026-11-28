@@ -83,7 +83,7 @@ theorem c_one_refines (s : List Bool) (stack : List (List Bool))
   · apply action_of_cut _ 1 (rightSig rest) _
       (by simpa [co] using cut_n1 rest hlive)
     rw [co_extend]
-    simp [actionsFor,choicesA,co,mkControl,segAppend_append]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append,altWord]
   · change Goes (boundary 2 s stack (rr 1 (runBits rest))) _
     exact c_one s stack (runBits rest)
 
