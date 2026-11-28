@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank, f-long]
         default: pilot
 
 permissions:
@@ -141,6 +141,16 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
+      - name: Prove four late-entry Raw34 translated half-line side cycles
+        if: inputs.mode == 'f-long'
+        run: |
+          set -euo pipefail
+          W=/tmp/agent23-raw34-halters
+          mkdir -p "$W"
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 im-results/agent40-raw34-frontier/Raw34FLongSideCycles.lean 2>&1 | tee "$W/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$W/audit.log"
+          grep -F "'BB6.Agent40Raw34FLongSideCycles.all_never'" "$W/audit.log"
       - name: Rank exact Raw34 complement after source-generatable F side cycles
         if: inputs.mode == 'cycle-rank'
         run: |
