@@ -155,6 +155,7 @@ theorem carry0 (k : Nat) (L : List Bool) :
       some (frame (rep D0 k++D1++L)) := by
   have h1 := prelude (rep D3 k++D0++L)
   have h2 := scanMany k (D0++L)
+  simp only [List.append_assoc] at h1 h2
   have h3 := boundary0 L (scanTail k)
   rw [← scanPrefix k] at h3
   have h4 := return0 k L
@@ -169,6 +170,7 @@ theorem carry1 (k : Nat) (L : List Bool) :
       some (frame (rep D0 k++D2++L)) := by
   have h1 := prelude (rep D3 k++D1++L)
   have h2 := scanMany k (D1++L)
+  simp only [List.append_assoc] at h1 h2
   have h3 := boundary1 L (scanTail k)
   rw [← scanPrefix k] at h3
   have h4 := return1 k L
@@ -183,6 +185,7 @@ theorem carry2 (k : Nat) (L : List Bool) :
       some (frame (rep D0 k++D3++L)) := by
   have h1 := prelude (rep D3 k++D2++L)
   have h2 := scanMany k (D2++L)
+  simp only [List.append_assoc] at h1 h2
   have h3 := boundary2 L (scanTail k)
   rw [← scanPrefix k] at h3
   have h4 := return2 k L
@@ -202,6 +205,7 @@ theorem carryT0 (k : Nat) :
   have h4 := returnT0 k
   have h5 := finish (rep C k++[true])
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
+  simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
   simpa only [frame,D0,T0,T1,List.append_assoc,
     show 21+4*k+4+6*k+5=30+10*k by omega] using H
@@ -216,6 +220,7 @@ theorem carryT1 (k : Nat) :
   have h4 := returnT1 k
   have h5 := finish (rep C k++[false,false,true,true])
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
+  simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
   simpa only [frame,D0,T0,T1,List.append_assoc,
     show 21+4*k+10+6*k+5=36+10*k by omega] using H
