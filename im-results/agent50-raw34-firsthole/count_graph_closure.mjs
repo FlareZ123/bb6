@@ -66,7 +66,7 @@ for(const b of bcd)for(const c of bcd)for(const d of bcd)
 old.push(pattern('1RB1LD_1RC---_0RD0RA_1LC1RD_------_------'));
 old.push(pattern('1RB---_1RC---_0RD0RE_1LC1RD_---1LD_------'));
 old.push(pattern('1RB---_1RC---_0RD0LD_1LC0RE_1RD---_------'));
-assert.equal(old.length,2876);
+assert.equal(old.length,3087);
 
 const graph=[];
 for(let mask=0;mask<16;mask++) {
