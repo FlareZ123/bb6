@@ -2199,10 +2199,10 @@ jobs:
           m=json.load(open(sys.argv[1]));log=open(sys.argv[2]).read()
           assert m['inputResidualRows']==4274
           assert m['openDepth6']==4234 and m['longDepth6']==40
-          assert m['fullyClosedAtDepth8']==840 and m['ofWhichClosedAtDepth7']==114
-          assert m['newlyClosedBeyondDepth7']==726
-          assert m['physicalMass']=='525000'
-          assert m['incrementalBeyondFull7Mass']=='453750'
+          assert m['fullyClosedAtDepth8']==3464 and m['ofWhichClosedAtDepth7']==123
+          assert m['newlyClosedBeyondDepth7']==3341
+          assert m['physicalMass']=='2165000'
+          assert m['remainingWholeDepth6CylinderMass']=='506250'
           assert m['pairwiseDisjoint'] and m['twoFreeSlotsEach']
           allowed={'propext','Classical.choice','Quot.sound'}
           for mod in m['modules']:
@@ -2215,7 +2215,8 @@ jobs:
                       assert got<=allowed,(full,got)
                   else:
                       assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: 840 disjoint Raw34 depth-six residual cylinders (525,000 physical tables) have source-level Covers through depth eight')
+          assert m['directExtendedSide']==767 and m['grandClosed']==38568
+          print('PASS: 3,464 disjoint Raw34 depth-six residual cylinders (2,165,000 physical tables) have source-level Covers through depth eight')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
