@@ -1,0 +1,64 @@
+name: Agent29 Raw36 D1=0RE sixteen source cycles and eight-live bound
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prove:
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reclaim unrelated SDKs
+        run: |
+          set -euo pipefail
+          df -h /
+          for p in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$p" ]]; then sudo rm -rf "$p"; fi
+          done
+          df -h /
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-10-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a29-raw36-direct10-census
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Authenticated dependency rebuild and new original-source proof
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile \
+            im-results/agent29-raw36/emit_direct10_eight.py \
+            im-results/agent29-raw36/check_direct10_eight.py
+          python im-results/agent29-raw36/check_direct10_eight.py \
+            --census /tmp/a29-raw36-direct10-census/direct10.json.gz \
+            --archives /tmp/a29-raw36-d110-archives \
+            --work /tmp/a29-raw36-d110 \
+            | tee /tmp/a29-raw36-d110-source.log
+          test -s /tmp/a29-raw36-d110/raw36-d110-live8-accepted.json
+          cat /tmp/a29-raw36-d110/raw36-d110-live8-accepted.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d1-0re-live8-source-evidence
+          path: |
+            /tmp/a29-raw36-d110/Raw36D110Live8.lean
+            /tmp/a29-raw36-d110/raw36-d110-live8-candidate.json
+            /tmp/a29-raw36-d110/raw36-d110-live8-accepted.json
+            /tmp/a29-raw36-d110/raw36-d110-live8-source.log
+            /tmp/a29-raw36-d110-source.log
+          if-no-files-found: warn
+          retention-days: 60
