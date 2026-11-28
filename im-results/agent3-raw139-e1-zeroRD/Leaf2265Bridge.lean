@@ -165,8 +165,10 @@ theorem weighted : Cover (WeightedBound (n+6)) ctr := by
     obtain ⟨c,hc,hs⟩ := reached m hm
     have hh : HaltsAfter m n := by
       constructor
-      · simp [hc]
-      · simp [BB6Coverage.run,hc,rawStep,hs,ht]
+      · simpa [hc]
+      · change (BB6Coverage.run m n BB6Coverage.blank).bind (rawStep m) = none
+        rw [hc]
+        simp [rawStep, hs, ht]
     intro k d hk hd
     have he := halting_time_unique m k n hk hh
     have hlt : d < 6 := List.mem_range.mp (List.mem_filter.mp hd).1
