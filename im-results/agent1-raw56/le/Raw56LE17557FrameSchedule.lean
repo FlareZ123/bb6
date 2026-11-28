@@ -263,6 +263,48 @@ theorem next_C_residue7_weight_positive (r : Nat) {p s : List Bool}
   unfold prefixWeight
   omega
 
+/-- Refinement of an outer-frame hit when the entire macro level is
+    lifted once: an outer B becomes B B C, while an outer carry remains a
+    carry because the inserted N_0 B pair is a complete nested frame. -/
+def refineLetter : Bool → List Bool
+  | true => [true, true, false]
+  | false => [false]
+
+def refine (w : List Bool) : List Bool := w.flatMap refineLetter
+
+@[simp] theorem refine_nil : refine [] = [] := rfl
+
+@[simp] theorem refine_cons (a : Bool) (w : List Bool) :
+    refine (a :: w) = refineLetter a ++ refine w := rfl
+
+@[simp] theorem refine_append (u v : List Bool) :
+    refine (u ++ v) = refine u ++ refine v := by
+  induction u with
+  | nil => rfl
+  | cons a u ih =>
+      simp [refine, List.append_assoc, ih]
+
+/-- The recursive frame schedule is exactly the outer-hit schedule induced by
+    one level of the rank-labelled macro substitution. -/
+theorem frame_succ_refine (r : Nat) :
+    frame (r+1) = [true, false] ++ refine (frame r) := by
+  induction r with
+  | zero => decide
+  | succ r ih =>
+      calc
+        frame (r+2) =
+            frame (r+1) ++ [false, true] ++ frame (r+1) ++ [false] := rfl
+        _ = ([true, false] ++ refine (frame r)) ++ [false, true] ++
+              ([true, false] ++ refine (frame r)) ++ [false] := by rw [ih]
+        _ = [true, false] ++
+              (refine (frame r) ++ [false] ++ [true, true, false] ++
+               refine (frame r) ++ [false]) := by
+              simp [List.append_assoc]
+        _ = [true, false] ++
+              refine (frame r ++ [false, true] ++ frame r ++ [false]) := by
+              simp [refine_append, refineLetter, List.append_assoc]
+        _ = [true, false] ++ refine (frame (r+1)) := rfl
+
 /-- A canonical prefix attaining the largest recursively exposed balance. -/
 def peak : Nat → List Bool
   | 0 => [true]
@@ -338,6 +380,7 @@ theorem frame_closes (r : Nat) :
   · unfold prefixWeight
     omega
 
+#print axioms frame_succ_refine
 #print axioms frame_initial_low
 #print axioms frame_initial_high
 #print axioms frame_closes
