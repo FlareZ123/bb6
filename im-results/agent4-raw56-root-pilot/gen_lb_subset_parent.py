@@ -42,8 +42,8 @@ theorem subset_{kk} (e : List Move × PartialMachine)
     List.mem_map_of_mem Prod.snd he
   simp only [nr_{kk},List.map_nil,List.map_cons,{EQ},
     List.mem_cons,List.not_mem_nil,or_false] at h
-  simp only [allTables,List.mem_cons,List.not_mem_nil,or_false]
-  simp_all
+  all_goals simp only [allTables,List.mem_cons,List.not_mem_nil,or_false]
+  all_goals simp_all
   all_goals grind
 """)
     childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
