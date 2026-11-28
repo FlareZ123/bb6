@@ -3067,14 +3067,16 @@ jobs:
           W=/tmp/a50-raw34-window5
           D=im-results/agent50-raw34-window5
           mkdir -p "$W"
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-window5-original "$D/Window5Witness.lean" "$D/Window5Product.lean" "$D/Window5Domains.lean" 2>&1 | tee "$W/closure.log"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-window5-original "$D/Window5Witness.lean" "$D/Window5Product.lean" "$D/Window5Domains.lean" "$D/Window5Bank128.lean" 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           grep -F "'BB6.Agent50Window5Witness.never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Witness.cover'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Product.never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Domains.family_never'" "$W/closure.log"
           grep -F "'BB6.Agent50Window5Domains.counts_exact'" "$W/closure.log"
+          grep -F "'BB6.Agent50Window5Bank128.every_mask_never'" "$W/closure.log"
           node "$D/search_and_count.mjs" | tee "$W/mask-bank-reconstruction.json"
+          node "$D/audit_mask_bank_union.mjs" | tee "$W/exact-bank-union.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
