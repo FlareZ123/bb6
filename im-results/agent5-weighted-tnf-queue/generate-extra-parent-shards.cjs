@@ -68,9 +68,11 @@ function write(name,s){fs.writeFileSync(path.join(outdir,name+'.lean'),s);module
 const MODULE_SPLIT_THRESHOLD=1000;
 function local(t,a,f,p,name,lines,imports,allowSplit=false){
  const safe='safe'+name;
- const threshold = (process.env.RAW11_REPAIR_SPLIT==='1' &&
+ const repair = (process.env.RAW11_REPAIR_SPLIT==='1' &&
    ((id===132 && name.startsWith('_root_12_root_19')) ||
-    (id===140 && name.startsWith('_root_6')))) ? 30 : MODULE_SPLIT_THRESHOLD;
+    (id===140 && name.startsWith('_root_6'))));
+ const threshold = repair ? 30 : MODULE_SPLIT_THRESHOLD;
+ const certThreshold = repair ? 8 : 49;
  if(allowSplit&&census.get(t)>threshold){
   const moduleName=prefix+'Sub'+name.replace(/[^A-Za-z0-9_]/g,'_');
   const subLines=[ns(moduleName),parent(a)];
@@ -92,7 +94,7 @@ end BB6.${moduleName}
    intro m hm
    ${eq(p,e.table)}  exact Cover.sound (${e.proof} ${B}) m hm
  `);return safe}
- if(census.get(t)<=49&&!external.get(t)){const c='cert'+name,h='checked'+name;lines.push(`def ${c} : Tree := ${emit(t,a,f)}
+ if(census.get(t)<=certThreshold&&!external.get(t)){const c='cert'+name,h='checked'+name;lines.push(`def ${c} : Tree := ${emit(t,a,f)}
  theorem ${h} : check ${B} ${p} ${c} = true := by decide +kernel
  theorem ${safe} : ∀ m, compatible ${p} m → WeightedBound ${B} m := sound ${B} _ ${c} (by decide) ${h}
  `);return safe}
