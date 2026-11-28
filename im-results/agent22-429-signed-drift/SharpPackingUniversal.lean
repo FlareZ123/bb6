@@ -113,4 +113,35 @@ theorem F_jump : ∀ n : Nat, 0<n →
         simp [Nat.ne_of_gt hn, hmod]
       rw [hdiv] at hfprev
       omega
+
+/-- Sum of base-four digits, defined by exact Euclidean division. -/
+def digitSum4 (n : Nat) : Nat :=
+  if h : n=0 then 0 else n%4+digitSum4 (n/4)
+termination_by n
+decreasing_by omega
+
+theorem digitSum4_recur (n : Nat) :
+    digitSum4 n=n%4+digitSum4 (n/4) := by
+  by_cases hz : n=0
+  · subst n
+    simp [digitSum4]
+  · rw [digitSum4]
+    simp [hz]
+
+/-- Exact base-four digit identity 3F(n)+s4(n)=4n. -/
+theorem digit_identity (n : Nat) :
+    3*F n+digitSum4 n=4*n := by
+  induction n using Nat.strongRecOn with
+  | ind n ih =>
+    by_cases hz : n=0
+    · subst n
+      simp [F,digitSum4]
+    · have hlt : n/4<n := by omega
+      have hi := ih (n/4) hlt
+      have hr := F_recur n
+      have hd := digitSum4_recur n
+      have hdiv : 4*(n/4)+n%4=n := by omega
+      omega
+
+#print axioms digit_identity
 end SharpPackingUniversal
