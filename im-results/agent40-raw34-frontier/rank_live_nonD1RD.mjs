@@ -323,6 +323,99 @@ function feasibleGraph(p,f){
   return a!=="HALT"&&f.S.includes(a[2]);
  });
 }
+
+// Exact union counter specialized to eight 25-way physical source slots.
+// Each cube is stored once in a wildcard trie.  During counting an active
+// trie node contributes at most its wildcard edge and one concrete edge, so
+// exact union cardinality does not require materializing the enormous MDD
+// apply products created by the 300k+ depth-five/six F/E banks.
+if(process.argv.includes("--trie-count")){
+ const mkTrieNode=()=>({wild:-1,by:Array(26).fill(-1),terminal:false});
+ const trie=[mkTrieNode()];
+ const fresh=()=>{const id=trie.length;trie.push(mkTrieNode());return id;};
+ for(const p of bank){
+   let id=0;
+   for(let at=0;at<8;at++){
+     if(trie[id].terminal)break;
+     const c=p[at];
+     if(c===0){
+       if(trie[id].wild<0)trie[id].wild=fresh();
+       id=trie[id].wild;
+     }else{
+       if(trie[id].by[c]<0)trie[id].by[c]=fresh();
+       id=trie[id].by[c];
+     }
+   }
+   trie[id].terminal=true;
+ }
+ const advance=(active,mask,at,code)=>{
+   const out=[];
+   for(const id of active){
+     const n=trie[id];
+     if(n.wild>=0)out.push(n.wild);
+     if(n.by[code]>=0)out.push(n.by[code]);
+   }
+   out.sort((a,b)=>a-b);
+   const uniq=[];for(const id of out)if(uniq.length===0||uniq[uniq.length-1]!==id)uniq.push(id);
+   return [uniq,nextMask(mask,at,code)];
+ };
+ const memo=new Map();
+ function residual(active,mask,at){
+   for(const id of active)if(trie[id].terminal)return 0n;
+   if(at===8)return mask===0?1n:0n;
+   const key=at+"|"+mask+"|"+active.join(",");
+   const hit=memo.get(key);if(hit!==undefined)return hit;
+   let total=0n;
+   for(let code=1;code<=25;code++){
+     const [next,nm]=advance(active,mask,at,code);
+     total+=residual(next,nm,at+1);
+   }
+   memo.set(key,total);return total;
+ }
+ function under(prefix){
+   let active=[0],mask=maskAll;
+   for(let at=0;at<prefix.length;at++)
+     [active,mask]=advance(active,mask,at,prefix[at]);
+   return residual(active,mask,prefix.length);
+ }
+ const totalByD1=[],top=[];let grand=0n,peak=0n;
+ for(let d=1;d<=25;d++){
+   if(alphabet[d-1]==="1RD")continue;
+   const mass=under([d]);grand+=mass;
+   totalByD1.push({D1:alphabet[d-1],unclassified:String(mass)});
+   for(let c=1;c<=25;c++)for(let b=1;b<=25;b++){
+     const n=under([d,c,b]);
+     if(n>0n){
+       top.push({D1:alphabet[d-1],C1:alphabet[c-1],B1:alphabet[b-1],
+         residual:String(n),residualPercentOf25power5:Number(n*10000n/(25n**5n))/100});
+       if(n>peak)peak=n;
+     }
+   }
+ }
+ totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
+   BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
+ top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
+   BigInt(a.residual)<BigInt(b.residual)?1:0);
+ console.log(JSON.stringify({
+   status:"Exact wildcard-trie source-bank 25-way complement; branches are OPEN hypotheses",
+   root:"1RB---_1RC---_0RD---_1LC---_------_------",
+   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
+   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
+   fLongSideCyclePatterns:fLongSource.length,eLongSideCyclePatterns:eLongSource.length,
+   fDepth5CyclePatterns:fDepth5Source.length,eConjugateCyclePatterns:eCycleSource.length,
+   eDepth5CyclePatterns:eDepth5Source.length,extendedLongCyclePatterns:extendedLongSource.length,
+   depth6CyclePatterns:depth6Source.length,depth6DirectHaltPatterns:nDepth6Halts,
+   missingNonEFConjugateThirdPatterns:missingThirdSource.length,
+   fConjugateUnboundedGrowthPatterns:fGrowthSource.length,
+   earlyHaltPatterns:n8,lateHaltPatterns:n9,additionalLateHaltPatterns:nAdditionalLate,
+   graphMasks:maskNames,fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
+   totalResidualD1not1RD:String(grand),plusAgent23Residual:String(grand+110397542n),
+   nonzeroThreeSlotPrefixes:top.length,bestThreeSlotResidual:String(peak),
+   trieNodes:trie.length,trieMemoStates:memo.size,mddNodes:0,
+   D1Distribution:totalByD1,topThreeSlotPrefixes:top.slice(0,45)
+ },null,2));
+ process.exit(0);
+}
 // Compile all source cylinders and the ten closed-control families into a
 // reduced ordered 25-way decision diagram. This avoids decimal-ID-list memo
 // keys, whose duplication exceeded the runner heap after depth-five banks.
