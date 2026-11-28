@@ -141,3 +141,6 @@ inductive: its \`oddNear\` constructor does not itself encode positivity,
 while the weighted drain identity uses \`u-1\`. The physical blank-root
 bridge supplies \`0<u\` from the transported positive minimum; the
 conditional generic lemmas do not silently assume it.
+
+
+Latest end-to-end diagnostics: run 46167852806 compiled the complete upstream chain, the positive-source coupled envelope, the generic inverse-ray transport, and EightRaySource, then reached FifthRayPhysicalSource.lean. It failed only on a redundant omega after a max/min simp (line 94) and a multiplication-commutativity goal left by the hpow3 normalization (line 153). Both were corrected in commit 2c30edb037db9aa5c4c0f148878fdf0207fd64e1. The next full-chain run, 46168664107, was dispatched on that commit and was queued at 17:06 UTC. Until that run succeeds, the scale-corrected physical theorem is still a candidate, not source-CI accepted.
