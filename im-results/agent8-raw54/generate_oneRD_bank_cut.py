@@ -79,6 +79,22 @@ def tree_size(t) -> int:
     return 1 + sum(tree_size(x) for x in t[3]) if t[0] == "split" else 1
 
 
+def residual_stats(t, p: tuple[int, ...]) -> tuple[int, int]:
+    """Exact unresolved-node count and physical completion mass below t."""
+    if t[0] == "open":
+        assert t[1] == show(p), (t[1], show(p))
+        return 1, 25 ** sum(x < 0 for x in p)
+    if t[0] == "split":
+        _, s, kids = int(t[1]), int(t[2]), t[3]
+        n = mass = 0
+        for i, child in enumerate(kids):
+            cn, cm = residual_stats(child, refine(p, s, i))
+            n += cn
+            mass += cm
+        return n, mass
+    return 0, 0
+
+
 def render_tree(t, p: tuple[int, ...], bank_count: int, open_seen: list[str]) -> str:
     kind = t[0]
     if kind == "far":
@@ -271,10 +287,22 @@ theorem cut (m : Machine) (hm : compatible parent m) :
 end {NS}
 """
     (out / "Raw54OneRDBankCut.lean").write_text(root)
+    branch_summary = []
+    for i, child in enumerate(kids):
+        bp = refine(parent, s, i)
+        rn, rm = residual_stats(child, bp)
+        branch_summary.append({
+            "move_code": i, "move": move(i), "tree_nodes": tree_size(child),
+            "residual_nodes": rn, "residual_mass": rm,
+        })
+    assert sum(x["residual_nodes"] for x in branch_summary) == len(opens)
+    assert sum(x["residual_mass"] for x in branch_summary) == sum(masses)
+
     (discovery / "generator-summary.json").write_text(json.dumps({
         "bank": len(bank), "residual_nodes": len(opens),
         "residual_mass": sum(masses), "bound": BOUND,
-        "root_query": [n, s], "tree_nodes": tree_size(tree)
+        "root_query": [n, s], "tree_nodes": tree_size(tree),
+        "branches": branch_summary,
     }, indent=2) + "\n")
     print("generated compact 1RD replay:",
           "bank", len(bank), "residuals", len(opens),
