@@ -671,3 +671,117 @@ jobs:
           W=/tmp/raw54-onerd-bank-base
           python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" im-results/agent8-raw54/Raw54OneRDBankAudit.lean 2>&1 | tee "$W.log"
           python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent8Raw54.OneRDBankAudit.farSpecCheck_sound BB6.Agent8Raw54.OneRDBankAudit.bankSound
+
+
+  raw54_onerd_prepare:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-cut'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate indexed FAR-pruned 1RD tree and compact Lean replay
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          OUT=/tmp/raw54-onerd-discovery
+          mkdir -p "$OUT"
+          g++ -std=c++17 -O3 "$D/oneRD_pruned_far.cpp" -o /tmp/raw54-onerd-far
+          (
+            cd "$OUT"
+            /tmp/raw54-onerd-far '1RB---_1RC---_0RD---_1LD0LE_---1RD_------' "$GITHUB_WORKSPACE/$D/oneRD_leancert_bank.txt" | tee search.log
+          )
+          python "$D/generate_oneRD_bank_cut.py" "$OUT" "$D"
+          grep -q '"residual_nodes": 671' "$OUT/generator-summary.json"
+          grep -q '"residual_mass": 24575' "$OUT/generator-summary.json"
+          mkdir -p /tmp/raw54-onerd-generated
+          cp "$D"/Raw54OneRDBank.lean "$D"/Raw54OneRDBranch*.lean "$D"/Raw54OneRDBankCut.lean /tmp/raw54-onerd-generated/
+          cp "$OUT"/tree.json "$OUT"/open.txt "$OUT"/search.log "$OUT"/generator-summary.json /tmp/raw54-onerd-generated/
+          du -sh /tmp/raw54-onerd-generated
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          path: /tmp/raw54-onerd-generated
+          if-no-files-found: error
+          retention-days: 90
+
+  raw54_onerd_branch:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-cut'
+    needs: raw54_onerd_prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 12
+      matrix:
+        branch: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          path: /tmp/raw54-onerd-generated
+      - name: Kernel-check compact 1RD branch
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          cp /tmp/raw54-onerd-generated/*.lean "$D/"
+          MOD=$(printf 'Raw54OneRDBranch%02d' '${{ matrix.branch }}')
+          W=/tmp/raw54-onerd-branch
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee "$W.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').checked"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw54-onerd-slice-${{ matrix.branch }}
+          path: /tmp/raw54-onerd-branch
+          if-no-files-found: error
+          retention-days: 90
+
+  raw54_onerd_assemble:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-cut'
+    needs: raw54_onerd_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          path: /tmp/raw54-onerd-generated
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw54-onerd-slice-*
+          path: /tmp/raw54-onerd-slices
+      - name: Merge source-identical branch objects and certify 671-residual cut
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          W=/tmp/raw54-onerd-cut
+          P=/tmp/raw54-onerd-merged
+          python im-results/agent13-coverage/unpack.py
+          cp /tmp/raw54-onerd-generated/*.lean "$D/"
+          python "$D/onera_slices.py" merge /tmp/raw54-onerd-slices "$P" 24 raw54-onerd
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" --precompiled-manifest "$P/manifest.json" --precompiled-dir "$P" "$D/Raw54OneRDBankCut.lean" 2>&1 | tee /tmp/raw54-onerd-cut.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.cut
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-bank-cut
+          path: |
+            /tmp/raw54-onerd-cut/manifest.json
+            /tmp/raw54-onerd-cut.log
+            /tmp/raw54-onerd-generated/generator-summary.json
+            /tmp/raw54-onerd-generated/open.txt
+          if-no-files-found: ignore
+          retention-days: 90
