@@ -20,6 +20,17 @@ on:
         required: true
         default: 23
 
+      preparation_profile:
+        description: "Optional deterministic source preparation for an existing family consumer"
+        type: choice
+        options: ["none", "raw40-a0la"]
+        default: "none"
+      raw40_child:
+        description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
+        type: choice
+        options: ["0LE", "0RB", "0RD", "0RE", "1LA", "1LC", "1LE", "1RB", "1RC", "1RE"]
+        default: "1RB"
+
 permissions:
   contents: read
 
@@ -34,17 +45,24 @@ jobs:
           PROOF_ROOT: ${{ inputs.root }}
           SUFFIX: ${{ inputs.theorem_suffix }}
           MIN_THEOREMS: ${{ inputs.minimum_theorems }}
+          PREPARATION_PROFILE: ${{ inputs.preparation_profile }}
+          RAW40_CHILD: ${{ inputs.raw40_child }}
         run: |
           set -euo pipefail
           [[ "$PROOF_ROOT" =~ ^im-results/[a-zA-Z0-9_./-]+\.lean$ ]]
           [[ "$PROOF_ROOT" != *..* ]]
-          test -f "$PROOF_ROOT"
+          if [[ "$PREPARATION_PROFILE" == "none" ]]; then
+            test -f "$PROOF_ROOT"
+          else
+            test "$PREPARATION_PROFILE" = "raw40-a0la"
+            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/a0la/${RAW40_CHILD}/shards/Raw40C0LA${RAW40_CHILD}All.lean"
+          fi
           [[ "$SUFFIX" =~ ^[a-zA-Z0-9_.]+$ ]]
           [[ "$MIN_THEOREMS" =~ ^[0-9]+$ ]]
           test "$MIN_THEOREMS" -ge 1
           test "$MIN_THEOREMS" -le 10000
           git rev-parse HEAD
-          sha256sum "$PROOF_ROOT"
+          if test -f "$PROOF_ROOT"; then sha256sum "$PROOF_ROOT"; fi
       - name: Install pinned Lean 4.36.0-rc2
         run: |
           set -euo pipefail
@@ -55,6 +73,18 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+      - name: Generate authentic Raw40 A0LA source family from frozen banks
+        if: ${{ inputs.preparation_profile == 'raw40-a0la' }}
+        env:
+          RAW40_CHILD: ${{ inputs.raw40_child }}
+          PROOF_ROOT: ${{ inputs.root }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent19-raw40-cut/prepare_a0la.py "$RAW40_CHILD"
+          test -f "$PROOF_ROOT"
+          sha256sum "$PROOF_ROOT"
       - name: Compile exact transitive Lean source, reject compiler errors
         env:
           PROOF_ROOT: ${{ inputs.root }}
