@@ -66,7 +66,10 @@ theorem codes_nodup :
     (parents.map BB6.Agent47PhaseFrontier.tableCode).Nodup := by decide +kernel
 
 theorem all_members_in_152 :
-    ∀ p ∈ parents, p ∈ prior := by decide +kernel
+    ∀ p ∈ parents, p ∈ prior := by
+  intro p hp
+  simp only [parents, List.mem_cons, List.mem_singleton] at hp
+  rcases hp with rfl|rfl|rfl|rfl <;> decide +kernel
 
 theorem exact_census :
     (prior.length,remaining.length) = (152,148) := by decide +kernel
