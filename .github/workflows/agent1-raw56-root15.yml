@@ -108,6 +108,32 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46148226109'
+      - name: Restore E11LB prepared source
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - name: Restore E11LB cut objects
+        uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - name: Restore E11LB certificate objects
+        uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
       - name: Compose original-source fourteen-way Raw56 root frontier
         run: |
           set -euo pipefail
@@ -161,7 +187,11 @@ jobs:
               assert (out / rel).is_dir(), rel
           print('union modules', sum(1 for _ in out.rglob('*.olean')), flush=True)
           PY
-          export LEAN_PATH="/tmp:/tmp/raw56-lb:/tmp/raw56-lb-parent:/tmp/raw56-lb-parent/E11LB:/tmp/raw56-root14-union:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
+          python im-results/agent4-raw56-root-pilot/split_lb_parent.py --prep /tmp/raw56-pilot-prep
+          mkdir -p /tmp/raw56-lb-defs/E11LB
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:/tmp/raw56-lb-defs/E11LB"
+          (cd /tmp/raw56-pilot-prep && lean -j1 -o /tmp/raw56-lb-defs/E11LB/Raw56LBTopDefs.olean E11LB/Raw56LBTopDefs.lean)
+          export LEAN_PATH="/tmp:/tmp/raw56-lb:/tmp/raw56-lb-defs/E11LB:/tmp/raw56-lb-parent:/tmp/raw56-lb-parent/E11LB:/tmp/raw56-root14-union:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
           lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean 2>&1 | tee /tmp/raw56-root15.log
           lean -o /tmp/Raw56Root14.olean im-results/agent1-raw56/Raw56Root14.lean 2>&1 | tee /tmp/raw56-root14.log
           lean -o /tmp/Raw56Root13LB.olean im-results/agent1-raw56/Raw56Root13LB.lean 2>&1 | tee /tmp/raw56-root13.log
