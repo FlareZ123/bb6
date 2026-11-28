@@ -1,4 +1,4 @@
-name: Agent1 Raw56 root15 composition
+name: Agent1 Raw56 root14 accepted-child composition
 
 on:
   workflow_dispatch:
@@ -8,9 +8,9 @@ permissions:
   actions: read
 
 jobs:
-  root15:
+  root14:
     runs-on: ubuntu-latest
-    timeout-minutes: 40
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -49,7 +49,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46064074987'
-      - name: Restore pilot certificate and cut proof objects
+      - name: Restore full original-source pilot certificates for E10RD and E11LC
         uses: actions/download-artifact@v4
         with:
           pattern: rootpilot-*
@@ -58,18 +58,79 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46064129990'
-      - name: Compose exact 15-way Raw56 root frontier
+      - name: Restore successfully recovered E11LC cut zero
+        uses: actions/download-artifact@v4
+        with:
+          name: rootpilot-cut-E11LC-0-recovered
+          path: /tmp/raw56-pilot-recovered
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46086743629'
+      - name: Restore source-certified E10RD and E11LC parent modules
+        uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-root-pilot-E1*-source-accepted
+          path: /tmp/raw56-pilot-finals
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46086743629'
+      - name: Restore complete E10RB source-certificate closure
+        uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-*
+          path: /tmp/raw56-pilot-rb
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46087297403'
+      - name: Restore source-certified E10RB parent module
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-pilot-E10RB-source-accepted
+          path: /tmp/raw56-pilot-rb-final
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46087297403'
+      - name: Compose original-source fourteen-way Raw56 root frontier
         run: |
           set -euo pipefail
-          export LEAN_PATH="/tmp/raw56-root17:/tmp/raw56-pilot:/tmp/raw56-pilot/E10RD:/tmp/raw56-pilot/E11LC:/tmp/raw56-rc:/tmp/raw56-re:/tmp/raw56-base/a1-raw56-root-consumer"
           lean --version | grep -F '4.36.0-rc2'
-          lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean | tee /tmp/raw56-root15.log
+          python - <<'PY'
+          from pathlib import Path
+          roots=['/tmp/raw56-root17','/tmp/raw56-pilot','/tmp/raw56-pilot-recovered',
+                 '/tmp/raw56-pilot-finals','/tmp/raw56-pilot-rb','/tmp/raw56-pilot-rb-final',
+                 '/tmp/raw56-rc','/tmp/raw56-re','/tmp/raw56-base/a1-raw56-root-consumer']
+          out=Path('/tmp/raw56-root14-union');out.mkdir(exist_ok=True)
+          for folder in roots:
+              root=Path(folder)
+              n=0
+              for src in root.rglob('*.olean'):
+                  dst=out/src.name
+                  if dst.exists():
+                      assert dst.resolve().read_bytes()==src.read_bytes(),('conflicting olean',src.name,folder)
+                  else:
+                      dst.symlink_to(src.resolve())
+                  n+=1
+              print(folder,n,flush=True)
+              assert n>0,folder
+          for name in ['Raw56Root17','Raw56PilotE10RDAll','Raw56PilotE11LCAll','Raw56PilotE10RBAll']:
+              assert (out/(name+'.olean')).is_file(),name
+          print('union',len(list(out.glob('*.olean'))))
+          PY
+          export LEAN_PATH="/tmp:/tmp/raw56-root14-union"
+          lean -o /tmp/Raw56Root15.olean im-results/agent1-raw56/Raw56Root15.lean 2>&1 | tee /tmp/raw56-root15.log
+          lean -o /tmp/Raw56Root14.olean im-results/agent1-raw56/Raw56Root14.lean 2>&1 | tee /tmp/raw56-root14.log
           python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root15.log --require BB6.Agent1Raw56Root.sound15RDLC
-          ! grep -Eq 'sorryAx|native_decide' /tmp/raw56-root15.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-root14.log --require BB6.Agent1Raw56Root.sound14RDRB
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-root15.log /tmp/raw56-root14.log
       - uses: actions/upload-artifact@v4
+        if: success()
         with:
-          name: raw56-root15-source-accepted
+          name: raw56-root14-source-accepted
           path: |
             /tmp/Raw56Root15.olean
+            /tmp/Raw56Root14.olean
             /tmp/raw56-root15.log
+            /tmp/raw56-root14.log
           if-no-files-found: error
