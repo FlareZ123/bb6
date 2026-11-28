@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, short150-pilot, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, short150-pilot, short150-batch, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -893,6 +893,66 @@ jobs:
             /tmp/raw11-q0-frame150/
             /tmp/raw11-q0-frame150.log
           if-no-files-found: warn
+          retention-days: 30
+
+  short150-batch:
+    if: inputs.mode == 'short150-batch'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Generate 97 independent first-hole certificates
+        env:
+          SHARD: ${{ matrix.shard }}
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/generate-q0150-short-leaves.cjs /tmp/q0short
+          python - <<'PY'
+          import json,os
+          a=json.load(open('/tmp/q0short/manifest.json'))
+          assert a['shortGenerated']==97 and a['long']==5 and a['never']==5
+          shard=int(os.environ['SHARD'])
+          paths=['/tmp/q0short/'+x['filename'] for x in a['leaves'] if x['type']=='short' and x['index']%16==shard]
+          assert 4<=len(paths)<=9,(shard,len(paths))
+          with open('/tmp/q0short/roots.txt','w') as f: f.write('\n'.join(paths)+'\n')
+          print('Independent source proofs:',len(paths))
+          PY
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check every chosen original-source lemma
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          mapfile -t ROOTS < /tmp/q0short/roots.txt
+          python tools/lean_compile_closure.py "${ROOTS[@]}" \
+            --source-root /tmp/q0short --workdir /tmp/q0short-verified \
+            --manifest /tmp/q0short-verified/manifest.json --jobs 2 --lean lean \
+            --label "q0 150 short shard ${{ matrix.shard }}" \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-150-complete-frontier.json \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate-q0150-short-leaves.cjs \
+            2>&1 | tee /tmp/q0short.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0short.log; then exit 1; fi
+          test "$(grep -c 'BB6.Raw11Q0150Short[0-9]*.safe.*depends on axioms:' /tmp/q0short.log)" -ge "${#ROOTS[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-150-short-shard-${{ matrix.shard }}
+          path: |
+            /tmp/q0short/manifest.json
+            /tmp/q0short/roots.txt
+            /tmp/q0short-verified/
+            /tmp/q0short.log
           retention-days: 30
 
   short150-pilot:
