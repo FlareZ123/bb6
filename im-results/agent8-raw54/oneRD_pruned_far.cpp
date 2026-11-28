@@ -72,8 +72,8 @@ Res classify(const Table& p,Cfg&c){
 long long pow25(int k){long long r=1;while(k--)r*=25;return r;}
 int maxDelay(const Table& p,int state=0,int seen=1){int out=0;for(int q=0;q<6;q++)if(!(seen>>q&1)){int a=p[2*q];if(a==-1||(a>=0&&a/12==0&&a%6==state))out=max(out,1+maxDelay(p,q,seen|(1<<q)));}return out;}
 map<string,long long> stats,mass;long long maxscore=-1;string maxcode;int maxn,maxd;ofstream tree,op;
-void build(Table p,Cfg c){size_t prefix=tr.size();int holes=count(p.begin(),p.end(),-1);for(auto& [dfa,rev]:dfaBank)if(far(p,dfa,rev)){
- stats["far"]++;mass["far"]+=pow25(holes);tree<<"[\"far\","<<holes<<"]";restore(prefix);return;}
+void build(Table p,Cfg c){size_t prefix=tr.size();int holes=count(p.begin(),p.end(),-1);for(size_t bi=0;bi<dfaBank.size();bi++){auto& [dfa,rev]=dfaBank[bi];if(far(p,dfa,rev)){
+ stats["far"]++;mass["far"]+=pow25(holes);tree<<"[\"far\","<<bi<<","<<holes<<"]";restore(prefix);return;}}
  Res a=classify(p,c);
  if(a.typ==0){stats["open"]++;mass["open"]+=pow25(holes);string s=show(p);op<<s<<'\n';tree<<"[\"open\",\""<<s<<"\"]";restore(prefix);return;}
  if(a.typ==2){stats["cycle"]++;mass["cycle"]+=pow25(holes);tree<<"[\"cycle\","<<a.e<<','<<a.k<<','<<(a.dir?"true":"false")<<','<<a.b<<']';restore(prefix);return;}
