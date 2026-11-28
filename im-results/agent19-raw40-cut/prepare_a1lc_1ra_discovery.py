@@ -78,23 +78,49 @@ if len(far_codes) != len(set(far_codes)) or any(i < 0 or i >= len(opens) for i i
 # already-established A1LC n-gram, run-length and lag-XOR families.  Each
 # accepted record is independently reconstructed by emit_rungram.py and then
 # checked by FastBiDFA in Lean.
-ngram_widths = [(5, 5), (6, 6), (7, 7), (8, 8), (5, 6), (6, 5), (4, 5), (5, 4)]
-run_params = [
-    [2, 1, 1, 2, 2], [2, 2, 2, 4, 4], [3, 2, 2, 4, 4],
-    [2, 1, 1, 1, 5], [2, 1, 2, 2, 2],
-]
-lag_params = [
-    [0, 2, 1, 1, 2, 5], [0, 2, 1, 2, 3, 3],
-    [3, 2, 2, 1, 4, 4], [0, 2, 1, 2, 2, 5],
-    [0, 2, 1, 1, 1, 6],
-]
+ngram_widths = {(5, 5), (6, 6), (7, 7), (8, 8), (5, 6), (6, 5), (4, 5), (5, 4)}
+run_pairs = {
+    ((2, 1, 1, 2, 2), (2, 1, 1, 2, 2)),
+    ((2, 2, 2, 4, 4), (2, 2, 2, 4, 4)),
+    ((3, 2, 2, 4, 4), (3, 2, 2, 4, 4)),
+    ((2, 1, 1, 1, 5), (2, 1, 1, 1, 5)),
+    ((2, 1, 2, 2, 2), (2, 1, 2, 2, 2)),
+}
+lag_pairs = {
+    ((0, 2, 1, 1, 2, 5), (0, 2, 1, 1, 2, 5)),
+    ((0, 2, 1, 2, 3, 3), (0, 2, 1, 2, 3, 3)),
+    ((3, 2, 2, 1, 4, 4), (3, 2, 2, 1, 4, 4)),
+    ((0, 2, 1, 2, 2, 5), (0, 2, 1, 2, 2, 5)),
+    ((0, 2, 1, 1, 1, 6), (0, 2, 1, 1, 1, 6)),
+}
+# Mine the proven A1LC banks for additional compact recognizers rather than
+# guessing a new parameter family for this child.
+for path in ROOT.glob("a1lc-*.json"):
+    data = json.loads(path.read_text())
+    for row in data.get("compact", []):
+        method = row.get("method", [])
+        if method and method[0] == "ngram":
+            ngram_widths.add((int(method[1]), int(method[2])))
+        elif method and method[0] == "rungram":
+            run_pairs.add((tuple(method[1]), tuple(method[2])))
+        elif method and method[0] == "compact-lag":
+            lag_pairs.add((tuple(method[1]), tuple(method[2])))
+    for group, _ranges in data.get("compactGroups", []):
+        kind, left, right = group
+        if kind == "ngram":
+            ngram_widths.add((int(left), int(right)))
+        elif kind == "rungram":
+            run_pairs.add((tuple(left), tuple(right)))
+        elif kind == "compact-lag":
+            lag_pairs.add((tuple(left), tuple(right)))
+
 compact_records = []
 unresolved = []
 methods = {}
 for i in sorted(set(range(len(opens))) - set(far_codes)):
     table = opens[i]
     record = None
-    for widths in ngram_widths:
+    for widths in sorted(ngram_widths, key=lambda x: (sum(x), x)):
         try:
             record = compact(table, widths, cap=100_000)
             methods[i] = ["ngram", *widths]
@@ -102,18 +128,18 @@ for i in sorted(set(range(len(opens))) - set(far_codes)):
         except ValueError:
             pass
     if record is None:
-        for params in run_params:
+        for left, right in sorted(run_pairs, key=lambda x: (sum(x[0]) + sum(x[1]), x)):
             try:
-                record = compact_run(table, params, params, cap=100_000)
-                methods[i] = ["rungram", params, params]
+                record = compact_run(table, list(left), list(right), cap=100_000)
+                methods[i] = ["rungram", list(left), list(right)]
                 break
             except ValueError:
                 pass
     if record is None:
-        for params in lag_params:
+        for left, right in sorted(lag_pairs, key=lambda x: (sum(x[0]) + sum(x[1]), x)):
             try:
-                record = compact_lag(table, params, params, cap=100_000)
-                methods[i] = ["compact-lag", params, params]
+                record = compact_lag(table, list(left), list(right), cap=100_000)
+                methods[i] = ["compact-lag", list(left), list(right)]
                 break
             except ValueError:
                 pass
