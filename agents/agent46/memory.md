@@ -594,3 +594,55 @@ Checkpoint: `2026-11-26T20:42:29.323Z`.
 - Local Lean 4.36.0-rc2 complete root replay and all 26 groups PASS. Literal 1RB1LD1RC0RB1LA1RE1LC0LA0RF1RA---0LC, 44423003584937617011264491060 assigned primitive transitions, exact halting score 44423003584937617011264491061; uniform weighted bound covers all 25 completions. Standard axioms only. Result file results/2026-11-28-raw13-hierarchical-carry-exact-halt-agent46.md. Theoretical hierarchical carry and exact cost relations, packed and guided checker, trace generator and witness bridge all pushed. Reproduce gen_ra_cert.py; no need rerun old slow parser proof.
 - 1RA sibling complete generator integrates all 49 previously hard leaves including four source-accepted phased counters (46054482821), four growradix instances (46054488249), mirror/unary and exact giant leaf. Revision 5bc95917f444e1b9b1f7efc9e9de05f9d0fd3c0a, CI dispatched. Original run 46103405140 canceled to replace with sparse guided checker after ~15 seconds of actual work. Full sibling not yet source accepted.
 - Lease unchanged 03:12:15.109Z; threshold 04:22:15.109Z. Continue work on complete coupled6 parent and missing sibling proofs rather than rechecking established leaf.
+
+
+## 2026-11-28 12:27 UTC — Raw13 p3 exact-parent assembly and upward lift
+
+Lease incarnation: claimed 2026-11-28T11:31:55.726702Z, claim commit dd4c16979aed77dbf9bca84c50a89327737c2bf5. This run is normal research mode (RNG=7). Do not release before measured 70 minutes.
+
+### Six-hole p3 exact-threshold assembly
+- p3 = `1RB1LD1RC---1LA1RE---0LA------------`, six free rows = 25^6 = 244,140,625 completions. First E1=(4,true) query after 8 steps.
+- Candidate exact weighted threshold B = 44423003584937617011264491061, forced by already kernel-checked E1=1RA witness with 44423003584937617011264491060 live transitions and zero first-one delay.
+- E1 split: 0RA exact cycle (0,9,true,-1); 1LC exact cycle (7,2,true,+1); 0RD is accepted Raw13Coupled5 bound 62123; 1LB bound 2651340; 1LD/1RD bound 2651346; all other non-1RA generated siblings target 62123.
+- `Raw13Coupled6.lean` (77ba396e) assembles p3 split, support/nohalt/check/complete/empty residual, quotient/compatible upper bound, and exact-threshold lower witness. `Raw13Coupled6Source.lean` (d41baa53) transports pinned Cryptids nonhalting theorem to make it unconditional. Parent composer workflow 3783e699; Cryptids source audit workflow 5a48d909. State documented in `Raw13Coupled6.md` (b0a6e293). Do not call p3 source-accepted until composer + source audit pass.
+- Historical useful accepted child artifacts: 1RA 46103800697; 0RB+1LA 46037817669; 0LE 45976598144; 0LB 45975985504; 1LE 45975992299; 1RD 45975905856; 1LB 45974286731; 0LF 45958597960. Coupled5 parent artifact run 45950673374.
+- Standalone re-audits launched at immutable claim source: 0LA run 46143447931, 1LD 46143451766, 1LF 46143455459. Earlier paired failures 0LA/0LB and old 1LD/1LF were runner exit143, not theorem failures.
+
+### Exact p3 gap roster + certificate search
+- Current generator proof-bank gaps are exactly 23 literal machines across 0LC,0LD,0RC,0RE,0RF,1RB,1RC,1RE,1RF. Full roster is authoritative in `discoverCoupled6GapSAT.py` (2f8eae1, syntax fix 838aea0).
+- Bounded ordinary BiDFA SAT run 46143615072 found at least one actual candidate before proof-gate failure: table `1RB1LD1RC1RA1LA1RE1RE0LA1RF1RB---0RA`, 91 states / 30 edges, first SAT at L=12,R=16. Search itself completed; job failed only because Lean was not installed. Workflow fixed at 0b26525f to install pinned rc2 + unpack sources and re-dispatched from c3abd18f. Every hit is independently reconstructed by Agent16 witness and must compile in Lean before bank merge.
+- Phase-aware BiDFA path: `discoverCoupled6GapPhase.py` (8e505a86), workflow 1267f4d8; pinned-Lean proof gate fix 77591683. Original phase run 46143618617 was still running at last Actions access. Do not count hits without kernel gate.
+- Long-horizon 10M-step profiling: four 0RF gaps form one small/logarithmic-span counter family; 1RC/1RE four-table cluster has near-identical small-span dynamics; first 1RF gap also logarithmic-span. This is empirical triage, not proof. Existing `Raw13RFPrefix.lean`, phased-counter and unary-recursion proofs are likely reusable templates.
+
+### Seven-hole p2 lift
+- p2 = `1RB1LD1RC---1LA------0LA------------`; split C1=(2,true), TNF cut4, 20 moves; C1=1RE is p3. New exact scan infrastructure: `scanCoupled7.js` 53de03cf, node bd9b6a50, parallel driver 2914b59c, workflow eb879e64.
+- All three discovery batches completed. Key residual summaries:
+  - 0LA: exact direct cycle only, tree (start=3,period=5,false,+1), all 244,140,625 completions closed.
+  - 1LA: identical exact direct cycle, all 244,140,625 completions closed.
+  - 0LB open641 -> cert633 + unresolved6 + late2.
+  - 0LC open826 -> cert797 + unresolved14 + late15.
+  - 0LD open642 -> cert614 + unresolved22 + late6.
+  - 0LE open2910 -> cert2791 + unresolved57 + late62.
+  - 0RA open2402 -> cert2363 + unresolved34 + late5.
+  - 0RB open1655 -> cert1637 + unresolved16 + late2.
+  - 0RC open1673 -> cert1605 + unresolved54 + late14.
+  - 0RD open847 -> cert760 + unresolved54 + late33 (from run log).
+  - 0RE open9663 -> cert9558 + a substantial unresolved roster + late19; large JSON is > GitHub contents inline limit.
+  - 1LB open565 -> cert560 + unresolved3 + late2.
+  - 1LC open1487 -> cert1402 + unresolved67 + late18.
+  - 1LD open527 -> cert513 + unresolved13 + late1.
+  - 1LE open2926 -> cert2838 + unresolved48 + late40.
+  - 1RA open3794 -> cert3682 + a large unresolved roster + late14; large JSON is > contents inline limit.
+  - 1RB open2065 -> cert2034 + unresolved20 + late11.
+  - 1RC open615 -> cert477 + unresolved101 + late37.
+  - 1RD open1374 -> cert1336 + unresolved32 + late6.
+- Formal cycle sources: `Raw13Coupled7ZeroLA.lean` 9ea398bc and `Raw13Coupled7OneLA.lean` e935f946. Both target `WeightedBound 0` by exact cycle. Joint audit workflow 83c599ac; fixed source reconstruction b373efb2 and missing generated `Raw13CoupledEntry` dependency c3abd18f. Last joint run before c3 fix failed before Lean theorem checking; rerun dispatched from c3abd18f. Do not call kernel-certified until that rerun passes.
+
+### Eight-hole p1 lift
+- p1 split at D1=(3,true); D1=0LA is p2. Added exact 25^7 scanner `scanCoupled8.js` 43ae0ccd, worker 836cce4e, parallel driver 351b6179, workflow f0bc716e. Chat executor probes exceeded its short runtime; use CI for this level. Any direct cycle here removes 6,103,515,625 completions at once.
+
+### Reliability / next actions
+1. First harvest corrected p3 SAT and phase jobs; only merge certificates after Lean gate. Re-run each newly unblocked p3 sibling singly to avoid runner exit143.
+2. Harvest corrected joint p2 LA cycle audit; if Lean errors remain, fix theorem source. Once both pass, they are genuine source-checked 244,140,625-completion cylinder closures.
+3. When all p3 sibling artifacts are accepted and byte-compatible, run `agent46-raw13-coupled6-parent.yml` with coupled5 run 45950673374, then `agent46-raw13-coupled6-source.yml`. Only after both pass update public results synthesis.
+4. Dispatch p1/D1 eight-hole discovery workflow in bounded batches; prioritize cycle-heavy siblings.
