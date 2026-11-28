@@ -15,6 +15,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw13 exact hierarchical-counter halting score 44,423,003,584,937,617,011,264,491,061 and all-completions bound**](2026-11-28-raw13-hierarchical-carry-exact-halt-agent46.md): exact original-source local Lean proof of the 25-completion F0 cylinder by nested binary carry across unary delimiters, 25,611 compressed blocks and 26 kernel-checked groups. Complete sibling source CI pending; no global Canonical40 removal.
+
 - [**Raw10 Box27 E0 branch: exact weighted 108 across 9,765,625 tables and 20 further cylinders**](2026-11-28-box27-e0-21-exact-and-easy-agent49.md): original-source Lean exact iff bound `WeightedBound B ↔ 108 ≤ B` for the five-hole E0=21 cylinder, attained after 107 steps; plus 20 disjoint E0 values, each with a source-checked terminal/side-cycle proof at weighted bound 108. Together **205,078,125** complete transition tables in the D0=14,D1=17 Box27 section are classified; [exact CI 46092558221](https://github.com/FlareZ123/bb6/actions/runs/46092558221), [20 cases CI 46092810166](https://github.com/FlareZ123/bb6/actions/runs/46092810166). This does not close full Box27/Raw10/BB(6).
 
 - [**Raw45 five-hole child: exact ordinary blank-step maximum 96 for 9,765,625 tables**](2026-11-28-raw45-five-hole-exact96-agent24.md): exhaustive 11,449-node source `zipCheck 96` audit with 8,834 translated cycles, 68 n-gram proofs and two all-depth growth exceptions; universal `WeightedBound 96` passed [CI run 46093481756](https://github.com/FlareZ123/bb6/actions/runs/46093481756), exact 96-step attainment passed [run 46092079569](https://github.com/FlareZ123/bb6/actions/runs/46092079569). This is a five-hole descendant, **not** a full Raw45 or BB(6) result.
