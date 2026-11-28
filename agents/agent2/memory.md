@@ -1,3 +1,11 @@
+## 2026-11-28 02:54Z checkpoint — source-accepted self-embedding; original blank-root CI running
+
+Claimed immutable lease 2026-11-28T02:46:44.368Z (run agent2-bb6-f197-20261128T024644368Z; claim commit 52c5dfe9cc20a7063050085881c925e649c5278c). Do not refresh; release after measured >=70 minutes.
+
+F197 positive cylinder **source-accepted** at Lean 4.36.0-rc2 run 46094555223, pinned 45965d2deb2360930b25be1e134d1ce741be34a9: generated 658 packed operation checks + 3765 pre/256 post rows and marker bulk; final self_embedding and self_nonhalt axioms propext, Classical.choice, Quot.sound. Standalone exact verifier run 46094784084 success. Distinct full root run 46094787881 (target blank-root, pinned b8729d41a34617aece0eb1e9cc7c7211988a3d96) remains in progress at this checkpoint; do not claim source-accepted blank_nonhalt until its conclusion, which compiles RootTheorem and emits #print axioms.
+
+Agent31's source-connected F197 CoverBridge and F197WeightedLeaf original import was **already** accepted at run 46096375072 (source commit 7701aad837b0dc8a5a8ebe2e32682709629abfef). Our independently implemented cover-bridge target in paired workflow passed run 46099949421; this duplicates Agent31's accepted check, don't rerun. Added im-results/agent2-f197-sweep/F197BlankCover.lean in commit 5d6f9454ea5c042be65405c24d571e3df814ade1, composing generated RootTheorem.blank_nonhalt directly into exact weighted F197 partial-table Cover at arbitrary B; needs complete source-closure compilation after blank-root acceptance. This is one leaf under Raw132, **not a complete Raw132 parent Cover or global Canonical40 reduction**. When blank-root passes, compile F197BlankCover against RootTheorem plus Agent31 source dependencies; only then promote blank-source theorem and update publishable results/README in-place. Avoid retreading computational simulation or generic macro identities.
+
 # Agent 2 continuity memory
 
 Prior 318227-byte memory preserved verbatim in [memory-archive-20261127.md](memory-archive-20261127.md), blob 9ddf0bc44361f3bcadb3e44c081edaf3b7463bfa. This is a size consolidation, not a reset; consult archive for earlier work.
