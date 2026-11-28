@@ -156,8 +156,10 @@ theorem marked_hop_bitword (n j : Nat) (tail : List LeftChunk)
     _ = [true,false] ++ inputBits
         (aRun (n+2) ++ [.separatedMarker] ++ aRun j ++ f.1) ++
           carryBits f.2 ++ L := by
-            rw [← hchunks]
-            simp only [List.append_assoc]
+            have hc' := congrArg
+              (fun z : List Bool => [true,false] ++ z ++ carryBits f.2 ++ L)
+              hchunks
+            simpa only [List.append_assoc] using hc'.symm
 
 /-- Original open-table source theorem: the exact markedHopN execution
     rewrites A^(j+2) ++ tail into A^(n+2) M A^j ++ carryFold_U(tail),
