@@ -111,7 +111,7 @@ jobs:
           export RAW11_LEAN_PATH="/tmp/raw11:$(find /tmp/raw11-deps -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
           export LEAN_PATH="$RAW11_LEAN_PATH"
           cd /tmp/raw11
-          for mod in Raw11Counter28RE ZFast ZTree ZRoute ZJoin ZTrace; do
+          for mod in Raw11Counter28LD Raw11Counter28RE ZFast ZTree ZRoute ZJoin ZTrace; do
             lean -o "$mod.olean" "$mod.lean" | tee "/tmp/raw11-output/$mod.log"
           done
           if [ "$SIBLING" = 16 ]; then
@@ -239,6 +239,7 @@ jobs:
             done
             lean -o "$pre"Join.olean "$pre"Join.lean 2>&1 | tee /tmp/raw11-output/join.log
           else
+            lean -o Raw11Counter28LD.olean Raw11Counter28LD.lean
             lean -o Raw11Counter28RE.olean Raw11Counter28RE.lean
             bash compile-siblings.sh "$SIBLING" 2>&1 | tee /tmp/raw11-output/join.log
           fi
