@@ -40,6 +40,57 @@ def ResetMove (a d R c : Nat) : Prop :=
 def ResetEpoch (R c R' c' : Nat) : Prop :=
   ∃ n a d, OuterRun n R c a d ∧ ResetMove a d R' c'
 
+/-- Every exact live source move is either a non-Middle move or a Middle reset. -/
+theorem move_outer_or_reset {a d A D : Nat}
+    (h : CounterMove a d A D) :
+    OuterMove a d A D ∨ ResetMove a d A D := by
+  cases h with
+  | high a d hg =>
+      left
+      unfold OuterMove
+      exact Or.inl ⟨hg,rfl,rfl⟩
+  | equal a =>
+      left
+      unfold OuterMove
+      exact Or.inr (Or.inr ⟨rfl,rfl,rfl⟩)
+  | far a d h1 h2 =>
+      left
+      unfold OuterMove
+      exact Or.inr (Or.inl ⟨h1,h2,rfl,rfl⟩)
+  | middleEven a d h1 h2 hp =>
+      right
+      unfold ResetMove
+      exact Or.inl ⟨h1,h2,hp,rfl,rfl⟩
+  | middleOdd a d h1 h2 hp =>
+      right
+      unfold ResetMove
+      exact Or.inr ⟨h1,h2,hp,rfl,rfl⟩
+
+/-- The two classes are guard-disjoint. -/
+theorem outerMove_not_reset {a d A D : Nat}
+    (ho : OuterMove a d A D) (hr : ResetMove a d A D) : False := by
+  unfold OuterMove at ho
+  unfold ResetMove at hr
+  rcases hr with hr | hr
+  · rcases hr with ⟨hr1,hr2,hp,rfl,rfl⟩
+    rcases ho with ho | ho
+    · rcases ho with ⟨hg,ha,hd⟩
+      omega
+    · rcases ho with hf | he
+      · rcases hf with ⟨hf1,hf2,ha,hd⟩
+        omega
+      · rcases he with ⟨heq,ha,hd⟩
+        omega
+  · rcases hr with ⟨hr1,hr2,hp,rfl,rfl⟩
+    rcases ho with ho | ho
+    · rcases ho with ⟨hg,ha,hd⟩
+      omega
+    · rcases ho with hf | he
+      · rcases hf with ⟨hf1,hf2,ha,hd⟩
+        omega
+      · rcases he with ⟨heq,ha,hd⟩
+        omega
+
 theorem outerMove_source {a d A D : Nat}
     (h : OuterMove a d A D) : CounterMove a d A D := by
   unfold OuterMove at h
@@ -181,6 +232,42 @@ theorem resetChain_counterReach {n R c A e : Nat}
       rcases ih with ⟨s,hs⟩
       rcases resetEpoch_counterReach he with ⟨m,hm⟩
       exact ⟨s+(m+1), counterReach_append hs hm⟩
+
+/-- Canonical reset skeleton: completed reset epochs followed by one
+    non-Middle suffix. -/
+def ResetDecomposition (R c A D : Nat) : Prop :=
+  ∃ q R0 c0 m,
+    ResetChain q R c R0 c0 ∧ OuterRun m R0 c0 A D
+
+/-- Every exact finite source run from a reset anchor has a reset decomposition. -/
+theorem counterReach_reset_decomposition
+    {R c n A D : Nat}
+    (h : CounterReach R c n A D) :
+    ResetDecomposition R c A D := by
+  induction h with
+  | nil =>
+      exact ⟨0,R,c,0,ResetChain.nil R c,OuterRun.nil R c⟩
+  | @step n a d A D h hm ih =>
+      rcases ih with ⟨q,R0,c0,m,hchain,houter⟩
+      rcases move_outer_or_reset hm with hout | hreset
+      · exact ⟨q,R0,c0,m+1,hchain,OuterRun.step houter hout⟩
+      · refine ⟨q+1,A,D,0,?_,OuterRun.nil A D⟩
+        exact ResetChain.step hchain ⟨m,a,d,houter,hreset⟩
+
+/-- Quantitative consequence of the canonical decomposition: after q completed
+    reset epochs, the current diagonal coordinate lies beyond R+7q. -/
+theorem decomposition_linear_X
+    {R c A D q R0 c0 m : Nat}
+    (hc : 1 ≤ c)
+    (hchain : ResetChain q R c R0 c0)
+    (houter : OuterRun m R0 c0 A D) :
+    R + 7*q < X A D := by
+  have hg := resetChain_linear_growth hchain hc
+  have hx := outerRun_X_monotone houter
+  have hbase : R0 < X R0 c0 := by
+    unfold X
+    omega
+  omega
 
 theorem resetChain_end_positive {n R c A e : Nat}
     (h : ResetChain n R c A e) (hc : 1 ≤ c) : 1 ≤ e := by
