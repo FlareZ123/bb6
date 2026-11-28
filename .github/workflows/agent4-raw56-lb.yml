@@ -1598,6 +1598,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46144287707'
+
       - uses: actions/download-artifact@v4
         with:
           pattern: rootpilot-lb-cert-*
@@ -1679,37 +1680,7 @@ jobs:
           cp /tmp/min/M*.lean /tmp/complete-hybrid/
           cp /tmp/min/M*.olean /tmp/complete-hybrid/
           sed -i 's/^import Raw56LBE11LBReduced$/import Raw56LBTopSubsetReduction/' /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
-          grep '^import Raw56LBTopSubsetReduction"/tmp/raw56-base/a1-raw56-root-consumer:/tmp/partial-final:/tmp/partial-final/E11LB:/tmp/accepted-top/E11LB:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:$PWD"
-          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
-          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
-          for ID in 42763 23706; do
-            test -f "M${ID}Final.olean"
-            lean -j1 -o "M${ID}Data.olean" "M${ID}Data.lean"
-            lean -j1 -o "M${ID}Base.olean" "M${ID}Base.lean"
-          done
-          lean -j1 -o M21049.olean M21049.lean
-          lean -j1 -o M3923Pair.olean M3923Pair.lean
-          lean -j1 -o M39234.olean M39234.lean
-          lean -j1 -o M39233.olean M39233.lean
-          lean -j1 -o Raw56LBCompleteHybrid.olean Raw56LBCompleteHybrid.lean | tee Raw56LBCompleteHybrid.log
-          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" Raw56LBCompleteHybrid.log \
-            --require BB6.Agent4Raw56LB.E11LB.all_quotient \
-            --require BB6.Agent4Raw56LB.E11LB.all
-          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
-            "/tmp/block/M42763Final.log" --require M42763.never
-          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
-            "/tmp/block/M23706Final.log" --require M23706.never
-          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
-            "/tmp/min/M39232Min.log" --require M39232.never
-      - uses: actions/upload-artifact@v4
-        with:
-          name: raw56-lb-complete-subset-original-source-accepted
-          path: |
-            /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
-            /tmp/complete-hybrid/Raw56LBCompleteHybrid.olean
-            /tmp/complete-hybrid/Raw56LBCompleteHybrid.log
-          if-no-files-found: error
- /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
+          grep '^import Raw56LBTopSubsetReduction$' /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
           cd /tmp/complete-hybrid
           export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/partial-final:/tmp/partial-final/E11LB:/tmp/accepted-top/E11LB:/tmp/rootpilot-cuts:/tmp/rootpilot-cuts/E11LB:/tmp/rootpilot-certs:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:$PWD"
           lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
