@@ -92,11 +92,13 @@ theorem check_open_duality (b f : Nat) (s : Pair) (hf : b≤f) :
                     constructor
                     · intro hall n ha
                       have hn : n∈List.range (v+1) :=
-                        List.mem_range.mpr (by omega)
+                        List.mem_range.mpr (by have hh := ha.1; omega)
                       have hh := List.all_eq_true.mp hall n hn
                       simp only [ha,ite_true,Bool.and_eq_true,
                         decide_eq_true_eq] at hh
-                      exact (child_iff (b-(n+2)) (by omega) (by omega)
+                      exact (child_iff (b-(n+2))
+                        (by have h1 := ha.1; have h2 := hv.1; omega)
+                        (by have h1 := ha.1; have h2 := hv.1; omega)
                         (high s n)).mp hh.2
                     · intro hall
                       apply List.all_eq_true.mpr
@@ -105,7 +107,9 @@ theorem check_open_duality (b f : Nat) (s : Pair) (hf : b≤f) :
                       · simp only [ha,ite_true,Bool.and_eq_true,
                           decide_eq_true_eq]
                         exact ⟨allowed_high_valid b v n s hv ha,
-                          (child_iff (b-(n+2)) (by omega) (by omega)
+                          (child_iff (b-(n+2))
+                            (by have h1 := ha.1; have h2 := hv.1; omega)
+                            (by have h1 := ha.1; have h2 := hv.1; omega)
                             (high s n)).mpr (hall n ha)⟩
                       · simp [ha]
                   constructor
