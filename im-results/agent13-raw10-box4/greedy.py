@@ -66,8 +66,9 @@ def collect(target=None):
    if r[0]=='rle':allc.append((tuple(t),('r',(r[1],r[1]),max(2500,r[2])),r[2]))
  for t,p,q in json.load(open(HERE/'survivors.json'))['stack']:
   if target is not None and t[target]!=0:continue
-  c=run(t,(p,q),8000);assert c is not None
-  allc.append((tuple(t),('r',(p,q),8000),len(c['states'])))
+  cap=12000  # wide RLE classifier admits up to 10000 states
+  c=run(t,(p,q),cap);assert c is not None, (t,p,q,cap)
+  allc.append((tuple(t),('r',(p,q),cap),len(c['states'])))
  return allc
 def main():
  target=int(sys.argv[1]) if len(sys.argv)>1 else None
