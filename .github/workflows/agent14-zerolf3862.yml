@@ -596,6 +596,7 @@ jobs:
           mkdir -p "$work"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedLocalAcceptedCovers.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified18ChampionNative.lean \
             --source-root "/tmp/a14-d0-ZeroLF/imports" \
             --source-root "/tmp/a14-d0-OneLB/imports" \
             --source-root "/tmp/a14-d0-OneLA/imports" \
@@ -629,6 +630,8 @@ jobs:
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedLocalAccepted.raw139_cover_after_accepted_local' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified18ChampionNative.localScore_ge_accepted18_native' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified18ChampionNative.raw139_p0_at_champion_from_49_native' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
       - uses: actions/upload-artifact@v4
         if: inputs.kind == 'raw139-local'
         with:
@@ -637,6 +640,7 @@ jobs:
             /tmp/agent14-raw139-local/log
             /tmp/agent14-raw139-local/manifest.json
             /tmp/agent14-raw139-local/build/Raw139NormalizedLocalAcceptedCovers.olean
+            /tmp/agent14-raw139-local/build/Raw139NormalizedCertified18ChampionNative.olean
           if-no-files-found: error
           retention-days: 14
       - uses: actions/upload-artifact@v4
