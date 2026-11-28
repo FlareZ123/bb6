@@ -1,11 +1,12 @@
 import ThreeStepStripWeightedUltraSource
+import DrainWeightedFirstCoupledSource
 
 /-!
 # One-sided #623 terminal cancellation bounds
 
 Exact source sector constants survive the weighted-cocycle cancellation.
-The first root strip is one-sided 15n+48 / 23n+114; the second is one-sided
-12n+43 / 14n+67. These are necessary halting conditions for authentic
+The first root strip is one-sided 7n+48 / 23n+114; the second is one-sided
+10n+43 / 14n+67. These are necessary halting conditions for authentic
 machine #623, not a root avoidance theorem or nonhalting result.
 -/
 
@@ -19,6 +20,8 @@ open BB6.Agent27ThreeStepStripSource
 open BB6.Agent27ThreeStepWeightedSource
 open BB6.Agent27TerminalWindowUltraSource
 open BB6.Agent27ThreeStepWeightedUltraSource
+open BB6.Agent27DrainWeightedFirstCoupledSource
+open BB6.Agent49DrainLinearLogSource
 open BB6.Agent27GapTwoThreeStepSource
 open BB6.Agent27AllScaleSuccessorBoundSource
 open BB6.Agent8RootCorridorSource
@@ -29,8 +32,18 @@ set_option maxHeartbeats 0
 def skewStrip (u v n : Nat) : Prop :=
   let m := min u v
   let L := max u v
-  (L ≤ 13*m+(23*n+114) ∧ 13*m ≤ L+(15*n+48)) ∨
-  (4*L ≤ 7*m+(14*n+67) ∧ 7*m ≤ 4*L+(12*n+43))
+  (L ≤ 13*m+(23*n+114) ∧ 13*m ≤ L+(7*n+48)) ∨
+  (4*L ≤ 7*m+(14*n+67) ∧ 7*m ≤ 4*L+(10*n+43))
+
+private theorem drain_weighted_package_coupled (n a b d x y : Nat)
+    (hb : b<3^n) (hbudget : b≤ternaryOnes a)
+    (hs : drainB a b d=some (.D x y)) :
+    ∃ r, r≤n ∧ x≤a+r ∧ a≤x+n+1 ∧
+      2*x+y=2*a+d+3*b+2*r := by
+  have hlo := drainB_first_lower_log n a b d x y hb hs
+  obtain ⟨r,hr,hup,hEq⟩ :=
+    drainB_weighted_depth_first_upper n a b d x y hbudget hb hs
+  exact ⟨r,hr,hup,hlo,hEq⟩
 
 theorem ordinary_previous_skew_strip (n u v x y : Nat)
     (hn : 10≤n) (hu : 0<u)
@@ -52,7 +65,7 @@ theorem ordinary_previous_skew_strip (n u v x y : Nat)
         omega
       have hbudget := large_first_has_budget n (u-v-5) (v+3) ha hb
       obtain ⟨r,hr,hl,hh,he⟩ :=
-        drain_weighted_package n (u-v-5) (v+3) 5 x y hb hbudget hs
+        drain_weighted_package_coupled n (u-v-5) (v+3) 5 x y hb hbudget hs
       unfold skewStrip
       simp only [Nat.min_eq_right huv, Nat.max_eq_left huv]
       rcases hw with hWin | hWin
@@ -68,7 +81,7 @@ theorem ordinary_previous_skew_strip (n u v x y : Nat)
         omega
       have hbudget := large_first_has_budget n (u-v-2) (v+2) ha hb
       obtain ⟨r,hr,hl,hh,he⟩ :=
-        drain_weighted_package n (u-v-2) (v+2) 2 x y hb hbudget hs
+        drain_weighted_package_coupled n (u-v-2) (v+2) 2 x y hb hbudget hs
       unfold skewStrip
       simp only [Nat.min_eq_right huv, Nat.max_eq_left huv]
       rcases hw with hWin | hWin
@@ -88,7 +101,7 @@ theorem ordinary_previous_skew_strip (n u v x y : Nat)
         omega
       have hbudget := large_first_has_budget n (v+4-u) (u-1) ha hb
       obtain ⟨r,hr,hl,hh,he⟩ :=
-        drain_weighted_package n (v+4-u) (u-1) 3 x y hb hbudget hs
+        drain_weighted_package_coupled n (v+4-u) (u-1) 3 x y hb hbudget hs
       unfold skewStrip
       simp only [Nat.min_eq_left huv, Nat.max_eq_right huv]
       rcases hw with hWin | hWin
@@ -115,7 +128,7 @@ theorem ordinary_previous_skew_strip (n u v x y : Nat)
         simp only [Option.bind_some,if_pos hqsmall]
         exact hs
       obtain ⟨r,hr,hl,hh,he⟩ :=
-        drain_weighted_package n (v+1-u) (u+1) 0 x y hb hbudget hbundle
+        drain_weighted_package_coupled n (v+1-u) (u+1) 0 x y hb hbudget hbundle
       unfold skewStrip
       simp only [Nat.min_eq_left h, Nat.max_eq_right h]
       rcases hw with hWin | hWin
