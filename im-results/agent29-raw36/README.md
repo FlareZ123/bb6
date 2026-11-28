@@ -1,6 +1,6 @@
 # Raw36: source-checked symmetry, corrected FAR semantics, and open descendants
 
-**Status (27 November 2026):** Exact Raw36 parent solution **not** established; BB(6) remains open. The main eight-hole Raw36 parent is `1RB---_1RC---_0RD---_0LD---_------_------`. `Raw36Cut.lean` source-checks its first-hole **conditional reduction** to 24 further obligations, not an unconditional parent bound.
+**Status (28 November 2026, 00:00 UTC):** Exact Raw36 parent solution **not** established; BB(6) remains open. The main eight-hole Raw36 parent is `1RB---_1RC---_0RD---_0LD---_------_------`. `Raw36Cut.lean` source-checks its first-hole **conditional reduction** to 24 further obligations, not an unconditional parent bound.
 
 ## Source-accepted mathematical statements
 
@@ -29,13 +29,27 @@ Every other representative child has **zero observed OPEN leaves** under the cor
 
 `reclassify.cjs` reproduces these corrected results without rewriting the historical JSON. `recover_far.cjs` enumerates all rooted binary one-sided DFA candidates through four states to seek exact nonhalting certificates for those 393 OPEN leaves. Its resulting candidates must be rechecked in Lean via `masks()`; no new complete bound is asserted before that.
 
-## The precise intended source route
+## Corrected B1=0LA reconstruction
 
-1. Use source-accepted 20-class symmetry and five immediate B1 cycles. In `Raw36D1Fifteen.lean`, the **fifteen** retained B1 actions are 0LA, 0LB, 0LE, 0RA, 0RB, 0RC, 0RD, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RC, 1RE. The five closed cycle actions are 0LC, 0LD, 1LD, 1RB, 1RD. Parent bound claims are conditional on genuine accepted children.
-2. For the six-hole B1=0LA descendant, find mathematically sound certificates (new FAR DFA codes, deeper translated cycles, or separate invariants) for the 393 reopened search leaves, and set any proposed bound at least 1022 if the witnessed halt is confirmed. Regenerate `candidate.json` using fixed `search.cjs` only once complete; the current `generate.py` intentionally compares against the obsolete JSON and rejects unsafe attempts.
-3. Source-certify the twenty representative C1 children, merge checked objects via `merge_shards.py`, and compile `Raw36Branch.lean` with the **correct** verified bound. Its present fixed-162 composer is a *template to revise*, not a valid proof. Then handle the other fourteen retained B1 children and all remaining Raw36 D1 branches.
-4. `results/` remains reserved for genuinely publishable mathematical progress; these unfinished candidates and engineering scripts remain here in `im-results/`.
+The corrected `generate_corrected.py` rebuilds the actual twenty representative trees, rather than trusting the stale `candidate.json` census. Each of the 393 OPEN tables is matched exactly, with the following disjoint evidence:
 
-The four-way candidate E/F symmetry originally saved **139,204 of 395,640 candidate tree nodes (35.18%)** in the *historical* generated-tree workload. This remains a valid source-level state-symmetry reduction but does not certify the flawed nonhalting leaves.
+| Evidence | OPEN leaves |
+| --- | ---: |
+| Agent7 transferred FAR fixture | 350 |
+| Independently reconstructed FAR codes 101230333, 101023202 | 27 |
+| Agent7 sweep invariants | 16 |
+| Total | 393 |
 
-Related CI selectors in the existing `agent10-four-hole.yml` workflow: `raw36-pilot` (single original-source child), `raw36-shards` (currently blocked by invalid FAR candidates), `raw36-reclassify` (corrected census), and `raw36-far-discover` (new automaton search). No accepted global roster decrement is claimed from Raw36.
+The generator rejects unmatched/duplicate OPEN tables, reconstructs each FAR mask, checks the exact fixture hash, and requires the full twenty-tree union to equal the evidence count. Sweep certificates enter through `Audit.proven`, whose Lean checker checks all twelve table slots. The former sweep recipe 360 accidentally duplicated recipe 145 (C1=1RA); the corrected C1=1RE table is `1RB1LF_1RC0LA_0RD1RE_0LD1LB_1RB0LB_---0LE`. Agent29 independently checked its unbounded recurrence in original-source Lean 4.36.0-rc2 (standard axioms), and the corrected Agent7 fixture now has sixteen distinct literal tables. The generated module of all sixteen sweeps compiled locally with standard axioms against the accepted dependency artifact. All twenty trees were generated successfully and all eight direct-cycle representatives (02,03,06,07,08,09,14,15) compiled locally; the large child proof checks remain underway. This is complete **candidate coverage of this six-hole descendant**, not yet a source-accepted universal theorem.
+
+The corrected conservative bound is 1022. Four-shard source check [46085477064](https://github.com/FlareZ123/bb6/actions/runs/46085477064) uses the new generator and original Lean sources pinned at `7a78c06e431a4110e5af8df227b51812dcaf7e74`. The old fixed-162 manifest is rejected by the updated merger. Successful independent child roots must be composed with the E/F transport and actual first-hole split; the generated `Raw36Branch.lean` aims to establish `branch_bound` and `branch_cover` at 1022, with standard axioms.
+
+## Remaining source route
+
+1. Finish the corrected 20 C1 representatives and source-accept the six-hole B1=0LA cover.
+2. Use the source-accepted E/F symmetry and the five immediate B1 cycles. In `Raw36D1Fifteen.lean`, the fifteen retained B1 actions are 0LA, 0LB, 0LE, 0RA, 0RB, 0RC, 0RD, 0RE, 1LA, 1LB, 1LC, 1LE, 1RA, 1RC, 1RE. Five closed cycle actions are 0LC, 0LD, 1LD, 1RB, 1RD. Establish the other fourteen child covers and all remaining Raw36 D1 branches.
+3. Only accepted original-source theorems can justify promotion to `results/` or any global roster reduction.
+
+The four-way candidate E/F symmetry originally saved 139,204 of 395,640 candidate tree nodes (35.18%) in the historical generated-tree workload. It remains a valid source-level state-symmetry reduction, irrespective of the old unsound classifier.
+
+Existing CI selectors: `raw36-pilot`, `raw36-shards` (corrected 1022), `raw36-reclassify`, `raw36-far-discover`. BB(6) and Raw36 remain open.
