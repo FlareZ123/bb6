@@ -105,19 +105,42 @@ source CI for outstanding actions 16–19 was requested using the existing
 manual [Agent44 workflow, run 46103874910](https://github.com/FlareZ123/bb6/actions/runs/46103874910).
 Keep the exact actual compiler outcome separate from candidate discovery.
 
-## Next mathematical step and enclosing consumer
+## Complete-parent assembly and exact complement
 
-1. Compile the complete exact 16–19 generated proof DAGs; repair only
-   real source errors and preserve the remaining child complement if any.
-2. Compose all twelve certificates at bound 158 in one typed `Route`.
-   The `PhaseFrontier.check` equality test prevents accidental import
-   of a mathematically different child table. Certify the empty residual
-   roster, the exported theorem and its axiom profile.
-3. Prove exact Extra28 membership in the current Raw11 152-retained
-   roster from [Agent47's maintained consumer](../agent47-raw11-adapter/README.md);
-   filter it by actual table equality and preserve every other residual.
-   Removing Extra28 would improve this *local* conditional roster by one,
-   not the current global Canonical40 count.
+The missing work is **source-accepting the actual twelve child Cover
+premises** and feeding them to the conditional full-parent join. The
+[existing manual source-closure workflow](../../.github/workflows/agent44-source-bundle.yml)
+now offers independently scoped modes, reusing pinned Lean 4.36.0-rc2
+and its original-source cache artifact 15144626755:
+
+- `raw11-extra28`: exact child D1 indices 16/17/18/19 in a four-job
+  matrix. Run [46105023399](https://github.com/FlareZ123/bb6/actions/runs/46105023399).
+- `raw11-eight`: independent source checks of existing children
+  7/8/9/10/12/13/14/15 in eight jobs. Run
+  [46105098512](https://github.com/FlareZ123/bb6/actions/runs/46105098512).
+- `raw11-final`: after both child matrices *succeed*, downloads their
+  exact source-accepted proof objects and invokes
+  [`assemble-complete.sh`](assemble-complete.sh) and
+  [`generate-complete-join.cjs`](generate-complete-join.cjs).
+  The final generated theorem `BB6.Agent44Extra28Completed.literal_complete`
+  must source-check every child-table identity using `sameTable_sound`
+  and export `Cover (WeightedBound 158) parent` without an extra hypothesis.
+  This final mode has **not** run; do not mistake the generated theorem
+  plan or the conditional `completeCover` for accepted mathematical
+  coverage.
+
+A distinct exact-complement consumer is already written for both real
+Raw11 frontiers. [`Raw11Extra28AfterRaw11Route.lean`](Raw11Extra28AfterRaw11Route.lean)
+starts from the **source-accepted** original 294-residual Raw11 route;
+its `cover_from_293` theorem takes an **explicit** complete Extra28
+Cover and preserves a 293-member complement, with source-closure run
+[46105484000](https://github.com/FlareZ123/bb6/actions/runs/46105484000)
+requested. [`Raw11Extra28AfterRaw11Q0152.lean`](Raw11Extra28AfterRaw11Q0152.lean)
+offers the corresponding 152→151 exact-table subtraction from the
+**locally checked**, but not independently source-accepted, deeper
+Agent47 q0+extra consumer. Neither subtraction is an unconditional
+Raw11 theorem until the complete Extra28 Cover is supplied. Neither
+changes the still-open global Canonical40 obligations.
 
 Separate discovery found complete *candidate*, not complete checked,
 parent trees for **Extra53 (84,445 nodes, bound 356)**,
