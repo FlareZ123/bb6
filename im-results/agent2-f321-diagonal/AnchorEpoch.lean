@@ -511,7 +511,7 @@ theorem terminal_last_anchor_first_two_high
   cases j with
   | zero =>
       cases htail
-      exact root_anchor_one_high_not_terminal hchain hc hfirst rfl
+      exact False.elim (root_anchor_one_high_not_terminal hchain hc hfirst rfl)
   | succ j =>
       rcases hfRun_first_step htail with ⟨E,F,hsecond,hrest⟩
       have hs := root_anchor_second_hf_is_high hchain hc hfirst hsecond
