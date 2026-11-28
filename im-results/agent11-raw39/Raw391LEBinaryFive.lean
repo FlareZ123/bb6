@@ -146,7 +146,7 @@ theorem never (v : V) (m : Machine) (hm : compatible (table v) m) : NeverHalts m
   intro n
   obtain ⟨t,i,W,ht,_,hr⟩ := live v n
   have hz : (BB6Coverage.Agent50Zipper.zrun (table v) t start).map project = some (S v i W) :=
-    (run_project table v t start).trans hr
+    (run_project (table v) t start).trans hr
   cases h : BB6Coverage.Agent50Zipper.zrun (table v) t start with
   | none => simp [h] at hz
   | some z =>
