@@ -1,10 +1,10 @@
-# Exact reverse-interval exclusion of the first nine wide-window scales
+# Exact reverse-interval exclusion of the first ten wide-window scales
 
 **Scope and status.** A deterministic, exhaustive **BigInt computation** excludes a full preceding wide-window trace at every rank
 \[
-P=a4^k+b,\qquad a\in\{1,2\},\quad 0\le b<9,\quad 12\le k\le20.
+P=a4^k+b,\qquad a\in\{1,2\},\quad 0\le b<9,\quad 11\le k\le20.
 \]
-The largest backward interior depth found in the 162 rank cases is **57** (k=20,a=1,b=6). The required preceding radius \(\lfloor4^k/(128(k+1))\rfloor\) is at least **10,082**, so a full wide crossing is impossible in this finite scale range. This is an exhaustive integer **computational certificate, not a Lean-kernel theorem**. It does not decide an unbounded #429 root family, establish the all-k strip exclusion, or bound BB(6).
+The largest backward interior depth found in the 180 rank cases is **57** (k=20,a=1,b=6). The required preceding radius \(\lfloor4^k/(128(k+1))\rfloor\) is at least **2,730**, so a full wide crossing is impossible in this finite scale range. This is an exhaustive integer **computational certificate, not a Lean-kernel theorem**. It does not decide an unbounded #429 root family, establish the all-k strip exclusion, or bound BB(6).
 
 The exhaustive engine and tiny-universe independent test are in [wide_reverse_intervals.cjs](wide_reverse_intervals.cjs). It uses the positive strict interior model of [Q0HalfStep](../agent1-429-q0-23-7/Q0HalfStep.lean) with actual phase-dependent rank costs and inverse offsets, not a relaxed modulo-only model. The search ignores additional lattice restrictions (such as even height at A phases), and therefore proves impossibility for an overapproximation of the exact graph if the arithmetic results are accepted.
 
@@ -36,6 +36,7 @@ Each row aggregates all 18 ranks at that k. Node counts include the initial inte
 
 | k | maximum reverse depth | explored nodes | wideRadius(k) |
 | ---: | ---: | ---: | ---: |
+| 11 | 34 | 95,473 | 2,730 |
 | 12 | 42 | 191,228 | 10,082 |
 | 13 | 36 | 382,466 | 37,449 |
 | 14 | 37 | 765,014 | 139,810 |
@@ -50,12 +51,12 @@ Reproduce with Node.js BigInt support:
 
 ~~~sh
 node im-results/agent18-429-odd-macro/wide_reverse_intervals.cjs --selftest
-node im-results/agent18-429-odd-macro/wide_reverse_intervals.cjs 12 20 64
+node im-results/agent18-429-odd-macro/wide_reverse_intervals.cjs 11 20 64
 ~~~
 
 Self-test compares the symbolic search to independent height-by-height replay for **all 497 ranks 4 through 500**, plus the k=12,a=1,b=0 rank; that larger rank agrees with the independently run direct 5,592,405-height enumeration (maximum depth 40). The full scan was executed with mathematically identical functions in a JavaScript V8 runtime because this invocation's local shell and Python entry points returned ClientError before executing any commands. The checked-in source has not been run as a repository CI job; do not label this a source-accepted Lean proof.
 
-As [Q0StripCross](../agent1-429-q0-23-7/Q0StripCross.lean) proves equivalence of the exact wide window and its signed carry formulation under its size hypotheses, the finite result points to a **smaller remaining proof obligation**: prove the all-scale exclusion for \(k\ge21\), and separately import this finite arithmetic certificate into a trustworthy formal consumer. The old \(k\ge12\) interface remains the only compiled theorem until that composition is accepted.
+As [Q0StripCross](../agent1-429-q0-23-7/Q0StripCross.lean) proves equivalence of the exact wide window and its signed carry formulation under its size hypotheses, the finite result points to a **smaller remaining proof obligation**: prove the all-scale exclusion for \(k\ge21\), and separately import this finite arithmetic certificate into a trustworthy formal consumer. The original q0 reduction only requires \(k\ge12\), while the Agent18 odd-reset theorem also allows \(k=11\); both ranges are now computationally covered through 20. The old \(k\ge12\) interface remains the only compiled theorem until that composition is accepted.
 
 ## Remaining unknown
 
