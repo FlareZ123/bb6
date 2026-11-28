@@ -154,6 +154,94 @@ jobs:
           if-no-files-found: error
           retention-days: 60
 
+
+  kid10-branches:
+    needs: common
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        branch: [5,11,13,17,23]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/d101
+      - name: Kernel-check one nontrivial kid10 branch
+        run: |
+          set -euo pipefail
+          python im-results/agent29-raw36/split_generated_kid.py \
+            --source /tmp/d101/Raw36D101Kid10.lean --out /tmp/split \
+            --root kid10 --module Raw36D101Kid10
+          printf -v PAD '%02d' ${{ matrix.branch }}
+          MOD=Raw36D101Kid10Branch$PAD
+          export LEAN_PATH=/tmp/d101:/tmp/split
+          (cd /tmp/split && lean -o "$MOD.olean" "$MOD.lean") 2>&1 | tee "/tmp/$MOD.log"
+          mkdir -p /tmp/out
+          cp "/tmp/split/$MOD.lean" "/tmp/split/$MOD.olean" "/tmp/$MOD.log" /tmp/out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-direct01-kid10-branch-${{ matrix.branch }}
+          path: /tmp/out/
+          if-no-files-found: error
+          retention-days: 60
+
+  kid10:
+    needs: [common, kid10-branches]
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/d101
+      - name: Regenerate exact kid10 split source
+        run: |
+          python im-results/agent29-raw36/split_generated_kid.py \
+            --source /tmp/d101/Raw36D101Kid10.lean --out /tmp/split \
+            --root kid10 --module Raw36D101Kid10
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw36-direct01-kid10-branch-*
+          path: /tmp/split
+          merge-multiple: true
+      - name: Compile trivial branches, wrapper, and audit kid10 theorem
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/d101:/tmp/split
+          for i in 0 1 2 3 4 6 7 8 9 10 12 14 15 16 18 19 20 21 22; do
+            printf -v PAD '%02d' "$i"
+            MOD=Raw36D101Kid10Branch$PAD
+            (cd /tmp/split && lean -o "$MOD.olean" "$MOD.lean")
+          done
+          (cd /tmp/split && lean -o Raw36D101Kid10.olean Raw36D101Kid10.lean) 2>&1 | tee /tmp/kid10.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/kid10.log \
+            BB6.Agent29Raw36D101.kid10_bound
+          mkdir -p /tmp/out
+          cp /tmp/split/Raw36D101Kid10.lean /tmp/split/Raw36D101Kid10.olean /tmp/kid10.log /tmp/out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-direct01-kid-10
+          path: /tmp/out/
+          if-no-files-found: error
+          retention-days: 60
   children:
     needs: common
     runs-on: ubuntu-latest
@@ -161,7 +249,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        kid: [0,1,2,3,6,7,8,9,10,14,15,18,19,20,21]
+        kid: [0,1,2,3,6,7,8,9,14,15,18,19,20,21]
     steps:
       - uses: actions/checkout@v4
       - name: Install exact Lean 4.36.0-rc2
@@ -195,7 +283,7 @@ jobs:
           retention-days: 60
 
   assemble:
-    needs: [common, accepted-children, children]
+    needs: [common, accepted-children, children, kid10]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
