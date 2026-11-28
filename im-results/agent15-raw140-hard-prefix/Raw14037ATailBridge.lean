@@ -51,4 +51,39 @@ theorem t11511_to_c31 (X : List Sym) :
 
 #print axioms t11511_to_c31
 
+/--
+Compose the A-tail bridge with the existing 65-triplet C-counter and its
+terminal depleter.  This reaches the exact two-bank state that starts the
+Raw37 D-phase entry problem.
+-/
+theorem t11511_to_twoBank :
+    Reach base
+      (G 15 (U3 70 ++ [S 2]) [S 1, S 1, S 5, S 1, S 1])
+      (boundary 1 false []
+        (U 2 94 ++ T 11 ++ cword Raw14042CounterLocal.CTail.c32)) := by
+  have h0 := t11511_to_c31 [S 2]
+  have ht : Raw14042CounterLocal.turn 65 Raw14042CounterLocal.CTail.c31 =
+      (10, Raw14042CounterLocal.CTail.c35221) := by
+    decide
+  have h1 := Raw14037Counter.iterate 65 25 0
+    Raw14042CounterLocal.CTail.c31 [S 2]
+  have h1' :
+      Reach base
+        (G 25 (U3 65 ++ [S 2]) [S 3, S 1])
+        (G 90 [S 2]
+          (T 10 ++ cword Raw14042CounterLocal.CTail.c35221)) := by
+    simpa [G, T, cword, ht] using h1
+  have h2 := Raw14037Counter.deplete 90 10
+    Raw14042CounterLocal.CTail.c35221
+  have h2' :
+      Reach base
+        (G 90 [S 2]
+          (T 10 ++ cword Raw14042CounterLocal.CTail.c35221))
+        (boundary 1 false []
+          (U 2 94 ++ T 11 ++ cword Raw14042CounterLocal.CTail.c32)) := by
+    simpa [G, U, T, cword, ccarry, next] using h2
+  exact Reach.trans h0 (Reach.trans h1' h2')
+
+#print axioms t11511_to_twoBank
+
 end Raw14037ATailBridge
