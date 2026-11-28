@@ -35,7 +35,7 @@ def transferOut : BState :=
 
 theorem transfer_run :
     run M37 (83+45*3) transferIn.prim = some transferOut.prim := by
-  simpa only [transferIn,transferOut,U,List.cons_append,List.append_assoc,
+  simpa only [transferIn,transferOut,BState.prim,U,List.cons_append,List.append_assoc,
     List.append_nil,List.nil_append] using
     transferMany37 3 (U 3 74 ++ [S 2]) [S 5,S 2,S 1,S 5]
 
