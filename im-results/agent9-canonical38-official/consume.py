@@ -52,6 +52,7 @@ FINAL_TARGETS = [
     TARGET_NS + ".raw47_literal_agreement",
     TARGET_NS + ".raw47_cover",
     TARGET_NS + ".sound38",
+    TARGET_NS + ".sound38_at",
     TARGET_NS + ".exact_at_champion_score",
 ]
 
@@ -176,6 +177,16 @@ theorem sound38 :
         ∃ e ∈ roster38, TNFQuotientCompatible e.2 m :=
   BB6.Agent3Raw47Canonical39Conditional.conditional_sound raw47_cover
 
+theorem sound38_at (B : Nat) (hFloor : 6766859 ≤ B) :
+    ∀ m, compatible root m →
+      WeightedBound B m ∨
+        ∃ e ∈ roster38, TNFQuotientCompatible e.2 m := by
+  intro m hm
+  rcases sound38 m hm with hsmall | hrest
+  · exact Or.inl (fun k d hk hd =>
+      Nat.le_trans (hsmall k d hk hd) hFloor)
+  · exact Or.inr hrest
+
 theorem exact_at_champion_score
     (hLeaves : ∀ e ∈ roster38,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
@@ -186,6 +197,7 @@ theorem exact_at_champion_score
 #print axioms raw47_literal_agreement
 #print axioms raw47_cover
 #print axioms sound38
+#print axioms sound38_at
 #print axioms exact_at_champion_score
 
 end BB6.Agent9Canonical38Raw39ThenRaw47
