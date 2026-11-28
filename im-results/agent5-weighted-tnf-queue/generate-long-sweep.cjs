@@ -45,7 +45,10 @@ function accelerate(table,limit,K=18){
 const fixtures=[
  {root:150,table:"1RB1LC_1RC1RF_0LA1LD_0LE0RB_1LA---_1RA0LA",n:1102620,slot:9},
  {root:150,table:"1RB1LC_1RC1RF_0LA1LD_0LB0RE_0LC1RD_1RA---",n:13007746,slot:11},
- {root:149,table:"1RB1LC_1RC---_0LA0RD_1RF1RE_0RD0RB_1LA0LC",n:195830,slot:3}
+ {root:149,table:"1RB1LC_1RC---_0LA0RD_1RF1RE_0RD0RB_1LA0LC",n:195830,slot:3},
+ {root:150,table:"1RB1LC_1RC1RF_0LA1LD_1LE0RB_0LA---_1RA0LA",n:1102608,slot:9},
+ {root:150,table:"1RB1LC_1RC1RF_0LA1LD_1LE0RB_0RA---_1RA0LA",n:1102620,slot:9},
+ {root:150,table:"1RB1LC_1RC1RF_0LA1LD_1LE0RB_0LB---_1RA0LA",n:2625198,slot:9}
 ];
 function emit(f,dir,mod){
  const fs=require("node:fs"),path=require("node:path");
