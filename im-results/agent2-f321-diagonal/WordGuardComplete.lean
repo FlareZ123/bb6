@@ -70,7 +70,7 @@ inductive WordRun : List InverseLetter → Nat → Nat → Nat → Nat → Prop 
   | far {w : List InverseLetter} {a d A D : Nat} (h1 : a<d) (h2 : 3*a+1≤d)
       (tail : WordRun w (4*a+6) (d-3*a) A D) : WordRun (.far::w) a d A D
 
-private theorem far_cert {p q k l a d T : Nat}
+theorem far_cert {p q k l a d T : Nat}
     (hx : a+d+5+(l+6)=2*T) :
     (q+6*p)*T=(4*p)*(d+3)+k+(3*l+24)*p ↔
       q*T+p*(3*a)=p*(d+3)+k := by
