@@ -137,7 +137,14 @@ theorem familyGrowth (w : Bool) (k : Nat) :
   have hend : [true]++rep [true] (k+1)++[true] =
       rep [true] ((k+1)+2) := by
     simp [rep,rep_snoc,List.cons_append,List.append_assoc]
-  simpa only [family,hstart,hend] using h
+  have hnext : rep [true] (k+2)++[true] =
+      rep [true] ((k+1)+2) := by
+    have hi : (k+1)+2 = (k+2)+1 := by omega
+    rw [hi]
+    change rep [true] (k+2)++[true] =
+      [true]++rep [true] (k+2)
+    exact rep_snoc [true] (k+2)
+  simpa only [family,hstart,hnext] using h
 
 /-- A fully parametric original infinite-tape all-time theorem:
     both write-0 and write-1 D1 branches, all four other slots free. -/
