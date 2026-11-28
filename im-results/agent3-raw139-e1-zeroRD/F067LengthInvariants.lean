@@ -116,10 +116,43 @@ theorem h_decomposition_exact (ks : List Nat) :
     omega
 
 
+/-- An elementary inequality used to remove the linear length term
+    from the explicit h formula. -/
+private theorem length_le_pow16 (n : Nat) : n ≤ 16 ^ n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+    have hp : 0 < 16 ^ n := Nat.pow_pos (by decide)
+    rw [pow_succ]
+    omega
+
+/-- Coarse but source-exact upper bound on F067's g accumulator in terms
+    of only the radix-four weighted digit sum and tower length. -/
+theorem g_weight_upper (ks : List Nat) :
+    g ks ≤ 28 * digitWeight ks + 137 * 16 ^ ks.length := by
+  have hg := g_decomposition_exact ks
+  have hp : 4 ^ ks.length ≤ 16 ^ ks.length :=
+    Nat.pow_le_pow_left (by decide) _
+  omega
+
+/-- Coarse bit-length-friendly upper bound on F067's h accumulator.
+    The source loop that generated the digit stack can be checked
+    independently of the costly nested tower algebra. -/
+theorem h_weight_upper (ks : List Nat) :
+    h ks ≤ 10 * digitWeight ks + 60 * 16 ^ ks.length := by
+  have hh := h_decomposition_exact ks
+  have hp : 4 ^ ks.length ≤ 16 ^ ks.length :=
+    Nat.pow_le_pow_left (by decide) _
+  have hn := length_le_pow16 ks.length
+  omega
+
+
 #print axioms d_length_exact
 #print axioms e_length_exact
 #print axioms d_length_upper
 #print axioms e_length_upper
 #print axioms g_decomposition_exact
 #print axioms h_decomposition_exact
+#print axioms g_weight_upper
+#print axioms h_weight_upper
 end BB6.Agent3F067LengthInvariants
