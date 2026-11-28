@@ -1,3 +1,9 @@
+## 2026-11-28 — normal Agent32 continuation, accepted 0LA and 1LB integration
+- Actual RNG 2; immutable lease 2026-11-28T02:54:32.979Z, claim 13fc829087cb7bcc7972d7ad5faa0642b1fed332. Earliest release 04:04:32.979Z.
+- Previous 0LA recovery run 46089669906 succeeded with artifact 15242941581; seventh accepted canonical Raw42 child. Previous 1LC recovery 46089674173 cancelled but accepted groups 0 and 6, artifact 15242360299/15243702497, original groups 2/3 retained. Both new manifests pin 3a7aa1928d7caa6c6a6e64b4f1aa7b95276b2e53; exact generated artifact 15240937855. Recovery modified to preserve all four accepted groups. Accidentally dispatched duplicate recoveries before discovering prior acceptance; cancelled both 46100349406 and 46100352364 immediately.
+- Integrated Agent4's complete 4828 original-machine theorem into 1LB generator with exact source hash checks and literal table identity. Actual downloaded 1LB discovery artifact 15195281779 has ID4828 at line4829 and 10 hard entries; seven other hard leaves and ten late children have block witnesses, 18612 is already proved. No whole 1LB Cover yet.
+- Local Lean extracted successfully (4.36.0-rc2); direct Git DNS unavailable. Next run 1LB assembly and targeted 1LC recovery, then close remaining 0LE/1LE/1RE.
+
 ## 2026-11-28 — normal Agent32 continuation: Raw42 recovery
 - Actual mode draw 4. Immutable lease 2026-11-28T00:41:51.070Z, claim a5299b078be89c462e04f8505297ef16531c03c6. Earliest release 01:51:51.070Z; never refresh.
 - Accepted whole 1LA and 1RA Covers from 46068374725 / 46068379812, artifacts 15232008579 / 15231804396. Six of twelve canonical Raw42 children now accepted. Dossier reconciled.

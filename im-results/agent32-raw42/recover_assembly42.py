@@ -18,7 +18,7 @@ from coarsen_ngram import transform as coarsen_ngram
 BRANCHES = {
     "0LA": (46054728374, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "3", "7"},
             {"Raw420LARun1243", "Raw420LARun2550", "Raw420LARun365"}),
-    "1LC": (46054733910, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"0", "1", "4", "5", "6", "7"},
+    "1LC": (46054733910, "39a33f527daf81c742b1a8f4cd81e65ceea40be7", {"1", "4", "5", "7"},
             {"Raw421LCRun620", "Raw421LCRun9216"}),
     "1LA": (45996630344, "9d157b474ac3ce708641ffe65070c7d0b472ae23", {"7"},
             {"Raw421LARun889", "Raw421LARun892"}),
@@ -38,8 +38,12 @@ def prepare(repo, g, shards, shared, branch, original):
     assert {p.name for p in shards.iterdir()} == {f"{prefix}-{i}" for i in good}
     for i in good:
         m = json.loads((shards / f"{prefix}-{i}" / "manifest.json").read_text())
-        expected = ("cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c"
-                    if branch == "1RA" and i == "4" else revision)
+        extra_revisions = {
+            ("1RA", "4"): "cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c",
+            ("1LC", "0"): "3a7aa1928d7caa6c6a6e64b4f1aa7b95276b2e53",
+            ("1LC", "6"): "3a7aa1928d7caa6c6a6e64b4f1aa7b95276b2e53",
+        }
+        expected = extra_revisions.get((branch, i), revision)
         assert m["proof_source_revision"] == expected, (i, m["proof_source_revision"])
     subset = dict(cfg, groups={i: cfg["groups"][i] for i in sorted(good)},
                   allow_mixed_revisions=True)

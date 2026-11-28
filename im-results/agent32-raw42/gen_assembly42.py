@@ -3,7 +3,7 @@
 Inputs are untrusted; every tree branch and witness is checked by Lean.
 Usage: gen_assembly42.py REPO BRANCH SEARCH_DIR OUTPUT_DIR
 """
-import json,sys,subprocess
+import base64,gzip,hashlib,json,sys,subprocess
 from pathlib import Path
 from collections import Counter
 from itertools import product
@@ -56,6 +56,19 @@ else:
         j=18612
         assert hard[j]=='1RB1RA1RC1LB0RD1RE1LD0LB0RA0RF---0RD'
         register_proof(j,'.proven BB6.Agent32Raw421LB.Leaf18612.p BB6.Agent32Raw421LB.Leaf18612.live','Raw42Leaf18612')
+        # Import Agent4's complete arithmetic and original-machine proof.
+        # The decoded source is exactly the locally kernel-checked source.
+        j=4828
+        assert hard[j]==opens[j].replace('_','')=='1RB0RF1RC1LB0RD0RE1LD0LB0RA0LD---0RD'
+        for name,digest in [
+            ('Raw42Leaf4828Arithmetic','70094dc99b336aa78193133c92c31452ce69d85aa579b8b0f0a28d47310221ca'),
+            ('Raw42Leaf4828Machine','373f4b4087a3e5804d8b007bd8fbf516bb88da3c711203f15cfe40cd5bb3d7fb'),
+        ]:
+            payload=gzip.decompress(base64.b64decode((raw/(name+'.lean.gz.b64')).read_bytes()))
+            assert hashlib.sha256(payload).hexdigest()==digest, name
+            (out/(name+'.lean')).write_bytes(payload)
+        ns='BB6.Agent4Raw42Leaf4828.MachineProof'
+        register_proof(j,f'.proven {ns}.p {ns}.never','Raw42Leaf4828Machine')
     expected={j:v for j,v in hard.items() if j not in late_splits and j not in proof}
     expected.update(late_children)
     rows=[x for x in json.loads((raw/'block42_witnesses.json').read_text()) if x['branch']==branch and x['id'] in expected]
