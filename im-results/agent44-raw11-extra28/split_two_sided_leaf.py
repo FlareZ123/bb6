@@ -81,7 +81,7 @@ def table_expr(table: str) -> str:
     if len(t) != 36:
         raise ValueError(f"expected 12 three-character slots, got {len(t)} chars")
     toks = [t[i:i + 3] for i in range(0, 36, 3)]
-    lines = ["(fun (q,b) => match q.val,b with"]
+    lines = ["(fun s => match s.1.val,s.2 with"]
     for j, tok in enumerate(toks):
         if tok == "---":
             continue
