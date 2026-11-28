@@ -20,12 +20,12 @@ def transferIn : BState :=
     trip 4 ++ [S 5,S 2,S 1,S 5]⟩
 
 theorem macro_afterBank :
-    execute M37 348 afterBank = some (13730,transferIn) := by
+    execute M37 4574 afterBank = some (13730,transferIn) := by
   decide +kernel
 
 theorem afterBank_run :
     run M37 13730 afterBank.prim = some transferIn.prim :=
-  execute_sound M37 348 13730 afterBank transferIn macro_afterBank
+  execute_sound M37 4574 13730 afterBank transferIn macro_afterBank
 
 def transferOut : BState :=
   ⟨4,true,
