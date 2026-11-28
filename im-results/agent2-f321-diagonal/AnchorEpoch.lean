@@ -134,6 +134,56 @@ theorem anchorEpoch_gain5 {R c R' c' : Nat}
   have hg := anchorEpoch_witness_growth hhf ha
   omega
 
+/-- Pull any exact formal inverse path backward across a known H/F forward
+    suffix.  Unlike the generic bounded inverse theorem, no large-second
+    hypothesis is needed because the branch language is already known exactly. -/
+theorem hfRun_pullback_formal
+    {n a d A D : Nat} {seed : Int} {w : List InverseLetter}
+    (h : HFRun n a d A D)
+    (hp : FormalInversePath seed w (A:Int) (D:Int)) :
+    ∃ w' : List InverseLetter,
+      FormalInversePath seed w' (a:Int) (d:Int) ∧
+      w'.length = w.length + n := by
+  induction h generalizing w with
+  | nil a d =>
+      exact ⟨w,hp,by omega⟩
+  | @step n a d A D B C h hm ih =>
+      unfold HFMove at hm
+      rcases hm with hH | hF
+      · rcases hH with ⟨hg,rfl,rfl⟩
+        have ha : 2*(A:Int) =
+            2*((A-D-2:Int)) + (2*D+3:Int) + 1 := by omega
+        have hd : 2*(D:Int) = (2*D+3:Int) - 3 := by omega
+        have hp' : FormalInversePath seed (.high::w) (A:Int) (D:Int) :=
+          FormalInversePath.stepH hp ha hd
+        obtain ⟨w',hw',hlen⟩ := ih hp'
+        refine ⟨w',hw',?_⟩
+        simp at hlen ⊢
+        omega
+      · rcases hF with ⟨h1,h2,rfl,rfl⟩
+        have ha : 4*(A:Int) = (4*A+6:Int) - 6 := by omega
+        have hd : (D:Int) = (D-3*A:Int) + 3*(A:Int) := by omega
+        have hp' : FormalInversePath seed (.far::w) (A:Int) (D:Int) :=
+          FormalInversePath.stepF hp ha hd
+        obtain ⟨w',hw',hlen⟩ := ih hp'
+        refine ⟨w',hw',?_⟩
+        simp at hlen ⊢
+        omega
+
+/-- A pure H/F suffix ending at a halting gate therefore carries an exact
+    terminal-seeded formal inverse word all the way back to its anchor. -/
+theorem hfRun_terminal_formal
+    {m R c D : Nat}
+    (h : HFRun m R c (D+1) D) :
+    ∃ w : List InverseLetter,
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) := by
+  have hp0 : FormalInversePath (D:Int) [] ((D+1:Int)) (D:Int) :=
+    FormalInversePath.nil
+  obtain ⟨w,hw,hlen⟩ := hfRun_pullback_formal h hp0
+  refine ⟨w,?_,hw⟩
+  simpa using hlen
+
 theorem hfRun_counterReach {n a d A D : Nat}
     (h : HFRun n a d A D) : CounterReach a d n A D := by
   induction h with
@@ -227,6 +277,42 @@ theorem terminal_has_last_anchor_HF
     | step h0 he =>
         rcases he with ⟨j,a,d,hj,ha⟩
         exact (anchorMove_bounds ha).1
+
+/-- Exact last-anchor inverse-word normal form for any authentic positive-time
+    halt.  The word ends at a genuine root-reachable anchor with second counter
+    one or two, with no asymptotic or bounded-depth cutoff. -/
+theorem terminal_has_last_anchor_formal_word
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      FormalInversePath (D:Int) w (R:Int) (c:Int) := by
+  rcases terminal_has_last_anchor_HF h with
+    ⟨q,R,c,m,hchain,hhf,hc⟩
+  rcases hfRun_terminal_formal hhf with ⟨w,hlen,hw⟩
+  exact ⟨q,R,c,m,w,hchain,hc,hlen,hw⟩
+
+/-- The formal word yields the exact odd-numerator dyadic equation at the
+    authentic last anchor. -/
+theorem terminal_last_anchor_compiled_equation
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m w,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      w.length = m ∧
+      (2:Int)^(compile w).shift * (R:Int) =
+        ((compile w).u:Int)*(D:Int) + (compile w).v ∧
+      (compile w).u % 2 = 1 := by
+  rcases terminal_has_last_anchor_formal_word h with
+    ⟨q,R,c,m,w,hchain,hc,hlen,hw⟩
+  have hcert := formal_inverse_congruence hw
+  exact ⟨q,R,c,m,w,hchain,hc,hlen,hcert.1,hcert.2⟩
+
+#print axioms terminal_has_last_anchor_formal_word
+#print axioms terminal_last_anchor_compiled_equation
 
 #print axioms move_hf_or_anchor
 #print axioms anchorEpoch_witness_growth
