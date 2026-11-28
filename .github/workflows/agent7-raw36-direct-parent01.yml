@@ -1,0 +1,99 @@
+name: Agent7 Raw36 direct D1=0LB complete parent source proof
+run-name: Raw36 direct 0LB all 320 exact leaves to weighted450 Cover
+on:
+  workflow_dispatch:
+    inputs:
+      max_parts:
+        description: 'Canonical audit size per Lean part'
+        type: choice
+        options: ['160','240','300','400']
+        default: '240'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  exact-parent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-1-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/direct01-census
+      - name: Require all 320 original exact key matches and three hard witnesses
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import gzip,json,hashlib,base64,lzma
+          r=Path('im-results/agent7-raw36-direct')
+          got=json.loads(gzip.decompress(Path('/tmp/direct01-census/direct01.json.gz').read_bytes()))
+          f=json.loads(lzma.decompress(base64.b64decode((r/'evidence01.xz.b64').read_text())))
+          extra=json.loads((r/'extra-hard01.json').read_text())
+          keys=sorted(s.replace('_','') for s in got['opens'])
+          assert got['parent']=='1RB---_1RC---_0RD---_0LD0LB_------_------'
+          assert len(keys)==320 and got['stats']['score']==450
+          assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==f['digest']
+          assert f['bound']==450 and len(f['data'])==len(keys)
+          assert set(extra)<=set(keys) and len(extra)==3
+          assert all(v is not None or t in extra for t,v in zip(keys,f['data']))
+          assert sum(v is None for v in f['data'])==3
+          assert sorted(v[0] for v in extra.values())==['d','h','p']
+          Path('/tmp/direct01-tree.json').write_text(json.dumps(got))
+          print('Exactly 320 disjoint literal source table witnesses; uncovered=0')
+          PY
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Reconstruct all exact original-machine Lean audit objects
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent7-raw36-direct/derive_drift.py \
+            --out /tmp/a7-direct01-full/Raw36D101Hard10.lean --chunk 180
+          python im-results/agent7-raw36-direct/generate_direct.py \
+            /tmp/direct01-tree.json /tmp/a7-direct01-full \
+            im-results/agent7-raw36-direct/evidence01.xz.b64 \
+            ${{ inputs.max_parts }} 1 all \
+            2>&1 | tee /tmp/a7-direct01-generated.log
+      - name: Kernel-verify universal original-cylinder Cover weighted 450
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-direct01-checked \
+            --source-root /tmp/a7-direct01-full \
+            --jobs 4 --manifest /tmp/a7-direct01-checked/manifest.json \
+            --label 'raw36-direct-D1-0LB-entire-original-tree' \
+            --theorem BB6.Agent29Raw36D101.cover \
+            --parent-table '1RB---_1RC---_0RD---_0LD0LB_------_------' \
+            --weighted-bound 450 \
+            --artifact-name raw36-direct01-original-cover450 \
+            --provenance-input im-results/agent7-raw36-direct/evidence01.xz.b64 \
+            --provenance-input im-results/agent7-raw36-direct/extra-hard01.json \
+            --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
+            --provenance-input im-results/agent7-raw36-direct/derive_drift.py \
+            /tmp/a7-direct01-full/Raw36D101.lean \
+            2>&1 | tee /tmp/a7-direct01-audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-direct01-audit.log \
+            BB6.Agent29Raw36D101.bound BB6.Agent29Raw36D101.cover
+          cp /tmp/a7-direct01-audit.log /tmp/a7-direct01-checked/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct01-original-cover450
+          path: |
+            /tmp/a7-direct01-generated.log
+            /tmp/a7-direct01-audit.log
+            /tmp/a7-direct01-checked/
+            /tmp/a7-direct01-full/
+          if-no-files-found: warn
+          retention-days: 60
