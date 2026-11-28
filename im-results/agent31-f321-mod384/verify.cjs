@@ -20,5 +20,5 @@ assert.equal(live[374*M+373],0);
 let mask=0n;for(let k=0;k<N;k++)if(live[k])mask|=1n<<BigInt(k);
 const hex=mask.toString(16);const fs=require("node:fs");
 const lean=fs.readFileSync(__dirname+"/Mod384Graph.lean","utf8");
-assert(lean.includes("def mask : Nat := 0x"+hex+"));
+assert(lean.includes("def mask : Nat := 0x"+hex));
 console.log(JSON.stringify({modulus:M,reachableResidues:tail,gateResidues:gates,excludedGateResidues:M-gates.length,checkedGraphBytes:Math.ceil(N/8)}));
