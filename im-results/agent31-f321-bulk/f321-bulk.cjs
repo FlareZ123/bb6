@@ -59,20 +59,21 @@ function test() {
     [(1n<<2048n) + 100n, 2n],
     [(1n<<8000n) + 150n, 17n]
   ]) assert.deepEqual(bulkHigh(a, d), slowHigh(a, d));
-  let a = 1n, d = 1n, total = 0n;
-  for (let i = 0; i < 200000; ++i) {
-    const slow = mapOnce(a,d), high = bulkHigh(a,d);
-    if (high.k === 0n) assert.equal(high.a, a);
-    if (slow.kind !== "high") {
-      assert.equal(high.k, 0n);
-    } else {
-      assert(high.k > 0n);
-    }
-    // Sample a full 10^4-step ordinary prefix against the bulk epoch route.
-    const next = mapOnce(a,d);
-    if (next.halt) break;
-    a = next.a; d = next.d; total++;
-    if (total >= 10000n) break;
+  // Cross-check an authentic 500-epoch prefix, including each exact exit state,
+  // against direct unaccelerated application of the published counter map.
+  let a = 1n, d = 1n;
+  for (let epoch = 0; epoch < 500; ++epoch) {
+    const fast = bulkHigh(a,d), slow = slowHigh(a,d);
+    assert.deepEqual(fast, slow);
+    if (fast.a === fast.d + 1n) break;
+    const f = mapOnce(fast.a,fast.d);
+    assert(!f.halt && f.kind !== "high");
+    a = f.a; d = f.d;
+  }
+  // The counter sum increases on every nonhalting map step.
+  for (let x = 0; x < 100; ++x) for (let y = 0; y < 40; ++y) {
+    const a = BigInt(x), d = BigInt(y), z = mapOnce(a,d);
+    if (!z.halt) assert(z.a + z.d >= a+d+1n);
   }
 }
 
