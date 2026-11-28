@@ -66,6 +66,8 @@ jobs:
           LEAN_PATH="$e" lean -o "$e/SourceNextBridge.olean" "$e/SourceNextBridge.lean" | tee -a /tmp/f321-odd-lean.log
           LEAN_PATH="$e" lean -o "$e/SourceHaltingBridge.olean" "$e/SourceHaltingBridge.lean" | tee -a /tmp/f321-odd-lean.log
           LEAN_PATH="$e:im-results/agent2-f321-odd-depth" lean im-results/agent2-f321-odd-depth/Mod3Executable.lean | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean -o im-results/agent2-f321-odd-depth/PhaseSource.olean im-results/agent2-f321-odd-depth/PhaseSource.lean | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e:im-results/agent2-f321-odd-depth" lean im-results/agent2-f321-odd-depth/PhaseExecutable.lean | tee -a /tmp/f321-odd-lean.log
           ! grep -q sorryAx /tmp/f321-odd-lean.log
       - name: Upload exact finite computation record
         if: ${{ !inputs.odd_depth_only }}
