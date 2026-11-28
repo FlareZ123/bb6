@@ -145,7 +145,7 @@ theorem external_call32_to42 (y : Nat) :
         (run (12*(k42 y)*(k42 y)+49*(k42 y)+68)
           (packet (3*k42 y+4) 0 2 externalU4))
         (packet (call42OutputA y) 0 6
-          [false,true,false,true]) := by
+          [false,true,false,true,false,false]) := by
     simpa [hout] using he42
   have hpad0 :=
     BB6.BoundaryPadding.source_pad 0 0 2
@@ -172,7 +172,7 @@ theorem external169_call42_prefix (y : Nat) :
             (3*(282429536481*y+249062601337)+4) 0 2
             (false :: List.replicate 6 true)))
         (packet (call42OutputA y) 0 6
-          [false,true,false,true,false,false]) := by
+          [false,true,false,true]) := by
   let r := 59049*y+52072
   obtain ⟨t0,h0⟩ := external169_call32_prefix r
   have hk :
