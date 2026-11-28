@@ -44,13 +44,18 @@ def machine : Machine := weightedTNFDefaultCompletion late
 def at202 : FinRayCfg := (finitePartialRun late 202 finiteBlank).getD finiteBlank
 
 theorem run202 : finitePartialRun late 202 finiteBlank = some at202 := by
-  decide +kernel
+  have h : (finitePartialRun late 202 finiteBlank).isSome = true := by decide +kernel
+  cases hr : finitePartialRun late 202 finiteBlank with
+  | none => simp [hr] at h
+  | some c => simp [at202, hr]
 
 theorem first_hole202 : late (readSlot (embedFinRay at202)) = none := by
   decide +kernel
 
 theorem no_assigned_halt : weightedTNFNoAssignedHalt late := by
-  decide +kernel
+  intro ⟨q,b⟩ h
+  have hq : q.val = 0 ∨ q.val = 1 ∨ q.val = 2 ∨ q.val = 3 ∨ q.val = 4 ∨ q.val = 5 := by omega
+  rcases hq with hq|hq|hq|hq|hq|hq <;> cases b <;> simp [late, hq] at h
 
 /-- 202 defined blank steps, followed by halt on the next (203rd) step. -/
 theorem halts202 : HaltsAfter machine 202 := by
@@ -58,7 +63,11 @@ theorem halts202 : HaltsAfter machine 202 := by
   exact ⟨embedFinRay at202,
     Q0ExhaustiveTree.finite_known late 202 at202 run202, first_hole202⟩
 
-theorem compatible_parent : compatible parent machine := by decide +kernel
+theorem compatible_parent : compatible parent machine := by
+  intro ⟨q,b⟩ t ht
+  have hq : q.val = 0 ∨ q.val = 1 ∨ q.val = 2 ∨ q.val = 3 ∨ q.val = 4 ∨ q.val = 5 := by omega
+  rcases hq with hq|hq|hq|hq|hq|hq <;> cases b <;>
+    simp [parent, machine, weightedTNFDefaultCompletion, late, hq] at *
 
 theorem score203_halter :
     ∃ m, compatible parent m ∧ HaltsAfter m 202 :=
