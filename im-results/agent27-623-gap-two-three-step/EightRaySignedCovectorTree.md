@@ -199,3 +199,29 @@ A transducer proof that finds a nonzero ternary output digit at position k, whil
 \`\`\`
 
 This isolates the quantitative target for the moving-window argument. The coefficient ranges alone do not prove the needed carry bound or the required high nonzero digit; those remain the genuine open steps.
+
+
+## Uniform scalar-carry magnitude bound
+
+For all eight scalar forms, \`|A|+|B|<=237\`. Also \`c_0=3*A0*gamma_s\` has \`|c_0|<=2160\`, since \`A0<=40\` and \`gamma_s<=18\`. Every ternary input digit \`x_i,y_i\` lies in \`{0,1,2}\`, so
+
+\`\`\`
+|A*x_i+B*y_i| <= 2*(|A|+|B|) <= 474.
+\`\`\`
+
+For the exact Euclidean carry recurrence
+
+\`\`\`
+c_(i+1) = floor((A*x_i+B*y_i+c_i)/3),
+\`\`\`
+
+the magnitude envelope obeys
+
+\`\`\`
+H_(i+1) = ceil((474+H_i)/3),   H_0=2160,
+H_1=878, H_2=451, H_3=309, H_4=261, H_5=245, H_6=240.
+\`\`\`
+
+Thus after six low ternary digits, the scalar carry magnitude is at most 240, uniformly over the eight rays, all four sector phases, and arbitrary input digits. In particular, \`240<3^5\`.
+
+This coefficient-only bound does **not** by itself imply that a nonzero high quotient forces a large absolute scalar form: for a negative Euclidean quotient, a low residue near \`3^k-1\` can partially cancel it. A complete exclusion still needs the signed-complement argument showing that the authentic nonmonochromatic middle output prevents the long all-2 (negative) or all-0 (positive) low-residue pattern required for a small absolute value.
