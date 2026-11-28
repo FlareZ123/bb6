@@ -105,5 +105,26 @@
       "crossing": 3,
       "long-cycle": 1
     }
+  },
+  {
+    "child": "1LB",
+    "opens": 155,
+    "nodes": 9453,
+    "initialBound": 297,
+    "bound": 297,
+    "witness": {
+      "score": 297,
+      "n": 296,
+      "slot": 11,
+      "delay": 0,
+      "delayPath": [],
+      "table": "1RB0LA_1RC0RE_0RD1LB_1LD1LA_0RF1RA_0RBHHH"
+    },
+    "counts": {
+      "far": 147,
+      "compact": 5,
+      "cycle": 2,
+      "crossing": 1
+    }
   }
 ]

@@ -192,5 +192,20 @@
       ]
     ],
     "increment": 60256
+  },
+  "1LB/143": {
+    "table": "1RB0LA_1RC1RE_0RD1LB_1LD1LA_---0RF_1RA1RF",
+    "entry": 36978,
+    "entryHead": -240,
+    "period": 60644,
+    "shift": -160,
+    "side": "L",
+    "cuts": [
+      [
+        11,
+        231
+      ]
+    ],
+    "increment": 28800
   }
 }

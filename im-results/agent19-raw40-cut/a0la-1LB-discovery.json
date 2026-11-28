@@ -2718,17 +2718,27 @@
   ],
   "unresolved": [
     {
-      "id": 8,
-      "table": "1RB0LA_1RC0RE_0RD1LB_1LD1LA_0RF0LB_1RB---"
-    },
-    {
-      "id": 9,
-      "table": "1RB0LA_1RC0RE_0RD1LB_1LD1LA_1RF0LB_0RA---"
-    },
-    {
       "id": 143,
       "table": "1RB0LA_1RC1RE_0RD1LB_1LD1LA_---0RF_1RA1RF"
     }
   ],
-  "late": []
+  "late": [],
+  "cycles": [
+    {
+      "id": 8,
+      "table": "1RB0LA_1RC0RE_0RD1LB_1LD1LA_0RF0LB_1RB---",
+      "entry": 565,
+      "period": 260,
+      "right": false,
+      "bound": 3
+    },
+    {
+      "id": 9,
+      "table": "1RB0LA_1RC0RE_0RD1LB_1LD1LA_1RF0LB_0RA---",
+      "entry": 105,
+      "period": 266,
+      "right": false,
+      "bound": 18
+    }
+  ]
 }

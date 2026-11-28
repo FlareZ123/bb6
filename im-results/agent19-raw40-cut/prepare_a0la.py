@@ -8,7 +8,7 @@ from emit_rungram import emit
 from compact_ngram import abstract,ngram,rungram,laggram
 from emit_raw40_late import emit_late_module
 c=sys.argv[1]
-assert c in ('0LE','0RB','0RD','0RE','1LA','1LC','1LE','1RB','1RC','1RE')
+assert c in ('0LE','0RB','0RD','0RE','1LA','1LB','1LC','1LE','1RB','1RC','1RE')
 if c=='1LC' and not (ROOT/'Raw40A0LA1LCLeaf66.lean').exists():
     raise SystemExit('1LC requires Raw40A0LA1LCLeaf66.lean (table + never); no proof assumed')
 recipe=ROOT/f'a0la-{c}-frontier-recipe.b64'
@@ -106,7 +106,7 @@ triple={'1RE/1096'}
 for name in ('a0la-late-splice-bank.json','a0la-0RD-leaf154-crossing.json'):
     for key,v in json.loads((ROOT/name).read_text()).items():
         child,i=key.split('/')
-        mod='Raw40LateCrossing'+('Short' if key in short else 'Triple' if key in triple else 'Long')
+        mod='Raw40LateCrossing'+('Short' if key in short else 'Triple' if key in triple else '1LB' if key=='1LB/143' else 'Long')
         register(child,i,v,'proof',f'BB6Coverage.Agent19Raw40LateCrossing.C{child}M{i}',mod)
 register('1LC',66,{'table':'1RB0LA_1RC0RE_0RD1LC_1LD1LA_---0RF_1RA1RF'},'proof',
          'BB6.Agent19Raw40.A0LA1LCLeaf66','Raw40A0LA1LCLeaf66')
@@ -147,5 +147,5 @@ if late:
     mods.append(mod)
 (out/'imports.txt').write_text(' '.join(mods))
 env=dict(os.environ,RAW40_PROOF_IMPORTS=' '.join(mods),RAW40_ACCELERATED_LAST_JSON=json.dumps(accelerated) if accelerated else '')
-subprocess.run([sys.executable,str(ROOT/'certify_modular.py'),str(out),str(out/'shards'),p,str(B),'Raw40C0LA'+c,'96','600'],env=env,check=True)
+subprocess.run([sys.executable,str(ROOT/'certify_modular.py'),str(out),str(out/'shards'),p,str(B),('Raw40C0LAC1LB' if c=='1LB' else 'Raw40C0LA'+c),'96','600'],env=env,check=True)
 print(c,'opens',len(opens),'FAR',len(far),'proven',len(proven),'bound',B,flush=True)
