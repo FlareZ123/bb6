@@ -1,50 +1,120 @@
-# Raw11 Extra28: first-hole refinement and binary-counter proofs
+# Raw11 Extra28: twelve-child proof frontier toward a complete parent Cover
 
-Parent: `1RB0LB_1RC1LC_0LA0LD_------_------_------`. The first hole is D1 at step 9. Eight ordinary children close by translated side cycles. D1=0LC has a prior locally checked WeightedBound 42 (3309 nodes); D1=0LD now has a locally kernel-checked WeightedBound 64 (3357 nodes). D1=1RB and D1=0RC also now have locally kernel-checked WeightedBounds 72 and 84 (4893 and 4965 nodes). Eight ordinary children still require full kernel-checked Covers. This is not a complete Raw11 parent Cover or a global roster reduction.
+**Exact parent:** `1RB0LB_1RC1LC_0LA0LD_------_------_------`.
+The original blank run's first unassigned transition is D1 at step 9.
+Its 20 normalized moves split into **eight directly translated-cycle-closed
+children and twelve nontrivial children**. No full parent Cover has yet been
+source-accepted; this remains one strict subcylinder of unresolved Raw11,
+not a global BB(6) reduction.
 
-## Checked D1=0LD result
+**Best currently established local proof status:** eight of the twelve
+nontrivial first-D1 children have complete, locally Lean-4.36.0-rc2-checked
+original-source certificate trees. The other four have complete *candidate*
+proof trees, but their exact final joins and parent composition have not
+passed an original-source CI audit. Thus the candidate parent bound 158
+is **conditional**, never a published universal bound.
 
-`BB6.Agent44Extra28LD.cover : Cover (WeightedBound 64) parent`. The exact child is `1RB0LB_1RC1LC_0LA0LD_---0LD_------_------`. The certificate tree has 2839 translated cycles, 371 last-hole leaves, 140 normalized splits, five two-stack automata leaves and two symbolic leaves; maximum ordinary query index 58. The two symbolic leaves share an unbounded binary counter: at E the left tape is zero followed by k copies of 11 and a zero sentinel, and the right tape comprises bits separated by zeros. A carry over one takes two transitions; resetting at zero erases the carry and returns to the least significant bit in 2k+4 steps. Blank entry occurs after 12 steps. The proof uses the actual SweepPumping / zipper transport to NeverHalts, not a finite simulation. Both F0=1LC and F0=1LD variants are checked.
+## Exact 20-way split and current certificates
 
-`Raw11Extra28LDRefine.consume` gives a conditional parent Cover at any B>=64, assuming the already established LC child lifted to 64 and the ten remaining exact obligations. `exactCodes` checks their table codes. The remaining D1 moves are 1RB,0RC,1LC,0RD,1LD,1RD,0LE,0RE,1LE,1RE.
+The D1-normalized action index is `4·nextState + 2·write + direction`,
+with left=0, right=1 and nextState A=0 through E=4. Indices
+0–6 and 11 are closed by translated-side-cycle witnesses.
+The other twelve indices, with their proposed weighted bounds, are:
 
-An additional original-source checked counter theorem, `BB6.Agent44Counter28RE.never`, closes the prepared leaf `1RB0LB1RC1LC0LA0LD1LF1RE1RD---0RE0LF` from blank entry at step 20; this is not yet a Cover for the whole D1=1RE child.
+| D1 index | Action | Bound | Evidence state |
+| ---: | --- | ---: | --- |
+| 7 | 1RB | 72 | locally kernel checked |
+| 8 | 0LC | 42 | locally kernel checked |
+| 9 | 0RC | 84 | locally kernel checked |
+| 10 | 1LC | 101 | locally kernel checked |
+| 12 | 0LD | 64 | locally kernel checked |
+| 13 | 0RD | 79 | locally kernel checked |
+| 14 | 1LD | 96 | locally kernel checked |
+| 15 | 1RD | 119 | locally kernel checked |
+| 16 | 0LE | 81 | complete candidate, join outstanding |
+| 17 | 0RE | 150 | complete candidate, join outstanding |
+| 18 | 1LE | 141 | complete candidate, join outstanding |
+| 19 | 1RE | 158 | complete candidate, join outstanding |
 
-## Reproduction
+The new portable
+[`Raw11Extra28AllChildren.lean`](Raw11Extra28AllChildren.lean)
+defines the literal original-source parent, checks all eight side leaves
+using the existing `PhaseFrontier` checker and keeps *all twelve* remaining
+children explicit. It proves an exact 12-code roster and a conditional
+`consume` theorem at any B≥42, accepting a complete per-child proof only
+through the sound `consumeAt` interface. This bridge intentionally imports
+no previous child theorem, so it can be source-audited independently of
+the large child proof objects. It does **not** assert that any of its twelve
+remaining premises has been discharged. The source-closure CI was requested
+as run [46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142);
+do not label it accepted unless that run passes.
 
-`ld-source.tar.gz` contains the generator, both symbolic source modules, the checked refinement, manifest, and hashes of the exact checked generated source. Extract in an empty directory; run `BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs" node generate.cjs`, then `sha256sum -c LD-checked.sha256`. Use Lean 4.36.0-rc2 and artifact 15144626755 (exact original source dependency closure), with LEAN_PATH including the working directory and extracted a47-raw11-root52 directory. Compile Raw11Counter28LD, Raw11Counter28RE, Raw11Extra28LDBase, Raw11Extra28LDPart0 through Part4, Raw11Extra28LDJoin and Raw11Extra28LDRefine with lean -o MODULE.olean MODULE.lean. All passed locally, with standard axioms only (propext, Classical.choice, Quot.sound), no sorryAx/native_decide. Local GitHub DNS unavailable; dependencies transferred by artifact and repository writes by connector.
+A single fully compiled joint `Route 158` with twelve `.certified`
+branches, the eight original side leaves, all exact table equalities,
+and empty residual roster would establish
+`Cover (WeightedBound 158) parent`. It requires the four outstanding
+joins and reuses the eight checked child proofs. It does not establish a
+complete Cover of the enclosing Raw11 parent or any of its other extras.
 
-The previous LC certificate remains in source.tar.gz; extract separately, run python generate.py then python split.py, compile Raw11Counter28, Raw11Extra28D1LCBase, Part0..4 and Join, then the separately stored Raw11Extra28Refine.lean. Its checked hashes are in checked.sha256. Both child results use the existing PhaseTree and PhaseFrontier libraries.
+## Proof mechanisms and reproduction
 
-## Complete candidate discovery for remaining children (not yet kernel checked)
+- **D1=0LC (bound 42)**: `source.tar.gz` contains the first proof, a
+  3,309-node tree. Run `python generate.py && python split.py`;
+  compile `Raw11Counter28`, `Raw11Extra28D1LCBase`, the five parts,
+  and `Raw11Extra28D1LCJoin`. Exact checked-file hashes are in
+  `checked.sha256`.
+- **D1=0LD (bound 64)**: `ld-source.tar.gz` contains the 3,357-node
+  tree and an unbounded binary-counter transport into original zipper
+  semantics. Use `BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs" node generate.cjs`,
+  check `LD-checked.sha256`, compile counter modules and five LD parts
+  plus join. A separate D1=1RE prepared-leaf counter is source checked,
+  but that **does not** close the 1RE parent.
+- **Other children**: `siblings-source.tar.gz` provides the general
+  `ZFast` translated-halfline checker, `ZTree` full proof tree and
+  `ZRoute` sound consumer. Run `python prepare-siblings.py`,
+  `node make-periodic.cjs`, and `bash generate-siblings.sh 7 9 10 13 14 15 16 17 18 19`.
+  The already-local-checked actions are 7,9,10,13,14,15; the other
+  four require source-level completed joins.
+- **Shared-prefix optimization**: `trace-core.tar.gz` provides
+  `ZJoin` (typed exact child roster) and `ZTrace` (reused zipper history).
+  Both general checker modules passed local original-source Lean checks
+  with only standard axioms. `node generate-trace.cjs 17 18 19`
+  creates additional source shards; `build-fast.sh` builds their
+  dependency groups. These are proof-producing compiler optimizations,
+  not a substitute for checking each generated certificate.
 
-All ten remaining children now have complete bounded-tree candidate discoveries; all initially open leaves were solved by finite automata except the source-checked RE counter. For D1=0RE one harder leaf `1RB0LB1RC1LC0LA0LD1LF0RE1RD1RA---1LE` requires ngram width 10 (78/84 stack states, 474 reachable rows). Candidate bounds in move order: 1RB 72, 0RC 84, 1LC 101, 0RD 79, 1LD 96, 1RD 119, 0LE 81, 0RE 150, 1LE 141, 1RE 158. Do not claim these bounds until the exact complete trees and parent consumer compile. Next work: shard kernel checks, compose LC and LD plus ten siblings, then consume Extra28 into the exact Raw11 route.
+All archived sources target Lean 4.36.0-rc2 against the pinned original
+`PhaseTree`/`PhaseFrontier` closure in artifact **15144626755**.
+Locally compiled exported theorems had only
+`propext`, `Classical.choice`, `Quot.sound`, with no
+`sorryAx`/`native_decide`; local builds do not replace an independent
+current-source acceptance of the final parent. Since the local shell
+execution boundary currently returns `ClientError`, targeted original
+source CI for outstanding actions 16–19 was requested using the existing
+manual [Agent44 workflow, run 46103874910](https://github.com/FlareZ123/bb6/actions/runs/46103874910).
+Keep the exact actual compiler outcome separate from candidate discovery.
 
-## Additional checked siblings and faster universal checker
+## Next mathematical step and enclosing consumer
 
-`BB6.Agent44Extra28M7.cover` and `BB6.Agent44Extra28M9.cover` passed kernel checking (standard axioms only), with exact D1 moves 1RB and 0RC. This closes two further residual cylinders; the exact parent consumer has not yet been updated to take these two.
+1. Compile the complete exact 16–19 generated proof DAGs; repair only
+   real source errors and preserve the remaining child complement if any.
+2. Compose all twelve certificates at bound 158 in one typed `Route`.
+   The `PhaseFrontier.check` equality test prevents accidental import
+   of a mathematically different child table. Certify the empty residual
+   roster, the exported theorem and its axiom profile.
+3. Prove exact Extra28 membership in the current Raw11 152-retained
+   roster from [Agent47's maintained consumer](../agent47-raw11-adapter/README.md);
+   filter it by actual table equality and preserve every other residual.
+   Removing Extra28 would improve this *local* conditional roster by one,
+   not the current global Canonical40 count.
 
-`siblings-source.tar.gz` (Git blob a7434ff99e18200af61b5ffb98c30a787b4f2218) adds the **general** source-checked zipper checker:
-- ZFast.lean: zipSideCheck_sound (arbitrary exact retained-halfline translated recurrence)
-- ZTree.lean: run_known, zipHoleOK_sound, sound (same PhaseTree certificate type, zipper semantics for side cycles and first holes)
-- ZRoute.lean: consume for existing PhaseFrontier Route, retaining exact table checks and residuals.
-
-All three passed actual original-source kernel checking, with only propext, Classical.choice, Quot.sound. No native_decide or sorryAx. The new checker is designed to reduce repeated finite-tape simulation on large trees; runtime benefit has not yet been measured on equal-sized source. Reproduction: extract ld-source.tar.gz and siblings-source.tar.gz into the same directory; set LEAN_PATH as above, build the two counter modules, then run `python prepare-siblings.py; node make-periodic.cjs; bash generate-siblings.sh 7 9 10 13 14 15 16 17 18 19`. Use `bash compile-siblings.sh 7 9 ...` as desired. This generates the exact checked M7/M9 sources and candidate sources for all other siblings; M14 onward use the new checker. Build in parallel only within memory limits. The checked M7/M9 bounds are not global roster reductions.
-
-## 2026-11-27 01:02 UTC: six new sibling closures; shared-history checker
-
-Additional fully kernel-checked Covers: D1=1LC (101, 4893 nodes), D1=0RD (79, 6861 nodes), D1=1LD (96, 6981 nodes). Thus this run has closed six of the eleven remaining siblings; the previously proved 0LC child is separate. Five remaining candidate sibling proofs (1RD,0LE,0RE,1LE,1RE) are in progress, not claimed. All compiled sibling Covers use only [propext, Classical.choice, Quot.sound].
-
-`trace-core.tar.gz` (blob 664773d8813f045fe210af2e0ce6a38417f92096) adds two general checked theorems:
-- ZJoin.join/childOf: a finite typed child roster whose exact normalized-move coverage and literal table equalities are kernel checked, avoiding repeated 24-way tactic search.
-- ZTrace.sound: persistent reversed zipper history. Each child reuses the proven prefix since refinement at a first hole preserves all earlier known steps. The translated recurrence checks absolute history positions and the retained-halfline condition, with no duplicate simulation of the period. All original PhaseTree certificate types are supported, with exact normalized splitting and weighted halt bounds. The source passed Lean 4.36.0-rc2 against the original artifact. No native_decide/sorryAx. Runtime improvements are not yet measured on identical shards.
-
-Reproduce by extracting the three source archives in the same directory, preparing earlier modules, then compiling ZJoin and ZTrace. `node generate-trace.cjs 17 18 19` emits deterministic literal-table proof shards and manifests; `build-fast.sh` builds their actual dependency lists (adjust its local directory and LEAN_PATH). This is checked general infrastructure, not a claim that all emitted shards passed. Continue the active earlier sibling builds, then compose all twenty D1 moves into a single Extra28 Cover.
-
-## 01:10 UTC checkpoint: additional sibling and new exact sweep
-
-D1=1RD (code15) now fully kernel-checked at WeightedBound 119, 9957 nodes. The earlier D1=0LC bound42 proof was rebuilt from its exact archive. Four candidate sibling joins (16–19) still outstanding. The new ZTrace shards are progressing without proof failures.
-
-A broad bounded discovery run found three other promising exact Raw11 extra cylinders: 53, 68, 77. **Candidate** exhaustive trees have respective 84,445 / 89,857 / 81,601 nodes, weighted bounds 356 / 97 / 208. All open discovery leaves have witnesses after standard and extended finite automata plus a longer translated side cycle (53) and one symbolic recurrence (68). Do not count parent covers yet. The exact Extra68 nonhalting leaf 1RB1LB1RC1RC0LA0LD1RE1LC0RF---0RC1RD is now kernel-checked in Raw11Extra68Sweep.lean. Entry13 to D with left empty and right 01000(100100)^k. Arbitrary k yields exact growth in 30+26k steps by 16k right sweep and 10k left sweep plus fixed steps. The proof handles arbitrary tails, uses the original SweepPumping bridge, and establishes all compatible completions never halt. Lean output: never uses [propext, Quot.sound]; safe adds Classical.choice.
-
-The three additional parent trees have complete generated proof sources locally, no missing witnesses. Whole-parent compilation remains pending. Continue Extra28 joins first. 
+Separate discovery found complete *candidate*, not complete checked,
+parent trees for **Extra53 (84,445 nodes, bound 356)**,
+**Extra68 (89,857 nodes, bound 97)** and
+**Extra77 (81,601 nodes, bound 208)**. The exact unbounded Extra68
+`Raw11Extra68Sweep.lean` leaf is locally original-source kernel checked:
+on its parameter k it realizes a 30+26k transition growth recurrence
+from a prepared zipper configuration, without relying on finite replay.
+The remaining parent joins are open. Those projects should only be
+advanced where they can remove an exact live Raw11 residual without
+duplicating already certified sibling work.
