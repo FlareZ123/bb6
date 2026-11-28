@@ -57,7 +57,7 @@ theorem external_call32_to42 (y : Nat) :
       (run (externalCall32To42Time y)
         (packet (call32InputA y) 0 11 externalU4))
       (packet (call42OutputA y) 0 6
-        [false,true,false,true,false,false]) := by
+        [false,true,false,true]) := by
   have ha33 : call32InputA y = 3*k33 y+4 := by
     simp [call32InputA,k33]; omega
   have ha34 : 8*k33 y+9 = 3*k34 y+2 := by
@@ -140,7 +140,25 @@ theorem external_call32_to42 (y : Nat) :
     run_add,he39,ha40,
     run_add,hb40,ha41,
     run_add,hb41,ha42]
-  simpa [hout] using he42
+  have h42 :
+      ObsEq
+        (run (12*(k42 y)*(k42 y)+49*(k42 y)+68)
+          (packet (3*k42 y+4) 0 2 externalU4))
+        (packet (call42OutputA y) 0 6
+          [false,true,false,true]) := by
+    simpa [hout] using he42
+  have hpad0 :=
+    BB6.BoundaryPadding.source_pad 0 0 2
+      (packet (call42OutputA y) 0 6 [false,true,false,true])
+  have hpad :
+      ObsEq
+        (packet (call42OutputA y) 0 6
+          [false,true,false,true,false,false])
+        (packet (call42OutputA y) 0 6
+          [false,true,false,true]) := by
+    have hs := BB6.Padding.cfgEq_symm hpad0
+    simpa [CryptidBoundary.run] using hs
+  exact BB6.Padding.cfgEq_trans h42 hpad
 
 /-- Source-connected external terminal cylinder through call 42.
     The modulus is 3^24; this is the exact 17-trit refinement of the
