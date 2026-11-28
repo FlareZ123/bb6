@@ -85,6 +85,7 @@ jobs:
           set -euo pipefail
           work=.tmp/a6-d9
           pipe="$work/pipeline"
+          chmod +x "$pipe/cert_census" "$pipe/strong" "$pipe/strong_emit" "$pipe/altblock"
           root="$work/d9c$CODE"
           ns="D9C$CODE"
           python3 "$pipe/discover.py" 9 "$CODE" "$root"
