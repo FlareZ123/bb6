@@ -65,6 +65,8 @@ const withMissingThird=process.argv.includes("--include-missing-ef-third");
 const withFGrowth=process.argv.includes("--include-f-growth");
 const withFDepth5=process.argv.includes("--include-f-depth5");
 const withEDepth5=process.argv.includes("--include-e-depth5");
+const withExtendedLong=process.argv.includes("--include-extended-long");
+const withDepth6Tranche=process.argv.includes("--include-depth6-tranche");
 const withLateHalts=process.argv.includes("--include-late-halts");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
@@ -90,6 +92,10 @@ const e5DirIndex=process.argv.indexOf("--e-depth5-dir");
 const eDepth5Dir=e5DirIndex<0?"/tmp/a50-raw34-e-depth5":process.argv[e5DirIndex+1];
 const halt5DirIndex=process.argv.indexOf("--halt-depth5-dir");
 const haltDepth5Dir=halt5DirIndex<0?"/tmp/a40-raw34-depth5-full":process.argv[halt5DirIndex+1];
+const extendedDirIndex=process.argv.indexOf("--extended-long-dir");
+const extendedLongDir=extendedDirIndex<0?"/tmp/a50-raw34-extended-long":process.argv[extendedDirIndex+1];
+const depth6DirIndex=process.argv.indexOf("--depth6-dir");
+const depth6Dir=depth6DirIndex<0?"/tmp/a50-raw34-depth6":process.argv[depth6DirIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -173,6 +179,26 @@ if(withEDepth5){
  assert.equal(eDepth5Source.length,m.count);
  eDepth5Source.forEach(add);
 }
+let extendedLongSource=[];
+if(withExtendedLong){
+ const m=JSON.parse(readFileSync(join(extendedLongDir,"manifest.json"),"utf8"));
+ assert.equal(m.fCount,481);assert.equal(m.eCount,481);
+ for(const unit of m.modules)
+   extendedLongSource.push(...parseSourceCycles(
+     readFileSync(join(extendedLongDir,unit.module+".lean"),"utf8")));
+ assert.equal(extendedLongSource.length,962);
+ extendedLongSource.forEach(add);
+}
+let depth6Source=[];
+if(withDepth6Tranche){
+ const m=JSON.parse(readFileSync(join(depth6Dir,"manifest.json"),"utf8"));
+ assert.equal(m.limit,100000);
+ for(const unit of [...m.fModules,...m.eModules])
+   depth6Source.push(...parseSourceCycles(
+     readFileSync(join(depth6Dir,unit.module+".lean"),"utf8")));
+ assert.equal(depth6Source.length,200000);
+ depth6Source.forEach(add);
+}
 let missingThirdSource=[];
 if(withMissingThird){
  for(let i=0;i<4;i++){
@@ -189,6 +215,7 @@ const fGrowthSource=withFGrowth?[
 fGrowthSource.forEach(add);
 const counterCount=counters.length+raySource.length+cycleSource.length+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
+  extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length;
 function loadHalters(file){
  const s=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
@@ -218,6 +245,7 @@ if(withLateHalts){
 }
 assert.equal(bank.length,4156+raySource.length+cycleSource.length+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
+  extendedLongSource.length+depth6Source.length+
   missingThirdSource.length+fGrowthSource.length+nAdditionalLate);
 
 const stateSlots=["D","C","B","A","E","E","F","F"];
@@ -353,6 +381,8 @@ console.log(JSON.stringify({
   fDepth5CyclePatterns:fDepth5Source.length,
   eConjugateCyclePatterns:eCycleSource.length,
   eDepth5CyclePatterns:eDepth5Source.length,
+  extendedLongCyclePatterns:extendedLongSource.length,
+  depth6CyclePatterns:depth6Source.length,
   missingNonEFConjugateThirdPatterns:missingThirdSource.length,
   fConjugateUnboundedGrowthPatterns:fGrowthSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
