@@ -1,0 +1,236 @@
+import DiagonalCoordinates
+import F321BackwardBarrier
+import Lean.Elab.Tactic.Omega
+
+/-!
+Canonical small-second anchor decomposition for the exact F321 source map.
+
+The Equal, Middle-even and Middle-odd branches are precisely the live branches
+whose output second counter is at most two. Between consecutive such anchors
+only High/Far moves occur. This is the exact forward counterpart of the H/F
+inverse-word machinery: every positive-time root run is a chain of completed
+anchor epochs plus one trailing High/Far suffix.
+-/
+
+namespace BB6.Agent2F321AnchorEpoch
+open BB6.Agent31F321Density
+open BB6.Agent2F321Diagonal
+
+def HFMove (a d A D : Nat) : Prop :=
+  (d+2 ≤ a ∧ A=a-d-2 ∧ D=2*d+3) ∨
+  (a<d ∧ 3*a+1≤d ∧ A=4*a+6 ∧ D=d-3*a)
+
+inductive HFRun : Nat → Nat → Nat → Nat → Nat → Prop
+  | nil (a d) : HFRun 0 a d a d
+  | step {n a d A D B C} :
+      HFRun n a d A D → HFMove A D B C →
+      HFRun (n+1) a d B C
+
+def AnchorMove (a d R c : Nat) : Prop :=
+  (a=d ∧ R=2*a+4 ∧ c=1) ∨
+  (a<d ∧ d<3*a+1 ∧ (d-a)%2=0 ∧ R=4*a+6 ∧ c=2) ∨
+  (a<d ∧ d<3*a+1 ∧ (d-a)%2=1 ∧ R=4*a+6 ∧ c=1)
+
+def AnchorEpoch (R c R' c' : Nat) : Prop :=
+  ∃ n a d, HFRun n R c a d ∧ AnchorMove a d R' c'
+
+theorem hfMove_source {a d A D : Nat}
+    (h : HFMove a d A D) : CounterMove a d A D := by
+  unfold HFMove at h
+  rcases h with h | h
+  · rcases h with ⟨hg,rfl,rfl⟩
+    exact CounterMove.high d hg
+  · rcases h with ⟨h1,h2,rfl,rfl⟩
+    exact CounterMove.far d h1 h2
+
+theorem anchorMove_source {a d R c : Nat}
+    (h : AnchorMove a d R c) : CounterMove a d R c := by
+  unfold AnchorMove at h
+  rcases h with hE | hM
+  · rcases hE with ⟨rfl,rfl,rfl⟩
+    exact CounterMove.equal a
+  · rcases hM with h2 | h1
+    · rcases h2 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      exact CounterMove.middleEven d hlo hhi hp
+    · rcases h1 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      exact CounterMove.middleOdd d hlo hhi hp
+
+theorem move_hf_or_anchor {a d A D : Nat}
+    (h : CounterMove a d A D) :
+    HFMove a d A D ∨ AnchorMove a d A D := by
+  cases h with
+  | high a d hg =>
+      left
+      unfold HFMove
+      exact Or.inl ⟨hg,rfl,rfl⟩
+  | equal a =>
+      right
+      unfold AnchorMove
+      exact Or.inl ⟨rfl,rfl,rfl⟩
+  | far a d h1 h2 =>
+      left
+      unfold HFMove
+      exact Or.inr ⟨h1,h2,rfl,rfl⟩
+  | middleEven a d h1 h2 hp =>
+      right
+      unfold AnchorMove
+      exact Or.inr (Or.inl ⟨h1,h2,hp,rfl,rfl⟩)
+  | middleOdd a d h1 h2 hp =>
+      right
+      unfold AnchorMove
+      exact Or.inr (Or.inr ⟨h1,h2,hp,rfl,rfl⟩)
+
+theorem hfMove_X_bounds {a d A D : Nat}
+    (h : HFMove a d A D) :
+    X a d + 1 ≤ X A D ∧ X A D ≤ X a d + 6 := by
+  unfold HFMove at h
+  rcases h with h | h
+  · rcases h with ⟨hg,rfl,rfl⟩
+    have hx := (high_coordinates a d hg).1
+    omega
+  · rcases h with ⟨h1,h2,rfl,rfl⟩
+    have hx := (far_coordinates a d h1 h2).1
+    omega
+
+theorem hfRun_X_bounds {n a d A D : Nat}
+    (h : HFRun n a d A D) :
+    X a d + n ≤ X A D ∧ X A D ≤ X a d + 6*n := by
+  induction h with
+  | nil => omega
+  | step h hm ih =>
+      have hs := hfMove_X_bounds hm
+      omega
+
+theorem anchorMove_bounds {a d R c : Nat}
+    (h : AnchorMove a d R c) :
+    (c=1 ∨ c=2) ∧ X a d ≤ R+1 ∧ R+c+5 ≥ X a d+5 := by
+  unfold AnchorMove at h
+  rcases h with hE | hM
+  · rcases hE with ⟨rfl,rfl,rfl⟩
+    unfold X
+    omega
+  · rcases hM with h2 | h1
+    · rcases h2 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      unfold X
+      omega
+    · rcases h1 with ⟨hlo,hhi,hp,rfl,rfl⟩
+      unfold X
+      omega
+
+theorem anchorEpoch_witness_growth
+    {n R c a d R' c' : Nat}
+    (hhf : HFRun n R c a d)
+    (ha : AnchorMove a d R' c') :
+    R + c + 4 + n ≤ R' := by
+  have hx := (hfRun_X_bounds hhf).1
+  have hb := (anchorMove_bounds ha).2.1
+  unfold X at hx
+  omega
+
+theorem anchorEpoch_gain5 {R c R' c' : Nat}
+    (h : AnchorEpoch R c R' c') (hc : 1 ≤ c) :
+    R + 5 ≤ R' := by
+  rcases h with ⟨n,a,d,hhf,ha⟩
+  have hg := anchorEpoch_witness_growth hhf ha
+  omega
+
+theorem hfRun_counterReach {n a d A D : Nat}
+    (h : HFRun n a d A D) : CounterReach a d n A D := by
+  induction h with
+  | nil => exact CounterReach.nil
+  | step h hm ih =>
+      exact CounterReach.step ih (hfMove_source hm)
+
+inductive AnchorChain : Nat → Nat → Nat → Nat → Nat → Prop
+  | nil (R c) : AnchorChain 0 R c R c
+  | step {q R c A e B f} :
+      AnchorChain q R c A e → AnchorEpoch A e B f →
+      AnchorChain (q+1) R c B f
+
+def AnchorDecomposition (R c A D : Nat) : Prop :=
+  ∃ q R0 c0 m,
+    AnchorChain q R c R0 c0 ∧ HFRun m R0 c0 A D
+
+theorem counterReach_anchor_decomposition
+    {R c n A D : Nat}
+    (h : CounterReach R c n A D) :
+    AnchorDecomposition R c A D := by
+  induction h with
+  | nil =>
+      exact ⟨0,R,c,0,AnchorChain.nil R c,HFRun.nil R c⟩
+  | @step n a d A D h hm ih =>
+      rcases ih with ⟨q,R0,c0,m,hchain,hhf⟩
+      rcases move_hf_or_anchor hm with hnext | hanchor
+      · exact ⟨q,R0,c0,m+1,hchain,HFRun.step hhf hnext⟩
+      · refine ⟨q+1,A,D,0,?_,HFRun.nil A D⟩
+        exact AnchorChain.step hchain ⟨m,a,d,hhf,hanchor⟩
+
+theorem seed_only_equal {A D : Nat}
+    (h : CounterMove 1 1 A D) : A=6 ∧ D=1 := by
+  cases h <;> omega
+
+theorem root_tail_from_six_one {n A D : Nat}
+    (h : CounterReach 1 1 (n+1) A D) :
+    CounterReach 6 1 n A D := by
+  induction n generalizing A D with
+  | zero =>
+      cases h with
+      | step hr hm =>
+          cases hr
+          rcases seed_only_equal hm with ⟨rfl,rfl⟩
+          exact CounterReach.nil
+  | succ n ih =>
+      cases h with
+      | step hr hm =>
+          exact CounterReach.step (ih hr) hm
+
+theorem root_anchor_decomposition {n A D : Nat}
+    (h : CounterReach 1 1 (n+1) A D) :
+    AnchorDecomposition 6 1 A D :=
+  counterReach_anchor_decomposition (root_tail_from_six_one h)
+
+theorem anchorChain_end_positive {q R c A e : Nat}
+    (h : AnchorChain q R c A e) (hc : 1 ≤ c) : 1 ≤ e := by
+  induction h with
+  | nil => exact hc
+  | step h he ih =>
+      rcases he with ⟨n,a,d,hhf,ha⟩
+      have hc' := (anchorMove_bounds ha).1
+      omega
+
+theorem anchorChain_linear_growth {q R c A e : Nat}
+    (h : AnchorChain q R c A e) (hc : 1 ≤ c) :
+    R + 5*q ≤ A := by
+  induction h with
+  | nil => omega
+  | @step q R c A e B f h he ih =>
+      have hi := ih hc
+      have hepos := anchorChain_end_positive h hc
+      have hg := anchorEpoch_gain5 he hepos
+      omega
+
+theorem terminal_has_last_anchor_HF
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c m,
+      AnchorChain q 6 1 R c ∧
+      HFRun m R c (D+1) D ∧
+      (c=1 ∨ c=2) := by
+  rcases root_anchor_decomposition h with ⟨q,R,c,m,hchain,hhf⟩
+  refine ⟨q,R,c,m,hchain,hhf,?_⟩
+  have hc := anchorChain_end_positive hchain (by decide)
+  by_cases hq : q=0
+  · subst q
+    cases hchain
+    exact Or.inl rfl
+  · cases hchain with
+    | step h0 he =>
+        rcases he with ⟨j,a,d,hj,ha⟩
+        exact (anchorMove_bounds ha).1
+
+#print axioms move_hf_or_anchor
+#print axioms anchorEpoch_witness_growth
+#print axioms root_anchor_decomposition
+#print axioms anchorChain_linear_growth
+#print axioms terminal_has_last_anchor_HF
+end BB6.Agent2F321AnchorEpoch
