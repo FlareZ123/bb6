@@ -870,3 +870,100 @@ jobs:
             /tmp/raw54-onerd-lasso.log
           if-no-files-found: error
           retention-days: 90
+
+
+  raw54_onerd_repair_branch:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-repair'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        branch: [0,5,6,7,11,12,13,16,17,18,19,20,21,22,23]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 71d246bee310ab987c2a0a491473346e70f3c1f2
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          run-id: '46130918355'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-generated
+      - name: Kernel-check missing 1RD branch at exact source snapshot
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          cp /tmp/raw54-onerd-generated/*.lean "$D/"
+          MOD=$(printf 'Raw54OneRDBranch%02d' '${{ matrix.branch }}')
+          W=/tmp/raw54-onerd-repair
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee "$W.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').checked" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').residual_count"
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw54-onerd-slice-${{ matrix.branch }}
+          path: /tmp/raw54-onerd-repair
+          if-no-files-found: error
+          retention-days: 90
+
+  raw54_onerd_repair_assemble:
+    if: inputs.target == 'weighted-tnf-raw54-onerd-bank-repair'
+    needs: raw54_onerd_repair_branch
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: 71d246bee310ab987c2a0a491473346e70f3c1f2
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-generated
+          run-id: '46130918355'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-generated
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw54-onerd-slice-*
+          run-id: '46130918355'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-all
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw54-onerd-slice-*
+          path: /tmp/raw54-onerd-new
+      - name: Merge old and repaired source-identical branches; certify cut
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          W=/tmp/raw54-onerd-cut
+          P=/tmp/raw54-onerd-merged
+          python im-results/agent13-coverage/unpack.py
+          cp /tmp/raw54-onerd-generated/*.lean "$D/"
+          cp -a /tmp/raw54-onerd-new/raw54-onerd-slice-* /tmp/raw54-onerd-all/
+          python "$D/onera_slices.py" merge /tmp/raw54-onerd-all "$P" 24 raw54-onerd
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" --precompiled-manifest "$P/manifest.json" --precompiled-dir "$P" "$D/Raw54OneRDBankCut.lean" 2>&1 | tee /tmp/raw54-onerd-cut.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.residual_count BB6.Agent8Raw54.OneRDBankAudit.cut BB6.Agent8Raw54.OneRDBankAudit.close
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-bank-cut-repaired
+          path: |
+            /tmp/raw54-onerd-cut/manifest.json
+            /tmp/raw54-onerd-cut.log
+            /tmp/raw54-onerd-generated/generator-summary.json
+            /tmp/raw54-onerd-generated/open.txt
+          if-no-files-found: ignore
+          retention-days: 90
