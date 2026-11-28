@@ -36,6 +36,13 @@ jobs:
           run-id: ${{ env.SOURCE_RUN }}
           name: raw42-group1-split-plan
           path: /tmp/original
+      - name: Row-split frozen 1LB Run leaf 5137
+        run: |
+          set -euo pipefail
+          python im-results/agent32-raw42/rewrite_run42_rows.py \
+            im-results/agent32-raw42/generated-assembly 1LB 5137
+          test -f im-results/agent32-raw42/generated-assembly/Raw421LBRun5137Data.lean
+          test -f im-results/agent32-raw42/generated-assembly/Raw421LBRun5137Row11.lean
       - name: Split only failed logical part 2
         id: plan
         run: |
