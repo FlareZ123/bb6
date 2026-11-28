@@ -114,13 +114,17 @@ source modules are `D1EightFour.lean`, `D1SecondLevel96.lean`, and
 `D1SecondLevel96Bound.lean` in
 [the ongoing formalization](../im-results/agent6-raw139-d1-zeroRD/README.md).
 
+## New local parent compositions (28 November, 17:13 UTC)
+
+All eight D0=8/C1 child Covers at weighted 3000 have completed in source CI. The additional four artifacts are C2 15264473622 (run 46147044639), C16 15264961564 (run 46147047904), C18 15266236199 (run 46147051530), C19 15264934525 (run 46147054693). The exact repository source `D1EightAll.lean` (blob fa6b5b71a9123e73e77a4598185d2fac568150b0) compiled locally in Lean 4.36.0-rc2 against those and the previously accepted C1/3/6/17 artifacts. Its unconditional `BB6.Agent6D1EightAll.cover` proves the entire D0=8 cylinder at weighted 3000. `D1NineOne.lean` (blob c55d17583c00ba44a3f1369dca0b56479ab71e0a) also compiled locally against accepted D9 C2/6/16/18/19 Covers; only C17 remains as a hypothesis of its parent theorem. Both exported Covers use only propext, Classical.choice, Quot.sound. These are checked local compositions of source-accepted dependencies, not new CI source-closure runs. The combined 89-residual frontier consumer is still compiling; no global roster cut is claimed.
+
 ## Scope and open upper-bound edge
 
 The source-proved theorems are strict reductions on **one** Raw139
 subcylinder, not a complete Cover of the Raw139 parent. None resolves
 the other 96 grandchildren or the universal BB(6) maximality bound.
-All-completion parent certificates for D0=8 and D0=9 would eliminate
-another eight of these 96 obligations and leave a conditional 88-machine
+The local D0=8 parent composition and a future unconditional D0=9 parent certificate would eliminate
+another eight of the 96 obligations and leave a conditional 88-machine
 frontier; `D1SecondLevel88OfParents.lean` stages that latter statement
 with **explicit hypotheses for both whole-parent Covers**, not accepted
 full-parent results. The authentic long-arrival D0=2 branches require
