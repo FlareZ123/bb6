@@ -70,13 +70,13 @@ def emit_bidfa_batch(name, entries, symmetry_entries=()):
     imports = ["FastBiDFA"]
     if symmetry_entries:
         imports += ["WeightedSymmetry", "WeightedTNF"]
-    parts = ["".join("import "+x+"\\n" for x in imports)
-             + "set_option maxRecDepth 100000\\nset_option maxHeartbeats 0\\n"]
+    parts = ["".join("import "+x+"\n" for x in imports)
+             + "set_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"]
     for namespace, body in entries:
-        parts.append(f"namespace {namespace}\\nopen {opens}\\n{body}\\nend {namespace}\\n")
+        parts.append(f"namespace {namespace}\nopen {opens}\n{body}\nend {namespace}\n")
     sym_opens = opens + " BB6.Agent13BlankDelay BB6.Agent16WeightedSymmetry"
     for namespace, body in symmetry_entries:
-        parts.append(f"namespace {namespace}\\nopen {sym_opens}\\n{body}\\nend {namespace}\\n")
+        parts.append(f"namespace {namespace}\nopen {sym_opens}\n{body}\nend {namespace}\n")
     (OUT/(name+".lean")).write_text("".join(parts))
 
 def swap_ef_table(table):
