@@ -144,25 +144,28 @@ theorem growth (n : Nat) :
       some (family (n+1)) := by
     rfl
 
-  have H := join0 h0
-    (join0 h1c
-      (join0 h1turn
-        (join0 h1d
-          (join0 h1end
-            (join0 h2pre
-              (join0 h2c
-                (join0 h2turn
-                  (join0 h2d
-                    (join0 h2end
-                      (join0 h3pre
-                        (join0 h3c
-                          (join0 h3turn
-                            (join0 h3d
-                              (join0 h3end h4))))))))))))))
-  have hc :
-      5 + ((5*n+5) + (2 + ((5*n+8) + (2 + (13 + ((5*n+7) + (2 +
-        ((5*n+10) + (2 + (5 + ((5*n+9) + (2 + ((5*n+12) + (2 + 11))))))))))))))) =
-      30*n+97 := by omega
+  have hA := join0 h0 (join0 h1c (join0 h1turn (join0 h1d h1end)))
+  have hcA : 5 + ((5*n+5) + (2 + ((5*n+8) + 2))) = 10*n+22 := by omega
+  have hA' : run0 table (10*n+22) (family n) =
+      some ⟨4,[false,true,false,true,true,false]++ones (n+1),ones (5*n+8)⟩ := by
+    simpa only [hcA] using hA
+
+  have hB := join0 h2pre (join0 h2c (join0 h2turn (join0 h2d h2end)))
+  have hcB : 13 + ((5*n+7) + (2 + ((5*n+10) + 2))) = 10*n+34 := by omega
+  have hB' : run0 table (10*n+34)
+      ⟨4,[false,true,false,true,true,false]++ones (n+1),ones (5*n+8)⟩ =
+      some ⟨4,zeros 5++ones (n+2),ones (5*n+10)⟩ := by
+    simpa only [hcB] using hB
+
+  have hC := join0 h3pre (join0 h3c (join0 h3turn (join0 h3d h3end)))
+  have hcC : 5 + ((5*n+9) + (2 + ((5*n+12) + 2))) = 10*n+30 := by omega
+  have hC' : run0 table (10*n+30)
+      ⟨4,zeros 5++ones (n+2),ones (5*n+10)⟩ =
+      some ⟨4,[false,true]++zeros 3++ones (n+2),ones (5*n+12)⟩ := by
+    simpa only [hcC] using hC
+
+  have H := join0 hA' (join0 hB' (join0 hC' h4))
+  have hc : (10*n+22) + ((10*n+34) + ((10*n+30) + 11)) = 30*n+97 := by omega
   simpa only [hc] using H
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
