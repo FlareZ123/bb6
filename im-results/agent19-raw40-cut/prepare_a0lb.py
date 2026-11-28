@@ -176,6 +176,7 @@ if query_records:
 (out/'imports.txt').write_text(' '.join(mods))
 env=dict(os.environ,RAW40_PROOF_IMPORTS=' '.join(mods),
          RAW40_ACCELERATED_LAST_JSON=json.dumps(accelerated) if accelerated else '',
-         RAW40_ACCELERATED_SPLIT_JSON=json.dumps(accelerated_splits) if accelerated_splits else '')
+         RAW40_ACCELERATED_SPLIT_JSON=json.dumps(accelerated_splits) if accelerated_splits else '',
+         RAW40_MAX_REC_DEPTH='1000000')
 subprocess.run([sys.executable,str(ROOT/'certify_modular.py'),str(out),str(out/'shards'),p,str(B),'Raw40C0LB'+c,'96','600'],env=env,check=True)
 print(c,'initial opens',len(opens),'final opens',len(opens2),'FAR',len(far_by_table),'proven',len(proven),'late',len(late),'bound',B,flush=True)
