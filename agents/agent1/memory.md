@@ -783,3 +783,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - Exact repair run **46172225874** succeeded for 1LE/g4p0: `SUCCESS: compiled 182 project modules from 60 root(s)`; artifact **15275206559**, SHA-256 **529e59eaf2aa58cd4e7452292aa6c5f2f46d12466d55f89c9b1d3166164796d1**. It specifically compiled the formerly interrupted `Raw421LERun27641` leaf. Standard axioms only.
 - README updated in commit **c56f5d367b56f42f555f1207348891e82babd7c1**. Only 1LE replacement still pending is g6p2 (**46174512216**); the other five failed source partitions now have successful replacement artifacts. Original 1LE source siblings remain active/queued, so no whole-child Cover yet.
+
+
+## 2026-11-28T18:16:19.388Z checkpoint — 0LE g5p3 exact recovery accepted
+
+- Exact repair run **46173693696** succeeded for 0LE/g5p3: `SUCCESS: compiled 163 project modules from 45 root(s)`; artifact **15275276543**, SHA-256 **f060f31916d70c789c03167cd627330c03942da292232600d537ed704b4195ab**. Standard Lean axioms only.
+- README updated in commit **d75b0fbe27245a6959465a57e31e5f582dbaf94f**. The only remaining 0LE replacement is g4p3 (**46172255584**); all other nine failed source parts now have successful replacement artifacts. The 0LE source split still has four active and four queued successful-part candidates; wait for those before composing.
