@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-plan, raw34-compact]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-plan, raw34-compact]
         default: late-parent
       base_run:
         type: string
@@ -978,6 +978,53 @@ jobs:
             /tmp/a40-raw34-counter/closure.log
             /tmp/a40-raw34-counter/manifest.json
             /tmp/a40-raw34-counter/binary-union.log
+          if-no-files-found: error
+          retention-days: 30
+
+
+  raw34-binary-ef:
+    if: inputs.mode == 'raw34-binary-ef'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check symmetric F binary-counter nonhalting
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-raw34-ef
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent40Raw34BinaryCounterF.all_time_never \
+            --artifact-name raw34-counter-ef-source \
+            im-results/agent40-raw34-frontier/Raw34BinaryCounterF.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('source_eq_perm','perm_compatible',
+                       'renamed_compatible','all_time_never'):
+              full='BB6.Agent40Raw34BinaryCounterF.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: F-symmetric Raw34 blank-start binary counter, standard axioms')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-binary-ef-source
+          path: |
+            /tmp/a40-raw34-ef/closure.log
+            /tmp/a40-raw34-ef/manifest.json
           if-no-files-found: error
           retention-days: 30
 
