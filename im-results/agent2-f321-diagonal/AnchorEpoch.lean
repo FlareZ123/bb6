@@ -170,7 +170,8 @@ theorem anchorMove_bounds {a d R c : Nat}
 
 theorem anchorMove_output_shape {a d R c : Nat}
     (h : AnchorMove a d R c) :
-    R % 2 = 0 ∧ (c=1 ∨ c=2) ∧ (c=2 → R%4=2) := by
+    R % 2 = 0 ∧ (c=1 ∨ c=2) ∧
+    (c=2 → R%4=2 ∧ 10≤R) := by
   unfold AnchorMove at h
   rcases h with hE | hM
   · rcases hE with ⟨rfl,rfl,rfl⟩
@@ -306,7 +307,8 @@ theorem root_anchor_decomposition {n A D : Nat}
 theorem root_anchorChain_endpoint_shape
     {q R c : Nat}
     (h : AnchorChain q 6 1 R c) :
-    R%2=0 ∧ (c=1 ∨ c=2) ∧ (c=2 → R%4=2) := by
+    R%2=0 ∧ (c=1 ∨ c=2) ∧
+    (c=2 → R%4=2 ∧ 10≤R) := by
   cases h with
   | nil =>
       omega
@@ -443,6 +445,76 @@ theorem terminal_last_anchor_first_high
   have hh := anchor_hfMove_is_high hR hc hfirst
   exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.1,hh.2,htail⟩
 
+/-- A one-step suffix from a genuine root anchor cannot already be terminal. -/
+theorem root_anchor_one_high_not_terminal
+    {q R c A D : Nat}
+    (hchain : AnchorChain q 6 1 R c)
+    (hc : c=1 ∨ c=2)
+    (hH : HFMove R c A D)
+    (hterm : A = D+1) : False := by
+  have hshape := root_anchorChain_endpoint_shape hchain
+  have hR : 6 ≤ R := by
+    have hg := anchorChain_linear_growth hchain (by decide)
+    omega
+  have hh := anchor_hfMove_is_high hR hc hH
+  rcases hh with ⟨rfl,rfl⟩
+  rcases hc with rfl | rfl
+  · have heven := hshape.1
+    omega
+  · have hmod := (hshape.2.2 rfl).1
+    omega
+
+/-- If a genuine root-anchor H/F suffix has a second step, that second step is
+    also High. -/
+theorem root_anchor_second_hf_is_high
+    {q R c B C A D : Nat}
+    (hchain : AnchorChain q 6 1 R c)
+    (hc : c=1 ∨ c=2)
+    (hfirst : HFMove R c B C)
+    (hsecond : HFMove B C A D) :
+    A = B-C-2 ∧ D = 2*C+3 := by
+  have hshape := root_anchorChain_endpoint_shape hchain
+  have hR : 6 ≤ R := by
+    have hg := anchorChain_linear_growth hchain (by decide)
+    omega
+  have hf := anchor_hfMove_is_high hR hc hfirst
+  rcases hf with ⟨rfl,rfl⟩
+  unfold HFMove at hsecond
+  rcases hsecond with hH | hF
+  · exact ⟨hH.2.1,hH.2.2⟩
+  · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
+    rcases hc with rfl | rfl
+    · omega
+    · have hc2 := hshape.2.2 rfl
+      omega
+
+/-- Every authentic terminal suffix has length at least two and its first two
+    forward moves are High. -/
+theorem terminal_last_anchor_first_two_high
+    {n D : Nat}
+    (h : CounterReach 1 1 (n+1) (D+1) D) :
+    ∃ q R c j B C E F,
+      AnchorChain q 6 1 R c ∧
+      (c=1 ∨ c=2) ∧
+      HFMove R c B C ∧
+      B = R-c-2 ∧ C = 2*c+3 ∧
+      HFMove B C E F ∧
+      E = B-C-2 ∧ F = 2*C+3 ∧
+      HFRun j E F (D+1) D := by
+  rcases terminal_last_anchor_first_high h with
+    ⟨q,R,c,j,B,C,hchain,hc,hfirst,hB,hC,htail⟩
+  have hj : 0 < j := by
+    by_contra hz
+    have hj0 : j=0 := by omega
+    subst j
+    cases htail
+    exact root_anchor_one_high_not_terminal hchain hc hfirst rfl
+  obtain ⟨t,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : j ≠ 0)
+  rcases hfRun_first_step htail with ⟨E,F,hsecond,hrest⟩
+  have hs := root_anchor_second_hf_is_high hchain hc hfirst hsecond
+  exact ⟨q,R,c,t,B,C,E,F,hchain,hc,hfirst,hB,hC,
+    hsecond,hs.1,hs.2,hrest⟩
+
 /-- Strengthening of the last-anchor formal normal form: the exact word can be
     chosen with a leading High letter. -/
 theorem terminal_has_last_anchor_formal_word_head_high
@@ -545,7 +617,7 @@ theorem terminal_last_anchor_shift_phase
     counterReach_terminal_mod6 (n:=n+1) (d:=D) (by omega) h
   refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,hcost,?_,?_⟩
   · intro hc2
-    have hR4 := hshape.2.2 hc2
+    have hR4 := (hshape.2.2 hc2).1
     omega
   · intro hc1
     have hReven := hshape.1
@@ -593,6 +665,9 @@ theorem terminal_last_anchor_highCount_phase
 
 #print axioms hfRun_second_pow_bound
 #print axioms terminal_last_anchor_high_growth_bound
+#print axioms root_anchor_one_high_not_terminal
+#print axioms root_anchor_second_hf_is_high
+#print axioms terminal_last_anchor_first_two_high
 #print axioms terminal_last_anchor_first_high
 #print axioms terminal_has_last_anchor_formal_word_head_high
 #print axioms terminal_has_last_anchor_formal_word
