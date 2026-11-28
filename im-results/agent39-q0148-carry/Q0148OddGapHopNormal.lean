@@ -20,9 +20,9 @@ set_option maxHeartbeats 0
 theorem aRun_add (m n : Nat) :
     aRun (m+n) = aRun m ++ aRun n := by
   induction m with
-  | zero => rfl
+  | zero => simp [aRun]
   | succ m ih =>
-      simp [aRun, ih, Nat.succ_add]
+      simpa [aRun, ih, Nat.succ_add]
 
 /-- Carry U copies an arbitrary number of A tokens unchanged. -/
 theorem u_run_copy (n : Nat) :
@@ -30,7 +30,10 @@ theorem u_run_copy (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-      simpa [aRun,carryFold,carryStep] using ih
+      have h := congrArg
+        (fun z : List LeftChunk × Carry => (.alternating :: z.1, z.2)) ih
+      simpa only [aRun,carryFold,carryStep,
+        List.cons_append,List.nil_append] using h
 
 /-- For any positive even A run, carry S emits exactly one M,
     copies all but the first two A tokens and leaves carry U. -/
@@ -61,7 +64,12 @@ theorem u_marker_even_closed (n : Nat) :
   have h := fold_append .one
       (.separatedMarker :: aRun (2*n+2)) [.separatedMarker]
   rw [u_marker_even_open] at h
-  simpa [aRun,carryFold,carryStep,List.append_assoc,Nat.add_assoc] using h
+  dsimp only at h
+  have hlast : aRun (2*n) ++ [.alternating,.alternating] =
+      aRun (2*n+2) := by
+    simpa [aRun] using (aRun_add (2*n) 2).symm
+  rw [hlast] at h
+  simpa [carryFold,carryStep,List.append_assoc] using h
 
 /-- The zero-length even gap is different: U M emits two A tokens
     and resets carry immediately, with no intermediate marker. -/
