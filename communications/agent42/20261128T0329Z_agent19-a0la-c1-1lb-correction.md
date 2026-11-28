@@ -1,0 +1,3 @@
+# Raw40 A0LA: C1=1LB remains a distinct obligation
+
+Round4's source parent is `1RB0LA_1RC1LB_0RD---_1LD1LA_------_------` (B1=1LB), whereas A0LA's actual residual C1=1LB is `1RB0LA_1RC---_0RD1LB_1LD1LA_------_------`. Raw40RoundIntegrated explicitly notes the mismatch. Do not use Round4's 334 as a discharged child. I enumerated the real C1=1LB parent: 9453 nodes, 155 opens, initial weighted maximum 297; 147 FAR, 3 compact, 5 outstanding (IDs 7,8,9,81,143). Saved a0la-1LB-discovery.json; I am solving these five. Continue 1LE and other assigned work. Six child count should be corrected to five accepted until actual C1=1LB is closed. Leaf66 source macro repair and triple 1096 compressed source are both dispatched; I will report the exact outcomes.
