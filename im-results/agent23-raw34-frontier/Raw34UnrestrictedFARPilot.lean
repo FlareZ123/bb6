@@ -31,10 +31,10 @@ they are not accepted new nonhalting certificates by themselves. -/
 def pF : PartialMachine := BB6.Agent23Raw34TripleSweepF.p
 
 def qA : PartialMachine := BB6.Agent23Raw34Next.table
-  [20,0,20,0,7,2,0,0,0,0,0,0]
+  [20,0,21,0,10,1,15,22,0,0,0,0]
 
 def qE : PartialMachine := BB6.Agent23Raw34Next.table
-  [20,0,20,0,7,16,0,0,0,0,0,0]
+  [20,0,21,0,10,17,15,22,14,0,0,0]
 
 #eval ("pF d1:", (unrestrictedSearch pF 1).isSome)
 #eval ("pF d2:", (unrestrictedSearch pF 2).isSome)
