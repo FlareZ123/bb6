@@ -55,7 +55,7 @@ jobs:
             test -f "$PROOF_ROOT"
           elif [[ "$PREPARATION_PROFILE" == "q0151-macro" ]]; then
             case "$PROOF_ROOT" in
-              im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean|im-results/agent5-weighted-tnf-queue/Q0151AbstractConcreteBridge.lean) ;;
+              im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean|im-results/agent5-weighted-tnf-queue/Q0151AbstractConcreteBridge.lean|im-results/agent5-weighted-tnf-queue/Q0151GoodEmptyRight.lean) ;;
               *) echo "Unapproved q0151-macro root: $PROOF_ROOT"; exit 1 ;;
             esac
             test -f im-results/agent5-weighted-tnf-queue/generate_q151_finite.py
