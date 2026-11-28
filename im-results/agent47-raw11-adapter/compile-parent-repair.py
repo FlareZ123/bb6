@@ -45,7 +45,11 @@ def main():
         assert (base / (ext.replace(".","/")+".olean")).is_file(), ext
 
     accepted = {}
-    for receipt in sorted(out.glob("receipt-*.json")):
+    receipts = sorted(out.glob("receipt-*.json"))
+    repair_receipt = out / "repair-receipt.json"
+    if repair_receipt.is_file():
+        receipts.append(repair_receipt)
+    for receipt in receipts:
         for name, obj in json.loads(receipt.read_text()).items():
             if name in accepted:
                 assert accepted[name] == obj, "conflicting immutable receipts"
