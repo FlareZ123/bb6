@@ -96,7 +96,7 @@ path with an axiom audit. First source runs:
 - M3 [46089959353](https://github.com/FlareZ123/bb6/actions/runs/46089959353)
 - M4 [46089962824](https://github.com/FlareZ123/bb6/actions/runs/46089962824)
 
-At initial submission these runs are queued, **not accepted**.
+M2 and M6 original-source Lean+axiom runs have **succeeded** (see URLs above); the other four growth-cylinder modules remain CI-pending or are being repaired. Do not infer an entire Raw45 parent Cover from those successful cylinders.
 The local shell and Python failed with a runtime `ClientError`
 before any command executed; this is not a Lean compile diagnostic.
 The next step is to repair actual compiler messages, certify all
@@ -214,11 +214,7 @@ generated using the existing source-accepted
 `NGramCertificate` checker. Unlike the discovery
 ngram closures, the source file has theorem statements
 `check p_i c_i = true` proven by kernel reduction and quantified
-`NeverHalts` lifts. Acceptance is pending the bank's original-source
-Lean gate; the *candidate* is not a certified upper bound until the
-entire audit, including all 8,834 translated-cycle checks,
-the 68 n-gram checkers, and both exceptional induction proofs,
-is accepted.
+`NeverHalts` lifts. The bank's original-source Lean and axiom gate **SUCCEEDED** in [run 46091283707](https://github.com/FlareZ123/bb6/actions/runs/46091283707). One alternating-growth lemma (L1) also **SUCCEEDED** in [run 46091372018](https://github.com/FlareZ123/bb6/actions/runs/46091372018). The *full-cut candidate* remains unaccepted until all 8,834 translated-cycle checks and the second exceptional recurrence (L2) pass together.
 
 The full-cut source uses the existing `ZipThreeHoleAudit`
 `Audit` datatype, constructs 24 first-level C1 children,
@@ -268,3 +264,25 @@ The full-cut source has been sharpened everywhere to
 (commit 545c9c72); kid04 smoke source was also sharpened to 96.
 The exact 96 lower and full 96 upper, once source accepted,
 will make a locally exact five-hole quotient subfamily bound.
+
+
+## Original-source verification checkpoint, 2026-11-28T01:19Z
+
+The source Lean+axiom gate has **succeeded** for two distinct
+five-hole nonhalt cylinders (`M2`, `M6`), the hard one-hole
+alternating recurrence `L1` (run 46091372018), and all
+68 `NGramCertificate` local-window witnesses (run 46091283707).
+Original-source retry for the E/F-conjugate `L2` is
+[46091554966](https://github.com/FlareZ123/bb6/actions/runs/46091554966).
+The 96-step literal halting witness is
+[46092079569](https://github.com/FlareZ123/bb6/actions/runs/46092079569).
+The complete 11,449-node `zipCheck 96` source audit is
+[46092496277](https://github.com/FlareZ123/bb6/actions/runs/46092496277).
+All last three were initially queued; **do not claim their
+theorems accepted before successful CI**.
+
+The 24-branch assembly was fixed to source `byMove` order
+`0,6,12,18,1,7,13,19,...,5,11,17,23`
+rather than naively listing 0..23 in tactic case order
+(commit 3bd79a9a). A separate `kid04` 96-bound preflight
+is queued as run 46091780695.
