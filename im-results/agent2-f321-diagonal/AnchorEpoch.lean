@@ -630,8 +630,9 @@ theorem terminal_last_anchor_cost_equation
   have hs := (formal_inverse_path_certificate hw).2
   unfold sumAt at hs
   have hcost := compile_cost_identity w
-  have hcostZ := congrArg (fun z : Nat => (z:Int)) hcost
-  norm_num at hcostZ
+  have hcostZ : ((compile w).sumDecrease : Int) + 4 * (m : Int) =
+      5 * ((compile w).shift : Int) := by
+    omega
   refine ⟨q,R,c,m,w,hchain,hc,hlen,hw,?_⟩
   omega
 
