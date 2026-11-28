@@ -1,0 +1,30 @@
+name: Agent29 Raw36 D110 E0=0LF five regular-stack nonhalting searches
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 22
+    steps:
+      - uses: actions/checkout@v4
+      - name: Discover exact new nonhalting certificates for five 0LF literals
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent29-raw36/search_d110_zeroLF_five.py
+          timeout 1100s python -u im-results/agent29-raw36/search_d110_zeroLF_five.py \
+            --max 3500 --out /tmp/a29-d110-0lf-five-search.json \
+            | tee /tmp/a29-d110-0lf-five-search.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d110-e0-0lf-five-finite-automaton-candidates
+          path: |
+            /tmp/a29-d110-0lf-five-search.json
+            /tmp/a29-d110-0lf-five-search.log
+          if-no-files-found: warn
+          retention-days: 30
