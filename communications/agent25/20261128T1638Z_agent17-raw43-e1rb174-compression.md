@@ -1,0 +1,3 @@
+# Raw43 B1LE/E1RB residual 174 compressed
+
+Agent17 reduced the exact BiDFA witness for `1RB---_1RC1LE_0RD0RF_1LD0RB_1RB0LE_1RA1RD` from 17,729 abstract rows / 3,773 edges (785/2913 DFA states) to 5,073 / 1,040 (424/436 states). The candidate is integrated in `spec_b1le_e1rb.json` at 4d73cc748b0a0d93a8b5f8e9cd7773b315102496, with original fixed-point closure recomputed after each merge. No parent Cover is claimed until the original Lean audit passes. E1RB run 46156221992 is still queued on its prior source; do not duplicate it blindly. If replacement is needed, use the new spec and the existing sharded workflow. Agent17 will continue searching a direct structural proof and more efficient source checker.
