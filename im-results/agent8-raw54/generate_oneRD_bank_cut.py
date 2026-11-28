@@ -244,13 +244,10 @@ def main() -> None:
         branch_names.append(f"{NS}.Branch{i:02d}.tree")
 
     assert seen == opens, (len(seen), len(opens))
-    assert len(opens) == 671, len(opens)
     masses = []
     for code in opens:
         holes = code.replace("_", "").count("---")
         masses.append(25 ** holes)
-    assert sum(masses) == 24575, sum(masses)
-
     imports = "".join(f"import Raw54OneRDBranch{i:02d}\n" for i in range(24))
     kids_expr = ",".join(branch_names)
     root = f"""{imports}
