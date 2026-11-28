@@ -22,6 +22,7 @@ def p : PartialMachine := fun s =>
   | 4, true  => some (some ⟨false, false, 4⟩)
   | 5, false => some (some ⟨false, false, 0⟩)
   | 5, true  => none
+  | _, _ => none
 
 def ones (n : Nat) : List Bool := rep [true] n
 
