@@ -1,6 +1,7 @@
 import SweepPumping
 import Raw10EncodedSourceBridge
 import Box17AuditCore
+import Box27SliceCore
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -118,6 +119,37 @@ theorem source_bound (B : Nat) (m : Machine)
     (d0 : Fin 25) (hd0 : m (3,false) = decode d0)
     (hc : d0 ∈ sweepCodes) : WeightedBound B m :=
   weighted_of_never B m (source_never m hm d0 hd0 hc)
+
+
+/-- The missing fifth D0 value is a three-move halt, irrespective of all
+    seven other free transition slots. -/
+theorem check0 :
+    BB6.Agent13.Box17.leafCheck 255 #[] (table 0) (.halt 3) = true := by decide
+
+theorem bound0 (m : Machine) (hm : compatible (table 0) m) :
+    WeightedBound 255 m :=
+  BB6.Agent49.Box27Slice.terminal_sound 255 (table 0) (.halt 3) check0 m hm
+
+def fastCodes : List (Fin 25) := [0,5,7,9,10]
+
+/-- A quarter of the original Box27 D0 domain (five of twenty codes)
+    is now bounded uniformly with all seven other slots unrestricted. -/
+theorem source_fast_bound (m : Machine)
+    (hm : Fits raw10Remainder[27]! m)
+    (d0 : Fin 25) (hd0 : m (3,false) = decode d0)
+    (hc : d0 ∈ fastCodes) : WeightedBound 255 m := by
+  have h : d0=0 ∨ d0=5 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
+    simpa [fastCodes] using hc
+  rcases h with rfl|rfl|rfl|rfl|rfl
+  · exact bound0 m (source_compatible 0 m hm hd0)
+  · exact source_bound 255 m hm 5 hd0 (by decide)
+  · exact source_bound 255 m hm 7 hd0 (by decide)
+  · exact source_bound 255 m hm 9 hd0 (by decide)
+  · exact source_bound 255 m hm 10 hd0 (by decide)
+
+#print axioms check0
+#print axioms bound0
+#print axioms source_fast_bound
 
 #print axioms first
 #print axioms macro05
