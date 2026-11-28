@@ -49,12 +49,12 @@ jobs:
           name: raw11-140-checkpoint
           path: /tmp/checkpoint
 
-      - name: Regenerate exact Extra140 root6 with two-node modules
+      - name: Regenerate exact Extra140 root6 with singleton-node modules
         env:
           SIX_HOLE_DATA: /tmp/six-hole
           RAW11_EXTENDED_AUTOMATA: '1'
           RAW11_REPAIR_SPLIT: '1'
-          RAW11_REPAIR_MODULE_THRESHOLD: '2'
+          RAW11_REPAIR_MODULE_THRESHOLD: '1'
           RAW11_REPAIR_CERT_THRESHOLD: '1'
         run: |
           set -euo pipefail
