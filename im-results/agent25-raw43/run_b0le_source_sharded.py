@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Resumable original-source acceptance for the four heavy Raw43 B0LE children."""
+"""Resumable original-source acceptance for heavy Raw43 BiDFA-backed children."""
 from __future__ import annotations
 
 import argparse
@@ -14,7 +14,12 @@ import zipfile
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
-VARIANTS = {"b0le_e0la", "b0le_e1la", "b0le_e1lf", "b0le_e1ra"}
+VARIANTS = {
+    "b0le_e0la", "b0le_e1la", "b0le_e1lf", "b0le_e1ra",
+    "b1la_a0la",
+    "b1le_e0lf", "b1le_e0ra", "b1le_e1rb",
+    "b1re_e11le",
+}
 DEEP = {
     "b0le_e1la": (
         46069234034,
@@ -64,7 +69,7 @@ def run_logged(args: list[str], log: Path, *, env: dict[str, str] | None = None)
 
 def prepare(variant: str) -> Path:
     if variant not in VARIANTS:
-        raise ValueError(f"unsupported B0LE source-shard variant: {variant}")
+        raise ValueError(f"unsupported Raw43 source-shard variant: {variant}")
     run(["python", "im-results/agent13-coverage/unpack.py"])
     run(["python", "im-results/agent31-three-hole-tnf/generate_sweeps.py"])
     run(["python", "im-results/agent31-three-hole-tnf/generate_four_hole.py"])
