@@ -196,8 +196,37 @@ def emit(tree):
     (he : m (4,false) = decode 24) : WeightedBound 108 m :=
   bound m (parent_compatible m hm hd0 hd1 he)
 
+def attainerTable : PartialMachine := fun s =>
+  some (decode ([8,21,11,18,13,13,14,17,24,0,3,6] : List (Fin 25))[BB6.Agent13.Box17.index s]!)
+def attainer : Machine := fun s => (attainerTable s).getD none
+theorem attainer_compatible : compatible attainerTable attainer := by
+  intro s t ht
+  simp [attainer,ht]
+theorem attainer_halts : HaltsAfter attainer 254 :=
+  BB6.Agent13.Box17.zipHalt_sound attainerTable 254 (by decide) attainer attainer_compatible
+theorem attainer_in_slice : compatible root attainer := by
+  intro s t ht
+  obtain ⟨q,b⟩ := s
+  have hq : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> simp [root] at ht ⊢ <;>
+    first | subst t; decide | contradiction
+
+theorem exact_weighted (C : Nat) :
+    (∀ m, compatible root m → WeightedBound C m) ↔ 255 ≤ C := by
+  constructor
+  · intro h
+    have hd : 0 ∈ delays (zeroNext attainer) 0 := by decide
+    have hb := h attainer attainer_in_slice 254 0 attainer_halts hd
+    omega
+  · intro h m hm k d hk hd
+    have hb := bound m hm k d hk hd
+    omega
+
 #print axioms bound
 #print axioms parent_bound
+#print axioms attainer_halts
+#print axioms attainer_in_slice
+#print axioms exact_weighted
 end BB6.Agent49.Box27Slice24
 '''
     source=source.replace('WeightedBound 108','WeightedBound '+str(B))
@@ -206,6 +235,7 @@ end BB6.Agent49.Box27Slice24
 if __name__=='__main__':
     tree=visit(ROOT)
     B=maxweight
-    assert B > 0
+    assert B == 255, B
+    assert any(row == [8,21,11,18,13,13,14,17,24,0,3,6] and n == 254 and p == [0] for row,n,p in attainers)
     print('E0=24 stats:',stats,'candidate weighted maximum:',B,'attainers:',attainers,flush=True)
     emit(tree)
