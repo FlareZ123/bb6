@@ -5,7 +5,9 @@ The caller must authenticate the producer closure and pinned base before invokin
 No changed object is imported until its selected declarations have passed kernel replay.
 """
 import argparse
+import concurrent.futures
 import hashlib
+import heapq
 import json
 import os
 from pathlib import Path
@@ -23,8 +25,12 @@ def write_lines(path, lines):
 
 
 def relocate(*, producer_files, base, work, root_module, root_names, prefix,
-             tool, comparator=None, plan_only=False):
+             tool, comparator=None, plan_only=False, jobs=1, checkpoint_every=1):
     """Return the root module and staged closure, leaving base untouched."""
+    if jobs < 1:
+        raise ValueError('jobs must be >= 1')
+    if checkpoint_every < 1:
+        raise ValueError('checkpoint_every must be >= 1')
     work = work.resolve()
     work.mkdir(parents=True, exist_ok=False)
     base = base.resolve()
@@ -109,12 +115,21 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
     checkpoint()
     if plan_only:
         return report, output, names
+    # Unaffected modules cannot import an affected module: affectedness is
+    # propagated to every transitive consumer above. Materialize them first so
+    # independent affected branches can be replayed concurrently.
     for m in order:
-        p = files[m]
-        if m not in affected:
-            if not (base / p.name).is_file():
-                shutil.copy2(p, output / p.name)
+        if m in affected:
             continue
+        p = files[m]
+        if not (base / p.name).is_file():
+            shutil.copy2(p, output / p.name)
+
+    affected_order = [m for m in order if m in affected]
+    rank = {m: i for i, m in enumerate(order)}
+
+    def replay_one(m):
+        p = files[m]
         staged = mapping[m]
         deps_path = work / (staged + '.imports.txt')
         # Duplicate Init headers are harmless, but preserve order while deduplicating.
@@ -126,13 +141,61 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
         log_path = logs / (staged + '.log')
         with log_path.open('w') as log:
             subprocess.run([str(tool), str(deps_path), str(relocation), str(object_path),
-                            staged, prefix, str(dest)], env=env, stdout=log, stderr=subprocess.STDOUT, check=True)
-        log = log_path.read_text()
-        assert dest.is_file() and 'PASS: saved' in log, f'no successful replay {m}'
-        report['stages'].append({'source_module': m, 'stage_module': staged,
-                                 'source_olean_sha256': sha(p), 'stage_olean_sha256': sha(dest), 'log': log})
-        checkpoint()
-        print(m, log.strip().splitlines()[-1], flush=True)
+                            staged, prefix, str(dest)], env=env, stdout=log,
+                           stderr=subprocess.STDOUT, check=True)
+        log_text = log_path.read_text()
+        assert dest.is_file() and 'PASS: saved' in log_text, f'no successful replay {m}'
+        record = {'source_module': m, 'stage_module': staged,
+                  'source_olean_sha256': sha(p), 'stage_olean_sha256': sha(dest),
+                  'log': log_text}
+        return record, log_text.strip().splitlines()[-1]
+
+    completed = 0
+    def record_stage(record, final_line):
+        nonlocal completed
+        report['stages'].append(record)
+        completed += 1
+        if completed % checkpoint_every == 0:
+            checkpoint()
+        print(record['source_module'], final_line, flush=True)
+
+    if jobs == 1:
+        for m in affected_order:
+            record_stage(*replay_one(m))
+    else:
+        # Schedule the affected import DAG. A stage becomes runnable exactly
+        # when all of its affected imports have produced their relocated olean.
+        pending = {m: {d for d in index[m]['imports'] if d in affected}
+                   for m in affected_order}
+        children = {m: [] for m in affected_order}
+        for m, deps in pending.items():
+            for d in deps:
+                children[d].append(m)
+        ready = [(rank[m], m) for m in affected_order if not pending[m]]
+        heapq.heapify(ready)
+        active = {}
+        with concurrent.futures.ThreadPoolExecutor(max_workers=jobs) as pool:
+            while ready or active:
+                while ready and len(active) < jobs:
+                    _, m = heapq.heappop(ready)
+                    active[pool.submit(replay_one, m)] = m
+                if not active:
+                    raise RuntimeError('affected import DAG stalled')
+                done, _ = concurrent.futures.wait(
+                    active, return_when=concurrent.futures.FIRST_COMPLETED)
+                for future in sorted(done, key=lambda f: rank[active[f]]):
+                    m = active.pop(future)
+                    record_stage(*future.result())
+                    for child in children[m]:
+                        pending[child].remove(m)
+                        if not pending[child]:
+                            heapq.heappush(ready, (rank[child], child))
+        assert completed == len(affected_order)
+
+    # Completion-order logging is useful while running; the persisted report is
+    # deterministic in original topological order.
+    report['stages'].sort(key=lambda x: rank[x['source_module']])
+    checkpoint()
     report['complete'] = True
     checkpoint()
     return report, output, names
@@ -149,10 +212,13 @@ def main():
     p.add_argument('--tool', type=Path, required=True)
     p.add_argument('--comparator', type=Path)
     p.add_argument('--plan-only', action='store_true')
+    p.add_argument('--jobs', type=int, default=1)
+    p.add_argument('--checkpoint-every', type=int, default=1)
     a = p.parse_args()
     report, _, _ = relocate(producer_files=a.producer_objects.read_text().splitlines(), base=a.base,
         work=a.work, root_module=a.root_module, root_names=a.root_name, prefix=a.prefix,
-        tool=a.tool.resolve(), comparator=a.comparator, plan_only=a.plan_only)
+        tool=a.tool.resolve(), comparator=a.comparator, plan_only=a.plan_only,
+        jobs=a.jobs, checkpoint_every=a.checkpoint_every)
     print(json.dumps(report, indent=2, sort_keys=True))
 
 
