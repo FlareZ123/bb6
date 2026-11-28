@@ -1474,3 +1474,317 @@ jobs:
             .tmp/a6-zeroLF/imports
           include-hidden-files: true
           retention-days: 14
+
+  recover-oneLF-plan:
+    if: inputs.variant == 'oneLF' && inputs.recovery_run_id == '45942475346'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      pin: ${{ steps.plan.outputs.pin }}
+      block_matrix: ${{ steps.plan.outputs.block_matrix }}
+      tree_matrix: ${{ steps.plan.outputs.tree_matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - name: Partition the original root00 source dependency graph
+        id: plan
+        run: python3 im-results/agent6-raw139-e0-oneLF/recover00.py plan .tmp/a6-oneLF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF/recovery-plan.json
+          retention-days: 14
+
+  recover-oneLF-block:
+    needs: [recover-oneLF-plan]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.recover-oneLF-plan.outputs.block_matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - name: Fetch recovery scheduler
+        env:
+          RECOVERY_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/recover00.py" > /tmp/recover00.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent13-block-far/specialize.py 5
+      - name: Compile independent block cut
+        env:
+          GROUP: ${{ matrix.group }}
+        run: python3 /tmp/recover00.py compile .tmp/a6-oneLF block "$GROUP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF00-block-${{ matrix.group }}
+          path: .tmp/a6-oneLF/cut-block-${{ matrix.group }}
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-oneLF-block-merge:
+    needs: [recover-oneLF-plan, recover-oneLF-block]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - name: Fetch recovery scheduler
+        env:
+          RECOVERY_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/recover00.py" > /tmp/recover00.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneLF00-block-*
+          path: .tmp/a6-oneLF/cuts-block
+      - name: Merge exact block dependency objects
+        run: python3 /tmp/recover00.py merge .tmp/a6-oneLF block
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF00-block-pool
+          path: |
+            .tmp/a6-oneLF/block-pool
+            .tmp/a6-oneLF/block-pool.json
+          retention-days: 14
+
+  recover-oneLF-tree:
+    needs: [recover-oneLF-plan, recover-oneLF-block-merge]
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix: ${{ fromJSON(needs.recover-oneLF-plan.outputs.tree_matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - name: Fetch recovery scheduler
+        env:
+          RECOVERY_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/recover00.py" > /tmp/recover00.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-block-pool
+          path: .tmp/a6-oneLF
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent13-block-far/specialize.py 5
+      - name: Compile independent tree cut
+        env:
+          GROUP: ${{ matrix.group }}
+        run: python3 /tmp/recover00.py compile .tmp/a6-oneLF tree "$GROUP"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF00-tree-${{ matrix.group }}
+          path: .tmp/a6-oneLF/cut-tree-${{ matrix.group }}
+          include-hidden-files: true
+          retention-days: 14
+
+  recover-oneLF-tree-merge:
+    needs: [recover-oneLF-plan, recover-oneLF-tree, recover-oneLF-block-merge]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - name: Fetch recovery scheduler
+        env:
+          RECOVERY_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/recover00.py" > /tmp/recover00.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-block-pool
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-oneLF00-tree-*
+          path: .tmp/a6-oneLF/cuts-tree
+      - name: Merge exact tree dependency objects
+        run: python3 /tmp/recover00.py merge .tmp/a6-oneLF tree
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-oneLF00-tree-pool
+          path: |
+            .tmp/a6-oneLF/tree-pool
+            .tmp/a6-oneLF/tree-pool.json
+          retention-days: 14
+
+  recover-oneLF-root00:
+    needs: [recover-oneLF-plan, recover-oneLF-tree-merge]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - name: Fetch recovery scheduler
+        env:
+          RECOVERY_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          git fetch --depth=1 origin "$RECOVERY_SHA"
+          git show "$RECOVERY_SHA:im-results/agent6-raw139-e0-oneLF/recover00.py" > /tmp/recover00.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-plan
+          path: .tmp/a6-oneLF
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-oneLF00-tree-pool
+          path: .tmp/a6-oneLF
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent13-block-far/specialize.py 5
+      - name: Check the unchanged exact root00 theorem
+        run: python3 /tmp/recover00.py compile .tmp/a6-oneLF root 0
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLF-root00-certified
+          path: .tmp/a6-oneLF/shards/raw139-e0-oneLF-root00-certified
+          retention-days: 14
+
+  compose-recovered-oneLF:
+    needs: [recover-oneLF-plan, recover-oneLF-root00]
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.recover-oneLF-plan.outputs.pin }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-core-and-sources
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct shared source dependencies
+        run: |
+          set -euo pipefail
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 im-results/agent13-block-far/specialize.py 5
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw139-e0-oneLF-root*-certified
+          run-id: 45942475346
+          github-token: ${{ github.token }}
+          path: .tmp/a6-oneLF/shards
+      - name: Verify precisely the 23 successful original roots exist
+        run: |
+          set -euo pipefail
+          test ! -e .tmp/a6-oneLF/shards/raw139-e0-oneLF-root00-certified
+          test "$(find .tmp/a6-oneLF/shards -mindepth 1 -maxdepth 1 -type d | wc -l)" -eq 23
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw139-e0-oneLF-root00-certified
+          path: .tmp/a6-oneLF/shards/raw139-e0-oneLF-root00-certified
+      - name: Compose the unchanged exact parent
+        run: python3 im-results/agent6-raw139-e0-oneLF/compose.py .tmp/a6-oneLF
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw139-e0-oneLF-parent-certified
+          path: |
+            .tmp/a6-oneLF/parent
+            .tmp/a6-oneLF/imports
+          include-hidden-files: true
+          retention-days: 14
