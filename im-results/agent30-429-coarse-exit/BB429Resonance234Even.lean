@@ -91,7 +91,8 @@ theorem d234_even_second_return (m s j : Nat) (hm : m=j+s) (hm2 : 2≤m)
   have hres := d234_even_nonresonant_mod9 m I hmod
   obtain ⟨k,t,hk,hkn,ht,hs⟩ :=
     return_from_exact_burst_even (u,w) I a P y hp
-      (by simp [y,K]; omega) hUc hV hsep' (by simpa [a] using hres)
+      (by simp [y,K]; omega) hUc hV hsep'
+      (by simp [a]; omega) (by simpa [a] using hres)
   refine ⟨8*m+7+K+k,t,by omega,?_,?_,hs⟩
   · dsimp [K,I] at hkn
     omega
