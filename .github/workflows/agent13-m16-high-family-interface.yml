@@ -84,6 +84,7 @@ on:
           - sourceModularStrictness
           - sourceM8ModConeStrict
           - sourceModularBlind
+          - sourceModularBlindHigh
           - sourceModularLowStop
           - sourceModularStopsCriterion
           - sourceModularFullCriterion
@@ -381,6 +382,9 @@ jobs:
               ;;
             sourceModularBlind)
               target=im-results/agent15-c-halting/ModularConeBlind.lean
+              ;;
+            sourceModularBlindHigh)
+              target=im-results/agent15-c-halting/ModularConeBlindHigh.lean
               ;;
             sourceModularLowStop)
               target=im-results/agent42-modular-cone/ModularConeLowStop.lean
