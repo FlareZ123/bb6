@@ -84,7 +84,7 @@ def read_extended(path: Path) -> list[tuple[str,int,int]]:
         ("1RB1RF_1RC0RA_0RD1RB_1LD0LE_1LA1RD_---0LC", 87079, 10),
         ("1RB1RF_1RC0RA_0RD1RB_1LD0LE_1LA1RD_---1RC", 69753, 10),
     }
-    lines = [x.split("\\t") for x in path.read_text().splitlines() if x.strip()]
+    lines = [x.split(chr(9)) for x in path.read_text().splitlines() if x.strip()]
     records = [(code, int(n), int(slot)) for code,n,slot in lines]
     if set(records) != expected or len(records) != 3:
         raise ValueError(f"extended ledger does not match pinned discovery: {records}")
