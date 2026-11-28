@@ -73,7 +73,7 @@ theorem growth (n : Nat) :
   have h0 : run0 p 11 (family n) =
       some ⟨1,[true],[false,false]++rep P (2*n+1)++[false]⟩ := by
     have h := prepare (rep P (2*n)++[false])
-    simpa only [family, P, rep, List.append_assoc] using h
+    simpa [family, P, rep, List.append_assoc] using h
   have hR : run0 p (6*(2*n+1))
       ⟨1,[true],[false,false]++rep P (2*n+1)++[false]⟩ =
       some ⟨1,[true]++rep P (2*n+1),[false,false,false]⟩ := by
@@ -94,7 +94,7 @@ theorem growth (n : Nat) :
     have h := sweepL p 1 [] [false,false,true] P P 8
       left_one (2*n+2) [] [false]
     have hsize : 2*(n+1) = 2*n+2 := by omega
-    simpa only [family,hsize,List.nil_append,List.append_nil] using h
+    simpa [family,hsize,List.append_assoc] using h
   have h := join0 h0 (join0 hR (join0 hF (join0 hT hL)))
   have hc : 11+(6*(2*n+1)+(4+(7+8*(2*n+2)))) = 28*n+44 := by omega
   simpa only [hc] using h
