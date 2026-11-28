@@ -12,16 +12,21 @@ here is a global BB(6) upper bound.
   **15266699152** (`raw11-132-checkpoint`) has SHA256
   `e13c7c046b1082edb3ec18ae60c52141696a72f066011bed7cd2746d3de01162`.
   A continuation was dispatched from that exact checkpoint.
-- **Extra140** (bound 491): the frozen audit is at **115/130 accepted original
-  modules**. Run **46154387464** proved 11/12 independently split children of
-  the sole 836,410-byte blocker; the remaining 409,267-byte TwoSidedAutomata
-  child alone hit runner shutdown. The proof-granularity transformation now
-  splits that child into its exact twelve state/symbol rows, then splits the
-  two largest row tries at depth 3. Local Lean 4.36.0-rc2 checks established
-  that the 83 KB Row05 decomposition yields eight 9–11 KB `decide +kernel`
-  obligations (about 2.3–2.4 GB peak each) and a sub-second recomposition
-  theorem with axiom profile `[propext]`; Row07's analogous eight checks and
-  recomposition also pass locally.
+- **Extra140** (bound 491): the transformed exact source DAG is now
+  **fully locally kernel-checked, 205/205 modules** on Lean 4.36.0-rc2. The
+  top theorem `BB6.Agent5Raw11Extra140.cover` prints only
+  `[propext, Classical.choice, Quot.sound]`. Run **46155855956** crossed the
+  former 409 KB hard blocker and checkpointed 131 accepted transformed
+  modules (artifact **15268120230**, SHA256
+  `ea6a8de13e858a54b64f8ab3d4ad0ea171a2026343dcc6f53acafa405cfff18b`);
+  run **46156345255** advanced this to **147/205** (artifact
+  **15268385005**, SHA256
+  `daabac8861b1292f69236ce7fa0923a04b3b3da1c17053170b05d5dcf8f55380`).
+  A full remaining source-acceptance pass is run **46157091467**. This local
+  205/205 result is strong reproducible evidence, but the staged global
+  150→149 consumer is not counted accepted until that CI parent bundle and
+  its integration audit succeed.
+
 - Reusable transformations are
   `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`, and
   `split_trie_row.py`. They preserve literal certificates/tables and change
