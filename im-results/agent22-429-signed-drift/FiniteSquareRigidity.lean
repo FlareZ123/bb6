@@ -19,6 +19,9 @@ theorem two_transfers_offset (M A B T u0 u1 u2 r0 : Nat)
   have hi1 : (M:Int)*(u2:Int) =
       (u1:Int)+(A:Int)*((r0:Int)+(T:Int))+(B:Int) := by
     exact_mod_cast h1
+  have hdist : (A:Int)*((r0:Int)+(T:Int)) =
+      (A:Int)*(r0:Int)+(A:Int)*(T:Int) := by grind
+  rw [hdist] at hi1
   calc
     ((A*T):Int) =
         ((M:Int)*(u2:Int)-(M:Int)*(u1:Int))+
@@ -67,6 +70,8 @@ theorem triple_entry_even_gap (M A B T u0 u1 u2 r0 : Nat)
   have h1b : u1≤(r0+T)/3 := by omega
   refine ⟨m,?_⟩
   rw [hm] at ho
+  have hmul : (M:Int)*(2*m) = (2*(M:Int))*m := by ac_rfl
+  rw [hmul] at ho
   constructor <;> omega
 
 #print axioms two_transfers_offset
