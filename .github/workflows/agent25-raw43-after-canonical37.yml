@@ -70,6 +70,15 @@ jobs:
             | tee /tmp/a10-raw42-after-canonical37.log
           test -s /tmp/a25-raw43-after-canonical37/evidence/raw42-after-canonical37-conditional.json
           cat /tmp/a25-raw43-after-canonical37/evidence/raw42-after-canonical37-conditional.json
+      - name: Source-check cumulative Raw42 plus Raw43 conditional successor
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent10-raw42-after-raw47/check_cumulative.py
+          python im-results/agent10-raw42-after-raw47/check_cumulative.py \
+            --work /tmp/a25-raw43-after-canonical37 \
+            | tee /tmp/a10-raw42-raw43-canonical35.log
+          test -s /tmp/a25-raw43-after-canonical37/evidence/raw42-raw43-after-canonical37-conditional.json
+          cat /tmp/a25-raw43-after-canonical37/evidence/raw42-raw43-after-canonical37-conditional.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -78,6 +87,7 @@ jobs:
             /tmp/a25-raw43-after-canonical37/evidence/
             /tmp/a25-raw43-after-canonical37.log
             /tmp/a10-raw42-after-canonical37.log
+            /tmp/a10-raw42-raw43-canonical35.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
