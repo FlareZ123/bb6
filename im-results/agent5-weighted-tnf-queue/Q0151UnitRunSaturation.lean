@@ -63,7 +63,7 @@ theorem turn_first_pos (s : SegmentSummary) :
     (turn s).first ≠ 0 := by
   rw [turn_eq]
   by_cases h : s.first = 0
-  · simp [h,plus_one_pos]
+  · simpa [h] using Nat.ne_of_gt (plus_one_pos s.last)
   · simp [h]
 
 theorem turn_last_zero (s : SegmentSummary) :
