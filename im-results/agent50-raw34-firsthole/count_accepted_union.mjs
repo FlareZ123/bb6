@@ -135,7 +135,16 @@ const stages=[
   ["Raw34-unary-growth",unary,85449218750n],
   ["Raw34-64-closed-CD",cdClosed,85693359375n],
   ["Raw34-1206-depth-three-side-cycles",depth3,97470703125n],
-  ["Raw34-1728-closed-BCD",bcdClosed,97509765625n]
+  ["Raw34-1728-closed-BCD",bcdClosed,97509765625n],
+  // Three additional *source-accepted* all-time growth cylinders.
+  // See Raw34TripleSweepGrowth.lean and Raw34AlternatingGrowth.lean.
+  ["Raw34-two-triple-sweep-growth",[
+    pattern("1RB1LD_1RC---_0RD0RA_1LC1RD_------_------"),
+    pattern("1RB---_1RC---_0RD0RE_1LC1RD_---1LD_------")
+  ],97529296875n],
+  ["Raw34-one-alternating-growth",[
+    pattern("1RB---_1RC---_0RD0LD_1LC0RE_1RD---_------")
+  ],97539062500n]
 ];
 let union=[],prev=0n;
 for(const [name,ps,expected] of stages) {
@@ -152,8 +161,8 @@ for(const [name,ps,expected] of stages) {
   }));
   prev=got.count;
 }
-assert.equal(prev,97509765625n);
-assert.equal(25n**8n-prev,55078125000n);
+assert.equal(prev,97539062500n);
+assert.equal(25n**8n-prev,55048828125n);
 
 // This last crosswalk identifies exactly the four new BCD closed-state
 // cylinders after all prior accepted cylinders. It is exact because no
@@ -179,4 +188,4 @@ assert.deepEqual(signatures,[
 ]);
 assert.equal(BigInt(newBCD.length)*25n**5n,39062500n);
 console.log("FOUR_ADDITIONAL_BCD "+JSON.stringify(signatures));
-console.log("PASS: exact physically disjoint Raw34 proved-union size 97,509,765,625 / 152,587,890,625; complement 55,078,125,000 (NOT proven halting)");
+console.log("PASS: exact physical-table Raw34 proved-union size 97,539,062,500 / 152,587,890,625; complement 55,048,828,125 (NOT proven halting)");
