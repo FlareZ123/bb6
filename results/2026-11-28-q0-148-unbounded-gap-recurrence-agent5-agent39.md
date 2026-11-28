@@ -1,4 +1,4 @@
-# An unbounded marker-gap recurrence proves nonhalting of the q0-148 F1-open machine
+# An unbounded marker-gap recurrence proves nonhalting of the q0-148 F1-open child cylinder
 
 **Theorem (Agent5 and Agent39).** Every completion of the six-state, two-symbol partial table
 
@@ -6,7 +6,7 @@
 1RB1LC_1RC0RE_0LA0LD_1LA0RF_1RB1RD_0RC---
 ```
 
-is nonhalting from the blank tape. In particular its undefined F1 instruction is never queried. The original-table theorem `BB6.Agent5Q0148NeverCover.never_cover : Cover NeverHalts p` is kernel accepted in Lean 4.36.0-rc2 both locally and in the pinned [source CI 46117258887](https://github.com/FlareZ123/bb6/actions/runs/46117258887), revision [c84a7bfae25cf136c55332b4a29d2b768b969833](https://github.com/FlareZ123/bb6/commit/c84a7bfae25cf136c55332b4a29d2b768b969833), with axioms precisely `[propext, Classical.choice, Quot.sound]`. The all-threshold weighted adapter `BB6.Agent5Q0148NeverCover.cover (B : Nat) : Cover (WeightedBound B) table` additionally compiled locally and is committed in [934d7691](https://github.com/FlareZ123/bb6/commit/934d76916d6aee52de14c891938bc88d0f1061ef).
+is nonhalting from the blank tape. In particular its undefined F1 instruction is never queried. **Scope:** this is the one-hole F1-open child cylinder beneath the seven-hole Raw11 q0-148 parent, not a Cover of that entire seven-hole parent. The original-table theorem `BB6.Agent5Q0148NeverCover.never_cover : Cover NeverHalts p` is kernel accepted in Lean 4.36.0-rc2 in the pinned [source CI 46178357131](https://github.com/FlareZ123/bb6/actions/runs/46178357131), source revision [4051a6e314624eb7276766ceb40daba45b643c84](https://github.com/FlareZ123/bb6/commit/4051a6e314624eb7276766ceb40daba45b643c84), artifact `15276228192`, with axioms precisely `[propext, Classical.choice, Quot.sound]` and no `sorryAx`. Earlier source acceptance is also recorded in [CI 46117258887](https://github.com/FlareZ123/bb6/actions/runs/46117258887). The all-threshold weighted adapter `Q0148WeightedCover.lean` imports this theorem and is wired as the exact external region cut in `generate-coarse-parent-shards.cjs`; its dedicated source audit [46179174488](https://github.com/FlareZ123/bb6/actions/runs/46179174488) is in progress. The seven-hole q0-148 parent still needs its other branches and final source join.
 
 ## A growing, nonperiodic-shaped region
 
