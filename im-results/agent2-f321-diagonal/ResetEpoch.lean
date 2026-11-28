@@ -128,6 +128,16 @@ theorem outerMove_X_strict {a d A D : Nat}
       have hx := (equal_coordinates a).1
       omega
 
+/-- Every non-Middle step raises X by at least one. -/
+theorem outerRun_X_growth {n a d A D : Nat}
+    (h : OuterRun n a d A D) :
+    X a d + n ≤ X A D := by
+  induction h with
+  | nil => omega
+  | step h hm ih =>
+      have hs := outerMove_X_strict hm
+      omega
+
 theorem outerRun_X_monotone {n a d A D : Nat}
     (h : OuterRun n a d A D) : X a d ≤ X A D := by
   induction h with
@@ -196,13 +206,18 @@ theorem outerRun_counterReach {n a d A D : Nat}
   | step h hm ih =>
       exact CounterReach.step ih (outerMove_source hm)
 
-/-- Every reset epoch is an exact source run of one more step. -/
+/-- Every reset epoch is an exact source run of one more step.  Its first
+    counter increase also dominates the number of intervening non-Middle steps. -/
 theorem resetEpoch_counterReach {R c R' c' : Nat}
     (h : ResetEpoch R c R' c') :
-    ∃ n, CounterReach R c (n+1) R' c' := by
+    ∃ n, CounterReach R c (n+1) R' c' ∧
+      R + c + 6 + n ≤ R' := by
   rcases h with ⟨n,a,d,ho,hr⟩
-  refine ⟨n, ?_⟩
-  exact CounterReach.step (outerRun_counterReach ho) (resetMove_source hr)
+  have hx := outerRun_X_growth ho
+  have hreset := resetMove_output_above_X hr
+  refine ⟨n, CounterReach.step (outerRun_counterReach ho) (resetMove_source hr), ?_⟩
+  unfold X at hx hreset
+  omega
 
 theorem counterReach_append
     {sa sd n a d m A D : Nat}
@@ -230,7 +245,7 @@ theorem resetChain_counterReach {n R c A e : Nat}
   | nil => exact ⟨0, CounterReach.nil⟩
   | step hc he ih =>
       rcases ih with ⟨s,hs⟩
-      rcases resetEpoch_counterReach he with ⟨m,hm⟩
+      rcases resetEpoch_counterReach he with ⟨m,hm,hgap⟩
       exact ⟨s+(m+1), counterReach_append hs hm⟩
 
 /-- Canonical reset skeleton: completed reset epochs followed by one
