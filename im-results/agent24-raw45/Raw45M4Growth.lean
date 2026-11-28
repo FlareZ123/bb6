@@ -63,14 +63,14 @@ theorem growth (n : Nat) :
     simpa only [ha] using dturn (ones (3*n+5))
   have h3 : run0 table 2 ⟨1,[true,true],ones (3*n+5)⟩ =
       some ⟨1,[],[true,true]++ones (3*n+5)⟩ := by
-    simpa only [ones,Nat.one_mul,List.nil_append,List.append_nil] using
+    simpa only [ones,rep,Nat.one_mul,List.cons_append,List.nil_append,List.append_nil] using
       sweepL table 1 [] [] [true] [true] 1 bstep 2 [] (ones (3*n+5))
   have h4 : run0 table 1 ⟨1,[],[true,true]++ones (3*n+5)⟩ =
       some ⟨2,[true,true],ones (3*n+6)⟩ := by
     have ha : ones (3*n+6) = [true]++ones (3*n+5) := by
       rw [show 3*n+6=1+(3*n+5) by omega]
       rfl
-    simpa only [ha,List.append_assoc] using bturn ([true]++ones (3*n+5))
+    simpa only [ha,List.append_assoc,List.cons_append,List.nil_append] using bturn ([true]++ones (3*n+5))
   have h5 : run0 table (3*n+6) ⟨2,[true,true],ones (3*n+6)⟩ =
       some ⟨2,[true]++zeros (3*n+6)++[true],[]⟩ := by
     simpa only [ones,zeros,Nat.one_mul,List.nil_append,
@@ -83,10 +83,10 @@ theorem growth (n : Nat) :
         [false,false,false]++zeros (3*n+6) := by
       rw [show 3*(n+1)+6=(3*n+6)+3 by omega]
       rfl
-    simpa only [phase,ha,List.append_assoc] using
+    simpa only [phase,ha,List.append_assoc,List.cons_append,List.nil_append] using
       finish (zeros (3*n+6)++[true])
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6
-  have ht : (((((3*n+6)+1)+2)+1)+(3*n+6)+2=6*n+18 := by omega
+  have ht : (3*n+6+1+2+1+(3*n+6)+2) = 6*n+18 := by omega
   simpa only [ht] using H
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
