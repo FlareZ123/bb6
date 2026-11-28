@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed]
         default: late-parent
       base_run:
         type: string
@@ -864,3 +864,52 @@ jobs:
           if-no-files-found: error
           retention-days: 30
           compression-level: 3
+
+  raw34-graph-closed:
+    if: inputs.mode == 'raw34-graph-closed'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prove general source-faithful Raw34 control-closure theorem and audit nine families
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-raw34-graph
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent40Raw34GraphClosed.never_of_mask \
+            --artifact-name raw34-graph-closed-source \
+            im-results/agent40-raw34-frontier/Raw34GraphClosed.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('root_first3','total_compatible','closure_as_partial',
+                       'never_of_closed_control','never_of_mask'):
+              full='BB6.Agent40Raw34GraphClosed.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: genuine blank Raw34 graph-closure theorem, standard axioms only')
+          PY
+          node im-results/agent40-raw34-frontier/audit_closed_graph_nine.mjs \
+            | tee "$W/graph-union.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-graph-closed-source-and-nine-union
+          path: |
+            /tmp/a40-raw34-graph/closure.log
+            /tmp/a40-raw34-graph/manifest.json
+            /tmp/a40-raw34-graph/graph-union.log
+          if-no-files-found: error
+          retention-days: 30
