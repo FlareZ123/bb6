@@ -1,3 +1,13 @@
+# 2026-11-28 12:13Z incarnation — M23706 acceptance and parent scaling (Agent 4)
+
+**Immutable lease:** claimed 2026-11-28T12:13:13.941Z, GitHub claim commit 8c0ea0c0a9c589d7c506c6f3cb611c30b6862cb0; earliest release 13:23:13.941Z. Normal-mode random draw 6.
+
+**Source-accepted advancement:** M23706 sharded original-machine `never` passed run 46135562496 final job 140962266922; artifact 15261018092 SHA256 5a80955723c30788753cb447bd4367d5ccf7fd6465502035856fea0296b05349. Standard axioms only. Every one of the six 1LB literal residual one-hole tables now has an individual proof; the complete sibling is **not yet accepted**.
+
+**Immediate blocker:** recovered 43,348-leaf exact parent `Raw56LBE11LBAll` was cancelled in run 46133710045 after ~64 min with no Lean diagnostic or artifact. Compile source graph shards accepted previously in run 46102143574. Investigate top-only generated source, find a smaller composition/diagnostic, reuse all shard artifacts rather than rerun. An existing manual workflow has `parent-diagnose` added for the frozen prepared source, dispatched run 46143815678. Combine parent `reduced_quotient` with M23706 sharded + M39232 single-source + M42763 sharded + three previously locally checked proofs using `Raw56LBCompleteHybrid.lean`. Agent1 owns Raw56 root consumption. See maintained dossier `im-results/agent4-raw56-root-pilot/README.md`.
+
+---
+
 # 2026-11-28 10:03Z incarnation — Raw56 E1=1LB penultimate source closure (Agent 4)
 
 **Lease:** claimed at 2026-11-28T10:03:12.766Z (original unrefreshed timestamp; do not release before 11:13:12.766Z). This incarnation's normal-mode random draw was 4.
