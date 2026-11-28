@@ -41,8 +41,10 @@ theorem reverseA_geometry (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-      simpa only [rep,List.reverse_append,ih] using
-        rep_snoc [false,true] n
+      change ([true,false] ++ rep [true,false] n).reverse =
+        [false,true] ++ rep [false,true] n
+      rw [List.reverse_append,ih]
+      simpa using rep_snoc [false,true] n
 
 /-- The simple phase-shift identity (01)^n 0 = 0 (10)^n. -/
 theorem phase_rotation_geometry (n : Nat) :
@@ -51,9 +53,10 @@ theorem phase_rotation_geometry (n : Nat) :
   induction n with
   | zero => rfl
   | succ n ih =>
-      have h := congrArg
-        (fun z : List Bool => [false,true] ++ z) ih
-      simpa only [rep,List.append_assoc] using h
+      change [false,true] ++ (rep [false,true] n ++ [false]) =
+        [false] ++ ([true,false] ++ rep [true,false] n)
+      have h := congrArg (fun z : List Bool => [false,true] ++ z) ih
+      simpa [List.append_assoc] using h
 
 /-- Reverse a single physical odd gap and marker: the phase
     boundary moves the marker from 011 to a 11010 carry frame. -/
@@ -63,7 +66,7 @@ theorem reversed_marker_geometry (n : Nat) :
   have h := congrArg
     (fun z : List Bool => [false,true] ++ z ++ [true,true])
     (phase_rotation_geometry n)
-  simpa only [rep,List.append_assoc] using h
+  simpa [rep,List.append_assoc] using h
 
 def nearSegments : List Nat → List Bool
   | [] => []
@@ -101,32 +104,38 @@ theorem reverse_segments_geometry (us : List Nat) :
               simp only [List.append_assoc]
         _ = nearSegments (us.reverse ++ [u]) := by
               rw [nearSegments_append]
-              rfl
-        _ = nearSegments (u::us).reverse := rfl
+              simp [nearSegments]
+        _ = nearSegments (u::us).reverse := by
+              simp
 
 /-- Every reversed odd gap adds exactly one source M=11010, with
     only the initial 010 and terminal alternating pair remaining.
     Induction is over an ARBITRARY number of physical markers. -/
-theorem telescope_geometry (us : List Nat) (tail : List Bool) :
-    nearSegments us ++ ([false,true,false] ++ tail) =
-      [false,true,false] ++ inputBits (evenBlocks us) ++ tail := by
-  induction us with
-  | nil => rfl
-  | cons u us ih =>
-      have hm := reversed_marker_geometry (2*u)
-      have ht := congrArg
-        (fun z : List Bool =>
-          (rep [false,true] (2*u+1) ++ [false,true,true]) ++ z) ih
-      simpa [nearSegments,evenBlocks,inputBits_append,
-        inputBits,aRun,chunkBits,List.append_assoc,hm]
-        using ht
-
 theorem input_aRun_geometry (n : Nat) :
     inputBits (aRun n) = rep [true,false] n := by
   induction n with
   | zero => rfl
   | succ n ih =>
       simpa [aRun,inputBits,chunkBits,rep,ih,List.append_assoc]
+
+theorem telescope_geometry (us : List Nat) (tail : List Bool) :
+    nearSegments us ++ ([false,true,false] ++ tail) =
+      [false,true,false] ++ inputBits (evenBlocks us) ++ tail := by
+  induction us with
+  | nil => rfl
+  | cons u us ih =>
+      have ht := congrArg
+        (fun z : List Bool =>
+          (rep [false,true] (2*u+1) ++ [false,true,true]) ++ z) ih
+      calc
+        nearSegments (u::us) ++ ([false,true,false] ++ tail) =
+          (rep [false,true] (2*u+1) ++ [false,true,true]) ++
+             ([false,true,false] ++ inputBits (evenBlocks us) ++ tail) := by
+               simpa [nearSegments,List.append_assoc] using ht
+        _ = [false,true,false] ++ inputBits (evenBlocks (u::us)) ++ tail := by
+          rw [reversed_marker_geometry (2*u)]
+          simp [evenBlocks,inputBits_append,inputBits,
+            input_aRun_geometry,chunkBits,List.append_assoc]
 
 /-- The far-left physical A^(a0+1), when reversed, contributes
     exactly the dangling 010 and the source A^a0 tail. -/
@@ -172,7 +181,7 @@ theorem physical_to_source_geometry (a0 : Nat) (us : List Nat) :
     _ = [true,false] ++
         inputBits (evenBlocks (1::us.reverse) ++ aRun a0) := by
           simp [evenBlocks,inputBits_append,inputBits,
-            aRun,chunkBits,List.append_assoc]
+            aRun,chunkBits,rep,List.append_assoc]
 
 #print axioms reverseA_geometry
 #print axioms phase_rotation_geometry
