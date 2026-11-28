@@ -1,0 +1,189 @@
+name: Agent10 Raw42 1LE shard4 recovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  SOURCE_RUN: "46142043725"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      parts: ${{ steps.plan.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - name: Split failed coarse shard 4 into four exact subshards
+        id: plan
+        run: |
+          set -euo pipefail
+          python im-results/agent17-raw42-recovery/split_subset.py \
+            im-results/agent32-raw42/generated-assembly \
+            im-results/agent32-raw42/generated-assembly/shards.json \
+            4 4 raw42-1LE-g4-sub /tmp/nested.json
+          echo "parts=$(python -c 'import json;print(json.dumps(list(json.load(open("/tmp/nested.json"))["groups"])))')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-1LE-g4-plan
+          path: /tmp/nested.json
+          retention-days: 14
+          if-no-files-found: error
+
+  compile:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        part: ${{ fromJSON(needs.prepare.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-core
+          path: /tmp/core
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-1LE-g4-plan
+          path: /tmp/plan
+      - name: Compile exact shard4 subpart
+        env:
+          PART: ${{ matrix.part }}
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' /tmp/plan/nested.json "$PART")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          mkdir -p /tmp/sub
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/sub --jobs 1 \
+            --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
+            --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core \
+            --manifest /tmp/sub/manifest.json --artifact-name "raw42-1LE-g4-sub-$PART" \
+            "${roots[@]}" | tee /tmp/sub/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/sub/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-1LE-g4-sub-${{ matrix.part }}
+          path: /tmp/sub/
+          retention-days: 30
+          if-no-files-found: error
+
+  rebuild_group4:
+    needs: [prepare, compile]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-1LE-g4-plan
+          path: /tmp/plan
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-1LE-g4-sub-*
+          path: /tmp/subs
+      - name: Authenticate exact union and restore canonical shard identity
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw109/merge_shards.py /tmp/subs /tmp/group4 /tmp/plan/nested.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('/tmp/group4/manifest.json')
+          m=json.loads(p.read_text())
+          m['artifact_name']='raw42-assembly-shard-4'
+          m['label']='raw42-assembly-shard-4'
+          p.write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-shard-4
+          path: /tmp/group4/
+          retention-days: 30
+          if-no-files-found: error
+
+  compose:
+    needs: rebuild_group4
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-assembly-shard-4
+          path: /tmp/shards/raw42-assembly-shard-4
+      - name: Authenticate all eight coarse shards and prove 1LE Cover
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$g/shards.json"
+          mkdir -p /tmp/final
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
+            --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json --artifact-name raw42-certified-1LE-shard4-recovery \
+            --theorem BB6.Agent32Raw421LE.Closed.cover \
+            --parent-table '1RB---_1RC1LE_0RD---_1LD0LB_------_------' \
+            --weighted-bound 100006 "$g/Raw421LEClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log BB6.Agent32Raw421LE.Closed.cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-1LE-shard4-recovery
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: error
