@@ -18,7 +18,7 @@ args = parser.parse_args()
 here = Path(__file__).resolve()
 reference = here.with_name("m42763_split.py")
 template = reference.read_text()
-assert template.count("42763") >= 20, "Unexpected template revision"
+assert template.count("42763") == 18, "Unexpected template revision"
 assert "from m42763_block_cert import TABLE, LEFT, RIGHT, EXPECTED, abstract, blockgram, emit" in template
 machine = args.machine
 specialized = template.replace("42763", machine)
