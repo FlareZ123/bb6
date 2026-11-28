@@ -47,7 +47,6 @@ jobs:
             node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
             node im-results/agent10-nov26-cryptids/generate_raw140_42_low.js
             cd im-results/agent10-nov26-cryptids
-            python split_raw14042_low_local.py
             for pair in mixed:Mixed bmixed:BMixed bmixed_end:BMixedEnd word:Word aword:AWord dexit:DExit extratail:ExtraTail mixed_front:MixedFront; do
               gen="${pair%:*}"
               mod="${pair#*:}"
@@ -68,7 +67,6 @@ jobs:
             node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
             node im-results/agent10-nov26-cryptids/generate_raw140_42_low.js
             cd im-results/agent10-nov26-cryptids
-            python split_raw14042_low_local.py
             for pair in mixed:Mixed bmixed:BMixed bmixed_end:BMixedEnd word:Word aword:AWord dexit:DExit extratail:ExtraTail mixed_front:MixedFront; do
               gen="${pair%:*}"
               mod="${pair#*:}"
