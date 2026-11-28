@@ -100,6 +100,42 @@ parent either satisfies `WeightedBound 40000` or extends one of exactly
 `0LA, 0RA, 0RF, 1LB, 1LF, 1RB, 1RC, 1RF`. The source gate reports only
 `propext`, `Classical.choice`, and `Quot.sound`.
 
+## Further parent refinement: collapse E0=1LF to one exact residual
+
+The E0=1LF child has **1,307** canonical leaves. Original-source run
+**46123920848** proves `BB6.Agent1Raw56.LE1LFPartial.sound1`, discharging
+**1,306** of them and leaving exactly global E1=0LE leaf **17557**:
+
+```
+1RB1LA_1RC1RB_0RD0RC_1LD1LE_1LF0LE_0LA---
+```
+
+The accepted artifact is **15255208881**,
+`raw56-le1LF-partial1-source-accepted`, digest
+
+```
+sha256:c4582b4a82b22f7a4b65aecc631521504af2795ec927b8f5edbc78436e193836
+```
+
+The resulting parent theorem
+`BB6.Agent1Raw56E1LE.sound7_plus_17557` is source accepted in run
+**46125056711**, artifact **15255367500**, digest
+
+```
+sha256:467f9b1184dc1220e719230b9694897268b31e25dfa44590dc411528a5ef4fec
+```
+
+It reduces the Raw56 E1=0LE parent to `WeightedBound 40000`, one of exactly
+**seven** remaining whole E0 siblings, or compatibility with the one explicit
+partial machine 17557. Its axiom profile is
+`[propext, Classical.choice, Quot.sound]`.
+
+Leaf 17557 is not claimed nonhalting here. The intermediate files
+`analyze_17557_dyadic.py`, `analyze_17557_renorm.py`, and
+`17557-triad-rewrite.md` isolate a dyadic checkpoint family, a ternary
+substitution `A→ABA, B→BBA`, and a level-renormalization conjugacy as the
+remaining proof target.
+
 ## Reproduction
 
 The exact generator is
