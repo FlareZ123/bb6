@@ -62,7 +62,7 @@ theorem localOK_step (p : PartialMachine)
           successor5 P mv l2 l1 r1 r2 false = true ∧
           successor5 P mv l2 l1 r1 r2 true = true := by
         simpa [hrow] using hs
-      refine ⟨mv, hrow, ?_⟩
+      refine ⟨mv, rfl, ?_⟩
       intro incoming
       cases incoming with
       | false => exact hb.1
