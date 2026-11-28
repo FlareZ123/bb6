@@ -302,16 +302,17 @@ open BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial 
             raise AssertionError('canonical residual traversal did not consume all rows')
         except StopIteration:
             pass
+        residual_count=len(self.unresolved)
         final=['abbrev ptop := p']+self.combine('top',n,s,self.cut,names)+[
-f'''def remaining15 := canonicalResiduals p {self.cut} ttop
-theorem count15 : remaining15.length = 15 := by decide
-theorem sound15 : ∀ m, TNFQuotientCompatible p m →
+f'''def remaining{residual_count} := canonicalResiduals p {self.cut} ttop
+theorem count{residual_count} : remaining{residual_count}.length = {residual_count} := by decide
+theorem sound{residual_count} : ∀ m, TNFQuotientCompatible p m →
       WeightedBound {BOUND} m ∨
-        ∃ e ∈ remaining15, TNFQuotientCompatible e.2 m := by
+        ∃ e ∈ remaining{residual_count}, TNFQuotientCompatible e.2 m := by
   intro m hm
   exact canonicalSound {BOUND} p {self.cut} ttop (by decide) supported root nohalt ctop m hm
-#print axioms count15
-#print axioms sound15''']
+#print axioms count{residual_count}
+#print axioms sound{residual_count}''']
         self.emit(MOD+'All',imports,final)
         self.manifest=[[x,['FastBiDFA']] for x in self.leafmods]+self.manifest
         (self.out/'manifest.json').write_text(json.dumps(self.manifest,indent=2)+'\n')
