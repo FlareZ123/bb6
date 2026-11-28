@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -896,7 +896,7 @@ jobs:
           retention-days: 30
 
   far-hard:
-    if: inputs.mode == 'far-hard'
+    if: inputs.mode == 'far-hard' || inputs.mode == 'far-hard-alt'
     runs-on: ubuntu-latest
     timeout-minutes: 35
     strategy:
@@ -916,7 +916,7 @@ jobs:
           ID: ${{ matrix.id }}
         run: |
           set -euo pipefail
-          node im-results/agent5-weighted-tnf-queue/find-hard-leaf-far.cjs "$ID" "/tmp/agent5-q0-far-$ID" 620 2>&1 | tee "/tmp/agent5-q0-far-$ID.log"
+          node im-results/agent5-weighted-tnf-queue/find-hard-leaf-far.cjs "$ID" "/tmp/agent5-q0-far-$ID" 620 "${{ inputs.mode == 'far-hard-alt' && 'alt' || 'default' }}" 2>&1 | tee "/tmp/agent5-q0-far-$ID.log"
           cat "/tmp/agent5-q0-far-$ID/summary.json" >> "$GITHUB_STEP_SUMMARY"
       - name: Kernel-check discovered original-source FAR certificate
         if: success()
