@@ -198,7 +198,8 @@ const canonicalRows=finalRows.map(r=>r.slice()).sort((a,b)=>{
 const canonicalFinalSha256=createHash("sha256")
   .update(JSON.stringify(canonicalRows)+"\n").digest("hex");
 assert.equal(finalSha256,"b5c98d90b8232d7b3dfc8a950b5e9aef7e27689649a5122bc0e16a25191feaee");
-assert.equal(canonicalFinalSha256,"ca1ea5f5554e6a3a6d9939e006a1ecee6b4ffd3f2b34a81a2cc52e12d90cb59d");
+// Independently matches census_f0ld.cpp / the source-checked FAR frontier.
+assert.equal(canonicalFinalSha256,"aa640978cd0aa16452a872d5a38ef5081b3696720aaad0474db051ab7b1b85aa");
 
 function leanLeaf(x){
   if(x.kind==="cert")return ".cert ("+leanCert(x.cert)+")";
