@@ -123,6 +123,9 @@ jobs:
             --theorem F421SecondaryLifetimes.secondaryPsumUniversal \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryPsumGuarded \
             --theorem F421SecondaryLifetimes.drainQmass \
+            --theorem F421SecondaryLifetimes.drainAug \
+            --theorem F421SecondaryLifetimes.sNextAug \
+            --theorem BB6Coverage.Agent41F421.EpochWords.sNextAugGuarded \
             --theorem F421SecondaryLifetimes.secondaryQMass \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryQMassGuarded \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryPrefixGrowth \
@@ -165,6 +168,8 @@ jobs:
             im-results/agent41-f421/F421SecondaryConservationGuard.lean \
             im-results/agent41-f421/F421SecondaryQMass.lean \
             im-results/agent41-f421/F421SecondaryQGrowth.lean \
+            im-results/agent41-f421/F421AugmentedQ.lean \
+            im-results/agent41-f421/F421AugmentedQGuard.lean \
             im-results/agent41-f421/F421SecondaryQGuard.lean \
             im-results/agent41-f421/F421SecondarySize.lean \
             im-results/agent41-f421/F421SecondarySizeGuard.lean \
