@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, weighted-skew, weighted-tight-skew, weighted-tight-skew-n13, four-ray-cone, four-ray-full, four-ray-generic, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
+        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, weighted-skew, weighted-tight-skew, weighted-tight-skew-n13, four-ray-cone, four-ray-full, eight-ray-full, four-ray-generic, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
         default: n10
 
 permissions:
@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Compile all-scale gap-two elimination against original source
-        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -90,7 +90,7 @@ jobs:
           if grep -q 'sorryAx' gap-two-axioms.log; then exit 1; fi
 
       - name: Compile universal successor and low-scale exclusion
-        if: inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -107,7 +107,7 @@ jobs:
           if grep -q 'sorryAx' low-scale-axioms.log; then exit 1; fi
 
       - name: Compile all-scale three-step terminal strip
-        if: inputs.target == 'three-step-strip' || inputs.target == 'weighted-tight-skew-n13' || inputs.target == 'four-ray-full'
+        if: inputs.target == 'three-step-strip' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -135,7 +135,7 @@ jobs:
 
 
       - name: Compile weighted-depth sharpened authentic terminal gate
-        if: inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -159,7 +159,7 @@ jobs:
           if grep -q 'sorryAx' weighted-strip-axioms.log; then exit 1; fi
 
       - name: Compile mass-aware weighted ultra terminal corridor
-        if: inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -174,7 +174,7 @@ jobs:
           if grep -q 'sorryAx' weighted-ultra-axioms.log; then exit 1; fi
 
       - name: Compile signed one-sided #623 weighted source gate
-        if: inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: inputs.target == 'weighted-skew' || (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -186,7 +186,7 @@ jobs:
           if grep -q 'sorryAx' weighted-skew-axioms.log; then exit 1; fi
 
       - name: Compile mass-bootstrapped signed terminal-parent and tight skew source
-        if: (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || inputs.target == 'four-ray-full'))
+        if: (inputs.target == 'weighted-tight-skew' || inputs.target == 'weighted-tight-skew-n13' || (inputs.target == 'four-ray-cone' || (inputs.target == 'four-ray-full' || inputs.target == 'eight-ray-full')))
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -201,7 +201,7 @@ jobs:
             lake env lean -o .lake/build/lib/lean/FourRayInverseConeSource.olean FourRayInverseConeSource.lean 2>&1 | tee -a tight-skew-axioms.log
             if grep -q 'sorryAx' tight-skew-axioms.log; then exit 1; fi
           fi
-          if [ "${{ inputs.target }}" = "four-ray-full" ]; then
+          if [ "${{ inputs.target }}" = "four-ray-full" ] || [ "${{ inputs.target }}" = "eight-ray-full" ]; then
             cp "../im-results/agent27-623-gap-two-three-step/FourRayInverseConeSource.lean" FourRayInverseConeSource.lean
             lake env lean -o .lake/build/lib/lean/FourRayInverseConeSource.olean FourRayInverseConeSource.lean 2>&1 | tee -a tight-skew-axioms.log
             cp "../im-results/agent27-623-gap-two-three-step/ThreeStepStripWeightedTightSkewN13Source.lean" ThreeStepStripWeightedTightSkewN13Source.lean
@@ -220,13 +220,28 @@ jobs:
 
 
       - name: Check arbitrary-rational coupled inverse ray transport
-        if: inputs.target == 'four-ray-generic'
+        if: inputs.target == 'four-ray-generic' || inputs.target == 'eight-ray-full'
         working-directory: cryptids
         run: |
           set -euo pipefail
           cp "../im-results/agent27-623-gap-two-three-step/GenericCoupledRayArithmetic.lean" GenericCoupledRayArithmetic.lean
           lake env lean -o .lake/build/lib/lean/GenericCoupledRayArithmetic.olean GenericCoupledRayArithmetic.lean 2>&1 | tee generic-ray-axioms.log
           if grep -q 'sorryAx' generic-ray-axioms.log; then exit 1; fi
+
+      - name: Compile authentic fifth-predecessor eight-ray gate
+        if: inputs.target == 'eight-ray-full'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          : > eight-ray-axioms.log
+          compile() {
+            cp "../im-results/$2.lean" "$1.lean"
+            lake env lean -o ".lake/build/lib/lean/$1.olean" "$1.lean" 2>&1 | tee -a eight-ray-axioms.log
+          }
+          compile GenericSourceRayTransport agent27-623-gap-two-three-step/GenericSourceRayTransport
+          compile EightRaySource agent27-623-gap-two-three-step/EightRaySource
+          compile FifthRayPhysicalSource agent27-623-gap-two-three-step/FifthRayPhysicalSource
+          if grep -q 'sorryAx' eight-ray-axioms.log; then exit 1; fi
 
   retained-parent-source:
     if: endsWith(inputs.target, '-source')
