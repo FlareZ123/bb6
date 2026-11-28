@@ -87,7 +87,7 @@ c_i ≡1 (mod4),  c_i≡5 (mod8),  b_i≡2i (mod8).
 
 For the [zero] family, base-four decomposition means `k_0=2(4^t−1)/3+4^t k_t` with `k_t≡0 (mod4)`. Apply the unique predecessor recursion exactly `t` times (with the already-handled `k_0=0` exception). At `Q_t(k_t)`, the first coordinate `3k_t` is `0 mod4` and the second `c_t k_t+b_t` is even. Thus **there is no predecessor**. Every pair on this chain differs from the seed, so `H_d` is unreachable.
 
-For the [three] family, the same `t)-fold recursion yields `k_t≡3 (mod4)` with **t even**. At `Q_t(k_t)=(A,D)`, `A` is odd and `D≡c_t·3+b_t≡3 (mod4)` (because `c_t≡1 (mod4)` and even `t` gives `b_t≡0 (mod4)`). Hence `Q_t` has exactly one high predecessor `R`:
+For the [three] family, the same t-fold recursion yields `k_t≡3 (mod4)` with **t even**. At `Q_t(k_t)=(A,D)`, `A` is odd and `D≡c_t·3+b_t≡3 (mod4)` (because `c_t≡1 (mod4)` and even `t` gives `b_t≡0 (mod4)`). Hence `Q_t` has exactly one high predecessor `R`:
 ```
 R = (A+(D−3)/2+2, (D−3)/2).
 ```
