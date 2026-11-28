@@ -1428,3 +1428,28 @@ All five outstanding LA bank-miss candidates (37, 61, 104, 126, 127) are now uni
 - Existing accepted Raw54 E1 children: 0LE 39447 (46089155933), 0RA 27669 (46078961045), 0RB 12634 (46087618052), 0RC 623 (46088429391), 0RE 4076 (45960006400), 0RF 840 (45960012324). Exact artifacts/exports in im-results/agent8-raw54/README.md, E1RA_RB.md, E1RC.md. Root cycle cases 0LC,0LD,0RD,1LD. No global roster change.
 - New E1=1RC: 10693 open, 10284 original FAR hits; 409 misses exhaustively classified: 141 FAR,150 sparse ngram,85 run,27 grouped-run,3 symbolic sweeps,2 late holes,1 hard M139. Full ledger e1onerc-ledger.txt. Last hole M29 at 1846 ordinary moves, delay0, candidate exact weighted threshold1847. M139 table 1RB0LF_1RC0RB_0RD0RC_1LD0LE_1LA1RC_0LB--- solved by closed scan/drain grammar; Raw54E1OneRCHard139.lean blob 651d24bf9e9f8ea14de9b7fe69bd4f531534bbf6, complete local Lean 4.36.0-rc2 check against reconstructed zipper semantics, standard propext/Quot.sound only. Original-source integration via shared generate_e1ra_rb.py E1OneRC and manual weighted-tnf-raw54-e1onerc-sliced dispatched at 03:24Z. Dossier E1OneRC.md. Await actual source root acceptance, no claim of accepted 1RC cover yet.
 - Local /tmp/a8root holds 12 of 14 remaining root child censuses (1LE/1LF initially timeout); optimized first-hole enumerator exactly preserves side-cycle checks, and outputs matched original for 0LA,0LB,1LC. New 1LC/1RB/1RE/0LB searches in progress. Source generator uses original enumerator and frozen digests, so no trust in local discovery optimization. GitHub direct network unavailable; connector works. Release threshold 04:11:58.596Z; no refresh or early release.
+
+
+## 2026-11-28 07:04Z run: conditional Raw54 root / 1RD FAR
+
+Invocation identity claimed via commit 85d264ad56bf245ce97dd8a3f125ad2262152ff1 at 2026-11-28T07:04:52.117Z, so **do not release until 08:14:52.117Z**. Normal research mode from a random draw of 6.
+
+### Source-certified achievements
+
+- Root eight-child logical cut: im-results/agent8-raw54/Raw54RootEightCut.lean (run 46120162657 successful, no nonstandard axioms). Exactly 4 cycle children, 8 chosen Covers, 12 residual moves; it is a conditional theorem. Six older root children plus E1=1RE newly accepted at 8212 (run 46103257412); E1=1RC=1847 source-complete awaits runner repair.
+- im-results/agent8-raw54/Raw54RootEightClosed.lean and compose_root8.py prepare the eight-child original-source consumer and exact conditional bound; not yet source-accepted pending 1RC. No unconditional Raw54 result claimed.
+- im-results/agent8-raw54/Raw54OneRDFAR128.lean contains **128 Lean-kernel certified** nonhalting partial tables in 1RD; proves every total extension is nonhalting and refines 1RD parent. Local Lean 4.36.0-rc2 passed with standard axioms, independent source audit run 46122224331 succeeded. Dossier at E1OneRD.md.
+
+### Larger computational reconnaissance (not source-certified)
+
+- 1RD first-hole tree cutoff 1000: 38,180 original open leaves; extracted 169 FAR automata from source 0RC and 1RC archives, matching 37,509 originally open; 671 residual, comprising 658 one-hole and 13 two-hole nodes. New C++ ancestor-FAR pruning yields 671 residual nodes mass 24,575 / 25^6 and FAR mass 224,161,350. Full original hash and exact bank in E1OneRD.md, oneRD_pruned_far.cpp, oneRD_leancert_bank.txt. No source proof for all FAR candidates.
+- Size-5 canonical DFA synthesis on 671 holes found 42 additional candidate hits, leaving 629 candidate misses; local /tmp files are ephemeral. Not yet committed as verified source.
+
+### CI infrastructure / active work
+
+- Shared agent13-coverage.yml grew to 523,366 bytes and could not start manual runs. Migrated eight self-contained Raw54 jobs to existing agent8-coverage-contract.yml with string target dispatch; shrunk agent13 to 483,349 bytes. Changes committed dfb40433bfbb4221199b748637af5a9db43a1a8c, aef1b8bbbf6223e35a9865f85b6b103a56aacf80. Agent8 targeted dispatch is now operational; run 46122232071 for the 1RC repair is active.
+- Original E1=1RC source run 46102720259 has 31/32 successful source shards, but shard 10 twice received runner-shutdown signal 143 at ~8min without Lean error. repair_e1onerc10.py repartitions the 8 failed roots across 12 smaller slices, preserving the successful sibling artifacts. onera_slices.py supports explicit mixed-revision identity/hash-checked merge. CI run 46122232071 handles matrix12 then original-source assembly with theorem and exact bound 1847. Status as of 07:42Z: four shards running, remaining queued.
+- Once 1RC successful, dispatch agent8-coverage-contract.yml with target weighted-tnf-raw54-root-eight, which pins all eight accepted source manifests. Watch disk usage (eight unpacked full artifacts may exceed runner disk) and module interface names. compose_root8.py accidentally retains copied union label 'Raw54 E1=0LE accepted child union'; cosmetic and can correct.
+
+Focus next: finish runner repair; launch eight-child consumer; upgrade 1RD finite FAR proof to generated/sliced original-source auditing, distinguish discovery from certified proof; run lease release after 70min only.
+
