@@ -10,6 +10,12 @@ on:
         description: Run containing agent6-raw139-d9-core
         type: string
         required: true
+      child_code:
+        description: D0=8 hard C1 action code
+        type: choice
+        options: ['2', '16', '17', '18', '19']
+        default: '17'
+        required: true
 permissions:
   contents: read
   actions: read
@@ -18,13 +24,8 @@ jobs:
   branch:
     runs-on: ubuntu-latest
     timeout-minutes: 75
-    strategy:
-      fail-fast: false
-      max-parallel: 2
-      matrix:
-        code: [17]
     env:
-      CODE: ${{ matrix.code }}
+      CODE: ${{ inputs.child_code }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -86,12 +87,12 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agent6-raw139-d8-c${{ matrix.code }}-certified
+          name: agent6-raw139-d8-c${{ inputs.child_code }}-certified
           path: |
-            .tmp/a6-d8more/d8c${{ matrix.code }}/src
-            .tmp/a6-d8more/d8c${{ matrix.code }}/compile.log
-            .tmp/a6-d8more/d8c${{ matrix.code }}/census.log
-            .tmp/a6-d8more/d8c${{ matrix.code }}/recipes.tsv
-            .tmp/a6-d8more/d8c${{ matrix.code }}/alt.out
+            .tmp/a6-d8more/d8c${{ inputs.child_code }}/src
+            .tmp/a6-d8more/d8c${{ inputs.child_code }}/compile.log
+            .tmp/a6-d8more/d8c${{ inputs.child_code }}/census.log
+            .tmp/a6-d8more/d8c${{ inputs.child_code }}/recipes.tsv
+            .tmp/a6-d8more/d8c${{ inputs.child_code }}/alt.out
           include-hidden-files: true
           retention-days: 14
