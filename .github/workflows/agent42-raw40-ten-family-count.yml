@@ -1,0 +1,54 @@
+name: Agent 42 Raw40 ten-family frontier count
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  count:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Compile exact source closure
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a42-count
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a42-count/compiled \
+            --jobs 2 \
+            --manifest /tmp/a42-count/manifest.json \
+            --label "Raw40 ten-family base-only count" \
+            im-results/agent42-raw40-crossing-splice/Raw40TenFamilyCount.lean \
+            2>&1 | tee /tmp/a42-count/compile.log
+
+      - name: Audit count axioms
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import pathlib,re
+          s=pathlib.Path('/tmp/a42-count/compile.log').read_text()
+          assert 'sorryAx' not in s
+          for name in ['count','solved_count']:
+              pat=r"'BB6\.Agent42Raw40TenFamilyCount\."+name+r"' does not depend on any axioms"
+              assert re.search(pat,s),name
+          print('PASS: exact 114/189 solved-family table union and 75-table complement are axiom-free')
+          PY
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw40-ten-family-count
+          path: /tmp/a42-count
+          if-no-files-found: warn
