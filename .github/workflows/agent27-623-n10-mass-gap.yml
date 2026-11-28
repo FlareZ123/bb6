@@ -129,6 +129,8 @@ jobs:
           compile RootExclusion agent48-623-budget-composition/RootExclusion
           compile RootMassGapAllN10 agent8-623-inverse/RootMassGapAllN10
           compile ThreeStepStripN11Source agent27-623-gap-two-three-step/ThreeStepStripN11Source
+          compile RootMassGapN11N12 agent48-623-budget-composition/RootMassGapN11N12
+          compile ThreeStepStripN13Source agent27-623-gap-two-three-step/ThreeStepStripN13Source
           if grep -q 'sorryAx' three-step-strip-axioms.log; then exit 1; fi
 
   retained-parent-source:
