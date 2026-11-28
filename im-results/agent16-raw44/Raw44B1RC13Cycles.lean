@@ -17,9 +17,9 @@ def p0 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle0 : zipCycle p0 49 1 false (6) = true := by decide +kernel
+theorem cycle0 : zipCycle p0 49 1 false (5) = true := by decide +kernel
 theorem never0 (m : Machine) (hm : compatible p0 m) : NeverHalts m :=
-  zipCycle_sound p0 49 1 false (6) (by decide) cycle0 m hm
+  zipCycle_sound p0 49 1 false (5) (by decide) cycle0 m hm
 theorem cover0 (bound : Nat) : Cover (DecidedBelow bound) p0 :=
   Cover.leaf p0 (fun m hm => Or.inl (never0 m hm))
 #print axioms never0
@@ -36,9 +36,9 @@ def p1 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle1 : zipCycle p1 9 1 false (2) = true := by decide +kernel
+theorem cycle1 : zipCycle p1 9 1 false (1) = true := by decide +kernel
 theorem never1 (m : Machine) (hm : compatible p1 m) : NeverHalts m :=
-  zipCycle_sound p1 9 1 false (2) (by decide) cycle1 m hm
+  zipCycle_sound p1 9 1 false (1) (by decide) cycle1 m hm
 theorem cover1 (bound : Nat) : Cover (DecidedBelow bound) p1 :=
   Cover.leaf p1 (fun m hm => Or.inl (never1 m hm))
 #print axioms never1
@@ -55,9 +55,9 @@ def p2 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle2 : zipCycle p2 8 1 false (1) = true := by decide +kernel
+theorem cycle2 : zipCycle p2 8 1 false (0) = true := by decide +kernel
 theorem never2 (m : Machine) (hm : compatible p2 m) : NeverHalts m :=
-  zipCycle_sound p2 8 1 false (1) (by decide) cycle2 m hm
+  zipCycle_sound p2 8 1 false (0) (by decide) cycle2 m hm
 theorem cover2 (bound : Nat) : Cover (DecidedBelow bound) p2 :=
   Cover.leaf p2 (fun m hm => Or.inl (never2 m hm))
 #print axioms never2
@@ -93,9 +93,9 @@ def p4 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle4 : zipCycle p4 11 1 false (6) = true := by decide +kernel
+theorem cycle4 : zipCycle p4 11 1 false (5) = true := by decide +kernel
 theorem never4 (m : Machine) (hm : compatible p4 m) : NeverHalts m :=
-  zipCycle_sound p4 11 1 false (6) (by decide) cycle4 m hm
+  zipCycle_sound p4 11 1 false (5) (by decide) cycle4 m hm
 theorem cover4 (bound : Nat) : Cover (DecidedBelow bound) p4 :=
   Cover.leaf p4 (fun m hm => Or.inl (never4 m hm))
 #print axioms never4
@@ -169,9 +169,9 @@ def p8 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle8 : zipCycle p8 7 5 false (2) = true := by decide +kernel
+theorem cycle8 : zipCycle p8 7 5 false (1) = true := by decide +kernel
 theorem never8 (m : Machine) (hm : compatible p8 m) : NeverHalts m :=
-  zipCycle_sound p8 7 5 false (2) (by decide) cycle8 m hm
+  zipCycle_sound p8 7 5 false (1) (by decide) cycle8 m hm
 theorem cover8 (bound : Nat) : Cover (DecidedBelow bound) p8 :=
   Cover.leaf p8 (fun m hm => Or.inl (never8 m hm))
 #print axioms never8
@@ -188,9 +188,9 @@ def p9 : PartialMachine := fun t => match t.1.val,t.2 with
   | 3, true => some (some ⟨true,false,1⟩)
   | _,_ => none
 
-theorem cycle9 : zipCycle p9 8 1 false (1) = true := by decide +kernel
+theorem cycle9 : zipCycle p9 8 1 false (0) = true := by decide +kernel
 theorem never9 (m : Machine) (hm : compatible p9 m) : NeverHalts m :=
-  zipCycle_sound p9 8 1 false (1) (by decide) cycle9 m hm
+  zipCycle_sound p9 8 1 false (0) (by decide) cycle9 m hm
 theorem cover9 (bound : Nat) : Cover (DecidedBelow bound) p9 :=
   Cover.leaf p9 (fun m hm => Or.inl (never9 m hm))
 #print axioms never9
