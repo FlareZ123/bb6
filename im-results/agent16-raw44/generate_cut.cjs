@@ -69,6 +69,12 @@ const fixed0LA={
   '1RB1LE_1RC0RC_0RD0LA_1LD1LB_0RB0LF_1RA---':['BB6.Agent16Raw44M3.table','BB6.Agent16Raw44M3.never'],
   '1RB1LF_1RC0RC_0RD0LA_1LD1LB_1RA---_0RB0LE':['BB6.Agent16Raw44M3Swap.table','BB6.Agent16Raw44M3Swap.never']
 };
+const fixed0RF={
+ '1RB0LF_1RC0RC_0RD0RF_1LD1LB_1LA---_1LE1LC':['BB6.Agent16Raw44M4RF.table','BB6.Agent16Raw44M4RF.never'],
+ '1RB1LE_1RC0RC_0RD0RF_1LD1LB_---0LA_0LA1LF':['BB6.Agent16Raw44M5RF.table','BB6.Agent16Raw44M5RF.never'],
+ '1RB1LE_1RC0RC_0RD0RF_1LD1LB_---0RF_0LA1LF':['BB6.Agent16Raw44M6RF.table','BB6.Agent16Raw44M6RF.never'],
+ '1RB---_1RC0RC_0RD0RF_1LD1LB_0RD1RD_---0RE':['BB6.Agent16Raw44B1RC_C1RF.table','BB6.Agent16Raw44B1RC_C1RF.never']
+};
 const fixed0RA={
   '1RB0LE_1RC0RC_0RD0RA_1LD1LB_0LF---_1LA1LB':['BB6.Agent16Raw44M1.table','BB6.Agent16Raw44M1.never'],
   '1RB1RE_1RC0RC_0RD0RA_1LD1LB_---0RF_0RC0RE':['BB6.Agent16Raw44M2.table','BB6.Agent16Raw44M2.never'],
@@ -77,7 +83,7 @@ const fixed0RA={
 };
 function slot(j){return `(${j>>1}, ${Boolean(j&1)})`}
 function move(m){return `⟨${Boolean(m&1)},${Boolean(m&2)},${m>>2}⟩`}
-const imports=second==='0RA'?'import Raw44CutBase\nimport Raw44B1RC_C1RA_M1Growth\nimport Raw44B1RC_C1RA_M1SwapGrowth\nimport Raw44B1RC_C1RA_M2Growth\nimport Raw44B1RC_C1RA_M2SwapGrowth\n':second==='0LA'?'import Raw44CutBase\nimport Raw44B1RC_C1LA_M3Growth\nimport Raw44B1RC_C1LA_M3SwapGrowth\n':'import Raw44CutBase\nimport Raw44B1RC_C1RE_M4Growth\nimport Raw44B1RC_C1RE_M5Growth\nimport Raw44B1RC_C1RE_M6Growth\nimport Raw44B1RC_C1RE_TwoHoleGrowth\n';
+const imports=second==='0RF'?'import Raw44CutBase\nimport Raw44B1RC_C1RF_M4SwapGrowth\nimport Raw44B1RC_C1RF_M5SwapGrowth\nimport Raw44B1RC_C1RF_M6SwapGrowth\nimport Raw44B1RC_C1RF_TwoHoleSwapGrowth\n':second==='0RA'?'import Raw44CutBase\nimport Raw44B1RC_C1RA_M1Growth\nimport Raw44B1RC_C1RA_M1SwapGrowth\nimport Raw44B1RC_C1RA_M2Growth\nimport Raw44B1RC_C1RA_M2SwapGrowth\n':second==='0LA'?'import Raw44CutBase\nimport Raw44B1RC_C1LA_M3Growth\nimport Raw44B1RC_C1LA_M3SwapGrowth\n':'import Raw44CutBase\nimport Raw44B1RC_C1RE_M4Growth\nimport Raw44B1RC_C1RE_M5Growth\nimport Raw44B1RC_C1RE_M6Growth\nimport Raw44B1RC_C1RE_TwoHoleGrowth\n';
 const root=run(ps,short,64);if(root.kind!=='hole')throw Error('No root hole: '+JSON.stringify(root));
 const first=root.j;
 fs.writeFileSync(path.join(out,'Raw44CutBase.lean'),`import ZipThreeHoleAudit\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent16Raw44Cut\nopen BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay\n${tableDecl('parent',ps)}theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide\ntheorem parent_nohalt : weightedTNFNoAssignedHalt parent := by\n  intro slot\n  rcases slot with ⟨q,b⟩\n  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega\n  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide\nend BB6.Agent16Raw44Cut\n`);
@@ -104,8 +110,8 @@ for(let ix=0;ix<24;ix++){
         return `.proven BB6.Agent16Raw44Cut.NG${String(ix).padStart(2,'0')}.p${i} BB6.Agent16Raw44Cut.NG${String(ix).padStart(2,'0')}.never${i}`}
       if(ng.over)break;
     }
-    const pkey=tab(ps);if(!(pkey in (second==='0RA'?fixed0RA:second==='0LA'?fixed0LA:fixed)))throw Error('Unexpected hard leaf: '+pkey);
-    const a=(second==='0RA'?fixed0RA:second==='0LA'?fixed0LA:fixed)[pkey];mass.hard++;hardCount++;return `.proven ${a[0]} ${a[1]}`;
+    const pkey=tab(ps);if(!(pkey in (second==='0RF'?fixed0RF:second==='0RA'?fixed0RA:second==='0LA'?fixed0LA:fixed)))throw Error('Unexpected hard leaf: '+pkey);
+    const a=(second==='0RF'?fixed0RF:second==='0RA'?fixed0RA:second==='0LA'?fixed0LA:fixed)[pkey];mass.hard++;hardCount++;return `.proven ${a[0]} ${a[1]}`;
   }
   const tree=visit(4);ps[first]=-1;
   const tag=String(ix).padStart(2,'0');
