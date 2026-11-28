@@ -63,8 +63,7 @@ jobs:
           lean -DmaxHeartbeats=15000000 -DmaxRecDepth=16000 -o im-results/agent39-429-1021/BB429RootMod16.olean im-results/agent39-429-1021/BB429RootMod16.lean
           lean -DmaxHeartbeats=50000000 -DmaxRecDepth=30000 -o im-results/agent6-harmonic429/BB429NewResidue.olean im-results/agent6-harmonic429/BB429NewResidue.lean
           p=im-results/agent33-429-signed-short
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=100000 -o "$p/BB429RootShortArithmetic.olean" "$p/BB429RootShortArithmetic.lean" 2>&1 | tee /tmp/agent33-root-short.log
-          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=100000 "$p/BB429RootShortSource.lean" 2>&1 | tee -a /tmp/agent33-root-short.log
+          lean -DmaxHeartbeats=30000000 -DmaxRecDepth=30000 "$p/BB429Forced13.lean" 2>&1 | tee /tmp/agent33-root-short.log
           ! grep -q 'sorryAx' /tmp/agent33-root-short.log
           ! grep -q 'native_decide' /tmp/agent33-root-short.log
   source-proof:
