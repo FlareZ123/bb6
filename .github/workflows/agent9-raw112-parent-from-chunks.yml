@@ -1,0 +1,179 @@
+name: Agent9 Raw112 parent from accepted chunks
+run-name: Raw112 parent Cover from accepted Sparse39 chunk aggregate
+
+on:
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+env:
+  FROZEN_HEAD: 6b8232d51d93665f66808b7faff7457963174aca
+  SOURCE_RUN: "45751911115"
+  PRIOR_RECOVERY_RUN: "45787320400"
+  RETRY_RUN: "46065378088"
+  CHUNK_RUN: "46123133746"
+
+jobs:
+  assemble_parent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.FROZEN_HEAD }}
+
+      - name: Restore exact Raw112 closure-tool provenance
+        run: |
+          set -euo pipefail
+          source_revision=17263f8415b7ad1aa83aa08c7fb8254aa6de5507
+          expected_blob_sha=c8eede107294a2dc67846f0899a46307f8f4d304
+          git fetch --no-tags origin "$source_revision"
+          git show "${source_revision}:tools/lean_compile_closure.py" > /tmp/raw112-lean_compile_closure.py
+          test "$(git hash-object /tmp/raw112-lean_compile_closure.py)" = "$expected_blob_sha"
+          cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
+
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Reconstruct source dependencies
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-generated-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ env.SOURCE_RUN }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-sparse39-split-sources
+          path: im-results/agent47-raw112-cut
+          run-id: ${{ env.CHUNK_RUN }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-*
+          path: /tmp/a9-raw112-shards
+          merge-multiple: false
+          run-id: ${{ env.SOURCE_RUN }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a9-raw112-shards
+          merge-multiple: false
+          run-id: ${{ env.PRIOR_RECOVERY_RUN }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw112-shard-r*
+          path: /tmp/a9-raw112-old-retry
+          merge-multiple: false
+          run-id: ${{ env.RETRY_RUN }}
+          github-token: ${{ github.token }}
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-shard-r05a00
+          path: /tmp/a9-raw112-current/raw112-shard-r05a00
+          run-id: ${{ env.CHUNK_RUN }}
+          github-token: ${{ github.token }}
+
+      - name: Reuse accepted shards and audit the Raw112 parent
+        env:
+          PYTHONUNBUFFERED: "1"
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+
+          destination = Path("/tmp/a9-raw112-shards")
+          old = Path("/tmp/a9-raw112-old-retry")
+          current = Path("/tmp/a9-raw112-current")
+          root = Path("im-results/agent47-raw112-cut")
+
+          # These seven groups were already kernel-accepted by the targeted retry.
+          for group in (
+              "r01a-rest0", "r01a-rest1", "r01a-deep",
+              "r04a", "r04b", "r04c", "r05a1",
+          ):
+              source = old / f"raw112-shard-{group}"
+              if not (source / "manifest.json").is_file():
+                  raise SystemExit(f"missing accepted carried shard {group}")
+              shutil.copytree(
+                  source, destination / source.name, dirs_exist_ok=True)
+
+          # r05a0 consists of four independently accepted children.  Child 00
+          # comes from the 52-chunk Sparse39 aggregate; 01..03 are prior accepts.
+          children = Path("/tmp/a9-r05a0-children")
+          children.mkdir()
+          for child in ("00", "01", "02", "03"):
+              group = f"r05a{child}"
+              source = (
+                  current if child == "00" else old
+              ) / f"raw112-shard-{group}"
+              if not (source / "manifest.json").is_file():
+                  raise SystemExit(f"missing r05a0 child {group}")
+              shutil.copytree(source, children / source.name)
+              factored = source / f"Raw112Kid05_{child}.lean"
+              if not factored.is_file():
+                  raise SystemExit(f"missing factored source for {group}")
+              shutil.copy2(factored, root / factored.name)
+
+          Path("/tmp/a9-r05a0-config.json").write_text(json.dumps({
+              "artifact_prefix": "raw112-shard",
+              "allow_mixed_revisions": True,
+              "groups": {
+                  f"r05a{child}": [f"Raw112Kid05_{child}"]
+                  for child in ("00", "01", "02", "03")
+              },
+          }, indent=2, sort_keys=True) + "\n")
+          PY
+
+          rm -rf /tmp/a9-raw112-r05a0-synth
+          python im-results/agent4-raw109/merge_shards.py             /tmp/a9-r05a0-children /tmp/a9-raw112-r05a0-synth             /tmp/a9-r05a0-config.json
+
+          python3 - <<'PY'
+          import json
+          import shutil
+          from pathlib import Path
+
+          synth = Path("/tmp/a9-raw112-r05a0-synth")
+          manifest = json.loads((synth / "manifest.json").read_text())
+          manifest["artifact_name"] = "raw112-shard-r05a0"
+          manifest["label"] = "raw112-targeted-retry-r05a0-sparse39-split"
+          (synth / "manifest.json").write_text(
+              json.dumps(manifest, indent=2, sort_keys=True) + "\n")
+          shutil.copytree(
+              synth, Path("/tmp/a9-raw112-shards/raw112-shard-r05a0"))
+          PY
+
+          # Recreate the one factored source needed by the existing assembler.
+          python im-results/agent10-raw112-recovery/factor_missing.py             im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+
+          python -u im-results/agent10-raw112-recovery/assemble_retry.py             --root im-results/agent47-raw112-cut             --shards /tmp/a9-raw112-shards             --union /tmp/a9-raw112-full-union             --branch-work /tmp/a9-raw112-branch-roots             --parent-work /tmp/a9-raw112-parent             --output /tmp/a9-raw112-assembled
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-closed-parent-cover
+          path: /tmp/a9-raw112-assembled/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 90
