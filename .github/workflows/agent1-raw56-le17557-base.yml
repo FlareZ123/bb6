@@ -46,20 +46,25 @@ jobs:
       - name: Check weighted frame schedule
         run: |
           set -euo pipefail
-          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule}.lean /tmp/union/
+          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar}.lean /tmp/union/
           export LEAN_PATH=/tmp/union
           cd /tmp/union
           lean -o Raw56LE17557RhoArithmetic.olean Raw56LE17557RhoArithmetic.lean 2>&1 | tee rho.log
           lean -o Raw56LE17557DefectStack.olean Raw56LE17557DefectStack.lean 2>&1 | tee defect.log
           lean -o Raw56LE17557FrameSchedule.olean Raw56LE17557FrameSchedule.lean 2>&1 | tee frame.log
-          cat rho.log defect.log frame.log > frame-all.log
+          lean -o Raw56LE17557EpisodeWord.olean Raw56LE17557EpisodeWord.lean 2>&1 | tee episode.log
+          lean -o Raw56LE17557ActionGrammar.olean Raw56LE17557ActionGrammar.lean 2>&1 | tee action.log
+          cat rho.log defect.log frame.log episode.log action.log > frame-all.log
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' frame-all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" frame-all.log \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_prefix_defect \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.next_B_guards \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.next_C_residue7_weight_positive \
-            --require BB6.Agent1Raw56.LE17557FrameSchedule.prefixWeight_unbounded
-          cp Raw56LE17557FrameSchedule.{lean,olean} frame-all.log /tmp/out/
+            --require BB6.Agent1Raw56.LE17557FrameSchedule.prefixWeight_unbounded \
+            --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_closes \
+            --require BB6.Agent1Raw56.LE17557ActionGrammar.erase_actionEpoch \
+            --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_head
+          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
