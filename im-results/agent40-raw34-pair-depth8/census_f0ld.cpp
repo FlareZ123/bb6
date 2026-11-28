@@ -183,26 +183,39 @@ int main() {
     vector<int> holes;
     for (int i=0;i<12;i++) if (base[i]==0) holes.push_back(i);
     if (holes.size()!=2) return 10;
+    long long rowClosed=0,rowHard=0;
     for (int a:CH) for (int b:CH) {
       auto m=base; m[holes[0]]=a; m[holes[1]]=b;
-      if (closedReachable(m)) closedLong6++; else hardLong6++;
+      if (closedReachable(m)) { closedLong6++; rowClosed++; }
+      else { hardLong6++; rowHard++; }
     }
+    // Exactly the 24*24 ordinary/ordinary completions close by state graph;
+    // the 49 completions with HALT in at least one unqueried hole remain.
+    if (rowClosed!=576 || rowHard!=49) return 15;
   }
   long long closedLong7=0, haltLong7=0, hardLong7=0;
   map<int,long long> long7HoleSlot;
+  long long hardLong7Targets=0, haltingLong7Targets=0;
   for (auto base:long7Rows) {
     vector<int> holes;
     for (int i=0;i<12;i++) if (base[i]==0) holes.push_back(i);
     if (holes.size()!=1) return 11;
     long7HoleSlot[holes[0]]++;
+    long long rowClosed=0,rowHalt=0,rowHard=0;
     for (int a:CH) {
       auto m=base; m[holes[0]]=a;
-      if (closedReachable(m)) { closedLong7++; continue; }
+      if (closedReachable(m)) { closedLong7++; rowClosed++; continue; }
       auto r=trace(m);
-      if (r.kind==1) { haltLong7++; continue; }
+      if (r.kind==1) { haltLong7++; rowHalt++; continue; }
       auto rr=trace(m,1000);
-      if (rr.kind==1) haltLong7++; else hardLong7++;
+      if (rr.kind==1) { haltLong7++; rowHalt++; }
+      else { hardLong7++; rowHard++; }
     }
+    // Every ordinary completion closes. The unique HALT completion either
+    // halts by 123 or is the one remaining hard complete machine.
+    if (rowClosed!=24 || rowHalt+rowHard!=1) return 16;
+    if (rowHard==1) hardLong7Targets++;
+    if (rowHalt==1) haltingLong7Targets++;
   }
   if (closedLong6!=23040 || hardLong6!=1960 ||
       closedLong7!=30624 || haltLong7!=3 || hardLong7!=1273)
@@ -210,7 +223,9 @@ int main() {
   if (long7HoleSlot != map<int,long long>{{1,388},{3,158},{5,344},{8,157},{9,229}})
     return 13;
   const long long finalCandidatePhysical=hardLong6+hardLong7;
-  if (finalCandidatePhysical!=3233) return 14;
+  const long long finalPartialBehaviorTargets=(long long)long6Rows.size()+hardLong7Targets;
+  if (finalCandidatePhysical!=3233 || hardLong7Targets!=1273 ||
+      haltingLong7Targets!=3 || finalPartialBehaviorTargets!=1313) return 14;
 
   cout<<"{\n"
       <<"  \"depth6ResidualRows\": 4274,\n"
@@ -230,6 +245,10 @@ int main() {
       <<", \"long7Hard\": "<<hardLong7<<"},\n"
       <<"  \"long7HoleSlots\": {\"1\": 388, \"3\": 158, \"5\": 344, \"8\": 157, \"9\": 229},\n"
       <<"  \"finalCandidatePhysical\": "<<finalCandidatePhysical<<",\n"
-      <<"  \"finalFormula\": \"1960 + 1273\"\n"
+      <<"  \"finalPartialBehaviorTargets\": "<<finalPartialBehaviorTargets<<",\n"
+      <<"  \"targetStructure\": {\"twoHoleTargets\": "<<long6Rows.size()
+      <<", \"hardPerTwoHoleTarget\": 49, \"oneHoleHardTargets\": "<<hardLong7Targets
+      <<", \"hardPerOneHoleTarget\": 1},\n"
+      <<"  \"finalFormula\": \"40*49 + 1273 = 3233 complete machines; 40 + 1273 = 1313 search targets\"\n"
       <<"}\n";
 }
