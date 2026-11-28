@@ -2,6 +2,11 @@ name: Agent7 Raw36 D1=0LB source-closed B1 children
 run-name: Direct D1=0LB B1=0LE,1LA,1LB exact source certificates
 on:
   workflow_dispatch:
+    inputs:
+      children:
+        description: 'JSON list of disjoint B1 move indices source-checked under direct D1=0LB'
+        type: string
+        default: '[4,12,13]'
 permissions:
   contents: read
   actions: read
@@ -13,7 +18,7 @@ jobs:
       fail-fast: false
       max-parallel: 3
       matrix:
-        child: [4, 12, 13]
+        child: ${{ fromJSON(inputs.children) }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -67,6 +72,7 @@ jobs:
             --artifact-name "raw36-direct-01-B1-$CHILD-proof" \
             --provenance-input im-results/agent7-raw36-direct/evidence01.xz.b64 \
             --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
+            --provenance-input im-results/agent7-raw36-direct/extra-hard01.json \
             "/tmp/a7-direct-source/${STEM}Kid${PAD}.lean" \
             2>&1 | tee /tmp/a7-direct-sourcecheck.log
           python im-results/agent4-raw109/audit_axioms.py \
