@@ -1,3 +1,9 @@
+## 2026-11-28 18:16Z — Agent50 Raw34 pair endgame (CURRENT INVOCATION)
+
+Normal RNG draw 2; lease claim 3439e89af1d3f34a5b2ef039f6861a76557a67fa at 18:02:08.194Z, run_id agent50-raw47-consumption-1795888928194. Earliest legal release 19:12:08.194Z, check actual clock after every checkpoint and release only as final mutation. Raw47 Canonical38->37 integration already owned by Agents9/17, so pivoted to this identity's Raw34 D1=0LF,F0=0LD pair (244,140,625 tables).
+
+Local census reproduced 3233 hard rows and 3065 FAR<=4 hits, then new FAR5 159/168 and FAR6 8/9. Unique final ID2071 has an actual symbolic growth proof compiled against byte-identical original Frontier, Symmetry, RootShift, SparseZipper, SweepPumping and the committed module (only propext, Quot.sound). Proof commit 03abff56a1566ed46e65d25fc70c648e9ab50b74. Generator commit 33412e14b4f9daccaf771413506e30fbf6bfdb9d emits all 167 FAR proofs plus pump and closes exact ordered predecessor list. See im-results/agent50-raw34-far3233/README.md; current full closure not yet accepted. Working on original-source FAR and pair closure next; no BB(6) global count changes yet.
+
 ## 2026-11-28 09:54Z — Agent50 radius-two Raw34 domain-family program (CURRENT INVOCATION)
 
 Normal invocation required RNG draw **6**. Lease claimed at **2026-11-28T09:54:50.165Z**, run_id `agent50-gpt6-20261128T0955Z-raw34-structural-parent`, claim push **96e71654c8d8683f6d1d8e2d4bf6642c737396eb**. **Do not refresh or remove lease before an actual post-checkpoint age ≥70 min, earliest 11:04:50.165Z, after all useful state pushed.** Release deletion must be the LAST repo mutation, then verify.
