@@ -53,6 +53,23 @@ For D1=1LB/B1=1RE, the 187 OPEN leaves now have a complete exact-key certificate
 
 Both manual proofs hold for every completion of their F1 hole. The full B1=1RE weighted bound 332 is source accepted in run 46112385989 and consumed by `parent_cover_from_ten`. The exact compact banks are direct-14-compact.json.xz.b64 and d1-22-compact.json.xz.b64; active_cert.py independently replays the active-edge witnesses and emits kernel certificates. The global Canonical40 frontier is unchanged.
 
+
+## Direct D1=0LB: 313/320 exact active closures
+
+A fresh exhaustive canonical search of `1RB---_1RC---_0RD---_0LD0LB_------_------` at support cut 4 visits 793,761 nodes, has weighted halt candidate threshold 450, and leaves exactly 320 literal OPEN tables after the current FAR bank. Their sorted literal digest is `ad90b7aa9a5268eb5b045e84ffab208cd3bcbbbdfb86a6724f32b5730a34d41c`.
+
+The compact bank `direct-01-partial.json.xz.b64` now supplies replayable two-sided finite-automata certificates for **313 of 320** literals. `generate_d101_partial.py` regenerates the canonical tree, checks the digest, independently replays every active quotient through `active_cert.py`, and emits Lean `NeverHalts` modules. Seven literal machines remain:
+
+- `1RB1LB_1RC1LE_0RD0RF_0LD0LB_1LF---_0LA0RF`
+- `1RB1LE_1RC1RE_0RD0RB_0LD0LB_1LB1LF_---0LA`
+- `1RB1LF_1RC0RE_0RD1RA_0LD0LB_1LF---_0LA1LC`
+- `1RB1LF_1RC1LE_0RD0RE_0LD0LB_0LA0RE_1LB---`
+- `1RB1LF_1RC1LE_0RD1RB_0LD0LB_0LA0RC_1LB---`
+- `1RB1LF_1RC1LE_0RD1RB_0LD0LB_0LA0RE_1LB---`
+- `1RB1RE_1RC1LE_0RD0RB_0LD0LB_1RA0LF_---1LD`
+
+This is an intermediate descendant closure, not yet a Cover of the direct D1=0LB parent.
+
 ## Remaining research
 
 Finish the nine direct D1 descendants. B1=1LE is source accepted at bound 387 by resumed run 46121176787; do not repeat any nested B1 closure. Use `parent_cover_from_nine` as the current parent interface, then consume completed direct D1 Covers into that exact live list. The global Canonical40 frontier is unchanged until the full Raw36 parent is proved.
