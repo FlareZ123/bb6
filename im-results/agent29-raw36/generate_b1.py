@@ -1,5 +1,5 @@
 """Generate source-exact closed canonical B1 descendant audit from literal evidence."""
-import argparse,base64,gzip,json,subprocess,sys
+import argparse,base64,gzip,hashlib,json,lzma,subprocess,sys
 from collections import Counter
 from itertools import product
 from pathlib import Path
@@ -19,12 +19,13 @@ open BB6.Agent29CanonicalFast BB6.Agent29FastZipWeight BB6.Agent29Raw36
 open BB6.Agent19CanonicalPartial
 '''
 
-def base(index,cut,n,s):
- return f'''abbrev b1 : PartialMachine := refine d1 (1,true) (some {move(MOVES[index])})
+def base(index,cut,n,s,direct=False):
+ source,source_slot,nohalt=('BB6.Agent29Raw36.parent','(3,true)','BB6.Agent29Raw36.parent_nohalt') if direct else ('d1','(1,true)','(weightedTNFNoAssignedHalt_refine _ _ _ parent_nohalt)')
+ return f'''abbrev b1 : PartialMachine := refine {source} {source_slot} (some {move(MOVES[index])})
 abbrev b1Child (mv : Move) : PartialMachine := refine b1 {slot(s)} (some mv)
 theorem b1_root : b1 initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem b1_nohalt : weightedTNFNoAssignedHalt b1 :=
-  weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _ parent_nohalt)
+  weightedTNFNoAssignedHalt_refine _ _ _ {nohalt}
 theorem b1_support : TNFSupport b1 {cut} := supportOK_sound _ _ (by decide)
 theorem b1Child_root (mv : Move) : b1Child mv initialSlot = some (some ⟨true,true,1⟩) :=
   refine_preserves_firstOne b1 {slot(s)} (some mv) (by decide) b1_root
@@ -37,11 +38,27 @@ def farterm(p,code):
 def size(t):return 1+sum(size(k) for k in t[3]) if t[0]=='split' else 1
 
 def main():
- ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('index',type=int);ap.add_argument('--out',type=Path,default=ROOT);ap.add_argument('--limit',type=int,default=300);ap.add_argument('--tree',type=Path);a=ap.parse_args();out=a.out;out.mkdir(parents=True,exist_ok=True)
- i=a.index;assert i in [1,4,6,7,8,9,10,12,13,14,16,18,20,22]
- stem=f'Raw36B1{i:02d}';NS=f'BB6.Agent29{stem}';OPEN_NS=NS+'Sweep';HEAD=header(NS);END=f'\nend {NS}\n'
- P='1RB---_1RC'+MOVES[i]+'_0RD---_0LD1LB_------_------';cut=max(4,i%6+1)
- evidence=json.loads(gzip.decompress(base64.b64decode((ROOT/f'd1-{i:02d}-evidence.json.gz.b64').read_text())))
+ ap=argparse.ArgumentParser(description=__doc__);ap.add_argument('index',type=int);ap.add_argument('--out',type=Path,default=ROOT);ap.add_argument('--limit',type=int,default=300);ap.add_argument('--tree',type=Path);ap.add_argument('--direct',action='store_true');a=ap.parse_args();out=a.out;out.mkdir(parents=True,exist_ok=True)
+ i=a.index;assert i in ([0,1,2,4,10,12,14,16,22] if a.direct else [1,4,6,7,8,9,10,12,13,14,16,18,20,22])
+ stem=f'Raw36D1{i:02d}' if a.direct else f'Raw36B1{i:02d}';NS=f'BB6.Agent29{stem}';OPEN_NS=NS+'Sweep';HEAD=header(NS);END=f'\nend {NS}\n'
+ P=('1RB---_1RC---_0RD---_0LD'+MOVES[i]+'_------_------') if a.direct else ('1RB---_1RC'+MOVES[i]+'_0RD---_0LD1LB_------_------');cut=max(4,i%6+1)
+ got=json.loads(a.tree.read_text() if a.tree else subprocess.check_output(['node',str(ROOT/'canonical_search.cjs'),P,str(cut),'tree'],text=True))
+ if a.direct:
+  fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/f'direct-{i:02d}-compact.json.xz.b64').read_text())))
+  keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
+  assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest']
+  evidence={'bound':fixture['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'missing':[]}
+  for j,(t,v) in enumerate(zip(keys,fixture['data'])):
+   pretty='_'.join(t[k:k+6] for k in range(0,36,6))
+   if v is None:evidence['missing'].append(pretty)
+   elif isinstance(v,str):evidence['far'].append([pretty,v])
+   elif v[0]=='s':evidence['sweep'].append([j,t,*v[1:]])
+   elif v[0]=='m':evidence['manual'].append([pretty,v[1]])
+   elif v[0]=='c':evidence['cycle'].append([pretty,v[1]])
+   elif v[0]=='r':evidence['regular'].append([pretty,*v[1:]])
+   else:raise ValueError(v)
+ else:
+  evidence=json.loads(gzip.decompress(base64.b64decode((ROOT/f'd1-{i:02d}-evidence.json.gz.b64').read_text())))
  far={parse(t):code for t,code in evidence['far']};records=evidence['sweep'];sweeps={parse(rec[1]):rec[0] for rec in records};manual={parse(t):ns for t,ns in evidence.get('manual',[])}
  cycles={parse(t):a for t,a in evidence.get('cycle',[])}
  assert not evidence.get('missing'),evidence.get('missing')
@@ -60,7 +77,6 @@ def main():
   regular_imports+=f'import {mod}\n'
  inp=out/f'{stem}SweepRecipes.jsonl';inp.write_text(''.join(json.dumps(r)+'\n' for r in records))
  subprocess.run([sys.executable,str(ROOT.parent/'agent7-raw49'/'emit_sweep_recipes.py'),str(inp),OPEN_NS,str(out/f'{stem}Sweeps.lean')],check=True)
- got=json.loads(a.tree.read_text() if a.tree else subprocess.check_output(['node',str(ROOT/'canonical_search.cjs'),P,str(cut),'tree'],text=True))
  B=evidence['bound'];assert got['parent']==P and got['cut']==cut and got['stats']['score']<=B
  assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)|set(regular)
  tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
@@ -101,7 +117,7 @@ def main():
   body.append(f'theorem {nm}_bound : ∀ m, compatible {pexpr} m → WeightedBound {B} m :=\n  BB6.Agent29CanonicalFast.bound {B} {pexpr} {c} {nm} (by decide) (supportOK_sound _ _ (by decide)) (b1Child_root {mv}) (b1Child_nohalt {mv}) {nm}_checked\n#print axioms {nm}_bound\n')
   (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+regular_imports+HEAD+'\n'.join(body)+END)
   print(nm,size(t),counter,flush=True)
- (out/f'{stem}Base.lean').write_text('import CanonicalPrefixFast\nimport Raw36Cut\n'+HEAD+base(a.index,cut,n,s)+END)
+ (out/f'{stem}Base.lean').write_text('import CanonicalPrefixFast\nimport Raw36Cut\n'+HEAD+base(a.index,cut,n,s,a.direct)+END)
  terms=[];proofs=[];imports=[]
  for i,t in enumerate(got['tree'][3]):
   if i%6>cut:assert t==['skip'];terms.append('(.last 0 (0,false))');proofs.append('(by rfl)');continue
