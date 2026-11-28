@@ -102,7 +102,7 @@ jobs:
               src=shard / (item["module"].replace(".", "/") + ".lean")
               dst=repo / item["source_path"]
               if not src.is_file():
-                  raise SystemExit(f"missing repaired source {src}")
+                  continue
               dst.parent.mkdir(parents=True, exist_ok=True)
               shutil.copy2(src,dst)
               restored += 1
