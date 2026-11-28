@@ -15,7 +15,7 @@ const input=opt("--source","/tmp/a50-raw34-f-depth5");
 const output=opt("--output","/tmp/a50-raw34-e-depth5");
 mkdirSync(output,{recursive:true});
 const manifest=JSON.parse(readFileSync(join(input,"manifest.json"),"utf8"));
-assert.equal(manifest.selectedCount,25000);
+assert(Number.isInteger(manifest.selectedCount)&&manifest.selectedCount>0);
 
 function swapCode(c){
   if(c<=1)return c;
@@ -93,7 +93,7 @@ end ${namespace}
   writeFileSync(join(output,module+".lean"),source);
   total+=xs.length;
 }
-assert.equal(total,25000);
+assert.equal(total,manifest.selectedCount);
 const report={
   source:"E/F state conjugates, original Lean checker remains authoritative",
   depth:5,count:total,grossPhysicalVolume:String(BigInt(total)*25n**3n),
@@ -101,7 +101,7 @@ const report={
     fullNewCandidateCount:manifest.fullNewCandidateCount},
   modules
 };
-assert.equal(report.grossPhysicalVolume,"390625000");
+assert.equal(report.grossPhysicalVolume,String(BigInt(manifest.selectedCount)*25n**3n));
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({...report,
   modules:modules.map(x=>x.namespace+".all_never")},null,2));
