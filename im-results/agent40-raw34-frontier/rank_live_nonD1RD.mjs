@@ -63,9 +63,13 @@ counters.forEach(add);
 const withECycles=process.argv.includes("--include-e-cycles");
 const withMissingThird=process.argv.includes("--include-missing-ef-third");
 const withFGrowth=process.argv.includes("--include-f-growth");
+const withFDepth5=process.argv.includes("--include-f-depth5");
+const withEDepth5=process.argv.includes("--include-e-depth5");
+const withLateHalts=process.argv.includes("--include-late-halts");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
-const withDepth4=process.argv.includes("--include-f-depth4")||withECycles;
+const withDepth4=process.argv.includes("--include-f-depth4")||withECycles||
+  withFDepth5||withEDepth5;
 const withCycles=process.argv.includes("--include-f-cycles")||withDepth4;
 const withEOnly=process.argv.includes("--include-e-ray")||withCycles||withELeft;
 const withLeft=process.argv.includes("--include-f-left")||withCycles||withELeft;
@@ -80,6 +84,12 @@ const efLeftIndex=process.argv.indexOf("--ef-left-dir");
 const efLeftDir=efLeftIndex<0?"/tmp/a40-raw34-ef-leftunion":process.argv[efLeftIndex+1];
 const missingThirdIndex=process.argv.indexOf("--missing-third-dir");
 const missingThirdDir=missingThirdIndex<0?"/tmp/a40-raw34-missing-thirdunion":process.argv[missingThirdIndex+1];
+const f5DirIndex=process.argv.indexOf("--f-depth5-dir");
+const fDepth5Dir=f5DirIndex<0?"/tmp/a50-raw34-f-depth5":process.argv[f5DirIndex+1];
+const e5DirIndex=process.argv.indexOf("--e-depth5-dir");
+const eDepth5Dir=e5DirIndex<0?"/tmp/a50-raw34-e-depth5":process.argv[e5DirIndex+1];
+const halt5DirIndex=process.argv.indexOf("--halt-depth5-dir");
+const haltDepth5Dir=halt5DirIndex<0?"/tmp/a40-raw34-depth5-full":process.argv[halt5DirIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -129,6 +139,16 @@ if(withCycles){
  }
  cycleSource.forEach(add);
 }
+let fDepth5Source=[];
+if(withFDepth5){
+ const m=JSON.parse(readFileSync(join(fDepth5Dir,"manifest.json"),"utf8"));
+ assert.equal(m.selectedCount,25000);
+ for(const unit of m.modules)
+   fDepth5Source.push(...parseSourceCycles(
+     readFileSync(join(fDepth5Dir,unit.module+".lean"),"utf8")));
+ assert.equal(fDepth5Source.length,25000);
+ fDepth5Source.forEach(add);
+}
 let eCycleSource=[];
 if(withECycles){
  eCycleSource.push(...parseSourceCycles(readFileSync(join(eCyclesDir,"Raw34EDepth2Cycles.lean"),"utf8")));
@@ -142,6 +162,16 @@ if(withECycles){
  }
  assert.equal(eCycleSource.length,9857,"all 9857 E/F-permuted source-cycle tables");
  eCycleSource.forEach(add);
+}
+let eDepth5Source=[];
+if(withEDepth5){
+ const m=JSON.parse(readFileSync(join(eDepth5Dir,"manifest.json"),"utf8"));
+ assert.equal(m.count,25000);
+ for(const unit of m.modules)
+   eDepth5Source.push(...parseSourceCycles(
+     readFileSync(join(eDepth5Dir,unit.module+".lean"),"utf8")));
+ assert.equal(eDepth5Source.length,25000);
+ eDepth5Source.forEach(add);
 }
 let missingThirdSource=[];
 if(withMissingThird){
@@ -157,9 +187,11 @@ const fGrowthSource=withFGrowth?[
   "1RB---_1RC---_0RD0LD_1LC0RF_------_1RD---"
 ].map(parseTable):[];
 fGrowthSource.forEach(add);
-const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length+fGrowthSource.length;
+const counterCount=counters.length+raySource.length+cycleSource.length+
+  fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
+  missingThirdSource.length+fGrowthSource.length;
 function loadHalters(file){
- const s=readFileSync(join(dir,file),"utf8");
+ const s=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
    .map(m=>({p:m[1].split(",").map(x=>Number(x.trim())),time:Number(m[2])}));
  for(const x of arr){
@@ -173,7 +205,20 @@ function loadHalters(file){
 const n8=loadHalters("Raw34OtherD1Halt8.lean");
 const n9=loadHalters("Raw34OtherD1Halt9New.lean");
 assert.equal(n8,109);assert.equal(n9,958);
-assert.equal(bank.length,4156+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length+fGrowthSource.length);
+let nAdditionalLate=0;
+if(withLateHalts){
+ nAdditionalLate+=loadHalters("Raw34LateThreeSlotHalters.lean");
+ for(let i=0;i<5;i++)
+   nAdditionalLate+=loadHalters("Raw34Depth4HalterShard"+String(i).padStart(2,"0")+".lean");
+ const m=JSON.parse(readFileSync(join(haltDepth5Dir,"manifest.json"),"utf8"));
+ assert.equal(m.numSourceCylinders,13884);
+ for(const unit of m.sourceTheorems)
+   nAdditionalLate+=loadHalters(join(haltDepth5Dir,unit.module+".lean"));
+ assert.equal(nAdditionalLate,14424,"5+535+13,884 accepted late halter cylinders");
+}
+assert.equal(bank.length,4156+raySource.length+cycleSource.length+
+  fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
+  missingThirdSource.length+fGrowthSource.length+nAdditionalLate);
 
 const stateSlots=["D","C","B","A","E","E","F","F"];
 const maskNames=["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
@@ -270,14 +315,17 @@ console.log(JSON.stringify({
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
+  fDepth5CyclePatterns:fDepth5Source.length,
   eConjugateCyclePatterns:eCycleSource.length,
+  eDepth5CyclePatterns:eDepth5Source.length,
   missingNonEFConjugateThirdPatterns:missingThirdSource.length,
   fConjugateUnboundedGrowthPatterns:fGrowthSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
   rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
   depth4CyclesIncluded:withDepth4,
-  earlyHaltPatterns:n8,lateHaltPatterns:n9,graphMasks:maskNames,
+  earlyHaltPatterns:n8,lateHaltPatterns:n9,
+  additionalLateHaltPatterns:nAdditionalLate,graphMasks:maskNames,
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
   totalResidualD1not1RD:String(grand),
   plusAgent23Residual:String(grand+110397542n),
