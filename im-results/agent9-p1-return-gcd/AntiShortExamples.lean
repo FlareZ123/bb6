@@ -3,23 +3,23 @@ set_option maxHeartbeats 0
 namespace BB6.Agent9AntiShortExamples
 open BB6.Agent9ReturnGCD BB6.Agent45.DelayedCarry BB6.Agent9AntiShortTrace
 
-/-- Noncoprime negacyclic 9|2^3+1: forbids length 2n+13,
-    improving the best cyclic 9|2^6-1 bound 2n+16. -/
+/-- Noncoprime negacyclic 9|2^3+1: forbids length 2n+12,
+    improving the best cyclic 9|2^6-1 bound 2n+15. -/
 theorem no_nine_antishift {n m W a : Nat}
     (hn : 14≤n) (heven : n%2=0) (ht : Trace n m W a)
     (i r : Nat) (flip : Bool)
-    (hp : i+9*2^r+(2*n+13)≤m)
-    (hrep : ∀ j<2*n+13,
+    (hp : i+9*2^r+(2*n+12)≤m)
+    (hrep : ∀ j<2*n+12,
       bit W (i+9*2^r+j)=
         if flip then 1-bit W (i+j) else bit W (i+j)) : False := by
-  apply trace_no_odd_antishort_repeat hn heven ht i r 9 3 (n+7) flip
+  apply trace_no_odd_antishort_repeat hn heven ht i r 9 3 (n+6) flip
   · decide
   · decide
   · decide
   · unfold total
     rw [Nat.pow_add]
-    change 9*(7*2^n+3+1)<2^n*128
-    have hpos := Nat.two_pow_pos n
+    change 9*(7*2^n+3+1)<2^n*64
+    have hpow : 2^14≤2^n := Nat.pow_le_pow_right (by decide) (by omega)
     omega
   · omega
   · intro j hj
