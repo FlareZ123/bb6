@@ -68,7 +68,7 @@ theorem codes_nodup :
 theorem all_members_in_152 :
     ∀ p ∈ parents, p ∈ prior := by
   intro p hp
-  simp only [parents, List.mem_cons, List.mem_singleton] at hp
+  simp [parents] at hp
   rcases hp with rfl|rfl|rfl|rfl <;> decide +kernel
 
 theorem exact_census :
