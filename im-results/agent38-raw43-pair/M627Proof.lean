@@ -108,7 +108,10 @@ theorem reset_finish (n : Nat) :
 theorem reset (n : Nat) :
     run0 table (7*n+23) ⟨5,false::true::true::front n,[]⟩ =
       some (phase (n+1)) := by
-  have h := join0 (join0 (reset_prefix n) (b_sweep n 0))
+  have sweep : run0 table (7*n) ⟨1,body n,true::false::word 1⟩ =
+      some ⟨1,[],true::false::word (n+1)⟩ := by
+    simpa only [Nat.zero_add] using b_sweep n 0
+  have h := join0 (join0 (reset_prefix n) sweep)
     (reset_finish n)
   have ht : (21+7*n)+2=7*n+23 := by omega
   simpa only [ht,Nat.zero_add] using h
