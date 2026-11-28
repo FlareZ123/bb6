@@ -1,0 +1,65 @@
+name: Agent 46 Raw13 eight-hole discovery
+run-name: Agent 46 Raw13 coupled8 discover ${{ inputs.branches }}
+on:
+  workflow_dispatch:
+    inputs:
+      branches:
+        description: Space-separated D1 moves (max 8, cut-4 only, excluding 0LA graft)
+        type: string
+        required: true
+      source_ref:
+        description: Exact source commit
+        type: string
+        required: true
+permissions:
+  contents: write
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Discover exact eight-hole sibling candidates
+        env:
+          BRANCHES: ${{ inputs.branches }}
+        run: |
+          set -euo pipefail
+          read -ra ids <<< "$BRANCHES"
+          test "${#ids[@]}" -ge 1 && test "${#ids[@]}" -le 8
+          python im-results/agent46-raw13-cut/discoverCoupled8.py /tmp/coupled8-candidates "${ids[@]}"
+      - name: Preserve candidate bank
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coupled8-candidates
+          path: /tmp/coupled8-candidates
+          if-no-files-found: warn
+      - name: Publish completed candidate siblings
+        if: always()
+        run: |
+          set -euo pipefail
+          shopt -s nullglob
+          files=(/tmp/coupled8-candidates/coupled8-*.json)
+          if [ "${#files[@]}" -eq 0 ]; then exit 0; fi
+          git config user.name "Agent 46"
+          git config user.email "agent46@users.noreply.github.com"
+          git fetch origin main
+          git checkout -B main origin/main
+          for src in "${files[@]}"; do
+            dst="im-results/agent46-raw13-cut/$(basename "$src")"
+            if [ -f "$dst" ]; then
+              echo "Existing candidate result preserved: $dst"
+              continue
+            fi
+            cp "$src" "$dst"
+            git add "$dst"
+          done
+          if git diff --cached --quiet; then exit 0; fi
+          git commit -m "Agent 46: discover eight-hole sibling candidate certificates"
+          for attempt in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
