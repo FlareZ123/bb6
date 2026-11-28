@@ -41,6 +41,24 @@ function bulkHigh(a, d) {
   return { a: aNext, d: dNext, k: hi };
 }
 
+// ALL exact antecedents of a post-high pair (r,D), including k=0.
+// Because D+3=2^k(d+3), k ranges over a finite 2-adic divisor chain.
+// For each admissible k, the unique predecessor is
+// d=(D+3)/2^k -3, a=D-d-k+r.
+function inverseBulkHigh(r, D) {
+  if (r < 0n || D < 0n || r > D+1n) return [];
+  let q = D+3n, k = 0n, res = [];
+  while (q >= 3n) {
+    const d = q-3n;
+    const a = D-d-k+r;
+    res.push({ a, d, k });
+    if ((q & 1n) !== 0n) break;
+    q >>= 1n;
+    ++k;
+  }
+  return res;
+}
+
 function slowHigh(a, d) {
   let k = 0n;
   while (a >= d + 2n) {
@@ -52,7 +70,12 @@ function slowHigh(a, d) {
 function test() {
   for (let x = 0; x < 100; ++x) for (let y = 0; y < 40; ++y) {
     const a = BigInt(x), d = BigInt(y);
-    assert.deepEqual(bulkHigh(a, d), slowHigh(a, d));
+    const z = bulkHigh(a, d);
+    assert.deepEqual(z, slowHigh(a, d));
+    const inverses = inverseBulkHigh(z.a, z.d);
+    assert(inverses.some(v => v.a === a && v.d === d && v.k === z.k));
+    for (const v of inverses)
+      assert.deepEqual(bulkHigh(v.a, v.d), {a:z.a, d:z.d, k:v.k});
   }
   for (const [a,d] of [
     [(1n<<128n) + 1024n, 1n],
@@ -106,4 +129,4 @@ if (require.main === module) {
   assert(Number.isSafeInteger(n) && n >= 1 && n <= 1_000_000);
   process.stdout.write(JSON.stringify(run(n, 10000), null, 2) + "\n");
 }
-module.exports = { mapOnce, deltaAt, bulkHigh, slowHigh, run, test };
+module.exports = { mapOnce, deltaAt, bulkHigh, inverseBulkHigh, slowHigh, run, test };
