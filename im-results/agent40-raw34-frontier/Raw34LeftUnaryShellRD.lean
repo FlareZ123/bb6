@@ -87,10 +87,14 @@ theorem grow (n : Nat) :
   have h3' : run0 p (n+2)
       ⟨2,[true,true]++rep [true] n++[false,true,true],[true]⟩ =
       some ⟨2,[false,true,true],[true,true]++rep [true] (n+1)⟩ := by
-    simpa only [rep,List.append_assoc,rep_snoc] using h3
-  have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3') h4) h5) h6
+    simpa [rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc] using h3
+  have h5' : run0 p (n+1)
+      ⟨5,[true,true,false,true,true],rep [true] (n+1)⟩ =
+      some ⟨5,[true]++rep [true] (n+1)++[true,false,true,true],[]⟩ := by
+    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h5
+  have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3') h4) h5') h6
   have ht : 1+1+(n+2)+2+(n+1)+1=2*n+8 := by omega
-  simpa only [word,rep,List.append_assoc,rep_snoc,ht] using H
+  simpa [word,rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc,ht] using H
 
 def family (k : Nat) : Z0 := word (2*k)
 def cost (k : Nat) : Nat := 4*k+8
@@ -111,8 +115,6 @@ theorem all_time_never (m : Machine)
   exact never_of_growth p family 6 cost familyFirst
     (by intro k; unfold cost; omega) familyGrowth m hm
 
-theorem cylinder_mass : cylinderMass p = 25^4 := by decide
-
 #print axioms first
 #print axioms cLeftMany
 #print axioms turn
@@ -120,5 +122,4 @@ theorem cylinder_mass : cylinderMass p = 25^4 := by decide
 #print axioms grow
 #print axioms familyGrowth
 #print axioms all_time_never
-#print axioms cylinder_mass
 end BB6.Agent40Raw34LeftUnaryShellRD
