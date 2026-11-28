@@ -123,4 +123,4 @@ The cancelled D17V21 run 46056414853 demonstrates an actual compilation bottlene
 
 ## D17V24 carry and periodic witnesses
 
-See [D17V24TernaryPeriodic.md](D17V24TernaryPeriodic.md). Three ternary carry records have local model-level all-time proofs; one further record has a generated periodic block witness. Original-source closure pending; eight other exact residuals remain.
+See [D17V24TernaryPeriodic.md](D17V24TernaryPeriodic.md). All twelve previously unresolved saved residual records have candidate witnesses: eleven symbolic nonhalting proofs checked locally with Lean and one periodic block-run certificate. Source audits have passed for seven; the remaining individual audits and complete parent sourceBound are pending. The full weighted cylinder replay (17,24,1000000) has been dispatched.
