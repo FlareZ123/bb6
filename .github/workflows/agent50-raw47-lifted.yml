@@ -1168,6 +1168,7 @@ jobs:
             --theorem BB6.Agent40Raw34ConjugateGrowth.alternatingF_never \
             --theorem BB6.Agent40Raw34PairQuadratic.contiguous_never \
             --theorem BB6.Agent40Raw34PairQuadratic.alternating_never \
+            --theorem BB6.Agent40Raw34PairQuadratic.stationary_never \
             --artifact-name raw34-F-conjugate-and-pair-growth-pumps \
             im-results/agent40-raw34-frontier/Raw34ConjugateGrowthPumps.lean \
             im-results/agent40-raw34-frontier/Raw34QuadraticPairGrowth.lean \
@@ -1186,7 +1187,10 @@ jobs:
           for name in ('contiguousFirst','contiguousBRightMany','contiguousTurn',
                        'contiguousALeftMany','contiguousGrowth','contiguous_never',
                        'alternatingFirst','alternatingBRightMany','alternatingTurn',
-                       'alternatingALeftMany','alternatingGrowth','alternating_never'):
+                       'alternatingALeftMany','alternatingGrowth','alternating_never',
+                       'stationaryFirst','stationaryTurn','stationaryELeftMany',
+                       'stationaryEToA','stationaryARightMany','stationaryFinal',
+                       'stationaryGrowth','stationary_never'):
               full='BB6.Agent40Raw34PairQuadratic.'+name
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \\[([^\\]]*)\\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
