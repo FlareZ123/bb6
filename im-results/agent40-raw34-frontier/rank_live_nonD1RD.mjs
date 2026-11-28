@@ -290,11 +290,20 @@ function familyBDD(f){
  }
  return r;
 }
-let nonhaltRoot=0;
-for(let i=0;i<haltStart;i++)nonhaltRoot=union(nonhaltRoot,cubeBDD(bank[i]));
+function compileCubes(ps,at=0){
+ if(ps.length===0)return 0;
+ if(at===8)return 1;
+ const wild=[],by=Array.from({length:26},()=>[]);
+ for(const p of ps){const c=p[at];if(c===0)wild.push(p);else by[c].push(p);}
+ const w=compileCubes(wild,at+1);
+ if(w===1)return 1;
+ const ch=Array(25);
+ for(let c=1;c<=25;c++)ch[c-1]=union(w,compileCubes(by[c],at+1));
+ return mk(at,ch);
+}
+let nonhaltRoot=compileCubes(bank.slice(0,haltStart));
 for(const f of families)nonhaltRoot=union(nonhaltRoot,familyBDD(f));
-let haltRoot=0;
-for(let i=haltStart;i<bank.length;i++)haltRoot=union(haltRoot,cubeBDD(bank[i]));
+const haltRoot=compileCubes(bank.slice(haltStart));
 assert.equal(intersect(nonhaltRoot,haltRoot),0,"halting/nonhalting proof-bank overlap");
 const coverageRoot=union(nonhaltRoot,haltRoot),countMemo=new Map();
 function coveredCount(id,at){
