@@ -161,8 +161,9 @@ theorem carry0 (k : Nat) (L : List Bool) :
   have h4 := return0 k L
   have h5 := finish (rep C k++[true,false,true]++L)
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
+  simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
-  simpa only [frame,D0,D1,List.append_assoc,
+  simpa only [frame,D0,D1,List.append_assoc,List.cons_append,List.nil_append,
     show 21+4*k+4+6*k+5=30+10*k by omega] using H
 
 theorem carry1 (k : Nat) (L : List Bool) :
@@ -176,8 +177,9 @@ theorem carry1 (k : Nat) (L : List Bool) :
   have h4 := return1 k L
   have h5 := finish (rep C k++[false,false,false]++L)
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
+  simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
-  simpa only [frame,D0,D2,List.append_assoc,
+  simpa only [frame,D0,D2,List.append_assoc,List.cons_append,List.nil_append,
     show 21+4*k+8+6*k+5=34+10*k by omega] using H
 
 theorem carry2 (k : Nat) (L : List Bool) :
@@ -191,8 +193,9 @@ theorem carry2 (k : Nat) (L : List Bool) :
   have h4 := return2 k L
   have h5 := finish (rep C k++[true,false,false]++L)
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
+  simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
-  simpa only [frame,D0,D3,List.append_assoc,
+  simpa only [frame,D0,D3,List.append_assoc,List.cons_append,List.nil_append,
     show 21+4*k+4+6*k+5=30+10*k by omega] using H
 
 theorem carryT0 (k : Nat) :
@@ -207,7 +210,7 @@ theorem carryT0 (k : Nat) :
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
   simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
-  simpa only [frame,D0,T0,T1,List.append_assoc,
+  simpa only [frame,D0,T0,T1,List.append_assoc,List.cons_append,List.nil_append,
     show 21+4*k+4+6*k+5=30+10*k by omega] using H
 
 theorem carryT1 (k : Nat) :
@@ -222,7 +225,7 @@ theorem carryT1 (k : Nat) :
   have H := join0 (join0 (join0 (join0 h1 h2) h3) h4) h5
   simp only [← List.append_assoc] at H
   rw [leftLayout k] at H
-  simpa only [frame,D0,T0,T1,List.append_assoc,
+  simpa only [frame,D0,T0,T1,List.append_assoc,List.cons_append,List.nil_append,
     show 21+4*k+10+6*k+5=36+10*k by omega] using H
 
 inductive Digits where
@@ -301,11 +304,6 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   · exact next
   · exact hm
 
-/-- Direct Cover adapter for the Raw36 parent proof. Nonhalting satisfies
-    every finite weighted threshold. -/
-theorem cover (B : Nat) : Cover (WeightedBound B) table :=
-  .leaf table (fun m hm => weighted_never B m (never m hm))
-
 #print axioms entry
 #print axioms scanMany
 #print axioms carry0
@@ -315,5 +313,4 @@ theorem cover (B : Nat) : Cover (WeightedBound B) table :=
 #print axioms carryT1
 #print axioms progress
 #print axioms never
-#print axioms cover
 end BB6.Agent28Raw36D101Odometer
