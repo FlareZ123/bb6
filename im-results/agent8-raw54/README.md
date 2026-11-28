@@ -1,6 +1,6 @@
 # Raw54: root child coverage status
 
-Parent `1RB---_1RC---_0RD---_1LD0LE_------_------`. E1 is the next hole. Seven source-accepted E1 children below are disjoint cylinders; the eighth candidate (1RC) still awaits an uninterrupted full source audit. The remaining root children still need covers. Four direct-cycle branches (0LC, 0LD, 0RD, 1LD) are handled by the root composition. No global roster change follows from these child results alone.
+Parent `1RB---_1RC---_0RD---_1LD0LE_------_------`. E1 is the next hole. Eight source-accepted E1 children below are disjoint cylinders. The remaining root children still need covers. Four direct-cycle branches (0LC, 0LD, 0RD, 1LD) are handled by the root composition. No global roster change follows from these child results alone.
 
 | E1 | Exact weighted threshold | Accepted source run | Artifact |
 |---|---:|---:|---:|
@@ -10,12 +10,12 @@ Parent `1RB---_1RC---_0RD---_1LD0LE_------_------`. E1 is the next hole. Seven s
 | 0RC | 623 | [46088429391](https://github.com/FlareZ123/bb6/actions/runs/46088429391) | 15242228730 |
 | 0RE | 4076 | [45960006400](https://github.com/FlareZ123/bb6/actions/runs/45960006400) | 15183587278 |
 | 0RF | 840 | [45960012324](https://github.com/FlareZ123/bb6/actions/runs/45960012324) | 15184007689 |
-| 1RC | 1847 (candidate; one shard runner shutdown, retry launched) | [46102720259](https://github.com/FlareZ123/bb6/actions/runs/46102720259) | pending |
+| 1RC | 1847 | [46122232071](https://github.com/FlareZ123/bb6/actions/runs/46122232071) | 15254946492 |
 | 1RE | 8212 | [46103257412](https://github.com/FlareZ123/bb6/actions/runs/46103257412) | 15252591144 |
 
-The 0LE artifact SHA256 is `766b74af87a0dfd06f46ba1aed87e82ecf45f7873c79868c607e4fc9c488f9da`. Its exact-source theorem exports are `BB6.Agent8Raw54.e1_complete`, `.e1_attained`, `.e1_exact_threshold`. The other accepted exports and artifacts are in [E1RA_RB.md](E1RA_RB.md), [E1RC.md](E1RC.md), and [E1RE_RF.md](E1RE_RF.md). The maximum of the seven accepted weighted thresholds is 39447. [Raw54RootCompose.lean](Raw54RootCompose.lean) expresses the root coverage interface. [Raw54RootEightCut.lean](Raw54RootEightCut.lean) enumerates twelve outstanding children after the eight designated branches, and its conditional theorem passed [original-source Lean 4.36.0-rc2](https://github.com/FlareZ123/bb6/actions/runs/46120162657), with only standard axioms. [Raw54RootEightClosed.lean](Raw54RootEightClosed.lean) is the pending identity-checked proof consumer of all eight child certificates; [compose_root8.py](compose_root8.py) is its artifact merge/audit driver. These are conditional root statements, not an unconditional Raw54 Cover.
+The 0LE artifact SHA256 is `766b74af87a0dfd06f46ba1aed87e82ecf45f7873c79868c607e4fc9c488f9da`. Its exact-source theorem exports are `BB6.Agent8Raw54.e1_complete`, `.e1_attained`, `.e1_exact_threshold`. The other accepted exports and artifacts are in [E1RA_RB.md](E1RA_RB.md), [E1RC.md](E1RC.md), [E1RE_RF.md](E1RE_RF.md), and [E1OneRC.md](E1OneRC.md). The maximum of the eight accepted weighted thresholds is 39447. [Raw54RootCompose.lean](Raw54RootCompose.lean) expresses the root coverage interface. [Raw54RootEightCut.lean](Raw54RootEightCut.lean) enumerates twelve outstanding children after the eight designated branches, and its conditional theorem passed [original-source Lean 4.36.0-rc2](https://github.com/FlareZ123/bb6/actions/runs/46120162657), with only standard axioms. [Raw54RootEightClosed.lean](Raw54RootEightClosed.lean) is the identity-checked proof consumer of all eight child certificates; [compose_root8.py](compose_root8.py) is its artifact merge/audit driver. These are conditional root statements, not an unconditional Raw54 Cover.
 
-The remaining 13 non-cycle children outside the seven accepted child bounds are 0LA, 0LB, 0LF, 1LA, 1LB, 1LC, 1LE, 1LF, 1RA, 1RB, 1RC, 1RD, 1RF. Once the 1RC candidate is accepted, twelve children remain. All 1RC discovery witnesses are classified; a first source run compiled 31/32 shards but runner shutdown interrupted shard 10; the failed-job retry is pending. The historical sub-child dossier below predates the successful 0LE assembly; its older pending flags are superseded by that accepted parent certificate.
+The remaining twelve non-cycle children outside the eight accepted child bounds are 0LA, 0LB, 0LF, 1LA, 1LB, 1LC, 1LE, 1LF, 1RA, 1RB, 1RD, 1RF. E1=1RC is now source-accepted: repair run 46122232071 compiled the interrupted shard by subdivision, assembled all source slices, and kernel-checked the exact bound 1847. The historical sub-child dossier below predates the successful 0LE assembly; its older pending flags are superseded by that accepted parent certificate.
 
 ---
 
