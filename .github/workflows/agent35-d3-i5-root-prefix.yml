@@ -126,6 +126,11 @@ jobs:
             echo 'Unexpected sorryAx in universal k25 E/E/B/A source theorem' >&2
             exit 1
           fi
+          lean -DmaxRecDepth=180000 -o "$R/DAllQK0.olean" "$R/DAllQK0.lean" 2>&1 | tee /tmp/d-k0-all-q.log
+          if grep -q 'sorryAx' /tmp/d-k0-all-q.log; then
+            echo 'Unexpected sorryAx in all-q k0 E/E/A source theorem' >&2
+            exit 1
+          fi
           lean -DmaxRecDepth=180000 -o "$R/I5D3Eleven.olean" "$R/I5D3Eleven.lean" 2>&1 | tee /tmp/i5-d3-eleven.log
           if grep -q 'sorryAx' /tmp/i5-d3-eleven.log; then
             echo 'Unexpected sorryAx in 11-exception true-blank D3 source theorem' >&2
