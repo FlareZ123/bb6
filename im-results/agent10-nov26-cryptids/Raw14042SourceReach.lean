@@ -132,13 +132,19 @@ theorem cOut {src : Prim} {p n r : Nat} (hr : r<6)
   subst t
   simpa only [encode] using hR
 
+theorem dRROdd (k h : Nat) (s : Raw140Double.Tail) (src : Prim)
+    (ho : (k+h)%2=1) (H : Raw14042DTerminals.RR k h s src) :
+    R src (encode ⟨.b,2*(k+h)+2,(k+Raw140Double.rank s)/6,
+      (k+Raw140Double.rank s)%6⟩) := by
+  apply bOut (Nat.mod_lt _ (by decide))
+  simpa only [Raw14042DTerminals.RR] using H
+
 theorem dRR (k h : Nat) (src : Prim) (ho : (k+h)%2=1)
     (H : Raw14042DTerminals.RR k h .s62 src) :
     R src (encode (Raw14042ArithmeticInvariant.d k h)) := by
-  have G : R src (encode ⟨.b,2*(k+h)+2,k/6,k%6⟩) := by
-    apply bOut (Nat.mod_lt _ (by decide))
-    simpa only [Raw14042DTerminals.RR,Raw140Double.rank,Nat.add_zero] using H
-  simpa only [Raw14042ArithmeticInvariant.d,ho,if_pos] using G
+  have G := dRROdd k h .s62 src ho H
+  simpa only [Raw14042ArithmeticInvariant.d,ho,if_pos,Raw140Double.rank,
+    Nat.add_zero] using G
 
 theorem ccRR (k m : Nat) (s : Raw14042Counter.CTail) (src : Prim)
     (he : (m+k)%2=0) (H : Raw14042CTerminals.RR k m s src) :
