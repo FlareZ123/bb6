@@ -38,7 +38,7 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
     keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
     assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest'];rows=list(zip(keys,fixture['data']))
     extras=ROOT/'extra-hard01.json'
-    if extras.exists():
+    if index==1 and extras.exists():
         direct=json.loads(extras.read_text())
         assert set(direct)<=set(keys)
         assert all(v is None or v==direct[t] for t,v in rows if t in direct)
