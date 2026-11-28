@@ -1,0 +1,98 @@
+name: Agent 46 Raw13 six-hole parent composition
+run-name: Agent 46 Raw13 coupled6 parent ${{ inputs.source_ref }}
+on:
+  workflow_dispatch:
+    inputs:
+      sibling_runs:
+        description: Space-separated successful coupled6Sibling workflow run IDs
+        type: string
+        required: true
+      coupled5_run:
+        description: Successful coupled5Parent workflow run ID
+        type: string
+        required: true
+      source_ref:
+        description: Exact repository source commit containing Raw13Coupled6.lean
+        type: string
+        required: true
+permissions:
+  actions: read
+  contents: read
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Install pinned Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download source-accepted child closures
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SIBLING_RUNS: ${{ inputs.sibling_runs }}
+          COUPLED5_RUN: ${{ inputs.coupled5_run }}
+        run: |
+          set -euo pipefail
+          read -ra runs <<< "$SIBLING_RUNS"
+          test "${#runs[@]}" -ge 1
+          for id in "${runs[@]}"; do
+            [[ "$id" =~ ^[0-9]+$ ]]
+            mkdir -p "/tmp/a46-c6-$id"
+            gh run download "$id" --repo "$GITHUB_REPOSITORY" \
+              --name raw13-closure-certified --dir "/tmp/a46-c6-$id"
+          done
+          [[ "$COUPLED5_RUN" =~ ^[0-9]+$ ]]
+          mkdir -p /tmp/a46-c5
+          gh run download "$COUPLED5_RUN" --repo "$GITHUB_REPOSITORY" \
+            --name raw13-coupled5-composed --dir /tmp/a46-c5
+      - name: Merge compatible proof objects and compile the exact parent
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          def flatten(sources, out):
+              out.mkdir(parents=True, exist_ok=True)
+              for src in sources:
+                  for f in sorted(src.rglob('*')):
+                      if not f.is_file() or f.suffix not in ('.lean','.olean'):
+                          continue
+                      dst=out/f.name
+                      if dst.exists():
+                          if f.suffix=='.lean':
+                              assert dst.read_bytes()==f.read_bytes(), f"source mismatch: {f.name}"
+                          continue
+                      shutil.copy2(f,dst)
+          c6_sources=sorted(Path('/tmp').glob('a46-c6-[0-9]*'))
+          assert c6_sources
+          flatten(c6_sources,Path('/tmp/a46-c6-flat'))
+          flatten([Path('/tmp/a46-c5')],Path('/tmp/a46-c5-flat'))
+          a=Path('/tmp/a46-c6-flat'); b=Path('/tmp/a46-c5-flat')
+          for f in sorted(a.glob('*.lean')):
+              g=b/f.name
+              if g.exists():
+                  assert f.read_bytes()==g.read_bytes(), f"cross-level source mismatch: {f.name}"
+          PY
+          cp im-results/agent46-raw13-cut/Raw13Coupled6.lean /tmp/a46-c6-flat/
+          cd /tmp/a46-c6-flat
+          export LEAN_PATH="$PWD:/tmp/a46-c5-flat"
+          lean -o Raw13Coupled6.olean Raw13Coupled6.lean 2>&1 | tee /tmp/a46-c6-parent.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-c6-parent.log; then
+            echo 'Forbidden proof placeholder or native_decide in six-hole parent closure' >&2
+            exit 1
+          fi
+          grep -F "BB6.Agent46Raw13Coupled6.exact_threshold" /tmp/a46-c6-parent.log
+      - name: Preserve composed six-hole proof closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-coupled6-composed
+          path: |
+            /tmp/a46-c6-flat
+            /tmp/a46-c5-flat
+            /tmp/a46-c6-parent.log
+          retention-days: 30
