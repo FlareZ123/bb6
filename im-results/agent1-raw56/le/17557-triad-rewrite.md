@@ -243,6 +243,28 @@ at most one. This suggests a regular marked-run relation with finite scanner
 state (“before the mark / at the mark / after the mark”), while allowing the
 marked zero-run to occur arbitrarily deep in the left stack.
 
+More strongly, the streaming checker now verifies a **deterministic token
+transition law** at every one of those boundaries (`transitionBad=0`) and
+the needed exceptional-residue guards (`guardBad=0`):
+
+- **normal A** (`b>5`): every reachable second right 1-run has
+  `b ≡ 5 (mod 8)`; no new defect is created, and an existing mark at
+  zero-run index `j` moves to `j+1` because A prepends a new left zero-run;
+- **B with first zero-run `ell>7`**: if `ell ≡ 6 (mod 8)` the input is
+  always unmarked and B creates mark 0; otherwise an existing mark keeps its
+  index;
+- **B with `ell=7`**: mark 0 never occurs; the front zero-run disappears, so
+  no mark stays absent and any deeper mark `j>=1` moves to `j-1`;
+- **A-carry with first zero-run `ell>1`**: residue 7 occurs only with mark 0
+  and cancels that mark; every nonexceptional carry preserves the current
+  mark;
+- **A-carry with `ell=1`**: mark 0 never occurs; deleting that zero-run shifts
+  any deeper mark from `j` to `j-1`.
+
+These rules explain both the uniqueness of the defect and its unbounded
+migration depth. Together with the Lean arithmetic lemmas, they reduce the
+left-side induction to proving the stated reachable guard invariant.
+
 The natural replacement for fixed `rho` is therefore a relation carrying
 an optional **defect token** on one left zero-run:
 
