@@ -1,21 +1,22 @@
 import CyclicOrder
+import CyclicPrimitive
 import OrderReturn
 set_option maxHeartbeats 0
 
 namespace BB6.Agent9CyclicShort
-open BB6.Agent9ReturnGCD BB6.Agent9AntiGenericBound BB6.Agent43OrderReturn BB6.Agent9AntiGenericScaled
+open BB6.Agent9ReturnGCD BB6.Agent9AntiGenericBound BB6.Agent43OrderReturn BB6.Agent9AntiGenericScaled BB6.Agent9CyclicPrimitive
 
 /-- A bounded positive affine-clock carry cannot have a repeated
     interior odd slope of (not necessarily coprime) modulus h once its
     return is at most K and the logarithmic coordinate margin B is at
-    least K. The mixed determinant after the primitive return p uses
+    most K. The mixed determinant after the primitive return p uses
     only p+B steps, rather than the older 2p+B second-difference bound. -/
 theorem no_short_return_carry
     (q dir C g : Int) (K B L : Nat) (a c x : Nat → Int)
     (hdir : dir=1 ∨ dir= -1) (hodd : g%2=1)
     (hret : 0<a 0 ∧ a 0<g →
       ∃ k, 0<k ∧ k≤K ∧ a k=a 0)
-    (hKL : K+B≤L) (hBK : K≤B)
+    (hKL : K+B≤L)
     (hinside : ∀ j≤L, 0<a j ∧ a j<g)
     (hx : ∀ j<L, x j=0 ∨ x j=1)
     (ha : ∀ j<L, 2*a (j+1)=a j+g*x j)
@@ -27,7 +28,6 @@ theorem no_short_return_carry
   obtain ⟨p,hp,hpk,hpr,hnd⟩ := primitive_of_return
     g a x L k hk (by omega) hreturn hinside hx ha
   have hpK : p≤K := by omega
-  have hpB : p≤B := by omega
   have hper := slope_return_period g a x L p hodd
     (by omega) hpr hx ha
   let b : Nat → Int := fun j => dir*(c (j+p)-c j)
@@ -92,36 +92,14 @@ theorem no_short_return_carry
       rw [heq] at hi
       exact hi
   have hE0 := finite_half_zero E B hhalf hEbound
-  have hEz := halving_zero_all E p
-    (fun j hj => hhalf j (by omega)) hE0
-  have hbin : ∀ j<p, 0<b j ∧ b j<(p:Int) := by
-    intro j hj
-    have he := hEz j (by omega)
-    dsimp [E] at he
-    have haj := hinside j (by omega)
-    have hm1 := Int.mul_pos (show 0<(p:Int) by omega) haj.1
-    have hm2 := Int.mul_lt_mul_of_pos_left haj.2
-      (show 0<(p:Int) by omega)
-    rw [Int.mul_comm (p:Int) g] at hm2
-    constructor
-    · by_cases h : 0<b j
-      · exact h
-      · have hn := Int.mul_nonpos_of_nonneg_of_nonpos
-          (show 0≤g by omega) (show b j≤0 by omega)
-        omega
-    · by_cases h : b j<(p:Int)
-      · exact h
-      · have hn := Int.mul_le_mul_of_nonneg_left
-          (show (p:Int)≤b j by omega) (show 0≤g by omega)
-        omega
-  obtain ⟨i,j,hij,hjp,he⟩ := interior_collision b p hp hbin
-  have h1 := hEz i (by omega)
-  have h2 := hEz j (by omega)
-  dsimp [E] at h1 h2
-  rw [he] at h1
-  have eq : (p:Int)*a i=(p:Int)*a j := by omega
-  exact hnd i j hij hjp
-    (Int.eq_of_mul_eq_mul_left (show (p:Int)≠0 by omega) eq)
+  have hdiv : g ∣ (p:Int)*a 0 := by
+    refine ⟨b 0,?_⟩
+    dsimp [E] at hE0
+    omega
+  exact primitive_product_not_dvd g p a x hg hp
+    (fun j hj => hinside j (by omega))
+    (fun j hj => ha j (by omega))
+    hpr hnd hdiv
 
 /-- Supplied Mersenne order K is a short return bound; this covers all
     odd h, even when gcd(h,K)>1. -/
@@ -130,7 +108,7 @@ theorem no_short_mersenne
     (a c x : Nat → Int)
     (hdir : dir=1 ∨ dir= -1) (hodd : h%2=1)
     (hK : 0<K) (horder : h∣(2:Int)^K-1)
-    (hKL : K+B≤L) (hBK : K≤B)
+    (hKL : K+B≤L)
     (hinside : ∀ j≤L, 0<a j ∧ a j<h)
     (hx : ∀ j<L, x j=0 ∨ x j=1)
     (ha : ∀ j<L, 2*a (j+1)=a j+h*x j)
@@ -138,7 +116,7 @@ theorem no_short_mersenne
     (hbound : ∀ j≤L, 1≤c j ∧ c j≤C)
     (hscale : h*(C+(K:Int)+1)<(2:Int)^B) : False := by
   apply no_short_return_carry q dir C h K B L a c x
-    hdir hodd _ hKL hBK hinside hx ha hc hbound hscale
+    hdir hodd _ hKL hinside hx ha hc hbound hscale
   intro hi
   have hKI := hinside K (by omega)
   exact ⟨K,hK,Nat.le_refl _,
@@ -146,14 +124,14 @@ theorem no_short_mersenne
       (fun j hj => ha j (by omega))⟩
 
 /-- Shortened positive-clock obstruction under a supplied Mersenne order.
-    Unlike the coprime-only obstruction, this accepts any odd h if K≤B.
+    Unlike the coprime-only obstruction, this accepts any odd h and all B.
     The extra r positions remove the dyadic part of the original slope. -/
 theorem no_scaled_short
     (h K A r B L : Nat) (q dir C g : Int)
     (a c w x : Nat → Int)
     (hh : 0<h) (hodd : (h:Int)%2=1)
     (horder : (h:Int)∣(2:Int)^K-1)
-    (hK : 0<K) (hKB : K≤B)
+    (hK : 0<K)
     (hdir : dir=1 ∨ dir= -1)
     (hg : g=(2:Int)^r*(h:Int))
     (hL : A+r+K+B≤L)
@@ -216,7 +194,7 @@ theorem no_scaled_short
   apply no_short_mersenne (q+dir*(A:Int)) dir C (h:Int) K B (L-r-A)
     (fun j => b (A+j)) (fun j => c (A+j))
     (fun j => x (A+j))
-    hdir hodd hK horder (by omega) hKB hinner
+    hdir hodd hK horder (by omega) hinner
   · intro j hj; exact hx (A+j) (by omega)
   · intro j hj; simpa only [Nat.add_assoc] using hb (A+j) (by omega)
   · intro j hj
