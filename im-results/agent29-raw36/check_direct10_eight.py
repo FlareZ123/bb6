@@ -34,7 +34,6 @@ def main():
     assert provenance["claim"]["theorem"]=="BB6.Agent29Raw36.parent_cover_from_nine"
     src=work/"Raw36D110Live8.lean"
     summary=work/"raw36-d110-live8-candidate.json"
-    emit.main_args=0 if False else None
     subprocess.run([sys.executable,str(HERE/"emit_direct10_eight.py"),
                     "--census",str(a.census.resolve()),
                     "--source",str(src),"--summary",str(summary)],check=True)
