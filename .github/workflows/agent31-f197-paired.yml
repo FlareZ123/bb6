@@ -19,6 +19,7 @@ on:
           - root-scout
           - root-generate
           - self-scout
+          - phase-scout
           - blank-root
           - blank-root-parallel
           - cover-bridge
@@ -35,7 +36,7 @@ jobs:
         if: ${{ inputs.target == 'computer-certificate' }}
         run: python3 im-results/agent2-f197-sweep/verify_nonhalt.py
       - name: Install pinned Lean 4.36.0-rc2
-        if: ${{ inputs.target != 'computer-certificate' && inputs.target != 'root-scout' && inputs.target != 'root-generate' && inputs.target != 'self-scout' }}
+        if: ${{ inputs.target != 'computer-certificate' && inputs.target != 'root-scout' && inputs.target != 'root-generate' && inputs.target != 'self-scout' && inputs.target != 'phase-scout' }}
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -160,6 +161,10 @@ jobs:
           fi
           ! grep -q sorryAx "$RLOG"
           python3 "$e/verify_nonhalt.py"
+
+      - name: Scout earlier authentic F197 root crossover to proved self-return phases
+        if: ${{ inputs.target == 'phase-scout' }}
+        run: python3 im-results/agent2-f197-sweep/root_phase_scout.py
 
       - name: Test smaller guarded F197 positive cylinders
         if: ${{ inputs.target == 'self-scout' }}
