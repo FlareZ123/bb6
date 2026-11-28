@@ -92,3 +92,31 @@ The universal upward restriction strictly generalizes all finite 42-pair **upwar
 This statement is genuinely about every valuation pair in the **exact high-level dynamics of the unchanged original Space Needle machine**, not a toy relaxed map. The universal arithmetic inequality above is an elementary **paper proof**. The two special original-source Lean statements have passed CI; an explicit fully quantified Lean proof of (1) and its source corollary is a separate formalization obligation. Neither prepared reverse branching nor this necessary transition rule establishes a blank-start halting decision, so no conclusion about the exact BB(6) value is asserted.
 
 The practical use is an **unbounded-label pruning rule** for the exact source inverse grammar: whenever a target with a known incoming \(w\)-edge is being expanded backwards along a smaller \(v\)-edge, immediately discard any attempt to follow that \(v\)-edge by \(w\) for *every* \(v<w\), without a bounded lookup table or a finite modular search.
+
+
+## Strengthening to **all** original valuations, including 0 and 1
+
+The restriction actually holds for **every pair of natural valuations \(0\le v<w\)**, once the affine correction is interpreted correctly in the integers:
+
+\[
+d_j=2^j(2j-3)\in\mathbb Z,\qquad D_j=2^{j+1}+3.
+\]
+
+The case \(v\ge2\) is the preceding proof. For the two missing cases \(v=0,1\), the correction is \(d_0=-3\) or \(d_1=-2\), respectively. The exact original high-level edge equation \(L_vB=D_vP+d_v\) still holds for these small valuations in integer arithmetic (they cannot be expressed by the earlier natural subtraction \(2v-3\), which would incorrectly truncate).
+
+For any \(w\ge1\), \(\gcd(D_w,3)=1\). If \(D_w\mid3(d_w-d_v)\), then \(D_w\mid d_w-d_v\). Since \(2d_w=(D_w-3)(2w-3)\) (an equality of integers), we obtain
+
+\[
+D_w\mid F_{v,w}:=2d_v+3(2w-3).
+\]
+
+For \(v=0\), \(F_{0,w}=6w-15\); for \(v=1\), \(F_{1,w}=6w-13\). For **all \(w\ge3\)**, both quantities are positive and strictly less than \(D_w\). The inequality is elementary: already \(D_3=19\), while \(F_{0,3}=3\) and \(F_{1,3}=5\); incrementing \(w\) increases either \(F\) by 6 but increases \(D_w\) by \(2^{w+1}\ge16\). The only remaining small pairs \(v<w\) are \(v=0,w=1\), \(v=0,w=2\), and \(v=1,w=2\). Their respective \(3(d_w-d_v)\) are \(3,21,18\), nonzero modulo \(D_w=7,11,11\). Therefore
+
+\[
+\boxed{\forall v,w\in\mathbb N,\ v<w
+\ \Longrightarrow\
+D_w\nmid 3(d_w-d_v),\qquad
+d_j=2^j(2j-3)\in\mathbb Z.}
+\]
+
+The original Space Needle map's valuation-\(0\) and valuation-\(1\) branches are covered by this signed equation, so the **semantic immediate-upward-switch prohibition holds for all genuine incoming valuation labels**. No \(\ge2\) exception remains in the mathematical result. The authored \`NoUpward.lean\` and source adapter currently address only \(v\ge2\); source-Lean formalization of the \(v=0,1\) signed extension is a separate outstanding step. This stronger original-machine paper theorem is still insufficient to decide the authentic blank orbit, and it does not prohibit downward switches or delayed upward returns.
