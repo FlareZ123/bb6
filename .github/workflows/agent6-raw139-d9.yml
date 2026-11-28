@@ -44,7 +44,7 @@ jobs:
           python3 im-results/agent13-coverage/unpack.py
           python3 im-results/agent13-block-far/specialize.py 4
           python3 "$pipe/late/certify_late.py" --roots "$pipe/late/lateRoots.tsv" --children "$pipe/late/lateChildren.tsv" --out "$pipe/D1Late.lean"
-          python3 tools/lean_compile_closure.py "$pipe/D1PackedTree.lean" "$pipe/D1Late.lean"             --source-root "$pipe" --workdir /tmp/a6-d9-core --jobs 2             --manifest "$work/core.json" --label agent6-raw139-d9-core | tee "$work/core.log"
+          python3 tools/lean_compile_closure.py "$pipe/D1PackedTree.lean" "$pipe/D1Late.lean" im-results/agent1-ngram/NGramCertificate.lean im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean             --source-root "$pipe" --workdir /tmp/a6-d9-core --jobs 2             --manifest "$work/core.json" --label agent6-raw139-d9-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
           find /tmp/a6-d9-core -name '*.olean' -exec cp '{}' "$core/" ';'
           test -f "$core/D1PackedTree.olean"
