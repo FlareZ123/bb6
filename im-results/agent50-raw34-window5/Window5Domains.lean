@@ -26,6 +26,32 @@ def Permitted
         P q l2 l1 c r1 r2 = true →
         successor5 P mv l2 l1 r1 r2 incoming = true
 
+/-- Explicit *computable* Decidable instance for the finite Boolean
+window universal proposition. The match on an arbitrary physical action
+must be eliminated before Lean can synthesize its decidability. -/
+def permittedDecidable
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
+    (q : Fin 6) (c : Bool) (a : Option Move) :
+    Decidable (Permitted P q c a) := by
+  cases a with
+  | none =>
+      unfold Permitted
+      infer_instance
+  | some mv =>
+      unfold Permitted
+      infer_instance
+
+instance permittedInstance
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
+    (q : Fin 6) (c : Bool) (a : Option Move) :
+    Decidable (Permitted P q c a) :=
+  permittedDecidable P q c a
+
+def permittedBoolean
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
+    (q : Fin 6) (c : Bool) (a : Option Move) : Bool :=
+  decide (Permitted P q c a)
+
 /-- Generalization from a sparse fixed-source table to the maximal
 per-invariant Cartesian product of allowed physical transitions. -/
 theorem never_of_permitted
