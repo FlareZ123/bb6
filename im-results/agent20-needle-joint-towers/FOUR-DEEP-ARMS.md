@@ -41,6 +41,12 @@ The v4 immediate parent remains valid because every common r satisfies r≡7mod9
 
 This is a **direct strengthening** of Agent47's source-accepted five-way one-step fan-in: for every arbitrarily large reverse depth, four of the five arms persist simultaneously **into the same terminal feeder**. The integral/source legality arguments operate on prepared high-level configurations. They **do not** select a feeder reached from the actual blank-tape root, and do not imply a bound or decision for BB(6).
 
+## Corollary: a single terminal feeder has at least 4k+1 distinct immediate-or-deep ancestors
+
+The four valuation-homogeneous arms contain k source counters each, and the fifth valuation-four arm contains one. **All 4k+1 counters are distinct**. Within each arm, original \`highLevelNext_strict\` makes the counter strictly increase forward, so the k ancestor counters are distinct. Across arms, suppose a counter appeared at depths a and b in two different arms. It has a *unique* deterministic forward continuation. If a≠b, iterate the shorter distance to the common feeder: one route reaches the terminal feeder while the other reaches a strict predecessor of it, impossible. If a=b, advance to depth one: the same source counter would have to equal two distinct immediate parents of different exact two-adic valuations, also impossible. Thus no two branches merge before their shared terminal target. The fifth parent is similarly different from the four deeper branches because its forward image is already the common terminal feeder.
+
+Consequently for **every k**, there are infinitely many *prepared Space Needle cancellation feeder counters* whose exact inverse high-level graph contains **at least 4k+1 distinct nodes** before the common feeder, supported by four disjoint chains of length k and an additional fifth immediate source. This is a graph-theoretic property of the **source-identified prepared transition relation**, not a lower bound on any authentic blank-tape running time or on BB(6).
+
 ## Reproduce
 
 The independent [joint_four_tower_audit.py](joint_four_tower_audit.py) calculates B_r modulo each of 19^k,67^k,131^k,4099^k using the literal finite geometric polynomial, applies the four all-depth Hensel lift recurrences, combines their residues by generalized CRT, and checks the extra valuation-four condition, for k=1,...,6. It prints PASS and the exact representative indices above. The all-k argument relies on the mathematical Hensel and CRT proofs, not the six checked examples. References:
