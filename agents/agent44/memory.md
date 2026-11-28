@@ -1,3 +1,72 @@
+## 2026-11-28 04:15 UTC — final twelve-child source compilation in progress
+
+**Claimed identity unchanged:** agent44 original `claimed_at`
+2026-11-28T03:35:40.543Z; release only at/after **04:45:40.543Z**.
+After each checkpoint measure actual JS runtime clock.
+
+**Accepted original-source proof**: exact 20-way 8-closed/12-residual
+`AllChildren.consume` at [46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142);
+injective finite-key `CodeBank.consume_bank` at
+[46104320797](https://github.com/FlareZ123/bb6/actions/runs/46104320797).
+No complete Extra28 Cover or BB(6) upper bound yet.
+
+**Real child jobs as of 04:15 UTC:**
+- manual `raw11-extra28` [46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773):
+  all four jobs D1=16,17,18,19 running, 16/18/19 at Lean
+  compilation, 17 at periodic width-ten generator;
+  actual previous failure showed `Raw11Counter28RE.lean` requires
+  `Raw11Counter28LD.olean`; fixed compiling LD before RE.
+  Do not resurrect cancelled older runs 46103874910,46104644107,
+  46104869306,46105023399.
+- manual `raw11-eight` [46105742866](https://github.com/FlareZ123/bb6/actions/runs/46105742866):
+  eight source-recheck jobs queued; fixed LD-before-RE dependency.
+  Do not use cancelled 46105098512.
+- manual `raw11-final` should be dispatched ONLY after both current
+  matrices succeed, inputs `four_run=46105738773`,
+  `eight_run=46105742866`, then it consumes exact accepted proof
+  objects via `assemble-complete.sh` and generates `literal_complete`.
+
+**Conditional parent composition:**
+- `Raw11Extra28CompleteJoin.lean`: first source run 46104412027
+  failed `decide` because `h:Covers` free; second 46105881101
+  failed `decide +revert` because no computable
+  `Decidable (∀h:Certificates,...)`.
+  Replaced with definitional equality proofs `by rfl`, source rerun
+  **46106607757** is queued. If it fails, do not repeatedly mutate
+  tactics: use the proof-independent source
+  `Raw11Extra28FromCovers.lean`/generator
+  `generate-table-join.cjs` instead.
+- `Raw11Extra28FromCovers.lean` provides exact table list with
+  `Q0RosterConsume.removeCovered` (no opaque proof in computed
+  certificate route), takes twelve conditional Covers, source CI
+  **46106295194** queued. This is likely more robust.
+- `Raw11Extra28AfterRaw11Route.lean` starts from the **source-accepted**
+  original 294-entry Raw11 conditional route and removes exactly
+  Extra28 to leave 293, conditional on its genuine bound158 Cover;
+  source check **46105484000** in progress.
+- `Raw11Extra28AfterRaw11Q0152.lean` conditional deeper 152→151
+  exact-table subtraction from locally Lean-checked Agent47 Q0+extras;
+  not independently source audited.
+
+**Final assembly alternatives**: default
+`generate-complete-join.cjs` + `assemble-complete.sh` uses
+`CompleteJoin.Certificates` and imports exact original child source
+Join files. Independent backups `generate-bank-join.cjs` (accepted
+`CodeBank`, needs FastKey) and `generate-table-join.cjs` (needs
+`FromCovers` source accepted) are committed, not compiled. The generated
+D1=17/18/19 `FastRaw11MxxJoin` files export `p_root`, `safe_root`
+and `cover`; exact generator was inspected from archive. Only stage
+unconditional parent theorem after corresponding source CI success.
+
+**Research directory and coordination:** Dossier
+`im-results/agent44-raw11-extra28/README.md` updated; broadcast
+`communications/broadcast/20261128T0408Z_agent44-raw11-extra28-assembly.md`
+asks collaborators to preserve exact Raw11 complement and not redo
+child candidates. User progress responses reflect conditional/accepted
+distinction. Next inspect actual failed job logs (GitHub Actions MCP,
+tail 100–160) after a failure, and adjust only substantive errors.
+
+---
 ## 2026-11-28 04:02 UTC — current priority, accepted proof and queued child jobs
 
 **Accepted today**: original-source Lean 4.36.0-rc2 closure for
