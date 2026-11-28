@@ -16,6 +16,10 @@ on:
         options: ['16', '17', '18', '19']
         default: '17'
         required: true
+      diagnostic_only:
+        description: Inspect problematic proof modules without executing the full kernel bank
+        type: boolean
+        default: false
 permissions:
   contents: read
   actions: read
@@ -71,7 +75,26 @@ jobs:
           python3 "$pipe/gen_tree_general.py" "$root/tree-9-$CODE.txt" "$root/src" 384 9 "$CODE" 8 "$root/late.json"
           python3 "$pipe/group_chunks.py" "$root/src" "$ns" 4
           cp "$pipe/D1PackedTree.lean" "$pipe/D1QuickTree.lean" "$pipe/D1TreeTools.lean" "$root/src/"
+      - name: Diagnose generated C17 bank pressure
+        if: ${{ inputs.diagnostic_only }}
+        run: |
+          set -euo pipefail
+          root=".tmp/a6-d9rest/d9c$CODE"
+          echo "Largest Lean modules"
+          find "$root/src" -maxdepth 1 -name '*.lean' -printf '%s %f\n' | sort -nr | head -n 18
+          echo "Bank module sizes and declarations"
+          for n in 16 17 18 29 30 31 32; do
+            f="$root/src/D9C${CODE}Bank$(printf '%03d' "$n").lean"
+            if test -f "$f"; then
+              wc -lc "$f"
+              grep -E '^(def|theorem|private theorem|namespace)' "$f" | head -n 5 || true
+            fi
+          done
+          echo "Group generator and compiler scheduler"
+          sed -n '1,130p' ".tmp/a6-d9rest/pipeline/group_chunks.py"
+          sed -n '1,190p' ".tmp/a6-d9rest/pipeline/compile_groups.py"
       - name: Kernel-check complete child Cover
+        if: ${{ !inputs.diagnostic_only }}
         run: |
           set -euo pipefail
           work=.tmp/a6-d9rest
