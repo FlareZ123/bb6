@@ -1,0 +1,91 @@
+name: Agent11 Raw112 exact reweight theorem from accepted parent
+run-name: Raw112 original-source reweight iff (accepted parent reused)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  FROZEN_HEAD: 6b8232d51d93665f66808b7faff7457963174aca
+  ACCEPTED_RAW112_RUN: "46146501930"
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Preserve new theorem sources; restore exact accepted Raw112 ancestor
+        run: |
+          set -euo pipefail
+          echo "New theorem source commit: $(git rev-parse HEAD)"
+          mkdir -p /tmp/raw112-new-sources
+          cp im-results/agent11-partial-weight/PartialWeightExact.lean /tmp/raw112-new-sources/
+          cp im-results/agent11-raw112-sharp/Raw112Reweight.lean /tmp/raw112-new-sources/
+          sha256sum /tmp/raw112-new-sources/*.lean
+          git fetch --no-tags origin "$FROZEN_HEAD"
+          git checkout --detach "$FROZEN_HEAD"
+          mkdir -p im-results/agent11-partial-weight im-results/agent11-raw112-sharp
+          cp /tmp/raw112-new-sources/PartialWeightExact.lean im-results/agent11-partial-weight/
+          cp /tmp/raw112-new-sources/Raw112Reweight.lean im-results/agent11-raw112-sharp/
+          git status --short
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore authenticated existing coverage source modules
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw112-closed-parent-cover
+          run-id: ${{ env.ACCEPTED_RAW112_RUN }}
+          github-token: ${{ github.token }}
+          repository: FlareZ123/bb6
+          path: /tmp/raw112-accepted
+      - name: Compile and audit exact residual reweight theorem against accepted source objects
+        run: |
+          set -euo pipefail
+          test -f /tmp/raw112-accepted/parent/manifest.json
+          test -f /tmp/raw112-accepted/parent/Raw112Data.lean
+          # Historical source shard patch is part of the accepted parent
+          # closure; use its exact authenticated source bytes.
+          cp /tmp/raw112-accepted/parent/Raw112Kid01_01.lean im-results/agent47-raw112-cut/Raw112Kid01_01.lean
+          mkdir -p /tmp/raw112-weight-iff
+          python tools/lean_compile_closure.py \
+            im-results/agent11-raw112-sharp/Raw112Reweight.lean \
+            --source-root /tmp/raw112-accepted/parent \
+            --workdir /tmp/raw112-weight-iff/compiled \
+            --precompiled-dir /tmp/raw112-accepted/parent \
+            --precompiled-manifest /tmp/raw112-accepted/parent/manifest.json \
+            --jobs 2 \
+            --manifest /tmp/raw112-weight-iff/manifest.json \
+            --label "Raw112 exact B iff weight-only checker" \
+            --theorem BB6.Agent11Raw112Reweight.weighted_bound_iff_query_weights \
+            --parent-table "1RB---_1RC---_0RD---_1LD1RE_---1LC_------" \
+            --artifact-name raw112-weight-iff-source \
+            2>&1 | tee /tmp/raw112-weight-iff/compile.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/raw112-weight-iff/compile.log \
+            BB6.Agent11Raw112Reweight.coveredAt_eq \
+            BB6.Agent11Raw112Reweight.residuals_weighted_at \
+            BB6.Agent11Raw112Reweight.weighted_bound_iff_query_weights
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw112-weight-iff-source
+          path: |
+            /tmp/raw112-weight-iff/manifest.json
+            /tmp/raw112-weight-iff/compile.log
+            /tmp/raw112-weight-iff/compiled/PartialWeightExact.olean
+            /tmp/raw112-weight-iff/compiled/Raw112Reweight.olean
+            im-results/agent11-partial-weight/PartialWeightExact.lean
+            im-results/agent11-raw112-sharp/Raw112Reweight.lean
+          if-no-files-found: warn
+          retention-days: 30
