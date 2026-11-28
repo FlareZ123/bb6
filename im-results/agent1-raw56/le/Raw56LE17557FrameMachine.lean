@@ -123,7 +123,7 @@ theorem outerTraceBelow_exec {k : Nat} {xs : List Action} {hs : List Bool}
 theorem segment_closes_low (r : Nat) (st : List Nat) :
     execLow (segment r) st = some st := by
   induction r using Nat.strongRecOn with
-  | h r ih =>
+  | ind r ih =>
       rw [segment_eq_normal_body]
       simp only [execLow, stepLow, Option.bind_some]
       have ht := outerTraceBelow_exec (body_outerTraceBelow r)
