@@ -130,7 +130,7 @@ def generate_source(prior, work):
 
 
 
-def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence):
+def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence, *, chunked=False):
     """Kernel-replay only the import-affected Raw47 declaration cone.
 
     Source producer was independently accepted; checked kernel replay preserves
@@ -161,13 +161,24 @@ def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence):
     subprocess.run(["leanc","-O2","-o","kernelstage","KernelStage.c"],
                    cwd=scratch,env=env,check=True)
     print(f"Raw47 staged producer import closure: {len(files)} objects",flush=True)
-    report, objects, names = relocate(
-        producer_files=files,base=linked,work=work/"raw47-kernel-replay",
-        root_module=spec["root"],
-        root_names=["BB6.Agent50Raw47Complete.cover_at"],
-        prefix="A50Raw47Slice",tool=scratch/"kernelstage",
-        comparator=c.selected.HERE.parent/"agent13-raw125"/"CompareKernelImports.lean",
-        jobs=4, checkpoint_every=32)
+    if chunked:
+        sys.path.insert(0, str(c.selected.HERE.parent / "agent11-raw39"))
+        from chunked_kernel_replay import relocate_chunked
+        report, objects, names = relocate_chunked(
+            producer_files=files, base=linked, work=work / "raw47-kernel-replay",
+            root_module=spec["root"],
+            root_names=["BB6.Agent50Raw47Complete.cover_at"],
+            prefix="A50Raw47Slice", tool=scratch / "kernelstage",
+            comparator_batch=c.selected.HERE.parent / "agent11-raw39" / "CompareKernelImportsBatch.lean",
+            chunk_size=64)
+    else:
+        report, objects, names = relocate(
+            producer_files=files,base=linked,work=work/"raw47-kernel-replay",
+            root_module=spec["root"],
+            root_names=["BB6.Agent50Raw47Complete.cover_at"],
+            prefix="A50Raw47Slice",tool=scratch/"kernelstage",
+            comparator=c.selected.HERE.parent/"agent13-raw125"/"CompareKernelImports.lean",
+            jobs=4, checkpoint_every=32)
     assert report["complete"]
     for file in sorted(objects.glob("*.olean")):
         dest=linked/file.name
@@ -198,7 +209,8 @@ end BB6.Agent50Raw47Bridge
         ["BB6.Agent50Raw47Bridge.cover_at"])
     assert set(profiles["BB6.Agent50Raw47Bridge.cover_at"]) <= c.ALLOWED
     copied.append(bridge)
-    audit["relocation"]={"mode":"staged-trust-level-zero-kernel-replay",
+    audit["relocation"]={"mode":("chunked-trust-level-zero-kernel-replay" if chunked
+                                 else "staged-trust-level-zero-kernel-replay"),
                          "report":report,
                          "root":report["staged_root"],
                          "bridge_olean_sha256":c.a68.sha(bridge),
@@ -211,7 +223,7 @@ def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work",type=Path,required=True)
     ap.add_argument("--raw47-run-id",type=int,required=True)
-    ap.add_argument("--transport",choices=("strict","staged"),default="strict")
+    ap.add_argument("--transport",choices=("strict","staged","chunked"),default="strict")
     args=ap.parse_args()
     work=args.work.resolve()
     work.mkdir(parents=True,exist_ok=False)
@@ -234,12 +246,13 @@ def main():
     parentdir.mkdir()
     spec,dirs=c.restore_parent(args.raw47_run_id,parentdir,evidence)
     copied,audit=[],{}
-    if args.transport == "staged":
-        kernel_replay_raw47(spec,dirs,linked,copied,audit,work,evidence)
+    if args.transport in ("staged", "chunked"):
+        kernel_replay_raw47(spec,dirs,linked,copied,audit,work,evidence,
+                            chunked=(args.transport == "chunked"))
     else:
         c.selected.add_family(spec,dirs,linked,copied,audit)
     source,names=generate_source(prior,work)
-    if args.transport == "staged":
+    if args.transport in ("staged", "chunked"):
         text=source.read_text()
         assert "import Raw47Complete" in text
         assert "BB6.Agent50Raw47Depth3Cut.parent" in text
