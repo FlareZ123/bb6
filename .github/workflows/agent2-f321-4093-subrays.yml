@@ -1,0 +1,73 @@
+name: Agent 2 F321 4093-tail refined affine rays (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  exact-refined-rays:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Build exact F321 source-counter predecessor kernel
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean"
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean"
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean"
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean"
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean"
+      - name: Regenerate and kernel-check the twelve three-digit subrays
+        run: |
+          set -euo pipefail
+          q=im-results/agent31-f321-mod384
+          e=im-results/agent31-f321-bulk
+          d=im-results/agent2-f321-4093
+          mkdir -p /tmp/f321-4093
+          python3 - <<'PY'
+          import json, pathlib, subprocess
+          manifest=json.loads(pathlib.Path("im-results/agent2-f321-4093/refined-subrays.json").read_text())
+          assert manifest["modulus"] == 786432
+          assert manifest["targetParent"] == {"modulus":12288,"residue":4093}
+          assert len(manifest["subrays"]) == 12
+          q=pathlib.Path("im-results/agent31-f321-mod384")
+          for item in manifest["subrays"]:
+              residue=item["d"]
+              assert residue % 12288 == 4093
+              proc=subprocess.run(
+                  ["python3",str(q/"affine_ray_generator.py"),"786432",str(residue)],
+                  check=True,text=True,capture_output=True)
+              dest=pathlib.Path("/tmp/f321-4093")/f"Auto{residue}.lean"
+              dest.write_text(proc.stdout)
+              summary=json.loads(subprocess.run(
+                  ["python3",str(q/"affine_ray_generator.py"),"786432",str(residue),"--summary"],
+                  check=True,text=True,capture_output=True).stdout)
+              assert summary["nodes"] == item["nodes"], (residue,summary,item)
+              print(f"generated {dest.name}: {summary}", flush=True)
+          PY
+          : > /tmp/f321-4093/lean.log
+          for f in /tmp/f321-4093/*.lean; do
+            echo "Checking $f"
+            LEAN_PATH="$e:$q" lean "$f" 2>&1 | tee -a /tmp/f321-4093/lean.log
+          done
+          test "$(grep -c '^axioms BB6.Agent31F321Ray' /tmp/f321-4093/lean.log || true)" -eq 12
+          ! grep -Eq 'sorryAx|native_decide' /tmp/f321-4093/lean.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: f321-4093-refined-exact-affine-certificates
+          path: |
+            /tmp/f321-4093/*.lean
+            /tmp/f321-4093/lean.log
+          if-no-files-found: ignore
+          retention-days: 5
