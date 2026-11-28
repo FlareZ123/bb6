@@ -1,0 +1,61 @@
+name: Agent50 Raw34 exact-frontier FAR source proofs
+
+on:
+  workflow_dispatch:
+
+jobs:
+  far-source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate and source-check exact frontier FAR certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a50-raw34-far3233
+          mkdir -p "$W/generated"
+          g++ -O3 -std=c++20 im-results/agent40-raw34-pair-depth8/census_f0ld.cpp -o "$W/census"
+          g++ -O3 -std=c++20 im-results/agent50-raw34-plan/far.cpp -o "$W/far"
+          "$W/census" --emit-hard > "$W/hard3233.txt"
+          test "$(wc -l < "$W/hard3233.txt")" -eq 3233
+          "$W/far" 4 < "$W/hard3233.txt" > "$W/far.jsonl" 2> "$W/far.log"
+          python im-results/agent50-raw34-far3233/generate_far_shards.py             --hard "$W/hard3233.txt" --far "$W/far.jsonl"             --output "$W/generated" --shard-size 40 | tee "$W/generation.json"
+          python tools/lean_compile_closure.py --workdir "$W/build"             --source-root "$W/generated" --jobs 8             --manifest "$W/closure-manifest.json"             --artifact-name raw34-far3233-source             "$W/generated"/Raw34FAR3233Shard*.lean 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/generated/manifest.json" "$W/closure.log" <<'PY'
+          import json,re,sys
+          m=json.load(open(sys.argv[1]))
+          log=open(sys.argv[2]).read()
+          assert m["frontierMachines"] == 3233
+          assert m["farHits"] == 3065 and m["misses"] == 168
+          assert len(m["missIds"]) == 168 and len(m["missRows"]) == 168
+          assert len(m["modules"]) == 77
+          assert sum(x["size"] for x in m["modules"]) == 3065
+          allowed={"propext","Classical.choice","Quot.sound"}
+          for x in m["modules"]:
+              full=x["namespace"]+".all_never"
+              mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if mm:
+                  got=set(re.findall(r"[A-Za-z][A-Za-z0-9_.]*",mm.group(1)))
+                  assert got <= allowed,(full,got)
+              else:
+                  assert f"'{full}' does not depend on any axioms" in log,full
+          assert "sorryAx" not in log
+          print("PASS: 3065 of 3233 exact Raw34 hard machines have source-kernel FAR proofs")
+          print("canonical frontier SHA256:",m["canonicalFrontierSha256"])
+          print("canonical 168-miss SHA256:",m["canonicalMissSha256"])
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-far3233-source
+          path: /tmp/a50-raw34-far3233/
+          if-no-files-found: warn
+          retention-days: 30
