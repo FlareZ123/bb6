@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-plan]
         default: late-parent
       base_run:
         type: string
@@ -959,5 +959,37 @@ jobs:
           path: |
             /tmp/a40-raw34-counter/closure.log
             /tmp/a40-raw34-counter/manifest.json
+          if-no-files-found: error
+          retention-days: 30
+
+  raw34-plan:
+    if: inputs.mode == 'raw34-plan'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Construct and check the complete literal pilot Cover
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-plan
+          W=/tmp/a50-raw34-plan
+          mkdir -p "$W"
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate.py" --output "$D/Raw34Pilot.lean" --summary "$W/pilot.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --theorem BB6.Agent50Raw34Pilot.cover_weighted --parent-table '1RB---_1RC---_0RD0RE_1LC0LD_---0LF_0LC---' --weighted-bound 28 --artifact-name raw34-plan-source --provenance-input "$D/generate.py" "$D/Raw34PilotWeighted.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34Pilot.cover_weighted'" "$W/closure.log"
+          cp "$D/Raw34Pilot.lean" "$W/"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-plan-source
+          path: /tmp/a50-raw34-plan/
           if-no-files-found: error
           retention-days: 30
