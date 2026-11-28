@@ -9,7 +9,7 @@ set_option autoImplicit false
 namespace BB6.Agent8Raw54.OneRDBankAudit
 open BB6Coverage BB6Coverage.FAR BB6.Agent13BlankDelay BB6.Agent8TNFPath
 open BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10FastAudit
-open BB6.Agent47PartialAudit
+open BB6Coverage.Agent50SideCycle BB6.Agent47PartialAudit
 
 /-- A compact source-derived DFA. The raw destinations are reduced modulo d;
     the generated bank separately checks that every source code already lies
@@ -38,15 +38,16 @@ private theorem fromTry {d : Nat} (p : PartialMachine) (start : Fin d)
 theorem farSpecCheck_sound (p : PartialMachine) (s : FarSpec)
     (h : farSpecCheck p s = true) (m : Machine) (hm : compatible p m) :
     NeverHalts m := by
-  cases hr : s.rev with
-  | false =>
-      exact fromTry p ⟨0,s.pos⟩ s.dfa
-        (by simpa [farSpecCheck,hr] using h) m hm
-  | true =>
-      exact FAR.reflectNever m
-        (fromTry (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa
-          (by simpa [farSpecCheck,hr] using h)
-          (reflectTable m) (FAR.reflectCompatible p m hm))
+  by_cases hr : s.rev = true
+  · have ht :
+        (FAR.fastTryDfa (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa).isSome = true := by
+      simpa [farSpecCheck,hr] using h
+    exact FAR.reflectNever m
+      (fromTry (FAR.reflectPartial p) ⟨0,s.pos⟩ s.dfa ht
+        (reflectTable m) (FAR.reflectCompatible p m hm))
+  · have ht : (FAR.fastTryDfa p ⟨0,s.pos⟩ s.dfa).isSome = true := by
+      simpa [farSpecCheck,hr] using h
+    exact fromTry p ⟨0,s.pos⟩ s.dfa ht m hm
 
 /-- Compact partial audit: FAR leaves carry only an index into a checked DFA
     bank. Unresolved leaves are retained exactly. -/
