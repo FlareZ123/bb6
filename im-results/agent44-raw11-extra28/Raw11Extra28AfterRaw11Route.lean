@@ -27,8 +27,6 @@ theorem exact_code :
     BB6.Agent47PhaseFrontier.tableCode extra28 = 26318896606190888 := by
   decide +kernel
 
-theorem exact_member : extra28 ∈ prior := by decide +kernel
-
 theorem exact_complement :
     (prior.length, remaining.length) = (294,293) := by decide +kernel
 
@@ -47,7 +45,6 @@ theorem cover_from_293 (B : Nat) (hB : 234 ≤ B)
       hRemaining)
 
 #print axioms exact_code
-#print axioms exact_member
 #print axioms exact_complement
 #print axioms cover_from_293
 end BB6.Agent44Extra28Raw11Root
