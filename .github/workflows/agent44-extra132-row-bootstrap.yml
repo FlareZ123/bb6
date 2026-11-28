@@ -88,6 +88,7 @@ jobs:
         env:
           RAW11_REPAIR_ID: '132'
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+          RAW11_REPAIR_MODULE_TIMEOUT: '240'
           RAW11_REPAIR_TARGET: Agent44Extra132GiantProof
         run: |
           set -euo pipefail
