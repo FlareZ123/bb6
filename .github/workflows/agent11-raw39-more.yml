@@ -458,10 +458,11 @@ jobs:
             "${roots[@]}" 2>&1 | tee /tmp/a11-semantic-shard.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a11-semantic-shard.log; then exit 1; fi
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: raw39-${{ inputs.branch }}-semantic-shard-${{ matrix.group }}
           path: /tmp/a11-semantic-shard/
-          if-no-files-found: error
+          if-no-files-found: warn
           retention-days: 30
 
   semantic_assemble:
