@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank, f-long, left-pumps]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank, f-long, left-pumps, left-rank]
         default: pilot
 
 permissions:
@@ -141,6 +141,27 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
+      - name: Exact original 25-way source-bank marginal for 14 four-hole left-growth cylinders
+        if: inputs.mode == 'left-rank'
+        run: |
+          set -euo pipefail
+          W=/tmp/agent23-raw34-halters
+          mkdir -p "$W"
+          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-f-left --include-e-ray \
+            --query-cubes im-results/agent40-raw34-frontier/left-growth-fourhole-candidates.json \
+            > "$W/left-growth-rank.json"
+          node - "$W/left-growth-rank.json" im-results/agent40-raw34-frontier/left-growth-fourhole-candidates.json <<'JS'
+          const fs=require("node:fs");
+          const audit=JSON.parse(fs.readFileSync(process.argv[2]));
+          const manifest=JSON.parse(fs.readFileSync(process.argv[3]));
+          const rows=audit.queryCubes.all.map((r,i)=>({name:manifest.hardLong[i].name,
+            gross:r.gross,alreadyClassified:r.certifiedInside,prospectiveNew:r.unresolved}));
+          console.log(JSON.stringify({totalFourHoleFamilies:rows.length,
+            exactFreshAgainstNamedPreCycleBank:audit.queryCubes.exactResidualGrossOverCubes,
+            unclassifiedBaselineWithoutSources:audit.totalResidualD1not1RD,
+            rows},null,2));
+          JS
       - name: Source compile all new unbounded left binary, unary and two-colour odometers
         if: inputs.mode == 'left-pumps'
         run: |
@@ -214,6 +235,7 @@ jobs:
           path: |
             /tmp/agent23-raw34-halters/audit.log
             /tmp/agent23-raw34-halters/rank-*.json
+            /tmp/agent23-raw34-halters/left-growth-rank.json
             /tmp/agent23-raw34-halters/generate-f*.log
           retention-days: 14
 
