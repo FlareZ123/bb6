@@ -206,7 +206,7 @@ theorem actual_predecessor_coupled_four_ray (n t u v x y : Nat)
   have hgrowth := BB6.Agent27ThreeStepStripArithmetic.scale_growth n (by omega)
   have hpow : 3^(n+3)=27*3^n := by
     rw [Nat.pow_add]
-    norm_num
+    omega
   have hqscale : min u v+3<3^(n+3) := by omega
   have hupper := even_step_second_upper (n+3) u v x y he hqscale hs
   have hhuge := scale_growth_thirteen n hn
