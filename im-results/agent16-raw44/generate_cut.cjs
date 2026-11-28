@@ -21,7 +21,7 @@ function run(p,T,W){let q=0,l=0n,r=0n,h=0,his=[];
       if(d>=0&&r===s.r&&((l^s.l)&((1n<<BigInt(s.h-lo))-1n))===0n)
         return {kind:'cycle',entry:i,period:t-i,right:true,boundary:lo};
       if(d<=0&&l===s.l&&((r^s.r)&((1n<<BigInt(hi-s.h+1))-1n))===0n)
-        return {kind:'cycle',entry:i,period:t-i,right:false,boundary:hi+1};
+        return {kind:'cycle',entry:i,period:t-i,right:false,boundary:hi};
     }
     const j=q*2+Number(r&1n),m=p[j];
     if(m<0)return {kind:'hole',n:t,j};
