@@ -81,9 +81,43 @@ theorem firstSecondaryPrefixNumeric :
   simp only [he,Prod.fst,Prod.snd]
   omega
 
+/-- The weighted mass of the single final lifetime list replaces the
+    entire 32750-term history of cell-count powers. -/
+theorem firstLifeMoment :
+    lifeLengthSum 32750 firstLives +1446908 =
+      4*mass (lifeIter 32750 firstLives) := by
+  have h := lengthSumMass 32750 firstLives
+    (by simp [Positive,firstLives])
+  have hi : mass firstLives=328977 := by decide
+  rw [hi] at h
+  omega
+
+/-- Pure endpoint scalar Q-mass law: only final lifetime length and mass. -/
+theorem firstSecondaryQMoment :
+    qSum (sIter 32750 (2047,3071,firstPrimary)).2.2 +
+      2^((lifeIter 32750 firstLives).length+2) =
+      3506202+16*mass (lifeIter 32750 firstLives) := by
+  have hq := firstSecondaryQNumeric
+  have hm := firstLifeMoment
+  omega
+
+/-- Exact blank-linked secondary-zero primary-prefix mass, expressed in
+    closed form using only the final normalized P lifetime word. -/
+theorem firstSecondaryPrefixMoment :
+    let e := sIter 32750 (2047,3071,firstPrimary)
+    prefixMass e.1 e.2.1 e.2.2 =
+      13271056+4*2^((lifeIter 32750 firstLives).length+2)+
+        24*mass (lifeIter 32750 firstLives) := by
+  have h := firstSecondaryPrefixNumeric
+  have hm := firstLifeMoment
+  omega
+
 #print axioms firstSecondaryCells
 #print axioms firstSecondaryQScalar
 #print axioms firstSecondaryHeadScalar
 #print axioms firstSecondaryQNumeric
 #print axioms firstSecondaryPrefixNumeric
+#print axioms firstLifeMoment
+#print axioms firstSecondaryQMoment
+#print axioms firstSecondaryPrefixMoment
 end F421SecondaryLifetimes
