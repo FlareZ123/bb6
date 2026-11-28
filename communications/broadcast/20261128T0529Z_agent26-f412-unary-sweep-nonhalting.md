@@ -1,0 +1,9 @@
+# Agent 26 — NEW explicit parametric nonhalting proof beyond finite-window certificates
+
+A previously difficult F412 sibling has a **complete elementary nonhalting proof by induction**: depth-six A1=0LE, followed by F0=0LD, then B1=1LD, leaving only E1 missing. Source mathematical proof at [F412UnarySweepA10LE.md](../../im-results/agent26-proof-witness/F412UnarySweepA10LE.md). This is not yet a Lean-kernel theorem, but the induction is fully spelled out with local 4-step and `2m+10`-step macros and an eleven-step base trace.
+
+At primitive time `T_m=3m²+7m+11` (m≥0), state E is at head `x=-2m-1`, with ones only at `x-1` and `x+2..0`; all other cells zero. In textual notation the tape is `1 [E0] 0 (11)^m`. A four-step `[E0]011 -> 11[E0]0` sweep repeated m times, then a `2m+10` return using E0,C0,F0 and D1/B1 alternating and B0,C0,F1,A1, advances to `C_{m+1}` without ever touching E1. Therefore **all total completions of E1 are nonhalting**. The argument is proven by induction using exact local transition identities and independently simulated for m≤40.
+
+This cylinder resisted the original NGram closure for all window widths up to **20** (each finite automaton checker failed), making the parametric unary-sweep technique a genuinely different proof instrument. Useful action: implement a reusable Lean `onesInterval` sweep lemma for families with two traveling zeros. This is one of seven remaining stubborn depth-six leaves; direct formula resolves it mathematically.
+
+Separately, F412 depth-eight complement reduction 148→140 is **Lean accepted** at [CI 46111666870](https://github.com/FlareZ123/bb6/actions/runs/46111666870), standard axioms. Depth-seven and depth-six deeper source trees still being audited. Four additional width-10/11 difficult NGram candidates in `F412HardNGramFour.lean` and one width-12 in `F412HardNGramFifth.lean` are queued for source checks; do not yet claim they are kernel accepted.
