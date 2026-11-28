@@ -5,33 +5,38 @@ base="$PWD/im-results/agent3-raw139-e1-zeroRD"
 work="$PWD/.tmp/a3-e1-$kind"
 mkdir -p "$work/imports" "$work/reuse" "$work/build" /tmp/a3-e1-core
 if [[ "$kind" == E1D0Leaf2265Core ]]; then
-  lean -o "$work/build/Leaf2265Core.olean" "$base/Leaf2265Core.lean" 2>&1 | tee "$work/log"
-  LEAN_PATH="$work/build" lean -o "$work/build/Leaf2265Compress.olean" "$base/Leaf2265Compress.lean" 2>&1 | tee -a "$work/log"
-  node "$base/emit-2265.cjs" > "$work/imports/Leaf2265Trace.lean"
-  LEAN_PATH="$work/build" lean -o "$work/build/Leaf2265Trace.olean" "$work/imports/Leaf2265Trace.lean" 2>&1 | tee -a "$work/log"
+  # Source-pinned tracked imports; do not invoke the historical alternate
+  # emit-2265.cjs trace, which predates the counted MacroRounds/All interface.
+  python3 im-results/agent13-coverage/unpack.py
+  python3 tools/lean_compile_closure.py \
+    --workdir "$work/build" --jobs 2 \
+    --manifest "$work/manifest.json" \
+    --label "Leaf2265 exact source trace and original weighted bridge" \
+    "$base/Leaf2265Bridge.lean" 2>&1 | tee "$work/log"
+  python3 - "$work/log" <<'PY'
+import pathlib,re,sys
+s=pathlib.Path(sys.argv[1]).read_text()
+required=[
+  "BB6.Agent3Leaf2265.terminalRun",
+  "BB6.Agent3Leaf2265.terminalRead",
+  "BB6.Agent3Leaf2265Bridge.reached",
+  "BB6.Agent3Leaf2265Bridge.weighted",
+]
+for theorem in required:
+  m=re.search(r"'"+re.escape(theorem)+r"' depends on axioms: \\[([^\\]]*)\\]",s)
+  if m: deps={x.strip() for x in m.group(1).split(",") if x.strip()}
+  elif "'"+theorem+"' does not depend on any axioms" in s: deps=set()
+  else: raise SystemExit("Missing source axiom audit: "+theorem)
+  bad=deps-{"propext","Quot.sound","Classical.choice"}
+  if bad: raise SystemExit(f"{theorem}: invalid axioms {bad}")
+  print(theorem, sorted(deps))
+PY
+  exit 0
 fi
 python3 im-results/agent13-coverage/unpack.py
 gh api "repos/$GITHUB_REPOSITORY/actions/artifacts/15175093456/zip" > /tmp/a3-e1-core.zip
 unzip -q /tmp/a3-e1-core.zip -d /tmp/a3-e1-core
 python3 im-results/agent3-raw139-e0-oneLB/merge-bank.py "$work/reuse" "$work/imports" /tmp/a3-e1-core
-if [[ "$kind" == E1D0Leaf2265Core ]]; then
-  cp "$base"/Leaf2265{Core,Compress,Bridge}.lean "$work/imports/"
-  export LEAN_PATH="$work/build:$work/reuse"
-  lean -o "$work/build/Leaf2265Bridge.olean" "$work/imports/Leaf2265Bridge.lean" 2>&1 | tee -a "$work/log"
-  python3 - "$work/log" <<'PY'
-import re,sys
-s=open(sys.argv[1]).read()
-for t in ["BB6.Agent3Leaf2265.terminalRun","BB6.Agent3Leaf2265.terminalRead","BB6.Agent3Leaf2265Bridge.reached","BB6.Agent3Leaf2265Bridge.weighted"]:
- m=re.search(r"'"+re.escape(t)+r"' depends on axioms: \[([^\]]*)\]",s)
- if m: used={x.strip() for x in m.group(1).split(",") if x.strip()}
- elif "'"+t+"' does not depend on any axioms" in s: used=set()
- else: raise SystemExit("Missing axiom audit: "+t)
- assert used<={"propext","Classical.choice","Quot.sound"},(t,used)
- print(t,sorted(used))
-PY
-  printf '%s\n' '{"scope":"original-source weighted cover","theorem":"BB6.Agent3Leaf2265Bridge.weighted","parent_table":[7,20,11,1,14,11,22,16,24,13,2,12]}' > "$work/manifest.json"
-  exit 0
-fi
 if [[ "$kind" == E1D0CounterCarry ]]; then
   python3 tools/lean_compile_closure.py "$base/CounterCarryBridge.lean" \
     --source-root "$work/imports" --workdir "$work/build" --jobs 2 \
