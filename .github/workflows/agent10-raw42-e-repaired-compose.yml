@@ -89,6 +89,36 @@ on:
         required: false
         type: string
         default: ''
+      repaired_run9:
+        description: 'Optional repaired-part run 9'
+        required: false
+        type: string
+        default: ''
+      repaired_part9:
+        description: 'Optional repaired exact partition key 9'
+        required: false
+        type: string
+        default: ''
+      repaired_run10:
+        description: 'Optional repaired-part run 10'
+        required: false
+        type: string
+        default: ''
+      repaired_part10:
+        description: 'Optional repaired exact partition key 10'
+        required: false
+        type: string
+        default: ''
+      repaired_run11:
+        description: 'Optional repaired-part run 11'
+        required: false
+        type: string
+        default: ''
+      repaired_part11:
+        description: 'Optional repaired exact partition key 11'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -121,6 +151,12 @@ jobs:
           PART7: ${{ inputs.repaired_part7 }}
           REPAIRED_RUN8: ${{ inputs.repaired_run8 }}
           PART8: ${{ inputs.repaired_part8 }}
+          REPAIRED_RUN9: ${{ inputs.repaired_run9 }}
+          PART9: ${{ inputs.repaired_part9 }}
+          REPAIRED_RUN10: ${{ inputs.repaired_run10 }}
+          PART10: ${{ inputs.repaired_part10 }}
+          REPAIRED_RUN11: ${{ inputs.repaired_run11 }}
+          PART11: ${{ inputs.repaired_part11 }}
         run: |
           set -euo pipefail
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
@@ -155,7 +191,19 @@ jobs:
             [[ "$REPAIRED_RUN8" =~ ^[0-9]+$ ]]
             [[ "$PART8" =~ ^g[0-7]p[0-3]$ ]]
           fi
-          parts=("$PART" "$PART2" "$PART3" "$PART4" "$PART5" "$PART6" "$PART7" "$PART8")
+          if [[ -n "$REPAIRED_RUN9" || -n "$PART9" ]]; then
+            [[ "$REPAIRED_RUN9" =~ ^[0-9]+$ ]]
+            [[ "$PART9" =~ ^g[0-7]p[0-3]$ ]]
+          fi
+          if [[ -n "$REPAIRED_RUN10" || -n "$PART10" ]]; then
+            [[ "$REPAIRED_RUN10" =~ ^[0-9]+$ ]]
+            [[ "$PART10" =~ ^g[0-7]p[0-3]$ ]]
+          fi
+          if [[ -n "$REPAIRED_RUN11" || -n "$PART11" ]]; then
+            [[ "$REPAIRED_RUN11" =~ ^[0-9]+$ ]]
+            [[ "$PART11" =~ ^g[0-7]p[0-3]$ ]]
+          fi
+          parts=("$PART" "$PART2" "$PART3" "$PART4" "$PART5" "$PART6" "$PART7" "$PART8" "$PART9" "$PART10" "$PART11")
           for ((i=0; i<${#parts[@]}; i++)); do
             [[ -z "${parts[$i]}" ]] && continue
             for ((j=i+1; j<${#parts[@]}; j++)); do
@@ -263,6 +311,33 @@ jobs:
           name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part8 }}
           path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part8 }}
 
+      - name: Replace optional repaired partition 9
+        if: ${{ inputs.repaired_run9 != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run9 }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part9 }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part9 }}
+
+      - name: Replace optional repaired partition 10
+        if: ${{ inputs.repaired_run10 != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run10 }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part10 }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part10 }}
+
+      - name: Replace optional repaired partition 11
+        if: ${{ inputs.repaired_run11 != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run11 }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part11 }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part11 }}
+
       - name: Restore rewritten generated sources from repaired partitions
         env:
           BRANCH: ${{ inputs.branch }}
@@ -274,6 +349,9 @@ jobs:
           PART6: ${{ inputs.repaired_part6 }}
           PART7: ${{ inputs.repaired_part7 }}
           PART8: ${{ inputs.repaired_part8 }}
+          PART9: ${{ inputs.repaired_part9 }}
+          PART10: ${{ inputs.repaired_part10 }}
+          PART11: ${{ inputs.repaired_part11 }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -284,7 +362,8 @@ jobs:
           parts=[p for p in (
               os.environ["PART"], os.environ["PART2"], os.environ["PART3"],
               os.environ["PART4"], os.environ["PART5"], os.environ["PART6"],
-              os.environ["PART7"], os.environ["PART8"]
+              os.environ["PART7"], os.environ["PART8"], os.environ["PART9"],
+              os.environ["PART10"], os.environ["PART11"]
           ) if p]
           repo=Path.cwd()
           restored=0
