@@ -60,7 +60,7 @@ def main():
             mod=f'Raw56LE{v}BiDFA{i}';ns=f'BB6.Agent1Raw56.LE{v}BiDFA{i}'
             dg,gg,ss=minimize(rec['table'],rec['dfa'])
             assert len(ss)<=rec['states'] and sum(map(len,gg))+2<=rec['edges']
-            text='\n'.join(['import FastBiDFA','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA',emit(i,rec['table'],dg,gg,ss,[len(ss),sum(map(len,gg))+2]),'end '+ns,''])
+            text='\n'.join(['import FastBiDFA','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA',emit(i,rec['table'],*dg,[len(ss),sum(map(len,gg))+2]),'end '+ns,''])
             (gen/(mod+'.lean')).write_text(text);mods.append(mod);proven[i]=ns+f'.M{i}'
         motifmods=[];motif={}
         global_stem=out/'global-le'
