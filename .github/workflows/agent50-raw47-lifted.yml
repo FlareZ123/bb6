@@ -235,6 +235,8 @@ jobs:
           name: canonical39-raw47-thin-delta
           path: |
             /tmp/a50-canonical39-raw47/canonical39-raw47-delta/**
+            /tmp/a50-canonical39-raw47/raw47-kernel-replay/**
+            /tmp/a50-canonical39-raw47/raw47-stage-tool/**
             /tmp/a50-canonical39-raw47.log
           if-no-files-found: error
           compression-level: 1
