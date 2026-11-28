@@ -74,6 +74,9 @@ theorem conditional_exact_at_champion
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
 #print axioms parent_count40
+#print axioms parent_root
+#print axioms parents_pairwise_distinct
+#print axioms parents_root
 #print axioms count39
 #print axioms removed_parent_absent
 #print axioms conditional_sound
