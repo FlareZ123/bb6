@@ -3,7 +3,7 @@ import BlockFARBridge
 import ZipThreeHoleAudit
 
 namespace Raw14042Cover
-open BB6BlockFAR Raw140Orbit Raw140Extra
+open BB6BlockFAR Raw140Orbit Raw140Extra Raw140VariantTransfer
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent50TNFPilot
 set_option maxRecDepth 4096
 set_option maxHeartbeats 1000000
