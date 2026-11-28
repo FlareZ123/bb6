@@ -12,9 +12,9 @@ function parameters(R){
   const F=R%3===1?69n:R%3===2?4161n:66645n;
   const D=4n**BigInt(R-1)+F;
   assert.equal(D%63n,7n);
-  const h=2n*(D-14182n)/63n,k=h+228n;
+  const h=2n*(D-1015n)/63n,k=h+18n;
   assert(h>0n&&h%2n===0n&&k%2n===0n);
-  const q=k-2n*BigInt(R)-300n,N=3n*k-2n*BigInt(R)-74n;
+  const q=k-2n*BigInt(R)-300n,N=3n*k-2n*BigInt(R)-282n;
   assert(q>0n&&N>h&&N%2n===0n);
   let rr=D;const bits=[];
   for(let j=0;j<R;j++){bits.unshift(Number(rr%4n));rr/=4n;}
@@ -23,12 +23,12 @@ function parameters(R){
   assert(k<4n**BigInt(R)&&k>=16n*BigInt(R));
   assert(k>4n*BigInt(R)+300n);
   // The first M=3 one block cancels T: H=28364+63h=2D.
-  assert.equal(28364n+63n*h,2n*D);
-  const lossFirst=679n+9n+(3n*(k-5n)-2n)+21n;
-  assert.equal(lossFirst,3n*k+692n);
+  assert.equal(2030n+63n*h,2n*D);
+  const lossFirst=49n+9n+(3n*(k-3n)-2n)+21n;
+  assert.equal(lossFirst,3n*k+68n);
   const L=k-BigInt(R);
   const zeroLoss=L%2n===0n?3n*L:3n*L-2n;
-  const Delta=3n*k+688n+zeroLoss;
+  const Delta=3n*k+64n+zeroLoss;
   assert(Delta>0n&&Delta<10n*k);
   let C=0n,E=0n,pEven=L%2n===0n; // rank after 111 is even
   // parity at first digit is even iff the length L is even
@@ -75,9 +75,9 @@ function direct(R){
     chunks.push([1,1]);
   };
   strict();
-  zr(227);assert.equal(y,T/2n);
-  one();assert.equal(y,672n);
-  zr(K-5);assert.equal(y,21n*T/32n);
+  zr(17);assert.equal(y,T/2n);
+  one();assert.equal(y,42n);
+  zr(K-3);assert.equal(y,21n*T/32n);
   one();one();one();assert.equal(y,2n*D);
   zr(K-R);assert.equal(y,2n*D*4n**BigInt(K-R));
   for(const b of bits){if(b===0)zr(1);else one();}
