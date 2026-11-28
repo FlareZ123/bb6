@@ -48,7 +48,8 @@ left, near -> far:  0^(b-6) 1^(a+2) [old left context]
 right:               1^2 0 1^(c+5) 0^(z-2) R
 ```
 
-and all three F reads are 0.
+and all three F reads are 0. The triad uses exactly
+`a + b + 2*c + 26` primitive steps.
 
 The boundary case **b = 5** performs the carry. If the old left context begins
 with `1^d 0 L` (near to far), A's final left sweep crosses those `d` ones.
@@ -60,7 +61,8 @@ tape is
 ```
 
 The context beyond the new head is unchanged. This is the mechanism that
-merges a completed local digit into the block on its left.
+merges a completed local digit into the block on its left. Its cost is exactly
+`2*a + 2*c + d + 33` primitive steps.
 
 ## Exact B-triad rewrite
 
@@ -82,7 +84,8 @@ run, while the right tape becomes
 
 Again all three F reads are 0. In particular, the first two Z-segments stop E
 inside a zero runway of sufficient length, and the final I-segment sends F
-onto the cell just erased by C.
+onto the cell just erased by C. The triad cost is exactly
+`2*a + 2*b + 29` primitive steps.
 
 These formulas can be checked directly by following A0/B/C/D/E/F across the
 displayed blocks; no asymptotic or simulation assumption is used in the local
