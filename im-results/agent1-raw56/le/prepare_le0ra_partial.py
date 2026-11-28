@@ -9,6 +9,7 @@ are conditional until the original Lean kernel and axiom gate accept them.
 from __future__ import annotations
 import base64,gzip,hashlib,itertools,json,subprocess,sys
 from pathlib import Path
+sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
 import emit_rc_rd as src
 import prepare_le0lb as pre
 
