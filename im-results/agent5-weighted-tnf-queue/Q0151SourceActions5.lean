@@ -24,6 +24,7 @@ open BB6.Agent5Q0151SegmentRunSound
 open BB6.Agent5Q0151CEndPhysicalBridge
 open BB6.Agent5Q0151TransferredWord
 open BB6.Agent5Q0151PackedRightExt
+open BB6Coverage.Agent13PackedZipper
 open BB6.Agent5Q0151SourceActions1
 open BB6.Agent5Q0151SourceActions3
 open BB6.Agent5Q0151StackSaturation
