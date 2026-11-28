@@ -109,7 +109,7 @@ jobs:
           assert int(d['sieve'])+int(d['sparse'])+int(d['exact'])==cutoff
           assert int(d['largeZero'])==0
           print('PASS: exact coverage of all initially admissible valuation indices, cutoff=',cutoff)
-          print('PARENTS:',d['parents'])
+          print('PARENTS:',d.get('parents',''))
           PY
       - name: Preserve reproducible r12 computational log
         if: always()
