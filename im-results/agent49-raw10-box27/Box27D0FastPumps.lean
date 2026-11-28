@@ -126,7 +126,7 @@ theorem source_never (m : Machine)
     (hc : d0 ∈ sweepCodes) : NeverHalts m := by
   have h : d0=5 ∨ d0=6 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
     simpa [sweepCodes] using hc
-  rcases h with rfl|rfl|rfl|rfl
+  rcases h with rfl|rfl|rfl|rfl|rfl
   · exact never05 m (source_compatible 5 m hm hd0)
   · exact never06 m (source_compatible 6 m hm hd0)
   · exact never07 m (source_compatible 7 m hm hd0)
@@ -143,7 +143,10 @@ theorem source_bound (B : Nat) (m : Machine)
 /-- The missing fifth D0 value is a three-move halt, irrespective of all
     seven other free transition slots. -/
 theorem check0 :
-    BB6.Agent13.Box17.leafCheck 255 #[] (table 0) (.halt 3) = true := by decide
+    BB6.Agent13.Box17.leafCheck 255 #[] (table 0) (.halt 3) = true := by
+  unfold BB6.Agent13.Box17.leafCheck BB6.Agent13.Box17.haltBound
+  unfold BB6.Agent13.Box17.zipHalt BB6Coverage.Agent10ZipAudit.zipRead
+  decide
 
 theorem bound0 (m : Machine) (hm : compatible (table 0) m) :
     WeightedBound 255 m :=
@@ -151,7 +154,7 @@ theorem bound0 (m : Machine) (hm : compatible (table 0) m) :
 
 def fastCodes : List (Fin 25) := [0,5,6,7,9,10]
 
-/-- A quarter of the original Box27 D0 domain (five of twenty codes)
+/-- Six of twenty original Box27 D0 values
     is now bounded uniformly with all seven other slots unrestricted. -/
 theorem source_fast_bound (m : Machine)
     (hm : Fits raw10Remainder[27]! m)
@@ -159,7 +162,7 @@ theorem source_fast_bound (m : Machine)
     (hc : d0 ∈ fastCodes) : WeightedBound 255 m := by
   have h : d0=0 ∨ d0=5 ∨ d0=6 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
     simpa [fastCodes] using hc
-  rcases h with rfl|rfl|rfl|rfl|rfl
+  rcases h with rfl|rfl|rfl|rfl|rfl|rfl
   · exact bound0 m (source_compatible 0 m hm hd0)
   · exact source_bound 255 m hm 5 hd0 (by decide)
   · exact source_bound 255 m hm 6 hd0 (by decide)
