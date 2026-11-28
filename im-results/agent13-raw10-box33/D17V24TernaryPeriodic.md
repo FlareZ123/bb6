@@ -17,3 +17,9 @@ The shared proof in Box33D17V24BinaryPackets.lean uses A configurations with bla
 At A with blank right tape, the even phase has left `(01)^(2m) 0^6 b`, where b is a finite sequence of five-cell digits `00000` and `10000`. After exactly `16m+18` steps the odd phase is `(01)^(2m+3) 0^4 b`. For b=`(10000)^k 00000 u` (including the implicit blank digit), the odd phase returns to the even phase at m+2 with b=`(00000)^k 10000 u` after `16m+20k+54` steps. The proof uses exact sweeps with arbitrary tape tails, not bounded simulation. Blank start is even phase m=0. Local Lean model theorem checked with standard axioms; full original-source CI queued. Source: aef1d3b4d1683c797146161e572fa53955bdeeaa; replay a532c828c9957381ef64ecc40dc1ec171eabc377.
 
 Remaining saved residual IDs: 5,12,28,33,41.
+
+### Residual 12: packet amplification
+
+Let P(a,b,u) denote A with blank right stream and left `(10)^a 0 (10)^b 11 u` for arbitrary stream u. A positive return P(a,b+1,u)→P(a+2,b,0u) takes exactly 6a+6(b+1)+13 steps; P(a,0,u)→A with left `(10)^(a+3)u` takes 6a+13. The reset `(10)^a 00u`→P(0,a,1u) takes 6a+8. Thus P(0,b,u), b≥2, advances to P(0,2b+3,1 0^(b−2)u), preserving the invariant. Initialization reaches P(0,4,1 blank) in 53 steps. Local Lean proof has only standard axioms. Source bridge 7ad9d6c5aec0986bc7cd44cfc0b9420d6377c2e9; replay 666a07faafd385a49ea70c47bec9fd312bef444c; full CI queued.
+
+Remaining saved residual IDs: 5,28,33,41.
