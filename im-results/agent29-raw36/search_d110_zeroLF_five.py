@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pursue five exact previously unresolved D1=0RE E0=0LF literals.
+"""Search exact unresolved D1=0RE E0-move literals with inverse-stack families.
 
 Fresh inverse-stack families only, deterministic search. Any FOUND row
 is an untrusted parametric candidate until the independent Lean kernel
@@ -56,11 +56,15 @@ def worker(item):
                 ZeroDivisionError,RecursionError,OverflowError,TimeoutError):
             pass
         finally:
-            # Cancel the one-shot timer before changing the handler.  The
-            # reverse order can race with SIGALRM and raise from finally,
-            # discarding successful candidates already found by this worker.
-            signal.setitimer(signal.ITIMER_REAL,0)
-            signal.signal(signal.SIGALRM,signal.SIG_IGN)
+            # Block SIGALRM while cancelling the one-shot timer.  Merely
+            # reversing setitimer/signal.signal is still racy when the alarm
+            # is already pending at the Python bytecode boundary.
+            old_mask=signal.pthread_sigmask(signal.SIG_BLOCK,{signal.SIGALRM})
+            try:
+                signal.setitimer(signal.ITIMER_REAL,0)
+                signal.signal(signal.SIGALRM,signal.SIG_IGN)
+            finally:
+                signal.pthread_sigmask(signal.SIG_SETMASK,old_mask)
             signal.signal(signal.SIGALRM,timed_out)
         if j%300==0:
             print("SCAN index",index,"tested",j,"elapsed",
