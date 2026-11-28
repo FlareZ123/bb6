@@ -2,13 +2,67 @@ name: Agent4 Raw56 1LB exact residual source acceptance
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: "Acceptance target"
+        required: true
+        default: "all"
+        type: choice
+        options:
+          - all
+          - m42763
 
 permissions:
   contents: read
   actions: read
 
 jobs:
+  m42763:
+    if: ${{ inputs.target == 'm42763' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Generate and kernel-check M42763 finite abstraction
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/m42763
+          cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/m42763/
+          python im-results/agent4-raw56-root-pilot/m42763_block_cert.py --out /tmp/m42763/M42763Block.lean
+          cd /tmp/m42763
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o M42763Block.olean M42763Block.lean | tee M42763Block.log
+          grep -F "M42763.never" M42763Block.log
+          if grep -Eq 'native_decide|sorryAx|admit' M42763Block.log; then
+            echo "non-kernel proof dependency found" >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-m42763-source-accepted
+          path: |
+            /tmp/m42763/M42763Block.lean
+            /tmp/m42763/M42763Block.olean
+            /tmp/m42763/M42763Block.log
+          if-no-files-found: error
+
   prepare:
+    if: ${{ inputs.target != 'm42763' }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
