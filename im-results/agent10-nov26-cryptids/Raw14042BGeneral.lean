@@ -100,7 +100,6 @@ theorem exitFront (j n : Nat) (X Y : List Sym) :
   have h1 := Raw14042Bank.pumpAny n X (U 1 j ++ Y)
   have h := join h0 h1
   refine ⟨5+3*(j+1)+21*n,?_⟩
-  unfold Reach
   simpa only [AB,TA,Raw14042Bank.bank_cons,U,List.replicate_succ,List.cons_append,List.append_assoc,List.nil_append] using h
 
 theorem exitAny (n : Nat) (X : List Sym) (s : ATail) :
