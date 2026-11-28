@@ -160,7 +160,8 @@ theorem never_oriented (f s : Bool) (p : PartialMachine) (c : Certificate)
   rw [initial_orient,h1] at H
   change run m k blank = some (orientConfig f s (family c j n)) at H
   rw [show k=n+(k-n) by omega,run_append] at H
-  cases hh : run m n blank with
+  change (run m n (emptyAt 0)).isSome = true
+  cases hh : run m n (emptyAt 0) with
   | none => simp [hh] at H
   | some z => rfl
 
