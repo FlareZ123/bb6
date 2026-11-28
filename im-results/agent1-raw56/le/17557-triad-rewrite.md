@@ -127,14 +127,67 @@ Equivalently, with A=0 and B=1, a substituted symbol `x` produces
 and exactly `4*3^(n-1)` A-return segments in epoch n. This is the structural
 source of the factor `3^(n-1)` in the observed clock formula.
 
+## Level-raising renormalization
+
+There is a substantially sharper finite-checked self-similarity. Work in the
+translation-invariant zipper coordinates `Z0`, so absolute head position is
+discarded. At each triad boundary, write the left and right tape as
+near-to-far alternating run-length lists.
+
+For every corresponding boundary checked from epochs 2→3 through 6→7, the
+boundary at position `k` is carried to boundary `3k` at the next level by
+one fixed run-length map `rho`.
+
+On the right, for
+`1^a1 0^z1 1^a2 0^z2 ... 1^am` with `m >= 2`:
+
+- `a1 -> 2*a1+2`, `z1 -> 2*z1-1`;
+- if `m=2`, the final `a2 -> 2*a2+4`;
+- if `m>=3`, `a2 -> 2*a2+3`, `z2 -> 2*z2-1`;
+- later nonfinal 1-runs double, later zero-runs map `z -> 2*z+1`;
+- the final 1-run maps `a -> 2*a+1`.
+
+On the left, every 1-run doubles. Every observed zero-run except the fixed
+anchor `3` has a unique representation
+
+```
+z = 8*q + s,   s in {-1,0,1,2},
+```
+
+and maps to `16*q+s`; the anchor `3` remains `3`.
+
+This map sends the checkpoint tape in `C_n` exactly to the checkpoint tape
+in `C_(n+1)`: the three right 1-run lengths transform as
+
+```
+2^n-2       -> 2^(n+1)-2
+2^(n+1)-3   -> 2^(n+2)-3
+2^(n+1)-1   -> 2^(n+2)-1.
+```
+
+Moreover, the checked macro orbit satisfies the conjugacy pattern
+
+```
+rho ∘ A = (A B A) ∘ rho
+rho ∘ B = (B B A) ∘ rho
+```
+
+at every reachable lower-level boundary in those epochs. This is exactly the
+same substitution `sigma(A)=ABA, sigma(B)=BBA` seen in the branch word.
+`analyze_17557_renorm.py` reproduces the literal primitive-step audit and
+checks the level map on every corresponding triad boundary through level 7.
+
 ## Remaining proof obligation
 
-A proof of the infinite family should define a symbolic configuration grammar
-closed by the two exact triad rewrites and prove that its induced triad word is
-the substitution fixed family above. That would simultaneously prove that F1
-is never queried and derive `C_n -> C_(n+1)` for all n.
+The infinite proof has therefore narrowed to a local renormalization theorem:
+define the symbolic domain of reachable triad-boundary zippers, prove it is
+closed under the A/B triad rewrites and under `rho`, and prove the two
+conjugacy identities above on that domain. The base epoch `C_2 -> C_3` is
+finite. Conjugacy would then inductively lift the whole epoch, proving
+`C_n -> C_(n+1)` for every n and simultaneously proving that F1 is never
+queried.
 
-The finite checker `analyze_17557_dyadic.py` deliberately stops short of that
-induction: its checkpoint and substitution assertions are computational
-evidence for the missing global grammar, while the two local triad rewrites in
-this note identify the exact symbolic lemmas to formalize.
+The finite checkers deliberately stop short of that domain/conjugacy proof.
+Their checkpoint, substitution and renormalization assertions are
+computational evidence; the exact local triad rewrites earlier in this note
+are the transition-level lemmas intended to discharge the remaining proof.
