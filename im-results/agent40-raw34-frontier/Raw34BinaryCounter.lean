@@ -106,6 +106,115 @@ theorem carryBlank (n : Nat) :
   have hc : 1+(2*n+3+2*(n+1))=4*n+6 := by omega
   simpa only [rep,List.append_assoc,List.nil_append,hc] using h1234
 
+
+/-! ## An exact inductive grammar for finite binary numerals
+
+The final digit is always one; earlier digits are each followed by a
+zero separator. This representation has no arbitrary trailing zeros,
+so its zipper is stable under our exact run0 implementation.
+The zero numeral is the separate word [] entry case.
+-/
+
+inductive Digits where
+  | last : Digits
+  | zero : Digits → Digits
+  | one : Digits → Digits
+  deriving DecidableEq, Repr
+
+def encode : Digits → List Bool
+  | .last => [true]
+  | .zero r => [false,false]++encode r
+  | .one r => [true,false]++encode r
+
+def padZeros : Nat → Digits → Digits
+  | 0, w => w
+  | n+1,w => .zero (padZeros n w)
+
+theorem padZeros_encode (n : Nat) (w : Digits) :
+    encode (padZeros n w) = rep [false,false] n++encode w := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+    simp [padZeros,encode,rep,ih,List.append_assoc]
+
+/-- Every positive numeral begins with either (a) a zero bit;
+    (b) some positive block of one-bits before a zero bit; or
+    (c) a finite all-one numeral. These cases are exhaustive,
+    not an assumption inferred from runtime traces. -/
+theorem classify (d : Digits) :
+    (∃ r : Digits, encode d = [false,false]++encode r) ∨
+    (∃ (n : Nat) (r : Digits),
+      encode d = [true]++rep [false,true] n++[false,false]++encode r) ∨
+    (∃ (n : Nat), encode d = [true]++rep [false,true] n) := by
+  induction d with
+  | last =>
+    exact Or.inr (Or.inr ⟨0,rfl⟩)
+  | zero r ih =>
+    exact Or.inl ⟨r,rfl⟩
+  | one r ih =>
+    rcases ih with ⟨u,hu⟩ | ⟨n,u,hu⟩ | ⟨n,hu⟩
+    · refine Or.inr (Or.inl ⟨0,u,?_⟩)
+      simp [encode,hu,rep,List.append_assoc]
+    · refine Or.inr (Or.inl ⟨n+1,u,?_⟩)
+      simp [encode,hu,rep,List.append_assoc]
+    · refine Or.inr (Or.inr ⟨n+1,?_⟩)
+      simp [encode,hu,rep,List.append_assoc]
+
+/-- Every well-formed finite binary numeral has a strictly positive
+    exact successor macro which does not query any undefined row.
+    Case b=0 takes 2 instructions; a carry through k+1 marked digits
+    takes 4k+6 instructions. This is the proof's progress invariant. -/
+theorem numeral_progress (d : Digits) :
+    ∃ (cost : Nat) (next : Digits),
+      0 < cost ∧
+      run0 p cost (word (encode d)) =
+        some (word (encode next)) := by
+  rcases classify d with ⟨r,hr⟩ | ⟨n,r,hr⟩ | ⟨n,hr⟩
+  · refine ⟨2,Digits.one r,by omega,?_⟩
+    simpa [hr,encode,List.append_assoc] using
+      (incZero ([false]++encode r))
+  · refine ⟨4*n+6,padZeros (n+1) (Digits.one r),by omega,?_⟩
+    simpa [hr,padZeros_encode,encode,List.append_assoc] using
+      (carryZero n (encode r))
+  · refine ⟨4*n+6,padZeros (n+1) Digits.last,by omega,?_⟩
+    simpa [hr,padZeros_encode,encode,List.append_assoc] using
+      (carryBlank n)
+
+/-- For every requested bound n, a genuine blank-start trace of
+    length at least n reaches a fully specified C-state numeral.
+    This is stronger than observing finitely many counter increments. -/
+theorem arbitrarily_long (n : Nat) :
+    ∃ (t : Nat) (d : Digits), n ≤ t ∧
+      run0 p t ⟨0,[],[]⟩ = some (word (encode d)) := by
+  induction n with
+  | zero =>
+    refine ⟨4,Digits.last,by omega,?_⟩
+    simpa [encode] using (join0 first incEmpty)
+  | succ n ih =>
+    obtain ⟨t,d,ht,hr⟩ := ih
+    obtain ⟨cost,next,hcost,hstep⟩ := numeral_progress d
+    refine ⟨t+cost,next,by omega,?_⟩
+    exact join0 hr hstep
+
+/-- The original six-state Raw34 child is nonhalting on the blank tape
+    under every completion of A1,B1,E1,F0,F1. In particular, a HALT
+    on E1 does not terminate the binary odometer. -/
+theorem all_time_never (m : Machine) (hm : compatible p m) :
+    NeverHalts m := by
+  intro n
+  obtain ⟨t,d,ht,hr⟩ := arbitrarily_long n
+  have hz : (zrun p t start).map project = some (word (encode d)) :=
+    (run_project p t start).trans hr
+  cases h : zrun p t start with
+  | none => simp [h] at hz
+  | some z =>
+    have H := zrun_sound p m hm t start z h
+    rw [start_embed] at H
+    rw [show t=n+(t-n) by omega,run_append] at H
+    cases he : run m n blank with
+    | none => simp [he] at H
+    | some c => rfl
+
 #print axioms first
 #print axioms incEmpty
 #print axioms incZero
@@ -115,5 +224,10 @@ theorem carryBlank (n : Nat) :
 #print axioms clearMany
 #print axioms carryZero
 #print axioms carryBlank
+#print axioms padZeros_encode
+#print axioms classify
+#print axioms numeral_progress
+#print axioms arbitrarily_long
+#print axioms all_time_never
 
 end BB6.Agent40Raw34BinaryCounter
