@@ -1,4 +1,4 @@
-# Current Raw11 continuation status — 2026-11-28 16:15 UTC
+# Current Raw11 continuation status — 2026-11-28 16:11 UTC
 
 This directory's older Extra28 narrative below is historical. **Extra28 and
 Extra140 are now source-accepted**, and the staged Raw11 route is
