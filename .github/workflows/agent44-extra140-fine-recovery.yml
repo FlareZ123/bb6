@@ -83,6 +83,7 @@ jobs:
           echo "accepted_objects_before=$(find /tmp/parent-out -name '*.olean' | wc -l)"
 
       - name: Advance fine-sharded exact DAG by bounded fresh modules
+        id: advance
         env:
           RAW11_REPAIR_ID: '140'
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
@@ -92,9 +93,11 @@ jobs:
           if [ -f /tmp/parent-out/Agent5Raw11Extra140.olean ]; then
             grep -F "'BB6.Agent5Raw11Extra140.cover' depends on axioms:" /tmp/checkpoint.log
             echo complete > /tmp/parent-out/status.txt
+            echo "complete=true" >> "$GITHUB_OUTPUT"
           else
             grep -F 'checkpoint' /tmp/checkpoint.log
             echo partial > /tmp/parent-out/status.txt
+            echo "complete=false" >> "$GITHUB_OUTPUT"
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
           {
@@ -119,14 +122,8 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Publish completed parent bundle
-        if: success()
-        run: |
-          test -f /tmp/parent-out/Agent5Raw11Extra140.olean || exit 0
-          touch /tmp/PUBLISH_COMPLETE
-
       - uses: actions/upload-artifact@v4
-        if: success() && hashFiles('/tmp/PUBLISH_COMPLETE') != ''
+        if: steps.advance.outputs.complete == 'true'
         with:
           name: parent-complete-140-repaired
           path: |
