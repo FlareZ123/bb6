@@ -1,6 +1,6 @@
 # Sharp universal finite packing bound for four-adic signed inverse edges
 
-**28 November 2026 — Agent 22. Mathematical statement and elementary proof, with a finite, machine-reproducible base certificate.** This result sharpens the existing source-independent signed inverse edge budget in [`ValuationEdges.lean`](../im-results/agent22-429-signed-drift/ValuationEdges.lean). The original `edge_family_budget` proved `6·∑j < K`; the theorem below improves the constant to **15/2**, and this new constant is optimal for general admissible edges. This paper argument has **not yet been checked end-to-end by Lean**. It does not decide #429 or BB(6), nor does it establish a universal Busy Beaver upper bound.
+**28 November 2026 — Agent 22. Exact extremal formula and mathematical proof, with a finite, machine-reproducible base certificate.** This result sharpens the existing source-independent signed inverse edge budget in [`ValuationEdges.lean`](../im-results/agent22-429-signed-drift/ValuationEdges.lean). The original `edge_family_budget` proved `6·∑j < K`; the theorem below improves the constant to **15/2**, and this new constant is optimal for general admissible edges. This paper argument has **not yet been checked end-to-end by Lean**. It does not decide #429 or BB(6), nor does it establish a universal Busy Beaver upper bound.
 
 ## Theorem: sharp signed-edge valuation budget
 
@@ -20,6 +20,42 @@ Suppose the source integers `v_i` are pairwise distinct. Then
 The coefficient **15/2 is sharp**: the single edge `K=15, v=1, j=2, w=1` satisfies every hypothesis and has `15j=30=2K`.
 
 For `1≤K<15`, the intermediate uniform interval estimate below can exceed `2K/15` only at `K=7,13,14`; consequently the theorem deliberately uses the exact hypothesis `K≥15`. In particular, it would be false to advertise the 15/2 statement as a theorem for all positive K.
+
+## Stronger exact extremal theorem: the capacity is attained at every K
+
+The sharp **per-K** result is stronger than the uniform 15/2 inequality. For *every positive integer K*, consider all finite edge families as in the theorem above, requiring distinct positive source values (the inequality `K≥15` is not needed). The **exact maximum** of their total exponent weight is
+[
+oxed{displaystyle
+J_{max}(K)=
+Fleft(leftlfloorrac{K-1}{3}ightflooright)
+-
+Fleft(leftlfloorrac K4ightflooright)
+=U(K).}
+]
+The upper bound is proven in the next section. **Every summand can be attained simultaneously:** for each integer `z` satisfying `K/4<z<K/3`, let `e=ν_4(z)`, and explicitly choose
+[
+v=4z-K,qquad j=e+1,qquad w=z/4^e.
+]
+All three entries are positive integers; `3v<K` is equivalent to `z<K/3`, and `4^j w=4z=v+K`. Distinct `z` give distinct `v`. Summing `j=1+ν_4(z)` over *all* the interval integers yields exactly `U(K)`. This exhibits a maximizing family and proves the capacity formula **without an asymptotic or compactness argument**.
+
+These maximizing edges are an abstract extremal family, not necessarily successive edges of one cyclic inverse path. Thus the exactness of `U(K)` for unconstrained **edge families** does not imply that a signed path with that total valuation weight exists.
+
+### Asymptotically exact capacity constant: 9
+
+Write `s_4(n)` for the sum of base-4 digits of `n`. A routine division-by-4 summation gives the exact digit identity
+[
+F(n)=rac{4n-s_4(n)}3.
+]
+Indeed, `n=4q+r` gives `F(n)=n+F(q)` and `s_4(n)=r+s_4(q)`; induction on `n` proves the identity. Consequently, with the same `a,b` as above,
+[
+U(K)=rac43(b-a)+rac{s_4(a)-s_4(b)}3
+=rac K9+O(log K).
+]
+Here `b-a=K/12+O(1)`, while each digit sum has at most `1+lfloorlog_4 Kfloor` digits, each at most three. Therefore
+[
+oxed{lim_{K	oinfty}rac{J_{max}(K)}{K}=rac19.}
+]
+The asymptotic coefficient **9** for the ratio `K/J` is itself optimal for large-K *unconstrained edge families*, because the constructive family above attains `J_{max}(K)` for every K. The globally valid constant 15/2 is smaller only because small K (specifically K=15) has a locally denser four-adic interval.
 
 ## Proof by exact valuation summation
 
