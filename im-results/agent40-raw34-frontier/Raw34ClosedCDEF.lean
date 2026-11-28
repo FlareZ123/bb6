@@ -26,6 +26,7 @@ def parent (c1 d1 e0 e1 f0 f1 : Move) : PartialMachine := fun s =>
   | 4,true => some (some e1)
   | 5,false => some (some f0)
   | 5,true => some (some f1)
+  | _,_ => none
 
 def inside (q : Fin 6) : Prop :=
   q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5
