@@ -1,10 +1,17 @@
-name: Agent 44 temporary source bundle
+name: Agent 44 source bundle and Raw11 Extra28 parent proof
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [bundle, raw11-extra28]
+        default: bundle
 permissions:
   contents: read
+  actions: read
 jobs:
   bundle:
+    if: inputs.mode == 'bundle'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -24,3 +31,74 @@ jobs:
           name: bb6-source-20261120
           path: /tmp/bb6-source.tar.gz
           retention-days: 1
+
+  raw11-extra28:
+    if: inputs.mode == 'raw11-extra28'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Hydrate accepted original-source proof dependencies and Agent44 generators
+        env:
+          GH_TOKEN: \${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw11 /tmp/raw11-deps /tmp/raw11-output
+          curl -fsSL --retry 2 -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/15144626755/zip" \
+            -o /tmp/raw11-deps.zip
+          unzip -q /tmp/raw11-deps.zip -d /tmp/raw11-deps
+          for a in ld-source siblings-source trace-core; do
+            tar -xzf "im-results/agent44-raw11-extra28/$a.tar.gz" -C /tmp/raw11
+          done
+          echo "PINNED_SOURCE_HEAD=$(git rev-parse HEAD)"
+          echo "GENERATORS:"
+          find /tmp/raw11 -maxdepth 2 -type f \( -name '*.sh' -o -name '*.py' -o -name '*.cjs' \) -printf '%P\n' | sort
+          echo "DEPS:"
+          find /tmp/raw11-deps -name '*.olean' -printf '%P\n' | head -60
+      - name: Generate exact remaining four first-hole sibling certificates
+        run: |
+          set -euo pipefail
+          cd /tmp/raw11
+          python prepare-siblings.py
+          node make-periodic.cjs
+          bash generate-siblings.sh 16 17 18 19
+          node generate-trace.cjs 17 18 19
+          echo "GENERATED MODULES:"
+          find . -maxdepth 2 -name '*.lean' -printf '%P\n' | sort | tail -100
+          echo "BUILD SCRIPT:"
+          sed -n '1,220p' build-fast.sh
+      - name: Kernel-check the four outstanding covers against the pinned original source
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/.elan/bin:$PATH"
+          export LEAN_PATH="/tmp/raw11:$(find /tmp/raw11-deps -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
+          cd /tmp/raw11
+          echo "LEAN_PATH=$LEAN_PATH"
+          bash compile-siblings.sh 16 2>&1 | tee /tmp/raw11-output/sibling16.log
+          bash build-fast.sh 2>&1 | tee /tmp/raw11-output/trace-17-19.log
+          if grep -RE 'sorryAx|native_decide' /tmp/raw11-output/*.log; then
+            echo 'Unapproved axiom or native_decide in proof output' >&2
+            exit 1
+          fi
+          echo "Source compilation finished; inspect theorem axiom prints in logs."
+      - name: Save proof diagnostics and generated sources
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent44-raw11-extra28-four-sibling-proof
+          path: |
+            /tmp/raw11-output
+            /tmp/raw11/*.lean
+            /tmp/raw11/*.json
+            /tmp/raw11/*.sh
+          if-no-files-found: ignore
+          retention-days: 30
