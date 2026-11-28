@@ -70,8 +70,13 @@ theorem no_coprime_cyclic
         (hbound 0 (by omega)).1,(hbound 0 (by omega)).2⟩
       (by have hh0 := hinner 0 (by omega); omega)
       hdir hscale
-    simpa only [E,Nat.zero_add,Int.sub_sub,Int.mul_sub,
-      Int.mul_add] using hi
+    have hident :
+        (h:Int)*(c K-c 0)+dir*(K:Int)*((h:Int)-a 0)-
+          dir*(K:Int)*(h:Int) = E 0 := by
+      simp only [E,Nat.zero_add,Int.mul_sub]
+      omega
+    rw [hident] at hi
+    exact hi
   have hEzero := finite_half_zero E B hhalf hEbound
   have hdiv : (h:Int) ∣ dir*(K:Int)*a 0 := by
     refine ⟨c K-c 0,?_⟩
@@ -83,7 +88,10 @@ theorem no_coprime_cyclic
     · simpa [hd] using hdiv
     · have hneg : (h:Int) ∣ -(dir*(K:Int)*a 0) :=
         Int.dvd_neg.mpr hdiv
-      simpa [hd] using hneg
+      have heq : -(dir*(K:Int)*a 0)=(K:Int)*a 0 := by
+        rw [hd]
+        simp
+      rwa [heq] at hneg
   have hnat : h ∣ K*(a 0).natAbs := by
     have hh' := Int.natAbs_dvd_natAbs.mpr hdivK
     simpa only [Int.natAbs_mul,Int.natAbs_natCast] using hh'
@@ -91,8 +99,9 @@ theorem no_coprime_cyclic
   have hI : (h:Int) ∣ a 0 :=
     Int.natAbs_dvd_natAbs.mp (by simpa using hA)
   have hz : a 0%(h:Int)=0 := Int.emod_eq_zero_of_dvd hI
+  have hBi := hinner 0 (by omega)
   have hi : a 0%(h:Int)=a 0 :=
-    Int.emod_eq_of_lt (by omega) (hinner 0 (by omega)).2
+    Int.emod_eq_of_lt (by omega) hBi.2
   omega
 
 /-- Shortened positive-clock obstruction under a supplied Mersenne order.
