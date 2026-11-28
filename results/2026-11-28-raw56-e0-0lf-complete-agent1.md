@@ -78,6 +78,28 @@ The generated leaf source has SHA-256
 The axiom gate reports only `propext`, `Classical.choice`, and
 `Quot.sound`; neither `sorryAx` nor `native_decide` is admitted.
 
+## Parent integration: exact 14-to-8 E1=0LE frontier
+
+The completed 0LF child is consumed together with the five previously accepted
+complete E0 children (0RB, 0RC, 0LB, 1LA, 1RA) in
+
+```
+BB6.Agent1Raw56E1LE.sound8_closed
+```
+
+GitHub Actions run **46123625812** source-accepts this theorem and uploads
+artifact **15255001408**, `raw56-le-six-source-accepted`, with digest
+
+```
+sha256:4ef87b64480b7765229c8fc5c25a975fe0cf8f15d9fbd087dd9f0c96049f33b2
+```
+
+The theorem says that every full machine compatible with the Raw56 E1=0LE
+parent either satisfies `WeightedBound 40000` or extends one of exactly
+**eight** residual E0 children. The remaining labels are
+`0LA, 0RA, 0RF, 1LB, 1LF, 1RB, 1RC, 1RF`. The source gate reports only
+`propext`, `Classical.choice`, and `Quot.sound`.
+
 ## Reproduction
 
 The exact generator is
@@ -85,6 +107,8 @@ The exact generator is
 `im-results/agent1-raw56/le/Raw56LE0LFFull.lean`. The manual source gate is
 `.github/workflows/agent1-raw56-le-0lf-complete.yml`.
 
-This closes one of the previously unresolved E0 siblings of Raw56 E1=0LE.
-The larger E1=0LE parent still requires the other residual siblings to be
-closed; this local theorem alone does not establish a global BB(6) upper bound.
+This closes one previously unresolved E0 sibling and sharpens the Raw56
+E1=0LE parent from its former 14-to-9 frontier to the source-certified
+14-to-8 frontier above. The eight residual siblings and other Raw56 branches
+still prevent a complete parent Cover; these results do not establish a
+global BB(6) upper bound.
