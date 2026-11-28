@@ -452,7 +452,7 @@ private theorem q7_escape_rejoin (t : Nat) (ht : t % 27 = 4) :
       h012 hA)
 
 
-/-- Fourth source return for the q=5, k≡7 (mod 27) E branch.
+/-- Fourth source return for the q=5, k≡25 (mod 27) E branch.
     For t≡8 (mod 9), two E events expose a B packet, followed by an
     A-code return to a pure-unary section. These are exact raw run costs. -/
 def q5FourthK (t : Nat) : Nat := 192*(t/9)+181
