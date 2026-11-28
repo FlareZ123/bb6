@@ -1,0 +1,145 @@
+import Raw56LE17557FrameSchedule
+import Raw56LE17557EpisodeWord
+
+namespace BB6.Agent1Raw56.LE17557ActionGrammar
+open BB6.Agent1Raw56.LE17557EpisodeWord
+
+/-- Rank-labelled macro actions.  `normal r` creates a rank-r finite
+    zero-run frame, `b` is a B triad, and `carry` is the b=5 A triad. -/
+inductive Action where
+  | normal : Nat → Action
+  | b : Action
+  | carry : Action
+  deriving DecidableEq, Repr
+
+/-- Forget action refinement and recover the ordinary A/B triad letter. -/
+def erase : Action → Bool
+  | .normal _ => false
+  | .b => true
+  | .carry => false
+
+/-- One level of the observed rank-labelled lift. -/
+def liftLetter : Action → List Action
+  | .normal r => [.normal (r+1), .b, .carry]
+  | .b => [.b, .b, .carry]
+  | .carry => [.normal 0, .b, .carry]
+
+def lift (w : List Action) : List Action := w.flatMap liftLetter
+def eraseWord (w : List Action) : List Bool := w.map erase
+
+@[simp] theorem erase_liftLetter (a : Action) :
+    eraseWord (liftLetter a) = substLetter (erase a) := by
+  cases a <;> simp [liftLetter, eraseWord, erase, substLetter]
+
+@[simp] theorem lift_nil : lift [] = [] := rfl
+@[simp] theorem lift_cons (a : Action) (w : List Action) :
+    lift (a::w) = liftLetter a ++ lift w := rfl
+
+@[simp] theorem eraseWord_append (u v : List Action) :
+    eraseWord (u++v) = eraseWord u ++ eraseWord v := by
+  simp [eraseWord]
+
+/-- The rank-labelled lift is exactly a refinement of the existing ternary
+    substitution sigma after erasing N/C back to A. -/
+theorem erase_lift (w : List Action) :
+    eraseWord (lift w) = subst (eraseWord w) := by
+  induction w with
+  | nil => rfl
+  | cons a w ih =>
+      rw [lift_cons, eraseWord_append, erase_liftLetter, ih]
+      rfl
+
+/-- Epoch 2 action classification, then repeated rank-labelled lifting. -/
+def actionEpoch : Nat → List Action
+  | 0 => [.carry, .b, .b, .carry]
+  | n+1 => lift (actionEpoch n)
+
+/-- The same epochs after forgetting the N/C refinement. -/
+def macroEpoch : Nat → List Bool
+  | 0 => [false, true, true, false]
+  | n+1 => subst (macroEpoch n)
+
+theorem erase_actionEpoch (n : Nat) :
+    eraseWord (actionEpoch n) = macroEpoch n := by
+  induction n with
+  | zero => rfl
+  | succ n ih =>
+      rw [actionEpoch, erase_lift, ih]
+      rfl
+
+@[simp] theorem liftLetter_length (a : Action) :
+    (liftLetter a).length = 3 := by
+  cases a <;> rfl
+
+theorem lift_length (w : List Action) :
+    (lift w).length = 3*w.length := by
+  induction w with
+  | nil => rfl
+  | cons a w ih =>
+      rw [lift_cons, List.length_append, liftLetter_length, ih]
+      simp
+      omega
+
+theorem actionEpoch_length (n : Nat) :
+    (actionEpoch n).length = 4*3^n := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rw [actionEpoch, lift_length, ih]
+      simp [Nat.pow_succ]
+      omega
+
+/-- A canonical rank-r frame segment is the r-fold lift of N_0 B. -/
+def segment : Nat → List Action
+  | 0 => [.normal 0, .b]
+  | r+1 => lift (segment r)
+
+theorem segment_length (r : Nat) :
+    (segment r).length = 2*3^r := by
+  induction r with
+  | zero => decide
+  | succ r ih =>
+      rw [segment, lift_length, ih]
+      simp [Nat.pow_succ]
+      omega
+
+/-- The lifted segment advertises its rank in its first normal action. -/
+theorem segment_head (r : Nat) :
+    (segment r).head? = some (.normal r) := by
+  induction r with
+  | zero => rfl
+  | succ r ih =>
+      cases h : segment r with
+      | nil => simp [h] at ih
+      | cons a w =>
+          have ha : a = .normal r := by
+            simpa [h] using ih
+          subst a
+          simp [segment, lift, liftLetter, h]
+
+/-- Boolean erasure of the frame segment, starting from AB. -/
+def segmentMacro : Nat → List Bool
+  | 0 => [false, true]
+  | r+1 => subst (segmentMacro r)
+
+theorem erase_segment (r : Nat) :
+    eraseWord (segment r) = segmentMacro r := by
+  induction r with
+  | zero => rfl
+  | succ r ih =>
+      rw [segment, erase_lift, ih]
+      rfl
+
+theorem segmentMacro_length (r : Nat) :
+    (segmentMacro r).length = 2*3^r := by
+  rw [← erase_segment]
+  simp [eraseWord, segment_length]
+
+#print axioms erase_lift
+#print axioms erase_actionEpoch
+#print axioms actionEpoch_length
+#print axioms segment_length
+#print axioms segment_head
+#print axioms erase_segment
+
+end BB6.Agent1Raw56.LE17557ActionGrammar
