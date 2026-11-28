@@ -594,6 +594,7 @@ jobs:
             --parent-table "1RB---_1RC---_0RD---_1LD1LE_${E0}0LE_------" \
             --artifact-name "raw56-le${E0}-source-accepted" \
             --provenance-input im-results/agent1-raw56/le/prepare_le0lb.py \
+            --provenance-input im-results/agent1-raw56/le/motif_quotient.py \
             --provenance-input im-results/agent1-raw56/le/motif_spec.json \
             --provenance-input im-results/agent1-raw56/le/inventory-79.json.gz.b64 \
             "/tmp/raw56-le-e0/${E0}gen/Raw56LE${E0}All.lean" 2>&1 | tee /tmp/raw56-le-compile.log
