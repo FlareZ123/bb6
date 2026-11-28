@@ -32,7 +32,7 @@ The other twelve indices, with their proposed weighted bounds, are:
 | 14 | 1LD | 96 | locally kernel checked |
 | 15 | 1RD | 119 | locally kernel checked |
 | 16 | 0LE | 81 | **original-source Lean kernel accepted**; [matrix job 16, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
-| 17 | 0RE | 150 | complete candidate, join outstanding |
+| 17 | 0RE | 150 | **original-source Lean kernel accepted**; [matrix job 17, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
 | 18 | 1LE | 141 | **original-source Lean kernel accepted**; [matrix job 18, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
 | 19 | 1RE | 158 | **original-source Lean kernel accepted**; [matrix job 19, run 46105738773](https://github.com/FlareZ123/bb6/actions/runs/46105738773) |
 
