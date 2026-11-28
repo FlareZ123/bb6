@@ -1348,7 +1348,7 @@ def kid04 : Audit :=
 ])
 
 theorem kid04_checked :
-  zipCheck 101 (refine parent (2,true) (some ⟨false,false,4⟩)) kid04 = true := by decide +kernel
+  zipCheck 96 (refine parent (2,true) (some ⟨false,false,4⟩)) kid04 = true := by decide +kernel
 
 
 #print axioms kid04_checked
