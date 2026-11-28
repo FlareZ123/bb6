@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank, f-long]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank, f-long, left-pumps]
         default: pilot
 
 permissions:
@@ -141,6 +141,27 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
+      - name: Source compile all new unbounded left binary, unary and two-colour odometers
+        if: inputs.mode == 'left-pumps'
+        run: |
+          set -euo pipefail
+          W=/tmp/agent23-raw34-halters
+          mkdir -p "$W/left"
+          python tools/lean_compile_closure.py --workdir "$W/left" --jobs 3 \
+            im-results/agent40-raw34-frontier/Raw34BinaryLeftOdometer.lean \
+            im-results/agent40-raw34-frontier/Raw34BinaryLeftOdometerBoth.lean \
+            im-results/agent40-raw34-frontier/Raw34UnaryLeftGrowth.lean \
+            im-results/agent40-raw34-frontier/Raw34LeftUnaryShell.lean \
+            im-results/agent40-raw34-frontier/Raw34LeftUnaryShellRD.lean \
+            im-results/agent40-raw34-frontier/Raw34TwoColorLeftGrowth.lean \
+            im-results/agent40-raw34-frontier/Raw34LeftOdometerConjugateE.lean \
+            im-results/agent40-raw34-frontier/Raw34LeftUnaryShellConjugateE.lean \
+            2>&1 | tee "$W/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$W/audit.log"
+          grep -F "'BB6.Agent40Raw34TwoColorLeftGrowth.all_time_never'" "$W/audit.log"
+          grep -F "'BB6.Agent40Raw34BinaryLeftOdometerBoth.all_time_never'" "$W/audit.log"
+          grep -F "'BB6.Agent40Raw34LeftUnaryShellConjugateE.shell_rd_E_never'" "$W/audit.log"
       - name: Prove four late-entry Raw34 translated half-line side cycles
         if: inputs.mode == 'f-long'
         run: |
