@@ -40,10 +40,11 @@ theorem subset_{kk} (e : List Move × PartialMachine)
     (he : e ∈ canonicalResiduals p_{kk} 5 t_{kk}) : e.2 ∈ allTables := by
   have h : e.2 ∈ (canonicalResiduals p_{kk} 5 t_{kk}).map Prod.snd :=
     List.mem_map_of_mem Prod.snd he
-  simp only [nr_{kk},List.map_nil,List.map_cons,Prod.snd,{EQ},
+  simp only [nr_{kk},List.map_nil,List.map_cons,{EQ},
     List.mem_cons,List.not_mem_nil,or_false] at h
   simp only [allTables,List.mem_cons,List.not_mem_nil,or_false]
   simp_all
+  all_goals grind
 """)
     childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
     (d/"Raw56LBTopChildren.lean").write_text(childrenSource)
@@ -59,8 +60,8 @@ open BB6Coverage BB6.Agent19CanonicalPartial
 
 theorem root_residual_subset (e : List Move × PartialMachine)
   (he : e ∈ canonicalResiduals ptop 5 ttop) : e.2 ∈ allTables := by
-  apply BB6.Agent4Raw56Root.canonicalResiduals_split_subset ptop 5 8 (2,true) ktop allTables
-    (fun mv x hx => ?_) e he
+  refine BB6.Agent4Raw56Root.canonicalResiduals_split_subset ptop 5 8 (2,true) ktop allTables ?_ e he
+  intro mv x hx
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
