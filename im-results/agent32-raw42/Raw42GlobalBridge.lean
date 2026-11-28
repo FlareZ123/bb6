@@ -1,5 +1,4 @@
 import Raw42NamedJoin
-import Raw42Canonical40Membership
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -9,7 +8,16 @@ open BB6Coverage BB6.Agent50TNFPilot
 open BB6.Agent32Raw42
 open BB6.Agent32Raw42NamedJoin
 
-abbrev literal : PartialMachine := BB6.Agent17Raw42Canonical40Membership.p
+/-- Raw42's exact literal seven-hole parent, kept local so the local join can
+    be checked without reconstructing the generated global roster source. -/
+def literal : PartialMachine := fun s =>
+  match s.1.val, s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 3,false => some (some ⟨true,false,3⟩)
+  | 3,true  => some (some ⟨false,false,1⟩)
+  | _,_ => none
 
 theorem parent_eq_literal : parent = literal := by
   apply tableOK_sound
