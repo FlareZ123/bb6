@@ -64,26 +64,25 @@ theorem raw4_data : raw4 = some e4 := by decide
 
 def s4 : DRegular.L := ⟨64*t4+27,1,5⟩
 
-def raw5 : Option DRegular.L := BB6.DRegularFast.fastRun 2511 s4
-#eval raw5.map (fun s => (s.a % 27, s.q, s.b))
-def t5b : Nat := ((raw5.getD (⟨0,0,0⟩ : DRegular.L)).a - 10) / 9
-def e5 : DRegular.L := ⟨9*t5b+10,7,1⟩
-theorem raw5_data : raw5 = some e5 := by decide
+/-- Executable probe only: binary-search the first departure from DRegular.
+    Its output is not a source proof and must not be used as a theorem premise. -/
+def locateExit : Nat → Nat → Nat → Nat
+  | 0, lo, _ => lo
+  | fuel+1, lo, hi =>
+    if lo < hi then
+      let mid := (lo+hi)/2
+      if (BB6.DRegularFast.fastRun mid s4).isSome then
+        locateExit fuel (mid+1) hi
+      else
+        locateExit fuel lo mid
+    else lo
 
-def s5 : DRegular.L := ⟨64*t5b+91,3,2⟩
-
-def raw6 : Option DRegular.L := BB6.DRegularFast.fastRun 2138 s5
-#eval raw6.map (fun s => (s.a % 27, s.q, s.b))
-def t6 : Nat := ((raw6.getD (⟨0,0,0⟩ : DRegular.L)).a - 7) / 9
-def e6 : DRegular.L := ⟨9*t6+7,7,1⟩
-theorem raw6_data : raw6 = some e6 ∧ t6 % 27 = 4 := by decide
-
-/-- The q=7, k=3t+1 branch is the k=13 (mod 27) fourth-return row. -/
-def v6 : Nat := t6 / 27
-def k0 : Nat := 576*v6+95
-def k1 : Nat := 1536*v6+255
-def kA6 : Nat := 4096*v6+682
-def s6 : DRegular.L := ⟨8*kA6+31,3,2⟩
+#eval ("first_none_after_s4", locateExit 13 0 2511)
+#eval ("last_regular_before_exit",
+  (BB6.DRegularFast.fastRun ((locateExit 13 0 2511)-1) s4).map
+    (fun u => (u.a % 81, u.q, u.b)))
+#eval ("first_none_confirmed",
+  (BB6.DRegularFast.fastRun (locateExit 13 0 2511) s4).isNone)
 
 private theorem regular_source (n : Nat) (s t : DRegular.L)
     (hc : DRegular.Canon s)
@@ -271,8 +270,9 @@ private theorem e_double_packet_source (t q : Nat) (hq : 2 ≤ q) :
       | zero => omega
       | succ n =>
         simpa using (BB6.Agent25BGeneral.oppairs_last n)
+    dsimp only [xs]
     rw [hlast]
-    simp [xs,hlen,hsub,List.append_assoc]
+    simp [hlen,hsub,List.append_assoc]
   have hcost :
       eDoublePacketCost k q = 12*k*k+49*k+64+4*(q-2) := rfl
   have hlen2 : 2*((q-2)+1)+2 = 2*q := by omega
@@ -312,7 +312,10 @@ private theorem q8_rejoin (t : Nat) :
           (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 16 ys))
         (DRegularSource.sourceSection (q8Out t)) := by
     rw [ha]
-    simpa [q8Out,q8K] using a_packet_unary_obs (q8K t) 0 5
+    have hout : 8*q8K t+29+2*0+8*5 = 64*t+117 := by
+      dsimp [q8K]
+      omega
+    simpa only [q8Out,hout] using a_packet_unary_obs (q8K t) 0 5
   simpa [q8Cost,Nat.add_assoc] using
     (source_chain
       (eDoublePacketCost (3*t+2) 8)
@@ -355,7 +358,10 @@ private theorem q7A_rejoin (t : Nat) :
           (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 14 ys))
         (DRegularSource.sourceSection (q7AOut t)) := by
     rw [ha]
-    simpa [q7AOut,q7AK] using a_packet_regular_obs (q7AK t) 0 4
+    have hout : 8*q7AK t+11+2*0+8*4 = 64*t+91 := by
+      dsimp [q7AK]
+      omega
+    simpa only [q7AOut,hout] using a_packet_regular_obs (q7AK t) 0 4
   simpa [q7ACost,Nat.add_assoc] using
     (source_chain
       (eDoublePacketCost (3*t+2) 7)
@@ -449,9 +455,6 @@ def regCost1 : Nat := DRegular.accumulated 4675 s0
 def regCost2 : Nat := DRegular.accumulated 1085 s1
 def regCost3 : Nat := DRegular.accumulated 611 s2
 def regCost4 : Nat := DRegular.accumulated 6911 s3
-def regCost5 : Nat := DRegular.accumulated 2511 s4
-def regCost6 : Nat := DRegular.accumulated 2138 s5
-
 private theorem reg1_obs :
     ObsEq (run regCost1 (DRegularSource.sourceSection s0))
       (DRegularSource.sourceSection e1) := by
@@ -459,8 +462,7 @@ private theorem reg1_obs :
     refine ⟨?_, ?_⟩
     · simp [s0,BB6.Agent35I5Exceptional.pureReentry]
       omega
-    · intro _
-      rfl
+    · simp [s0,BB6.Agent35I5Exceptional.pureReentry]
   exact regular_source 4675 s0 e1 hc raw1_data.1
 
 private theorem reg2_obs :
@@ -470,8 +472,7 @@ private theorem reg2_obs :
     refine ⟨?_, ?_⟩
     · simp [s1]
       omega
-    · intro hq
-      simp [s1] at hq
+    · simp [s1]
   exact regular_source 1085 s1 e2 hc raw2_data.1
 
 private theorem reg3_obs :
@@ -481,8 +482,7 @@ private theorem reg3_obs :
     refine ⟨?_, ?_⟩
     · simp [s2]
       omega
-    · intro _
-      rfl
+    · simp [s2]
   exact regular_source 611 s2 e3 hc raw3_data
 
 private theorem reg4_obs :
@@ -492,45 +492,21 @@ private theorem reg4_obs :
     refine ⟨?_, ?_⟩
     · simp [s3]
       omega
-    · intro _
-      rfl
+    · simp [s3]
   exact regular_source 6911 s3 e4 hc raw4_data
-
-private theorem reg5_obs :
-    ObsEq (run regCost5 (DRegularSource.sourceSection s4))
-      (DRegularSource.sourceSection e5) := by
-  have hc : DRegular.Canon s4 := by
-    refine ⟨?_, ?_⟩
-    · simp [s4]
-      omega
-    · intro hq
-      simp [s4] at hq
-  exact regular_source 2511 s4 e5 hc raw5_data
-
-private theorem reg6_obs :
-    ObsEq (run regCost6 (DRegularSource.sourceSection s5))
-      (DRegularSource.sourceSection e6) := by
-  have hc : DRegular.Canon s5 := by
-    refine ⟨?_, ?_⟩
-    · simp [s5]
-      omega
-    · intro hq
-      simp [s5] at hq
-  exact regular_source 2138 s5 e6 hc raw6_data.1
 
 def continuationCost : Nat :=
   regCost1 + q4Cost t1 +
   regCost2 + q5Cost t2 +
   regCost3 + q8Cost t3 +
-  regCost4 + q5BCost t4 +
-  regCost5 + q7ACost t5b +
-  regCost6 + q7EscapeCost t6
+  regCost4 + q5BCost t4
 
-/-- The authentic seed5 blank-root path continues through the first
-    third-conditional q=7 checkpoint and source-re-enters L(.,3,2). -/
+/-- The authentic D3 root resumes four exact regular stretches and four
+    exceptional source returns. The next hypothesized stretch is invalid:
+    the regular model exits before return 2511 from s4. -/
 theorem continuation_source :
     ObsEq (run continuationCost (DRegularSource.sourceSection s0))
-      (DRegularSource.sourceSection s6) := by
+      (DRegularSource.sourceSection s4) := by
   have h01 := source_chain regCost1 (q4Cost t1)
     (DRegularSource.sourceSection s0)
     (DRegularSource.sourceSection e1)
@@ -573,37 +549,7 @@ theorem continuation_source :
     (DRegularSource.sourceSection e4)
     (DRegularSource.sourceSection s4)
     h06 (q5B_rejoin t4)
-  have h08 := source_chain
-    (regCost1+q4Cost t1+regCost2+q5Cost t2+regCost3+q8Cost t3+
-      regCost4+q5BCost t4) regCost5
-    (DRegularSource.sourceSection s0)
-    (DRegularSource.sourceSection s4)
-    (DRegularSource.sourceSection e5)
-    h07 reg5_obs
-  have h09 := source_chain
-    (regCost1+q4Cost t1+regCost2+q5Cost t2+regCost3+q8Cost t3+
-      regCost4+q5BCost t4+regCost5)
-    (q7ACost t5b)
-    (DRegularSource.sourceSection s0)
-    (DRegularSource.sourceSection e5)
-    (DRegularSource.sourceSection s5)
-    h08 (q7A_rejoin t5b)
-  have h10 := source_chain
-    (regCost1+q4Cost t1+regCost2+q5Cost t2+regCost3+q8Cost t3+
-      regCost4+q5BCost t4+regCost5+q7ACost t5b) regCost6
-    (DRegularSource.sourceSection s0)
-    (DRegularSource.sourceSection s5)
-    (DRegularSource.sourceSection e6)
-    h09 reg6_obs
-  have h11 := source_chain
-    (regCost1+q4Cost t1+regCost2+q5Cost t2+regCost3+q8Cost t3+
-      regCost4+q5BCost t4+regCost5+q7ACost t5b+regCost6)
-    (q7EscapeCost t6)
-    (DRegularSource.sourceSection s0)
-    (DRegularSource.sourceSection e6)
-    (DRegularSource.sourceSection s6)
-    h10 (q7_escape_rejoin t6 raw6_data.2)
-  simpa [continuationCost,Nat.add_assoc] using h11
+  simpa [continuationCost,Nat.add_assoc] using h07
 
 def sourceElapsedFinal : Nat :=
   BB6.Agent35I5Exceptional.sourceElapsed + continuationCost
@@ -611,12 +557,12 @@ def horizonFinal : Nat := 15 + sourceElapsedFinal
 
 theorem root_source :
     ObsEq (run sourceElapsedFinal (sourceUnary 5))
-      (DRegularSource.sourceSection s6) := by
+      (DRegularSource.sourceSection s4) := by
   exact source_chain
     BB6.Agent35I5Exceptional.sourceElapsed continuationCost
     (sourceUnary 5)
     (DRegularSource.sourceSection s0)
-    (DRegularSource.sourceSection s6)
+    (DRegularSource.sourceSection s4)
     BB6.Agent35I5Exceptional.i5_three_exception_rejoin
     continuation_source
 
@@ -639,9 +585,9 @@ theorem final_next_live :
   rw [hrun]
   intro hbad
   have hright :
-      (run 1 (DRegularSource.sourceSection s6)).st ≠ 6 := by
+      (run 1 (DRegularSource.sourceSection s4)).st ≠ 6 := by
     simp [CryptidBoundary.run,CryptidBoundary.step,
-      DRegularSource.sourceSection,CryptidBoundary.init,goL,s6]
+      DRegularSource.sourceSection,CryptidBoundary.init,goL,s4]
   exact hright (hstate.symm.trans hbad)
 
 private theorem frozen_step (c : CryptidBoundary.Cfg) (h : c.st = 6) :
@@ -731,8 +677,6 @@ theorem horizonFinal_ge_10pow1458 : 10^1458 ≤ horizonFinal := by
 #print axioms raw2_data
 #print axioms raw3_data
 #print axioms raw4_data
-#print axioms raw5_data
-#print axioms raw6_data
 #print axioms q7_escape_rejoin
 #print axioms continuation_source
 #print axioms root_source
