@@ -670,7 +670,7 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           W=/tmp/raw54-onerd-bank-base
           python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" im-results/agent8-raw54/Raw54OneRDBankAudit.lean 2>&1 | tee "$W.log"
-          python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent8Raw54.OneRDBankAudit.farSpecCheck_sound BB6.Agent8Raw54.OneRDBankAudit.bankSound
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" BB6.Agent8Raw54.OneRDBankAudit.farSpecCheck_sound BB6.Agent8Raw54.OneRDBankAudit.bankSound BB6.Agent8Raw54.OneRDBankAudit.bankClose
 
 
   raw54_onerd_prepare:
@@ -773,7 +773,7 @@ jobs:
           cp /tmp/raw54-onerd-generated/*.lean "$D/"
           python "$D/onera_slices.py" merge /tmp/raw54-onerd-slices "$P" 24 raw54-onerd
           python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" --precompiled-manifest "$P/manifest.json" --precompiled-dir "$P" "$D/Raw54OneRDBankCut.lean" 2>&1 | tee /tmp/raw54-onerd-cut.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.cut
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.cut BB6.Agent8Raw54.OneRDBankAudit.close
       - uses: actions/upload-artifact@v4
         if: always()
         with:
