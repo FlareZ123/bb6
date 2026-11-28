@@ -58,6 +58,13 @@ def finalOut (n : Nat) : Z0 :=
       [true] ++ rep [true,false] (B n) ++ fTail,
     []⟩
 
+/-- The F-on-fresh-zero family observed on the exact blank orbit. -/
+def family (n : Nat) : Z0 :=
+  ⟨5,
+    [false,true] ++ rep [true,false,true] (4*n+2) ++
+      rep [false,true] (2*n+1) ++ [true,false,true,true,false,true],
+    []⟩
+
 theorem preludeC (R : List Bool) :
     run0 table 21
       ⟨4,[],[false,false,false,false,false,true,false,true,true,false,true]++R⟩ =
@@ -147,6 +154,58 @@ theorem alignBeforeF (b : Nat) (X : List Bool) :
   have h := rep_snoc [true,true] b
   have hh := congrArg (fun x : List Bool => [false] ++ x ++ X) h
   simpa [List.append_assoc] using hh
+
+theorem alignFTail (p : Nat) :
+    rep [true,false] p ++ fTail =
+      [true,false,true] ++ rep [false,true] (p+1) ++
+        [true,false,true,true,false,true] := by
+  induction p with
+  | zero => rfl
+  | succ p ih =>
+    simp only [rep, List.append_assoc]
+    rw [ih]
+    rfl
+
+theorem prefixShift (m : Nat) (X : List Bool) :
+    [false,true,true,false] ++ [true] ++ rep [true,false,true] m ++
+        [true,false,true] ++ X =
+      [false,true] ++ [true,false,true] ++ [true,false,true] ++
+        rep [true,false,true] m ++ X := by
+  have h := rep_snoc [true,false,true] m
+  have hh := congrArg
+    (fun x : List Bool => [false,true] ++ [true,false,true] ++ x ++ X) h
+  simpa [List.append_assoc] using hh
+
+theorem normalizeFinal (m p : Nat) :
+    [false,true,true,false] ++ rep [true,true,false] m ++ [true] ++
+        rep [true,false] p ++ fTail =
+      [false,true] ++ rep [true,false,true] (m+2) ++
+        rep [false,true] (p+1) ++ [true,false,true,true,false,true] := by
+  have hr := rotate true [true,false] m
+  have hr0 :
+      [true] ++ rep [true,false,true] m =
+        rep [true,true,false] m ++ [true] := by
+    simpa using hr
+  have ht := alignFTail p
+  simp only [List.append_assoc]
+  rw [← List.append_assoc (rep [true,true,false] m) [true]
+    (rep [true,false] p ++ fTail)]
+  rw [← hr0]
+  simp only [List.append_assoc]
+  rw [ht]
+  rw [show m+2=(m+1)+1 by omega]
+  simp only [rep, List.append_assoc]
+  simpa [List.append_assoc] using prefixShift m
+    ([false,true] ++ rep [false,true] p ++
+      [true,false,true,true,false,true])
+
+theorem finalOut_eq_family_succ (n : Nat) : finalOut n = family (n+1) := by
+  apply Z0.mk.injEq.mpr
+  constructor
+  · rfl
+  constructor
+  · simpa [finalOut, family, A, B] using normalizeFinal (A n + 1) (B n)
+  · rfl
 
 theorem phase_final (n : Nat) :
     run0 table (136*n+204) (p4 n) = some (finalOut n) := by
@@ -295,5 +354,11 @@ theorem phase_final (n : Nat) :
     omega
   simpa only [hc] using H
 
+theorem phase_final_family (n : Nat) :
+    run0 table (136*n+204) (p4 n) = some (family (n+1)) := by
+  rw [← finalOut_eq_family_succ n]
+  exact phase_final n
+
 #print axioms phase_final
+#print axioms phase_final_family
 end BB6.Agent9Raw43B1LEE0LFM559
