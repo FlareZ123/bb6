@@ -11,7 +11,7 @@ from emit_rungram import emit
 from compact_ngram import compact,compact_run,compact_lag
 from emit_raw40_late import emit_late_module,emit_pump_module
 c=sys.argv[1] if len(sys.argv)>1 else '0LC'
-assert c in ('0LC','1LB','0RC','1RC','1LE','0LE','0RD','1LC','1RD','0RE','1RB','1RE')
+assert c in ('0LC','1LB','0RC','1RC','1LE','0LE','0RD','1LC','1RD','0RE','1RB','1RE','1RA')
 recipe=ROOT/f'a1lc-{c}-recipe.json'
 spec=json.loads((recipe if recipe.exists() else ROOT/f'a1lc-{c}-discovery.json').read_text())
 p=spec['parent']; B=spec.get('bound',spec['initialBound'])
