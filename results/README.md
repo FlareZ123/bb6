@@ -70,3 +70,8 @@ The [research board](../research/BOARD.md) tracks the live missing quantifiers a
 Update a family row when its strongest mathematical theorem or remaining frontier changes. Link the detailed maintained result/dossier for individual certificates and audit histories. Add a new row only for a distinct mathematical programme or substantial mechanism; replace stale statuses in place. Keep accepted global roster reductions distinct from local or conditional claims. A count of proved tables, an accepted local theorem, and a fixed-score global theorem are different evidence levels.
 
 **The decisive open obligation remains the complete universal upper bound at the attained champion score.**
+
+
+## Residual-level structural nonhalting theorems
+
+- [Raw43 B1LE/E0LF residual 559](raw43-e0lf559-nonhalting.md): a source-accepted blank-start recurrence with per-section cost (448n+612), proving nonhalting for every completion of the one-hole partial machine. This is a genuine residual-level result, not a Raw43 parent Cover or a global Canonical38 reduction.
