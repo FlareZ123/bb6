@@ -204,23 +204,18 @@ axioms (and `Classical.choice` on the iff characterizations), with no
 `sorryAx`. The remaining difficulty is therefore structural reachability of
 the run grammar and the marked-run relation, not the modular arithmetic.
 
-## The self-similarity survives as a one-defect relation
+## A one-defect relation explains the prefix, but fails at rank 8
 
-The failure is highly structured. Primitive replay through the
+The first repair is highly structured. Primitive replay through the
 level-11→12 comparison shows that the right-side transformation remains
 exact at every compared boundary, every left 1-run still doubles, and left
-run shape is unchanged. Every discrepant boundary has exactly one zero-run
-shorter than the old `rhoZero` prediction by 8.
+run shape is unchanged. Every discrepant boundary there has exactly one
+zero-run shorter than the old `rhoZero` prediction by 8.
 
-The level-10→11 comparison has two marked boundaries, both at zero-run
-position 0. Level 11→12 has 30: 28 at zero-run position 0 and two at
-position 1.
-
-A streaming lockstep replay using only the exact A/B triad formulas now checks
-the relation much farther without materializing either orbit. It replays one
-low macro against its three high macros and reports zero right-side failures,
-zero relation-shape failures and zero multi-mark boundaries through level 15.
-The defect census is:
+A streaming lockstep replay using only the exact A/B triad formulas extends
+that **finite prefix** through level 15. It replays one low macro against its
+three high macros and reports zero right-side failures, zero relation-shape
+failures and zero multi-mark boundaries through the level-15→16 comparison:
 
 | low→high level | unmarked | mark 0 | mark 1 | mark 2 | mark 3 |
 | --- | ---: | ---: | ---: | ---: | ---: |
@@ -231,91 +226,71 @@ The defect census is:
 | 14→15 | 2,117,863 | 5,724 | 2,098 | 80 | 0 |
 | 15→16 | 6,341,515 | 23,520 | 11,390 | 860 | 8 |
 
-These deeper rows are **derived-macro evidence**, not Lean/source
-primitive-run theorems. The reproducer is
-`analyze_17557_defect_stream.cpp`; its default level-15 run checks
-6,377,293 boundary relations in the final row.
+The corresponding complete one-defect lifetimes seen in this prefix are
+exactly `E_r=sigma^r(BA)` for ranks `r=0..5`. Their lengths are
+`2·3^r`; the largest observed mark depth is `ceil(r/2)`.
+`Raw56LE17557EpisodeWord.lean` kernel-checks the independent substitution
+bookkeeping: `E_(r+1)=sigma(E_r)`, `|E_r|=2·3^r`, and every `E_r`
+contains exactly `3^r` A macros and `3^r` B macros.
 
-The important structural correction is that the mark position is not bounded:
-the observed maximum positions are `0,1,1,2,2,3` from levels 10 through 15.
-What remains bounded is the **number of defects**: every checked relation has
-at most one. This suggests a regular marked-run relation with finite scanner
-state (“before the mark / at the mark / after the mark”), while allowing the
-marked zero-run to occur arbitrarily deep in the left stack.
+The one-defect interpretation is **not** an all-level invariant. The exact
+triad rewrite grammar predicts, and a targeted reachable-state replay
+confirms, a second obstruction at rank 8.
 
-More strongly, the streaming checker now verifies a **deterministic token
-transition law** at every one of those boundaries (`transitionBad=0`) and
-the needed exceptional-residue guards (`guardBad=0`):
-
-- **normal A** (`b>5`): every reachable second right 1-run has
-  `b ≡ 5 (mod 8)`; no new defect is created, and an existing mark at
-  zero-run index `j` moves to `j+1` because A prepends a new left zero-run;
-- **B with first zero-run `ell>7`**: if `ell ≡ 6 (mod 8)` the input is
-  always unmarked and B creates mark 0; otherwise an existing mark keeps its
-  index;
-- **B with `ell=7`**: mark 0 never occurs; the front zero-run disappears, so
-  no mark stays absent and any deeper mark `j>=1` moves to `j-1`;
-- **A-carry with first zero-run `ell>1`**: residue 7 occurs only with mark 0
-  and cancels that mark; every nonexceptional carry preserves the current
-  mark;
-- **A-carry with `ell=1`**: mark 0 never occurs; deleting that zero-run shifts
-  any deeper mark from `j` to `j-1`.
-
-These rules explain both the uniqueness of the defect and its unbounded
-migration depth. Together with the Lean arithmetic lemmas, they reduce the
-left-side induction to proving the stated reachable guard invariant.
-
-There is also a recursive description of every complete defect lifetime in
-the checked macro orbit. Let `E_0 = BA` and
-`E_(r+1) = sigma(E_r)`. Through level 15, **every** interval from mark
-creation to mark cancellation is exactly one `E_r = sigma^r(BA)); no other
-episode word occurs. Its length is `2·3^r`, and the largest mark depth
-inside the episode is exactly `ceil(r/2)`. The observed episode counts are:
-
-| epoch | E0 | E1 | E2 | E3 | E4 | E5 |
-| --- | ---: | ---: | ---: | ---: | ---: | ---: |
-| 10 | 2 | 0 | 0 | 0 | 0 | 0 |
-| 11 | 20 | 2 | 0 | 0 | 0 | 0 |
-| 12 | 116 | 20 | 2 | 0 | 0 | 0 |
-| 13 | 516 | 116 | 20 | 2 | 0 | 0 |
-| 14 | 1,968 | 516 | 116 | 20 | 2 | 0 |
-| 15 | 6,828 | 1,968 | 516 | 116 | 20 | 2 |
-
-`analyze_17557_defect_stream.cpp` now checks this episode grammar in the
-same pass as the one-defect relation, transition law, and residue guards.
-This turns the remaining proof target into a natural induction on substituted
-episodes: prove the base `BA` creates and cancels one front defect, then show
-that replacing each macro by `ABA` or `BBA` sends a valid `E_r`
-lifetime to a valid `E_(r+1)` lifetime while preserving the frame-stack
-guard.
-
-The natural replacement for fixed `rho` is therefore a relation carrying
-an optional **defect token** on one left zero-run:
+Start from the exact epoch-18 checkpoint and replay the exact A/B rewrites to
 
 ```
-unmarked zero z  -> rhoZero(z)
-marked zero z    -> rhoZero(z) - 8.
+k = 3280 * 3^8 = 21,520,080.
 ```
 
-No tested boundary carries two marked zero-runs. The earliest token is
-created when a B runway enters the exceptional residue-6 class. In the next
-level the token can move from the first to the second zero-run when a carry
-exposes deeper left context.
-
-The earliest finite-state child rules are already small. Write `-` for no
-mark, `0` for a mark on the first zero-run, `1` for a mark on the second,
-and `C` for the b=5 A-carry:
+This is the start of the rank-8 substituted defect episode. Pair that
+reachable low state with its ordinary `rho` image. The pair initially has
+no defect and the right relation is exact. At episode offset **3280**, the low
+state has a B runway of length **22** while the current pair already has an
+8-cell front defect. After the low B and its high-side `BBA` block,
 
 ```
-B, first-zero residue 5, no mark  -> (-,-,0)
-B, first-zero residue 6, no mark  -> (-,0,0)
-C, first-zero residue 7, mark 0   -> (0,1,0).
+low next zero     = 15
+actual high zero  = 15
+rhoZero(15)       = 31
 ```
 
-Further local states appear later, but the single-token invariant survives
-through the level-15 streaming replay. The proof target is therefore a
-finite-state transducer over an arbitrarily deep **marked run**, rather than
-a map whose state is the mark's numeric depth or the old pointwise rho.
+so the defect is now **16 cells**, not 8. The right relation still agrees
+exactly. At episode offset **9841**, two distinct left zero-runs each carry an
+8-cell defect simultaneously. Therefore both “one token” and “one weighted
+token” are false as global invariants.
+
+`analyze_17557_defect_vector.cpp` reproduces this derived-macro closure
+counterexample. It then checks the entire `|E_8|=13,122` macro episode with
+the more general relation
+
+```
+high zero_i = rhoZero(low zero_i) - 8 * weight_i,
+weight_i ∈ Nat.
+```
+
+Across that full episode the right map remains exact, every left discrepancy
+is a positive multiple of 8 on a zero-run, the maximum number of simultaneous
+nonzero weights is **2**, the maximum weight is **2**, and all weights return
+to zero at the end of the episode. This is derived-macro evidence rather than
+a primitive-machine/source theorem, but it is an exact closure test for the
+local rewrite system.
+
+The arithmetic explains the new state naturally. On a front zero-run:
+
+- ordinary B residues preserve its defect weight;
+- exceptional B residue 6 increments the front weight by one;
+- ordinary A-carry residues preserve the front weight;
+- exceptional A-carry residue 7 decrements a positive front weight by one;
+- normal A prepends a fresh zero-run of weight zero;
+- exact zero-run deletion pops the corresponding weight, subject to the
+  reachable guard that the disappearing run has weight zero.
+
+Thus the next proof object is a **stack/vector of nonnegative defect weights**,
+one aligned with each finite left zero-run, rather than a single marked run.
+The finite-prefix one-token rules and `Raw56LE17557DefectRelation.lean`
+remain useful special cases for weights in `{0,1}` with support size at most
+one, but they are not the final conjugacy domain.
 
 ## Right-side level map
 
@@ -338,16 +313,18 @@ Define a symbolic relation on paired low/high triad-boundary zippers with:
 
 1. the fixed right-run relation;
 2. doubled left 1-runs;
-3. `rhoZero` on unmarked left zero-runs;
-4. at most one marked zero-run using `rhoZero(z)-8`, at arbitrary run depth;
-5. finite scanner state sufficient to create, move, and delete the mark through
-   A, B, and A-carry rewrites.
+3. a nonnegative defect-weight vector aligned with the finite left zero-runs;
+4. zero-run equation `high_i = rhoZero(low_i) - 8 * weight_i`;
+5. local stack rules for normal-A push, exact-run pop, residue-6 B increment,
+   and residue-7 carry decrement;
+6. a reachable guard strong enough to keep every subtraction nonnegative and
+   justify zero-weight pops.
 
 Then prove that one low A or B triad corresponds to `ABA` or `BBA` on
-the high side while preserving the relation. The finite base epoch
-`C_2 -> C_3` is already exact. Such a relational conjugacy would recover
-the all-level checkpoint recurrence while handling the residue-6 B and
-residue-7 carry obstructions correctly.
+the high side while preserving this weighted-stack relation. The finite base
+epoch `C_2 -> C_3` is already exact. The rank-8 replay shows why any proof
+domain restricted to one defect or one marked run cannot be inductive.
 
-The old fixed-map route should not be revived. The defect relation is the
-current smallest known proof target for leaf 17557.
+The old fixed map and the one-token repair should not be revived as global
+claims. The weighted defect-stack relation is the current smallest known
+proof target for leaf 17557.
