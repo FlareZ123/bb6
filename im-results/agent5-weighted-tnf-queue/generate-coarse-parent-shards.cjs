@@ -115,9 +115,9 @@ const safeTy=p=>`∀ m, compatible ${p} m → WeightedBound ${B} m`;
 const eq=(p,q)=>`have hEq : ${p} = ${q} := BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)\n  rw [hEq] at hm\n`;
 // Packed long last-hole traces. The original-source lemma converts the packed
 // final read slot to a knownRun first-hole witness without recomputing the run.
-// Long traces are split into independently kernel-checkable 4096-step parts so
-// Lean can compile the expensive 256-step decisions in parallel. The public
-// LongK module retains the same pK/safeK interface used by generated subtrees.
+// Long traces are split into independently kernel-checkable 4096-step parts.
+// Each part composes only its local 256-step decisions; the public LongK module
+// joins the resulting ~4k spans, retaining the same pK/safeK interface.
 const LONG_PART_STEPS=4096;
 if(longs.length){
  for(let k=0;k<longs.length;k++){
@@ -151,20 +151,21 @@ if(longs.length){
   baseLines.push(`def ${p} : PartialMachine := ${table(t)}`);
   for(const x of checkpoints)baseLines.push(`def z${k}_${x.i} : P := ${x.i===0?'startP':`⟨${x.q},${x.l},${x.r}⟩`}`);
   baseLines.push(`end BB6.${name}\n`);write(baseName,imports([])+baseLines.join('\n'));
-  const partNames=[],chunksPerPart=LONG_PART_STEPS/256;
+  const partNames=[],parts=[],chunksPerPart=LONG_PART_STEPS/256;
   for(let lo=1,part=0;lo<checkpoints.length;lo+=chunksPerPart,part++){
+   const hi=Math.min(checkpoints.length,lo+chunksPerPart),start=checkpoints[lo-1],finish=checkpoints[hi-1];
    const partName=name+'Part'+part,partLines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
-   const hi=Math.min(checkpoints.length,lo+chunksPerPart);
    for(let j=lo;j<hi;j++){
-    const prev=checkpoints[j-1],x=checkpoints[j],s=`step${k}_${x.i}`;
+    const prev=checkpoints[j-1],x=checkpoints[j],s=`step${k}_${x.i}`,span=`span${k}_${start.i}_${x.i}`;
     partLines.push(`theorem ${s} : runP ${p} ${x.i-prev.i} z${k}_${prev.i} = some z${k}_${x.i} := by decide +kernel`);
+    partLines.push(`theorem ${span} : runP ${p} ${x.i-start.i} z${k}_${start.i} = some z${k}_${x.i} := ${j===lo?s:`joinP span${k}_${start.i}_${prev.i} ${s}`}`);
    }
-   partLines.push(`end BB6.${name}\n`);write(partName,imports([baseName])+partLines.join('\n'));partNames.push(partName);
+   partLines.push(`end BB6.${name}\n`);write(partName,imports([baseName])+partLines.join('\n'));partNames.push(partName);parts.push({start:start.i,end:finish.i});
   }
   const lines=[`namespace BB6.${name}\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\nopen BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree`];
-  for(let j=1;j<checkpoints.length;j++){
-   const prev=checkpoints[j-1],x=checkpoints[j],s=`step${k}_${x.i}`,run=`run${k}_${x.i}`;
-   lines.push(`theorem ${run} : runP ${p} ${x.i} startP = some z${k}_${x.i} := ${prev.i===0?s:'joinP run'+k+'_'+prev.i+' '+s}`);
+  for(let j=0;j<parts.length;j++){
+   const x=parts[j],span=`span${k}_${x.start}_${x.end}`,run=`run${k}_${x.end}`;
+   lines.push(`theorem ${run} : runP ${p} ${x.end} startP = some z${k}_${x.end} := ${x.start===0?span:`joinP run${k}_${x.start} ${span}`}`);
   }
   lines.push(`theorem safe${k} : ${safeTy(p)} := lastPacked ${B} ${p} ${c.n} ${slot(c.slot)} z${k}_${c.n} run${k}_${c.n} (by decide) (by decide) (by decide) (by decide) (by decide)\n#print axioms safe${k}`);
   lines.push(`end BB6.${name}\n`);write(name,imports([baseName,...partNames])+lines.join('\n'));
