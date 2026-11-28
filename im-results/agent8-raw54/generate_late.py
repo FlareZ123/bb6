@@ -32,8 +32,9 @@ def maxdelay(t):
             q=x[2];k+=1
     return longest
 
-def generate(kind,idx,code,record,outdir,chunk):
-    t=rowdata(code);name=f'Raw54E1{kind.upper()}Late{idx}';ns=f'BB6.Agent8Raw54.E1{kind.upper()}Late{idx}'
+def generate(kind,idx,code,record,outdir,chunk,*,label=None):
+    label=label or 'E1'+kind.upper()
+    t=rowdata(code);name=f'Raw54{label}Late{idx}';ns=f'BB6.Agent8Raw54.{label}Late{idx}'
     lines=['import Raw54LateBridge','set_option maxRecDepth 100000','set_option maxHeartbeats 0','set_option Elab.async false','set_option autoImplicit false',f'namespace {ns}',
     'open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6Coverage.Agent50Zipper BB6Coverage.Agent31Pump BB6Coverage.Agent10ZipAudit BB6.Agent8Raw54.LateBridge',
     f'-- {code}',f'abbrev parent : PartialMachine := refine BB6.Agent8Raw54.raw54 (4,true) (some {mv(t[9])})',
