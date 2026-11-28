@@ -903,6 +903,8 @@ jobs:
           PY
           node im-results/agent40-raw34-frontier/audit_closed_graph_nine.mjs \
             | tee "$W/graph-union.log"
+          node im-results/agent40-raw34-frontier/audit_closed_graph_ten.mjs \
+            | tee "$W/full-ten-graph-union.log"
           node im-results/agent40-raw34-frontier/refine_agent23_second_stage.mjs \
             > "$W/source-accepted-agent23-d1rd.log"
           python - "$W/source-accepted-agent23-d1rd.log" <<'PY'
@@ -925,6 +927,7 @@ jobs:
             /tmp/a40-raw34-graph/closure.log
             /tmp/a40-raw34-graph/manifest.json
             /tmp/a40-raw34-graph/graph-union.log
+            /tmp/a40-raw34-graph/full-ten-graph-union.log
             /tmp/a40-raw34-graph/source-accepted-agent23-d1rd.log
           if-no-files-found: error
           retention-days: 30
@@ -1018,6 +1021,8 @@ jobs:
               else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: F-symmetric Raw34 blank-start binary counter, standard axioms')
           PY
+          node im-results/agent40-raw34-frontier/audit_binary_pair_ten.mjs \
+            | tee "$W/binary-pair-ten-union.log"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -1025,6 +1030,7 @@ jobs:
           path: |
             /tmp/a40-raw34-ef/closure.log
             /tmp/a40-raw34-ef/manifest.json
+            /tmp/a40-raw34-ef/binary-pair-ten-union.log
           if-no-files-found: error
           retention-days: 30
 
