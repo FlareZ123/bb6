@@ -83,29 +83,13 @@ assert counts["Q0Root53Parent.lean"] == 1
 assert len([f for f in counts if re.fullmatch(r"Q0Root53Shard\d+\.lean", f)]) == 24
 
 
-# An independent exhaustive C++ simulation of the 25^5 full completions
-# identified this 203-step halter. The simulation is NOT a trusted proof:
-# run202, first_hole202 and extends_parent below are all kernel-decided.
-late_literal = "1RB1RD_1RC1RE_0LA0RF_1LA1LD_---0LC_0LA0RB"
-late_string = late_literal.replace("_", "")
-late_table = tuple(late_string[i:i+3] for i in range(0,36,3))
-score,slot = 202,8
-assert len(late_table) == 12 and late_table[slot] == "---"
 
-def flag(b):
-    return "true" if b else "false"
-
-rows = ["def late : PartialMachine := fun (q,b) => match q.val,b with"]
-for i, action in enumerate(late_table):
-    if action != "---":
-        rows.append(
-            f"  | {i//2},{flag(i%2)} => some (some "
-            f"⟨{flag(action[0]=='1')},{flag(action[1]=='R')},"
-            f"{ord(action[2])-65}⟩)"
-        )
-rows.append("  | _,_ => none")
-
+# The explicit halting machine and 202-step run are independently kernel-checked
+# in the tracked Raw11Q0Root53Halter203 module, rather than extracted from the
+# generated search tree. Its compatibility with the generated parent is
+# checked here by exact equality of all twelve slots.
 witness = """import Q0Root53Parent
+import Raw11Q0Root53Halter203
 import OrdinaryQ0Exhaustive
 
 set_option maxRecDepth 100000
@@ -115,44 +99,33 @@ namespace Q0Root53SharpWitness
 open BB6Coverage BB6.Agent13BlankDelay
 open BB6.Agent5ExactOneHole (OrdinaryBound)
 
-""" + "\n".join(rows) + """
+theorem same_parent :
+    Q0Root53.rootParent = BB6.Agent47Root53Halter203.parent :=
+  Q0ExhaustiveTree.sameTable_sound (by decide +kernel)
 
-def machine : Machine := weightedTNFDefaultCompletion late
-def at202 : FinRayCfg := (finitePartialRun late 202 finiteBlank).getD finiteBlank
-
-theorem run202 : finitePartialRun late 202 finiteBlank = some at202 := by decide +kernel
-theorem first_hole202 : late (readSlot (embedFinRay at202)) = none := by decide +kernel
-theorem no_assigned_halt : weightedTNFNoAssignedHalt late := by decide +kernel
-
-theorem halts202 : HaltsAfter machine 202 := by
-  apply (weightedTNF_halt_iff_firstHole late no_assigned_halt 202).mpr
-  exact ⟨embedFinRay at202,
-    Q0ExhaustiveTree.finite_known late 202 at202 run202,
-    first_hole202⟩
-
-theorem extends_parent : compatible Q0Root53.rootParent machine := by decide +kernel
+theorem witness_compatible :
+    compatible Q0Root53.rootParent BB6.Agent47Root53Halter203.machine := by
+  rw [same_parent]
+  exact BB6.Agent47Root53Halter203.compatible_parent
 
 theorem sharp_upper : Cover (OrdinaryBound 203) Q0Root53.rootParent :=
   Q0Root53.sharp_root
 
-/-- Exact maximum 203 ordinary steps for all halting completions of the
-five-hole q0-root53 cylinder, attained by the literal machine above. -/
+/-- Exact ordinary maximum 203, attained on the literal full machine in
+Raw11Q0Root53Halter203. The universality comes only from the source-checked
+complete exhaustive tree; the experimental 25^5 scan is not trusted. -/
 theorem family_exact_203 :
     (∀ m, compatible Q0Root53.rootParent m → OrdinaryBound 203 m) ∧
     (∃ m, compatible Q0Root53.rootParent m ∧ HaltsAfter m 202) :=
-  ⟨sharp_upper.sound, ⟨machine, extends_parent, halts202⟩⟩
+  ⟨sharp_upper.sound, ⟨BB6.Agent47Root53Halter203.machine,
+    witness_compatible, BB6.Agent47Root53Halter203.halts202⟩⟩
 
-#print axioms halts202
+#print axioms same_parent
 #print axioms sharp_upper
 #print axioms family_exact_203
 end Q0Root53SharpWitness
 """
 (out / "Q0Root53SharpWitness.lean").write_text(witness)
 
-print("root53 sharp generated modules:", counts)
-print("chosen halter: ordinary steps=203, first-hole index=202,"
-      " holes_before_assignment=", late_table.count("---"),
-      "slot=", slot,
-      "partial_table=", "_".join(
-          "".join(late_table)[i:i+6] for i in range(0,36,6)
-      ))
+print("root53 source-derived sharp modules:", counts)
+print("attaining complete table: 1RB1RD_1RC1RE_0LA0RF_1LA1LD_---0LC_0LA0RB")
