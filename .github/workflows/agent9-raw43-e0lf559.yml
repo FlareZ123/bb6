@@ -36,9 +36,9 @@ jobs:
             --provenance-input "$root/Raw43B1LEE0LFM559Never.lean" \
             "$root/Raw43B1LEE0LFM559Never.lean" 2>&1 | tee /tmp/a9-raw43-e0lf559-never.log
           python im-results/agent4-raw109/audit_axioms.py \
-            /tmp/a9-raw43-e0lf559-final.log \
+            /tmp/a9-raw43-e0lf559-never.log \
             BB6.Agent17Raw43B1LEE0LFM559.never
-          cp /tmp/a9-raw43-e0lf559-final.log "$work/audit.log"
+          cp /tmp/a9-raw43-e0lf559-never.log "$work/audit.log"
       - name: Retain exact source closure
         uses: actions/upload-artifact@v4
         with:
