@@ -61,7 +61,18 @@ def dynamic_pin(run_id):
     check(len(matches)==1, f"exactly one complete 1LE proof expected: {matches}")
     a=matches[0]
     check(a["digest"].startswith("sha256:"), "missing GitHub artifact digest")
-    return ("1LE",run_id,a["id"],a["digest"][7:],run["head_sha"],a["name"],28311)
+    # The g5b-only recovery checks out the original proven source revision,
+    # deliberately different from its workflow-dispatch commit. Pin BOTH
+    # identities. The artifact itself still has to contain a dependency-closed
+    # manifest whose source revision matches this exact checkout.
+    source_revision=run["head_sha"]
+    if run_id==46114235329:
+        check(run["path"]==".github/workflows/agent11-raw39-g5b-recovery.yml"
+              and run["head_sha"]=="d5b062d6d3a035dedbcda3f878ff1bc797a87207",
+              "unexpected recovery workflow source or dispatch commit")
+        source_revision="aafec68362a0fb2f508023c133bde7264236c32a"
+    return ("1LE",run_id,a["id"],a["digest"][7:],
+            source_revision,a["name"],28311)
 
 def gather(pin, work, compiler_sha, compiler_version):
     branch,run_id,aid,ziphash,revision,name,B=pin
