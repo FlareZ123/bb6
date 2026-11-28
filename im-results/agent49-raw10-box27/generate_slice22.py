@@ -247,6 +247,32 @@ theorem exact_weighted (C : Nat) :
     have hb := bound m hm hnot k d hk hd
     omega
 
+
+/-- Unconditional complete E0=22 five-hole slice bound. -/
+theorem all_bound (m : Machine) (hm : compatible root m) : WeightedBound 149 m := by
+  by_cases he : compatible exceptional m
+  · exact weighted_of_never 149 m (exceptional_never m he)
+  · exact bound m hm he
+
+theorem all_parent_bound (m : Machine)
+    (hm : BB6.Agent49Box.Fits BB6.Agent49BoxBridge.raw10Remainder[27]! m)
+    (hd0 : m (3,false) = decode 14) (hd1 : m (3,true) = decode 17)
+    (he : m (4,false) = decode 22) : WeightedBound 149 m :=
+  all_bound m (parent_compatible m hm hd0 hd1 he)
+
+theorem full_exact_weighted (C : Nat) :
+    (∀ m, compatible root m → WeightedBound C m) ↔ 149 ≤ C := by
+  constructor
+  · intro h
+    exact (exact_weighted C).mp (fun m hm _ => h m hm)
+  · intro h m hm k d hk hd
+    have hb := all_bound m hm k d hk hd
+    omega
+
+#print axioms all_bound
+#print axioms all_parent_bound
+#print axioms full_exact_weighted
+
 #print axioms bound
 #print axioms parent_bound
 #print axioms attainer_halts

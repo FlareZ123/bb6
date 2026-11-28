@@ -1,6 +1,7 @@
 import Box17AuditCore
 import Raw10EncodedSourceBridge
 import Box27MaskedCounter3
+import Box27ExceptionalFAR
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
@@ -150,6 +151,26 @@ theorem parent_compatible (m : Machine) (hm : Fits raw10Remainder[27]! m)
   have hq : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
     simp [root] at ht ⊢ <;> simp_all
+
+
+/-- This equality is an exact equality of original partial machine tables,
+    including the missing F1 slot. -/
+theorem exceptional_far_table :
+    exceptional = BB6.Agent49.Box27ExceptionalFAR.table := by
+  funext s
+  obtain ⟨q,b⟩ := s
+  have hq : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
+    decide
+
+/-- Source-level nonhalting for all 25 completions of the former holdout. -/
+theorem exceptional_never (m : Machine) (hm : compatible exceptional m) :
+    NeverHalts m := by
+  rw [exceptional_far_table] at hm
+  exact BB6.Agent49.Box27ExceptionalFAR.never m hm
+
+#print axioms exceptional_far_table
+#print axioms exceptional_never
 
 #print axioms masked_sound
 #print axioms excluded_sound

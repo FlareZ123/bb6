@@ -971,8 +971,8 @@ jobs:
           W=/tmp/raw10-box27-slice22
           D=im-results/agent49-raw10-box27
           python "$D/generate_slice22.py" | tee /tmp/box27-slice22-stats.log
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice22.exact_weighted --parent-table "8,-1,11,-1,13,13,14,17,22,-1,-1,-1" --weighted-bound 149 --artifact-name raw10-box27-slice22 --provenance-input "$D/generate_slice22.py" "$D/Box27Slice22Source.lean" 2>&1 | tee /tmp/raw10-box27-slice22.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice22.log BB6.Agent49.Box27Slice22.masked_sound BB6.Agent49.Box27Slice22.excluded_sound BB6.Agent49.Box27Slice22.audit_sound BB6.Agent49.Box27Slice22.bound BB6.Agent49.Box27Slice22.parent_bound BB6.Agent49.Box27Slice22.exact_weighted
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice22.full_exact_weighted --parent-table "8,-1,11,-1,13,13,14,17,22,-1,-1,-1" --weighted-bound 149 --artifact-name raw10-box27-slice22 --provenance-input "$D/generate_slice22.py" "$D/Box27Slice22Source.lean" 2>&1 | tee /tmp/raw10-box27-slice22.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice22.log BB6.Agent49.Box27ExceptionalFAR.checked BB6.Agent49.Box27ExceptionalFAR.never BB6.Agent49.Box27Slice22.exceptional_far_table BB6.Agent49.Box27Slice22.exceptional_never BB6.Agent49.Box27Slice22.masked_sound BB6.Agent49.Box27Slice22.excluded_sound BB6.Agent49.Box27Slice22.audit_sound BB6.Agent49.Box27Slice22.bound BB6.Agent49.Box27Slice22.parent_bound BB6.Agent49.Box27Slice22.exact_weighted BB6.Agent49.Box27Slice22.all_bound BB6.Agent49.Box27Slice22.all_parent_bound BB6.Agent49.Box27Slice22.full_exact_weighted
           cp /tmp/raw10-box27-slice22.log "$W/lean.log"
           cp /tmp/box27-slice22-stats.log "$W/stats.log"
       - uses: actions/upload-artifact@v4
