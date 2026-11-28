@@ -16,7 +16,7 @@ on:
         type: string
         default: '0re'
       raw43_b1rc_pins:
-        description: 'JSON map child suffixes to successful exact Raw43 child run IDs'
+        description: 'Raw43 child run ID map; sharded resume accepts shard_run_id and shard_revision'
         type: string
         default: '{}'
       raw108_groups:
@@ -3222,7 +3222,7 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   raw43-b0le-shards:
-    if: inputs.target == 'raw43-b0le-sharded'
+    if: inputs.target == 'raw43-b0le-sharded' && inputs.raw43_b1rc_pins == '{}'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -3254,7 +3254,7 @@ jobs:
           retention-days: 30
 
   raw43-b0le-sharded-assemble:
-    if: inputs.target == 'raw43-b0le-sharded'
+    if: always() && inputs.target == 'raw43-b0le-sharded' && (needs.raw43-b0le-shards.result == 'success' || (needs.raw43-b0le-shards.result == 'skipped' && inputs.raw43_b1rc_pins != '{}'))
     needs: raw43-b0le-shards
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -3267,6 +3267,7 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
       - name: Download all successful Raw43 B0LE proof shards
+        if: inputs.raw43_b1rc_pins == '{}'
         uses: actions/download-artifact@v4
         with:
           pattern: raw43-b0le-shard-*
@@ -3275,6 +3276,7 @@ jobs:
       - name: Merge shards and source-audit the complete Raw43 B0LE child
         env:
           GH_TOKEN: ${{ github.token }}
+          RAW43_RESUME_PINS: ${{ inputs.raw43_b1rc_pins }}
         run: |
           set -euo pipefail
           python im-results/agent25-raw43/run_b0le_source_sharded.py assemble \
