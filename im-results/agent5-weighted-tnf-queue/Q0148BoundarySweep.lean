@@ -379,6 +379,107 @@ theorem markedHop (cs : List LeftChunk) (L R : List Bool) :
   have h := join0 h1 h2
   simpa only [List.append_assoc] using h
 
+
+/-- The right boundary's 1110 sentinel is processed in nine original
+    steps, reaching control E0 with the final 10 still on the right. -/
+theorem rightToEZero :
+    Auto.knownRun p 9 ⟨0,[false],[false,true,true,true,false]⟩ =
+      some ⟨4,[false,false,true,true],[true,false]⟩ := by
+  decide +kernel
+
+/-- Two-step rightward E0 scan across each additional 10 token. -/
+theorem rightEAlternating :
+    Auto.knownRun p 2 ⟨4,[false],[true,false]⟩ =
+      some ⟨4,[false,false,true],[]⟩ := by
+  decide +kernel
+
+/-- Two-step rightward E0 scan across the first two 1s of a marker 110:
+    the result is E1 with its immediate right neighbor still zero. -/
+theorem rightEMarker :
+    Auto.knownRun p 2 ⟨4,[false],[true,true]⟩ =
+      some ⟨4,[true,false,true],[]⟩ := by
+  decide +kernel
+
+/-- All-length source computation: arbitrary number of 10 tokens
+    transfers rightwards through the two-state E0/B1 cycle. -/
+theorem rightEAltSweep (n : Nat) (L R : List Bool) :
+    run0 p (2*n)
+      ⟨4,[false] ++ L,rep [true,false] n ++ R⟩ =
+    some ⟨4,[false] ++ rep [false,true] n ++ L,R⟩ := by
+  have one (l r : List Bool) :
+      run0 p 2 ⟨4,[false] ++ l,[true,false] ++ r⟩ =
+      some ⟨4,[false] ++ [false,true] ++ l,r⟩ := by
+    simpa [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p 2 rightEAlternating l r
+  simpa [List.append_assoc] using
+    sweepR p 4 [false] [] [true,false] [false,true] 2 one n L R
+
+/-- The complete right-edge transfer over ANY positive-length A-run
+    immediately followed by a 110 marker. E0 scans n extra A tokens
+    before reaching E1 on the marker; duration exactly 13 + 2*n. -/
+theorem rightContinuation (n : Nat) (L R : List Bool) :
+    run0 p (13+2*n)
+      ⟨0,[false] ++ L,
+        [false,true,true,true,false] ++ rep [true,false] n ++
+          [true,true,false] ++ R⟩ =
+    some ⟨4,
+      [true,false,true] ++ rep [false,true] (n+1) ++
+        [false,true,true] ++ L,
+      [false] ++ R⟩ := by
+  have h1 : run0 p 9
+      ⟨0,[false] ++ L,
+         [false,true,true,true,false] ++ rep [true,false] n ++
+           [true,true,false] ++ R⟩ =
+      some ⟨4,[false,false,true,true] ++ L,
+           rep [true,false] (n+1) ++ [true,true,false] ++ R⟩ := by
+    simpa [Auto.extend,rep,List.append_assoc] using
+      Auto.knownRun_sound p 9 rightToEZero L
+        (rep [true,false] n ++ [true,true,false] ++ R)
+  have h2 : run0 p (2*(n+1))
+      ⟨4,[false,false,true,true] ++ L,
+         rep [true,false] (n+1) ++ [true,true,false] ++ R⟩ =
+      some ⟨4,[false] ++ rep [false,true] (n+1) ++
+                   [false,true,true] ++ L,
+                [true,true,false] ++ R⟩ := by
+    simpa [List.append_assoc] using
+      rightEAltSweep (n+1) ([false,true,true] ++ L) ([true,true,false] ++ R)
+  have h3 : run0 p 2
+      ⟨4,[false] ++ rep [false,true] (n+1) ++
+          [false,true,true] ++ L,[true,true,false] ++ R⟩ =
+      some ⟨4,[true,false,true] ++ rep [false,true] (n+1) ++
+          [false,true,true] ++ L,[false] ++ R⟩ := by
+    simpa [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p 2 rightEMarker
+        (rep [false,true] (n+1) ++ [false,true,true] ++ L) ([false] ++ R)
+  have h := join0 h1 (join0 h2 h3)
+  have ht : 9 + (2*(n+1) + 2) = 13 + 2*n := by omega
+  simpa only [ht,List.append_assoc] using h
+
+/-- Generalized marked E1 -> E1 macro: there can be *any* number
+    n of extra 10 tokens between the E-head's next 10 token and
+    the following 110 marker. Source-defined for all n,cs,L,R. -/
+theorem markedHopN (cs : List LeftChunk) (n : Nat) (L R : List Bool) :
+    run0 p ((4 + 4 * scanCost cs) + (13 + 2*n))
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+        [false,true,false] ++ rep [true,false] n ++
+          [true,true,false] ++ R⟩ =
+    some ⟨4,[true,false,true] ++ rep [false,true] (n+1) ++
+        [false,true,true] ++ outputRightChunks (rightSequence cs) ++ L,
+         [false] ++ R⟩ := by
+  have h1 := firstRoundPositive cs L
+    (rep [true,false] n ++ [true,true,false] ++ R)
+  have h2 := rightContinuation n
+    (outputRightChunks (rightSequence cs) ++ L) R
+  have h := join0 h1 h2
+  simpa [List.append_assoc] using h
+
+#print axioms rightToEZero
+#print axioms rightEAlternating
+#print axioms rightEMarker
+#print axioms rightEAltSweep
+#print axioms rightContinuation
+#print axioms markedHopN
+
 #print axioms markedEdge13
 #print axioms markedHop
 
