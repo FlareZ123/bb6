@@ -272,7 +272,7 @@ theorem allEdgeSlots_nodup {K : Nat} (es : List (Edge K))
       exact List.mem_map.mpr ⟨e',he',hv.symm⟩
 
 theorem allEdgeSlots_subset_capacity (K : Nat) (es : List (Edge K))
-    (hK : 15≤K) :
+    (hK : 0<K) :
     allEdgeSlots es ⊆ slotsRange (K/4) (((K-1)/3)-(K/4)) := by
   rintro ⟨z,r⟩ hp
   obtain ⟨e,he,hpe⟩ := allEdgeSlots_origin es hp
@@ -294,7 +294,7 @@ theorem allEdgeSlots_subset_capacity (K : Nat) (es : List (Edge K))
   · exact hr
 
 theorem edge_family_capacity (K : Nat) (es : List (Edge K))
-    (hK : 15≤K) (hn : (es.map (fun e => e.v)).Nodup) :
+    (hK : 0<K) (hn : (es.map (fun e => e.v)).Nodup) :
     (es.map (fun e => e.j)).sum ≤
       F ((K-1)/3)-F (K/4) := by
   have hnodup := allEdgeSlots_nodup es hn
@@ -310,7 +310,7 @@ theorem edge_family_capacity (K : Nat) (es : List (Edge K))
 theorem sharp_edge_family_budget (K : Nat) (es : List (Edge K))
     (hK : 15≤K) (hn : (es.map (fun e => e.v)).Nodup) :
     15*(es.map (fun e => e.j)).sum ≤ 2*K := by
-  have hc := edge_family_capacity K es hK hn
+  have hc := edge_family_capacity K es (by omega) hn
   have hm := Nat.mul_le_mul_left 15 hc
   exact Nat.le_trans hm (sharp_capacity K hK)
 
