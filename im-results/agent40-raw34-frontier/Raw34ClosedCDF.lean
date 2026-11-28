@@ -33,6 +33,10 @@ def parent (c1 d1 f0 f1 : Move) : PartialMachine := fun s =>
 
 def inside (q : Fin 6) : Prop := q = 2 ∨ q = 3 ∨ q = 5
 
+instance (q : Fin 6) : Decidable (inside q) := by
+  unfold inside
+  infer_instance
+
 theorem closed_table
     (c1 d1 f0 f1 : Move)
     (hc : inside c1.next)
