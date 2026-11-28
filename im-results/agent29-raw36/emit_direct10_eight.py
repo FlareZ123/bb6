@@ -24,11 +24,14 @@ def main():
     p.add_argument("--census",required=True,type=Path)
     p.add_argument("--source",required=True,type=Path)
     p.add_argument("--summary",required=True,type=Path)
+    p.add_argument("--bound",type=int,default=2004)
     a=p.parse_args()
     census=json.loads(gzip.decompress(a.census.read_bytes()))
     assert census["parent"]==BASE
     assert census["cut"]==5
     assert census["stats"]["open"]==2638
+    B=a.bound
+    assert B>=2004
     root=census["tree"]
     assert root[0]=="split" and len(root[3])==24
     n,s,kids=root[1:4]
@@ -42,7 +45,7 @@ def main():
     assert all(count_open(kids[i])>0 for i in live)
 
     out=[]
-    out.append("""import Raw36ParentLive9
+    out.append(f"""import Raw36ParentLive9
 import CanonicalFastAudit
 
 set_option maxRecDepth 100000
@@ -60,7 +63,7 @@ open BB6Coverage BB6.Agent13BlankDelay BB6.Agent50TNFPilot
 open BB6.Agent31ThreeHole BB6.Agent10ZipAudit
 open BB6.Agent29FastZipWeight BB6.Agent29CanonicalFast
 
-def B : Nat := 2004
+def B : Nat := {B}
 def parent : PartialMachine :=
   BB6.Agent29Raw36.d1Child ⟨false,true,4⟩
 def hole : Slot := (4,false)
@@ -162,7 +165,7 @@ end BB6.Agent29Raw36D110Live8
       "cycle_indices":closed,
       "live_indices":live,
       "live_transition_moves":["".join(MOVES[i]) for i in live],
-      "bound_weighted":2004,
+      "bound_weighted":B,
       "root_query_step":n,
       "root_query_slot":s,
       "source_sha256":hashlib.sha256(source.encode()).hexdigest(),
