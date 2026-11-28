@@ -40,6 +40,49 @@ def LocalOK7 (p : PartialMachine)
         successor7 P mv l3 l2 l1 r1 r2 r3 true = true
     | _ => False
 
+/-- Boolean finite local checker; finite-quantifier conclusions
+avoid the difficult reduction of an unknown match in a Decidable Prop. -/
+def localStepBoolean7 (p : PartialMachine)
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool → Bool → Bool)
+    (q : Fin 6) (l3 l2 l1 c r1 r2 r3 : Bool) : Bool :=
+  if P q l3 l2 l1 c r1 r2 r3 then
+    match p (q,c) with
+    | some (some mv) =>
+        successor7 P mv l3 l2 l1 r1 r2 r3 false &&
+        successor7 P mv l3 l2 l1 r1 r2 r3 true
+    | _ => false
+  else true
+
+theorem localOK7_of_check (p : PartialMachine)
+    (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool → Bool → Bool)
+    (h : ∀ q l3 l2 l1 c r1 r2 r3,
+      localStepBoolean7 p P q l3 l2 l1 c r1 r2 r3 = true) :
+    LocalOK7 p P := by
+  intro q l3 l2 l1 c r1 r2 r3 hsupport
+  have hs := h q l3 l2 l1 c r1 r2 r3
+  have hc :
+      (match p (q,c) with
+       | some (some mv) =>
+         successor7 P mv l3 l2 l1 r1 r2 r3 false &&
+         successor7 P mv l3 l2 l1 r1 r2 r3 true
+       | _ => false) = true := by
+    simpa [localStepBoolean7, hsupport] using hs
+  cases hrow : p (q,c) with
+  | none => simp [hrow] at hc
+  | some opt =>
+    cases opt with
+    | none => simp [hrow] at hc
+    | some mv =>
+      have hb :
+          (successor7 P mv l3 l2 l1 r1 r2 r3 false &&
+           successor7 P mv l3 l2 l1 r1 r2 r3 true) = true := by
+        simpa [hrow] using hc
+      have hpair :
+          successor7 P mv l3 l2 l1 r1 r2 r3 false = true ∧
+          successor7 P mv l3 l2 l1 r1 r2 r3 true = true :=
+        Bool.and_eq_true.mp hb
+      simpa [hrow] using hpair
+
 theorem localOK7_step (p : PartialMachine)
     (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool → Bool → Bool)
     (h : LocalOK7 p P) :
