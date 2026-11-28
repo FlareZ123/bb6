@@ -12,6 +12,7 @@ on:
           - at-family
           - at-general
           - at-monoid-growth
+          - epoch-marker
         default: paired
 
 jobs:
@@ -76,3 +77,21 @@ jobs:
           lean -o im-results/agent31-f197-macro/PairedScan.olean im-results/agent31-f197-macro/PairedScan.lean | tee -a /tmp/paired.log
           lean im-results/agent31-f197-macro/PairedReset.lean | tee -a /tmp/paired.log
           ! grep -q sorryAx /tmp/paired.log
+
+      - name: Check marker and parity epoch certificates
+        if: ${{ inputs.target == 'epoch-marker' }}
+        env:
+          LEAN_PATH: im-results/agent31-f197-macro:im-results/agent2-f197-sweep
+        run: |
+          set -euo pipefail
+          d=im-results/agent31-f197-macro
+          e=im-results/agent2-f197-sweep
+          lean -o "$d/Macro.olean" "$d/Macro.lean" | tee /tmp/epoch-marker.log
+          for module in PrefixCheck EpochMarker EpochMarkerExit; do
+            lean -o "$e/$module.olean" "$e/$module.lean" | tee -a /tmp/epoch-marker.log
+          done
+          for module in JCarry MixedCarry PrefixP CycleCert EpochCycle; do
+            lean -o "$d/$module.olean" "$d/$module.lean" | tee -a /tmp/epoch-marker.log
+          done
+          lean "$e/EpochOdd.lean" | tee -a /tmp/epoch-marker.log
+          ! grep -q sorryAx /tmp/epoch-marker.log
