@@ -7,6 +7,11 @@ on:
         type: boolean
         required: false
         default: false
+      cancellation_r13_child_high:
+        description: 'Only r13 valuation-four child, m=3150001..7604436; no root re-scan'
+        type: boolean
+        required: false
+        default: false
       cancellation_r12:
         description: 'Run exact GMP initial cancellation-feeder r=12 parent scan, not Lean'
         type: boolean
@@ -16,7 +21,7 @@ permissions:
   contents: read
 jobs:
   source-potential:
-    if: ${{ !inputs.cancellation_r12 && !inputs.cancellation_r13 }}
+    if: ${{ !inputs.cancellation_r12 && !inputs.cancellation_r13 && !inputs.cancellation_r13_child_high }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -85,7 +90,7 @@ jobs:
           PY
 
   cancellation-r12:
-    if: ${{ inputs.cancellation_r12 && !inputs.cancellation_r13 }}
+    if: ${{ inputs.cancellation_r12 && !inputs.cancellation_r13 && !inputs.cancellation_r13_child_high }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -130,14 +135,14 @@ jobs:
           if-no-files-found: warn
 
   cancellation-r13:
-    if: ${{ inputs.cancellation_r13 }}
+    if: ${{ inputs.cancellation_r13 || inputs.cancellation_r13_child_high }}
     runs-on: ubuntu-latest
     timeout-minutes: 90
     strategy:
       fail-fast: false
       max-parallel: 4
       matrix:
-        range: ["1 1500000", "1500001 3000000", "3000001 5000000", "5000001 7604436"]
+        range: ${{ fromJSON(inputs.cancellation_r13_child_high && '["3150001 4650000","4650001 6150000","6150001 7604436"]' || '["1 1500000","1500001 3000000","3000001 5000000","5000001 7604436"]') }}
     steps:
       - uses: actions/checkout@v4
       - name: Build paired exact segmented enumerator
@@ -151,16 +156,20 @@ jobs:
       - name: Exhaust assigned r13 interval
         env:
           RANGE: ${{ matrix.range }}
+          CHILD_ONLY: ${{ inputs.cancellation_r13_child_high }}
         run: |
           set -euo pipefail
           export OMP_NUM_THREADS=4
           read -r LO HI <<< "$RANGE"
-          /tmp/needle13 13 "$LO" "$HI" 10000000 2>&1 | tee /tmp/needle13.log
+          ARGS=(13 "$LO" "$HI" 10000000)
+          if [ "$CHILD_ONLY" = true ]; then ARGS+=(child-only); fi
+          /tmp/needle13 "${ARGS[@]}" 2>&1 | tee /tmp/needle13.log
           python3 - <<'PY'
           import math,os,pathlib,re
           lo,hi=map(int,os.environ['RANGE'].split())
           line=next(x for x in pathlib.Path('/tmp/needle13.log').read_text().splitlines() if x.startswith('r=13 range='))
-          header,body=line.split(' root: ')
+          child_only=os.environ['CHILD_ONLY']=='true'
+          header,body=line.split(' root skipped: ' if child_only else ' root: ')
           root,four=body.split(' four: ')
           d=dict(re.findall(r'(\w+)=([^\s]*)',header))
           a=(9**13+5)//2
@@ -168,6 +177,7 @@ jobs:
           assert int(d['cut'])==cut==7604436
           assert d['range']==f'{lo}..{hi}'
           for title,part,keys in [('root',root,('sieve','rotation','sparse','exact')),('four',four,('sieve','Ladic','rotation','sparse','exact'))]:
+              if title=='root' and child_only: continue
               d=dict(re.findall(r'(\w+)=([^\s]*)',part))
               assert sum(int(d[k]) for k in keys)==hi-lo+1
               print('PASS: exact paired r13 segment',title,lo,hi,'parents=',d['parents'])
