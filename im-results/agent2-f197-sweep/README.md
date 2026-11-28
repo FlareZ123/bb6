@@ -1,13 +1,22 @@
-# F197 exact reductions, guarded safety, and source-certified reset monoid
+# F197 exact reductions and blank-root nonhalting certificate
+
+**Current strongest result:** [exact positive self-embedding and blank-root certificate](NonhaltingCertificate.md), reproducible using [verify_nonhalt.py](verify_nonhalt.py). The literal F197 machine reaches the cylinder B(P^72 HEAD L^80 l,e), l beginning1, after a literal seed and 181 accelerated epochs. Every configuration in this cylinder has a strictly positive return to the same cylinder, independently of the opaque suffix. The exact computer-assisted proof is complete, locally verified in 11.45s. Full source-connected Lean trace and Raw132 Cover remain pending; do not change the authoritative canonical roster yet.
+
+New general-purpose source proof modules: [PrefixCheck](PrefixCheck.lean), [EpochMarker](EpochMarker.lean), [EpochMarkerExit](EpochMarkerExit.lean), [EpochEntrance](EpochEntrance.lean), [EpochMarkerBulk](EpochMarkerBulk.lean), [CounterCore](CounterCore.lean). The last module lifts arbitrary finite local cores over unbounded counters, including non-AA terminal and J/U/C marker configurations. The older infinite-language closure strategy is superseded for this literal root by the self-embedding cylinder.
+
+## Historical exact reset-family results
 
 **Strongest theorem (Lean, original source machine):** [arbitrary mixed P/Q reset monoid](ATFreeMonoidTheorem.md) for any nonempty W∈{P=AAT,Q=TAT}⁺, nonempty A/T data `c₀...c_q`, Z=c₀(Tc₁)...(Tc_q), Φ=A H(c₀)...H(c_q), H(A)=AT,H(T)=AAT, F(P)=P,F(Q)=AAAT, and any aligned left continuation X:
 ```
 B(W Z AA X,e) → B(F(W) Φ X,e)
 steps = 68·#P + 82·#Q + 74 + 68q + 14·#T(data)
 ```
-Both the exact source run and **strict +2 finite-bit growth** are kernel-certified under Lean 4.36.0-rc2, only `[propext, Quot.sound]`, no sorryAx. Proof files: [ATFreeMonoidCore.lean](ATFreeMonoidCore.lean), [ATFreeMonoid.lean](ATFreeMonoid.lean), [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean), and [ATGeneralParser.lean](ATGeneralParser.lean); CIs [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068) and [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937). This subsumes the prior P^n / complementary TAT counter families, which remain historical intermediate evidence. **The genuine blank-tape nonhalting invariant and BB(6) are still open**; concentrate on J/U/C marker and non-AA terminal coverage, not further P/Q lifts.
+Both the exact source run and **strict +2 finite-bit growth** are kernel-certified under Lean 4.36.0-rc2, only `[propext, Quot.sound]`, no sorryAx. Proof files: [ATFreeMonoidCore.lean](ATFreeMonoidCore.lean), [ATFreeMonoid.lean](ATFreeMonoid.lean), [ATFreeMonoidGrowth.lean](ATFreeMonoidGrowth.lean), and [ATGeneralParser.lean](ATGeneralParser.lean); CIs [46083890068](https://github.com/FlareZ123/bb6/actions/runs/46083890068) and [46083987937](https://github.com/FlareZ123/bb6/actions/runs/46083987937). This subsumes the prior P^n / complementary TAT counter families, which remain historical intermediate evidence. The earlier open blank-orbit problem is addressed by the certificate above; the universal BB(6) upper bound remains open.
 
-**Strongest source-certified result:** the [unbounded complementary-AT reset family](ATPairedTheorem.md) is a Lean-accepted exact literal-source identity for arbitrary run-aligned suffixes and every finite A/T data list. It gives `TAT Z AA X → AAAT Φ X`, exactly `156+68q+14t` live steps and +2 left bits (Lean run 46080673465, only `propext, Quot.sound`). The [older parametric P-prefix rules](ParametricReset.md) and [Agent31 paired-AA program](../agent31-f197-macro/PairedResetCandidate.md) complement this result. **No published blank-orbit nonhalting theorem for F197 follows:** the set of genuine reset words is not yet proved closed under the known positive-growth rewrites.
+**Strongest source-certified result:** the [unbounded complementary-AT reset family](ATPairedTheorem.md) is a Lean-accepted exact literal-source identity for arbitrary run-aligned suffixes and every finite A/T data list. It gives `TAT Z AA X → AAAT Φ X`, exactly `156+68q+14t` live steps and +2 left bits (Lean run 46080673465, only `propext, Quot.sound`). The [older parametric P-prefix rules](ParametricReset.md) and [Agent31 paired-AA program](../agent31-f197-macro/PairedResetCandidate.md) complement this result. These earlier families alone did not establish blank-root nonhalting.
+
+
+## Historical sweep and obstruction results
 
 The exact two-sweep reduction and counterexample below remain useful independently; their safety invariant is conditional and must not be mistaken for a Cover.
 
