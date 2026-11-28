@@ -685,6 +685,99 @@ theorem twoBlankTurns (cs : List LeftChunk) (L R : List Bool) :
 #print axioms carryFoldBits
 #print axioms rightBlankCarryShape
 #print axioms carryTerminal
+
+/-- Generic right-end blank-only reversal after an ordinary token
+    sweep (contrasting with the 13-step triple-1110 right gadget). -/
+theorem rightEdgeTwo :
+    Auto.knownRun p 2 ⟨0,[false],[false,false]⟩ =
+      some ⟨2,[false,true,true],[]⟩ := by
+  decide +kernel
+
+theorem rightSubst_append (xs ys : List LeftChunk) :
+    rightSubst (xs ++ ys) = rightSubst xs ++ rightSubst ys := by
+  induction xs with
+  | nil => rfl
+  | cons c cs ih =>
+      simp only [List.cons_append,rightSubst,ih,List.append_assoc]
+
+/-- After a right scan of a new token followed by all old chunks,
+    the left-facing C0 sees precisely the right-substitution image
+    of the old list with the new token appended. -/
+theorem secondRightOutput (tok : LeftChunk) (chunks : List LeftChunk) :
+    outputRightChunks (toRight tok :: rightSequence chunks) =
+      rightSubst (chunks ++ [tok]) := by
+  simp [outputRightChunks,outputRightChunks_rightSeq,
+        rightSubst_append,rightSubst]
+
+theorem secondCarryShape (tok : LeftChunk) (chunks : List LeftChunk) :
+    [false,true,true] ++
+      outputRightChunks (toRight tok :: rightSequence chunks) =
+    [false] ++ inputBits
+      (carryFold .eleven (chunks ++ [tok])).1 ++
+      carryBits (carryFold .eleven (chunks ++ [tok])).2 := by
+  have h := congrArg (fun v : List Bool => [false] ++ v)
+      (carryFoldBits Carry.eleven (chunks ++ [tok]))
+  simpa [secondRightOutput,carryBits,List.append_assoc] using h
+
+/-- A **repeatable entire bidirectional boundary cycle**.
+    If qA begins with 0 then ONE 10 or 11010 token, then a reversed
+    arbitrary chunk list and blank right tail, exact original-source
+    execution returns qA at the next blank left boundary.
+    No F1 is used, regardless of the word's length. -/
+theorem anotherBlankCycle (tok : LeftChunk) (chunks : List LeftChunk)
+    (L R : List Bool) :
+    let rs := toRight tok :: rightSequence chunks
+    let f := carryFold .eleven (chunks ++ [tok])
+    run0 p ((rightScanCost rs + 2) +
+        (scanCost f.1 + carryCost f.2))
+      ⟨0,[false,false,false] ++ L,
+        [false] ++ chunkBits tok ++ outputBits chunks ++
+          [false,false] ++ R⟩ =
+    some ⟨0,[false] ++ L,
+      carryRight f.2 ++ outputBits f.1 ++ [false] ++ R⟩ := by
+  dsimp only
+  let rs := toRight tok :: rightSequence chunks
+  let f := carryFold Carry.eleven (chunks ++ [tok])
+  have h1 : run0 p (rightScanCost rs)
+      ⟨0,[false,false,false] ++ L,
+        [false] ++ chunkBits tok ++ outputBits chunks ++
+          [false,false] ++ R⟩ =
+      some ⟨0,[false] ++ outputRightChunks rs ++
+              [false,false] ++ L,[false,false,false] ++ R⟩ := by
+    simpa [rs,rightSequenceInput,toRight,rightInput,
+           List.append_assoc] using
+      scanRightChunks rs ([false,false] ++ L) ([false,false] ++ R)
+  have h2 : run0 p 2
+      ⟨0,[false] ++ outputRightChunks rs ++
+           [false,false] ++ L,[false,false,false] ++ R⟩ =
+      some ⟨2,[false] ++ inputBits f.1 ++ carryBits f.2 ++
+          [false,false] ++ L,[false] ++ R⟩ := by
+    have h := Auto.knownRun_sound p 2 rightEdgeTwo
+      (outputRightChunks rs ++ [false,false] ++ L) ([false] ++ R)
+    simpa [Auto.extend,rs,f,secondCarryShape,List.append_assoc] using h
+  have h3 : run0 p (scanCost f.1)
+      ⟨2,[false] ++ inputBits f.1 ++ carryBits f.2 ++
+              [false,false] ++ L,[false] ++ R⟩ =
+      some ⟨2,[false] ++ carryBits f.2 ++
+          [false,false] ++ L,
+          outputBits f.1 ++ [false] ++ R⟩ := by
+    simpa [List.append_assoc] using
+      scanChunks f.1 (carryBits f.2 ++ [false,false] ++ L) ([false] ++ R)
+  have h4 : run0 p (carryCost f.2)
+      ⟨2,[false] ++ carryBits f.2 ++
+           [false,false] ++ L,outputBits f.1 ++ [false] ++ R⟩ =
+      some ⟨0,[false] ++ L,
+          carryRight f.2 ++ outputBits f.1 ++ [false] ++ R⟩ := by
+    simpa [Auto.extend,List.append_assoc] using
+      Auto.knownRun_sound p (carryCost f.2) (carryTerminal f.2)
+        L (outputBits f.1 ++ [false] ++ R)
+  have h := join0 h1 (join0 h2 (join0 h3 h4))
+  simpa [rs,f,Nat.add_assoc,List.append_assoc] using h
+
+#print axioms rightEdgeTwo
+#print axioms secondCarryShape
+#print axioms anotherBlankCycle
+
 #print axioms twoBlankTurns
 
 #print axioms rightBlank13
