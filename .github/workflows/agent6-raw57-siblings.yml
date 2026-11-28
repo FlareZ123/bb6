@@ -646,14 +646,16 @@ jobs:
           cat checker.log cut.log closed.log > all.log
           ! grep -E 'sorryAx|native_decide|(^| )error:' all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound10_closed
+          mkdir -p /tmp/le-four/output
+          for n in FastBiDFA Raw56E1LEFourCut Raw56E1LEFourClosed; do
+            cp "$n.lean" "$n.olean" /tmp/le-four/output/
+          done
+          cp all.log /tmp/le-four/output/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
           name: raw56-le-four-source-accepted
-          path: |
-            /tmp/le-four/union/{FastBiDFA,Raw56E1LEFourCut,Raw56E1LEFourClosed}.lean
-            /tmp/le-four/union/{FastBiDFA,Raw56E1LEFourCut,Raw56E1LEFourClosed}.olean
-            /tmp/le-four/union/all.log
+          path: /tmp/le-four/output/**
           if-no-files-found: error
           retention-days: 30
 
