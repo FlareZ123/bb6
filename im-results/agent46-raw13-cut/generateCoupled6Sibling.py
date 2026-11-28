@@ -80,6 +80,12 @@ def main(mv):
             ("oLD","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1LD---"),
             ("oRC","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RC---")]:
             manual[t]=f".closed (.proven ({ns_rf}.p .{v}) ({ns_rf}.never .{v}))"
+        extra_imports += ["Raw13Coupled6RFQuaternary", "Raw13Coupled6RFOneRD"]
+        for mod,t in [
+            ("Raw13Coupled6RFQuaternary","1RB1LD1RC0LD1LA1RE0LD0LA0RB0RF1LB---"),
+            ("Raw13Coupled6RFOneRD","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RD---")]:
+            ns_rf="BB6.Agent46"+mod
+            manual[t]=f".closed (.proven {ns_rf}.p {ns_rf}.never)"
         extra_imports.append("Raw13RFPrefix")
         manual["1RB1LD1RC0LC1LA1RE0RB0LA0RA0RF0LA---"]=".closed (.proven BB6.Agent46Raw13RFPrefix.p BB6.Agent46Raw13RFPrefix.never)"
     if mv=="1RA":
