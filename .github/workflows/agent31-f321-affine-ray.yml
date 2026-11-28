@@ -37,6 +37,13 @@ jobs:
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean "$a2/ResetEven.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q:$a2" lean "$a2/ResetMod384.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Core.olean" "$q/Mod512Core.lean" | tee -a /tmp/agent31-ray.log
+          for i in 0 1 2 3 4 5 6 7; do
+            LEAN_PATH="$e:$q" lean -o "$q/Mod512Chunk$i.olean" "$q/Mod512Chunk$i.lean" | tee -a /tmp/agent31-ray.log
+          done
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Graph.olean" "$q/Mod512Graph.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Source.olean" "$q/Mod512Source.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q:$a2" lean "$a2/ResetMod512.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay7933.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay9043.lean" | tee -a /tmp/agent31-ray.log
