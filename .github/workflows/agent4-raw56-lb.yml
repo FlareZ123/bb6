@@ -665,12 +665,14 @@ jobs:
           lean -j1 -o M39234.olean M39234.lean
           lean -j1 -o M39233.olean M39233.lean
           lean -j1 -o Raw56LBComplete.olean Raw56LBComplete.lean | tee Raw56LBComplete.log
-          grep -F 'BB6.Agent4Raw56LB.E11LB.all_quotient' Raw56LBComplete.log
-          grep -F 'BB6.Agent4Raw56LB.E11LB.all' Raw56LBComplete.log
-          if grep -Eq 'native_decide|sorryAx|admit' Raw56LBComplete.log; then
-            echo "Non-kernel trust dependency found" >&2
-            exit 1
-          fi
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" Raw56LBComplete.log \
+            --require BB6.Agent4Raw56LB.E11LB.all_quotient \
+            --require BB6.Agent4Raw56LB.E11LB.all
+          for ID in 42763 23706 39232; do
+            python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
+              "/tmp/block/M${ID}Final.log" \
+              --require "M${ID}.never"
+          done
       - uses: actions/upload-artifact@v4
         with:
           name: raw56-lb-complete-original-source-accepted
