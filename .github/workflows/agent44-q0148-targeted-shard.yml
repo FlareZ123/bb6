@@ -1,0 +1,65 @@
+name: Agent44 q0-148 targeted missing shard
+
+on:
+  workflow_dispatch:
+    inputs:
+      shard:
+        description: Missing q0-148 shard index
+        required: true
+        type: choice
+        options: ['0','1','3','8','9','12','19','22','24','33','38','44','45']
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: a91540d12d451fc7fc3a14dfc52e8ed2df0de04d
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46117423502
+          name: raw11-q0-sharded-core-148
+          path: /tmp/q0148-core
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Kernel-check exact missing shard
+        env:
+          SHARD: ${{ inputs.shard }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          mapfile -t MODS < "/tmp/q0148-core/coarse-generated/shard-$SHARD.txt"
+          test "${#MODS[@]}" -gt 0
+          mkdir -p /tmp/q0148-shard
+          ROOTS=()
+          for mod in "${MODS[@]}"; do
+            ROOTS+=("/tmp/q0148-core/coarse-generated/$mod.lean")
+          done
+          python tools/lean_compile_closure.py "${ROOTS[@]}"             --source-root /tmp/q0148-core/coarse-generated             --workdir /tmp/q0148-shard             --manifest /tmp/q0148-shard/manifest.json             --jobs 1 --lean lean             --precompiled-manifest /tmp/q0148-core/coarse-core/manifest.json             --precompiled-dir /tmp/q0148-core/coarse-core             --label "q0-148 targeted recovery shard $SHARD"             2>&1 | tee /tmp/q0148-shard/check.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0148-shard/check.log; then exit 1; fi
+          python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py             thin /tmp/q0148-core/coarse-core /tmp/q0148-shard
+          echo "$SHARD" > /tmp/q0148-shard/shard-index.txt
+          lean --version > /tmp/q0148-shard/toolchain.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent44-q0148-targeted-part-${{ inputs.shard }}
+          path: /tmp/q0148-shard
+          if-no-files-found: warn
+          retention-days: 30
