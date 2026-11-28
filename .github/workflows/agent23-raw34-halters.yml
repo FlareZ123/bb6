@@ -208,7 +208,7 @@ jobs:
           node im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
             --output "$W/f4" --shard-size 100 > "$W/generate-f4.log"
           node --max-old-space-size=5120 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
-            --audit-disjoint-cycles --include-f-depth4 --include-f-long \
+            --audit-disjoint-cycles --include-f-depth4 --include-f-long --include-e-long \
             --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
             --query-cubes "$W/f4/manifest.json" > "$W/rank-cycles.json"
           node -e 'const j=require(process.argv[1]); console.log(JSON.stringify({baselineNonD1:j.totalResidualD1not1RD,disjointSources:j.cycleAudit,hard69:j.queryCubes&&{open:j.queryCubes.openCubes,residual:j.queryCubes.exactResidualGrossOverCubes,top:j.queryCubes.topOpen.slice(0,5)}},null,2))' "$W/rank-cycles.json"
