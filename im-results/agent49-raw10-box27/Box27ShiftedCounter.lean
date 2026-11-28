@@ -154,7 +154,7 @@ theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
   let start : Z := ⟨0,0,[],false::zeros (3*n+2)⟩
   have hz : (zrun table t start).map project = some z :=
     (run_project table t start).trans hr
-  cases hZ : zrun (table v) t start with
+  cases hZ : zrun table t start with
   | none => simp [hZ] at hz
   | some z' =>
     have H := zrun_sound table m hm t start z' hZ
