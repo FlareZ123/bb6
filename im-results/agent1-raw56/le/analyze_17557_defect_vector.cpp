@@ -108,6 +108,11 @@ vector<pair<int,long long>> defects(const vector<Run>&lo,const vector<Run>&hi){
   }
   return d;
 }
+string sigmaWord(string w){
+  string o; o.reserve(w.size()*3);
+  for(char c:w)o += c=='A' ? "ABA" : "BBA";
+  return o;
+}
 string prefixW(int n,size_t need){
   string w="ABBA";
   for(int lev=3;lev<=n;lev++){
@@ -123,37 +128,53 @@ string prefixW(int n,size_t need){
 }
 int main(){
   const long long start=3280LL*6561LL; // epoch 18, rank-8 episode
-  const int span=2*6561;               // |sigma^8(BA)|
-  string w=prefixW(18,start+span+1);
-  Z lo=checkpoint(18);
-  for(long long i=0;i<start;i++)macro(lo,w[i]);
-  Z hi{rhoL(lo.L),rhoR(lo.R)};
-  if(!defects(lo.L,hi.L).empty()||!same(rhoR(lo.R),hi.R))return 2;
+  string prefix=prefixW(18,start+1);
+  Z base=checkpoint(18);
+  for(long long i=0;i<start;i++)macro(base,prefix[i]);
 
-  int maxDefs=0,maxWeight=0;
-  for(int j=0;j<span;j++){
-    char c=w[start+j];
-    macro(lo,c);
-    string sc=c=='A'?"ABA":"BBA";
-    for(char d:sc)macro(hi,d);
-    auto ds=defects(lo.L,hi.L);
-    if(!same(rhoR(lo.R),hi.R))return 3;
-    for(auto [idx,delta]:ds){
-      if(delta<=0||delta%8)return 4;
-      maxWeight=max(maxWeight,(int)(delta/8));
+  string episode="BA";
+  for(int i=0;i<8;i++)episode=sigmaWord(episode);
+
+  for(int rank=8;rank<=13;rank++){
+    Z lowStart=base;
+    Z highStart{rhoL(base.L),rhoR(base.R)};
+    Z lo=lowStart, hi=highStart;
+    if(!defects(lo.L,hi.L).empty()||!same(rhoR(lo.R),hi.R))return 2;
+
+    int maxDefs=0,maxWeight=0;
+    for(int j=0;j<(int)episode.size();j++){
+      char c=episode[j];
+      macro(lo,c);
+      string sc=c=='A'?"ABA":"BBA";
+      for(char d:sc)macro(hi,d);
+      auto ds=defects(lo.L,hi.L);
+      if(!same(rhoR(lo.R),hi.R))return 3;
+      for(auto [idx,delta]:ds){
+        if(delta<=0||delta%8)return 4;
+        maxWeight=max(maxWeight,(int)(delta/8));
+      }
+      maxDefs=max(maxDefs,(int)ds.size());
+
+      if(rank==8&&j==3280){
+        if(ds.size()!=1||ds[0].first!=0||ds[0].second!=16)return 5;
+        cerr<<"rank8 offset 3280: front defect weight 2 (16 cells)\n";
+      }
+      if(rank==8&&j==9841){
+        if(ds.size()!=2||ds[0].second!=8||ds[1].second!=8)return 6;
+        cerr<<"rank8 offset 9841: two 8-cell defects coexist\n";
+      }
     }
-    maxDefs=max(maxDefs,(int)ds.size());
-    if(j==3280){
-      if(ds.size()!=1||ds[0].first!=0||ds[0].second!=16)return 5;
-      cerr<<"rank8 offset 3280: front defect weight 2 (16 cells)\n";
-    }
-    if(j==9841){
-      if(ds.size()!=2||ds[0].second!=8||ds[1].second!=8)return 6;
-      cerr<<"rank8 offset 9841: two 8-cell defects coexist\n";
-    }
+    auto end=defects(lo.L,hi.L);
+    cerr<<"PASS rank "<<rank<<" len="<<episode.size()
+        <<" maxDefs="<<maxDefs<<" maxWeight="<<maxWeight
+        <<" endDefs="<<end.size()<<"\n";
+    if(!end.empty()||maxDefs!=2||maxWeight!=2)return 7;
+
+    // The next substituted episode starts at the high partner of the current
+    // episode start.  This is a local closure stress test of the relation,
+    // not a claim that the high partner has been independently primitive-run.
+    base=highStart;
+    episode=sigmaWord(episode);
   }
-  auto end=defects(lo.L,hi.L);
-  cerr<<"PASS rank8 vector relation: maxDefs="<<maxDefs
-      <<" maxWeight="<<maxWeight<<" endDefs="<<end.size()<<"\n";
-  return end.empty()&&maxDefs==2&&maxWeight==2?0:7;
+  return 0;
 }
