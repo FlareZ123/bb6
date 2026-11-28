@@ -1,0 +1,104 @@
+name: Agent6 Raw139 D1=0RD 97-machine frontier (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-d6-d9-reductions-checked
+          run-id: 46138720868
+          github-token: ${{ github.token }}
+          path: .tmp/map
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d8-c1-certified
+          run-id: 46137845251
+          github-token: ${{ github.token }}
+          path: .tmp/d8c1
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d8-c3-certified
+          run-id: 46137845251
+          github-token: ${{ github.token }}
+          path: .tmp/d8c3
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d8-c6-certified
+          run-id: 46137440341
+          github-token: ${{ github.token }}
+          path: .tmp/d8c6
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-c2-certified
+          run-id: 46137436779
+          github-token: ${{ github.token }}
+          path: .tmp/d9c2
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-c6-certified
+          run-id: 46137436779
+          github-token: ${{ github.token }}
+          path: .tmp/d9c6
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-core
+          run-id: 46137436779
+          github-token: ${{ github.token }}
+          path: .tmp/core
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Audit child proofs and check 97-machine composition
+        run: |
+          set -euo pipefail
+          map="$(realpath .tmp/map/a6-reductions/build)"
+          core="$(realpath .tmp/core/core)"
+          d8c1="$(realpath .tmp/d8c1/src)"
+          d8c3="$(realpath .tmp/d8c3/src)"
+          d8c6="$(realpath .tmp/d8c6/d8c6/src)"
+          d9c2="$(realpath .tmp/d9c2/src)"
+          d9c6="$(realpath .tmp/d9c6/src)"
+          for spec in "8:1:.tmp/d8c1" "8:3:.tmp/d8c3" "8:6:.tmp/d8c6/d8c6" "9:2:.tmp/d9c2" "9:6:.tmp/d9c6"; do
+            rest="${spec#*:}"; code="${rest%%:*}"; root="${rest#*:}"; d0="${spec%%:*}"
+            grep -F "FINAL" "$root/compile.log"
+            grep -F " 0 []" "$root/compile.log"
+            grep -F "'D${d0}C$code.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$root/src/logs/D${d0}C${code}Parent.log"
+            ! grep -REq 'sorryAx|ofReduceBool' "$root/src/logs"
+          done
+          lp="$map:$d8c1:$d8c3:$d8c6:$d9c2:$d9c6:$core"
+          LEAN_PATH="$lp" lean -o "$map/D1EightFive.olean" im-results/agent6-raw139-d1-zeroRD/D1EightFive.lean | tee .tmp/d8five.log
+          LEAN_PATH="$lp" lean -o "$map/D1NineFour.olean" im-results/agent6-raw139-d1-zeroRD/D1NineFour.lean | tee .tmp/d9four.log
+          LEAN_PATH="$lp" lean -o "$map/D1SecondLevel97.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel97.lean | tee .tmp/d97.log
+          grep -F "'BB6.Agent6D1EightFive.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8five.log
+          grep -F "'BB6.Agent6D1NineFour.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9four.log
+          grep -F "'BB6.Agent6D1SecondLevel97.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d97.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8five.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9four.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d97.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-raw139-d1-97-frontier-checked
+          path: |
+            .tmp/d8five.log
+            .tmp/d9four.log
+            .tmp/d97.log
+            .tmp/map/a6-reductions/build/D1EightFive.olean
+            .tmp/map/a6-reductions/build/D1NineFour.olean
+            .tmp/map/a6-reductions/build/D1SecondLevel97.olean
+          retention-days: 14
