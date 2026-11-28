@@ -579,13 +579,9 @@ jobs:
           PINS: ${{ inputs.raw43_b1rc_pins }}
         run: |
           set -euo pipefail
-          root=im-results/agent25-raw43
           input=/tmp/a38-b0le-input
           base=/tmp/a38-b0le-base
           work=/tmp/a38-b0le-complete
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           reduced=$(jq -er '.reduced|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
           gh api "repos/$GITHUB_REPOSITORY/actions/runs/$reduced" > /tmp/run-reduced.json
           jq -e '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith("raw43-b0le-reduced "))' /tmp/run-reduced.json
@@ -597,11 +593,14 @@ jobs:
             jq -e --arg title "raw43-extra raw43=b0le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' "/tmp/run-$v.json"
             gh run download "$id" -n raw43-extra-proof -D "$input/$v"
             jq -e --arg sha "$(jq -r .head_sha "/tmp/run-$v.json")" '.proof_source_revision == $sha' "$input/$v/manifest.json"
-            cp "$input/$v/spec_b0le_e$v.json" "$root/spec_b0le_e$v.json"
-            python "$root/generate.py" "b0le_e$v"
           done
           python im-results/agent38-raw43-pair/merge_b0le_complete.py "$input" "$base" "$PINS"
+          source_roots=(--source-root "$input/reduced")
+          for v in 0la 0lf 1le 1ra 1la 1lb 1lf 1rf; do
+            source_roots+=(--source-root "$input/$v")
+          done
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            "${source_roots[@]}" \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean \
             --override M44Data=im-results/agent38-raw43-pair/M44Data.lean \
