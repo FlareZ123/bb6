@@ -82,5 +82,24 @@ theorem source_primitive_power_bound
     exact False.elim (source_no_primitive_finite_power x xs u D n r0 hs
       hr0 hbig hj hlarge hprim)
 
+/-- One-letter specialization: a repeated E_j or S_j source macro with j>1
+    obeys the exact scale-power bound without a separate primitivity proof. -/
+theorem source_single_letter_power_bound
+    (x : PeriodicMacro.Letter) (u D : Nat → Nat) (n r0 : Nat)
+    (hs : ∀ i : Nat, i≤n+1 →
+      SourceWalk [x] (u i) (D i) (u (i+1)) (D (i+1)))
+    (hr0 : 6*u 0+D 0=2*r0)
+    (hj : 0<x.j) (hlarge : 1<x.j) :
+    (PeriodicMacro.M [x])^n ≤
+      2*((r0+2*PeriodicMacro.T [x])/3) := by
+  apply source_primitive_power_bound x [] u D n r0 hs hr0
+  · intro y hy
+    simp only [List.mem_cons, List.mem_nil_iff, or_false] at hy
+    subst y
+    exact hj
+  · exact ⟨x,by simp,hlarge⟩
+  · exact FiniteCyclicValuation.singleton_primitive _
+
+#print axioms source_single_letter_power_bound
 #print axioms source_primitive_power_bound
 end SignedPairMacroBridge
