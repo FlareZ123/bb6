@@ -1188,9 +1188,9 @@ jobs:
           for name in ('finite_check_exact_halt','short_halt_sound',
                        'short_bank8','short_bank9','all_bank8_halt','all_bank9_halt'):
               full='BB6.Agent40Raw34EarlyHalters.'+name
-              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \\[([^\\]]*)\\]",log)
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
-              else: assert f"'{full}' does not depend on any axioms",full
+              else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: 1067 original blank-start actual halters, standard axioms')
           PY
           node im-results/agent40-raw34-frontier/audit_halt9_increment.mjs \
