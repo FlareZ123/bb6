@@ -33,6 +33,7 @@ theorem signed_high_edge
       -(BB6.Agent42ModularCone.q s) := by
     rw [signed_one_numer,signed_parity_cost s.x s.y (n+2) hc]
     simp only [BB6.Agent42ModularCone.q,BB6.Agent42ModularCone.odd]
+    omega
   have hchildpar : parity (signedS (BB6.Agent42ModularCone.high s n).x
           (BB6.Agent42ModularCone.high s n).y) =
       BB6.Agent42ModularCone.odd s := by
@@ -70,7 +71,7 @@ theorem signed_high_edge
       -((BB6.Agent42ModularCone.high s n).x+
         2+BB6.Agent42ModularCone.odd s) := by omega
     rw [hneg,Int.mul_neg]
-  exact ⟨hs,he.trans hfirst⟩
+  exact ⟨hs,he.trans hfirst.symm⟩
 
 #print axioms signed_high_edge
 end BB6.Agent21Dyadic

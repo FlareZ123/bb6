@@ -30,15 +30,19 @@ theorem valuation_first_gap_classification
     (hv : ValValid b s v)
     (hr : 0<r)
     (hpar : (r:Int)%2=(s.y+1)%2)
-    (hdiv : P r∣-(q s)) :
+    (hdiv : BB6.Agent21Dyadic.P r∣-(q s)) :
     (r=1 ∧ s.y%2=0) ∨
       (∃ n : Nat, r=n+2 ∧ Allowed s v n) := by
   have hd' : I r ∣ q s := by
-    have hI : I r=P r := by
-      simp [I,BB6.Agent42ModularCone.P,P]
+    have hI : I r=BB6.Agent21Dyadic.P r := by
+      simp [I,BB6.Agent42ModularCone.P,BB6.Agent21Dyadic.P]
     rw [hI]
-    have hh : P r∣-(-(q s)) := (dvd_neg.mpr hdiv)
-    simpa only [neg_neg] using hh
+    obtain ⟨k,hk⟩ := hdiv
+    refine ⟨-k,?_⟩
+    calc
+      q s = -(-(q s)) := by omega
+      _ = -(BB6.Agent21Dyadic.P r*k) := by rw [hk]
+      _ = BB6.Agent21Dyadic.P r*(-k) := by rw [Int.mul_neg]
   have hrle : r≤v := exact_val_gap_le b v r s hv hd'
   by_cases h1 : r=1
   · left
