@@ -34,10 +34,12 @@ for f in (4,13):
     PROVEN[literal(23,f)]=f"Raw140Double.X{f}"
 
 def table_code(t):
-    codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(t)]
+    # Match BB6.Agent50FastKey.tableCode: undefined=25, halt=24,
+    # little-endian base-26 packing in canonical slot order.
+    codes=[25 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(t)]
     acc=0
-    for code in codes:
-        acc=26*acc+code
+    for code in reversed(codes):
+        acc=code+26*acc
     return acc
 
 def main():
@@ -103,18 +105,10 @@ theorem checked : partialCheck {B} parent tree = true := by decide +kernel
 def remaining := partialResiduals parent tree
 theorem remaining_count : remaining.length = {len(pending)} := by decide +kernel
 
-/-- Stable exact identity of the unresolved source-checked frontier. -/
-def residualSlotCode : Option (Option Move) → Nat
-  | none => 24
-  | some none => 25
-  | some (some mv) => 4*mv.next.val+2*mv.write.toNat+mv.right.toNat
-
-def residualTableCode (p : PartialMachine) : Nat :=
-  ((List.finRange 6).flatMap fun q =>
-    [residualSlotCode (p (q,false)), residualSlotCode (p (q,true))]).foldl
-      (fun a b => 26*a+b) 0
-
-def remainingCodes : List Nat := remaining.map (fun e => residualTableCode e.2)
+/-- Stable exact identity of the unresolved source-checked frontier,
+using the repository's injective partial-table key. -/
+def remainingCodes : List Nat :=
+  remaining.map (fun e => BB6.Agent50FastKey.tableCode e.2)
 def expectedCodes : List Nat := {expected_codes}
 theorem remaining_exact : remainingCodes = expectedCodes := by decide +kernel
 theorem remaining_nodup : remainingCodes.Nodup := by
