@@ -92,6 +92,10 @@ const fixed1RA={
   '1RB1LE_1RC0RC_0RD1RA_1LD1LB_1LF0LA_---1LE':['BB6.Agent16Raw44Cut.hard4','h4'],
   '1RB1LF_1RC0RC_0RD1RA_1LD1LB_---1LF_1LE0LA':['BB6.Agent16Raw44Cut.hard5','h5']
 };
+const hardKeys=Object.keys(fixed1RA).filter(k => /^h[0-5]$/.test(fixed1RA[k][1]));
+const hardDefs=hardKeys.map((t,i) => tableDecl('hard'+i,t.replaceAll('_','').match(/.../g).map(enc))).join('\n');
+if(hardKeys.length!==6 || hardKeys.some((t,i)=>fixed1RA[t][1]!=='h'+i))
+  throw Error('Conditional hard-key ordering mismatch');
 const fixed0RA={
   '1RB0LE_1RC0RC_0RD0RA_1LD1LB_0LF---_1LA1LB':['BB6.Agent16Raw44M1.table','BB6.Agent16Raw44M1.never'],
   '1RB1RE_1RC0RC_0RD0RA_1LD1LB_---0RF_0RC0RE':['BB6.Agent16Raw44M2.table','BB6.Agent16Raw44M2.never'],
