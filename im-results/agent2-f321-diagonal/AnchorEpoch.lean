@@ -138,10 +138,10 @@ theorem anchor_hfMove_is_high
     {R c A D : Nat}
     (hR : 6 ≤ R) (hc : c=1 ∨ c=2)
     (h : HFMove R c A D) :
-    A = R-c-2 ∧ D = 2*c+3 := by
+    c+2 ≤ R ∧ A = R-c-2 ∧ D = 2*c+3 := by
   unfold HFMove at h
   rcases h with hH | hF
-  · exact ⟨hH.2.1,hH.2.2⟩
+  · exact ⟨hH.1,hH.2.1,hH.2.2⟩
   · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
     rcases hc with rfl | rfl <;> omega
 
@@ -445,7 +445,7 @@ theorem terminal_last_anchor_first_high
   obtain ⟨j,rfl⟩ := Nat.exists_eq_succ_of_ne_zero (by omega : m ≠ 0)
   rcases hfRun_first_step hhf with ⟨B,C,hfirst,htail⟩
   have hh := anchor_hfMove_is_high hR hc hfirst
-  exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.1,hh.2,htail⟩
+  exact ⟨q,R,c,j,B,C,hchain,hc,hfirst,hh.2.1,hh.2.2,htail⟩
 
 /-- A one-step suffix from a genuine root anchor cannot already be terminal. -/
 theorem root_anchor_one_high_not_terminal
@@ -459,7 +459,7 @@ theorem root_anchor_one_high_not_terminal
     have hg := anchorChain_linear_growth hchain (by decide)
     omega
   have hh := anchor_hfMove_is_high hR hc hH
-  rcases hh with ⟨rfl,rfl⟩
+  rcases hh with ⟨hguard,rfl,rfl⟩
   rcases hc with rfl | rfl
   · have heven := hshape.1
     omega
@@ -474,16 +474,16 @@ theorem root_anchor_second_hf_is_high
     (hc : c=1 ∨ c=2)
     (hfirst : HFMove R c B C)
     (hsecond : HFMove B C A D) :
-    A = B-C-2 ∧ D = 2*C+3 := by
+    C+2 ≤ B ∧ A = B-C-2 ∧ D = 2*C+3 := by
   have hshape := root_anchorChain_endpoint_shape hchain
   have hR : 6 ≤ R := by
     have hg := anchorChain_linear_growth hchain (by decide)
     omega
   have hf := anchor_hfMove_is_high hR hc hfirst
-  rcases hf with ⟨rfl,rfl⟩
+  rcases hf with ⟨hguard,rfl,rfl⟩
   unfold HFMove at hsecond
   rcases hsecond with hH | hF
-  · exact ⟨hH.2.1,hH.2.2⟩
+  · exact ⟨hH.1,hH.2.1,hH.2.2⟩
   · rcases hF with ⟨hlo,hhi,rfl,rfl⟩
     rcases hc with rfl | rfl
     · omega
@@ -515,7 +515,7 @@ theorem terminal_last_anchor_first_two_high
   rcases hfRun_first_step htail with ⟨E,F,hsecond,hrest⟩
   have hs := root_anchor_second_hf_is_high hchain hc hfirst hsecond
   exact ⟨q,R,c,t,B,C,E,F,hchain,hc,hfirst,hB,hC,
-    hsecond,hs.1,hs.2,hrest⟩
+    hsecond,hs.2.1,hs.2.2,hrest⟩
 
 /-- Strongest local normal form currently needed: the exact terminal-seeded
     inverse word can be chosen with two leading High letters. -/
@@ -538,6 +538,11 @@ theorem terminal_has_last_anchor_formal_word_head_high_high
   have hR : 6 ≤ R := by
     have hg := anchorChain_linear_growth hchain (by decide)
     omega
+  have hR0 : 6 ≤ R := by
+    have hg := anchorChain_linear_growth hchain (by decide)
+    omega
+  have hg0 := anchor_hfMove_is_high hR0 hc hfirst
+  have hg1 := root_anchor_second_hf_is_high hchain hc hfirst hsecond
   have ha1 : 2*(((R-c-2 : Nat):Int)) =
       2*(((R-c-2-c*2-5 : Nat):Int)) + ((2*(2*c+3)+3 : Nat):Int) + 1 := by
     rcases hc with rfl | rfl <;> omega
