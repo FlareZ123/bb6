@@ -89,7 +89,40 @@ portfolio* may therefore be added exactly. The reusable BigInt
 finite-domain proof audit is [count_portfolio.mjs](count_portfolio.mjs).
 These local calculations do not establish any BB(6) global bound.
 
-## 3. Alternating two-sweep counter with cost 28n+44
+
+## 3. Two-stage C/D causal guard: conditional 1 and 0 predecessors
+
+[Raw34CausalGuardE.lean](Raw34CausalGuardE.lean) and
+[Raw34CausalGuardF.lean](Raw34CausalGuardF.lean) use a strictly stronger
+local invariant that can be true for two different tape reasons in
+state C, without requiring a single fixed symbol at C:
+
+```text
+state A or B,
+OR (state C AND (tape[head]=0 OR tape[head-1]=1)),
+OR (state D AND tape[head-1]=0),
+OR (state E/F AND tape[head]=1).
+```
+
+Root B0=1RC puts 1 immediately left of C. Root C0=0RD puts
+0 immediately left of D; root D0=1LC subsequently returns
+to C **on that same zero**. Other transitions into C must
+be 1RC or, from D, 0LC/1LC. Consequently whenever C1 is
+actually executed (C scanning 1), it must have a left neighbor 1.
+Thus C1=0LE/1LE or0LF/1LF enters E/F scanning 1, proving that
+**E0/F0 is impossible even if explicitly HALT**. The permitted
+A1, B1, E1/F1 transitions are the 8 ordinary moves to A/B,
+plus 1RC and 0RD. D1 additionally permits 0LC/1LC.
+
+Each E/F causal family has `2*12*10^3*25^3=375,000,000`
+physical completions. Exact BigInt overlap arithmetic predicts
+**3,986,500 E** and **5,910,500 F** new completions beyond the
+old source-accepted plus Agent40 graph portfolio, including
+**912,500 E0-HALT** and **1,412,500 F0-HALT** cases. Source
+Lean proof is pending; all ten newly described family cylinders
+are disjoint from one another on their fixed source slots.
+
+## 4. Alternating two-sweep counter with cost 28n+44
 
 See [Raw34AlternatingTwoSweep.lean](Raw34AlternatingTwoSweep.lean) and
 [Raw34AlternatingTwoSweepF.lean](Raw34AlternatingTwoSweepF.lean).
@@ -141,6 +174,6 @@ frontier generator to quantify which Raw34 subtrees remain unresolved.
 
 CI modes of `.github/workflows/agent50-raw47-lifted.yml`:
 `raw34-guarded-e`, `raw34-guarded-f`, `raw34-zero-guarded`,
-`raw34-initial-guarded`, `raw34-two-sweep`.
+`raw34-initial-guarded`, `raw34-causal-guarded`, `raw34-two-sweep`.
 The corrected baseline exact-union mode `raw34-union-audit`
 passed as GitHub Actions run 46108131428.
