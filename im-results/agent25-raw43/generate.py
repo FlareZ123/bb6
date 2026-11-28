@@ -15,6 +15,7 @@ sys.path[:0] = [str(IM/x) for x in (
     "agent31-three-hole-tnf", "agent10-tnf-multipump", "agent1-ngram",
     "agent32-raw59")]
 from generate_four_hole import masks, move, slot
+from emit_ngram import emit as emit_ngram
 from emit_rungram import emit as emit_bidfa
 
 S = json.loads((ROOT/("spec.json" if VARIANT == "default" else f"spec_{VARIANT}.json")).read_text())
@@ -26,6 +27,13 @@ PREFIX = "Raw43" + SUFFIX
 CHUNK = 240
 SHARD = 5000
 BIDFA_BATCH = max(1, int(os.environ.get("RAW43_BIDFA_BATCH", "1")))
+
+# Exact local-window replacement for the dominant B1RE/E1=1LE BiDFA outlier.
+# The candidate search is untrusted: emit_ngram produces a certificate that Lean
+# rechecks through NGramCertificate.check.  Width 12 is the first successful
+# symmetric local-window closure for residual 3 (4416 abstract states), replacing
+# the previous 47353-state BiDFA certificate.
+NGRAM_OVERRIDES = {"b1re_e11le": {3: 12}}
 
 def emit(name, imports, body, namespace=NS, opens=None):
     if opens is None:
@@ -86,9 +94,43 @@ def generate():
                 assert rows[i]==table
                 cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
                 modules[i]="Raw43M29"
+
+        ngram_overrides = NGRAM_OVERRIDES.get(VARIANT, {})
+        if ngram_overrides:
+            ngram_bin = work/"ngram"
+            compile_cpp(IM/"agent1-ngram/ngram.cpp", ngram_bin)
+            for i,width in sorted(ngram_overrides.items()):
+                proc = subprocess.run(
+                    [str(ngram_bin), str(width)],
+                    input=f"{i} {rows[i]}\n",
+                    text=True,
+                    capture_output=True,
+                    check=True,
+                )
+                line = proc.stdout.strip()
+                found_i, ngram_cert = line.split(maxsplit=1)
+                assert int(found_i) == i
+                found_width = int(ngram_cert.split()[0])
+                assert found_width == width
+                name = PREFIX+"NGram"+str(i)
+                namespace = NS+"NGram"+str(i)
+                body = emit_ngram(str(i), rows[i], ngram_cert)
+                emit(
+                    name, ["NGramCertificate"], body, namespace,
+                    "BB6Coverage BB6.Agent1NGram",
+                )
+                cert[i] = f".proven {namespace}.p{i} {namespace}.never{i}"
+                modules[i] = name
+                print(
+                    f"ngram override {VARIANT} residual {i}: width {width}",
+                    flush=True,
+                )
+
         bidfa_pending=[]
         for key,leaf in S.get("bidfa",{}).items():
             i=int(key)
+            if i in ngram_overrides:
+                continue
             assert rows[i]==leaf["table"]
             name=PREFIX+"BiDFA"+str(i)
             namespace=NS+"BiDFA"+str(i)
