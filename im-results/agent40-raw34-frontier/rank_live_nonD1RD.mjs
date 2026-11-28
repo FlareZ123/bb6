@@ -385,10 +385,17 @@ function compileCubes(ps,at=0){
  if(at===8)return 1;
  const wild=[],by=Array.from({length:26},()=>[]);
  for(const p of ps){const c=p[at];if(c===0)wild.push(p);else by[c].push(p);}
- const w=compileCubes(wild,at+1);
- if(w===1)return 1;
+ // Compile each physical branch from its actual compatible cube set instead
+ // of first compiling the wildcard subtree and unioning it into 25 children.
+ // The latter creates enormous transient apply-product MDDs for the accepted
+ // 300k+ depth-five/six source banks even though the final union is compact.
+ if(wild.some(p=>p.slice(at+1).every(x=>x===0)))return 1;
  const ch=Array(25);
- for(let c=1;c<=25;c++)ch[c-1]=union(w,compileCubes(by[c],at+1));
+ for(let c=1;c<=25;c++){
+   if(wild.length===0)ch[c-1]=compileCubes(by[c],at+1);
+   else if(by[c].length===0)ch[c-1]=compileCubes(wild,at+1);
+   else ch[c-1]=compileCubes(wild.concat(by[c]),at+1);
+ }
  return mk(at,ch);
 }
 let nonhaltRoot=compileCubes(bank.slice(0,haltStart));
