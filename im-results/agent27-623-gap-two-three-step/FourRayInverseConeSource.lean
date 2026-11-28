@@ -170,8 +170,150 @@ theorem source_step_four_ray (N n u v x y : Nat)
   tight_successor_four_ray N n u v x y hhi hsep
     (ordinary_of_step u v x y hu he hg hs) ht
 
+
+/-- The first-counter upper half of the original source envelope is valid
+*without* activating the ternary-ones budget. Thus it holds even close to
+the diagonal, where the shared depth witness is not yet available. -/
+theorem ordinary_first_upper_log (N u v x y : Nat)
+    (hhi : min u v+3 < 3^N)
+    (hord : OrdinaryStep u v x y) :
+    x+min u v ≤ max u v+N+5 := by
+  cases hord with
+  | oddFar h hs =>
+      have huv : v≤u := by omega
+      have hb : v+3<3^N := by
+        rw [Nat.min_eq_right huv] at hhi
+        omega
+      have hx := drainB_first_upper_log N (u-v-5) (v+3) 5 x y hb hs
+      simp only [Nat.min_eq_right huv, Nat.max_eq_left huv]
+      omega
+  | evenFar h hs =>
+      have huv : v≤u := by omega
+      have hb : v+2<3^N := by
+        rw [Nat.min_eq_right huv] at hhi
+        omega
+      have hx := drainB_first_upper_log N (u-v-2) (v+2) 2 x y hb hs
+      simp only [Nat.min_eq_right huv, Nat.max_eq_left huv]
+      omega
+  | oddNear h hs =>
+      have hb : u-1<3^N := by
+        rcases le_total u v with huv | hvu
+        · rw [Nat.min_eq_left huv] at hhi
+          omega
+        · rw [Nat.min_eq_right hvu] at hhi
+          omega
+      have hx := drainB_first_upper_log N (v+4-u) (u-1) 3 x y hb hs
+      rcases le_total u v with huv | hvu
+      · simp only [Nat.min_eq_left huv, Nat.max_eq_right huv]
+        omega
+      · simp only [Nat.min_eq_right hvu, Nat.max_eq_left hvu]
+        omega
+  | evenNear p q d h hev hs =>
+      have hb : u+1<3^N := by
+        rw [Nat.min_eq_left h] at hhi
+        omega
+      have hq : q≤u/3 :=
+        evalA_second_le_quotient (v+1-u) u (2*u+5) p q d hev
+      have hqsmall : q<u+1 := by omega
+      have hbundle : drainB (v+1-u) (u+1) 0 = some (.D x y) := by
+        rw [drainB]
+        have hne : u+1≠0 := by omega
+        simp only [if_neg hne]
+        have hindex : u+1-1=u := by omega
+        have hthird : 0+2*(u+1)+3=2*u+5 := by omega
+        rw [hindex,hthird,hev]
+        simp only [Option.bind_some,if_pos hqsmall]
+        exact hs
+      have hx := drainB_first_upper_log N (v+1-u) (u+1) 0 x y hb hbundle
+      simp only [Nat.min_eq_left h, Nat.max_eq_right h]
+      omega
+
+/-- A tight terminal corridor always bounds the *second* successor
+counter by thirteen times its first plus the upper signed budget, in
+either orientation. -/
+theorem tight_second_upper (n x y : Nat)
+    (ht : tightSkew x y n) : y≤13*x+23*n+111 := by
+  unfold tightSkew at ht
+  dsimp at ht
+  rcases le_total x y with hxy | hyx
+  · simp only [Nat.min_eq_left hxy, Nat.max_eq_right hxy] at ht
+    rcases ht with hf | hn <;> omega
+  · omega
+
+/-- The exact source excludes a hypothetical near-diagonal predecessor
+of a terminal tight ray as soon as its minimum counter dwarfs the two
+ternary depths. No assumed separation, and no unproved step recurrence. -/
+theorem source_step_large_four_ray (N n u v x y : Nat)
+    (hhi : min u v+3 < 3^N)
+    (hlarge : 14*N+12*n+151 ≤ min u v)
+    (hu : 0<u) (he : u%2=0) (hg : u≠v+2)
+    (hs : highLevelNext (.D u v)=some (.D x y))
+    (ht : tightSkew x y n) :
+    fourRayCone N n u v := by
+  have hord := ordinary_of_step u v x y hu he hg hs
+  have hfirst := ordinary_first_upper_log N u v x y hhi hord
+  have hmass := BB6.Agent49ParitySource.next_strict_mass u v x y hs
+  have hsecond := tight_second_upper n x y ht
+  have hsep : min u v+N+10 ≤ max u v := by
+    by_contra hb
+    have hminU : min u v≤u := Nat.min_le_left u v
+    have hminV : min u v≤v := Nat.min_le_right u v
+    omega
+  exact tight_successor_four_ray N n u v x y hhi hsep hord ht
+
+/-- On an exact even blank-root transition the exceptional gap-two branch
+cannot produce a tight terminal corridor at the same high-mass scale.
+This removes the last hypothesis needed for unconditional root transport. -/
+theorem large_gap_two_cannot_hit_tight (N n u v x y : Nat)
+    (hhi : min u v+3 < 3^N)
+    (hlarge : 14*N+12*n+151 ≤ min u v)
+    (he : u%2=0) (hg : u=v+2)
+    (hs : highLevelNext (.D u v)=some (.D x y))
+    (ht : tightSkew x y n) : False := by
+  have h0 : u≠0 := by omega
+  have h1 : ¬ (v%2=1 ∧ v+5≤u) := by omega
+  have h2 : ¬ (v%2=0 ∧ v+3≤u) := by omega
+  have h3 : u%2≠1 := by omega
+  have hstep : drainB 0 u 2 = some (.D x y) := by
+    simpa only [highLevelNext,if_neg h0,if_neg h1,if_neg h2,
+      if_neg h3,if_pos hg] using hs
+  have hv : v≤u := by omega
+  have hb : u<3^N := by
+    rw [Nat.min_eq_right hv] at hhi
+    omega
+  have hx := drainB_first_upper_log N 0 u 2 x y hb hstep
+  have hmass := BB6.Agent49ParitySource.next_strict_mass u v x y hs
+  have hsecond := tight_second_upper n x y ht
+  have hminV : min u v≤v := Nat.min_le_right u v
+  omega
+
+/-- A *genuinely reached* blank-root predecessor of a tight successor
+lies in one of the four rational inverse rays whenever its source
+minimum counter dominates both ternary depths. In particular no assumed
+near/far sector or gap-two hypothesis remains. -/
+theorem root_large_four_ray (N n t u v x y : Nat)
+    (hroot : run t=some (.D u v))
+    (hhi : min u v+3 < 3^N)
+    (hlarge : 14*N+12*n+151 ≤ min u v)
+    (hs : highLevelNext (.D u v)=some (.D x y))
+    (ht : tightSkew x y n) :
+    fourRayCone N n u v := by
+  have hu : 0<u := by
+    have hm := Nat.min_le_left u v
+    omega
+  have he := run_preserves_even t u v hroot
+  have hg : u≠v+2 := by
+    intro hgap
+    exact large_gap_two_cannot_hit_tight N n u v x y
+      hhi hlarge he hgap hs ht
+  exact source_step_large_four_ray N n u v x y
+    hhi hlarge hu he hg hs ht
+
 #print axioms ordinary_affine_envelope
 #print axioms tight_successor_four_ray
 #print axioms source_step_four_ray
+#print axioms source_step_large_four_ray
+#print axioms large_gap_two_cannot_hit_tight
+#print axioms root_large_four_ray
 
 end BB6.Agent27FourRayInverseConeSource
