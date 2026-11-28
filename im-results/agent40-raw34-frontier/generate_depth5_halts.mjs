@@ -94,21 +94,29 @@ const conflict=(a,b)=>a.some((v,i)=>v&&b[i]&&v!==b[i]);
 const parse=file=>[...readFileSync(join(dir,file),"utf8")
   .matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
   .map(m=>m[1].split(",").map(x=>Number(x.trim())));
-if(maxFixed===4){
- const previous=[
+const previous=[
+  ...parse("Raw34OtherD1Halt8.lean"),
+  ...parse("Raw34OtherD1Halt9New.lean"),
   ...parse("Raw34LateThreeSlotHalters.lean"),
   ...Array.from({length:5},(_,i)=>parse(`Raw34Depth4HalterShard${String(i).padStart(2,"0")}.lean`)).flat()
- ];
- assert.equal(previous.length,540);
- for(let i=0;i<selected.length;i++){
-  for(let j=i+1;j<selected.length;j++)
-   assert(conflict(selected[i].codes,selected[j].codes),
-      `overlapping new minimal cylinders ${i}:${j}`);
-  for(const p of previous)
-   assert(conflict(selected[i].codes,p),
-      `overlap against earlier genuine halting source ${i}`);
+];
+assert.equal(previous.length,1607); // 109+958+5+535
+// Strong literal disjointness, independently of the semantic
+// uniqueness-of-first-halt argument: 96,375,786 pair tests for maxFixed 5.
+let pairChecks=0,priorChecks=0;
+for(let i=0;i<selected.length;i++){
+ for(let j=i+1;j<selected.length;j++){
+  pairChecks++;
+  assert(conflict(selected[i].codes,selected[j].codes),
+    `overlapping new minimal cylinders ${i}:${j}`);
+ }
+ for(const p of previous){
+  priorChecks++;
+  assert(conflict(selected[i].codes,p),
+    `new source overlaps previous genuine halting certificate ${i}`);
  }
 }
+
 const shards=Math.ceil(selected.length/shardSize),names=[];
 for(let i=0;i<shards;i++){
  const xs=selected.slice(i*shardSize,(i+1)*shardSize);
@@ -155,6 +163,7 @@ const report={status:"source-generated, kernel-checkable genuine halting physica
  numSourceCylinders:selected.length,maxFixed,shardSize,numShards:shards,
  fixedSlotHistogram:hist,physicalCoverageNew:String(volume),
  remainingSourceFrontierAfterAcceptance:String(5324497401n-volume),
- sourceTheorems:names,oldDisjointnessChecked:maxFixed===4};
+ sourceTheorems:names,oldDisjointnessChecked:true,pairwiseChecks:pairChecks,
+  earlierSourceComparisons:priorChecks};
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({...report,sourceTheorems:names.map(x=>x.ns+".all_halt")},null,2));
