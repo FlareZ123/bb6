@@ -30,7 +30,6 @@ theorem zeroEvenRound (t : Nat) (r : Ray) :
     change S (2+5*t+4) (pre P (pre P r)) = _
     rw [S_push, S_push]
     congr 1
-    omega
   rw [he] at h
   exact h
 
@@ -56,7 +55,6 @@ theorem twoOddZeroRound (t : Nat) (r : Ray) :
     change S (2+5*t+4) (pre P (cons true (cons true r))) = _
     rw [S_push]
     congr 1
-    omega
   rw [he] at h
   have g := chain h (one (2+5*t+5) (cons true r))
   have hf : S ((2+5*t+5)+1) (cons false (cons true r)) =
@@ -64,7 +62,6 @@ theorem twoOddZeroRound (t : Nat) (r : Ray) :
     change S ((2+5*t+5)+1) (pre P r) = _
     rw [S_push]
     congr 1
-    omega
   rw [hf] at g
   exact g
 
