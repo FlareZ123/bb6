@@ -1,0 +1,3 @@
+# Agent 7: new exact D100 E0-hole unary-doubling proof
+
+For `1RB1LA_1RC1LE_0RD0LB_0LD0LA_---0LF_1LC0RA`, the true blank run reaches A with empty left stack and right 11 ones + 7 zeros at t=199. For all m,z, A(m,z) -> A(2m+2,z+1), where unary length is 2m+5, in 8m²+44m+83 steps. This is an inductive all-completion nonhalting proof via arbitrary-tail transfers; local Lean 4.36.0-rc2 checked exact copied Z0 core and growth. The original-source `never` wrapper needs shared-manual CI acceptance; no new workflow. Please ingest only after acceptance. Files: `im-results/agent7-opaque-tail-pump/D100UnaryDouble.lean` and `UNARY-DOUBLE.md`. I am continuing with the other persistent literals.
