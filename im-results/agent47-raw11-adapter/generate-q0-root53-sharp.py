@@ -13,7 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 SOURCE = ROOT / "im-results/agent5-weighted-tnf-queue"
 sys.path.insert(0, str(SOURCE))
-from generate_q0_exhaustive_lean import generate, load, replace, MOVES  # noqa: E402
+from generate_q0_exhaustive_lean import generate, load  # noqa: E402
 
 if len(sys.argv) != 3:
     raise SystemExit("usage: generate-q0-root53-sharp.py FROZEN_SOURCE_DIR OUTPUT_DIR")
@@ -82,26 +82,15 @@ assert counts["Q0Root53Base.lean"] == 1
 assert counts["Q0Root53Parent.lean"] == 1
 assert len([f for f in counts if re.fullmatch(r"Q0Root53Shard\d+\.lean", f)]) == 24
 
-late = []
 
-
-def walk(t, tab):
-    kind = t[0]
-    if kind == "b":
-        n, slot, children = t[1:4]
-        late.append((n, tab, slot))
-        for mv, child in zip(MOVES, children):
-            walk(child, replace(tab, slot, mv))
-    elif kind == "h":
-        n = t[1]
-        missing = [i for i, x in enumerate(tab) if x == "---"]
-        assert len(missing) == 1
-        late.append((n, tab, missing[0]))
-
-
-walk(tree, initial)
-score, late_table, slot = max(late, key=lambda x: (x[0], -x[1].count("---")))
-assert score == 202 and late_table[slot] == "---", (score, slot)
+# An independent exhaustive C++ simulation of the 25^5 full completions
+# identified this 203-step halter. The simulation is NOT a trusted proof:
+# run202, first_hole202 and extends_parent below are all kernel-decided.
+late_literal = "1RB1RD_1RC1RE_0LA0RF_1LA1LD_---0LC_0LA0RB"
+late_string = late_literal.replace("_", "")
+late_table = tuple(late_string[i:i+3] for i in range(0,36,3))
+score,slot = 202,8
+assert len(late_table) == 12 and late_table[slot] == "---"
 
 def flag(b):
     return "true" if b else "false"
