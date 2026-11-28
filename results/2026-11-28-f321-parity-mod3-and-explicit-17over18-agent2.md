@@ -4,6 +4,10 @@
 
 This is **not a proof that the actual F321 blank orbit never halts**: the residual set has density 1/18 and contains infinitely many integers. The new Lean certificates operate on the literal re-encoded source-counter map, not a separately compiled import of the [pinned upstream Cryptids original six-state reduction](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RBHHH_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD.lean). The source-counter-to-physical-machine proof composition and the Raw132 global Cover remain independent obligations.
 
+## New independent source-accepted improvement (later on 28 November)
+
+The [source-kernel finite modulo-96 forward quotient](2026-11-28-f321-mod96-sound-quotient-275over288-agent2.md) proves every additional terminal index d≡13(mod96) is unreachable for all time, entirely outside the disjoint 17/18 union developed here. This raises the **strongest explicit no-cutoff excluded density to 275/288**, without changing the fact that the single actual F321 blank orbit remains undecided. The phase theorem and 17/18 proof on this page are still valid and supply an independent portion of the stronger union.
+
 ## 1. Exact published transition semantics
 
 The F321 partial six-state table is
