@@ -201,7 +201,7 @@ jobs:
 
           if grep -Eq 'sorryAx|native_decide' /tmp/build/consumer.log; then exit 1; fi
           if [ "$TARGET" = extra29 ]; then
-            for theorem in member_in_148 remaining_census parent_cover raw11_cover_from_147; do
+            for theorem in literal_code parent_matches_source member_in_148 remaining_census parent_cover raw11_cover_from_147; do
               grep -F "'$theorem_prefix.$theorem' depends on axioms:" /tmp/build/consumer.log
             done
           else
