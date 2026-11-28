@@ -26,7 +26,7 @@ representative. This lemma is independent of Raw39. -/
 theorem sound40_at (B : Nat) (hFloor : 6766859 ≤ B) :
     ∀ m, compatible root m →
       WeightedBound B m ∨
-        ∃ e ∈ baseRoster, TNFQuotientCompatible e.2 m := by
+        ∃ e ∈ BB6.Agent11Raw39Canonical40Conditional.baseRoster, TNFQuotientCompatible e.2 m := by
   intro m hm
   rcases BB6.Agent31Canonical40Extra57.sound_integrated m hm with hsmall | hrest
   · exact Or.inl (fun k d hk hd =>
@@ -43,7 +43,7 @@ theorem remove_many_at (B : Nat) (hFloor : 6766859 ≤ B)
     (hParents : ∀ p ∈ parents, Cover (WeightedBound B) p) :
     ∀ m, compatible root m →
       WeightedBound B m ∨
-        ∃ e ∈ removeParents parents baseRoster,
+        ∃ e ∈ removeParents parents BB6.Agent11Raw39Canonical40Conditional.baseRoster,
           TNFQuotientCompatible e.2 m :=
   removeParents_sound (sound40_at B hFloor) hRoots hParents
 
