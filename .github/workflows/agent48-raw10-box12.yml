@@ -1,0 +1,105 @@
+name: Agent48 Raw10 Box12 exact domain cover (manual)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+env:
+  D: im-results/agent48-raw10-box12
+  WORK: /tmp/box12-work
+  DEPS: /tmp/box12-deps/tmp/a49-raw10-box6-probe
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Load exact accepted dependency artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash "$D/fetch-deps.sh"
+      - run: bash "$D/ci-prepare.sh"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: box12-common
+          path: /tmp/box12-common.tar.gz
+          retention-days: 30
+          if-no-files-found: error
+  branches:
+    needs: prepare
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        e: [0, 3, 4, 12, 18, 20, 21, 22, 23, 24]
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    env:
+      E: ${{ matrix.e }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Load exact accepted dependency artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash "$D/fetch-deps.sh"
+      - uses: actions/download-artifact@v4
+        with:
+          name: box12-common
+          path: /tmp/box12-common
+      - run: bash "$D/ci-branch.sh"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: box12-e-${{ matrix.e }}
+          path: /tmp/box12-work/tree/Box12E${{ matrix.e }}*.olean
+          retention-days: 30
+          if-no-files-found: error
+  join:
+    needs: branches
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Load exact accepted dependency artifact
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bash "$D/fetch-deps.sh"
+      - uses: actions/download-artifact@v4
+        with:
+          name: box12-common
+          path: /tmp/box12-common
+      - name: Unpack shared kernel-checked modules
+        run: |
+          mkdir -p "$WORK"
+          tar -xzf /tmp/box12-common/box12-common.tar.gz -C "$WORK"
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: box12-e-*
+          merge-multiple: true
+          path: /tmp/box12-work/tree
+      - run: bash "$D/ci-join.sh"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: box12-final
+          path: |
+            /tmp/box12-final.tar.gz
+            /tmp/box12-final.log
+          retention-days: 90
+          if-no-files-found: error
