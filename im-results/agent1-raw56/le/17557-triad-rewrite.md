@@ -296,6 +296,17 @@ The arithmetic explains the new state naturally. On a front zero-run:
 - exact zero-run deletion pops the corresponding weight, subject to the
   reachable guard that the disappearing run has weight zero.
 
+`Raw56LE17557DefectStack.lean` now lifts these scalar laws to the whole
+aligned zero-run/weight stack and is locally checked by Lean 4.36.0-rc2.
+Two guard equivalences make the intended semantic induction especially
+direct: the B arithmetic bound is equivalent to the related high runway
+having at least **15** cells, exactly what the high `BBA` block consumes;
+and, under the necessary residue-7 positive-weight condition, the carry
+bound is equivalent to the related high front zero-run being nonempty. The
+file packages these as unified whole-stack B and carry preservation
+theorems, leaving the reachable shape/residue/positivity invariant as the
+principal unresolved semantic obligation.
+
 Thus the next proof object is a **stack/vector of nonnegative defect weights**,
 one aligned with each finite left zero-run, rather than a single marked run.
 The finite-prefix one-token rules and `Raw56LE17557DefectRelation.lean`
