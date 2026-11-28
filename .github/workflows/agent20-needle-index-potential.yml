@@ -1,10 +1,17 @@
 name: Agent20 Space Needle source-level 3/4/5 potential theorem (manual)
 on:
   workflow_dispatch:
+    inputs:
+      cancellation_r12:
+        description: 'Run exact GMP initial cancellation-feeder r=12 parent scan, not Lean'
+        type: boolean
+        required: false
+        default: false
 permissions:
   contents: read
 jobs:
   source-potential:
+    if: ${{ !inputs.cancellation_r12 }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -66,3 +73,48 @@ jobs:
                   assert axioms <= {'propext','Classical.choice','Quot.sound'}, (name,axioms)
           print('PASS: source potential and mixed branch kernels, standard axioms only')
           PY
+
+  cancellation-r12:
+    if: ${{ inputs.cancellation_r12 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compile existing exact sparse GMP root parent enumerator
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libgmp-dev
+          g++ -O3 -std=c++17 -fopenmp im-results/agent48-needle-r10/needle11.cpp -lgmpxx -lgmp -o /tmp/needle-r12
+          sha256sum im-results/agent48-needle-r10/needle11.cpp
+          echo "GITHUB_SHA=$GITHUB_SHA"
+      - name: Exhaust r12 initial-parent valuation range from source-derived cutoff
+        run: |
+          set -euo pipefail
+          export OMP_NUM_THREADS=4
+          /tmp/needle-r12 12 1 0 1 1 6000000 | tee /tmp/needle-r12.log
+          python3 - <<'PY'
+          import re,pathlib,math
+          s=pathlib.Path('/tmp/needle-r12.log').read_text()
+          assert 'LARGE_UNRESOLVED' not in s,s[-1000:]
+          result=[line for line in s.splitlines() if line.startswith('r=12 c=1')]
+          assert len(result)==1,result
+          line=result[0]
+          print('FINITE_SCAN:',line)
+          d=dict(re.findall(r'(\w+)=([^\s]+)',line))
+          n=9**12
+          a=(n+5)//2
+          cutoff=math.isqrt(16*12*a-1)
+          assert d['range']==f'1..{cutoff}',(d['range'],cutoff)
+          assert int(d['sieve'])+int(d['sparse'])+int(d['exact'])==cutoff
+          assert int(d['largeZero'])==0
+          print('PASS: exact coverage of all initially admissible valuation indices, cutoff=',cutoff)
+          print('PARENTS:',d['parents'])
+          PY
+      - name: Preserve reproducible r12 computational log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent20-space-needle-r12-raw
+          path: /tmp/needle-r12.log
+          if-no-files-found: warn
