@@ -28,7 +28,7 @@ theorem eq0RD : BB6.Agent19Raw40.A0LA.child ⟨false,true,3⟩ = BB6.Agent19Raw4
   BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
 theorem eq0RE : BB6.Agent19Raw40.A0LA.child ⟨false,true,4⟩ = BB6.Agent19Raw40.Raw40C0LA0RE.p :=
   BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
-theorem eq1LA : BB6.Agent19Raw40.A0LA.child ⟨true,false,0⟩ = BB6.Agent19Raw40.Raw40C0LA1LBB6.Agent19Raw40.A0LA.p :=
+theorem eq1LA : BB6.Agent19Raw40.A0LA.child ⟨true,false,0⟩ = BB6.Agent19Raw40.Raw40C0LA1LA.p :=
   BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
 theorem eq1LB : BB6.Agent19Raw40.A0LA.child ⟨true,false,1⟩ = BB6.Agent19Raw40.Raw40C0LA1LB.p :=
   BB6.Agent19Raw40.A0LA.equalTable_sound _ _ (by decide)
@@ -63,7 +63,7 @@ theorem children :
   · rw [eq0RE] at hm
     exact BB6.Agent19Raw40.Raw40C0LA0RE.all_quotient m hm
   · rw [eq1LA] at hm
-    exact BB6.Agent19Raw40.Raw40C0LA1LBB6.Agent19Raw40.A0LA.all_quotient m hm
+    exact BB6.Agent19Raw40.Raw40C0LA1LA.all_quotient m hm
   · rw [eq1LB] at hm
     exact BB6.Agent19Raw40.Raw40C0LA1LB.all_quotient m hm
   · rw [eq1LC] at hm
