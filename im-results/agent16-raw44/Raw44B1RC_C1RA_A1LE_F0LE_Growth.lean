@@ -199,7 +199,15 @@ theorem stageA (n : Nat) :
     have ho : [false] ++ (V n ++ [false,true,false,true]) =
         W (n+1) ++ [true] := by
       simpa only [List.append_assoc] using (rotateV n)
-    simpa [leftA,hi,ho,List.append_assoc] using H
+    calc
+      run0 table 3 (leftA n) =
+          run0 table 3 ⟨0,[],
+            [false,true,false] ++ ([false] ++ V n ++ [false,true,false,true])⟩ := by
+              rw [leftA,hi]
+              rfl
+      _ = some ⟨0,[false,true,true,true],
+            [false] ++ V n ++ [false,true,false,true]⟩ := H
+      _ = some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by rw [ho]
   have h2 : run0 table (6*(n+1))
       ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ =
       some ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ := by
