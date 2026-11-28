@@ -105,16 +105,16 @@ theorem c_even_pop (n : Nat) (s saved : List Bool)
       (boundary 1 (saved ++ [true,true,true,true]) ss
         (s ++ alt (2*n) ++ true::R)) := by
   have h := cEven n s.reverse (savedLeft (saved::ss)) R hs
-  simpa [boundary,leftOf,saved_pop_left,List.reverse_reverse,
-    List.append_assoc] using h
+  simpa [boundary,leftOf,savedLeft,marker,saved_pop_left,
+    List.reverse_append,List.reverse_reverse,List.append_assoc] using h
 
 theorem b_end_pop (s saved : List Bool) (ss : List (List Bool))
     (hs : Scan s.reverse) :
     Goes (boundary 1 s (saved::ss) [])
       (boundary 1 (saved ++ [true,true,true,true]) ss s) := by
   have h := bEnd s.reverse (savedLeft (saved::ss)) hs
-  simpa [boundary,leftOf,saved_pop_left,List.reverse_reverse,
-    List.append_assoc] using h
+  simpa [boundary,leftOf,savedLeft,marker,saved_pop_left,
+    List.reverse_append,List.reverse_reverse,List.append_assoc] using h
 
 #print axioms b_one
 #print axioms c_one
