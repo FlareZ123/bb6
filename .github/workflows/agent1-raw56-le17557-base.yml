@@ -66,7 +66,8 @@ jobs:
             --require BB6.Agent1Raw56.LE17557ActionGrammar.erase_actionEpoch \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_head \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.body_outerTrace \
-            --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_is_closed_nested
+            --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_is_closed_nested \
+            --require BB6.Agent1Raw56.LE17557ActionGrammar.body_outerTraceBelow
           cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
