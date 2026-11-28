@@ -1,0 +1,52 @@
+name: Agent11 Raw83 after direct Canonical38
+run-name: Direct Canonical38 -> 37 using accepted Raw83 parent
+
+on:
+  workflow_dispatch:
+    inputs:
+      canonical38_run:
+        description: 'Successful Agent3 direct Raw39+Raw47 Canonical38 producer'
+        type: string
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Consume Raw83 from authenticated direct Canonical38
+        env:
+          GH_TOKEN: ${{ github.token }}
+          CANONICAL38_RUN: ${{ inputs.canonical38_run }}
+        run: |
+          set -euo pipefail
+          [[ "$CANONICAL38_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent11-canonical37-raw83/consume.py
+          python im-results/agent11-canonical37-raw83/consume.py \
+            --work /tmp/a11-canonical37-raw83 \
+            --canonical38-run "$CANONICAL38_RUN" | tee /tmp/a11-canonical37-raw83.log
+          test -s /tmp/a11-canonical37-raw83/canonical37-raw83-after-direct38-delta/delta.json
+          cat /tmp/a11-canonical37-raw83/canonical37-raw83-after-direct38-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical37-raw83-after-direct38-delta
+          path: |
+            /tmp/a11-canonical37-raw83/canonical37-raw83-after-direct38-delta/**
+            /tmp/a11-canonical37-raw83.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
