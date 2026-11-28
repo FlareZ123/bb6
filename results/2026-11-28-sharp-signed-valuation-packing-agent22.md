@@ -36,7 +36,7 @@ The upper bound is proven in the next section. **Every summand can be attained s
 [
 v=4z-K,qquad j=e+1,qquad w=z/4^e.
 ]
-All three entries are positive integers; `3v<K` is equivalent to `z<K/3`, and `4^j w=4z=v+K`. Distinct `z` give distinct `v`. Summing `j=1+ν_4(z)` over *all* the interval integers yields exactly `U(K)`. This exhibits a maximizing family and proves the capacity formula **without an asymptotic or compactness argument**.
+All three entries are positive integers; `3v<K` is equivalent to `z<K/3`, and `4^j w=4z=v+K`. **Even the target** satisfies the same strict cone `0<3w<K`, since `0<w=z/4^e≤z<K/3`. Distinct `z` give distinct `v`. Summing `j=1+ν_4(z)` over *all* the interval integers yields exactly `U(K)`. This exhibits a maximizing family and proves the capacity formula **without an asymptotic or compactness argument**.
 
 These maximizing edges are an abstract extremal family, not necessarily successive edges of one cyclic inverse path. Thus the exactness of `U(K)` for unconstrained **edge families** does not imply that a signed path with that total valuation weight exists.
 
