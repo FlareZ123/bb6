@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4, cycle-rank]
         default: pilot
 
 permissions:
@@ -141,6 +141,20 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Defect.never'" /tmp/agent23-raw34-halters/audit.log
           grep -F "'BB6Coverage.Agent23Odometer.never'" /tmp/agent23-raw34-halters/audit.log
+      - name: Rank exact Raw34 complement after source-generatable F side cycles
+        if: inputs.mode == 'cycle-rank'
+        run: |
+          set -euo pipefail
+          W=/tmp/agent23-raw34-halters
+          mkdir -p "$W/f3" "$W/f4"
+          node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs \\
+            --output "$W/f3" --shard-size 50 > "$W/generate-f3.log"
+          node im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \\
+            --output "$W/f4" --shard-size 100 > "$W/generate-f4.log"
+          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \\
+            --include-f-depth4 --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \\
+            > "$W/rank-cycles.json"
+          node -e 'const j=require(process.argv[1]); console.log(JSON.stringify({raw34Complement:j.plusAgent23Residual,nonD1:j.totalResidualD1not1RD,cycleGain:j.rayAndCycleNewPhysicalGain,topThree:j.topThreeSlotPrefixes.slice(0,3)},null,2))' "$W/rank-cycles.json"
       - name: Source-check F-branch depth-three translated side cycles (592 candidate tables)
         if: inputs.mode == 'f-depth3'
         run: |
@@ -161,7 +175,10 @@ jobs:
         if: always()
         with:
           name: agent23-raw34-halters-source-audit
-          path: /tmp/agent23-raw34-halters/audit.log
+          path: |
+            /tmp/agent23-raw34-halters/audit.log
+            /tmp/agent23-raw34-halters/rank-cycles.json
+            /tmp/agent23-raw34-halters/generate-f*.log
           retention-days: 14
 
   f-depth4-prepare:
