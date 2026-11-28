@@ -2286,7 +2286,9 @@ jobs:
           assert t['D1Distribution']==x['D1Distribution']
           assert t['topThreeSlotPrefixes']==x['topThreeSlotPrefixes']
           print('PASS: reduced MDD and wildcard trie agree on the exact Raw34 baseline')
-          print('MDD nodes:',x['mddNodes'],'trie nodes:',t['trieNodes'],'trie memo states:',t['trieMemoStates'])
+          print('MDD nodes:',x['mddNodes'],'trie nodes:',t['trieNodes'],
+                'peak D1 trie memo states:',t['triePeakD1MemoStates'],
+                'total D1 trie memo states:',t['trieTotalD1MemoStates'])
           PY
       - uses: actions/upload-artifact@v4
         if: always()
