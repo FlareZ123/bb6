@@ -50,9 +50,51 @@ function check(t,s) {
   // Claim: terminal height/P lies in the forbidden inverse-band.
   assert(6n*y>T); // y > T/6
   assert(2n*y<T); // y < T/2
+  // Independently execute the exact aligned radix-16 q0 macro word.
+  // Coalescing chronological halfsteps is determined by the parity of
+  // s and M; this is independent from the reverse one-step simulation.
+  const blocks=[];
+  const add=(digit,count)=>{if(count>0)blocks.push([digit,count]);};
+  if(s%2===0){
+    add(0,q/2);
+    if(M%2===0) { add(5,M/2);add(0,r/2);add(1,1); }
+    else { add(5,(M-1)/2);add(1,1);add(0,(r-1)/2);add(1,1); }
+  } else {
+    add(0,(q-1)/2);add(4,1);
+    if(M%2===0) { add(5,(M-2)/2);add(1,1);add(0,(r-1)/2);add(1,1); }
+    else { add(5,(M-1)/2);add(0,r/2);add(1,1); }
+  }
+  add(0,(k-2)/2);
+  let mp=p/2n,my=y/2n,macroCount=0;
+  for(const [digit,count] of blocks) {
+    assert(my>0n && 3n*my<mp);
+    if(digit===0) {
+      const pow=16n**BigInt(count);
+      assert.equal(my%pow,0n,'zero macro exact division');
+      my/=pow;
+      mp+=3n*BigInt(count);
+      macroCount+=count;
+    } else {
+      for(let i=0;i<count;i++) {
+        const cost=BigInt(digit===1?5:digit===4?4:6);
+        const offset=BigInt(digit===1?6:digit===4?18:32);
+        const numerator=my+BigInt(digit)*mp+offset;
+        assert.equal(numerator%16n,0n,'nonzero macro exact division');
+        my=numerator/16n;mp+=cost;macroCount++;
+      }
+    }
+    assert(my>0n && 3n*my<mp);
+  }
+  assert.equal(macroCount*2,N);
+  assert.equal(mp,T+2n);assert.equal(my,1n);
+  // At the macro endpoint, no digit is integrable: none of 0,1,4,5
+  // gives a numerator divisible by 16, since T is divisible by 16.
+  for(const [digit,offset] of [[0,0],[1,6],[4,18],[5,32]]) {
+    assert.notEqual((1n+BigInt(digit)*(T+2n)+BigInt(offset))%16n,0n);
+  }
   return {t,s,M,k,r,q,N,rankLoss:loss.toString(),
     resetHeight:H.toString().slice(0,24),terminalHeightVsT:
-      (Number(y*10000n/T)/10000).toFixed(4),terminal:true};
+      (Number(y*10000n/T)/10000).toFixed(4),terminal:true,macroVerified:true,macroBlocks:blocks.length};
 }
 if(require.main===module){
   const t=process.argv[2]===undefined?1:Number(process.argv[2]);
