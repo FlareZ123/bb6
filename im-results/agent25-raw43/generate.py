@@ -45,12 +45,78 @@ def emit(name, imports, body, namespace=NS, opens=None):
         + f"namespace {namespace}\nopen {opens}\n"
         + body + f"\nend {namespace}\n")
 
-def emit_bidfa_batch(name, entries):
+def emit_bidfa_batch(name, entries, symmetry_entries=()):
     opens = "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA"
-    parts = ["import FastBiDFA\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\n"]
+    imports = ["FastBiDFA"]
+    if symmetry_entries:
+        imports += ["WeightedSymmetry", "WeightedTNF"]
+    parts = ["".join("import "+x+"\\n" for x in imports)
+             + "set_option maxRecDepth 100000\\nset_option maxHeartbeats 0\\n"]
     for namespace, body in entries:
-        parts.append(f"namespace {namespace}\nopen {opens}\n{body}\nend {namespace}\n")
+        parts.append(f"namespace {namespace}\\nopen {opens}\\n{body}\\nend {namespace}\\n")
+    sym_opens = opens + " BB6.Agent13BlankDelay BB6.Agent16WeightedSymmetry"
+    for namespace, body in symmetry_entries:
+        parts.append(f"namespace {namespace}\\nopen {sym_opens}\\n{body}\\nend {namespace}\\n")
     (OUT/(name+".lean")).write_text("".join(parts))
+
+def swap_ef_table(table):
+    """Rename states E and F in both source rows and transition targets."""
+    flat = table.replace("_", "")
+    assert len(flat) == 36
+    perm = [0, 1, 2, 3, 5, 4]
+    old = [flat[3*i:3*i+3] for i in range(12)]
+    new = ["---"] * 12
+    for q in range(6):
+        for a in range(2):
+            tr = old[2*q+a]
+            if tr != "---":
+                tr = tr[:2] + chr(ord("A") + perm[ord(tr[2])-ord("A")])
+            new[2*perm[q]+a] = tr
+    return "_".join("".join(new[2*q:2*q+2]) for q in range(6))
+
+def partial_table_source(table):
+    flat = table.replace("_", "")
+    rows = [flat[3*i:3*i+3] for i in range(12)]
+    out = ["def table : PartialMachine := fun s =>", "  match s.1.val,s.2 with"]
+    for j,tr in enumerate(rows):
+        if tr == "---":
+            continue
+        write = str(tr[0] == "1").lower()
+        right = str(tr[1] == "R").lower()
+        nxt = ord(tr[2]) - ord("A")
+        out.append(f"  | {j//2},{str(bool(j%2)).lower()} => some (some ⟨{write},{right},{nxt}⟩)")
+    out.append("  | _,_ => none")
+    return "\\n".join(out)
+
+def symmetry_never_body(i, table, rep_i, rep_namespace):
+    return f"""namespace M{i}
+{partial_table_source(table)}
+private abbrev ef : StatePerm := swapStates (4 : Fin 6) 5
+theorem renamed_table :
+    renamePartial ef table = {rep_namespace}.M{rep_i}.table := by
+  funext s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
+private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6) = 0)
+    (m : Machine) (h : NeverHalts (renameTable e m)) : NeverHalts m := by
+  intro n
+  have hrun : run (renameTable e m) n blank =
+      (run m n blank).map (renameConfig e) := by
+    simpa [renameConfig,blank,hroot] using rename_run e m blank n
+  have hn := h n
+  rw [hrun] at hn
+  cases hr : run m n blank with
+  | none => simp [hr] at hn
+  | some d => simp [hr]
+theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := by
+  have hc := rename_compatible ef hm
+  rw [renamed_table] at hc
+  have hn := {rep_namespace}.M{rep_i}.never (renameTable ef m) hc
+  exact rename_never_back ef (by decide +kernel) m hn
+#print axioms renamed_table
+#print axioms never
+end M{i}"""
 
 def compile_cpp(src, out):
     subprocess.run(["g++","-std=c++20","-O3",str(src),"-o",str(out)],check=True)
@@ -127,28 +193,70 @@ def generate():
                 )
 
         bidfa_pending=[]
-        for key,leaf in S.get("bidfa",{}).items():
-            i=int(key)
-            if i in ngram_overrides:
+        bidfa = {int(key): leaf for key,leaf in S.get("bidfa",{}).items()}
+        symmetry_mate = {}
+        if VARIANT == "b1la_a0la":
+            by_table = {leaf["table"]: i for i,leaf in bidfa.items()}
+            for i,leaf in bidfa.items():
+                mate = by_table.get(swap_ef_table(leaf["table"]))
+                assert mate is not None and mate != i
+                assert swap_ef_table(bidfa[mate]["table"]) == leaf["table"]
+                symmetry_mate[i] = mate
+            reps = [i for i in bidfa if i < symmetry_mate[i]]
+            assert len(bidfa) == 88 and len(reps) == 44
+            print("B1LA A0LA E/F symmetry: 88 BiDFA leaves -> 44 representatives", flush=True)
+
+        done_bidfa=set()
+        for i in sorted(bidfa):
+            if i in done_bidfa or i in ngram_overrides:
                 continue
+            leaf=bidfa[i]
             assert rows[i]==leaf["table"]
-            name=PREFIX+"BiDFA"+str(i)
-            namespace=NS+"BiDFA"+str(i)
-            body=emit_bidfa(i,rows[i],*leaf["dfa"],[leaf["states"],leaf["edges"]])
-            cert[i]=f".proven {namespace}.M{i}.table {namespace}.M{i}.never"
-            if BIDFA_BATCH == 1:
-                emit(name,["FastBiDFA"],body,namespace,
-                     "BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA")
-                modules[i]=name
+            mate = symmetry_mate.get(i)
+            if mate is not None:
+                rep=min(i,mate)
+                partner=max(i,mate)
+                if i != rep:
+                    continue
+                assert rows[partner] == bidfa[partner]["table"]
             else:
-                bidfa_pending.append((i,namespace,body))
+                rep=i
+                partner=None
+
+            name=PREFIX+"BiDFA"+str(rep)
+            namespace=NS+"BiDFA"+str(rep)
+            body=emit_bidfa(rep,rows[rep],*leaf["dfa"],[leaf["states"],leaf["edges"]])
+            cert[rep]=f".proven {namespace}.M{rep}.table {namespace}.M{rep}.never"
+            sym_entry=None
+            if partner is not None:
+                partner_namespace=NS+"BiDFA"+str(partner)
+                partner_body=symmetry_never_body(partner, rows[partner], rep, namespace)
+                cert[partner]=f".proven {partner_namespace}.M{partner}.table {partner_namespace}.M{partner}.never"
+                sym_entry=(partner_namespace,partner_body)
+                done_bidfa.add(partner)
+            done_bidfa.add(rep)
+
+            if BIDFA_BATCH == 1:
+                emit_bidfa_batch(name,[(namespace,body)],[] if sym_entry is None else [sym_entry])
+                modules[rep]=name
+                if partner is not None:
+                    modules[partner]=name
+            else:
+                bidfa_pending.append((rep,namespace,body,partner,sym_entry))
+
         if BIDFA_BATCH > 1:
             for off in range(0,len(bidfa_pending),BIDFA_BATCH):
                 chunk=bidfa_pending[off:off+BIDFA_BATCH]
                 name=PREFIX+"BiDFABatch"+str(off//BIDFA_BATCH)
-                emit_bidfa_batch(name,[(namespace,body) for _,namespace,body in chunk])
-                for i,_,_ in chunk:
+                emit_bidfa_batch(
+                    name,
+                    [(namespace,body) for _,namespace,body,_,_ in chunk],
+                    [sym for *_,sym in chunk if sym is not None],
+                )
+                for i,_,_,partner,_ in chunk:
                     modules[i]=name
+                    if partner is not None:
+                        modules[partner]=name
         for key,leaf in S.get("lateLast",{}).items():
             i=int(key)
             assert rows[i]==leaf["table"]
