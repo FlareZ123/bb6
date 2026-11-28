@@ -1,5 +1,8 @@
 # q0-151: factorized finite macro candidate and source-proof seam
 
+**Accepted original-machine result, 28 November 2026.** Lean CI **46160692221** compiled the full 108-module transitive source closure rooted at `Q0151FullCover.lean`. The exported theorem `BB6.Agent5Q0151FullCover.cover (B)` proves `Cover (WeightedBound B)` for the exact q0-151 one-hole cylinder for every natural `B`; its axiom profile is exactly `[Classical.choice, Quot.sound, propext]`. Artifact **15270000450**, ZIP SHA-256 `6e4a66349c6ba17f1eae5f9f805c9269e5ed0144f3c66f86010c9b2e765fe859`.
+
+
 The only target is the q0-151 F0-open partial machine `1RB1LC_1RC0RD_0LA1RD_1RB0RE_1LC1RF_---0RC`. This is **intermediate** work. It is not a root nonhalting proof until the source-level macro/stack interpretation is discharged. The original true run of this machine must be connected to the abstract language independently of the finite checker.
 
 ## Exact computational fixed-point structure
@@ -42,10 +45,8 @@ The original-table macro lemmas `Q0151SourceMacro.lean` and `Q0151MacroSteps.lea
 
 Finally, `Q0151PackedLiveness.lean` gives an actual-machine `Cover NeverHalts` theorem from a source-level region with a positive-length return from each member, accepted in [run 46130063572](https://github.com/FlareZ123/bb6/actions/runs/46130063572). This remains conditional: an invariant relating each concrete physical tape+stack to a `Good` abstract control and a corresponding genuine macro successor must be constructed.
 
-## Remaining decisive work
+## Accepted source closure and remaining integration edge
 
-1. **Done at the abstract level:** the factorized certificate is kernel-accepted without `sorryAx`; the category, concatenation, transfer, scan grammar and all-length source macro components have individual formal proofs, but their full transitive source audit must be verified on the eventual cover root.
-2. **Immediate proof target:** `Q0151SourceActions12.lean` adds the previously missing C-mode length-two pop bridge. `Q0151RegionLift.lean` implements a physical stack relation with exact current/saved segment summaries; `Q0151FullCover.lean` assembles exhaustive B/C source-macro cases, including zero-tail physical pops, into a positive-return `Cover NeverHalts p` candidate. These three new files must pass the complete source-closure audit before any nonhalting claim.
-3. If the complete original-machine proof is accepted, connect this exact q0-151 open leaf to its authenticated parent and global weighted residual cover; do not decrement the current Canonical38 count without an accepted membership and consumer lineage.
+The former source seam is discharged. `Q0151RegionLift.lean` constrains every physical stack element by the all-length segment grammar and the exact 50-symbol saved set, and transports authentic stay/push/pop macros through the finite `Good` invariant. `Q0151FullCover.lean` exhausts both B and C modes by live-run length, including the length-two and empty-stack pop cases, obtaining a strictly positive original-machine return from every region state. `cover_of_region` proves `Cover NeverHalts p`, and `weighted_never` lifts this to `cover (B)` for every bound.
 
-No statement here determines the exact value of BB(6).
+The remaining work is integration rather than nonhalting mathematics: compile the authenticated q0-151 frozen parent assembly and consume that parent by exact membership in the accepted Raw11 residual roster. No statement here determines the exact value of BB(6).
