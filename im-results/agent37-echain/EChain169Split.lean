@@ -1,5 +1,6 @@
 import Lean.Elab.Tactic.Omega
 import EChainBEEAReentry
+import PacketEZeroAnyTail
 
 set_option maxHeartbeats 40000000
 set_option maxRecDepth 16384
@@ -324,7 +325,51 @@ theorem reset2187_655_source_reentry (v Q : Nat) (hQ : 2 ≤ Q) :
         3*(2097152*v+628722)+3 := by omega
   rw [he,hout]
 
+
+def externalU6 : List Bool :=
+  [false,true,false,true,true,true]
+
+/-- Source composition through the actual external-cylinder call-24 boundary.
+    The exact external replay has t ≡ 5 (mod 9) and Q=0 in the
+    k=243*t+169 P2 class.  After the common reset/E/B/B/E/B prefix this is
+    an E-zero packet; the arbitrary-tail theorem consumes the leading 01
+    of the marker and reaches P(0,9;010111). -/
+theorem external169_call24_prefix (v : Nat) :
+    let kE := 786432*v+497914
+    let T := time243_169 (9*v+5) 0 +
+      (12*kE*kE+49*kE+54)
+    run T
+      (packet (3*(2187*v+1384)+4) 0 2
+        (false :: List.replicate 6 true)) =
+      packet (6291456*v+3983317) 0 9 externalU6 := by
+  dsimp only
+  rw [run_add]
+  have hp := prefix243_169 (9*v+5) 0
+  have hk0 :
+      2187*v+1384 = 243*(9*v+5)+169 := by omega
+  rw [hk0,hp]
+  have hin :
+      262144*(9*v+5)+183026 =
+        3*(786432*v+497914)+4 := by omega
+  rw [hin]
+  have hmarker :
+      BB6.Agent35K4Shapes.marker =
+        false :: true :: externalU6 := by decide
+  rw [hmarker]
+  have he :=
+    BB6.Agent37PacketBoundary.e_zero_drop_any
+      (786432*v+497914) 1 externalU6
+  have hout :
+      8*(786432*v+497914)+5 =
+        6291456*v+3983317 := by omega
+  simpa [hout] using he
+
 #print axioms prefix729_412
 #print axioms reset729_412_source_reentry
+#print axioms prefix243_169
+#print axioms reset2187_898_source_reentry
+#print axioms reset2187_1627_source_reentry
+#print axioms reset2187_655_source_reentry
+#print axioms external169_call24_prefix
 
 end BB6.Agent37EChain169Split
