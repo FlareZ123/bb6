@@ -20,6 +20,7 @@ const first=resolve(dir,"../agent50-raw34-firsthole");
 const depth2=JSON.parse(readFileSync(resolve(first,"depth2-candidate-witnesses.json"),"utf8")).second_level;
 const depth3=JSON.parse(readFileSync(resolve(first,"depth3-candidate-witnesses.json"),"utf8")).witnesses;
 const maskBank=JSON.parse(readFileSync(resolve(dir,"mask-bank-128.json"),"utf8"));
+const efBank=JSON.parse(readFileSync(resolve(dir,"ef-conjugate-bank-128.json"),"utf8"));
 const actions=["HALT"];
 for(const w of "01")for(const d of "LR")for(const q of "ABCDEF")
   actions.push(w+d+q);
@@ -69,6 +70,34 @@ for(const S of ["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
 }
 assert.equal(graph.length,9);
 assert.equal(maskBank.ranked.length,128);
+assert.equal(efBank.conjugates.length,128);
+// Verify every E/F conjugate is mechanically derived, not blindly
+// accepted from a JSON record. The physical HALT action remains 0.
+function conjugateAction(i){
+  if(i===0)return 0;
+  const a=actions[i],q=a[2]==="E"?"F":a[2]==="F"?"E":a[2];
+  return index.get(a.slice(0,2)+q);
+}
+function conjugateDomain(bits){
+  let out=0;
+  for(let i=0;i<25;i++)
+    if(bits&(1<<i))out|=1<<conjugateAction(i);
+  return out;
+}
+function conjugateMask(hex){
+  const old=BigInt(hex),section=(1n<<32n)-1n;
+  const e=(old>>128n)&section,f=(old>>160n)&section;
+  return "0x"+((old&((1n<<128n)-1n))|(f<<128n)|(e<<160n)).toString(16);
+}
+for(const [i,record] of efBank.conjugates.entries()){
+  const old=maskBank.ranked[i],transformed=old.domainMasks.map(conjugateDomain);
+  const domain=transformed.slice();
+  domain[4]=transformed[6];domain[5]=transformed[7];
+  domain[6]=transformed[4];domain[7]=transformed[5];
+  assert.deepEqual(record.domainMasks,domain);
+  assert.equal(record.maskHex,conjugateMask(old.maskHex));
+  assert.equal(record.sourceIndex,i);
+}
 
 const nodes=[{at:8},{at:8}],unique=Array.from({length:8},()=>new Map());
 function mk(at,ch){
@@ -155,8 +184,18 @@ for(const [i,item] of maskBank.ranked.entries()){
 const expandedCount=cardinality(expanded),gain=expandedCount-oldCount;
 assert.equal(gain,51399300n);
 assert.equal(expandedCount,123277683300n);
-assert.equal(cardinality(expanded)+
-  (25n**8n-cardinality(expanded)),25n**8n);
+let expandedEF=expanded;
+let positiveSymmetry=0;
+for(const record of efBank.conjugates){
+  const previous=cardinality(expandedEF);
+  expandedEF=union(expandedEF,productBDD(record.domainMasks));
+  if(cardinality(expandedEF)>previous)positiveSymmetry++;
+}
+const symmetryCount=cardinality(expandedEF),symmetryGain=symmetryCount-expandedCount;
+assert.equal(symmetryGain,78216493n);
+assert.equal(symmetryCount,123355899793n);
+assert.equal(cardinality(expandedEF)+
+  (25n**8n-cardinality(expandedEF)),25n**8n);
 
 console.log(JSON.stringify({
   status:"PASS: exact 25-way MDD union arithmetic; nonhalting still conditional on original-source Lean gate",
@@ -167,6 +206,12 @@ console.log(JSON.stringify({
   oldPlusGraph:String(oldCount),withRadiusTwo:String(expandedCount),
   genuinelyOutsideOlderPortfolio:String(gain),
   stillUncoveredByTheseFamilies:String(25n**8n-expandedCount),
+  efConjugateInvariants:efBank.conjugates.length,
+  symmetryAdditionalPhysical:String(symmetryGain),
+  bothBanksOutsideOlderPortfolio:String(symmetryCount-oldCount),
+  bothBanksExactUnion:String(symmetryCount),
+  bothBanksUncovered:String(25n**8n-symmetryCount),
+  nonzeroSymmetryMasks:positiveSymmetry,
   mddNodes:nodes.length,nonzeroNovelMasks:marginal.filter(x=>BigInt(x.gain)>0n).length,
   firstMarginals:marginal.slice(0,20)
 },null,2));
