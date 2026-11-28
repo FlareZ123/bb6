@@ -1,8 +1,8 @@
-# Raw36: source-checked parent Cover reduction to ten concrete cylinders
+# Raw36: source-checked parent Cover reduction to nine direct cylinders
 
-**Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. Source-accepted B1=0LE and B1=1RE Covers now compose with the earlier twelve-cylinder theorem to leave exactly ten premises at any common weighted threshold B ≥ 1152: the nine direct D1 moves (0LA, 1LA, 0LB, 0LC, 1LC, 0LE, 0RE, 1LE, 1RE), and only B1=1LE under D1=1LB. The exact composition is `BB6.Agent29Raw36.parent_cover_from_ten` in [Raw36ParentLive10.lean](Raw36ParentLive10.lean); the existing parameterized compose runner checks the complete pinned original-source object closure. B1=0LB, 0LE and 1RE are no longer live premises. No Canonical40 removal is claimed until all ten remaining cylinders are discharged.
+**Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. Source-accepted B1=0LE, B1=1RE and B1=1LE Covers now compose with the earlier reductions to leave exactly nine premises at any common weighted threshold B ≥ 1152: the direct D1 moves 0LA, 1LA, 0LB, 0LC, 1LC, 0LE, 0RE, 1LE and 1RE. The exact composition is `BB6.Agent29Raw36.parent_cover_from_nine` in [Raw36ParentLive9.lean](Raw36ParentLive9.lean); the existing parameterized compose runner checks the complete pinned original-source object closure. No nested B1 premise remains. No Canonical40 removal is claimed until all ten remaining cylinders are discharged.
 
-The predecessor `parent_cover_from_twelve` remains a dependency and records the earlier B1=0LB consumption. B1=0LE is source-accepted at weighted bound 1152 in [run 46097780398](https://github.com/FlareZ123/bb6/actions/runs/46097780398), artifact 15249355743; B1=1RE is source-accepted at weighted bound 332 in [run 46112385989](https://github.com/FlareZ123/bb6/actions/runs/46112385989), artifact 15252363171. Their exact artifact digests and source revisions are pinned in [accepted_pins.json](accepted_pins.json).
+The predecessor `parent_cover_from_twelve` remains a dependency and records the earlier B1=0LB consumption. B1=0LE is source-accepted at weighted bound 1152 in [run 46097780398](https://github.com/FlareZ123/bb6/actions/runs/46097780398), artifact 15249355743; B1=1RE is source-accepted at weighted bound 332 in [run 46112385989](https://github.com/FlareZ123/bb6/actions/runs/46112385989), artifact 15252363171; B1=1LE is source-accepted at weighted bound 387 in [run 46121176787](https://github.com/FlareZ123/bb6/actions/runs/46121176787), artifact 15253439483. Their exact artifact digests and source revisions are pinned in [accepted_pins.json](accepted_pins.json).
 
 ## Closed B1 cylinders
 
@@ -21,11 +21,12 @@ All eleven non-0LA rows below have source-accepted original-machine weighted cov
 | 1LA | 551 | same run, artifact 15242397102 |
 | 1LB | 415 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15240986373 |
 | 1LC | 288 | [46087583776](https://github.com/FlareZ123/bb6/actions/runs/46087583776), artifact 15240727480 |
+| 1LE | 387 | [46121176787](https://github.com/FlareZ123/bb6/actions/runs/46121176787), artifact 15253439483 |
 | 1RA | 263 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15241768281 |
 | 1RC | 95 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15239643588 |
 | 1RE | 332 | [46112385989](https://github.com/FlareZ123/bb6/actions/runs/46112385989), artifact 15252363171 |
 
-The five immediate B1 cycles (0LC, 0LD, 1LD, 1RB, 1RD) and E/F transport are source-accepted in [46076282287](https://github.com/FlareZ123/bb6/actions/runs/46076282287), artifact 15234902017. The only retained B1 action after the new composition is 1LE, a literal child of `b1Child` in `Raw36D1SymmetryCut.lean`.
+The five immediate B1 cycles (0LC, 0LD, 1LD, 1RB, 1RD) and E/F transport are source-accepted in [46076282287](https://github.com/FlareZ123/bb6/actions/runs/46076282287), artifact 15234902017. All nested B1 actions under D1=1LB are now consumed; the parent interface retains only direct D1 children.
 
 **Composition evidence.** On 28 November 2026, the four corrected shard ZIPs, the relevant pilot closure and ten B1 branch ZIPs were retrieved and matched against the GitHub artifact SHA-256 digests. Common imported source/object identities agree; the pilot's obsolete Raw36Kid08 is excluded in favor of the corrected shard object. Using the exact Lean 4.36.0-rc2 executable (SHA-256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00), `Raw36Branch.lean` and `Raw36D1Complement.lean` compiled locally. The final `branch_cover` and `d1_cover_from_four` both report only `[propext, Classical.choice, Quot.sound]`. The local root source SHA-256 digests are 4d255a57c9d994364beba263dccb93dca1fd530190e41d63227a38323b0e3811 and f30b8a06e54d695db57e17a93b42e0344a152f7c32e129e3940bc68099c33db6, respectively. The compiled root object SHA-256 values are da675f9c71914204ec6f0f6cd83a79449d0940b22cdc40c1d428334ca8d83931 and 6534567c04e5989a842dc69438ffdb0d7a7ceca4519b49fa89733f69c705497f. [accepted_pins.json](accepted_pins.json) records all input artifacts; [compose_accepted.py](compose_accepted.py) reconstructs the exact selected dependency union and the two new roots without rebuilding the expensive child trees.
 
@@ -54,6 +55,6 @@ Both manual proofs hold for every completion of their F1 hole. The full B1=1RE w
 
 ## Remaining research
 
-Finish the B1=1LE source gate and the nine direct D1 descendants. B1=1LE has a complete 1002-leaf candidate bank at bound 387; the prior 150-minute source run kernel-checked child modules 00–22 and timed out while compiling child 23, preserving artifact 15248908350 for resume. Do not repeat the accepted B1=0LB, 0LE or 1RE closures. Use `parent_cover_from_ten` as the current parent interface, then consume any completed direct D1 Covers into that exact live list. The global Canonical40 frontier is unchanged until the full Raw36 parent is proved.
+Finish the nine direct D1 descendants. B1=1LE is source accepted at bound 387 by resumed run 46121176787; do not repeat any nested B1 closure. Use `parent_cover_from_nine` as the current parent interface, then consume completed direct D1 Covers into that exact live list. The global Canonical40 frontier is unchanged until the full Raw36 parent is proved.
 
 Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.

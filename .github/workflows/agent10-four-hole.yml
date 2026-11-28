@@ -3070,7 +3070,7 @@ jobs:
           root=im-results/agent29-raw36
           python "$root/compose_accepted.py" --inputs /tmp/raw36-zips --work /tmp/raw36-complement --download
           mkdir -p /tmp/raw36-delta
-          cp /tmp/raw36-complement/Raw36Branch.{lean,olean} /tmp/raw36-complement/Raw36D1Complement.{lean,olean} /tmp/raw36-complement/Raw36ParentComplement.{lean,olean} /tmp/raw36-complement/Raw36ParentLive12.{lean,olean} /tmp/raw36-complement/Raw36ParentLive10.{lean,olean} /tmp/raw36-complement/{manifest.json,audit.log} "$root/accepted_pins.json" /tmp/raw36-delta/
+          cp /tmp/raw36-complement/Raw36Branch.{lean,olean} /tmp/raw36-complement/Raw36D1Complement.{lean,olean} /tmp/raw36-complement/Raw36ParentComplement.{lean,olean} /tmp/raw36-complement/Raw36ParentLive12.{lean,olean} /tmp/raw36-complement/Raw36ParentLive10.{lean,olean} /tmp/raw36-complement/Raw36ParentLive9.{lean,olean} /tmp/raw36-complement/{manifest.json,audit.log} "$root/accepted_pins.json" /tmp/raw36-delta/
       - name: Retain thin original-source complement delta
         uses: actions/upload-artifact@v4
         with:
