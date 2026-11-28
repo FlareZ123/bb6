@@ -15,6 +15,9 @@ import zipfile
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
 VARIANTS = {
+    # The two top-level LF siblings are parent-reuse prerequisites whose direct
+    # source gates have also been vulnerable to hosted-runner shutdowns.
+    "0lf", "1lf",
     "b0le_e0la", "b0le_e1la", "b0le_e1lf", "b0le_e1ra",
     "b1la_a0la",
     "b1le_e0lf", "b1le_e0ra", "b1le_e1rb",
@@ -174,7 +177,7 @@ def assemble(variant: str, count: int, shards_root: Path) -> None:
         "--expected-shards", str(count),
     ])
 
-    suffix = variant.upper()
+    suffix = ("E" + variant.upper()) if re.fullmatch(r"[01][lr][a-f]", variant) else variant.upper()
     theorem = f"BB6.Agent25Raw43{suffix}.all43child"
     spec = HERE / f"spec_{variant}.json"
     bound = int(json.loads(spec.read_text(encoding="utf-8"))["bound"])
