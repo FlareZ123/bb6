@@ -18,9 +18,9 @@ theorem rep_singleton_cons (b : Bool) (n : Nat) (L : List Bool) :
 theorem rep_add (P : List Bool) (m n : Nat) :
     rep P (m+n) = rep P m ++ rep P n := by
   induction m with
-  | zero => rfl
+  | zero => simp [rep]
   | succ m ih =>
-      simp [rep, ih, List.append_assoc]
+      rw [show m+1+n=m+n+1 by omega, rep, rep, ih, List.append_assoc]
 
 /-- Compose two exact source runs whose intermediate zipper states are
     propositionally equal after run-list normalization. -/
@@ -49,12 +49,12 @@ theorem A1_left_one (L R : List Bool) :
 theorem D0_left_zero (L R : List Bool) :
     run0 p 1 ⟨3, false :: false :: L, R⟩ =
       some ⟨3, false :: L, true :: R⟩ := by
-  simp [run0, step0, p, move0]
+  rfl
 
 theorem E1_left_one (L R : List Bool) :
     run0 p 1 ⟨4, true :: true :: L, R⟩ =
       some ⟨4, true :: L, false :: R⟩ := by
-  simp [run0, step0, p, move0]
+  rfl
 
 /-- B sweeps right across an arbitrary run of ones, preserving them. -/
 theorem B_sweep_ones (n : Nat) (L R : List Bool) :
@@ -181,8 +181,11 @@ theorem I_return (a b c z : Nat) (L R : List Bool) :
   have h123 := join0_of_eq h12
     (by simp [tail, afterB, rep, rep_singleton_cons, List.append_assoc]) h3
   have h1234 := join0 h123 h4
-  have h := join0 h1234 h5
-  simpa [tail, afterB, rep, List.append_assoc] using h
+  have h := join0_of_eq h1234
+    (by simp [afterB, rep, rep_singleton_cons, List.append_assoc]) h5
+  have hcost : 1 + a + 2 + (b+4) + 5 = a+b+12 := by omega
+  rw [← hcost]
+  simpa [tail, afterB, rep, rep_singleton_cons, List.append_assoc] using h
 
 theorem AB_zero_to_C (L R : List Bool) :
     run0 p 2 ⟨0, false :: L, false :: true :: R⟩ =
@@ -256,6 +259,8 @@ theorem Z_return (a b c z : Nat) (L R : List Bool) :
     (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h4
   have h := join0_of_eq h1234
     (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h5
+  have hcost : 2 + (c+1) + 2 + (c+3) + 5 = 2*c+13 := by omega
+  rw [← hcost]
   simpa [LT, RT, rep, rep_singleton_cons, List.append_assoc] using h
 
 /-- Exact nine-step normal third return (the b>5 branch). -/
