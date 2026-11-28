@@ -109,6 +109,10 @@ jobs:
             --theorem BB6Coverage.Agent41F421.originalBlankEntry \
             --theorem F421TertiaryGuard.drainMod8 \
             --theorem F421TertiaryGuard.drainQ \
+            --theorem F421SecondaryLifetimes.advance_mass \
+            --theorem F421SecondaryLifetimes.sourcePDrain_lifetime \
+            --theorem F421SecondaryLifetimes.originalDrainPProjection \
+            --theorem F421SecondaryLifetimes.originalDrainLifetime \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
@@ -128,6 +132,8 @@ jobs:
             im-results/agent41-f421/F421Epoch.lean \
             im-results/agent41-f421/F421Odd.lean \
             im-results/agent41-f421/PrimaryGuard.lean \
+            im-results/agent41-f421/F421SecondaryLifetimes.lean \
+            im-results/agent41-f421/F421SourceLifetimeBridge.lean \
             im-results/agent41-f421/F421MergedDrain.lean \
             im-results/agent41-f421/F421PrimaryEvents.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
