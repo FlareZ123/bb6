@@ -183,10 +183,29 @@ theorem check_closed (nodes : Array Node) (bound fuel root : Nat) (p : PartialMa
   intro j row hj
   simp at hj
 
+/-- A machine lies in one of the literal residual cylinders stored by a plan.
+The index/equality witness deliberately preserves the exact source row rather
+than reducing the residual to an external cardinality. -/
+def ExplicitResidual (rows : List (List Nat)) (m : Machine) : Prop :=
+  ∃ j row, rows[j]? = some row ∧ compatible (table row) m
+
+/-- A checked plan with residual leaves is an exact source-level cover by
+bounded/nonhalting certificates or one of its explicit residual cylinders. -/
+theorem check_explicit_residual
+    (nodes : Array Node) (rows : List (List Nat)) (bound fuel root : Nat)
+    (p : PartialMachine) (h : check nodes rows bound fuel root p = true) :
+    Cover (fun m => DecidedBelow bound m ∨ ExplicitResidual rows m) p := by
+  apply check_sound nodes rows bound (fun _ hd => Or.inl hd) _ fuel root p h
+  intro j row hj
+  apply Cover.leaf
+  intro m hm
+  exact Or.inr ⟨j, row, hj, hm⟩
+
 #print axioms sameTable_sound
 #print axioms closedCheck_sound
 #print axioms cert_sound
 #print axioms checkWith_sound
 #print axioms check_sound
 #print axioms check_closed
+#print axioms check_explicit_residual
 end BB6.Agent50Raw34Plan
