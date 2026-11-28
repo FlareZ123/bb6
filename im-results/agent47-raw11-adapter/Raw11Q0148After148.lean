@@ -27,7 +27,7 @@ def closed : List PartialMachine := [q0148]
 def remaining : List PartialMachine := Q0RosterConsume.removeCovered prior closed
 
 theorem literal_code :
-    BB6.Agent47PhaseFrontier.tableCode q0148 = 27872153278554440 := by
+    BB6.Agent47PhaseFrontier.tableCode q0148 = 27168822759015208 := by
   decide +kernel
 
 theorem member_in_148 : q0148 ∈ prior := by
