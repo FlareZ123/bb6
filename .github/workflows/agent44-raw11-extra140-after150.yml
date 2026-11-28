@@ -1,0 +1,122 @@
+name: Agent44 Raw11 150-to-149 Extra140 integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      extra140_run:
+        description: Successful complete Extra140 checkpoint run ID
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Download accepted Raw11 150 successor
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46120220611
+          name: agent47-raw11-exact-299-to-150-extra28
+          path: /tmp/raw11-150
+
+      - name: Download accepted Raw11 predecessor objects
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46111781717
+          name: raw11-exact-299-to-151-q0root53
+          path: /tmp/q0151
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46109014135
+          name: raw11-q0-root53-complete-source
+          path: /tmp/root53
+
+      - name: Download completed Extra140 proof bundle
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.extra140_run }}
+          name: parent-complete-140-repaired
+          path: /tmp/extra140
+
+      - name: Recover immutable transitive proof objects
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/build
+          for id in             15144626755             15159003899 15161045625             15159257293 15154832729 15154568902             15154569169 15154663882 15158958272             15017647753 15014940132 15166284252             15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"               -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/raw11-150 -name Raw11Extra28After151.olean -print -quit)"
+          test -n "$(find /tmp/extra140 -name Agent5Raw11Extra140.olean -print -quit)"
+          test -n "$(find /tmp/extra140 -name Agent5Raw11Extra140.lean -print -quit)"
+
+      - name: Kernel-check exact 150-to-149 successor
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/build
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53             /tmp/raw11-150 /tmp/extra140 -type f -name '*.olean' | sort)
+          export LEAN_PATH
+
+          src=im-results/agent44-raw11-extra28/Raw11Extra140After150.lean
+          lean -j1 -o /tmp/build/Raw11Extra140After150.olean "$src"             | tee /tmp/build/Raw11Extra140After150.log
+
+          if grep -Eq 'sorryAx|native_decide' /tmp/build/*.log; then
+            echo "forbidden axiom found" >&2
+            exit 1
+          fi
+          for theorem in             "'BB6.Agent44Raw11Extra140After150.literal_code' depends on axioms:"             "'BB6.Agent44Raw11Extra140After150.member_in_150' depends on axioms:"             "'BB6.Agent44Raw11Extra140After150.remaining_census' depends on axioms:"             "'BB6.Agent44Raw11Extra140After150.parent_cover' depends on axioms:"             "'BB6.Agent44Raw11Extra140After150.raw11_cover_from_149' depends on axioms:"; do
+            grep -F "$theorem" /tmp/build/Raw11Extra140After150.log
+          done
+          sha256sum "$src" > /tmp/build/source-sha256.txt
+          lean --version > /tmp/build/toolchain.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent44-raw11-exact-299-to-149-extra140
+          path: |
+            /tmp/build
+            im-results/agent44-raw11-extra28/Raw11Extra140After150.lean
+          if-no-files-found: warn
+          retention-days: 30
