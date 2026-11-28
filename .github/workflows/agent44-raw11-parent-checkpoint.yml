@@ -25,6 +25,11 @@ on:
         description: Optional exact module to compile with only its dependency closure
         required: false
         type: string
+      row_split_extra132:
+        description: Bootstrap Extra132 by replacing the frozen giant FAR leaf with row-split modules
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -109,6 +114,15 @@ jobs:
           test -s "/tmp/parent-source/Agent5Raw11Extra${PARENT_ID}.lean"
           echo "source_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
           echo "checkpoint_objects=$(find /tmp/parent-out -name '*.olean' | wc -l)"
+
+      - name: Row-split the frozen Extra132 giant FAR leaf
+        if: inputs.row_split_extra132 && inputs.parent_id == '132' && inputs.prior_run == ''
+        run: |
+          set -euo pipefail
+          python im-results/agent44-raw11-extra28/split_two_sided_leaf.py             /tmp/parent-source/Agent5Raw11Extra132Sub_root_12_root_19_root_21.lean
+          test -s /tmp/parent-source/Agent44Extra132GiantProof.lean
+          test -s /tmp/parent-source/TwoSidedAutomataRows.lean
+          echo "row_split_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
 
       - name: Advance exact kernel DAG by bounded fresh modules
         id: advance
