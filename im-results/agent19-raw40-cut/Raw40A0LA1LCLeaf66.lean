@@ -71,7 +71,7 @@ theorem step_sound (m : Machine) (hm : compatible table m)
     have e : n+t+6 = n+4+(t+1)+1 := by omega
     rw [e] at H
     refine ⟨2*n+16,j,by omega,?_⟩
-    simpa only [fam,zero,leftWord,rightWord,List.append_assoc] using H
+    simpa only [fam,zero,leftWord,rightWord,List.append_assoc, show O 0 = [] by rfl, show W 3 = [false,false,false] by rfl, List.nil_append] using H
   | split k b g c u v hb hg =>
     obtain ⟨n,rfl⟩ : ∃ n : Nat, b=n+4 := ⟨b-4,by omega⟩
     obtain ⟨d,rfl⟩ : ∃ d : Nat, g=5+d := ⟨g-5,by omega⟩
@@ -79,7 +79,7 @@ theorem step_sound (m : Machine) (hm : compatible table m)
     have e1 : n+4-3=n+1 := by omega
     have e2 : 5+d-5=d := by omega
     refine ⟨2*n+k+31,j,by omega,?_⟩
-    simpa only [fam,pop,unpop,rightWord,e1,e2,W_add 5 d,List.append_assoc] using H
+    simpa only [fam,pop,unpop,rightWord,e1,e2,W_add 5 d,List.append_assoc, show W 5 = [false,false,false,false,false] by rfl, show O 3 = [true,true,true] by rfl] using H
   | five k b c u v hb =>
     obtain ⟨n,rfl⟩ : ∃ n : Nat, b=n+4 := ⟨b-4,by omega⟩
     obtain ⟨j,H⟩ := splitFrame m hm n k u (O c++rightWord v) h
@@ -87,18 +87,19 @@ theorem step_sound (m : Machine) (hm : compatible table m)
     have e2 : O (c+3) = [true,true,true]++O c := by
       rw [Nat.add_comm c 3,O_add]; rfl
     refine ⟨2*n+k+31,j,by omega,?_⟩
-    simpa only [fam,pop,unpop,rightWord,e1,e2,List.append_assoc] using H
+    simpa only [fam,pop,unpop,rightWord,e1,e2,List.append_assoc, show W 5 = [false,false,false,false,false] by rfl] using H
   | blank k b u hb =>
     obtain ⟨n,rfl⟩ : ∃ n : Nat, b=n+4 := ⟨b-4,by omega⟩
     obtain ⟨j,H⟩ := splitFrame m hm n k u [] h
     have he : embed (liftZ h (A (O k++leftWord u) (O (n+4)++[false,false,false,false,false]++[]))) =
         fam ⟨k,n+4,u,[]⟩ h := by
-      apply embed_congr _ _ rfl rfl (fun _ => rfl)
+      unfold fam
+      apply embed_congr (liftZ h (A (O k++leftWord u) (O (n+4)++[false,false,false,false,false]++[]))) (liftZ h (A (O k++leftWord u) (O (n+4)++rightWord []))) rfl rfl (fun _ => rfl)
       exact append_getD _ _ _ (padEq_sound [false,false,false,false,false] [] (by decide))
     rw [he] at H
     have e : n+4-3=n+1 := by omega
     refine ⟨2*n+k+31,j,by omega,?_⟩
-    simpa only [fam,pop,unpop,rightWord,e,List.append_assoc,List.append_nil] using H
+    simpa only [fam,pop,unpop,rightWord,e,List.append_assoc,List.append_nil,show O 3 = [true,true,true] by rfl] using H
 
 theorem reach_sound (m : Machine) (hm : compatible table m)
     {a b : C} (hr : Reach a b) (h : Int) :
@@ -139,6 +140,7 @@ theorem entry (m : Machine) (hm : compatible table m) :
     apply embed_congr _ _ (by decide) (by decide)
     · exact padEq_sound _ _ (by decide +kernel)
     · exact padEq_sound _ _ (by decide +kernel)
+  change run m 93860 (embed start) = some (embed Leaf66Entry.entryZ) at H
   rwa [start_embed,he] at H
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
