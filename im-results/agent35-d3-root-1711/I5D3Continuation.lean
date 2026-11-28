@@ -325,6 +325,40 @@ theorem q8_rejoin (t : Nat) :
       (DRegularSource.sourceSection (q8Out t))
       hE hA)
 
+/-- The q=5, k=3t+2 E exception restores a pure-unary section
+    through the E-double and 3r+1 A-code original-source macros. -/
+def q5EAOut (t : Nat) : DRegular.L := ⟨64*t+101,0,0⟩
+def q5EACost (t : Nat) : Nat :=
+  eDoublePacketCost (3*t+2) 5 +
+    BB6.Agent35APacketUnary.duration (q8K t) 0 3
+
+theorem q5EA_rejoin (t : Nat) :
+    ObsEq (run (q5EACost t)
+      (DRegularSource.sourceSection ⟨9*t+10,5,1⟩))
+      (DRegularSource.sourceSection (q5EAOut t)) := by
+  have hE := e_double_packet_source t 5 (by omega)
+  have ha : 8*(3*t+2)+5 = 3*q8K t+3 := by
+    dsimp [q8K]
+    omega
+  have hA :
+      ObsEq
+        (run (BB6.Agent35APacketUnary.duration (q8K t) 0 3)
+          (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 10 ys))
+        (DRegularSource.sourceSection (q5EAOut t)) := by
+    rw [ha]
+    have hout : 8*q8K t+29+2*0+8*3 = 64*t+101 := by
+      dsimp [q8K]
+      omega
+    simpa only [q5EAOut,hout] using a_packet_unary_obs (q8K t) 0 3
+  simpa [q5EACost,Nat.add_assoc] using
+    (source_chain
+      (eDoublePacketCost (3*t+2) 5)
+      (BB6.Agent35APacketUnary.duration (q8K t) 0 3)
+      (DRegularSource.sourceSection ⟨9*t+10,5,1⟩)
+      (BB6.Agent31PacketSource.packet (8*(3*t+2)+5) 0 10 ys)
+      (DRegularSource.sourceSection (q5EAOut t))
+      hE hA)
+
 def q5BOut (t : Nat) : DRegular.L := ⟨64*t+27,1,5⟩
 def q5BCost (t : Nat) : Nat :=
   BB6.Agent32EAll.duration (3*t) 4 + BB6.Agent25BGeneral.bCost t
@@ -740,6 +774,7 @@ theorem horizonFinal_ge_10pow1458 : 10^1458 ≤ horizonFinal := by
 #print axioms raw3_data
 #print axioms raw4_data
 #print axioms q7_escape_rejoin
+#print axioms q5EA_rejoin
 #print axioms q5_fourth_source
 #print axioms continuation_source
 #print axioms root_source
