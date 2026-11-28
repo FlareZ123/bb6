@@ -113,14 +113,14 @@ theorem regularEndpointFloor_sourceSection
         (DRegularSource.sourceSection ⟨a,q,b⟩) ∧
       DRegular.Canon ⟨a,q,b⟩ := by
   rcases h with ⟨T,n,hcases,hn⟩
-  have hn2 : 2 ≤ n := le_trans hfloor hn
+  have hn2 : 2 ≤ n := by omega
   have hrep : List.replicate (n+1) true =
       List.replicate n true ++ [true] := by
     rw [show n+1 = n+1 by rfl,
       ← List.replicate_append_replicate]
     rfl
   rcases hcases with h0 | h1 | h2
-  · refine ⟨T,n+1,2,2,?_,?⟩
+  · refine ⟨T,n+1,2,2,?_,?_⟩
     have heq : endpointZero n =
         BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2 := by
       simp [endpointZero,BB6.Agent2BoundaryBZero.regularSection,
@@ -131,7 +131,7 @@ theorem regularEndpointFloor_sourceSection
     rw [h0,heq,hsec]
     exact BB6.Padding.cfgEq_refl _
     exact canon_nonzero_q (n+1) 2 2 (by omega) (by decide)
-  · refine ⟨T,n,0,0,?_,?⟩
+  · refine ⟨T,n,0,0,?_,?_⟩
     have heq : endpointOne n =
         BB6.Agent2BoundaryBZero.regularSection n 0 0 := by
       simp [endpointOne,BB6.Agent2BoundaryBZero.regularSection,
@@ -145,11 +145,11 @@ theorem regularEndpointFloor_sourceSection
     · exact hn2
     · right
       rfl
-  · refine ⟨T,n,4,0,?_,?⟩
-    have hreg : ObsEq endpointTwo
+  · refine ⟨T,n,4,0,?_,?_⟩
+    have hreg : ObsEq (endpointTwo n)
         (BB6.Agent2BoundaryBZero.regularSection n 4 0) := by
       change BB6.Padding.CfgEq
-        (BB6.BoundaryPadding.represent endpointTwo)
+        (BB6.BoundaryPadding.represent (endpointTwo n))
         (BB6.BoundaryPadding.represent
           (BB6.Agent2BoundaryBZero.regularSection n 4 0))
       apply BB6.Padding.cfgEq_symm
@@ -307,15 +307,14 @@ theorem reset_double_B_to_A_source_reentry (d k h t Q : Nat)
     a,q,b,hcombined,hcanon⟩
 
 
-private theorem endpointZero_sourceSection (n : Nat) :
-    ObsEq endpointZero
+private theorem endpointZero_sourceSection (n : Nat) (hn : 1 ≤ n) :
+    ObsEq (endpointZero n)
       (DRegularSource.sourceSection ⟨n+1,2,2⟩) := by
   have hrep : List.replicate (n+1) true =
       List.replicate n true ++ [true] := by
-    induction n with
-    | zero => rfl
-    | succ n ih =>
-      simp [List.replicate_succ,ih,List.append_assoc]
+    rw [show n+1 = n+1 by rfl,
+      ← List.replicate_append_replicate]
+    rfl
   have heq : endpointZero n =
       BB6.Agent2BoundaryBZero.regularSection (n+1) 2 2 := by
     simp [endpointZero,BB6.Agent2BoundaryBZero.regularSection,
@@ -374,7 +373,8 @@ theorem concrete_reset_double_B_to_A_source_reentry :
         (BB6.Agent31PacketSource.packet 9354 0 3
           BB6.Agent35K4Shapes.marker) = endpointZero 24955 := by
     have h := BB6.Agent35MarkerA.close_zero 3117 0 1
-    simpa [endpointZero,hn] using h
+    rw [hn] at h
+    simpa only [endpointZero] using h
   have hreset : ObsEq
       (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
         (BB6.Agent31PacketSource.packet 187 0 2
@@ -405,7 +405,7 @@ theorem concrete_reset_double_B_to_A_source_reentry :
           BB6.Agent35K4Shapes.marker))
       (DRegularSource.sourceSection ⟨24956,2,2⟩) := by
     rw [hARaw]
-    exact endpointZero_sourceSection 24955
+    exact endpointZero_sourceSection 24955 (by omega)
   have h12 := BB6.BoundaryPadding.source_chain
     (BB6.Agent2PacketP2Reset.eTwoTime 61 0)
     (BB6.Agent37EChain.chainTime 1 41 0)
