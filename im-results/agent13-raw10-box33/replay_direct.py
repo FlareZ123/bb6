@@ -3,6 +3,7 @@ every split, last-row reduction, simulation witness and abstract certificate."""
 from pathlib import Path
 import json, os, shutil, sys
 from replay_cylinder import HERE,BASE,BRANCH,call,HARD_D14V17,HARD_D14V18
+from pack_shards import Shard, pack_shards
 
 SCAN_MAIN=r'''
 uint64_t counts[5]={},mass[5]={};int maxhalt=0;
@@ -240,22 +241,17 @@ def run_direct(args):
     tree=parse(root);assert next(f,None) is None
     # Split independent subtrees into small kernel-checked modules. The last-row
     # constructor participates in the same sharding rule as a 25-way branch.
-    group=serial=size=0;body=[];imports=set()
-    def flush():
-        nonlocal group,size,body,imports
-        if body:
-            write(f'{family}DG{group:04d}',imports|{family+'Tree'},f'namespace {ns}\n'+em.OPEN+'open BB6.Agent13.Box33Direct\n'+'\n'.join(body)+f'\nend {ns}\n')
-            group+=1;size=0;body=[];imports=set()
+    pending_shards=[]
+    serial=0
     def materialize(node):
-        nonlocal serial,size,body,imports
+        nonlocal serial
         if node.size>384:
             kids=list(node.kids);sz=node.size
             for j,(_,u) in sorted(enumerate(kids),key=lambda x:-x[1][1].size):
                 if sz<=384:break
                 x,u=kids[j];ref=materialize(u);kids[j]=(x,Node(u.t,'known',ref));sz-=u.size-1
             node=Node(node.t,node.kind,node.args,kids)
-        if size+node.size>3000 or len(body)>=32:flush()
-        name=f'DN{serial:06d}';serial+=1;mod=f'{family}DG{group:04d}'
+        name=f'DN{serial:06d}';serial+=1;token='@'+name
         ks={};bs={}
         def render(n):
             if n.kind=='b':return f'.branch {n.args[0]} ['+','.join(f'({a},{render(c)})' for a,c in n.kids)+']'
@@ -269,10 +265,15 @@ def run_direct(args):
             if n.kind=='known':return f'.leaf (.known {ks.setdefault(tuple(n.args),len(ks))})'
             raise ValueError(n.kind)
         t=render(node);banks=[boxes[i] for i in bs];refs=list(ks)
-        imports.update(m for m,_ in banks+refs if m!=mod)
-        body.append(f'def p{name} : PartialMachine := {em.partial(node.t)}\ndef b{name} : Bank {B} := ⟨#[{",".join(r for _,r in refs)}],#[{",".join(r for _,r in banks)}]⟩\ndef t{name} : Tree := {t}\ntheorem ok{name} : audit b{name} 12 p{name} t{name} = true := by decide\ndef {name} : Known {B} := certified b{name} p{name} t{name} ok{name}\n')
-        size+=node.size;return mod,ns+'.'+name
-    mod,ref=materialize(tree);flush()
+        imports=frozenset(m for m,_ in banks+refs)
+        decl=f'def p{name} : PartialMachine := {em.partial(node.t)}\ndef b{name} : Bank {B} := ⟨#[{",".join(r for _,r in refs)}],#[{",".join(r for _,r in banks)}]⟩\ndef t{name} : Tree := {t}\ntheorem ok{name} : audit b{name} 12 p{name} t{name} = true := by decide\ndef {name} : Known {B} := certified b{name} p{name} t{name} ok{name}\n'
+        pending_shards.append(Shard(token,node.size,decl,imports))
+        return token,ns+'.'+name
+    token,ref=materialize(tree)
+    assignments,groups=pack_shards(pending_shards,family)
+    for mod,imports,bodies in groups:
+        write(mod,imports|{family+'Tree'},f'namespace {ns}\n'+em.OPEN+'open BB6.Agent13.Box33Direct\n'+'\n'.join(bodies)+f'\nend {ns}\n')
+    mod=assignments[token]
     write(f'{family}Closure',[mod,family+'Tree'],f'''namespace {ns}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent13.Box33Direct
 open BB6.Agent13.Box17 (tableEq tableEq_sound)
@@ -282,4 +283,4 @@ theorem sourceBound : ∀ m, compatible (Box33D0.child {d} {v}) m → WeightedBo
 #print axioms sourceBound
 end {ns}
 ''')
-    print('direct tree nodes',tree.size,'shards',serial,'modules',group,'source proof still required',flush=True)
+    print('direct tree nodes',tree.size,'shards',serial,'modules',len(groups),'source proof still required',flush=True)
