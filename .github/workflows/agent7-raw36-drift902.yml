@@ -17,9 +17,9 @@ on:
         type: boolean
         default: false
       d100_mod_set:
-        description: First five accepted or next six novel certificates
+        description: Five modular, six extra, or ten phase quotient certificates
         type: choice
-        options: ['five','six']
+        options: ['five','six','ten']
         default: 'five'
 permissions:
   contents: read
@@ -186,8 +186,8 @@ jobs:
             --label raw36-d100-modular-stack-quotients-${{ inputs.d100_mod_set }} \
             --artifact-name raw36-d100-modular-${{ inputs.d100_mod_set }}-source \
             --provenance-input im-results/agent7-opaque-tail-pump/emit_modular.py \
-            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-modular${{ inputs.d100_mod_set == 'six' && '-extra' || '' }}.json \
-            /tmp/a7-d100-mod/Raw36D100${{ inputs.d100_mod_set == 'six' && 'Extra' || 'Mod' }}Automata00.lean \
+            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-${{ inputs.d100_mod_set == 'ten' && 'phase-ten' || inputs.d100_mod_set == 'six' && 'modular-extra' || 'modular' }}.json \
+            /tmp/a7-d100-mod/Raw36D100${{ inputs.d100_mod_set == 'ten' && 'Phase' || inputs.d100_mod_set == 'six' && 'Extra' || 'Mod' }}Automata00.lean \
             2>&1 | tee /tmp/a7-d100-mod-audit.log
           while IFS= read -r theorem; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-mod-audit.log "$theorem"
