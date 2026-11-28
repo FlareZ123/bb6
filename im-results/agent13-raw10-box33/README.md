@@ -124,3 +124,22 @@ The cancelled D17V21 run 46056414853 demonstrates an actual compilation bottlene
 ## D17V24 carry and periodic witnesses
 
 See [D17V24TernaryPeriodic.md](D17V24TernaryPeriodic.md). All twelve previously unresolved saved residual records have candidate witnesses: eleven symbolic nonhalting proofs checked locally with Lean and one periodic block-run certificate. Source audits have passed for seven; the remaining individual audits and complete parent sourceBound are pending. The full weighted cylinder replay (17,24,1000000) has been dispatched.
+
+## D17V16 exact residual completion (2026-11-28)
+
+The direct scan (`D0=17,E0=16`) produced 7,242 early open leaves; the n-gram pass closed 6,615, and extended first-hole/trace discovery left 560 candidates. The lag/RLE pass closed 554. The six exact residuals, in the discovery order, are:
+
+| index | twelve row codes (0 = halt) | witness |
+|---|---|---|
+| 0 | 8,19,11,14,1,13,17,14,16,23,3,0 | Counter, false |
+| 1 | 8,10,11,24,1,13,17,8,16,20,0,2 | Bank.M1 |
+| 2 | 8,24,11,4,1,13,17,8,16,20,0,10 | Bank.M2 |
+| 3 | 8,0,11,24,1,13,17,7,16,20,1,22 | Sweep |
+| 4 | 8,10,11,23,1,13,17,4,16,20,0,7 | Bank.M4 |
+| 5 | 8,23,11,14,1,13,17,14,16,3,19,0 | Counter, true |
+
+The existing bank contains three automata certificates. [Box33D17V16Counters.lean](Box33D17V16Counters.lean) proves two more with a common three-cell guard: on the left tape every index 3n+1 (long) or 3n (short) is zero. Each positive-time return preserves the guard, including the recursive carry and clearing cases.
+
+[Box33D17V16Sweep.lean](Box33D17V16Sweep.lean) proves residual 3 via an ordered run-length language. Write `G = {3} ∪ {6+5j : j≥0}`, and encode left-tape pairs as zero-run length followed by one-run length. Allowed tail constructors are empty; (1,3) followed by an allowed tail; (4+5i,6+5j) followed by a boundary tail; and (1,6+5j) followed by a boundary tail. A boundary tail is empty or begins with a (4+5i,6+5j) pair. The left sweep carries a front unary run whose sum with the accumulated right run belongs to G; if that sum is not 3 the left tail must be a boundary. The two rightward startup blocks turn this into a first-right phase with a G-length zero run and a (6+5j)-length one run, followed by only three-one right blocks. The remaining right steps insert a valid pair and then (1,3) repeatedly. The blank-end step returns to the left phase. This grammar is stronger than independent mod-5 constraints and is closed for all represented tails.
+
+The two symbolic modules' local stream-model `neverBlank` declarations passed Lean 4.36.0-rc2 with only propext and Quot.sound. Original-source bridge audits 46108595476 and 46109105401 and full cylinder replay 46109144219 (bound 1000000) were queued; these are **not** yet accepted parent proofs. Replay integration fabe6a25dec1d899d2b56ec2057a544cd8918bcd selects all six exact tables, without trusting discovery. No global upper bound or roster deletion follows from the candidate set.
