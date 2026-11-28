@@ -49,7 +49,7 @@ theorem subset_{kk} (e : List Move × PartialMachine)
     (d/"Raw56LBTopChildren.lean").write_text(childrenSource)
     # First-query discrimination exactly mirrors the source-accepted cktop
     # proof's 24 terms, so it never expands a giant concatenated list.
-    branches="\n".join("  · exact subset_"+f"{k:02}"+" e he" for k in ORDER)
+    branches="\n".join("  · exact subset_"+f"{k:02}"+" x hx" for k in ORDER)
     root="""import Raw56LBTopChildren
 import CanonicalResidualSubset
 set_option maxRecDepth 100000
@@ -60,7 +60,7 @@ open BB6Coverage BB6.Agent19CanonicalPartial
 theorem root_residual_subset (e : List Move × PartialMachine)
   (he : e ∈ canonicalResiduals ptop 5 ttop) : e.2 ∈ allTables := by
   apply BB6.Agent4Raw56Root.canonicalResiduals_split_subset ptop 5 8 (2,true) ktop allTables
-    (fun mv x hx => ?_) e
+    (fun mv x hx => ?_) e he
   rcases mv with ⟨w,r,q⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
