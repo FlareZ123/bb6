@@ -51,16 +51,20 @@ function main(max=30000) {
   for(let d=0;d<max;d++){
     const kind=excluded(d);if(!kind)continue;
     count++;counts[kind]=(counts[kind]||0)+1;
-    let a=d+1,b=d,depth=0;
-    for(;;) {
+    // Explore the COMPLETE inverse ancestry. The 1 mod 8 family can
+    // branch twice at its first gate, with both branches terminating;
+    // requiring a unique inverse is invalid even for a correct theorem.
+    const todo=[[d+1,d,0]],seen=new Set();
+    while(todo.length) {
+      const [a,b,depth]=todo.pop(),key=a+","+b;
+      if(seen.has(key))continue;
+      seen.add(key);
       assert(!(a===1&&b===1),"Excluded gate reached authentic seed");
-      const inv=inverse(a,b);
-      assert(inv.length<=1,"Excluded gate has a branching ancestor");
-      if(inv.length===0)break;
-      [a,b]=inv[0];depth++;
-      assert(depth<=64,"Unexpected unclosed predecessor chain");
+      assert(depth<=64,"Unexpected unclosed predecessor tree");
+      assert(seen.size<=512,"Unexpected branching complexity");
+      maxDepth=Math.max(maxDepth,depth);
+      for(const [x,y] of inverse(a,b))todo.push([x,y,depth+1]);
     }
-    maxDepth=Math.max(maxDepth,depth);
   }
   return {testedTerminalParameters:max,excludedCount:count,observedFraction:count/max,counts,maxDepth};
 }
