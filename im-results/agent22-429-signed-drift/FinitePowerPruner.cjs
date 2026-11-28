@@ -46,6 +46,19 @@ function primitiveTypedWord(word) {
   }
   return word;
 }
+// For a legal signed pair with exponent j, the next pair type flips
+// iff j is odd. The rank increment is 2*(3*j+2) or 2*(3*j+4),
+// and the two pair types have disjoint combined-rank classes mod 4.
+function typedGuardCompatible(word) {
+  let expected = word[0].isE;
+  for (const x of word) {
+    if (x.isE !== expected) return false;
+    if (x.j % 2) expected = !expected;
+  }
+  // The word is repeated at least twice, so its exit must admit the
+  // identical first type again.
+  return expected === word[0].isE;
+}
 function exceedsPower(base, exponent, threshold) {
   if (exponent < 0n || base < 1n || threshold < 0n)
     throw new Error("invalid nonnegative power comparison");
@@ -67,6 +80,7 @@ function exceedsPower(base, exponent, threshold) {
 function certificate(word, halfRank, repetitions) {
   if (repetitions < 2n) throw new Error("at least 2 repetitions required");
   if (halfRank < 0n) throw new Error("half-rank must be nonnegative");
+  const typeCompatible = typedGuardCompatible(word);
   const core = primitiveTypedWord(word);
   const copies = repetitions*BigInt(word.length/core.length);
   const {M,A,B,T} = coefficient(core);
@@ -88,7 +102,7 @@ function certificate(word, halfRank, repetitions) {
   const affineSlopeInteger = numerator % denominator === 0n;
   const affineSlopeEven = numerator % (2n*denominator) === 0n;
   const powerExcluded = scaleCondition && !affineSlopeEven;
-  const excluded = squareExcluded || tripleResidueExcluded || powerExcluded;
+  const excluded = !typeCompatible || squareExcluded || tripleResidueExcluded || powerExcluded;
   return {
     originalWord: word.map(x => (x.isE ? "E" : "S")+x.j).join(","),
     primitiveTypedWord: core.map(x => (x.isE ? "E" : "S")+x.j).join(","),
@@ -96,6 +110,7 @@ function certificate(word, halfRank, repetitions) {
     inputHalfRank: halfRank.toString(),
     M: M.toString(), A: A.toString(), B: B.toString(),
     T: T.toString(), heightBound: H2.toString(),
+    sourceTypeCycleCompatible: typeCompatible,
     squareResidue: squareResidue.toString(),
     squareModuloExclusion: squareExcluded,
     tripleResidue: tripleResidue.toString(),
@@ -104,7 +119,7 @@ function certificate(word, halfRank, repetitions) {
     finitePowerExclusion: powerExcluded,
     excludedByExactNecessaryCondition: excluded,
     reason: excluded ?
-      "At least one exact finite-path necessary condition fails; the specified repeated word cannot occur." :
+      "At least one exact signed type or arithmetic condition fails; the specified repeated word cannot occur." :
       "All necessary-condition tests are inconclusive; this does NOT certify a repeat or an infinite path."
   };
 }
@@ -122,4 +137,4 @@ if (require.main === module) {
     process.exitCode = 1;
   }
 }
-module.exports = {parseWord,coefficient,primitiveTypedWord,exceedsPower,certificate};
+module.exports = {parseWord,coefficient,primitiveTypedWord,typedGuardCompatible,exceedsPower,certificate};
