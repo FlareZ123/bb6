@@ -607,7 +607,7 @@ jobs:
             --precompiled-manifest "$base/manifest.json" --precompiled-dir "$base" \
             --manifest "$work/manifest.json" --label raw43-b0le-complete \
             --theorem BB6.Agent38Raw43B0LEComplete.all_completions --weighted-bound 3466 \
-            --parent-table '1RB---_1RC0LE_0RD---_1LD0RB_1LA---_------' \
+            --parent-table '1RB---_1RC0LE_0RD---_1LD0RB_------_------' \
             --artifact-name raw43-b0le-complete-proof \
             im-results/agent38-raw43-pair/Raw43B0LEComplete.lean 2>&1 | tee /tmp/a38-b0le-complete.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/a38-b0le-complete.log \
