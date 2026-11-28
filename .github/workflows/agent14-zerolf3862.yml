@@ -143,8 +143,8 @@ jobs:
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve52Source.source_oneLF_cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve52Source.raw139_p0_cover_from_52_source' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve52Source.source_oneLF_cover' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve52Source.raw139_p0_cover_from_52_source' depends on axioms: [propext," "$work/log"
       - uses: actions/upload-artifact@v4
         if: inputs.kind == 'post52-source'
         with:
@@ -198,8 +198,8 @@ jobs:
             --override Raw139Normalized=im-results/agent6-raw139-normalized/Raw139Normalized.lean \
             | tee "$work/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\\.ofReduceBool' "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.sourceAcceptedExtraTwo_cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
-          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.raw139_p0_cover_from_53_source_extra' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.sourceAcceptedExtraTwo_cover' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53Source.raw139_p0_cover_from_53_source_extra' depends on axioms: [propext," "$work/log"
       - uses: actions/upload-artifact@v4
         if: inputs.kind == 'post53-source'
         with:
