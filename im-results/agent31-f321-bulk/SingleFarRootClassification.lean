@@ -128,6 +128,22 @@ theorem dangerA_exact (k : Nat) :
   have he := Nat.div_mul_cancel hd
   omega
 
+/-- Exact cancellation between the dangerous terminal parameter and the
+    moving MiddleOdd/Far-boundary first-coordinate. -/
+theorem dangerA_terminal_balance (k : Nat) :
+    2*(((dangerR k-6)/4) + 6*k) + 17 = dangerT k := by
+  have ha := dangerA_exact k
+  have hr := dangerR_balance k
+  omega
+
+/-- Sharpened moving phase of the dangerous first-coordinate.  The shifted
+    quantity a_k+6k is fixed modulo 100663296 = 201326592 / 2. -/
+theorem dangerA_moving_mod100663296 (k : Nat) :
+    (((dangerR k-6)/4) + 6*k) % 100663296 = 4793482 := by
+  have hb := dangerA_terminal_balance k
+  have ht := dangerT_mod201326592 k
+  omega
+
 /-- Exact moving phase of the dangerous first-coordinate at modulus
     50331648 = 201326592 / 4.  This lifts the previously observed
     a_k == 10-6k (mod 384) pattern by seventeen binary bits. -/
@@ -306,6 +322,8 @@ theorem highThenFar_root_terminal_mod49152
 #print axioms dangerT_mod201326592
 #print axioms dangerR_moving_mod201326592
 #print axioms dangerA_exact
+#print axioms dangerA_terminal_balance
+#print axioms dangerA_moving_mod100663296
 #print axioms dangerA_moving_mod50331648
 #print axioms dangerT_mod49152
 #print axioms highThenFar_root_mod24
