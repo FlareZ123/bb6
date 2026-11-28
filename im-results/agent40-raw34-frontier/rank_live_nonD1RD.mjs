@@ -60,7 +60,24 @@ const counters=[
  "1RB---_1RC---_0RD0LC_1LC1RF_------_1RD---"
 ].map(parseTable);
 counters.forEach(add);
-const counterCount=counters.length;
+const withRay=process.argv.includes("--include-f-ray");
+function parseSourceRay(file){
+ const text=readFileSync(join(dir,file),"utf8");
+ const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
+   m[1].split(",").map(x=>Number(x.trim())));
+ for(const p of arr){
+   assert.equal(p.length,12);
+   for(const [i,a] of rootActions)assert.equal(p[i],codeOf.get(a));
+ }
+ return arr.map(p=>slots.map(i=>p[i]));
+}
+const raySource=withRay?[
+ ...parseSourceRay("Raw34FRightRay.lean"),
+ ...parseSourceRay("Raw34EFRightRay.lean")
+]:[];
+if(withRay)assert.equal(raySource.length,36);
+raySource.forEach(add);
+const counterCount=counters.length+raySource.length;
 function loadHalters(file){
  const s=readFileSync(join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
@@ -76,7 +93,7 @@ function loadHalters(file){
 const n8=loadHalters("Raw34OtherD1Halt8.lean");
 const n9=loadHalters("Raw34OtherD1Halt9New.lean");
 assert.equal(n8,109);assert.equal(n9,958);
-assert.equal(bank.length,4156);
+assert.equal(bank.length,4156+raySource.length);
 
 const stateSlots=["D","C","B","A","E","E","F","F"];
 const maskNames=["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
@@ -161,8 +178,9 @@ for(let d=1;d<=25;d++){
   }
  }
 }
-assert.equal(grand,5471912359n,
+if(!withRay)assert.equal(grand,5471912359n,
  "Raw34 non-D1 residual does not match independent source union subtraction");
+if(withRay)assert(grand<5471912359n,"new F-ray sources did not reduce complement");
 totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
   BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
 top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
@@ -170,7 +188,8 @@ top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
 console.log(JSON.stringify({
   status:"Exact source-bank 25-way complement rank; branches are OPEN hypotheses",
   root:"1RB---_1RC---_0RD---_1LC---_------_------",
-  actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counterCount,
+  actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
+  rayPatterns:raySource.length, rayNewPhysicalGain:withRay?String(5471912359n-grand):"0",
   earlyHaltPatterns:n8,lateHaltPatterns:n9,graphMasks:maskNames,
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
   totalResidualD1not1RD:String(grand),
