@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass]
+        options: [pilot, full, depth2, highmass, union]
         default: pilot
 
 permissions:
@@ -68,6 +68,18 @@ jobs:
             2>&1 | tee /tmp/agent23-raw34-halters/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+      - name: Source-audit generic control-closure and exact ten-mask finite union
+        if: inputs.mode == 'union'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
+            im-results/agent40-raw34-frontier/Raw34GraphClosed.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+          node im-results/agent23-raw34-frontier/union_graph_source.mjs \
+            | tee /tmp/agent23-raw34-halters/physical-union.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
