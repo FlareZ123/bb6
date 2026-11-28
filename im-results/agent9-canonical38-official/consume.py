@@ -263,6 +263,8 @@ def main():
         "source_revision": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=REPO, text=True).strip(),
         "accepted_canonical39": accepted39,
+        "canonical40_delta": pin40,
+        "canonical40_root_sha256": prior40["root_sha256"],
         "transport_carrier": transport_pin,
         "transport_carrier_status": transport_report["status"],
         "previous_residual_count": 39,
