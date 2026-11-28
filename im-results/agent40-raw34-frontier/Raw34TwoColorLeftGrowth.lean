@@ -98,7 +98,7 @@ theorem grow (n : Nat) :
         rep [true] n⟩ =
       some ⟨5,[true]++rep [true] n++[false,false]++
         rep [false] (n+1)++[true,true],[]⟩ := by
-    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h3
+    simpa only [List.cons_append,List.nil_append,List.append_assoc,List.append_nil] using h3
   have H := join0 (join0 (join0 (join0 h0 h1') h2) h3') h4
   have ht : 2+(n+1)+2+n+1=2*n+6 := by omega
   simpa [word,rep,List.cons_append,List.nil_append,List.append_assoc,ht] using H
