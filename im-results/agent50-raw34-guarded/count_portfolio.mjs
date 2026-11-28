@@ -110,6 +110,7 @@ assert.equal(acceptedMass,97539062500n);
 assert.equal(portfolioMass,123226284000n);
 const SAFE_B=mask([...moves('ACD'),'1RB']); // 13 actions into A,C,D or marked B
 const SAFE_D=mask([...moves('ABC'),'0RD']); // 13 actions into A,B,C or zero-guard D
+const SAFE_A=mask([...moves('BCD'),'0RA']); // 13 actions into B,C,D or initially-guarded A
 const GUARD_E=mask(['0LE','1LE']);
 const GUARD_F=mask(['0LF','1LF']);
 
@@ -126,6 +127,14 @@ const zeroF=[GUARD_F,SAFE_D,SAFE_D,SAFE_D,ALL,ALL,SAFE_D,ALL];
 const zeroEHalt=zeroE.slice();zeroEHalt[5]=bit('HALT');
 const zeroFHalt=zeroF.slice();zeroFHalt[7]=bit('HALT');
 
+// Initial A starts on blank tape with its left predecessor 0.
+// Every later entry into A via 0RA preserves the same predecessor,
+// so A1 left into E/F always scans an E0/F0 zero.
+const initialE=[SAFE_A,SAFE_A,SAFE_A,GUARD_E,SAFE_A,ALL,ALL,ALL];
+const initialF=[SAFE_A,SAFE_A,SAFE_A,GUARD_F,ALL,ALL,SAFE_A,ALL];
+const initialEHalt=initialE.slice();initialEHalt[5]=bit('HALT');
+const initialFHalt=initialF.slice();initialFHalt[7]=bit('HALT');
+
 // Exact two-sweep source classes (E1/F0/F1 and E0/E1/F1 free,
 // respectively). Both have a 28n+44 period in the original zipper.
 const twoE=table('1RB0LB_1RC1RE_0RD0LA_1LC0LD_0RA---_------');
@@ -136,6 +145,8 @@ const families=[
  ['marked_B_F0',oneF,oneFHalt],
  ['zero_D_E1',zeroE,zeroEHalt],
  ['zero_D_F1',zeroF,zeroFHalt],
+ ['initial_A_E1',initialE,initialEHalt],
+ ['initial_A_F1',initialF,initialFHalt],
  ['two_sweep_E',twoE,null],
  ['two_sweep_F',twoF,null]
 ];
@@ -173,6 +184,10 @@ assert.equal(detailed.marked_B_E0.additional_outside_portfolio,'14395550');
 assert.equal(detailed.marked_B_E0.protected_instruction_equals_HALT.new_nontrivial,'3103750');
 assert.equal(detailed.zero_D_E1.additional_outside_portfolio,'52905450');
 assert.equal(detailed.zero_D_F1.additional_outside_portfolio,'145517450');
+assert.equal(detailed.initial_A_E1.additional_outside_portfolio,'3981250');
+assert.equal(detailed.initial_A_F1.additional_outside_portfolio,'3981250');
+assert.equal(detailed.initial_A_E1.protected_instruction_equals_HALT.new_nontrivial,'796250');
+assert.equal(detailed.initial_A_F1.protected_instruction_equals_HALT.new_nontrivial,'796250');
 assert.equal(detailed.two_sweep_E.additional_outside_portfolio,'3125');
 assert.equal(detailed.two_sweep_F.additional_outside_portfolio,'3125');
 console.log(JSON.stringify({
