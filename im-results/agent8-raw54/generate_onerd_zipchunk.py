@@ -109,8 +109,21 @@ theorem cover : Cover (WeightedBound {SCORE}) p := by
   apply Cover.leaf
   intro m hm
   exact (certifiedZip {SCORE} p (.last {n} {s}) firstOne nohalt checked).sound m hm""",
+        f"""def witness : Machine := weightedTNFDefaultCompletion (refine p {s} none)
+/-- The halting filling of the unique unknown instruction halts at exactly n={n}. -/
+theorem witness_halts : HaltsAfter witness {n} := by
+  obtain ⟨hread,hhole,_⟩ := zipQueryOK_sound query
+  have hm : compatible (refine p {s} none) witness := weightedTNFDefaultCompletion_compatible _
+  cases hr : knownRun p {n} with
+  | none => simp [hr] at hread
+  | some c =>
+    have hs : readSlot c = {s} := by simpa [hr] using hread
+    apply first_hole_halts p {n} c hr
+    · simpa [hs] using hhole
+    · simpa [hs] using hm""",
         f"#print axioms prefix{last}",
         "#print axioms cover",
+        "#print axioms witness_halts",
         f"end BB6.Agent8Raw54.{ns}"
     ])
     return "\n".join(lines)+"\n"
