@@ -2,6 +2,12 @@ name: Agent29 Raw36 accepted D102+D114 conditional parent reduction
 
 on:
   workflow_dispatch:
+    inputs:
+      d101_run_id:
+        description: 'Optional successful Raw36 D1=0LB parent run; when set, consume it to six live D1 premises'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -28,27 +34,41 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
-      - name: Authenticate and source-check independent Raw36 D102+D114 parents
+      - name: Authenticate and source-check Raw36 accepted direct parents
         env:
           GH_TOKEN: ${{ github.token }}
+          D101_RUN: ${{ inputs.d101_run_id }}
         run: |
           set -euo pipefail
           lean --version | grep -F '4.36.0-rc2'
           python -m py_compile im-results/agent29-raw36/compose_dual_direct.py
-          python im-results/agent29-raw36/compose_dual_direct.py \
-            --inputs /tmp/a29-raw36-dual-archives \
-            --work /tmp/a29-raw36-dual \
-            | tee /tmp/a29-raw36-dual.log
-          test -s /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
-          cat /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+          if [[ -n "$D101_RUN" ]]; then
+            python -m py_compile im-results/agent18-raw36-d101/compose_live6.py
+            python im-results/agent18-raw36-d101/compose_live6.py \
+              --d101-run "$D101_RUN" \
+              --inputs /tmp/a29-raw36-dual-archives \
+              --work /tmp/a29-raw36-dual \
+              | tee /tmp/a29-raw36-dual.log
+            test -s /tmp/a29-raw36-dual/raw36-live6-after-d101.json
+            cat /tmp/a29-raw36-dual/raw36-live6-after-d101.json
+          else
+            python im-results/agent29-raw36/compose_dual_direct.py \
+              --inputs /tmp/a29-raw36-dual-archives \
+              --work /tmp/a29-raw36-dual \
+              | tee /tmp/a29-raw36-dual.log
+            test -s /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+            cat /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: raw36-d102-d114-accepted-live7-evidence
           path: |
             /tmp/a29-raw36-dual/raw36-live7-after-d102-d114.json
+            /tmp/a29-raw36-dual/raw36-live6-after-d101.json
             /tmp/a29-raw36-dual/*-collisions.json
             /tmp/a29-raw36-dual/dual-source.log
+            /tmp/a29-raw36-dual/d101-live6-source.log
             /tmp/a29-raw36-dual.log
           if-no-files-found: warn
           retention-days: 30
