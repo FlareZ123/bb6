@@ -79,6 +79,24 @@ theorem highFarT_add8 (m : Nat) :
   have hp := highFarT_pos m
   omega
 
+/-- A simple linear lower bound, sufficient to remove Nat-subtraction
+    ambiguity from the dangerous anchor definition. -/
+theorem dangerT_linear_bound (k : Nat) :
+    12*k+17 ≤ dangerT k := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      unfold dangerT dangerM at ih ⊢
+      rw [show 8*(k+1)+6=(8*k+6)+8 by omega, highFarT_add8]
+      omega
+
+/-- Exact subtraction-free balance defining the dangerous root anchor. -/
+theorem dangerR_balance (k : Nat) :
+    dangerR k + 24*k+28 = 2*dangerT k := by
+  unfold dangerR dangerN
+  have hb := dangerT_linear_bound k
+  omega
+
 /-- Every member of the exhaustive dangerous subfamily lies on one exact
     terminal ray modulo 201326592 = 3 * 2^26. -/
 theorem dangerT_mod201326592 (k : Nat) :
@@ -90,6 +108,14 @@ theorem dangerT_mod201326592 (k : Nat) :
       rw [show 8*(k+1)+6=(8*k+6)+8 by omega, highFarT_add8]
       have hp := highFarT_pos (8*k+6)
       omega
+
+/-- The moving anchor residue is exact at the same large modulus.  This
+    strengthens the exploratory R == 22 (mod 24) pattern to a linear phase. -/
+theorem dangerR_moving_mod201326592 (k : Nat) :
+    (dangerR k + 24*k) % 201326592 = 19173934 := by
+  have hb := dangerR_balance k
+  have hm := dangerT_mod201326592 k
+  omega
 
 /-- Every member of the exhaustive dangerous subfamily lies on one exact
     terminal ray modulo 49152. -/
@@ -255,7 +281,10 @@ theorem highThenFar_root_terminal_mod49152
 #print axioms reached_second_one_mod24_or_seed
 #print axioms highThenFar_sumDecrease
 #print axioms highFarT_add8
+#print axioms dangerT_linear_bound
+#print axioms dangerR_balance
 #print axioms dangerT_mod201326592
+#print axioms dangerR_moving_mod201326592
 #print axioms dangerT_mod49152
 #print axioms highThenFar_root_mod24
 #print axioms highThenFar_root_is_danger_family
