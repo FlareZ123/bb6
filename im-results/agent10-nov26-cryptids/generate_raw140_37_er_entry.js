@@ -75,7 +75,7 @@ theorem drainBank (p n : Nat) (X : List Sym) :
       (boundary 4 true
         (S 1 :: (oddword (iterate n (bankWord p) .t1155).1 ++ X))
         (tailWord (iterate n (bankWord p) .t1155).2)) :=
-    Reach.lift (M := M37) (fill_extends _ _) hb
+    Reach.ext (M := M37) (fill_extends _ _) hb
   have hw := oddword_bankWord p
   have hs : tailWord Tail.t1155 = [S 1,S 1,S 5,S 5] := rfl
   rw [hw, hs] at hb'
