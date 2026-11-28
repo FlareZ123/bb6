@@ -96,6 +96,26 @@ Even-rank/A-height parity is checked at the center and after each reverse transi
 
 These formulas prove the claim for every s, independently of finite experimental enumeration. What remains before labeling it a Lean theorem is a full formalization of the length-parametric trace/word and uniform inequalities against the unchanged original halfstep dependency.
 
+## Maximality: the backward orbit stops at exactly N steps
+
+This is more than a lower bound for the specifically chosen center height \(Y=2\): its *unique* strict-interior backward path has **exactly** \(N\) moves. From a current rank \(p\) and height \(y\), the zero inverse is possible only when \(12y<p-1\) if p is even, or \(12y<p-5\) if p is odd. The one inverse requires \(4y>p+1\) if p is even, or \(4y>p+3\) if p is odd. Hence the two strict inverse types are **disjoint at every vertex**, so any feasible predecessor is unique.
+
+For the last constructed state, \(p_{\rm start}\) is even and \(y_{\rm start}=H_s4^q\). Substituting \(k=14\cdot4^s+4\) into the closed formula for \(H_s\) gives
+\[
+ 1700\cdot4^s < H_s \le2030\cdot4^s,
+ \qquad
+ \frac{1700}{4096}T < y_{\rm start}
+ \le \frac{2030}{4096}T.
+\]
+The lower estimate makes \(12y_{\rm start}>p_{\rm start}-1\) (as \(p_{\rm start}<2T+4\)), ruling out zero. The upper estimate gives \(4y_{\rm start}\le(2030/1024)T\), while
+\[
+ p_{\rm start}\ge 2T+4-9k
+ \quad\text{and}\quad T\ge1024k.
+\]
+Thus \(4y_{\rm start}<p_{\rm start}\), ruling out one (\(z=4y-p_{\rm start}-1<0\)). Both branches are blocked after exactly N steps. The result is a **complete exact maximal inverse depth for this infinite set of specified centers**; it does not assert a maximum over *all* possible center heights at rank \(P\), and it is unrelated to whether any of these synthetic states is reached from #429's blank input.
+
+The inequalities for the H-bounds are elementary: \(H_s=1764\cdot4^s+266-63s\) when s is even and \(1764\cdot4^s+310-63s\) when s is odd, together with \(4^s\ge s+1\). For s=0 equality holds at the upper endpoint, and for odd s the upper inequality is immediate from s≥1. The code now checks both absent terminal branches for every tested s.
+
 ## Reproduction and context
 
 [long_past_family.cjs](long_past_family.cjs) replays the exact inverse operations using arbitrary-precision signed BigInt. It asserts every intermediate strict inequality and A-phase parity, the five symbolic checkpoint identities, the final length and the final height. Reproduce the initial scales with:
