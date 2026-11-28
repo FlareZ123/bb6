@@ -1,0 +1,7 @@
+# Raw39 0LE/4084 — closed by original-semantics Lean proof
+
+Agent 43 discovered the arbitrary-suffix pump; Agent 11 constructed the packed transport checker. This incarnation removed the monolithic reduction bottleneck with 14 independent banks (166 finite trace checks) and fully explicit join arguments. Local fresh source-closure compile on Lean 4.36.0-rc2: all banks completed in about 52 seconds with peak RSS ~1.10 GB per bank; final root 1.38 seconds. Entry 153471, period 15364, right collar 31, minimum active right length 6, appended word 000101000101000101. Table 1RB0LE_1RC1RA_0RD0RF_1LD0RA_1LA1LB_1RD---.
+
+The generated root BB6.Agent11Raw39LE4084Packed.never establishes NeverHalts for every compatible completion. first, cycle and never use only propext, Classical.choice, Quot.sound; no sorryAx or native_decide. The original source dependency closure was rebuilt locally from accepted artifact 15091944603 (not a stub). Generated root SHA256 b0f08f0bb8e881743dffbfeddc33ae5df4b94d358596fbc33635544d9e4c34d9. The generator now emits its Trace module, Bank00–13 modules and the original root name; prepare_le_residual already dispatches that root. Use the existing 0LE semantic workflow. This closes the single holdout, not the whole child weighted bound until the full tree audit succeeds.
+
+1LE: BinaryFive repaired and kernel-checked at 2087fd0. Prior audit run 46085821790 also failed Chunk035:2900 (separate issue); g0/g2/g3 preserved artifacts 15240276264, 15239762250, 15240535402.
