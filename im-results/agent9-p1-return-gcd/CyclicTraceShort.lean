@@ -4,13 +4,13 @@ set_option maxHeartbeats 0
 namespace BB6.Agent9CyclicTraceShort
 open BB6.Agent9ReturnGCD BB6.Agent45.DelayedCarry BB6.Agent9CyclicShort
 
-/-- Coprimality-free Mersenne-order exclusion under K≤B for the authentic delayed carry.
+/-- Coprimality-free Mersenne-order exclusion for the authentic delayed carry.
     This requires only n+3+K+B selected bits when the odd shift h
-    has order dividing K and K does not exceed the logarithmic margin B. -/
+    has order dividing K, without a K≤B restriction. -/
 theorem trace_no_odd_short_repeat {n m W a : Nat}
     (hn : 14≤n) (heven : n%2=0) (ht : Trace n m W a)
     (i r h K B : Nat) (flip : Bool)
-    (hodd : h%2=1) (hKB : K≤B)
+    (hodd : h%2=1)
     (horder : (h:Int)∣(2:Int)^K-1) (hK : 0<K)
     (hmass : h*(total n+K+1)<2^B)
     (hp : i+2^r*h+(n+3+K+B)≤m)
@@ -82,7 +82,7 @@ theorem trace_no_odd_short_repeat {n m W a : Nat}
   apply no_scaled_short h K A r B L q (-1) (total n:Int) (p:Int)
     (fun j => c (i+j)-d j) (fun j => c (i+j))
     (fun j => w (i+j)) (fun j => bit W (i+j))
-    (by omega) hoddI horder hK hKB (Or.inr rfl) hgp
+    (by omega) hoddI horder hK (Or.inr rfl) hgp
     (by dsimp [L]; omega)
   · have h0 := H.bounds i (by omega)
     have h1 := H.bounds (i+p) (by omega)
