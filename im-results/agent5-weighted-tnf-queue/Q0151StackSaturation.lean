@@ -59,29 +59,40 @@ theorem step_preserves
     (hblank : Saved blank)
     {c st d st'}
     (step : MacroStep delta resume blank c st d st')
-    (hc : Good c) (hst : List.Forall Saved st) :
-    Good d ∧ List.Forall Saved st' := by
+    (hc : Good c) (hst : (∀ x, x ∈ st → Saved x)) :
+    Good d ∧ (∀ x, x ∈ st → Saved x)' := by
   cases step with
   | stay h =>
       exact ⟨closed _ hc _ h, hst⟩
   | push h =>
       have hsafe := closed _ hc _ h
-      exact ⟨hsafe.1, .cons hsafe.2 hst⟩
+      refine ⟨hsafe.1, ?_⟩
+      intro x hx
+      simp only [List.mem_cons] at hx
+      rcases hx with he | hx
+      · subst x
+        exact hsafe.2
+      · exact hst x hx
   | pop_some h =>
-      cases hst with
-      | cons hsymbol htail =>
-          exact ⟨(closed _ hc _ h) _ hsymbol, htail⟩
+      refine ⟨(closed _ hc _ h) _ (hst _ (by simp)), ?_⟩
+      intro x hx
+      exact hst x (by simp [hx])
   | pop_empty h =>
-      exact ⟨(closed _ hc _ h) _ hblank, .nil⟩
+      refine ⟨(closed _ hc _ h) _ hblank, ?_⟩
+      intro x hx
+      cases hx
 
 theorem reachable_safe
     (closed : ∀ c, Good c → ∀ a, a ∈ delta c →
       SafeAction Good Saved resume a)
     (hblank : Saved blank) {start : C} (hstart : Good start)
     {c st} (hr : Reach delta resume blank start c st) :
-    Good c ∧ List.Forall Saved st := by
+    Good c ∧ (∀ x, x ∈ st → Saved x) := by
   induction hr with
-  | init => exact ⟨hstart, .nil⟩
+  | init =>
+      refine ⟨hstart, ?_⟩
+      intro x hx
+      cases hx
   | extend _ step ih =>
       exact step_preserves closed hblank step ih.1 ih.2
 
