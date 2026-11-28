@@ -5,7 +5,7 @@ namespace BB6.Agent49.Box27ShiftedCounter
 open BB6Coverage BB6Coverage.Agent31Pump
 
 /-- A binary odometer with digits 000 and 001, with F0=1RA and E1=0LE.
-    A1 and F1 are never queried, giving 25 arbitrary completions. -/
+    A1 and F1 are never queried, giving 625 physical completions. -/
 def table : PartialMachine := fun s => match s with
   | (0,false) => some (some ⟨true,true,1⟩)
   | (1,false) => some (some ⟨true,false,2⟩)
