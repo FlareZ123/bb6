@@ -22,7 +22,7 @@ on:
         options: [run, ngram, diagnose]
         default: run
       leaf:
-        description: 'Exact generated leaf number, or 0 in diagnose mode'
+        description: 'Exact generated leaf number(s), comma-separated for NGram repair, or 0 in diagnose mode'
         required: true
         type: string
 
@@ -49,7 +49,11 @@ jobs:
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
           [[ "$PROOF_KIND" =~ ^(run|ngram|diagnose)$ ]]
-          [[ "$LEAF" =~ ^[0-9]+$ ]]
+          if [[ "$PROOF_KIND" == "ngram" ]]; then
+            [[ "$LEAF" =~ ^[0-9]+(,[0-9]+)*$ ]]
+          else
+            [[ "$LEAF" =~ ^[0-9]+$ ]]
+          fi
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
 
       - name: Reconstitute original trusted source dependencies
@@ -96,9 +100,12 @@ jobs:
             python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
             python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
           elif [[ "$PROOF_KIND" == "ngram" ]]; then
-            stem="Raw42${BRANCH}NGram${LEAF}"
-            test -f "$g/${stem}.lean"
-            python "$d/rewrite_ngram42_rows.py" "$g" "$BRANCH" "$LEAF"
+            IFS=',' read -ra leaves <<< "$LEAF"
+            for leaf in "${leaves[@]}"; do
+              stem="Raw42${BRANCH}NGram${leaf}"
+              test -f "$g/${stem}.lean"
+              python "$d/rewrite_ngram42_rows.py" "$g" "$BRANCH" "$leaf"
+            done
           else
             [[ "$LEAF" == "0" ]]
             echo "DIAGNOSE: compiling unmodified exact partition $BRANCH/$PART"
