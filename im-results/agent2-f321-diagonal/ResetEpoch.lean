@@ -144,12 +144,34 @@ theorem resetEpoch_counterReach {R c R' c' : Nat}
   refine ⟨n, ?_⟩
   exact CounterReach.step (outerRun_counterReach ho) (resetMove_source hr)
 
+theorem counterReach_append
+    {sa sd n a d m A D : Nat}
+    (h1 : CounterReach sa sd n a d)
+    (h2 : CounterReach a d m A D) :
+    CounterReach sa sd (n+m) A D := by
+  induction h2 with
+  | nil => simpa using h1
+  | step hr hm ih =>
+      have hs := CounterReach.step ih hm
+      simpa [Nat.add_assoc] using hs
+
 /-- Finite chains of reset epochs. -/
 inductive ResetChain : Nat → Nat → Nat → Nat → Nat → Prop
   | nil (R c) : ResetChain 0 R c R c
   | step {n R c A e B f} :
       ResetChain n R c A e → ResetEpoch A e B f →
       ResetChain (n+1) R c B f
+
+/-- Every reset chain denotes a genuine finite run of the canonical source map. -/
+theorem resetChain_counterReach {n R c A e : Nat}
+    (h : ResetChain n R c A e) :
+    ∃ steps, CounterReach R c steps A e := by
+  induction h with
+  | nil => exact ⟨0, CounterReach.nil⟩
+  | step hc he ih =>
+      rcases ih with ⟨s,hs⟩
+      rcases resetEpoch_counterReach he with ⟨m,hm⟩
+      exact ⟨s+(m+1), counterReach_append hs hm⟩
 
 theorem resetChain_end_positive {n R c A e : Nat}
     (h : ResetChain n R c A e) (hc : 1 ≤ c) : 1 ≤ e := by
