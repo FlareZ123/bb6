@@ -92,6 +92,10 @@ theorem carryBlank (w : Bool) (n : Nat) :
   have h0' : run0 (p w) 1 (word w ([true]++rep [true] n)) =
       some ⟨1,rep [true] (n+1),[false,w]⟩ := by
     simpa only [rep,List.append_assoc] using h0
+  have h1' : run0 (p w) (n+1)
+      ⟨1,rep [true] (n+1),[false,w]⟩ =
+      some ⟨1,[],rep [true] (n+1)++[false,w]⟩ := by
+    simpa only [List.append_nil] using h1
   have h2' : run0 (p w) 1
       ⟨1,[],rep [true] (n+1)++[false,w]⟩ =
       some ⟨2,[true,true],rep [true] n++[false,w]⟩ := by
@@ -99,12 +103,12 @@ theorem carryBlank (w : Bool) (n : Nat) :
   have h3' : run0 (p w) n
       ⟨2,[true,true],rep [true] n++[false,w]⟩ =
       some ⟨2,[true]++rep [true] n++[true],[false,w]⟩ := by
-    simpa only [List.append_assoc] using h3
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h3
   have h4' : run0 (p w) 1
       ⟨2,[true]++rep [true] n++[true],[false,w]⟩ =
       some ⟨2,[false]++([true]++rep [true] n++[true]),[w]⟩ := by
-    simpa only [List.append_assoc] using h4
-  have H := join0 (join0 (join0 (join0 (join0 h0' h1) h2') h3') h4') h5
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h4
+  have H := join0 (join0 (join0 (join0 (join0 h0' h1') h2') h3') h4') h5
   have ht : 1+(n+1)+1+n+1+resetCost w =
       2*(n+1)+2+resetCost w := by omega
   simpa only [List.append_assoc,ht] using H
@@ -117,16 +121,23 @@ def cost (w : Bool) (k : Nat) : Nat :=
 
 theorem familyFirst (w : Bool) :
     run0 (p w) 6 ⟨0,[],[]⟩ = some (family w 0) := by
-  simpa only [family,rep,List.nil_append] using first w
+  simpa [family,rep,List.cons_append,List.nil_append] using first w
 
 theorem familyGrowth (w : Bool) (k : Nat) :
     run0 (p w) (cost w k) (family w k) =
       some (family w (k+1)) := by
   have h := carryBlank w (k+1)
-  have hr : rep [true] (k+1)++[true] =
-      rep [true] ((k+1)+1) := by
-    simpa only [rep] using rep_snoc [true] (k+1)
-  simpa only [family,cost,rep,Nat.add_assoc,List.append_assoc,hr] using h
+  have hlen : 2*((k+1)+1)+2+resetCost w = cost w k := by
+    unfold cost
+    omega
+  rw [hlen] at h
+  have hstart : [true]++rep [true] (k+1) =
+      rep [true] (k+2) := by
+    simp [rep,List.cons_append]
+  have hend : [true]++rep [true] (k+1)++[true] =
+      rep [true] ((k+1)+2) := by
+    simp [rep,rep_snoc,List.cons_append,List.append_assoc]
+  simpa only [family,hstart,hend] using h
 
 /-- A fully parametric original infinite-tape all-time theorem:
     both write-0 and write-1 D1 branches, all four other slots free. -/
@@ -136,15 +147,10 @@ theorem all_time_never (w : Bool) (m : Machine)
     (familyFirst w) (by intro k; unfold cost; omega)
     (familyGrowth w) m hm
 
-theorem cylinder_mass (w : Bool) :
-    cylinderMass (p w) = 25^4 := by
-  cases w <;> decide
-
 #print axioms first
 #print axioms skipMany
 #print axioms scanMany
 #print axioms carryBlank
 #print axioms familyGrowth
 #print axioms all_time_never
-#print axioms cylinder_mass
 end BB6.Agent40Raw34UnaryLeftGrowth
