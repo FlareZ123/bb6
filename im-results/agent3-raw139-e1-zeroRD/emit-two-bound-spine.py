@@ -176,7 +176,7 @@ def build(plan):
         "theorem parent_cover_conditional (audits : Audits)",
         "    (hOrd : CheckedAudits audits) (safe3506 : Safe3506) :",
         f"    Cover (WeightedBound largeBound) {pname(root)} :=",
-        f"  sound finiteBound largeBound finite_le_large {pname(root)}",
+        f"  BB6.Agent3TwoBoundAudit.sound finiteBound largeBound finite_le_large {pname(root)}",
         f"    ({tname(root)} audits safe3506) initial_rule no_assigned_halt",
         f"    ({hname(root)} audits hOrd safe3506)",
         "",
