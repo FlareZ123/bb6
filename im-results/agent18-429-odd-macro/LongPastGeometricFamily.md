@@ -59,6 +59,25 @@ The final rank is also explicit:
 \]
 This is even; \(H_s4^q\) is even. The chronological path from this state ends at \((2T+4,2)\) after exactly \(N\) half-steps, or \(N/2\) aligned signed macro steps. The whole path is strict.
 
+## Exact radix-16 macro incarnation
+
+The explicit even-height A-phase check above is sufficient to pair chronological bits into the *unchanged* signed macro model \(p'=p+\ell(d)\), \(16y'=y+d\,p+c_d\), with digits \(d\in\{0,1,4,5\}\), costs \(\ell=(3,5,4,6)\), and offsets \(c=(0,6,18,32)\). The chronological macro word of length \(N/2\) is especially sparse:
+
+- For **even s** (q even, r odd):
+  \[
+  \boxed{0^{q/2}\ 5\ 1\ 0^{(r-1)/2}\ 1\ 0^{(k-2)/2}}.
+  \]
+- For **odd s** (q odd, r even):
+  \[
+  \boxed{0^{(q-1)/2}\ 4\ 5\ 0^{r/2}\ 1\ 0^{(k-2)/2}}.
+  \]
+
+Both have exactly **three nonzero macro digits**, even though their length tends to infinity. Their exact macro start state is
+\[
+ \left(\frac{p_{\rm start}}2,\ \frac{H_s4^q}2\right)
+\]
+and final state is \((T+2,1)\), with all intermediate strict-cone and exact divisibility guards satisfied. [long_past_family.cjs](long_past_family.cjs) independently replays these source-notation radix-16 transitions (including checking every integer division by 16) rather than relying only on even-A height. **This is the exact signed q0 macro semantics, not automatically the real blank-machine source orbit**: the macro start is synthetic and no authentic-root membership is established.
+
 ## Uniform strictness and lattice verification
 
 The only scale fact needed is \(T=4^k\ge1024k\) for \(k\ge18\), true at 18 and propagated by multiplying the left side by four as k increases. Here \(k\ge18\), \(r,q\ge0\), and \(N\le3k\). Every ancestor rank obeys
