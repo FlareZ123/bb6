@@ -17,6 +17,21 @@ def DefectStack (low weights high : List Nat) : Prop :=
   simp [weightedZero]
 
 
+/-- In the admissible range the defect weight is literally recoverable as
+    the eight-cell deficit from the base rho image. -/
+theorem weightedZero_recover (z w : Nat) (h : 8*w ≤ rhoZero z) :
+    weightedZero z w + 8*w = rhoZero z := by
+  unfold weightedZero
+  omega
+
+/-- Consequently an admissible related high zero-run determines its defect
+    weight uniquely. -/
+theorem weightedZero_weight_unique (z w₁ w₂ : Nat)
+    (h₁ : 8*w₁ ≤ rhoZero z) (h₂ : 8*w₂ ≤ rhoZero z)
+    (heq : weightedZero z w₁ = weightedZero z w₂) : w₁ = w₂ := by
+  unfold weightedZero at heq
+  omega
+
 /-- The base zero-run map preserves residue modulo eight exactly. -/
 theorem rhoZero_mod8 (z : Nat) : rhoZero z % 8 = z % 8 := by
   unfold rhoZero
@@ -257,6 +272,8 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
   · simp only [weightedImage]
     rw [carry_regular_preserves ell w h1 h7 hbound]
 
+#print axioms weightedZero_recover
+#print axioms weightedZero_weight_unique
 #print axioms rhoZero_mod8
 #print axioms weightedZero_mod8
 #print axioms push_zero
