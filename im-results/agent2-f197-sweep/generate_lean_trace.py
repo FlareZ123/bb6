@@ -56,7 +56,8 @@ def generate(kind,rows):
     for i in range(0,len(allchunks),module_chunks):
         name=kind+str(i//module_chunks);prev='TraceStates';modules.append(name)
         with open(f'{root}/{name}.lean','w') as f:
-            print('\n'.join('import '+b for b in banks),file=f)
+            used=sorted({ops[json.dumps(r['rule'],sort_keys=True)]//80 for seg in allchunks[i:i+module_chunks] for r in seg})
+            print('\n'.join('import '+banks[j] for j in used),file=f)
             print(f'import {prev}\nset_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter\n',file=f)
             for j,rs in enumerate(allchunks[i:i+module_chunks],i):
                 tag=kind+f'Seg{j}'
@@ -76,11 +77,11 @@ def generate(kind,rows):
                 ids=[ops[json.dumps(r['rule'],sort_keys=True)] for r in rs]
                 print(f'def {tag}Ops : List Op := ['+', '.join('op'+str(j) for j in ids)+']',file=f)
                 print(f'theorem {tag}OK : {tag}Ops.all opOK = true := by\n  simp only [{tag}Ops,List.all_cons,List.all_nil,Bool.true_and,'+','.join('op'+str(j)+'OK' for j in dict.fromkeys(ids))+']',file=f)
-                print(f'theorem {tag}Apply : applyOps {tag}Ops {kind}N{j} {tag}Src = some ({kind}N{j+1},{tag}Dst) := by decide',file=f)
+                print(f'theorem {tag}Apply : applyOps {tag}Ops {kind}N{j} {tag}Src = some ({kind}N{j+1},{tag}Dst) := by rfl',file=f)
                 print(f'theorem {tag} (l : Tape) (hl : l 0 = true) : '+('ReachPos' if j==0 else 'Reach')+f' (state {kind}N{j} {kind}W{j} l) (state {kind}N{j+1} {kind}W{j+1} l) := by',file=f)
                 print(f'  have hhead : okHead {tag}Tail = true := by decide\n  have hh := pre_first {tag}Tail l hhead hl',file=f)
                 print(f'  have h := '+('ops_pos' if j==0 else 'ops_sound')+f' {tag}Ops {kind}N{j} {kind}N{j+1} {tag}Src {tag}Dst (pre {tag}Tail l) hh '+('(by decide) ' if j==0 else '')+f'{tag}OK {tag}Apply',file=f)
-                print(f'  have hs : {tag}Src ++ {tag}Tail = {kind}W{j} := by decide\n  have hd : {tag}Dst ++ {tag}Tail = {kind}W{j+1} := by decide',file=f)
+                print(f'  have hs : {tag}Src ++ {tag}Tail = {kind}W{j} := by rfl\n  have hd : {tag}Dst ++ {tag}Tail = {kind}W{j+1} := by rfl',file=f)
                 print('  simp only [state, ← Agent2EpochMarker.pre_append] at h\n  rw [hs,hd] at h\n  exact h\n',file=f)
             print('end F197.Agent2Self',file=f)
     return modules,len(allchunks)
