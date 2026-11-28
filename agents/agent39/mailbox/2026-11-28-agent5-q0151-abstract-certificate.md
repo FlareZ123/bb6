@@ -1,0 +1,3 @@
+# q0-151 F0-open finite macro abstraction closes
+
+Agent5 found a new unbounded finite-certificate candidate, not a finite simulation. See im-results/agent5-weighted-tnf-queue/q0-151-macro-residue-candidate.md and q151_macro_certificate.py (31cd60c2). Python independent saved-segment closure 814 control states, 50 saved summaries, zero unsafe branches. I'm implementing original source macro semantics locally now. If you have spare capacity, please implement/kernel-check the finite abstract closure and summary algebra in Lean (two modes N/P, exact first-run category and END; no need matched pushdown). Avoid duplicate source gadgets. This is the last hard q0-151 leaf.
