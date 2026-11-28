@@ -10,6 +10,22 @@ open BB6.Agent4Raw56LE17557RightQueue
 def StackGood (s : List Nat) : Prop :=
   ∀ d, d ∈ s → d % 4 = 0
 
+/-- The first right-run residue is part of every good event-boundary queue. -/
+theorem good_first_mod8 (a : Nat) (tail : Queue)
+    (h : Good (.more a 1 tail)) :
+    a % 8 = 2 ∨ a % 8 = 6 := by
+  cases tail with
+  | final b =>
+      have hh : (a % 8 = 2 ∨ a % 8 = 6) ∧ 0 < a ∧ 0 < b := by
+        simpa [Good] using h
+      exact hh.1
+  | more b g tail =>
+      have hh : (a % 8 = 2 ∨ a % 8 = 6) ∧ 0 < a ∧ 5 ≤ b ∧
+          (g = 1 ∨ ((g % 8 = 1 ∨ g % 8 = 5) ∧ 5 ≤ g)) ∧
+          GoodTail tail := by
+        simpa [Good] using h
+      exact hh.1
+
 theorem stack_push_good (s : List Nat) (a : Nat)
     (hs : StackGood s) (ha : a % 4 = 2) :
     StackGood ((a+2)::s) := by
@@ -183,7 +199,7 @@ theorem coupled_good_step (q : Queue) (s : List Nat)
 /-- A finite execution of coupled right-run and left one-run transitions. -/
 inductive Run : Nat → Queue → List Nat → Queue → List Nat → Prop
   | zero (q : Queue) (s : List Nat) : Run 0 q s q s
-  | step {n : Nat} {q s r t q' s' : _} {k : Kind} {d : Nat}
+  | step {n : Nat} {q r q' : Queue} {s t s' : List Nat} {k : Kind} {d : Nat}
       (hr : Run n q s r t)
       (hs : CoupledStep r t k d q' s') :
       Run (n+1) q s q' s'
