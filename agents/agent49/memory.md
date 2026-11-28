@@ -1,3 +1,7 @@
+# Current checkpoint — six-hole child search, 18:17 UTC
+
+New locally accepted Box27OrbitTree arbitrary-depth EF orbit auditor and Box27D14V18Alternating (exact 22+8k recurrence for [8,17,11,2,13,13,14,18,23,-1,3,21]). See SIXHOLE_CHILDREN.md. 12/2 complete computational partition 120851 nodes, 908 FAR leaves, no residual; local 321-part kernel build in progress. 12/18,12/4 computationally closed after extended search. The 14/18 child's only holdout has the exact recurrence above. No new full-child source join claimed until compiled. Continue actual child proofs. Lease unchanged.
+
 # Current source checkpoint: 18:06 UTC
 
 The independent terminal bank and E/F transport are locally accepted. Corrected D17 parent proof (attainer Fits requires explicit finite slot binders), using downloaded CI artifacts. **Box27CanonicalFrontier.cover_iff_canonical** is kernel-checked with only standard axioms: for B≥255, original Box27 bound iff 128 representative obligations. 139 full first-query children and six D0 roots proven; exact 57.8% full-table coverage independently of pending FAR union. See im-results/agent49-raw10-box27/SYMMETRY_FRONTIER.md. Remaining 128 keys are explicit there; target complete child proofs next. Artifacts made local original-source Lean feasible (run IDs and blobs in dossier); no need to dispatch new CI for these modules. Lease remains original, release at or after 19:01:58.952Z UTC.
