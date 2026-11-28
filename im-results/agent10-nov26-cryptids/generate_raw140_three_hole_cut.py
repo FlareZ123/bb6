@@ -79,6 +79,8 @@ def main():
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(PARENT)]
     expected_codes=[table_code(t) for t in pending]
     out="""import PartialAudit
+import FastKey
+import PartialPrefixAudit
 import Raw140SevenCover
 import Raw140ExtraNovelCover
 import Raw140LongFourCover
@@ -118,6 +120,12 @@ theorem remaining_nodup : remainingCodes.Nodup := by
 theorem sound : ∀ m, compatible parent m → WeightedBound {B} m ∨
   ∃ e ∈ remaining, compatible e.2 m :=
   partialSound {B} parent tree root nohalt checked
+
+theorem quotient_sound : ∀ m, TNFQuotientCompatible parent m → WeightedBound {B} m ∨
+  ∃ e ∈ remaining, TNFQuotientCompatible e.2 m := by
+  apply BB6.Agent50PartialPrefix.partialQuotientSound {B} parent tree root nohalt
+  exact (BB6.Agent50PartialPrefix.partialPrefixCheck_eq {B} parent tree).trans checked
+
 theorem cover {{N : Nat}} (hN : {B} ≤ N)
     (h : ∀ e ∈ remaining, Cover (WeightedBound N) e.2) :
     Cover (WeightedBound N) parent := by
@@ -131,6 +139,7 @@ theorem cover {{N : Nat}} (hN : {B} ≤ N)
 #print axioms remaining_exact
 #print axioms remaining_nodup
 #print axioms sound
+#print axioms quotient_sound
 #print axioms cover
 end BB6.Agent10Raw140ThreeHole
 """
