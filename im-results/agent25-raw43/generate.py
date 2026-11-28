@@ -39,6 +39,9 @@ NGRAM_OVERRIDES = {
     # material one: width 1 replaces a 3643-state BiDFA.  The remaining six
     # are small but strictly cheaper and use the same already-accepted checker.
     "b1le_e1rb": {175: 1, 475: 1, 679: 6, 685: 1, 725: 1, 775: 1, 885: 1},
+    # Seven E0LF leaves save 7144 BiDFA states in total.  All are exact
+    # first-success widths from the same NGram checker.
+    "b1le_e0lf": {385: 1, 395: 1, 785: 1, 795: 1, 845: 1, 895: 1, 1151: 1},
 }
 
 def emit(name, imports, body, namespace=NS, opens=None):
