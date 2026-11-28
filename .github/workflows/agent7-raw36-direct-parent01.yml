@@ -235,7 +235,7 @@ jobs:
           python im-results/agent4-raw109/audit_axioms.py /tmp/kid10.log \
             BB6.Agent29Raw36D101.kid10_bound
           mkdir -p /tmp/out
-          cp /tmp/split/Raw36D101Kid10.lean /tmp/split/Raw36D101Kid10.olean /tmp/kid10.log /tmp/out/
+          cp /tmp/split/Raw36D101Kid10*.lean /tmp/split/Raw36D101Kid10*.olean /tmp/kid10.log /tmp/out/
       - uses: actions/upload-artifact@v4
         with:
           name: raw36-direct01-kid-10
