@@ -26,7 +26,7 @@ theorem literal_code :
 theorem member_in_152 : parent ∈ prior := by decide +kernel
 
 theorem exact_complement :
-    remaining = prior.filter (fun q => !BB6.Agent47PhaseFrontier.sameTable q parent) := by
+    remaining = prior.filter (fun q => !Q0ExhaustiveTree.sameTable q parent) := by
   rfl
 
 theorem remaining_census :
