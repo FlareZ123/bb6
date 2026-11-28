@@ -39,8 +39,8 @@ jobs:
       - name: Restore pinned Raw112 parent seed repair
         run: |
           set -euo pipefail
-          repair_revision=9e931195d400ca3e54e6efc24ec9924a88a65525
-          repair_blob=9b5a79dedb1109efe660f6c6817aa1e8ffd0d76f
+          repair_revision=1da5e288a46b1f1ccf804b5bf801f6783f23953a
+          repair_blob=cc29a2d78e0837638bc42a3a65e1a2e4d3acb1c0
           git fetch --no-tags origin "$repair_revision"
           git show "${repair_revision}:im-results/agent10-raw112-recovery/assemble_retry.py" > /tmp/raw112-assemble-patched.py
           test "$(git hash-object /tmp/raw112-assemble-patched.py)" = "$repair_blob"
