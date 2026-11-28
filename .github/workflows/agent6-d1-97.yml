@@ -1,4 +1,4 @@
-name: Agent6 Raw139 D1=0RD 93-frontier plus full D8 parent (manual)
+name: Agent6 Raw139 D1=0RD 89-frontier plus full D8 parent (manual)
 on:
   workflow_dispatch:
     inputs:
@@ -159,6 +159,7 @@ jobs:
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel93.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel93.lean | tee .tmp/d93.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel93Bound.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel93Bound.lean | tee .tmp/d93bound.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel88OfParents.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel88OfParents.lean | tee .tmp/d88parents.log
+          LEAN_PATH="$lp" lean -o "$map/D1SecondLevel89.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel89.lean | tee .tmp/d89.log
           grep -F "'BB6.Agent6D1SecondLevel97.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d97.log
           grep -F "'BB6.Agent6D1EightFour.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8four.log
           grep -F "'BB6.Agent6D1SecondLevel96.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d96.log
@@ -168,6 +169,7 @@ jobs:
           grep -F "'BB6.Agent6D1SecondLevel93.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d93.log
           grep -F "'BB6.Agent6D1SecondLevel93Bound.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d93bound.log
           grep -F "'BB6.Agent6D1SecondLevel88OfParents.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d88parents.log
+          grep -F "'BB6.Agent6D1SecondLevel89.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d89.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8five.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9four.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d97.log
@@ -179,9 +181,10 @@ jobs:
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d93.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d93bound.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d88parents.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d89.log
       - uses: actions/upload-artifact@v4
         with:
-          name: agent6-raw139-d1-93-d8-parent-checked
+          name: agent6-raw139-d1-89-d8-parent-checked
           path: |
             .tmp/d8five.log
             .tmp/d9four.log
@@ -194,6 +197,7 @@ jobs:
             .tmp/d93.log
             .tmp/d93bound.log
             .tmp/d88parents.log
+            .tmp/d89.log
             .tmp/map/a6-reductions/build/D1EightFive.olean
             .tmp/map/a6-reductions/build/D1NineFour.olean
             .tmp/map/a6-reductions/build/D1SecondLevel97.olean
@@ -205,4 +209,5 @@ jobs:
             .tmp/map/a6-reductions/build/D1SecondLevel93.olean
             .tmp/map/a6-reductions/build/D1SecondLevel93Bound.olean
             .tmp/map/a6-reductions/build/D1SecondLevel88OfParents.olean
+            .tmp/map/a6-reductions/build/D1SecondLevel89.olean
           retention-days: 14
