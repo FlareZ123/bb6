@@ -338,6 +338,38 @@ theorem blank147Shape :
         pack ([true,false] ++ inputBits blankChunks ++ [false]),
         pack [false,true,false]⟩ := by decide +kernel
 
+
+/-- Thirteen-step local E-hop gadget. From the A0 head at the 1110
+    temporary sentinel, with exactly one following 110 marker, the
+    machine reaches a fresh E1 with right neighbor zero. The rule
+    is checked by the finite original-table known-run kernel. -/
+theorem markedEdge13 :
+    Auto.knownRun p 13
+      ⟨0,[false],[false,true,true,true,false,true,true,false]⟩ =
+    some ⟨4,[true,false,true,false,true,false,true,true],[false]⟩ := by
+  decide +kernel
+
+/-- Universal E-to-E marked hop: arbitrary marker-bearing left prefix,
+    at least one final 10 followed by 110 on the right, arbitrary L,R.
+    The returned E reads 1, its immediate right bit is 0, and every
+    step on the way is defined (so never uses the F1 hole).
+    Arithmetic cost is EXACT: 17 + 4 * scanCost(cs). -/
+theorem markedHop (cs : List LeftChunk) (L R : List Bool) :
+    run0 p ((4 + 4 * scanCost cs) + 13)
+      ⟨4,[true,false] ++ inputBits cs ++ [false] ++ L,
+         [false,true,false,true,true,false] ++ R⟩ =
+    some ⟨4,[true,false,true,false,true,false,true,true] ++
+              outputRightChunks (rightSequence cs) ++ L,
+            [false] ++ R⟩ := by
+  have h1 := firstRoundPositive cs L ([true,true,false] ++ R)
+  have h2 := Auto.knownRun_sound p 13 markedEdge13
+    (outputRightChunks (rightSequence cs) ++ L) R
+  have h := join0 h1 h2
+  simpa only [List.append_assoc] using h
+
+#print axioms markedEdge13
+#print axioms markedHop
+
 #print axioms blank147
 #print axioms blank147Shape
 
