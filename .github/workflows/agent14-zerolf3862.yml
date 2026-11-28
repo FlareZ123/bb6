@@ -399,6 +399,8 @@ jobs:
             im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve48.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified18Finite.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified18Native.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified19Finite.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified19Native.lean \
             --workdir "$work/build" \
             --jobs 4 \
             --manifest "$work/manifest.json" \
@@ -452,6 +454,10 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedCertified18Finite.remainingTables_cover_from_49_certified' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedCertified18Native.native_eighteen_to_B' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedCertified18Native.raw139_p0_from_49_native' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified19Finite.normalizedAfterSourceAcceptedNineteen_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified19Finite.normalizedAfterProspectiveTwenty_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified19Native.native_nineteen_to_B' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified19Native.raw139_p0_from_48_native' depends on axioms: [propext," "$work/log"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
             --workdir "$work/prospective-build" \
@@ -487,6 +493,8 @@ jobs:
             /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve49.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve48.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedCertified18Finite.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedCertified19Finite.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedCertified19Native.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedCertified18Native.olean
             /tmp/agent14-e0-counts/prospective-log
             /tmp/agent14-e0-counts/prospective-manifest.json
@@ -597,6 +605,7 @@ jobs:
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedLocalAcceptedCovers.lean \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified18ChampionNative.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedCertified19ChampionNative.lean \
             --source-root "/tmp/a14-d0-ZeroLF/imports" \
             --source-root "/tmp/a14-d0-OneLB/imports" \
             --source-root "/tmp/a14-d0-OneLA/imports" \
@@ -632,6 +641,7 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedLocalAccepted.raw139_cover_after_accepted_local' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedCertified18ChampionNative.localScore_ge_accepted18_native' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedCertified18ChampionNative.raw139_p0_at_champion_from_49_native' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedCertified19ChampionNative.raw139_p0_at_champion_from_48_native' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/log"
       - uses: actions/upload-artifact@v4
         if: inputs.kind == 'raw139-local'
         with:
@@ -641,6 +651,7 @@ jobs:
             /tmp/agent14-raw139-local/manifest.json
             /tmp/agent14-raw139-local/build/Raw139NormalizedLocalAcceptedCovers.olean
             /tmp/agent14-raw139-local/build/Raw139NormalizedCertified18ChampionNative.olean
+            /tmp/agent14-raw139-local/build/Raw139NormalizedCertified19ChampionNative.olean
           if-no-files-found: error
           retention-days: 14
       - uses: actions/upload-artifact@v4

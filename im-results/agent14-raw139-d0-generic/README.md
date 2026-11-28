@@ -1,5 +1,13 @@
 # Raw139 normalized p0 decomposition and accepted E0 parents
 
+## 28 November 2026: certified 19-parent / 48-row frontier
+
+Run **46125877467** source-accepted the exact C1=0RA parent `[7,24,11,24,14,1,3,16,12,11,24,24]`: `BB6.Agent14Raw139C1ZeroRA.weighted : Cover (WeightedBound 14876970) parent`, standard axioms only, artifact **15255923435** (SHA-256 `4fbe384cfff8fed1abbbb50fa39236fd8f35916baf77d2fff430a55c80e99ede`). This raises the independently accepted normalized Raw139 parent set from eighteen to **nineteen**.
+
+[Raw139NormalizedCertified19Finite.lean](Raw139NormalizedCertified19Finite.lean) proves all nineteen exact parent tables occur once in the authentic 67-row normalized family and that their exact complement has **48 rows**. ZeroLF remains pending; adding it prospectively would make twenty accepted/prospective parents and **47 rows**. [Raw139NormalizedCertified19Native.lean](Raw139NormalizedCertified19Native.lean) transports all nineteen native accepted bounds to one common cutoff (the largest remains 187,672,026), and [Raw139NormalizedCertified19ChampionNative.lean](Raw139NormalizedCertified19ChampionNative.lean) composes that transport through the roster-independent accepted Raw139 spine at the attained champion score. The resulting local interface exposes only the 48 normalized residual Covers once the nineteen source certificates are supplied at their accepted native bounds.
+
+This is a Raw139 local reduction, not a global Canonical40 discharge or a BB(6) upper bound.
+
 ## 28 November 2026: certified 18-parent / 49-row frontier; ZeroLF would make 19 / 48
 
 The normalized Raw139 complement has now been reconciled against **eighteen whole-parent cylinders with independent original-source acceptance**.  The eleven previously certified E0 parents are joined by C1=1LC (bound 598, run 45581126485), F1=0LD (124, run 45612965271), E0=1LF (90,794, run 46093526398), C1=0LA (266, run 45596109440), C1=0LC (321, same run), E0=1LA (881,057, run 45936484460), and E0=0LC (80,377, run 45968078984).  The pending E0=0LF/ZeroLF parent is intentionally **not** counted among those eighteen.
