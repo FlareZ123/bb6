@@ -563,6 +563,7 @@ jobs:
             b0le_e0la|b0le_e1la|b0le_e1lf|b0le_e1ra|b1la_a0la|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb|b1re_e11le) workers=1 ;;
           esac
           python tools/lean_compile_closure.py --workdir "$work" --jobs "$workers" \
+            --source-root im-results/agent9-raw43-e0lf559 \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean \
             --override M44Data=im-results/agent38-raw43-pair/M44Data.lean \
