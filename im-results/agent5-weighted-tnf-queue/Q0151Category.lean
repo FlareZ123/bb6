@@ -44,8 +44,52 @@ theorem gateMask_cats (xs : List Nat) :
     gateMask (xs.map cat) = gateMask xs := by
   simp only [gateMask,gateRun_cats]
 
+/-! Category addition is a congruence: this is the algebraic obligation
+needed to abstract the merger of an unfinished segment run with the first
+run on the right. -/
+
+theorem cat_small (n : Nat) (h : n ≤ 4) : cat n = n := by
+  simp [cat, h]
+
+theorem cat_large (n : Nat) (h : 5 ≤ n) : 5 ≤ cat n := by
+  have hn : ¬ n ≤ 4 := by omega
+  simp only [cat, if_neg hn]
+  omega
+
+theorem cat_eq_of_large_mod (a b : Nat)
+    (ha : 5 ≤ a) (hb : 5 ≤ b) (hm : a % 4 = b % 4) :
+    cat a = cat b := by
+  have hna : ¬ a ≤ 4 := by omega
+  have hnb : ¬ b ≤ 4 := by omega
+  simp only [cat, if_neg hna, if_neg hnb]
+  omega
+
+theorem cat_add (a b : Nat) :
+    cat (cat a + cat b) = cat (a + b) := by
+  by_cases hsmall : a + b ≤ 4
+  · have ha : a ≤ 4 := by omega
+    have hb : b ≤ 4 := by omega
+    rw [cat_small a ha, cat_small b hb]
+  · have hlarge : 5 ≤ a + b := by omega
+    have hs : 5 ≤ cat a + cat b := by
+      by_cases ha : a ≤ 4
+      · by_cases hb : b ≤ 4
+        · rw [cat_small a ha, cat_small b hb]
+          omega
+        · have hcb : 5 ≤ cat b := cat_large b (by omega)
+          rw [cat_small a ha]
+          omega
+      · have hca : 5 ≤ cat a := cat_large a (by omega)
+        omega
+    have hm : (cat a + cat b) % 4 = (a + b) % 4 := by
+      have ha := cat_mod a
+      have hb := cat_mod b
+      omega
+    exact cat_eq_of_large_mod (cat a + cat b) (a + b) hs hlarge hm
+
 #print axioms cat_mod
 #print axioms cat_idempotent
+#print axioms cat_add
 #print axioms gateRun_cats
 #print axioms gateMask_cats
 end BB6.Agent5Q0151Category
