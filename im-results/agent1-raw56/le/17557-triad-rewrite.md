@@ -201,8 +201,9 @@ residues, it proves the defect transition equations directly:
 
 The printed axiom profiles contain only Lean's standard quotient/propositional
 axioms (and `Classical.choice` on the iff characterizations), with no
-`sorryAx`. The remaining difficulty is therefore structural reachability of
-the run grammar and the marked-run relation, not the modular arithmetic.
+`sorryAx`. These scalar lemmas are now subsumed by the weighted-stack
+interface below; the remaining difficulty is structural reachability, not the
+modular arithmetic.
 
 ## A one-defect relation explains the prefix, but fails at rank 8
 
@@ -348,8 +349,9 @@ Define a symbolic relation on paired low/high triad-boundary zippers with:
 4. zero-run equation `high_i = rhoZero(low_i) - 8 * weight_i`;
 5. local stack rules for normal-A push, exact-run pop, residue-6 B increment,
    and residue-7 carry decrement;
-6. a reachable guard strong enough to keep every subtraction nonnegative and
-   justify zero-weight pops.
+6. the reachable zipper/residue invariant that supplies normal-A residue 5,
+   residue-7 positive carry weight, and the semantic high-runway guards.
+   Exact-run zero-weight pops then follow from those semantic guards.
 
 Then prove that one low A or B triad corresponds to `ABA` or `BBA` on
 the high side while preserving this weighted-stack relation. The finite base
