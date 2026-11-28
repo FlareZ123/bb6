@@ -2453,7 +2453,7 @@ jobs:
           cp im-results/agent29-raw36/{ClosedGrowth,RegularRayInvariant,FastRegularRay,ChunkRegularRay,Raw36D1LCExceptional}.lean /tmp/d102/
           export LEAN_PATH=/tmp/d102:/tmp/base
           : > /tmp/d102-common.log
-          compile() { echo "[d102-common] $1" | tee -a /tmp/d102-common.log; lean -o "/tmp/d102/${1%.lean}.olean" "/tmp/d102/$1" 2>&1 | tee -a /tmp/d102-common.log; }
+          compile() { echo "[d102-common] $1" | tee -a /tmp/d102-common.log; (cd /tmp/d102 && lean -o "${1%.lean}.olean" "$1") 2>&1 | tee -a /tmp/d102-common.log; }
           for f in ClosedGrowth.lean RegularRayInvariant.lean FastRegularRay.lean ChunkRegularRay.lean Raw36D1LCExceptional.lean Raw36D102Base.lean Raw36D102Sweeps.lean; do compile "$f"; done
           for f in /tmp/d102/Raw36D102Regular*.lean; do compile "$(basename "$f")"; done
           for k in 0 1 2 3 6 7 8 9 14 15 18 19 20 21; do compile "$(printf 'Raw36D102Kid%02d.lean' "$k")"; done
@@ -2499,7 +2499,7 @@ jobs:
           unzip -q /tmp/raw36-b104.zip -d /tmp/base
           export LEAN_PATH=/tmp/d102:/tmp/base
           kid=$(printf 'Raw36D102Kid%02d' ${{ matrix.kid }})
-          lean -o "/tmp/d102/$kid.olean" "/tmp/d102/$kid.lean" 2>&1 | tee "/tmp/$kid.log"
+          (cd /tmp/d102 && lean -o "$kid.olean" "$kid.lean") 2>&1 | tee "/tmp/$kid.log"
           python im-results/agent4-raw109/audit_axioms.py "/tmp/$kid.log" "BB6.Agent29Raw36D102.${kid#Raw36D102}_bound"
           cp "/tmp/d102/$kid.lean" "/tmp/d102/$kid.olean" "/tmp/$kid.log" /tmp/out/
       - name: Retain heavy D1=0LC child
@@ -2544,7 +2544,7 @@ jobs:
           unzip -q /tmp/raw36-b104.zip -d /tmp/final
           cp -a /tmp/d102/. /tmp/final/
           export LEAN_PATH=/tmp/final
-          lean -o /tmp/final/Raw36D102.olean /tmp/final/Raw36D102.lean 2>&1 | tee /tmp/d102-root.log
+          (cd /tmp/final && lean -o Raw36D102.olean Raw36D102.lean) 2>&1 | tee /tmp/d102-root.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/d102-root.log BB6.Agent29Raw36D102.bound BB6.Agent29Raw36D102.cover
           python im-results/agent29-raw36/build_closure_manifest.py --work /tmp/final --root Raw36D102 \
             --label raw36-d1-02 --artifact-name raw36-d1-02-proof \
