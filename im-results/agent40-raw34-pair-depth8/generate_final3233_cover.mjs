@@ -191,7 +191,14 @@ assert.equal(finalIndex.size,3233);
 
 const finalJson=JSON.stringify(finalRows)+"\n";
 const finalSha256=createHash("sha256").update(finalJson).digest("hex");
-assert.equal(finalSha256,"c63e67cc6bf6a30e6ec0d4d313a4b2407dd31593d6331311634fc6fe0537ef83");
+const canonicalRows=finalRows.map(r=>r.slice()).sort((a,b)=>{
+  for(let i=0;i<a.length;i++)if(a[i]!==b[i])return a[i]-b[i];
+  return 0;
+});
+const canonicalFinalSha256=createHash("sha256")
+  .update(JSON.stringify(canonicalRows)+"\n").digest("hex");
+assert.equal(finalSha256,"b5c98d90b8232d7b3dfc8a950b5e9aef7e27689649a5122bc0e16a25191feaee");
+assert.equal(canonicalFinalSha256,"ca1ea5f5554e6a3a6d9939e006a1ecee6b4ffd3f2b34a81a2cc52e12d90cb59d");
 
 function leanLeaf(x){
   if(x.kind==="cert")return ".cert ("+leanCert(x.cert)+")";
@@ -492,6 +499,7 @@ const manifest={
   originalResidualPhysical:"2671250",
   finalResidualRows:finalRows.length,
   finalResidualSha256:finalSha256,
+  canonicalFinalResidualSha256:canonicalFinalSha256,
   finalResidualsAreComplete:finalRows.every(r=>r.every(x=>x!==0)),
   finalResidualsUnique:new Set(finalRows.map(r=>r.join(","))).size===finalRows.length,
   boundedHaltTimes:[101,102,123],
