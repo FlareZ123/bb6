@@ -71,6 +71,7 @@ jobs:
           node im-results/agent2-f321-mod96/verify.cjs > /tmp/f321-mod96-graph.json
           lean -o im-results/agent2-f321-mod96/Mod96Graph.olean im-results/agent2-f321-mod96/Mod96Graph.lean | tee -a /tmp/f321-odd-lean.log
           LEAN_PATH="im-results/agent2-f321-mod96:$e" lean im-results/agent2-f321-mod96/Mod96Source.lean | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean im-results/agent2-f321-bulk/HighBulkSource.lean | tee -a /tmp/f321-odd-lean.log
           ! grep -q sorryAx /tmp/f321-odd-lean.log
       - name: Upload exact finite computation record
         if: ${{ !inputs.odd_depth_only }}
