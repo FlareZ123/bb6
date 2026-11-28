@@ -50,8 +50,12 @@ def sharpen(text):
     assert text.count("theorem safe_") == len(copies), (
         text.count("theorem safe_"), len(copies)
     )
-    header = "import OrdinaryQ0Exhaustive\nopen BB6.Agent5ExactOneHole (OrdinaryBound)\n"
-    text = header + text
+    text = "import OrdinaryQ0Exhaustive\\n" + text
+    text = text.replace(
+        "open BB6Coverage BB6.Agent13BlankDelay Q0ExhaustiveTree",
+        "open BB6Coverage BB6.Agent13BlankDelay Q0ExhaustiveTree\\n"
+        "open BB6.Agent5ExactOneHole (OrdinaryBound)",
+    )
     if "theorem sym_sound" in text:
         base_sharp = """
 theorem sym_sharp (p : PartialMachine) (h : sym p = true) :
