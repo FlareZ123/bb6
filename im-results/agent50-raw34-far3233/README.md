@@ -6,4 +6,33 @@ The last machine has a symbolic growth proof, not merely a simulation cutoff. At
 
 The first and general growth theorems were compiled in Lean 4.36.0-rc2 against a local model reproducing the relevant SweepPumping definitions and lemmas, with only propext and Quot.sound. The committed module imports the original SweepPumping and adds its never_of_growth bridge; that original dependency compilation is still outstanding. FAR hits are search witnesses pending FastFAR checks. The 3,233 and 168 predecessor covers likewise must pass original-source verification before the pair parent can be called closed. No global Cover count is changed here.
 
-Next: generate the 167 certificates, connect the exact 168 miss rows to the existing Raw34FAR168Cover, then compile the combined original-source target in coordination with the existing Raw34 pair owners. Do not duplicate the global Raw47 consumer.
+Next: compile the combined original-source target in coordination with the existing Raw34 pair owners. Do not duplicate the global Raw47 consumer.
+
+
+## Reproduce the endgame
+
+With the existing hard3233.txt and far4.jsonl (all original census IDs in order), compile the existing agent50-raw34-plan/far.cpp to far, and run:
+
+```bash
+python - <<'PY'
+import json
+from pathlib import Path
+rows = Path('hard3233.txt').read_text().splitlines()
+misses = [x['id'] for x in map(json.loads, Path('far4.jsonl').read_text().splitlines()) if 'd' not in x]
+Path('hard168.txt').write_text('\n'.join(rows[i] for i in misses)+'\n')
+PY
+./far 5 < hard168.txt > far5.jsonl
+python - <<'PY'
+import json
+from pathlib import Path
+rows = Path('hard3233.txt').read_text().splitlines()
+misses = [x['id'] for x in map(json.loads, Path('far5.jsonl').read_text().splitlines()) if 'd' not in x]
+Path('hard9.txt').write_text('\n'.join(rows[i] for i in misses)+'\n')
+PY
+./far 6 < hard9.txt > far6.jsonl
+python generate_close_168.py --hard hard3233.txt --far4 far4.jsonl --far5 far5.jsonl --far6 far6.jsonl --output generated
+```
+
+The generator ran locally, producing 14 source shards and Raw34FAR168Closed.lean.
+Ordered 168-row SHA256: e5a91a6700e3e2027c85923c8b6661ff8cee6e6167ad0903b525ed538ee792f9.
+The final theorem is BB6.Agent50Raw34FAR168Closed.cover : Cover (DecidedBelow 128) BB6.Agent40Raw34PairD1LF_F0LDDepth6Data.parent. Its proof requires all original dependencies (including the 3233-to-168 predecessor), checks every FAR witness with FastFAR, proves the last row agrees with the growth machine, and proves literal list equality with the predecessor misses in Lean. The output is not yet source-accepted.
