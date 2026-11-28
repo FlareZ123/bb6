@@ -1,0 +1,137 @@
+name: Agent44 fine-shard Extra140 root6 recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      max_fresh:
+        description: Fresh Lean modules to compile before checkpoint
+        required: true
+        default: '8'
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45896597080
+          pattern: raw11-six-hole-*
+          merge-multiple: true
+          path: /tmp/six-hole
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Download last accepted Extra140 checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46141446137
+          name: raw11-140-checkpoint
+          path: /tmp/checkpoint
+
+      - name: Regenerate exact Extra140 DAG with finer root6 modules
+        env:
+          SIX_HOLE_DATA: /tmp/six-hole
+          RAW11_EXTENDED_AUTOMATA: '1'
+          RAW11_REPAIR_SPLIT: '1'
+          RAW11_REPAIR_MODULE_THRESHOLD: '5'
+          RAW11_REPAIR_CERT_THRESHOLD: '4'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/parent-source /tmp/parent-out
+          node im-results/agent5-weighted-tnf-queue/generate-extra-parent-shards.cjs             140 /tmp/parent-source | tee /tmp/generation.log
+          test -s /tmp/parent-source/Agent5Raw11Extra140.lean
+          python - <<'PY'
+          from pathlib import Path
+          rows=sorted(
+            ((p.stat().st_size,p.name) for p in Path('/tmp/parent-source').glob('*.lean')),
+            reverse=True,
+          )
+          print('source_modules',len(rows))
+          for size,name in rows[:25]:
+              print('SOURCE_SIZE',size,name)
+          assert rows[0][0] < 500_000, rows[0]
+          PY
+
+          receipt="$(find /tmp/checkpoint -type f -name repair-receipt.json -print -quit)"
+          test -n "$receipt"
+          cp -a "$(dirname "$receipt")/." /tmp/parent-out/
+          echo "accepted_objects_before=$(find /tmp/parent-out -name '*.olean' | wc -l)"
+
+      - name: Advance fine-sharded exact DAG by bounded fresh modules
+        env:
+          RAW11_REPAIR_ID: '140'
+          RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
+          if [ -f /tmp/parent-out/Agent5Raw11Extra140.olean ]; then
+            grep -F "'BB6.Agent5Raw11Extra140.cover' depends on axioms:" /tmp/checkpoint.log
+            echo complete > /tmp/parent-out/status.txt
+          else
+            grep -F 'checkpoint' /tmp/checkpoint.log
+            echo partial > /tmp/parent-out/status.txt
+          fi
+          if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
+          {
+            echo "parent_id=140"
+            echo "prior_checkpoint=46141446137"
+            echo "repair_module_threshold=5"
+            echo "repair_cert_threshold=4"
+            echo "max_fresh=${{ inputs.max_fresh }}"
+            echo "head_sha=$GITHUB_SHA"
+            echo "lean_version=$(lean --version)"
+          } > /tmp/parent-out/checkpoint-provenance.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-140-fine-checkpoint
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+            /tmp/generation.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish completed parent bundle
+        if: success()
+        run: |
+          test -f /tmp/parent-out/Agent5Raw11Extra140.olean || exit 0
+          touch /tmp/PUBLISH_COMPLETE
+
+      - uses: actions/upload-artifact@v4
+        if: success() && hashFiles('/tmp/PUBLISH_COMPLETE') != ''
+        with:
+          name: parent-complete-140-repaired
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+          if-no-files-found: error
+          retention-days: 30
