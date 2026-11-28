@@ -53,7 +53,8 @@ theorem d5_family_second_reentry (v : Nat) :
         (DRegularSource.sourceSection ⟨a,q,b⟩) ∧
       DRegular.Canon ⟨a,q,b⟩ := by
   have hh : 1 ≤ familyH v := by
-    simp [familyH]
+    unfold familyH
+    omega
   have h := odd_depth_aligned_second_reentry
     2 (familyK v) (familyH v) (familyT v) (familyR v)
     hh (reset_alignment v) (double_B_alignment v) (endpoint_alignment v)
