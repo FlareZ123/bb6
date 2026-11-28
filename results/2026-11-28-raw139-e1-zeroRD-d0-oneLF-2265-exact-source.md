@@ -56,9 +56,10 @@ The explicit completion `closingMachine s := (p s).getD none` realizes
 the finite halting score `N+1`. The generic construction and exact
 attainment lemma `attainable_of_source` separately passed original-source
 Lean CI [46150512653](https://github.com/FlareZ123/bb6/actions/runs/46150512653).
-A specialized instance `exact_attainable` is in
-`Leaf2265Bridge.lean`; its single-root source replay was dispatched
-separately.
+The specialized instance `BB6.Agent3Leaf2265Bridge.exact_attainable` is
+also **source accepted** in [CI 46150812333](https://github.com/FlareZ123/bb6/actions/runs/46150812333),
+with standard Lean axioms: the concrete six-state machine really attains
+exact primitive halt-query score `N+1`.
 
 ## Source proof mechanism
 
@@ -104,8 +105,13 @@ The proof uses the **second** counted increment
 `proposedIncrementCost 1 6 71 (2^63−1)` and an all-parameter
 first-section containment lemma. It avoids evaluating
 `4^(2^63−1)`; the source expression's separate *attainment* is
-established by the champion project. Since the literal `N+6 ≤ 2^1024`,
-this one-hole cylinder is below the attained champion.
+established by the champion project. Since the literal `N+6 ≤ 2^1024`, the entire one-hole cylinder
+is **source-certified at the attained champion score** by
+`BB6.Agent3Leaf2265ChampionCompare.one_hole_cover_at_champion`,
+[CI 46151036404](https://github.com/FlareZ123/bb6/actions/runs/46151036404).
+The mixed finite/astronomical transport to `2^32768` is separately
+**source accepted** in [CI 46151039892](https://github.com/FlareZ123/bb6/actions/runs/46151039892),
+under the reusable `TwoBoundAudit` checker.
 
 The original parent `Raw139 E1=0RD/D0=1LF` has **4,875** open
 cutoff-100 children: **4,873** ordinary resolved recipes and the two
@@ -125,6 +131,7 @@ Busy Beaver value.
 - [Symbolic attained-champion threshold](../im-results/agent3-raw139-e1-zeroRD/ChampionPow1024.lean), [direct threshold consumer](../im-results/agent3-raw139-e1-zeroRD/Leaf2265ChampionCompare.lean).
 - [Hybrid finite/astronomical audit construction](../im-results/agent3-raw139-e1-zeroRD/TwoBoundAudit.lean) and [saved parent census](../im-results/agent3-raw139-e1-zeroRD/census-d0lf1.json).
 
-Only the theorem declarations with successful original-source closure CI
-above are reported as fully checked; pending downstream consumer imports
-should be promoted independently after their own successful runs.
+Every concrete theorem stated above has now passed its cited complete
+original-source Lean closure and axiom audit. The still-open obligations are
+the 3506 F067 source proof and the finite whole-parent query-tree Cover;
+no conclusion about BB(6) maximality follows from one child.
