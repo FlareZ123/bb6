@@ -76,17 +76,22 @@ theorem bounded_last_hole
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
     (hunknown : p s = none)
     (hrest : ∀ slot, slot ≠ s → ∃ mv, p slot = some (some mv))
-    (hknown : knownRun p n = some ((knownRun p n).getD blank))
+    (hknown : (knownRun p n).isSome = true)
     (hslot : readSlot ((knownRun p n).getD blank) = s) :
     ∀ m, compatible p m → WeightedBound B m := by
   let c : Config := (knownRun p n).getD blank
-  have hr : knownRun p n = some c := hknown
+  have hr : knownRun p n = some c := by
+    cases h : knownRun p n with
+    | none => simp [h] at hknown
+    | some cfg => simp [c,h]
   have hu : p (readSlot c) = none := by
     rw [hslot]
     exact hunknown
   apply last_hole_sound B p n c hroot hr hu
   · intro slot hs
-    exact hrest slot (by simpa only [hslot] using hs)
+    have hcslot : readSlot c = s := hslot
+    rw [hcslot] at hs
+    exact hrest slot hs
   · intro d hd
     have hd6 : d < 6 := by
       unfold possibleDelays at hd
@@ -95,8 +100,7 @@ theorem bounded_last_hole
 
 theorem pF0B1_short (B : Nat) (hB : 128 ≤ B)
     (fm bm : Move) (n : Nat) (hn : n ≤ 120)
-    (hknown : knownRun (pF0B1 fm bm) n =
-      some ((knownRun (pF0B1 fm bm) n).getD blank))
+    (hknown : (knownRun (pF0B1 fm bm) n).isSome = true)
     (hslot : readSlot ((knownRun (pF0B1 fm bm) n).getD blank) = (4,true)) :
     ∀ m, compatible (pF0B1 fm bm) m → WeightedBound B m :=
   bounded_last_hole B hB _ (4,true) n hn
@@ -105,8 +109,7 @@ theorem pF0B1_short (B : Nat) (hB : 128 ≤ B)
 
 theorem pF0E1_short (B : Nat) (hB : 128 ≤ B)
     (fm em : Move) (n : Nat) (hn : n ≤ 120)
-    (hknown : knownRun (pF0E1 fm em) n =
-      some ((knownRun (pF0E1 fm em) n).getD blank))
+    (hknown : (knownRun (pF0E1 fm em) n).isSome = true)
     (hslot : readSlot ((knownRun (pF0E1 fm em) n).getD blank) = (1,true)) :
     ∀ m, compatible (pF0E1 fm em) m → WeightedBound B m :=
   bounded_last_hole B hB _ (1,true) n hn
@@ -121,14 +124,17 @@ theorem split_at_hole
     (p : PartialMachine) (slot : Slot) (n : Nat) (hn : n ≤ 120)
     (hroot : p initialSlot = some (some ⟨true,true,1⟩))
     (hunknown : p slot = none)
-    (hknown : knownRun p n = some ((knownRun p n).getD blank))
+    (hknown : (knownRun p n).isSome = true)
     (hslot : readSlot ((knownRun p n).getD blank) = slot)
     (hchildren : ∀ mv : Move, ∀ m : Machine,
       compatible (refine p slot (some mv)) m → WeightedBound B m) :
     ∀ m, compatible p m → WeightedBound B m := by
   intro m hm
   let c : Config := (knownRun p n).getD blank
-  have hr : knownRun p n = some c := hknown
+  have hr : knownRun p n = some c := by
+    cases h : knownRun p n with
+    | none => simp [h] at hknown
+    | some cfg => simp [c,h]
   have hu : p (readSlot c) = none := by
     rw [hslot]
     exact hunknown
