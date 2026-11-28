@@ -130,9 +130,19 @@ def shard(variant: str, index: int, count: int) -> None:
     generated = prepare(variant)
     batches = sorted(generated.glob("Raw43*BiDFABatch*.lean"), key=batch_key)
     roots = [path for pos, path in enumerate(batches) if pos % count == index]
-    if not roots:
-        raise RuntimeError(f"no batch roots selected for shard {index}/{count}")
     work = Path(f"/tmp/a25-b0le-shard-{index}")
+    if not roots:
+        # Proof simplifications can reduce the generated batch count below the
+        # workflow's fixed shard matrix.  Retain an explicit empty artifact;
+        # merge_b0le_source_shards.py independently recomputes which shard
+        # indices should be empty from the generated source bank.
+        work.mkdir(parents=True, exist_ok=False)
+        (work / "EMPTY").write_text(
+            f"{variant} shard {index}/{count}: no generated BiDFA batch roots\n",
+            encoding="utf-8",
+        )
+        print(f"PASS empty shard {index}/{count}: 0 of {len(batches)} BiDFA batch modules", flush=True)
+        return
     log = work / "audit.log"
     run_logged([
         "python", "tools/lean_compile_closure.py",
