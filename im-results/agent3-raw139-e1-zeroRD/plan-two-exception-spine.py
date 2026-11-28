@@ -93,6 +93,7 @@ def build_plan(part, census, tree_hash):
             c = stats(node, cache)
             regions.append({
                 "path": list(prefix), "table": list(table),
+                "root_kind": node[0], "depth": len(prefix),
                 "nodes": sum(c.values()), "open": c["open"],
                 "split": c["split"], "cycle": c["cycle"],
                 "last": c["last"], "far": c["far"]})
@@ -152,6 +153,10 @@ def main():
     print("Disjoint ordinary regions:", len(plan["ordinary_regions"]))
     print("Ordinary open leaves:", sum(x["open"]
                                        for x in plan["ordinary_regions"]))
+    print("Ordinary region root kinds:", dict(Counter(
+        x["root_kind"] for x in plan["ordinary_regions"])))
+    print("Ordinary region depths:", dict(Counter(
+        x["depth"] for x in plan["ordinary_regions"])))
     if args.out:
         args.out.write_text(json.dumps(plan, indent=2) + "\n")
         print("Wrote reproducible source-generator plan to", args.out)
