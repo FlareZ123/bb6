@@ -17,13 +17,9 @@ open BB6.Agent14Raw139NormalizedE0TenAcceptedConditional
     changing the original halting/first-blank-delay semantics. -/
 theorem mono_cover {A B : Nat} (hAB : A ≤ B) {p : PartialMachine}
     (h : Cover (WeightedBound A) p) : Cover (WeightedBound B) p := by
-  induction h with
-  | leaf p hbound =>
-      refine Cover.leaf p ?_
-      intro m hm k d hk hd
-      exact Nat.le_trans (hbound m hm k d hk hd) hAB
-  | branch p s hu kids ih =>
-      exact Cover.branch p s hu (fun t ht => ih t ht)
+  apply Cover.leaf
+  intro m hm k d hk hd
+  exact Nat.le_trans (h.sound m hm k d hk hd) hAB
 
 /-- The first ten E0 parents were each accepted at a *different* exact
     primitive weighted bound: six at 6766859, then 1RF at 6024,
