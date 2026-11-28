@@ -1112,6 +1112,8 @@ jobs:
       - name: Source-check 109 bounded-halting Raw34 cylinders
         run: |
           set -euo pipefail
+          # Reconstruct the pinned BB6Coverage source before dependency closure.
+          python im-results/agent13-coverage/unpack.py
           W=/tmp/a40-raw34-halt8
           mkdir -p "$W"
           lean --version | grep -F '4.36.0-rc2'
@@ -1161,6 +1163,8 @@ jobs:
       - name: Source-check 958 additional exact-eight-step Raw34 halters
         run: |
           set -euo pipefail
+          # Reconstruct the pinned BB6Coverage source before dependency closure.
+          python im-results/agent13-coverage/unpack.py
           W=/tmp/a40-raw34-halt9
           mkdir -p "$W"
           lean --version | grep -F '4.36.0-rc2'
