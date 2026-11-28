@@ -173,7 +173,7 @@ function loadHalters(file){
 const n8=loadHalters("Raw34OtherD1Halt8.lean");
 const n9=loadHalters("Raw34OtherD1Halt9New.lean");
 assert.equal(n8,109);assert.equal(n9,958);
-assert.equal(bank.length,4156+raySource.length);
+assert.equal(bank.length,4156+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length+fGrowthSource.length);
 
 const stateSlots=["D","C","B","A","E","E","F","F"];
 const maskNames=["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
