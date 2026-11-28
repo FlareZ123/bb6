@@ -244,57 +244,83 @@ function feasibleGraph(p,f){
   return a!=="HALT"&&f.S.includes(a[2]);
  });
 }
-// Important global consistency check: a genuine short halter cannot share a
-// physical completion with a source-proved forever-live certificate.
-for(let i=oldCount+counterCount;i<bank.length;i++){
- for(let j=0;j<oldCount+counterCount;j++)
-   assert(!overlap(bank[i],bank[j]),"halt/nonhalt cylinder overlap: "+i+" vs "+j);
- for(const f of families)
-   assert(!feasibleGraph(bank[i],f),"halt/closed-graph overlap: "+i+" "+f.S);
-}
+// Compile all source cylinders and the ten closed-control families into a
+// reduced ordered 25-way decision diagram. This avoids decimal-ID-list memo
+// keys, whose duplication exceeded the runner heap after depth-five banks.
+const haltStart=oldCount+counterCount;
 const pow=Array.from({length:9},(_,i)=>25n**BigInt(i));
-const memo=new Map();
-let memoNodes=0;
-function count(ids,at,mask){
- if(ids.some(id=>bank[id].slice(at).every(v=>v===0)))return 0n;
- if(at===8)return mask?0n:1n;
- if(ids.length===0&&mask===0)return pow[8-at];
- const key=at+"|"+mask+"|"+ids.join(",");
- if(memo.has(key))return memo.get(key);
- const wildcard=[],by=Array.from({length:26},()=>[]);
- for(const id of ids){
-  const c=bank[id][at];if(c===0)wildcard.push(id);else by[c].push(id);
- }
- let sum=0n;
- for(let c=1;c<=25;c++){
-  const next=wildcard.concat(by[c]);
-  sum+=count(next,at+1,nextMask(mask,at,c));
- }
- memo.set(key,sum);
- memoNodes++;
- return sum;
+const nodes=[{at:8,ch:null},{at:8,ch:null}];
+const unique=Array.from({length:8},()=>new Map());
+function mk(at,ch){
+ let same=true;
+ for(let i=1;i<25;i++)if(ch[i]!==ch[0]){same=false;break;}
+ if(same)return ch[0];
+ const key=ch.join(","),hit=unique[at].get(key);
+ if(hit!==undefined)return hit;
+ const id=nodes.length;nodes.push({at,ch:ch.slice()});unique[at].set(key,id);return id;
 }
-const idsAll=bank.map((_,i)=>i);
-function branch(ids,at,code){
- return {
-  ids:ids.filter(i=>bank[i][at]===0||bank[i][at]===code),
-  mask:null
- };
+function apply2(a,b,isAnd,memo){
+ if(isAnd){if(a===0||b===0)return 0;if(a===1)return b;if(b===1)return a;}
+ else {if(a===1||b===1)return 1;if(a===0)return b;if(b===0)return a;}
+ if(a===b)return a;
+ const lo=Math.min(a,b),hi=Math.max(a,b),key=lo+","+hi,old=memo.get(key);
+ if(old!==undefined)return old;
+ const va=nodes[a].at,vb=nodes[b].at,at=Math.min(va,vb),ch=Array(25);
+ for(let c=0;c<25;c++){
+  const x=va===at?nodes[a].ch[c]:a,y=vb===at?nodes[b].ch[c]:b;
+  ch[c]=apply2(x,y,isAnd,memo);
+ }
+ const out=mk(at,ch);memo.set(key,out);return out;
+}
+const union=(a,b)=>apply2(a,b,false,new Map());
+const intersect=(a,b)=>apply2(a,b,true,new Map());
+function cubeBDD(p){
+ let r=1;
+ for(let at=7;at>=0;at--){const code=p[at];if(!code)continue;
+  const ch=Array(25).fill(0);ch[code-1]=r;r=mk(at,ch);}
+ return r;
+}
+function familyBDD(f){
+ let r=1;const where=new Set(f.where);
+ for(let at=7;at>=0;at--){if(!where.has(at))continue;
+  const ch=Array(25).fill(0);
+  for(let c=1;c<=25;c++){const a=alphabet[c-1];
+   if(a!=="HALT"&&f.S.includes(a[2]))ch[c-1]=r;}
+  r=mk(at,ch);
+ }
+ return r;
+}
+let nonhaltRoot=0;
+for(let i=0;i<haltStart;i++)nonhaltRoot=union(nonhaltRoot,cubeBDD(bank[i]));
+for(const f of families)nonhaltRoot=union(nonhaltRoot,familyBDD(f));
+let haltRoot=0;
+for(let i=haltStart;i<bank.length;i++)haltRoot=union(haltRoot,cubeBDD(bank[i]));
+assert.equal(intersect(nonhaltRoot,haltRoot),0,"halting/nonhalting proof-bank overlap");
+const coverageRoot=union(nonhaltRoot,haltRoot),countMemo=new Map();
+function coveredCount(id,at){
+ if(id===0)return 0n;if(id===1)return pow[8-at];
+ const n=nodes[id];assert(n.at>=at);
+ let base=countMemo.get(id);
+ if(base===undefined){base=0n;for(const child of n.ch)base+=coveredCount(child,n.at+1);countMemo.set(id,base);}
+ return pow[n.at-at]*base;
+}
+function restrictAt(id,at,code){
+ if(id<=1)return id;const n=nodes[id];assert(n.at>=at);
+ return n.at===at?n.ch[code-1]:id;
 }
 const totalByD1=[],top=[];
 let grand=0n,peak=0n;
 for(let d=1;d<=25;d++){
  if(alphabet[d-1]==="1RD")continue;
- const m1=nextMask(maskAll,0,d);
- const id1=branch(idsAll,0,d).ids;
- const mass=count(id1,1,m1);
+ const id1=restrictAt(coverageRoot,0,d);
+ const mass=pow[7]-coveredCount(id1,1);
  totalByD1.push({D1:alphabet[d-1],unclassified:String(mass)});
  grand+=mass;
  for(let c=1;c<=25;c++){
-  const id2=branch(id1,1,c).ids,m2=nextMask(m1,1,c);
+  const id2=restrictAt(id1,1,c);
   for(let b=1;b<=25;b++){
-   const id3=branch(id2,2,b).ids,m3=nextMask(m2,2,b);
-   const n=count(id3,3,m3);
+   const id3=restrictAt(id2,2,b);
+   const n=pow[5]-coveredCount(id3,3);
    if(n>0n){
     top.push({D1:alphabet[d-1],C1:alphabet[c-1],B1:alphabet[b-1],
       residual:String(n),residualPercentOf25power5:Number(n*10000n/pow[5])/100});
@@ -331,7 +357,7 @@ console.log(JSON.stringify({
   plusAgent23Residual:String(grand+110397542n),
   nonzeroThreeSlotPrefixes:top.length,
   bestThreeSlotResidual:String(peak),
-  memoizedCountStates:memoNodes,
+  memoizedCountStates:nodes.length,mddNodes:nodes.length,
   D1Distribution:totalByD1,
   topThreeSlotPrefixes:top.slice(0,45)
 },null,2));
