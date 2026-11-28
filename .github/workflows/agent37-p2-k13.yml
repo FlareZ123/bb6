@@ -202,4 +202,4 @@ jobs:
         run: |
           set -euo pipefail
           lean --version
-          python3 -u im-results/agent37-echain/reproduce-safe-e.py Seed24956SecondReentry OddDepthAffineAlignment OddDepthSecondReturn D5SecondReturn EChain169Split ExternalCall42Prefix
+          python3 -u im-results/agent37-echain/reproduce-safe-e.py Seed24956SecondReentry OddDepthAffineAlignment OddDepthSecondReturn D5SecondReturn EChain169Split ExternalCall42Prefix ExternalCall54Prefix
