@@ -229,16 +229,34 @@ theorem next_B_weight_update (r : Nat) {p s : List Bool}
     (hps : frame r = p ++ true :: s) :
     bNextWeight (lowRemaining r p) (prefixWeight p) =
       prefixWeight (p ++ [true]) := by
-  have hb := frame_prefix_ballot r hps
+  have hbal := frame_prefix_ballot r hps
   have hf := lowRemaining_balance_form r hps
-  unfold prefixWeight bNextWeight
-  simp only [countB, countC, List.count_append, List.count_cons,
-    List.count_nil, Nat.add_zero]
-  by_cases h6 : lowRemaining r p % 8 = 6
-  · simp [h6]
-    omega
-  · simp [h6]
-    omega
+  have hsuf := lowRemaining_eq_suffixCost r hps
+  have h7 : 7 ≤ lowRemaining r p := by
+    rw [hsuf]
+    simp [lowCost, countB, countC]
+  by_cases hd : countB p = countC p
+  · have hn : lowRemaining r p % 8 ≠ 6 := by
+      intro h6
+      omega
+    simp [prefixWeight, bNextWeight, countB, countC,
+      List.count_append, hd, hn]
+  · have hdpos : 1 ≤ countB p - countC p := by omega
+    have hm :
+        lowRemaining r p % 8 =
+          (countB p - countC p - 1) % 8 := by
+      have heq :
+          lowRemaining r p =
+            8 * ((2^(r+1)-1) - countB p) +
+              (countB p - countC p - 1) := by
+        omega
+      rw [heq, Nat.add_mod]
+      simp
+    unfold prefixWeight bNextWeight
+    rw [hm]
+    simp only [countB, countC, List.count_append, List.count_cons,
+      List.count_nil, Nat.add_zero]
+    split <;> omega
 
 /-- Likewise the closed-form frame weight follows the carry transition exactly.
     Ballot positivity at a scheduled carry supplies the only delicate case. -/
@@ -249,17 +267,24 @@ theorem next_C_weight_update (r : Nat) {p s : List Bool}
   have hbfull : countC (p ++ [false]) ≤ countB (p ++ [false]) := by
     apply frame_prefix_ballot r (p := p ++ [false]) (s := s)
     simpa [List.append_assoc] using hps
-  have hb : countC p + 1 ≤ countB p := by
+  have hpos : countC p + 1 ≤ countB p := by
     simpa [countB, countC, List.count_append] using hbfull
   have hf := lowRemaining_balance_form r hps
+  have hm :
+      lowRemaining r p % 8 =
+        (countB p - countC p - 1) % 8 := by
+    have heq :
+        lowRemaining r p =
+          8 * ((2^(r+1)-1) - countB p) +
+            (countB p - countC p - 1) := by
+      omega
+    rw [heq, Nat.add_mod]
+    simp
   unfold prefixWeight carryNextWeight
+  rw [hm]
   simp only [countB, countC, List.count_append, List.count_cons,
     List.count_nil, Nat.add_zero]
-  by_cases h7 : lowRemaining r p % 8 = 7
-  · simp [h7]
-    omega
-  · simp [h7]
-    omega
+  split <;> omega
 
 /-- The B/BBA semantic runway guards follow immediately from suffix cost. -/
 theorem next_B_guards (r : Nat) {p s : List Bool}
