@@ -20,7 +20,7 @@ def tree : PartialAudit := .split 8 (2,true) (byPartialMove [
   .unresolved,
   .unresolved,
   .closed (.cycle 10 3 false 0),
-  .closed (.cycle 9 6 true -1),
+  .closed (Audit.cycle 9 6 true (-1)),
   .closed (.cycle 5 4 true 1),
   .unresolved,
   .unresolved,
