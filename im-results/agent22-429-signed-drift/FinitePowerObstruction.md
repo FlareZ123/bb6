@@ -59,6 +59,32 @@ Since `3*u_n <= r_n` at n=0,1,2, the first three nonnegative integers `u_n` are 
 
 The previously documented triple-word lemma is q=3. **The new leverage is the exponent q-2:** for four copies the required denominator is M squared; for five it is M cubed. The bound H uses only the *first three* boundaries and does not inflate with q.
 
+## An additional two-copy square obstruction (stronger at short repetitions)
+
+There is also a genuinely **two-copy** necessary condition, independent of the higher-power threshold (1). Suppose W is traversed twice, giving three paired boundaries (u0,r0), (u1,r0+T), (u2,r0+2T). From the two exact transfers,
+
+```text
+    A*T = M*(u2-u1) + (u0-u1).                          (7)
+```
+
+Set `H0=floor(r0/3)`, `H1=floor((r0+T)/3)`. Since `D>=0` at the first two boundaries, `0<=u0<=H0`, `0<=u1<=H1`; hence
+
+```text
+    -H1 <= A*T - M*k <= H0,    k=u2-u1 integral.       (8)
+```
+
+Writing `rho = A*T mod M` as a least nonnegative residue, **two complete copies are impossible if**
+
+```text
+    rho > H0   AND   M-rho > H1.                       (9)
+```
+
+Proof: no integer in the interval [-H1,H0] can have residue rho modulo M under (9). This is a one-sided *asymmetric modular-gap certificate*; the inequalities need no hypothetical third copy or primitive word, and do not require computing an entire path. It is sound for all finite, original signed E/S+even-F macro walks satisfying the source's guards.
+
+If **three** W copies exist, u2 must also satisfy the same first-letter type guard as u0 and u1. Their parity agrees; therefore k=u2-u1 is even, strengthening (8)-(9) by replacing modulus M with **2M**. This is separate from the second-difference power obstruction and can reject three copies even when M is below the threshold (1). Importantly the modulus for **two copies alone is M, not 2M**: u2 is merely an output, with no guarantee that a hypothetical third W's entry guard holds. The exact BigInt pruner below implements both variants.
+
+For q>=3 the combined pruner rejects if either the two-copy modulo-M gap, the three-copy modulo-2M gap, or the large-power even-slope divisibility condition fails. If q=2 it uses only the first. These are exact *necessary* conditions, not an exhaustive decision for the signed inverse model.
+
 ## A strict finite slope-cone lemma (missing justification now made explicit)
 
 For `W=(x_1,...,x_a)` with all `j_i>=1` and `s_i=4^(j_i)`, direct telescoping yields the *exact nonnegative coefficient gap*
@@ -98,6 +124,7 @@ The word `S2,S2,S2` has `M=4096,A=273,T=30`, so `A*T=2*(M-1)`: its three-letter 
 [FinitePowerPruner.cjs](FinitePowerPruner.cjs) implements (1)-(3) with JavaScript BigInt, short-circuiting the power comparison against its finite threshold. Invocation:
 
 ```bash
+node FinitePowerPruner.cjs E2 100 2
 node FinitePowerPruner.cjs E2 100 5
 node FinitePowerPruner.cjs S2,S2,S2 100 5
 ```
