@@ -13,7 +13,7 @@ using namespace std;
 
 constexpr int L=39447;
 #ifndef RAW54_LASSO_W
-#define RAW54_LASSO_W 16384
+#define RAW54_LASSO_W 131072
 #endif
 #ifndef RAW54_LASSO_MAXPERIOD
 #define RAW54_LASSO_MAXPERIOD 16384
@@ -24,7 +24,8 @@ constexpr int MAXPERIOD=RAW54_LASSO_MAXPERIOD;
 using Tape=array<uint64_t,W/64>;
 using Table=array<int,12>;
 
-struct Cfg{int q,h;Tape t;uint64_t left=0,right=0;};
+struct Cfg{int q,h;Tape t;};
+struct Meta{int q,h;};
 struct Res{int typ,n,s,e,k,dir,b;}; // 0 open, 1 unknown, 2 cycle
 
 uint64_t word(const Tape&t,int i){return i>=0&&i<W/64?t[i]:0;}
@@ -45,7 +46,6 @@ void move(Cfg&c,int a){
   c.h+=a%12>=6?1:-1;c.q=a%6;
   assert(c.h>64&&c.h<W-64);
 }
-void sig(Cfg&c){c.left=window(c.t,c.h-63);c.right=window(c.t,c.h);}
 bool eqR(const Cfg&a,const Cfg&b,int low,int d){
   for(int i=low;i<W;i+=64)if(window(a.t,i)!=window(b.t,i+d))return false;
   return true;
@@ -53,6 +53,18 @@ bool eqR(const Cfg&a,const Cfg&b,int low,int d){
 bool eqL(const Cfg&a,const Cfg&b,int high,int d){
   for(int i=high-63;i>=-63;i-=64)if(window(a.t,i)!=window(b.t,i+d))return false;
   return true;
+}
+bool validateCycle(const Table& p,int j,int n,bool right,int boundary,int d){
+  Cfg c{0,O,{}}; Cfg a{},b{}; bool gotA=false;
+  for(int t=0;t<=n;t++){
+    if(t==j){a=c;gotA=true;}
+    if(t==n){b=c;break;}
+    int s=2*c.q+read(c),v=p[s];
+    if(v<0)return false;
+    move(c,v);
+  }
+  assert(gotA);
+  return right?eqR(a,b,boundary,d):eqL(a,b,boundary,d);
 }
 uint64_t mix64(uint64_t x){
   x ^= x >> 30; x *= 0xbf58476d1ce4e5b9ULL;
@@ -83,14 +95,13 @@ string show(const Table&p){
 }
 
 Res classify(const Table&p){
-  vector<Cfg> tr; tr.reserve(L+1);
+  vector<Meta> tr; tr.reserve(L+1);
   unordered_map<uint64_t,vector<int>> rightSeen,leftSeen;
   rightSeen.reserve(L);leftSeen.reserve(L);
   Cfg c{0,O,{}};
   for(int n=0;n<=L;n++){
     int s=2*c.q+read(c);
     if(p[s]<0)return {1,n,s,0,0,0,0};
-    sig(c);
     uint64_t kr=rightKey(c), kl=leftKey(c);
 
     if(auto it=rightSeen.find(kr);it!=rightSeen.end()){
@@ -99,7 +110,7 @@ Res classify(const Table&p){
         int j=*z;if(n-j>MAXPERIOD)break;
         int d=c.h-tr[j].h;if(d<0)continue;
         int low=c.h;for(int x=j;x<n;x++)low=min(low,tr[x].h);
-        if(eqR(tr[j],c,low,d))return {2,0,0,j,n-j,1,low-O};
+        if(validateCycle(p,j,n,true,low,d))return {2,0,0,j,n-j,1,low-O};
       }
     }
     if(auto it=leftSeen.find(kl);it!=leftSeen.end()){
@@ -108,10 +119,10 @@ Res classify(const Table&p){
         int j=*z;if(n-j>MAXPERIOD)break;
         int d=c.h-tr[j].h;if(d>0)continue;
         int high=c.h;for(int x=j;x<n;x++)high=max(high,tr[x].h);
-        if(eqL(tr[j],c,high,d))return {2,0,0,j,n-j,0,high-O};
+        if(validateCycle(p,j,n,false,high,d))return {2,0,0,j,n-j,0,high-O};
       }
     }
-    tr.push_back(c);
+    tr.push_back({c.q,c.h});
     rightSeen[kr].push_back(n);leftSeen[kl].push_back(n);
     move(c,p[s]);
   }
