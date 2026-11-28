@@ -244,8 +244,8 @@ theorem source_never (m : Machine)
   dsimp at heq hcheck
   simp only [Prod.mk.injEq] at heq
   rcases heq with ⟨rfl,rfl,rfl⟩
-  exact BB6.Agent4Automata.never (table d0 d1 e0) w hcheck m
-    (source_compatible d0 d1 e0 m hm hd0 hd1 he0)
+  exact BB6.Agent4Automata.never (table a b e) w hcheck m
+    (source_compatible a b e m hm hd0 hd1 he0)
 
 theorem source_bound (B : Nat) (m : Machine)
     (hm : Fits raw10Remainder[27]! m)
