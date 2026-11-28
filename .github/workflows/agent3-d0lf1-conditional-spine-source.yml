@@ -1,0 +1,65 @@
+name: Agent 3 Raw139 D0=1LF conditional 206-region source audit
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  source-conditional-spine:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Produce exact two-exception spine from original source simulator
+        run: |
+          set -euo pipefail
+          python3 im-results/agent3-raw139-e1-zeroRD/plan-two-exception-spine.py --out /tmp/raw139-d0lf1-spine.json
+          python3 im-results/agent3-raw139-e1-zeroRD/emit-two-bound-spine.py /tmp/raw139-d0lf1-spine.json im-results/agent3-raw139-e1-zeroRD/Raw139D0LF1ConditionalSpine.lean
+          sha256sum im-results/agent3-raw139-e1-zeroRD/Raw139D0LF1ConditionalSpine.lean
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Hydrate checksum-pinned original coverage source
+        run: python3 im-results/agent13-coverage/unpack.py
+      - name: Compile generated nine-node conditional proof and full dependency closure
+        run: |
+          set -euo pipefail
+          python3 tools/lean_compile_closure.py \
+            --workdir /tmp/d0lf1-conditional-source \
+            --jobs 2 \
+            --manifest /tmp/d0lf1-conditional-manifest.json \
+            --label "Raw139 D0=1LF 206-region conditional source proof" \
+            im-results/agent3-raw139-e1-zeroRD/Raw139D0LF1ConditionalSpine.lean \
+            2>&1 | tee /tmp/d0lf1-conditional-compile.log
+      - name: Audit exact conditional theorem (no axioms hiding region obligations)
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          s=open('/tmp/d0lf1-conditional-compile.log').read()
+          name='BB6.Agent3D0LF1Spine.parent_cover_conditional'
+          m=re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]",s)
+          x=[a for n,a in m if n==name]
+          if not x:
+              if f"'{name}' does not depend on any axioms" not in s:
+                  raise SystemExit('Missing source-audited conditional parent theorem')
+              x=['']
+          if len(x)!=1: raise SystemExit('Duplicate conditional parent axiom records')
+          extra={a.strip() for a in x[0].split(',') if a.strip()}-
+          {'propext','Quot.sound','Classical.choice'}
+          if extra: raise SystemExit('Unexpected conditional theorem axioms: '+str(extra))
+          print('SOURCE-ACCEPTED conditional parent theorem, 206 explicit ordinary obligations, standard axioms')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent3-raw139-d0lf1-conditional-spine-source
+          path: |
+            /tmp/raw139-d0lf1-spine.json
+            im-results/agent3-raw139-e1-zeroRD/Raw139D0LF1ConditionalSpine.lean
+            /tmp/d0lf1-conditional-compile.log
+            /tmp/d0lf1-conditional-manifest.json
+          if-no-files-found: ignore
+          retention-days: 30
