@@ -21,7 +21,8 @@ private theorem n_plus_1000_le_power (n : Nat) (hn : 18 ≤ n) :
       _ ≤ 2^(n+2)*2 := by omega
       _ = 2^(n+1+2) := by
         have heq : n+1+2=(n+2)+1 := by omega
-        rw [heq, Nat.pow_succ]
+        rw [heq]
+        exact (Nat.pow_succ 2 (n+2)).symm
 
 /-- Any authentic branch-7 last-reset arithmetic solution with n>=18
     has q>=16, far beyond the finite special-output region. -/
