@@ -55,7 +55,7 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
         rows=[(k,v) for k,v in rows if k in wanted]
     else:wanted=set(keys)
     assert all(v is not None for k,v in rows),(child,'missing literal certificates')
-    external=generate(rows,out,STEM,'BB6.Agent7'+STEM+'Automata')
+    external=generate([(t,v) for t,v in rows if v[0]!='h'],out,STEM,'BB6.Agent7'+STEM+'Automata')
     sw=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0]=='s']
     for j in range(0,len(sw),4):
         name=f'{STEM}Sweep{j//4:02d}';ns=f'{SWEEP}{j//4:02d}';body=[]
@@ -85,6 +85,10 @@ theorem b1Child_nohalt (mv : Move) : weightedTNFNoAssignedHalt (b1Child mv) :=
             if tag=='open':
                 k=raw(p);assert p==parse(x[0]) and k not in used;used.add(k);v=evidence[k]
                 if v[0]=='f':return farterm(p,v[1])
+                if v[0]=='h':
+                    assert k=='1RB1LF1RC0RE0RD1RA0LD0LB1LF---0LA1LC'
+                    imports.add('Raw36D101Hard10')
+                    return '.proven BB6.Agent7Raw36D101Hard10.table BB6.Agent7Raw36D101Hard10.never'
                 mod,ns=external[k];imports.add(mod);return f'.proven {ns}.table {ns}.never'
             assert tag=='split';n,s,kids=x;assert len(kids)==24 and p[s]=='---' and s//2<c
             return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(render(refine(p,s,mv),max(c,j%6+1),k) if j%6<=c else '.last 0 (0,false)' for j,(mv,k) in enumerate(zip(MOVES,kids)))+'])'
