@@ -135,11 +135,97 @@ theorem segmentMacro_length (r : Nat) :
   rw [← erase_segment]
   simp [eraseWord, segment_length]
 
+/-- Body of a rank-r frame after its creating normal action. -/
+def body : Nat → List Action
+  | 0 => [.b]
+  | r+1 => [.b, .carry] ++ lift (body r)
+
+@[simp] theorem lift_append (u v : List Action) :
+    lift (u ++ v) = lift u ++ lift v := by
+  induction u with
+  | nil => rfl
+  | cons a u ih =>
+      simp [lift, List.append_assoc, ih]
+
+/-- A rank-r segment consists of its creating normal action followed by the
+    recursively lifted frame body. -/
+theorem segment_eq_normal_body (r : Nat) :
+    segment r = .normal r :: body r := by
+  induction r with
+  | zero => rfl
+  | succ r ih =>
+      rw [segment, ih]
+      simp [lift, liftLetter, body, List.append_assoc]
+
+/-- `OuterTrace xs hs` means that `hs` is the sequence of hits on the
+    current outer frame while executing `xs`; complete nested frame segments
+    may be skipped as internally closed work. -/
+inductive OuterTrace : List Action → List Bool → Prop where
+  | nil : OuterTrace [] []
+  | hitB {xs hs} : OuterTrace xs hs → OuterTrace (.b :: xs) (true :: hs)
+  | hitC {xs hs} : OuterTrace xs hs → OuterTrace (.carry :: xs) (false :: hs)
+  | skip (r : Nat) {xs hs} :
+      OuterTrace xs hs → OuterTrace (segment r ++ xs) hs
+
+/-- Lifting a macro word refines each outer B into B B C, while an outer carry
+    remains C because the inserted N_0 B pair is a complete nested rank-0
+    frame.  Existing nested frames simply promote by one rank. -/
+theorem outerTrace_lift {xs hs : List _} (h : OuterTrace xs hs) :
+    OuterTrace (lift xs)
+      (BB6.Agent1Raw56.LE17557FrameSchedule.refine hs) := by
+  induction h with
+  | nil => exact .nil
+  | hitB h ih =>
+      simpa [lift, liftLetter,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refine,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refineLetter] using
+        OuterTrace.hitB (OuterTrace.hitB (OuterTrace.hitC ih))
+  | hitC h ih =>
+      have hc : OuterTrace
+          (.carry :: lift _)
+          (false :: BB6.Agent1Raw56.LE17557FrameSchedule.refine _) :=
+        OuterTrace.hitC ih
+      have hs := OuterTrace.skip 0 hc
+      simpa [segment, lift, liftLetter,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refine,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refineLetter,
+        List.append_assoc] using hs
+  | skip r h ih =>
+      have hs := OuterTrace.skip (r+1) ih
+      simpa [lift_append, segment] using hs
+
+/-- The body of every rank-r segment has exactly the recursively derived frame
+    hit schedule.  This is the syntactic nesting theorem missing from the
+    earlier finite replay: nested frames are closed structurally rather than
+    by a bounded scan. -/
+theorem body_outerTrace (r : Nat) :
+    OuterTrace (body r) (BB6.Agent1Raw56.LE17557FrameSchedule.frame r) := by
+  induction r with
+  | zero =>
+      exact OuterTrace.hitB OuterTrace.nil
+  | succ r ih =>
+      have hl := outerTrace_lift ih
+      have hbc := OuterTrace.hitB (OuterTrace.hitC hl)
+      simpa [body,
+        BB6.Agent1Raw56.LE17557FrameSchedule.frame,
+        BB6.Agent1Raw56.LE17557FrameSchedule.frame_succ_refine] using hbc
+
+/-- Consequently a complete rank-r segment is one nested frame followed by no
+    outer-frame hit at all. -/
+theorem segment_is_closed_nested (r : Nat) :
+    OuterTrace (segment r) [] := by
+  have h : OuterTrace [] [] := OuterTrace.nil
+  simpa using OuterTrace.skip r h
+
 #print axioms erase_lift
 #print axioms erase_actionEpoch
 #print axioms actionEpoch_length
 #print axioms segment_length
 #print axioms segment_head
+#print axioms segment_eq_normal_body
+#print axioms outerTrace_lift
+#print axioms body_outerTrace
+#print axioms segment_is_closed_nested
 #print axioms erase_segment
 
 end BB6.Agent1Raw56.LE17557ActionGrammar
