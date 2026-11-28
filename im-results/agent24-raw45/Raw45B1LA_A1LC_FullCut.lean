@@ -12,7 +12,7 @@ set_option maxHeartbeats 0
 
 namespace BB6.Agent24Raw45FullChild
 
-open BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit
+open BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay
 
 def parent : PartialMachine := fun s => match s with
   | (0,false) => some (some ⟨true,true,1⟩)
