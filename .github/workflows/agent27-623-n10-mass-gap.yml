@@ -178,6 +178,9 @@ jobs:
         working-directory: cryptids
         run: |
           set -euo pipefail
+          cp "../im-results/agent27-623-gap-two-three-step/DrainWeightedFirstCoupledSource.lean" DrainWeightedFirstCoupledSource.lean
+          lake env lean -o .lake/build/lib/lean/DrainWeightedFirstCoupledSource.olean DrainWeightedFirstCoupledSource.lean 2>&1 | tee drain-weighted-first-coupled-axioms.log
+          if grep -q 'sorryAx' drain-weighted-first-coupled-axioms.log; then exit 1; fi
           cp "../im-results/agent27-623-gap-two-three-step/ThreeStepStripWeightedSkewSource.lean" ThreeStepStripWeightedSkewSource.lean
           lake env lean -o .lake/build/lib/lean/ThreeStepStripWeightedSkewSource.olean ThreeStepStripWeightedSkewSource.lean 2>&1 | tee weighted-skew-axioms.log
           if grep -q 'sorryAx' weighted-skew-axioms.log; then exit 1; fi
