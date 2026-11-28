@@ -1192,7 +1192,7 @@ jobs:
                        'stationaryEToA','stationaryARightMany','stationaryFinal',
                        'stationaryGrowth','stationary_never'):
               full='BB6.Agent40Raw34PairQuadratic.'+name
-              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \\[([^\\]]*)\\]",log)
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: source-proved F-conjugate and Raw34 pair quadratic growth pumps')
