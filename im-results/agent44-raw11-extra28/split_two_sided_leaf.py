@@ -13,6 +13,7 @@ where TABLE is the exact 12-slot transition string for the selected cert.
 """
 from __future__ import annotations
 
+import os
 import re
 import sys
 from pathlib import Path
@@ -134,8 +135,11 @@ def main() -> None:
         raise ValueError("no automata literal found")
     autos.sort(reverse=True)
     cert_bytes, auto_start, cert_end, cert_expr = autos[0]
-    if cert_bytes < 1_000_000:
-        raise ValueError(f"largest automata certificate unexpectedly small: {cert_bytes}")
+    min_cert_bytes = int(os.environ.get("TWOSIDED_SPLIT_MIN_CERT_BYTES", "1000000"))
+    if cert_bytes < min_cert_bytes:
+        raise ValueError(
+            f"largest automata certificate unexpectedly small: {cert_bytes} < {min_cert_bytes}"
+        )
 
     # Find the exact cert declaration whose Tree expression contains the giant.
     defs = list(re.finditer(r"^\s*def\s+(cert[A-Za-z0-9_]*)\s*:\s*Tree\s*:=\s*", source, re.M))
@@ -188,8 +192,8 @@ def main() -> None:
         raise FileNotFoundError(companion)
     out.joinpath("TwoSidedAutomataRows.lean").write_bytes(companion.read_bytes())
 
-    prefix = "Agent44Extra132Giant"
-    proof_ns = "BB6.Agent44Extra132Giant"
+    prefix = os.environ.get("TWOSIDED_SPLIT_PREFIX", "Agent44Extra132Giant")
+    proof_ns = os.environ.get("TWOSIDED_SPLIT_NAMESPACE", "BB6.Agent44Extra132Giant")
 
     write_module(out, prefix + "Left", ["TwoSidedAutomata"], proof_ns,
                  "def left : BB6.Agent4Automata.Stack := " + left + "\n#print axioms left")
@@ -263,10 +267,10 @@ theorem weighted (B : Nat) : Cover (WeightedBound B) table :=
 
     replacement = f"""theorem {safe_name} : ∀ m, compatible {p_name} m → WeightedBound {bound} m := by
   intro m hm
-  have hEq : {p_name} = BB6.Agent44Extra132Giant.table :=
+  have hEq : {p_name} = {proof_ns}.table :=
     BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)
   rw [hEq] at hm
-  exact Cover.sound (BB6.Agent44Extra132Giant.weighted {bound}) m hm
+  exact Cover.sound ({proof_ns}.weighted {bound}) m hm
 
 """
     patched = source[:d.start()] + replacement + source[block_end:]
