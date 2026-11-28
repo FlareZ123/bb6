@@ -107,8 +107,14 @@ def download(pin, work):
     return list(dirs.values())
 
 
-def download_named_artifact(run_id, name, work):
-    """Download one named artifact only from a successful, specified producer run."""
+def download_named_artifact(run_id, name, work, expected_source_revision=None):
+    """Download one named artifact from a successful producer run.
+
+    By default the proof manifest must match the run head. Recomposition jobs
+    that deliberately check out an older frozen source may pass that exact
+    source revision explicitly; callers remain responsible for pinning the
+    accepted run/artifact identity.
+    """
     run_info = api_json(f"repos/{REPO}/actions/runs/{run_id}")
     assert run_info["conclusion"] == "success", (run_id, run_info.get("conclusion"))
     artifacts = api_json(f"repos/{REPO}/actions/runs/{run_id}/artifacts")["artifacts"]
@@ -139,15 +145,22 @@ def download_named_artifact(run_id, name, work):
         [str(path) for path, _ in candidates],
     )
     manifest_path, manifest = candidates[0]
-    assert manifest["proof_source_revision"] == run_info["head_sha"], (
-        manifest["proof_source_revision"], run_info["head_sha"]
-    )
+    proof_source_revision = manifest["proof_source_revision"]
+    if expected_source_revision is None:
+        assert proof_source_revision == run_info["head_sha"], (
+            proof_source_revision, run_info["head_sha"]
+        )
+    else:
+        assert proof_source_revision == expected_source_revision, (
+            proof_source_revision, expected_source_revision, run_info["head_sha"]
+        )
     assert "4.36.0-rc2" in manifest["lean_version"], manifest["lean_version"]
     prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
     assert manifest["lean_binary"]["sha256"] == sha(prefix / "bin" / "lean")
     metadata = {
         "run_id": run_id,
-        "source_revision": run_info["head_sha"],
+        "producer_head_sha": run_info["head_sha"],
+        "source_revision": proof_source_revision,
         "artifact_id": item["id"],
         "artifact_name": name,
         "artifact_digest": digest,
