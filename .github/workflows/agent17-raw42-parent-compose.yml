@@ -9,6 +9,7 @@ on:
       run_1RE: {description: 'Successful 1RE assembly run', required: true, type: string}
       artifact_0LE: {description: '0LE certified artifact name', required: true, type: string, default: 'raw42-certified-0LE'}
       artifact_1LE: {description: '1LE certified artifact name', required: true, type: string, default: 'raw42-certified-1LE'}
+      artifact_1RE: {description: '1RE certified artifact name', required: true, type: string, default: 'raw42-certified-1RE'}
 permissions:
   contents: read
   actions: read
@@ -54,7 +55,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LE }}", name: "${{ inputs.artifact_1LE }}", path: /tmp/children/1LE}
       - uses: actions/download-artifact@v4
-        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1RE }}", name: raw42-certified-1RE, path: /tmp/children/1RE}
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1RE }}", name: "${{ inputs.artifact_1RE }}", path: /tmp/children/1RE}
       - name: Strictly merge child closures
         run: |
           set -euo pipefail
