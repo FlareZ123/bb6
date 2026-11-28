@@ -104,6 +104,14 @@ theorem rootIter_sound {n a d A D : Nat}
           have hr := ih hx
           exact CounterReach.step hr (move_of_rootStep_some h)
 
+theorem rootIter_complete {n a d A D : Nat}
+    (h : CounterReach a d n A D) :
+    rootIter n a d = some (A,D) := by
+  induction h with
+  | nil => rfl
+  | step hr hm ih =>
+      simp [rootIter,ih,rootStep_some_of_move hm]
+
 theorem counterMove_deterministic
     {a d A D B C : Nat}
     (h1 : CounterMove a d A D)
@@ -250,6 +258,7 @@ theorem first_mixed_anchor_middleOdd_predecessor_unreachable
 #print axioms root_at_404
 #print axioms root_at_405
 #print axioms root_at_427
+#print axioms rootIter_complete
 #print axioms counterReach_deterministic
 #print axioms first_mixed_anchor_middleOdd_predecessor_unreachable
 
