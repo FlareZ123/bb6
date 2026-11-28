@@ -1,0 +1,30 @@
+name: Agent44 rank six-hole FAR certificate sizes
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  rank:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download immutable six-hole discovery bank
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45896597080
+          pattern: raw11-six-hole-*
+          merge-multiple: true
+          path: /tmp/six-hole
+
+      - name: Rank exact emitted certificate sizes
+        run: |
+          set -euo pipefail
+          node im-results/agent44-raw11-extra28/diagnose-large-six-hole-automata.cjs /tmp/six-hole
