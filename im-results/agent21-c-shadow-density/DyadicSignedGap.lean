@@ -69,6 +69,48 @@ theorem signed_first_gap_strict (x y : Int) (r b : Nat) (w : List Nat)
     exact hnot hq
   omega
 
+/-- The first-gap restriction also covers the single pending word of
+    cost b+1: modulo 2^b, only min(r,b) initial bits matter. This removes
+    an otherwise nontrivial edge case in the all-depth duality induction. -/
+theorem signed_first_gap_min (x y : Int) (r b : Nat) (w : List Nat)
+    (hr : 0<r) (hb : 0<b)
+    (hd : P b∣signedZ x y+acc (signedS x y) (r::w)) :
+    (r:Int)%2=(y+1)%2 ∧ P (min r b)∣-(x+y+(x+y)%2) := by
+  have hminb : min r b≤b := Nat.min_le_right _ _
+  have hminr : min r b≤r := Nat.min_le_left _ _
+  have hminpos : 0<min r b := by
+    by_cases h : r≤b
+    · simpa [Nat.min_eq_left h] using hr
+    · have h' : b≤r := by omega
+      simpa [Nat.min_eq_right h'] using hb
+  have hbig : P (min r b)∣signedZ x y+acc (signedS x y) (r::w) :=
+    Int.dvd_trans (P_dvd _ _ hminb) hd
+  have hfirst : P (min r b)∣signedZ x y+offset (signedS x y) r := by
+    have hform : signedZ x y+acc (signedS x y) (r::w) =
+        (signedZ x y+offset (signedS x y) r)+
+          P r*acc (signedS x y+shift r) w := by
+      simp only [acc]
+      omega
+    rw [hform] at hbig
+    have hpart : P (min r b)∣P r*acc (signedS x y+shift r) w :=
+      Int.dvd_trans (P_dvd _ _ hminr) (Int.dvd_mul_right _ _)
+    have hs := Int.dvd_sub hbig hpart
+    convert hs using 1 <;> omega
+  have htwo : (signedZ x y+offset (signedS x y) r)%2=0 := by
+    have hh : P 1∣signedZ x y+offset (signedS x y) r :=
+      Int.dvd_trans (P_dvd 1 _ hminpos) hfirst
+    simpa [P] using (Int.emod_eq_zero_of_dvd hh)
+  have hpar : (r:Int)%2=(y+1)%2 := by
+    rw [signed_one_numer] at htwo
+    unfold parity signedS shift at htwo
+    omega
+  refine ⟨hpar,?_⟩
+  have hq : signedZ x y+offset (signedS x y) r=-(x+y+(x+y)%2) := by
+    rw [signed_one_numer,signed_parity_cost x y r hpar]
+    omega
+  rw [←hq]
+  exact hfirst
+
 #print axioms signed_first_gap
 #print axioms signed_first_gap_strict
 end BB6.Agent21Dyadic
