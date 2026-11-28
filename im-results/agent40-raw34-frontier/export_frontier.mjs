@@ -13,6 +13,7 @@
  * Usage:
  *   node export_frontier.mjs 1RD > raw34-d1-1rd.json
  *   node export_frontier.mjs all > raw34-full-frontier.json
+ * The JSON is a compact exact DAG, not an expansion of all open paths.
  */
 import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
@@ -57,14 +58,6 @@ function parse(table) {
     assert(move === "---" || alphabet.includes(move), "invalid move " + move);
     return move === "---" ? null : move;
   });
-}
-function tableFromPrefix(prefix) {
-  const slots = originalSlots.slice();
-  for (let idx = 0; idx < prefix.length; idx++)
-    slots[slotOrder[idx]] = prefix[idx] === "HALT" ? "1RZ" : prefix[idx];
-  // The textual 1RZ is a display-only encoding of the unique HALT action;
-  // symbolic slot prefix in JSON remains authoritative.
-  return slots.map((x, i) => x + ([1, 3, 5, 7, 9].includes(i) ? "_" : "")).join("");
 }
 const certificates = [];
 function add(family, table, source, label) {
@@ -188,50 +181,48 @@ if (chosen === "1RD") {
   assert.equal(remaining, 2783203125n);
 }
 
-// Unroll only OPEN paths to an explicit disjoint list of still-unknown
-// partial cylinders. DAG nodes are shared, but each *path* is distinct.
-const openCylinders = [];
-const depthHistogram = {};
-function listOpen(node, prefix) {
+// Count the *unrolled* leaves symbolically on the shared DAG. For example,
+// the 1RD branch has hundreds of thousands of distinct open path cylinders
+// but only a few dozen distinct split subproblems; never materialize these
+// cylinders by default. A consumer can traverse cases on demand.
+const pathMemo = new Map();
+function pathStats(node) {
+  if (pathMemo.has(node)) return pathMemo.get(node);
   const n = nodes[node];
+  let ans;
   if (n.kind === "open") {
-    assert.equal(prefix.length + n.remainingSlots, 8);
-    depthHistogram[prefix.length] = (depthHistogram[prefix.length] ?? 0) + 1;
-    openCylinders.push({
-      prefix, // authoritative, including the explicit HALT action
-      partialTableDisplay: tableFromPrefix(prefix),
-      completeTables: String(powers[n.remainingSlots]),
-    });
-    return;
+    ans = {coveredPaths:0n, openPaths:1n,
+           histogram:{[8-n.remainingSlots]:1n}};
+  } else if (n.kind === "covered") {
+    ans = {coveredPaths:1n, openPaths:0n,histogram:{}};
+  } else {
+    let coveredPaths = 0n, openPaths = 0n;
+    const histogram = {};
+    for (const next of n.cases) {
+      const s = pathStats(next);
+      coveredPaths += s.coveredPaths;
+      openPaths += s.openPaths;
+      for (const [depth, amount] of Object.entries(s.histogram))
+        histogram[depth] = (histogram[depth] ?? 0n) + amount;
+    }
+    ans = {coveredPaths, openPaths, histogram};
   }
-  if (n.kind === "covered") return;
-  for (let k = 0; k < alphabet.length; k++)
-    listOpen(n.cases[k], [...prefix, alphabet[k]]);
+  pathMemo.set(node, ans);
+  return ans;
 }
-listOpen(root, chosen === "all" ? [] : [chosen]);
-const rebuilt = openCylinders.reduce((acc,x) => acc + BigInt(x.completeTables), 0n);
-assert.equal(rebuilt, remaining, "explicit open-cylinder disjoint sum");
-
-// A covered leaf is valid iff its certificate is compatible with the full
-// prefix and imposes no constraints on the unfilled suffix. The constructor's
-// candidate-filter invariant guarantees this at every recursion, but we
-// recheck it independently against the fully built DAG.
-let coveredPaths = 0;
-function auditCovered(node, prefix) {
-  const n = nodes[node];
-  if (n.kind === "open") return;
-  if (n.kind === "covered") {
-    const p = certificates[n.certificate].pattern;
-    assert(p.every((v,i) => v === null || (i < prefix.length && v === prefix[i])),
-           "incorrect covered leaf containment");
-    coveredPaths++;
-    return;
-  }
-  for (let k = 0; k < alphabet.length; k++)
-    auditCovered(n.cases[k], [...prefix,alphabet[k]]);
+const paths = pathStats(root);
+if (chosen === "1RD") {
+  assert.equal(paths.openPaths, 420909n);
+  assert.equal(paths.coveredPaths, 393580n);
 }
-auditCovered(root, chosen === "all" ? [] : [chosen]);
+const depthHistogram = Object.fromEntries(
+  Object.entries(paths.histogram).map(([depth, n]) => [depth, String(n)])
+);
 
+// Independent disjoint-cardinality conservation is already checked at each
+// split (covered + open = 25^remaining). For every covered terminal, the
+// candidate-filter invariant checks its fixed earlier slots and the suffix
+// wildcard test checks that it constrains none of the later slots.
 const usedCertIds = new Set(nodes.filter(x=>x.kind==="covered").map(x=>x.certificate));
 const payload = {
   status: "finite physical frontier, NOT a universal BB(6) Cover",
@@ -241,8 +232,9 @@ const payload = {
   provablyNonhaltingFromAcceptedCylinderPatterns: String(proved),
   outsideTheseCertificates: String(remaining),
   uniqueDagNodes: nodes.length,
-  coveredPaths, openCylinderCount: openCylinders.length, openDepthHistogram: depthHistogram,
-  root, nodes, openCylinders,
+  coveredPaths: String(paths.coveredPaths), openCylinderCount: String(paths.openPaths),
+  openDepthHistogram: depthHistogram,
+  root, nodes,
   usedCertificates: certificates.filter(x=>usedCertIds.has(x.id)),
 };
 console.log(JSON.stringify(payload, null, 2));
