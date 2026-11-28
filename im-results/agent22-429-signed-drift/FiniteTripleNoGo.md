@@ -1,6 +1,6 @@
 # Finite triple-repeat obstruction for signed #429 inverse macro paths
 
-**Status: new paper-level finite-pattern theorem with its exact affine-forcing component Lean-checked.** The complete primitive-word-to-rotation step has not yet been source-integrated into Lean; the theorem is conditional on the established compressed signed model, not a decision of the authentic blank-root #429 machine or BB(6).
+**Status: superseded by a stronger kernel-checked finite-power theorem.** The original three-copy argument below is retained for provenance. `FinitePrimitiveNoGo.lean` now closes the primitive finite-word step for arbitrary sufficiently long powers, `SignedPrimitivePowerNoGo.lean` lifts it to literal signed `SourceWalk`s, and the doubled typed-period case is closed by `DoubledGapCycle.lean` / `SignedDoubledGapNoGo.lean`. Current pinned-Lean CI evidence is run `46161634933`. None of these is yet a decision of authentic blank-root #429 or BB(6).
 
 ## Claim: sufficiently long primitive cubes cannot occur
 
