@@ -141,6 +141,9 @@ jobs:
           lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/f321-anchor-epoch.log
           lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-anchor-epoch.log
+          m=im-results/agent31-f321-mod384
+          LEAN_PATH="$e:$m" lean -o "$m/Mod384Graph.olean" "$m/Mod384Graph.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$m" lean -o "$m/Mod384Source.olean" "$m/Mod384Source.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/DiagonalCoordinates.olean" "$a2/DiagonalCoordinates.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6.olean" "$a2/Phase6.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6Bridge.olean" "$a2/Phase6Bridge.lean" | tee -a /tmp/f321-anchor-epoch.log
@@ -159,6 +162,7 @@ jobs:
           LEAN_PATH="$e:$a2" lean -o "$a2/OddV2Witness.olean" "$a2/OddV2Witness.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/OddTerminal.olean" "$a2/OddTerminal.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$a2/EqualHigh.olean" "$a2/EqualHigh.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2:$m" lean -o "$a2/EqualHighMod384.olean" "$a2/EqualHighMod384.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2:$o" lean -o "$o/ObstructionAlignment.olean" "$o/ObstructionAlignment.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2:$o" lean -o "$o/AllFarObstruction.olean" "$o/AllFarObstruction.lean" | tee -a /tmp/f321-anchor-epoch.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/f321-anchor-epoch.log
