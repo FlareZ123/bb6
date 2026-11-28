@@ -658,7 +658,7 @@ jobs:
             --weighted-bound 208 \
             --provenance-input im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py \
             --provenance-input im-results/agent5-weighted-tnf-queue/Q0ExhaustiveTree.lean \
-            --provenance-input /tmp/q053-witness/q0-auto-candidate.json \
+            --provenance-input "$(find /tmp/q053-witness -name q0-auto-candidate.json -print -quit)" \
             2>&1 | tee /tmp/q053-certified.log
           if grep -Eq 'sorryAx|native_decide' /tmp/q053-certified.log; then
             echo 'unapproved trust dependency' >&2
