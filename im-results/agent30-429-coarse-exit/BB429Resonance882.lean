@@ -155,44 +155,15 @@ theorem d882_post (j : Nat) :
   rw [show 8*j+28=(8*j+15)+13 by omega,run_add,d882_phase]
   exact d882_tail j
 
-theorem d882_post_m (m : Nat) (hm : 3≤m) :
-    run (8*m+4) (prepared m 882) =
-      some (196*m+6983,72*16^m-368*m-13078) := by
-  let j := m-3
-  have hmj : j+3=m := by
-    dsimp [j]
-    omega
-  have h := d882_post j
-  rw [hmj] at h
-  have hp : 294912*16^j=72*16^m := by
-    dsimp [j]
-    calc
-      294912*16^(m-3) = 72*(4096*16^(m-3)) := by grind +ring
-      _ = 72*16^m := by
-        rw [show m=(m-3)+3 by omega,Nat.pow_add]
-        norm_num
-  rw [hp] at h
-  simpa [j] using h
-
 theorem d882_post_Uc (j : Nat) :
     Uc (196*j+7571,294912*16^j-368*j-14182) =
       1176*j+45444 := by
   simp [Uc]
   omega
 
-theorem d882_post_Vc (j : Nat) :
-    Vc (196*j+7571,294912*16^j-368*j-14182) =
-      884736*(16:Int)^j+72*j+2880 := by
-  have hs := scale_ge j
-  simp [Vc]
-  push_cast
-  omega
-
 #print axioms d882_phase
 #print axioms d882_tail
 #print axioms d882_post
-#print axioms d882_post_m
 #print axioms d882_post_Uc
-#print axioms d882_post_Vc
 
 end BB429.CoarseExit
