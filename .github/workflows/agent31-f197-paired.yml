@@ -19,6 +19,7 @@ on:
           - computer-certificate
           - root-scout
           - root-generate
+          - root-generate-short
           - self-scout
           - phase-scout
           - blank-root
@@ -37,7 +38,7 @@ jobs:
         if: ${{ inputs.target == 'computer-certificate' }}
         run: python3 im-results/agent2-f197-sweep/verify_nonhalt.py
       - name: Install pinned Lean 4.36.0-rc2
-        if: ${{ inputs.target != 'computer-certificate' && inputs.target != 'root-scout' && inputs.target != 'root-generate' && inputs.target != 'self-scout' && inputs.target != 'phase-scout' }}
+        if: ${{ inputs.target != 'computer-certificate' && inputs.target != 'root-scout' && inputs.target != 'root-generate' && inputs.target != 'root-generate-short' && inputs.target != 'self-scout' && inputs.target != 'phase-scout' }}
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -206,7 +207,7 @@ jobs:
         run: python3 im-results/agent2-f197-sweep/root_scout.py
 
       - name: Validate optimized F197 root Lean source generator
-        if: ${{ inputs.target == 'root-generate' }}
+        if: ${{ inputs.target == 'root-generate' || inputs.target == 'root-generate-short' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -215,7 +216,12 @@ jobs:
           mkdir -p "$b"
           python3 "$e/generate_lean_trace.py" "$b"
           python3 "$e/generate_packed_banks.py" "$b"
-          python3 "$e/generate_root_trace.py" "$b"
+          if [ "${{ inputs.target }}" = 'root-generate-short' ]; then
+            F197_ROOT_CUT_GENERIC=1 python3 "$e/generate_root_trace.py" "$b"
+            grep -q 'blank_to_generic' "$b/RootTheorem.lean"
+          else
+            python3 "$e/generate_root_trace.py" "$b"
+          fi
           echo "Source modules:"
           find "$b" -maxdepth 1 -name 'Root*.lean' | wc -l
           echo "Independent bank modules:"
