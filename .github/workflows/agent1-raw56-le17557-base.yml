@@ -46,7 +46,7 @@ jobs:
       - name: Check weighted frame schedule
         run: |
           set -euo pipefail
-          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar,LocalSweeps}.lean /tmp/union/
+          cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar,FrameMachine,LocalSweeps}.lean /tmp/union/
           export LEAN_PATH=/tmp/union
           cd /tmp/union
           lean -o Raw56LE17557RhoArithmetic.olean Raw56LE17557RhoArithmetic.lean 2>&1 | tee rho.log
@@ -54,8 +54,9 @@ jobs:
           lean -o Raw56LE17557FrameSchedule.olean Raw56LE17557FrameSchedule.lean 2>&1 | tee frame.log
           lean -o Raw56LE17557EpisodeWord.olean Raw56LE17557EpisodeWord.lean 2>&1 | tee episode.log
           lean -o Raw56LE17557ActionGrammar.olean Raw56LE17557ActionGrammar.lean 2>&1 | tee action.log
+          lean -o Raw56LE17557FrameMachine.olean Raw56LE17557FrameMachine.lean 2>&1 | tee machine.log
           lean -o Raw56LE17557LocalSweeps.olean Raw56LE17557LocalSweeps.lean 2>&1 | tee sweeps.log
-          cat rho.log defect.log frame.log episode.log action.log sweeps.log > frame-all.log
+          cat rho.log defect.log frame.log episode.log action.log machine.log sweeps.log > frame-all.log
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' frame-all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" frame-all.log \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_prefix_defect \
@@ -64,11 +65,15 @@ jobs:
             --require BB6.Agent1Raw56.LE17557FrameSchedule.prefixWeight_unbounded \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_closes \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_succ_refine \
+            --require BB6.Agent1Raw56.LE17557FrameSchedule.next_B_weight_update \
+            --require BB6.Agent1Raw56.LE17557FrameSchedule.next_C_weight_update \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.erase_actionEpoch \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_head \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.body_outerTrace \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.segment_is_closed_nested \
             --require BB6.Agent1Raw56.LE17557ActionGrammar.body_outerTraceBelow \
+            --require BB6.Agent1Raw56.LE17557FrameMachine.segment_closes_low \
+            --require BB6.Agent1Raw56.LE17557FrameMachine.normal_push_eq_frame_cost \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.B_sweep_ones \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.C_sweep_ones \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_sweep_left_ones \
@@ -77,7 +82,7 @@ jobs:
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_normal \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_carry \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.B_triad
-          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} frame-all.log /tmp/out/
+          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
