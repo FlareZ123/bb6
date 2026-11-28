@@ -7,8 +7,8 @@ on:
       mode:
         description: Canonical38 predecessor lineage
         type: choice
-        options: [direct, serial]
-        default: direct
+        options: [direct-membership, direct, serial]
+        default: direct-membership
         required: true
       canonical39_run_id:
         description: Serial mode only - successful Raw47 Canonical39 producer run
@@ -26,9 +26,10 @@ on:
         default: ''
         required: false
       raw112_run_id:
-        description: Successful Raw112 whole-parent producer run
+        description: Raw112 whole-parent producer run (required for direct/serial)
         type: string
-        required: true
+        default: ''
+        required: false
 
 permissions:
   actions: read
@@ -47,6 +48,23 @@ jobs:
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+
+      - name: Source-check Raw112 literal membership in direct Canonical38
+        if: inputs.mode == 'direct-membership'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIRECT38_RUN_ID: ${{ inputs.direct38_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$DIRECT38_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent9-raw112-direct38/consume.py
+          python im-results/agent9-raw112-direct38/consume.py \
+            --work /tmp/a9-direct38-membership \
+            --direct38-run-id "$DIRECT38_RUN_ID" \
+            --membership-only | tee /tmp/a9-direct38-membership.log
+          test -s /tmp/a9-direct38-membership/membership/membership.json
+          cat /tmp/a9-direct38-membership/membership/membership.json
 
       - name: Consume Raw112 from accepted direct Canonical38 roster
         if: inputs.mode == 'direct'
@@ -88,6 +106,17 @@ jobs:
             --raw112-run-id "$RAW112_RUN_ID" | tee /tmp/a3-canonical37.log
           test -s /tmp/a3-canonical37/canonical37-raw47-raw39-raw112-delta/delta.json
           cat /tmp/a3-canonical37/canonical37-raw47-raw39-raw112-delta/delta.json
+
+      - uses: actions/upload-artifact@v4
+        if: always() && inputs.mode == 'direct-membership'
+        with:
+          name: raw112-direct38-membership
+          path: |
+            /tmp/a9-direct38-membership/membership/**
+            /tmp/a9-direct38-membership.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
 
       - uses: actions/upload-artifact@v4
         if: always() && inputs.mode == 'direct'
