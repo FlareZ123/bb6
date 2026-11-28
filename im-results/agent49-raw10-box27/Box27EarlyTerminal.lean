@@ -1,11 +1,35 @@
-import Box27D0FastPumps
+import Box17AuditCore
+import Raw10EncodedSourceBridge
 
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent49.Box27EarlyTerminal
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
-open BB6.Agent13.Box17 (decode slot Witness leafCheck)
-open BB6.Agent49.Box27Slice (terminal_sound)
+open BB6.Agent13.Box17 (decode slot Witness leafCheck leafCheck_sound)
+
+def base (d0 : Fin 25) : PartialMachine := fun s => match s with
+  | (0,false) => some (decode 8)
+  | (1,false) => some (decode 11)
+  | (2,false) | (2,true) => some (decode 13)
+  | (3,false) => some (decode d0)
+  | _ => none
+
+theorem base_compatible (d0 : Fin 25) (m : Machine)
+    (hm : Fits raw10Remainder[27]! m)
+    (hd0 : m (3,false) = decode d0) : compatible (base d0) m := by
+  have e0 : raw10Remainder[27]! (0,false) = [decode 8] := by decide
+  have e1 : raw10Remainder[27]! (1,false) = [decode 11] := by decide
+  have e2 : raw10Remainder[27]! (2,false) = [decode 13] := by decide
+  have e3 : raw10Remainder[27]! (2,true) = [decode 13] := by decide
+  have h0 : m (0,false) = decode 8 := by simpa [e0] using hm (0,false)
+  have h1 : m (1,false) = decode 11 := by simpa [e1] using hm (1,false)
+  have h2 : m (2,false) = decode 13 := by simpa [e2] using hm (2,false)
+  have h3 : m (2,true) = decode 13 := by simpa [e3] using hm (2,true)
+  intro s t ht
+  obtain ⟨q,b⟩ := s
+  have hq : q=0 ∨ q=1 ∨ q=2 ∨ q=3 ∨ q=4 ∨ q=5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;>
+    cases b <;> simp [base] at ht ⊢ <;> simp_all
 
 structure Entry where
   d0 : Fin 25
@@ -14,7 +38,7 @@ structure Entry where
   w : Witness
 
 def table (e : Entry) : PartialMachine :=
-  refine (Box27D0FastPumps.table e.d0) (slot e.s) (decode e.v)
+  refine (base e.d0) (slot e.s) (decode e.v)
 
 /-- 137 first-query children: 14 halts and 123 translated cycles. -/
 def entries : List Entry := [
@@ -163,10 +187,12 @@ theorem source_bound (e : Entry) (he : e ∈ entries) (m : Machine)
     (hm : Fits raw10Remainder[27]! m)
     (hd : m (3,false) = decode e.d0)
     (hv : m (slot e.s) = decode e.v) : WeightedBound 255 m := by
-  apply terminal_sound 255 (table e) e.w (List.all_eq_true.mp all_checked e he) m
-  unfold table
-  rw [← hv]
-  exact compatible_refine _ m (slot e.s) (Box27D0FastPumps.source_compatible e.d0 m hm hd)
+  have hc : compatible (table e) m := by
+    unfold table
+    rw [← hv]
+    exact compatible_refine _ m (slot e.s) (base_compatible e.d0 m hm hd)
+  exact leafCheck_sound 255 #[] (by intro i q hi; simp at hi) (table e) e.w
+    (List.all_eq_true.mp all_checked e he) m hc
 
 def selected (d0 d1 e0 b1 f0 : Fin 25) : Bool :=
   entries.any (fun e => decide (e.d0 = d0) &&
@@ -183,26 +209,35 @@ theorem selected_bound (m : Machine) (hm : Fits raw10Remainder[27]! m)
     (hb1 : m (1,true) = decode b1)
     (hf0 : m (5,false) = decode f0)
     (h : selected d0 d1 e0 b1 f0 = true) : WeightedBound 255 m := by
+  unfold selected at h
   obtain ⟨e,he,hc⟩ := List.any_eq_true.mp h
   simp only [Bool.and_eq_true,decide_eq_true_eq] at hc
-  apply source_bound e he m hm (hc.1.symm ▸ hd0)
+  apply source_bound e he m hm (by rw [hc.1]; exact hd0)
   have hh := hc.2
   split at hh
   · rename_i hs
     have hv : e.v = b1 := of_decide_eq_true hh
-    simpa only [hs,hv] using hb1
+    rw [hs,hv]
+    change m (1,true) = decode b1
+    exact hb1
   · split at hh
     · rename_i hs
       have hv : e.v = d1 := of_decide_eq_true hh
-      simpa only [hs,hv] using hd1
+      rw [hs,hv]
+      change m (3,true) = decode d1
+      exact hd1
     · split at hh
       · rename_i hs
         have hv : e.v = e0 := of_decide_eq_true hh
-        simpa only [hs,hv] using he0
+        rw [hs,hv]
+        change m (4,false) = decode e0
+        exact he0
       · split at hh
         · rename_i hs
           have hv : e.v = f0 := of_decide_eq_true hh
-          simpa only [hs,hv] using hf0
+          rw [hs,hv]
+          change m (5,false) = decode f0
+          exact hf0
         · contradiction
 
 #print axioms all_checked
