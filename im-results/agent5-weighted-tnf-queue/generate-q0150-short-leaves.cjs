@@ -37,7 +37,10 @@ function P(i,t){
  "open BB6Coverage.Agent13PackedZipper BB6.Agent5FastPhaseTree",
  "def p : PartialMachine := fun s => match s.1.val,s.2 with",
  ...t.map((m,j)=>m==="---"?null:`  | ${j>>1},${bool(j%2)} => some (some ⟨${bool(m[0]==="1")},${bool(m[1]==="R")},${m.charCodeAt(2)-65}⟩)`).filter(x=>x!==null),
- "  | _,_ => none", "def z0 : P := startP"
+ "  | _,_ => none", "def z0 : P := startP",
+ "theorem joinAt (n k t : Nat) (a b c : P) (ht : n+k=t) (h : runP p n a = some b) (g : runP p k b = some c) : runP p t a = some c := by",
+ "  rw [← ht]",
+ "  exact joinP h g"
  ];
  let q=0,l=0n,r=0n,prev=0,n=0;
  for(n=1;n<=100000;n++){
@@ -47,10 +50,10 @@ function P(i,t){
   const w=BigInt(m[0]);q=m.charCodeAt(2)-65;
   if(m[1]==="R"){l=(r&1n)+2n*(w+2n*(l>>1n));r>>=1n;}
   else{l>>=1n;r=w+2n*r;}
-  if(n%256===0){const z="z"+n,prevZ="z"+prev,step="step"+n,run="run"+n;lines.push(`def ${z} : P := ⟨${q},${l},${r}⟩`);lines.push(`theorem ${step} : runP p ${n-prev} ${prevZ} = some ${z} := by decide +kernel`);lines.push(`theorem ${run} : runP p ${n} startP = some ${z} := ${prev===0?step:"joinP run"+prev+" "+step}`);prev=n;}
+  if(n%256===0){const z="z"+n,prevZ="z"+prev,step="step"+n,run="run"+n;lines.push(`def ${z} : P := ⟨${q},${l},${r}⟩`);lines.push(`theorem ${step} : runP p ${n-prev} ${prevZ} = some ${z} := by decide +kernel`);lines.push(`theorem ${run} : runP p ${n} startP = some ${z} := ${prev===0?step:("joinAt "+prev+" "+(n-prev)+" "+n+" startP z"+prev+" z"+n+" (by decide) run"+prev+" "+step)}`);prev=n;}
  }
  if(n>=100000||t[2*q+Number(l&1n)]!=="---")throw Error("not a first-hole short leaf "+i);
- if(prev!==n){const z="z"+n,step="step"+n,run="run"+n;lines.push(`def ${z} : P := ⟨${q},${l},${r}⟩`);lines.push(`theorem ${step} : runP p ${n-prev} z${prev} = some ${z} := by decide +kernel`);lines.push(`theorem ${run} : runP p ${n} startP = some ${z} := ${prev===0?step:"joinP run"+prev+" "+step}`);}
+ if(prev!==n){const z="z"+n,step="step"+n,run="run"+n;lines.push(`def ${z} : P := ⟨${q},${l},${r}⟩`);lines.push(`theorem ${step} : runP p ${n-prev} z${prev} = some ${z} := by decide +kernel`);lines.push(`theorem ${run} : runP p ${n} startP = some ${z} := ${prev===0?step:("joinAt "+prev+" "+(n-prev)+" "+n+" startP z"+prev+" z"+n+" (by decide) run"+prev+" "+step)}`);}
  const slot=2*q+Number(l&1n),cert=`theorem safe : ∀ m, compatible p m → WeightedBound 13007752 m :=\n  lastPacked 13007752 p ${n} (${q},${bool(slot%2)}) z${n} run${n} (by decide) (by decide) (by decide) (by decide) (by decide)`;
  const exact=`theorem exact : ∀ m, compatible p m → BB6.Agent5ExactOneHole.OrdinaryBound 13007747 m :=\n  BB6.Agent5ExactOneHole.lastPackedExact 13007747 p ${n} (${q},${bool(slot%2)}) z${n} run${n} (by decide) (by decide) (by decide) (by decide)`;
  lines.push(cert,exact,"#print axioms safe","#print axioms exact",`end ${name}`,"");
