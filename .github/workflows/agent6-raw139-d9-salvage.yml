@@ -6,8 +6,12 @@ on:
         description: Pinned repository source commit
         type: string
         required: true
-      branch_run_id:
-        description: Run containing core and six branch artifacts
+      first_run_id:
+        description: Run containing core plus C2/C6 artifacts
+        type: string
+        required: true
+      rest_run_id:
+        description: Run containing C16/C17/C18/C19 artifacts
         type: string
         required: true
 permissions:
@@ -24,13 +28,25 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: agent6-raw139-d9-core
-          run-id: ${{ inputs.branch_run_id }}
+          run-id: ${{ inputs.first_run_id }}
           github-token: ${{ github.token }}
           path: .tmp/a6-d9
       - uses: actions/download-artifact@v4
         with:
-          pattern: agent6-raw139-d9-c*-certified
-          run-id: ${{ inputs.branch_run_id }}
+          name: agent6-raw139-d9-c2-certified
+          run-id: ${{ inputs.first_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d9/branches/agent6-raw139-d9-c2-certified
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-c6-certified
+          run-id: ${{ inputs.first_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d9/branches/agent6-raw139-d9-c6-certified
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: agent6-raw139-d9-c1*-certified
+          run-id: ${{ inputs.rest_run_id }}
           github-token: ${{ github.token }}
           path: .tmp/a6-d9/branches
       - name: Install Lean
