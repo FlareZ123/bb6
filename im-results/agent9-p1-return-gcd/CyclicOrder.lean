@@ -44,7 +44,7 @@ theorem no_coprime_cyclic
     rw [hclock,hper] at h1
     have hdiff : 2*(c (j+K+1)-c (j+1)) =
         (c (j+K)-c j)+dir*(K:Int)*x j := by
-      simp only [Int.add_mul] at h1
+      simp only [Int.add_mul] at h0 h1
       omega
     have hA := ha j (by omega)
     dsimp [E]
@@ -52,10 +52,17 @@ theorem no_coprime_cyclic
     calc
       2*((h:Int)*(c (j+K+1)-c (j+1))-dir*(K:Int)*a (j+1)) =
           (h:Int)*(2*(c (j+K+1)-c (j+1))) -
-            dir*(K:Int)*(2*a (j+1)) := by ring
+            dir*(K:Int)*(2*a (j+1)) := by
+            simp only [Int.mul_sub,Int.mul_assoc]
+            ac_rfl
       _ = (h:Int)*((c (j+K)-c j)+dir*(K:Int)*x j) -
             dir*(K:Int)*(a j+(h:Int)*x j) := by rw [hdiff,hA]
-      _ = (h:Int)*(c (j+K)-c j)-dir*(K:Int)*a j := by ring
+      _ = (h:Int)*(c (j+K)-c j)-dir*(K:Int)*a j := by
+        simp only [Int.mul_add,Int.mul_sub]
+        have heq : (h:Int)*(dir*(K:Int)*x j) =
+            dir*(K:Int)*((h:Int)*x j) := by ac_rfl
+        rw [heq]
+        omega
   have hEbound : -(2:Int)^B<E 0 ∧ E 0<(2:Int)^B := by
     have hi := interior_energy_bound (h:Int) C ((h:Int)-a 0)
       (c K) (c 0) dir K B (by omega)
