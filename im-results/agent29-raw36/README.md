@@ -8,6 +8,23 @@ The older `parent_cover_from_nine` and `parent_cover_from_live7_after02And14` in
 
 The predecessor `parent_cover_from_twelve` remains a dependency and records the earlier B1=0LB consumption. B1=0LE is source-accepted at weighted bound 1152 in [run 46097780398](https://github.com/FlareZ123/bb6/actions/runs/46097780398), artifact 15249355743; B1=1RE is source-accepted at weighted bound 332 in [run 46112385989](https://github.com/FlareZ123/bb6/actions/runs/46112385989), artifact 15252363171; B1=1LE is source-accepted at weighted bound 387 in [run 46121176787](https://github.com/FlareZ123/bb6/actions/runs/46121176787), artifact 15253439483. Their exact artifact digests and source revisions are pinned in [accepted_pins.json](accepted_pins.json).
 
+## D110 search ledger (candidate evidence, not yet source acceptance)
+
+The current D1=0RE subbranch has eight first-E0 child obligations. The source-census open set and the post-FAR/structured holdout set are different; the counts below distinguish them.
+
+| E0 move | Source-census OPEN leaves | Remaining after existing FAR/structured bank | Current candidate status |
+|---|---:|---:|---|
+| 0LE | 13 | 0 | 12 FAR + 1 structured; whole child is included in source run 46169047318 |
+| 1LB | 40 | 1 | New `r` witness `["r",6,9,5,1318]`; whole child is included in source run 46169047318 |
+| 0LF | more than 5 | 5 | Five inverse-stack candidates found in run 46156248678; two `r`, three `m`; not yet Lean-kernel accepted |
+| 0RF | more than 7 | 7 | Run 46170633597 found five of six nonhalting candidates, all `r` with parameters `[12,15,12]`; one 2634-step halting simulation candidate is separate; one literal remains unresolved |
+
+The unresolved 0RF literal after the 3500-candidate search is
+`1RB0LA_1RC---_0RD0LA_0LD0RE_0RF1RA_1LF1LC`. The five found nonhalting literals have reported finite-automaton reachable counts 2794, 2730, 4672, 3741 and 3587. The separate halting simulation candidate is
+`1RB0LA_1RC---_0RD1RF_0LD0RE_0RF1RC_1LF1RA`, which reaches its B1 halt slot after 2634 ordinary transitions. Neither those candidate witnesses nor the simulation are source proofs.
+
+The source consumer is parameterized to support a common B=5000 audit with the five 0LF candidates, six 0RF nonhalting candidates, and an `Audit.last` node for the 0RF halt. The 0RF search currently lacks its sixth nonhalting candidate, so the prepared four-live adapter is not ready to run. In accordance with Critic's serialization note, do not dispatch another Raw36 source consumer while the Raw47→Canonical38→37 consumer remains live.
+
 ## Historical intermediate: source-accepted seven-live direct D1 reduction (28 November, run 46153631874)
 
 **Historical intermediate frontier: seven direct D1 cylinders before D101 was accepted.**
