@@ -96,6 +96,12 @@ jobs:
           LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-mod384-lean.log
           LEAN_PATH="$e" lean -o "$q/Mod384Graph.olean" "$q/Mod384Graph.lean" | tee -a /tmp/f321-mod384-lean.log
           LEAN_PATH="$q:$e" lean "$q/Mod384Source.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e" lean -o "$e/FiniteResidueCheck.olean" "$e/FiniteResidueCheck.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e" lean -o "$e/ExplicitResidueFamilies.olean" "$e/ExplicitResidueFamilies.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e" lean -o "$e/F321Periodicity.olean" "$e/F321Periodicity.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e" lean -o "$e/SourceNextBridge.olean" "$e/SourceNextBridge.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e" lean -o "$e/SourceHaltingBridge.olean" "$e/SourceHaltingBridge.lean" | tee -a /tmp/f321-mod384-lean.log
+          LEAN_PATH="$e:$q" lean -o "$q/HaltingBridgeCore.olean" "$q/HaltingBridgeCore.lean" | tee -a /tmp/f321-mod384-lean.log
           ! grep -q sorryAx /tmp/f321-mod384-lean.log
       - name: Upload exact finite computation record
         if: ${{ !inputs.odd_depth_only && !inputs.mod384_only }}
