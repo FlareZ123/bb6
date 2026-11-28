@@ -54,8 +54,52 @@ def verify_raw113_base(work: Path, run_id: int):
 
 
 def verify_raw112_parent(work: Path, run_id: int):
-    metadata, dirs = a68.download_named_artifact(run_id, RAW112_ARTIFACT, work)
-    metadata_dir = work / "metadata" / str(metadata["artifact_id"])
+    # The accepted Raw112 parent artifact intentionally separates the frozen
+    # proof-source checkout from the later assembly-repair workflow revision.
+    # Generic download_named_artifact assumes equality and therefore rejects
+    # the valid accepted run 46146501930.  Verify both provenance layers
+    # explicitly here instead of weakening the shared generic rule.
+    expected_proof_source = "6b8232d51d93665f66808b7faff7457963174aca"
+    expected_assembly_revision = "8da8090eab8f85670300b44eabf65070793864d7"
+
+    run = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}")
+    assert run["conclusion"] == "success", (run_id, run.get("conclusion"))
+    assert run["head_sha"] == expected_assembly_revision, (
+        run["head_sha"], expected_assembly_revision
+    )
+    artifacts = a68.api_json(f"repos/{REPO}/actions/runs/{run_id}/artifacts")["artifacts"]
+    matches = [x for x in artifacts if x["name"] == RAW112_ARTIFACT]
+    assert len(matches) == 1, [
+        (x["id"], x["name"]) for x in artifacts
+    ]
+    item = matches[0]
+    assert not item["expired"] and item["digest"].startswith("sha256:"), item
+    digest = item["digest"].removeprefix("sha256:")
+    dirs = a68.download((item["id"], run_id, digest), work)
+
+    metadata_dir = work / "metadata" / str(item["id"])
+    manifests = []
+    for path in metadata_dir.rglob("manifest.json"):
+        try:
+            manifest = json.loads(path.read_text())
+        except (OSError, json.JSONDecodeError):
+            continue
+        claim = manifest.get("claim") or {}
+        modules = {entry.get("module") for entry in manifest.get("modules", [])}
+        if (claim.get("theorem") == RAW112_THEOREM
+                and claim.get("parent_table") == RAW112_TABLE
+                and claim.get("weighted_bound") == 100000
+                and {"Raw112ClosedCover", "Raw112Data"} <= modules):
+            manifests.append((path, manifest))
+    assert len(manifests) == 1, [str(p) for p, _ in manifests]
+    manifest_path, manifest = manifests[0]
+    assert manifest["proof_source_revision"] == expected_proof_source, (
+        manifest["proof_source_revision"], expected_proof_source
+    )
+    assert "4.36.0-rc2" in manifest["lean_version"], manifest["lean_version"]
+    prefix = Path(subprocess.check_output(["lean", "--print-prefix"], text=True).strip())
+    assert manifest["lean_binary"]["sha256"] == a68.sha(prefix / "bin" / "lean")
+
     summaries = list(metadata_dir.rglob("retry-summary.json"))
     assert len(summaries) == 1, [str(p) for p in summaries]
     summary = json.loads(summaries[0].read_text())
@@ -77,12 +121,36 @@ def verify_raw112_parent(work: Path, run_id: int):
         resumed_from = summary.get("resumed_from_retry_run_id")
         resumed_ids = [] if resumed_from is None else [resumed_from]
     assert isinstance(resumed_ids, list)
-    assert all(isinstance(run_id, int) and run_id > 0 for run_id in resumed_ids)
+    assert all(isinstance(source_run_id, int) and source_run_id > 0
+               for source_run_id in resumed_ids)
     if not resumed_ids:
         assert new_retry_groups == all_retry_groups and not reused_retry_groups
     else:
         assert reused_retry_groups
     assert any((d / "Raw112ClosedCover.olean").is_file() for d in dirs)
+
+    metadata = {
+        "run_id": run_id,
+        "source_revision": expected_proof_source,
+        "assembly_revision": run["head_sha"],
+        "artifact_id": item["id"],
+        "artifact_name": item["name"],
+        "artifact_digest": item["digest"],
+        "manifest_path": str(manifest_path),
+        "manifest_sha256": a68.sha(manifest_path),
+        "theorem": RAW112_THEOREM,
+        "parent_table": RAW112_TABLE,
+        "weighted_bound": 100000,
+        "lean_version": manifest["lean_version"],
+        "lean_binary_sha256": manifest["lean_binary"]["sha256"],
+        "module_count": manifest["module_count"],
+    }
+    print(
+        "Verified Raw112 parent artifact "
+        f"{item['id']} with frozen proof source {expected_proof_source} "
+        f"and assembly revision {run['head_sha']}.",
+        flush=True,
+    )
     return metadata, dirs, summary
 
 
