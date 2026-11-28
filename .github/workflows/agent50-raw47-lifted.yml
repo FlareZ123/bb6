@@ -1138,9 +1138,11 @@ jobs:
             --theorem BB6.Agent40Raw34FRightRay.never \
             --theorem BB6.Agent40Raw34EFRightRay.never \
             --theorem BB6.Agent40Raw34FLeftRay.never \
-            --artifact-name raw34-EF-left-right-ray-source \
+            --theorem BB6.Agent40Raw34FDepth2Cycles.all_never \
+            --artifact-name raw34-EF-ray-and-F-cycle-source \
             im-results/agent40-raw34-frontier/Raw34EFRightRay.lean \
             im-results/agent40-raw34-frontier/Raw34FLeftRay.lean \
+            im-results/agent40-raw34-frontier/Raw34FDepth2Cycles.lean \
             2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           python - "$W/closure.log" <<'PY'
@@ -1162,7 +1164,12 @@ jobs:
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: 44 source-proved F/E right and F left pristine-ray cylinders')
+          for name in ('count','checked','all_never'):
+              full='BB6.Agent40Raw34FDepth2Cycles.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 44 ray cylinders plus 34 two-slot F side-cycle nonhalters')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
