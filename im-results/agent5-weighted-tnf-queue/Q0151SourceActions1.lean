@@ -69,7 +69,7 @@ theorem b_one_refines (s : List Bool) (stack : List (List Bool))
   · apply action_of_cut _ 1 (rightSig rest) _
       (by simpa [co] using cut_n1 rest hlive)
     rw [co_extend]
-    simp [actionsFor,choicesA,co]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append]
   · change Goes (boundary 1 s stack (rr 1 (runBits rest))) _
     exact b_one s stack (runBits rest)
 
@@ -83,7 +83,7 @@ theorem c_one_refines (s : List Bool) (stack : List (List Bool))
   · apply action_of_cut _ 1 (rightSig rest) _
       (by simpa [co] using cut_n1 rest hlive)
     rw [co_extend]
-    simp [actionsFor,choicesA,co]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append]
   · change Goes (boundary 2 s stack (rr 1 (runBits rest))) _
     exact c_one s stack (runBits rest)
 
@@ -96,9 +96,9 @@ theorem b_four_refines (s : List Bool) (stack : List (List Bool))
   constructor
   · apply action_of_cut _ 4 (rightSig rest) _
       (by simpa [co] using cut_n4 rest hlive)
-    simp [actionsFor,choicesA,co,altWord,segAppend]
+    simp [actionsFor,choicesA,co,mkControl,altWord,segAppend]
   · change Goes (boundary 1 s stack (rr 4 (runBits rest))) _
-    simpa [alt] using b_zero 0 s stack (runBits rest)
+    simpa [alt,BB6Coverage.Agent31Pump.rep] using b_zero 0 s stack (runBits rest)
 
 theorem c_four_refines (s : List Bool) (stack : List (List Bool))
     (rest : List Nat) (hlive : rightType (rightSig (3::rest)) ≠ 0) :
@@ -112,9 +112,9 @@ theorem c_four_refines (s : List Bool) (stack : List (List Bool))
   · apply action_of_cut _ 4 (rightSig rest) _
       (by simpa [co] using cut_n4 rest hlive)
     rw [co_extend]
-    simp [actionsFor,choicesA,co,List.append_assoc]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append,List.append_assoc]
   · change Goes (boundary 2 s stack (rr 4 (runBits rest))) _
-    simpa only [alt_one] using c_zero 0 s stack (runBits rest)
+    simpa [alt_one] using c_zero 0 s stack (runBits rest)
 
 theorem b_five_refines (s : List Bool) (stack : List (List Bool))
     (rest : List Nat) (hlive : rightType (rightSig (4::rest)) ≠ 0) :
@@ -126,9 +126,9 @@ theorem b_five_refines (s : List Bool) (stack : List (List Bool))
   constructor
   · apply action_of_cut _ 5 (rightSig rest) _
       (by simpa [co] using cut_n5 rest hlive)
-    simp [actionsFor,choicesA,co]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append]
   · change Goes (boundary 1 s stack (rr 5 (runBits rest))) _
-    simpa only [alt_one] using b_big_one 0 s stack (runBits rest)
+    simpa [alt_one] using b_big_one 0 s stack (runBits rest)
 
 theorem c_five_refines (s : List Bool) (stack : List (List Bool))
     (rest : List Nat) (hlive : rightType (rightSig (4::rest)) ≠ 0) :
@@ -141,9 +141,9 @@ theorem c_five_refines (s : List Bool) (stack : List (List Bool))
   · apply action_of_cut _ 5 (rightSig rest) _
       (by simpa [co] using cut_n5 rest hlive)
     rw [co_extend]
-    simp [actionsFor,choicesA,co,List.append_assoc]
+    simp [actionsFor,choicesA,co,mkControl,segAppend_append,List.append_assoc]
   · change Goes (boundary 2 s stack (rr 5 (runBits rest))) _
-    simpa only [alt_two] using c_big_one 0 s stack (runBits rest)
+    simpa [alt_two] using c_big_one 0 s stack (runBits rest)
 
 #print axioms action_of_cut
 #print axioms b_one_refines
