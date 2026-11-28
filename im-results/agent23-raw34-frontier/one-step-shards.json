@@ -1,0 +1,106 @@
+{
+  "source": "one-step-refine.json",
+  "shards": 16,
+  "total": 1897,
+  "files": [
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard00.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard01.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard02.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard03.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard04.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard05.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard06.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard07.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard08.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard09.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard10.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard11.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard12.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard13.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard14.lean",
+    "im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard15.lean"
+  ],
+  "totalMass": "1031640625",
+  "shardCounts": [
+    {
+      "witnesses": 119,
+      "cycles": 112,
+      "halts": 7
+    },
+    {
+      "witnesses": 119,
+      "cycles": 111,
+      "halts": 8
+    },
+    {
+      "witnesses": 119,
+      "cycles": 111,
+      "halts": 8
+    },
+    {
+      "witnesses": 119,
+      "cycles": 110,
+      "halts": 9
+    },
+    {
+      "witnesses": 119,
+      "cycles": 114,
+      "halts": 5
+    },
+    {
+      "witnesses": 119,
+      "cycles": 106,
+      "halts": 13
+    },
+    {
+      "witnesses": 119,
+      "cycles": 111,
+      "halts": 8
+    },
+    {
+      "witnesses": 119,
+      "cycles": 109,
+      "halts": 10
+    },
+    {
+      "witnesses": 119,
+      "cycles": 108,
+      "halts": 11
+    },
+    {
+      "witnesses": 118,
+      "cycles": 107,
+      "halts": 11
+    },
+    {
+      "witnesses": 118,
+      "cycles": 105,
+      "halts": 13
+    },
+    {
+      "witnesses": 118,
+      "cycles": 112,
+      "halts": 6
+    },
+    {
+      "witnesses": 118,
+      "cycles": 113,
+      "halts": 5
+    },
+    {
+      "witnesses": 118,
+      "cycles": 101,
+      "halts": 17
+    },
+    {
+      "witnesses": 118,
+      "cycles": 106,
+      "halts": 12
+    },
+    {
+      "witnesses": 118,
+      "cycles": 108,
+      "halts": 10
+    }
+  ]
+}
