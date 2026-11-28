@@ -1173,6 +1173,7 @@ jobs:
       - name: Reconstitute two small already accepted original-source roots
         run: |
           set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
           mkdir -p /tmp/accepted-objects/ordinary-checker /tmp/accepted-objects/203-halter
           python tools/lean_compile_closure.py \
             im-results/agent47-raw11-adapter/OrdinaryQ0Exhaustive.lean \
