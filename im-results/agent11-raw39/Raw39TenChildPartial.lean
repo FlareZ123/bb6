@@ -21,6 +21,16 @@ theorem conditional_parent_bound
     (h : Bound 28311 (child ⟨true,false,4⟩)) : Bound 28311 p39 :=
   BB6.Agent43Raw39ExactJoin.parent_bound zeroLE_bound h
 
+/-- The remaining A1=1LE child is both necessary and sufficient
+for the exact uniform weighted bound on the entire Raw39 parent. -/
+theorem parent_bound_iff_oneLE :
+    Bound 28311 p39 ↔ Bound 28311 (child ⟨true,false,4⟩) := by
+  constructor
+  · intro hp m hm
+    exact hp m (refine_preserves_compat p39 m (0,true)
+      (some ⟨true,false,4⟩) (by decide) hm)
+  · exact conditional_parent_bound
+
 theorem conditional_parent_cover
     (h : Bound 28311 (child ⟨true,false,4⟩)) :
     Cover (WeightedBound 28311) p39 :=
@@ -33,6 +43,7 @@ theorem conditional_parent_exact
 
 #print axioms zeroLE_bound
 #print axioms conditional_parent_bound
+#print axioms parent_bound_iff_oneLE
 #print axioms conditional_parent_cover
 #print axioms conditional_parent_exact
 end BB6.Agent11Raw39TenChild
