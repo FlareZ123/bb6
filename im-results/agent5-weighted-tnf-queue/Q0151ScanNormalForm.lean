@@ -17,6 +17,8 @@ namespace BB6.Agent5Q0151ScanNormalForm
 open BB6.Agent5Q0151SourceMacro
 open BB6.Agent5Q0151SegmentGrammar
 open BB6.Agent5Q0151SegmentRunSound
+open BB6.Agent5Q0151FiniteModel
+open BB6.Agent5Q0151ConcatSound
 
 theorem bitRuns_append (a b : List Nat) :
     bitRuns (a++b) = bitRuns a ++ bitRuns b := by
@@ -39,7 +41,7 @@ theorem scan_normal (S : List Bool) (h : Scan S) :
         _ = bitRuns cl ++ (List.replicate k true ++ [true]) := by
           rw [hcl]; simp [List.append_assoc]
         _ = bitRuns cl ++ List.replicate (k+1) true := by
-          simp [List.replicate_add,List.append_assoc]
+          simp [List.replicate_succ',List.append_assoc]
   | @pair xs _ ih =>
       obtain ⟨cl,k,hcl⟩ := ih
       refine ⟨cl++[k],0,?_⟩
@@ -48,19 +50,19 @@ theorem scan_normal (S : List Bool) (h : Scan S) :
         _ = bitRuns cl ++ (List.replicate k true ++ [true,false]) := by
           rw [hcl]; simp [List.append_assoc]
         _ = bitRuns (cl++[k]) ++ List.replicate 0 true := by
-          simp [bitRuns_append,bitRuns,List.replicate_add,List.append_assoc]
+          simp [bitRuns_append,bitRuns,List.replicate_succ',List.append_assoc]
 
 theorem bitRuns_end (xs : List Nat) :
-    xs = [] ∨ ∃ prefix, bitRuns xs = prefix ++ [false] := by
+    xs = [] ∨ ∃ pref, bitRuns xs = pref ++ [false] := by
   induction xs with
   | nil => exact Or.inl rfl
   | cons n ns ih =>
-      rcases ih with he | ⟨prefix,hprefix⟩
+      rcases ih with he | ⟨pref,hpref⟩
       · subst ns
         exact Or.inr ⟨List.replicate (n+1) true, by simp [bitRuns]⟩
       · exact Or.inr
-          ⟨List.replicate (n+1) true ++ [false] ++ prefix,
-            by simp [bitRuns,hprefix,List.append_assoc]⟩
+          ⟨List.replicate (n+1) true ++ [false] ++ pref,
+            by simp [bitRuns,hpref,List.append_assoc]⟩
 
 theorem open_count_pos (cl : List Nat) (k : Nat) (u : List Bool)
     (he : bitRuns cl ++ List.replicate k true = u ++ [true]) :
@@ -68,16 +70,16 @@ theorem open_count_pos (cl : List Nat) (k : Nat) (u : List Bool)
   cases k with
   | zero =>
       simp at he
-      rcases bitRuns_end cl with hnil | ⟨prefix,hprefix⟩
+      rcases bitRuns_end cl with hnil | ⟨pref,hpref⟩
       · subst cl
         simp [bitRuns] at he
-      · rw [hprefix] at he
+      · rw [hpref] at he
         have hrev := congrArg List.reverse he
         simp at hrev
   | succ n => omega
 
 theorem segGood_normal (s : List Bool) (hs : SegGood s) :
-    ∃ closed last : Nat,
+    ∃ (closed : List Nat) (last : Nat),
       s = bitRuns closed ++ List.replicate (last+1) true := by
   obtain ⟨cl,k,hcl⟩ := scan_normal s.reverse hs.1
   have he : s = bitRuns cl ++ List.replicate k true := by
@@ -89,7 +91,7 @@ theorem segGood_normal (s : List Bool) (hs : SegGood s) :
   simpa [hsum] using he
 
 theorem segGood_summary (s : List Bool) (hs : SegGood s) :
-    ∃ closed last : Nat,
+    ∃ (closed : List Nat) (last : Nat),
       s = bitRuns closed ++ List.replicate (last+1) true ∧
       segAppend emptySegment s = segmentOfRuns closed last := by
   obtain ⟨closed,last,h⟩ := segGood_normal s hs
