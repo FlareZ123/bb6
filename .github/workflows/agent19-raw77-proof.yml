@@ -118,5 +118,6 @@ jobs:
           [[ "$SOURCE_REVISION" =~ ^[0-9a-f]{40}$ ]]
           test "$(git rev-parse HEAD)" = "$SOURCE_REVISION"
           python im-results/agent13-coverage/unpack.py
+          python im-results/agent19-d3-local/unpack_d3_sibling.py
           python tools/lean_compile_closure.py --workdir /tmp/a19-d3-local --jobs 2 im-results/agent19-d3-local/D3LocalCut.lean | tee /tmp/a19-d3-local.log
           if grep -Eq 'sorryAx|native_decide' /tmp/a19-d3-local.log; then exit 1; fi
