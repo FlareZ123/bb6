@@ -125,6 +125,15 @@ jobs:
           echo "source_modules=$(find /tmp/parent-source -name '*.lean' | wc -l)"
           echo "checkpoint_objects=$(find /tmp/parent-out -name '*.olean' | wc -l)"
 
+      - name: Repair legacy Extra132 row-split data elaboration
+        if: inputs.parent_id == '132'
+        run: |
+          set -euo pipefail
+          data=/tmp/parent-source/Agent44Extra132GiantData.lean
+          if [ -s "$data" ]; then
+            python im-results/agent44-raw11-extra28/repair_two_sided_data.py "$data"
+          fi
+
       - name: Row-split the frozen Extra132 giant FAR leaf
         if: inputs.row_split_extra132 && inputs.parent_id == '132' && inputs.prior_run == ''
         run: |
