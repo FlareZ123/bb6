@@ -1,0 +1,50 @@
+name: Agent9 official Canonical39 Raw47 successor
+run-name: Accepted Raw39 Canonical39 -> Raw47 -> Canonical38
+
+on:
+  workflow_dispatch:
+    inputs:
+      direct38_run_id:
+        description: Successful direct Raw39+Raw47 transport-carrier run
+        type: string
+        required: true
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Source-check official Raw39 then Raw47 successor
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DIRECT38_RUN_ID: ${{ inputs.direct38_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$DIRECT38_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent9-canonical38-official/consume.py
+          python im-results/agent9-canonical38-official/consume.py             --work /tmp/a9-canonical38-official             --direct38-run-id "$DIRECT38_RUN_ID" | tee /tmp/a9-canonical38-official.log
+          test -s /tmp/a9-canonical38-official/canonical38-raw39-then-raw47-delta/delta.json
+          cat /tmp/a9-canonical38-official/canonical38-raw39-then-raw47-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical38-raw39-then-raw47-delta
+          path: |
+            /tmp/a9-canonical38-official/canonical38-raw39-then-raw47-delta/**
+            /tmp/a9-canonical38-official.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
