@@ -81,7 +81,9 @@ def table_expr(table: str) -> str:
     if len(t) != 36:
         raise ValueError(f"expected 12 three-character slots, got {len(t)} chars")
     toks = [t[i:i + 3] for i in range(0, 36, 3)]
-    lines = ["(fun s => match s.1.val,s.2 with"]
+    # Use equation-style definition so Lean gets the PartialMachine domain
+    # from the declaration before elaborating state projections/Move literals.
+    lines = ["def table : PartialMachine"]
     for j, tok in enumerate(toks):
         if tok == "---":
             continue
@@ -92,10 +94,10 @@ def table_expr(table: str) -> str:
         right = "true" if tok[1] == "R" else "false"
         nxt = ord(tok[2]) - ord("A")
         lines.append(
-            f"  | {q},{str(bool(b)).lower()} => "
+            f"  | ({q},{str(bool(b)).lower()}) => "
             f"some (some ⟨{write},{right},{nxt}⟩)"
         )
-    lines.append("  | _,_ => none)")
+    lines.append("  | _ => none")
     return "\n".join(lines)
 
 
