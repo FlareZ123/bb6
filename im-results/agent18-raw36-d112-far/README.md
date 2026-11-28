@@ -138,3 +138,23 @@ and olean SHA256 is
 After the inherited FAR bank, inherited structured bank, 31 FAR-mutation
 leaves, 24 late-hole weighted leaves, and these three generic structured
 leaves, **95 / 3841** exact D1=1LA canonical OPEN tables remain unresolved.
+
+
+## Periodic quotient sweep: 89 unresolved
+
+A targeted periodic-stack sweep over the remaining 95 exact literals found
+**six** additional finite quotient invariants.  Their exact compact witnesses
+are retained in `periodic_extra6.tsv`; `emit_periodic6.py` regenerates the
+independent `TwoSidedAutomata` Lean source.
+
+All six regenerated `never` theorems compiled locally under Lean
+4.36.0-rc2 with only
+`[propext, Classical.choice, Quot.sound]`.  The generated source SHA256 is
+`761f25e8af141e4106b3a3c0ffc782cdd9b2f06d5f36f9d48d8db8019f9f79d7`;
+the resulting olean SHA256 is
+`f09253f237e98e38b990f742a307893d3f3a4eae47d107e775f413418a74eb54`.
+
+The six witnesses have replay sizes 88--216 and quotient stack-state shapes
+between (9,12) and (20,22).  After all currently source-checked inherited FAR,
+structured, mutation, late-hole, generic, and periodic families, **89 / 3841**
+exact D1=1LA canonical OPEN tables remain without a certificate.
