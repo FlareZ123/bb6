@@ -531,6 +531,28 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  raw56_le_research_inputs:
+    if: inputs.child == 'raw56-le-research-inputs'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Collect exact LE research sources for offline exploration
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw56-le-input-src
+          cp -a im-results/agent1-raw56/le /tmp/raw56-le-input-src/
+          cp -a im-results/agent32-raw59 /tmp/raw56-le-input-src/
+          cp im-results/agent1-raw56/{emit_rc_rd.py,discover_abstract_pinned.js} /tmp/raw56-le-input-src/
+          cp im-results/agent7-raw49/cut.cpp /tmp/raw56-le-input-src/
+          cp im-results/agent19-raw40-cut/farbank.cpp /tmp/raw56-le-input-src/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-le-research-inputs
+          path: /tmp/raw56-le-input-src/**
+          if-no-files-found: error
+          retention-days: 7
+
   raw56_le_23011:
     if: inputs.child == 'raw56-le-23011'
     runs-on: ubuntu-latest
