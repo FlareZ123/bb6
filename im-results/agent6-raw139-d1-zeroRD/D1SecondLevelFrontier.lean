@@ -34,7 +34,7 @@ def f19 : List PartialMachine :=
 
 /-- Exact explicit second-level residual frontier under Raw139 D1=0RD. -/
 def frontier : List PartialMachine :=
-  f2 ++ f6 ++ f8 ++ f9 ++ f10 ++ f16 ++ f17 ++ f18 ++ f19
+  f2 ++ (f6 ++ (f8 ++ (f9 ++ (f10 ++ (f16 ++ (f17 ++ (f18 ++ f19)))))))
 
 theorem frontier_length : frontier.length = 102 := by decide
 
