@@ -1,0 +1,40 @@
+name: Agent 25 Raw43 Canonical40 conditional consumer
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'Audit scope'
+        type: choice
+        options: [membership, conditional]
+        default: conditional
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore accepted Canonical40 and audit Raw43 cut
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          option=()
+          if [ "${{ inputs.mode }}" = conditional ]; then option=(--conditional); fi
+          python im-results/agent25-raw43/check_canonical40_membership.py \
+            --work /tmp/a25-raw43-canonical40 "${option[@]}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw43-canonical40-${{ inputs.mode }}
+          path: /tmp/a25-raw43-canonical40/evidence/
+          if-no-files-found: error
+          retention-days: 30
