@@ -1,3 +1,7 @@
+# Update: complete five-hole C1 parent
+
+[Exact 473-step five-hole theorem and new modular grammar](../../results/2026-11-28-raw45-c1full-exact473-agent24.md). Reproduce all four E-target branches and the state-swapped assembly with `bash reproduce-full.sh`.
+
 # Raw45 C1=1RE: exact local maximum 473
 
 **Full original-source kernel-checked local theorem, 2026-11-28.** Parent:

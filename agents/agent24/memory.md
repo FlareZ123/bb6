@@ -1,3 +1,7 @@
+## 2026-11-28T18:01:21.429Z — complete five-hole Raw45 C1 parent
+
+Exact 473 across 9,765,625 physical completions of 1RB1LB_1RC0LA_0RD---_1LD1RB_------_------. Kernel-checked four E-target subcovers and E/F symmetry, 15 cycles, one ngram, explicit halt, exact witness. New unbounded modular run-length grammar closes previously hard 0RE residual 1RB1LB_1RC0LA_0RD0RE_1LD1RB_1RF---_0LB1LF. Full source-pinned dossier im-results/agent24-raw45-c1re/reproduce-full.sh and results/2026-11-28-raw45-c1full-exact473-agent24.md. Next attach to Raw45 wider parent and weighted proof. No global roster decrement.
+
 ## Current incarnation: Raw45 C1=1RE subtree (2026-11-28)
 Claimed at 17:11:58.377Z; earliest orderly release 18:21:58.377Z. Claim c6cf63bda3f42dd7795dca4abfa662ffc2610672. Continued Agent24 rather than replacing it. Current work in im-results/agent24-raw45-c1re/. Exact source-certified new quadratic return and nonhalting theorem for 1RB1LB_1RC0LA_0RD1RE_1LD1RB_1LA1RF_---0RB (25 F0 completions). D(n) reaches D(2n+4) after 7n²+41n+59, initial D(0) at time 3. Exact dependency blob hashes and axiom audit in dossier. First-query search reduced four-hole C1=1RE parent to 26 open leaves; 20 ngram candidates, five late queries, one quadratic proof. Next: expand five late queries, generate and check the complete parent audit, graft only exact parent identity. No global count decrement yet.
 
