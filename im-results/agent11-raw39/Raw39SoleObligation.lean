@@ -1,4 +1,4 @@
-import Raw39ThresholdReduction
+import Raw39TenChildPartial
 import Raw39Canonical40Conditional
 
 set_option maxRecDepth 100000
@@ -40,15 +40,28 @@ theorem parent_cover_of_oneLE (h1 : Bound 28311 oneLE) :
 
 /-- The 40-cover global proof is factored into the original 1LE first-hole
 completion and the 39 exact remaining quotient representatives. -/
-/-- At the global quotient's accepted intermediate score, the only Raw39
-hypothesis needed is the A1=1LE child at that *same* score. This is weaker
-than demanding its exact proposed local threshold 28311. -/
-theorem parent_cover_if_oneLE_at_global
-    (h1 : Bound 6766859 oneLE) :
-    Cover (WeightedBound 6766859) p39 := by
+/-- A direct source-certified sibling join applies at ANY threshold
+above the largest remaining sibling bound 15125, requiring the complete 1LE
+child only at that threshold. No all-threshold equivalence is needed. -/
+theorem parent_cover_if_oneLE_above_15125 (B : Nat) (hB : 15125 ≤ B)
+    (h1 : Bound B oneLE) : Cover (WeightedBound B) p39 := by
   apply Cover.leaf
   rw [literal_source_equality]
-  exact (BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE 6766859).mpr h1
+  apply BB6.Agent11Raw39AcceptedNine.parent_bound_two B (by omega)
+  intro mv hm
+  simp only [BB6.Agent11Raw39AcceptedNine.remaining,
+    List.mem_cons, List.not_mem_nil, or_false] at hm
+  rcases hm with rfl | rfl
+  · exact BB6.Agent43Raw391LEBoundLift.mono hB
+      BB6.Agent11Raw39TenChild.zeroLE_bound
+  · exact h1
+
+/-- At the global quotient's accepted intermediate score, the only Raw39
+hypothesis needed is the A1=1LE child at that *same* score. -/
+theorem parent_cover_if_oneLE_at_global
+    (h1 : Bound 6766859 oneLE) :
+    Cover (WeightedBound 6766859) p39 :=
+  parent_cover_if_oneLE_above_15125 6766859 (by decide) h1
 
 theorem exact_at_champion_if_oneLE_at_global
     (h1 : Bound 6766859 oneLE)
@@ -69,6 +82,7 @@ theorem exact_at_champion_if_oneLE
 #print axioms literal_source_equality
 #print axioms parent_bound_of_oneLE
 #print axioms parent_cover_of_oneLE
+#print axioms parent_cover_if_oneLE_above_15125
 #print axioms parent_cover_if_oneLE_at_global
 #print axioms exact_at_champion_if_oneLE_at_global
 #print axioms exact_at_champion_if_oneLE
