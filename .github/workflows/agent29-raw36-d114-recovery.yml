@@ -39,6 +39,8 @@ jobs:
               for p in (root/rel.with_suffix('.lean'),root/(name+'.lean')):
                   if p.exists(): return p
           def visit(name):
+              if name.startswith('Raw36D114Kid'):
+                  return
               if name in seen: return
               seen.add(name)
               src=locate(dst,name) or locate(base,name)
