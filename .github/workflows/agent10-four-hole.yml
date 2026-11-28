@@ -920,6 +920,7 @@ jobs:
           done
           python "$root/merge_b1rc.py" /tmp/a25-b1ra-input /tmp/a25-b1ra-base "$PINS" b1ra
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --precompiled-manifest /tmp/a25-b1ra-base/manifest.json --precompiled-dir /tmp/a25-b1ra-base \
             --manifest "$work/manifest.json" --label raw43-b1ra-complete \
             --theorem BB6.Agent25Raw43B1RA.all_completions --weighted-bound 519 \
@@ -957,6 +958,7 @@ jobs:
           done
           python "$root/merge_b1rc.py" /tmp/a25-b1lb-input /tmp/a25-b1lb-base "$PINS" b1lb
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --precompiled-manifest /tmp/a25-b1lb-base/manifest.json --precompiled-dir /tmp/a25-b1lb-base \
             --manifest "$work/manifest.json" --label raw43-b1lb-complete \
             --theorem BB6.Agent25Raw43B1LB.all_completions --weighted-bound 289 \
