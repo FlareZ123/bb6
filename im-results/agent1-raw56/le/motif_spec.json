@@ -362,6 +362,48 @@
     ]
   },
   {
+    "id": 6304,
+    "table": "1RB---_1RC0RF_0RD1RC_1LD1LE_0RA0LE_1LD1LA",
+    "params": [
+      {
+        "k": 28,
+        "groups": [
+          [
+            "1",
+            1,
+            3
+          ]
+        ]
+      },
+      {
+        "k": 28,
+        "groups": [
+          [
+            "1",
+            1,
+            3
+          ],
+          [
+            "0",
+            1,
+            3
+          ],
+          [
+            "000111",
+            1,
+            3
+          ]
+        ]
+      }
+    ],
+    "states": 3001,
+    "edges": 1059,
+    "quotient": [
+      89,
+      31
+    ]
+  },
+  {
     "id": 7174,
     "table": "1RB0RF_1RC1RA_0RD1RF_1LD1LE_0RA0LE_---0LB",
     "params": [
@@ -401,6 +443,38 @@
     "quotient": [
       80,
       34
+    ]
+  },
+  {
+    "id": 12323,
+    "table": "1RB0RF_1RC---_0RD1RA_1LD1LE_0RF0LE_1LB1RC",
+    "params": [
+      {
+        "k": 40,
+        "groups": [
+          [
+            "111111110",
+            2,
+            1
+          ]
+        ]
+      },
+      {
+        "k": 40,
+        "groups": [
+          [
+            "1110000000",
+            2,
+            1
+          ]
+        ]
+      }
+    ],
+    "states": 9670,
+    "edges": 2136,
+    "quotient": [
+      2151,
+      862
     ]
   },
   {
@@ -658,6 +732,70 @@
     ]
   },
   {
+    "id": 21463,
+    "table": "1RB0RF_1RC0RE_0RD0RA_1LD1LE_1RB0LE_---0RD",
+    "params": [
+      {
+        "k": 24,
+        "groups": [
+          [
+            "00111",
+            2,
+            2
+          ]
+        ]
+      },
+      {
+        "k": 24,
+        "groups": [
+          [
+            "00111",
+            2,
+            2
+          ]
+        ]
+      }
+    ],
+    "states": 2953,
+    "edges": 1077,
+    "quotient": [
+      1076,
+      440
+    ]
+  },
+  {
+    "id": 21805,
+    "table": "1RB---_1RC0LF_0RD0RF_1LD1LE_1RB0LE_1RA1RC",
+    "params": [
+      {
+        "k": 24,
+        "groups": [
+          [
+            "00111",
+            2,
+            2
+          ]
+        ]
+      },
+      {
+        "k": 24,
+        "groups": [
+          [
+            "00111",
+            2,
+            2
+          ]
+        ]
+      }
+    ],
+    "states": 12644,
+    "edges": 1739,
+    "quotient": [
+      2279,
+      489
+    ]
+  },
+  {
     "id": 21806,
     "table": "1RB---_1RC0RD_0RD0RF_1LD1LE_1RB0LE_1RA1RC",
     "params": [
@@ -690,6 +828,38 @@
     ]
   },
   {
+    "id": 21807,
+    "table": "1RB---_1RC1RB_0RD0RF_1LD1LE_1RB0LE_1RA1RC",
+    "params": [
+      {
+        "k": 40,
+        "groups": [
+          [
+            "111111110",
+            2,
+            1
+          ]
+        ]
+      },
+      {
+        "k": 40,
+        "groups": [
+          [
+            "1110000000",
+            2,
+            1
+          ]
+        ]
+      }
+    ],
+    "states": 4917,
+    "edges": 1571,
+    "quotient": [
+      757,
+      290
+    ]
+  },
+  {
     "id": 22343,
     "table": "1RB1RA_1RC0RA_0RD1RF_1LD1LE_1RB0LE_---0LD",
     "params": [
@@ -719,6 +889,38 @@
     "quotient": [
       2429,
       568
+    ]
+  },
+  {
+    "id": 22621,
+    "table": "1RB1RF_1RC0RE_0RD0RA_1LD1LE_1RC0LE_---1RB",
+    "params": [
+      {
+        "k": 40,
+        "groups": [
+          [
+            "111111110",
+            2,
+            1
+          ]
+        ]
+      },
+      {
+        "k": 40,
+        "groups": [
+          [
+            "1110000000",
+            2,
+            1
+          ]
+        ]
+      }
+    ],
+    "states": 9882,
+    "edges": 2041,
+    "quotient": [
+      1781,
+      827
     ]
   }
 ]
