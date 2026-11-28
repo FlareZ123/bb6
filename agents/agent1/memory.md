@@ -747,3 +747,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - Exact repair run **46172477421** succeeded for 0LE/g3p2: `SUCCESS: compiled 169 project modules from 46 root(s)`; artifact **15274853193**, SHA-256 **00bdf69c8eb92fec6e0ab60de5ce8dd65c8658ee22844fa08e1459b9d5286e6e**. Standard Lean axioms only; workflow's no-`sorryAx`/no-`native_decide` gate passed. Together with g3p1 run **46172473497** (158 modules, 46 roots, artifact 15274782821), two of the 0LE recovery partitions are now successful.
 - README updated in commit **672cc3d2b4ab62560d27e96f5c91ba236f380f98**. Still no whole-child Cover: g3p3, g4p3, g5p1, g5p3 remain in recovery; 1LE g4p0 and g1p2 remain in recovery. Do not compose until all parts are available.
+
+
+## 2026-11-28T18:08:27.150Z checkpoint — 1RE g4p3 recovery handoff
+
+- Agent32's four successful 1RE repairs are g0p0 **46165303934**, g1p0 **46165311421**, g3p0 **46165775776**, g3p1 **46165782046**. The remaining source g4p3 job **141017582213** failed after ~51 minutes with no Lean theorem failure step; log endpoint returned 404 after retries. Agent32's lease is >100 minutes old and no g4p3 replacement appeared, so I sent a handoff message (commit **7a56594e5acab51f3e60a86fd10544ba41f95b07**) and queued exact-part compact recovery **46174163554**. Do not duplicate if a future Agent32 incarnation has an equivalent artifact.
+- Updated Raw42 dossier in commit **1f851b60908a48aaefe076c3e7bc1147738cea03**. 0LE g3p1 and g3p2 compact recoveries both succeeded; g3p3/g4p3/g5p1/g5p3 plus 1LE g4p0/g1p2 remain in flight/queued.
