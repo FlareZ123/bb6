@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, extra-resume-132, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, extra-resume-132, q0-root53-source, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -605,4 +605,74 @@ jobs:
             /tmp/parent-out
             /tmp/parent-source
           if-no-files-found: error
+          retention-days: 30
+
+
+  # Regenerate only from frozen source witness, never redo search. Independently
+  # compile the already locally checked 30,793-node complete q0-root53 parent.
+  q0-root53-source:
+    if: inputs.mode == 'q0-root53-source'
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45815437524
+          name: q0-root53-generated-source
+          path: /tmp/q053-witness
+      - name: Translate frozen exhaustive witness to source proof modules
+        run: |
+          set -euo pipefail
+          proof="$(find /tmp/q053-witness -name q0-auto-candidate.json -print -quit)"
+          test -n "$proof"
+          python im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py \
+            "$(dirname "$proof")" /tmp/q053-generated --chunk 49
+          test -f /tmp/q053-generated/Q0Root53Parent.lean
+          test -f /tmp/q053-generated/Q0Root53Shard23.lean
+          grep -F 'theorem safe_root' /tmp/q053-generated/Q0Root53Parent.lean
+          mkdir -p /tmp/q053-certified
+      - name: Compile exact original-source q0-root53 Cover with kernel
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py /tmp/q053-generated/Q0Root53Parent.lean \
+            --source-root /tmp/q053-generated \
+            --workdir /tmp/q053-certified \
+            --jobs 1 --lean lean \
+            --manifest /tmp/q053-certified/manifest.json \
+            --label 'complete q0-root53 exact parent from frozen witness' \
+            --theorem Q0Root53.safe_root \
+            --parent-table 1RB1RD_1RC1RE_0LA---_1LA1LD_------_------ \
+            --weighted-bound 208 \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py \
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0ExhaustiveTree.lean \
+            --provenance-input /tmp/q053-witness/q0-auto-candidate.json \
+            2>&1 | tee /tmp/q053-certified.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q053-certified.log; then
+            echo 'unapproved trust dependency' >&2
+            exit 1
+          fi
+          grep -F "'Q0Root53.safe_root' depends on axioms:" /tmp/q053-certified.log
+          test -f /tmp/q053-certified/Q0Root53Parent.olean
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-root53-complete-source
+          path: |
+            /tmp/q053-certified
+            /tmp/q053-generated
+            /tmp/q053-certified.log
+          if-no-files-found: warn
           retention-days: 30
