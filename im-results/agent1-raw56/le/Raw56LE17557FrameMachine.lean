@@ -122,7 +122,7 @@ theorem outerTraceBelow_exec {k : Nat} {xs : List Action} {hs : List Bool}
     restoring the incoming stack verbatim. -/
 theorem segment_closes_low (r : Nat) (st : List Nat) :
     execLow (segment r) st = some st := by
-  induction r using Nat.strongRecOn with
+  induction r using Nat.strongRecOn generalizing st with
   | ind r ih =>
       rw [segment_eq_normal_body]
       simp only [execLow, stepLow, Option.bind_some]
@@ -214,7 +214,7 @@ theorem rootHits_highCost (n : Nat) :
     highCost (rootHits n) = 2^(n+5) := by
   rw [rootHits_high_twice_low, rootHits_lowCost]
   rw [show n+5 = (n+4)+1 by omega, Nat.pow_succ]
-  omega
+  ac_rfl
 
 theorem rootHits_nonempty (n : Nat) : rootHits n ≠ [] := by
   intro h
