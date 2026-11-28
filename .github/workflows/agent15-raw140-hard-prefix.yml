@@ -25,7 +25,7 @@ jobs:
           node im-results/agent10-nov26-cryptids/generate_raw140_37_er_entry.js
           python tools/lean_compile_closure.py --workdir /tmp/agent15-raw140-hard-prefix --jobs 3 \
             im-results/agent15-raw140-hard-prefix/Raw14037HardPrefix.lean 2>&1 | tee /tmp/agent15-raw140-hard-prefix.log
-          for t in section0_to_section13 blank_to_section13 drain_endpoint section13_to_afterBank blank_to_afterBank blank_to_transferOut; do
+          for t in section0_to_section13 blank_to_section13 drain_endpoint section13_to_afterBank blank_to_afterBank blank_to_transferOut step_ext37 run_ext37 blank_to_transferOut_ext; do
             python im-results/agent4-raw109/audit_axioms.py /tmp/agent15-raw140-hard-prefix.log "Raw14037HardPrefix.$t"
           done
       - uses: actions/upload-artifact@v4
