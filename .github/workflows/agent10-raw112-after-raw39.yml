@@ -13,6 +13,11 @@ on:
         required: true
         type: string
         default: '46114235329'
+      raw47_conditional:
+        description: 'Also source-check Raw47 38-to-37 conditional roster complement'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -50,6 +55,14 @@ jobs:
             | tee /tmp/a10-raw112-after-raw39.log
           test -s /tmp/a10-raw112-after-raw39/evidence/raw112-after-raw39-canonical38.json
           cat /tmp/a10-raw112-after-raw39/evidence/raw112-after-raw39-canonical38.json
+      - name: Source-check Raw47 conditional complement after accepted Raw112
+        if: ${{ inputs.raw47_conditional }}
+        run: |
+          set -euo pipefail
+          python im-results/agent29-raw47-after-raw112/check.py \
+            --work /tmp/a10-raw112-after-raw39 \
+            | tee /tmp/a29-raw47-conditional-after-raw112.log
+          test -s /tmp/a10-raw112-after-raw39/evidence/raw47-conditional-after-raw112-canonical37.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
