@@ -200,13 +200,12 @@ theorem normalizeFinal (m p : Nat) :
       [true,false,true,true,false,true])
 
 theorem finalOut_eq_family_succ (n : Nat) : finalOut n = family (n+1) := by
-  unfold finalOut family
-  congr 1
   have h := normalizeFinal (A n + 1) (B n)
   have ha : A n + 1 + 2 = 4*(n+1)+2 := by simp [A]; omega
   have hb : B n + 1 = 2*(n+1)+1 := by simp [B]; omega
   rw [ha, hb] at h
-  simpa [A, B] using h
+  unfold finalOut family
+  rw [h]
 
 def C (n : Nat) : Nat := 4*n+2
 def D (n : Nat) : Nat := 2*n+1
@@ -441,9 +440,9 @@ theorem phase_middle_first (n : Nat) :
     have h := sweepR table 2 [true] [] [true,false,true] [true,false,true] 3
       right3C (K n) (rep [true,false] (D n) ++ cTail)
       [true,false,false,true,true,false,false,true,true]
-    rw [rotate011 (K n)
-      [false,false,true,true,false,false,true,true]]
-    simpa [List.append_assoc] using h
+    have hr := rotate011 (K n)
+      [false,false,true,true,false,false,true,true]
+    convert h using 1 <;> simp [hr, List.append_assoc]
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (K n) ++
@@ -491,8 +490,8 @@ theorem phase_middle_first (n : Nat) :
           [false,true,true] ++ rep [false,true,true] (K n+1) := by
       rw [hk]
       rfl
-    rw [hrep]
-    simpa [midraw, eTail, List.append_assoc] using h
+    convert h using 1 <;>
+      simp [midraw, eTail, hrep, List.append_assoc]
 
   have H := join0 h0 (join0 h1 (join0 h2 (join0 h3 (join0 h4 h5))))
   have hc :
@@ -633,17 +632,17 @@ theorem phase_p3_turn (n : Nat) :
       rep [false,true,true] (K n+2) ++ [false,false,true,true])
 
 theorem p4turn_eq_p4 (n : Nat) : p4turn n = p4 n := by
-  unfold p4turn p4
-  congr 1
   have h := alignOnesTurn (D n+1)
   have hk : K n+2 = A n := by simp [K,A]; omega
   have hb : D n+1 = B n := by simp [D,B]; omega
   rw [hk, hb] at h
-  simpa [List.append_assoc] using
-    congrArg
-      (fun x : List Bool =>
-        [false,false,false,false,false,true,false,true,true,false] ++ x ++
-          rep [false,true,true] (A n) ++ [false,false,true,true]) h
+  have hr := congrArg
+    (fun x : List Bool =>
+      [false,false,false,false,false,true,false,true,true,false] ++ x ++
+        rep [false,true,true] (A n) ++ [false,false,true,true]) h
+  unfold p4turn p4
+  rw [hk, hb]
+  simpa [List.append_assoc] using congrArg (fun r : List Bool => (⟨4,[],r⟩ : Z0)) hr
 
 theorem phase_p2_to_p4 (n : Nat) :
     run0 table (224*n+276) (p2raw n) = some (p4 n) := by
@@ -686,8 +685,8 @@ theorem phase_final (n : Nat) :
     have h := sweepR table 2 [true] [] [true,false,true] [true,false,true] 3
       right3C (A n) (rep [true,false] (B n) ++ cTail)
       [true,false,false,true,true]
-    rw [rotateRightC n]
-    simpa [List.append_assoc] using h
+    have hr := rotateRightC n
+    convert h using 1 <;> simp [hr, List.append_assoc]
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (A n) ++
@@ -741,9 +740,10 @@ theorem phase_final (n : Nat) :
       some ⟨4,[true,true,false,false,true,false,true,true,false,true],
         [false,true,true] ++ rep [true,true] (B n) ++
           rep [false,true,true] (A n+1) ++ [false,true]⟩ := by
-    rw [← alignBeforeF (B n)
-      (rep [false,true,true] (A n+1) ++ [false,true])]
-    simpa [eTail, List.append_assoc] using h5
+    have hr := alignBeforeF (B n)
+      (rep [false,true,true] (A n+1) ++ [false,true])
+    convert h5 using 1 <;>
+      simp [hr, eTail, List.append_assoc]
 
   have h6 : run0 table 21
       ⟨4,[true,true,false,false,true,false,true,true,false,true],
