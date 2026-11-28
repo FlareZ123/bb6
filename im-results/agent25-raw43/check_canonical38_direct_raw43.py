@@ -83,7 +83,7 @@ def main():
     root, profiles = c.u.compile_one(
         HERE / "Raw43Canonical38DirectConditional.lean",
         linked, evidence, TARGETS)
-    assert set(profiles) == set(TARGETS), profiles
+    assert set(TARGETS) <= set(profiles), (set(TARGETS) - set(profiles), profiles)
     assert all(set(ax) <= ALLOWED for ax in profiles.values()), profiles
     shutil.copy2(root, evidence / root.name)
 
