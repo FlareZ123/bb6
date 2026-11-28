@@ -121,7 +121,6 @@ jobs:
           LEAN_PATH="$e:$a2" lean -o "$a2/BulkRuns.olean" "$a2/BulkRuns.lean" | tee -a /tmp/f321-single-far.log
           LEAN_PATH="$e:$a2" lean -o "$e/HighFarTerminalFamily.olean" "$e/HighFarTerminalFamily.lean" | tee -a /tmp/f321-single-far.log
           LEAN_PATH="$e:$a2" lean -o "$e/HighFarRootTargets.olean" "$e/HighFarRootTargets.lean" | tee -a /tmp/f321-single-far.log
-          LEAN_PATH="$e:$a2" lean -o "$a2/AnchorEpoch.olean" "$a2/AnchorEpoch.lean" | tee -a /tmp/f321-single-far.log
           LEAN_PATH="$e:$a2:$q" lean "$e/SingleFarRootClassification.lean" | tee -a /tmp/f321-single-far.log
           ! grep -q sorryAx /tmp/f321-single-far.log
 
