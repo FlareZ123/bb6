@@ -28,7 +28,7 @@ theorem no_nine_shift {n m W a : Nat}
     simpa only [Nat.mul_comm] using hh
 
 /-- The higher non-coprime example gcd(27,18)=9: the one-period
-    bound saves 14 selected bits over a 2K-return obstruction. -/
+    bound saves 18 selected bits over a 2K-return obstruction. -/
 theorem no_twentyseven_shift {n m W a : Nat}
     (hn : 14≤n) (heven : n%2=0) (ht : Trace n m W a)
     (i r : Nat) (flip : Bool)
@@ -53,7 +53,7 @@ theorem no_twentyseven_shift {n m W a : Nat}
 
 /-- Small factor of the 23rd Mersenne number: 47*2^r shifts
     forbid either parity of equality for 2n+35 bits, shortening the
-    old 2n+53 order-return bound by 18 bits. -/
+    same-margin 2n+58 order-return bound by 23 bits. -/
 theorem no_fortyseven_shift {n m W a : Nat}
     (hn : 14≤n) (heven : n%2=0) (ht : Trace n m W a)
     (i r : Nat) (flip : Bool)
