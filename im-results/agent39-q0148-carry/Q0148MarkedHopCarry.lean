@@ -76,11 +76,16 @@ theorem marked_phase (n j : Nat) :
       [false,true,true] ++ rep [false,true] (j+2) =
         rep [true,false] (n+1) ++ [true,false] ++
           ([true,true] ++ rep [false,true] (j+2)) := by
-            rw [h1]
-            simp only [List.append_assoc]
+            have ht := congrArg
+              (fun w : List Bool =>
+                w ++ [false,true,true] ++ rep [false,true] (j+2)) h1
+            simpa [List.append_assoc] using ht
     _ = rep [true,false] (n+1) ++ [true,false] ++
           ([true,true,false,true,false] ++ rep [true,false] j ++ [true]) := by
-            rw [h2]
+            have ht := congrArg
+              (fun w : List Bool =>
+                rep [true,false] (n+1) ++ [true,false] ++ w) h2
+            simpa [List.append_assoc] using ht
     _ = rep [true,false] (n+2) ++
         [true,true,false,true,false] ++ rep [true,false] j ++ [true] := by
           rw [hr]
