@@ -152,8 +152,8 @@ theorem hfRun_pullback_formal
       rcases hm with hH | hF
       · rcases hH with ⟨hg,rfl,rfl⟩
         have ha : 2*(A:Int) =
-            2*((A-D-2:Int)) + (2*D+3:Int) + 1 := by omega
-        have hd : 2*(D:Int) = (2*D+3:Int) - 3 := by omega
+            2*(((A-D-2 : Nat):Int)) + ((2*D+3 : Nat):Int) + 1 := by omega
+        have hd : 2*(D:Int) = ((2*D+3 : Nat):Int) - 3 := by omega
         have hp' : FormalInversePath seed (.high::w) (A:Int) (D:Int) :=
           FormalInversePath.stepH hp ha hd
         obtain ⟨w',hw',hlen⟩ := ih hp'
@@ -161,8 +161,8 @@ theorem hfRun_pullback_formal
         simp at hlen ⊢
         omega
       · rcases hF with ⟨h1,h2,rfl,rfl⟩
-        have ha : 4*(A:Int) = (4*A+6:Int) - 6 := by omega
-        have hd : (D:Int) = (D-3*A:Int) + 3*(A:Int) := by omega
+        have ha : 4*(A:Int) = ((4*A+6 : Nat):Int) - 6 := by omega
+        have hd : (D:Int) = (((D-3*A : Nat):Int)) + 3*(A:Int) := by omega
         have hp' : FormalInversePath seed (.far::w) (A:Int) (D:Int) :=
           FormalInversePath.stepF hp ha hd
         obtain ⟨w',hw',hlen⟩ := ih hp'
