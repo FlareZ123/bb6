@@ -13,12 +13,13 @@ on:
           - at-general
           - at-monoid-growth
           - epoch-marker
+          - self-embedding
         default: paired
 
 jobs:
   kernel-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean 4.36.0-rc2
@@ -95,3 +96,34 @@ jobs:
           done
           lean "$e/EpochOdd.lean" | tee -a /tmp/epoch-marker.log
           ! grep -q sorryAx /tmp/epoch-marker.log
+
+      - name: Check F197 self-embedding from generated finite certificates
+        if: ${{ inputs.target == 'self-embedding' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          d="$PWD/im-results/agent31-f197-macro"
+          e="$PWD/im-results/agent2-f197-sweep"
+          b="$RUNNER_TEMP/f197-kernel"
+          mkdir -p "$b"
+          python3 "$e/generate_lean_trace.py" "$b"
+          cp "$d/Macro.lean" "$b/"
+          for m in PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryBulk TraceLogic; do
+            cp "$e/$m.lean" "$b/"
+          done
+          cd "$b"
+          export LEAN_PATH=.
+          for m in Macro PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryData OrdinaryBulk TraceLogic TraceStates; do
+            lean -j 1 -o "$m.olean" "$m.lean" | tee -a "$RUNNER_TEMP/f197-kernel.log"
+          done
+          export RLOG="$RUNNER_TEMP/f197-kernel.log"
+          compile() {
+            local s="$1"
+            lean -j 1 -o "${s%.lean}.olean" "$s" 2>&1 | tee -a "$RLOG"
+          }
+          export -f compile
+          printf '%s\n' OpBank*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
+          printf '%s\n' SelfPre*.lean SelfPost*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
+          lean -j 1 -o SelfTheorem.olean SelfTheorem.lean | tee -a "$RLOG"
+          ! grep -q sorryAx "$RLOG"
+          python3 "$e/verify_nonhalt.py"
