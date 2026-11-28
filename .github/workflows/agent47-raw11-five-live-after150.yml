@@ -2,6 +2,12 @@ name: Agent47 Raw11 five-live-parent crosswalk after 150
 
 on:
   workflow_dispatch:
+    inputs:
+      q0151_parent_run:
+        description: Successful q0-151 sharded parent run ID; empty means crosswalk-only
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -124,3 +130,169 @@ jobs:
             im-results/agent47-raw11-adapter/Raw11FiveLiveAfter150.lean
           if-no-files-found: warn
           retention-days: 30
+
+  q0151-consume:
+    if: inputs.q0151_parent_run != ''
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - name: Download accepted Raw11 150 object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46120220611
+          name: agent47-raw11-exact-299-to-150-extra28
+          path: /tmp/q0150accepted
+
+      - name: Download accepted Raw11 151 object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46111781717
+          name: raw11-exact-299-to-151-q0root53
+          path: /tmp/q0151accepted
+
+      - name: Download accepted Raw11 152 predecessor
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152accepted
+
+      - name: Download accepted q0-root53 parent object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46109014135
+          name: raw11-q0-root53-complete-source
+          path: /tmp/root53accepted
+
+      - name: Download accepted Extra28 child proof objects
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105742866
+          pattern: agent44-raw11-extra28-confirmed-*
+          merge-multiple: true
+          path: /tmp/extra28-eight
+
+      - name: Download remaining accepted Extra28 child proof objects
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105738773
+          pattern: agent44-raw11-extra28-child-*
+          merge-multiple: true
+          path: /tmp/extra28-four
+
+      - name: Download accepted q0-151 common/core proof objects
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.q0151_parent_run }}
+          name: raw11-q0-sharded-core-151
+          path: /tmp/q151core
+
+      - name: Download accepted q0-151 proof shards
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.q0151_parent_run }}
+          pattern: raw11-q0-sharded-part-151-*
+          path: /tmp/q151parts
+
+      - name: Download accepted q0-151 parent object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.q0151_parent_run }}
+          name: raw11-coarse-cover-151
+          path: /tmp/q151parent
+
+      - name: Recover exact Raw11 transitive source objects
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/q151-consumer
+          for id in \
+            15144626755 \
+            15159003899 15161045625 \
+            15159257293 15154832729 15154568902 \
+            15154569169 15154663882 15158958272 \
+            15017647753 15014940132 15166284252 \
+            15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/q0150accepted -name Raw11Extra28After151.olean -print -quit)"
+          test -n "$(find /tmp/q151parent -name Agent5Q0Coarse151.olean -print -quit)"
+          test -n "$(find /tmp/q151core -name Q0151FullCover.olean -print -quit)"
+          test -n "$(find /tmp/q151parts -name '*.olean' -print -quit)"
+
+      - name: Kernel-check exact Raw11 150-to-149 successor
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/q151-consumer
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find \
+            /tmp/deps /tmp/root53accepted /tmp/q0152accepted /tmp/q0151accepted \
+            /tmp/q0150accepted /tmp/extra28-eight /tmp/extra28-four \
+            /tmp/q151core /tmp/q151parts /tmp/q151parent \
+            -type f -name '*.olean' | sort)
+          export LEAN_PATH
+
+          src=im-results/agent5-weighted-tnf-queue/Raw11Q0151After150.lean
+          lean -j1 -o /tmp/q151-consumer/Raw11Q0151After150.olean "$src" \
+            | tee /tmp/q151-consumer/Raw11Q0151After150.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q151-consumer/Raw11Q0151After150.log; then
+            exit 1
+          fi
+          for theorem in \
+            "'BB6.Agent5Raw11Q0151After150.member_in_150' depends on axioms:" \
+            "'BB6.Agent5Raw11Q0151After150.remaining_census' depends on axioms:" \
+            "'BB6.Agent5Raw11Q0151After150.parent_cover' depends on axioms:" \
+            "'BB6.Agent5Raw11Q0151After150.raw11_cover_from_149' depends on axioms:"; do
+            grep -F "$theorem" /tmp/q151-consumer/Raw11Q0151After150.log
+          done
+          sha256sum "$src" > /tmp/q151-consumer/source-sha256.txt
+          lean --version > /tmp/q151-consumer/toolchain.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent5-raw11-exact-299-to-149-q0151
+          path: |
+            /tmp/q151-consumer
+            im-results/agent5-weighted-tnf-queue/Raw11Q0151After150.lean
+          if-no-files-found: warn
+          retention-days: 30
+
