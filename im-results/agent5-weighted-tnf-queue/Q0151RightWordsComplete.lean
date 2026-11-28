@@ -99,11 +99,13 @@ theorem cut_second_live (a b : Nat) (rest : List Nat)
       (by simpa only [suffixMask] using h)
   exact cut_second a b rest hc (suffixMask_live_variants rest ht)
 
+def actualNext : List Nat → Nat × RightSummary
+  | [] => (0,emptyRight)
+  | n::rest => (cat (n+1),rightSig rest)
+
 theorem cut_real_next (xs : List Nat)
     (h : rightType (rightSig xs) ≠ 0) :
-    (match xs with
-      | [] => (0,emptyRight)
-      | n::rest => (cat (n+1),rightSig rest)) ∈ cut (rightSig xs) := by
+    actualNext xs ∈ cut (rightSig xs) := by
   cases xs with
   | nil => exact cut_empty
   | cons a rest =>
