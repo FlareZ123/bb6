@@ -360,7 +360,7 @@ theorem R_return_carry (a d c z : Nat) (L R : List Bool) :
   have h := join0_of_eq h12
     (by simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc]) h3
   convert h using 1 <;>
-    simp [RT, rep, rep_singleton_cons, List.append_assoc] <;> omega
+    simp [RT, rep, rep_add, rep_singleton_cons, List.append_assoc] <;> omega
 
 /-- Source-level boundary b=5 A-triad carry rewrite. -/
 theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
