@@ -265,6 +265,30 @@ These rules explain both the uniqueness of the defect and its unbounded
 migration depth. Together with the Lean arithmetic lemmas, they reduce the
 left-side induction to proving the stated reachable guard invariant.
 
+There is also a recursive description of every complete defect lifetime in
+the checked macro orbit. Let `E_0 = BA` and
+`E_(r+1) = sigma(E_r)`. Through level 15, **every** interval from mark
+creation to mark cancellation is exactly one `E_r = sigma^r(BA)); no other
+episode word occurs. Its length is `2·3^r`, and the largest mark depth
+inside the episode is exactly `ceil(r/2)`. The observed episode counts are:
+
+| epoch | E0 | E1 | E2 | E3 | E4 | E5 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| 10 | 2 | 0 | 0 | 0 | 0 | 0 |
+| 11 | 20 | 2 | 0 | 0 | 0 | 0 |
+| 12 | 116 | 20 | 2 | 0 | 0 | 0 |
+| 13 | 516 | 116 | 20 | 2 | 0 | 0 |
+| 14 | 1,968 | 516 | 116 | 20 | 2 | 0 |
+| 15 | 6,828 | 1,968 | 516 | 116 | 20 | 2 |
+
+`analyze_17557_defect_stream.cpp` now checks this episode grammar in the
+same pass as the one-defect relation, transition law, and residue guards.
+This turns the remaining proof target into a natural induction on substituted
+episodes: prove the base `BA` creates and cancels one front defect, then show
+that replacing each macro by `ABA` or `BBA` sends a valid `E_r`
+lifetime to a valid `E_(r+1)` lifetime while preserving the frame-stack
+guard.
+
 The natural replacement for fixed `rho` is therefore a relation carrying
 an optional **defect token** on one left zero-run:
 
