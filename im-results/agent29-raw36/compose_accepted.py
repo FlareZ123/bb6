@@ -85,6 +85,8 @@ def main():
         compile_roots += ["Raw36ParentLive8", "Raw36ParentLive8D101"]
     if "Raw36D101" in members and "Raw36D102" in members:
         compile_roots += ["Raw36ParentLive7", "Raw36ParentLive7D101D102"]
+    if all(name in members for name in ("Raw36D101", "Raw36D102", "Raw36D114")):
+        compile_roots += ["Raw36ParentLive6", "Raw36ParentLive6D101D102D114"]
     expected_by_root = {
         "Raw36Branch": {"children_bound", "branch_bound", "branch_cover"},
         "Raw36D1Complement": {"b1Complement_count", "b1Complement_nodup", "d1_bound_from_four", "d1_cover_from_four"},
@@ -96,6 +98,8 @@ def main():
         "Raw36ParentLive8D101": {"d101_identity", "d101_cover_at", "parent_cover_from_live8"},
         "Raw36ParentLive7": {"parent_cover_from_seven", "d1Live7_count", "parentLive7_count"},
         "Raw36ParentLive7D101D102": {"d102_identity", "d102_cover_at", "parent_cover_from_live7"},
+        "Raw36ParentLive6": {"parent_cover_from_six", "d1Live6_count", "parentLive6_count"},
+        "Raw36ParentLive6D101D102D114": {"d114_identity", "d114_cover_at", "parent_cover_from_live6"},
     }
     for name in compile_roots:
         src = ROOT / (name + ".lean")
@@ -125,6 +129,9 @@ def main():
     if "Raw36D101" in members and "Raw36D102" in members:
         claim_theorem = "BB6.Agent29Raw36.parent_cover_from_live7"
         remaining_d1 = ["0LA", "1LA", "1LC", "0LE", "0RE", "1LE", "1RE"]
+    if all(name in members for name in ("Raw36D101", "Raw36D102", "Raw36D114")):
+        claim_theorem = "BB6.Agent29Raw36.parent_cover_from_live6"
+        remaining_d1 = ["0LA", "1LA", "0LE", "0RE", "1LE", "1RE"]
     revision = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
     result = {"schema_version": 1, "label": "raw36-d1-complement",
               "artifact_name": "raw36-d1-complement", "proof_source_revision": revision,
