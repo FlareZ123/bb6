@@ -69,3 +69,58 @@ dominated by long traces rather than unknown first-query branching.
 Local reproduction on 28 November 2026 compiled `census.cpp` with
 `g++ -O3 -std=c++20` and completed the depth-seven/eight census in 5.25
 seconds after generating `residualRows.json`.
+
+
+## Better pair target: D1=0LF, F0=0LD
+
+A complete rank of the 100 physical (D1,F0) pair roots using
+`rank_pairs_depth6.cpp` identified
+
+`1RB---_1RC---_0RD0LF_1LC---_------_0LD---`
+
+as a substantially better unresolved pair parent than the original F0=0LA
+pilot.  The exact extended source-plan generator now supports this parent
+directly (`generate_pair_depth6_plan.mjs --f0 0LD`) and asserts the
+following depth-six census:
+
+- 16,976 total plan nodes;
+- 4,318 explicit residual rows;
+- 1/7/67/604 finite-halting leaves at depths 3/4/5/6;
+- 17/101/1,002/10,155 short side-cycle leaves at depths 3/4/5/6;
+- 25 additional extended side-cycles at depth six;
+- 4,234 open depth-six residuals;
+- 82 long depth-six residuals;
+- exactly **two** long depth-five residuals.
+
+The residual physical mass at that point is therefore
+
+`(4234+82)*25^2 + 2*25^3 = 2,728,750`
+
+out of the pair parent's 244,140,625 completions.  A dedicated workflow mode
+`raw34-pair-easy-plan` kernel-checks the generated source `Cover`; the
+numerical census is a generator assertion and should be paired with a
+successful workflow run before being treated as source accepted.
+
+The two depth-five residual cylinders are exactly
+
+`1RB1LA_1RC1RB_0RD---_1LC0LF_------_0LD1LA`
+
+and
+
+`1RB0LF_1RC1RA_0RD---_1LC0LF_------_0LD1LA`.
+
+Each has three arbitrary rows (C1,E0,E1), hence physical mass 15,625.
+`../agent40-raw34-frontier/Raw34QuadraticPairGrowth.lean` gives parametric
+sweep-pump proofs for both.  The first grows a contiguous block with checkpoint
+time n(n+8); the second grows an alternating block with checkpoint time
+2n^2+7n.  Once both theorems are source accepted, all depth-five residual mass
+for this pair is closed and only the 4,316 depth-six residual cylinders remain.
+
+A deeper candidate census using the same short side-cycle checker, then the
+repository's larger half-line search window (entry <= 500, period <= 200,
+trace cap 1,000), reduces the unresolved physical target further to 131,081.
+That number is **candidate-level only** until those deeper candidates are
+emitted as source theorems and kernel checked.  Its useful structural
+breakdown is 82 long depth-six cylinders, 1,276 long depth-seven cylinders,
+and 16,681 complete depth-eight long machines after the two depth-five
+growth cylinders are separated.
