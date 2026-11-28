@@ -80,7 +80,7 @@ theorem root_residual_subset (e : List Move × PartialMachine)
     old_mid=("have hh : e.snd ∈ residuals.map Prod.snd := List.mem_map_of_mem Prod.snd he\n"
              "    rw [residual_tables] at hh")
     assert theorem.count(old_mid)==1
-    theorem=theorem.replace(old_mid,"have hh : e.snd ∈ allTables := root_residual_subset e he",1)
+    theorem=theorem.replace(old_mid,"have hh : e.snd ∈ allTables := root_residual_subset e he\n    simp only [allTables] at hh",1)
     reduction=source_head+theorem
     assert reduction.count("theorem reduced_quotient :")==1
     assert "theorem residual_tables :" not in reduction
