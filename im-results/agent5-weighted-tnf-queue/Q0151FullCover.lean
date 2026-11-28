@@ -9,6 +9,7 @@ import Q0151SourceActions10
 import Q0151SourceActions11
 import Q0151SourceActions12
 import Q0151PackedLiveness
+import WeightedTNF
 
 set_option maxHeartbeats 0
 set_option maxRecDepth 100000
@@ -27,7 +28,7 @@ makes no statement about BB(6) global maximality.
 -/
 
 namespace BB6.Agent5Q0151FullCover
-open BB6Coverage BB6Coverage.Agent31Pump
+open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent13BlankDelay
 open BB6.Agent5Q0151SourceMacro
 open BB6.Agent5Q0151PhysicalStack
 open BB6.Agent5Q0151SourceActions1
@@ -161,12 +162,19 @@ theorem physical_progress (x : P) (hx : Region x) :
   | true =>
       simpa [srcQ] using progress_b s st rs hs hst hc
 
-theorem cover : Cover NeverHalts p := by
+theorem never_cover : Cover NeverHalts p := by
   exact cover_of_region Region 1 (boundary 1 [true] [] [])
     blank_seed initial physical_progress
+
+abbrev table : PartialMachine := p
+
+/-! Exact one-hole Cover consumable by the weighted Raw11 q0 parent tree. -/
+theorem cover (B : Nat) : Cover (WeightedBound B) table :=
+  .leaf p (fun m hm => weighted_never B m (never_cover.sound m hm))
 
 #print axioms progress_b
 #print axioms progress_c
 #print axioms physical_progress
+#print axioms never_cover
 #print axioms cover
 end BB6.Agent5Q0151FullCover
