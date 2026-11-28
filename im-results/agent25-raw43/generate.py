@@ -33,6 +33,17 @@ BIDFA_BATCH = max(1, int(os.environ.get("RAW43_BIDFA_BATCH", "1")))
 # rechecks through NGramCertificate.check.  Width 12 is the first successful
 # symmetric local-window closure for residual 3 (4416 abstract states), replacing
 # the previous 47353-state BiDFA certificate.
+MACRO_OVERRIDES = {
+    "b1le_e0ra": {
+        192: (
+            "1RB1LF_1RC1LE_0RD0RC_1LD0RB_0RA---_0LA1LB",
+            "Raw43B1LEE0RAMacro",
+            "BB6.Agent38Raw43B1LEE0RA.table",
+            "BB6.Agent38Raw43B1LEE0RA.never",
+        ),
+    },
+}
+
 NGRAM_OVERRIDES = {
     "b1re_e11le": {3: 12},
     # Seven exact local-window closures in B1LE/E1=1RB.  Residual 175 is the
@@ -170,6 +181,16 @@ def generate():
                 cert[i]=".proven BB6.Agent25Raw43M29.table BB6.Agent25Raw43M29.never"
                 modules[i]="Raw43M29"
 
+        macro_overrides = MACRO_OVERRIDES.get(VARIANT, {})
+        for i,(expected,module,partial,never) in sorted(macro_overrides.items()):
+            assert rows[i] == expected
+            cert[i] = f".proven {partial} {never}"
+            modules[i] = module
+            print(
+                f"macro override {VARIANT} residual {i}: {module}",
+                flush=True,
+            )
+
         ngram_overrides = NGRAM_OVERRIDES.get(VARIANT, {})
         if ngram_overrides:
             ngram_bin = work/"ngram"
@@ -217,7 +238,7 @@ def generate():
 
         done_bidfa=set()
         for i in sorted(bidfa):
-            if i in done_bidfa or i in ngram_overrides:
+            if i in done_bidfa or i in ngram_overrides or i in macro_overrides:
                 continue
             leaf=bidfa[i]
             assert rows[i]==leaf["table"]
