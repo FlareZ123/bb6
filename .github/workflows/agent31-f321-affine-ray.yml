@@ -45,6 +45,7 @@ jobs:
           LEAN_PATH="$e:$q" lean -o "$q/Mod512Source.olean" "$q/Mod512Source.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q:$a2" lean "$a2/ResetMod512.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$a2" lean "$a2/EvenV2.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$a2" lean "$a2/OddV2Witness.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay7933.lean" | tee -a /tmp/agent31-ray.log
           LEAN_PATH="$e:$q" lean "$q/AffineRay9043.lean" | tee -a /tmp/agent31-ray.log
