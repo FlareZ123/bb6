@@ -46,7 +46,7 @@ theorem subset_{kk} (e : List Move × PartialMachine)
   all_goals simp_all
   all_goals grind
 """)
-    childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
+    childrenSource=("import Raw56LBTopTables\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace "+NS+"\nopen BB6Coverage BB6.Agent13BlankDelay BB6.Agent31ThreeHole BB6.Agent10ZipAudit\nopen BB6.Agent48PrefixAudit BB6.Agent47PartialAudit BB6.Agent19CanonicalPartial BB6.Agent47CanonicalFrontier\n"+ "\n".join(children)+"\n#print axioms subset_23\nend "+NS+"\n")
     (d/"Raw56LBTopChildren.lean").write_text(childrenSource)
     # First-query discrimination exactly mirrors the source-accepted cktop
     # proof's 24 terms, so it never expands a giant concatenated list.
