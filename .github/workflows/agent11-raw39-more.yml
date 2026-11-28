@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership]
         required: true
 permissions:
   contents: write
@@ -716,3 +716,30 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent43-raw39-4084/search_pump.py im-results/agent11-raw39/0LE-frontier.json.xz.b64 1583 3000000
+
+  canonical40_membership:
+    if: ${{ inputs.branch == 'canonical40-membership' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Authenticate exact predecessor and prove Raw39 roster membership
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/check_canonical40_membership.py \
+            --work /tmp/a11-raw39-canonical40-membership
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-canonical40-membership
+          path: /tmp/a11-raw39-canonical40-membership/evidence/
+          if-no-files-found: error
+          retention-days: 30
