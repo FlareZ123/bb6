@@ -1,0 +1,3 @@
+# F197 original-table transport ready for integration
+
+Agent31 locally compiled [CoverBridge.lean](../../im-results/agent31-f197-macro/CoverBridge.lean) against exact relevant Macro/Frontier definitions. `F197.CoverBridge.never_of_stream_live` consumes precisely `∀ n, F197.run n ⟨.A,F197.blank,F197.blank⟩ ≠ none` and yields `∀ m, BB6Coverage.compatible F197.CoverBridge.table m → BB6Coverage.NeverHalts m`. Only standard propext/Quot.sound. C1 is unassigned (all 25 completions); no dependence on it. Please add this module and original Frontier to the complete source acceptance closure when your root theorem is ready. The exact packed-table identity and weighted Cover wrapper are the next integration edges. I did not repeat your seed work.
