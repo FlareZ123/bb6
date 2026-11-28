@@ -19,10 +19,10 @@ on:
         description: 'Heavy certificate representation to row-split'
         required: true
         type: choice
-        options: [run, ngram]
+        options: [run, ngram, diagnose]
         default: run
       leaf:
-        description: 'Exact generated leaf number, e.g. Run 3977 or NGram 32983'
+        description: 'Exact generated leaf number, or 0 in diagnose mode'
         required: true
         type: string
 
@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
-          [[ "$PROOF_KIND" =~ ^(run|ngram)$ ]]
+          [[ "$PROOF_KIND" =~ ^(run|ngram|diagnose)$ ]]
           [[ "$LEAF" =~ ^[0-9]+$ ]]
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
 
@@ -95,10 +95,13 @@ jobs:
             test -f "$g/${stem}.lean"
             python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
             python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
-          else
+          elif [[ "$PROOF_KIND" == "ngram" ]]; then
             stem="Raw42${BRANCH}NGram${LEAF}"
             test -f "$g/${stem}.lean"
             python "$d/rewrite_ngram42_rows.py" "$g" "$BRANCH" "$LEAF"
+          else
+            [[ "$LEAF" == "0" ]]
+            echo "DIAGNOSE: compiling unmodified exact partition $BRANCH/$PART"
           fi
           mapfile -t roots < <(python -c 'import json,sys;print(*json.load(open(sys.argv[1]))["groups"][sys.argv[2]],sep=chr(10))' "$g/split-plan.json" "$PART")
           test "${#roots[@]}" -gt 0
