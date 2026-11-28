@@ -98,6 +98,38 @@ attachment: 42 are covered by stored certificate banks and the remaining
 seven are the four phased-counter instances, mirrored counter, unary recursion,
 and the giant hierarchical halting leaf.  The generator accounts for all 49.
 
+## E1=0RF hard-leaf closure
+
+The 0RF discovery tree contains 1,559 open leaves: 1,544 ordinary
+certificate records, 3 bounded late-query leaves, and 12 hard leaves.
+Six hard leaves have stored auto certificates and one is handled by
+`Raw13RFPrefix.lean`. The other five now have original-semantics
+nonhalting proofs:
+
+| Literal partial table | Lean theorem module |
+| --- | --- |
+| `1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF0LD---` | Raw13Coupled6RFCounter (zLD) |
+| `1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1LD---` | Raw13Coupled6RFCounter (oLD) |
+| `1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RC---` | Raw13Coupled6RFCounter (oRC) |
+| `1RB1LD1RC0LD1LA1RE0LD0LA0RB0RF1LB---` | Raw13Coupled6RFQuaternary |
+| `1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RD---` | Raw13Coupled6RFOneRD |
+
+The first three share a two-phase arbitrary-width binary counter;
+the fourth grows a unary prefix by one block on each three-pass
+quaternary increment; the fifth has a distinct two-phase binary
+counter using an E-state carry of cost 26 per six-cell digit.
+All five prove `∀ m, compatible p m → NeverHalts m`, covering 125
+distinct concrete completions. Blank entries and all unbounded
+returns passed Lean 4.36.0-rc2 locally using the original dependency
+objects from accepted artifact 15248054208 (run 46103800697).
+Their axiom profiles are [propext, Classical.choice, Quot.sound];
+the growth and entry results use [propext, Quot.sound].
+`generateCoupled6Sibling.py` attaches the five proofs by exact literal
+table, with no change to the target weighted bound. The RF sibling's
+literal proof inventory is complete; its whole generated cut must
+still be source-audited with target coupled6Sibling, branches 0RF.
+No global canonical roster decrement is claimed.
+
 ## Composition and source audit
 
 `.github/workflows/agent46-raw13-coupled6-parent.yml` merges independently
