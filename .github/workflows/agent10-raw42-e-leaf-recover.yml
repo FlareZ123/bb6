@@ -19,7 +19,7 @@ on:
         description: 'Heavy certificate representation to row-split'
         required: true
         type: choice
-        options: [run, ngram, compact_ngram, diagnose]
+        options: [run, ngram, compact_ngram, compact_run, diagnose]
         default: run
       leaf:
         description: 'Exact generated leaf number(s), comma-separated for NGram repair, or 0 in diagnose mode'
@@ -48,7 +48,7 @@ jobs:
           set -euo pipefail
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
-          [[ "$PROOF_KIND" =~ ^(run|ngram|compact_ngram|diagnose)$ ]]
+          [[ "$PROOF_KIND" =~ ^(run|ngram|compact_ngram|compact_run|diagnose)$ ]]
           if [[ "$PROOF_KIND" == "diagnose" ]]; then
             [[ "$LEAF" == "0" ]]
           else
@@ -102,10 +102,12 @@ jobs:
               python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee -a /tmp/minimize.log
               python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$leaf"
             done
-          elif [[ "$PROOF_KIND" == "compact_ngram" ]]; then
+          elif [[ "$PROOF_KIND" == "compact_ngram" || "$PROOF_KIND" == "compact_run" ]]; then
+            kind=NGram
+            if [[ "$PROOF_KIND" == "compact_run" ]]; then kind=Run; fi
             IFS=',' read -ra leaves <<< "$LEAF"
             for leaf in "${leaves[@]}"; do
-              stem="Raw42${BRANCH}NGram${leaf}"
+              stem="Raw42${BRANCH}${kind}${leaf}"
               test -f "$g/${stem}.lean"
               python "$d/partial_ngram_quotient.py" "$g/${stem}.lean"
             done
