@@ -157,6 +157,7 @@ def main():
     ap.add_argument("--raw47-run-id", type=int, default=46068688341)
     ap.add_argument("--onele-run", type=int, default=46114235329)
     ap.add_argument("--chunk-size", type=int, default=64)
+    ap.add_argument("--raw39-resume", type=Path)
     args = ap.parse_args()
 
     work = args.work.resolve()
@@ -199,6 +200,7 @@ def main():
         comparator_batch=A11 / "CompareKernelImportsBatch.lean",
         allow_compatible=True,
         chunk_size=args.chunk_size,
+        resume_from=args.raw39_resume,
     )
     assert raw39_report["complete"]
     assert "BB6.Agent11Raw39Closed.parent_bound" in selected
