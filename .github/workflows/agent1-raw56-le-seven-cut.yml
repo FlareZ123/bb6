@@ -52,10 +52,12 @@ jobs:
                   else:
                       target.symlink_to(path.resolve())
               print('restored',root,len(files))
-          for m in ['Raw56E1LECut','Raw56E1LEFourCut','Raw56E1LEFiveCut']:
+          for m in ['Raw56RootConsumer','Raw56E1LEFourCut','Raw56E1LEFiveCut']:
               assert (dst/(m+'.olean')).is_file(),m
           PY
           export LEAN_PATH=/tmp/raw56-seven
+          cp im-results/agent1-raw56/le/Raw56E1LECut.lean /tmp/raw56-seven/
+          (cd /tmp/raw56-seven && lean -o Raw56E1LECut.olean Raw56E1LECut.lean) 2>&1 | tee /tmp/raw56-seven-earlier.log
           cp im-results/agent1-raw56/le/Raw56E1LESevenCut.lean /tmp/raw56-seven/
           (cd /tmp/raw56-seven && lean -o Raw56E1LESevenCut.olean Raw56E1LESevenCut.lean) 2>&1 | tee /tmp/raw56-seven.log
           python im-results/agent1-raw57/check_axioms.py /tmp/raw56-seven.log --require BB6.Agent1Raw56E1LE.sound7
