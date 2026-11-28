@@ -177,7 +177,9 @@ theorem weighted_of_source (steps : Nat) (d : Cfg)
     obtain ⟨c,hc,hslot⟩ := reached_of_source m hm steps d hs hd
     have hh : HaltsAfter m steps := by
       constructor
-      · simpa [hc]
+      · change (BB6Coverage.run m steps BB6Coverage.blank).isSome = true
+        rw [hc]
+        rfl
       · change (BB6Coverage.run m steps BB6Coverage.blank).bind (rawStep m) = none
         rw [hc]
         simp [rawStep, hslot, ht]
