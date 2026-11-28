@@ -27,7 +27,7 @@ theorem one_run_output (n : Nat) :
       have h := congrArg
         (fun z : List LeftChunk × Carry => (.alternating :: z.1, z.2)) ih
       simpa only [aRun, carryFold, carryStep, Nat.succ_add,
-        List.cons_append] using h
+        List.cons_append, List.nil_append] using h
 
 /-- An even number of As followed by a marker passes through the
     S-state carry, moving the marker to the front without losing any As. -/
@@ -74,12 +74,10 @@ theorem block_normalization_output (ns : List Nat) :
   induction ns with
   | nil => rfl
   | cons n ns ih =>
-      change carryFold .eleven
-          ((aRun (2*n) ++ [.separatedMarker]) ++ evenBlocks ns) =
-        ((.separatedMarker :: aRun (2*n)) ++ normalizedBlocks ns, .eleven)
-      rw [fold_append .eleven (aRun (2*n) ++ [.separatedMarker]) (evenBlocks ns)]
-      rw [even_run_output, ih]
-      rfl
+      have h := fold_append .eleven
+        (aRun (2*n) ++ [.separatedMarker]) (evenBlocks ns)
+      rw [even_run_output, ih] at h
+      simpa only [evenBlocks,normalizedBlocks,List.append_assoc] using h
 
 /-- A trailing A^0 leaves carry S, corresponding to the a=1 branch. -/
 theorem terminal_zero_output (ns : List Nat) :
