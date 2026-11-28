@@ -27,7 +27,7 @@ on:
         default: false
 
       anchor_epoch_only:
-        description: Kernel-check exact root last-anchor HF decomposition and endpoint shape
+        description: Kernel-check root last-anchor HF decomposition, endpoint shape, and minus-three tails
         type: boolean
         required: false
         default: false
@@ -130,7 +130,7 @@ jobs:
           LEAN_PATH="$e:$a2:$q" lean "$e/SingleFarRootClassification.lean" | tee -a /tmp/f321-single-far.log
           ! grep -q sorryAx /tmp/f321-single-far.log
 
-      - name: Kernel-check exact F321 root last-anchor decomposition and endpoint shape
+      - name: Kernel-check F321 last-anchor decomposition, endpoint shape, and minus-three tail split
         if: ${{ inputs.anchor_epoch_only }}
         run: |
           set -euo pipefail
@@ -151,6 +151,17 @@ jobs:
           LEAN_PATH="$e" lean -o "$e/TerminalWordOneFarGeneral.olean" "$e/TerminalWordOneFarGeneral.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e" lean -o "$e/TerminalWordLastFar.olean" "$e/TerminalWordLastFar.lean" | tee -a /tmp/f321-anchor-epoch.log
           LEAN_PATH="$e:$a2" lean -o "$e/TerminalAnchorShape.olean" "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$e/TerminalAnchorShape.olean" "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-anchor-epoch.log
+          o=im-results/agent2-f321-4093
+          LEAN_PATH="$e:$a2" lean -o "$a2/BulkRuns.olean" "$a2/BulkRuns.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/ResetHigh.olean" "$a2/ResetHigh.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/ResetEven.olean" "$a2/ResetEven.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/EvenV2.olean" "$a2/EvenV2.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/OddV2Witness.olean" "$a2/OddV2Witness.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/OddTerminal.olean" "$a2/OddTerminal.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2" lean -o "$a2/EqualHigh.olean" "$a2/EqualHigh.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2:$o" lean -o "$o/ObstructionAlignment.olean" "$o/ObstructionAlignment.lean" | tee -a /tmp/f321-anchor-epoch.log
+          LEAN_PATH="$e:$a2:$o" lean -o "$o/AllFarObstruction.olean" "$o/AllFarObstruction.lean" | tee -a /tmp/f321-anchor-epoch.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/f321-anchor-epoch.log
 
       - name: Kernel-check F321 odd-depth source-counter inverse theorem
