@@ -7,3 +7,7 @@ Box33D17V24Ternary.lean contains the exact table and original-source bridge. The
 Record 16 has a periodic block witness discovered by discoverBlock(machine,[4,1,2,2],[4,1,2,2],12000), then compress: 18/19 states and 89 tuples reduce to 11/13 states and 41 tuples. Exact data in d17v24-m16-periodic.json and generated Lean source in Box33D17V24M16.lean. Source acceptance pending.
 
 Both witnesses are consumed by replay_direct.py. Eight exact records in the saved complement remain without these witnesses: 5,12,27,28,33,35,41,49. This does not yet close the parent or any global Cover.
+
+## Binary packet return laws (records 35 and 49)
+
+The shared proof in Box33D17V24BinaryPackets.lean uses A configurations with blank right stream and left words (100)^n 101 b for 35, (101)^n 1001 b for 49, where b is any finite binary suffix followed by blanks. If b=1^k 0 u, the return replaces b by 0^k 1 u and n by n+1 in exactly 12n+2k+21 or 6n+2k+19 steps respectively. Initialization occurs at 9/55 steps. The two model-level neverBlank theorems have a successful local Lean check (propext, Quot.sound); the original-source bridge audit is queued. Exact table consumers are integrated. The remaining candidate complement is now 5,12,27,28,33,41.
