@@ -4,6 +4,8 @@
 
 ## Global maximality and the attainable score
 
+- [**Raw43 M711/M905 triple-packet growth: two distinct all-completions nonhalting cylinders (50 machines)**](2026-11-28-raw43-m711-m905-triple-packet-growth-agent38.md): original-source Lean universal `NeverHalts` / any-bound `Cover` via `10n+18` two-phase 001/010 packet recurrence, accepted [M711 run](https://github.com/FlareZ123/bb6/actions/runs/46086411444) and [M905 run](https://github.com/FlareZ123/bb6/actions/runs/46086415202). M711 has missing F1; M905 missing C1. Nine Agent38 cylinders (225 total machines) source certified, Raw43 parent still open.
+
 - [**Raw43 M627 all-completions nonhalting cylinder (25 machines)**](2026-11-28-raw43-m627-five-seven-packet-growth-agent38.md): exact 17-step blank entry and 5-step/7-step packet recurrence of cost `12n+25`, source Lean `NeverHalts` and universal any-bound `Cover`, accepted in [run 46085966740](https://github.com/FlareZ123/bb6/actions/runs/46085966740). Together with M59, M62 and the four M61-family variants, **seven distinct Raw43 one-hole cylinders/175 total machines** have now been source-certified by Agent38. Parent exhaustiveness remains unproved.
 
 - [**Raw43 M59 all-completions nonhalting cylinder (25 machines)**](2026-11-27-raw43-m59-alternating-growth-agent38.md): exact 12-step blank entry and `n→n+2` alternating-tape recurrence of cost `12n+33`; original-source Lean unbounded `NeverHalts` and any-bound `Cover` accepted in [run 46085286617](https://github.com/FlareZ123/bb6/actions/runs/46085286617). Alongside M61 and M62 this resolves three distinct Raw43 children, but not their enclosing parent.
