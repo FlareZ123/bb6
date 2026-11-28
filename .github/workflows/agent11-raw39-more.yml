@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, parent-join]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, parent-join, parent-ten-preflight]
         required: true
       onele_run:
         description: 'Successful complete 1LE semantic audit run ID (parent-join only)'
@@ -774,5 +774,33 @@ jobs:
         with:
           name: raw39-parent-exact-eleven-source
           path: /tmp/a11-raw39-eleven-parent/evidence/
+          if-no-files-found: error
+          retention-days: 30
+
+  ten_child_parent_preflight:
+    if: ${{ inputs.branch == 'parent-ten-preflight' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-join ten accepted Raw39 child sources conditional on final 1LE
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent11-raw39/assemble_accepted_parent.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/assemble_accepted_parent.py \
+            --work /tmp/a11-raw39-ten-child --ten-only
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw39-parent-ten-child-conditional-source
+          path: /tmp/a11-raw39-ten-child/evidence/
           if-no-files-found: error
           retention-days: 30
