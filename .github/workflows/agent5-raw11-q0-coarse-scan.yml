@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, short150-pilot, short150-batch, exact-one-hole, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, mitm-synth, short150-pilot, short150-batch, exact-one-hole, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -1417,4 +1417,67 @@ jobs:
             /tmp/q0149-block-certified/
             /tmp/q0149-block.log
           if-no-files-found: error
+          retention-days: 30
+
+  mitm-synth:
+    if: inputs.mode == 'mitm-synth'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        id: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Bounded independent synthesis of correlated two-stack relations
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          mkdir -p "/tmp/agent5-mitm-$ID"
+          python3 -m pip install --user --quiet z3-solver
+          python3 im-results/agent5-weighted-tnf-queue/synthesize-hard-mitm.py "$ID" \
+            --min-states 2 --max-states 5 --timeout-ms 25000 --budget-seconds 420 \
+            --output "/tmp/agent5-mitm-$ID/solve.json" \
+            2>&1 | tee "/tmp/agent5-mitm-$ID/solver.log"
+          node im-results/agent5-weighted-tnf-queue/emit-hard-mitm.cjs \
+            "/tmp/agent5-mitm-$ID/solve.json" "/tmp/agent5-mitm-$ID" \
+            2>&1 | tee "/tmp/agent5-mitm-$ID/reconstruct.log"
+          cat "/tmp/agent5-mitm-$ID/solve.json" >> "$GITHUB_STEP_SUMMARY"
+      - name: Verify candidate with original-source Lean 4.36.0-rc2
+        env:
+          ID: ${{ matrix.id }}
+        run: |
+          set -euo pipefail
+          ROOT="/tmp/agent5-mitm-$ID/Q0HardMITM$ID.lean"
+          if ! test -f "$ROOT"; then
+            echo "No reconstructed proof candidate for q0-$ID" >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          export PATH="$HOME/.elan/bin:$PATH"
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py "$ROOT" \
+            --workdir "/tmp/agent5-mitm-check-$ID" --jobs 2 --lean lean \
+            --label "raw11-q0-$ID-two-stack-synth" \
+            --provenance-input "/tmp/agent5-mitm-$ID/solve.json" \
+            --provenance-input im-results/agent5-weighted-tnf-queue/synthesize-hard-mitm.py \
+            --provenance-input im-results/agent5-weighted-tnf-queue/emit-hard-mitm.cjs \
+            --provenance-input im-results/agent5-weighted-tnf-queue/q0-open-automata.cjs \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee "/tmp/agent5-mitm-$ID/proof.log"
+          if grep -Eq 'sorryAx|native_decide' "/tmp/agent5-mitm-$ID/proof.log"; then exit 1; fi
+          grep -F ".cover' depends on axioms:" "/tmp/agent5-mitm-$ID/proof.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent5-q0-mitm-${{ matrix.id }}
+          path: |
+            /tmp/agent5-mitm-${{ matrix.id }}/
+            /tmp/agent5-mitm-check-${{ matrix.id }}/
+          if-no-files-found: warn
           retention-days: 30
