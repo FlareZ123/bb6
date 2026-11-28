@@ -83,6 +83,34 @@ theorem residue_class_never (n r k:Nat)
   rw [residuePass_periodic]
   exact hr
 
+/-- Constructive necessity: every genuine seed-to-gate reachability
+    witness induces at least one exact modular H/F word of length n, for
+    every n satisfying the explicit second-counter barrier. -/
+theorem source_gate_forces_congruence (n d m:Nat)
+    (hb:6*2^n≤d+3)
+    (reach:CounterReach 1 1 m (d+1) d) :
+    ∃ w:List InverseLetter, w.length=n ∧
+      (((compile w).u:Int)*(d:Int)+(compile w).v)%
+        ((2:Int)^(compile w).shift)=0 := by
+  have hr:=reach_to_backward reach
+  have hLen:n≤m := by
+    by_cases hgood:n≤m
+    · exact hgood
+    · have hm:m≤n := by omega
+      have hpow:2^m≤2^n := Nat.pow_le_pow_right (by decide:0<2) hm
+      have hbSmaller:6*2^m≤d+3 := by omega
+      have hFinal:=backward_end_large hr hbSmaller
+      omega
+  obtain ⟨A,D,hprefix⟩ := backward_take n hr hLen
+  have hroot:FormalInversePath (d:Int) [] ((d+1:Int)) (d:Int) :=
+    FormalInversePath.nil
+  obtain ⟨w, hw, hword⟩ :=
+    backward_to_formal (d:Int) [] hroot hprefix hb
+  have heq: (2:Int)^(compile w).shift * (A:Int) =
+      ((compile w).u:Int)*(d:Int)+(compile w).v :=
+    (formal_inverse_congruence hw).1
+  exact ⟨w, by simpa using hword, by rw [←heq];simp⟩
+
 /-- Concrete *infinite* kernel-checked residue family,
     including arbitrarily large terminal parameters. -/
 theorem gate1000_mod256_never (k:Nat) :
@@ -94,6 +122,7 @@ theorem gate1000_mod256_never (k:Nat) :
   simpa [show 2^(2*4)=256 by decide, hEq] using hm
 
 #print axioms residuePass_periodic
+#print axioms source_gate_forces_congruence
 #print axioms residue_class_never
 #print axioms gate1000_mod256_never
 
