@@ -1,0 +1,72 @@
+name: Agent1 Raw56 E1LE seven-way conditional composition
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  seven_cut:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-seven-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-five-source-accepted
+          path: /tmp/raw56-seven-five
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46109884602'
+      - name: Compile exact seven-way symbolic theorem with imported trusted source objects
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/raw56-seven
+          python - <<'PY'
+          from pathlib import Path
+          dst=Path('/tmp/raw56-seven')
+          for root in ['/tmp/raw56-seven-base','/tmp/raw56-seven-five']:
+              src=Path(root)
+              files=list(src.rglob('*.olean'))
+              assert files,root
+              for path in files:
+                  target=dst/path.name
+                  if target.exists():
+                      assert target.read_bytes()==path.read_bytes(),(path.name,root)
+                  else:
+                      target.symlink_to(path.resolve())
+              print('restored',root,len(files))
+          for m in ['Raw56E1LECut','Raw56E1LEFourCut','Raw56E1LEFiveCut']:
+              assert (dst/(m+'.olean')).is_file(),m
+          PY
+          export LEAN_PATH=/tmp/raw56-seven
+          cp im-results/agent1-raw56/le/Raw56E1LESevenCut.lean /tmp/raw56-seven/
+          (cd /tmp/raw56-seven && lean -o Raw56E1LESevenCut.olean Raw56E1LESevenCut.lean) 2>&1 | tee /tmp/raw56-seven.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-seven.log --require BB6.Agent1Raw56E1LE.sound7
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-seven.log
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-e1le-seven-symbolic-source-accepted
+          path: |
+            /tmp/raw56-seven/Raw56E1LESevenCut.lean
+            /tmp/raw56-seven/Raw56E1LESevenCut.olean
+            /tmp/raw56-seven.log
+          if-no-files-found: error
+          retention-days: 30
