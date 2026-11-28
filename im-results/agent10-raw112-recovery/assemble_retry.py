@@ -87,6 +87,96 @@ def verify_reuse(manifest_path: Path, expected_compiled: set[str], label: str) -
     print(f"{label}: reused all {len(expected_reused)} source-identical parent dependencies")
 
 
+
+def stitch_precompiled_roots(union: Path, branch_work: Path, combined: Path) -> None:
+    """Retain *all* accepted shard objects plus newly compiled branch roots.
+
+    The branch-root closure contains only dependencies of its three roots. It is
+    not a replacement for the full 24-branch shard union. Feeding just that
+    closure to the parent compiler silently recompiles the omitted branches.
+    This explicit, identity-checked union repairs that loss without weakening
+    the source/hash/axiom gates in lean_compile_closure.py.
+    """
+    left = json.loads((union / "manifest.json").read_text(encoding="utf-8"))
+    right = json.loads((branch_work / "manifest.json").read_text(encoding="utf-8"))
+    for field in ("schema_version", "proof_source_revision", "lean_version"):
+        if left.get(field) != right.get(field):
+            raise ValueError(f"parent seed: incompatible {field}")
+    if left["lean_binary"]["sha256"] != right["lean_binary"]["sha256"]:
+        raise ValueError("parent seed: incompatible compiler binary")
+    fields = (
+        "module", "source_sha256", "project_imports", "olean_path",
+        "olean_sha256", "import_closure_sha256", "module_identity_sha256",
+    )
+    entries = {item["module"]: item for item in left["modules"]}
+    if len(entries) != left["module_count"]:
+        raise ValueError("parent seed: duplicate module in shard union")
+    additions = []
+    for item in right["modules"]:
+        name = item["module"]
+        if name in entries:
+            if any(entries[name].get(k) != item.get(k) for k in fields):
+                raise ValueError(f"parent seed: conflicting proof-object identity {name}")
+        else:
+            entries[name] = item
+            additions.append(item)
+    if len(set(item["module"] for item in right["modules"])) != right["module_count"]:
+        raise ValueError("parent seed: duplicate branch-root module")
+    for item in entries.values():
+        if not set(item["project_imports"]) <= entries.keys():
+            raise ValueError(f"parent seed: unclosed dependency of {item['module']}")
+    if combined.exists():
+        shutil.rmtree(combined)
+    # All paths live under /tmp in the parent-only workflow. Hardlinks avoid
+    # recopying a multi-GB certified archive; fallback is safe across devices.
+    try:
+        shutil.copytree(union, combined, copy_function=os.link)
+    except OSError:
+        if combined.exists():
+            shutil.rmtree(combined)
+        shutil.copytree(union, combined)
+    for item in additions:
+        rel = Path(item["olean_path"])
+        if rel.is_absolute() or ".." in rel.parts:
+            raise ValueError(f"parent seed: unsafe object path {rel}")
+        target = combined / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        source = branch_work / rel
+        if not source.is_file():
+            raise FileNotFoundError(f"parent seed: missing branch object {source}")
+        try:
+            os.link(source, target)
+        except OSError:
+            shutil.copy2(source, target)
+    roots = {item["module"]: item for item in left["roots"]}
+    roots.update({item["module"]: item for item in right["roots"]})
+    inputs = {item["path"]: item for item in left["provenance_inputs"]}
+    for item in right["provenance_inputs"]:
+        key = item["path"]
+        if key in inputs and inputs[key] != item:
+            raise ValueError(f"parent seed: conflicting provenance input {key}")
+        inputs[key] = item
+    left.update(
+        label="raw112-shards-plus-branch-roots",
+        artifact_name="raw112-parent-precompiled-seed",
+        roots=[roots[key] for key in sorted(roots)],
+        modules=[entries[key] for key in sorted(entries)],
+        module_count=len(entries),
+        provenance_inputs=[inputs[key] for key in sorted(inputs)],
+        source_revisions=sorted(set(left.get("source_revisions", [])) |
+                                set(right.get("source_revisions", []))),
+        precompiled_core=None,
+        precompiled_stitched_from=[
+            {"label": "full-shard-union", "module_count": len(left["modules"])},
+            {"label": "branch-aggregators", "module_count": len(right["modules"])},
+        ],
+    )
+    (combined / "manifest.json").write_text(
+        json.dumps(left, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+    print(f"parent seed: retained {len(entries)} authenticated object modules; "
+          f"added {len(additions)} branch-only modules")
+
+
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, required=True)
@@ -151,11 +241,15 @@ def main() -> None:
         "branch aggregators",
     )
 
+    # The three branch-root imports do not reach the other 21 accepted
+    # branches. Preserve the complete shard union for the parent proof.
+    seed = Path("/tmp/a47-raw112-parent-precompiled")
+    stitch_precompiled_roots(union, branch_work, seed)
     parent_log = Path("/tmp/a47-raw112-parent-cover.log")
     run_compile(
         [str(root / "Raw112ClosedCover.lean")],
         parent_work,
-        branch_work,
+        seed,
         "raw112-closed-parent-cover-targeted-retry",
         "raw112-closed-parent-cover",
         parent_log,
