@@ -1,0 +1,61 @@
+name: Agent6 Raw139 D0=8 consume C1=6 (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent3-raw139-normalized-cryptids-scan
+          run-id: 45767740664
+          github-token: ${{ github.token }}
+          path: .tmp/base
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d8-c6-certified
+          run-id: 46137440341
+          github-token: ${{ github.token }}
+          path: .tmp/d8
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-core
+          run-id: 46137436779
+          github-token: ${{ github.token }}
+          path: .tmp/core
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check seven-child D0=8 parent interface
+        run: |
+          set -euo pipefail
+          base="$(realpath .tmp/base/build)"
+          d8="$(realpath .tmp/d8/d8c6/src)"
+          core="$(realpath .tmp/core/core)"
+          LEAN_PATH="$base" lean -o "$base/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean > .tmp/d1zero.log
+          LEAN_PATH="$base" lean -o "$base/D1EightReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1EightReduce.lean > .tmp/d8reduce.log
+          LEAN_PATH="$base:$d8:$core" lean -o "$base/D1EightSeven.olean" im-results/agent6-raw139-d1-zeroRD/D1EightSeven.lean | tee .tmp/d8seven.log
+          grep -F "'BB6.Agent6D1EightSeven.c6' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8seven.log
+          grep -F "'BB6.Agent6D1EightSeven.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8seven.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8seven.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-raw139-d8-seven-child-parent
+          path: |
+            .tmp/d8seven.log
+            .tmp/base/build/D1EightSeven.olean
+          retention-days: 14
