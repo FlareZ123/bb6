@@ -1,0 +1,68 @@
+name: Agent6 Raw139 D0=9 salvage compose (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned repository source commit
+        type: string
+        required: true
+      branch_run_id:
+        description: Run containing core and six branch artifacts
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-core
+          run-id: ${{ inputs.branch_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d9
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: agent6-raw139-d9-c*-certified
+          run-id: ${{ inputs.branch_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d9/branches
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Audit six child artifacts and compose D0=9
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d9
+          for code in 2 6 16 17 18 19; do
+            root="$work/branches/agent6-raw139-d9-c$code-certified"
+            test -f "$root/compile.log"
+            grep -F "FINAL" "$root/compile.log"
+            grep -F " 0 []" "$root/compile.log"
+            grep -F "'D9C$code.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$root/src/logs/D9C${code}Parent.log"
+            ! grep -REq 'sorryAx|ofReduceBool' "$root/src/logs"
+          done
+          merged="$work/merged"
+          mkdir -p "$merged"
+          find "$work/core" -name '*.olean' -exec cp '{}' "$merged/" ';'
+          find "$work/branches" -name '*.olean' -exec cp '{}' "$merged/" ';'
+          cp "$work/pipeline/D1D9Parent.lean" "$merged/"
+          (cd "$merged" && LEAN_PATH=. lean -o D1D9Parent.olean D1D9Parent.lean) | tee "$work/compose.log"
+          grep -F "'BB6.Agent6D1D9.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/compose.log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/compose.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-raw139-d9-parent-certified
+          path: |
+            .tmp/a6-d9/compose.log
+            .tmp/a6-d9/merged/D1D9Parent.lean
+            .tmp/a6-d9/merged/D1D9Parent.olean
+          retention-days: 14
