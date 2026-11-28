@@ -1,0 +1,206 @@
+name: Agent29 Raw36 D1=0LC split kid16 recovery
+run-name: Raw36 D1=0LC split missing kid16 and assemble weighted172 Cover
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-common
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/d102
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-b1-4-proof
+          run-id: 46097780398
+          github-token: ${{ github.token }}
+          path: /tmp/base
+      - name: Package the exact minimal accepted dependency closure
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/split-smoke
+          cp -a /tmp/d102/. /tmp/deps/
+          python - <<'PY'
+          from pathlib import Path
+          import re,shutil
+          dst=Path('/tmp/deps'); base=Path('/tmp/base')
+          roots=re.findall(r'^import ([A-Za-z0-9_.]+)$',(dst/'Raw36D102Kid16.lean').read_text(),re.M)
+          seen=set()
+          def locate(root,name):
+              rel=Path(*name.split('.'))
+              for p in (root/rel.with_suffix('.lean'),root/(name+'.lean')):
+                  if p.exists(): return p
+          def visit(name):
+              if name in seen: return
+              seen.add(name)
+              src=locate(dst,name) or locate(base,name)
+              if src is None:
+                  assert name=='Lean' or name=='Std' or name.startswith('Lean.'),name
+                  return
+              obj=src.with_suffix('.olean')
+              assert obj.exists(),(name,obj)
+              if src.parent!=dst:
+                  shutil.copy2(src,dst/src.name); shutil.copy2(obj,dst/obj.name); src=dst/src.name
+              for dep in re.findall(r'^import ([A-Za-z0-9_.]+)$',src.read_text(),re.M): visit(dep)
+          for root in roots: visit(root)
+          print('packaged modules',len(seen),'bytes',sum(p.stat().st_size for p in dst.iterdir() if p.is_file()))
+          PY
+          python im-results/agent29-raw36/split_generated_kid.py --source /tmp/deps/Raw36D102Kid16.lean --out /tmp/split-smoke --root kid16 --module Raw36D102Kid16 | tee /tmp/deps/split-report.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-d102-split-deps
+          path: /tmp/deps/
+          if-no-files-found: error
+          retention-days: 60
+  branches:
+    needs: bootstrap
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 14
+      matrix:
+        branch: [0,5,6,7,10,11,12,13,17,18,19,20,22,23]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-split-deps
+          path: /tmp/deps
+      - name: Kernel-check one independent heavy kid16 branch
+        run: |
+          set -euo pipefail
+          python im-results/agent29-raw36/split_generated_kid.py --source /tmp/deps/Raw36D102Kid16.lean --out /tmp/split --root kid16 --module Raw36D102Kid16
+          printf -v PAD '%02d' ${{ matrix.branch }}
+          MOD=Raw36D102Kid16Branch$PAD
+          export LEAN_PATH=/tmp/deps:/tmp/split
+          (cd /tmp/split && lean -o "$MOD.olean" "$MOD.lean") 2>&1 | tee "/tmp/$MOD.log"
+          mkdir -p /tmp/out
+          cp "/tmp/split/$MOD.lean" "/tmp/split/$MOD.olean" "/tmp/$MOD.log" /tmp/out/
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-d102-kid16-branch-${{ matrix.branch }}
+          path: /tmp/out/
+          if-no-files-found: error
+          retention-days: 60
+  kid16:
+    needs: [bootstrap, branches]
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-split-deps
+          path: /tmp/deps
+      - name: Regenerate exact split source
+        run: python im-results/agent29-raw36/split_generated_kid.py --source /tmp/deps/Raw36D102Kid16.lean --out /tmp/split --root kid16 --module Raw36D102Kid16
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw36-d102-kid16-branch-*
+          path: /tmp/split
+          merge-multiple: true
+      - name: Compile trivial branches, wrapper, and audit child theorem
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/deps:/tmp/split
+          for i in 1 2 3 4 8 9 14 15 16 21; do
+            printf -v PAD '%02d' "$i"; MOD=Raw36D102Kid16Branch$PAD
+            (cd /tmp/split && lean -o "$MOD.olean" "$MOD.lean")
+          done
+          (cd /tmp/split && lean -o Raw36D102Kid16.olean Raw36D102Kid16.lean) 2>&1 | tee /tmp/kid16.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/kid16.log BB6.Agent29Raw36D102.kid16_bound
+          cp /tmp/kid16.log /tmp/split/kid16-audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-d102-kid-16-split
+          path: /tmp/split/
+          if-no-files-found: error
+          retention-days: 60
+  parent:
+    needs: [bootstrap, kid16]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-split-deps
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-16-split
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-4
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-10
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-12
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-13
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/deps
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-d102-kid-22
+          run-id: 46123549616
+          github-token: ${{ github.token }}
+          path: /tmp/deps
+      - name: Kernel-check exact D1=0LC parent Cover
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/deps
+          (cd /tmp/deps && lean -o Raw36D102.olean Raw36D102.lean) 2>&1 | tee /tmp/d102-root.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/d102-root.log BB6.Agent29Raw36D102.bound BB6.Agent29Raw36D102.cover
+          python im-results/agent29-raw36/build_closure_manifest.py --work /tmp/deps --root Raw36D102 --label raw36-d1-02-split16 --artifact-name raw36-d1-02-proof-split16 --theorem BB6.Agent29Raw36D102.cover --bound 172 --parent-table '1RB---_1RC---_0RD---_0LD0LC_------_------' --provenance 'common_run=46123549616,split_source=${{ github.sha }}'
+          cp /tmp/d102-root.log /tmp/deps/audit.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw36-d1-02-proof-split16
+          path: /tmp/deps/
+          if-no-files-found: error
+          retention-days: 60
