@@ -16,6 +16,7 @@ They do not identify arbitrary abstract paths with physical ones.
 -/
 
 namespace BB6.Agent5Q0151RegionLift
+open BB6Coverage BB6Coverage.Agent31Pump
 open BB6.Agent5Q0151SourceMacro
 open BB6.Agent5Q0151PhysicalStack
 open BB6.Agent5Q0151SourceActions1
