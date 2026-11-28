@@ -2078,7 +2078,7 @@ jobs:
             --shard-size 25 | tee "$W/final-generation.json"
           cp "$W/generated/manifest.json" "$W/final-manifest.json"
           python tools/lean_compile_closure.py --workdir "$W/build" \
-            --source-root "$W/generated" --jobs 8 \
+            --source-root "$W/generated" --jobs 2 \
             --manifest "$W/closure-manifest.json" \
             --artifact-name raw34-pair-final3233-source \
             "$W/generated"/Raw34PairFinal3233Cover.lean 2>&1 | tee "$W/closure.log"

@@ -148,7 +148,7 @@ jobs:
             --far5 "$W/far5.jsonl" --far6 "$W/far6.jsonl" \
             --output "$W/generated" --shard-size 12 | tee "$W/far168-closed-generation.json"
           python tools/lean_compile_closure.py --workdir "$W/build" \
-            --source-root "$W/generated" --jobs 8 \
+            --source-root "$W/generated" --jobs 2 \
             --manifest "$W/closure-manifest.json" \
             --artifact-name raw34-pair-full-endgame-source \
             "$W/generated/Raw34FAR168Closed.lean" 2>&1 | tee "$W/closure.log"
