@@ -73,6 +73,9 @@ def main():
     done = set(reused)
     report = dict(reused)
     max_fresh = int(os.environ.get("RAW11_REPAIR_MAX_FRESH", "0"))
+    target_module = os.environ.get("RAW11_REPAIR_TARGET", "").strip()
+    if target_module:
+        assert target_module in files, f"unknown repair target {target_module}"
     compiled_fresh = 0
     print("source_modules",len(files),
           "accepted_reused",len(reused),
@@ -101,9 +104,23 @@ def main():
         print(*axioms,sep="\n",flush=True)
         return {"source":sha(src),"olean":sha(target),"axioms":axioms}
 
+    def target_closure(name):
+        todo = {name}
+        stack = [name]
+        while stack:
+            cur = stack.pop()
+            for dep in deps[cur]:
+                if dep not in done and dep not in todo:
+                    todo.add(dep)
+                    stack.append(dep)
+        return todo
+
     while done != files.keys():
-        ready = sorted((k for k in files.keys()-done if deps[k] <= done),
-                       key=lambda k:(files[k].stat().st_size,k))
+        pending = files.keys() - done
+        active = target_closure(target_module) if target_module and target_module not in done else pending
+        ready = sorted((k for k in active if deps[k] <= done),
+                       key=lambda k:(0 if k == target_module else 1,
+                                     files[k].stat().st_size,k))
         assert ready, "dependency cycle or unrepresented import"
         for name in ready:
             report[name] = compile_one(name)
@@ -111,6 +128,11 @@ def main():
             compiled_fresh += 1
             (out/"repair-receipt.json").write_text(
                 json.dumps(report,sort_keys=True,indent=2)+"\n")
+            if target_module and name == target_module and done != files.keys():
+                print("target-checkpoint",parent_id,target_module,
+                      "compiled_fresh",compiled_fresh,
+                      "accepted_total",len(report),"remaining",len(files)-len(done),flush=True)
+                return
             if max_fresh and compiled_fresh >= max_fresh and done != files.keys():
                 print("checkpoint",parent_id,"compiled_fresh",compiled_fresh,
                       "accepted_total",len(report),"remaining",len(files)-len(done),flush=True)
