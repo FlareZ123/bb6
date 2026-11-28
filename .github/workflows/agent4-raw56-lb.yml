@@ -13,6 +13,7 @@ on:
           - m42763
           - m23706
           - m39232
+          - recover
 
 permissions:
   contents: read
@@ -441,4 +442,71 @@ jobs:
             /tmp/mblock/M*Final.olean
             /tmp/mblock/M*Base.log
             /tmp/mblock/M*Final.log
+          if-no-files-found: error
+
+  recover-assemble:
+    if: ${{ inputs.target == 'recover' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reuse all twenty-six checked shards, kernel-check only six-residual join
+        run: |
+          set -euo pipefail
+          sudo fallocate -l 8G /mnt/raw56-swap
+          sudo chmod 600 /mnt/raw56-swap
+          sudo mkswap /mnt/raw56-swap
+          sudo swapon /mnt/raw56-swap || true
+          free -h
+          export LEAN_NUM_THREADS=1
+          python -u im-results/agent4-raw56-root-pilot/compile_lb.py final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --out /tmp/rootpilot-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted-recovered
+          path: /tmp/rootpilot-final
           if-no-files-found: error
