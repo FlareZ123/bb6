@@ -62,3 +62,5 @@ The **other four** residual literals did not query their missing row within 300,
 * **Accept the 2,218 archived candidates individually in Lean**, then assemble the **complete** source-checked D100 parent audit; do not confuse 2,248 distinct candidate-covered keys with an accepted 'Cover', or promote this dossier into 'results/' until the larger mathematical claim is proved.
 
 The E0-hole literal `1RB1LA_1RC1LE_0RD1RF_0LD0LA_---0LB_1LD1RB` is now resolved at the reconstructed-model level by an exact accelerated exposure of 53,257,978,073,992,275 transitions. See [DELAYED-E0.md](DELAYED-E0.md). Original-source WeightedBound acceptance is pending; no accepted global count changed.
+
+The final persistent F1-hole literal `1RB0LE_1RC1LD_0RD0RB_0LD0LA_1LA0RF_1RE---` is now resolved at the reconstructed-model level by a universal countdown/doubling/restart recurrence with exact positive-cost induction. See [COUNTDOWN.md](COUNTDOWN.md). The original-source `NeverHalts` bridge still awaits acceptance. All three formerly persistent hard literals now have local model-checked mathematical certificates.
