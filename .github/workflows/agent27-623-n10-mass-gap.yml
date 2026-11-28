@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, weighted-skew, weighted-tight-skew, weighted-tight-skew-n13, four-ray-cone, four-ray-full, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
+        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, weighted-skew, weighted-tight-skew, weighted-tight-skew-n13, four-ray-cone, four-ray-full, four-ray-generic, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
         default: n10
 
 permissions:
@@ -217,6 +217,16 @@ jobs:
             lake env lean -o .lake/build/lib/lean/ThreeStepStripWeightedTightSkewN13Source.olean ThreeStepStripWeightedTightSkewN13Source.lean 2>&1 | tee -a tight-skew-axioms.log
             if grep -q 'sorryAx' tight-skew-axioms.log; then exit 1; fi
           fi
+
+
+      - name: Check arbitrary-rational coupled inverse ray transport
+        if: inputs.target == 'four-ray-generic'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          cp "../im-results/agent27-623-gap-two-three-step/GenericCoupledRayArithmetic.lean" GenericCoupledRayArithmetic.lean
+          lake env lean -o .lake/build/lib/lean/GenericCoupledRayArithmetic.olean GenericCoupledRayArithmetic.lean 2>&1 | tee generic-ray-axioms.log
+          if grep -q 'sorryAx' generic-ray-axioms.log; then exit 1; fi
 
   retained-parent-source:
     if: endsWith(inputs.target, '-source')
