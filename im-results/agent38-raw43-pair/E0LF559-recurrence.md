@@ -42,6 +42,19 @@ A direct simulator check matched the closed form exactly for every (n=0,ldots,30
 the last checked macro state is (t_{30}=213410), head (250), interval
 ([-245,249]).  No A1 query occurs along this prefix.
 
+A useful phase decomposition also stabilizes exactly across the checked family.
+Relative to time `t_n`, the eight newly exposed left cells are first reached in
+four consecutive two-cell events:
+
+- positions `-8n-6,-8n-7` at offsets `88n+116, 88n+117`;
+- positions `-8n-8,-8n-9` at offsets `88n+132, 88n+133`;
+- positions `-8n-10,-8n-11` at offsets `312n+392, 312n+393`;
+- positions `-8n-12,-8n-13` at offsets `312n+408, 312n+409`.
+
+The right frontier then advances by eight cells and returns to the next F0 family
+at offset `448n+612`.  These affine phase times are strong hints for splitting
+the proof into a small fixed number of block-sweep lemmas.
+
 This is **computational evidence / a formalization target**, not yet a theorem.
 The high-value next step is to decompose one (n	o n+1) transition into the
 generic `SweepPumping.lean` left/right sweep lemmas, as was done for residual
