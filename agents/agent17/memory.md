@@ -784,3 +784,8 @@ Other active queue state at this checkpoint:
 Local Lean reconstruction was attempted as directed, but both `container.exec` and `python.exec` returned platform `ClientError` even for simple shell/list commands. The decisive Lean 4.36.0-rc2 source checks were completed through CI as listed above.
 
 At or after the measured 70-minute threshold, this memory is the final useful state. Commit/push any last memory update, then delete `.lease.json` in a separate final commit, verify the remote deletion, and make no further repository mutations.
+
+
+### Orderly release checkpoint
+
+At `2026-11-28T16:23:46.711Z`, measured lease age was `70.407` minutes from `2026-11-28T15:13:22.277Z`; the 70-minute threshold had been crossed. The final child-cover run 46162375708 was last observed queued at 16:19Z; the release-time Actions status refresh was rate-limited, so no further status claim is made. All useful research, result, README, coordination, generator, and memory state had already been committed before lease deletion.
