@@ -1,6 +1,6 @@
 # Raw11 q0-148: exact even-gap carry normal forms and the three-turn source bridge
 
-**Status, 2026-11-28:** Concrete all-length symbolic proof candidates and a 150-case direct original-table regression. Source Lean files are committed; **kernel acceptance is pending**. These are intermediate results, **not** a source Cover, a proof of full q0-148 nonhalting, or a BB(6) solution.
+**Status, 2026-11-28:** The exact arbitrary-length even-gap transducer theorem in `Q0148EvenCarryOutput.lean` is **kernel accepted** in [pinned Lean 4.36 source-closure CI run 46114949710](https://github.com/FlareZ123/bb6/actions/runs/46114949710), with all six printed `_output` proofs free of `sorryAx`. The deeper original-source return and all-marker induction remain **proof candidates awaiting kernel audit**, accompanied by finite original-table regressions. These are intermediate results, **not** a source Cover, a proof of full q0-148 nonhalting, or a BB(6) solution.
 
 ## Original source and the missing bridge
 
@@ -48,7 +48,7 @@ The simpler a=1 case has `C=E(ns)`, normalized carry `S`, qA0 after `5s+26` orig
 
 ## Reproduction and proof status
 
-- `Q0148EvenCarryOutput.lean`: even-gap output and list factorization, five named `*_output` theorems for the generic `shared-lean-source-closure.yml` source audit.
+- `Q0148EvenCarryOutput.lean`: accepted all-length original-transducer even-gap normal forms, generic word append, and terminal carry laws. Independent pinned source-closure workflow 46114949710: **success**, printed axioms contain no `sorryAx`.
 - `Q0148ThreeCarryCycles.lean`: marker rotation, second/third carry formulas and exact-source three-cycle composition. These files import the existing source macro module rather than rebuilding or replacing source semantics.
 - Direct independent JS interpretation of the literal original partial table checked **150 parametrically chosen finite `ns` lists** of up to seven blocks, with different arbitrary left/right nonblank tails, at exactly `13s+114` source steps. All 150 yielded the predicted qA0 head and complete named output tape prefix/tail; this is an internal finite regression, **not** proof of universal validity. The Lean files contain the mathematical generalization and are the authoritative proof target.
 
