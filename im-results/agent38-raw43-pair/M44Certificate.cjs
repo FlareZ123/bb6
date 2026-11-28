@@ -2,7 +2,7 @@
 // Deterministic finite abstraction of Raw43 M44's proved packet parser.
 // No search cap or randomized choice is used in the final certificate.
 // Run: node M44Certificate.cjs --check
-//      node M44Certificate.cjs --lean > M44Data.lean
+//      node M44Certificate.cjs --out .
 const END=17, MAX=16;
 const side=q=>q===10||q===11?0:1;
 function action(q,b){
@@ -88,30 +88,56 @@ function verify(c){
  }
  return {states:all.size,left:c.nl,right:c.nr,edges:c.edges.map(x=>x.reduce((n,a)=>n+a.length,0)),checked};
 }
-function leanData(c){
- const nl=c.nl,nr=c.nr,rows=Array.from({length:14*nl},()=>[]);
+function leanFiles(c){
+ const nl=c.nl,nr=c.nr,rows=Array.from({length:14*nl},()=>[]),files={};
  for(const [q,l,r]of c.states)rows[q*nl+l].push(r);
- function tree(xs,empty){if(!xs.length)return '.leaf '+empty;if(xs.every(x=>x===xs[0]))return '.leaf '+xs[0];return '.branch ('+tree(xs.filter((_,i)=>i%2===0),empty)+') ('+tree(xs.filter((_,i)=>i%2===1),empty)+')'}
- let s='import M44Checker\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option exponentiation.threshold 10000\nnamespace BB6.Agent38M44\n';
- const rownames=rows.map((xs,i)=>{if(!xs.length)return 'emptyRow';xs.sort((a,b)=>a-b);let mask=xs.reduce((m,x)=>m|(1n<<BigInt(x)),0n);s+='def row'+i+' : Row := row ['+xs+'] '+mask+' (by decide)\n';return 'row'+i});
+ const header=imp=>'import '+imp+'\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option exponentiation.threshold 10000\nnamespace BB6.Agent38M44\n';
+ function emit(name,type,values,empty){
+  let code=header('M44Checker'),id=0,cache=new Map();
+  function tree(xs){
+   if(!xs.length)return '.leaf '+empty;
+   if(xs.every(x=>x===xs[0]))return '.leaf '+xs[0];
+   const t='.branch ('+tree(xs.filter((_,i)=>i%2===0))+') ('+tree(xs.filter((_,i)=>i%2===1))+')';
+   if(xs.length<=16)return t;
+   if(cache.has(t))return cache.get(t);
+   const n=name+'Part'+id++;code+='def '+n+' : Lookup '+type+' := '+t+'\n';cache.set(t,n);return n;
+  }
+  const root=tree(values);return code+'def '+name+' : Lookup '+type+' := '+root+'\nend BB6.Agent38M44\n';
+ }
  for(let side=0;side<2;side++){
   let n=side===0?nl:nr,pred=Array.from({length:n},(_,j)=>c.edges[side][j]||[]);
-  s+='def pred'+side+' : Lookup (List (Nat × Nat)) :=\n'+tree(pred.map(es=>'['+es.map(([b,i])=>'('+b+','+i+')').join(',')+']'),'[]')+'\n';
-  let delta=c.delta[side].map(xs=>xs.reduce((m,j,b)=>m|(BigInt(j+1)<<BigInt(11*b)),0n).toString());
-  s+='def delta'+side+' : Lookup Nat :=\n'+tree(delta,'0')+'\n';
+  files['M44Pred'+side+'.lean']=emit('pred'+side,'(List (Nat × Nat))',pred.map(es=>'['+es.map(([b,i])=>'('+b+','+i+')').join(',')+']'),'[]');
+  const delta=c.delta[side].map(xs=>xs.reduce((m,j,b)=>m|(BigInt(j+1)<<BigInt(11*b)),0n).toString());
+  files['M44Delta'+side+'.lean']=emit('delta'+side,'Nat',delta,'0');
  }
- s+='def allRows : Lookup Row :=\n'+tree(rownames,'emptyRow')+'\ndef cert : Cert := ⟨'+nl+','+nr+',⟨pred0,delta0⟩,⟨pred1,delta1⟩,allRows⟩\n';
- s+='theorem initLeft : pushWord cert.left [3,0,7] 0 = some '+c.states[0][1]+' := by decide\n';
- s+='theorem initRight : pushWord cert.right W0 0 = some '+c.states[0][2]+' := by decide\n';
- s+='theorem initGood : cert.good 0 '+c.states[0][1]+' '+c.states[0][2]+' = true := by decide\n';
- s+='theorem emptyL : (17,0) ∈ cert.left.pred.get 0 := by decide\ntheorem emptyR : (17,0) ∈ cert.right.pred.get 0 := by decide\n';
- for(let q=0;q<14;q++)s+='theorem closed'+q+' : checkQ cert '+q+' = true := by decide\n';
- s+='theorem certClosed : closed cert := by\n  intro q hq\n  have h : '+Array.from({length:14},(_,i)=>'q='+i).join(' ∨ ')+' := by omega\n  rcases h with '+Array(14).fill('rfl').join(' | ')+'\n'+Array.from({length:14},(_,i)=>'  · exact closed'+i).join('\n')+'\n#print axioms certClosed\nend BB6.Agent38M44\n';
- return s;
+ files['M44Rows.lean']=emit('allRows','Nat',rows.map(xs=>xs.reduce((m,x)=>m|(1n<<BigInt(x)),0n).toString()),'0');
+ let base=header('M44Pred0\nimport M44Pred1\nimport M44Delta0\nimport M44Delta1\nimport M44Rows');
+ base+='def cert : Cert := ⟨'+nl+','+nr+',⟨pred0,delta0⟩,⟨pred1,delta1⟩,allRows⟩\n';
+ base+='theorem initLeft : pushWord cert.left [3,0,7] 0 = some '+c.states[0][1]+' := by decide\n';
+ base+='theorem initRight : pushWord cert.right W0 0 = some '+c.states[0][2]+' := by decide\n';
+ base+='theorem initGood : cert.good 0 '+c.states[0][1]+' '+c.states[0][2]+' = true := by decide\n';
+ base+='theorem emptyL : (17,0) ∈ cert.left.pred.get 0 := by decide\ntheorem emptyR : (17,0) ∈ cert.right.pred.get 0 := by decide\nend BB6.Agent38M44\n';
+ files['M44DataBase.lean']=base;
+ for(let q=0;q<14;q++){
+  let blocks=[],curr=[],sum=0;
+  for(let l=0;l<nl;l++){let n=rows[q*nl+l].length;if(curr.length&&sum+n>600){blocks.push(curr);curr=[];sum=0}curr.push(l);sum+=n}
+  if(curr.length)blocks.push(curr);
+  let s=header('M44DataBase');
+  for(let i=0;i<blocks.length;i++)s+='theorem checked'+q+'_'+i+' : (['+blocks[i]+'] : List Nat).all (checkRow cert '+q+') = true := by decide\n';
+  s+='theorem closed'+q+' : checkQ cert '+q+' = true := by\n  change (('+blocks.map(x=>'(['+x+'] : List Nat)').join(' ++ ')+').all (checkRow cert '+q+')) = true\n  simp only [List.all_append,'+blocks.map((x,i)=>'checked'+q+'_'+i).join(',')+',Bool.and_self]\nend BB6.Agent38M44\n';
+  files['M44Check'+q+'.lean']=s;
+ }
+ let out=header(Array.from({length:14},(_,i)=>'M44Check'+i).join('\nimport '));
+ out+='theorem certClosed : closed cert := by\n  intro q hq\n  have h : '+Array.from({length:14},(_,i)=>'q='+i).join(' ∨ ')+' := by omega\n  rcases h with '+Array(14).fill('rfl').join(' | ')+'\n'+Array.from({length:14},(_,i)=>'  · exact closed'+i).join('\n')+'\n#print axioms certClosed\nend BB6.Agent38M44\n';
+ files['M44Data.lean']=out;return files;
 }
 if(typeof process!=='undefined'&&typeof require!=='undefined'&&require.main===module){
  const c=build(),summary=verify(c);
- if(process.argv.includes('--lean'))process.stdout.write(leanData(c));
- else if(process.argv.includes('--json'))process.stdout.write(JSON.stringify(c));
+ if(process.argv.includes('--out')){
+  const dir=process.argv[process.argv.indexOf('--out')+1];if(!dir)throw Error('--out requires directory');
+  const fs=require('fs'),path=require('path');fs.mkdirSync(dir,{recursive:true});
+  for(const [name,content]of Object.entries(leanFiles(c)))fs.writeFileSync(path.join(dir,name),content);
+  console.log(JSON.stringify(summary));
+ } else if(process.argv.includes('--json'))process.stdout.write(JSON.stringify(c));
  else console.log(JSON.stringify(summary));
 }
