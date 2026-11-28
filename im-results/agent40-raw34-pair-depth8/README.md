@@ -84,7 +84,7 @@ directly (`generate_pair_depth6_plan.mjs --f0 0LD`) and asserts the
 following depth-six census:
 
 - 16,976 total plan nodes;
-- 4,276 explicit residual rows;
+- 4,274 explicit residual rows;
 - 1/7/67/604 finite-halting leaves at depths 3/4/5/6;
 - 17/101/1,002/10,155 short side-cycle leaves at depths 3/4/5/6;
 - 25 additional extended side-cycles at depth six;
@@ -95,7 +95,7 @@ following depth-six census:
 
 The residual physical mass at that point is therefore
 
-`(4234+40)*25^2 + 2*25^3 = 2,702,500`
+`(4234+40)*25^2 = 2,671,250` after the two depth-five growth leaves are consumed
 
 out of the pair parent's 244,140,625 completions.  A dedicated workflow mode
 `raw34-pair-easy-plan` kernel-checks the generated source `Cover`; the
@@ -114,8 +114,9 @@ Each has three arbitrary rows (C1,E0,E1), hence physical mass 15,625.
 `../agent40-raw34-frontier/Raw34QuadraticPairGrowth.lean` gives parametric
 sweep-pump proofs for both.  The first grows a contiguous block with checkpoint
 time n(n+8); the second grows an alternating block with checkpoint time
-2n^2+7n.  Once both theorems are source accepted, all depth-five residual mass
-for this pair is closed and only the 4,274 depth-six residual cylinders remain.
+2n^2+7n.  The easy-plan certificate type consumes both growth theorems as leaves, so
+all depth-five residual mass is removed from the explicit residual set and only
+the 4,274 depth-six residual cylinders remain.
 The 42 newly closed depth-six leaves require no dynamical recurrence: both E
 rows are free, while every A/B/C/D/F row is assigned an ordinary transition
 whose next state remains in {A,B,C,D,F}, so `Raw34Plan.Cert.closed` applies
