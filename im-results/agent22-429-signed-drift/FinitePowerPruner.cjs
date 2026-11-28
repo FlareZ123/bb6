@@ -77,6 +77,9 @@ function exceedsPower(base, exponent, threshold) {
   }
   return prod > threshold;
 }
+const positivePart = x => x > 0n ? x : 0n;
+const smaller = (x,y) => x < y ? x : y;
+const larger = (x,y) => x > y ? x : y;
 function certificate(word, halfRank, repetitions) {
   if (repetitions < 2n) throw new Error("at least 2 repetitions required");
   if (halfRank < 0n) throw new Error("half-rank must be nonnegative");
@@ -91,17 +94,30 @@ function certificate(word, halfRank, repetitions) {
   // must come from the interval [-H1,H0].
   const squareResidue = numerator % M;
   const squareExcluded = squareResidue > H0 && M-squareResidue > H1;
+  const squareRankFloor = positivePart(smaller(
+    3n*squareResidue,3n*(M-squareResidue)-T));
   // For W W W: the third W's initial symbol fixes parity of u2 as
   // well, so (u2-u1) is even and the modulus strengthens to 2M.
   const tripleModulus = 2n*M;
   const tripleResidue = numerator % tripleModulus;
   const tripleResidueExcluded =
     copies >= 3n && tripleResidue > H0 && tripleModulus-tripleResidue > H1;
+  const tripleRankFloor = copies >= 3n ?
+    positivePart(smaller(3n*tripleResidue,
+      3n*(tripleModulus-tripleResidue)-T)) : 0n;
   const scaleCondition = copies >= 3n &&
     exceedsPower(M,copies-2n,2n*H2);
   const affineSlopeInteger = numerator % denominator === 0n;
   const affineSlopeEven = numerator % (2n*denominator) === 0n;
   const powerExcluded = scaleCondition && !affineSlopeEven;
+  // Numeric exact lower rank floor if the resulting decimal value is
+  // reasonably sized; otherwise give the unexpanded symbolic formula.
+  const powerBits = BigInt(M.toString(2).length)*(copies-2n);
+  const powerRankFloor =
+    copies >= 3n && !affineSlopeEven && powerBits <= 16384n ?
+    positivePart(3n*(M**(copies-2n)/2n)-2n*T) : null;
+  const knownRankFloor = larger(squareRankFloor,
+    larger(tripleRankFloor,powerRankFloor === null ? 0n : powerRankFloor));
   const excluded = !typeCompatible || squareExcluded || tripleResidueExcluded || powerExcluded;
   return {
     originalWord: word.map(x => (x.isE ? "E" : "S")+x.j).join(","),
@@ -112,11 +128,17 @@ function certificate(word, halfRank, repetitions) {
     T: T.toString(), heightBound: H2.toString(),
     sourceTypeCycleCompatible: typeCompatible,
     squareResidue: squareResidue.toString(),
+    squareRankFloor: squareRankFloor.toString(),
     squareModuloExclusion: squareExcluded,
     tripleResidue: tripleResidue.toString(),
+    tripleRankFloor: tripleRankFloor.toString(),
     tripleModuloExclusion: tripleResidueExcluded,
     scaleCondition, affineSlopeInteger, affineSlopeEven,
     finitePowerExclusion: powerExcluded,
+    finitePowerRankFloor: powerRankFloor === null ? null : powerRankFloor.toString(),
+    finitePowerRankFloorFormula: copies >= 3n && !affineSlopeEven ?
+      "max(0,3*M^(q-2)/2-2*T) with q after typed-core reduction" : null,
+    combinedComputedRankFloor: knownRankFloor.toString(),
     excludedByExactNecessaryCondition: excluded,
     reason: excluded ?
       "At least one exact signed type or arithmetic condition fails; the specified repeated word cannot occur." :
