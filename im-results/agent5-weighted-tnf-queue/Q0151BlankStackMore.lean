@@ -24,11 +24,11 @@ theorem empty_as_virtual_saved (q : Fin 6) (s R : List Bool) :
   calc
     boundary q s [] R =
         frame q (s.reverse ++ [false,false]) R := by
-          simp [boundary,leftOf,savedLeft,marker]
+          simp [boundary,leftOf,savedLeft,BB6.Agent5Q0151PhysicalStack.marker]
     _ = frame q ((s.reverse ++ [false,false]) ++ [false,false]) R :=
           (frame_trailing_marker q (s.reverse ++ [false,false]) R).symm
     _ = boundary q s ([] :: []) R := by
-          simp [boundary,leftOf,savedLeft,marker,List.append_assoc]
+          simp [boundary,leftOf,savedLeft,BB6.Agent5Q0151PhysicalStack.marker,List.append_assoc]
 
 theorem c_even_empty (n : Nat) (s R : List Bool)
     (hs : Scan s.reverse) :
