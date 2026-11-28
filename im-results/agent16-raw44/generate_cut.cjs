@@ -4,7 +4,7 @@
 // Search output is untrusted; resulting Lean zipCheck/NGram check is kernel-checked.
 const fs=require('fs'),path=require('path');
 const out=process.argv[2]||path.join(__dirname,'generated');
-const W=Number(process.argv[3]||128),short=120,long=1600,second=process.argv[4]||'0RE',B=second==='0LA'?126:second==='0RA'?375:second==='0LE'?373:211;
+const W=Number(process.argv[3]||128),short=120,long=1600,second=process.argv[4]||'0RE',B=second==='1LE'?475:second==='1RE'?155:second==='0LA'?126:second==='0RA'?375:second==='0LE'?373:211;
 fs.mkdirSync(out,{recursive:true});
 const base=['1RB',null,'1RC','0RC','0RD',second,'1LD','1LB',null,null,null,null];
 const enc=s=>s===null||s==='---'?-1:(s.charCodeAt(2)-65)*4+(s[1]==='R'?2:0)+Number(s[0]);
@@ -90,10 +90,17 @@ const fixed0LE = second==='0LE'
       return [key, ['BB6.Agent16Raw44.C1LE.Leaf'+row[0]+'.table', 'BB6.Agent16Raw44.C1LE.Leaf'+row[0]+'.never']];
     }))
   : {};
-const fixedForSecond = second==='0LE' ? fixed0LE : second==='0RF' ? fixed0RF : second==='0RA' ? fixed0RA : second==='0LA' ? fixed0LA : fixed;
+const remainingOne = second==='1LE' || second==='1RE';
+const remainingFixed = remainingOne ? Object.assign(
+    Object.fromEntries(Object.entries(JSON.parse(fs.readFileSync(path.join(__dirname,'remaining-far-map.json'),'utf8'))).filter(([p])=>p.split('_')[2].slice(3)===second)),
+    Object.fromEntries(fs.readFileSync(path.join(__dirname,second+'-autopump-certs.jsonl'),'utf8').trim().split('\n').map(line=>{
+        const row=JSON.parse(line), name='BB6.Agent16Raw44RemainingPump.C'+second+'.Leaf'+row[0];
+        return [row[1].match(/.{6}/g).join('_'),[name+'.table',name+'.never']];
+    }))) : {};
+const fixedForSecond = remainingOne ? remainingFixed : second==='0LE' ? fixed0LE : second==='0RF' ? fixed0RF : second==='0RA' ? fixed0RA : second==='0LA' ? fixed0LA : fixed;
 function slot(j){return `(${j>>1}, ${Boolean(j&1)})`}
 function move(m){return `⟨${Boolean(m&1)},${Boolean(m&2)},${m>>2}⟩`}
-const imports=second==='0LE'?'import Raw44CutBase\nimport Raw44C1LEAutoPump\n':second==='0RF'?'import Raw44CutBase\nimport Raw44B1RC_C1RF_M4SwapGrowth\nimport Raw44B1RC_C1RF_M5SwapGrowth\nimport Raw44B1RC_C1RF_M6SwapGrowth\nimport Raw44B1RC_C1RF_TwoHoleSwapGrowth\n':second==='0RA'?'import Raw44CutBase\nimport Raw44B1RC_C1RA_M1Growth\nimport Raw44B1RC_C1RA_M1SwapGrowth\nimport Raw44B1RC_C1RA_M2Growth\nimport Raw44B1RC_C1RA_M2SwapGrowth\n':second==='0LA'?'import Raw44CutBase\nimport Raw44B1RC_C1LA_M3Growth\nimport Raw44B1RC_C1LA_M3SwapGrowth\n':'import Raw44CutBase\nimport Raw44B1RC_C1RE_M4Growth\nimport Raw44B1RC_C1RE_M5Growth\nimport Raw44B1RC_C1RE_M6Growth\nimport Raw44B1RC_C1RE_TwoHoleGrowth\n';
+const imports=remainingOne?'import Raw44CutBase\nimport Raw44RemainingFAR\nimport Raw44RemainingPump'+second+'\n':second==='0LE'?'import Raw44CutBase\nimport Raw44C1LEAutoPump\n':second==='0RF'?'import Raw44CutBase\nimport Raw44B1RC_C1RF_M4SwapGrowth\nimport Raw44B1RC_C1RF_M5SwapGrowth\nimport Raw44B1RC_C1RF_M6SwapGrowth\nimport Raw44B1RC_C1RF_TwoHoleSwapGrowth\n':second==='0RA'?'import Raw44CutBase\nimport Raw44B1RC_C1RA_M1Growth\nimport Raw44B1RC_C1RA_M1SwapGrowth\nimport Raw44B1RC_C1RA_M2Growth\nimport Raw44B1RC_C1RA_M2SwapGrowth\n':second==='0LA'?'import Raw44CutBase\nimport Raw44B1RC_C1LA_M3Growth\nimport Raw44B1RC_C1LA_M3SwapGrowth\n':'import Raw44CutBase\nimport Raw44B1RC_C1RE_M4Growth\nimport Raw44B1RC_C1RE_M5Growth\nimport Raw44B1RC_C1RE_M6Growth\nimport Raw44B1RC_C1RE_TwoHoleGrowth\n';
 const root=run(ps,short,64);if(root.kind!=='hole')throw Error('No root hole: '+JSON.stringify(root));
 const first=root.j;
 fs.writeFileSync(path.join(out,'Raw44CutBase.lean'),`import ZipThreeHoleAudit\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nnamespace BB6.Agent16Raw44Cut\nopen BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay\n${tableDecl('parent',ps)}theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide\ntheorem parent_nohalt : weightedTNFNoAssignedHalt parent := by\n  intro slot\n  rcases slot with ⟨q,b⟩\n  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega\n  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide\nend BB6.Agent16Raw44Cut\n`);
