@@ -34,12 +34,14 @@ jobs:
           build=.tmp/a6-reductions/build
           LEAN_PATH="$build" lean -o "$build/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean > .tmp/d1zero.log
           LEAN_PATH="$build" lean -o "$build/D1SixReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1SixReduce.lean | tee .tmp/d6reduce.log
+          LEAN_PATH="$build" lean -o "$build/D1EightReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1EightReduce.lean | tee .tmp/d8reduce.log
           LEAN_PATH="$build" lean -o "$build/D1NineReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1NineReduce.lean | tee .tmp/d9reduce.log
           LEAN_PATH="$build" lean -o "$build/D1LateD0Reduce.olean" im-results/agent6-raw139-d1-zeroRD/D1LateD0Reduce.lean | tee .tmp/d16d17reduce.log
           LEAN_PATH="$build" lean -o "$build/D1RemainingD0Reduce.olean" im-results/agent6-raw139-d1-zeroRD/D1RemainingD0Reduce.lean | tee .tmp/dremainingreduce.log
           LEAN_PATH="$build" lean -o "$build/D1SecondLevel.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel.lean | tee .tmp/dsecondlevel.log
           LEAN_PATH="$build" lean -o "$build/D1SecondLevelFrontier.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevelFrontier.lean | tee .tmp/dfrontier.log
           grep -F "'BB6.Agent6D1SixReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d6reduce.log
+          grep -F "'BB6.Agent6D1EightReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d8reduce.log
           grep -F "'BB6.Agent6D1NineReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9reduce.log
           grep -F "'BB6.Agent6D1SixteenReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d16d17reduce.log
           grep -F "'BB6.Agent6D1SeventeenReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d16d17reduce.log
@@ -50,6 +52,7 @@ jobs:
           grep -F "'BB6.Agent6D1SecondLevel.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/dsecondlevel.log
           grep -F "'BB6.Agent6D1SecondLevelFrontier.cover_of_frontier' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/dfrontier.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d6reduce.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d8reduce.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9reduce.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d16d17reduce.log
           ! grep -Eq 'sorryAx|ofReduceBool' .tmp/dremainingreduce.log
@@ -60,12 +63,14 @@ jobs:
           name: agent6-d6-d9-reductions-checked
           path: |
             .tmp/d6reduce.log
+            .tmp/d8reduce.log
             .tmp/d9reduce.log
             .tmp/d16d17reduce.log
             .tmp/dremainingreduce.log
             .tmp/dsecondlevel.log
             .tmp/dfrontier.log
             .tmp/a6-reductions/build/D1SixReduce.olean
+            .tmp/a6-reductions/build/D1EightReduce.olean
             .tmp/a6-reductions/build/D1NineReduce.olean
             .tmp/a6-reductions/build/D1LateD0Reduce.olean
             .tmp/a6-reductions/build/D1RemainingD0Reduce.olean
