@@ -41,6 +41,11 @@ RAW42_CUT = [
     "BB6.Agent17Raw42Canonical39Conditional.conditional_sound",
     "BB6.Agent17Raw42Canonical39Conditional.conditional_exact_at_champion",
 ]
+RAW42_FROM_NAMED = [
+    "BB6.Agent17Raw42Canonical39FromNamed.literal_eq_p42",
+    "BB6.Agent17Raw42Canonical39FromNamed.cover_from_named_at_global",
+    "BB6.Agent17Raw42Canonical39FromNamed.sound_from_named",
+]
 
 
 def source_check(source, linked, evidence, names):
@@ -100,6 +105,7 @@ def main():
         (HERE / "Raw42Canonical40Membership.lean", RAW42_40),
         (HERE / "Raw42Canonical39Membership.lean", RAW42_39),
         (HERE / "Raw42Canonical39Conditional.lean", RAW42_CUT),
+        (HERE / "Raw42Canonical39FromNamed.lean", RAW42_FROM_NAMED),
     ]:
         root, p = source_check(source, canonical, evidence, targets)
         roots[root.name] = sha(root)
