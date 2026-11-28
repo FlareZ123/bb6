@@ -32,6 +32,14 @@ on:
         description: Seconds allowed for exact FAR search
         type: string
         default: '900'
+      auto_json:
+        description: Optional tracked Raw41 AutoPump fixture for this exact target
+        type: string
+        default: ''
+      require_closed:
+        description: Fail if any unresolved leaves remain after source generation
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -65,12 +73,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Reuse exact canonical enumeration and search FAR
+        env:
+          RAW41_AUTO_JSON: ${{ inputs.auto_json }}
+          RAW41_REQUIRE_CLOSED: ${{ inputs.require_closed }}
         run: |
+          set -euo pipefail
+          auto_args=()
+          if [[ -n "$RAW41_AUTO_JSON" ]]; then
+            [[ "$RAW41_AUTO_JSON" =~ ^im-results/agent36-raw41/certificates/[a-zA-Z0-9_./-]+\.json$ ]]
+            [[ "$RAW41_AUTO_JSON" != *..* ]]
+            test -f "$RAW41_AUTO_JSON"
+            auto_args+=(--auto-json "$RAW41_AUTO_JSON")
+          fi
           python3 im-results/agent36-raw41/close_candidate.py \
             --index ${{ inputs.index }} --dfa ${{ inputs.dfa }} --time ${{ inputs.search_seconds }} \
             --late "${{ inputs.late }}" --far-override "${{ inputs.far_override }}" --min-bound ${{ inputs.min_bound }} \
-            --out raw41-target-candidate
+            --out raw41-target-candidate "${auto_args[@]}"
           cat raw41-target-candidate/summary.json
+          if [[ "$RAW41_REQUIRE_CLOSED" == true ]]; then
+            python3 - <<'PY'
+          import json
+          s=json.load(open("raw41-target-candidate/summary.json"))
+          remaining=s.get("remaining_after_auto", s.get("remaining_after_late", s["remaining"]))
+          if remaining != 0:
+              raise SystemExit(f"Raw41 child still has {remaining} open leaves; no complete source closure")
+          print("Raw41 candidate has no unresolved leaves (generation condition, not Lean acceptance)")
+          PY
+          fi
       - uses: actions/upload-artifact@v4
         if: always()
         with:
