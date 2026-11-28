@@ -47,6 +47,7 @@ jobs:
         run: |
           set -euo pipefail
           cp im-results/agent1-raw56/le/Raw56LE17557{RhoArithmetic,DefectStack,FrameSchedule,EpisodeWord,ActionGrammar,FrameMachine,RightLevel,AbstractEpoch,LocalSweeps,RankedTriads,LiftConjugacy}.lean /tmp/union/
+          cp im-results/agent4-raw56-root-pilot/Raw56LE17557RightQueue.lean /tmp/union/
           export LEAN_PATH=/tmp/union
           cd /tmp/union
           lean -o Raw56LE17557RhoArithmetic.olean Raw56LE17557RhoArithmetic.lean 2>&1 | tee rho.log
@@ -60,7 +61,8 @@ jobs:
           lean -o Raw56LE17557LocalSweeps.olean Raw56LE17557LocalSweeps.lean 2>&1 | tee sweeps.log
           lean -o Raw56LE17557RankedTriads.olean Raw56LE17557RankedTriads.lean 2>&1 | tee ranked.log
           lean -o Raw56LE17557LiftConjugacy.olean Raw56LE17557LiftConjugacy.lean 2>&1 | tee conjugacy.log
-          cat rho.log defect.log frame.log episode.log action.log machine.log right.log abstract.log sweeps.log ranked.log conjugacy.log > frame-all.log
+          lean -o Raw56LE17557RightQueue.olean Raw56LE17557RightQueue.lean 2>&1 | tee rightqueue.log
+          cat rho.log defect.log frame.log episode.log action.log machine.log right.log abstract.log sweeps.log ranked.log conjugacy.log rightqueue.log > frame-all.log
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' frame-all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" frame-all.log \
             --require BB6.Agent1Raw56.LE17557FrameSchedule.frame_prefix_defect \
@@ -89,8 +91,9 @@ jobs:
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_carry \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.B_triad \
             --require BB6.Agent1Raw56.LE17557RankedTriads.A_ranked_normal \
-            --require BB6.Agent1Raw56.LE17557LiftConjugacy.frame_conjugate_cycle
-          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557RightLevel.{lean,olean} Raw56LE17557AbstractEpoch.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} Raw56LE17557RankedTriads.{lean,olean} Raw56LE17557LiftConjugacy.{lean,olean} frame-all.log /tmp/out/
+            --require BB6.Agent1Raw56.LE17557LiftConjugacy.frame_conjugate_cycle \\
+            --require BB6.Agent4Raw56LE17557RightQueue.every_finite_prefix
+          cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557RightLevel.{lean,olean} Raw56LE17557AbstractEpoch.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} Raw56LE17557RankedTriads.{lean,olean} Raw56LE17557LiftConjugacy.{lean,olean} Raw56LE17557RightQueue.{lean,olean} rightqueue.log frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
