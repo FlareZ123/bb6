@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, extra-resume-132, q0-root53-source, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, extra-resume-132, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -674,5 +674,82 @@ jobs:
             /tmp/q053-certified
             /tmp/q053-generated
             /tmp/q053-certified.log
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  # A genuine new restricted-family result: derive a sharp unpadded
+  # 203-step ordinary upper bound from the same frozen exact 30,793-node
+  # q0 root53 tree, and exhibit a literal 203-step attaining halter.
+  q0-root53-sharp:
+    if: inputs.mode == 'q0-root53-sharp'
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45815437524
+          name: q0-root53-generated-source
+          path: /tmp/q053-witness
+      - name: Regenerate sharp source and identify actual attaining halter
+        run: |
+          set -euo pipefail
+          witness="$(find /tmp/q053-witness -name q0-auto-candidate.json -print -quit)"
+          test -n "$witness"
+          python im-results/agent47-raw11-adapter/generate-q0-root53-sharp.py \
+            "$(dirname "$witness")" /tmp/q053-sharp \
+            | tee /tmp/q053-sharp-generation.log
+          test -f /tmp/q053-sharp/Q0Root53SharpWitness.lean
+          test -f /tmp/q053-sharp/Q0Root53Parent.lean
+          grep -F 'theorem family_exact_203' /tmp/q053-sharp/Q0Root53SharpWitness.lean
+          test "$(find /tmp/q053-sharp -name 'Q0Root53Shard*.lean' | wc -l)" -eq 24
+      - name: Kernel-check full branch and sharp ordinary maximum
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          mkdir -p /tmp/q053-sharp-certified
+          python tools/lean_compile_closure.py /tmp/q053-sharp/Q0Root53SharpWitness.lean \
+            --source-root /tmp/q053-sharp \
+            --workdir /tmp/q053-sharp-certified \
+            --jobs 1 --lean lean \
+            --manifest /tmp/q053-sharp-certified/manifest.json \
+            --label 'root53 exact 203 ordinary-step maximum and halter' \
+            --theorem Q0Root53SharpWitness.family_exact_203 \
+            --parent-table 1RB1RD_1RC1RE_0LA---_1LA1LD_------_------ \
+            --provenance-input im-results/agent47-raw11-adapter/generate-q0-root53-sharp.py \
+            --provenance-input im-results/agent5-weighted-tnf-queue/generate_q0_exhaustive_lean.py \
+            --provenance-input "$(find /tmp/q053-witness -name q0-auto-candidate.json -print -quit)" \
+            2>&1 | tee /tmp/q053-sharp-source.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q053-sharp-source.log; then
+            echo 'unapproved trust dependency' >&2
+            exit 1
+          fi
+          for theorem in \
+            "'Q0Root53.sharp_root' depends on axioms:" \
+            "'Q0Root53SharpWitness.halts202' depends on axioms:" \
+            "'Q0Root53SharpWitness.family_exact_203' depends on axioms:"; do
+            grep -F "$theorem" /tmp/q053-sharp-source.log
+          done
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-q0-root53-exact-ordinary-203
+          path: |
+            /tmp/q053-sharp-certified
+            /tmp/q053-sharp
+            /tmp/q053-sharp-source.log
+            /tmp/q053-sharp-generation.log
           if-no-files-found: warn
           retention-days: 30
