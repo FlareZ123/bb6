@@ -1,0 +1,219 @@
+name: Agent10 Raw42 0LE subshard recovery
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+env:
+  SOURCE_RUN: "46142039950"
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    outputs:
+      groups: ${{ steps.plan.outputs.groups }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - name: Split every frozen 0LE coarse shard in two
+        id: plan
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          generated = Path("im-results/agent32-raw42/generated-assembly")
+          source = json.loads((generated / "shards.json").read_text())
+
+          def imports(module):
+              path = generated / (module + ".lean")
+              if not path.is_file():
+                  return []
+              out = []
+              for line in path.read_text().splitlines():
+                  if line.startswith("import "):
+                      out.extend(line.split()[1:])
+              return out
+
+          memo = {}
+          def closure(module):
+              if module in memo:
+                  return memo[module]
+              path = generated / (module + ".lean")
+              if not path.is_file():
+                  memo[module] = frozenset()
+                  return memo[module]
+              seen = {module}
+              for dep in imports(module):
+                  seen.update(closure(dep))
+              memo[module] = frozenset(seen)
+              return memo[module]
+
+          def byte_count(modules):
+              return sum((generated / (m + ".lean")).stat().st_size for m in modules)
+
+          groups = {}
+          stats = {}
+          for coarse, roots0 in sorted(source["groups"].items(), key=lambda kv: int(kv[0])):
+              roots = list(roots0)
+              root_closures = {r: closure(r) for r in roots}
+              order = sorted(roots, key=lambda r: (-byte_count(root_closures[r]), r))
+              parts = [[], []]
+              unions = [set(), set()]
+              for root in order:
+                  rc = set(root_closures[root])
+                  target = min(
+                      range(2),
+                      key=lambda i: (byte_count(unions[i] | rc), len(parts[i]), i),
+                  )
+                  parts[target].append(root)
+                  unions[target].update(rc)
+              for i in range(2):
+                  key = f"{coarse}{chr(ord('a') + i)}"
+                  groups[key] = sorted(parts[i])
+                  stats[key] = {
+                      "roots": len(parts[i]),
+                      "closure_modules": len(unions[i]),
+                      "closure_bytes": byte_count(unions[i]),
+                  }
+
+          plan = {
+              "artifact_prefix": "raw42-0LE-sub",
+              "groups": groups,
+              "allow_mixed_revisions": False,
+              "source_plan": source,
+              "stats": stats,
+          }
+          Path("/tmp/nested.json").write_text(json.dumps(plan, indent=2, sort_keys=True) + "\n")
+          print(json.dumps(stats, indent=2, sort_keys=True))
+          PY
+          echo "groups=$(python -c 'import json;print(json.dumps(list(json.load(open("/tmp/nested.json"))["groups"])))')" >> "$GITHUB_OUTPUT"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-0LE-sub-plan
+          path: /tmp/nested.json
+          retention-days: 14
+          if-no-files-found: error
+
+  compile_subshard:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        key: ${{ fromJSON(needs.prepare.outputs.groups) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-core
+          path: /tmp/core
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-0LE-sub-plan
+          path: /tmp/plan
+      - name: Compile one exact 0LE subshard
+        env:
+          KEY: ${{ matrix.key }}
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' /tmp/plan/nested.json "$KEY")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          out=/tmp/sub
+          mkdir -p "$out"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir "$out" --jobs 1 \
+            --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
+            --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core \
+            --manifest "$out/manifest.json" --artifact-name "raw42-0LE-sub-$KEY" \
+            "${roots[@]}" | tee "$out/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$out/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-0LE-sub-${{ matrix.key }}
+          path: /tmp/sub/
+          retention-days: 30
+          if-no-files-found: error
+
+  compose:
+    needs: [prepare, compile_subshard]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ env.SOURCE_RUN }}
+          name: raw42-assembly-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-0LE-sub-plan
+          path: /tmp/plan
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-0LE-sub-*
+          path: /tmp/subs
+      - name: Authenticate subshards and prove the full 0LE Cover
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          python im-results/agent4-raw109/merge_shards.py /tmp/subs /tmp/merged /tmp/plan/nested.json
+          mkdir -p /tmp/final
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA=im-results/agent32-raw42/FastBiDFA.lean \
+            --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json --artifact-name raw42-certified-0LE-subsharded-recovery \
+            --theorem BB6.Agent32Raw420LE.Closed.cover \
+            --parent-table '1RB---_1RC0LE_0RD---_1LD0LB_------_------' \
+            --weighted-bound 100006 "$g/Raw420LEClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log BB6.Agent32Raw420LE.Closed.cover
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-0LE-subsharded-recovery
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: error
