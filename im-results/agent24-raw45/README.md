@@ -286,3 +286,64 @@ The 24-branch assembly was fixed to source `byMove` order
 rather than naively listing 0..23 in tactic case order
 (commit 3bd79a9a). A separate `kid04` 96-bound preflight
 is queued as run 46091780695.
+
+
+## The full Raw45 depth-two translated-cycle portfolio
+
+A separate expansion of the exact **seven-hole Raw45 parent**
+`1RB---_1RC---_0RD---_1LD1RB_------_------`
+through two first-missing-row splits (with the repository's
+state-first-use target cutoff) generated a small exact lasso bank:
+
+- 15 internal first-hole splits;
+- **159** short translated-cycle leaves, of which **6**
+  occur after only one split (six holes remain) and **153**
+  after two splits (five holes remain);
+- **44** TNF state-target aliases excluded by first-use
+  canonicalization;
+- **137** ordinary five-hole residuals querying a third
+  undefined row within 1000 moves;
+- **6** five-hole residuals with no first-hole query or
+  detected translated lasso within 1000 moves, exactly
+  the previously identified M1–M6 growing cylinders.
+
+All 159 translated cycles have **period at most 24**
+and enter by at most 26 primitive moves from the genuine
+blank configuration. Every partial-machine table, exact
+`zipCycle` witness and source `zipCycle_sound` theorem is
+now recorded in four new source files:
+
+[Raw45Depth2CyclesA.lean](Raw45Depth2CyclesA.lean),
+[Raw45Depth2CyclesB.lean](Raw45Depth2CyclesB.lean),
+[Raw45Depth2CyclesC.lean](Raw45Depth2CyclesC.lean),
+[Raw45Depth2CyclesD.lean](Raw45Depth2CyclesD.lean).
+
+These are newly generated **source proof candidates** until
+the respective original-source+axiom CI gates
+`raw45-d2-a`, `raw45-d2-b`, `raw45-d2-c`,
+`raw45-d2-d` report success. The six depth-one
+cycle cylinders, each with six missing rows, cover
+`6 × 25^6 = 1,464,843,750` physical completed
+transition tables; the 153 depth-two cylinders cover another
+`153 × 25^5 = 1,494,140,625`, for a proposed total
+`2,958,984,375` *disjoint* raw literal completions with
+genuine source-certified translated cycles. These counts
+are **not** the number of canonical TNF orbits; state
+renaming and the 44 aliases require a distinct formal
+normal-form argument before a global roster can be reduced.
+
+The shorter
+[Raw45ElevenDirectCycles.lean](Raw45ElevenDirectCycles.lean)
+independently packages eleven mutually distinct five-hole
+`B1=0LA` children already subsumed by the 159-cycle
+bank, with all their entry/period/boundary witnesses:
+`A1=0LA,1LA,0RA,1RA,0LB,0RC,1RC,0LD,1LD,0RD,1RD`.
+CI target `raw45-eleven-cycles` is pending. This
+smaller proof is a quick source-gate test, not an
+additional disjoint completion count.
+
+The depth-two first-hole portfolio remains **incomplete**
+until the other 137 residuals have upper/nonhalting
+certificates, the six M1–M6 growth proofs pass, and an
+entire source-sound parent assembly is built. No global BB(6)
+claim follows from counting these canonical leaves.
