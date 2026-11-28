@@ -83,7 +83,7 @@ const raySource=withRay?[
 if(withRay)assert.equal(raySource.length,withLeft?44:36);
 raySource.forEach(add);
 function parseSourceCycles(text){
- const rows=[...text.matchAll(/⟨\\[([\\d,\\s]+)\\],/g)].map(m=>
+ const rows=[...text.matchAll(/⟨\[([\d,\s]+)\],/g)].map(m=>
    m[1].split(",").map(x=>Number(x.trim())));
  for(const p of rows){
    assert.equal(p.length,12,"source cycle witness must have 12 physical slots");
