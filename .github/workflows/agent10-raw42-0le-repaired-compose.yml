@@ -69,6 +69,30 @@ jobs:
           name: raw42-split-0LE-g0p2
           path: /tmp/parts/raw42-split-0LE-g0p2
 
+      - name: Restore rewritten generated sources from repaired g0p2
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import shutil
+          shard=Path("/tmp/parts/raw42-split-0LE-g0p2")
+          manifest=json.loads((shard/"manifest.json").read_text())
+          repo=Path.cwd()
+          restored=0
+          for item in manifest["modules"]:
+              if item.get("source_kind") != "generated-or-untracked":
+                  continue
+              src=shard / (item["module"].replace(".", "/") + ".lean")
+              dst=repo / item["source_path"]
+              if not src.is_file():
+                  raise SystemExit(f"missing repaired source {src}")
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(src,dst)
+              restored += 1
+          print(f"restored {restored} repaired generated sources")
+          PY
+
       - name: Authenticate exact 32-part union and prove whole 0LE Cover
         run: |
           set -euo pipefail
