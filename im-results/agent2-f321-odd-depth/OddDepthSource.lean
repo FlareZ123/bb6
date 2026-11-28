@@ -82,16 +82,18 @@ theorem gate_to_Q0 (k:Nat) (hk:1≤k) :
       ∃ m, CounterReach 1 1 m (3*k) (13*k) := by
   intro n hr
   cases hr with
-  | step hr hm =>
+  | @step n a d A D hr hm =>
     have hlarge : 3 ≤ 8*k+3 := by omega
     rcases large_second_only_high_far hm hlarge with hh | hf
     · cases hr with
       | nil => omega
-      | step hr2 hm2 =>
-        rcases large_second_only_high_far hm2 (by omega) with hh2 | hf2
+      | @step n2 a2 d2 A2 D2 hr2 hm2 =>
+        have hmid : 3 ≤ d := by omega
+        rcases large_second_only_high_far hm2 hmid with hh2 | hf2
         · omega
-        · refine ⟨_, ?_⟩
-          convert hr2 using 1 <;> omega
+        · have hsa : a2 = 3*k := by omega
+          have hsd : d2 = 13*k := by omega
+          exact ⟨n2, by simpa only [hsa,hsd] using hr2⟩
     · omega
 
 /-- A Q_i(4k+2) output has a single far predecessor Q_(i+1)(k). -/
@@ -114,7 +116,7 @@ theorem peel (i k:Nat) :
     simp [Nat.add_mod, Nat.mul_mod, he]
     omega
   cases hr with
-  | step hp hm =>
+  | @step n a d A D hp hm =>
     rcases large_second_only_high_far hm hd with hh | hf
     · omega
     · have hpoly :
@@ -122,8 +124,10 @@ theorem peel (i k:Nat) :
            coeff i*(4*k+2)+shift i+9*k := by
         simp [Nat.add_mul, Nat.mul_add, Nat.mul_assoc, Nat.mul_comm, Nat.mul_left_comm]
         omega
-      refine ⟨_, ?_⟩
-      convert hp using 1 <;> omega
+      have hsa : a = 3*k := by omega
+      have hsd : d = (4*coeff i+9)*k+(shift i+2*coeff i) := by
+        omega
+      exact ⟨n, by simpa only [hsa,hsd] using hp⟩
 
 /-- All t forced low base-four digit-2 inversions are valid exactly as
     symbolic source-counter transformations. -/
@@ -168,7 +172,6 @@ theorem odd_depth_gate_never (t m:Nat) (ht:t%2=1) :
   have hD : (coeff t*(4*m+1)+shift t)%4=3 := by
     have hfour : (4*m+1)%4=1 := by omega
     rw [Nat.add_mod, Nat.mul_mod, hc, hs, hfour]
-    decide
   have hq' : CounterReach 1 1 q (3*(4*m+1))
        (coeff t*(4*m+1)+shift t) := by
     simpa using hq
