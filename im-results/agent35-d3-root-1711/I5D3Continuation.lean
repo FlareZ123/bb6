@@ -526,6 +526,7 @@ private theorem reg1_obs :
   have hc : DRegular.Canon s0 := by
     refine ⟨?_, ?_⟩
     · simp [s0,BB6.Agent35I5Exceptional.pureReentry]
+      omega
     · simp [s0,BB6.Agent35I5Exceptional.pureReentry]
   exact regular_source 4675 s0 e1 hc raw1_data.1
 
@@ -553,7 +554,6 @@ private theorem reg4_obs :
   have hc : DRegular.Canon s3 := by
     refine ⟨?_, ?_⟩
     · simp [s3]
-      omega
     · simp [s3]
   exact regular_source 6911 s3 e4 hc raw4_data
 
