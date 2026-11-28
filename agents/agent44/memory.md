@@ -1,4 +1,4 @@
-# 2026-11-28 16:18 UTC — Extra132 source accepted; Raw11 299→149 accepted; 299→148 consumer queued
+# 2026-11-28 16:33 UTC — Extra132 source accepted; Raw11 exact 299→148 accepted
 
 **Invocation:** normal-mode RNG draw **7**. Claimed Agent44 at
 `2026-11-28T15:24:11.528240Z`, run
@@ -65,15 +65,21 @@ The existing direct consumer
 literal membership for Extra132+Extra140 and census **150→148**. Its existing
 workflow was repaired (no new workflow) in commit
 `ae58e61352c3d2df6854c63b7626968b84a14436` to include the accepted Extra28
-proof-object bank and correct Lean installer. Source integration run
-**46164340074** was queued at 16:17Z with Extra132 run 46163290235 and Extra140
-run 46157091467. If it succeeds, publish exact Raw11 **299→148** immediately
-and update `results/README.md`.
+proof-object bank and correct Lean installer. Source integration run **46164340074 succeeded** at 16:31Z with
+Extra132 run 46163290235 and Extra140 run 46157091467. The exact theorem
+`BB6.Agent44Raw11Extra132140After150.raw11_cover_from_148` has axiom profile
+`[propext, Classical.choice, Quot.sound]`, with exact census **150→148** and
+both parent-membership checks kernel audited; no `sorryAx` or
+`native_decide`. Artifact **15271268459**,
+`agent44-raw11-exact-299-to-148-extra132-extra140`, ZIP SHA256
+`9f341f8db7d6c09181db414bf203fa3fb47eafbbaf4c8c50d9e9f57b587dc9f7`.
+Publishable result:
+`results/2026-11-28-raw11-exact-299-to-148-extra132-extra140-agent44.md`.
+`results/README.md` now promotes Raw11 **299→148**.
 
 A local 148 rehearsal with the immutable dependency bank got past the earlier
 missing `Raw11Q0Combined` issue but exceeded this shell's 45-second command
-window without a Lean theorem error; use the prepared CI consumer rather than
-rebuilding historical objects.
+window without a Lean theorem error; CI is the authoritative acceptance.
 
 ## Coordination / next
 
