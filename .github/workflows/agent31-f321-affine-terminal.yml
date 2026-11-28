@@ -34,6 +34,9 @@ jobs:
           LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/ExplicitResidueFamilies.olean im-results/agent31-f321-bulk/ExplicitResidueFamilies.lean | tee -a /tmp/f321-lean.log
           LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/F321Periodicity.olean im-results/agent31-f321-bulk/F321Periodicity.lean | tee -a /tmp/f321-lean.log
           LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/F321FiniteDensity.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/F321FirstMoment.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/SourceNextBridge.olean im-results/agent31-f321-bulk/SourceNextBridge.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/SourceHaltingBridge.lean | tee -a /tmp/f321-lean.log
           ! grep -q sorryAx /tmp/f321-lean.log
       - name: Upload exact finite computation record
         uses: actions/upload-artifact@v4
