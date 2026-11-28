@@ -18,6 +18,14 @@ on:
         description: Maximum ordinary certificate chunk nodes
         type: string
         default: '400'
+      shard_count:
+        description: Source-check shards for cover-sharded (1–128); increase on large frozen trees
+        type: string
+        default: '8'
+      module_nodes:
+        description: Source tree node threshold per generated Lean module
+        type: string
+        default: '6000'
       revision:
         description: Exact source revision (empty uses dispatch SHA)
         type: string
@@ -532,6 +540,8 @@ jobs:
     outputs:
       id: ${{ steps.prepare.outputs.id }}
       remaining: ${{ steps.frontier.outputs.remaining }}
+      shards: ${{ steps.prepare.outputs.shards }}
+      count: ${{ steps.prepare.outputs.count }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -540,15 +550,20 @@ jobs:
         id: prepare
         env:
           INDICES: ${{ inputs.indices }}
+          SHARD_COUNT: ${{ inputs.shard_count }}
         run: |
           python - <<'PY'
           import json, os
+          n = int(os.environ['SHARD_COUNT'])
+          assert 1 <= n <= 128
           ids = json.loads(os.environ['INDICES'])
           assert isinstance(ids, list) and len(ids) == 1 and type(ids[0]) is int
           with open('im-results/agent47-raw11-adapter/raw11-route.json') as route_file:
               assert 0 <= ids[0] < len(json.load(route_file)['targets'])
           with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
               print('id='+str(ids[0]), file=f)
+              print('count='+str(n), file=f)
+              print('shards='+json.dumps(list(range(n)), separators=(',', ':')), file=f)
           PY
       - uses: actions/download-artifact@v4
         with:
@@ -560,10 +575,12 @@ jobs:
         env:
           ID: ${{ steps.prepare.outputs.id }}
           CHUNK: ${{ inputs.chunk }}
+          MODULE_NODES: ${{ inputs.module_nodes }}
+          SHARD_COUNT: ${{ steps.prepare.outputs.count }}
         run: |
           set -euo pipefail
-          node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK"
-          python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py partition /tmp/coarse-generated 8
+          node im-results/agent5-weighted-tnf-queue/generate-coarse-parent-shards.cjs "$ID" /tmp/coarse-candidate /tmp/coarse-generated "$CHUNK" "$MODULE_NODES"
+          python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py partition /tmp/coarse-generated "$SHARD_COUNT"
       - uses: actions/download-artifact@v4
         if: steps.prepare.outputs.id == '149'
         with:
@@ -670,9 +687,9 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      max-parallel: 4
+      max-parallel: 8
       matrix:
-        shard: [0,1,2,3,4,5,6,7]
+        shard: ${{ fromJSON(needs.sharded-core.outputs.shards) }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -752,7 +769,7 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           PARTS=(/tmp/coarse-parts/raw11-q0-sharded-part-"$ID"-*)
-          test "${#PARTS[@]}" -eq 8
+          test "${#PARTS[@]}" -eq '${{ needs.sharded-core.outputs.count }}'
           python im-results/agent5-weighted-tnf-queue/shard-coarse-proof.py merge /tmp/coarse-core /tmp/coarse-union "${PARTS[@]}"
           THEOREM="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["theorem"])')"
           TABLE="$(python -c 'import json;print(json.load(open("/tmp/coarse-generated/manifest.json"))["table"])')"
