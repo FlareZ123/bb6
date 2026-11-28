@@ -9,6 +9,8 @@ This tool never treats a residual count or prepared trace as a global bound.
 import argparse
 import json
 import re
+import os
+import sys
 from pathlib import Path
 import shutil
 import subprocess
@@ -127,10 +129,88 @@ def generate_source(prior, work):
     return root, [name.replace(old_ns,TARGET_NS).replace("p57_","p47_") for name in names]
 
 
+
+def kernel_replay_raw47(spec, dirs, linked, copied, audit, work, evidence):
+    """Kernel-replay only the import-affected Raw47 declaration cone.
+
+    Source producer was independently accepted; checked kernel replay preserves
+    its proof terms and transforms every conflicting declaration consistently.
+    Native staged objects are then imported by an ordinary Lean source bridge.
+    """
+    helper = c.selected.HERE.parent / "agent32-raw59" / "kernel-slice"
+    sys.path.insert(0,str(helper))
+    from stage_relocate import relocate
+    prefix = Path(subprocess.check_output(
+        ["lean","--print-prefix"],text=True).strip())
+    files_out = subprocess.check_output(
+        ["lean","--run",str(c.selected.HERE / "WalkImportClosure.lean"),
+         str(prefix / "lib" / "lean"),str(len(dirs)),*map(str,dirs),
+         spec["root"]],text=True)
+    files = sorted(set(Path(x) for x in files_out.splitlines()))
+    assert files and all(p.suffix == ".olean" and p.is_file() and
+                         p.parent in dirs for p in files)
+    assert any(p.name == spec["root"] + ".olean" for p in files)
+    scratch = work / "raw47-stage-tool"
+    scratch.mkdir()
+    shutil.copy2(helper / "KernelStage.lean",scratch / "KernelStage.lean")
+    env = dict(os.environ,LEAN_SYSROOT=str(prefix),
+               LEAN_PATH=str(linked))
+    print("Raw47 staged original-source kernel replay: building native checker",flush=True)
+    subprocess.run(["lean","-c","KernelStage.c","KernelStage.lean"],
+                   cwd=scratch,env=env,check=True)
+    subprocess.run(["leanc","-O2","-o","kernelstage","KernelStage.c"],
+                   cwd=scratch,env=env,check=True)
+    print(f"Raw47 staged producer import closure: {len(files)} objects",flush=True)
+    report, objects, names = relocate(
+        producer_files=files,base=linked,work=work/"raw47-kernel-replay",
+        root_module=spec["root"],
+        root_names=["BB6.Agent50Raw47Complete.cover_at"],
+        prefix="A50Raw47Slice",tool=scratch/"kernelstage",
+        comparator=c.selected.HERE.parent/"agent13-raw125"/"CompareKernelImports.lean")
+    assert report["complete"]
+    for file in sorted(objects.glob("*.olean")):
+        dest=linked/file.name
+        if dest.exists():
+            assert c.a68.sha(dest)==c.a68.sha(file),file
+        else:
+            shutil.copy2(file,dest)
+            copied.append(dest)
+    parent_name = ("A50Raw47Slice.BB6.Agent50Raw47Depth3Cut.parent"
+                   if "BB6.Agent50Raw47Depth3Cut.parent" in names
+                   else "BB6.Agent50Raw47Depth3Cut.parent")
+    source = scratch / "Raw47KernelBridge.lean"
+    source.write_text(f"""import {report['staged_root']}
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+namespace BB6.Agent50Raw47Bridge
+open BB6Coverage BB6.Agent13BlankDelay
+open BB6.Agent47CanonicalFrontier
+abbrev parent : PartialMachine := {parent_name}
+theorem cover_at (B : Nat) (h : 143977 ≤ B) :
+    Cover (WeightedBound B) parent := by
+  simpa only [parent] using
+    (A50Raw47Slice.BB6.Agent50Raw47Complete.cover_at B h)
+#print axioms cover_at
+end BB6.Agent50Raw47Bridge
+""")
+    bridge, profiles = c.u.compile_one(source,linked,evidence,
+        ["BB6.Agent50Raw47Bridge.cover_at"])
+    assert set(profiles["BB6.Agent50Raw47Bridge.cover_at"]) <= c.ALLOWED
+    copied.append(bridge)
+    audit["relocation"]={"mode":"staged-trust-level-zero-kernel-replay",
+                         "report":report,
+                         "root":report["staged_root"],
+                         "bridge_olean_sha256":c.a68.sha(bridge),
+                         "source_sha256":c.a68.sha(source),
+                         "profile":profiles}
+    print("PASS: transported Raw47 whole-parent theorem using checked kernel replay",flush=True)
+
+
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work",type=Path,required=True)
     ap.add_argument("--raw47-run-id",type=int,required=True)
+    ap.add_argument("--transport",choices=("strict","staged"),default="strict")
     args=ap.parse_args()
     work=args.work.resolve()
     work.mkdir(parents=True,exist_ok=False)
@@ -153,8 +233,22 @@ def main():
     parentdir.mkdir()
     spec,dirs=c.restore_parent(args.raw47_run_id,parentdir,evidence)
     copied,audit=[],{}
-    c.selected.add_family(spec,dirs,linked,copied,audit)
+    if args.transport == "staged":
+        kernel_replay_raw47(spec,dirs,linked,copied,audit,work,evidence)
+    else:
+        c.selected.add_family(spec,dirs,linked,copied,audit)
     source,names=generate_source(prior,work)
+    if args.transport == "staged":
+        text=source.read_text()
+        assert "import Raw47Complete" in text
+        assert "BB6.Agent50Raw47Depth3Cut.parent" in text
+        assert "BB6.Agent50Raw47Complete.cover_at" in text
+        text=text.replace("import Raw47Complete","import Raw47KernelBridge")
+        text=text.replace("BB6.Agent50Raw47Depth3Cut.parent",
+                          "BB6.Agent50Raw47Bridge.parent")
+        text=text.replace("BB6.Agent50Raw47Complete.cover_at",
+                          "BB6.Agent50Raw47Bridge.cover_at")
+        source.write_text(text)
     root,profiles=c.u.compile_one(source,linked,evidence,names)
     assert TARGET_NS+".exact_at_champion_score" in profiles
     assert all(set(v)<=c.ALLOWED for v in profiles.values())
@@ -168,6 +262,7 @@ def main():
         hashes[dst.name]=c.a68.sha(dst)
     report={
         "status":"source-accepted Raw47 successor of Canonical40",
+        "transport":args.transport,
         "previous_delta":pin40,
         "previous_root_sha256":prior["root_sha256"],
         "previous_residual_count":40,
