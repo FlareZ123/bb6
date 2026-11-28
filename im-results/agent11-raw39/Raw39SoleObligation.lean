@@ -9,7 +9,7 @@ An exact original-source global conditional with only the single unsolved Raw39
 A1=1LE child in addition to the 39 other Canonical40 quotient representatives.
 This file does *not* establish that the 1LE child is bounded; that final
 hypothesis must be discharged by the complete source-checked 1LE proof.
--/-
+-/
 
 namespace BB6.Agent11Raw39SoleObligation
 
