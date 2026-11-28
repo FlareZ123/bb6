@@ -549,7 +549,7 @@ jobs:
                   if any(x in line for x in ['theorem ctop','theorem nrtop','theorem partial_quotient','theorem exact_residuals','def ttop','def residuals','#print axioms']):
                       print('KEY',i+1,line[:300],flush=True)
               print('TAIL',name,flush=True)
-              for line in lines[-100:]:print(line[:450])
+              for line in (lines[:65] if name == 'Raw56LBE11LBReduced.lean' else lines[-100:]):print(line[:450])
           PY
 
   parent-split-defs:
