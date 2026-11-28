@@ -12,9 +12,15 @@
 using namespace std;
 
 constexpr int L=39447;
-constexpr int W=16384;
+#ifndef RAW54_LASSO_W
+#define RAW54_LASSO_W 16384
+#endif
+#ifndef RAW54_LASSO_MAXPERIOD
+#define RAW54_LASSO_MAXPERIOD 16384
+#endif
+constexpr int W=RAW54_LASSO_W;
 constexpr int O=W/2;
-constexpr int MAXPERIOD=16384;
+constexpr int MAXPERIOD=RAW54_LASSO_MAXPERIOD;
 using Tape=array<uint64_t,W/64>;
 using Table=array<int,12>;
 
