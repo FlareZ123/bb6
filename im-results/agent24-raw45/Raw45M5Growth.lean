@@ -63,10 +63,8 @@ theorem growth (n : Nat) :
   have h2 : run0 table 1 ⟨3,ones (3*n+2),[true,true]⟩ =
       some ⟨1,ones (3*n+3),[true]⟩ := by
     have ha : ones (3*n+2) = [true]++ones (3*n+1) := by
-      rw [show 3*n+2=1+(3*n+1) by omega]
       rfl
     have hb : ones (3*n+3) = [true,true]++ones (3*n+1) := by
-      rw [show 3*n+3=2+(3*n+1) by omega]
       rfl
     simpa only [ha,hb] using dturn (ones (3*n+1))
   have h3 : run0 table (3*n+3) ⟨1,ones (3*n+3),[true]⟩ =
@@ -78,7 +76,6 @@ theorem growth (n : Nat) :
   have h4 : run0 table 1 ⟨1,[],ones (3*n+4)⟩ =
       some ⟨2,[true,true],ones (3*n+3)⟩ := by
     have ha : ones (3*n+4) = [true]++ones (3*n+3) := by
-      rw [show 3*n+4=1+(3*n+3) by omega]
       rfl
     simpa only [ha] using bturn (ones (3*n+3))
   have h5 : run0 table (3*n+3) ⟨2,[true,true],ones (3*n+3)⟩ =
@@ -100,7 +97,6 @@ theorem growth (n : Nat) :
   have h6 : run0 table 2 ⟨2,ones (3*n+5),[]⟩ =
       some (phase (n+1)) := by
     have ha : ones (3*n+5) = [true]++ones (3*n+4) := by
-      rw [show 3*n+5=1+(3*n+4) by omega]
       rfl
     have hb : phase (n+1) =
         ⟨3,[false,false]++[true]++ones (3*n+4),[]⟩ := by
