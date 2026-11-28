@@ -74,7 +74,8 @@ jobs:
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_sweep_left_ones \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.I_return \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.Z_return \
-            --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_normal
+            --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_normal \
+            --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_carry
           cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
         if: success()
