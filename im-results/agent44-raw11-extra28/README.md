@@ -7,11 +7,24 @@ therefore the two exact remaining generated parents Extra132 and Extra140,
 which can remove further members of that accepted complement. No statement
 here is a global BB(6) upper bound.
 
-- **Extra132** (bound 691): resumable source audit run **46154482484** advanced
-  the exact generated DAG to **139/163 accepted modules**, leaving 24. Artifact
-  **15266699152** (`raw11-132-checkpoint`) has SHA256
-  `e13c7c046b1082edb3ec18ae60c52141696a72f066011bed7cd2746d3de01162`.
-  A continuation was dispatched from that exact checkpoint.
+- **Extra132** (bound 691): resumable source audit run **46154482484**
+  advanced the exact generated DAG to **139/163 accepted modules** (artifact
+  **15266699152**, SHA256
+  `e13c7c046b1082edb3ec18ae60c52141696a72f066011bed7cd2746d3de01162`).
+  The next repaired run compiled all five formerly missing 0.65–0.86 MB row
+  definitions and the exact certificate data, then runner-shutdown occurred
+  inside `RowCheck01`; a local unsplit `RowCheck03` also exceeded the
+  process memory ceiling. This isolates the remaining bottleneck to
+  `stateStepOK` evaluation over giant trie rows, not certificate discovery.
+  The resumable workflow now accepts explicit `ROW:DEPTH` trie splits and
+  invalidates only affected cached objects. Exact trie geometry showed that
+  splitting the eleven nontrivial rows as
+  `00:5 01:2 02:3 03:5 04:3 05:5 06:5 07:5 08:5 10:4 11:5`
+  makes every literal trie chunk at most **28,884 bytes** while preserving the
+  exact rows as shallow trees of opaque chunks. Run **46157544723** is the
+  first source audit of this all-row factorization. No complete Extra132 Cover
+  is claimed until its top theorem is accepted.
+
 - **Extra140** (bound 491): the transformed exact source DAG is now
   **fully locally kernel-checked, 205/205 modules** on Lean 4.36.0-rc2. The
   top theorem `BB6.Agent5Raw11Extra140.cover` prints only
