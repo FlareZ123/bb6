@@ -60,27 +60,27 @@ theorem width_scaled (m e H : Nat) :
     good rotation. The old symmetric mass calculation paid a factor of 3. -/
 theorem width_sum_lt (r a m : Nat) (hr : 8≤r) (ha : 1728*r^4≤a)
     (hm : 0<m) (hbig : 13*(r+1)*a≤4*(m*m)) :
-    width m ((2*r+1)*a) 5+width m a (4*r+7)+width m 0 (4*r+8)<m := by
+    width m ((2*r+1)*a) 6+width m a (4*r+7)+width m 0 (4*r+8)<m := by
   let E := (2*r+1)*a
-  let W := width m E 5+width m a (4*r+7)+width m 0 (4*r+8)
-  have h1 := width_scaled m E 5
+  let W := width m E 6+width m a (4*r+7)+width m 0 (4*r+8)
+  have h1 := width_scaled m E 6
   have h2 := width_scaled m a (4*r+7)
   have h3 : width m 0 (4*r+8)=4*r+10 := by rw [width_const m _ hm]
-  have hW : 5*(W*m)≤5*(8*r+42)*m+16*(r+1)*a := by
-    have heW : 5*(W*m)=5*(width m E 5*m)+5*(width m a (4*r+7)*m)+5*(width m 0 (4*r+8)*m) := by dsimp [W]; grind
+  have hW : 5*(W*m)≤5*(8*r+43)*m+16*(r+1)*a := by
+    have heW : 5*(W*m)=5*(width m E 6*m)+5*(width m a (4*r+7)*m)+5*(width m 0 (4*r+8)*m) := by dsimp [W]; grind
     rw [heW,h3]
     calc
-       _ ≤ (5*(5+10)*m+8*E)+(5*((4*r+7)+10)*m+8*a)+5*((4*r+10)*m) := Nat.add_le_add_right (Nat.add_le_add h1 h2) _
-       _ = 5*(8*r+42)*m+16*(r+1)*a := by dsimp [E]; grind
+       _ ≤ (5*(6+10)*m+8*E)+(5*((4*r+7)+10)*m+8*a)+5*((4*r+10)*m) := Nat.add_le_add_right (Nat.add_le_add h1 h2) _
+       _ = 5*(8*r+43)*m+16*(r+1)*a := by dsimp [E]; grind
   have hM := large_m r a m hr ha hbig
-  have hO : 65*(8*r+42)<m := by omega
+  have hO : 65*(8*r+43)<m := by omega
   have hOm := Nat.mul_lt_mul_of_pos_right hO hm
   have hbig16 := Nat.mul_le_mul_left 16 hbig
   have hW13 := Nat.mul_le_mul_left 13 hW
   have htotal : 65*(W*m)<65*(m*m) := by
     rw [Nat.mul_add] at hW13
     have he1 : 13*(5*(W*m))=65*(W*m) := by omega
-    have he2 : 13*(5*(8*r+42)*m)=65*(8*r+42)*m := by grind
+    have he2 : 13*(5*(8*r+43)*m)=65*(8*r+43)*m := by grind
     have he3 : 13*(16*(r+1)*a)=16*(13*(r+1)*a) := by grind
     rw [he1,he2,he3] at hW13
     omega
@@ -96,7 +96,7 @@ theorem width_sum_lt (r a m : Nat) (hr : 8≤r) (ha : 1728*r^4≤a)
 theorem narrow_cutoff (r N a m : Nat) (c C : Int)
     (hr : 8≤r) (ha : 1728*r^4≤a) (haN : 2*a=N+5)
     (hN : 81≤N) (hNpow : N<2^(4*r)) (hm : 0<m)
-    (hold : m*m<16*r*a) (hc : c.natAbs<32)
+    (hold : m*m<16*r*a) (hc : c.natAbs<64)
     (hC : C.natAbs≤110*m+325) (hCne : C≠0)
     (hd : denominator m∣value [(c,(2*r+1)*a),(C-c*(N:Int),a),(3*C,0)]) :
     4*(m*m)<13*(r+1)*a := by
@@ -111,7 +111,7 @@ theorem narrow_cutoff (r N a m : Nat) (c C : Int)
   have hC64 : C.natAbs<64*N := by omega
   have hsub := Int.natAbs_sub_le C (c*(N:Int))
   rw [Int.natAbs_mul,Int.natAbs_natCast] at hsub
-  have hcn := Nat.mul_le_mul_right N (show c.natAbs≤31 by omega)
+  have hcn := Nat.mul_le_mul_right N (show c.natAbs≤63 by omega)
   have hD128 : (C-c*(N:Int)).natAbs<128*N := by omega
   have hC256 : (3*C).natAbs<256*N := by
     simp only [Int.natAbs_mul]
@@ -127,7 +127,7 @@ theorem narrow_cutoff (r N a m : Nat) (c C : Int)
     simpa [Nat.mul_comm] using Nat.lt_trans hC256 h
   have hwidth := width_sum_lt r a m hr ha hm (by omega)
   have hE : a≤(2*r+1)*a := by simpa using Nat.mul_le_mul_right a (show 1≤2*r+1 by omega)
-  have hdiv := constant_dvd_of_width_sum m a ((2*r+1)*a) a 5 (4*r+7) (4*r+8)
+  have hdiv := constant_dvd_of_width_sum m a ((2*r+1)*a) a 6 (4*r+7) (4*r+8)
     c (C-c*(N:Int)) (3*C) hE (by omega) (by exact hc) hDpow hCpow hwidth hd
   have hpow : 2^(4*r+8)≤3^(a/m) := Nat.le_trans
     (Nat.pow_le_pow_left (by decide : 2≤3) _) (Nat.pow_le_pow_right (by decide) (by omega))
