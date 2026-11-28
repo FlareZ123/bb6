@@ -30,6 +30,7 @@ function step(a,d) {
 }
 function excluded(d) {
   if (d%2===0) return "even";
+  if (d%8===1) return "1mod8";
   if (d%8===7) return "7mod8";
   if (d%8!==3) return null;
   let k=(d-3)/8,t=0;
