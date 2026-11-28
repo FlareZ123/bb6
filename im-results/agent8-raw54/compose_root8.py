@@ -21,7 +21,7 @@ EXPECTED = {
             '1RB---_1RC---_0RD---_1LD0LE_---0RE_------'),
     '0RF': ('45960012324', 'BB6.Agent8Raw54.E1RF.complete_cover', 840,
             '1RB---_1RC---_0RD---_1LD0LE_---0RF_------'),
-    '1RC': ('46102720259', 'BB6.Agent8Raw54.E1OneRC.complete_cover', 1847,
+    '1RC': ('46122232071', 'BB6.Agent8Raw54.E1OneRC.complete_cover', 1847,
             '1RB---_1RC---_0RD---_1LD0LE_---1RC_------'),
     '1RE': ('46103257412', 'BB6.Agent8Raw54.E1OneRE.complete_cover', 8212,
             '1RB---_1RC---_0RD---_1LD0LE_---1RE_------'),
@@ -82,7 +82,7 @@ def merge(inputs, out):
         identity = {k: e[k] for k in ('module', 'source_sha256', 'project_imports', 'olean_sha256', 'import_closure_sha256')}
         assert digest(identity) == e['module_identity_sha256'], module
     m = dict(base, modules=list(entries.values()), module_count=len(entries),
-             source_revisions=sorted(revisions), label='Raw54 E1=0LE accepted child union',
+             source_revisions=sorted(revisions), label='Raw54 eight accepted E1 child union',
              roots=[], claim={'theorem': None, 'parent_table': None, 'weighted_bound': None})
     (out / 'manifest.json').write_text(json.dumps(m, indent=2, sort_keys=True) + '\n')
 
