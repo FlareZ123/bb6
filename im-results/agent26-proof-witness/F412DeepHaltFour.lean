@@ -23,7 +23,7 @@ theorem pB1_other_slots (mv : Move) (slot : Slot) (hs : slot ≠ (4,true)) :
 theorem pB1_root (mv : Move) :
     pB1 mv initialSlot = some (some ⟨true,true,1⟩) := by
   simp [pB1, fChild, fParent, fHole, refine, fP8, fP7, fP6, fP5,
-    fP4, fP3, fP2, fP1, fResidual, fRoot, initialSlot]
+    fP4, fP3, fP2, fP1, fResidual, fRoot, initialSlot] <;> decide
 
 theorem pB1_E1_unknown (mv : Move) : pB1 mv (4,true) = none := by
   simp [pB1, fChild, fParent, fHole, refine, fP8, fP7, fP6,
@@ -34,18 +34,22 @@ theorem pB1_E1_unknown (mv : Move) : pB1 mv (4,true) = none := by
     halting rows, so no infinite-run search or macro analysis is needed. -/
 theorem short_last_hole (B : Nat) (hB : 37 ≤ B)
     (mv : Move) (n : Nat) (hn : n ≤ 30)
-    (hknown : knownRun (pB1 mv) n =
-      some ((knownRun (pB1 mv) n).getD blank))
+    (hknown : (knownRun (pB1 mv) n).isSome = true)
     (hslot : readSlot ((knownRun (pB1 mv) n).getD blank) = (4,true)) :
     ∀ m, compatible (pB1 mv) m → WeightedBound B m := by
   let c : Config := (knownRun (pB1 mv) n).getD blank
-  have hr : knownRun (pB1 mv) n = some c := hknown
+  have hr : knownRun (pB1 mv) n = some c := by
+    cases h : knownRun (pB1 mv) n with
+    | none => simp [h] at hknown
+    | some cfg => simp [c,h]
   have hu : pB1 mv (readSlot c) = none := by
     rw [hslot]
     exact pB1_E1_unknown mv
   apply last_hole_sound B (pB1 mv) n c (pB1_root mv) hr hu
   · intro slot hs
-    exact pB1_other_slots mv slot (by simpa only [hslot] using hs)
+    have hcslot : readSlot c = (4,true) := hslot
+    rw [hcslot] at hs
+    exact pB1_other_slots mv slot hs
   · intro d hd
     have hd6 : d < 6 := by
       unfold possibleDelays at hd
