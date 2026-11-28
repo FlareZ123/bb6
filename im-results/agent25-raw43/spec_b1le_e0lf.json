@@ -12033,18 +12033,6 @@
         5
       ]
     },
-    "559": {
-      "dfa": 9922,
-      "edges": 722,
-      "params": {
-        "k": 16,
-        "periods": [
-          3
-        ],
-        "c": 2,
-        "m": 2
-      }
-    },
     "560": {
       "table": "1RB0LB_1RC1LE_0RD---_1LD0RB_0LF0RA_0LA0RC",
       "status": "ok",
@@ -30228,6 +30216,13 @@
   },
   "lateLast": {},
   "lateCycle": {},
-  "growth": {},
+  "growth": {
+    "559": {
+      "table": "1RB---_1RC1LE_0RD1RF_1LD0RB_0LF0LE_1RA0RB",
+      "module": "Raw43B1LEE0LFM559Never",
+      "partial": "(BB6.Agent9Raw43B1LEE0LFM559.table)",
+      "never": "(BB6.Agent17Raw43B1LEE0LFM559.never)"
+    }
+  },
   "unresolved": []
 }
