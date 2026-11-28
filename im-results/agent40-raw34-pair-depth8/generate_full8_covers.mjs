@@ -62,10 +62,29 @@ function sideWitness(hist){
   }
   return null;
 }
+function closedReachable(p){
+  const seen=new Set([0]),queue=[0];
+  while(queue.length){
+    const q=queue.pop();
+    for(const bit of [0,1]){
+      const action=p[2*q+bit];
+      if(action<=1)return null;
+      const next=(action-2)%6;
+      if(!seen.has(next)){seen.add(next);queue.push(next);}
+    }
+  }
+  return [...seen].sort((a,b)=>a-b);
+}
 function certFor(p){
   const r=trace(p),w=sideWitness(r.hist);
-  if(w)return {kind:"side",...w};
+  if(w)return {kind:"side",...w,extended:false};
   if(r.kind==="halt")return {kind:"halt",n:r.t};
+  const closed=closedReachable(p);
+  if(closed)return {kind:"closed",ss:closed};
+  if(r.kind==="long"){
+    const rr=trace(p,1000),ww=sideWitness(rr.hist,500,200);
+    if(ww)return {kind:"side",...ww,extended:true};
+  }
   return {kind:r.kind,slot:r.slot};
 }
 function conflict(a,b){
@@ -78,6 +97,7 @@ function leanSlot(slot){
 function leanInt(x){return x<0?`(${x})`:String(x);}
 function leanCert(c){
   if(c.kind==="halt")return `.halt ${c.n}`;
+  if(c.kind==="closed")return `.closed 0 [${c.ss.join(",")}]`;
   assert.equal(c.kind,"side");
   return `.side ${c.entry} ${c.period} ${c.right} ${leanInt(c.boundary)}`;
 }
@@ -89,7 +109,8 @@ function leanChild(c){
 
 const selected=[];
 let open6=0,long6=0,full7Rows=0;
-let directHalt=0,directSide=0,grandHalt=0,grandSide=0;
+let directHalt=0,directSide=0,directExtendedSide=0,directClosed=0;
+let grandHalt=0,grandSide=0,grandExtendedSide=0,grandClosed=0;
 for(let rowIndex=0;rowIndex<rows.length;rowIndex++){
   const base=rows[rowIndex];
   assert(Array.isArray(base)&&base.length===12);
@@ -102,7 +123,7 @@ for(let rowIndex=0;rowIndex<rows.length;rowIndex++){
   for(const code of choiceCodes){
     const child=base.slice();child[first.slot]=code;
     const c=certFor(child);
-    if(c.kind==="halt"||c.kind==="side"){
+    if(["halt","side","closed"].includes(c.kind)){
       children.push({kind:"cert",cert:c});
       continue;
     }
@@ -113,7 +134,7 @@ for(let rowIndex=0;rowIndex<rows.length;rowIndex++){
     for(const code2 of choiceCodes){
       const grand=child.slice();grand[c.slot]=code2;
       const g=certFor(grand);
-      if(g.kind!=="halt"&&g.kind!=="side"){complete=false;break;}
+      if(!["halt","side","closed"].includes(g.kind)){complete=false;break;}
       certs.push(g);
     }
     if(!complete)break;
@@ -125,9 +146,14 @@ for(let rowIndex=0;rowIndex<rows.length;rowIndex++){
   if(!usedSplit)full7Rows++;
   for(const c of children){
     if(c.kind==="cert"){
-      c.cert.kind==="halt"?directHalt++:directSide++;
-    }else for(const g of c.certs)
-      g.kind==="halt"?grandHalt++:grandSide++;
+      if(c.cert.kind==="halt")directHalt++;
+      else if(c.cert.kind==="closed")directClosed++;
+      else {directSide++;if(c.cert.extended)directExtendedSide++;}
+    }else for(const g of c.certs){
+      if(g.kind==="halt")grandHalt++;
+      else if(g.kind==="closed")grandClosed++;
+      else {grandSide++;if(g.extended)grandExtendedSide++;}
+    }
   }
   selected.push({rowIndex,codes:base,slot:first.slot,children});
 }
@@ -249,13 +275,24 @@ const report={
   inputResidualRows:rows.length,openDepth6:open6,longDepth6:long6,
   fullyClosedAtDepth8:selected.length,ofWhichClosedAtDepth7:full7Rows,
   newlyClosedBeyondDepth7:selected.length-full7Rows,
-  directHalt,directSide,grandHalt,grandSide,
+  directHalt,directSide,directExtendedSide,directClosed,
+  grandHalt,grandSide,grandExtendedSide,grandClosed,
   physicalMass:String(BigInt(selected.length)*25n**2n),
-  incrementalBeyondFull7Mass:String(BigInt(selected.length-full7Rows)*25n**2n),
+  remainingWholeDepth6CylinderMass:String(BigInt(rows.length-selected.length)*25n**2n),
   pairwiseDisjoint:true,twoFreeSlotsEach:true,
   shardSize,modules
 };
-assert.equal(report.physicalMass,"525000");
-assert.equal(report.incrementalBeyondFull7Mass,"453750");
+assert.equal(selected.length,3464);
+assert.equal(full7Rows,123);
+assert.equal(directHalt,4234);
+assert.equal(directSide,79735);
+assert.equal(directExtendedSide,767);
+assert.equal(directClosed,0);
+assert.equal(grandHalt,20605);
+assert.equal(grandSide,455952);
+assert.equal(grandExtendedSide,0);
+assert.equal(grandClosed,38568);
+assert.equal(report.physicalMass,"2165000");
+assert.equal(report.remainingWholeDepth6CylinderMass,"506250");
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({...report,modules:modules.map(x=>x.namespace+".all_cover")},null,2));
