@@ -122,6 +122,9 @@ jobs:
             --theorem F421SecondaryLifetimes.sourceProtectedIter \
             --theorem F421SecondaryLifetimes.secondaryPsumUniversal \
             --theorem BB6Coverage.Agent41F421.EpochWords.secondaryPsumGuarded \
+            --theorem F421SecondaryLifetimes.drainQmass \
+            --theorem F421SecondaryLifetimes.secondaryQMass \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryQMassGuarded \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
@@ -151,6 +154,9 @@ jobs:
             im-results/agent41-f421/F421SecondaryMass.lean \
             im-results/agent41-f421/F421SecondaryConservation.lean \
             im-results/agent41-f421/F421SecondaryConservationGuard.lean \
+            im-results/agent41-f421/F421SecondaryQMass.lean \
+            im-results/agent41-f421/F421SecondaryQGrowth.lean \
+            im-results/agent41-f421/F421SecondaryQGuard.lean \
             im-results/agent41-f421/F421MergedDrain.lean \
             im-results/agent41-f421/F421PrimaryEvents.lean \
             2>&1 | tee /tmp/a41-f421-frontier.log
