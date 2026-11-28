@@ -92,5 +92,11 @@ theorem source_injective (K : Nat) {n : Nat} (hn : 0<n)
   have he := (backwards_unique_iter K hn v j h a b hab k).2 hkpos
   exact False.elim (hneq he)
 
+theorem singleton_primitive (j : Fin 1 → Nat) :
+    CyclicPrimitive (by decide : 0<(1:Nat)) j := by
+  intro a b hab
+  exact False.elim (hab (Subsingleton.elim a b))
+
+#print axioms singleton_primitive
 #print axioms source_injective
 end FiniteCyclicValuation
