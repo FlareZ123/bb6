@@ -1,0 +1,102 @@
+name: Agent10 Raw42 0LE repaired partition compose
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: 'Original 0LE exact-split run containing accepted sibling partitions'
+        required: true
+        type: string
+        default: '46156341083'
+      repaired_run:
+        description: 'Successful exact heavy-leaf repair run for g0p2'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate pinned runs
+        env:
+          SOURCE_RUN: ${{ inputs.source_run }}
+          REPAIRED_RUN: ${{ inputs.repaired_run }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
+          [[ "$REPAIRED_RUN" =~ ^[0-9]+$ ]]
+
+      - name: Reconstruct original coverage source
+        run: python im-results/agent13-coverage/unpack.py
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+
+      - name: Restore frozen generated source and exact split plan
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+
+      - name: Download all accepted original 0LE partitions
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          pattern: raw42-split-0LE-g*
+          path: /tmp/parts
+
+      - name: Replace failed g0p2 with exact row-reproved partition
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run }}
+          name: raw42-split-0LE-g0p2
+          path: /tmp/parts/raw42-split-0LE-g0p2
+
+      - name: Authenticate exact 32-part union and prove whole 0LE Cover
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/parts /tmp/merged "$g/split-plan.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw420LE.Closed.cover"
+          python tools/lean_compile_closure.py \
+            --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/merged/manifest.json \
+            --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json \
+            --artifact-name raw42-certified-0LE-repaired \
+            --theorem "$th" \
+            --parent-table '1RB---_1RC0LE_0RD---_1LD0LB_------_------' \
+            --weighted-bound 100006 \
+            "$g/Raw420LEClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/final/audit.log "$th"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-certified-0LE-repaired
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: warn
