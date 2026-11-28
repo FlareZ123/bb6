@@ -1,0 +1,111 @@
+name: Agent44 bootstrap row-split Extra132 singleton leaf
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_run:
+        description: Successful Agent44 threshold-1 source run
+        required: true
+        type: string
+      max_fresh:
+        description: Fresh support modules to compile before checkpoint
+        required: true
+        default: '6'
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  bootstrap:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Download threshold-1 exact source
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.source_run }}
+          name: parent-source-132-threshold1
+          path: /tmp/source-artifact
+
+      - name: Recover source and seven accepted leaf banks
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/parent-source /tmp/parent-out
+          srcroot="$(dirname "$(find /tmp/source-artifact -name Agent5Raw11Extra132.lean -print -quit)")"
+          test -n "$srcroot"
+          cp -a "$srcroot/." /tmp/parent-source/
+          for pair in             1:15167752700 2:15167528142 3:15167803036             4:15167811958 5:15168810518 6:15167956708 7:15167922399; do
+            group="${pair%%:*}"
+            id="${pair#*:}"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"               -o "/tmp/leaf-$id.zip"
+            unzip -o -q "/tmp/leaf-$id.zip" -d /tmp/parent-out
+            test -s "/tmp/parent-out/receipt-$group.json"
+          done
+          giant="$(cat /tmp/parent-source/giant-module.txt)"
+          test -s "/tmp/parent-source/$giant"
+          echo "GIANT=$giant" >> "$GITHUB_ENV"
+          echo "source_modules_before=$(find /tmp/parent-source -name '*.lean' | wc -l)"
+          echo "accepted_objects_before=$(find /tmp/parent-out -name '*.olean' | wc -l)"
+
+      - name: Replace isolated 6.1MB FAR leaf by row-split proof modules
+        run: |
+          set -euo pipefail
+          python im-results/agent44-raw11-extra28/split_two_sided_leaf.py             "/tmp/parent-source/$GIANT" | tee /tmp/row-split.log
+          test -s /tmp/parent-source/Agent44Extra132GiantProof.lean
+          test -s /tmp/parent-source/TwoSidedAutomataRows.lean
+          echo "source_modules_after=$(find /tmp/parent-source -name '*.lean' | wc -l)"
+
+      - name: Advance exact row-split proof DAG by a bounded tranche
+        env:
+          RAW11_REPAIR_ID: '132'
+          RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+          RAW11_REPAIR_TARGET: Agent44Extra132GiantProof
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known             /tmp/parent-out 2>&1 | tee /tmp/checkpoint.log
+          grep -F 'checkpoint' /tmp/checkpoint.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
+          {
+            echo "parent_id=132"
+            echo "threshold1_source_run=${{ inputs.source_run }}"
+            echo "giant_original_module=$GIANT"
+            echo "target_module=Agent44Extra132GiantProof"
+            echo "max_fresh=${{ inputs.max_fresh }}"
+            echo "head_sha=$GITHUB_SHA"
+            echo "lean_version=$(lean --version)"
+          } > /tmp/parent-out/checkpoint-provenance.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-132-checkpoint
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+            /tmp/row-split.log
+          if-no-files-found: warn
+          retention-days: 30
