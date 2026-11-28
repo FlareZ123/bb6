@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583]
         required: true
 permissions:
   contents: write
@@ -313,7 +313,7 @@ jobs:
           fi
 
   semantic_shards:
-    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' }}
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' || inputs.branch == '1LE' }}
     strategy:
       fail-fast: false
       max-parallel: 3
@@ -374,6 +374,8 @@ jobs:
             --provenance-input "$root/minimize_bi.py" \
             --provenance-input "$root/1LA-frontier.json.xz.b64" \
             --provenance-input "$root/1RE-frontier.json.xz.b64" \
+            --provenance-input "$root/1LE-frontier.json.xz.b64" \
+            --provenance-input "$root/prepare_le_residual.py" \
             --provenance-input "$root/prepare_raw39la_frontier.py" \
             --provenance-input "$root/rungram_regen.py" \
             --provenance-input "$root/la-frontier.json" \
@@ -403,7 +405,7 @@ jobs:
           retention-days: 30
 
   semantic_assemble:
-    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' }}
+    if: ${{ inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' || inputs.branch == '1LE' }}
     needs: semantic_shards
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -471,6 +473,8 @@ jobs:
             --provenance-input "$root/minimize_bi.py" \
             --provenance-input "$root/1LA-frontier.json.xz.b64" \
             --provenance-input "$root/1RE-frontier.json.xz.b64" \
+            --provenance-input "$root/1LE-frontier.json.xz.b64" \
+            --provenance-input "$root/prepare_le_residual.py" \
             --provenance-input "$root/prepare_raw39la_frontier.py" \
             --provenance-input "$root/rungram_regen.py" \
             --provenance-input "$root/la-frontier.json" \
