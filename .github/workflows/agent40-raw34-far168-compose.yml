@@ -158,7 +158,7 @@ jobs:
           grep -F "'BB6.Agent50Raw34FAR168.cover'" "$W/closure.log"
           grep -F "'BB6.Agent50Raw34M2071.never'" "$W/closure.log"
           grep -F "'BB6.Agent50Raw34FAR168Closed.cover'" "$W/closure.log"
-          grep -F 'Cover (DecidedBelow 128) BB6.Agent40Raw34PairD1LF_F0LDDepth6Data.parent' "$W/closure.log"
+          grep -F 'theorem cover : Cover (DecidedBelow 128) BB6.Agent40Raw34PairD1LF_F0LDDepth6Data.parent := by' "$W/generated/Raw34FAR168Closed.lean"
           python - "$W/generated/far168-closed-manifest.json" "$W/closure.log" <<'PY'
           import json,re,sys
           m=json.load(open(sys.argv[1])); log=open(sys.argv[2]).read()
