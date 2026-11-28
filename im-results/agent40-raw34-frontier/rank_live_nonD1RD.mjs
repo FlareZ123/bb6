@@ -61,6 +61,7 @@ const counters=[
 ].map(parseTable);
 counters.forEach(add);
 const withECycles=process.argv.includes("--include-e-cycles");
+const withMissingThird=process.argv.includes("--include-missing-ef-third");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
 const withDepth4=process.argv.includes("--include-f-depth4")||withECycles;
@@ -76,6 +77,8 @@ const eDirIndex=process.argv.indexOf("--e-cycles-dir");
 const eCyclesDir=eDirIndex<0?"/tmp/a40-raw34-eunion":process.argv[eDirIndex+1];
 const efLeftIndex=process.argv.indexOf("--ef-left-dir");
 const efLeftDir=efLeftIndex<0?"/tmp/a40-raw34-ef-leftunion":process.argv[efLeftIndex+1];
+const missingThirdIndex=process.argv.indexOf("--missing-third-dir");
+const missingThirdDir=missingThirdIndex<0?"/tmp/a40-raw34-missing-thirdunion":process.argv[missingThirdIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -139,7 +142,16 @@ if(withECycles){
  assert.equal(eCycleSource.length,9857,"all 9857 E/F-permuted source-cycle tables");
  eCycleSource.forEach(add);
 }
-const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length;
+let missingThirdSource=[];
+if(withMissingThird){
+ for(let i=0;i<4;i++){
+   const name="Raw34MissingEFThirdShard"+String(i).padStart(3,"0")+".lean";
+   missingThirdSource.push(...parseSourceCycles(readFileSync(join(missingThirdDir,name),"utf8")));
+ }
+ assert.equal(missingThirdSource.length,168,"168 omitted physical source-symmetry witnesses");
+ missingThirdSource.forEach(add);
+}
+const counterCount=counters.length+raySource.length+cycleSource.length+eCycleSource.length+missingThirdSource.length;
 function loadHalters(file){
  const s=readFileSync(join(dir,file),"utf8");
  const arr=[...s.matchAll(/⟨\[([\d,\s]+)\], \.halt (\d+)⟩/g)]
@@ -253,6 +265,7 @@ console.log(JSON.stringify({
   actionCount:25,oldNonhaltPatterns:oldCount,binaryOdometerPatterns:counters.length,
   rayPatterns:raySource.length,cyclePatterns:cycleSource.length,
   eConjugateCyclePatterns:eCycleSource.length,
+  missingNonEFConjugateThirdPatterns:missingThirdSource.length,
   rayNewPhysicalGain:withRay&&!withCycles?String(5471912359n-grand):"0",
   rayAndCycleNewPhysicalGain:withCycles?String(5471912359n-grand):"0",
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
