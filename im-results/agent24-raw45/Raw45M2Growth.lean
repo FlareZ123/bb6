@@ -49,7 +49,6 @@ theorem growth (n : Nat) :
   have h2 : run0 table 2 ⟨3,[true,true],ones (2*n+2)⟩ =
       some ⟨2,[true,false,true,true],ones (2*n)⟩ := by
     have ha : ones (2*n+2) = [true,true]++ones (2*n) := by
-      rw [show 2*n+2=2+(2*n) by omega]
       rfl
     simpa only [ha] using turn (ones (2*n))
   have h3 : run0 table (2*n) ⟨2,[true,false,true,true],ones (2*n)⟩ =
@@ -62,7 +61,7 @@ theorem growth (n : Nat) :
       some (phase (n+1)) := by
     have hz : zeros (2*(n+1)+2) =
         [false,false,false,false]++zeros (2*n) := by
-      rw [show 2*(n+1)+2=4+(2*n) by omega]
+      rw [show 2*(n+1)+2=(2*n)+4 by omega]
       rfl
     simpa only [phase,hz,List.append_assoc] using
       finish (zeros (2*n)++[false,true,true])
