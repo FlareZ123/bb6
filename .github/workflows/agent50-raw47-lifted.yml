@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-ef-left-rays, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1212,6 +1212,54 @@ jobs:
         with:
           name: raw34-f-right-ray-source
           path: /tmp/a40-raw34-f-ray/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-ef-left-rays:
+    if: inputs.mode == 'raw34-ef-left-rays'
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Original-source 1,024 mixed E/F nine-step left rays
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-ef-left
+          mkdir -p "$W/generated"
+          node im-results/agent40-raw34-frontier/generate_ef_left_ray.mjs \
+            --output "$W/generated" | tee "$W/generation.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/generated" --jobs 4 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-EF-left-ray-sources \
+            "$W/generated"/Raw34EFLeftShard*.lean \
+            2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for i in range(16):
+              namespace=f'BB6.Agent40EFLeft.Raw34EFLeftShard{i:03d}.'
+              for name in ('count','checked','never'):
+                  full=namespace+name
+                  m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+                  else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 1024 source-certified mixed E/F left-ray cylinders')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-EF-left-ray-1024-source
+          path: /tmp/a40-raw34-ef-left/
           if-no-files-found: warn
           retention-days: 30
 
