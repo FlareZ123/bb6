@@ -25,7 +25,7 @@ def write_lines(path, lines):
 
 
 def relocate(*, producer_files, base, work, root_module, root_names, prefix,
-             tool, comparator=None, plan_only=False, jobs=1, checkpoint_every=1):
+             tool, comparator=None, comparator_batch=None, plan_only=False, jobs=1, checkpoint_every=1):
     """Return the root module and staged closure, leaving base untouched."""
     if jobs < 1:
         raise ValueError('jobs must be >= 1')
@@ -74,6 +74,48 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
         reachable.add(m)
         order.append(m)
     visit(root_module)
+    # Optionally compare ALL differing-byte duplicate modules in one Lean
+    # process rather than starting Lean once per object. The batch checker
+    # must implement the SAME exact kernel-data equality predicate; malformed
+    # or missing output is a hard failure, never an assumed equivalence.
+    if comparator is not None and comparator_batch is not None:
+        raise ValueError("specify either comparator or comparator_batch")
+    batch_equal = {}
+    batch_audit = None
+    if comparator_batch is not None:
+        different = []
+        for m in order:
+            original = files[m]
+            accepted = base / original.name
+            if accepted.is_file() and sha(original) != sha(accepted):
+                different.append((m, accepted, original))
+        pairs_file = logs / "kernel-compare-pairs.tsv"
+        for _, a, b in different:
+            if any("\\t" in str(x) or "\\n" in str(x) for x in (a, b)):
+                raise ValueError("unsupported object path in batch comparison")
+        pairs_file.write_text("".join(
+            str(a) + "\\t" + str(b) + "\\n" for _, a, b in different))
+        checker = Path(comparator_batch).resolve()
+        proc = subprocess.run(
+            ["lean", "--run", str(checker), str(pairs_file)],
+            env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            text=True)
+        (logs / "kernel-compare-batch.stdout").write_text(proc.stdout)
+        (logs / "kernel-compare-batch.stderr").write_text(proc.stderr)
+        if proc.returncode != 0:
+            raise RuntimeError(
+                "Lean kernel-data batch comparison failed: " +
+                proc.stderr[-2000:])
+        flags = proc.stdout.splitlines()
+        if len(flags) != len(different) or any(
+                flag not in ("E", "D") for flag in flags):
+            raise RuntimeError("invalid Lean batch equivalence transcript")
+        batch_equal = {m: flag == "E" for (m, _, _), flag in
+                       zip(different, flags)}
+        batch_audit = {"method": "Lean batch exact kernel-data comparison",
+                       "source": str(checker), "sha256": sha(checker),
+                       "compared": len(different),
+                       "equal": sum(batch_equal.values())}
     # Mark only conflicting modules and their transitive import consumers.
     affected = set()
     collisions = []
@@ -81,7 +123,7 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
         p = files[m]
         q = base / p.name
         if q.is_file() and sha(p) != sha(q):
-            equal = False
+            equal = batch_equal.get(m, False) if comparator_batch is not None else False
             if comparator is not None:
                 proc = subprocess.run(['lean', '--run', str(comparator), str(q), str(p)],
                                       env=env, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
@@ -108,6 +150,7 @@ def relocate(*, producer_files, base, work, root_module, root_names, prefix,
               'root_names': {n: prefix + '.' + n for n in root_names},
               'source_modules': len(order), 'affected_modules': len(affected),
               'selected_declarations': len(names), 'collisions': collisions,
+              'kernel_comparison': batch_audit,
               'stages': [], 'complete': False}
     report_path = work / 'report.json'
     def checkpoint():
@@ -211,13 +254,15 @@ def main():
     p.add_argument('--prefix', required=True)
     p.add_argument('--tool', type=Path, required=True)
     p.add_argument('--comparator', type=Path)
+    p.add_argument('--comparator-batch', type=Path)
     p.add_argument('--plan-only', action='store_true')
     p.add_argument('--jobs', type=int, default=1)
     p.add_argument('--checkpoint-every', type=int, default=1)
     a = p.parse_args()
     report, _, _ = relocate(producer_files=a.producer_objects.read_text().splitlines(), base=a.base,
         work=a.work, root_module=a.root_module, root_names=a.root_name, prefix=a.prefix,
-        tool=a.tool.resolve(), comparator=a.comparator, plan_only=a.plan_only,
+        tool=a.tool.resolve(), comparator=a.comparator,
+        comparator_batch=a.comparator_batch, plan_only=a.plan_only,
         jobs=a.jobs, checkpoint_every=a.checkpoint_every)
     print(json.dumps(report, indent=2, sort_keys=True))
 
