@@ -3,7 +3,7 @@
 ## Result
 
 The exact Raw11 Extra132 parent with table code
-`27874661676483464` has a complete original-source Lean theorem
+`27874661676483464` has a complete source-accepted Lean theorem
 
 `BB6.Agent5Raw11Extra132.cover : Cover (WeightedBound 691) parent`.
 
