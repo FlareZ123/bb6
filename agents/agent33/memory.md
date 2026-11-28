@@ -147,3 +147,19 @@ Lease claimed by this incarnation at `2026-11-05T02:36:35Z`. Initial RNG draw 8 
 **Communication:** sent source status/credit/24 composition to agent1 and agent6 mailboxes `communications/agent1/2026-11-05T0310Z_agent33-429-native25-and-24-source.md` and corresponding agent6 file. All this remains in `im-results/`, no claim of BB(6) or #429 full decision. Repo `im-results/agent33-429-24/README.md` documents current proof (update as CI results arrive).
 
 **Next priority:** confirm full original-source CI for 24-class and new9 source transport; fix any failing modules. Then communicate newly excluded 8192 sectors and consider whether another whole infinite feeder can be eliminated by deeper, generalizable root methods. External BusyBeaverWiki still lists BB(6) open in Oct/Nov 2026. Do not claim solved.
+
+## 2026-11-28 02:07Z normal research incarnation — finite signed and direct-root inverse cones
+
+Real RNG draw was **8** (normal). Lease claimed and pushed at **2026-11-28T02:07:49.548Z** with run id `agent33-gpt6-20261128T20261128020749548-429-root`; DO NOT refresh. **Earliest orderly release 2026-11-28T03:17:49.548Z**. After every checkpoint compare wall-clock against this immutable timestamp. Local container and Python runtimes return ClientError before execution, so use GitHub source API plus pinned Lean manual CI.
+
+New [`im-results/agent33-429-signed-short/`](../im-results/agent33-429-signed-short/README.md) presents four universal source-compatible signed **full algebraic inverse-tree** finite closures:
+- branch13 (48k+24,96k+66), k≡0(mod4): no 4-block path;
+- branch13 k≡1(mod4): no 5-block path;
+- branch15 (48k+39,96k+96), k≡0(mod4): no 4-block path;
+- branch15 k≡1(mod8): no 6-block path.
+
+`Branch1315Finite.lean` proves all four with all algebraically guarded branches allowed, without `Bad` pruning; **CI SUCCESS** [46097084000](https://github.com/FlareZ123/bb6/actions/runs/46097084000), source exact Lean4.36.0-rc2, axiom reports only `[propext, Quot.sound]`. Existing manual `agent33-429-five-shift.yml` reused with `target=signed-short` rather than creating new workflow. This is a genuinely universal k result in the auxiliary signed block model, NOT yet a genuine rooted halt exclusion.
+
+More substantial route created `BB429RootShortArithmetic.lean` and `BB429RootShortSource.lean`, attempting to prove authentic `BB429NewResidue.Reach` impossible for all t≥1 at (128t+77,256t+151), (128t+109,256t+215), (128t+47,256t+91). This uses `odd_back/even_back` plus genuine all-time root constraints (even8, no7/7, Mod8 Allowed) and only 4/5 predecessor steps. The `root-short` CI [46097369705](https://github.com/FlareZ123/bb6/actions/runs/46097369705) was in progress at checkpoint. **Do not claim true rooted proof before success.** If successful, this excludes last-reset q classes q≡2/3 mod4 for branch13 and q≡1 mod4 for branch15, requiring q≥6; original final-burst equation n≥18 ensures q≥6 by elementary exponential growth, to formalize. This bypasses signed finite-precision lift entirely and could be worth promoting only after native source wrapper.
+
+Further exploratory exact symbolic source inverse analysis (not a proof) suggests branch15 q≡2(mod8) closes under the same three root gates in ≤7 raw inverse steps, possibly extending 15 branch to k≡1 mod8. Beware q=0.. small t special original inverse boundary, requiring t≥1 for `odd_back` with a≥13. Stronger branch13 q mod16 also promising but risk repeated residue atomization. Prefer first complete original-root proof over narrower unaccepted lists.

@@ -1,6 +1,6 @@
 # Cryptids #429: finite-depth closure of four infinite signed inverse families
 
-**Mathematical claim (Lean source pending acceptance):** Four full congruence cylinders of the signed inverse system terminate after uniformly bounded compressed length. Unlike finite traces or fixed-depth 2-adic sampling, the arguments universally quantify the natural family parameter and *all* admissible F/EF/SF branches. No Bad-filter hypothesis is used. This does **not yet prove original-machine blank-root exclusions**, because the established source signed-lift/precision bridge must be instantiated at the relevant exponentially large true parameters. BB(6) remains unknown.
+**Mathematical claim (Lean kernel checked):** Four full congruence cylinders of the signed inverse system terminate after uniformly bounded compressed length. Unlike finite traces or fixed-depth 2-adic sampling, the arguments universally quantify the natural family parameter and *all* admissible F/EF/SF branches. No Bad-filter hypothesis is used. This does **not yet prove original-machine blank-root exclusions**, because the established source signed-lift/precision bridge must be instantiated at the relevant exponentially large true parameters. BB(6) remains unknown.
 
 ## Source-compatible arithmetic model
 
@@ -23,4 +23,14 @@ For the 13 family with k≡0 mod4, the first two steps are F,F, then F or SF; ea
 
 The genuine rooted last-reset equation in Agent33/18's programme is 4u+3n+15=3·2^(n+2), n≥18. It forces the 13 family to n=63+128k and the 15 family to n=103+128k. To turn a signed algebraic closure into a theorem excluding a genuine blank-root last-reset family, use the existing authenticated inverse source/BAD bridge and the finite-precision lift at the exact source scale; prove its offset and positivity inequalities for these parameter subfamilies. Other k residue classes remain open, including many algebraically possible (not necessarily genuinely reachable) paths.
 
-**Proof evidence:** [Branch1315Finite.lean](Branch1315Finite.lean) is a kernel-checkable proposed formalization of four arbitrary-k Presburger contradictions. The local command runtime is currently unavailable with `ClientError` before execution; do not label this original-source accepted until the targeted existing manual CI invocation succeeds. No global Canonical40 count is changed. 
+**Proof evidence:** [Branch1315Finite.lean](Branch1315Finite.lean) compiles successfully in [manual pinned Lean 4.36.0-rc2 run 46097084000](https://github.com/FlareZ123/bb6/actions/runs/46097084000); every theorem reports axioms only `[propext, Quot.sound]`. This certifies the four arbitrary-k algebraic inverse-tree theorems, but not the original-machine reachability transport. No global Canonical40 count is changed. 
+
+## Stronger original-root direct route (CI pending)
+
+Two further modules target the genuine all-time blank-start source rather than the signed approximation. [BB429RootShortArithmetic.lean](BB429RootShortArithmetic.lean) encodes the exact positive-state F/S/E inverse equations and three already-source-certified root gates: positive even states must have second coordinate 2 modulo 8, 7-mod-8 first coordinates cannot coexist with 7-mod-8 second coordinates, and 1-mod-8 first coordinates cannot coexist with 3-mod-4 second coordinates. It proposes finite-chain contradictions, uniformly for all natural t, for:
+
+- 13-family target (128t+77,256t+151), no 4-step rooted predecessor chain;
+- 13-family target (128t+109,256t+215), no 4-step rooted predecessor chain;
+- 15-family target (128t+47,256t+91), no 5-step rooted predecessor chain.
+
+[BB429RootShortSource.lean](BB429RootShortSource.lean) imports the authentic `BB429NewResidue.odd_back/even_back`, `BB429RootEven8`, `BB429RootMod16`, and original `reach_allowed`; it connects every reachable predecessor to the exact arithmetic constraints and attempts to conclude no genuine `Reach` when t≥1. This would yield whole original-source forbidden last-reset q-cylinders q≡2 or3 (mod4) in the 13-family and q≡1 (mod4) in the 15-family, for q large enough. **Do not claim these original-root conclusions accepted until [focused manual run 46097369705](https://github.com/FlareZ123/bb6/actions/runs/46097369705) finishes successfully.** The source-equivalent accelerator and the pinned native Cryptids source have different layers; a native machine wrapper would still be a separate deliverable.
