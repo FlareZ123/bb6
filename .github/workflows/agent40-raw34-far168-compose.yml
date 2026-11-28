@@ -1,4 +1,4 @@
-name: Agent40 Raw34 exact FAR168 composition
+name: Agent40 Raw34 pair full endgame closure
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,7 @@ on:
         type: string
         default: "46175041055"
       far_run_id:
-        description: Run ID containing the source-accepted 3,065-machine FAR bank artifact
+        description: Run ID containing the source-accepted four-state FAR bank artifact
         required: true
         type: string
         default: "46163747316"
@@ -16,9 +16,9 @@ permissions:
   contents: read
   actions: read
 jobs:
-  compose:
+  close-parent:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -35,7 +35,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.parent_run_id }}
           path: /tmp/a40-raw34-parent
-      - name: Download source-accepted FAR certificate bank
+      - name: Download source-accepted four-state FAR bank
         uses: actions/download-artifact@v4
         with:
           name: raw34-far3233-source
@@ -43,13 +43,13 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.far_run_id }}
           path: /tmp/a50-raw34-far
-      - name: Compose exact 168-residual Cover and check it in original-source Lean
+      - name: Compose parent, verify exact frontier identity, and close all 168 residuals
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           P=/tmp/a40-raw34-parent
           F=/tmp/a50-raw34-far
-          W=/tmp/a40-raw34-far168
+          W=/tmp/a40-raw34-endgame
           mkdir -p "$W/generated"
           test -f "$P/generated/Raw34PairFinal3233Cover.lean"
           test -f "$P/generated/finalRows.json"
@@ -61,10 +61,10 @@ jobs:
           cp "$F"/generated/Raw34FAR3233Shard*.lean "$W/generated/"
           cp "$P/generated/finalRows.json" "$W/finalRows.json"
           cp "$P/final-manifest.json" "$W/parent-manifest.json"
-          cp "$F/generated/manifest.json" "$W/far-manifest.json"
+          cp "$F/generated/manifest.json" "$W/far4-manifest.json"
           cp "$F/hard3233.txt" "$W/hard3233.txt"
-          cp "$F/far.jsonl" "$W/far.jsonl"
-          python - "$W/finalRows.json" "$W/hard3233.txt" "$W/far-manifest.json" "$W/parent-manifest.json" <<'PY'
+          cp "$F/far.jsonl" "$W/far4.jsonl"
+          python - "$W/finalRows.json" "$W/hard3233.txt" "$W/far4-manifest.json" "$W/parent-manifest.json" <<'PY'
           import hashlib,json,sys
           final=json.load(open(sys.argv[1]))
           hard=[]
@@ -73,8 +73,7 @@ jobs:
               xs=[int(x) for x in line.split()]
               assert xs[0]==len(hard) and len(xs)==13
               hard.append(xs[1:])
-          far=json.load(open(sys.argv[3]))
-          parent=json.load(open(sys.argv[4]))
+          far=json.load(open(sys.argv[3])); parent=json.load(open(sys.argv[4]))
           digest=lambda rows: hashlib.sha256((json.dumps(rows,separators=(",",":"))+"\n").encode()).hexdigest()
           assert len(final)==len(hard)==3233
           assert len({tuple(r) for r in final})==3233
@@ -88,46 +87,86 @@ jobs:
           assert far["farHits"]==3065 and far["misses"]==168
           assert len(far["missRows"])==168
           assert far["canonicalMissSha256"]==digest(sorted(far["missRows"]))
-          print("PASS: parent and FAR artifacts refer to the identical canonical 3,233-machine frontier")
+          print("PASS: parent and FAR4 artifacts have identical 3,233-machine frontiers")
           PY
           python im-results/agent50-raw34-far3233/generate_shrink_to_168.py \
-            --hard "$W/hard3233.txt" --far "$W/far.jsonl" \
-            --far-manifest "$W/far-manifest.json" \
+            --hard "$W/hard3233.txt" --far "$W/far4.jsonl" \
+            --far-manifest "$W/far4-manifest.json" \
             --final-rows "$W/finalRows.json" \
-            --output "$W/generated" --shard-size 40 | tee "$W/generation.json"
+            --output "$W/generated" --shard-size 40 | tee "$W/far168-generation.json"
+          g++ -O3 -std=c++20 im-results/agent50-raw34-plan/far.cpp -o "$W/far"
+          python - "$W/hard3233.txt" "$W/far4.jsonl" "$W/hard168.txt" <<'PY'
+          import json,sys
+          lines=open(sys.argv[1]).read().splitlines()
+          records=[json.loads(x) for x in open(sys.argv[2]) if x.strip()]
+          misses=[x["id"] for x in records if "d" not in x]
+          assert len(lines)==3233 and len(records)==3233 and len(misses)==168
+          open(sys.argv[3],"w").write("\n".join(lines[i] for i in misses)+"\n")
+          print("FAR5 input rows:",len(misses))
+          PY
+          "$W/far" 5 < "$W/hard168.txt" > "$W/far5.jsonl" 2> "$W/far5.log"
+          python - "$W/hard3233.txt" "$W/far5.jsonl" "$W/hard8.txt" "$W/misses5.json" <<'PY'
+          import json,sys
+          lines=open(sys.argv[1]).read().splitlines()
+          records=[json.loads(x) for x in open(sys.argv[2]) if x.strip()]
+          misses=[x["id"] for x in records if "d" not in x]
+          assert len(records)==168 and len(misses)==9 and 2071 in misses,(len(records),misses)
+          ids=[i for i in misses if i!=2071]
+          assert len(ids)==8
+          open(sys.argv[3],"w").write("\n".join(lines[i] for i in ids)+"\n")
+          json.dump(misses,open(sys.argv[4],"w"))
+          print("FAR5:",len(records)-len(misses),"hits; remaining IDs:",misses)
+          PY
+          "$W/far" 6 < "$W/hard8.txt" > "$W/far6hits.jsonl" 2> "$W/far6.log"
+          python - "$W/misses5.json" "$W/far6hits.jsonl" "$W/far6.jsonl" <<'PY'
+          import json,sys
+          misses=json.load(open(sys.argv[1]))
+          hits=[json.loads(x) for x in open(sys.argv[2]) if x.strip()]
+          by_id={x["id"]:x for x in hits}
+          expected={i for i in misses if i!=2071}
+          assert set(by_id)==expected and len(by_id)==8
+          rows=[({"id":i} if i==2071 else by_id[i]) for i in misses]
+          open(sys.argv[3],"w").write("\n".join(json.dumps(x,separators=(",",":")) for x in rows)+"\n")
+          print("FAR6:",len(by_id),"source candidates; growth row 2071 handled symbolically")
+          PY
+          python im-results/agent50-raw34-far3233/generate_close_168.py \
+            --hard "$W/hard3233.txt" --far4 "$W/far4.jsonl" \
+            --far5 "$W/far5.jsonl" --far6 "$W/far6.jsonl" \
+            --output "$W/generated" --shard-size 12 | tee "$W/far168-closed-generation.json"
           python tools/lean_compile_closure.py --workdir "$W/build" \
             --source-root "$W/generated" --jobs 8 \
             --manifest "$W/closure-manifest.json" \
-            --artifact-name raw34-far168-composed \
-            "$W/generated/Raw34FAR168Cover.lean" 2>&1 | tee "$W/closure.log"
+            --artifact-name raw34-pair-full-endgame-source \
+            "$W/generated/Raw34FAR168Closed.lean" 2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           grep -F "'BB6.Agent40Raw34Final3233.cover'" "$W/closure.log"
           grep -F "'BB6.Agent50Raw34FAR168.cover'" "$W/closure.log"
-          python - "$W/generated/far168-manifest.json" "$W/closure.log" <<'PY'
+          grep -F "'BB6.Agent50Raw34M2071.never'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34FAR168Closed.cover'" "$W/closure.log"
+          grep -F 'Cover (DecidedBelow 128) BB6.Agent40Raw34PairD1LF_F0LDDepth6Data.parent' "$W/closure.log"
+          python - "$W/generated/far168-closed-manifest.json" "$W/closure.log" <<'PY'
           import json,re,sys
           m=json.load(open(sys.argv[1])); log=open(sys.argv[2]).read()
-          assert m["oldResidualRows"]==3233
-          assert m["oldCanonicalSha256"]=="aa640978cd0aa16452a872d5a38ef5081b3696720aaad0474db051ab7b1b85aa"
-          assert m["farHits"]==3065 and m["newResidualRows"]==168
-          assert m["newCanonicalSha256"]=="b70715768b541358c7f96c4183ad292a8b57559f73fe6e6e07eb1529cd4c5e74"
-          assert m["newResidualsComplete"] and m["newResidualsUnique"]
-          assert m["theorem"]=="BB6.Agent50Raw34FAR168.cover"
+          assert m["residualRows"]==168 and m["far5Hits"]==159 and m["far6Hits"]==8
+          assert m["growthId"]==2071
+          assert m["orderedMissSha256"]=="e5a91a6700e3e2027c85923c8b6661ff8cee6e6167ad0903b525ed538ee792f9"
+          assert m["theorem"]=="BB6.Agent50Raw34FAR168Closed.cover"
+          assert "sorryAx" not in log
           allowed={"propext","Classical.choice","Quot.sound"}
-          for theorem in ("BB6.Agent40Raw34Final3233.cover","BB6.Agent50Raw34FAR168.cover"):
+          for theorem in ("BB6.Agent40Raw34Final3233.cover","BB6.Agent50Raw34FAR168.cover","BB6.Agent50Raw34M2071.never","BB6.Agent50Raw34FAR168Closed.cover"):
               mm=re.search(r"'"+re.escape(theorem)+r"' depends on axioms: \[([^\]]*)\]",log)
               if mm:
                   got=set(re.findall(r"[A-Za-z][A-Za-z0-9_.]*",mm.group(1)))
                   assert got<=allowed,(theorem,got)
               else:
                   assert f"'{theorem}' does not depend on any axioms" in log,theorem
-          assert "sorryAx" not in log
-          print("PASS: exact Raw34 pair parent is DecidedBelow 128 or one of 168 explicit complete machines; standard axioms only")
+          print("PASS: Raw34 D1=0LF,F0=0LD parent is covered by DecidedBelow 128; 3,233 -> 168 -> 0 residuals")
           PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw34-far168-composed
-          path: /tmp/a40-raw34-far168/
+          name: raw34-pair-full-endgame-source
+          path: /tmp/a40-raw34-endgame/
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
