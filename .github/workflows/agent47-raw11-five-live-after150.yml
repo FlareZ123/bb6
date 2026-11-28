@@ -8,6 +8,11 @@ on:
         required: false
         default: ''
         type: string
+      extra132140_run:
+        description: Successful Raw11 150-to-148 Extra132+140 run ID; empty uses the older 150-entry predecessor
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -201,6 +206,36 @@ jobs:
           merge-multiple: true
           path: /tmp/extra28-four
 
+      - name: Download accepted Raw11 148 predecessor
+        if: inputs.extra132140_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.extra132140_run }}
+          name: agent44-raw11-exact-299-to-148-extra132-extra140
+          path: /tmp/extra132140
+
+      - name: Download accepted Extra132 parent bundle
+        if: inputs.extra132140_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46163290235
+          name: parent-complete-132-repaired
+          path: /tmp/extra132
+
+      - name: Download accepted Extra140 parent bundle
+        if: inputs.extra132140_run != ''
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46157091467
+          name: parent-complete-140-repaired
+          path: /tmp/extra140
+
       - name: Download accepted q0-151 common/core proof objects
         uses: actions/download-artifact@v4
         with:
@@ -267,21 +302,36 @@ jobs:
             /tmp/deps /tmp/root53accepted /tmp/q0152accepted /tmp/q0151accepted \
             /tmp/q0150accepted /tmp/extra28-eight /tmp/extra28-four \
             /tmp/q151core /tmp/q151parts /tmp/q151parent \
-            -type f -name '*.olean' | sort)
+            /tmp/extra132140 /tmp/extra132 /tmp/extra140 \
+            -type f -name '*.olean' 2>/dev/null | sort)
           export LEAN_PATH
 
-          src=im-results/agent5-weighted-tnf-queue/Raw11Q0151After150.lean
-          lean -j1 -o /tmp/q151-consumer/Raw11Q0151After150.olean "$src" \
-            | tee /tmp/q151-consumer/Raw11Q0151After150.log
-          if grep -Eq 'sorryAx|native_decide' /tmp/q151-consumer/Raw11Q0151After150.log; then
+          if [ -n "${{ inputs.extra132140_run }}" ]; then
+            src=im-results/agent5-weighted-tnf-queue/Raw11Q0151After148.lean
+            out=Raw11Q0151After148
+            theorems=(
+              "'BB6.Agent5Raw11Q0151After148.member_in_148' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After148.remaining_census' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After148.parent_cover' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After148.raw11_cover_from_147' depends on axioms:"
+            )
+          else
+            src=im-results/agent5-weighted-tnf-queue/Raw11Q0151After150.lean
+            out=Raw11Q0151After150
+            theorems=(
+              "'BB6.Agent5Raw11Q0151After150.member_in_150' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After150.remaining_census' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After150.parent_cover' depends on axioms:"
+              "'BB6.Agent5Raw11Q0151After150.raw11_cover_from_149' depends on axioms:"
+            )
+          fi
+          lean -j1 -o "/tmp/q151-consumer/$out.olean" "$src" \
+            | tee "/tmp/q151-consumer/$out.log"
+          if grep -Eq 'sorryAx|native_decide' "/tmp/q151-consumer/$out.log"; then
             exit 1
           fi
-          for theorem in \
-            "'BB6.Agent5Raw11Q0151After150.member_in_150' depends on axioms:" \
-            "'BB6.Agent5Raw11Q0151After150.remaining_census' depends on axioms:" \
-            "'BB6.Agent5Raw11Q0151After150.parent_cover' depends on axioms:" \
-            "'BB6.Agent5Raw11Q0151After150.raw11_cover_from_149' depends on axioms:"; do
-            grep -F "$theorem" /tmp/q151-consumer/Raw11Q0151After150.log
+          for theorem in "${theorems[@]}"; do
+            grep -F "$theorem" "/tmp/q151-consumer/$out.log"
           done
           sha256sum "$src" > /tmp/q151-consumer/source-sha256.txt
           lean --version > /tmp/q151-consumer/toolchain.txt
@@ -289,10 +339,11 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agent5-raw11-exact-299-to-149-q0151
+          name: agent5-raw11-q0151-consumer
           path: |
             /tmp/q151-consumer
             im-results/agent5-weighted-tnf-queue/Raw11Q0151After150.lean
+            im-results/agent5-weighted-tnf-queue/Raw11Q0151After148.lean
           if-no-files-found: warn
           retention-days: 30
 
