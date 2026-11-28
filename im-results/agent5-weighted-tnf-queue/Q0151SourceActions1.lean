@@ -44,17 +44,17 @@ theorem action_of_cut (st : Control) (c : Nat) (r : RightSummary)
 theorem cut_n1 (rest : List Nat)
     (h : rightType (rightSig (0::rest)) ≠ 0) :
     (1,rightSig rest) ∈ cut (rightSig (0::rest)) := by
-  simpa [cat] using cut_real_next (0::rest) h
+  simpa [cat,actualNext] using cut_real_next (0::rest) h
 
 theorem cut_n4 (rest : List Nat)
     (h : rightType (rightSig (3::rest)) ≠ 0) :
     (4,rightSig rest) ∈ cut (rightSig (3::rest)) := by
-  simpa [cat] using cut_real_next (3::rest) h
+  simpa [cat,actualNext] using cut_real_next (3::rest) h
 
 theorem cut_n5 (rest : List Nat)
     (h : rightType (rightSig (4::rest)) ≠ 0) :
     (5,rightSig rest) ∈ cut (rightSig (4::rest)) := by
-  simpa [cat] using cut_real_next (4::rest) h
+  simpa [cat,actualNext] using cut_real_next (4::rest) h
 
 theorem alt_one : alt 1 = altWord 1 := by decide +kernel
 theorem alt_two : alt 2 = altWord 2 := by decide +kernel
