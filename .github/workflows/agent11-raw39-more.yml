@@ -5,7 +5,7 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, parent-join, parent-ten-preflight]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, parent-join, parent-ten-preflight, global-sole-obligation, global-parent-join]
         required: true
       onele_run:
         description: 'Successful complete 1LE semantic audit run ID (parent-join only)'
@@ -807,4 +807,39 @@ jobs:
           name: raw39-parent-ten-child-conditional-source
           path: /tmp/a11-raw39-ten-child/evidence/
           if-no-files-found: error
+          retention-days: 30
+
+  global_raw39:
+    if: ${{ inputs.branch == 'global-sole-obligation' || inputs.branch == 'global-parent-join' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-join original Raw39 and accepted Canonical40 quotient
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ONELE_RUN: ${{ inputs.onele_run }}
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent11-raw39/consume_raw39_after_canonical40.py
+          python im-results/agent13-coverage/unpack.py
+          option=()
+          if [ "${{ inputs.branch }}" = 'global-parent-join' ]; then
+            test -n "$ONELE_RUN"
+            option=(--onele-run "$ONELE_RUN")
+          fi
+          python im-results/agent11-raw39/consume_raw39_after_canonical40.py \
+            --work /tmp/a11-raw39-global-source "${option[@]}"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw39-global-source-${{ inputs.branch }}
+          path: /tmp/a11-raw39-global-source/evidence/
+          if-no-files-found: warn
           retention-days: 30
