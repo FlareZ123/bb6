@@ -21,6 +21,7 @@ const depth2=JSON.parse(readFileSync(resolve(first,"depth2-candidate-witnesses.j
 const depth3=JSON.parse(readFileSync(resolve(first,"depth3-candidate-witnesses.json"),"utf8")).witnesses;
 const maskBank=JSON.parse(readFileSync(resolve(dir,"mask-bank-128.json"),"utf8"));
 const efBank=JSON.parse(readFileSync(resolve(dir,"ef-conjugate-bank-128.json"),"utf8"));
+const window7Bank=JSON.parse(readFileSync(resolve(dir,"../agent50-raw34-window7/mask-bank-128.json"),"utf8"));
 const actions=["HALT"];
 for(const w of "01")for(const d of "LR")for(const q of "ABCDEF")
   actions.push(w+d+q);
@@ -71,6 +72,7 @@ for(const S of ["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
 assert.equal(graph.length,9);
 assert.equal(maskBank.ranked.length,128);
 assert.equal(efBank.conjugates.length,128);
+assert.equal(window7Bank.ranked.length,128);
 // Verify every E/F conjugate is mechanically derived, not blindly
 // accepted from a JSON record. The physical HALT action remains 0.
 function conjugateAction(i){
@@ -194,8 +196,18 @@ for(const record of efBank.conjugates){
 const symmetryCount=cardinality(expandedEF),symmetryGain=symmetryCount-expandedCount;
 assert.equal(symmetryGain,78216493n);
 assert.equal(symmetryCount,123355899793n);
-assert.equal(cardinality(expandedEF)+
-  (25n**8n-cardinality(expandedEF)),25n**8n);
+let expandedSeven=expandedEF,positiveSeven=0;
+for(const row of window7Bank.ranked){
+  const previous=cardinality(expandedSeven);
+  expandedSeven=union(expandedSeven,productBDD(row.domainMasks));
+  if(cardinality(expandedSeven)>previous)positiveSeven++;
+}
+const sevenCount=cardinality(expandedSeven);
+const sevenGain=sevenCount-symmetryCount;
+assert.equal(sevenGain,15606675n);
+assert.equal(sevenCount,123371506468n);
+assert.equal(cardinality(expandedSeven)+
+  (25n**8n-cardinality(expandedSeven)),25n**8n);
 
 console.log(JSON.stringify({
   status:"PASS: exact 25-way MDD union arithmetic; nonhalting still conditional on original-source Lean gate",
@@ -212,6 +224,12 @@ console.log(JSON.stringify({
   bothBanksExactUnion:String(symmetryCount),
   bothBanksUncovered:String(25n**8n-symmetryCount),
   nonzeroSymmetryMasks:positiveSymmetry,
+  sevenCellInvariants:window7Bank.ranked.length,
+  sevenCellIncrementalPhysical:String(sevenGain),
+  fiveAndSevenFamiliesUnion:String(sevenCount),
+  fiveAndSevenOutsideOldPortfolio:String(sevenCount-oldCount),
+  fiveAndSevenResidualOutsideTheirOwnUnion:String(25n**8n-sevenCount),
+  nonzeroSevenMasks:positiveSeven,
   mddNodes:nodes.length,nonzeroNovelMasks:marginal.filter(x=>BigInt(x.gain)>0n).length,
   firstMarginals:marginal.slice(0,20)
 },null,2));
