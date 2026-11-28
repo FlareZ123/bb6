@@ -75,6 +75,7 @@ theorem encode_ne_of_p_lt (x y : Section) (h : x.p<y.p) :
   change (encode ⟨x.kind,x.p,x.n,x.s⟩).l (3*x.p+2) =
     (encode ⟨y.kind,y.p,y.n,y.s⟩).l (3*x.p+2) at hb
   rw [h0,h1] at hb
+  simpa using hb
 
 theorem step_plus (x : Section) (hx : good x) :
     Raw14042Growth.Plus M42 (encode x) (encode (step x)) := by
@@ -83,12 +84,13 @@ theorem step_plus (x : Section) (hx : good x) :
   have hpg := Raw14042Growth.step_growth x hx
   have hne : encode x ≠ encode (step x) :=
     encode_ne_of_p_lt x (step x) (by omega)
-  by_contra hpos
-  have hz : t=0 := by omega
-  subst t
-  have heq : encode x = encode (step x) := by
-    simpa [run] using ht
-  exact hne heq
+  have htz : t ≠ 0 := by
+    intro hz
+    subst t
+    have heq : encode x = encode (step x) := by
+      simpa [run] using ht
+    exact hne heq
+  exact Nat.pos_of_ne_zero htz
 
 theorem root_encode :
     encode Raw14042Growth.root = Raw14042Entry.rootS5.prim := by
