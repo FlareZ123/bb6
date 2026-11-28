@@ -22,7 +22,8 @@ jobs:
           "$HOME/.elan/bin/lean" --version
       - name: Kernel-check F321 inverse odd-numerator and sum lemmas
         run: |
-          lean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
+          lean -o im-results/agent31-f321-bulk/DensityOneCore.olean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/DensityOneExtension.lean | tee -a /tmp/f321-lean.log
           ! grep -q sorryAx /tmp/f321-lean.log
       - name: Upload exact finite computation record
         uses: actions/upload-artifact@v4
