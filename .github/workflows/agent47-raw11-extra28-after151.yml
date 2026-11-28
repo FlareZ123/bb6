@@ -1,0 +1,135 @@
+name: Agent47 Raw11 151-to-150 Extra28 integration
+
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run:
+        description: Successful Agent44 raw11-final workflow run ID
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+
+      - name: Download accepted Raw11 151 object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46111781717
+          name: raw11-exact-299-to-151-q0root53
+          path: /tmp/q0151
+
+      - name: Download accepted root53 parent object
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46109014135
+          name: raw11-q0-root53-complete-source
+          path: /tmp/root53
+
+      - name: Download successful Extra28 final parent source
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.parent_run }}
+          name: agent44-raw11-extra28-full-parent-original-source
+          path: /tmp/extra28-final
+
+      - name: Download twelve accepted Extra28 child proof-object bundles
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105742866
+          pattern: agent44-raw11-extra28-confirmed-*
+          merge-multiple: true
+          path: /tmp/extra28-eight
+
+      - name: Download four accepted Extra28 child proof-object bundles
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46105738773
+          pattern: agent44-raw11-extra28-child-*
+          merge-multiple: true
+          path: /tmp/extra28-four
+
+      - name: Recover exact transitive source objects
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/build
+          for id in             15144626755             15159003899 15161045625             15159257293 15154832729 15154568902             15154569169 15154663882 15158958272             15017647753 15014940132 15166284252             15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"               -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/q0151 -name Raw11Q0Root53After152.olean -print -quit)"
+          test -n "$(find /tmp/root53 -name Q0Root53Parent.olean -print -quit)"
+          test -n "$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          for m in             Raw11Extra28M7Join Raw11Extra28D1LCJoin Raw11Extra28M9Join             Raw11Extra28M10Join Raw11Extra28LDJoin Raw11Extra28M13Join             Raw11Extra28M14Join Raw11Extra28M15Join Raw11Extra28M16Join             FastRaw11M17Join FastRaw11M18Join FastRaw11M19Join; do
+            test -n "$(find /tmp/extra28-eight /tmp/extra28-four -name "$m.olean" -print -quit)"
+          done
+
+      - name: Kernel-replay Extra28 parent and exact Raw11 151-to-150 successor
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/build
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find /tmp/deps /tmp/q0151 /tmp/root53 /tmp/extra28-eight /tmp/extra28-four                     -type f -name '*.olean' | sort)
+          export LEAN_PATH
+
+          lean -j1 -o /tmp/build/Raw11Extra28AllChildren.olean             im-results/agent44-raw11-extra28/Raw11Extra28AllChildren.lean
+          lean -j1 -o /tmp/build/Raw11Extra28MinimalJoin.olean             im-results/agent44-raw11-extra28/Raw11Extra28MinimalJoin.lean
+
+          literal="$(find /tmp/extra28-final -name Raw11Extra28LiteralComplete.lean -print -quit)"
+          lean -j1 -o /tmp/build/Raw11Extra28LiteralComplete.olean "$literal"             | tee /tmp/build/Raw11Extra28LiteralComplete.log
+
+          src=im-results/agent47-raw11-adapter/Raw11Extra28After151.lean
+          lean -j1 -o /tmp/build/Raw11Extra28After151.olean "$src"             | tee /tmp/build/Raw11Extra28After151.log
+
+          if grep -Eq 'sorryAx|native_decide' /tmp/build/*.log; then
+            echo "forbidden axiom found" >&2
+            exit 1
+          fi
+          for theorem in             "'BB6.Agent44Extra28Completed.literal_complete' depends on axioms:"             "'BB6.Agent47Raw11Extra28After151.member_in_151' depends on axioms:"             "'BB6.Agent47Raw11Extra28After151.remaining_census' depends on axioms:"             "'BB6.Agent47Raw11Extra28After151.parent_cover' depends on axioms:"             "'BB6.Agent47Raw11Extra28After151.raw11_cover_from_150' depends on axioms:"; do
+            grep -F "$theorem" /tmp/build/*.log
+          done
+          sha256sum "$src" "$literal" > /tmp/build/source-sha256.txt
+          lean --version > /tmp/build/toolchain.txt
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent47-raw11-exact-299-to-150-extra28
+          path: |
+            /tmp/build
+            im-results/agent47-raw11-adapter/Raw11Extra28After151.lean
+          if-no-files-found: warn
+          retention-days: 30
