@@ -144,6 +144,18 @@ jobs:
           test "$(find /tmp/parent-source -maxdepth 1 -name 'Agent44SplitAgent5Raw11Extra140Sub_root_6_root_9_root_20Leaf*.lean' | wc -l)" -eq 12
           test "$(wc -c < "$target")" -lt 25000
 
+          # Leaf03 is itself a 409 KB TwoSidedAutomata certificate.  Give its
+          # twelve exact state/symbol rows independent kernel obligations.
+          leaf=/tmp/parent-source/Agent44SplitAgent5Raw11Extra140Sub_root_6_root_9_root_20Leaf03.lean
+          TWOSIDED_SPLIT_MIN_CERT_BYTES=300000 \
+          TWOSIDED_SPLIT_PREFIX=Agent44Extra140Root6Root9Root20Leaf03Rows \
+          TWOSIDED_SPLIT_NAMESPACE=BB6.Agent44Extra140Root6Root9Root20Leaf03Rows \
+            python im-results/agent44-raw11-extra28/split_two_sided_leaf.py \
+              "$leaf" '1RB1RD_1RC0LE_0LA0RC_1LA1LD_0LF1LB_0LB---' \
+              | tee /tmp/extra140-leaf03-row-split.log
+          test -s /tmp/parent-source/Agent44Extra140Root6Root9Root20Leaf03RowsProof.lean
+          test "$(wc -c < "$leaf")" -lt 25000
+
       - name: Advance exact kernel DAG by bounded fresh modules
         id: advance
         env:
