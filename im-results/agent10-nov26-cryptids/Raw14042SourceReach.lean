@@ -154,8 +154,8 @@ theorem ccRR (k m : Nat) (s : Raw14042Counter.CTail) (src : Prim)
     apply cOut (Nat.mod_lt _ (by decide))
     simpa only [Raw14042CTerminals.RR,Nat.add_comm k m,Nat.add_comm (Raw14042CGeneral.crank s) k,
       r] using H
-  simpa only [Raw14042ArithmeticInvariant.cc,he,if_pos,Nat.add_comm m k,
-    Nat.add_comm (Raw14042CGeneral.crank s) k,r] using G
+  simpa only [Raw14042ArithmeticInvariant.cc,he,if_pos,Nat.add_comm k m,
+    Nat.add_comm k (Raw14042CGeneral.crank s),r] using G
 
 theorem bsRR (k u v : Nat) (s : Raw140ERSuffix.Tail) (src : Prim)
     (ho : (k+v+1)%2=1) (H : Raw14042BTerminals.RR k u v s src) :
