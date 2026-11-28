@@ -22,15 +22,12 @@ theorem pathOfWord430 : ∀ (ds : List Digit) (p y : Nat),
     intro p y h
     change decide (num d p y % 16 = 0) &&
       IsWord430 ds (nextP d p) (nextY d p y) = true at h
-    cases hx : decide (num d p y % 16 = 0) with
-    | false =>
-      simp [hx] at h
-    | true =>
-      have hmod : num d p y % 16 = 0 := of_decide_true hx
-      have htail : IsWord430 ds (nextP d p) (nextY d p y) = true := by
-        simpa [hx] using h
+    by_cases hd : num d p y % 16 = 0
+    · have htail : IsWord430 ds (nextP d p) (nextY d p y) = true := by
+        simpa [hd] using h
       simpa only [List.length_cons] using
-        (Path.cons d hmod (ih (nextP d p) (nextY d p y) htail))
+        (Path.cons d hd (ih (nextP d p) (nextY d p y) htail))
+    · simp [hd] at h
 
 /-- Exact paired signed macro witness for s=2 in LongPastCascade:
     chronological word 0^197,1,4,0,5,0^211,5,1,0^212,1,0^113. -/
