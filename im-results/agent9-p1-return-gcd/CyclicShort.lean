@@ -3,7 +3,7 @@ import OrderReturn
 set_option maxHeartbeats 0
 
 namespace BB6.Agent9CyclicShort
-open BB6.Agent9ReturnGCD BB6.Agent9AntiGenericBound BB6.Agent43OrderReturn
+open BB6.Agent9ReturnGCD BB6.Agent9AntiGenericBound BB6.Agent43OrderReturn BB6.Agent9AntiGenericScaled
 
 /-- A bounded positive affine-clock carry cannot have a repeated
     interior odd slope of (not necessarily coprime) modulus h once its
