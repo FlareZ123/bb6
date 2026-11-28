@@ -14,6 +14,7 @@ import {join} from "node:path";
 const args=process.argv.slice(2);
 function opt(name,def){const i=args.indexOf(name);return i<0?def:args[i+1];}
 const output=opt("--output","/tmp/a50-raw34-pair-plan");
+const rootShards=args.includes("--root-shards");
 mkdirSync(output,{recursive:true});
 
 const alphabet=["HALT"];
@@ -89,6 +90,7 @@ function closesWithoutE(p){
 }
 
 const p=parentCodes.slice(),nodes=[],rows=[],stats={};
+let topChildren=null,topSlot=null;
 function inc(k){stats[k]=(stats[k]??0)+1;}
 function pushNode(text){const i=nodes.length;nodes.push(text);return i;}
 function residual(depth,kind){
@@ -129,6 +131,7 @@ function build(depth){
   p[r.slot]=code;children.push(build(depth+1));
  }
  p[r.slot]=0;
+ if(depth===2){topChildren=children.slice();topSlot=r.slot;}
  return pushNode(`.split ${leanSlot(r.slot)} [${children.join(",")}]`);
 }
 const rootIndex=build(2);
@@ -150,6 +153,196 @@ assert.equal(nodes.length,expected.nodes);
 assert.equal(rows.length,expected.rows);
 assert.deepEqual(stats,expected.stats);
 assert.equal(rootIndex,nodes.length-1);
+
+
+if(rootShards){
+ assert(easyMode,"root sharding is currently implemented for the F0=0LD easy plan");
+ assert(topChildren&&topChildren.length===25);
+ assert.equal(topSlot,11);
+ assert.equal(topChildren.at(-1),nodes.length-2);
+
+ const dataModule="Raw34PairD1LF_F0LDDepth6Data";
+ const dataNs="BB6.Agent40Raw34PairD1LF_F0LDDepth6Data";
+ const dataSource=\`import Raw34Plan
+import Raw34QuadraticPairGrowth
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+namespace \${dataNs}
+open BB6Coverage BB6.Agent50Raw34Plan
+
+inductive EasyCert where
+  | base (cert : Cert)
+  | contiguous
+  | alternating
+
+def easyCheck (p : PartialMachine) : EasyCert → Bool
+  | .base cert => certCheck 128 p cert
+  | .contiguous => sameTable p BB6.Agent40Raw34PairQuadratic.contiguous
+  | .alternating => sameTable p BB6.Agent40Raw34PairQuadratic.alternating
+
+abbrev EasyNode := PlanNode EasyCert
+def parent : PartialMachine := table [\${parentCodes.join(",")}]
+def rootSlot : Slot := \${leanSlot(topSlot)}
+def residualRows : List (List Nat) := [
+\${rows.map(r=>\`  [\${r.join(",")}]\`).join(",\\n")}
+]
+abbrev Good (m : Machine) : Prop :=
+  DecidedBelow 128 m ∨ ExplicitResidual residualRows m
+
+theorem easy_sound (p : PartialMachine) (cert : EasyCert)
+    (h : easyCheck p cert = true) : Cover Good p := by
+  cases cert with
+  | base c =>
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl ((cert_sound 128 p c h).sound m hm)
+  | contiguous =>
+      have hp : p = BB6.Agent40Raw34PairQuadratic.contiguous :=
+        sameTable_sound p _ h
+      subst p
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl (Or.inl (BB6.Agent40Raw34PairQuadratic.contiguous_never m hm))
+  | alternating =>
+      have hp : p = BB6.Agent40Raw34PairQuadratic.alternating :=
+        sameTable_sound p _ h
+      subst p
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl (Or.inl (BB6.Agent40Raw34PairQuadratic.alternating_never m hm))
+
+theorem residual_sound (j : Nat) (row : List Nat)
+    (h : residualRows[j]? = some row) : Cover Good (table row) := by
+  apply Cover.leaf
+  intro m hm
+  exact Or.inr ⟨j,row,h,hm⟩
+
+theorem residual_count : residualRows.length = \${rows.length} := by decide
+#print axioms easy_sound
+#print axioms residual_sound
+#print axioms residual_count
+end \${dataNs}
+\`;
+ writeFileSync(join(output,dataModule+".lean"),dataSource);
+
+ function rebaseNode(text,start){
+   if(!text.startsWith(".split "))return text;
+   const lb=text.lastIndexOf("["),rb=text.lastIndexOf("]");
+   assert(lb>=0&&rb>lb);
+   const kids=text.slice(lb+1,rb).split(",").map(x=>Number(x)-start);
+   assert(kids.every(x=>Number.isInteger(x)&&x>=0));
+   return text.slice(0,lb+1)+kids.join(",")+text.slice(rb);
+ }
+ function leanTransition(i){
+   if(i===0)return "none";
+   const k=i-1,q=Math.floor(k/4),c=k%4;
+   const w=c>=2,r=(c%2)===1;
+   return \`some ⟨\${w}, \${r}, ⟨\${q}, by decide⟩⟩\`;
+ }
+
+ const shardMeta=[];
+ let start=0;
+ for(let i=0;i<25;i++){
+   const end=topChildren[i],local=nodes.slice(start,end+1).map(x=>rebaseNode(x,start));
+   const localRoot=local.length-1,suffix=String(i).padStart(2,"0");
+   const module=\`Raw34PairD1LF_F0LDDepth6Child\${suffix}\`;
+   const ns=\`BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${suffix}\`;
+   const transition=leanTransition(i);
+   const childSource=\`import \${dataModule}
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+namespace \${ns}
+open BB6Coverage BB6.Agent50Raw34Plan \${dataNs}
+def childParent : PartialMachine := refine parent rootSlot (\${transition})
+def nodes : Array EasyNode := #[
+\${local.map(n=>\`  \${n}\`).join(",\\n")}
+]
+theorem node_count : nodes.size = \${local.length} := by decide
+theorem checked : checkWith nodes residualRows easyCheck 4 \${localRoot} childParent = true := by
+  decide +kernel
+theorem cover : Cover Good childParent :=
+  checkWith_sound nodes residualRows easyCheck easy_sound residual_sound
+    4 \${localRoot} childParent checked
+#print axioms node_count
+#print axioms checked
+#print axioms cover
+end \${ns}
+\`;
+   writeFileSync(join(output,module+".lean"),childSource);
+   shardMeta.push({i,module,namespace:ns,start,end,nodes:local.length,transition});
+   start=end+1;
+ }
+ assert.equal(start,nodes.length-1);
+
+ function finCases(combo){
+   const [w,r]=combo;
+   const ids=[];
+   for(let q=0;q<6;q++)ids.push(1+4*q+(w?2:0)+(r?1:0));
+   const target=\`Cover Good (refine parent rootSlot (some ⟨\${w}, \${r}, q⟩))\`;
+   let body=\`by\\n  refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[0]).padStart(2,"0")}.cover) ?_ q\\n\`;
+   let indent="  ";
+   for(let k=1;k<6;k++){
+     const varName=\`q\${k}\`;
+     body+=indent+\`intro \${varName}\\n\`;
+     if(k<5){
+       body+=indent+\`refine Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[k]).padStart(2,"0")}.cover) ?_ \${varName}\\n\`;
+       indent+="  ";
+     }else{
+       body+=indent+\`exact Fin.cases (by exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child\${String(ids[k]).padStart(2,"0")}.cover) (fun z => Fin.elim0 z) \${varName}\\n\`;
+     }
+   }
+   return {target,body};
+ }
+ const combos=[[false,false],[false,true],[true,false],[true,true]];
+ const helperNames=["cover00","cover01","cover10","cover11"];
+ const helpers=combos.map((c,i)=>{
+   const x=finCases(c);
+   return \`theorem \${helperNames[i]} (q : Fin 6) : \${x.target} := \${x.body}\`;
+ }).join("\\n");
+ const importLines=shardMeta.map(x=>\`import \${x.module}\`).join("\\n");
+ const finalModule="Raw34PairD1LF_F0LDDepth6Sharded";
+ const finalNs="BB6.Agent40Raw34PairD1LF_F0LDDepth6Sharded";
+ const finalSource=\`\${importLines}
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+namespace \${finalNs}
+open BB6Coverage
+open \${dataNs}
+\${helpers}
+theorem cover : Cover Good parent := by
+  apply Cover.branch parent rootSlot (by decide)
+  intro t ht
+  cases t with
+  | none =>
+      exact BB6.Agent40Raw34PairD1LF_F0LDDepth6Child00.cover
+  | some mv =>
+      rcases mv with ⟨w,r,q⟩
+      cases w <;> cases r
+      · exact cover00 q
+      · exact cover01 q
+      · exact cover10 q
+      · exact cover11 q
+#print axioms cover00
+#print axioms cover01
+#print axioms cover10
+#print axioms cover11
+#print axioms cover
+end \${finalNs}
+\`;
+ writeFileSync(join(output,finalModule+".lean"),finalSource);
+ writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
+ const report={
+   parentCodes,d1:d1Action,f0:f0Action,physicalParentCompletions:String(25n**6n),
+   nodeCount:nodes.length,residualCount:rows.length,rootIndex,rootSlot:topSlot,
+   rootChildCount:topChildren.length,shards:shardMeta,bound:128,
+   maxAssignedFreeTransitions:6,stats,
+   theorem:finalNs+".cover",
+   interpretation:"Exact pair-parent Cover, kernel-checked through 25 root subplans to avoid a monolithic decide proof."
+ };
+ writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\\n");
+ console.log(JSON.stringify(report,null,2));
+ process.exit(0);
+}
 
 const imports=easyMode
   ?"import Raw34Plan\nimport Raw34QuadraticPairGrowth"
