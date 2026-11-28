@@ -1,0 +1,32 @@
+name: Agent 31 F321 exact affine terminal rays (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  affine-ray-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Verify authentic source counter ray backwards closure
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          q=im-results/agent31-f321-mod384
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/agent31-ray.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/agent31-ray.log
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/agent31-ray.log
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/agent31-ray.log
+          LEAN_PATH="$e:$q" lean "$q/AffineRay3787.lean" | tee -a /tmp/agent31-ray.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent31-ray.log
