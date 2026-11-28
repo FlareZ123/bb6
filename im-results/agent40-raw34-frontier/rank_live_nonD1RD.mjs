@@ -62,6 +62,7 @@ const counters=[
 counters.forEach(add);
 const withDepth4=process.argv.includes("--include-f-depth4");
 const withCycles=process.argv.includes("--include-f-cycles")||withDepth4;
+const withEOnly=process.argv.includes("--include-e-ray")||withCycles;
 const withLeft=process.argv.includes("--include-f-left")||withCycles;
 const withRay=process.argv.includes("--include-f-ray")||withLeft;
 const fDirIndex=process.argv.indexOf("--f-depth3-dir");
@@ -81,9 +82,10 @@ function parseSourceRay(file){
 const raySource=withRay?[
  ...parseSourceRay("Raw34FRightRay.lean"),
  ...parseSourceRay("Raw34EFRightRay.lean"),
- ...(withLeft?parseSourceRay("Raw34FLeftRay.lean"):[])
+ ...(withLeft?parseSourceRay("Raw34FLeftRay.lean"):[]),
+ ...(withEOnly?parseSourceRay("Raw34ERightRay.lean"):[])
 ]:[];
-if(withRay)assert.equal(raySource.length,withLeft?44:36);
+if(withRay)assert.equal(raySource.length,(withLeft?44:36)+(withEOnly?4:0));
 raySource.forEach(add);
 function parseSourceCycles(text){
  const rows=[...text.matchAll(/⟨\[([\d,\s]+)\],/g)].map(m=>
