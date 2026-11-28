@@ -8,8 +8,8 @@ open BB6.Agent9ReturnGCD BB6.Agent9AntiGenericBound BB6.Agent43OrderReturn BB6.A
 
 /-- A bounded positive affine-clock carry cannot have a repeated
     interior odd slope of (not necessarily coprime) modulus h once its
-    return is at most K and the logarithmic coordinate margin B is at
-    most K. The mixed determinant after the primitive return p uses
+    return is at most K, with no relation required between K and the
+    logarithmic coordinate margin B. The mixed determinant after the primitive return p uses
     only p+B steps, rather than the older 2p+B second-difference bound. -/
 theorem no_short_return_carry
     (q dir C g : Int) (K B L : Nat) (a c x : Nat → Int)
