@@ -2,7 +2,7 @@
 
 Parent `1RB---_1RC---_0RD---_1LD0LE_---0RC_------`. This is a different E1 branch from the E1=0LE dossier. The deterministic first-hole enumeration has 12,182 splits, 215,468 side cycles, 58,266 final-hole leaves, and 6,453 open leaves. It accounts for all 244,140,625 raw completions. Frozen FAR bank hits 6,085; the remaining 368 are indexed by row order, with the two SHA-256 digests checked by [generate_e1rc.py](generate_e1rc.py).
 
-The [complete candidate ledger](e1rc-ledger.txt) partitions all 368 misses into 176 FAR mutations, 100 sparse n-gram fixed points, 67 run-length DFA closures, five long translated cycles and 20 exact affine-growth certificates. No discovery holdouts remain. The full source audit at the candidate bound 623 is **not accepted yet**.
+The [complete candidate ledger](e1rc-ledger.txt) partitions all 368 misses into 176 FAR mutations, 100 sparse n-gram fixed points, 67 run-length DFA closures, five long translated cycles and 20 exact affine-growth certificates. No discovery holdouts remain. The full source audit at the sharp bound 623 has passed.
 
 ## Exact unbounded growth
 
@@ -15,8 +15,11 @@ The remaining S witnesses are compactly specified in the ledger and regenerated 
 
 ## Sharp lower-bound witness
 
-`1RB0LC_1RC0RF_0RD0LA_1LD0LE_1LA0RC_0REHHH` reaches F1 after 622 nonhalting moves, with delay zero. [Raw54E1RCBase.lean](Raw54E1RCBase.lean) proves `BB6.Agent8Raw54.E1RC.Attainer.attained` against original Raw54Base dependencies; locally checked with only propext, Classical.choice, Quot.sound. Therefore any weighted Cover for the E1=0RC cylinder must use a bound of at least 623. The matching upper bound remains a candidate until the source audit succeeds.
+`1RB0LC_1RC0RF_0RD0LA_1LD0LE_1LA0RC_0REHHH` reaches F1 after 622 nonhalting moves, with delay zero. [Raw54E1RCBase.lean](Raw54E1RCBase.lean) proves `BB6.Agent8Raw54.E1RC.Attainer.attained` against original Raw54Base dependencies; locally checked with only propext, Classical.choice, Quot.sound. Therefore any weighted Cover for the E1=0RC cylinder must use a bound of at least 623. The matching upper bound is now accepted.
 
 ## Reproduction
 
 Run `python im-results/agent8-raw54/generate_e1rc.py --sweeps-only` for the 20 exact recurrences, or omit the flag to generate the full sharded audit and exact-threshold theorem. The generator uses the original enumerator, frozen bank, existing FAR/sparse/run-DFA and multi-sweep emitters. It checks the census hashes and complete partition, then emits `Raw54E1RCComplete.lean`. Its exported `complete_cover` and `exact_threshold` must compile with the exact source closure and pass the transitive axiom gate. These claims apply only to this raw54 child.
+
+## Accepted exact-source closure (2026-11-28)
+[Run 46088429391](https://github.com/FlareZ123/bb6/actions/runs/46088429391), artifact 15242228730, SHA256 `ac2d35f4907ea7a717477f520bb9d8431b93bf8e7bd2266363985c3a5bbe7548`. The exact-source `BB6.Agent8Raw54.E1RC.complete_cover` and `.exact_threshold` accepted. This concerns E1=0RC only.
