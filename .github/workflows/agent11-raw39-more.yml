@@ -897,13 +897,16 @@ jobs:
           (cd /tmp/a11chunk/srcproducer && LEAN_PATH=/tmp/a11chunk/producer lean -o /tmp/a11chunk/producer/Target.olean Target.lean)
           cp im-results/agent32-raw59/kernel-slice/KernelStage.lean /tmp/a11chunk/tool/KernelStage.lean
           (cd /tmp/a11chunk/tool && lean -c KernelStage.c KernelStage.lean && leanc -O2 -o kernelstage KernelStage.c)
+          printf '%s\\t%s\\n' /tmp/a11chunk/base/Common.olean /tmp/a11chunk/base/Common.olean /tmp/a11chunk/base/Common.olean /tmp/a11chunk/producer/Common.olean > /tmp/a11chunk/kernel-pairs.tsv
+          lean --run im-results/agent11-raw39/CompareKernelImportsBatch.lean /tmp/a11chunk/kernel-pairs.tsv > /tmp/a11chunk/compare-batch.log
+          diff -u <(printf 'E\\nD\\n') /tmp/a11chunk/compare-batch.log
           printf '%s\n' /tmp/a11chunk/producer/Common.olean /tmp/a11chunk/producer/Target.olean > /tmp/a11chunk/source-objects.txt
           python im-results/agent11-raw39/chunked_kernel_replay.py \
             --producer-objects /tmp/a11chunk/source-objects.txt \
             --base /tmp/a11chunk/base --work /tmp/a11chunk/replay \
             --root-module Target --root-name Toy.target \
             --prefix ToySlice --tool /tmp/a11chunk/tool/kernelstage \
-            --comparator im-results/agent13-raw125/CompareKernelImports.lean \
+            --comparator-batch im-results/agent11-raw39/CompareKernelImportsBatch.lean \
             --chunk-size 2
           cat > /tmp/a11chunk/ToySmoke.lean <<'LEAN'
           import ToySliceChunk0000
@@ -919,6 +922,7 @@ jobs:
             --base /tmp/a11chunk/base --work /tmp/a11chunk/replay-split \
             --root-module Target --root-name Toy.target \
             --prefix ToySliceSplit --tool /tmp/a11chunk/tool/kernelstage \
+            --comparator-batch im-results/agent11-raw39/CompareKernelImportsBatch.lean \
             --chunk-size 1
           cat > /tmp/a11chunk/ToySmokeSplit.lean <<'LEAN'
           import ToySliceSplitChunk0001
