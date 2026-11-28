@@ -210,6 +210,10 @@ def generate():
                     check=True,
                 )
                 line = proc.stdout.strip()
+                if not line:
+                    # No n-gram certificate for this row; later certificate
+                    # families (BiDFA/last/cycle/split) remain authoritative.
+                    continue
                 found_i, ngram_cert = line.split(maxsplit=1)
                 assert int(found_i) == i
                 found_width = int(ngram_cert.split()[0])
