@@ -124,6 +124,52 @@ theorem move_coordinate_cases {a d A D : Nat} (h : CounterMove a d A D) :
       have hc := middle_odd_coordinates _ _ h1 h2 hp
       exact ⟨hb,hm,hp',hc.2.1,hc.2.2⟩
 
+/-- Every live source move strictly raises the diagonal rank X. -/
+theorem counterMove_X_strict {a d A D : Nat}
+    (h : CounterMove a d A D) :
+    X a d + 1 ≤ X A D := by
+  cases h with
+  | high d hg =>
+      have hx := (high_coordinates a d hg).1
+      omega
+  | equal =>
+      have hx := (equal_coordinates a).1
+      omega
+  | far d h1 h2 =>
+      have hx := (far_coordinates a d h1 h2).1
+      omega
+  | middleEven d h1 h2 hp =>
+      have hx := (middle_even_coordinates a d h1 h2 hp).1
+      unfold X Y at hx ⊢
+      omega
+  | middleOdd d h1 h2 hp =>
+      have hx := (middle_odd_coordinates a d h1 h2 hp).1
+      unfold X Y at hx ⊢
+      omega
+
+/-- Exact n-step source reachability gains at least n in X. -/
+theorem counterReach_X_growth {sa sd n A D : Nat}
+    (h : CounterReach sa sd n A D) :
+    X sa sd + n ≤ X A D := by
+  induction h with
+  | nil => omega
+  | step hr hm ih =>
+      have hs := counterMove_X_strict hm
+      omega
+
+/-- Any authentic terminal gate with parameter D reached in n counter moves
+    is reached by counter time at most 2D-1. -/
+theorem root_terminal_counter_time_bound {n D : Nat}
+    (h : CounterReach 1 1 n (D+1) D) :
+    n + 1 ≤ 2*D := by
+  have hg := counterReach_X_growth h
+  unfold X at hg
+  omega
+
+#print axioms counterMove_X_strict
+#print axioms counterReach_X_growth
+#print axioms root_terminal_counter_time_bound
+
 #print axioms terminal_iff_diagonal
 #print axioms move_coordinate_cases
 end BB6.Agent2F321Diagonal
