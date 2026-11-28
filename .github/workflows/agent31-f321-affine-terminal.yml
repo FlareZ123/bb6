@@ -26,7 +26,9 @@ jobs:
           LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/DensityOneExtension.olean im-results/agent31-f321-bulk/DensityOneExtension.lean | tee -a /tmp/f321-lean.log
           lean -o im-results/agent31-f321-bulk/SourceCounter.olean im-results/agent31-f321-bulk/SourceCounter.lean | tee -a /tmp/f321-lean.log
           lean -o im-results/agent31-f321-bulk/Barrier.olean im-results/agent31-f321-bulk/Barrier.lean | tee -a /tmp/f321-lean.log
-          LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/F321BackwardBarrier.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/F321BackwardBarrier.olean im-results/agent31-f321-bulk/F321BackwardBarrier.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/FiniteResidueCheck.olean im-results/agent31-f321-bulk/FiniteResidueCheck.lean | tee -a /tmp/f321-lean.log
+          LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/ExplicitResidueFamilies.lean | tee -a /tmp/f321-lean.log
           ! grep -q sorryAx /tmp/f321-lean.log
       - name: Upload exact finite computation record
         uses: actions/upload-artifact@v4
