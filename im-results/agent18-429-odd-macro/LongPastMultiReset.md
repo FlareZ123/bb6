@@ -84,6 +84,25 @@ using \(T4^{-M}\ge4096k\). This holds even at j=M, where the main term is zero. 
 
 For the A-phase parity, all zeros produce heights divisible by 4, and the first isolated one lands at even rank with even ordinate \(2(4^M-1)4^s/3\). During the M-one block, the leading \(T\)-term in the formula for \(y_j\) is an even integer. Modulo two only the final term of \(E_j\) contributes, so \(y_j\equiv \delta+C_j-c_j\equiv p_j\pmod2\), since \(c_j\) is even and \(p_j=2T-\delta-C_j\). Thus **every even-rank state has even height**. The final zeros preserve this parity. Paired chronological halfsteps reproduce exactly the source-defined radix-16 macro digits \(0,1,4,5\), costs \(3,5,4,6\), and offsets \(0,6,18,32\).
 
+## Exact source-macro block form and forward terminality
+
+The signed word is not merely valid at halfstep resolution. Its chronological **radix-16 macro word**, using the original digit mapping \(00\mapsto0,\ 10\mapsto1,\ 01\mapsto4,\ 11\mapsto5\), has one of four explicit run-length presentations:
+
+| parity of s | parity of M | exact chronological macro word |
+| --- | --- | --- |
+| even | odd | \(0^{q/2}\,5^{(M-1)/2}\,1\,0^{(r-1)/2}\,1\,0^{(k-2)/2}\) |
+| even | even | \(0^{q/2}\,5^{M/2}\,0^{r/2}\,1\,0^{(k-2)/2}\) |
+| odd | odd | \(0^{(q-1)/2}\,4\,5^{(M-1)/2}\,0^{r/2}\,1\,0^{(k-2)/2}\) |
+| odd | even | \(0^{(q-1)/2}\,4\,5^{(M-2)/2}\,1\,0^{(r-1)/2}\,1\,0^{(k-2)/2}\) |
+
+The run-length counts are all natural integers by \(r\equiv M+s\pmod2\), \(q\equiv s\pmod2\). The macro path starts at \((p_{\rm start}/2,H4^q/2)\), has length \(N/2\), and ends at \((T+2,1)\). In the *original* q0 signed macro functions the digit costs are \(3,5,4,6\) and offsets \(0,6,18,32\); every exact division by sixteen follows from the verified A-phase lattice, or can be independently checked from the displayed run-length word. [long_past_multi_reset.cjs](long_past_multi_reset.cjs) now performs precisely such independent source-macro replay with BigInt, fast-forwarding only exact all-zero blocks, for all six tested parameters.
+
+The terminal macro vertex admits **no outgoing source-macro edge**: since \(T=4^k\equiv0\pmod{16}\) for \(k\ge18\), at \((p,y)=(T+2,1)\) the possible numerators for digits \(0,1,4,5\) are respectively
+\[
+1,\quad T+9,\quad 4T+27,\quad 5T+43,
+\]
+with residues modulo 16 equal to \(1,9,11,11\), all nonzero. The start vertex has no incoming **strict-interior** macro edge because even a single halfstep predecessor is impossible, as shown below. Thus the construction is a two-ended **maximal directed path in the strict signed macro graph**. This does not assert that intermediate vertices have no alternative outgoing edges, so it is not a claim that the path forms an isolated graph component. It is also not a proof that an authentic blank-root source trajectory enters this path.
+
 ## Exact terminality and uniqueness of the prehistory
 
 The final rank is even. Total rank loss, obtained by summing alternating phase-dependent zero/one costs, is
@@ -121,7 +140,7 @@ At this even-rank endpoint, a reverse-zero ancestor would require \(12y<p-1\), w
 
 ## Checkers and remaining obligations
 
-[long_past_multi_reset.cjs](long_past_multi_reset.cjs) tests the two-parameter formulas with arbitrary-precision BigInt. It fast-forwards zero runs using their exact parity-dependent rank-cost sum, explicitly performs every one step, checks every segment's maximal strict height, every A-phase parity, final forbidden inverse-band, and the residual bound \(H>k4^M\). It covers \((M,s)=(3,0),(3,1),(6,0),(6,1),(9,0),(9,1)\), up to \(k=233{,}020\). The M=3 special case is also directly replayed step-by-step through every halfstep and independently through source radix-16 macros in [long_past_family.cjs](long_past_family.cjs).
+[long_past_multi_reset.cjs](long_past_multi_reset.cjs) tests the two-parameter formulas with arbitrary-precision BigInt. It fast-forwards zero runs using their exact parity-dependent rank-cost sum, explicitly performs every one step, checks every segment's maximal strict height, every A-phase parity, final forbidden inverse-band, and the residual bound \(H>k4^M\). It covers \((M,s)=(3,0),(3,1),(6,0),(6,1),(9,0),(9,1)\), up to \(k=233{,}020\), and **independently checks all source-macro block divisions and both endpoint terminalities**. The M=3 special case is also directly replayed step-by-step through every halfstep and independently through source radix-16 macros in [long_past_family.cjs](long_past_family.cjs).
 
 ~~~sh
 node im-results/agent18-429-odd-macro/long_past_multi_reset.cjs
