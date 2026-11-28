@@ -28,6 +28,7 @@ jobs:
           python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
             im-results/agent23-raw34-frontier/Raw34D1RDHalting12.lean \
             im-results/agent23-raw34-frontier/Raw34D1RDOneStepPilot.lean \
+            im-results/agent23-raw34-frontier/Raw34TripleSweepGrowthF.lean \
             2>&1 | tee /tmp/agent23-raw34-halters/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
