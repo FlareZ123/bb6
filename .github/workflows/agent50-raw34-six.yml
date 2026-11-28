@@ -1,18 +1,11 @@
 name: Agent 50 Raw34 six-hole complete Cover
 on:
   workflow_dispatch:
-    inputs:
-      graph_closure:
-        description: "Compile all-state Raw34 closed-graph theorem and exact union auditor"
-        required: false
-        default: false
-        type: boolean
 permissions:
   contents: read
   actions: read
 jobs:
   prepare:
-    if: ${{ !inputs.graph_closure }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -52,7 +45,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   children:
-    if: ${{ !inputs.graph_closure }}
     needs: prepare
     runs-on: ubuntu-latest
     timeout-minutes: 45
@@ -109,7 +101,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
   compose:
-    if: ${{ !inputs.graph_closure }}
     needs: children
     runs-on: ubuntu-latest
     timeout-minutes: 25
@@ -153,36 +144,3 @@ jobs:
           compression-level: 1
           retention-days: 30
 
-  graph-closure:
-    if: ${{ inputs.graph_closure }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 25
-    steps:
-      - uses: actions/checkout@v4
-      - name: Install Lean 4.36.0-rc2
-        run: |
-          set -euo pipefail
-          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
-          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
-          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile original-source graph theorem and audit all axioms
-        run: |
-          set -euo pipefail
-          D=im-results/agent50-raw34-firsthole
-          W=/tmp/a50-raw34-graph
-          mkdir -p "$W"
-          python im-results/agent13-coverage/unpack.py
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 --manifest "$W/manifest.json" --artifact-name raw34-graph-source --provenance-input "$D/count_graph_closure.mjs" "$D/Raw34GraphClosure.lean" 2>&1 | tee "$W/closure.log"
-          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
-          grep -F "'BB6.Agent50Raw34Graph.first3'" "$W/closure.log"
-          grep -F "'BB6.Agent50Raw34Graph.never_of_graph_closure'" "$W/closure.log"
-          grep -F "'BB6.Agent50Raw34Graph.never_of_finset'" "$W/closure.log"
-          node "$D/count_graph_closure.mjs" | tee "$W/union.json"
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: raw34-graph-source
-          path: /tmp/a50-raw34-graph/
-          if-no-files-found: error
-          retention-days: 30
