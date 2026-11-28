@@ -199,11 +199,34 @@ shorter than the old `rhoZero` prediction by 8.
 
 The level-10→11 comparison has two marked boundaries, both at zero-run
 position 0. Level 11→12 has 30: 28 at zero-run position 0 and two at
-position 1. A separate macro replay using only the exact A/B triad formulas
-reproduces these primitive results and extends the same relation to
-level 12→13: 250 marked boundaries, 216 at position 0 and 34 at position 1.
-The last count is rewrite-model evidence, not a Lean/source primitive-run
-theorem.
+position 1.
+
+A streaming lockstep replay using only the exact A/B triad formulas now checks
+the relation much farther without materializing either orbit. It replays one
+low macro against its three high macros and reports zero right-side failures,
+zero relation-shape failures and zero multi-mark boundaries through level 15.
+The defect census is:
+
+| low→high level | unmarked | mark 0 | mark 1 | mark 2 | mark 3 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 10→11 | 26,243 | 2 | 0 | 0 | 0 |
+| 11→12 | 78,703 | 28 | 2 | 0 | 0 |
+| 12→13 | 235,947 | 216 | 34 | 0 | 0 |
+| 13→14 | 707,047 | 1,224 | 314 | 4 | 0 |
+| 14→15 | 2,117,863 | 5,724 | 2,098 | 80 | 0 |
+| 15→16 | 6,341,515 | 23,520 | 11,390 | 860 | 8 |
+
+These deeper rows are **derived-macro evidence**, not Lean/source
+primitive-run theorems. The reproducer is
+`analyze_17557_defect_stream.cpp`; its default level-15 run checks
+6,377,293 boundary relations in the final row.
+
+The important structural correction is that the mark position is not bounded:
+the observed maximum positions are `0,1,1,2,2,3` from levels 10 through 15.
+What remains bounded is the **number of defects**: every checked relation has
+at most one. This suggests a regular marked-run relation with finite scanner
+state (“before the mark / at the mark / after the mark”), while allowing the
+marked zero-run to occur arbitrarily deep in the left stack.
 
 The natural replacement for fixed `rho` is therefore a relation carrying
 an optional **defect token** on one left zero-run:
@@ -229,8 +252,9 @@ C, first-zero residue 7, mark 0   -> (0,1,0).
 ```
 
 Further local states appear later, but the single-token invariant survives
-through the level-12→13 macro replay. The proof target is therefore a finite
-relational transducer for this token, rather than the old pointwise map.
+through the level-15 streaming replay. The proof target is therefore a
+finite-state transducer over an arbitrarily deep **marked run**, rather than
+a map whose state is the mark's numeric depth or the old pointwise rho.
 
 ## Right-side level map
 
@@ -254,8 +278,8 @@ Define a symbolic relation on paired low/high triad-boundary zippers with:
 1. the fixed right-run relation;
 2. doubled left 1-runs;
 3. `rhoZero` on unmarked left zero-runs;
-4. at most one marked zero-run using `rhoZero(z)-8`;
-5. finite local state sufficient to create, move, and delete the mark through
+4. at most one marked zero-run using `rhoZero(z)-8`, at arbitrary run depth;
+5. finite scanner state sufficient to create, move, and delete the mark through
    A, B, and A-carry rewrites.
 
 Then prove that one low A or B triad corresponds to `ABA` or `BBA` on
