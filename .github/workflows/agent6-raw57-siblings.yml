@@ -537,6 +537,10 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+      - name: Print exact E0 proof-complement triage from pinned source inventory
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/le/triage_remaining.py
       - name: Collect exact LE research sources for offline exploration
         run: |
           set -euo pipefail
