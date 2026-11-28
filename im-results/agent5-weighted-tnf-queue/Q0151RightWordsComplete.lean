@@ -99,8 +99,26 @@ theorem cut_second_live (a b : Nat) (rest : List Nat)
       (by simpa only [suffixMask] using h)
   exact cut_second a b rest hc (suffixMask_live_variants rest ht)
 
+theorem cut_real_next (xs : List Nat)
+    (h : rightType (rightSig xs) ≠ 0) :
+    (match xs with
+      | [] => (0,emptyRight)
+      | n::rest => (cat (n+1),rightSig rest)) ∈ cut (rightSig xs) := by
+  cases xs with
+  | nil => exact cut_empty
+  | cons a rest =>
+      cases rest with
+      | nil => exact cut_single a
+      | cons b bs =>
+          have hl : suffixMask (b::bs) ≠ 0 := by
+            intro hz
+            apply h
+            simp [rightSig,rightType,cat_pos a,hz,pre_zero]
+          exact cut_second_live a b bs hl
+
 #print axioms suffixMask_shape
 #print axioms suffixMask_live_variants
 #print axioms cat_first_of_live
 #print axioms cut_second_live
+#print axioms cut_real_next
 end BB6.Agent5Q0151RightWordsComplete
