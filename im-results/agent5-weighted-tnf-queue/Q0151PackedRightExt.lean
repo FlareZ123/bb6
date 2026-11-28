@@ -44,8 +44,11 @@ theorem frame_right_pack (q : Fin 6) (left R T : List Bool)
     (he : pack R = pack T) :
     frame q left R = frame q left T := by
   obtain ⟨hhead,htail⟩ := pack_head_tail R T he
+  have hleft : pack (R.headD false :: left) =
+      pack (T.headD false :: left) :=
+    congrArg (fun bit : Bool => pack (bit :: left)) hhead
   unfold frame encode0
-  simp [hhead,htail]
+  simp only [hleft,htail]
 
 theorem boundary_right_pack (q : Fin 6) (left : List Bool)
     (stack : List (List Bool)) (R T : List Bool)
