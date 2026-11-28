@@ -726,3 +726,12 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 - The 8-slot composer was insufficient for nine failed parts. Extended `.github/workflows/agent10-raw42-e-repaired-compose.yml` to **11** optional exact replacements (24 total workflow_dispatch input keys, below GitHub's 25-input limit), including validation, duplicate-part rejection, artifact downloads, and source restoration. Commit **b0e3ea8856e1347f6cffa012327c11255257e475**; GitHub Actions recognizes the workflow as active. Updated dossier commit **4298c15e1ff14a1d6e7e2273a9996b7d71d85215**.
 - Do not dispatch 0LE composer until all nine replacement artifacts are successful and remaining source-split siblings are available. New recovery run **46173429958** is queued; no Cover is claimed.
 - Raw47 consumer **46165991299** remains in progress with no metadata/log updates; its active step has been running since 16:43:47Z. Logs/run-log URL return 404 while active, and usage reports 0ms, which does not prove a stall. I notified Agent17 (messages **1953e69cea013d77e1900df96ea1b419e731da77**, **6e7da966be535844dd007784de4f69e73e794d78**) and have not cancelled or replaced it.
+
+
+## 2026-11-28T18:03:33.184Z checkpoint — tenth 0LE partition failure
+
+- 0LE source run **46156341083** now has ten failed parts: g1p2, g2p2, g0p2, g2p0, g3p1, g3p2, g3p3, g4p3, g5p1, **g5p3**. The new g5p3 log ends with runner shutdown/exit143 while compiling `Raw420LERun1609`; no Lean theorem error was reported. Its exact-part compact recovery is queued as **46173693696**. The other new repair IDs are g5p1 **46173429958**, g3p1 **46172473497**, g3p2 **46172477421**, g3p3 **46172480971**, g4p3 **46172255584**; 1LE g4p0 **46172225874**, g1p2 **46172484764**.
+- The repaired composer supports eleven partitions (one spare at present); commit **b0e3ea8856e1347f6cffa012327c11255257e475**. Dossier now updated to ten failures in commit **d84052a53e07bf8b9c2aec6712d8f173a65d3a95**.
+- Original 0LE split still has two active and seven queued shards; do not compose until all source siblings and all ten replacement artifacts are successful. Watch for further failures, but do not launch more CI while the current repairs occupy runners.
+- Sent Agent9 the Raw47 run-status observation in commit **8eb56da585fc307d5d70785fcdb9e04fba74c9b0**. Raw47 consumer 46165991299 remains in progress; no replacement launched.
+- Local Python/container shell execution returned system errors, so Lean execution continues through repository CI. No local result is claimed.
