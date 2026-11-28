@@ -223,6 +223,40 @@ theorem highRemaining_eq_suffixCost (r : Nat) {p s : List Bool}
   unfold highRemaining highCost at *
   omega
 
+/-- Pure modular arithmetic behind one scheduled B hit. -/
+theorem bWeightArithmetic (x y q ell : Nat)
+    (hy : y ≤ x)
+    (hell : ell = 8*q + (x-y) - 1)
+    (h7 : 7 ≤ ell) :
+    bNextWeight ell ((x-y)/8) = (x+1-y)/8 := by
+  by_cases hd : x = y
+  · subst x
+    have hn : ell % 8 ≠ 6 := by
+      intro h6
+      omega
+    simp [bNextWeight, hn]
+  · have hdpos : 1 ≤ x-y := by omega
+    have hm : ell % 8 = (x-y-1) % 8 := by
+      have heq : ell = 8*q + ((x-y)-1) := by omega
+      rw [heq, Nat.add_mod]
+      simp
+    unfold bNextWeight
+    rw [hm]
+    split <;> omega
+
+/-- Pure modular arithmetic behind one scheduled carry hit. -/
+theorem cWeightArithmetic (x y q ell : Nat)
+    (hpos : y+1 ≤ x)
+    (hell : ell = 8*q + (x-y) - 1) :
+    carryNextWeight ell ((x-y)/8) = (x-(y+1))/8 := by
+  have hm : ell % 8 = (x-y-1) % 8 := by
+    have heq : ell = 8*q + ((x-y)-1) := by omega
+    rw [heq, Nat.add_mod]
+    simp
+  unfold carryNextWeight
+  rw [hm]
+  split <;> omega
+
 /-- The closed-form frame weight updates exactly by the defect-stack B
     transition at every scheduled B hit. -/
 theorem next_B_weight_update (r : Nat) {p s : List Bool}
@@ -235,28 +269,12 @@ theorem next_B_weight_update (r : Nat) {p s : List Bool}
   have h7 : 7 ≤ lowRemaining r p := by
     rw [hsuf]
     simp [lowCost, countB, countC]
-  by_cases hd : countB p = countC p
-  · have hn : lowRemaining r p % 8 ≠ 6 := by
-      intro h6
-      omega
-    simp [prefixWeight, bNextWeight, countB, countC,
-      List.count_append, hd, hn]
-  · have hdpos : 1 ≤ countB p - countC p := by omega
-    have hm :
-        lowRemaining r p % 8 =
-          (countB p - countC p - 1) % 8 := by
-      have heq :
-          lowRemaining r p =
-            8 * ((2^(r+1)-1) - countB p) +
-              (countB p - countC p - 1) := by
-        omega
-      rw [heq, Nat.add_mod]
-      simp
-    unfold prefixWeight bNextWeight
-    rw [hm]
-    simp only [countB, countC, List.count_append, List.count_cons,
-      List.count_nil, Nat.add_zero]
-    split <;> omega
+    omega
+  have ha := bWeightArithmetic
+    (countB p) (countC p)
+    ((2^(r+1)-1) - countB p)
+    (lowRemaining r p) hbal hf h7
+  simpa [prefixWeight, countB, countC, List.count_append] using ha
 
 /-- Likewise the closed-form frame weight follows the carry transition exactly.
     Ballot positivity at a scheduled carry supplies the only delicate case. -/
@@ -270,21 +288,11 @@ theorem next_C_weight_update (r : Nat) {p s : List Bool}
   have hpos : countC p + 1 ≤ countB p := by
     simpa [countB, countC, List.count_append] using hbfull
   have hf := lowRemaining_balance_form r hps
-  have hm :
-      lowRemaining r p % 8 =
-        (countB p - countC p - 1) % 8 := by
-    have heq :
-        lowRemaining r p =
-          8 * ((2^(r+1)-1) - countB p) +
-            (countB p - countC p - 1) := by
-      omega
-    rw [heq, Nat.add_mod]
-    simp
-  unfold prefixWeight carryNextWeight
-  rw [hm]
-  simp only [countB, countC, List.count_append, List.count_cons,
-    List.count_nil, Nat.add_zero]
-  split <;> omega
+  have ha := cWeightArithmetic
+    (countB p) (countC p)
+    ((2^(r+1)-1) - countB p)
+    (lowRemaining r p) hpos hf
+  simpa [prefixWeight, countB, countC, List.count_append] using ha
 
 /-- The B/BBA semantic runway guards follow immediately from suffix cost. -/
 theorem next_B_guards (r : Nat) {p s : List Bool}
@@ -465,6 +473,8 @@ theorem frame_closes (r : Nat) :
   · unfold prefixWeight
     omega
 
+#print axioms bWeightArithmetic
+#print axioms cWeightArithmetic
 #print axioms next_B_weight_update
 #print axioms next_C_weight_update
 #print axioms normalB_ge6
