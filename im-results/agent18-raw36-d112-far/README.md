@@ -178,3 +178,22 @@ After removing these twelve exact tables, **77 / 3841** saved canonical
 D1=1LA OPEN literals remain without a current certificate.  The sorted
 77-line residual roster SHA256 is
 `daa2caa8fcd72ba0653ce8477320b90613be70efbbed1ebf5edb37c9a8fef388`.
+
+
+## Targeted period-five shell: 74 unresolved
+
+A bounded period-five search over the 77 residual literals, using a focused
+mask family rather than the full parameter cube, finds **three** additional
+finite quotient certificates.  Their compact witnesses are retained in
+`period5_extra3.tsv`; `emit_period5_extra3.py` regenerates the independent
+`TwoSidedAutomata` source.
+
+All three `never` theorems compiled locally under Lean 4.36.0-rc2 and report
+exactly `[propext, Classical.choice, Quot.sound]`.  Generated source SHA256:
+`c3792d439ab4851887966d0139f334a19eb99f3d4b8ef39b54fd952844d99fc1`;
+olean SHA256:
+`90d346ff436a12a01247b21d0cee1ba41cfefc53a54391bf1327417777ab83b0`.
+
+The exact unresolved D1=1LA roster is therefore **74 / 3841** saved canonical
+OPEN literals; its sorted-line SHA256 is
+`d60bcc1439f1a933e2fbbf5677c3771eb834ab8a53e297f8d4985f7afc601340`.
