@@ -2,6 +2,11 @@ name: Agent1 Raw56 root-pilot source acceptance
 
 on:
   workflow_dispatch:
+    inputs:
+      recover:
+        description: Reuse run 46064129990; rebuild only cancelled E11LC cut shard 0
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -9,6 +14,7 @@ permissions:
 
 jobs:
   prepare:
+    if: inputs.recover == false
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -157,6 +163,81 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent1-raw56/root_pilot_accept.py compile-final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --tag '${{ matrix.tag }}' --out /tmp/rootpilot-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-root-pilot-${{ matrix.tag }}-source-accepted
+          path: /tmp/rootpilot-final
+          if-no-files-found: error
+
+  recover:
+    if: inputs.recover
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    strategy:
+      fail-fast: false
+      matrix:
+        tag: [E10RD, E11LC]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-pilot-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064129990'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-cert-${{ matrix.tag }}-*
+          path: /tmp/rootpilot-cert-inputs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064129990'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-cut-${{ matrix.tag }}-*
+          path: /tmp/rootpilot-cut-inputs
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064129990'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Restore successful shards and finish the single cancelled cut
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/recover_root_pilot.py restore \
+            --tag '${{ matrix.tag }}' --prep /tmp/raw56-pilot-prep \
+            --base /tmp/raw56-base/a1-raw56-root-consumer \
+            --cert-inputs /tmp/rootpilot-cert-inputs --cut-inputs /tmp/rootpilot-cut-inputs \
+            --work /tmp/rootpilot-recovery --new-cut /tmp/rootpilot-new-cut \
+            --out /tmp/rootpilot-final --compiler im-results/agent1-raw56/root_pilot_accept.py
+      - uses: actions/upload-artifact@v4
+        if: matrix.tag == 'E11LC'
+        with:
+          name: rootpilot-cut-E11LC-0-recovered
+          path: /tmp/rootpilot-new-cut
+          if-no-files-found: error
+      - name: Check the complete parent Cover and strict axiom profile
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/recover_root_pilot.py final \
+            --tag '${{ matrix.tag }}' --prep /tmp/raw56-pilot-prep \
+            --base /tmp/raw56-base/a1-raw56-root-consumer \
+            --cert-inputs /tmp/rootpilot-cert-inputs --cut-inputs /tmp/rootpilot-cut-inputs \
+            --work /tmp/rootpilot-recovery --new-cut /tmp/rootpilot-new-cut \
+            --out /tmp/rootpilot-final --compiler im-results/agent1-raw56/root_pilot_accept.py
       - uses: actions/upload-artifact@v4
         with:
           name: raw56-root-pilot-${{ matrix.tag }}-source-accepted
