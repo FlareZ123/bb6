@@ -282,8 +282,14 @@ theorem cut (m : Machine) (hm : compatible parent m) :
     WeightedBound B m ∨ ∃ e ∈ residuals, compatible e.2 m :=
   bankSound bank B parent tree parent_root parent_nohalt checked m hm
 
+theorem close
+    (hres : ∀ e ∈ residuals, Cover (WeightedBound B) e.2) :
+    Cover (WeightedBound B) parent :=
+  bankClose bank B parent tree parent_root parent_nohalt checked hres
+
 #print axioms checked
 #print axioms cut
+#print axioms close
 end {NS}
 """
     (out / "Raw54OneRDBankCut.lean").write_text(root)
