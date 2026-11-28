@@ -40,7 +40,7 @@ theorem F_lower_three (n : Nat) :
   have h1 := F_recur (n/4)
   have hge := F_ge_self ((n/4)/4)
   have hdiv : (n/4)/4=n/16 := by omega
-  rw [hdiv] at hge
+  rw [hdiv] at h1 hge
   omega
 
 theorem F_three_of_lt64 (n : Nat) (h : n<64) :
@@ -52,7 +52,7 @@ theorem F_three_of_lt64 (n : Nat) (h : n<64) :
   have hdiv0 : ((n/4)/4)/4=0 := by omega
   have hFzero : F 0=0 := by simp [F]
   rw [hdiv0,hFzero] at h2
-  rw [hdiv] at h2
+  rw [hdiv] at h1 h2
   omega
 
 theorem large_bound (K : Nat) (h : 151≤K) :
