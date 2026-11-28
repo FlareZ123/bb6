@@ -47,7 +47,7 @@ l' = L^7 L^732592001087343491 T Y l.
 
 This tape begins 1, so the positive path repeats without any finite-support or hidden suffix assumption. For every time bound N, N iterations contain at least N live primitive transitions. Hence no finite halting time exists for any configuration in the cylinder.
 
-The verifier separately simulates exactly 5,810,803 literal transitions from blank, with no halt, to B(P^114 seedWord e,e) (inclusive left length3311, right001). It then applies the same guarded core/terminal/epoch rules and the two generic epochs, recording all finite word transformations and compressed reservoirs without expanding huge powers. Refilling a visible prefix simply repartitions the exact concatenation of finite-word powers. At epoch181, after 10,477 trace entries including refills, the state is B(P^72 HEAD L^80 l,e) with l beginning 1. This closes the computational blank-root nonhalting argument.
+The verifier separately simulates exactly 5,810,803 literal transitions from blank, with no halt, to B(P^114 seedWord e,e) (inclusive left length3311, right001). It then applies the same guarded core/terminal/epoch rules and the one generic epochs, recording all finite word transformations and compressed reservoirs without expanding huge powers. Refilling a visible prefix simply repartitions the exact concatenation of finite-word powers. At epoch181, after 10,477 trace entries including refills, the state is B(P^72 HEAD L^80 l,e) with l beginning 1. This closes the computational blank-root nonhalting argument.
 
 ## Proof status and integration
 
