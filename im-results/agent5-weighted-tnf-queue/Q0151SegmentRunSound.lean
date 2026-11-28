@@ -79,6 +79,22 @@ theorem bitRuns_sound (s : SegmentSummary) (xs : List Nat)
       rw [segAppend_append,appendClosed s n hs]
       exact ih (closeRun s n) (closeRun_last s n)
 
+theorem closedFold_images (first : Nat) (a b : Int) (rest : List Nat) :
+    closedFold ⟨runCat first,a,b,0⟩ rest =
+      ⟨runCat first,forward (runWord rest) a,
+        forward (runWord rest) b,0⟩ := by
+  induction rest generalizing a b with
+  | nil => rfl
+  | cons n ns ih =>
+      have hf : runCat first ≠ 0 := cat_pos first
+      change closedFold (closeRun ⟨runCat first,a,b,0⟩ n) ns = _
+      have hstep : closeRun ⟨runCat first,a,b,0⟩ n =
+          ⟨runCat first,dnext a (runCat n),
+            dnext b (runCat n),0⟩ := by
+        simp [closeRun,hf]
+      rw [hstep,ih]
+      rfl
+
 theorem closedFold_summary (xs : List Nat) :
     closedFold emptySegment xs =
       match xs with
@@ -89,19 +105,11 @@ theorem closedFold_summary (xs : List Nat) :
   cases xs with
   | nil => rfl
   | cons first rest =>
-      have hfirst : closeRun emptySegment first =
-          ⟨runCat first,0,1,0⟩ := by
-        rfl
-      rw [show closedFold emptySegment (first::rest) =
-        closedFold (closeRun emptySegment first) rest by rfl, hfirst]
-      induction rest generalizing first with
-      | nil => rfl
-      | cons n ns ih =>
-          -- Both closures are left folds of the same two-mode transition.
-          simp only [closedFold,List.foldl_cons,runWord,List.map_cons,
-            forward,List.foldl_cons]
-          have hf : runCat first ≠ 0 := cat_pos first
-          simpa [closeRun,hf,closedFold] using ih first
+      change closedFold (closeRun emptySegment first) rest = _
+      have hf : closeRun emptySegment first =
+          ⟨runCat first,0,1,0⟩ := by rfl
+      rw [hf, closedFold_images]
+
 
 theorem segmentBits_sound (closed : List Nat) (last : Nat) :
     segAppend emptySegment
@@ -124,6 +132,7 @@ theorem segmentBits_sound (closed : List Nat) (last : Nat) :
 #print axioms appendOnes
 #print axioms appendClosed
 #print axioms bitRuns_sound
+#print axioms closedFold_images
 #print axioms closedFold_summary
 #print axioms segmentBits_sound
 end BB6.Agent5Q0151SegmentRunSound
