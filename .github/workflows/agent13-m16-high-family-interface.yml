@@ -522,10 +522,19 @@ jobs:
               exit 2
               ;;
           esac
+          extra_roots=()
+          if [ "$M16_TARGET" = sourceM8ModConeStrict ]; then
+            mkdir -p /tmp/a43mod8
+            base64 -d im-results/agent43-c-quotient-kernel/c-cert8.tar.xz.b64 > /tmp/a43mod8/certificate.tar.xz
+            echo "8a9a54fd96c81aaffcb3c06a941cabb06fe0aaa7387b8834ef0d72fbd2acec42  /tmp/a43mod8/certificate.tar.xz" | sha256sum -c -
+            tar -xJf /tmp/a43mod8/certificate.tar.xz -C /tmp/a43mod8
+            extra_roots+=(--source-root /tmp/a43mod8)
+          fi
           python3 tools/lean_compile_closure.py \
             "$target" \
             --workdir /tmp/a43m16-root-filter \
             --source-root /tmp/a43mod16 \
+            "${extra_roots[@]}" \
             --jobs "$jobs" \
             --lean "$(command -v lean)" \
             --override CLine=im-results/agent11-c-line/CLine.lean \
