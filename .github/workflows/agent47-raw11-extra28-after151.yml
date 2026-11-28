@@ -36,6 +36,15 @@ jobs:
           name: raw11-exact-299-to-151-q0root53
           path: /tmp/q0151
 
+      - name: Download accepted exact Raw11 299-to-152 predecessor
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152
+
       - name: Download accepted root53 parent object
         uses: actions/download-artifact@v4
         with:
@@ -102,7 +111,7 @@ jobs:
               *":$dir:"*) ;;
               *) LEAN_PATH="$LEAN_PATH:$dir" ;;
             esac
-          done < <(find /tmp/deps /tmp/q0151 /tmp/root53 /tmp/extra28-eight /tmp/extra28-four                     -type f -name '*.olean' | sort)
+          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53 /tmp/extra28-eight /tmp/extra28-four                     -type f -name '*.olean' | sort)
           export LEAN_PATH
 
           lean -j1 -o /tmp/build/Raw11Extra28AllChildren.olean             im-results/agent44-raw11-extra28/Raw11Extra28AllChildren.lean
