@@ -143,17 +143,16 @@ theorem countB_refine (w : List Bool) :
   induction w with
   | nil => rfl
   | cons a w ih =>
-      cases a <;>
-        simp [refine, refineLetter, countB, List.count_append, ih] <;> omega
+      rw [refine_cons, countB_append, ih]
+      cases a <;> simp [refineLetter, countB] <;> omega
 
 theorem countC_refine (w : List Bool) :
     countC (refine w) = countB w + countC w := by
   induction w with
   | nil => rfl
   | cons a w ih =>
-      cases a <;>
-        simp [refine, refineLetter, countB, countC, List.count_append, ih] <;>
-        omega
+      rw [refine_cons, countC_append, ih]
+      cases a <;> simp [refineLetter, countB, countC] <;> omega
 
 theorem rootHits_counts (n : Nat) :
     countB (rootHits n) = 2^(n+1) ∧
@@ -173,13 +172,15 @@ theorem rootHits_lowCost (n : Nat) :
   unfold lowCost
   rw [hb,hc]
   simp [Nat.pow_succ]
-  ring
+  omega
 
 theorem rootHits_nonempty (n : Nat) : rootHits n ≠ [] := by
   intro h
   have hc := (rootHits_counts n).1
   rw [h] at hc
   simp [countB] at hc
+  have hp : 0 < 2^(n+1) := Nat.pow_pos (by omega)
+  omega
 
 /-- The complete rank-labelled epoch is stack-safe against a root runway whose
     size is exactly the checkpoint displacement.  Every nested finite frame
