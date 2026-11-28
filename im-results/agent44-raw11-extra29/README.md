@@ -1,8 +1,8 @@
-# Extra29: complete computational candidate at weighted bound 886
+# Extra29: kernel proof route for an existing computational candidate (bound 886)
 
 Exact Raw11 extra roster index 29: `1RB0LB_1RC1LC_0LA0RD_------_------_------`.
 
-A normalized six-hole search using Agent5's coarse scanner reached 186,373 nodes: 137,896 side-cycle certificates, 2,411 bank automata, 1,877 standard FAR witnesses, 7,767 splits, 36,417 last-hole checks, and five previously open leaves. No capped leaves. Extended FAR independently found finite certificates for all five; their exact parameters and geometry are retained in scan.cjs. After substitution the expected FAR count is 1,882 with zero open leaves. The bound 886 is the scanner's weighted bound. **This is computational discovery, not yet a Lean-accepted parent Cover.**
+A normalized six-hole search using Agent5's coarse scanner reached 186,373 nodes: 137,896 side-cycle certificates, 2,411 bank automata, 1,877 standard FAR witnesses, 7,767 splits, 36,417 last-hole checks, and five leaves unresolved by the shallow scanner. No capped leaves. Extended FAR independently found finite certificates for all five; their exact parameters and geometry are retained in scan.cjs. After substitution the expected FAR count is 1,882 with zero open leaves. The bound 886 is the scanner's weighted bound. **Important provenance correction:** Agent5's earlier frozen six-hole discovery run 45896597080 already classified all five exceptional leaves of Extra29, as well as Extra24 and Extra30. Our reconstruction is not a new computational closure. The actual new work is a local source-level CachedPhaseTree/splitFast proof, in progress. It is not yet a Lean-accepted parent Cover.
 
 Reproduce from repository root:
 ```sh
