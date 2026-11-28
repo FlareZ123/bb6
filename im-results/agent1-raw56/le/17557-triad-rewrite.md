@@ -147,14 +147,19 @@ On the right, for
 - later nonfinal 1-runs double, later zero-runs map `z -> 2*z+1`;
 - the final 1-run maps `a -> 2*a+1`.
 
-On the left, every 1-run doubles. Every observed zero-run except the fixed
-anchor `3` has a unique representation
+On the left, every 1-run doubles. The deeper audit shows that the earlier
+four-residue description was too narrow. The correct finite-checked zero-run
+map is defined for every nonnegative `z`: write `z=8*q+r` with
+`0 <= r < 8`, then
 
 ```
-z = 8*q + s,   s in {-1,0,1,2},
+rhoZero(z) = 16*q+r       if r <= 6
+rhoZero(z) = 16*q+15      if r = 7.
 ```
 
-and maps to `16*q+s`; the anchor `3` remains `3`.
+The second line is equivalently the signed residue `-1` convention. This
+universal residue map agrees with every corresponding left zero-run checked
+through the 7→8 level lift.
 
 This map sends the checkpoint tape in `C_n` exactly to the checkpoint tape
 in `C_(n+1)`: the three right 1-run lengths transform as
@@ -172,136 +177,85 @@ rho ∘ A = (A B A) ∘ rho
 rho ∘ B = (B B A) ∘ rho
 ```
 
-at every reachable lower-level boundary in those epochs. This is exactly the
-same substitution `sigma(A)=ABA, sigma(B)=BBA` seen in the branch word.
-`analyze_17557_renorm.py` reproduces the literal primitive-step audit and
-checks the level map on every corresponding triad boundary through level 7.
+at every corresponding lower-level boundary through the 7→8 audit. This is
+exactly the same substitution `sigma(A)=ABA, sigma(B)=BBA` seen in the
+branch word. `analyze_17557_renorm.py` reproduces this literal
+primitive-step check.
 
 ## Algebraic reduction of the conjugacy
 
-The exact triad formulas reduce the two conjugacy identities to elementary
-run-length identities; no long primitive trace is needed once the symbolic
-domain is fixed.
+The exact triad formulas still reduce the semantic conjugacy to elementary
+run-length identities, but the residue **role** of a zero-run is part of the
+remaining invariant.
 
-For a normal A-triad, the lower second 1-run has
-`b in {13,29,61,125,...}`. After level raising it is `2*b+3`.
-The high-level sequence is therefore:
-
-```
-A:  left zero runway becomes 2*b-3
-B:  the runway becomes       2*b-10
-A:  boundary b=5 consumes one more zero, leaving 2*b-11.
-```
-
-The lower A-triad leaves a zero runway `b-6`; hence the left-side part of
-`rho∘A = ABA∘rho` is exactly
+For a normal A-triad, the lower second 1-run in the observed family is
+`b in {13,29,61,125,...}`. The high sequence is `ABA`, and the three
+high macros leave a left zero runway of `2*b-11`. The lower A-triad leaves
+`b-6`, so this part of conjugacy reduces to
 
 ```
 rhoZero(b-6) = 2*b-11.
 ```
 
-For the reachable family `b-6 in {7,23,55,119,...}`, this follows directly
-from the signed-residue rule. On the right, the same three high triads give
-
-```
-1^6 0 1^(rho(c)+13) 0^(rho(z)-6) ...
-```
-
-which is exactly `rho` of the lower result
-`1^2 0 1^(c+5) 0^(z-2) ...`; the final/nonfinal 1-run cases agree
-separately with the right-run rules.
+For these normal-A values, `b-6 ≡ 7 (mod 8)`, and the universal residue map
+proves the identity immediately.
 
 For a B-triad with left zero runway `ell`, the high sequence `BBA`
-removes `7+7+1=15` zeros. The lower B-triad removes 7, so its left-side
-conjugacy is exactly
+removes `7+7+1=15` zeros. The lower B-triad removes 7, so the left equality
+is
 
 ```
-rhoZero(ell-7) = rhoZero(ell) - 15.
+rhoZero(ell-7) = rhoZero(ell)-15.
 ```
 
-Every finite `ell` seen in the reachable family satisfies this identity.
-The right side after `BBA` is
+This identity is **not** true for arbitrary `ell`; for example the residue-6
+class is exceptional. It holds for every B-role runway in the checked orbit
+through level 8. Proving that B-role runways remain in the allowed residue
+subset is therefore an explicit part of the missing symbolic-domain theorem.
 
-```
-1^6 0 1^13 0^(2*a-3) 1^(rho(b)+3) ...
-```
-
-and this is exactly the right-run renormalization of the lower B result
-
-```
-1^2 0 1^5 0^(a-1) 1^(b+3) ...
-```
-
-including the terminal/nonterminal case for the `b` block.
-
-Finally, when the lower A-triad is the carry case `b=5`, the raised
-configuration has second block 13. Its first high A is normal, the following
-B exhausts the generated seven-zero runway, and the last high A is the
-`b=5` carry. If the lower left begins `1^d 0^ell L`, the two adjacent
-raised 1-runs merge to length `2*d+2*a+4`; the carry therefore emits a
-first right block of length
+For the A carry case `b=5`, if the lower left begins
+`1^d 0^ell L`, the raised configuration first executes normal A, then B,
+then the `b=5` carry. The merged high left 1-run has length
+`2*d+2*a+4`, so the emitted first right block is
 
 ```
 2*d + 2*a + 10 = 2*(d+a+4)+2,
 ```
 
 exactly the first-run rule applied to the lower carry output. The remaining
-left equality is the one-cell identity
+left equality is
 
 ```
-rhoZero(ell-1) = rhoZero(ell)-1,
+rhoZero(ell-1) = rhoZero(ell)-1.
 ```
 
-which holds on the finite reachable zero-run classes (with the all-blank tail
-handled as the obvious infinite-zero case).
+This too is role-sensitive rather than universal: residue 7 is exceptional,
+while every carry-role runway in the checked orbit satisfies it.
 
-The zero-run arithmetic is itself finite-state. Introduce the four classes
-
-```
-Z[-1](q) = 8*q-1   (q >= 1)
-Z[ 0](q) = 8*q
-Z[ 1](q) = 8*q+1
-Z[ 2](q) = 8*q+2
-```
-
-together with the anchor `3`. Then `rhoZero` simply doubles the class
-parameter:
+The right-side algebra is generic once terminal versus nonterminal final
+1-runs is tracked. For normal A, the three high macros produce
 
 ```
-rhoZero(Z[s](q)) = Z[s](2*q).
+1^6 0 1^(rho(c)+13) 0^(rho(z)-6) ...
 ```
 
-The B-triad's subtraction by seven cycles exactly through the classes needed
-by its reachable left runway:
+which is the right-run renormalization of
+`1^2 0 1^(c+5) 0^(z-2) ...`. For B, `BBA` produces
 
 ```
-Z[-1](q)-7 = Z[0](q-1)
-Z[ 0](q)-7 = Z[1](q-1)
-Z[ 1](q)-7 = Z[2](q-1)
-Z[ 2](1)-7 = 3.
+1^6 0 1^13 0^(2*a-3) 1^(rho(b)+3) ...
 ```
 
-Consequently `rhoZero(ell-7)=rhoZero(ell)-15` is immediate in every B case.
+which is the renormalization of
+`1^2 0 1^5 0^(a-1) 1^(b+3) ...`; terminal and nonterminal cases agree
+separately.
 
-The A carry's subtraction by one similarly cycles
-
-```
-Z[0](q)-1 = Z[-1](q)
-Z[1](q)-1 = Z[0](q)
-Z[2](q)-1 = Z[1](q),
-```
-
-with anchors `3->2` and `1->0` (where 0 means the run disappears into the
-blank tail). Hence `rhoZero(ell-1)=rhoZero(ell)-1` is immediate in every
-carry case. The normal-A runway is always in `Z[-1]`
-(`b-6 = 7,23,55,119,...`), giving
-`rhoZero(b-6)=2*b-11`.
-
-Thus the entire **left side** of both conjugacy identities is closed by a
-five-state arithmetic grammar: four signed residues plus the anchor 3. The
-remaining symbolic-domain work is to package the right alternating-run
-shape, terminal/nonterminal final-block flag, and these left classes into a
-single invariant and check that the exact A/B triad rewrites preserve it.
+So the remaining infinite proof is now sharply stated: define a finite
+**role grammar** for left zero-runs (normal-A, B-runway, A-carry) plus the
+right alternating-run/terminal flag, prove those roles are preserved by the
+exact triad rewrites and by `rho`, and then apply the two conjugacy
+identities. The universal `rhoZero` formula is fixed; what remains is the
+role-residue invariant, not the level map itself.
 
 ## Remaining proof obligation
 
