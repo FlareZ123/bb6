@@ -16,6 +16,7 @@ on:
           - self-embedding
           - computer-certificate
           - root-scout
+          - root-generate
           - blank-root
           - cover-bridge
         default: paired
@@ -30,7 +31,7 @@ jobs:
         if: ${{ inputs.target == 'computer-certificate' }}
         run: python3 im-results/agent2-f197-sweep/verify_nonhalt.py
       - name: Install pinned Lean 4.36.0-rc2
-        if: ${{ inputs.target != 'computer-certificate' }}
+        if: ${{ inputs.target != 'computer-certificate' && inputs.target != 'root-scout' && inputs.target != 'root-generate' }}
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -173,3 +174,22 @@ jobs:
       - name: Find earliest stronger F197 root-cylinder entrance
         if: ${{ inputs.target == 'root-scout' }}
         run: python3 im-results/agent2-f197-sweep/root_scout.py
+
+      - name: Validate optimized F197 root Lean source generator
+        if: ${{ inputs.target == 'root-generate' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          e=im-results/agent2-f197-sweep
+          b="$RUNNER_TEMP/f197-root-generator"
+          mkdir -p "$b"
+          python3 "$e/generate_lean_trace.py" "$b"
+          python3 "$e/generate_packed_banks.py" "$b"
+          python3 "$e/generate_root_trace.py" "$b"
+          echo "Source modules:"
+          find "$b" -maxdepth 1 -name 'Root*.lean' | wc -l
+          echo "Independent bank modules:"
+          find "$b" -maxdepth 1 -name 'RootBank*.lean' | wc -l
+          echo "Root parts:"
+          find "$b" -maxdepth 1 -name 'RootPart*.lean' | wc -l
+          test -s "$b/RootTheorem.lean"
