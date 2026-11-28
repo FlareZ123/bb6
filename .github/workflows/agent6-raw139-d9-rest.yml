@@ -54,7 +54,7 @@ jobs:
           root="$work/d9c$CODE"
           ns="D9C$CODE"
           python3 "$pipe/discover.py" 9 "$CODE" "$root"
-          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" 8 "$ns"
+          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" 2 "$ns"
           python3 - "$root/certs.jsonl" "$root/alt.in" <<'PY'
           import json,sys
           src,dst=sys.argv[1:]
