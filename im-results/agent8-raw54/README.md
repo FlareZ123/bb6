@@ -17,6 +17,15 @@ The 0LE artifact SHA256 is `766b74af87a0dfd06f46ba1aed87e82ecf45f7873c79868c607e
 
 The remaining twelve non-cycle children outside the eight accepted child bounds are 0LA, 0LB, 0LF, 1LA, 1LB, 1LC, 1LE, 1LF, 1RA, 1RB, 1RD, 1RF. E1=1RC is now source-accepted: repair run 46122232071 compiled the interrupted shard by subdivision, assembled all source slices, and kernel-checked the exact bound 1847. The historical sub-child dossier below predates the successful 0LE assembly; its older pending flags are superseded by that accepted parent certificate.
 
+## Canonical40 integration and E1=1RD frontier
+
+Raw54's literal parent is now independently authenticated against the accepted Canonical40 source closure. [Raw54Canonical40Membership.lean](Raw54Canonical40Membership.lean) was checked in [run 46129894481](https://github.com/FlareZ123/bb6/actions/runs/46129894481): `BB6.Agent8Raw54Canonical40Membership.parent_present` proves the literal table occurs **exactly once** in `BB6.Agent31Canonical40Extra57.roster40`, with axioms `[propext, Classical.choice, Quot.sound]`. Artifact `raw54-canonical40-membership` is ID **15257508986**, SHA-256 `5edacc9a707f9026d33a488d3d00281c1584707e72a5e6f8a64751adcd7f116c`. Thus a future accepted Raw54 parent Cover has an exact source-level route into the current global Canonical40 theorem; the Cover itself is still open.
+
+For E1=1RD, [Raw54OneRDBankAudit.lean](Raw54OneRDBankAudit.lean) introduces a compact source replay in which each FAR-pruned node stores only the index of its exact source-derived DFA and Lean reruns `FAR.fastTryDfa`. [Run 46130067326](https://github.com/FlareZ123/bb6/actions/runs/46130067326) source-accepted `farSpecCheck_sound`, `bankSound`, and `bankClose` with the standard axiom profile. The generic cut preserves every unresolved cylinder explicitly and proves that Covers of those residuals compose back into the 1RD parent.
+
+The first generated 1RD discovery artifact has **671** explicit residual cylinders after the 169-DFA FAR bank, with physical completion mass **24,575**. A deeper first-unknown pass through the Raw54 threshold 39,447 resolved 14 one-hole cylinders (maximum new first-hole hit 25,748; maximum checked score 25,749) and left 657 cylinders / mass 24,225. This is computational discovery only until incorporated into the source replay. The dominant residual behavior therefore avoids its remaining transition for tens of thousands of steps; the active next attack is exact long-period side-cycle detection rather than further shallow splitting.
+
+
 ---
 
 # Raw54 E1=0LE, E0=1LB: five-hole child reduction
