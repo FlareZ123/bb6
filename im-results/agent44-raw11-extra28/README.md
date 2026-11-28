@@ -31,9 +31,13 @@ source-accepted at exact **299→149** after q0-root53, Extra28 and Extra140
   into the unchanged generated parent DAG compiles all five reverse
   dependencies through **`BB6.Agent5Raw11Extra132.cover`**, again with the
   same standard axiom profile and no `sorryAx` or `native_decide`.
-  Source replay is running as **CI 46163290235** through the resumable parent
-  workflow. Count Extra132 as source accepted only if that run reaches and
-  audits the top theorem.
+  Source replay **CI 46163290235 succeeded** through the resumable parent
+  workflow: the packed proof plus unchanged reverse dependency chain reached
+  `BB6.Agent5Raw11Extra132.cover` with exactly
+  `[propext, Classical.choice, Quot.sound]`. Complete-parent artifact
+  **15271066058** has ZIP SHA256
+  `5392f9ae5d5177ff6fb0d3fb0aa1ae325f9225ca17042ed741160038a02d9372`.
+  Extra132 is therefore source accepted.
 
 - Reusable proof-engineering artifacts are
   `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`,
