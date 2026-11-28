@@ -76,7 +76,7 @@ theorem b_two_big_one_refines (n : Nat) (s : List Bool)
   have hact : Action.pop (rightSig decoded) ∈
       delta (co true s (1::(4*n+4)::rest)) := by
     rw [← hrequest]
-    simpa [co] using haction
+    simpa [co,mkControl] using haction
   have hmacro := b_two_big_one_source n s stack (runBits rest) hs.1
   have hp : pack (s ++ [true,true,true,false] ++
       alt (2*n+1) ++ true::runBits rest) =
