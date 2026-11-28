@@ -27,7 +27,7 @@ theorem pB1_root (mv : Move) :
 
 theorem pB1_E1_unknown (mv : Move) : pB1 mv (4,true) = none := by
   simp [pB1, fChild, fParent, fHole, refine, fP8, fP7, fP6,
-    fP5, fP4, fP3, fP2, fP1, fResidual, fRoot, emptyTable]
+    fP5, fP4, fP3, fP2, fP1, fResidual, fRoot, emptyTable] <;> decide
 
 /-- A finite 30-step first-hole certificate suffices for every ordinary
     or halting completion. Ordinary completions are total and have no
