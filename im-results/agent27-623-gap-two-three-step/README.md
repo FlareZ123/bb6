@@ -133,3 +133,11 @@ does **not** establish all-time avoidance. The end-to-end target
 compiles the full original-source dependency chain and the three new modules;
 source CI is pending. Do not cite the eight-ray theorem as accepted until
 that run succeeds.
+
+
+The generic coupled transport now carries an explicit source-positivity
+hypothesis \`0<u\`. This is not redundant with the current \`OrdinaryStep\`
+inductive: its \`oddNear\` constructor does not itself encode positivity,
+while the weighted drain identity uses \`u-1\`. The physical blank-root
+bridge supplies \`0<u\` from the transported positive minimum; the
+conditional generic lemmas do not silently assume it.
