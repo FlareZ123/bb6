@@ -77,6 +77,26 @@ def read(path: Path) -> dict[str,list[tuple]]:
         raise ValueError(f"expected {EXPECTED_CYCLES}/{EXPECTED_LAST} cycles/last; got {len(cycles)}/{len(lasts)}")
     return {"cycle": cycles, "last": lasts}
 
+
+def read_extended(path: Path) -> list[tuple[str,int,int]]:
+    expected = {
+        ("1RB0RF_1RC0RA_0RD1RB_1LD0LE_1LA1RD_---0LA", 87079, 10),
+        ("1RB1RF_1RC0RA_0RD1RB_1LD0LE_1LA1RD_---0LC", 87079, 10),
+        ("1RB1RF_1RC0RA_0RD1RB_1LD0LE_1LA1RD_---1RC", 69753, 10),
+    }
+    lines = [x.split("\\t") for x in path.read_text().splitlines() if x.strip()]
+    records = [(code, int(n), int(slot)) for code,n,slot in lines]
+    if set(records) != expected or len(records) != 3:
+        raise ValueError(f"extended ledger does not match pinned discovery: {records}")
+    parent = parse(PARENT)
+    for code,n,slot in records:
+        a = parse(code)
+        if any(v != "---" and v != a[i] for i,v in enumerate(parent)):
+            raise ValueError(f"not 1RD refinement: {code}")
+        if a[slot] != "---" or n < 39447:
+            raise ValueError((code,n,slot))
+    return records
+
 def render(i:int, c:tuple, kind:str) -> str:
     if kind == "cycle":
         spec,e,k,right,b = c
@@ -87,8 +107,8 @@ def render(i:int, c:tuple, kind:str) -> str:
     else:
         spec,n,s = c
         audit = f".last {n} ({s//2},{str(bool(s%2)).lower()})"
-        bound = 39447
-        ns = f"OneRDLast{i:02d}"
+        bound = 100000 if kind == "extended" else 39447
+        ns = f"OneRDExtended{i:02d}" if kind == "extended" else f"OneRDLast{i:02d}"
         desc = "Every compatible machine reaches the final unassigned slot before the bound."
     return f"""import Raw54OneRDBankAudit
 set_option maxRecDepth 100000
@@ -127,15 +147,15 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("lasso",type=Path)
     ap.add_argument("out",type=Path)
-    ap.add_argument("--kind",choices=["cycle","last"],default="cycle")
+    ap.add_argument("--kind",choices=["cycle","last","extended"],default="cycle")
     ap.add_argument("--index",type=int,required=True)
     args=ap.parse_args()
-    cases=read(args.lasso)[args.kind]
+    cases=read_extended(args.lasso) if args.kind == "extended" else read(args.lasso)[args.kind]
     i=args.index
     if not 0 <= i < len(cases):
         raise ValueError(i)
     args.out.mkdir(parents=True,exist_ok=True)
-    ns = "Lasso" if args.kind == "cycle" else "Last"
+    ns = "Lasso" if args.kind == "cycle" else ("Extended" if args.kind == "extended" else "Last")
     path=args.out/f"Raw54OneRD{ns}{i:02d}.lean"
     path.write_text(render(i,cases[i],args.kind))
     print(f"kind={args.kind} index={i} record={cases[i]}")
