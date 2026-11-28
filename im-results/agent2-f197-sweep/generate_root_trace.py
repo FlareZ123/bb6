@@ -58,9 +58,10 @@ if GENERIC_CUT:
     assert x['w'].startswith(v.M+v.GEN[1]['src']), (x['n'],x['w'][:80])
     assert int(x['n'])==2*(2*q+2)+1, (x['n'],q)
     GENERIC_INFO={'index':ix,'q':q,'Y':x['w'][len(v.M+v.GEN[1]['src']):]}
+    total=len(D['trace'])
     D['trace']=D['trace'][:ix]
     D['end']={'n':x['n'],'w':x['w'],'rope':x['rope']}
-    print('GENERIC SHORTCUT prefix rows',ix,'original rows',len(v.root_trace()['trace']),'q',q,flush=True)
+    print('GENERIC SHORTCUT prefix rows',ix,'original rows',total,'q',q,flush=True)
 seeds=seed_rows(D['seed']);rows=[];r=[]
 for x in D['trace']:
     if x.get('kind')=='refill':
