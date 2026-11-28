@@ -16,6 +16,7 @@ on:
           - recover
           - parent-diagnose
           - recover-split
+          - consumer-conditional
           - complete
           - complete-min
           - complete-hybrid
@@ -1245,4 +1246,106 @@ jobs:
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.olean
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.log
+          if-no-files-found: error
+
+  consumer-conditional:
+    if: ${{ inputs.target == 'consumer-conditional' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" }} "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" }} "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m42763-row-*
+          path: /tmp/block
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m42763-source-accepted
+          path: /tmp/block
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m23706-row-*
+          path: /tmp/block
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m23706_run }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m23706-source-accepted
+          path: /tmp/block
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m23706_run }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m39232-minimized-single-source-accepted
+          path: /tmp/min
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.m39232_run }}
+      - name: Compose authentic six-machine nonhalting proof from explicit parent premise
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/conditional
+          cp im-results/agent4-two-sided-automata/{TwoSidedAutomata,TwoSidedChunks}.lean /tmp/conditional/
+          cp im-results/agent4-raw56-root-pilot/{M21049,M3923Pair,M39234,M39233}.lean /tmp/conditional/
+          cp /tmp/raw56-pilot-prep/E11LB/Raw56LBE11LBBase.lean /tmp/conditional/
+          cp /tmp/block/M*.lean /tmp/conditional/
+          cp /tmp/block/M*.olean /tmp/conditional/
+          cp /tmp/min/M*.lean /tmp/conditional/
+          cp /tmp/min/M*.olean /tmp/conditional/
+          python im-results/agent4-raw56-root-pilot/gen_lb_conditional_consumer.py --prep /tmp/raw56-pilot-prep --out /tmp/conditional/Raw56LBConditionalHybrid.lean
+          cd /tmp/conditional
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:/tmp/raw56-pilot-prep:/tmp/raw56-pilot-prep/E11LB:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o Raw56LBE11LBBase.olean Raw56LBE11LBBase.lean
+          for ID in 42763 23706; do
+            test -s "M${ID}Final.olean"
+            lean -j1 -o "M${ID}Data.olean" "M${ID}Data.lean"
+            lean -j1 -o "M${ID}Base.olean" "M${ID}Base.lean"
+          done
+          lean -j1 -o M21049.olean M21049.lean
+          lean -j1 -o M3923Pair.olean M3923Pair.lean
+          lean -j1 -o M39234.olean M39234.lean
+          lean -j1 -o M39233.olean M39233.lean
+          lean -j1 -o Raw56LBConditionalHybrid.olean Raw56LBConditionalHybrid.lean | tee Raw56LBConditionalHybrid.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" Raw56LBConditionalHybrid.log --require BB6.Agent4Raw56LB.E11LB.all_quotient --require BB6.Agent4Raw56LB.E11LB.all
+          test -s Raw56LBConditionalHybrid.olean
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-conditional-six-source-accepted
+          path: |
+            /tmp/conditional/Raw56LBConditionalHybrid.lean
+            /tmp/conditional/Raw56LBConditionalHybrid.olean
+            /tmp/conditional/Raw56LBConditionalHybrid.log
           if-no-files-found: error
