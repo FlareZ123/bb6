@@ -73,7 +73,22 @@ In nearest-first zipper notation let `D(b)=101b`, `O=1111`, `T=0111`, `G(b,L,n)=
 - G(1,D(b)L,n) → G(b,L,n+1), and G(1,101,n) → Z(n+1), in 14 steps.
 - G(1,[],n+1) → G(0,D(0)^(n+1)101,0), in 8n+40 steps.
 
-The rules are proved using arbitrary-tail fixed primitive segments and `sweepR`, not sampled induction. Positive-cost invariant closure yields arbitrarily long live prefixes; `zrun_sound` transports them to every compatible original machine. This eliminates one of the six candidate residuals; five remain (23706, 39232, 39233, 39234, 42763). No parent decrement is claimed until a checked consumer discharges the precise complement.
+The rules are proved using arbitrary-tail fixed primitive segments and `sweepR`, not sampled induction. Positive-cost invariant closure yields arbitrarily long live prefixes; `zrun_sound` transports them to every compatible original machine. This eliminates one of the six candidate residuals. Two further closures are given below. No parent decrement is claimed until a checked consumer discharges the precise complement.
+
+### M39234 and M39233: four-phase stack invariant and exact stuttering equivalence
+
+M39234 (`1RB1RA_1RC0LB_0RD1RF_1LD1LE_1RC1LB_---0RA`) is universally nonhalting. In C with scanned 0 and exactly one 1 to the left, encode the right word including the scanned cell as pairs (a,b) denoting 0^a 1^b. Let P_n=(2,8)(6,4)(2,4)^n, q=4(k+1), and S be any finite sequence of pairs (4(a+1),4(b+1)). The four phases are G0 = P_n (6,4)(7,q) S; G1 = P_n (2,8)(2,4)(7,q) S; G2 = P_n (6,8)(3,q) S; G3 = P_n (2,8)(2,8)(3,q) S. Blank entry is G0(5,0,[]) at 1533 primitive steps. G0→G1 costs 166+16n; G1→G2(n+2) costs 206+16n; G2→G3 costs 166+16n. G3→G0(n+2,k',S') costs 234+16n when k=0 and 242+16n+8m when k=m+1. In offset coordinates (a,b) for S the six exact cases are:
+
+| k | S | (k', S') |
+|---|---|---|
+| 0 | [] | (1,[]) |
+| m+1 | [] | (0,[(m,0)]) |
+| 0 | (0,b)::T | (b+2,T) |
+| m+1 | (0,b)::T | (0,(m,b+1)::T) |
+| 0 | (a+1,b)::T | (1,(a,b)::T) |
+| m+1 | (a+1,b)::T | (0,(m,0)::(a,b)::T) |
+
+[M39234.lean](M39234.lean) proves the arbitrary-tail parametric identities with exact primitive segments and sweep lemmas, then closes this infinite invariant and transports it to all compatible original machines. [M3923Pair.lean](M3923Pair.lean) proves an exact stuttering equivalence with M39233 (`1RB1RA_1RC0LB_0RD1RF_1LD1LE_0RE1LB_---0RA`): on entry to E, the right neighbor is always 1, and the short E0 transition equals the long sequence E0,E1,B0 in three primitive steps. Every other step agrees. Positive-cost simulation, preservation and the halt-fill original-semantics bridge give an iff between universal nonhalting Covers. [M39233.lean](M39233.lean) transfers the M39234 theorem. All three sources compiled locally against accepted artifact 15160313745 under Lean 4.36.0-rc2; the exported Cover and equivalence theorems print only [propext, Quot.sound]. Build pair, then M39234, then M39233, with the current directory and accepted closure on LEAN_PATH. SHA256: pair e4472541fe10c20a19798024b4fd311358f9d486ee85f225eba64a1010c50cc7; M39234 250b14e0d94281a324905edd341c090a663b0942e9167436da2999aa0f039861; M39233 6b65abc7f72ac91e80b0514febdb03295e75e20e17aa8d388fdd3f9add63a697. Three residuals remain: M23706, M39232, M42763. No parent decrement until an exact consumer is accepted.
 
 ## Reusable advances
 
