@@ -43,6 +43,38 @@ theorem rho_a_normal (b : Nat) (h6 : 6 ≤ b) (hr : b % 8 = 5) :
   unfold rhoZero
   split <;> omega
 
+
+/-- An unmarked residue-6 B runway creates exactly one eight-cell defect. -/
+theorem rho_b_creates_defect (ell : Nat) (h7 : 7 ≤ ell) (h6 : ell % 8 = 6) :
+    rhoZero ell - 15 = rhoZero (ell - 7) - 8 := by
+  unfold rhoZero
+  split <;> split <;> omega
+
+/-- Away from residue 6, an existing marked B runway keeps the same defect.
+    The lower bound is the semantic regime in which the marked high runway
+    supports both initial B macros. -/
+theorem rho_b_preserves_defect (ell : Nat) (h15 : 15 ≤ ell)
+    (h6 : ell % 8 ≠ 6) :
+    (rhoZero ell - 8) - 15 = rhoZero (ell - 7) - 8 := by
+  unfold rhoZero
+  split <;> split <;> omega
+
+/-- A marked residue-7 carry cancels the eight-cell defect exactly. -/
+theorem rho_c_cancels_defect (ell : Nat) (h7min : 7 ≤ ell)
+    (h7 : ell % 8 = 7) :
+    (rhoZero ell - 8) - 1 = rhoZero (ell - 1) := by
+  unfold rhoZero
+  simp only [h7, ↓reduceIte]
+  split <;> omega
+
+/-- A marked nonexceptional carry preserves the same eight-cell defect. -/
+theorem rho_c_preserves_defect (ell : Nat) (h8 : 8 ≤ ell)
+    (h7 : ell % 8 ≠ 7) :
+    (rhoZero ell - 8) - 1 = rhoZero (ell - 1) - 8 := by
+  unfold rhoZero
+  simp only [h7, ↓reduceIte]
+  split <;> omega
+
 /-- Exact characterization of the B obstruction. -/
 theorem rho_b_identity_iff (ell : Nat) (h7 : 7 ≤ ell) :
     (rhoZero (ell - 7) + 15 = rhoZero ell) ↔ ell % 8 ≠ 6 := by
@@ -66,6 +98,10 @@ theorem rho_marked_positive (z : Nat) (h7 : 7 ≤ z) : 8 ≤ rhoZero z := by
 #print axioms rho_c_regular
 #print axioms rho_c_exception
 #print axioms rho_a_normal
+#print axioms rho_b_creates_defect
+#print axioms rho_b_preserves_defect
+#print axioms rho_c_cancels_defect
+#print axioms rho_c_preserves_defect
 #print axioms rho_b_identity_iff
 #print axioms rho_c_identity_iff
 #print axioms rho_marked_positive
