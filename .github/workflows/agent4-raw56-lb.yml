@@ -17,10 +17,14 @@ permissions:
   actions: read
 
 jobs:
-  m42763:
+  m42763-rows:
     if: ${{ inputs.target == 'm42763' }}
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 25
+    strategy:
+      fail-fast: false
+      matrix:
+        row: ['0f','0t','1f','1t','2f','2t','3f','3t','4f','4t','5f','5t']
     steps:
       - uses: actions/checkout@v4
       - name: Install pinned Lean
@@ -37,18 +41,82 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '45912699461'
-      - name: Generate and kernel-check M42763 finite abstraction
+      - name: Kernel-check one M42763 state/symbol row in eight chunks
+        run: |
+          set -euo pipefail
+          ROW='${{ matrix.row }}'
+          mkdir -p /tmp/m42763
+          cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/m42763/
+          cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/m42763/
+          python im-results/agent4-raw56-root-pilot/m42763_split.py --out-dir /tmp/m42763
+          cd /tmp/m42763
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o M42763Data.olean M42763Data.lean
+          for R in 0 1 2 3 4 5 6 7; do
+            lean -j1 -o "M42763Chunk${ROW}_${R}.olean" "M42763Chunk${ROW}_${R}.lean"
+          done
+          lean -j1 -o "M42763Row${ROW}.olean" "M42763Row${ROW}.lean" | tee "M42763Row${ROW}.log"
+          grep -F "row${ROW}" "M42763Row${ROW}.log"
+          if grep -Eq 'native_decide|sorryAx|admit' "M42763Row${ROW}.log"; then
+            echo "non-kernel proof dependency found" >&2
+            exit 1
+          fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-m42763-row-${{ matrix.row }}
+          path: |
+            /tmp/m42763/M42763Chunk${{ matrix.row }}_*.olean
+            /tmp/m42763/M42763Row${{ matrix.row }}.olean
+            /tmp/m42763/M42763Row${{ matrix.row }}.log
+          if-no-files-found: error
+
+  m42763-final:
+    if: ${{ inputs.target == 'm42763' }}
+    needs: m42763-rows
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Generate exact sharded source
         run: |
           set -euo pipefail
           mkdir -p /tmp/m42763
           cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/m42763/
-          python im-results/agent4-raw56-root-pilot/m42763_block_cert.py --out /tmp/m42763/M42763Block.lean
+          cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/m42763/
+          python im-results/agent4-raw56-root-pilot/m42763_split.py --out-dir /tmp/m42763
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m42763-row-*
+          path: /tmp/m42763
+          merge-multiple: true
+      - name: Assemble kernel-checked M42763 theorem and strict axiom gate
+        run: |
+          set -euo pipefail
           cd /tmp/m42763
           export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
           lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
-          lean -j1 -o M42763Block.olean M42763Block.lean | tee M42763Block.log
-          grep -F "M42763.never" M42763Block.log
-          if grep -Eq 'native_decide|sorryAx|admit' M42763Block.log; then
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o M42763Data.olean M42763Data.lean
+          lean -j1 -o M42763Base.olean M42763Base.lean | tee M42763Base.log
+          lean -j1 -o M42763Final.olean M42763Final.lean | tee M42763Final.log
+          grep -F "M42763.never" M42763Final.log
+          if grep -Eq 'native_decide|sorryAx|admit' M42763Final.log; then
             echo "non-kernel proof dependency found" >&2
             exit 1
           fi
@@ -56,9 +124,10 @@ jobs:
         with:
           name: raw56-lb-m42763-source-accepted
           path: |
-            /tmp/m42763/M42763Block.lean
-            /tmp/m42763/M42763Block.olean
-            /tmp/m42763/M42763Block.log
+            /tmp/m42763/*.lean
+            /tmp/m42763/M42763Final.olean
+            /tmp/m42763/M42763Base.log
+            /tmp/m42763/M42763Final.log
           if-no-files-found: error
 
   prepare:
