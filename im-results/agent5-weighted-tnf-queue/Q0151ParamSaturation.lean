@@ -121,9 +121,15 @@ theorem two_zero_repair_positive (s : SegmentSummary)
   have hstart := segAppend_lower s hN hP
     [true,true,true,false]
   simp only [List.append_assoc]
-  rw [segAppend_append,segAppend_append]
-  exact alt_positive (segAppend s [true,true,true,false])
-    (2*a-1) (by omega) tail hstart.1 hstart.2
+  calc
+    segAppend s ([true,true,true,false] ++ (altWord (2*a-1) ++ tail)) =
+        segAppend (segAppend s [true,true,true,false]) (altWord (2*a-1) ++ tail) :=
+      segAppend_append s [true,true,true,false] _
+    _ = segAppend (segAppend s [true,true,true,false]) (altWord 1 ++ tail) :=
+      alt_positive (segAppend s [true,true,true,false]) (2*a-1) (by omega) tail
+        hstart.1 hstart.2
+    _ = segAppend s ([true,true,true,false] ++ (altWord 1 ++ tail)) :=
+      (segAppend_append s [true,true,true,false] _).symm
 
 #print axioms segClosed_lower
 #print axioms segAppend_lower
