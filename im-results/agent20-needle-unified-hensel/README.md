@@ -82,3 +82,20 @@ The apparently heterogeneous modular targets \(C_k\) of the individual reports a
 ## Implication for research strategy
 
 The existence of arbitrarily deep legitimate *prepared* predecessors invalidates any proposed universal bounded-depth sieve whose final argument is only that every terminal cancellation feeder has bounded reverse depth. It does **not** rule out a sieve using root invariants, reachability restrictions, or additional mixed valuations. For authentic BB(6), the mathematical frontier is an **original blank-root-sensitive** obstruction (or positive halt proof), not further finite predecessor searches. The new [source-accepted Space Needle Raw10 Box0 bridge](../agent20-needle-raw10-routing/README.md) identifies the precise weighted original-root obligation that any breakthrough must discharge.
+
+
+## Source-kernel acceptance (28 November 2026 UTC)
+
+The abstract arithmetic invariant and its **uniform original-source for every valuation w≥2** have now passed the complete pinned Cryptids original-source Lean kernel gate **[run 46085435892](https://github.com/FlareZ123/bb6/actions/runs/46085435892)**. The workflow pinned Cryptids \`ced8f9f44f67a167d5ecc03e687b048c67926371\` and Lean 4.35.0-rc4; it compiled the unchanged original six-state Space Needle module and Agent48's original-source \`SpaceNeedleClosed\` before the new files \`IndexPotential.lean\` and \`SpaceNeedlePotentialSource.lean\`. The theorem
+\[
+\texttt{allValuationsSource}:\
+\quad \forall w\ge2,\ \texttt{SourceChain}\ w\ k\ e\ f\
+\Longrightarrow\ (2^{w+1}+3)^k\mid 3(e+2)+2^w(2w-3)
+\]
+is **not merely a fixed-3/4/5 specialization**: w is universally quantified in the actual source-kernel theorem. The source chain is built from the exact original \`highLevelNext (.N (oddTower q w))\` of the unchanged Cryptids module. The log reports:
+\`'BB6.Agent20NeedlePotentialSource.allValuationsSource' depends on axioms: [propext, Classical.choice, Quot.sound]\`.
+The three specialized statements report the same standard axioms. No \`sorryAx\`, \`native_decide\`, additional assumptions, or simulator-only premises are present.
+
+**Scope:** This proves necessary divisibility for any finite uniform-valuation *high-level source history* and the original source connection of the abstract invariant. It does not kernel-certify the paper-level *existence* of all-depth cancellation-feeder classes, nor prove a genuine blank-start orbit ever reaches them. The unconditional BB(6) decision remains open.
+
+Additional [valuation-six resonance dossier](../agent20-needle-six-tower/README.md) discovers 65 independent 131-adic all-depth prepared branches; the [joint-tower theorem](../agent20-needle-joint-towers/README.md) combines valuation 3/5/6 to produce, for each k, infinitely many prepared cancellation feeders with three **simultaneous** depth-k branches plus two further immediate predecessors of valuations 4/11. Both are exact paper proofs with regression scripts but remain outside the source-accepted all-depth existence set.
