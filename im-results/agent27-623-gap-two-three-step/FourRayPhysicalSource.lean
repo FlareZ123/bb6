@@ -153,7 +153,8 @@ theorem even_step_second_upper (N u v x y : Nat)
       have hy := drainB_upper_linear_log N (v+1) 2 2 x y hb hd
       simp [hzero]
       omega
-    · have hp : some (.D v 7)=some (.D x y) := by
+    · have hp : (some (HighLevelState.D v 7) : Option HighLevelState) =
+        some (HighLevelState.D x y) := by
         simpa only [highLevelNext,if_pos hzero,if_neg hv] using hs
       cases hp
       simp [hzero]
