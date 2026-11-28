@@ -73,6 +73,28 @@ A useful strengthening is that the proof does **not** need the separate
 terminal phase assumption \`d % 6 = 1\`. Source reachability plus the exact
 inverse equations already force the full modulo-24 phase.
 
+## Adaptive bit-length reformulation
+
+For the surviving family, let \(L\) be the ordinary binary bit-length of the
+root anchor \(R\). Since \(n=24k+22\), the master equation places \(R\)
+strictly between \(2^{n+2}\) and \(2^{n+3}\), so \(L=n+3\). Substitution gives
+the equivalent digital target
+\[
+  \boxed{7R+7L+15=2^{L+2}}.
+\]
+Thus the uniform root problem for this class can be stated without the suffix
+parameter \(k\): exclude source-reached second-counter-one anchors satisfying
+this exact bit-length equation. This is an elementary corollary of the
+kernel-checked master equation and the \(n=24k+22\) classification; the
+bit-length reformulation itself is recorded here as paper arithmetic rather
+than as an additional Lean theorem.
+
+This explains why fixed shallow residue sieves are structurally inadequate:
+the target carries a modulus condition of depth growing with \(L\). The next
+useful invariant should therefore track an adaptive 2-adic phase of the
+authentic root anchor, rather than enumerate a fixed modulus or continue
+one-\(k\)-at-a-time window proofs.
+
 ## Formal verification
 
 GitHub Actions run **46156483458** completed successfully under Lean
