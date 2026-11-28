@@ -49,6 +49,9 @@ def main():
  allsets=[set(far),set(sweeps),set(manual),set(cycles),set(regular)];assert sum(map(len,allsets))==len(set().union(*allsets))
  manual_imports=''.join(f'import {ns.removeprefix("BB6.Agent29")}\n' for ns in sorted(set(manual.values())))
  assert len(far)==len(evidence['far']) and len(sweeps)==len(records) and not set(far)&set(sweeps) and not (set(far)|set(sweeps))&set(manual)
+ if 'BB6.Agent29Raw36B1LBCycle' in manual.values():
+  from emit_phase0lb import generate
+  generate(out/'Raw36B1LBCycle.lean')
  regular_imports=''
  for j,(t,L,R) in enumerate(evidence.get('regular',[])):
   I=inv(t,L,R);assert I,(t,'not closed')
