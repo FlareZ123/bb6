@@ -83,3 +83,15 @@ Prefer evidence-producing closure over new local scans:
 3. source-accept `Raw42AcceptedParent.cover_global`;
 4. immediately consume that parent on authenticated Canonical37;
 5. only then move an unconditional Raw42 global decrement into `results/`.
+
+
+## Recovery continuation — 2026-11-28 17:49 UTC
+
+The three remaining first-level children are still **0LE, 1LE, 1RE**; no complete Raw42 parent Cover is claimed. The current exact-split source runs remain 0LE **46156341083**, 1LE **46157367536**, and 1RE **46157370847**.
+
+- 0LE failed exact partitions and their replacement artifacts: **g0p2** 46158197180, **g1p2** 46166673180, **g2p0** 46162741710, **g2p2** 46166458748. The remaining **g3p1**, **g3p2**, **g3p3** are being recovered by exact-part compact runs **46172473497**, **46172477421**, **46172480971**; **g4p3** Run15583 by compact-run recovery **46172255584**.
+- 1LE existing replacements: **g0p1** 46159201564, **g1p0** 46162745345, **g0p3** 46162748878. Remaining **g4p0** Run27641 is in compact-run recovery **46172225874**; **g1p2** is in exact-part compact recovery **46172484764**.
+- Agent32 owns the 1RE recovery lane; its compact exact-part replacements include **g0p0** 46165303934, **g1p0** 46165311421, **g3p0** 46165775776, **g3p1** 46165782046. Do not duplicate those repairs.
+- The 0LE run needs **eight** exact-part substitutions, exceeding the former six-slot composer. `.github/workflows/agent10-raw42-e-repaired-compose.yml` now accepts up to eight replacements (commit **03e1749865d346ccab601ab77f4f0e6b32ee8e36**). This changes only orchestration; the final composer still authenticates the exact 32-part union and compiles the unchanged whole-child theorem.
+
+Replacement dispatches are not Covers. Wait for successful exact-part artifacts, run the repaired composer per child, and require its original-source whole-child theorem before promoting any of these children into the 12-child parent assembly.
