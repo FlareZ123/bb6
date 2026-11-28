@@ -69,15 +69,15 @@ theorem move_hf_or_anchor {a d A D : Nat}
       right
       unfold AnchorMove
       exact Or.inl ⟨rfl,rfl,rfl⟩
-  | far h1 h2 =>
+  | far _ h1 h2 =>
       left
       unfold HFMove
       exact Or.inr ⟨h1,h2,rfl,rfl⟩
-  | middleEven h1 h2 hp =>
+  | middleEven _ h1 h2 hp =>
       right
       unfold AnchorMove
       exact Or.inr (Or.inl ⟨h1,h2,hp,rfl,rfl⟩)
-  | middleOdd h1 h2 hp =>
+  | middleOdd _ h1 h2 hp =>
       right
       unfold AnchorMove
       exact Or.inr (Or.inr ⟨h1,h2,hp,rfl,rfl⟩)
