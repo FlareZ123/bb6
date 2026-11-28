@@ -44,7 +44,9 @@ jobs:
           git fetch --no-tags origin "$repair_revision"
           git show "${repair_revision}:im-results/agent10-raw112-recovery/assemble_retry.py" > /tmp/raw112-assemble-patched.py
           test "$(git hash-object /tmp/raw112-assemble-patched.py)" = "$repair_blob"
-          cp /tmp/raw112-assemble-patched.py im-results/agent10-raw112-recovery/assemble_retry.py
+          # Keep the frozen tracked assembler byte-identical: accepted shard
+          # manifests hash it as a provenance input. Execute the repaired copy
+          # from /tmp only after the shard manifests have authenticated it.
 
       - name: Install Lean 4.36.0-rc2
         run: |
@@ -179,7 +181,14 @@ jobs:
           # Recreate the one factored source needed by the existing assembler.
           python im-results/agent10-raw112-recovery/factor_missing.py             im-results/agent47-raw112-cut/Raw112Kid01_01.lean
 
-          python -u im-results/agent10-raw112-recovery/assemble_retry.py             --root im-results/agent47-raw112-cut             --shards /tmp/a9-raw112-shards             --union /tmp/a9-raw112-full-union             --branch-work /tmp/a9-raw112-branch-roots             --parent-work /tmp/a9-raw112-parent             --output /tmp/a9-raw112-assembled
+          PYTHONPATH="$PWD/im-results/agent10-raw112-recovery" \
+            python -u /tmp/raw112-assemble-patched.py \
+              --root im-results/agent47-raw112-cut \
+              --shards /tmp/a9-raw112-shards \
+              --union /tmp/a9-raw112-full-union \
+              --branch-work /tmp/a9-raw112-branch-roots \
+              --parent-work /tmp/a9-raw112-parent \
+              --output /tmp/a9-raw112-assembled
 
           python3 - <<'PY'
           import json
