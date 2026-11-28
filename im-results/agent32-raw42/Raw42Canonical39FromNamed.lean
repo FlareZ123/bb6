@@ -5,7 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent17Raw42Canonical39FromNamed
-open BB6Coverage
+open BB6Coverage BB6.Agent13BlankDelay
 open BB6.Agent32Raw42
 
 abbrev p42 : PartialMachine := BB6.Agent17Raw42Canonical39Conditional.p42
@@ -13,9 +13,8 @@ noncomputable abbrev roster38 :=
   BB6.Agent17Raw42Canonical39Conditional.roster38
 
 theorem literal_eq_p42 :
-    BB6.Agent17Raw42GlobalBridge.literal = p42 := by
-  apply tableOK_sound
-  decide
+    BB6.Agent17Raw42GlobalBridge.literal = p42 :=
+  BB6.Agent31ThreeHole.tableOK_sound _ _ (by decide)
 
 theorem cover_from_named_at_global
     (h0LA : Cover (WeightedBound 100006) (child ⟨false,false,0⟩))
