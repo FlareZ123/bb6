@@ -1956,6 +1956,20 @@ jobs:
                   assert f"'{full}' does not depend on any axioms" in log,full
           print('PASS: exact source Cover for 244,140,625-completion Raw34 F subparent with 12,356 explicit residual cylinders')
           PY
+          g++ -O3 -std=c++20 im-results/agent40-raw34-pair-depth8/census.cpp -o "$W/raw34-pair-depth8-census"
+          "$W/raw34-pair-depth8-census" "$W/generated/residualRows.json" | tee "$W/depth8-census.json"
+          python - "$W/depth8-census.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['depth6ResidualRows']==12356
+          assert x['openDepth6Rows']==11571
+          assert x['depth7']=={'sidecycles':198646,'halts':11571,'open':62061,'long':16997}
+          assert x['depth8FromOpen7']=={'sidecycles':1233087,'halts':62061,'long':256377}
+          assert x['depth6ResidualPhysical']==8892500
+          assert x['newlyClassifiedPhysical']==6550573
+          assert x['remainingPhysical']==2341927
+          print('PASS: reproducible Raw34 pair depth-seven/eight census leaves 2,341,927 candidate-level physical holdouts')
+          PY
       - uses: actions/upload-artifact@v4
         if: always()
         with:
