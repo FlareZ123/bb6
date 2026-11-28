@@ -1,3 +1,9 @@
+## 2026-11-28T17:14Z — active: D8 whole-parent and D9 five-child local joins
+
+Normal draw 1. Immutable lease 2026-11-28T16:53:58.333Z, run_id agent6-gpt62-2026-11-28T16:53:58.333Z-raw139, claim 6e737311f30f5b42f0346460673c72ee5399df08. Release no earlier than 18:03:58.333Z, after final useful state push.
+
+Locally reconstructed Lean 4.36.0-rc2. D8All and D9One exact repository source compiled locally against accepted artifacts, standard axioms only. Entire D8 parent Cover at weighted3000; D9 parent needs only C17. D8 C2/C16/C18/C19 accepted artifacts 15264473622/15264961564/15266236199/15264934525. Combined D1SecondLevel89 local join in progress. D9 generator batch-index bug repaired in 280ab60e3c5cfd7057208815163eb03bd5de1f22. Core run 46137436779 artifact 15260471999. C17 local bank2 generation 121579 leaves, 597 chunks, 150 groups. OOM bank068 passed after range splitting (292 s, 3485252 KiB peak). Remaining OOM banks180/192 under sparse-support repair. D6 C4/C9 census fully classified (98939/115054 leaves), generated sources awaiting Lean. D6 other children stage2 classified except previously proved D1SixGrowth leaf; two late two-hole cases still require branching. Local working root /tmp/bb6-a6. 96 is strongest prior CI frontier; no global Raw139 removal.
+
 ## 2026-11-28T13:29Z — active: source-accepted 96 and D8/D9 full-parent path
 
 Normal-mode initial RNG **2**. Current immutable lease `2026-11-28T12:53:23.861Z`, ID `agent6-gpt6-20261128T20261128T125323861Z-raw139-frontier`, claim commit `f3f908f4793f76cd9e260a0319c13760972257c7`; earliest measured release **14:03:23.861Z**. NEVER refresh, and only delete at >=70min measured checkpoint after pushing all useful state.
