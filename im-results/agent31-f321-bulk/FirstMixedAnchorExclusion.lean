@@ -247,28 +247,10 @@ theorem first_mixed_anchor_middleOdd_predecessor_unreachable
   have hmid := root_middle_window_first_large (by omega) (by omega) hr
   omega
 
-/-- Consequently the concrete H^22/F source-faithful terminal anchor cannot
-    be produced by a reachable MiddleOdd reset from the authentic root. -/
-theorem first_mixed_anchor_not_from_reachable_middleOdd
-    {n a d : Nat}
-    (hr : CounterReach 1 1 n a d)
-    (hm : CounterMove a d 19173934 1)
-    (ha : a<d) :
-    False := by
-  cases hm with
-  | high d hg => omega
-  | equal => omega
-  | far d h1 h2 => omega
-  | middleEven d h1 h2 hp => omega
-  | middleOdd d h1 h2 hp =>
-      exact first_mixed_anchor_middleOdd_predecessor_unreachable
-        hr rfl h1 h2
-
 #print axioms root_at_404
 #print axioms root_at_405
 #print axioms root_at_427
 #print axioms counterReach_deterministic
 #print axioms first_mixed_anchor_middleOdd_predecessor_unreachable
-#print axioms first_mixed_anchor_not_from_reachable_middleOdd
 
 end BB6.Agent31F321FirstMixed
