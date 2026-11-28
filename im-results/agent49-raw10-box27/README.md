@@ -1,52 +1,37 @@
-# Box27 exact five-hole slice and broader E0 classification
+# Raw10 Box27: complete E0 branches and the final 25-table exception
 
-2026-11-28, Agent49. **Original-source Lean-verified, including exact weighted bound.**
-Run [46091498528](https://github.com/FlareZ123/bb6/actions/runs/46091498528) accepted the complete E0=21 five-hole partition, artifact 15241468718. Run [46092558221](https://github.com/FlareZ123/bb6/actions/runs/46092558221) accepted `exact_weighted`: all 9,765,625 completions have the sharp weighted maximum 108. Run [46092810166](https://github.com/FlareZ123/bb6/actions/runs/46092810166) independently accepted 20 additional E0 cylinders, each with 9,765,625 completions, by short finite terminal/cycle witnesses. These source-audited disjoint cases cover **205,078,125** physical tables. Full proof summary: [results/2026-11-28-box27-e0-21-exact-and-easy-agent49.md](../../results/2026-11-28-box27-e0-21-exact-and-easy-agent49.md).
+**28 November 2026.** The source domain is `raw10Remainder[27]!` with A0=8, B0=11, C0=C1=13. This dossier fixes D0=14 and D1=17 and then partitions **all 25 possible E0 codes**. A1, B1, E1, F0 and F1 are unrestricted in each branch, so each whole E0 cylinder has `25^5 = 9,765,625` complete tables. The full fixed-D0/D1 family has **244,140,625** tables. All stated scores use the repository's original-source weighted convention.
 
-Additional attempted E0=24 source proof: `generate_slice24.py`, `Box27Slice24Core.lean` and manual target `weighted-tnf-raw10-box27-slice24`; the discovery candidate counts 13,401 tree nodes, 386 two-sided finite automata, 2,296 last-hole certificates, and sharp weighted maximum **255** witnessed by `[8,21,11,18,13,13,14,17,24,0,3,6]` halting after 254 live moves. **Do not treat this extra claim as Lean accepted until its independent CI run finishes.** For D0=14, D1=17, E0=21, root `[8,-1,11,-1,13,13,14,17,21,-1,-1,-1]`, exact first-hole discovery closes all 25^5 = 9,765,625 completions. Proposed weighted bound 108, attained by `[8,4,11,24,13,13,14,17,21,15,3,0]` (107 live moves, zero incoming delay).
+## Accepted mathematical boundary
 
-| leaf type | count | completion mass |
-|---|---:|---:|
-| halt | 101 | 432725 |
-| side cycle | 1959 | 9321375 |
-| last hole | 324 | 8100 |
-| two-sided finite stack invariant | 41 | 3425 |
-| open | 0 | 0 |
+| E0 code(s) | Bound or exact weighted maximum | Original-source accepted evidence |
+| --- | ---: | --- |
+| `0,1,2,4..20` (20 distinct values) | bound 108 | [CI 46092810166](https://github.com/FlareZ123/bb6/actions/runs/46092810166), `Box27EasyE0.source_bound` |
+| `21` | **exact 108** | [CI 46092558221](https://github.com/FlareZ123/bb6/actions/runs/46092558221), `Box27Slice.exact_weighted` |
+| `3` | **exact 141** | [CI 46094172421](https://github.com/FlareZ123/bb6/actions/runs/46094172421), `Box27Slice03.exact_weighted` |
+| `23` | **exact 143** | [CI 46094175250](https://github.com/FlareZ123/bb6/actions/runs/46094175250), `Box27Slice23.exact_weighted` |
+| `24` | **exact 255** | [CI 46094310742](https://github.com/FlareZ123/bb6/actions/runs/46094310742), `Box27Slice24.exact_weighted` |
+| `22`, **excluding one 25-completion table** | exact 149 on the restricted subset | [CI 46094538498](https://github.com/FlareZ123/bb6/actions/runs/46094538498), conditional `Box27Slice22.exact_weighted` |
 
-`generate_slice.py` deterministically regenerates the candidate and emits independent Lean chunks. `Box27SliceCore.lean` uses existing source-level Box17 terminal and Agent4 finite-stack checkers, splits all 25 alternatives, and connects the root to raw10Remainder[27]. No finite simulation limit is trusted by Lean. The 41 automata supplant the older symbolic-only seed census. Largest joint invariant: 97 states. Local Lean is available but local GitHub checkout DNS is unavailable; original-source verification is required in CI.
+These source-accepted results classify **244,140,600 distinct tables** (every completion in the fixed D0/D1 family except the 25 completions of `[8,24,11,8,13,13,14,17,22,15,4,-1]`), all at weighted bound 255 or below. The E0=24 witness `[8,21,11,18,13,13,14,17,24,0,3,6]` halts in 254 live moves and scores 255. These are disjoint per-E0 results, **not yet one kernel-consumed parent theorem**. The largest bound for the 25 exceptional completions is not established by the accepted prior certificates.
 
-Broader D0=14,D1=17 slice: candidate scan of 244,140,625 completions, 8 open cylinders (mass 200), of which 3 subsequently have lag-XOR finite-stack candidates; 5 still require work. No claim of closure for this broader slice or Box27. The [masked-counter proof](MASKED-COUNTER.md) supplies two further exact one-hole nonhalting arguments, with the original-source audit still required; candidate discovery sets are not assumed identical.
+## New 10-state/side finite automaton for the exceptional 25 tables
 
-## Earlier single-cylinder investigation
+`Box27ExceptionalFAR.lean` contains a concrete two-sided stack automaton with **10 states per tape half and 306 reachable abstract control/stack states**. Its closed state relation contains no F1 query, so the generic original `TwoSidedAutomata.never` theorem would prove that every F1 completion runs forever. `generate_exceptional_far.py` reconstructs the table, both stack relations and the abstract reachable set from a three-state transformation monoid and a three-bit prefix automaton. The search algorithm is *untrusted*; Lean checks the entire finite certificate by `BB6.Agent4Automata.check`.
 
-# Raw10 Box27: growing unary-block cylinder
+The exact table-identity bridge `Box27Slice22.exceptional_far_table` is added to `Box27Slice22Core.lean`; `generate_slice22.py` now emits `all_bound` and `full_exact_weighted` at **149** without the exceptional hypothesis. A focused original-source [CI run 46113905945](https://github.com/FlareZ123/bb6/actions/runs/46113905945) is queued at this review: **do not claim kernel acceptance of the new FAR or unconditional E0=22 theorem until it succeeds and passes the axiom gate**.
 
-**Mathematical result (paper proof; original-source Lean audit not yet accepted).** All completions of the sparse row
+The next source file `Box27D17Parent.lean` combines all 25 E0 values under their exact original Raw10 domain, with theorem
+`BB6.Agent49.Box27D17Parent.exact_weighted`, intended to prove **sharp weighted maximum 255 across all 244,140,625 tables**. Existing manual [CI 46114149252](https://github.com/FlareZ123/bb6/actions/runs/46114149252) is queued. Its conclusion is **not accepted yet**. This theorem's full original-source transitive closure and `sorryAx` audit are decisive.
 
-```
-[8,3,11,2,13,13,14,17,21,?,3,?]
-1RB1LA_1LC0RA_0LD0LD_0RD0LE_0LF???_1LA???
-```
+## Source mechanisms
 
-are nonhalting. Code 0 is halt; code 1+4q+2w+r is the ordinary transition, r=1 right. Slots are A0,A1,...,F1. Both E1 and F1 are arbitrary (625 raw completions). This is an actual blank-orbit result, not an assertion about prepared-tape reachability.
+The first-hole subtree emitters `generate_slice.py`, `generate_slice03.py`, `generate_slice22.py`, `generate_slice23.py`, and `generate_slice24.py` regenerate finite halt witnesses, side-cycle witnesses, last-hole checks and two-sided finite-stack automata. The `Box27Slice*Core.lean` modules prove that accepted leaves imply the original blank-start bound. The exceptionally structured E0=22 children can also invoke `Box27MaskedCounter3.never`, accepted in [CI 46093466147](https://github.com/FlareZ123/bb6/actions/runs/46093466147), rather than relying on finite simulation. See [MASKED-COUNTER.md](MASKED-COUNTER.md) for the carry/unwind grammar.
 
-The source base34 Box27 fixes A0=8, B0=11, C0=C1=13 and permits D0=14. The cylinder is therefore inside that original rectangle, with D1=17, E0=21, F0=3, A1=3, B1=2. It does not close the entire rectangle or the Raw10 parent.
+An independent, smaller unary-growth cylinder `[8,3,11,2,13,13,14,17,21,-1,3,-1]` is covered by the E0=21 complete theorem, but retains a useful explicit recurrence: at primitive time 5, the machine is at rightmost marker `R(0)`; from `R(k)` it reaches `R(k+1)` in `10+4k` steps, hence `R(k)` occurs at time `2k²+8k+5`. The run never queries E1 or F1. `Box27GrowingBlock.lean` and `Box27GrowingBlockSource.lean` are an alternative paper/Lean candidate proof, **not** a new disjoint parent reduction.
 
-## Exact recurrence
+## Remaining proof obligations
 
-At time 5 the blank-start execution reaches D scanning the rightmost 1 at position 1. The right half-line is blank, and the left half-line is two zeros followed by a block of k=0 ones and then blanks. Denote that configuration R(k) for general k, with D scanning 1.
-
-- D1, E0, F0 take three steps. The scanned marker is erased; cell -1 becomes 1; A scans cell -2. The k old ones occupy cells -2 through -(k+1), with the empty range understood when k=0.
-- A1 takes k leftward steps across the old block without alteration; A0 writes the next blank at -(k+2) and moves right to B. B now scans the first of k+1 consecutive ones.
-- Each of the first k ones is passed in three moves: B1 erases the current one and moves right into A scanning another one; A1 moves back; A0 restores the erased cell and returns right to B. After k repetitions, B scans cell -1 and the left block has length k+1.
-- Six more steps B1,A0,B0,C1,D0,D0 erase the temporary one, restore the rightmost marker, and restore the two-zero separator. The machine is at R(k+1), with the entire right half-line blank.
-
-The exact cost is 3+k+1+3k+6=10+4k, positive for every k. In particular the kth return is at primitive time 5+10k+2k(k-1)=2k²+8k+5. No E1 or F1 query occurs in any block, or in the initial prefix. Hence every finite step count is reached by every completion, proving nonhalting independent of those slots.
-
-## Formal interface
-
-- Box27GrowingBlock.lean states the exact stream recurrence and its all-time safety consequence.
-- Box27GrowingBlockSource.lean projects the original sparse knownRun into that stream model, proves compatible_never for arbitrary completions, and gives parent_never / parent_bound on the actual source Box27.
-- These files are proof candidates until the named original-source theorem and axiom audit pass. No local Lean invocation was available in this session.
-
-The existing sibling work on Box28 and Box33 concerns different C0 domains. This cylinder is not counted as a complete parent Cover; the remaining Box27 branches must still be closed. The exact return family provides a reusable external leaf for a later first-hole partition of D0=14,D1=17,E0=21.
+1. Accept and axiom-audit the one-hole FAR plus **unconditional** E0=22 full-source theorem.
+2. Accept the complete D0=14/D1=17 parent join, including its source-domain `Fits` witness, without re-searching the already accepted child certificates.
+3. Integrate this local bounded cylinder into the live Raw10 parent complement; other D0/D1 values remain open. The fixed-D17 result is not an unconditional Raw10 Cover and proves no global BB(6) upper bound.
