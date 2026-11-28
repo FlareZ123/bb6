@@ -1,0 +1,97 @@
+name: Agent6 Raw139 D0=8 extra exact children (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+      core_run_id:
+        description: Run containing agent6-raw139-d9-core
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      max-parallel: 2
+      matrix:
+        code: [1, 3]
+    env:
+      CODE: ${{ matrix.code }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent6-raw139-d9-core
+          run-id: ${{ inputs.core_run_id }}
+          github-token: ${{ github.token }}
+          path: .tmp/a6-d8more
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate exact D0=8 branch
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d8more
+          pipe="$work/pipeline"
+          chmod +x "$pipe/cert_census" "$pipe/strong" "$pipe/strong_emit" "$pipe/altblock"
+          root="$work/d8c$CODE"
+          ns="D8C$CODE"
+          python3 "$pipe/discover.py" 8 "$CODE" "$root"
+          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" 8 "$ns"
+          python3 - "$root/certs.jsonl" "$root/alt.in" <<'PY'
+          import json,sys
+          src,dst=sys.argv[1:]
+          with open(dst,'w') as out:
+              for line in open(src):
+                  c=json.loads(line)
+                  if c.get("type")=="ng" and len(c.get("states",[]))>1000:
+                      out.write(str(c["id"])+" "+",".join(map(str,c["p"]))+"\n")
+          PY
+          if test -s "$root/alt.in"; then
+            "$pipe/altblock" "$root/alt.in" > "$root/alt.out"
+            "$pipe/strong_emit" "$root/alt.out" > "$root/alt.jsonl"
+            python3 "$pipe/replace_alt.py" "$root" "$ns"
+          else
+            : > "$root/alt.out"
+            : > "$root/alt.jsonl"
+          fi
+          python3 "$pipe/gen_tree_general.py" "$root/tree-8-$CODE.txt" "$root/src" 384 8 "$CODE" 8 "$root/late.json"
+          python3 "$pipe/group_chunks.py" "$root/src" "$ns" 8
+          cp "$pipe/D1PackedTree.lean" "$pipe/D1QuickTree.lean" "$pipe/D1TreeTools.lean" "$root/src/"
+      - name: Kernel-check complete child Cover
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d8more
+          export LEAN="$HOME/.elan/bin/lean"
+          export JOBS=2
+          root_abs="$(realpath "$work")"
+          core_abs="$(realpath "$work/core")"
+          python3 "$work/pipeline/compile_groups.py" "$root_abs" "$core_abs" "D8C$CODE" | tee "$work/d8c$CODE/compile.log"
+          grep -F "FINAL" "$work/d8c$CODE/compile.log"
+          grep -F " 0 []" "$work/d8c$CODE/compile.log"
+          grep -F "'D8C$CODE.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d8c$CODE/src/logs/D8C$CODEParent.log"
+          ! grep -REq 'sorryAx|ofReduceBool' "$work/d8c$CODE/src/logs"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent6-raw139-d8-c${{ matrix.code }}-certified
+          path: |
+            .tmp/a6-d8more/d8c${{ matrix.code }}/src
+            .tmp/a6-d8more/d8c${{ matrix.code }}/compile.log
+            .tmp/a6-d8more/d8c${{ matrix.code }}/census.log
+            .tmp/a6-d8more/d8c${{ matrix.code }}/recipes.tsv
+            .tmp/a6-d8more/d8c${{ matrix.code }}/alt.out
+          include-hidden-files: true
+          retention-days: 14
