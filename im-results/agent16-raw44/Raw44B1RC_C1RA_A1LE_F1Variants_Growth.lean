@@ -109,7 +109,7 @@ private theorem ffinish (toC : Bool) (R : List Bool) :
       some ⟨0,[],[false,true,false,true] ++ R⟩ := by
   cases toC <;> rfl
 
-private theorem afront3 toC (toC : Bool) (R : List Bool) :
+private theorem afront3 (toC : Bool) (R : List Bool) :
     run0 (table toC) 3 ⟨0,[],[false,true,false] ++ R⟩ =
       some ⟨0,[false,true,true,true],R⟩ := by cases toC <;> rfl
 
@@ -118,31 +118,31 @@ private theorem apacket (toC : Bool) (L R : List Bool) :
       some ⟨0,[false,true,true,true,true] ++ L,R⟩ := by
   cases toC <;> rfl
 
-private theorem afinish3 toC (toC : Bool) (L : List Bool) :
+private theorem afinish3 (toC : Bool) (L : List Bool) :
     run0 (table toC) 3 ⟨0,[false] ++ L,[true]⟩ =
       some ⟨3,[false,false,false,true] ++ L,[]⟩ := by cases toC <;> rfl
 
-private theorem dzero3 toC (toC : Bool) (L : List Bool) :
+private theorem dzero3 (toC : Bool) (L : List Bool) :
     run0 (table toC) 3 ⟨3,[false,false,false] ++ L,[]⟩ =
       some ⟨3,L,[true,true,true]⟩ := by cases toC <;> rfl
 
-private theorem dturn5 toC (toC : Bool) (L : List Bool) :
+private theorem dturn5 (toC : Bool) (L : List Bool) :
     run0 (table toC) 5 ⟨3,[true,true] ++ L,[true,true,true]⟩ =
       some ⟨0,[false] ++ L,[false,true,true,true]⟩ := by cases toC <;> rfl
 
-private theorem amiddle5 toC (toC : Bool) (L : List Bool) :
+private theorem amiddle5 (toC : Bool) (L : List Bool) :
     run0 (table toC) 5 ⟨0,[false] ++ L,[false,true,true,true]⟩ =
       some ⟨0,[true,true] ++ L,[false,true,true]⟩ := by cases toC <;> rfl
 
-private theorem astep2 toC (toC : Bool) (L R : List Bool) :
+private theorem astep2 (toC : Bool) (L R : List Bool) :
     run0 (table toC) 2 ⟨0,[true,true] ++ L,R⟩ =
       some ⟨0,L,[false,true] ++ R⟩ := by cases toC <;> rfl
 
-private theorem apacket2 toC (toC : Bool) (L R : List Bool) :
+private theorem apacket2 (toC : Bool) (L R : List Bool) :
     run0 (table toC) 6 ⟨0,[false] ++ L,[true,false,true,false] ++ R⟩ =
       some ⟨0,[false,true,true,false,true] ++ L,R⟩ := by cases toC <;> rfl
 
-private theorem afinish10 toC (toC : Bool) (L : List Bool) :
+private theorem afinish10 (toC : Bool) (L : List Bool) :
     run0 (table toC) 10 ⟨0,[false] ++ L,[true,false,true,true]⟩ =
       some ⟨5,[true] ++ L,[true,true,false,true]⟩ := by cases toC <;> rfl
 
