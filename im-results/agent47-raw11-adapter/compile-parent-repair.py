@@ -73,6 +73,8 @@ def main():
     done = set(reused)
     report = dict(reused)
     max_fresh = int(os.environ.get("RAW11_REPAIR_MAX_FRESH", "0"))
+    module_timeout = int(os.environ.get("RAW11_REPAIR_MODULE_TIMEOUT", "0"))
+    assert module_timeout >= 0
     target_module = os.environ.get("RAW11_REPAIR_TARGET", "").strip()
     if target_module:
         assert target_module in files, f"unknown repair target {target_module}"
@@ -88,10 +90,16 @@ def main():
         log = out / (name+".log")
         env = dict(os.environ, LEAN_PATH=os.pathsep.join((str(out),str(base))))
         print("compile",name,"bytes",src.stat().st_size,flush=True)
-        with log.open("w") as stream:
-            result = subprocess.run(
-                ["lean","-j1","-o",str(target),src.name],
-                cwd=source,env=env,stdout=stream,stderr=subprocess.STDOUT)
+        try:
+            with log.open("w") as stream:
+                result = subprocess.run(
+                    ["lean","-j1","-o",str(target),src.name],
+                    cwd=source,env=env,stdout=stream,stderr=subprocess.STDOUT,
+                    timeout=module_timeout or None)
+        except subprocess.TimeoutExpired:
+            target.unlink(missing_ok=True)
+            print("module-timeout",name,"seconds",module_timeout,flush=True)
+            return None
         content = log.read_text()
         if result.returncode != 0 or re.search(r"sorryAx|native_decide",content):
             print(content[-12000:],flush=True)
@@ -123,7 +131,13 @@ def main():
                                      files[k].stat().st_size,k))
         assert ready, "dependency cycle or unrepresented import"
         for name in ready:
-            report[name] = compile_one(name)
+            fresh = compile_one(name)
+            if fresh is None:
+                print("timeout-checkpoint",parent_id,name,
+                      "compiled_fresh",compiled_fresh,
+                      "accepted_total",len(report),"remaining",len(files)-len(done),flush=True)
+                return
+            report[name] = fresh
             done.add(name)
             compiled_fresh += 1
             (out/"repair-receipt.json").write_text(
