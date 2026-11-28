@@ -101,18 +101,21 @@ theorem cert_sound (bound : Nat) (p : PartialMachine) (cert : Cert)
         (fun q => q ∈ ss) (closedCheck_sound p ss hh.2) m hm entry
         (embedFinRay c) hr (List.contains_iff_mem.mp hh.1))
 
-inductive Node where
-  | leaf (cert : Cert)
+inductive PlanNode (α : Type) where
+  | leaf (cert : α)
   | residual (row : Nat)
   | split (slot : Slot) (children : List Nat)
 
-def check (nodes : Array Node) (rows : List (List Nat)) (bound : Nat) :
+abbrev Node := PlanNode Cert
+
+def checkWith {α : Type} (nodes : Array (PlanNode α)) (rows : List (List Nat))
+    (verify : PartialMachine → α → Bool) :
     Nat → Nat → PartialMachine → Bool
   | 0, _, _ => false
   | k+1, i, p =>
       match nodes[i]? with
       | none => false
-      | some (.leaf cert) => certCheck bound p cert
+      | some (.leaf cert) => verify p cert
       | some (.residual j) =>
           match rows[j]? with
           | none => false
@@ -122,28 +125,29 @@ def check (nodes : Array Node) (rows : List (List Nat)) (bound : Nat) :
           choices.all fun t =>
             match children[choices.idxOf t]? with
             | none => false
-            | some j => check nodes rows bound k j (refine p s t)
+            | some j => checkWith nodes rows verify k j (refine p s t)
 
-theorem check_sound (nodes : Array Node) (rows : List (List Nat)) (bound : Nat)
-    {good : Machine → Prop} (lift : ∀ m, DecidedBelow bound m → good m)
+theorem checkWith_sound {α : Type} (nodes : Array (PlanNode α)) (rows : List (List Nat))
+    {good : Machine → Prop} (verify : PartialMachine → α → Bool)
+    (leaf_sound : ∀ p cert, verify p cert = true → Cover good p)
     (hrows : ∀ (j : Nat) (row : List Nat), rows[j]? = some row → Cover good (table row))
-    (fuel i : Nat) (p : PartialMachine) (h : check nodes rows bound fuel i p = true) :
+    (fuel i : Nat) (p : PartialMachine) (h : checkWith nodes rows verify fuel i p = true) :
     Cover good p := by
   induction fuel generalizing i p with
-  | zero => simp [check] at h
+  | zero => simp [checkWith] at h
   | succ k ih =>
     cases hn : nodes[i]? with
-    | none => simp [check,hn] at h
+    | none => simp [checkWith,hn] at h
     | some node =>
       cases node with
       | leaf cert =>
-        have hc : certCheck bound p cert = true := by simpa only [check,hn] using h
-        exact .leaf p (fun m hm => lift m ((cert_sound bound p cert hc).sound m hm))
+        have hc : verify p cert = true := by simpa only [checkWith,hn] using h
+        exact leaf_sound p cert hc
       | residual j =>
         cases hr : rows[j]? with
-        | none => simp [check,hn,hr] at h
+        | none => simp [checkWith,hn,hr] at h
         | some row =>
-          have he : sameTable p (table row) = true := by simpa only [check,hn,hr] using h
+          have he : sameTable p (table row) = true := by simpa only [checkWith,hn,hr] using h
           rw [sameTable_sound p (table row) he]
           exact hrows j row hr
       | split s children =>
@@ -151,8 +155,8 @@ theorem check_sound (nodes : Array Node) (rows : List (List Nat)) (bound : Nat)
             (choices.all fun t =>
               match children[choices.idxOf t]? with
               | none => false
-              | some j => check nodes rows bound k j (refine p s t)) = true := by
-          simpa only [check,hn,Bool.and_eq_true] using h
+              | some j => checkWith nodes rows verify k j (refine p s t)) = true := by
+          simpa only [checkWith,hn,Bool.and_eq_true] using h
         apply Cover.branch p s (of_decide_eq_true hh.1.1)
         intro t ht
         have htcheck := List.all_eq_true.mp hh.2 t ht
@@ -160,6 +164,18 @@ theorem check_sound (nodes : Array Node) (rows : List (List Nat)) (bound : Nat)
         | none => simp [hj] at htcheck
         | some j =>
           exact ih j (refine p s t) (by simpa only [hj] using htcheck)
+
+def check (nodes : Array Node) (rows : List (List Nat)) (bound : Nat) :=
+  checkWith nodes rows (certCheck bound)
+
+theorem check_sound (nodes : Array Node) (rows : List (List Nat)) (bound : Nat)
+    {good : Machine → Prop} (lift : ∀ m, DecidedBelow bound m → good m)
+    (hrows : ∀ (j : Nat) (row : List Nat), rows[j]? = some row → Cover good (table row))
+    (fuel i : Nat) (p : PartialMachine) (h : check nodes rows bound fuel i p = true) :
+    Cover good p := by
+  apply checkWith_sound nodes rows (certCheck bound) _ hrows fuel i p h
+  intro q c hc
+  exact .leaf q (fun m hm => lift m ((cert_sound bound q c hc).sound m hm))
 
 theorem check_closed (nodes : Array Node) (bound fuel root : Nat) (p : PartialMachine)
     (h : check nodes [] bound fuel root p = true) : Cover (DecidedBelow bound) p := by
@@ -170,6 +186,7 @@ theorem check_closed (nodes : Array Node) (bound fuel root : Nat) (p : PartialMa
 #print axioms sameTable_sound
 #print axioms closedCheck_sound
 #print axioms cert_sound
+#print axioms checkWith_sound
 #print axioms check_sound
 #print axioms check_closed
 end BB6.Agent50Raw34Plan
