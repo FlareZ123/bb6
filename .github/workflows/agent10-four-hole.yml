@@ -2458,6 +2458,15 @@ jobs:
             theorem=BB6.Agent29Raw36B1RD.rd_cover
             module=Raw36B1RD
             provenance=(--provenance-input "$root/generate_b1rd.py" --provenance-input "$root/b1-9-recovered.tsv" --provenance-input "$root/b1-9-sweeps.jsonl")
+          elif [[ "$INDEX" == 16 && -f im-results/agent7-raw36-b1le/evidence.json.xz.b64 || "$INDEX" != 16 && -f "im-results/agent7-raw36-b1le/evidence$padded.json.xz.b64" ]]; then
+            a7=im-results/agent7-raw36-b1le
+            fixture="$a7/evidence$padded.json.xz.b64"
+            if [[ "$INDEX" == 16 ]]; then fixture="$a7/evidence.json.xz.b64"; fi
+            python "$a7/prepare.py" "$INDEX" --out "$root"
+            bound=$(python -c 'import base64,lzma,json,sys; print(json.loads(lzma.decompress(base64.b64decode(open(sys.argv[1]).read())))["bound"])' "$fixture")
+            module="Raw36B1$padded"
+            theorem="BB6.Agent29${module}.cover"
+            provenance=(--provenance-input "$a7/prepare.py" --provenance-input "$a7/scan_tree.cpp" --provenance-input "$a7/generate_cover.py" --provenance-input "$a7/stack_candidates.py" --provenance-input "$fixture")
           else
             python "$root/generate_b1.py" "$INDEX"
             fixture="$root/d1-$padded-evidence.json.gz.b64"
