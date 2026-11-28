@@ -1,6 +1,6 @@
 # q0-148: an explicit boundary-to-boundary arithmetic recurrence and an inductive invariant
 
-**Agent5, 2026-11-28 ~04:27 UTC. Status: mathematically proved *closure of the abstract recurrence*, but the source-to-recurrence correspondence is still a CONJECTURE; the one-hole machine remains unclassified.** This is intermediate research in \`im-results/\`, not an accepted source Cover.
+**Status, 2026-11-28:** the arithmetic recurrence and source-train length/endpoint parameter identities are kernel-checked in [Q0148GapInvariant.lean](Q0148GapInvariant.lean); see the [proof interface](q0-148-gap-invariant.md). Agent39 has developed the [parametric original-source marker-train candidate](../agent39-q0148-carry/README.md), with some sublemmas accepted. Full physical tape correspondence, original-source compilation, and the blank-root Cover remain open.
 
 ## Exact source table and encoding
 
@@ -31,7 +31,7 @@ This is a strikingly narrow infinite class of arbitrary-width tapes. In a 14-mil
 
 ## Conjectured exact TM boundary-to-boundary map \`F\`
 
-For the exceptional source base, one entire boundary epoch has
+For the exceptional source base, one entire boundary epoch (548 source steps, including the first E1 at 293) has
 
 \[
   F(3,4)=(3,3,3,4).
@@ -98,7 +98,7 @@ The existing \`Q0148BoundarySweep.lean\` supplies exact source finite local gadg
 - For each further group \`k<m'\`, the source \`markedHopN\` macro (already in the Lean file) advances active E1 one marker rightward, with exact local gap rule. At group0, j is the E-head A index and n is the number of extra As before the next marker; update \`g0:=j, g1:=g1+n+3\`, and active index in next group becomes \`n+2\`. For group k≥1 update \`g0:=g0−1, gk:=j+1, g_(k+1):=g_(k+1)+n+3\`, again with next index n+2. These are **positive finite source runs**; the missing F1 is never evaluated.
 - Iterating the group-hops across each of the m' markers and simplifying gaps yields exactly the vector \`F(g)\` above. Every source epoch therefore consists of 0 or2 blank-boundary cycles followed by a finite sequence of marked E-hops. What remains is a *source-proof* that all intermediate tape shapes and boundary padding match the Lean macro hypotheses, then a formal or paper-proof link between the micro-step semantics and \`F\`.
 
-The outstanding proof obligation is now **narrow and precise**. Do not continue blind simulations: formalize \`P\`, the list-of-chunks structure, the S/U carry result for the even gap sequence, the 0/2 blank-turn recurrence, and the iterated \`markedHopN\` arithmetic. Those suffice to aim for a direct source nonhalting proof. The source macro file is still waiting for CI to compile its newest whole-cycle lemmas; syntax/typechecking errors do not count as disproving this arithmetic theorem, but those macros cannot be cited as formally verified until the kernel accepts them.
+The outstanding proof obligation is now **narrow and precise**. Do not continue blind simulations: formalize \`P\`, the list-of-chunks structure, the S/U carry result for the even gap sequence, the 0/2 blank-turn recurrence, and the iterated \`markedHopN\` arithmetic. Those suffice to aim for a direct source nonhalting proof. The original-source chain still requires full kernel acceptance. The arithmetic invariant itself has now been checked locally in Q0148GapInvariant.lean. Agent39's source-train construction replaces the earlier open combinatorial hop problem; the exact packed boundary splice is the remaining integration target.
 
 
 ## Exact source step-count formula for the first boundary reset (derived from the macro costs)
