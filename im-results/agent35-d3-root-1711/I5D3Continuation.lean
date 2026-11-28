@@ -451,6 +451,71 @@ private theorem q7_escape_rejoin (t : Nat) (ht : t % 27 = 4) :
       (DRegularSource.sourceSection (q7EscapeOut t))
       h012 hA)
 
+
+/-- Fourth source return for the q=5, k≡7 (mod 27) E branch.
+    For t≡8 (mod 9), two E events expose a B packet, followed by an
+    A-code return to a pure-unary section. These are exact raw run costs. -/
+def q5FourthK (t : Nat) : Nat := 192*(t/9)+181
+def q5FourthA (t : Nat) : Nat := 512*(t/9)+485
+def q5FourthOut (t : Nat) : DRegular.L :=
+  ⟨8*q5FourthA t+47,0,0⟩
+def q5FourthCost (t : Nat) : Nat :=
+  BB6.Agent31SecondSource.firstCost t 2 +
+  BB6.Agent31SecondSource.secondCost t +
+  (12*q5FourthK t*q5FourthK t+49*q5FourthK t+40) +
+  BB6.Agent35APacketUnary.duration (q5FourthA t) 1 2
+
+theorem q5_fourth_source (t : Nat) (ht : t % 9 = 8) :
+    ObsEq (run (q5FourthCost t)
+      (DRegularSource.sourceSection ⟨9*t+7,5,1⟩))
+      (DRegularSource.sourceSection (q5FourthOut t)) := by
+  have htdiv : t = 9*(t/9)+8 := by
+    have h := Nat.mod_add_div t 9
+    omega
+  have h0 : 64*t+33 = 3*q5FourthK t+2 := by
+    dsimp [q5FourthK]
+    omega
+  have h1 : 8*q5FourthK t+10 = 3*q5FourthA t+3 := by
+    dsimp [q5FourthK,q5FourthA]
+    omega
+  have hTwo := two_return_packet t 2
+  have hB :
+      ObsEq
+        (run (12*q5FourthK t*q5FourthK t+49*q5FourthK t+40)
+          (BB6.Agent31PacketSource.packet (64*t+33) 2 7 ys))
+        (BB6.Agent31PacketSource.packet (8*q5FourthK t+10) 1 7 ys) := by
+    rw [h0]
+    rw [BB6.Agent31PacketSource.b_packet (q5FourthK t) 1 7 ys]
+    exact BB6.Padding.cfgEq_refl _
+  have hA :
+      ObsEq
+        (run (BB6.Agent35APacketUnary.duration (q5FourthA t) 1 2)
+          (BB6.Agent31PacketSource.packet (8*q5FourthK t+10) 1 7 ys))
+        (DRegularSource.sourceSection (q5FourthOut t)) := by
+    rw [h1]
+    have hout : 8*q5FourthA t+29+2*1+8*2 =
+        8*q5FourthA t+47 := by omega
+    simpa only [q5FourthOut,hout] using
+      a_packet_unary_obs (q5FourthA t) 1 2
+  have hThree := source_chain
+    (BB6.Agent31SecondSource.firstCost t 2 +
+      BB6.Agent31SecondSource.secondCost t)
+    (12*q5FourthK t*q5FourthK t+49*q5FourthK t+40)
+    (DRegularSource.sourceSection ⟨9*t+7,5,1⟩)
+    (BB6.Agent31PacketSource.packet (64*t+33) 2 7 ys)
+    (BB6.Agent31PacketSource.packet (8*q5FourthK t+10) 1 7 ys)
+    hTwo hB
+  simpa [q5FourthCost,Nat.add_assoc] using
+    (source_chain
+      (BB6.Agent31SecondSource.firstCost t 2 +
+        BB6.Agent31SecondSource.secondCost t +
+        (12*q5FourthK t*q5FourthK t+49*q5FourthK t+40))
+      (BB6.Agent35APacketUnary.duration (q5FourthA t) 1 2)
+      (DRegularSource.sourceSection ⟨9*t+7,5,1⟩)
+      (BB6.Agent31PacketSource.packet (8*q5FourthK t+10) 1 7 ys)
+      (DRegularSource.sourceSection (q5FourthOut t))
+      hThree hA)
+
 def regCost1 : Nat := DRegular.accumulated 4675 s0
 def regCost2 : Nat := DRegular.accumulated 1085 s1
 def regCost3 : Nat := DRegular.accumulated 611 s2
@@ -678,6 +743,7 @@ theorem horizonFinal_ge_10pow1458 : 10^1458 ≤ horizonFinal := by
 #print axioms raw3_data
 #print axioms raw4_data
 #print axioms q7_escape_rejoin
+#print axioms q5_fourth_source
 #print axioms continuation_source
 #print axioms root_source
 #print axioms parsed_D3_no_halt_through_final
