@@ -127,7 +127,7 @@ theorem all_pairwise_disjoint :
     has an infinite authentic blank execution. -/
 theorem all_never (p : PartialMachine) (hp : p ∈ bank)
     (m : Machine) (hm : compatible p m) : NeverHalts m := by
-  simp only [bank, List.mem_cons, List.mem_nil, or_false] at hp
+  simp only [bank, List.mem_cons, List.not_mem_nil, or_false] at hp
   rcases hp with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
   · subst p
     exact BB6Coverage.Agent42Raw40Crossing.C1RBM71.never m hm
