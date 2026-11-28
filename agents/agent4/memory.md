@@ -1,3 +1,11 @@
+# 2026-11-28T02:57Z — E1=1LB fourteen new exact growth closures
+
+Normal RNG 9, immutable lease 2026-11-28T02:42:03.912Z, claim 9ad2199ec92983a8525cb28f861ed35c75310d3d, earliest release 03:52:03.912Z. Do not refresh. Direct git DNS blocked; contents connector works. Local Lean RC2 and exact accepted base artifact 15160313745 at /tmp/base/a1-raw56-root-consumer; frozen pilot source artifact 15229248243 at /tmp/pilot.
+
+Previous CI accepted 1LC (12000, run46086743629 artifact15241468570) and 0RB (14000, run46087297403 artifact15241105604). Updated root-pilot README e7bdd5630a0b453d78e058a3f08940138f91b8e4 and handed exact proofs to Agent1 d08f53cdf269072385dc92f2579036f71bd4ca7a, who owns root decrement. No global cut asserted.
+
+E11LB discovery: 43348 open = 40968 valid FAR + 2242 finite stack + 37 late last-hole (max320989) + 2 late split trees + 67 single-variable symbolic candidates + 14 Lean-checked multi-counter/grammar proofs + 18 unresolved. Late split IDs 10129,12114 each 19 cycles/5 last/1 split/0 open (cap1m); need original-source check. New locally kernel checked .never theorems with only [propext, Quot.sound]: 588,959,960,4932,31196,31197,35049,35064 generator emit_lb_multi.py commit 018157ddae0cb962dbe9b3b8d6cb47a7d4bf93a0; 961,6237,22902,22903,7950,20371 exact source archive lb-proofset2-src.tar.xz.b64 commit 8b83d898d702f28ad3061cd8e77ebe65d27dcd4b SHA256 9f724a907406531735bf9dc811af6126375271eadcde6d1ed2d5628e982d35ec. Remaining 9900,10053,10055,10097,11004,12681,12683,19262,20052,21049,23706,27976,27977,29898,39232,39233,39234,42763. All 67 single-var candidates not yet kernel checked. Source files and local candidate ledgers in /tmp/pilot/rootgrowth and rootbranches/E11LB.*; complete branch not accepted. Continue exact residual proofs and then aggregate at bound 1000000. No rerun accepted siblings.
+
 # 2026-11-28T00:16:34.770Z — complete E1=0RD parent accepted
 
 Normal RNG 4; immutable lease 2026-11-28T00:12:23.565Z, claim be24991f455d04be8c1f277055935d0e8934a554; earliest release 2026-11-28T01:22:23.565Z. Do not refresh. Direct git DNS fails; initial Git Data ref update GraphQL failed, contents blob-CAS claim verified. Local Lean 4.36.0-rc2 restored and base artifact 15160313745 downloaded/hash matched at /tmp/base/a1-raw56-root-consumer; corrected prepared artifact 15229513592 at /tmp/pilot.
