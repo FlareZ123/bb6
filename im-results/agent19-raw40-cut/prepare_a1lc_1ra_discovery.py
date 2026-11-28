@@ -20,7 +20,7 @@ OUT = ROOT / "a1lc" / "1RA"
 PARENT = "1RB1LC_1RC1RA_0RD---_1LD1LA_------_------"
 OUT.mkdir(parents=True, exist_ok=True)
 sys.path.insert(0, str(ROOT))
-from compact_ngram import compact, compact_run, compact_lag  # noqa: E402
+from compact_ngram import compact, compact_run, compact_lag, find_lag  # noqa: E402
 
 
 def run(args, **kwargs):
@@ -74,10 +74,28 @@ for line in far.stdout.splitlines():
 if len(far_codes) != len(set(far_codes)) or any(i < 0 or i >= len(opens) for i in far_codes):
     raise SystemExit("FAR search returned duplicate or out-of-range ids")
 
-# The nine residuals left by FAR need stronger finite summaries.  Try the
-# already-established A1LC n-gram, run-length and lag-XOR families.  Each
-# accepted record is independently reconstructed by emit_rungram.py and then
-# checked by FastBiDFA in Lean.
+# One residual can require a six-state FAR summary even when the other 187
+# close at five.  Search only the remaining ids so the larger bank stays cheap.
+remaining_for_far6 = sorted(set(range(len(opens))) - set(far_codes))
+far6_stats = []
+if remaining_for_far6:
+    far6_input = "".join(
+        f"{i} {opens[i].replace('_', '')}\\n" for i in remaining_for_far6
+    )
+    far6 = run([str(OUT / "farbank"), "6", str(OUT / "far-bank.txt")],
+               cwd=OUT, input=far6_input, capture_output=True)
+    (OUT / "far6.txt").write_text(far6.stdout)
+    (OUT / "far6.log").write_text(far6.stderr)
+    for line in far6.stdout.splitlines():
+        fields = line.split()
+        if len(fields) == 2:
+            far_codes[int(fields[0])] = fields[1]
+    far6_stats = [line for line in far6.stderr.splitlines() if line.startswith("n=")]
+
+# Remaining residuals need stronger finite summaries.  Try the already-
+# established A1LC n-gram, run-length and lag-XOR families.  Each accepted
+# record is independently reconstructed by emit_rungram.py and checked by
+# FastBiDFA in Lean.
 ngram_widths = {(5, 5), (6, 6), (7, 7), (8, 8), (5, 6), (6, 5), (4, 5), (5, 4)}
 run_pairs = {
     ((2, 1, 1, 2, 2), (2, 1, 1, 2, 2)),
@@ -144,6 +162,14 @@ for i in sorted(set(range(len(opens))) - set(far_codes)):
             except ValueError:
                 pass
     if record is None:
+        for seed in ((0, 2, 2, 5), (0, 2, 3, 3), (3, 2, 4, 4)):
+            try:
+                record = find_lag(table, seed, seed, cap=100_000)
+                methods[i] = ["find-lag", list(seed), list(seed)]
+                break
+            except ValueError:
+                pass
+    if record is None:
         unresolved.append({"id": i, "table": table})
     else:
         compact_records.append({"id": i, **record})
@@ -152,7 +178,7 @@ for i in sorted(set(range(len(opens))) - set(far_codes)):
 enum_stats = {}
 for key, value in re.findall(r"(cycle|last|open|split):(\d+)", enum.stdout):
     enum_stats[key] = int(value)
-far_stats = [line for line in far.stderr.splitlines() if line.startswith("n=")]
+far_stats = [line for line in far.stderr.splitlines() if line.startswith("n=")] + far6_stats
 summary = {
     "parent": PARENT,
     "opens": len(opens),
