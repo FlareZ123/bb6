@@ -30,11 +30,20 @@ on:
         type: choice
         options: ['F0','B1']
         default: 'F0'
+      d100_long_epoch_batch:
+        description: Certify the 2396150-step 78-cell hard B1 opaque-tail pump
+        type: boolean
+        default: false
+      d100_long_epoch_mode:
+        description: Pilot source batches or the complete NeverHalts proof
+        type: choice
+        options: ['pilot','full']
+        default: 'pilot'
 permissions:
   contents: read
 jobs:
   source-audit:
-    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch }}
+    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch && !inputs.d100_long_epoch_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -282,5 +291,60 @@ jobs:
             /tmp/a7-d100-exposure/
             /tmp/a7-d100-exposure-proof/
             /tmp/a7-d100-exposure-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-long-epoch:
+    if: ${{ inputs.d100_long_epoch_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate deterministic 2396150-step symbolic and original-blank certificate
+        run: |
+          set -euo pipefail
+          python im-results/agent7-opaque-tail-pump/long_epoch_certificate.py \
+            --out /tmp/a7-long-epoch --chunk 1200 --batch 36
+          python im-results/agent13-coverage/unpack.py
+      - name: Compile source closure and audit exact nonhalting proof or pilot lemma
+        run: |
+          set -euo pipefail
+          MODE=${{ inputs.d100_long_epoch_mode }}
+          if [[ "$MODE" == "pilot" ]]; then
+            TARGETS=(/tmp/a7-long-epoch/LongEpochBase000.lean /tmp/a7-long-epoch/LongEpochSym000.lean)
+          else
+            test "$MODE" = full
+            TARGETS=(/tmp/a7-long-epoch/LongEpochNever.lean)
+          fi
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-long-epoch-proof \
+            --source-root /tmp/a7-long-epoch --jobs 2 \
+            --manifest /tmp/a7-long-epoch-proof/manifest.json \
+            --label raw36-d100-long-epoch-${{ inputs.d100_long_epoch_mode }} \
+            --artifact-name raw36-d100-long-epoch-${{ inputs.d100_long_epoch_mode }} \
+            --provenance-input im-results/agent7-opaque-tail-pump/long_epoch_certificate.py \
+            "${TARGETS[@]}" 2>&1 | tee /tmp/a7-long-epoch-audit.log
+          if [[ "$MODE" == "pilot" ]]; then
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-long-epoch-audit.log BB6.Agent7D100LongEpoch.base_block000
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-long-epoch-audit.log BB6.Agent7D100LongEpoch.sym_block000
+          else
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-long-epoch-audit.log BB6.Agent7D100LongEpoch.never
+          fi
+          cp /tmp/a7-long-epoch-audit.log /tmp/a7-long-epoch-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-long-epoch-${{ inputs.d100_long_epoch_mode }}
+          path: |
+            /tmp/a7-long-epoch/certificate.json
+            /tmp/a7-long-epoch-proof/
+            /tmp/a7-long-epoch-audit.log
           if-no-files-found: warn
           retention-days: 60
