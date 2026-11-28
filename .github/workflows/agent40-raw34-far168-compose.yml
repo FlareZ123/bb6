@@ -43,7 +43,7 @@ jobs:
           repository: ${{ github.repository }}
           run-id: ${{ inputs.far_run_id }}
           path: /tmp/a50-raw34-far
-      - name: Compose parent, verify exact frontier identity, and close all 168 residuals
+      - name: Compose parent, verify exact frontier, and close all 168 residuals
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
@@ -59,6 +59,7 @@ jobs:
           test -f "$F/generated/manifest.json"
           cp "$P"/generated/*.lean "$W/generated/"
           cp "$F"/generated/Raw34FAR3233Shard*.lean "$W/generated/"
+          cp im-results/agent50-raw34-far3233/Raw34M2071Growth.lean "$W/generated/Raw34M2071Growth.lean"
           cp "$P/generated/finalRows.json" "$W/finalRows.json"
           cp "$P/final-manifest.json" "$W/parent-manifest.json"
           cp "$F/generated/manifest.json" "$W/far4-manifest.json"
@@ -94,7 +95,20 @@ jobs:
             --far-manifest "$W/far4-manifest.json" \
             --final-rows "$W/finalRows.json" \
             --output "$W/generated" --shard-size 40 | tee "$W/far168-generation.json"
-          g++ -O3 -std=c++20 im-results/agent50-raw34-plan/far.cpp -o "$W/far"
+          cp im-results/agent50-raw34-plan/far.cpp "$W/far.cpp"
+          python - "$W/far.cpp" <<'PY'
+          from pathlib import Path
+          import sys
+          p=Path(sys.argv[1]); s=p.read_text()
+          old='int limit=argc>1?atoi(argv[1]):4; if(limit<1||limit>6){cerr<<"limit must be 1..6\\n";return 2;}'
+          new='int limit=argc>1?atoi(argv[1]):4; int minD=argc>2?atoi(argv[2]):1; if(limit<1||limit>6||minD<1||minD>limit){cerr<<"invalid FAR size interval\\n";return 2;}'
+          assert old in s
+          s=s.replace(old,new)
+          assert s.count('for(int d=1;d<=limit;d++)')==2
+          s=s.replace('for(int d=1;d<=limit;d++)','for(int d=minD;d<=limit;d++)')
+          p.write_text(s)
+          PY
+          g++ -O3 -std=c++20 "$W/far.cpp" -o "$W/far"
           python - "$W/hard3233.txt" "$W/far4.jsonl" "$W/hard168.txt" <<'PY'
           import json,sys
           lines=open(sys.argv[1]).read().splitlines()
@@ -104,7 +118,7 @@ jobs:
           open(sys.argv[3],"w").write("\n".join(lines[i] for i in misses)+"\n")
           print("FAR5 input rows:",len(misses))
           PY
-          "$W/far" 5 < "$W/hard168.txt" > "$W/far5.jsonl" 2> "$W/far5.log"
+          "$W/far" 5 5 < "$W/hard168.txt" > "$W/far5.jsonl" 2> "$W/far5.log"
           python - "$W/hard3233.txt" "$W/far5.jsonl" "$W/hard8.txt" "$W/misses5.json" <<'PY'
           import json,sys
           lines=open(sys.argv[1]).read().splitlines()
@@ -117,7 +131,7 @@ jobs:
           json.dump(misses,open(sys.argv[4],"w"))
           print("FAR5:",len(records)-len(misses),"hits; remaining IDs:",misses)
           PY
-          "$W/far" 6 < "$W/hard8.txt" > "$W/far6hits.jsonl" 2> "$W/far6.log"
+          "$W/far" 6 6 < "$W/hard8.txt" > "$W/far6hits.jsonl" 2> "$W/far6.log"
           python - "$W/misses5.json" "$W/far6hits.jsonl" "$W/far6.jsonl" <<'PY'
           import json,sys
           misses=json.load(open(sys.argv[1]))
@@ -127,7 +141,7 @@ jobs:
           assert set(by_id)==expected and len(by_id)==8
           rows=[({"id":i} if i==2071 else by_id[i]) for i in misses]
           open(sys.argv[3],"w").write("\n".join(json.dumps(x,separators=(",",":")) for x in rows)+"\n")
-          print("FAR6:",len(by_id),"source candidates; growth row 2071 handled symbolically")
+          print("FAR6:",len(by_id),"hits; growth row 2071 handled symbolically")
           PY
           python im-results/agent50-raw34-far3233/generate_close_168.py \
             --hard "$W/hard3233.txt" --far4 "$W/far4.jsonl" \
