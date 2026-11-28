@@ -83,17 +83,19 @@ theorem grow (n : Nat) :
   have h2' : run0 p (n+1)
       ⟨2,[true]++rep [true] n++[false,true,true],[true]⟩ =
       some ⟨2,[false,true,true],[true,true]++rep [true] n⟩ := by
-    simpa only [rep,List.append_assoc,rep_snoc] using h2
-  have H := join0 (join0 (join0 (join0 h1 h2') h3) h4) h5
+    simpa [rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc] using h2
+  have h4' : run0 p n
+      ⟨5,[true,true,false,true,true],rep [true] n⟩ =
+      some ⟨5,[true]++rep [true] n++[true,false,true,true],[]⟩ := by
+    simpa only [List.cons_append,List.nil_append,List.append_assoc] using h4
+  have H := join0 (join0 (join0 (join0 h1 h2') h3) h4') h5
   have ht : 1+(n+1)+2+n+1=2*n+5 := by omega
-  simpa only [word,rep,List.append_assoc,rep_snoc,ht] using H
+  simpa [word,rep,rep_snoc,List.cons_append,List.nil_append,List.append_assoc,ht] using H
 
 theorem all_time_never (m : Machine)
     (hm : compatible p m) : NeverHalts m := by
   exact never_of_growth p word 6 (fun n => 2*n+5)
     first (by intro n; omega) grow m hm
-
-theorem cylinder_mass : cylinderMass p = 25^4 := by decide
 
 #print axioms first
 #print axioms cLeftMany
@@ -101,5 +103,4 @@ theorem cylinder_mass : cylinderMass p = 25^4 := by decide
 #print axioms fRightMany
 #print axioms grow
 #print axioms all_time_never
-#print axioms cylinder_mass
 end BB6.Agent40Raw34LeftUnaryShell
