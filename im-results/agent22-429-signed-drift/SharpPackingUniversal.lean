@@ -113,10 +113,44 @@ theorem digit_identity (n : Nat) :
       have hdiv : 4*(n/4)+n%4=n := by omega
       omega
 
+/-- Number of factors four in a strictly positive integer. -/
+def fourVal (n : Nat) : Nat :=
+  if hn : n=0 then 0
+  else if hd : n%4=0 then 1+fourVal (n/4) else 0
+termination_by n
+decreasing_by omega
+
+/-- Each finite difference of F is precisely one plus its four-adic
+    exponent. This bridges the numerical capacity theorem to the
+    exact optimal edge-family charging argument. -/
+theorem F_jump : ∀ n : Nat, 0<n →
+    F n = F (n-1)+1+fourVal n := by
+  intro n
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    intro hn
+    have hf := F_recur n
+    have hfprev := F_recur (n-1)
+    by_cases hmod : n%4=0
+    · have hqpos : 0<n/4 := by omega
+      have hlt : n/4<n := by omega
+      have hi := ih (n/4) hlt hqpos
+      have hdiv : (n-1)/4=n/4-1 := by omega
+      have hv : fourVal n=1+fourVal(n/4) := by
+        simp [fourVal, Nat.ne_of_gt hn, hmod]
+      rw [hdiv] at hfprev
+      omega
+    · have hdiv : (n-1)/4=n/4 := by omega
+      have hv : fourVal n=0 := by
+        simp [fourVal, Nat.ne_of_gt hn, hmod]
+      rw [hdiv] at hfprev
+      omega
+
 #print axioms F_recur
 #print axioms F_upper
 #print axioms F_lower_three
 #print axioms F_three_of_lt64
 #print axioms sharp_capacity
 #print axioms digit_identity
+#print axioms F_jump
 end SharpPackingUniversal
