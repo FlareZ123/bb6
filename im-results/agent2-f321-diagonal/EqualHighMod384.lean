@@ -44,7 +44,6 @@ private theorem pow2_even_mod384 (k : Nat)
       rw [hexp, Nat.pow_add]
       have htwo : 2^2 = 4 := by decide
       rw [htwo, Nat.mul_mod, ih]
-      decide
 
 private theorem half_mod768 (k : Nat) (heven : k % 2 = 0) :
     ((k+10)/2) % 384 = (((k%768)+10)/2) % 384 := by
