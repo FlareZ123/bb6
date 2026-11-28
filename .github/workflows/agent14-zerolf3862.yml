@@ -98,6 +98,7 @@ jobs:
           mkdir -p "$work"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0TenNativeBounds.lean \
+            im-results/agent14-raw139-d0-generic/Raw139NormalizedPostTwelve53.lean \
             --workdir "$work/build" \
             --jobs 4 \
             --manifest "$work/manifest.json" \
@@ -132,6 +133,8 @@ jobs:
           grep -F "'BB6.Agent14Raw139NormalizedE0TenNativeBounds.native_ten_to_B' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0TenNativeBounds.raw139_p0_from_57_native' depends on axioms: [propext," "$work/log"
           grep -F "'BB6.Agent14Raw139NormalizedE0TenNativeBounds.raw139_p0_from_56_native' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53.normalizedAfterTwelvePlusTwo_count' depends on axioms: [propext," "$work/log"
+          grep -F "'BB6.Agent14Raw139NormalizedPostTwelve53.raw139_p0_cover_from_53' depends on axioms: [propext," "$work/log"
           python3 tools/lean_compile_closure.py \
             im-results/agent14-raw139-d0-generic/Raw139NormalizedE0CutsProspective.lean \
             --workdir "$work/prospective-build" \
@@ -160,6 +163,7 @@ jobs:
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0TenAcceptedFinite.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0TenAcceptedConditional.olean
             /tmp/agent14-e0-counts/build/Raw139NormalizedE0TenNativeBounds.olean
+            /tmp/agent14-e0-counts/build/Raw139NormalizedPostTwelve53.olean
             /tmp/agent14-e0-counts/prospective-log
             /tmp/agent14-e0-counts/prospective-manifest.json
             /tmp/agent14-e0-counts/prospective-build/Raw139NormalizedE0CutsProspective.olean
