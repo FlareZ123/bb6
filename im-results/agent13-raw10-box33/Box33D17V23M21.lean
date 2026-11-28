@@ -304,8 +304,9 @@ theorem never : NeverHalts table := by
   intro n
   have hv : valid (.double [] 0) := by simp [valid,potential,dPot,fuel]
   have hb : BB6.Agent13.Box33PrefixMacro.project BB6Coverage.blank = phase (.double [] 0) := by
-    rw [Box33Source.project_blank]
-    simp [phase,enc,DB,cfg,word,ones,rep,Box33UnarySweeper.blank,z]
+    change Box33Source.project false BB6Coverage.blank = phase (.double [] 0)
+    rw [Box33Source.project_blank false]
+    simp [phase,enc,DB,cfg,word,ones,rep,Box33UnarySweeper.blank] <;> rfl
   rw [hb]
   exact never_phase n (.double [] 0) hv
 
