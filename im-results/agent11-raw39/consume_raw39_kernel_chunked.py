@@ -164,7 +164,7 @@ def main():
         "parent": parent,
         "staged_root": report["staged_root"],
         "kernel_replay": {
-            "mode": report["mode"], "chunk_size": report["chunk_size"],
+            "mode": report["mode"], "chunk_size": report.get("chunk_size"),
             "affected_modules": report["affected_modules"],
             "selected_declarations": report["selected_declarations"],
             "kernel_comparison": report["kernel_comparison"],
