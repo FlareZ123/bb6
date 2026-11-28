@@ -1,0 +1,626 @@
+{
+  "status": "Finite original-blank trace candidates: JavaScript computed; Lean source not yet compiled",
+  "physicalMachines": "351562500",
+  "leaves": [
+    {
+      "id": 0,
+      "frontierOpenLeafIndex": 0,
+      "assignedHaltSlot": "C1",
+      "ordinaryStepsBeforeHalt": 7,
+      "attemptedHaltStep": 8,
+      "mass": "244140625",
+      "decisions": [
+        "1RD",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD---_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p0_weighted"
+    },
+    {
+      "id": 1,
+      "frontierOpenLeafIndex": 1,
+      "assignedHaltSlot": "A1",
+      "ordinaryStepsBeforeHalt": 11,
+      "attemptedHaltStep": 12,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "0LA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0LA_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "0LA"
+        },
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C1",
+          "move": "0LA"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p1_weighted"
+    },
+    {
+      "id": 2,
+      "frontierOpenLeafIndex": 13,
+      "assignedHaltSlot": "E0",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "0LE",
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0LE_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "0LE"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p2_weighted"
+    },
+    {
+      "id": 3,
+      "frontierOpenLeafIndex": 37,
+      "assignedHaltSlot": "A1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "0RA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RA_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "0RA"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p3_weighted"
+    },
+    {
+      "id": 4,
+      "frontierOpenLeafIndex": 47,
+      "assignedHaltSlot": "B1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "0RB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RB_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "0RB"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p4_weighted"
+    },
+    {
+      "id": 5,
+      "frontierOpenLeafIndex": 57,
+      "assignedHaltSlot": "E1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "0RE",
+        null,
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD0RE_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "0RE"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p5_weighted"
+    },
+    {
+      "id": 6,
+      "frontierOpenLeafIndex": 69,
+      "assignedHaltSlot": "B1",
+      "ordinaryStepsBeforeHalt": 9,
+      "attemptedHaltStep": 10,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1LA",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LA_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1LA"
+        },
+        {
+          "slot": "A0",
+          "move": "1RB"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p6_weighted"
+    },
+    {
+      "id": 7,
+      "frontierOpenLeafIndex": 89,
+      "assignedHaltSlot": "B1",
+      "ordinaryStepsBeforeHalt": 10,
+      "attemptedHaltStep": 11,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1LB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LB_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1LB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C1",
+          "move": "1LB"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p7_weighted"
+    },
+    {
+      "id": 8,
+      "frontierOpenLeafIndex": 102,
+      "assignedHaltSlot": "E0",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1LE",
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1LE_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1LE"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p8_weighted"
+    },
+    {
+      "id": 9,
+      "frontierOpenLeafIndex": 127,
+      "assignedHaltSlot": "A1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1RA",
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RA_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1RA"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p9_weighted"
+    },
+    {
+      "id": 10,
+      "frontierOpenLeafIndex": 139,
+      "assignedHaltSlot": "B1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1RB",
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RB_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1RB"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p10_weighted"
+    },
+    {
+      "id": 11,
+      "frontierOpenLeafIndex": 150,
+      "assignedHaltSlot": "E1",
+      "ordinaryStepsBeforeHalt": 8,
+      "attemptedHaltStep": 9,
+      "mass": "9765625",
+      "decisions": [
+        "1RD",
+        "1RE",
+        null,
+        null,
+        null,
+        "HALT"
+      ],
+      "projection": "1RB---_1RC---_0RD1RE_1LC1RD_------_------",
+      "readTrace": [
+        {
+          "slot": "A0",
+          "move": "1RB"
+        },
+        {
+          "slot": "B0",
+          "move": "1RC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C0",
+          "move": "0RD"
+        },
+        {
+          "slot": "D1",
+          "move": "1RD"
+        },
+        {
+          "slot": "D0",
+          "move": "1LC"
+        },
+        {
+          "slot": "C1",
+          "move": "1RE"
+        }
+      ],
+      "sourceLeanTheorem": "BB6.Agent23Raw34D1RDHalters.p11_weighted"
+    }
+  ]
+}

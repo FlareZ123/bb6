@@ -1,21 +1,30 @@
-# Raw34 D1=1RD: exact accepted-cylinder complement
+# Raw34 D1=1RD: explicit finite proof frontier and assigned-halt descendants
 
-**Scope and status.** This is an exact finite set-theoretic physical-table partition, **not** a new kernel-checked Lean proof or a complete Raw34 Cover. Fix D1=`1RD` in the eight-hole parent `1RB---_1RC---_0RD---_1LC---_------_------`. There are **25^7 = 6,103,515,625** possible physical completions over the remaining seven entries, counting HALT as a distinct 25th action.
+**Status (28 November 2026).** This is an exact *finite computational* physical-table partition, with an additional twelve-leaf source-Lean proof **draft pending full compilation**. It is not a complete Raw34 Cover or a universal BB(6) upper bound. The original certified Raw34 nonhalting families remain unchanged.
 
-The source-accepted Raw34 nonhalting cylinder families cover **3,320,312,500** of these machines. The remaining **2,783,203,125** are *not covered by these particular certificates*; this says nothing about whether they actually halt. The exact algorithm partitions this branch into **124 disjoint proof-labeled covered leaves and 165 disjoint uncovered leaves**, with 12 genuine 25-way splits and 13 skipped wildcard slots. It verifies conservation of physical-table mass and explicitly preserves HALT action branches. The output [manifest](D1-1RD-proof-frontier.json) identifies each remaining partial-table leaf and each covered leaf's original-source theorem family.
+For the Raw34 parent `1RB---_1RC---_0RD---_1LC---_------_------` with D1=`1RD`, exactly **25^7 = 6,103,515,625** physical tables are possible:
 
-## Reproduction and proof boundary
+| Classification at the current evidence level | Physical completions |
+| --- | ---: |
+| In previously accepted nonhalting cylinders | **3,320,312,500** |
+| Outside those accepted nonhalting cylinders | **2,783,203,125** |
 
-From repository root run `node im-results/agent23-raw34-frontier/export.mjs` to audit the committed manifest or append `--write` to regenerate it after changing the upstream accepted proof set. The pure JavaScript program consumes Agent50's unmodified [depth-two/depth-three witnessed certificates](../agent50-raw34-firsthole/), and adds its eleven first-level side cycles, unary-growth cylinder, closed C–D pairs, 1,728 B–C–D triples, and three source-accepted longer growth pumps. References to corresponding accepted source files and CI jobs are embedded in the JSON `sourceMap`.
+The finite recursion partitions this branch into **124 proof-labeled covered leaves and 165 disjoint leaves not covered by those nonhalting certificates**. It uses 12 actual 25-outcome splits, 13 wildcard skips, and 314 visited nodes.
 
-A physical-machine **HALT** instruction is not the wildcard `---` in the partial-table notation. The manifest's `decisions` field is authoritative: when a leaf fixes HALT, `explicitHalts` records the affected slots and `projection` replaces that action with `---` **only as a lossy display**. A consumer must not mistake that projection for the original exact leaf.
+## Concrete new finite-halt candidates
 
-The script verifies: (1) every covered leaf contains an exact accepted input proof cylinder, (2) every uncovered leaf has empty intersection with all 3,087 input proof cylinders, (3) all 289 leaves are pairwise disjoint, and (4) their 25-ary masses total 25^7. These are direct finite calculations; neither this JavaScript run nor the JSON output substitutes for an original-source Lean proof of the branch partition.
+Independently executing the original blank-start transitions of each of the 165 uncovered leaves to its first unassigned instruction or assigned HALT identifies **12 leaves that encounter an explicitly assigned HALT without ever querying an unassigned transition**. Their disjoint physical-machine mass is **351,562,500** (one six-hole case of 244,140,625 completions, plus eleven five-hole cases of 9,765,625 each). Their assigned HALT is encountered within **9 to 12 ordinary step attempts** (the C1=HALT case at attempted step 8); the other **153 leaves and 2,431,640,625 completions** still first encounter an unspecified instruction.
 
-**Important fixed entry:** the accepted triple-sweep `pA` has A1=1LD, C1=0RA and D1=1RD. Omitting A1 would incorrectly give a six-hole rather than five-hole cylinder and overcount the certified union. This exporter includes A1=1LD.
+The complete individual table decisions, query traces, halt times, and physical masses are in [halting12.json](halting12.json). The [Raw34D1RDHalting12.lean](Raw34D1RDHalting12.lean) draft uses *existing original-source* `finiteHaltCheck_sound` and `weighted_of_margin`, with 12 explicit checked Boolean instances, to attempt a `Cover (WeightedBound 18)` for each fixed halt leaf. **Source-level acceptance has not yet been obtained** because the local shell/Lean failed at the tool boundary; do not count these candidates as kernel-proved halting cylinders until a successful original-source CI source and axiom audit.
 
-## Next mathematical obligation
+## Reproducible complement
 
-For a globally consumable Raw34 result, prove an exhaustive Lean split/containment theorem using the existing 25-outcome transition refinement and compose the original-source nonhalting witnesses at the covered leaves. Resolve every remaining open child at a sufficient weighted score threshold, and only then establish a whole-parent `Cover` and exact membership in the current canonical roster. These exact uncovered children are the next leaf-level research targets, not a claim of a 40-to-39 global reduction.
+The pure [export.mjs](export.mjs) consumes Agent50's unmodified [depth-two and depth-three certificate data](../agent50-raw34-firsthole/) and reconstructs [D1-1RD-proof-frontier.json](D1-1RD-proof-frontier.json). Run from repository root `node im-results/agent23-raw34-frontier/export.mjs` to audit the manifest, or `--write` to regenerate it. The script checks 3,087 original accepted proof patterns, containment of every covered leaf, zero intersection of any uncovered leaf with any input proof, 289-way leaf disjointness, and the exact 25-ary total mass. Source families include eleven oriented rays, 74 depth-two and 1206 depth-three side cycles, unary growth, closed C–D and B–C–D controls, and three accepted polynomial sweep pumps.
 
-This complements the [source-accepted Raw34 family synthesis](../../results/2026-11-28-raw34-covering-97b-tables-agent50.md) without altering its 97,539,062,500-machine full-parent union figure.
+A physical **HALT** instruction is different from the wildcard `---`. The manifest's `decisions` and `explicitHalts` are authoritative. Its `projection` replaces a fixed HALT with `---` **solely for human-readable display** and is not a faithful completion definition. The accepted triple-sweep `pA` additionally fixes A1=1LD, not a wildcard: its correct five-hole cylinder is used.
+
+## Mathematical proof boundary and next action
+
+The accepted source Lean proofs establish `NeverHalts` for each old nonhalting source cylinder. The finite JS partition/trace computation is not a Lean partition theorem, and the twelve new `WeightedBound 18` declarations are an **uncompiled proof candidate**. To promote them, compile `Raw34D1RDHalting12.lean` against unmodified `FiniteHalting`, `WeightedFirstOneCover` and the full dependencies in Lean 4.36.0-rc2 with axiom profiles excluding `sorryAx`. Then compose the checked 25-way physical split with these 12 and the accepted nonhalting leaves, explicitly retaining the 153 still open leaves; solve all remaining descendants at the target score before consuming the whole parent in the accepted global roster.
+
+The 2,431,640,625 completion remainder is **not known to halt or diverge**, and no new Canonical40 reduction is claimed. Full Raw34 accepted nonhalting union remains 97,539,062,500 physical completions in [Agent50's published synthesis](../../results/2026-11-28-raw34-covering-97b-tables-agent50.md).
