@@ -67,6 +67,7 @@ const withFDepth5=process.argv.includes("--include-f-depth5");
 const withEDepth5=process.argv.includes("--include-e-depth5");
 const withExtendedLong=process.argv.includes("--include-extended-long");
 const withDepth6Tranche=process.argv.includes("--include-depth6-tranche");
+const withDepth6Halts=process.argv.includes("--include-depth6-halts");
 const withLateHalts=process.argv.includes("--include-late-halts");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
@@ -96,6 +97,8 @@ const extendedDirIndex=process.argv.indexOf("--extended-long-dir");
 const extendedLongDir=extendedDirIndex<0?"/tmp/a50-raw34-extended-long":process.argv[extendedDirIndex+1];
 const depth6DirIndex=process.argv.indexOf("--depth6-dir");
 const depth6Dir=depth6DirIndex<0?"/tmp/a50-raw34-depth6":process.argv[depth6DirIndex+1];
+const depth6HaltDirIndex=process.argv.indexOf("--depth6-halt-dir");
+const depth6HaltDir=depth6HaltDirIndex<0?"/tmp/a50-raw34-depth6-halts":process.argv[depth6HaltDirIndex+1];
 function parseSourceRay(file){
  const text=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -232,6 +235,27 @@ function loadHalters(file){
 const n8=loadHalters("Raw34OtherD1Halt8.lean");
 const n9=loadHalters("Raw34OtherD1Halt9New.lean");
 assert.equal(n8,109);assert.equal(n9,958);
+let nDepth6Halts=0;
+if(withDepth6Halts){
+ const m=JSON.parse(readFileSync(join(depth6HaltDir,"manifest.json"),"utf8"));
+ assert.equal(m.selectedCount,138017);
+ const parseDirect=file=>{
+   const text=readFileSync(join(depth6HaltDir,file),"utf8");
+   return [...text.matchAll(/⟨\[([\d,\s]+)\],\s*(\d+)⟩/g)]
+     .map(mm=>mm[1].split(",").map(x=>Number(x.trim())));
+ };
+ for(const unit of [...m.fModules,...m.eModules]){
+   const arr=parseDirect(unit.module+".lean");
+   assert.equal(arr.length,unit.size);
+   for(const p of arr){
+     assert.equal(p.length,12);
+     for(const [i,a] of rootActions)assert.equal(p[i],codeOf.get(a));
+     add(slots.map(i=>p[i]));
+   }
+   nDepth6Halts+=arr.length;
+ }
+ assert.equal(nDepth6Halts,276034);
+}
 let nAdditionalLate=0;
 if(withLateHalts){
  nAdditionalLate+=loadHalters("Raw34LateThreeSlotHalters.lean");
@@ -246,7 +270,7 @@ if(withLateHalts){
 assert.equal(bank.length,4156+raySource.length+cycleSource.length+
   fDepth5Source.length+eCycleSource.length+eDepth5Source.length+
   extendedLongSource.length+depth6Source.length+
-  missingThirdSource.length+fGrowthSource.length+nAdditionalLate);
+  missingThirdSource.length+fGrowthSource.length+nDepth6Halts+nAdditionalLate);
 
 const stateSlots=["D","C","B","A","E","E","F","F"];
 const maskNames=["CDE","CDF","CDEF","BCDE","BCDF","BCDEF",
@@ -390,7 +414,8 @@ console.log(JSON.stringify({
   additionalCycleGainOverAll44Rays:"Subtract --include-f-left residual externally for exact fresh mass",
   depth4CyclesIncluded:withDepth4,
   earlyHaltPatterns:n8,lateHaltPatterns:n9,
-  additionalLateHaltPatterns:nAdditionalLate,graphMasks:maskNames,
+  additionalLateHaltPatterns:nAdditionalLate,
+  depth6DirectHaltPatterns:nDepth6Halts,graphMasks:maskNames,
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
   totalResidualD1not1RD:String(grand),
   plusAgent23Residual:String(grand+110397542n),
