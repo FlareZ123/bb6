@@ -147,6 +147,49 @@ theorem h_weight_upper (ks : List Nat) :
   omega
 
 
+/-- Exact radix-four digit-sum response to the F067 stack shift.
+    This formula is division-free and works for an arbitrary shift amount. -/
+theorem digitSum_shift (c : Nat) (ks : List Nat) :
+    3 * digitSum (shift c ks) + c =
+      3 * digitSum ks + c * 4 ^ ks.length := by
+  induction ks generalizing c with
+  | nil => simp [shift, digitSum]
+  | cons k ks ih =>
+    change 3 * (k+c+digitSum (shift (4*c) ks)) + c =
+      3 * (k+digitSum ks) + c * 4 ^ (ks.length+1)
+    have hp : c * 4 ^ (ks.length+1) = (4*c) * 4 ^ ks.length := by
+      rw [pow_succ]
+      ac_rfl
+    rw [hp]
+    have h := ih (4*c)
+    omega
+
+/-- Exact place-value response to the F067 stack shift:
+    15·W(shift c ks)+c = 15·W(ks)+c·16^|ks|.
+    Together with g_decomposition_exact, this gives the already-known
+    linear g_shift theorem without traversing the tower. -/
+theorem digitWeight_shift (c : Nat) (ks : List Nat) :
+    15 * digitWeight (shift c ks) + c =
+      15 * digitWeight ks + c * 16 ^ ks.length := by
+  induction ks generalizing c with
+  | nil => simp [shift, digitWeight]
+  | cons k ks ih =>
+    change 15 * (k+c+4*digitWeight (shift (4*c) ks)) + c =
+      15 * (k+4*digitWeight ks) + c * 16 ^ (ks.length+1)
+    have hp : c * 16 ^ (ks.length+1) =
+        4 * ((4*c) * 16 ^ ks.length) := by
+      rw [pow_succ]
+      calc
+        c * (16 ^ ks.length * 16) =
+            (16*c) * 16 ^ ks.length := by ac_rfl
+        _ = 4 * ((4*c) * 16 ^ ks.length) := by
+          change ((4*4)*c) * 16 ^ ks.length = _
+          ac_rfl
+    rw [hp]
+    have h := ih (4*c)
+    omega
+
+
 #print axioms d_length_exact
 #print axioms e_length_exact
 #print axioms d_length_upper
@@ -155,4 +198,6 @@ theorem h_weight_upper (ks : List Nat) :
 #print axioms h_decomposition_exact
 #print axioms g_weight_upper
 #print axioms h_weight_upper
+#print axioms digitSum_shift
+#print axioms digitWeight_shift
 end BB6.Agent3F067LengthInvariants
