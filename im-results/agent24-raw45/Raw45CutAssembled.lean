@@ -10,7 +10,7 @@ import Raw45CutPart23
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 namespace BB6.Agent24Raw45FullChild
-open BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit
+open BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay
 def kid00 : Audit :=
 .cycle 0 9 false (3)
 
