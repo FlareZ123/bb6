@@ -23,6 +23,11 @@ on:
         required: false
         type: boolean
         default: false
+      raw42_after_raw47:
+        description: 'Also source-check the Raw42 37-to-36 conditional successor'
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -79,6 +84,16 @@ jobs:
             --raw47-run-id 46068688341 \
             | tee /tmp/a29-raw47-after-raw112.log
           test -s /tmp/a10-raw112-after-raw39/evidence/raw47-after-raw112-canonical37.json
+      - name: Source-check Raw42 conditional Canonical36 after Raw112 and Raw47
+        if: ${{ inputs.raw42_after_raw47 }}
+        run: |
+          set -euo pipefail
+          [[ "${{ inputs.raw47_full }}" == "true" ]]
+          python -m py_compile im-results/agent32-raw42/check_after_raw112_raw47.py
+          python im-results/agent32-raw42/check_after_raw112_raw47.py \
+            --work /tmp/a10-raw112-after-raw39 \
+            | tee /tmp/a17-raw42-after-raw112-raw47.log
+          test -s /tmp/a10-raw112-after-raw39/evidence/raw42-after-raw112-raw47-canonical36.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
