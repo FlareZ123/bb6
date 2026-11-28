@@ -229,15 +229,3 @@ Global consumption is also staged rather than inferred from raw indices:
 
 Until a parent artifact is source accepted, none of these conditional roster
 successors changes the accepted global residual count.
-
-
-## Prepared Raw112→Raw47→Raw42 global follow-on (Agent17, 2026-11-28)
-
-The next consumer is staged on the exact accepted Raw112-first lineage:
-
-- `Raw42Canonical36AfterRaw112Raw47.lean` imports the source-accepted Raw47 Canonical37 successor, proves Raw42 occurs exactly once in that 37-member roster, and removes it to a 36-member conditional roster.
-- `Raw42Canonical36FromNamed.lean` derives the Raw42 parent Cover from the twelve exact named child Covers and exposes conditional soundness and champion-score exactness.
-- `check_after_raw112_raw47.py` checks the original Lean sources and standard axiom profiles.
-- The existing `.github/workflows/agent10-raw112-after-raw39.yml` supports optional `raw42_after_raw47=true`, paired with `raw47_full=true`, so the Raw47 bridge and Raw42 consumer are checked in one linked environment. No new workflow was added.
-
-This is prepared source, not yet CI-accepted. It does **not** change the accepted global residual count: Raw42 still needs its complete twelve-child parent Cover. The current dossier records nine accepted children; 0LE, 1LE and 1RE remain on exact split runs 46156341083, 46157367536 and 46157370847. Raw47's full after-Raw112 source bridge is being checked in run 46155256842.
