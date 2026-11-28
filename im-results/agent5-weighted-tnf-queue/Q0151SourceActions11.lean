@@ -30,6 +30,7 @@ open BB6.Agent5Q0151RightWords
 open BB6.Agent5Q0151ParamSaturation
 open BB6.Agent5Q0151OuterAbstractActions
 open BB6.Agent5Q0151MacroTransfer
+open BB6.Agent5Q0151TransferredWord
 open BB6.Agent5Q0151PackedRightExt
 open BB6.Agent5Q0151SourceActions1
 open BB6.Agent5Q0151SourceActions3
@@ -119,13 +120,16 @@ theorem c_six_refines (n : Nat) (s : List Bool)
   have hp : pack (s ++ alt (2*n+2) ++ true::runBits rest) =
       pack (runBits decoded) := by
     simpa [List.append_assoc] using hpack
+  have hp' : pack (s ++ alt (2*(n+1)) ++ true::runBits rest) =
+      pack (runBits decoded) := by
+    simpa [Nat.mul_add,Nat.add_assoc] using hp
   have hright :
       boundary 1 (popSaved stack ++ [true,true,true,true])
         (popTail stack)
-        (s ++ alt (2*n+2) ++ true::runBits rest) =
+        (s ++ alt (2*(n+1)) ++ true::runBits rest) =
       boundary 1 (popSaved stack ++ [true,true,true,true])
         (popTail stack) (runBits decoded) :=
-    boundary_right_pack _ _ _ _ _ hp
+    boundary_right_pack _ _ _ _ _ hp'
   rw [hright] at hmacro
   refine ⟨decoded,hact,?_,resume_saved (popSaved stack) decoded⟩
   simpa [runBits,Nat.mul_add,Nat.add_assoc] using hmacro
