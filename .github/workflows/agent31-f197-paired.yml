@@ -16,6 +16,7 @@ on:
           - self-embedding
           - computer-certificate
           - blank-root
+          - cover-bridge
         default: paired
 
 jobs:
@@ -143,3 +144,27 @@ jobs:
           fi
           ! grep -q sorryAx "$RLOG"
           python3 "$e/verify_nonhalt.py"
+
+      - name: Certify F197 exact partial-table weighted Cover bridge
+        if: ${{ inputs.target == 'cover-bridge' }}
+        env:
+          LEAN_PATH: im-results/agent31-f197-macro:im-results/agent8-coverage-contract:im-results/agent42-coverage-normal:im-results/agent4-coverage-smoke:im-results/agent13-weighted-first-one
+        run: |
+          set -euo pipefail
+          d=im-results/agent31-f197-macro
+          f=im-results/agent8-coverage-contract
+          t=im-results/agent42-coverage-normal
+          g=im-results/agent4-coverage-smoke
+          e=im-results/agent13-weighted-first-one
+          lean -o "$f/Frontier.olean" "$f/Frontier.lean" | tee /tmp/f197-bridge.log
+          lean -o "$f/Symmetry.olean" "$f/Symmetry.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$f/RootShift.olean" "$f/RootShift.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$t/FirstStep.olean" "$t/FirstStep.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$g/WriteOneDrift.olean" "$g/WriteOneDrift.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$e/BlankDelayKernel.olean" "$e/BlankDelayKernel.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$e/BlankDelaySource.olean" "$e/BlankDelaySource.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$e/SparseBlankDelay.olean" "$e/SparseBlankDelay.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$d/Macro.olean" "$d/Macro.lean" | tee -a /tmp/f197-bridge.log
+          lean -o "$d/CoverBridge.olean" "$d/CoverBridge.lean" | tee -a /tmp/f197-bridge.log
+          lean "$d/F197WeightedLeaf.lean" | tee -a /tmp/f197-bridge.log
+          ! grep -q sorryAx /tmp/f197-bridge.log
