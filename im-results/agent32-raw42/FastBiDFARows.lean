@@ -2,6 +2,8 @@ import FastBiDFA
 
 namespace BB6.Agent32Raw42FastBiDFA
 
+open BB6.Agent32FastBiDFA
+
 /-- Row-wise composition form of `check`, kept in an extension module so
     previously accepted FastBiDFA objects retain byte/source identity. -/
 theorem check_of_rows {p c} (hl : edgeOK c.el 0 false 0 = true)
