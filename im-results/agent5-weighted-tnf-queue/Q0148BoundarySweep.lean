@@ -381,7 +381,7 @@ theorem markedHop (cs : List LeftChunk) (L R : List Bool) :
   have h2 := Auto.knownRun_sound p 13 markedEdge13
     (outputRightChunks (rightSequence cs) ++ L) R
   have h := join0 h1 h2
-  simpa only [List.append_assoc] using h
+  simpa [Auto.extend,List.append_assoc] using h
 
 
 /-- The right boundary's 1110 sentinel is processed in nine original
