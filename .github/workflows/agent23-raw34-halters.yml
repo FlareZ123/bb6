@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3]
+        options: [pilot, full, depth2, highmass, union, third, far, complete-slices, erase-slice, final-eight, f-depth3, f-depth4]
         default: pilot
 
 permissions:
@@ -12,6 +12,7 @@ permissions:
 
 jobs:
   certified-leaves:
+    if: inputs.mode != 'f-depth4'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -162,3 +163,76 @@ jobs:
           name: agent23-raw34-halters-source-audit
           path: /tmp/agent23-raw34-halters/audit.log
           retention-days: 14
+
+  f-depth4-prepare:
+    if: inputs.mode == 'f-depth4'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate exact original-source F depth-four cycle candidates
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/a40-f-depth4-source
+          node im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \\
+            --output /tmp/a40-f-depth4-source --shard-size 100 \\
+            > /tmp/a40-f-depth4-source/generation.log
+          test "$(find /tmp/a40-f-depth4-source -maxdepth 1 -name 'Raw34FDepth4SideShard*.lean' | wc -l)" -eq 93
+          grep -F '9231' /tmp/a40-f-depth4-source/manifest.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: a40-raw34-f-depth4-source
+          path: /tmp/a40-f-depth4-source/
+          if-no-files-found: error
+          compression-level: 1
+          retention-days: 30
+  f-depth4-check:
+    if: inputs.mode == 'f-depth4'
+    needs: f-depth4-prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 6
+      matrix:
+        group: [0,1,2,3,4,5]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: a40-raw34-f-depth4-source
+          path: /tmp/a40-f-depth4-source
+      - name: Certify each disjoint depth-four side-cycle via authentic source checker
+        env:
+          GROUP: ${{ matrix.group }}
+        run: |
+          set -euo pipefail
+          W=/tmp/a40-f-depth4-verify
+          mkdir -p "$W"
+          mapfile -t all < <(find /tmp/a40-f-depth4-source -maxdepth 1 -name 'Raw34FDepth4SideShard*.lean' | sort)
+          test "${#all[@]}" -eq 93
+          roots=()
+          for i in "${!all[@]}"; do
+            if (( i % 6 == GROUP )); then roots+=("${all[$i]}"); fi
+          done
+          test "${#roots[@]}" -ge 15
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py --workdir "$W/build" \\
+            --source-root /tmp/a40-f-depth4-source --jobs 2 \\
+            "${roots[@]}" 2>&1 | tee "$W/audit.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$W/audit.log"
+          grep -F '.all_never' "$W/audit.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: a40-raw34-f-depth4-source-audit-${{ matrix.group }}
+          path: /tmp/a40-f-depth4-verify/audit.log
+          if-no-files-found: warn
+          retention-days: 30
