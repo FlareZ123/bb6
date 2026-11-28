@@ -7,8 +7,11 @@ This source-level reduction removes the previously conditional *one more
 step* of the eight-ray inverse construction: at n>=13 the genuine source
 third predecessor is so massive that both previous genuine inputs
 automatically have enough ternary room and cannot be exceptional
-gap-two or near-diagonal transitions. Hence a halting authentic blank
-machine must reach one of eight explicit fifth-predecessor cones.
+gap-two or near-diagonal transitions. It also transports a lower scale
+bound 3^(n-4)<=min(u,v) to the fifth predecessor, so the ray parameter
+cannot be inflated independently of a fixed root state. Hence a halting
+authentic blank machine must reach one of eight explicit fifth-predecessor
+cones at its own scale.
 
 This is a source proof CANDIDATE until pinned upstream CI accepts it.
 The resulting eight cones remain *necessary* halting conditions, not
@@ -69,12 +72,13 @@ theorem root_big_first_forces_ordinary_separated
   · omega
 
 /-- A genuine halt forces one of the eight explicit rational fifth-
-predecessor cones. In contrast with ordinary_four_to_eight, NO
-extra ordinary-sector, separation, root-scale, or synthetic-prepared-tape
-premises are retained in the conclusion. -/
+predecessor cones, with a scale interval transported to the authentic
+root state. The lower bound prevents the ray parameter from being chosen
+arbitrarily large at a fixed state. -/
 theorem target_halt_implies_eight_ray
     (hh : BusyBeaver.IsHalt target) :
     ∃ t u v n, run t=some (.D u v) ∧ 13≤n ∧
+      3^(n-4)≤min u v ∧ min u v+3<3^(n+3) ∧
       eightRayCone (n+3) n u v := by
   obtain ⟨tp,px,py,n,hp,hn,hlo,hhi,ht⟩ :=
     target_halt_implies_n13_tight_skew_strip hh
@@ -141,6 +145,21 @@ theorem target_halt_implies_eight_ray
                   have heR := run_preserves_even tr ru rv hr
                   have hyR := even_step_second_upper (n+3)
                     ru rv qx qy heR hscaleR hstepR
+                  have hminP := Nat.min_le_right px py
+                  have hminQ := Nat.min_le_right qx qy
+                  have hmassBound : 3^(n-1) ≤ 9*min ru rv+16*(n+3)+83 := by
+                    omega
+                  have hpow3 : 3^(n-1)=27*3^(n-4) := by
+                    have hn' : n-1=n-4+3 := by omega
+                    rw [hn',Nat.pow_add]
+                    norm_num
+                  have hscaleBudget : 16*(n+3)+83≤18*3^(n-4) := by
+                    have hbase : 1000*n+1000≤3^(n-1) := by omega
+                    rw [hpow3] at hbase
+                    omega
+                  have hminRLower : 3^(n-4)≤min ru rv := by
+                    rw [hpow3] at hmassBound
+                    omega
                   have hminR : 0<min ru rv := by
                     have hm := Nat.min_le_right qx qy
                     omega
@@ -151,7 +170,7 @@ theorem target_halt_implies_eight_ray
                     root_big_first_forces_ordinary_separated
                       (n+3) tr ru rv qx qy hr hminR
                       hscaleR hqxLarge hstepR
-                  exact ⟨tr,ru,rv,n,hr,hn,
+                  exact ⟨tr,ru,rv,n,hr,hn,hminRLower,hscaleR,
                     ordinary_four_to_eight (n+3) n ru rv qx qy
                       hscaleR hsep hord hfour⟩
 
@@ -159,12 +178,13 @@ theorem target_halt_implies_eight_ray
 rays. Establishing the all-time root avoidance premise remains open. -/
 theorem target_not_halt_of_eight_ray_avoidance
     (avoid : ∀ t u v n, run t=some (.D u v) → 13≤n →
+      3^(n-4)≤min u v → min u v+3<3^(n+3) →
       ¬ eightRayCone (n+3) n u v) :
     ¬ BusyBeaver.IsHalt target := by
   intro hh
-  obtain ⟨t,u,v,n,hroot,hn,height⟩ :=
+  obtain ⟨t,u,v,n,hroot,hn,hscaleLo,hscaleHi,height⟩ :=
     target_halt_implies_eight_ray hh
-  exact avoid t u v n hroot hn height
+  exact avoid t u v n hroot hn hscaleLo hscaleHi height
 
 #print axioms root_big_first_forces_ordinary_separated
 #print axioms target_halt_implies_eight_ray
