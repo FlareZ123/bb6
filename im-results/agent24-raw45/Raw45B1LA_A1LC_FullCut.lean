@@ -12111,28 +12111,28 @@ theorem kids_checked (mv : Move) :
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl
   all_goals cases w <;> cases r
   · exact kid00_checked
-  · exact kid01_checked
-  · exact kid02_checked
-  · exact kid03_checked
-  · exact kid04_checked
-  · exact kid05_checked
   · exact kid06_checked
-  · exact kid07_checked
-  · exact kid08_checked
-  · exact kid09_checked
-  · exact kid10_checked
-  · exact kid11_checked
   · exact kid12_checked
-  · exact kid13_checked
-  · exact kid14_checked
-  · exact kid15_checked
-  · exact kid16_checked
-  · exact kid17_checked
   · exact kid18_checked
+  · exact kid01_checked
+  · exact kid07_checked
+  · exact kid13_checked
   · exact kid19_checked
+  · exact kid02_checked
+  · exact kid08_checked
+  · exact kid14_checked
   · exact kid20_checked
+  · exact kid03_checked
+  · exact kid09_checked
+  · exact kid15_checked
   · exact kid21_checked
+  · exact kid04_checked
+  · exact kid10_checked
+  · exact kid16_checked
   · exact kid22_checked
+  · exact kid05_checked
+  · exact kid11_checked
+  · exact kid17_checked
   · exact kid23_checked
 
 theorem checked : zipCheck 96 parent tree = true := by
