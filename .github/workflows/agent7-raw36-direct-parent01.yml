@@ -6,8 +6,8 @@ on:
       max_parts:
         description: 'Canonical audit size per Lean part'
         type: choice
-        options: ['160','240','300','400']
-        default: '240'
+        options: ['160','240','280','300','400']
+        default: '280'
 permissions:
   contents: read
   actions: read
@@ -92,14 +92,76 @@ jobs:
           if-no-files-found: error
           retention-days: 60
 
-  children:
+  accepted-children:
     needs: common
     runs-on: ubuntu-latest
-    timeout-minutes: 65
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
-        kid: [0,1,2,3,4,6,7,8,9,10,12,13,14,15,16,18,19,20,21,22]
+        kid: [4,12,13,16,22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct01-common
+          path: /tmp/d101
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-01-child-${{ matrix.kid }}-source
+          run-id: 46125096035
+          github-token: ${{ github.token }}
+          path: /tmp/accepted
+      - name: Import only exact source/object-identical accepted child
+        env:
+          KID: ${{ matrix.kid }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib,json,os
+          from pathlib import Path
+          def sha(p):
+              with Path(p).open('rb') as f: return hashlib.file_digest(f,'sha256').hexdigest()
+          pad=f"{int(os.environ['KID']):02d}"
+          stem=f"Raw36D101Kid{pad}"
+          current=json.loads(Path('/tmp/d101/common-manifest.json').read_text())
+          accepted=json.loads(Path('/tmp/accepted/a7-direct-check/manifest.json').read_text())
+          assert accepted['lean_version']==current['lean_version']
+          assert accepted['lean_binary']['sha256']==current['lean_binary']['sha256']
+          assert accepted['claim']['theorem']==f"BB6.Agent29Raw36D101.kid{pad}_bound"
+          assert accepted['claim']['weighted_bound']==450
+          a={x['module']:x for x in accepted['modules']}
+          c={x['module']:x for x in current['modules']}
+          root=a[stem]
+          src=Path('/tmp/d101')/(stem+'.lean')
+          obj=Path('/tmp/accepted/a7-direct-check')/(stem+'.olean')
+          assert sha(src)==root['source_sha256'], (stem,'source identity mismatch')
+          assert sha(obj)==root['olean_sha256'], (stem,'object digest mismatch')
+          for name,entry in a.items():
+              if name==stem: continue
+              assert name in c, (stem,'dependency absent from fresh common closure',name)
+              assert c[name]['module_identity_sha256']==entry['module_identity_sha256'], (stem,'dependency identity mismatch',name)
+          Path('/tmp/out').mkdir(parents=True,exist_ok=True)
+          (Path('/tmp/out')/(stem+'.lean')).write_bytes(src.read_bytes())
+          (Path('/tmp/out')/(stem+'.olean')).write_bytes(obj.read_bytes())
+          print('accepted exact child identity reused',stem,root['module_identity_sha256'])
+          PY
+      - name: Retain identity-checked accepted child object
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-direct01-kid-${{ matrix.kid }}
+          path: /tmp/out/
+          if-no-files-found: error
+          retention-days: 60
+
+  children:
+    needs: common
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      matrix:
+        kid: [0,1,2,3,6,7,8,9,10,14,15,18,19,20,21]
     steps:
       - uses: actions/checkout@v4
       - name: Install exact Lean 4.36.0-rc2
@@ -133,7 +195,7 @@ jobs:
           retention-days: 60
 
   assemble:
-    needs: [common, children]
+    needs: [common, accepted-children, children]
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
