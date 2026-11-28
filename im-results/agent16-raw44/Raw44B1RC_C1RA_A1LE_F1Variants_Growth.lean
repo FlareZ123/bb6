@@ -206,8 +206,14 @@ theorem stageA (toC : Bool) (n : Nat) :
   have h1 : run0 (table toC) 3 (leftA n) =
       some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by
     have H := afront3 toC ([true] ++ V (n+1))
-    have hv := rotateV n
-    simpa [leftA,hv,List.append_assoc] using H
+    calc
+      run0 (table toC) 3 (leftA n) =
+          run0 (table toC) 3 ⟨0,[],
+            [false,true,false] ++ ([true] ++ V (n+1))⟩ := by
+              rfl
+      _ = some ⟨0,[false,true,true,true],[true] ++ V (n+1)⟩ := H
+      _ = some ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ := by
+            rw [rotateV n]
   have h2 : run0 (table toC) (8*(n+1))
       ⟨0,[false,true,true,true],W (n+1) ++ [true]⟩ =
       some ⟨0,[false] ++ rep [true,true,true,true] (n+1) ++ [true,true,true],[true]⟩ := by
