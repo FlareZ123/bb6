@@ -1,15 +1,16 @@
-# Raw36: source-checked parent cover reduction to thirteen concrete cylinders
+# Raw36: source-checked parent Cover reduction to twelve concrete cylinders
 
-**Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. For its seven-hole D1=1LB descendant `1RB---_1RC---_0RD---_0LD1LB_------_------`, the locally compiled original-source theorem `BB6.Agent29Raw36.d1_cover_from_four` reduces the entire weighted Cover to **four** exact B1 cylinders: **0LB, 0LE, 1LE, 1RE**. It consumes all eleven other retained representatives, the five closed cycles, the four E/F aliases and the real halt choice. It holds for any common weighted threshold B ≥ 1022. This is a conditional theorem; no remaining child or full Raw36 parent is claimed solved by it.
+**Raw36 remains open.** The eight-hole parent is `1RB---_1RC---_0RD---_0LD---_------_------`. The strongest locally compiled original-source theorem is now `BB6.Agent29Raw36.parent_cover_from_twelve` in [Raw36ParentLive12.lean](Raw36ParentLive12.lean). At any common weighted threshold B ≥ 1022 it requires exactly the nine direct D1 moves (0LA, 1LA, 0LB, 0LC, 1LC, 0LE, 0RE, 1LE, 1RE), and three B1 moves (0LE, 1LE, 1RE) under D1=1LB. The B1=0LB Cover at 315 has been consumed, using definitional table equality `b101_identity`. The corresponding seven-hole theorem `d1_cover_from_three` consumes the entire B1=0LB parent, all eleven earlier accepted representatives, and the original closed cycles/aliases/real halt choice.
 
-`Raw36ParentComplement.lean` now lifts that reduction through the original eight-hole `Raw36Cut.cover`. The locally kernel-compiled `parent_cover_from_thirteen` requires exactly thirteen explicit original partial tables at a common B ≥ 1022: nine direct D1 moves (0LA, 1LA, 0LB, 0LC, 1LC, 0LE, 0RE, 1LE, 1RE), plus the four B1 moves above under D1=1LB. `remaining_explicit` proves equality to the actual original 24-entry residual list by definitional reduction; `parentComplement_count` proves the count 13; the parent theorem uses only standard axioms. Source SHA-256 `f8bccb830d981c1bd01d2e8fcd80aa314d7609c50ae06ea3d73fdd3700ea4756`; compiled object `67425f04cc5ea1ec2115dcf1c2b8038350fe0d51452e280e86aa3569e528ea72`. No count-only inference or unproved classifier is involved.
+The prior original-source conditional reduction `parent_cover_from_thirteen` and its exact 24-entry equality `remaining_explicit` remain dependencies. The new theorem was compiled locally with the exact Lean 4.36.0-rc2 compiler and SHA-256-verified accepted input archives; all 401 selected source/object identities agreed. Both new Cover theorems report only `[propext, Classical.choice, Quot.sound]`. Source SHA-256 `20bf64f1470d42391ca4c879029c6511a0a34e10b668fa940ec7551a8ede7085`; object SHA-256 `fdb9c5e2454a186ad444e01326a4462b39b9cecf5117b78ac32b950891e7df6a`. The shared runner's corrected axiom regex and extended pinned input manifest reproduce the local closure. This is a conditional theorem; the nine direct D1 and three B1 premises are still explicit. No Canonical40 removal is claimed.
 
 ## Closed B1 cylinders
 
-All ten non-0LA rows below have source-accepted original-machine weighted covers at the indicated threshold. The B1=0LA row now also has an unconditional local source-compiled `branch_cover`; its twenty independently accepted child objects are composed using the source-level symmetry theorem.
+All eleven non-0LA rows below have source-accepted original-machine weighted covers at the indicated threshold. The B1=0LA row now also has an unconditional local source-compiled `branch_cover`; its twenty independently accepted child objects are composed using the source-level symmetry theorem.
 
 | B1 action | Weighted bound | Source evidence |
 | --- | ---: | --- |
+| 0LB | 315 | [46095057554](https://github.com/FlareZ123/bb6/actions/runs/46095057554), artifact 15243776901 |
 | 0LA | 1022 | [four shards](https://github.com/FlareZ123/bb6/actions/runs/46085477064), local `Raw36Branch.lean` |
 | 0RA | 225 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15241456595 |
 | 0RB | 326 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15240236503 |
@@ -22,7 +23,7 @@ All ten non-0LA rows below have source-accepted original-machine weighted covers
 | 1RA | 263 | [46089144018](https://github.com/FlareZ123/bb6/actions/runs/46089144018), artifact 15241768281 |
 | 1RC | 95 | [46087166988](https://github.com/FlareZ123/bb6/actions/runs/46087166988), artifact 15239643588 |
 
-The five immediate B1 cycles (0LC, 0LD, 1LD, 1RB, 1RD) and E/F transport are source-accepted in [46076282287](https://github.com/FlareZ123/bb6/actions/runs/46076282287), artifact 15234902017. The four retained open actions are literal children of `b1Child` in `Raw36D1SymmetryCut.lean`.
+The five immediate B1 cycles (0LC, 0LD, 1LD, 1RB, 1RD) and E/F transport are source-accepted in [46076282287](https://github.com/FlareZ123/bb6/actions/runs/46076282287), artifact 15234902017. The three retained open actions are literal children of `b1Child` in `Raw36D1SymmetryCut.lean`.
 
 **Composition evidence.** On 28 November 2026, the four corrected shard ZIPs, the relevant pilot closure and ten B1 branch ZIPs were retrieved and matched against the GitHub artifact SHA-256 digests. Common imported source/object identities agree; the pilot's obsolete Raw36Kid08 is excluded in favor of the corrected shard object. Using the exact Lean 4.36.0-rc2 executable (SHA-256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00), `Raw36Branch.lean` and `Raw36D1Complement.lean` compiled locally. The final `branch_cover` and `d1_cover_from_four` both report only `[propext, Classical.choice, Quot.sound]`. The local root source SHA-256 digests are 4d255a57c9d994364beba263dccb93dca1fd530190e41d63227a38323b0e3811 and f30b8a06e54d695db57e17a93b42e0344a152f7c32e129e3940bc68099c33db6, respectively. The compiled root object SHA-256 values are da675f9c71914204ec6f0f6cd83a79449d0940b22cdc40c1d428334ca8d83931 and 6534567c04e5989a842dc69438ffdb0d7a7ceca4519b49fa89733f69c705497f. [accepted_pins.json](accepted_pins.json) records all input artifacts; [compose_accepted.py](compose_accepted.py) reconstructs the exact selected dependency union and the two new roots without rebuilding the expensive child trees.
 
@@ -38,7 +39,7 @@ The direct seven-hole cylinder `1RB---_1RC---_0RD---_0LD0LC_------_------` has a
 
 ## New exact leaf closures and descendant certificates (28 November)
 
-The B1=0LB branch now has a source-accepted weighted Cover at 315 ([run 46095057554](https://github.com/FlareZ123/bb6/actions/runs/46095057554), artifact 15243776901). It is not yet consumed into the 13-cylinder parent theorem.
+The B1=0LB branch now has a source-accepted weighted Cover at 315 ([run 46095057554](https://github.com/FlareZ123/bb6/actions/runs/46095057554), artifact 15243776901). It is consumed by the locally compiled twelve-cylinder parent theorem.
 
 For direct D1=1LC, all 250 formerly OPEN literal tables are locally kernel-checked against the original TwoSidedAutomata semantics (184 ngram, 46 run-length, 20 modular active inverse-stack certificates). All 250 match the complete canonical discovery tree exactly; the proposed full weighted bound is 366. The full parent closure is dispatched, not yet accepted.
 
@@ -51,6 +52,6 @@ Both manual proofs hold for every completion of their F1 hole. The full B1=1RE w
 
 ## Remaining research
 
-Consume the accepted B1=0LB proof; close B1=0LE, 1LE and the pending source closure of 1RE under D1=1LB. Use the checked four-way complement, not a repeated census of the eleven closed cases. Then close the nine direct D1 descendants in `parentComplement` and apply `parent_cover_from_thirteen` to close the original eight-hole parent. The global Canonical40 frontier is unchanged by this local refinement.
+Close B1=0LE, 1LE and the source closure of 1RE under D1=1LB (Agent7 owns the first two). The 1RE generator's late-cycle fixture decoder now preserves all four witness fields; the earlier CI failure was a Python unpack error, not a mathematical counterexample. Use `d1_cover_from_three` and `parent_cover_from_twelve`; close the nine direct D1 descendants in `parentLive12` rather than repeating the twelve accepted B1 cases. The global Canonical40 frontier is unchanged by this local refinement.
 
 Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.
