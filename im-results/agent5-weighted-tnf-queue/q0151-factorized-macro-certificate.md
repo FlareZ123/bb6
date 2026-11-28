@@ -30,7 +30,7 @@ These restrictions are **not** a cosmetic compression. Extending B to the full `
 
 `Q0151FiniteModel.lean` independently specifies the finite interpreter in Lean, including right suffix masks, segment transfer images, and macro branching. **Lean source CI succeeded**: [run 46131631497](https://github.com/FlareZ123/bb6/actions/runs/46131631497).
 
-`generate_q151_finite.py` now checks the four-rectangle decomposition as an assertion, then generates `Q0151FiniteCertificate.lean`. The generated Lean file computes original finite interpreter transitions on all rectangle rows, checks their membership and nonemptiness, and checks the 12 possible pop-request summaries against all 50 saved symbols. Python **does not** attest to correctness; it only proposes literal lists and theorem statements. The resulting `finite_closed`, `finite_progress`, and `abstract_never_bad` are intended for kernel `decide +kernel` proof. Source-closure workflow uses `preparation_profile=q0151-macro`. Until CI succeeds, these statements remain draft.
+`generate_q151_finite.py` now checks the four-rectangle decomposition as an assertion, then generates `Q0151FiniteCertificate.lean`. The generated Lean file computes original finite interpreter transitions on all rectangle rows, checks their membership and nonemptiness, and checks the 12 possible pop-request summaries against all 50 saved symbols. Python **does not** attest to correctness; it only proposes literal lists and theorem statements. **Source-accepted 28 November:** [CI run 46153782229](https://github.com/FlareZ123/bb6/actions/runs/46153782229) compiled all 63 project dependencies, independently regenerated the four-rectangle `Q0151FiniteCertificate.lean` and passed the theorem-suffix audit: `finite_closed`, `finite_progress`, and `abstract_never_bad` each have exactly `[propext]` as transitive Lean axioms; artifact [15266633056](https://github.com/FlareZ123/bb6/actions/runs/46153782229/artifacts/15266633056), ZIP SHA-256 `95dfcdca799d84eaa18d0bf5b30877b580e4ffc9bafcf5dade8a995f0d94b8c7`. The compiler source revision is `a79becccc02855ed652bab57ece97cadd46158e9`. This certifies **only the abstract macro interpreter**, NOT nonhalting of the original Turing machine. The source-closure workflow uses `preparation_profile=q0151-macro`.
 
 ## Algebraic and physical-source work
 
@@ -44,9 +44,8 @@ Finally, `Q0151PackedLiveness.lean` gives an actual-machine `Cover NeverHalts` t
 
 ## Remaining decisive work
 
-1. Establish the factorized certificate's Lean finite closure with no `sorryAx`, then keep its source, run ID and hashes stable.
-2. Complete the finite-category addition/saturation lemmas and the source physical-segment grammar.
-3. Define a concrete-to-abstract relation for *all* valid right run sequences and saved stack segments. Prove `cut` completeness, source macro branches and physical `Goes` successors agree with `delta`, including empty-stack/default-zero behavior. Consume this proof with `cover_of_region`.
-4. Only after that is accomplished can this one q0-151 F0-open leaf be declared covered, and only then may the global q0 frontier and parent cut be updated.
+1. **Done at the abstract level:** the factorized certificate is kernel-accepted without `sorryAx`; the category, concatenation, transfer, scan grammar and all-length source macro components have individual formal proofs, but their full transitive source audit must be verified on the eventual cover root.
+2. **Immediate proof target:** `Q0151SourceActions12.lean` adds the previously missing C-mode length-two pop bridge. `Q0151RegionLift.lean` implements a physical stack relation with exact current/saved segment summaries; `Q0151FullCover.lean` assembles exhaustive B/C source-macro cases, including zero-tail physical pops, into a positive-return `Cover NeverHalts p` candidate. These three new files must pass the complete source-closure audit before any nonhalting claim.
+3. If the complete original-machine proof is accepted, connect this exact q0-151 open leaf to its authenticated parent and global weighted residual cover; do not decrement the current Canonical38 count without an accepted membership and consumer lineage.
 
 No statement here determines the exact value of BB(6).
