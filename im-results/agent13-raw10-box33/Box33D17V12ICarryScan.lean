@@ -27,16 +27,12 @@ theorem carry_B1 (l r : Stream) :
 theorem carry_pair (l r : Stream) :
     run 10 (carryC l (word (bits "01010010") r)) =
       some (carryC (word (bits "11111011") l) r) := by
-  have h1 := carry_N1 l (word (bits "0010") r)
-  have h2 := carry_B1 (word (bits "1011") l) r
+  have h1 : run 6 (carryC l (word (bits "01010010") r)) =
+      some (carryF (word (bits "1011") l) (word (bits "0010") r)) := by
+    convert carry_N1 l (word (bits "0010") r) using 1 <;> rfl
   change run (6+4) (carryC l (word (bits "01010010") r)) = _
-  rw [run_add]
-  convert (show (run 6 (carryC l (word (bits "01010010") r))).bind
-       (run 4) = _ from by
-    rw [show word (bits "01010010") r =
-        word (bits "0101") (word (bits "0010") r) by rfl, h1,
-        Option.bind_some,h2]
-  ) using 1 <;> rfl
+  rw [run_add,h1,Option.bind_some,carry_B1]
+  rfl
 
 /-- Prefix repetition in a two-sided infinite stream. -/
 def carryRepeat (pattern : List Bool) : Nat → Stream → Stream
