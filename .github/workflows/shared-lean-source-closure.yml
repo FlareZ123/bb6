@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "q0151-macro", "raw10-i-stream"]
+        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "raw40-a1lc-enumerate", "q0151-macro", "raw10-i-stream"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -79,6 +79,9 @@ jobs:
             esac
             test -f im-results/agent19-raw40-cut/prepare_round5.py
             test -f im-results/agent19-raw40-cut/prepare_a0la.py
+          elif [[ "$PREPARATION_PROFILE" == "raw40-a1lc-enumerate" ]]; then
+            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40A1LC1REExact.lean"
+            test -f im-results/agent19-raw40-cut/enumerate_canon.cpp
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
             if [[ "$RAW40_CHILD" == "1LB" ]]; then
@@ -115,6 +118,20 @@ jobs:
           for stem in Box33D17V12IParametric Box33D17V12IRelay Box33D17V12ICarry Box33D17V12IRules; do
             test -s "${stem}.lean"
           done
+      - name: Enumerate omitted Raw40 A1LC B1=1RA child
+        if: ${{ inputs.preparation_profile == 'raw40-a1lc-enumerate' }}
+        run: |
+          set -euo pipefail
+          out=/tmp/raw40-a1lc-1ra
+          mkdir -p "$out"
+          g++ -std=c++20 -O3 im-results/agent19-raw40-cut/enumerate_canon.cpp -o "$out/enumerate_canon"
+          cd "$out"
+          ./enumerate_canon '1RB1LC_1RC1RA_0RD---_1LD1LA_------_------' > enum.log
+          test -s tree.json
+          test -f open.txt
+          echo "open_count=$(wc -l < open.txt)"
+          sha256sum tree.json open.txt enum.log
+          tail -n 5 enum.log
       - name: Generate q0-151 Lean finite-control certificate
         if: ${{ inputs.preparation_profile == 'q0151-macro' }}
         env:
@@ -168,6 +185,7 @@ jobs:
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
       - name: Compile exact transitive Lean source, reject compiler errors
+        if: ${{ inputs.preparation_profile != 'raw40-a1lc-enumerate' }}
         env:
           PROOF_ROOT: ${{ inputs.root }}
           PREPARATION_PROFILE: ${{ inputs.preparation_profile }}
@@ -187,6 +205,7 @@ jobs:
             --label "standalone source closure ${PROOF_ROOT}" \
             "${overrides[@]}" "$PROOF_ROOT" 2>&1 | tee /tmp/lean-source-closure/compile.log
       - name: Audit printed theorem axiom dependencies
+        if: ${{ inputs.preparation_profile != 'raw40-a1lc-enumerate' }}
         env:
           PROOF_ROOT: ${{ inputs.root }}
           SUFFIX: ${{ inputs.theorem_suffix }}
@@ -228,6 +247,7 @@ jobs:
             /tmp/lean-source-closure/manifest.json
             /tmp/lean-source-closure/compile.log
             /tmp/lean-source-closure/axioms.log
+            /tmp/raw40-a1lc-1ra/
             im-results/agent5-weighted-tnf-queue/Q0151FiniteCertificate.lean
           if-no-files-found: ignore
           retention-days: 30
