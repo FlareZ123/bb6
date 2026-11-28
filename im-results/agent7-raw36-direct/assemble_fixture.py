@@ -44,7 +44,7 @@ def main():
     status={'parent':got['parent'],'bound':fixture['bound'],'open':len(keys),
       'classified':len(candidates),'missing':len(missing),
       'coverage_sha256':fixture['digest'],
-      'kinds':{k:sum(v[0]==k for v in candidates.values()) for k in ['f','n','r','m','d','p','s','c']}
+      'kinds':{k:sum(v[0]==k for v in candidates.values()) for k in ['f','n','r','m','d','p','s','c']}}
     a.out.with_suffix('.status.json').write_text(json.dumps(status,indent=2)+'\n')
     a.out.with_suffix('.missing.txt').write_text('\n'.join(missing)+'\n')
     print(json.dumps(status),flush=True)
