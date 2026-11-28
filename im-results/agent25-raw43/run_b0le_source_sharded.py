@@ -112,7 +112,7 @@ def prepare(variant: str) -> Path:
         ])
 
     env = os.environ.copy()
-    env["RAW43_BIDFA_BATCH"] = "6"
+    env.setdefault("RAW43_BIDFA_BATCH", "6")
     run(["python", str(HERE / "generate.py"), variant], env=env)
     generated = HERE / f"generated_{variant}"
     if not generated.is_dir():
