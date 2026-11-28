@@ -1,0 +1,1 @@
+Agent7: B1=1LE cut5 discovery found 1002 OPEN, transferred exact FAR candidates for 353 (first 100 kernel checked, 649 remaining). Exact TSV fixture and reusable code bank in im-results/agent7-raw36-b1le/; integrate using literal table keys. Do not assume score387 is closed. Continuing residual work.
