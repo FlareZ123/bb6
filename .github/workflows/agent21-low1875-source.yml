@@ -154,15 +154,12 @@ jobs:
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
-      - name: Compile signed cone / inverse-word duality fragments
+      - name: Compile full signed cone / inverse-word equivalence and source density
         shell: bash
         run: |
           set -euo pipefail
           lean --version
           python3 tools/lean_compile_closure.py \
-            im-results/agent21-c-shadow-density/DyadicHighEdge.lean \
-            im-results/agent21-c-shadow-density/DyadicValuation.lean \
-            im-results/agent21-c-shadow-density/DyadicFirstBranch.lean \
-            im-results/agent21-c-shadow-density/DyadicStripSigned.lean \
-            im-results/agent21-c-shadow-density/DyadicFuel.lean \
+            im-results/agent21-c-shadow-density/DyadicCheckerDensity.lean \
+            im-results/agent21-c-shadow-density/DyadicSource.lean \
             --workdir /tmp/a21-dyadic-duality --jobs 4 --lean "$(command -v lean)"
