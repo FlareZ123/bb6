@@ -119,6 +119,14 @@ Here the quotient `M^(q-2)/2` is integral because `M=4^J` and J>=1. Indeed if th
 
 This bounds the earliest *weighted inverse position* of a q-th power exponentially in its run-gap weight and q-2. Under the separate paper primitive-period valuation no-go, a shortest typed period containing j>1 always has the required divisor failure, giving an unconditional (within that still uncompiled paper composition) power-onset restriction for such words. It remains consistent with high-complexity aperiodic infinite symbolic paths and is not a whole-machine verdict.
 
+For the **actual post-forced-F branch-29 signed feeder line** already formalized in [SignedFRunParity.lean](../agent18-429-root-invariants/SignedFRunParity.lean), `(u,D)=(48t,96t+18)` with `t≥1`, the initial half-rank is exactly `r_init=(6u+D)/2=192t+9`. Thus (13) specializes, for any repeated typed macro word with a non-even affine slope divisor, to the explicit root-parameter requirement
+
+```text
+   14*I + 28*J + 384*t + 18 >= 3*4^(J*(q-2)).       (14)
+```
+
+This is a uniform **necessary bound for signed-feeder descendants**, not a closure of the unknown branch-29 family. To promote it to a theorem about authentic positive BB429 ancestors still requires a source-to-actual-path quantifier and the existing signed precision lift.
+
 The bounds are *necessary only*. Real paths face additional E/S guards, Bad leaves, and authentic-root ancestry constraints, so they may be impossible even at ranks above (10)–(12). For example, the nonempty legitimate signed prefix E2³ exists from `(u,D)=(183,32)`, `r0=565`: its paired inputs `(183,32)->(47,864)->(39,928)->(39,944)` satisfy the finite recurrence. E2⁴ fails from that same input at the next F divisibility. This is a concrete reminder that the quantitative no-go does **not** prohibit every finite cube.
 
 ## A strict finite slope-cone lemma (missing justification now made explicit)
