@@ -323,6 +323,24 @@ theorem firstRoundPositive (cs : List LeftChunk) (L R : List Bool) :
     omega
   simpa only [ht,List.append_assoc] using h
 
+
+/-- Exact 147-step bridge from the all-zero blank tape into the first
+    10/110 section. This is finite original-table computation only. -/
+def blankChunks : List LeftChunk :=
+  [.alternating,.alternating,.separatedMarker,.alternating,.alternating]
+
+theorem blank147 :
+    runP p 147 startP = some ⟨4,10965,2⟩ := by decide +kernel
+
+theorem blank147Shape :
+    runP p 147 startP =
+      some ⟨4,
+        pack ([true,false] ++ inputBits blankChunks ++ [false]),
+        pack [false,true,false]⟩ := by decide +kernel
+
+#print axioms blank147
+#print axioms blank147Shape
+
 #print axioms rightSequenceInput
 #print axioms rightSequenceCost
 #print axioms firstRoundPositive
