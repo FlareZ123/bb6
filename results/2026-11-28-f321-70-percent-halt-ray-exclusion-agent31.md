@@ -1,7 +1,7 @@
-# F321: a density-7/10 infinite exclusion of terminal counter parameters
+# F321: a density-33/40 infinite exclusion of terminal counter parameters
 
 **Theorem (paper proof; 28 November 2026).** Consider the source-formalized two-counter return map of the F321 Busy Beaver holdout
-`1RB---_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD`, started at `(a,d)=(1,1)`. Its only halting counter gate is `H_d=(d+1,d)`. There is an explicit, decidable subset `E ⊆ ℕ` of **natural density exactly 7/10** such that `H_d` is *not reachable* from the authentic seed for every `d∈E`. In fact, each such `H_d` has a finite inverse ancestry that ends in an impossible (zero-predecessor) counter pair, without encountering the seed.
+`1RB---_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD`, started at `(a,d)=(1,1)`. Its only halting counter gate is `H_d=(d+1,d)`. There is an explicit, decidable subset `E ⊆ ℕ` of **natural density exactly 33/40** such that `H_d` is *not reachable* from the authentic seed for every `d∈E`. In fact, each such `H_d` has a finite inverse ancestry that ends in an impossible (zero-predecessor) counter pair, without encountering the seed.
 
 This is an unbounded mathematical exclusion, not a bounded forward simulation or a theorem of global nonhalting. **Proof status:** elementary proof below for the counter map given by [the upstream Lean reduction](https://github.com/google-deepmind/cryptids/blob/c86f15861709b76042998c5211c7b2f83991621b/BusyBeaver/BB6/M_1RBHHH_1RC1LE_0RD0RF_0RE0LA_1LF0LB_1LA1LD.lean). Our new exclusion proof is *not yet kernel-checked in Lean* nor consumed by an original-source six-state theorem. The upstream source has `HasCollatzReduction` and `IsValidAcceleration`, **not** an unconditional blank-root halt decision. This result does not establish an exact BB(6) value or close Raw132.
 
@@ -35,12 +35,13 @@ Two immediate consequences, used repeatedly: (i) any output with *even* `D` and 
 Define `E` as a disjoint union of the following classes:
 
 1. Every **even** terminal parameter `d`.
-2. Every `d≡7 (mod8)`.
-3. For each integer `t≥0`, the progression
+2. Every `d≡1 (mod8)`.
+3. Every `d≡7 (mod8)`.
+4. For each integer `t≥0`, the progression
    ```
    d ≡ (16·4^t − 7)/3    (mod 32·4^t).            [zero]
    ```
-4. For each **even** integer `t≥0`, the progression
+5. For each **even** integer `t≥0`, the progression
    ```
    d ≡ (88·4^t − 7)/3    (mod 32·4^t).            [three]
    ```
@@ -50,15 +51,27 @@ The displayed residues are integers because `4^t≡1 (mod3)`. Initial progressio
 | Class | Initial terminal residues |
 | --- | --- |
 | Even | `0,2,4,…` |
+| 1 modulo 8 | `1 (mod8)` |
 | 7 modulo 8 | `7 (mod8)` |
 | [zero] | `3 (mod32)`, `19 (mod128)`, `83 (mod512)`, `339 (mod2048)`, … |
 | [three], even t | `27 (mod32)`, `467 (mod512)`, `7507 (mod8192)`, … |
 
-To see the disjointness, restrict to `d≡3 (mod8)` for the last two families and write `k=(d−3)/8). In base four, the low-order digits of `k` are `t` consecutive 2s followed by digit **0** in [zero], or `t` consecutive 2s followed by digit **3** in [three], with `t` even for the latter. These are mutually exclusive, and neither meets the even or 7-modulo-8 classes.
+To see the disjointness, restrict to `d≡3 (mod8)` for the last two families and write `k=(d−3)/8). In base four, the low-order digits of `k` are `t` consecutive 2s followed by digit **0** in [zero], or `t` consecutive 2s followed by digit **3** in [three], with `t` even for the latter. These are mutually exclusive, and neither meets the even, 1-modulo-8 or 7-modulo-8 classes.
 
 ## 3. Proof of all-time exclusion
 
 **Even d.** The gate is `H_d=(d+1,d)`, with odd first coordinate and even second coordinate. It has no predecessors by the inverse list; it is not the seed `(1,1)`.
+
+**d≡1 (mod8).** For `d=1`, the terminal pair `(2,1)` has no predecessor. For `d=8k+1` with `k≥1`, the gate `(8k+2,8k+1)` has exactly two immediate predecessors, one high and one far:
+```
+H_(8k+1) ← (12k+3,4k−1)         [high]
+          ← (2k−1,14k−2)         [far].
+```
+The far predecessor has odd first and even second coordinates and therefore has no predecessors. The high predecessor has odd first coordinate and odd second coordinate at least three, so it has exactly one predecessor, another high step:
+```
+(12k+3,4k−1) ← (14k+3,2k−2).
+```
+This last pair again has odd first and even second coordinates and therefore no predecessors. None equals the authentic seed. This excludes **every** `d≡1 (mod8)`.
 
 **d≡7 (mod8).** Write `d=8k+7`. Its gate has a **unique** high predecessor
 ```
@@ -93,23 +106,23 @@ R = (A+(D−3)/2+2, (D−3)/2).
 ```
 Its second coordinate is even and its first coordinate is odd; by the inverse list, **R has no predecessors**. Again the finite ancestral chain misses the seed, proving exclusion.
 
-This proves the theorem for **every** index in all four infinite families, not just checked small parameters.
+This proves the theorem for **every** index in all five families, not just checked small parameters.
 
 ## 4. Natural density
 
-For each finite collection of arithmetic progressions, densities add because the four families are disjoint. The limiting densities of the two infinite families are
+For each finite collection of arithmetic progressions, densities add because the four families are disjoint. The two additional fixed-modulus classes `d≡1,7 (mod8)` have density `1/8` each. The limiting densities of the two infinite families are
 ```
 [zero]  Σ_(t≥0) 1/(32·4^t)  = 1/24,
 [three] Σ_(n≥0) 1/(32·4^(2n)) = 1/30.
 ```
 The tails are controlled uniformly by containing all as-yet uncounted base-four suffixes within a single progression whose modulus grows with the truncation, so they have upper natural density tending to zero. Therefore the infinite union has a genuine natural density and
 ```
-dens(E) = 1/2 + 1/8 + 1/24 + 1/30 = 7/10.
+dens(E) = 1/2 + 1/8 + 1/8 + 1/24 + 1/30 = 33/40.
 ```
-The complement still has density **3/10** and contains infinitely many candidate halting parameters. The theorem cannot be promoted to a full F321 decision.
+The complement still has density **7/40** and contains infinitely many candidate halting parameters. The theorem cannot be promoted to a full F321 decision.
 
 ## 5. Reproduction, scope and next proof edge
 
-The original-source counter map and its complete inverse are independently encoded in [the reproducible exact inverse-sieve script](../im-results/agent31-f321-bulk/f321-inverse-sieve.cjs); run `node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000`. It tests the forward/inverse rules on all 4,900 small ordered pairs and checks that every classified gate `0≤d<30000` has a unique chain to a zero-indegree pair without hitting `(1,1)`. The bounded regression covers **21,001** such `d` (70.003%; the extra one is a finite boundary effect). The script is *not* the reason the infinite theorem holds: the induction in §3 supplies that proof.
+The original-source counter map and its complete inverse are independently encoded in [the reproducible exact inverse-sieve script](../im-results/agent31-f321-bulk/f321-inverse-sieve.cjs); run `node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000`. It tests the forward/inverse rules on all 4,900 small ordered pairs and checks that every classified gate `0≤d<30000` has a unique chain to a zero-indegree pair without hitting `(1,1)`. The bounded regression covers **24,751** such `d` (82.503%; the extra one is a finite boundary effect). The script is *not* the reason the infinite theorem holds: the induction in §3 supplies that proof.
 
-The related [dual logarithmic forward accelerators, complete maximal-block inverse and root experiment](../im-results/agent31-f321-bulk/README.md) provide a second entry point. The source-faithful next proof question is to construct new, complete inverse ancestry obstructions for a positive fraction of the remaining `3/10` of terminal rays, or prove nonattainment for **all** terminal parameters. A source-connected Lean formalization of §1–4 would then let this result join the upstream original-machine reduction. Neither this article nor the accepted F197 cylinder discharges the much larger Raw132 parent Cover.
+The related [dual logarithmic forward accelerators, complete maximal-block inverse and root experiment](../im-results/agent31-f321-bulk/README.md) provide a second entry point. The source-faithful next proof question is to construct new, complete inverse ancestry obstructions for a positive fraction of the remaining `7/40` of terminal rays, or prove nonattainment for **all** terminal parameters. A source-connected Lean formalization of §1–4 would then let this result join the upstream original-machine reduction. Neither this article nor the accepted F197 cylinder discharges the much larger Raw132 parent Cover.
