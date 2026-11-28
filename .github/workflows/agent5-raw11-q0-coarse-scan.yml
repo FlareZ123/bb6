@@ -1499,6 +1499,10 @@ jobs:
       - name: Finite source check of 3-carry boundary macros
         run: |
           node im-results/agent5-weighted-tnf-queue/q0-148-carry-transducer.cjs
+      - name: Full deterministic source-boundary recurrence regression
+        run: |
+          set -euo pipefail
+          node im-results/agent5-weighted-tnf-queue/q0-148-boundary-recurrence.cjs
       - name: Original-source q0-148 parametric sweep validation
         run: |
           set -euo pipefail
