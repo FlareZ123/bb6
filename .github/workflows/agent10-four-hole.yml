@@ -544,7 +544,8 @@ jobs:
               python "$root/prepare_b0le_bank.py" 1rf "$root/spec_$VARIANT.json" "$root/spec_$VARIANT.json" ;;
           esac
           case "$VARIANT" in
-            b0le_e*|1lf|b1la_a0la|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb|b1re_e11le) export RAW43_BIDFA_BATCH=24 ;;
+            b1la_a0la|b1re_e11le) export RAW43_BIDFA_BATCH=12 ;;
+            b0le_e*|1lf|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb) export RAW43_BIDFA_BATCH=24 ;;
           esac
           python "$root/generate.py" "$VARIANT"
           if [[ "$VARIANT" == b*_* ]]; then
