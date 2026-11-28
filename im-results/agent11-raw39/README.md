@@ -1,6 +1,6 @@
-# Raw39: nine accepted child bounds, two remaining canonical obligations
+# Raw39: exact attained score 28311; two remaining upper-bound audits
 
-**Status:** locally kernel-checked, artifact-linked conditional parent Cover; not a complete Raw39 Cover or BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
+**Status:** all discovery holdouts closed; nine accepted child bounds and two pending complete child audits. The parent lower bound is proved, and its upper-bound composition is locally kernel-checked against original dependency artifacts. This is not yet a complete Raw39 Cover or BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
 
 `Raw39AcceptedNine.lean` proves `BB6.Agent11Raw39AcceptedNine.parent_cover_two`: at every B ≥ 2354, bounds on exactly 0LE and 1LE imply `Cover (WeightedBound B) p39`. It composes the accepted 1RE theorem (weighted bound 1459) with the previous eight-child join, including the original fresh-state symmetry and literal cycle cases. No global roster change has yet been earned.
 
@@ -20,7 +20,11 @@ All nine archives were merged locally, verifying the embedded manifest SHA256 fo
 
 Lean 4.36.0-rc2 compiled Raw39AcceptedSix, Seven, Eight and Nine in order against these exact dependencies. Nine's `remaining_count` uses only propext; `parent_bound_two` and `parent_cover_two` depend only on propext, Classical.choice and Quot.sound. Nine source SHA256: eb048a3c0aec74326b4e073c031335b1772d7cfc5f3e107bb702493ce871e4c6. Reproduce by downloading the nine exact artifacts, checking manifest hashes and common module equality, setting LEAN_PATH to the merged directory and compiling the four named modules in order using the same Lean release. This is distinct from a fresh source rebuild.
 
-The previous StableCut/StableIntegrated/SymmetryCut interfaces and Six/Seven/Eight are historical conditional compositions. The accepted 1RE partition is documented in [Raw39RE1Frontier.md](Raw39RE1Frontier.md). The remaining difficult discovery branches are 0LE and 1LE; neither is yet a complete child proof.
+The previous StableCut/StableIntegrated/SymmetryCut interfaces and Six/Seven/Eight are historical conditional compositions. The accepted 1RE partition is documented in [Raw39RE1Frontier.md](Raw39RE1Frontier.md).
+
+## Exact attained parent score
+
+[Raw39ExactJoin](Raw39ExactJoin.md) gives the kernel-checked explicit weighted witness of 28311, impossibility of bound 28310, and exact parent threshold conditional on the two remaining child upper bounds 15125 (0LE) and 28311 (1LE). The corresponding leaf lower bounds are proved. The complete 0LE and corrected 1LE source audits are [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153) and [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482). The latter preserves eligible modules from three accepted low-bound shards via source-identity-checked reuse and monotonicity.
 
 ## LE discovery frontiers
 
@@ -28,10 +32,10 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 
 | Branch | Open | FAR | Asym | Run | Block | Run/block | Late | Delayed cycle | Original residual | Remaining |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 1 |
+| 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 0 |
 | 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 0 |
 
-Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; standard axioms only:
+Candidate weighted upper bounds 15125/28311, not yet source-accepted as complete children. The previous 28310 candidate is false because the late 1LE witness admits one incoming blank delay. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; standard axioms only:
 
 - [0LE 5883](Raw39LE5883.md): unbounded base-four carry grammar.
 - [0LE 1791 and 1800](Raw39LE1791.md): alternating residue-three run-count grammar.
@@ -67,4 +71,4 @@ Candidate weighted bounds 15125/28310, not source-accepted. All 1688 run/block d
 
 - [0LE 1583](Raw39LE1583.md): exact arbitrary-tail eight-sweep recurrence, entry 3210 and cost 1028+128n, locally kernel-checked on original dependencies.
 
-Remaining 0LE ID: 4084. [4084 exact two-stack reduction](Raw39LE4084.md) proves ten live A-return rules, one exhaustive bad branch, and an original-semantics nonhalting criterion for any closed coupled stack language; the invariant itself remains open. The last 1LE discovery holdout, [180](Raw39LE180.md), is closed by a locally kernel-checked native port of the upstream sixteen-block collar-box certificate identified by Agent9. The earlier A-return and pushdown reductions are superseded as closure methods. The semantic generator dispatches delayed cycles and 57 custom leaves (locally checked, some source-accepted). Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
+The last 0LE discovery holdout 4084 is closed by the [exact arbitrary-tail pump](../agent43-raw39-4084/PACKED-CLOSURE.md): entry 153471, period 15364, growth 18, with 166 kernel-checked packed segments and an unrestricted nonhalting theorem. The [earlier two-stack reduction](Raw39LE4084.md) is superseded as a closure method. The last 1LE discovery holdout, [180](Raw39LE180.md), is closed by a locally kernel-checked native port of the upstream sixteen-block collar-box certificate identified by Agent9. The earlier A-return and pushdown reductions are superseded as closure methods. The semantic generator dispatches delayed cycles and 58 custom leaves (locally checked, some source-accepted). Explicit `--conditional` emits `Raw39{0LE,1LE}Conditional`, with named `ResidualHypotheses` fields, a separate manifest, and `all{0LE,1LE}_if_residual`; complete mode refuses any unresolved leaf. A genuine mixed conditional/accepted Raw39 root join was kernel-checked locally, but full LE regeneration and source audit remain pending. No complete parent or universal BB(6) bound.
