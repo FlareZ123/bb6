@@ -90,3 +90,35 @@ MiddleOdd crossing would collapse the whole infinite family at once.
 
 Reproduction uses the exact CounterMove branch order in SourceCounter.lean;
 the all-time proof wrapper is formalized in DangerWindowCriterion.lean.
+
+
+## Extended fixed-modulus stress test
+
+A tempting extrapolation from k=0..20 was that modulus 12288 might separate
+the target first-counter residue from every authentic root first counter in
+the complete MiddleOdd sum band.  An exact source simulation through k=60
+**falsifies that conjecture**.
+
+Modulo 12288, collisions occur for k = 23, 27, 37, 50, 59.  Raising only the
+2-adic depth progressively removes most of them:
+
+- mod 24576: k = 27, 37, 59 remain;
+- mod 49152 through 196608: k = 37, 59 remain;
+- mod 393216 through 3145728: k = 59 remains.
+
+For each exceptional k, restricting to window states with the same residue
+modulo 3 as the target, the maximum observed 2-adic valuation of the exact
+first-counter difference A-a_k is:
+
+| k | max v2(A-a_k) in its complete band |
+|---:|---:|
+| 23 | 12 |
+| 27 | 13 |
+| 37 | 16 |
+| 50 | 12 |
+| 59 | 20 |
+
+So a fixed shallow modulus is not the missing uniform proof.  The data instead
+supports looking for an *adaptive* 2-adic phase invariant or a recurrence on
+the crossing epoch.  This is exploratory evidence only; it does not weaken
+the individually kernel-certified k=0..6 root exclusions.
