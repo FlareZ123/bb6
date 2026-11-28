@@ -17,3 +17,15 @@ Let z=6u+rank(s). Each conversion subtracts 11 from z, adds 9 to v, and subtract
 ## Status
 
 Raw14037SixBank.lean: local Lean 4.36.0-rc2 check against the restored Raw140 source closure from artifact 15220415544 (with the already-upstream ERExit simp repair). The printed axioms of inner, advance, drainN and drain are [propext, Quot.sound]. This is a conditional macro reachability result, not a decision of any sibling or a Cover. CI source closure and end-to-end invariant remain outstanding. The four sibling paths share this phase; the outstanding work is the finite terminal families u=0,1 (including potentially further bank phases), the entry bridge, and an invariant connecting every return. No parent count changes on this result alone.
+
+## Complementary 322 counter (checked)
+
+Write G(v,X,R)=DR(62 6^v 7 X,R), and T(n)=(322)^n. For the six C-tails (31,32,315,325,3242,35221), let next advance cyclically and ccarry equal one only at the wrap. Raw14037Counter.lean proves, on the same partial base:
+
+```
+G(v,3X,T(n)s) -> G(v+1,X,T(n+ccarry(s))next(s))
+G(v,3^k X,T(n)s) -> G(v+k,X,T(n+turn(k,s).1)turn(k,s).2)
+G(v,2,T(n)s) -> BL([],2^(v+4) T(n+ccarry(s)+ccarry(next(s)))next(next(s)))
+```
+
+The first law factors through the existing 42 counter scan and the new six-bank seed and loop. The second is induction on k, and the third handles the terminal left marker by two further counter rotations. All three are locally kernel-checked with [propext, Quot.sound], no sorryAx. This proves an entire unbounded sweep plus exit, with arbitrary untouched X in the first two laws. The remaining bridges are the finite six-bank terminal tails, the 2-bank-to-D phase and subsequent section return. No machine verdict yet.
