@@ -34,21 +34,22 @@ theorem wraps_succ (n : Nat) (s : Tail) :
   cases s <;> simp [wraps,rank,rho,wrap] <;> omega
 
 theorem trips_wrap (k : Nat) (s : Tail) :
-    trips133 (k + wrap s) = trips133 k ++ carry s := by
-  cases s <;> simp [wrap,trips133,carry]
+    trips133 (k + wrap s) =
+      trips133 k ++ Raw140ERSuffix.carry s := by
+  cases s <;> simp [wrap, trips133, Raw140ERSuffix.carry]
 
 theorem iterate_closed (n : Nat) (W : List Bool) (s : Tail) :
     iterate n W s =
       (trips133 (wraps n s) ++ W ++ List.replicate n true, rhoN n s) := by
   induction n generalizing W s with
   | zero =>
-      simp [iterate,wraps,rank,rhoN,trips133]
+      cases s <;> simp [iterate, wraps, rank, rhoN, trips133]
   | succ n ih =>
       rw [iterate, ih]
       have hw := wraps_succ n s
       rw [hw, trips_wrap (wraps n (rho s)) s]
-      simp only [advanceWord, rhoN, List.append_assoc]
-      simp only [List.replicate_succ, List.cons_append]
+      simp only [advanceWord, rhoN, List.append_assoc,
+        List.replicate_succ, List.cons_append, List.nil_append]
 
 def sym133 : Nat → List Sym
   | 0 => []
