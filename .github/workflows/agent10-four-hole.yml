@@ -553,7 +553,7 @@ jobs:
           bound=$(python -c 'import json,sys;print(json.load(open(sys.argv[1]))["bound"])' "$root/spec_$VARIANT.json")
           workers=2
           case "$VARIANT" in
-            b0le_e1la|b0le_e1lf|b0le_e0la|b1la_a0la|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb|b1re_e11le) workers=1 ;;
+            b0le_e1la|b0le_e0la|b1la_a0la|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb|b1re_e11le) workers=1 ;;
           esac
           python tools/lean_compile_closure.py --workdir "$work" --jobs "$workers" \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
