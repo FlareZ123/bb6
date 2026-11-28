@@ -67,7 +67,7 @@ jobs:
     if: inputs.target != 'raw36-scan-long' && inputs.target != 'raw36-open-depth' && inputs.target != 'raw36-witness' && inputs.target != 'raw36-far-discover' && inputs.target != 'raw36-reclassify' && inputs.target != 'raw36-shards' && inputs.target != 'raw36-compose' && inputs.target != 'raw36-b1rd' && inputs.target != 'raw36-b1-general' && inputs.target != 'raw36-b1-resume16' && inputs.target != 'raw36-d102-shards' && inputs.target != 'raw36-d114-shards' && inputs.target != 'raw36-d101-active' && inputs.target != 'raw36-d1-direct' && inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'raw113-shard' && inputs.target != 'raw113-compose' && inputs.target != 'canonical62-raw112-raw58' && inputs.target != 'canonical62-preflight'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
-    timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata') && 120 || 60 }}
+    timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata' || inputs.target == 'raw43-extra') && 120 || 60 }}
     steps:
       - uses: actions/checkout@v4
       - name: Install Lean 4.36.0-rc2
@@ -553,6 +553,7 @@ jobs:
           bound=$(python -c 'import json,sys;print(json.load(open(sys.argv[1]))["bound"])' "$root/spec_$VARIANT.json")
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
+            --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean \
             --manifest "$work/manifest.json" --label "raw43-$VARIANT" \
             --theorem "$theorem" --weighted-bound "$bound" --artifact-name raw43-extra-proof \
             --provenance-input "$root/spec_$VARIANT.json" --provenance-input "$root/generate.py" \
