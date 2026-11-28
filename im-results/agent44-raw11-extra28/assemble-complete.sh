@@ -75,13 +75,13 @@ unzip -q "$OUTPUT/original-cache.zip" -d "$DEPS"
 export LEAN_PATH="$WORK:$(find "$DEPS" -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
 export PATH="$HOME/.elan/bin:$PATH"
 
-cp "$ROOT/Raw11Extra28AllChildren.lean" "$ROOT/Raw11Extra28CompleteJoin.lean" "$WORK/"
+cp "$ROOT/Raw11Extra28AllChildren.lean" "$ROOT/Raw11Extra28MinimalJoin.lean" "$WORK/"
 cd "$WORK"
 lean -o Raw11Extra28AllChildren.olean Raw11Extra28AllChildren.lean \
   2>&1 | tee "$OUTPUT/frontier.log"
-lean -o Raw11Extra28CompleteJoin.olean Raw11Extra28CompleteJoin.lean \
-  2>&1 | tee "$OUTPUT/complete-conditional-join.log"
-node "$ROOT/generate-complete-join.cjs" "$WORK/Raw11Extra28LiteralComplete.lean"
+lean -o Raw11Extra28MinimalJoin.olean Raw11Extra28MinimalJoin.lean \
+  2>&1 | tee "$OUTPUT/minimal-conditional-join.log"
+node "$ROOT/generate-minimal-join.cjs" "$WORK/Raw11Extra28LiteralComplete.lean"
 lean -o Raw11Extra28LiteralComplete.olean Raw11Extra28LiteralComplete.lean \
   2>&1 | tee "$OUTPUT/literal-complete.log"
 
