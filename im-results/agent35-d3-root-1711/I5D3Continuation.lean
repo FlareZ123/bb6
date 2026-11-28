@@ -84,7 +84,7 @@ def locateExit : Nat → Nat → Nat → Nat
 #eval ("first_none_confirmed",
   (BB6.DRegularFast.fastRun (locateExit 13 0 2511) s4).isNone)
 
-private theorem regular_source (n : Nat) (s t : DRegular.L)
+theorem regular_source (n : Nat) (s t : DRegular.L)
     (hc : DRegular.Canon s)
     (hf : BB6.DRegularFast.fastRun n s = some t) :
     ObsEq (run (DRegular.accumulated n s) (DRegularSource.sourceSection s))
@@ -298,7 +298,7 @@ def q8Cost (t : Nat) : Nat :=
     BB6.Agent35APacketUnary.duration (q8K t) 0 5
 
 /-- The q=8, k=3t+2 exception closes through E-double and a 3r+1 A packet. -/
-private theorem q8_rejoin (t : Nat) :
+theorem q8_rejoin (t : Nat) :
     ObsEq (run (q8Cost t)
       (DRegularSource.sourceSection ⟨9*t+10,8,1⟩))
       (DRegularSource.sourceSection (q8Out t)) := by
@@ -344,7 +344,7 @@ def q7ACost (t : Nat) : Nat :=
     BB6.Agent35APacketGeneral.duration (q7AK t) 0 4
 
 /-- The q=7, k=3t+2 exception closes by E-double and the 3r+2 A code. -/
-private theorem q7A_rejoin (t : Nat) :
+theorem q7A_rejoin (t : Nat) :
     ObsEq (run (q7ACost t)
       (DRegularSource.sourceSection ⟨9*t+10,7,1⟩))
       (DRegularSource.sourceSection (q7AOut t)) := by
@@ -385,7 +385,7 @@ def q7EscapeCost (t : Nat) : Nat :=
 
 /-- Source-certified fourth return for the seed5 q=7 E exception:
     t≡4 (mod 27), i.e. k=3t+1≡13 (mod 27). -/
-private theorem q7_escape_rejoin (t : Nat) (ht : t % 27 = 4) :
+theorem q7_escape_rejoin (t : Nat) (ht : t % 27 = 4) :
     ObsEq (run (q7EscapeCost t)
       (DRegularSource.sourceSection ⟨9*t+7,7,1⟩))
       (DRegularSource.sourceSection (q7EscapeOut t)) := by
@@ -628,7 +628,7 @@ theorem root_source :
     BB6.Agent35I5Exceptional.i5_three_exception_rejoin
     continuation_source
 
-private theorem obs_state {c d : CryptidBoundary.Cfg}
+theorem obs_state {c d : CryptidBoundary.Cfg}
     (h : BB6.BoundaryPadding.ObsEq c d) : c.st = d.st := by
   change BB6.Padding.CfgEq
     (BB6.BoundaryPadding.represent c)
@@ -669,7 +669,7 @@ private theorem frozen_run (c : CryptidBoundary.Cfg) (n : Nat)
     rw [frozen_step c h]
     exact ih
 
-private theorem no_frozen_before_live_endpoint
+theorem no_frozen_before_live_endpoint
     (c : CryptidBoundary.Cfg) (N n : Nat) (hn : n ≤ N)
     (hlive : (CryptidBoundary.run N c).st ≠ 6) :
     (CryptidBoundary.run n c).st ≠ 6 := by
