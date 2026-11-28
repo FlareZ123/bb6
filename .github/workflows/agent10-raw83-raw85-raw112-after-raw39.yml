@@ -1,0 +1,54 @@
+name: Agent10 accepted Raw83 Raw85 Raw112 after Raw39
+
+on:
+  workflow_dispatch:
+    inputs:
+      raw112_run_id:
+        description: 'Successful source-accepted Raw112 parent run'
+        required: true
+        type: string
+        default: '46146501930'
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Authenticate compact three-parent batch and source-check Canonical36
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent10-raw83-raw85-raw112-canonical36/consume.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent10-raw83-raw85-raw112-canonical36/consume.py \
+            --work /tmp/a10-raw83-raw85-raw112-after-raw39 \
+            --raw112-run-id "$RAW112_RUN_ID" \
+            | tee /tmp/a10-raw83-raw85-raw112-after-raw39.log
+          test -s /tmp/a10-raw83-raw85-raw112-after-raw39/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
+          cat /tmp/a10-raw83-raw85-raw112-after-raw39/evidence/raw83-raw85-raw112-after-raw39-canonical36.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical36-raw39-raw83-raw85-raw112-evidence
+          path: |
+            /tmp/a10-raw83-raw85-raw112-after-raw39/evidence/
+            /tmp/a10-raw83-raw85-raw112-after-raw39.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
