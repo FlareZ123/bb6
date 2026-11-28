@@ -34,7 +34,7 @@ def cut : Cut :=
     .unresolved,
     .unresolved,
     .unresolved,
-    .unresolved,
+    .closed (.proven BB6Coverage.Agent31Pump.D3Affine.p2 BB6Coverage.Agent31Pump.D3Affine.never2),
     .unresolved,
     .unresolved,
     .unresolved,
@@ -158,9 +158,9 @@ def remaining : List (List Move × PartialMachine) := residuals parent 4 cut
 
 theorem checked : check 21269 parent 4 cut = true := by decide
 
-theorem remaining_count : remaining.length = 74 := by decide
+theorem remaining_count : remaining.length = 73 := by decide
 
-theorem remaining_mass : openMass 6 4 cut = 181508225 := by decide
+theorem remaining_mass : openMass 6 4 cut = 171742600 := by decide
 
 def d3Leaf : PartialMachine := fun s => match s.1.val,s.2 with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -181,7 +181,7 @@ def otherRemaining : List (List Move × PartialMachine) :=
   remaining.filter (fun e => !tableOK e.2 d3Leaf)
 
 theorem d3_count : (remaining.filter (fun e => tableOK e.2 d3Leaf)).length = 1 := by decide
-theorem other_count : otherRemaining.length = 73 := by decide
+theorem other_count : otherRemaining.length = 72 := by decide
 
 theorem local_sound (m : Machine) (hm : TNFQuotientCompatible parent m) :
     WeightedBound 21269 m ∨ ∃ e ∈ remaining, TNFQuotientCompatible e.2 m :=
