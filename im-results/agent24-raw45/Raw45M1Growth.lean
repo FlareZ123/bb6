@@ -59,7 +59,7 @@ theorem growth (n : Nat) :
       some ⟨2,[true]++zeros n++ones (n+3),[]⟩ := by
     have ha : ones (n+4) = [true]++ones (n+3) := by
       rfl
-    simpa only [ha,ones,zeros,List.nil_append,List.append_nil,
+    simpa only [ha,List.nil_append,List.append_nil,
                 Nat.one_mul,List.append_assoc] using
       sweepR table 2 [true] [] [true] [false] 1 cstep n (ones (n+3)) []
   have h4 : run0 table 2 ⟨2,[true]++zeros n++ones (n+3),[]⟩ =
