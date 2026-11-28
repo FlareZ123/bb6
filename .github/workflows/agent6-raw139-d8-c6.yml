@@ -1,0 +1,101 @@
+name: Agent6 Raw139 D0=8 C1=6 exact child (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  certify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 80
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Reconstruct exact certificate pipeline
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d8c6
+          pipe="$work/pipeline"
+          root="$work/d8c6"
+          core="$work/core"
+          mkdir -p "$pipe" "$root" "$core"
+          cat im-results/agent6-raw139-d1-zeroRD/d9-pipeline/source.b64.0* | base64 -d > /tmp/d9-source.tar.xz
+          tar -xJf /tmp/d9-source.tar.xz -C "$pipe"
+          base64 -d im-results/agent6-raw139-d1-zeroRD/strong.cpp.xz.b64 | xz -d > "$pipe/strong.cpp"
+          mkdir -p "$pipe/late"
+          base64 -d im-results/agent6-raw139-d1-zeroRD/late-source.tar.xz.b64 | tar -xJf - -C "$pipe/late"
+          cp im-results/agent6-raw139-d1-zeroRD/d9-pipeline/altblock.cpp "$pipe/"
+          cp im-results/agent6-raw139-d1-zeroRD/d9-pipeline/replace_alt.py "$pipe/"
+          g++ -O3 -std=c++17 "$pipe/cert_census.cpp" -o "$pipe/cert_census"
+          g++ -O3 -std=c++17 "$pipe/strong.cpp" -o "$pipe/strong"
+          g++ -O3 -std=c++17 "$pipe/strong_emit.cpp" -o "$pipe/strong_emit"
+          g++ -O3 -std=c++17 "$pipe/altblock.cpp" -o "$pipe/altblock"
+          python3 im-results/agent13-coverage/unpack.py
+          python3 im-results/agent13-block-far/specialize.py 4
+          python3 "$pipe/late/certify_late.py" --roots "$pipe/late/lateRoots.tsv" --children "$pipe/late/lateChildren.tsv" --out "$pipe/D1Late.lean"
+          python3 "$pipe/discover.py" 8 6 "$root"
+          python3 "$pipe/emit_lean.py" "$root/certs.jsonl" "$root/src" 8 D8C6
+          python3 - "$root/certs.jsonl" "$root/alt.in" <<'PY'
+          import json,sys
+          src,dst=sys.argv[1:]
+          with open(dst,'w') as out:
+              for line in open(src):
+                  c=json.loads(line)
+                  if c.get("type")=="ng" and len(c.get("states",[]))>1000:
+                      out.write(str(c["id"])+" "+",".join(map(str,c["p"]))+"\n")
+          PY
+          if test -s "$root/alt.in"; then
+            "$pipe/altblock" "$root/alt.in" > "$root/alt.out"
+            "$pipe/strong_emit" "$root/alt.out" > "$root/alt.jsonl"
+            python3 "$pipe/replace_alt.py" "$root" D8C6
+          else
+            : > "$root/alt.out"
+            : > "$root/alt.jsonl"
+          fi
+          python3 "$pipe/gen_tree_general.py" "$root/tree-8-6.txt" "$root/src" 384 8 6 8 "$root/late.json"
+          python3 "$pipe/group_chunks.py" "$root/src" D8C6 8
+          cp "$pipe/D1PackedTree.lean" "$pipe/D1QuickTree.lean" "$pipe/D1TreeTools.lean" "$root/src/"
+      - name: Certify shared core from source
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d8c6
+          pipe="$work/pipeline"
+          core="$work/core"
+          python3 tools/lean_compile_closure.py "$pipe/D1PackedTree.lean" "$pipe/D1Late.lean"             --source-root "$pipe" --workdir /tmp/a6-d8c6-core --jobs 2             --manifest "$work/core.json" --label agent6-raw139-d8c6-core | tee "$work/core.log"
+          ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
+          find /tmp/a6-d8c6-core -name '*.olean' -exec cp '{}' "$core/" ';'
+      - name: Kernel-check complete D0=8 C1=6 child Cover
+        run: |
+          set -euo pipefail
+          work=.tmp/a6-d8c6
+          export LEAN="$HOME/.elan/bin/lean"
+          export JOBS=2
+          python3 "$work/pipeline/compile_groups.py" "$work" "$work/core" D8C6 | tee "$work/d8c6/compile.log"
+          grep -F "FINAL" "$work/d8c6/compile.log"
+          grep -F " 0 []" "$work/d8c6/compile.log"
+          grep -F "'D8C6.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d8c6/src/logs/D8C6Parent.log"
+          ! grep -REq 'sorryAx|ofReduceBool' "$work/d8c6/src/logs"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-raw139-d8-c6-certified
+          path: |
+            .tmp/a6-d8c6/d8c6/src
+            .tmp/a6-d8c6/d8c6/compile.log
+            .tmp/a6-d8c6/d8c6/census.log
+            .tmp/a6-d8c6/d8c6/recipes.tsv
+            .tmp/a6-d8c6/d8c6/alt.out
+            .tmp/a6-d8c6/core.json
+          include-hidden-files: true
+          retention-days: 14
