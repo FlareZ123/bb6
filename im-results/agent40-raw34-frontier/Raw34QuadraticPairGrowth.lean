@@ -193,12 +193,16 @@ theorem alternatingGrowth (k : Nat) :
     run0 alternating (alternatingCost k) (alternatingWord k) =
       some (alternatingWord (k+1)) := by
   have h0 := alternatingAToB k
-  have hr := rotate false [true] k
+  have hr0 := rotate false [true] k
+  have hr : [false]++rep [true,false] k++[false,false] =
+      rep [false,true] k++[false,false,false] := by
+    have h := congrArg (fun xs => xs++[false,false]) hr0
+    simpa only [List.append_assoc] using h
   have h1 := alternatingBRightMany k [true] [false,false,false]
   have h0' : run0 alternating 1 (alternatingWord k) =
       some ⟨1,[true,true],rep [false,true] k++[false,false,false]⟩ := by
-    rw [← hr]
-    simpa only [List.append_assoc] using h0
+    rw [hr] at h0
+    exact h0
   have h1' : run0 alternating (2*k)
       ⟨1,[true,true],rep [false,true] k++[false,false,false]⟩ =
       some ⟨1,[true]++rep [true,true] k++[true],
@@ -207,9 +211,13 @@ theorem alternatingGrowth (k : Nat) :
   have h2 := alternatingTurn (rep [true,true] k++[true])
   have hone : [true]++rep [true,true] k++[true] =
       rep [true,true] (k+1) := by
-    have hrot := rotate true [true] k
-    rw [hrot]
-    simpa only [rep,List.append_assoc] using (rep_snoc [true,true] k)
+    calc
+      [true]++rep [true,true] k++[true]
+          = rep [true,true] k++[true,true] := by
+              rw [rotate true [true] k]
+              simp only [List.append_assoc]
+      _ = [true,true]++rep [true,true] k := rep_snoc [true,true] k
+      _ = rep [true,true] (k+1) := by rfl
   have h2' : run0 alternating 10
       ⟨1,[true]++rep [true,true] k++[true],[false,false,false]⟩ =
       some ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ := by
@@ -218,7 +226,7 @@ theorem alternatingGrowth (k : Nat) :
   have h3' : run0 alternating (2*(k+1))
       ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ =
       some (alternatingWord (k+1)) := by
-    simpa [alternatingWord,rep,List.append_assoc] using h3
+    simpa [alternatingWord,rep,rep_snoc,List.append_assoc] using h3
   have H := join0 (join0 (join0 h0' h1') h2') h3'
   have ht : 1+2*k+10+2*(k+1) = alternatingCost k := by
     unfold alternatingCost
