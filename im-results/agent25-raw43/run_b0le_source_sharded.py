@@ -127,10 +127,10 @@ def batch_key(path: Path) -> int:
     return int(match.group(1))
 
 
-def shard(variant: str, index: int, count: int) -> None:
+def shard(variant: str, index: int, count: int, generated: Path | None = None) -> None:
     if not 0 <= index < count:
         raise ValueError("shard index out of range")
-    generated = prepare(variant)
+    generated = generated if generated is not None else prepare(variant)
     batches = sorted(generated.glob("Raw43*BiDFABatch*.lean"), key=batch_key)
     roots = [path for pos, path in enumerate(batches) if pos % count == index]
     work = Path(f"/tmp/a25-b0le-shard-{index}")
@@ -163,11 +163,14 @@ def shard(variant: str, index: int, count: int) -> None:
     )
 
 
-def recover_shards(variant: str, count: int, shards_root: Path, pins: str) -> str:
+def recover_shards(variant: str, count: int, shards_root: Path, pins: str, generated: Path) -> tuple[str, list[int]]:
     """Reuse successful producer artifacts even when their assembly job failed."""
     pin = json.loads(pins)
-    if not isinstance(pin, dict) or set(pin) != {"shard_run_id", "shard_revision"}:
-        raise ValueError("resume pins must contain shard_run_id and shard_revision")
+    if not isinstance(pin, dict) or not {"shard_run_id", "shard_revision"} <= set(pin) <= {"shard_run_id", "shard_revision", "repair_indices"}:
+        raise ValueError("resume pins require shard_run_id and shard_revision; optional repair_indices")
+    repair = pin.get("repair_indices", [])
+    if not isinstance(repair, list) or any(type(i) is not int or not 0 <= i < count for i in repair) or len(set(repair)) != len(repair):
+        raise ValueError("invalid repair_indices")
     run_id, revision = pin["shard_run_id"], pin["shard_revision"]
     if not isinstance(run_id, int) or isinstance(run_id, bool) or run_id <= 0:
         raise ValueError("invalid shard run ID")
@@ -185,16 +188,21 @@ def recover_shards(variant: str, count: int, shards_root: Path, pins: str) -> st
         raise RuntimeError("pinned run does not match the completed Raw43 shard producer")
     for index in range(count):
         name = f"raw43-b0le-shard-{index}"
-        run(["gh", "run", "download", str(run_id), "--repo", repo,
-             "--name", name, "--dir", str(shards_root / name)])
-    return revision
+        if index in repair:
+            shard(variant, index, count, generated)
+            (shards_root / name).parent.mkdir(parents=True, exist_ok=True)
+            Path(f"/tmp/a25-b0le-shard-{index}").rename(shards_root / name)
+        else:
+            run(["gh", "run", "download", str(run_id), "--repo", repo,
+                 "--name", name, "--dir", str(shards_root / name)])
+    return revision, repair
 
 
 def assemble(variant: str, count: int, shards_root: Path) -> None:
     generated = prepare(variant)
     pins = os.environ.get("RAW43_RESUME_PINS", "{}")
-    revision = (recover_shards(variant, count, shards_root, pins)
-                if pins != "{}" else os.environ["GITHUB_SHA"])
+    revision, repair = (recover_shards(variant, count, shards_root, pins, generated)
+                        if pins != "{}" else (os.environ["GITHUB_SHA"], []))
     union = Path("/tmp/a25-b0le-shard-union")
     run([
         "python", str(HERE / "merge_b0le_source_shards.py"),
@@ -204,6 +212,7 @@ def assemble(variant: str, count: int, shards_root: Path) -> None:
         "--variant", variant,
         "--revision", revision,
         "--expected-shards", str(count),
+        *(["--replacement-revision", os.environ["GITHUB_SHA"], "--replacement-indices", *map(str, repair)] if repair else []),
     ])
 
     suffix = ("E" + variant.upper()) if re.fullmatch(r"[01][lr][a-f]", variant) else variant.upper()
