@@ -46,7 +46,7 @@ def compile : List InverseLetter → ArithmeticCert
 
 private theorem pow_two_succ_even (n : Nat) :
     (2^(n+1) : Nat) % 2 = 0 := by
-  rw [pow_succ]
+  rw [Nat.pow_succ]
   omega
 
 theorem advance_preserves_odd (z : ArithmeticCert) (b : InverseLetter)
