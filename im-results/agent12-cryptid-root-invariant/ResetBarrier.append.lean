@@ -3,7 +3,7 @@ Synchronizing reset barrier; append after GeneralTripleBarrier.
 The aligned core requires no good-stack hypothesis.
 -/
 
-theorem a12ResetHazard (k : ℕ) (T : List ℕ) (W : List (ℕ × ℕ))
+private theorem a12ResetHazard (k : ℕ) (T : List ℕ) (W : List (ℕ × ℕ))
     (c : ℕ) (L : List ℕ) :
     ∃ q, ReachesPlus target (tok_CR (k::T) W (1::0::0::1::1::0::1::c::L)) q ∧
       (step target q).isNone := by
