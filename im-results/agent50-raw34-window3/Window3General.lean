@@ -101,6 +101,66 @@ theorem never_of_slotwise_safe
     hsafe q scanned ⟨left,right,hp⟩
   exact ⟨mv,hm,fun incoming => hs left right incoming hp⟩
 
+/-- The exact fourteen neighborhood predicates enumerated by the
+    companion finite Raw34 source-combinatorics generator. A tag 0
+    excludes a control state; tag 1 imposes no tape restriction.
+    All expressions are Boolean and inspect only left/current/right. -/
+def pred14 (k : Fin 14) (l c r : Bool) : Bool :=
+  match k.val with
+  | 0 => false
+  | 1 => true
+  | 2 => !l
+  | 3 => l
+  | 4 => !c
+  | 5 => c
+  | 6 => !r
+  | 7 => r
+  | 8 => (!c) || l
+  | 9 => c || (!l)
+  | 10 => (!c) || r
+  | 11 => c || (!r)
+  | 12 => (!l) || r
+  | 13 => l || (!r)
+  | _ => false
+
+def tagged (T : Fin 6 → Fin 14) : Fin 6 → Bool → Bool → Bool → Bool :=
+  fun q l c r => pred14 (T q) l c r
+
+/-- A source slot is permitted either when *no* observation in its
+    state can read this symbol, allowing any HALT action, or when
+    it contains an ordinary move preserving the three-cell predicate
+    for all possible previous neighbors and fresh incoming symbols.
+
+    The set of such actions is a Cartesian-product constraint on the
+    physical twelve-entry complete transition table, justifying the
+    finite 25-ary union calculation for each fixed tag vector. -/
+def Permitted (T : Fin 6 → Fin 14)
+    (q : Fin 6) (scanned : Bool) (action : Option Move) : Prop :=
+  (∀ left right, tagged T q left scanned right = false) ∨
+    ∃ mv, action = some mv ∧
+      ∀ left right incoming,
+        tagged T q left scanned right = true →
+          successor (tagged T) mv left right incoming = true
+
+/-- Universal soundness for *all* 14^6 tag vectors and all their
+    25-choice compatible physical Turing machines. In particular,
+    a HALT action at a genuinely unread symbol is harmless. -/
+theorem never_of_tagged_permitted
+    (T : Fin 6 → Fin 14)
+    (m : Machine)
+    (hstart : tagged T 0 false false false = true)
+    (hallowed : ∀ q scanned, Permitted T q scanned (m (q,scanned))) :
+    NeverHalts m := by
+  apply never_of_slotwise_safe (tagged T) m hstart
+  intro q scanned hreach
+  rcases hallowed q scanned with hmiss | ⟨mv,hm,hs⟩
+  · obtain ⟨left,right,hobs⟩ := hreach
+    have hbad := hmiss left right
+    rw [hobs] at hbad
+    cases hbad
+  · exact ⟨mv,hm,hs⟩
+
 #print axioms never_of_locally_safe
 #print axioms never_of_slotwise_safe
+#print axioms never_of_tagged_permitted
 end BB6.Agent50Window3
