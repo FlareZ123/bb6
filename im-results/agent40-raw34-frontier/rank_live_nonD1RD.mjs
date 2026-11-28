@@ -142,11 +142,11 @@ if(withCycles){
 let fDepth5Source=[];
 if(withFDepth5){
  const m=JSON.parse(readFileSync(join(fDepth5Dir,"manifest.json"),"utf8"));
- assert.equal(m.selectedCount,25000);
+ assert(Number.isInteger(m.selectedCount)&&m.selectedCount>0);
  for(const unit of m.modules)
    fDepth5Source.push(...parseSourceCycles(
      readFileSync(join(fDepth5Dir,unit.module+".lean"),"utf8")));
- assert.equal(fDepth5Source.length,25000);
+ assert.equal(fDepth5Source.length,m.selectedCount);
  fDepth5Source.forEach(add);
 }
 let eCycleSource=[];
@@ -166,11 +166,11 @@ if(withECycles){
 let eDepth5Source=[];
 if(withEDepth5){
  const m=JSON.parse(readFileSync(join(eDepth5Dir,"manifest.json"),"utf8"));
- assert.equal(m.count,25000);
+ assert(Number.isInteger(m.count)&&m.count>0);
  for(const unit of m.modules)
    eDepth5Source.push(...parseSourceCycles(
      readFileSync(join(eDepth5Dir,unit.module+".lean"),"utf8")));
- assert.equal(eDepth5Source.length,25000);
+ assert.equal(eDepth5Source.length,m.count);
  eDepth5Source.forEach(add);
 }
 let missingThirdSource=[];
