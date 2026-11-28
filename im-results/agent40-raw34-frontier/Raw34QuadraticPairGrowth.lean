@@ -245,4 +245,108 @@ theorem alternating_never (m : Machine)
 #print axioms alternatingALeftMany
 #print axioms alternatingGrowth
 #print axioms alternating_never
+
+/-! A third easy-pair residual has a stationary-head unary pump.
+The cylinder
+  1RB1RA_1RC---_0RD---_1LC0LF_1RA1LE_0LD0LE
+leaves B1 and C1 arbitrary.  Checkpoints occur with k+1 contiguous ones
+immediately left of A; the next checkpoint costs 2k+12. -/
+
+def stationary : PartialMachine := fun s =>
+  match s.1.val,s.2 with
+  | 0,false => some (some ⟨true,true,1⟩)
+  | 0,true  => some (some ⟨true,true,0⟩)
+  | 1,false => some (some ⟨true,true,2⟩)
+  | 2,false => some (some ⟨false,true,3⟩)
+  | 3,false => some (some ⟨true,false,2⟩)
+  | 3,true  => some (some ⟨false,false,5⟩)
+  | 4,false => some (some ⟨true,true,0⟩)
+  | 4,true  => some (some ⟨true,false,4⟩)
+  | 5,false => some (some ⟨false,false,3⟩)
+  | 5,true  => some (some ⟨false,false,4⟩)
+  | _,_ => none
+
+def stationaryWord (k : Nat) : Z0 :=
+  ⟨0,[false]++rep [true] (k+1),[false,false,false]⟩
+
+def stationaryCost (k : Nat) : Nat := 2*k+12
+
+theorem stationaryFirst :
+    run0 stationary 10 ⟨0,[],[]⟩ = some (stationaryWord 0) := by
+  decide
+
+theorem stationaryTurn (L : List Bool) :
+    run0 stationary 9 ⟨0,[false]++L,[false,false,false]⟩ =
+      some ⟨4,L,[false,false,false,false]⟩ := by
+  rfl
+
+theorem stationaryELeftOne (L R : List Bool) :
+    run0 stationary 1 ⟨4,[true]++L,R⟩ =
+      some ⟨4,L,[true]++R⟩ := by
+  rfl
+
+theorem stationaryELeftMany (n : Nat) (L R : List Bool) :
+    run0 stationary n ⟨4,rep [true] n++L,R⟩ =
+      some ⟨4,L,rep [true] n++R⟩ := by
+  have h := sweepL stationary 4 [] [] [true] [true] 1
+    stationaryELeftOne n L R
+  simpa only [List.nil_append,Nat.one_mul,List.append_assoc] using h
+
+theorem stationaryEToA (k : Nat) :
+    run0 stationary 1
+      ⟨4,[],rep [true] (k+1)++[false,false,false,false]⟩ =
+      some ⟨0,[true,true],rep [true] k++[false,false,false,false]⟩ := by
+  simp [stationary,run0,step0,move0,rep]
+
+theorem stationaryARightOne (L R : List Bool) :
+    run0 stationary 1 ⟨0,[true]++L,[true]++R⟩ =
+      some ⟨0,[true,true]++L,R⟩ := by
+  rfl
+
+theorem stationaryARightMany (n : Nat) (L R : List Bool) :
+    run0 stationary n ⟨0,[true]++L,rep [true] n++R⟩ =
+      some ⟨0,[true]++rep [true] n++L,R⟩ := by
+  have h := sweepR stationary 0 [true] [] [true] [true] 1
+    stationaryARightOne n L R
+  simpa only [List.nil_append,Nat.one_mul,List.append_assoc] using h
+
+theorem stationaryFinal (k : Nat) :
+    run0 stationary 1
+      ⟨0,[true]++rep [true] k++[true],[false,false,false,false]⟩ =
+      some (stationaryWord (k+1)) := by
+  simp [stationaryWord,stationary,run0,step0,move0,rep,rep_snoc,
+        List.append_assoc]
+
+theorem stationaryGrowth (k : Nat) :
+    run0 stationary (stationaryCost k) (stationaryWord k) =
+      some (stationaryWord (k+1)) := by
+  have h0 := stationaryTurn (rep [true] (k+1))
+  have h1 := stationaryELeftMany (k+1) [] [false,false,false,false]
+  have h2 := stationaryEToA k
+  have h3 := stationaryARightMany k [true] [false,false,false,false]
+  have h3' : run0 stationary k
+      ⟨0,[true,true],rep [true] k++[false,false,false,false]⟩ =
+      some ⟨0,[true]++rep [true] k++[true],[false,false,false,false]⟩ := by
+    simpa only [List.append_assoc] using h3
+  have h4 := stationaryFinal k
+  have H := join0 (join0 (join0 (join0 h0 h1) h2) h3') h4
+  have ht : 9+(k+1)+1+k+1 = stationaryCost k := by
+    unfold stationaryCost
+    omega
+  simpa only [List.append_assoc,ht] using H
+
+theorem stationary_never (m : Machine)
+    (hm : compatible stationary m) : NeverHalts m := by
+  exact never_of_growth stationary stationaryWord 10 stationaryCost
+    stationaryFirst (by intro k; unfold stationaryCost; omega)
+    stationaryGrowth m hm
+
+#print axioms stationaryFirst
+#print axioms stationaryTurn
+#print axioms stationaryELeftMany
+#print axioms stationaryEToA
+#print axioms stationaryARightMany
+#print axioms stationaryFinal
+#print axioms stationaryGrowth
+#print axioms stationary_never
 end BB6.Agent40Raw34PairQuadratic
