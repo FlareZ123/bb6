@@ -953,8 +953,8 @@ jobs:
           W=/tmp/raw10-box27-slice
           D=im-results/agent49-raw10-box27
           python "$D/generate_slice.py"
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice.parent_bound --parent-table "8,-1,11,-1,13,13,14,17,21,-1,-1,-1" --weighted-bound 108 --artifact-name raw10-box27-slice --provenance-input "$D/generate_slice.py" "$D/Box27SliceSource.lean" 2>&1 | tee /tmp/raw10-box27-slice.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice.log BB6.Agent49.Box27Slice.audit_sound BB6.Agent49.Box27Slice.bound BB6.Agent49.Box27Slice.parent_bound BB6.Agent49.Box27Slice.attainer_halts BB6.Agent49.Box27Slice.attainer_in_slice
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27Slice.parent_bound --theorem BB6.Agent49.Box27Slice.exact_weighted --parent-table "8,-1,11,-1,13,13,14,17,21,-1,-1,-1" --weighted-bound 108 --artifact-name raw10-box27-slice --provenance-input "$D/generate_slice.py" "$D/Box27SliceSource.lean" 2>&1 | tee /tmp/raw10-box27-slice.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-slice.log BB6.Agent49.Box27Slice.audit_sound BB6.Agent49.Box27Slice.bound BB6.Agent49.Box27Slice.parent_bound BB6.Agent49.Box27Slice.attainer_halts BB6.Agent49.Box27Slice.attainer_in_slice BB6.Agent49.Box27Slice.exact_weighted
           cp /tmp/raw10-box27-slice.log "$W/lean.log"
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw10-box27-slice'
