@@ -189,6 +189,21 @@ exactly 8. Similarly, the A-carry identity
 `rhoZero(b-6)=2*b-11` holds on the observed normal-A family
 `b ≡ 5 (mod 8)`.
 
+The arithmetic core is now independently kernel-checked in
+`Raw56LE17557RhoArithmetic.lean` with local Lean 4.36.0-rc2. Besides the
+regular identities and exact iff characterizations of the two exceptional
+residues, it proves the defect transition equations directly:
+
+- an unmarked residue-6 B runway creates `rhoZero(next)-8`;
+- a marked nonexceptional B runway preserves the same `-8` defect;
+- a marked residue-7 carry cancels the defect exactly;
+- a marked nonexceptional carry preserves it.
+
+The printed axiom profiles contain only Lean's standard quotient/propositional
+axioms (and `Classical.choice` on the iff characterizations), with no
+`sorryAx`. The remaining difficulty is therefore structural reachability of
+the run grammar and the marked-run relation, not the modular arithmetic.
+
 ## The self-similarity survives as a one-defect relation
 
 The failure is highly structured. Primitive replay through the
