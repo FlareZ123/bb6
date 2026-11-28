@@ -59,7 +59,7 @@ theorem ops_pos (os : List Op) (n n' : Nat) (w w' : Word) (l : Tape) (hl : l 0 =
 
 def LB := enc "AATAAATAUJTT"
 def OUT := enc "TAATAAATAATTAAATUJTTAATAAATAUJTT"
-def Head := enc "JTAATAAATATAATAATAATAATAATTATAATAATTAATTAAATAUJTT"
+def Head := enc "JTAATAAATATAATAATAATAATAATTATAATAATAATTAATTAAATAUJTT"
 def START := Head++flat LB 35
 
 theorem kpow_eq (n : Nat) (l : Tape) : Agent2EpochMarker.kpow n l = rep K n l := by
