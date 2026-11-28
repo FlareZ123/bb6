@@ -177,6 +177,83 @@ theorem m8BoundaryLattice_unreachable (m s : Nat) (hm4 : m%4=3) :
     hm hj.1 hj.2 (m8BoundaryLattice_stop m s hm4)
     hscale hv8 hpar
 
+
+/-- Completeness of the boundary parameterization. At depth d=2m+2,
+    every Diophantine M8 solution in the forbidden v=2 mod 8 sector is
+    exactly one of the displayed q-rays. -/
+theorem m8BoundaryLattice_complete
+    (m j v : Nat)
+    (hm4 : m%4=3)
+    (hv8 : v%8=2)
+    (heq : m8BoundaryQ m*(j+3)=m+2^(2*m+2)*v) :
+    ∃ s,
+      v=m8BoundaryVLattice m s ∧
+      j=m8BoundaryJLattice m s := by
+  let Q := m8BoundaryQ m
+  let B := 2^(2*m+2)
+  have hm : 1≤m := by omega
+  have hQlow := m8BoundaryQ_lower m hm
+  have hQpos : 0<Q := by omega
+  have hQ8 := m8BoundaryQ_mod8 m hm
+  have hB : B=3*Q+1 := by
+    simpa [B,Q] using m8BoundaryBQ m
+  have hdecomp : m+B*v=Q*(3*v)+(m+v) := by
+    rw [hB]
+    simp [Nat.add_mul,Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+    omega
+  have hmain : Q*(j+3)=Q*(3*v)+(m+v) := by
+    simpa [Q,B] using (heq.trans hdecomp)
+  have hmul : Q*(3*v)≤Q*(j+3) := by
+    rw [hmain]
+    omega
+  have hle : 3*v≤j+3 :=
+    Nat.le_of_mul_le_mul_left hmul hQpos
+  let q := j+3-3*v
+  have hjq : j+3=3*v+q := by
+    dsimp [q]
+    omega
+  have hqQ : Q*q=m+v := by
+    rw [hjq,Nat.mul_add] at hmain
+    omega
+  have hqpos : 1≤q := by
+    by_contra h
+    have hq0 : q=0 := by omega
+    rw [hq0,Nat.mul_zero] at hqQ
+    omega
+  have hqmod : q%8=(if m%8=3 then 1 else 5) := by
+    have hh := congrArg (fun z : Nat => z%8) hqQ
+    rw [Nat.mul_mod,hQ8,Nat.add_mod] at hh
+    by_cases h3 : m%8=3
+    · rw [if_pos h3]
+      omega
+    · have h7 : m%8=7 := by omega
+      rw [if_neg h3]
+      omega
+  let s := q/8
+  have hqform : q=m8BoundaryCoeff m s := by
+    have hdiv := Nat.mod_add_div q 8
+    dsimp [s,m8BoundaryCoeff]
+    rw [hqmod]
+    omega
+  have hv : v=m8BoundaryVLattice m s := by
+    dsimp [m8BoundaryVLattice]
+    rw [← hqform]
+    rw [← hqQ]
+    omega
+  have hqB : q*B=j+3*m+3 := by
+    calc
+      q*B = q*(3*Q+1) := by rw [hB]
+      _ = 3*(Q*q)+q := by
+        simp [Nat.mul_add,Nat.mul_assoc,Nat.mul_comm,Nat.mul_left_comm]
+      _ = 3*(m+v)+q := by rw [hqQ]
+      _ = j+3*m+3 := by omega
+  have hj : j=m8BoundaryJLattice m s := by
+    dsimp [m8BoundaryJLattice]
+    rw [← hqform]
+    change j=q*B-(3*m+3)
+    omega
+  exact ⟨s,hv,hj⟩
+
 /-- The one-ray family in M8BoundarySource is the q=1, s=0 slice. -/
 theorem m8Boundary_first_slice (m : Nat) (hm8 : m%8=3) :
     m8BoundaryCoeff m 0=1 ∧
@@ -212,6 +289,7 @@ theorem m8Boundary_first_slice (m : Nat) (hm8 : m%8=3) :
 
 #print axioms m8BoundaryLattice_stop
 #print axioms m8BoundaryLattice_unreachable
+#print axioms m8BoundaryLattice_complete
 #print axioms m8Boundary_first_slice
 
 end BB6.Agent15Research
