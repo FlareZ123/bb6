@@ -91,6 +91,25 @@ def main():
         (evidence / "membership.json").write_text(
             json.dumps(receipt, indent=2, sort_keys=True) + "\n")
         print("PASS: Canonical40 source theorem with one explicit Raw39 premise and 39 remaining Covers", flush=True)
+        # Stronger algebraic consequence: at any larger threshold, parent
+        # Cover can be consumed directly, rather than at floor 6,766,859.
+        loose=[
+            "BB6.Agent11Raw39Canonical40LooseThreshold.parents_cover_at",
+            "BB6.Agent11Raw39Canonical40LooseThreshold.sound_at",
+            "BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_target",
+            "BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_champion",
+        ]
+        source3=HERE/"Raw39Canonical40LooseThreshold.lean"
+        root3,loose_profiles=c.u.compile_one(source3,linked,evidence,loose)
+        assert set(loose_profiles)==set(loose),loose_profiles
+        assert all(set(ax)<=ALLOWED for ax in loose_profiles.values())
+        shutil.copy2(root3,evidence/root3.name)
+        receipt["loose_threshold_claim"]="target-score parent Cover suffices; local floor not required"
+        receipt["loose_threshold_theorems"]=loose
+        receipt["loose_threshold_axioms"]=loose_profiles
+        receipt["loose_threshold_root_sha256"]=c.a68.sha(root3)
+        (evidence/"membership.json").write_text(json.dumps(receipt,indent=2,sort_keys=True)+"\n")
+        print("PASS: Canonical40 soundness at any target threshold ≥6766859; exactness from parent Cover at target",flush=True)
 
 if __name__ == "__main__":
     main()
