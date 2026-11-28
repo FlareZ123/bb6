@@ -72,6 +72,8 @@ def main():
 
     done = set(reused)
     report = dict(reused)
+    max_fresh = int(os.environ.get("RAW11_REPAIR_MAX_FRESH", "0"))
+    compiled_fresh = 0
     print("source_modules",len(files),
           "accepted_reused",len(reused),
           "fresh_to_compile",len(files)-len(reused),flush=True)
@@ -106,8 +108,13 @@ def main():
         for name in ready:
             report[name] = compile_one(name)
             done.add(name)
+            compiled_fresh += 1
             (out/"repair-receipt.json").write_text(
                 json.dumps(report,sort_keys=True,indent=2)+"\n")
+            if max_fresh and compiled_fresh >= max_fresh and done != files.keys():
+                print("checkpoint",parent_id,"compiled_fresh",compiled_fresh,
+                      "accepted_total",len(report),"remaining",len(files)-len(done),flush=True)
+                return
     assert len(report) == len(files)
     assert (out/(target_parent+'.olean')).is_file()
     # Mathematical entry point is source-checked by the whole DAG.
