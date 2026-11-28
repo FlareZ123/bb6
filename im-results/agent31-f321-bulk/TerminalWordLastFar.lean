@@ -123,14 +123,15 @@ theorem farPureHigh_num_plus_three (c b : Nat) :
       rw [h1,h2]
       exact (Int.mul_add _ _ _).symm
 
-/-- General last-Far theorem. Earlier inverse letters are arbitrary: if the
-    final Far is followed by b Highs before the terminal gate, then d is
-    forced into the b-deep 2-adic neighbourhood of -3. -/
-theorem lastFar_near_minus_three
+/-- Strong general last-Far theorem. Earlier inverse letters are arbitrary:
+    if the final Far is followed by b Highs before the terminal gate, then
+    d+3 has a factor 2^b, and the residual quotient has parity b. -/
+theorem lastFar_near_minus_three_parity
     {p : List InverseLetter} {b d R c : Nat}
     (hp : FormalInversePath (d:Int)
       (p ++ (.far :: pureHigh b)) (R:Int) (c:Int)) :
-    ∃ z : Int, (d:Int)+3 = (2:Int)^b * z := by
+    ∃ z : Int, (d:Int)+3 = (2:Int)^b * z ∧
+      z % 2 = (b:Int) % 2 := by
   let w : List InverseLetter := .far :: pureHigh b
   have hdenFac := terminalDenom_append_factor p w
   have hnumFac := terminalNumerator_append_factor c p w
@@ -190,18 +191,40 @@ theorem lastFar_near_minus_three
   have hnumK : terminalNumerator c (p ++ (.far :: pureHigh b)) + 3 =
       (2:Int)^b*K := by simpa [K] using hnumPlus
   rw [hdenQ] at heq
-  refine ⟨K - Q*(d:Int), ?_⟩
-  have h1 : (1 + (2:Int)^b*Q)*(d:Int) =
-      (d:Int) + (2:Int)^b*(Q*(d:Int)) := by
-    rw [Int.add_mul]
-    ac_rfl
-  rw [h1] at heq
-  rw [Int.mul_sub]
-  have hPQ : (2:Int)^b*(Q*(d:Int)) = ((2:Int)^b*Q)*(d:Int) := by ac_rfl
-  omega
+  refine ⟨K - Q*(d:Int), ?_, ?_⟩
+  · have h1 : (1 + (2:Int)^b*Q)*(d:Int) =
+        (d:Int) + (2:Int)^b*(Q*(d:Int)) := by
+      rw [Int.add_mul]
+      ac_rfl
+    rw [h1] at heq
+    rw [Int.mul_sub]
+    have hPQ : (2:Int)^b*(Q*(d:Int)) =
+        ((2:Int)^b*Q)*(d:Int) := by ac_rfl
+    omega
+  · have hKmod : K % 2 = (b:Int) % 2 := by
+      dsimp [K]
+      omega
+    have hQmod : Q % 2 = 0 := by
+      dsimp [Q]
+      omega
+    have hQdmod : (Q*(d:Int)) % 2 = 0 := by
+      rw [Int.mul_emod, hQmod]
+      simp
+    rw [Int.sub_emod, hKmod, hQdmod]
+    omega
+
+/-- Divisibility-only corollary used by the reset-tail analysis. -/
+theorem lastFar_near_minus_three
+    {p : List InverseLetter} {b d R c : Nat}
+    (hp : FormalInversePath (d:Int)
+      (p ++ (.far :: pureHigh b)) (R:Int) (c:Int)) :
+    ∃ z : Int, (d:Int)+3 = (2:Int)^b * z := by
+  rcases lastFar_near_minus_three_parity hp with ⟨z,hz,_⟩
+  exact ⟨z,hz⟩
 
 #print axioms compile_append_shift
 #print axioms terminalDenom_append_factor
 #print axioms terminalNumerator_append_factor
+#print axioms lastFar_near_minus_three_parity
 #print axioms lastFar_near_minus_three
 end BB6.Agent31F321Density
