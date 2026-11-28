@@ -75,7 +75,6 @@ theorem bankStep (n m : Nat) (X : List Sym) (s : ATail) :
     congr 1
     exact merge 3 m 1 X
   refine ⟨22*W.length+Raw140ERSuffix.cost s,?_⟩
-  unfold Reach
   simpa only [List.append_assoc,he,aword,an] using h
 
 theorem bankIter (k n m : Nat) (X : List Sym) (s : ATail) :
