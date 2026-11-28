@@ -28,9 +28,9 @@ end ZeroLB
 
 namespace ZeroLC
 abbrev p : PartialMachine := refine base (4,false) (some ⟨false,false,2⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
-  zipCycle_sound p 9 1 false -1 (by decide) check m hm
+  zipCycle_sound p 9 1 false (-1) (by decide) check m hm
 theorem cover (B : Nat) : Cover (WeightedBound B) p := by
   apply Cover.leaf p
   intro m hm
@@ -40,9 +40,9 @@ end ZeroLC
 
 namespace ZeroLD
 abbrev p : PartialMachine := refine base (4,false) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 8 1 false -2 = true := by decide
+theorem check : zipCycle p 8 1 false (-2) = true := by decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
-  zipCycle_sound p 8 1 false -2 (by decide) check m hm
+  zipCycle_sound p 8 1 false (-2) (by decide) check m hm
 theorem cover (B : Nat) : Cover (WeightedBound B) p := by
   apply Cover.leaf p
   intro m hm
@@ -52,9 +52,9 @@ end ZeroLD
 
 namespace ZeroLE
 abbrev p : PartialMachine := refine base (4,false) (some ⟨false,false,4⟩)
-theorem check : zipCycle p 7 1 false -1 = true := by decide
+theorem check : zipCycle p 7 1 false (-1) = true := by decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
-  zipCycle_sound p 7 1 false -1 (by decide) check m hm
+  zipCycle_sound p 7 1 false (-1) (by decide) check m hm
 theorem cover (B : Nat) : Cover (WeightedBound B) p := by
   apply Cover.leaf p
   intro m hm
@@ -88,9 +88,9 @@ end OneLC
 
 namespace OneLD
 abbrev p : PartialMachine := refine base (4,false) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 8 1 false -2 = true := by decide
+theorem check : zipCycle p 8 1 false (-2) = true := by decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
-  zipCycle_sound p 8 1 false -2 (by decide) check m hm
+  zipCycle_sound p 8 1 false (-2) (by decide) check m hm
 theorem cover (B : Nat) : Cover (WeightedBound B) p := by
   apply Cover.leaf p
   intro m hm
@@ -100,9 +100,9 @@ end OneLD
 
 namespace OneLE
 abbrev p : PartialMachine := refine base (4,false) (some ⟨true,false,4⟩)
-theorem check : zipCycle p 7 1 false -1 = true := by decide
+theorem check : zipCycle p 7 1 false (-1) = true := by decide
 theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
-  zipCycle_sound p 7 1 false -1 (by decide) check m hm
+  zipCycle_sound p 7 1 false (-1) (by decide) check m hm
 theorem cover (B : Nat) : Cover (WeightedBound B) p := by
   apply Cover.leaf p
   intro m hm
