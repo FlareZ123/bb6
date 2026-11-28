@@ -30,6 +30,24 @@ theorem first (d0 : Fin 25) :
 theorem macro05 (R : List Bool) :
     run0 (table 5) 3 ⟨3,[],R⟩ =
       some ⟨3,[],[false,true,false]++R⟩ := by rfl
+/-- A single three-move rule shifts the boundary left without consulting D1. -/
+theorem macro06 (R : List Bool) :
+    run0 (table 6) 3 ⟨3,[],false::R⟩ =
+      some ⟨3,[],false::true::R⟩ := by rfl
+
+def family06 (n : Nat) : Z0 :=
+  ⟨3,[],false::rep [true] n++[true]⟩
+
+theorem growth06 (n : Nat) :
+    run0 (table 6) 3 (family06 n) = some (family06 (n+1)) := by
+  simpa only [family06,rep,List.append_assoc,List.cons_append,List.nil_append] using
+    macro06 (rep [true] n ++ [true])
+
+theorem never06 (m : Machine) (hm : compatible (table 6) m) :
+    NeverHalts m :=
+  never_of_growth (table 6) family06 3 (fun _ => 3)
+    (by rfl) (by intro n; omega) growth06 m hm
+
 theorem macro07 (R : List Bool) :
     run0 (table 7) 3 ⟨3,[],R⟩ =
       some ⟨3,[],[false,true,true]++R⟩ := by rfl
@@ -100,16 +118,17 @@ theorem source_compatible (d0 : Fin 25) (m : Machine)
   rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;>
     cases b <;> simp [table] at ht ⊢ <;> simp_all
 
-def sweepCodes : List (Fin 25) := [5,7,9,10]
+def sweepCodes : List (Fin 25) := [5,6,7,9,10]
 
 theorem source_never (m : Machine)
     (hm : Fits raw10Remainder[27]! m)
     (d0 : Fin 25) (hd0 : m (3,false) = decode d0)
     (hc : d0 ∈ sweepCodes) : NeverHalts m := by
-  have h : d0=5 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
+  have h : d0=5 ∨ d0=6 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
     simpa [sweepCodes] using hc
   rcases h with rfl|rfl|rfl|rfl
   · exact never05 m (source_compatible 5 m hm hd0)
+  · exact never06 m (source_compatible 6 m hm hd0)
   · exact never07 m (source_compatible 7 m hm hd0)
   · exact never09 m (source_compatible 9 m hm hd0)
   · exact never10 m (source_compatible 10 m hm hd0)
@@ -130,7 +149,7 @@ theorem bound0 (m : Machine) (hm : compatible (table 0) m) :
     WeightedBound 255 m :=
   BB6.Agent49.Box27Slice.terminal_sound 255 (table 0) (.halt 3) check0 m hm
 
-def fastCodes : List (Fin 25) := [0,5,7,9,10]
+def fastCodes : List (Fin 25) := [0,5,6,7,9,10]
 
 /-- A quarter of the original Box27 D0 domain (five of twenty codes)
     is now bounded uniformly with all seven other slots unrestricted. -/
@@ -138,11 +157,12 @@ theorem source_fast_bound (m : Machine)
     (hm : Fits raw10Remainder[27]! m)
     (d0 : Fin 25) (hd0 : m (3,false) = decode d0)
     (hc : d0 ∈ fastCodes) : WeightedBound 255 m := by
-  have h : d0=0 ∨ d0=5 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
+  have h : d0=0 ∨ d0=5 ∨ d0=6 ∨ d0=7 ∨ d0=9 ∨ d0=10 := by
     simpa [fastCodes] using hc
   rcases h with rfl|rfl|rfl|rfl|rfl
   · exact bound0 m (source_compatible 0 m hm hd0)
   · exact source_bound 255 m hm 5 hd0 (by decide)
+  · exact source_bound 255 m hm 6 hd0 (by decide)
   · exact source_bound 255 m hm 7 hd0 (by decide)
   · exact source_bound 255 m hm 9 hd0 (by decide)
   · exact source_bound 255 m hm 10 hd0 (by decide)
@@ -152,6 +172,9 @@ theorem source_fast_bound (m : Machine)
 #print axioms source_fast_bound
 
 #print axioms first
+#print axioms macro06
+#print axioms growth06
+#print axioms never06
 #print axioms macro05
 #print axioms macro07
 #print axioms macro09
