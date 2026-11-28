@@ -71,7 +71,10 @@ function local(t,a,f,p,name,lines,imports,allowSplit=false){
  const repair = (process.env.RAW11_REPAIR_SPLIT==='1' &&
    ((id===132 && name.startsWith('_root_12_root_19')) ||
     (id===140 && name.startsWith('_root_6'))));
- const threshold = repair ? 30 : MODULE_SPLIT_THRESHOLD;
+ const configuredModuleThreshold = Number(process.env.RAW11_REPAIR_MODULE_THRESHOLD || 30);
+ if(!Number.isInteger(configuredModuleThreshold) || configuredModuleThreshold < 2)
+   throw Error('bad RAW11_REPAIR_MODULE_THRESHOLD');
+ const threshold = repair ? configuredModuleThreshold : MODULE_SPLIT_THRESHOLD;
  const configuredCertThreshold = Number(process.env.RAW11_REPAIR_CERT_THRESHOLD || 8);
  if(!Number.isInteger(configuredCertThreshold) || configuredCertThreshold < 1)
    throw Error('bad RAW11_REPAIR_CERT_THRESHOLD');
