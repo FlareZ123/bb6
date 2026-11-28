@@ -61,10 +61,12 @@ const counters=[
 ].map(parseTable);
 counters.forEach(add);
 const withECycles=process.argv.includes("--include-e-cycles");
+const withEFLeft=process.argv.includes("--include-ef-left-ray");
+const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
 const withDepth4=process.argv.includes("--include-f-depth4")||withECycles;
 const withCycles=process.argv.includes("--include-f-cycles")||withDepth4;
-const withEOnly=process.argv.includes("--include-e-ray")||withCycles;
-const withLeft=process.argv.includes("--include-f-left")||withCycles;
+const withEOnly=process.argv.includes("--include-e-ray")||withCycles||withELeft;
+const withLeft=process.argv.includes("--include-f-left")||withCycles||withELeft;
 const withRay=process.argv.includes("--include-f-ray")||withLeft;
 const fDirIndex=process.argv.indexOf("--f-depth3-dir");
 const fDepth3Dir=fDirIndex<0?"/tmp/a40-raw34-f-cycleunion":process.argv[fDirIndex+1];
@@ -72,8 +74,10 @@ const f4DirIndex=process.argv.indexOf("--f-depth4-dir");
 const fDepth4Dir=f4DirIndex<0?"/tmp/a40-raw34-f-depth4union":process.argv[f4DirIndex+1];
 const eDirIndex=process.argv.indexOf("--e-cycles-dir");
 const eCyclesDir=eDirIndex<0?"/tmp/a40-raw34-eunion":process.argv[eDirIndex+1];
+const efLeftIndex=process.argv.indexOf("--ef-left-dir");
+const efLeftDir=efLeftIndex<0?"/tmp/a40-raw34-ef-leftunion":process.argv[efLeftIndex+1];
 function parseSourceRay(file){
- const text=readFileSync(join(dir,file),"utf8");
+ const text=readFileSync(file.startsWith("/")?file:join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
    m[1].split(",").map(x=>Number(x.trim())));
  for(const p of arr){
@@ -86,9 +90,13 @@ const raySource=withRay?[
  ...parseSourceRay("Raw34FRightRay.lean"),
  ...parseSourceRay("Raw34EFRightRay.lean"),
  ...(withLeft?parseSourceRay("Raw34FLeftRay.lean"):[]),
- ...(withEOnly?parseSourceRay("Raw34ERightRay.lean"):[])
+ ...(withEOnly?parseSourceRay("Raw34ERightRay.lean"):[]),
+ ...(withELeft?parseSourceRay("Raw34ELeftRay.lean"):[]),
+ ...(withEFLeft?Array.from({length:16},(_,i)=>
+   parseSourceRay(join(efLeftDir,"Raw34EFLeftShard"+String(i).padStart(3,"0")+".lean"))).flat():[])
 ]:[];
-if(withRay)assert.equal(raySource.length,(withLeft?44:36)+(withEOnly?4:0));
+if(withRay)assert.equal(raySource.length,
+  (withLeft?44:36)+(withEOnly?4:0)+(withELeft?8:0)+(withEFLeft?1024:0));
 raySource.forEach(add);
 function parseSourceCycles(text){
  const rows=[...text.matchAll(/⟨\[([\d,\s]+)\],/g)].map(m=>
