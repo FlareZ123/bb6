@@ -211,8 +211,8 @@ def witness : PartialMachine :=
 
 theorem witness_never (m : Machine)
     (hm : compatible witness m) : NeverHalts m := by
-  exact never _ _ _ _ _ (by decide) (by decide)
-    (by decide) (by decide) m hm
+  exact never _ _ _ _ _ (by simp [safeMove]) (by simp [safeMove])
+    (by simp [dSafeMove,safeMove]) (by simp [safeMove]) m hm
 
 #print axioms safe_move_inv
 #print axioms return_C
