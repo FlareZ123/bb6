@@ -156,15 +156,15 @@ theorem split_at_hole
 theorem pF0_root (fm : Move) :
     pF0 fm initialSlot = some (some ⟨true,true,1⟩) := by
   simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
-    fP4,fP3,fP2,fP1,fResidual,fRoot,initialSlot]
+    fP4,fP3,fP2,fP1,fResidual,fRoot,initialSlot] <;> decide
 
 theorem pF0_B1_unknown (fm : Move) : pF0 fm (1,true) = none := by
   simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
-    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable]
+    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable] <;> decide
 
 theorem pF0_E1_unknown (fm : Move) : pF0 fm (4,true) = none := by
   simp [pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
-    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable]
+    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable] <;> decide
 
 #print axioms bounded_last_hole
 #print axioms pF0B1_short
