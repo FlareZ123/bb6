@@ -80,6 +80,35 @@ jobs:
           name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
           path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
 
+      - name: Restore rewritten generated sources from repaired partition
+        env:
+          BRANCH: ${{ inputs.branch }}
+          PART: ${{ inputs.repaired_part }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          import shutil, os
+          branch=os.environ["BRANCH"]
+          part=os.environ["PART"]
+          shard=Path("/tmp/parts") / f"raw42-split-{branch}-{part}"
+          manifest=json.loads((shard/"manifest.json").read_text())
+          repo=Path.cwd()
+          restored=0
+          for item in manifest["modules"]:
+              if item.get("source_kind") != "generated-or-untracked":
+                  continue
+              src=shard / (item["module"].replace(".", "/") + ".lean")
+              dst=repo / item["source_path"]
+              if not src.is_file():
+                  raise SystemExit(f"missing repaired source {src}")
+              dst.parent.mkdir(parents=True, exist_ok=True)
+              shutil.copy2(src,dst)
+              restored += 1
+          print(f"restored {restored} repaired generated sources")
+          PY
+
       - name: Authenticate exact 32-part union and prove whole child Cover
         env:
           BRANCH: ${{ inputs.branch }}
