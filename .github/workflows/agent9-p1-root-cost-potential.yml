@@ -1,12 +1,19 @@
 name: Agent 9 P1 one-dimensional root-cost potential Lean certificate
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: 'Original root-cost audit or modulus-three source factor theorem'
+        type: choice
+        options: [root-cost, anti3]
+        default: root-cost
 
 permissions:
   contents: read
 
 jobs:
   verify:
+    if: inputs.target == 'root-cost'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -49,3 +56,32 @@ jobs:
           fi
           grep -F "BB6.Agent9RootCost.rootCostPotentialStep" /tmp/root-cost-potential.log
           grep -F "BB6.Agent9RootCost.rootCostPotentialDelta" /tmp/root-cost-potential.log
+
+  anti3:
+    if: inputs.target == 'anti3'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fsSL --retry 5 --retry-all-errors https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile unchanged original Trace and source-derived anti-three theorem
+        shell: bash
+        run: |
+          set -euo pipefail
+          root=im-results/agent9-p1-return-gcd
+          lag=im-results/agent45-p1-delayed-carry
+          export LEAN_PATH="$root:$lag"
+          lean --version
+          lean -o "$lag/LagCore.olean" "$lag/LagCore.lean"
+          for f in ReturnGCD ReturnSlope ReturnObstruction ReturnGeneral ReturnTrace ReturnSource ReturnScaled Anti3Core Anti3Full Anti3Source Anti3Trace; do
+            echo "ORIGINAL SOURCE MODULE $f"
+            lean -o "$root/$f.olean" "$root/$f.lean" 2>&1 | tee "/tmp/agent9-$f.log"
+            if grep -Eq 'sorryAx|error:' "/tmp/agent9-$f.log"; then exit 1; fi
+          done
+          grep -F "trace_no_three_dyadic_repeat' depends on axioms: [propext, Classical.choice, Quot.sound]" /tmp/agent9-Anti3Trace.log
