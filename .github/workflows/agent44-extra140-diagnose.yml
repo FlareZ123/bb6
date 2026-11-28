@@ -1,0 +1,49 @@
+name: Agent44 diagnose Extra140 target module
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46141446137
+          name: raw11-140-checkpoint
+          path: /tmp/checkpoint
+      - name: Inspect exact frozen target source
+        run: |
+          set -euo pipefail
+          src="$(find /tmp/checkpoint -name Agent5Raw11Extra140Sub_root_6_root_9.lean -print -quit)"
+          test -n "$src"
+          python - "$src" <<'PY'
+          from pathlib import Path
+          import re,hashlib,sys
+          p=Path(sys.argv[1]); s=p.read_text()
+          print('bytes',len(s.encode()),'sha256',hashlib.sha256(s.encode()).hexdigest())
+          rows=[]
+          for m in re.finditer(r'\(\.automata ',s):
+              st=m.end()
+              if s[st] != '⟨': continue
+              depth=0
+              for i,ch in enumerate(s[st:],st):
+                  if ch=='⟨': depth+=1
+                  elif ch=='⟩':
+                      depth-=1
+                      if depth==0:
+                          blob=s[st:i+1]
+                          rows.append((len(blob.encode()),hashlib.sha256(blob.encode()).hexdigest()))
+                          break
+          rows.sort(reverse=True)
+          print('automata_count',len(rows))
+          for i,x in enumerate(rows): print('AUTOMATA',i,*x)
+          PY
