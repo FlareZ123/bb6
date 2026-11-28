@@ -1,0 +1,2195 @@
+{
+  "schema": 1,
+  "description": "Seven-physical-cell original-tape closure candidates sampled with independent 25-ary exact MDD novelty filter against OLD 3087 cylinders, nine graph families, 128 radius-two masks and their 128 EF conjugates; not yet newer full accepted source portfolio",
+  "rootRaw34": "1RB---_1RC---_0RD---_1LC---_------_------",
+  "seed": 8112019,
+  "trials": 100000,
+  "physicalActionAlphabet": "0 HALT, 1..24 write[01] direction[LR] destination[ABCDEF]",
+  "slotOrder": "D1,C1,B1,A1,E0,E1,F0,F1",
+  "numberClosedWithE1": 2159,
+  "uniqueProductDomains": 1504,
+  "positiveOver256": 319,
+  "retain": 128,
+  "baselineCount256": "123355899793",
+  "newUnionCount": "123371506468",
+  "newIncrement": "15606675",
+  "nonzeroRetained": 109,
+  "ranked": [
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff00000000000000000000000000ff00000000000000ff000000000000ff0f000000000000000f00000003000000f0ff000000000000f0000000000001",
+      "domainMasks": [
+        40972,
+        33554431,
+        132096,
+        40972,
+        33554431,
+        1049728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 75,
+      "sourceTable": "1RB0LB_1RC1LE_0RD1RC_1LC1LA_HALT0RA_HALTHALT",
+      "individualOutside256": "521875",
+      "grossPhysical": "37500000"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f00000f0ffff00f0fff000f0fff000f0fff0c0f0c0c0c0c0c0c0c0ffc0c0c0c0c0c00000000000000000000000000003000000000000ff00000000000000ff000001",
+      "domainMasks": [
+        65536,
+        35840,
+        33554431,
+        196624,
+        33554431,
+        623616,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB0LD_1RC1RF_0RD0RE_1LC1LD_HALT1RA_HALTHALT",
+      "individualOutside256": "421875",
+      "grossPhysical": "14062500"
+    },
+    {
+      "windowMask": "0xf000f0000000f000f000f0000000f0000000ffff0000ffff000000000000ffff00f000f0000000f000ff00f0000000f0ff000000ff00000000000000ff03000000f0fff00000fff000f000f00000fff1",
+      "domainMasks": [
+        41984,
+        33554431,
+        131072,
+        41984,
+        33554431,
+        1049728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 175,
+      "sourceTable": "1RB0RD_1RC1LE_0RD0RD_1LC1LA_HALT0RA_HALTHALT",
+      "individualOutside256": "381250",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ff00ffffff00ff00ff00ff00ff00ff0000f000000000000000ff000000000000ff000000ff000000ff000000ff030000f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f1",
+      "domainMasks": [
+        8192,
+        33554431,
+        73744,
+        13640704,
+        33554431,
+        73744,
+        33554431,
+        33554431
+      ],
+      "nWindows": 215,
+      "sourceTable": "1RB1RE_1RC1LD_0RD0LF_1LC1LA_HALT0LD_HALTHALT",
+      "individualOutside256": "337500",
+      "grossPhysical": "17578125"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000000ffff00000000000000000000000000f000000000000000ff000000000000ff000000000000000000000000030000f0f0000000000000f0f0000000000001",
+      "domainMasks": [
+        40960,
+        33554431,
+        9216,
+        1049632,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0LE_1RC1LA_0RD0RC_1LC1LA_HALT1RC_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xc000c000c000c000c000c000c000c000000fffff00000000000f000000000000f0f00000f0000000f0ff0000f000000000c000c000c000c000c000c000c300c008080808080808080808080808080809",
+      "domainMasks": [
+        32784,
+        131072,
+        33554431,
+        1048832,
+        33554431,
+        2097154,
+        33554431,
+        33554431
+      ],
+      "nWindows": 103,
+      "sourceTable": "1RB0RB_1RC0LB_0RD1LE_1LC0LD_HALT0LA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0x800080008000800080008000800080000f0ffff0000000000f0000000000000c0f00000c0000000c0ff0000c0000000f000000000000000f00000000003000000c0000000c0000000c0000000c00001",
+      "domainMasks": [
+        98304,
+        1048608,
+        33792,
+        33554431,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB0LF_1RC0RD_0RD0LE_1LC1LD_HALT1RA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0x4000f000f000f0004000f000f000f00000fffff00000000000f00000000000030f0000030000000ffff00003000000000000000ffff000000000000ffff000000000030000000ff000000ff000000ff",
+      "domainMasks": [
+        1081360,
+        32,
+        2097184,
+        33554431,
+        33554431,
+        128,
+        33554431,
+        33554431
+      ],
+      "nWindows": 134,
+      "sourceTable": "1RB0RE_1RC0LE_0RD0LE_1LC0LD_HALT0RA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "2343750"
+    },
+    {
+      "windowMask": "0xff000000c0000000f0000000c00000f0ffff0000000000f0000000000000ffff0000c0000000f0ff0000c0000000f0ff8000c0c08000f0f08000c0c38000000f0008000c0008000f0008000c0009",
+      "domainMasks": [
+        114698,
+        2113536,
+        2099200,
+        33554431,
+        33554431,
+        2,
+        33554431,
+        33554431
+      ],
+      "nWindows": 123,
+      "sourceTable": "1RB1RB_1RC0RE_0RD1LB_1LC1LD_HALT0LA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "7812500"
+    },
+    {
+      "windowMask": "0x4000400040004000400040004000400000fffff00000000000f00000000000030f000003000000030ff0000300000000f000000000000000f0000000003000000300000003000000030000000300001",
+      "domainMasks": [
+        32784,
+        1048608,
+        33792,
+        33554431,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1RB_1RC0RD_0RD0LE_1LC0LD_HALT1RA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf0008000c0008000f0008000c000800000f0ffff0000000000f0000000000000ffff0000c0000000f0ff0000c000000000000000000000000000000000030000ff000000c0000000f0000000c0000001",
+      "domainMasks": [
+        98312,
+        2228224,
+        33554431,
+        2228224,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 91,
+      "sourceTable": "1RB1RC_1RC1RE_0RD1LE_1LC1LD_HALT1RA_HALTHALT",
+      "individualOutside256": "281250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000000ffff000000000000000000000000ffff00000000000000ff00000000000000ff00000000000000f0000000030000f00f000000000000f00f000000000001",
+      "domainMasks": [
+        49162,
+        2106368,
+        33554431,
+        2098208,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 79,
+      "sourceTable": "1RB0LE_1RC1RF_0RD1LA_1LC0LA_HALT1RB_HALTHALT",
+      "individualOutside256": "262500",
+      "grossPhysical": "28125000"
+    },
+    {
+      "windowMask": "0x30000000300000003000000030000000000ffff000000000000000000000000ffff00000000000000ff00000000000000ff00000000000000f00000000300000f0f0000000000000f0f000000000001",
+      "domainMasks": [
+        49162,
+        2098178,
+        33554431,
+        3146784,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 79,
+      "sourceTable": "1RB0LE_1RC1RD_0RD0LA_1LC1LB_HALT1RA_HALTHALT",
+      "individualOutside256": "262500",
+      "grossPhysical": "37500000"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000000ffff000000000000000000000000fff000000000000000ff00000000000000f000000000000000f0000000030000f000000000000000f000000000000001",
+      "domainMasks": [
+        49152,
+        9216,
+        33554431,
+        2098208,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0LE_1RC0LE_0RD1LA_1LC1LB_HALT1RB_HALTHALT",
+      "individualOutside256": "262500",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf0008000c0008000f0008000c000800f000ffff00000000f000000000000000ffff00000000000000ff000000000000ffff0000c0000000f0f00000c003000000ff000000c0000000f0000000c00001",
+      "domainMasks": [
+        16384,
+        3228704,
+        1048608,
+        33554431,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 111,
+      "sourceTable": "1RB1RA_1RC0LE_0RD1LD_1LC1LB_HALT1RA_HALTHALT",
+      "individualOutside256": "253125",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000100030001000f000100030001000000ffff0000030300000f0f0000030300ff00100030001000ff001000300010ff030000030300000f0300000303000003f101110331011103f1011103310111",
+      "domainMasks": [
+        40960,
+        33554431,
+        1056,
+        1026,
+        33554431,
+        1026,
+        33554431,
+        33554431
+      ],
+      "nWindows": 132,
+      "sourceTable": "1RB0RD_1RC0LE_0RD1RA_1LC1LA_HALT0LA_HALTHALT",
+      "individualOutside256": "243750",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xff000000c0000000f0000000c000000000f0ffff0000000000f0000000000000ffff0000c0000000f0ff0000c000000000000000000000000000000000030000f0008000c0008000f0008000c0008001",
+      "domainMasks": [
+        98312,
+        2105344,
+        33554431,
+        10485760,
+        33554431,
+        2105344,
+        33554431,
+        33554431
+      ],
+      "nWindows": 91,
+      "sourceTable": "1RB1RE_1RC1RC_0RD1LA_1LC1LD_HALT1RC_HALTHALT",
+      "individualOutside256": "225000",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff00000000000000000000000000f000000000000000ff000000000000ff0000000000000000000000000300000cf000000c0000000cf000000c000001",
+      "domainMasks": [
+        40960,
+        33554431,
+        132096,
+        2621440,
+        33554431,
+        1049602,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB1RC_1RC1LE_0RD1RD_1LC1LA_HALT0LA_HALTHALT",
+      "individualOutside256": "212500",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff00000000000000000000000000f000000000000000ff000000000000ff000000000000000000000000030000fff000000000000000f0000000000001",
+      "domainMasks": [
+        40960,
+        33554431,
+        132096,
+        132096,
+        33554431,
+        1573888,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB1LE_1RC1LE_0RD1LA_1LC1LA_HALT1RA_HALTHALT",
+      "individualOutside256": "206250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000d000d000d000f000d000d000d000000ffff00000000000000000000000000ff00000000000000ff000000000000ff0f0000f30f0000f30f0000f30f0000d3f3d3d3d3d3d3d3d3f3d3d3d3d3d3d3",
+      "domainMasks": [
+        40972,
+        33554431,
+        32,
+        1056768,
+        33554431,
+        2,
+        33554431,
+        33554431
+      ],
+      "nWindows": 182,
+      "sourceTable": "1RB1LA_1RC0LE_0RD0LB_1LC1LA_HALT0LA_HALTHALT",
+      "individualOutside256": "206250",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c000000ffffffff000000000000000000000000ffff000000000000f0ff000000000000ffff000000000000f0f000000003000000ff00000000000000f0000000000001",
+      "domainMasks": [
+        49152,
+        7341088,
+        7341088,
+        33554431,
+        33554431,
+        3670016,
+        33554431,
+        33554431
+      ],
+      "nWindows": 111,
+      "sourceTable": "1RB1RD_1RC0LE_0RD1RD_1LC1LB_HALT1RA_HALTHALT",
+      "individualOutside256": "204825",
+      "grossPhysical": "58593750"
+    },
+    {
+      "windowMask": "0xff000000c0000000f0000000c0000000ffffffffc0000000f0000000c0000000fff0000000000000f0ff000000000000f0f08000c0008000f0f08000c003800000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        4408320,
+        12582912,
+        33554431,
+        33554431,
+        4210688,
+        33554431,
+        33554431
+      ],
+      "nWindows": 107,
+      "sourceTable": "1RB1RF_1RC1RE_0RD1LD_1LC1LB_HALT1RD_HALTHALT",
+      "individualOutside256": "202500",
+      "grossPhysical": "7812500"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f00000f0ffff00f0000000f0ffff00f00000c0ffc000c0ffc000c0ffc000c0ffc000ff030f03ff030f03ff030f03ff030f0300c000c000c000c000c000c000c000c1",
+      "domainMasks": [
+        98312,
+        1050624,
+        4,
+        33554431,
+        33554431,
+        1056768,
+        33554431,
+        33554431
+      ],
+      "nWindows": 193,
+      "sourceTable": "1RB1LB_1RC0LB_0RD0RE_1LC1LD_HALT1LA_HALTHALT",
+      "individualOutside256": "191250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xff00000000000000000000000000ffffffff000000000000000000000000ffff000000000000f0ff000000000000f0ff000000000000f0f0000000030000000f000000000000000f000000000001",
+      "domainMasks": [
+        49152,
+        6292480,
+        6294528,
+        33554431,
+        33554431,
+        49162,
+        33554431,
+        33554431
+      ],
+      "nWindows": 99,
+      "sourceTable": "1RB0LC_1RC0RE_0RD1RD_1LC1LB_HALT0LA_HALTHALT",
+      "individualOutside256": "191250",
+      "grossPhysical": "37500000"
+    },
+    {
+      "windowMask": "0xf000f000f0000000f000f000f000000ffffffff000000000000000000000000ffff000000000000ffff000000000000ffff0000ffff0000ffff00000003000000ff000000ff000000ff000000000001",
+      "domainMasks": [
+        1097740,
+        7341088,
+        3145760,
+        33554431,
+        33554431,
+        1572864,
+        33554431,
+        33554431
+      ],
+      "nWindows": 163,
+      "sourceTable": "1RB1RF_1RC0LE_0RD1RD_1LC1RB_HALT1RA_HALTHALT",
+      "individualOutside256": "163350",
+      "grossPhysical": "58593750"
+    },
+    {
+      "windowMask": "0x30000000300000003000000030000000000ffff000000000000000000000000ffff00000000000000ff0000000000000fff0000000000000ff0000000030000000f000000000000000f000000000001",
+      "domainMasks": [
+        49162,
+        2098180,
+        3146784,
+        33554431,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 79,
+      "sourceTable": "1RB0LF_1RC0LE_0RD0LB_1LC1LB_HALT1RA_HALTHALT",
+      "individualOutside256": "155500",
+      "grossPhysical": "37500000"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ffffffffffffff00ffffff00ffffff00f0f0f000f000f000f0fff000f000f000f000f000f000f000f000f000f003f00000000000000000000000000000000001",
+      "domainMasks": [
+        4194304,
+        12583936,
+        12583936,
+        33554431,
+        33554431,
+        4309008,
+        33554431,
+        33554431
+      ],
+      "nWindows": 215,
+      "sourceTable": "1RB0LE_1RC0RD_0RD1RE_1LC1RD_HALT1LB_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "17578125"
+    },
+    {
+      "windowMask": "0xff00000000000000f0000000000000f0ffff00c0ffff00f0f0f000c00000c0f080f0c0c08000c0ff80f0c0c08000f0000000c0000000f0000000c003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        1048576,
+        35840,
+        33554431,
+        33554431,
+        99328,
+        33554431,
+        33554431
+      ],
+      "nWindows": 115,
+      "sourceTable": "1RB0RB_1RC0RE_0RD1RB_1LC1LD_HALT0RD_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f00000f0ffff00f0fff000f0fff000f0fff0c0f0c0c0c0c0c0c0c0ffc0c0c0c0c0c000000000ff00000000000000ff03000000000000000000000000000000000001",
+      "domainMasks": [
+        65536,
+        35840,
+        196624,
+        33554431,
+        33554431,
+        1147904,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB1LB_1RC0LD_0RD0RE_1LC1LD_HALT1RB_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "14062500"
+    },
+    {
+      "windowMask": "0xff00000000000000f00000f0ffff00c0ffff00f0f0f000c0f0f0c0f080ffc0c080ccc0ff80ffc0c080cc0000f0000000c0000000f0000003c00000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        34048,
+        101376,
+        33554431,
+        33554431,
+        98312,
+        33554431,
+        33554431
+      ],
+      "nWindows": 139,
+      "sourceTable": "1RB0RD_1RC0RE_0RD0RB_1LC1LD_HALT0LC_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "28125000"
+    },
+    {
+      "windowMask": "0xb000b000b000b000b000b000b000b000cbcfffffcbcbcfcbcbcfcfcbcbcbcfcbb0f0b0b0b0b0b0b0b0ffb0b0b0b0b0b0cf000000cf000000cf000000cf03000000000000000000000000000000000001",
+      "domainMasks": [
+        32784,
+        1115136,
+        163856,
+        33554431,
+        33554431,
+        1115136,
+        33554431,
+        33554431
+      ],
+      "nWindows": 196,
+      "sourceTable": "1RB0LF_1RC1LE_0RD1RB_1LC0LD_HALT1LD_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "21093750"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000ffffffff000000000000f00000000000fff0000000000000f0ff000000000000f0f0000000c00000f0f0000000c3000000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        4195328,
+        6423552,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 91,
+      "sourceTable": "1RB0LA_1RC1LE_0RD1RD_1LC1LB_HALT0RD_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c000000000f0ffff00c0ffff00f0f0f000c00000c0f080f0c0c08000c0ff80f0c0c080000000ff00000000000000f0000003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        8388608,
+        99328,
+        33554431,
+        33554431,
+        34048,
+        33554431,
+        33554431
+      ],
+      "nWindows": 115,
+      "sourceTable": "1RB1RB_1RC0RD_0RD1RE_1LC1LD_HALT0RB_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf000000030000000f000000030000000000fffff00000000000f000000000000ffff04003c0004003fff04003c000400ffff0000003000000ff000000033000000000000000000000000000000000001",
+      "domainMasks": [
+        49176,
+        1048576,
+        3277824,
+        33554431,
+        33554431,
+        3145736,
+        33554431,
+        33554431
+      ],
+      "nWindows": 109,
+      "sourceTable": "1RB1RF_1RC1LE_0RD1RB_1LC0LD_HALT0LC_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "18750000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c0000000f0f0ffffc080c080f0f0c080c080c080c0f08080c0808080c0ff8080c0808080ff00000000000000f00000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        12681216,
+        197632,
+        33554431,
+        33554431,
+        1146880,
+        33554431,
+        33554431
+      ],
+      "nWindows": 104,
+      "sourceTable": "1RB1RF_1RC1LD_0RD1RE_1LC1LD_HALT1RB_HALTHALT",
+      "individualOutside256": "151875",
+      "grossPhysical": "28125000"
+    },
+    {
+      "windowMask": "0x80008000f000800080008000f00080000f0ffff0000000000f0000000000000c0f00000c0000000ffff0000c000000000000000ffff000000000000f0030000000000c0000000c0000000ff000000c1",
+      "domainMasks": [
+        1146880,
+        32,
+        2097152,
+        33554431,
+        33554431,
+        128,
+        33554431,
+        33554431
+      ],
+      "nWindows": 101,
+      "sourceTable": "1RB1LC_1RC1RC_0RD0LE_1LC1LD_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "1171875"
+    },
+    {
+      "windowMask": "0x70004000700040007000400070004000000fffff00000000000f0000000000003fff0000300000003fff000030000000003f000000300000003f00000033000000073f040007300400073f0400073005",
+      "domainMasks": [
+        32796,
+        2228224,
+        33554431,
+        2,
+        33554431,
+        2097280,
+        33554431,
+        33554431
+      ],
+      "nWindows": 123,
+      "sourceTable": "1RB0LA_1RC0RF_0RD1LE_1LC0LD_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xff000000030000000f000000030000000000ffff00000000000000000000000000f000000000000000ff000000000000ff000100030001000f00010003030100f0f0101030101010f0f0101030101011",
+      "domainMasks": [
+        40960,
+        33554431,
+        8192,
+        9437184,
+        33554431,
+        8196,
+        33554431,
+        33554431
+      ],
+      "nWindows": 97,
+      "sourceTable": "1RB1RE_1RC1LA_0RD0RC_1LC1LA_HALT0LB_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ffff00000000000000000000ffffffff0000ff00ffffffff0000ff00fffff0fff0f0f0fff0f0f0fff0f0f0fff0f0000f000f000f000f000f000f000f000f",
+      "domainMasks": [
+        49674,
+        16384,
+        2115584,
+        33554431,
+        33554431,
+        16898,
+        33554431,
+        33554431
+      ],
+      "nWindows": 256,
+      "sourceTable": "1RB0RE_1RC0RE_0RD1LB_1LC0RC_HALT0LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "17578125"
+    },
+    {
+      "windowMask": "0xf000f00030003000f000f00030003000000ffff0000030000000f000000030030f010103030101030ff101030301010ff000000030000000f0000000303000000f000100030001000f0001000300011",
+      "domainMasks": [
+        40960,
+        9440256,
+        32,
+        33554431,
+        33554431,
+        32768,
+        33554431,
+        33554431
+      ],
+      "nWindows": 115,
+      "sourceTable": "1RB1RF_1RC0LE_0RD0RE_1LC1LA_HALT1LC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf000100010001000f0001000100010000000ffff000003030000030300000303fff10111031101110fff011103110111ff00000003000000030000000303000000f000100010001000f0001000100011",
+      "domainMasks": [
+        40960,
+        8,
+        131080,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 118,
+      "sourceTable": "1RB1LD_1RC1LE_0RD0LC_1LC1LA_HALT1RC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0x8000800080008000800080008000800000f0ffff0000000000f0000000000000c0ff0000c0000000c0ff0000c0000000000f0000000f0000000f0000000f0000cb030b03cb030b03cb030b03cb030b03",
+      "domainMasks": [
+        98316,
+        131074,
+        33554431,
+        2,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 120,
+      "sourceTable": "1RB0LA_1RC0LB_0RD1LE_1LC1LD_HALT1RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000c0f00000c0000000c0ff0000c0000000ff808080c0808080f0808080c083808000f000000000000000f0000000000001",
+      "domainMasks": [
+        40960,
+        9453568,
+        16384,
+        33554431,
+        33554431,
+        1098752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 83,
+      "sourceTable": "1RB0RD_1RC1LB_0RD1RE_1LC1LA_HALT1LB_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000e000e000e000f000e000e000e0000000ffff0000fcf00000fcf00000fcf0ecfcecececececececffececececececff000000fc000000fc000000fc03000000f000e000e000e000f000e000e000e1",
+      "domainMasks": [
+        40960,
+        33792,
+        131072,
+        33554431,
+        33554431,
+        1082376,
+        33554431,
+        33554431
+      ],
+      "nWindows": 211,
+      "sourceTable": "1RB1LF_1RC1LE_0RD1LC_1LC1LA_HALT0LC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xf000f0003000f000f000f0003000f00000fffff00000000000f000000000000ffff000030000000ffff000030000000ffff0000ffff00000f000000ffff0000000000ff000000ff0000000f000000ff",
+      "domainMasks": [
+        1081368,
+        3145728,
+        2097184,
+        33554431,
+        33554431,
+        128,
+        33554431,
+        33554431
+      ],
+      "nWindows": 168,
+      "sourceTable": "1RB0LD_1RC0LE_0RD1RB_1LC0LD_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c000f000ffffc000c000f000f000c000c00000f000000000000000ff000000000000ff000000ff000000f0000000f0030000c0f08080c0c08080c0f08080c0c08081",
+      "domainMasks": [
+        8192,
+        33554431,
+        65536,
+        5254144,
+        33554431,
+        1056768,
+        33554431,
+        33554431
+      ],
+      "nWindows": 115,
+      "sourceTable": "1RB0RE_1RC1LD_0RD1RE_1LC1LA_HALT1RB_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3906250"
+    },
+    {
+      "windowMask": "0xff00000000000000f000000000000000ffff0000ffff0000000000000000f0f000f0c0000000f0ff00f0c0000000ffc0f080ffc08080f0c0f080c0c3808000f000f00000000000f000f000000001",
+      "domainMasks": [
+        40960,
+        1067008,
+        16384,
+        33554431,
+        33554431,
+        1024,
+        33554431,
+        33554431
+      ],
+      "nWindows": 139,
+      "sourceTable": "1RB0LF_1RC1LB_0RD0RE_1LC1LA_HALT0RD_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "2343750"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000ffff00000000000000ff00000000000000f000000000000000f00000000300000000ff00000000000000000000000001",
+      "domainMasks": [
+        49160,
+        2229248,
+        33554431,
+        49160,
+        33554431,
+        2098304,
+        33554431,
+        33554431
+      ],
+      "nWindows": 67,
+      "sourceTable": "1RB0LC_1RC1LE_0RD1LE_1LC1LB_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "31640625"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f00000000000ffff000000000000ffff00000000ffffff00ffff0000ffffff0000f00000ff00000000000000ff0000000003000000f0000000f0000000f0000000f00001",
+      "domainMasks": [
+        2138112,
+        2097152,
+        2229248,
+        33554431,
+        33554431,
+        3147264,
+        33554431,
+        33554431
+      ],
+      "nWindows": 151,
+      "sourceTable": "1RB0RC_1RC1LE_0RD1RC_1LC1LA_HALT0RC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "14062500"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ffff000000000000ffff00000000fff00000ffff0000ffff0000ffff000000f0000000f0000000f0000000f30000f000f000f000f000f000f000f000f001",
+      "domainMasks": [
+        2146304,
+        9216,
+        33554431,
+        2099200,
+        33554431,
+        2097152,
+        33554431,
+        33554431
+      ],
+      "nWindows": 175,
+      "sourceTable": "1RB0RE_1RC0RF_0RD1LA_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0x80008000800080008000800080008000f000ffff00000000f00000000000000000f000000000000000ff000000000000ff000000000000000000000000030000c0f00000c0000000c0f00000c0000001",
+      "domainMasks": [
+        8192,
+        33554431,
+        66560,
+        4325376,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1LE_1RC1LD_0RD0RD_1LC1LA_HALT1RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xd000d000d000d000d000d000d000d000000ffff000000000000ffff00000000f3ff0000f3ff0000f3ff0000f3ff0000ffd3d3d3f3d3d3d3ffd3d3d3f3d3d3d300f0000000f0000000f0000000f00001",
+      "domainMasks": [
+        40968,
+        17440,
+        16384,
+        33554431,
+        33554431,
+        2097156,
+        33554431,
+        33554431
+      ],
+      "nWindows": 217,
+      "sourceTable": "1RB1RF_1RC1LB_0RD0LE_1LC1LA_HALT0LB_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f0000000ffff0000ffff0000ffff0000ffff0fff0fff0fff0fff0fff0fff0fff0fffff000000ff000000ff000000ff03000000f000f000f000f000f000f000f000f1",
+      "domainMasks": [
+        41992,
+        2098696,
+        132104,
+        33554431,
+        33554431,
+        1049608,
+        33554431,
+        33554431
+      ],
+      "nWindows": 259,
+      "sourceTable": "1RB0LF_1RC1LE_0RD0LC_1LC1LA_HALT0LC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "56250000"
+    },
+    {
+      "windowMask": "0xf000000000000000f00000000000f00ffff000000000f00000000000000ffff00000000000000ff00000000000030ff00003000000030ff00003003000000030000000300000003000000030001",
+      "domainMasks": [
+        16384,
+        2098192,
+        4196352,
+        33554431,
+        33554431,
+        2,
+        33554431,
+        33554431
+      ],
+      "nWindows": 91,
+      "sourceTable": "1RB1LB_1RC0RE_0RD0LD_1LC1LB_HALT0LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "2343750"
+    },
+    {
+      "windowMask": "0x40004000400040004000400040004000000fffff00000000000f00000000000030f000003000000030ff0000300000000040004000400040004000400043004000003000000030000000300000003001",
+      "domainMasks": [
+        32784,
+        131072,
+        33554431,
+        16384,
+        33554431,
+        2097280,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1LB_1RC0RB_0RD1LE_1LC0LD_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f00000f0ffff00f0000000f0ffff00f00000c0f0c000c0ffc000c0ffc000c0ffc0000000000f0000000f0000000f0003000f000000000000ff00000000000000ff01",
+      "domainMasks": [
+        98304,
+        2048,
+        33554431,
+        4,
+        33554431,
+        128,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB0LB_1RC1LE_0RD0RE_1LC1LD_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "781250"
+    },
+    {
+      "windowMask": "0xf000000030000000f0000000300000fffff0003ffff000f0f0f0003000030f010ff3030100030ff10ff303010000f000000030000000f0000000303000000300010003000100030001000300011",
+      "domainMasks": [
+        32784,
+        1050624,
+        34304,
+        33554431,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "nWindows": 135,
+      "sourceTable": "1RB0RD_1RC0RC_0RD0RE_1LC0LD_HALT1LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0x30003000300030003000300030003000000ffff000000000000000000000000fff0000000000000ffff00000000000000f0000000ff000000f0000000ff00000f00000f0f00000f0f00000f0f00000f",
+      "domainMasks": [
+        49152,
+        1026,
+        33554431,
+        32,
+        33554431,
+        128,
+        33554431,
+        33554431
+      ],
+      "nWindows": 116,
+      "sourceTable": "1RB0LE_1RC0LA_0RD0LA_1LC1LB_HALT0RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xff000000ff00000000000000ff000000ffff0000ffff000000000000fffffff000f0ff0000f000ff00f0ff0000f000f000f0000000f000f000f0000300f0f000f0000000f000f000f0000000f001",
+      "domainMasks": [
+        50176,
+        8192,
+        33554431,
+        2100224,
+        33554431,
+        50176,
+        33554431,
+        33554431
+      ],
+      "nWindows": 175,
+      "sourceTable": "1RB0RE_1RC0RA_0RD1LA_1LC1LB_HALT0RD_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ffffffffffffff00ffffff00ffffff00f0f0f000f000f000f0fff000f000f00000000000000000000000000000030000f000f000f000f000f000f000f000f001",
+      "domainMasks": [
+        4194304,
+        12583936,
+        33554431,
+        12583936,
+        33554431,
+        4300816,
+        33554431,
+        33554431
+      ],
+      "nWindows": 215,
+      "sourceTable": "1RB0RD_1RC1LE_0RD1RE_1LC1RD_HALT1LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "17578125"
+    },
+    {
+      "windowMask": "0xff000000ff00000000000000ff000000ffff0000ffff000000000000ffff00f000f0000000f000ff00f0000000f0ff000000ff00000000000000ff030000f0f0f0f00000f0f0f0f0f0f00000f0f1",
+      "domainMasks": [
+        41984,
+        33554431,
+        8192,
+        1051648,
+        33554431,
+        41984,
+        33554431,
+        33554431
+      ],
+      "nWindows": 175,
+      "sourceTable": "1RB0RE_1RC1LA_0RD0RE_1LC1LA_HALT0RD_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0x40004000400040004000400040004000000fffff00000000000f00000000000030ff00003000000030ff000030000000000f0000000f0000000f0000000f000037030703370307033703070337030703",
+      "domainMasks": [
+        32796,
+        131074,
+        33554431,
+        2,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 120,
+      "sourceTable": "1RB0LA_1RC0LC_0RD1LE_1LC0LD_HALT1RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "6250000"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f0000000000ffff000000000000ffff0000000003f0030003ff030003ff030003ff0300ff00000f0000000fff00000f0003000f00f0000000f0000000f0000000f00001",
+      "domainMasks": [
+        40960,
+        256,
+        1056,
+        33554431,
+        33554431,
+        1032,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB0LA_1RC0LE_0RD0RB_1LC1LA_HALT0LC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff0000000000ffffffffffff0000ffff000000000000f0f0f000f0000000f0fff000f0000000ffc0f080ffc0c080ffc0f080f0c3c08000f000f000f0000000f000f000f00001",
+      "domainMasks": [
+        4227072,
+        5261312,
+        16384,
+        33554431,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "nWindows": 203,
+      "sourceTable": "1RB1RA_1RC1LB_0RD0RE_1LC1RD_HALT1LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f0000000ffff0000ffcf0000ffcf0000ffcfcbfbcbfbcbfbcbfbcbffcbfbcbfbcbfbff000000ff000000ff000000ff03000000f000f000f000f000f000f000f000f1",
+      "domainMasks": [
+        40960,
+        1032,
+        131072,
+        33554431,
+        33554431,
+        1082368,
+        33554431,
+        33554431
+      ],
+      "nWindows": 254,
+      "sourceTable": "1RB0RB_1RC1LE_0RD0LC_1LC1LA_HALT1LC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000f0000000f000f000f0000000f0000000ffff0000ffff000000000000ffff00f0fff00000fff000ff00f00000fff0ff000000ff00000000000000ff03000000f000f0000000f000f000f0000000f1",
+      "domainMasks": [
+        41984,
+        41984,
+        131072,
+        33554431,
+        33554431,
+        1050112,
+        33554431,
+        33554431
+      ],
+      "nWindows": 175,
+      "sourceTable": "1RB0LD_1RC1LE_0RD0RD_1LC1LA_HALT0RC_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0xc000c000c000c000c000c000c000c00000fffff00000000000f000000000000f0f00000f0000000f0ff0000f0000000ff80c080f080c080ff80c080f083c08000f0000000f0000000f0000000f00001",
+      "domainMasks": [
+        40976,
+        1064992,
+        16384,
+        33554431,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 127,
+      "sourceTable": "1RB1LD_1RC1LB_0RD0LE_1LC0LD_HALT1RA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "3515625"
+    },
+    {
+      "windowMask": "0x30000000300000003000000030000000000ffff0000000000000000000000000fff0000000000000fff000000000000ff0f000000000000000f00000003000000f000000000000000f0000000000001",
+      "domainMasks": [
+        40972,
+        2098208,
+        1032,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 75,
+      "sourceTable": "1RB1LF_1RC0LC_0RD0LE_1LC1LA_HALT1RB_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "18750000"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff000000ff000000ffffffffffffffffffff0000fffffffff0f0f0fff000f0fff0fff0fff000f0ff000000000000000000000000000300000f000f000f000f000f000f000f000f01",
+      "domainMasks": [
+        4227072,
+        12582912,
+        33554431,
+        4194816,
+        33554431,
+        4227074,
+        33554431,
+        33554431
+      ],
+      "nWindows": 255,
+      "sourceTable": "1RB0RC_1RC1LE_0RD1RE_1LC1RD_HALT0LA_HALTHALT",
+      "individualOutside256": "140625",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c00000000000ffff000000000000000000000000f0f0000000000000f0ff000000000000ff00000000000000000000000003000000f000000000000000f0000000000001",
+      "domainMasks": [
+        40960,
+        1180672,
+        33792,
+        33554431,
+        33554431,
+        2097152,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0RF_1RC1LC_0RD1LE_1LC1LA_HALT1RC_HALTHALT",
+      "individualOutside256": "121875",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000f00000000000f000f000000000000000ffff000000000000000000000000ffff0000ff00000000ff00000000000000ff00f00000000000f000f0000300000c0f00000c0c00000c0f00000c0c0001",
+      "domainMasks": [
+        49162,
+        131072,
+        33554431,
+        3145984,
+        33554431,
+        2097154,
+        33554431,
+        33554431
+      ],
+      "nWindows": 107,
+      "sourceTable": "1RB0RB_1RC1LC_0RD1LE_1LC0LA_HALT0LA_HALTHALT",
+      "individualOutside256": "121875",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000c0f00000c0000000c0ff0000c0000000ff00000000000000000000000003000000f000000000000000f0000000000001",
+      "domainMasks": [
+        40960,
+        8388608,
+        132096,
+        33554431,
+        33554431,
+        1082368,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB1RB_1RC1LE_0RD1RE_1LC1LA_HALT1LC_HALTHALT",
+      "individualOutside256": "121875",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000ff00ffff00000000000000000000000000f000000000000000ff000000000000ff000000000000000000000000030000f0f0000000000000f0f0000000000001",
+      "domainMasks": [
+        8192,
+        33554431,
+        140288,
+        5243904,
+        33554431,
+        5243904,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1RB_1RC1LE_0RD1RA_1LC1LA_HALT1RD_HALTHALT",
+      "individualOutside256": "118750",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0xf000f000f000c000f000f000f000c000000ffff000000000000000000000000ffff000000000000ffff000000000000ffff0000ffff0000ffff0000f003000000ff000000ff000000ff000000f00001",
+      "domainMasks": [
+        1105934,
+        3163168,
+        3145760,
+        33554431,
+        33554431,
+        524288,
+        33554431,
+        33554431
+      ],
+      "nWindows": 159,
+      "sourceTable": "1RB1LA_1RC0LE_0RD1LB_1LC1RB_HALT1RA_HALTHALT",
+      "individualOutside256": "112500",
+      "grossPhysical": "41015625"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000000ffff000000000000000000000000ffff00000000000000ff00000000000000f000000000000000f000000003000003000000030000000300000003000001",
+      "domainMasks": [
+        49160,
+        2098208,
+        33554431,
+        2097152,
+        33554431,
+        2098178,
+        33554431,
+        33554431
+      ],
+      "nWindows": 67,
+      "sourceTable": "1RB1RC_1RC1LD_0RD0LE_1LC1LB_HALT0LA_HALTHALT",
+      "individualOutside256": "109375",
+      "grossPhysical": "10546875"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000000ffff000000000000000000000000ffff00000000000000ff00000000000000ff0000000f000000ff0000000f000037030703370307033703070337030703",
+      "domainMasks": [
+        49164,
+        2098208,
+        33554431,
+        2,
+        33554431,
+        3154946,
+        33554431,
+        33554431
+      ],
+      "nWindows": 120,
+      "sourceTable": "1RB0LA_1RC0LB_0RD0LE_1LC1LB_HALT1LA_HALTHALT",
+      "individualOutside256": "109375",
+      "grossPhysical": "23437500"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000000ffff000000000000000000000000ffff00000000000000ff00000000000000ff00000000000000f0000000030000030f000003000000030f000003000001",
+      "domainMasks": [
+        49162,
+        2098208,
+        33554431,
+        2621440,
+        33554431,
+        3146754,
+        33554431,
+        33554431
+      ],
+      "nWindows": 79,
+      "sourceTable": "1RB1RA_1RC0RC_0RD0LE_1LC1LB_HALT0LA_HALTHALT",
+      "individualOutside256": "109375",
+      "grossPhysical": "37500000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000ffff00000000000000ff00000000000000ff0000000f000000ff0000000f0000cb030b03cb030b03cb030b03cb030b03",
+      "domainMasks": [
+        49164,
+        2229248,
+        33554431,
+        2,
+        33554431,
+        2106368,
+        33554431,
+        33554431
+      ],
+      "nWindows": 120,
+      "sourceTable": "1RB0LA_1RC0LF_0RD1LE_1LC1LB_HALT1LA_HALTHALT",
+      "individualOutside256": "106250",
+      "grossPhysical": "14062500"
+    },
+    {
+      "windowMask": "0xf0008000c0008000f0008000c00080000000ffff0000c0000000f0000000c00000f000000000000000ff000000000000ff000000c0000000f0000000c0030000c0f08080c0c08080c0f08080c0c08081",
+      "domainMasks": [
+        8192,
+        33554431,
+        132096,
+        9446400,
+        33554431,
+        1057792,
+        33554431,
+        33554431
+      ],
+      "nWindows": 99,
+      "sourceTable": "1RB0RD_1RC1LE_0RD0RB_1LC1LA_HALT1LA_HALTHALT",
+      "individualOutside256": "103125",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000c000f000f000f000c000ffffffffffffc000fffff000f000c000f0f0f080f0c0c080f0fff080f0c0c08000000000000000000000000000030000ff000000ff000000ff000000f0000001",
+      "domainMasks": [
+        4227072,
+        4751360,
+        33554431,
+        4423680,
+        33554431,
+        4751360,
+        33554431,
+        33554431
+      ],
+      "nWindows": 183,
+      "sourceTable": "1RB1LE_1RC1LD_0RD1RA_1LC1RD_HALT1LC_HALTHALT",
+      "individualOutside256": "103125",
+      "grossPhysical": "28125000"
+    },
+    {
+      "windowMask": "0xf000f000f0000000f000f000f000000ffffffffffff0000ffffffff00000000fffff000ffff0000f0fff000ffff0000ffff00ffff0000ffffff00ff0003000000000000000000000000000000000001",
+      "domainMasks": [
+        4227072,
+        5242880,
+        5276704,
+        33554431,
+        33554431,
+        6291712,
+        33554431,
+        33554431
+      ],
+      "nWindows": 239,
+      "sourceTable": "1RB1LD_1RC0LE_0RD1RB_1LC1RD_HALT0RB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "23437500"
+    },
+    {
+      "windowMask": "0xf000000030000000f00000003000000000fffff00030301000f0f010003030130f010103010101030ff1010301010103000100030001000300010003003100000000000000000000000000000000001",
+      "domainMasks": [
+        16,
+        8389632,
+        8389632,
+        33554431,
+        33554431,
+        49152,
+        33554431,
+        33554431
+      ],
+      "nWindows": 96,
+      "sourceTable": "1RB0RD_1RC0RD_0RD1RE_1LC0LD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf000000030000000f000000030000000000ffff0000000000000f0f00000000ffff0000003300000fff000000330000ffff0101033101010ff101010333010100ff000000000000000f000000000001",
+      "domainMasks": [
+        49160,
+        3146788,
+        2097156,
+        33554431,
+        33554431,
+        2622468,
+        33554431,
+        33554431
+      ],
+      "nWindows": 129,
+      "sourceTable": "1RB0RA_1RC0LB_0RD0LE_1LC1LB_HALT1RA_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "46875000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f0000f0ffff0000000000f0000000000000fff00000ff000000ffff0000ff000000f0f0f0f0f0f0f0f0f0f0f0f0f0f3f0f000000000000000000000000000000001",
+      "domainMasks": [
+        114688,
+        16416,
+        2113536,
+        33554431,
+        33554431,
+        16384,
+        33554431,
+        33554431
+      ],
+      "nWindows": 167,
+      "sourceTable": "1RB1LD_1RC1LB_0RD0LE_1LC1LD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000ffffffff000000000000000000000000fff0000000000000f0ff000000000000f0f0000000000000f0f000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        4195328,
+        6423552,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 83,
+      "sourceTable": "1RB1RF_1RC1LE_0RD1RD_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "12500000"
+    },
+    {
+      "windowMask": "0xff0000000000000000000000000000f0ffff0000000000f0000000000000c0f00000c0000000c0ff0000c0000000f000000000000000f00000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        1048576,
+        35840,
+        33554431,
+        33554431,
+        98304,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0RB_1RC0RE_0RD1RB_1LC1LD_HALT1LC_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000000000000000f00000000000000000f0ffff0000000000f0000000000000c0f00000c0000000c0ff0000c00000000000ff0000000000000000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        8388608,
+        98304,
+        33554431,
+        33554431,
+        34048,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0RE_1RC1LD_0RD1RE_1LC1LD_HALT0RB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff00000000000000ffffffffffff0000ffff000000000000f0f0f000f0000000f0fff000f0000000f000f000f0000000f000f000f003000000000000000000000000000000000001",
+      "domainMasks": [
+        4227072,
+        12582912,
+        12582912,
+        33554431,
+        33554431,
+        4243456,
+        33554431,
+        33554431
+      ],
+      "nWindows": 151,
+      "sourceTable": "1RB1LE_1RC1RD_0RD1RE_1LC1RD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000f00ffff000000000f00000000000000ffff00000000000000ff00000000000030f000003000000030f000003003000000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        2098224,
+        12582912,
+        33554431,
+        33554431,
+        2114560,
+        33554431,
+        33554431
+      ],
+      "nWindows": 75,
+      "sourceTable": "1RB1LF_1RC1RE_0RD0LD_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xff00000000000000ff00000000f0ffff00f0000000f0ffff00f00000c0f0c000c0f0c000c0ffc000c0f0c0000000f0000000f0000000f0000003f00000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        256,
+        8388608,
+        33554431,
+        33554431,
+        17408,
+        33554431,
+        33554431
+      ],
+      "nWindows": 119,
+      "sourceTable": "1RB1RD_1RC1RE_0RD0RB_1LC1LD_HALT0RD_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000f00ffff000000000f00000000000000fff000000000000000ff00000000000030f000003000000030f000003003000000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        1072,
+        12582912,
+        33554431,
+        33554431,
+        17408,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1LD_1RC1RE_0RD0LD_1LC1LB_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000800080008000f00080008000800000f0ffff0000000000f0000000000000ffff0000c0000000c0ff0000c0000000ffff8080c0808080f0808080c083808000000000000000000000000000000001",
+      "domainMasks": [
+        98312,
+        1196032,
+        1064960,
+        33554431,
+        33554431,
+        3162112,
+        33554431,
+        33554431
+      ],
+      "nWindows": 106,
+      "sourceTable": "1RB1RE_1RC1RB_0RD1LE_1LC1LD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "21093750"
+    },
+    {
+      "windowMask": "0xf0008000c0008000f0008000c00080000000ffff0000c0000000f0000000c000fff00000c0000000f0ff0000c0000000c0f08080c0c08080c0f08080c0c3808000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        132096,
+        10503168,
+        33554431,
+        33554431,
+        2114560,
+        33554431,
+        33554431
+      ],
+      "nWindows": 99,
+      "sourceTable": "1RB1LA_1RC0RD_0RD1LE_1LC1LB_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f000000ffff000000000000ffff00000000fff00000ffff0000ffff0000fff00000f0f0f0f0f0f0f0f0f0f0f0f0f0f3f0f000000000000000000000000000000001",
+      "domainMasks": [
+        2146304,
+        17440,
+        2113536,
+        33554431,
+        33554431,
+        16384,
+        33554431,
+        33554431
+      ],
+      "nWindows": 187,
+      "sourceTable": "1RB1LD_1RC1LB_0RD0LE_1LC1RC_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf0008000c0008000f0008000c000800000f0ffff0000000000f0000000000000ffff0000c0000000f0ff0000c0000000ff000000c0000000f0000000c003000000000000000000000000000000000001",
+      "domainMasks": [
+        98312,
+        2228224,
+        2228224,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 91,
+      "sourceTable": "1RB0RD_1RC1RC_0RD1LE_1LC1LD_HALT1RB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f000000ffff000000000000ffff00000000fff00000fff00000ffff0000ffff0000f0f0f0f0f0f0fffff0f0f0f0f0f3f0f000000000000000000000000000000001",
+      "domainMasks": [
+        49408,
+        17440,
+        2113536,
+        33554431,
+        33554431,
+        16384,
+        33554431,
+        33554431
+      ],
+      "nWindows": 195,
+      "sourceTable": "1RB1RB_1RC1LB_0RD0LE_1LC0RB_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf000000000000000f00000000000000000f0ffff0000000000f0000000000000c0f00000c0000000c0ff0000c0000000ff808080c0808080f0808080c083808000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        9453568,
+        16384,
+        33554431,
+        33554431,
+        1098752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 83,
+      "sourceTable": "1RB1LA_1RC1LB_0RD1RE_1LC1LD_HALT1RB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f00000fffff00000000000f000000000000fff00000ff000000ffff0000ff000000f0f0f0f0f0f0f0f0f0f0f0f0f0f3f0f000000000000000000000000000000001",
+      "domainMasks": [
+        49168,
+        16416,
+        2113536,
+        33554431,
+        33554431,
+        16384,
+        33554431,
+        33554431
+      ],
+      "nWindows": 167,
+      "sourceTable": "1RB1LC_1RC1LB_0RD0LE_1LC0LD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000100030001000f000100030001000000ffff000000000000000000000000fff00000030000000fff00000300000030f010103010101030f010103013101000000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        32,
+        10485760,
+        33554431,
+        33554431,
+        16384,
+        33554431,
+        33554431
+      ],
+      "nWindows": 89,
+      "sourceTable": "1RB1LB_1RC1RC_0RD0LE_1LC1LB_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xff00000000000000000000000000000000f0ffff0000000000f0000000000000c0f00000c0000000c0ff0000c0000000f000000000000000f00000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        1048576,
+        8422400,
+        33554431,
+        33554431,
+        17408,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB0LC_1RC1RE_0RD1RB_1LC1LD_HALT0RD_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff00000000000000ffffffffffff0000ffffffff00000000f0fff000f0ff0000f0fff000f0ff0000ff0fff03ff0f0f03ff0fff03ff0f0f0300000000000000000000000000000001",
+      "domainMasks": [
+        4227076,
+        13631492,
+        4,
+        33554431,
+        33554431,
+        4244484,
+        33554431,
+        33554431
+      ],
+      "nWindows": 241,
+      "sourceTable": "1RB1RA_1RC0LB_0RD1RE_1LC1RD_HALT1LB_HALTHALT",
+      "individualOutside256": "101250",
+      "grossPhysical": "23437500"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff00000000000000000000000000ff00000000000000ff000000000000ff0f0000000f0000000f0000000f0000cbf30b03cb030b03cbf30b03cb030b03",
+      "domainMasks": [
+        40972,
+        33554431,
+        132096,
+        2,
+        33554431,
+        1057792,
+        33554431,
+        33554431
+      ],
+      "nWindows": 120,
+      "sourceTable": "1RB0LA_1RC1LE_0RD1RD_1LC1LA_HALT1LA_HALTHALT",
+      "individualOutside256": "100000",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f000000ffff00000000000000000000000000f000000000000000ff000000000000ff000000ff000000ff000000ff030000f0f0f0f0f0f0f0f0f0f0f0f0f0f0f0f1",
+      "domainMasks": [
+        40960,
+        33554431,
+        8224,
+        1056768,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "nWindows": 159,
+      "sourceTable": "1RB1LA_1RC0LE_0RD0RE_1LC1LA_HALT1LA_HALTHALT",
+      "individualOutside256": "96875",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0x300000003000000030000000300000000000ffff000000000000000000000000ffff0f000000000000ff0f00000000000ff30000000300000ff300000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49160,
+        4,
+        2229248,
+        33554431,
+        33554431,
+        1049088,
+        33554431,
+        33554431
+      ],
+      "nWindows": 81,
+      "sourceTable": "1RB0LC_1RC1LE_0RD0LB_1LC1LB_HALT0RC_HALTHALT",
+      "individualOutside256": "87525",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c000000ffffffff000000000000000000000000fff0000000000000f0ff000000000000f0f0000000000000f0f000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        4195328,
+        6292512,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 83,
+      "sourceTable": "1RB1LE_1RC0LE_0RD1RD_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "82950",
+      "grossPhysical": "12500000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c0000000000ffff000000000000000000000000ffff00000000000000ff000000000000ffff00000000000000f0000000030000ffff000000000000f0f0000000000001",
+      "domainMasks": [
+        57352,
+        3679264,
+        3679264,
+        3671072,
+        33554431,
+        3670016,
+        33554431,
+        33554431
+      ],
+      "nWindows": 99,
+      "sourceTable": "1RB0LE_1RC1LA_0RD1RA_1LC1LA_HALT1RB_HALTHALT",
+      "individualOutside256": "81250",
+      "grossPhysical": "33750000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c0000000000ffff000000000000000000000000ffff00000000000000ff000000000000ffff000000000000f0f000000003000000f000000000000000f0000000000001",
+      "domainMasks": [
+        57352,
+        3163168,
+        3146784,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 87,
+      "sourceTable": "1RB0LD_1RC0LE_0RD1LB_1LC1LA_HALT1RB_HALTHALT",
+      "individualOutside256": "79900",
+      "grossPhysical": "62500000"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c0000000000ffff000000000000000000000000fff000000000000000ff000000000000f0f0000000000000f0f000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        17408,
+        2098208,
+        33554431,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB1LF_1RC0LE_0RD1LB_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "79900",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c000000ffffffff000000000000000000000000ffff000000000000f0ff000000000000ffff00000000000000f0000000030000f0f0000000000000f0f0000000000001",
+      "domainMasks": [
+        40960,
+        7341088,
+        7382048,
+        7341088,
+        33554431,
+        3145728,
+        33554431,
+        33554431
+      ],
+      "nWindows": 111,
+      "sourceTable": "1RB1RD_1RC1RD_0RD0LE_1LC1LA_HALT1RB_HALTHALT",
+      "individualOutside256": "78125",
+      "grossPhysical": "10937500"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000ffff00000000000000ff000000000000ffff00000000000000f000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49160,
+        3277824,
+        3277824,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB0LC_1RC1LE_0RD1RB_1LC1LB_HALT0RD_HALTHALT",
+      "individualOutside256": "73800",
+      "grossPhysical": "56250000"
+    },
+    {
+      "windowMask": "0xf000000000000000f0000000000000000000ffff000000000000000000000000fff000000000000000ff000000000000fff000000000000000f000000003000000000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        132096,
+        132096,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "nWindows": 63,
+      "sourceTable": "1RB1RE_1RC0RD_0RD1LE_1LC1LB_HALT1RB_HALTHALT",
+      "individualOutside256": "73800",
+      "grossPhysical": "9375000"
+    },
+    {
+      "windowMask": "0xf000f000f000f000f000f000f000f000000fffff000fff0f000fff0f000fff0ff0f0f0f0f0f0f0f0f0fff0f0f0f0f0f0ff000000ff000000ff000000ff03000000f0fff000f0fff000f0fff000f0fff1",
+      "domainMasks": [
+        40976,
+        1082496,
+        163840,
+        40976,
+        33554431,
+        1082496,
+        33554431,
+        33554431
+      ],
+      "nWindows": 267,
+      "sourceTable": "1RB1LA_1RC1LE_0RD0RA_1LC0LD_HALT1LC_HALTHALT",
+      "individualOutside256": "69975",
+      "grossPhysical": "4500000"
+    },
+    {
+      "windowMask": "0xff000000f0000000ff000000f0000000fffffffff0000000ff000000f0000000fff0000000000000ffff000000000000ff000000000000000000000000030000f0f0c000f000c000f0f0c000f000c001",
+      "domainMasks": [
+        8192,
+        4400128,
+        4432952,
+        12582912,
+        33554431,
+        4202496,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB1RE_1RC0LC_0RD1LD_1LC1LA_HALT1RD_HALTHALT",
+      "individualOutside256": "68750",
+      "grossPhysical": "2812500"
+    },
+    {
+      "windowMask": "0xf0008000f0008000f0008000f000800000f0ffff0000000000f0000000000000ffff0000c0000000ffff0000c0000000ffffff00ffffc000ffffff00ffffc000fffffffffffffffffffffffff000ffff",
+      "domainMasks": [
+        1695886,
+        3825792,
+        1572992,
+        1048704,
+        33554431,
+        3670400,
+        33554431,
+        33554431
+      ],
+      "nWindows": 280,
+      "sourceTable": "1RB0RA_1RC1RA_0RD1LE_1LC1LD_HALT0RB_HALTHALT",
+      "individualOutside256": "68600",
+      "grossPhysical": "32812500"
+    },
+    {
+      "windowMask": "0xc0000000c0000000c0000000c000000ffffffff000000000000000000000000f0f0000000000000f0ff000000000000ff000000000000000000000000030000f0f0000000000000f0f0000000000001",
+      "domainMasks": [
+        40960,
+        5243936,
+        4236288,
+        5243936,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "nWindows": 87,
+      "sourceTable": "1RB0LE_1RC1RD_0RD1RB_1LC1LA_HALT1RC_HALTHALT",
+      "individualOutside256": "56250",
+      "grossPhysical": "4000000"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f000000000fffff000f0000000fffff000f000030f0300030ff300030ff300030ff30000300030f0300030f0300030f0303030f00000000000000000000000000000001",
+      "domainMasks": [
+        32784,
+        8388608,
+        4194560,
+        33554431,
+        33554431,
+        33796,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB0LA_1RC0RB_0RD1RE_1LC0LD_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f000000000f0ffff00f0000000f0ffff00f00000c0ffc000c0ffc000c0ffc000c0ffc000cb0bcb0bcb0bcb0bcb0bcb0bcb0bcb0b00000000000000000000000000000001",
+      "domainMasks": [
+        98312,
+        8388612,
+        4,
+        33554431,
+        33554431,
+        50176,
+        33554431,
+        33554431
+      ],
+      "nWindows": 177,
+      "sourceTable": "1RB1LF_1RC0LB_0RD1RE_1LC1LD_HALT1LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "7031250"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c00000f0ffff0080f0f000f0c0c00080ffffc0f080c0c08080f0c0ff80c0c08080f0000000000000ff00000000000003f00000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        34816,
+        1024,
+        33554431,
+        33554431,
+        256,
+        33554431,
+        33554431
+      ],
+      "nWindows": 119,
+      "sourceTable": "1RB0LB_1RC0RD_0RD0RE_1LC1LD_HALT0RB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xf000000000000000f00000000000f000ffff00000000f000000000000000fff000000000000000ff000000000000c0fc0000c00c0000c0fc0000c00f000000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        66560,
+        4196352,
+        33554431,
+        33554431,
+        4,
+        33554431,
+        33554431
+      ],
+      "nWindows": 79,
+      "sourceTable": "1RB0RA_1RC0RE_0RD1LD_1LC1LB_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xff00000000000000f00000f0ffff0080f0f000f0c0c00080ffffc0f080c0c08080f0c0ff80c0c08080f00000f0000000c0000000f0000003c00000000000000000000000000000000001",
+      "domainMasks": [
+        98304,
+        33024,
+        2048,
+        33554431,
+        33554431,
+        1024,
+        33554431,
+        33554431
+      ],
+      "nWindows": 119,
+      "sourceTable": "1RB0LA_1RC0RE_0RD0RB_1LC1LD_HALT0RD_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xf000000030000000f000000030000000000ffff0000000000000f0f00000000fff30000003300000fff00000033000003f101010331010103f101010333010100000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        1056,
+        4,
+        33554431,
+        33554431,
+        1028,
+        33554431,
+        33554431
+      ],
+      "nWindows": 104,
+      "sourceTable": "1RB0RC_1RC0LB_0RD0LE_1LC1LB_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf0000000c0000000f0000000c000f000ffffc000c000f000f000c000c000fff00000ff000000f0ff0000f0000000c0f08080c0c08080c0f08080c0c3808000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        65536,
+        6310912,
+        33554431,
+        33554431,
+        2113536,
+        33554431,
+        33554431
+      ],
+      "nWindows": 115,
+      "sourceTable": "1RB1RD_1RC0RE_0RD1LD_1LC1LB_HALT1RC_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "3906250"
+    },
+    {
+      "windowMask": "0x30003000300030003000300030003000000ffff000000000000ffff00000000fff0000000ff0000ffff000000ff00000ff0000f0ff0000f0ff0000f0ff3000f00000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        1028,
+        1056,
+        33554431,
+        33554431,
+        256,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB1LA_1RC0LE_0RD0LB_1LC1LB_HALT0RB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000c000ffffc0000000c0000000c0000000fff000000000000000ff00000000000080f080008000800080f080008003800000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        132096,
+        4194304,
+        33554431,
+        33554431,
+        2163712,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB1LE_1RC1RD_0RD1LE_1LC1LB_HALT1LD_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "2343750"
+    },
+    {
+      "windowMask": "0xf0000000f0000000f0000000f0000000000ffff000000000000ffff00000000fff0000000ff0000ffff000000ff000003f0030f03f0030f03f0030f03f3030f00000000000000000000000000000001",
+      "domainMasks": [
+        49152,
+        1056,
+        256,
+        33554431,
+        33554431,
+        1028,
+        33554431,
+        33554431
+      ],
+      "nWindows": 143,
+      "sourceTable": "1RB1RD_1RC0RB_0RD0LE_1LC1LB_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "3125000"
+    },
+    {
+      "windowMask": "0xf000000000000000f000000000000000300ffff030000000300000003000000fff000000000000000ff00000000000010f010001000100010f010001003100000000000000000000000000000000001",
+      "domainMasks": [
+        16384,
+        1056,
+        4194304,
+        33554431,
+        33554431,
+        1040,
+        33554431,
+        33554431
+      ],
+      "nWindows": 71,
+      "sourceTable": "1RB0RB_1RC1RD_0RD0LE_1LC1LB_HALT0LD_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "1562500"
+    },
+    {
+      "windowMask": "0xff000000ff000000ff00000000000000ffffffffffff0000ffff0f0f00000000f0fff000f0330000f0fff000f03300000f030f010f0303010f030f010f03030100000000000000000000000000000001",
+      "domainMasks": [
+        4227072,
+        12582912,
+        4,
+        33554431,
+        33554431,
+        4227076,
+        33554431,
+        33554431
+      ],
+      "nWindows": 185,
+      "sourceTable": "1RB1LF_1RC0LB_0RD1RE_1LC1RD_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "4687500"
+    },
+    {
+      "windowMask": "0xf000000000000000f00000000000000000fffff00000000000f00000000000030ff00003000000030ff0000300000000300000003000000030000000303000000000000000000000000000000000001",
+      "domainMasks": [
+        32792,
+        8388608,
+        6291456,
+        33554431,
+        33554431,
+        2130948,
+        33554431,
+        33554431
+      ],
+      "nWindows": 67,
+      "sourceTable": "1RB0LB_1RC1RC_0RD1RE_1LC0LD_HALT0LB_HALTHALT",
+      "individualOutside256": "50625",
+      "grossPhysical": "9375000"
+    }
+  ]
+}
