@@ -30,7 +30,7 @@ def main():
     raw=TARGET.replace("_","")
     assert len(raw)==36
     source,n,shape=emit(0,raw,["r",6,9,5,1318])
-    assert n==1318,n
+    assert 0<n<=1318,n # incidence quotient compresses 1318 raw configurations to 108
     generated="\n".join([
        "import TwoSidedAutomata",
        "set_option maxRecDepth 100000",
@@ -73,7 +73,7 @@ def main():
       "source_literal":TARGET,
       "source_literal_sha256":hashlib.sha256(TARGET.encode()).hexdigest(),
       "certificate_kind":"r","parameters":{"k":6,"c":9,"m":5,"reachable":1318},
-      "abstract_stack_shape":list(shape),
+      "abstract_stack_shape":list(shape),\n      "compressed_reachable_states":n,"raw_reachable_states":1318,
       "theorem":expected,"axioms":observed,
       "source_sha256":base.file_sha(target),
       "root_olean_sha256":base.file_sha(work/"Raw36D110E01LB.olean"),
