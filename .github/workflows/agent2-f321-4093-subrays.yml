@@ -60,7 +60,7 @@ jobs:
             echo "Checking $f"
             LEAN_PATH="$e:$q" lean "$f" 2>&1 | tee -a /tmp/f321-4093/lean.log
           done
-          test "$(grep -c '^axioms BB6.Agent31F321Ray' /tmp/f321-4093/lean.log || true)" -eq 12
+          test "$(grep -Ec "BB6\\.Agent31F321Ray[0-9]+\\.gate[0-9]+_mod786432_never.*depends on axioms" /tmp/f321-4093/lean.log || true)" -eq 12
           ! grep -Eq 'sorryAx|native_decide' /tmp/f321-4093/lean.log
       - uses: actions/upload-artifact@v4
         if: always()
