@@ -1,0 +1,200 @@
+name: Agent4 Raw56 1LB exact residual source acceptance
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-pilot-generated-source
+          path: /tmp/raw56-pilot-source
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46062134943'
+      - name: Replay frozen witness choices and emit partial Cover
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/prepare_lb.py --source /tmp/raw56-pilot-source --out /tmp/raw56-pilot-prep
+          python im-results/agent4-raw56-root-pilot/compile_lb.py balance --prep /tmp/raw56-pilot-prep
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+          if-no-files-found: error
+
+  certs:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check finite and growth witnesses
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/compile_lb.py cert --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --shard '${{ matrix.shard }}' --out /tmp/rootpilot-cert
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rootpilot-lb-cert-${{ matrix.shard }}
+          path: /tmp/rootpilot-cert
+          if-no-files-found: error
+
+  long:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [6168,21109]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check segmented long query and weighted bound
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/compile_lb.py long --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --shard '${{ matrix.shard }}' --out /tmp/rootpilot-long
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rootpilot-lb-long-${{ matrix.shard }}
+          path: /tmp/rootpilot-long
+          if-no-files-found: error
+
+  cuts:
+    needs: certs
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [0,1,2,3,4,5,6,7,8,9,10,11]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Check exact canonical residual subtree
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/compile_lb.py cut --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --shard '${{ matrix.shard }}' --out /tmp/rootpilot-cut
+      - uses: actions/upload-artifact@v4
+        with:
+          name: rootpilot-lb-cut-${{ matrix.shard }}
+          path: /tmp/rootpilot-cut
+          if-no-files-found: error
+
+  assemble:
+    needs: [cuts,long]
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/raw56-pilot-prep
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-long-*
+          path: /tmp/rootpilot-certs
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/rootpilot-cuts
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Assemble six-table residual theorem and strict axiom gate
+        run: |
+          set -euo pipefail
+          python im-results/agent4-raw56-root-pilot/compile_lb.py final --prep /tmp/raw56-pilot-prep --base /tmp/raw56-base/a1-raw56-root-consumer --certs /tmp/rootpilot-certs --cuts /tmp/rootpilot-cuts --out /tmp/rootpilot-final
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted
+          path: /tmp/rootpilot-final
+          if-no-files-found: error
