@@ -19,10 +19,10 @@ Lean 4.36.0-rc2 locally accepted the eight 16-case kernel verification
 batches and the two universal theorem families: **samples_never**, asserting
 that every compatible total machine is nonhalting, and **samples_parent**,
 asserting compatibility with the Raw54 E1=1RD parent. Source axiom audit
-showed only propext, Classical.choice, Quot.sound. An independent
+showed only propext, Classical.choice, Quot.sound. The independent
 [original-source CI check](https://github.com/FlareZ123/bb6/actions/runs/46122224331)
-was dispatched. These 128 explicitly enumerated cases are a rigorous
-partial result, not a complete coverage theorem.
+**succeeded**. These 128 explicitly enumerated cases are a rigorous
+source-accepted partial result, not a complete coverage theorem.
 
 ## Computational FAR-pruned frontier (not Lean-certified yet)
 
@@ -70,7 +70,7 @@ Reproducibility SHA256:
 * bank file: 37dca6055038f1128d72fd840e559dec2f97233485889797518d461bd1efdbc9
 
 **Research boundary:** the complete pruned-tree result remains
-computational evidence. The 128-case Lean theorem is accepted locally;
+computational evidence. The 128-case Lean theorem is source-accepted;
 this dossier makes no claim to certify the other FAR hits or close the
 671 residual leaves. The next step is compositional source replay of
 the ancestor-pruned tree using the existing Lean Audit/fastFAR checker.
