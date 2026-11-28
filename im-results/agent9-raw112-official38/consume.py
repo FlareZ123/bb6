@@ -129,9 +129,11 @@ theorem p112_cover :
   rw [p112_source_eq]
   apply Cover.leaf
   intro m hm k d hk hd
+  have hFloor : 6766859 ≤ proposedTM63Moves + 7 :=
+    BB6.Agent38ChampionThreshold.champion_score_ge_6766859
   exact Nat.le_trans
     (BB6.Agent47Raw112.parent_cover.sound m hm k d hk hd)
-    (by omega)
+    (Nat.le_trans (by decide : 100000 ≤ 6766859) hFloor)
 
 theorem count37 : roster37.length = 37 :=
   BB6.Agent9Raw112Canonical38OfficialConditional.count37
