@@ -91,7 +91,7 @@ jobs:
             --require BB6.Agent1Raw56.LE17557LocalSweeps.A_triad_carry \
             --require BB6.Agent1Raw56.LE17557LocalSweeps.B_triad \
             --require BB6.Agent1Raw56.LE17557RankedTriads.A_ranked_normal \
-            --require BB6.Agent1Raw56.LE17557LiftConjugacy.frame_conjugate_cycle \\
+            --require BB6.Agent1Raw56.LE17557LiftConjugacy.frame_conjugate_cycle \
             --require BB6.Agent4Raw56LE17557RightQueue.every_finite_prefix
           cp Raw56LE17557FrameSchedule.{lean,olean} Raw56LE17557ActionGrammar.{lean,olean} Raw56LE17557FrameMachine.{lean,olean} Raw56LE17557RightLevel.{lean,olean} Raw56LE17557AbstractEpoch.{lean,olean} Raw56LE17557LocalSweeps.{lean,olean} Raw56LE17557RankedTriads.{lean,olean} Raw56LE17557LiftConjugacy.{lean,olean} Raw56LE17557RightQueue.{lean,olean} rightqueue.log frame-all.log /tmp/out/
       - uses: actions/upload-artifact@v4
