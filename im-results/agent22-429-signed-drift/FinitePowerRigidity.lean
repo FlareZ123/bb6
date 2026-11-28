@@ -48,8 +48,11 @@ theorem second_diff_power (M n : Nat) (p c : Int) (u : Nat → Nat)
       calc
         dd u 0=(M:Int)^k * dd u k := prev
         _ = (M:Int)^k *((M:Int)*dd u (k+1)) := by rw [step]
-        _ = (M:Int)^(k+1)*dd u (k+1) := by simp only [pow_succ,mul_assoc]
-  exact hpow n (le_refl n)
+        _ = (M:Int)^(k+1)*dd u (k+1) := by
+          change (M:Int)^k*((M:Int)*dd u (k+1)) =
+            ((M:Int)^k*(M:Int))*dd u (k+1)
+          ac_rfl
+  exact hpow n (by omega)
 
 theorem power_forces_affine (M B n : Nat) (p c : Int)
     (u : Nat → Nat)
@@ -82,7 +85,7 @@ theorem power_forces_affine (M B n : Nat) (p c : Int)
       ((u 1:Int)-(u 0:Int))+p := by
     calc
       (M:Int)*((u 2:Int)-(u 1:Int)) =
-          (M:Int)*(u 2:Int)-(M:Int)*(u 1:Int) := by simp only [mul_sub]
+          (M:Int)*(u 2:Int)-(M:Int)*(u 1:Int) := by grind
       _ = ((u 1:Int)+p+c)-((u 0:Int)+c) := by rw [hh1,hh0]
       _ = ((u 1:Int)-(u 0:Int))+p := by omega
   constructor
@@ -91,7 +94,7 @@ theorem power_forces_affine (M B n : Nat) (p c : Int)
     calc
       ((M:Int)-1)*((u 1:Int)-(u 0:Int)) =
           (M:Int)*((u 1:Int)-(u 0:Int))-
-          ((u 1:Int)-(u 0:Int)) := by simp only [sub_mul,one_mul]
+          ((u 1:Int)-(u 0:Int)) := by grind
       _ = p := by omega
 
 #print axioms second_diff_power
