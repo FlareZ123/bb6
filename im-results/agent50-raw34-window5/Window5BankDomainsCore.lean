@@ -25,7 +25,7 @@ def variableSlots : List (Fin 6 × Bool) :=
 def allowedSlot (bits : Nat) (slot : Nat) (act : Nat) : Bool :=
   let source := (variableSlots[slot]?).getD (0,false)
   let action : Option Move := (allMoves[act]?).getD none
-  decide (Permitted (masked bits) source.1 source.2 action)
+  permittedBoolean (masked bits) source.1 source.2 action
 
 /-- Test every set bit in the physical domain against actual
 permission for this row and five-cell predicate. A 0 bit forbids the
