@@ -1228,7 +1228,7 @@ jobs:
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           g++ -O3 -std=c++17 "$D/far.cpp" -o "$W/far"
           python "$D/generate.py" --output "$W/imports/Raw34Pilot.lean" --summary "$W/pilot.json"
-          python "$D/generate_compact.py" --far "$W/far" --output "$W/imports" | tee "$W/generator.log"
+          python "$D/generate_compact.py" --far "$W/far" --output "$W/imports" --split-children 3 | tee "$W/generator.log"
           python - "$W/imports/summary.json" <<'PY'
           import json,sys
           x=json.load(open(sys.argv[1]))
