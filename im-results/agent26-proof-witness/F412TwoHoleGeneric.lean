@@ -60,7 +60,7 @@ theorem pF0E1_root (fm em : Move) :
 theorem pF0B1_E1_unknown (fm bm : Move) :
     pF0B1 fm bm (4,true) = none := by
   simp [pF0B1,pF0,fChild,fParent,fHole,refine,fP7,fP6,fP5,
-    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable]
+    fP4,fP3,fP2,fP1,fResidual,fRoot,emptyTable] <;> decide
 
 theorem pF0E1_B1_unknown (fm em : Move) :
     pF0E1 fm em (1,true) = none := by
