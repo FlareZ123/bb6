@@ -47,8 +47,8 @@ jobs:
                   raise SystemExit('Missing source-audited conditional parent theorem')
               x=['']
           if len(x)!=1: raise SystemExit('Duplicate conditional parent axiom records')
-          extra={a.strip() for a in x[0].split(',') if a.strip()}-
-          {'propext','Quot.sound','Classical.choice'}
+          extra=({a.strip() for a in x[0].split(',') if a.strip()} -
+                 {'propext','Quot.sound','Classical.choice'})
           if extra: raise SystemExit('Unexpected conditional theorem axioms: '+str(extra))
           print('SOURCE-ACCEPTED conditional parent theorem, 206 explicit ordinary obligations, standard axioms')
           PY
