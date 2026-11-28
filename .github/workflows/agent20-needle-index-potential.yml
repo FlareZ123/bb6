@@ -2,6 +2,11 @@ name: Agent20 Space Needle source-level 3/4/5 potential theorem (manual)
 on:
   workflow_dispatch:
     inputs:
+      cancellation_r13:
+        description: 'Run segmented exact GMP r=13 predecessor scan (new asymmetric bound)'
+        type: boolean
+        required: false
+        default: false
       cancellation_r12:
         description: 'Run exact GMP initial cancellation-feeder r=12 parent scan, not Lean'
         type: boolean
@@ -11,7 +16,7 @@ permissions:
   contents: read
 jobs:
   source-potential:
-    if: ${{ !inputs.cancellation_r12 }}
+    if: ${{ !inputs.cancellation_r12 && !inputs.cancellation_r13 }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
@@ -80,7 +85,7 @@ jobs:
           PY
 
   cancellation-r12:
-    if: ${{ inputs.cancellation_r12 }}
+    if: ${{ inputs.cancellation_r12 && !inputs.cancellation_r13 }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -122,4 +127,52 @@ jobs:
         with:
           name: agent20-space-needle-r12-raw
           path: /tmp/needle-r12.log
+          if-no-files-found: warn
+
+  cancellation-r13:
+    if: ${{ inputs.cancellation_r13 }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        range: ["1 1500000", "1500001 3000000", "3000001 5000000", "5000001 7604436"]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build exact segmented enumerator
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq libgmp-dev
+          g++ -O3 -std=c++17 -fopenmp im-results/agent20-needle-coprime/needle13.cpp -lgmpxx -lgmp -o /tmp/needle13
+          sha256sum im-results/agent20-needle-coprime/needle13.cpp
+          git rev-parse HEAD
+      - name: Exhaust assigned r13 interval
+        env:
+          RANGE: ${{ matrix.range }}
+        run: |
+          set -euo pipefail
+          export OMP_NUM_THREADS=4
+          read -r LO HI <<< "$RANGE"
+          /tmp/needle13 13 1 0 1 "$LO" "$HI" | tee /tmp/needle13.log
+          python3 - <<'PY'
+          import math,os,pathlib,re
+          lo,hi=map(int,os.environ['RANGE'].split())
+          line=next(x for x in pathlib.Path('/tmp/needle13.log').read_text().splitlines() if x.startswith('r=13 c=1'))
+          d=dict(re.findall(r'(\w+)=([^\s]+)',line))
+          a=(9**13+5)//2
+          cut=math.isqrt((13*14*a-1)//4)
+          assert int(d['cut'])==cut==7604436
+          assert d['range']==f'{lo}..{hi}'
+          assert sum(int(d[k]) for k in ('rotation','sieve','sparse','exact'))==hi-lo+1
+          assert int(d['largeZero'])==0
+          print('PASS: exact r13 segment',line)
+          PY
+      - name: Preserve exact segment evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: agent20-r13-${{ strategy.job-index }}
+          path: /tmp/needle13.log
           if-no-files-found: warn
