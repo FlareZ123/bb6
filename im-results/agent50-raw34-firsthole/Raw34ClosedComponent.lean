@@ -78,7 +78,7 @@ theorem first3 (c1 d1 : Move)
     (m : Machine) (hm : compatible (parent c1 d1) m) :
     run m 3 blank = some (embedFinRay start3) := by
   have h : finitePartialRun (parent c1 d1) 3 finiteBlank =
-      some start3 := by decide
+      some start3 := by rfl
   simpa only [embedFinRay_blank] using
     finitePartialRun_sound (parent c1 d1) m hm finiteBlank start3 3 h
 
@@ -87,7 +87,7 @@ theorem never (c1 d1 : Move)
     (hd : d1.next = 2 ∨ d1.next = 3)
     (m : Machine) (hm : compatible (parent c1 d1) m) : NeverHalts m := by
   have h3 := first3 c1 d1 m hm
-  have hs : inside (embedFinRay start3) := by decide
+  have hs : inside (embedFinRay start3) := by simp [inside,embedFinRay,start3]
   intro n
   by_cases hn : n ≤ 3
   · cases h : run m n blank with
