@@ -230,7 +230,7 @@ def main():
     # Compile the same integration theorem against the relocated, independently
     # replayed Raw47 bridge.  The literal table agreement and the global
     # Canonical38 geometry are rechecked in this exact environment.
-    relocated = work / "Raw47AfterRaw112IntegratedRelocated.lean"
+    relocated = work / "Raw47AfterRaw112Integrated.lean"
     text = (HERE / "Raw47AfterRaw112Integrated.lean").read_text()
     assert "import Raw47Complete" in text
     assert "BB6.Agent50Raw47Depth3Cut.parent" in text
