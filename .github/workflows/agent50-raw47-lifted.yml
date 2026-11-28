@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1264,6 +1264,58 @@ jobs:
         with:
           name: raw34-halt-depth4-source-and-census
           path: /tmp/a40-raw34-halt-depth4/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-halt-depth5:
+    if: inputs.mode == 'raw34-halt-depth5'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Exact 25-way first-query census and source-Lean proofs for 456m physical machines
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-halt-depth5
+          mkdir -p "$W/generated"
+          lean --version | grep -F '4.36.0-rc2'
+          node im-results/agent40-raw34-frontier/generate_depth5_halts.mjs \
+            --max-fixed 4 --shard-size 64 --output "$W/generated" \
+            | tee "$W/generation.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/generated" --jobs 4 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-depth5-large-source \
+            "$W/generated"/Raw34Depth5LargeShard*.lean \
+            2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/closure.log" "$W/generated/manifest.json" <<'PY'
+          import json,re,sys
+          log=open(sys.argv[1]).read()
+          manifest=json.load(open(sys.argv[2]))
+          assert manifest['numSourceCylinders']==1024
+          assert manifest['physicalCoverageNew']=='456250000'
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for unit in manifest['sourceTheorems']:
+              for name in ('count','checked','short','all_halt','all_weighted'):
+                  full=unit['ns']+'.'+name
+                  m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+                  else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 1,024 source-accepted depth-five minimal halters, 456,250,000 physical machines')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-halt-depth5-large-source-and-census
+          path: /tmp/a40-raw34-halt-depth5/
           if-no-files-found: warn
           retention-days: 30
 
