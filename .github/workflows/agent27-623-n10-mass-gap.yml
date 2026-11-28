@@ -6,7 +6,7 @@ on:
       target:
         description: Proof target
         type: choice
-        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
+        options: [n10, gap-two-three-step, low-scale, three-step-strip, weighted-strip, weighted-ultra, weighted-skew, raw106-source, raw79-source, raw67-source, raw61-source, raw63-source]
         default: n10
 
 permissions:
@@ -63,7 +63,7 @@ jobs:
           fi
 
       - name: Compile all-scale gap-two elimination against original source
-        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra'
+        if: inputs.target == 'gap-two-three-step' || inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -90,7 +90,7 @@ jobs:
           if grep -q 'sorryAx' gap-two-axioms.log; then exit 1; fi
 
       - name: Compile universal successor and low-scale exclusion
-        if: inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra'
+        if: inputs.target == 'low-scale' || inputs.target == 'three-step-strip' || inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -135,7 +135,7 @@ jobs:
 
 
       - name: Compile weighted-depth sharpened authentic terminal gate
-        if: inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra'
+        if: inputs.target == 'weighted-strip' || inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -159,7 +159,7 @@ jobs:
           if grep -q 'sorryAx' weighted-strip-axioms.log; then exit 1; fi
 
       - name: Compile mass-aware weighted ultra terminal corridor
-        if: inputs.target == 'weighted-ultra'
+        if: inputs.target == 'weighted-ultra' || inputs.target == 'weighted-skew'
         working-directory: cryptids
         run: |
           set -euo pipefail
@@ -172,6 +172,15 @@ jobs:
           compile ThreeStepStripTerminalUltraSource agent27-623-gap-two-three-step/ThreeStepStripTerminalUltraSource
           compile ThreeStepStripWeightedUltraSource agent27-623-gap-two-three-step/ThreeStepStripWeightedUltraSource
           if grep -q 'sorryAx' weighted-ultra-axioms.log; then exit 1; fi
+
+      - name: Compile signed one-sided #623 weighted source gate
+        if: inputs.target == 'weighted-skew'
+        working-directory: cryptids
+        run: |
+          set -euo pipefail
+          cp "../im-results/agent27-623-gap-two-three-step/ThreeStepStripWeightedSkewSource.lean" ThreeStepStripWeightedSkewSource.lean
+          lake env lean -o .lake/build/lib/lean/ThreeStepStripWeightedSkewSource.olean ThreeStepStripWeightedSkewSource.lean 2>&1 | tee weighted-skew-axioms.log
+          if grep -q 'sorryAx' weighted-skew-axioms.log; then exit 1; fi
 
   retained-parent-source:
     if: endsWith(inputs.target, '-source')
