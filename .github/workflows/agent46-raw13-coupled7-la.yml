@@ -1,0 +1,39 @@
+name: Agent 46 Raw13 seven-hole LA cycles
+run-name: Agent 46 Raw13 coupled7 LA cycles
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Exact source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Kernel-check both seven-hole LA cycle closures
+        run: |
+          set -euo pipefail
+          D=im-results/agent46-raw13-cut
+          for src in Raw13Coupled7ZeroLA.lean Raw13Coupled7OneLA.lean; do
+            stem="${src%.lean}"
+            python tools/lean_compile_closure.py --workdir "/tmp/a46-$stem" --jobs 4 \
+              "$D/$src" | tee "/tmp/a46-$stem.log"
+            if grep -Eq 'sorryAx|native_decide' "/tmp/a46-$stem.log"; then exit 1; fi
+            grep -F ".bound" "/tmp/a46-$stem.log"
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw13-coupled7-LA-certified
+          path: |
+            /tmp/a46-Raw13Coupled7ZeroLA
+            /tmp/a46-Raw13Coupled7OneLA
+            /tmp/a46-Raw13Coupled7ZeroLA.log
+            /tmp/a46-Raw13Coupled7OneLA.log
+          retention-days: 30
