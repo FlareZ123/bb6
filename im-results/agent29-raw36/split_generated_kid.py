@@ -8,7 +8,7 @@ import argparse
 import re
 from pathlib import Path
 
-PART_DEF = r"^def ({root}_part\\d+)\\s*:"
+PART_DEF = r"^def ({root}_part\d+)\s*:"
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
@@ -22,7 +22,7 @@ def main():
     pat = PART_DEF.format(root=re.escape(a.root))
     first = re.search(pat, text, re.M)
     assert first, "no part declarations"
-    root_match = re.search(rf"^def {re.escape(a.root)}\\s*:.*$", text, re.M)
+    root_match = re.search(rf"^def {re.escape(a.root)}\s*:.*$", text, re.M)
     assert root_match and root_match.start() > first.start(), "root declaration missing/misordered"
     root_pos = root_match.start()
     header = text[:first.start()]
@@ -36,15 +36,15 @@ def main():
         blocks[name] = text[pos:end]
         order.append(name)
     refs = {
-        name: set(re.findall(rf"\\b({re.escape(a.root)}_part\\d+)\\b", block)) - {name}
+        name: set(re.findall(rf"\b({re.escape(a.root)}_part\d+)\b", block)) - {name}
         for name, block in blocks.items()
     }
 
-    rm = re.search(rf"def {re.escape(a.root)}\\s*:.*?byMove \\[([^\\]]+)\\]", tail, re.S)
+    rm = re.search(rf"def {re.escape(a.root)}\s*:.*?byMove \[([^\]]+)\]", tail, re.S)
     assert rm, "root byMove list not found"
     roots = [x.strip() for x in rm.group(1).split(",")]
     assert len(roots) == 24, roots
-    assert all(re.fullmatch(rf"{re.escape(a.root)}_part\\d+", x) for x in roots), roots
+    assert all(re.fullmatch(rf"{re.escape(a.root)}_part\d+", x) for x in roots), roots
 
     def closure(name):
         seen = set()
