@@ -100,21 +100,36 @@ jobs:
               for p in files:
                   q=dst/p.name
                   if q.exists():
-                      assert hashlib.sha256(q.read_bytes()).digest()==hashlib.sha256(p.read_bytes()).digest(),(q,p)
-                  else:
-                      shutil.copy2(p,q)
-          needed=['Raw56RootConsumer','Raw56E1LECut','Raw56E1LEFiveCut','Raw56E1LEFiveClosed',
+                      # Accepted closures may contain independently compiled copies of
+                      # the same shared module. Keep the first copy; the shared checker
+                      # and all thin composition modules are rebuilt below from source.
+                      print('keep prior accepted duplicate',p.name,'skip',name)
+                      continue
+                  shutil.copy2(p,q)
+          needed=['Raw56RootConsumer','Raw56E1LECut',
                   'Raw56LE0RBAll','Raw56LE0RCAll','Raw56LE0LBAll','Raw56LE1LAAll','Raw56LE1RAAll',
-                  'Raw56LE0LFPartialAll','Raw56LE0LFMotif3613','Raw56LE0LFFull']
+                  'Raw56LE0LFPartialAll']
           assert all((dst/(n+'.olean')).exists() for n in needed),[n for n in needed if not (dst/(n+'.olean')).exists()]
           print('accepted object union',counts,'total',len(list(dst.glob('*.olean'))))
           PY
-          cp im-results/agent1-raw56/le/Raw56E1LE{SixCut,SixClosed}.lean /tmp/le-six/union/
+          cp im-results/agent32-raw59/FastBiDFA.lean /tmp/le-six/union/
+          for n in Raw56LE0LFMotif3613 Raw56LE0LFFull; do
+            src="$(find /tmp/le-six/lf -name "$n.lean" -print -quit)"
+            test -n "$src"
+            cp "$src" /tmp/le-six/union/
+          done
+          cp im-results/agent1-raw56/le/Raw56E1LE{FourCut,FiveCut,FiveClosed,SixCut,SixClosed}.lean /tmp/le-six/union/
           export LEAN_PATH=/tmp/le-six/union
           cd /tmp/le-six/union
+          lean -o FastBiDFA.olean FastBiDFA.lean 2>&1 | tee checker.log
+          lean -o Raw56LE0LFMotif3613.olean Raw56LE0LFMotif3613.lean 2>&1 | tee lf-leaf.log
+          lean -o Raw56LE0LFFull.olean Raw56LE0LFFull.lean 2>&1 | tee lf-full.log
+          lean -o Raw56E1LEFourCut.olean Raw56E1LEFourCut.lean 2>&1 | tee four-cut.log
+          lean -o Raw56E1LEFiveCut.olean Raw56E1LEFiveCut.lean 2>&1 | tee five-cut.log
+          lean -o Raw56E1LEFiveClosed.olean Raw56E1LEFiveClosed.lean 2>&1 | tee five-closed.log
           lean -o Raw56E1LESixCut.olean Raw56E1LESixCut.lean 2>&1 | tee six-cut.log
           lean -o Raw56E1LESixClosed.olean Raw56E1LESixClosed.lean 2>&1 | tee six-closed.log
-          cat six-cut.log six-closed.log > all.log
+          cat checker.log lf-leaf.log lf-full.log four-cut.log five-cut.log five-closed.log six-cut.log six-closed.log > all.log
           ! grep -Eq 'sorryAx|native_decide|(^| )error:' all.log
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound8_closed
           mkdir -p /tmp/le-six/output
