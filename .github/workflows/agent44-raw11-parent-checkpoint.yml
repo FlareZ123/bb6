@@ -129,6 +129,7 @@ jobs:
         env:
           RAW11_REPAIR_ID: ${{ inputs.parent_id }}
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
+          RAW11_REPAIR_MODULE_TIMEOUT: '240'
           RAW11_REPAIR_TARGET: ${{ inputs.target_module }}
         run: |
           set -euo pipefail
