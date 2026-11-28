@@ -65,34 +65,50 @@ function exceedsPower(base, exponent, threshold) {
   return prod > threshold;
 }
 function certificate(word, halfRank, repetitions) {
-  if (repetitions < 3n) throw new Error("at least 3 repetitions required");
+  if (repetitions < 2n) throw new Error("at least 2 repetitions required");
   if (halfRank < 0n) throw new Error("half-rank must be nonnegative");
   const core = primitiveTypedWord(word);
   const copies = repetitions*BigInt(word.length/core.length);
   const {M,A,B,T} = coefficient(core);
-  const H = (halfRank+2n*T)/3n;
-  const heightThreshold = 2n*H;
-  const denominator = M-1n;
-  const numerator = A*T;
-  const scaleCondition = exceedsPower(M,copies-2n,heightThreshold);
+  const H0 = halfRank/3n, H1 = (halfRank+T)/3n;
+  const H2 = (halfRank+2n*T)/3n;
+  const numerator = A*T, denominator = M-1n;
+  // For W W: AT = M*(u2-u1)+(u0-u1), so its residue modulo M
+  // must come from the interval [-H1,H0].
+  const squareResidue = numerator % M;
+  const squareExcluded = squareResidue > H0 && M-squareResidue > H1;
+  // For W W W: the third W's initial symbol fixes parity of u2 as
+  // well, so (u2-u1) is even and the modulus strengthens to 2M.
+  const tripleModulus = 2n*M;
+  const tripleResidue = numerator % tripleModulus;
+  const tripleResidueExcluded =
+    copies >= 3n && tripleResidue > H0 && tripleModulus-tripleResidue > H1;
+  const scaleCondition = copies >= 3n &&
+    exceedsPower(M,copies-2n,2n*H2);
   const affineSlopeInteger = numerator % denominator === 0n;
   const affineSlopeEven = numerator % (2n*denominator) === 0n;
+  const powerExcluded = scaleCondition && !affineSlopeEven;
+  const excluded = squareExcluded || tripleResidueExcluded || powerExcluded;
   return {
     originalWord: word.map(x => (x.isE ? "E" : "S")+x.j).join(","),
     primitiveTypedWord: core.map(x => (x.isE ? "E" : "S")+x.j).join(","),
     repetitionsAfterReduction: copies.toString(),
     inputHalfRank: halfRank.toString(),
     M: M.toString(), A: A.toString(), B: B.toString(),
-    T: T.toString(), heightBound: H.toString(),
-    scaleCondition,
-    affineSlopeInteger,
-    affineSlopeEven,
-    excludedByExactNecessaryCondition: scaleCondition && !affineSlopeEven,
-    reason: scaleCondition && !affineSlopeEven ?
-      "A legal repeat would force an even integer s with (M-1)*s=A*T, impossible." :
-      "The necessary-condition test is inconclusive; this does NOT certify a repeat or an infinite path."
+    T: T.toString(), heightBound: H2.toString(),
+    squareResidue: squareResidue.toString(),
+    squareModuloExclusion: squareExcluded,
+    tripleResidue: tripleResidue.toString(),
+    tripleModuloExclusion: tripleResidueExcluded,
+    scaleCondition, affineSlopeInteger, affineSlopeEven,
+    finitePowerExclusion: powerExcluded,
+    excludedByExactNecessaryCondition: excluded,
+    reason: excluded ?
+      "At least one exact finite-path necessary condition fails; the specified repeated word cannot occur." :
+      "All necessary-condition tests are inconclusive; this does NOT certify a repeat or an infinite path."
   };
 }
+
 if (require.main === module) {
   try {
     if (process.argv.length !== 5)
