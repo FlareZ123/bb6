@@ -1,64 +1,86 @@
-# Infinite two-sided #429 signed windows with radius asymptotic to log4(rank)
+# Infinite exact two-sided #429 signed windows with symmetric halfstep radius k−18
 
-**Status:** Exact **paper-level** arithmetic construction, with direct BigInt sample replay; *not* all-parameter Lean certified. Synthetic exact signed graph, **not** authentic blank-source ancestry and **not** a wide crossing of radius \(\asymp4^k/k\).
+**New paper-level theorem, exact symbolic derivation and independent BigInt signed-macro replay. Not yet an all-parameter Lean theorem.** The states are synthetic states of the authentic signed #429 halfstep/radix-16 **graph**, not authenticated ancestors of the blank machine. The theorem is about a *linear* window in the logarithmic rank parameter k, not the exponentially larger \(\asymp4^k/k\) two-sided window in the unresolved #429 proof.
 
-## Exact one-parameter theorem
+## Exact theorem with one free parameter
 
-For every integer R≥10, set \(F_R=69,4161,66645\), according as R≡1,2,0 (mod3), and
+For every integer \(R\ge10\), let
 \[
-D=4^{R-1}+F_R,\quad h=2(D-14182)/63,\quad k=228+h,\quad T=4^k.
+ F_R=\begin{cases}
+ 69,&R\equiv1\pmod3,\\
+ 4161,&R\equiv2\pmod3,\\
+ 66645,&R\equiv0\pmod3,
+ \end{cases}\quad
+ D=4^{R-1}+F_R,\quad
+ h=\frac{2(D-1015)}{63},\quad
+ k=18+h,\quad T=4^k.
 \]
-The three F values have **only 0/1 base-four digits** in exponents below 9, and \(4^{R-1}+F_R\equiv7\equiv14182\pmod{63}\); hence h is a positive **even** integer, k is even and the R base-four digits \(\beta_R(D)\) are all 0 or 1, with the highest digit 1. Let \(q=k-2R-300>0\), \(N=3k-2R-74\).
+Each F has only base-four 0/1 digits below exponent nine, and \(4^{R-1}+F_R\equiv7\equiv1015\pmod{63}\). Therefore \(h\) is positive and **even**, k even, and the R base-four digits \(\beta_R(D)\) are all 0 or 1, beginning with 1. Put \(q=k-2R-300>0\) and \(N=3k-2R-282\).
 
-At the exact doubled-rank **center** \((P,Y)=(2T+4,\ 2\cdot4^h)\) there exist *both*:
-
-1. An exact strict-interior **backward** halfstep path of length N, with reverse-chronological word
+At the exact doubled-rank signed halfstep center
 \[
-\boxed{0^{227}\ 1\ 0^{k-5}\ 111\ 0^{k-R}\ \beta_R(D)\ 0^q}.
+ (P,Y)=(2T+4,\;2\cdot4^h)
 \]
-2. An exact strict-interior **forward** halfstep path of length h, with chronological word \(0^h\), ending at \((P+3h,2)\).
+there are **two** strict, source-phase-aligned positive-cone paths:
 
-Every even-rank/A-phase ordinate is even, so pairing chronological halfsteps gives actual exact signed **radix-16 q0 macro** paths. The center macro state is \((T+2,4^h)\), with backward path length N/2 and forward zero word length h/2, ending at \((T+2+3h/2,1)\). Since N>h, this gives a symmetric signed macro window radius **h/2**, or radius **h halfsteps**.
-
-As R tends to infinity, \(h\sim(2/63)4^{R-1}\), \(k=h+228\), and N/k→3. Therefore
+- A **backward** halfstep path of length **N**, with reverse chronological word
 \[
-\boxed{\limsup_{k\to\infty}\max_{\text{strict center heights }Y}
- \frac{\text{symmetric halfstep window radius at }(2\cdot4^k+4,Y)}{k}\ \ge\ 1}
+ \boxed{0^{17}\;1\;0^{k-3}\;111\;0^{k-R}\;\beta_R(D)\;0^q.}
 \]
-(and the equivalent macro-radius/k limsup is at least \(1/2\)). In particular, a uniform source-level **no-cross cutoff at any halfstep radius \(ck\) with c<1** is false in this broad synthetic signed graph. This says nothing about larger linear thresholds Ck with C≥1, and nothing about the **exponentially larger** unresolved \(\lfloor4^k/[128(k+1)]\rfloor\) radius.
+- A **forward** halfstep path of length **h=k−18**, consisting of precisely \(0^h\) and ending at \((P+3h,2)\).
 
-## Exact cancellation proof
+Every even-rank/A-phase ordinate is even, and N and h are even. Thus grouping chronological halfsteps produces exact **original q0 signed radix-16 macro** paths centered at \((T+2,4^h)\), with a backward path of N/2 macro steps and a forward path of **h/2** macro zero steps. The forward endpoint is \((T+2+3h/2,1)\). N>h, so the signed graph has a **symmetric strict macro window radius exactly \(h/2=(k-18)/2\)**, or **halfstep radius \(h=k-18\)**, for every R≥10.
 
-The first 227 reverse zeros cost \(3\cdot227-2=679\) in rank and increase height from \(2\cdot4^h\) to \(T/2\). The following inverse one has cost 9 and offset 12, producing height \(672=42\cdot4^2\). Another \(k-5\) zeros increase height to \(21T/32\). Three reverse ones, with alternating costs 9,3,9, cancel **the entire leading T term**, leaving
+As R→∞, \(h\sim(2/63)4^{R-1}\), \(k=h+18\), and \(N/k\to3\). Consequently
 \[
-H=28364+63h=\boxed{2D}.
+ \boxed{\limsup_{k\to\infty}\max_Y
+  \frac{\text{symmetric signed halfstep window radius at }(2\cdot4^k+4,Y)}{k}
+  \ge1}
 \]
-The next \(k-R\) zeros increase height to \((2D/4^R)T\). For the R restricted base-four bits \(d_i\), after j bits the exact inverse recurrence unwinds to
-\[
- y_j=2T D_{\rm suffix,j}/4^{R-j}+
-      \sum_{i\le j}4^{j-i}d_i(\Delta+C_i-c_i),
-\]
-with \(\Delta<10k\), \(C_i\le9i\), \(c_i\in\{4,12\}\) for ones. Since the remaining suffix has only base-four 0/1 digits, its height is strictly below \(2T/3\) with margin \(2T/4^R\). At j=R the T term **again vanishes exactly**, leaving positive \(E_R<4k4^R\). The last q reverse zeros finish at height
-\[
- 0<E_R4^q<(4k/4^{R+300})T,
-\]
-still strictly interior. Every reverse rank is ≥\(2T-9N>2T-27k\), while all checkpoint heights obey the strict cone. For every R≥10, elementary bounds \(k<4^R\), \(R\le k/16\), and \(T>100k4^{2R}\) make the margins positive; within zero runs the last reverse point is the height maximum. Each inverse-one error term \(\Delta+C_i-c_i\) is positive. This is the same exact source-aligned two-level cancellation established in [LongPastUniformM.md](LongPastUniformM.md), specialized to M=3, s=2 and a *free* R.
+with the analogous macro-radius/k limsup ≥1/2. This **falsifies a universal no-crossing bound at any radius \(ck\) with c<1 (halfstep units)** for synthetic strict graph states. It does **not** rule out a larger constant-linear bound and does not challenge the exponential target \(\lfloor4^k/[128(k+1)]\rfloor\).
 
-For the forward portion, the center has height \(2\cdot4^h\). Successive forward zeros divide this by four and increase the doubled rank by 5/1 in alternating phases; h even moves add rank exactly 3h and end at height 2. Heights strictly decrease and ranks increase, so the cone holds throughout. All even/A heights are even. The corresponding h/2 macro zero steps divide macro ordinate by sixteen each time and add +3 to macro rank.
+## Algebraic proof of the backward path
 
-## Concrete checked instances
+The first 17 inverse zeros from even rank lose \(3\cdot17-2=49\) rank units and multiply height by \(4^{17}\), reaching height \(2\cdot4^{h+17}=T/2\). The next inverse one from odd phase has cost nine and height
+\[
+4(T/2)-(2T+4-49-9)-12=42.
+\]
+The next \(k-3\) inverse zeros reach height \(42\cdot4^{k-3}=21T/32\). Because k is even, this zero-run length is odd, so the next three inverse ones have costs 9,3,9. Their enormous T-term cancels **exactly**, leaving
+\[
+H=2030+63h=\boxed{2D}.
+\]
+A further \(k-R\) inverse zeros raise height to \((2D/4^R)T\). The R restricted base-four digits \(d_1,\ldots,d_R\) now provide a **second exact cancellation**. If the rank at the start of that digit block is \(2T-\Delta\), with \(\Delta<10k\), and \(C_i\le9i\) is the accumulated cost through digit i, then after j digits the height is
+\[
+ y_j=2T\,D_{\mathrm{suffix},j}/4^{R-j}
+       +\sum_{i\le j}4^{j-i}d_i(\Delta+C_i-c_i),
+\]
+where \(c_i=4\) or 12 is the phase-dependent offset for a one (zero contributes no offset), and the suffix consists of unconsumed 0/1 base-four digits. The first digit is 1, so the error term stays **strictly positive**. At j=R, the suffix is zero, and the leading \(T\) coefficient vanishes:
+\[
+0<E_R:=y_R<4k4^R.
+\]
+The last q reverse zeros yield positive height \(E_R4^q<(4k/4^{R+300})T\).
+
+All predecessor ranks remain ≥\(2T-9N>2T-27k\). Every height is positive and satisfies \(3y<p\): the pre-reset maxima are \(T/2\), \(21T/32\) and the positive intermediate one residues; the digit-block suffix bound is \(3y_j<2T-2T4^{-R}+12k4^R<2T-27k\); the final zeros are extremely small. The sufficient elementary bounds \(k<4^R\), \(R\le k/16\) and \(T>100k4^{2R}\) hold at R=10 and improve for larger R. Within any homogeneous reverse-zero run, each step multiplies height by 4 and decreases rank, so checking its final state checks *every earlier state*. One predecessors landing at even ranks produce even heights (\(4y-q-12\)), and zero predecessors produce multiples of four. Hence all A-phase lattice guards are exact, not phase-relaxed.
+
+## Forward part and exact source macro semantics
+
+From even doubled rank \(P\), each forward zero divides height by four and increments doubled rank by 5 at even phase or 1 at odd phase. The initial height \(2\cdot4^h\) is divisible by the required powers of four, and after h (even) zero steps the height is 2 and rank increases by 3h. Along the forward trajectory heights strictly decrease and ranks increase, preserving \(0<3y<p\) and A-rank even height. Pairing gives exactly h/2 source q0 macro zeros, each dividing macro height by 16 and increasing macro rank by 3. The source macro forward endpoint is \((T+2+3h/2,1)\).
+
+## Reproduction
 
 | R | F_R | h | k | backward N halfsteps | forward h halfsteps | h/k |
 | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| 10 | 69 | 7,874 | 8,102 | 24,212 | 7,874 | .97186 |
-| 11 | 4,161 | 32,970 | 33,198 | 99,498 | 32,970 | .99313 |
-| 12 | 66,645 | 134,818 | 135,046 | 405,040 | 134,818 | .99831 |
-| 13 | 69 | 532,162 | 532,390 | 1,597,070 | 532,162 | .99957 |
+| 10 | 69 | 8,292 | 8,310 | 24,628 | 8,292 | 0.99783 |
+| 11 | 4,161 | 33,388 | 33,406 | 99,914 | 33,388 | 0.99946 |
+| 12 | 66,645 | 135,236 | 135,254 | 405,456 | 135,236 | 0.99987 |
+| 13 | 69 | 532,580 | 532,598 | 1,597,? | 532,580 | 0.99997 |
 
-The reproducible [long_two_sided_cantor.cjs](long_two_sided_cantor.cjs) **symbolic** checker verifies the R-family modular code, both exact cancellation identities, and sufficient strict-cone inequalities without constructing 4^k. Its **direct** mode (k≤200,000) reconstructs the large signed rank, replays all nonzero inverse bits, validates positive strict endpoints for every compressed zero run, independently pairs the chronological halfsteps into exact original radix-16 macro digits and checks their integrality and final center, and checks the forward macro zero endpoint. Run Node.js with no dependencies: `node im-results/agent18-429-odd-macro/long_two_sided_cantor.cjs 10 11 12`.
+[long_two_sided_cantor.cjs](long_two_sided_cantor.cjs) implements a **symbolic exact-integer checker** for arbitrary R without materializing \(4^k\); for k≤200,000 it additionally runs a **direct independent source macro** replay: every nonzero halfstep, rank-parity lattice, strict compressed zero-block endpoint, and original radix-16 macro digit division is checked. Execute:
 
-Exact signed BigInt reverse and forward replay passed for R=10, R=11, and R=12; nonzero inverse digits were executed individually, zero runs were fast-forwarded using exact phase-cost identities, every terminal cone and A-height parity checked. The existing [long_past_cascade.cjs](long_past_cascade.cjs) contains the equivalent two-reset arithmetic for a fixed leading-exponent choice, and [LongPastUniformM.md](LongPastUniformM.md) proves its uniform symbolic bounds.
+~~~
+node im-results/agent18-429-odd-macro/long_two_sided_cantor.cjs 10 11 12
+~~~
 
-For a smaller fixed k=430 witness, [LongPastMacro430.lean](LongPastMacro430.lean) contains an exact 740-step past macro path and 101-step future zero macro path centered at \((4^{430}+2,4^{202})\), submitted for pinned Lean source-closure. That fixed witness uses an earlier R=8 parametrization rather than this R≥10 family.
+Direct halfstep and original macro replay were independently tested for R10,R11,R12. A separate smaller instance at k=430, center \((4^{430}+2,4^{202})\), has a **740-step past macro path** and **101-step forward macro zero path** in [LongPastMacro430.lean](LongPastMacro430.lean), submitted for Lean source-closure. That earlier k430 witness uses a distinct R=8, s=2 construction, not this simpler s=0 R≥10 family.
 
-**Limitations:** No authentic q0 blank-root membership, no two-sided window on the exponentially longer scale, and no BB(6) upper bound. A universal no-crossing cutoff with a **larger** linear coefficient remains possible; third resonance or restricted authentic-root information could be decisive.
+**Limitations.** The all-R statement still needs formal source-closure acceptance. This result gives no valid machine reachability from the blank tape, no exponential wide-window crossing, no #429 holdout resolution and no exact BB(6).
