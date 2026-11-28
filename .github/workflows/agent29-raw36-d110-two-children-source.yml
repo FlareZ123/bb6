@@ -74,7 +74,7 @@ jobs:
           github-token: ${{ github.token }}
           path: /tmp/a29-d110-0lf-search
       - name: Download optional E0=0RF candidate search artifact
-        if: ${{ inputs.include_zeroRF }}
+        if: ${{ inputs.include_zeroRF && inputs.zeroRF_search_run_id != '' }}
         uses: actions/download-artifact@v4
         with:
           name: raw36-d110-e0-0RF-inverse-stack-candidates
@@ -109,6 +109,7 @@ jobs:
           python -m py_compile \
             im-results/agent29-raw36/generate_direct10_multi.py \
             im-results/agent29-raw36/compose_direct10_dual04_13.py \
+            im-results/agent29-raw36/generate_direct10_multi.py \
             im-results/agent29-raw36/emit_direct10_eight.py
           args=( \
             --census /tmp/a29-d110-census/direct10.json.gz \
