@@ -643,6 +643,45 @@ jobs:
                   assert not dest.exists(),dest
                   shutil.copy2(src,dest)
           PY
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '150'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46090041659'
+          name: raw11-q0-long-sweep-source-3
+          path: /tmp/q0150-external/long3
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '150'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46090041659'
+          name: raw11-q0-long-sweep-source-4
+          path: /tmp/q0150-external/long4
+      - uses: actions/download-artifact@v4
+        if: steps.prepare.outputs.id == '150'
+        with:
+          github-token: ${{ github.token }}
+          run-id: '46090041659'
+          name: raw11-q0-long-sweep-source-5
+          path: /tmp/q0150-external/long5
+      - name: Stage the three newly checked long q0-150 traces
+        if: steps.prepare.outputs.id == '150'
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import shutil
+          root=Path('/tmp/q0150-external')
+          out=Path('/tmp/coarse-generated')
+          for i in (3, 4, 5):
+              stem=f'Raw11Q0LongSweep{i}'
+              matches=[p for p in root.rglob(stem+'*.lean') if p.stem==stem or p.stem.startswith(stem+'Part') or p.stem==stem+'Base']
+              assert matches and any(p.stem==stem for p in matches),(stem,matches)
+              for src in matches:
+                  dest=out/src.name
+                  assert not dest.exists(),dest
+                  shutil.copy2(src,dest)
+          PY
       - name: Stage accepted exact q0-149 leaf sources
         if: steps.prepare.outputs.id == '149'
         run: |
