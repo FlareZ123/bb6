@@ -43,8 +43,9 @@ def trie(xs):
     if xs==[0]:return '.leaf'
     return '(.branch '+trie([x//2 for x in xs if x%2==0])+' '+trie([x//2 for x in xs if x%2]) + ')'
 
-def emit(i,t,dls,drs,n):
+def emit(i,t,dls,drs,n,compressor=None):
     p=parse(t);ok,n2,E,S,D,T=replay(p,[dls,drs]);assert ok and n2==n,(i,n,n2)
+    if compressor is not None:ok,n2,E,S,D,T=compressor(p,(ok,n2,E,S,D,T))
     bit=lambda x:str(bool(x)).lower()
     def stack(d):
         es=','.join('['+','.join(f'({bit(b)},{j})' for b,j in sorted(E[d][k]))+']' for k in range(len(T[d])))
@@ -61,12 +62,12 @@ def emit(i,t,dls,drs,n):
     lines.append(f'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := {A}.never table cert checked m hm\n#print axioms never\nend M{i}')
     return '\n'.join(lines)
 
-def generate(rows,out,stem='Raw36D112Learn'):
+def generate(rows,out,stem='Raw36D112Learn',chunk=6,compressor=None):
     out=Path(out);out.mkdir(exist_ok=True,parents=True);mapping={}
-    for j in range(0,len(rows),6):
-        mod=stem+f'{j//6:02}';ns='BB6.Agent18'+mod;lines=['import TwoSidedAutomata','import FARCheck','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage']
-        for i,t,n,dl,dr in rows[j:j+6]:
-            lines.append(emit(i,t,dl,dr,n));mapping[t]=(mod,f'{ns}.M{i}')
+    for j in range(0,len(rows),chunk):
+        mod=stem+f'{j//chunk:02}';ns='BB6.Agent18'+mod;lines=['import TwoSidedAutomata','import FARCheck','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage']
+        for i,t,n,dl,dr in rows[j:j+chunk]:
+            lines.append(emit(i,t,dl,dr,n,compressor));mapping[t]=(mod,f'{ns}.M{i}')
         lines.append('end '+ns);(out/(mod+'.lean')).write_text('\n'.join(lines)+'\n')
     return mapping
 

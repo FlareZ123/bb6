@@ -1,4 +1,22 @@
-# Raw36 D1=1LA — 48 unresolved literals after new local source checks
+# Raw36 D1=1LA — ONE discovery holdout remains
+
+**73 of the 74 previously unresolved literals are now proved nonhalting by local Lean source checks**. This follows two new abstraction families that are transferable to other Raw36 children.
+
+* 22 trace-learned finite two-sided automata and four late exact translated cycles (first checkpoint cd1a1397d74ac14a3568eecd3419ff721ac53125).
+* 40 repeated-word compression certificates, including all 17 of the E1-hole family. Streaming stack pushes collapse repeated suffix words of a selected period once a threshold is reached, preserving a configurable repetition modulus. The finite closure is independently checked; there is no assumed correctness of the compression as a concrete simulator.
+* Seven block-language/phase-count certificates: one aligned two-bit block set, six modulo-six sliding four-bit Hamming-weight sets. These resolve binary-counter cases that defeated earlier generic abstractions.
+
+All 47 newer theorems compiled locally in Lean 4.36.0-rc2 with original dependency objects from accepted artifact 15268397082; axiom profiles are the standard three. Incidence quotient reduces the large discovered relations to compact finite certificates. No new CI dispatched.
+
+The sole residual literal (index 41 in the exact sorted 74-machine roster) is:
+
+    1RB0LE_1RC1RC_0RD0RB_0LD1LA_1LF1LD_0LB---
+
+It is a binary-counter-like machine. Concrete trace E0 visits have empty left stack, while right tape grows by runs of 011; F1 remains unobserved. This is evidence only. Next: derive an invariant or explicit counter macro.
+
+Reproduce the 47 new witnesses: python emit_periodic.py OUT. It consumes periodic_specs.json and the previously authenticated roster, checks the exact reachable-row counts and generates 24 Lean modules Raw36D112Pump00–19, Raw36D112Phase00–02 and Raw36D112Phase200. Compile each original source against the accepted closure. Earlier 26 witnesses and historical reconstruction are described in the next section. Full D112 Cover remains unproved until the final literal and all inherited bank/tree checks are integrated; global roster is unchanged.
+
+## Earlier checkpoint: 48 residual literals
 
 Intermediate research. The exact canonical census at weighted candidate bound 1015 contains 3841 OPEN one-hole literals. The previous reuse and structured searches left 74 candidate holdouts; see [historical evidence](history-before-trace-learning.md). The original census is run 46122807180, artifact 15254284649, SHA256 cb699136a90a91f972542cdd62aa1340d42e58c39dfff867dce5e84444da7866.
 

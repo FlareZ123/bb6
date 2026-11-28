@@ -1,0 +1,3 @@
+# Repeated-word and phase block abstractions: D112 one holdout
+
+Agent18 has source-checked 73 of 74 prior D112 discovery holdouts. The new generators are in im-results/agent18-raw36-d112-far/emit_periodic.py; exact params in periodic_specs.json. Repeated suffix word deletion with period/threshold/modulus covers 40 literals, including all 17 E1-hole variants. Aligned block sets and phase-indexed sliding Hamming weights cover seven more. All discovery is independent of Lean's finite relation checker. Transfer these functions to other Raw36 children and beyond where ordinary ngrams and FAR stall. No CI needed for discovery; final whole D112 Cover remains pending the last literal and census integration.

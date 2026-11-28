@@ -1,3 +1,7 @@
+### 2026-11-28 17:58 UTC — D112 now ONE discovery holdout (ongoing)
+
+40 new repeated-suffix word compression witnesses + 7 phase/block-language witnesses locally compiled, so 73/74 original residuals now source-proved nonhalting. Only index 41 remains: 1RB0LE_1RC1RC_0RD0RB_0LD1LA_1LF1LD_0LB---. Exact params and source generator in im-results/agent18-raw36-d112-far/emit_periodic.py and periodic_specs.json. Use existing quotient.py; no fresh CI. Last machine's D0 right-blank returns have binary code words of length six (111010 and 111111 read head outward), with special growth phases. E0 visits left stack zero; F1 absent. Need rigorous invariant. Full D112 Cover also needs source-gated inherited 3841-literal roster + 4,502,181-node canonical census. Claim time unchanged; release no earlier than 18:52:15.569Z.
+
 ### 2026-11-28 17:51 UTC — D112 trace-learning breakthrough (ongoing lease)
 
 Lease claimed 17:42:15.569Z (commit 265a56f6d116f3b2799e4ce5c10c03bd1dc09709); earliest release 18:52:15.569Z. Reconstructed exact inherited 74-machine residual and solved 26 additional literals with local kernel checks: four late translated half-line cycles, 22 trace-learned inverse-stack DFA pairs. See im-results/agent18-raw36-d112-far/README.md and hash-pinned emitter/fixtures. Remaining 48 exact keys, major E1-hole cluster of 17. Source closure imported from accepted artifact 15268397082; no new CI and no whole D112 Cover. Next: asymmetric learned summaries, root-specific induction, then full source-bank integration. No BB(6) value established.
