@@ -227,4 +227,180 @@ theorem target_not_halt_of_strip_avoidance
 #print axioms target_halt_implies_strip
 #print axioms target_not_halt_of_strip_avoidance
 
+
+/-!
+# Sharper authenticated-root terminal geometry
+
+The original common 35*n+93 envelope uses the largest of all four old-ray
+source errors in both output orientations. The right-output error is in fact
+at most 14*n+12 (versus 26*n+46 for left output) in all ordinary sectors.
+The resulting two widths differ. This is a necessary halting gate, not an
+invariant asserting that blank-root visits avoid the gate.
+-/
+
+def thinStrip (u v n : Nat) : Prop :=
+  let m := min u v
+  let L := max u v
+  (L ≤ 13*m+(35*n+89) ∧ 13*m ≤ L+(35*n+89)) ∨
+  (4*L ≤ 7*m+(23*n+51) ∧ 7*m ≤ 4*L+(23*n+51))
+
+/-- Orientation-specific cancellation, far predecessors. -/
+private theorem far_cancel_thin (n u v x y : Nat) (huv : v ≤ u)
+    (hleft : -(26*n+46 : Int) ≤
+        (x:Int)-4*(y:Int)-5-((u:Int)-13*(v:Int)) ∧
+      (x:Int)-4*(y:Int)-5-((u:Int)-13*(v:Int)) ≤ (26*n+46 : Int))
+    (hright : -(14*n+12 : Int) ≤
+        (y:Int)-4*(x:Int)-1-(7*(v:Int)-4*(u:Int)) ∧
+      (y:Int)-4*(x:Int)-1-(7*(v:Int)-4*(u:Int)) ≤ (14*n+12 : Int))
+    (hterm : (4*y≤x+9*n+38 ∧ x≤4*y+9*n+38) ∨
+      (4*x≤y+9*n+38 ∧ y≤4*x+9*n+38)) : thinStrip u v n := by
+  unfold thinStrip
+  simp only [Nat.min_eq_right huv, Nat.max_eq_left huv]
+  rcases hterm with h | h
+  · left; omega
+  · right; omega
+
+/-- Orientation-specific cancellation, near predecessors. The scale lower
+bound excludes crossing to the wrong side of the source diagonal. -/
+private theorem near_cancel_thin (n u v x y : Nat) (hn : 10 ≤ n)
+    (hm : 3^(n-1)-3 ≤ min u v)
+    (hleft : -(26*n+46 : Int) ≤
+        (x:Int)-4*(y:Int)-5-((v:Int)-13*(u:Int)) ∧
+      (x:Int)-4*(y:Int)-5-((v:Int)-13*(u:Int)) ≤ (26*n+46 : Int))
+    (hright : -(14*n+12 : Int) ≤
+        (y:Int)-4*(x:Int)-1-(7*(u:Int)-4*(v:Int)) ∧
+      (y:Int)-4*(x:Int)-1-(7*(u:Int)-4*(v:Int)) ≤ (14*n+12 : Int))
+    (hterm : (4*y≤x+9*n+38 ∧ x≤4*y+9*n+38) ∨
+      (4*x≤y+9*n+38 ∧ y≤4*x+9*n+38)) : thinStrip u v n := by
+  have hg := band_growth n (min u v) hn hm
+  have huv : u ≤ v := by
+    by_cases h : u ≤ v
+    · exact h
+    · have h' : v ≤ u := by omega
+      rw [Nat.min_eq_right h'] at hg
+      rcases hterm with h | h <;> omega
+  unfold thinStrip
+  simp only [Nat.min_eq_left huv, Nat.max_eq_right huv]
+  rcases hterm with h | h
+  · left; omega
+  · right; omega
+
+/-- Exact original-source ordinary transitions imply the sharper strip.
+The distinct B-drain bounds for all four sectors are kept intact. -/
+theorem ordinary_previous_thin_strip (n u v x y : Nat)
+    (hn : 10≤n) (hu : 0<u)
+    (hlo : 3^(n-1)-3≤min u v) (hhi : min u v+3<3^n)
+    (hord : OrdinaryStep u v x y)
+    (hw : (4*y≤x+9*n+38 ∧ x≤4*y+9*n+38) ∨
+      (4*x≤y+9*n+38 ∧ y≤4*x+9*n+38)) : thinStrip u v n := by
+  cases hord with
+  | oddFar h hs =>
+      have huv : v≤u := by omega
+      have hb : v+3<3^n := by simpa [Nat.min_eq_right huv] using hhi
+      obtain ⟨hr,hl⟩ := oddFarGap u v x y n 1 5 h (Or.inl rfl) (Or.inl rfl) hs hb
+      exact far_cancel_thin n u v x y huv (by omega) (by omega) hw
+  | evenFar h hs =>
+      have huv : v≤u := by omega
+      have hb : v+2<3^n := by
+        rw [Nat.min_eq_right huv] at hhi
+        omega
+      obtain ⟨hr,hl⟩ := evenFarGap u v x y n 1 5 h (Or.inl rfl) (Or.inl rfl) hs hb
+      exact far_cancel_thin n u v x y huv (by omega) (by omega) hw
+  | oddNear h hs =>
+      have hb : u-1<3^n := by omega
+      obtain ⟨hr,hl⟩ := oddNearGap u v x y n 1 5 hu h (Or.inl rfl) (Or.inl rfl) hs hb
+      exact near_cancel_thin n u v x y hn hlo (by omega) (by omega) hw
+  | evenNear p q r h hev hs =>
+      have hb : u<3^n := by
+        rw [Nat.min_eq_left h] at hhi
+        omega
+      obtain ⟨hr,hl⟩ := evenNearGap u v p q r x y n 1 5 hu h hb
+        (Or.inl rfl) (Or.inl rfl) hev hs
+      exact near_cancel_thin n u v x y hn hlo (by omega) (by omega) hw
+
+/-- A genuine three-step terminal chain is forced into the sharper gate. -/
+theorem root_three_step_terminal_thin_strip (n t u v x y aa dd : Nat)
+    (hn : 10≤n) (hlo : 3^(n-1)-3≤min u v) (hhi : min u v+3<3^n)
+    (hq : run t=some (.D u v))
+    (hs : highLevelNext (.D u v)=some (.D x y))
+    (ht : highLevelNext (.D x y)=some (.D aa dd))
+    (hh : highLevelNext (.D aa dd)=none) : thinStrip u v n := by
+  have hm := band_growth n (min u v) hn hlo
+  have hu : 0<u := by omega
+  have heu := run_preserves_even t u v hq
+  have hgu : u≠v+2 := by
+    intro hg
+    exact blank_root_gap_two_no_three_step_terminal t u v x y aa dd hq hg hs ht hh
+  have hordq := ordinary_of_step u v x y hu heu hgu hs
+  have hp : run (t+1)=some (.D x y) := by simpa [run,hq] using hs
+  have hex := run_preserves_even (t+1) x y hp
+  have hea := next_preserves_even x y aa dd hex ht
+  obtain ⟨hx,hodd,heven,hgate⟩ :=
+    blank_root_two_step_terminal_parent_corridor (t+1) x y aa dd hp ht hh
+  have hxp : x≤16*y+68 := by
+    by_cases hy : y%2=1
+    · have h := (hodd hy).2
+      omega
+    · have h := (heven (by omega)).2
+      omega
+  have hgy := root_terminal_parent_not_gap_two (t+1) x y aa dd hp ht hh
+  have hordp := ordinary_of_step x y aa dd hx hex hgy ht
+  have hy := successor_second_bound n u v x y (by omega) hhi heu hs
+  obtain ⟨hpy,hK⟩ := terminal_scale n (min u v) x y hn hhi hy hxp
+  have hw := ordinary_terminal_window n x y aa dd hn hx hordp hpy hK hea hh
+  exact ordinary_previous_thin_strip n u v x y hn hu hlo hhi hordq hw
+
+/-- Every finite accelerated-root failure requires one of two distinct
+source-checked near/far corridors. -/
+theorem run_none_implies_thin_strip (k : Nat) (hk : run k=none) :
+    ∃ t u v n, run t=some (.D u v) ∧ 10≤n ∧
+      3^(n-1)-3≤min u v ∧ min u v+3<3^n ∧ thinStrip u v n := by
+  have hinit (j : Nat) (hj : j≤49) : ∃ s, run j=some s := by
+    cases hr : run j with
+    | some s => exact ⟨s,rfl⟩
+    | none =>
+        have hbad := run_none_forward j hr (49-j)
+        rw [show j+(49-j)=49 by omega,root_run_49_small_scale] at hbad
+        contradiction
+  obtain ⟨t,q,p,r,hq,hs,ht,hh⟩ := terminal_chain highLevelNext run
+    (fun _ => rfl) (hinit 0 (by decide)) (hinit 1 (by decide))
+    (hinit 2 (by decide)) k hk
+  rcases q with ⟨u,v⟩
+  rcases p with ⟨x,y⟩
+  rcases r with ⟨aa,dd⟩
+  have hm : 19680≤min u v := by
+    by_cases h : 19680≤min u v
+    · exact h
+    · exact (blank_root_no_small_min_three_step_terminal t u v x y aa dd
+        hq (by omega) hs ht hh).elim
+  obtain ⟨n,hn,hlo,hhi⟩ := scale_exists (min u v) hm
+  exact ⟨t,u,v,n,hq,hn,hlo,hhi,
+    root_three_step_terminal_thin_strip n t u v x y aa dd hn hlo hhi hq hs ht hh⟩
+
+/-- Direct authentic six-state blank-machine bridge for the refined condition. -/
+theorem target_halt_implies_thin_strip (hh : BusyBeaver.IsHalt target) :
+    ∃ t u v n, run t=some (.D u v) ∧ 10≤n ∧
+      3^(n-1)-3≤min u v ∧ min u v+3<3^n ∧ thinStrip u v n := by
+  obtain ⟨k,hk⟩ := isHalt_iff_highLevel_acceleration.mp hh
+  have hr : run k=none := by
+    rw [run_eq_highLevel_iterate]
+    apply Option.isNone_iff_eq_none.mp
+    simpa only [highLevelStart] using hk
+  exact run_none_implies_thin_strip k hr
+
+/-- Sufficient root-avoidance condition, with explicit unproved premise. -/
+theorem target_not_halt_of_thin_strip_avoidance
+    (avoid : ∀ t u v n, run t=some (.D u v) → 10≤n →
+      3^(n-1)-3≤min u v → min u v+3<3^n → ¬ thinStrip u v n) :
+    ¬ BusyBeaver.IsHalt target := by
+  intro hh
+  obtain ⟨t,u,v,n,hq,hn,hlo,hhi,hs⟩ := target_halt_implies_thin_strip hh
+  exact avoid t u v n hq hn hlo hhi hs
+
+#print axioms ordinary_previous_thin_strip
+#print axioms root_three_step_terminal_thin_strip
+#print axioms run_none_implies_thin_strip
+#print axioms target_halt_implies_thin_strip
+#print axioms target_not_halt_of_thin_strip_avoidance
+
 end BB6.Agent27ThreeStepStripSource
