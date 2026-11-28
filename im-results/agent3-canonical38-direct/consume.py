@@ -73,6 +73,7 @@ def source_check(source, linked, evidence, names):
 
 
 def restore_canonical40(work):
+    work.mkdir(parents=True, exist_ok=False)
     linked, _, _, base_report = c.base.verify_base(work, c.base.BASE_RUN)
     sharp = c.resume.restore_sharp(work, linked, base_report)
     ready, _, ready_pin = c.extra.restore_ready(work, linked, sharp, 46031670976)
