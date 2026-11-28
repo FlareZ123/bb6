@@ -911,6 +911,21 @@ jobs:
           LEAN
           LEAN_PATH=/tmp/a11chunk/replay/objects:/tmp/a11chunk/base lean /tmp/a11chunk/ToySmoke.lean | tee /tmp/a11chunk/audit.log
           ! grep -E 'sorryAx|native_decide' /tmp/a11chunk/audit.log
+          # Also test dependency transport ACROSS two consecutive checked chunks.
+          python im-results/agent11-raw39/chunked_kernel_replay.py \
+            --producer-objects /tmp/a11chunk/source-objects.txt \
+            --base /tmp/a11chunk/base --work /tmp/a11chunk/replay-split \
+            --root-module Target --root-name Toy.target \
+            --prefix ToySliceSplit --tool /tmp/a11chunk/tool/kernelstage \
+            --chunk-size 1
+          cat > /tmp/a11chunk/ToySmokeSplit.lean <<'LEAN'
+          import ToySliceSplitChunk0001
+          theorem split_definition : ToySliceSplit.Toy.shared = 2 := by decide
+          #print axioms ToySliceSplit.Toy.target
+          #print axioms split_definition
+          LEAN
+          LEAN_PATH=/tmp/a11chunk/replay-split/objects:/tmp/a11chunk/base lean /tmp/a11chunk/ToySmokeSplit.lean | tee /tmp/a11chunk/audit-split.log
+          ! grep -E 'sorryAx|native_decide' /tmp/a11chunk/audit-split.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -919,5 +934,7 @@ jobs:
             /tmp/a11chunk/replay/report.json
             /tmp/a11chunk/replay/ToySliceChunk0000.log
             /tmp/a11chunk/audit.log
+            /tmp/a11chunk/replay-split/report.json
+            /tmp/a11chunk/audit-split.log
           if-no-files-found: warn
           retention-days: 30
