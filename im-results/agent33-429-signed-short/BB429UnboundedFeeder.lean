@@ -29,25 +29,29 @@ theorem source_S (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (8*z+7680*v+7,8*z+9216*v+19) =
       some (4*z+3072*v+5,16*z+18432*v+34) := by
   simp only [BB429.next]
-  split_ifs <;> omega
+  repeat' (split <;> try omega)
+  all_goals omega
 
 theorem source_F_inner (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (4*z+3072*v+5,16*z+18432*v+34) =
       some (8*z+6144*v+13,8*z+12288*v+21) := by
   simp only [BB429.next]
-  split_ifs <;> omega
+  repeat' (split <;> try omega)
+  all_goals omega
 
 theorem source_E (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (8*z+6144*v+13,8*z+12288*v+21) =
       some (4*z+6,16*z+24576*v+42) := by
   simp only [BB429.next]
-  split_ifs <;> omega
+  repeat' (split <;> try omega)
+  all_goals omega
 
 theorem source_F_outer (z v : Nat) (hv : 1 ≤ v) :
     BB429.next (4*z+6,16*z+24576*v+42) =
       some (8*z+15,8*z+24576*v+27) := by
   simp only [BB429.next]
-  split_ifs <;> omega
+  repeat' (split <;> try omega)
+  all_goals omega
 
 /-- Four genuine accelerated forward steps from the renormalized
     descendant to its original affine ancestor. -/
