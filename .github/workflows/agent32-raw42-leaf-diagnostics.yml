@@ -1,0 +1,66 @@
+name: Agent32 Raw42 heavy-leaf research probe
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: choice
+        options: [0LE, 1LE, 1RE]
+        default: 0LE
+      stem:
+        description: Exact generated source stem, e.g. Raw420LERun15760
+        type: string
+        required: true
+        default: Raw420LERun15760
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Map original source artifact
+        id: pick
+        env:
+          BRANCH: ${{ inputs.branch }}
+          STEM: ${{ inputs.stem }}
+        run: |
+          set -euo pipefail
+          [[ "$STEM" =~ ^Raw42[01](LE|RE)[A-Za-z0-9_]+$ ]]
+          case "$BRANCH" in
+            0LE) echo "run=46156341083" >> "$GITHUB_OUTPUT"; echo "artifact=raw42-split-generated" >> "$GITHUB_OUTPUT";;
+            1LE) echo "run=46142043725" >> "$GITHUB_OUTPUT"; echo "artifact=raw42-assembly-generated" >> "$GITHUB_OUTPUT";;
+            1RE) echo "run=46142047495" >> "$GITHUB_OUTPUT"; echo "artifact=raw42-assembly-generated" >> "$GITHUB_OUTPUT";;
+            *) exit 2;;
+          esac
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pick.outputs.run }}
+          name: ${{ steps.pick.outputs.artifact }}
+          path: /tmp/generated
+      - name: Inspect the exact slow leaf without recomputing any certificate
+        env:
+          STEM: ${{ inputs.stem }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import os
+          import pathlib
+          import re
+          stem=os.environ['STEM']
+          source=pathlib.Path('/tmp/generated')/(stem+'.lean')
+          if not source.is_file():
+              raise SystemExit(f'Missing exact frozen source {stem}')
+          s=source.read_text()
+          print('SOURCE', stem, 'BYTES',len(s.encode()), 'LINES',len(s.splitlines()))
+          print('PREFIX\n',s[:7000])
+          print('SUFFIX\n',s[-1400:])
+          for token in ('def p','abbrev p','def cert','def table','theorem live','by decide','by decide +kernel'):
+              print('TOKEN',token,'COUNT',s.count(token),'POSITION',s.find(token))
+          for m in re.finditer(r'\\| \\((?:[0-5]), (?:true|false)\\) =>[^\n]+',s):
+              print('TRANS',m.group()[:250])
+          PY
