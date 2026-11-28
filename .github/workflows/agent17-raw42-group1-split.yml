@@ -44,6 +44,14 @@ jobs:
           run-id: ${{ steps.pin.outputs.run }}
           name: raw42-recovery-shared
           path: /tmp/shared
+      - name: Row-split restored 1LC NGram leaf 855
+        if: inputs.assembly_branch == '1LC'
+        run: |
+          set -euo pipefail
+          python im-results/agent32-raw42/rewrite_ngram42_rows.py \
+            im-results/agent32-raw42/generated-assembly 1LC 855
+          test -f im-results/agent32-raw42/generated-assembly/Raw421LCNGram855Data.lean
+          test -f im-results/agent32-raw42/generated-assembly/Raw421LCNGram855Row11.lean
       - name: Build dependency-balanced split plan
         id: plan
         env:
