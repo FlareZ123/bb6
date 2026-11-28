@@ -28,11 +28,15 @@ def farterm(p,code):
     rev,n,D,L,R,z=masks(code,raw(p));return f'.far {str(bool(rev)).lower()} {n} ⟨0,{D},{L},{R},{z}⟩'
 def size(t):return 1+sum(map(size,t[3])) if t[0]=='split' else 1
 
-def main(treefile,out,limit=300):
-    out=Path(out);out.mkdir(exist_ok=True,parents=True);got=json.loads(Path(treefile).read_text());fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/'evidence.json.xz.b64').read_text())))
-    keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])==1002
-    assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest'];rows=list(zip(keys,fixture['data']));evidence=dict(rows);B=fixture['bound'];assert B>=got['stats']['score'];P=parse(got['parent']);cut=got['cut'];assert raw(P)=='1RB---1RC1LE0RD---0LD1LB------------' and cut==5
-    external=generate(rows,out)
+def main(treefile,out,limit=300,index=16):
+    global NS,SWEEP,STEM,HEAD,END
+    STEM=f'Raw36B1{index:02d}';NS='BB6.Agent29'+STEM;SWEEP='BB6.Agent7'+STEM+'Sweep'
+    HEAD=HEAD.replace('BB6.Agent29Raw36B116',NS);END=f'\nend {NS}\n'
+
+    out=Path(out);out.mkdir(exist_ok=True,parents=True);got=json.loads(Path(treefile).read_text());fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/('evidence.json.xz.b64' if index==16 else f'evidence{index:02d}.json.xz.b64')).read_text())))
+    keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
+    assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest'];rows=list(zip(keys,fixture['data']));evidence=dict(rows);B=fixture['bound'];assert B>=got['stats']['score'];P=parse(got['parent']);cut=got['cut'];assert raw(P)=='1RB---1RC'+MOVES[index]+'0RD---0LD1LB------------' and cut==max(4,index%6+1)
+    external=generate(rows,out,STEM,'BB6.Agent7'+STEM+'Automata')
     sw=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0]=='s']
     for j in range(0,len(sw),4):
         name=f'{STEM}Sweep{j//4:02d}';ns=f'{SWEEP}{j//4:02d}';body=[]
@@ -40,7 +44,7 @@ def main(treefile,out,limit=300):
             body.append(emit_sweep([i,t,*v[1:]]));external[t]=(name,f'{ns}.M{i}')
         (out/(name+'.lean')).write_text(HEADER.format(ns=ns)+'\n\n'.join(body)+'\nend '+ns+'\n')
     tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
-    base=f'''abbrev b1 : PartialMachine := refine d1 (1,true) (some ⟨true,false,4⟩)
+    base=f'''abbrev b1 : PartialMachine := refine d1 (1,true) (some {move(MOVES[index])})
 abbrev b1Child (mv : Move) : PartialMachine := refine b1 {slot(s)} (some mv)
 theorem b1_root : b1 initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem b1_nohalt : weightedTNFNoAssignedHalt b1 :=
@@ -80,9 +84,10 @@ theorem b1Child_nohalt (mv : Move) : weightedTNFNoAssignedHalt (b1Child mv) :=
         body.append(f'theorem {nm}_bound : ∀ m, compatible {pexpr} m → WeightedBound {B} m :=\n  BB6.Agent29CanonicalFast.bound {B} {pexpr} {c} {nm} (by decide) (supportOK_sound _ _ (by decide)) (b1Child_root {mv}) (b1Child_nohalt {mv}) {nm}_checked\n#print axioms {nm}_bound\n')
         (out/f'{STEM}Kid{i:02d}.lean').write_text(f'import {STEM}Base\n'+''.join(f'import {m}\n' for m in sorted(imports))+HEAD+'\n'.join(body)+END);print(nm,size(t),counter,flush=True)
     for i,t in enumerate(kids):
-        assert i%6<=cut;module(i,t)
+        if i%6>cut:assert t==['skip'];continue
+        module(i,t)
     assert used==set(keys)
-    names=[f'kid{i:02d}' for i in range(24)];xs='['+','.join(names)+']';proofs=[n+'_checked' for n in names]
+    names=[f'kid{i:02d}' if i%6<=cut else '(.last 0 (0,false))' for i in range(24)];xs='['+','.join(names)+']';proofs=[name+'_checked' if i%6<=cut else '(by rfl)' for i,name in enumerate(names)]
     body=f'''def audit : Audit := .split {n} {slot(s)} (byMove {xs})
 theorem audit_checked : BB6.Agent29CanonicalFast.check {B} b1 {cut} audit = true :=
   split24 {B} b1 {cut} {n} {slot(s)} {xs} (by rfl)
@@ -93,6 +98,6 @@ theorem cover : Cover (WeightedBound {B}) b1 := Cover.leaf b1 bound
 #print axioms bound
 #print axioms cover
 '''
-    (out/f'{STEM}.lean').write_text(''.join(f'import {STEM}Kid{i:02d}\n' for i in range(24))+HEAD+body+END)
+    (out/f'{STEM}.lean').write_text(''.join(f'import {STEM}Kid{i:02d}\n' for i in range(24) if i%6<=cut)+HEAD+body+END)
     print('complete exact OPEN match',len(used),flush=True)
-if __name__=='__main__':main(sys.argv[1],sys.argv[2],int(sys.argv[3]) if len(sys.argv)>3 else 300)
+if __name__=='__main__':main(sys.argv[1],sys.argv[2],int(sys.argv[3]) if len(sys.argv)>3 else 300,int(sys.argv[4]) if len(sys.argv)>4 else 16)
