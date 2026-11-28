@@ -24,7 +24,7 @@ The authentic counter seed is `(1,1)`; the upstream original-machine reduction r
 | High | `D≥3` odd | `(A+(D−3)/2+2, (D−3)/2)` |
 | Equality | `D=1, A≥4` even | `((A−4)/2, (A−4)/2)` |
 | Far | `D≥1, A≥6, A≡2 (mod4)` | `((A−6)/4, D+3(A−6)/4)` |
-| Middle | `D∈{1,2}, A≥10, A≡2 (mod4)` | all `((A−6)/4,d)` with `(A−6)/4<d≤3(A−6)/4` and parity `d−(A−6)/4 ≡ D−1 (mod2)` |
+| Middle | `D∈{1,2}, A≥10, A≡2 (mod4)` | all `((A−6)/4,d)` with `(A−6)/4<d≤3(A−6)/4` and parity `d−(A−6)/4 ≡ D (mod2)` |
 
 For the middle row, this parity condition is written so that `D=1` requires odd difference and `D=2` requires even difference. Every row follows by rearranging its branch equations and guard; conversely, substituting any listed antecedent into `T` reproduces `(A,D)`. We therefore have a **complete inverse map**, with no unspecified branch.
 
