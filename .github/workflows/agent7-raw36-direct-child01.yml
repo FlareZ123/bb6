@@ -1,0 +1,84 @@
+name: Agent7 Raw36 D1=0LB source-closed B1 children
+run-name: Direct D1=0LB B1=0LE,1LA,1LB exact source certificates
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  three-proof-children:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        child: [4, 12, 13]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-1-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/direct-census
+      - name: Recover exact canonical tree and verify 317-of-320 keyed evidence
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import gzip,json,base64,hashlib,lzma
+          from pathlib import Path
+          root=Path('im-results/agent7-raw36-direct')
+          c=json.loads(gzip.decompress(Path('/tmp/direct-census/direct01.json.gz').read_bytes()))
+          f=json.loads(lzma.decompress(base64.b64decode((root/'evidence01.xz.b64').read_text())))
+          keys=sorted(t.replace('_','') for t in c['opens'])
+          assert c['parent']=='1RB---_1RC---_0RD---_0LD0LB_------_------'
+          assert len(keys)==320 and c['stats']['score']==450
+          assert len(f['data'])==320 and f['bound']==450
+          assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==f['digest']
+          assert sum(v is None for v in f['data'])==3
+          Path('/tmp/direct-tree.json').write_text(json.dumps(c))
+          PY
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate and source-check one exact six-hole child
+        run: |
+          set -euo pipefail
+          CHILD=${{ matrix.child }}
+          printf -v PAD '%02d' "$CHILD"
+          STEM=Raw36D101
+          THEOREM="BB6.Agent29Raw36D101.kid${PAD}_bound"
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent7-raw36-direct/generate_direct.py \
+            /tmp/direct-tree.json /tmp/a7-direct-source \
+            im-results/agent7-raw36-direct/evidence01.xz.b64 280 1 "$CHILD"
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-direct-check --source-root /tmp/a7-direct-source \
+            --jobs 3 --manifest /tmp/a7-direct-check/manifest.json \
+            --theorem "$THEOREM" --weighted-bound 450 \
+            --parent-table "1RB---_1RC---_0RD---_0LD0LB_------_------; B1=$CHILD" \
+            --artifact-name "raw36-direct-01-B1-$CHILD-proof" \
+            --provenance-input im-results/agent7-raw36-direct/evidence01.xz.b64 \
+            --provenance-input im-results/agent7-raw36-direct/generate_direct.py \
+            "/tmp/a7-direct-source/${STEM}Kid${PAD}.lean" \
+            2>&1 | tee /tmp/a7-direct-sourcecheck.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a7-direct-sourcecheck.log "$THEOREM"
+          cp /tmp/a7-direct-sourcecheck.log /tmp/a7-direct-check/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-01-child-${{ matrix.child }}-source
+          path: |
+            /tmp/a7-direct-source/
+            /tmp/a7-direct-check/
+            /tmp/a7-direct-sourcecheck.log
+          if-no-files-found: warn
+          retention-days: 30
