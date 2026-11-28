@@ -741,3 +741,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - Exact repair run **46172473497** completed successfully for 0LE/g3p1. Its log confirms `SUCCESS: compiled 158 project modules from 46 root(s)`, uploaded artifact **15274782821**, SHA-256 **6397df7d389a08d379f910104c94d17530cd3747b0cb1863ecfafbd2b220e323**. The workflow's `sorryAx|native_decide` gate passed; the observed leaf axioms were only standard `propext`, `Classical.choice`, `Quot.sound`. This is one exact partition, not the whole 0LE Cover.
 - README update commit **35bfbcb5049c837d64cf1cc7d43a974b81b56d8c** records this result. Remaining 0LE repair runs are still in flight/queued; do not compose until all ten exact replacements and source siblings are ready.
+
+
+## 2026-11-28T18:07:13.140Z checkpoint — 0LE g3p2 exact recovery accepted
+
+- Exact repair run **46172477421** succeeded for 0LE/g3p2: `SUCCESS: compiled 169 project modules from 46 root(s)`; artifact **15274853193**, SHA-256 **00bdf69c8eb92fec6e0ab60de5ce8dd65c8658ee22844fa08e1459b9d5286e6e**. Standard Lean axioms only; workflow's no-`sorryAx`/no-`native_decide` gate passed. Together with g3p1 run **46172473497** (158 modules, 46 roots, artifact 15274782821), two of the 0LE recovery partitions are now successful.
+- README updated in commit **672cc3d2b4ab62560d27e96f5c91ba236f380f98**. Still no whole-child Cover: g3p3, g4p3, g5p1, g5p3 remain in recovery; 1LE g4p0 and g1p2 remain in recovery. Do not compose until all parts are available.
