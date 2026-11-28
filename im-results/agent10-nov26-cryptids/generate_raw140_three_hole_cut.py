@@ -33,6 +33,13 @@ if FAMILY:
 for f in (4,13):
     PROVEN[literal(23,f)]=f"Raw140Double.X{f}"
 
+def table_code(t):
+    codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(t)]
+    acc=0
+    for code in codes:
+        acc=26*acc+code
+    return acc
+
 def main():
     with tempfile.TemporaryDirectory() as tmp:
         d=Path(tmp)
@@ -68,6 +75,7 @@ def main():
     assert len(far)==54 and len(PROVEN)==15+int(SOURCE)+int(SOURCE86)+int(SOURCE42)+5*int(FAMILY) and len(pending)==20-int(SOURCE)-int(SOURCE86)-int(SOURCE42)-5*int(FAMILY), (len(far),len(PROVEN),len(pending))
     assert all(t.count("---")==1 for t in pending)
     codes=[24 if a=="---" else 4*(ord(a[2])-65)+2*int(a[0])+int(a[1]=="R") for a in parse(PARENT)]
+    expected_codes=[table_code(t) for t in pending]
     out="""import PartialAudit
 import Raw140SevenCover
 import Raw140ExtraNovelCover
@@ -94,6 +102,25 @@ theorem nohalt : weightedTNFNoAssignedHalt parent := by
 theorem checked : partialCheck {B} parent tree = true := by decide +kernel
 def remaining := partialResiduals parent tree
 theorem remaining_count : remaining.length = {len(pending)} := by decide +kernel
+
+/-- Stable exact identity of the unresolved source-checked frontier. -/
+def residualSlotCode : Option (Option Move) → Nat
+  | none => 24
+  | some none => 25
+  | some (some mv) => 4*mv.next.val+2*mv.write.toNat+mv.right.toNat
+
+def residualTableCode (p : PartialMachine) : Nat :=
+  ((List.finRange 6).flatMap fun q =>
+    [residualSlotCode (p (q,false)), residualSlotCode (p (q,true))]).foldl
+      (fun a b => 26*a+b) 0
+
+def remainingCodes : List Nat := remaining.map (fun e => residualTableCode e.2)
+def expectedCodes : List Nat := {expected_codes}
+theorem remaining_exact : remainingCodes = expectedCodes := by decide +kernel
+theorem remaining_nodup : remainingCodes.Nodup := by
+  rw [remaining_exact]
+  decide +kernel
+
 theorem sound : ∀ m, compatible parent m → WeightedBound {B} m ∨
   ∃ e ∈ remaining, compatible e.2 m :=
   partialSound {B} parent tree root nohalt checked
@@ -107,6 +134,8 @@ theorem cover {{N : Nat}} (hN : {B} ≤ N)
   · exact (h e he).sound m hq
 #print axioms checked
 #print axioms remaining_count
+#print axioms remaining_exact
+#print axioms remaining_nodup
 #print axioms sound
 #print axioms cover
 end BB6.Agent10Raw140ThreeHole
