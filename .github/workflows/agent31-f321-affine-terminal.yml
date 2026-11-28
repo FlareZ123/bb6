@@ -77,7 +77,8 @@ jobs:
           a2=im-results/agent2-f321-diagonal
           LEAN_PATH="$e:$a2" lean -o "$a2/DiagonalCoordinates.olean" "$a2/DiagonalCoordinates.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/BulkRuns.olean" "$a2/BulkRuns.lean" | tee -a /tmp/f321-terminal-candidate.log
-          LEAN_PATH="$e:$a2" lean "$e/HighFarTerminalFamily.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e:$a2" lean -o "$e/HighFarTerminalFamily.olean" "$e/HighFarTerminalFamily.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e:$a2" lean "$e/FirstMixedAnchorExclusion.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6.olean" "$a2/Phase6.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6Bridge.olean" "$a2/Phase6Bridge.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/f321-terminal-candidate.log
