@@ -1,6 +1,6 @@
 # D0=1LF ordinary regions: independent source certificates
 
-## Current result (2026-11-28 17:12 UTC)
+## Current result (2026-11-28)
 
 The existing conditional nine-split spine has passed original-source CI
 (run 46151793808, artifact 15265739265). Leaf 2265 is already unconditionally
@@ -41,8 +41,30 @@ PYTHONPATH=im-results/agent48-raw139-f1-oneRA python3 "$P/emit-d0lf1-regions.py"
 # BlockFAR2, BlockFARBridge and their exact source dependencies.
 ```
 
-The remaining 56 ordinary regions contain most of the original tree
-mass; width-four BFAR and four long late traces require their existing
-specialized adapters. No claim that all ordinary regions, the F067
-exception, this Raw139 parent, or BB(6) are solved. Continue by extending
-the generator for those cases and joining the conditional spine.
+The remaining 56 ordinary regions contain most of the original tree mass.
+Four long final-hole traces now have independent exact source-imported
+local Lean certificates, emitted by `emit-d0lf1-late.py`:
+
+| Open index | Successful moves | First hole | Chunks (≤4000 moves) |
+|---|---:|---|---:|
+| 1101 | 148136 | C1 | 38 |
+| 1106 | 134470 | C1 | 34 |
+| 2775 | 11175 | E0 | 3 |
+| 2962 | 31937 | E0 | 8 |
+
+All 83 segment theorems and four `BB6.Agent3D0LF1Late.H<index>.cover`
+theorems compiled locally in 43.65 seconds with Lean 4.36.0-rc2 and
+the original accepted compiled dependencies from artifact 15175093456.
+The `checked` and `cover` exports use only propext, Classical.choice and
+Quot.sound; the exact `reached` exports use propext and Quot.sound.
+This is local kernel acceptance of the actual source imports, not a new
+full-source CI closure. The generator also reproduces the exact literal
+table, sole undefined slot, and balanced packed-replay joins. For
+reproduction, run `python3 emit-d0lf1-late.py <output-dir>` and compile
+the four generated D0LF1Late<index>.lean roots using their transitive
+generated imports and the original PackedAudit closure.
+
+These four late certificates still need integration into the 56 larger
+region audits. Five width-four BFAR witnesses also need their existing
+wide-block adapter. The F067 exception remains independent. No claim
+that all ordinary regions, this Raw139 parent, or BB(6) are solved.
