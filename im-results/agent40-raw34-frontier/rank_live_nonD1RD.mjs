@@ -68,6 +68,11 @@ const withEDepth5=process.argv.includes("--include-e-depth5");
 const withExtendedLong=process.argv.includes("--include-extended-long");
 const withDepth6Tranche=process.argv.includes("--include-depth6-tranche");
 const withDepth6Halts=process.argv.includes("--include-depth6-halts");
+const withWindow5MaskBank=process.argv.includes("--include-window5-mask-bank");
+const window5Families=withWindow5MaskBank
+  ? JSON.parse(readFileSync(join(dir,"../agent50-raw34-window5/mask-bank-128.json"),"utf8"))
+      .ranked.map(x=>x.domainMasks)
+  : [];
 const withLateHalts=process.argv.includes("--include-late-halts");
 const withEFLeft=process.argv.includes("--include-ef-left-ray");
 const withELeft=process.argv.includes("--include-e-left-ray")||withEFLeft;
@@ -342,6 +347,17 @@ function familyBDD(f){
  }
  return r;
 }
+function domainBDD(domain){
+ assert.equal(domain.length,8);
+ let r=1;
+ for(let at=7;at>=0;at--){
+  const mask=domain[at],ch=Array(25).fill(0);
+  assert(Number.isInteger(mask)&&mask>0&&mask<(1<<25));
+  for(let c=0;c<25;c++)if(mask&(1<<c))ch[c]=r;
+  r=mk(at,ch);
+ }
+ return r;
+}
 function compileCubes(ps,at=0){
  if(ps.length===0)return 0;
  if(at===8)return 1;
@@ -355,9 +371,15 @@ function compileCubes(ps,at=0){
 }
 let nonhaltRoot=compileCubes(bank.slice(0,haltStart));
 for(const f of families)nonhaltRoot=union(nonhaltRoot,familyBDD(f));
+const nonhaltWithoutWindow5=nonhaltRoot;
+if(withWindow5MaskBank)
+ for(const domain of window5Families)nonhaltRoot=union(nonhaltRoot,domainBDD(domain));
 const haltRoot=compileCubes(bank.slice(haltStart));
 assert.equal(intersect(nonhaltRoot,haltRoot),0,"halting/nonhalting proof-bank overlap");
-const coverageRoot=union(nonhaltRoot,haltRoot),countMemo=new Map();
+const coverageRoot=union(nonhaltRoot,haltRoot);
+const coverageWithoutWindow5=withWindow5MaskBank
+  ? union(nonhaltWithoutWindow5,haltRoot) : null;
+const countMemo=new Map();
 function coveredCount(id,at){
  if(id===0)return 0n;if(id===1)return pow[8-at];
  const n=nodes[id];assert(n.at>=at);
@@ -390,9 +412,18 @@ for(let d=1;d<=25;d++){
   }
  }
 }
-if(!withRay)assert.equal(grand,5471912359n,
+if(!withRay&&!withWindow5MaskBank)assert.equal(grand,5471912359n,
  "Raw34 non-D1 residual does not match independent source union subtraction");
 if(withRay)assert(grand<5471912359n,"new F-ray sources did not reduce complement");
+let residualBeforeWindow5=0n;
+if(withWindow5MaskBank){
+ for(let d=1;d<=25;d++){
+  if(alphabet[d-1]==="1RD")continue;
+  const id=restrictAt(coverageWithoutWindow5,0,d);
+  residualBeforeWindow5+=pow[7]-coveredCount(id,1);
+ }
+ assert(residualBeforeWindow5>=grand);
+}
 totalByD1.sort((a,b)=>BigInt(a.unclassified)>BigInt(b.unclassified)?-1:
   BigInt(a.unclassified)<BigInt(b.unclassified)?1:0);
 top.sort((a,b)=>BigInt(a.residual)>BigInt(b.residual)?-1:
@@ -416,6 +447,9 @@ console.log(JSON.stringify({
   earlyHaltPatterns:n8,lateHaltPatterns:n9,
   additionalLateHaltPatterns:nAdditionalLate,
   depth6DirectHaltPatterns:nDepth6Halts,graphMasks:maskNames,
+  window5DomainFamilies:window5Families.length,
+  window5FreshNonD1Physical:withWindow5MaskBank?String(residualBeforeWindow5-grand):"0",
+  window5BaselineNonD1Physical:withWindow5MaskBank?String(residualBeforeWindow5):"not requested",
   fixedD1:"except 1RD",expectedRemainingD1_1RD:"110397542",
   totalResidualD1not1RD:String(grand),
   plusAgent23Residual:String(grand+110397542n),
