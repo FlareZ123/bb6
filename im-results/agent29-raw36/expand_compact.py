@@ -18,7 +18,7 @@ def expand(i,tree=None):
  a=json.loads(lzma.decompress(base64.b64decode((ROOT/f'd1-{i:02d}-compact.json.xz.b64').read_text())))
  assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==a['digest']
  assert len(keys)==len(a['data'])
- e={'bound':a['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'missing':[]}
+ e={'bound':a['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'active':[],'missing':[]}
  for j,(t,v) in enumerate(zip(keys,a['data'])):
   pretty='_'.join(t[k:k+6] for k in range(0,36,6))
   if v is None:e['missing'].append(pretty)
@@ -27,6 +27,7 @@ def expand(i,tree=None):
   elif v[0]=='m':e['manual'].append([pretty,v[1]])
   elif v[0]=='c':e['cycle'].append([pretty,v[1:]])
   elif v[0]=='r':e['regular'].append([pretty,*v[1:]])
+  elif v[0]=='a':e['active'].append([pretty,*v[1:]])
   else:raise ValueError(v)
  return e
 if __name__=='__main__':
