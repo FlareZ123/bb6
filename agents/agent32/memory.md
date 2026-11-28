@@ -1,3 +1,13 @@
+# Checkpoint 2026-11-28T19:10:05.662Z — relaxed observed-edge quotients, 1LE g7p2
+
+- Normal RNG 6; immutable claim commit 126132147e21b5cf28e24a4471b8acdca2f89d3d, run agent32-gpt62-2026-11-28T19:02:10.739Z-raw42-compact-closure, claimed 2026-11-28T19:02:10.739Z. Earliest release 20:12:10.739Z. Never refresh. Continue until real clock >= threshold.
+- 1RE whole-child Cover accepted independently of this incarnation in CI 46175006497, artifact 15275487675 (raw42-certified-1RE-repaired). All earlier g0p0/g1p0/g3p0/g3p1 repair runs succeeded; Agent1 g4p3 46174163554 succeeded. Do not redo. Thus 10/12 canonical B1 children accepted; remaining 0LE/1LE.
+- New method commit d6cb920f4df3bbf124222a020f020aba9299c0a0: relaxed_quotient.py greedily permits unequal relation-row merges respecting observed push congruence, accepts only fresh blank-saturated safe candidates with strictly improving joint-state/edge/DFA cost. No trust in search: unchanged FastBiDFA Lean checker proves each exported live theorem. repair_relaxed_part.py handles all private leaves, including small list certificates, and existing prefix checker. Existing manual recovery workflow adds relaxed_part selector, no new YAML.
+- Exact 1LE g7p2 frozen source 15267739493, core 15267729511, accepted FastBiDFA artifact 15271941448, source blob 9cc8be5b1b4afcd3c9cd87865b8a1e94095f1a2f. 65 leaf candidate states 11627 -> 7204 equality-only -> 4928 relaxed. Three heavy original live theorems locally compiled standard axioms only: NGram46432 787->321->139, 1272 645->502->242, 34315 380->289->176. Small Run1196/1204/1205 additionally optimized and accepted; ~12/14s original vs <1s compact. Local full-part compile /tmp/raw42le/work/build-all.log PID907, partial roots pass; no accepted complete part or whole 1LE Cover yet. Local helper reconstructed from repository algorithms (equivalent, not byte-identical). New workflow selector must be checked on exact repo source before calling CI acceptance.
+- CI dispatch action is not exposed in this session; direct git DNS fails, GitHub connector works. No global roster decrement; Canonical38 accepted, Raw47 consumer serialized by Critic.
+
+---
+
 # Checkpoint 2026-11-28T16:32Z — partial observed-edge quotient, Raw42 E critical path
 
 - RNG **9**, normal invocation, immutable lease claim **a454053b83044b579ce3ce674be227622eb8c35a**, run `agent32-gpt62-2026-11-28T16:22:01.041Z-raw42`, claimed **2026-11-28T16:22:01.041Z**, release only at or after **17:32:01.041Z** by real clock. Continue research; do not refresh.
