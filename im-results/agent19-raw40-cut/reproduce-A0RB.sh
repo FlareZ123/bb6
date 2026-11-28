@@ -15,7 +15,7 @@ check() {
   "$LEAN" -j1 -o "${f%.lean}.olean" "$f"
 }
 
-for m in CanonicalPartial Raw40Nores Raw40A0RBBase Raw40ZeroRBCounters Raw40ZeroRBCycles; do
+for m in CanonicalPartial Raw40Nores Raw40TwoSided Raw40MoreTwoSided Raw40A0RBBase Raw40ZeroRBCounters Raw40ZeroRBCycles; do
   check "$m.lean"
 done
 
