@@ -8,6 +8,7 @@ def main():
  p.add_argument("--batch",type=Path,required=True)
  p.add_argument("--index",type=int,required=True)
  p.add_argument("--out",type=Path,required=True)
+ p.add_argument("--manual",action="append",default=[])
  a=p.parse_args()
  a.out.mkdir(parents=True,exist_ok=True)
  batch=json.loads(a.batch.read_text())
@@ -21,9 +22,11 @@ def main():
   fn.write_text(json.dumps({"leaf":x["leaf"],"found":True,
          "fixture":x["fixture"]},indent=2)+"\n")
   args+=["--auto-json",str(fn)]
+ for m in a.manual:
+  args+=["--manual",m]
  print("FAMILY",a.index,"SUBMITTED AUTO LEAVES",[x["leaf"] for x in objs],flush=True)
  subprocess.run(args,check=True)
  summary=json.loads((a.out/"summary.json").read_text())
  print("SUMMARY",json.dumps(summary),flush=True)
- assert summary["remaining_after_auto"]==0,summary
+ assert summary["remaining_after_manual"]==0,summary
 if __name__=="__main__":main()

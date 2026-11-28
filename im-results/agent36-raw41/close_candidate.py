@@ -69,6 +69,7 @@ def main():
     parser.add_argument("--late",action="append",default=[],help="Original open-index:exact-step:read-slot; e.g. 2:1423:9")
     parser.add_argument("--far-override",action="append",default=[],help="Original open-index:reflectedDFAcode; verified by the existing FAR constructor")
     parser.add_argument("--auto-json",action="append",default=[],type=Path,help="Original autoword source fixture with leaf index and candidate proof")
+    parser.add_argument("--manual",action="append",default=[],help="Original index:module:table theorem:never theorem (separated by colons)")
     parser.add_argument("--min-bound",type=int,default=0)
     args=parser.parse_args()
     assert args.index>=0 and args.dfa in range(1,9)
@@ -162,6 +163,13 @@ def main():
             assert data["fixture"]["table"]==leaves[idx],(filename,idx,leaves[idx],data["fixture"]["table"])
             auto[idx]=data["fixture"]
         remaining_after_auto=[(i,v) for i,v in remaining_after_late if i not in auto]
+        manual={}
+        for item in args.manual:
+            i,mod,tab,thm=item.split(":")
+            idx=int(i)
+            assert idx in {i for i,_ in remaining_after_auto} and idx not in manual
+            manual[idx]=[mod,tab,thm]
+        unresolved=[(i,v) for i,v in remaining_after_auto if i not in manual]
         summary=dict(index=args.index,table=table,bound=bound,opens=len(leaves),
              far_certificates=len(found),remaining=len(missing),
              late_last_holes={str(i): {"step":n,"slot":sl} for i,(n,sl) in late.items()},
@@ -169,11 +177,12 @@ def main():
              remaining_after_late=len(remaining_after_late),
              auto_leaf_indices=sorted(auto),
              remaining_after_auto=len(remaining_after_auto),
+             manual_leaf_indices=sorted(manual),remaining_after_manual=len(unresolved),
              bank_size=len(bank),timeout=truncated,
              proof_status="FAR candidates only, pending Lean source check")
         (args.out/"summary.json").write_text(json.dumps(summary,indent=2)+"\n")
         print(json.dumps(summary,indent=2),flush=True)
-        if not remaining_after_auto:
+        if not unresolved:
             # Reuse original exact canonical tree and trusted source checker.
             source=args.out/"lean"
             source.mkdir(exist_ok=True)
@@ -187,6 +196,8 @@ def main():
             if auto:
                 (source/"auto.jsonl").write_text("".join(
                     json.dumps([mapping[i],v])+"\n" for i,v in sorted(auto.items())))
+            if manual:
+                (source/"proven.json").write_text(json.dumps({mapping[i]:v for i,v in manual.items()})+"\n")
             mod=f"Raw41New{args.index:03d}"
             run(["python3",str(R47/"gen_children.py"),str(source.resolve()),mod,str(bound),table,
                  "--standalone"],cwd=source)

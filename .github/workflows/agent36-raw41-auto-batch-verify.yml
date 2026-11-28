@@ -1,6 +1,14 @@
-name: Agent 36 kernel verify two new all-symbolic Raw41 families 034 and 131 (manual)
+name: Agent 36 kernel verify targeted Raw41 mixed proof
 on:
   workflow_dispatch:
+    inputs:
+      index:
+        required: true
+        default: "94"
+        type: string
+      source_run:
+        required: true
+        type: string
 permissions:
   contents: read
   actions: read
@@ -8,12 +16,6 @@ jobs:
   verify:
     runs-on: ubuntu-latest
     timeout-minutes: 95
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - {index: 34, pad: "034"}
-          - {index: 131, pad: "131"}
     steps:
       - uses: actions/checkout@v4
       - name: Install original Lean checker
@@ -25,8 +27,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
-          run-id: 46083148884
-          name: raw41-target-${{ matrix.index }}-auto
+          run-id: ${{ inputs.source_run }}
+          name: raw41-target-${{ inputs.index }}-auto
           path: /tmp/raw41-allauto
       - uses: actions/download-artifact@v4
         with:
@@ -37,10 +39,10 @@ jobs:
       - name: Check all affine pumps and all 24 canonical branches
         run: |
           set -euo pipefail
-          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-allauto/summary.json"))["remaining_after_auto"])')" = 0
+          test "$(python3 -c 'import json;print(json.load(open("/tmp/raw41-allauto/summary.json"))["remaining_after_manual"])')" = 0
           lean --version | grep -F '4.36.0-rc2'
-          MOD=Raw41New${{ matrix.pad }}
-          SRC=.tmp/a36-raw41-batch-check-${{ matrix.pad }}
+          printf -v MOD "Raw41New%03d" "${{ inputs.index }}"
+          SRC=.tmp/a36-raw41-batch-check-${{ inputs.index }}
           D=im-results/agent47-raw41-cut
           R=im-results/agent19-raw40-cut
           mkdir -p "$SRC"
@@ -54,6 +56,9 @@ jobs:
           lean -o "$SRC/Raw41LBLA.olean" "$D/Raw41LBLA.lean" 2>&1 | tee /tmp/a36-batch-lbla.log
           lean -o "$SRC/CanonicalPartial.olean" "$R/CanonicalPartial.lean" 2>&1 | tee /tmp/a36-batch-partial.log
           lean -o "$SRC/CanonicalEmpty.olean" "$D/CanonicalEmpty.lean" 2>&1 | tee /tmp/a36-batch-empty.log
+          if [ "$MOD" = Raw41New094 ]; then
+            lean -o "$SRC/Raw41New094Leaf66.olean" im-results/agent36-raw41/Raw41New094Leaf66.lean 2>&1 | tee /tmp/a36-batch-manual.log
+          fi
           lean -o "$SRC/$MOD"Base.olean "$SRC/$MOD"Base.lean 2>&1 | tee /tmp/a36-batch-base.log
           for n in $(seq -w 0 23); do
             lean -o "$SRC/$MOD"Branch$n.olean "$SRC/$MOD"Branch$n.lean 2>&1 | tee /tmp/a36-batch-branch-$n.log
@@ -65,6 +70,6 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: raw41-auto-batch-lean-${{ matrix.index }}
+          name: raw41-auto-batch-lean-${{ inputs.index }}
           path: /tmp/a36-batch-*.log
           retention-days: 45
