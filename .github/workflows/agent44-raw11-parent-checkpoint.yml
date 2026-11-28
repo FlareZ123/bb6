@@ -107,6 +107,7 @@ jobs:
           echo "checkpoint_objects=$(find /tmp/parent-out -name '*.olean' | wc -l)"
 
       - name: Advance exact kernel DAG by bounded fresh modules
+        id: advance
         env:
           RAW11_REPAIR_ID: ${{ inputs.parent_id }}
           RAW11_REPAIR_MAX_FRESH: ${{ inputs.max_fresh }}
@@ -116,9 +117,11 @@ jobs:
           if [ -f "/tmp/parent-out/Agent5Raw11Extra${RAW11_REPAIR_ID}.olean" ]; then
             grep -F "'BB6.Agent5Raw11Extra${RAW11_REPAIR_ID}.cover' depends on axioms:" /tmp/checkpoint.log
             echo complete > /tmp/parent-out/status.txt
+            echo "complete=true" >> "$GITHUB_OUTPUT"
           else
             grep -F 'checkpoint' /tmp/checkpoint.log
             echo partial > /tmp/parent-out/status.txt
+            echo "complete=false" >> "$GITHUB_OUTPUT"
           fi
           if grep -Eq 'sorryAx|native_decide' /tmp/checkpoint.log; then exit 1; fi
           {
@@ -139,4 +142,16 @@ jobs:
             /tmp/parent-source
             /tmp/checkpoint.log
           if-no-files-found: warn
+          retention-days: 30
+
+      - name: Publish legacy complete-parent bundle for exact successor consumers
+        if: steps.advance.outputs.complete == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: parent-complete-${{ inputs.parent_id }}-repaired
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
+            /tmp/checkpoint.log
+          if-no-files-found: error
           retention-days: 30
