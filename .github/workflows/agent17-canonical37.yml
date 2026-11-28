@@ -1,0 +1,67 @@
+name: Agent17 Canonical37 Raw47 Raw112 Raw39
+
+on:
+  workflow_dispatch:
+    inputs:
+      canonical39_raw47_run_id:
+        description: Successful Raw47 Canonical40 -> Canonical39 producer
+        type: string
+        required: true
+      canonical38_raw47_raw112_run_id:
+        description: Successful Raw112 successor on that exact Raw47 lineage
+        type: string
+        required: true
+      onele_run:
+        description: Accepted Raw39 all-child source producer
+        type: string
+        required: false
+        default: "46114235329"
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  canonical37:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Consume Raw39 from exact Raw47 -> Raw112 Canonical38
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW47_RUN: ${{ inputs.canonical39_raw47_run_id }}
+          RAW112_SUCCESSOR_RUN: ${{ inputs.canonical38_raw47_raw112_run_id }}
+          ONELE_RUN: ${{ inputs.onele_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW47_RUN" =~ ^[0-9]+$ ]]
+          [[ "$RAW112_SUCCESSOR_RUN" =~ ^[0-9]+$ ]]
+          [[ "$ONELE_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent17-canonical37/consume_raw39_after_raw47_raw112.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent17-canonical37/consume_raw39_after_raw47_raw112.py \
+            --work /tmp/a17-canonical37 \
+            --canonical39-raw47-run-id "$RAW47_RUN" \
+            --canonical38-raw47-raw112-run-id "$RAW112_SUCCESSOR_RUN" \
+            --onele-run "$ONELE_RUN" | tee /tmp/a17-canonical37.log
+          test -s /tmp/a17-canonical37/canonical37-raw47-raw112-raw39-delta/delta.json
+          cat /tmp/a17-canonical37/canonical37-raw47-raw112-raw39-delta/delta.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical37-raw47-raw112-raw39-thin-delta
+          path: |
+            /tmp/a17-canonical37/canonical37-raw47-raw112-raw39-delta/**
+            /tmp/a17-canonical37.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
