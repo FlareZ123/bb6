@@ -1,5 +1,5 @@
 {
-  "status": "discovery only pending original-source Lean gate",
+  "status": "source-accepted Raw34Depth3 source theorem: CI run 46086787386; axiom profile standard only",
   "source": "depth2-candidate-witnesses.json",
   "parameters": {
     "cap": 250,
@@ -27871,5 +27871,11 @@
       "third": "0LC",
       "table": "1RB---_1RC---_0RD0LC_1LC1RE_1RD---_------"
     }
-  ]
+  ],
+  "source_acceptance": {
+    "run": 46086787386,
+    "artifact": 15239197563,
+    "artifact_sha256": "c0a31880abee91512c818bdc9f2fd6394f0dfe356a4455b7ea8d9ca435f23a46",
+    "theorem": "BB6.Agent50Raw34Depth3.all_never"
+  }
 }

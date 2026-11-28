@@ -1,5 +1,14 @@
 # Raw34 infinite-ray certificates and unbounded unary-growth proof
 
+## Latest accepted deep sources and exact union
+
+- `Raw34Depth3Defs.lean`, `Raw34Depth3Shard00..11.lean`, `Raw34Depth3All.lean`: **1,206** additionally accepted universally nonhalting depth-three cylinders, original-source [run 46086787386](https://github.com/FlareZ123/bb6/actions/runs/46086787386); standard axioms only, 23 compiled project modules.
+- `Raw34ClosedBCD.lean`: **all 1,728** choices of B1/C1/D1 with successor in B/C/D never halt for any completion, original-source [run 46086997664](https://github.com/FlareZ123/bb6/actions/runs/46086997664). Four new long-running descendants beyond existing ray/closed C–D/unary families.
+- `count_accepted_union.mjs`: reproducible exact finite 25-outcome-per-slot set union across all accepted Raw34 cylinders; [CI run 46087244007](https://github.com/FlareZ123/bb6/actions/runs/46087244007) confirms **97,509,765,625 covered** full physical tables and **55,078,125,000 unclassified**. The separate CI trace is not itself a Lean proof and does not show those unclassified tables halt.
+- Academic synthesis: [Raw34 full current accepted local union](../../results/2026-11-28-raw34-covering-97b-tables-agent50.md), with links to source proofs, exact counts, and unresolved classification.
+- `Raw34Depth3Distinct.lean` is a **separate pending** original-source Lean gate on signature uniqueness and overlap vs prior rays; it is not included in the accepted claims until its own CI passes. Exact physical-table disjointness is already reproducible by the finite union script.
+
+
 **Accepted ray result:** exactly **85 distinct oriented half-line infinite-ray cylinders**, containing `11*25^7+74*25^6=85,205,078,125` physical six-state two-symbol transition tables. This is a local universal nonhalting result, **not** a complete Raw34 Cover, a global Canonical40 reduction or BB(6) determination.
 
 The true raw34 parent is `1RB---_1RC---_0RD---_1LC---_------_------`.
