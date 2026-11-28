@@ -59,7 +59,6 @@ jobs:
           test -f "$F/generated/manifest.json"
           cp "$P"/generated/*.lean "$W/generated/"
           cp "$F"/generated/Raw34FAR3233Shard*.lean "$W/generated/"
-          cp im-results/agent50-raw34-far3233/Raw34M2071Growth.lean "$W/generated/Raw34M2071Growth.lean"
           cp "$P/generated/finalRows.json" "$W/finalRows.json"
           cp "$P/final-manifest.json" "$W/parent-manifest.json"
           cp "$F/generated/manifest.json" "$W/far4-manifest.json"
