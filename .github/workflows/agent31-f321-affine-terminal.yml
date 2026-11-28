@@ -83,6 +83,7 @@ jobs:
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase6Bridge.olean" "$a2/Phase6Bridge.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/Phase12.olean" "$a2/Phase12.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean -o "$a2/AnchorEpoch.olean" "$a2/AnchorEpoch.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e:$a2" lean "$e/HighFarRootTargets.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean "$e/FirstMixedAnchorRoot.lean" | tee -a /tmp/f321-terminal-candidate.log
           LEAN_PATH="$e:$a2" lean "$e/TerminalAnchorShape.lean" | tee -a /tmp/f321-terminal-candidate.log
           ! grep -q sorryAx /tmp/f321-terminal-candidate.log
