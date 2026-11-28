@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Targeted BiDFA synthesis for the four currently uncovered Raw13 p3 leaves.
+"""Targeted BiDFA synthesis for the exact currently uncovered Raw13 p3 leaf roster.
 
 SAT output is candidate data. Every hit is re-expanded by Agent16's independent
 fixed-point witness and compiled in Lean before it may enter the shared bank.
@@ -20,8 +20,26 @@ TARGETS=[
  "1RB1LD1RC1RB1LA1RE1LF0LA0RC0LD---0LE",
  "1RB1LD1RC1LB1LA1RE0LF0LA1RB0RC---0LA",
  "1RB1LD1RC0LB1LA1RE1LF0LA1LB0RE1LE---",
-]
-SCHEDULE=[
+ "1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF0LD---",
+ "1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1LD---",
+ "1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RC---",
+ "1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RD---",
+ "1RB1LD1RC1RA1LA1RE0LC0LA0RF1RB---0RB",
+ "1RB1LD1RC0RA1LA1RE0RD0LA1RF1RB---0RB",
+ "1RB1LD1RC1RA1LA1RE1RE0LA1RF1RB---0RA",
+ "1RB1LD1RC0RB1LA1RE1LF0LA0LE1RC1LC---",
+ "1RB1LD1RC1RA1LA1RE0LC0LA0RF1RC---0RB",
+ "1RB1LD1RC0RB1LA1RE1LF0LA1LA1RC1LC---",
+ "1RB1LD1RC0RB1LA1RE1LF0LA1LA1RC1LE---",
+ "1RB1LD1RC0RB1LA1RE1LF0LA1LA1RE1LC---",
+ "1RB1LD1RC0RB1LA1RE1LF0LA1LA1RE1LE---",
+ "1RB1LD1RC---1LA1RE1LA0LA1RF1RE0LD0RE",
+ "1RB1LD1RC0LD1LA1RE0RE0LA1RB1RF0LB---",
+ "1RB1LD1RC---1LA1RE0RD0LA0RC1RF1LA0RD",
+ "1RB1LD1RC---1LA1RE1LE0LA0RC1RF1LA0RD",
+ "1RB1LD1RC---1LA1RE1RE0LA0RC1RF1LA0RD",
+ "1RB1LD1RC0LC1LA1RE0RB0LA0RA1RF1RC---",
+]SCHEDULE=[
  (6,6,4000),(8,8,6000),(10,10,10000),
  (8,12,10000),(12,8,10000),(12,12,16000),
  (12,16,22000),(16,12,22000),(16,16,30000),
@@ -45,7 +63,7 @@ def search_one(item):
 
 def main(outdir):
     out=Path(outdir);out.mkdir(parents=True,exist_ok=True)
-    with ProcessPoolExecutor(max_workers=4) as pool:
+    with ProcessPoolExecutor(max_workers=8) as pool:
         rows=list(pool.map(search_one,enumerate(TARGETS)))
     hits=[r for r in rows if r["status"]=="ok"]
     (out/"attempts.json").write_text(json.dumps(rows,indent=2)+"\n")
