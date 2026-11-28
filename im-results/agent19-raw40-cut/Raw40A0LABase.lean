@@ -48,7 +48,7 @@ def bounds : List (Move × Nat) := [
   (⟨false,true,3⟩,942),
   (⟨false,true,4⟩,22169),
   (⟨true,false,0⟩,1139),
-  (⟨true,false,1⟩,334),
+  (⟨true,false,1⟩,297),
   (⟨true,false,2⟩,767),
   (⟨true,false,4⟩,10391),
   (⟨true,true,1⟩,1756),
