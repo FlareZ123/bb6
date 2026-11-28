@@ -23,6 +23,19 @@ theorem d234_post_m_complete (m : Nat) (hm : 2≤m) :
     have hpow : 1≤16^j := Nat.pow_pos (by decide)
     omega
 
+theorem d234_post_counter_nonneg (m : Nat) (hm : 2≤m) :
+    808*m+7677 ≤ 72*16^m := by
+  induction m with
+  | zero => omega
+  | succ m ih =>
+    by_cases h : 2≤m
+    · have hh := ih h
+      rw [Nat.pow_succ]
+      omega
+    · have he : m=1 := by omega
+      subst m
+      decide
+
 theorem d234_burst_growth_complete (s : Nat) (hs : 3≤s) :
     832*(4*s+3)+7936 ≤ 72*16^s := by
   induction s with
@@ -89,10 +102,12 @@ theorem d234_even_second_return_complete
     · simpa [P] using hu
     · rw [hR]
       dsimp [R]
+      have hW := d234_post_counter_nonneg m hm2
       omega
   have hp : w%2=1 := by
-    rw [show R=2*u+w by omega]
-    dsimp [R,K]
+    have hRodd : R%2=1 := by
+      dsimp [R,K]
+      omega
     omega
   have hUc : Uc (u,w)=a*(P:Int) := by
     have h := congrArg (fun z : Nat => (z:Int)) hu
@@ -300,6 +315,7 @@ theorem d234_all (m : Nat) :
     · exact ⟨179,(0,83010348331692983048),by decide,by decide,by native_decide,by simp [isSection]⟩
 
 #print axioms d234_post_m_complete
+#print axioms d234_post_counter_nonneg
 #print axioms d234_burst_growth_complete
 #print axioms d234_sep_growth_complete
 #print axioms d234_even_second_return_complete
