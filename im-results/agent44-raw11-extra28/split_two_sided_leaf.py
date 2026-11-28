@@ -137,6 +137,10 @@ def main() -> None:
 
     left, right, rows = parse_cert(cert_expr)
     out = target.parent
+    companion = Path(__file__).resolve().with_name("TwoSidedAutomataRows.lean")
+    if not companion.is_file():
+        raise FileNotFoundError(companion)
+    out.joinpath("TwoSidedAutomataRows.lean").write_bytes(companion.read_bytes())
     prefix = "Agent44Extra132Giant"
     proof_ns = "BB6.Agent44Extra132Giant"
 
