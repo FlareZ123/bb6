@@ -165,7 +165,17 @@ theorem m8Boundary_unreachable_thin (m : Nat) (hm8 : m%8=3) :
     (2*m+2) (m8BoundaryD m)
     hm hj2 hs (m8Boundary_stop m hm8) hscale hdmod hpar
 
+/-- The source exclusion occurs at arbitrarily large stopping-family
+    parameters; choosing m=8L+3 gives an explicit witness above any bound. -/
+theorem m8Boundary_unbounded_parameter (L : Nat) :
+    ∃ m, L≤m ∧ m%8=3 ∧
+      ¬ BB6.Agent15.CReach
+        (2*m8BoundaryJThin m+3) (m8BoundaryKThin m) := by
+  refine ⟨8*L+3, by omega, by omega, ?_⟩
+  exact m8Boundary_unreachable_thin (8*L+3) (by omega)
+
 #print axioms m8Boundary_stop
 #print axioms m8Boundary_unreachable_thin
+#print axioms m8Boundary_unbounded_parameter
 
 end BB6.Agent15Research
