@@ -10,6 +10,8 @@ def main():
     ap=argparse.ArgumentParser();ap.add_argument('--census',required=True,type=Path)
     ap.add_argument('--far',type=Path);ap.add_argument('--stack',type=Path)
     ap.add_argument('--extras',type=Path);ap.add_argument('--out',required=True,type=Path)
+    ap.add_argument('--allow-missing',action='store_true',
+      help='Produce unclaimed partial fixture for exact child source checks')
     a=ap.parse_args()
     got=json.loads(gzip.decompress(a.census.read_bytes()))
     keys=sorted(t.replace('_','') for t in got['opens'])
@@ -46,5 +48,5 @@ def main():
     a.out.with_suffix('.status.json').write_text(json.dumps(status,indent=2)+'\n')
     a.out.with_suffix('.missing.txt').write_text('\n'.join(missing)+'\n')
     print(json.dumps(status),flush=True)
-    if missing:raise SystemExit(3)
+    if missing and not a.allow_missing:raise SystemExit(3)
 if __name__=='__main__':main()
