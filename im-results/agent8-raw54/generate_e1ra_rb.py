@@ -11,6 +11,12 @@ from emit_mask import emit_data
 from generate_sharded_children import assemble
 
 SPECS={
+ "E1OneRE":dict(parent="1RB---_1RC---_0RD---_1LD0LE_---1RE_------",bound=8212,
+    stats=Counter(split=27228,cycle=465210,last=136749,open=24286),
+    open_sha="a10f58ce1a267b66303ddbb964e3504bebbedb5c18513a7474d1e1ce0edc7b4f",
+    miss_sha="cc1d98e76b3841f24f746d2d4eeb54bb3ce62a2930c7ef0a73a8f0ed94654b75",
+    hits=23811,misses=475,tags=Counter(F=207,N=131,R=108,G=24,S=1,H=4),
+    attainer=198,n=8211,delay=0),
  "E1OneRC":dict(parent="1RB---_1RC---_0RD---_1LD0LE_---1RC_------",bound=1847,
     stats=Counter(split=18718,cycle=327830,last=91992,open=10693),
     open_sha="ef1e7ed33b01d008f8a8edd3630d762de45ecbc4c87add7ad3f962c4c13eed42",
@@ -136,7 +142,7 @@ def main():
     label=args.label;spec=SPECS[label];B=spec["bound"]
     ns="BB6.Agent8Raw54."+label
     base="Raw54"+label+"Base"
-    w,q={"E1RA":("false",0),"E1RB":("false",1),"E1OneRC":("true",2)}[label]
+    w,q={"E1RA":("false",0),"E1RB":("false",1),"E1OneRC":("true",2),"E1OneRE":("true",4)}[label]
     (ROOT/(base+".lean")).write_text(f"""import Raw54Base
 namespace {ns}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
