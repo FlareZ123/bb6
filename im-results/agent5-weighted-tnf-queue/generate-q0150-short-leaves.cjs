@@ -54,7 +54,7 @@ function P(i,t){
  const slot=2*q+Number(l&1n),cert=`theorem safe : ∀ m, compatible p m → WeightedBound 13007752 m :=\n  lastPacked 13007752 p ${n} (${q},${bool(slot%2)}) z${n} run${n} (by decide) (by decide) (by decide) (by decide) (by decide)`;
  lines.push(cert,"#print axioms safe",`end ${name}`,"");
  const filename=ns+".lean";fs.writeFileSync(path.join(dir,filename),lines.join("\n"));
- return {index:i,steps:n,slot,table:t.join("_"),module:ns,filename};
+ return {index:i,steps:n,slot,table:Array.from({length:6},(_,j)=>t[2*j]+t[2*j+1]).join("_"),module:ns,filename};
 }
 fs.mkdirSync(dir,{recursive:true});
 let labels=[],short=0,longN=0,inf=0;
