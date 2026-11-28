@@ -19,10 +19,12 @@ def Permitted
     (P : Fin 6 → Bool → Bool → Bool → Bool → Bool → Bool)
     (q : Fin 6) (c : Bool) (a : Option Move) : Prop :=
   (∀ l2 l1 r1 r2, P q l2 l1 c r1 r2 = false) ∨
-  (∃ mv, a = some mv ∧
-    ∀ l2 l1 r1 r2 incoming,
-      P q l2 l1 c r1 r2 = true →
-      successor5 P mv l2 l1 r1 r2 incoming = true)
+  match a with
+  | none => False
+  | some mv =>
+      ∀ l2 l1 r1 r2 incoming,
+        P q l2 l1 c r1 r2 = true →
+        successor5 P mv l2 l1 r1 r2 incoming = true
 
 /-- Generalization from a sparse fixed-source table to the maximal
 per-invariant Cartesian product of allowed physical transitions. -/
@@ -34,13 +36,21 @@ theorem never_of_permitted
   let p : PartialMachine := fun s => some (m s)
   have hlocal : LocalOK p P := by
     intro q l2 l1 c r1 r2 hp
-    rcases hsafe q c with hmissing | ⟨mv,hm,hs⟩
+    rcases hsafe q c with hmissing | hallowed
     · have hcontra := hmissing l2 l1 r1 r2
       rw [hp] at hcontra
       cases hcontra
-    · have hf := hs l2 l1 r1 r2 false hp
-      have ht := hs l2 l1 r1 r2 true hp
-      simpa [p,hm] using And.intro hf ht
+    · cases hrow : m (q,c) with
+      | none => simp [hrow] at hallowed
+      | some mv =>
+        have hs :
+            ∀ l2 l1 r1 r2 incoming,
+              P q l2 l1 c r1 r2 = true →
+              successor5 P mv l2 l1 r1 r2 incoming = true := by
+          simpa [hrow] using hallowed
+        have hf := hs l2 l1 r1 r2 false hp
+        have ht := hs l2 l1 r1 r2 true hp
+        simpa [p,hrow] using And.intro hf ht
   have hcompatible : compatible p m := by
     intro s v hv
     exact Option.some.inj hv
