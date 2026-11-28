@@ -29,6 +29,17 @@ private theorem small_typed_capacity (K J : Nat)
     rw [hFb,hFa]
     omega
 
+/-- The typed rank-cost envelope always exceeds exact four-adic capacity. -/
+theorem typed_cost_exceeds_capacity (K J : Nat)
+    (hK : 0<K)
+    (hlow : 3*J+2≤K)
+    (hhigh : K+4≤7*J) :
+    SharpPackingUniversal.F ((K-1)/3)-SharpPackingUniversal.F (K/4)<J := by
+  by_cases h15 : 15≤K
+  · have hb := SharpPackingUniversal.sharp_capacity K h15
+    omega
+  · exact small_typed_capacity K J hK (by omega) hlow hhigh
+
 /-- All-K primitive-cycle obstruction for the rank-cost envelope of a nonempty
     typed E/S word containing a genuine F run. The two arithmetic hypotheses
     abstract exactly T>=3J+2 and T<=7J-4. -/
@@ -58,5 +69,6 @@ theorem no_primitive_periodic_slope_typed_cost
       ((List.finRange n).map (fun s : Fin n => j (s.val:Int))).sum at hlt
     omega
 
+#print axioms typed_cost_exceeds_capacity
 #print axioms no_primitive_periodic_slope_typed_cost
 end ValuationPacking
