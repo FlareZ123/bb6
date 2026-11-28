@@ -367,6 +367,7 @@ jobs:
             --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" \
             --label "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --artifact-name "raw39-${{ inputs.branch }}-semantic-shard-$GROUP" \
             --provenance-input "$root/prepare_semantic_branch.py" \
             --provenance-input "$root/prepare_raw39_semantic_children.py" \
@@ -463,6 +464,7 @@ jobs:
             --workdir "$work" --jobs 2 \
             --manifest "$work/manifest.json" \
             --label "raw39-${{ inputs.branch }}-semantic-complete" \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --artifact-name "raw39-${{ inputs.branch }}-semantic-proof" \
             --theorem "$theorem" --parent-table "$table" --weighted-bound "$bound" \
             --precompiled-manifest /tmp/a11-semantic-union/manifest.json \
