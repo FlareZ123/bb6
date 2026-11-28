@@ -36,22 +36,31 @@ jobs:
     if: inputs.mode == 'raw11-extra28'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        sibling: [16, 17, 18, 19]
+    env:
+      SIBLING: \${{ matrix.sibling }}
     steps:
       - uses: actions/checkout@v4
-      - name: Install pinned Lean
+      - name: Install pinned Lean 4.36.0-rc2
         run: |
           set -euo pipefail
           curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
-      - name: Hydrate accepted original-source proof dependencies and Agent44 generators
+
+      - name: Extract exact source generators and original-source dependencies
         env:
           GH_TOKEN: \${{ github.token }}
         run: |
           set -euo pipefail
           mkdir -p /tmp/raw11 /tmp/raw11-deps /tmp/raw11-output
-          curl -fsSL --retry 2 -H "Authorization: Bearer $GH_TOKEN" \
+          curl --retry 2 --retry-delay 5 -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/15144626755/zip" \
             -o /tmp/raw11-deps.zip
@@ -59,46 +68,80 @@ jobs:
           for a in ld-source siblings-source trace-core; do
             tar -xzf "im-results/agent44-raw11-extra28/$a.tar.gz" -C /tmp/raw11
           done
+          test -f /tmp/raw11/generate.cjs
+          test -f /tmp/raw11/ZJoin.lean
+          test -f /tmp/raw11/ZTrace.lean
+          test -f /tmp/raw11/Raw11Counter28RE.lean
+          test "$(find /tmp/raw11-deps -name '*.olean' | wc -l)" -gt 0
+          echo "SIBLING=$SIBLING"
           echo "PINNED_SOURCE_HEAD=$(git rev-parse HEAD)"
-          echo "GENERATORS:"
-          find /tmp/raw11 -maxdepth 2 -type f \( -name '*.sh' -o -name '*.py' -o -name '*.cjs' \) -printf '%P\n' | sort
-          echo "DEPS:"
-          find /tmp/raw11-deps -name '*.olean' -printf '%P\n' | sed -n '1,60p'
-      - name: Generate exact remaining four first-hole sibling certificates
+          echo "PINNED_CACHE_ARTIFACT=15144626755"
+
+      - name: Generate only the targeted authentic D1 child
         run: |
           set -euo pipefail
           cd /tmp/raw11
+          export BB6_Q0_AUTOMATA="$PWD/q0-open-automata.cjs"
           python prepare-siblings.py
           node make-periodic.cjs
-          bash generate-siblings.sh 16 17 18 19
-          node generate-trace.cjs 17 18 19
-          echo "GENERATED MODULES:"
-          find . -maxdepth 2 -name '*.lean' -printf '%P\n' | sort | tail -100
-          echo "BUILD SCRIPT:"
-          sed -n '1,220p' build-fast.sh
-      - name: Kernel-check the four outstanding covers against the pinned original source
+          if [ "$SIBLING" = 16 ]; then
+            bash generate-siblings.sh "$SIBLING"
+            test -f "Raw11Extra28M16Join.lean"
+          else
+            node generate-trace.cjs "$SIBLING"
+            test -f "FastRaw11M\${SIBLING}Join.lean"
+            test -f "FastRaw11M\${SIBLING}Manifest.json"
+          fi
+          sha256sum generate.cjs generate-trace.cjs
+
+      - name: Compile and certify targeted source-complete child
         run: |
           set -euo pipefail
           export PATH="$HOME/.elan/bin:$PATH"
-          export LEAN_PATH="/tmp/raw11:$(find /tmp/raw11-deps -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
+          export RAW11_LEAN_PATH="/tmp/raw11:$(find /tmp/raw11-deps -name '*.olean' -printf '%h\n' | sort -u | paste -sd:)"
+          export LEAN_PATH="$RAW11_LEAN_PATH"
           cd /tmp/raw11
-          echo "LEAN_PATH=$LEAN_PATH"
-          bash compile-siblings.sh 16 2>&1 | tee /tmp/raw11-output/sibling16.log
-          bash build-fast.sh 2>&1 | tee /tmp/raw11-output/trace-17-19.log
-          if grep -RE 'sorryAx|native_decide' /tmp/raw11-output/*.log; then
-            echo 'Unapproved axiom or native_decide in proof output' >&2
+          for mod in Raw11Counter28RE ZFast ZTree ZRoute ZJoin ZTrace; do
+            lean -o "$mod.olean" "$mod.lean" | tee "/tmp/raw11-output/$mod.log"
+          done
+          if [ "$SIBLING" = 16 ]; then
+            bash compile-siblings.sh 16 2>&1 | tee /tmp/raw11-output/child16.log
+            grep -F "'BB6.Agent44Extra28M16.cover' depends on axioms:" /tmp/raw11-output/child16.log
+          else
+            sed -i 's|export PATH=/tmp/lean/lean-4.36.0-rc2-linux/bin:$PATH|export PATH="$HOME/.elan/bin:$PATH"|' build-fast.sh
+            sed -i 's|export LEAN_PATH=.:a47-raw11-root52|export LEAN_PATH="$RAW11_LEAN_PATH"|' build-fast.sh
+            bash build-fast.sh "$SIBLING" 2>&1 | tee "/tmp/raw11-output/child\${SIBLING}.log"
+            cat "logs/FastRaw11M\${SIBLING}Join.log"
+            grep -F "'BB6.Agent44FastM\${SIBLING}.cover' depends on axioms:" "logs/FastRaw11M\${SIBLING}Join.log"
+          fi
+          if grep -ER 'sorryAx|native_decide' /tmp/raw11-output/*.log /tmp/raw11/logs/*.log 2>/dev/null; then
+            echo 'Unapproved axiom or oracle in compiled theorem' >&2
             exit 1
           fi
-          echo "Source compilation finished; inspect theorem axiom prints in logs."
-      - name: Save proof diagnostics and generated sources
+
+      - name: Retain exact generated source and failing leaf diagnostic
         if: always()
-        uses: actions/upload-artifact@v4
+        run: |
+          set +e
+          mkdir -p /tmp/raw11-output
+          if [ -d /tmp/raw11 ]; then
+            cd /tmp/raw11
+            find . -maxdepth 1 -type f -name '*Manifest.json' -exec cp {} /tmp/raw11-output/ \;
+            if [ "$SIBLING" = 16 ]; then
+              tar -czf /tmp/raw11-output/child16-generated-source.tar.gz Raw11Extra28M16*.lean
+            else
+              tar -czf "/tmp/raw11-output/child\${SIBLING}-generated-source.tar.gz" "FastRaw11M\${SIBLING}"*.lean
+            fi
+            if [ -d logs ]; then
+              mkdir -p /tmp/raw11-output/leaf-logs
+              cp -a logs/. /tmp/raw11-output/leaf-logs/
+            fi
+          fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
         with:
-          name: agent44-raw11-extra28-four-sibling-proof
-          path: |
-            /tmp/raw11-output
-            /tmp/raw11/*.lean
-            /tmp/raw11/*.json
-            /tmp/raw11/*.sh
+          name: agent44-raw11-extra28-child-\${{ matrix.sibling }}
+          path: /tmp/raw11-output
           if-no-files-found: ignore
           retention-days: 30
