@@ -14,10 +14,11 @@ back to the positive-length primitive-machine macro theorems.
 
 theorem small_of_cat_small (n c : Nat)
     (hc : cat n = c) (hsmall : c ≤ 4) : n ≤ 4 := by
-  by_contra hn
-  have hlarge : 5 ≤ n := by omega
-  have hout := cat_large n hlarge
-  omega
+  by_cases hn : n ≤ 4
+  · exact hn
+  · have hlarge : 5 ≤ n := by omega
+    have hout := cat_large n hlarge
+    omega
 
 theorem cat_one (n : Nat) (h : cat n = 1) : n = 1 := by
   have hs := small_of_cat_small n 1 h (by omega)
