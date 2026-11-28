@@ -5,7 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412Depth6.A10RCF15
-open BB6Coverage BB6.Agent26F412Graft BB6.Agent26F412ThreeHole BB6.Agent26F412TwoHole BB6.Agent1NGram
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft BB6.Agent26F412ThreeHole BB6.Agent26F412TwoHole BB6.Agent1NGram
 
 def am : Move := ⟨false,true,2⟩
 def fm : Move := ⟨true,false,3⟩
