@@ -144,4 +144,28 @@ theorem digit_identity (n : Nat) :
       omega
 
 #print axioms digit_identity
+
+/-- Stronger uniform capacity bound after the final small four-adic exception. -/
+theorem sharp_eight_small (K : Nat) (hlo : 64≤K) (hhi : K≤191) :
+    8*(F ((K-1)/3)-F (K/4))≤K := by
+  have hb := F_three_of_lt64 ((K-1)/3) (by omega)
+  have ha := F_three_of_lt64 (K/4) (by omega)
+  rw [hb,ha]
+  omega
+
+theorem sharp_eight_large (K : Nat) (h : 192≤K) :
+    8*(F ((K-1)/3)-F (K/4))≤K := by
+  have hu := F_upper ((K-1)/3)
+  have hl := F_lower_three (K/4)
+  have harith : 32*((K-1)/3) ≤
+      3*K+24*(K/4+(K/4)/4+(K/4)/16) := by omega
+  omega
+
+theorem sharp_eight (K : Nat) (h : 64≤K) :
+    8*(F ((K-1)/3)-F (K/4))≤K := by
+  by_cases hs : K≤191
+  · exact sharp_eight_small K h hs
+  · exact sharp_eight_large K (by omega)
+
+#print axioms sharp_eight
 end SharpPackingUniversal
