@@ -11,7 +11,7 @@ HERE = Path(__file__).resolve()
 sys.path.insert(0, str(HERE.parent))
 from m42763_block_cert import TABLE, LEFT, RIGHT, EXPECTED, abstract, blockgram, emit
 
-DEPTH = 3
+DEPTH = 4
 CHUNKS = 1 << DEPTH
 NS = "BB6.Agent4Raw56RootE11LB.M42763Block"
 INNER = NS + ".M42763"
