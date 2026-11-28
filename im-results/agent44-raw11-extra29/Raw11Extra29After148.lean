@@ -16,6 +16,7 @@ reduction, not a BB(6) maximality theorem.
 -/
 namespace BB6.Agent44Raw11Extra29After148
 open BB6Coverage BB6.Agent13BlankDelay
+open BB6.Agent47PhaseFrontier (tableCode)
 
 def parent : PartialMachine := fun (q,b) => match q.val,b with
   | 0,false => some (some ⟨true,true,1⟩)
@@ -29,6 +30,9 @@ def parent : PartialMachine := fun (q,b) => match q.val,b with
 def prior : List PartialMachine := BB6.Agent44Raw11Extra132140After150.remaining
 def closed : List PartialMachine := [parent]
 def remaining : List PartialMachine := Q0RosterConsume.removeCovered prior closed
+
+theorem literal_code : tableCode parent = 26318896915106664 := by
+  decide +kernel
 
 theorem parent_matches_source : parent = BB6.Agent5Raw11Extra29.parent :=
   BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)
