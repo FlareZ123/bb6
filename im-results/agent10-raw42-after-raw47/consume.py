@@ -7,6 +7,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import os
 from pathlib import Path
 import shutil
 import subprocess
@@ -61,11 +62,18 @@ def sha(path: Path) -> str:
     return h.hexdigest()
 
 
-def verify_parent(run_id: int, downloaded: Path) -> tuple[dict, dict, list[Path]]:
+def verify_parent(
+    run_id: int, downloaded: Path, allow_in_progress: bool = False
+) -> tuple[dict, dict, list[Path]]:
     run = a17.raw47.a68.api_json(
         f"repos/FlareZ123/bb6/actions/runs/{run_id}"
     )
-    assert run["conclusion"] == "success", run["conclusion"]
+    if allow_in_progress:
+        assert os.environ.get("GITHUB_RUN_ID") == str(run_id)
+        assert os.environ.get("GITHUB_SHA") == run["head_sha"]
+        assert run["status"] == "in_progress", run["status"]
+    else:
+        assert run["conclusion"] == "success", run["conclusion"]
 
     artifacts = a17.raw47.a68.api_json(
         f"repos/FlareZ123/bb6/actions/runs/{run_id}/artifacts"
@@ -137,6 +145,7 @@ def main() -> int:
     ap.add_argument("--raw112-run-id", type=int, default=46146501930)
     ap.add_argument("--onele-run", type=int, default=46114235329)
     ap.add_argument("--chunk-size", type=int, default=64)
+    ap.add_argument("--allow-in-progress-parent", action="store_true")
     args = ap.parse_args()
 
     work = args.work.resolve()
@@ -145,7 +154,9 @@ def main() -> int:
     evidence.mkdir()
 
     parent_receipt, parent_manifest, producer_objects = verify_parent(
-        args.raw42_run_id, args.raw42_artifact_dir.resolve()
+        args.raw42_run_id,
+        args.raw42_artifact_dir.resolve(),
+        allow_in_progress=args.allow_in_progress_parent,
     )
     (evidence / "raw42-parent.json").write_text(
         json.dumps(parent_receipt, indent=2, sort_keys=True) + "\n",
