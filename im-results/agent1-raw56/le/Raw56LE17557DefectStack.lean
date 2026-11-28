@@ -133,6 +133,34 @@ theorem carry_safe_iff (ell w : Nat) (h1 : 1 ≤ ell)
     unfold weightedZero
     omega
 
+/-- Unified whole-stack B law stated directly with the semantic high-runway
+    guard needed by the corresponding BBA block. -/
+theorem b_weighted_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h7 : 7 ≤ ell) (h15 : 15 ≤ weightedZero ell w) :
+    DefectStack ((ell-7)::low) (bNextWeight ell w::weights)
+      ((weightedZero ell w - 15)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [b_weighted_transition ell w h7 ((b_safe_iff ell w h7).mp h15)]
+
+/-- Unified whole-stack carry law stated with the semantic nonempty-run guard
+    plus the necessary residue-7 positive-weight condition. -/
+theorem carry_weighted_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h1 : 1 ≤ ell) (hpositive : ell % 8 = 7 → 1 ≤ w)
+    (hnonempty : 1 ≤ weightedZero ell w) :
+    DefectStack ((ell-1)::low) (carryNextWeight ell w::weights)
+      ((weightedZero ell w - 1)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [carry_weighted_transition ell w h1 hpositive
+      ((carry_safe_iff ell w h1 hpositive).mp hnonempty)]
+
 /-- Whole-stack B transition at the exceptional residue: only the front
     weight changes, while every deeper zero-run/weight pair is untouched. -/
 theorem b_exception_stack {low weights high : List Nat} (ell w : Nat)
@@ -197,6 +225,8 @@ theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
 #print axioms carry_weighted_transition
 #print axioms b_safe_iff
 #print axioms carry_safe_iff
+#print axioms b_weighted_stack
+#print axioms carry_weighted_stack
 #print axioms b_exception_stack
 #print axioms b_regular_stack
 #print axioms carry_exception_stack
