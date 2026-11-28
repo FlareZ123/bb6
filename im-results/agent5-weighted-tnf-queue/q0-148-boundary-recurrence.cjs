@@ -72,13 +72,14 @@ function nextBoundary(g,limit=120000){
   const a=one.has(x)?1:0;
   if(t>0&&q===4&&a===1){
    const low=Math.min(...one),high=Math.max(...one);
-   if(x!==high-2)continue;
-   let word="";
-   for(let i=low;i<=high+1;i++)word+=one.has(i)?"1":"0";
-   const parsed=parse(word,x-low);
-   if(parsed?.g.at(-1)===4&&
-      parsed?.head?.k===parsed.g.length-1&&parsed.head.j===2)
-    return {status:"boundary",t,g:parsed.g};
+   if(x===high-2){
+    let word="";
+    for(let i=low;i<=high+1;i++)word+=one.has(i)?"1":"0";
+    const parsed=parse(word,x-low);
+    if(parsed?.g.at(-1)===4&&
+       parsed?.head?.k===parsed.g.length-1&&parsed.head.j===2)
+     return {status:"boundary",t,g:parsed.g};
+   }
   }
   const tr=table[2*q+a];
   if(tr===null)return {status:"haltingF1",t,x,q,a};
