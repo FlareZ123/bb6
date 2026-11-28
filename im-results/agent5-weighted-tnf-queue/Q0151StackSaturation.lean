@@ -60,7 +60,7 @@ theorem step_preserves
     {c st d st'}
     (step : MacroStep delta resume blank c st d st')
     (hc : Good c) (hst : (∀ x, x ∈ st → Saved x)) :
-    Good d ∧ (∀ x, x ∈ st → Saved x)' := by
+    Good d ∧ (∀ x, x ∈ st' → Saved x) := by
   cases step with
   | stay h =>
       exact ⟨closed _ hc _ h, hst⟩
