@@ -22,6 +22,7 @@ function opt(name,otherwise){
  const i=args.indexOf(name);return i<0?otherwise:args[i+1];
 }
 const maxFixed=Number(opt("--max-fixed","4")),shardSize=Number(opt("--shard-size","64"));
+const skipDisjointness=args.includes("--skip-disjointness");
 const output=opt("--output",join(dir,"generated-depth5"));
 assert([4,5].includes(maxFixed));assert(Number.isInteger(shardSize)&&shardSize>0);
 mkdirSync(output,{recursive:true});
@@ -164,6 +165,6 @@ const report={status:"source-generated, kernel-checkable genuine halting physica
  fixedSlotHistogram:hist,physicalCoverageNew:String(volume),
  remainingSourceFrontierAfterAcceptance:String(5324497401n-volume),
  sourceTheorems:names,oldDisjointnessChecked:true,pairwiseChecks:pairChecks,
-  earlierSourceComparisons:priorChecks};
+  earlierSourceComparisons:priorChecks,disjointnessSkipped:skipDisjointness};
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
 console.log(JSON.stringify({...report,sourceTheorems:names.map(x=>x.ns+".all_halt")},null,2));
