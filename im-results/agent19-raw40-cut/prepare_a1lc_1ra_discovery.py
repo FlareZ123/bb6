@@ -169,6 +169,7 @@ if remaining_for_far6:
     far6_stats = [line for line in far6.stderr.splitlines() if line.startswith("n=")]
 else:
     far6_ids = []
+    far6_stats = []
 
 # Remaining residuals need stronger finite summaries.  Try the already-
 # established A1LC n-gram, run-length and lag-XOR families.  Each accepted
