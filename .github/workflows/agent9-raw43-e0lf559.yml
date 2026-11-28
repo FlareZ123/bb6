@@ -1,0 +1,46 @@
+name: Agent 9 Raw43 E0LF559 final phase
+run-name: raw43-e0lf559-final source=${{ github.sha }}
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Kernel-check the residual-559 final phase
+        run: |
+          set -euo pipefail
+          root=im-results/agent9-raw43-e0lf559
+          work=/tmp/a9-raw43-e0lf559-final
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --manifest "$work/manifest.json" \
+            --label raw43-b1le-e0lf559-final \
+            --theorem BB6.Agent9Raw43B1LEE0LFM559.phase_final \
+            --artifact-name raw43-b1le-e0lf559-final-proof \
+            --provenance-input "$root/Raw43B1LEE0LFM559Final.lean" \
+            "$root/Raw43B1LEE0LFM559Final.lean" 2>&1 | tee /tmp/a9-raw43-e0lf559-final.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a9-raw43-e0lf559-final.log \
+            BB6.Agent9Raw43B1LEE0LFM559.phase_final
+          cp /tmp/a9-raw43-e0lf559-final.log "$work/audit.log"
+      - name: Retain exact source closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw43-b1le-e0lf559-final-proof
+          path: /tmp/a9-raw43-e0lf559-final/
+          if-no-files-found: error
+          retention-days: 30
