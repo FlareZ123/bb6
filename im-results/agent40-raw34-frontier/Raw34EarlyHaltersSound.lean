@@ -16,7 +16,7 @@ theorem finite_check_exact_halt
     (p : PartialMachine) (n : Nat) (m : Machine)
     (hm : compatible p m) (h : finiteHaltCheck p n = true) :
     HaltsAfter m n := by
-  unfold HaltsAfter
+  change (run m n blank).isSome = true ∧ run m (n+1) blank = none
   cases he : finitePartialRun p n finiteBlank with
   | none => simp [finiteHaltCheck, he] at h
   | some c =>
