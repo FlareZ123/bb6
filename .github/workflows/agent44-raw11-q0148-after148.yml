@@ -1,8 +1,14 @@
-name: Agent44 Raw11 148-to-147 q0-148 integration
+name: Agent44 Raw11 148-to-147 consumer
 
 on:
   workflow_dispatch:
     inputs:
+      target:
+        description: Exact retained Raw11 parent to consume
+        required: true
+        default: q0148
+        type: choice
+        options: [q0148, extra29]
       raw11_148_run:
         description: Successful exact Raw11 150-to-148 integration run ID
         required: true
@@ -16,8 +22,14 @@ on:
         required: true
         type: string
       q0148_run:
-        description: Successful complete q0-148 recovery run ID
-        required: true
+        description: Successful q0-148 parent run ID (q0148 target only)
+        required: false
+        default: ''
+        type: string
+      extra29_run:
+        description: Successful Extra29 parent Cover run ID (extra29 target only)
+        required: false
+        default: ''
         type: string
 
 permissions:
@@ -27,9 +39,22 @@ permissions:
 jobs:
   verify:
     runs-on: ubuntu-latest
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate exact parent input
+        env:
+          TARGET: ${{ inputs.target }}
+          Q0148_RUN: ${{ inputs.q0148_run }}
+          EXTRA29_RUN: ${{ inputs.extra29_run }}
+        run: |
+          set -euo pipefail
+          case "$TARGET" in
+            q0148) test -n "$Q0148_RUN" ;;
+            extra29) test -n "$EXTRA29_RUN" ;;
+            *) echo "unsupported target: $TARGET" >&2; exit 2 ;;
+          esac
 
       - name: Install pinned Lean
         run: |
@@ -49,6 +74,7 @@ jobs:
           path: /tmp/raw11-148
 
       - name: Download accepted q0-148 complete parent
+        if: inputs.target == 'q0148'
         uses: actions/download-artifact@v4
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -56,6 +82,16 @@ jobs:
           run-id: ${{ inputs.q0148_run }}
           name: agent44-q0148-complete-parent-cover-B6164
           path: /tmp/q0148
+
+      - name: Download accepted Extra29 complete parent
+        if: inputs.target == 'extra29'
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.extra29_run }}
+          name: raw11-extra-parent-29
+          path: /tmp/extra29
 
       - uses: actions/download-artifact@v4
         with:
@@ -116,18 +152,28 @@ jobs:
       - name: Recover immutable transitive proof objects
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
-          mkdir -p /tmp/deps /tmp/build
-          for id in             15144626755             15159003899 15161045625             15159257293 15154832729 15154568902             15154569169 15154663882 15158958272             15017647753 15014940132 15166284252             15163134847 15161467291 15162658933 15162722191; do
+          mkdir -p /tmp/deps /tmp/build /tmp/q0148 /tmp/extra29
+          for id in 15144626755 15159003899 15161045625 15159257293 15154832729 15154568902 15154569169 15154663882 15158958272 15017647753 15014940132 15166284252 15163134847 15161467291 15162658933 15162722191; do
             mkdir -p "/tmp/deps/$id"
-            curl -fsSL -H "Authorization: Bearer $GH_TOKEN"               -H "Accept: application/vnd.github+json"               "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip"               -o "/tmp/deps/$id.zip"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/deps/$id.zip"
             unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
           done
           test -n "$(find /tmp/raw11-148 -name Raw11Extra132140After150.olean -print -quit)"
-          test -n "$(find /tmp/q0148 -name Agent5Q0Coarse148.olean -print -quit)"
+          if [ "$TARGET" = q0148 ]; then
+            test -n "$(find /tmp/q0148 -name Agent5Q0Coarse148.olean -print -quit)"
+          else
+            test -n "$(find /tmp/extra29 -name Agent5Raw11Extra29.olean -print -quit)"
+          fi
 
-      - name: Kernel-check exact 148-to-147 q0-148 successor
+      - name: Kernel-check exact 148-to-147 successor
+        env:
+          TARGET: ${{ inputs.target }}
         run: |
           set -euo pipefail
           export LEAN_PATH=/tmp/build
@@ -137,25 +183,42 @@ jobs:
               *":$dir:"*) ;;
               *) LEAN_PATH="$LEAN_PATH:$dir" ;;
             esac
-          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53 /tmp/base             /tmp/raw11-150 /tmp/raw11-148 /tmp/extra132 /tmp/extra140 /tmp/q0148             -type f -name '*.olean' | sort)
+          done < <(find /tmp/deps /tmp/q0152 /tmp/q0151 /tmp/root53 /tmp/base \
+            /tmp/raw11-150 /tmp/raw11-148 /tmp/extra132 /tmp/extra140 \
+            /tmp/q0148 /tmp/extra29 -type f -name '*.olean' | sort)
           export LEAN_PATH
 
-          src=im-results/agent44-raw11-extra28/Raw11Q0148After148.lean
-          lean -j1 -o /tmp/build/Raw11Q0148After148.olean "$src"             | tee /tmp/build/Raw11Q0148After148.log
+          if [ "$TARGET" = extra29 ]; then
+            src=im-results/agent44-raw11-extra29/Raw11Extra29After148.lean
+            out=/tmp/build/Raw11Extra29After148.olean
+            theorem_prefix=BB6.Agent44Raw11Extra29After148
+          else
+            src=im-results/agent44-raw11-extra28/Raw11Q0148After148.lean
+            out=/tmp/build/Raw11Q0148After148.olean
+            theorem_prefix=BB6.Agent44Raw11Q0148After148
+          fi
+          lean -j1 -o "$out" "$src" | tee /tmp/build/consumer.log
 
-          if grep -Eq 'sorryAx|native_decide' /tmp/build/*.log; then exit 1; fi
-          for theorem in             "'BB6.Agent44Raw11Q0148After148.literal_code' depends on axioms:"             "'BB6.Agent44Raw11Q0148After148.member_in_148' depends on axioms:"             "'BB6.Agent44Raw11Q0148After148.remaining_census' depends on axioms:"             "'BB6.Agent44Raw11Q0148After148.q0148_cover' depends on axioms:"             "'BB6.Agent44Raw11Q0148After148.raw11_cover_from_147' depends on axioms:"; do
-            grep -F "$theorem" /tmp/build/Raw11Q0148After148.log
-          done
+          if grep -Eq 'sorryAx|native_decide' /tmp/build/consumer.log; then exit 1; fi
+          if [ "$TARGET" = extra29 ]; then
+            for theorem in member_in_148 remaining_census parent_cover raw11_cover_from_147; do
+              grep -F "'$theorem_prefix.$theorem' depends on axioms:" /tmp/build/consumer.log
+            done
+          else
+            for theorem in literal_code member_in_148 remaining_census q0148_cover raw11_cover_from_147; do
+              grep -F "'$theorem_prefix.$theorem' depends on axioms:" /tmp/build/consumer.log
+            done
+          fi
           sha256sum "$src" > /tmp/build/source-sha256.txt
           lean --version > /tmp/build/toolchain.txt
 
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: agent44-raw11-exact-299-to-147-q0148
+          name: agent44-raw11-exact-299-to-147-${{ inputs.target }}
           path: |
             /tmp/build
             im-results/agent44-raw11-extra28/Raw11Q0148After148.lean
+            im-results/agent44-raw11-extra29/Raw11Extra29After148.lean
           if-no-files-found: warn
           retention-days: 30
