@@ -4,8 +4,18 @@ on:
     inputs:
       mode:
         type: choice
-        options: [bundle, raw11-extra28, raw11-eight]
+        options: [bundle, raw11-extra28, raw11-eight, raw11-final]
         default: bundle
+      eight_run:
+        description: Original-source accepted eight-child workflow run ID
+        type: string
+        required: false
+        default: ''
+      four_run:
+        description: Original-source accepted four-child workflow run ID
+        type: string
+        required: false
+        default: ''
 permissions:
   contents: read
   actions: read
@@ -260,5 +270,32 @@ jobs:
         with:
           name: agent44-raw11-extra28-confirmed-${{ matrix.sibling }}
           path: /tmp/raw11-output
+          if-no-files-found: ignore
+          retention-days: 30
+
+  raw11-final:
+    if: inputs.mode == 'raw11-final'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      EIGHT_RUN: ${{ inputs.eight_run }}
+      FOUR_RUN: ${{ inputs.four_run }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2, exact original source
+        run: |
+          set -euo pipefail
+          curl -fsSL https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Kernel-compose all twelve exact D1 children into a full parent Cover
+        run: bash im-results/agent44-raw11-extra28/assemble-complete.sh
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent44-raw11-extra28-full-parent-original-source
+          path: /tmp/raw11-final-output
           if-no-files-found: ignore
           retention-days: 30
