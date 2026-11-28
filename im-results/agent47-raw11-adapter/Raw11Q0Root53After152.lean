@@ -23,7 +23,11 @@ theorem literal_code :
     BB6.Agent47PhaseFrontier.tableCode parent = 27873617542988488 := by
   decide +kernel
 
-theorem member_in_152 : parent ∈ prior := by decide +kernel
+theorem member_in_152 : parent ∈ prior := by
+  have h : prior.any (fun q => Q0ExhaustiveTree.sameTable q parent) = true := by
+    decide +kernel
+  obtain ⟨q,hq,he⟩ := List.any_eq_true.mp h
+  exact (Q0ExhaustiveTree.sameTable_sound he) ▸ hq
 
 theorem exact_complement :
     remaining = prior.filter (fun q => !Q0ExhaustiveTree.sameTable q parent) := by
