@@ -25,10 +25,17 @@ const choiceCodes=[1];
 for(let q=0;q<6;q++)choiceCodes.push(2+q,8+q,14+q,20+q);
 assert.equal(choiceCodes.length,25);
 const root=[21,0,22,0,11,0,16,0,0,0,0,0];
-const dCode=alphabet.indexOf("0LF")+1;
-const f0Code=alphabet.indexOf("0LA")+1;
-assert.equal(dCode,7);assert.equal(f0Code,2);
+const d1Action=opt("--d1","0LF");
+const f0Action=opt("--f0","0LA");
+assert(["0LA","0LD"].includes(f0Action),"currently source-gated for F0=0LA or 0LD");
+assert.equal(d1Action,"0LF","currently source-gated for D1=0LF");
+const dCode=alphabet.indexOf(d1Action)+1;
+const f0Code=alphabet.indexOf(f0Action)+1;
+assert.equal(dCode,7);assert(f0Code>0);
 const parentCodes=root.slice();parentCodes[7]=dCode;parentCodes[10]=f0Code;
+const namespaceName=f0Action==="0LA"
+  ?"BB6.Agent50Raw34PairDepth6"
+  :"BB6.Agent40Raw34PairD1LF_F0LDDepth6";
 
 function trace(p,cap=100){
  let q=0,h=0,ones=new Set(),hist=[];
@@ -101,19 +108,28 @@ function build(depth){
  return pushNode(`.split ${leanSlot(r.slot)} [${children.join(",")}]`);
 }
 const rootIndex=build(2);
-assert.equal(nodes.length,39676);
-assert.equal(rows.length,12356);
-assert.deepEqual(stats,{
- halt3:1,cycle3:12,halt4:12,cycle4:144,halt5:143,cycle5:1944,
- halt6:1431,cycle6:21688,openResidual6:11571,longResidual6:732,
- longResidual5:52,extendedCycle6:353,extendedCycle5:5,longResidual4:1
-});
+const expected=f0Action==="0LA"?{
+ nodes:39676,rows:12356,stats:{
+  halt3:1,cycle3:12,halt4:12,cycle4:144,halt5:143,cycle5:1944,
+  halt6:1431,cycle6:21688,openResidual6:11571,longResidual6:732,
+  longResidual5:52,extendedCycle6:353,extendedCycle5:5,longResidual4:1
+ }
+}:{
+ nodes:16976,rows:4318,stats:{
+  halt3:1,cycle3:17,halt4:7,halt5:67,cycle5:1002,
+  halt6:604,cycle6:10155,longResidual6:82,openResidual6:4234,
+  cycle4:101,extendedCycle6:25,longResidual5:2
+ }
+};
+assert.equal(nodes.length,expected.nodes);
+assert.equal(rows.length,expected.rows);
+assert.deepEqual(stats,expected.stats);
 assert.equal(rootIndex,nodes.length-1);
 
 const source=`import Raw34Plan
 set_option maxRecDepth 1000000
 set_option maxHeartbeats 0
-namespace BB6.Agent50Raw34PairDepth6
+namespace ${namespaceName}
 open BB6Coverage BB6.Agent50Raw34Plan
 
 def parent : PartialMachine := table [${parentCodes.join(",")}]
@@ -134,15 +150,16 @@ theorem cover :
 #print axioms residual_count
 #print axioms checked
 #print axioms cover
-end BB6.Agent50Raw34PairDepth6
+end ${namespaceName}
 `;
-writeFileSync(join(output,"Raw34PairDepth6Plan.lean"),source);
+const outputModule=f0Action==="0LA"?"Raw34PairDepth6Plan.lean":"Raw34PairD1LF_F0LDDepth6Plan.lean";
+writeFileSync(join(output,outputModule),source);
 writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
 const report={
- parentCodes,d1:"0LF",f0:"0LA",physicalParentCompletions:String(25n**6n),
+ parentCodes,d1:d1Action,f0:f0Action,physicalParentCompletions:String(25n**6n),
  nodeCount:nodes.length,residualCount:rows.length,rootIndex,
  bound:128,maxAssignedFreeTransitions:6,stats,
- theorem:"BB6.Agent50Raw34PairDepth6.cover",
+ theorem:namespaceName+".cover",
  interpretation:"Every completion of this literal Raw34 subparent is DecidedBelow 128 or extends one of the explicit residualRows; Lean checker is authoritative."
 };
 writeFileSync(join(output,"manifest.json"),JSON.stringify(report,null,2)+"\n");
