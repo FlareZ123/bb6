@@ -144,7 +144,11 @@ candidate frontier: all 23,040 ordinary/ordinary completions of the 40
 two-hole cylinders are closed-state nonhalters, and all 30,624 ordinary
 completions of the 1,276 one-hole cylinders are closed-state nonhalters.
 Three of the 1,276 HALT completions halt finitely.  Therefore the remaining
-candidate frontier is exactly **3,233 complete machines = 1,960 + 1,273**.
+candidate frontier is exactly **3,233 complete machines = 1,960 + 1,273**.  These are only **1,313 exact partial search targets**:
+40 two-hole cylinders contribute 49 HALT-bearing hard completions apiece,
+while 1,273 one-hole cylinders contribute one hard HALT completion apiece.
+This grouping is exact finite arithmetic and is now asserted per cylinder by
+`census_f0ld.cpp`.
 A direct simulator run additionally found no halt among these 3,233 through
 one million ordinary moves; that simulation is exploratory evidence, not a
 proof.
