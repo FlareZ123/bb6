@@ -217,10 +217,12 @@ theorem m8BoundaryLattice_complete
     rw [hjq,Nat.mul_add] at hmain
     omega
   have hqpos : 1≤q := by
-    by_contra h
-    have hq0 : q=0 := by omega
-    rw [hq0,Nat.mul_zero] at hqQ
-    omega
+    cases q with
+    | zero =>
+        simp at hqQ
+        omega
+    | succ q =>
+        omega
   have hqmod : q%8=(if m%8=3 then 1 else 5) := by
     have hh := congrArg (fun z : Nat => z%8) hqQ
     rw [Nat.mul_mod,hQ8,Nat.add_mod] at hh
