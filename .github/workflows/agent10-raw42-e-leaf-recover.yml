@@ -1,0 +1,105 @@
+name: Agent10 Raw42 E exact heavy-leaf row rescue
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: choice
+        options: [0LE, 1LE, 1RE]
+        default: 1LE
+      source_run:
+        description: 'Exact-split run containing frozen generated source and split plan'
+        required: true
+        type: string
+      part:
+        description: 'Exact partition key, e.g. g0p1'
+        required: true
+        type: string
+      leaf:
+        description: 'Exact generated Run leaf number, e.g. 3977'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source_rescue:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate exact repair target
+        env:
+          BRANCH: ${{ inputs.branch }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+          PART: ${{ inputs.part }}
+          LEAF: ${{ inputs.leaf }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
+          [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
+          [[ "$LEAF" =~ ^[0-9]+$ ]]
+          [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
+
+      - name: Reconstitute original trusted source dependencies
+        run: python im-results/agent13-coverage/unpack.py
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+
+      - name: Restore frozen generated source and exact partition
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+
+      - name: Restore trusted precompiled dependency closure
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: raw42-split-core
+          path: /tmp/core
+
+      - name: Reprove exact finite relation by independent FastBiDFA rows
+        env:
+          BRANCH: ${{ inputs.branch }}
+          PART: ${{ inputs.part }}
+          LEAF: ${{ inputs.leaf }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          stem="Raw42${BRANCH}Run${LEAF}"
+          test -f "$g/${stem}.lean"
+          python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
+          mapfile -t roots < <(python -c 'import json,sys;print(*json.load(open(sys.argv[1]))["groups"][sys.argv[2]],sep=chr(10))' "$g/split-plan.json" "$PART")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          mkdir -p /tmp/repaired
+          python tools/lean_compile_closure.py \
+            --lean /tmp/lean-one --workdir /tmp/repaired --jobs 1 \
+            --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/core/manifest.json --precompiled-dir /tmp/core \
+            --manifest /tmp/repaired/manifest.json \
+            --artifact-name "raw42-split-$BRANCH-$PART" \
+            "${roots[@]}" | tee /tmp/repaired/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/repaired/audit.log
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.part }}
+          path: /tmp/repaired/
+          retention-days: 30
+          if-no-files-found: error
