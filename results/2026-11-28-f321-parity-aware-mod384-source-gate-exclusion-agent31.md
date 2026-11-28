@@ -40,6 +40,28 @@ Starting from `(6,1)`, the reachable closure of these abstract edges has **7,414
 
 The odd/even middle guard is the significant improvement: the previous [modulo-96 source-kernel quotient](2026-11-28-f321-mod96-sound-quotient-275over288-agent2.md) allowed both middle outputs at every residue. The new theorem excludes a larger full arithmetic set of hypothetical gates, at all depths; its complement density `5/128≈3.90625%` improves the previous explicit `13/288≈4.51389%` complement density. The exact sets should not simply be subtracted without checking containment; the comparison is in their standalone exclusion densities.
 
+## Combining with the explicit inverse-ray families (paper density corollary)
+
+The previously established *independent* inverse-ray theorem excludes parameters of the form `d=8k+3` whose base-four expansion of `k`, read from least significant digit, begins with any number `t` of digits `2` and then has **digit 0 at any t**, **digit 3 at even t**, or **digit 1 at odd t**; see the [33/40 theorem](2026-11-28-f321-70-percent-halt-ray-exclusion-agent31.md) and [odd-depth theorem](2026-11-28-f321-odd-depth-base-four-rays-agent2.md). These exclusions can be intersected with the new modulus-384 gate list to sharpen the explicit natural density of all-time forbidden parameters **from 123/128 to 1109/1152 = 96.26736…%**.
+
+Indeed, of the fifteen allowed residue classes only five are `3 mod8`: `r=115,139,211,235,331`. Their corresponding `k=(r−3)/8` modulo `48` are `14,17,26,29,41`. Of these, only `k≡26 (mod48)` has its first **two** low base-four digits equal to `2,2`; `14` has `2,3`, and the other three begin with digit `1`. Thus only the `d≡211 (mod384)` class has a nontrivial intersection with these three infinite ray families. Conditioned on its fixed `2,2` prefix, the first subsequent non-`2` digit occurs with the following relative probabilities, obtained as convergent geometric sums of *disjoint* arithmetic progressions:
+
+```text
+[zero]  (any depth t≥2):     ∑_(j≥0) (1/4)^(j+1)       = 1/3
+[three] (even t≥2):         ∑_(j≥0) (1/4)^(2j+1)      = 4/15
+[one]   (odd t≥3):          ∑_(j≥0) (1/4)^(2j+2)      = 1/15
+Total excluded fraction within d≡211(mod384) = 2/3.
+```
+
+The congruence `k≡26 (mod48)` additionally fixes a class modulo 3, but `3` is coprime to every power of `4`; hence the low higher base-four digits are still equidistributed conditional on this progression. Tail densities vanish by the common length-`j` digit-`2` prefix, giving a genuine natural density for the union. The additional excluded density is `(1/384)·(2/3) = 1/576`; total excluded density is
+
+```text
+123/128 + 1/576 = 1109/1152,
+residual candidate density = 43/1152.
+```
+
+**Evidence distinction:** the parity-aware modulo-384 universal statement and Agent2's odd-depth ray theorem are Lean source-kernel accepted; the set-theoretic combination and exact density arithmetic in this section are paper derivations, not a new separately compiled Lean theorem. The remaining `43/1152` parameter density is only an upper bound on which hypothetical terminal indices may be reached, not a halting probability or resolution of the authentic orbit.
+
 ## Source-accepted certificate and reproducibility
 
 The proof source is in [Mod384Graph.lean](../im-results/agent31-f321-mod384/Mod384Graph.lean) and [Mod384Source.lean](../im-results/agent31-f321-mod384/Mod384Source.lean).
