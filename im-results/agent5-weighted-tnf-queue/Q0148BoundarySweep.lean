@@ -620,6 +620,7 @@ theorem rightBlankCarryShape (cs : List LeftChunk) :
   have h := congrArg
     (fun v : List Bool => [false,true,true,false,true,false] ++ v)
     (carryFoldBits Carry.eleven cs)
+  rw [outputRightChunks_rightSeq]
   change [false,true,true,false,true,false,true,true] ++ rightSubst cs =
     [false] ++ inputBits
       (.separatedMarker :: (carryFold .eleven cs).1) ++
