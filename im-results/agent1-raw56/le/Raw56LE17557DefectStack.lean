@@ -66,11 +66,70 @@ theorem carry_regular_preserves (ell w : Nat)
   unfold weightedZero
   omega
 
+
+/-- Whole-stack B transition at the exceptional residue: only the front
+    weight changes, while every deeper zero-run/weight pair is untouched. -/
+theorem b_exception_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h7 : 7 ≤ ell) (h6 : ell % 8 = 6)
+    (hbound : 8*(w+1) ≤ rhoZero (ell-7)) :
+    DefectStack ((ell-7)::low) ((w+1)::weights)
+      ((weightedZero ell w - 15)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [b_exception_increments ell w h7 h6 hbound]
+
+/-- Whole-stack regular B transition preserves the front weight. -/
+theorem b_regular_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h7 : 7 ≤ ell) (h6 : ell % 8 ≠ 6)
+    (hbound : 8*w ≤ rhoZero (ell-7)) :
+    DefectStack ((ell-7)::low) (w::weights)
+      ((weightedZero ell w - 15)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [b_regular_preserves ell w h7 h6 hbound]
+
+/-- Whole-stack exceptional carry transition decrements the front weight and
+    leaves every deeper pair untouched. -/
+theorem carry_exception_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h1 : 1 ≤ ell) (h7 : ell % 8 = 7) (hw : 1 ≤ w)
+    (hbound : 8*(w-1) ≤ rhoZero (ell-1)) :
+    DefectStack ((ell-1)::low) ((w-1)::weights)
+      ((weightedZero ell w - 1)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [carry_exception_decrements ell w h1 h7 hw hbound]
+
+/-- Whole-stack regular carry transition preserves the front weight. -/
+theorem carry_regular_stack {low weights high : List Nat} (ell w : Nat)
+    (h : DefectStack low weights high)
+    (h1 : 1 ≤ ell) (h7 : ell % 8 ≠ 7)
+    (hbound : 8*w ≤ rhoZero (ell-1)) :
+    DefectStack ((ell-1)::low) (w::weights)
+      ((weightedZero ell w - 1)::high) := by
+  rcases h with ⟨hlen, rfl⟩
+  constructor
+  · simp [hlen]
+  · simp only [weightedImage]
+    rw [carry_regular_preserves ell w h1 h7 hbound]
+
 #print axioms push_zero
 #print axioms pop
 #print axioms b_exception_increments
 #print axioms b_regular_preserves
 #print axioms carry_exception_decrements
 #print axioms carry_regular_preserves
+#print axioms b_exception_stack
+#print axioms b_regular_stack
+#print axioms carry_exception_stack
+#print axioms carry_regular_stack
 
 end BB6.Agent1Raw56.LE17557DefectStack
