@@ -159,6 +159,7 @@ def main():
     ap.add_argument("--work",type=Path,required=True)
     ap.add_argument("--onele-run",type=int)
     ap.add_argument("--ten-only",action="store_true",help="check all accepted child source closures except final 1LE")
+    ap.add_argument("--all-threshold",action="store_true",help="also audit the optional full-spectrum iff candidate")
     args=ap.parse_args()
     work=args.work.resolve()
     work.mkdir(parents=True,exist_ok=False)
@@ -212,22 +213,32 @@ def main():
           "native_decide" not in final.read_text(),
           "unapproved axioms in complete parent source consumer")
     extra_targets=[]
+    checked={}
     if args.ten_only:
-        # This adds a stronger result without changing the original ten-child
-        # acceptance gate or the existing theorem's proof dependencies.
-        name="Raw39ThresholdReduction"
-        compile_missing(name,linked,evidence,index,busy,compiled)
-        extra_targets=[
-            "BB6.Agent11Raw39ThresholdReduction.oneLE_lower_bound",
-            "BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE",
-        ]
-        extra_log=evidence/(name+".log")
-        subprocess.run([
-            sys.executable,str(REPO/"im-results/agent4-raw109/audit_axioms.py"),
-            str(extra_log),*extra_targets],check=True)
-        check("sorryAx" not in extra_log.read_text() and
-              "native_decide" not in extra_log.read_text(),
-              "unapproved axioms in all-threshold reduction")
+        # The general sibling lift is the immediately actionable global
+        # consequence and does not depend on the optional iff conjecture.
+        targets_by_module={
+            "Raw39SiblingThreshold":[
+                "BB6.Agent11Raw39SiblingThreshold.bound_from_oneLE",
+                "BB6.Agent11Raw39SiblingThreshold.cover_from_oneLE",
+            ],
+        }
+        if args.all_threshold:
+            targets_by_module["Raw39ThresholdReduction"]=[
+                "BB6.Agent11Raw39ThresholdReduction.oneLE_lower_bound",
+                "BB6.Agent11Raw39ThresholdReduction.bound_iff_oneLE",
+            ]
+        for name,theorems in targets_by_module.items():
+            compile_missing(name,linked,evidence,index,busy,compiled)
+            extra_log=evidence/(name+".log")
+            subprocess.run([
+                sys.executable,str(REPO/"im-results/agent4-raw109/audit_axioms.py"),
+                str(extra_log),*theorems],check=True)
+            check("sorryAx" not in extra_log.read_text() and
+                  "native_decide" not in extra_log.read_text(),
+                  f"unapproved axioms in {name}")
+            extra_targets.extend(theorems)
+            checked[name]=digest(linked/(name+".olean"))
     receipt={"status":("source-accepted Raw39 ten-child conditional Bound" if args.ten_only
                       else "source-accepted Raw39 eleven-child exact weighted Bound"),
              "bound":28311,"parent_table":"1RB---_1RC---_0RD---_1LD0RA_------_------",
@@ -235,10 +246,8 @@ def main():
                  ["git","rev-parse","HEAD"],text=True).strip(),
              "producers":docs,"unique_objects":len(seen),
              "newly_compiled":compiled,"theorems":targets,
-             "all_threshold_theorems":extra_targets,
-             "all_threshold_root_sha256":(
-                 digest(linked/"Raw39ThresholdReduction.olean")
-                 if args.ten_only else None),
+             "extra_source_theorems":extra_targets,
+             "extra_source_objects":checked,
              "root_sha256":digest(linked/("Raw39TenChildPartial.olean" if args.ten_only else "Raw39CompleteJoin.olean")),
              "lean_version":compiler_version,"lean_sha256":compiler_sha}
     (evidence/"parent-accepted.json").write_text(
