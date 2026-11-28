@@ -61,6 +61,20 @@ theorem prefixMassAffine (a b : Nat) (cs : List PC)
   simp only [he,Prod.fst,Prod.snd]
   omega
 
+/-- Q-mass affine law, under an exact secondary leading Q run. -/
+theorem qMassAffine (b : Nat) (cs : List PC)
+    (hb : b=3*2^cs.length-1)
+    (hq : qSum ((sNext b cs).2.2)=qSum cs+b+
+      2*(2^cs.length-2^(drain 0 0 (dec cs)).1.length))
+    (hl : (drain 0 0 (dec cs)).1.length≤cs.length) :
+    qSum ((sNext b cs).2.2)+2^(sNext b cs).2.2.length+1 =
+      qSum cs+5*2^cs.length := by
+  have hd := nextLengthPower b cs
+  have hm : 0<2^cs.length := Nat.pow_pos (by decide)
+  have hle : 2^(drain 0 0 (dec cs)).1.length ≤ 2^cs.length :=
+    Nat.pow_le_pow_right (n:=2) (by decide) hl
+  omega
+
 def lengthSum : Nat → Nat × Nat × List PC → Nat
   | 0,_ => 0
   | k+1, (_,b,cs) => 2^cs.length+lengthSum k (sNext b cs)
@@ -68,4 +82,5 @@ def lengthSum : Nat → Nat × Nat × List PC → Nat
 #print axioms nextHeadExact
 #print axioms iterHeadExact
 #print axioms prefixMassAffine
+#print axioms qMassAffine
 end F421SecondaryLifetimes
