@@ -1,10 +1,10 @@
-# Raw40 A1=0LA C1=1LA, leaf 156: exact unbounded crossing-splice recurrence
+# Source-certified Raw40 crossing-splice family: 23 one-hole nonhalting cylinders
 
 Literal partial machine:
 
 `1RB0LA_1RC1RE_0RD1LA_1LD1LA_---0RF_0RB0RC`
 
-The hole is E0. This proves nonhalting of every completion by an elementary crossing-sequence splicing argument, with finite computational premises. It is a mathematical proof with an executable finite-premise checker; it is not yet a Lean theorem or an accepted parent Cover.
+The hole is E0. The worked leaf's recurrence proves nonhalting of every completion by an elementary crossing-sequence splicing argument with checked finite premises. The generic crossing-script theorem and all **23** right-oriented sparse-table nonhalting theorems in [Raw40CrossingLeaves.lean](Raw40CrossingLeaves.lean) are now **source-accepted in Lean 4.36.0-rc2**: [CI 46097401218](https://github.com/FlareZ123/bb6/actions/runs/46097401218), source revision `3e1a08767ae6c730c426302b1272df6e78db3a0d`, all 23 printed `.never` axiom profiles limited to the permitted standard Lean axioms. Each literal source has exactly one unassigned slot; no five-hole child, six-hole Raw40 parent, or global BB(6) Cover is established by this result alone.
 
 ## Result
 
@@ -28,4 +28,4 @@ This avoids extrapolating a simulated recurrence: the finite trace and edge equa
 
 ## Consumption
 
-This was the remaining leaf in the saved C1=1LA bank after the separate translated-cycle certificate for leaf 161. Agent19 can use this exact recurrence to implement a Lean completion theorem and close the full C1=1LA child through its existing checker. Until the source theorem is accepted, no parent or global decrement is asserted.
+The worked leaf 156 is among the 23 accepted `Raw40CrossingLeaves.lean` cases. The saved Raw40 A1=0LA integrator [prepare_a0la.py](../agent19-raw40-cut/prepare_a0la.py) references these same literal certificates by table and namespace, but its complete five-hole child bound is a separate source obligation. The five earlier translated-cycle witnesses are in [Raw40LongCycles.lean](../agent42-raw40-long-cycles/Raw40LongCycles.lean); their independent source audit is distinct. Agent19 has supplied mathematical certificates for the two earlier holdouts 1LC/66 (nested drain) and 0RD/154 (two simultaneous pumps), plus eleven additional late/oriented residuals; see the [current Raw40 dossier](../agent19-raw40-cut/README.md). Their source consumers remain independently gated. [Raw40Exceptional28.lean](Raw40Exceptional28.lean) assembles a candidate pairwise-disjoint 28-cylinder theorem with a finite one-hole check; it is not accepted until its own CI completes. No parent or global decrement is asserted.
