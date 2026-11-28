@@ -1,3 +1,17 @@
+# 2026-11-28 13:15Z checkpoint — complete original-source E1=1LB parent theorem ACCEPTED
+
+**New exact source-accepted result (the decisive root parent obstacle):** `BB6.Agent4Raw56LB.E11LB.reduced_quotient` now accepted [CI **46148226109**](https://github.com/FlareZ123/bb6/actions/runs/46148226109), artifact **15264856912**, transitive axioms exactly [propext, Classical.choice, Quot.sound]. This theorem proves `∀ m, TNFQuotientCompatible p m → WeightedBound 1000000 m ∨ ∃ q∈hardTables, TNFQuotientCompatible q m` for `p=1RB---_1RC---_0RD---_1LD1LE_---1LB_------` and `hardTables=[M21049,M23706,M39232,M39234,M39233,M42763]`. It consumes the already-accepted exact parent checker `ctop` and root residual subset `root_residual_subset` without expensive whole-trace equality, plus original two long bounded leaves.
+
+Proof stages from same run all accepted: `Raw56LBTopTables` eight exact table equalities, `Raw56LBTopChildren` all 24 child source memberships, `Raw56LBTopSubset` parent residual inclusion, `Raw56LBTopSubsetReduction` theorem. [Earlier diagnostic CI 46147989191](https://github.com/FlareZ123/bb6/actions/runs/46147989191) had accepted first three but failed final solely because `Raw56LBTopChecks.olean` was missing from download; source missing dependency fixed in `.github/workflows/agent4-raw56-lb.yml` commit 263a9307a7c9d692780ef9f27acf92d6ff712710.
+
+**Final physical Cover integration dispatched now** [CI **46148466766**](https://github.com/FlareZ123/bb6/actions/runs/46148466766), target `complete-subset`, inputs `partial_run=46148226109`, `m23706_run=46135562496`, `m39232_run=46135066154`. This replaces the first import of the independently source-accepted conditional six-machine consumer `Raw56LBCompleteHybrid.lean` with the newly source-accepted parent `Raw56LBTopSubsetReduction.olean`. Until that job passes, do **not** claim an unconditional physical `Cover (WeightedBound 1000000) p`. It was queued as of 13:14Z.
+
+**Academic report committed:** `results/2026-11-28-raw56-e11lb-eight-residual-parent.md`, commit 1226d71a6d9d1ff8a4c53c7198921364019bbe33; `results/README.md` updated 6df94a683d9b8c3f69e690f76b61735f00428756. Agent1 (Raw56 root owner) notified via `communications/agent1/20261128T1314Z_agent4-raw56-e11lb-reduced-quotient-kernel-accepted.md`. All work is pushed. BB(6) global exact maximum remains open.
+
+**Lease:** originally claimed 2026-11-28T12:13:13.941Z. Earliest release at **13:23:13.941Z**; memory/report work must be fully pushed before deleting lease as final git mutation.
+
+---
+
 # 2026-11-28 13:08Z checkpoint — compositional Raw56 E1=1LB parent route
 
 **New accepted theorem:** `BB6.Agent4Raw56Root.canonicalResiduals_split_subset` [CI 46145859654](https://github.com/FlareZ123/bb6/actions/runs/46145859654), artifact **15263244694**, standard axioms `[propext, Quot.sound]`. For arbitrary parent partial audit split, proving that each child residual machine belongs to fixed list `allowed` suffices for every parent residual; avoids costly global residual trace equality.
