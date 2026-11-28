@@ -129,10 +129,11 @@ int main() {
   long long open6=0,long6=0;
   long long side7=0,halt7=0,open7=0,long7=0,extended7=0;
   long long side8=0,halt8=0,long8=0,closed8=0;
+  vector<array<int,12>> long6Rows, long7Rows;
 
   for (auto base:rows) {
     auto r0=trace(base);
-    if (r0.kind==2) { long6++; continue; }
+    if (r0.kind==2) { long6++; long6Rows.push_back(base); continue; }
     if (r0.kind!=0) { cerr<<"residual invariant\n"; return 5; }
     open6++;
     int s=r0.slot;
@@ -144,7 +145,7 @@ int main() {
       if (r.kind==2) {
         auto ext=trace(child,1000);
         if (side(ext.hist,500,200)) extended7++;
-        else long7++;
+        else { long7++; long7Rows.push_back(child); }
         continue;
       }
       open7++;
@@ -177,6 +178,38 @@ int main() {
   if (depth6Physical!=2671250 || unresolvedPhysical!=56900 ||
       classifiedPhysical!=2614350) return 9;
 
+  long long closedLong6=0, hardLong6=0;
+  for (auto base:long6Rows) {
+    vector<int> holes;
+    for (int i=0;i<12;i++) if (base[i]==0) holes.push_back(i);
+    if (holes.size()!=2) return 10;
+    for (int a:CH) for (int b:CH) {
+      auto m=base; m[holes[0]]=a; m[holes[1]]=b;
+      if (closedReachable(m)) closedLong6++; else hardLong6++;
+    }
+  }
+  long long closedLong7=0, haltLong7=0, hardLong7=0;
+  map<int,long long> long7HoleSlot;
+  for (auto base:long7Rows) {
+    vector<int> holes;
+    for (int i=0;i<12;i++) if (base[i]==0) holes.push_back(i);
+    if (holes.size()!=1) return 11;
+    long7HoleSlot[holes[0]]++;
+    for (int a:CH) {
+      auto m=base; m[holes[0]]=a;
+      if (closedReachable(m)) { closedLong7++; continue; }
+      auto r=trace(m);
+      if (r.kind==1) haltLong7++; else hardLong7++;
+    }
+  }
+  if (closedLong6!=23040 || hardLong6!=1960 ||
+      closedLong7!=30624 || haltLong7!=3 || hardLong7!=1273)
+    return 12;
+  if (long7HoleSlot != map<int,long long>{{1,388},{3,158},{5,344},{8,157},{9,229}})
+    return 13;
+  const long long finalCandidatePhysical=hardLong6+hardLong7;
+  if (finalCandidatePhysical!=3233) return 14;
+
   cout<<"{\n"
       <<"  \"depth6ResidualRows\": 4274,\n"
       <<"  \"depth6ResidualPhysical\": "<<depth6Physical<<",\n"
@@ -187,7 +220,14 @@ int main() {
       <<"  \"depth8\": {\"shortSide\": "<<side8<<", \"halts\": "<<halt8
       <<", \"long\": "<<long8<<", \"closedReachable\": "<<closed8<<"},\n"
       <<"  \"classifiedPhysicalCandidate\": "<<classifiedPhysical<<",\n"
-      <<"  \"remainingPhysicalCandidate\": "<<unresolvedPhysical<<",\n"
-      <<"  \"remainingFormula\": \"40*625 + 1276*25\"\n"
+      <<"  \"remainingPhysicalBeforeLastHoleClosure\": "<<unresolvedPhysical<<",\n"
+      <<"  \"lastHoleClosure\": {\"long6Closed\": "<<closedLong6
+      <<", \"long6Hard\": "<<hardLong6
+      <<", \"long7Closed\": "<<closedLong7
+      <<", \"long7Halts\": "<<haltLong7
+      <<", \"long7Hard\": "<<hardLong7<<"},\n"
+      <<"  \"long7HoleSlots\": {\"1\": 388, \"3\": 158, \"5\": 344, \"8\": 157, \"9\": 229},\n"
+      <<"  \"finalCandidatePhysical\": "<<finalCandidatePhysical<<",\n"
+      <<"  \"finalFormula\": \"1960 + 1273\"\n"
       <<"}\n";
 }
