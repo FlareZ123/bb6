@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-f-depth5-full-cycles, raw34-e-depth5-cycles, raw34-e-depth5-full-cycles, raw34-extended-long-cycles, raw34-depth6-tranche, raw34-depth6-halts, raw34-pair-depth6-plan, raw34-pair-easy-plan, raw34-pair-easy-sharded, raw34-pair-f0ld-census, raw34-pair-full7, raw34-pair-full8, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-depth5-full-union-audit, raw34-depth6-full-union-audit, raw34-rank-mdd-baseline, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit, raw34-window5-audit, raw34-window5-fullunion, raw34-window5-domain-shards, raw34-window7-domain-shards]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-f-depth5-cycles, raw34-f-depth5-full-cycles, raw34-e-depth5-cycles, raw34-e-depth5-full-cycles, raw34-extended-long-cycles, raw34-depth6-tranche, raw34-depth6-halts, raw34-pair-depth6-plan, raw34-pair-easy-plan, raw34-pair-easy-sharded, raw34-pair-final3233, raw34-pair-f0ld-census, raw34-pair-full7, raw34-pair-full8, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-depth5-full-union-audit, raw34-depth6-full-union-audit, raw34-rank-mdd-baseline, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit, raw34-window5-audit, raw34-window5-fullunion, raw34-window5-domain-shards, raw34-window7-domain-shards]
         default: late-parent
       base_run:
         type: string
@@ -2049,6 +2049,73 @@ jobs:
           path: /tmp/a40-raw34-pair-easy-plan/
           if-no-files-found: warn
           retention-days: 30
+
+  raw34-pair-final3233:
+    if: inputs.mode == 'raw34-pair-final3233'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check exact pair parent to 3,233 complete residual machines
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-final3233
+          mkdir -p "$W/generated"
+          node im-results/agent50-raw34-plan/generate_pair_depth6_plan.mjs \
+            --f0 0LD --root-shards --output "$W/generated" | tee "$W/root-generation.json"
+          cp "$W/generated/manifest.json" "$W/root-manifest.json"
+          node im-results/agent40-raw34-pair-depth8/generate_final3233_cover.mjs \
+            --source "$W/generated/residualRows.json" --output "$W/generated" \
+            --shard-size 25 | tee "$W/final-generation.json"
+          cp "$W/generated/manifest.json" "$W/final-manifest.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/generated" --jobs 8 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-pair-final3233-source \
+            "$W/generated"/Raw34PairFinal3233Cover.lean 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/root-manifest.json" "$W/final-manifest.json" "$W/closure.log" <<'PY'
+          import json,re,sys
+          root=json.load(open(sys.argv[1]))
+          m=json.load(open(sys.argv[2]))
+          log=open(sys.argv[3]).read()
+          assert root['d1']=='0LF' and root['f0']=='0LD'
+          assert root['physicalParentCompletions']=='244140625'
+          assert root['nodeCount']==16976 and root['residualCount']==4274
+          assert len(root['shards'])==25
+          assert m['originalResidualRows']==4274
+          assert m['originalResidualPhysical']=='2671250'
+          assert m['finalResidualRows']==3233
+          assert m['finalResidualSha256']=='c63e67cc6bf6a30e6ec0d4d313a4b2407dd31593d6331311634fc6fe0537ef83'
+          assert m['finalResidualsAreComplete'] and m['finalResidualsUnique']
+          assert m['boundedHaltTimes']==[101,102,123]
+          assert m['theorem']=='BB6.Agent40Raw34Final3233.cover'
+          final=m['theorem']
+          allowed={'propext','Classical.choice','Quot.sound'}
+          mm=re.search(r"'"+re.escape(final)+r"' depends on axioms: \[([^\]]*)\]",log)
+          if mm:
+              got=set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))
+              assert got<=allowed,(final,got)
+          else:
+              assert f"'{final}' does not depend on any axioms" in log,final
+          assert 'sorryAx' not in log
+          print('PASS: exact 244,140,625-table Raw34 pair parent is source-covered by DecidedBelow 128 or 3,233 explicit complete residual machines')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-pair-final3233-source
+          path: /tmp/a40-raw34-final3233/
+          if-no-files-found: warn
+          retention-days: 30
+
 
   raw34-pair-f0ld-census:
     if: inputs.mode == 'raw34-pair-f0ld-census'
