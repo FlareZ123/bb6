@@ -1,0 +1,28 @@
+name: Agent29 Raw36 D1=0RE E0=1LB exponential-counter macro probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  macro:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify sixth exact frontier milestone and exponential clock pattern
+        run: |
+          set -euo pipefail
+          g++ -O3 -std=c++17 -Wall -Wextra \
+            im-results/agent29-raw36/d110_e01lb_macro_probe.cpp \
+            -o /tmp/a29-d110-e01lb-macro
+          /tmp/a29-d110-e01lb-macro | tee /tmp/a29-d110-e01lb-macro.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d110-e01lb-finite-exponential-frontier-evidence
+          path: /tmp/a29-d110-e01lb-macro.log
+          if-no-files-found: warn
+          retention-days: 45
