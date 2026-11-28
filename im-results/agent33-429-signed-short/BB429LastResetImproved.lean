@@ -1,5 +1,6 @@
 import BB429Forced13More
 import BB429Forced15
+import BB429Forced15More
 
 namespace BB429LastResetImproved
 open BB429NewResidue
@@ -74,7 +75,22 @@ theorem source_branch15_k_not0_mod4
   rw [ha,hb] at hr
   exact BB429Forced15.rooted_15_q1_mod4_excluded t ht hr
 
+/-- Strengthening of the source-exact 15-family parameter restriction:
+    k=0,1,4(mod8) are excluded at arbitrary genuine blank-run times. -/
+theorem source_branch15_k_mod8_necessary
+    (n k q : Nat) (hn : 18 ≤ n)
+    (hreset : 4*(32*q+15)+3*n+15 = 3*2^(n+2))
+    (hparam : q+(3*k+3) = 3*2^(n-5))
+    (hr : Reach (32*q+15) (64*q+27)) :
+    k%8=2 ∨ k%8=3 ∨ k%8=5 ∨ k%8=6 ∨ k%8=7 := by
+  have hq : 16≤q :=
+    genuine_last_reset_q_large n q 15 hn (by omega) hreset
+  have hclass := BB429Forced15More.rooted_15_q_mod8_necessary q hq hr
+  have hp := power_mod16_zero n hn
+  omega
+
 #print axioms genuine_last_reset_q_large
 #print axioms source_branch13_k_mod16_necessary
 #print axioms source_branch15_k_not0_mod4
+#print axioms source_branch15_k_mod8_necessary
 end BB429LastResetImproved
