@@ -1,0 +1,26 @@
+# Cryptids #429: finite-depth closure of four infinite signed inverse families
+
+**Mathematical claim (Lean source pending acceptance):** Four full congruence cylinders of the signed inverse system terminate after uniformly bounded compressed length. Unlike finite traces or fixed-depth 2-adic sampling, the arguments universally quantify the natural family parameter and *all* admissible F/EF/SF branches. No Bad-filter hypothesis is used. This does **not yet prove original-machine blank-root exclusions**, because the established source signed-lift/precision bridge must be instantiated at the relevant exponentially large true parameters. BB(6) remains unknown.
+
+## Source-compatible arithmetic model
+
+The compressed signed inverse maps are F: (u,d)↦(u/2,d+3u+3) for even u, EF: (u,d)↦(u+(d+8)/8,d/4+4) for odd u and d divisible by eight, and SF: (u,d)↦(u+(d+20)/8,d/4−1) for even u and d≡4 (mod 8). The 3-branch `Step` in [Branch1315Finite.lean](Branch1315Finite.lean) encodes exactly these guarded actions as linear integer equations, with *no* source-derived Bad exclusions. In particular any path in the actual signed inverse filter is a Step-path.
+
+Agent22's exact source-accepted branch arithmetic gives initial coordinates (48k+24,96k+66) for the 13-family and (48k+39,96k+96) for the 15-family (see [Branch13_15.lean](../agent22-429-signed-drift/Branch13_15.lean), CI 45683408657).
+
+| Family | Universal k restriction | Max legal compressed transitions | Blocking theorem |
+| --- | --- | ---: | --- |
+| 13 | k≡0 (mod 4) | 3 | `branch13_mod4_zero_no_four` |
+| 13 | k≡1 (mod 4) | 4 | `branch13_mod4_one_no_five` |
+| 15 | k≡0 (mod 4) | 3 | `branch15_mod4_zero_no_four` |
+| 15 | k≡1 (mod 8) | 5 | `branch15_mod8_one_no_six` |
+
+The claims prohibit any chain of respectively 4, 5, 4, or 6 algebraically legal edges from the genuine parameterized initial signed state. The formal proof uses linear equations for each transition and Presburger decision (`omega`); the original inverse model's Bad leaves can only shorten a path.
+
+For the 13 family with k≡0 mod4, the first two steps are F,F, then F or SF; each next state has odd u and d nonzero modulo eight. For the 15 family with k≡1 mod8, the first step is EF, followed by F or SF; the SF endpoint is terminal and the F branch terminates after four further F actions. These short recurrences provide human-checkable independent proofs of two rows.
+
+## Exact research boundary
+
+The genuine rooted last-reset equation in Agent33/18's programme is 4u+3n+15=3·2^(n+2), n≥18. It forces the 13 family to n=63+128k and the 15 family to n=103+128k. To turn a signed algebraic closure into a theorem excluding a genuine blank-root last-reset family, use the existing authenticated inverse source/BAD bridge and the finite-precision lift at the exact source scale; prove its offset and positivity inequalities for these parameter subfamilies. Other k residue classes remain open, including many algebraically possible (not necessarily genuinely reachable) paths.
+
+**Proof evidence:** [Branch1315Finite.lean](Branch1315Finite.lean) is a kernel-checkable proposed formalization of four arbitrary-k Presburger contradictions. The local command runtime is currently unavailable with `ClientError` before execution; do not label this original-source accepted until the targeted existing manual CI invocation succeeds. No global Canonical40 count is changed. 
