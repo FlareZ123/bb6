@@ -2093,7 +2093,8 @@ jobs:
           assert m['originalResidualRows']==4274
           assert m['originalResidualPhysical']=='2671250'
           assert m['finalResidualRows']==3233
-          assert m['finalResidualSha256']=='c63e67cc6bf6a30e6ec0d4d313a4b2407dd31593d6331311634fc6fe0537ef83'
+          assert m['finalResidualSha256']=='b5c98d90b8232d7b3dfc8a950b5e9aef7e27689649a5122bc0e16a25191feaee'
+          assert m['canonicalFinalResidualSha256']=='ca1ea5f5554e6a3a6d9939e006a1ecee6b4ffd3f2b34a81a2cc52e12d90cb59d'
           assert m['finalResidualsAreComplete'] and m['finalResidualsUnique']
           assert m['boundedHaltTimes']==[101,102,123]
           assert m['theorem']=='BB6.Agent40Raw34Final3233.cover'
