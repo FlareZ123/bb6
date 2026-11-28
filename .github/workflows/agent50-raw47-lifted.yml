@@ -2236,12 +2236,14 @@ jobs:
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_depth5_halts.mjs \
             --max-fixed 5 --shard-size 192 --skip-disjointness --output "$W/halt5" > "$W/halt5.json"
           WIN5=""
+          WIN7=""
           if [ "${{ inputs.mode }}" = "raw34-window5-fullunion" ]; then
             WIN5="--include-window5-mask-bank"
+            WIN7="--include-window7-mask-bank"
           fi
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
             --include-e-cycles --include-missing-ef-third --include-f-growth \
-            --include-ef-left-ray --include-f-depth5 --include-e-depth5 --include-late-halts $WIN5 \
+            --include-ef-left-ray --include-f-depth5 --include-e-depth5 --include-late-halts $WIN5 $WIN7 \
             --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" --e-cycles-dir "$W/eold" \
             --missing-third-dir "$W/missing" --ef-left-dir "$W/efleft" \
             --f-depth5-dir "$W/f5" --e-depth5-dir "$W/e5" --halt-depth5-dir "$W/halt5" \
