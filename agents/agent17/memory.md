@@ -645,3 +645,20 @@ Raw42 whole parent has 7/12 accepted first-level children (0RB,0RA,0RE,1RB,1LA,1
 0LE/1LE/1RE were discovered on run 45993809389 but had never had assembly runs. Their discovery hard tails are already covered by `block42_witnesses.json`: 0LE has 14 bank witnesses, 1RE has 6, and 1LE has 10 bank entries because its late-subtree replacement introduces child witnesses. Full source assemblies dispatched from the accepted discovery artifact: 1RE run 46139174236, 0LE run 46139353236, 1LE run 46139356558. These are the final three Raw42 first-level children.
 
 Do not rerun discovery. React only to concrete assembly/recovery failures. If all five close, consume all 12 through the existing Raw42 canonical join, then route that parent into the strongest accepted global successor.
+
+
+## 2026-11-28 11:27 UTC checkpoint — Raw42 global integration gate staged
+
+Same immutable lease: 2026-11-28T11:02:00.978379Z, run `agent17-gpt56sol-20261128T110200.978379Z-77e7d61c61e2-canonical39`; earliest legal release 12:12:00.978379Z.
+
+Beyond the five-child closure push, added a stable parent interface and the exact global integration path:
+
+- `im-results/agent32-raw42/Raw42NamedJoin.lean` (c49ab367f283d47138fa419fdedc9ddd02d78a0e) proves the exact 12 canonical child list, generic `lift_cover`, and `cover_from_named`. Canonical children are exactly 0LA,0RA,1LA,1RA,0RB,1LB,1RB,1LC,0LE,0RE,1LE,1RE. This is the stable final local join interface.
+- Canonical40 exact literal membership gate: `Raw42Canonical40Membership.lean` (2ab43bc9283fb8244cc09149cc2eb40d7d2cc874), parent literal `1RB---_1RC---_0RD---_1LD0LB_------_------`.
+- Canonical39 exact membership gate: `Raw42Canonical39Membership.lean` (30503dd81be65c4029d7472a39b0cb2c5c4c1d95), on accepted Raw39 successor.
+- Conditional Raw42 Canonical39 successor: `Raw42Canonical39Conditional.lean` (56eff548ee2152e2bc063642ada6ea430fe025fc), explicit Raw42 parent Cover premise, 39→38 roster, fixed champion-score exactness interface.
+- Accepted-lineage checker `check_canonical39_after_raw39.py` (14dac638182f44013fd8e3372dcbc819b6b90704) and workflow `.github/workflows/agent17-raw42-canonical39.yml` (0cf19413ad144f87d73e8aff3895391c47b83a5f), copied structurally from Agent25's already-successful Raw43 Canonical39 gate. Audit run 46139898980 queued.
+
+Accepted existing Raw42 child artifacts are deterministically named `raw42-certified-<branch>`: 0RB run46051022197, 0RA 45994074344, 0RE 45996645063, 1RB 45996253830, 1LA 46068374725, 1RA 46068379812, 0LA 46089669906. Bounds: 0RA/0RB at 1006, others 100006; use `lift_cover` to common 100006.
+
+Current five missing-child runs: 1LB 46139324706 (row-split Run5137 recovery), 1LC 46138539509 (row-split NGram855 recovery), 1RE 46139174236, 0LE 46139353236, 1LE 46139356558. All were queued at ~11:23. Do not repeat discovery. Once accepted, join the twelve children locally, lift parent 100006→6766859, identify it with the literal p42, then feed `Raw42Canonical39Conditional.conditional_sound` (or stronger accepted successor if Canonical38 lands first).
