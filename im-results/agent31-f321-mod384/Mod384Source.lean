@@ -69,14 +69,20 @@ theorem source_closed {a d A D:Nat}
     · exact hF
   | middleEven d h1 h2 hp =>
     have hM:hit (M2 (a%384) (d%384)).1 (M2 (a%384) (d%384)).2=true := by
-      simpa [x,y] using (hc.2.2.2.1 (by omega))
+      have hpSum : (a+d)%2=0 := by omega
+      have hpResidue : (a%384+d%384)%2=0 := by omega
+      have hpFin : (x.val+y.val)%2=0 := by simpa [x,y] using hpResidue
+      simpa [x,y] using (hc.2.2.2.1 hpFin)
     apply hit_of_mods (b:=(M2 (a%384) (d%384)).1) (c:=(M2 (a%384) (d%384)).2)
     · simpa only [M2,Prod.fst,Nat.mod_mod] using far_first_mod a
     · simp [M2]
     · exact hM
   | middleOdd d h1 h2 hp =>
     have hM:hit (M1 (a%384) (d%384)).1 (M1 (a%384) (d%384)).2=true := by
-      simpa [x,y] using (hc.2.2.1 (by omega))
+      have hpSum : (a+d)%2=1 := by omega
+      have hpResidue : (a%384+d%384)%2=1 := by omega
+      have hpFin : (x.val+y.val)%2=1 := by simpa [x,y] using hpResidue
+      simpa [x,y] using (hc.2.2.1 hpFin)
     apply hit_of_mods (b:=(M1 (a%384) (d%384)).1) (c:=(M1 (a%384) (d%384)).2)
     · simpa only [M1,Prod.fst,Nat.mod_mod] using far_first_mod a
     · simp [M1]
