@@ -22,6 +22,7 @@ open BB6.Agent5Q0151SegmentGrammar
 open BB6.Agent5Q0151RightWords
 open BB6.Agent5Q0151TransferredWord
 open BB6.Agent5Q0151PackedRightExt
+open BB6Coverage.Agent13PackedZipper
 open BB6.Agent5Q0151SourceActions1
 open BB6.Agent5Q0151SourceActions3
 
