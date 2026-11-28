@@ -30,7 +30,7 @@ for(let st=0;st<435;st+=10){
  for(const x of ys){
   const y=xs[x.i+1],n=y.T-x.T;
   S+="  have s"+x.i+" : Runs "+n+" ("+at(x)+") ("+at(y)+") := by\n";
-  S+="    simpa [pre, P, G, O, rep, S_push] using ("+macro(x)+")\n";
+  S+="    simpa [pre, P, G, O, S_consP] using ("+macro(x)+")\n";
  }
  let e="s"+ys[ys.length-1].i;
  for(let i=ys.length-2;i>=0;i--)e="(chain s"+ys[i].i+" "+e+")";
@@ -49,7 +49,7 @@ S+="def terminalCfg : Cfg := E (rep Q "+last.k+" blank)\n  (pre [false,false,fal
 S+="theorem terminalRead : terminalCfg.q = 4 ∧ terminalCfg.r 0 = false := by\n  constructor <;> rfl\n\n";
 S+="theorem terminalRun : Runs "+rec.firstE0+" blankCfg terminalCfg := by\n";
 S+="  have hTerm : Runs "+cost+" ("+at(last)+") terminalCfg := by\n";
-S+="    simpa [pre, rep, G, O, P, terminalCfg] using\n      (terminal3 "+last.k+" "+r+" ("+ray(u)+"))\n";
+S+="    simpa [pre, G, O, P, terminalCfg] using\n      (terminal3 "+last.k+" "+r+" ("+ray(u)+"))\n";
 S+="  have h := chain seed (chain traceSections hTerm)\n  simpa only [Nat.reduceAdd] using h\n\n";
 S+="#print axioms terminalRun\n#print axioms terminalRead\nend BB6.Agent3Leaf2265\n";
 const filename=path.join(__dirname,"Leaf2265Trace.lean");
@@ -67,7 +67,7 @@ const wrapper=S.slice(0,anchors[0].index)
   .replace("import Leaf2265MacroAll",imports)+S.slice(sectionStart);
 const emitted=[[filename,wrapper]];
 for(let g=0;g<11;g++){
-  let group="import Leaf2265MacroAll\n\nnamespace BB6.Agent3Leaf2265\n"+
+  let group="import Leaf2265TracePrelude\n\nnamespace BB6.Agent3Leaf2265\n"+
     "set_option maxRecDepth 1000000\nset_option maxHeartbeats 0\n\n"+
     "/-! Source-derived, independently counted section chunks "+
     (4*g)+"–"+(4*g+3)+" of the original 435-section trace. -/\n\n";
