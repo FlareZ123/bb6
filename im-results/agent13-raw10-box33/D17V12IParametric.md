@@ -1,140 +1,66 @@
-# An exact unbounded two-packet return map for Raw10 D17/E0=12, machine I
+# Machine I: complete blank-orbit nonhalting via an inductive payload grammar
 
-**Status:** original-machine transition code copied literally into a standalone Lean 4.36.0-rc2 stream model. The full local source compiled with no errors on 28 November 2026. The exported `MacroI.oddPacket` and `MacroI.evenPacket` have transitive axiom profiles `[propext, Classical.choice, Quot.sound]` and **no** `sorryAx` or `native_decide`. A CI import into the unchanged repository source is not yet completed, and neither theorem is an all-blank nonhalting proof. The archive and checksum-checked extractor are adjacent to this note.
+**Status (2026-11-28):** complete, locally kernel-checked nonhalting theorem `MacroI.neverBlank_I` in the literal six-state stream model under Lean 4.36.0-rc2. The original repository-model bridge and parent-cover consumption are separate outstanding steps. This closes the mathematical blank-orbit problem for this exact table; it does not establish a new global BB(6) bound.
 
-## Exact machine and semantics
-
-The row-code table is
+## Exact machine and return boundary
 
 ```text
 [8,24,11,18,1,13,17,3,12,0,4,21]
 1RB1RF_1LC0RE_0LA0LD_0LE1LA_1RC---_1RA0LF
 ```
 
-The stand-alone two-way stream simulator has states A–F, lists of left/right bits in **nearest-first** order, a right stream including the scanned bit, initially all-zero left stream `z`, and `run n` exactly n primitive, nonhalting transitions. `word(w,r)` prepends finite word `w` and `rep(w,j,r)` prepends `j` copies. For every natural `j` and arbitrary infinite tape tail `r`, define
-
+Streams are nearest-first, the right stream includes the scanned symbol, and `z` is the infinite zero stream. Define
 ```text
-P(j) = 01010010 (0010)^j
-phase(j,r) = (state A, left=z, right=P(j) ++ r)
+phase(j,r) = A(z, 01010010 (0010)^j r)
+N(j,u) = phase(j,10101 u)
 ```
+The authentic blank configuration reaches N(3,11 z) after exactly 490 transitions.
 
-The *universally quantified* exact statements are:
+## Closed language and unbounded carry
 
+The payload language consists of a finite sequence of arbitrary members of {ZS,ZR,PS,PR}, followed by one of ten terminal words and the infinite blank suffix. Here ZS=00001000, ZR=00000101, PS=00101000, PR=00100101.
+
+Every payload decomposes into PR^k x. The terminal relation (x,y,t) is:
+- 0000 r → 0010 r, t=14 (covers ZS and ZR)
+- 00101000 r → 00000101 r, t=36
+- 11 → 01, t=8
+- 01 → 00001, t=18
+- 00001 → 00101, t=14
+- 00101 → 00000101, t=36
+- empty → 001, t=14
+- 001 → 0000101, t=30
+- 0000101 → 0010101, t=14
+- 0010101 → 0000010001, t=40
+- 0000010001 → 0010010001, t=14
+- 0010010001 → 0000100011, t=34
+
+The first two preserve arbitrary tails; the ten remaining cases have blank tails. Every y belongs to the language. The fully quantified theorem `complete_carry` gives
 ```text
-oddPacket j r:
-  run (108 + 32*j) (phase j (11000 ++ r))
-    = some (phase (j+1) (10101 ++ r))
-
-evenPacket j r:
-  run (110 + 32*j) (phase j (10101000 ++ r))
-    = some (phase (j+1) (11000001 ++ r))
+run (236+t+24*k+64*j) (N(j,PR^k x))
+  = some (N(j+2,ZS^k y)).
 ```
-
-Both preserve the arbitrary suffix bit-for-bit, move to the next outer `0010` block, and guarantee no halt anywhere in the stated finite segment. They are not just simulations at selected j: the proof is induction in j, with exact 6-step right-pump and 10-step left-pump identities and 28/40/42-step finite relay cores.
-
-## Mechanism
-
-The shared symbol transport is:
-
-```text
-run  6 A(l,0100 r)       = A(1101 l,r)
-run 10 A(1101 l,11 r)    = A(l,110100 r)
-```
-
-Thus a rightward sweep across j copies of `0100` takes `6j` transitions, and the inverse relay over j left-hand `1101` blocks takes `10j` transitions. The elementary word-conjugacy
-
-```text
-010(0010)^j = (0100)^j 010
-```
-
-aligns the repeated blocks at the start; `01010(0100)^j010 = 01010010(0010)^j` restores the canonical return boundary. In both packet rules, finite cores perform all effects on the payload outside these pumps.
-
-The exact proof factorizes the odd packet into `(60+16j)+(48+16j)=108+32j`, and the even packet into `(62+16j)+(48+16j)=110+32j`. All four quantified component identities, stream algebra and packet-composition theorems are in `Box33D17V12IParametric.lean`.
+The forward carry costs 10 per pair and the backward carry 14. The initial sweep, terminal core, final sweep and two packet boundaries account for the remaining cost. `payload_decompose` proves this covers the entire inductive language, `payload_return` establishes its preservation, `good_progress` gives a strictly positive successful return, and `neverBlank_I` uses strong induction on arbitrary primitive time. No finite simulation horizon is used.
 
 ## Reproduce
 
 ```bash
 cd im-results/agent13-raw10-box33
 python3 unpack_i_parametric.py
-lean --version # requires Lean 4.36.0-rc2 (from project toolchain)
-lean Box33D17V12IParametric.lean
-```
-
-Expected source SHA-256: `77e88d80bdf0023a825a3e49bf27a48ebc9807e7336a5ae4690cbca016ec2f5f`. Check `#print axioms MacroI.oddPacket` and `#print axioms MacroI.evenPacket` at the end of the reconstructed source.
-
-## Unresolved blank-orbit obligation
-
-Machine I is one of two hard leaves not yet closed in the D17/E0=12 cylinder; the other is `[8,24,11,8,1,13,17,18,12,5,2,0]`. The actual blank orbit visits packet configurations, but the two packet rules do **not** alone form a closed invariant, because their respective outputs are not universally required inputs for the next packet. For example the synthetic `phase(0,tail)` with tail integer `0x195` (nearest-bit-first encoding) reaches the E1 halt in 29 primitive steps, despite satisfying `tail ≡ 21 (mod 32)`. This falsifies the tempting blanket safety claim for all mod-32 payloads. A root-specific inductively invariant digit grammar or a stronger cross-packet/carry rule is needed before one can assert machine-I nonhalting, let alone a full Raw10 cylinder bound or BB(6) solution.
-
-**Immediate best next test:** derive exact parameterized carry rules for `phase(j,10101001 ++ r)`, which occurs along the genuine orbit but is not covered by `evenPacket`. Connect the resulting rules to a root-containing closed regular or recursively generated language. There is no new BB(6) upper bound from the present result.
-
-
-## Further universally quantified results (28 November, ~11:15 UTC)
-
-The adjacent `Box33D17V12ICarry.lean` proves, for every `j : Nat` and arbitrary `r : Stream`,
-
-```text
-run (132 + 32*j) (phase j (1010100101000 ++ r))
-  = some (phase (j+1) (1100000000101 ++ r)).
-```
-
-The proof uses an exact 64-step finite core plus the same two unbounded sweeps and universal 48+16j reset. This is not inferred from numerical growth and does not require a fixed blank suffix.
-
-More generally `Box33D17V12IRelay.lean` proves the **finite-to-infinite relay lifting lemma**. Let `X,Y` be *arbitrary finite Boolean words*, `c` a natural number, and suppose the finite core is valid for all left and right streams:
-
-```text
-run c A(1101 ++ l, 010 ++ X ++ r)
-  = some A(l, 11 ++ 010 ++ Y ++ r).
-```
-
-Then for every `j,r`, without any assumption about `r`,
-
-```text
-run (20+c+16*j) (phase j (X++r))
-  = some (phase j (Y++r)).
-```
-
-The proof is a literal decomposition into `5+6(j+1)+c+10j+9` primitive transitions. Its other theorem, `universalSecond`, proves
-
-```text
-run (48+16*j) (phase j (00010000++r))
-  = some (phase (j+1) (110000++r)).
-```
-
-The combination `packetLift` maps any appropriate arbitrary-tail finite core in `c` steps to a `68+c+32j` return that adds one outer `0010` block. This turns the hard **unbounded spatial repetition parameter** into a fixed-size Lean proof of the core and a reusable induction theorem. `generate_i_relays.py` emits such source theorem candidates for finite numerical guard prefixes; it never declares successful source acceptance. The adjacent extractor `unpack_i_generator.py` reconstructs the audited generator, SHA256 `e936ff293159f851a51c2e843d1bd779ce5f368e15529e574b7a8bfd0a07c3c0`.
-
-### Source reconstruction and test
-
-```bash
-cd im-results/agent13-raw10-box33
-python3 unpack_i_parametric.py
-python3 unpack_i_carry.py
 python3 unpack_i_relay.py
-python3 unpack_i_generator.py
+python3 unpack_i_invariant.py
+export LEAN_PATH=.
 lean -o Box33D17V12IParametric.olean Box33D17V12IParametric.lean
-LEAN_PATH=. lean -o Box33D17V12IRelay.olean Box33D17V12IRelay.lean
-LEAN_PATH=. lean Box33D17V12ICarry.lean
-python3 generate_i_relays.py /tmp/IExamples.lean 0x75 0x55 0x215 0x295
-LEAN_PATH=. lean /tmp/IExamples.lean
+lean -o Box33D17V12IRelay.olean Box33D17V12IRelay.lean
+lean -o Box33D17V12IClosed.olean Box33D17V12IClosed.lean
+lean Box33D17V12IInvariant.lean
 ```
 
-The local proof was compiled with Lean 4.36.0-rc2. `#print axioms` reports only the ordinary `propext`, `Classical.choice`, and `Quot.sound` axioms for `relay`, `universalSecond`, `packetLift`, and `carryPacket`. Import into the original repository transition semantics and a globally closed blank-root invariant remain uncompleted.
+The new archive extractor checks SHA-256 for both sources. All three audited theorems (`complete_carry`, `payload_return`, `neverBlank_I`) have axiom profile [propext, Classical.choice, Quot.sound], with neither sorryAx nor native_decide. The proof source is in the original literal stream model, pending an independently checked source-model transfer.
 
-## Payload return-map evidence and important counterexamples
+## Earlier partial results and their limits
 
-The fixed `10101` prefix at one boundary produces the exact low-bit payload return map `F` in a second boundary, and `packetLift` can prove each finite guarded cylinder when its core passes `rfl`. For example, with integer payload notation converted to nearest-first words:
+The previous odd/even packet proofs have costs 108+32j and 110+32j. The relay lifting theorem in Box33D17V12IRelay turns an arbitrary-tail core of cost c into a full return of cost 20+c+16j; universalSecond costs 48+16j. The carry example in Box33D17V12ICarry has cost 132+32j. These are now subsumed for blank-orbit purposes by the language proof, but remain independently useful.
 
-```text
-F(1w) = 0w
-F(000w) = 001w
-F(011w) = 000w
-F(01000w) = 00001w
-F(0010000w) = 0000101w
-F(00101000w) = 00000101w
-```
+Synthetic phase(0,0x195) (nearest-bit-first encoding) halts after 29 steps, so blanket claims for every tail congruent to 21 mod 32 are false. Likewise, payload prefixes 0011 and 010011 can halt. The language invariant is essential: the earlier 100,000-return experiment and finite prefix search did not prove it.
 
-These samples are **finite-guard identities**, not a complete total characterization of `F`. In particular, the separate guarded prefix `0011` immediately reaches the E1 halt, as does `010011`. An infinite invariant must distinguish the genuine payload orbit from such unsafe continuations.
-
-An exploratory, untrusted iteration of `F` on blank-extended integer payloads beginning with `11` completed 100,000 section returns without encountering a halt. Every return after the initial two had prefix `000` or `001`, alternately (49,999 observations of each); largest active integer payload length was 66 bits. This **does not prove the infinite trajectory**, and the first long orbit is not a substitute for an inductive invariant. A prefix-tree search through depth 12 found 77 closed return/halt cylinders and 82 unresolved length-12 prefixes; these counts are discovery diagnostics, not a universal prefix partition theorem. For every fixed prefix length 4 through 21 considered, a sampled root-orbit even-boundary prefix had a deliberately changed six-bit continuation that halted within two return attempts. Consequently a simple finite-prefix safety cylinder is inadequate; the genuine orbit likely requires a more structured (possibly recursive or automata-theoretic) language.
-
-The open question is the carry regime `001w` and how to identify a closed language of full payload streams containing the authentic blank-start sequence. Neither the root nor the entire D17V12 cylinder is closed by this partial result.
+The other outstanding hard table in D17/E0=12 is [8,24,11,8,1,13,17,18,12,5,2,0]. Neither that table nor the complete cylinder is closed by this proof alone.
