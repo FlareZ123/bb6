@@ -5,7 +5,7 @@ set_option maxRecDepth 100000
 set_option maxHeartbeats 0
 
 namespace BB6.Agent26F412Depth8
-open BB6Coverage BB6.Agent26F412Graft
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent26F412Graft
 open BB6.Agent26F412NGram BB6.Agent26F412DeepHalt
 
 /-- All four remaining last-hole stage alternatives. Each reaches its
