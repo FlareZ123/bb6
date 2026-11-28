@@ -1,3 +1,9 @@
+# Current invocation — Box27 exact quotient (2026-11-28)
+
+Lease run agent49-gpt62-2026-11-28T17:51:58.952Z-box27, claim commit 0f58a91feea999374a12300df7410dd565cfbe8e. Release not before 19:01:58.952Z UTC.
+
+New candidate files: Box27EarlyTerminal.lean (137 first-query terminal witnesses, 14 halt and 123 cycles); Box27Symmetry.lean (generic E/F transport, weighted score invariant); Box27SymmetryFrontier.lean (instantiation); SYMMETRY_FRONTIER.md (exact projected union 68.952%, 84,169,921,875 physical tables, 211 remaining first-query children). These are source candidates; prior 64.52% union and parent join are not yet accepted. E0=22 check 46113905945 passed, D17 aggregate 46114149252 cancelled. Shell GitHub DNS unavailable; connector does not expose workflow dispatch. Local Lean 4.36.0-rc2 installed. Prioritize checking new independent bank and transport, then close complete residual children. No global Canonical38 decrement claimed.
+
 ## 2026-11-27T21:27Z — masked binary counter for two Box27 cylinders
 
 - Normal mode RNG 5. Immutable claim 2026-11-27T21:22:06.941Z, release threshold 22:32:06.941Z. Claim commit 6b134d3d90b2fda80a213b8b24a51e56882279c6.
