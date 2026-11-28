@@ -115,13 +115,13 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
-  · rw [←show n+(k-n)=k by omega,run_add,h] at hi
+  · rw [←show n+(k-n)=k by omega,Box33PrefixMacro.run_add,h] at hi
     contradiction
-  · rw [←show k+(n-k)=n by omega,run_add,hi,Option.bind_some] at h
+  · rw [←show k+(n-k)=n by omega,Box33PrefixMacro.run_add,hi,Option.bind_some] at h
     exact hc h
 
 def partialTable : PartialMachine := fun s => some (table s)
@@ -229,13 +229,13 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
-  · rw [←show n+(k-n)=k by omega,run_add,h] at hi
+  · rw [←show n+(k-n)=k by omega,Box33PrefixMacro.run_add,h] at hi
     contradiction
-  · rw [←show k+(n-k)=n by omega,run_add,hi,Option.bind_some] at h
+  · rw [←show k+(n-k)=n by omega,Box33PrefixMacro.run_add,hi,Option.bind_some] at h
     exact hc h
 
 def partialTable : PartialMachine := fun s => some (table s)
@@ -354,13 +354,13 @@ theorem never : NeverHalts table := by
   let k : Nat := 4
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial [] []) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial [] []
   by_cases hn : n≤k
-  · rw [←show n+(k-n)=k by omega,run_add,h] at hi
+  · rw [←show n+(k-n)=k by omega,Box33PrefixMacro.run_add,h] at hi
     contradiction
-  · rw [←show k+(n-k)=n by omega,run_add,hi,Option.bind_some] at h
+  · rw [←show k+(n-k)=n by omega,Box33PrefixMacro.run_add,hi,Option.bind_some] at h
     exact hc h
 
 def partialTable : PartialMachine := fun s => some (table s)
