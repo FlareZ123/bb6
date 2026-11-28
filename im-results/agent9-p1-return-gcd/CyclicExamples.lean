@@ -15,7 +15,6 @@ theorem no_nine_shift {n m W a : Nat}
         if flip then 1-bit W (i+j) else bit W (i+j)) : False := by
   apply trace_no_odd_short_repeat hn heven ht i r 9 6 (n+7) flip
   · decide
-  · omega
   · decide
   · decide
   · unfold total
@@ -39,7 +38,6 @@ theorem no_twentyseven_shift {n m W a : Nat}
         if flip then 1-bit W (i+j) else bit W (i+j)) : False := by
   apply trace_no_odd_short_repeat hn heven ht i r 27 18 (n+8) flip
   · decide
-  · omega
   · decide
   · decide
   · unfold total
@@ -65,7 +63,6 @@ theorem no_fortyseven_shift {n m W a : Nat}
         if flip then 1-bit W (i+j) else bit W (i+j)) : False := by
   apply trace_no_odd_short_repeat hn heven ht i r 47 23 (n+9) flip
   · decide
-  · omega
   · decide
   · decide
   · unfold total
