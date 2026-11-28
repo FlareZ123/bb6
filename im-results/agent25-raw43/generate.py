@@ -42,6 +42,14 @@ MACRO_OVERRIDES = {
             "BB6.Agent38Raw43B1LEE0RA.never",
         ),
     },
+    "b1le_e0lf": {
+        1106: (
+            "1RB1LC_1RC1LE_0RD0RB_1LD0RB_0LF---_0LA1LE",
+            "Raw43B1LEE0LFM1106",
+            "BB6.Agent38Raw43B1LEE0LFM1106.table",
+            "BB6.Agent38Raw43B1LEE0LFM1106.never",
+        ),
+    },
 }
 
 NGRAM_OVERRIDES = {
