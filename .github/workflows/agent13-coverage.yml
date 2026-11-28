@@ -1042,8 +1042,8 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           W=/tmp/raw10-box27-d0-pumps
           D=im-results/agent49-raw10-box27
-          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27D0FastPumps.source_bound --artifact-name raw10-box27-d0-pumps --provenance-input "$D/Box27D0FastPumps.lean" "$D/Box27D0FastPumps.lean" 2>&1 | tee /tmp/raw10-box27-d0-pumps.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-d0-pumps.log BB6.Agent49.Box27D0FastPumps.never05 BB6.Agent49.Box27D0FastPumps.never07 BB6.Agent49.Box27D0FastPumps.never09 BB6.Agent49.Box27D0FastPumps.never10 BB6.Agent49.Box27D0FastPumps.source_compatible BB6.Agent49.Box27D0FastPumps.source_never BB6.Agent49.Box27D0FastPumps.source_bound
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 4 --manifest "$W/manifest.json" --theorem BB6.Agent49.Box27D0FastPumps.source_fast_bound --artifact-name raw10-box27-d0-pumps --provenance-input "$D/Box27D0FastPumps.lean" "$D/Box27D0FastPumps.lean" 2>&1 | tee /tmp/raw10-box27-d0-pumps.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw10-box27-d0-pumps.log BB6.Agent49.Box27D0FastPumps.never05 BB6.Agent49.Box27D0FastPumps.never07 BB6.Agent49.Box27D0FastPumps.never09 BB6.Agent49.Box27D0FastPumps.never10 BB6.Agent49.Box27D0FastPumps.source_compatible BB6.Agent49.Box27D0FastPumps.source_never BB6.Agent49.Box27D0FastPumps.source_bound BB6.Agent49.Box27D0FastPumps.check0 BB6.Agent49.Box27D0FastPumps.bound0 BB6.Agent49.Box27D0FastPumps.source_fast_bound
           cp /tmp/raw10-box27-d0-pumps.log "$W/lean.log"
       - uses: actions/upload-artifact@v4
         if: inputs.target == 'weighted-tnf-raw10-box27-d0-pumps'
