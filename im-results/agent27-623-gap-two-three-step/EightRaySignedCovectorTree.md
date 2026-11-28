@@ -243,3 +243,14 @@ If \`abs(F)<=W<3^k\`, then \`q\` must be either 0 or -1. Indeed, q>=1 gives F>=3
 Consequently, a nonmonochromatic block of output digits entirely at positions j satisfying \`3^j>W\` rules out \`abs(F)<=W\`. This argument does not require a separate magnitude bound on q: a small signed integer forces the high digits of its low residue to be uniformly 0 or uniformly 2 according to the sign.
 
 For the eight strips, \`W=1422*ell+15216\`. The exact remaining transducer task is therefore to locate a nonmonochromatic output block J within the first k digits, with \`3^min(J)>1422*ell+15216\`, while preserving the true carry at the moving S-window cut. The carry magnitude bound above is secondary; the signed-complement criterion is stronger.
+
+
+## Existing reset machinery to reuse
+
+The relevant finite carry artifacts already exist:
+
+- [PostResetCarryPairTransducer.json](../agent48-623-tight-window/PostResetCarryPairTransducer.json) is a 66-state paired L/R carry transducer; each of the nine raw digit-pair inputs records both branch output pairs and the next paired state.
+- [SourceCarryResetProduct.json](../agent24-machine623-shifted-reset-product/SourceCarryResetProduct.json) is the reachable source-to-target carry/reset product with one- and two-symbol output skips.
+- [ExactSeedCarry84.json](../agent24-machine623-shifted-reset-product/ExactSeedCarry84.json) records exact source-derived seeds for the 84 correction-only S-window suffix exceptions.
+
+The existing shift-aware reset overlap certificate establishes a nonmonochromatic x-output suffix for its checked reset language and carry rectangles. That x-only property does not automatically transfer to the eight forms A*x+B*y+c. The next finite product should either prove nonmonochromaticity separately for each coefficient pair over the exact source-derived seed set, or prove a symbolic condition on the paired output word that implies nonmonochromaticity for all eight forms. Keep the branch-dependent one-symbol trim and exact low-cut carry in the product; a generic reset label without the source phase is insufficient.
