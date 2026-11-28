@@ -187,7 +187,8 @@ theorem check_closed (nodes : Array Node) (bound fuel root : Nat) (p : PartialMa
 The index/equality witness deliberately preserves the exact source row rather
 than reducing the residual to an external cardinality. -/
 def ExplicitResidual (rows : List (List Nat)) (m : Machine) : Prop :=
-  ∃ j row, rows[j]? = some row ∧ compatible (table row) m
+  ∃ (j : Nat) (row : List Nat),
+    rows[j]? = some row ∧ compatible (table row) m
 
 /-- A checked plan with residual leaves is an exact source-level cover by
 bounded/nonhalting certificates or one of its explicit residual cylinders. -/
