@@ -21,11 +21,20 @@ on:
         type: choice
         options: ['five','six','ten','two']
         default: 'five'
+      d100_exposure_batch:
+        description: Source-prove finite first-hole exposure for one-hole D100 holdouts
+        type: boolean
+        default: false
+      d100_exposure_target:
+        description: Exact one-hole literal exposure witness
+        type: choice
+        options: ['F0','B1']
+        default: 'F0'
 permissions:
   contents: read
 jobs:
   source-audit:
-    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch }}
+    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -201,5 +210,68 @@ jobs:
             /tmp/a7-d100-mod/
             /tmp/a7-d100-mod-proof/
             /tmp/a7-d100-mod-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-exposure:
+    if: ${{ inputs.d100_exposure_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate source-locked finite-blank-prefix exposure lemma
+        run: |
+          set -euo pipefail
+          TARGET=${{ inputs.d100_exposure_target }}
+          if [[ "$TARGET" == F0 ]]; then
+            TABLE='1RB1RE_1RC1LF_0RD1RF_0LD0LA_1LA1LE_---0LB'
+            N=23126
+            CHUNK=170
+            SHA='520970e8e17cd2a0bcc882d5fe872a602616316884102444c1a45d5981085935'
+            NAME='BB6.Agent7D100Exposure5d5ca9965558'
+          else
+            test "$TARGET" = B1
+            TABLE='1RB1LE_1RC---_0RD1RF_0LD0LA_0LB0LA_1LA1RB'
+            N=60671
+            CHUNK=512
+            SHA='b7dd63eefcfab9fa14f933dcf182f97594e7e89e720c276bff1b48b1174fc456'
+            NAME='BB6.Agent7D100Exposure3fc1ba85d9c6'
+          fi
+          ROOT=/tmp/a7-d100-exposure/Raw36D100Exposure.lean
+          python im-results/agent7-opaque-tail-pump/exposure_emit.py "$TABLE" "$N" "$ROOT" --chunk "$CHUNK"
+          echo "$SHA  $ROOT" | sha256sum -c -
+          printf '%s\n' "$NAME" > /tmp/a7-d100-exposure/namespace.txt
+      - name: Compile original zipper source and audit exact exposure theorems
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-d100-exposure-proof \
+            --source-root /tmp/a7-d100-exposure --jobs 2 \
+            --manifest /tmp/a7-d100-exposure-proof/manifest.json \
+            --label raw36-d100-exposure-${{ inputs.d100_exposure_target }} \
+            --artifact-name raw36-d100-exposure-${{ inputs.d100_exposure_target }} \
+            --provenance-input im-results/agent7-opaque-tail-pump/exposure_emit.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/detect_pump.py \
+            /tmp/a7-d100-exposure/Raw36D100Exposure.lean \
+            2>&1 | tee /tmp/a7-d100-exposure-audit.log
+          NAME="$(cat /tmp/a7-d100-exposure/namespace.txt)"
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-exposure-audit.log "$NAME.reached"
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-exposure-audit.log "$NAME.hole"
+          cp /tmp/a7-d100-exposure-audit.log /tmp/a7-d100-exposure-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-exposure-${{ inputs.d100_exposure_target }}
+          path: |
+            /tmp/a7-d100-exposure/
+            /tmp/a7-d100-exposure-proof/
+            /tmp/a7-d100-exposure-audit.log
           if-no-files-found: warn
           retention-days: 60
