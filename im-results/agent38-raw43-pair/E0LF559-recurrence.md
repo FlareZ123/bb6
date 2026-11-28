@@ -52,8 +52,30 @@ four consecutive two-cell events:
 - positions `-8n-12,-8n-13` at offsets `312n+408, 312n+409`.
 
 The right frontier then advances by eight cells and returns to the next F0 family
-at offset `448n+612`.  These affine phase times are strong hints for splitting
-the proof into a small fixed number of block-sweep lemmas.
+at offset \`448n+612\`.
+
+More strongly, if the right zipper is written from the cell immediately right of
+the left-edge head through the finite support, the four E0 phase configurations
+have the following exact observed words:
+
+- P1: \`00110110 1^(4n+2) (110)^(4n+2) 0110011\`;
+- P2: \`0000010110 1^(4n+2) (110)^(4n+2) 0110011\`;
+- P3: \`00110110 1^(4n+4) (110)^(4n+4) 011\`;
+- P4: \`0000010110 1^(4n+4) (110)^(4n+4) 011\`.
+
+Their exact candidate phase costs are therefore:
+
+\[
+  F_n \xrightarrow{88n+116} P1_n
+  \xrightarrow{16} P2_n
+  \xrightarrow{224n+260} P3_n
+  \xrightarrow{16} P4_n
+  \xrightarrow{136n+204} F_{n+1}.
+\]
+
+The costs sum to \`448n+612\`.  This turns the remaining formalization problem
+into three parametric block sweeps plus two fixed 16-step turnarounds, rather than
+one opaque 9,922-state automaton.
 
 This is **computational evidence / a formalization target**, not yet a theorem.
 The high-value next step is to decompose one (n	o n+1) transition into the
