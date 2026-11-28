@@ -152,7 +152,7 @@ assert.deepEqual(stats,expected.stats);
 assert.equal(rootIndex,nodes.length-1);
 
 const imports=easyMode
-  ?"import Raw34Plan\\nimport Raw34QuadraticPairGrowth"
+  ?"import Raw34Plan\nimport Raw34QuadraticPairGrowth"
   :"import Raw34Plan";
 const easyPrelude=easyMode?`
 inductive EasyCert where
@@ -230,10 +230,10 @@ open BB6Coverage BB6.Agent50Raw34Plan
 ${easyPrelude}
 def parent : PartialMachine := table [${parentCodes.join(",")}]
 def residualRows : List (List Nat) := [
-${rows.map(r=>`  [${r.join(",")}]`).join(",\\n")}
+${rows.map(r=>`  [${r.join(",")}]`).join(",\n")}
 ]
 def nodes : Array ${nodeType} := #[
-${nodes.map(n=>`  ${n}`).join(",\\n")}
+${nodes.map(n=>`  ${n}`).join(",\n")}
 ]
 theorem node_count : nodes.size = ${nodes.length} := by decide
 theorem residual_count : residualRows.length = ${rows.length} := by decide
@@ -242,7 +242,7 @@ end ${namespaceName}
 `;
 const outputModule=easyMode?"Raw34PairD1LF_F0LDDepth6Plan.lean":"Raw34PairDepth6Plan.lean";
 writeFileSync(join(output,outputModule),source);
-writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
+writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\n");
 const report={
  parentCodes,d1:d1Action,f0:f0Action,physicalParentCompletions:String(25n**6n),
  nodeCount:nodes.length,residualCount:rows.length,rootIndex,
