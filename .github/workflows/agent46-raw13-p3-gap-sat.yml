@@ -1,0 +1,78 @@
+name: Agent 46 Raw13 p3 gap SAT
+run-name: Agent 46 Raw13 p3 gap SAT
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Exact source commit
+        type: string
+        required: true
+permissions:
+  contents: write
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Search four uncovered leaves
+        run: |
+          set -euo pipefail
+          python im-results/agent46-raw13-cut/discoverCoupled6GapSAT.py /tmp/a46-gap-sat
+      - name: Kernel-check every SAT hit
+        run: |
+          set -euo pipefail
+          D=im-results/agent46-raw13-cut
+          cp /tmp/a46-gap-sat/Raw13Coupled6GapSAT.lean "$D/"
+          python tools/lean_compile_closure.py --workdir /tmp/a46-gap-lean --jobs 4 \
+            "$D/Raw13Coupled6GapSAT.lean" | tee /tmp/a46-gap-lean.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-gap-lean.log; then
+            echo 'Forbidden proof placeholder or native_decide' >&2
+            exit 1
+          fi
+      - name: Publish certified BiDFA hits
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B publish origin/main
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          src=Path('/tmp/a46-gap-sat/bank.json')
+          new=json.loads(src.read_text())
+          path=Path('im-results/agent46-raw13-cut/coupled6-extra-bidfa.json')
+          old=json.loads(path.read_text())
+          by={x['table']:x for x in old}
+          added=0
+          for x in new:
+              prev=by.get(x['table'])
+              if prev is not None:
+                  assert prev['dfa']==x['dfa'], 'conflicting certified DFA'
+                  continue
+              old.append(x);by[x['table']]=x;added+=1
+          path.write_text(json.dumps(old,separators=(',',':'))+'\n')
+          print('certified hits',len(new),'new',added)
+          PY
+          if git diff --quiet -- im-results/agent46-raw13-cut/coupled6-extra-bidfa.json; then
+            exit 0
+          fi
+          git config user.name "Agent 46"
+          git config user.email "agent46@users.noreply.github.com"
+          git add im-results/agent46-raw13-cut/coupled6-extra-bidfa.json
+          git commit -m "Agent 46: add Lean-certified BiDFA proofs for p3 gaps"
+          for n in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
+      - name: Preserve targeted search audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-p3-gap-sat
+          path: |
+            /tmp/a46-gap-sat
+            /tmp/a46-gap-lean.log
+          retention-days: 30
