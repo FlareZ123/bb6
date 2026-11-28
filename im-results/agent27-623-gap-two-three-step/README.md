@@ -93,3 +93,43 @@ target \`four-ray-full\`, against pinned Cryptids
 \`c86f15861709b76042998c5211c7b2f83991621b\`.
 **No #623 nonhalting theorem or BB(6) maximality proof follows without
 showing all-time blank-root avoidance of these four cones.**
+
+
+## Fifth-predecessor scale-corrected eight-ray reduction (candidate; CI pending)
+
+The new [GenericSourceRayTransport.lean](GenericSourceRayTransport.lean),
+[EightRaySource.lean](EightRaySource.lean), and
+[FifthRayPhysicalSource.lean](FifthRayPhysicalSource.lean) extend the coupled
+four-ray reduction by one authentic blank-root predecessor. The eight
+candidate ray centres are
+\`121, 43/40, 61/13, 55/16, 79/4, 37/25, 64/7, 40/19\`.
+Their exact one-sided inequalities and the equivalent signed-coordinate
+covector tree are recorded in
+[EightRaySignedCovectorTree.md](EightRaySignedCovectorTree.md).
+
+A review found that an unscaled statement
+\`∀ n≥13, ¬ eightRayCone (n+3) n u v\` would be vacuous for a fixed state:
+all cone error widths grow with n. The physical theorem has therefore been
+corrected to retain the scale at the same authentic fifth predecessor:
+\`\`\`
+n ≥ 13
+3^(n-4) ≤ min(u,v)
+min(u,v)+3 < 3^(n+3)
+\`\`\`
+The lower bound is derived from the terminal predecessor's
+\`3^(n-1)-3 ≤ min(x,y)\` and the two exact-source bounds
+\`y ≤ 3*min(source)+4*(n+3)+20\`, giving
+\`3^(n-1) ≤ 9*min(u,v)+16*(n+3)+83\`.
+The n≥13 growth lemma supplies
+\`18*3^(n-4) ≥ 16*(n+3)+83\`, hence
+\`3^(n-4) ≤ min(u,v)\`. The upper scale bound is transported from the
+existing strict-mass and terminal upper-scale estimates.
+
+The avoidance corollary now quantifies only over this scale-corrected
+interval, rather than arbitrary n. This repairs the logical vacuity but
+does **not** establish all-time avoidance. The end-to-end target
+\`eight-ray-full\` in the existing
+[agent27-623-n10-mass-gap.yml](../../.github/workflows/agent27-623-n10-mass-gap.yml)
+compiles the full original-source dependency chain and the three new modules;
+source CI is pending. Do not cite the eight-ray theorem as accepted until
+that run succeeds.
