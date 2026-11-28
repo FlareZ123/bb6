@@ -67,7 +67,8 @@ theorem compatible_parent : compatible parent machine := by
   intro ⟨q,b⟩ t ht
   have hq : q.val = 0 ∨ q.val = 1 ∨ q.val = 2 ∨ q.val = 3 ∨ q.val = 4 ∨ q.val = 5 := by omega
   rcases hq with hq|hq|hq|hq|hq|hq <;> cases b <;>
-    simp [parent, machine, weightedTNFDefaultCompletion, late, hq] at *
+    simp [parent, machine, weightedTNFDefaultCompletion, late, hq] at * <;>
+    assumption
 
 theorem score203_halter :
     ∃ m, compatible parent m ∧ HaltsAfter m 202 :=
