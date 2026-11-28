@@ -1,3 +1,23 @@
+# Raw54: root child coverage status
+
+Parent `1RB---_1RC---_0RD---_1LD0LE_------_------`. E1 is the next hole. The six source-accepted E1 children below are disjoint cylinders; the remaining root children still need covers. Four direct-cycle branches (0LC, 0LD, 0RD, 1LD) are handled by the root composition. No global roster change follows from these child results alone.
+
+| E1 | Exact weighted threshold | Accepted source run | Artifact |
+|---|---:|---:|---:|
+| 0LE | 39447 | [46089155933](https://github.com/FlareZ123/bb6/actions/runs/46089155933) | 15241480930 |
+| 0RA | 27669 | [46078961045](https://github.com/FlareZ123/bb6/actions/runs/46078961045) | 15239307204 |
+| 0RB | 12634 | [46087618052](https://github.com/FlareZ123/bb6/actions/runs/46087618052) | 15243964279 |
+| 0RC | 623 | [46088429391](https://github.com/FlareZ123/bb6/actions/runs/46088429391) | 15242228730 |
+| 0RE | 4076 | [45960006400](https://github.com/FlareZ123/bb6/actions/runs/45960006400) | 15183587278 |
+| 0RF | 840 | [45960012324](https://github.com/FlareZ123/bb6/actions/runs/45960012324) | 15184007689 |
+| 1RC | 1847 (candidate; full source audit queued) | [dossier](E1OneRC.md) | pending |
+
+The 0LE artifact SHA256 is `766b74af87a0dfd06f46ba1aed87e82ecf45f7873c79868c607e4fc9c488f9da`. Its exact-source theorem exports are `BB6.Agent8Raw54.e1_complete`, `.e1_attained`, `.e1_exact_threshold`. The other accepted exports and artifacts are in [E1RA_RB.md](E1RA_RB.md), [E1RC.md](E1RC.md), and [E1RE_RF.md](E1RE_RF.md). The maximum of the six accepted weighted thresholds is 39447. [Raw54RootCompose.lean](Raw54RootCompose.lean) expresses the root coverage interface.
+
+The remaining 14 non-cycle children are 0LA, 0LB, 0LF, 1LA, 1LB, 1LC, 1LE, 1LF, 1RA, 1RB, 1RC, 1RD, 1RE, 1RF. All 1RC discovery witnesses are classified; formal source integration is pending. The historical sub-child dossier below predates the successful 0LE assembly; its older pending flags are superseded by that accepted parent certificate.
+
+---
+
 # Raw54 E1=0LE, E0=1LB: five-hole child reduction
 
 Canonical raw54: `1RB---_1RC---_0RD---_1LD0LE_------_------`.
