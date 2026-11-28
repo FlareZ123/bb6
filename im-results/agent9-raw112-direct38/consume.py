@@ -34,6 +34,8 @@ RAW112_TABLE = "1RB---_1RC---_0RD---_1LD1RE_---1LC_------"
 RAW112_THEOREM = "BB6.Agent47Raw112.parent_cover"
 MEMBERSHIP_SOURCE = HERE / "Raw112Canonical38DirectMembership.lean"
 MEMBERSHIP_NS = "BB6.Agent9Raw112Canonical38DirectMembership"
+CONDITIONAL_SOURCE = HERE / "Raw112Canonical38DirectConditional.lean"
+CONDITIONAL_NS = "BB6.Agent9Raw112Canonical38DirectConditional"
 ALLOWED = {"propext", "Classical.choice", "Quot.sound"}
 
 
@@ -91,7 +93,7 @@ def restore_direct38(work: Path, linked: Path, prior40: dict, pin40: dict,
 
 def generate_source(folder: Path):
     source = folder / "Canonical37Raw39Raw47Raw112Direct.lean"
-    source.write_text("""import Raw112Canonical38DirectMembership
+    source.write_text("""import Raw112Canonical38DirectConditional
 import Raw112ClosedCover
 
 set_option maxRecDepth 100000
@@ -105,19 +107,10 @@ open BB6.Agent47CanonicalFrontier BB6.Agent47CanonicalRefinement
 open BB6.Agent31StableParentBatch
 open BB6ChampionArithmetic
 
-noncomputable abbrev baseRoster :=
-  BB6.Agent3Canonical38Raw39Raw47Direct.roster38
 abbrev p112 : PartialMachine :=
-  BB6.Agent9Raw112Canonical38DirectMembership.p112
-abbrev removedParents : List PartialMachine := [p112]
-
-theorem p112_count38 :
-    (baseRoster.filter (fun e => sameTable e.2 p112)).length = 1 :=
-  BB6.Agent9Raw112Canonical38DirectMembership.parent_count38
-
-theorem p112_root :
-    p112 initialSlot = some (some ⟨true,true,1⟩) :=
-  BB6.Agent9Raw112Canonical38DirectMembership.parent_root
+  BB6.Agent9Raw112Canonical38DirectConditional.p112
+noncomputable abbrev roster37 :=
+  BB6.Agent9Raw112Canonical38DirectConditional.roster37
 
 theorem p112_source_eq : p112 = BB6.Agent47Raw112.parent :=
   sameTable_sound (by decide)
@@ -131,52 +124,26 @@ theorem p112_cover :
     (BB6.Agent47Raw112.parent_cover.sound m hm k d hk hd)
     (by omega)
 
-theorem parents_root :
-    ∀ p ∈ removedParents,
-      p initialSlot = some (some ⟨true,true,1⟩) := by
-  intro p hp
-  have he : p = p112 := by simpa [removedParents] using hp
-  subst p
-  exact p112_root
-
-theorem parents_cover :
-    ∀ p ∈ removedParents,
-      Cover (WeightedBound (proposedTM63Moves + 7)) p := by
-  intro p hp
-  have he : p = p112 := by simpa [removedParents] using hp
-  subst p
-  exact p112_cover
-
-noncomputable def roster37 := removeParents removedParents baseRoster
-
-theorem count37 : roster37.length = 37 := by
-  decide
+theorem count37 : roster37.length = 37 :=
+  BB6.Agent9Raw112Canonical38DirectConditional.count37
 
 theorem raw112_removed :
-    (roster37.filter (fun e => sameTable e.2 p112)).length = 0 := by
-  decide
+    (roster37.filter (fun e => sameTable e.2 p112)).length = 0 :=
+  BB6.Agent9Raw112Canonical38DirectConditional.removed_parent_absent
 
 theorem sound_integrated :
     ∀ m, compatible root m →
       WeightedBound (proposedTM63Moves + 7) m ∨
-        ∃ e ∈ roster37, TNFQuotientCompatible e.2 m := by
-  apply removeParents_sound (parents := removedParents)
-    (roster := baseRoster)
-    BB6.Agent3Canonical38Raw39Raw47Direct.sound38_at_champion
-    parents_root parents_cover
+        ∃ e ∈ roster37, TNFQuotientCompatible e.2 m :=
+  BB6.Agent9Raw112Canonical38DirectConditional.conditional_sound p112_cover
 
 theorem exact_at_champion_score
     (hLeaves : ∀ e ∈ roster37,
       Cover (WeightedBound (proposedTM63Moves + 7)) e.2) :
     BB6.Coverage.ExactBB6 (proposedTM63Moves + 7) :=
-  exact_from_quotient_roster
-    (by omega)
-    BB6.Agent38ChampionThreshold.champion_score_ge_6766859
-    sound_integrated
-    hLeaves
-    BB6Coverage.Agent48DirectRoot.champion_raw_witness
+  BB6.Agent9Raw112Canonical38DirectConditional.conditional_exact_at_champion
+    p112_cover hLeaves
 
-#print axioms p112_count38
 #print axioms p112_source_eq
 #print axioms p112_cover
 #print axioms count37
@@ -187,7 +154,6 @@ theorem exact_at_champion_score
 end BB6.Agent9Canonical37Raw39Raw47Raw112Direct
 """)
     names = [
-        TARGET_NS + ".p112_count38",
         TARGET_NS + ".p112_source_eq",
         TARGET_NS + ".p112_cover",
         TARGET_NS + ".count37",
@@ -242,29 +208,57 @@ def main():
     membership_profiles = c.a68.gate(membership_log, membership_names)
     assert all(set(v) <= ALLOWED for v in membership_profiles.values())
 
+    conditional_output = linked / (CONDITIONAL_SOURCE.stem + ".olean")
+    conditional_log = c.a68.compile_module(
+        CONDITIONAL_SOURCE, conditional_output,
+        dict(os.environ, LEAN_PATH=str(linked)),
+        work / "conditional.log")
+    conditional_names = [
+        CONDITIONAL_NS + ".parent_count38",
+        CONDITIONAL_NS + ".parent_root",
+        CONDITIONAL_NS + ".count37",
+        CONDITIONAL_NS + ".removed_parent_absent",
+        CONDITIONAL_NS + ".conditional_sound",
+        CONDITIONAL_NS + ".conditional_exact_at_champion",
+    ]
+    conditional_profiles = c.a68.gate(conditional_log, conditional_names)
+    assert all(set(v) <= ALLOWED for v in conditional_profiles.values())
+
     if args.membership_only:
         report = {
-            "status": "source-accepted Raw112 membership on direct Canonical38",
+            "status": (
+                "source-accepted conditional Raw112 successor of direct Canonical38"),
             "source_revision": subprocess.check_output(
                 ["git", "rev-parse", "HEAD"],
                 cwd=HERE.parents[1], text=True).strip(),
             "previous_delta": pin38,
             "previous_root_sha256": prior38["root_sha256"],
             "previous_residual_count": 38,
+            "remaining_residual_count": 37,
             "raw112_parent_table": RAW112_TABLE,
             "raw112_literal_count": 1,
+            "cover_premise": (
+                "Cover (WeightedBound (proposedTM63Moves + 7)) p112"),
             "direct38_run_id": args.direct38_run_id,
-            "root": membership_output.name,
-            "root_sha256": c.a68.sha(membership_output),
-            "axioms": membership_profiles,
+            "root": conditional_output.name,
+            "root_sha256": c.a68.sha(conditional_output),
+            "objects": {
+                membership_output.name: c.a68.sha(membership_output),
+                conditional_output.name: c.a68.sha(conditional_output),
+            },
+            "axioms": {**membership_profiles, **conditional_profiles},
+            "conditional_exact_at_champion":
+                CONDITIONAL_NS + ".conditional_exact_at_champion",
         }
         out = work / "membership"
         out.mkdir()
         shutil.copy2(membership_output, out / membership_output.name)
+        shutil.copy2(conditional_output, out / conditional_output.name)
         (out / "membership.json").write_text(
             json.dumps(report, indent=2, sort_keys=True) + "\n")
         print(
-            "PASS: Raw112 occurs exactly once in accepted direct Canonical38",
+            "PASS: Raw112 unique on direct Canonical38 and conditional "
+            "38 -> 37 successor source-accepted",
             flush=True,
         )
         return
@@ -277,7 +271,7 @@ def main():
     raw112_meta, raw112_dirs, raw112_summary = verify_raw112_parent(
         raw112_work, args.raw112_run_id)
 
-    copied = [membership_output]
+    copied = [membership_output, conditional_output]
     audit = {}
     c.selected.add_family(
         {"root": "Raw112ClosedCover"}, raw112_dirs, linked, copied, audit)
