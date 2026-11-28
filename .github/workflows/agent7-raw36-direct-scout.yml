@@ -1,0 +1,52 @@
+name: Agent7 Raw36 direct D1 exact canonical frontier scout
+run-name: Raw36 direct D1 frozen-bank discovery (manual only)
+on:
+  workflow_dispatch:
+    inputs:
+      selected:
+        description: 'Comma-free index list: 0LA=0, 0LB=1, 0LE=4, 1LA=12, 1LE=16, 1RE=22'
+        type: choice
+        options: ['all','0','1','4','10','12','16','22']
+        default: 'all'
+permissions:
+  contents: read
+jobs:
+  scout:
+    if: inputs.selected == 'all'
+    strategy:
+      fail-fast: false
+      max-parallel: 4
+      matrix:
+        index: [0,1,4,10,12,16,22]
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enumerate exact table frontier (untrusted discovery)
+        run: |
+          set -euo pipefail
+          python im-results/agent7-raw36-direct/scout.py ${{ matrix.index }} /tmp/a7-direct
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ matrix.index }}-census
+          path: /tmp/a7-direct/
+          if-no-files-found: warn
+          retention-days: 30
+  focused:
+    if: inputs.selected != 'all'
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Enumerate selected exact table frontier (untrusted discovery)
+        run: |
+          set -euo pipefail
+          python im-results/agent7-raw36-direct/scout.py ${{ inputs.selected }} /tmp/a7-direct
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct-D1-${{ inputs.selected }}-census
+          path: /tmp/a7-direct/
+          if-no-files-found: warn
+          retention-days: 30
