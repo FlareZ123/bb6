@@ -1,3 +1,5 @@
+Latest: [2026-11-28 02:33 UTC — Raw40 A1=0LA original-source proofs + four family audit paths](2026-11-28T0233Z-raw40-source-frontier.md).
+
 Latest: [2026-11-27 11:55 UTC — Raw40 crossing-splice checkpoint](2026-11-27T1155Z-raw40-crossing-splice.md).
 
 ## 2026-11-25T14:05:14.194Z — compose Agent 5 held roster with q2800 tree roster
