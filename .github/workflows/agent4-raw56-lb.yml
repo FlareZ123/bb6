@@ -25,6 +25,7 @@ on:
           - complete-min
           - complete-hybrid
           - complete-subset
+          - root16-lb
       partial_run:
         description: "Run containing source-accepted six-residual reduced parent"
         required: false
@@ -1554,7 +1555,7 @@ jobs:
           if-no-files-found: error
 
   complete-subset:
-    if: ${{ inputs.target == 'complete-subset' }}
+    if: ${{ inputs.target == 'complete-subset' || inputs.target == 'root16-lb' }}
     runs-on: ubuntu-latest
     timeout-minutes: 65
     steps:
@@ -1574,6 +1575,34 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '45912699461'
+
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'root16-lb'
+        with:
+          name: raw56-root17-source-accepted
+          path: /tmp/raw56-root17
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46064074987'
+
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'root16-lb'
+        with:
+          pattern: raw56-rc-*
+          path: /tmp/raw56-rc
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46045652695'
+
+      - uses: actions/download-artifact@v4
+        if: inputs.target == 'root16-lb'
+        with:
+          name: raw56-reparent-source-accepted
+          path: /tmp/raw56-re
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46061898661'
 
       - uses: actions/download-artifact@v4
         with:
@@ -1711,6 +1740,14 @@ jobs:
             "/tmp/block/M23706Final.log" --require M23706.never
           python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
             "/tmp/min/M39232Min.log" --require M39232.never
+          if [ '${{ inputs.target }}' = 'root16-lb' ]; then
+            cp "$GITHUB_WORKSPACE/im-results/agent4-raw56-root-pilot/Raw56Root16LBHybrid.lean" .
+            export LEAN_PATH="$LEAN_PATH:/tmp/raw56-root17:/tmp/raw56-rc:/tmp/raw56-re"
+            lean -j1 -o Raw56Root16LBHybrid.olean Raw56Root16LBHybrid.lean | tee Raw56Root16LBHybrid.log
+            python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" Raw56Root16LBHybrid.log \
+              --require BB6.Agent4Raw56Root16LBHybrid.count16LB \
+              --require BB6.Agent4Raw56Root16LBHybrid.sound16LB
+          fi
       - uses: actions/upload-artifact@v4
         with:
           name: raw56-lb-complete-subset-original-source-accepted
@@ -1718,6 +1755,15 @@ jobs:
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.lean
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.olean
             /tmp/complete-hybrid/Raw56LBCompleteHybrid.log
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        if: inputs.target == 'root16-lb'
+        with:
+          name: raw56-root16-lb-source-accepted
+          path: |
+            /tmp/complete-hybrid/Raw56Root16LBHybrid.lean
+            /tmp/complete-hybrid/Raw56Root16LBHybrid.olean
+            /tmp/complete-hybrid/Raw56Root16LBHybrid.log
           if-no-files-found: error
 
   consumer-conditional:
