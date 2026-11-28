@@ -73,7 +73,7 @@ jobs:
           work=.tmp/a6-d8c6
           pipe="$work/pipeline"
           core="$work/core"
-          python3 tools/lean_compile_closure.py "$pipe/D1PackedTree.lean" "$pipe/D1Late.lean"             --source-root "$pipe" --workdir /tmp/a6-d8c6-core --jobs 2             --manifest "$work/core.json" --label agent6-raw139-d8c6-core | tee "$work/core.log"
+          python3 tools/lean_compile_closure.py "$pipe/D1PackedTree.lean" "$pipe/D1Late.lean" im-results/agent1-ngram/NGramCertificate.lean im-results/agent13-block-far/BlockFAR2.lean im-results/agent13-block-far/BlockFARBridge.lean im-results/agent13-block-far/BlockFARBridge4.lean             --source-root "$pipe" --workdir /tmp/a6-d8c6-core --jobs 2             --manifest "$work/core.json" --label agent6-raw139-d8c6-core | tee "$work/core.log"
           ! grep -Eq 'sorryAx|ofReduceBool' "$work/core.log"
           find /tmp/a6-d8c6-core -name '*.olean' -exec cp '{}' "$core/" ';'
       - name: Kernel-check complete D0=8 C1=6 child Cover
@@ -88,6 +88,7 @@ jobs:
           grep -F "'D8C6.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d8c6/src/logs/D8C6Parent.log"
           ! grep -REq 'sorryAx|ofReduceBool' "$work/d8c6/src/logs"
       - uses: actions/upload-artifact@v4
+        if: always()
         with:
           name: agent6-raw139-d8-c6-certified
           path: |
@@ -97,5 +98,6 @@ jobs:
             .tmp/a6-d8c6/d8c6/recipes.tsv
             .tmp/a6-d8c6/d8c6/alt.out
             .tmp/a6-d8c6/core.json
+            .tmp/a6-d8c6/core.log
           include-hidden-files: true
           retention-days: 14
