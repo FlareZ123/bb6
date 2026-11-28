@@ -26,12 +26,14 @@ open BB6.Agent5Q0151ParamSaturation
 
 theorem good_cut_real (c : Control) (hc : Good c)
     (xs : List Nat) (h : c.right = rightSig xs) :
-    (match xs with
-      | [] => (0,emptyRight)
-      | n::rest => (BB6.Agent5Q0151Category.cat (n+1),rightSig rest))
-      ∈ cut c.right := by
+    actualNext xs ∈ cut c.right := by
+  have hs : rightType (rightSig xs) ≠ 0 := by
+    rw [← h]
+    exact good_live_right c hc
+  have hh : actualNext xs ∈ cut (rightSig xs) :=
+    cut_real_next xs hs
   rw [h]
-  exact cut_real_next xs (by simpa only [h] using good_live_right c hc)
+  exact hh
 
 theorem good_current_alt_positive (c : Control) (hc : Good c)
     (n : Nat) (hn : 0 < n) (tail : List Bool) :
