@@ -4,7 +4,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent16Raw44Easy13
 open BB6Coverage BB6Coverage.Agent10ZipAudit
 
-/-- Thirteen first-hole Raw44 C1 siblings, each 25^5 total tables,
+/- Thirteen first-hole Raw44 C1 siblings, each 25^5 total tables,
   distinguished by exact fixed partial transition C1. -/
 /-- Raw44 B1=0RC, C1=0LB; translated left side-cycle at raw 49, period 1. -/
 def p0 : PartialMachine := fun t => match t.1.val,t.2 with
