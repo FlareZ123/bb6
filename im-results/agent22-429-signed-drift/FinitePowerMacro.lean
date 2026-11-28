@@ -52,7 +52,7 @@ theorem finite_power_word_slope
       calc
         M xs*u (i+1) =
             u i+A xs*(r 0+i*T xs)+B xs := hmp
-        _ = u i+i*(A xs*T xs)+(A xs*r 0+B xs) := by ring
+        _ = u i+i*(A xs*T xs)+(A xs*r 0+B xs) := by grind
     exact_mod_cast hnat
   exact PeriodicPower.power_forces_affine
     (M xs) H n ((A xs*T xs):Int) ((A xs*r 0+B xs):Int)
