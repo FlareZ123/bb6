@@ -78,12 +78,12 @@ private theorem rotateV (n : Nat) :
         [true,true,true,false] ++ ([true] ++ V (n+1)) := by
       unfold V
       rw [show n+2=1+(n+1) by omega,rep_add]
-      simp only [rep,List.append_assoc,List.cons_append]
+      simp [rep,List.append_assoc]
     have hright : W (n+2) ++ [true] =
         [true,true,true,false] ++ (W (n+1) ++ [true]) := by
       unfold W
       rw [show n+2=1+(n+1) by omega,rep_add]
-      simp only [rep,List.append_assoc,List.cons_append]
+      simp [rep,List.append_assoc]
     rw [hleft,hright,ih]
 
 private theorem rotateX (n : Nat) :
