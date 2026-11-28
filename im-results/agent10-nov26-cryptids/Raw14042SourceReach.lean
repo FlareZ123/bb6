@@ -103,7 +103,7 @@ def encode (x : Section) : Prim :=
   | .b => boundary 1 true (U 5 x.p) (Raw14042Right.T x.n ++ Raw140Double.tailWord (bTail x.s))
   | .c => Raw14042CGeneral.cCfg x.p x.n (cTail x.s)
 
-private theorem aOut {src : Prim} {p n r : Nat} (hr : r<6)
+theorem aOut {src : Prim} {p n r : Nat} (hr : r<6)
     (h : ∃ t : Raw140ERSuffix.Tail, Raw14042BGeneral.arank t=r ∧
       R src (Raw14042BGeneral.aCfg p n t)) :
     R src (encode ⟨.a,p,n,r⟩) := by
@@ -112,7 +112,7 @@ private theorem aOut {src : Prim} {p n r : Nat} (hr : r<6)
   subst t
   simpa only [encode] using hR
 
-private theorem bOut {src : Prim} {p n r : Nat} (hr : r<6)
+theorem bOut {src : Prim} {p n r : Nat} (hr : r<6)
     (h : ∃ t : Raw140Double.Tail, Raw140Double.rank t=r ∧
       R src (Raw14042DGeneral.B p n t)) :
     R src (encode ⟨.b,p,n,r⟩) := by
@@ -123,7 +123,7 @@ private theorem bOut {src : Prim} {p n r : Nat} (hr : r<6)
   rw [bTrip_eq] at hR
   simpa only [encode] using hR
 
-private theorem cOut {src : Prim} {p n r : Nat} (hr : r<6)
+theorem cOut {src : Prim} {p n r : Nat} (hr : r<6)
     (h : ∃ t : Raw14042Counter.CTail, Raw14042CGeneral.crank t=r ∧
       R src (Raw14042CGeneral.cCfg p n t)) :
     R src (encode ⟨.c,p,n,r⟩) := by
@@ -132,7 +132,7 @@ private theorem cOut {src : Prim} {p n r : Nat} (hr : r<6)
   subst t
   simpa only [encode] using hR
 
-private theorem dRR (k h : Nat) (src : Prim) (ho : (k+h)%2=1)
+theorem dRR (k h : Nat) (src : Prim) (ho : (k+h)%2=1)
     (H : Raw14042DTerminals.RR k h .s62 src) :
     R src (encode (Raw14042ArithmeticInvariant.d k h)) := by
   have G : R src (encode ⟨.b,2*(k+h)+2,k/6,k%6⟩) := by
@@ -140,7 +140,7 @@ private theorem dRR (k h : Nat) (src : Prim) (ho : (k+h)%2=1)
     simpa only [Raw14042DTerminals.RR,Raw140Double.rank,Nat.add_zero] using H
   simpa only [Raw14042ArithmeticInvariant.d,ho,if_pos] using G
 
-private theorem ccRR (k m : Nat) (s : Raw14042Counter.CTail) (src : Prim)
+theorem ccRR (k m : Nat) (s : Raw14042Counter.CTail) (src : Prim)
     (he : (m+k)%2=0) (H : Raw14042CTerminals.RR k m s src) :
     R src (encode (Raw14042ArithmeticInvariant.cc k m (Raw14042CGeneral.crank s))) := by
   let r := (Raw14042CGeneral.crank s+k+2)%6
@@ -151,7 +151,7 @@ private theorem ccRR (k m : Nat) (s : Raw14042Counter.CTail) (src : Prim)
   simpa only [Raw14042ArithmeticInvariant.cc,he,if_pos,Nat.add_comm m k,
     Nat.add_comm (Raw14042CGeneral.crank s) k,r] using G
 
-private theorem bsRR (k u v : Nat) (s : Raw140ERSuffix.Tail) (src : Prim)
+theorem bsRR (k u v : Nat) (s : Raw140ERSuffix.Tail) (src : Prim)
     (ho : (k+v+1)%2=1) (H : Raw14042BTerminals.RR k u v s src) :
     R src (encode (Raw14042ArithmeticInvariant.bs k u v (Raw14042BGeneral.arank s))) := by
   let q := k+Raw14042BGeneral.arank s
