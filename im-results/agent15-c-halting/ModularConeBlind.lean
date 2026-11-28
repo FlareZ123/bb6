@@ -30,6 +30,18 @@ theorem I_mod2_zero (b : Nat) (hb : 1 ≤ b) : I b % 2 = 0 := by
   obtain ⟨n,rfl⟩ : ∃ n, b = n+1 := ⟨b-1, by omega⟩
   simp [I, P, Nat.pow_add]
 
+/-- The canonical residue of -2 at any precision at least two. -/
+theorem negTwo_mod_I (b : Nat) (hb : 2 ≤ b) : (-2 : Int) % I b = I b - 2 := by
+  have hI := I_ge4 b hb
+  have hc : Cong b (-2) (I b-2) := by
+    unfold Cong
+    refine ⟨(-1:Int),?_⟩
+    omega
+  have hm := cong_mod hc
+  have hr : (I b-2)%I b=I b-2 := Int.emod_eq_of_lt (by omega) (by omega)
+  rw [hr] at hm
+  exact hm
+
 /-- Canonical representatives of the modular-cone direct-chain blind cylinder. -/
 def Blind (b : Nat) (s : Pair) : Prop := s.x % 4 = 3 ∧ s.y = I b - 2
 
@@ -144,6 +156,25 @@ theorem blind_excluded_false (b : Nat) (s : Pair) (hb : 2≤b) (hs : Blind b (re
   obtain ⟨n,rfl⟩ : ∃n,b=n+2 := ⟨b-2,by omega⟩
   exact blind_check_false n (residue (n+2) s) hs
 
+/-- Congruence-form interface to the blind cylinder. -/
+theorem blind_of_congruences (b : Nat) (s : Pair) (hb : 2≤b)
+    (hx : s.x%4=3) (hy : Cong b s.y (-2)) : Blind b (residue b s) := by
+  have h4 := four_dvd_I b hb
+  constructor
+  · change (s.x%I b)%4=3
+    rw [Int.emod_emod_of_dvd _ h4]
+    exact hx
+  · change s.y%I b=I b-2
+    have hm := cong_mod hy
+    rw [hm, negTwo_mod_I b hb]
+
+/-- Any state congruent to the blind cylinder is accepted as unresolved by
+    the executable modular exclusion checker. -/
+theorem excluded_false_of_congruences (b : Nat) (s : Pair) (hb : 2≤b)
+    (hx : s.x%4=3) (hy : Cong b s.y (-2)) : excluded b s=false :=
+  blind_excluded_false b s hb (blind_of_congruences b s hb hx hy)
+
+#print axioms excluded_false_of_congruences
 #print axioms blind_check_false
 #print axioms blind_excluded_false
 
