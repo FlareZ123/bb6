@@ -61,7 +61,7 @@ def main(treefile,out,fixture_file,limit=300,index=1,child=None):
     automata_suffix=os.environ.get('RAW36_AUTOMATA_SUFFIX','')
     automata_stem=STEM+automata_suffix
     automata_ns='BB6.Agent7'+automata_stem+'Automata'
-    external=generate([(t,v) for t,v in rows if v[0]!='h'],out,automata_stem,automata_ns)
+    external=generate([(t,v) for t,v in rows if v[0] not in ('h','l')],out,automata_stem,automata_ns)
     sw=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0]=='s']
     for j in range(0,len(sw),4):
         name=f'{STEM}Sweep{j//4:02d}';ns=f'{SWEEP}{j//4:02d}';body=[]
@@ -95,6 +95,9 @@ theorem b1Child_nohalt (mv : Move) : weightedTNFNoAssignedHalt (b1Child mv) :=
                     assert k=='1RB1LF1RC0RE0RD1RA0LD0LB1LF---0LA1LC'
                     imports.add('Raw36D101Hard10')
                     return '.proven BB6.Agent7Raw36D101Hard10.table BB6.Agent7Raw36D101Hard10.never'
+                if v[0]=='l':
+                    assert len(v)==3 and isinstance(v[1],int) and 0<=v[2]<12
+                    return f'.last {v[1]} {slot(v[2])}'
                 mod,ns=external[k];imports.add(mod);return f'.proven {ns}.table {ns}.never'
             assert tag=='split';n,s,kids=x;assert len(kids)==24 and p[s]=='---' and s//2<c
             return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(render(refine(p,s,mv),max(c,j%6+1),k) if j%6<=c else '.last 0 (0,false)' for j,(mv,k) in enumerate(zip(MOVES,kids)))+'])'
