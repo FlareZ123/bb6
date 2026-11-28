@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "raw40-a0la"]
+        options: ["none", "coverage-generators", "raw40-a0la"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -51,7 +51,7 @@ jobs:
           set -euo pipefail
           [[ "$PROOF_ROOT" =~ ^im-results/[a-zA-Z0-9_./-]+\.lean$ ]]
           [[ "$PROOF_ROOT" != *..* ]]
-          if [[ "$PREPARATION_PROFILE" == "none" ]]; then
+          if [[ "$PREPARATION_PROFILE" == "none" || "$PREPARATION_PROFILE" == "coverage-generators" ]]; then
             test -f "$PROOF_ROOT"
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
@@ -73,6 +73,12 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+      - name: Generate source-pinned three/four-hole coverage modules
+        if: ${{ inputs.preparation_profile != 'none' }}
+        run: |
+          set -euo pipefail
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
       - name: Generate authentic Raw40 A0LA source family from frozen banks
         if: ${{ inputs.preparation_profile == 'raw40-a0la' }}
         env:
@@ -80,8 +86,6 @@ jobs:
           PROOF_ROOT: ${{ inputs.root }}
         run: |
           set -euo pipefail
-          python im-results/agent31-three-hole-tnf/generate_sweeps.py
-          python im-results/agent31-three-hole-tnf/generate_four_hole.py
           python im-results/agent19-raw40-cut/prepare_a0la.py "$RAW40_CHILD"
           test -f "$PROOF_ROOT"
           sha256sum "$PROOF_ROOT"
