@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la' && inputs.child != 'raw56-le-1ra'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la' && inputs.child != 'raw56-le-1ra' && inputs.child != 'raw56-le-four-assemble'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -552,6 +552,110 @@ jobs:
           path: /tmp/raw56-le-input-src/**
           if-no-files-found: error
           retention-days: 7
+
+  raw56_le_four_assemble:
+    if: inputs.child == 'raw56-le-four-assemble'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install source-pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/le-four/base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RB
+          path: /tmp/le-four/rb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RC
+          path: /tmp/le-four/rc
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-two-source-accepted
+          path: /tmp/le-four/two
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - name: Download two newly accepted original-source E0 siblings
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RUN_IDS: ${{ inputs.source_run_id }}
+        run: |
+          set -euo pipefail
+          IFS=, read -r LB_RUN LA_RUN <<< "$RUN_IDS"
+          test -n "$LB_RUN" && test -n "$LA_RUN"
+          for entry in "lb:$LB_RUN:raw56-le0LB-source-accepted" "la:$LA_RUN:raw56-le1LA-source-accepted"; do
+            IFS=: read -r DIR RUN NAME <<< "$entry"
+            ID="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/artifacts" --jq ".artifacts[] | select(.name == \"$NAME\") | .id" | head -1)"
+            test -n "$ID"
+            mkdir -p "/tmp/le-four/$DIR"
+            gh api -H 'Accept: application/vnd.github+json' "repos/$GITHUB_REPOSITORY/actions/artifacts/$ID/zip" > "/tmp/le-four/$DIR.zip"
+            unzip -q "/tmp/le-four/$DIR.zip" -d "/tmp/le-four/$DIR"
+            echo "Linked accepted $NAME artifact $ID from run $RUN"
+          done
+      - name: Compile first exact-source 14-to-10 accepted conditional frontier
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/le-four/union
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib,shutil
+          base=Path('/tmp/le-four')
+          dst=base/'union'
+          counts={}
+          for name in ('base','rb','rc','two','lb','la'):
+              root=base/name
+              files=list(root.rglob('*.olean'))
+              assert files,(name,root)
+              counts[name]=len(files)
+              for p in files:
+                  q=dst/p.name
+                  if q.exists():
+                      assert hashlib.sha256(q.read_bytes()).digest()==hashlib.sha256(p.read_bytes()).digest(),(q,p)
+                  else:shutil.copy2(p,q)
+          needed=['Raw56RootConsumer','Raw56E1LECut','Raw56LE0RBAll','Raw56LE0RCAll','Raw56LE0LBAll','Raw56LE1LAAll']
+          assert all((dst/(n+'.olean')).exists() for n in needed),needed
+          print('accepted module union',counts,len(list(dst.glob('*.olean'))))
+          PY
+          cp im-results/agent32-raw59/FastBiDFA.lean /tmp/le-four/union/
+          cp im-results/agent1-raw56/le/Raw56E1LE{FourCut,FourClosed}.lean /tmp/le-four/union/
+          export LEAN_PATH=/tmp/le-four/union
+          export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
+          cd /tmp/le-four/union
+          lean -o FastBiDFA.olean FastBiDFA.lean 2>&1 | tee checker.log
+          lean -o Raw56E1LEFourCut.olean Raw56E1LEFourCut.lean 2>&1 | tee cut.log
+          lean -o Raw56E1LEFourClosed.olean Raw56E1LEFourClosed.lean 2>&1 | tee closed.log
+          cat checker.log cut.log closed.log > all.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' all.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound10_closed
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le-four-source-accepted
+          path: |
+            /tmp/le-four/union/{FastBiDFA,Raw56E1LEFourCut,Raw56E1LEFourClosed}.lean
+            /tmp/le-four/union/{FastBiDFA,Raw56E1LEFourCut,Raw56E1LEFourClosed}.olean
+            /tmp/le-four/union/all.log
+          if-no-files-found: error
+          retention-days: 30
 
   raw56_le_0lb:
     if: inputs.child == 'raw56-le-0lb' || inputs.child == 'raw56-le-1la' || inputs.child == 'raw56-le-1ra'
