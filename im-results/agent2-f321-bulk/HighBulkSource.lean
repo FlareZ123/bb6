@@ -94,4 +94,17 @@ theorem high_bulk_closed (a d j:Nat)
 #print axioms high_bulk
 #print axioms high_bulk_closed
 
+/-- A pair of numeric tests certifies a genuinely maximal High block:
+the guard admits all j moves but rules out a (j+1)st High move. -/
+theorem high_maximal (a d j:Nat)
+    (h:highCost d j≤a)
+    (hstop:¬highCost d (j+1)≤a) :
+    CounterReach a d j (a-highCost d j) (highD d j)
+      ∧ a-highCost d j < highD d j+2 := by
+  have hstep:highCost d (j+1)=highCost d j+highD d j+2 := rfl
+  refine ⟨high_bulk a d j h, ?_⟩
+  omega
+
+#print axioms high_maximal
+
 end BB6.Agent2F321Bulk
