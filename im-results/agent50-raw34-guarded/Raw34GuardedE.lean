@@ -193,8 +193,8 @@ def witnessA : PartialMachine :=
 
 theorem witnessA_never (m : Machine)
     (hm : compatible witnessA m) : NeverHalts m := by
-  exact never _ _ _ _ _ (by decide) (by decide) (by decide)
-    (by decide) m hm
+  exact never _ _ _ _ _ (by simp [safeMove]) (by simp [safeMove]) (by simp [safeMove])
+    (by simp [safeMove]) m hm
 
 /-- A distinct E1=0RC, A1=1RA right-moving counter-like holdout. -/
 def witnessB : PartialMachine :=
@@ -203,8 +203,8 @@ def witnessB : PartialMachine :=
 
 theorem witnessB_never (m : Machine)
     (hm : compatible witnessB m) : NeverHalts m := by
-  exact never _ _ _ _ _ (by decide) (by decide) (by decide)
-    (by decide) m hm
+  exact never _ _ _ _ _ (by simp [safeMove]) (by simp [safeMove]) (by simp [safeMove])
+    (by simp [safeMove]) m hm
 
 #print axioms blank_inv
 #print axioms safe_move_inv
