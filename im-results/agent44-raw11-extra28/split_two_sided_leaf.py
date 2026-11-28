@@ -82,9 +82,7 @@ def table_expr(table: str) -> str:
     if len(t) != 36:
         raise ValueError(f"expected 12 three-character slots, got {len(t)} chars")
     toks = [t[i:i + 3] for i in range(0, 36, 3)]
-    # Use equation-style definition so Lean gets the PartialMachine domain
-    # from the declaration before elaborating state projections/Move literals.
-    lines = ["def table : PartialMachine"]
+    lines = ["def table : PartialMachine := fun s => match s.1.val, s.2 with"]
     for j, tok in enumerate(toks):
         if tok == "---":
             continue
@@ -95,10 +93,10 @@ def table_expr(table: str) -> str:
         right = "true" if tok[1] == "R" else "false"
         nxt = ord(tok[2]) - ord("A")
         lines.append(
-            f"  | ({q},{str(bool(b)).lower()}) => "
+            f"  | {q},{str(bool(b)).lower()} => "
             f"some (some ⟨{write},{right},{nxt}⟩)"
         )
-    lines.append("  | _ => none")
+    lines.append("  | _,_ => none")
     return "\n".join(lines)
 
 
@@ -209,8 +207,8 @@ def main() -> None:
 
     data_name = prefix + "Data"
     write_module(
-        out, data_name, [prefix + "Left", prefix + "Right", *row_mods], proof_ns,
-        "open BB6.Agent4Automata\n"
+        out, data_name, ["PhaseTree", prefix + "Left", prefix + "Right", *row_mods], proof_ns,
+        "open BB6.Agent4Automata BB6Coverage BB6.Agent13BlankDelay BB6.Agent5PhaseTree\n"
         f"{table_expr(literal_table)}\n"
         "def cert : BB6.Agent4Automata.Cert := ⟨left,right,#["
         + ",".join(f"row{j:02}" for j in range(12)) + "]⟩\n#print axioms cert",
