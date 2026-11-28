@@ -24,8 +24,10 @@ theorem period_slope_dvd (n : Nat) (u v : Int) (w : List Nat)
   change -(P n*u)-P n*(u+2*v)*coeff w=(P n*2)*(-k)
   have he : -(P n*u)-P n*(u+2*v)*coeff w =
       -(P n*(u+(u+2*v)*coeff w)) := by
-    rw [Int.mul_add,Int.mul_assoc]
-    omega
+    calc
+      -(P n*u)-P n*(u+2*v)*coeff w =
+          -(P n*u+P n*((u+2*v)*coeff w)) := by rw [Int.mul_assoc]; omega
+      _ = -(P n*(u+(u+2*v)*coeff w)) := by rw [Int.mul_add]
   rw [he,hk]
   rw [Int.mul_assoc]
   simp only [Int.mul_neg,Int.neg_mul]
