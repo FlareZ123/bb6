@@ -44,6 +44,30 @@ theorem no_immediate_switch {v w e f p q : Nat}
     convert h using 1 <;> norm_num [pow_one] <;> ring
   exact hgap h'
 
+/-- Exact source-connected mixed-word residue transfer for one edge.
+    The alternate label w need not be the current state's valuation. -/
+theorem source_cross_step {v w q e : Nat}
+    (hv : 2 ≤ v) (hw : 2 ≤ w)
+    (he : highLevelNext (.N (oddTower q v))=some (.N e)) :
+    (((2^(v+1)+3 : Nat) : Int)) *
+      (3*((oddTower q v+2 : Nat) : Int) +
+        ((2^w*(2*w-3) : Nat) : Int)) =
+    (((2^(v+1) : Nat) : Int)) *
+      (3*((e+2 : Nat) : Int) +
+        ((2^w*(2*w-3) : Nat) : Int)) +
+    3*(((2^w*(2*w-3) : Nat) : Int) -
+       ((2^v*(2*v-3) : Nat) : Int)) := by
+  have hs : SourceChain v 1 e (oddTower q v) :=
+    SourceChain.step q he (SourceChain.zero _)
+  have hp : (2^(v+1)) *
+      (3*(e+2)+2^v*(2*v-3)) =
+      (2^(v+1)+3) *
+      (3*(oddTower q v+2)+2^v*(2*v-3)) := by
+    simpa using allValuationsPotential hv hs
+  exact cross_step_identity (by rfl) hp
+
+#print axioms source_cross_step
+
 #print axioms mixed_source_gap
 #print axioms no_immediate_switch
 end BB6.Agent20NeedleMixedPotentialSource
