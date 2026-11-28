@@ -133,6 +133,7 @@ jobs:
             --theorem F421SecondaryLifetimes.firstSecondaryQMoment \
             --theorem F421SecondaryLifetimes.firstSecondaryPrefixMoment \
             --theorem BB6Coverage.Agent41F421.EpochWords.firstSecondaryPotential \
+            --theorem BB6Coverage.Agent41F421.EpochWords.secondaryPotentialProtected \
             --theorem F421DrainPlan.splitPlan \
             --theorem BB6Coverage.Agent41F421.GeneralDrain.generalDrain \
             --theorem BB6Coverage.Agent41F421.MergedDrain.mergedDrain \
