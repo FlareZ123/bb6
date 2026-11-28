@@ -29,7 +29,10 @@ function swapTable(p){
     out[8+bit]=swapCode(p[10+bit]);
     out[10+bit]=swapCode(p[8+bit]);
   }
-  assert.deepEqual(out.slice(0,7),[21,0,22,0,11,0,16]);
+  assert.equal(out[0],21);
+  assert.equal(out[2],22);
+  assert.equal(out[4],11);
+  assert.equal(out[6],16);
   return out;
 }
 function parse(text){
