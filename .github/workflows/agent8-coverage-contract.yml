@@ -734,7 +734,7 @@ jobs:
           MOD=$(printf 'Raw54OneRDBranch%02d' '${{ matrix.branch }}')
           W=/tmp/raw54-onerd-branch
           python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee "$W.log"
-          python im-results/agent4-raw109/audit_axioms.py "$W.log" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').checked"
+          python im-results/agent4-raw109/audit_axioms.py "$W.log" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').checked" "BB6.Agent8Raw54.OneRDBankAudit.Branch$(printf '%02d' '${{ matrix.branch }}').residual_count"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
@@ -773,7 +773,7 @@ jobs:
           cp /tmp/raw54-onerd-generated/*.lean "$D/"
           python "$D/onera_slices.py" merge /tmp/raw54-onerd-slices "$P" 24 raw54-onerd
           python tools/lean_compile_closure.py --workdir "$W" --jobs 2 --manifest "$W/manifest.json" --precompiled-manifest "$P/manifest.json" --precompiled-dir "$P" "$D/Raw54OneRDBankCut.lean" 2>&1 | tee /tmp/raw54-onerd-cut.log
-          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.cut BB6.Agent8Raw54.OneRDBankAudit.close
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-onerd-cut.log BB6.Agent8Raw54.OneRDBankAudit.checked BB6.Agent8Raw54.OneRDBankAudit.residual_count BB6.Agent8Raw54.OneRDBankAudit.cut BB6.Agent8Raw54.OneRDBankAudit.close
       - uses: actions/upload-artifact@v4
         if: always()
         with:
