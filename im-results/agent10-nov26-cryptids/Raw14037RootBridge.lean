@@ -16,7 +16,7 @@ def afterBank : BState :=
 
 def transferIn : BState :=
   ⟨0,true,
-    U 3 2 ++ (U 3 74 ++ [S 2]),
+    S 3 :: S 3 :: (U 3 74 ++ [S 2]),
     trip 1 ++ (trip 3 ++ [S 5,S 2,S 1,S 5])⟩
 
 theorem macro_afterBank :
