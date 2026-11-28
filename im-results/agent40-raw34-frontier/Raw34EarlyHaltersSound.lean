@@ -16,7 +16,7 @@ theorem finite_check_exact_halt
     (p : PartialMachine) (n : Nat) (m : Machine)
     (hm : compatible p m) (h : finiteHaltCheck p n = true) :
     HaltsAfter m n := by
-  change (run m n blank).isSome = true ∧ run m (n+1) blank = none
+  -- Keep HaltsAfter opaque until constructor, as in finiteHaltCheck_sound.
   cases he : finitePartialRun p n finiteBlank with
   | none => simp [finiteHaltCheck, he] at h
   | some c =>
