@@ -23,7 +23,7 @@ required=[
   "BB6.Agent3Leaf2265Bridge.weighted",
 ]
 for theorem in required:
-  m=re.search(r"'"+re.escape(theorem)+r"' depends on axioms: \\[([^\\]]*)\\]",s)
+  m=re.search(r"'"+re.escape(theorem)+r"' depends on axioms: \[([^\]]*)\]",s)
   if m: deps={x.strip() for x in m.group(1).split(",") if x.strip()}
   elif "'"+theorem+"' does not depend on any axioms" in s: deps=set()
   else: raise SystemExit("Missing source axiom audit: "+theorem)
