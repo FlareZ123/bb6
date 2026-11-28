@@ -200,4 +200,10 @@ theorem never (m : Machine) (hm : compatible p m) : NeverHalts m :=
   never_of_growth p a 83 (fun n => 26*n+87) first (by omega) grow m hm
 #print axioms never
 
+theorem cover (B : Nat) : Cover (WeightedBound B) p := by
+  apply Cover.leaf p
+  intro m hm
+  exact weighted_never B m (never m hm)
+#print axioms cover
+
 end BB6.Agent32Raw42Run15760Growth
