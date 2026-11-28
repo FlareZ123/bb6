@@ -195,7 +195,7 @@ def stitch_precompiled_roots(union: Path, branch_work: Path, combined: Path) -> 
         ],
     )
     (combined / "manifest.json").write_text(
-        json.dumps(left, indent=2, sort_keys=True) + "\\n", encoding="utf-8")
+        json.dumps(left, indent=2, sort_keys=True) + "\n", encoding="utf-8")
     print(f"parent seed: retained {len(entries)} authenticated object modules; "
           f"added {len(additions)} branch-only modules")
 
