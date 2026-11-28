@@ -620,7 +620,21 @@ theorem rightBlankCarryShape (cs : List LeftChunk) :
   have h := congrArg
     (fun v : List Bool => [false,true,true,false,true,false] ++ v)
     (carryFoldBits Carry.eleven cs)
-  simpa only [outputRightChunks_rightSeq,inputBits,List.append_assoc] using h
+  change [false,true,true,false,true,false,true,true] ++ rightSubst cs =
+    [false] ++ inputBits
+      (.separatedMarker :: (carryFold .eleven cs).1) ++
+    carryBits (carryFold .eleven cs).2
+  calc
+    [false,true,true,false,true,false,true,true] ++ rightSubst cs =
+      [false,true,true,false,true,false] ++
+        (carryBits .eleven ++ rightSubst cs) := by rfl
+    _ = [false,true,true,false,true,false] ++
+        (inputBits (carryFold .eleven cs).1 ++
+          carryBits (carryFold .eleven cs).2) := h
+    _ = [false] ++ inputBits
+      (.separatedMarker :: (carryFold .eleven cs).1) ++
+      carryBits (carryFold .eleven cs).2 := by
+        simp [inputBits,chunkBits,List.append_assoc]
 
 /-- All three exceptional left-edge residues are handled by fixed
     original-table runs. No infinite search is required. -/
@@ -765,8 +779,25 @@ theorem anotherBlankCycle (tok : LeftChunk) (chunks : List LeftChunk)
     have hc := congrArg
       (fun v : List Bool => v ++ ([false,false] ++ L))
       (secondCarryShape tok chunks)
-    rw [hc] at h
-    simpa [Auto.extend,rs,f,List.append_assoc] using h
+    have hz :
+        [false,true,true] ++ outputRightChunks rs ++
+           ([false,false] ++ L) =
+        [false] ++ inputBits f.1 ++ carryBits f.2 ++
+           ([false,false] ++ L) := by
+      simpa [rs,f,List.append_assoc] using hc
+    have hh : run0 p 2
+        ⟨0,[false] ++ outputRightChunks rs ++
+          [false,false] ++ L,[false,false,false] ++ R⟩ =
+      some ⟨2,[false,true,true] ++ outputRightChunks rs ++
+        [false,false] ++ L,[false] ++ R⟩ := by
+      simpa [Auto.extend,List.append_assoc] using h
+    rw [show
+      [false,true,true] ++ outputRightChunks rs ++
+         [false,false] ++ L =
+      [false] ++ inputBits f.1 ++ carryBits f.2 ++
+         [false,false] ++ L from by
+           simpa [List.append_assoc] using hz] at hh
+    simpa [List.append_assoc] using hh
   have h3 : run0 p (scanCost f.1)
       ⟨2,[false] ++ inputBits f.1 ++ carryBits f.2 ++
               [false,false] ++ L,[false] ++ R⟩ =
