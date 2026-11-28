@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la' && inputs.child != 'raw56-le-1ra' && inputs.child != 'raw56-le-four-assemble'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs' && inputs.child != 'raw56-le-0lb' && inputs.child != 'raw56-le-1la' && inputs.child != 'raw56-le-1ra' && inputs.child != 'raw56-le-four-assemble' && inputs.child != 'raw56-le-five-assemble'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -554,9 +554,11 @@ jobs:
           retention-days: 7
 
   raw56_le_four_assemble:
-    if: inputs.child == 'raw56-le-four-assemble'
+    if: inputs.child == 'raw56-le-four-assemble' || inputs.child == 'raw56-le-five-assemble'
     runs-on: ubuntu-latest
     timeout-minutes: 35
+    env:
+      MODE: ${{ inputs.child == 'raw56-le-five-assemble' && 'five' || 'four' }}
     steps:
       - uses: actions/checkout@v4
       - name: Install source-pinned Lean 4.36.0-rc2
@@ -594,15 +596,20 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '46048213225'
-      - name: Download two newly accepted original-source E0 siblings
+      - name: Link source-accepted E0 siblings from explicit source run IDs
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RUN_IDS: ${{ inputs.source_run_id }}
         run: |
           set -euo pipefail
-          IFS=, read -r LB_RUN LA_RUN <<< "$RUN_IDS"
+          IFS=, read -r LB_RUN LA_RUN RA_RUN <<< "$RUN_IDS"
           test -n "$LB_RUN" && test -n "$LA_RUN"
-          for entry in "lb:$LB_RUN:raw56-le0LB-source-accepted" "la:$LA_RUN:raw56-le1LA-source-accepted"; do
+          parts=("lb:$LB_RUN:raw56-le0LB-source-accepted" "la:$LA_RUN:raw56-le1LA-source-accepted")
+          if [[ "$MODE" == five ]]; then
+            test -n "$RA_RUN"
+            parts+=("ra:$RA_RUN:raw56-le1RA-source-accepted")
+          fi
+          for entry in "${parts[@]}"; do
             IFS=: read -r DIR RUN NAME <<< "$entry"
             ID="$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$RUN/artifacts" --jq ".artifacts[] | select(.name == \"$NAME\") | .id" | head -1)"
             test -n "$ID"
@@ -611,17 +618,18 @@ jobs:
             unzip -q "/tmp/le-four/$DIR.zip" -d "/tmp/le-four/$DIR"
             echo "Linked accepted $NAME artifact $ID from run $RUN"
           done
-      - name: Compile first exact-source 14-to-10 accepted conditional frontier
+      - name: Compile exact-source conditional 14-to-10 or mixed-bound 14-to-9 frontier
         run: |
           set -euo pipefail
           mkdir -p /tmp/le-four/union
           python - <<'PY'
           from pathlib import Path
-          import hashlib,shutil
+          import hashlib,shutil,os
           base=Path('/tmp/le-four')
           dst=base/'union'
           counts={}
-          for name in ('base','rb','rc','two','lb','la'):
+          folders=('base','rb','rc','two','lb','la') + (('ra',) if os.environ['MODE']=='five' else ())
+          for name in folders:
               root=base/name
               files=list(root.rglob('*.olean'))
               assert files,(name,root)
@@ -632,29 +640,40 @@ jobs:
                       assert hashlib.sha256(q.read_bytes()).digest()==hashlib.sha256(p.read_bytes()).digest(),(q,p)
                   else:shutil.copy2(p,q)
           needed=['Raw56RootConsumer','Raw56E1LECut','Raw56LE0RBAll','Raw56LE0RCAll','Raw56LE0LBAll','Raw56LE1LAAll']
+          if os.environ['MODE']=='five': needed.append('Raw56LE1RAAll')
           assert all((dst/(n+'.olean')).exists() for n in needed),needed
           print('accepted module union',counts,len(list(dst.glob('*.olean'))))
           PY
           cp im-results/agent32-raw59/FastBiDFA.lean /tmp/le-four/union/
-          cp im-results/agent1-raw56/le/Raw56E1LE{FourCut,FourClosed}.lean /tmp/le-four/union/
+          cp im-results/agent1-raw56/le/Raw56E1LE{FourCut,FourClosed,FiveCut,FiveClosed}.lean /tmp/le-four/union/
           export LEAN_PATH=/tmp/le-four/union
           export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
           cd /tmp/le-four/union
           lean -o FastBiDFA.olean FastBiDFA.lean 2>&1 | tee checker.log
           lean -o Raw56E1LEFourCut.olean Raw56E1LEFourCut.lean 2>&1 | tee cut.log
-          lean -o Raw56E1LEFourClosed.olean Raw56E1LEFourClosed.lean 2>&1 | tee closed.log
+          if [[ "$MODE" == four ]]; then
+            lean -o Raw56E1LEFourClosed.olean Raw56E1LEFourClosed.lean 2>&1 | tee closed.log
+            REQUIRE=BB6.Agent1Raw56E1LE.sound10_closed
+            modules=(FastBiDFA Raw56E1LEFourCut Raw56E1LEFourClosed)
+          else
+            lean -o Raw56E1LEFiveCut.olean Raw56E1LEFiveCut.lean 2>&1 | tee five-cut.log
+            lean -o Raw56E1LEFiveClosed.olean Raw56E1LEFiveClosed.lean 2>&1 | tee closed.log
+            REQUIRE=BB6.Agent1Raw56E1LE.sound9_closed
+            modules=(FastBiDFA Raw56E1LEFourCut Raw56E1LEFiveCut Raw56E1LEFiveClosed)
+          fi
           cat checker.log cut.log closed.log > all.log
+          if [[ "$MODE" == five ]]; then cat five-cut.log >> all.log; fi
           ! grep -E 'sorryAx|native_decide|(^| )error:' all.log
-          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound10_closed
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require "$REQUIRE"
           mkdir -p /tmp/le-four/output
-          for n in FastBiDFA Raw56E1LEFourCut Raw56E1LEFourClosed; do
+          for n in "${modules[@]}"; do
             cp "$n.lean" "$n.olean" /tmp/le-four/output/
           done
           cp all.log /tmp/le-four/output/
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: raw56-le-four-source-accepted
+          name: ${{ inputs.child == 'raw56-le-five-assemble' && 'raw56-le-five-source-accepted' || 'raw56-le-four-source-accepted' }}
           path: /tmp/le-four/output/**
           if-no-files-found: error
           retention-days: 30
