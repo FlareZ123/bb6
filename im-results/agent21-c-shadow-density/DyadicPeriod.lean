@@ -59,14 +59,21 @@ theorem period_word_iff (s z u v : Int) (n : Nat) (w : List Nat)
     (hw : ∃ r t, w = r::t ∧ 0<r) :
     (P (n+1) ∣ z-P n*u+acc (s-2*(P n*(u+2*v))) w) ↔
       (P (n+1) ∣ z+acc s w) := by
-  have hd := period_word_difference s z u v n w hw
+  let newer : Int := z-P n*u+acc (s-2*(P n*(u+2*v))) w
+  let older : Int := z+acc s w
+  change (P (n+1)∣newer) ↔ (P (n+1)∣older)
+  have hd : P (n+1)∣newer-older := period_word_difference s z u v n w hw
   constructor
   · intro h
     have hs := Int.dvd_sub h hd
-    convert hs using 1 <;> omega
+    have heq : newer-(newer-older)=older := by omega
+    rw [heq] at hs
+    exact hs
   · intro h
     have hs := Int.dvd_add hd h
-    convert hs using 1 <;> omega
+    have heq : (newer-older)+older=newer := by omega
+    rw [heq] at hs
+    exact hs
 
 #print axioms period_word_iff
 end BB6.Agent21Dyadic
