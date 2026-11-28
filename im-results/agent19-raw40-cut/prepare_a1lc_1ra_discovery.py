@@ -49,6 +49,76 @@ witness_slot = witness_table.replace("_", "").index("HHH") // 3
 if bound != witness_n + 1 + witness_delay:
     raise SystemExit("enumerator witness score is inconsistent")
 
+def far_valid(code: str, table: str) -> bool:
+    """Independent Python replay of certify_shards.py's FAR closure check."""
+    rev = int(code[0])
+    D = [int(ch) for ch in code[1:]]
+    n = len(D) // 2
+    if n < 1 or len(D) != 2 * n:
+        return False
+    N = 6 * n + 1
+    H = N - 1
+    halt = 1 << H
+    T = [0] * (2 * N)
+    T[H] = T[N + H] = halt
+    flat = table.replace("_", "")
+    if len(flat) != 36:
+        return False
+    transitions = [flat[3 * i:3 * i + 3] for i in range(12)]
+    rules = []
+    for l in range(n):
+        for q in range(6):
+            for a in range(2):
+                m = transitions[2 * q + a]
+                dst = a * N + 6 * l + q
+                if m == "---":
+                    T[dst] = halt
+                    continue
+                w = int(m[0])
+                r = m[1] == "R"
+                k = ord(m[2]) - 65
+                if r != bool(rev):
+                    T[dst] = 1 << (6 * D[2 * l + w] + k)
+                else:
+                    for j in range(n):
+                        for b in range(2):
+                            if D[2 * j + b] == l:
+                                rules.append((dst, b * N + 6 * j + k, w * N))
+    while True:
+        z = halt
+        while True:
+            old = z
+            for j in range(N):
+                if T[j] & z:
+                    z |= 1 << j
+            if z & 1:
+                return False
+            if old == z:
+                break
+        changed = False
+        for dst, src, off in rules:
+            v = T[dst]
+            bits = T[src]
+            while bits:
+                k = (bits & -bits).bit_length() - 1
+                v |= T[off + k]
+                bits &= bits - 1
+            if v != T[dst]:
+                T[dst] = v
+                changed = True
+        if not changed:
+            return True
+
+
+def filter_invalid_far(codes):
+    invalid = {}
+    for i, code in list(codes.items()):
+        if not far_valid(code, opens[i]):
+            invalid[i] = code
+            del codes[i]
+    return invalid
+
+
 # Reuse every already-checked A1LC FAR code as a seed, then exhaust the
 # restricted-growth FAR search through five summary states.
 seed_codes = set()
@@ -71,8 +141,9 @@ for line in far.stdout.splitlines():
     fields = line.split()
     if len(fields) == 2:
         far_codes[int(fields[0])] = fields[1]
-if len(far_codes) != len(set(far_codes)) or any(i < 0 or i >= len(opens) for i in far_codes):
-    raise SystemExit("FAR search returned duplicate or out-of-range ids")
+if any(i < 0 or i >= len(opens) for i in far_codes):
+    raise SystemExit("FAR search returned out-of-range ids")
+invalid_far = filter_invalid_far(far_codes)
 
 # One residual can require a six-state FAR summary even when the other 187
 # close at five.  Search only the remaining ids so the larger bank stays cheap.
@@ -90,6 +161,7 @@ if remaining_for_far6:
         fields = line.split()
         if len(fields) == 2:
             far_codes[int(fields[0])] = fields[1]
+    invalid_far.update(filter_invalid_far(far_codes))
     far6_stats = [line for line in far6.stderr.splitlines() if line.startswith("n=")]
 
 # Remaining residuals need stronger finite summaries.  Try the already-
@@ -199,6 +271,7 @@ summary = {
     "tree_sha256": hashlib.sha256((OUT / "tree.json").read_bytes()).hexdigest(),
     "enum_stats": enum_stats,
     "far_stats": far_stats,
+    "invalid_far": [{"id": i, "code": code} for i, code in sorted(invalid_far.items())],
     "compact_methods": methods,
 }
 (OUT / "discovery-draft.json").write_text(json.dumps(summary, indent=2) + "\n")
