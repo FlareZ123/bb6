@@ -101,8 +101,14 @@ theorem pairwiseCheck_sound : ∀ xs, pairwiseCheck xs = true →
   | nil => intro _; exact List.Pairwise.nil
   | cons p ps ih =>
     intro h
-    have hh : ps.all (clash p) = true ∧ pairwiseCheck ps = true := by
-      exact Bool.and_eq_true.mp (by simpa only [pairwiseCheck] using h)
+    have hleft : ps.all (clash p) = true := by
+      cases hl : ps.all (clash p) with
+      | false => simp [pairwiseCheck, hl] at h
+      | true => rfl
+    have hright : pairwiseCheck ps = true := by
+      simpa only [pairwiseCheck, hleft, Bool.true_and] using h
+    have hh : ps.all (clash p) = true ∧ pairwiseCheck ps = true :=
+      ⟨hleft, hright⟩
     apply List.Pairwise.cons
     · intro q hq m hp hqm
       exact clash_sound (List.all_eq_true.mp hh.1 q hq) m hp hqm
@@ -121,7 +127,7 @@ theorem all_pairwise_disjoint :
     has an infinite authentic blank execution. -/
 theorem all_never (p : PartialMachine) (hp : p ∈ bank)
     (m : Machine) (hm : compatible p m) : NeverHalts m := by
-  simp only [bank, List.mem_cons, List.mem_singleton] at hp
+  simp only [bank, List.mem_cons, List.mem_nil, or_false] at hp
   rcases hp with h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h | h
   · subst p
     exact BB6Coverage.Agent42Raw40Crossing.C1RBM71.never m hm
