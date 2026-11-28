@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-plan]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-plan, raw34-compact]
         default: late-parent
       base_run:
         type: string
@@ -1006,5 +1006,47 @@ jobs:
         with:
           name: raw34-plan-source
           path: /tmp/a50-raw34-plan/
+          if-no-files-found: error
+          retention-days: 30
+
+  raw34-compact:
+    if: inputs.mode == 'raw34-compact'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Generate compact proof and check the entire source closure
+        run: |
+          set -euo pipefail
+          D=im-results/agent50-raw34-plan
+          W=/tmp/a50-raw34-compact
+          mkdir -p "$W/generated"
+          python im-results/agent13-coverage/unpack.py
+          g++ -O3 -std=c++17 "$D/far.cpp" -o "$W/far"
+          python "$D/generate.py" --output "$W/generated/Raw34Pilot.lean" --summary "$W/pilot.json"
+          python "$D/generate_compact.py" --far "$W/far" --output "$W/generated"
+          python - "$W/generated/summary.json" <<'PY'
+          import json,sys
+          x=json.load(open(sys.argv[1]))
+          assert x['weighted_bound']==107 and x['stats'].get('residual',0)==0
+          assert sum(x['mass'].values())==25**5
+          assert x['attainer']['ordinary']+x['attainer']['delay']==107
+          PY
+          python tools/lean_compile_closure.py --workdir "$W/build" --source-root "$W/generated" --jobs 2 --manifest "$W/manifest.json" --theorem BB6.Agent50Raw34E1LB.cover --parent-table '1RB---_1RC---_0RD0RE_1LC0LD_---1LB_------' --weighted-bound 107 --artifact-name raw34-compact-e1lb --provenance-input "$D/generate.py" --provenance-input "$D/generate_compact.py" --provenance-input "$D/fastsim.py" --provenance-input "$D/far.cpp" "$D/Raw34PilotExact.lean" "$W/generated/Raw34E1LB.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34E1LB.cover'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34E1LB.attained'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34Pilot.cover_weighted'" "$W/closure.log"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-compact-e1lb
+          path: /tmp/a50-raw34-compact/
           if-no-files-found: error
           retention-days: 30
