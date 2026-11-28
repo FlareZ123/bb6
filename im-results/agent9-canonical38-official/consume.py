@@ -30,6 +30,7 @@ ACCEPTED39_RUN = 46129131784
 ACCEPTED39_ARTIFACT = 15258350500
 ACCEPTED39_DIGEST = "aa5706bd0657478d66b1707bdd16e73101047e6f26206157c91f8312035d4557"
 ACCEPTED39_HEAD = "6d5196868ae0d95c217b54a308550b9bfd5572ba"
+ACCEPTED39_SOURCE_BLOB = "f3e7cc6d3c67ba5c3c671637d63e9e5900cfd089"
 DIRECT_ARTIFACT = "canonical38-raw39-raw47-direct-delta"
 DIRECT_NS = "BB6.Agent3Canonical38Raw39Raw47Direct"
 COND_NS = "BB6.Agent3Raw47Canonical39Conditional"
@@ -207,6 +208,10 @@ def main():
         d.mkdir(parents=True, exist_ok=True)
 
     accepted39 = authenticate_accepted39(evidence)
+    source_blob = subprocess.check_output(
+        ["git", "hash-object", str(A11 / "Raw39Canonical39Successor.lean")],
+        cwd=REPO, text=True).strip()
+    assert source_blob == ACCEPTED39_SOURCE_BLOB
     linked, _, _, base_report = c.base.verify_base(work, c.base.BASE_RUN)
     sharp = c.resume.restore_sharp(work, linked, base_report)
     ready, _, ready_pin = c.extra.restore_ready(work, linked, sharp, 46031670976)
