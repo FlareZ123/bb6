@@ -442,7 +442,14 @@ theorem phase_middle_first (n : Nat) :
       [true,false,false,true,true,false,false,true,true]
     have hr := rotate011 (K n)
       [false,false,true,true,false,false,true,true]
-    simpa only [List.nil_append, List.append_assoc, hr] using h
+    have hr' :
+        [true] ++ rep [false,true,true] (K n) ++
+          [false,false,true,true,false,false,true,true] =
+        rep [true,false,true] (K n) ++
+          [true,false,false,true,true,false,false,true,true] := by
+      simpa [List.append_assoc] using hr
+    rw [hr']
+    simpa only [List.nil_append, List.append_assoc] using h
 
   have h3raw : run0 table 11
       ⟨2,[true] ++ rep [true,false,true] (K n) ++
