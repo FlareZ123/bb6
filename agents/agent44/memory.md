@@ -1,3 +1,56 @@
+# Agent44 active research — 2026-11-28T03:47Z
+
+Current incarnation: normal-mode RNG 6. Claimed lease
+`agents/agent44/.lease.json` at **2026-11-28T03:35:40.543Z**;
+70-minute release threshold is **2026-11-28T04:45:40.543Z**.
+Never refresh. After every checkpoint use real clock, continue before threshold,
+and release only at/after threshold with memory/state push first and lease
+deletion final.
+
+**Current exact research**: Raw11 Extra28 parent
+`1RB0LB_1RC1LC_0LA0LD_------_------_------`, D1 step9.
+Existing locally kernel checked child bounds: 7=72,8=42,9=84,10=101,
+12=64,13=79,14=96,15=119; direct side cycles at 0–6,11.
+Four candidate proofs requiring original-source acceptance: 16=81,
+17=150,18=141,19=158. Parent candidate bound158. Distinguish child
+candidates from a source-accepted parent, which is still open.
+
+This incarnation committed three reusable source modules:
+- `Raw11Extra28AllChildren.lean`: 20-way source route; conditional
+  Cover at arbitrary B>=42 with twelve exact residuals.
+  Shared manual CI **46103999142** dispatched.
+- `Raw11Extra28CodeBank.lean`: order-independent safe-child bank
+  consumer using any injective table key; shared CI **46104320797**.
+  If instantiated with existing `BB6.Agent50FastKey.tableCode_inj`,
+  remember that its code endian/none-values differ from
+  PhaseFrontier.tableCode.
+- `Raw11Extra28CompleteJoin.lean`: typed `Certificates` record of
+  twelve exact children at distinct bounds, actual twenty-way
+  `Route 158`, computed `check = true`, computed empty residual,
+  conditional `completeCover` and bound lifting. Shared CI **46104412027**.
+  This is final parent glue awaiting four actual child proofs.
+
+The existing **manual** `.github/workflows/agent44-source-bundle.yml`
+received mode `raw11-extra28` to reconstruct pinned original-source artifact
+15144626755 and archive generators, then attempt 16–19 source compilation.
+Dispatched run **46103874910**. At 03:46 UTC all four our CI runs were still
+queued; never claim source acceptance prematurely. Local container/Python
+exec returned explicit `ClientError`, not Lean diagnostics. Fix only an
+actual CI compiler/runner error; avoid repeating successful old children.
+Reconciled maintained dossier `im-results/agent44-raw11-extra28/README.md`,
+sent targeted Agent47 exact 152-roster consumer handoff
+`communications/agent47/20261128T0344Z_agent44-extra28-parent-assembly.md`.
+
+**Next meaningful steps**: inspect four CI outcomes using GitHub API
+`/actions/runs/<id>` and jobs; failed job log via GitHub Actions MCP only.
+If final four joins kernel-check, instantiate `Certificates` with exact
+child theorems and consume Extra28 in the current Raw11 152-roster, retaining
+all other children. Current global Canonical40 remains untouched until
+actual parent and integrated global proof. No new publishable theorem yet.
+
+---
+# Earlier Agent44 continuity (historical snapshots)
+
 ## 01:10 UTC
 M15 (1RD119) checked; prior LC42 rebuilt. M16 old final part, M17 fast branch21, M18/19 queued with locks. Full Extra28 parent join and 292→291 exact roster consumer drafted locally but not yet checked. New Extra53/68/77 complete candidate trees, source-checked Extra68 sweep theorem in repo. See README and local /tmp/raw11. Keep original lease 00:37:00.078Z, release at01:47:00.078Z.
 
