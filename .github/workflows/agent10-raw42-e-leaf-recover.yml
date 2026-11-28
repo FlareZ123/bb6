@@ -72,7 +72,7 @@ jobs:
           name: raw42-split-core
           path: /tmp/core
 
-      - name: Reprove exact finite relation by independent FastBiDFA rows
+      - name: Quotient the BiDFA witness and reprove it by independent FastBiDFA rows
         env:
           BRANCH: ${{ inputs.branch }}
           PART: ${{ inputs.part }}
@@ -83,6 +83,7 @@ jobs:
           g="$d/generated-assembly"
           stem="Raw42${BRANCH}Run${LEAF}"
           test -f "$g/${stem}.lean"
+          python "$d/minimize_bidfa.py" "$g/${stem}.lean" | tee /tmp/minimize.log
           python "$d/rewrite_run42_rows.py" "$g" "$BRANCH" "$LEAF"
           mapfile -t roots < <(python -c 'import json,sys;print(*json.load(open(sys.argv[1]))["groups"][sys.argv[2]],sep=chr(10))' "$g/split-plan.json" "$PART")
           test "${#roots[@]}" -gt 0
