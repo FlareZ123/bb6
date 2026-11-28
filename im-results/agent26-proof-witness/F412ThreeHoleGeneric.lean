@@ -78,17 +78,17 @@ theorem pA1F0E1_root (am fm em : Move) :
 
 theorem pA1_F0_unknown (am : Move) : pA1 am (5,false) = none := by
   simp [pA1,fChild,fParent,fHole,refine,fP6,fP5,fP4,fP3,fP2,
-    fP1,fResidual,fRoot,emptyTable]
+    fP1,fResidual,fRoot,emptyTable] <;> decide
 
 theorem pA1F0_B1_unknown (am fm : Move) :
     pA1F0 am fm (1,true) = none := by
   simp [pA1F0,pA1,fChild,fParent,fHole,refine,fP6,fP5,fP4,fP3,
-    fP2,fP1,fResidual,fRoot,emptyTable]
+    fP2,fP1,fResidual,fRoot,emptyTable] <;> decide
 
 theorem pA1F0_E1_unknown (am fm : Move) :
     pA1F0 am fm (4,true) = none := by
   simp [pA1F0,pA1,fChild,fParent,fHole,refine,fP6,fP5,fP4,fP3,
-    fP2,fP1,fResidual,fRoot,emptyTable]
+    fP2,fP1,fResidual,fRoot,emptyTable] <;> decide
 
 theorem pA1F0B1_short (B : Nat) (hB : 128 ≤ B)
     (am fm bm : Move) (n : Nat) (hn : n ≤ 120)
