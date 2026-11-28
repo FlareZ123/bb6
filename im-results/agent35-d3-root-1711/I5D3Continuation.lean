@@ -124,7 +124,7 @@ private theorem second_finish_eq_packet (t h : Nat) :
 
 /-- Two source-certified E returns, expressed directly at the regular
     source section and its exact packet endpoint. -/
-private theorem two_return_packet (t h : Nat) :
+theorem two_return_packet (t h : Nat) :
     ObsEq
       (run (BB6.Agent31SecondSource.firstCost t h +
           BB6.Agent31SecondSource.secondCost t)
@@ -134,7 +134,7 @@ private theorem two_return_packet (t h : Nat) :
   rw [second_start_eq_source t h, second_finish_eq_packet t h] at hTwo
   exact hTwo
 
-private theorem a_packet_regular_obs (k q r : Nat) :
+theorem a_packet_regular_obs (k q r : Nat) :
     ObsEq
       (run (BB6.Agent35APacketGeneral.duration k q r)
         (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+2) ys))
@@ -147,7 +147,7 @@ private theorem a_packet_regular_obs (k q r : Nat) :
   rw [BB6.Agent35APacketGeneral.source_a_packet_regular]
   exact BB6.Padding.cfgEq_refl _
 
-private theorem a_packet_unary_obs (k q r : Nat) :
+theorem a_packet_unary_obs (k q r : Nat) :
     ObsEq
       (run (BB6.Agent35APacketUnary.duration k q r)
         (BB6.Agent31PacketSource.packet (3*k+3) q (3*r+1) ys))
