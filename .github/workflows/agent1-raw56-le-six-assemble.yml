@@ -78,6 +78,13 @@ jobs:
           run-id: '46109884602'
       - uses: actions/download-artifact@v4
         with:
+          name: raw56-le0LF-partial1-source-accepted
+          path: /tmp/le-six/lfbase
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46112103663'
+      - uses: actions/download-artifact@v4
+        with:
           name: raw56-le0LF-complete-source-accepted
           path: /tmp/le-six/lf
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -93,7 +100,7 @@ jobs:
           root=Path('/tmp/le-six')
           dst=root/'union'
           counts={}
-          for name in ('base','rb','rc','two','lb','la','ra','five','lf'):
+          for name in ('base','rb','rc','two','lb','la','ra','five','lfbase','lf'):
               files=list((root/name).rglob('*.olean'))
               assert files,(name,root/name)
               counts[name]=len(files)
