@@ -2067,9 +2067,11 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           W=/tmp/a40-raw34-final3233
-          mkdir -p "$W/generated"
+          mkdir -p "$W/base" "$W/generated"
           node im-results/agent50-raw34-plan/generate_pair_depth6_plan.mjs \
-            --f0 0LD --root-shards --output "$W/generated" | tee "$W/root-generation.json"
+            --f0 0LD --output "$W/base" | tee "$W/base-generation.json"
+          node im-results/agent40-raw34-pair-depth8/generate_recursive_shards.mjs \
+            --input "$W/base" --output "$W/generated" --threshold 400 | tee "$W/root-generation.json"
           cp "$W/generated/manifest.json" "$W/root-manifest.json"
           node im-results/agent40-raw34-pair-depth8/generate_final3233_cover.mjs \
             --source "$W/generated/residualRows.json" --output "$W/generated" \
@@ -2090,6 +2092,7 @@ jobs:
           assert root['physicalParentCompletions']=='244140625'
           assert root['nodeCount']==16976 and root['residualCount']==4274
           assert len(root['shards'])==25
+          assert root['threshold']==400 and root['maxDirectNodes']<=400
           assert m['originalResidualRows']==4274
           assert m['originalResidualPhysical']=='2671250'
           assert m['finalResidualRows']==3233
@@ -2178,9 +2181,11 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
           W=/tmp/a40-raw34-pair-easy-sharded
-          mkdir -p "$W/generated"
+          mkdir -p "$W/base" "$W/generated"
           node im-results/agent50-raw34-plan/generate_pair_depth6_plan.mjs \
-            --f0 0LD --root-shards --output "$W/generated" | tee "$W/generation.json"
+            --f0 0LD --output "$W/base" | tee "$W/base-generation.json"
+          node im-results/agent40-raw34-pair-depth8/generate_recursive_shards.mjs \
+            --input "$W/base" --output "$W/generated" --threshold 400 | tee "$W/generation.json"
           python tools/lean_compile_closure.py --workdir "$W/build" \
             --source-root "$W/generated" --jobs 8 \
             --manifest "$W/closure-manifest.json" \
@@ -2204,17 +2209,10 @@ jobs:
               assert got<=allowed,(final,got)
           else:
               assert f"'{final}' does not depend on any axioms" in log,final
-          for x in m['shards']:
-              ns=x['namespace']
-              for name in ('node_count','checked','cover'):
-                  full=ns+'.'+name
-                  mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
-                  if mm:
-                      got=set(re.findall(r'[A-Za-z][A-Za-z0-9_.]*',mm.group(1)))
-                      assert got<=allowed,(full,got)
-                  else:
-                      assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: exact 244,140,625-completion Raw34 pair parent Cover compiled from 25 kernel-checked root subplans')
+          assert m['threshold']==400
+          assert m['maxDirectNodes']<=400
+          assert m['directModuleCount']>25 and m['aggregateModuleCount']>1
+          print('PASS: exact 244,140,625-completion Raw34 pair parent Cover compiled from recursively sharded kernel-checked subplans')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
