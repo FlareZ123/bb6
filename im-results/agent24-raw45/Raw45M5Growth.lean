@@ -25,7 +25,6 @@ private theorem ones_snoc (n : Nat) : ones n ++ [true] = ones (n+1) := by
   calc
     rep [true] n ++ [true] = [true] ++ rep [true] n := rep_snoc [true] n
     _ = rep [true] (n+1) := by
-      rw [show n+1=1+n by omega]
       rfl
 
 private theorem dstart (L : List Bool) :
@@ -72,7 +71,7 @@ theorem growth (n : Nat) :
     have H := sweepL table 1 [] [] [true] [true] 1 bstep (3*n+3) [] [true]
     have hs : ones (3*n+3)++[true] = ones (3*n+4) := by
       rw [ones_snoc,show (3*n+3)+1=3*n+4 by omega]
-    simpa only [ones,Nat.one_mul,List.nil_append,List.append_nil,hs] using H
+    simpa only [Nat.one_mul,List.nil_append,List.append_nil,hs] using H
   have h4 : run0 table 1 ⟨1,[],ones (3*n+4)⟩ =
       some ⟨2,[true,true],ones (3*n+3)⟩ := by
     have ha : ones (3*n+4) = [true]++ones (3*n+3) := by
@@ -102,9 +101,9 @@ theorem growth (n : Nat) :
         ⟨3,[false,false]++[true]++ones (3*n+4),[]⟩ := by
       unfold phase
       rw [show 3*(n+1)+2=3*n+5 by omega,ha]
-    simpa only [ha,hb] using finish (ones (3*n+4))
+    simpa only [ha,hb,List.append_assoc] using finish (ones (3*n+4))
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6
-  have ht : ((((2+1)+(3*n+3))+1+(3*n+3))+2 = 6*n+12 := by omega
+  have ht : (2+1+(3*n+3)+1+(3*n+3)+2) = 6*n+12 := by omega
   simpa only [ht] using H
 
 theorem never (m : Machine) (hm : compatible table m) : NeverHalts m :=
