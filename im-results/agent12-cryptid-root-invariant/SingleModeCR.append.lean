@@ -168,13 +168,16 @@ private theorem a12DRreturn_sound (K L : List ℕ) :
     have hc : 4*z+(8+2*z) = 6*z+8 := by omega
     rw [hc] at h
     rw [hL]
-    exact ReachesIn.trans h (a12ELscan_sound K z 0 [])
+    have hs := a12ELscan_sound K z 0 []
+    simp only [a12PointCfg_eq,a12ELword] at hs
+    exact ReachesIn.trans h hs
   | some p =>
     rcases p with ⟨v,T⟩
     simp only [a12DRreturn,hs]
     rw [hL]
-    exact ReachesIn.trans (a12cDRsweep z K ((v+1)::T))
+    have hh := ReachesIn.trans (a12cDRsweep z K ((v+1)::T))
       (a12c_DR_succ (List.replicate z 1 ++ K) [] v T)
+    simpa only [Nat.zero_add] using hh
 
 def a12Live (c : ℕ) (p : ℕ × A12CRPoint) : ℕ × Option A12CRPoint :=
   (c+p.1,some p.2)
@@ -210,10 +213,14 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
     cases k with
     | zero =>
       simp only [a12CRCostStep,a12Live]
-      exact ⟨by omega,ReachesIn.trans (a12c_CR_1_nil_9 K [] ) (a12ELscan_sound K 0 0 [])⟩
+      have hs := a12ELscan_sound K 0 0 []
+      simp only [a12PointCfg_eq,a12ELword] at hs
+      exact ⟨by omega,ReachesIn.trans (a12c_CR_1_nil_9 K []) hs⟩
     | succ k =>
       simp only [a12CRCostStep,a12Live]
-      exact ⟨by omega,ReachesIn.trans (a12c_CR_add2_nil_21 k K []) (a12ELscan_sound (k::K) 1 0 [])⟩
+      have hs := a12ELscan_sound (k::K) 1 0 []
+      simp only [a12PointCfg_eq,a12ELword] at hs
+      exact ⟨by omega,ReachesIn.trans (a12c_CR_add2_nil_21 k K []) hs⟩
   | cons a L =>
     rcases a with _ | _ | a
     · simp only [a12CRCostStep]
@@ -225,8 +232,9 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
     · cases L with
       | nil =>
         simp only [a12CRCostStep,a12Live]
-        exact ⟨by omega,ReachesIn.trans (a12c_CR_1_nil_33 (k+1) K [])
-          (a12ELscan_sound ((k+1)::K) 2 0 [])⟩
+        have hs := a12ELscan_sound ((k+1)::K) 2 0 []
+        simp only [a12PointCfg_eq,a12ELword] at hs
+        exact ⟨by omega,ReachesIn.trans (a12c_CR_1_nil_33 (k+1) K []) hs⟩
       | cons b L =>
         rcases b with _ | _ | b
         · simp only [a12CRCostStep]
@@ -234,16 +242,19 @@ theorem a12CRCostStep_sound (s : A12CRPoint) :
         · cases L with
           | nil =>
             simp only [a12CRCostStep,a12Live]
-            exact ⟨by omega,ReachesIn.trans (a12c_CR_1_1_nil_25 (k+1) K [])
-              (a12ELscan_sound ((k+1)::K) 1 0 [])⟩
+            have hs := a12ELscan_sound ((k+1)::K) 1 0 []
+            simp only [a12PointCfg_eq,a12ELword] at hs
+            exact ⟨by omega,ReachesIn.trans (a12c_CR_1_1_nil_25 (k+1) K []) hs⟩
           | cons c L =>
             simp only [a12CRCostStep,a12Live]
-            exact ⟨by omega,ReachesIn.trans (a12c_CR_1_1_cons_25 (k+1) K [] c L)
-              (a12ELscan_sound ((k+1)::K) 1 (c+1) L)⟩
+            have hs := a12ELscan_sound ((k+1)::K) 1 (c+1) L
+            simp only [a12PointCfg_eq,a12ELword] at hs
+            exact ⟨by omega,ReachesIn.trans (a12c_CR_1_1_cons_25 (k+1) K [] c L) hs⟩
         · simp only [a12CRCostStep,a12Live]
-          exact ⟨by omega,ReachesIn.trans (a12c_CR_1_add2 (k+1) K [] b L)
-            (a12DRreturn_sound (1::(k+1)::K) (b::L))⟩
-    · simpa only [a12CRCostStep] using a12c_CR_add2_halts ((k+1)::K) [] a L
+          have hs := a12DRreturn_sound (1::(k+1)::K) (b::L)
+          rw [a12PointCfg_eq] at hs
+          exact ⟨by omega,ReachesIn.trans (a12c_CR_1_add2 (k+1) K [] b L) hs⟩
+    · simpa only [a12CRCostStep,Nat.add_assoc] using a12c_CR_add2_halts ((k+1)::K) [] a L
 
 def a12CRNext (s : A12CRPoint) : Option A12CRPoint := (a12CRCostStep s).2
 
@@ -275,8 +286,10 @@ theorem a12CRNext_sound (s : A12CRPoint) :
     exact ⟨q,hq.to_star,hh⟩
 
 /-- The actual #85 blank root, not merely a prepared configuration. -/
-theorem a12CR_acceleration : IsValidAcceleration target a12Root85 a12PointCfg a12CRNext :=
-  IsValidAcceleration.of_step a12Root85_exact.to_star a12CRNext_sound
+theorem a12CR_acceleration : IsValidAcceleration target a12Root85 a12PointCfg a12CRNext := by
+  refine IsValidAcceleration.of_step a12Root85_exact.to_star ?_
+  intro s
+  exact a12CRNext_sound s
 
 theorem a12Root85_halt_iff : IsHalt target ↔ CollatzHalts a12CRNext a12Root85 :=
   a12CR_acceleration.isHalt_iff
