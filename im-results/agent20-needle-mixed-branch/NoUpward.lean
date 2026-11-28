@@ -39,6 +39,20 @@ private theorem double_square_le_two_pow (w : Nat) (hw : 6 ≤ w) :
       rw [hs]
       nlinarith
 
+/-- The affine fixed-point correction increases strictly with valuation >= 2. -/
+theorem potential_correction_strict {v w : Nat}
+    (hv : 2 ≤ v) (hvw : v < w) :
+    2^v*(2*v-3) < 2^w*(2*w-3) := by
+  have hcV : 0 < 2*v-3 := by omega
+  have hcW : 2*v-3 ≤ 2*w-3 := by omega
+  have hp : 2*2^v ≤ 2^w := two_pow_doubles hvw
+  calc
+    2^v*(2*v-3) < 2^w*(2*v-3) := by
+      apply Nat.mul_lt_mul_of_pos_right
+      · omega
+      · exact hcV
+    _ ≤ 2^w*(2*w-3) := Nat.mul_le_mul_left _ hcW
+
 /-- Every upward pair has nonvanishing cross-potential difference modulo
     its larger-valuation incoming-edge denominator. -/
 theorem no_upward_division (v w : Nat)
@@ -50,17 +64,9 @@ theorem no_upward_division (v w : Nat)
   let Q : Nat := dw-dv
   have hcV : 0<2*v-3 := by omega
   have hcW : 2*v-3 ≤ 2*w-3 := by omega
-  have hp : 2*2^v ≤ 2^w := two_pow_doubles hvw
   have hpowerpos : 0<(2:Nat)^v := pow_pos (by decide) _
   have hposDv : 0<dv := by dsimp [dv]; positivity
-  have horder : dv < dw := by
-    dsimp [dv,dw]
-    calc
-      2^v*(2*v-3) < 2^w*(2*v-3) := by
-        apply Nat.mul_lt_mul_of_pos_right
-        · omega
-        · exact hcV
-      _ ≤ 2^w*(2*w-3) := Nat.mul_le_mul_left _ hcW
+  have horder : dv < dw := potential_correction_strict hv hvw
   have hQpos : 0<Q := by dsimp [Q]; omega
   have hQeq : Q+dv=dw := by dsimp [Q]; omega
   have hcop3 : D.Coprime 3 := by
