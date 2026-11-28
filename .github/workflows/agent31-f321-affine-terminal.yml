@@ -14,6 +14,12 @@ on:
         required: false
         default: false
 
+      terminal_candidate_only:
+        description: Kernel-check exact F321 terminal word candidate equation
+        type: boolean
+        required: false
+        default: false
+
 jobs:
   verify:
     runs-on: ubuntu-latest
@@ -21,12 +27,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify source-map inverse and explicit 33-over-40 families
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000 | tee /tmp/f321-explicit.json
       - name: Verify 2^20 symbolic affine inverse-class certificate
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/affine_terminal_sieve.cjs 20 | tee /tmp/f321-affine.json
@@ -37,7 +43,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Kernel-check F321 inverse odd-numerator and sum lemmas
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
         run: |
           set -euo pipefail
           lean -o im-results/agent31-f321-bulk/DensityOneCore.olean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
@@ -53,6 +59,16 @@ jobs:
           LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/SourceNextBridge.olean im-results/agent31-f321-bulk/SourceNextBridge.lean | tee -a /tmp/f321-lean.log
           LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/SourceHaltingBridge.lean | tee -a /tmp/f321-lean.log
           ! grep -q sorryAx /tmp/f321-lean.log
+      - name: Kernel-check exact F321 terminal word candidate equation
+        if: ${{ inputs.terminal_candidate_only }}
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-terminal-candidate.log
+          LEAN_PATH="$e" lean "$e/TerminalWordCandidate.lean" | tee -a /tmp/f321-terminal-candidate.log
+          ! grep -q sorryAx /tmp/f321-terminal-candidate.log
+
       - name: Kernel-check F321 odd-depth source-counter inverse theorem
         if: ${{ inputs.odd_depth_only && !inputs.mod384_only }}
         run: |
@@ -104,7 +120,7 @@ jobs:
           LEAN_PATH="$e:$q" lean -o "$q/HaltingBridgeCore.olean" "$q/HaltingBridgeCore.lean" | tee -a /tmp/f321-mod384-lean.log
           ! grep -q sorryAx /tmp/f321-mod384-lean.log
       - name: Upload exact finite computation record
-        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only }}
+        if: ${{ !inputs.odd_depth_only && !inputs.mod384_only && !inputs.terminal_candidate_only }}
         uses: actions/upload-artifact@v4
         with:
           name: f321-affine-2pow20-certificate
