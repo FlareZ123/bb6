@@ -203,7 +203,7 @@ def main():
     final=evidence/("Raw39TenChildPartial.log" if args.ten_only else "Raw39CompleteJoin.log")
     check(final.exists(),"missing final source compilation")
     targets=([f"BB6.Agent11Raw39TenChild.{n}" for n in
-             ("zeroLE_bound","conditional_parent_bound","conditional_parent_cover","conditional_parent_exact")]
+             ("zeroLE_bound","conditional_parent_bound","parent_bound_iff_oneLE","conditional_parent_cover","conditional_parent_exact")]
              if args.ten_only else THEOREMS)
     subprocess.run([
         sys.executable,str(REPO/"im-results/agent4-raw109/audit_axioms.py"),
