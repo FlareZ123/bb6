@@ -2,7 +2,6 @@
 import sys,json
 from pathlib import Path
 from verify_nonhalt import enc, nextstep,U,S,X,J,P,check_families,clear,check_bulk,self_trace
-root=Path(sys.argv[1]);check_families();clear();check_bulk();D=self_trace(35)
 
 def bits(w):return '['+','.join('true' if c=='1' else 'false' for c in enc(w))+']'
 def packed(p,l,r):return f'⟨.{p},{int("1"+l[::-1],2)},{int("1"+r[::-1],2)}⟩'
@@ -40,10 +39,12 @@ def write_op(f,i,r):
     he='hc0' if len(chunks)==1 else f'hchain{len(chunks)-1}'
     print(f'  have he : pexecFast {k} {initial} = some ({cost},{final}) := {he}\n  rw [hs,ht,he]\n  decide +kernel\n',file=f)
 
-rs=list({json.dumps(x['rule'],sort_keys=True):x['rule'] for x in D['trace']+D['post']}.values())
-for i in range(0,len(rs),80):
-    with open(root/f'OpBank{i//80}.lean','w') as f:
-        print('import PackedCheck\nset_option linter.unusedSimpArgs false\nset_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter PackedCheck\n',file=f)
-        for j,r in enumerate(rs[i:i+80],i):write_op(f,j,r)
-        print('end F197.Agent2Self',file=f)
-print('generated',len(rs))
+if __name__=='__main__':
+    root=Path(sys.argv[1]);check_families();clear();check_bulk();D=self_trace(35)
+    rs=list({json.dumps(x['rule'],sort_keys=True):x['rule'] for x in D['trace']+D['post']}.values())
+    for i in range(0,len(rs),80):
+        with open(root/f'OpBank{i//80}.lean','w') as f:
+            print('import PackedCheck\nset_option linter.unusedSimpArgs false\nset_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter PackedCheck\n',file=f)
+            for j,r in enumerate(rs[i:i+80],i):write_op(f,j,r)
+            print('end F197.Agent2Self',file=f)
+    print('generated',len(rs))
