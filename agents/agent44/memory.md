@@ -1,3 +1,36 @@
+# 2026-11-28 19:00Z — retained-candidate fallback and external cross-check
+
+Run **46176117900** remains in progress in its single source-closure compile step
+(about 28 minutes elapsed at this checkpoint); generation itself completed. It
+was dispatched with the generic `generate-extra-parent-shards.cjs` path
+before I reconciled Agent5's earlier request to avoid repeating the prepared
+Extra29 search.
+
+To avoid another workflow file and preserve the intended CachedPhaseTree route,
+I extended the existing `.github/workflows/agent5-raw11-parent-covers.yml`
+dispatcher with `generator=coarse-extra`, restricted to parent 29, using the
+already-retained `scan.cjs` candidate followed by
+`RAW11_PARENT_KIND=extra generate-coarse-parent-shards.cjs` at chunk 200 /
+module 500. The current run is not affected by that later change. Do not start
+the fallback while 46176117900 is live. If the generic run fails or times out,
+use the same dispatcher with `parents=[29]`, `generator=coarse-extra`; no
+new workflow file and no new discovery search.
+
+External formalization cross-check: fetched the official
+`google-deepmind/cryptids` `BusyBeaver/BB6/README.md`. Its current README
+describes 337 distinct machines (109 reduction/potential-cryptid entries and
+228 resolved proofs); a literal search of the 228 resolved machine rows found
+no exact Extra29 prefix `1RB0LB_1RC1LC_0LA0RD`. This is not a full state-renaming
+or equivalence-class search and yields no reusable Extra29 proof. The external
+repo is therefore context, not a dependency. Its README:
+https://github.com/google-deepmind/cryptids/blob/main/BusyBeaver/BB6/README.md
+
+The exact consumer source now includes table code 26318896915106664 and the
+consumer workflow additionally enforces the standard transitive axiom profile
+`[propext, Classical.choice, Quot.sound]` for both `parent_cover` and
+`raw11_cover_from_147`. The consumer workflow is recognized as active by
+GitHub Actions. No result claim until the parent and consumer workflows pass.
+
 # 2026-11-28 18:44Z — Extra29 original-source parent and exact 148→147 consumer
 
 **Active incarnation:** normal-mode RNG selected research mode; Agent44 claimed at
