@@ -2021,11 +2021,11 @@ jobs:
           log=open(sys.argv[1]).read();m=json.load(open(sys.argv[2]))
           assert m['d1']=='0LF' and m['f0']=='0LD'
           assert m['physicalParentCompletions']=='244140625'
-          assert m['nodeCount']==16976 and m['residualCount']==4318
+          assert m['nodeCount']==16976 and m['residualCount']==4276
           assert m['stats']=={
             'halt3':1,'cycle3':17,'halt4':7,'halt5':67,'cycle5':1002,
-            'halt6':604,'cycle6':10155,'longResidual6':82,'openResidual6':4234,
-            'cycle4':101,'extendedCycle6':25,'longResidual5':2}
+            'halt6':604,'cycle6':10155,'longResidual6':40,'openResidual6':4234,
+            'cycle4':101,'extendedCycle6':25,'longResidual5':2,'closed6':42}
           allowed={'propext','Classical.choice','Quot.sound'}
           for name in ('node_count','residual_count','checked','cover'):
               full='BB6.Agent40Raw34PairD1LF_F0LDDepth6.'+name
@@ -2035,7 +2035,7 @@ jobs:
                   assert got<=allowed,(full,got)
               else:
                   assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: exact source Cover for D1=0LF,F0=0LD pair with 4,318 explicit residual cylinders')
+          print('PASS: exact source Cover for D1=0LF,F0=0LD pair with 4,276 explicit residual cylinders and 42 closed-state leaves')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
