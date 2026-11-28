@@ -116,7 +116,29 @@ source modules are `D1EightFour.lean`, `D1SecondLevel96.lean`, and
 
 ## New local parent compositions (28 November, 17:13 UTC)
 
-All eight D0=8/C1 child Covers at weighted 3000 have completed in source CI. The additional four artifacts are C2 15264473622 (run 46147044639), C16 15264961564 (run 46147047904), C18 15266236199 (run 46147051530), C19 15264934525 (run 46147054693). The exact repository source `D1EightAll.lean` (blob fa6b5b71a9123e73e77a4598185d2fac568150b0) compiled locally in Lean 4.36.0-rc2 against those and the previously accepted C1/3/6/17 artifacts. Its unconditional `BB6.Agent6D1EightAll.cover` proves the entire D0=8 cylinder at weighted 3000. `D1NineOne.lean` (blob c55d17583c00ba44a3f1369dca0b56479ab71e0a) also compiled locally against accepted D9 C2/6/16/18/19 Covers; only C17 remains as a hypothesis of its parent theorem. Both exported Covers use only propext, Classical.choice, Quot.sound. These are checked local compositions of source-accepted dependencies, not new CI source-closure runs. The combined 89-residual frontier consumer is still compiling; no global roster cut is claimed.
+All eight D0=8/C1 child Covers at weighted 3000 have completed in source CI. The additional four artifacts are C2 15264473622 (run 46147044639), C16 15264961564 (run 46147047904), C18 15266236199 (run 46147051530), C19 15264934525 (run 46147054693). The exact repository source `D1EightAll.lean` (blob fa6b5b71a9123e73e77a4598185d2fac568150b0) compiled locally in Lean 4.36.0-rc2 against those and the previously accepted C1/3/6/17 artifacts. Its unconditional `BB6.Agent6D1EightAll.cover` proves the entire D0=8 cylinder at weighted 3000. `D1NineOne.lean` (blob c55d17583c00ba44a3f1369dca0b56479ab71e0a) also compiled locally against accepted D9 C2/6/16/18/19 Covers; only C17 remains as a hypothesis of its parent theorem. Both exported Covers use only propext, Classical.choice, Quot.sound. These are checked local compositions of source-accepted dependencies, not new CI source-closure runs. The factored 89-residual frontier consumer is checked below; no global roster cut is claimed.
+
+## Locally kernel-checked factored 89-obligation composition
+
+The seven additional grandchild discharges are now connected through
+`D1SecondLevel89OfParents.cover_of_frontier` and its exact `F.frontier_length = 89`.
+The interface is checked with the whole D8 parent and D9 C2/6/16/18/19 Covers
+at 3000 as six explicit arguments, followed by the 89 remaining B-Covers.
+Every one of those six arguments has an independently checked theorem:
+`D1EightAll.cover`, `D1NineFour.c2/c6`, `D1NineOne.c16/c18/c19`.
+All exported axioms are standard. This is a valid factored local proof
+of the 89-obligation implication at all B≥3000. The single-module
+`D1SecondLevel89.lean` source has had its incorrect seven-way case split
+fixed to six; its local monolithic import was terminated due to 4-GiB
+memory pressure, not a logical diagnostic. The source-accepted CI boundary
+remains 96 pending a fresh source-closure CI join.
+
+`D1SecondLevel88OfParents.cover_of_frontier` also compiled locally with
+standard axioms; it is conditional on D8 and D9 full-parent Covers.
+The only additional obligation before the 88 frontier is the D9 C17
+Cover at 3000. The three previously memory-killed C17 banks have been
+recovered locally, but the remaining tree groups must compile before
+that obligation is discharged.
 
 ## Scope and open upper-bound edge
 
