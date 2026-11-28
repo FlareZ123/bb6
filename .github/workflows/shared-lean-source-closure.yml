@@ -23,7 +23,7 @@ on:
       preparation_profile:
         description: "Optional deterministic source preparation for an existing family consumer"
         type: choice
-        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "raw40-a1lc-enumerate", "q0151-macro", "raw10-i-stream"]
+        options: ["none", "coverage-generators", "raw40-a0la", "raw40-a0la-complete", "raw40-round4", "raw40-round5", "raw40-a1lc-enumerate", "raw40-a1lc-child", "q0151-macro", "raw10-i-stream"]
         default: "none"
       raw40_child:
         description: "Raw40 A1=0LA C1 source-child selection when preparation_profile=raw40-a0la"
@@ -82,6 +82,10 @@ jobs:
           elif [[ "$PREPARATION_PROFILE" == "raw40-a1lc-enumerate" ]]; then
             test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40A1LC1REExact.lean"
             test -f im-results/agent19-raw40-cut/enumerate_canon.cpp
+          elif [[ "$PREPARATION_PROFILE" == "raw40-a1lc-child" ]]; then
+            test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40C1LC1RAAll.lean"
+            test -f im-results/agent19-raw40-cut/prepare_a1lc_1ra_discovery.py
+            test -f im-results/agent19-raw40-cut/prepare_a1lc_0lc.py
           else
             test "$PREPARATION_PROFILE" = "raw40-a0la"
             if [[ "$RAW40_CHILD" == "1LB" ]]; then
@@ -157,6 +161,19 @@ jobs:
           echo "far_certificates=$(wc -l < far5.txt)"
           cat far5.txt
           cat far5.log
+      - name: Generate source-checked Raw40 A1LC B1=1RA child
+        if: ${{ inputs.preparation_profile == 'raw40-a1lc-child' }}
+        env:
+          PROOF_ROOT: ${{ inputs.root }}
+        run: |
+          set -euo pipefail
+          python3 im-results/agent19-raw40-cut/prepare_a1lc_1ra_discovery.py
+          python3 im-results/agent19-raw40-cut/prepare_a1lc_0lc.py 1RA
+          test -f "$PROOF_ROOT"
+          mkdir -p /tmp/raw40-a1lc-1ra
+          cp -a im-results/agent19-raw40-cut/a1lc/1RA/. /tmp/raw40-a1lc-1ra/
+          cp im-results/agent19-raw40-cut/a1lc-1RA-discovery.json /tmp/raw40-a1lc-1ra/
+          sha256sum "$PROOF_ROOT" im-results/agent19-raw40-cut/a1lc-1RA-discovery.json
       - name: Generate q0-151 Lean finite-control certificate
         if: ${{ inputs.preparation_profile == 'q0151-macro' }}
         env:
@@ -168,7 +185,7 @@ jobs:
           test -f "$PROOF_ROOT"
           sha256sum "$CERT_ROOT"
       - name: Generate source-pinned three/four-hole coverage modules
-        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' || inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' || inputs.preparation_profile == 'raw40-a0la-complete' }}
+        if: ${{ inputs.preparation_profile == 'coverage-generators' || inputs.preparation_profile == 'raw40-a0la' || inputs.preparation_profile == 'raw40-round4' || inputs.preparation_profile == 'raw40-round5' || inputs.preparation_profile == 'raw40-a0la-complete' || inputs.preparation_profile == 'raw40-a1lc-child' }}
         run: |
           set -euo pipefail
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
@@ -218,7 +235,7 @@ jobs:
           set -euo pipefail
           mkdir -p /tmp/lean-source-closure
           overrides=()
-          if [[ "$PREPARATION_PROFILE" == "raw40-a0la" || "$PREPARATION_PROFILE" == "raw40-a0la-complete" ]]; then
+          if [[ "$PREPARATION_PROFILE" == "raw40-a0la" || "$PREPARATION_PROFILE" == "raw40-a0la-complete" || "$PREPARATION_PROFILE" == "raw40-a1lc-child" ]]; then
             # prepare_a0la.py explicitly uses agent32-raw59's generator.
             # The raw42 FastBiDFA module has a different source identity.
             overrides+=(--override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean)
