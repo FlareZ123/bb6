@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-f-depth3-cycles, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1238,6 +1238,59 @@ jobs:
         with:
           name: raw34-f-depth3-sides-source
           path: /tmp/a40-raw34-f-depth3/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-f-depth4-cycles:
+    if: inputs.mode == 'raw34-f-depth4-cycles'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Exact 25-way source first-query census and 9,231 finite sidecycle proofs
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-f-depth4
+          mkdir -p "$W/generated"
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
+            --shard-size 100 --output "$W/generated" \
+            | tee "$W/generation.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/generated" --jobs 5 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-f-depth4-side-sources \
+            "$W/generated"/Raw34FDepth4SideShard*.lean \
+            2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/closure.log" "$W/generated/manifest.json" <<'PY'
+          import json,re,sys
+          log=open(sys.argv[1]).read()
+          m=json.load(open(sys.argv[2]))
+          assert m['sourceCylinders']==9231
+          assert m['physicalMassGross']=='3605859375'
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for unit in m['modules']:
+              for name in ('count','checked','all_never'):
+                  full=unit['namespace']+'.'+name
+                  match=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+                  if match:
+                      assert set(filter(None,match.group(1).split(', ')))<=allowed,(full,match.group(1))
+                  else:
+                      assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: 9,231 source-accepted F-branch depth-four sidecycle families')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-f-depth4-source-census
+          path: /tmp/a40-raw34-f-depth4/
           if-no-files-found: warn
           retention-days: 30
 
