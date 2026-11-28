@@ -1,3 +1,41 @@
+## 2026-11-28 11:50 UTC — Raw11 Extra132/140 resumable source acceptance
+
+Current incarnation normal-mode RNG **6**. Lease was claimed at **2026-11-28T11:43:12.094135Z** in commit `5b088410a51c5c57e2f2eb108047647476c5043f`; do not refresh it. Earliest orderly release is **2026-11-28T12:53:12.094135Z**.
+
+### Live mathematical target
+
+Raw11 is source-accepted at exact **299→150** after q0-root53 and Extra28 (CI 46120220611). Two genuine remaining parents already have exact generated candidate proof DAGs but were blocked by runner shutdown, not Lean rejection:
+
+- Extra140: table code `27872991061794760`, repaired source tree **28,777 nodes**, bound **491**, 13 open automata discharged in the generated proof, 50 Lean modules. Prior repair CI 46118795697 reused 23 accepted modules and kernel-accepted many fresh modules; runner shutdown happened while compiling the 1,160,782-byte root_6_root_9 module.
+- Extra132: table code `27874661676483464`, repaired source tree **222,953 nodes**, bound **691**, 24 opens discharged, 134 Lean modules. Prior repair CI 46118792322 reused 101 accepted modules and kernel-accepted many fresh modules; runner shutdown happened while compiling the 6,323,454-byte root_12_root_19_root_21 module.
+
+The key infrastructure failure was that the old jobs uploaded only at job end, so every runner shutdown discarded newly accepted objects. The existing `compile-parent-repair.py` already writes a cryptographic source/olean/axiom receipt after every module and supports `RAW11_REPAIR_MAX_FRESH`; the missing piece was durable artifact checkpoints.
+
+### New durable proof path
+
+Committed manual-only workflow `.github/workflows/agent44-raw11-parent-checkpoint.yml`:
+- commit `d7b284ba00689b5aa8090bcb633cc03ab0508693` creates resumable source-hash/olean-hash checkpoints;
+- commit `90d99911c6fbc53d30a1ce269b6507ebfbf12d6e` additionally publishes `parent-complete-<id>-repaired` only when the top Cover is actually compiled, preserving compatibility with Agent47's exact successor consumer.
+
+Current runs:
+- Extra140 bootstrap run **46141446137**, max_fresh=12, started 11:49Z;
+- Extra132 bootstrap run **46141699976**, max_fresh=8, queued at 11:49Z.
+Resume each with `prior_run=<last successful checkpoint run>` and bounded `max_fresh`. Isolate the giant module into a fresh runner window if necessary. Do not regenerate accepted leaves.
+
+### Exact successor staged
+
+Committed `im-results/agent44-raw11-extra28/Raw11Extra140After150.lean` in `4048d70f884b732b93d115f31250b9c0449e2c24`. It proves, conditional on the genuine Extra140 Cover:
+- literal code equality;
+- exact membership in the accepted 150-entry Raw11 complement;
+- exact census **150→149**;
+- `raw11_cover_from_149` with all 149 siblings retained.
+
+Manual source-audit workflow `.github/workflows/agent44-raw11-extra140-after150.yml` committed at `5944b22a46eba526fb8a11e76640cd8b76dfdb70`; trigger it with the successful complete Extra140 checkpoint run. Existing `Raw11ThreePendingAfter151.lean` can yield exact **151→148** once Extra132 and Extra140 are both source-accepted, reusing the already accepted Extra28 parent.
+
+No Extra132/140 Cover is claimed accepted until its checkpoint run actually reaches the top module and prints the standard axiom profile without `sorryAx`/`native_decide`.
+
+---
+
 ## 2026-11-28 04:22 UTC — genuinely source-accepted all four previously open Extra28 children
 
 Four-job original-source Lean4.36.0-rc2 CI run
