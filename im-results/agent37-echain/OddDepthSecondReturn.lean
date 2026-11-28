@@ -103,7 +103,7 @@ theorem odd_depth_reset_exact
     calc
       8*k+5 = 4*(2*k+1)+1 := by omega
       _ = 4*(3^(2*n+1)*h)+1 := by rw [hk]
-      _ = 1+4*3^(2*n+1)*h := by omega
+      _ = 1+4*3^(2*n+1)*h := by\n        rw [Nat.mul_assoc, Nat.add_comm]
   have hp : 2*(3*n)+6 = 3*(2*n+1)+3 := by omega
   have hq : 2*(2*n+1) = 4*n+2 := by omega
   have hresetRaw :
