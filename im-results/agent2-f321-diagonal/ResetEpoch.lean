@@ -5,7 +5,7 @@ import Lean.Elab.Tactic.Omega
 /-!
 Reset-to-reset epoch skeleton for the exact F321 counter map.
 
-Between consecutive Middle resets, only High/Far outer moves occur.  The
+Between consecutive Middle resets, only High/Far/Equal non-Middle moves occur.  The
 diagonal coordinate X=a+d+5 strictly increases on every such outer move, and
 the next Middle reset's first counter 4a+6 lies strictly above the pre-reset X.
 Consequently the first counter of every reset-to-reset epoch is strictly
@@ -17,12 +17,14 @@ namespace BB6.Agent2F321ResetEpoch
 open BB6.Agent31F321Density
 open BB6.Agent2F321Diagonal
 
-/-- Exactly one High or Far source move, written without branch ambiguity. -/
+/-- Exactly one non-Middle live source move, written without branch ambiguity:
+    High, Far, or Equal. -/
 def OuterMove (a d A D : Nat) : Prop :=
   (d+2 ≤ a ∧ A=a-d-2 ∧ D=2*d+3) ∨
-  (a<d ∧ 3*a+1≤d ∧ A=4*a+6 ∧ D=d-3*a)
+  (a<d ∧ 3*a+1≤d ∧ A=4*a+6 ∧ D=d-3*a) ∨
+  (a=d ∧ A=2*a+4 ∧ D=1)
 
-/-- Arbitrary finite High/Far interleaving. -/
+/-- Arbitrary finite High/Far/Equal interleaving. -/
 inductive OuterRun : Nat → Nat → Nat → Nat → Nat → Prop
   | nil (a d) : OuterRun 0 a d a d
   | step {n a d A D B C} :
@@ -41,11 +43,14 @@ def ResetEpoch (R c R' c' : Nat) : Prop :=
 theorem outerMove_source {a d A D : Nat}
     (h : OuterMove a d A D) : CounterMove a d A D := by
   unfold OuterMove at h
-  rcases h with h | h
-  · rcases h with ⟨hg,rfl,rfl⟩
+  rcases h with hH | hRest
+  · rcases hH with ⟨hg,rfl,rfl⟩
     exact CounterMove.high d hg
-  · rcases h with ⟨h1,h2,rfl,rfl⟩
-    exact CounterMove.far d h1 h2
+  · rcases hRest with hF | hE
+    · rcases hF with ⟨h1,h2,rfl,rfl⟩
+      exact CounterMove.far d h1 h2
+    · rcases hE with ⟨rfl,rfl,rfl⟩
+      exact CounterMove.equal a
 
 theorem resetMove_source {a d R c : Nat}
     (h : ResetMove a d R c) : CounterMove a d R c := by
@@ -56,17 +61,21 @@ theorem resetMove_source {a d R c : Nat}
   · rcases h with ⟨h1,h2,hp,rfl,rfl⟩
     exact CounterMove.middleOdd d h1 h2 hp
 
-/-- X strictly increases on every outer move: +1 for High, +6 for Far. -/
+/-- X strictly increases on every non-Middle move: +1 High, +6 Far, +5 Equal. -/
 theorem outerMove_X_strict {a d A D : Nat}
     (h : OuterMove a d A D) : X a d < X A D := by
   unfold OuterMove at h
-  rcases h with h | h
-  · rcases h with ⟨hg,rfl,rfl⟩
+  rcases h with hH | hRest
+  · rcases hH with ⟨hg,rfl,rfl⟩
     have hx := (high_coordinates a d hg).1
     omega
-  · rcases h with ⟨h1,h2,rfl,rfl⟩
-    have hx := (far_coordinates a d h1 h2).1
-    omega
+  · rcases hRest with hF | hE
+    · rcases hF with ⟨h1,h2,rfl,rfl⟩
+      have hx := (far_coordinates a d h1 h2).1
+      omega
+    · rcases hE with ⟨rfl,rfl,rfl⟩
+      have hx := (equal_coordinates a).1
+      omega
 
 theorem outerRun_X_monotone {n a d A D : Nat}
     (h : OuterRun n a d A D) : X a d ≤ X A D := by
@@ -117,7 +126,7 @@ theorem resetEpoch_gain7 {R c R' c' : Nat}
   omega
 
 /-- Reset first counters are strictly increasing from one reset epoch to the
-    next, independent of the High/Far interleaving length and branch pattern. -/
+    next, independent of the High/Far/Equal interleaving length and branch pattern. -/
 theorem resetEpoch_strict {R c R' c' : Nat}
     (h : ResetEpoch R c R' c') : R < R' := by
   rcases h with ⟨n,a,d,ho,hr⟩
