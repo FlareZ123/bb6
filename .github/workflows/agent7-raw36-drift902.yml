@@ -248,6 +248,9 @@ jobs:
           python im-results/agent7-opaque-tail-pump/exposure_emit.py "$TABLE" "$N" "$ROOT" --chunk "$CHUNK"
           echo "$SHA  $ROOT" | sha256sum -c -
           printf '%s\n' "$NAME" > /tmp/a7-d100-exposure/namespace.txt
+          python im-results/agent7-opaque-tail-pump/emit_exposure_bound.py \
+            /tmp/a7-d100-exposure/Raw36D100Exposure.json \
+            /tmp/a7-d100-exposure/Raw36D100ExposureBound.lean
       - name: Compile original zipper source and audit exact exposure theorems
         run: |
           set -euo pipefail
@@ -258,12 +261,14 @@ jobs:
             --label raw36-d100-exposure-${{ inputs.d100_exposure_target }} \
             --artifact-name raw36-d100-exposure-${{ inputs.d100_exposure_target }} \
             --provenance-input im-results/agent7-opaque-tail-pump/exposure_emit.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/emit_exposure_bound.py \
             --provenance-input im-results/agent7-opaque-tail-pump/detect_pump.py \
-            /tmp/a7-d100-exposure/Raw36D100Exposure.lean \
+            /tmp/a7-d100-exposure/Raw36D100ExposureBound.lean \
             2>&1 | tee /tmp/a7-d100-exposure-audit.log
           NAME="$(cat /tmp/a7-d100-exposure/namespace.txt)"
           python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-exposure-audit.log "$NAME.reached"
           python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-exposure-audit.log "$NAME.hole"
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-exposure-audit.log "BB6.Agent7D100ExposureBound.bound"
           cp /tmp/a7-d100-exposure-audit.log /tmp/a7-d100-exposure-proof/audit.log
       - uses: actions/upload-artifact@v4
         if: always()
