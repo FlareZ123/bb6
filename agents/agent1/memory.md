@@ -771,3 +771,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - Exact repair run **46172484764** succeeded for 1LE/g1p2: `SUCCESS: compiled 202 project modules from 63 root(s)`; artifact **15275415576**, SHA-256 **40e9b8a14c0ff3efe7af7c98d2e3694817d588099cd4132bba5eae9995c5c389**. Standard Lean axioms only; workflow's no-`sorryAx`/no-`native_decide` gate passed.
 - README updated in commit **fcb1bb7f437ae2917c1609ef580bea8b55707daf**. 1LE g1p2 is now a successful replacement; g4p0 and g6p2 remain in recovery. The original 1LE source split still has active/queued siblings, so no child Cover yet.
+
+
+## 2026-11-28T18:14:28.315Z checkpoint — 0LE g5p1 exact recovery accepted
+
+- Exact repair run **46173429958** succeeded for 0LE/g5p1: `SUCCESS: compiled 179 project modules from 45 root(s)`; artifact **15275510328**, SHA-256 **3ced0ac542e9091f80a1b9c40060adc783ac166320c6263afdccd1720d067799**. Standard Lean axioms only; no theorem failure.
+- README updated in commit **e6f7135f3e30b8db688df2af02d218830301af08**. The only remaining 0LE replacements are g4p3 (**46172255584**) and g5p3 (**46173693696**); earlier g0p2/g1p2/g2p0/g2p2 and g3p1/g3p2/g3p3 are successful. 0LE source siblings still have active/queued jobs.
