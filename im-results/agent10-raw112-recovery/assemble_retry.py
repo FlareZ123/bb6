@@ -63,7 +63,16 @@ def run_compile(
     for path in PROVENANCE_INPUTS:
         cmd.extend(["--provenance-input", path])
     with log_path.open("w", encoding="utf-8") as log:
-        subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT, check=True)
+        result = subprocess.run(cmd, stdout=log, stderr=subprocess.STDOUT)
+    if result.returncode != 0:
+        # This driver redirects compiler output into /tmp. Without printing the
+        # actual diagnostic, failed CI runs hide the decisive first error and
+        # consume repeated queued jobs for the same unknown issue.
+        print(f"{label}: compiler failed (exit {result.returncode}); "
+              f"last source-diagnostic lines:", file=sys.stderr, flush=True)
+        for line in log_path.read_text(encoding="utf-8", errors="replace").splitlines()[-130:]:
+            print(line, file=sys.stderr, flush=True)
+        raise subprocess.CalledProcessError(result.returncode, cmd)
 
 
 def verify_reuse(manifest_path: Path, expected_compiled: set[str], label: str,
