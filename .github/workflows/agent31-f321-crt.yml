@@ -1,0 +1,36 @@
+name: Agent 31 F321 kernel-certified CRT source quotient (manual)
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  crt-kernel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          "$HOME/.elan/bin/lean" --version
+      - name: Check both finite quotient graphs and authentic source CRT composition
+        run: |
+          set -euo pipefail
+          e=im-results/agent31-f321-bulk
+          q=im-results/agent31-f321-mod384
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-crt.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-crt.log
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/f321-crt.log
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod384Graph.olean" "$q/Mod384Graph.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod384Source.olean" "$q/Mod384Source.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Graph.olean" "$q/Mod512Graph.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e:$q" lean -o "$q/Mod512Source.olean" "$q/Mod512Source.lean" | tee -a /tmp/f321-crt.log
+          LEAN_PATH="$e:$q" lean "$q/Mod1536CRT.lean" | tee -a /tmp/f321-crt.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/f321-crt.log
