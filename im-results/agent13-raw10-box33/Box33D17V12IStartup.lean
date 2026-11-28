@@ -65,6 +65,44 @@ theorem regular_start_rotated (j : Nat) (r : Stream) :
          (word (bits "010101010010") r) by rfl]
   rw [hp,Option.bind_some,he]
 
+
+/-- Exact 0010 ↔ 0100 conjugacy for arbitrary block count and tape tail. -/
+theorem regular_rotate_0010 (j : Nat) (r : Stream) :
+    word (bits "010") (carryRepeat (bits "0010") j r) =
+      carryRepeat (bits "0100") j (word (bits "010") r) := by
+  induction j with
+  | zero => rfl
+  | succ j ih =>
+    change word (bits "0100010") (carryRepeat (bits "0010") j r) =
+      word (bits "0100")
+        (carryRepeat (bits "0100") j (word (bits "010") r))
+    rw [← ih]
+    rfl
+
+/-- Exact all-j source entry from the original phase boundary into the
+    12-bit C carry scanner. This composes the 5-step head core, j+1 pumps,
+    and the fixed 18-step exit, with a stream word-conjugacy. -/
+theorem regular_start_phase (j : Nat) (r : Stream) :
+    run (29+6*j) (phase j (word (bits "101010010") r)) =
+      some (carryC
+        (carryRepeat (bits "1101") (j+1) (word (bits "1") z)) r) := by
+  have hprefix : phase j (word (bits "101010010") r) =
+      cfg .A z (word (bits "01010")
+        (carryRepeat (bits "0100") j
+          (word (bits "010101010010") r))) := by
+    change cfg .A z
+      (word (bits "01010")
+        (word (bits "010")
+          (carryRepeat (bits "0010") j
+            (word (bits "101010010") r)))) = _
+    rw [regular_rotate_0010]
+    rfl
+  rw [hprefix]
+  exact regular_start_rotated j r
+
+#print axioms regular_rotate_0010
+#print axioms regular_start_phase
+
 #print axioms regular_head5
 #print axioms regular_right4_many
 #print axioms regular_enter_carry
