@@ -29,3 +29,15 @@ G(v,2,T(n)s) -> BL([],2^(v+4) T(n+ccarry(s)+ccarry(next(s)))next(next(s)))
 ```
 
 The first law factors through the existing 42 counter scan and the new six-bank seed and loop. The second is induction on k, and the third handles the terminal left marker by two further counter rotations. All three are locally kernel-checked with [propext, Quot.sound], no sorryAx. This proves an entire unbounded sweep plus exit, with arbitrary untouched X in the first two laws. The remaining bridges are the finite six-bank terminal tails, the 2-bank-to-D phase and subsequent section return. No machine verdict yet.
+
+## Terminal entry and complementary D-left drain (checked)
+
+The one-triplet terminal of F is now handled for every A-tail: F(1,v,w+1,s;X) reaches G(v+5,3^w X,(115)^extra(s) rho(s)), by Raw14037Terminal.one. This does not yet imply that the six resulting right strings all enter the C-counter language.
+
+For C-tails c(s) in the 322 cycle above define H(a,n,s;X)=DL(X,4^a 2 (322)^n c(s)). Raw14037DPhase proves
+
+```
+H(a+1,n+2,s;666 X) -> H(a+10,n+ccarry(s),next(s);X).
+```
+
+The proof scans the leading 4-bank into 5s, enters the existing 322 counter, rotates its tail, and uses two framed leading-2 deletion steps. Writing z=6n+rank(s), each large return subtracts 11 from z, adds 9 to a, and removes exactly three 6-blocks. Thus J=(z-1)/11 (natural arithmetic) is the exact number of large returns until n<2, provided a>0 and the left 6-bank has at least 3J blocks. The source theorem drain returns H(a+9J,n',s';6^(k-3J) X) with 6n'+rank(s')=z-11J and n'<2. Both advance and drain compile locally with [propext, Quot.sound]. This is a second independent unbounded-bank reduction, with arbitrary suffix X, shared by all four sibling completions. The low H tails still need return classification; no Cover is claimed.
