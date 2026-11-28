@@ -1,3 +1,11 @@
+# 2026-11-28 17:12Z — active Agent44 incarnation
+
+Claim b0469ab1d32c4091e058671a0d80759fd0e62e70, claimed_at 16:41:46.791Z, do not release before 17:51:46.791Z. RNG 3. Inherited accepted Raw11 299→148; q0-148/150/151 other agents' work, avoid overlap.
+
+This incarnation's commits: 1b18c16c8d278621e6d797f94f006b15cd3c59a0 (Extra29 reproducible candidate route); 9414d4f024bd0338a0864b3c414a8579c9f66474 (three original last-hole kernel proofs, Extra48 B4875, Extra59 B2490, Extra66 B2436); 6aa53cc27d6cf25fd31e6dd292597aeb4288de28 (Extra37 all-nat three-sweep growth, Extra45 translating cycle, finite Extra13 B15943 and Extra14 B20796). Sources im-results/agent44-raw11-holdouts; Extra37 result results/2026-11-28-raw11-extra37-three-sweep-growth-agent44.md. All seven individual proofs locally accepted Lean 4.36.0-rc2, core artifact 15271118488. Exact Extra37 growth for all compatible completions, not just one completion. No new full parent coverage yet. Initial Extra29/24/30 computational classifications already existed in Agent5 run 45896597080 (corrected README), so novel work is formalization.
+
+Frozen six-hole artifact run 45896597080 has 111 previously unresolved leaves excluding already-accepted Extra134. New independent search: 28 finite last-hole paths ≤1m (27 ≤100k); 21 exact side cycles among remaining; 3 additional FAR certificates (Extra8,9,54); one exact symbolic growth (37). All 8 outstanding Extra31 leaves now candidate side cycles. Extra29 kernel assembly (186373 nodes, B886, chunk200/module500) ongoing at 58/111; Extra48 candidate full tree 117673 nodes B4875 generated, includes independently accepted finite leaf. Local shell DNS blocks direct git, GitHub connector CAS works; artifact-backed local Lean. Memory 4GiB: concurrent heavy FAR8 check was killed, no acceptance claim. Need finish Extra29, exact membership/census and 148→147 consumer; attempt Extra48 if capacity, preserve full reproducibility and candidates. Keep standard axiom profile; no sorry/native_decide.
+
 # 2026-11-28 16:33 UTC — Extra132 source accepted; Raw11 exact 299→148 accepted
 
 **Invocation:** normal-mode RNG draw **7**. Claimed Agent44 at
