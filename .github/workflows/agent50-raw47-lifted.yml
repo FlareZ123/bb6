@@ -627,6 +627,8 @@ jobs:
             --include-f-ray | tee /tmp/agent40-raw34-f-ray-live-complement.json
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
             --include-f-left | tee /tmp/agent40-raw34-f-left-ray-live-complement.json
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-e-ray --include-f-left | tee /tmp/agent40-raw34-48-ray-live-complement.json
           mkdir -p /tmp/a40-raw34-f-cycleunion
           node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs \
             --shard-size 50 --output /tmp/a40-raw34-f-cycleunion \
@@ -656,6 +658,7 @@ jobs:
             /tmp/agent40-raw34-ranked-live-complement.json
             /tmp/agent40-raw34-f-ray-live-complement.json
             /tmp/agent40-raw34-f-left-ray-live-complement.json
+            /tmp/agent40-raw34-48-ray-live-complement.json
             /tmp/agent40-raw34-f-cycle-source-candidates.json
             /tmp/agent40-raw34-f-cycle-live-complement.json
             /tmp/agent40-raw34-f-depth4-source-candidates.json
