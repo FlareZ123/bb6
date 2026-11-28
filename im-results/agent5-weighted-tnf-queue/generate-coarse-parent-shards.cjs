@@ -39,6 +39,7 @@ const regionCuts=new Map([
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LA1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M0'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0LD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M1'}],
  ['1RB1LC1RC0RE0LA1LD0RB1LC---1RF0RD1RB', {root:150,mod:'Raw11Q0Frame150Rules',ns:'BB6Coverage.Agent31Pump.Frame150.Raw11.M2'}],
+ ['1RB1LC1RC0RD0LA1RD1RB0RE1LC1RF---0RC', {root:151,mod:'Q0151FullCover',ns:'BB6.Agent5Q0151FullCover'}],
  ['1RB1LC1RC---0LA1RD0RE1LD1RA0RF0RC0LB', {root:151,mod:'Raw11Q0Linear151',ns:'BB6Coverage.Agent31Pump.Raw11Q0Linear151'}],
  ['1RB1LC1RC0LF0LA1RD0RC0RE1LF---0LB1LB', {root:151,mod:'Raw11Q0LeftGlider151',ns:'BB6Coverage.Agent31Pump.Raw11Q0LeftGlider151'}],
  ['1RB1LC1RC1RB0LA1LD1LA0RE1RD1RF---1RD', {root:150,mod:'Raw11Q0Sweep150',ns:'BB6Coverage.Agent31Pump.Raw11Q0Sweep150'}],
