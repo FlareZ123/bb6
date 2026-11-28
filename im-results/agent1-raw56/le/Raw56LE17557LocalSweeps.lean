@@ -269,6 +269,83 @@ theorem A_triad_normal (a d c z : Nat) (L R : List Bool) :
   have h := join0 hIZ hR
   simpa [rep, List.append_assoc] using h
 
+theorem carry_prelude7 (L R : List Bool) :
+    run0 p 7
+      ⟨0, false :: L, [false,true,false,true] ++ R⟩ =
+      some ⟨0, true :: true :: L, [false,true,true] ++ R⟩ := by
+  rfl
+
+theorem A1_land_zero (L R : List Bool) :
+    run0 p 1 ⟨0, true :: false :: L, R⟩ =
+      some ⟨0, false :: L, true :: R⟩ := by
+  rfl
+
+/-- Exact third-return carry: the local frame has no zero left after the
+    second return, so the seven-step prelude merges into the old left one-run,
+    A sweeps that combined run, and lands on the preceding zero. -/
+theorem R_return_carry (a d c z : Nat) (L R : List Bool) :
+    run0 p (a+d+12)
+      ⟨0,
+        false :: rep [true] (a+3) ++ rep [true] d ++ false :: L,
+        [false,true,false] ++ rep [true] (c+5) ++
+          rep [false] z ++ R⟩ =
+      some
+      ⟨0, false :: L,
+        rep [true] (a+d+5) ++ [false] ++
+          rep [true] (c+6) ++ rep [false] z ++ R⟩ := by
+  let RT : List Bool := rep [true] (c+4) ++ rep [false] z ++ R
+  have h1 :
+      run0 p 7
+        ⟨0,
+          false :: rep [true] (a+d+3) ++ false :: L,
+          [false,true,false,true] ++ RT⟩ =
+      some
+        ⟨0,
+          true :: rep [true] (a+d+4) ++ false :: L,
+          [false] ++ rep [true] (c+6) ++ rep [false] z ++ R⟩ := by
+    have ht := carry_prelude7
+      (rep [true] (a+d+3) ++ false :: L) RT
+    simpa [RT, rep, List.append_assoc] using ht
+  have h2 := A_sweep_left_ones (a+d+4) (false :: L)
+    ([false] ++ rep [true] (c+6) ++ rep [false] z ++ R)
+  have h3 :
+      run0 p 1
+        ⟨0, true :: false :: L,
+          rep [true] (a+d+4) ++ [false] ++
+            rep [true] (c+6) ++ rep [false] z ++ R⟩ =
+      some
+        ⟨0, false :: L,
+          rep [true] (a+d+5) ++ [false] ++
+            rep [true] (c+6) ++ rep [false] z ++ R⟩ := by
+    have ht := A1_land_zero L
+      (rep [true] (a+d+4) ++ [false] ++
+        rep [true] (c+6) ++ rep [false] z ++ R)
+    simpa [rep, List.append_assoc] using ht
+  have h12 := join0 h1 h2
+  have h := join0 h12 h3
+  simpa [rep, List.append_assoc] using h
+
+/-- Source-level boundary b=5 A-triad carry rewrite. -/
+theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
+    run0 p (2*a+2*c+d+37)
+      ⟨0, false :: rep [true] d ++ false :: L,
+        rep [true] (a+1) ++ [false] ++
+        rep [true] 5 ++ [false] ++
+        rep [true] (c+1) ++ rep [false] (z+2) ++ R⟩ =
+      some
+      ⟨0, false :: L,
+        rep [true] (a+d+5) ++ [false] ++
+          rep [true] (c+6) ++ rep [false] z ++ R⟩ := by
+  have hI := I_return a 0 c z (rep [true] d ++ false :: L) R
+  have hZ := Z_return a 0 c z (rep [true] d ++ false :: L) R
+  have hR := R_return_carry a d c z L R
+  have hIZ := join0 hI hZ
+  have h := join0 hIZ hR
+  simpa [rep, List.append_assoc] using h
+
+#print axioms carry_prelude7
+#print axioms R_return_carry
+#print axioms A_triad_carry
 #print axioms R_return_normal
 #print axioms A_triad_normal
 #print axioms AB_zero_to_C
