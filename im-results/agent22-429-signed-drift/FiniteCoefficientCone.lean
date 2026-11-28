@@ -54,7 +54,7 @@ theorem coefficient_weak_cone (xs : List Letter)
           scale x*(3*A xs)+scale x := by grind
       rw [hd]
       omega
-    exact le_trans hr hm
+    omega
 
 theorem scale_gt_four (x : Letter) (hj : 1<x.j) :
     4<scale x := by
@@ -100,7 +100,7 @@ theorem coefficient_strict_cone (xs : List Letter)
         omega
       simp only [A,M]
       rw [heq]
-      exact lt_of_lt_of_le hc hmul
+      omega
     · obtain ⟨y,hy,hylarge⟩ := hlarge
       have hiny : y∈xs := by
         have hh : y=x ∨ y∈xs := List.mem_cons.mp hy
@@ -118,7 +118,7 @@ theorem coefficient_strict_cone (xs : List Letter)
         omega
       simp only [A,M]
       rw [heq]
-      exact lt_of_le_of_lt hc hmul
+      omega
 
 #print axioms coefficient_gap_identity
 #print axioms coefficient_weak_cone
