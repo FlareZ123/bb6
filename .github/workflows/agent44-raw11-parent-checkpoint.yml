@@ -40,6 +40,11 @@ on:
         required: true
         default: false
         type: boolean
+      split_extra132_rows:
+        description: Optional space-separated Extra132 ROW:DEPTH trie splits, for example 01:3 or 01:3 02:4
+        required: false
+        default: ''
+        type: string
 
 permissions:
   contents: read
@@ -134,6 +139,27 @@ jobs:
             python im-results/agent44-raw11-extra28/repair_two_sided_data.py "$data"
           fi
 
+      - name: Chunk selected Extra132 automata rows
+        if: inputs.parent_id == '132' && inputs.split_extra132_rows != ''
+        env:
+          ROW_SPECS: ${{ inputs.split_extra132_rows }}
+        run: |
+          set -euo pipefail
+          for spec in $ROW_SPECS; do
+            row="${spec%%:*}"
+            depth="${spec#*:}"
+            test "$row" != "$depth"
+            test -s "/tmp/parent-source/Agent44Extra132GiantRowData${row}.lean"
+            python im-results/agent44-raw11-extra28/split_trie_row.py \
+              "/tmp/parent-source/Agent44Extra132GiantRowData${row}.lean" "$depth" \
+              | tee "/tmp/extra132-row${row}-trie-split.log"
+            rm -f \
+              "/tmp/parent-out/Agent44Extra132GiantRowData${row}.olean" \
+              "/tmp/parent-out/Agent44Extra132GiantRowCheck${row}.olean" \
+              /tmp/parent-out/Agent44Extra132GiantData.olean \
+              /tmp/parent-out/Agent44Extra132GiantProof.olean
+          done
+
       - name: Row-split the frozen Extra132 giant FAR leaf
         if: inputs.row_split_extra132 && inputs.parent_id == '132' && inputs.prior_run == ''
         run: |
@@ -202,6 +228,7 @@ jobs:
             echo "max_fresh=${RAW11_REPAIR_MAX_FRESH}"
             echo "target_module=${RAW11_REPAIR_TARGET}"
             echo "split_extra140_aggregate=${{ inputs.split_extra140_aggregate }}"
+            echo "split_extra132_rows=${{ inputs.split_extra132_rows }}"
             echo "head_sha=${GITHUB_SHA}"
             echo "lean_version=$(lean --version)"
           } > /tmp/parent-out/checkpoint-provenance.txt
