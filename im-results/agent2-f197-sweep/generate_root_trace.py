@@ -58,13 +58,25 @@ rows=seeds+rows
 for a,b in zip(rows,rows[1:]):assert (a['n2'],a['w2'],a['rope2'])==(b['n'],b['w'],b['rope'])
 assert rows[-1]['w2']==D['end']['w'] and rows[-1]['rope2']==D['end']['rope']
 normal=('core','direct','terminal')
-ops=list({op_key(x['rule']):x['rule'] for x in rows if x['rule']['type'] in normal}.values());opid={op_key(r):i for i,r in enumerate(ops)}
+# SelfTheorem's 658 operation banks are already source-checked. Reuse *identical*
+# guarded rule certificates rather than reconstructing their packed proofs.
+self_trace = v.self_trace(35)
+self_rules = {op_key(x['rule']):x['rule'] for x in self_trace['trace']+self_trace['post']}
+self_ids = {k:i for i,k in enumerate(self_rules)}
+all_ops = {op_key(x['rule']):x['rule'] for x in rows if x['rule']['type'] in normal}
+ops = [r for k,r in all_ops.items() if k not in self_ids]
+opid = {op_key(r):i for i,r in enumerate(ops)}
+def op_name(r):
+    k=op_key(r)
+    return f'op{self_ids[k]}' if k in self_ids else f'rootOp{opid[k]}'
+for k in all_ops:
+    if k in self_ids: assert (root/f'OpBank{self_ids[k]//80}.lean').exists()
 for i in range(0,len(ops),80):
     name=f'RootBank{i//80}';buf=io.StringIO()
     for j,r in enumerate(ops[i:i+80],i):write_op(buf,j,r)
     body=re.sub(r'\bop(\d+)(OK)?\b',r'rootOp\1\2',buf.getvalue())
     (root/(name+'.lean')).write_text('import PackedCheck\nset_option linter.unusedSimpArgs false\nset_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter PackedCheck\n'+body+'end F197.Agent2Self\n')
-print('root banks',len(ops),flush=True)
+print('root operations total/new/reused',len(all_ops),len(ops),len(all_ops)-len(ops),flush=True)
 segments=[];i=0
 while i<len(rows):
     r=rows[i];j=i+1
@@ -97,10 +109,10 @@ def emit_seg(f,i,seg):
             if len(suffix)>nfree:suffix=suffix[-nfree:] if nfree else ''
             assert x['w'].endswith(suffix) and x['w2'].endswith(suffix)
         ws=w[:-len(suffix)] if suffix else w;wt=w2[:-len(suffix)] if suffix else w2
-        ids=[opid[op_key(x['rule'])] for x in seg]
-        print('  let os : List Op := ['+', '.join('rootOp'+str(j) for j in ids)+']',file=f)
+        names=[op_name(x['rule']) for x in seg]
+        print('  let os : List Op := ['+', '.join(names)+']',file=f)
         for name,value in [('src',ws),('dst',wt),('tail',suffix)]:print(f'  let {name} : Word := {word_expr(value)}',file=f)
-        print('  have hok : os.all opOK = true := by\n    simp only [os,List.all_cons,List.all_nil,Bool.true_and,'+','.join('rootOp'+str(j)+'OK' for j in dict.fromkeys(ids))+']',file=f)
+        print('  have hok : os.all opOK = true := by\n    simp only [os,List.all_cons,List.all_nil,Bool.true_and,'+','.join(name+'OK' for name in dict.fromkeys(names))+']',file=f)
         print(f'  have happ : applyOps os rootN{i} src = some (rootN{i+1},dst) := by decide +kernel\n  have ht : okHead tail = true := by decide +kernel\n  have hr : ropeOK {rn} = true := by decide +kernel',file=f)
         print(f'  have h := ops_sound os rootN{i} rootN{i+1} src dst (pre tail (ropeTape {rn})) (pre_first tail _ ht (rope_head {rn} hr)) hok happ',file=f)
         print(f'  have hs : src++tail = rootW{i} := by decide +kernel\n  have hd : dst++tail = rootW{i+1} := by decide +kernel\n  simp only [state, ← Agent2EpochMarker.pre_append] at h\n  rw [hs,hd] at h\n  exact h',file=f)
@@ -118,10 +130,14 @@ def emit_seg(f,i,seg):
 
 names=[];size=4
 for i in range(0,len(segments),size):
-    name=f'RootPart{i//size}';names.append(name);segs=segments[i:i+size];banks=sorted({opid[op_key(x['rule'])]//80 for seg in segs for x in seg if x['rule']['type'] in normal})
+    name=f'RootPart{i//size}';names.append(name);segs=segments[i:i+size]
+    keys={op_key(x['rule']) for seg in segs for x in seg if x['rule']['type'] in normal}
+    root_banks=sorted({opid[k]//80 for k in keys if k in opid})
+    self_banks=sorted({self_ids[k]//80 for k in keys if k in self_ids})
     with (root/(name+'.lean')).open('w') as f:
         print('import RootStates',file=f)
-        for b in banks:print(f'import RootBank{b}',file=f)
+        for b in root_banks:print(f'import RootBank{b}',file=f)
+        for b in self_banks:print(f'import OpBank{b}',file=f)
         print('set_option maxRecDepth 100000\nset_option maxHeartbeats 20000000\nnamespace F197.Agent2Self\nopen Agent2Counter PrefixCheck',file=f)
         for j,seg in enumerate(segs,i):emit_seg(f,j,seg)
         print(f'theorem rootPart{i//size} : Reach rootC{i} rootC{i+len(segs)} := by\n  have h0 := rootSeg{i}',file=f)
