@@ -45,9 +45,12 @@ children explicit. It proves an exact 12-code roster and a conditional
 through the sound `consumeAt` interface. This bridge intentionally imports
 no previous child theorem, so it can be source-audited independently of
 the large child proof objects. It does **not** assert that any of its twelve
-remaining premises has been discharged. The source-closure CI was requested
-as run [46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142);
-do not label it accepted unless that run passes.
+remaining premises has been discharged. The original-source Lean 4.36.0-rc2 closure **passed**
+[run 46103999142](https://github.com/FlareZ123/bb6/actions/runs/46103999142),
+pinning the source from commit `bb294092b564`. The workflow checks the
+`consume` theorem and its standard-axiom profile, making the twelve-child
+frontier a verified conditional mathematical reduction. No sibling proof
+premise was silently assumed or discharged in that run.
 
 The explicit [`Raw11Extra28CompleteJoin.lean`](Raw11Extra28CompleteJoin.lean)
 provides a **conditional complete parent theorem** at weighted bound 158:
