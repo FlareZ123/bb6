@@ -132,6 +132,30 @@ jobs:
           echo "open_count=$(wc -l < open.txt)"
           sha256sum tree.json open.txt enum.log
           tail -n 5 enum.log
+      - name: Search reusable FAR certificates for Raw40 A1LC B1=1RA residuals
+        if: ${{ inputs.preparation_profile == 'raw40-a1lc-enumerate' }}
+        run: |
+          set -euo pipefail
+          cd /tmp/raw40-a1lc-1ra
+          python3 - <<'PY'
+          import glob,json,pathlib
+          codes=set()
+          for path in glob.glob('im-results/agent19-raw40-cut/a1lc-*.json'):
+              data=json.load(open(path))
+              for row in data.get('far',[]):
+                  codes.add(row['code'])
+              for line in data.get('farGroups','').splitlines():
+                  fields=line.split()
+                  if fields: codes.add(fields[0])
+          pathlib.Path('far-bank.txt').write_text(''.join(c+'\\n' for c in sorted(codes)))
+          print('seed_far_codes',len(codes))
+          PY
+          g++ -std=c++20 -O3 im-results/agent19-raw40-cut/farbank.cpp -o farbank
+          sed 's/_//g' open.txt | awk '{print NR-1, $0}' > far.in
+          ./farbank 5 far-bank.txt < far.in > far5.txt 2> far5.log
+          echo "far_certificates=$(wc -l < far5.txt)"
+          cat far5.txt
+          cat far5.log
       - name: Generate q0-151 Lean finite-control certificate
         if: ${{ inputs.preparation_profile == 'q0151-macro' }}
         env:
