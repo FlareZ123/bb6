@@ -1,4 +1,4 @@
-import Raw45B1LA_A1LC_FullCut
+import Raw45CutAssembled
 import Raw45Sharp96Witness
 set_option maxRecDepth 100000
 set_option maxHeartbeats 0
