@@ -151,8 +151,13 @@ theorem terminal_reach_c (p n s : Nat) (hp : 24≤p) (he : p%2=0)
         Raw14042Counter.cword,terminal] using G
     · have G := dRROdd (p+2) 1 .s6221 _ (by omega)
         (Raw14042DTerminals.c0r2 p he)
+      have hpout : 2*((p+2)+1)+2 = 2*p+8 := by omega
+      have hnout : (p+2+Raw140Double.rank (.s6221 : Raw140Double.Tail))/6 = (p+4)/6 := by
+        simp only [Raw140Double.rank]
+      have hsout : (p+2+Raw140Double.rank (.s6221 : Raw140Double.Tail))%6 = (p+4)%6 := by
+        simp only [Raw140Double.rank]
       simpa [encode,cTail,Raw14042CGeneral.cCfg,Raw14042Counter.T,
-        Raw14042Counter.cword,Raw140Double.rank,terminal] using G
+        Raw14042Counter.cword,Raw140Double.rank,terminal,hpout,hnout,hsout] using G
     · have G := bsRR (p+11-4) 0 3 .t152 _ (by omega)
         (Raw14042BTerminals.c0r3 p hp he)
       simpa [encode,cTail,Raw14042CGeneral.cCfg,Raw14042Counter.T,
