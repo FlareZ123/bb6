@@ -36,6 +36,11 @@ const parentCodes=root.slice();parentCodes[7]=dCode;parentCodes[10]=f0Code;
 const namespaceName=f0Action==="0LA"
   ?"BB6.Agent50Raw34PairDepth6"
   :"BB6.Agent40Raw34PairD1LF_F0LDDepth6";
+const easyMode=f0Action==="0LD";
+const contiguousCodes=[21,14,22,21,11,0,16,7,0,0,5,14];
+const alternatingCodes=[21,7,22,20,11,0,16,7,0,0,5,14];
+const sameCodes=(a,b)=>a.length===b.length&&a.every((x,i)=>x===b[i]);
+const certLeaf=cert=>easyMode?`.leaf (.base (${cert}))`:`.leaf (${cert})`;
 
 function trace(p,cap=100){
  let q=0,h=0,ones=new Set(),hist=[];
@@ -90,24 +95,30 @@ function residual(depth,kind){
  const j=rows.length;rows.push(p.slice());inc(kind+depth);return pushNode(`.residual ${j}`);
 }
 function build(depth){
+ if(easyMode&&sameCodes(p,contiguousCodes)){
+  inc("contiguousGrowth"+depth);return pushNode(".leaf .contiguous");
+ }
+ if(easyMode&&sameCodes(p,alternatingCodes)){
+  inc("alternatingGrowth"+depth);return pushNode(".leaf .alternating");
+ }
  const r=trace(p),w=sideWitness(r.hist);
  if(w){
   inc("cycle"+depth);
-  return pushNode(`.leaf (.side ${w.entry} ${w.period} ${w.right} ${leanInt(w.boundary)})`);
+  return pushNode(certLeaf(`.side ${w.entry} ${w.period} ${w.right} ${leanInt(w.boundary)}`));
  }
  if(r.kind==="halt"){
   assert(r.t+1<=128);inc("halt"+depth);
-  return pushNode(`.leaf (.halt ${r.t})`);
+  return pushNode(certLeaf(`.halt ${r.t}`));
  }
  if(r.kind==="long"){
   const rr=trace(p,1000),ww=sideWitness(rr.hist,500,200);
   if(ww){
    inc("extendedCycle"+depth);
-   return pushNode(`.leaf (.side ${ww.entry} ${ww.period} ${ww.right} ${leanInt(ww.boundary)})`);
+   return pushNode(certLeaf(`.side ${ww.entry} ${ww.period} ${ww.right} ${leanInt(ww.boundary)}`));
   }
   if(f0Action==="0LD"&&closesWithoutE(p)){
    inc("closed"+depth);
-   return pushNode(".leaf (.closed 0 [0,1,2,3,5])");
+   return pushNode(certLeaf(".closed 0 [0,1,2,3,5]"));
   }
   return residual(depth,"longResidual");
  }
@@ -128,10 +139,11 @@ const expected=f0Action==="0LA"?{
   longResidual5:52,extendedCycle6:353,extendedCycle5:5,longResidual4:1
  }
 }:{
- nodes:16976,rows:4276,stats:{
+ nodes:16976,rows:4274,stats:{
   halt3:1,cycle3:17,halt4:7,halt5:67,cycle5:1002,
   halt6:604,cycle6:10155,longResidual6:40,openResidual6:4234,
-  cycle4:101,extendedCycle6:25,longResidual5:2,closed6:42
+  cycle4:101,extendedCycle6:25,closed6:42,
+  contiguousGrowth5:1,alternatingGrowth5:1
  }
 };
 assert.equal(nodes.length,expected.nodes);
@@ -139,21 +151,67 @@ assert.equal(rows.length,expected.rows);
 assert.deepEqual(stats,expected.stats);
 assert.equal(rootIndex,nodes.length-1);
 
-const source=`import Raw34Plan
-set_option maxRecDepth 1000000
-set_option maxHeartbeats 0
-namespace ${namespaceName}
-open BB6Coverage BB6.Agent50Raw34Plan
+const imports=easyMode
+  ?"import Raw34Plan\\nimport Raw34QuadraticPairGrowth"
+  :"import Raw34Plan";
+const easyPrelude=easyMode?`
+inductive EasyCert where
+  | base (cert : Cert)
+  | contiguous
+  | alternating
 
-def parent : PartialMachine := table [${parentCodes.join(",")}]
-def residualRows : List (List Nat) := [
-${rows.map(r=>`  [${r.join(",")}]`).join(",\n")}
-]
-def nodes : Array Node := #[
-${nodes.map(n=>`  ${n}`).join(",\n")}
-]
-theorem node_count : nodes.size = ${nodes.length} := by decide
-theorem residual_count : residualRows.length = ${rows.length} := by decide
+def easyCheck (p : PartialMachine) : EasyCert → Bool
+  | .base cert => certCheck 128 p cert
+  | .contiguous => sameTable p BB6.Agent40Raw34PairQuadratic.contiguous
+  | .alternating => sameTable p BB6.Agent40Raw34PairQuadratic.alternating
+
+abbrev EasyNode := PlanNode EasyCert
+`:"";
+const nodeType=easyMode?"EasyNode":"Node";
+const proofBlock=easyMode?`
+abbrev Good (m : Machine) : Prop :=
+  DecidedBelow 128 m ∨ ExplicitResidual residualRows m
+
+theorem easy_sound (p : PartialMachine) (cert : EasyCert)
+    (h : easyCheck p cert = true) : Cover Good p := by
+  cases cert with
+  | base c =>
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl ((cert_sound 128 p c h).sound m hm)
+  | contiguous =>
+      have hp : p = BB6.Agent40Raw34PairQuadratic.contiguous :=
+        sameTable_sound p _ h
+      subst p
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl (Or.inl (BB6.Agent40Raw34PairQuadratic.contiguous_never m hm))
+  | alternating =>
+      have hp : p = BB6.Agent40Raw34PairQuadratic.alternating :=
+        sameTable_sound p _ h
+      subst p
+      apply Cover.leaf
+      intro m hm
+      exact Or.inl (Or.inl (BB6.Agent40Raw34PairQuadratic.alternating_never m hm))
+
+theorem residual_sound (j : Nat) (row : List Nat)
+    (h : residualRows[j]? = some row) : Cover Good (table row) := by
+  apply Cover.leaf
+  intro m hm
+  exact Or.inr ⟨j,row,h,hm⟩
+
+theorem checked : checkWith nodes residualRows easyCheck 5 ${rootIndex} parent = true := by
+  decide +kernel
+theorem cover : Cover Good parent :=
+  checkWith_sound nodes residualRows easyCheck easy_sound residual_sound
+    5 ${rootIndex} parent checked
+#print axioms node_count
+#print axioms residual_count
+#print axioms easy_sound
+#print axioms residual_sound
+#print axioms checked
+#print axioms cover
+`:`
 theorem checked : check nodes residualRows 128 5 ${rootIndex} parent = true := by
   decide +kernel
 theorem cover :
@@ -163,9 +221,26 @@ theorem cover :
 #print axioms residual_count
 #print axioms checked
 #print axioms cover
+`;
+const source=`${imports}
+set_option maxRecDepth 1000000
+set_option maxHeartbeats 0
+namespace ${namespaceName}
+open BB6Coverage BB6.Agent50Raw34Plan
+${easyPrelude}
+def parent : PartialMachine := table [${parentCodes.join(",")}]
+def residualRows : List (List Nat) := [
+${rows.map(r=>`  [${r.join(",")}]`).join(",\\n")}
+]
+def nodes : Array ${nodeType} := #[
+${nodes.map(n=>`  ${n}`).join(",\\n")}
+]
+theorem node_count : nodes.size = ${nodes.length} := by decide
+theorem residual_count : residualRows.length = ${rows.length} := by decide
+${proofBlock}
 end ${namespaceName}
 `;
-const outputModule=f0Action==="0LA"?"Raw34PairDepth6Plan.lean":"Raw34PairD1LF_F0LDDepth6Plan.lean";
+const outputModule=easyMode?"Raw34PairD1LF_F0LDDepth6Plan.lean":"Raw34PairDepth6Plan.lean";
 writeFileSync(join(output,outputModule),source);
 writeFileSync(join(output,"residualRows.json"),JSON.stringify(rows)+"\\n");
 const report={
