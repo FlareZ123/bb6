@@ -79,7 +79,7 @@ def main():
     env = dict(os.environ, LEAN_PATH=str(work))
     roots = []
     output = []
-    for name in ("Raw36Branch", "Raw36D1Complement", "Raw36ParentComplement", "Raw36ParentLive12"):
+    for name in ("Raw36Branch", "Raw36D1Complement", "Raw36ParentComplement", "Raw36ParentLive12", "Raw36ParentLive10"):
         src = ROOT / (name + ".lean")
         dst = work / src.name
         dst.write_bytes(src.read_bytes())
@@ -92,7 +92,8 @@ def main():
         expected = {"Raw36Branch": {"children_bound", "branch_bound", "branch_cover"},
                     "Raw36D1Complement": {"b1Complement_count", "b1Complement_nodup", "d1_bound_from_four", "d1_cover_from_four"},
                     "Raw36ParentComplement": {"remaining_explicit", "parentComplement_count", "parent_cover_from_thirteen"},
-                    "Raw36ParentLive12": {"b101_identity", "b1Live_count", "parentLive12_count", "b101_cover_at", "d1_cover_from_three", "parent_cover_from_twelve"}}[name]
+                    "Raw36ParentLive12": {"b101_identity", "b1Live_count", "parentLive12_count", "b101_cover_at", "d1_cover_from_three", "parent_cover_from_twelve"},
+                    "Raw36ParentLive10": {"b104_identity", "b122_identity", "b104_cover_at", "b122_cover_at", "d1_cover_from_one", "parent_cover_from_ten", "b1Live1_count", "parentLive10_count"}}[name]
         assert {k.rsplit(".", 1)[-1] for k, _ in axioms} == expected, p.stdout
         assert all(set(x.strip() for x in a.split(",") if x.strip()) <= AXIOMS for _, a in axioms)
         entry = {"module": name, "source_path": "im-results/agent29-raw36/" + src.name,
@@ -108,9 +109,9 @@ def main():
               "source_revisions": sorted({revision, *(p["revision"] for p in PINS)}),
               "workflow": {"run_id": os.environ.get("GITHUB_RUN_ID"), "workflow_head_sha": os.environ.get("GITHUB_SHA")},
               "lean_version": version, "lean_binary": {"path": str(compiler), "sha256": compiler_sha},
-              "claim": {"theorem": "BB6.Agent29Raw36.parent_cover_from_twelve", "weighted_bound": 1022,
+              "claim": {"theorem": "BB6.Agent29Raw36.parent_cover_from_ten", "weighted_bound": 1152,
                         "parent_table": "1RB---_1RC---_0RD---_0LD---_------_------",
-                        "conditional": True, "remaining_D1": ["0LA", "1LA", "0LB", "0LC", "1LC", "0LE", "0RE", "1LE", "1RE"], "remaining_B1": ["0LE", "1LE", "1RE"]},
+                        "conditional": True, "remaining_D1": ["0LA", "1LA", "0LB", "0LC", "1LC", "0LE", "0RE", "1LE", "1RE"], "remaining_B1": ["1LE"]},
               "roots": roots, "module_count": len(members),
               "modules": [members[k] for k in sorted(members)],
               "provenance_inputs": [{"path": "im-results/agent29-raw36/accepted_pins.json",
