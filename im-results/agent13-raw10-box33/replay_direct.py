@@ -78,6 +78,16 @@ def run_direct(args):
     cycles={}
     late_fixed={}
     known_specs={}
+    if (d,v)==(17,16):
+        bank=json.loads((HERE/'d17v16-bank.json').read_text())
+        for i,record in bank.items():
+            nm=f'v16bank{i}';known[tuple(record['machine'])]=nm
+            known_specs[nm]=('Box33D17V16Bank',f'BB6.Agent13.Box33D17V16Bank.M{i}','')
+        for b,t in [(False,[8,19,11,14,1,13,17,14,16,23,3,0]),(True,[8,23,11,14,1,13,17,14,16,3,19,0])]:
+            nm=f'v16counter{int(b)}';known[tuple(t)]=nm
+            known_specs[nm]=('Box33D17V16Counters','BB6.Agent13.Box33D17V16Counters',f' {str(b).lower()}')
+        known[(8,0,11,24,1,13,17,7,16,20,1,22)]='v16sweep'
+        known_specs['v16sweep']=('Box33D17V16Sweep','BB6.Agent13.Box33D17V16Sweep','')
     if (d,v)==(17,18):
         for i,t in enumerate([[8,6,11,4,1,13,17,15,18,23,4,0],[8,20,11,24,1,13,17,9,18,6,16,0],[8,9,11,24,1,13,17,19,18,4,2,0]]):
             nm=f'v18m{i}';known[tuple(t)]=nm
