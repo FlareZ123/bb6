@@ -2,7 +2,7 @@
 function emit(records){
  const bits=s=>"["+[...s].map(x=>x==="1"?"true":"false").join(",")+"]";
  const llist=(s,p)=>"["+s.map(x=>"."+p+x).join(",")+"]";
- let txt=`import Box33ExactMacro\n\nnamespace BB6.Agent13.Box33D17V23Exact\nopen C9Pair\nopen BB6.Agent13.Box33PrefixMacro BB6.Agent13.Box33ExactMacro\nopen BB6.Agent13.Box33D14Growth (z word)\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedSimpArgs false\n`;
+ let txt=`import Box33ExactMacro\n\nnamespace BB6.Agent13.Box33D17V23Anchored\nopen C9Pair\nopen BB6.Agent13.Box33PrefixMacro BB6.Agent13.Box33ExactMacro\nopen BB6.Agent13.Box33D14Growth (z word)\nset_option maxRecDepth 100000\nset_option maxHeartbeats 0\nset_option linter.unusedSimpArgs false\n`;
  for(const [id,c] of Object.entries(records)){
  const con=(name,p,n)=>`inductive ${name} where\n  | ${Array.from({length:n},(_,i)=>p+i).join(" | ")}\n`;
  txt+=`\nnamespace M${id}\n`+con("Mode","m",c.modes.length)+con("L","l",c.B.length)+con("D","d",c.D.length);
@@ -55,13 +55,13 @@ theorem never : NeverHalts table := by
   let k : Nat := ${c.initial?.t||0}
   have hi : Box33PrefixMacro.run step k (project BB6Coverage.blank) =
       some (exactPhase spec spec.initial ${llist(c.initial?.ls||[],"l")} ${llist(c.initial?.rs||[],"d")}) := by
-    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
+    simp [k,project,Box33Source.project,BB6Coverage.blank,Box33Source.q,Box33Source.perm,exactPhase,spec,shape,atShape,blocks,leftWord,rightWord,word,Box33PrefixMacro.run,step,left,right]
   intro h
   have hc := exactNever spec step sound positive (n-k) spec.initial ${llist(c.initial?.ls||[],"l")} ${llist(c.initial?.rs||[],"d")}
   by_cases hn : n≤k
-  · rw [←show n+(k-n)=k by omega,run_add,h] at hi
+  · rw [←show n+(k-n)=k by omega,Box33PrefixMacro.run_add,h] at hi
     contradiction
-  · rw [←show k+(n-k)=n by omega,run_add,hi,Option.bind_some] at h
+  · rw [←show k+(n-k)=n by omega,Box33PrefixMacro.run_add,hi,Option.bind_some] at h
     exact hc h
 
 def partialTable : PartialMachine := fun s => some (table s)
@@ -73,7 +73,7 @@ theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverH
 #print axioms compatible_never
 end M${id}\n`;
  }
- return txt+"end BB6.Agent13.Box33D17V23Exact\n";
+ return txt+"end BB6.Agent13.Box33D17V23Anchored\n";
 }
 
 module.exports={emit};
