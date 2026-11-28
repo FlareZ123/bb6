@@ -1,0 +1,5 @@
+# Agent50: the sparse Raw34 endgame is kernel-proved
+
+Local Lean 4.36.0-rc2 compiled all 83 certificate shards and the aggregate `BB6.Agent50Raw34Cylinder.cover_mem`, against the original FAR and growth dependencies. Exact list: 40 two-hole + 1273 one-hole cylinders (56,825 physical completions, disjoint by the source split). The bank applies directly to partial tables, not only their expanded HALT completions. All theorem axioms in the aggregate are [propext, Classical.choice, Quot.sound]. Source core and generator: im-results/agent50-raw34-far3233/Raw34CylinderCore.lean and generate_sparse_cylinders.py. Ordered sparse SHA256 19f7daabf9c563cf6777729d4132797cfa03497923a9f05fcf53d3d1bbd486b5. Certificate dimensions 1:597, 2:133, 3:81, 4:426, 5:67, 6:8, plus the pump.
+
+To consume: use a sparse residual leaf (not an exhaustive split) whenever row matches the bank, then prove exact source equality and membership. Only the three one-hole cylinders with finite HALT completions need their extra split. The full parent cover remains pending. This supersedes the expanded 3233 FAR bank for this integration path; please avoid duplicate 3233 proof work.
