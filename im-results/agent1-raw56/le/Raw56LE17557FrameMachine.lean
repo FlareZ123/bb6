@@ -121,6 +121,88 @@ theorem normal_push_eq_frame_cost (r : Nat) :
   simp [Nat.pow_succ]
   omega
 
+/-- Root-level B/C hits in epoch n after all complete nested finite frames
+    are hidden.  Epoch zero here is the physical C_2 -> C_3 epoch. -/
+def rootHits : Nat → List Bool
+  | 0 => [false, true, true, false]
+  | n+1 => refine (rootHits n)
+
+theorem actionEpoch_rootTraceBelow (n : Nat) :
+    OuterTraceBelow n (actionEpoch n) (rootHits n) := by
+  induction n with
+  | zero =>
+      exact OuterTraceBelow.hitC
+        (OuterTraceBelow.hitB
+          (OuterTraceBelow.hitB
+            (OuterTraceBelow.hitC OuterTraceBelow.nil)))
+  | succ n ih =>
+      simpa [actionEpoch, rootHits] using outerTraceBelow_lift ih
+
+theorem countB_refine (w : List Bool) :
+    countB (refine w) = 2 * countB w := by
+  induction w with
+  | nil => rfl
+  | cons a w ih =>
+      cases a <;>
+        simp [refine, refineLetter, countB, List.count_append, ih] <;> omega
+
+theorem countC_refine (w : List Bool) :
+    countC (refine w) = countB w + countC w := by
+  induction w with
+  | nil => rfl
+  | cons a w ih =>
+      cases a <;>
+        simp [refine, refineLetter, countB, countC, List.count_append, ih] <;>
+        omega
+
+theorem rootHits_counts (n : Nat) :
+    countB (rootHits n) = 2^(n+1) ∧
+    countC (rootHits n) = 2^(n+1) := by
+  induction n with
+  | zero => decide
+  | succ n ih =>
+      rcases ih with ⟨hb,hc⟩
+      rw [rootHits, countB_refine, countC_refine, hb, hc]
+      simp [Nat.pow_succ]
+      omega
+
+/-- Exact root blank displacement of the physical epoch C_(n+2) -> C_(n+3). -/
+theorem rootHits_lowCost (n : Nat) :
+    lowCost (rootHits n) = 2^(n+4) := by
+  rcases rootHits_counts n with ⟨hb,hc⟩
+  unfold lowCost
+  rw [hb,hc]
+  simp [Nat.pow_succ]
+  ring
+
+theorem rootHits_nonempty (n : Nat) : rootHits n ≠ [] := by
+  intro h
+  have hc := (rootHits_counts n).1
+  rw [h] at hc
+  simp [countB] at hc
+
+/-- The complete rank-labelled epoch is stack-safe against a root runway whose
+    size is exactly the checkpoint displacement.  Every nested finite frame
+    closes by strict-rank induction, leaving precisely the root hit word. -/
+theorem actionEpoch_consumes_root (n : Nat) (st : List Nat) :
+    execLow (actionEpoch n) (2^(n+4) :: st) = some st := by
+  rw [← rootHits_lowCost n]
+  have ht := outerTraceBelow_exec (actionEpoch_rootTraceBelow n)
+    (closed := by
+      intro r hr st'
+      exact segment_closes_low r st')
+    (lowCost (rootHits n) :: st)
+  rw [ht]
+  have hn := rootHits_nonempty n
+  cases hroot : rootHits n with
+  | nil => exact False.elim (hn hroot)
+  | cons a w =>
+      simpa [hroot] using hitWord_consumes_own_cost a w st
+
+#print axioms actionEpoch_rootTraceBelow
+#print axioms rootHits_counts
+#print axioms rootHits_lowCost
+#print axioms actionEpoch_consumes_root
 #print axioms hitWord_consumes_own_cost
 #print axioms outerTraceBelow_exec
 #print axioms segment_closes_low
