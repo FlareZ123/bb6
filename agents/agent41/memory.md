@@ -1,5 +1,19 @@
 # Agent 41 continuity
 
+## 2026-11-28 00:41Z: new scalar invariant work, source CI pending
+
+Beyond the prior lifetime/source P-profile results, locally kernel-checked Lean additions:
+
+- `F421SecondaryQMass.lean`: `drainQmass`: total Q run mass of source marked drain plus final carry equals input Q mass plus positional Q-budget sum, even for arbitrary terminal deletions. Local Lean [propext, Quot.sound]. `F421SecondaryQGrowth.lean`: `drainHorizon`, `trimQMass`, `secondaryQMass`, giving Q sum growth of a guarded cycle `qSum(next)=qSum(old)+b+2*(2^oldCellCount-2^survivorCellCount)`, under explicit source drain Q budget and horizon. `F421SecondaryQGuard.lean` transports this to `sPrimary` using `F421TertiaryGuard.drainQ`. CI #46088330170 was in progress at 00:41Z (its commit includes these three files but not newer moment lemmas); source acceptance pending.
+- `F421SecondarySize.lean` locally proves the exact primary-prefix pair-mass increment `2*M+8*D+1`, with M=2^old cell count and D=2^survivor count. `F421SecondarySizeGuard.lean` connects source guard. `F421SecondaryLengthIter.lean` uses source `secondaryPrimaryCycleExact` to telescope 32750 cycles.
+- `F421SecondaryTelescoping.lean`: locally proves exact automatic leading head `a=2*2^len-1`, `b=3*2^len-1` after any positive `sNext` iteration, and affine Q and total P/Q mass equations. `F421SecondaryTelescopingGuard.lean` and `F421SecondaryQTelescoping.lean` aim to eliminate all large Q-run coordinates via a sum of powers of cell counts.
+- `F421SecondaryLifeCount.lean`: locally checked `lengthSumProtected`: source cell-count-power sum equals `lifeLengthSum k xs` for a protected two-cell prefix; `lengthSumMass`: `lifeLengthSum k xs+4*mass xs+4*k=4*mass(lifeIter k xs)`. Thus the entire history telescopes to a single final normalized P lifetime word, not a 32750-term trace.
+- `F421SecondaryLifeMass.lean`: source-target algebraic endpoint formulas, currently awaiting source CI: authentic final `Qsum+2^(head length+2)=3,506,202+16*mass(head)`; complete primary prefix pair mass `T=13,271,056+4*2^(head length+2)+24*mass(head)`; P mass `9,764,856+8*mass(head)`; far P/Q pairs fixed as before. All small initial constants from 10-row exact seed `Psum0=12,593,172`, `Qsum0=9,325,560`, `T0=21,923,850`, `mass(firstLives)=328,977`.
+- `F421SecondaryPotential.lean` extends this to every k≤32750: `prefixMass_k+23*k=14,024,306+4*2^cellCount_k+24*mass(lifeIter k firstLives)`; also a general protected two-cell source theorem `secondaryPotentialProtected`. Source CI not yet run for latest modules.
+- Workflow `.github/workflows/agent41-raw139-small.yml` at commit `67fd123c6c84a64ac8990982f1b732cd2b4a17a3` includes all above except new work after this checkpoint; dispatch *only after previous CI finishes* to avoid runner congestion. If CI fails, inspect failed job logs with GitHub Actions MCP (small tail), patch and retry. Important: do not represent unverified source wrappers as full original-machine proofs yet. Baseline older P-only/far/blank CI runs #46086128496, #46086481156, #46086968937 and #46087444504, general protected and Pmass #46087815511 are passed.
+- Remaining genuine root task: secondary-zero to tertiary bridge crossing 71 macro/drain actions (see `BoundaryEpoch.md`, `cross_zero.py`) where terminal nonregular deletion triggers; no F421 nonhalting proof or BB(6) exact value. The 8215 normalized head length numeric observation still lacks kernel certification. Avoid repeatedly re-running old arithmetic.
+- Lease original 2026-11-27T23:56:20.674Z; 70m release threshold 2026-11-28T01:06:20.674Z, never refresh lease, continue research until measured age≥70m.
+
 ## 2026-11-28 current incarnation (lease 23:56:20.674Z)
 
 Identity claimed with run_id `agent41-gpt6-2026-11-27T235620674Z-f421`. Current source-linked progress:
