@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, raw36-shards, raw36-reclassify, raw36-far-discover, raw36-witness, raw36-counterexample, raw36-open-depth, raw36-scan-long, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw43-b0le-lf746, raw43-b0le-lf-triple, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, raw36-shards, raw36-b1rd, raw36-reclassify, raw36-far-discover, raw36-witness, raw36-counterexample, raw36-open-depth, raw36-scan-long, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw43-b0le-lf746, raw43-b0le-lf-triple, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw36_child:
         description: 'C1 move index 0..23 for the Raw36 six-hole child audit (F-targets are symmetry aliases)'
@@ -64,7 +64,7 @@ permissions:
   actions: read
 jobs:
   check:
-    if: inputs.target != 'raw36-scan-long' && inputs.target != 'raw36-open-depth' && inputs.target != 'raw36-witness' && inputs.target != 'raw36-far-discover' && inputs.target != 'raw36-reclassify' && inputs.target != 'raw36-shards' && inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'raw113-shard' && inputs.target != 'raw113-compose' && inputs.target != 'canonical62-raw112-raw58' && inputs.target != 'canonical62-preflight'
+    if: inputs.target != 'raw36-scan-long' && inputs.target != 'raw36-open-depth' && inputs.target != 'raw36-witness' && inputs.target != 'raw36-far-discover' && inputs.target != 'raw36-reclassify' && inputs.target != 'raw36-shards' && inputs.target != 'raw36-b1rd' && inputs.target != 'raw109-sharded' && inputs.target != 'raw108-sharded' && inputs.target != 'raw108-resume' && inputs.target != 'raw108-selected' && inputs.target != 'raw108-lb0' && inputs.target != 'raw108-lb0-reuse' && inputs.target != 'raw108-compose' && inputs.target != 'raw58-shard' && inputs.target != 'raw58-prepare' && inputs.target != 'raw58-compose' && inputs.target != 'raw119-shard' && inputs.target != 'raw119-compose' && inputs.target != 'raw113-shard' && inputs.target != 'raw113-compose' && inputs.target != 'canonical62-raw112-raw58' && inputs.target != 'canonical62-preflight'
     runs-on: ubuntu-latest
     # Raw58 child and parent closures can exceed 60m; use 2 Lean workers for child audits to reduce runner pressure.
     timeout-minutes: ${{ (inputs.target == 'raw58-child' || inputs.target == 'raw58-more3' || inputs.target == 'raw58-automata') && 120 || 60 }}
@@ -2406,6 +2406,49 @@ jobs:
             /tmp/a4-canonical62-preflight/canonical62-preflight.json
             /tmp/a4-canonical62-preflight/reachable-link-audit.json
           if-no-files-found: warn
+          retention-days: 30
+
+  raw36-b1rd:
+    if: inputs.target == 'raw36-b1rd'
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Check canonical Raw36 B1=0RD closure from original source
+        run: |
+          set -euo pipefail
+          root=im-results/agent29-raw36
+          work=/tmp/a29-raw36-b1rd
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python "$root/generate_b1rd.py"
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 1 --manifest "$work/manifest.json" \
+            --label raw36-b1rd --theorem BB6.Agent29Raw36B1RD.rd_cover --weighted-bound 85 \
+            --artifact-name raw36-b1rd-proof --provenance-input "$root/candidate.json" \
+            --provenance-input "$root/search.cjs" --provenance-input "$root/canonical_search.cjs" \
+            --provenance-input "$root/generate_b1rd.py" --provenance-input "$root/b1-9-recovered.tsv" \
+            --provenance-input "$root/b1-9-sweeps.jsonl" \
+            --provenance-input im-results/agent7-raw36-transfer/fixture.tsv.gz.b64 \
+            "$root/Raw36B1RD.lean" 2>&1 | tee /tmp/a29-raw36-b1rd.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a29-raw36-b1rd.log \
+            BB6.Agent29FastZipWeight.fastCheck_eq BB6.Agent29CanonicalFast.sound \
+            BB6.Agent29CanonicalFast.split24 BB6.Agent29Raw36B1RDSweep.M0.never \
+            BB6.Agent29Raw36B1RDSweep.M1.never BB6.Agent29Raw36B1RD.rd_bound BB6.Agent29Raw36B1RD.rd_cover
+          cp /tmp/a29-raw36-b1rd.log "$work/audit.log"
+      - name: Retain source-checked B1=0RD closure
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw36-b1rd-proof
+          path: /tmp/a29-raw36-b1rd/
+          if-no-files-found: error
           retention-days: 30
 
   raw36-shards:
