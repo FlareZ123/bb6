@@ -9,7 +9,7 @@ on:
         required: true
         default: legacy
         type: choice
-        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, mitm-synth, short150-pilot, short150-batch, exact-one-hole, long-sweep, cycle149, block149]
+        options: [legacy, full, full-prefix, resume, roster, pumps, cover, counter, pair143, roster143, ten143, cached, cover-sharded, frame150, linear151, sweep150, double150, glider151, glider148, far-hard, far-hard-alt, mitm-synth, grammar-sweep, short150-pilot, short150-batch, exact-one-hole, long-sweep, cycle149, block149]
       generation_run:
         description: Retained full-scan run with candidate tree artifacts
         type: string
@@ -1479,5 +1479,44 @@ jobs:
           path: |
             /tmp/agent5-mitm-${{ matrix.id }}/
             /tmp/agent5-mitm-check-${{ matrix.id }}/
+          if-no-files-found: warn
+          retention-days: 30
+
+  grammar-sweep:
+    if: inputs.mode == 'grammar-sweep'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.revision || github.sha }}
+      - name: Install source-compatible Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Original-source q0-148 parametric sweep validation
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py \
+            im-results/agent5-weighted-tnf-queue/Q0148BoundarySweep.lean \
+            --workdir /tmp/agent5-q0148-grammar-sweep --jobs 2 --lean lean \
+            --label agent5-q0148-grammar-parametric-sweeps \
+            --provenance-input im-results/agent5-weighted-tnf-queue/Q0148BoundarySweep.lean \
+            --provenance-input im-results/agent31-three-hole-tnf/SweepPumping.lean \
+            --provenance-input im-results/agent13-coverage/BB6Coverage.lean.xz.b64 \
+            2>&1 | tee /tmp/q0148-sweep-lean.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/q0148-sweep-lean.log; then exit 1; fi
+          grep -F "'BB6.Agent5Q0148BoundarySweep.transparentRight' depends on axioms:" \
+              /tmp/q0148-sweep-lean.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: agent5-q0148-grammar-sweep
+          path: |
+            /tmp/agent5-q0148-grammar-sweep/
+            /tmp/q0148-sweep-lean.log
           if-no-files-found: warn
           retention-days: 30
