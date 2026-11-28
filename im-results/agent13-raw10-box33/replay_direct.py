@@ -76,6 +76,7 @@ def run_direct(args):
     call(work/'rle_scan',-1)
     known,source={(14,17):(HARD_D14V17,'Box33D14Source'),(14,18):(HARD_D14V18,'Box33D14V18Source')}.get((d,v),({},None))
     cycles={}
+    late_fixed={}
     known_specs={}
     if (d,v)==(17,22):
         hard=json.loads((HERE/'d17v22-hard.json').read_text())['machines']
@@ -117,6 +118,13 @@ def run_direct(args):
         for i,record in bank.items():
             nm=f'pair{i}';known[tuple(record['machine'])]=nm
             known_specs[nm]=('Box33D17V24PairBlocks',f'BB6.Agent13.Box33D17V24PairBlocks.M{i}','')
+        full=json.loads((HERE/'d17v24-full-automata.json').read_text())
+        for i,record in full.items():
+            nm=f'v24bank{i}';known[tuple(record['machine'])]=nm
+            mod=f'Box33D17V24Bank{int(i)%4}'
+            known_specs[nm]=(mod,f'BB6.Agent13.{mod}.M{i}','')
+        for record in json.loads((HERE/'d17v24-full-residual.json').read_text())['late']:
+            late_fixed[tuple(record['machine'])]=tuple(record['witness'])
     if (d,v)==(17,21):
         known={
             (8,18,11,0,1,13,17,10,21,14,24,4):'m0',
@@ -137,7 +145,9 @@ def run_direct(args):
     unresolved=[]
     for l in open('rlehard-1.txt'):
         t=tuple(map(int,l.split()))
-        if t in cycles:
+        if t in late_fixed:
+            late[t]=late_fixed[t]
+        elif t in cycles:
             late[t]=cycles[t]
         elif t in known:
             late[t]=('known',known[t])
