@@ -1,0 +1,78 @@
+name: Agent17 Raw47 after accepted Raw112 Canonical38
+
+on:
+  workflow_dispatch:
+    inputs:
+      raw47_run_id:
+        description: 'Accepted Raw47 whole-parent run'
+        required: true
+        type: string
+        default: '46068688341'
+      raw112_run_id:
+        description: 'Accepted Raw112 whole-parent run'
+        required: true
+        type: string
+        default: '46146501930'
+      onele_run:
+        description: 'Accepted Raw39 1LE source run'
+        required: true
+        type: string
+        default: '46114235329'
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  consume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reclaim unrelated hosted SDKs
+        run: |
+          set -euo pipefail
+          df -h /
+          for folder in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$folder" ]]; then sudo rm -rf "$folder"; fi
+          done
+          df -h /
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Authenticate Raw112-first Canonical38 and consume Raw47
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RAW47_RUN_ID: ${{ inputs.raw47_run_id }}
+          RAW112_RUN_ID: ${{ inputs.raw112_run_id }}
+          ONELE_RUN: ${{ inputs.onele_run }}
+        run: |
+          set -euo pipefail
+          [[ "$RAW47_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$RAW112_RUN_ID" =~ ^[0-9]+$ ]]
+          [[ "$ONELE_RUN" =~ ^[0-9]+$ ]]
+          lean --version | grep -F '4.36.0-rc2'
+          python -m py_compile im-results/agent17-raw47-after-raw112/consume.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent17-raw47-after-raw112/consume.py \
+            --work /tmp/a17-raw47-after-raw112 \
+            --raw47-run-id "$RAW47_RUN_ID" \
+            --raw112-run-id "$RAW112_RUN_ID" \
+            --onele-run "$ONELE_RUN" \
+            | tee /tmp/a17-raw47-after-raw112.log
+          test -s /tmp/a17-raw47-after-raw112/evidence/canonical37-raw47-after-raw112.json
+          cat /tmp/a17-raw47-after-raw112/evidence/canonical37-raw47-after-raw112.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical37-raw47-after-raw112-evidence
+          path: |
+            /tmp/a17-raw47-after-raw112/evidence/
+            /tmp/a17-raw47-after-raw112.log
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
