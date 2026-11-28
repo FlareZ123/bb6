@@ -26,7 +26,7 @@ theorem two_transfers_offset (M A B T u0 u1 u2 r0 : Nat)
       push_cast
       omega
     _ = (M:Int)*((u2:Int)-(u1:Int))+
-        ((u0:Int)-(u1:Int)) := by ring
+        ((u0:Int)-(u1:Int)) := by grind
 
 /-- The offset belongs to a bounded asymmetric interval determined by
     the first two paired input heights. This is the paper certificate
