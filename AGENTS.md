@@ -31,6 +31,10 @@ At the 19 November 2026 inventory, `.github/workflows/` contained **502 workflow
 - Run the cheapest useful local preflight when available. After a real compiler diagnostic, do not rerun unchanged source or create a new workflow: repair the first failing declaration, then use the existing target for one focused acceptance run.
 - A claimed source proof must compile its exact dependency closure at a pinned toolchain/revision, fail on Lean errors, and expose transitive axiom profiles for exported theorems. Do not call a theorem kernel-checked if its dependency profile contains `sorryAx` or an unapproved oracle/axiom; report any `native_decide` or other trust dependency explicitly.
 
+### Accepted global-roster preflight before expensive consumer CI
+
+Before preparing or dispatching a global `CanonicalN → Canonical(N−k)` consumer, first confirm that **each proposed exact parent is still present on the strongest source-accepted predecessor**. For the currently accepted Canonical39 snapshot, run `python3 tools/preflight_canonical39_raw.py --accepted Canonical39 <raw IDs>`; add `--table <original 12-transition table>` when checking a single candidate. This read-only advisory gate is grounded in the reconstructed Canonical40 manifest plus the separately accepted Raw39 decrement. It would have rejected the redundant Raw83/85/106/79 consumer dispatches of 28 November 2026. A passing result is **not** source certification: the actual Lean consumer must still establish exact table identity, unique membership, full parent Cover, sound removal, and the theorem's transitive axiom profile. Check the current accepted stage in the research README first; do not silently apply this Canonical39 snapshot after a newer accepted successor is published. A prepared parent's score or its appearance in an older list is not evidence of current membership.
+
 ## Local Lean 4.36.0-rc2 bootstrap
 
 The supplied split files concatenate to an outer ZIP whose member is `lean-4.36.0-rc2-linux.tar.zst`. Extracting the ZIP alone does **not** install Lean; extract the inner Zstandard tar archive as well:
