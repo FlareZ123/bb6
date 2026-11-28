@@ -49,6 +49,12 @@ The Lean candidate supplies source statements:
 All quantifiers are universal over total compatible completions; this is
 not an empirical search or speculative numeric estimate.
 
+## Why the old cutoff can make a correct parent proof impossible
+
+This is not merely an optimization. The accepted [Raw13 one-hole exact-halting certificate](../../results/2026-11-28-raw13-hierarchical-carry-exact-halt-agent46.md) attains **44,423,003,584,937,617,011,264,491,061 primitive steps**. Its total halting completion extends the Raw13 cylinder whose three leading source transitions are `A0=1RB, B0=1RC, C0=1LA`; that cylinder also appears in the reconstructed Canonical40 raw-index audit (the latter's global identity remains a separate theorem obligation). The witness is already far larger than the historical cutoff **6,766,859**. Therefore a `Cover (WeightedBound 6766859)` of that *whole Raw13 parent* would be mathematically false: it would incorrectly exclude this witnessed halter. The champion score is vastly larger still.
+
+The parametric target-score approach avoids this false local precondition: a valid parent Cover at the actual champion score can coexist with known long halters while still supporting the exact global upper-bound argument. It does **not** automatically prove any such parent Cover. This distinction matters especially for parent classes that contain an explicit long-running halting completion. The finite roster proof should not accidentally make a local cutoff into a universal upper-bound obligation.
+
 ## Raw39 application
 
 Raw39 P has a [source-accepted dominance theorem](../../results/2026-11-28-raw39-dominant-child-equivalence-agent11.md):
