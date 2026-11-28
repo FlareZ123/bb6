@@ -25,6 +25,37 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Authenticate retained direct38 replay checkpoint
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          run_id=46136413104
+          expected_head=37bdd85684e7d3ba58bac6e6add8a6cf9e8d1c51
+          expected_digest='sha256:6aa153f8ecf7ea318fdcc00cf2c6faa942a083b5a3b7992dd8abd34f6751afbd'
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id" > /tmp/a3-resume-run.json
+          jq -e --arg head "$expected_head" \
+            '.conclusion == "cancelled" and .event == "workflow_dispatch" and .path == ".github/workflows/agent3-canonical38-direct.yml" and .head_sha == $head' \
+            /tmp/a3-resume-run.json
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts" > /tmp/a3-resume-artifacts.json
+          jq -e --arg digest "$expected_digest" \
+            '[.artifacts[] | select(.name == "canonical38-raw39-raw47-direct-delta" and .expired == false and .digest == $digest)] | length == 1' \
+            /tmp/a3-resume-artifacts.json
+      - name: Restore retained direct38 replay checkpoint
+        uses: actions/download-artifact@v4
+        with:
+          name: canonical38-raw39-raw47-direct-delta
+          path: /tmp/a3-direct-resume
+          run-id: 46136413104
+          github-token: ${{ github.token }}
+      - name: Locate authenticated Raw39 replay checkpoint
+        run: |
+          set -euo pipefail
+          report="$(find /tmp/a3-direct-resume -type f -path '*/raw39-kernel-replay/report.json' -print -quit)"
+          test -n "$report"
+          resume="$(dirname "$report")"
+          test -d "$resume/objects"
+          echo "RAW39_RESUME=$resume" >> "$GITHUB_ENV"
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
@@ -46,7 +77,8 @@ jobs:
           python im-results/agent3-canonical38-direct/consume.py \
             --work /tmp/a3-canonical38-direct \
             --raw47-run-id "$RAW47_RUN_ID" \
-            --onele-run "$ONELE_RUN" | tee /tmp/a3-canonical38-direct.log
+            --onele-run "$ONELE_RUN" \
+            --raw39-resume "$RAW39_RESUME" | tee /tmp/a3-canonical38-direct.log
           test -s /tmp/a3-canonical38-direct/canonical38-raw39-raw47-direct-delta/delta.json
           cat /tmp/a3-canonical38-direct/canonical38-raw39-raw47-direct-delta/delta.json
       - uses: actions/upload-artifact@v4
