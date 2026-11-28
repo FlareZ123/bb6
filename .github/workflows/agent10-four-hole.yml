@@ -554,6 +554,7 @@ jobs:
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
             --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
             --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean \
+            --override M44Data=im-results/agent38-raw43-pair/M44Data.lean \
             --manifest "$work/manifest.json" --label "raw43-$VARIANT" \
             --theorem "$theorem" --weighted-bound "$bound" --artifact-name raw43-extra-proof \
             --provenance-input "$root/spec_$VARIANT.json" --provenance-input "$root/generate.py" \
