@@ -48,11 +48,17 @@ theorem literal_codes :
       [26318896606190888, 27874661676483464, 27872991061794760] := by
   decide +kernel
 
+theorem member_via_sameTable (p : PartialMachine)
+    (h : prior.any (fun q => Q0ExhaustiveTree.sameTable q p) = true) :
+    p ∈ prior := by
+  obtain ⟨q,hq,he⟩ := List.any_eq_true.mp h
+  exact (Q0ExhaustiveTree.sameTable_sound he) ▸ hq
+
 theorem all_members_in_151 : ∀ p ∈ parents, p ∈ prior := by
   intro p hp
   simp [parents] at hp
   rcases hp with rfl | rfl | rfl <;>
-    exact (by decide +kernel)
+    exact member_via_sameTable _ (by decide +kernel)
 
 theorem exact_census :
     (prior.length,remaining.length) = (151,148) := by
