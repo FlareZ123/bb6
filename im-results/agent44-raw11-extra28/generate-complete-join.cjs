@@ -31,7 +31,7 @@ const source = [
     '\n  BB6.Agent47PhaseFrontier.sameTable_sound (by decide +kernel)'),
   '',
   'def certificates : BB6.Agent44Extra28CompleteJoin.Certificates := {',
-  ...children.map(x => `  c${x[0]} := by\n    intro m hm\n    change compatible (${term(x)}) m at hm\n    rw [exact${x[0]}] at hm\n    exact ${x[6]}.${x[8]} m hm`),
+  children.map(x => `  c${x[0]} := by\n    intro m hm\n    change compatible (${term(x)}) m at hm\n    rw [exact${x[0]}] at hm\n    exact ${x[6]}.${x[8]} m hm`).join(',\n'),
   '}',
   '',
   'theorem literal_complete :',
