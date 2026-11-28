@@ -71,8 +71,10 @@ theorem growth (n : Nat) :
   have h3 : run0 table (3*n+3) ⟨1,ones (3*n+3),[true]⟩ =
       some ⟨1,[],ones (3*n+4)⟩ := by
     have H := sweepL table 1 [] [] [true] [true] 1 bstep (3*n+3) [] [true]
-    have hs : ones (3*n+3)++[true] = ones (3*n+4) := by
-      rw [ones_snoc,show (3*n+3)+1=3*n+4 by omega]
+    have hs : rep [true] (3*n+3)++[true] = ones (3*n+4) := by
+      change ones (3*n+3)++[true] = ones (3*n+4)
+      simpa only [show (3*n+3)+1=3*n+4 by omega] using
+        ones_snoc (3*n+3)
     simpa only [Nat.one_mul,List.nil_append,List.append_nil,hs] using H
   have h4 : run0 table 1 ⟨1,[],ones (3*n+4)⟩ =
       some ⟨2,[true,true],ones (3*n+3)⟩ := by
@@ -92,6 +94,7 @@ theorem growth (n : Nat) :
         ⟨3,[false,false]++[true,true]++ones (3*n+3),[]⟩ := by
       unfold phase
       rw [show 3*(n+1)+2=3*n+5 by omega,ha]
+      simp only [List.append_assoc]
     simpa only [hb,List.append_assoc] using finish (ones (3*n+3))
   have H := join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6
   have ht : (2+1+(3*n+3)+1+3*(3*n+3)+4) = 12*n+20 := by omega
