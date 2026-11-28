@@ -55,7 +55,7 @@ theorem scanMany (n : Nat) (R : List Bool) :
     some ⟨3,[true]++rep [true,true] n++[false,true,true],R⟩ := by
   have h := sweepR p 3 [true] [] [false,true] [true,true] 2
     scanPair n [false,true,true] R
-  simpa only [List.nil_append,List.append_assoc] using h
+  simpa [List.append_assoc] using h
 
 theorem lastZero (L R : List Bool) :
     run0 p 3 ⟨3,[true]++L,[false,false]++R⟩ =
@@ -87,7 +87,12 @@ theorem carryZero (n : Nat) (R : List Bool) :
   have h2 := scanMany n ([false,false]++R)
   have h3 := lastZero (rep [true,true] n++[false,true,true]) R
   have h4 := clearMany (n+1) ([true]++R)
-  have h12 := join0 h1 h2
+  have h2' : run0 p (2*n)
+      ⟨3,[true,false,true,true],rep [false,true] n++[false,false]++R⟩ =
+      some ⟨3,[true]++rep [true,true] n++[false,true,true],
+        [false,false]++R⟩ := by
+    simpa only [List.append_assoc] using h2
+  have h12 := join0 h1 h2'
   have h123 := join0 h12 h3
   have h1234 := join0 h123 h4
   have hc : 1+(2*n+3+2*(n+1))=4*n+6 := by omega
@@ -100,7 +105,11 @@ theorem carryBlank (n : Nat) :
   have h2 := scanMany n []
   have h3 := lastBlank (rep [true,true] n++[false,true,true])
   have h4 := clearMany (n+1) [true]
-  have h12 := join0 h1 h2
+  have h2' : run0 p (2*n)
+      ⟨3,[true,false,true,true],rep [false,true] n⟩ =
+      some ⟨3,[true]++rep [true,true] n++[false,true,true],[]⟩ := by
+    simpa using h2
+  have h12 := join0 h1 h2'
   have h123 := join0 h12 h3
   have h1234 := join0 h123 h4
   have hc : 1+(2*n+3+2*(n+1))=4*n+6 := by omega
