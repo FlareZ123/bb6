@@ -29,9 +29,7 @@ D0=8 and 9 have zero stage-2 open leaves. All their late replay leaves (85 exact
 ordinary step 8. Twelve of the 20 TNF-admissible ordinary C1 codes are discharged by exact
 translated-cycle audits; only codes `[1,2,3,6,16,17,18,19]` remain as child-Cover
 hypotheses. Thus `BB6.Agent6D1EightReduce.cover` proves the complete D0=8 cylinder at
-every weighted bound `B ≥ 14` from exactly those eight child Covers. Local Lean
-4.36.0-rc2 checked the theorem against accepted normalized artifact 15093190882 with only
-`propext`, `Classical.choice`, and `Quot.sound`. The cap-250 replay census partitions
+every weighted bound `B ≥ 14` from exactly those eight child Covers. Pinned source gate [CI 46136123205](https://github.com/FlareZ123/bb6/actions/runs/46136123205), artifact **15259537646**, independently recompiled the theorem against accepted normalized artifact 15093190882 with Lean 4.36.0-rc2 and only `propext`, `Classical.choice`, and `Quot.sound`. The cap-250 replay census partitions
 the eight hard children into 1,476,355 terminal leaves plus the twelve immediate cycles
 (1,476,367 leaves total) and 7,371 cap-250 open leaves; those counts are discovery data,
 while the eight-child reduction itself is a kernel theorem.
