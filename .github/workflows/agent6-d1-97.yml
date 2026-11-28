@@ -19,6 +19,12 @@ jobs:
           ref: ${{ inputs.source_sha }}
       - uses: actions/download-artifact@v4
         with:
+          name: agent3-raw139-normalized-cryptids-scan
+          run-id: 45767740664
+          github-token: ${{ github.token }}
+          path: .tmp/base
+      - uses: actions/download-artifact@v4
+        with:
           name: agent6-d6-d9-reductions-checked
           run-id: 46138720868
           github-token: ${{ github.token }}
@@ -67,6 +73,7 @@ jobs:
       - name: Audit child proofs and check 97-machine composition
         run: |
           set -euo pipefail
+          base="$(realpath .tmp/base/build)"
           map="$(realpath .tmp/map/a6-reductions/build)"
           core="$(realpath .tmp/core/core)"
           d8c1="$(realpath .tmp/d8c1/src)"
@@ -81,7 +88,8 @@ jobs:
             grep -F "'D${d0}C$code.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$root/src/logs/D${d0}C${code}Parent.log"
             ! grep -REq 'sorryAx|ofReduceBool' "$root/src/logs"
           done
-          lp="$map:$d8c1:$d8c3:$d8c6:$d9c2:$d9c6:$core"
+          LEAN_PATH="$base" lean -o "$map/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean > .tmp/d1zero.log
+          lp="$map:$base:$d8c1:$d8c3:$d8c6:$d9c2:$d9c6:$core"
           LEAN_PATH="$lp" lean -o "$map/D1EightFive.olean" im-results/agent6-raw139-d1-zeroRD/D1EightFive.lean | tee .tmp/d8five.log
           LEAN_PATH="$lp" lean -o "$map/D1NineFour.olean" im-results/agent6-raw139-d1-zeroRD/D1NineFour.lean | tee .tmp/d9four.log
           LEAN_PATH="$lp" lean -o "$map/D1SecondLevel97.olean" im-results/agent6-raw139-d1-zeroRD/D1SecondLevel97.lean | tee .tmp/d97.log
