@@ -5,22 +5,22 @@ namespace BB6.Agent9CyclicExamples
 open BB6.Agent9ReturnGCD BB6.Agent45.DelayedCarry BB6.Agent9CyclicTraceShort
 
 /-- A non-coprime example (gcd(9,6)=3): no equal or opposite
-    delayed-carry factors at shift 9*2^r of length 2n+16. -/
+    delayed-carry factors at shift 9*2^r of length 2n+15. -/
 theorem no_nine_shift {n m W a : Nat}
     (hn : 14≤n) (heven : n%2=0) (ht : Trace n m W a)
     (i r : Nat) (flip : Bool)
-    (hp : i+9*2^r+(2*n+16)≤m)
-    (hrep : ∀ j<2*n+16,
+    (hp : i+9*2^r+(2*n+15)≤m)
+    (hrep : ∀ j<2*n+15,
       bit W (i+9*2^r+j)=
         if flip then 1-bit W (i+j) else bit W (i+j)) : False := by
-  apply trace_no_odd_short_repeat hn heven ht i r 9 6 (n+7) flip
+  apply trace_no_odd_short_repeat hn heven ht i r 9 6 (n+6) flip
   · decide
   · decide
   · decide
   · unfold total
     rw [Nat.pow_add]
-    change 9*(7*2^n+6+1)<2^n*128
-    have hpos := Nat.two_pow_pos n
+    change 9*(7*2^n+6+1)<2^n*64
+    have hpow : 2^14≤2^n := Nat.pow_le_pow_right (by decide) (by omega)
     omega
   · omega
   · intro j hj
