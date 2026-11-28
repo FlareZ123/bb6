@@ -143,6 +143,12 @@ This is important: positivity of the D coordinate at only three finite boundarie
 
 The slopes return cyclically after one complete typed word, since its start/end are consecutive copy boundaries. This is the exact finite source of the strict cone used by the older triple-word valuation-packing argument; no infinite-state positivity has been smuggled into a finite theorem.
 
+## Parity-free primitive gap-word exclusion from the new sharp packing theorem
+
+The new **exact capacity theorem** [sharp four-adic signed packing](../../results/2026-11-28-sharp-signed-valuation-packing-agent22.md) upgrades the primitive-period inference, not just the numeric constant. Consider a typed word W whose *underlying positive-j word* is itself primitive and contains a letter j>1. When many copies force an integer-affine first-coordinate slope, the strict finite cone (4) supplies positive **integer** slopes s_i with `4^j_i*s_(i+1)=s_i+T`, `0<3*s_i<T`, and cyclic phase return after W. There is no need to infer evenness here. The sharp capacity theorem with K=T and `J=sum j_i` yields `15J<=2T<=14J` when `T>=15`, a contradiction. If T<15, the exact capacity enumerates all seven possible typed words with some j>1, each with `U(T)<J`; none can be a primitive integer-slope cycle. Consequently **no positive integer affine slope exists for a primitive j-period with a positive F-run**, even without the source E/S same-parity guard.
+
+If the typed period consists of **two** copies of a primitive positive-j period with opposite E/S type, the word's full rank increment is larger (T can exceed 7J for the primitive subperiod); the parity-based half-rank reduction K=T/2 and the earlier 6J bound remain necessary. In both cases the full signed source-word-to-cyclic-slope Lean composition remains an open formal task. No BB429 whole-machine conclusion follows.
+
 ## Primitive typed-period no-go (paper composition)
 
 If W is the **shortest valid typed period** and its underlying positive-j word has primitive gap period `(j_1,...,j_a)` containing j>1, the existing [ValuationCyclic.lean](ValuationCyclic.lean) and [ValuationEdges.lean](ValuationEdges.lean) prove that a cyclic positive integer slope sequence of the form (6) would require `K >= 6*t+1`, where `t=sum_(i=1)^a j_i`.
