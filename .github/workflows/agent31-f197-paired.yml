@@ -14,15 +14,21 @@ on:
           - at-monoid-growth
           - epoch-marker
           - self-embedding
+          - computer-certificate
+          - blank-root
         default: paired
 
 jobs:
   kernel-check:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Verify exact standalone F197 certificate
+        if: ${{ inputs.target == 'computer-certificate' }}
+        run: python3 im-results/agent2-f197-sweep/verify_nonhalt.py
       - name: Install pinned Lean 4.36.0-rc2
+        if: ${{ inputs.target != 'computer-certificate' }}
         run: |
           curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
           sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
@@ -98,7 +104,7 @@ jobs:
           ! grep -q sorryAx /tmp/epoch-marker.log
 
       - name: Check F197 self-embedding from generated finite certificates
-        if: ${{ inputs.target == 'self-embedding' }}
+        if: ${{ inputs.target == 'self-embedding' || inputs.target == 'blank-root' }}
         shell: bash
         run: |
           set -euo pipefail
@@ -108,6 +114,9 @@ jobs:
           mkdir -p "$b"
           python3 "$e/generate_lean_trace.py" "$b"
           python3 "$e/generate_packed_banks.py" "$b"
+          if [ "${{ inputs.target }}" = "blank-root" ]; then
+            python3 "$e/generate_root_trace.py" "$b"
+          fi
           cp "$d/Macro.lean" "$b/"
           for m in PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryBulk TraceLogic PackedCheck SeedCore RootCore; do
             cp "$e/$m.lean" "$b/"
@@ -126,5 +135,11 @@ jobs:
           printf '%s\n' OpBank*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
           printf '%s\n' SelfPre*.lean SelfPost*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
           lean -j 1 -o SelfTheorem.olean SelfTheorem.lean | tee -a "$RLOG"
+          if [ "${{ inputs.target }}" = "blank-root" ]; then
+            compile RootStates.lean
+            printf '%s\n' RootBank*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
+            printf '%s\n' RootPart*.lean | xargs -P 2 -n 1 bash -eo pipefail -c 'compile "$0"'
+            compile RootTheorem.lean
+          fi
           ! grep -q sorryAx "$RLOG"
           python3 "$e/verify_nonhalt.py"
