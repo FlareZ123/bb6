@@ -63,7 +63,6 @@ def Good : Queue → Prop
 theorem normal_final_good (c : Nat) (hc : 0 < c) :
     Good (.more 2 1 (.final (c+5))) := by
   simp [Good]
-  omega
 
 /-- Exact right-run rewrite for a normal A triad, with a nonfinal third run. -/
 theorem normal_more_good (c g : Nat) (tail : Queue)
@@ -129,7 +128,7 @@ theorem b_final_good (a b : Nat)
   change (2 % 8 = 2 ∨ 2 % 8 = 6) ∧ 0 < 2 ∧ 5 ≤ 5 ∧
     ((a-1 = 1) ∨ (((a-1) % 8 = 1 ∨ (a-1) % 8 = 5) ∧ 5 ≤ a-1)) ∧
     GoodTail (.final (b+3))
-  exact ⟨by omega, by omega, by omega, hgap, by simp [GoodTail]; omega⟩
+  exact ⟨by omega, by omega, by omega, hgap, by simp [GoodTail]⟩
 
 /-- Exact right-run rewrite for a nonfinal B triad. -/
 theorem b_more_good (a b g : Nat) (tail : Queue)
@@ -217,7 +216,8 @@ theorem good_step (q : Queue) (d : Nat) (hd : d % 4 = 0)
                         have hc : 0 < c := by
                           simpa [GoodTail] using hTail
                         by_cases hb5 : b = 5
-                        · refine ⟨.carry, .more (a+d+4) 1 (.final (c+5)), ?_, ?_⟩
+                        · subst b
+                          refine ⟨.carry, .more (a+d+4) 1 (.final (c+5)), ?_, ?_⟩
                           · exact Step.carryFinal haPos hc hd
                           · exact carry_final_good a d c ha hd hc
                         · have hb6 : 6 ≤ b := by omega
@@ -230,7 +230,8 @@ theorem good_step (q : Queue) (d : Nat) (hd : d % 4 = 0)
                           simpa [GoodTail] using hTail
                         rcases ht with ⟨hc, hg2, hTail2⟩
                         by_cases hb5 : b = 5
-                        · refine ⟨.carry,
+                        · subst b
+                          refine ⟨.carry,
                             .more (a+d+4) 1 (.more (c+5) (g2-2) tail2), ?_, ?_⟩
                           · exact Step.carryMore haPos hc hd hg2
                           · exact carry_more_good a d c g2 tail2 ha hd hc hg2 hTail2
@@ -276,7 +277,7 @@ theorem run_safe (carry : Nat → Nat)
 def initial : Queue := .more 2 1 (.more 5 1 (.final 7))
 
 theorem initial_good : Good initial := by
-  decide
+  simp [initial, Good, GoodTail]
 
 /-- Every finite prefix of the right-run execution from the C₂ checkpoint
     exists and remains inside the source-triad guard domain. -/
