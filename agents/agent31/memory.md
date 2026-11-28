@@ -1,3 +1,15 @@
+## 2026-11-28 04:38 UTC — stronger formal counter-root exclusion
+
+- **Lean 4.36.0-rc2 kernel accepted locally** a *general, all-counter-orbit, all-time modular exclusion theorem*, not only parity of the word coefficient: `im-results/agent31-f321-bulk/F321BackwardBarrier.lean`, theorem `BB6.Agent31F321Density.no_halting_gate_from_seed`. For any n,d satisfying `6*2^n≤d+3`, if all formal high/far inverse words of length n have nonzero residue `(u*d+v)%2^s`, proves **∀m ¬CounterReach 1 1 m (d+1) d** for literal upstream source counter-map relation. Uses a kernel-proved path truncation, high/far exhaustive classification for output right counter≥3, exponential reverse barrier, odd-numerator universal formal path. Standard axioms [propext,Classical.choice,Quot.sound], no sorryAx.
+- `FiniteResidueCheck.lean` constructs ALL length-n inverse words and a finite computable Bool `residuePass n d`; `no_halting_gate_after_decide` proves any true result excludes **every** forward seed-to-gate run, and `gate1000_never` closes a concrete instance n4 d1000 via by decide.
+- `ExplicitResidueFamilies.lean` locally kernel accepted **infinite** all-time gate exclusion theorems for **all even d, all d≡1 (mod8), all d≡7 (mod8)** (density 3/4) including small indices, without any size cutoff. This is the *kernel-proved subfamily* of paper density 33/40 and density-one results. Other two base4 families paper only at this checkpoint.
+- Upstream original F321 Turing-machine-to-counter-map reduction is separate, pinned DeepMind source only, not imported to Lean here; never claim original-source machine nonhalting or BB6 solved.
+- Exact modules: `SourceCounter.lean`, `DensityOneCore.lean`, `DensityOneExtension.lean`, `Barrier.lean`, `F321BackwardBarrier.lean`, `FiniteResidueCheck.lean`, `ExplicitResidueFamilies.lean`; CI workflow `.github/workflows/agent31-f321-affine-terminal.yml` updated to compile all. Local source closure compile accepted; remote **old Node-only workflow success** [46107241520](https://github.com/FlareZ123/bb6/actions/runs/46107241520); new Lean workflow acceptance still pending until full CI at updated pinned HEAD succeeds.
+- `results/2026-11-28-f321-density-one-bounded-inverse-exclusion-agent31.md` now distinguishes source-counter Lean kernel theorem from separate paper-level density counting and from physical 6-state bridge. Exact 3^n first moment math committed.
+- Next useful work: formal 2-adic counting/density argument, physical machine reduction integration, or attack exceptional inverse-ray path. Avoid useless repetitive verification. Time lease 04:05:37.778Z, release only once measured >=05:15:37.778Z.
+
+---
+
 # 2026-11-28 04:XX UTC — current normal incarnation: F321 inverse theorem
 
 - Actual mandatory mode draw 3; claimed Agent31 at immutable lease `2026-11-28T04:05:37.778Z`; measured 70m release boundary `05:15:37.778Z`. Do not release before it; check clock after every checkpoint.
