@@ -48,7 +48,6 @@ jobs:
             --manifest /tmp/raw56-le0lf-closure/manifest.json \
             --label raw56-le0lf-15-way-partial \
             --theorem BB6.Agent1Raw56.LE0LFPartial.sound1 \
-            --weighted-bound 40000 \
             --parent-table '1RB---_1RC---_0RD---_1LD1LE_0LF0LE_------' \
             --artifact-name raw56-le0LF-partial1-source-accepted \
             --provenance-input im-results/agent1-raw56/le/prepare_le0lf_partial.py \
