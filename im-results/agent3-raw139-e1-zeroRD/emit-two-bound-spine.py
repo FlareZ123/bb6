@@ -126,8 +126,8 @@ def build(plan):
             "",
             f"theorem {hname(i)} (audits : Audits) (hOrd : CheckedAudits audits)",
             "    (safe3506 : Safe3506) :",
-            f"    check finiteBound largeBound {pname(i)} ({tname(i)} audits safe3506) = true := by",
-            f"  simp only [{tname(i)}, check, Bool.and_eq_true]",
+            f"    BB6.Agent3TwoBoundAudit.check finiteBound largeBound {pname(i)} ({tname(i)} audits safe3506) = true := by",
+            f"  simp only [{tname(i)}, BB6.Agent3TwoBoundAudit.check, Bool.and_eq_true]",
             "  refine ⟨by decide +kernel, allMoves_of _ ?_⟩",
             "  intro mv",
             "  rcases mv with ⟨w,r,q⟩",
@@ -142,7 +142,7 @@ def build(plan):
         ]
         for code,where,goal,needed,body in refs:
             if goal=="spine":
-                target=f"check finiteBound largeBound (refine {pname(i)} {slot(read)} (some {move(code)})) ({body}) = true"
+                target=f"BB6.Agent3TwoBoundAudit.check finiteBound largeBound (refine {pname(i)} {slot(read)} (some {move(code)})) ({body}) = true"
             elif goal=="ordinary":
                 target=f"packedPrefixCheck finiteBound (refine {pname(i)} {slot(read)} (some {move(code)})) (audits {needed}) = true"
             else:
