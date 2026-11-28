@@ -5,20 +5,21 @@ set_option maxHeartbeats 0
 namespace BB6.Agent16Raw44B1RC_C1RF
 open BB6Coverage BB6Coverage.Agent31Pump BB6Coverage.Agent50Zipper
 
-/-- Raw44, B1=0RC, C1=0RF, F0=0RD, F1=1RD, E1=0RF.
-    A1 and E0 remain undefined: 25^2 compatible complete tables. -/
+/-- Raw44, B1=0RC, C1=0RF, E0=0RD, E1=1RD, F1=0RE.
+    A1 and F0 remain undefined: 25^2 compatible complete tables.
+    This is the E/F state-renaming of the certified C1=0RE two-hole growth table. -/
 def table : PartialMachine := fun s =>
   match s.1.val, s.2 with
   | 0, false => some (some ⟨true, true, 1⟩)
   | 1, false => some (some ⟨true, true, 2⟩)
   | 1, true  => some (some ⟨false, true, 2⟩)
   | 2, false => some (some ⟨false, true, 3⟩)
-  | 2, true  => some (some ⟨false, true, 4⟩)
+  | 2, true  => some (some ⟨false, true, 5⟩)
   | 3, false => some (some ⟨true, false, 3⟩)
   | 3, true  => some (some ⟨true, false, 1⟩)
-  | 4, true  => some (some ⟨false, true, 5⟩)
-  | 5, false => some (some ⟨false, true, 3⟩)
-  | 5, true  => some (some ⟨true, true, 3⟩)
+  | 4, false => some (some ⟨false, true, 3⟩)
+  | 4, true  => some (some ⟨true, true, 3⟩)
+  | 5, true  => some (some ⟨false, true, 4⟩)
   | _, _ => none
 
 def ones (n : Nat) : List Bool := rep [true] n
