@@ -57,8 +57,15 @@ table, this closes a whole four-slot-freedom product uniformly. -/
 theorem every_parent_checked :
     ∀ (b d : Bool) (e : Fin 3),
       LocalOK (parent b d e) (masked invariantMask) := by
-  simp only [LocalOK]
-  decide +kernel
+  have h :
+      ∀ (b d : Bool) (e : Fin 3) (q : Fin 6)
+        (l2 l1 c r1 r2 : Bool),
+        localStepBoolean (parent b d e) (masked invariantMask)
+          q l2 l1 c r1 r2 = true := by
+    decide +kernel
+  intro b d e
+  exact localOK_of_check (parent b d e) (masked invariantMask)
+    (h b d e)
 
 theorem never (b d : Bool) (e : Fin 3)
     (m : Machine) (hm : compatible (parent b d e) m) :
