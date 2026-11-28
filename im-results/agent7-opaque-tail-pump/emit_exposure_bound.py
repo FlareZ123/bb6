@@ -28,7 +28,11 @@ open BB6.Agent50TNFPilot BB6.Agent7D100ExposureBridge
 open BB6.Agent29FastZipWeight
 open {srcns}
 theorem hroot : table initialSlot = some (some ⟨true,true,1⟩) := by decide
-theorem hno : weightedTNFNoAssignedHalt table := by decide
+theorem hno : weightedTNFNoAssignedHalt table := by
+  intro s
+  rcases s with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
 theorem query : zipRead table {n} = some ({q},{a}) := by
   exact zipRead_of_run0 table {n} _ reached
 theorem hrest : restOK table ({q},{a}) = true := by decide
