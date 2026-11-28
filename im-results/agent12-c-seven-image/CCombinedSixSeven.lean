@@ -18,6 +18,10 @@ def strictResidue26 (r : Nat) : Prop :=
   r%4=0 ∨ r%16=15 ∨ r%64=13 ∨ r%64=38 ∨
   r%32=21 ∨ r%32=25
 
+instance (r : Nat) : Decidable (strictResidue26 r) := by
+  unfold strictResidue26
+  infer_instance
+
 /-- The six separately proved sectors are exactly the residue predicate
     after the linear coordinate r=29u+v. -/
 theorem strict_sector_iff_residue26 (u v : Nat) :
@@ -68,7 +72,7 @@ theorem exactly_six_not_seven_residue26 (u v : Nat)
     0,...,63 the predicate contains 26 residues. -/
 theorem strict_residue26_count :
     ((List.range 64).filter (fun r => decide (strictResidue26 r))).length = 26 := by
-  native_decide
+  decide
 
 #print axioms strict_sector_iff_residue26
 #print axioms exactly_six_not_seven_residue26
