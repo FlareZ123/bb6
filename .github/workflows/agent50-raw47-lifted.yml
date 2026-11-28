@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-growth-f-conjugates, raw34-f-right-ray, raw34-ef-left-rays, raw34-ef-left-audit, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-missing-ef-third, raw34-f-e-cycles-audit, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1136,6 +1136,52 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+
+  raw34-growth-f-conjugates:
+    if: inputs.mode == 'raw34-growth-f-conjugates'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source check two F-conjugate unbounded sweep-pump theorems
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-f-growth
+          mkdir -p "$W"
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 4 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent40Raw34ConjugateGrowth.tripleF_never \
+            --theorem BB6.Agent40Raw34ConjugateGrowth.alternatingF_never \
+            --artifact-name raw34-two-F-conjugate-growth-pumps \
+            im-results/agent40-raw34-frontier/Raw34ConjugateGrowthPumps.lean \
+            2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('triple_eq','alternating_eq','compatible_perm',
+                       'transport_never','tripleF_never','alternatingF_never'):
+              full='BB6.Agent40Raw34ConjugateGrowth.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: two source-proved F-conjugate unbounded growth-pump Raw34 cylinders')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-F-conjugate-unbounded-pump-sources
+          path: /tmp/a40-raw34-f-growth/
+          if-no-files-found: warn
+          retention-days: 30
 
   raw34-f-right-ray:
     if: inputs.mode == 'raw34-f-right-ray'
