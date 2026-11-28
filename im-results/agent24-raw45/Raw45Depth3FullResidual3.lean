@@ -1,0 +1,661 @@
+import ZipThreeHoleAudit
+import NGramCertificate
+set_option maxRecDepth 100000
+set_option maxHeartbeats 0
+
+namespace BB6.Agent24Raw45Depth3Full3
+open BB6Coverage BB6.Agent31ThreeHole BB6.Agent10ZipAudit BB6.Agent13BlankDelay
+open BB6.Agent1NGram
+
+/-- Depth-three Raw45 residual with four undefined rows A1,C1,E0,F1. -/
+def parent : PartialMachine := fun s => match s with
+  | (0,false) => some (some ⟨true,true,1⟩)
+  | (0,true) => none
+  | (1,false) => some (some ⟨true,true,2⟩)
+  | (1,true) => some (some ⟨false,false,4⟩)
+  | (2,false) => some (some ⟨false,true,3⟩)
+  | (2,true) => none
+  | (3,false) => some (some ⟨true,false,3⟩)
+  | (3,true) => some (some ⟨true,true,1⟩)
+  | (4,false) => none
+  | (4,true) => some (some ⟨false,true,5⟩)
+  | (5,false) => some (some ⟨false,true,1⟩)
+  | (5,true) => none
+  | _ => none
+
+theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide
+theorem parent_nohalt : weightedTNFNoAssignedHalt parent := by
+  intro slot
+  rcases slot with ⟨q,b⟩
+  have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide
+
+def ngramP0 : PartialMachine := fun s => match s with
+  | (0,false) => some (some ⟨true,true,1⟩)
+  | (0,true) => none
+  | (1,false) => some (some ⟨true,true,2⟩)
+  | (1,true) => some (some ⟨false,false,4⟩)
+  | (2,false) => some (some ⟨false,true,3⟩)
+  | (2,true) => some (some ⟨false,false,4⟩)
+  | (3,false) => some (some ⟨true,false,3⟩)
+  | (3,true) => some (some ⟨true,true,1⟩)
+  | (4,false) => some (some ⟨true,false,4⟩)
+  | (4,true) => some (some ⟨false,true,5⟩)
+  | (5,false) => some (some ⟨false,true,1⟩)
+  | (5,true) => some (some ⟨false,false,0⟩)
+  | _ => none
+def ngramP1 : PartialMachine := fun s => match s with
+  | (0,false) => some (some ⟨true,true,1⟩)
+  | (0,true) => none
+  | (1,false) => some (some ⟨true,true,2⟩)
+  | (1,true) => some (some ⟨false,false,4⟩)
+  | (2,false) => some (some ⟨false,true,3⟩)
+  | (2,true) => some (some ⟨true,false,3⟩)
+  | (3,false) => some (some ⟨true,false,3⟩)
+  | (3,true) => some (some ⟨true,true,1⟩)
+  | (4,false) => some (some ⟨true,false,4⟩)
+  | (4,true) => some (some ⟨false,true,5⟩)
+  | (5,false) => some (some ⟨false,true,1⟩)
+  | (5,true) => some (some ⟨false,false,0⟩)
+  | _ => none
+def ngramC : Cert := ⟨0,0xf,0xf,#[(.branch (.branch .leaf .leaf) .empty),.empty,(.branch (.branch .leaf .leaf) (.branch .leaf .leaf)),(.branch (.branch .leaf .leaf) (.branch .leaf .leaf)),(.branch (.branch .empty .leaf) (.branch .empty .leaf)),(.branch (.branch .empty .leaf) (.branch .empty .leaf)),(.branch .leaf (.branch .leaf .leaf)),(.branch .leaf (.branch .leaf .leaf)),(.branch (.branch .leaf .leaf) (.branch .leaf .leaf)),(.branch (.branch .leaf .leaf) (.branch .leaf .leaf)),(.branch .leaf .leaf),(.branch .leaf .leaf)]⟩
+theorem ngram_ok0 : check ngramP0 ngramC = true := by decide
+theorem ngram_ok1 : check ngramP1 ngramC = true := by decide
+theorem ngram_never0 (m : Machine) (hm : compatible ngramP0 m) : NeverHalts m :=
+  never ngramP0 ngramC ngram_ok0 m hm
+theorem ngram_never1 (m : Machine) (hm : compatible ngramP1 m) : NeverHalts m :=
+  never ngramP1 ngramC ngram_ok1 m hm
+
+/-- Exact proof-carrying cut: 23 splits, 472 side cycles, 56 last-hole leaves,
+    and two width-one n-gram-proven leaves. Latest first-hole query is step 43. -/
+def tree : Audit :=
+  .split 10 (4,false) (byMove [
+      .cycle 0 11 true (0),
+      .cycle 1 10 true (1),
+      .cycle 21 1 false (1),
+      .cycle 26 1 false (2),
+      .cycle 23 1 false (3),
+      .cycle 1 11 true (1),
+      .cycle 0 11 true (0),
+      .cycle 1 10 true (1),
+      .cycle 38 1 false (8),
+      .cycle 20 1 false (2),
+      .cycle 10 1 true (2),
+      .cycle 1 11 true (1),
+      .cycle 1 14 true (1),
+      .split 12 (2,true) (byMove [
+            .split 13 (0,true) (byMove [
+                    .cycle 0 15 false (3),
+                    .cycle 14 13 false (0),
+                    .cycle 0 15 false (3),
+                    .cycle 1 14 true (0),
+                    .cycle 25 4 false (3),
+                    .last 14 (5,true),
+                    .cycle 0 14 true (0),
+                    .cycle 1 13 true (1),
+                    .cycle 28 1 false (2),
+                    .cycle 25 1 false (1),
+                    .cycle 10 4 true (1),
+                    .cycle 1 14 true (1),
+                    .cycle 16 17 true (-2),
+                    .cycle 16 3 false (-1),
+                    .cycle 11 5 false (2),
+                    .cycle 31 1 false (1),
+                    .last 15 (5,true),
+                    .last 14 (5,true),
+                    .cycle 0 14 true (0),
+                    .cycle 1 13 true (1),
+                    .cycle 2 12 true (1),
+                    .cycle 1 18 true (1),
+                    .cycle 18 6 false (2),
+                    .cycle 1 14 true (1)
+                  ]),
+            .cycle 24 4 false (4),
+            .cycle 16 1 false (0),
+            .cycle 1 13 true (1),
+            .cycle 1 14 true (1),
+            .split 13 (5,true) (byMove [
+                    .last 14 (0,true),
+                    .cycle 14 13 false (0),
+                    .cycle 30 1 false (0),
+                    .cycle 1 14 true (0),
+                    .cycle 25 4 false (3),
+                    .cycle 14 14 true (-1),
+                    .cycle 0 14 true (0),
+                    .cycle 1 13 true (1),
+                    .cycle 28 1 false (2),
+                    .cycle 25 1 false (1),
+                    .cycle 10 4 true (1),
+                    .cycle 1 14 true (1),
+                    .last 14 (0,true),
+                    .cycle 16 3 false (-1),
+                    .cycle 1 20 true (-1),
+                    .cycle 31 1 false (1),
+                    .cycle 15 4 false (1),
+                    .cycle 14 6 false (0),
+                    .cycle 0 14 true (0),
+                    .cycle 1 13 true (1),
+                    .cycle 2 12 true (1),
+                    .cycle 1 18 true (1),
+                    .cycle 18 6 false (2),
+                    .cycle 1 14 true (1)
+                  ]),
+            .cycle 0 13 true (0),
+            .cycle 1 12 true (1),
+            .cycle 1 26 true (1),
+            .cycle 3 10 true (1),
+            .cycle 10 3 true (1),
+            .cycle 1 13 true (1),
+            .split 13 (0,true) (byMove [
+                    .cycle 1 18 true (-1),
+                    .cycle 87 13 false (0),
+                    .cycle 23 1 false (1),
+                    .cycle 11 4 true (0),
+                    .cycle 17 4 false (1),
+                    .last 14 (5,true),
+                    .cycle 0 15 true (0),
+                    .cycle 16 5 false (0),
+                    .cycle 1 18 true (1),
+                    .cycle 1 14 true (1),
+                    .cycle 1 15 true (1),
+                    .last 14 (5,true),
+                    .cycle 14 9 false (1),
+                    .cycle 16 3 false (-1),
+                    .cycle 29 18 true (0),
+                    .cycle 23 1 false (-1),
+                    .last 15 (5,true),
+                    .last 14 (5,true),
+                    .cycle 0 15 true (0),
+                    .cycle 1 16 true (1),
+                    .cycle 12 2 true (1),
+                    .cycle 1 14 true (1),
+                    .cycle 1 15 true (1),
+                    .last 14 (5,true)
+                  ]),
+            .cycle 16 4 false (2),
+            .cycle 16 18 true (-1),
+            .cycle 1 16 true (1),
+            .split 14 (5,true) (byMove [
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (1),
+                    .cycle 29 1 false (1),
+                    .cycle 34 1 false (2),
+                    .cycle 17 5 false (-1),
+                    .cycle 1 15 true (1),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (1),
+                    .cycle 50 1 false (8),
+                    .cycle 28 1 false (2),
+                    .cycle 10 5 true (1),
+                    .cycle 1 15 true (1),
+                    .cycle 1 18 true (1),
+                    .cycle 11 4 true (1),
+                    .cycle 1 16 true (1),
+                    .cycle 26 1 false (0),
+                    .cycle 17 5 false (-1),
+                    .cycle 18 7 false (0),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (1),
+                    .cycle 2 13 true (1),
+                    .cycle 1 19 true (1),
+                    .cycle 17 7 false (1),
+                    .cycle 1 15 true (1)
+                  ]),
+            .split 13 (5,true) (byMove [
+                    .last 14 (0,true),
+                    .cycle 87 13 false (0),
+                    .cycle 22 1 false (-2),
+                    .cycle 11 4 true (0),
+                    .cycle 17 4 false (1),
+                    .cycle 1 18 true (-1),
+                    .last 14 (0,true),
+                    .cycle 16 5 false (0),
+                    .cycle 18 7 false (0),
+                    .cycle 1 14 true (1),
+                    .cycle 1 15 true (1),
+                    .cycle 1 15 true (1),
+                    .last 14 (0,true),
+                    .cycle 16 3 false (-1),
+                    .cycle 30 18 true (-1),
+                    .cycle 23 1 false (-1),
+                    .cycle 15 4 false (1),
+                    .cycle 14 6 false (0),
+                    .last 14 (0,true),
+                    .cycle 1 16 true (1),
+                    .cycle 12 2 true (1),
+                    .cycle 1 14 true (1),
+                    .cycle 1 15 true (1),
+                    .cycle 1 15 true (1)
+                  ]),
+            .cycle 0 13 true (0),
+            .cycle 1 12 true (1),
+            .cycle 2 11 true (1),
+            .cycle 1 17 true (1),
+            .cycle 6 8 true (1),
+            .cycle 1 13 true (1)
+          ]),
+      .cycle 1 12 true (1),
+      .cycle 18 1 false (0),
+      .split 13 (5,true) (byMove [
+            .split 16 (2,true) (byMove [
+                    .last 17 (0,true),
+                    .cycle 29 1 false (3),
+                    .cycle 20 1 false (0),
+                    .cycle 1 17 true (0),
+                    .proven ngramP0 ngram_never0,
+                    .last 18 (0,true),
+                    .cycle 0 17 true (0),
+                    .cycle 0 38 true (0),
+                    .cycle 1 34 true (0),
+                    .cycle 3 14 true (0),
+                    .cycle 10 7 true (0),
+                    .cycle 13 23 true (0),
+                    .last 17 (0,true),
+                    .cycle 21 1 false (1),
+                    .cycle 25 1 false (1),
+                    .proven ngramP1 ngram_never1,
+                    .cycle 0 19 true (0),
+                    .last 18 (0,true),
+                    .cycle 0 17 true (0),
+                    .cycle 1 16 true (0),
+                    .cycle 2 15 true (0),
+                    .cycle 18 22 true (1),
+                    .cycle 0 20 true (0),
+                    .last 36 (0,true)
+                  ]),
+            .cycle 1 16 true (0),
+            .cycle 15 1 false (1),
+            .cycle 14 1 false (0),
+            .cycle 14 1 false (0),
+            .split 16 (2,true) (byMove [
+                    .last 17 (0,true),
+                    .cycle 18 1 false (0),
+                    .cycle 19 1 false (1),
+                    .cycle 1 17 true (0),
+                    .cycle 28 1 false (4),
+                    .cycle 28 1 false (2),
+                    .cycle 0 17 true (0),
+                    .cycle 48 1 false (4),
+                    .cycle 26 1 false (2),
+                    .cycle 24 1 false (2),
+                    .cycle 10 7 true (0),
+                    .cycle 13 23 true (0),
+                    .last 17 (0,true),
+                    .cycle 18 1 false (0),
+                    .cycle 32 1 false (4),
+                    .cycle 30 1 false (4),
+                    .cycle 29 1 false (3),
+                    .cycle 13 4 true (0),
+                    .cycle 0 17 true (0),
+                    .cycle 1 16 true (0),
+                    .cycle 2 15 true (0),
+                    .cycle 18 22 true (1),
+                    .cycle 18 40 true (1),
+                    .cycle 69 1 false (3)
+                  ]),
+            .split 14 (0,true) (byMove [
+                    .cycle 0 15 true (0),
+                    .cycle 24 1 false (2),
+                    .cycle 16 1 false (2),
+                    .cycle 15 1 false (1),
+                    .cycle 15 1 false (1),
+                    .cycle 25 1 false (3),
+                    .cycle 0 15 true (0),
+                    .cycle 24 1 false (4),
+                    .cycle 16 1 false (4),
+                    .cycle 15 1 false (3),
+                    .cycle 15 1 false (3),
+                    .cycle 25 1 false (5),
+                    .cycle 28 1 false (4),
+                    .last 16 (2,true),
+                    .cycle 1 16 true (0),
+                    .cycle 15 1 false (1),
+                    .cycle 15 1 false (1),
+                    .cycle 17 1 false (1),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (0),
+                    .cycle 23 1 false (3),
+                    .cycle 29 1 false (5),
+                    .cycle 0 18 true (0),
+                    .cycle 0 32 true (0)
+                  ]),
+            .cycle 15 1 false (1),
+            .split 14 (2,true) (byMove [
+                    .cycle 0 15 true (0),
+                    .cycle 24 1 false (2),
+                    .cycle 16 1 false (2),
+                    .cycle 15 1 false (1),
+                    .cycle 15 1 false (1),
+                    .cycle 25 1 false (3),
+                    .cycle 0 15 true (0),
+                    .cycle 24 1 false (4),
+                    .cycle 16 1 false (4),
+                    .cycle 15 1 false (3),
+                    .cycle 15 1 false (3),
+                    .cycle 25 1 false (5),
+                    .cycle 28 1 false (4),
+                    .cycle 18 1 false (0),
+                    .cycle 1 16 true (0),
+                    .cycle 15 1 false (1),
+                    .cycle 15 1 false (1),
+                    .cycle 17 1 false (1),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (0),
+                    .cycle 23 1 false (3),
+                    .cycle 29 1 false (5),
+                    .cycle 19 1 false (5),
+                    .cycle 41 1 false (5)
+                  ]),
+            .cycle 1 14 true (0),
+            .cycle 25 1 false (5),
+            .cycle 25 1 false (5),
+            .cycle 19 1 false (1),
+            .split 15 (2,true) (byMove [
+                    .last 16 (0,true),
+                    .cycle 17 1 false (-1),
+                    .cycle 18 1 false (0),
+                    .cycle 1 19 true (0),
+                    .cycle 19 1 false (1),
+                    .cycle 13 3 false (1),
+                    .last 16 (0,true),
+                    .cycle 20 24 true (0),
+                    .cycle 27 1 false (1),
+                    .cycle 1 16 true (0),
+                    .cycle 10 34 true (0),
+                    .cycle 13 27 true (0),
+                    .last 16 (0,true),
+                    .cycle 17 1 false (-1),
+                    .cycle 23 1 false (1),
+                    .cycle 21 1 false (1),
+                    .cycle 12 4 true (0),
+                    .cycle 13 3 false (1),
+                    .last 16 (0,true),
+                    .cycle 1 50 true (0),
+                    .cycle 2 15 true (0),
+                    .cycle 1 16 true (0),
+                    .cycle 12 23 true (0),
+                    .cycle 21 1 false (1)
+                  ]),
+            .cycle 28 1 false (4),
+            .cycle 14 1 false (0),
+            .cycle 14 1 false (0),
+            .cycle 16 1 false (0),
+            .split 14 (0,true) (byMove [
+                    .cycle 0 16 true (0),
+                    .cycle 16 1 false (0),
+                    .last 15 (2,true),
+                    .cycle 1 15 true (0),
+                    .cycle 26 1 false (4),
+                    .cycle 0 16 true (0),
+                    .cycle 0 15 true (0),
+                    .cycle 0 34 true (0),
+                    .cycle 24 1 false (2),
+                    .cycle 22 1 false (2),
+                    .cycle 10 5 true (0),
+                    .cycle 13 19 true (1),
+                    .cycle 21 1 false (1),
+                    .cycle 16 1 false (0),
+                    .last 15 (2,true),
+                    .cycle 28 1 false (4),
+                    .cycle 0 17 true (0),
+                    .cycle 13 2 true (1),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (0),
+                    .cycle 2 13 true (0),
+                    .cycle 16 20 true (1),
+                    .cycle 0 18 true (0),
+                    .cycle 0 32 true (0)
+                  ]),
+            .cycle 26 1 false (4),
+            .split 14 (2,true) (byMove [
+                    .last 15 (0,true),
+                    .cycle 16 1 false (0),
+                    .cycle 17 1 false (1),
+                    .cycle 1 15 true (0),
+                    .cycle 26 1 false (4),
+                    .cycle 24 1 false (2),
+                    .cycle 0 15 true (0),
+                    .cycle 42 1 false (4),
+                    .cycle 24 1 false (2),
+                    .cycle 22 1 false (2),
+                    .cycle 10 5 true (0),
+                    .cycle 13 19 true (1),
+                    .last 15 (0,true),
+                    .cycle 16 1 false (0),
+                    .cycle 30 1 false (4),
+                    .cycle 28 1 false (4),
+                    .cycle 25 1 false (3),
+                    .cycle 13 2 true (1),
+                    .cycle 0 15 true (0),
+                    .cycle 1 14 true (0),
+                    .cycle 2 13 true (0),
+                    .cycle 16 20 true (1),
+                    .cycle 16 34 true (1),
+                    .cycle 2 30 true (0)
+                  ]),
+            .cycle 1 14 true (0),
+            .cycle 12 19 true (0),
+            .cycle 13 17 true (1)
+          ]),
+      .split 14 (5,true) (byMove [
+            .split 17 (2,true) (byMove [
+                    .last 18 (0,true),
+                    .cycle 28 3 false (3),
+                    .cycle 21 1 false (-1),
+                    .last 33 (0,true),
+                    .cycle 8 25 false (4),
+                    .last 19 (0,true),
+                    .cycle 0 18 true (-1),
+                    .last 35 (0,true),
+                    .cycle 3 17 false (3),
+                    .cycle 3 15 false (3),
+                    .last 23 (0,true),
+                    .last 39 (0,true),
+                    .last 18 (0,true),
+                    .cycle 20 3 false (1),
+                    .cycle 24 3 false (1),
+                    .cycle 8 27 false (4),
+                    .last 35 (0,true),
+                    .last 19 (0,true),
+                    .last 33 (0,true),
+                    .last 32 (0,true),
+                    .last 31 (0,true),
+                    .last 43 (0,true),
+                    .last 20 (0,true),
+                    .last 36 (0,true)
+                  ]),
+            .cycle 1 17 true (-1),
+            .cycle 16 1 false (0),
+            .cycle 15 1 false (-1),
+            .cycle 15 3 false (-1),
+            .split 17 (2,true) (byMove [
+                    .last 18 (0,true),
+                    .cycle 18 3 false (0),
+                    .cycle 20 1 false (0),
+                    .cycle 1 18 true (-1),
+                    .cycle 27 3 false (4),
+                    .cycle 27 3 false (2),
+                    .cycle 0 18 true (-1),
+                    .cycle 8 20 true (-1),
+                    .cycle 25 3 false (2),
+                    .cycle 23 3 false (2),
+                    .cycle 10 8 true (-1),
+                    .cycle 8 24 true (-1),
+                    .last 18 (0,true),
+                    .cycle 18 3 false (0),
+                    .cycle 31 3 false (4),
+                    .cycle 29 3 false (4),
+                    .cycle 28 3 false (3),
+                    .cycle 14 4 true (-1),
+                    .cycle 43 3 false (2),
+                    .cycle 1 36 true (-1),
+                    .cycle 2 16 true (-1),
+                    .cycle 8 28 true (-1),
+                    .cycle 1 24 true (-1),
+                    .cycle 1 40 true (-1)
+                  ]),
+            .split 15 (0,true) (byMove [
+                    .cycle 0 16 true (0),
+                    .cycle 23 3 false (2),
+                    .cycle 17 1 false (1),
+                    .cycle 16 1 false (0),
+                    .cycle 16 3 false (0),
+                    .cycle 24 3 false (3),
+                    .cycle 0 16 true (0),
+                    .cycle 23 3 false (4),
+                    .cycle 17 1 false (3),
+                    .cycle 16 1 false (2),
+                    .cycle 16 3 false (2),
+                    .cycle 24 3 false (5),
+                    .cycle 27 3 false (4),
+                    .last 17 (2,true),
+                    .cycle 1 17 true (0),
+                    .cycle 16 1 false (0),
+                    .cycle 16 3 false (0),
+                    .cycle 16 3 false (1),
+                    .cycle 0 16 true (0),
+                    .cycle 1 15 true (0),
+                    .cycle 22 3 false (3),
+                    .cycle 28 3 false (5),
+                    .cycle 13 3 true (0),
+                    .cycle 8 19 true (0)
+                  ]),
+            .cycle 15 3 false (1),
+            .split 15 (2,true) (byMove [
+                    .cycle 0 16 true (0),
+                    .cycle 23 3 false (2),
+                    .cycle 17 1 false (1),
+                    .cycle 16 1 false (0),
+                    .cycle 16 3 false (0),
+                    .cycle 24 3 false (3),
+                    .cycle 0 16 true (0),
+                    .cycle 23 3 false (4),
+                    .cycle 17 1 false (3),
+                    .cycle 16 1 false (2),
+                    .cycle 16 3 false (2),
+                    .cycle 24 3 false (5),
+                    .cycle 27 3 false (4),
+                    .cycle 18 3 false (0),
+                    .cycle 1 17 true (0),
+                    .cycle 16 1 false (0),
+                    .cycle 16 3 false (0),
+                    .cycle 16 3 false (1),
+                    .cycle 0 16 true (0),
+                    .cycle 1 15 true (0),
+                    .cycle 22 3 false (3),
+                    .cycle 28 3 false (5),
+                    .cycle 13 3 true (0),
+                    .cycle 8 19 true (0)
+                  ]),
+            .cycle 1 15 true (0),
+            .cycle 24 3 false (5),
+            .cycle 24 3 false (5),
+            .cycle 18 3 false (1),
+            .split 16 (2,true) (byMove [
+                    .last 17 (0,true),
+                    .cycle 17 3 false (-1),
+                    .cycle 19 1 false (-1),
+                    .cycle 35 3 false (-1),
+                    .cycle 18 3 false (1),
+                    .cycle 14 3 false (0),
+                    .last 17 (0,true),
+                    .cycle 12 5 false (2),
+                    .cycle 26 3 false (1),
+                    .cycle 1 17 true (-1),
+                    .cycle 8 27 false (5),
+                    .cycle 41 3 false (-1),
+                    .last 17 (0,true),
+                    .cycle 17 3 false (-1),
+                    .cycle 22 3 false (1),
+                    .cycle 20 3 false (1),
+                    .cycle 14 4 true (-1),
+                    .cycle 14 3 false (0),
+                    .last 17 (0,true),
+                    .cycle 8 25 false (4),
+                    .cycle 31 3 false (-1),
+                    .cycle 34 3 false (1),
+                    .cycle 39 3 false (-1),
+                    .cycle 20 3 false (1)
+                  ]),
+            .cycle 27 3 false (4),
+            .cycle 15 1 false (-1),
+            .cycle 15 3 false (-1),
+            .cycle 15 3 false (0),
+            .split 15 (0,true) (byMove [
+                    .cycle 0 17 false (3),
+                    .cycle 16 3 false (0),
+                    .last 16 (2,true),
+                    .cycle 1 16 true (0),
+                    .cycle 25 3 false (4),
+                    .cycle 0 17 true (0),
+                    .cycle 0 16 true (0),
+                    .cycle 8 18 true (0),
+                    .cycle 23 3 false (2),
+                    .cycle 21 3 false (2),
+                    .cycle 10 6 true (0),
+                    .cycle 8 22 true (0),
+                    .cycle 20 3 false (1),
+                    .cycle 16 3 false (0),
+                    .last 16 (2,true),
+                    .cycle 27 3 false (4),
+                    .cycle 0 18 true (0),
+                    .cycle 14 2 true (0),
+                    .cycle 0 16 true (0),
+                    .cycle 1 15 true (0),
+                    .cycle 2 14 true (0),
+                    .cycle 8 26 true (0),
+                    .cycle 13 3 true (0),
+                    .cycle 8 19 true (0)
+                  ]),
+            .cycle 25 3 false (4),
+            .split 15 (2,true) (byMove [
+                    .last 16 (0,true),
+                    .cycle 16 3 false (0),
+                    .cycle 18 1 false (0),
+                    .cycle 1 16 true (0),
+                    .cycle 25 3 false (4),
+                    .cycle 23 3 false (2),
+                    .cycle 0 16 true (0),
+                    .cycle 8 18 true (0),
+                    .cycle 23 3 false (2),
+                    .cycle 21 3 false (2),
+                    .cycle 10 6 true (0),
+                    .cycle 8 22 true (0),
+                    .last 16 (0,true),
+                    .cycle 16 3 false (0),
+                    .cycle 29 3 false (4),
+                    .cycle 27 3 false (4),
+                    .cycle 24 3 false (3),
+                    .cycle 14 2 true (0),
+                    .cycle 0 16 true (0),
+                    .cycle 1 15 true (0),
+                    .cycle 2 14 true (0),
+                    .cycle 8 26 true (0),
+                    .cycle 13 3 true (0),
+                    .cycle 8 19 true (0)
+                  ]),
+            .cycle 1 15 true (0),
+            .cycle 8 22 true (0),
+            .cycle 8 19 true (0)
+          ]),
+      .cycle 0 11 true (0),
+      .cycle 1 10 true (1),
+      .cycle 2 9 true (1),
+      .cycle 1 15 true (1),
+      .cycle 10 1 true (2),
+      .cycle 1 11 true (1)
+    ])
+
+theorem checked : zipCheck 49 parent tree = true := by decide +kernel
+noncomputable def certificate : WeightedTNFCertificate 49 parent 6 :=
+  certifiedZip 49 parent tree parent_root parent_nohalt checked
+theorem all_completions_weighted : ∀ m, compatible parent m → WeightedBound 49 m :=
+  certificate.sound
+theorem cover : Cover (WeightedBound 49) parent := Cover.leaf _ all_completions_weighted
+
+#print axioms ngram_never0
+#print axioms ngram_never1
+#print axioms checked
+#print axioms all_completions_weighted
+#print axioms cover
+end BB6.Agent24Raw45Depth3Full3
