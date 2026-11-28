@@ -125,6 +125,8 @@ def main():
         tool=stage_tool,
         comparator_batch=HERE / "CompareKernelImportsBatch.lean",
         chunk_size=args.chunk_size)
+    (evidence / "raw39-kernel-plan.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\\n")
     if not report["complete"] or (
         "BB6.Agent11Raw39Closed.parent_bound" not in names):
         raise RuntimeError("Raw39 parent theorem not kernel replayed")
