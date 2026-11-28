@@ -1,0 +1,90 @@
+name: Agent47 resumable Raw11 parent repair
+
+on:
+  workflow_dispatch:
+    inputs:
+      parent_id:
+        description: Raw11 extra parent id (132 or 140)
+        required: true
+        type: choice
+        options: ['132','140']
+      prior_run:
+        description: Workflow run containing the latest durable repair checkpoint
+        required: true
+        type: string
+      prior_artifact:
+        description: Exact checkpoint artifact name from prior_run
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  resume:
+    runs-on: ubuntu-latest
+    timeout-minutes: 70
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: ${{ inputs.prior_run }}
+          name: ${{ inputs.prior_artifact }}
+          path: /tmp/checkpoint
+
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+
+      - name: Recover source and proof-object checkpoint
+        env:
+          PARENT_ID: ${{ inputs.parent_id }}
+        run: |
+          set -euo pipefail
+          src="$(find /tmp/checkpoint -type f -name "Agent5Raw11Extra${PARENT_ID}.lean" -print -quit)"
+          receipt="$(find /tmp/checkpoint -type f -name repair-receipt.json -print -quit)"
+          test -n "$src"
+          test -n "$receipt"
+          mkdir -p /tmp/resume-source /tmp/resume-out
+          cp -a "$(dirname "$src")/." /tmp/resume-source/
+          cp -a "$(dirname "$receipt")/." /tmp/resume-out/
+          test -s "/tmp/resume-source/Agent5Raw11Extra${PARENT_ID}.lean"
+          test -s /tmp/resume-out/repair-receipt.json
+          echo "source modules: $(find /tmp/resume-source -name '*.lean' | wc -l)"
+          echo "checkpoint objects: $(find /tmp/resume-out -name '*.olean' | wc -l)"
+
+      - name: Continue exact kernel DAG from last accepted module
+        env:
+          RAW11_REPAIR_ID: ${{ inputs.parent_id }}
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-repair.py             /tmp/resume-source /tmp/base/tmp/a47-raw11-root52-known /tmp/resume-out             2>&1 | tee /tmp/resume.log
+          test -f "/tmp/resume-out/Agent5Raw11Extra${RAW11_REPAIR_ID}.olean"
+          grep -F "'BB6.Agent5Raw11Extra${RAW11_REPAIR_ID}.cover' depends on axioms:"             /tmp/resume.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/resume.log; then exit 1; fi
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parent-complete-${{ inputs.parent_id }}-resume
+          path: |
+            /tmp/resume-out
+            /tmp/resume-source
+            /tmp/resume.log
+          if-no-files-found: warn
+          retention-days: 30
