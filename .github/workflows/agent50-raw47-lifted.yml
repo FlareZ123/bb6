@@ -1166,8 +1166,10 @@ jobs:
             --manifest "$W/manifest.json" \
             --theorem BB6.Agent40Raw34ConjugateGrowth.tripleF_never \
             --theorem BB6.Agent40Raw34ConjugateGrowth.alternatingF_never \
-            --artifact-name raw34-two-F-conjugate-growth-pumps \
+            --theorem BB6.Agent40Raw34PairQuadratic.contiguous_never \
+            --artifact-name raw34-F-conjugate-and-pair-growth-pumps \
             im-results/agent40-raw34-frontier/Raw34ConjugateGrowthPumps.lean \
+            im-results/agent40-raw34-frontier/Raw34QuadraticPairGrowth.lean \
             2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           python - "$W/closure.log" <<'PY'
@@ -1180,7 +1182,13 @@ jobs:
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: two source-proved F-conjugate unbounded growth-pump Raw34 cylinders')
+          for name in ('contiguousFirst','contiguousBRightMany','contiguousTurn',
+                       'contiguousALeftMany','contiguousGrowth','contiguous_never'):
+              full='BB6.Agent40Raw34PairQuadratic.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \\[([^\\]]*)\\]",log)
+              if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: source-proved F-conjugate and Raw34 pair quadratic growth pumps')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
