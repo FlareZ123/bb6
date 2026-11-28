@@ -1,0 +1,50 @@
+name: Agent6 D0=6/9 reduction gates (manual)
+on:
+  workflow_dispatch:
+    inputs:
+      source_sha:
+        description: Pinned source commit
+        type: string
+        required: true
+permissions:
+  contents: read
+  actions: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_sha }}
+      - uses: actions/download-artifact@v4
+        with:
+          name: agent3-raw139-normalized-cryptids-scan
+          run-id: 45767740664
+          github-token: ${{ github.token }}
+          path: .tmp/a6-reductions
+      - name: Install Lean
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Check D0=6 and D0=9 exact reductions
+        run: |
+          set -euo pipefail
+          build=.tmp/a6-reductions/build
+          LEAN_PATH="$build" lean -o "$build/D1ZeroRD.olean" im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean > .tmp/d1zero.log
+          LEAN_PATH="$build" lean -o "$build/D1SixReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1SixReduce.lean | tee .tmp/d6reduce.log
+          LEAN_PATH="$build" lean -o "$build/D1NineReduce.olean" im-results/agent6-raw139-d1-zeroRD/D1NineReduce.lean | tee .tmp/d9reduce.log
+          grep -F "'BB6.Agent6D1SixReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d6reduce.log
+          grep -F "'BB6.Agent6D1NineReduce.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" .tmp/d9reduce.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d6reduce.log
+          ! grep -Eq 'sorryAx|ofReduceBool' .tmp/d9reduce.log
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agent6-d6-d9-reductions-checked
+          path: |
+            .tmp/d6reduce.log
+            .tmp/d9reduce.log
+            .tmp/a6-reductions/build/D1SixReduce.olean
+            .tmp/a6-reductions/build/D1NineReduce.olean
+          retention-days: 14
