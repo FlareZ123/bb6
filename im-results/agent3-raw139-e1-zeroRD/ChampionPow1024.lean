@@ -14,14 +14,14 @@ increment of the exact attained champion. The proof never evaluates
 
 private def secondRight : Nat := 2^63-1
 
-private theorem second_increment_general (b : Nat)
-    (h64 : 64 ≤ b) (h1024 : 1024 ≤ b) (hsmall : 9*b ≤ 2^128) :
-    2^1024 ≤ proposedIncrementCost 1 6 71 b := by
-  have hpow : 2^1024 ≤ 4^b := by
+private theorem second_increment_general (b e : Nat)
+    (h64 : 64 ≤ b) (he : e ≤ b) (hsmall : 9*b ≤ 2^128) :
+    2^e ≤ proposedIncrementCost 1 6 71 b := by
+  have hpow : 2^e ≤ 4^b := by
     calc
-      2^1024 ≤ 4^1024 := Nat.pow_le_pow_left (by decide) _
+      2^e ≤ 4^e := Nat.pow_le_pow_left (by decide) _
       _ ≤ 4^b :=
-        Nat.pow_le_pow_right (by decide) h1024
+        Nat.pow_le_pow_right (by decide) he
   have hb : 9*b ≤ 4^b := by
     calc
       9*b ≤ 2^128 := hsmall
@@ -32,7 +32,7 @@ private theorem second_increment_general (b : Nat)
 
 theorem second_increment_ge_pow1024 :
     2^1024 ≤ proposedIncrementCost 1 6 71 secondRight := by
-  exact second_increment_general secondRight
+  exact second_increment_general secondRight 1024
     (by decide) (by decide) (by decide)
 
 theorem second_increment_le_first_section :
@@ -60,6 +60,24 @@ theorem champion_score_ge_pow1024 :
       second_increment_le_first_section
     _ ≤ proposedTM63Moves + 7 :=
       BB6.Agent38ChampionThreshold.first_section_cost_le_champion_score
+
+/-- A finite but extremely strong uniform attainment interface:
+the exact certified champion score exceeds 2^e for every
+e ≤ 2^63−1. No tower is unfolded to establish the inequality. -/
+theorem champion_score_ge_pow_of_le (e : Nat) (he : e ≤ 2^63-1) :
+    2^e ≤ proposedTM63Moves + 7 := by
+  have heb : e ≤ secondRight := by simpa [secondRight] using he
+  have hfirst : 2^e ≤ proposedIncrementCost 1 6 71 secondRight :=
+    second_increment_general secondRight e (by decide) heb (by decide)
+  exact Nat.le_trans (Nat.le_trans hfirst second_increment_le_first_section)
+    BB6.Agent38ChampionThreshold.first_section_cost_le_champion_score
+
+theorem champion_score_ge_pow32768 :
+    2^32768 ≤ proposedTM63Moves + 7 :=
+  champion_score_ge_pow_of_le 32768 (by decide)
+
+#print axioms champion_score_ge_pow_of_le
+#print axioms champion_score_ge_pow32768
 
 #print axioms second_increment_ge_pow1024
 #print axioms second_increment_le_first_section
