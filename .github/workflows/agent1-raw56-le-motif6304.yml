@@ -1,0 +1,51 @@
+name: Agent1 Raw56 E0=0RA leaf6304 independent motif theorem
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  motif6304:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Load original-source accepted base closure
+        uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-motif-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reconstruct independent certificate and prove never-halting
+        run: |
+          set -euo pipefail
+          lean --version | grep -F '4.36.0-rc2'
+          python im-results/agent1-raw56/le/prove_motif_6304.py /tmp/raw56-motif6304 | tee /tmp/raw56-motif6304-gen.log
+          export LEAN_PATH="/tmp/raw56-motif6304:/tmp/raw56-motif-base/a1-raw56-root-consumer"
+          lean -o /tmp/raw56-motif6304/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-motif6304-checker.log
+          lean -o /tmp/raw56-motif6304/Raw56LEMotif6304.olean /tmp/raw56-motif6304/Raw56LEMotif6304.lean 2>&1 | tee /tmp/raw56-motif6304-axioms.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-motif6304-axioms.log --require BB6.Agent1Raw56.LEMotif.M6304.never
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-motif6304-axioms.log /tmp/raw56-motif6304-checker.log
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le-motif6304-source-accepted
+          path: |
+            /tmp/raw56-motif6304/*.lean
+            /tmp/raw56-motif6304/*.olean
+            /tmp/raw56-motif6304/*.json
+            /tmp/raw56-motif6304-*.log
+          if-no-files-found: error
+          retention-days: 30
