@@ -94,3 +94,24 @@ saved D1=1LA canonical OPEN literals remain outside the current exact
 certificate banks.  This is a 96.824% candidate reduction of the OPEN roster;
 whole-parent Cover status still awaits source checking/integration of the full
 structured bank and proofs for the 122 true holdouts.
+
+
+## Late-hole weighted leaves: 98 unresolved
+
+Of the 122 exact tables left after the FAR mutation shell, **24** reach their
+only unassigned row `F0` at steps **2155 through 2479**. At uniform local
+bound **2600**, all 24 pass `ZipThreeHoleAudit.zipCheck` as `.last` leaves
+and yield `WeightedTNFCertificate 2600` objects. The exact source is checked
+in `Raw36D112Last00.lean` through `Raw36D112Last03.lean` (six leaves per
+module). Local Lean 4.36.0-rc2 compiled every module; every `checked` and
+`weighted` theorem reports only `[propext, Classical.choice, Quot.sound]`.
+The four source SHA256 values are
+`296899b3f54252187975a12cd27392ececd7bb4e5f650d9aa012e1bf4c1409ed`,
+`7ef8e86a501da90488891314286af66f26337f1b75a085b7fe89d1f7bd69907d`,
+`65f028836db95e5bef1c1fd66a4ef1487723b51f4ca480f4132edc2c47ae0aee`,
+and `759d9d2e2e2d46034643a8ee51384fd80051af3fdb69077cc789d160ce27131c`.
+
+Consequently **98 / 3841** exact D1=1LA OPEN tables remain outside the current
+FAR, structured-quotient, and late-hole weighted banks. This is a genuine
+weighted-certificate reduction. Whole-parent Cover status still needs full
+structured-bank integration plus proofs for those 98 residual tables.
