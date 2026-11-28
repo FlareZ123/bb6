@@ -107,13 +107,14 @@ jobs:
           b="$RUNNER_TEMP/f197-kernel"
           mkdir -p "$b"
           python3 "$e/generate_lean_trace.py" "$b"
+          python3 "$e/generate_packed_banks.py" "$b"
           cp "$d/Macro.lean" "$b/"
-          for m in PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryBulk TraceLogic; do
+          for m in PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryBulk TraceLogic PackedCheck SeedCore RootCore; do
             cp "$e/$m.lean" "$b/"
           done
           cd "$b"
           export LEAN_PATH=.
-          for m in Macro PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryData OrdinaryBulk TraceLogic TraceStates; do
+          for m in Macro PrefixCheck EpochMarker EpochMarkerExit EpochEntrance EpochMarkerBulk CounterCore SelfBase OrdinaryCore OrdinaryData OrdinaryBulk TraceLogic PackedCheck SeedCore RootCore TraceStates; do
             lean -j 1 -o "$m.olean" "$m.lean" | tee -a "$RUNNER_TEMP/f197-kernel.log"
           done
           export RLOG="$RUNNER_TEMP/f197-kernel.log"
