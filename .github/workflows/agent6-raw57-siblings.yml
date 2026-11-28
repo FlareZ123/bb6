@@ -531,6 +531,47 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
+  raw56_le_23011:
+    if: inputs.child == 'raw56-le-23011'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-le23011-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reconstruct original-source LE23011 and prove 7014 weighted bound
+        run: |
+          set -euo pipefail
+          python im-results/agent1-raw56/le/prepare_23011.py /tmp/raw56-le23011
+          export LEAN_PATH=/tmp/raw56-le23011-base/a1-raw56-root-consumer:/tmp/raw56-le23011
+          export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
+          lean --version
+          lean -o /tmp/raw56-le23011/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-le23011/checker.log
+          lean -o /tmp/raw56-le23011/Raw56LE23011F0RA.olean /tmp/raw56-le23011/Raw56LE23011F0RA.lean 2>&1 | tee /tmp/raw56-le23011/leaf.log
+          lean -o /tmp/raw56-le23011/Raw56LE23011Cover.olean /tmp/raw56-le23011/Raw56LE23011Cover.lean 2>&1 | tee /tmp/raw56-le23011/cover.log
+          cat /tmp/raw56-le23011/{checker,leaf,cover}.log > /tmp/raw56-le23011/axioms.log
+          ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le23011/axioms.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le23011/axioms.log --require BB6.Agent1Raw56.LE23011.M23011.never --require BB6.Agent1Raw56.LE23011Cover.all_quotient
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le23011-source-accepted
+          path: /tmp/raw56-le23011/**
+          if-no-files-found: error
+          retention-days: 30
+
   raw56_reparent_shard:
     if: inputs.child == 'raw56-reparent-assembly'
     runs-on: ubuntu-latest
