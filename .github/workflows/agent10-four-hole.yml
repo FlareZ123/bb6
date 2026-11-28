@@ -5,7 +5,7 @@ on:
     inputs:
       target:
         type: choice
-        options: [raw36-pilot, raw36-shards, raw36-compose, raw36-b1rd, raw36-b1-general, raw36-b1-resume16, raw36-d102-shards, raw36-d114-shards, raw36-d101-active, raw36-d1-direct, raw36-reclassify, raw36-far-discover, raw36-witness, raw36-counterexample, raw36-open-depth, raw36-scan-long, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw43-b0le-lf746, raw43-b0le-lf-triple, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
+        options: [raw36-pilot, raw36-shards, raw36-compose, raw36-b1rd, raw36-b1-general, raw36-b1-resume16, raw36-d102-shards, raw36-d114-shards, raw36-d101-active, raw36-d1-direct, raw36-reclassify, raw36-far-discover, raw36-witness, raw36-counterexample, raw36-open-depth, raw36-scan-long, twelve, five-hole, recursive, raw107-witness, raw121-witness, raw121-membership, raw107-child, raw107-child-chunked, raw107-root-cut, raw107-parent, raw108-root-cut, raw108-witness, raw108-counter, raw108-gap, raw108-long, raw108-le-trace, raw108-block10-core, raw108-block895, raw108-block895-narrow, raw108-split1930-narrow, raw108-lb0, raw108-lb0-reuse, raw108-weight-core, cached-audit-core, raw108-sharded, raw108-resume, raw108-selected, raw108-compose, raw108-child, raw108-graft, raw119-shard, raw119-compose, raw113-shard, raw113-compose, raw43-child, raw43-0rd, raw43-parent-cut, raw43-parent-reuse, raw43-1rd-growth, raw43-hard-pair, raw43-1rd, raw43-extra, raw43-b1rc-cut, raw43-b1rc-compose, raw43-b0rc-compose, raw43-b0ra-compose, raw43-b0la-compose, raw43-b0le-reduced, raw43-b0le-compose, raw43-b1la-reduced, raw43-b1ra-compose, raw43-b1lb-compose, raw43-b1le-compose, raw43-b1re-compose, raw43-b1la-compose, raw43-b0le-discover, raw43-b0le-m177, raw43-b0le-m81-discover, raw43-b0le-abstract, raw43-b0le-deep, raw43-b0le-m81-abstract, raw43-b0le-e1rf-complete, raw43-b0le-late-cycle, raw43-b0le-lb746, raw43-b0le-lf746, raw43-b0le-lf-triple, raw83-exact, raw58-cut, raw58-more, raw58-more2, raw58-more3, raw58-rc, raw58-child, raw58-late, raw58-automata, raw58-shard, raw58-prepare, raw58-compose, canonical62-preflight, canonical62-raw112-raw58, raw109-cut, raw109-refine, raw109-refine6, raw109-refine7, raw109-refine8, raw109-refine9, raw109-refine12, raw109-final-leaves, raw109-closed, raw109-sharded]
         default: twelve
       raw36_child:
         description: 'C1 move index for raw36-pilot; JSON array of B1 indices for raw36-b1-general'
@@ -569,6 +569,49 @@ jobs:
         with:
           name: raw43-extra-proof
           path: /tmp/a25-raw43-extra/
+          retention-days: 30
+      - name: Compose four source-accepted Raw43 B0LE residual children
+        if: inputs.target == 'raw43-b0le-compose'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PINS: ${{ inputs.raw43_b1rc_pins }}
+        run: |
+          set -euo pipefail
+          root=im-results/agent25-raw43
+          input=/tmp/a38-b0le-input
+          base=/tmp/a38-b0le-base
+          work=/tmp/a38-b0le-complete
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          for v in 1la 1lb 1lf 1rf; do
+            id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
+            gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > "/tmp/run-$v.json"
+            jq -e --arg title "raw43-extra raw43=b0le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' "/tmp/run-$v.json"
+            gh run download "$id" -n raw43-extra-proof -D "$input/$v"
+            jq -e --arg sha "$(jq -r .head_sha "/tmp/run-$v.json")" '.proof_source_revision == $sha' "$input/$v/manifest.json"
+            cp "$input/$v/spec_b0le_e$v.json" "$root/spec_b0le_e$v.json"
+            python "$root/generate.py" "b0le_e$v"
+          done
+          python "$root/merge_b1rc.py" "$input" "$base" "$PINS" b0lefull
+          python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --precompiled-manifest "$base/manifest.json" --precompiled-dir "$base" \
+            --manifest "$work/manifest.json" --label raw43-b0le-complete \
+            --theorem BB6.Agent38Raw43B0LEComplete.all_completions --weighted-bound 3466 \
+            --parent-table '1RB---_1RC0LE_0RD---_1LD0RB_1LA---_------' \
+            --artifact-name raw43-b0le-complete-proof \
+            im-results/agent38-raw43-pair/Raw43B0LEComplete.lean 2>&1 | tee /tmp/a38-b0le-complete.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a38-b0le-complete.log \
+            BB6.Agent38Raw43B0LEComplete.classified_all \
+            BB6.Agent38Raw43B0LEComplete.all_completions \
+            BB6.Agent38Raw43B0LEComplete.cover
+          cp /tmp/a38-b0le-complete.log "$work/audit.log"
+      - name: Retain complete Raw43 B0LE proof
+        if: inputs.target == 'raw43-b0le-compose'
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw43-b0le-complete-proof
+          path: /tmp/a38-b0le-complete/
           retention-days: 30
       - name: Check B1RC canonical cut
         if: inputs.target == 'raw43-b1rc-cut'
