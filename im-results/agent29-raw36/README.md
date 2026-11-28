@@ -4,6 +4,52 @@
 
 The predecessor `parent_cover_from_twelve` remains a dependency and records the earlier B1=0LB consumption. B1=0LE is source-accepted at weighted bound 1152 in [run 46097780398](https://github.com/FlareZ123/bb6/actions/runs/46097780398), artifact 15249355743; B1=1RE is source-accepted at weighted bound 332 in [run 46112385989](https://github.com/FlareZ123/bb6/actions/runs/46112385989), artifact 15252363171; B1=1LE is source-accepted at weighted bound 387 in [run 46121176787](https://github.com/FlareZ123/bb6/actions/runs/46121176787), artifact 15253439483. Their exact artifact digests and source revisions are pinned in [accepted_pins.json](accepted_pins.json).
 
+## Source-accepted two-parent direct D1 reduction (28 November, run 46153631874)
+
+**New live frontier: seven direct D1 cylinders without dependence on D1=0LB assembly.**
+The new theorem
+`BB6.Agent29Raw36.parent_cover_from_live7_after02And14` in
+[Raw36ParentLive7D102D114.lean](Raw36ParentLive7D102D114.lean) establishes,
+for any weighted bound `B ≥ 1152`:
+
+```text
+(∀ p ∈ [D1=0LA, D1=1LA, D1=0LB, D1=0LE, D1=0RE,
+        D1=1LE, D1=1RE], Cover (WeightedBound B) p)
+  → Cover (WeightedBound B) Raw36Parent.
+```
+
+This **source-checked** reduction consumes the two already independent
+complete seven-hole direct parents D1=0LC (bound 172, source run
+[46135318026](https://github.com/FlareZ123/bb6/actions/runs/46135318026),
+artifact 15261371812) and D1=1LC (bound 366, source run
+[46136452862](https://github.com/FlareZ123/bb6/actions/runs/46136452862),
+artifact 15262524140) against the original accepted nine-child predecessor.
+
+The [combined exact-source CI acceptance
+46153631874](https://github.com/FlareZ123/bb6/actions/runs/46153631874)
+produced [evidence artifact
+15266582866](https://github.com/FlareZ123/bb6/actions/runs/46153631874/artifacts/15266582866).
+The source-to-object evidence pins Lean 4.36.0-rc2, checks all accepted parent
+transitive hashes, and proves definitional equality of the two independently
+certified parent tables with the live Raw36 children. Its target theorem
+axioms are exactly `[propext, Classical.choice, Quot.sound]`;
+no `sorryAx`, oracle, or conditional accepted parent assumption is
+introduced. Root object SHA-256
+`24644ff5444ee756a09f695852ed4b84fb008c5b8560f7e8d0b30baa1bbe10e2`.
+
+The current original-source **seven** live direct-D1 leaves, not nine,
+are the strongest accepted local Raw36 interface. The D1=0LB parent has a
+complete candidate bank, but its attempted source parent assembly
+[46146299525](https://github.com/FlareZ123/bb6/actions/runs/46146299525)
+fails due incompatible `Raw36D101Automata00` module identity,
+not due a proven counterexample. Until it source-accepts, D1=0LB must
+remain an explicit seventh Cover premise.
+
+This theorem does **not** close Raw36 or establish a global BB(6)
+upper bound. Avoid silently replacing its seven premises by ordinary
+machine computations; they require accepted whole-parent `Cover`
+proofs.
+
 ## Closed B1 cylinders
 
 All eleven non-0LA rows below have source-accepted original-machine weighted covers at the indicated threshold. The B1=0LA row now also has an unconditional local source-compiled `branch_cover`; its twenty independently accepted child objects are composed using the source-level symmetry theorem.
@@ -72,6 +118,6 @@ The 313 emitted `NeverHalts` theorems are source-accepted by [run 46123293966](h
 
 ## Remaining research
 
-Finish the nine direct D1 descendants. B1=1LE is source accepted at bound 387 by resumed run 46121176787; do not repeat any nested B1 closure. Use `parent_cover_from_nine` as the current parent interface, then consume completed direct D1 Covers into that exact live list. The global Canonical40 frontier is unchanged until the full Raw36 parent is proved.
+Finish the seven remaining direct D1 descendants. B1=1LE is source accepted at bound 387 by resumed run 46121176787; do not repeat any nested B1 closure. Use the source-accepted `parent_cover_from_live7_after02And14` as the current parent interface; consume additional direct D1 Covers into this seven-member live list. The global Canonical40 frontier is unchanged until the full Raw36 parent is proved.
 
 Historical corrected-census data and proof generators remain in this directory. `candidate.json` and old `d1-*.json` are experimental inputs, not proofs; no obsolete pre-correction claimed census should be read as a theorem.
