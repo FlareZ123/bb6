@@ -36,6 +36,16 @@ jobs:
           test "$(git hash-object /tmp/raw112-lean_compile_closure.py)" = "$expected_blob_sha"
           cp /tmp/raw112-lean_compile_closure.py tools/lean_compile_closure.py
 
+      - name: Restore pinned Raw112 parent seed repair
+        run: |
+          set -euo pipefail
+          repair_revision=52b14015a0a2a2e3984cdac0d30438943a3d833e
+          repair_blob=78603f6f89e2405e6fa553a2ce7ef460970dad29
+          git fetch --no-tags origin "$repair_revision"
+          git show "${repair_revision}:im-results/agent10-raw112-recovery/assemble_retry.py" > /tmp/raw112-assemble-patched.py
+          test "$(git hash-object /tmp/raw112-assemble-patched.py)" = "$repair_blob"
+          cp /tmp/raw112-assemble-patched.py im-results/agent10-raw112-recovery/assemble_retry.py
+
       - name: Install Lean 4.36.0-rc2
         run: |
           set -euo pipefail
