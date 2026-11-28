@@ -307,9 +307,13 @@ Moreover, the exact deletion cases no longer require a separate pop guard:
 at low B-runway length 7, the semantic 15-cell high-runway condition forces
 the front weight to be zero; at low carry-runway length 1, high-side
 nonemptiness forces the front weight to be zero. Normal A's residue-5 rule
-is also packaged as a zero-weight stack push. The file therefore leaves the
-reachable zipper shape, normal-A residue-5 condition, and residue-7
-positive-weight condition as the principal unresolved semantic obligations.
+is also packaged as a zero-weight stack push. The weighted relation preserves
+every zero-run residue modulo 8 exactly, and under the natural non-underflow
+bound the defect weight is recoverable uniquely from the low/high run pair.
+Thus the residue automaton is unchanged by introducing weights: weights carry
+only quotient-level information. The file therefore leaves the reachable
+zipper shape, normal-A residue-5 condition, and residue-7 positive-weight
+condition as the principal unresolved semantic obligations.
 
 Thus the next proof object is a **stack/vector of nonnegative defect weights**,
 one aligned with each finite left zero-run, rather than a single marked run.
