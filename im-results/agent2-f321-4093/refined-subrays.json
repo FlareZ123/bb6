@@ -1,0 +1,72 @@
+{
+  "targetParent": {
+    "modulus": 12288,
+    "residue": 4093
+  },
+  "refinementPower": 3,
+  "modulus": 786432,
+  "subrays": [
+    {
+      "index": 10,
+      "d": 126973,
+      "nodes": 47
+    },
+    {
+      "index": 16,
+      "d": 200701,
+      "nodes": 46
+    },
+    {
+      "index": 18,
+      "d": 225277,
+      "nodes": 46
+    },
+    {
+      "index": 19,
+      "d": 237565,
+      "nodes": 50
+    },
+    {
+      "index": 24,
+      "d": 299005,
+      "nodes": 47
+    },
+    {
+      "index": 28,
+      "d": 348157,
+      "nodes": 49
+    },
+    {
+      "index": 42,
+      "d": 520189,
+      "nodes": 47
+    },
+    {
+      "index": 48,
+      "d": 593917,
+      "nodes": 46
+    },
+    {
+      "index": 50,
+      "d": 618493,
+      "nodes": 46
+    },
+    {
+      "index": 51,
+      "d": 630781,
+      "nodes": 50
+    },
+    {
+      "index": 56,
+      "d": 692221,
+      "nodes": 47
+    },
+    {
+      "index": 60,
+      "d": 741373,
+      "nodes": 49
+    }
+  ],
+  "status": "candidate until Lean workflow succeeds",
+  "sourceGenerator": "im-results/agent31-f321-mod384/affine_ray_generator.py"
+}
