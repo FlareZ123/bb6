@@ -16,11 +16,11 @@ static U powmod(U a,U e,U p){ U z=1; while(e){if(e&1)z=z*a%p; a=a*a%p; e>>=1;}re
 static U apmod(U r,U a,U p){ U A=powmod(2,a,p),P=0,n=1; for(U i=0;i<r;i++){P=(A*A%p*P+n*((A+p-3)%p))%p;n=n*9%p;}return A*P%p; }
 struct Cache {
   U k=0; Z v=1;
-  Z get(U n){
+  const Z& get(U n){
     if(n==k)return v;
     if(n<k&&k-n<=5000){
       U delta=k-n;
-      if(delta<=20){U p=1;for(U i=0;i<delta;i++)p*=3;mpz_divexact_ui(v.get_mpz_t(),v.get_mpz_t(),p);}
+      if(delta<=40){U p=1;for(U i=0;i<delta;i++)p*=3;mpz_divexact_ui(v.get_mpz_t(),v.get_mpz_t(),p);}
       else {Z p;mpz_ui_pow_ui(p.get_mpz_t(),3,delta);mpz_divexact(v.get_mpz_t(),v.get_mpz_t(),p.get_mpz_t());}
     }else mpz_ui_pow_ui(v.get_mpz_t(),3,n);
     k=n;return v;
@@ -28,10 +28,33 @@ struct Cache {
 };
 // The reduction 2^m = -3 (mod 2^m+3) is exact, including negative inputs.
 static void fold(Z& s,U m){ Z hi,lo; while(bits(s)>m){mpz_tdiv_q_2exp(hi.get_mpz_t(),s.get_mpz_t(),m);mpz_tdiv_r_2exp(lo.get_mpz_t(),s.get_mpz_t(),m);s=lo-3*hi;} }
+// Evaluate the base-2^m limbs at -3 in one pass. This is congruent to
+// the dense integer modulo 2^m+3. Each raw bit is copied only once.
+static Z fold_digits(const Z& value,U m){
+  U b=bits(value);if(b<=m)return value;
+  const mp_limb_t* src=mpz_limbs_read(value.get_mpz_t());
+  U size=mpz_size(value.get_mpz_t()),digits=1+(b-1)/m;
+  Z acc=0,block;
+  for(U i=digits;i-->0;){
+    U start=i*m,len=std::min(m,b-start),n=(len+GMP_NUMB_BITS-1)/GMP_NUMB_BITS;
+    U offset=start/GMP_NUMB_BITS,shift=start%GMP_NUMB_BITS;
+    mp_limb_t* dst=mpz_limbs_write(block.get_mpz_t(),n);
+    for(U j=0;j<n;j++){
+      U k=offset+j;mp_limb_t v=k<size?src[k]>>shift:0;
+      if(shift&&k+1<size)v|=(src[k+1]<<(GMP_NUMB_BITS-shift))&GMP_NUMB_MASK;
+      dst[j]=v&GMP_NUMB_MASK;
+    }
+    U rem=len%GMP_NUMB_BITS;if(rem)dst[n-1]&=(mp_limb_t(1)<<rem)-1;
+    mpz_limbs_finish(block.get_mpz_t(),n);
+    acc=block-3*acc;
+  }
+  if(value<0)acc=-acc;
+  fold(acc,m);return acc;
+}
 static Z pow3special(U k,U m){ Z z=1;int b=0;for(U t=k;t>>=1;)++b;for(;b>=0;--b){z*=z;fold(z,m);if((k>>b)&1){z*=3;fold(z,m);}}return z; }
 static Z red(U e,U m,const Z&D,Cache&cache){
   U k=e/m,s=e%m;Z z,three=3;
-  if(m>=25000 && k<=8*m) z=cache.get(k);
+  if(m>=25000 && k<=64*m && k<=50000000) z=fold_digits(cache.get(k),m);
   else if(m>=25000){
     unsigned h=0;while((k>>h)>m/2)h++;
     z=cache.get(k>>h);
