@@ -27,6 +27,21 @@ The earlier deterministic F-sidecycle generator searched only entries below 60 a
 
 Reproduction: original-source Lean closure via manual `.github/workflows/agent23-raw34-halters.yml` mode `f-long` on commit `c761e3a1`, [run 46142276152](https://github.com/FlareZ123/bb6/actions/runs/46142276152), success. Accepted source transcript includes `'BB6.Agent40Raw34FLongSideCycles.checked'` and `'BB6.Agent40Raw34FLongSideCycles.all_never'`, with the standard axiom profile.
 
+## Four additional E/F-conjugate original-state cylinders — independently source accepted
+
+The same *original-source checker*, independently applied to each distinct E/F-swapped **physical** table, has now certified four further nonhalting cylinders:
+
+| Additional E-branch partial table | Entry | Period | Retained half-line |
+| --- | ---: | ---: | --- |
+| `1RB---_1RC---_0RD0LB_1LC0RE_1LE0LC_------` | 72 | 1 | left of +6 |
+| `1RB---_1RC---_0RD1RD_1LC0RE_1LE0LC_------` | 64 | 1 | left of +6 |
+| `1RB---_1RC---_0RD0RC_1LC0RE_1LD1LE_------` | 60 | 5 | left of +10 |
+| `1RB---_1RC---_0RD0LE_1LC0RE_1RD0RD_------` | 60 | 3 | left of +11 |
+
+All four have **four** unrestricted original transitions, and D1=0RE instead of D1=0RF in the original four tables, so the eight certified physical cylinders are mutually disjoint. Their combined gross union has **8×25⁴ = 3,125,000** physical total completions.
+
+The E variants are not merely assumed nonhalting because a prior F machine was nonhalting: the concrete source `[Raw34ELongSideCycles.lean](../im-results/agent40-raw34-frontier/Raw34ELongSideCycles.lean)` checks the four rewritten 12-slot original tables, entries, periods, directions and boundaries directly using the original finite-window decision procedure, then instantiates the same already source-proved all-time `fastSideCycleCheck_sound` theorem. [Source-closure run **46143551875**](https://github.com/FlareZ123/bb6/actions/runs/46143551875) independently compiled the original four **and** E-conjugate four, checked both `all_never` exports, excluded `sorryAx`/`native_decide`, and succeeded. The E-variant *fresh marginal* relative to the wider original source bank is not yet included in the 9,861-F-source count.
+
 ## Limits
 
 These certificates do **not** prove a universal maximality bound for all six-state machines, close the Raw34 parent, or reduce the accepted Canonical39 global roster. They are all-time mathematical nonhalting results for the four stated subcylinders. Exact fresh mass relative to the current wider source bank is being computed separately in `im-results/`.
