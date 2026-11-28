@@ -15,7 +15,8 @@ open BB6Coverage BB6.Agent23Raw34Next
 theorem finite_check_exact_halt
     (p : PartialMachine) (n : Nat) (m : Machine)
     (hm : compatible p m) (h : finiteHaltCheck p n = true) :
-    run m n blank ≠ none ∧ run m (n+1) blank = none := by
+    HaltsAfter m n := by
+  unfold HaltsAfter
   cases he : finitePartialRun p n finiteBlank with
   | none => simp [finiteHaltCheck, he] at h
   | some c =>
@@ -38,8 +39,7 @@ theorem short_halt_sound (bound : Nat) (w : Witness)
     (hshort : isShortHalt bound w = true)
     (hcheck : check w = true)
     (m : Machine) (hm : compatible (table w.codes) m) :
-    ∃ n : Nat, n+1 ≤ bound ∧ run m n blank ≠ none ∧
-      run m (n+1) blank = none := by
+    ∃ n : Nat, n+1 ≤ bound ∧ HaltsAfter m n := by
   cases w with
   | mk codes cert =>
     cases cert with
@@ -50,9 +50,7 @@ theorem short_halt_sound (bound : Nat) (w : Witness)
       have hh : decide (n+1 ≤ 27) = true ∧
           finiteHaltCheck (table codes) n = true := by
         simpa only [check, Bool.and_eq_true] using hcheck
-      obtain ⟨hlive, hstop⟩ :=
-        finite_check_exact_halt (table codes) n m hm hh.2
-      exact ⟨n, hn, hlive, hstop⟩
+      exact ⟨n, hn, finite_check_exact_halt (table codes) n m hm hh.2⟩
     | side entry period right boundary =>
       simp only [isShortHalt] at hshort
       contradiction
@@ -68,8 +66,7 @@ theorem short_bank9 :
 theorem all_bank8_halt (w : Witness)
     (hw : w ∈ BB6.Agent40Raw34Halt8.witnesses)
     (m : Machine) (hm : compatible (table w.codes) m) :
-    ∃ n : Nat, n+1 ≤ 8 ∧ run m n blank ≠ none ∧
-      run m (n+1) blank = none :=
+    ∃ n : Nat, n+1 ≤ 8 ∧ HaltsAfter m n :=
   short_halt_sound 8 w
     (List.all_eq_true.mp short_bank8 w hw)
     (List.all_eq_true.mp BB6.Agent40Raw34Halt8.checked w hw)
@@ -78,8 +75,7 @@ theorem all_bank8_halt (w : Witness)
 theorem all_bank9_halt (w : Witness)
     (hw : w ∈ BB6.Agent40Raw34Halt9New.witnesses)
     (m : Machine) (hm : compatible (table w.codes) m) :
-    ∃ n : Nat, n+1 ≤ 9 ∧ run m n blank ≠ none ∧
-      run m (n+1) blank = none :=
+    ∃ n : Nat, n+1 ≤ 9 ∧ HaltsAfter m n :=
   short_halt_sound 9 w
     (List.all_eq_true.mp short_bank9 w hw)
     (List.all_eq_true.mp BB6.Agent40Raw34Halt9New.checked w hw)
