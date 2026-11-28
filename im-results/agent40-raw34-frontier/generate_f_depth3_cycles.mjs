@@ -119,10 +119,10 @@ theorem all_never (w : CycleWitness) (hw : w ∈ witnesses)
     (m : Machine) (hm : compatible (table w.codes) m) :
     NeverHalts m := by
   have hh : checkCycle w = true := List.all_eq_true.mp checked w hw
-  have h : decide (0 < w.period) = true &&
+  obtain ⟨hpos,hc⟩ : decide (0 < w.period) = true ∧
       fastSideCycleCheck (table w.codes)
-        w.entry w.period w.right w.boundary = true := hh
-  obtain ⟨hpos,hc⟩ := Bool.and_eq_true.mp h
+        w.entry w.period w.right w.boundary = true := by
+    simpa only [checkCycle, Bool.and_eq_true] using hh
   exact fastSideCycleCheck_sound (table w.codes)
     w.entry w.period w.right w.boundary
     (of_decide_eq_true hpos) hc m hm
