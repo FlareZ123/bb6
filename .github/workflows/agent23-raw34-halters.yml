@@ -1,6 +1,11 @@
 name: Agent23 Raw34 D1=1RD halt and side-cycle certificates (manual)
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        type: choice
+        options: [pilot, full]
+        default: pilot
 
 permissions:
   contents: read
@@ -22,6 +27,7 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
       - name: Compile exact source theorem closure and audit axioms
+        if: inputs.mode != 'full'
         run: |
           set -euo pipefail
           mkdir -p /tmp/agent23-raw34-halters
@@ -29,6 +35,16 @@ jobs:
             im-results/agent23-raw34-frontier/Raw34D1RDHalting12.lean \
             im-results/agent23-raw34-frontier/Raw34D1RDOneStepPilot.lean \
             im-results/agent23-raw34-frontier/Raw34TripleSweepGrowthF.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+      - name: Compile 1897 local first-query certificates in 16 source shards
+        if: inputs.mode == 'full'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 4 \
+            im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard*.lean \
             2>&1 | tee /tmp/agent23-raw34-halters/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
