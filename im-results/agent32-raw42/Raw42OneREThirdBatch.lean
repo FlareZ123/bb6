@@ -62,9 +62,9 @@ namespace Leaf003
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,0⟩))
     (0, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf003
 
@@ -106,9 +106,9 @@ namespace Leaf007
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,0⟩))
     (0, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf007
 
@@ -161,9 +161,9 @@ namespace Leaf012
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,2⟩))
     (2, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf012
 
@@ -172,9 +172,9 @@ namespace Leaf013
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,2⟩))
     (2, true) (some ⟨false,false,4⟩)
-theorem check : zipCycle p 11 1 false -1 = true := by decide
+theorem check : zipCycle p 11 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 11 1 false -1 (by decide) check B
+  zipper_cover p 11 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf013
 
@@ -227,9 +227,9 @@ namespace Leaf018
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,2⟩))
     (2, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf018
 
@@ -238,9 +238,9 @@ namespace Leaf019
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,2⟩))
     (2, true) (some ⟨true,false,4⟩)
-theorem check : zipCycle p 11 1 false -1 = true := by decide
+theorem check : zipCycle p 11 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 11 1 false -1 (by decide) check B
+  zipper_cover p 11 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf019
 
@@ -304,9 +304,9 @@ namespace Leaf025
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,4⟩))
     (4, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf025
 
@@ -315,9 +315,9 @@ namespace Leaf026
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,4⟩))
     (4, true) (some ⟨false,false,4⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf026
 
@@ -370,9 +370,9 @@ namespace Leaf031
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,4⟩))
     (4, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf031
 
@@ -381,9 +381,9 @@ namespace Leaf032
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,4⟩))
     (4, true) (some ⟨true,false,4⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf032
 
@@ -447,9 +447,9 @@ namespace Leaf038
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,5⟩))
     (5, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf038
 
@@ -480,9 +480,9 @@ namespace Leaf041
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨false,false,5⟩))
     (5, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf041
 
@@ -1096,9 +1096,9 @@ namespace Leaf097
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,0⟩))
     (0, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf097
 
@@ -1129,9 +1129,9 @@ namespace Leaf100
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,0⟩))
     (0, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf100
 
@@ -1261,9 +1261,9 @@ namespace Leaf112
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,2⟩))
     (2, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf112
 
@@ -1294,9 +1294,9 @@ namespace Leaf115
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,2⟩))
     (2, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf115
 
@@ -1338,9 +1338,9 @@ namespace Leaf119
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,4⟩))
     (4, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf119
 
@@ -1349,9 +1349,9 @@ namespace Leaf120
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,4⟩))
     (4, true) (some ⟨false,false,4⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf120
 
@@ -1393,9 +1393,9 @@ namespace Leaf124
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,4⟩))
     (4, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf124
 
@@ -1404,9 +1404,9 @@ namespace Leaf125
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,4⟩))
     (4, true) (some ⟨true,false,4⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf125
 
@@ -1459,9 +1459,9 @@ namespace Leaf130
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,5⟩))
     (5, true) (some ⟨false,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf130
 
@@ -1481,9 +1481,9 @@ namespace Leaf132
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,false,5⟩))
     (5, true) (some ⟨true,false,3⟩)
-theorem check : zipCycle p 9 1 false -1 = true := by decide
+theorem check : zipCycle p 9 1 false (-1) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 9 1 false -1 (by decide) check B
+  zipper_cover p 9 1 false (-1) (by decide) check B
 #print axioms cover
 end Leaf132
 
@@ -1899,9 +1899,9 @@ namespace Leaf170
 abbrev p : PartialMachine :=
   refine (refine base (4, false) (some ⟨true,true,4⟩))
     (4, true) (some ⟨false,false,4⟩)
-theorem check : zipCycle p 20 1 true -2 = true := by decide
+theorem check : zipCycle p 20 1 true (-2) = true := by decide
 theorem cover (B : Nat) : Cover (WeightedBound B) p :=
-  zipper_cover p 20 1 true -2 (by decide) check B
+  zipper_cover p 20 1 true (-2) (by decide) check B
 #print axioms cover
 end Leaf170
 
