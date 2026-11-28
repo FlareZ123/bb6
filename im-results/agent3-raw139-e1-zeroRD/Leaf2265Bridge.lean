@@ -17,6 +17,16 @@ theorem reached (m : Machine) (hm : compatible ctr m) :
 theorem weighted : Cover (WeightedBound (n+6)) ctr :=
   weighted_of_source n terminalCfg terminalRun terminalRead
 
+
+/-- The literal closingMachine halts after exactly 228-digit n successful
+    moves and its final halt query, realizing the score n+1. In particular
+    this is a genuine source-derived six-state attainable lower bound, not
+    a simulation cut-off or a proposed arithmetic runtime. -/
+theorem exact_attainable : Attainable (n+1) :=
+  attainable_of_source n terminalCfg terminalRun terminalRead
+
+#print axioms exact_attainable
+
 #print axioms reached
 #print axioms weighted
 end BB6.Agent3Leaf2265Bridge
