@@ -74,7 +74,7 @@ jobs:
           plan = json.loads(Path(
               "im-results/agent47-raw112-cut/Raw112Sparse39SplitPlan.json"
           ).read_text())
-          assert len(plan) == 29
+          assert len(plan) == 52
           groups = {item["module"]: [item["module"]] for item in plan}
           Path("/tmp/a33-chunk-config.json").write_text(json.dumps({
               "artifact_prefix": "raw112-sparse-chunk",
