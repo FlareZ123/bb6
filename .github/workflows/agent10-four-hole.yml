@@ -545,7 +545,7 @@ jobs:
           esac
           case "$VARIANT" in
             b1re_e11le|b1le_e0la|b1le_e0lf|b1le_e0ra|b1le_e1rb) export RAW43_BIDFA_BATCH=6 ;;
-            b1la_a0la) export RAW43_BIDFA_BATCH=12 ;;
+            b1la_a0la) export RAW43_BIDFA_BATCH=3 ;;
             b0le_e*|1lf) export RAW43_BIDFA_BATCH=6 ;;
           esac
           python "$root/generate.py" "$VARIANT"
