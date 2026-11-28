@@ -82,7 +82,9 @@ jobs:
           work=.tmp/a6-d8c6
           export LEAN="$HOME/.elan/bin/lean"
           export JOBS=2
-          python3 "$work/pipeline/compile_groups.py" "$work" "$work/core" D8C6 | tee "$work/d8c6/compile.log"
+          root_abs="$(realpath "$work")"
+          core_abs="$(realpath "$work/core")"
+          python3 "$work/pipeline/compile_groups.py" "$root_abs" "$core_abs" D8C6 | tee "$work/d8c6/compile.log"
           grep -F "FINAL" "$work/d8c6/compile.log"
           grep -F " 0 []" "$work/d8c6/compile.log"
           grep -F "'D8C6.cover' depends on axioms: [propext, Classical.choice, Quot.sound]" "$work/d8c6/src/logs/D8C6Parent.log"
