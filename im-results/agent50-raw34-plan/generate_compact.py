@@ -185,12 +185,60 @@ def emit_parent(p,slot,children,names,nss,bound,out,name):
     lines += ['#print axioms conditional',f'end {ns}','']
     (out/(name+'.lean')).write_text('\n'.join(lines))
 
+def extract_subbuilder(b, root, parent_table):
+    """Rebase an already-resolved source tree to a fresh local root.
+
+    Every emitted node is copied verbatim, except that its child indices
+    are rebased. This avoids rerunning the untrusted FAR/autopump searches
+    and permits each subtree to get a separate Lean kernel invocation.
+    The original ordinary proof nodes and row certificates are unchanged.
+    """
+    out=Builder(b.cap,b.window)
+    def clone(old):
+        i=len(out.nodes)
+        out.nodes.append(None)
+        node=b.nodes[old]
+        if node[0]=='split':
+            out.nodes[i]=('split',node[1],[clone(k) for k in node[2]])
+        else:out.nodes[i]=node
+        return i
+    assert clone(root)==0
+    assert not out.rows(), 'full source Cover cannot have pending rows'
+    if b.attainer is not None:
+        a,steps,delay=b.attainer
+        if all(x is None or x==y for x,y in zip(parent_table,a)):
+            out.attainer=b.attainer
+    return out
+
+
+def emit_heavy_split(b, q, name, bound, out):
+    """Split a single heavy RootChild into 25 checkable grandchildren.
+
+    The original outer RootChild module keeps exactly its name and
+    Cover statement, now proved by importing its child Covers.
+    """
+    top=b.nodes[0]
+    assert top[0]=='split', (name,top[0])
+    _,slot,indices=top
+    assert len(indices)==25
+    leaves=[];leaf_names=[];leaf_nss=[]
+    for i,(action,idx) in enumerate(zip(CHOICES,indices)):
+        subq=refine(q,slot,action)
+        small=extract_subbuilder(b,idx,subq)
+        lname=f'{name}Grand{i:02}'
+        ns=f'BB6.Agent50{lname}'
+        emit_child(small,subq,lname,ns,bound,out)
+        leaves.append(small);leaf_names.append(lname);leaf_nss.append(ns)
+    emit_parent(q,slot,leaves,leaf_names,leaf_nss,bound,out,name)
+
+
 def main():
     ap=ArgumentParser()
     ap.add_argument('--parent',default='1RB---_1RC---_0RD0RE_1LC0LD_---1LB_------')
     ap.add_argument('--cap',type=int,default=200);ap.add_argument('--window',type=int,default=40)
     ap.add_argument('--long-cap',type=int,default=10000);ap.add_argument('--far-limit',type=int,default=6)
     ap.add_argument('--far',default='./far');ap.add_argument('--output',default='generated');ap.add_argument('--name',default='Raw34E1LB')
+    ap.add_argument('--split-children',default='',help='comma-separated source child indices 0..24 to emit as 25 smaller source Covers')
     args=ap.parse_args();out=Path(args.output);out.mkdir(parents=True,exist_ok=True)
     p=parse(args.parent);c=simulate(p,args.cap,args.window);assert c[0]=='split';slot=c[1]
     tables=[refine(p,slot,a) for a in CHOICES];builders=[]
@@ -200,7 +248,11 @@ def main():
     for b,q in zip(builders,tables):b.finish(q)
     bound=max(1,max(b.bound for b in builders))
     names=[f'{args.name}Child{i:02}' for i in range(25)];nss=[f'BB6.Agent50{x}' for x in names]
-    for b,q,name,ns in zip(builders,tables,names,nss):emit_child(b,q,name,ns,bound,out)
+    heavy={int(i) for i in args.split_children.split(',') if i.strip()}
+    assert heavy <= set(range(25)),heavy
+    for i,(b,q,name,ns) in enumerate(zip(builders,tables,names,nss)):
+        if i in heavy: emit_heavy_split(b,q,name,bound,out)
+        else: emit_child(b,q,name,ns,bound,out)
     emit_parent(p,slot,builders,names,nss,bound,out,args.name)
     info={'parent':format_table(p),'split':slot,'weighted_bound':bound,'nodes':sum(len(b.nodes) for b in builders)+26,
           'stats':dict(sum((b.stats for b in builders),Counter())),'mass':dict(sum((b.mass for b in builders),Counter())),
