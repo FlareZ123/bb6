@@ -89,6 +89,33 @@ theorem resetMove_output_above_X {a d R c : Nat}
     unfold X
     omega
 
+/-- Stronger form: the next reset first counter lies above the entire starting
+    reset coordinate, not merely above its first counter. -/
+theorem resetEpoch_Xgap {R c R' c' : Nat}
+    (h : ResetEpoch R c R' c') : X R c < R' := by
+  rcases h with ⟨n,a,d,ho,hr⟩
+  have h1 := outerRun_X_monotone ho
+  have h2 := resetMove_output_above_X hr
+  omega
+
+theorem resetMove_output_small {a d R c : Nat}
+    (h : ResetMove a d R c) : c = 1 ∨ c = 2 := by
+  unfold ResetMove at h
+  rcases h with h | h
+  · rcases h with ⟨_,_,_,_,rfl⟩
+    exact Or.inr rfl
+  · rcases h with ⟨_,_,_,_,rfl⟩
+    exact Or.inl rfl
+
+/-- Any epoch beginning at a genuine reset counter c=1 or c=2 gains at least
+    seven in its reset first counter. -/
+theorem resetEpoch_gain7 {R c R' c' : Nat}
+    (h : ResetEpoch R c R' c') (hc : 1 ≤ c) :
+    R + 7 ≤ R' := by
+  have hg := resetEpoch_Xgap h
+  unfold X at hg
+  omega
+
 /-- Reset first counters are strictly increasing from one reset epoch to the
     next, independent of the High/Far interleaving length and branch pattern. -/
 theorem resetEpoch_strict {R c R' c' : Nat}
