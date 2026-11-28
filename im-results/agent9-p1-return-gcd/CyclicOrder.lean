@@ -88,10 +88,7 @@ theorem no_coprime_cyclic
     · simpa [hd] using hdiv
     · have hneg : (h:Int) ∣ -(dir*(K:Int)*a 0) :=
         Int.dvd_neg.mpr hdiv
-      have heq : -(dir*(K:Int)*a 0)=(K:Int)*a 0 := by
-        rw [hd]
-        simp
-      rwa [heq] at hneg
+      simpa only [hd,Int.mul_assoc,Int.neg_one_mul,neg_neg] using hneg
   have hnat : h ∣ K*(a 0).natAbs := by
     have hh' := Int.natAbs_dvd_natAbs.mpr hdivK
     simpa only [Int.natAbs_mul,Int.natAbs_natCast] using hh'
