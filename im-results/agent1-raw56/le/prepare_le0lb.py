@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate whole-child original-source certificates for E0=0LB,1LA,1RA with exact late queries."""
+"""Generate whole-child certificates for E0=0LB,1LA,1RA, quotienting every BiDFA witness."""
 import base64,gzip,hashlib,itertools,json,subprocess,sys
 from pathlib import Path
 HERE=Path(__file__).resolve().parent
@@ -31,6 +31,7 @@ def main():
     for p,h in [(CUT,'88d5dfc4994f8bd203fe3f3def5ea90efda86037'),(FAR,'30cac1862b3b88d7ba596b359a9dc8503163593d'),(DISC,'8fe2ac5d02e9809ea27904da010833e24b331ad9'),(BIDFA/'emit_rungram.py','e11a06c9daf6720ee537e6d2dea27daba20d6723'),(BIDFA/'FastBiDFA.lean','6d31e7e2f081eac524a9c7bb8bd33e55bc1dfd7f'),(AGENT/'emit_rc_rd.py','f6753bf0e6368a66eadb148d5df61d491068e54a')]:blob(p,h)
     for name,src in [('cut',CUT),('farbank',FAR)]:subprocess.run(['g++','-O3','-std=c++20',str(src),'-o',str(out/name)],check=True)
     sys.path.insert(0,str(BIDFA));from emit_rungram import emit
+    from motif_quotient import minimize
     for v in selected:
         offset,count,ht,ho,hf=SPEC[v];stop=offset+count
         hard=[2217,2218,2584,2589,2595,2600] if v=='0LB' else ([14773,14775] if v=='1LA' else [20388])
@@ -57,7 +58,9 @@ def main():
         for rec in records:
             i=rec['id'];assert rec['table']==rows[i] and i not in got
             mod=f'Raw56LE{v}BiDFA{i}';ns=f'BB6.Agent1Raw56.LE{v}BiDFA{i}'
-            text='\n'.join(['import FastBiDFA','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA',emit(i,rec['table'],*rec['dfa'],[rec['states'],rec['edges']]),'end '+ns,''])
+            dg,gg,ss=minimize(rec['table'],rec['dfa'])
+            assert len(ss)<=rec['states'] and sum(map(len,gg))+2<=rec['edges']
+            text='\n'.join(['import FastBiDFA','set_option maxRecDepth 100000','set_option maxHeartbeats 0','namespace '+ns,'open BB6Coverage BB6Coverage.Agent31Pump BB6.Agent1NGram BB6.Agent32FastBiDFA',emit(i,rec['table'],dg,gg,ss,[len(ss),sum(map(len,gg))+2]),'end '+ns,''])
             (gen/(mod+'.lean')).write_text(text);mods.append(mod);proven[i]=ns+f'.M{i}'
         motifmods=[];motif={}
         global_stem=out/'global-le'
