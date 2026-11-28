@@ -765,3 +765,9 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 
 - 1LE source run **46157367536** developed a sixth failed partition, **g6p2**. Its job log shows successful compilation of many modules and then exit143 / runner shutdown during `Raw421LERun1594`, not a Lean theorem error. Exact-part compact recovery dispatched as **46174512216** (queued).
 - 1LE's other failed partitions are already covered by existing repairs or active runs: g0p1 **46159201564**, g1p0 **46162745345**, g0p3 **46162748878**, g4p0 **46172225874**, g1p2 **46172484764**. The 11-slot composer is sufficient. README update commit **fa91f9e75a4302f28e553a24968f0903842dbdff**.
+
+
+## 2026-11-28T18:12:58.413Z checkpoint — 1LE g1p2 exact recovery accepted
+
+- Exact repair run **46172484764** succeeded for 1LE/g1p2: `SUCCESS: compiled 202 project modules from 63 root(s)`; artifact **15275415576**, SHA-256 **40e9b8a14c0ff3efe7af7c98d2e3694817d588099cd4132bba5eae9995c5c389**. Standard Lean axioms only; workflow's no-`sorryAx`/no-`native_decide` gate passed.
+- README updated in commit **fcb1bb7f437ae2917c1609ef580bea8b55707daf**. 1LE g1p2 is now a successful replacement; g4p0 and g6p2 remain in recovery. The original 1LE source split still has active/queued siblings, so no child Cover yet.
