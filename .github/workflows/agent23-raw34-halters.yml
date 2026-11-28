@@ -161,35 +161,11 @@ jobs:
             --output "$W/f3" --shard-size 50 > "$W/generate-f3.log"
           node im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
             --output "$W/f4" --shard-size 100 > "$W/generate-f4.log"
-          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
-            --include-f-left --include-e-ray > "$W/rank-ray-baseline.json"
-          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
-            --include-f-cycles --f-depth3-dir "$W/f3" > "$W/rank-depth3.json"
-          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
-            --include-f-depth4 --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
-            > "$W/rank-depth4.json"
-          node im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
-            --include-f-depth4 --include-f-long --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
+          node --max-old-space-size=5120 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --audit-disjoint-cycles --include-f-depth4 --include-f-long \
+            --f-depth3-dir "$W/f3" --f-depth4-dir "$W/f4" \
             --query-cubes "$W/f4/manifest.json" > "$W/rank-cycles.json"
-          node - "$W" <<'JS'
-          const fs=require("node:fs"), W=process.argv[2];
-          const get=(n)=>JSON.parse(fs.readFileSync(W+"/rank-"+n+".json"));
-          const a=get("ray-baseline"),b=get("depth3"),c=get("depth4"),d=get("cycles");
-          const num=x=>BigInt(x.totalResidualD1not1RD);
-          const result={
-            baselineUnclassifiedWithoutFCycles:String(num(a)),
-            afterDepth3:String(num(b)),
-            afterDepth4:String(num(c)),
-            afterLateFour:String(num(d)),
-            fDepth2and3FreshOverRays:String(num(a)-num(b)),
-            fDepth4FreshOverFDepth3:String(num(b)-num(c)),
-            lateFourFreshOverDepth4:String(num(c)-num(d)),
-            hard69ExactAfterCurrentSourceCandidates:d.queryCubes,
-            note:"Conditional arithmetic: all source cylinders must pass Lean before their deductions become accepted."
-          };
-          console.log(JSON.stringify(result,null,2));
-          fs.writeFileSync(W+"/rank-deltas.json",JSON.stringify(result,null,2)+"\n");
-          JS
+          node -e 'const j=require(process.argv[1]); console.log(JSON.stringify({baselineNonD1:j.totalResidualD1not1RD,disjointSources:j.cycleAudit,hard69:j.queryCubes&&{open:j.queryCubes.openCubes,residual:j.queryCubes.exactResidualGrossOverCubes,top:j.queryCubes.topOpen.slice(0,5)}},null,2))' "$W/rank-cycles.json"
       - name: Source-check F-branch depth-three translated side cycles (592 candidate tables)
         if: inputs.mode == 'f-depth3'
         run: |
