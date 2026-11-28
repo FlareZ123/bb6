@@ -646,3 +646,14 @@ Lease incarnation: claimed 2026-11-28T11:31:55.726702Z, claim commit dd4c16979ae
 2. Harvest corrected joint p2 LA cycle audit; if Lean errors remain, fix theorem source. Once both pass, they are genuine source-checked 244,140,625-completion cylinder closures.
 3. When all p3 sibling artifacts are accepted and byte-compatible, run `agent46-raw13-coupled6-parent.yml` with coupled5 run 45950673374, then `agent46-raw13-coupled6-source.yml`. Only after both pass update public results synthesis.
 4. Dispatch p1/D1 eight-hole discovery workflow in bounded batches; prioritize cycle-heavy siblings.
+
+## 2026-11-28 17:27 UTC — complete RF hard-leaf inventory
+
+Normal RNG=1, immutable lease claimed 2026-11-28T17:11:45.490Z, commit 31d236da655adbc5f279ee8212dbf3cfd5b48a0b, run agent46-gpt62-2026-11-28T17:11:45.490Z-raw13-gap; release threshold 18:21:45.490Z. Current checkpoint 2026-11-28T17:27:20.360Z.
+
+Five new one-hole cylinders have unconditional original-semantics NeverHalts theorems for all compatible completions (125 concrete machines). All three files locally compiled against accepted original dependency objects from artifact 15248054208, run 46103800697, using provided Lean 4.36.0-rc2. Source blobs match local checked bytes. No sorryAx/native oracle. 
+- Raw13Coupled6RFCounter.lean bd60fa5e: 0RF F0=0LD/1LD/1RC, same binary counter with primary A root and secondary B root, arbitrary bit-list induction, entry235/247/223. 
+- Raw13Coupled6RFQuaternary.lean 50055077: table 1RB1LD1RC0LD1LA1RE0LD0LA0RB0RF1LB---; A empty left, right (010)^(n+1) 10 enc(ds); phase markers 10→000→0110→10, carry digit cycle 010→000→011→001→010 with overflow append digit2; grow prefix by one block; entry22. 
+- Raw13Coupled6RFOneRD.lean ed566665: table 1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RD---, distinct primary B frame and secondary B frame, D0=101010,D1=111010,end11, 26-step carry adds six ones, overflow toggles phases and grows width on secondary overflow. Seed561. Prior A-root search for this variant was wrong because its long-run root is B.
+- Generator adapter cb0a81b0 includes all five; 0RF search inventory has 12 hard leaves, now all covered by these five + Raw13RFPrefix + six stored auto certificates. Dossier Raw13Coupled6.md 6cb62906. Full sibling cut audit target coupled6Sibling 0RF still needed. No dispatch tool available in this invocation; direct git DNS blocked. No new canonical roster decrement until source acceptance and parent assembly.
+- Next: remaining exact gap roster in discoverCoupled6GapSAT.py (four RF entries now proved, plus fifth outside that roster). Avoid rediscovering these proofs. Target other families with the same arbitrary-tail sweep and structural carry proof strategy.
