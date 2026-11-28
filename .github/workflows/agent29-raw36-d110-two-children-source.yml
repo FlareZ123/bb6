@@ -19,10 +19,10 @@ on:
         type: boolean
         default: false
       zeroRF_search_run_id:
-        description: "Successful candidate-search run containing the exact E0=0RF report"
+        description: "Successful candidate-search run containing all six E0=0RF nonhalting certificates"
         required: false
         type: string
-        default: "46170131334"
+        default: ""
       bound:
         description: "Common weighted threshold for the D110 parent and all selected child Covers"
         required: false
@@ -95,6 +95,10 @@ jobs:
           set -euo pipefail
           if [[ "${{ inputs.include_zeroRF }}" == "true" && "${{ inputs.include_zeroLF }}" != "true" ]]; then
             echo "E0=0RF mode requires include_zeroLF=true because its adapter composes on Live5."
+            exit 2
+          fi
+          if [[ "${{ inputs.include_zeroRF }}" == "true" && -z "${{ inputs.zeroRF_search_run_id }}" ]]; then
+            echo "E0=0RF mode requires a completed all-six candidate-search run ID."
             exit 2
           fi
           if [[ "${{ inputs.include_zeroRF }}" == "true" && "${{ inputs.bound }}" -lt 2635 ]]; then
