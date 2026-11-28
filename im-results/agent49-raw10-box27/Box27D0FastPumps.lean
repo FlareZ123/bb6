@@ -13,7 +13,7 @@ growth; code 10 enters a deterministic two-step recurrence. All other
 seven transition slots A1,B1,D1,E0,E1,F0,F1 remain free.
 -/
 namespace BB6.Agent49.Box27D0FastPumps
-open BB6Coverage BB6Coverage.Agent31Pump
+open BB6Coverage BB6Coverage.Agent13BlankDelay BB6Coverage.Agent31Pump
 open BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 

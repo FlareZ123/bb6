@@ -11,7 +11,7 @@ slots. Two-state (33 pairs) or four-state (one pair) stack automata check
 the invariant. This is independent of the D0=0/5/7/9/10 macro closures.
 -/
 namespace BB6.Agent49.Box27D0D1FAR
-open BB6Coverage BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 def table (d0 d1 : Fin 25) : PartialMachine := fun s => match s with

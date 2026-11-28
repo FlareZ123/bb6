@@ -8,7 +8,7 @@ set_option maxHeartbeats 0
     opposed to the full inverse relation used in Box27D0D1FAR.
     D0=6 is handled more generally by Box27D0FastPumps.never06. -/
 namespace BB6.Agent49.Box27D0D1FARExt
-open BB6Coverage BB6.Agent49Box BB6.Agent49BoxBridge
+open BB6Coverage BB6Coverage.Agent13BlankDelay BB6.Agent49Box BB6.Agent49BoxBridge
 open BB6.Agent13.Box17 (decode)
 
 def table (d0 d1 : Fin 25) : PartialMachine := fun s => match s with
