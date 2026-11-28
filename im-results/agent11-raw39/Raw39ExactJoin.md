@@ -22,6 +22,6 @@ Local Lean 4.36.0-rc2 checks succeeded for all listed theorems with standard axi
 
 Source-audit status on 28 November:
 - **0LE complete:** [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153) passed all eight shards and final Lean child closure at bound 15125.
-- **1LE incomplete:** [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482) has accepted partial shards, but shard g1's runner shut down and g5 exceeded the 45-minute limit. The existing source generator now supports 16-way 1LE sharding; three earlier lower-bound artifacts remain eligible for source-identity-checked reuse. A completed 1LE source audit is still required.
+- **1LE incomplete:** [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482) accepted individual shard jobs g0,g2,g3,g4,g6,g7, but g1's runner shut down and g5 exceeded the 45-minute limit. The replacement [46102161614](https://github.com/FlareZ123/bb6/actions/runs/46102161614) reuses those six corrected-bound artifact closures at pinned source revision e7c319dd, with sixteen smaller leaf groups for the missing source proof modules. It has not yet passed; a complete 1LE source audit is required.
 
-Do not decrement the global roster before both complete child bounds are actually accepted and the unconditional join consumed. No exact BB(6) assertion.
+The pending final joins are prepared as source candidates in `Raw39CompleteJoin.lean` and `Raw39Canonical40Bridge.lean`; the explicit roster40 membership preflight is `Raw39Canonical40Membership.lean`. These modules do not yet have combined original-source Lean acceptance. Do not decrement the global roster before both complete child bounds are actually accepted and the unconditional join consumed. No exact BB(6) assertion.
