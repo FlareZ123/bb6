@@ -25,8 +25,9 @@ Equivalently, the residue-7 class is represented as the signed residue -1.
 This single map covers the larger residue family that appears at deeper
 levels.
 
-The literal primitive simulator checks all corresponding boundaries for
-levels 2->3 through 7->8 (all corresponding triad boundaries in those epochs).
+The literal primitive simulator checks the fixed-map prefix through the
+9->10 comparison.  The next comparison is the known counterexample and is
+intentionally outside this regression audit.
 """
 
 TABLE = "1RB1LA_1RC1RB_0RD0RC_1LD1LE_1LF0LE_0LA---"
