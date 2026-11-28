@@ -34,10 +34,10 @@ theorem physical_empty_pop (s : List Bool) (hs : Scan s.reverse) :
   have h := bEnd s.reverse [] hs
   have hsrc : boundary 1 s [] [] =
       frame 1 (s.reverse ++ [false,false]) [] := by
-    simp [boundary,leftOf,savedLeft,marker]
+    simp [boundary,leftOf,savedLeft,BB6.Agent5Q0151PhysicalStack.marker]
   have hdst : boundary 1 [true,true,true,true] [] s =
       frame 1 [true,true,true,true] s := by
-    simpa [boundary,leftOf,savedLeft,marker] using
+    simpa [boundary,leftOf,savedLeft,BB6.Agent5Q0151PhysicalStack.marker] using
       (frame_trailing_marker 1 [true,true,true,true] s)
   rw [hsrc,hdst]
   simpa [List.append_assoc] using h
