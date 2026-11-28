@@ -1,0 +1,92 @@
+name: Agent17 Raw42 twelve-child parent compose
+on:
+  workflow_dispatch:
+    inputs:
+      run_0LE: {description: 'Successful 0LE assembly run', required: true, type: string}
+      run_1LB: {description: 'Successful 1LB recovery run', required: true, type: string}
+      run_1LC: {description: 'Successful 1LC recovery run', required: true, type: string}
+      run_1LE: {description: 'Successful 1LE assembly run', required: true, type: string}
+      run_1RE: {description: 'Successful 1RE assembly run', required: true, type: string}
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Validate dynamic run IDs
+        run: |
+          set -euo pipefail
+          for x in "${{ inputs.run_0LE }}" "${{ inputs.run_1LB }}" "${{ inputs.run_1LC }}" "${{ inputs.run_1LE }}" "${{ inputs.run_1RE }}"; do
+            [[ "$x" =~ ^[0-9]+$ ]]
+          done
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '46089669906', name: raw42-certified-0LA, path: /tmp/children/0LA}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '45994074344', name: raw42-certified-0RA, path: /tmp/children/0RA}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '46068374725', name: raw42-certified-1LA, path: /tmp/children/1LA}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '46068379812', name: raw42-certified-1RA, path: /tmp/children/1RA}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '46051022197', name: raw42-certified-0RB, path: /tmp/children/0RB}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LB }}", name: raw42-certified-1LB-targeted-recovery, path: /tmp/children/1LB}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '45996253830', name: raw42-certified-1RB, path: /tmp/children/1RB}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LC }}", name: raw42-certified-1LC-split-recovery, path: /tmp/children/1LC}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_0LE }}", name: raw42-certified-0LE, path: /tmp/children/0LE}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: '45996645063', name: raw42-certified-0RE, path: /tmp/children/0RE}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1LE }}", name: raw42-certified-1LE, path: /tmp/children/1LE}
+      - uses: actions/download-artifact@v4
+        with: {github-token: "${{ secrets.GITHUB_TOKEN }}", repository: FlareZ123/bb6, run-id: "${{ inputs.run_1RE }}", name: raw42-certified-1RE, path: /tmp/children/1RE}
+      - name: Strictly merge child closures
+        run: |
+          set -euo pipefail
+          python im-results/agent32-raw42/merge_child_artifacts42.py \
+            --artifacts-root /tmp/children \
+            --sources-out /tmp/raw42-sources \
+            --objects-out /tmp/raw42-objects \
+            --manifest-out /tmp/raw42-merged-manifest.json
+      - name: Compile only the twelve-child parent wrapper
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/raw42-parent --jobs 1 \
+            --source-root /tmp/raw42-sources \
+            --precompiled-manifest /tmp/raw42-merged-manifest.json \
+            --precompiled-dir /tmp/raw42-objects \
+            --manifest /tmp/raw42-parent/manifest.json \
+            --artifact-name raw42-parent-certified \
+            --theorem BB6.Agent17Raw42AcceptedParent.cover_global \
+            --parent-table '1RB---_1RC---_0RD---_1LD0LB_------_------' \
+            --weighted-bound 6766859 \
+            im-results/agent32-raw42/Raw42AcceptedParent.lean \
+            | tee /tmp/raw42-parent/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/raw42-parent/audit.log
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/raw42-parent/audit.log \
+            BB6.Agent17Raw42AcceptedParent.cover_global
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-parent-compose
+          path: |
+            /tmp/raw42-merged-manifest.json
+            /tmp/raw42-parent/
+          if-no-files-found: warn
+          retention-days: 30
