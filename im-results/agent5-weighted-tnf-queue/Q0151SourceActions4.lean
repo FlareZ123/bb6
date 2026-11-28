@@ -51,7 +51,10 @@ theorem b_two_end_refines (s : List Bool) (hs : SegGood s)
     pop_four_transfer s hs []
   have hact : Action.pop (rightSig canonical) ∈ delta (co true s [1]) := by
     rw [← hsummary]
-    simp [delta,co,actionsFor,choicesA,cut,rightSig,cat,emptyRight]
+    apply action_of_cut _ 2 emptyRight _
+      (by simpa [co] using
+        (show (2,emptyRight) ∈ cut (rightSig [1]) by decide +kernel))
+    simp [actionsFor,choicesA,cut,emptyRight,co,rightSig,suffixMask]
   have hmacro := b_two_end_source s stack hs.1
   have hpacked : boundary 1 (popSaved stack ++ [true,true,true,true])
       (popTail stack) (s ++ [true,true,true,true]) =
