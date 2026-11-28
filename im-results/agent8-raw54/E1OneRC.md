@@ -1,4 +1,4 @@
-# Raw54 E1=1RC: complete discovery partition, candidate exact threshold 1847
+# Raw54 E1=1RC: source-accepted complete Cover, exact threshold 1847
 
 Parent: `1RB---_1RC---_0RD---_1LD0LE_---1RC_------` (six remaining slots, 25^6 raw completions).
 
@@ -28,8 +28,8 @@ At primitive time 61 the machine is B(T(1)). Exact total transitions:
 | D(0::s,W) | D(s,P W) | 33 |
 | D((j+1)::s,W) | S(j::s,0,W) | 46 |
 
-Each transition preserves arbitrary tails, uses finite reduction plus sweep induction, and has strictly positive cost. The total next-section function therefore yields unbounded live prefixes. The [Lean proof](Raw54E1OneRCHard139.lean) exports `BB6.Agent8Raw54.E1OneRC.M139.never`; its complete recurrence and nonhalting theorem compiled locally with only propext and Quot.sound against reconstructed exact zipper semantics. The committed source imports original SweepPumping; its original-source closure is pending the integrated audit. This is a proof candidate with a checked local derivation, not yet a source-accepted root Cover.
+Each transition preserves arbitrary tails, uses finite reduction plus sweep induction, and has strictly positive cost. The total next-section function therefore yields unbounded live prefixes. The [Lean proof](Raw54E1OneRCHard139.lean) exports `BB6.Agent8Raw54.E1OneRC.M139.never`; its complete recurrence and nonhalting theorem compiled locally with only propext and Quot.sound against reconstructed exact zipper semantics. The committed source imports original SweepPumping. The complete generated parent closure, including this grammar theorem, is source-accepted by the repaired sharded audit described below.
 
 ## Integration
 
-Run `python im-results/agent8-raw54/generate_e1ra_rb.py E1OneRC --threshold 80`. The shared generator regenerates all finite and symbolic witnesses, exact late traces, and `Raw54E1OneRCComplete.lean`. The manual workflow target `weighted-tnf-raw54-e1onerc-sliced` checks sharded original-source closure and the named exact-threshold theorem with the axiom gate. It has been dispatched. Only after the final source audit succeeds may the bound 1847 be treated as accepted. No global residual roster cut is claimed.
+Run `python im-results/agent8-raw54/generate_e1ra_rb.py E1OneRC --threshold 80`. The shared generator regenerates all finite and symbolic witnesses, exact late traces, and `Raw54E1OneRCComplete.lean`. The original sliced run compiled 31/32 source shards but shard 10 was terminated by runner shutdown. The focused repair [run 46122232071](https://github.com/FlareZ123/bb6/actions/runs/46122232071) subdivided only that shard, reused the 31 identity-checked successful slices, and then compiled `Raw54E1OneRCComplete.lean` from original source. `BB6.Agent8Raw54.E1OneRC.complete_cover` and `.exact_threshold` both passed with axioms `[propext, Classical.choice, Quot.sound]`; artifact `raw54-e1onerc-complete-certified` is ID **15254946492**, SHA-256 `7fd932eaf51d519bcac1f8e83f1d6df17337b670e6f013e8effa049d39328ec0`. Thus 1847 is a source-accepted exact weighted threshold for this entire E1=1RC cylinder. No global Raw54 Cover follows by itself.
