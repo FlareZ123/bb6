@@ -70,13 +70,13 @@ theorem root_residual_subset (e : List Move × PartialMachine)
     source_head=reduced[:reduced.index("def table6168 :")]
     assert "import Raw56LBE11LBAll" in source_head
     source_head=source_head.replace("import Raw56LBE11LBAll",
-        "import Raw56LBTopSubset\\nimport Raw56LBTopChecks",1)
+        "import Raw56LBTopSubset\nimport Raw56LBTopChecks",1)
     theorem=reduced[reduced.index("theorem reduced_quotient :"):]
     original_call="rcases partial_quotient m hm with h | ⟨e,he,hc⟩"
     new_call="rcases canonicalSound 1000000 p 5 ttop (by decide) supported root nohalt ctop m hm with h | ⟨e,he,hc⟩"
     assert theorem.count(original_call)==1
     theorem=theorem.replace(original_call,new_call,1)
-    old_mid=("have hh : e.snd ∈ residuals.map Prod.snd := List.mem_map_of_mem Prod.snd he\\n"
+    old_mid=("have hh : e.snd ∈ residuals.map Prod.snd := List.mem_map_of_mem Prod.snd he\n"
              "    rw [residual_tables] at hh")
     assert theorem.count(old_mid)==1
     theorem=theorem.replace(old_mid,"have hh : e.snd ∈ allTables := root_residual_subset e he",1)
