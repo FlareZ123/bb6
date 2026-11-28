@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
+        options: [late-parent, lift, canonical, canonical39, canonical38-raw39-conditional, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit, raw34-triple-sweep, raw34-alternating, raw34-bidirectional, closed-graph, raw34-closed-cde, raw34-closed-families, raw34-graph-closed, raw34-binary-counter, raw34-binary-ef, raw34-f-right-ray, raw34-f-depth3-cycles, raw34-f-depth4-cycles, raw34-e-cycles, raw34-halt8, raw34-halt9, raw34-halt-depth4, raw34-halt-depth5, raw34-halt-depth5-full, raw34-plan, raw34-compact, raw34-compact-sharded, raw34-guarded-e, raw34-two-sweep, raw34-guarded-f, raw34-zero-guarded, raw34-initial-guarded, raw34-causal-guarded, raw34-six-plan, raw34-window3-audit]
         default: late-parent
       base_run:
         type: string
@@ -1311,6 +1311,70 @@ jobs:
         with:
           name: raw34-f-depth4-source-census
           path: /tmp/a40-raw34-f-depth4/
+          if-no-files-found: warn
+          retention-days: 30
+
+  raw34-e-cycles:
+    if: inputs.mode == 'raw34-e-cycles'
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Source-check E/F-conjugate 9,857 two-, three-, and four-slot translated cycles
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          W=/tmp/a40-raw34-e-conjugate
+          mkdir -p "$W/f3" "$W/f4" "$W/e"
+          node im-results/agent40-raw34-frontier/generate_f_depth3_cycles.mjs \
+            --shard-size 50 --output "$W/f3" > "$W/f3-census.json"
+          node im-results/agent40-raw34-frontier/generate_f_depth4_cycles.mjs \
+            --shard-size 100 --output "$W/f4" > "$W/f4-census.json"
+          node im-results/agent40-raw34-frontier/lift_f_cycles_to_e.mjs \
+            --depth 2 --output "$W/e" > "$W/e2-census.json"
+          node im-results/agent40-raw34-frontier/lift_f_cycles_to_e.mjs \
+            --depth 3 --source "$W/f3" --output "$W/e" > "$W/e3-census.json"
+          node im-results/agent40-raw34-frontier/lift_f_cycles_to_e.mjs \
+            --depth 4 --source "$W/f4" --output "$W/e" > "$W/e4-census.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/e" --jobs 5 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-e-conjugate-sides \
+            "$W/e"/Raw34EDepth*.lean \
+            2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          python - "$W/closure.log" "$W" <<'PY'
+          import json,re,sys,os
+          log=open(sys.argv[1]).read()
+          W=sys.argv[2]
+          allowed={'propext','Classical.choice','Quot.sound'}
+          sum_count=0
+          for d in [2,3,4]:
+              m=json.load(open(os.path.join(W,f'e{d}-census.json')))
+              assert m['depth']==d
+              assert m['count']=={2:34,3:592,4:9231}[d]
+              sum_count+=m['count']
+              entries=m['byModule']
+              for stem in entries:
+                  for name in ('count','checked','all_never'):
+                      full=stem.rsplit('.',1)[0]+'.'+name
+                      mm=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+                      if mm: assert set(filter(None,mm.group(1).split(', ')))<=allowed,(full,mm.group(1))
+                      else: assert f"'{full}' does not depend on any axioms" in log,full
+          assert sum_count==9857
+          print('PASS: 9857 source-proved E/F-conjugate translated sidecycle partial machines')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-e-side-conjugacy-source
+          path: /tmp/a40-raw34-e-conjugate/
           if-no-files-found: warn
           retention-days: 30
 
