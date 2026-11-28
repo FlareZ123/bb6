@@ -1,0 +1,117 @@
+name: Agent4 source-accept exact five-of-six Raw56 E1=1LB parent reduction
+
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run:
+        description: "Successful 1LB reduced-parent source-recovery run"
+        required: true
+        default: "46133710045"
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  five:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-prepared
+          path: /tmp/prep
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-six-residual-source-accepted-recovered
+          path: /tmp/reduced
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.parent_run }}
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cut-*
+          path: /tmp/cuts
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: rootpilot-lb-cert-*
+          path: /tmp/certs
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46102143574'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw56-lb-m42763-row-*
+          path: /tmp/accepted
+          merge-multiple: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m42763-source-accepted
+          path: /tmp/accepted
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46127222127'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-lb-m39232-minimized-single-source-accepted
+          path: /tmp/accepted
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46135066154'
+      - name: Kernel-accept exact 43,348-leaf parent reduced to only M23706
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/five
+          cp im-results/agent4-two-sided-automata/{TwoSidedAutomata,TwoSidedChunks}.lean /tmp/five/
+          cp im-results/agent4-raw56-root-pilot/{M21049,M3923Pair,M39234,M39233,Raw56LBFiveOfSix}.lean /tmp/five/
+          cp /tmp/accepted/M*.olean /tmp/five/
+          cp /tmp/accepted/M*.lean /tmp/five/
+          cd /tmp/five
+          export LEAN_PATH="/tmp/base/a1-raw56-root-consumer:/tmp/reduced:/tmp/reduced/E11LB:/tmp/cuts:/tmp/cuts/E11LB:/tmp/certs:/tmp/prep:/tmp/prep/E11LB:$PWD"
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
+          lean -j1 -o M42763Data.olean M42763Data.lean
+          lean -j1 -o M42763Base.olean M42763Base.lean
+          lean -j1 -o M21049.olean M21049.lean
+          lean -j1 -o M3923Pair.olean M3923Pair.lean
+          lean -j1 -o M39234.olean M39234.lean
+          lean -j1 -o M39233.olean M39233.lean
+          lean -j1 -o Raw56LBFiveOfSix.olean Raw56LBFiveOfSix.lean | tee Raw56LBFiveOfSix.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" \
+            Raw56LBFiveOfSix.log \
+            --require BB6.Agent4Raw56LB.E11LB.all_except_23706
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-five-of-six-parent-source-accepted
+          path: |
+            /tmp/five/Raw56LBFiveOfSix.lean
+            /tmp/five/Raw56LBFiveOfSix.olean
+            /tmp/five/Raw56LBFiveOfSix.log
+          if-no-files-found: error
