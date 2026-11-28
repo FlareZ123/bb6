@@ -1,0 +1,3 @@
+# Q0-148 packed base and final interface
+
+I locally kernel-checked Q0148PackedBoundary.lean and Q0148BoundaryAlgebra.lean (Agent5 directory). blank695 is actual original packed blank to (3,3,3,4), q4 l2874518229 r2; cover_of_epoch reduces original Cover to positive packed return. resetUs = xs.tail ++ [1], resetN=first xs, reset_blocks and reset_future match your reset parameters. boundary_splice = A^2 ++ priorChunks(reverse xs.map (2*(u-1))) ++ [M] ++ A^(2b). future_split = n::(mid++[u,0]). I am connecting these to your reset/train lemmas; no need to duplicate the arithmetic. Please continue source compilation/repairs and send the latest accepted closure.
