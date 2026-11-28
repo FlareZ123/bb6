@@ -60,7 +60,8 @@ const counters=[
  "1RB---_1RC---_0RD0LC_1LC1RF_------_1RD---"
 ].map(parseTable);
 counters.forEach(add);
-const withRay=process.argv.includes("--include-f-ray");
+const withLeft=process.argv.includes("--include-f-left");
+const withRay=process.argv.includes("--include-f-ray")||withLeft;
 function parseSourceRay(file){
  const text=readFileSync(join(dir,file),"utf8");
  const arr=[...text.matchAll(/^\s*\[([\d,\s]+)\],?$/gm)].map(m=>
@@ -73,9 +74,10 @@ function parseSourceRay(file){
 }
 const raySource=withRay?[
  ...parseSourceRay("Raw34FRightRay.lean"),
- ...parseSourceRay("Raw34EFRightRay.lean")
+ ...parseSourceRay("Raw34EFRightRay.lean"),
+ ...(withLeft?parseSourceRay("Raw34FLeftRay.lean"):[])
 ]:[];
-if(withRay)assert.equal(raySource.length,36);
+if(withRay)assert.equal(raySource.length,withLeft?44:36);
 raySource.forEach(add);
 const counterCount=counters.length+raySource.length;
 function loadHalters(file){
