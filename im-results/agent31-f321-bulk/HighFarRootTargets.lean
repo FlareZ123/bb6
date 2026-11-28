@@ -1,5 +1,5 @@
 import HighFarTerminalFamily
-import AnchorEpoch
+import Phase6Bridge
 import Lean.Elab.Tactic.Omega
 
 /-!
@@ -15,9 +15,26 @@ root invariant.
 namespace BB6.Agent31F321HighFarRootTargets
 open BB6.Agent31F321Density
 open BB6.Agent31F321HighFarFamily
-open BB6.Agent2F321AnchorEpoch
 open BB6.Agent2F321Phase6
 open BB6.Agent2F321Phase6Bridge
+
+/-- Exact source reset branches whose output second counter is at most two. -/
+def SmallAnchorMove (a d R c : Nat) : Prop :=
+  (a=d ∧ R=2*a+4 ∧ c=1) ∨
+  (a<d ∧ d<3*a+1 ∧ (d-a)%2=0 ∧ R=4*a+6 ∧ c=2) ∨
+  (a<d ∧ d<3*a+1 ∧ (d-a)%2=1 ∧ R=4*a+6 ∧ c=1)
+
+theorem smallAnchorMove_source {a d R c : Nat}
+    (h : SmallAnchorMove a d R c) : CounterMove a d R c := by
+  unfold SmallAnchorMove at h
+  rcases h with hE | hM
+  · rcases hE with ⟨rfl,rfl,rfl⟩
+    exact CounterMove.equal a
+  · rcases hM with hEven | hOdd
+    · rcases hEven with ⟨h1,h2,hp,rfl,rfl⟩
+      exact CounterMove.middleEven d h1 h2 hp
+    · rcases hOdd with ⟨h1,h2,hp,rfl,rfl⟩
+      exact CounterMove.middleOdd d h1 h2 hp
 
 def dangerM (k : Nat) : Nat := 8*k+6
 def dangerN (k : Nat) : Nat := 24*k+22
@@ -54,9 +71,9 @@ theorem danger_equal_predecessor_unreachable
 theorem danger_anchor_requires_middleOdd
     {k n a d : Nat}
     (hr : CounterReach 1 1 n a d)
-    (ha : AnchorMove a d (dangerR k) 1) :
+    (ha : SmallAnchorMove a d (dangerR k) 1) :
     a<d ∧ d<3*a+1 ∧ (d-a)%2=1 ∧ 4*a+6=dangerR k := by
-  unfold AnchorMove at ha
+  unfold SmallAnchorMove at ha
   rcases ha with hE | hM
   · rcases hE with ⟨had,hR,hc⟩
     have hrEq : CounterReach 1 1 n a a := by simpa [had] using hr
@@ -67,6 +84,7 @@ theorem danger_anchor_requires_middleOdd
     · rcases hOdd with ⟨h1,h2,hp,hR,hc⟩
       exact ⟨h1,h2,hp,hR.symm⟩
 
+#print axioms smallAnchorMove_source
 #print axioms danger_family
 #print axioms danger_equal_predecessor_unreachable
 #print axioms danger_anchor_requires_middleOdd
