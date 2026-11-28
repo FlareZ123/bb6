@@ -27,6 +27,7 @@ jobs:
           mkdir -p /tmp/raw140-37-a-tail
           python tools/lean_compile_closure.py --workdir /tmp/raw140-37-a-tail --jobs 3 im-results/agent15-raw140-hard-prefix/Raw14037ATailBridge.lean 2>&1 | tee /tmp/raw140-37-a-tail.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-37-a-tail.log Raw14037ATailBridge.t11511_to_c31
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw140-37-a-tail.log Raw14037ATailBridge.t11511_to_twoBank
       - uses: actions/upload-artifact@v4
         if: always()
         with:
