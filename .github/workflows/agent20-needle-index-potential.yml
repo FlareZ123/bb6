@@ -35,10 +35,12 @@ jobs:
           cp "$GITHUB_WORKSPACE/im-results/agent48-space-needle/SpaceNeedleClosed.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-unified-hensel/IndexPotential.lean" .
           cp "$GITHUB_WORKSPACE/im-results/agent20-needle-unified-hensel/SpaceNeedlePotentialSource.lean" .
-          for module in SpaceNeedleClosed IndexPotential SpaceNeedlePotentialSource; do
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/MixedValuationDisjoint.lean" .
+          cp "$GITHUB_WORKSPACE/im-results/agent20-needle-mixed-branch/NeedleMixedValuationSource.lean" .
+          for module in SpaceNeedleClosed IndexPotential SpaceNeedlePotentialSource MixedValuationDisjoint NeedleMixedValuationSource; do
             lake env lean -o ".lake/build/lib/lean/$module.olean" "$module.lean" 2>&1 | tee "$module.source.log"
           done
-          if grep -E 'sorryAx|native_decide|Lean.ofReduceBool' IndexPotential.source.log SpaceNeedlePotentialSource.source.log; then
+          if grep -E 'sorryAx|native_decide|Lean.ofReduceBool' IndexPotential.source.log SpaceNeedlePotentialSource.source.log MixedValuationDisjoint.source.log NeedleMixedValuationSource.source.log; then
             echo "Non-kernel proof axiom rejected" >&2
             exit 1
           fi
@@ -51,5 +53,13 @@ jobs:
               assert hit, name
               axioms={x.strip() for x in hit[1].split(',')}
               assert axioms <= {'propext','Classical.choice','Quot.sound'},(name,axioms)
-          print('PASS: three source kernels, standard axioms only')
+          for source, names in [('MixedValuationDisjoint.source.log',['no_three_then_five','no_five_then_three']), ('NeedleMixedValuationSource.source.log',['no_three_then_five_source','no_five_then_three_source'])]:
+              txt=pathlib.Path(source).read_text()
+              namespace='BB6.Agent20MixedValuation' if source.startswith('Mixed') else 'BB6.Agent20NeedleMixedSource'
+              for name in names:
+                  hit=re.search(r"'"+namespace+r"\."+name+r"' depends on axioms: \[([^\]]*)\]",txt)
+                  assert hit, (source,name)
+                  axioms={x.strip() for x in hit[1].split(',')}
+                  assert axioms <= {'propext','Classical.choice','Quot.sound'}, (name,axioms)
+          print('PASS: source potential and mixed branch kernels, standard axioms only')
           PY
