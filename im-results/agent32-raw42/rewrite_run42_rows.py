@@ -49,7 +49,7 @@ def write(name, imports, body):
     )
 
 data_mod = stem + "Data"
-write(data_mod, ["FastBiDFA"], definitions)
+write(data_mod, ["FastBiDFARows"], definitions)
 
 rows = []
 for j in range(12):
