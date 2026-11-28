@@ -69,3 +69,28 @@ the three pinned inputs.  `emit_structured.py` regenerates independent Lean
 certificates for any desired low-state prefix or the full structured bank.
 The earlier eight-worker local replay was memory-wasteful; the sequential
 replay completes comfortably and is the reproducible path.
+
+
+## FAR mutation shell: 122 candidate holdouts
+
+Starting from the 153 exact residual literals above, one-transition mutations of
+the 441 inherited D1=0RE FAR seed automata close **31 additional exact
+literals**.  Exhaustive rooted binary DFAs through **d=5** close none beyond
+that mutation shell.  The 31-row table/code mapping SHA256 is
+`3ab7b9423dc3a1d9c428144c6daa9e632c8c13812997a04ef45589f1c58ddd10`;
+the sorted **122** residual table list SHA256 is
+`eca0fc8bd3a486f45cbbef0445dbd4f491d3117712b5400523c674bc4a07a273`.
+
+All 31 new FAR witnesses were regenerated as original Lean source in seven
+small modules and kernel-checked locally with Lean 4.36.0-rc2 against the
+accepted `ThreeHoleAudit` / `FastFAR` dependency closure.  Every `never`
+theorem reports exactly `[propext, Classical.choice, Quot.sound]`.  A second
+mutation shell seeded by the new 31 winners closes **zero** of the 122, and
+exhaustive d≤5 FAR likewise closes zero, so this specific FAR neighborhood is
+exhausted.
+
+Combined with the inherited FAR and structured families, only **122 / 3841**
+saved D1=1LA canonical OPEN literals remain outside the current exact
+certificate banks.  This is a 96.824% candidate reduction of the OPEN roster;
+whole-parent Cover status still awaits source checking/integration of the full
+structured bank and proofs for the 122 true holdouts.
