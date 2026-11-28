@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, extra-resume-132, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -493,5 +493,116 @@ jobs:
             /tmp/raw11-q0-152
             im-results/agent47-raw11-adapter/Raw11FourExtra.lean
             im-results/agent47-raw11-adapter/Raw11Q0CombinedExtra.lean
+          if-no-files-found: error
+          retention-days: 30
+
+
+  # Recover seven individually accepted immutable leaves; retry only the
+  # single GitHub-runner-interrupted group zero, then check the entire DAG.
+  extra132-last:
+    if: inputs.mode == 'extra-resume-132'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45927180508
+          name: parent-source-132
+          path: /tmp/parent-source
+      - name: Check exact previously interrupted group zero
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-shards.py leaf \
+            /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known \
+            /tmp/parent-out --group 0
+          test -f /tmp/parent-out/receipt-0.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: parent-leaf-132-resumed-0
+          path: /tmp/parent-out
+          if-no-files-found: warn
+          retention-days: 30
+
+  extra132-frozen-join:
+    needs: extra132-last
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45906697676
+          name: raw11-root52-known-consumption
+          path: /tmp/base
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 45927180508
+          name: parent-source-132
+          path: /tmp/parent-source
+      - uses: actions/download-artifact@v4
+        with:
+          name: parent-leaf-132-resumed-0
+          path: /tmp/parent-out
+      - name: Recover only the seven already-accepted leaf artifacts
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/parent-out
+          for pair in \
+            1:15167752700 2:15167528142 3:15167803036 \
+            4:15167811958 5:15168810518 6:15167956708 7:15167922399; do
+            group="${pair%%:*}"
+            id="${pair#*:}"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/leaf-$id.zip"
+            unzip -o -q "/tmp/leaf-$id.zip" -d /tmp/parent-out
+            test -f "/tmp/parent-out/receipt-$group.json"
+          done
+      - name: Verify full immutable proof graph and parent certificate
+        run: |
+          set -euo pipefail
+          python im-results/agent47-raw11-adapter/compile-parent-shards.py join \
+            /tmp/parent-source /tmp/base/tmp/a47-raw11-root52-known \
+            /tmp/parent-out
+          test -f /tmp/parent-out/Agent5Raw11Extra132.olean
+          grep -F "'BB6.Agent5Raw11Extra132.cover' depends on axioms:" \
+            /tmp/parent-out/Agent5Raw11Extra132.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/parent-out/Agent5Raw11Extra132.log; then exit 1; fi
+      - uses: actions/upload-artifact@v4
+        with:
+          name: parent-complete-132-recovered
+          path: |
+            /tmp/parent-out
+            /tmp/parent-source
           if-no-files-found: error
           retention-days: 30
