@@ -1,0 +1,158 @@
+name: Agent10 Raw42 E multi-repair exact compose
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        type: choice
+        options: [0LE, 1LE, 1RE]
+        default: 0LE
+      source_run:
+        description: 'Original exact-split run containing accepted sibling partitions'
+        required: true
+        type: string
+      repairs_json:
+        description: 'JSON array [{"part":"g0p2","run":46158197180}, ...]'
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate exact composition inputs
+        env:
+          BRANCH: ${{ inputs.branch }}
+          SOURCE_RUN: ${{ inputs.source_run }}
+          REPAIRS: ${{ inputs.repairs_json }}
+        run: |
+          set -euo pipefail
+          [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
+          [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
+          python - <<'PY'
+          import json, os, re
+          xs=json.loads(os.environ["REPAIRS"])
+          assert isinstance(xs,list) and xs
+          parts=set()
+          for x in xs:
+              assert set(x)=={"part","run"}
+              assert re.fullmatch(r"g[0-7]p[0-3]",str(x["part"]))
+              assert str(x["run"]).isdigit()
+              assert x["part"] not in parts
+              parts.add(x["part"])
+          print("repairs", sorted(parts))
+          PY
+
+      - name: Reconstruct original coverage source
+        run: python im-results/agent13-coverage/unpack.py
+
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+
+      - name: Restore frozen generated source and exact split plan
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          name: raw42-split-generated
+          path: im-results/agent32-raw42/generated-assembly
+
+      - name: Download accepted original exact partitions
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.source_run }}
+          pattern: raw42-split-${{ inputs.branch }}-g*
+          path: /tmp/parts
+
+      - name: Overlay all repaired exact partitions and their rewritten sources
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ inputs.branch }}
+          REPAIRS: ${{ inputs.repairs_json }}
+        run: |
+          set -euo pipefail
+          python - <<'PY' > /tmp/repairs.tsv
+          import json, os
+          for x in json.loads(os.environ["REPAIRS"]):
+              print(f'{x["part"]}\t{x["run"]}')
+          PY
+          while IFS=$'\t' read -r part run; do
+            dst="/tmp/parts/raw42-split-$BRANCH-$part"
+            rm -rf "$dst"
+            mkdir -p "$dst"
+            gh run download "$run" -R FlareZ123/bb6 \
+              -n "raw42-split-$BRANCH-$part" -D "$dst"
+          done < /tmp/repairs.tsv
+
+          python - <<'PY'
+          import json, os, shutil
+          from pathlib import Path
+          repo=Path.cwd()
+          branch=os.environ["BRANCH"]
+          repairs=json.loads(os.environ["REPAIRS"])
+          restored={}
+          for x in repairs:
+              part=x["part"]
+              shard=Path("/tmp/parts") / f"raw42-split-{branch}-{part}"
+              manifest=json.loads((shard/"manifest.json").read_text())
+              n=0
+              for item in manifest["modules"]:
+                  if item.get("source_kind") != "generated-or-untracked":
+                      continue
+                  src=shard / (item["module"].replace(".", "/") + ".lean")
+                  if not src.is_file():
+                      continue
+                  dst=repo / item["source_path"]
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(src,dst)
+                  n += 1
+              restored[part]=n
+          print("restored rewritten sources", restored)
+          PY
+
+      - name: Authenticate exact 32-part union and prove whole child Cover
+        env:
+          BRANCH: ${{ inputs.branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py \
+            /tmp/parts /tmp/merged "$g/split-plan.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py \
+            --lean /tmp/lean-one --workdir /tmp/final --jobs 1 \
+            --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean" \
+            --precompiled-manifest /tmp/merged/manifest.json \
+            --precompiled-dir /tmp/merged \
+            --manifest /tmp/final/manifest.json \
+            --artifact-name "raw42-certified-${BRANCH}-repaired" \
+            --theorem "$th" \
+            --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------" \
+            --weighted-bound 100006 \
+            "$g/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-certified-${{ inputs.branch }}-repaired
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: warn
