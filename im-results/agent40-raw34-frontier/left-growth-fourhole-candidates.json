@@ -1,0 +1,244 @@
+{
+  "description": "14 pairwise-disjoint Raw34 4-additional-fixed-slot unbounded-growth source proof candidates; accepted status varies by Lean CI; source bank marginal is computational, not formal",
+  "sourceRoot": "1RB---_1RC---_0RD---_1LC---_------_------",
+  "hardLong": [
+    {
+      "name": "F-binary-D1-0LF",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        10,
+        16,
+        7,
+        0,
+        0,
+        3,
+        0
+      ]
+    },
+    {
+      "name": "F-unary-D1-0LF",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        22,
+        16,
+        7,
+        0,
+        0,
+        3,
+        0
+      ]
+    },
+    {
+      "name": "F-binary-D1-1LF",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        10,
+        16,
+        19,
+        0,
+        0,
+        3,
+        0
+      ]
+    },
+    {
+      "name": "F-unary-D1-1LF",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        22,
+        16,
+        19,
+        0,
+        0,
+        3,
+        0
+      ]
+    },
+    {
+      "name": "F-shell-F0-1LC",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        25,
+        0,
+        0,
+        16,
+        25
+      ]
+    },
+    {
+      "name": "F-shell-F0-1RD",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        25,
+        0,
+        0,
+        23,
+        25
+      ]
+    },
+    {
+      "name": "F-twocolor-1n-0n-growth",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        13,
+        0,
+        0,
+        23,
+        25
+      ]
+    },
+    {
+      "name": "E-binary-D1-0LE",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        10,
+        16,
+        6,
+        3,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-unary-D1-0LE",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        22,
+        16,
+        6,
+        3,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-binary-D1-1LE",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        10,
+        16,
+        18,
+        3,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-unary-D1-1LE",
+      "codes": [
+        21,
+        0,
+        22,
+        15,
+        11,
+        22,
+        16,
+        18,
+        3,
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-shell-E0-1LC",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        24,
+        16,
+        24,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-shell-E0-1RD",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        24,
+        23,
+        24,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "E-twocolor-1n-0n-growth",
+      "codes": [
+        21,
+        0,
+        22,
+        0,
+        11,
+        16,
+        16,
+        12,
+        23,
+        24,
+        0,
+        0
+      ]
+    }
+  ]
+}
