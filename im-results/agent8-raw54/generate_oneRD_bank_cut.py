@@ -282,7 +282,7 @@ theorem checked : bankCheck bank B parent tree = true := by
 
 def residuals := bankResiduals parent tree
 
-theorem residual_count : residuals.length = 671 := by decide +kernel
+theorem residual_count : residuals.length = {len(opens)} := by decide +kernel
 
 theorem cut (m : Machine) (hm : compatible parent m) :
     WeightedBound B m ∨ ∃ e ∈ residuals, compatible e.2 m :=
