@@ -361,3 +361,70 @@ domain restricted to one defect or one marked run cannot be inductive.
 The old fixed map and the one-token repair should not be revived as global
 claims. The weighted defect-stack relation is the current smallest known
 proof target for leaf 17557.
+
+
+## Rank-frame closure (2026-11-28)
+
+The left-side obstruction is now organized by a **ranked finite-frame grammar**
+rather than by a bounded defect heuristic.
+
+For a rank-`r` normal-A frame, define the outer B/carry hit word
+`F_0=B` and
+`F_(r+1)=F_r C B F_r C`.
+Lean proves
+`#B(F_r)=2^(r+1)-1`,
+`#C(F_r)=2^(r+1)-2`, and every prefix is ballot-safe.
+If a prefix has `x` B hits and `y` carries, its low/high remaining
+zero-run lengths satisfy
+
+```
+L = 8*(2^(r+1)-1) - 1 - (7*x+y)
+H = 16*(2^(r+1)-1) - 1 - (15*x+y)
+rhoZero(L) = H + 8 * floor((x-y)/8).
+```
+
+Thus the exact defect weight is `floor((x-y)/8)`.  Both semantic runway
+guards are suffix-cost facts, residue-7 carries automatically have positive
+weight, and a complete frame returns to `L=H=weight=0`.
+The same closed form proves the weights are globally **unbounded**: there are
+prefixes of `F_(8t)` of weight exactly `t`.  The earlier finite
+maximum-weight-two observation is therefore not a valid global invariant.
+
+The observed action substitution has the rank-labelled refinement
+
+```
+N_r -> N_(r+1) B C
+B   -> B B C
+C   -> N_0 B C,
+```
+
+where erasing `N` and `C` to `A` recovers
+`sigma(A)=ABA`, `sigma(B)=BBA`.
+A rank-`r` normal action has
+`b_r=2^(r+4)-3`, with `b_0=13` and
+`b_(r+1)=2*b_r+3`.
+The segment created by `N_r` contains only strictly lower-rank nested
+segments, and its outer hit word is exactly `F_r`.
+
+`Raw56LE17557FrameMachine.lean` packages this into an abstract finite-zero
+stack machine.  Each `N_r` pushes the exact cost of `F_r`, B consumes
+seven cells, and C consumes one.  The intended strong-induction theorem is
+that every rank segment closes and restores the incoming stack.  At epoch
+root, after hiding complete nested frames, the hit word starts as `CBBC`
+and lifts by `B->BBC`, `C->C`; it has equal B/C counts
+`2^(n+1)`.  Consequently its low cost is `2^(n+4)`, its high cost is
+`2^(n+5)`, and the root itself has zero defect.  These costs exactly match
+the dyadic checkpoint displacement scale.
+
+The fixed right-side map is now also isolated in
+`Raw56LE17557RightLevel.lean`: for the three-run checkpoint vector
+`(q-2,1,2q-3,1,2q-1)` it maps `q -> 2q`, hence maps the right side of
+`C_n` to `C_(n+1)` for every `n>=2`.
+
+Finally, `Raw56LE17557LocalSweeps.lean` derives the A-normal, A-carry, and
+B triad rewrites compositionally from the original six-state transition table
+using reusable one-direction sweep lemmas, replacing the old simulator-only
+local macro basis.  The remaining global obligation is to synchronize these
+source-level triads with the rank-labelled epoch grammar/right-level relation
+for all epochs.  Until that synchronization theorem is proved, leaf 17557 is
+not claimed nonhalting.
