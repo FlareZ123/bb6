@@ -4,6 +4,7 @@ import base64,hashlib,json,lzma
 from shutil import copyfile
 from prepare_semantic_branch import Builder
 from unpack_le_sweeps import unpack
+from gen4084_packed import main as generate_4084
 
 ROOT=Path(__file__).resolve().parent
 
@@ -21,6 +22,11 @@ def custom_le(branch,out):
             assert i not in result
             result[i]=(mod,ns+'.table'+arg,ns+'.never'+arg)
     if branch=='0LE':
+        if out.resolve()!=ROOT:
+            copyfile(ROOT/'PackedPump.lean',out/'PackedPump.lean')
+        generate_4084(out/'Raw39LE4084Packed.lean')
+        assert hashlib.sha256((out/'Raw39LE4084Packed.lean').read_bytes()).hexdigest()=='0467ac821763e0c49f5ebcf47e339e82aa43987eaf6ad55dc482d3ab3bcd3707'
+        add('Raw39LE4084Packed',[4084],packed=True)
         add('Raw39LE1583',[1583])
         add('Raw39LE1791',[1791,1800],['false','true'])
         add('Raw39LE5883',[5883])
