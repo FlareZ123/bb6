@@ -80,6 +80,18 @@ theorem highFarT_add8 (m : Nat) :
   omega
 
 /-- Every member of the exhaustive dangerous subfamily lies on one exact
+    terminal ray modulo 201326592 = 3 * 2^26. -/
+theorem dangerT_mod201326592 (k : Nat) :
+    dangerT k % 201326592 = 9586981 := by
+  induction k with
+  | zero => decide
+  | succ k ih =>
+      unfold dangerT dangerM at ih ⊢
+      rw [show 8*(k+1)+6=(8*k+6)+8 by omega, highFarT_add8]
+      have hp := highFarT_pos (8*k+6)
+      omega
+
+/-- Every member of the exhaustive dangerous subfamily lies on one exact
     terminal ray modulo 49152. -/
 theorem dangerT_mod49152 (k : Nat) :
     dangerT k % 49152 = 2341 := by
@@ -213,6 +225,19 @@ theorem highThenFar_root_is_danger_family
 
   exact ⟨k,hkN,hdT,hR,rfl⟩
 
+/-- Every authentic-source-compatible H^n/F terminal suffix has its terminal
+    parameter in the single ray 9586981 modulo 201326592. -/
+theorem highThenFar_root_terminal_mod201326592
+    {m n d R c : Nat}
+    (hroot : CounterReach 1 1 m R c)
+    (hc : c=1 ∨ c=2)
+    (hp : FormalInversePath (d:Int) (highThenFar n) (R:Int) (c:Int)) :
+    d % 201326592 = 9586981 := by
+  rcases highThenFar_root_is_danger_family hroot hc hp with
+    ⟨k,hn,hd,hR,hc1⟩
+  rw [hd]
+  exact dangerT_mod201326592 k
+
 /-- Every authentic-source-compatible H^n/F terminal suffix therefore has its
     terminal parameter in the single ray 2341 modulo 49152. -/
 theorem highThenFar_root_terminal_mod49152
@@ -230,8 +255,10 @@ theorem highThenFar_root_terminal_mod49152
 #print axioms reached_second_one_mod24_or_seed
 #print axioms highThenFar_sumDecrease
 #print axioms highFarT_add8
+#print axioms dangerT_mod201326592
 #print axioms dangerT_mod49152
 #print axioms highThenFar_root_mod24
 #print axioms highThenFar_root_is_danger_family
+#print axioms highThenFar_root_terminal_mod201326592
 #print axioms highThenFar_root_terminal_mod49152
 end BB6.Agent31F321SingleFar
