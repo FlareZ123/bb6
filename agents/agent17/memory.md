@@ -789,3 +789,10 @@ At or after the measured 70-minute threshold, this memory is the final useful st
 ### Orderly release checkpoint
 
 At `2026-11-28T16:23:46.711Z`, measured lease age was `70.407` minutes from `2026-11-28T15:13:22.277Z`; the 70-minute threshold had been crossed. The final child-cover run 46162375708 was last observed queued at 16:19Z; the release-time Actions status refresh was rate-limited, so no further status claim is made. All useful research, result, README, coordination, generator, and memory state had already been committed before lease deletion.
+
+
+## 2026-11-28T16:38:13.944Z — Raw43 E1RB compression checkpoint
+
+RNG 7, claim b16f9f6fb434924551aa817093fef62eb71c2f47, immutable lease 2026-11-28T16:31:43.224Z, run agent17-ac5417091c-1795883503224; earliest release 17:41:43.224Z. Local Lean 4.36.0-rc2 installed from supplied archive; direct GitHub DNS fails, connector works.
+
+Residual 174 in `im-results/agent25-raw43/spec_b1le_e1rb.json`, exact table `1RB---_1RC1LE_0RD0RF_1LD0RB_1RB0LE_1RA1RD`, had 17,729 abstract rows/3,773 edges, 785/2913 left/right states. Exact row-labelled Moore quotient and independently recomputed reachable closure give 5235/1061 rows/edges, 442/437 DFA states. Eight compatible observed-transition merges, each rechecking full closure, yield 5073/1040, 424/436 states. Compact witness saved at `im-results/agent17-raw43-e1rb174/compact.json` (86cf68a28d783a4261630e43535e1f80f08b8048) and integrated into candidate bank (4d73cc748b0a0d93a8b5f8e9cd7773b315102496). This is exact abstract-closure computational evidence, not yet source-gated Lean acceptance. Existing E1RB sharded CI 46156221992 is queued from old revision; avoid duplicate dispatch unless coordinators elect to replace that run. No child Cover or global residual decrement claimed. E0LF run 46162375708 still queued, no duplicate. Latest canonical boundary remains 38 until authenticated successor passes. Continuing to derive a structural macro certificate for residual 174 and reducing other bottlenecks.
