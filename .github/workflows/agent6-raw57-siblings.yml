@@ -16,7 +16,7 @@ permissions:
   contents: read
 jobs:
   proof:
-    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc'
+    if: inputs.child != 'raw57-cuts' && inputs.child != 'raw57-rc2-recovery' && inputs.child != 'raw56-rc-portfolio' && inputs.child != 'raw56-le-two' && inputs.child != 'raw56-reparent-assembly' && inputs.child != 'raw56-root-pilot' && inputs.child != 'raw56-pilot-0rd' && inputs.child != 'raw56-pilot-1lc' && inputs.child != 'raw56-le-23011' && inputs.child != 'raw56-le-research-inputs'
     runs-on: ubuntu-latest
     timeout-minutes: ${{ (inputs.child == 'parent-all' || inputs.child == 'raw56-e1-0re') && 360 || 60 }}
     steps:
@@ -581,8 +581,9 @@ jobs:
           export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
           lean --version
           lean -o /tmp/raw56-le23011/FastBiDFA.olean im-results/agent32-raw59/FastBiDFA.lean 2>&1 | tee /tmp/raw56-le23011/checker.log
-          lean -o /tmp/raw56-le23011/Raw56LE23011F0RA.olean /tmp/raw56-le23011/Raw56LE23011F0RA.lean 2>&1 | tee /tmp/raw56-le23011/leaf.log
-          lean -o /tmp/raw56-le23011/Raw56LE23011Cover.olean /tmp/raw56-le23011/Raw56LE23011Cover.lean 2>&1 | tee /tmp/raw56-le23011/cover.log
+          cd /tmp/raw56-le23011
+          lean -o Raw56LE23011F0RA.olean Raw56LE23011F0RA.lean 2>&1 | tee /tmp/raw56-le23011/leaf.log
+          lean -o Raw56LE23011Cover.olean Raw56LE23011Cover.lean 2>&1 | tee /tmp/raw56-le23011/cover.log
           cat /tmp/raw56-le23011/{checker,leaf,cover}.log > /tmp/raw56-le23011/axioms.log
           ! grep -E 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le23011/axioms.log
           python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le23011/axioms.log --require BB6.Agent1Raw56.LE23011.M23011.never --require BB6.Agent1Raw56.LE23011Cover.all_quotient
