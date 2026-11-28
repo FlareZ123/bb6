@@ -1,0 +1,30 @@
+{
+  "1RB---_1RC0RC_0RD1LE_1LD1LB_0LA1RF_0LD0RF": [
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf3.table",
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf3.never"
+  ],
+  "1RB0LE_1RC0RC_0RD1LE_1LD1LB_1LA0RF_---0RC": [
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf6.table",
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf6.never"
+  ],
+  "1RB0LF_1RC0RC_0RD1LE_1LD1LB_1LA0RB_1LA---": [
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf7.table",
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf7.never"
+  ],
+  "1RB1LF_1RC0RC_0RD1LE_1LD1LB_1LF0RB_0LA---": [
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf19.table",
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf19.never"
+  ],
+  "1RB1RA_1RC0RC_0RD1LE_1LD1LB_1LF---_0RA0LF": [
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf21.table",
+    "BB6.Agent16Raw44RemainingFAR.C1LELeaf21.never"
+  ],
+  "1RB1LF_1RC0RC_0RD1RE_1LD1LB_0LA1LB_1LA---": [
+    "BB6.Agent16Raw44RemainingFAR.C1RELeaf3.table",
+    "BB6.Agent16Raw44RemainingFAR.C1RELeaf3.never"
+  ],
+  "1RB---_1RC0RC_0RD1RE_1LD1LB_0LF1LB_0LA1LF": [
+    "BB6.Agent16Raw44RemainingFAR.C1RELeaf4.table",
+    "BB6.Agent16Raw44RemainingFAR.C1RELeaf4.never"
+  ]
+}
