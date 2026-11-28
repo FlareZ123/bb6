@@ -28,6 +28,7 @@ python3 tools/lean_compile_closure.py \
   im-results/agent48-counted-inc0/TM63RawUpperInterface.lean \
   im-results/agent48-counted-inc0/Enumerate62Potential.lean \
   im-results/agent48-counted-inc0/ChampionParentExact.lean \
+  "$@" \
   --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
   --override OuterLCIncPrelude=im-results/agent8-counted-reset/OuterLCIncPrelude.lean \
   --override M0OddResidueSeven=im-results/agent41-m0-n16r7/M0OddResidueSeven.lean \
@@ -53,3 +54,19 @@ for name in ("champion_halts_exact", "champion_attained_exact", "champion_maximu
         raise SystemExit(f"nonstandard axioms: {name}: {used-allowed}")
     print(f"{name}: {sorted(used)}")
 PY
+
+if [[ "${1:-}" == 'im-results/agent26-proof-witness/F412ChampionBound.lean' ]]; then
+  python3 - "$work/compile.log" <<'PY'
+import pathlib, re, sys
+log = pathlib.Path(sys.argv[1]).read_text()
+allowed = {'propext', 'Classical.choice', 'Quot.sound'}
+for name in ('champion_ge_pow200', 'f412_le_champion'):
+    m = re.search(r"'BB6.Agent26F412Graft\." + name + r"' depends on axioms: \[([^\]]*)\]", log)
+    if not m:
+        raise SystemExit('missing exact F412 axiom audit: '+name)
+    used = {x.strip() for x in m.group(1).split(',') if x.strip()}
+    if not used <= allowed:
+        raise SystemExit(f'nonstandard F412 axioms in {name}: {used-allowed}')
+    print(f'{name}: {sorted(used)}')
+PY
+fi
