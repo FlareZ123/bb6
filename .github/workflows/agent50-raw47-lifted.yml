@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth]
         default: late-parent
       base_run:
         type: string
@@ -303,5 +303,51 @@ jobs:
             /tmp/a50-raw34-depth2/closure.log
             /tmp/a50-raw34-depth2/manifest.json
             /tmp/a50-raw34-depth2/build/*.olean
+          if-no-files-found: error
+          retention-days: 30
+
+  raw34-growth:
+    if: inputs.mode == 'raw34-growth'
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Prove all-time Raw34 C1=1LC unary growth in Lean
+        run: |
+          set -euo pipefail
+          W=/tmp/a50-raw34-growth
+          mkdir -p "$W"
+          lean --version | grep -F '4.36.0-rc2'
+          python tools/lean_compile_closure.py --workdir "$W/build" --jobs 2 \
+            --manifest "$W/manifest.json" \
+            --theorem BB6.Agent50Raw34Unary.never \
+            --artifact-name raw34-growth-source \
+            im-results/agent50-raw34-firsthole/Raw34UnaryGrowth.lean \
+            2>&1 | tee "$W/closure.log"
+          python - "$W/closure.log" <<'PY'
+          import re,sys
+          log=open(sys.argv[1]).read()
+          allowed={'propext','Classical.choice','Quot.sound'}
+          for name in ('first','left_one','right_one','growth','never'):
+              full='BB6.Agent50Raw34Unary.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', '))) <= allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: universal Raw34 unary growth with only standard axioms')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-growth-source
+          path: |
+            /tmp/a50-raw34-growth/closure.log
+            /tmp/a50-raw34-growth/manifest.json
+            /tmp/a50-raw34-growth/build/*.olean
           if-no-files-found: error
           retention-days: 30
