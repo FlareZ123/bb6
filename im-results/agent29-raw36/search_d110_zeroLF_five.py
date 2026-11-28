@@ -5,7 +5,7 @@ Fresh inverse-stack families only, deterministic search. Any FOUND row
 is an untrusted parametric candidate until the independent Lean kernel
 checks its complete finite two-sided automaton proof.
 """
-import argparse,hashlib,json,random,signal,sys,time
+import argparse,hashlib,json,random,sys,time
 from pathlib import Path
 from multiprocessing import Pool
 
@@ -37,14 +37,12 @@ TARGETS={
 assert all(len(t.replace("_",""))==36 for group in TARGETS.values() for t in group)
 LITERALS=TARGETS["0LF"]
 PARAMS=[]
-def timed_out(*_):raise TimeoutError("regular-stack candidate timed out")
 def worker(item):
     index,table,candidates=item
     machine=tuple(table.replace("_","")[j:j+3] for j in range(0,36,3))
     signal.signal(signal.SIGALRM,timed_out)
     start=time.monotonic()
     for j,p in enumerate(candidates,1):
-        signal.setitimer(signal.ITIMER_REAL,0.17)
         try:
             ok,n,*_=replay(machine,(*p,None))
             assert ok
@@ -53,19 +51,8 @@ def worker(item):
             print("CANDIDATE_FOUND",json.dumps(found),flush=True)
             return found
         except (AssertionError,IndexError,ValueError,MemoryError,
-                ZeroDivisionError,RecursionError,OverflowError,TimeoutError):
+                ZeroDivisionError,RecursionError,OverflowError):
             pass
-        finally:
-            # Block SIGALRM while cancelling the one-shot timer.  Merely
-            # reversing setitimer/signal.signal is still racy when the alarm
-            # is already pending at the Python bytecode boundary.
-            old_mask=signal.pthread_sigmask(signal.SIG_BLOCK,{signal.SIGALRM})
-            try:
-                signal.setitimer(signal.ITIMER_REAL,0)
-                signal.signal(signal.SIGALRM,signal.SIG_IGN)
-            finally:
-                signal.pthread_sigmask(signal.SIG_SETMASK,old_mask)
-            signal.signal(signal.SIGALRM,timed_out)
         if j%300==0:
             print("SCAN index",index,"tested",j,"elapsed",
                   round(time.monotonic()-start,1),flush=True)
