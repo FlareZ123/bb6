@@ -150,7 +150,8 @@ theorem odd_depth_reset_exact
       BB6.Agent37EChainDoubleBReentry.endpointZero
         (512*t+8*n+379) := by
     have h0 := BB6.Agent35MarkerA.close_zero (64*t+45) (4*n) 1
-    simpa [BB6.Agent37EChainDoubleBReentry.endpointZero,hN] using h0
+    rw [hN] at h0
+    simpa only [BB6.Agent37EChainDoubleBReentry.endpointZero] using h0
   have hreset : ObsEq
       (CryptidBoundary.run (BB6.Agent2PacketP2Reset.eTwoTime k (3*n))
         (packet (3*k+4) (3*n) 2
