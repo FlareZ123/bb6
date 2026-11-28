@@ -133,7 +133,7 @@ theorem branch_bound (m : Machine) (hm : compatible branch m) : WeightedBound {B
   branch_bound_from_twenty {BOUND} (by decide) children_bound m hm
 
 theorem branch_cover : Cover (WeightedBound {BOUND}) branch :=
-  Cover.leaf branch_bound
+  Cover.leaf branch branch_bound
 #print axioms children_bound
 #print axioms branch_bound
 #print axioms branch_cover

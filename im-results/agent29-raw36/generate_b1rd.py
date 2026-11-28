@@ -89,7 +89,7 @@ theorem rdAudit_checked : BB6.Agent29CanonicalFast.check {B} rd 4 rdAudit = true
     '''+'\n    '.join(proofs)+f'''
 theorem rd_bound : ∀ m, compatible rd m → WeightedBound {B} m :=
   BB6.Agent29CanonicalFast.bound {B} rd 4 rdAudit (by decide) rd_support rd_root rd_nohalt rdAudit_checked
-theorem rd_cover : Cover (WeightedBound {B}) rd := Cover.leaf rd_bound
+theorem rd_cover : Cover (WeightedBound {B}) rd := Cover.leaf rd rd_bound
 #print axioms rd_bound
 #print axioms rd_cover
 '''
