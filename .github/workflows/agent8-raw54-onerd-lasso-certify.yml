@@ -1,0 +1,51 @@
+name: Agent 8 Raw54 1RD literal-lasso original-source checks
+
+on:
+  workflow_dispatch:
+    inputs:
+      indices:
+        description: 'JSON list of cycle indices 0..28 (e.g. [0,1,2]); use small batches'
+        required: true
+        default: '[0]'
+
+jobs:
+  literal_cycle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    strategy:
+      fail-fast: false
+      max-parallel: 8
+      matrix:
+        index: ${{ fromJSON(inputs.indices) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw54-onerd-residual-lasso
+          run-id: '46132016517'
+          github-token: ${{ github.token }}
+          path: /tmp/raw54-onerd-lasso
+      - name: Certify literal cycle directly against source
+        run: |
+          set -euo pipefail
+          D=im-results/agent8-raw54
+          python im-results/agent13-coverage/unpack.py
+          python "$D/generate_onerd_lasso_proofs.py" /tmp/raw54-onerd-lasso/raw54-onerd-lasso.tsv "$D" --index ${{ matrix.index }}
+          MOD=$(printf 'Raw54OneRDLasso%02d' '${{ matrix.index }}')
+          W=/tmp/raw54-onerd-literal-${{ matrix.index }}
+          python tools/lean_compile_closure.py --workdir "$W" --jobs 1 --manifest "$W/manifest.json" "$D/$MOD.lean" 2>&1 | tee /tmp/raw54-lasso-${{ matrix.index }}.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/raw54-lasso-${{ matrix.index }}.log "BB6.Agent8Raw54.OneRDLasso$(printf '%02d' '${{ matrix.index }}').checked" "BB6.Agent8Raw54.OneRDLasso$(printf '%02d' '${{ matrix.index }}').cover"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw54-onerd-literal-${{ matrix.index }}
+          path: |
+            /tmp/raw54-lasso-${{ matrix.index }}.log
+            im-results/agent8-raw54/Raw54OneRDLasso*.lean
+          if-no-files-found: ignore
+          retention-days: 90
