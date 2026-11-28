@@ -2,26 +2,29 @@
 
 This is intermediate research, not a global BB(6) upper bound. The primary E1=1RE sibling proof is separately maintained in ../agent4-raw56-reparent.
 
-## Two large root branches
+## Complete E1=0RD Cover; E1=1LC candidate-complete
 
-Both use original canonical cut depth 7, cap 1000, lookback 32 and the frozen cross-branch FAR bank. Tables are 1RB---_1RC---_0RD---_1LD1LE_---{E1}_------.
+**Main established claim.** The original-source theorem `BB6.Agent1Raw56Pilot.E10RD.all_quotient` proves the entire six-hole parent `1RB---_1RC---_0RD---_1LD1LE_---0RD_------` has weighted bound **12,000**, for every quotient-compatible completion. The companion `.all` proves the physical-compatible version (25^6 = 244,140,625 tables). Both have only `propext, Classical.choice, Quot.sound`. The separate 1LC sibling remains open until its full parent theorem is accepted. Neither result alone closes Raw56 or reduces the global Canonical40 roster.
 
-| E1 | open leaves | FAR-bank accepted candidates | further finite stack | late last-hole | FAR6 | universal growth checked in Lean | unresolved |
-|---|---:|---:|---:|---:|---:|---:|---:|
-| 0RD | 17081 | 16395 | 674 | 1 | 0 | 11 | 0 |
-| 1LC | 22268 | 21356 | 861 | 28 | 1 | 21 | 0 |
+Both branches use the original canonical cut depth 7, cap 1000, lookback 32 and the frozen cross-branch FAR bank. After repairing malformed transferred FAR codes, their exact candidate partitions are:
 
-Both branches are candidate-complete. All open indices are partitioned disjointly into the five witness classes above, including M19569 under universal growth. No whole sibling bound is asserted yet.
+| E1 | open leaves | valid FAR (incl. extra FAR6) | finite stack | late last-hole | universal growth / special | remaining candidate gaps |
+|---|---:|---:|---:|---:|---:|---:|
+| 0RD | 17081 | 16382 | 687 | 1 | 11 | 0 |
+| 1LC | 22268 | 21350 | 868 | 28 | 22 | 0 |
 
-## Source assembly at common weighted bound 12000 (20:32 UTC)
+The 20 invalid imported codes (13 in 0RD, 7 in 1LC) referred to a state outside their own transition arrays. Agent1's `root_pilot_accept.py` regenerated valid finite-stack witnesses for these leaves using the frozen parameter portfolio; the original erroneous FAR outputs are historical discovery data only. In the 1LC row, 21350 includes the one extra FAR6 certificate.
 
-- Accepted base: artifact 15160313745 (747 modules, manifest SHA256 5aa3f0a21c8717b6d1e2629d97afa6402717d6c98fa640b735af2349bef339af); compiler Lean 4.36.0-rc2 SHA256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00.
+### Exact source acceptance and recovery
+
+- Accepted base artifact 15160313745 (747 modules, manifest SHA256 5aa3f0a21c8717b6d1e2629d97afa6402717d6c98fa640b735af2349bef339af); Lean 4.36.0-rc2 SHA256 db7f559d05795e7af52e42bc966c90240a39dcb9712161c54c97afa546e20c00.
 - Frozen generated input: run 46062134943, artifact 15229248243, SHA256 829d39f979f1787b21f75ca000b4d31c94e135fcff590d26e0e7397edb0226cb.
-- New source emitter and compiler: [prepare_root_aggregate.py](prepare_root_aggregate.py), [emit_root_aggregate_join.py](emit_root_aggregate_join.py), [compile_pilot_aggregate.py](compile_pilot_aggregate.py), source commit ae1e73b9298552a93a54411cb42d586aa17e0ce4. They consume the existing exact witnesses rather than running discovery again. Each E0 branch builds an independent source/object closure, and the final assembler checks hashes, exact roster equality, and the allowed axiom set.
-- Both first-query cuts checked locally in Lean: E10RD queries E0 at step 8, with 10 immediate cycles and 14 residual choices; E11LC at step 9, with 9 immediate cycles and 15 residual choices. Their `cover` theorems reduce the parent weighted bound 12000 to those exact residual child bounds. The `checked`, `count`, and `cover` axioms are all standard.
-- **New unconditional local theorem:** `BB6.Agent4Raw56.E10RDC08.all_quotient` and `all` cover E1=0RD, E0=0RC at weighted bound 12000. All 67 generated modules compiled from source against the accepted base; 22,489 tree nodes and 160 open leaves (156 FAR, 4 finite-stack). Axiom report: [propext, Classical.choice, Quot.sound].
-- Full E10RD source assembly dispatched using the existing sibling workflow, run [46064120289](https://github.com/FlareZ123/bb6/actions/runs/46064120289). E11LC special-leaf source preflight in progress. Neither whole E1 branch is claimed closed until its final unconditional theorem passes.
-- Independently, the older E1=1RE parent is source-accepted (run 46061898661, artifact 15230025742), bound 10000, see [reparent](../agent4-raw56-reparent/README.md). This is not a new global roster decrement.
+- Corrected exact prepared source graph: [run 46064129990](https://github.com/FlareZ123/bb6/actions/runs/46064129990), artifact **15229513592**; all eight certificate jobs and seven of eight cut jobs passed before E11LC cut shard 0 was cancelled. The older per-E0 job 46064120289 failed on the malformed bank; do not rerun it unchanged.
+- **E1=0RD final acceptance:** [run 46086743629, job 140797978012](https://github.com/FlareZ123/bb6/actions/runs/46086743629/job/140797978012) completed successfully. Thin final artifact **15238599825**, ZIP SHA256 `a78581809ef25fbae612b94df14da386f4fb7c6fe787ee9e081107d9960a047d`. Root module `Raw56PilotE10RDAll.olean`, SHA256 `2be22de63f2dd8fc2f09a02c9b97d1e6a556253895162327a8f1a85e76bdec4d`. Its manifest gives the 1,323-module cut graph and precise dependency hashes. The final log explicitly prints both exported standard-axiom profiles.
+- Recovery script [recover_root_pilot.py](recover_root_pilot.py) and the `recover=true` selector in the existing [manual workflow](../../.github/workflows/agent1-raw56-root-pilot.yml) reuse every successful original shard, validate expected modulo-4 module allocation and dependency closure, reject conflicting objects, check the accepted base digest, and compile the final original-source theorem. Source revisions d724fd5475336710d60d9f068c176d329acdf657 and c3be11442c574488fd1f2a22d12141ff8790c1cc. The separate 1LC recovery job is finishing only its cancelled cut shard 0; its final parent theorem is not yet accepted.
+- The exact local root consumer should lift the existing Raw56 root bound 10000 to 12000 (using monotonicity), remove E1=0RD by `sameTable_sound`, and prove the complement count from the accepted 17-entry root. Agent1 owns the combined root decrement. No new root count asserted before that consumer passes.
+
+The older [prepare_root_aggregate.py](prepare_root_aggregate.py), [emit_root_aggregate_join.py](emit_root_aggregate_join.py), and [compile_pilot_aggregate.py](compile_pilot_aggregate.py) also split the E1 parents by their exact first E0 query. Their first-query cut theorems are kernel-checked, and E10RD/E0=0RC was locally fully covered at 12000. The successful corrected full-source union above supersedes the incomplete per-E0 assembly. E1=1RE is independently source accepted at 10000 in run 46061898661 (artifact 15230025742); see [reparent](../agent4-raw56-reparent/README.md).
 
 ### M19569: exact finite run-stack invariant
 
@@ -52,7 +55,7 @@ Reconstruct the certificate with `python3 generate_m5334.py > Raw56LCM5334.lean`
 
 M20376 (`1RB---_1RC0LB_0RD1LA_1LD1LE_1RF1LC_0LE0RF`) is now closed for every compatible completion by [Raw56LCM20376.lean](Raw56LCM20376.lean). The exact blank entry at step 27 reaches A with left stack `001` (scanned cell included), right `110`. The general family has right `11(1111)^n0` and left a word of digits `00ab`, optionally ending with `001`. Digits with `a=0` increment to `a=1` in `26+4n` steps; digit `a=1,b=0` changes to `a=0,b=1` in `30+4n`; `a=b=1` removes that digit and increases carry depth in ten steps. The first two cases prepend `n` zero digits and reset carry depth; empty and truncated final digit have checked extension rules. All macro identities hold for arbitrary untouched suffixes. Positive-cost closure gives arbitrarily long original-machine live prefixes. `BB6.Agent4Raw56LCM20376.never` compiled with Lean 4.36.0-rc2 against artifact 15160313745, importing `SweepPumping` from that exact accepted closure, with only `[propext, Quot.sound]`. No aggregate parent proof yet. Source SHA256 `7cc528a9008b659bf13d1ac58eb48b2088d85a535fcf1a002699365c372fc19d`.
 
-All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. FAR and finite-stack candidates require original checker acceptance; every generated growth lemma and the M20376 and M5334 invariants already checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
+All 29 late queries are last-hole, maximum 10814 (1LC). No assumption of nonhalting from finite observation. The 0RD complete original-source cut is now accepted. The 1LC corrected finite-stack and growth certificate shards have passed, but its complete cut and final theorem remain separate. Every generated growth lemma and the M20376 and M5334 invariants were checked against accepted upstream artifact 15160313745 with Lean 4.36.0-rc2, standard axioms propext and Quot.sound only.
 
 ## Reusable advances
 
@@ -77,7 +80,7 @@ python emit_symbolic.py E10RD E11LC
 python emit_multi.py
 python emit_grammar.py
 ```
-Archive SHA256 7511d777aac6b8b98beb351584c90ee4744a79ca232b7bb4f1b6ac2f09c56523, 25124 bytes. Six git blobs checked individually. Primary archive supplies cut/farbank/abstraction helpers; build as in its README. For discovery use fast_root_batch.py, residual_root.py. Compile generated rootgrowth/*.lean with LEAN_PATH pointing to extracted artifact a1-raw56-root-consumer. *.finite.json is compact frozen parameter dictionary plus rows of open index, parameter ID and state count. *.unresolved includes pre-growth residuals, not only remaining unresolved. *.query has first-query witness or -1. *.far6 records extra candidate. Rebuild canonical cut with bound large enough to cover the actual weighted last-hole times; no aggregate bound claimed here.
+Archive SHA256 7511d777aac6b8b98beb351584c90ee4744a79ca232b7bb4f1b6ac2f09c56523, 25124 bytes. Six git blobs checked individually. Primary archive supplies cut/farbank/abstraction helpers; build as in its README. For discovery use fast_root_batch.py, residual_root.py. Compile generated rootgrowth/*.lean with LEAN_PATH pointing to extracted artifact a1-raw56-root-consumer. *.finite.json is compact frozen parameter dictionary plus rows of open index, parameter ID and state count. *.unresolved includes pre-growth residuals, not only remaining unresolved. *.query has first-query witness or -1. *.far6 records extra candidate. Rebuild the canonical cut with a bound large enough to cover the actual weighted last-hole times. The raw archive predates correction of the malformed FAR codes; use the corrected prepared artifact and focused recovery above for the accepted 0RD aggregate.
 
 Expected SHA256:
 - E10RD.open 778cf100f9bf4149614dcfa9cc81f48f3411c805d10e951b7d94e46f54c595ee
