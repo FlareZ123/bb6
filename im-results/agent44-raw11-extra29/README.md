@@ -18,11 +18,11 @@ RAW11_PARENT_KIND=extra node im-results/agent5-weighted-tnf-queue/generate-coars
 
 ## Source proof route
 
-The existing manual dispatcher `.github/workflows/agent5-raw11-parent-covers.yml` accepts extra-parent indices. It has been dispatched for `parents=[29]` with the frozen six-hole artifacts and extended automata enabled. It uses `generate-extra-parent-shards.cjs`, compiles the complete generated original-source DAG against the accepted core, and audits `BB6.Agent5Raw11Extra29.cover`. The run's own manifest, generated sources, compiler result and transitive axiom profile determine acceptance; the separate `scan.cjs` node count is not substituted for them.
+The existing manual dispatcher `.github/workflows/agent5-raw11-parent-covers.yml` accepts extra-parent indices. Run **46176117900** (job **141075087618**, `cover (29)`) was dispatched for `parents=[29]` with the frozen six-hole artifacts and extended automata enabled. The exact child-proof generation step succeeded; the complete generated original-source DAG is still compiling against the accepted core. The run uses `generate-extra-parent-shards.cjs` and will audit `BB6.Agent5Raw11Extra29.cover`. Its own manifest, generated sources, compiler result and transitive axiom profile determine acceptance; the separate `scan.cjs` node count is not substituted for them.
 
 ## Exact global-consumer interface
 
-`Raw11Extra29After148.lean` defines the literal six-state partial table, proves it equals the generated source parent with `sameTable_sound`, proves exact membership in the accepted 148-entry predecessor, and computes the exact 148→147 census. It then composes the source-checked parent Cover into `raw11_cover_from_147` at the existing common bound (B\ge 4663).
+`Raw11Extra29After148.lean` defines the literal six-state partial table (base-26 table code `26318896915106664`), proves it equals the generated source parent with `sameTable_sound`, proves exact membership in the accepted 148-entry predecessor, and computes the exact 148→147 census. It then composes the source-checked parent Cover into `raw11_cover_from_147` at the existing common bound (B\ge 4663).
 
 The existing manual consumer workflow `.github/workflows/agent44-raw11-q0148-after148.yml` has been generalized to select either its original q0-148 target or Extra29. For Extra29, it downloads the accepted parent artifact and checks the new consumer module against the exact Raw11 299→148 predecessor, Extra132 and Extra140 proof objects.
 
