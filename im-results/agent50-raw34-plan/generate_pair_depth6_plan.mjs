@@ -18,6 +18,12 @@ mkdirSync(output,{recursive:true});
 
 const alphabet=["HALT"];
 for(const w of "01")for(const d of "LR")for(const q of "ABCDEF")alphabet.push(w+d+q);
+// BB6Coverage.choices is HALT followed by state-major
+// 0Lq,0Rq,1Lq,1Rq for q=A..F.  Plan child arrays must use that order
+// even though physical source codes themselves are write/direction-major.
+const choiceCodes=[1];
+for(let q=0;q<6;q++)choiceCodes.push(2+q,8+q,14+q,20+q);
+assert.equal(choiceCodes.length,25);
 const root=[21,0,22,0,11,0,16,0,0,0,0,0];
 const dCode=alphabet.indexOf("0LF")+1;
 const f0Code=alphabet.indexOf("0LA")+1;
@@ -88,7 +94,7 @@ function build(depth){
  if(depth>=6)return residual(depth,"openResidual");
  assert.equal(p[r.slot],0);
  const children=[];
- for(let code=1;code<=25;code++){
+ for(const code of choiceCodes){
   p[r.slot]=code;children.push(build(depth+1));
  }
  p[r.slot]=0;
