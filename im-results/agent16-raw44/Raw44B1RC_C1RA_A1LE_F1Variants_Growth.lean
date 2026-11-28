@@ -197,7 +197,7 @@ theorem stageF (toC : Bool) (n : Nat) :
     simpa only [leftA,hs,List.append_assoc] using H
   have H := join0 h1 h2
   have ht : ((if toC then 6 else 4)*n) + (if toC then 6 else 4) =
-      (if toC then 6 else 4)*(n+1) := by cases toC <;> omega
+      (if toC then 6 else 4)*(n+1) := by cases toC <;> simp <;> omega
   simpa only [ht] using H
 
 /-- A traverses the 0100 word train rightward, filling it with ones. -/
