@@ -593,17 +593,6 @@
       "1RE",
       "1RB",
       "1RF",
-      "1RD",
-      "0RE"
-    ],
-    "table": "1RB0LC1RC1RE1LA0LD0RB0RE1RB1RF1RD---",
-    "mass": 50
-  },
-  {
-    "address": [
-      "1RE",
-      "1RB",
-      "1RF",
       "1RE"
     ],
     "table": "1RB0LC1RC1RE1LA0LD0RB---1RB1RF1RE---",
