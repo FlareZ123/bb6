@@ -62,7 +62,7 @@ theorem no_short_return_carry
   have hscaleP : g*(C+(p:Int)+1)<(2:Int)^B := by
     have hp : C+(p:Int)+1≤C+(K:Int)+1 := by omega
     have hm := Int.mul_le_mul_of_nonneg_left hp (by omega : 0≤g)
-    exact lt_of_le_of_lt hm hscale
+    omega
   have hEbound : -(2:Int)^B<E 0 ∧ E 0<(2:Int)^B := by
     have hpos : 0<g-a 0 ∧ g-a 0<g := by
       have hh := hinside 0 (by omega)
@@ -84,10 +84,15 @@ theorem no_short_return_carry
         ⟨(hbound 0 (by omega)).1,(hbound 0 (by omega)).2,
           (hbound p (by omega)).1,(hbound p (by omega)).2⟩
         hpos (Or.inl rfl) hscaleP
+      have hbzero : b 0 = c 0-c p := by
+        dsimp [b]
+        simp only [Nat.zero_add,hd,Int.neg_one_mul]
+        omega
       have heq : g*(c 0-c p)+(1:Int)*(p:Int)*(g-a 0)-
         (1:Int)*(p:Int)*g=E 0 := by
-        simp only [E,b,Nat.zero_add,hd,Int.one_mul,Int.mul_sub,
-          Int.mul_assoc,Int.neg_one_mul]
+        dsimp [E]
+        rw [hbzero]
+        simp only [Int.one_mul,Int.mul_sub]
         omega
       rw [heq] at hi
       exact hi
