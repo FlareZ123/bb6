@@ -1,10 +1,16 @@
 name: Agent 22 signed #429 inverse certificate (manual)
 on:
   workflow_dispatch:
+    inputs:
+      finite_power_only:
+        description: Compile only new signed finite-power modules
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   verify:
+    if: ${{ !inputs.finite_power_only }}
     runs-on: ubuntu-latest
     timeout-minutes: 35
     steps:
@@ -54,3 +60,28 @@ jobs:
           lean "$p/Branch29SignedFloor1M.lean" 2>&1 | tee -a /tmp/agent22-branch29-audit.log
           ! grep -q 'sorryAx' /tmp/agent22-branch29-audit.log
           ! grep -q 'native_decide' /tmp/agent22-branch29-audit.log
+
+  finite_power:
+    if: ${{ inputs.finite_power_only }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean for finite-power algebra
+        run: |
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Compile exact finite-power modules and axiom profiles
+        env:
+          LEAN_PATH: im-results/agent22-429-signed-drift
+        run: |
+          set -euo pipefail
+          p=im-results/agent22-429-signed-drift
+          for name in AffineOrbitRigidity PeriodicMacroTransfer FinitePowerRigidity FinitePowerMacro; do
+            echo "::group::Lean $name"
+            lean -DmaxRecDepth=8192 -DmaxHeartbeats=1000000 -o "$p/$name.olean" "$p/$name.lean" 2>&1 | tee -a /tmp/agent22-finite-power-axioms.log
+            echo "::endgroup::"
+          done
+          ! grep -q 'sorryAx' /tmp/agent22-finite-power-axioms.log
+          ! grep -q 'native_decide' /tmp/agent22-finite-power-axioms.log
