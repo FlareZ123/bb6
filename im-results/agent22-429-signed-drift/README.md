@@ -150,3 +150,18 @@ intermediate and belongs in im-results, not results/.
 **Pending:** A 31-class congruence-filtered signed certificate targets `n>=128,000,127`; no acceptance claim until its full CI source check completes.
 
 For exact lists, source proofs, methodology, acceptance status, and research gaps, see [NEW_RESIDUE_AND_BURST_RESULTS.md](NEW_RESIDUE_AND_BURST_RESULTS.md). New reusable arbitrary-modulus shifted-affine certificate bridge: [Branch29ShiftedCert.lean](Branch29ShiftedCert.lean).
+
+
+## Sharp four-adic capacity and finite periodic powers
+
+The periodic/repeated-word arithmetic is now closed much more sharply than the older grid-packing route.
+
+- `SharpExactValuation.lean` / `SharpExactConstruction.lean`: for every positive shift `K`, the exact maximum weight of a legal distinct-source valuation edge family is `F((K-1)/3)-F(K/4)`, with an explicit attaining family.
+- `SharpGlobalTheorem.lean`: sharp uniform `15*Σj≤2K` for `K≥15` (equality at `K=15`), plus `8*Σj≤K` for all `K≥64`; the exact `K=63` extremizer proves 64 is the factor-eight threshold.
+- `FiniteSlopeTransport.lean` → `FinitePowerSlopeCycle.lean` → `FiniteSlopePacking.lean` → `CyclicPrimitiveFinite.lean` → `SlopeCycleAdapter.lean` → `FinitePrimitiveNoGo.lean`: finite repeated exact macro walks force a strict closed slope cycle; primitive exponent schedules give distinct sources; exact capacity contradicts the typed rank-cost envelope.
+- `SignedPrimitivePowerNoGo.lean`: the same obstruction for literal signed `SourceWalk` repetitions, with direct necessary power bound.
+- `DoubledGapCycle.lean` → `DoubledGapFinitePower.lean` → `SignedDoubledGapNoGo.lean`: closes the typed-period-doubles-gap-period form `W ++ flip(W)` by proving equal midpoint slope and halving the even recurrence.
+
+Pinned Lean 4.36.0-rc2 workflow run `46161634933` accepted the current chain with guards rejecting `sorryAx` and `native_decide`. The publishable mathematical statement is indexed at `results/2026-11-28-sharp-signed-valuation-packing-agent22.md`.
+
+This does **not** close #429. The high-value remaining bridge is authentic ancestry coverage: prove that every unresolved blank-root signed path contains a sufficiently long primitive or doubled-flip repeated `SourceWalk`, or control the genuinely aperiodic residual class. Further finite-period arithmetic enumeration is lower priority because the exact periodic obstruction is now available.
