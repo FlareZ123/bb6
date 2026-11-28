@@ -27,6 +27,7 @@ CLAIMS = [
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--work", type=Path, required=True)
+    ap.add_argument("--conditional", action="store_true")
     a = ap.parse_args()
     work = a.work.resolve()
     work.mkdir(parents=True, exist_ok=False)
@@ -63,6 +64,33 @@ def main():
     (evidence / "membership.json").write_text(
         json.dumps(receipt, indent=2, sort_keys=True) + "\n")
     print("PASS: exact Canonical40 Raw39 membership and Raw47 distinction", flush=True)
+
+    if a.conditional:
+        names = [
+            "BB6.Agent11Raw39Canonical40Conditional.parent_count40",
+            "BB6.Agent11Raw39Canonical40Conditional.parent_root",
+            "BB6.Agent11Raw39Canonical40Conditional.parents_pairwise_distinct",
+            "BB6.Agent11Raw39Canonical40Conditional.parents_root",
+            "BB6.Agent11Raw39Canonical40Conditional.count39",
+            "BB6.Agent11Raw39Canonical40Conditional.removed_parent_absent",
+            "BB6.Agent11Raw39Canonical40Conditional.conditional_sound",
+            "BB6.Agent11Raw39Canonical40Conditional.conditional_exact_at_champion",
+        ]
+        source2 = HERE / "Raw39Canonical40Conditional.lean"
+        root2, proof_profiles = c.u.compile_one(source2, linked, evidence, names)
+        assert set(proof_profiles) == set(names), proof_profiles
+        assert all(set(ax) <= ALLOWED for ax in proof_profiles.values())
+        shutil.copy2(root2, evidence / root2.name)
+        receipt["claim"] = (
+            "accepted Canonical40 to conditional 39+Raw39 exact source theorem"
+        )
+        receipt["conditional_theorems"] = names
+        receipt["conditional_axioms"] = proof_profiles
+        receipt["conditional_root"] = root2.name
+        receipt["conditional_root_sha256"] = c.a68.sha(root2)
+        (evidence / "membership.json").write_text(
+            json.dumps(receipt, indent=2, sort_keys=True) + "\n")
+        print("PASS: Canonical40 source theorem with one explicit Raw39 premise and 39 remaining Covers", flush=True)
 
 if __name__ == "__main__":
     main()
