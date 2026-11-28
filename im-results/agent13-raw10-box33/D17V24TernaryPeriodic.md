@@ -23,3 +23,9 @@ Remaining saved residual IDs: 5,12,28,33,41.
 Let P(a,b,u) denote A with blank right stream and left `(10)^a 0 (10)^b 11 u` for arbitrary stream u. A positive return P(a,b+1,u)→P(a+2,b,0u) takes exactly 6a+6(b+1)+13 steps; P(a,0,u)→A with left `(10)^(a+3)u` takes 6a+13. The reset `(10)^a 00u`→P(0,a,1u) takes 6a+8. Thus P(0,b,u), b≥2, advances to P(0,2b+3,1 0^(b−2)u), preserving the invariant. Initialization reaches P(0,4,1 blank) in 53 steps. Local Lean proof has only standard axioms. Source bridge 7ad9d6c5aec0986bc7cd44cfc0b9420d6377c2e9; replay 666a07faafd385a49ea70c47bec9fd312bef444c; full CI queued.
 
 Remaining saved residual IDs: 5,28,33,41.
+
+### Residual 5: recursively nested sweeps
+
+With p=10, q=01, let S(n,u)=0011 q^n 00u, T(k,u)=q^(k+1) 000 p^k 11u. These denote left streams at A. A complete epoch at right 001z carries S(n,u) to S(n+1,11 q^n 1u). The key transfer is A(T(k,u),001r)→A(u,1^(2k+4)0 1^(2k+5)r), for arbitrary u,r. Its strong-induction proof uses a chain of strictly smaller nested transfers, with right balanced runs and a decreasing zero-pair counter. The restore lemma reconstructs T from two odd unary runs; a separate even/odd finish restores S. Initialization reaches S(0,011z) at 71 steps. The local Lean neverBlank theorem uses only standard axioms. Source cb8f29eb070967fb97ec4996b564b98695ffa539; replay 1b335e08624c7c8597a3a065d613d26c3d2f6f61; full CI queued.
+
+Remaining saved residual IDs: 28,33,41.
