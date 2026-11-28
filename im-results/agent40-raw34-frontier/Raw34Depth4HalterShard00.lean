@@ -10,7 +10,7 @@ instruction consulted. This is an all-completion theorem, not a simulation
 claim. Other four instructions may even be HALT.
 -/
 namespace BB6.Agent40Raw34Depth4Shard00
-open BB6Coverage BB6.Agent23Raw34Next BB6.Agent40Raw34EarlyHalters
+open BB6Coverage BB6.Agent13BlankDelay BB6.Agent23Raw34Next BB6.Agent40Raw34EarlyHalters
 def witnesses : List Witness := [
   ⟨[21,3,22,1,11,2,16,5,0,0,0,0], .halt 20⟩,
   ⟨[21,8,22,1,11,2,16,5,0,0,0,0], .halt 10⟩,
