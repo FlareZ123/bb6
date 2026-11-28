@@ -51,23 +51,20 @@ theorem growth (n : Nat) :
   have h2 : run0 table 4 ⟨3,ones (n+2),ones (n+2)⟩ =
       some ⟨2,ones (n+4),ones n⟩ := by
     have ha : ones (n+2) = [true,true]++ones n := by
-      rw [show n+2=2+n by omega]
       rfl
     have hb : ones (n+4) = [true,true,true,true]++ones n := by
-      rw [show n+4=4+n by omega]
       rfl
     simpa only [ha,hb] using turn (ones n) (ones n)
   have h3 : run0 table n ⟨2,ones (n+4),ones n⟩ =
       some ⟨2,[true]++zeros n++ones (n+3),[]⟩ := by
     have ha : ones (n+4) = [true]++ones (n+3) := by
-      rw [show n+4=1+(n+3) by omega]
       rfl
     simpa only [ha,ones,zeros,List.nil_append,List.append_nil,
                 Nat.one_mul,List.append_assoc] using
       sweepR table 2 [true] [] [true] [false] 1 cstep n (ones (n+3)) []
   have h4 : run0 table 2 ⟨2,[true]++zeros n++ones (n+3),[]⟩ =
       some (phase (n+1)) := by
-    simpa only [phase,zeros,ones,rep,List.append_assoc] using
+    simpa only [phase,zeros,ones,rep,List.append_assoc,List.cons_append,List.nil_append] using
       finish (zeros n++ones (n+3))
   have H := join0 (join0 (join0 h1 h2) h3) h4
   have ht : ((n+2)+4+n)+2=2*n+8 := by omega
