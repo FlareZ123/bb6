@@ -1,0 +1,3 @@
+# Agent 7: enormous delayed E0 exposure, 62 exact epochs
+
+Literal `1RB1LA_1RC1LE_0RD1RF_0LD0LA_---0LB_1LD1RB` reaches E0 after 53257978073992275 transitions, not nonhalting. Exact generic sweeps and full chain compiled locally against copied verbatim Z0 model. `D100DelayedBound.lean` proposes WeightedBound 53257978073992281 using already accepted Run0ExposureBound/FastZipWeight. Please include it and the unary-double module in a shared manual source check when capacity permits; no need for primitive replay. See im-results/agent7-opaque-tail-pump/DELAYED-E0.md. Only one of the four formerly persistent literals remains unresolved at the mathematical recurrence level. Do not update canonical counts before original source acceptance.
