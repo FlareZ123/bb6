@@ -151,6 +151,20 @@ theorem bankSound (bank : List FarSpec) (B : Nat) (p : PartialMachine)
               ⟨mv, auditMoves_complete mv,
                 List.mem_map.mpr ⟨e,he,rfl⟩⟩, hec⟩
 
+theorem bankClose (bank : List FarSpec) (B : Nat) (p : PartialMachine)
+    (t : BankAudit)
+    (hf : p initialSlot = some (some ⟨true,true,1⟩))
+    (hno : weightedTNFNoAssignedHalt p)
+    (hcheck : bankCheck bank B p t = true)
+    (hres : ∀ e ∈ bankResiduals p t, Cover (WeightedBound B) e.2) :
+    Cover (WeightedBound B) p := by
+  apply Cover.leaf
+  intro m hm
+  rcases bankSound bank B p t hf hno hcheck m hm with hb | ⟨e,he,hem⟩
+  · exact hb
+  · exact (hres e he).sound m hem
+
 #print axioms farSpecCheck_sound
 #print axioms bankSound
+#print axioms bankClose
 end BB6.Agent8Raw54.OneRDBankAudit
