@@ -217,12 +217,10 @@ theorem m8BoundaryLattice_complete
     rw [hjq,Nat.mul_add] at hmain
     omega
   have hqpos : 1≤q := by
-    cases q with
-    | zero =>
-        simp at hqQ
-        omega
-    | succ q =>
-        omega
+    apply Nat.one_le_iff_ne_zero.mpr
+    intro hq0
+    rw [hq0,Nat.mul_zero] at hqQ
+    omega
   have hqmod : q%8=(if m%8=3 then 1 else 5) := by
     have hh := congrArg (fun z : Nat => z%8) hqQ
     rw [Nat.mul_mod,hQ8,Nat.add_mod] at hh
@@ -236,12 +234,14 @@ theorem m8BoundaryLattice_complete
   have hqform : q=m8BoundaryCoeff m s := by
     have hdiv := Nat.mod_add_div q 8
     dsimp [s,m8BoundaryCoeff]
-    rw [hqmod]
-    omega
+    calc
+      q = q%8+8*(q/8) := hdiv.symm
+      _ = (if m%8=3 then 1 else 5)+8*(q/8) := by rw [hqmod]
   have hv : v=m8BoundaryVLattice m s := by
     dsimp [m8BoundaryVLattice]
     rw [← hqform]
-    rw [← hqQ]
+    have hqQ' : q*m8BoundaryQ m=m+v := by
+      simpa [Q,Nat.mul_comm] using hqQ
     omega
   have hqB : q*B=j+3*m+3 := by
     calc
