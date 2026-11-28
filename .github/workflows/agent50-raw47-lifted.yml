@@ -1125,8 +1125,9 @@ jobs:
           python tools/lean_compile_closure.py --workdir "$W/build" --jobs 3 \
             --manifest "$W/manifest.json" \
             --theorem BB6.Agent40Raw34FRightRay.never \
-            --artifact-name raw34-F-right-ray-source \
-            im-results/agent40-raw34-frontier/Raw34FRightRay.lean \
+            --theorem BB6.Agent40Raw34EFRightRay.never \
+            --artifact-name raw34-EF-right-ray-source \
+            im-results/agent40-raw34-frontier/Raw34EFRightRay.lean \
             2>&1 | tee "$W/closure.log"
           python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
           python - "$W/closure.log" <<'PY'
@@ -1138,7 +1139,12 @@ jobs:
               m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
               if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
               else: assert f"'{full}' does not depend on any axioms" in log,full
-          print('PASS: four source-verified F-pristine-right cylinders, all completions nonhalting')
+          for name in ('count','checked','never'):
+              full='BB6.Agent40Raw34EFRightRay.'+name
+              m=re.search(r"'"+re.escape(full)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if m: assert set(filter(None,m.group(1).split(', ')))<=allowed,(full,m.group(1))
+              else: assert f"'{full}' does not depend on any axioms" in log,full
+          print('PASS: four F-only and 32 mixed E/F source-proved pristine-ray cylinders')
           PY
       - uses: actions/upload-artifact@v4
         if: always()
