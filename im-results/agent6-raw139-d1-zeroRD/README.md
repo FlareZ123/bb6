@@ -36,6 +36,15 @@ the eight hard children into 1,476,355 terminal leaves plus the twelve immediate
 (1,476,367 leaves total) and 7,371 cap-250 open leaves; those counts are discovery data,
 while the eight-child reduction itself is a kernel theorem.
 
+[D1NineReduce.lean](D1NineReduce.lean) supplies the parallel exact D0=9 composition interface.
+For `[7,24,11,24,14,24,9,13,24,24,24,24]`, the same step-8 C1 split has only
+six hard ordinary codes, `[2,6,16,17,18,19]`; the other 14 children are
+kernel-checked translated cycles. `BB6.Agent6D1NineReduce.cover` proves the complete
+D0=9 cylinder at every `B ≥ 14` from those six child Covers. Local Lean
+4.36.0-rc2 accepted it with only the standard axioms. The source gate in
+`.github/workflows/agent6-raw139-d9.yml` is independently rebuilding all six child
+certificate banks and their unconditional weighted-3000 parent composition.
+
 The exact certificate bank is reproducible from [late-source.tar.xz.b64](late-source.tar.xz.b64), containing the untrusted generator and two fixed witness manifests. Extract with `base64 -d late-source.tar.xz.b64 | tar -xJf -`. In the accepted normalized artifact 15093190882 build directory, run `python certify_late.py --roots lateRoots.tsv --children lateChildren.tsv`, then `LEAN_PATH=. lean -o D1Late.olean D1Late.lean`. The generated module SHA-256 is 138dfdbc02d63f28ac39d44d9ec19f7d2baecfaab646be83990f0c40b3c05cf3. Local Lean 4.36.0-rc2 checked `BB6.Agent6D1Late.allLate` with only propext, Classical.choice, Quot.sound. The `tables` list is an exact list of the 85 partial-machine roots, not a statement about the complete census partition.
 
 The formerly multi-hole table [7,24,11,24,14,16,8,13,20,1,23,3] first queries B1 at 295 ordinary moves. Its 24 ordinary children partition into four last-hole arrivals at 296 or 297, six translated cycles, and 14 ngram certificates (13 width-2 and one width-5). The exact source `zipCheck` checks the split, every child's table identity, the weighted halt allowance, and the leaf certificate. It needs no remaining hypotheses. Ngram certificates use a compact trie constructor from sorted row keys, with every closure equality reduced by the kernel. No new axiom or trusted discovery algorithm.
