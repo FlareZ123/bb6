@@ -4,13 +4,13 @@ namespace BB429.CoarseExit
 
 /-- Four bounded base-four steps at doubled leading scale.  This is the
     parity companion of `four_edges`: with subtraction 108 and box [0,54],
-    only 0 and 36 can survive four more steps. -/
+    the exact four-step survivor set is {0,9,27,36}. -/
 theorem four_edges54 (z0 z1 z2 z3 z4 : Int)
     (h0 : 0≤z0 ∧ z0≤54) (h1 : 0≤z1 ∧ z1≤54) (h2 : 0≤z2 ∧ z2≤54)
     (h3 : 0≤z3 ∧ z3≤54) (h4 : 0≤z4 ∧ z4≤54)
     (e0 : z1=4*z0 ∨ z1=4*z0-108) (e1 : z2=4*z1 ∨ z2=4*z1-108)
     (e2 : z3=4*z2 ∨ z3=4*z2-108) (e3 : z4=4*z3 ∨ z4=4*z3-108) :
-    z0=0 ∨ z0=36 := by
+    z0=0 ∨ z0=9 ∨ z0=27 ∨ z0=36 := by
   rcases e0 with e0|e0 <;>
     rcases e1 with e1|e1 <;>
     rcases e2 with e2|e2 <;>
@@ -30,11 +30,11 @@ theorem scaled_step54 (H a r z : Int) (e : Bool) (hr : r=54*H) (ha : a=H*z) :
   cases e <;> simp [Int.mul_sub,Int.mul_assoc,Int.mul_left_comm,Int.mul_comm] <;> omega
 
 /-- If r=54H, four further bounded leading-coefficient steps force the
-    normalized coefficient to 0 or 36. -/
+    normalized coefficient into the exact set {0,9,27,36}. -/
 theorem four_scaled54 (H r a : Int) (e : Nat → Bool) (i : Nat) (z : Int)
     (hH : 0<H) (hr : r=54*H) (hz : lead r a e i=H*z)
     (hb : ∀ j, j≤i+4 → 0≤lead r a e j ∧ lead r a e j≤r) :
-    z=0 ∨ z=36 := by
+    z=0 ∨ z=9 ∨ z=27 ∨ z=36 := by
   let z1 := 4*z-(if e i then 108 else 0)
   let z2 := 4*z1-(if e (i+1) then 108 else 0)
   let z3 := 4*z2-(if e (i+2) then 108 else 0)
@@ -64,6 +64,7 @@ theorem return_from_exact_burst_even (p : State) (I : Nat) (a P y : Int)
     (hodd : p.2%2=1) (hy : 27≤y) (hU : Uc p=a*P)
     (hV : Vc p=(54*4^I)*P+y)
     (hsep : 3*cap (budget 0 y (I+4)) (I+4)+39<P)
+    (ha12 : a%12=0)
     (hres : ∀ e : Nat → Bool, a≠36+108*word4 e I) :
     ∃ k t, 0<k ∧ k≤2*(I+4) ∧ run k p=some t ∧ isSection t := by
   classical
@@ -97,13 +98,17 @@ theorem return_from_exact_burst_even (p : State) (I : Nat) (a P y : Int)
       grind +ring
     have h := four_scaled54 H r a e I (a-108*word4 e I) hH hr hZ
       (by simpa [L] using hB)
-    rcases h with h|h
+    rcases h with h|h|h|h
     · rw [h,Int.mul_zero] at hZ
       have he := negative_error P r a y L U V e ph hy hU' hV' hb I
         (by dsimp [L]; omega)
       have hp := hphys I (by dsimp [L]; omega)
       rw [hZ,Int.zero_mul,Int.sub_zero] at he
       omega
+    · have : False := by omega
+      exact this.elim
+    · have : False := by omega
+      exact this.elim
     · exact hres e (by omega)
 
 theorem d234_even_resonance_mod9 (m I : Nat) (e : Nat → Bool)
