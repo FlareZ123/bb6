@@ -100,7 +100,7 @@ theorem contiguousGrowth (k : Nat) :
     calc
       rep [true] (k+1)++[true,false,false,false]
           = (rep [true] (k+1)++[true])++[false,false,false] := by
-              simp only [List.append_assoc]
+              simp only [List.append_assoc,List.cons_append,List.nil_append]
       _ = ([true]++rep [true] (k+1))++[false,false,false] := by
               rw [rep_snoc [true] (k+1)]
       _ = rep [true] ((k+1)+1)++[false,false,false] := by rfl
@@ -108,7 +108,7 @@ theorem contiguousGrowth (k : Nat) :
       ⟨0,rep [true] (k+1),[true,false,false,false]⟩ =
       some (contiguousWord (k+1)) := by
     rw [htail] at h3
-    simpa only [contiguousWord] using h3
+    simpa only [List.append_nil,contiguousWord] using h3
   have H := join0 (join0 (join0 h0 h1') h2') h3'
   have ht : 1+k+9+(k+1) = contiguousCost k := by
     unfold contiguousCost
@@ -228,17 +228,21 @@ theorem alternatingGrowth (k : Nat) :
               simpa only [List.cons_append,List.nil_append,List.append_assoc] using hrot
       _ = [true,true]++rep [true,true] k := rep_snoc [true,true] k
       _ = rep [true,true] (k+1) := by rfl
+  have honeR : [true]++(rep [true,true] k++[true]) =
+      rep [true,true] (k+1) := by
+    rw [← List.append_assoc]
+    exact hone
   have h2' : run0 alternating 10
       ⟨1,[true]++rep [true,true] k++[true],[false,false,false]⟩ =
       some ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ := by
-    simpa only [hone] using h2
+    simpa only [honeR,List.append_assoc] using h2
   have h3 := alternatingALeftMany (k+1) [] [true,false,false,false]
   have htail : rep [true,false] (k+1)++[true,false,false,false] =
       rep [true,false] ((k+1)+1)++[false,false] := by
     calc
       rep [true,false] (k+1)++[true,false,false,false]
           = (rep [true,false] (k+1)++[true,false])++[false,false] := by
-              simp only [List.append_assoc]
+              simp only [List.append_assoc,List.cons_append,List.nil_append]
       _ = ([true,false]++rep [true,false] (k+1))++[false,false] := by
               rw [rep_snoc [true,false] (k+1)]
       _ = rep [true,false] ((k+1)+1)++[false,false] := by rfl
@@ -246,7 +250,7 @@ theorem alternatingGrowth (k : Nat) :
       ⟨0,rep [true,true] (k+1),[true,false,false,false]⟩ =
       some (alternatingWord (k+1)) := by
     rw [htail] at h3
-    simpa only [alternatingWord] using h3
+    simpa only [List.append_nil,alternatingWord] using h3
   have H := join0 (join0 (join0 h0' h1') h2') h3'
   have ht : 1+2*k+10+2*(k+1) = alternatingCost k := by
     unfold alternatingCost
@@ -360,7 +364,7 @@ theorem stationaryGrowth (k : Nat) :
   have ht : 9+(k+1)+1+k+1 = stationaryCost k := by
     unfold stationaryCost
     omega
-  simpa only [List.append_assoc,ht] using H
+  simpa only [stationaryWord,ht] using H
 
 theorem stationary_never (m : Machine)
     (hm : compatible stationary m) : NeverHalts m := by
