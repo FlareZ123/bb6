@@ -5,10 +5,14 @@ on:
       branch:
         description: 'Which exact A1 child to audit'
         type: choice
-        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, canonical40-batch38, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, global-parent-chunked, chunked-kernel-smoke]
+        options: [0RB, 1RC, 0RE, 0RC, 0LA, 1LB, 1LA, 1RE, 1LE, 0LE, inspect-1LE-holdouts, inspect-1LE-proof-sources, gap-dfa, pump-4084, pump-search-1583, canonical40-membership, canonical40-conditional, canonical40-batch38, parent-join, parent-ten-preflight, parent-ten-all-threshold, global-sole-obligation, global-parent-join, global-parent-chunked, global-after-raw47-chunked, chunked-kernel-smoke]
         required: true
       onele_run:
         description: 'Successful complete 1LE semantic audit run ID (parent-join only)'
+        required: false
+        type: string
+      canonical39_run:
+        description: 'Successful Raw47 source-accepted Canonical39 successor run (global-after-raw47-chunked only)'
         required: false
         type: string
 permissions:
@@ -943,4 +947,40 @@ jobs:
             /tmp/a11chunk/replay-split/report.json
             /tmp/a11chunk/audit-split.log
           if-no-files-found: warn
+          retention-days: 30
+
+  global_after_raw47_chunked:
+    if: ${{ inputs.branch == 'global-after-raw47-chunked' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Authenticate serial accepted Raw47 predecessor; source-check Raw39 successor
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ONELE_RUN: ${{ inputs.onele_run }}
+          CANONICAL39_RUN: ${{ inputs.canonical39_run }}
+        run: |
+          set -euo pipefail
+          [[ "$ONELE_RUN" =~ ^[0-9]+$ ]]
+          [[ "$CANONICAL39_RUN" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent11-raw39/consume_raw39_after_raw47_chunked.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent11-raw39/consume_raw39_after_raw47_chunked.py \
+            --work /tmp/a11-canonical38-after-raw47 \
+            --onele-run "$ONELE_RUN" \
+            --canonical39-raw47-run-id "$CANONICAL39_RUN" --chunk-size 64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: canonical38-raw47-raw39-original-source-delta
+          path: /tmp/a11-canonical38-after-raw47/canonical38-raw47-raw39-delta/**
+          if-no-files-found: warn
+          compression-level: 1
           retention-days: 30
