@@ -93,13 +93,13 @@ theorem all_covered (h : Covers) :
 
 theorem safe (h : Covers) :
     ∀ m, compatible BB6.Agent44Extra28AllChildren.parent m → WeightedBound 158 m :=
-  BB6.Agent44Extra28AllChildren.consume 158 (by decide)
+  (BB6.Agent44Extra28AllChildren.consume 158 (by decide)
     (Q0RosterConsume.consume 158 BB6.Agent44Extra28AllChildren.remaining covered
       (all_covered h)
       (by
         intro p hp
         rw [no_residual] at hp
-        cases hp))
+        cases hp))).sound
 
 theorem completeCover (h : Covers) :
     Cover (WeightedBound 158) BB6.Agent44Extra28AllChildren.parent :=
