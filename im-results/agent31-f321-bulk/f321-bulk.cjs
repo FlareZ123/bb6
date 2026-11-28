@@ -59,6 +59,51 @@ function inverseBulkHigh(r, D) {
   return res;
 }
 
+// For the far branch (d >= 3a+1), k consecutive steps satisfy
+// A_k = (a+2)*4^k-2, D_k=d-(a+2)*(4^k-1)+6k.
+// The far guard gap D_k-(3*A_k+1) strictly decreases in k.
+function farGap(a, d, k) {
+  return d+a+7n+6n*k-((a+2n)<<(2n*k+2n));
+}
+
+function bulkFar(a, d) {
+  assert(a >= 0n && d >= 0n);
+  if (d < 3n*a+1n) return { a, d, k: 0n };
+  let hi = 1n;
+  while (farGap(a,d,hi) >= 0n) hi <<= 1n;
+  let lo = hi >> 1n;
+  while (hi-lo>1n) {
+    const mid = (hi+lo)>>1n;
+    if (farGap(a,d,mid) >= 0n) lo=mid; else hi=mid;
+  }
+  const pow = 1n << (2n*hi);
+  const A = (a+2n)*pow-2n;
+  const D = d-(a+2n)*(pow-1n)+6n*hi;
+  assert(D>=0n && D<=3n*A);
+  return {a:A,d:D,k:hi};
+}
+
+function slowFar(a,d) {
+  let k=0n;
+  while(d>=3n*a+1n) { d-=3n*a; a=4n*a+6n; k++; }
+  return {a,d,k};
+}
+
+// Complete finite inverse of the maximal far-run map.
+// For k>=1, the exit also has D>=1. The invariant A+2=(a+2)*4^k
+// restricts k to a finite 4-adic divisor chain.
+function inverseBulkFar(A,D) {
+  if(A<0n||D<0n||D>3n*A)return [];
+  let q=A+2n,k=0n,res=[];
+  while(q>=2n) {
+    const a=q-2n,d=D+A-a-6n*k;
+    if((k===0n||D>=1n)&&d>=0n) res.push({a,d,k});
+    if(q%4n!==0n)break;
+    q/=4n;k++;
+  }
+  return res;
+}
+
 function slowHigh(a, d) {
   let k = 0n;
   while (a >= d + 2n) {
@@ -76,6 +121,12 @@ function test() {
     assert(inverses.some(v => v.a === a && v.d === d && v.k === z.k));
     for (const v of inverses)
       assert.deepEqual(bulkHigh(v.a, v.d), {a:z.a, d:z.d, k:v.k});
+    const far = bulkFar(a,d);
+    assert.deepEqual(far,slowFar(a,d));
+    const finv=inverseBulkFar(far.a,far.d);
+    assert(finv.some(v=>v.a===a&&v.d===d&&v.k===far.k));
+    for(const v of finv)
+      assert.deepEqual(bulkFar(v.a,v.d), {a:far.a,d:far.d,k:v.k});
   }
   for (const [a,d] of [
     [(1n<<128n) + 1024n, 1n],
@@ -129,4 +180,4 @@ if (require.main === module) {
   assert(Number.isSafeInteger(n) && n >= 1 && n <= 1_000_000);
   process.stdout.write(JSON.stringify(run(n, 10000), null, 2) + "\n");
 }
-module.exports = { mapOnce, deltaAt, bulkHigh, inverseBulkHigh, slowHigh, run, test };
+module.exports = { mapOnce, deltaAt, bulkHigh, inverseBulkHigh, slowHigh, farGap, bulkFar, inverseBulkFar, slowFar, run, test };
