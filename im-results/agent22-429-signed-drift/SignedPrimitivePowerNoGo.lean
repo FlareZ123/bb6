@@ -4,12 +4,16 @@ import FinitePrimitiveNoGo
 namespace SignedPairMacroBridge
 open FiniteCyclicValuation
 
+private theorem pairRun_input_even_local {typ : Bool}
+    {j u D v d' : Nat} (hp : PairRun typ j u D v d') : D%2=0 := by
+  cases hp <;> omega
+
 private theorem sourceWalk_input_even {x : PeriodicMacro.Letter}
     {xs : List PeriodicMacro.Letter} {u D U D' : Nat}
     (h : SourceWalk (x::xs) u D U D') : D%2=0 := by
   cases h with
-  | cons hp rest =>
-      cases hp <;> omega
+  | @cons x xs u D v d' U D' hp rest =>
+      exact pairRun_input_even_local hp
 
 /-- Source-certified signed E/S+even-F primitive-power obstruction. The only
     hypotheses beyond literal SourceWalk repetitions are the exact quantitative
@@ -70,11 +74,13 @@ theorem source_primitive_power_bound
       (PeriodicMacro.slopeExponentFun (x::xs))) :
     (PeriodicMacro.M (x::xs))^n ≤
       2*((r0+2*PeriodicMacro.T (x::xs))/3) := by
-  by_contra hnot
-  have hbig : 2*((r0+2*PeriodicMacro.T (x::xs))/3) <
-      (PeriodicMacro.M (x::xs))^n := by omega
-  exact source_no_primitive_finite_power x xs u D n r0 hs hr0 hbig
-    hj hlarge hprim
+  by_cases hle : (PeriodicMacro.M (x::xs))^n ≤
+      2*((r0+2*PeriodicMacro.T (x::xs))/3)
+  · exact hle
+  · have hbig : 2*((r0+2*PeriodicMacro.T (x::xs))/3) <
+        (PeriodicMacro.M (x::xs))^n := by omega
+    exact False.elim (source_no_primitive_finite_power x xs u D n r0 hs
+      hr0 hbig hj hlarge hprim)
 
 #print axioms source_primitive_power_bound
 end SignedPairMacroBridge
