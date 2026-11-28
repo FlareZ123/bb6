@@ -70,6 +70,23 @@ original-source Lean 4.36.0-rc2 and standard-axiom audit in
 These lemmas are conditional glue, **not** a current closed parent or global
 BB(6) theorem.
 
+A second proof-independent composition,
+[`Raw11Extra28FromCovers.lean`](Raw11Extra28FromCovers.lean),
+separates the twelve **literal** child tables from their opaque Cover proof
+arguments. It calculates the empty remaining complement with
+`Q0RosterConsume.removeCovered` and accepts twelve Cover premises at the
+bounds above. It therefore avoids the `decide` tactic's free-variable
+obstacle encountered in the proof-dependent Route checker. Its original
+source closure was dispatched in
+[run 46106295194](https://github.com/FlareZ123/bb6/actions/runs/46106295194),
+and is **not** counted as accepted until successful. The separate
+[`generate-table-join.cjs`](generate-table-join.cjs) constructs the
+unconditional final parent proof from actual exported child safe theorems
+using this composition. An additional
+[`generate-bank-join.cjs`](generate-bank-join.cjs) provides a finite
+injective-code bank alternative. These generators are not substitutes for
+checking the actual child proof objects.
+
 ## Proof mechanisms and reproduction
 
 - **D1=0LC (bound 42)**: `source.tar.gz` contains the first proof, a
