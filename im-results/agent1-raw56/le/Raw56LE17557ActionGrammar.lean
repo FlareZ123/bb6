@@ -207,7 +207,6 @@ theorem body_outerTrace (r : Nat) :
       have hl := outerTrace_lift ih
       have hbc := OuterTrace.hitB (OuterTrace.hitC hl)
       simpa [body,
-        BB6.Agent1Raw56.LE17557FrameSchedule.frame,
         BB6.Agent1Raw56.LE17557FrameSchedule.frame_succ_refine] using hbc
 
 /-- Consequently a complete rank-r segment is one nested frame followed by no
@@ -272,7 +271,6 @@ theorem body_outerTraceBelow (r : Nat) :
       have hl := outerTraceBelow_lift ih
       have hbc := OuterTraceBelow.hitB (OuterTraceBelow.hitC hl)
       simpa [body,
-        BB6.Agent1Raw56.LE17557FrameSchedule.frame,
         BB6.Agent1Raw56.LE17557FrameSchedule.frame_succ_refine] using hbc
 
 /-- Forgetting the rank bound recovers the earlier outer trace. -/
