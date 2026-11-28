@@ -56,7 +56,7 @@ jobs:
               assert hit, name
               axioms={x.strip() for x in hit[1].split(',')}
               assert axioms <= {'propext','Classical.choice','Quot.sound'},(name,axioms)
-          for source, names in [('MixedValuationDisjoint.source.log',['no_three_then_five','no_five_then_three']), ('NeedleMixedValuationSource.source.log',['no_three_then_five_source','no_five_then_three_source']), ('MixedPotentialGeneral.source.log',['gap_from_potential','immediate_gap']), ('NeedleMixedPotentialSource.source.log',['mixed_source_gap','no_immediate_switch'])]:
+          for source, names in [('MixedValuationDisjoint.source.log',['no_three_then_five','no_five_then_three']), ('NeedleMixedValuationSource.source.log',['no_three_then_five_source','no_five_then_three_source']), ('MixedPotentialGeneral.source.log',['gap_from_potential','immediate_gap','cross_step_identity']), ('NeedleMixedPotentialSource.source.log',['mixed_source_gap','no_immediate_switch','source_cross_step'])]:
               txt=pathlib.Path(source).read_text()
               namespace={'MixedValuationDisjoint.source.log':'BB6.Agent20MixedValuation','NeedleMixedValuationSource.source.log':'BB6.Agent20NeedleMixedSource','MixedPotentialGeneral.source.log':'BB6.Agent20MixedPotentialGeneral','NeedleMixedPotentialSource.source.log':'BB6.Agent20NeedleMixedPotentialSource'}[source]
               for name in names:
