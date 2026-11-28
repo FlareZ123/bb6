@@ -92,8 +92,9 @@ theorem b0r5_mod0 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=0) :
     have h2M := Reach.ext ext h2
     simpa only [hk] using h2M
   have h := Reach.trans h01 h2'
-  have hp4 : p/4=k+1 := by omega
-  simpa only [hj,hk,hp4,show 3*(4*k+4)+18=12*k+30 by omega] using h
+  have hpout : 3*p+18=12*k+30 := by omega
+  have hnout : p/4-1=k := by omega
+  simpa only [hpout,hnout] using h
 
 /-- The C35221 terminal for p = 0 mod 4 realizes the ordinary arithmetic A branch. -/
 theorem c0r5_mod0 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=0) :
