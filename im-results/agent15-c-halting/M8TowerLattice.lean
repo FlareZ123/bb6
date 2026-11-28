@@ -137,7 +137,7 @@ theorem m8TowerLattice_mass
   have hgeom : 3*Q*S+1=X := by
     simpa [Q,S,X] using m8TowerLattice_geom m r
   have hvsum : m+V=q*Q := by
-    simpa [V,q] using m8BoundaryVLattice_sum m s hm4
+    simpa [V,q,Q,m8TowerLatticeV] using m8BoundaryVLattice_sum m s hm4
   have hqQ : Q*q=m+V := by
     calc
       Q*q=q*Q := Nat.mul_comm _ _
@@ -204,12 +204,10 @@ theorem m8TowerLatticeJ_parity
     simpa [q] using m8TowerLatticeCoeff_mod4 m s hm4
   have hterm : (3*S*V)%4=2 := by
     rw [Nat.mul_mod (3*S) V 4,Nat.mul_mod 3 S 4,hs4,hv4]
-    omega
   have hj : J+3=3*S*V+q := by
     simpa [J,S,V,q] using m8TowerLatticeJ_plus3 m r s hm4 hr
   have hjmod : (J+3)%4=3 := by
     rw [hj,Nat.add_mod,hterm,hq4]
-    omega
   have hJ4 : J%4=0 := by
     rw [Nat.add_mod] at hjmod
     omega
