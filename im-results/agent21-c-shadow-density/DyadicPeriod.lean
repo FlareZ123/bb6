@@ -30,7 +30,7 @@ theorem period_slope_dvd (n : Nat) (u v : Int) (w : List Nat)
       _ = -(P n*(u+(u+2*v)*coeff w)) := by rw [Int.mul_add]
   rw [he,hk]
   rw [Int.mul_assoc]
-  simp only [Int.mul_neg,Int.neg_mul]
+  simp only [Int.mul_neg]
 
 /-- Exact all-precision translation invariance of nonempty inverse-word
     divisibility. A shift by 2^(n+1) in the original x/y coordinates

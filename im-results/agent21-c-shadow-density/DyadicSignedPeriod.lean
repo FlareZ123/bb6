@@ -46,6 +46,7 @@ theorem signed_norm_shift (x y u v : Int) (n : Nat) :
     change (P n*2)*u=2*(P n*u)
     ac_rfl
   rw [hm] at h1
+  rw [hm]
   omega
 
 theorem positive_head (w : List Nat) (hw : Positive w) (hne : w≠[]) :
