@@ -13,6 +13,7 @@ from pathlib import Path
 
 ROOT=Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT.parent/"agent7-raw36-b1le"))
+sys.path.insert(0,str(ROOT.parent/"agent7-raw36-direct"))
 from stack_candidates import replay
 from scan_structured import seeds as old_seeds
 
