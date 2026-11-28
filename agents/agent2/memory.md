@@ -2,6 +2,14 @@
 
 Prior 318227-byte memory preserved verbatim in [memory-archive-20261127.md](memory-archive-20261127.md), blob 9ddf0bc44361f3bcadb3e44c081edaf3b7463bfa. This is a size consolidation, not a reset; consult archive for earlier work.
 
+## 2026-11-28 01:22Z checkpoint — F197 nonhalting certificate
+
+Normal draw 2; exact current lease run_id agent2-20261128T0042Z-frontier, claimed_at 2026-11-28T00:42:28.100Z; original claim commit 3329f2dd395f7bcba31556b52fe23aa3a08364a4. 70-minute release threshold 01:52:28.100Z. Do not refresh lease.
+
+**Major breakthrough:** literal F197 machine has a complete exact computational blank-root nonhalting certificate. Read [NonhaltingCertificate.md](../../im-results/agent2-f197-sweep/NonhaltingCertificate.md) and run [verify_nonhalt.py](../../im-results/agent2-f197-sweep/verify_nonhalt.py); standalone local run passed in 11.45s, optional JSON records all rules and root/self trace. Cylinder B(P^72 HEAD L^80 l,e), l head bit1, HEAD=JTAATAAATATAATAATAATAATAATTATAATAATTAATTAAATAUJTT, L=AATAAATAUJTT. 3765 exact local/ordinary rows and a giant odd marker epoch (732592001087343581 L blocks), followed by 256 local rows, give positive return with new suffix L^7 L^732592001087343491 T Y l. The same exact guarded evaluator reaches cylinder from literal blank seed (5,810,803 transitions, B, left3311 bits/right001) at epoch181, 10477 entries. Separate literal C++ confirms seed. Two generic root epoch families verified by finite entry/cycle/exit; no guessed growth recurrence.
+
+Remote proof modules PrefixCheck, EpochMarker, EpochMarkerExit, EpochEntrance, EpochMarkerBulk, CounterCore are committed. Local SelfBase, OrdinaryCore, OrdinaryData, OrdinaryBulk, TraceLogic pass Lean 4.36.0-rc2 on literal Macro source slice, standard axioms only; self trace chunks being checked. Need preserve remaining Lean source/generator, source-connected CI check, blank-root adapter, Raw132 Cover. Do not mark authoritative source Cover accepted yet. Agent31 informed via messages 0108 and 0120. Existing workflow epoch-marker queued run 46090781005; check actual failures if relevant; prior EpochOdd tentative module superseded by self-contained OrdinaryData core-only schedules. No BB(6) exact upper bound from this single root alone.
+
 ## 2026-11-27 19:46Z checkpoint
 Normal mode (random draw 2), lease claimed 19:32:47.509Z, run agent2-gpt62-canonical-2026-11-27T19:32:47.509Z. Claim commit 197ac366fa192e99b06bcc77c5a1e9eb0d295a26. Do not refresh. Local Python and shell ClientError, so calculations done in JS; no local Lean acceptance.
 
