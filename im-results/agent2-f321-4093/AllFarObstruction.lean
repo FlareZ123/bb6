@@ -1,4 +1,5 @@
 import ObstructionAlignment
+import EqualHigh
 import F321BackwardBarrier
 import Lean.Elab.Tactic.Omega
 
@@ -16,6 +17,7 @@ namespace BB6.Agent2F321AllFarObstruction
 open BB6.Agent31F321Density
 open BB6.Agent2F321ObstructionAlignment
 open BB6.Agent2F321Bulk
+open BB6.Agent2F321EqualHigh
 
 def farWord : Nat → List InverseLetter
   | 0 => []
@@ -129,6 +131,57 @@ theorem middleEven_tail_blocks_depth
     ¬ NoResidueWord depth D := by
   apply nearMinusThree_blocks_NoResidueWord depth D
   exact middleEven_terminal_nearMinusThree hh ht hdepth
+
+private theorem pow_factor_of_le {N e : Nat} (h : N ≤ e) :
+    ∃ q : Nat, 2^e = 2^N * q := by
+  obtain ⟨r,hr⟩ := Nat.exists_eq_add_of_le h
+  subst e
+  refine ⟨2^r, ?_⟩
+  exact Nat.pow_add 2 N r
+
+private theorem four_times_pow (k : Nat) :
+    4 * 2^k = 2^(k+2) := by
+  calc
+    4 * 2^k = 2^2 * 2^k := by
+      have h2 : 2^2 = 4 := by decide
+      rw [h2]
+    _ = 2^(2+k) := (Nat.pow_add 2 2 k).symm
+    _ = 2^(k+2) := by congr 1 <;> omega
+
+/-- Equal-reset terminal tails have the same exceptional 2-adic limit.
+The root phase theorem additionally restricts their High length to 12 or 18
+modulo 24. -/
+theorem equalHigh_terminal_nearMinusThree
+    {k a A D N : Nat}
+    (hh : HighRun k (2*a+4) 1 A D)
+    (ht : A = D + 1)
+    (hN : N ≤ k+2) : NearMinusThree N D := by
+  have hterm := equal_high_terminal_parameter hh ht
+  rcases pow_factor_of_le hN with ⟨q,hq⟩
+  refine ⟨q, ?_⟩
+  rw [hterm, four_times_pow k]
+  exact hq
+
+/-- The third authentic small-second anchor family, Equal followed by High,
+also defeats every fixed-depth terminal-only residue sieve on sufficiently
+long tails. Its root-reachable predecessor forces k mod 24 in {12,18}. -/
+theorem equalHigh_tail_blocks_depth
+    {n k a A D depth : Nat}
+    (hn : 0 < n)
+    (hr : CounterReach 1 1 n a a)
+    (hh : HighRun k (2*a+4) 1 A D)
+    (ht : A = D + 1)
+    (hdepth : 2*depth ≤ k+2) :
+    (k % 24 = 12 ∨ k % 24 = 18) ∧
+      ¬ NoResidueWord depth D := by
+  have hphase := equal_high_terminal_length_mod24 hn hr hh ht
+  constructor
+  · exact hphase
+  · apply nearMinusThree_blocks_NoResidueWord
+    exact equalHigh_terminal_nearMinusThree hh ht hdepth
+
+#print axioms equalHigh_terminal_nearMinusThree
+#print axioms equalHigh_tail_blocks_depth
 
 #print axioms nearMinusThree_blocks_NoResidueWord
 #print axioms middleOdd_tail_blocks_depth
