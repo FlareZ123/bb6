@@ -5,7 +5,6 @@ import Raw14042ExtraTail
 
 namespace Raw14042MixedTerminals
 open BB6BlockFAR Raw140Orbit Raw140Extra Raw140Double Raw140VariantTransfer
-open Raw14042ArithmeticInvariant
 open Raw14042Counter (CTail T cword turn)
 open Raw14042CGeneral (crank crank_lt ct_balance cCfg)
 open Raw14042BGeneral (ATail arank arank_lt aCfg)
@@ -51,10 +50,9 @@ theorem b0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
       show (2*k+1)+1=2*k+2 by omega] using h2M
   have hb := Raw14042CGeneral.ct_balance j (.c325)
   have hlt := crank_lt s
-  have hbal : 6*n+crank s=p/2+1 := by
-    dsimp only [n,s]
-    simp only [Raw14042CGeneral.crank] at hb
-    omega
+  have hb' : 6*n+crank s=j+3 := by
+    simpa only [n,s,Raw14042CGeneral.ct,Raw14042CGeneral.crank] using hb
+  have hbal : 6*n+crank s=p/2+1 := by omega
   have hn : n=(p/2+1)/6 := by omega
   have hs : crank s=(p/2+1)%6 := by omega
   refine ⟨s,hs,?_⟩
@@ -83,12 +81,17 @@ theorem b0r5_mod0 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=0) :
       simpa only [Braw,hj,U,List.replicate_succ,List.cons_append] using h0
     simpa only [n,s] using Reach.trans h0' (Reach.ext ext h1)
   have hb := Raw14042CGeneral.ct_balance j (.c325)
-  have hbal : 6*n+crank s=2*k+3 := by
-    dsimp only [n,s]
-    simp only [Raw14042CGeneral.crank] at hb
-    omega
+  have hb' : 6*n+crank s=j+3 := by
+    simpa only [n,s,Raw14042CGeneral.ct,Raw14042CGeneral.crank] using hb
+  have hbal : 6*n+crank s=2*k+3 := by omega
   have h2 := Raw14042MixedExitEvenB.bEvenExit k n s hbal
-  have h := Reach.trans h01 (Reach.ext ext h2)
+  have h2' : R
+      (boundary 1 true [S 5]
+        (S 2::S 2::(U 1 (j+3) ++ S 2::S 3::(U 2 (j+1) ++ T n ++ cword s))))
+      (cCfg (12*k+30) k .c32) := by
+    have h2M := Reach.ext ext h2
+    simpa only [hk] using h2M
+  have h := Reach.trans h01 h2'
   have hp4 : p/4=k+1 := by omega
   simpa only [hj,hk,hp4,show 3*(4*k+4)+18=12*k+30 by omega] using h
 
