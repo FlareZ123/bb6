@@ -422,6 +422,22 @@ theorem prefixWeight_unbounded (t : Nat) :
 /-- Second-right-run length carried by a rank-r normal-A action. -/
 def normalB (r : Nat) : Nat := 2^(r+4) - 3
 
+@[simp] theorem normalB_zero : normalB 0 = 13 := by
+  decide
+
+theorem normalB_succ (r : Nat) :
+    normalB (r+1) = 2 * normalB r + 3 := by
+  unfold normalB
+  have hs : 2^(r+5) = 2 * 2^(r+4) := by
+    rw [show r+5 = (r+4)+1 by omega, Nat.pow_succ]
+    omega
+  rw [show r+1+4 = r+5 by omega, hs]
+  have hp : 16 ≤ 2^(r+4) := by
+    have h : 2^4 ≤ 2^(r+4) :=
+      Nat.pow_le_pow_right (by decide) (by omega)
+    simpa using h
+  omega
+
 theorem pow_ge16 (r : Nat) : 16 ≤ 2^(r+4) := by
   have h : 2^4 ≤ 2^(r+4) :=
     Nat.pow_le_pow_right (by decide) (by omega)
@@ -477,6 +493,8 @@ theorem frame_closes (r : Nat) :
 #print axioms cWeightArithmetic
 #print axioms next_B_weight_update
 #print axioms next_C_weight_update
+#print axioms normalB_zero
+#print axioms normalB_succ
 #print axioms normalB_ge6
 #print axioms normalB_mod8
 #print axioms frame_succ_refine
