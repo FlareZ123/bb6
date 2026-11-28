@@ -1,0 +1,57 @@
+name: Agent7 Raw36 0LB/0RE exact 902-step infinite drift
+run-name: Raw36 single holdout—902-step opaque-tail pump Lean kernel audit
+on:
+  workflow_dispatch:
+    inputs:
+      chunk:
+        description: 'Finite initial 14958-step source proof segment length'
+        type: choice
+        options: ['100','180','240','300','500']
+        default: '180'
+permissions:
+  contents: read
+jobs:
+  source-audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 95
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install exact Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate exact blank-tape entry and universal opaque-tail pump
+        run: |
+          set -euo pipefail
+          python im-results/agent7-raw36-direct/derive_drift.py \
+            --out /tmp/a7-drift-source/Raw36D101Hard10.lean --chunk ${{ inputs.chunk }}
+      - name: Compile full Lean source closure and audit accepted axioms
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-drift-proof \
+            --source-root /tmp/a7-drift-source \
+            --jobs 2 --manifest /tmp/a7-drift-proof/manifest.json \
+            --label 'raw36-direct01-hard0re-opaque902' \
+            --theorem BB6.Agent7Raw36D101Hard10.never \
+            --parent-table '1RB1LF_1RC0RE_0RD1RA_0LD0LB_1LF---_0LA1LC' \
+            --artifact-name raw36-direct01-hard0re-902-proof \
+            --provenance-input im-results/agent7-raw36-direct/derive_drift.py \
+            /tmp/a7-drift-source/Raw36D101Hard10.lean \
+            2>&1 | tee /tmp/a7-drift-audit.log
+          python im-results/agent4-raw109/audit_axioms.py \
+            /tmp/a7-drift-audit.log BB6.Agent7Raw36D101Hard10.never
+          cp /tmp/a7-drift-audit.log /tmp/a7-drift-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-direct01-hard0re-902-proof
+          path: |
+            /tmp/a7-drift-source/
+            /tmp/a7-drift-proof/
+            /tmp/a7-drift-audit.log
+          if-no-files-found: warn
+          retention-days: 60
