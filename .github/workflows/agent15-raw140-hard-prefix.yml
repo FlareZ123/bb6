@@ -19,6 +19,7 @@ jobs:
         run: |
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
+          python im-results/agent10-nov26-cryptids/generate_raw140_orbit_phases.py
           node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
           python im-results/agent10-nov26-cryptids/generate_raw140_37_section.py > im-results/agent10-nov26-cryptids/Raw14037Section.lean
           node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
