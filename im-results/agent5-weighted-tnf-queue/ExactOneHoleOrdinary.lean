@@ -52,15 +52,15 @@ theorem last_hole_exact
 /-- Exact ordinary upper bound from a packed zipper trace; no first-one
     assumption and no five-step normalization delay. -/
 theorem lastPackedExact (B : Nat) (p : PartialMachine) (n : Nat)
-    (s : Slot) (z : BB6.Agent13PackedZipper.P)
-    (hr : BB6.Agent13PackedZipper.runP p n BB6.Agent13PackedZipper.startP = some z)
-    (hs : BB6.Agent13PackedZipper.readP z = s)
+    (s : Slot) (z : BB6Coverage.Agent13PackedZipper.P)
+    (hr : BB6Coverage.Agent13PackedZipper.runP p n BB6Coverage.Agent13PackedZipper.startP = some z)
+    (hs : BB6Coverage.Agent13PackedZipper.readP z = s)
     (hu : p s = none)
     (hrest : BB6.Agent50TNFPilot.restOK p s = true)
     (hb : n + 1 ≤ B) :
     ∀ m, compatible p m → OrdinaryBound B m := by
-  have hread : BB6.Agent13PackedZipper.readRunP p n = some s := by
-    simp [BB6.Agent13PackedZipper.readRunP, hr, hs]
+  have hread : BB6Coverage.Agent13PackedZipper.readRunP p n = some s := by
+    simp [BB6Coverage.Agent13PackedZipper.readRunP, hr, hs]
   have hfirst : BB6.Agent5FastPhaseTree.firstOK (n+6) p n s = true := by
     simp [BB6.Agent5FastPhaseTree.firstOK, hread, hu]
   obtain ⟨c, hknown, hslot, hundef, _⟩ :=
