@@ -165,7 +165,7 @@ theorem BE_last (R : List Bool) :
 theorem odd_end (a : Nat) (R : List Bool) :
     run0 table (2*a+1) ⟨1,U (2*a+1),R⟩ =
     some ⟨4,[],true::rep W a++R⟩ := by
-  rw [U_add]
+  rw [U_add,show U 1 = [true] by rfl]
   exact join0 (BE_all a [true] R) (BE_last (rep W a++R))
 
 theorem turn_hole (L R : List Bool) :
