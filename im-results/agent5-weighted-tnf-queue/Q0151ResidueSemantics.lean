@@ -56,39 +56,6 @@ theorem gateMask_insert (preRuns suffix : List Nat) (k : Nat) :
       gateMask (preRuns ++ suffix) := by
   simp only [gateMask, gateRun_insert]
 
-def cat (n : Nat) : Nat :=
-  if n ≤ 4 then n else 5 + (n - 1) % 4
-
-theorem cat_mod (n : Nat) : cat n % 4 = n % 4 := by
-  unfold cat
-  split_ifs <;> omega
-
-theorem cat_idempotent (n : Nat) : cat (cat n) = cat n := by
-  unfold cat
-  split_ifs <;> omega
-
-theorem cat_add (a b : Nat) :
-    cat (cat a + cat b) = cat (a + b) := by
-  unfold cat
-  split_ifs <;> omega
-
-theorem gateStep_cat (mode : Bool) (n : Nat) :
-    gateStep mode (cat n) = gateStep mode n := by
-  simp only [gateStep, cat_mod]
-
-theorem gateRun_cats (mode : Bool) (xs : List Nat) :
-    gateRun mode (xs.map cat) = gateRun mode xs := by
-  induction xs generalizing mode with
-  | nil => rfl
-  | cons length xs ih =>
-      simp only [List.map_cons, gateRun, gateStep_cat]
-      cases h : gateStep mode length with
-      | none => simp [h]
-      | some mode' => simpa [h] using ih mode'
-
-theorem gateMask_cats (xs : List Nat) :
-    gateMask (xs.map cat) = gateMask xs := by
-  simp only [gateMask, gateRun_cats]
 
 theorem gateRun_forbidden_three (mode : Bool) (n : Nat) (xs : List Nat)
     (h : n % 4 = 3) : gateRun mode (n :: xs) = none := by
@@ -96,11 +63,6 @@ theorem gateRun_forbidden_three (mode : Bool) (n : Nat) (xs : List Nat)
 
 #print axioms gateRun_insert
 #print axioms gateMask_insert
-#print axioms cat_mod
-#print axioms cat_idempotent
-#print axioms cat_add
-#print axioms gateRun_cats
-#print axioms gateMask_cats
 #print axioms gateRun_forbidden_three
 
 end BB6.Agent5Q0151ResidueSemantics
