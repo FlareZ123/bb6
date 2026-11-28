@@ -572,7 +572,7 @@ jobs:
           name: raw43-extra-proof
           path: /tmp/a25-raw43-extra/
           retention-days: 30
-      - name: Compose four source-accepted Raw43 B0LE residual children
+      - name: Compose the exact accepted Raw43 B0LE closure
         if: inputs.target == 'raw43-b0le-compose'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -586,7 +586,12 @@ jobs:
           python im-results/agent13-coverage/unpack.py
           python im-results/agent31-three-hole-tnf/generate_sweeps.py
           python im-results/agent31-three-hole-tnf/generate_four_hole.py
-          for v in 1la 1lb 1lf 1rf; do
+          reduced=$(jq -er '.reduced|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
+          gh api "repos/$GITHUB_REPOSITORY/actions/runs/$reduced" > /tmp/run-reduced.json
+          jq -e '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith("raw43-b0le-reduced "))' /tmp/run-reduced.json
+          gh run download "$reduced" -n raw43-b0le-reduced-proof -D "$input/reduced"
+          jq -e --arg sha "$(jq -r .head_sha /tmp/run-reduced.json)" '.proof_source_revision == $sha' "$input/reduced/manifest.json"
+          for v in 0la 0lf 1le 1ra 1la 1lb 1lf 1rf; do
             id=$(jq -er --arg v "$v" '.[$v]|tostring|select(test("^[0-9]+$"))' <<< "$PINS")
             gh api "repos/$GITHUB_REPOSITORY/actions/runs/$id" > "/tmp/run-$v.json"
             jq -e --arg title "raw43-extra raw43=b0le_e$v child=" '.conclusion == "success" and .event == "workflow_dispatch" and .path == ".github/workflows/agent10-four-hole.yml" and (.display_title|startswith($title))' "/tmp/run-$v.json"
@@ -595,8 +600,11 @@ jobs:
             cp "$input/$v/spec_b0le_e$v.json" "$root/spec_b0le_e$v.json"
             python "$root/generate.py" "b0le_e$v"
           done
-          python "$root/merge_b1rc.py" "$input" "$base" "$PINS" b0lefull
+          python im-results/agent38-raw43-pair/merge_b0le_complete.py "$input" "$base" "$PINS"
           python tools/lean_compile_closure.py --workdir "$work" --jobs 2 \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
+            --override M44Proof=im-results/agent38-raw43-pair/M44Proof.lean \
+            --override M44Data=im-results/agent38-raw43-pair/M44Data.lean \
             --precompiled-manifest "$base/manifest.json" --precompiled-dir "$base" \
             --manifest "$work/manifest.json" --label raw43-b0le-complete \
             --theorem BB6.Agent38Raw43B0LEComplete.all_completions --weighted-bound 3466 \
