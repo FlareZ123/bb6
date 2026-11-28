@@ -13,7 +13,7 @@ D1=(bw,L,F) is executed, its F successor necessarily scans that
 marked 0, so F1 is never queried. Arbitrary F1=HALT is permitted.
 
 The source authentic fixed root is A0=1RB, B0=1RC, C0=0RD,
-D0=1LC. A1,B1,C1,E0 are ordinary moves into A/B/C or 0RD.
+D0=1LC. A1,B1,C1,F0 are ordinary moves into A/B/C or 0RD.
 The three unassigned outcomes F1,E0,E1 remain arbitrary.
 -/
 
