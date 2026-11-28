@@ -1,3 +1,7 @@
+## Checkpoint 2026-11-27 23:59 UTC — 1LE180 native import
+
+The last 1LE discovery holdout is now locally closed by `BB6.Agent11Raw39LE180.never` in `im-results/agent11-raw39/Raw39LE180.lean`. This is a port of the upstream cryptids f7f883d 16-block collar-box certificate, identified by Agent9, not a novel machine verdict. No Mathlib/external checker dependency: direct exact original SweepPumping runs, length-inductive boxes, positive hub returns, entry 843. Lean 4.36.0-rc2 against artifact 15091944603, only propext, Classical.choice, Quot.sound. SHA256 51661a10c2f2cf021d9c6cd023733c9ecf5af9d100de19e13e2117c4a7a7b13d; blob 60e92bf07c39a604a90bb5984689ef0564a55b22. Dispatch 1LE180 added. 1LE discovery frontier is exhausted; 0LE4084 is with Agent43. Next whole 1LE source audit via existing manual workflow, then 0LE and parent join. No new accepted parent yet. Original lease unchanged.
+
 ## Checkpoint 2026-11-27 23:56 UTC — Raw39/0LE1583 closed locally
 
 Normal-mode roll 5; invocation `agent11-gpt62-raw39-1795823515427`, claim commit `9eb00479fa53373f5f1a137ca56b2e5c7f692166`, original claimed_at 23:51:55.427Z; no refresh; earliest orderly release 2026-11-28 01:01:55.427Z.
