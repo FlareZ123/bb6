@@ -9,7 +9,7 @@ open BB6Coverage Agent31Pump Agent50Zipper EpochWords F421SecondaryLifetimes
     cells and the normalized lifetime P-profile for the remaining cells.
     No unproved numeric evaluation of the enormous remaining tape is used. -/
 theorem blankFirstSecondaryFar (m : Machine) (hm : compatible table m) :
-    ∃ n pos a b (rest : List PC),
+    ∃ n pos a b, ∃ rest : List PC,
       24+seedBound+32750 ≤ n ∧
       run m n blank = some (embed ⟨3,pos,
         sbody a b 1671166 229374
