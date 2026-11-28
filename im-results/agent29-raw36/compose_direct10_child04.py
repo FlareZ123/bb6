@@ -89,13 +89,14 @@ def main():
         p.add_argument("--"+name,required=True,type=Path)
     a=p.parse_args()
     work=a.work.resolve()
-    work.mkdir(parents=True,exist_ok=True)
+    stage=work.with_name(work.name+"-inputs")
+    stage.mkdir(parents=True,exist_ok=False)
     a.archives.resolve().mkdir(parents=True,exist_ok=True)
     census,fixture,target=read_parent_banks(a)
-    fixture_file=work/"direct10-accepted-candidate-bank.xz.b64"
+    fixture_file=stage/"direct10-accepted-candidate-bank.xz.b64"
     fixture_file.write_text(base64.b64encode(lzma.compress(
         json.dumps(fixture,separators=(",",":")).encode())).decode()+"\n")
-    sourcefile=work/"direct10-original-census.json"
+    sourcefile=stage/"direct10-original-census.json"
     sourcefile.write_text(json.dumps(census,separators=(",",":"))+"\n")
     # At this point the 13 target-table witnesses are *candidates*.
     # Reconstruct the original trusted predecessor and recheck each proof.
