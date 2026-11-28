@@ -84,9 +84,39 @@ theorem sharp_capacity (K : Nat) (h : 15≤K) :
   · exact small_bound K h hsmall
   · exact large_bound K (by omega)
 
+/-- Sum of base-four digits, defined by exact Euclidean division. -/
+def digitSum4 (n : Nat) : Nat :=
+  if h : n=0 then 0 else n%4+digitSum4 (n/4)
+termination_by n
+decreasing_by omega
+
+theorem digitSum4_recur (n : Nat) :
+    digitSum4 n=n%4+digitSum4 (n/4) := by
+  by_cases hz : n=0
+  · subst n
+    simp [digitSum4]
+  · simp [digitSum4,hz]
+
+/-- Exact formula F(n)=(4*n-digitSum4(n))/3, without division
+    in the proof statement. -/
+theorem digit_identity (n : Nat) :
+    3*F n+digitSum4 n=4*n := by
+  induction n using Nat.strong_induction_on with
+  | h n ih =>
+    by_cases hz : n=0
+    · subst n
+      simp [F,digitSum4]
+    · have hlt : n/4<n := by omega
+      have hi := ih (n/4) hlt
+      have hr := F_recur n
+      have hd := digitSum4_recur n
+      have hdiv : 4*(n/4)+n%4=n := by omega
+      omega
+
 #print axioms F_recur
 #print axioms F_upper
 #print axioms F_lower_three
 #print axioms F_three_of_lt64
 #print axioms sharp_capacity
+#print axioms digit_identity
 end SharpPackingUniversal
