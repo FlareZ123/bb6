@@ -936,6 +936,36 @@ jobs:
           LEAN
           LEAN_PATH=/tmp/a11chunk/replay-split/objects:/tmp/a11chunk/base lean /tmp/a11chunk/ToySmokeSplit.lean | tee /tmp/a11chunk/audit-split.log
           ! grep -E 'sorryAx|native_decide' /tmp/a11chunk/audit-split.log
+          # Compatible imports should NOT consume replay effort: same original
+          # kernel data, same declaration identities, no renamed proof objects.
+          mkdir -p /tmp/a11chunk/compatible-base
+          cp /tmp/a11chunk/producer/Common.olean /tmp/a11chunk/compatible-base/Common.olean
+          python im-results/agent11-raw39/chunked_kernel_replay.py \
+            --producer-objects /tmp/a11chunk/source-objects.txt \
+            --base /tmp/a11chunk/compatible-base --work /tmp/a11chunk/replay-compatible \
+            --root-module Target --root-name Toy.target \
+            --prefix ToyCompat --tool /tmp/a11chunk/tool/kernelstage \
+            --comparator-batch im-results/agent11-raw39/CompareKernelImportsBatch.lean \
+            --allow-compatible --chunk-size 1
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          root = Path('/tmp/a11chunk/replay-compatible')
+          report = json.loads((root/'report.json').read_text())
+          assert report['mode'] == 'authenticated-original-compatible-link'
+          assert report['affected_modules'] == 0
+          assert report['staged_root'] == 'Target'
+          assert (root/'objects/Target.olean').is_file()
+          PY
+          cat > /tmp/a11chunk/ToySmokeCompatible.lean <<'LEAN'
+          import Target
+          theorem compatible_target : Toy.shared = 2 := by
+            exact Toy.target
+          #print axioms Toy.target
+          #print axioms compatible_target
+          LEAN
+          LEAN_PATH=/tmp/a11chunk/replay-compatible/objects:/tmp/a11chunk/compatible-base lean /tmp/a11chunk/ToySmokeCompatible.lean | tee /tmp/a11chunk/audit-compatible.log
+          ! grep -E 'sorryAx|native_decide' /tmp/a11chunk/audit-compatible.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -946,6 +976,8 @@ jobs:
             /tmp/a11chunk/audit.log
             /tmp/a11chunk/replay-split/report.json
             /tmp/a11chunk/audit-split.log
+            /tmp/a11chunk/replay-compatible/report.json
+            /tmp/a11chunk/audit-compatible.log
           if-no-files-found: warn
           retention-days: 30
 

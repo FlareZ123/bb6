@@ -53,6 +53,18 @@ constant infos and extra constant names. The modified generic planner accepts
 missing, extra or malformed comparison results cause failure; they are never
 treated as equivalence.
 
+## Import-compatible fast path
+
+If the original producer root is **not** in the affected import cone,
+the old planner raised an error. The new explicit `allow_compatible=True`
+path instead preserves the original module names, copies only absent
+source-authenticated modules, reuses accepted base objects where exact
+kernel data agrees, and **performs no relocated replay**. It checks every
+different-byte duplicate's exact kernel data, including import declarations,
+and refuses any unresolved collision. The final original-source and axiom
+audit still decides acceptance. A dedicated three-way smoke (true collision,
+two-batch collision, and no-collision fast path) is the next acceptance gate.
+
 ## Actual acceptance and runnable targets
 
 | Source gate | Evidence |

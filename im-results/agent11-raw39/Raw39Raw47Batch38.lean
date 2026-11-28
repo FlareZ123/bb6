@@ -46,7 +46,7 @@ theorem parent_roots :
     ∀ p ∈ removedParents,
       p initialSlot = some (some ⟨true,true,1⟩) := by
   intro p hp
-  simp only [removedParents, List.mem_cons, List.mem_singleton] at hp
+  simp [removedParents] at hp
   rcases hp with rfl | rfl
   · decide
   · decide
@@ -56,7 +56,7 @@ theorem parent_covers (B : Nat)
     (h47 : Cover (WeightedBound B) p47) :
     ∀ p ∈ removedParents, Cover (WeightedBound B) p := by
   intro p hp
-  simp only [removedParents, List.mem_cons, List.mem_singleton] at hp
+  simp [removedParents] at hp
   rcases hp with rfl | rfl
   · exact h39
   · exact h47
