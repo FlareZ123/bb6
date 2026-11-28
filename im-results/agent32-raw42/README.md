@@ -12,8 +12,10 @@ The following exact first-level Covers have already passed pinned original-sourc
 | 0RA | [45994074344](https://github.com/FlareZ123/bb6/actions/runs/45994074344) | 15195228793 |
 | 0RE | [45996645063](https://github.com/FlareZ123/bb6/actions/runs/45996645063) | 15198405532 |
 | 1RB | [45996253830](https://github.com/FlareZ123/bb6/actions/runs/45996253830) | 15196792976 |
+| 1LA | [46068374725](https://github.com/FlareZ123/bb6/actions/runs/46068374725) | 15232008579 |
+| 1RA | [46068379812](https://github.com/FlareZ123/bb6/actions/runs/46068379812) | 15231804396 |
 
-0RB now has a **complete source-accepted Cover at weighted bound 1006**: CI 46051022197 exports artifact 15225325950 (and repaired group-5 artifact 15224134446), using the seven accepted CI shards and an explicit exact-source FastBiDFA module override. 1LA has seven successful shards (run 45996630344), 1RA seven across runs 45996637267 and 46053095897 (new group 4 artifact 15225662884). The only missing groups are 1LA group 7 and 1RA group 1. Their concrete blockers, Run902 and Run3138, now have reduced original-source Lean-checked certificates (below). No complete Raw42 parent or global roster reduction yet.
+0RB now has a **complete source-accepted Cover at weighted bound 1006**: CI 46051022197 exports artifact 15225325950 (and repaired group-5 artifact 15224134446), using the seven accepted CI shards and an explicit exact-source FastBiDFA module override. 1LA and 1RA are now complete original-source weighted Covers at bound 100006: the two successful recovery runs above consume all eight shards, including repaired 1LA group 7 (artifact 15232930887) and 1RA group 1 (artifact 15232297382). Thus six of the twelve canonical children have complete accepted Covers. The remaining six are 0LA, 0LE, 1LB, 1LC, 1LE, 1RE. The arithmetic and original-machine theorem for 1LB/4828 is now proved locally by Agent4 (see below), but whole-child assembly is separate. No complete Raw42 parent or global roster reduction yet.
 
 [Raw42CanonicalJoin.lean](Raw42CanonicalJoin.lean) provides the checked final interface: exactly 12 canonical residual B1 child Covers at a common bound B≥12 imply the full Raw42 parent Cover. It applies the existing weighted TNF fresh-state renaming theorem with support cut 4, so each of the four F aliases is discharged by its E representative; no independent proof for an alias is required. The conditional theorem and exact count compile locally, standard axioms only. This is a parent assembly interface, not a closed parent.
 
@@ -30,7 +32,26 @@ The new [minimize_bidfa.py](minimize_bidfa.py) labels each left DFA state by its
 
 Both original-source `live` theorems compiled with Lean 4.36.0-rc2, using exact FastBiDFA Git blob 9cc8be5b1b4afcd3c9cd87865b8a1e94095f1a2f and original core artifact 15195788488. Axiom profiles are [propext, Classical.choice, Quot.sound], no sorryAx or native_decide. Original generated source artifacts are 15195778487 and 15195733756. Reproduce by running minimize_bidfa.py on each original list module, convert_bidfa.py, then replacing the concrete proof `:= by decide` with `:= by decide +kernel` before compiling. Exact resulting source SHA256 values respectively 1f78626e80c6f3b3bd191af035ee443a3d1e542baaedf17b8728a44f0fa35561 and a309c647c292d1daf2b8bdd6fe74564868479abdfddaa532fe385f55db64cf5b.
 
-The existing manual recovery target now reuses the seven accepted groups for each branch, including 1RA group 4 from the second run (proof source revision cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c). It restores the exact previous generated source for those accepted modules; only missing imports may be replaced from their original list witnesses. It performs relation quotienting before trie conversion on expensive remaining witnesses and records before/after counts. Source revision 4b3a61a7086128e9737ee10df1285fb30fa32739 is dispatched for both branches. Fresh whole-child acceptance remains pending; these are checked alternative certificates for two previously discovered open leaves, not a new global roster removal.
+The existing manual recovery target now reuses the seven accepted groups for each branch, including 1RA group 4 from the second run (proof source revision cb294f1cff71bb89fc063d8cce01c8f3a0b4d71c). It restores the exact previous generated source for those accepted modules; only missing imports may be replaced from their original list witnesses. It performs relation quotienting before trie conversion on expensive remaining witnesses and records before/after counts. Both whole-child recovery runs on source revision 4b3a61a7086128e9737ee10df1285fb30fa32739 completed successfully and exported the final artifacts listed above. These are accepted child Covers, not a new global roster removal.
+
+## Completing interrupted 0LA and 1LC recovery
+
+The first 0LA recovery [46069218549](https://github.com/FlareZ123/bb6/actions/runs/46069218549) failed in preparation, after validating five accepted shards, because the original assembly artifact had already converted some `Run` modules to FastCert and the minimizer accepted only list syntax. The simultaneous 1LC recovery 46069222731 was cancelled. [restore_fast.py](restore_fast.py) now decodes the exact trie edge and state relations into their list representation before quotienting; all final generated certificates still go through the unchanged original-source checker. The existing accepted modules remain untouched.
+
+Local reproduction uses original generated artifacts 15226785430 (0LA), 15226735539 (1LC) and original core 15226315786. All 784 run-summary modules parsed and quotienting completed, including all three previously converted FastCert modules; their exact round-trip sets and transition arrays agreed. Run [test_restore_fast.py](test_restore_fast.py) on the two extracted artifact directories for the actual fixture check. The eight relevant alternate certificates below all compiled with Lean 4.36.0-rc2, exact Raw42 FastBiDFA source blob 9cc8be5b1b4afcd3c9cd87865b8a1e94095f1a2f, and only [propext, Classical.choice, Quot.sound].
+
+| Branch/leaf | Old (left,right,relation) | Quotient | Lean seconds |
+|---|---|---|---:|
+| 0LA/1243 | (76,60,1226) | (20,21,129) | 1.01 |
+| 0LA/2550 | (75,60,1175) | (19,21,126) | 0.88 |
+| 0LA/365 | (115,33,1249) | (43,14,179) | 1.39 |
+| 0LA/589 | (44,180,2601) | (31,102,1092) | 9.95 |
+| 0LA/598 | (44,180,2567) | (31,102,1073) | 9.89 |
+| 1LC/620 | (60,99,1351) | (32,48,496) | 3.22 |
+| 1LC/9216 | (92,80,1864) | (32,28,395) | 2.14 |
+| 1LC/631 | (103,37,2888) | (20,25,487) | 2.41 |
+
+These check the concrete blockers and all preconverted large Run witnesses. The new repair is to be consumed by the existing recover_assembly target with the five accepted 0LA shards and two accepted 1LC shards. The exact parent-child Covers still require final eight-shard composition; the local certificates alone do not change the global count.
 
 ## Established original-source cuts
 
@@ -115,9 +136,9 @@ Leaf 1659 `1RB1RE_1RC0RA_0RD---_1LD0LB_1LF0RC_0LA0LF` is now **source-checked no
 
 All 1723 normalized open leaves of 0RA now have candidate verdicts. The 94 residual leaf proofs (52 n-gram, 39 run/block-run, 2 twin-growth, 1 recursive language) have been locally source-checked, as have the two independent four-hole growth proofs (also in the FAR class). The subsequently accepted whole-child CI run 45994074344 assembled all 1723 leaves and closes 0RA. No complete Raw42 parent or global roster reduction is yet claimed.
 
-## 1LB exceptional leaf 18612
+## 1LB exceptional leaves 18612 and 4828
 
-[Raw42Leaf18612.lean](Raw42Leaf18612.lean) now proves the exact partial table `1RB1RA_1RC1LB_0RD1RE_1LD0LB_0RA0RF_---0RD` nonhalting for every compatible completion. At step 55 its family is D, left 00 1^(8n+10) 0 1^(2n+2), right empty, n=0. The three parameterized exact return moves on D-configurations (a,b,c) are reduce (a+4,b,c) to (a,b+2,c+2), clock 4a+10; swap-zero (0,b+4,c) to (b,2,c+3), clock 4b+11; and exit-two (2,b,c) to (c+4,b+2,0), clock c+12. The eight-stage composed return maps family n to n+1 at a positive clock. The failed CI 45996929823 was due to the locally dependent hypothesis in the two list-normalization inductions; clearing it and normalizing cons/append fixes the proof. Local Lean 4.36.0-rc2 against the exact assembly core reports only propext and Quot.sound for `BB6.Agent32Raw421LB.Leaf18612.live`. This closes the exact F0-hole leaf (25 normalized completions), not the entire 1LB parent. Fresh CI acceptance pending.
+[Raw42Leaf18612.lean](Raw42Leaf18612.lean) now proves the exact partial table `1RB1RA_1RC1LB_0RD1RE_1LD0LB_0RA0RF_---0RD` nonhalting for every compatible completion. At step 55 its family is D, left 00 1^(8n+10) 0 1^(2n+2), right empty, n=0. The three parameterized exact return moves on D-configurations (a,b,c) are reduce (a+4,b,c) to (a,b+2,c+2), clock 4a+10; swap-zero (0,b+4,c) to (b,2,c+3), clock 4b+11; and exit-two (2,b,c) to (c+4,b+2,0), clock c+12. The eight-stage composed return maps family n to n+1 at a positive clock. The failed CI 45996929823 was due to the locally dependent hypothesis in the two list-normalization inductions; clearing it and normalizing cons/append fixes the proof. Local Lean 4.36.0-rc2 against the exact assembly core reports only propext and Quot.sound for `BB6.Agent32Raw421LB.Leaf18612.live`. This closes the exact F0-hole leaf (25 normalized completions), not the entire 1LB parent. Fresh CI acceptance pending. Agent4 additionally completed the source-level nonhalting theorem for the other exceptional 1LB leaf 4828: exact table `1RB0RF_1RC1LB_0RD0RE_1LD0LB_0RA0LD_---0RD`, `BB6.Agent4Raw42Leaf4828.MachineProof.never` for every compatible completion. See [the finite forbidden-word invariant and original sweep bridge](Raw42Leaf4828Arithmetic.md). Both proofs need consumption at their exact generated leaf tables; no 1LB parent acceptance yet.
 
 ## 0RB complete local weighted Cover
 

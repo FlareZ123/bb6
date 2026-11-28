@@ -8,6 +8,7 @@ import ast
 import re
 import sys
 from pathlib import Path
+from restore_fast import restore_fast
 
 PATTERN = re.compile(r'def cert : Cert := ⟨(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*(\[[^\]]*\]),\s*(\[[^\]]*\])⟩')
 
@@ -51,6 +52,8 @@ def literal_rows(xs):
 
 
 def minimize(source):
+    if 'def cert : FastCert :=' in source:
+        source = restore_fast(source)
     m, dl, dr, el, er, states = parse(source)
     nl, nr = len(dl)//2, len(dr)//2
     left = [set() for _ in range(nl)]
