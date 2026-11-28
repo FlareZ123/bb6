@@ -19,6 +19,7 @@ abbrev R := Reach M42
 abbrev A (p : Nat) (w : List Sym) := boundary 0 true (U 3 p ++ [S 2]) w
 abbrev Braw (p : Nat) (w : List Sym) := boundary 1 true (U 5 p) w
 private theorem rr {k : Nat} {c d : Prim} (h : run M42 k c = some d) : R c d := ⟨k,h⟩
+private theorem ext : Extends M42 := fill_extends _ _
 
 /-- The B62542 terminal for p = 2 mod 4 realizes the arithmetic C branch. -/
 theorem b0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
@@ -39,14 +40,15 @@ theorem b0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
     have h0' : R (Braw p [S 6,S 2,S 5,S 4,S 2])
         (boundary 4 true (S 1::S 3::U 5 (2*j+1)) [S 1,S 1,S 2,S 3,S 3,S 1,S 5]) := by
       simpa only [Braw,hj,U,List.replicate_succ,List.cons_append] using h0
-    simpa only [n,s] using Reach.trans h0' h1
+    simpa only [n,s] using Reach.trans h0' (Reach.ext ext h1)
   have h2 := Raw14042MixedExitOdd.bExit k (T n ++ cword s)
   have h2' : R
       (boundary 1 true [S 5]
         (S 2::S 2::(U 1 (j+3) ++ S 2::S 3::(U 2 (j+1) ++ T n ++ cword s))))
       (cCfg (8*k+16) n s) := by
+    have h2M := Reach.ext ext h2
     simpa only [cCfg,A,hk,List.append_assoc,show (2*k+1)+3=2*k+4 by omega,
-      show (2*k+1)+1=2*k+2 by omega] using h2
+      show (2*k+1)+1=2*k+2 by omega] using h2M
   have hb := Raw14042CGeneral.ct_balance j (.c325)
   have hlt := crank_lt s
   have hbal : 6*n+crank s=p/2+1 := by
@@ -79,14 +81,14 @@ theorem b0r5_mod0 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=0) :
     have h0' : R (Braw p [S 6,S 2,S 5,S 4,S 2])
         (boundary 4 true (S 1::S 3::U 5 (2*j+1)) [S 1,S 1,S 2,S 3,S 3,S 1,S 5]) := by
       simpa only [Braw,hj,U,List.replicate_succ,List.cons_append] using h0
-    simpa only [n,s] using Reach.trans h0' h1
+    simpa only [n,s] using Reach.trans h0' (Reach.ext ext h1)
   have hb := Raw14042CGeneral.ct_balance j (.c325)
   have hbal : 6*n+crank s=2*k+3 := by
     dsimp only [n,s]
     simp only [Raw14042CGeneral.crank] at hb
     omega
   have h2 := Raw14042MixedExitEvenB.bEvenExit k n s hbal
-  have h := Reach.trans h01 h2
+  have h := Reach.trans h01 (Reach.ext ext h2)
   have hp4 : p/4=k+1 := by omega
   simpa only [hj,hk,hp4,show 3*(4*k+4)+18=12*k+30 by omega] using h
 
@@ -111,26 +113,35 @@ theorem c0r5_mod0 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=0) :
     have h0' : R (A p [S 2,S 3,S 5,S 2,S 2,S 1])
         (boundary 3 false (U 6 (p+1) ++ [S 4]) [S 4,S 2,S 1,S 5,S 5,S 4,S 2]) := by
       simpa only [A] using h0
-    simpa only [n,s,hj,show 2*j+5=2*j+4+1 by omega] using Reach.trans h0' h1
+    have h1' : R
+        (boundary 3 false (U 6 (p+1) ++ [S 4]) [S 4,S 2,S 1,S 5,S 5,S 4,S 2])
+        (boundary 3 false [S 4]
+          (U 4 (j+4) ++ S 0::S 5::(U 1 (j+2) ++ S 5::
+            (Raw14042AWord.TA n ++ Raw14042DMixed.aw s)))) := by
+      have h1M := Reach.ext ext h1
+      simpa only [n,s,hj,show 2*j+5=2*j+4+1 by omega] using h1M
+    exact Reach.trans h0' h1'
   have h2 := Raw14042MixedExitOdd.cExit k (Raw14042AWord.TA n ++ Raw14042DMixed.aw s)
   have h2' : R
       (boundary 3 false [S 4]
         (U 4 (j+4) ++ S 0::S 5::(U 1 (j+2) ++ S 5::
           (Raw14042AWord.TA n ++ Raw14042DMixed.aw s))))
       (aCfg (8*k+18) n s) := by
-    simpa only [aCfg,Raw14042MixedExitEvenC.ta_eq,hk,List.append_assoc,
-      show 2*k+4=2*k+4 by omega,show 2*k+2=2*k+2 by omega] using h2
+    have h2M := Reach.ext ext h2
+    simpa only [aCfg,Raw14042DExitTail.A,Raw14042MixedExitEvenC.ta_eq,hk,List.append_assoc,
+      show 2*k+4=2*k+4 by omega,show 2*k+2=2*k+2 by omega] using h2M
   have hb := Raw14042MixedExitEvenC.turn_balance j (.t1121)
   have hlt := arank_lt s
-  have hbal : 6*n+arank s=p/2 := by
+  have hbal0 : 6*n+arank s=j+2 := by
     dsimp only [n,s]
-    simp only [Raw14042BGeneral.arank] at hb
-    omega
+    simpa only [Raw14042BGeneral.arank] using hb
+  have hbal : 6*n+arank s=p/2 := by omega
   have hn : n=(p/2)/6 := by omega
   have hs : arank s=(p/2)%6 := by omega
   refine ⟨s,hs,?_⟩
   have h := Reach.trans h01 h2'
-  simpa only [hn,hj,hk,show 2*(4*k+4)+10=8*k+18 by omega] using h
+  have hpout : 2*p+10=8*k+18 := by omega
+  simpa only [hn,hpout] using h
 
 /-- The C35221 terminal for p = 2 mod 4 realizes the exceptional arithmetic A branch. -/
 theorem c0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
@@ -153,16 +164,31 @@ theorem c0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
     have h0' : R (A p [S 2,S 3,S 5,S 2,S 2,S 1])
         (boundary 3 false (U 6 (p+1) ++ [S 4]) [S 4,S 2,S 1,S 5,S 5,S 4,S 2]) := by
       simpa only [A] using h0
-    simpa only [n,s,hj,show 2*j+5=2*j+4+1 by omega] using Reach.trans h0' h1
+    have h1' : R
+        (boundary 3 false (U 6 (p+1) ++ [S 4]) [S 4,S 2,S 1,S 5,S 5,S 4,S 2])
+        (boundary 3 false [S 4]
+          (U 4 (j+4) ++ S 0::S 5::(U 1 (j+2) ++ S 5::
+            (Raw14042AWord.TA n ++ Raw14042DMixed.aw s)))) := by
+      have h1M := Reach.ext ext h1
+      simpa only [n,s,hj,show 2*j+5=2*j+4+1 by omega] using h1M
+    exact Reach.trans h0' h1'
   have hb := Raw14042MixedExitEvenC.turn_balance j (.t1121)
-  have hbal : 6*n+arank s=2*k+3 := by
+  have hbal0 : 6*n+arank s=j+2 := by
     dsimp only [n,s]
-    simp only [Raw14042BGeneral.arank] at hb
-    omega
+    simpa only [Raw14042BGeneral.arank] using hb
+  have hbal : 6*n+arank s=2*k+3 := by omega
   have h2 := Raw14042MixedExitEvenC.cEvenExit k n s hbal
+  have h2' : R
+      (boundary 3 false [S 4]
+        (U 4 (j+4) ++ S 0::S 5::(U 1 (j+2) ++ S 5::
+          (Raw14042AWord.TA n ++ Raw14042DMixed.aw s))))
+      (A (12*k+44) (Raw14042Bank.T (k+1) ++ [S 1,S 1])) := by
+    have h2M := Reach.ext ext h2
+    simpa only [A,Raw14042DExitTail.A,hk,
+      show (2*k+1)+4=2*k+5 by omega,show (2*k+1)+2=2*k+3 by omega] using h2M
   have h12 : R (A p [S 2,S 3,S 5,S 2,S 2,S 1])
       (A (12*k+44) (Raw14042Bank.T (k+1) ++ [S 1,S 1])) :=
-    Reach.trans h01 h2
+    Reach.trans h01 h2'
   have h3 := Raw14042ExtraTail.return11 (k-1) (12*k+43)
   have h3' : R (A (12*k+44) (Raw14042Bank.T (k+1) ++ [S 1,S 1]))
       (aCfg (12*k+56) (k-1) .t542) := by
@@ -172,7 +198,8 @@ theorem c0r5_mod2 (p : Nat) (hp : 24 ≤ p) (he : p%2=0) (hm : p%4=2) :
       show 12*k+43+13=12*k+56 by omega] using h3
   have hp4 : p/4=k+1 := by omega
   have hn : p/4-2=k-1 := by omega
-  simpa only [hj,hk,hp4,hn,show 3*(4*k+6)+38=12*k+56 by omega] using Reach.trans h12 h3'
+  have hpout : 3*p+38=12*k+56 := by omega
+  simpa only [hn,hpout] using Reach.trans h12 h3'
 
 #print axioms b0r5_mod2
 #print axioms b0r5_mod0
