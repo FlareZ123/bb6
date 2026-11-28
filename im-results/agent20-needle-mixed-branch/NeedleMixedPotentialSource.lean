@@ -22,8 +22,10 @@ theorem mixed_source_gap {v w k e f p q : Nat}
       (((2^w*(2*w-3) : Nat) : Int) -
        ((2^v*(2*v-3) : Nat) : Int)) := by
   have hp := allValuationsPotential hv hV
-  have ht := allValuationsSource hw hWtarget
-  have hf := allValuationsSource hw hWparent
+  have ht : (2^(w+1)+3) ∣ 3*(e+2)+2^w*(2*w-3) := by
+    simpa using allValuationsSource hw hWtarget
+  have hf : (2^(w+1)+3) ∣ 3*(f+2)+2^w*(2*w-3) := by
+    simpa using allValuationsSource hw hWparent
   exact gap_from_potential hp ht hf
 
 /-- In particular, two admissible valuation labels cannot interleave
