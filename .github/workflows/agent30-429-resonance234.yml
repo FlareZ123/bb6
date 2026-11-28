@@ -45,6 +45,7 @@ jobs:
           lean -o im-results/agent30-429-coarse-exit/BB429ResonancePhysical.olean im-results/agent30-429-coarse-exit/BB429ResonancePhysical.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance234Evacuation.olean im-results/agent30-429-coarse-exit/BB429Resonance234Evacuation.lean 2>&1 | tee -a "$LOG"
           lean -o im-results/agent30-429-coarse-exit/BB429Resonance234Return.olean im-results/agent30-429-coarse-exit/BB429Resonance234Return.lean 2>&1 | tee -a "$LOG"
+          lean -o im-results/agent30-429-coarse-exit/BB429Resonance234Complete.olean im-results/agent30-429-coarse-exit/BB429Resonance234Complete.lean 2>&1 | tee -a "$LOG"
           lean im-results/agent30-429-coarse-exit/BB429ResonancePhysical.lean 2>&1 | tee -a "$LOG"
           grep -F "'BB429.CoarseExit.d234_post' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_second_nonresonant_mod9' depends on axioms:" "$LOG"
@@ -60,6 +61,7 @@ jobs:
           grep -F "'BB429.CoarseExit.d234_resonant_endpoint_package' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_endpoint_evacuation_data' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.d234_resonant_endpoint_evacuates' depends on axioms:" "$LOG"
+          grep -F "'BB429.CoarseExit.return_from_exact_burst_even_complete' depends on axioms:" "$LOG"
           grep -F "'BB429.CoarseExit.resonance_error_physical' depends on axioms:" "$LOG"
           if grep -q sorryAx "$LOG"; then
             echo "Unexpected sorryAx"; exit 1
