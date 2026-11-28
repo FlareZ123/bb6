@@ -58,7 +58,9 @@ theorem conditional_sound
         ∃ e ∈ roster37, TNFQuotientCompatible e.2 m := by
   apply removeParents_sound (parents := removedParents)
     (roster := baseRoster)
-    BB6.Agent9Canonical38Raw39ThenRaw47.sound38
+    BB6.Agent9Canonical38Raw39ThenRaw47.sound38_at
+      (proposedTM63Moves + 7)
+      BB6.Agent38ChampionThreshold.champion_score_ge_6766859
     parents_root (parents_cover hp)
 
 theorem conditional_exact_at_champion
