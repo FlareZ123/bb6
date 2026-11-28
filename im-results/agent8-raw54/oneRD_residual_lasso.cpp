@@ -54,8 +54,20 @@ bool eqL(const Cfg&a,const Cfg&b,int high,int d){
   for(int i=high-63;i>=-63;i-=64)if(window(a.t,i)!=window(b.t,i+d))return false;
   return true;
 }
-uint64_t key(int q,uint64_t x){
-  return x ^ (0x9e3779b97f4a7c15ULL*uint64_t(q+1));
+uint64_t mix64(uint64_t x){
+  x ^= x >> 30; x *= 0xbf58476d1ce4e5b9ULL;
+  x ^= x >> 27; x *= 0x94d049bb133111ebULL;
+  return x ^ (x >> 31);
+}
+uint64_t rightKey(const Cfg& c){
+  uint64_t h=mix64(uint64_t(c.q+1));
+  for(int k=0;k<4;k++) h=mix64(h ^ window(c.t,c.h+64*k));
+  return h;
+}
+uint64_t leftKey(const Cfg& c){
+  uint64_t h=mix64(uint64_t(c.q+1));
+  for(int k=0;k<4;k++) h=mix64(h ^ window(c.t,c.h-63-64*k));
+  return h;
 }
 
 int encode(char w,char r,char q){return (w-'0')*12+(r=='R')*6+(q-'A');}
@@ -79,7 +91,7 @@ Res classify(const Table&p){
     int s=2*c.q+read(c);
     if(p[s]<0)return {1,n,s,0,0,0,0};
     sig(c);
-    uint64_t kr=key(c.q,c.right), kl=key(c.q,c.left);
+    uint64_t kr=rightKey(c), kl=leftKey(c);
 
     if(auto it=rightSeen.find(kr);it!=rightSeen.end()){
       auto &v=it->second;
