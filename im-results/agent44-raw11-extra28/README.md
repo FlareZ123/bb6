@@ -22,10 +22,16 @@ here is a global BB(6) upper bound.
   run **46156345255** advanced this to **147/205** (artifact
   **15268385005**, SHA256
   `daabac8861b1292f69236ce7fa0923a04b3b3da1c17053170b05d5dcf8f55380`).
-  A full remaining source-acceptance pass is run **46157091467**. This local
-  205/205 result is strong reproducible evidence, but the staged global
-  150→149 consumer is not counted accepted until that CI parent bundle and
-  its integration audit succeed.
+  Full source-acceptance run **46157091467** then **succeeded**: all
+  **205/205 transformed modules** were accepted and the top theorem
+  `BB6.Agent5Raw11Extra140.cover` printed exactly
+  `[propext, Classical.choice, Quot.sound]`, with no `sorryAx` or
+  `native_decide`. Complete-parent artifact **15268500784**
+  (`parent-complete-140-repaired`) has SHA256
+  `a4098e5860e17ba27d18109fe553d0426a40196e95f09f8b64acd0402f42527f`.
+  Exact Raw11 150→149 integration audit **46157584217** was dispatched from
+  this accepted bundle and must succeed before that global roster reduction
+  is counted accepted.
 
 - Reusable transformations are
   `split_phase_automata_leaves.py`, `split_two_sided_leaf.py`, and
