@@ -1,4 +1,4 @@
-"""Exact-source sharded audits of the two Raw54 E1=0RA/0RB cylinders."""
+"""Exact-source sharded audits of Raw54 E1=0RA, 0RB and 1RC cylinders."""
 from pathlib import Path
 from collections import Counter
 import argparse, hashlib, json, subprocess, tempfile
@@ -11,6 +11,12 @@ from emit_mask import emit_data
 from generate_sharded_children import assemble
 
 SPECS={
+ "E1OneRC":dict(parent="1RB---_1RC---_0RD---_1LD0LE_---1RC_------",bound=1847,
+    stats=Counter(split=18718,cycle=327830,last=91992,open=10693),
+    open_sha="ef1e7ed33b01d008f8a8edd3630d762de45ecbc4c87add7ad3f962c4c13eed42",
+    miss_sha="c54a699944fb2ca9c8f7dfc399c960923bfacb0f10d24a06e2314e1ec56ce24a",
+    hits=10284,misses=409,tags=Counter(F=141,N=150,R=85,G=27,S=3,H=2,U=1),
+    attainer=29,n=1846,delay=0),
  "E1RA":dict(parent="1RB---_1RC---_0RD---_1LD0LE_---0RA_------",bound=27669,
     stats=Counter(split=28565,cycle=503924,last=139138,open=13934),
     open_sha="339bef5621fb9a1cc2a900dd30680e3adac2cc1ad7bc21007db77c395983508a",
@@ -98,9 +104,12 @@ def collect(work,label):
             for i,k in zip(map(int,ids),("one","two","three")):
                 put(misses[i],f".proven ({ns}.table .{k}) ({ns}.never .{k})",mod)
                 tags[tag]+=1
+        elif tag=="U":
+            assert label=="E1OneRC" and v==["139"]
+            proved(139,"Raw54E1OneRCHard139","BB6.Agent8Raw54.E1OneRC.M139");tags[tag]+=1
         elif tag in ("H","Z"):
             i=int(v[0]);code=misses[i]
-            late(label[-2:].lower(),i,code,[tag,*v[1:]],ROOT,500)
+            late(label[-2:].lower(),i,code,[tag,*v[1:]],ROOT,500,label=label)
             mod=f"Raw54{label}Late{i}"
             ns=f"BB6.Agent8Raw54.{label}Late{i}"
             if tag=="Z":
@@ -127,11 +136,11 @@ def main():
     label=args.label;spec=SPECS[label];B=spec["bound"]
     ns="BB6.Agent8Raw54."+label
     base="Raw54"+label+"Base"
-    q=0 if label=="E1RA" else 1
+    w,q={"E1RA":("false",0),"E1RB":("false",1),"E1OneRC":("true",2)}[label]
     (ROOT/(base+".lean")).write_text(f"""import Raw54Base
 namespace {ns}
 open BB6Coverage BB6.Agent13BlankDelay BB6.Agent8TNFPath BB6.Agent50TNFPilot BB6.Agent31ThreeHole BB6.Agent10ZipAudit
-abbrev parent : PartialMachine := refine BB6.Agent8Raw54.raw54 (4,true) (some ⟨false,true,{q}⟩)
+abbrev parent : PartialMachine := refine BB6.Agent8Raw54.raw54 (4,true) (some ⟨{w},true,{q}⟩)
 theorem parent_root : parent initialSlot = some (some ⟨true,true,1⟩) := by decide
 theorem parent_nohalt : weightedTNFNoAssignedHalt parent :=
   weightedTNFNoAssignedHalt_refine _ _ _ (weightedTNFNoAssignedHalt_refine _ _ _
