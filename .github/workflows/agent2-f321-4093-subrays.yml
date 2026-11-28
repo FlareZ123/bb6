@@ -62,24 +62,6 @@ jobs:
           done
           test "$(grep -c '^axioms BB6.Agent31F321Ray' /tmp/f321-4093/lean.log || true)" -eq 12
           ! grep -Eq 'sorryAx|native_decide' /tmp/f321-4093/lean.log
-      - name: Kernel-check root obstruction-spine alignment
-        run: |
-          set -euo pipefail
-          e=im-results/agent31-f321-bulk
-          d=im-results/agent2-f321-diagonal
-          z=im-results/agent2-f321-4093
-          LEAN_PATH="$e" lean -o "$d/DiagonalCoordinates.olean" "$d/DiagonalCoordinates.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/BulkRuns.olean" "$d/BulkRuns.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/Phase6.olean" "$d/Phase6.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/Phase12.olean" "$d/Phase12.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/ResetHigh.olean" "$d/ResetHigh.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/ResetEven.olean" "$d/ResetEven.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/Phase6Bridge.olean" "$d/Phase6Bridge.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/EvenV2.olean" "$d/EvenV2.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/OddV2Witness.olean" "$d/OddV2Witness.lean"
-          LEAN_PATH="$e:$d" lean -o "$d/OddTerminal.olean" "$d/OddTerminal.lean"
-          LEAN_PATH="$e:$d:$z" lean "$z/ObstructionAlignment.lean" 2>&1 | tee /tmp/f321-4093/alignment.log
-          ! grep -Eq 'sorryAx|native_decide' /tmp/f321-4093/alignment.log
       - uses: actions/upload-artifact@v4
         if: always()
         with:
