@@ -246,7 +246,11 @@ theorem next_C_weight_update (r : Nat) {p s : List Bool}
     (hps : frame r = p ++ false :: s) :
     carryNextWeight (lowRemaining r p) (prefixWeight p) =
       prefixWeight (p ++ [false]) := by
-  have hb := next_C_balance_positive r hps
+  have hbfull : countC (p ++ [false]) ≤ countB (p ++ [false]) := by
+    apply frame_prefix_ballot r (p := p ++ [false]) (s := s)
+    simpa [List.append_assoc] using hps
+  have hb : countC p + 1 ≤ countB p := by
+    simpa [countB, countC, List.count_append] using hbfull
   have hf := lowRemaining_balance_form r hps
   unfold prefixWeight carryNextWeight
   simp only [countB, countC, List.count_append, List.count_cons,
