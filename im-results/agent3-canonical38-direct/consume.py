@@ -229,6 +229,10 @@ def main():
     before_free = shutil.disk_usage(work).free
     for transient in (work / "raw39-parent", work / "raw39-kernel-replay"):
         shutil.rmtree(transient)
+    if args.raw39_resume is not None:
+        # The cancelled predecessor's large checkpoint had to remain resident
+        # only until the resumed kernel transport completed.
+        shutil.rmtree(args.raw39_resume)
     after_free = shutil.disk_usage(work).free
     print(
         f"Raw39 authenticated source/staging cleanup: "
