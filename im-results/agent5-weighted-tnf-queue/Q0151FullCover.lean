@@ -99,17 +99,17 @@ theorem progress_b (s : List Bool) (st : List (List Bool))
       · obtain ⟨k,hk⟩ := h4
         have hn : n = 4*k+3 := by omega
         subst n
-        obtain ⟨ha,hg⟩ := b_four_refines k s st rest hlive
+        obtain ⟨ha,hg⟩ := BB6.Agent5Q0151SourceActions10.b_four_refines k s st rest hlive
         exact push_step hc hs hst (good_alt_three (2*k)) ha hg
       · obtain ⟨k,hk⟩ := h5
         have hn : n = 4*k+4 := by omega
         subst n
-        obtain ⟨ha,hg⟩ := b_five_refines k s st rest hlive
+        obtain ⟨ha,hg⟩ := BB6.Agent5Q0151SourceActions10.b_five_refines k s st rest hlive
         exact push_step hc hs hst (good_alt_two (2*k+1)) ha hg
       · obtain ⟨k,hk⟩ := h6
         have hn : n = 4*k+5 := by omega
         subst n
-        obtain ⟨decoded,ha,hg⟩ := b_six_refines k s st rest hlive
+        obtain ⟨decoded,ha,hg⟩ := BB6.Agent5Q0151SourceActions11.b_six_refines k s st rest hlive
         exact stay_step hc hst (good_append_four s hs) ha hg
 
 theorem progress_c (s : List Bool) (st : List (List Bool))
@@ -138,17 +138,17 @@ theorem progress_c (s : List Bool) (st : List (List Bool))
       · obtain ⟨k,hk⟩ := h4
         have hn : n = 4*k+3 := by omega
         subst n
-        obtain ⟨ha,hg⟩ := c_four_refines k s st rest hlive
+        obtain ⟨ha,hg⟩ := BB6.Agent5Q0151SourceActions10.c_four_refines k s st rest hlive
         exact stay_step hc hst (good_append_alt_three s hs (2*k+1)) ha hg
       · obtain ⟨k,hk⟩ := h5
         have hn : n = 4*k+4 := by omega
         subst n
-        obtain ⟨ha,hg⟩ := c_five_refines k s st rest hlive
+        obtain ⟨ha,hg⟩ := BB6.Agent5Q0151SourceActions10.c_five_refines k s st rest hlive
         exact stay_step hc hst (good_append_alt_two s hs (2*k+2)) ha hg
       · obtain ⟨k,hk⟩ := h6
         have hn : n = 4*k+5 := by omega
         subst n
-        obtain ⟨decoded,ha,hg,hr⟩ := c_six_refines k s hs st rest hlive
+        obtain ⟨decoded,ha,hg,hr⟩ := BB6.Agent5Q0151SourceActions11.c_six_refines k s hs st rest hlive
         exact pop_step hc hst ha hg hr
 
 theorem physical_progress (x : P) (hx : Region x) :
