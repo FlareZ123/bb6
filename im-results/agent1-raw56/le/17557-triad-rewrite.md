@@ -310,8 +310,10 @@ nonemptiness forces the front weight to be zero. Normal A's residue-5 rule
 is also packaged as a zero-weight stack push. The weighted relation preserves
 every zero-run residue modulo 8 exactly, and under the natural non-underflow
 bound the defect weight is recoverable uniquely from the low/high run pair.
-Thus the residue automaton is unchanged by introducing weights: weights carry
-only quotient-level information. The file therefore leaves the reachable
+More precisely Lean proves
+`high/8 = 2*(low/8) + [low mod 8 = 7] - weight`.
+Thus the residue automaton is unchanged by introducing weights: the new state
+is exactly a quotient-level carry deficit. The file therefore leaves the reachable
 zipper shape, normal-A residue-5 condition, and residue-7 positive-weight
 condition as the principal unresolved semantic obligations.
 
