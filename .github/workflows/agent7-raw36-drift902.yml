@@ -12,11 +12,15 @@ on:
         description: Check seven exact Raw36 D1=0LA opaque-tail pumps
         type: boolean
         default: false
+      d100_mod_batch:
+        description: Check five novel Raw36 D1=0LA modular-stack invariants
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   source-audit:
-    if: ${{ !inputs.d100_batch }}
+    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -62,7 +66,7 @@ jobs:
           retention-days: 60
 
   d100-batch:
-    if: ${{ inputs.d100_batch }}
+    if: ${{ inputs.d100_batch && !inputs.d100_mod_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 110
     steps:
@@ -140,5 +144,57 @@ jobs:
             /tmp/a7-d100-source/
             /tmp/a7-d100-proof/
             /tmp/a7-d100-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-modular:
+    if: ${{ inputs.d100_mod_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 110
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw36-direct-D1-0-census
+          run-id: 46122807180
+          github-token: ${{ github.token }}
+          path: /tmp/a7-d100-census
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate strict five-key active inverse-stack certificates
+        run: |
+          set -euo pipefail
+          python im-results/agent7-opaque-tail-pump/emit_modular.py \
+            /tmp/a7-d100-census/direct00.json.gz /tmp/a7-d100-mod
+      - name: Kernel-check original TwoSidedAutomata source and five theorems
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-d100-mod-proof \
+            --source-root /tmp/a7-d100-mod --jobs 2 \
+            --manifest /tmp/a7-d100-mod-proof/manifest.json \
+            --label raw36-d100-five-modular-stack-quotients \
+            --artifact-name raw36-d100-five-modular-source \
+            --provenance-input im-results/agent7-opaque-tail-pump/emit_modular.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/d100-new-modular.json \
+            /tmp/a7-d100-mod/Raw36D100ModAutomata00.lean \
+            2>&1 | tee /tmp/a7-d100-mod-audit.log
+          while IFS= read -r theorem; do
+            python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-mod-audit.log "$theorem"
+          done < /tmp/a7-d100-mod/theorems.txt
+          cp /tmp/a7-d100-mod-audit.log /tmp/a7-d100-mod-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-five-modular-source
+          path: |
+            /tmp/a7-d100-mod/
+            /tmp/a7-d100-mod-proof/
+            /tmp/a7-d100-mod-audit.log
           if-no-files-found: warn
           retention-days: 60
