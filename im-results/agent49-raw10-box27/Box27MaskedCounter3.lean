@@ -57,7 +57,7 @@ theorem carry_zero (v : Variant) (L R : List Bool) (y : Bool) :
     run0 (table v) 3 (carry L false y R) = some ⟨4,L,false::false::true::y::R⟩ := by cases v <;> rfl
 
 theorem carry_one (v : Variant) (L R : List Bool) :
-    run0 (table v) 5 (carry L true false R) = some ⟨4,L,false::false::false::true::R⟩ := by cases v <;> rfl
+    run0 (table v) 5 (carry L true false R) = some ⟨4,L,false::false::extraBit v::true::R⟩ := by cases v <;> rfl
 
 theorem carry_more (v : Variant) (L R : List Bool) (x y : Bool) :
     run0 (table v) 3 (carry L true true (false::x::y::R)) = some (carry (true::true::true::L) x y R) := by cases v <;> rfl
@@ -73,21 +73,21 @@ theorem carry_return (v : Variant) (ds : List Digit) (L R : List Bool) (x y : Bo
     cases x <;> cases y
     · exact ⟨3,[(true,false),zeroDigit],by decide,carry_zero v L (false::false::false::R) false⟩
     · exact ⟨3,[(true,true),zeroDigit],by decide,carry_zero v L (false::false::false::R) true⟩
-    · exact ⟨5,[(false,true),zeroDigit],by decide,carry_one v L (false::false::false::R)⟩
+    · exact ⟨5,[(extraBit v,true),zeroDigit],by decide,carry_one v L (false::false::false::R)⟩
     · have h1 := carry_more v L R false false
       have h2 := carry_zero v (true::true::true::L) R false
       have h3 := unwind v L (false::false::true::false::R)
-      exact ⟨9,[(false,extraBit v),(true,false)],by decide,join0 (join0 h1 h2) h3⟩
+      exact ⟨9,[(extraBit v,false),(true,false)],by decide,join0 (join0 h1 h2) h3⟩
   | cons d ds ih =>
     rcases d with ⟨a,b⟩
     cases x <;> cases y
     · exact ⟨3,(true,false)::(a,b)::ds++[zeroDigit],by decide,by simpa only [encode,encode_append,List.cons_append,List.append_assoc,List.nil_append] using carry_zero v L (encode ((a,b)::ds)++false::false::false::R) false⟩
     · exact ⟨3,(true,true)::(a,b)::ds++[zeroDigit],by decide,by simpa only [encode,encode_append,List.cons_append,List.append_assoc,List.nil_append] using carry_zero v L (encode ((a,b)::ds)++false::false::false::R) true⟩
-    · exact ⟨5,(false,true)::(a,b)::ds++[zeroDigit],by decide,by simpa only [encode,encode_append,List.cons_append,List.append_assoc,List.nil_append] using carry_one v L (encode ((a,b)::ds)++false::false::false::R)⟩
+    · exact ⟨5,(extraBit v,true)::(a,b)::ds++[zeroDigit],by decide,by simpa only [encode,encode_append,List.cons_append,List.append_assoc,List.nil_append] using carry_one v L (encode ((a,b)::ds)++false::false::false::R)⟩
     · have h1 := carry_more v L (encode ds++false::false::false::R) a b
       obtain ⟨t,ds',ht,h2⟩ := ih (true::true::true::L) a b
       have h3 := unwind v L (false::(encode ds'++R))
-      exact ⟨3+t+3,(false,extraBit v)::ds',by omega,join0 (join0 h1 h2) h3⟩
+      exact ⟨3+t+3,(extraBit v,false)::ds',by omega,join0 (join0 h1 h2) h3⟩
 
 theorem next (v : Variant) (b : Bool) (ds : List Digit) (R : List Bool) :
     ∃ t b' ds', 0<t ∧ run0 (table v) t (front b ds (false::false::false::R)) =
@@ -168,4 +168,4 @@ theorem never (v : Variant) (m : Machine) (hm : compatible (table v) m) : NeverH
     | some c => rfl
 
 #print axioms never
-end BB6.Agent49.Box27MaskedCounter
+end BB6.Agent49.Box27MaskedCounter3
