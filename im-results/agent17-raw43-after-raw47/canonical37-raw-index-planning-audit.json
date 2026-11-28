@@ -1,0 +1,96 @@
+{
+  "status": "planning census derived from manifest reconstruction; exact quotient counts still require kernel source acceptance",
+  "source_audit": {
+    "path": "im-results/agent50-raw47-canonical41/canonical40-raw-index-audit.json",
+    "git_blob_sha": "cff29b7847e7c45174af54e08fb31b864e989261"
+  },
+  "accepted_lineage": [
+    {
+      "stage": "Canonical40",
+      "removed_raw": 57,
+      "accepted": true
+    },
+    {
+      "stage": "Canonical39",
+      "removed_raw": 39,
+      "accepted": true,
+      "run_id": 46129131784
+    },
+    {
+      "stage": "Canonical38",
+      "removed_raw": 112,
+      "accepted": true,
+      "run_id": 46150267242
+    },
+    {
+      "stage": "Canonical37",
+      "removed_raw": 47,
+      "accepted": false,
+      "active_run_id": 46152158603
+    }
+  ],
+  "canonical37_candidate_raw_indices": [
+    0,
+    2,
+    4,
+    6,
+    8,
+    9,
+    10,
+    11,
+    13,
+    15,
+    17,
+    19,
+    21,
+    23,
+    26,
+    30,
+    34,
+    36,
+    38,
+    40,
+    41,
+    42,
+    43,
+    44,
+    45,
+    46,
+    48,
+    49,
+    54,
+    55,
+    56,
+    131,
+    132,
+    133,
+    134,
+    139,
+    140
+  ],
+  "count": 37,
+  "next_mature_candidate": {
+    "raw": 43,
+    "table": "1RB_---_1RC_---_0RD_---_1LD_0RB_---_---_---_---",
+    "membership_evidence": {
+      "run_id": 46132342154,
+      "artifact_id": 15257917221,
+      "artifact_name": "raw43-canonical39-membership-source"
+    },
+    "global_conditional_source": "im-results/agent17-raw43-after-raw47/Raw43AfterRaw47Conditional.lean",
+    "caveat": "Raw43 whole-parent Cover is not yet accepted; only use this as a target-selection census."
+  },
+  "removed_history_guard": {
+    "do_not_resubtract": [
+      39,
+      112,
+      47,
+      83,
+      85,
+      106,
+      79,
+      67
+    ],
+    "note": "Raw83, Raw85, Raw106, Raw79 and Raw67 were already consumed upstream of Canonical40/39; this list prevents stale-parent double subtraction."
+  }
+}
