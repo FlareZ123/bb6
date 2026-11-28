@@ -80,7 +80,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: FlareZ123/bb6
           run-id: ${{ inputs.q0148_run }}
-          name: agent44-q0148-complete-parent-cover-B6164
+          name: raw11-coarse-cover-148
           path: /tmp/q0148
 
       - name: Download accepted Extra29 complete parent
