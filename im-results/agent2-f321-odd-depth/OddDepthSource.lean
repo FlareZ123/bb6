@@ -82,17 +82,15 @@ theorem gate_to_Q0 (k:Nat) (hk:1≤k) :
       ∃ m, CounterReach 1 1 m (3*k) (13*k) := by
   intro n hr
   cases hr with
-  | nil => omega
   | step hr hm =>
     have hlarge : 3 ≤ 8*k+3 := by omega
     rcases large_second_only_high_far hm hlarge with hh | hf
     · cases hr with
       | nil => omega
       | step hr2 hm2 =>
-        have hmid : 3 ≤ 4*k := by omega
-        rcases large_second_only_high_far hm2 hmid with hh2 | hf2
+        rcases large_second_only_high_far hm2 (by omega) with hh2 | hf2
         · omega
-        ·          refine ⟨_, ?_⟩
+        · refine ⟨_, ?_⟩
           convert hr2 using 1 <;> omega
     · omega
 
@@ -105,8 +103,10 @@ theorem peel (i k:Nat) :
   intro n hr
   have hge : 13 ≤ coeff i := coeff_ge i
   have hd : 3 ≤ coeff i*(4*k+2)+shift i := by
-    have hmul : 2*coeff i ≤ (4*k+2)*coeff i :=
-      Nat.mul_le_mul_right (coeff i) (by omega)
+    have hmul : 2*coeff i ≤ coeff i*(4*k+2) := by
+      calc
+        2*coeff i ≤ (4*k+2)*coeff i := Nat.mul_le_mul_right (coeff i) (by omega)
+        _ = coeff i*(4*k+2) := Nat.mul_comm _ _
     omega
   have heven : (coeff i*(4*k+2)+shift i)%2=0 := by
     have hc := shift_mod4 i
@@ -114,7 +114,6 @@ theorem peel (i k:Nat) :
     simp [Nat.add_mod, Nat.mul_mod, he]
     omega
   cases hr with
-  | nil => omega
   | step hp hm =>
     rcases large_second_only_high_far hm hd with hh | hf
     · omega
@@ -167,8 +166,9 @@ theorem odd_depth_gate_never (t m:Nat) (ht:t%2=1) :
     omega
   have hA : (3*(4*m+1))%2 = 1 := by omega
   have hD : (coeff t*(4*m+1)+shift t)%4=3 := by
-    rw [Nat.add_mod,Nat.mul_mod]
-    omega
+    have hfour : (4*m+1)%4=1 := by omega
+    rw [Nat.add_mod, Nat.mul_mod, hc, hs, hfour]
+    decide
   have hq' : CounterReach 1 1 q (3*(4*m+1))
        (coeff t*(4*m+1)+shift t) := by
     simpa using hq
