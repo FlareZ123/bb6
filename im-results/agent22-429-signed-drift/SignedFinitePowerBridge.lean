@@ -8,20 +8,27 @@ Lean kernel acceptance is pending CI compilation and axiom inspection.
 -/
 namespace SignedPairMacroBridge
 
+private theorem pairRun_input_even {typ : Bool} {j u D v d' : Nat}
+    (hp : PairRun typ j u D v d') : D%2=0 := by
+  cases hp <;> omega
+
+private theorem pairRun_input_parity {typ : Bool} {j u D v d' : Nat}
+    (hp : PairRun typ j u D v d') :
+    u%2=(if typ then 1 else 0) := by
+  cases hp <;> simp_all
+
 theorem sourceWalk_head_even {x : PeriodicMacro.Letter}
     {xs : List PeriodicMacro.Letter} {u D U D' : Nat}
     (h : SourceWalk (x::xs) u D U D') : D%2=0 := by
   cases h with
-  | cons hp rest =>
-    cases hp <;> omega
+  | cons hp rest => exact pairRun_input_even hp
 
 theorem sourceWalk_head_parity {x : PeriodicMacro.Letter}
     {xs : List PeriodicMacro.Letter} {u D U D' : Nat}
     (h : SourceWalk (x::xs) u D U D') :
     u%2 = (if x.isE then 1 else 0) := by
   cases h with
-  | cons hp rest =>
-    cases hp <;> simp_all
+  | cons hp rest => exact pairRun_input_parity hp
 
 /-- n+2 consecutive repetitions of a nonempty source-exact typed
     pair/F word have a rigid affine slope whenever M^n beats the first
