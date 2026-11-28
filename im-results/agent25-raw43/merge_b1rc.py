@@ -7,15 +7,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 branch = sys.argv[4] if len(sys.argv) > 4 else "b1rc"
-VARIANTS = {"b1lafull": ("0la","0lb","0lc","0ld","0le","0rc","0re","1lb","1lc","1le","1rc","1re"), "b1re": ("0la","0lb","0lc","0le","0lf","0rc","0re","0rf","1la","1lc","1ld","1le","1lf","1rd","1re","1rf"), "b1le": ("0la","0lb","0lc","0ld","0le","0lf","0ra","0rc","0re","0rf","1la","1lb","1lc","1le","1lf","1ra","1rb","1rc","1re","1rf"), "b0le": ("0lc","0le","0ra","0rb","0re","0rf","1lc","1rb","1re"), "b1rc": ("0la", "0le", "0re", "1la", "1le", "1re"), "b0rc": ("0le", "0re", "1le", "1re"), "b0ra": ("0le","0rc","0re","1lb","1le","1re"), "b0la": ("0la","0lb","0le","0re","1la","1lb","1le","1re"), "b1ra": ("0lc","0le","0rc","0re","1lc","1le","1re"), "b1lb": ("0la","0le","0ra","0re","1la","1le","1ra","1re"), "b1la": ("0lb","0lc","0ld","0le","0rc","0re","1lb","1lc","1le","1rc","1re")}[branch]
+VARIANTS = {"b0lefull": ("1la","1lb","1lf","1rf"), "b1lafull": ("0la","0lb","0lc","0ld","0le","0rc","0re","1lb","1lc","1le","1rc","1re"), "b1re": ("0la","0lb","0lc","0le","0lf","0rc","0re","0rf","1la","1lc","1ld","1le","1lf","1rd","1re","1rf"), "b1le": ("0la","0lb","0lc","0ld","0le","0lf","0ra","0rc","0re","0rf","1la","1lb","1lc","1le","1lf","1ra","1rb","1rc","1re","1rf"), "b0le": ("0lc","0le","0ra","0rb","0re","0rf","1lc","1rb","1re"), "b1rc": ("0la", "0le", "0re", "1la", "1le", "1re"), "b0rc": ("0le", "0re", "1le", "1re"), "b0ra": ("0le","0rc","0re","1lb","1le","1re"), "b0la": ("0la","0lb","0le","0re","1la","1lb","1le","1re"), "b1ra": ("0lc","0le","0rc","0re","1lc","1le","1re"), "b1lb": ("0la","0le","0ra","0re","1la","1le","1ra","1re"), "b1la": ("0lb","0lc","0ld","0le","0rc","0re","1lb","1lc","1le","1rc","1re")}[branch]
 src, out = map(Path, sys.argv[1:3])
 out.mkdir(parents=True, exist_ok=True)
 pins = json.loads(sys.argv[3])
-proof_branch = "b1la" if branch == "b1lafull" else branch
+proof_branch = "b1la" if branch == "b1lafull" else "b0le" if branch == "b0lefull" else branch
 if branch == 'b0le' and '1le' in pins:
     VARIANTS += ('1le',)
 assert set(pins) == set(VARIANTS)
-slot = "e1" if branch == "b1re" else "e" if branch in {"b0le","b1le"} else "a" if branch in {"b0ra","b1ra","b1la","b1lafull"} else "c"
+slot = "e1" if branch == "b1re" else "e" if branch in {"b0le","b0lefull","b1le"} else "a" if branch in {"b0ra","b1ra","b1la","b1lafull"} else "c"
 entries = {}
 revisions = set()
 base = None
