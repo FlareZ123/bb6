@@ -6,6 +6,31 @@ Paper strict extension when some exponent exceeds one is separate.
 -/
 namespace PeriodicMacro
 
+/-- Recursive nonnegative coefficient gap, the finite strict-cone
+    invariant. This is the weighted prefix sum of 4^j-4. -/
+def coefficientGap : List Letter → Nat
+| [] => 0
+| x::xs => (scale x-4)+scale x*coefficientGap xs
+
+theorem coefficient_gap_identity (xs : List Letter)
+    (hj : ∀ x : Letter, x∈xs → 0<x.j) :
+    M xs = 3*A xs+1+coefficientGap xs := by
+  induction xs with
+  | nil => simp [M,A,coefficientGap]
+  | cons x xs ih =>
+    have hx : 0<x.j := hj x (by simp)
+    have htail : ∀ y : Letter, y∈xs → 0<y.j := by
+      intro y hy
+      exact hj y (by simp [hy])
+    have hi := ih htail
+    have hs : 4≤scale x := scale_ge_four x hx
+    have hscale : scale x=(scale x-4)+4 := by omega
+    change scale x*M xs =
+      3*(1+scale x*A xs)+1+
+        ((scale x-4)+scale x*coefficientGap xs)
+    rw [hi]
+    grind
+
 theorem coefficient_weak_cone (xs : List Letter)
     (hj : ∀ x : Letter, x∈xs → 0<x.j) :
     3*A xs+1 ≤ M xs := by
@@ -95,6 +120,7 @@ theorem coefficient_strict_cone (xs : List Letter)
       rw [heq]
       exact lt_of_le_of_lt hc hmul
 
+#print axioms coefficient_gap_identity
 #print axioms coefficient_weak_cone
 #print axioms coefficient_strict_cone
 end PeriodicMacro
