@@ -16,9 +16,29 @@ on:
         required: true
         type: string
       repaired_part:
-        description: 'Repaired exact partition key, e.g. g0p1'
+        description: 'First repaired exact partition key, e.g. g0p1'
         required: true
         type: string
+      repaired_run2:
+        description: 'Optional second repaired-part run'
+        required: false
+        type: string
+        default: ''
+      repaired_part2:
+        description: 'Optional second repaired exact partition key'
+        required: false
+        type: string
+        default: ''
+      repaired_run3:
+        description: 'Optional third repaired-part run'
+        required: false
+        type: string
+        default: ''
+      repaired_part3:
+        description: 'Optional third repaired exact partition key'
+        required: false
+        type: string
+        default: ''
 
 permissions:
   contents: read
@@ -37,12 +57,26 @@ jobs:
           SOURCE_RUN: ${{ inputs.source_run }}
           REPAIRED_RUN: ${{ inputs.repaired_run }}
           PART: ${{ inputs.repaired_part }}
+          REPAIRED_RUN2: ${{ inputs.repaired_run2 }}
+          PART2: ${{ inputs.repaired_part2 }}
+          REPAIRED_RUN3: ${{ inputs.repaired_run3 }}
+          PART3: ${{ inputs.repaired_part3 }}
         run: |
           set -euo pipefail
           [[ "$BRANCH" =~ ^(0LE|1LE|1RE)$ ]]
           [[ "$SOURCE_RUN" =~ ^[0-9]+$ ]]
           [[ "$REPAIRED_RUN" =~ ^[0-9]+$ ]]
           [[ "$PART" =~ ^g[0-7]p[0-3]$ ]]
+          if [[ -n "$REPAIRED_RUN2" || -n "$PART2" ]]; then
+            [[ "$REPAIRED_RUN2" =~ ^[0-9]+$ ]]
+            [[ "$PART2" =~ ^g[0-7]p[0-3]$ ]]
+          fi
+          if [[ -n "$REPAIRED_RUN3" || -n "$PART3" ]]; then
+            [[ "$REPAIRED_RUN3" =~ ^[0-9]+$ ]]
+            [[ "$PART3" =~ ^g[0-7]p[0-3]$ ]]
+          fi
+          [[ "$PART" != "$PART2" && "$PART" != "$PART3" ]]
+          [[ -z "$PART2" || "$PART2" != "$PART3" ]]
 
       - name: Reconstruct original coverage source
         run: python im-results/agent13-coverage/unpack.py
@@ -80,10 +114,30 @@ jobs:
           name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
           path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part }}
 
-      - name: Restore rewritten generated sources from repaired partition
+      - name: Replace optional second failed partition
+        if: ${{ inputs.repaired_run2 != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run2 }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part2 }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part2 }}
+
+      - name: Replace optional third failed partition
+        if: ${{ inputs.repaired_run3 != '' }}
+        uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ inputs.repaired_run3 }}
+          name: raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part3 }}
+          path: /tmp/parts/raw42-split-${{ inputs.branch }}-${{ inputs.repaired_part3 }}
+
+      - name: Restore rewritten generated sources from repaired partitions
         env:
           BRANCH: ${{ inputs.branch }}
           PART: ${{ inputs.repaired_part }}
+          PART2: ${{ inputs.repaired_part2 }}
+          PART3: ${{ inputs.repaired_part3 }}
         run: |
           set -euo pipefail
           python - <<'PY'
@@ -91,22 +145,23 @@ jobs:
           from pathlib import Path
           import shutil, os
           branch=os.environ["BRANCH"]
-          part=os.environ["PART"]
-          shard=Path("/tmp/parts") / f"raw42-split-{branch}-{part}"
-          manifest=json.loads((shard/"manifest.json").read_text())
+          parts=[p for p in (os.environ["PART"], os.environ["PART2"], os.environ["PART3"]) if p]
           repo=Path.cwd()
           restored=0
-          for item in manifest["modules"]:
-              if item.get("source_kind") != "generated-or-untracked":
-                  continue
-              src=shard / (item["module"].replace(".", "/") + ".lean")
-              dst=repo / item["source_path"]
-              if not src.is_file():
-                  continue
-              dst.parent.mkdir(parents=True, exist_ok=True)
-              shutil.copy2(src,dst)
-              restored += 1
-          print(f"restored {restored} repaired generated sources")
+          for part in parts:
+              shard=Path("/tmp/parts") / f"raw42-split-{branch}-{part}"
+              manifest=json.loads((shard/"manifest.json").read_text())
+              for item in manifest["modules"]:
+                  if item.get("source_kind") != "generated-or-untracked":
+                      continue
+                  src=shard / (item["module"].replace(".", "/") + ".lean")
+                  dst=repo / item["source_path"]
+                  if not src.is_file():
+                      continue
+                  dst.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(src,dst)
+                  restored += 1
+          print(f"restored {restored} repaired generated sources from {len(parts)} partition(s)")
           PY
 
       - name: Authenticate exact 32-part union and prove whole child Cover
