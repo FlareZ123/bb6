@@ -31,6 +31,7 @@ TEN_TARGETS = [
     "BB6.Agent11Raw39SoleObligation.parent_cover_if_oneLE_above_15125",
     "BB6.Agent11Raw39SoleObligation.parent_cover_if_oneLE_at_global",
     "BB6.Agent11Raw39SoleObligation.exact_at_champion_if_oneLE_at_global",
+    "BB6.Agent11Raw39SoleObligation.exact_at_champion_if_oneLE_at_champion",
     "BB6.Agent11Raw39SoleObligation.exact_at_champion_if_oneLE",
 ]
 FULL_TARGETS = [
@@ -84,10 +85,24 @@ def canonical_source(work):
     root2,profiles2=c.u.compile_one(
         HERE/"Raw39Canonical40Conditional.lean",linked,evidence,conditional)
     ensure(all(set(v)<=ALLOWED for v in profiles2.values()),"nonstandard conditional axioms")
+    loose=[
+        "BB6.Agent11Raw39Canonical40LooseThreshold.sound40_at",
+        "BB6.Agent11Raw39Canonical40LooseThreshold.remove_many_at",
+        "BB6.Agent11Raw39Canonical40LooseThreshold.parents_cover_at",
+        "BB6.Agent11Raw39Canonical40LooseThreshold.sound_at",
+        "BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_target",
+        "BB6.Agent11Raw39Canonical40LooseThreshold.exact_at_champion",
+    ]
+    root3,profiles3=c.u.compile_one(
+        HERE/"Raw39Canonical40LooseThreshold.lean",linked,evidence,loose)
+    ensure(all(set(v)<=ALLOWED for v in profiles3.values()),
+           "nonstandard loose-threshold axioms")
     return linked, {"canonical40":pin40,
                     "membership":{k:v for k,v in profiles.items()},
                     "conditional":{k:v for k,v in profiles2.items()},
-                    "membership_sha256":sha(root),"conditional_sha256":sha(root2)}
+                    "loose_threshold":{k:v for k,v in profiles3.items()},
+                    "membership_sha256":sha(root),"conditional_sha256":sha(root2),
+                    "loose_threshold_sha256":sha(root3)}
 
 def accepted_parent(work,onele_run):
     work.mkdir(parents=True,exist_ok=False)
@@ -192,7 +207,7 @@ def main():
         claim="source-accepted Raw39 whole parent and Canonical40 to 39 reduction"
     else:
         roots=[HERE/"Raw39SoleObligation.lean"]
-        claim="source-accepted 39 global Covers plus sole Raw39 A1=1LE premise"
+        claim="source-accepted 39 global Covers plus sole Raw39 A1=1LE bound at champion-score premise"
     profiles={}
     built={}
     for source in roots:
