@@ -63,7 +63,10 @@ jobs:
             test "$PROOF_ROOT" = "im-results/agent19-raw40-cut/Raw40Round5Exact.lean"
             test -f im-results/agent19-raw40-cut/prepare_round5.py
           elif [[ "$PREPARATION_PROFILE" == "raw40-a0la-complete" ]]; then
-            test "$PROOF_ROOT" = "im-results/agent42-raw40-crossing-splice/Raw40A0LAExact.lean"
+            case "$PROOF_ROOT" in
+              im-results/agent42-raw40-crossing-splice/Raw40A0LAExact.lean|im-results/agent42-raw40-crossing-splice/Raw40A0LARefinement.lean) ;;
+              *) exit 1 ;;
+            esac
             test -f im-results/agent19-raw40-cut/prepare_round4.py
             test -f im-results/agent19-raw40-cut/prepare_round5.py
             test -f im-results/agent19-raw40-cut/prepare_a0la.py
