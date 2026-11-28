@@ -30,17 +30,14 @@ theorem second_diff_power (M n : Nat) (p c : Int) (u : Nat → Nat)
     have h0 := h i (by omega)
     have h1 := h (i+1) (by omega)
     have h2 := h (i+2) (by omega)
+    have hh1 : (M:Int)*(u (i+2):Int) =
+        (u (i+1):Int)+((i+1:Nat):Int)*p+c := by
+      simpa [Nat.add_assoc] using h1
+    have hh2 : (M:Int)*(u (i+3):Int) =
+        (u (i+2):Int)+((i+2:Nat):Int)*p+c := by
+      simpa [Nat.add_assoc] using h2
     dsimp [dd]
-    calc
-      (M:Int)*((u (i+3):Int)-2*(u (i+2):Int)+(u (i+1):Int)) =
-          (M:Int)*(u (i+3):Int)-2*((M:Int)*(u (i+2):Int))+
-          (M:Int)*(u (i+1):Int) := by ring
-      _ = ((u (i+2):Int)+((i+2:Nat):Int)*p+c) -
-          2*((u (i+1):Int)+((i+1:Nat):Int)*p+c) +
-          ((u i:Int)+(i:Int)*p+c) := by rw [h2,h1,h0]
-      _ = (u (i+2):Int)-2*(u (i+1):Int)+(u i:Int) := by
-        push_cast
-        ring
+    grind
   have hpow (k : Nat) (hk : k≤n) :
       dd u 0=(M:Int)^k * dd u k := by
     induction k with
@@ -51,7 +48,7 @@ theorem second_diff_power (M n : Nat) (p c : Int) (u : Nat → Nat)
       calc
         dd u 0=(M:Int)^k * dd u k := prev
         _ = (M:Int)^k *((M:Int)*dd u (k+1)) := by rw [step]
-        _ = (M:Int)^(k+1)*dd u (k+1) := by rw [pow_succ]; ring
+        _ = (M:Int)^(k+1)*dd u (k+1) := by simp only [pow_succ,mul_assoc]
   exact hpow n (le_refl n)
 
 theorem power_forces_affine (M B n : Nat) (p c : Int)
@@ -85,7 +82,7 @@ theorem power_forces_affine (M B n : Nat) (p c : Int)
       ((u 1:Int)-(u 0:Int))+p := by
     calc
       (M:Int)*((u 2:Int)-(u 1:Int)) =
-          (M:Int)*(u 2:Int)-(M:Int)*(u 1:Int) := by ring
+          (M:Int)*(u 2:Int)-(M:Int)*(u 1:Int) := by simp only [mul_sub]
       _ = ((u 1:Int)+p+c)-((u 0:Int)+c) := by rw [hh1,hh0]
       _ = ((u 1:Int)-(u 0:Int))+p := by ring
   constructor
@@ -94,7 +91,7 @@ theorem power_forces_affine (M B n : Nat) (p c : Int)
     calc
       ((M:Int)-1)*((u 1:Int)-(u 0:Int)) =
           (M:Int)*((u 1:Int)-(u 0:Int))-
-          ((u 1:Int)-(u 0:Int)) := by ring
+          ((u 1:Int)-(u 0:Int)) := by simp only [sub_mul,one_mul]
       _ = p := by omega
 
 #print axioms second_diff_power
