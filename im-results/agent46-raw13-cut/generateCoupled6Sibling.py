@@ -73,6 +73,13 @@ def main(mv):
         extra_imports.append("Raw13RECycle")
         manual["1RB1LD1RC1LA1LA1RE1RF0LA1LB0RE---1RD"]=".closed (.proven BB6.Agent46Raw13RECycle.p BB6.Agent46Raw13RECycle.never)"
     if mv=="0RF":
+        extra_imports.append("Raw13Coupled6RFCounter")
+        ns_rf="BB6.Agent46Raw13Coupled6RFCounter"
+        for v,t in [
+            ("zLD","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF0LD---"),
+            ("oLD","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1LD---"),
+            ("oRC","1RB1LD1RC0LD1LA1RE0RB0LA1RB0RF1RC---")]:
+            manual[t]=f".closed (.proven ({ns_rf}.p .{v}) ({ns_rf}.never .{v}))"
         extra_imports.append("Raw13RFPrefix")
         manual["1RB1LD1RC0LC1LA1RE0RB0LA0RA0RF0LA---"]=".closed (.proven BB6.Agent46Raw13RFPrefix.p BB6.Agent46Raw13RFPrefix.never)"
     if mv=="1RA":
