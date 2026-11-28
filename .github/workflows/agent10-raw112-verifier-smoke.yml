@@ -1,0 +1,41 @@
+name: Agent10 Raw112 accepted-artifact verifier smoke
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Verify split source/assembly provenance
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import sys
+          from pathlib import Path
+          sys.path.insert(0, "im-results/agent17-raw112-canonical58")
+          import assemble_canonical58_raw112_graft as raw112
+          work=Path("/tmp/raw112-verifier-smoke")
+          work.mkdir()
+          meta, dirs, summary=raw112.verify_raw112_parent(work, 46146501930)
+          assert meta["source_revision"] == "6b8232d51d93665f66808b7faff7457963174aca"
+          assert meta["assembly_revision"] == "8da8090eab8f85670300b44eabf65070793864d7"
+          assert meta["artifact_id"] == 15263639929
+          assert meta["weighted_bound"] == 100000
+          assert any((d/"Raw112ClosedCover.olean").is_file() for d in dirs)
+          print("PASS Raw112 accepted artifact provenance", meta)
+          PY
