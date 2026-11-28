@@ -1,0 +1,76 @@
+name: Agent1 Raw56 E0=0RA exact conditional 3881-to-15 theorem
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source_partial:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install original pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-le0ra-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Reconstruct the exact 3881-leaf canonical proof and 15 unresolved residuals
+        run: |
+          set -euo pipefail
+          export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent31-three-hole-tnf/generate_sweeps.py
+          python im-results/agent31-three-hole-tnf/generate_four_hole.py
+          python im-results/agent1-raw56/le/prepare_le0ra_partial.py /tmp/raw56-le0ra-partial | tee /tmp/raw56-le0ra-prepare.log
+      - name: Lean check canonical quotient theorem against original source
+        run: |
+          set -euo pipefail
+          export ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/raw56-le0ra-closure --jobs 2 \
+            --precompiled-manifest /tmp/raw56-le0ra-base/a1-raw56-root-consumer/manifest.json \
+            --precompiled-dir /tmp/raw56-le0ra-base/a1-raw56-root-consumer \
+            --source-root /tmp/raw56-le0ra-partial/0RAgen \
+            --override FastBiDFA=im-results/agent32-raw59/FastBiDFA.lean \
+            --manifest /tmp/raw56-le0ra-closure/manifest.json \
+            --label raw56-le0ra-15-way-partial \
+            --theorem BB6.Agent1Raw56.LE0RAPartial.sound15 \
+            --weighted-bound 7014 \
+            --parent-table '1RB---_1RC---_0RD---_1LD1LE_0RA0LE_------' \
+            --artifact-name raw56-le0RA-partial15-source-accepted \
+            --provenance-input im-results/agent1-raw56/le/prepare_le0ra_partial.py \
+            --provenance-input im-results/agent1-raw56/le/prove_motif_6304.py \
+            --provenance-input im-results/agent1-raw56/le/motif_spec.json \
+            --provenance-input im-results/agent1-raw56/le/inventory-79.json.gz.b64 \
+            /tmp/raw56-le0ra-partial/0RAgen/Raw56LE0RAPartialAll.lean 2>&1 | tee /tmp/raw56-le0ra-compile.log
+          python im-results/agent1-raw57/check_axioms.py /tmp/raw56-le0ra-compile.log --require BB6.Agent1Raw56.LE0RAPartial.sound15
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' /tmp/raw56-le0ra-compile.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw56-le0RA-partial15-progress
+          path: |
+            /tmp/raw56-le0ra-prepare.log
+            /tmp/raw56-le0ra-compile.log
+            /tmp/raw56-le0ra-closure/manifest.json
+          retention-days: 14
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le0RA-partial15-source-accepted
+          path: /tmp/raw56-le0ra-closure/**
+          retention-days: 30
+          if-no-files-found: error
