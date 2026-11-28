@@ -662,3 +662,28 @@ Beyond the five-child closure push, added a stable parent interface and the exac
 Accepted existing Raw42 child artifacts are deterministically named `raw42-certified-<branch>`: 0RB run46051022197, 0RA 45994074344, 0RE 45996645063, 1RB 45996253830, 1LA 46068374725, 1RA 46068379812, 0LA 46089669906. Bounds: 0RA/0RB at 1006, others 100006; use `lift_cover` to common 100006.
 
 Current five missing-child runs: 1LB 46139324706 (row-split Run5137 recovery), 1LC 46138539509 (row-split NGram855 recovery), 1RE 46139174236, 0LE 46139353236, 1LE 46139356558. All were queued at ~11:23. Do not repeat discovery. Once accepted, join the twelve children locally, lift parent 100006→6766859, identify it with the literal p42, then feed `Raw42Canonical39Conditional.conditional_sound` (or stronger accepted successor if Canonical38 lands first).
+
+
+## 2026-11-28 11:49 UTC checkpoint — Raw42 generator fix and direct Canonical38 staging
+
+Immutable lease remains 2026-11-28T11:02:00.978379Z; earliest legal release 12:12:00.978379Z.
+
+Concrete fixes after the 11:27 checkpoint:
+- The first-ever 0LE/1LE/1RE assembly attempts all failed in `assembly_prepare` due one shared generator bug: `gen_assembly42.py` appended the literal characters `\\n` to leaf-emitter stdin, so `emit_ngram42.py` parsed widths such as `8\\n` and `9\\n` as invalid integers. Commit `fa6ebd1bb831904f60adc9ac91700aa6de93087c` replaces that suffix with `chr(10)`. Fresh runs: 0LE 46141265775, 1LE 46141269591, 1RE 46141272523; all queued as of ~11:49.
+- 1LC row split run 46138539509 exposed only an ambiguity in the generated Data module: `Cert` resolved to both Agent1NGram and Agent32AsymNGram. Commit `ca327755cc18b9f1287b76cdde82e2a9ebb69b2d` qualifies `BB6.Agent32AsymNGram.Cert`. Fresh 1LC recovery run 46141169519 queued.
+- 1LB repaired recovery remains run 46139324706, queued after its row-split Run5137 rewrite.
+
+Local/global theorem seam:
+- `Raw42GlobalBridge.lean` was decoupled from generated Canonical40 source in `0d45ed12fe435e823d29893d7753e56f6e5728fc`: it now defines Raw42's exact literal parent locally, so local join math is tracked-source checkable.
+- `Raw42Canonical39FromNamed.lean` commit `c6cb18b6b790f866796eb548759da243c6127c53`: the twelve named child Covers directly imply the Canonical39 conditional successor soundness theorem.
+- Accepted-lineage checker expanded in `9f8aa68f92ed48eadb216c89ae49a55f44f7c9de` to audit the named-child global seam. Original audit run 46139898980 is still in progress; a newer audit was dispatched after this expansion and may be queued.
+- Local bridge source check fresh run 46141296345 queued.
+
+Direct Canonical38 path staged without claiming predecessor acceptance:
+- `Raw42Canonical38DirectConditional.lean` commit `603b4a701e2c90f0ec7b5b5ab0cb5074a88dc651`: explicit Raw42 parent Cover premise removes Raw42 from Agent3 direct Raw39+Raw47 roster38, yielding conditional roster37 and exactness interface.
+- `Raw42Canonical38DirectFromNamed.lean` commit `e410b1d9111a6ac63f560aee20f5c4220e069593`: twelve named child Covers -> Raw42 Cover at champion threshold -> direct Canonical38 conditional soundness.
+- `check_canonical38_direct_raw42.py` commit `ce6114c30e02449ddb3e73e74431f9982e6a3f28` authenticates the direct38 artifact then source-checks both direct theorem layers.
+- workflow `.github/workflows/agent17-raw42-canonical38-direct.yml` commit `ad05543ac0419011596f8cff07bdabaac9fe17e1` is staged but intentionally not dispatched until Agent3 direct Canonical38 run 46136413104 succeeds.
+- Direct Canonical38 producer 46136413104 was still in progress on last check.
+
+Do not rerun discovery or old failed assemblies. Continue status-driven fixes. If direct38 succeeds, dispatch Agent17 direct38 audit with canonical38_run=46136413104. If all five Raw42 children close, compose their accepted artifacts through Raw42GlobalBridge; this would make Raw42 a real global residual removal rather than only a conditional theorem.
