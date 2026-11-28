@@ -117,6 +117,26 @@ theorem dangerR_moving_mod201326592 (k : Nat) :
   have hm := dangerT_mod201326592 k
   omega
 
+/-- The unique MiddleOdd/Far-boundary first-coordinate associated with a
+    dangerous anchor is an exact integer, not a truncated division. -/
+theorem dangerA_exact (k : Nat) :
+    4*((dangerR k-6)/4)+6 = dangerR k := by
+  have hm24 : dangerR k % 24 = 22 := (danger_family k).2.2
+  have hm4 : dangerR k % 4 = 2 := by omega
+  have hz : (dangerR k-6) % 4 = 0 := by omega
+  have hd : 4 ∣ dangerR k-6 := Nat.dvd_of_mod_eq_zero hz
+  have he := Nat.div_mul_cancel hd
+  omega
+
+/-- Exact moving phase of the dangerous first-coordinate at modulus
+    50331648 = 201326592 / 4.  This lifts the previously observed
+    a_k == 10-6k (mod 384) pattern by seventeen binary bits. -/
+theorem dangerA_moving_mod50331648 (k : Nat) :
+    (((dangerR k-6)/4) + 6*k) % 50331648 = 4793482 := by
+  have ha := dangerA_exact k
+  have hr := dangerR_moving_mod201326592 k
+  omega
+
 /-- Every member of the exhaustive dangerous subfamily lies on one exact
     terminal ray modulo 49152. -/
 theorem dangerT_mod49152 (k : Nat) :
@@ -285,6 +305,8 @@ theorem highThenFar_root_terminal_mod49152
 #print axioms dangerR_balance
 #print axioms dangerT_mod201326592
 #print axioms dangerR_moving_mod201326592
+#print axioms dangerA_exact
+#print axioms dangerA_moving_mod50331648
 #print axioms dangerT_mod49152
 #print axioms highThenFar_root_mod24
 #print axioms highThenFar_root_is_danger_family
