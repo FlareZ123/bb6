@@ -17,6 +17,41 @@ namespace BB6.Agent5Q0151ParamSaturation
 open BB6.Agent5Q0151FiniteModel
 open BB6.Agent5Q0151UnitRunSaturation
 
+theorem segClosed_lower (s : SegmentSummary)
+    (hN : -1 ≤ s.imageN) (hP : -1 ≤ s.imageP) :
+    -1 ≤ (segClosed s).imageN ∧
+      -1 ≤ (segClosed s).imageP := by
+  by_cases hl : s.last = 0
+  · simpa [segClosed,hl] using (And.intro hN hP)
+  · by_cases hf : s.first = 0
+    · simp [segClosed,hl,hf]
+    · refine ⟨?_,?_⟩
+      · simpa [segClosed,hl,hf] using
+          dnext_lower s.imageN s.last hN
+      · simpa [segClosed,hl,hf] using
+          dnext_lower s.imageP s.last hP
+
+theorem segBit_lower (s : SegmentSummary) (b : Bool)
+    (hN : -1 ≤ s.imageN) (hP : -1 ≤ s.imageP) :
+    -1 ≤ (segBit s b).imageN ∧
+      -1 ≤ (segBit s b).imageP := by
+  cases b with
+  | false => simpa [segBit] using segClosed_lower s hN hP
+  | true => simpa [segBit] using (And.intro hN hP)
+
+theorem segAppend_lower (s : SegmentSummary)
+    (hN : -1 ≤ s.imageN) (hP : -1 ≤ s.imageP)
+    (w : List Bool) :
+    -1 ≤ (segAppend s w).imageN ∧
+      -1 ≤ (segAppend s w).imageP := by
+  induction w generalizing s with
+  | nil => simpa [segAppend] using (And.intro hN hP)
+  | cons b bs ih =>
+      change -1 ≤ (segAppend (segBit s b) bs).imageN ∧
+        -1 ≤ (segAppend (segBit s b) bs).imageP
+      have h := segBit_lower s b hN hP
+      exact ih (segBit s b) h.1 h.2
+
 theorem alt_positive (s : SegmentSummary) (n : Nat)
     (hn : 0 < n) (suffix : List Bool)
     (hN : -1 ≤ s.imageN) (hP : -1 ≤ s.imageP) :
@@ -83,26 +118,15 @@ theorem two_zero_repair_positive (s : SegmentSummary)
         altWord (2*a-1) ++ tail) =
       segAppend s ([true,true,true,false] ++
         altWord 1 ++ tail) := by
-  have hstart : -1 ≤ (segAppend s [true,true,true,false]).imageN ∧
-      -1 ≤ (segAppend s [true,true,true,false]).imageP := by
-    have h0 : segAppend s [true,true,true,false] =
-        segClosed {s with last :=
-          plus (plus (plus s.last 1) 1) 1} := by
-      rfl
-    rw [h0]
-    -- Every nonnegative or rejected mode is mapped to a mode >= -1.
-    unfold segClosed
-    split
-    · exact ⟨by simpa using hN, by simpa using hP⟩
-    · split
-      · exact ⟨by decide,by decide⟩
-      · exact ⟨dnext_lower s.imageN _ hN,
-          dnext_lower s.imageP _ hP⟩
+  have hstart := segAppend_lower s hN hP
+    [true,true,true,false]
   simp only [List.append_assoc]
   rw [segAppend_append,segAppend_append]
   exact alt_positive (segAppend s [true,true,true,false])
     (2*a-1) (by omega) tail hstart.1 hstart.2
 
+#print axioms segClosed_lower
+#print axioms segAppend_lower
 #print axioms alt_positive
 #print axioms alt_positive_both
 #print axioms big_odd_new_segment
