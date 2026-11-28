@@ -178,18 +178,18 @@ theorem singleFuel (c : Nat) (xs : List (Nat × Nat)) (b : Nat)
   split at h <;> omega
 
 theorem positive : ∀ p : Phase, 0 < (advance p).1
-  | .double [] b => by simp [advance]; omega
-  | .double [(0,c)] b => by simp [advance]; omega
-  | .double ((0,c)::(0,e)::ys) b => by simp [advance]; omega
-  | .double ((0,c)::(1,e)::ys) b => by simp [advance]; omega
-  | .double ((0,c)::(d+2,e)::ys) b => by simp [advance]; omega
-  | .double ((1,c)::xs) b => by simp [advance]; omega
-  | .double ((2,c)::xs) b => by simp [advance]; omega
-  | .double ((a+3,c)::xs) b => by simp [advance]; omega
-  | .single c [] b => by simp [advance]; omega
-  | .single c ((0,e)::ys) b => by simp [advance]; omega
-  | .single c ((1,e)::ys) b => by simp [advance]; omega
-  | .single c ((d+2,e)::ys) b => by simp [advance]; omega
+  | .double [] b => by simp [advance] <;> omega
+  | .double [(0,c)] b => by simp [advance] <;> omega
+  | .double ((0,c)::(0,e)::ys) b => by simp [advance] <;> omega
+  | .double ((0,c)::(1,e)::ys) b => by simp [advance] <;> omega
+  | .double ((0,c)::(d+2,e)::ys) b => by simp [advance] <;> omega
+  | .double ((1,c)::xs) b => by simp [advance] <;> omega
+  | .double ((2,c)::xs) b => by simp [advance] <;> omega
+  | .double ((a+3,c)::xs) b => by simp [advance] <;> omega
+  | .single c [] b => by simp [advance] <;> omega
+  | .single c ((0,e)::ys) b => by simp [advance] <;> omega
+  | .single c ((1,e)::ys) b => by simp [advance] <;> omega
+  | .single c ((d+2,e)::ys) b => by simp [advance] <;> omega
 
 theorem preserved : ∀ p : Phase, valid p → valid (advance p).2
   | .double [] b, hv => by
@@ -236,7 +236,9 @@ theorem sound : ∀ p : Phase, valid p → run (advance p).1 (phase p) = some (p
   | .double ((0,c)::(0,e)::ys) b, hv => by
     have hh := d1 (c+1) (ones e (enc ys)) (ones b z)
     have he : ones (c+1+3) (ones e (enc ys)) = ones (c+e+4) (enc ys) := by
-      rw [←rep_add,show c+1+3+e=c+e+4 by omega]
+      calc
+        ones (c+1+3) (ones e (enc ys)) = ones (c+1+3+e) (enc ys) := (rep_add [true] (c+1+3) e (enc ys)).symm
+        _ = _ := by rw [show c+1+3+e=c+e+4 by omega]
     rw [he] at hh
     simpa [advance,phase,enc,DB,SB,ones,zeros,rep,word] using hh
   | .double ((0,c)::(1,e)::ys) b, hv => by
@@ -258,7 +260,9 @@ theorem sound : ∀ p : Phase, valid p → run (advance p).1 (phase p) = some (p
     obtain ⟨n,rfl⟩ : ∃ n, b=n+2 := ⟨b-2,by omega⟩
     have hh := s1 (c+1) (ones e (enc ys)) (ones n z)
     have he : ones (c+1+4) (ones e (enc ys)) = ones (c+e+5) (enc ys) := by
-      rw [←rep_add,show c+1+4+e=c+e+5 by omega]
+      calc
+        ones (c+1+4) (ones e (enc ys)) = ones (c+1+4+e) (enc ys) := (rep_add [true] (c+1+4) e (enc ys)).symm
+        _ = _ := by rw [show c+1+4+e=c+e+5 by omega]
     rw [he] at hh
     simpa [advance,phase,enc,DB,SB,ones,zeros,rep,word] using hh
   | .single c ((1,e)::ys) b, hv => by
@@ -298,9 +302,12 @@ theorem project_step (c : BB6Coverage.Config) :
 theorem never : NeverHalts table := by
   apply BB6.Agent13.Box33PrefixMacro.sourceNever table step project_step
   intro n
-  have hv : valid (.double [] 0) := by decide
-  have hn := never_phase n (.double [] 0) hv
-  simpa [phase,enc,DB,cfg,word,ones,rep,project,Box33Source.project,BB6Coverage.blank,Box33Source.q] using hn
+  have hv : valid (.double [] 0) := by simp [valid,potential,dPot,fuel]
+  have hb : BB6.Agent13.Box33PrefixMacro.project BB6Coverage.blank = phase (.double [] 0) := by
+    rw [Box33Source.project_blank]
+    simp [phase,enc,DB,cfg,word,ones,rep,Box33UnarySweeper.blank,z]
+  rw [hb]
+  exact never_phase n (.double [] 0) hv
 
 def partialTable : PartialMachine := fun s => some (table s)
 theorem compatible_never (m : Machine) (hm : compatible partialTable m) : NeverHalts m := by
