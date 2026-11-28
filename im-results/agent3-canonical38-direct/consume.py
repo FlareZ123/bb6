@@ -220,6 +220,23 @@ def main():
     generated.append(root)
     profiles.update(ax)
 
+    # The Raw39 source bundle and staged replay now have authenticated,
+    # source-checked copies of every required object in 'linked'. Retaining
+    # both entire transient trees exhausted the Ubuntu runner filesystem while
+    # downloading the independent Raw47 parent (run 46146819850; ENOSPC).
+    # Keep the in-memory audit report and the copied kernel objects, but free
+    # the redundant staging bytes BEFORE restoring the second parent.
+    before_free = shutil.disk_usage(work).free
+    for transient in (work / "raw39-parent", work / "raw39-kernel-replay"):
+        shutil.rmtree(transient)
+    after_free = shutil.disk_usage(work).free
+    print(
+        f"Raw39 authenticated source/staging cleanup: "
+        f"{(after_free - before_free) // (1024**2)} MiB recovered, "
+        f"{after_free // (1024**2)} MiB available for Raw47",
+        flush=True,
+    )
+
     # Transport Raw47 into the SAME authenticated Canonical40 environment.
     raw47_parent_dir = work / "raw47-parent"
     raw47_parent_dir.mkdir()
