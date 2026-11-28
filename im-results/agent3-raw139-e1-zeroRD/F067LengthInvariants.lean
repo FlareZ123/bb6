@@ -57,8 +57,35 @@ theorem e_length_upper (ks : List Nat) :
   have he := e_length_exact ks
   omega
 
+/-- Geometric place-value of the F067 stack digits in radix four. -/
+def digitWeight : List Nat → Nat
+  | [] => 0
+  | k :: ks => k + 4 * digitWeight ks
+
+/-- Exact decomposition of the first tower-time accumulator:
+    15·g + 1838 = 420·digitWeight + 28·16^length + 2020·4^length.
+
+    Thus all dependence of g on the actual (potentially enormous) digit
+    values factors through ONE radix-four integer. No iteration of tower
+    operations is needed to calculate or bound the remaining terms. -/
+theorem g_decomposition_exact (ks : List Nat) :
+    15 * g ks + 1838 =
+      420 * digitWeight ks +
+      28 * 16 ^ ks.length + 2020 * 4 ^ ks.length := by
+  induction ks with
+  | nil => decide
+  | cons k ks ih =>
+    have hd := d_length_exact ks
+    change 15 * (28*k + 390 + 4*g ks + 6*d ks) + 1838 =
+      420 * (k + 4*digitWeight ks) +
+      28 * 16 ^ (ks.length+1) + 2020 * 4 ^ (ks.length+1)
+    simp only [pow_succ]
+    omega
+
+
 #print axioms d_length_exact
 #print axioms e_length_exact
 #print axioms d_length_upper
 #print axioms e_length_upper
+#print axioms g_decomposition_exact
 end BB6.Agent3F067LengthInvariants
