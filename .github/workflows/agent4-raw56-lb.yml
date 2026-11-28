@@ -30,6 +30,11 @@ on:
         required: false
         default: ""
         type: string
+      optimized:
+        description: "Use context-minimized relation for new 1LB source rows"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -374,7 +379,10 @@ jobs:
           mkdir -p /tmp/mblock
           cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/mblock/
           cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/mblock/
-          python im-results/agent4-raw56-root-pilot/m_block_split.py --machine "$ID" --out-dir /tmp/mblock
+          opts=()
+          if [ '${{ inputs.optimized }}' = 'true' ]; then opts+=(--minimized); fi
+          python im-results/agent4-raw56-root-pilot/m_block_split.py \
+            --machine "$ID" --out-dir /tmp/mblock "${opts[@]}"
           cd /tmp/mblock
           export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
           lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
@@ -427,7 +435,10 @@ jobs:
           mkdir -p /tmp/mblock
           cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/mblock/
           cp im-results/agent4-two-sided-automata/TwoSidedChunks.lean /tmp/mblock/
-          python im-results/agent4-raw56-root-pilot/m_block_split.py --machine "$ID" --out-dir /tmp/mblock
+          opts=()
+          if [ '${{ inputs.optimized }}' = 'true' ]; then opts+=(--minimized); fi
+          python im-results/agent4-raw56-root-pilot/m_block_split.py \
+            --machine "$ID" --out-dir /tmp/mblock "${opts[@]}"
       - uses: actions/download-artifact@v4
         with:
           pattern: raw56-lb-${{ inputs.target }}-row-*
