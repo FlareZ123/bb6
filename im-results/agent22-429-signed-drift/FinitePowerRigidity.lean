@@ -84,7 +84,7 @@ theorem power_forces_affine (M B n : Nat) (p c : Int)
       (M:Int)*((u 2:Int)-(u 1:Int)) =
           (M:Int)*(u 2:Int)-(M:Int)*(u 1:Int) := by simp only [mul_sub]
       _ = ((u 1:Int)+p+c)-((u 0:Int)+c) := by rw [hh1,hh0]
-      _ = ((u 1:Int)-(u 0:Int))+p := by ring
+      _ = ((u 1:Int)-(u 0:Int))+p := by omega
   constructor
   · omega
   · rw [hd] at hdiff
