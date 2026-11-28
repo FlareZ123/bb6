@@ -1572,14 +1572,15 @@ jobs:
           holes=sum(flat[i:i+3]=="---" for i in range(0,36,3))
           assert len(x["children"])==25
           assert sum(x["mass"].values())==25**holes
-          residuals=[r for c in x["children"] for r in c["residuals"]]
-          residual_mass=sum(25**r.count(0) for r in residuals)
+          residuals=[{"child":i,"row":r} for i,c in enumerate(x["children"]) for r in c["residuals"]]
+          residual_mass=sum(25**r["row"].count(0) for r in residuals)
           print("RAW34_SIX_FRONTIER",json.dumps({
               "parent":x["parent"],"holes":holes,"weighted_bound":x["weighted_bound"],
               "nodes":x["nodes"],"stats":x["stats"],"mass":x["mass"],
               "residual_rows":len(residuals),"residual_mass":residual_mass,
               "child_residual_rows":[len(c["residuals"]) for c in x["children"]]
           },sort_keys=True))
+          print("RAW34_SIX_RESIDUALS",json.dumps(residuals,sort_keys=True))
           PY
       - uses: actions/upload-artifact@v4
         if: always()
