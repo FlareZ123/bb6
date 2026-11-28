@@ -127,6 +127,9 @@ def run_direct(args):
             table=json.loads((HERE/'d17v24-full-residual.json').read_text())['machines'][str(i)]
             nm=f'v24ternary{i}';known[tuple(table)]=nm
             known_specs[nm]=('Box33D17V24Ternary','BB6.Agent13.Box33D17V24Ternary',f' .m{i}')
+        table=json.loads((HERE/'d17v24-full-residual.json').read_text())['machines']['12']
+        known[tuple(table)]='v24m12'
+        known_specs['v24m12']=('Box33D17V24M12','BB6.Agent13.Box33D17V24M12','')
         table=json.loads((HERE/'d17v24-full-residual.json').read_text())['machines']['27']
         known[tuple(table)]='v24m27'
         known_specs['v24m27']=('Box33D17V24M27','BB6.Agent13.Box33D17V24M27','')
