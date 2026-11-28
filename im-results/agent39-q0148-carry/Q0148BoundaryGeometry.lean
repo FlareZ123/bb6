@@ -72,7 +72,7 @@ theorem reversed_marker_geometry (n : Nat) :
   calc
     [false,true] ++ rep [false,true] n ++ [false,true,true] =
         [false,true] ++ (rep [false,true] n ++ [false]) ++ [true,true] := by
-          rfl
+          simp [List.append_assoc]
     _ = [false,true] ++ ([false] ++ rep [true,false] n) ++ [true,true] := by
           rw [phase_rotation_geometry]
     _ = [false,true,false] ++ rep [true,false] n ++ [true,true] := by
@@ -205,7 +205,9 @@ theorem physical_to_source_geometry (a0 : Nat) (us : List Nat) :
               inputBits (evenBlocks (1::us.reverse) ++ aRun a0) =
                 inputBits (aRun 2 ++ [.separatedMarker]) ++
                   inputBits (evenBlocks us.reverse) ++ inputBits (aRun a0) := by
-            simp [evenBlocks,inputBits_append,List.append_assoc]
+            simp only [evenBlocks]
+            rw [← List.append_assoc]
+            rw [inputBits_append, inputBits_append]
           calc
             ([true] ++ rep [false,true] 2 ++ [false,true,true]) ++
                 ([false,true,false] ++ inputBits (evenBlocks us.reverse) ++
@@ -214,7 +216,9 @@ theorem physical_to_source_geometry (a0 : Nat) (us : List Nat) :
                 inputBits (evenBlocks us.reverse) ++ inputBits (aRun a0) := hcombine
             _ = [true,false] ++
                 inputBits (evenBlocks (1::us.reverse) ++ aRun a0) := by
-                  rw [← hbits]
+                  have hbits' := congrArg
+                    (fun z : List Bool => [true,false] ++ z) hbits
+                  simpa only [List.append_assoc] using hbits'.symm
 
 #print axioms reverseA_geometry
 #print axioms phase_rotation_geometry
