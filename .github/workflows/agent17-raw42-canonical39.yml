@@ -1,0 +1,41 @@
+name: Agent17 Raw42 cumulative Canonical39 cut
+on:
+  workflow_dispatch:
+    inputs:
+      onele_run:
+        description: 'Accepted Raw39 1LE source run'
+        type: string
+        default: '46114235329'
+permissions:
+  contents: read
+  actions: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Restore accepted Raw39 Canonical39 and source-check Raw42 conditional cut
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          [[ "${{ inputs.onele_run }}" =~ ^[0-9]+$ ]]
+          python -m py_compile im-results/agent32-raw42/check_canonical39_after_raw39.py
+          python im-results/agent13-coverage/unpack.py
+          python im-results/agent32-raw42/check_canonical39_after_raw39.py \
+            --work /tmp/a17-raw42-after-raw39 \
+            --onele-run "${{ inputs.onele_run }}" --chunk-size 64
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw42-after-raw39-conditional
+          path: /tmp/a17-raw42-after-raw39/evidence/
+          if-no-files-found: warn
+          retention-days: 30
