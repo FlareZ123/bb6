@@ -20,6 +20,33 @@ open BB6.Agent31StableParentBatch
 open BB6ChampionArithmetic
 open BB6.Agent11Raw39Canonical40Conditional
 
+/-- The accepted Canonical40 source frontier is sound at *every* B above
+its original weighted floor, without inspecting or changing any retained
+representative. This lemma is independent of Raw39. -/
+theorem sound40_at (B : Nat) (hFloor : 6766859 ≤ B) :
+    ∀ m, compatible root m →
+      WeightedBound B m ∨
+        ∃ e ∈ baseRoster, TNFQuotientCompatible e.2 m := by
+  intro m hm
+  rcases BB6.Agent31Canonical40Extra57.sound_integrated m hm with hsmall | hrest
+  · exact Or.inl (fun k d hk hd =>
+      Nat.le_trans (hsmall k d hk hd) hFloor)
+  · exact Or.inr hrest
+
+/-- Any batch of independently certified parent Covers can be removed at ANY
+target B ≥ 6766859; parent bounds need NOT fit the original local cutoff.
+This applies to every current Canonical40 target, not only Raw39. -/
+theorem remove_many_at (B : Nat) (hFloor : 6766859 ≤ B)
+    {parents : List PartialMachine}
+    (hRoots : ∀ p ∈ parents,
+      p initialSlot = some (some ⟨true,true,1⟩))
+    (hParents : ∀ p ∈ parents, Cover (WeightedBound B) p) :
+    ∀ m, compatible root m →
+      WeightedBound B m ∨
+        ∃ e ∈ removeParents parents baseRoster,
+          TNFQuotientCompatible e.2 m :=
+  removeParents_sound (sound40_at B hFloor) hRoots hParents
+
 theorem parents_cover_at (B : Nat)
     (hp : Cover (WeightedBound B) p39) :
     ∀ p ∈ removedParents, Cover (WeightedBound B) p := by
@@ -34,13 +61,7 @@ theorem sound_at (B : Nat) (hFloor : 6766859 ≤ B)
     ∀ m, compatible root m →
       WeightedBound B m ∨
         ∃ e ∈ roster39, TNFQuotientCompatible e.2 m := by
-  apply removeParents_sound (parents := removedParents)
-    (roster := baseRoster) ?_ parents_root (parents_cover_at B hp)
-  intro m hm
-  rcases BB6.Agent31Canonical40Extra57.sound_integrated m hm with hsmall | hrest
-  · exact Or.inl (fun k d hk hd =>
-      Nat.le_trans (hsmall k d hk hd) hFloor)
-  · exact Or.inr hrest
+  exact remove_many_at B hFloor parents_root (parents_cover_at B hp)
 
 /-- Discharging a single parent at the target global score suffices; the
 older local 6,766,859 floor is not mathematically necessary. -/
@@ -64,6 +85,8 @@ theorem exact_at_champion
     (by omega) hp hLeaves
     BB6Coverage.Agent48DirectRoot.champion_raw_witness
 
+#print axioms sound40_at
+#print axioms remove_many_at
 #print axioms parents_cover_at
 #print axioms sound_at
 #print axioms exact_at_target
