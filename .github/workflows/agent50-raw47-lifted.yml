@@ -623,6 +623,8 @@ jobs:
             | tee /tmp/agent40-raw34-source-frontier.log
           node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
             | tee /tmp/agent40-raw34-ranked-live-complement.json
+          node --max-old-space-size=6144 im-results/agent40-raw34-frontier/rank_live_nonD1RD.mjs \
+            --include-f-ray | tee /tmp/agent40-raw34-f-ray-live-complement.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -631,6 +633,7 @@ jobs:
             /tmp/agent50-raw34-exact-union.log
             /tmp/agent40-raw34-source-frontier.log
             /tmp/agent40-raw34-ranked-live-complement.json
+            /tmp/agent40-raw34-f-ray-live-complement.json
           if-no-files-found: error
           retention-days: 30
 
