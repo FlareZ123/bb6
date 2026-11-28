@@ -76,10 +76,10 @@ def preMany (xs : List Nat) (t : Nat) : Nat :=
 
 def segConcat (s : SegmentSummary) (r : RightSummary) : RightSummary :=
   let firstRun := if s.last = 0 then r.first else plus s.last r.first
+  let t := if firstRun = 0 then r.tail else pre firstRun r.tail
   if s.first = 0 then
-    ⟨firstRun, r.tail⟩
+    ⟨firstRun, t⟩
   else
-    let t := if firstRun = 0 then r.tail else pre firstRun r.tail
     ⟨s.first,
       (if maskAccept t s.imageN then 1 else 0) +
       (if maskAccept t s.imageP then 2 else 0)⟩
