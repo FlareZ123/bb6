@@ -8,6 +8,7 @@ sys.path.insert(0,str(ROOT.parent/'agent31-three-hole-tnf'))
 from generate_four_hole import masks,slot,move,refine,parse
 from regex_to_dfa import inv
 from emit_regular import emit
+from active_cert import generate as emit_active
 MOVES=[w+d+q for w,d,q in product('01','LR','ABCDEF')]
 def header(ns):
  return f'''set_option maxRecDepth 100000
@@ -47,7 +48,7 @@ def main():
   fixture=json.loads(lzma.decompress(base64.b64decode((ROOT/f'direct-{i:02d}-compact.json.xz.b64').read_text())))
   keys=sorted(t.replace('_','') for t in got['opens']);assert len(keys)==len(set(keys))==len(fixture['data'])
   assert hashlib.sha256('\n'.join(keys).encode()).hexdigest()==fixture['digest']
-  evidence={'bound':fixture['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'missing':[]}
+  evidence={'bound':fixture['bound'],'far':[],'sweep':[],'manual':[],'cycle':[],'regular':[],'active':[],'missing':[]}
   for j,(t,v) in enumerate(zip(keys,fixture['data'])):
    pretty='_'.join(t[k:k+6] for k in range(0,36,6))
    if v is None:evidence['missing'].append(pretty)
@@ -56,6 +57,7 @@ def main():
    elif v[0]=='m':evidence['manual'].append([pretty,v[1]])
    elif v[0]=='c':evidence['cycle'].append([pretty,v[1]])
    elif v[0]=='r':evidence['regular'].append([pretty,*v[1:]])
+   elif v[0]=='a':evidence['active'].append([pretty,*v[1:]])
    else:raise ValueError(v)
  else:
   evidence=json.loads(gzip.decompress(base64.b64decode((ROOT/f'd1-{i:02d}-evidence.json.gz.b64').read_text())))
@@ -63,7 +65,8 @@ def main():
  cycles={parse(t):a for t,a in evidence.get('cycle',[])}
  assert not evidence.get('missing'),evidence.get('missing')
  regular={parse(t):j for j,(t,L,R) in enumerate(evidence.get('regular',[]))}
- allsets=[set(far),set(sweeps),set(manual),set(cycles),set(regular)];assert sum(map(len,allsets))==len(set().union(*allsets))
+ active={parse(t):v for t,v in emit_active(evidence.get('active',[]),out,stem).items()}
+ allsets=[set(far),set(sweeps),set(manual),set(cycles),set(regular),set(active)];assert sum(map(len,allsets))==len(set().union(*allsets))
  manual_imports=''.join(f'import {ns.removeprefix("BB6.Agent29")}\n' for ns in sorted(set(manual.values())))
  assert len(far)==len(evidence['far']) and len(sweeps)==len(records) and not set(far)&set(sweeps) and not (set(far)|set(sweeps))&set(manual)
  if 'BB6.Agent29Raw36B1LBCycle' in manual.values():
@@ -78,7 +81,7 @@ def main():
  inp=out/f'{stem}SweepRecipes.jsonl';inp.write_text(''.join(json.dumps(r)+'\n' for r in records))
  subprocess.run([sys.executable,str(ROOT.parent/'agent7-raw49'/'emit_sweep_recipes.py'),str(inp),OPEN_NS,str(out/f'{stem}Sweeps.lean')],check=True)
  B=evidence['bound'];assert got['parent']==P and got['cut']==cut and got['stats']['score']<=B
- assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)|set(regular)
+ assert {parse(t) for t in got['opens']}==set(far)|set(sweeps)|set(manual)|set(cycles)|set(regular)|set(active)
  tag,n,s,kids=got['tree'];assert tag=='split' and len(kids)==24
  used={}
  def render(p,c,t):
@@ -90,6 +93,8 @@ def main():
   if tag=='open':
    assert p==parse(x[0]) and p not in used
    if p in far:used[p]='FAR';return farterm(p,far[p])
+   if p in active:
+    used[p]='active';mod,ns=active[p];return f'.proven {ns}.table {ns}.never'
    if p in regular:
     used[p]='regular';ns=f'{NS}Regular.M{regular[p]}';return f'.proven {ns}.table {ns}.never'
    if p in cycles:
@@ -99,7 +104,7 @@ def main():
   assert tag=='split';n,s,kids=x;assert len(kids)==24 and p[s]=='---' and s//2<c
   return f'.split {n} {slot(s)} (byMove [\n'+',\n'.join(render(refine(p,s,mv),max(c,i%6+1),k) if i%6<=c else '.last 0 (0,false)' for i,(mv,k) in enumerate(zip(MOVES,kids)))+'])'
  def module(i,t):
-  nm=f'kid{i:02d}';body=[];counter=0
+  nm=f'kid{i:02d}';body=[];counter=0;before=set(used)
   def emit(p,c,t,pexpr,name=None):
    nonlocal counter
    if name is None:counter+=1;name=f'{nm}_part{counter}'
@@ -115,7 +120,8 @@ def main():
    body.append(f'def {name} : Audit := .split {n} {slot(s)} (byMove {xs})\ntheorem {name}_checked : BB6.Agent29CanonicalFast.check {B} {pexpr} {c} {name} = true :=\n  split24 {B} {pexpr} {c} {n} {slot(s)} {xs} (by rfl)\n    '+'\n    '.join(proofs)+'\n');return name
   c=max(cut,i%6+1);mv=move(MOVES[i]);pexpr=f'(b1Child {mv})';emit(refine(parse(P),s,MOVES[i]),c,t,pexpr,nm)
   body.append(f'theorem {nm}_bound : ∀ m, compatible {pexpr} m → WeightedBound {B} m :=\n  BB6.Agent29CanonicalFast.bound {B} {pexpr} {c} {nm} (by decide) (supportOK_sound _ _ (by decide)) (b1Child_root {mv}) (b1Child_nohalt {mv}) {nm}_checked\n#print axioms {nm}_bound\n')
-  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+regular_imports+HEAD+'\n'.join(body)+END)
+  active_imports=''.join(f'import {mod}\n' for mod in sorted({active[p][0] for p in set(used)-before if p in active}))
+  (out/f'{stem}Kid{i:02d}.lean').write_text(f'import {stem}Base\nimport {stem}Sweeps\n'+manual_imports+regular_imports+active_imports+HEAD+'\n'.join(body)+END)
   print(nm,size(t),counter,flush=True)
  (out/f'{stem}Base.lean').write_text('import CanonicalPrefixFast\nimport Raw36Cut\n'+HEAD+base(a.index,cut,n,s,a.direct)+END)
  terms=[];proofs=[];imports=[]
