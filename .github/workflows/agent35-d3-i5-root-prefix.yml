@@ -120,3 +120,14 @@ jobs:
             echo 'Unexpected sorryAx in corrected D3 seven-checkpoint source theorem' >&2
             exit 1
           fi
+          lean -DmaxRecDepth=55000 -o "$G/PacketAZero.olean" "$G/PacketAZero.lean"
+          lean -DmaxRecDepth=180000 -o "$R/DAllQK25.olean" "$R/DAllQK25.lean" 2>&1 | tee /tmp/d-k25-all-q.log
+          if grep -q 'sorryAx' /tmp/d-k25-all-q.log; then
+            echo 'Unexpected sorryAx in universal k25 E/E/B/A source theorem' >&2
+            exit 1
+          fi
+          lean -DmaxRecDepth=180000 -o "$R/I5D3Eleven.olean" "$R/I5D3Eleven.lean" 2>&1 | tee /tmp/i5-d3-eleven.log
+          if grep -q 'sorryAx' /tmp/i5-d3-eleven.log; then
+            echo 'Unexpected sorryAx in 11-exception true-blank D3 source theorem' >&2
+            exit 1
+          fi
