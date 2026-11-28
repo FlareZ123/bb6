@@ -36,3 +36,36 @@ Every printed theorem depended only on
 No D1=1LA parent Cover or Raw36 global decrement is claimed here. The next
 high-value step is a balanced source gate over the reused bank, followed by
 composition into the saved canonical D1=1LA audit tree.
+
+
+## Structured quotient transfer: 153 candidate holdouts
+
+The 27 distinct regular-stack parameter families actually used by the
+neighboring D1=0RE structured-candidate artifact (run **46154479283**,
+artifact **15266524122**, `structured.json` SHA256
+`a56b0a2558ee5576ce2de4f40069a39349d06e10764ea4aec70a29ed2c9c5560`)
+were replayed sequentially on the **1496** D1=1LA literals left after the FAR
+reuse above.  They close another **1343 exact literals**: 1102 modular
+summaries, 229 run-length summaries and 12 periodic summaries.  Exactly
+**153** literals remain.  The 1343-row mapping SHA256 is
+`4f65305134b5151243d7b1ae61ae1582bc4b25f0298d65ded52680999e7c9b8d`;
+the sorted 153-line holdout file SHA256 is
+`6efc697700bd538cdd552bfa35913ba7e3cbb6df38aeda10c78225f5371af8d5`.
+
+Thus the two inherited proof families candidate-close **3688 / 3841
+(96.0167%)** of the saved canonical D1=1LA OPEN roster, leaving only 153 for
+new structural work.  This is a finite exact-key statement about the saved
+canonical frontier; it is not yet a whole-parent Cover.
+
+As an independent source check, the **24 lowest-replay-state** structured
+records were regenerated with the repository's incidence-quotient emitter and
+compiled locally under Lean 4.36.0-rc2 against the accepted
+`TwoSidedAutomata` dependency closure.  All 24 `never` theorems reported
+only `[propext, Classical.choice, Quot.sound]`.  Generated source SHA256:
+`c90afb6f31a684f9407e888ef6172a6e4ee58f68db3f64ce1bd4817e401615ca`.
+
+`reuse_structured.py` deterministically reproduces the 1343/153 split from
+the three pinned inputs.  `emit_structured.py` regenerates independent Lean
+certificates for any desired low-state prefix or the full structured bank.
+The earlier eight-worker local replay was memory-wasteful; the sequential
+replay completes comfortably and is the reproducible path.
