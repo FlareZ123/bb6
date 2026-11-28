@@ -172,6 +172,16 @@ If `T<15`, the condition that some `j>1` leaves **exactly seven** possible typed
 
 **Connection to finite powers.** If enough consecutive copies of a typed word have an exact affine first-coordinate transfer, the finite second-difference argument in [`FinitePowerObstruction.md`](../im-results/agent22-429-signed-drift/FinitePowerObstruction.md) forces a positive integer slope `s` with `(M-1)s=A T`. The direct coefficient identity `M-1-3A=∑(4^{j_i}-4)·prefixScale` yields `3s<T` whenever some `j_i>1`. The slope difference transported through each letter satisfies `4^{j_i}s_{i+1}=s_i+T`, so the new corollary **excludes a sufficiently large finite power of any primitive-gap typed word without relying on parity at all**. This composition is now kernel-checked in [`FinitePrimitiveNoGo.lean`](../im-results/agent22-429-signed-drift/FinitePrimitiveNoGo.lean): `no_primitive_finite_power` constructs the finite closed slope cycle, proves its strict cone, turns cyclic gap primitivity into pairwise-distinct sources, and applies the exact capacity contradiction. [`SignedPrimitivePowerNoGo.lean`](../im-results/agent22-429-signed-drift/SignedPrimitivePowerNoGo.lean) lifts the theorem to literal signed `SourceWalk` repetitions and exposes the usable necessary bound `M^n ≤ 2⌊(r₀+2T)/3⌋`; CI run `46161634933` accepted the complete chain. The remaining doubled typed-period case is now closed when the period has the exact form `W ++ flip(W)` with primitive positive exponent half `W`: [`DoubledGapCycle.lean`](../im-results/agent22-429-signed-drift/DoubledGapCycle.lean) proves that the midpoint slope equals the start, halves the even recurrence to shift `T/2`, and applies exact capacity; [`DoubledGapFinitePower.lean`](../im-results/agent22-429-signed-drift/DoubledGapFinitePower.lean) and [`SignedDoubledGapNoGo.lean`](../im-results/agent22-429-signed-drift/SignedDoubledGapNoGo.lean) lift this to finite powers and signed `SourceWalk` repetitions. CI run `46161634933` accepted the chain. There is still no full inverse-path termination claim here.
 
+### Exact factor-eight threshold
+
+The exact formula also gives a stronger clean coefficient once the last small four-adic exception has passed:
+
+\[
+K\ge64\quad\Longrightarrow\quad 8J\le K.
+\]
+
+For `64≤K≤191`, both arguments of `F` are below `64`, so the exact three-term expansion `F(n)=n+⌊n/4⌋+⌊n/16⌋` reduces the claim to Presburger arithmetic. For `K≥192`, combine `3F(n)≤4n` with `F(n)≥n+⌊n/4⌋+⌊n/16⌋`; the resulting floor inequality proves `8U(K)≤K` directly. This threshold is exact: at `K=63`, the explicit maximizing family has `U(63)=8`, hence `8U(63)=64>63`. The Lean theorems are `SharpPackingUniversal.sharp_eight`, `ValuationPacking.eight_from_sixty_four`, and `ValuationPacking.factor_eight_fails_at_63`.
+
 ### Reproducibility and kernel formalization
 
 Run `node im-results/agent22-429-signed-drift/sharp_packing_small.cjs` to reproduce the 136-case finite base. The Lean proof is decomposed into `SharpPackingUniversal.lean`, `SharpEdgeFamily.lean`, `SharpExactConstruction.lean`, `SharpExactValuation.lean`, and `SharpGlobalTheorem.lean`. These prove the exact per-`K` upper bound, explicit attainment for every positive `K`, the exact base-four digit identity, and the globally sharp `15/2` theorem.
