@@ -1170,20 +1170,24 @@ jobs:
           run-id: 46109014135
           name: raw11-q0-root53-complete-source
           path: /tmp/accepted-objects/original-root53
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 46110753510
-          name: standalone-lean-source-closure
-          path: /tmp/accepted-objects/ordinary-checker
-      - uses: actions/download-artifact@v4
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          repository: FlareZ123/bb6
-          run-id: 46111133174
-          name: standalone-lean-source-closure
-          path: /tmp/accepted-objects/203-halter
+      - name: Reconstitute two small already accepted original-source roots
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/accepted-objects/ordinary-checker /tmp/accepted-objects/203-halter
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/OrdinaryQ0Exhaustive.lean \
+            --workdir /tmp/accepted-objects/ordinary-checker --jobs 2 \
+            --manifest /tmp/accepted-objects/ordinary-checker/manifest.json \
+            --label 'source already accepted CI46110753510' \
+            2>&1 | tee /tmp/accepted-objects/ordinary-checker/compile.log
+          python tools/lean_compile_closure.py \
+            im-results/agent47-raw11-adapter/Raw11Q0Root53Halter203.lean \
+            --workdir /tmp/accepted-objects/203-halter --jobs 2 \
+            --manifest /tmp/accepted-objects/203-halter/manifest.json \
+            --label 'source already accepted CI46111133174' \
+            2>&1 | tee /tmp/accepted-objects/203-halter/compile.log
+          test -n "$(find /tmp/accepted-objects/ordinary-checker -name OrdinaryQ0Exhaustive.olean -print -quit)"
+          test -n "$(find /tmp/accepted-objects/203-halter -name Raw11Q0Root53Halter203.olean -print -quit)"
       - name: Reuse frozen original sources; generate only new sharp proofs
         run: |
           set -euo pipefail
