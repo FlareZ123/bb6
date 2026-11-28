@@ -93,10 +93,10 @@ def emit(i,t,v):
     lines.append(f'theorem never (m : Machine) (hm : compatible table m) : NeverHalts m := {A}.never table cert checked m hm\n#print axioms never\nend M{i}')
     return '\n'.join(lines),n,tuple(map(len,T))
 
-def generate(rows,out):
-    out=Path(out);out.mkdir(parents=True,exist_ok=True);ns='BB6.Agent7Raw36B1LEAutomata';xs=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0] not in ('f','s')];modules={}
+def generate(rows,out,stem='Raw36B116',ns='BB6.Agent7Raw36B1LEAutomata'):
+    out=Path(out);out.mkdir(parents=True,exist_ok=True);xs=[(i,t,v) for i,(t,v) in enumerate(rows) if v[0] not in ('f','s')];modules={}
     for j in range(0,len(xs),16):
-        name=f'Raw36B116Automata{j//16:02d}';lines=['import TwoSidedAutomata','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage']
+        name=f'{stem}Automata{j//16:02d}';lines=['import TwoSidedAutomata','set_option maxRecDepth 100000','set_option maxHeartbeats 0',f'namespace {ns}','open BB6Coverage']
         for i,t,v in xs[j:j+16]:
             source,n,shape=emit(i,t,v);lines.append(source);modules[t]=(name,f'{ns}.M{i}');print(i,v[0],n,shape,flush=True)
         lines.append(f'end {ns}');(out/(name+'.lean')).write_text('\n'.join(lines)+'\n')
