@@ -137,7 +137,8 @@ assert.equal(roots.length,1927);
 assert.equal(accounted,1390234375n);
 assert.equal(graph,879004125n);
 assert.equal(outside,511230250n);
-assert.equal(nodes.length,63);
+assert.equal(nodes.filter(n=>n.type==="split").length,63);
+assert.equal(nodes.length,105);
 const oldAndAgent23=4713281250n;
 const newAcceptedAndGraph=oldAndAgent23+graph;
 assert.equal(newAcceptedAndGraph,5592285375n);
@@ -157,6 +158,7 @@ console.log(JSON.stringify({
   excludedPriorGrowthPhysicalMass:String(totalGrowth),
   testedOpenSourceChildCylinders:roots.length,
   decisionDagNodes:nodes.length,
+  decisionSplitNodes:nodes.filter(n=>n.type==="split").length,
   byOldStatus:Object.fromEntries(
     Object.entries(perKind).map(([k,v])=>[k,{
       n:v.n,graphProved:String(v.graph),outside:String(v.outside)
