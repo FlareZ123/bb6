@@ -1,6 +1,6 @@
 # Raw44 B1=0RC, C1=0LE: residual frontier and AutoPump certificates
 
-**Status: intermediate computational result; no C1=0LE Cover is claimed yet.**
+**Status: the 45 residual nonhalting proofs are Lean-source-accepted; the complete C1=0LE/C1=0LF child Cover is awaiting assembly.**
 
 ## Discovery partition
 
@@ -39,11 +39,11 @@ The generic Agent48 AutoPump search (find(p, lim=2000)) found a candidate pumpin
 
 The generated certificate JSONL has SHA256 a264eb5744ebc6abc59d2013b3cc962e04cce3de99451fa11e6b8538dfdce611. The workflow regenerates it and the emitter converts it into Lean source.
 
-These are candidates, not proofs, until the original-source Lean checker accepts every check_never theorem. The 45 residuals were also each simulated for up to 100,000 steps with a 128-configuration translated-lasso window; all remained open without querying a missing transition. This is empirical evidence only.
+All 45 certificates have now passed the original-source Lean kernel and axiom audit in [GitHub Actions run 46166705089](https://github.com/FlareZ123/bb6/actions/runs/46166705089), target raw44-cut-0le-autopump. Thus each of the 45 partial machines is proved nonhalting by its check_never theorem. The 45 residuals were also each simulated for up to 100,000 steps with a 128-configuration translated-lasso window; all remained open without querying a missing transition. That simulation is corroboration only; the Lean proofs are the evidence.
 
 ## Proof boundary and next action
 
-The existing Agent46AutoPump kernel is imported from im-results/agent46-raw13-cut/Agent46AutoPump.lean. Run the kernel gate on raw44-cut-0le-autopump first. If all 45 check_never certificates pass, run raw44-cut-0le-assembled to combine them with the finite split/cycle/n-gram tree and establish the full five-hole Cover (WeightedBound 373) parent. Only after source acceptance should this be promoted to results/.
+The existing Agent46AutoPump kernel is imported from im-results/agent46-raw13-cut/Agent46AutoPump.lean. The 45 residual proofs are accepted. The next run, [46167386448](https://github.com/FlareZ123/bb6/actions/runs/46167386448), targets raw44-cut-0le-assembled and compiles the finite split/cycle/n-gram tree together with Raw44C1LEFESymmetry.lean. On success it will establish the five-hole C1=0LE Cover (WeightedBound 373) and transport it to C1=0LF. Only then should the complete child result be promoted to results/.
 
 The C1=0LF sibling is the E/F-renaming image; weighted_cover_transport in im-results/agent16-weighted-symmetry/WeightedSymmetry.lean is the intended transfer lemma, but its exact application remains to be compiled.
 
