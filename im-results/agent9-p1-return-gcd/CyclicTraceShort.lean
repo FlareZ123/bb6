@@ -2,7 +2,7 @@ import CyclicShort
 import ReturnTrace
 set_option maxHeartbeats 0
 namespace BB6.Agent9CyclicTraceShort
-open BB6.Agent9ReturnGCD BB6.Agent45.DelayedCarry BB6.Agent9CyclicOrder
+open BB6.Agent9ReturnGCD BB6.Agent45.DelayedCarry BB6.Agent9CyclicShort
 
 /-- Coprimality-free Mersenne-order exclusion under K≤B for the authentic delayed carry.
     This requires only n+3+K+B selected bits when the odd shift h
