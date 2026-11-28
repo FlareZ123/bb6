@@ -217,6 +217,73 @@ theorem segment_is_closed_nested (r : Nat) :
   have h : OuterTrace [] [] := OuterTrace.nil
   simpa using OuterTrace.skip r h
 
+/-- Rank-bounded version of `OuterTrace`.  At ambient rank k, only complete
+    nested frames of strictly smaller rank may be skipped.  This removes the
+    circularity from the unbounded syntactic trace relation. -/
+inductive OuterTraceBelow (k : Nat) : List Action → List Bool → Prop where
+  | nil : OuterTraceBelow k [] []
+  | hitB {xs hs} :
+      OuterTraceBelow k xs hs →
+      OuterTraceBelow k (.b :: xs) (true :: hs)
+  | hitC {xs hs} :
+      OuterTraceBelow k xs hs →
+      OuterTraceBelow k (.carry :: xs) (false :: hs)
+  | skip {r : Nat} (hr : r < k) {xs hs} :
+      OuterTraceBelow k xs hs →
+      OuterTraceBelow k (segment r ++ xs) hs
+
+/-- Lifting preserves the strict nesting discipline: an old nested rank r
+    becomes r+1, while the new frame inserted by a lifted carry has rank 0. -/
+theorem outerTraceBelow_lift {k : Nat} {xs hs : List _}
+    (h : OuterTraceBelow k xs hs) :
+    OuterTraceBelow (k+1) (lift xs)
+      (BB6.Agent1Raw56.LE17557FrameSchedule.refine hs) := by
+  induction h with
+  | nil => exact .nil
+  | hitB h ih =>
+      simpa [lift, liftLetter,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refine,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refineLetter] using
+        OuterTraceBelow.hitB (OuterTraceBelow.hitB (OuterTraceBelow.hitC ih))
+  | hitC h ih =>
+      have hc : OuterTraceBelow (k+1)
+          (.carry :: lift _)
+          (false :: BB6.Agent1Raw56.LE17557FrameSchedule.refine _) :=
+        OuterTraceBelow.hitC ih
+      have hs := OuterTraceBelow.skip (k := k+1) (r := 0) (Nat.zero_lt_succ k) hc
+      simpa [segment, lift, liftLetter,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refine,
+        BB6.Agent1Raw56.LE17557FrameSchedule.refineLetter,
+        List.append_assoc] using hs
+  | @skip r hr xs hs h ih =>
+      have hs' := OuterTraceBelow.skip (k := k+1) (r := r+1)
+        (Nat.succ_lt_succ hr) ih
+      simpa [lift_append, segment] using hs'
+
+/-- A rank-r body contains only strictly lower-rank nested frames.  Its outer
+    hit sequence is still exactly F_r. -/
+theorem body_outerTraceBelow (r : Nat) :
+    OuterTraceBelow r (body r)
+      (BB6.Agent1Raw56.LE17557FrameSchedule.frame r) := by
+  induction r with
+  | zero =>
+      exact OuterTraceBelow.hitB OuterTraceBelow.nil
+  | succ r ih =>
+      have hl := outerTraceBelow_lift ih
+      have hbc := OuterTraceBelow.hitB (OuterTraceBelow.hitC hl)
+      simpa [body,
+        BB6.Agent1Raw56.LE17557FrameSchedule.frame,
+        BB6.Agent1Raw56.LE17557FrameSchedule.frame_succ_refine] using hbc
+
+/-- Forgetting the rank bound recovers the earlier outer trace. -/
+theorem outerTraceBelow_forget {k : Nat} {xs hs : List _}
+    (h : OuterTraceBelow k xs hs) : OuterTrace xs hs := by
+  induction h with
+  | nil => exact .nil
+  | hitB h ih => exact OuterTrace.hitB ih
+  | hitC h ih => exact OuterTrace.hitC ih
+  | skip hr h ih => exact OuterTrace.skip _ ih
+
 #print axioms erase_lift
 #print axioms erase_actionEpoch
 #print axioms actionEpoch_length
@@ -226,6 +293,9 @@ theorem segment_is_closed_nested (r : Nat) :
 #print axioms outerTrace_lift
 #print axioms body_outerTrace
 #print axioms segment_is_closed_nested
+#print axioms outerTraceBelow_lift
+#print axioms body_outerTraceBelow
+#print axioms outerTraceBelow_forget
 #print axioms erase_segment
 
 end BB6.Agent1Raw56.LE17557ActionGrammar
