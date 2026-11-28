@@ -1,6 +1,6 @@
 # Raw39: exact attained score 28311; two remaining upper-bound audits
 
-**Status:** all discovery holdouts closed; nine accepted child bounds and two pending complete child audits. The parent lower bound is proved, and its upper-bound composition is locally kernel-checked against original dependency artifacts. This is not yet a complete Raw39 Cover or BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
+**Status (28 November):** all discovery holdouts closed; **ten accepted child bounds**, including the complete 0LE source audit ([run 46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153)), and **one outstanding complete 1LE audit**. The parent lower bound is proved, and its upper-bound composition is locally kernel-checked against original dependency artifacts. This is not yet a complete Raw39 Cover or BB(6) upper bound. The first-hole query is A1 at live time 6 for `1RB---_1RC---_0RD---_1LD0RA_------_------`.
 
 `Raw39AcceptedNine.lean` proves `BB6.Agent11Raw39AcceptedNine.parent_cover_two`: at every B ≥ 2354, bounds on exactly 0LE and 1LE imply `Cover (WeightedBound B) p39`. It composes the accepted 1RE theorem (weighted bound 1459) with the previous eight-child join, including the original fresh-state symmetry and literal cycle cases. No global roster change has yet been earned.
 
@@ -24,7 +24,7 @@ The previous StableCut/StableIntegrated/SymmetryCut interfaces and Six/Seven/Eig
 
 ## Exact attained parent score
 
-[Raw39ExactJoin](Raw39ExactJoin.md) gives the kernel-checked explicit weighted witness of 28311, impossibility of bound 28310, and exact parent threshold conditional on the two remaining child upper bounds 15125 (0LE) and 28311 (1LE). The corresponding leaf lower bounds are proved. The complete 0LE and corrected 1LE source audits are [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153) and [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482). The latter preserves eligible modules from three accepted low-bound shards via source-identity-checked reuse and monotonicity.
+[Raw39ExactJoin](Raw39ExactJoin.md) gives the kernel-checked explicit weighted witness of 28311, impossibility of bound 28310, and exact parent threshold conditional on the two remaining child upper bounds 15125 (0LE) and 28311 (1LE). The corresponding leaf lower bounds are proved. The complete 0LE source audit [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153) **succeeded**, including the full child theorem at weighted bound 15125. The corrected 1LE source audit [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482) has accepted shard results but cannot yet deliver a complete child theorem: g1's GitHub runner shut down after approximately 29 minutes, and g5 reached the 45-minute job timeout; neither is a Lean mathematical counterexample. Sixteen-way 1LE leaf sharding retains the same generated proof modules and reduces per-job computation; three prior accepted low-bound shards remain source-identity-reused.
 
 ## LE discovery frontiers
 
@@ -35,7 +35,7 @@ The exact compressed partitions [0LE](0LE-frontier.json.xz.b64) and [1LE](1LE-fr
 | 0LE | 11603 | 9864 | 1302 | 223 | 143 | 38 | 10 | 14 | 9 | 0 |
 | 1LE | 26246 | 23084 | 1790 | 877 | 373 | 34 | 24 | 15 | 49 | 0 |
 
-Candidate weighted upper bounds 15125/28311, not yet source-accepted as complete children. The previous 28310 candidate is false because the late 1LE witness admits one incoming blank delay. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; standard axioms only:
+Weighted upper bound 15125 is source-accepted for the complete 0LE child; 28311 remains a candidate complete upper bound for 1LE pending its source audit. The previous 28310 candidate is false because the late 1LE witness admits one incoming blank delay. All 1688 run/block discoveries independently regenerated in Python. Custom Lean proofs checked locally against exact artifact-linked dependencies; standard axioms only:
 
 - [0LE 5883](Raw39LE5883.md): unbounded base-four carry grammar.
 - [0LE 1791 and 1800](Raw39LE1791.md): alternating residue-three run-count grammar.

@@ -20,8 +20,8 @@ The first hole C1 is reached at 15124; the halt refinement has possible incoming
 
 Local Lean 4.36.0-rc2 checks succeeded for all listed theorems with standard axioms [propext, Classical.choice, Quot.sound]. The exact nine accepted artifact closures plus 1LE g2 were merged, checking source/object hashes, duplicate identity and compiler version: 1594 distinct source/object pairs. Raw39AcceptedSix through Nine re-linked (no regeneration of child proofs); final join compiled in 1.85 seconds, peak RSS ~2.37 GB.
 
-Pending existing-workflow runs:
-- 0LE: [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153).
-- 1LE: [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482), with reuse of the three accepted prior shards at the smaller bound where exact source identity permits.
+Source-audit status on 28 November:
+- **0LE complete:** [46093979153](https://github.com/FlareZ123/bb6/actions/runs/46093979153) passed all eight shards and final Lean child closure at bound 15125.
+- **1LE incomplete:** [46094272482](https://github.com/FlareZ123/bb6/actions/runs/46094272482) has accepted partial shards, but shard g1's runner shut down and g5 exceeded the 45-minute limit. The existing source generator now supports 16-way 1LE sharding; three earlier lower-bound artifacts remain eligible for source-identity-checked reuse. A completed 1LE source audit is still required.
 
 Do not decrement the global roster before both complete child bounds are actually accepted and the unconditional join consumed. No exact BB(6) assertion.

@@ -359,9 +359,9 @@ jobs:
     if: ${{ always() && !cancelled() && (needs.prepare_1le_reuse.result == 'success' || needs.prepare_1le_reuse.result == 'skipped') && (inputs.branch == '0LA' || inputs.branch == '1LB' || inputs.branch == '1LA' || inputs.branch == '1RE' || inputs.branch == '1LE' || inputs.branch == '0LE') }}
     strategy:
       fail-fast: false
-      max-parallel: 3
+      max-parallel: 6
       matrix:
-        group: [g0, g1, g2, g3, g4, g5, g6, g7]
+        group: ${{ fromJSON(inputs.branch == '1LE' && '["g0","g1","g2","g3","g4","g5","g6","g7","g8","g9","g10","g11","g12","g13","g14","g15"]' || '["g0","g1","g2","g3","g4","g5","g6","g7"]') }}
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
