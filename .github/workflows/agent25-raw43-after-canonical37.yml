@@ -61,6 +61,15 @@ jobs:
           python im-results/agent25-raw43/check_canonical37_after_raw47.py             --work /tmp/a25-raw43-after-canonical37             --raw47-run-id "$RAW47_RUN_ID"             --raw112-run-id "$RAW112_RUN_ID"             --onele-run "$ONELE_RUN"             | tee /tmp/a25-raw43-after-canonical37.log
           test -s /tmp/a25-raw43-after-canonical37/evidence/raw43-after-canonical37-conditional.json
           cat /tmp/a25-raw43-after-canonical37/evidence/raw43-after-canonical37-conditional.json
+      - name: Reuse Canonical37 to source-check Raw42 conditional successor
+        run: |
+          set -euo pipefail
+          python -m py_compile im-results/agent10-raw42-after-raw47/check.py
+          python im-results/agent10-raw42-after-raw47/check.py \
+            --work /tmp/a25-raw43-after-canonical37 \
+            | tee /tmp/a10-raw42-after-canonical37.log
+          test -s /tmp/a25-raw43-after-canonical37/evidence/raw42-after-canonical37-conditional.json
+          cat /tmp/a25-raw43-after-canonical37/evidence/raw42-after-canonical37-conditional.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -68,6 +77,7 @@ jobs:
           path: |
             /tmp/a25-raw43-after-canonical37/evidence/
             /tmp/a25-raw43-after-canonical37.log
+            /tmp/a10-raw42-after-canonical37.log
           if-no-files-found: warn
           compression-level: 1
           retention-days: 30
