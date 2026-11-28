@@ -51,39 +51,58 @@ theorem right_one :
   intro L R
   rfl
 
+theorem shift_true (k : Nat) :
+    [true]++bits k = bits k++[true] := by
+  change bits (k+1) = bits k++[true]
+  exact rep_snoc [true] k
+
+theorem bits_three (k : Nat) :
+    [true]++bits k++[true,true] = bits (k+3) := by
+  have h1 : bits (k+1) = bits k++[true] :=
+    rep_snoc [true] k
+  have h2 : bits (k+2) = bits (k+1)++[true] := by
+    simpa [Nat.add_assoc] using (rep_snoc [true] (k+1))
+  have h3 : bits (k+3) = bits (k+2)++[true] := by
+    simpa [Nat.add_assoc] using (rep_snoc [true] (k+2))
+  rw [h3,h2,h1]
+  rw [shift_true]
+  simp [List.append_assoc]
+
 theorem growK (k : Nat) :
     run0 p (2*k+10) (familyK k) = some (familyK (k+3)) := by
   have hA : run0 p 1 (familyK k) =
       some ⟨1,[true,true]++bits k,[]⟩ := by
     rfl
-  have hB : run0 p (k+2) ⟨1,[true,true]++bits k,[]⟩ =
-      some ⟨1,[],[true]++bits (k+1)⟩ := by
-    have h := sweepL p 1 [] [] [true] [true] 1 left_one (k+2) [] []
-    change run0 p (k+2) ⟨1,rep [true] (k+2),[]⟩ =
-      some ⟨1,[],rep [true] (k+2)⟩
-    exact h
-  have hB0 : run0 p 1 ⟨1,[],[true]++bits (k+1)⟩ =
-      some ⟨2,[true,true],bits (k+1)⟩ := by
+  have hB2 : run0 p 2 ⟨1,[true,true]++bits k,[]⟩ =
+      some ⟨1,bits k,[true,true]⟩ := by
     rfl
-  have hC : run0 p (k+1) ⟨2,[true,true],bits (k+1)⟩ =
-      some ⟨2,[true]++bits (k+1)++[true],[]⟩ := by
+  have hBk : run0 p k ⟨1,bits k,[true,true]⟩ =
+      some ⟨1,[],[true,true]++bits k⟩ := by
+    have h := sweepL p 1 [] [true,true] [true] [true] 1
+      left_one k [] []
+    simpa [bits] using h
+  have hB0 : run0 p 1 ⟨1,[],[true,true]++bits k⟩ =
+      some ⟨2,[true,true],[true]++bits k⟩ := by
+    rfl
+  have hC1 : run0 p 1 ⟨2,[true,true],[true]++bits k⟩ =
+      some ⟨2,[true,true,true],bits k⟩ := by
+    rfl
+  have hCk : run0 p k ⟨2,[true,true,true],bits k⟩ =
+      some ⟨2,[true]++bits k++[true,true],[]⟩ := by
     have h := sweepR p 2 [true] [] [true] [true] 1
-      right_one (k+1) [true] []
+      right_one k [true,true] []
     simpa [bits] using h
   have hEnd : run0 p 5
-      ⟨2,[true]++bits (k+1)++[true],[]⟩ =
+      ⟨2,[true]++bits k++[true,true],[]⟩ =
       some (familyK (k+3)) := by
     have hraw : run0 p 5
-        ⟨2,[true]++bits (k+1)++[true],[]⟩ =
-        some ⟨0,[false,true]++bits (k+1)++[true],[true]⟩ := by
+        ⟨2,[true]++bits k++[true,true],[]⟩ =
+        some ⟨0,[false]++([true]++bits k++[true,true]),[true]⟩ := by
       rfl
-    have hbits : bits (k+3) =
-        [true]++bits (k+1)++[true] := by
-      have hs := rep_snoc [true] (k+2)
-      simpa [bits,rep,Nat.add_assoc] using hs
-    simpa [familyK,hbits] using hraw
-  have h := join0 hA (join0 hB (join0 hB0 (join0 hC hEnd)))
-  have hc : 1+((k+2)+(1+((k+1)+5))) = 2*k+10 := by omega
+    simpa [familyK,bits_three] using hraw
+  have h := join0 hA (join0 hB2 (join0 hBk
+    (join0 hB0 (join0 hC1 (join0 hCk hEnd)))))
+  have hc : 1+(2+(k+(1+(1+(k+5))))) = 2*k+10 := by omega
   simpa only [hc] using h
 
 theorem growth (n : Nat) :
@@ -102,6 +121,8 @@ theorem never (m : Machine) (hm : compatible p m) : NeverHalts m := by
 #print axioms first
 #print axioms left_one
 #print axioms right_one
+#print axioms shift_true
+#print axioms bits_three
 #print axioms growK
 #print axioms growth
 #print axioms never
