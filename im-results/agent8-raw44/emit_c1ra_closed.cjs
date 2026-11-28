@@ -44,22 +44,19 @@ theorem hard1_renamed : renamePartial ef hard1 = hard0 := by
   funext s
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
-    simp [renamePartial, ef, swapStates, renameMove, hard0, hard1]
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
 
 theorem hard3_renamed : renamePartial ef hard3 = hard2 := by
   funext s
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
-    simp [renamePartial, ef, swapStates, renameMove, hard2, hard3]
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
 
 theorem hard5_renamed : renamePartial ef hard5 = hard4 := by
   funext s
   rcases s with ⟨q,b⟩
   have hq : q = 0 ∨ q = 1 ∨ q = 2 ∨ q = 3 ∨ q = 4 ∨ q = 5 := by omega
-  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;>
-    simp [renamePartial, ef, swapStates, renameMove, hard4, hard5]
+  rcases hq with rfl|rfl|rfl|rfl|rfl|rfl <;> cases b <;> decide +kernel
 
 private theorem rename_never_back (e : StatePerm) (hroot : e.forward (0 : Fin 6) = 0)
     (m : Machine) (h : NeverHalts (renameTable e m)) : NeverHalts m := by
@@ -89,19 +86,19 @@ theorem hard1_never (m : Machine) (hm : compatible hard1 m) : NeverHalts m := by
   have hc := rename_compatible ef hm
   rw [hard1_renamed] at hc
   have hn := hard0_never (renameTable ef m) hc
-  exact rename_never_back ef (by simp [ef, swapStates]) m hn
+  exact rename_never_back ef (by decide +kernel) m hn
 
 theorem hard3_never (m : Machine) (hm : compatible hard3 m) : NeverHalts m := by
   have hc := rename_compatible ef hm
   rw [hard3_renamed] at hc
   have hn := hard2_never (renameTable ef m) hc
-  exact rename_never_back ef (by simp [ef, swapStates]) m hn
+  exact rename_never_back ef (by decide +kernel) m hn
 
 theorem hard5_never (m : Machine) (hm : compatible hard5 m) : NeverHalts m := by
   have hc := rename_compatible ef hm
   rw [hard5_renamed] at hc
   have hn := hard4_never (renameTable ef m) hc
-  exact rename_never_back ef (by simp [ef, swapStates]) m hn
+  exact rename_never_back ef (by decide +kernel) m hn
 
 theorem weighted_bound (m : Machine) (hm : compatible parent m) : WeightedBound 211 m :=
   BB6.Agent16Raw44Cut.weighted_bound
