@@ -1,0 +1,61 @@
+name: Agent4 minimized Raw56 1LB hard nonhalting source proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      machine:
+        description: "Original raw-six-state one-hole residual"
+        required: true
+        type: choice
+        options:
+          - m23706
+          - m39232
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 50
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean RC2
+        run: |
+          set -euo pipefail
+          curl https://raw.githubusercontent.com/leanprover/elan/master/elan-init.sh -sSf | sh -s -- -y --default-toolchain none
+          "$HOME/.elan/bin/elan" toolchain install leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/raw56-base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - name: Generate and kernel-check one authentic-machine finite invariant
+        run: |
+          set -euo pipefail
+          ID='${{ inputs.machine }}'
+          ID="${ID#m}"
+          mkdir -p /tmp/min
+          cp im-results/agent4-two-sided-automata/TwoSidedAutomata.lean /tmp/min/
+          python im-results/agent4-raw56-root-pilot/m_min_single.py \
+            --machine "$ID" --out "/tmp/min/M${ID}Min.lean"
+          cd /tmp/min
+          export LEAN_PATH="/tmp/raw56-base/a1-raw56-root-consumer:$PWD"
+          lean --version | grep -F '4.36.0-rc2'
+          lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
+          lean -j1 -o "M${ID}Min.olean" "M${ID}Min.lean" | tee "M${ID}Min.log"
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" "M${ID}Min.log" \
+            --require "M${ID}.never"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw56-lb-${{ inputs.machine }}-minimized-single-source-accepted
+          path: |
+            /tmp/min/M*Min.lean
+            /tmp/min/M*Min.olean
+            /tmp/min/M*Min.log
+          if-no-files-found: error
