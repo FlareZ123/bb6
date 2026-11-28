@@ -83,7 +83,7 @@ def allMoves : List (Option Move) :=
         (List.finRange 6).map (fun q => some (⟨w,r,q⟩ : Move))))
 
 def countAt (q : Fin 6) (c : Bool) : Nat :=
-  (allMoves.filter (fun a => decide (Permitted P q c a))).length
+  (allMoves.filter (fun a => permittedBoolean P q c a)).length
 
 theorem enumeration_count : allMoves.length = 25 := by decide
 theorem enumeration_nodup : allMoves.Nodup := by decide
