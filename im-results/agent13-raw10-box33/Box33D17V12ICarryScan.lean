@@ -63,6 +63,34 @@ theorem carry_pairs (k : Nat) (l r : Stream) :
         Option.bind_some,carry_pair]
     rfl
 
+/-- Common turnaround configuration after an S=1000 terminal. -/
+abbrev carryResetC (l r : Stream) : Config :=
+  cfg .C (word (bits "111111111011") l) (word (bits "1101") r)
+
+/-- Common left-return scanning configuration, with eight leading right zeros. -/
+abbrev carryResetB (l r : Stream) : Config :=
+  cfg .B (word (bits "111111111011") l) (word (bits "00000000") r)
+
+/-- The S=1000 terminal consumes exactly 18 steps with arbitrary tails. -/
+theorem carry_terminalS (l r : Stream) :
+    run 18 (carryC l (word (bits "1000") r)) =
+      some (carryResetC l r) := by rfl
+
+/-- The first 14-step retreat after an S terminal. -/
+theorem carry_turnR (l r : Stream) :
+    run 14 (carryResetC (word (bits "11111011") l) r) =
+      some (carryResetB l (word (bits "0101") r)) := by rfl
+
+/-- Every subsequent 14-step retreat consumes one left carry marker
+    and emits exactly one right output digit pair S Z = 10000000. -/
+theorem carry_back_step (l r : Stream) :
+    run 14 (carryResetB (word (bits "11111011") l) r) =
+      some (carryResetB l (word (bits "10000000") r)) := by rfl
+
+#print axioms carry_terminalS
+#print axioms carry_turnR
+#print axioms carry_back_step
+
 #print axioms carry_pair
 #print axioms carry_pairs
 end MacroI
