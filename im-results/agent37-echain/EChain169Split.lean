@@ -6,6 +6,28 @@ set_option maxRecDepth 16384
 
 namespace BB6.Agent37EChain169Split
 
+private theorem regularSection_sourceSection
+    (a q b : Nat) (ha : 2 ≤ a) :
+    BB6.Agent2BoundaryBZero.regularSection a q b =
+      DRegularSource.sourceSection ⟨a,q,b⟩ := by
+  simp only [BB6.Agent2BoundaryBZero.regularSection,
+    DRegularSource.sourceSection, CryptidBoundary.init]
+  have hrepAdd (m n : Nat) :
+      List.replicate (m+n) true =
+        List.replicate m true ++ List.replicate n true := by
+    induction m with
+    | zero => simp
+    | succ m ih =>
+      rw [show Nat.succ m+n=(m+n)+1 by omega]
+      rw [List.replicate_succ,ih]
+      rw [← List.cons_append,← List.replicate_succ]
+  have hrep : List.replicate a true =
+      [true,true] ++ List.replicate (a-2) true := by
+    rw [show a=2+(a-2) by omega,hrepAdd]
+    simp
+  rw [hrep]
+  simp [List.append_assoc]
+
 open CryptidBoundary BB6.Agent31PacketSource
 open BB6.Agent37EChain BB6.Agent37EChainBExit
 open BB6.Agent2PacketP2Reset BB6.Agent35K4Shapes
@@ -238,7 +260,7 @@ theorem reset2187_1627_source_reentry (v Q : Nat) :
   have hreg :
       BB6.Agent2BoundaryBZero.regularSection aOut 3 2 =
         DRegularSource.sourceSection ⟨aOut,3,2⟩ := by
-    apply BB6.Agent37EChainDoubleBReentry.regularSection_sourceSection
+    apply regularSection_sourceSection
     dsimp [aOut,k6]
     omega
   change ObsEq
@@ -259,8 +281,10 @@ theorem reset2187_1627_source_reentry (v Q : Nat) :
     rw [hk,hp,hin,hb1,hb0]
   rw [hraw,hreg]
   exact BB6.Padding.cfgEq_refl _
-  dsimp [aOut,k6,DRegular.Canon]
-  omega
+  constructor
+  · dsimp [aOut,k6]
+    omega
+  · exact Or.inl (by decide)
 
 #print axioms prefix729_412
 #print axioms reset729_412_source_reentry
