@@ -61,7 +61,7 @@ jobs:
           cp /tmp/raw112-accepted/parent/Raw112Kid01_01.lean im-results/agent47-raw112-cut/Raw112Kid01_01.lean
           mkdir -p /tmp/raw112-weight-iff
           python tools/lean_compile_closure.py \
-            im-results/agent11-raw112-sharp/Raw112Reweight.lean \
+            im-results/agent11-raw112-sharp/Raw112SharpBound.lean \
             --source-root /tmp/raw112-accepted/parent \
             --workdir /tmp/raw112-weight-iff/compiled \
             --precompiled-dir /tmp/raw112-accepted/parent \
