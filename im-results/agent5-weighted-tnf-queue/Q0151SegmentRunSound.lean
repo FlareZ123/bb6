@@ -37,14 +37,20 @@ theorem appendOnes (s : SegmentSummary) (m n : Nat)
       {s with last := cat (m+n)} := by
   induction n generalizing s m with
   | zero =>
-      simp [segAppend,h]
+      cases s with
+      | mk f i j last =>
+          change last = cat m at h
+          subst last
+          rfl
   | succ n ih =>
       simp only [List.replicate_succ]
       change segAppend (segBit s true) (List.replicate n true) =
         {s with last := cat (m+(n+1))}
       have hs : (segBit s true).last = cat (m+1) := by
         change plus s.last 1 = cat (m+1)
-        rw [h,show (1:Nat) = cat 1 by decide, plus_cat]
+        rw [h]
+        have hcat : cat 1 = 1 := by decide
+        simpa [hcat] using plus_cat m 1
       have hh := ih (segBit s true) (m+1) hs
       simpa [segBit,Nat.add_assoc,Nat.add_comm,Nat.add_left_comm] using hh
 
@@ -74,10 +80,13 @@ theorem bitRuns_sound (s : SegmentSummary) (xs : List Nat)
   induction xs generalizing s with
   | nil => rfl
   | cons n ns ih =>
-      change segAppend s ((List.replicate (n+1) true ++ [false]) ++
-        bitRuns ns) = closedFold (closeRun s n) ns
-      rw [segAppend_append,appendClosed s n hs]
-      exact ih (closeRun s n) (closeRun_last s n)
+      calc
+        segAppend s (bitRuns (n::ns)) =
+            segAppend s ((List.replicate (n+1) true ++ [false]) ++
+              bitRuns ns) := by simp [bitRuns,List.append_assoc]
+        _ = closedFold (closeRun s n) ns := by
+            rw [segAppend_append,appendClosed s n hs]
+            exact ih (closeRun s n) (closeRun_last s n)
 
 theorem closedFold_images (first : Nat) (a b : Int) (rest : List Nat) :
     closedFold ⟨runCat first,a,b,0⟩ rest =
@@ -121,11 +130,11 @@ theorem segmentBits_sound (closed : List Nat) (last : Nat) :
   | nil =>
       have h : (emptySegment : SegmentSummary).last = cat 0 := by decide
       rw [appendOnes _ 0 (last+1) h]
-      simp [segmentOfRuns,cat,runCat]
+      simp [segmentOfRuns,cat,runCat,emptySegment]
   | cons first rest =>
       have h : (⟨runCat first,forward (runWord rest) 0,
           forward (runWord rest) 1,0⟩ : SegmentSummary).last = cat 0 := by
-        decide
+        rfl
       rw [appendOnes _ 0 (last+1) h]
       simp [segmentOfRuns,cat,runCat]
 
