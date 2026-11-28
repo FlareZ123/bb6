@@ -79,7 +79,25 @@ def main():
     env = dict(os.environ, LEAN_PATH=str(work))
     roots = []
     output = []
-    for name in ("Raw36Branch", "Raw36D1Complement", "Raw36ParentComplement", "Raw36ParentLive12", "Raw36ParentLive10", "Raw36ParentLive9"):
+    compile_roots = ["Raw36Branch", "Raw36D1Complement", "Raw36ParentComplement",
+                     "Raw36ParentLive12", "Raw36ParentLive10", "Raw36ParentLive9"]
+    if "Raw36D101" in members:
+        compile_roots += ["Raw36ParentLive8", "Raw36ParentLive8D101"]
+    if "Raw36D101" in members and "Raw36D102" in members:
+        compile_roots += ["Raw36ParentLive7", "Raw36ParentLive7D101D102"]
+    expected_by_root = {
+        "Raw36Branch": {"children_bound", "branch_bound", "branch_cover"},
+        "Raw36D1Complement": {"b1Complement_count", "b1Complement_nodup", "d1_bound_from_four", "d1_cover_from_four"},
+        "Raw36ParentComplement": {"remaining_explicit", "parentComplement_count", "parent_cover_from_thirteen"},
+        "Raw36ParentLive12": {"b101_identity", "b1Live_count", "parentLive12_count", "b101_cover_at", "d1_cover_from_three", "parent_cover_from_twelve"},
+        "Raw36ParentLive10": {"b104_identity", "b122_identity", "b104_cover_at", "b122_cover_at", "d1_cover_from_one", "parent_cover_from_ten", "b1Live1_count", "parentLive10_count"},
+        "Raw36ParentLive9": {"b116_identity", "b116_cover_at", "d1_cover_closed", "parent_cover_from_nine", "parentLive9_count"},
+        "Raw36ParentLive8": {"parent_cover_from_eight", "d1Live8_count", "parentLive8_count"},
+        "Raw36ParentLive8D101": {"d101_identity", "d101_cover_at", "parent_cover_from_live8"},
+        "Raw36ParentLive7": {"parent_cover_from_seven", "d1Live7_count", "parentLive7_count"},
+        "Raw36ParentLive7D101D102": {"d102_identity", "d102_cover_at", "parent_cover_from_live7"},
+    }
+    for name in compile_roots:
         src = ROOT / (name + ".lean")
         dst = work / src.name
         dst.write_bytes(src.read_bytes())
@@ -89,12 +107,7 @@ def main():
         assert not p.stderr, p.stderr
         output.append(p.stdout)
         axioms = re.findall(r"'([^']+)' depends on axioms: \[([^\]]*)\]", p.stdout)
-        expected = {"Raw36Branch": {"children_bound", "branch_bound", "branch_cover"},
-                    "Raw36D1Complement": {"b1Complement_count", "b1Complement_nodup", "d1_bound_from_four", "d1_cover_from_four"},
-                    "Raw36ParentComplement": {"remaining_explicit", "parentComplement_count", "parent_cover_from_thirteen"},
-                    "Raw36ParentLive12": {"b101_identity", "b1Live_count", "parentLive12_count", "b101_cover_at", "d1_cover_from_three", "parent_cover_from_twelve"},
-                    "Raw36ParentLive10": {"b104_identity", "b122_identity", "b104_cover_at", "b122_cover_at", "d1_cover_from_one", "parent_cover_from_ten", "b1Live1_count", "parentLive10_count"},
-                    "Raw36ParentLive9": {"b116_identity", "b116_cover_at", "d1_cover_closed", "parent_cover_from_nine", "parentLive9_count"}}[name]
+        expected = expected_by_root[name]
         assert {k.rsplit(".", 1)[-1] for k, _ in axioms} == expected, p.stdout
         assert all(set(x.strip() for x in a.split(",") if x.strip()) <= AXIOMS for _, a in axioms)
         entry = {"module": name, "source_path": "im-results/agent29-raw36/" + src.name,
@@ -104,15 +117,23 @@ def main():
         entry["import_closure_sha256"], entry["module_identity_sha256"] = identity(entry, members)
         members[name] = entry
         roots.append({k:entry[k] for k in ("module", "source_path", "source_sha256")})
+    claim_theorem = "BB6.Agent29Raw36.parent_cover_from_nine"
+    remaining_d1 = ["0LA", "1LA", "0LB", "0LC", "1LC", "0LE", "0RE", "1LE", "1RE"]
+    if "Raw36D101" in members:
+        claim_theorem = "BB6.Agent29Raw36.parent_cover_from_live8"
+        remaining_d1 = ["0LA", "1LA", "0LC", "1LC", "0LE", "0RE", "1LE", "1RE"]
+    if "Raw36D101" in members and "Raw36D102" in members:
+        claim_theorem = "BB6.Agent29Raw36.parent_cover_from_live7"
+        remaining_d1 = ["0LA", "1LA", "1LC", "0LE", "0RE", "1LE", "1RE"]
     revision = subprocess.check_output(["git", "-C", str(ROOT), "rev-parse", "HEAD"], text=True).strip()
     result = {"schema_version": 1, "label": "raw36-d1-complement",
               "artifact_name": "raw36-d1-complement", "proof_source_revision": revision,
               "source_revisions": sorted({revision, *(p["revision"] for p in PINS)}),
               "workflow": {"run_id": os.environ.get("GITHUB_RUN_ID"), "workflow_head_sha": os.environ.get("GITHUB_SHA")},
               "lean_version": version, "lean_binary": {"path": str(compiler), "sha256": compiler_sha},
-              "claim": {"theorem": "BB6.Agent29Raw36.parent_cover_from_nine", "weighted_bound": 1152,
+              "claim": {"theorem": claim_theorem, "weighted_bound": 1152,
                         "parent_table": "1RB---_1RC---_0RD---_0LD---_------_------",
-                        "conditional": True, "remaining_D1": ["0LA", "1LA", "0LB", "0LC", "1LC", "0LE", "0RE", "1LE", "1RE"], "remaining_B1": []},
+                        "conditional": True, "remaining_D1": remaining_d1, "remaining_B1": []},
               "roots": roots, "module_count": len(members),
               "modules": [members[k] for k in sorted(members)],
               "provenance_inputs": [{"path": "im-results/agent29-raw36/accepted_pins.json",
