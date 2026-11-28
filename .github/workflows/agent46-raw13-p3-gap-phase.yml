@@ -1,0 +1,69 @@
+name: Agent 46 Raw13 p3 phase gaps
+run-name: Agent 46 Raw13 p3 phase gaps
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: Exact source commit
+        type: string
+        required: true
+permissions:
+  contents: write
+jobs:
+  search:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+      - name: Search phase-aware BiDFA invariants
+        run: |
+          set -euo pipefail
+          python im-results/agent46-raw13-cut/discoverCoupled6GapPhase.py /tmp/a46-gap-phase 8000
+      - name: Kernel-check every phase hit
+        run: |
+          set -euo pipefail
+          D=im-results/agent46-raw13-cut
+          cp /tmp/a46-gap-phase/Raw13Coupled6GapPhase.lean "$D/"
+          python tools/lean_compile_closure.py --workdir /tmp/a46-gap-phase-lean --jobs 4 \
+            "$D/Raw13Coupled6GapPhase.lean" | tee /tmp/a46-gap-phase.log
+          if grep -Eq 'sorryAx|native_decide' /tmp/a46-gap-phase.log; then exit 1; fi
+      - name: Publish certified phase BiDFA hits
+        run: |
+          set -euo pipefail
+          git fetch origin main
+          git checkout -B publish origin/main
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          new=json.loads(Path('/tmp/a46-gap-phase/bank.json').read_text())
+          path=Path('im-results/agent46-raw13-cut/coupled6-extra-bidfa.json')
+          old=json.loads(path.read_text()); by={x['table']:x for x in old}; added=0
+          for x in new:
+              prev=by.get(x['table'])
+              if prev is not None:
+                  continue
+              old.append(x);by[x['table']]=x;added+=1
+          path.write_text(json.dumps(old,separators=(',',':'))+'\n')
+          print('phase certified hits',len(new),'new',added)
+          PY
+          if git diff --quiet -- im-results/agent46-raw13-cut/coupled6-extra-bidfa.json; then exit 0; fi
+          git config user.name "Agent 46"
+          git config user.email "agent46@users.noreply.github.com"
+          git add im-results/agent46-raw13-cut/coupled6-extra-bidfa.json
+          git commit -m "Agent 46: add phase-certified BiDFA proofs for p3 gaps"
+          for n in 1 2 3 4 5; do
+            if git push origin HEAD:main; then exit 0; fi
+            git pull --rebase origin main
+          done
+          exit 1
+      - name: Preserve phase search audit
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: raw13-p3-gap-phase
+          path: |
+            /tmp/a46-gap-phase
+            /tmp/a46-gap-phase.log
+          retention-days: 30
