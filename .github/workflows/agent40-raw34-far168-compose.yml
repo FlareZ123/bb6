@@ -1,0 +1,133 @@
+name: Agent40 Raw34 exact FAR168 composition
+on:
+  workflow_dispatch:
+    inputs:
+      parent_run_id:
+        description: Run ID containing the source-accepted Raw34 3,233-row parent Cover artifact
+        required: true
+        type: string
+        default: "46175041055"
+      far_run_id:
+        description: Run ID containing the source-accepted 3,065-machine FAR bank artifact
+        required: true
+        type: string
+        default: "46163747316"
+permissions:
+  contents: read
+  actions: read
+jobs:
+  compose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Download source-accepted exact parent Cover
+        uses: actions/download-artifact@v4
+        with:
+          name: raw34-pair-final3233-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.parent_run_id }}
+          path: /tmp/a40-raw34-parent
+      - name: Download source-accepted FAR certificate bank
+        uses: actions/download-artifact@v4
+        with:
+          name: raw34-far3233-source
+          github-token: ${{ github.token }}
+          repository: ${{ github.repository }}
+          run-id: ${{ inputs.far_run_id }}
+          path: /tmp/a50-raw34-far
+      - name: Compose exact 168-residual Cover and check it in original-source Lean
+        run: |
+          set -euo pipefail
+          python im-results/agent13-coverage/unpack.py
+          P=/tmp/a40-raw34-parent
+          F=/tmp/a50-raw34-far
+          W=/tmp/a40-raw34-far168
+          mkdir -p "$W/generated"
+          test -f "$P/generated/Raw34PairFinal3233Cover.lean"
+          test -f "$P/generated/finalRows.json"
+          test -f "$P/final-manifest.json"
+          test -f "$F/hard3233.txt"
+          test -f "$F/far.jsonl"
+          test -f "$F/generated/manifest.json"
+          cp "$P"/generated/*.lean "$W/generated/"
+          cp "$F"/generated/Raw34FAR3233Shard*.lean "$W/generated/"
+          cp "$P/generated/finalRows.json" "$W/finalRows.json"
+          cp "$P/final-manifest.json" "$W/parent-manifest.json"
+          cp "$F/generated/manifest.json" "$W/far-manifest.json"
+          cp "$F/hard3233.txt" "$W/hard3233.txt"
+          cp "$F/far.jsonl" "$W/far.jsonl"
+          python - "$W/finalRows.json" "$W/hard3233.txt" "$W/far-manifest.json" "$W/parent-manifest.json" <<'PY'
+          import hashlib,json,sys
+          final=json.load(open(sys.argv[1]))
+          hard=[]
+          for line in open(sys.argv[2]):
+              if not line.strip(): continue
+              xs=[int(x) for x in line.split()]
+              assert xs[0]==len(hard) and len(xs)==13
+              hard.append(xs[1:])
+          far=json.load(open(sys.argv[3]))
+          parent=json.load(open(sys.argv[4]))
+          digest=lambda rows: hashlib.sha256((json.dumps(rows,separators=(",",":"))+"\n").encode()).hexdigest()
+          assert len(final)==len(hard)==3233
+          assert len({tuple(r) for r in final})==3233
+          assert len({tuple(r) for r in hard})==3233
+          assert {tuple(r) for r in final}=={tuple(r) for r in hard}
+          canonical=digest(sorted(final))
+          assert canonical=="aa640978cd0aa16452a872d5a38ef5081b3696720aaad0474db051ab7b1b85aa",canonical
+          assert parent["canonicalFinalResidualSha256"]==canonical
+          assert far["canonicalFrontierSha256"]==canonical
+          assert far["orderedFrontierSha256"]==digest(hard)
+          assert far["farHits"]==3065 and far["misses"]==168
+          assert len(far["missRows"])==168
+          assert far["canonicalMissSha256"]==digest(sorted(far["missRows"]))
+          print("PASS: parent and FAR artifacts refer to the identical canonical 3,233-machine frontier")
+          PY
+          python im-results/agent50-raw34-far3233/generate_shrink_to_168.py \
+            --hard "$W/hard3233.txt" --far "$W/far.jsonl" \
+            --far-manifest "$W/far-manifest.json" \
+            --final-rows "$W/finalRows.json" \
+            --output "$W/generated" --shard-size 40 | tee "$W/generation.json"
+          python tools/lean_compile_closure.py --workdir "$W/build" \
+            --source-root "$W/generated" --jobs 8 \
+            --manifest "$W/closure-manifest.json" \
+            --artifact-name raw34-far168-composed \
+            "$W/generated/Raw34FAR168Cover.lean" 2>&1 | tee "$W/closure.log"
+          python im-results/agent4-raw109/audit_axioms.py "$W/closure.log"
+          grep -F "'BB6.Agent40Raw34Final3233.cover'" "$W/closure.log"
+          grep -F "'BB6.Agent50Raw34FAR168.cover'" "$W/closure.log"
+          python - "$W/generated/far168-manifest.json" "$W/closure.log" <<'PY'
+          import json,re,sys
+          m=json.load(open(sys.argv[1])); log=open(sys.argv[2]).read()
+          assert m["oldResidualRows"]==3233
+          assert m["oldCanonicalSha256"]=="aa640978cd0aa16452a872d5a38ef5081b3696720aaad0474db051ab7b1b85aa"
+          assert m["farHits"]==3065 and m["newResidualRows"]==168
+          assert m["newCanonicalSha256"]=="b70715768b541358c7f96c4183ad292a8b57559f73fe6e6e07eb1529cd4c5e74"
+          assert m["newResidualsComplete"] and m["newResidualsUnique"]
+          assert m["theorem"]=="BB6.Agent50Raw34FAR168.cover"
+          allowed={"propext","Classical.choice","Quot.sound"}
+          for theorem in ("BB6.Agent40Raw34Final3233.cover","BB6.Agent50Raw34FAR168.cover"):
+              mm=re.search(r"'"+re.escape(theorem)+r"' depends on axioms: \[([^\]]*)\]",log)
+              if mm:
+                  got=set(re.findall(r"[A-Za-z][A-Za-z0-9_.]*",mm.group(1)))
+                  assert got<=allowed,(theorem,got)
+              else:
+                  assert f"'{theorem}' does not depend on any axioms" in log,theorem
+          assert "sorryAx" not in log
+          print("PASS: exact Raw34 pair parent is DecidedBelow 128 or one of 168 explicit complete machines; standard axioms only")
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-far168-composed
+          path: /tmp/a40-raw34-far168/
+          if-no-files-found: warn
+          compression-level: 1
+          retention-days: 30
