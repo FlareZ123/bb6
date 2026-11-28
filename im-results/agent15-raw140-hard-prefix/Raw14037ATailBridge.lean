@@ -3,7 +3,7 @@ import Raw140Framed
 
 namespace Raw14037ATailBridge
 
-open BB6BlockFAR Raw140Orbit Raw140Extra Raw14037Counter
+open BB6BlockFAR Raw140Orbit Raw140Extra Raw14037Counter Raw14042Counter Raw14042CounterLocal
 open Raw140Double (Reach)
 
 set_option maxRecDepth 100000
