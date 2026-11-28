@@ -24,20 +24,39 @@ D0=8 and 9 have zero stage-2 open leaves. All their late replay leaves (85 exact
 
 ## Exact second-level reduction map
 
-The hard D0 frontier now has four compact kernel theorems exposing its next exact split.
-[D1SixReduce.lean](D1SixReduce.lean) reaches C1 at step 7 and reduces D0=6 to ten hard
-ordinary codes `[0,2,4,6,9,15,16,17,18,19]`; the other ten codes are exact cycles.
-[D1EightReduce.lean](D1EightReduce.lean) and [D1NineReduce.lean](D1NineReduce.lean)
-respectively reduce D0=8 to eight C1 children and D0=9 to six. Finally
-[D1LateD0Reduce.lean](D1LateD0Reduce.lean) reaches the newly introduced E0 slot at step 6
-for D0=16 and D0=17 (TNF support cut 5), discharging twelve of 24 admissible actions by
-exact cycles in each case. Their remaining hard sets are respectively
-`[2,6,9,12,14,15,16,18,20,21,22,23]` and
-`[2,6,8,9,10,14,16,18,20,21,22,23]`. Local Lean 4.36.0-rc2 checks all four reduction
-theorems with only `propext`, `Classical.choice`, and `Quot.sound`; D0=8 additionally
-has pinned source acceptance in CI 46136123205. These are conditional composition
-theorems: they identify the exact child Covers still required rather than asserting those
-children are all closed.
+Every one of the nine hard D0 children in `D1ZeroRD.cover` now has an exact
+kernel-checked next-hole reduction.  Across these children there are 196
+TNF-admissible ordinary actions at the second level.  Exact short-cycle audits discharge
+94 actions immediately, leaving **102 explicit grandchild Cover obligations**.
+
+| D0 code | next hole / step | hard second-level codes | hard count |
+| --- | --- | --- | ---: |
+| 2 | A1 / 7 | `[0,2,6,8,9,10,15,16,17,18,19]` | 11 |
+| 6 | C1 / 7 | `[0,2,4,6,9,15,16,17,18,19]` | 10 |
+| 8 | C1 / 8 | `[1,2,3,6,16,17,18,19]` | 8 |
+| 9 | C1 / 8 | `[2,6,16,17,18,19]` | 6 |
+| 10 | C1 / 8 | `[0,1,2,3,5,6,7,16,17,18,19]` | 11 |
+| 16 | E0 / 6 | `[2,6,9,12,14,15,16,18,20,21,22,23]` | 12 |
+| 17 | E0 / 6 | `[2,6,8,9,10,14,16,18,20,21,22,23]` | 12 |
+| 18 | E0 / 6 | `[0,1,2,3,5,6,7,9,11,12,14,16,17,18,19,20,21,22,23]` | 19 |
+| 19 | E0 / 6 | `[0,2,4,6,8,9,10,16,18,20,21,22,23]` | 13 |
+
+The source modules are [D1SixReduce.lean](D1SixReduce.lean),
+[D1EightReduce.lean](D1EightReduce.lean), [D1NineReduce.lean](D1NineReduce.lean),
+[D1LateD0Reduce.lean](D1LateD0Reduce.lean), and
+[D1RemainingD0Reduce.lean](D1RemainingD0Reduce.lean).  Pinned source CI
+[46137136069](https://github.com/FlareZ123/bb6/actions/runs/46137136069) independently
+accepted all nine reducer theorems with only `propext`, `Classical.choice`, and
+`Quot.sound`.  D0=8 also has the earlier focused source gate
+[46136123205](https://github.com/FlareZ123/bb6/actions/runs/46136123205), artifact
+15259537646.
+
+[D1SecondLevel.lean](D1SecondLevel.lean) composes the nine reducers back through
+`D1ZeroRD.cover`: for every weighted bound `B ≥ 14`, Covers for exactly those nine
+hard grandchild families imply a Cover of the whole normalized D1=0RD cylinder.  This is
+a conditional frontier theorem rather than a claim that all 102 grandchildren are
+already decided.  Local Lean 4.36.0-rc2 checks the composition with the same standard
+axiom set; a pinned source gate is queued separately.
 
 ## D0=8 and D0=9: complete late-replay cut
 
