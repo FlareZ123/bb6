@@ -40,23 +40,29 @@ theorem six_reach_to_root
 
 /-- Every abstract AnchorChain from the canonical post-seed anchor is backed by
     a genuine source-counter reachability path. -/
-theorem anchorChain_six_reach
-    {q R c : Nat}
-    (h : AnchorChain q 6 1 R c) :
-    ∃ n, CounterReach 6 1 n R c := by
+theorem anchorChain_reach
+    {q R c A e : Nat}
+    (h : AnchorChain q R c A e) :
+    ∃ n, CounterReach R c n A e := by
   induction h with
   | nil =>
       exact ⟨0, CounterReach.nil⟩
-  | @step q _ _ A e B f hchain hepoch ih =>
+  | @step q R c A e B f hchain hepoch ih =>
       rcases ih with ⟨n,hr⟩
       rcases hepoch with ⟨m,a,d,hhf,ha⟩
       have hhfr : CounterReach A e m a d := hfRun_counterReach hhf
-      have hpre : CounterReach 6 1 (n+m) a d :=
+      have hpre : CounterReach R c (n+m) a d :=
         counterReach_append_local hr hhfr
       have hlast : CounterReach a d 1 B f :=
         CounterReach.step CounterReach.nil (anchorMove_source ha)
       have hall := counterReach_append_local hpre hlast
       exact ⟨n+m+1, by simpa [Nat.add_assoc] using hall⟩
+
+theorem anchorChain_six_reach
+    {q R c : Nat}
+    (h : AnchorChain q 6 1 R c) :
+    ∃ n, CounterReach 6 1 n R c :=
+  anchorChain_reach h
 
 /-- Sharp necessary residue classes for a genuine root-reachable anchor output.
 
