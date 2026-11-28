@@ -78,6 +78,19 @@ def run_direct(args):
     cycles={}
     late_fixed={}
     known_specs={}
+    if (d,v)==(17,12):
+        for file,mod in [('d17v12-bank.json','Box33D17V12Bank'),('d17v12-bank-extra.json','Box33D17V12BankExtra')]:
+            for i,record in json.loads((HERE/file).read_text()).items():
+                nm=f'v12bank{i}';known[tuple(record['machine'])]=nm
+                known_specs[nm]=(mod,f'BB6.Agent13.{mod}.M{i}','')
+        for i,t,b in [(4,[8,24,11,6,1,13,17,17,12,11,4,0],False),(9,[8,24,11,20,1,13,17,21,12,0,4,11],True)]:
+            nm=f'v12unary{i}';known[tuple(t)]=nm
+            known_specs[nm]=('Box33D17V12Unary','BB6.Agent13.Box33D17V12Unary.Triple',f' {str(b).lower()}')
+        for i,t in [(5,[8,24,11,4,1,13,17,10,12,0,4,14]),(7,[8,24,11,1,1,13,17,10,12,0,4,14]),(8,[8,24,11,21,1,13,17,10,12,0,4,14])]:
+            nm=f'v12unary{i}';known[tuple(t)]=nm
+            known_specs[nm]=('Box33D17V12Unary','BB6.Agent13.Box33D17V12Unary.Quint',f' .m{i}')
+        known[(8,3,11,22,1,13,17,11,12,0,4,22)]='v12m0'
+        known_specs['v12m0']=('Box33D17V12M0','BB6.Agent13.Box33D17V12M0','')
     if (d,v)==(17,16):
         bank=json.loads((HERE/'d17v16-bank.json').read_text())
         for i,record in bank.items():
