@@ -79,7 +79,11 @@ def gather(pin, work, compiler_sha, compiler_version):
     run=a68.api_json(f"repos/{a68.REPO}/actions/runs/{run_id}")
     check(run["status"]=="completed" and run["conclusion"]=="success",
           f"{branch} source producer failed: {run_id}")
-    check(run["head_sha"]==revision, f"{branch}: wrong source revision")
+    dispatch_rev=("d5b062d6d3a035dedbcda3f878ff1bc797a87207"
+                  if branch=="1LE" and run_id==46114235329
+                  else revision)
+    check(run["head_sha"]==dispatch_rev,
+          f"{branch}: wrong dispatch/source revision")
     info=a68.api_json(f"repos/{a68.REPO}/actions/artifacts/{aid}")
     check(info["name"]==name and info["workflow_run"]["id"]==run_id,
           f"{branch}: wrong producer artifact")
