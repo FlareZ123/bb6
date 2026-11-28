@@ -86,4 +86,44 @@ theorem t11511_to_twoBank :
 
 #print axioms t11511_to_twoBank
 
+/--
+The 94-symbol two-bank is consumed into a 186-symbol five-bank, while
+preserving an arbitrary right suffix.  This is the fixed entry bridge from
+the C-counter's depleted state into the D-phase H-family.
+-/
+def twoBank94Valid : Prop :=
+  Raw140Framed.execute base false true 26135
+    ⟨1, false, [], U2 94⟩ =
+    some (78405, ⟨3, false, U5 186, [S 2]⟩)
+
+theorem twoBank94_certificate : twoBank94Valid := by
+  decide +kernel
+
+theorem twoBank94_to_h (X : List Sym) :
+    Reach base
+      (boundary 1 false [] (U2 94 ++ X))
+      (boundary 3 false (U5 186) (S 2 :: X)) := by
+  have h := Raw140Framed.execute_sound base false true 26135 78405
+    ⟨1, false, [], U2 94⟩
+    ⟨3, false, U5 186, [S 2]⟩
+    [] X twoBank94_certificate
+  simpa [boundary, U2, U5] using h
+
+/--
+The concrete Raw37 one-triplet terminal now reaches the D-phase entry
+family H(0,11,c32,5^186), with all counters and suffixes explicit.
+-/
+theorem t11511_to_dPhaseEntry :
+    Reach base
+      (G 15 (U3 70 ++ [S 2]) [S 1, S 1, S 5, S 1, S 1])
+      (boundary 3 false (U5 186)
+        (S 2 :: T 11 ++ cword Raw14042CounterLocal.CTail.c32)) := by
+  have h0 := t11511_to_twoBank
+  have h1 := twoBank94_to_h
+    (T 11 ++ cword Raw14042CounterLocal.CTail.c32)
+  exact Reach.trans h0 h1
+
+#print axioms twoBank94_to_h
+#print axioms t11511_to_dPhaseEntry
+
 end Raw14037ATailBridge
