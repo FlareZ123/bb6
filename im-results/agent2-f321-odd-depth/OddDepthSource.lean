@@ -67,8 +67,6 @@ theorem odd_three_dead (A D:Nat)
     · cases hr with
       | nil => omega
       | step hr2 hm2 =>
-        have hAodd : _ := (show _ from (by omega : True))
-        clear hAodd
         cases hm2 with
         | high hg => omega
         | equal => omega
@@ -94,9 +92,7 @@ theorem gate_to_Q0 (k:Nat) (hk:1≤k) :
         have hmid : 3 ≤ 4*k := by omega
         rcases large_second_only_high_far hm2 hmid with hh2 | hf2
         · omega
-        · have ha : _ := (show _ from (by omega : True))
-          clear ha
-          refine ⟨_, ?_⟩
+        ·          refine ⟨_, ?_⟩
           convert hr2 using 1 <;> omega
     · omega
 

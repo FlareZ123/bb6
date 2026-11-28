@@ -1,6 +1,12 @@
 name: Agent31 F321 affine terminal inverse certificate
 on:
   workflow_dispatch:
+    inputs:
+      odd_depth_only:
+        description: Verify Agent2 F321 odd-depth inverse rays without full affine sieve
+        type: boolean
+        required: false
+        default: false
 
 jobs:
   verify:
@@ -9,10 +15,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Verify source-map inverse and explicit 33-over-40 families
+        if: ${{ !inputs.odd_depth_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000 | tee /tmp/f321-explicit.json
       - name: Verify 2^20 symbolic affine inverse-class certificate
+        if: ${{ !inputs.odd_depth_only }}
         run: |
           set -euo pipefail
           node im-results/agent31-f321-bulk/affine_terminal_sieve.cjs 20 | tee /tmp/f321-affine.json
@@ -23,6 +31,7 @@ jobs:
           echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
           "$HOME/.elan/bin/lean" --version
       - name: Kernel-check F321 inverse odd-numerator and sum lemmas
+        if: ${{ !inputs.odd_depth_only }}
         run: |
           set -euo pipefail
           lean -o im-results/agent31-f321-bulk/DensityOneCore.olean im-results/agent31-f321-bulk/DensityOneCore.lean | tee /tmp/f321-lean.log
@@ -38,7 +47,21 @@ jobs:
           LEAN_PATH=im-results/agent31-f321-bulk lean -o im-results/agent31-f321-bulk/SourceNextBridge.olean im-results/agent31-f321-bulk/SourceNextBridge.lean | tee -a /tmp/f321-lean.log
           LEAN_PATH=im-results/agent31-f321-bulk lean im-results/agent31-f321-bulk/SourceHaltingBridge.lean | tee -a /tmp/f321-lean.log
           ! grep -q sorryAx /tmp/f321-lean.log
+      - name: Kernel-check F321 odd-depth source-counter inverse theorem
+        if: ${{ inputs.odd_depth_only }}
+        run: |
+          set -euo pipefail
+          node im-results/agent2-f321-odd-depth/verify.cjs 101
+          e=im-results/agent31-f321-bulk
+          lean -o "$e/DensityOneCore.olean" "$e/DensityOneCore.lean" | tee /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean -o "$e/DensityOneExtension.olean" "$e/DensityOneExtension.lean" | tee -a /tmp/f321-odd-lean.log
+          lean -o "$e/SourceCounter.olean" "$e/SourceCounter.lean" | tee -a /tmp/f321-odd-lean.log
+          lean -o "$e/Barrier.olean" "$e/Barrier.lean" | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean -o "$e/F321BackwardBarrier.olean" "$e/F321BackwardBarrier.lean" | tee -a /tmp/f321-odd-lean.log
+          LEAN_PATH="$e" lean im-results/agent2-f321-odd-depth/OddDepthSource.lean | tee -a /tmp/f321-odd-lean.log
+          ! grep -q sorryAx /tmp/f321-odd-lean.log
       - name: Upload exact finite computation record
+        if: ${{ !inputs.odd_depth_only }}
         uses: actions/upload-artifact@v4
         with:
           name: f321-affine-2pow20-certificate
