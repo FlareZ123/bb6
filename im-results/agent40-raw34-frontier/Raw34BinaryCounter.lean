@@ -227,9 +227,12 @@ theorem all_time_never (m : Machine) (hm : compatible p m) :
 #print axioms first
 #print axioms incEmpty
 #print axioms incZero
+#print axioms enterOne
+#print axioms scanPair
 #print axioms scanMany
 #print axioms lastZero
 #print axioms lastBlank
+#print axioms clearPair
 #print axioms clearMany
 #print axioms carryZero
 #print axioms carryBlank
