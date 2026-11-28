@@ -1,0 +1,2191 @@
+{
+  "schema": 1,
+  "description": "Radius-two closed-window source candidates, full 25-action physical slots; per-mask domains are sufficient conditions only, NOT a complete Raw34 Cover",
+  "sourceGenerator": "deterministic xorshift32 seed 987654321, 250000 trials, sample five ordinary A1/B1/C1/D1/E1 moves with E0/F0/F1 HALT; close 5-cell BFS under arbitrary fresh bits; enumerate maximal per-slot sound actions; exact BigInt difference versus older 3087 source cylinders plus nine graph families",
+  "actionIndex": "0=HALT, 1..24=write/direction/state ordinary moves; domainMasks sorted D1,C1,B1,A1,E0,E1,F0,F1",
+  "seed": 987654321,
+  "trials": 250000,
+  "closedWithE1AbstractRead": 4835,
+  "closedNontrivial": 4519,
+  "uniqueNontrivialFamilies": 2592,
+  "positiveOutsideOldGraph": 1158,
+  "retained": 128,
+  "ranked": [
+    {
+      "maskHex": "0xf000f000fffffffffffffccccccccfcc00000001",
+      "sourceTable": "1RB0RA_1RC1RE_0RD1RD_1LC1LB_HALT0RC_HALTHALT",
+      "nWindows": 85,
+      "domainMasks": [
+        4310032,
+        4310032,
+        14795792,
+        33554431,
+        33554431,
+        6407696,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "900000000",
+      "outsideBase": "2835000"
+    },
+    {
+      "maskHex": "0xf000f0ffffffffffccfcffcccccfcc00000001",
+      "sourceTable": "1RB1LC_1RC0RE_0RD1RD_1LC1LB_HALT0RC_HALTHALT",
+      "nWindows": 85,
+      "domainMasks": [
+        4310032,
+        4310032,
+        6409232,
+        33554431,
+        33554431,
+        4310544,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "787500000",
+      "outsideBase": "2480625"
+    },
+    {
+      "maskHex": "0xf0f0f0f000ff0000ff00ff00ff00ff00ffffffff",
+      "sourceTable": "1RB1LA_1RC0LE_0RD1LE_1LC1RC_HALT0LA_HALTHALT",
+      "nWindows": 88,
+      "domainMasks": [
+        3727502,
+        3810466,
+        3810466,
+        3678338,
+        33554431,
+        3678338,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "455625000",
+      "outsideBase": "2464500"
+    },
+    {
+      "maskHex": "0x303030300fff0ffffffffffff000f3000c0c0c0d",
+      "sourceTable": "1RB0RE_1RC0LE_0RD0LC_1LC1LA_HALT1RD_HALTHALT",
+      "nWindows": 83,
+      "domainMasks": [
+        2205208,
+        2131464,
+        2131496,
+        33554431,
+        33554431,
+        6325768,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "562500000",
+      "outsideBase": "2109375"
+    },
+    {
+      "maskHex": "0x30303030ffffffffcfcccccc00000300f000f001",
+      "sourceTable": "1RB0LE_1RC1RF_0RD1RA_1LC1RD_HALT0RD_HALTHALT",
+      "nWindows": 69,
+      "domainMasks": [
+        4293648,
+        4817936,
+        33554431,
+        4293680,
+        33554431,
+        4293648,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "351562500",
+      "outsideBase": "2109375"
+    },
+    {
+      "maskHex": "0xf000f000ffffffffcfcccccc0000030030303031",
+      "sourceTable": "1RB0RD_1RC1LD_0RD1RE_1LC1RD_HALT0LA_HALTHALT",
+      "nWindows": 69,
+      "domainMasks": [
+        4293648,
+        12682256,
+        33554431,
+        4293648,
+        33554431,
+        4293650,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "351562500",
+      "outsideBase": "2109375"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffffccffeaeeeaff00ff00ffffffff",
+      "sourceTable": "1RB1LA_1RC1LE_0RD0LA_1LC1RD_HALT0LC_HALTHALT",
+      "nWindows": 108,
+      "domainMasks": [
+        5873794,
+        5841026,
+        8103042,
+        5841026,
+        33554431,
+        5873802,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "606375000",
+      "outsideBase": "2041125"
+    },
+    {
+      "maskHex": "0xf000f000fffffffffffffffff0fff300cccccccd",
+      "sourceTable": "1RB1RE_1RC1RD_0RD0LC_1LC1LA_HALT0RB_HALTHALT",
+      "nWindows": 107,
+      "domainMasks": [
+        6399512,
+        6399512,
+        6399512,
+        15836696,
+        33554431,
+        6399768,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "1252968750",
+      "outsideBase": "2031250"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff0000ff000c00ff00ff00ffffffff",
+      "sourceTable": "1RB0RA_1RC1LE_0RD1RA_1LC1RA_HALT0LA_HALTHALT",
+      "nWindows": 74,
+      "domainMasks": [
+        1630342,
+        3826822,
+        3810434,
+        1581186,
+        33554431,
+        1581186,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "250000000",
+      "outsideBase": "1405125"
+    },
+    {
+      "maskHex": "0xc0c0c0c0f0fff000ff00ff00ffffffff00000001",
+      "sourceTable": "1RB0LA_1RC0RB_0RD1LE_1LC1RB_HALT1RD_HALTHALT",
+      "nWindows": 73,
+      "domainMasks": [
+        3162372,
+        3294468,
+        3162372,
+        33554431,
+        33554431,
+        7356676,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "410156250",
+      "outsideBase": "1265625"
+    },
+    {
+      "maskHex": "0xf000c00cff0cc8cf88cc88f888cb880c080c09",
+      "sourceTable": "1RB0LB_1RC1LB_0RD0RE_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 56,
+      "domainMasks": [
+        106496,
+        1100800,
+        50176,
+        33554431,
+        33554431,
+        106496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "52734375",
+      "outsideBase": "1265625"
+    },
+    {
+      "maskHex": "0x3030303000ff00ff7f7f7f7ff000f3000c0c0c0d",
+      "sourceTable": "1RB1LC_1RC0LE_0RD0LC_1LC1LA_HALT1LC_HALTHALT",
+      "nWindows": 71,
+      "domainMasks": [
+        41992,
+        2098696,
+        1064,
+        33554431,
+        33554431,
+        2131464,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "93750000",
+      "outsideBase": "1125000"
+    },
+    {
+      "maskHex": "0xf000f000ffffffc8cfc8ccc800000300c0c0c0c1",
+      "sourceTable": "1RB1LD_1RC1RB_0RD1RE_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 62,
+      "domainMasks": [
+        4292608,
+        12681216,
+        33554431,
+        12681216,
+        33554431,
+        4301824,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "93750000",
+      "outsideBase": "1125000"
+    },
+    {
+      "maskHex": "0xc000f0ffffffffcfccfcff88cc8bcc00000001",
+      "sourceTable": "1RB1LD_1RC0RE_0RD1LB_1LC1RD_HALT0RC_HALTHALT",
+      "nWindows": 77,
+      "domainMasks": [
+        4293648,
+        4310032,
+        6409744,
+        33554431,
+        33554431,
+        4310544,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "738281250",
+      "outsideBase": "1063125"
+    },
+    {
+      "maskHex": "0xf0f0f0f0ffffff30cfc0ccc0f000f300cccccccd",
+      "sourceTable": "1RB0RE_1RC0LD_0RD1RE_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 83,
+      "domainMasks": [
+        4202496,
+        13641728,
+        4367408,
+        13641728,
+        33554431,
+        4202496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "10937500",
+      "outsideBase": "1002750"
+    },
+    {
+      "maskHex": "0x30303030ffff0000ff00ff00ff0fff0fffffffff",
+      "sourceTable": "1RB1RA_1RC1RD_0RD0LE_1LC0RA_HALT0RB_HALTHALT",
+      "nWindows": 96,
+      "domainMasks": [
+        3727502,
+        7873698,
+        7873698,
+        3678338,
+        33554431,
+        3678594,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "531562500",
+      "outsideBase": "996200"
+    },
+    {
+      "maskHex": "0x30303030ffffffffcfcfcccff000f30000000001",
+      "sourceTable": "1RB0LF_1RC0LE_0RD1RB_1LC1RD_HALT0RC_HALTHALT",
+      "nWindows": 73,
+      "domainMasks": [
+        4293648,
+        5342224,
+        4293680,
+        33554431,
+        33554431,
+        4294160,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "421875000",
+      "outsideBase": "911250"
+    },
+    {
+      "maskHex": "0xc080c08000ff00c0ff88cc88f000c3000c080c09",
+      "sourceTable": "1RB0LD_1RC1LE_0RD1LC_1LC1LA_HALT1RC_HALTHALT",
+      "nWindows": 47,
+      "domainMasks": [
+        40960,
+        2130944,
+        2262016,
+        33554431,
+        33554431,
+        3179520,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "37500000",
+      "outsideBase": "843750"
+    },
+    {
+      "maskHex": "0xc080c080f0ffc0000f000c00f000c300cc88cc89",
+      "sourceTable": "1RB1LA_1RC1LE_0RD0RB_1LC1LA_HALT1RD_HALTHALT",
+      "nWindows": 47,
+      "domainMasks": [
+        8192,
+        33554431,
+        140288,
+        5251072,
+        33554431,
+        5251072,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "10546875",
+      "outsideBase": "843750"
+    },
+    {
+      "maskHex": "0xf000c000c0ffc0800f000c00f000c300cc88cc89",
+      "sourceTable": "1RB1RE_1RC1LA_0RD1RE_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 46,
+      "domainMasks": [
+        8192,
+        33554431,
+        74752,
+        9445376,
+        33554431,
+        74752,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "10546875",
+      "outsideBase": "843750"
+    },
+    {
+      "maskHex": "0x303030300fff0fffcffcccfff000f3000c0c0c0d",
+      "sourceTable": "1RB0LA_1RC0LE_0RD0RC_1LC1LA_HALT1RD_HALTHALT",
+      "nWindows": 75,
+      "domainMasks": [
+        108048,
+        34304,
+        33824,
+        33554431,
+        33554431,
+        4228096,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "63281250",
+      "outsideBase": "843750"
+    },
+    {
+      "maskHex": "0xc0f0c0c08cff8cc88f888c88f000c300cc88cc89",
+      "sourceTable": "1RB0RE_1RC1LE_0RD1RA_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 60,
+      "domainMasks": [
+        106496,
+        10071040,
+        140288,
+        1158144,
+        33554431,
+        106496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "20250000",
+      "outsideBase": "796425"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff0000ff00fc00feeeefee0c000c01",
+      "sourceTable": "1RB1LE_1RC1LB_0RD1LE_1LC1LA_HALT0LB_HALTHALT",
+      "nWindows": 61,
+      "domainMasks": [
+        57344,
+        2245632,
+        2113536,
+        33554431,
+        33554431,
+        2113540,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "776250"
+    },
+    {
+      "maskHex": "0x3030303000ff0000ff000f00ff00ff00ffffffff",
+      "sourceTable": "1RB1RA_1RC0LE_0RD0RA_1LC0RA_HALT1RC_HALTHALT",
+      "nWindows": 76,
+      "domainMasks": [
+        1630350,
+        3695782,
+        3679394,
+        1581186,
+        33554431,
+        3678338,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "337500000",
+      "outsideBase": "774250"
+    },
+    {
+      "maskHex": "0xc0c0c0c0fafffafacfccccccf000f300cccccccd",
+      "sourceTable": "1RB0LD_1RC1LE_0RD1LD_1LC1LA_HALT1RD_HALTHALT",
+      "nWindows": 79,
+      "domainMasks": [
+        40960,
+        5350416,
+        238608,
+        5350416,
+        33554431,
+        5350416,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "64312500",
+      "outsideBase": "765625"
+    },
+    {
+      "maskHex": "0xf000f000ffffffffcfcccccc3030333000000001",
+      "sourceTable": "1RB0LB_1RC0RD_0RD1RE_1LC1RD_HALT0LB_HALTHALT",
+      "nWindows": 69,
+      "domainMasks": [
+        4293648,
+        12682256,
+        4293648,
+        33554431,
+        33554431,
+        4293652,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "351562500",
+      "outsideBase": "759375"
+    },
+    {
+      "maskHex": "0xf000f000f0fff0f0ff00fc00cccccfcc00000001",
+      "sourceTable": "1RB1RD_1RC1RE_0RD1LD_1LC1LB_HALT0LD_HALTHALT",
+      "nWindows": 61,
+      "domainMasks": [
+        16384,
+        2180112,
+        14697472,
+        33554431,
+        33554431,
+        2180112,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "48828125",
+      "outsideBase": "759375"
+    },
+    {
+      "maskHex": "0x30303030ffffffffcfccccccf000f30000000001",
+      "sourceTable": "1RB1LD_1RC0LE_0RD1RB_1LC1RD_HALT0RD_HALTHALT",
+      "nWindows": 69,
+      "domainMasks": [
+        4293648,
+        5342224,
+        4293680,
+        33554431,
+        33554431,
+        4293648,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "351562500",
+      "outsideBase": "759375"
+    },
+    {
+      "maskHex": "0xf000c000ffffc080ff00cc00cc88cf8800000001",
+      "sourceTable": "1RB0RC_1RC1RE_0RD1LD_1LC1LB_HALT1RD_HALTHALT",
+      "nWindows": 52,
+      "domainMasks": [
+        16384,
+        6374400,
+        14696448,
+        33554431,
+        33554431,
+        6374400,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "39062500",
+      "outsideBase": "759375"
+    },
+    {
+      "maskHex": "0x30303030ffff0000ff00cc00ff00ff00ffffffff",
+      "sourceTable": "1RB1RA_1RC0LE_0RD1RD_1LC0RA_HALT1RA_HALTHALT",
+      "nWindows": 84,
+      "domainMasks": [
+        1630342,
+        7873698,
+        7873698,
+        1581186,
+        33554431,
+        1581186,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "253125000",
+      "outsideBase": "757625"
+    },
+    {
+      "maskHex": "0x3030303000ff0000ff000c00ff00ff00ffffffff",
+      "sourceTable": "1RB0RA_1RC0LE_0RD1RA_1LC1RA_HALT0LA_HALTHALT",
+      "nWindows": 74,
+      "domainMasks": [
+        1630342,
+        3695782,
+        3679394,
+        1581186,
+        33554431,
+        1581186,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "250000000",
+      "outsideBase": "749625"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffffccffeafeeaf000f300cccccccd",
+      "sourceTable": "1RB1RC_1RC1LE_0RD1LA_1LC1RD_HALT0LC_HALTHALT",
+      "nWindows": 88,
+      "domainMasks": [
+        4300800,
+        6365184,
+        6530048,
+        7446536,
+        33554431,
+        7446536,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "85750000",
+      "outsideBase": "721875"
+    },
+    {
+      "maskHex": "0xc0c0c0c0bbffbbfbcfcccccc00000300f000f001",
+      "sourceTable": "1RB1LE_1RC1LF_0RD1RA_1LC0LD_HALT1LD_HALTHALT",
+      "nWindows": 64,
+      "domainMasks": [
+        32784,
+        623632,
+        33554431,
+        164880,
+        33554431,
+        623632,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xf000f00000ff0000ff000c00ff0003000c000c01",
+      "sourceTable": "1RB0RB_1RC0LE_0RD1LE_1LC1LA_HALT1RB_HALTHALT",
+      "nWindows": 41,
+      "domainMasks": [
+        40964,
+        3277856,
+        3277856,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "87890625",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xc000c000c0ffc0000f000c00f00003008c808c81",
+      "sourceTable": "1RB1RE_1RC1LD_0RD0RD_1LC1LA_HALT1RB_HALTHALT",
+      "nWindows": 37,
+      "domainMasks": [
+        8192,
+        33554431,
+        197632,
+        12582912,
+        33554431,
+        1057792,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "7031250",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xf000f000bbffbbfbcfcccccc00000300c0c0c0c1",
+      "sourceTable": "1RB1LD_1RC0LC_0RD1RE_1LC0LD_HALT1LA_HALTHALT",
+      "nWindows": 64,
+      "domainMasks": [
+        32784,
+        8487952,
+        33554431,
+        8487952,
+        33554431,
+        42000,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0x80808080ccffccc88f888c8800000300c000c001",
+      "sourceTable": "1RB1LE_1RC1RC_0RD1RA_1LC1LD_HALT1RD_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        98304,
+        4817920,
+        33554431,
+        230400,
+        33554431,
+        4817920,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xc000c000ccffccc88f888c880000030080808081",
+      "sourceTable": "1RB1RD_1RC1RD_0RD1RE_1LC1LD_HALT1LA_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        98304,
+        12682240,
+        33554431,
+        12682240,
+        33554431,
+        107520,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xc0c0c0c0eeffeefecfcccccc00000300f000f001",
+      "sourceTable": "1RB1LE_1RC0LB_0RD1RA_1LC1LD_HALT0LD_HALTHALT",
+      "nWindows": 64,
+      "domainMasks": [
+        98304,
+        623632,
+        33554431,
+        230400,
+        33554431,
+        623632,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0x3000300030ff30ff0f0f0c0cf000f3004c4c4c4d",
+      "sourceTable": "1RB1RE_1RC0LD_0RD1RB_1LC1LA_HALT0RC_HALTHALT",
+      "nWindows": 59,
+      "domainMasks": [
+        9216,
+        33554431,
+        1040,
+        13632512,
+        33554431,
+        2106896,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "31250000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0x3000300030ff30000f000c00f00003004c404c41",
+      "sourceTable": "1RB1RE_1RC0LD_0RD0RF_1LC1LA_HALT1LA_HALTHALT",
+      "nWindows": 37,
+      "domainMasks": [
+        8192,
+        33554431,
+        1072,
+        12582912,
+        33554431,
+        2106368,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "7031250",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xf000c00cff0cc8cf88cc88f000c3000c080c09",
+      "sourceTable": "1RB0LA_1RC1LC_0RD0RE_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 50,
+      "domainMasks": [
+        106496,
+        1084416,
+        33792,
+        33554431,
+        33554431,
+        106496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xc000c00cff0cff8f8f8c8f00000300000000f1",
+      "sourceTable": "1RB0LC_1RC0LE_0RD0RE_1LC1LD_HALT0RA_HALTHALT",
+      "nWindows": 49,
+      "domainMasks": [
+        99328,
+        35840,
+        33554431,
+        99352,
+        33554431,
+        99456,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "70312500",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff00fc2f2e2e2ef000f3000c0c0c0d",
+      "sourceTable": "1RB0LD_1RC1LE_0RD0RC_1LC1LA_HALT0LC_HALTHALT",
+      "nWindows": 58,
+      "domainMasks": [
+        40960,
+        2623104,
+        132096,
+        33554431,
+        33554431,
+        1049608,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "23437500",
+      "outsideBase": "703125"
+    },
+    {
+      "maskHex": "0x30303030ffffffffffffccccff000300ff00ff01",
+      "sourceTable": "1RB0LE_1RC0RC_0RD1RD_1LC1RA_HALT0RD_HALTHALT",
+      "nWindows": 91,
+      "domainMasks": [
+        4817936,
+        4817936,
+        7972402,
+        7964208,
+        33554431,
+        4817936,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "405000000",
+      "outsideBase": "693750"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffffffffffccccff000300ff00ff01",
+      "sourceTable": "1RB1LE_1RC0RC_0RD1RD_1LC1RA_HALT1LC_HALTHALT",
+      "nWindows": 91,
+      "domainMasks": [
+        4817936,
+        4817936,
+        8103442,
+        8095248,
+        33554431,
+        4817936,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "405000000",
+      "outsideBase": "693750"
+    },
+    {
+      "maskHex": "0xc000c000f0ff0000ff000f00ff31ff31ffffffff",
+      "sourceTable": "1RB1RA_1RC0LB_0RD1LE_1LC0RA_HALT1RD_HALTHALT",
+      "nWindows": 82,
+      "domainMasks": [
+        1597574,
+        3826822,
+        3678342,
+        1581186,
+        33554431,
+        7873670,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "344531250",
+      "outsideBase": "693625"
+    },
+    {
+      "maskHex": "0xc080c080ffff0000ff00cc00ff00ff00ffffffff",
+      "sourceTable": "1RB1RA_1RC1RD_0RD1LE_1LC0RA_HALT1RB_HALTHALT",
+      "nWindows": 82,
+      "domainMasks": [
+        1630342,
+        8004738,
+        7873666,
+        1581186,
+        33554431,
+        3678338,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "270000000",
+      "outsideBase": "686750"
+    },
+    {
+      "maskHex": "0xf0f0f0f000ff0000ff000c00ff00ff00ff00ff01",
+      "sourceTable": "1RB0LE_1RC1LE_0RD0LE_1LC1RB_HALT1RA_HALTHALT",
+      "nWindows": 67,
+      "domainMasks": [
+        1630214,
+        3826726,
+        3802144,
+        3802144,
+        33554431,
+        1572864,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "78750000",
+      "outsideBase": "651100"
+    },
+    {
+      "maskHex": "0xf000c0ffffccc8ff88cc88cc88cf8800000001",
+      "sourceTable": "1RB1LA_1RC0RE_0RD1RD_1LC1LB_HALT1LD_HALTHALT",
+      "nWindows": 60,
+      "domainMasks": [
+        114688,
+        6407168,
+        6409216,
+        33554431,
+        33554431,
+        114688,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "147656250",
+      "outsideBase": "607500"
+    },
+    {
+      "maskHex": "0x30303030ffffff00ffc0ccc0ff00ff00ffffffff",
+      "sourceTable": "1RB0LA_1RC0LE_0RD1LA_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 96,
+      "domainMasks": [
+        5808258,
+        5775490,
+        7906466,
+        5775490,
+        33554431,
+        5775490,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "236250000",
+      "outsideBase": "599550"
+    },
+    {
+      "maskHex": "0x3020302000ff0000ff00cc00ffc8ffc80f000c01",
+      "sourceTable": "1RB1RD_1RC1LB_0RD0LE_1LC1RB_HALT1RA_HALTHALT",
+      "nWindows": 55,
+      "domainMasks": [
+        1105924,
+        3163168,
+        1064960,
+        33554431,
+        33554431,
+        3670016,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "58593750",
+      "outsideBase": "573750"
+    },
+    {
+      "maskHex": "0x3020302000ff0000ff00cc00ff88cf880f000c01",
+      "sourceTable": "1RB0RD_1RC1LB_0RD0LE_1LC1LB_HALT1RA_HALTHALT",
+      "nWindows": 51,
+      "domainMasks": [
+        57348,
+        3163168,
+        3162112,
+        33554431,
+        33554431,
+        3670016,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "70312500",
+      "outsideBase": "573750"
+    },
+    {
+      "maskHex": "0xc000c0008cff8cc88f888c880000030080808081",
+      "sourceTable": "1RB1LD_1RC0RD_0RD1RE_1LC1LD_HALT1LA_HALTHALT",
+      "nWindows": 40,
+      "domainMasks": [
+        98304,
+        8487936,
+        33554431,
+        8487936,
+        33554431,
+        107520,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "50000000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x1010101003ff03ff4f4f4c4f0000030030003001",
+      "sourceTable": "1RB0LE_1RC1RB_0RD1RA_1LC0LD_HALT0RC_HALTHALT",
+      "nWindows": 49,
+      "domainMasks": [
+        33808,
+        525312,
+        33554431,
+        2131488,
+        33554431,
+        4228608,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "46875000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3000300003ff03ff4f4f4c4f0000030010101011",
+      "sourceTable": "1RB0RC_1RC1LD_0RD1RE_1LC0LD_HALT0LA_HALTHALT",
+      "nWindows": 49,
+      "domainMasks": [
+        33808,
+        8389632,
+        33554431,
+        4228608,
+        33554431,
+        2131458,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "46875000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf0000000ff0000ff000c000f000f00c300c301",
+      "sourceTable": "1RB0RE_1RC1LD_0RD1LA_1LC1LB_HALT0LA_HALTHALT",
+      "nWindows": 39,
+      "domainMasks": [
+        49158,
+        2106368,
+        33554431,
+        2100224,
+        33554431,
+        49158,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf000000000ff0000cf00cc00f8c8fbc80c000c01",
+      "sourceTable": "1RB0RC_1RC1LB_0RD1RE_1LC1LA_HALT0LB_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        40960,
+        9454592,
+        16384,
+        33554431,
+        33554431,
+        50180,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "12500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c00ff0003000c000c01",
+      "sourceTable": "1RB0LC_1RC1RB_0RD1LE_1LC1LA_HALT0RD_HALTHALT",
+      "nWindows": 37,
+      "domainMasks": [
+        40964,
+        3277824,
+        3277824,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3030303000ff0000ff00ff00ff0003000f000f01",
+      "sourceTable": "1RB0LE_1RC0RD_0RD0LE_1LC1RC_HALT1RA_HALTHALT",
+      "nWindows": 51,
+      "domainMasks": [
+        2138126,
+        3146784,
+        3179560,
+        33554431,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "112500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c00cff0cff8f8c8c8c00000300000000f1",
+      "sourceTable": "1RB0RD_1RC0LE_0RD0RE_1LC1LD_HALT0RA_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        99328,
+        35840,
+        33554431,
+        99344,
+        33554431,
+        99456,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x20202020ccffcccc8f888c8800000300c000c001",
+      "sourceTable": "1RB0LE_1RC0LD_0RD1RA_1LC1LD_HALT1LD_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        98304,
+        4817920,
+        33554431,
+        99360,
+        33554431,
+        6358016,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "62500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf000f0ffffff30cfc0ccc0f000f3000c0c0c0d",
+      "sourceTable": "1RB1LC_1RC0LD_0RD0RE_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 67,
+      "domainMasks": [
+        4194304,
+        5244928,
+        4228112,
+        33554431,
+        33554431,
+        4202496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "9375000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf00030ffff3331cf44cc44f00033000c040c05",
+      "sourceTable": "1RB0RC_1RC1RD_0RD0RE_1LC0LD_HALT1LA_HALTHALT",
+      "nWindows": 58,
+      "domainMasks": [
+        32784,
+        5245952,
+        4228112,
+        33554431,
+        33554431,
+        40976,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "37500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x8080808000ff00c0cf00cc00f888cb880c080c09",
+      "sourceTable": "1RB1LB_1RC1LB_0RD1LE_1LC1LA_HALT0RD_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        8192,
+        1197056,
+        17408,
+        33554431,
+        33554431,
+        3163136,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "12500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3000300033ff33334f444c440000030040404041",
+      "sourceTable": "1RB0LD_1RC0RB_0RD1RE_1LC0LD_HALT1LA_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        32784,
+        12583952,
+        33554431,
+        12583952,
+        33554431,
+        2139152,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "62500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x4040404033ff33334f444c440000030030003001",
+      "sourceTable": "1RB1LE_1RC1RB_0RD1RA_1LC0LD_HALT0LD_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        32784,
+        4719632,
+        33554431,
+        2262032,
+        33554431,
+        4719632,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "62500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3030303000ff0000ff00ff00ff0f030f0c000c01",
+      "sourceTable": "1RB1LB_1RC1RB_0RD0LE_1LC1LA_HALT0RB_HALTHALT",
+      "nWindows": 55,
+      "domainMasks": [
+        2138124,
+        3146784,
+        3179560,
+        33554431,
+        33554431,
+        2097408,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "93750000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf000f0ffffffc0cfc0ccc0f000f3000c0c0c0d",
+      "sourceTable": "1RB0LA_1RC1LD_0RD0RE_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 67,
+      "domainMasks": [
+        4194304,
+        5244928,
+        4293632,
+        33554431,
+        33554431,
+        4202496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "9375000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf00cff0cff8f8c8c8c0000030000c000c1",
+      "sourceTable": "1RB0RE_1RC1LC_0RD0RA_1LC1LD_HALT0LD_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        99328,
+        33920,
+        33554431,
+        101376,
+        33554431,
+        99344,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c0fcffccc88f888c88c000c30008080809",
+      "sourceTable": "1RB0LC_1RC1RD_0RD0RE_1LC1LD_HALT1LA_HALTHALT",
+      "nWindows": 48,
+      "domainMasks": [
+        65536,
+        5344256,
+        4293632,
+        33554431,
+        33554431,
+        106496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf0000000fcfffcc88f888c8800000300c000c001",
+      "sourceTable": "1RB1RE_1RC1LE_0RD1RA_1LC1LD_HALT0LD_HALTHALT",
+      "nWindows": 46,
+      "domainMasks": [
+        65536,
+        4817920,
+        33554431,
+        12682240,
+        33554431,
+        74768,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "39062500",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x30003030ff30ff0f0c0c0ff000f3004c4c4c4d",
+      "sourceTable": "1RB0RE_1RC0LD_0RD1RA_1LC1LA_HALT0RC_HALTHALT",
+      "nWindows": 59,
+      "domainMasks": [
+        9216,
+        33554431,
+        1040,
+        5245952,
+        33554431,
+        42496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "25000000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c000fcfffcc88f888c8800000300f0000001",
+      "sourceTable": "1RB0LD_1RC1RF_0RD1RE_1LC1LD_HALT1RA_HALTHALT",
+      "nWindows": 46,
+      "domainMasks": [
+        65536,
+        12682240,
+        33554431,
+        197648,
+        33554431,
+        4817920,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "39062500",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c000f000f0003f00301",
+      "sourceTable": "1RB1LB_1RC0RF_0RD1LE_1LC0LA_HALT0RA_HALTHALT",
+      "nWindows": 39,
+      "domainMasks": [
+        49158,
+        2229248,
+        33554431,
+        49158,
+        33554431,
+        2098304,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c000c0ffc0800f000c00f000c3008c888c89",
+      "sourceTable": "1RB1RE_1RC1LD_0RD1RA_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        8192,
+        33554431,
+        66560,
+        13639680,
+        33554431,
+        1123328,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "12500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3000300000ff0000ff000c000f000f0013131313",
+      "sourceTable": "1RB0RA_1RC0RF_0RD0LE_1LC0LA_HALT0LA_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        49158,
+        2098208,
+        33554431,
+        1572994,
+        33554431,
+        3146754,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "75000000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x8080808000ff0000cf00cc00f8c8cbc80c000c01",
+      "sourceTable": "1RB1RB_1RC1LB_0RD1LE_1LC1LA_HALT0RB_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        40960,
+        1197056,
+        16384,
+        33554431,
+        33554431,
+        3162368,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "12500000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0x3030303000ff00ffff0ffc0f0f0c0f0c11111111",
+      "sourceTable": "1RB0RC_1RC1LC_0RD0LE_1LC1LB_HALT0LA_HALTHALT",
+      "nWindows": 66,
+      "domainMasks": [
+        50176,
+        2098208,
+        33554431,
+        1050114,
+        33554431,
+        1050114,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "56250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff00000f000c00f000c3008c888c89",
+      "sourceTable": "1RB0RE_1RC1LE_0RD0LF_1LC1LA_HALT1LA_HALTHALT",
+      "nWindows": 41,
+      "domainMasks": [
+        40960,
+        33554431,
+        132096,
+        9447424,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "6250000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xc000c0000cff0cfc8f8c8c8c0000030020202021",
+      "sourceTable": "1RB0RC_1RC1RD_0RD1RE_1LC1LD_HALT0LA_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        98304,
+        8422400,
+        33554431,
+        6292992,
+        33554431,
+        33794,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "562500"
+    },
+    {
+      "maskHex": "0xf000c0ffffffffffffccccff00cf00cf8acf8b",
+      "sourceTable": "1RB0RE_1RC0RC_0RD1LA_1LC1RD_HALT0LA_HALTHALT",
+      "nWindows": 95,
+      "domainMasks": [
+        4293648,
+        4301840,
+        7448080,
+        7450128,
+        33554431,
+        4301842,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "295312500",
+      "outsideBase": "525000"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c00ff00ff00ffffffff",
+      "sourceTable": "1RB1RA_1RC0RA_0RD1LE_1LC0RA_HALT1LA_HALTHALT",
+      "nWindows": 70,
+      "domainMasks": [
+        1630342,
+        3826822,
+        3679362,
+        1581186,
+        33554431,
+        3679362,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "306250000",
+      "outsideBase": "522875"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffffccffeaeeeaff00ff0000000001",
+      "sourceTable": "1RB0RF_1RC1LE_0RD1RB_1LC1RD_HALT0LC_HALTHALT",
+      "nWindows": 77,
+      "domainMasks": [
+        5341184,
+        5308416,
+        7570432,
+        33554431,
+        33554431,
+        5341192,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "164062500",
+      "outsideBase": "506250"
+    },
+    {
+      "maskHex": "0xc000c0ffffffcccfcaceca88888b8800000001",
+      "sourceTable": "1RB1LC_1RC0RE_0RD1LB_1LC1RD_HALT0LC_HALTHALT",
+      "nWindows": 62,
+      "domainMasks": [
+        4292608,
+        4308992,
+        6409728,
+        33554431,
+        33554431,
+        4309000,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "187500000",
+      "outsideBase": "506250"
+    },
+    {
+      "maskHex": "0xc080c080c8ffc8c8ff88cc88f000c3008c888c89",
+      "sourceTable": "1RB1RD_1RC1LE_0RD1RC_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 58,
+      "domainMasks": [
+        40960,
+        2196480,
+        2327552,
+        15836160,
+        33554431,
+        3253248,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "30000000",
+      "outsideBase": "493750"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff0000ff00ff00ffffffff22ffffff",
+      "sourceTable": "1RB0RB_1RC0RA_0RD1LE_1LC1RA_HALT0LA_HALTHALT",
+      "nWindows": 90,
+      "domainMasks": [
+        3719564,
+        3294596,
+        3162500,
+        3162500,
+        33554431,
+        3162502,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "283500000",
+      "outsideBase": "483000"
+    },
+    {
+      "maskHex": "0xf000f0ffffffc8cfc8ccc8f000f300cccccccd",
+      "sourceTable": "1RB1LD_1RC1LA_0RD0RE_1LC1RD_HALT1LA_HALTHALT",
+      "nWindows": 78,
+      "domainMasks": [
+        4300800,
+        5351424,
+        4301824,
+        5351424,
+        33554431,
+        4202496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "22500000",
+      "outsideBase": "462500"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffff0000ff00fc00ff000300ff00ff01",
+      "sourceTable": "1RB1LE_1RC1RD_0RD1RD_1LC1RA_HALT1RC_HALTHALT",
+      "nWindows": 65,
+      "domainMasks": [
+        565250,
+        7996416,
+        8037386,
+        7996416,
+        33554431,
+        2621440,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "45000000",
+      "outsideBase": "456250"
+    },
+    {
+      "maskHex": "0xc000c000f0ff0000ff000f00ff31ff3100000001",
+      "sourceTable": "1RB1RB_1RC0LB_0RD1LE_1LC1RB_HALT1RD_HALTHALT",
+      "nWindows": 51,
+      "domainMasks": [
+        1064964,
+        3294212,
+        3145732,
+        33554431,
+        33554431,
+        7341060,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "105468750",
+      "outsideBase": "455625"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c00fff0ff00ffffffff",
+      "sourceTable": "1RB0RA_1RC1RA_0RD1LE_1LC0LA_HALT0RB_HALTHALT",
+      "nWindows": 74,
+      "domainMasks": [
+        1630342,
+        3826822,
+        1581186,
+        1581186,
+        33554431,
+        3679618,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "250000000",
+      "outsideBase": "452750"
+    },
+    {
+      "maskHex": "0xc000c0ffffffffcfffccfff000f3f08c8c8c8d",
+      "sourceTable": "1RB0RE_1RC1RD_0RD1LA_1LC0RC_HALT0RB_HALTHALT",
+      "nWindows": 89,
+      "domainMasks": [
+        4294160,
+        4302352,
+        4294160,
+        7450128,
+        33554431,
+        5351184,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "354375000",
+      "outsideBase": "450000"
+    },
+    {
+      "maskHex": "0xc0c0c0c0aaffaafacfccccccf000f300cccccccd",
+      "sourceTable": "1RB0LD_1RC1LE_0RD1LD_1LC1LA_HALT1LD_HALTHALT",
+      "nWindows": 75,
+      "domainMasks": [
+        40960,
+        1156112,
+        173056,
+        1156112,
+        33554431,
+        1156112,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "27000000",
+      "outsideBase": "450000"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffffccefeaeeeaf000f300cccccccd",
+      "sourceTable": "1RB0LC_1RC1LE_0RD1LA_1LC1RD_HALT0LC_HALTHALT",
+      "nWindows": 86,
+      "domainMasks": [
+        4300800,
+        4268032,
+        4432896,
+        5349384,
+        33554431,
+        5349384,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "40500000",
+      "outsideBase": "431250"
+    },
+    {
+      "maskHex": "0xc0c0c0c0eeffeefeffccccccfc00ff00feeefeef",
+      "sourceTable": "1RB1LA_1RC1LE_0RD0LA_1LC1LD_HALT0LD_HALTHALT",
+      "nWindows": 96,
+      "domainMasks": [
+        1155072,
+        107522,
+        2335744,
+        107520,
+        33554431,
+        1680402,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "60000000",
+      "outsideBase": "425000"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c000c000f00f0000001",
+      "sourceTable": "1RB1LE_1RC1LF_0RD1LE_1LC1LB_HALT1RA_HALTHALT",
+      "nWindows": 33,
+      "domainMasks": [
+        49152,
+        2229248,
+        33554431,
+        2229248,
+        33554431,
+        2622464,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc080c08000ff00ccff08cc080c080f0822222223",
+      "sourceTable": "1RB0RD_1RC0RE_0RD1LE_1LC1LB_HALT0LA_HALTHALT",
+      "nWindows": 49,
+      "domainMasks": [
+        49152,
+        2229248,
+        33554431,
+        3146752,
+        33554431,
+        2098178,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf0000000ff0000cf00cf00f888cb880c000c01",
+      "sourceTable": "1RB0RA_1RC1LB_0RD0RE_1LC1LA_HALT0LC_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        40968,
+        1068032,
+        16384,
+        33554431,
+        33554431,
+        40968,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "14062500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x4040404033ff33314f444c440000030030003001",
+      "sourceTable": "1RB1LE_1RC0RC_0RD1RA_1LC0LD_HALT1RD_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        32784,
+        4719616,
+        33554431,
+        2262032,
+        33554431,
+        4719616,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "35156250",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c00f00003000c000c01",
+      "sourceTable": "1RB1LF_1RC1RC_0RD1LE_1LC1LA_HALT1RB_HALTHALT",
+      "nWindows": 33,
+      "domainMasks": [
+        40960,
+        2229248,
+        2229248,
+        33554431,
+        33554431,
+        3146752,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c0c0ffc0cc0f080c08f000c3f08c888c89",
+      "sourceTable": "1RB0RE_1RC1LD_0RD1LC_1LC1LA_HALT0RB_HALTHALT",
+      "nWindows": 51,
+      "domainMasks": [
+        8192,
+        33554431,
+        65536,
+        5254144,
+        33554431,
+        41216,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "5859375",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000000cff0cff8f8c8c8c00000300c000c001",
+      "sourceTable": "1RB0RE_1RC0RF_0RD1RA_1LC1LD_HALT0RD_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        99328,
+        558080,
+        33554431,
+        35840,
+        33554431,
+        99328,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "31640625",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3030303000ff00000f000c00f00033004c444c45",
+      "sourceTable": "1RB0RE_1RC0LE_0RD0LF_1LC1LA_HALT1LA_HALTHALT",
+      "nWindows": 41,
+      "domainMasks": [
+        40960,
+        33554431,
+        1056,
+        9439232,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "4687500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff00ffff0cfc0c0c0c0f0c00f000f1",
+      "sourceTable": "1RB0RD_1RC1LA_0RD1LE_1LC1LB_HALT0RA_HALTHALT",
+      "nWindows": 61,
+      "domainMasks": [
+        50176,
+        2229248,
+        33554431,
+        50176,
+        33554431,
+        2098304,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "31640625",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf0000000ccffccc88f888c8800000300c000c001",
+      "sourceTable": "1RB1RE_1RC1RE_0RD1RA_1LC1LD_HALT1LD_HALTHALT",
+      "nWindows": 42,
+      "domainMasks": [
+        98304,
+        4817920,
+        33554431,
+        8487936,
+        33554431,
+        74752,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "46875000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3000300003ff03004f404f400003030310101011",
+      "sourceTable": "1RB0RB_1RC1RC_0RD1RE_1LC0LD_HALT0LA_HALTHALT",
+      "nWindows": 39,
+      "domainMasks": [
+        32792,
+        8388608,
+        33554431,
+        6291712,
+        33554431,
+        2130946,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "14062500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x30303030ddffddfdcfcccccc00000300f000f001",
+      "sourceTable": "1RB0LE_1RC0LD_0RD1RA_1LC1LD_HALT0LD_HALTHALT",
+      "nWindows": 64,
+      "domainMasks": [
+        98304,
+        623616,
+        33554431,
+        99360,
+        33554431,
+        98320,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "37500000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c00000ff00000ff00c00f30003000c000c01",
+      "sourceTable": "1RB0RF_1RC1LE_0RD0LB_1LC1LA_HALT0RC_HALTHALT",
+      "nWindows": 35,
+      "domainMasks": [
+        40964,
+        40964,
+        132096,
+        33554431,
+        33554431,
+        1050112,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000f00003ff03f3cfcccccc00000300c0c0c0c1",
+      "sourceTable": "1RB1LC_1RC0LF_0RD1RE_1LC0LD_HALT1LA_HALTHALT",
+      "nWindows": 55,
+      "domainMasks": [
+        32784,
+        8422400,
+        33554431,
+        8422400,
+        33554431,
+        41984,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3000300003ff03334f444c440000030010101011",
+      "sourceTable": "1RB0RD_1RC0LF_0RD1RE_1LC0LD_HALT0LA_HALTHALT",
+      "nWindows": 39,
+      "domainMasks": [
+        32784,
+        8389632,
+        33554431,
+        4228096,
+        33554431,
+        2130946,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "18750000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x1010101003ff03334f444c440000030030003001",
+      "sourceTable": "1RB0LE_1RC0RE_0RD1RA_1LC0LD_HALT0RD_HALTHALT",
+      "nWindows": 39,
+      "domainMasks": [
+        32784,
+        525312,
+        33554431,
+        2130976,
+        33554431,
+        4228096,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "18750000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc0c0c0c0ffffff32cfc4ccc400000300f000f001",
+      "sourceTable": "1RB1LE_1RC0RF_0RD1RA_1LC1RD_HALT0LD_HALTHALT",
+      "nWindows": 62,
+      "domainMasks": [
+        4227072,
+        4718608,
+        33554431,
+        4359184,
+        33554431,
+        4718608,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "35156250",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf0000000ff00000f000c00f3000300cc00cc01",
+      "sourceTable": "1RB0RE_1RC1LA_0RD1RB_1LC1LA_HALT0LB_HALTHALT",
+      "nWindows": 35,
+      "domainMasks": [
+        40964,
+        33554431,
+        9216,
+        1051648,
+        33554431,
+        40964,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3000300003ff03004f404c400300030011111111",
+      "sourceTable": "1RB0LA_1RC1LA_0RD1RE_1LC0LD_HALT0LA_HALTHALT",
+      "nWindows": 38,
+      "domainMasks": [
+        32788,
+        8388608,
+        33554431,
+        5242882,
+        33554431,
+        2130946,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "14062500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c08cff8cc88f888c88c000c30008080809",
+      "sourceTable": "1RB0RF_1RC1LD_0RD0RE_1LC1LD_HALT1LA_HALTHALT",
+      "nWindows": 44,
+      "domainMasks": [
+        98304,
+        1149952,
+        99328,
+        33554431,
+        33554431,
+        106496,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "35156250",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3000300013ff13314f444c440000030010101011",
+      "sourceTable": "1RB0LD_1RC0RD_0RD1RE_1LC0LD_HALT0LA_HALTHALT",
+      "nWindows": 40,
+      "domainMasks": [
+        32784,
+        8389632,
+        33554431,
+        4227088,
+        33554431,
+        2130962,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "23437500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc0c0c0c000ff00ff8fcc8cfff000f3000c0c0c0d",
+      "sourceTable": "1RB1LD_1RC1LE_0RD0RC_1LC1LA_HALT1LC_HALTHALT",
+      "nWindows": 63,
+      "domainMasks": [
+        42496,
+        34304,
+        132096,
+        33554431,
+        33554431,
+        1082368,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c00000ff0000ff000c000f000f0000f00001",
+      "sourceTable": "1RB0LB_1RC0RD_0RD1LE_1LC1LB_HALT0RA_HALTHALT",
+      "nWindows": 35,
+      "domainMasks": [
+        49156,
+        2229248,
+        33554431,
+        49156,
+        33554431,
+        2098304,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "31640625",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c0000cff0cff8f8c8c8c0000030000f00001",
+      "sourceTable": "1RB0RD_1RC1RC_0RD1RE_1LC1LD_HALT0RA_HALTHALT",
+      "nWindows": 45,
+      "domainMasks": [
+        99328,
+        8422400,
+        33554431,
+        99328,
+        33554431,
+        33920,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "31640625",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf0000000ff00000f000f00f0000300cc00cc01",
+      "sourceTable": "1RB0RE_1RC1LA_0RD0LB_1LC1LA_HALT0LC_HALTHALT",
+      "nWindows": 35,
+      "domainMasks": [
+        40968,
+        33554431,
+        9216,
+        1051648,
+        33554431,
+        40968,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3010301000ff0033ff043c040f040f0411111111",
+      "sourceTable": "1RB0RD_1RC1RC_0RD0LE_1LC1LB_HALT0LA_HALTHALT",
+      "nWindows": 50,
+      "domainMasks": [
+        49152,
+        2098208,
+        33554431,
+        1049602,
+        33554431,
+        1049602,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000300000ff0030cf44cc44f01033100c040c05",
+      "sourceTable": "1RB1RC_1RC1LC_0RD1RE_1LC1LA_HALT0LB_HALTHALT",
+      "nWindows": 47,
+      "domainMasks": [
+        40960,
+        9438208,
+        32768,
+        33554431,
+        33554431,
+        33796,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "7031250",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xc000c0000cff0cc88f888c880000030080808081",
+      "sourceTable": "1RB1LC_1RC1RA_0RD1RE_1LC1LD_HALT1LA_HALTHALT",
+      "nWindows": 38,
+      "domainMasks": [
+        98304,
+        8422400,
+        33554431,
+        8422400,
+        33554431,
+        41984,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "21093750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000000000ff0000cf00cc00f888cb880c000c01",
+      "sourceTable": "1RB0LF_1RC1LB_0RD1RE_1LC1LA_HALT0RD_HALTHALT",
+      "nWindows": 41,
+      "domainMasks": [
+        40960,
+        9454592,
+        16384,
+        33554431,
+        33554431,
+        50176,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "9375000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3010301000ff00304f444c44f00033000c040c05",
+      "sourceTable": "1RB0LC_1RC0LE_0RD0RD_1LC1LA_HALT1LC_HALTHALT",
+      "nWindows": 43,
+      "domainMasks": [
+        40960,
+        9438208,
+        1056,
+        33554431,
+        33554431,
+        32768,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "4687500",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000f000ddffddfdcfcccccc0000030030303031",
+      "sourceTable": "1RB0LD_1RC0LA_0RD1RE_1LC1LD_HALT0LA_HALTHALT",
+      "nWindows": 64,
+      "domainMasks": [
+        98304,
+        8487936,
+        33554431,
+        98320,
+        33554431,
+        99330,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "37500000",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0x3010301000ff00300f000c00f00033004c444c45",
+      "sourceTable": "1RB0RD_1RC0LE_0RD1RB_1LC1LA_HALT1LA_HALTHALT",
+      "nWindows": 41,
+      "domainMasks": [
+        8192,
+        33554431,
+        1056,
+        9438208,
+        33554431,
+        8192,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "2343750",
+      "outsideBase": "421875"
+    },
+    {
+      "maskHex": "0xf000f000ff00ffcfccccccf000f3000c0c0c0d",
+      "sourceTable": "1RB0RD_1RC1LC_0RD0RE_1LC1LA_HALT0RD_HALTHALT",
+      "nWindows": 61,
+      "domainMasks": [
+        41984,
+        1084416,
+        33792,
+        33554431,
+        33554431,
+        41984,
+        33554431,
+        33554431
+      ],
+      "grossPhysical": "28125000",
+      "outsideBase": "421875"
+    }
+  ]
+}
