@@ -1,4 +1,4 @@
-import CyclicOrder
+import AntiGenericScaled
 import CyclicPrimitive
 import OrderReturn
 set_option maxHeartbeats 0
