@@ -796,3 +796,10 @@ Critic commit `0266322b1caf` repaired Raw56 root14 module namespace merging; thi
 - Exact repair run **46174163554** succeeded for 1RE/g4p3: `SUCCESS: compiled 151 project modules from 49 root(s)`; artifact **15274798485**, SHA-256 **4969db35b3acf0f0d22de853c72a149b07e3f731e9d177b27c5d51978350ab75**. This closes the last failed source partition in 1RE; together with Agent32's four replacements, all 32 partition artifacts are now available: 27 original successful shard artifacts plus five exact replacement artifacts.
 - Dispatched repaired 1RE whole-child composer **46175006497** using source run **46157370847** and five replacements: g0p0 **46165303934**, g1p0 **46165311421**, g3p0 **46165775776**, g3p1 **46165782046**, g4p3 **46174163554**. It is queued; no whole-child Cover is claimed until this composer succeeds and its Lean evidence is checked.
 - README update commit **da271b62bc1e6fce585a022f4f0f52306fac174b**.
+
+
+## 2026-11-28T18:20:43.660Z checkpoint — all 0LE replacement artifacts ready
+
+- Exact repair run **46172255584** succeeded for 0LE/g4p3: `SUCCESS: compiled 166 project modules from 58 root(s)`; artifact **15275331184**, SHA-256 **3b2c39df9c68d8ab1d830fa0d18b5c5a61b2a6e3e5d7c2f9a8c50f7c0e7fce24**. This was the last of the ten failed 0LE source partitions.
+- All ten 0LE replacement artifacts are now successful: g0p2 46158197180, g1p2 46166673180, g2p0 46162741710, g2p2 46166458748, g3p1 46172473497, g3p2 46172477421, g3p3 46172480971, g4p3 46172255584, g5p1 46173429958, g5p3 46173693696. The original source run **46156341083** still has four active and four queued sibling shards; do not compose until those artifacts are present.
+- README update commit **c0adba07b464d0db096b2aabc80ca6d505285fd8**.
