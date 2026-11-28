@@ -10,11 +10,11 @@ open BB6Coverage
 Guard at initial state A: at the blank start the cell immediately
 left of A's head is 0. Every later transition into A is forced to be
 0RA, preserving that 0 predecessor. A1=(bw,L,F) consequently enters
-E scanning a 0, and F1 is never read (even if assigned HALT).
+F scanning a 0, and F1 is never read (even if assigned HALT).
 
 Other source fixed rows are B0=1RC C0=0RD D0=1LC, A0=1RB.
-The unrestricted A1,B1,C1,D1,E0 root entries are allocated as
-A1 left into E, B1/C1/D1/F0 any of 12 ordinary moves to B,C,D
+The unrestricted A1,B1,C1,D1,F0 root entries are allocated as
+A1 left into F, B1/C1/D1/F0 any of 12 ordinary moves to B,C,D
 or the special guarded A-entry move 0RA. F1,E0,E1 are free.
 -/
 
