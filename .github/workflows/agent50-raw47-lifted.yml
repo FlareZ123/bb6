@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct]
+        options: [late-parent, lift, canonical, canonical39, raw34-sidecycle, raw34-depth2, raw34-growth, raw34-closed, raw34-depth3, raw34-closed-bcd, raw34-depth3-distinct, raw34-union-audit]
         default: late-parent
       base_run:
         type: string
@@ -540,5 +540,27 @@ jobs:
             /tmp/a50-raw34-depth3-distinct/closure.log
             /tmp/a50-raw34-depth3-distinct/manifest.json
             /tmp/a50-raw34-depth3-distinct/build/*.olean
+          if-no-files-found: error
+          retention-days: 30
+
+  raw34-union-audit:
+    if: inputs.mode == 'raw34-union-audit'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Exact 25-way wildcard cylinder union
+        run: |
+          set -euo pipefail
+          node --version
+          node im-results/agent50-raw34-firsthole/count_accepted_union.mjs \
+            | tee /tmp/agent50-raw34-exact-union.log
+          grep -F 'PASS: exact physically disjoint Raw34 proved-union size 97,509,765,625' \
+            /tmp/agent50-raw34-exact-union.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw34-exact-union-audit
+          path: /tmp/agent50-raw34-exact-union.log
           if-no-files-found: error
           retention-days: 30
