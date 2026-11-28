@@ -5,6 +5,22 @@ open BB6Coverage
 open BB6Coverage.Agent31Pump
 open BB6.Agent1Raw56.LE17557Base
 
+/-- Normalize a singleton repetition followed by the same bit.  This is the
+    list-level rotation repeatedly needed when composing source sweeps. -/
+theorem rep_singleton_cons (b : Bool) (n : Nat) (L : List Bool) :
+    rep [b] n ++ b :: L = b :: rep [b] n ++ L := by
+  have h := congrArg (fun xs : List Bool => xs ++ L) (rep_snoc [b] n)
+  simpa [List.append_assoc] using h
+
+/-- Compose two exact source runs whose intermediate zipper states are
+    propositionally equal after run-list normalization. -/
+theorem join0_of_eq {p : PartialMachine} {n k : Nat} {a b b' c : Z0}
+    (h : run0 p n a = some b) (e : b = b')
+    (g : run0 p k b' = some c) :
+    run0 p (n+k) a = some c := by
+  subst b'
+  exact join0 h g
+
 theorem B1_one (L R : List Bool) :
     run0 p 1 ⟨1, true :: L, true :: R⟩ =
       some ⟨1, true :: true :: L, R⟩ := by
@@ -134,7 +150,7 @@ theorem I_return (a b c z : Nat) (L R : List Bool) :
           rep [true] (b+4) ++ afterB⟩ := by
     have ht := B_turn_to_C (rep [true] a ++ true :: L)
       (rep [true] (b+4) ++ afterB)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h4 := C_sweep_ones (b+4)
     (true :: true :: rep [true] a ++ true :: L) afterB
   have h5 :
@@ -150,9 +166,10 @@ theorem I_return (a b c z : Nat) (L R : List Bool) :
     have ht := C_I_turn_to_A
       (rep [false] (b+4) ++ true :: true :: rep [true] a ++ true :: L)
       (rep [true] c ++ rep [false] (z+2) ++ R)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h12 := join0 h1 h2
-  have h123 := join0 h12 h3
+  have h123 := join0_of_eq h12
+    (by simp [tail, afterB, rep, rep_singleton_cons, List.append_assoc]) h3
   have h1234 := join0 h123 h4
   have h := join0 h1234 h5
   simpa [tail, afterB, rep, List.append_assoc] using h
@@ -206,7 +223,7 @@ theorem Z_return (a b c z : Nat) (L R : List Bool) :
         ⟨3, false :: rep [false] (c+3) ++ true :: true :: LT, RT⟩ := by
     have ht := C_to_D_zero
       (rep [false] (c+1) ++ true :: true :: LT) RT
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h4 := D_sweep_left_zeros (c+3)
     (true :: true :: LT) RT
   have h5 :
@@ -221,11 +238,15 @@ theorem Z_return (a b c z : Nat) (L R : List Bool) :
       (rep [false] (b+1) ++ rep [true] (a+3) ++ L)
       (rep [true] (c+3) ++ RT)
     simpa [LT, rep, List.append_assoc] using ht
-  have h12 := join0 h1 h2
-  have h123 := join0 h12 h3
-  have h1234 := join0 h123 h4
-  have h := join0 h1234 h5
-  simpa [LT, RT, rep, List.append_assoc] using h
+  have h12 := join0_of_eq h1
+    (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h2
+  have h123 := join0_of_eq h12
+    (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h3
+  have h1234 := join0_of_eq h123
+    (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h4
+  have h := join0_of_eq h1234
+    (by simp [LT, RT, rep, rep_singleton_cons, List.append_assoc]) h5
+  simpa [LT, RT, rep, rep_singleton_cons, List.append_assoc] using h
 
 /-- Exact nine-step normal third return (the b>5 branch). -/
 theorem R_return_normal (L R : List Bool) :
@@ -264,10 +285,13 @@ theorem A_triad_normal (a d c z : Nat) (L R : List Bool) :
     have ht := R_return_normal
       (rep [false] d ++ rep [true] (a+3) ++ L)
       (rep [true] (c+4) ++ rep [false] z ++ R)
-    simpa [rep, List.append_assoc] using ht
-  have hIZ := join0 hI hZ
-  have h := join0 hIZ hR
-  simpa [rep, List.append_assoc] using h
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
+  have hIZ := join0_of_eq hI
+    (by simp [rep, rep_singleton_cons, List.append_assoc]) hZ
+  have h := join0_of_eq hIZ
+    (by simp [rep, rep_singleton_cons, List.append_assoc]) hR
+  convert h using 1 <;>
+    simp [rep, rep_singleton_cons, List.append_assoc] <;> omega
 
 theorem carry_prelude7 (L R : List Bool) :
     run0 p 7
@@ -320,10 +344,13 @@ theorem R_return_carry (a d c z : Nat) (L R : List Bool) :
     have ht := A1_land_zero L
       (rep [true] (a+d+4) ++ [false] ++
         rep [true] (c+6) ++ rep [false] z ++ R)
-    simpa [rep, List.append_assoc] using ht
-  have h12 := join0 h1 h2
-  have h := join0 h12 h3
-  simpa [rep, List.append_assoc] using h
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
+  have h12 := join0_of_eq h1
+    (by simp [RT, rep, rep_singleton_cons, List.append_assoc]) h2
+  have h := join0_of_eq h12
+    (by simp [RT, rep, rep_singleton_cons, List.append_assoc]) h3
+  convert h using 1 <;>
+    simp [RT, rep, rep_singleton_cons, List.append_assoc] <;> omega
 
 /-- Source-level boundary b=5 A-triad carry rewrite. -/
 theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
@@ -339,9 +366,12 @@ theorem A_triad_carry (a d c z : Nat) (L R : List Bool) :
   have hI := I_return a 0 c z (rep [true] d ++ false :: L) R
   have hZ := Z_return a 0 c z (rep [true] d ++ false :: L) R
   have hR := R_return_carry a d c z L R
-  have hIZ := join0 hI hZ
-  have h := join0 hIZ hR
-  simpa [rep, List.append_assoc] using h
+  have hIZ := join0_of_eq hI
+    (by simp [rep, rep_singleton_cons, List.append_assoc]) hZ
+  have h := join0_of_eq hIZ
+    (by simp [rep, rep_singleton_cons, List.append_assoc]) hR
+  convert h using 1 <;>
+    simp [rep, rep_singleton_cons, List.append_assoc] <;> omega
 
 theorem D0D1_to_E (L R : List Bool) :
     run0 p 2 ⟨3, false :: true :: true :: L, R⟩ =
@@ -387,7 +417,7 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
     have ht := B_turn_to_C
       (rep [true] (A+1) ++ true :: LT)
       (rep [true] B ++ rep [false] (z+2) ++ R)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h4 := C_sweep_ones B
     (true :: true :: rep [true] (A+1) ++ true :: LT)
     (rep [false] (z+2) ++ R)
@@ -405,7 +435,7 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
     have ht := C_to_D_zero
       (rep [false] B ++
         true :: true :: rep [true] (A+1) ++ true :: LT) RT
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h6 := D_sweep_left_zeros (B+2)
     (rep [true] (A+4) ++ LT) RT
   have h7 :
@@ -418,7 +448,7 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
     have ht := D0D1_to_E
       (rep [true] (A+2) ++ LT)
       (rep [true] (B+2) ++ RT)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h8 := E_sweep_left_ones (A+2) LT
     (rep [true] (B+4) ++ RT)
   have h9 :
@@ -432,8 +462,24 @@ theorem B_first_Z_return (A B z : Nat) (L R : List Bool) :
     have ht := E_Z_tail_to_A (rep [false] 5 ++ L)
       (rep [false] (A+2) ++ rep [true] (B+4) ++ RT)
     simpa [LT, rep, List.append_assoc] using ht
-  have h := join0 (join0 (join0 (join0 (join0 (join0 (join0 (join0 h1 h2) h3) h4) h5) h6) h7) h8) h9
-  simpa [LT, RT, tailB, rep, List.append_assoc] using h
+  have h12 := join0_of_eq h1
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h2
+  have h123 := join0_of_eq h12
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h3
+  have h1234 := join0_of_eq h123
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h4
+  have h12345 := join0_of_eq h1234
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h5
+  have h123456 := join0_of_eq h12345
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h6
+  have h1234567 := join0_of_eq h123456
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h7
+  have h12345678 := join0_of_eq h1234567
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h8
+  have h := join0_of_eq h12345678
+    (by simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc]) h9
+  convert h using 1 <;>
+    simp [LT, RT, tailB, rep, rep_singleton_cons, List.append_assoc] <;> omega
 
 /-- The second B-triad Z return is completely local and always costs eleven. -/
 theorem B_second_Z_return (L R : List Bool) :
@@ -469,7 +515,7 @@ theorem B_triad (A B z : Nat) (L R : List Bool) :
             rep [false] z ++ R⟩ := by
     have ht := B_second_Z_return L
       (rep [false] A ++ rep [true] (B+4) ++ rep [false] z ++ R)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h3 :
       run0 p 9
         ⟨0, rep [false] 2 ++ L,
@@ -484,7 +530,7 @@ theorem B_triad (A B z : Nat) (L R : List Bool) :
     have ht := R_return_normal L
       (rep [true] 3 ++ rep [false] (A+1) ++
         rep [true] (B+4) ++ rep [false] z ++ R)
-    simpa [rep, List.append_assoc] using ht
+    simpa [rep, rep_singleton_cons, List.append_assoc] using ht
   have h12 := join0 h1 h2
   have h := join0 h12 h3
   simpa [rep, List.append_assoc] using h
