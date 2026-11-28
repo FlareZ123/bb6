@@ -15,7 +15,7 @@ ALLOWED={"propext","Classical.choice","Quot.sound"}
 NS="BB6.Agent29Raw36."
 NAMES=["d102_same_source","d114_same_source","d102_cover_at",
        "d114_cover_at","parent_cover_from_live7_after02And14",
-       "remaining_count","removed_02","removed_14"]
+       "after02And14_count"]
 PINS=[
  {"index":"02","run":46135318026,"revision":"432ae5f017782402e77b656aa42f27afd442c6fb",
   "id":15261371812,"artifact":"raw36-d1-02-proof-split16",
