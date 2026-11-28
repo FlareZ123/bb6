@@ -72,6 +72,13 @@ def main(mv):
         subprocess.run([sys.executable,str(Path(__file__).with_name("gen_sweep46.py"))],check=True)
         extra_imports.append("Raw13RECycle")
         manual["1RB1LD1RC1LA1LA1RE1RF0LA1LB0RE---1RD"]=".closed (.proven BB6.Agent46Raw13RECycle.p BB6.Agent46Raw13RECycle.never)"
+    if mv in ("1RB","1RC"):
+        extra_imports.append("Raw13Coupled6RBSweeps")
+        ns_rb="BB6.Agent46Raw13Coupled6RBSweeps"
+        if mv=="1RB":
+            manual["1RB1LD1RC1RA1LA1RE0LC0LA0RF1RB---0RB"]=f".closed (.proven ({ns_rb}.p .rb) {ns_rb}.never4)"
+        else:
+            manual["1RB1LD1RC1RA1LA1RE0LC0LA0RF1RC---0RB"]=f".closed (.proven ({ns_rb}.p .rc) {ns_rb}.never8)"
     if mv=="1RF":
         extra_imports += ["Raw13Coupled6OneRFPrefix", "Raw13Coupled6OneRFAlternating"]
         manual["1RB1LD1RC0LD1LA1RE0RE0LA1RB1RF0LB---"]=".closed (.proven BB6.Agent46Raw13Coupled6OneRFAlternating.p BB6.Agent46Raw13Coupled6OneRFAlternating.never)"
