@@ -124,6 +124,11 @@ jobs:
           compile Agent49TerminalRatio4Source agent49-parity623/TerminalRatio4Source
           compile ThreeStepStripArithmetic agent27-623-gap-two-three-step/ThreeStepStripArithmetic
           compile ThreeStepStripSource agent27-623-gap-two-three-step/ThreeStepStripSource
+          compile SquareGapTerminalBridge agent8-623-inverse/SquareGapTerminalBridge
+          compile Agent8RootCancellationBudgetBridge agent8-623-inverse/RootCancellationBudgetBridge
+          compile RootExclusion agent48-623-budget-composition/RootExclusion
+          compile RootMassGapAllN10 agent8-623-inverse/RootMassGapAllN10
+          compile ThreeStepStripN11Source agent27-623-gap-two-three-step/ThreeStepStripN11Source
           if grep -q 'sorryAx' three-step-strip-axioms.log; then exit 1; fi
 
   retained-parent-source:
