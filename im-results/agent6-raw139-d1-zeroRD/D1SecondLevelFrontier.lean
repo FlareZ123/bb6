@@ -44,31 +44,44 @@ theorem cover_of_frontier (B : Nat) (hB : 14 ≤ B)
   apply BB6.Agent6D1SecondLevel.cover B hB
   · intro n hn
     apply h
-    simp [frontier, f2, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩)
   · intro n hn
     apply h
-    simp [frontier, f6, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩))
   · intro n hn
     apply h
-    simp [frontier, f8, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩)))
   · intro n hn
     apply h
-    simp [frontier, f9, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩))))
   · intro n hn
     apply h
-    simp [frontier, f10, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩)))))
   · intro n hn
     apply h
-    simp [frontier, f16, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩))))))
   · intro n hn
     apply h
-    simp [frontier, f17, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩)))))))
   · intro n hn
     apply h
-    simp [frontier, f18, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (Or.inl (List.mem_map.mpr ⟨n, hn, rfl⟩))))))))
   · intro n hn
     apply h
-    simp [frontier, f19, hn]
+    simp only [frontier, List.mem_append]
+    exact Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr (Or.inr
+      (List.mem_map.mpr ⟨n, hn, rfl⟩))))))))
 
 #print axioms cover_of_frontier
 end BB6.Agent6D1SecondLevelFrontier
