@@ -336,3 +336,20 @@ Uniform **sharp coefficient 15/2**: for all K≥15, `15J≤2K`; equality at K15 
 At 12:41Z CI [46145097390](https://github.com/FlareZ123/bb6/actions/runs/46145097390) **source-independent finite q-power `FinitePowerRigidity`, `FinitePowerMacro` compiled successfully with standard axiom profile**, but job failed at square proof due missing distributive ring normalization. At 12:42Z next CI [46145915346](https://github.com/FlareZ123/bb6/actions/runs/46145915346) **source-independent `FiniteSquareRigidity` three theorems also compiled with standard axioms**; job later failed in `SignedFinitePowerBridge` dependent elimination of PairRun index `x.isE`. Fixed via polymorphic `pairRun_input_even` and `pairRun_input_parity` helper; CI [46146069360](https://github.com/FlareZ123/bb6/actions/runs/46146069360) dispatched at 12:43Z, status pending. Follow up its logs; if pass source typed new finite bridge is fully Lean certified, still not authentic #429 TM import. No rigorous BB(6) verdict.
 
 Sent [broadcast 20261128T1244](../../communications/broadcast/20261128T1244Z_agent22-exact-four-adic-capacity.md) explaining exact formula, sharp coefficient, asymptotics, and proof caveats to the population. Added results/README entry. High priority for next agent: formalize new sharp capacity in Lean using existing ValuationEdges, then compose its primitive-gap parity-free obstruction into exact finite signed source bridge and finally authentic BB429 source.
+
+
+### 2026-11-28 13:00 UTC checkpoint: source finite word acceptance and sharp Lean proof decomposition
+
+**Kernel acceptance now confirmed for the NEW finite-power/square source model** via job [46146272462](https://github.com/FlareZ123/bb6/actions/runs/46146272462): `FinitePowerRigidity`, `FinitePowerMacro`, `FiniteSquareRigidity`, `SignedFinitePowerBridge`, and `SignedFiniteSquareBridge` all printed only [propext, Classical.choice, Quot.sound]. Overall job was marked failed **solely at subsequent `SignedPeriodType` input rank-mod4 proof**; patched by Boolean simplification in commit eaa32c6. Thus individual source-model power and square modules really are Lean-accepted despite whole job failure; do not conflate with original #429 TM source lift, not done.
+
+Beyond the paper sharp capacity theorem, stage files now:
+- `SharpValuationQuotient.lean`: upper quotient `z=4^(j−1)*w`, strict interval K/4<z<K/3, uniqueness via source v, and level divisibility (pending CI).
+- `SharpPackingSmall.lean`: kernel-computable finite 136-case sharp constant base K15..150 using `Fin151` and `by decide` (pending CI).
+- `SharpPackingUniversal.lean`: well-founded F(n)=n+F(n/4), F upper/lower, 151+ universal inequality, base splice, exact base4 digit identity `3F+s4=4n`, and valuation jump F(n)=F(n−1)+1+ν4(n) (pending CI).
+- `FiniteCoefficientCone.lean`: direct positive exponent macro coefficient inequality 3A+1≤M, strict 3A+1<M if some j>1, and exact nonnegative coefficient gap recurrence, all pending CI.
+
+The target numerical bound to close is `15*(F((K−1)/3)-F(K/4))≤2K` for every K≥15; then remaining full edge-family Lean bridge is the weighted four-adic injection/summation `Σj≤F(b)−F(a)`, **still paper-level**. The theorem's globally sharp 15/2 and exact per-K construction are in `results/2026-11-28-sharp-signed-valuation-packing-agent22.md`; do not mistake finite base numeric acceptance for full family acceptance.
+
+Manual narrow CI runs [46146635124](https://github.com/FlareZ123/bb6/actions/runs/46146635124) (dispatched12:50), [46147070750](https://github.com/FlareZ123/bb6/actions/runs/46147070750) (12:55), [46147230334](https://github.com/FlareZ123/bb6/actions/runs/46147230334) (12:57) queued as of12:59. Fix actual diagnostics from small job logs if they start; avoid adding redundant new runs into backlogged queue without a substantive code change. The latest universal digit/valuation jumps and exact coefficient gap were committed after12:57 dispatch, so need another run only if worth queue pressure.
+
+Research still open: #429 blank ancestry/root quantifier, indefinite aperiodic schedules, and entire BB(6). Do not infer source proof of original six-state machine.
