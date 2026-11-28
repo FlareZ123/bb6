@@ -1,8 +1,8 @@
-# Space Needle: cancellation indices 10 and 11, complete finite reverse trees
+# Space Needle: cancellation indices 10, 11 and 12, complete finite reverse trees
 
 ## Result and status
 
-The tenth and eleventh cancellation feeders are not on the blank-root orbit, by the established exact shifted-counter inverse correspondence, the kernel-checked arithmetic cancellation cutoff and resonance/gap lemmas, and the finite exact GMP calculation below. This is an intermediate computational exclusion, not a newly kernel-certified finite result or a decision of Space Needle. The previously audited r=7,8,9 cases are not rerun.
+The tenth, eleventh and twelfth cancellation feeders are not on the blank-root orbit, by the established exact shifted-counter inverse correspondence, the kernel-checked arithmetic cancellation cutoff and resonance/gap lemmas, and the finite exact GMP calculation below. This is an intermediate computational exclusion, not a newly kernel-certified finite result or a decision of Space Needle. The previously audited r=7,8,9 cases are not rerun.
 
 For the detailed r=10 audit, set N=9^10=3486784401, a=(N+5)/2=1743392203, A=2^a, M=20a=34867844060, P=(A^20-N)/(A+3). The cancellation feeder b=AP/2 maps to terminal 2^(M-1). We avoid allocating AP or the terminal integer.
 
@@ -63,6 +63,23 @@ For r=11 the kernel-checked initial cutoff is m^2<16ra, giving m<=1661786. The o
 The r=11 reverse tree consists of its sole root, which differs from blank root 3.
 
 The new needle11.cpp differs from the checked r=10 version only in the specialized modular exponentiation. It replaces general GMP modulus by signed shift folding using 2^m=-3 mod D, after every square and multiplication by 3. Every fold preserves congruence and strictly reduces magnitude whenever |S|>=2^m and m>=8. For smaller m the original GMP path remains. This permits exact modular powers without large general integer division. The exact source SHA256 is ee7f5216b0cce8ab029630ed84d364655296b1772f59b3c5f60e2901a443f592. The first small chunk was also independently repeated with this source. The optimized r=11 calculation is complete, but not yet a Lean finite certificate.
+
+## Twelfth cancellation feeder: complete initial-parent exclusion
+
+For r=12, N=282429536481 and a=141214768243. The same proved cutoff m²<16ra restricts all possible initial incoming valuations to m=1..5,207,037. The existing exact GMP enumerator `needle11.cpp` was executed at pinned revision `ebc7eeb7f62c109d1c4497648f27fd9c93a05a8c` in [manual run 46102294468](https://github.com/FlareZ123/bb6/actions/runs/46102294468), with [raw output artifact 15247340526](https://github.com/FlareZ123/bb6/actions/runs/46102294468/artifacts/15247340526).
+
+```
+r=12 c=1 d=0 L=1 range=1..5207037 cut=5207037 sieve=4212546 sparse=994491 exact=0 extras=0 largeZero=0 parents= seconds=1110.07
+```
+
+The 4,212,546 prime rejections and 994,491 sparse congruence rejections partition the entire admissible interval exactly. No survivor required a full LD test, and there were no unresolved large candidates. The initial feeder has no predecessor; it is distinct from the blank shifted root 3, so r=12 cannot be encountered on the authentic high-level blank orbit, subject to the same established correspondence, cutoff and exact computational evidence as r=11.
+
+Reproduce with the existing r=11 binary:
+```sh
+g++ -O3 -std=c++17 -fopenmp needle11.cpp -lgmpxx -lgmp -o needle11
+OMP_NUM_THREADS=4 ./needle11 12 1 0 1 1 6000000
+```
+The source SHA256 remains `ee7f5216b0cce8ab029630ed84d364655296b1772f59b3c5f60e2901a443f592`. This is a finite computational exclusion at one new index, not an all-r result or a kernel-certified finite tree. Agent20 recovered the successful prior computation without repeating it.
 
 ## Checked arithmetic implementation
 
