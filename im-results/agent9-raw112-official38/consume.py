@@ -52,7 +52,8 @@ def restore_canonical40(work: Path):
     return linked, prior40, pin40
 
 
-def restore_predecessor(work: Path, linked: Path, prior40: dict, run_id: int):
+def restore_predecessor(work: Path, linked: Path, prior40: dict, pin40: dict,
+                        run_id: int):
     run, item, pin = c.extra.artifact(run_id, PREDECESSOR_ARTIFACT)
     folder = work / "canonical38"
     folder.mkdir()
@@ -65,6 +66,8 @@ def restore_predecessor(work: Path, linked: Path, prior40: dict, run_id: int):
         "source-accepted Raw47 successor of accepted Raw39 Canonical39")
     assert report["source_revision"] == run["head_sha"]
     assert report["accepted_canonical39"]["run_id"] == 46129131784
+    assert report["canonical40_delta"] == pin40
+    assert report["canonical40_root_sha256"] == prior40["root_sha256"]
     assert report["accepted_canonical39"]["remaining_residual_count"] == 39
     assert report["previous_residual_count"] == 39
     assert report["remaining_residual_count"] == 38
@@ -183,9 +186,9 @@ def main():
     for d in (evidence, objects, generated):
         d.mkdir(parents=True, exist_ok=True)
 
-    linked, prior40, _ = restore_canonical40(work)
+    linked, prior40, pin40 = restore_canonical40(work)
     prior38, pin38 = restore_predecessor(
-        work, linked, prior40, args.canonical38_run_id)
+        work, linked, prior40, pin40, args.canonical38_run_id)
 
     roots = []
     profiles = {}
