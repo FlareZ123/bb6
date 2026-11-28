@@ -1,0 +1,128 @@
+name: Agent1 Raw56 E1=0LE six-child 14-to-8 assembly
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  assemble:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned original Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-root-frontier-source-accepted
+          path: /tmp/le-six/base
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '45912699461'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RB
+          path: /tmp/le-six/rb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-shard-0RC
+          path: /tmp/le-six/rc
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-two-source-accepted
+          path: /tmp/le-six/two
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46048213225'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LB-source-accepted
+          path: /tmp/le-six/lb
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095334604'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le1LA-source-accepted
+          path: /tmp/le-six/la
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095337775'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le1RA-source-accepted
+          path: /tmp/le-six/ra
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46095340906'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le-five-source-accepted
+          path: /tmp/le-six/five
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46109884602'
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw56-le0LF-complete-source-accepted
+          path: /tmp/le-six/lf
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: ${{ github.repository }}
+          run-id: '46122584096'
+      - name: Strictly merge accepted objects and check eight-residual theorem
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/le-six/union
+          python - <<'PY'
+          from pathlib import Path
+          import hashlib, shutil
+          root=Path('/tmp/le-six')
+          dst=root/'union'
+          counts={}
+          for name in ('base','rb','rc','two','lb','la','ra','five','lf'):
+              files=list((root/name).rglob('*.olean'))
+              assert files,(name,root/name)
+              counts[name]=len(files)
+              for p in files:
+                  q=dst/p.name
+                  if q.exists():
+                      assert hashlib.sha256(q.read_bytes()).digest()==hashlib.sha256(p.read_bytes()).digest(),(q,p)
+                  else:
+                      shutil.copy2(p,q)
+          needed=['Raw56RootConsumer','Raw56E1LECut','Raw56E1LEFiveCut','Raw56E1LEFiveClosed',
+                  'Raw56LE0RBAll','Raw56LE0RCAll','Raw56LE0LBAll','Raw56LE1LAAll','Raw56LE1RAAll',
+                  'Raw56LE0LFPartialAll','Raw56LE0LFMotif3613','Raw56LE0LFFull']
+          assert all((dst/(n+'.olean')).exists() for n in needed),[n for n in needed if not (dst/(n+'.olean')).exists()]
+          print('accepted object union',counts,'total',len(list(dst.glob('*.olean'))))
+          PY
+          cp im-results/agent1-raw56/le/Raw56E1LE{SixCut,SixClosed}.lean /tmp/le-six/union/
+          export LEAN_PATH=/tmp/le-six/union
+          cd /tmp/le-six/union
+          lean -o Raw56E1LESixCut.olean Raw56E1LESixCut.lean 2>&1 | tee six-cut.log
+          lean -o Raw56E1LESixClosed.olean Raw56E1LESixClosed.lean 2>&1 | tee six-closed.log
+          cat six-cut.log six-closed.log > all.log
+          ! grep -Eq 'sorryAx|native_decide|(^| )error:' all.log
+          python "$GITHUB_WORKSPACE/im-results/agent1-raw57/check_axioms.py" all.log --require BB6.Agent1Raw56E1LE.sound8_closed
+          mkdir -p /tmp/le-six/output
+          cp Raw56E1LESixCut.{lean,olean} Raw56E1LESixClosed.{lean,olean} all.log /tmp/le-six/output/
+      - uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: raw56-le-six-source-accepted
+          path: /tmp/le-six/output/**
+          if-no-files-found: error
+          retention-days: 30
