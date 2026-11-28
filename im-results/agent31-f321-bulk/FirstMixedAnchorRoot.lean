@@ -1,11 +1,11 @@
 import FirstMixedAnchorExclusion
-import AnchorEpoch
+import HighFarRootTargets
 import Lean.Elab.Tactic.Omega
 
 namespace BB6.Agent31F321FirstMixedRoot
 open BB6.Agent31F321Density
 open BB6.Agent31F321FirstMixed
-open BB6.Agent2F321AnchorEpoch
+open BB6.Agent31F321HighFarRootTargets
 open BB6.Agent2F321Phase6
 open BB6.Agent2F321Phase6Bridge
 
@@ -28,9 +28,9 @@ theorem first_mixed_equal_predecessor_unreachable
 theorem first_mixed_anchor_not_root_anchor
     {n a d : Nat}
     (hr : CounterReach 1 1 n a d)
-    (ha : AnchorMove a d 19173934 1) :
+    (ha : SmallAnchorMove a d 19173934 1) :
     False := by
-  unfold AnchorMove at ha
+  unfold SmallAnchorMove at ha
   rcases ha with hE | hM
   · rcases hE with ⟨had,hR,hc⟩
     subst d
