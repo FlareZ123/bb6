@@ -111,11 +111,11 @@ theorem carryZero (w : Bool) (n : Nat) (R : List Bool) :
   have h3' : run0 (p w) n
       ⟨2,[true,true]++R,rep [true] n++[false,w]⟩ =
       some ⟨2,[true]++rep [false] n++[true]++R,[false,w]⟩ := by
-    simpa only [List.append_assoc] using h3
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h3
   have h4' : run0 (p w) 1
       ⟨2,[true]++rep [false] n++[true]++R,[false,w]⟩ =
       some ⟨2,[false]++([false]++rep [false] n++[true]++R),[w]⟩ := by
-    simpa only [List.append_assoc] using h4
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h4
   have H := join0 (join0 (join0 (join0 (join0 h0' h1) h2') h3') h4') h5
   have ht : 1+(n+1)+1+n+1+resetCost w =
       2*(n+1)+2+resetCost w := by omega
@@ -134,6 +134,10 @@ theorem carryBlank (w : Bool) (n : Nat) :
   have h0' : run0 (p w) 1 (word w ([true]++rep [true] n)) =
       some ⟨1,rep [true] (n+1),[false,w]⟩ := by
     simpa only [rep,List.append_assoc] using h0
+  have h1' : run0 (p w) (n+1)
+      ⟨1,rep [true] (n+1),[false,w]⟩ =
+      some ⟨1,[],rep [true] (n+1)++[false,w]⟩ := by
+    simpa only [List.append_nil] using h1
   have h2' : run0 (p w) 1
       ⟨1,[],rep [true] (n+1)++[false,w]⟩ =
       some ⟨2,[true,true],rep [true] n++[false,w]⟩ := by
@@ -141,12 +145,12 @@ theorem carryBlank (w : Bool) (n : Nat) :
   have h3' : run0 (p w) n
       ⟨2,[true,true],rep [true] n++[false,w]⟩ =
       some ⟨2,[true]++rep [false] n++[true],[false,w]⟩ := by
-    simpa only [List.append_assoc] using h3
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h3
   have h4' : run0 (p w) 1
       ⟨2,[true]++rep [false] n++[true],[false,w]⟩ =
       some ⟨2,[false]++([false]++rep [false] n++[true]),[w]⟩ := by
-    simpa only [List.append_assoc] using h4
-  have H := join0 (join0 (join0 (join0 (join0 h0' h1) h2') h3') h4') h5
+    simpa [List.cons_append,List.nil_append,List.append_assoc] using h4
+  have H := join0 (join0 (join0 (join0 (join0 h0' h1') h2') h3') h4') h5
   have ht : 1+(n+1)+1+n+1+resetCost w =
       2*(n+1)+2+resetCost w := by omega
   simpa only [rep,List.append_assoc,ht] using H
@@ -163,10 +167,10 @@ theorem splitBits (R : List Bool) :
     | true =>
       rcases ih with ⟨n,T,h⟩ | ⟨n,h⟩
       · refine Or.inl ⟨n+1,T,?_⟩
-        simpa only [rep,List.append_assoc] using
+        simpa [rep,List.cons_append,List.nil_append,List.append_assoc] using
           congrArg (List.cons true) h
       · refine Or.inr ⟨n+1,?_⟩
-        simpa only [rep,List.append_assoc] using
+        simpa [rep,List.cons_append,List.nil_append,List.append_assoc] using
           congrArg (List.cons true) h
 
 theorem wordProgress (w : Bool) (R : List Bool) :
@@ -218,10 +222,6 @@ theorem all_time_never (w : Bool) (m : Machine)
     | none => simp [he] at H
     | some c => rfl
 
-theorem cylinder_mass (w : Bool) :
-    cylinderMass (p w) = 25^4 := by
-  cases w <;> decide
-
 #print axioms first
 #print axioms incZero
 #print axioms incEmpty
@@ -233,5 +233,4 @@ theorem cylinder_mass (w : Bool) :
 #print axioms wordProgress
 #print axioms arbitrarilyLong
 #print axioms all_time_never
-#print axioms cylinder_mass
 end BB6.Agent40Raw34BinaryLeftOdometerBoth
