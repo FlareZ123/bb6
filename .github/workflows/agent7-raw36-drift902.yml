@@ -48,11 +48,15 @@ on:
         type: choice
         options: ['pilot','full']
         default: 'pilot'
+      d100_joint_exposure_batch:
+        description: Joint source-accepted importable finite F0 and B1 bounds
+        type: boolean
+        default: false
 permissions:
   contents: read
 jobs:
   source-audit:
-    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch && !inputs.d100_long_epoch_batch && !inputs.d100_f1_exposure_batch }}
+    if: ${{ !inputs.d100_batch && !inputs.d100_mod_batch && !inputs.d100_exposure_batch && !inputs.d100_long_epoch_batch && !inputs.d100_f1_exposure_batch && !inputs.d100_joint_exposure_batch }}
     runs-on: ubuntu-latest
     timeout-minutes: 95
     steps:
@@ -409,5 +413,48 @@ jobs:
             /tmp/a7-f1-exposure/certificate.json
             /tmp/a7-f1-proof/
             /tmp/a7-f1-audit.log
+          if-no-files-found: warn
+          retention-days: 60
+
+  d100-joint-exposure:
+    if: ${{ inputs.d100_joint_exposure_batch }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          echo "ELAN_TOOLCHAIN=leanprover/lean4:v4.36.0-rc2" >> "$GITHUB_ENV"
+      - name: Generate hash-matched F0 and B1 original-source proofs with distinct Lean module names
+        run: |
+          set -euo pipefail
+          python im-results/agent7-opaque-tail-pump/joint_exposure.py --out /tmp/a7-d100-joint
+          python im-results/agent13-coverage/unpack.py
+      - name: Source-check original paired exact bound theorem and axioms
+        run: |
+          set -euo pipefail
+          python tools/lean_compile_closure.py \
+            --workdir /tmp/a7-d100-joint-proof --source-root /tmp/a7-d100-joint --jobs 2 \
+            --manifest /tmp/a7-d100-joint-proof/manifest.json \
+            --label raw36-d100-exposure-joint --artifact-name raw36-d100-exposure-joint \
+            --provenance-input im-results/agent7-opaque-tail-pump/joint_exposure.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/exposure_emit.py \
+            --provenance-input im-results/agent7-opaque-tail-pump/emit_exposure_bound.py \
+            /tmp/a7-d100-joint/Raw36D100TwoBounds.lean 2>&1 | tee /tmp/a7-d100-joint-audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/a7-d100-joint-audit.log \
+            BB6.Agent7D100TwoBounds.boundF0 BB6.Agent7D100TwoBounds.boundB1
+          cp /tmp/a7-d100-joint-audit.log /tmp/a7-d100-joint-proof/audit.log
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw36-d100-exposure-joint
+          path: |
+            /tmp/a7-d100-joint/
+            /tmp/a7-d100-joint-proof/
+            /tmp/a7-d100-joint-audit.log
           if-no-files-found: warn
           retention-days: 60
