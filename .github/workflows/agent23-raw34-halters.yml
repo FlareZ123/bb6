@@ -4,7 +4,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [pilot, full]
+        options: [pilot, full, depth2]
         default: pilot
 
 permissions:
@@ -27,7 +27,7 @@ jobs:
           set -euo pipefail
           python im-results/agent13-coverage/unpack.py
       - name: Compile exact source theorem closure and audit axioms
-        if: inputs.mode != 'full'
+        if: inputs.mode == 'pilot'
         run: |
           set -euo pipefail
           mkdir -p /tmp/agent23-raw34-halters
@@ -45,6 +45,16 @@ jobs:
           mkdir -p /tmp/agent23-raw34-halters
           python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 4 \
             im-results/agent23-raw34-frontier/Raw34D1RDOneStepShard*.lean \
+            2>&1 | tee /tmp/agent23-raw34-halters/audit.log
+          python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
+      - name: Compile second-unassigned C1=0RF growth and halting certificate bank
+        if: inputs.mode == 'depth2'
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/agent23-raw34-halters
+          python tools/lean_compile_closure.py --workdir /tmp/agent23-raw34-halters --jobs 3 \
+            im-results/agent23-raw34-frontier/Raw34D1RDDepth2C1RF.lean \
             2>&1 | tee /tmp/agent23-raw34-halters/audit.log
           python im-results/agent4-raw109/audit_axioms.py /tmp/agent23-raw34-halters/audit.log
           ! grep -Eq 'sorryAx|native_decide' /tmp/agent23-raw34-halters/audit.log
