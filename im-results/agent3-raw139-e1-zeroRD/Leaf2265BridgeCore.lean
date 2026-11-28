@@ -188,6 +188,48 @@ theorem weighted_of_source (steps : Nat) (d : Cfg)
     have hlt : delay < 6 := List.mem_range.mp (List.mem_filter.mp hdelay).1
     omega
 
+
+/-- A concrete six-state Turing machine completing this one-hole table by a
+    genuine halting transition at its sole missing slot. All other eleven
+    transition entries are identical to the certified source table. -/
+def closingMachine : Machine := fun s => (ctr s).getD none
+
+theorem closingMachine_compatible : compatible ctr closingMachine := by
+  intro s t ht
+  change (ctr s).getD none = t
+  rw [ht]
+  rfl
+
+theorem closingMachine_missing : closingMachine (4,false) = none := by
+  rfl
+
+/-- A source-counted E0 first-query trace yields not only an all-completion
+    upper bound, but an *attained* exact halting score at n+1, for the
+    explicit machine closing the sole hole with a halt instruction. -/
+theorem haltsAfter_of_source (steps : Nat) (d : Cfg)
+    (hs : BB6.Agent3Leaf2265.Runs steps blankCfg d)
+    (hd : d.q = 4 ∧ d.r 0 = false) :
+    HaltsAfter closingMachine steps := by
+  obtain ⟨c,hc,hslot⟩ :=
+    reached_of_source closingMachine closingMachine_compatible steps d hs hd
+  constructor
+  · change (BB6Coverage.run closingMachine steps BB6Coverage.blank).isSome = true
+    rw [hc]
+    rfl
+  · change (BB6Coverage.run closingMachine steps BB6Coverage.blank).bind
+      (rawStep closingMachine) = none
+    rw [hc]
+    simp [rawStep,hslot,closingMachine_missing]
+
+theorem attainable_of_source (steps : Nat) (d : Cfg)
+    (hs : BB6.Agent3Leaf2265.Runs steps blankCfg d)
+    (hd : d.q = 4 ∧ d.r 0 = false) :
+    Attainable (steps+1) :=
+  ⟨closingMachine,steps,haltsAfter_of_source steps d hs hd,rfl⟩
+
+#print axioms closingMachine_compatible
+#print axioms haltsAfter_of_source
+#print axioms attainable_of_source
 #print axioms table_match
 #print axioms observe_move
 #print axioms run_sound
