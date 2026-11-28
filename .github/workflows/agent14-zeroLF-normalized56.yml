@@ -1,4 +1,4 @@
-name: Raw139 normalized 56-row Cover after source ZeroLF discharge
+name: Raw139 normalized 55-row Cover after source ZeroLF discharge
 on:
   workflow_dispatch:
     inputs:
@@ -50,13 +50,13 @@ jobs:
           test -f .tmp/zeroLF56/accepted/manifest.json
           test -f .tmp/zeroLF56/conditional/imports/ZLFRoot13.lean
           test -f im-results/agent14-raw139-e0-zeroLF/Cover3862.lean
-      - name: Source compile direct normalized 56-case consumer
+      - name: Source compile direct normalized 55-case consumer
         run: |
           set -euo pipefail
           work=.tmp/zeroLF56
           mkdir -p "$work/check"
           python3 tools/lean_compile_closure.py \
-            im-results/agent14-raw139-e0-zeroLF/Raw139E0ZeroLF56AfterSource.lean \
+            im-results/agent14-raw139-e0-zeroLF/Raw139E0ZeroLF55AfterSource.lean \
             --source-root "$work/conditional/imports" \
             --source-root "$work/imports" \
             --precompiled-manifest "$work/accepted/manifest.json" \
@@ -64,8 +64,8 @@ jobs:
             --workdir /tmp/a14-zeroLF56 \
             --jobs 4 \
             --manifest "$work/check/manifest.json" \
-            --label raw139-e0-zeroLF-56-normalized \
-            --theorem BB6.Agent14Raw139E0ZeroLF56AfterSource.raw139_p0_from_56_with_zeroLF_source \
+            --label raw139-e0-zeroLF-55-normalized \
+            --theorem BB6.Agent14Raw139E0ZeroLF55AfterSource.raw139_p0_from_55_with_zeroLF_source \
             --override CanonicalFrontier=im-results/agent47-rooted-tnf/CanonicalFrontier.lean \
             --override TNFPilot=im-results/agent50-weighted-tnf-pilot/TNFPilot.lean \
             --override FastFAR=im-results/agent7-far/FastFAR.lean \
@@ -77,13 +77,13 @@ jobs:
             --override TerminalBridge=im-results/agent42-champion-terminal/TerminalBridge.lean \
             | tee "$work/check/log"
           ! grep -Eq 'sorryAx|native_decide|Lean\.ofReduceBool' "$work/check/log"
-          grep -F "'BB6.Agent14Raw139E0ZeroLF56AfterSource.normalized_zeroLF_cover' depends on axioms: [propext," "$work/check/log"
-          grep -F "'BB6.Agent14Raw139E0ZeroLF56AfterSource.raw139_p0_from_56_with_zeroLF_source' depends on axioms: [propext," "$work/check/log"
-          cp /tmp/a14-zeroLF56/Raw139E0ZeroLF56AfterSource.olean "$work/check/"
+          grep -F "'BB6.Agent14Raw139E0ZeroLF55AfterSource.normalized_zeroLF_cover' depends on axioms: [propext," "$work/check/log"
+          grep -F "'BB6.Agent14Raw139E0ZeroLF55AfterSource.raw139_p0_from_55_with_zeroLF_source' depends on axioms: [propext," "$work/check/log"
+          cp /tmp/a14-zeroLF56/Raw139E0ZeroLF55AfterSource.olean "$work/check/"
       - uses: actions/upload-artifact@v4
         if: success()
         with:
-          name: raw139-e0-zeroLF-normalized56-source-accepted
+          name: raw139-e0-zeroLF-normalized55-source-accepted
           path: |
             .tmp/zeroLF56/check/log
             .tmp/zeroLF56/check/manifest.json
