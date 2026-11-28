@@ -23,7 +23,6 @@ theorem signed_open_residue (b : Nat)
       let v : Int := -(s.y/d)
       have hp : BB6.Agent42ModularCone.I (n+1)=d := by
         dsimp [d,P,BB6.Agent42ModularCone.I,BB6.Agent42ModularCone.P]
-        rfl
       have hx : (BB6.Agent42ModularCone.residue (n+1) s).x =
           s.x+d*u := by
         simp only [BB6.Agent42ModularCone.residue,hp]
