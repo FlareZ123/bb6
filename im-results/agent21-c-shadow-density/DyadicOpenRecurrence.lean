@@ -15,11 +15,18 @@ private theorem I_dvd' (m n : Nat) (hm : m≤n) : I m∣I n := by
     vanish at the entire available bit precision. -/
 theorem valid_not_full (b v : Nat) (s : Pair)
     (hv : ValValid b s v) :
-    ¬P b∣-(q s) := by
+    ¬BB6.Agent21Dyadic.P b∣-(q s) := by
   intro hd
-  have hp : P b=I b := by simp [P,I,BB6.Agent42ModularCone.P]
+  have hp : BB6.Agent21Dyadic.P b=I b := by
+    simp [BB6.Agent21Dyadic.P,I,BB6.Agent42ModularCone.P]
   rw [hp] at hd
-  have hdI : I b∣q s := dvd_neg.mp hd
+  have hdI : I b∣q s := by
+    obtain ⟨k,hk⟩ := hd
+    refine ⟨-k,?_⟩
+    calc
+      q s = -(-(q s)) := by omega
+      _ = -(I b*k) := by rw [hk]
+      _ = I b*(-k) := by rw [Int.mul_neg]
   have hsmall : I (v+1)∣I b := I_dvd' (v+1) b hv.1
   have hvdiv : I (v+1)∣q s := Int.dvd_trans hsmall hdI
   have hz := Int.emod_eq_zero_of_dvd hvdiv
@@ -49,7 +56,9 @@ theorem open_iff_children (b v : Nat) (s : Pair)
     have hone : signedZ s.x s.y+offset (signedS s.x s.y) r=-(q s) := by
       rw [signed_one_numer,signed_parity_cost s.x s.y r hpar]
       simp only [q,odd]
-    have hdiv : P r∣-(q s) := ⟨z',(hprefix.trans hone).symm⟩
+      omega
+    have hdiv : BB6.Agent21Dyadic.P r∣-(q s) :=
+      ⟨z',(hprefix.trans hone).symm⟩
     rcases valuation_first_gap_classification b v r s hv hr hpar hdiv with
       ⟨h1,hy⟩|⟨n,hn,ha⟩
     · left
@@ -71,14 +80,10 @@ theorem open_iff_children (b v : Nat) (s : Pair)
       have hs := hedge.1
       have hz := hedge.2
       have hze : z'=signedZ (high s n).x (high s n).y := by
-        have heq : P (n+2)*z'=P (n+2)*signedZ (high s n).x (high s n).y :=
+        have heq : BB6.Agent21Dyadic.P (n+2)*z'=
+            BB6.Agent21Dyadic.P (n+2)*signedZ (high s n).x (high s n).y :=
           hprefix.trans hz.symm
-        have hd : P (n+2)*(z'-signedZ (high s n).x (high s n).y)=0 := by
-          rw [Int.mul_sub]
-          omega
-        rcases mul_eq_zero.mp hd with h0 | h0
-        · exact False.elim ((P_ne (n+2)) h0)
-        · omega
+        exact Int.eq_of_mul_eq_mul_left (P_ne (n+2)) heq
       rw [←hs,hze] at hchild
       exact hchild
   · rintro (⟨hy,hchild⟩|⟨n,ha,hchild⟩)
@@ -94,7 +99,12 @@ theorem open_iff_children (b v : Nat) (s : Pair)
         (signedS (high s n).x (high s n).y)
         (signedZ (high s n).x (high s n).y)
         (n+2) (b-(n+2)) (by omega) hs hz hchild
-      simpa only [show b-(n+2)+(n+2)=b by omega] using ho
+      have hnle : n+2≤b := by
+        have hn : n+2≤v := ha.1
+        have hbv : v+1≤b := hv.1
+        omega
+      have hcost : b-(n+2)+(n+2)=b := by omega
+      rwa [hcost] at ho
 
 #print axioms open_iff_children
 end BB6.Agent21Duality
