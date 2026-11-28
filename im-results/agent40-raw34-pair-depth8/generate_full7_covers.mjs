@@ -151,16 +151,16 @@ def rowCheck (r : RowWitness) : Bool :=
 
 theorem row_sound (r : RowWitness) (h : rowCheck r = true) :
     Cover (DecidedBelow 128) (table r.codes) := by
-  have hh : decide ((table r.codes) r.slot = none) = true ∧
-      (decide (r.certs.length = choices.length) = true ∧
-       (choices.all fun t =>
+  have hh : (decide ((table r.codes) r.slot = none) = true ∧
+      decide (r.certs.length = choices.length) = true) ∧
+      (choices.all fun t =>
         match r.certs[choices.idxOf t]? with
         | none => false
-        | some c => certCheck 128 (refine (table r.codes) r.slot t) c) = true) := by
+        | some c => certCheck 128 (refine (table r.codes) r.slot t) c) = true := by
     simpa only [rowCheck, Bool.and_eq_true] using h
-  apply Cover.branch (table r.codes) r.slot (of_decide_eq_true hh.1)
+  apply Cover.branch (table r.codes) r.slot (of_decide_eq_true hh.1.1)
   intro t ht
-  have hc := List.all_eq_true.mp hh.2.2 t ht
+  have hc := List.all_eq_true.mp hh.2 t ht
   cases he : r.certs[choices.idxOf t]? with
   | none => simp [he] at hc
   | some c =>
