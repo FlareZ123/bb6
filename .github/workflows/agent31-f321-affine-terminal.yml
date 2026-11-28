@@ -1,0 +1,24 @@
+name: Agent31 F321 affine terminal inverse certificate
+on:
+  workflow_dispatch:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source-map inverse and explicit 33-over-40 families
+        run: |
+          node im-results/agent31-f321-bulk/f321-inverse-sieve.cjs 30000 | tee /tmp/f321-explicit.json
+      - name: Verify 2^20 symbolic affine inverse-class certificate
+        run: |
+          node im-results/agent31-f321-bulk/affine_terminal_sieve.cjs 20 | tee /tmp/f321-affine.json
+      - name: Upload exact finite computation record
+        uses: actions/upload-artifact@v4
+        with:
+          name: f321-affine-2pow20-certificate
+          path: |
+            /tmp/f321-explicit.json
+            /tmp/f321-affine.json
+          retention-days: 30
