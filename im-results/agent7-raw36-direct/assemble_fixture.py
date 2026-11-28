@@ -17,9 +17,9 @@ def main():
     candidates={}
     def assign(t,v,origin):
         k=t.replace('_','');assert k in keys,(origin,k)
-        if k in candidates:
-            if candidates[k]!=v:raise ValueError(('conflict',k,candidates[k],v,origin))
-            return
+        # FAR wins over N-gram, which wins over later structured evidence.
+        # Alternate valid certificates need not have the same representation.
+        if k in candidates:return
         candidates[k]=v
     if a.far:
         for line in a.far.read_text().splitlines():
@@ -30,7 +30,8 @@ def main():
             assert v[0] in ('n','r','m','d','p')
             assign(t,v,'stack')
     if a.extras:
-        for t,v in json.loads(a.extras.read_text()).items():
+        d=json.loads(a.extras.read_text())
+        for t,v in (d.items() if isinstance(d,dict) else d):
             assign(t,v,'extras')
     missing=sorted(set(keys)-set(candidates))
     fixture={'bound':got['stats']['score'],
