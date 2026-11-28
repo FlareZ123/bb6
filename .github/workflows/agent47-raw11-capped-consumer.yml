@@ -5,7 +5,7 @@ on:
     inputs:
       mode:
         type: choice
-        options: [capped, q0-banks, q0-152, q0-148-pending, extra-resume-132, extra-repair-132, extra-repair-140, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
+        options: [capped, q0-banks, q0-152, q0-151-root53, q0-148-pending, extra-resume-132, extra-repair-132, extra-repair-140, q0-root53-source, q0-root53-sharp, extra-shards, q0-149-three, q0-149-eight, q0-149-ten]
         default: capped
       extra_id:
         type: choice
@@ -1041,5 +1041,98 @@ jobs:
             /tmp/parent-out
             /tmp/parent-source
             /tmp/extra140-repaired.log
+          if-no-files-found: warn
+          retention-days: 30
+
+
+  # One genuine additional eliminated Raw11 cylinder: fully certified
+  # five-hole q0-root53 Cover at B=208, composed into accepted 299->152.
+  q0-151-root53:
+    if: inputs.mode == 'q0-151-root53'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      actions: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install pinned Lean 4.36.0-rc2
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46108357572
+          name: raw11-q0-152-accepted-consumer
+          path: /tmp/q0152-accepted
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          repository: FlareZ123/bb6
+          run-id: 46109014135
+          name: raw11-q0-root53-complete-source
+          path: /tmp/root53-accepted
+      - name: Recover prior exact transitive original-source proof objects
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/deps /tmp/q0151-root53
+          for id in \
+            15159003899 15161045625 \
+            15159257293 15154832729 15154568902 \
+            15154569169 15154663882 15158958272 \
+            15017647753 15014940132 15166284252 \
+            15163134847 15161467291 15162658933 15162722191; do
+            mkdir -p "/tmp/deps/$id"
+            curl -fsSL -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/FlareZ123/bb6/actions/artifacts/$id/zip" \
+              -o "/tmp/deps/$id.zip"
+            unzip -q "/tmp/deps/$id.zip" -d "/tmp/deps/$id"
+          done
+          test -n "$(find /tmp/root53-accepted -name Q0Root53Parent.olean -print -quit)"
+          test -n "$(find /tmp/q0152-accepted -name Raw11Q0CombinedExtra.olean -print -quit)"
+          cat /tmp/root53-accepted/tmp/q053-certified/manifest.json \
+            | head -c 1000 || true
+      - name: Compile exact source 152->151 and parent Cover integration
+        run: |
+          set -euo pipefail
+          export LEAN_PATH=/tmp/q0151-root53
+          while IFS= read -r obj; do
+            dir="$(dirname "$obj")"
+            case ":$LEAN_PATH:" in
+              *":$dir:"*) ;;
+              *) LEAN_PATH="$LEAN_PATH:$dir" ;;
+            esac
+          done < <(find /tmp/deps /tmp/q0152-accepted /tmp/root53-accepted \
+            -type f -name '*.olean' | sort)
+          export LEAN_PATH
+          src=im-results/agent47-raw11-adapter/Raw11Q0Root53After152.lean
+          lean -j1 -o /tmp/q0151-root53/Raw11Q0Root53After152.olean "$src" \
+            | tee /tmp/q0151-root53/Raw11Q0Root53After152.log
+          if grep -Eq 'sorryAx|native_decide' \
+            /tmp/q0151-root53/Raw11Q0Root53After152.log; then exit 1; fi
+          for theorem in \
+            "'BB6.Agent47Q0Root53After152.parent_cover' depends on axioms:" \
+            "'BB6.Agent47Q0Root53After152.member_in_152' depends on axioms:" \
+            "'BB6.Agent47Q0Root53After152.remaining_census' depends on axioms:" \
+            "'BB6.Agent47Q0Root53After152.raw11_cover_from_151' depends on axioms:"; do
+            grep -F "$theorem" /tmp/q0151-root53/Raw11Q0Root53After152.log
+          done
+          sha256sum "$src" > /tmp/q0151-root53/source-sha256.txt
+          sha256sum /tmp/q0151-root53/Raw11Q0Root53After152.olean \
+            > /tmp/q0151-root53/olean-sha256.txt
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: raw11-exact-299-to-151-q0root53
+          path: |
+            /tmp/q0151-root53
+            im-results/agent47-raw11-adapter/Raw11Q0Root53After152.lean
           if-no-files-found: warn
           retention-days: 30
