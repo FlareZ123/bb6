@@ -25,6 +25,18 @@ jobs:
     timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
+      - name: Free preinstalled runner SDKs before authenticated proof restore
+        run: |
+          set -euo pipefail
+          echo 'Disk before proof work:'
+          df -h /
+          # These are unrelated to the pinned Lean/Python/GitHub certificate
+          # pipeline and can consume many GiB on stock ubuntu-latest images.
+          for folder in /usr/local/lib/android /usr/share/dotnet /usr/local/share/powershell; do
+            if [[ -d "$folder" ]]; then sudo rm -rf "$folder"; fi
+          done
+          echo 'Disk after runner cleanup:'
+          df -h /
       - name: Authenticate retained direct38 replay checkpoint
         env:
           GH_TOKEN: ${{ github.token }}
