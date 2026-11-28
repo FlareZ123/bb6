@@ -64,44 +64,47 @@ D1=0RD cylinder.  The exported theorem uses only `propext`, `Classical.choice`,
 and `Quot.sound`.  This is a conditional frontier theorem rather than a claim that all
 102 grandchildren are already decided.
 
-## D0=8 and D0=9: complete late-replay cut
+## D0=8 and D0=9: source-accepted second-level child closures
 
-[D1EightReduce.lean](D1EightReduce.lean) now kernel-checks the exact D0=8 first-C1 reduction. For
-`[7,24,11,24,14,24,8,13,24,24,24,24]`, blank execution reaches the open C1 slot at
-ordinary step 8. Twelve of the 20 TNF-admissible ordinary C1 codes are discharged by exact
-translated-cycle audits; only codes `[1,2,3,6,16,17,18,19]` remain as child-Cover
-hypotheses. Thus `BB6.Agent6D1EightReduce.cover` proves the complete D0=8 cylinder at
-every weighted bound `B ≥ 14` from exactly those eight child Covers. Pinned source gate [CI 46136123205](https://github.com/FlareZ123/bb6/actions/runs/46136123205), artifact **15259537646**, independently recompiled the theorem against accepted normalized artifact 15093190882 with Lean 4.36.0-rc2 and only `propext`, `Classical.choice`, and `Quot.sound`. The cap-250 replay census partitions
-the eight hard children into 1,476,355 terminal leaves plus the twelve immediate cycles
-(1,476,367 leaves total) and 7,371 cap-250 open leaves; those counts are discovery data,
-while the eight-child reduction itself is a kernel theorem.
+Both cylinder reducers `D1EightReduce.cover` and `D1NineReduce.cover`
+are source-accepted, using exact blank first-hole step-8 semantics.
+For D0=8, 12 of 20 TNF-admissible C1 actions have short-cycle
+certificates; eight actions `[1,2,3,6,16,17,18,19]` initially
+remain. At weighted bound 3000, the complete child Covers
+for C1=1,3,6 are source-accepted and composed in `D1EightFive.cover`
+([CI 46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273)).
+The additional C1=17 whole-child Cover is source-accepted by
+[CI 46139905624](https://github.com/FlareZ123/bb6/actions/runs/46139905624),
+artifact 15262091078. `D1EightFour.cover` consumes it, leaving
+only **[2,16,18,19]**. Its entire source and axiom profile are accepted
+as part of [CI 46147351683](https://github.com/FlareZ123/bb6/actions/runs/46147351683).
+A complete D0=8 parent Cover is **not yet** claimed.
 
-Three of those eight hypotheses are now eliminated completely at weighted bound
-3000.  C1 code 6 is the 94,879-leaf Cover from pinned source CI
-[46137440341](https://github.com/FlareZ123/bb6/actions/runs/46137440341), artifact
-**15260935299**.  C1 codes 1 and 3 are the 61,483-leaf and 101,204-leaf Covers retained
-as artifacts **15260696627** and **15260299839** from run
-[46137845251](https://github.com/FlareZ123/bb6/actions/runs/46137845251); both reached
-`FINAL ... 0 []` and their parent logs expose only the standard axioms (the run status
-was caused by a fixed post-proof shell-variable assertion).  The consumer theorem
-[D1EightFive.lean](D1EightFive.lean) was then source-accepted in CI
-[46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273), retained
-artifact **15260876687**, proving the complete D0=8 cylinder from only five remaining
-child Covers: `[2,16,17,18,19]`.
+For D0=9, 14 of 20 C1 actions have short-cycle certificates.
+C1=2 and C1=6 have fully checked child Covers (artifacts
+15260522869, 15260548085). The source-accepted `D1NineFour.cover`
+leaves **[16,17,18,19]**. Three of these four have independently
+accepted whole-child certificates in the D9 rest bank (C16,C18,C19).
+The remaining C17 job twice hit an external runner shutdown after
+31 successful compiler modules; that does not establish failure or
+success for its whole Cover. A smaller-bank single-worker source run is
+the current exact parent-closure route. The D0=9 parent itself remains
+unaccepted.
 
-[D1NineReduce.lean](D1NineReduce.lean) supplies the parallel exact D0=9 composition interface.
-For `[7,24,11,24,14,24,9,13,24,24,24,24]`, the same step-8 C1 split has only
-six hard ordinary codes, `[2,6,16,17,18,19]`; the other 14 children are
-kernel-checked translated cycles. `BB6.Agent6D1NineReduce.cover` proves the complete
-D0=9 cylinder at every `B ≥ 14` from those six child Covers.  Two of the six are now
-complete at weighted bound 3000: C1 code 2 (artifact **15260522869**) and code 6
-(artifact **15260548085**) from run
-[46137436779](https://github.com/FlareZ123/bb6/actions/runs/46137436779).  Their compile
-logs reached `FINAL 126 0 []` and `FINAL 118 0 []` respectively, and both parent
-logs contain only `[propext, Classical.choice, Quot.sound]`; their failed matrix job
-statuses came from the same fixed post-proof shell assertion.  [D1NineFour.lean](D1NineFour.lean)
-consumes those two Covers and leaves only C1 codes `[16,17,18,19]`; its combined source
-gate is in progress.
+The exact **102-grandchild** conditional reduction for `B≥14` was
+accepted at [CI 46138720868](https://github.com/FlareZ123/bb6/actions/runs/46138720868).
+Consuming five child Covers yielded the accepted fixed-3000
+`D1SecondLevel97.cover_of_frontier`
+([CI 46139540619](https://github.com/FlareZ123/bb6/actions/runs/46139540619)).
+Consuming D8 C17 and formally lifting the fixed child scores for
+**every B≥3000** yields the strongest accepted
+`D1SecondLevel96Bound.cover_of_frontier`
+([CI 46147351683](https://github.com/FlareZ123/bb6/actions/runs/46147351683),
+artifact 15264817299). The exhaustive remaining 96-machine list and
+source theorem are in `D1SecondLevel96.lean` and
+`D1SecondLevel96Bound.lean`. The additional 88-residual
+`D1SecondLevel88OfParents.lean` is **conditional on both D8 and
+D9 full-parent Covers**; these dependencies are unresolved.
 
 The exact certificate bank is reproducible from [late-source.tar.xz.b64](late-source.tar.xz.b64), containing the untrusted generator and two fixed witness manifests. Extract with `base64 -d late-source.tar.xz.b64 | tar -xJf -`. In the accepted normalized artifact 15093190882 build directory, run `python certify_late.py --roots lateRoots.tsv --children lateChildren.tsv`, then `LEAN_PATH=. lean -o D1Late.olean D1Late.lean`. The generated module SHA-256 is 138dfdbc02d63f28ac39d44d9ec19f7d2baecfaab646be83990f0c40b3c05cf3. Local Lean 4.36.0-rc2 checked `BB6.Agent6D1Late.allLate` with only propext, Classical.choice, Quot.sound. The `tables` list is an exact list of the 85 partial-machine roots, not a statement about the complete census partition.
 

@@ -1,39 +1,43 @@
-# Raw139 D1=0RD: exact two-level residual frontier
+# Raw139 D1=0RD: certified 102-to-96 residual frontier
 
-## Result
+## Strongest source-accepted theorem
 
-Let `p` be the normalized Raw139 partial machine represented by
+Let `p` be the normalized Raw139 D1=0RD partial machine
+`[7,24,11,24,14,24,24,13,24,24,24,24]` under ordinary transition codes.
+At weighted bound `B≥3000`, the strongest accepted conditional theorem is
 
-`[7,24,11,24,14,24,24,13,24,24,24,24]`
+```lean
+theorem BB6.Agent6D1SecondLevel96Bound.cover_of_frontier
+    (B : Nat) (hB : 3000 ≤ B)
+    (h : ∀ p ∈ BB6.Agent6D1SecondLevel96.F.frontier,
+      Cover (WeightedBound B) p) :
+    Cover (WeightedBound B) BB6.Agent6D1ZeroRD.p
+```
 
-under the repository's ordinary transition-code convention.  This is the D1=0RD
-cylinder studied in `im-results/agent6-raw139-d1-zeroRD/D1ZeroRD.lean`.
+The explicit frontier has exactly **96** members: `frontier_length = 96`.
+This bound-uniform result source-compiled with Lean 4.36.0-rc2 in
+[run 46147351683](https://github.com/FlareZ123/bb6/actions/runs/46147351683),
+artifact **15264817299**, digest
+`sha256:b98a54edefd073cbdc295d6543c4ab3db638a5c9a70d30e6788997e964265da4`.
+The check audits six separately accepted complete child Covers and the complete
+transitive source closure; exported Cover theorems depend only on
+`[propext, Classical.choice, Quot.sound]` with neither `sorryAx` nor
+`ofReduceBool`.
 
-The first exact split leaves nine D0 children:
-`[2,6,8,9,10,16,17,18,19]`.  Each of those nine children now has a
-kernel-checked next-hole reduction.  Across the resulting second-level TNF actions there
-are 196 admissible actions, of which 94 are discharged immediately by exact translated
-cycle certificates.  The remaining **102** actions are represented explicitly by
-`BB6.Agent6D1SecondLevelFrontier.frontier`.
-
-The principal theorem is:
-
+The original `D1SecondLevelFrontier.cover_of_frontier` still gives a stronger
+*threshold* (`B≥14`) but needs **102** explicit grandchildren:
 ```lean
 theorem BB6.Agent6D1SecondLevelFrontier.cover_of_frontier
     (B : Nat) (hB : 14 ≤ B)
     (h : ∀ p ∈ frontier, Cover (WeightedBound B) p) :
     Cover (WeightedBound B) BB6.Agent6D1ZeroRD.p
 ```
-
-and the exact cardinality theorem is
-
-```lean
-theorem BB6.Agent6D1SecondLevelFrontier.frontier_length :
-    frontier.length = 102
-```
-
-Thus, for every weighted bound `B ≥ 14`, proving the 102 explicit residual partial
-machines suffices to prove the whole normalized D1=0RD cylinder.
+All nine D0 first-level hard children have exact next-hole reductions.
+Across 196 admissible second-level actions, 94 terminate in
+source-checked translated-cycle Covers; the other 102 form the original
+frontier. The 96 theorem consumes six additional whole grandchildren at
+weighted 3000 and uses Cover monotonicity to preserve the result for all
+larger bounds.
 
 ## Exact second-level partition
 
@@ -79,37 +83,46 @@ The exported Cover theorems depend only on
 `[propext, Classical.choice, Quot.sound]`; the gate rejects `sorryAx` and
 `ofReduceBool`.
 
-## Source-certified follow-on closures at weighted bound 3000
 
-Three residual children of the D0=8 family are now fully certified and consumed:
-C1 codes 1, 3, and 6.  The corresponding retained child artifacts are **15260696627**,
-**15260299839**, and **15260935299**.  The composed theorem
-`BB6.Agent6D1EightFive.cover` is source-accepted by CI
-[46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273), artifact
-**15260876687** (SHA-256
-`64e1e1ff4c7d2359871cccaa9cbfc3e0014b7cd65b37d229ef2a3534d8b50b5e`).
-It reduces the complete D0=8 cylinder at weighted bound 3000 to only the five child
-codes `[2,16,17,18,19]`.
+## Fully consumed children and proof chain
 
-Two residual children of D0=9, C1 codes 2 and 6, have likewise completed their entire
-kernel joins in retained artifacts **15260522869** and **15260548085**.  Their compile
-logs end in `FINAL 126 0 []` and `FINAL 118 0 []`, and the exported Covers use
-only `[propext, Classical.choice, Quot.sound]`.  The original matrix jobs were marked
-failed only after those proofs, by a subsequently corrected shell-variable assertion.
-`D1NineFour.lean` consumes these two proofs and leaves codes
-`[16,17,18,19]`; this composition remains pending independent source-gate acceptance
-at the time of this result update.
+At weighted 3000 the accepted complete second-level child Covers are:
 
-These follow-on closures solve five of the 102 explicit second-level obligations at
-weighted bound 3000.  The source module `D1SecondLevel97.lean` expresses the resulting
-97-machine conditional frontier, but that stronger wrapper should be treated as pending
-until its independent source gate succeeds.
+| D0 / C1 code | Source evidence | Status |
+| --- | --- | --- |
+| 8 / 1,3,6 | Artifacts 15260696627, 15260299839, 15260935299; [D1EightFive join 46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273) | Fully source accepted |
+| 8 / 17 | [Run 46139905624](https://github.com/FlareZ123/bb6/actions/runs/46139905624), artifact 15262091078 | Fully source accepted; source `D1EightFour.c17` transports it |
+| 9 / 2,6 | Artifacts 15260522869 and 15260548085; source consumer `D1NineFour` included in [run 46139540619](https://github.com/FlareZ123/bb6/actions/runs/46139540619) | Fully source accepted |
 
-## Scope
+The five-child source-consumer `D1EightFive.cover` is accepted in
+[run 46138910273](https://github.com/FlareZ123/bb6/actions/runs/46138910273).
+The predecessor `D1SecondLevel97.cover_of_frontier` (five children
+eliminated) is source accepted in
+[run 46139540619](https://github.com/FlareZ123/bb6/actions/runs/46139540619),
+artifact **15260783376**, digest
+`sha256:dc7152ec7342dd11a7b6c8e87ceed83c1728d5ff9a8248b549a5726ada9ac795`.
+The stronger `D1EightFour.cover` consumes the D0=8/C1=17 theorem, leaving
+the four D0=8 C1 codes **[2,16,18,19]**. The D0=9 C1 complement remains
+**[16,17,18,19]**. These eight grandchildren are among the 96 outstanding
+second-level obligations.
 
-This is a strict reduction theorem for one normalized Raw139 subcylinder.  It does not
-claim that the 102 frontier machines are all solved, does not prove a complete Raw139
-parent Cover, and does not determine BB(6).  Its contribution is to replace the previous
-nine opaque first-level obligations by an exact, kernel-checked, machine-explicit
-second-level frontier on which independent solvers can work without reconstructing the
-split.
+The six child proofs are checked at weighted 3000; the theorem
+`D1SecondLevel96Bound.cover_of_frontier` proves the uniform
+`B≥3000` transport by structural induction on `Cover`, then applies
+the original source-level first-hole reductions. The exact saved
+source modules are `D1EightFour.lean`, `D1SecondLevel96.lean`, and
+`D1SecondLevel96Bound.lean` in
+[the ongoing formalization](../im-results/agent6-raw139-d1-zeroRD/README.md).
+
+## Scope and open upper-bound edge
+
+The source-proved theorems are strict reductions on **one** Raw139
+subcylinder, not a complete Cover of the Raw139 parent. None resolves
+the other 96 grandchildren or the universal BB(6) maximality bound.
+All-completion parent certificates for D0=8 and D0=9 would eliminate
+another eight of these 96 obligations and leave a conditional 88-machine
+frontier; `D1SecondLevel88OfParents.lean` stages that latter statement
+with **explicit hypotheses for both whole-parent Covers**, not accepted
+full-parent results. The authentic long-arrival D0=2 branches require
+bounds far above 3000; the bound-uniform interface is needed to integrate
+them without falsely claiming a short stopping bound.
