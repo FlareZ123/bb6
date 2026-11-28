@@ -258,6 +258,7 @@ jobs:
             done
           elif [ "$TARGET" = erEntry37 ]; then
             node im-results/agent10-nov26-cryptids/generate_raw140_variant_transfer.js
+            node im-results/agent10-nov26-cryptids/generate_raw140_er_suffix.js
             node im-results/agent10-nov26-cryptids/generate_raw140_37_er_entry.js
             python tools/lean_compile_closure.py --workdir /tmp/raw140-er-entry37 --jobs 3 im-results/agent10-nov26-cryptids/Raw14037EREntry.lean 2>&1 | tee /tmp/raw140-proof.log
             for t in front toERBank drainBank; do
