@@ -41,7 +41,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           run-id: '45912699461'
-      - name: Kernel-check one M42763 state/symbol row in eight chunks
+      - name: Kernel-check one M42763 state/symbol row in sixteen chunks
         run: |
           set -euo pipefail
           ROW='${{ matrix.row }}'
@@ -54,7 +54,7 @@ jobs:
           lean -j1 -o TwoSidedAutomata.olean TwoSidedAutomata.lean
           lean -j1 -o TwoSidedChunks.olean TwoSidedChunks.lean
           lean -j1 -o M42763Data.olean M42763Data.lean
-          for R in 0 1 2 3 4 5 6 7; do
+          for R in 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15; do
             lean -j1 -o "M42763Chunk${ROW}_${R}.olean" "M42763Chunk${ROW}_${R}.lean"
           done
           lean -j1 -o "M42763Row${ROW}.olean" "M42763Row${ROW}.lean" | tee "M42763Row${ROW}.log"
