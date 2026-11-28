@@ -15,6 +15,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
+import time
 
 HERE = Path(__file__).resolve().parent
 REPO = HERE.parents[1]
@@ -166,7 +167,21 @@ def main():
     evidence=work/"evidence"
     evidence.mkdir()
     parent,receipt=accepted_parent(work/"parent",a.onele_run)
-    canonical,pin=canonical_source(work/"canonical")
+    # The accepted Canonical40 ancestor involves a large GitHub artifact chain.
+    # A transient HTTPS reset during 'gh api .../zip' must not masquerade as a
+    # failed Lean proof. Retry *only* failed GitHub downloads, never source
+    # compilation failures or mathematical assertions.
+    for attempt in range(3):
+        try:
+            canonical,pin=canonical_source(work/"canonical")
+            break
+        except subprocess.CalledProcessError as e:
+            cmd=e.cmd if isinstance(e.cmd,list) else []
+            if cmd[:2] != ["gh","api"] or attempt==2:
+                raise
+            print(f"Transient GitHub artifact fetch failure, attempt {attempt+1}: {e}",flush=True)
+            shutil.rmtree(work/"canonical",ignore_errors=True)
+            time.sleep((5,15)[attempt])
     linked=work/"linked"
     n=merge_objects(linked,canonical,parent,evidence)
 
