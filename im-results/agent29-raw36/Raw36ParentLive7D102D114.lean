@@ -60,25 +60,13 @@ theorem parent_cover_from_live7_after02And14 (B : Nat) (hB : 1152 ≤ B)
   · exact h _ (List.mem_map.mpr ⟨_,by decide,rfl⟩)
   · exact h _ (List.mem_map.mpr ⟨_,by decide,rfl⟩)
 
-theorem remaining_count :
+theorem after02And14_count :
     parentLiveAfter02And14.length = 7 := by decide
-
-theorem removed_02 :
-    (parentLiveAfter02And14.filter
-      (fun p => sameTable p (d1Child ⟨false,false,2⟩))).length = 0 := by
-  decide
-
-theorem removed_14 :
-    (parentLiveAfter02And14.filter
-      (fun p => sameTable p (d1Child ⟨true,false,2⟩))).length = 0 := by
-  decide
 
 #print axioms d102_same_source
 #print axioms d114_same_source
 #print axioms d102_cover_at
 #print axioms d114_cover_at
 #print axioms parent_cover_from_live7_after02And14
-#print axioms remaining_count
-#print axioms removed_02
-#print axioms removed_14
+#print axioms after02And14_count
 end BB6.Agent29Raw36
