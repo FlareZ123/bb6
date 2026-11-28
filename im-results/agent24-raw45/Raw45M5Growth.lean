@@ -73,7 +73,10 @@ theorem growth (n : Nat) :
       change ones (3*n+3)++[true] = ones (3*n+4)
       simpa only [show (3*n+3)+1=3*n+4 by omega] using
         ones_snoc (3*n+3)
-    simpa only [Nat.one_mul,List.nil_append,List.append_nil,hs] using H
+    have H' : run0 table (3*n+3) ⟨1,rep [true] (3*n+3),[true]⟩ =
+        some ⟨1,[],ones (3*n+4)⟩ := by
+      simpa only [Nat.one_mul,List.nil_append,List.append_nil,hs] using H
+    exact H'
   have h4 : run0 table 1 ⟨1,[],ones (3*n+4)⟩ =
       some ⟨2,[true,true],ones (3*n+3)⟩ := by
     have ha : ones (3*n+4) = [true]++ones (3*n+3) := by
