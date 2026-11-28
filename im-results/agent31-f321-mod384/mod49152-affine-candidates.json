@@ -1,0 +1,75 @@
+{
+  "modulus": 49152,
+  "method": "complete parity-aware finite reachable quotient mod 49152, followed by strict symbolic inverse closure (source-high and source-far only)",
+  "provenance": "independently reproduced JS BFS on 2026-11-28 08:43Z; kernel proof generation pending",
+  "reachableForwardStates": 25387932,
+  "forwardPossibleTerminals": 562,
+  "fullDepthCertifiedRayCandidates": [
+    {
+      "d": 3787,
+      "nodes": 10
+    },
+    {
+      "d": 7933,
+      "nodes": 24
+    },
+    {
+      "d": 8893,
+      "nodes": 28
+    },
+    {
+      "d": 11275,
+      "nodes": 15
+    },
+    {
+      "d": 15595,
+      "nodes": 12
+    },
+    {
+      "d": 18955,
+      "nodes": 14
+    },
+    {
+      "d": 26437,
+      "nodes": 16
+    },
+    {
+      "d": 26461,
+      "nodes": 21
+    },
+    {
+      "d": 26725,
+      "nodes": 17
+    },
+    {
+      "d": 28093,
+      "nodes": 23
+    },
+    {
+      "d": 30589,
+      "nodes": 27
+    },
+    {
+      "d": 31933,
+      "nodes": 28
+    },
+    {
+      "d": 33619,
+      "nodes": 7
+    },
+    {
+      "d": 42397,
+      "nodes": 18
+    },
+    {
+      "d": 48715,
+      "nodes": 14
+    }
+  ],
+  "previouslyCoveredResidues": [
+    3787,
+    7933,
+    33619
+  ],
+  "notes": "Every listed ray's generator proof must be separately kernel-checked. The three covered residues do not provide additional density: 3787 from earlier mod6144 cone; 7933 earlier mod12288 cone; 33619 from existing odd-depth base-four inverse ray. Other 12 disjoint from each other, modulo384 excluded set, and older base-four ray families."
+}
