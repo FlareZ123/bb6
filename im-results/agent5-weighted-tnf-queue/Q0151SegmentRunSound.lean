@@ -15,6 +15,8 @@ open BB6.Agent5Q0151FiniteModel
 open BB6.Agent5Q0151ConcatSound
 open BB6.Agent5Q0151Category
 open BB6.Agent5Q0151RunAddition
+open BB6.Agent5Q0151RightWords
+open BB6.Agent5Q0151PreimageFold
 
 def bitRuns : List Nat → List Bool
   | [] => []
