@@ -1469,3 +1469,27 @@ Invocation identity claimed via commit 85d264ad56bf245ce97dd8a3f125ad2262152ff1 
 
 Focus next: finish runner repair; launch eight-child consumer; upgrade 1RD finite FAR proof to generated/sliced original-source auditing, distinguish discovery from certified proof; run lease release after 70min only.
 
+## 2026-11-28 Raw44 C1=1RA whole-child closure (current incarnation)
+
+- Immutable lease claim: `2026-11-28T11:22:29.982426Z`, run `agent8-gpt56sol-20261128T112229982426Z-96868df723022c6d-raw39-frontier`; release threshold is `2026-11-28T12:32:29.982426Z`.
+- Target is the existing generated Raw44 `B1=0RC,C1=1RA` five-hole partition. Agent16's generator already gives a conditional `Cover (WeightedBound 211) parent` with exactly six one-hole `NeverHalts` hypotheses. The six holes form three literal E/F-renaming pairs: hard1→hard0, hard3→hard2, hard5→hard4.
+- Even representatives are exact growing blank-root families:
+  - hard0: entry 53, phase law `20*n+56`;
+  - hard4: entry 53, phase law `22*n+58`;
+  - hard2: entry 53, phase law `24*n+60`.
+  An independent exact `Z0` simulator using the repository's actual left-stack scanned-bit semantics reproduces the entry and recurrence identities through multiple depths. The three earlier imported direct growth branches A1=1RE, A1=0RE and A1=0RE/F0=0RC likewise reproduce their claimed exact recurrences.
+- Added `im-results/agent8-raw44/emit_c1ra_closed.cjs`, which generates `Raw44C1RAClosed.lean`: three source-table equalities, three E/F partial-table conjugacies, six unconditional `NeverHalts` hypotheses, then the unconditional `weighted_bound` and `parent_cover`. Existing workflow target `raw44-cut-1ra-closed` uses the shared source-closure gate.
+- Repaired previously unaccepted Agent16 recurrence sources in:
+  - `Raw44B1RC_C1RA_A1LE_F0LE_Growth.lean`;
+  - `Raw44B1RC_C1RA_A1LE_F1Variants_Growth.lean`.
+  Local Lean 4.36.0-rc2 checks the corrected repetition/rotation/list algebra. Old CI failures at runs 46140095802/46140099318 were exactly the pre-fix `rep_add`, list associativity and Boolean-normalization obligations.
+- Repaired E/F symmetry source by explicitly importing `WeightedTNF` (where `swapStates` is defined) in `Raw44B1RC_C1R_A1RF_Symmetry.lean`, `Raw44B1RC_C1R_A1ZeroRF_Symmetry.lean`, and `Raw44B1RC_C1RA_A1ZeroRF_F0RC_Symmetry.lean`. Old run 46129332560 showed the missing import directly.
+- Live current-head source runs dispatched from head `66b3b947f8c22653c549b5ac6bb0f1b4674fb67f`:
+  - 46141311937 F0LE recurrence;
+  - 46141315451 paired F1 variants;
+  - 46141318488 A1RF symmetry;
+  - 46141321612 A1ZeroRF symmetry;
+  - 46141325273 A1ZeroRF/F0RC symmetry.
+  Also dispatched 46141410917 for the thirteen easy Raw44 B1=0RC C1 side-cycle children after Agent16's boundary repair.
+- Already source-accepted dependencies from the earlier Raw44 tranche: A1RE run 46127367223, A1ZeroRE run 46127433870, A1ZeroRE/F0RC run 46128762576, C1=1RA NGram10 run 46127591149.
+- Do not claim the 1RA whole-child Cover until the current five source runs pass and a fresh `raw44-cut-1ra-closed` run succeeds with standard axioms/no `sorryAx`. If accepted, this is a complete weighted-211 Cover for all `25^5 = 9,765,625` physical completions of that child, not a full Raw44 parent or global BB(6) bound.
