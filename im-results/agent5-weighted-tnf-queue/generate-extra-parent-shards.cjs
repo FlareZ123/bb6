@@ -69,7 +69,7 @@ const MODULE_SPLIT_THRESHOLD=1000;
 function local(t,a,f,p,name,lines,imports,allowSplit=false){
  const safe='safe'+name;
  const threshold = (process.env.RAW11_REPAIR_SPLIT==='1' && id===132 &&
-   name.startsWith('_root_12_root_19_')) ? 80 : MODULE_SPLIT_THRESHOLD;
+   name.startsWith('_root_12_root_19_')) ? 30 : MODULE_SPLIT_THRESHOLD;
  if(allowSplit&&census.get(t)>threshold){
   const moduleName=prefix+'Sub'+name.replace(/[^A-Za-z0-9_]/g,'_');
   const subLines=[ns(moduleName),parent(a)];
