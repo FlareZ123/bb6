@@ -1,0 +1,281 @@
+name: Agent17 Raw42 oversized group1 recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      assembly_branch:
+        type: choice
+        options: [1LB, 1LC]
+        default: 1LB
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    outputs:
+      parts: ${{ steps.plan.outputs.parts }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select accepted recovery state
+        id: pin
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          case "$BRANCH" in
+            1LB) run=46111777843;;
+            1LC) run=46111781574;;
+            *) exit 2;;
+          esac
+          echo "run=$run" >> "$GITHUB_OUTPUT"
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pin.outputs.run }}
+          name: raw42-recovery-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          github-token: ${{ github.token }}
+          run-id: ${{ steps.pin.outputs.run }}
+          name: raw42-recovery-shared
+          path: /tmp/shared
+      - name: Build dependency-balanced split plan
+        id: plan
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          prefix="raw42-group1-$BRANCH-part"
+          python im-results/agent17-raw42-recovery/split_group.py             im-results/agent32-raw42/generated-assembly 1 3 "$prefix" /tmp/split.json
+          echo "parts=$(python -c 'import json;print(json.dumps(list(json.load(open("/tmp/split.json"))["groups"])))')" >> "$GITHUB_OUTPUT"
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          p=json.loads(Path('/tmp/split.json').read_text())
+          s=json.loads(Path('im-results/agent32-raw42/generated-assembly/shards.json').read_text())
+          assert sorted(p['source_roots']) == sorted(s['groups']['1'])
+          assert sum(len(v) for v in p['groups'].values()) == len(s['groups']['1'])
+          print(json.dumps(p, indent=2, sort_keys=True))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-group1-generated
+          path: im-results/agent32-raw42/generated-assembly/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-group1-shared
+          path: /tmp/shared/
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-group1-split-plan
+          path: /tmp/split.json
+          retention-days: 14
+          if-no-files-found: error
+
+  split_compile:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    strategy:
+      fail-fast: false
+      max-parallel: 3
+      matrix:
+        part: ${{ fromJSON(needs.prepare.outputs.parts) }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-shared
+          path: /tmp/shared
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-split-plan
+          path: /tmp/plan
+      - name: Compile one dependency-closed part
+        env:
+          PART: ${{ matrix.part }}
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          plan=/tmp/plan/split.json
+          mapfile -t roots < <(python -c 'import json,sys;print("\n".join(json.load(open(sys.argv[1]))["groups"][sys.argv[2]]))' "$plan" "$PART")
+          test "${#roots[@]}" -gt 0
+          for i in "${!roots[@]}"; do roots[i]="$g/${roots[i]}.lean"; done
+          out=/tmp/part
+          mkdir -p "$out"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir "$out" --jobs 1             --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean"             --precompiled-manifest /tmp/shared/manifest.json --precompiled-dir /tmp/shared             --manifest "$out/manifest.json" --artifact-name "raw42-group1-$BRANCH-part-$PART"             "${roots[@]}" | tee "$out/audit.log"
+          ! grep -Eq 'sorryAx|native_decide' "$out/audit.log"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-group1-${{ inputs.assembly_branch }}-part-${{ matrix.part }}
+          path: /tmp/part/
+          retention-days: 30
+          if-no-files-found: error
+
+  merge_group1:
+    needs: [prepare, split_compile]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-split-plan
+          path: /tmp/plan
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: raw42-group1-${{ inputs.assembly_branch }}-part-*
+          path: /tmp/parts
+      - name: Authenticate union and repack canonical group1
+        run: |
+          set -euo pipefail
+          g=im-results/agent32-raw42/generated-assembly
+          python im-results/agent4-raw109/merge_shards.py /tmp/parts /tmp/group1 /tmp/plan/split.json
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          g=Path('im-results/agent32-raw42/generated-assembly')
+          mpath=Path('/tmp/group1/manifest.json')
+          m=json.loads(mpath.read_text())
+          cfg=json.loads((g/'shards.json').read_text())
+          assert {x['module'] for x in m['roots']} == set(cfg['groups']['1'])
+          m['artifact_name']='raw42-assembly-shard-1'
+          m['label']='raw42-assembly-shard-1'
+          mpath.write_text(json.dumps(m,indent=2,sort_keys=True)+'\n')
+          print('Canonical group1 roots:',len(m['roots']),'modules:',m['module_count'])
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-assembly-shard-1
+          path: /tmp/group1/
+          retention-days: 30
+          if-no-files-found: error
+
+  compose:
+    needs: merge_group1
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reconstruct coverage sources
+        run: python im-results/agent13-coverage/unpack.py
+      - name: Install pinned Lean
+        run: |
+          set -euo pipefail
+          curl -sSf https://elan.lean-lang.org/elan-init.sh -o /tmp/elan-init.sh
+          sh /tmp/elan-init.sh -y --default-toolchain leanprover/lean4:v4.36.0-rc2
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+          printf '#!/bin/sh\nexec lean -j1 "$@"\n' >/tmp/lean-one
+          chmod +x /tmp/lean-one
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-group1-generated
+          path: im-results/agent32-raw42/generated-assembly
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LB'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46100532768
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LB'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46111777843
+          name: raw42-assembly-shard-0
+          path: /tmp/shards/raw42-assembly-shard-0
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46054733910
+          pattern: raw42-assembly-shard-*
+          path: /tmp/shards
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46089674173
+          name: raw42-assembly-shard-0
+          path: /tmp/shards/raw42-assembly-shard-0
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46089674173
+          name: raw42-assembly-shard-6
+          path: /tmp/shards/raw42-assembly-shard-6
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46100529988
+          name: raw42-assembly-shard-5
+          path: /tmp/shards/raw42-assembly-shard-5
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46111781574
+          name: raw42-assembly-shard-4
+          path: /tmp/shards/raw42-assembly-shard-4
+      - uses: actions/download-artifact@v4
+        if: inputs.assembly_branch == '1LC'
+        with:
+          github-token: ${{ github.token }}
+          run-id: 46111781574
+          name: raw42-assembly-shard-7
+          path: /tmp/shards/raw42-assembly-shard-7
+      - uses: actions/download-artifact@v4
+        with:
+          name: raw42-assembly-shard-1
+          path: /tmp/shards/raw42-assembly-shard-1
+      - name: Merge all eight authenticated shards and check child Cover
+        env:
+          BRANCH: ${{ inputs.assembly_branch }}
+        run: |
+          set -euo pipefail
+          d=im-results/agent32-raw42
+          g="$d/generated-assembly"
+          python im-results/agent4-raw109/merge_shards.py /tmp/shards /tmp/merged "$g/shards.json"
+          mkdir -p /tmp/final
+          th="BB6.Agent32Raw42${BRANCH}.Closed.cover"
+          python tools/lean_compile_closure.py --lean /tmp/lean-one --workdir /tmp/final --jobs 1             --source-root "$g" --override FastBiDFA="$d/FastBiDFA.lean"             --precompiled-manifest /tmp/merged/manifest.json --precompiled-dir /tmp/merged             --manifest /tmp/final/manifest.json --artifact-name "raw42-certified-$BRANCH-split-recovery"             --theorem "$th" --parent-table "1RB---_1RC${BRANCH}_0RD---_1LD0LB_------_------"             --weighted-bound 100006 "$g/Raw42${BRANCH}ClosedCover.lean" | tee /tmp/final/audit.log
+          ! grep -Eq 'sorryAx|native_decide' /tmp/final/audit.log
+          python im-results/agent32-raw59/check_axioms.py /tmp/final/audit.log "$th"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: raw42-certified-${{ inputs.assembly_branch }}-split-recovery
+          path: /tmp/final/
+          retention-days: 30
+          if-no-files-found: error
