@@ -2,7 +2,7 @@
 """Emit transport of an exact blank-exposure theorem to a universal weighted bound.
 
 Requires source-checked reached/hole from exposure_emit.py, and original
-CheckedLateHole.zipRead_of_run0 and bounded_of_query. All kernel checked.
+Run0ExposureBound.zipRead_of_run0 and bounded_of_query. All kernel checked.
 """
 import json,sys
 from pathlib import Path
@@ -16,7 +16,7 @@ def main(info_path,out):
     srcns=d['namespace']
     assert srcns.startswith('BB6.Agent7D100Exposure')
     source=f'''import Raw36D100Exposure
-import CheckedLateHole
+import Run0ExposureBound
 import FastZipWeight
 import Lean.Elab.Tactic.Omega
 set_option maxRecDepth 100000
@@ -24,7 +24,7 @@ set_option maxHeartbeats 0
 namespace BB6.Agent7D100ExposureBound
 open BB6Coverage BB6Coverage.Agent10ZipAudit
 open BB6.Agent13BlankDelay BB6.Agent31ThreeHole
-open BB6.Agent50TNFPilot BB6.Agent50CheckedLateHole
+open BB6.Agent50TNFPilot BB6.Agent7D100ExposureBridge
 open BB6.Agent29FastZipWeight
 open {srcns}
 theorem hroot : table initialSlot = some (some ⟨true,true,1⟩) := by decide
