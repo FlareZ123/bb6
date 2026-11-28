@@ -29,7 +29,9 @@ jobs:
           ! grep -Eq 'sorryAx|native_decide' /tmp/a17-raw42-bridge.log
           python im-results/agent32-raw59/check_axioms.py \
             /tmp/a17-raw42-bridge.log \
-            BB6.Agent17Raw42GlobalBridge.parent_eq_literal \
+            BB6.Agent17Raw42GlobalBridge.parent_eq_literal
+          python im-results/agent32-raw59/check_axioms.py \
+            /tmp/a17-raw42-bridge.log \
             BB6.Agent17Raw42GlobalBridge.global_cover_from_named
       - uses: actions/upload-artifact@v4
         if: always()
